@@ -8,5 +8,6 @@ describe('registerHandlebarHelpers', () => {
         const helpers = Object.keys(Handlebars.helpers);
         expect(helpers).toContain('equals');
         expect(helpers).toContain('notEquals');
+        expect(helpers).toContain('containsSpaces');
     });
 });
