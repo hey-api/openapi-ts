@@ -85,7 +85,7 @@
         "codecov": "3.8.1",
         "eslint": "7.15.0",
         "eslint-config-prettier": "7.0.0",
-        "eslint-plugin-prettier": "3.2.0",
+        "eslint-plugin-prettier": "3.3.0",
         "eslint-plugin-simple-import-sort": "7.0.0",
         "express": "4.17.1",
         "form-data": "3.0.0",
