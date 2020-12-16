@@ -52,11 +52,11 @@ import { OpenAPI } from './OpenAPI';
 
 
 /**
-* Request using node-fetch client
-* @param options The request options from the the service
-* @result ApiResult
-* @throws ApiError
-*/
+ * Request using node-fetch client
+ * @param options The request options from the the service
+ * @returns ApiResult
+ * @throws ApiError
+ */
 export async function request(options: ApiRequestOptions): Promise<ApiResult> {
     const url = getUrl(options);
     const response = await sendRequest(options, url);
