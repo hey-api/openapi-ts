@@ -26,6 +26,12 @@ import nodeGetResponseBody from '../templates/core/node/getResponseBody.hbs';
 import nodeGetResponseHeader from '../templates/core/node/getResponseHeader.hbs';
 import nodeRequest from '../templates/core/node/request.hbs';
 import nodeSendRequest from '../templates/core/node/sendRequest.hbs';
+import httpntlmGetHeaders from '../templates/core/httpntlm/getHeaders.hbs';
+import httpntlmGetRequestBody from '../templates/core/httpntlm/getRequestBody.hbs';
+import httpntlmGetResponseBody from '../templates/core/httpntlm/getResponseBody.hbs';
+import httpntlmGetResponseHeader from '../templates/core/httpntlm/getResponseHeader.hbs';
+import httpntlmRequest from '../templates/core/httpntlm/request.hbs';
+import httpntlmSendRequest from '../templates/core/httpntlm/sendRequest.hbs';
 import templateCoreSettings from '../templates/core/OpenAPI.hbs';
 import templateCoreRequest from '../templates/core/request.hbs';
 import xhrGetHeaders from '../templates/core/xhr/getHeaders.hbs';
@@ -172,6 +178,14 @@ export function registerHandlebarTemplates(): Templates {
     Handlebars.registerPartial('node/getResponseHeader', Handlebars.template(nodeGetResponseHeader));
     Handlebars.registerPartial('node/sendRequest', Handlebars.template(nodeSendRequest));
     Handlebars.registerPartial('node/request', Handlebars.template(nodeRequest));
+
+    // Specific files for the node client implementation
+    Handlebars.registerPartial('httpntlm/getHeaders', Handlebars.template(httpntlmGetHeaders));
+    Handlebars.registerPartial('httpntlm/getRequestBody', Handlebars.template(httpntlmGetRequestBody));
+    Handlebars.registerPartial('httpntlm/getResponseBody', Handlebars.template(httpntlmGetResponseBody));
+    Handlebars.registerPartial('httpntlm/getResponseHeader', Handlebars.template(httpntlmGetResponseHeader));
+    Handlebars.registerPartial('httpntlm/sendRequest', Handlebars.template(httpntlmSendRequest));
+    Handlebars.registerPartial('httpntlm/request', Handlebars.template(httpntlmRequest));
 
     return templates;
 }

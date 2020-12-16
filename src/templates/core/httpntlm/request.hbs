@@ -1,0 +1,76 @@
+{{>header}}
+
+import FormData from 'form-data';
+import fetch, { BodyInit, Headers, RequestInit, Response } from 'node-fetch';
+import { types } from 'util';
+
+import { ApiError } from './ApiError';
+import type { ApiRequestOptions } from './ApiRequestOptions';
+import type { ApiResult } from './ApiResult';
+import { OpenAPI } from './OpenAPI';
+
+{{>functions/isDefined}}
+
+
+{{>functions/isString}}
+
+
+{{>functions/isStringWithValue}}
+
+
+{{>functions/isBinary}}
+
+
+{{>functions/getQueryString}}
+
+
+{{>functions/getUrl}}
+
+
+{{>functions/getFormData}}
+
+
+{{>functions/resolve}}
+
+
+{{>httpntlm/getHeaders}}
+
+
+{{>httpntlm/getRequestBody}}
+
+
+{{>httpntlm/sendRequest}}
+
+
+{{>httpntlm/getResponseHeader}}
+
+
+{{>httpntlm/getResponseBody}}
+
+
+{{>functions/catchErrors}}
+
+
+/**
+* Request using node-fetch client
+* @param options The request options from the the service
+* @result ApiResult
+* @throws ApiError
+*/
+export async function request(options: ApiRequestOptions): Promise<ApiResult> {
+    const url = getUrl(options);
+    const response = await sendRequest(options, url);
+    const responseBody = await getResponseBody(response);
+    const responseHeader = getResponseHeader(response, options.responseHeader);
+
+    const result: ApiResult = {
+        url,
+        ok: response.ok,
+        status: response.status,
+        statusText: response.statusText,
+        body: responseHeader || responseBody,
+    };
+
+    catchErrors(options, result);
+    return result;
+}

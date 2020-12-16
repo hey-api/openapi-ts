@@ -1,0 +1,13 @@
+function getRequestBody(options: ApiRequestOptions): BodyInit | undefined {
+    if (options.formData) {
+        return getFormData(options.formData);
+    }
+    if (options.body) {
+        if (isString(options.body) || isBinary(options.body)) {
+            return options.body;
+        } else {
+            return JSON.stringify(options.body);
+        }
+    }
+    return undefined;
+}

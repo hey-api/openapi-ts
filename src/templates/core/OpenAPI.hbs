@@ -10,6 +10,7 @@ type Config = {
     TOKEN?: string | Resolver<string>;
     USERNAME?: string | Resolver<string>;
     PASSWORD?: string | Resolver<string>;
+    DOMAIN?: string | Resolver<string>;
     HEADERS?: Headers | Resolver<Headers>;
 }
 
@@ -20,5 +21,6 @@ export const OpenAPI: Config = {
     TOKEN: undefined,
     USERNAME: undefined,
     PASSWORD: undefined,
+    DOMAIN: undefined,
     HEADERS: undefined,
 };
