@@ -9,4 +9,7 @@ export function registerHandlebarHelpers(): void {
     Handlebars.registerHelper('notEquals', function (a: string, b: string, options: Handlebars.HelperOptions): string {
         return a !== b ? options.fn(this) : options.inverse(this);
     });
+    Handlebars.registerHelper('containsSpaces', function (value: string): boolean {
+        return /\s+/.test(value);
+    });
 }

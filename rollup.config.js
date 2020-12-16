@@ -34,6 +34,7 @@ const handlebarsPlugin = () => ({
                 knownHelpers: {
                     equals: true,
                     notEquals: true,
+                    containsSpaces: true,
                 },
             });
             return `export default ${templateSpec};`;
