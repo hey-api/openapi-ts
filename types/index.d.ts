@@ -7,7 +7,7 @@ export declare enum HttpClient {
 export type Options = {
     input: string | Record<string, any>;
     output: string;
-    httpClient?: HttpClient;
+    httpClient?: string | HttpClient;
     useOptions?: boolean;
     useUnionTypes?: boolean;
     exportCore?: boolean;

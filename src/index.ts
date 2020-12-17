@@ -1,3 +1,4 @@
+import { HttpClient } from './HttpClient';
 import { parse as parseV2 } from './openApi/v2';
 import { parse as parseV3 } from './openApi/v3';
 import { getOpenApiSpec } from './utils/getOpenApiSpec';
@@ -7,16 +8,12 @@ import { postProcessClient } from './utils/postProcessClient';
 import { registerHandlebarTemplates } from './utils/registerHandlebarTemplates';
 import { writeClient } from './utils/writeClient';
 
-export enum HttpClient {
-    FETCH = 'fetch',
-    XHR = 'xhr',
-    NODE = 'node',
-}
+export { HttpClient } from './HttpClient';
 
 export type Options = {
     input: string | Record<string, any>;
     output: string;
-    httpClient?: HttpClient;
+    httpClient?: string | HttpClient;
     useOptions?: boolean;
     useUnionTypes?: boolean;
     exportCore?: boolean;

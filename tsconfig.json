@@ -16,6 +16,7 @@
         "strictNullChecks": true,
         "strictFunctionTypes": true,
         "allowSyntheticDefaultImports": true,
+        "allowJs": true,
         "skipLibCheck": true
     },
 

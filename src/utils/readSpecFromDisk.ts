@@ -1,4 +1,4 @@
-import * as path from 'path';
+import { resolve } from 'path';
 
 import { exists, readFile } from './fileSystem';
 
@@ -7,7 +7,7 @@ import { exists, readFile } from './fileSystem';
  * @param input
  */
 export async function readSpecFromDisk(input: string): Promise<string> {
-    const filePath = path.resolve(process.cwd(), input);
+    const filePath = resolve(process.cwd(), input);
     const fileExists = await exists(filePath);
     if (fileExists) {
         try {

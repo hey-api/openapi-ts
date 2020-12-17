@@ -1,5 +1,5 @@
-import * as path from 'path';
+import { relative } from 'path';
 
 export function isSubDirectory(parent: string, child: string) {
-    return path.relative(child, parent).startsWith('..');
+    return relative(child, parent).startsWith('..');
 }

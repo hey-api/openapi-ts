@@ -1,5 +1,5 @@
 import type { Client } from '../client/interfaces/Client';
-import { HttpClient } from '../index';
+import { HttpClient } from '../HttpClient';
 import { writeFile } from './fileSystem';
 import { Templates } from './registerHandlebarTemplates';
 import { writeClientCore } from './writeClientCore';

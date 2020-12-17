@@ -1,7 +1,7 @@
-import * as path from 'path';
+import { resolve } from 'path';
 
 import type { Client } from '../client/interfaces/Client';
-import { HttpClient } from '../index';
+import { HttpClient } from '../HttpClient';
 import { mkdir, rmdir } from './fileSystem';
 import { isSubDirectory } from './isSubdirectory';
 import { Templates } from './registerHandlebarTemplates';
@@ -12,7 +12,7 @@ import { writeClientSchemas } from './writeClientSchemas';
 import { writeClientServices } from './writeClientServices';
 
 /**
- * Write our OpenAPI client, using the given templates at the given output path.
+ * Write our OpenAPI client, using the given templates at the given output
  * @param client Client object with all the models, services, etc.
  * @param templates Templates wrapper with all loaded Handlebars templates
  * @param output The relative location of the output directory
@@ -28,7 +28,7 @@ export async function writeClient(
     client: Client,
     templates: Templates,
     output: string,
-    httpClient: HttpClient,
+    httpClient: string | HttpClient,
     useOptions: boolean,
     useUnionTypes: boolean,
     exportCore: boolean,
@@ -36,11 +36,11 @@ export async function writeClient(
     exportModels: boolean,
     exportSchemas: boolean
 ): Promise<void> {
-    const outputPath = path.resolve(process.cwd(), output);
-    const outputPathCore = path.resolve(outputPath, 'core');
-    const outputPathModels = path.resolve(outputPath, 'models');
-    const outputPathSchemas = path.resolve(outputPath, 'schemas');
-    const outputPathServices = path.resolve(outputPath, 'services');
+    const outputPath = resolve(process.cwd(), output);
+    const outputPathCore = resolve(outputPath, 'core');
+    const outputPathModels = resolve(outputPath, 'models');
+    const outputPathSchemas = resolve(outputPath, 'schemas');
+    const outputPathServices = resolve(outputPath, 'services');
 
     if (!isSubDirectory(process.cwd(), output)) {
         throw new Error(`Output folder is not a subdirectory of the current working directory`);
