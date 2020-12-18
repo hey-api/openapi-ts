@@ -1,10 +1,10 @@
 import type { OperationResponse } from '../../../client/interfaces/OperationResponse';
+import { getPattern } from '../../../utils/getPattern';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiResponse } from '../interfaces/OpenApiResponse';
 import { getComment } from './getComment';
 import { getContent } from './getContent';
 import { getModel } from './getModel';
-import { getPattern } from './getPattern';
 import { getType } from './getType';
 
 export function getOperationResponse(openApi: OpenApi, response: OpenApiResponse, responseCode: number): OperationResponse {

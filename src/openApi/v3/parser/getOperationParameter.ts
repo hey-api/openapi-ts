@@ -1,11 +1,11 @@
 import type { OperationParameter } from '../../../client/interfaces/OperationParameter';
+import { getPattern } from '../../../utils/getPattern';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiParameter } from '../interfaces/OpenApiParameter';
 import { getComment } from './getComment';
 import { getModel } from './getModel';
 import { getModelDefault } from './getModelDefault';
 import { getOperationParameterName } from './getOperationParameterName';
-import { getPattern } from './getPattern';
 import { getType } from './getType';
 
 export function getOperationParameter(openApi: OpenApi, parameter: OpenApiParameter): OperationParameter {

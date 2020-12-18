@@ -1,4 +1,5 @@
 import type { Model } from '../../../client/interfaces/Model';
+import { getPattern } from '../../../utils/getPattern';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 import { extendEnum } from './extendEnum';
@@ -7,7 +8,6 @@ import { getEnum } from './getEnum';
 import { getEnumFromDescription } from './getEnumFromDescription';
 import { getModelComposition } from './getModelComposition';
 import { getModelProperties } from './getModelProperties';
-import { getPattern } from './getPattern';
 import { getType } from './getType';
 
 export function getModel(openApi: OpenApi, definition: OpenApiSchema, isDefinition: boolean = false, name: string = ''): Model {

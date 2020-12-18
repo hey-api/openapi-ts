@@ -1,10 +1,10 @@
 import type { Model } from '../../../client/interfaces/Model';
+import { getPattern } from '../../../utils/getPattern';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 import { escapeName } from './escapeName';
 import { getComment } from './getComment';
 import type { getModel } from './getModel';
-import { getPattern } from './getPattern';
 import { getType } from './getType';
 
 // Fix for circular dependency

@@ -1,5 +1,5 @@
 import type { Enum } from '../../../client/interfaces/Enum';
-import { isDefined } from './isDefined';
+import { isDefined } from '../../../utils/isDefined';
 
 export function getEnum(values?: (string | number)[]): Enum[] {
     if (Array.isArray(values)) {

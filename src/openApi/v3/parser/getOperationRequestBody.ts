@@ -1,10 +1,10 @@
 import type { OperationParameter } from '../../../client/interfaces/OperationParameter';
+import { getPattern } from '../../../utils/getPattern';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiRequestBody } from '../interfaces/OpenApiRequestBody';
 import { getComment } from './getComment';
 import { getContent } from './getContent';
 import { getModel } from './getModel';
-import { getPattern } from './getPattern';
 import { getType } from './getType';
 
 export function getOperationRequestBody(openApi: OpenApi, parameter: OpenApiRequestBody): OperationParameter {

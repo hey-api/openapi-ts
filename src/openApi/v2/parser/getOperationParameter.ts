@@ -1,4 +1,5 @@
 import type { OperationParameter } from '../../../client/interfaces/OperationParameter';
+import { getPattern } from '../../../utils/getPattern';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiParameter } from '../interfaces/OpenApiParameter';
 import { extendEnum } from './extendEnum';
@@ -8,7 +9,6 @@ import { getEnumFromDescription } from './getEnumFromDescription';
 import { getModel } from './getModel';
 import { getOperationParameterDefault } from './getOperationParameterDefault';
 import { getOperationParameterName } from './getOperationParameterName';
-import { getPattern } from './getPattern';
 import { getType } from './getType';
 
 export function getOperationParameter(openApi: OpenApi, parameter: OpenApiParameter): OperationParameter {

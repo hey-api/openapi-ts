@@ -14,8 +14,8 @@ export function getModelComposition(openApi: OpenApi, definitions: OpenApiSchema
         properties: [],
     };
 
-    const modes = definitions.map(definition => getModel(openApi, definition));
-    modes
+    const models = definitions.map(definition => getModel(openApi, definition));
+    models
         .filter(model => {
             const hasProperties = model.properties.length;
             const hasEnums = model.enums.length;
