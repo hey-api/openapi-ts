@@ -23,18 +23,20 @@ import { writeClientServices } from './writeClientServices';
  * @param exportServices: Generate services
  * @param exportModels: Generate models
  * @param exportSchemas: Generate schemas
+ * @param request: Path to custom request file
  */
 export async function writeClient(
     client: Client,
     templates: Templates,
     output: string,
-    httpClient: string | HttpClient,
+    httpClient: HttpClient,
     useOptions: boolean,
     useUnionTypes: boolean,
     exportCore: boolean,
     exportServices: boolean,
     exportModels: boolean,
-    exportSchemas: boolean
+    exportSchemas: boolean,
+    request?: string
 ): Promise<void> {
     const outputPath = resolve(process.cwd(), output);
     const outputPathCore = resolve(outputPath, 'core');
@@ -49,7 +51,7 @@ export async function writeClient(
     if (exportCore) {
         await rmdir(outputPathCore);
         await mkdir(outputPathCore);
-        await writeClientCore(client, templates, outputPathCore, httpClient);
+        await writeClientCore(client, templates, outputPathCore, httpClient, request);
     }
 
     if (exportServices) {

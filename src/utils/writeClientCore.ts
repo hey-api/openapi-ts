@@ -11,8 +11,9 @@ import { Templates } from './registerHandlebarTemplates';
  * @param templates The loaded handlebar templates
  * @param outputPath Directory to write the generated files to
  * @param httpClient The selected httpClient (fetch, xhr or node)
+ * @param request: Path to custom request file
  */
-export async function writeClientCore(client: Client, templates: Templates, outputPath: string, httpClient: string | HttpClient): Promise<void> {
+export async function writeClientCore(client: Client, templates: Templates, outputPath: string, httpClient: HttpClient, request?: string): Promise<void> {
     const context = {
         httpClient,
         server: client.server,
@@ -23,20 +24,14 @@ export async function writeClientCore(client: Client, templates: Templates, outp
     await writeFile(resolve(outputPath, 'ApiError.ts'), templates.core.apiError({}));
     await writeFile(resolve(outputPath, 'ApiRequestOptions.ts'), templates.core.apiRequestOptions({}));
     await writeFile(resolve(outputPath, 'ApiResult.ts'), templates.core.apiResult({}));
+    await writeFile(resolve(outputPath, 'request.ts'), templates.core.request(context));
 
-    switch (httpClient) {
-        case HttpClient.FETCH:
-        case HttpClient.XHR:
-        case HttpClient.NODE:
-            await writeFile(resolve(outputPath, 'request.ts'), templates.core.request(context));
-            break;
-        default:
-            const customRequestFile = resolve(process.cwd(), httpClient);
-            const customRequestFileExists = await exists(customRequestFile);
-            if (!customRequestFileExists) {
-                throw new Error(`Custom request file "${customRequestFile}" does not exists`);
-            }
-            await copyFile(customRequestFile, resolve(outputPath, 'request.ts'));
-            break;
+    if (request) {
+        const requestFile = resolve(process.cwd(), request);
+        const requestFileExists = await exists(requestFile);
+        if (!requestFileExists) {
+            throw new Error(`Custom request file "${requestFile}" does not exists`);
+        }
+        await copyFile(requestFile, resolve(outputPath, 'request.ts'));
     }
 }
