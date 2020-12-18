@@ -1714,6 +1714,9 @@
                     "reference": {
                         "$ref": "#/components/schemas/ModelWithString"
                     },
+                    "property with space": {
+                        "type": "string"
+                    },
                     "@namespace.string": {
                         "type": "string",
                         "readOnly": true

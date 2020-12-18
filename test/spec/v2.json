@@ -1066,6 +1066,9 @@
                 "reference": {
                     "$ref": "#/definitions/ModelWithString"
                 },
+                "property with space": {
+                    "type": "string"
+                },
                 "@namespace.string": {
                     "type": "string",
                     "readOnly": true

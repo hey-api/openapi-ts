@@ -942,6 +942,7 @@ export type ModelWithProperties = {
     number?: number;
     boolean?: boolean;
     reference?: ModelWithString;
+    'property with space'?: string;
     readonly '@namespace.string'?: string;
     readonly '@namespace.integer'?: number;
 }
@@ -1614,6 +1615,9 @@ export const $ModelWithProperties = {
         },
         reference: {
             type: 'ModelWithString',
+        },
+        'property with space': {
+            type: 'string',
         },
         '@namespace.string': {
             type: 'string',
@@ -3298,6 +3302,7 @@ export type ModelWithProperties = {
     number?: number;
     boolean?: boolean;
     reference?: ModelWithString;
+    'property with space'?: string;
     readonly '@namespace.string'?: string;
     readonly '@namespace.integer'?: number;
 }
@@ -4125,6 +4130,9 @@ export const $ModelWithProperties = {
         },
         reference: {
             type: 'ModelWithString',
+        },
+        'property with space': {
+            type: 'string',
         },
         '@namespace.string': {
             type: 'string',
