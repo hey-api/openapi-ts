@@ -10,10 +10,10 @@ export enum {{{name}}} {
      * {{{description}}}
      */
     {{/if}}
-    {{#if (containsSpaces name)}}
+    {{#containsSpaces name}}
     "{{{name}}}" = {{{value}}},
     {{else}}
     {{{name}}} = {{{value}}},
-    {{/if}}
+    {{/containsSpaces}}
     {{/each}}
 }

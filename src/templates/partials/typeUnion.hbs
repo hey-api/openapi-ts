@@ -1,5 +1,1 @@
-{{~#if parent~}}
-({{#each properties}}{{>type parent=../parent}}{{#unless @last}} | {{/unless}}{{/each}}){{>isNullable}}
-{{~else~}}
-({{#each properties}}{{>type}}{{#unless @last}} | {{/unless}}{{/each}}){{>isNullable}}
-{{~/if~}}
+({{#union properties parent}}{{this}}{{/union}}){{>isNullable}}
