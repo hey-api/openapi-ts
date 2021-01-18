@@ -62,7 +62,7 @@
     },
     "dependencies": {
         "camelcase": "^6.2.0",
-        "commander": "^6.2.0",
+        "commander": "^7.0.0",
         "handlebars": "^4.7.6",
         "js-yaml": "^3.14.0",
         "mkdirp": "^1.0.4",
