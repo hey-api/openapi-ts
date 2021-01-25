@@ -78,7 +78,7 @@
         "@types/express": "4.17.11",
         "@types/jest": "26.0.20",
         "@types/js-yaml": "3.12.5",
-        "@types/node": "14.14.21",
+        "@types/node": "14.14.22",
         "@types/node-fetch": "2.5.8",
         "@types/qs": "6.9.5",
         "@typescript-eslint/eslint-plugin": "4.14.0",
