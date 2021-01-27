@@ -532,7 +532,7 @@
                     },
                     {
                         "description": "This is an array parameter that is send as pipes format (pipe-separated values)",
-                        "name": "parameterArrayMulti",
+                        "name": "parameterArrayPipes",
                         "in": "query",
                         "required": true,
                         "type": "array",

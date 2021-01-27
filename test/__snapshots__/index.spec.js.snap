@@ -1743,7 +1743,7 @@ export class CollectionFormatService {
      * @param parameterArrayCsv This is an array parameter that is send as csv format (comma-separated values)
      * @param parameterArraySsv This is an array parameter that is send as ssv format (space-separated values)
      * @param parameterArrayTsv This is an array parameter that is send as tsv format (tab-separated values)
-     * @param parameterArrayMulti This is an array parameter that is send as pipes format (pipe-separated values)
+     * @param parameterArrayPipes This is an array parameter that is send as pipes format (pipe-separated values)
      * @param parameterArrayMulti This is an array parameter that is send as multi format (multiple parameter instances)
      * @throws ApiError
      */
@@ -1751,7 +1751,7 @@ export class CollectionFormatService {
         parameterArrayCsv: Array<string>,
         parameterArraySsv: Array<string>,
         parameterArrayTsv: Array<string>,
-        parameterArrayMulti: Array<string>,
+        parameterArrayPipes: Array<string>,
         parameterArrayMulti: Array<string>,
     ): Promise<void> {
         const result = await __request({
@@ -1761,7 +1761,7 @@ export class CollectionFormatService {
                 'parameterArrayCSV': parameterArrayCsv,
                 'parameterArraySSV': parameterArraySsv,
                 'parameterArrayTSV': parameterArrayTsv,
-                'parameterArrayMulti': parameterArrayMulti,
+                'parameterArrayPipes': parameterArrayPipes,
                 'parameterArrayMulti': parameterArrayMulti,
             },
         });
@@ -4308,7 +4308,7 @@ export class CollectionFormatService {
      * @param parameterArrayCsv This is an array parameter that is send as csv format (comma-separated values)
      * @param parameterArraySsv This is an array parameter that is send as ssv format (space-separated values)
      * @param parameterArrayTsv This is an array parameter that is send as tsv format (tab-separated values)
-     * @param parameterArrayMulti This is an array parameter that is send as pipes format (pipe-separated values)
+     * @param parameterArrayPipes This is an array parameter that is send as pipes format (pipe-separated values)
      * @param parameterArrayMulti This is an array parameter that is send as multi format (multiple parameter instances)
      * @throws ApiError
      */
@@ -4316,7 +4316,7 @@ export class CollectionFormatService {
         parameterArrayCsv: Array<string> | null,
         parameterArraySsv: Array<string> | null,
         parameterArrayTsv: Array<string> | null,
-        parameterArrayMulti: Array<string> | null,
+        parameterArrayPipes: Array<string> | null,
         parameterArrayMulti: Array<string> | null,
     ): Promise<void> {
         const result = await __request({
@@ -4326,7 +4326,7 @@ export class CollectionFormatService {
                 'parameterArrayCSV': parameterArrayCsv,
                 'parameterArraySSV': parameterArraySsv,
                 'parameterArrayTSV': parameterArrayTsv,
-                'parameterArrayMulti': parameterArrayMulti,
+                'parameterArrayPipes': parameterArrayPipes,
                 'parameterArrayMulti': parameterArrayMulti,
             },
         });
