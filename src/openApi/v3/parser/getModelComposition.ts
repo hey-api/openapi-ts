@@ -1,8 +1,8 @@
-import type {ModelComposition} from '../../../client/interfaces/ModelComposition';
-import type {OpenApi} from '../interfaces/OpenApi';
-import type {OpenApiSchema} from '../interfaces/OpenApiSchema';
-import type {getModel} from './getModel';
-import {getModelProperties} from "./getModelProperties";
+import type { ModelComposition } from '../../../client/interfaces/ModelComposition';
+import type { OpenApi } from '../interfaces/OpenApi';
+import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
+import type { getModel } from './getModel';
+import { getModelProperties } from './getModelProperties';
 
 // Fix for circular dependency
 export type GetModelFn = typeof getModel;
