@@ -16,7 +16,7 @@ export function getOperationParameterDefault(parameter: OpenApiParameter, operat
         case 'int':
         case 'integer':
         case 'number':
-            if (operationParameter.export == 'enum' && operationParameter.enum?.[parameter.default]) {
+            if (operationParameter.export === 'enum' && operationParameter.enum?.[parameter.default]) {
                 return operationParameter.enum[parameter.default].value;
             }
             return parameter.default;

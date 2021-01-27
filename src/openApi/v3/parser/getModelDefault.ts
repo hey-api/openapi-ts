@@ -16,7 +16,7 @@ export function getModelDefault(definition: OpenApiSchema, model?: Model): strin
         case 'int':
         case 'integer':
         case 'number':
-            if (model?.export == 'enum' && model.enum?.[definition.default]) {
+            if (model?.export === 'enum' && model.enum?.[definition.default]) {
                 return model.enum[definition.default].value;
             }
             return definition.default;

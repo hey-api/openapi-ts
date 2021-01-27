@@ -1,14 +1,14 @@
-import type { Model } from '../../../client/interfaces/Model';
-import { getPattern } from '../../../utils/getPattern';
-import type { OpenApi } from '../interfaces/OpenApi';
-import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
-import { extendEnum } from './extendEnum';
-import { getComment } from './getComment';
-import { getEnum } from './getEnum';
-import { getEnumFromDescription } from './getEnumFromDescription';
-import { getModelComposition } from './getModelComposition';
-import { getModelProperties } from './getModelProperties';
-import { getType } from './getType';
+import type {Model} from '../../../client/interfaces/Model';
+import {getPattern} from '../../../utils/getPattern';
+import type {OpenApi} from '../interfaces/OpenApi';
+import type {OpenApiSchema} from '../interfaces/OpenApiSchema';
+import {extendEnum} from './extendEnum';
+import {getComment} from './getComment';
+import {getEnum} from './getEnum';
+import {getEnumFromDescription} from './getEnumFromDescription';
+import {getModelComposition} from './getModelComposition';
+import {getModelProperties} from './getModelProperties';
+import {getType} from './getType';
 
 export function getModel(openApi: OpenApi, definition: OpenApiSchema, isDefinition: boolean = false, name: string = ''): Model {
     const model: Model = {
@@ -119,7 +119,7 @@ export function getModel(openApi: OpenApi, definition: OpenApiSchema, isDefiniti
     }
 
     if (definition.allOf?.length) {
-        const composition = getModelComposition(openApi, definition.allOf, 'all-of', getModel);
+        const composition = getModelComposition(openApi, definition, definition.allOf, 'all-of', getModel);
         model.export = composition.type;
         model.imports.push(...composition.imports);
         model.enums.push(...composition.enums);
