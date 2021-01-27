@@ -122,8 +122,8 @@ export function getModel(openApi: OpenApi, definition: OpenApiSchema, isDefiniti
         const composition = getModelComposition(openApi, definition, definition.allOf, 'all-of', getModel);
         model.export = composition.type;
         model.imports.push(...composition.imports);
-        model.enums.push(...composition.enums);
         model.properties.push(...composition.properties);
+        model.enums.push(...composition.enums);
         return model;
     }
 
@@ -136,6 +136,7 @@ export function getModel(openApi: OpenApi, definition: OpenApiSchema, isDefiniti
             const properties = getModelProperties(openApi, definition, getModel);
             properties.forEach(property => {
                 model.imports.push(...property.imports);
+                model.enums.push(...property.enums);
                 model.properties.push(property);
                 if (property.export === 'enum') {
                     model.enums.push(property);

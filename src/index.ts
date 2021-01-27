@@ -55,7 +55,11 @@ export async function generate({
 }: Options): Promise<void> {
     const openApi = isString(input) ? await getOpenApiSpec(input) : input;
     const openApiVersion = getOpenApiVersion(openApi);
-    const templates = registerHandlebarTemplates();
+    const templates = registerHandlebarTemplates({
+        httpClient,
+        useUnionTypes,
+        useOptions,
+    });
 
     switch (openApiVersion) {
         case OpenApiVersion.V2: {

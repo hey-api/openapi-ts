@@ -1,7 +1,2 @@
-{{~#if @root.useUnionTypes~}}
-{{#each enum}}{{{value}}}{{#unless @last}} | {{/unless}}{{/each}}{{>isNullable}}
-{{~else if parent~}}
-{{{parent}}}.{{{name}}}{{>isNullable}}
-{{~else~}}
-{{#each enum}}{{{value}}}{{#unless @last}} | {{/unless}}{{/each}}{{>isNullable}}
-{{~/if~}}
+{{#enumerator enum parent name}}{{this}}{{/enumerator}}{{>isNullable}}
+

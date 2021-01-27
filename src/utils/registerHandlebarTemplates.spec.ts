@@ -1,8 +1,13 @@
+import { HttpClient } from '../HttpClient';
 import { registerHandlebarTemplates } from './registerHandlebarTemplates';
 
 describe('registerHandlebarTemplates', () => {
     it('should return correct templates', () => {
-        const templates = registerHandlebarTemplates();
+        const templates = registerHandlebarTemplates({
+            httpClient: HttpClient.FETCH,
+            useOptions: false,
+            useUnionTypes: false,
+        });
         expect(templates.index).toBeDefined();
         expect(templates.exports.model).toBeDefined();
         expect(templates.exports.schema).toBeDefined();

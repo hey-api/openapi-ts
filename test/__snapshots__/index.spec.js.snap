@@ -4961,13 +4961,13 @@ import { OpenAPI } from '../core/OpenAPI';
 export class TypesService {
 
     /**
-     * @param parameterObject This is an object parameter
      * @param parameterArray This is an array parameter
      * @param parameterDictionary This is a dictionary parameter
      * @param parameterEnum This is an enum parameter
      * @param parameterNumber This is a number parameter
      * @param parameterString This is a string parameter
      * @param parameterBoolean This is a boolean parameter
+     * @param parameterObject This is an object parameter
      * @param id This is a number parameter
      * @returns number Response is a simple number
      * @returns string Response is a simple string
@@ -4976,26 +4976,26 @@ export class TypesService {
      * @throws ApiError
      */
     public static async types(
-        parameterObject: any,
         parameterArray: Array<string> | null,
         parameterDictionary: any,
         parameterEnum: 'Success' | 'Warning' | 'Error' | null,
         parameterNumber: number = 123,
         parameterString: string | null = 'default',
         parameterBoolean: boolean | null = true,
+        parameterObject: any = null,
         id?: number,
     ): Promise<number | string | boolean | any> {
         const result = await __request({
             method: 'GET',
             path: \`/api/v\${OpenAPI.VERSION}/types\`,
             query: {
-                'parameterObject': parameterObject,
                 'parameterArray': parameterArray,
                 'parameterDictionary': parameterDictionary,
                 'parameterEnum': parameterEnum,
                 'parameterNumber': parameterNumber,
                 'parameterString': parameterString,
                 'parameterBoolean': parameterBoolean,
+                'parameterObject': parameterObject,
             },
         });
         return result.body;
