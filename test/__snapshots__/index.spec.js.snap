@@ -381,6 +381,7 @@ export { $SimpleReference } from './schemas/$SimpleReference';
 export { $SimpleString } from './schemas/$SimpleString';
 export { $SimpleStringWithPattern } from './schemas/$SimpleStringWithPattern';
 
+export { CollectionFormatService } from './services/CollectionFormatService';
 export { ComplexService } from './services/ComplexService';
 export { DefaultsService } from './services/DefaultsService';
 export { DuplicateService } from './services/DuplicateService';
@@ -756,6 +757,10 @@ export type ModelWithEnum = {
      * These are the HTTP error code enums
      */
     statusCode?: ModelWithEnum.statusCode;
+    /**
+     * Simple boolean enum
+     */
+    bool?: boolean;
 }
 
 export namespace ModelWithEnum {
@@ -1422,6 +1427,9 @@ export const $ModelWithEnum = {
         statusCode: {
             type: 'Enum',
         },
+        bool: {
+            type: 'boolean',
+        },
     },
 };"
 `;
@@ -1720,6 +1728,47 @@ export const $SimpleStringWithPattern = {
     maxLength: 64,
     pattern: '^[a-zA-Z0-9_]*$',
 };"
+`;
+
+exports[`v2 should generate: ./test/generated/v2/services/CollectionFormatService.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import { request as __request } from '../core/request';
+import { OpenAPI } from '../core/OpenAPI';
+
+export class CollectionFormatService {
+
+    /**
+     * @param parameterArrayCsv This is an array parameter that is send as csv format (comma-separated values)
+     * @param parameterArraySsv This is an array parameter that is send as ssv format (space-separated values)
+     * @param parameterArrayTsv This is an array parameter that is send as tsv format (tab-separated values)
+     * @param parameterArrayMulti This is an array parameter that is send as pipes format (pipe-separated values)
+     * @param parameterArrayMulti This is an array parameter that is send as multi format (multiple parameter instances)
+     * @throws ApiError
+     */
+    public static async collectionFormat(
+        parameterArrayCsv: Array<string>,
+        parameterArraySsv: Array<string>,
+        parameterArrayTsv: Array<string>,
+        parameterArrayMulti: Array<string>,
+        parameterArrayMulti: Array<string>,
+    ): Promise<void> {
+        const result = await __request({
+            method: 'GET',
+            path: \`/api/v\${OpenAPI.VERSION}/collectionFormat\`,
+            query: {
+                'parameterArrayCSV': parameterArrayCsv,
+                'parameterArraySSV': parameterArraySsv,
+                'parameterArrayTSV': parameterArrayTsv,
+                'parameterArrayMulti': parameterArrayMulti,
+                'parameterArrayMulti': parameterArrayMulti,
+            },
+        });
+        return result.body;
+    }
+
+}"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/services/ComplexService.ts 1`] = `
@@ -2639,6 +2688,7 @@ export { $SimpleReference } from './schemas/$SimpleReference';
 export { $SimpleString } from './schemas/$SimpleString';
 export { $SimpleStringWithPattern } from './schemas/$SimpleStringWithPattern';
 
+export { CollectionFormatService } from './services/CollectionFormatService';
 export { ComplexService } from './services/ComplexService';
 export { DefaultsService } from './services/DefaultsService';
 export { DuplicateService } from './services/DuplicateService';
@@ -3136,6 +3186,10 @@ export type ModelWithEnum = {
      * These are the HTTP error code enums
      */
     statusCode?: ModelWithEnum.statusCode;
+    /**
+     * Simple boolean enum
+     */
+    bool?: boolean;
 }
 
 export namespace ModelWithEnum {
@@ -3948,6 +4002,9 @@ export const $ModelWithEnum = {
         statusCode: {
             type: 'Enum',
         },
+        bool: {
+            type: 'boolean',
+        },
     },
 };"
 `;
@@ -4236,6 +4293,47 @@ export const $SimpleStringWithPattern = {
     maxLength: 64,
     pattern: '^[a-zA-Z0-9_]*$',
 };"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/services/CollectionFormatService.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import { request as __request } from '../core/request';
+import { OpenAPI } from '../core/OpenAPI';
+
+export class CollectionFormatService {
+
+    /**
+     * @param parameterArrayCsv This is an array parameter that is send as csv format (comma-separated values)
+     * @param parameterArraySsv This is an array parameter that is send as ssv format (space-separated values)
+     * @param parameterArrayTsv This is an array parameter that is send as tsv format (tab-separated values)
+     * @param parameterArrayMulti This is an array parameter that is send as pipes format (pipe-separated values)
+     * @param parameterArrayMulti This is an array parameter that is send as multi format (multiple parameter instances)
+     * @throws ApiError
+     */
+    public static async collectionFormat(
+        parameterArrayCsv: Array<string> | null,
+        parameterArraySsv: Array<string> | null,
+        parameterArrayTsv: Array<string> | null,
+        parameterArrayMulti: Array<string> | null,
+        parameterArrayMulti: Array<string> | null,
+    ): Promise<void> {
+        const result = await __request({
+            method: 'GET',
+            path: \`/api/v\${OpenAPI.VERSION}/collectionFormat\`,
+            query: {
+                'parameterArrayCSV': parameterArrayCsv,
+                'parameterArraySSV': parameterArraySsv,
+                'parameterArrayTSV': parameterArrayTsv,
+                'parameterArrayMulti': parameterArrayMulti,
+                'parameterArrayMulti': parameterArrayMulti,
+            },
+        });
+        return result.body;
+    }
+
+}"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/services/ComplexService.ts 1`] = `
