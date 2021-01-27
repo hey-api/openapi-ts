@@ -55,7 +55,7 @@ export function getModel(openApi: OpenApi, definition: OpenApiSchema, isDefiniti
         return model;
     }
 
-    if (definition.enum) {
+    if (definition.enum && definition.type !== 'boolean') {
         const enumerators = getEnum(definition.enum);
         const extendedEnumerators = extendEnum(enumerators, definition);
         if (extendedEnumerators.length) {

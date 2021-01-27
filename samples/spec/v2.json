@@ -978,6 +978,13 @@
         "Order": {
             "type": "object",
             "properties": {
+                "bool": {
+                    "description": "Simple boolean enum",
+                    "type": "boolean",
+                    "enum": [
+                        true
+                    ]
+                },
                 "id": {
                     "type": "integer",
                     "format": "int64"

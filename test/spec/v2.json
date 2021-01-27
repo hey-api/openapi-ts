@@ -490,6 +490,71 @@
                 }
             }
         },
+        "/api/v{api-version}/collectionFormat": {
+            "get": {
+                "tags": [
+                    "CollectionFormat"
+                ],
+                "operationId": "CollectionFormat",
+                "parameters": [
+                    {
+                        "description": "This is an array parameter that is send as csv format (comma-separated values)",
+                        "name": "parameterArrayCSV",
+                        "in": "query",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "csv"
+                    },
+                    {
+                        "description": "This is an array parameter that is send as ssv format (space-separated values)",
+                        "name": "parameterArraySSV",
+                        "in": "query",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "ssv"
+                    },
+                    {
+                        "description": "This is an array parameter that is send as tsv format (tab-separated values)",
+                        "name": "parameterArrayTSV",
+                        "in": "query",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "tsv"
+                    },
+                    {
+                        "description": "This is an array parameter that is send as pipes format (pipe-separated values)",
+                        "name": "parameterArrayMulti",
+                        "in": "query",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "pipes"
+                    },
+                    {
+                        "description": "This is an array parameter that is send as multi format (multiple parameter instances)",
+                        "name": "parameterArrayMulti",
+                        "in": "query",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "multi"
+                    }
+                ]
+            }
+        },
         "/api/v{api-version}/types": {
             "get": {
                 "tags": [
@@ -931,6 +996,13 @@
                         "400 foo-bar",
                         "500 foo.bar",
                         "600 foo&bar"
+                    ]
+                },
+                "bool": {
+                    "description": "Simple boolean enum",
+                    "type": "boolean",
+                    "enum": [
+                        true
                     ]
                 }
             }
