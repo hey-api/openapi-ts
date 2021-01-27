@@ -1,4 +1,4 @@
-import { safeLoad } from 'js-yaml';
+import { load } from 'js-yaml';
 import { extname } from 'path';
 
 import { readSpec } from './readSpec';
@@ -16,7 +16,7 @@ export async function getOpenApiSpec(input: string): Promise<any> {
         case '.yml':
         case '.yaml':
             try {
-                return safeLoad(content);
+                return load(content);
             } catch (e) {
                 throw new Error(`Could not parse OpenApi YAML: "${input}"`);
             }
