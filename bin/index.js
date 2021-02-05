@@ -6,7 +6,7 @@ const path = require('path');
 const program = require('commander');
 const pkg = require('../package.json');
 
-program
+const params = program
     .name('openapi')
     .usage('[options]')
     .version(pkg.version)
@@ -20,22 +20,23 @@ program
     .option('--exportModels <value>', 'Write models to disk', true)
     .option('--exportSchemas <value>', 'Write schemas to disk', false)
     .option('--request <value>', 'Path to custom request file')
-    .parse(process.argv);
+    .parse(process.argv)
+    .opts();
 
 const OpenAPI = require(path.resolve(__dirname, '../dist/index.js'));
 
 if (OpenAPI) {
     OpenAPI.generate({
-        input: program.input,
-        output: program.output,
-        httpClient: program.client,
-        useOptions: program.useOptions,
-        useUnionTypes: program.useUnionTypes,
-        exportCore: JSON.parse(program.exportCore) === true,
-        exportServices: JSON.parse(program.exportServices) === true,
-        exportModels: JSON.parse(program.exportModels) === true,
-        exportSchemas: JSON.parse(program.exportSchemas) === true,
-        request: program.request,
+        input: params.input,
+        output: params.output,
+        httpClient: params.client,
+        useOptions: params.useOptions,
+        useUnionTypes: params.useUnionTypes,
+        exportCore: JSON.parse(params.exportCore) === true,
+        exportServices: JSON.parse(params.exportServices) === true,
+        exportModels: JSON.parse(params.exportModels) === true,
+        exportSchemas: JSON.parse(params.exportSchemas) === true,
+        request: params.request,
     })
         .then(() => {
             process.exit(0);
