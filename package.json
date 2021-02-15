@@ -95,7 +95,7 @@
         "jest-cli": "26.6.3",
         "node-fetch": "2.6.1",
         "prettier": "2.2.1",
-        "puppeteer": "7.0.1",
+        "puppeteer": "7.1.0",
         "qs": "6.9.6",
         "rollup": "2.38.5",
         "rollup-plugin-terser": "7.0.2",
