@@ -1,5 +1,5 @@
-import RefParser from 'json-schema-ref-parser';
 import { load } from 'js-yaml';
+import RefParser from 'json-schema-ref-parser';
 import { extname } from 'path';
 
 import { readSpec } from './readSpec';
@@ -32,6 +32,5 @@ export async function getOpenApiSpec(input: string): Promise<any> {
             }
             break;
     }
-    const transformed = await RefParser.bundle(rootObject);
-    return transformed;
+    return await RefParser.bundle(rootObject);
 }
