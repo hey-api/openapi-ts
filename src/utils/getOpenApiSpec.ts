@@ -1,3 +1,4 @@
+import RefParser from 'json-schema-ref-parser';
 import { load } from 'js-yaml';
 import { extname } from 'path';
 
@@ -12,20 +13,25 @@ import { readSpec } from './readSpec';
 export async function getOpenApiSpec(input: string): Promise<any> {
     const extension = extname(input).toLowerCase();
     const content = await readSpec(input);
+    let rootObject: any;
     switch (extension) {
         case '.yml':
         case '.yaml':
             try {
-                return load(content);
+                rootObject = load(content);
             } catch (e) {
                 throw new Error(`Could not parse OpenApi YAML: "${input}"`);
             }
+            break;
 
         default:
             try {
-                return JSON.parse(content);
+                rootObject = JSON.parse(content);
             } catch (e) {
                 throw new Error(`Could not parse OpenApi JSON: "${input}"`);
             }
+            break;
     }
+    const transformed = await RefParser.bundle(rootObject);
+    return transformed;
 }
