@@ -90,7 +90,7 @@
         "eslint-plugin-prettier": "3.3.1",
         "eslint-plugin-simple-import-sort": "7.0.0",
         "express": "4.17.1",
-        "form-data": "3.0.0",
+        "form-data": "4.0.0",
         "glob": "7.1.6",
         "jest": "26.6.3",
         "jest-cli": "26.6.3",
