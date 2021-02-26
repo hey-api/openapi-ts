@@ -15,7 +15,7 @@ export function getModelProperties(openApi: OpenApi, definition: OpenApiSchema, 
     for (const propertyName in definition.properties) {
         if (definition.properties.hasOwnProperty(propertyName)) {
             const property = definition.properties[propertyName];
-            const propertyRequired = definition.required?.includes(propertyName);
+            const propertyRequired = definition.required?.includes(propertyName) || property.default !== undefined;
             if (property.$ref) {
                 const model = getType(property.$ref);
                 models.push({
@@ -28,7 +28,7 @@ export function getModelProperties(openApi: OpenApi, definition: OpenApiSchema, 
                     description: getComment(property.description),
                     isDefinition: false,
                     isReadOnly: property.readOnly === true,
-                    isRequired: propertyRequired === true,
+                    isRequired: propertyRequired,
                     isNullable: property.nullable === true,
                     format: property.format,
                     maximum: property.maximum,
@@ -61,7 +61,7 @@ export function getModelProperties(openApi: OpenApi, definition: OpenApiSchema, 
                     description: getComment(property.description),
                     isDefinition: false,
                     isReadOnly: property.readOnly === true,
-                    isRequired: propertyRequired === true,
+                    isRequired: propertyRequired,
                     isNullable: property.nullable === true,
                     format: property.format,
                     maximum: property.maximum,
