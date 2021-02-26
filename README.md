@@ -394,8 +394,8 @@ OpenAPI.TOKEN = getToken;
 
 ### References
 
-Local references to schema definitions (those beginning with `#/definitions/schemas/`) will
-be converted to type references to the equivalent, generated top-level type.
+Local references to schema definitions (those beginning with `#/definitions/schemas/`)
+will be converted to type references to the equivalent, generated top-level type.
 
 The OpenAPI generator also supports external references, which allows you to break
 down your openapi.yml into multiple sub-files, or incorporate third-party schemas
