@@ -587,10 +587,10 @@ exports[`v2 should generate: ./test/generated/v2/models/EnumWithNumbers.ts 1`] =
  * This is a simple enum with numbers
  */
 export enum EnumWithNumbers {
-    \\"_-1\\" = -1,
-    \\"_1\\" = 1,
-    \\"_2\\" = 2,
-    \\"_3\\" = 3,
+    '_-1' = -1,
+    '_1' = 1,
+    '_2' = 2,
+    '_3' = 3,
 }"
 `;
 
@@ -3017,10 +3017,10 @@ exports[`v3 should generate: ./test/generated/v3/models/EnumWithNumbers.ts 1`] =
  * This is a simple enum with numbers
  */
 export enum EnumWithNumbers {
-    \\"_-1\\" = -1,
-    \\"_1\\" = 1,
-    \\"_2\\" = 2,
-    \\"_3\\" = 3,
+    '_-1' = -1,
+    '_1' = 1,
+    '_2' = 2,
+    '_3' = 3,
 }"
 `;
 
