@@ -72,7 +72,7 @@
     "devDependencies": {
         "@babel/cli": "7.13.0",
         "@babel/core": "7.13.1",
-        "@babel/preset-env": "7.13.5",
+        "@babel/preset-env": "7.13.8",
         "@babel/preset-typescript": "7.13.0",
         "@rollup/plugin-commonjs": "17.1.0",
         "@rollup/plugin-node-resolve": "11.2.0",
