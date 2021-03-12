@@ -1,8 +1,9 @@
-async function sendRequest(options: ApiRequestOptions, url: string): Promise<Response> {
+async function sendRequest(options: ApiRequestOptions, url: string, signal: AbortSignal): Promise<Response> {
     const request: RequestInit = {
         method: options.method,
         headers: await getHeaders(options),
         body: getRequestBody(options),
+        signal,
     };
     if (OpenAPI.WITH_CREDENTIALS) {
         request.credentials = 'include';

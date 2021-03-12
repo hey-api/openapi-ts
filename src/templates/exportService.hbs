@@ -5,6 +5,7 @@
 import type { {{{this}}} } from '../models/{{{this}}}';
 {{/each}}
 {{/if}}
+import type { CancelablePromise } from '../core/CancelablePromise';
 import { request as __request } from '../core/request';
 {{#if @root.useVersion}}
 import { OpenAPI } from '../core/OpenAPI';
@@ -35,7 +36,7 @@ export class {{{name}}} {
     {{/each}}
      * @throws ApiError
      */
-    public static async {{{name}}}({{>parameters}}): Promise<{{>result}}> {
+    public static async {{{name}}}({{>parameters}}): CancelablePromise<{{>result}}> {
         const result = await __request({
             method: '{{{method}}}',
             path: `{{{path}}}`,

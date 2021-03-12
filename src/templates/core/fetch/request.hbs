@@ -3,6 +3,7 @@
 import { ApiError } from './ApiError';
 import type { ApiRequestOptions } from './ApiRequestOptions';
 import type { ApiResult } from './ApiResult';
+import type { CancelablePromise } from './CancelablePromise';
 import { OpenAPI } from './OpenAPI';
 
 {{>functions/isDefined}}
@@ -53,9 +54,10 @@ import { OpenAPI } from './OpenAPI';
  * @returns ApiResult
  * @throws ApiError
  */
-export async function request(options: ApiRequestOptions): Promise<ApiResult> {
+export async function request(options: ApiRequestOptions): CancelablePromise<ApiResult> {
+    const controller = new AbortController();
     const url = getUrl(options);
-    const response = await sendRequest(options, url);
+    const response = await sendRequest(options, url, controller.signal);
     const responseBody = await getResponseBody(response);
     const responseHeader = getResponseHeader(response, options.responseHeader);
 
