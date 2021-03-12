@@ -951,6 +951,8 @@ export type ModelWithProperties = {
     boolean?: boolean;
     reference?: ModelWithString;
     'property with space'?: string;
+    default?: string;
+    try?: string;
     readonly '@namespace.string'?: string;
     readonly '@namespace.integer'?: number;
 }
@@ -1630,6 +1632,12 @@ export const $ModelWithProperties = {
         'property with space': {
             type: 'string',
         },
+        default: {
+            type: 'string',
+        },
+        try: {
+            type: 'string',
+        },
         '@namespace.string': {
             type: 'string',
             isReadOnly: true,
@@ -2059,6 +2067,7 @@ export class ParametersService {
      * @param parameterPath1 This is the parameter that goes into the path
      * @param parameterPath2 This is the parameter that goes into the path
      * @param parameterPath3 This is the parameter that goes into the path
+     * @param _default This is the parameter with a reserved keyword
      * @throws ApiError
      */
     public static async callWithWeirdParameterNames(
@@ -2069,6 +2078,7 @@ export class ParametersService {
         parameterPath1?: string,
         parameterPath2?: string,
         parameterPath3?: string,
+        _default?: string,
     ): Promise<void> {
         const result = await __request({
             method: 'GET',
@@ -3363,6 +3373,8 @@ export type ModelWithProperties = {
     boolean?: boolean;
     reference?: ModelWithString;
     'property with space'?: string;
+    default?: string;
+    try?: string;
     readonly '@namespace.string'?: string;
     readonly '@namespace.integer'?: number;
 }
@@ -4197,6 +4209,12 @@ export const $ModelWithProperties = {
         'property with space': {
             type: 'string',
         },
+        default: {
+            type: 'string',
+        },
+        try: {
+            type: 'string',
+        },
         '@namespace.string': {
             type: 'string',
             isReadOnly: true,
@@ -4697,6 +4715,7 @@ export class ParametersService {
      * @param parameterPath1 This is the parameter that goes into the path
      * @param parameterPath2 This is the parameter that goes into the path
      * @param parameterPath3 This is the parameter that goes into the path
+     * @param _default This is the parameter with a reserved keyword
      * @throws ApiError
      */
     public static async callWithWeirdParameterNames(
@@ -4708,6 +4727,7 @@ export class ParametersService {
         parameterPath1?: string,
         parameterPath2?: string,
         parameterPath3?: string,
+        _default?: string,
     ): Promise<void> {
         const result = await __request({
             method: 'GET',

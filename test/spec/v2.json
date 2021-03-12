@@ -134,6 +134,13 @@
                         "required": false
                     },
                     {
+                        "description": "This is the parameter with a reserved keyword",
+                        "name": "default",
+                        "in": "path",
+                        "type": "string",
+                        "required": false
+                    },
+                    {
                         "description": "This is the parameter that goes into the request header",
                         "name": "parameter.header",
                         "in": "header",
@@ -1139,6 +1146,12 @@
                     "$ref": "#/definitions/ModelWithString"
                 },
                 "property with space": {
+                    "type": "string"
+                },
+                "default": {
+                    "type": "string"
+                },
+                "try": {
                     "type": "string"
                 },
                 "@namespace.string": {
