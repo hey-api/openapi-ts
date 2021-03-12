@@ -800,10 +800,15 @@
         "EnumWithNumbers": {
             "description": "This is a simple enum with numbers",
             "enum": [
-                -1,
                 1,
                 2,
-                3
+                3,
+                100,
+                200,
+                300,
+                -100,
+                -200,
+                -300
             ]
         },
         "EnumFromDescription": {

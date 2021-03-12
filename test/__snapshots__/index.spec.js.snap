@@ -590,10 +590,15 @@ exports[`v2 should generate: ./test/generated/v2/models/EnumWithNumbers.ts 1`] =
  * This is a simple enum with numbers
  */
 export enum EnumWithNumbers {
-    '_-1' = -1,
     '_1' = 1,
     '_2' = 2,
     '_3' = 3,
+    '_100' = 100,
+    '_200' = 200,
+    '_300' = 300,
+    '_-100' = -100,
+    '_-200' = -200,
+    '_-300' = -300,
 }"
 `;
 
@@ -3034,10 +3039,15 @@ exports[`v3 should generate: ./test/generated/v3/models/EnumWithNumbers.ts 1`] =
  * This is a simple enum with numbers
  */
 export enum EnumWithNumbers {
-    '_-1' = -1,
     '_1' = 1,
     '_2' = 2,
     '_3' = 3,
+    '_100' = 100,
+    '_200' = 200,
+    '_300' = 300,
+    '_-100' = -100,
+    '_-200' = -200,
+    '_-300' = -300,
 }"
 `;
 
