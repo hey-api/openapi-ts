@@ -9,5 +9,6 @@ describe('escapeDescription', () => {
         expect(escapeDescription('')).toEqual('');
         expect(escapeDescription('fooBar')).toEqual('fooBar');
         expect(escapeDescription('foo \\`test\\` bar')).toEqual('foo \\`test\\` bar');
+        expect(escapeDescription('foo */bar/*')).toEqual('foo *_/bar/*');
     });
 });
