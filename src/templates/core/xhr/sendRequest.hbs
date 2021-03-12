@@ -16,5 +16,7 @@ async function sendRequest(options: ApiRequestOptions, url: string): Promise<XML
             }
         };
         xhr.send(getRequestBody(options));
+
+        // xhr.abort();
     });
 }

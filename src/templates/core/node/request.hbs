@@ -8,7 +8,7 @@ import { types } from 'util';
 import { ApiError } from './ApiError';
 import type { ApiRequestOptions } from './ApiRequestOptions';
 import type { ApiResult } from './ApiResult';
-import type { CancelablePromise } from './CancelablePromise';
+import { CancelablePromise } from './CancelablePromise';
 import { OpenAPI } from './OpenAPI';
 
 {{>functions/isDefined}}
@@ -56,24 +56,25 @@ import { OpenAPI } from './OpenAPI';
 /**
  * Request using node-fetch client
  * @param options The request options from the the service
- * @returns ApiResult
+ * @returns CancelablePromise<T>
  * @throws ApiError
  */
-export async function request(options: ApiRequestOptions): CancelablePromise<ApiResult> {
-    const controller = new AbortController();
-    const url = getUrl(options);
-    const response = await sendRequest(options, url, controller.signal);
-    const responseBody = await getResponseBody(response);
-    const responseHeader = getResponseHeader(response, options.responseHeader);
+export function request<T>(options: ApiRequestOptions): CancelablePromise<T> {
+    return new CancelablePromise((resolve, reject, cancel) => {
+        const controller = new AbortController();
+        const url = getUrl(options);
+        const response = await sendRequest(options, url, controller.signal);
+        const responseBody = await getResponseBody(response);
+        const responseHeader = getResponseHeader(response, options.responseHeader);
 
-    const result: ApiResult = {
-        url,
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        body: responseHeader || responseBody,
-    };
+        const result: ApiResult = {
+            url,
+            ok: response.ok,
+            status: response.status,
+            statusText: response.statusText,
+            body: responseHeader || responseBody,
+        };
 
-    catchErrors(options, result);
-    return result;
+        catchErrors(options, result);
+    });
 }

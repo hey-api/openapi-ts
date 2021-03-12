@@ -4,6 +4,7 @@ import { HttpClient } from '../HttpClient';
 import templateCoreApiError from '../templates/core/ApiError.hbs';
 import templateCoreApiRequestOptions from '../templates/core/ApiRequestOptions.hbs';
 import templateCoreApiResult from '../templates/core/ApiResult.hbs';
+import templateCancelablePromise from '../templates/core/CancelablePromise.hbs';
 import fetchGetHeaders from '../templates/core/fetch/getHeaders.hbs';
 import fetchGetRequestBody from '../templates/core/fetch/getRequestBody.hbs';
 import fetchGetResponseBody from '../templates/core/fetch/getResponseBody.hbs';
@@ -28,7 +29,6 @@ import nodeGetResponseHeader from '../templates/core/node/getResponseHeader.hbs'
 import nodeRequest from '../templates/core/node/request.hbs';
 import nodeSendRequest from '../templates/core/node/sendRequest.hbs';
 import templateCoreSettings from '../templates/core/OpenAPI.hbs';
-import templateCancelablePromise from '../templates/core/CancelablePromise.hbs';
 import templateCoreRequest from '../templates/core/request.hbs';
 import xhrGetHeaders from '../templates/core/xhr/getHeaders.hbs';
 import xhrGetRequestBody from '../templates/core/xhr/getRequestBody.hbs';

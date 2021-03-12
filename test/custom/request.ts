@@ -2,22 +2,17 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { ApiRequestOptions } from './ApiRequestOptions';
-import type { ApiResult } from './ApiResult';
+import { CancelablePromise } from './CancelablePromise';
 import { OpenAPI } from './OpenAPI';
 
-export async function request(options: ApiRequestOptions): Promise<ApiResult> {
+export function request<T>(options: ApiRequestOptions): CancelablePromise<T> {
+    return new CancelablePromise((resolve, reject, cancel) => {
+        const url = `${OpenAPI.BASE}${options.path}`;
 
-    const url = `${OpenAPI.BASE}${options.path}`;
+        // Do your request...
 
-    // Do your request...
-
-    return {
-        url,
-        ok: true,
-        status: 200,
-        statusText: 'dummy',
-        body: {
+        resolve({
             ...options
-        },
-    };
+        });
+    });
 }
