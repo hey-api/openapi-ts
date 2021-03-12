@@ -2088,6 +2088,7 @@ export class ParametersService {
             },
             query: {
                 'parameter-query': parameterQuery,
+                'default': _default,
             },
             formData: {
                 'parameter_form': parameterForm,
@@ -4740,6 +4741,7 @@ export class ParametersService {
             },
             query: {
                 'parameter-query': parameterQuery,
+                'default': _default,
             },
             formData: {
                 'parameter_form': parameterForm,

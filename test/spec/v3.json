@@ -176,7 +176,7 @@
                     {
                         "description": "This is the parameter with a reserved keyword",
                         "name": "default",
-                        "in": "path",
+                        "in": "query",
                         "required": false,
                         "nullable": false,
                         "schema": {
