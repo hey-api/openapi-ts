@@ -23,7 +23,7 @@ export function getModel(openApi: OpenApi, definition: OpenApiSchema, isDefiniti
         isDefinition,
         isReadOnly: definition.readOnly === true,
         isNullable: definition.nullable === true,
-        isRequired: false,
+        isRequired: definition.default !== undefined,
         format: definition.format,
         maximum: definition.maximum,
         exclusiveMaximum: definition.exclusiveMaximum,

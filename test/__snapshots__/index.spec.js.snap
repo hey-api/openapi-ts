@@ -4397,7 +4397,7 @@ export class ComplexService {
         requestBody?: {
             readonly key: string | null,
             name: string | null,
-            enabled?: boolean,
+            enabled: boolean,
             readonly type: 'Monkey' | 'Horse' | 'Bird',
             listOfModels?: Array<ModelWithString> | null,
             listOfStrings?: Array<string> | null,
