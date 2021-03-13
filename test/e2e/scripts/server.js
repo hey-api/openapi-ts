@@ -28,16 +28,18 @@ async function start(dir) {
         // Although this might not be a 'correct' response, we can use this to test
         // the majority of API calls.
         app.all('/base/api/*', (req, res) => {
-            res.json({
-                method: req.method,
-                protocol: req.protocol,
-                hostname: req.hostname,
-                path: req.path,
-                url: req.url,
-                query: req.query,
-                body: req.body,
-                headers: req.headers,
-            });
+            setTimeout(() => {
+                res.json({
+                    method: req.method,
+                    protocol: req.protocol,
+                    hostname: req.hostname,
+                    path: req.path,
+                    url: req.url,
+                    query: req.query,
+                    body: req.body,
+                    headers: req.headers,
+                });
+            }, 100);
         });
 
         server = app.listen(3000, resolve);

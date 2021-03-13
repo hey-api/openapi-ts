@@ -1,9 +1,14 @@
-async function sendRequest(options: ApiRequestOptions, url: string, signal: AbortSignal): Promise<Response> {
+async function sendRequest(options: ApiRequestOptions, url: string, onCancel: (cancelHandler: () => void) => void): Promise<Response> {
+    const controller = new AbortController();
+
     const request: RequestInit = {
         method: options.method,
         headers: await getHeaders(options),
         body: getRequestBody(options),
-        signal,
+        signal: controller.signal,
     };
+
+    onCancel(() => controller.abort());
+
     return await fetch(url, request);
 }

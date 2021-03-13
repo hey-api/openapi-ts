@@ -1,10 +1,12 @@
 function getFormData(params: Record<string, any>): FormData {
     const formData = new FormData();
+
     Object.keys(params).forEach(key => {
         const value = params[key];
         if (isDefined(value)) {
             formData.append(key, value);
         }
     });
+
     return formData;
 }

@@ -6,7 +6,7 @@ async function generateV2() {
     await OpenAPI.generate({
         input: './test/spec/v2.json',
         output: './test/generated/v2/',
-        httpClient: OpenAPI.HttpClient.NODE,
+        httpClient: OpenAPI.HttpClient.FETCH,
         useOptions: false,
         useUnionTypes: false,
         exportCore: true,
@@ -21,7 +21,7 @@ async function generateV3() {
     await OpenAPI.generate({
         input: './test/spec/v3.json',
         output: './test/generated/v3/',
-        httpClient: OpenAPI.HttpClient.NODE,
+        httpClient: OpenAPI.HttpClient.FETCH,
         useOptions: false,
         useUnionTypes: false,
         exportCore: true,

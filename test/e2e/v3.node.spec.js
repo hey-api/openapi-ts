@@ -41,10 +41,20 @@ describe('v3.node', () => {
         const result = await ComplexService.complexTypes({
             first: {
                 second: {
-                    third: 'Hello World!'
-                }
-            }
+                    third: 'Hello World!',
+                },
+            },
         });
+        expect(result).toBeDefined();
+    });
+
+    it('can abort the request', async () => {
+        const { SimpleService } = require('./generated/v3/node/index.js');
+        const promise = await SimpleService.getCallWithoutParametersAndResponse();
+        setTimeout(() => {
+            promise.cancel();
+        }, 10);
+        const result = await promise;
         expect(result).toBeDefined();
     });
 

@@ -37,11 +37,23 @@ describe('v2.xhr', () => {
             return await ComplexService.complexTypes({
                 first: {
                     second: {
-                        third: 'Hello World!'
-                    }
-                }
+                        third: 'Hello World!',
+                    },
+                },
             });
         });
         expect(result).toBeDefined();
+    });
+
+    it('can abort the request', async () => {
+        const result = await browser.evaluate(async () => {
+            const { SimpleService } = window.api;
+            const promise = SimpleService.getCallWithoutParametersAndResponse();
+            setTimeout(() => {
+                promise.cancel();
+            }, 10);
+            await promise;
+        });
+        expect(result).toBeUndefined();
     });
 });

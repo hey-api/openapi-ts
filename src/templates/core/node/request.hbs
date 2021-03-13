@@ -60,21 +60,26 @@ import { OpenAPI } from './OpenAPI';
  * @throws ApiError
  */
 export function request<T>(options: ApiRequestOptions): CancelablePromise<T> {
-    return new CancelablePromise((resolve, reject, cancel) => {
-        const controller = new AbortController();
-        const url = getUrl(options);
-        const response = await sendRequest(options, url, controller.signal);
-        const responseBody = await getResponseBody(response);
-        const responseHeader = getResponseHeader(response, options.responseHeader);
+    return new CancelablePromise(async (resolve, reject, onCancel) => {
+        try {
+            const url = getUrl(options);
+            const response = await sendRequest(options, url, onCancel);
+            const responseBody = await getResponseBody(response);
+            const responseHeader = getResponseHeader(response, options.responseHeader);
 
-        const result: ApiResult = {
-            url,
-            ok: response.ok,
-            status: response.status,
-            statusText: response.statusText,
-            body: responseHeader || responseBody,
-        };
+            const result: ApiResult = {
+                url,
+                ok: response.ok,
+                status: response.status,
+                statusText: response.statusText,
+                body: responseHeader || responseBody,
+            };
 
-        catchErrors(options, result);
+            catchErrors(options, result);
+
+            resolve(result.body);
+        } catch (error) {
+            reject(error);
+        }
     });
 }

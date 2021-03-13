@@ -1,5 +1,6 @@
 function getQueryString(params: Record<string, any>): string {
     const qs: string[] = [];
+
     Object.keys(params).forEach(key => {
         const value = params[key];
         if (isDefined(value)) {
@@ -12,8 +13,10 @@ function getQueryString(params: Record<string, any>): string {
             }
         }
     });
+
     if (qs.length > 0) {
         return `?${qs.join('&')}`;
     }
+
     return '';
 }

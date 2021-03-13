@@ -1,5 +1,4 @@
-async function sendRequest(options: ApiRequestOptions, url: string): Promise<XMLHttpRequest> {
-
+async function sendRequest(options: ApiRequestOptions, url: string, onCancel: (cancelHandler: () => void) => void): Promise<XMLHttpRequest> {
     const xhr = new XMLHttpRequest();
     xhr.open(options.method, url, true);
     xhr.withCredentials = OpenAPI.WITH_CREDENTIALS;
@@ -9,14 +8,19 @@ async function sendRequest(options: ApiRequestOptions, url: string): Promise<XML
         xhr.setRequestHeader(key, value);
     });
 
-    return new Promise<XMLHttpRequest>(resolve => {
+    return new Promise<XMLHttpRequest>((resolve, reject) => {
         xhr.onreadystatechange = () => {
             if (xhr.readyState === XMLHttpRequest.DONE) {
                 resolve(xhr);
             }
+        console.log(xhr.readyState);
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                reject();
+            }
         };
+
         xhr.send(getRequestBody(options));
 
-        // xhr.abort();
+        onCancel(() => xhr.abort());
     });
 }

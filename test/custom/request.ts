@@ -6,13 +6,21 @@ import { CancelablePromise } from './CancelablePromise';
 import { OpenAPI } from './OpenAPI';
 
 export function request<T>(options: ApiRequestOptions): CancelablePromise<T> {
-    return new CancelablePromise((resolve, reject, cancel) => {
+    return new CancelablePromise((resolve, reject, onCancel) => {
         const url = `${OpenAPI.BASE}${options.path}`;
 
-        // Do your request...
+        try {
+            // Do your request...
+            const timeout = setTimeout(() => {
+                resolve({ ...options });
+            }, 500);
 
-        resolve({
-            ...options
-        });
+            // Cancel your request...
+            onCancel(() => {
+                clearTimeout(timeout);
+            });
+        } catch (e) {
+            reject(e);
+        }
     });
 }
