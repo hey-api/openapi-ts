@@ -20,6 +20,7 @@
 - Supports JSON and YAML files for input
 - Supports generation through CLI, Node.js and NPX
 - Supports tsc and @babel/plugin-transform-typescript
+- Supports aborting of requests (cancelable promise pattern)
 - Supports external references using [`json-schema-ref-parser`](https://github.com/APIDevTools/json-schema-ref-parser/)
 
 ## Install
@@ -463,6 +464,7 @@ in order to compile and run this client, you will need to install the `node-fetc
 
 ```
 npm install @types/node-fetch --save-dev
+npm install abort-controller --save-dev
 npm install node-fetch --save-dev
 npm install form-data --save-dev
 ```
