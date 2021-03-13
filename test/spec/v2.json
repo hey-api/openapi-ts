@@ -370,6 +370,19 @@
                 "operationId": "DuplicateName"
             }
         },
+        "/api/v{api-version}/no-content": {
+            "get": {
+                "tags": [
+                    "NoContent"
+                ],
+                "operationId": "CallWithNoContentResponse",
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
         "/api/v{api-version}/response": {
             "get": {
                 "tags": [
