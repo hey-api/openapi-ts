@@ -389,6 +389,7 @@ export { ComplexService } from './services/ComplexService';
 export { DefaultsService } from './services/DefaultsService';
 export { DuplicateService } from './services/DuplicateService';
 export { HeaderService } from './services/HeaderService';
+export { NoContentService } from './services/NoContentService';
 export { ParametersService } from './services/ParametersService';
 export { ResponseService } from './services/ResponseService';
 export { SimpleService } from './services/SimpleService';
@@ -2024,6 +2025,30 @@ export class HeaderService {
 }"
 `;
 
+exports[`v2 should generate: ./test/generated/v2/services/NoContentService.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import { request as __request } from '../core/request';
+import { OpenAPI } from '../core/OpenAPI';
+
+export class NoContentService {
+
+    /**
+     * @returns void
+     * @throws ApiError
+     */
+    public static async callWithNoContentResponse(): Promise<void> {
+        const result = await __request({
+            method: 'GET',
+            path: \`/api/v\${OpenAPI.VERSION}/no-content\`,
+        });
+        return result.body;
+    }
+
+}"
+`;
+
 exports[`v2 should generate: ./test/generated/v2/services/ParametersService.ts 1`] = `
 "/* istanbul ignore file */
 /* tslint:disable */
@@ -2717,6 +2742,7 @@ export { DefaultsService } from './services/DefaultsService';
 export { DuplicateService } from './services/DuplicateService';
 export { HeaderService } from './services/HeaderService';
 export { MultipartService } from './services/MultipartService';
+export { NoContentService } from './services/NoContentService';
 export { ParametersService } from './services/ParametersService';
 export { RequestBodyService } from './services/RequestBodyService';
 export { ResponseService } from './services/ResponseService';
@@ -4665,6 +4691,30 @@ export class MultipartService {
         const result = await __request({
             method: 'GET',
             path: \`/api/v\${OpenAPI.VERSION}/multipart\`,
+        });
+        return result.body;
+    }
+
+}"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/services/NoContentService.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import { request as __request } from '../core/request';
+import { OpenAPI } from '../core/OpenAPI';
+
+export class NoContentService {
+
+    /**
+     * @returns void
+     * @throws ApiError
+     */
+    public static async callWithNoContentResponse(): Promise<void> {
+        const result = await __request({
+            method: 'GET',
+            path: \`/api/v\${OpenAPI.VERSION}/no-content\`,
         });
         return result.body;
     }

@@ -18,7 +18,8 @@ export function getOperationResponses(openApi: OpenApi, responses: OpenApiRespon
             const responseCode = getOperationResponseCode(code);
 
             if (responseCode) {
-                operationResponses.push(getOperationResponse(openApi, response, responseCode));
+                const operationResponse = getOperationResponse(openApi, response, responseCode);
+                operationResponses.push(operationResponse);
             }
         }
     }
