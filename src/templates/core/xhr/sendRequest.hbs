@@ -9,16 +9,8 @@ async function sendRequest(options: ApiRequestOptions, url: string, onCancel: (c
     });
 
     return new Promise<XMLHttpRequest>((resolve, reject) => {
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                resolve(xhr);
-            }
-        console.log(xhr.readyState);
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                reject();
-            }
-        };
-
+        xhr.onload = () => resolve(xhr);
+        xhr.onabort = () => reject(new Error('The user aborted a request.'));
         xhr.send(getRequestBody(options));
 
         onCancel(() => xhr.abort());

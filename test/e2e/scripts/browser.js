@@ -3,7 +3,7 @@
 const puppeteer = require('puppeteer');
 
 let browser;
-let page
+let page;
 
 async function start() {
     // This starts the a new  puppeteer browser (Chrome)

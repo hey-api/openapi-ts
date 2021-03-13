@@ -46,14 +46,17 @@ describe('v2.fetch', () => {
     });
 
     it('can abort the request', async () => {
-        const result = await browser.evaluate(async () => {
-            const { SimpleService } = window.api;
-            const promise = SimpleService.getCallWithoutParametersAndResponse();
-            setTimeout(() => {
-                promise.cancel();
-            }, 10);
-            await promise;
-        });
-        expect(result).toBeUndefined();
+        try {
+            await browser.evaluate(async () => {
+                const { SimpleService } = window.api;
+                const promise = SimpleService.getCallWithoutParametersAndResponse();
+                setTimeout(() => {
+                    promise.cancel();
+                }, 10);
+                await promise;
+            });
+        } catch (e) {
+            expect(e.message).toContain('The user aborted a request.');
+        }
     });
 });

@@ -49,13 +49,15 @@ describe('v3.node', () => {
     });
 
     it('can abort the request', async () => {
-        const { SimpleService } = require('./generated/v3/node/index.js');
-        const promise = await SimpleService.getCallWithoutParametersAndResponse();
-        setTimeout(() => {
-            promise.cancel();
-        }, 10);
-        const result = await promise;
-        expect(result).toBeDefined();
+        try {
+            const { SimpleService } = require('./generated/v3/node/index.js');
+            const promise = SimpleService.getCallWithoutParametersAndResponse();
+            setTimeout(() => {
+                promise.cancel();
+            }, 10);
+            await promise;
+        } catch (e) {
+            expect(e.message).toContain('The user aborted a request.');
+        }
     });
-
 });
