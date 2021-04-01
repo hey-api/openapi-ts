@@ -31,6 +31,11 @@ export function getModelComposition(openApi: OpenApi, definition: OpenApiSchema,
         });
 
     if (definition.properties) {
+        const properties = getModelProperties(openApi, definition, getModel);
+        properties.forEach(property => {
+            composition.imports.push(...property.imports);
+            composition.enums.push(...property.enums);
+        });
         composition.properties.push({
             name: 'properties',
             export: 'interface',
@@ -46,7 +51,7 @@ export function getModelComposition(openApi: OpenApi, definition: OpenApiSchema,
             imports: [],
             enum: [],
             enums: [],
-            properties: [...getModelProperties(openApi, definition, getModel)],
+            properties,
         });
     }
 

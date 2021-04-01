@@ -21,13 +21,23 @@ export function registerHandlebarHelpers(root: { httpClient: HttpClient; useOpti
     Handlebars.registerHelper('union', function (this: any, properties: Model[], parent: string | undefined, options: Handlebars.HelperOptions) {
         const type = Handlebars.partials['type'];
         const types = properties.map(property => type({ ...root, ...property, parent }));
-        return options.fn(types.filter(unique).join(' | '));
+        const uniqueTypes = types.filter(unique);
+        let uniqueTypesString = uniqueTypes.join(' | ');
+        if (uniqueTypes.length > 1) {
+            uniqueTypesString = `(${uniqueTypesString})`;
+        }
+        return options.fn(uniqueTypesString);
     });
 
     Handlebars.registerHelper('intersection', function (this: any, properties: Model[], parent: string | undefined, options: Handlebars.HelperOptions) {
         const type = Handlebars.partials['type'];
         const types = properties.map(property => type({ ...root, ...property, parent }));
-        return options.fn(types.filter(unique).join(' & '));
+        const uniqueTypes = types.filter(unique);
+        let uniqueTypesString = uniqueTypes.join(' & ');
+        if (uniqueTypes.length > 1) {
+            uniqueTypesString = `(${uniqueTypesString})`;
+        }
+        return options.fn(uniqueTypesString);
     });
 
     Handlebars.registerHelper('enumerator', function (this: any, enumerators: Enum[], parent: string | undefined, name: string | undefined, options: Handlebars.HelperOptions) {
