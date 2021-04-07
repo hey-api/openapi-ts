@@ -42,6 +42,7 @@ export function getOperationParameter(openApi: OpenApi, parameter: OpenApiParame
         enum: [],
         enums: [],
         properties: [],
+        mediaType: null,
     };
 
     if (parameter.$ref) {

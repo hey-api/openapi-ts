@@ -69,6 +69,9 @@ export class {{{name}}} {
             {{/if}}
             {{#if parametersBody}}
             body: {{{parametersBody.name}}},
+            {{#if parametersBody.mediaType}}
+            bodyMediaType: '{{{parametersBody.mediaType}}}',
+            {{/if}}
             {{/if}}
             {{#if responseHeader}}
             responseHeader: '{{{responseHeader}}}',
