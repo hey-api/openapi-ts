@@ -20,16 +20,14 @@ async function getHeaders(options: ApiRequestOptions): Promise<Headers> {
     }
 
     if (options.body) {
-        if (options.bodyMediaType) {
-            headers.append('Content-Type', options.bodyMediaType);
+        if (options.mediaType) {
+            headers.append('Content-Type', options.mediaType);
+        } else if (isBinary(options.body)) {
+            headers.append('Content-Type', 'application/octet-stream');
+        } else if (isString(options.body)) {
+            headers.append('Content-Type', 'text/plain');
         } else {
-            if (isBinary(options.body)) {
-                headers.append('Content-Type', 'application/octet-stream');
-            } else if (isString(options.body)) {
-                headers.append('Content-Type', 'text/plain');
-            } else {
-                headers.append('Content-Type', 'application/json');
-            }
+            headers.append('Content-Type', 'application/json');
         }
     }
     return headers;

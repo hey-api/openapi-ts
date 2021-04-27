@@ -33,9 +33,8 @@ export function getOperationRequestBody(openApi: OpenApi, parameter: OpenApiRequ
 
     if (parameter.content) {
         const schema = getContent(openApi, parameter.content);
-        const mediaType = getMediaType(openApi, parameter.content);
         if (schema) {
-            requestBody.mediaType = mediaType;
+            requestBody.mediaType = getMediaType(openApi, parameter.content);
             if (schema?.$ref) {
                 const model = getType(schema.$ref);
                 requestBody.export = 'reference';

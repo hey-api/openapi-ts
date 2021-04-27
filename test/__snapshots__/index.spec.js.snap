@@ -35,7 +35,7 @@ export type ApiRequestOptions = {
     readonly query?: Record<string, any>;
     readonly formData?: Record<string, any>;
     readonly body?: any;
-    readonly bodyMediaType?: string;
+    readonly mediaType?: string;
     readonly responseHeader?: string;
     readonly errors?: Record<number, string>;
 }"
@@ -181,16 +181,14 @@ async function getHeaders(options: ApiRequestOptions): Promise<Headers> {
     }
 
     if (options.body) {
-        if (options.bodyMediaType) {
-            headers.append('Content-Type', options.bodyMediaType);
+        if (options.mediaType) {
+            headers.append('Content-Type', options.mediaType);
+        } else if (isBlob(options.body)) {
+            headers.append('Content-Type', options.body.type || 'application/octet-stream');
+        } else if (isString(options.body)) {
+            headers.append('Content-Type', 'text/plain');
         } else {
-            if (isBlob(options.body)) {
-                headers.append('Content-Type', options.body.type || 'application/octet-stream');
-            } else if (isString(options.body)) {
-                headers.append('Content-Type', 'text/plain');
-            } else {
-                headers.append('Content-Type', 'application/json');
-            }
+            headers.append('Content-Type', 'application/json');
         }
     }
     return headers;
@@ -201,7 +199,7 @@ function getRequestBody(options: ApiRequestOptions): BodyInit | undefined {
         return getFormData(options.formData);
     }
     if (options.body) {
-        if (options.bodyMediaType?.includes('/json')) {
+        if (options.mediaType?.includes('/json')) {
             return JSON.stringify(options.body)
         } else if (isString(options.body) || isBlob(options.body)) {
             return options.body;
@@ -2390,7 +2388,7 @@ export type ApiRequestOptions = {
     readonly query?: Record<string, any>;
     readonly formData?: Record<string, any>;
     readonly body?: any;
-    readonly bodyMediaType?: string;
+    readonly mediaType?: string;
     readonly responseHeader?: string;
     readonly errors?: Record<number, string>;
 }"
@@ -2536,16 +2534,14 @@ async function getHeaders(options: ApiRequestOptions): Promise<Headers> {
     }
 
     if (options.body) {
-        if (options.bodyMediaType) {
-            headers.append('Content-Type', options.bodyMediaType);
+        if (options.mediaType) {
+            headers.append('Content-Type', options.mediaType);
+        } else if (isBlob(options.body)) {
+            headers.append('Content-Type', options.body.type || 'application/octet-stream');
+        } else if (isString(options.body)) {
+            headers.append('Content-Type', 'text/plain');
         } else {
-            if (isBlob(options.body)) {
-                headers.append('Content-Type', options.body.type || 'application/octet-stream');
-            } else if (isString(options.body)) {
-                headers.append('Content-Type', 'text/plain');
-            } else {
-                headers.append('Content-Type', 'application/json');
-            }
+            headers.append('Content-Type', 'application/json');
         }
     }
     return headers;
@@ -2556,7 +2552,7 @@ function getRequestBody(options: ApiRequestOptions): BodyInit | undefined {
         return getFormData(options.formData);
     }
     if (options.body) {
-        if (options.bodyMediaType?.includes('/json')) {
+        if (options.mediaType?.includes('/json')) {
             return JSON.stringify(options.body)
         } else if (isString(options.body) || isBlob(options.body)) {
             return options.body;
@@ -4495,7 +4491,7 @@ export class ComplexService {
             method: 'PUT',
             path: \`/api/v\${OpenAPI.VERSION}/complex/\${id}\`,
             body: requestBody,
-            bodyMediaType: 'application/json-patch+json',
+            mediaType: 'application/json-patch+json',
         });
         return result.body;
     }
@@ -4792,7 +4788,7 @@ export class ParametersService {
                 'parameterForm': parameterForm,
             },
             body: requestBody,
-            bodyMediaType: 'application/json',
+            mediaType: 'application/json',
         });
         return result.body;
     }
@@ -4837,7 +4833,7 @@ export class ParametersService {
                 'parameter_form': parameterForm,
             },
             body: requestBody,
-            bodyMediaType: 'application/json',
+            mediaType: 'application/json',
         });
         return result.body;
     }
@@ -4858,7 +4854,7 @@ export class ParametersService {
                 'parameter': parameter,
             },
             body: requestBody,
-            bodyMediaType: 'application/json',
+            mediaType: 'application/json',
         });
         return result.body;
     }
@@ -4879,7 +4875,7 @@ export class ParametersService {
                 'parameter': parameter,
             },
             body: requestBody,
-            bodyMediaType: 'application/json',
+            mediaType: 'application/json',
         });
         return result.body;
     }
@@ -4908,7 +4904,7 @@ export class RequestBodyService {
             method: 'POST',
             path: \`/api/v\${OpenAPI.VERSION}/requestBody/\`,
             body: requestBody,
-            bodyMediaType: 'application/json',
+            mediaType: 'application/json',
         });
         return result.body;
     }
