@@ -84,7 +84,7 @@
         "@types/qs": "6.9.6",
         "@typescript-eslint/eslint-plugin": "4.22.0",
         "@typescript-eslint/parser": "4.22.0",
-        "codecov": "3.8.1",
+        "codecov": "3.8.2",
         "eslint": "7.25.0",
         "eslint-config-prettier": "8.3.0",
         "eslint-plugin-prettier": "3.4.0",
