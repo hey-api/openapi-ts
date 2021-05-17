@@ -83,7 +83,7 @@
         "@types/node-fetch": "2.5.10",
         "@types/qs": "6.9.6",
         "@typescript-eslint/eslint-plugin": "4.22.0",
-        "@typescript-eslint/parser": "4.22.0",
+        "@typescript-eslint/parser": "4.23.0",
         "codecov": "3.8.2",
         "eslint": "7.26.0",
         "eslint-config-prettier": "8.3.0",
