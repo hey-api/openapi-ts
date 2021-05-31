@@ -76,7 +76,7 @@
         "@babel/preset-typescript": "7.13.0",
         "@rollup/plugin-commonjs": "19.0.0",
         "@rollup/plugin-node-resolve": "13.0.0",
-        "@types/express": "4.17.11",
+        "@types/express": "4.17.12",
         "@types/jest": "26.0.23",
         "@types/js-yaml": "4.0.1",
         "@types/node": "15.6.0",
