@@ -85,7 +85,7 @@
         "@typescript-eslint/eslint-plugin": "4.25.0",
         "@typescript-eslint/parser": "4.26.0",
         "codecov": "3.8.2",
-        "eslint": "7.27.0",
+        "eslint": "7.28.0",
         "eslint-config-prettier": "8.3.0",
         "eslint-plugin-prettier": "3.4.0",
         "eslint-plugin-simple-import-sort": "7.0.0",
