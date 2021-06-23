@@ -4,11 +4,20 @@ async function getHeaders(options: ApiRequestOptions): Promise<Headers> {
     const password = await resolve(options, OpenAPI.PASSWORD);
     const defaultHeaders = await resolve(options, OpenAPI.HEADERS);
 
-    const headers = new Headers({
+    const filteredHeaders = Object.entries({
         Accept: 'application/json',
         ...defaultHeaders,
         ...options.headers,
-    });
+    }).reduce((acc, [headerKey, headerValue]) => {
+        if (typeof headerValue !== 'undefined') {
+            return {
+                ...acc,
+                [headerKey]: headerValue,
+            };
+        }
+        return acc;
+    }, {});
+    const headers = new Headers(filteredHeaders);
 
     if (isStringWithValue(token)) {
         headers.append('Authorization', `Bearer ${token}`);
