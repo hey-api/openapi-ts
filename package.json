@@ -92,7 +92,7 @@
         "express": "4.17.1",
         "form-data": "4.0.0",
         "glob": "7.1.7",
-        "jest": "27.0.4",
+        "jest": "27.0.5",
         "jest-cli": "26.6.3",
         "node-fetch": "2.6.1",
         "prettier": "2.3.2",
