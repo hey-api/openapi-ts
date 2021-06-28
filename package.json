@@ -62,7 +62,7 @@
     },
     "dependencies": {
         "camelcase": "^6.2.0",
-        "commander": "^7.0.0",
+        "commander": "^8.0.0",
         "handlebars": "^4.7.6",
         "js-yaml": "^4.0.0",
         "json-schema-ref-parser": "^9.0.7",
