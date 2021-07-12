@@ -80,7 +80,7 @@
         "@types/jest": "26.0.24",
         "@types/js-yaml": "4.0.2",
         "@types/node": "16.0.0",
-        "@types/node-fetch": "2.5.10",
+        "@types/node-fetch": "2.5.11",
         "@types/qs": "6.9.7",
         "@typescript-eslint/eslint-plugin": "4.28.2",
         "@typescript-eslint/parser": "4.28.1",
