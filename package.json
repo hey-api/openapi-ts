@@ -78,7 +78,7 @@
         "@rollup/plugin-node-resolve": "13.0.0",
         "@types/express": "4.17.12",
         "@types/jest": "26.0.23",
-        "@types/js-yaml": "4.0.1",
+        "@types/js-yaml": "4.0.2",
         "@types/node": "16.0.0",
         "@types/node-fetch": "2.5.10",
         "@types/qs": "6.9.6",
