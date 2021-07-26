@@ -71,7 +71,7 @@
     },
     "devDependencies": {
         "@babel/cli": "7.14.8",
-        "@babel/core": "7.14.6",
+        "@babel/core": "7.14.8",
         "@babel/preset-env": "7.14.8",
         "@babel/preset-typescript": "7.14.5",
         "@rollup/plugin-commonjs": "19.0.1",
