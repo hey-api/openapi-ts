@@ -163,22 +163,20 @@ async function getHeaders(options: ApiRequestOptions): Promise<Headers> {
     const token = await resolve(options, OpenAPI.TOKEN);
     const username = await resolve(options, OpenAPI.USERNAME);
     const password = await resolve(options, OpenAPI.PASSWORD);
-    const defaultHeaders = await resolve(options, OpenAPI.HEADERS);
+    const additionalHeaders = await resolve(options, OpenAPI.HEADERS);
 
-    const filteredHeaders = Object.entries({
+    const defaultHeaders = Object.entries({
         Accept: 'application/json',
-        ...defaultHeaders,
+        ...additionalHeaders,
         ...options.headers,
-    }).reduce((acc, [headerKey, headerValue]) => {
-        if (typeof headerValue !== 'undefined') {
-            return {
-                ...acc,
-                [headerKey]: headerValue,
-            };
-        }
-        return acc;
-    }, {});
-    const headers = new Headers(filteredHeaders);
+    })
+        .filter(([key, value]) => isDefined(value))
+        .reduce((headers, [key, value]) => ({
+            ...headers,
+            [key]: value,
+        }), {});
+
+    const headers = new Headers(defaultHeaders);
 
     if (isStringWithValue(token)) {
         headers.append('Authorization', \`Bearer \${token}\`);
@@ -2527,22 +2525,20 @@ async function getHeaders(options: ApiRequestOptions): Promise<Headers> {
     const token = await resolve(options, OpenAPI.TOKEN);
     const username = await resolve(options, OpenAPI.USERNAME);
     const password = await resolve(options, OpenAPI.PASSWORD);
-    const defaultHeaders = await resolve(options, OpenAPI.HEADERS);
+    const additionalHeaders = await resolve(options, OpenAPI.HEADERS);
 
-    const filteredHeaders = Object.entries({
+    const defaultHeaders = Object.entries({
         Accept: 'application/json',
-        ...defaultHeaders,
+        ...additionalHeaders,
         ...options.headers,
-    }).reduce((acc, [headerKey, headerValue]) => {
-        if (typeof headerValue !== 'undefined') {
-            return {
-                ...acc,
-                [headerKey]: headerValue,
-            };
-        }
-        return acc;
-    }, {});
-    const headers = new Headers(filteredHeaders);
+    })
+        .filter(([key, value]) => isDefined(value))
+        .reduce((headers, [key, value]) => ({
+            ...headers,
+            [key]: value,
+        }), {});
+
+    const headers = new Headers(defaultHeaders);
 
     if (isStringWithValue(token)) {
         headers.append('Authorization', \`Bearer \${token}\`);

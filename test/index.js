@@ -13,7 +13,7 @@ async function generateV2() {
         exportSchemas: true,
         exportModels: true,
         exportServices: true,
-        request: './test/custom/request.ts',
+        // request: './test/custom/request.ts',
     });
 }
 
@@ -28,7 +28,7 @@ async function generateV3() {
         exportSchemas: true,
         exportModels: true,
         exportServices: true,
-        request: './test/custom/request.ts',
+        // request: './test/custom/request.ts',
     });
 }
 
