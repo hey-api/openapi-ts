@@ -34,4 +34,28 @@ describe('getRef', () => {
             type: 'integer',
         });
     });
+
+    it('should produce correct result for encoded ref path', () => {
+        expect(
+            getRef(
+                {
+                    openapi: '3.0',
+                    info: {
+                        title: 'dummy',
+                        version: '1.0',
+                    },
+                    paths: {
+                        '/api/user/{id}': {
+                            description: 'This is an Example path',
+                        },
+                    },
+                },
+                {
+                    $ref: '#/paths/~1api~1user~1%7Bid%7D',
+                }
+            )
+        ).toEqual({
+            description: 'This is an Example path',
+        });
+    });
 });
