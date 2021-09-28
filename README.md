@@ -459,10 +459,9 @@ you can specify `--client node` in the openapi call:
 `openapi --input ./spec.json --output ./dist --client node`
 
 This will generate a client that uses [`node-fetch`](https://www.npmjs.com/package/node-fetch) internally. However,
-in order to compile and run this client, you will need to install the `node-fetch` dependencies:
+in order to compile and run this client, you will need to install the `node-fetch@2.x` dependencies:
 
 ```
-npm install @types/node-fetch --save-dev
 npm install node-fetch --save-dev
 npm install form-data --save-dev
 ```

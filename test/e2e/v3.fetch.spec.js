@@ -17,8 +17,8 @@ describe('v3.fetch', () => {
     }, 30000);
 
     afterAll(async () => {
-        await server.stop();
         await browser.stop();
+        await server.stop();
     });
 
     it('requests token', async () => {

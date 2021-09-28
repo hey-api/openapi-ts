@@ -18,7 +18,7 @@ describe('v2.node', () => {
 
     it('requests token', async () => {
         const { OpenAPI, SimpleService } = require('./generated/v2/node/index.js');
-        const tokenRequest = jest.fn().mockResolvedValue('MY_TOKEN')
+        const tokenRequest = jest.fn().mockResolvedValue('MY_TOKEN');
         OpenAPI.TOKEN = tokenRequest;
         const result = await SimpleService.getCallWithoutParametersAndResponse();
         expect(tokenRequest.mock.calls.length).toBe(1);

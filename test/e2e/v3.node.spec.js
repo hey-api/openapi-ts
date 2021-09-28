@@ -18,7 +18,7 @@ describe('v3.node', () => {
 
     it('requests token', async () => {
         const { OpenAPI, SimpleService } = require('./generated/v3/node/index.js');
-        const tokenRequest = jest.fn().mockResolvedValue('MY_TOKEN')
+        const tokenRequest = jest.fn().mockResolvedValue('MY_TOKEN');
         OpenAPI.TOKEN = tokenRequest;
         OpenAPI.USERNAME = undefined;
         OpenAPI.PASSWORD = undefined;
