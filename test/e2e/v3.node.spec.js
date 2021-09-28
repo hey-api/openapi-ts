@@ -60,7 +60,6 @@ describe('v3.node', () => {
                 prop: 'valueBody'
             }
         );
-        console.log(result)
         expect(result).toBeDefined();
     });
 });
