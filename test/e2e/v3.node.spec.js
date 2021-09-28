@@ -48,4 +48,19 @@ describe('v3.node', () => {
         expect(result).toBeDefined();
     });
 
+    it('formData', async () => {
+        const { ParametersService } = require('./generated/v3/node/index.js');
+        const result = await ParametersService.callWithParameters(
+            'valueHeader',
+            'valueQuery',
+            'valueForm',
+            'valueCookie',
+            'valuePath',
+            {
+                prop: 'valueBody'
+            }
+        );
+        console.log(result)
+        expect(result).toBeDefined();
+    });
 });

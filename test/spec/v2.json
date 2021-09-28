@@ -55,7 +55,7 @@
             }
         },
         "/api/v{api-version}/parameters/{parameterPath}": {
-            "get": {
+            "post": {
                 "tags": [
                     "Parameters"
                 ],
@@ -106,7 +106,7 @@
             }
         },
         "/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}": {
-            "get": {
+            "post": {
                 "tags": [
                     "Parameters"
                 ],

@@ -7,6 +7,7 @@ describe('getType', () => {
         expect(type.base).toEqual('number');
         expect(type.template).toEqual(null);
         expect(type.imports).toEqual([]);
+        expect(type.isNullable).toEqual(false);
     });
 
     it('should convert string', () => {
@@ -15,6 +16,7 @@ describe('getType', () => {
         expect(type.base).toEqual('string');
         expect(type.template).toEqual(null);
         expect(type.imports).toEqual([]);
+        expect(type.isNullable).toEqual(false);
     });
 
     it('should convert string array', () => {
@@ -23,6 +25,7 @@ describe('getType', () => {
         expect(type.base).toEqual('string');
         expect(type.template).toEqual(null);
         expect(type.imports).toEqual([]);
+        expect(type.isNullable).toEqual(false);
     });
 
     it('should convert template with primary', () => {
@@ -31,6 +34,7 @@ describe('getType', () => {
         expect(type.base).toEqual('Link');
         expect(type.template).toEqual('string');
         expect(type.imports).toEqual(['Link']);
+        expect(type.isNullable).toEqual(false);
     });
 
     it('should convert template with model', () => {
@@ -39,6 +43,7 @@ describe('getType', () => {
         expect(type.base).toEqual('Link');
         expect(type.template).toEqual('Model');
         expect(type.imports).toEqual(['Link', 'Model']);
+        expect(type.isNullable).toEqual(false);
     });
 
     it('should have double imports', () => {
@@ -47,6 +52,7 @@ describe('getType', () => {
         expect(type.base).toEqual('Link');
         expect(type.template).toEqual('Link');
         expect(type.imports).toEqual(['Link', 'Link']);
+        expect(type.isNullable).toEqual(false);
     });
 
     it('should convert generic', () => {
@@ -55,6 +61,7 @@ describe('getType', () => {
         expect(type.base).toEqual('T');
         expect(type.template).toEqual(null);
         expect(type.imports).toEqual([]);
+        expect(type.isNullable).toEqual(false);
     });
 
     it('should support dot', () => {
@@ -63,6 +70,7 @@ describe('getType', () => {
         expect(type.base).toEqual('model_000');
         expect(type.template).toEqual(null);
         expect(type.imports).toEqual(['model_000']);
+        expect(type.isNullable).toEqual(false);
     });
 
     it('should support dashes', () => {
@@ -71,6 +79,7 @@ describe('getType', () => {
         expect(type.base).toEqual('some_special_schema');
         expect(type.template).toEqual(null);
         expect(type.imports).toEqual(['some_special_schema']);
+        expect(type.isNullable).toEqual(false);
     });
 
     it('should support dollar sign', () => {
@@ -79,5 +88,24 @@ describe('getType', () => {
         expect(type.base).toEqual('$some_special_schema');
         expect(type.template).toEqual(null);
         expect(type.imports).toEqual(['$some_special_schema']);
+        expect(type.isNullable).toEqual(false);
+    });
+
+    it('should support multiple base types', () => {
+        const type = getType(['string', 'int']);
+        expect(type.type).toEqual('string | number');
+        expect(type.base).toEqual('string | number');
+        expect(type.template).toEqual(null);
+        expect(type.imports).toEqual([]);
+        expect(type.isNullable).toEqual(false);
+    });
+
+    it('should support multiple nullable types', () => {
+        const type = getType(['string', 'null']);
+        expect(type.type).toEqual('string');
+        expect(type.base).toEqual('string');
+        expect(type.template).toEqual(null);
+        expect(type.imports).toEqual([]);
+        expect(type.isNullable).toEqual(true);
     });
 });

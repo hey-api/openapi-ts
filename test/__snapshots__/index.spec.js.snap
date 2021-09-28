@@ -2094,7 +2094,7 @@ export class ParametersService {
         parameterPath: string,
     ): Promise<void> {
         const result = await __request({
-            method: 'GET',
+            method: 'POST',
             path: \`/api/v\${OpenAPI.VERSION}/parameters/\${parameterPath}\`,
             headers: {
                 'parameterHeader': parameterHeader,
@@ -2132,7 +2132,7 @@ export class ParametersService {
         _default?: string,
     ): Promise<void> {
         const result = await __request({
-            method: 'GET',
+            method: 'POST',
             path: \`/api/v\${OpenAPI.VERSION}/parameters/\${parameterPath1}/\${parameterPath2}/\${parameterPath3}\`,
             headers: {
                 'parameter.header': parameterHeader,
@@ -3572,7 +3572,7 @@ exports[`v3 should generate: ./test/generated/v3/models/SimpleStringWithPattern.
 /**
  * This is a simple string
  */
-export type SimpleStringWithPattern = string | null;"
+export type SimpleStringWithPattern = string;"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$ArrayWithArray.ts 1`] = `
@@ -4392,7 +4392,6 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$SimpleStringWithPatter
 /* eslint-disable */
 export const $SimpleStringWithPattern = {
     type: 'string',
-    isNullable: true,
     maxLength: 64,
     pattern: '^[a-zA-Z0-9_]*$',
 };"
@@ -4791,7 +4790,7 @@ export class ParametersService {
         requestBody: ModelWithString | null,
     ): Promise<void> {
         const result = await __request({
-            method: 'GET',
+            method: 'POST',
             path: \`/api/v\${OpenAPI.VERSION}/parameters/\${parameterPath}\`,
             cookies: {
                 'parameterCookie': parameterCookie,
@@ -4835,7 +4834,7 @@ export class ParametersService {
         _default?: string,
     ): Promise<void> {
         const result = await __request({
-            method: 'GET',
+            method: 'POST',
             path: \`/api/v\${OpenAPI.VERSION}/parameters/\${parameterPath1}/\${parameterPath2}/\${parameterPath3}\`,
             cookies: {
                 'PARAMETER-COOKIE': parameterCookie,

@@ -17,6 +17,7 @@ export function getType(value?: string, template?: string): Type {
         base: 'any',
         template: null,
         imports: [],
+        isNullable: false,
     };
 
     const valueClean = stripNamespace(value || '');

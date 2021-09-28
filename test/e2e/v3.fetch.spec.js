@@ -57,4 +57,22 @@ describe('v3.fetch', () => {
         });
         expect(result).toBeDefined();
     });
+
+    it('formData', async () => {
+        const result = await browser.evaluate(async () => {
+            const { ParametersService } = window.api;
+            return await ParametersService.callWithParameters(
+                'valueHeader',
+                'valueQuery',
+                'valueForm',
+                'valueCookie',
+                'valuePath',
+                {
+                    prop: 'valueBody'
+                }
+            );
+        });
+        expect(result).toBeDefined();
+    });
+
 });

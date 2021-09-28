@@ -180,6 +180,7 @@ export function getModel(openApi: OpenApi, definition: OpenApiSchema, isDefiniti
         model.type = definitionType.type;
         model.base = definitionType.base;
         model.template = definitionType.template;
+        model.isNullable = definitionType.isNullable;
         model.imports.push(...definitionType.imports);
         model.default = getModelDefault(definition, model);
         return model;

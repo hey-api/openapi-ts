@@ -3,4 +3,5 @@ export interface Type {
     base: string;
     template: string | null;
     imports: string[];
+    isNullable: boolean;
 }
