@@ -8,10 +8,10 @@ export { OpenAPI } from './core/OpenAPI';
 {{#if models}}
 
 {{#each models}}
-{{#if enum}}
-export { {{{name}}} } from './models/{{{name}}}';
-{{else if @root.useUnionTypes}}
+{{#if @root.useUnionTypes}}
 export type { {{{name}}} } from './models/{{{name}}}';
+{{else if enum}}
+export { {{{name}}} } from './models/{{{name}}}';
 {{else if enums}}
 export { {{{name}}} } from './models/{{{name}}}';
 {{else}}

@@ -16,7 +16,11 @@ import type { {{{this}}} } from './{{{this}}}';
 {{else equals export 'all-of'}}
 {{>exportComposition}}
 {{else equals export 'enum'}}
+{{#if @root.useUnionTypes}}
+{{>exportType}}
+{{else}}
 {{>exportEnum}}
+{{/if}}
 {{else}}
 {{>exportType}}
 {{/equals}}
