@@ -61,7 +61,7 @@
         "codecov": "codecov --token=66c30c23-8954-4892-bef9-fbaed0a2e42b"
     },
     "dependencies": {
-        "@types/node-fetch": "^2.5.12",
+        "@types/node-fetch": "^3.0.3",
         "camelcase": "^6.2.0",
         "commander": "^8.0.0",
         "form-data": "^4.0.0",
