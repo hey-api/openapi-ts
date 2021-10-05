@@ -1927,31 +1927,31 @@ export class DefaultsService {
 
     /**
      * @param parameterStringWithNoDefault This is a string with no default
+     * @param parameterStringWithDefault This is a string with default
+     * @param parameterStringWithEmptyDefault This is a string with empty default
      * @param parameterOptionalStringWithDefault This is a optional string with default
      * @param parameterOptionalStringWithEmptyDefault This is a optional string with empty default
      * @param parameterOptionalStringWithNoDefault This is a optional string with no default
-     * @param parameterStringWithDefault This is a string with default
-     * @param parameterStringWithEmptyDefault This is a string with empty default
      * @throws ApiError
      */
     public static async callToTestOrderOfParams(
         parameterStringWithNoDefault: string,
+        parameterStringWithDefault: string = 'Hello World!',
+        parameterStringWithEmptyDefault: string = '',
         parameterOptionalStringWithDefault: string = 'Hello World!',
         parameterOptionalStringWithEmptyDefault: string = '',
         parameterOptionalStringWithNoDefault?: string,
-        parameterStringWithDefault: string = 'Hello World!',
-        parameterStringWithEmptyDefault: string = '',
     ): Promise<void> {
         const result = await __request({
             method: 'PUT',
             path: \`/api/v\${OpenAPI.VERSION}/defaults\`,
             query: {
                 'parameterStringWithNoDefault': parameterStringWithNoDefault,
+                'parameterStringWithDefault': parameterStringWithDefault,
+                'parameterStringWithEmptyDefault': parameterStringWithEmptyDefault,
                 'parameterOptionalStringWithDefault': parameterOptionalStringWithDefault,
                 'parameterOptionalStringWithEmptyDefault': parameterOptionalStringWithEmptyDefault,
                 'parameterOptionalStringWithNoDefault': parameterOptionalStringWithNoDefault,
-                'parameterStringWithDefault': parameterStringWithDefault,
-                'parameterStringWithEmptyDefault': parameterStringWithEmptyDefault,
             },
         });
         return result.body;
@@ -4493,7 +4493,7 @@ export class ComplexService {
         requestBody?: {
             readonly key: string | null,
             name: string | null,
-            enabled: boolean,
+            enabled?: boolean,
             readonly type: 'Monkey' | 'Horse' | 'Bird',
             listOfModels?: Array<ModelWithString> | null,
             listOfStrings?: Array<string> | null,
@@ -4590,31 +4590,31 @@ export class DefaultsService {
 
     /**
      * @param parameterStringWithNoDefault This is a string with no default
+     * @param parameterStringWithDefault This is a string with default
+     * @param parameterStringWithEmptyDefault This is a string with empty default
      * @param parameterOptionalStringWithDefault This is a optional string with default
      * @param parameterOptionalStringWithEmptyDefault This is a optional string with empty default
      * @param parameterOptionalStringWithNoDefault This is a optional string with no default
-     * @param parameterStringWithDefault This is a string with default
-     * @param parameterStringWithEmptyDefault This is a string with empty default
      * @throws ApiError
      */
     public static async callToTestOrderOfParams(
         parameterStringWithNoDefault: string,
+        parameterStringWithDefault: string = 'Hello World!',
+        parameterStringWithEmptyDefault: string = '',
         parameterOptionalStringWithDefault: string = 'Hello World!',
         parameterOptionalStringWithEmptyDefault: string = '',
         parameterOptionalStringWithNoDefault?: string,
-        parameterStringWithDefault: string = 'Hello World!',
-        parameterStringWithEmptyDefault: string = '',
     ): Promise<void> {
         const result = await __request({
             method: 'PUT',
             path: \`/api/v\${OpenAPI.VERSION}/defaults\`,
             query: {
                 'parameterStringWithNoDefault': parameterStringWithNoDefault,
+                'parameterStringWithDefault': parameterStringWithDefault,
+                'parameterStringWithEmptyDefault': parameterStringWithEmptyDefault,
                 'parameterOptionalStringWithDefault': parameterOptionalStringWithDefault,
                 'parameterOptionalStringWithEmptyDefault': parameterOptionalStringWithEmptyDefault,
                 'parameterOptionalStringWithNoDefault': parameterOptionalStringWithNoDefault,
-                'parameterStringWithDefault': parameterStringWithDefault,
-                'parameterStringWithEmptyDefault': parameterStringWithEmptyDefault,
             },
         });
         return result.body;

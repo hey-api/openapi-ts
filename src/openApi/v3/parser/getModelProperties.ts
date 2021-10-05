@@ -15,7 +15,7 @@ export function getModelProperties(openApi: OpenApi, definition: OpenApiSchema, 
     for (const propertyName in definition.properties) {
         if (definition.properties.hasOwnProperty(propertyName)) {
             const property = definition.properties[propertyName];
-            const propertyRequired = definition.required?.includes(propertyName) || property.default !== undefined;
+            const propertyRequired = !!definition.required?.includes(propertyName);
             if (property.$ref) {
                 const model = getType(property.$ref);
                 models.push({
