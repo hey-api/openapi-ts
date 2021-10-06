@@ -1002,7 +1002,7 @@
     jest-util "^27.2.4"
     slash "^3.0.0"
 
-"@jest/core@^27.2.2", "@jest/core@^27.2.4":
+"@jest/core@^27.2.4":
   version "27.2.4"
   resolved "https://registry.yarnpkg.com/@jest/core/-/core-27.2.4.tgz#0b932da787d64848eab720dbb88e5b7a3f86e539"
   integrity sha512-UNQLyy+rXoojNm2MGlapgzWhZD1CT1zcHZQYeiD0xE7MtJfC19Q6J5D/Lm2l7i4V97T30usKDoEtjI8vKwWcLg==
@@ -3139,7 +3139,7 @@ jest-circus@^27.2.4:
     stack-utils "^2.0.3"
     throat "^6.0.1"
 
-jest-cli@27.2.4, jest-cli@^27.2.2:
+jest-cli@27.2.4, jest-cli@^27.2.4:
   version "27.2.4"
   resolved "https://registry.yarnpkg.com/jest-cli/-/jest-cli-27.2.4.tgz#acda7f367aa6e674723fc1a7334e0ae1799448d2"
   integrity sha512-4kpQQkg74HYLaXo3nzwtg4PYxSLgL7puz1LXHj5Tu85KmlIpxQFjRkXlx4V47CYFFIDoyl3rHA/cXOxUWyMpNg==
@@ -3526,14 +3526,14 @@ jest-worker@^27.2.4:
     merge-stream "^2.0.0"
     supports-color "^8.0.0"
 
-jest@27.2.2:
-  version "27.2.2"
-  resolved "https://registry.yarnpkg.com/jest/-/jest-27.2.2.tgz#445a4c16aa4c4ae6e512d62fb6f8b2624cbd6c26"
-  integrity sha512-XAB/9akDTe3/V0wPNKWfP9Y/NT1QPiCqyRBYGbC66EA9EvgAzdaFEqhFGLaDJ5UP2yIyXUMtju9a9IMrlYbZTQ==
+jest@27.2.4:
+  version "27.2.4"
+  resolved "https://registry.yarnpkg.com/jest/-/jest-27.2.4.tgz#70e27bef873138afc123aa4769f7124c50ad3efb"
+  integrity sha512-h4uqb1EQLfPulWyUFFWv9e9Nn8sCqsJ/j3wk/KCY0p4s4s0ICCfP3iMf6hRf5hEhsDyvyrCgKiZXma63gMz16A==
   dependencies:
-    "@jest/core" "^27.2.2"
+    "@jest/core" "^27.2.4"
     import-local "^3.0.2"
-    jest-cli "^27.2.2"
+    jest-cli "^27.2.4"
 
 js-tokens@^4.0.0:
   version "4.0.0"
@@ -3842,7 +3842,7 @@ neo-async@^2.6.0:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-node-fetch@*:
+node-fetch@*, node-fetch@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-3.0.0.tgz#79da7146a520036f2c5f644e4a26095f17e411ea"
   integrity sha512-bKMI+C7/T/SPU1lKnbQbwxptpCrG9ashG+VkytmXCPZyuM9jB6VU+hY0oi4lC8LxTtAeWdckNCTa3nrGsAdA3Q==
@@ -3861,14 +3861,6 @@ node-fetch@^2.6.1:
   integrity sha512-mmlIVHJEu5rnIxgEgez6b9GgWXbkZj5YZ7fx+2r94a2E+Uirsp6HsPTPlomfdHtpt/B0cdKviwkoaM6pyvUOpQ==
   dependencies:
     whatwg-url "^5.0.0"
-
-node-fetch@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-3.0.0.tgz#79da7146a520036f2c5f644e4a26095f17e411ea"
-  integrity sha512-bKMI+C7/T/SPU1lKnbQbwxptpCrG9ashG+VkytmXCPZyuM9jB6VU+hY0oi4lC8LxTtAeWdckNCTa3nrGsAdA3Q==
-  dependencies:
-    data-uri-to-buffer "^3.0.1"
-    fetch-blob "^3.1.2"
 
 node-int64@^0.4.0:
   version "0.4.0"
