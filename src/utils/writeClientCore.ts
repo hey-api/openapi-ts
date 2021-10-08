@@ -10,7 +10,7 @@ import { Templates } from './registerHandlebarTemplates';
  * @param client Client object, containing, models, schemas and services
  * @param templates The loaded handlebar templates
  * @param outputPath Directory to write the generated files to
- * @param httpClient The selected httpClient (fetch, xhr or node)
+ * @param httpClient The selected httpClient (fetch, xhr, node or axios)
  * @param request: Path to custom request file
  */
 export async function writeClientCore(client: Client, templates: Templates, outputPath: string, httpClient: HttpClient, request?: string): Promise<void> {

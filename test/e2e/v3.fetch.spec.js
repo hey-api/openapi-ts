@@ -7,7 +7,6 @@ const server = require('./scripts/server');
 const browser = require('./scripts/browser');
 
 describe('v3.fetch', () => {
-
     beforeAll(async () => {
         await generate('v3/fetch', 'v3', 'fetch');
         await copy('v3/fetch');
@@ -50,9 +49,9 @@ describe('v3.fetch', () => {
             return await ComplexService.complexTypes({
                 first: {
                     second: {
-                        third: 'Hello World!'
-                    }
-                }
+                        third: 'Hello World!',
+                    },
+                },
             });
         });
         expect(result).toBeDefined();
@@ -61,18 +60,10 @@ describe('v3.fetch', () => {
     it('formData', async () => {
         const result = await browser.evaluate(async () => {
             const { ParametersService } = window.api;
-            return await ParametersService.callWithParameters(
-                'valueHeader',
-                'valueQuery',
-                'valueForm',
-                'valueCookie',
-                'valuePath',
-                {
-                    prop: 'valueBody'
-                }
-            );
+            return await ParametersService.callWithParameters('valueHeader', 'valueQuery', 'valueForm', 'valueCookie', 'valuePath', {
+                prop: 'valueBody',
+            });
         });
         expect(result).toBeDefined();
     });
-
 });

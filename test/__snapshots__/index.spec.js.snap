@@ -71,6 +71,7 @@ type Config = {
     USERNAME?: string | Resolver<string>;
     PASSWORD?: string | Resolver<string>;
     HEADERS?: Headers | Resolver<Headers>;
+    ENCODE_PATH?: (path: string) => string;
 }
 
 export const OpenAPI: Config = {
@@ -81,6 +82,7 @@ export const OpenAPI: Config = {
     USERNAME: undefined,
     PASSWORD: undefined,
     HEADERS: undefined,
+    ENCODE_PATH: undefined,
 };"
 `;
 
@@ -109,6 +111,14 @@ function isBlob(value: any): value is Blob {
     return value instanceof Blob;
 }
 
+function base64(str: string): string {
+    try {
+        return btoa(str);
+    } catch (err) {
+        return Buffer.from(str).toString('base64');
+    }
+}
+
 function getQueryString(params: Record<string, any>): string {
     const qs: string[] = [];
     Object.keys(params).forEach(key => {
@@ -130,9 +140,8 @@ function getQueryString(params: Record<string, any>): string {
 }
 
 function getUrl(options: ApiRequestOptions): string {
-    const path = options.path.replace(/[:]/g, '_');
+    const path = OpenAPI.ENCODE_PATH ? OpenAPI.ENCODE_PATH(options.path) : options.path;
     const url = \`\${OpenAPI.BASE}\${path}\`;
-
     if (options.query) {
         return \`\${url}\${getQueryString(options.query)}\`;
     }
@@ -183,7 +192,7 @@ async function getHeaders(options: ApiRequestOptions): Promise<Headers> {
     }
 
     if (isStringWithValue(username) && isStringWithValue(password)) {
-        const credentials = btoa(\`\${username}:\${password}\`);
+        const credentials = base64(\`\${username}:\${password}\`);
         headers.append('Authorization', \`Basic \${credentials}\`);
     }
 
@@ -2433,6 +2442,7 @@ type Config = {
     USERNAME?: string | Resolver<string>;
     PASSWORD?: string | Resolver<string>;
     HEADERS?: Headers | Resolver<Headers>;
+    ENCODE_PATH?: (path: string) => string;
 }
 
 export const OpenAPI: Config = {
@@ -2443,6 +2453,7 @@ export const OpenAPI: Config = {
     USERNAME: undefined,
     PASSWORD: undefined,
     HEADERS: undefined,
+    ENCODE_PATH: undefined,
 };"
 `;
 
@@ -2471,6 +2482,14 @@ function isBlob(value: any): value is Blob {
     return value instanceof Blob;
 }
 
+function base64(str: string): string {
+    try {
+        return btoa(str);
+    } catch (err) {
+        return Buffer.from(str).toString('base64');
+    }
+}
+
 function getQueryString(params: Record<string, any>): string {
     const qs: string[] = [];
     Object.keys(params).forEach(key => {
@@ -2492,9 +2511,8 @@ function getQueryString(params: Record<string, any>): string {
 }
 
 function getUrl(options: ApiRequestOptions): string {
-    const path = options.path.replace(/[:]/g, '_');
+    const path = OpenAPI.ENCODE_PATH ? OpenAPI.ENCODE_PATH(options.path) : options.path;
     const url = \`\${OpenAPI.BASE}\${path}\`;
-
     if (options.query) {
         return \`\${url}\${getQueryString(options.query)}\`;
     }
@@ -2545,7 +2563,7 @@ async function getHeaders(options: ApiRequestOptions): Promise<Headers> {
     }
 
     if (isStringWithValue(username) && isStringWithValue(password)) {
-        const credentials = btoa(\`\${username}:\${password}\`);
+        const credentials = base64(\`\${username}:\${password}\`);
         headers.append('Authorization', \`Basic \${credentials}\`);
     }
 

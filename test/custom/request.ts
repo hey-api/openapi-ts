@@ -6,7 +6,6 @@ import type { ApiResult } from './ApiResult';
 import { OpenAPI } from './OpenAPI';
 
 export async function request(options: ApiRequestOptions): Promise<ApiResult> {
-
     const url = `${OpenAPI.BASE}${options.path}`;
 
     // Do your request...
@@ -17,7 +16,7 @@ export async function request(options: ApiRequestOptions): Promise<ApiResult> {
         status: 200,
         statusText: 'dummy',
         body: {
-            ...options
+            ...options,
         },
     };
 }

@@ -7,7 +7,6 @@ const server = require('./scripts/server');
 const browser = require('./scripts/browser');
 
 describe('v2.fetch', () => {
-
     beforeAll(async () => {
         await generate('v2/fetch', 'v2', 'fetch');
         await copy('v2/fetch');
@@ -37,9 +36,9 @@ describe('v2.fetch', () => {
             return await ComplexService.complexTypes({
                 first: {
                     second: {
-                        third: 'Hello World!'
-                    }
-                }
+                        third: 'Hello World!',
+                    },
+                },
             });
         });
         expect(result).toBeDefined();

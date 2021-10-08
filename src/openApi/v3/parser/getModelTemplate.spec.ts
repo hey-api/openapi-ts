@@ -7,6 +7,7 @@ describe('getModelTemplate', () => {
             base: 'Link',
             template: 'Model',
             imports: ['Model'],
+            isNullable: false,
         });
         expect(template).toEqual('<T>');
     });
@@ -17,6 +18,7 @@ describe('getModelTemplate', () => {
             base: 'string',
             template: null,
             imports: [],
+            isNullable: false,
         });
         expect(template).toEqual('');
     });

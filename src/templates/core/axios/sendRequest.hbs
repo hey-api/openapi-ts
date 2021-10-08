@@ -1,0 +1,11 @@
+async function sendRequest(options: ApiRequestOptions, url: string): Promise<AxiosResponse<any>> {
+    const formData = options.formData && getFormData(options.formData);
+    const data = formData || options.body;
+    const config: AxiosRequestConfig = {
+        url,
+        data,
+        method: options.method,
+        headers: await getHeaders(options, formData),
+    };
+    return await axios.request(config);
+}

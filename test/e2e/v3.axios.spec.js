@@ -5,11 +5,10 @@ const compileWithTypescript = require('./scripts/compileWithTypescript');
 const server = require('./scripts/server');
 
 describe('v3.node', () => {
-
     beforeAll(async () => {
-        await generate('v3/node', 'v3', 'node');
-        compileWithTypescript('v3/node');
-        await server.start('v3/node');
+        await generate('v3/axios', 'v3', 'axios');
+        compileWithTypescript('v3/axios');
+        await server.start('v3/axios');
     }, 30000);
 
     afterAll(async () => {
@@ -17,7 +16,7 @@ describe('v3.node', () => {
     });
 
     it('requests token', async () => {
-        const { OpenAPI, SimpleService } = require('./generated/v3/node/index.js');
+        const { OpenAPI, SimpleService } = require('./generated/v3/axios/index.js');
         const tokenRequest = jest.fn().mockResolvedValue('MY_TOKEN');
         OpenAPI.TOKEN = tokenRequest;
         OpenAPI.USERNAME = undefined;
@@ -28,7 +27,7 @@ describe('v3.node', () => {
     });
 
     it('uses credentials', async () => {
-        const { OpenAPI, SimpleService } = require('./generated/v3/node/index.js');
+        const { OpenAPI, SimpleService } = require('./generated/v3/axios/index.js');
         OpenAPI.TOKEN = undefined;
         OpenAPI.USERNAME = 'username';
         OpenAPI.PASSWORD = 'password';
@@ -37,7 +36,7 @@ describe('v3.node', () => {
     });
 
     it('complexService', async () => {
-        const { ComplexService } = require('./generated/v3/node/index.js');
+        const { ComplexService } = require('./generated/v3/axios/index.js');
         const result = await ComplexService.complexTypes({
             first: {
                 second: {
@@ -49,7 +48,7 @@ describe('v3.node', () => {
     });
 
     it('formData', async () => {
-        const { ParametersService } = require('./generated/v3/node/index.js');
+        const { ParametersService } = require('./generated/v3/axios/index.js');
         const result = await ParametersService.callWithParameters(
             'valueHeader',
             'valueQuery',

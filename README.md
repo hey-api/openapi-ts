@@ -15,7 +15,7 @@
 - Frontend ❤️ OpenAPI, but we do not want to use JAVA codegen in our builds
 - Quick, lightweight, robust and framework agnostic 🚀
 - Supports generation of TypeScript clients
-- Supports generations of fetch and XHR http clients
+- Supports generations of fetch, XHR and Axios http clients
 - Supports OpenAPI specification v2.0 and v3.0
 - Supports JSON and YAML files for input
 - Supports generation through CLI, Node.js and NPX
@@ -40,7 +40,7 @@ $ openapi --help
     -V, --version             output the version number
     -i, --input <value>       OpenAPI specification, can be a path, url or string content (required)
     -o, --output <value>      Output directory (required)
-    -c, --client <value>      HTTP client to generate [fetch, xhr, node] (default: "fetch")
+    -c, --client <value>      HTTP client to generate [fetch, xhr, axios, node] (default: "fetch")
     --useOptions              Use options instead of arguments
     --useUnionTypes           Use union types instead of enums
     --exportCore <value>      Write core files to disk (default: true)
@@ -403,12 +403,12 @@ as part of your types to ensure everything is able to be TypeScript generated.
 
 External references may be:
 * *relative references* - references to other files at the same location e.g.
-    `{ $ref: 'schemas/customer.yml' }`
+  `{ $ref: 'schemas/customer.yml' }`
 * *remote references* - fully qualified references to another remote location
-     e.g. `{ $ref: 'https://myexampledomain.com/schemas/customer_schema.yml' }`
+   e.g. `{ $ref: 'https://myexampledomain.com/schemas/customer_schema.yml' }`
 
-    For remote references, both files (when the file is on the current filesystem)
-    and http(s) URLs are supported.
+   For remote references, both files (when the file is on the current filesystem)
+   and http(s) URLs are supported.
 
 External references may also contain internal paths in the external schema (e.g.
 `schemas/collection.yml#/definitions/schemas/Customer`) and back-references to
@@ -418,14 +418,6 @@ schema in the main file as a type of an object or array property, for example).
 At start-up, an OpenAPI or Swagger file with external references will be "bundled",
 so that all external references and back-references will be resolved (but local
 references preserved).
-
-### Compare to other generators
-Depending on which swagger generator you use, you will see different output.
-For instance: Different ways of generating models, services, level of quality,
-HTTP client, etc. I've compiled a list with the results per area and how they
-compare against the openapi-typescript-codegen.
-
-[Click here to see the comparison](https://htmlpreview.github.io/?https://github.com/ferdikoomen/openapi-typescript-codegen/blob/master/samples/index.html)
 
 
 FAQ
@@ -452,6 +444,9 @@ module.exports = {
 
 
 ### Node.js support
+> Since version 3.x [`node-fetch`](https://www.npmjs.com/package/node-fetch) switched to ESM only, breaking many
+> CommonJS based toolchains (like Jest). Right now we do not support this new version!
+
 By default, this library will generate a client that is compatible with the (browser based) [fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API),
 however this client will not work inside the Node.js environment. If you want to generate a Node.js compatible client then
 you can specify `--client node` in the openapi call:
@@ -459,11 +454,12 @@ you can specify `--client node` in the openapi call:
 `openapi --input ./spec.json --output ./dist --client node`
 
 This will generate a client that uses [`node-fetch`](https://www.npmjs.com/package/node-fetch) internally. However,
-in order to compile and run this client, you will need to install the `node-fetch@2.x` dependencies:
+in order to compile and run this client, you might need to install the `node-fetch@2.x` dependencies:
 
 ```
-npm install node-fetch --save-dev
-npm install form-data --save-dev
+npm install @types/node-fetch@2.x --save-dev
+npm install node-fetch@2.x --save-dev
+npm install form-data@4.x --save-dev
 ```
 
 In order to compile the project and resolve the imports, you will need to enable the `allowSyntheticDefaultImports`

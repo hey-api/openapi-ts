@@ -3,7 +3,7 @@
 const express = require('express');
 
 let app;
-let server
+let server;
 
 async function start(dir) {
     return new Promise(resolve => {

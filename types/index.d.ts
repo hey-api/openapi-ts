@@ -2,6 +2,7 @@ export declare enum HttpClient {
     FETCH = 'fetch',
     XHR = 'xhr',
     NODE = 'node',
+    AXIOS = 'axios',
 }
 
 export type Options = {

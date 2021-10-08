@@ -22,7 +22,7 @@ async function getHeaders(options: ApiRequestOptions): Promise<Headers> {
     }
 
     if (isStringWithValue(username) && isStringWithValue(password)) {
-        const credentials = btoa(`${username}:${password}`);
+        const credentials = base64(`${username}:${password}`);
         headers.append('Authorization', `Basic ${credentials}`);
     }
 

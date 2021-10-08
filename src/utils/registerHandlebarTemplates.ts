@@ -4,12 +4,18 @@ import { HttpClient } from '../HttpClient';
 import templateCoreApiError from '../templates/core/ApiError.hbs';
 import templateCoreApiRequestOptions from '../templates/core/ApiRequestOptions.hbs';
 import templateCoreApiResult from '../templates/core/ApiResult.hbs';
+import axiosGetHeaders from '../templates/core/axios/getHeaders.hbs';
+import axiosGetResponseBody from '../templates/core/axios/getResponseBody.hbs';
+import axiosGetResponseHeader from '../templates/core/axios/getResponseHeader.hbs';
+import axiosRequest from '../templates/core/axios/request.hbs';
+import axiosSendRequest from '../templates/core/axios/sendRequest.hbs';
 import fetchGetHeaders from '../templates/core/fetch/getHeaders.hbs';
 import fetchGetRequestBody from '../templates/core/fetch/getRequestBody.hbs';
 import fetchGetResponseBody from '../templates/core/fetch/getResponseBody.hbs';
 import fetchGetResponseHeader from '../templates/core/fetch/getResponseHeader.hbs';
 import fetchRequest from '../templates/core/fetch/request.hbs';
 import fetchSendRequest from '../templates/core/fetch/sendRequest.hbs';
+import functionBase64 from '../templates/core/functions/base64.hbs';
 import functionCatchErrors from '../templates/core/functions/catchErrors.hbs';
 import functionGetFormData from '../templates/core/functions/getFormData.hbs';
 import functionGetQueryString from '../templates/core/functions/getQueryString.hbs';
@@ -148,6 +154,7 @@ export function registerHandlebarTemplates(root: { httpClient: HttpClient; useOp
     Handlebars.registerPartial('functions/isString', Handlebars.template(functionIsString));
     Handlebars.registerPartial('functions/isStringWithValue', Handlebars.template(functionIsStringWithValue));
     Handlebars.registerPartial('functions/isSuccess', Handlebars.template(functionIsSuccess));
+    Handlebars.registerPartial('functions/base64', Handlebars.template(functionBase64));
     Handlebars.registerPartial('functions/resolve', Handlebars.template(functionResolve));
 
     // Specific files for the fetch client implementation
@@ -173,6 +180,13 @@ export function registerHandlebarTemplates(root: { httpClient: HttpClient; useOp
     Handlebars.registerPartial('node/getResponseHeader', Handlebars.template(nodeGetResponseHeader));
     Handlebars.registerPartial('node/sendRequest', Handlebars.template(nodeSendRequest));
     Handlebars.registerPartial('node/request', Handlebars.template(nodeRequest));
+
+    // Specific files for the axios client implementation
+    Handlebars.registerPartial('axios/getHeaders', Handlebars.template(axiosGetHeaders));
+    Handlebars.registerPartial('axios/getResponseBody', Handlebars.template(axiosGetResponseBody));
+    Handlebars.registerPartial('axios/getResponseHeader', Handlebars.template(axiosGetResponseHeader));
+    Handlebars.registerPartial('axios/sendRequest', Handlebars.template(axiosSendRequest));
+    Handlebars.registerPartial('axios/request', Handlebars.template(axiosRequest));
 
     return templates;
 }

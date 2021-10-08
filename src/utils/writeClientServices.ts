@@ -13,7 +13,7 @@ const VERSION_TEMPLATE_STRING = 'OpenAPI.VERSION';
  * @param services Array of Services to write
  * @param templates The loaded handlebar templates
  * @param outputPath Directory to write the generated files to
- * @param httpClient The selected httpClient (fetch, xhr or node)
+ * @param httpClient The selected httpClient (fetch, xhr, node or axios)
  * @param useUnionTypes Use union types instead of enums
  * @param useOptions Use options or arguments functions
  */

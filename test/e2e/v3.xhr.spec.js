@@ -7,7 +7,6 @@ const server = require('./scripts/server');
 const browser = require('./scripts/browser');
 
 describe('v3.xhr', () => {
-
     beforeAll(async () => {
         await generate('v3/xhr', 'v3', 'xhr');
         await copy('v3/xhr');
@@ -50,9 +49,9 @@ describe('v3.xhr', () => {
             return await ComplexService.complexTypes({
                 first: {
                     second: {
-                        third: 'Hello World!'
-                    }
-                }
+                        third: 'Hello World!',
+                    },
+                },
             });
         });
         expect(result).toBeDefined();
