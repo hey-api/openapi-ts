@@ -2,8 +2,6 @@
 
 [![NPM][npm-image]][npm-url]
 [![License][license-image]][license-url]
-[![Build Status][travis-image]][travis-url]
-[![Dependency Status][deps-image]][deps-url]
 [![Coverage][coverage-image]][coverage-url]
 [![Quality][quality-image]][quality-url]
 [![Code Climate][climate-image]][climate-url]
@@ -478,10 +476,6 @@ in your `tsconfig.json` file.
 [npm-image]: https://img.shields.io/npm/v/openapi-typescript-codegen.svg
 [license-url]: LICENSE
 [license-image]: http://img.shields.io/npm/l/openapi-typescript-codegen.svg
-[travis-url]: https://travis-ci.org/ferdikoomen/openapi-typescript-codegen
-[travis-image]: https://img.shields.io/travis/ferdikoomen/openapi-typescript-codegen.svg
-[deps-url]: https://david-dm.org/ferdikoomen/openapi-typescript-codegen
-[deps-image]: https://img.shields.io/david/ferdikoomen/openapi-typescript-codegen.svg
 [coverage-url]: https://codecov.io/gh/ferdikoomen/openapi-typescript-codegen
 [coverage-image]: https://img.shields.io/codecov/c/github/ferdikoomen/openapi-typescript-codegen.svg
 [quality-url]: https://lgtm.com/projects/g/ferdikoomen/openapi-typescript-codegen
