@@ -3,12 +3,13 @@ async function getHeaders(options: ApiRequestOptions, formData?: FormData): Prom
     const username = await resolve(options, OpenAPI.USERNAME);
     const password = await resolve(options, OpenAPI.PASSWORD);
     const additionalHeaders = await resolve(options, OpenAPI.HEADERS);
+    const formHeaders = typeof formData?.getHeaders === 'function' && formData?.getHeaders() || {}
 
     const headers = Object.entries({
         Accept: 'application/json',
         ...additionalHeaders,
         ...options.headers,
-        ...formData?.getHeaders()
+        ...formHeaders,
     })
     .filter(([key, value]) => isDefined(value))
     .reduce((headers, [key, value]) => ({
