@@ -33,7 +33,7 @@ export function getType(values?: string | string[], template?: string): Type {
         return result;
     }
 
-    const valueClean = stripNamespace(values || '');
+    const valueClean = decodeURIComponent(stripNamespace(values || ''));
 
     if (/\[.*\]$/g.test(valueClean)) {
         const matches = valueClean.match(/(.*?)\[(.*)\]$/);

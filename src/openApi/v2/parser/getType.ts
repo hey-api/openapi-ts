@@ -20,7 +20,7 @@ export function getType(value?: string, template?: string): Type {
         isNullable: false,
     };
 
-    const valueClean = stripNamespace(value || '');
+    const valueClean = decodeURIComponent(stripNamespace(value || ''));
 
     if (/\[.*\]$/g.test(valueClean)) {
         const matches = valueClean.match(/(.*?)\[(.*)\]$/);
