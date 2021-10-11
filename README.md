@@ -47,6 +47,8 @@ $ openapi --help
     --exportServices <value>  Write services to disk (default: true)
     --exportModels <value>    Write models to disk (default: true)
     --exportSchemas <value>   Write schemas to disk (default: false)
+    --request <value>         Path to custom request file
+    -h, --help                display help for command
 
   Examples
     $ openapi --input ./spec.json
