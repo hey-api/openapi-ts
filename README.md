@@ -6,6 +6,7 @@
 [![Quality][quality-image]][quality-url]
 [![Code Climate][climate-image]][climate-url]
 [![Downloads][downloads-image]][downloads-url]
+[![Build][build-image]][build-url]
 
 > Node.js library that generates Typescript clients based on the OpenAPI specification.
 
@@ -484,3 +485,5 @@ in your `tsconfig.json` file.
 [climate-image]: https://img.shields.io/codeclimate/maintainability/ferdikoomen/openapi-typescript-codegen.svg
 [downloads-url]: http://npm-stat.com/charts.html?package=openapi-typescript-codegen
 [downloads-image]: http://img.shields.io/npm/dm/openapi-typescript-codegen.svg
+[build-url]: https://circleci.com/gh/ferdikoomen/openapi-typescript-codegen/tree/master
+[build-image]: https://circleci.com/gh/ferdikoomen/openapi-typescript-codegen/tree/master.svg?style=svg
