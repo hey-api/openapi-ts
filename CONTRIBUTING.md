@@ -27,5 +27,5 @@ https://help.github.com/articles/using-pull-requests
 5. Ensure the code is formatted by running: `yarn run eslint:fix`
 6. Commit your changes using a descriptive commit message
 
-After your Pull Request is created, it will automatically be build using Circle CI
-and Travis. When the build is successful then the Pull Request is ready for review.
+After your Pull Request is created, it will automatically be build using Circle CI.
+When the build is successful then the Pull Request is ready for review.

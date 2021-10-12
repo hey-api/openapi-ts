@@ -9,4 +9,3 @@ updates:
   ignore:
     - dependency-name: "@types/node-fetch"
     - dependency-name: "node-fetch"
-    - dependency-name: "eslint"
