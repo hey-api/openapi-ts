@@ -6,9 +6,9 @@ const server = require('./scripts/server');
 
 describe('v2.node', () => {
     beforeAll(async () => {
-        await generate('v2/node', 'v2', 'node');
-        compileWithTypescript('v2/node');
-        await server.start('v2/node');
+        await generate('v2/axios', 'v2', 'axios');
+        compileWithTypescript('v2/axios');
+        await server.start('v2/axios');
     }, 30000);
 
     afterAll(async () => {
@@ -16,7 +16,7 @@ describe('v2.node', () => {
     });
 
     it('requests token', async () => {
-        const { OpenAPI, SimpleService } = require('./generated/v2/node/index.js');
+        const { OpenAPI, SimpleService } = require('./generated/v2/axios/index.js');
         const tokenRequest = jest.fn().mockResolvedValue('MY_TOKEN');
         OpenAPI.TOKEN = tokenRequest;
         const result = await SimpleService.getCallWithoutParametersAndResponse();
@@ -25,7 +25,7 @@ describe('v2.node', () => {
     });
 
     it('complexService', async () => {
-        const { ComplexService } = require('./generated/v2/node/index.js');
+        const { ComplexService } = require('./generated/v2/axios/index.js');
         const result = await ComplexService.complexTypes({
             first: {
                 second: {
@@ -38,14 +38,14 @@ describe('v2.node', () => {
 
     it('can abort the request', async () => {
         try {
-            const { SimpleService } = require('./generated/v3/node/index.js');
+            const { SimpleService } = require('./generated/v2/axios/index.js');
             const promise = SimpleService.getCallWithoutParametersAndResponse();
             setTimeout(() => {
                 promise.cancel();
             }, 10);
             await promise;
         } catch (e) {
-            expect(e.message).toContain('The user aborted a request.');
+            expect(e.message).toContain('canceled');
         }
     });
 });

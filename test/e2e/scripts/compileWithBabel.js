@@ -11,15 +11,21 @@ function compileWithBabel(dir) {
             const result = babel.transformSync(content, {
                 filename: file,
                 presets: [
-                    ['@babel/preset-env', {
-                        modules: false,
-                        targets: {
-                            node: true,
+                    [
+                        '@babel/preset-env',
+                        {
+                            modules: false,
+                            targets: {
+                                node: true,
+                            },
                         },
-                    }],
-                    ['@babel/preset-typescript', {
-                        onlyRemoveTypeImports: true,
-                    }],
+                    ],
+                    [
+                        '@babel/preset-typescript',
+                        {
+                            onlyRemoveTypeImports: true,
+                        },
+                    ],
                 ],
             });
             const out = file.replace(/\.ts$/, '.js');

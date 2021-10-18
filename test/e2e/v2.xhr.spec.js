@@ -7,7 +7,6 @@ const server = require('./scripts/server');
 const browser = require('./scripts/browser');
 
 describe('v2.xhr', () => {
-
     beforeAll(async () => {
         await generate('v2/xhr', 'v2', 'xhr');
         await copy('v2/xhr');
@@ -17,8 +16,8 @@ describe('v2.xhr', () => {
     }, 30000);
 
     afterAll(async () => {
-        await server.stop();
         await browser.stop();
+        await server.stop();
     });
 
     it('requests token', async () => {

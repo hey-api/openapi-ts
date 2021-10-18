@@ -1,0 +1,16 @@
+async function sendRequest(options: ApiRequestOptions, url: string, onCancel: (cancelHandler: () => void) => void): Promise<AxiosResponse<any>> {
+    const controller = new AbortController();
+    const formData = options.formData && getFormData(options.formData);
+    const data = formData || options.body;
+    const config: AxiosRequestConfig = {
+        url,
+        data,
+        method: options.method,
+        headers: await getHeaders(options, formData),
+        signal: controller.signal,
+    };
+
+    onCancel(() => controller.abort());
+
+    return await axios.request(config);
+}

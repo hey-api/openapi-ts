@@ -17,9 +17,10 @@ export function getType(value?: string, template?: string): Type {
         base: 'any',
         template: null,
         imports: [],
+        isNullable: false,
     };
 
-    const valueClean = stripNamespace(value || '');
+    const valueClean = decodeURIComponent(stripNamespace(value || ''));
 
     if (/\[.*\]$/g.test(valueClean)) {
         const matches = valueClean.match(/(.*?)\[(.*)\]$/);

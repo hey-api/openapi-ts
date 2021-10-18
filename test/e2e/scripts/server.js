@@ -3,7 +3,7 @@
 const express = require('express');
 
 let app;
-let server
+let server;
 
 async function start(dir) {
     return new Promise(resolve => {
@@ -12,10 +12,13 @@ async function start(dir) {
         // Serve the JavaScript files from the specific folder, since we are using browser
         // based ES6 modules, this also means that we can just request the js/index.js file
         // and all other relative paths are resolved from that file.
-        app.use('/js', express.static(`./test/e2e/generated/${dir}/`, {
-            extensions: ['', 'js'],
-            index: 'index.js',
-        }));
+        app.use(
+            '/js',
+            express.static(`./test/e2e/generated/${dir}/`, {
+                extensions: ['', 'js'],
+                index: 'index.js',
+            })
+        );
 
         // When we request the index then we can just return the script loader.
         // This file is copied from test/e2e/assets/script.js to the output directory

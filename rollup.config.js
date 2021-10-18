@@ -57,7 +57,7 @@ const getPlugins = () => {
         return plugins;
     }
     return [...plugins, terser()];
-}
+};
 
 module.exports = {
     input: './src/index.ts',

@@ -35,6 +35,7 @@ export type ApiRequestOptions = {
     readonly query?: Record<string, any>;
     readonly formData?: Record<string, any>;
     readonly body?: any;
+    readonly mediaType?: string;
     readonly responseHeader?: string;
     readonly errors?: Record<number, string>;
 }"
@@ -146,6 +147,7 @@ type Config = {
     USERNAME?: string | Resolver<string>;
     PASSWORD?: string | Resolver<string>;
     HEADERS?: Headers | Resolver<Headers>;
+    ENCODE_PATH?: (path: string) => string;
 }
 
 export const OpenAPI: Config = {
@@ -156,6 +158,7 @@ export const OpenAPI: Config = {
     USERNAME: undefined,
     PASSWORD: undefined,
     HEADERS: undefined,
+    ENCODE_PATH: undefined,
 };"
 `;
 
@@ -185,6 +188,14 @@ function isBlob(value: any): value is Blob {
     return value instanceof Blob;
 }
 
+function base64(str: string): string {
+    try {
+        return btoa(str);
+    } catch (err) {
+        return Buffer.from(str).toString('base64');
+    }
+}
+
 function getQueryString(params: Record<string, any>): string {
     const qs: string[] = [];
 
@@ -209,9 +220,8 @@ function getQueryString(params: Record<string, any>): string {
 }
 
 function getUrl(options: ApiRequestOptions): string {
-    const path = options.path.replace(/[:]/g, '_');
+    const path = OpenAPI.ENCODE_PATH ? OpenAPI.ENCODE_PATH(options.path) : options.path;
     const url = \`\${OpenAPI.BASE}\${path}\`;
-
     if (options.query) {
         return \`\${url}\${getQueryString(options.query)}\`;
     }
@@ -245,25 +255,34 @@ async function getHeaders(options: ApiRequestOptions): Promise<Headers> {
     const token = await resolve(options, OpenAPI.TOKEN);
     const username = await resolve(options, OpenAPI.USERNAME);
     const password = await resolve(options, OpenAPI.PASSWORD);
-    const defaultHeaders = await resolve(options, OpenAPI.HEADERS);
+    const additionalHeaders = await resolve(options, OpenAPI.HEADERS);
 
-    const headers = new Headers({
+    const defaultHeaders = Object.entries({
         Accept: 'application/json',
-        ...defaultHeaders,
+        ...additionalHeaders,
         ...options.headers,
-    });
+    })
+        .filter(([key, value]) => isDefined(value))
+        .reduce((headers, [key, value]) => ({
+            ...headers,
+            [key]: value,
+        }), {});
+
+    const headers = new Headers(defaultHeaders);
 
     if (isStringWithValue(token)) {
         headers.append('Authorization', \`Bearer \${token}\`);
     }
 
     if (isStringWithValue(username) && isStringWithValue(password)) {
-        const credentials = btoa(\`\${username}:\${password}\`);
+        const credentials = base64(\`\${username}:\${password}\`);
         headers.append('Authorization', \`Basic \${credentials}\`);
     }
 
     if (options.body) {
-        if (isBlob(options.body)) {
+        if (options.mediaType) {
+            headers.append('Content-Type', options.mediaType);
+        } else if (isBlob(options.body)) {
             headers.append('Content-Type', options.body.type || 'application/octet-stream');
         } else if (isString(options.body)) {
             headers.append('Content-Type', 'text/plain');
@@ -280,7 +299,9 @@ function getRequestBody(options: ApiRequestOptions): BodyInit | undefined {
     }
 
     if (options.body) {
-        if (isString(options.body) || isBlob(options.body)) {
+        if (options.mediaType?.includes('/json')) {
+            return JSON.stringify(options.body)
+        } else if (isString(options.body) || isBlob(options.body)) {
             return options.body;
         } else {
             return JSON.stringify(options.body);
@@ -321,18 +342,20 @@ function getResponseHeader(response: Response, responseHeader?: string): string 
 }
 
 async function getResponseBody(response: Response): Promise<any> {
-    try {
-        const contentType = response.headers.get('Content-Type');
-        if (contentType) {
-            const isJSON = contentType.toLowerCase().startsWith('application/json');
-            if (isJSON) {
-                return await response.json();
-            } else {
-                return await response.text();
+    if (response.status !== 204) {
+        try {
+            const contentType = response.headers.get('Content-Type');
+            if (contentType) {
+                const isJSON = contentType.toLowerCase().startsWith('application/json');
+                if (isJSON) {
+                    return await response.json();
+                } else {
+                    return await response.text();
+                }
             }
+        } catch (error) {
+            console.error(error);
         }
-    } catch (error) {
-        console.error(error);
     }
 
     return null;
@@ -696,12 +719,18 @@ export enum EnumWithNumbers {
     '_1' = 1,
     '_2' = 2,
     '_3' = 3,
+    '_1.1' = 1.1,
+    '_1.2' = 1.2,
+    '_1.3' = 1.3,
     '_100' = 100,
     '_200' = 200,
     '_300' = 300,
     '_-100' = -100,
     '_-200' = -200,
     '_-300' = -300,
+    '_-1.1' = -1.1,
+    '_-1.2' = -1.2,
+    '_-1.3' = -1.3,
 }"
 `;
 
@@ -2172,7 +2201,7 @@ export class ParametersService {
         parameterPath: string,
     ): CancelablePromise<void> {
         return __request({
-            method: 'GET',
+            method: 'POST',
             path: \`/api/v\${OpenAPI.VERSION}/parameters/\${parameterPath}\`,
             headers: {
                 'parameterHeader': parameterHeader,
@@ -2209,7 +2238,7 @@ export class ParametersService {
         _default?: string,
     ): CancelablePromise<void> {
         return __request({
-            method: 'GET',
+            method: 'POST',
             path: \`/api/v\${OpenAPI.VERSION}/parameters/\${parameterPath1}/\${parameterPath2}/\${parameterPath3}\`,
             headers: {
                 'parameter.header': parameterHeader,
@@ -2465,6 +2494,7 @@ export type ApiRequestOptions = {
     readonly query?: Record<string, any>;
     readonly formData?: Record<string, any>;
     readonly body?: any;
+    readonly mediaType?: string;
     readonly responseHeader?: string;
     readonly errors?: Record<number, string>;
 }"
@@ -2576,6 +2606,7 @@ type Config = {
     USERNAME?: string | Resolver<string>;
     PASSWORD?: string | Resolver<string>;
     HEADERS?: Headers | Resolver<Headers>;
+    ENCODE_PATH?: (path: string) => string;
 }
 
 export const OpenAPI: Config = {
@@ -2586,6 +2617,7 @@ export const OpenAPI: Config = {
     USERNAME: undefined,
     PASSWORD: undefined,
     HEADERS: undefined,
+    ENCODE_PATH: undefined,
 };"
 `;
 
@@ -2615,6 +2647,14 @@ function isBlob(value: any): value is Blob {
     return value instanceof Blob;
 }
 
+function base64(str: string): string {
+    try {
+        return btoa(str);
+    } catch (err) {
+        return Buffer.from(str).toString('base64');
+    }
+}
+
 function getQueryString(params: Record<string, any>): string {
     const qs: string[] = [];
 
@@ -2639,9 +2679,8 @@ function getQueryString(params: Record<string, any>): string {
 }
 
 function getUrl(options: ApiRequestOptions): string {
-    const path = options.path.replace(/[:]/g, '_');
+    const path = OpenAPI.ENCODE_PATH ? OpenAPI.ENCODE_PATH(options.path) : options.path;
     const url = \`\${OpenAPI.BASE}\${path}\`;
-
     if (options.query) {
         return \`\${url}\${getQueryString(options.query)}\`;
     }
@@ -2675,25 +2714,34 @@ async function getHeaders(options: ApiRequestOptions): Promise<Headers> {
     const token = await resolve(options, OpenAPI.TOKEN);
     const username = await resolve(options, OpenAPI.USERNAME);
     const password = await resolve(options, OpenAPI.PASSWORD);
-    const defaultHeaders = await resolve(options, OpenAPI.HEADERS);
+    const additionalHeaders = await resolve(options, OpenAPI.HEADERS);
 
-    const headers = new Headers({
+    const defaultHeaders = Object.entries({
         Accept: 'application/json',
-        ...defaultHeaders,
+        ...additionalHeaders,
         ...options.headers,
-    });
+    })
+        .filter(([key, value]) => isDefined(value))
+        .reduce((headers, [key, value]) => ({
+            ...headers,
+            [key]: value,
+        }), {});
+
+    const headers = new Headers(defaultHeaders);
 
     if (isStringWithValue(token)) {
         headers.append('Authorization', \`Bearer \${token}\`);
     }
 
     if (isStringWithValue(username) && isStringWithValue(password)) {
-        const credentials = btoa(\`\${username}:\${password}\`);
+        const credentials = base64(\`\${username}:\${password}\`);
         headers.append('Authorization', \`Basic \${credentials}\`);
     }
 
     if (options.body) {
-        if (isBlob(options.body)) {
+        if (options.mediaType) {
+            headers.append('Content-Type', options.mediaType);
+        } else if (isBlob(options.body)) {
             headers.append('Content-Type', options.body.type || 'application/octet-stream');
         } else if (isString(options.body)) {
             headers.append('Content-Type', 'text/plain');
@@ -2710,7 +2758,9 @@ function getRequestBody(options: ApiRequestOptions): BodyInit | undefined {
     }
 
     if (options.body) {
-        if (isString(options.body) || isBlob(options.body)) {
+        if (options.mediaType?.includes('/json')) {
+            return JSON.stringify(options.body)
+        } else if (isString(options.body) || isBlob(options.body)) {
             return options.body;
         } else {
             return JSON.stringify(options.body);
@@ -2751,18 +2801,20 @@ function getResponseHeader(response: Response, responseHeader?: string): string 
 }
 
 async function getResponseBody(response: Response): Promise<any> {
-    try {
-        const contentType = response.headers.get('Content-Type');
-        if (contentType) {
-            const isJSON = contentType.toLowerCase().startsWith('application/json');
-            if (isJSON) {
-                return await response.json();
-            } else {
-                return await response.text();
+    if (response.status !== 204) {
+        try {
+            const contentType = response.headers.get('Content-Type');
+            if (contentType) {
+                const isJSON = contentType.toLowerCase().startsWith('application/json');
+                if (isJSON) {
+                    return await response.json();
+                } else {
+                    return await response.text();
+                }
             }
+        } catch (error) {
+            console.error(error);
         }
-    } catch (error) {
-        console.error(error);
     }
 
     return null;
@@ -3258,12 +3310,18 @@ export enum EnumWithNumbers {
     '_1' = 1,
     '_2' = 2,
     '_3' = 3,
+    '_1.1' = 1.1,
+    '_1.2' = 1.2,
+    '_1.3' = 1.3,
     '_100' = 100,
     '_200' = 200,
     '_300' = 300,
     '_-100' = -100,
     '_-200' = -200,
     '_-300' = -300,
+    '_-1.1' = -1.1,
+    '_-1.2' = -1.2,
+    '_-1.3' = -1.3,
 }"
 `;
 
@@ -3722,7 +3780,7 @@ exports[`v3 should generate: ./test/generated/v3/models/SimpleStringWithPattern.
 /**
  * This is a simple string
  */
-export type SimpleStringWithPattern = string | null;"
+export type SimpleStringWithPattern = string;"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$ArrayWithArray.ts 1`] = `
@@ -4542,7 +4600,6 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$SimpleStringWithPatter
 /* eslint-disable */
 export const $SimpleStringWithPattern = {
     type: 'string',
-    isNullable: true,
     maxLength: 64,
     pattern: '^[a-zA-Z0-9_]*$',
 };"
@@ -4644,7 +4701,7 @@ export class ComplexService {
         requestBody?: {
             readonly key: string | null,
             name: string | null,
-            enabled: boolean,
+            enabled?: boolean,
             readonly type: 'Monkey' | 'Horse' | 'Bird',
             listOfModels?: Array<ModelWithString> | null,
             listOfStrings?: Array<string> | null,
@@ -4659,6 +4716,7 @@ export class ComplexService {
             method: 'PUT',
             path: \`/api/v\${OpenAPI.VERSION}/complex/\${id}\`,
             body: requestBody,
+            mediaType: 'application/json-patch+json',
         });
     }
 
@@ -4935,7 +4993,7 @@ export class ParametersService {
         requestBody: ModelWithString | null,
     ): CancelablePromise<void> {
         return __request({
-            method: 'GET',
+            method: 'POST',
             path: \`/api/v\${OpenAPI.VERSION}/parameters/\${parameterPath}\`,
             cookies: {
                 'parameterCookie': parameterCookie,
@@ -4950,6 +5008,7 @@ export class ParametersService {
                 'parameterForm': parameterForm,
             },
             body: requestBody,
+            mediaType: 'application/json',
         });
     }
 
@@ -4977,7 +5036,7 @@ export class ParametersService {
         _default?: string,
     ): CancelablePromise<void> {
         return __request({
-            method: 'GET',
+            method: 'POST',
             path: \`/api/v\${OpenAPI.VERSION}/parameters/\${parameterPath1}/\${parameterPath2}/\${parameterPath3}\`,
             cookies: {
                 'PARAMETER-COOKIE': parameterCookie,
@@ -4993,6 +5052,7 @@ export class ParametersService {
                 'parameter_form': parameterForm,
             },
             body: requestBody,
+            mediaType: 'application/json',
         });
     }
 
@@ -5012,6 +5072,7 @@ export class ParametersService {
                 'parameter': parameter,
             },
             body: requestBody,
+            mediaType: 'application/json',
         });
     }
 
@@ -5031,6 +5092,7 @@ export class ParametersService {
                 'parameter': parameter,
             },
             body: requestBody,
+            mediaType: 'application/json',
         });
     }
 
@@ -5059,6 +5121,7 @@ export class RequestBodyService {
             method: 'POST',
             path: \`/api/v\${OpenAPI.VERSION}/requestBody/\`,
             body: requestBody,
+            mediaType: 'application/json',
         });
     }
 

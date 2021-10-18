@@ -1,0 +1,9 @@
+function getResponseHeader(response: AxiosResponse<any>, responseHeader?: string): string | null {
+    if (responseHeader) {
+        const content = response.headers[responseHeader];
+        if (isString(content)) {
+            return content;
+        }
+    }
+    return null;
+}

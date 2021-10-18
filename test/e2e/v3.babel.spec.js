@@ -7,7 +7,6 @@ const server = require('./scripts/server');
 const browser = require('./scripts/browser');
 
 describe('v3.fetch', () => {
-
     beforeAll(async () => {
         await generate('v3/babel', 'v3', 'fetch', true, true);
         await copy('v3/babel');
@@ -17,8 +16,8 @@ describe('v3.fetch', () => {
     }, 30000);
 
     afterAll(async () => {
-        await server.stop();
         await browser.stop();
+        await server.stop();
     });
 
     it('requests token', async () => {

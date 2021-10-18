@@ -3,7 +3,7 @@ import type { Enum } from '../../../client/interfaces/Enum';
 export function getEnumFromDescription(description: string): Enum[] {
     // Check if we can find this special format string:
     // None=0,Something=1,AnotherThing=2
-    if (/^(\w+=[0-9]+,?)+$/g.test(description)) {
+    if (/^(\w+=[0-9]+)/g.test(description)) {
         const matches = description.match(/(\w+=[0-9]+,?)/g);
         if (matches) {
             // Grab the values from the description

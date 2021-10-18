@@ -55,7 +55,7 @@
             }
         },
         "/api/v{api-version}/parameters/{parameterPath}": {
-            "get": {
+            "post": {
                 "tags": [
                     "Parameters"
                 ],
@@ -106,7 +106,7 @@
             }
         },
         "/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}": {
-            "get": {
+            "post": {
                 "tags": [
                     "Parameters"
                 ],
@@ -816,12 +816,18 @@
                 1,
                 2,
                 3,
+                1.1,
+                1.20,
+                1.300,
                 100,
                 200,
                 300,
                 -100,
                 -200,
-                -300
+                -300,
+                -1.1,
+                -1.20,
+                -1.300
             ]
         },
         "EnumFromDescription": {

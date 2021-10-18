@@ -1,5 +1,9 @@
 {{>header}}
 
+import { AbortController, AbortSignal } from 'abort-controller';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import FormData from 'form-data';
+
 import { ApiError } from './ApiError';
 import type { ApiRequestOptions } from './ApiRequestOptions';
 import type { ApiResult } from './ApiResult';
@@ -15,7 +19,7 @@ import { OpenAPI } from './OpenAPI';
 {{>functions/isStringWithValue}}
 
 
-{{>functions/isBlob}}
+{{>functions/isSuccess}}
 
 
 {{>functions/base64}}
@@ -33,26 +37,23 @@ import { OpenAPI } from './OpenAPI';
 {{>functions/resolve}}
 
 
-{{>fetch/getHeaders}}
+{{>axios/getHeaders}}
 
 
-{{>fetch/getRequestBody}}
+{{>axios/sendRequest}}
 
 
-{{>fetch/sendRequest}}
+{{>axios/getResponseHeader}}
 
 
-{{>fetch/getResponseHeader}}
-
-
-{{>fetch/getResponseBody}}
+{{>axios/getResponseBody}}
 
 
 {{>functions/catchErrors}}
 
 
 /**
- * Request using fetch client
+ * Request using axios client
  * @param options The request options from the the service
  * @returns CancelablePromise<T>
  * @throws ApiError
@@ -62,12 +63,12 @@ export function request<T>(options: ApiRequestOptions): CancelablePromise<T> {
         try {
             const url = getUrl(options);
             const response = await sendRequest(options, url, onCancel);
-            const responseBody = await getResponseBody(response);
+            const responseBody = getResponseBody(response);
             const responseHeader = getResponseHeader(response, options.responseHeader);
 
             const result: ApiResult = {
                 url,
-                ok: response.ok,
+                ok: isSuccess(response.status),
                 status: response.status,
                 statusText: response.statusText,
                 body: responseHeader || responseBody,
@@ -81,3 +82,4 @@ export function request<T>(options: ApiRequestOptions): CancelablePromise<T> {
         }
     });
 }
+

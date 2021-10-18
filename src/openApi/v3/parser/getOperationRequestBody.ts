@@ -4,6 +4,7 @@ import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiRequestBody } from '../interfaces/OpenApiRequestBody';
 import { getComment } from './getComment';
 import { getContent } from './getContent';
+import { getMediaType } from './getMediaType';
 import { getModel } from './getModel';
 import { getType } from './getType';
 
@@ -27,11 +28,13 @@ export function getOperationRequestBody(openApi: OpenApi, parameter: OpenApiRequ
         enum: [],
         enums: [],
         properties: [],
+        mediaType: null,
     };
 
     if (parameter.content) {
         const schema = getContent(openApi, parameter.content);
         if (schema) {
+            requestBody.mediaType = getMediaType(openApi, parameter.content);
             if (schema?.$ref) {
                 const model = getType(schema.$ref);
                 requestBody.export = 'reference';

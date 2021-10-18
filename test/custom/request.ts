@@ -12,7 +12,15 @@ export function request<T>(options: ApiRequestOptions): CancelablePromise<T> {
         try {
             // Do your request...
             const timeout = setTimeout(() => {
-                resolve({ ...options });
+                resolve({
+                    url,
+                    ok: true,
+                    status: 200,
+                    statusText: 'dummy',
+                    body: {
+                        ...options,
+                    },
+                });
             }, 500);
 
             // Cancel your request...

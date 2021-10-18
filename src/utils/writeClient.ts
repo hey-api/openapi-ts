@@ -16,7 +16,7 @@ import { writeClientServices } from './writeClientServices';
  * @param client Client object with all the models, services, etc.
  * @param templates Templates wrapper with all loaded Handlebars templates
  * @param output The relative location of the output directory
- * @param httpClient The selected httpClient (fetch, xhr or node)
+ * @param httpClient The selected httpClient (fetch, xhr, node or axios)
  * @param useOptions Use options or arguments functions
  * @param useUnionTypes Use union types instead of enums
  * @param exportCore: Generate core client classes

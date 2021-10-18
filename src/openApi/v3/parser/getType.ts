@@ -5,21 +5,35 @@ import { stripNamespace } from './stripNamespace';
 function encode(value: string): string {
     return value.replace(/^[^a-zA-Z_$]+/g, '').replace(/[^\w$]+/g, '_');
 }
-
 /**
  * Parse any string value into a type object.
- * @param value String value like "integer" or "Link[Model]".
+ * @param values String or String[] value like "integer", "Link[Model]" or ["string", "null"]
  * @param template Optional template class from parent (needed to process generics)
  */
-export function getType(value?: string, template?: string): Type {
+export function getType(values?: string | string[], template?: string): Type {
     const result: Type = {
         type: 'any',
         base: 'any',
         template: null,
         imports: [],
+        isNullable: false,
     };
 
-    const valueClean = stripNamespace(value || '');
+    // Special case for JSON Schema spec (december 2020, page 17),
+    // that allows type to be an array of primitive types...
+    if (Array.isArray(values)) {
+        const type = values
+            .filter(value => value !== 'null')
+            .filter(value => hasMappedType(value))
+            .map(value => getMappedType(value))
+            .join(' | ');
+        result.type = type;
+        result.base = type;
+        result.isNullable = values.includes('null');
+        return result;
+    }
+
+    const valueClean = decodeURIComponent(stripNamespace(values || ''));
 
     if (/\[.*\]$/g.test(valueClean)) {
         const matches = valueClean.match(/(.*?)\[(.*)\]$/);
