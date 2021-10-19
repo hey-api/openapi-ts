@@ -111,11 +111,13 @@ export class CancelablePromise<T> implements Promise<T> {
         return this.#promise.then(onFulfilled, onRejected);
     }
 
-    public catch<TResult = never>(onRejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult> {
+    public catch<TResult = never>(
+        onRejected?: ((reason: any) => TResult | PromiseLike<TResult>) | null
+    ): Promise<T | TResult> {
         return this.#promise.catch(onRejected);
     }
 
-    public finally(onFinally?: (() => void) | undefined | null): Promise<T> {
+    public finally(onFinally?: (() => void) | null): Promise<T> {
         return this.#promise.finally(onFinally);
     }
 
@@ -129,7 +131,7 @@ export class CancelablePromise<T> implements Promise<T> {
                 for (const cancelHandler of this.#cancelHandlers) {
                     cancelHandler();
                 }
-            } catch(error) {
+            } catch (error) {
                 this.#reject?.(error);
                 return;
             }
@@ -2582,11 +2584,13 @@ export class CancelablePromise<T> implements Promise<T> {
         return this.#promise.then(onFulfilled, onRejected);
     }
 
-    public catch<TResult = never>(onRejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult> {
+    public catch<TResult = never>(
+        onRejected?: ((reason: any) => TResult | PromiseLike<TResult>) | null
+    ): Promise<T | TResult> {
         return this.#promise.catch(onRejected);
     }
 
-    public finally(onFinally?: (() => void) | undefined | null): Promise<T> {
+    public finally(onFinally?: (() => void) | null): Promise<T> {
         return this.#promise.finally(onFinally);
     }
 
@@ -2600,7 +2604,7 @@ export class CancelablePromise<T> implements Promise<T> {
                 for (const cancelHandler of this.#cancelHandlers) {
                     cancelHandler();
                 }
-            } catch(error) {
+            } catch (error) {
                 this.#reject?.(error);
                 return;
             }
