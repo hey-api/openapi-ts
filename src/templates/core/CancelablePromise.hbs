@@ -1,35 +1,42 @@
+{{>header}}
+
 export class CancelablePromise<T> implements Promise<T> {
     readonly [Symbol.toStringTag]: string;
 
-    private _isPending: boolean = true;
-    private _isCanceled: boolean = false;
-    private _promise: Promise<T>;
-    private _resolve?: (value: T | PromiseLike<T>) => void;
-    private _reject?: (reason?: unknown) => void;
-    private _cancelHandler?: () => void;
+    #isPending: boolean;
+    #isCanceled: boolean;
+    readonly #cancelHandlers: (() => void)[];
+    readonly #promise: Promise<T>;
+    #resolve?: (value: T | PromiseLike<T>) => void;
+    #reject?: (reason?: any) => void;
 
-    constructor(executor: (resolve: (value: T | PromiseLike<T>) => void, reject: (reason?: unknown) => void, onCancel: (cancelHandler: () => void) => void) => void) {
-        this._promise = new Promise<T>((resolve, reject) => {
-            this._resolve = resolve;
-            this._reject = reject;
+    constructor(executor: (
+        resolve: (value: T | PromiseLike<T>) => void,
+        reject: (reason?: any) => void,
+        onCancel: (cancelHandler: () => void) => void) => void,
+    ) {
+        this.#isPending = true;
+        this.#isCanceled = false;
+        this.#cancelHandlers = [];
+        this.#promise = new Promise<T>((resolve, reject) => {
+            this.#resolve = resolve;
+            this.#reject = reject;
 
             const onResolve = (value: T | PromiseLike<T>): void => {
-                if (!this._isCanceled && this._resolve) {
-                    this._isPending = false;
-                    this._resolve(value);
+                if (!this.#isCanceled) {
+                    this.#isPending = false;
+                    this.#resolve?.(value);
                 }
             };
 
-            const onReject = (reason?: unknown): void => {
-                if (this._reject) {
-                    this._isPending = false;
-                    this._reject(reason);
-                }
+            const onReject = (reason?: any): void => {
+                this.#isPending = false;
+                this.#reject?.(reason);
             };
 
             const onCancel = (cancelHandler: () => void): void => {
-                if (this._isPending) {
-                    this._cancelHandler = cancelHandler;
+                if (this.#isPending) {
+                    this.#cancelHandlers.push(cancelHandler);
                 }
             };
 
@@ -41,33 +48,35 @@ export class CancelablePromise<T> implements Promise<T> {
         onFulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | null,
         onRejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | null
     ): Promise<TResult1 | TResult2> {
-        return this._promise.then(onFulfilled, onRejected);
+        return this.#promise.then(onFulfilled, onRejected);
     }
 
     public catch<TResult = never>(onRejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult> {
-        return this._promise.catch(onRejected);
+        return this.#promise.catch(onRejected);
     }
 
     public finally(onFinally?: (() => void) | undefined | null): Promise<T> {
-        return this._promise.finally(onFinally);
+        return this.#promise.finally(onFinally);
     }
 
-    public cancel() {
-        if (!this._isPending || this._isCanceled) {
+    public cancel(): void {
+        if (!this.#isPending || this.#isCanceled) {
             return;
         }
-        this._isCanceled = true;
-        if (this._cancelHandler && this._reject) {
+        this.#isCanceled = true;
+        if (this.#cancelHandlers.length) {
             try {
-                this._cancelHandler();
+                for (const cancelHandler of this.#cancelHandlers) {
+                    cancelHandler();
+                }
             } catch (error) {
-                this._reject(error);
+                this.#reject?.(error);
                 return;
             }
         }
     }
 
     public get isCanceled(): boolean {
-        return this._isCanceled;
+        return this.#isCanceled;
     }
 }
