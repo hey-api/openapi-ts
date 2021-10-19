@@ -45,7 +45,7 @@ describe('v2.node', () => {
             }, 10);
             await promise;
         } catch (e) {
-            expect(e.message).toContain('canceled');
+            expect(e.message).toContain('The user aborted a request.');
         }
     });
 });

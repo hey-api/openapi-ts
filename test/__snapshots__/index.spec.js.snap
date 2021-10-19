@@ -430,7 +430,7 @@ exports[`v2 should generate: ./test/generated/v2/index.ts 1`] = `
 /* tslint:disable */
 /* eslint-disable */
 export { ApiError } from './core/ApiError';
-export type { CancelablePromise } from './core/CancelablePromise';
+export { CancelablePromise } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 
 export type { ArrayWithArray } from './models/ArrayWithArray';
@@ -2899,7 +2899,7 @@ exports[`v3 should generate: ./test/generated/v3/index.ts 1`] = `
 /* tslint:disable */
 /* eslint-disable */
 export { ApiError } from './core/ApiError';
-export type { CancelablePromise } from './core/CancelablePromise';
+export { CancelablePromise } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 
 export type { ArrayWithArray } from './models/ArrayWithArray';

@@ -1,5 +1,5 @@
 async function sendRequest(options: ApiRequestOptions, url: string, onCancel: (cancelHandler: () => void) => void): Promise<AxiosResponse<any>> {
-    const controller = new AbortController();
+    const source = axios.CancelToken.source();
     const formData = options.formData && getFormData(options.formData);
     const data = formData || options.body;
 
@@ -8,10 +8,10 @@ async function sendRequest(options: ApiRequestOptions, url: string, onCancel: (c
         data,
         method: options.method,
         headers: await getHeaders(options, formData),
-        signal: controller.signal,
+        cancelToken: source.token,
     };
 
-    onCancel(() => controller.abort());
+    onCancel(() => source.cancel('The user aborted a request.'));
 
     return await axios.request(config);
 }
