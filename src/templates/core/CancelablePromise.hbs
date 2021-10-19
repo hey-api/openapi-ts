@@ -10,10 +10,12 @@ export class CancelablePromise<T> implements Promise<T> {
     #resolve?: (value: T | PromiseLike<T>) => void;
     #reject?: (reason?: any) => void;
 
-    constructor(executor: (
-        resolve: (value: T | PromiseLike<T>) => void,
-        reject: (reason?: any) => void,
-        onCancel: (cancelHandler: () => void) => void) => void,
+    constructor(
+        executor: (
+            resolve: (value: T | PromiseLike<T>) => void,
+            reject: (reason?: any) => void,
+            onCancel: (cancelHandler: () => void) => void
+        ) => void
     ) {
         this.#isPending = true;
         this.#isCanceled = false;
@@ -69,7 +71,7 @@ export class CancelablePromise<T> implements Promise<T> {
                 for (const cancelHandler of this.#cancelHandlers) {
                     cancelHandler();
                 }
-            } catch (error) {
+            } catch(error) {
                 this.#reject?.(error);
                 return;
             }
