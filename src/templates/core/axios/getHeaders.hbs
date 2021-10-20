@@ -11,7 +11,7 @@ async function getHeaders(options: ApiRequestOptions, formData?: FormData): Prom
         ...options.headers,
         ...formHeaders,
     })
-    .filter(([key, value]) => isDefined(value))
+    .filter(([_, value]) => isDefined(value))
     .reduce((headers, [key, value]) => ({
         ...headers,
         [key]: value,
