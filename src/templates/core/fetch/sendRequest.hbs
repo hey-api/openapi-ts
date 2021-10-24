@@ -1,10 +1,17 @@
-async function sendRequest(options: ApiRequestOptions, url: string, onCancel: (cancelHandler: () => void) => void): Promise<Response> {
+async function sendRequest(
+    options: ApiRequestOptions,
+    url: string,
+    formData: FormData | undefined,
+    body: BodyInit | undefined,
+    headers: Headers,
+    onCancel: OnCancel
+): Promise<Response> {
     const controller = new AbortController();
-    
+
     const request: RequestInit = {
+        headers,
+        body: body || formData,
         method: options.method,
-        headers: await getHeaders(options),
-        body: getRequestBody(options),
         signal: controller.signal,
     };
 

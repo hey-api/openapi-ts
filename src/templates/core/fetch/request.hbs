@@ -4,6 +4,7 @@ import { ApiError } from './ApiError';
 import type { ApiRequestOptions } from './ApiRequestOptions';
 import type { ApiResult } from './ApiResult';
 import { CancelablePromise } from './CancelablePromise';
+import type { OnCancel } from './CancelablePromise';
 import { OpenAPI } from './OpenAPI';
 
 {{>functions/isDefined}}
@@ -61,21 +62,27 @@ export function request<T>(options: ApiRequestOptions): CancelablePromise<T> {
     return new CancelablePromise(async (resolve, reject, onCancel) => {
         try {
             const url = getUrl(options);
-            const response = await sendRequest(options, url, onCancel);
-            const responseBody = await getResponseBody(response);
-            const responseHeader = getResponseHeader(response, options.responseHeader);
+            const formData = getFormData(options);
+            const body = getRequestBody(options);
+            const headers = await getHeaders(options);
 
-            const result: ApiResult = {
-                url,
-                ok: response.ok,
-                status: response.status,
-                statusText: response.statusText,
-                body: responseHeader || responseBody,
-            };
+            if (!onCancel.isCancelled) {
+                const response = await sendRequest(options, url, formData, body, headers, onCancel);
+                const responseBody = await getResponseBody(response);
+                const responseHeader = getResponseHeader(response, options.responseHeader);
 
-            catchErrors(options, result);
+                const result: ApiResult = {
+                    url,
+                    ok: response.ok,
+                    status: response.status,
+                    statusText: response.statusText,
+                    body: responseHeader || responseBody,
+                };
 
-            resolve(result.body);
+                catchErrors(options, result);
+
+                resolve(result.body);
+            }
         } catch (error) {
             reject(error);
         }

@@ -1,10 +1,29 @@
 {{>header}}
 
+export class CancelError extends Error {
+
+    constructor(reason: string = 'Promise was canceled') {
+        super(reason);
+        this.name = 'CancelError';
+    }
+
+    public get isCancelled(): boolean {
+        return true;
+    }
+}
+
+export interface OnCancel {
+    readonly isPending: boolean;
+    readonly isCancelled: boolean;
+
+    (cancelHandler: () => void): void;
+}
+
 export class CancelablePromise<T> implements Promise<T> {
     readonly [Symbol.toStringTag]: string;
 
     #isPending: boolean;
-    #isCanceled: boolean;
+    #isCancelled: boolean;
     readonly #cancelHandlers: (() => void)[];
     readonly #promise: Promise<T>;
     #resolve?: (value: T | PromiseLike<T>) => void;
@@ -14,18 +33,18 @@ export class CancelablePromise<T> implements Promise<T> {
         executor: (
             resolve: (value: T | PromiseLike<T>) => void,
             reject: (reason?: any) => void,
-            onCancel: (cancelHandler: () => void) => void
+            onCancel: OnCancel
         ) => void
     ) {
         this.#isPending = true;
-        this.#isCanceled = false;
+        this.#isCancelled = false;
         this.#cancelHandlers = [];
         this.#promise = new Promise<T>((resolve, reject) => {
             this.#resolve = resolve;
             this.#reject = reject;
 
             const onResolve = (value: T | PromiseLike<T>): void => {
-                if (!this.#isCanceled) {
+                if (!this.#isCancelled) {
                     this.#isPending = false;
                     this.#resolve?.(value);
                 }
@@ -42,7 +61,15 @@ export class CancelablePromise<T> implements Promise<T> {
                 }
             };
 
-            return executor(onResolve, onReject, onCancel);
+            Object.defineProperty(onCancel, 'isPending', {
+                get: (): boolean => this.#isPending,
+            });
+
+            Object.defineProperty(onCancel, 'isCancelled', {
+                get: (): boolean => this.#isCancelled,
+            });
+
+            return executor(onResolve, onReject, onCancel as OnCancel);
         });
     }
 
@@ -64,10 +91,10 @@ export class CancelablePromise<T> implements Promise<T> {
     }
 
     public cancel(): void {
-        if (!this.#isPending || this.#isCanceled) {
+        if (!this.#isPending || this.#isCancelled) {
             return;
         }
-        this.#isCanceled = true;
+        this.#isCancelled = true;
         if (this.#cancelHandlers.length) {
             try {
                 for (const cancelHandler of this.#cancelHandlers) {
@@ -80,7 +107,7 @@ export class CancelablePromise<T> implements Promise<T> {
         }
     }
 
-    public get isCanceled(): boolean {
-        return this.#isCanceled;
+    public get isCancelled(): boolean {
+        return this.#isCancelled;
     }
 }

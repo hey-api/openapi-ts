@@ -1,12 +1,15 @@
-function getFormData(params: Record<string, any>): FormData {
-    const formData = new FormData();
+function getFormData(options: ApiRequestOptions): FormData | undefined {
+    if (options.formData) {
+        const formData = new FormData();
 
-    Object.keys(params).forEach(key => {
-        const value = params[key];
-        if (isDefined(value)) {
-            formData.append(key, value);
-        }
-    });
+        Object.keys(options.formData).forEach(key => {
+            const value = options.formData?.[key];
+            if (isDefined(value)) {
+                formData.append(key, value);
+            }
+        });
 
-    return formData;
+        return formData;
+    }
+    return;
 }

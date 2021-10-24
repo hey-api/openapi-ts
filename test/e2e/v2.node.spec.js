@@ -38,7 +38,7 @@ describe('v2.node', () => {
 
     it('can abort the request', async () => {
         try {
-            const { SimpleService } = require('./generated/v3/node/index.js');
+            const { SimpleService } = require('./generated/v2/node/index.js');
             const promise = SimpleService.getCallWithoutParametersAndResponse();
             setTimeout(() => {
                 promise.cancel();

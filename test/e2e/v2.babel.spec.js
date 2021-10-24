@@ -6,7 +6,7 @@ const compileWithBabel = require('./scripts/compileWithBabel');
 const server = require('./scripts/server');
 const browser = require('./scripts/browser');
 
-describe('v2.fetch', () => {
+describe('v2.babel', () => {
     beforeAll(async () => {
         await generate('v2/babel', 'v2', 'fetch', true, true);
         await copy('v2/babel');

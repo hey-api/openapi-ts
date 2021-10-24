@@ -1,13 +1,18 @@
-async function sendRequest(options: ApiRequestOptions, url: string, onCancel: (cancelHandler: () => void) => void): Promise<AxiosResponse<any>> {
+async function sendRequest(
+    options: ApiRequestOptions,
+    url: string,
+    formData: FormData | undefined,
+    body: any,
+    headers: Record<string, string>,
+    onCancel: OnCancel
+): Promise<AxiosResponse<any>> {
     const source = axios.CancelToken.source();
-    const formData = options.formData && getFormData(options.formData);
-    const data = formData || options.body;
 
     const config: AxiosRequestConfig = {
         url,
-        data,
+        headers,
+        data: body || formData,
         method: options.method,
-        headers: await getHeaders(options, formData),
         cancelToken: source.token,
     };
 

@@ -15,6 +15,7 @@ export class ApiError extends Error {
     constructor(response: ApiResult, message: string) {
         super(message);
 
+        this.name = 'ApiError';
         this.url = response.url;
         this.status = response.status;
         this.statusText = response.statusText;
@@ -58,11 +59,30 @@ exports[`v2 should generate: ./test/generated/v2/core/CancelablePromise.ts 1`] =
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+export class CancelError extends Error {
+
+    constructor(reason: string = 'Promise was canceled') {
+        super(reason);
+        this.name = 'CancelError';
+    }
+
+    public get isCancelled(): boolean {
+        return true;
+    }
+}
+
+export interface OnCancel {
+    readonly isPending: boolean;
+    readonly isCancelled: boolean;
+
+    (cancelHandler: () => void): void;
+}
+
 export class CancelablePromise<T> implements Promise<T> {
     readonly [Symbol.toStringTag]: string;
 
     #isPending: boolean;
-    #isCanceled: boolean;
+    #isCancelled: boolean;
     readonly #cancelHandlers: (() => void)[];
     readonly #promise: Promise<T>;
     #resolve?: (value: T | PromiseLike<T>) => void;
@@ -72,18 +92,18 @@ export class CancelablePromise<T> implements Promise<T> {
         executor: (
             resolve: (value: T | PromiseLike<T>) => void,
             reject: (reason?: any) => void,
-            onCancel: (cancelHandler: () => void) => void
+            onCancel: OnCancel
         ) => void
     ) {
         this.#isPending = true;
-        this.#isCanceled = false;
+        this.#isCancelled = false;
         this.#cancelHandlers = [];
         this.#promise = new Promise<T>((resolve, reject) => {
             this.#resolve = resolve;
             this.#reject = reject;
 
             const onResolve = (value: T | PromiseLike<T>): void => {
-                if (!this.#isCanceled) {
+                if (!this.#isCancelled) {
                     this.#isPending = false;
                     this.#resolve?.(value);
                 }
@@ -100,7 +120,15 @@ export class CancelablePromise<T> implements Promise<T> {
                 }
             };
 
-            return executor(onResolve, onReject, onCancel);
+            Object.defineProperty(onCancel, 'isPending', {
+                get: (): boolean => this.#isPending,
+            });
+
+            Object.defineProperty(onCancel, 'isCancelled', {
+                get: (): boolean => this.#isCancelled,
+            });
+
+            return executor(onResolve, onReject, onCancel as OnCancel);
         });
     }
 
@@ -122,10 +150,10 @@ export class CancelablePromise<T> implements Promise<T> {
     }
 
     public cancel(): void {
-        if (!this.#isPending || this.#isCanceled) {
+        if (!this.#isPending || this.#isCancelled) {
             return;
         }
-        this.#isCanceled = true;
+        this.#isCancelled = true;
         if (this.#cancelHandlers.length) {
             try {
                 for (const cancelHandler of this.#cancelHandlers) {
@@ -138,8 +166,8 @@ export class CancelablePromise<T> implements Promise<T> {
         }
     }
 
-    public get isCanceled(): boolean {
-        return this.#isCanceled;
+    public get isCancelled(): boolean {
+        return this.#isCancelled;
     }
 }"
 `;
@@ -184,6 +212,7 @@ import { ApiError } from './ApiError';
 import type { ApiRequestOptions } from './ApiRequestOptions';
 import type { ApiResult } from './ApiResult';
 import { CancelablePromise } from './CancelablePromise';
+import type { OnCancel } from './CancelablePromise';
 import { OpenAPI } from './OpenAPI';
 
 function isDefined<T>(value: T | null | undefined): value is Exclude<T, null | undefined> {
@@ -243,17 +272,20 @@ function getUrl(options: ApiRequestOptions): string {
     return url;
 }
 
-function getFormData(params: Record<string, any>): FormData {
-    const formData = new FormData();
+function getFormData(options: ApiRequestOptions): FormData | undefined {
+    if (options.formData) {
+        const formData = new FormData();
 
-    Object.keys(params).forEach(key => {
-        const value = params[key];
-        if (isDefined(value)) {
-            formData.append(key, value);
-        }
-    });
+        Object.keys(options.formData).forEach(key => {
+            const value = options.formData?.[key];
+            if (isDefined(value)) {
+                formData.append(key, value);
+            }
+        });
 
-    return formData;
+        return formData;
+    }
+    return;
 }
 
 type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
@@ -304,14 +336,11 @@ async function getHeaders(options: ApiRequestOptions): Promise<Headers> {
             headers.append('Content-Type', 'application/json');
         }
     }
+
     return headers;
 }
 
 function getRequestBody(options: ApiRequestOptions): BodyInit | undefined {
-    if (options.formData) {
-        return getFormData(options.formData);
-    }
-
     if (options.body) {
         if (options.mediaType?.includes('/json')) {
             return JSON.stringify(options.body)
@@ -321,17 +350,23 @@ function getRequestBody(options: ApiRequestOptions): BodyInit | undefined {
             return JSON.stringify(options.body);
         }
     }
-
-    return undefined;
+    return;
 }
 
-async function sendRequest(options: ApiRequestOptions, url: string, onCancel: (cancelHandler: () => void) => void): Promise<Response> {
+async function sendRequest(
+    options: ApiRequestOptions,
+    url: string,
+    formData: FormData | undefined,
+    body: BodyInit | undefined,
+    headers: Headers,
+    onCancel: OnCancel
+): Promise<Response> {
     const controller = new AbortController();
-    
+
     const request: RequestInit = {
+        headers,
+        body: body || formData,
         method: options.method,
-        headers: await getHeaders(options),
-        body: getRequestBody(options),
         signal: controller.signal,
     };
 
@@ -344,15 +379,14 @@ async function sendRequest(options: ApiRequestOptions, url: string, onCancel: (c
     return await fetch(url, request);
 }
 
-function getResponseHeader(response: Response, responseHeader?: string): string | null {
+function getResponseHeader(response: Response, responseHeader?: string): string | undefined {
     if (responseHeader) {
         const content = response.headers.get(responseHeader);
         if (isString(content)) {
             return content;
         }
     }
-
-    return null;
+    return;
 }
 
 async function getResponseBody(response: Response): Promise<any> {
@@ -371,8 +405,7 @@ async function getResponseBody(response: Response): Promise<any> {
             console.error(error);
         }
     }
-
-    return null;
+    return;
 }
 
 function catchErrors(options: ApiRequestOptions, result: ApiResult): void {
@@ -407,21 +440,27 @@ export function request<T>(options: ApiRequestOptions): CancelablePromise<T> {
     return new CancelablePromise(async (resolve, reject, onCancel) => {
         try {
             const url = getUrl(options);
-            const response = await sendRequest(options, url, onCancel);
-            const responseBody = await getResponseBody(response);
-            const responseHeader = getResponseHeader(response, options.responseHeader);
+            const formData = getFormData(options);
+            const body = getRequestBody(options);
+            const headers = await getHeaders(options);
 
-            const result: ApiResult = {
-                url,
-                ok: response.ok,
-                status: response.status,
-                statusText: response.statusText,
-                body: responseHeader || responseBody,
-            };
+            if (!onCancel.isCancelled) {
+                const response = await sendRequest(options, url, formData, body, headers, onCancel);
+                const responseBody = await getResponseBody(response);
+                const responseHeader = getResponseHeader(response, options.responseHeader);
 
-            catchErrors(options, result);
+                const result: ApiResult = {
+                    url,
+                    ok: response.ok,
+                    status: response.status,
+                    statusText: response.statusText,
+                    body: responseHeader || responseBody,
+                };
 
-            resolve(result.body);
+                catchErrors(options, result);
+
+                resolve(result.body);
+            }
         } catch (error) {
             reject(error);
         }
@@ -2488,6 +2527,7 @@ export class ApiError extends Error {
     constructor(response: ApiResult, message: string) {
         super(message);
 
+        this.name = 'ApiError';
         this.url = response.url;
         this.status = response.status;
         this.statusText = response.statusText;
@@ -2531,11 +2571,30 @@ exports[`v3 should generate: ./test/generated/v3/core/CancelablePromise.ts 1`] =
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+export class CancelError extends Error {
+
+    constructor(reason: string = 'Promise was canceled') {
+        super(reason);
+        this.name = 'CancelError';
+    }
+
+    public get isCancelled(): boolean {
+        return true;
+    }
+}
+
+export interface OnCancel {
+    readonly isPending: boolean;
+    readonly isCancelled: boolean;
+
+    (cancelHandler: () => void): void;
+}
+
 export class CancelablePromise<T> implements Promise<T> {
     readonly [Symbol.toStringTag]: string;
 
     #isPending: boolean;
-    #isCanceled: boolean;
+    #isCancelled: boolean;
     readonly #cancelHandlers: (() => void)[];
     readonly #promise: Promise<T>;
     #resolve?: (value: T | PromiseLike<T>) => void;
@@ -2545,18 +2604,18 @@ export class CancelablePromise<T> implements Promise<T> {
         executor: (
             resolve: (value: T | PromiseLike<T>) => void,
             reject: (reason?: any) => void,
-            onCancel: (cancelHandler: () => void) => void
+            onCancel: OnCancel
         ) => void
     ) {
         this.#isPending = true;
-        this.#isCanceled = false;
+        this.#isCancelled = false;
         this.#cancelHandlers = [];
         this.#promise = new Promise<T>((resolve, reject) => {
             this.#resolve = resolve;
             this.#reject = reject;
 
             const onResolve = (value: T | PromiseLike<T>): void => {
-                if (!this.#isCanceled) {
+                if (!this.#isCancelled) {
                     this.#isPending = false;
                     this.#resolve?.(value);
                 }
@@ -2573,7 +2632,15 @@ export class CancelablePromise<T> implements Promise<T> {
                 }
             };
 
-            return executor(onResolve, onReject, onCancel);
+            Object.defineProperty(onCancel, 'isPending', {
+                get: (): boolean => this.#isPending,
+            });
+
+            Object.defineProperty(onCancel, 'isCancelled', {
+                get: (): boolean => this.#isCancelled,
+            });
+
+            return executor(onResolve, onReject, onCancel as OnCancel);
         });
     }
 
@@ -2595,10 +2662,10 @@ export class CancelablePromise<T> implements Promise<T> {
     }
 
     public cancel(): void {
-        if (!this.#isPending || this.#isCanceled) {
+        if (!this.#isPending || this.#isCancelled) {
             return;
         }
-        this.#isCanceled = true;
+        this.#isCancelled = true;
         if (this.#cancelHandlers.length) {
             try {
                 for (const cancelHandler of this.#cancelHandlers) {
@@ -2611,8 +2678,8 @@ export class CancelablePromise<T> implements Promise<T> {
         }
     }
 
-    public get isCanceled(): boolean {
-        return this.#isCanceled;
+    public get isCancelled(): boolean {
+        return this.#isCancelled;
     }
 }"
 `;
@@ -2657,6 +2724,7 @@ import { ApiError } from './ApiError';
 import type { ApiRequestOptions } from './ApiRequestOptions';
 import type { ApiResult } from './ApiResult';
 import { CancelablePromise } from './CancelablePromise';
+import type { OnCancel } from './CancelablePromise';
 import { OpenAPI } from './OpenAPI';
 
 function isDefined<T>(value: T | null | undefined): value is Exclude<T, null | undefined> {
@@ -2716,17 +2784,20 @@ function getUrl(options: ApiRequestOptions): string {
     return url;
 }
 
-function getFormData(params: Record<string, any>): FormData {
-    const formData = new FormData();
+function getFormData(options: ApiRequestOptions): FormData | undefined {
+    if (options.formData) {
+        const formData = new FormData();
 
-    Object.keys(params).forEach(key => {
-        const value = params[key];
-        if (isDefined(value)) {
-            formData.append(key, value);
-        }
-    });
+        Object.keys(options.formData).forEach(key => {
+            const value = options.formData?.[key];
+            if (isDefined(value)) {
+                formData.append(key, value);
+            }
+        });
 
-    return formData;
+        return formData;
+    }
+    return;
 }
 
 type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
@@ -2777,14 +2848,11 @@ async function getHeaders(options: ApiRequestOptions): Promise<Headers> {
             headers.append('Content-Type', 'application/json');
         }
     }
+
     return headers;
 }
 
 function getRequestBody(options: ApiRequestOptions): BodyInit | undefined {
-    if (options.formData) {
-        return getFormData(options.formData);
-    }
-
     if (options.body) {
         if (options.mediaType?.includes('/json')) {
             return JSON.stringify(options.body)
@@ -2794,17 +2862,23 @@ function getRequestBody(options: ApiRequestOptions): BodyInit | undefined {
             return JSON.stringify(options.body);
         }
     }
-
-    return undefined;
+    return;
 }
 
-async function sendRequest(options: ApiRequestOptions, url: string, onCancel: (cancelHandler: () => void) => void): Promise<Response> {
+async function sendRequest(
+    options: ApiRequestOptions,
+    url: string,
+    formData: FormData | undefined,
+    body: BodyInit | undefined,
+    headers: Headers,
+    onCancel: OnCancel
+): Promise<Response> {
     const controller = new AbortController();
-    
+
     const request: RequestInit = {
+        headers,
+        body: body || formData,
         method: options.method,
-        headers: await getHeaders(options),
-        body: getRequestBody(options),
         signal: controller.signal,
     };
 
@@ -2817,15 +2891,14 @@ async function sendRequest(options: ApiRequestOptions, url: string, onCancel: (c
     return await fetch(url, request);
 }
 
-function getResponseHeader(response: Response, responseHeader?: string): string | null {
+function getResponseHeader(response: Response, responseHeader?: string): string | undefined {
     if (responseHeader) {
         const content = response.headers.get(responseHeader);
         if (isString(content)) {
             return content;
         }
     }
-
-    return null;
+    return;
 }
 
 async function getResponseBody(response: Response): Promise<any> {
@@ -2844,8 +2917,7 @@ async function getResponseBody(response: Response): Promise<any> {
             console.error(error);
         }
     }
-
-    return null;
+    return;
 }
 
 function catchErrors(options: ApiRequestOptions, result: ApiResult): void {
@@ -2880,21 +2952,27 @@ export function request<T>(options: ApiRequestOptions): CancelablePromise<T> {
     return new CancelablePromise(async (resolve, reject, onCancel) => {
         try {
             const url = getUrl(options);
-            const response = await sendRequest(options, url, onCancel);
-            const responseBody = await getResponseBody(response);
-            const responseHeader = getResponseHeader(response, options.responseHeader);
+            const formData = getFormData(options);
+            const body = getRequestBody(options);
+            const headers = await getHeaders(options);
 
-            const result: ApiResult = {
-                url,
-                ok: response.ok,
-                status: response.status,
-                statusText: response.statusText,
-                body: responseHeader || responseBody,
-            };
+            if (!onCancel.isCancelled) {
+                const response = await sendRequest(options, url, formData, body, headers, onCancel);
+                const responseBody = await getResponseBody(response);
+                const responseHeader = getResponseHeader(response, options.responseHeader);
 
-            catchErrors(options, result);
+                const result: ApiResult = {
+                    url,
+                    ok: response.ok,
+                    status: response.status,
+                    statusText: response.statusText,
+                    body: responseHeader || responseBody,
+                };
 
-            resolve(result.body);
+                catchErrors(options, result);
+
+                resolve(result.body);
+            }
         } catch (error) {
             reject(error);
         }
