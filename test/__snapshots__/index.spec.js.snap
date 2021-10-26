@@ -811,7 +811,7 @@ import type { ModelWithString } from './ModelWithString';
 export type ModelThatExtends = (ModelWithString & {
     propExtendsA?: string;
     propExtendsB?: ModelWithString;
-});
+} & any);
 "
 `;
 
@@ -829,7 +829,7 @@ import type { ModelWithString } from './ModelWithString';
 export type ModelThatExtendsExtends = (ModelWithString & ModelThatExtends & {
     propExtendsC?: string;
     propExtendsD?: ModelWithString;
-});
+} & any);
 "
 `;
 
@@ -1478,6 +1478,9 @@ export const $ModelThatExtends = {
                 type: 'ModelWithString',
             },
         },
+    }, {
+        properties: {
+        },
     }],
 };"
 `;
@@ -1500,6 +1503,9 @@ export const $ModelThatExtendsExtends = {
             propExtendsD: {
                 type: 'ModelWithString',
             },
+        },
+    }, {
+        properties: {
         },
     }],
 };"
@@ -3201,6 +3207,8 @@ import type { CompositionBaseModel } from './CompositionBaseModel';
  * This is a model that extends the base model
  */
 export type CompositionExtendedModel = (CompositionBaseModel & {
+    firstName: string;
+    lastname: string;
     age: number;
 });
 "
@@ -4055,6 +4063,14 @@ export const $CompositionExtendedModel = {
         type: 'CompositionBaseModel',
     }, {
         properties: {
+            firstName: {
+                type: 'string',
+                isRequired: true,
+            },
+            lastname: {
+                type: 'string',
+                isRequired: true,
+            },
             age: {
                 type: 'number',
                 isRequired: true,

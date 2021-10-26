@@ -1,5 +1,8 @@
 import type { Enum } from '../../../client/interfaces/Enum';
 
+/**
+ * @deprecated
+ */
 export function getEnumFromDescription(description: string): Enum[] {
     // Check if we can find this special format string:
     // None=0,Something=1,AnotherThing=2

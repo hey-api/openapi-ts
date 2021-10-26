@@ -133,13 +133,13 @@ export function getModel(openApi: OpenApi, definition: OpenApiSchema, isDefiniti
         model.base = 'any';
 
         if (definition.properties) {
-            const properties = getModelProperties(openApi, definition, getModel);
-            properties.forEach(property => {
-                model.imports.push(...property.imports);
-                model.enums.push(...property.enums);
-                model.properties.push(property);
-                if (property.export === 'enum') {
-                    model.enums.push(property);
+            const modelProperties = getModelProperties(openApi, definition, getModel);
+            modelProperties.forEach(modelProperty => {
+                model.imports.push(...modelProperty.imports);
+                model.enums.push(...modelProperty.enums);
+                model.properties.push(modelProperty);
+                if (modelProperty.export === 'enum') {
+                    model.enums.push(modelProperty);
                 }
             });
         }

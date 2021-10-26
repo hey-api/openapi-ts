@@ -5,6 +5,7 @@ import { stripNamespace } from './stripNamespace';
 function encode(value: string): string {
     return value.replace(/^[^a-zA-Z_$]+/g, '').replace(/[^\w$]+/g, '_');
 }
+
 /**
  * Parse any string value into a type object.
  * @param values String or String[] value like "integer", "Link[Model]" or ["string", "null"]
