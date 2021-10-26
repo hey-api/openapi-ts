@@ -488,7 +488,7 @@ export type { DictionaryWithDictionary } from './models/DictionaryWithDictionary
 export type { DictionaryWithProperties } from './models/DictionaryWithProperties';
 export type { DictionaryWithReference } from './models/DictionaryWithReference';
 export type { DictionaryWithString } from './models/DictionaryWithString';
-export { EnumFromDescription } from './models/EnumFromDescription';
+export type { EnumFromDescription } from './models/EnumFromDescription';
 export { EnumWithExtensions } from './models/EnumWithExtensions';
 export { EnumWithNumbers } from './models/EnumWithNumbers';
 export { EnumWithStrings } from './models/EnumWithStrings';
@@ -619,8 +619,8 @@ exports[`v2 should generate: ./test/generated/v2/models/ArrayWithProperties.ts 1
  * This is a simple array with properties
  */
 export type ArrayWithProperties = Array<{
-    foo?: string,
-    bar?: string,
+    foo?: string;
+    bar?: string;
 }>;"
 `;
 
@@ -692,8 +692,8 @@ exports[`v2 should generate: ./test/generated/v2/models/DictionaryWithProperties
  * This is a complex dictionary
  */
 export type DictionaryWithProperties = Record<string, {
-    foo?: string,
-    bar?: string,
+    foo?: string;
+    bar?: string;
 }>;"
 `;
 
@@ -729,11 +729,7 @@ exports[`v2 should generate: ./test/generated/v2/models/EnumFromDescription.ts 1
 /**
  * Success=1,Warning=2,Error=3
  */
-export enum EnumFromDescription {
-    SUCCESS = 1,
-    WARNING = 2,
-    ERROR = 3,
-}"
+export type EnumFromDescription = number;"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/models/EnumWithExtensions.ts 1`] = `
@@ -813,8 +809,8 @@ import type { ModelWithString } from './ModelWithString';
  * This is a model that extends another model
  */
 export type ModelThatExtends = (ModelWithString & {
-    propExtendsA?: string,
-    propExtendsB?: ModelWithString,
+    propExtendsA?: string;
+    propExtendsB?: ModelWithString;
 });
 "
 `;
@@ -831,8 +827,8 @@ import type { ModelWithString } from './ModelWithString';
  * This is a model that extends another model
  */
 export type ModelThatExtendsExtends = (ModelWithString & ModelThatExtends & {
-    propExtendsC?: string,
-    propExtendsD?: ModelWithString,
+    propExtendsC?: string;
+    propExtendsD?: ModelWithString;
 });
 "
 `;
@@ -1061,8 +1057,8 @@ exports[`v2 should generate: ./test/generated/v2/models/ModelWithNestedPropertie
 export type ModelWithNestedProperties = {
     readonly first: {
         readonly second: {
-            readonly third: string,
-        },
+            readonly third: string;
+        };
     };
 }
 "
@@ -1434,7 +1430,7 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$EnumFromDescription.ts
 /* tslint:disable */
 /* eslint-disable */
 export const $EnumFromDescription = {
-    type: 'Enum',
+    type: 'number',
 };"
 `;
 
@@ -1994,9 +1990,9 @@ export class ComplexService {
         parameterObject: {
             first?: {
                 second?: {
-                    third?: string,
-                },
-            },
+                    third?: string;
+                };
+            };
         },
         parameterReference: ModelWithString,
     ): CancelablePromise<Array<ModelWithString>> {
@@ -2358,9 +2354,9 @@ export class ResponseService {
      * @throws ApiError
      */
     public static callWithResponses(): CancelablePromise<{
-        readonly '@namespace.string'?: string,
-        readonly '@namespace.integer'?: number,
-        readonly value?: Array<ModelWithString>,
+        readonly '@namespace.string'?: string;
+        readonly '@namespace.integer'?: number;
+        readonly value?: Array<ModelWithString>;
     } | ModelWithString | ModelThatExtends | ModelThatExtendsExtends> {
         return __request({
             method: 'PUT',
@@ -2994,6 +2990,8 @@ export type { ArrayWithNumbers } from './models/ArrayWithNumbers';
 export type { ArrayWithProperties } from './models/ArrayWithProperties';
 export type { ArrayWithReferences } from './models/ArrayWithReferences';
 export type { ArrayWithStrings } from './models/ArrayWithStrings';
+export type { CompositionBaseModel } from './models/CompositionBaseModel';
+export type { CompositionExtendedModel } from './models/CompositionExtendedModel';
 export type { CompositionWithAllOfAndNullable } from './models/CompositionWithAllOfAndNullable';
 export type { CompositionWithAnyOf } from './models/CompositionWithAnyOf';
 export type { CompositionWithAnyOfAndNullable } from './models/CompositionWithAnyOfAndNullable';
@@ -3006,7 +3004,7 @@ export type { DictionaryWithDictionary } from './models/DictionaryWithDictionary
 export type { DictionaryWithProperties } from './models/DictionaryWithProperties';
 export type { DictionaryWithReference } from './models/DictionaryWithReference';
 export type { DictionaryWithString } from './models/DictionaryWithString';
-export { EnumFromDescription } from './models/EnumFromDescription';
+export type { EnumFromDescription } from './models/EnumFromDescription';
 export { EnumWithExtensions } from './models/EnumWithExtensions';
 export { EnumWithNumbers } from './models/EnumWithNumbers';
 export { EnumWithStrings } from './models/EnumWithStrings';
@@ -3023,6 +3021,7 @@ export { ModelWithEnumFromDescription } from './models/ModelWithEnumFromDescript
 export type { ModelWithInteger } from './models/ModelWithInteger';
 export type { ModelWithNestedEnums } from './models/ModelWithNestedEnums';
 export type { ModelWithNestedProperties } from './models/ModelWithNestedProperties';
+export type { ModelWithNullableString } from './models/ModelWithNullableString';
 export type { ModelWithOrderedProperties } from './models/ModelWithOrderedProperties';
 export type { ModelWithPattern } from './models/ModelWithPattern';
 export type { ModelWithProperties } from './models/ModelWithProperties';
@@ -3042,6 +3041,8 @@ export { $ArrayWithNumbers } from './schemas/$ArrayWithNumbers';
 export { $ArrayWithProperties } from './schemas/$ArrayWithProperties';
 export { $ArrayWithReferences } from './schemas/$ArrayWithReferences';
 export { $ArrayWithStrings } from './schemas/$ArrayWithStrings';
+export { $CompositionBaseModel } from './schemas/$CompositionBaseModel';
+export { $CompositionExtendedModel } from './schemas/$CompositionExtendedModel';
 export { $CompositionWithAllOfAndNullable } from './schemas/$CompositionWithAllOfAndNullable';
 export { $CompositionWithAnyOf } from './schemas/$CompositionWithAnyOf';
 export { $CompositionWithAnyOfAndNullable } from './schemas/$CompositionWithAnyOfAndNullable';
@@ -3071,6 +3072,7 @@ export { $ModelWithEnumFromDescription } from './schemas/$ModelWithEnumFromDescr
 export { $ModelWithInteger } from './schemas/$ModelWithInteger';
 export { $ModelWithNestedEnums } from './schemas/$ModelWithNestedEnums';
 export { $ModelWithNestedProperties } from './schemas/$ModelWithNestedProperties';
+export { $ModelWithNullableString } from './schemas/$ModelWithNullableString';
 export { $ModelWithOrderedProperties } from './schemas/$ModelWithOrderedProperties';
 export { $ModelWithPattern } from './schemas/$ModelWithPattern';
 export { $ModelWithProperties } from './schemas/$ModelWithProperties';
@@ -3144,8 +3146,8 @@ exports[`v3 should generate: ./test/generated/v3/models/ArrayWithProperties.ts 1
  * This is a simple array with properties
  */
 export type ArrayWithProperties = Array<{
-    foo?: string,
-    bar?: string,
+    foo?: string;
+    bar?: string;
 }>;"
 `;
 
@@ -3173,6 +3175,37 @@ exports[`v3 should generate: ./test/generated/v3/models/ArrayWithStrings.ts 1`] 
 export type ArrayWithStrings = Array<string>;"
 `;
 
+exports[`v3 should generate: ./test/generated/v3/models/CompositionBaseModel.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+/**
+ * This is a base model with two simple optional properties
+ */
+export type CompositionBaseModel = {
+    firstName?: string;
+    lastname?: string;
+}
+"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/models/CompositionExtendedModel.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+import type { CompositionBaseModel } from './CompositionBaseModel';
+
+/**
+ * This is a model that extends the base model
+ */
+export type CompositionExtendedModel = (CompositionBaseModel & {
+    age: number;
+});
+"
+`;
+
 exports[`v3 should generate: ./test/generated/v3/models/CompositionWithAllOfAndNullable.ts 1`] = `
 "/* istanbul ignore file */
 /* tslint:disable */
@@ -3187,7 +3220,7 @@ import type { ModelWithEnum } from './ModelWithEnum';
  */
 export type CompositionWithAllOfAndNullable = {
     propA?: ({
-        boolean?: boolean,
+        boolean?: boolean;
     } & ModelWithEnum & ModelWithArray & ModelWithDictionary) | null;
 }
 "
@@ -3226,7 +3259,7 @@ import type { ModelWithEnum } from './ModelWithEnum';
  */
 export type CompositionWithAnyOfAndNullable = {
     propA?: ({
-        boolean?: boolean,
+        boolean?: boolean;
     } | ModelWithEnum | ModelWithArray | ModelWithDictionary) | null;
 }
 "
@@ -3242,7 +3275,7 @@ exports[`v3 should generate: ./test/generated/v3/models/CompositionWithAnyOfAnon
  */
 export type CompositionWithAnyOfAnonymous = {
     propA?: ({
-        propA?: any,
+        propA?: string;
     } | string | number);
 }
 "
@@ -3281,7 +3314,7 @@ import type { ModelWithEnum } from './ModelWithEnum';
  */
 export type CompositionWithOneOfAndNullable = {
     propA?: ({
-        boolean?: boolean,
+        boolean?: boolean;
     } | ModelWithEnum | ModelWithArray | ModelWithDictionary) | null;
 }
 "
@@ -3297,7 +3330,7 @@ exports[`v3 should generate: ./test/generated/v3/models/CompositionWithOneOfAnon
  */
 export type CompositionWithOneOfAnonymous = {
     propA?: ({
-        propA?: any,
+        propA?: string;
     } | string | number);
 }
 "
@@ -3336,8 +3369,8 @@ exports[`v3 should generate: ./test/generated/v3/models/DictionaryWithProperties
  * This is a complex dictionary
  */
 export type DictionaryWithProperties = Record<string, {
-    foo?: string,
-    bar?: string,
+    foo?: string;
+    bar?: string;
 }>;"
 `;
 
@@ -3373,11 +3406,7 @@ exports[`v3 should generate: ./test/generated/v3/models/EnumFromDescription.ts 1
 /**
  * Success=1,Warning=2,Error=3
  */
-export enum EnumFromDescription {
-    SUCCESS = 1,
-    WARNING = 2,
-    ERROR = 3,
-}"
+export type EnumFromDescription = number;"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/models/EnumWithExtensions.ts 1`] = `
@@ -3457,8 +3486,8 @@ import type { ModelWithString } from './ModelWithString';
  * This is a model that extends another model
  */
 export type ModelThatExtends = (ModelWithString & {
-    propExtendsA?: string,
-    propExtendsB?: ModelWithString,
+    propExtendsA?: string;
+    propExtendsB?: ModelWithString;
 });
 "
 `;
@@ -3475,8 +3504,8 @@ import type { ModelWithString } from './ModelWithString';
  * This is a model that extends another model
  */
 export type ModelThatExtendsExtends = (ModelWithString & ModelThatExtends & {
-    propExtendsC?: string,
-    propExtendsD?: ModelWithString,
+    propExtendsC?: string;
+    propExtendsD?: ModelWithString;
 });
 "
 `;
@@ -3705,9 +3734,38 @@ exports[`v3 should generate: ./test/generated/v3/models/ModelWithNestedPropertie
 export type ModelWithNestedProperties = {
     readonly first: {
         readonly second: {
-            readonly third: string | null,
-        } | null,
+            readonly third: string | null;
+        } | null;
     } | null;
+}
+"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/models/ModelWithNullableString.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+/**
+ * This is a model with one string property
+ */
+export type ModelWithNullableString = {
+    /**
+     * This is a simple string property
+     */
+    nullableProp1?: string | null;
+    /**
+     * This is a simple string property
+     */
+    nullableRequiredProp1: string | null;
+    /**
+     * This is a simple string property
+     */
+    nullableProp2?: string | null;
+    /**
+     * This is a simple string property
+     */
+    nullableRequiredProp2: string | null;
 }
 "
 `;
@@ -3971,6 +4029,41 @@ export const $ArrayWithStrings = {
 };"
 `;
 
+exports[`v3 should generate: ./test/generated/v3/schemas/$CompositionBaseModel.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $CompositionBaseModel = {
+    properties: {
+        firstName: {
+            type: 'string',
+        },
+        lastname: {
+            type: 'string',
+        },
+    },
+};"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/schemas/$CompositionExtendedModel.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $CompositionExtendedModel = {
+    type: 'all-of',
+    contains: [{
+        type: 'CompositionBaseModel',
+    }, {
+        properties: {
+            age: {
+                type: 'number',
+                isRequired: true,
+            },
+        },
+    }],
+};"
+`;
+
 exports[`v3 should generate: ./test/generated/v3/schemas/$CompositionWithAllOfAndNullable.ts 1`] = `
 "/* istanbul ignore file */
 /* tslint:disable */
@@ -4058,8 +4151,7 @@ export const $CompositionWithAnyOfAnonymous = {
             contains: [{
                 properties: {
                     propA: {
-                        properties: {
-                        },
+                        type: 'string',
                     },
                 },
             }, {
@@ -4132,8 +4224,7 @@ export const $CompositionWithOneOfAnonymous = {
             contains: [{
                 properties: {
                     propA: {
-                        properties: {
-                        },
+                        type: 'string',
                     },
                 },
             }, {
@@ -4224,7 +4315,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$EnumFromDescription.ts
 /* tslint:disable */
 /* eslint-disable */
 export const $EnumFromDescription = {
-    type: 'Enum',
+    type: 'number',
 };"
 `;
 
@@ -4510,6 +4601,34 @@ export const $ModelWithNestedProperties = {
 };"
 `;
 
+exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithNullableString.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $ModelWithNullableString = {
+    properties: {
+        nullableProp1: {
+            type: 'string',
+            isNullable: true,
+        },
+        nullableRequiredProp1: {
+            type: 'string',
+            isRequired: true,
+            isNullable: true,
+        },
+        nullableProp2: {
+            type: 'string',
+            isNullable: true,
+        },
+        nullableRequiredProp2: {
+            type: 'string',
+            isRequired: true,
+            isNullable: true,
+        },
+    },
+};"
+`;
+
 exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithOrderedProperties.ts 1`] = `
 "/* istanbul ignore file */
 /* tslint:disable */
@@ -4776,9 +4895,9 @@ export class ComplexService {
         parameterObject: {
             first?: {
                 second?: {
-                    third?: string,
-                },
-            },
+                    third?: string;
+                };
+            };
         },
         parameterReference: ModelWithString,
     ): CancelablePromise<Array<ModelWithString>> {
@@ -4805,17 +4924,17 @@ export class ComplexService {
     public static complexParams(
         id: number,
         requestBody?: {
-            readonly key: string | null,
-            name: string | null,
-            enabled?: boolean,
-            readonly type: 'Monkey' | 'Horse' | 'Bird',
-            listOfModels?: Array<ModelWithString> | null,
-            listOfStrings?: Array<string> | null,
-            parameters: (ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary),
+            readonly key: string | null;
+            name: string | null;
+            enabled?: boolean;
+            readonly type: 'Monkey' | 'Horse' | 'Bird';
+            listOfModels?: Array<ModelWithString> | null;
+            listOfStrings?: Array<string> | null;
+            parameters: (ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary);
             readonly user?: {
-                readonly id?: number,
-                readonly name?: string | null,
-            },
+                readonly id?: number;
+                readonly name?: string | null;
+            };
         },
     ): CancelablePromise<ModelWithString> {
         return __request({
@@ -5031,11 +5150,11 @@ export class MultipartService {
      * @throws ApiError
      */
     public static multipartResponse(): CancelablePromise<{
-        file?: string,
+        file?: string;
         metadata?: {
-            foo?: string,
-            bar?: string,
-        },
+            foo?: string;
+            bar?: string;
+        };
     }> {
         return __request({
             method: 'GET',
@@ -5282,9 +5401,9 @@ export class ResponseService {
      * @throws ApiError
      */
     public static callWithResponses(): CancelablePromise<{
-        readonly '@namespace.string'?: string,
-        readonly '@namespace.integer'?: number,
-        readonly value?: Array<ModelWithString>,
+        readonly '@namespace.string'?: string;
+        readonly '@namespace.integer'?: number;
+        readonly value?: Array<ModelWithString>;
     } | ModelWithString | ModelThatExtends | ModelThatExtendsExtends> {
         return __request({
             method: 'PUT',
@@ -5413,8 +5532,8 @@ export class TypesService {
         parameterDictionary: any,
         parameterEnum: 'Success' | 'Warning' | 'Error' | null,
         parameterNumber: number = 123,
-        parameterString: string | null = 'default',
-        parameterBoolean: boolean | null = true,
+        parameterString: string = 'default',
+        parameterBoolean: boolean = true,
         parameterObject: any = null,
         id?: number,
     ): CancelablePromise<number | string | boolean | any> {

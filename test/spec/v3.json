@@ -828,7 +828,7 @@
                         "in": "query",
                         "required": true,
                         "schema": {
-                            "type": "int",
+                            "type": "number",
                             "default": 123
                         }
                     },
@@ -837,10 +837,10 @@
                         "name": "parameterString",
                         "in": "query",
                         "required": true,
-                        "nullable": true,
                         "schema": {
                             "type": "string",
-                            "default": "default"
+                            "default": "default",
+                            "nullable": true
                         }
                     },
                     {
@@ -848,10 +848,10 @@
                         "name": "parameterBoolean",
                         "in": "query",
                         "required": true,
-                        "nullable": true,
                         "schema": {
                             "type": "boolean",
-                            "default": true
+                            "default": true,
+                            "nullable": true
                         }
                     },
                     {
@@ -859,10 +859,10 @@
                         "name": "parameterObject",
                         "in": "query",
                         "required": true,
-                        "nullable": true,
                         "schema": {
                             "type": "object",
-                            "default": null
+                            "default": null,
+                            "nullable": true
                         }
                     },
                     {
@@ -870,12 +870,12 @@
                         "name": "parameterArray",
                         "in": "query",
                         "required": true,
-                        "nullable": true,
                         "schema": {
                             "type": "array",
                             "items": {
                                 "type": "string"
-                            }
+                            },
+                            "nullable": true
                         }
                     },
                     {
@@ -883,12 +883,12 @@
                         "name": "parameterDictionary",
                         "in": "query",
                         "required": true,
-                        "nullable": true,
                         "schema": {
                             "type": "object",
                             "items": {
                                 "type": "string"
-                            }
+                            },
+                            "nullable": true
                         }
                     },
                     {
@@ -896,13 +896,13 @@
                         "name": "parameterEnum",
                         "in": "query",
                         "required": true,
-                        "nullable": true,
                         "schema": {
                             "enum": [
                                 "Success",
                                 "Warning",
                                 "Error"
-                            ]
+                            ],
+                            "nullable": true
                         }
                     },
                     {
@@ -972,16 +972,16 @@
                         "in": "formData",
                         "required": true,
                         "schema": {
-                            "type": "File"
+                            "type": "file"
                         }
                     },
                     {
                         "name": "api-version",
                         "in": "path",
                         "required": true,
-                        "nullable": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "nullable": true
                         }
                     }
                 ],
@@ -1261,7 +1261,6 @@
                 "required": false,
                 "content": {
                     "application/json": {
-                        "description": "Message for default response",
                         "schema": {
                             "$ref": "#/components/schemas/ModelWithString"
                         }
@@ -1288,7 +1287,7 @@
             },
             "SimpleFile": {
                 "description": "This is a simple file",
-                "type": "File"
+                "type": "file"
             },
             "SimpleReference": {
                 "description": "This is a simple reference",
@@ -1331,7 +1330,7 @@
             },
             "EnumFromDescription": {
                 "description": "Success=1,Warning=2,Error=3",
-                "type": "int"
+                "type": "number"
             },
             "EnumWithExtensions": {
                 "description": "This is a simple enum with numbers",
@@ -1483,6 +1482,40 @@
                     }
                 }
             },
+            "ModelWithNullableString": {
+                "description": "This is a model with one string property",
+                "type": "object",
+                "required": [
+                    "nullableRequiredProp1",
+                    "nullableRequiredProp2"
+                ],
+                "properties": {
+                    "nullableProp1": {
+                        "description": "This is a simple string property",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "nullableRequiredProp1": {
+                        "description": "This is a simple string property",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "nullableProp2": {
+                        "description": "This is a simple string property",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "nullableRequiredProp2": {
+                        "description": "This is a simple string property",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            },
             "ModelWithEnum": {
                 "description": "This is a model with one enum",
                 "type": "object",
@@ -1587,13 +1620,13 @@
                     "propWithFile": {
                         "type": "array",
                         "items": {
-                            "type": "File"
+                            "type": "file"
                         }
                     },
                     "propWithNumber": {
                         "type": "array",
                         "items": {
-                            "type": "int"
+                            "type": "number"
                         }
                     }
                 }
@@ -1653,7 +1686,9 @@
                                 "description": "Anonymous object type",
                                 "type": "object",
                                 "properties": {
-                                    "propA": "string"
+                                    "propA": {
+                                        "type": "string"
+                                    }
                                 }
                             },
                             {
@@ -1702,7 +1737,9 @@
                                 "description": "Anonymous object type",
                                 "type": "object",
                                 "properties": {
-                                    "propA": "string"
+                                    "propA": {
+                                        "type": "string"
+                                    }
                                 }
                             },
                             {
@@ -1803,6 +1840,37 @@
                         ]
                     }
                 }
+            },
+            "CompositionBaseModel": {
+                "description": "This is a base model with two simple optional properties",
+                "type": "object",
+                "properties": {
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "lastname": {
+                        "type": "string"
+                    }
+                }
+            },
+            "CompositionExtendedModel": {
+                "description": "This is a model that extends the base model",
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/CompositionBaseModel"
+                    }
+                ],
+                "properties": {
+                    "age": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "firstName",
+                    "lastname",
+                    "age"
+                ]
             },
             "ModelWithProperties": {
                 "description": "This is a model with one nested property",

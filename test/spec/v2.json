@@ -588,7 +588,7 @@
                         "in": "query",
                         "required": true,
                         "default": 123,
-                        "type": "int"
+                        "type": "number"
                     },
                     {
                         "description": "This is a string parameter",
@@ -832,7 +832,7 @@
         },
         "EnumFromDescription": {
             "description": "Success=1,Warning=2,Error=3",
-            "type": "int"
+            "type": "number"
         },
         "EnumWithExtensions": {
             "description": "This is a simple enum with numbers",
@@ -1117,7 +1117,7 @@
                 "propWithNumber": {
                     "type": "array",
                     "items": {
-                        "type": "int"
+                        "type": "number"
                     }
                 }
             }
