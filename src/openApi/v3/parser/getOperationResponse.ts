@@ -2,9 +2,11 @@ import type { OperationResponse } from '../../../client/interfaces/OperationResp
 import { getPattern } from '../../../utils/getPattern';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiResponse } from '../interfaces/OpenApiResponse';
+import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 import { getComment } from './getComment';
 import { getContent } from './getContent';
 import { getModel } from './getModel';
+import { getRef } from './getRef';
 import { getType } from './getType';
 
 export function getOperationResponse(openApi: OpenApi, response: OpenApiResponse, responseCode: number): OperationResponse {
@@ -29,9 +31,12 @@ export function getOperationResponse(openApi: OpenApi, response: OpenApiResponse
     };
 
     if (response.content) {
-        const schema = getContent(openApi, response.content);
+        let schema = getContent(openApi, response.content);
         if (schema) {
-            if (schema?.$ref) {
+            if (schema.$ref?.startsWith('#/components/responses/')) {
+                schema = getRef<OpenApiSchema>(openApi, schema);
+            }
+            if (schema.$ref) {
                 const model = getType(schema.$ref);
                 operationResponse.export = 'reference';
                 operationResponse.type = model.type;
