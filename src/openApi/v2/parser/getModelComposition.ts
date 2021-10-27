@@ -52,7 +52,7 @@ export function getModelComposition(openApi: OpenApi, definition: OpenApiSchema,
         properties.push(...modelProperties);
     }
 
-    if (properties) {
+    if (properties.length) {
         composition.properties.push({
             name: 'properties',
             export: 'interface',
