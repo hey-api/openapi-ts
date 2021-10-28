@@ -57,7 +57,14 @@ export async function writeClient(
     if (exportServices) {
         await rmdir(outputPathServices);
         await mkdir(outputPathServices);
-        await writeClientServices(client.services, templates, outputPathServices, httpClient, useUnionTypes, useOptions);
+        await writeClientServices(
+            client.services,
+            templates,
+            outputPathServices,
+            httpClient,
+            useUnionTypes,
+            useOptions
+        );
     }
 
     if (exportSchemas) {
@@ -74,6 +81,15 @@ export async function writeClient(
 
     if (exportCore || exportServices || exportSchemas || exportModels) {
         await mkdir(outputPath);
-        await writeClientIndex(client, templates, outputPath, useUnionTypes, exportCore, exportServices, exportModels, exportSchemas);
+        await writeClientIndex(
+            client,
+            templates,
+            outputPath,
+            useUnionTypes,
+            exportCore,
+            exportServices,
+            exportModels,
+            exportSchemas
+        );
     }
 }

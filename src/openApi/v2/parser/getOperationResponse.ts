@@ -6,7 +6,11 @@ import { getComment } from './getComment';
 import { getModel } from './getModel';
 import { getType } from './getType';
 
-export function getOperationResponse(openApi: OpenApi, response: OpenApiResponse, responseCode: number): OperationResponse {
+export function getOperationResponse(
+    openApi: OpenApi,
+    response: OpenApiResponse,
+    responseCode: number
+): OperationResponse {
     const operationResponse: OperationResponse = {
         in: 'response',
         name: '',

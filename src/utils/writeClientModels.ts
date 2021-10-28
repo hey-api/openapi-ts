@@ -14,7 +14,13 @@ import { Templates } from './registerHandlebarTemplates';
  * @param httpClient The selected httpClient (fetch, xhr, node or axios)
  * @param useUnionTypes Use union types instead of enums
  */
-export async function writeClientModels(models: Model[], templates: Templates, outputPath: string, httpClient: HttpClient, useUnionTypes: boolean): Promise<void> {
+export async function writeClientModels(
+    models: Model[],
+    templates: Templates,
+    outputPath: string,
+    httpClient: HttpClient,
+    useUnionTypes: boolean
+): Promise<void> {
     for (const model of models) {
         const file = resolve(outputPath, `${model.name}.ts`);
         const templateResult = templates.exports.model({

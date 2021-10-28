@@ -3,7 +3,18 @@ export interface Schema {
     isReadOnly: boolean;
     isRequired: boolean;
     isNullable: boolean;
-    format?: 'int32' | 'int64' | 'float' | 'double' | 'string' | 'boolean' | 'byte' | 'binary' | 'date' | 'date-time' | 'password';
+    format?:
+        | 'int32'
+        | 'int64'
+        | 'float'
+        | 'double'
+        | 'string'
+        | 'boolean'
+        | 'byte'
+        | 'binary'
+        | 'date'
+        | 'date-time'
+        | 'password';
     maximum?: number;
     exclusiveMaximum?: boolean;
     minimum?: number;

@@ -19,7 +19,7 @@ async function generateV2() {
 
 async function generateV3() {
     await OpenAPI.generate({
-        input: './test/spec/v3.json',
+        input: './test/spec/spec.json',
         output: './test/generated/v3/',
         httpClient: OpenAPI.HttpClient.FETCH,
         useOptions: false,
@@ -33,7 +33,7 @@ async function generateV3() {
 }
 
 async function generate() {
-    await generateV2();
+    // await generateV2();
     await generateV3();
 }
 

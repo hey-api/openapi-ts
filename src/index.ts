@@ -66,7 +66,19 @@ export async function generate({
             const client = parseV2(openApi);
             const clientFinal = postProcessClient(client);
             if (!write) break;
-            await writeClient(clientFinal, templates, output, httpClient, useOptions, useUnionTypes, exportCore, exportServices, exportModels, exportSchemas, request);
+            await writeClient(
+                clientFinal,
+                templates,
+                output,
+                httpClient,
+                useOptions,
+                useUnionTypes,
+                exportCore,
+                exportServices,
+                exportModels,
+                exportSchemas,
+                request
+            );
             break;
         }
 
@@ -74,7 +86,19 @@ export async function generate({
             const client = parseV3(openApi);
             const clientFinal = postProcessClient(client);
             if (!write) break;
-            await writeClient(clientFinal, templates, output, httpClient, useOptions, useUnionTypes, exportCore, exportServices, exportModels, exportSchemas, request);
+            await writeClient(
+                clientFinal,
+                templates,
+                output,
+                httpClient,
+                useOptions,
+                useUnionTypes,
+                exportCore,
+                exportServices,
+                exportModels,
+                exportSchemas,
+                request
+            );
             break;
         }
     }

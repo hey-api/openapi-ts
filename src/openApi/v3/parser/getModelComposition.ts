@@ -9,7 +9,13 @@ import { getRequiredPropertiesFromComposition } from './getRequiredPropertiesFro
 // Fix for circular dependency
 export type GetModelFn = typeof getModel;
 
-export function getModelComposition(openApi: OpenApi, definition: OpenApiSchema, definitions: OpenApiSchema[], type: 'one-of' | 'any-of' | 'all-of', getModel: GetModelFn): ModelComposition {
+export function getModelComposition(
+    openApi: OpenApi,
+    definition: OpenApiSchema,
+    definitions: OpenApiSchema[],
+    type: 'one-of' | 'any-of' | 'all-of',
+    getModel: GetModelFn
+): ModelComposition {
     const composition: ModelComposition = {
         type,
         imports: [],
@@ -35,7 +41,12 @@ export function getModelComposition(openApi: OpenApi, definition: OpenApiSchema,
         });
 
     if (definition.required) {
-        const requiredProperties = getRequiredPropertiesFromComposition(openApi, definition.required, definitions, getModel);
+        const requiredProperties = getRequiredPropertiesFromComposition(
+            openApi,
+            definition.required,
+            definitions,
+            getModel
+        );
         requiredProperties.forEach(requiredProperty => {
             composition.imports.push(...requiredProperty.imports);
             composition.enums.push(...requiredProperty.enums);

@@ -69,7 +69,12 @@ export class {{{name}}} {
             },
             {{/if}}
             {{#if parametersBody}}
+            {{#equals parametersBody.in 'formData'}}
+            formData: {{{parametersBody.name}}},
+            {{/equals}}
+            {{#equals parametersBody.in 'body'}}
             body: {{{parametersBody.name}}},
+            {{/equals}}
             {{#if parametersBody.mediaType}}
             mediaType: '{{{parametersBody.mediaType}}}',
             {{/if}}

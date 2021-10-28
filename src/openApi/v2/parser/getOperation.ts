@@ -12,7 +12,13 @@ import { getOperationResponses } from './getOperationResponses';
 import { getOperationResults } from './getOperationResults';
 import { getServiceClassName } from './getServiceClassName';
 
-export function getOperation(openApi: OpenApi, url: string, method: string, op: OpenApiOperation, pathParams: OperationParameters): Operation {
+export function getOperation(
+    openApi: OpenApi,
+    url: string,
+    method: string,
+    op: OpenApiOperation,
+    pathParams: OperationParameters
+): Operation {
     const serviceName = op.tags?.[0] || 'Service';
     const serviceClassName = getServiceClassName(serviceName);
     const operationNameFallback = `${method}${serviceClassName}`;

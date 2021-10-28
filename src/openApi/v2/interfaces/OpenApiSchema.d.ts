@@ -28,7 +28,18 @@ export interface OpenApiSchema extends OpenApiReference, WithEnumExtension, With
     required?: string[];
     enum?: (string | number)[];
     type?: string;
-    format?: 'int32' | 'int64' | 'float' | 'double' | 'string' | 'boolean' | 'byte' | 'binary' | 'date' | 'date-time' | 'password';
+    format?:
+        | 'int32'
+        | 'int64'
+        | 'float'
+        | 'double'
+        | 'string'
+        | 'boolean'
+        | 'byte'
+        | 'binary'
+        | 'date'
+        | 'date-time'
+        | 'password';
     items?: OpenApiSchema;
     allOf?: OpenApiSchema[];
     properties?: Dictionary<OpenApiSchema>;

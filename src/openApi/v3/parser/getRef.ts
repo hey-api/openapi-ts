@@ -17,7 +17,9 @@ export function getRef<T>(openApi: OpenApi, item: T & OpenApiReference): T {
         // if we cannot find it, then we throw an error.
         let result: any = openApi;
         paths.forEach(path => {
-            const decodedPath = decodeURIComponent(path.replace(ESCAPED_REF_SLASH, '/').replace(ESCAPED_REF_TILDE, '~'));
+            const decodedPath = decodeURIComponent(
+                path.replace(ESCAPED_REF_SLASH, '/').replace(ESCAPED_REF_TILDE, '~')
+            );
             if (result.hasOwnProperty(decodedPath)) {
                 result = result[decodedPath];
             } else {

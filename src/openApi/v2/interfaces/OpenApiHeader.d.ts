@@ -7,7 +7,18 @@ import type { OpenApiItems } from './OpenApiItems';
 export interface OpenApiHeader {
     description?: string;
     type: 'string' | 'number' | 'integer' | 'boolean' | 'array';
-    format?: 'int32' | 'int64' | 'float' | 'double' | 'string' | 'boolean' | 'byte' | 'binary' | 'date' | 'date-time' | 'password';
+    format?:
+        | 'int32'
+        | 'int64'
+        | 'float'
+        | 'double'
+        | 'string'
+        | 'boolean'
+        | 'byte'
+        | 'binary'
+        | 'date'
+        | 'date-time'
+        | 'password';
     items?: Dictionary<OpenApiItems>;
     collectionFormat?: 'csv' | 'ssv' | 'tsv' | 'pipes';
     default?: any;

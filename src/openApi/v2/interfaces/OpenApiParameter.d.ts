@@ -14,7 +14,18 @@ export interface OpenApiParameter extends OpenApiReference, WithEnumExtension, W
     required?: boolean;
     schema?: OpenApiSchema;
     type?: string;
-    format?: 'int32' | 'int64' | 'float' | 'double' | 'string' | 'boolean' | 'byte' | 'binary' | 'date' | 'date-time' | 'password';
+    format?:
+        | 'int32'
+        | 'int64'
+        | 'float'
+        | 'double'
+        | 'string'
+        | 'boolean'
+        | 'byte'
+        | 'binary'
+        | 'date'
+        | 'date-time'
+        | 'password';
     allowEmptyValue?: boolean;
     items?: OpenApiItems;
     collectionFormat?: 'csv' | 'ssv' | 'tsv' | 'pipes' | 'multi';

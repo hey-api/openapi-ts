@@ -13,7 +13,13 @@ import { Templates } from './registerHandlebarTemplates';
  * @param httpClient The selected httpClient (fetch, xhr, node or axios)
  * @param request: Path to custom request file
  */
-export async function writeClientCore(client: Client, templates: Templates, outputPath: string, httpClient: HttpClient, request?: string): Promise<void> {
+export async function writeClientCore(
+    client: Client,
+    templates: Templates,
+    outputPath: string,
+    httpClient: HttpClient,
+    request?: string
+): Promise<void> {
     const context = {
         httpClient,
         server: client.server,

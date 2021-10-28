@@ -34,7 +34,18 @@ export interface OpenApiSchema extends OpenApiReference, WithEnumExtension {
     properties?: Dictionary<OpenApiSchema>;
     additionalProperties?: boolean | OpenApiSchema;
     description?: string;
-    format?: 'int32' | 'int64' | 'float' | 'double' | 'string' | 'boolean' | 'byte' | 'binary' | 'date' | 'date-time' | 'password';
+    format?:
+        | 'int32'
+        | 'int64'
+        | 'float'
+        | 'double'
+        | 'string'
+        | 'boolean'
+        | 'byte'
+        | 'binary'
+        | 'date'
+        | 'date-time'
+        | 'password';
     default?: any;
     nullable?: boolean;
     discriminator?: OpenApiDiscriminator;

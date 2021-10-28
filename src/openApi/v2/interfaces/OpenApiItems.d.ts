@@ -5,7 +5,18 @@ import type { WithEnumExtension } from './Extensions/WithEnumExtension';
  */
 export interface OpenApiItems extends WithEnumExtension {
     type?: string;
-    format?: 'int32' | 'int64' | 'float' | 'double' | 'string' | 'boolean' | 'byte' | 'binary' | 'date' | 'date-time' | 'password';
+    format?:
+        | 'int32'
+        | 'int64'
+        | 'float'
+        | 'double'
+        | 'string'
+        | 'boolean'
+        | 'byte'
+        | 'binary'
+        | 'date'
+        | 'date-time'
+        | 'password';
     items?: OpenApiItems;
     collectionFormat?: 'csv' | 'ssv' | 'tsv' | 'pipes';
     default?: any;

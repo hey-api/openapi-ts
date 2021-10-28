@@ -11,7 +11,12 @@ import { getModelDefault } from './getModelDefault';
 import { getModelProperties } from './getModelProperties';
 import { getType } from './getType';
 
-export function getModel(openApi: OpenApi, definition: OpenApiSchema, isDefinition: boolean = false, name: string = ''): Model {
+export function getModel(
+    openApi: OpenApi,
+    definition: OpenApiSchema,
+    isDefinition: boolean = false,
+    name: string = ''
+): Model {
     const model: Model = {
         name,
         export: 'interface',
