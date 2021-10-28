@@ -53,12 +53,9 @@ async function generateRealWorldSpecs() {
 }
 
 async function main() {
-    // await generate('./test/spec/v2.json', './test/generated/v2/');
-    // await generate('./test/spec/v3.json', './test/generated/v3/');
+    await generate('./test/spec/v2.json', './test/generated/v2/');
+    await generate('./test/spec/v3.json', './test/generated/v3/');
     // await generateRealWorldSpecs();
-    await generate('https://api.apis.guru/v2/specs/asana.com/1.0/openapi.yaml', './test/generated/asana/');
-    await generate('https://api.apis.guru/v2/specs/amazonaws.com/ec2/2016-11-15/openapi.yaml', './test/generated/ec2/');
-    await generate('https://api.apis.guru/v2/specs/aucklandmuseum.com/2.0.0/swagger.yaml', './test/generated/aucklandmuseum/');
 }
 
 main();
