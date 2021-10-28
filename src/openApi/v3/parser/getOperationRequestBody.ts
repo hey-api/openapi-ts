@@ -33,7 +33,8 @@ export function getOperationRequestBody(openApi: OpenApi, parameter: OpenApiRequ
     if (parameter.content) {
         const content = getContent(openApi, parameter.content);
         if (content) {
-            if (content.mediaType === 'multipart/form-data') {
+            requestBody.mediaType = content.mediaType;
+            if (requestBody.mediaType === 'multipart/form-data') {
                 requestBody.in = 'formData';
                 requestBody.name = 'formData';
                 requestBody.prop = 'formData';

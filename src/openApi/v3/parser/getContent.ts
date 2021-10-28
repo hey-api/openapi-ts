@@ -25,7 +25,7 @@ export function getContent(openApi: OpenApi, content: Dictionary<OpenApiMediaTyp
     if (basicMedia) {
         return {
             mediaType: basicMedia,
-            schema: content[basicMedia],
+            schema: content[basicMedia].schema as OpenApiSchema,
         };
     }
 
@@ -34,7 +34,7 @@ export function getContent(openApi: OpenApi, content: Dictionary<OpenApiMediaTyp
     if (otherMediaType) {
         return {
             mediaType: otherMediaType,
-            schema: content[otherMediaType],
+            schema: content[otherMediaType].schema as OpenApiSchema,
         };
     }
     return null;
