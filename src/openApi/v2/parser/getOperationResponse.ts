@@ -2,8 +2,10 @@ import type { OperationResponse } from '../../../client/interfaces/OperationResp
 import { getPattern } from '../../../utils/getPattern';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiResponse } from '../interfaces/OpenApiResponse';
+import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 import { getComment } from './getComment';
 import { getModel } from './getModel';
+import { getRef } from './getRef';
 import { getType } from './getType';
 
 export function getOperationResponse(
@@ -35,9 +37,13 @@ export function getOperationResponse(
     // if this is a reference then the parameter is just the 'name' of
     // this reference type. Otherwise it might be a complex schema and
     // then we need to parse the schema!
-    if (response.schema) {
-        if (response.schema.$ref) {
-            const model = getType(response.schema.$ref);
+    let schema = response.schema;
+    if (schema) {
+        if (schema.$ref?.startsWith('#/responses/')) {
+            schema = getRef<OpenApiSchema>(openApi, schema);
+        }
+        if (schema.$ref) {
+            const model = getType(schema.$ref);
             operationResponse.export = 'reference';
             operationResponse.type = model.type;
             operationResponse.base = model.base;
@@ -45,7 +51,7 @@ export function getOperationResponse(
             operationResponse.imports.push(...model.imports);
             return operationResponse;
         } else {
-            const model = getModel(openApi, response.schema);
+            const model = getModel(openApi, schema);
             operationResponse.export = model.export;
             operationResponse.type = model.type;
             operationResponse.base = model.base;
