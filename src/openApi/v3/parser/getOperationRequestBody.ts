@@ -7,7 +7,7 @@ import { getContent } from './getContent';
 import { getModel } from './getModel';
 import { getType } from './getType';
 
-export function getOperationRequestBody(openApi: OpenApi, parameter: OpenApiRequestBody): OperationParameter {
+export function getOperationRequestBody(openApi: OpenApi, body: OpenApiRequestBody): OperationParameter {
     const requestBody: OperationParameter = {
         in: 'body',
         export: 'interface',
@@ -17,12 +17,12 @@ export function getOperationRequestBody(openApi: OpenApi, parameter: OpenApiRequ
         base: 'any',
         template: null,
         link: null,
-        description: getComment(parameter.description),
+        description: getComment(body.description),
         default: undefined,
         isDefinition: false,
         isReadOnly: false,
-        isRequired: parameter.required === true,
-        isNullable: parameter.nullable === true,
+        isRequired: body.required === true,
+        isNullable: body.nullable === true,
         imports: [],
         enum: [],
         enums: [],
@@ -30,8 +30,8 @@ export function getOperationRequestBody(openApi: OpenApi, parameter: OpenApiRequ
         mediaType: null,
     };
 
-    if (parameter.content) {
-        const content = getContent(openApi, parameter.content);
+    if (body.content) {
+        const content = getContent(openApi, body.content);
         if (content) {
             requestBody.mediaType = content.mediaType;
             switch (requestBody.mediaType) {

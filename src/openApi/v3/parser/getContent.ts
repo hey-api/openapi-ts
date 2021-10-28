@@ -22,20 +22,21 @@ const BASIC_MEDIA_TYPES = [
 ];
 
 export function getContent(openApi: OpenApi, content: Dictionary<OpenApiMediaType>): Content | null {
-    const basicMedia = BASIC_MEDIA_TYPES.find(mediaType => isDefined(content[mediaType]?.schema));
-    if (basicMedia) {
+    const basicMediaTypeWithSchema = Object.keys(content)
+        .filter(mediaType => BASIC_MEDIA_TYPES.includes(mediaType))
+        .find(mediaType => isDefined(content[mediaType]?.schema));
+    if (basicMediaTypeWithSchema) {
         return {
-            mediaType: basicMedia,
-            schema: content[basicMedia].schema as OpenApiSchema,
+            mediaType: basicMediaTypeWithSchema,
+            schema: content[basicMediaTypeWithSchema].schema as OpenApiSchema,
         };
     }
 
-    const otherMediaTypes = Object.keys(content);
-    const otherMediaType = otherMediaTypes.find(mediaType => isDefined(content[mediaType]?.schema));
-    if (otherMediaType) {
+    const firstMediaTypeWithSchema = Object.keys(content).find(mediaType => isDefined(content[mediaType]?.schema));
+    if (firstMediaTypeWithSchema) {
         return {
-            mediaType: otherMediaType,
-            schema: content[otherMediaType].schema as OpenApiSchema,
+            mediaType: firstMediaTypeWithSchema,
+            schema: content[firstMediaTypeWithSchema].schema as OpenApiSchema,
         };
     }
     return null;
