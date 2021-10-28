@@ -33,7 +33,7 @@ async function generateV3() {
 }
 
 async function generate() {
-    // await generateV2();
+    await generateV2();
     await generateV3();
 }
 

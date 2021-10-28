@@ -314,7 +314,29 @@
                     "RequestBody"
                 ],
                 "requestBody": {
-                    "$ref": "#/components/requestBodies/SimpleRequestBody"
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/requestBodies/SimpleRequestBody"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v{api-version}/formData/": {
+            "post": {
+                "tags": [
+                    "FormData"
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/requestBodies/SimpleRequestBody"
+                            }
+                        }
+                    }
                 }
             }
         },
