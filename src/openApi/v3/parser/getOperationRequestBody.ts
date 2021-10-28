@@ -34,10 +34,13 @@ export function getOperationRequestBody(openApi: OpenApi, parameter: OpenApiRequ
         const content = getContent(openApi, parameter.content);
         if (content) {
             requestBody.mediaType = content.mediaType;
-            if (requestBody.mediaType === 'multipart/form-data') {
-                requestBody.in = 'formData';
-                requestBody.name = 'formData';
-                requestBody.prop = 'formData';
+            switch (requestBody.mediaType) {
+                case 'application/x-www-form-urlencoded':
+                case 'multipart/form-data':
+                    requestBody.in = 'formData';
+                    requestBody.name = 'formData';
+                    requestBody.prop = 'formData';
+                    break;
             }
             if (content.schema.$ref) {
                 const model = getType(content.schema.$ref);
