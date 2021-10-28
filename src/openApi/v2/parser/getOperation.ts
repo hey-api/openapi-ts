@@ -11,6 +11,7 @@ import { getOperationResponseHeader } from './getOperationResponseHeader';
 import { getOperationResponses } from './getOperationResponses';
 import { getOperationResults } from './getOperationResults';
 import { getServiceClassName } from './getServiceClassName';
+import { sortByRequired } from './sortByRequired';
 
 export function getOperation(
     openApi: OpenApi,
@@ -72,6 +73,8 @@ export function getOperation(
             operation.imports.push(...operationResult.imports);
         });
     }
+
+    operation.parameters = operation.parameters.sort(sortByRequired);
 
     return operation;
 }

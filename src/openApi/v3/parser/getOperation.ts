@@ -69,7 +69,6 @@ export function getOperation(
         const requestBody = getOperationRequestBody(openApi, requestBodyDef);
         operation.imports.push(...requestBody.imports);
         operation.parameters.push(requestBody);
-        operation.parameters = operation.parameters.sort(sortByRequired);
         operation.parametersBody = requestBody;
     }
 
@@ -85,6 +84,8 @@ export function getOperation(
             operation.imports.push(...operationResult.imports);
         });
     }
+
+    operation.parameters = operation.parameters.sort(sortByRequired);
 
     return operation;
 }

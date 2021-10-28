@@ -2105,12 +2105,12 @@ export class DefaultsService {
             method: 'PUT',
             path: \`/api/v\${OpenAPI.VERSION}/defaults\`,
             query: {
-                'parameterStringWithNoDefault': parameterStringWithNoDefault,
                 'parameterOptionalStringWithDefault': parameterOptionalStringWithDefault,
                 'parameterOptionalStringWithEmptyDefault': parameterOptionalStringWithEmptyDefault,
                 'parameterOptionalStringWithNoDefault': parameterOptionalStringWithNoDefault,
                 'parameterStringWithDefault': parameterStringWithDefault,
                 'parameterStringWithEmptyDefault': parameterStringWithEmptyDefault,
+                'parameterStringWithNoDefault': parameterStringWithNoDefault,
             },
         });
     }
@@ -2293,8 +2293,8 @@ export class ParametersService {
                 'parameter.header': parameterHeader,
             },
             query: {
-                'parameter-query': parameterQuery,
                 'default': _default,
+                'parameter-query': parameterQuery,
             },
             formData: {
                 'parameter_form': parameterForm,
@@ -2494,13 +2494,13 @@ export class TypesService {
             method: 'GET',
             path: \`/api/v\${OpenAPI.VERSION}/types\`,
             query: {
-                'parameterArray': parameterArray,
-                'parameterDictionary': parameterDictionary,
-                'parameterEnum': parameterEnum,
                 'parameterNumber': parameterNumber,
                 'parameterString': parameterString,
                 'parameterBoolean': parameterBoolean,
                 'parameterObject': parameterObject,
+                'parameterArray': parameterArray,
+                'parameterDictionary': parameterDictionary,
+                'parameterEnum': parameterEnum,
             },
         });
     }
@@ -5051,12 +5051,12 @@ export class DefaultsService {
             method: 'PUT',
             path: \`/api/v\${OpenAPI.VERSION}/defaults\`,
             query: {
-                'parameterStringWithNoDefault': parameterStringWithNoDefault,
                 'parameterOptionalStringWithDefault': parameterOptionalStringWithDefault,
                 'parameterOptionalStringWithEmptyDefault': parameterOptionalStringWithEmptyDefault,
                 'parameterOptionalStringWithNoDefault': parameterOptionalStringWithNoDefault,
                 'parameterStringWithDefault': parameterStringWithDefault,
                 'parameterStringWithEmptyDefault': parameterStringWithEmptyDefault,
+                'parameterStringWithNoDefault': parameterStringWithNoDefault,
             },
         });
     }
@@ -5315,8 +5315,8 @@ export class ParametersService {
                 'parameter.header': parameterHeader,
             },
             query: {
-                'parameter-query': parameterQuery,
                 'default': _default,
+                'parameter-query': parameterQuery,
             },
             formData: {
                 'parameter_form': parameterForm,
@@ -5591,13 +5591,13 @@ export class TypesService {
             method: 'GET',
             path: \`/api/v\${OpenAPI.VERSION}/types\`,
             query: {
-                'parameterArray': parameterArray,
-                'parameterDictionary': parameterDictionary,
-                'parameterEnum': parameterEnum,
                 'parameterNumber': parameterNumber,
                 'parameterString': parameterString,
                 'parameterBoolean': parameterBoolean,
                 'parameterObject': parameterObject,
+                'parameterArray': parameterArray,
+                'parameterDictionary': parameterDictionary,
+                'parameterEnum': parameterEnum,
             },
         });
     }

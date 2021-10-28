@@ -3,7 +3,6 @@ import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiParameter } from '../interfaces/OpenApiParameter';
 import { getOperationParameter } from './getOperationParameter';
 import { getRef } from './getRef';
-import { sortByRequired } from './sortByRequired';
 
 export function getOperationParameters(openApi: OpenApi, parameters: OpenApiParameter[]): OperationParameters {
     const operationParameters: OperationParameters = {
@@ -58,12 +57,5 @@ export function getOperationParameters(openApi: OpenApi, parameters: OpenApiPara
             }
         }
     });
-
-    operationParameters.parameters = operationParameters.parameters.sort(sortByRequired);
-    operationParameters.parametersPath = operationParameters.parametersPath.sort(sortByRequired);
-    operationParameters.parametersQuery = operationParameters.parametersQuery.sort(sortByRequired);
-    operationParameters.parametersForm = operationParameters.parametersForm.sort(sortByRequired);
-    operationParameters.parametersCookie = operationParameters.parametersCookie.sort(sortByRequired);
-    operationParameters.parametersHeader = operationParameters.parametersHeader.sort(sortByRequired);
     return operationParameters;
 }
