@@ -313,14 +313,13 @@
                 "tags": [
                     "RequestBody"
                 ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/requestBodies/SimpleRequestBody"
-                            }
-                        }
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/SimpleParameter"
                     }
+                ],
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/SimpleRequestBody"
                 }
             }
         },
@@ -329,14 +328,13 @@
                 "tags": [
                     "FormData"
                 ],
-                "requestBody": {
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "$ref": "#/components/requestBodies/SimpleRequestBody"
-                            }
-                        }
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/SimpleParameter"
                     }
+                ],
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/SimpleFormData"
                 }
             }
         },
@@ -1287,6 +1285,28 @@
                             "$ref": "#/components/schemas/ModelWithString"
                         }
                     }
+                }
+            },
+            "SimpleFormData": {
+                "description": "A reusable request body",
+                "required": false,
+                "content": {
+                    "multipart/form-data": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ModelWithString"
+                        }
+                    }
+                }
+            }
+        },
+        "parameters": {
+            "SimpleParameter": {
+                "description": "This is a reusable parameter",
+                "name": "parameter",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string"
                 }
             }
         },

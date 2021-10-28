@@ -3090,6 +3090,7 @@ export { CollectionFormatService } from './services/CollectionFormatService';
 export { ComplexService } from './services/ComplexService';
 export { DefaultsService } from './services/DefaultsService';
 export { DuplicateService } from './services/DuplicateService';
+export { FormDataService } from './services/FormDataService';
 export { HeaderService } from './services/HeaderService';
 export { MultipartService } from './services/MultipartService';
 export { NoContentService } from './services/NoContentService';
@@ -5116,6 +5117,40 @@ export class DuplicateService {
 }"
 `;
 
+exports[`v3 should generate: ./test/generated/v3/services/FormDataService.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { ModelWithString } from '../models/ModelWithString';
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { request as __request } from '../core/request';
+import { OpenAPI } from '../core/OpenAPI';
+
+export class FormDataService {
+
+    /**
+     * @param parameter This is a reusable parameter
+     * @param formData A reusable request body
+     * @throws ApiError
+     */
+    public static postFormDataService(
+        parameter?: string,
+        formData?: ModelWithString,
+    ): CancelablePromise<void> {
+        return __request({
+            method: 'POST',
+            path: \`/api/v\${OpenAPI.VERSION}/formData/\`,
+            query: {
+                'parameter': parameter,
+            },
+            formData: formData,
+            mediaType: 'multipart/form-data',
+        });
+    }
+
+}"
+`;
+
 exports[`v3 should generate: ./test/generated/v3/services/HeaderService.ts 1`] = `
 "/* istanbul ignore file */
 /* tslint:disable */
@@ -5346,15 +5381,20 @@ import { OpenAPI } from '../core/OpenAPI';
 export class RequestBodyService {
 
     /**
+     * @param parameter This is a reusable parameter
      * @param requestBody A reusable request body
      * @throws ApiError
      */
     public static postRequestBodyService(
+        parameter?: string,
         requestBody?: ModelWithString,
     ): CancelablePromise<void> {
         return __request({
             method: 'POST',
             path: \`/api/v\${OpenAPI.VERSION}/requestBody/\`,
+            query: {
+                'parameter': parameter,
+            },
             body: requestBody,
             mediaType: 'application/json',
         });
