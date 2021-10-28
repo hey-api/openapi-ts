@@ -4,5 +4,5 @@
  * @param version
  */
 export function getServiceVersion(version = '1.0'): string {
-    return version.replace(/^v/gi, '');
+    return String(version).replace(/^v/gi, '');
 }
