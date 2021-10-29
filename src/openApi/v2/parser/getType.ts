@@ -1,5 +1,5 @@
 import type { Type } from '../../../client/interfaces/Type';
-import { getMappedType, hasMappedType } from './getMappedType';
+import { getMappedType } from './getMappedType';
 import { stripNamespace } from './stripNamespace';
 
 function encode(value: string): string {
@@ -8,10 +8,10 @@ function encode(value: string): string {
 
 /**
  * Parse any string value into a type object.
- * @param value String value like "integer" or "Link[Model]".
- * @param template Optional template class from parent (needed to process generics)
+ * @param type String value like "integer" or "Link[Model]".
+ * @param format String value like "binary" or "date".
  */
-export function getType(value?: string, template?: string): Type {
+export function getType(type: string = 'any', format?: string): Type {
     const result: Type = {
         type: 'any',
         base: 'any',
@@ -20,10 +20,17 @@ export function getType(value?: string, template?: string): Type {
         isNullable: false,
     };
 
-    const valueClean = decodeURIComponent(stripNamespace(value || ''));
+    const mapped = getMappedType(type, format);
+    if (mapped) {
+        result.type = mapped;
+        result.base = mapped;
+        return result;
+    }
 
-    if (/\[.*\]$/g.test(valueClean)) {
-        const matches = valueClean.match(/(.*?)\[(.*)\]$/);
+    const typeWithoutNamespace = decodeURIComponent(stripNamespace(type));
+
+    if (/\[.*\]$/g.test(typeWithoutNamespace)) {
+        const matches = typeWithoutNamespace.match(/(.*?)\[(.*)\]$/);
         if (matches?.length) {
             const match1 = getType(encode(matches[1]));
             const match2 = getType(encode(matches[2]));
@@ -44,26 +51,16 @@ export function getType(value?: string, template?: string): Type {
 
             result.imports.push(...match1.imports);
             result.imports.push(...match2.imports);
+            return result;
         }
-    } else if (hasMappedType(valueClean)) {
-        const mapped = getMappedType(valueClean);
-        if (mapped) {
-            result.type = mapped;
-            result.base = mapped;
-        }
-    } else if (valueClean) {
-        const type = encode(valueClean);
+    }
+
+    if (typeWithoutNamespace) {
+        const type = encode(typeWithoutNamespace);
         result.type = type;
         result.base = type;
         result.imports.push(type);
-    }
-
-    // If the property that we found matched the parent template class
-    // Then ignore this whole property and return it as a "T" template property.
-    if (result.type === template) {
-        result.type = 'T'; // Template;
-        result.base = 'T'; // Template;
-        result.imports = [];
+        return result;
     }
 
     return result;

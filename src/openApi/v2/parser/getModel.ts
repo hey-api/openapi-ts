@@ -153,7 +153,7 @@ export function getModel(
 
     // If the schema has a type than it can be a basic or generic type.
     if (definition.type) {
-        const definitionType = getType(definition.type);
+        const definitionType = getType(definition.type, definition.format);
         model.export = 'generic';
         model.type = definitionType.type;
         model.base = definitionType.base;

@@ -84,7 +84,7 @@ export function getOperationParameter(openApi: OpenApi, parameter: OpenApiParame
     }
 
     if (parameter.type === 'array' && parameter.items) {
-        const items = getType(parameter.items.type);
+        const items = getType(parameter.items.type, parameter.items.format);
         operationParameter.export = 'array';
         operationParameter.type = items.type;
         operationParameter.base = items.base;
@@ -95,7 +95,7 @@ export function getOperationParameter(openApi: OpenApi, parameter: OpenApiParame
     }
 
     if (parameter.type === 'object' && parameter.items) {
-        const items = getType(parameter.items.type);
+        const items = getType(parameter.items.type, parameter.items.format);
         operationParameter.export = 'dictionary';
         operationParameter.type = items.type;
         operationParameter.base = items.base;
@@ -137,7 +137,7 @@ export function getOperationParameter(openApi: OpenApi, parameter: OpenApiParame
 
     // If the parameter has a type than it can be a basic or generic type.
     if (parameter.type) {
-        const definitionType = getType(parameter.type);
+        const definitionType = getType(parameter.type, parameter.format);
         operationParameter.export = 'generic';
         operationParameter.type = definitionType.type;
         operationParameter.base = definitionType.base;

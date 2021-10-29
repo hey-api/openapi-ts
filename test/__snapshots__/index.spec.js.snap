@@ -5195,7 +5195,7 @@ export class MultipartService {
      * @throws ApiError
      */
     public static multipartResponse(): CancelablePromise<{
-        file?: string;
+        file?: Blob;
         metadata?: {
             foo?: string;
             bar?: string;

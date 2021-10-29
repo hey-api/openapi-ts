@@ -49,14 +49,6 @@ describe('getType', () => {
         expect(type.imports).toEqual(['Link', 'Link']);
     });
 
-    it('should convert generic', () => {
-        const type = getType('#/definitions/Link', 'Link');
-        expect(type.type).toEqual('T');
-        expect(type.base).toEqual('T');
-        expect(type.template).toEqual(null);
-        expect(type.imports).toEqual([]);
-    });
-
     it('should support dot', () => {
         const type = getType('#/definitions/model.000');
         expect(type.type).toEqual('model_000');

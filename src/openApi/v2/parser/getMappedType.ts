@@ -1,4 +1,4 @@
-export const TYPE_MAPPINGS = new Map<string, string>([
+const TYPE_MAPPINGS = new Map<string, string>([
     ['File', 'File'],
     ['file', 'File'],
     ['any', 'any'],
@@ -25,10 +25,9 @@ export const TYPE_MAPPINGS = new Map<string, string>([
 /**
  * Get mapped type for given type to any basic Typescript/Javascript type.
  */
-export function getMappedType(type: string): string | undefined {
+export function getMappedType(type: string, format?: string): string | undefined {
+    if (format === 'binary') {
+        return 'File';
+    }
     return TYPE_MAPPINGS.get(type);
-}
-
-export function hasMappedType(type: string): boolean {
-    return TYPE_MAPPINGS.has(type);
 }

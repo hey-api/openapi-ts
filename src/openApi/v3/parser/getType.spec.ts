@@ -55,15 +55,6 @@ describe('getType', () => {
         expect(type.isNullable).toEqual(false);
     });
 
-    it('should convert generic', () => {
-        const type = getType('#/components/schemas/Link', 'Link');
-        expect(type.type).toEqual('T');
-        expect(type.base).toEqual('T');
-        expect(type.template).toEqual(null);
-        expect(type.imports).toEqual([]);
-        expect(type.isNullable).toEqual(false);
-    });
-
     it('should support dot', () => {
         const type = getType('#/components/schemas/model.000');
         expect(type.type).toEqual('model_000');
