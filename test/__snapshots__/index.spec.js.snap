@@ -1520,7 +1520,7 @@ export const $ModelWithArray = {
         propWithFile: {
             type: 'array',
             contains: {
-                type: 'File',
+                type: 'binary',
             },
         },
         propWithNumber: {
@@ -1886,7 +1886,7 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$SimpleFile.ts 1`] = `
 /* tslint:disable */
 /* eslint-disable */
 export const $SimpleFile = {
-    type: 'File',
+    type: 'binary',
 };"
 `;
 
@@ -4416,7 +4416,7 @@ export const $ModelWithArray = {
         propWithFile: {
             type: 'array',
             contains: {
-                type: 'File',
+                type: 'binary',
             },
         },
         propWithNumber: {
@@ -4799,7 +4799,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$SimpleFile.ts 1`] = `
 /* tslint:disable */
 /* eslint-disable */
 export const $SimpleFile = {
-    type: 'File',
+    type: 'binary',
 };"
 `;
 
