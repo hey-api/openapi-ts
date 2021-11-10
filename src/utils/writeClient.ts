@@ -23,6 +23,8 @@ import { writeClientServices } from './writeClientServices';
  * @param exportServices: Generate services
  * @param exportModels: Generate models
  * @param exportSchemas: Generate schemas
+ * @param exportSchemas: Generate schemas
+ * @param postfix: Service name postfix
  * @param request: Path to custom request file
  */
 export async function writeClient(
@@ -36,6 +38,7 @@ export async function writeClient(
     exportServices: boolean,
     exportModels: boolean,
     exportSchemas: boolean,
+    postfix: string,
     request?: string
 ): Promise<void> {
     const outputPath = resolve(process.cwd(), output);
@@ -63,7 +66,8 @@ export async function writeClient(
             outputPathServices,
             httpClient,
             useUnionTypes,
-            useOptions
+            useOptions,
+            postfix
         );
     }
 
@@ -89,7 +93,8 @@ export async function writeClient(
             exportCore,
             exportServices,
             exportModels,
-            exportSchemas
+            exportSchemas,
+            postfix
         );
     }
 }

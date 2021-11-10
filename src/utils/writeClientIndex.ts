@@ -18,6 +18,7 @@ import { sortServicesByName } from './sortServicesByName';
  * @param exportServices: Generate services
  * @param exportModels: Generate models
  * @param exportSchemas: Generate schemas
+ * @param postfix: Service name postfix
  */
 export async function writeClientIndex(
     client: Client,
@@ -27,7 +28,8 @@ export async function writeClientIndex(
     exportCore: boolean,
     exportServices: boolean,
     exportModels: boolean,
-    exportSchemas: boolean
+    exportSchemas: boolean,
+    postfix: string
 ): Promise<void> {
     await writeFile(
         resolve(outputPath, 'index.ts'),
@@ -37,6 +39,7 @@ export async function writeClientIndex(
             exportModels,
             exportSchemas,
             useUnionTypes,
+            postfix,
             server: client.server,
             version: client.version,
             models: sortModelsByName(client.models),

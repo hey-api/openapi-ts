@@ -2,12 +2,15 @@ function getFormData(options: ApiRequestOptions): FormData | undefined {
     if (options.formData) {
         const formData = new FormData();
 
-        Object.keys(options.formData).forEach(key => {
-            const value = options.formData?.[key];
-            if (isDefined(value)) {
-                formData.append(key, value);
-            }
-        });
+        Object.entries(options.formData)
+            .filter(([_, value]) => isDefined(value))
+            .forEach(([key, value]) => {
+                if (isString(value) || isBlob(value)) {
+                    formData.append(key, value);
+                } else {
+                    formData.append(key, JSON.stringify(value));
+                }
+            });
 
         return formData;
     }

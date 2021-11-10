@@ -11,7 +11,7 @@ import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
 {{/if}}
 
-export class {{{name}}} {
+export class {{{name}}}{{{@root.postfix}}} {
 
     {{#each operations}}
     /**

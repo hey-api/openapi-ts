@@ -11,9 +11,9 @@ describe('writeClientModels', () => {
         const models: Model[] = [
             {
                 export: 'interface',
-                name: 'MyModel',
-                type: 'MyModel',
-                base: 'MyModel',
+                name: 'User',
+                type: 'User',
+                base: 'User',
                 template: null,
                 link: null,
                 description: null,
@@ -40,12 +40,13 @@ describe('writeClientModels', () => {
                 apiError: () => 'apiError',
                 apiRequestOptions: () => 'apiRequestOptions',
                 apiResult: () => 'apiResult',
+                cancelablePromise: () => 'cancelablePromise',
                 request: () => 'request',
             },
         };
 
         await writeClientModels(models, templates, '/', HttpClient.FETCH, false);
 
-        expect(writeFile).toBeCalledWith('/MyModel.ts', 'model');
+        expect(writeFile).toBeCalledWith('/User.ts', 'model');
     });
 });

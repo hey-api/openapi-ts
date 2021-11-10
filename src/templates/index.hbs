@@ -33,7 +33,7 @@ export { ${{{name}}} } from './schemas/${{{name}}}';
 {{#if services}}
 
 {{#each services}}
-export { {{{name}}} } from './services/{{{name}}}';
+export { {{{name}}}{{{@root.postfix}}} } from './services/{{{name}}}{{{@root.postfix}}}';
 {{/each}}
 {{/if}}
 {{/if}}

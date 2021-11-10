@@ -1,9 +1,9 @@
 {{>header}}
 
 import { AbortController } from 'abort-controller';
+import Blob from 'cross-blob'
 import FormData from 'form-data';
 import fetch, { BodyInit, Headers, RequestInit, Response } from 'node-fetch';
-import { types } from 'util';
 
 import { ApiError } from './ApiError';
 import type { ApiRequestOptions } from './ApiRequestOptions';
@@ -22,9 +22,6 @@ import { OpenAPI } from './OpenAPI';
 
 
 {{>functions/isBlob}}
-
-
-{{>functions/isBinary}}
 
 
 {{>functions/base64}}

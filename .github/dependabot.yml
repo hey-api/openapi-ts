@@ -8,4 +8,7 @@ updates:
   open-pull-requests-limit: 10
   ignore:
     - dependency-name: "@types/node-fetch"
+    - dependency-name: "abort-controller"
+    - dependency-name: "cross-blob"
+    - dependency-name: "form-data"
     - dependency-name: "node-fetch"

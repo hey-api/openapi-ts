@@ -1,6 +1,7 @@
 {{>header}}
 
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import Blob from 'cross-blob'
 import FormData from 'form-data';
 
 import { ApiError } from './ApiError';
@@ -17,6 +18,9 @@ import { OpenAPI } from './OpenAPI';
 
 
 {{>functions/isStringWithValue}}
+
+
+{{>functions/isBlob}}
 
 
 {{>functions/isSuccess}}

@@ -12,8 +12,8 @@ async function getHeaders(options: ApiRequestOptions): Promise<Headers> {
         .filter(([_, value]) => isDefined(value))
         .reduce((headers, [key, value]) => ({
             ...headers,
-            [key]: value,
-        }), {});
+            [key]: String(value),
+        }), {} as Record<string, string>);
 
     const headers = new Headers(defaultHeaders);
 

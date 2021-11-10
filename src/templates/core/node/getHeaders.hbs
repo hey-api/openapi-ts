@@ -12,8 +12,8 @@ async function getHeaders(options: ApiRequestOptions): Promise<Headers> {
         .filter(([_, value]) => isDefined(value))
         .reduce((headers, [key, value]) => ({
             ...headers,
-            [key]: value,
-        }), {});
+            [key]: String(value),
+        }), {} as Record<string, string>);
 
     const headers = new Headers(defaultHeaders);
 
@@ -29,7 +29,7 @@ async function getHeaders(options: ApiRequestOptions): Promise<Headers> {
     if (options.body) {
         if (options.mediaType) {
             headers.append('Content-Type', options.mediaType);
-        } else if (isBinary(options.body)) {
+        } else if (isBlob(options.body)) {
             headers.append('Content-Type', 'application/octet-stream');
         } else if (isString(options.body)) {
             headers.append('Content-Type', 'text/plain');

@@ -47,6 +47,7 @@ $ openapi --help
     --exportServices <value>  Write services to disk (default: true)
     --exportModels <value>    Write models to disk (default: true)
     --exportSchemas <value>   Write schemas to disk (default: false)
+    --postfix <value>         Service name postfix (default: "Service")
     --request <value>         Path to custom request file
     -h, --help                display help for command
 
@@ -459,10 +460,11 @@ This will generate a client that uses [`node-fetch`](https://www.npmjs.com/packa
 in order to compile and run this client, you might need to install the `node-fetch@2.x` dependencies:
 
 ```
-npm install @types/node-fetch --save-dev
-npm install abort-controller --save-dev
-npm install node-fetch --save-dev
-npm install form-data --save-dev
+npm install @types/node-fetch@2.x --save-dev
+npm install abort-controller@3.x --save-dev
+npm install cross-blob@2.x --save-dev
+npm install form-data@4.x --save-dev
+npm install node-fetch@2.x --save-dev
 ```
 
 In order to compile the project and resolve the imports, you will need to enable the `allowSyntheticDefaultImports`

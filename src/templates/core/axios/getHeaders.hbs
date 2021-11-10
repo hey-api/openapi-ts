@@ -14,7 +14,7 @@ async function getHeaders(options: ApiRequestOptions, formData?: FormData): Prom
     .filter(([_, value]) => isDefined(value))
     .reduce((headers, [key, value]) => ({
         ...headers,
-        [key]: value,
+        [key]: String(value),
     }), {} as Record<string, string>);
 
     if (isStringWithValue(token)) {

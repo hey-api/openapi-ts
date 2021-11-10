@@ -14,6 +14,7 @@ async function generate(input, output) {
         exportSchemas: true,
         exportModels: true,
         exportServices: true,
+        // postfix: 'Api',
         // request: './test/custom/request.ts',
     });
 }

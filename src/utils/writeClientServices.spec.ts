@@ -10,7 +10,7 @@ describe('writeClientServices', () => {
     it('should write to filesystem', async () => {
         const services: Service[] = [
             {
-                name: 'MyService',
+                name: 'User',
                 operations: [],
                 imports: [],
             },
@@ -28,12 +28,13 @@ describe('writeClientServices', () => {
                 apiError: () => 'apiError',
                 apiRequestOptions: () => 'apiRequestOptions',
                 apiResult: () => 'apiResult',
+                cancelablePromise: () => 'cancelablePromise',
                 request: () => 'request',
             },
         };
 
-        await writeClientServices(services, templates, '/', HttpClient.FETCH, false, false);
+        await writeClientServices(services, templates, '/', HttpClient.FETCH, false, false, 'Service');
 
-        expect(writeFile).toBeCalledWith('/MyService.ts', 'service');
+        expect(writeFile).toBeCalledWith('/UserService.ts', 'service');
     });
 });

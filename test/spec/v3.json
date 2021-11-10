@@ -1083,6 +1083,43 @@
             }
         },
         "/api/v{api-version}/multipart": {
+            "post": {
+                "tags": [
+                    "multipart"
+                ],
+                "operationId": "MultipartRequest",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "content": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "data": {
+                                        "oneOf": [
+                                            {
+                                                "$ref": "#/components/schemas/ModelWithString"
+                                            }
+                                        ],
+                                        "nullable": true
+                                    }
+                                }
+                            },
+                            "encoding": {
+                                "content": {
+                                    "style": "form"
+                                },
+                                "data": {
+                                    "style": "form"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "get": {
                 "tags": [
                     "multipart"

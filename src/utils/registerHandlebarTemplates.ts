@@ -22,7 +22,6 @@ import functionCatchErrors from '../templates/core/functions/catchErrors.hbs';
 import functionGetFormData from '../templates/core/functions/getFormData.hbs';
 import functionGetQueryString from '../templates/core/functions/getQueryString.hbs';
 import functionGetUrl from '../templates/core/functions/getUrl.hbs';
-import functionIsBinary from '../templates/core/functions/isBinary.hbs';
 import functionIsBlob from '../templates/core/functions/isBlob.hbs';
 import functionIsDefined from '../templates/core/functions/isDefined.hbs';
 import functionIsString from '../templates/core/functions/isString.hbs';
@@ -156,7 +155,6 @@ export function registerHandlebarTemplates(root: {
     Handlebars.registerPartial('functions/getFormData', Handlebars.template(functionGetFormData));
     Handlebars.registerPartial('functions/getQueryString', Handlebars.template(functionGetQueryString));
     Handlebars.registerPartial('functions/getUrl', Handlebars.template(functionGetUrl));
-    Handlebars.registerPartial('functions/isBinary', Handlebars.template(functionIsBinary));
     Handlebars.registerPartial('functions/isBlob', Handlebars.template(functionIsBlob));
     Handlebars.registerPartial('functions/isDefined', Handlebars.template(functionIsDefined));
     Handlebars.registerPartial('functions/isString', Handlebars.template(functionIsString));
