@@ -16,7 +16,7 @@ async function sendRequest(
     };
 
     if (OpenAPI.WITH_CREDENTIALS) {
-        request.credentials = 'include';
+        request.credentials = OpenAPI.CREDENTIALS;
     }
 
     onCancel(() => controller.abort());

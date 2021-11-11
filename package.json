@@ -1,6 +1,6 @@
 {
     "name": "openapi-typescript-codegen",
-    "version": "0.12.0-alpha.0",
+    "version": "0.12.0-alpha",
     "description": "Library that generates Typescript clients based on the OpenAPI specification.",
     "author": "Ferdi Koomen",
     "homepage": "https://github.com/ferdikoomen/openapi-typescript-codegen",
@@ -56,7 +56,7 @@
         "eslint:fix": "eslint \"./src/**/*.ts\" \"./bin/index.js\" \"./types/index.d.ts\" --fix",
         "prettier": "prettier \"./src/**/*.ts\" \"./bin/index.js\" \"./types/index.d.ts\" --check",
         "prettier:fix": "prettier \"./src/**/*.ts\" \"./bin/index.js\" \"./types/index.d.ts\" --write",
-        "prepublish": "yarn run clean && yarn run release",
+        "prepublishOnly": "yarn run clean && yarn run release",
         "codecov": "codecov --token=66c30c23-8954-4892-bef9-fbaed0a2e42b"
     },
     "dependencies": {
