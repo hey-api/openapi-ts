@@ -257,7 +257,7 @@ export const $MyModel = {
             format: 'date-time',
         },
     },
-};
+} as const;
 ```
 
 These runtime object are prefixed with a `$` character and expose all the interesting attributes of a model

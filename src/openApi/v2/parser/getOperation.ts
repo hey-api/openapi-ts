@@ -10,25 +10,25 @@ import { getOperationPath } from './getOperationPath';
 import { getOperationResponseHeader } from './getOperationResponseHeader';
 import { getOperationResponses } from './getOperationResponses';
 import { getOperationResults } from './getOperationResults';
-import { getServiceClassName } from './getServiceClassName';
+import { getServiceName } from './getServiceName';
 import { sortByRequired } from './sortByRequired';
 
 export function getOperation(
     openApi: OpenApi,
     url: string,
     method: string,
+    tag: string,
     op: OpenApiOperation,
     pathParams: OperationParameters
 ): Operation {
-    const serviceName = op.tags?.[0] || 'Service';
-    const serviceClassName = getServiceClassName(serviceName);
-    const operationNameFallback = `${method}${serviceClassName}`;
+    const serviceName = getServiceName(tag);
+    const operationNameFallback = `${method}${serviceName}`;
     const operationName = getOperationName(op.operationId || operationNameFallback);
     const operationPath = getOperationPath(url);
 
     // Create a new operation object for this method.
     const operation: Operation = {
-        service: serviceClassName,
+        service: serviceName,
         name: operationName,
         summary: getComment(op.summary),
         description: getComment(op.description),

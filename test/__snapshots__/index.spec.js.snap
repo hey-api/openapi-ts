@@ -180,13 +180,12 @@ import type { ApiRequestOptions } from './ApiRequestOptions';
 
 type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
 type Headers = Record<string, string>;
-type CredentialModes = 'include' | 'omit' | 'same-origin';
 
 type Config = {
     BASE: string;
     VERSION: string;
     WITH_CREDENTIALS: boolean;
-    CREDENTIALS: CredentialModes;
+    CREDENTIALS: 'include' | 'omit' | 'same-origin';
     TOKEN?: string | Resolver<string>;
     USERNAME?: string | Resolver<string>;
     PASSWORD?: string | Resolver<string>;
@@ -573,6 +572,9 @@ export { ComplexService } from './services/ComplexService';
 export { DefaultsService } from './services/DefaultsService';
 export { DuplicateService } from './services/DuplicateService';
 export { HeaderService } from './services/HeaderService';
+export { MultipleTags1Service } from './services/MultipleTags1Service';
+export { MultipleTags2Service } from './services/MultipleTags2Service';
+export { MultipleTags3Service } from './services/MultipleTags3Service';
 export { NoContentService } from './services/NoContentService';
 export { ParametersService } from './services/ParametersService';
 export { ResponseService } from './services/ResponseService';
@@ -2206,6 +2208,100 @@ export class HeaderService {
 }"
 `;
 
+exports[`v2 should generate: ./test/generated/v2/services/MultipleTags1Service.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { request as __request } from '../core/request';
+import { OpenAPI } from '../core/OpenAPI';
+
+export class MultipleTags1Service {
+
+    /**
+     * @returns void
+     * @throws ApiError
+     */
+    public static dummyA(): CancelablePromise<void> {
+        return __request({
+            method: 'GET',
+            path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/a\`,
+        });
+    }
+
+    /**
+     * @returns void
+     * @throws ApiError
+     */
+    public static dummyB(): CancelablePromise<void> {
+        return __request({
+            method: 'GET',
+            path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/b\`,
+        });
+    }
+
+}"
+`;
+
+exports[`v2 should generate: ./test/generated/v2/services/MultipleTags2Service.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { request as __request } from '../core/request';
+import { OpenAPI } from '../core/OpenAPI';
+
+export class MultipleTags2Service {
+
+    /**
+     * @returns void
+     * @throws ApiError
+     */
+    public static dummyA(): CancelablePromise<void> {
+        return __request({
+            method: 'GET',
+            path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/a\`,
+        });
+    }
+
+    /**
+     * @returns void
+     * @throws ApiError
+     */
+    public static dummyB(): CancelablePromise<void> {
+        return __request({
+            method: 'GET',
+            path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/b\`,
+        });
+    }
+
+}"
+`;
+
+exports[`v2 should generate: ./test/generated/v2/services/MultipleTags3Service.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { request as __request } from '../core/request';
+import { OpenAPI } from '../core/OpenAPI';
+
+export class MultipleTags3Service {
+
+    /**
+     * @returns void
+     * @throws ApiError
+     */
+    public static dummyB(): CancelablePromise<void> {
+        return __request({
+            method: 'GET',
+            path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/b\`,
+        });
+    }
+
+}"
+`;
+
 exports[`v2 should generate: ./test/generated/v2/services/NoContentService.ts 1`] = `
 "/* istanbul ignore file */
 /* tslint:disable */
@@ -2694,13 +2790,12 @@ import type { ApiRequestOptions } from './ApiRequestOptions';
 
 type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
 type Headers = Record<string, string>;
-type CredentialModes = 'include' | 'omit' | 'same-origin';
 
 type Config = {
     BASE: string;
     VERSION: string;
     WITH_CREDENTIALS: boolean;
-    CREDENTIALS: CredentialModes;
+    CREDENTIALS: 'include' | 'omit' | 'same-origin';
     TOKEN?: string | Resolver<string>;
     USERNAME?: string | Resolver<string>;
     PASSWORD?: string | Resolver<string>;
@@ -3105,6 +3200,9 @@ export { DuplicateService } from './services/DuplicateService';
 export { FormDataService } from './services/FormDataService';
 export { HeaderService } from './services/HeaderService';
 export { MultipartService } from './services/MultipartService';
+export { MultipleTags1Service } from './services/MultipleTags1Service';
+export { MultipleTags2Service } from './services/MultipleTags2Service';
+export { MultipleTags3Service } from './services/MultipleTags3Service';
 export { NoContentService } from './services/NoContentService';
 export { ParametersService } from './services/ParametersService';
 export { RequestBodyService } from './services/RequestBodyService';
@@ -5235,6 +5333,100 @@ export class MultipartService {
         return __request({
             method: 'GET',
             path: \`/api/v\${OpenAPI.VERSION}/multipart\`,
+        });
+    }
+
+}"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/services/MultipleTags1Service.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { request as __request } from '../core/request';
+import { OpenAPI } from '../core/OpenAPI';
+
+export class MultipleTags1Service {
+
+    /**
+     * @returns void
+     * @throws ApiError
+     */
+    public static dummyA(): CancelablePromise<void> {
+        return __request({
+            method: 'GET',
+            path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/a\`,
+        });
+    }
+
+    /**
+     * @returns void
+     * @throws ApiError
+     */
+    public static dummyB(): CancelablePromise<void> {
+        return __request({
+            method: 'GET',
+            path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/b\`,
+        });
+    }
+
+}"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/services/MultipleTags2Service.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { request as __request } from '../core/request';
+import { OpenAPI } from '../core/OpenAPI';
+
+export class MultipleTags2Service {
+
+    /**
+     * @returns void
+     * @throws ApiError
+     */
+    public static dummyA(): CancelablePromise<void> {
+        return __request({
+            method: 'GET',
+            path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/a\`,
+        });
+    }
+
+    /**
+     * @returns void
+     * @throws ApiError
+     */
+    public static dummyB(): CancelablePromise<void> {
+        return __request({
+            method: 'GET',
+            path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/b\`,
+        });
+    }
+
+}"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/services/MultipleTags3Service.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { request as __request } from '../core/request';
+import { OpenAPI } from '../core/OpenAPI';
+
+export class MultipleTags3Service {
+
+    /**
+     * @returns void
+     * @throws ApiError
+     */
+    public static dummyB(): CancelablePromise<void> {
+        return __request({
+            method: 'GET',
+            path: \`/api/v\${OpenAPI.VERSION}/multiple-tags/b\`,
         });
     }
 

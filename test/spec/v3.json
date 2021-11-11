@@ -572,6 +572,35 @@
                 }
             }
         },
+        "/api/v{api-version}/multiple-tags/a": {
+            "get": {
+                "tags": [
+                    "MultipleTags1",
+                    "MultipleTags2"
+                ],
+                "operationId": "DummyA",
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/v{api-version}/multiple-tags/b": {
+            "get": {
+                "tags": [
+                    "MultipleTags1",
+                    "MultipleTags2",
+                    "MultipleTags3"
+                ],
+                "operationId": "DummyB",
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
         "/api/v{api-version}/response": {
             "get": {
                 "tags": [

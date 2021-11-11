@@ -4,13 +4,12 @@ import type { ApiRequestOptions } from './ApiRequestOptions';
 
 type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
 type Headers = Record<string, string>;
-type CredentialModes = 'include' | 'omit' | 'same-origin';
 
 type Config = {
     BASE: string;
     VERSION: string;
     WITH_CREDENTIALS: boolean;
-    CREDENTIALS: CredentialModes;
+    CREDENTIALS: 'include' | 'omit' | 'same-origin';
     TOKEN?: string | Resolver<string>;
     USERNAME?: string | Resolver<string>;
     PASSWORD?: string | Resolver<string>;
