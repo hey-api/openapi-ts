@@ -23,7 +23,10 @@ const BASIC_MEDIA_TYPES = [
 
 export function getContent(openApi: OpenApi, content: Dictionary<OpenApiMediaType>): Content | null {
     const basicMediaTypeWithSchema = Object.keys(content)
-        .filter(mediaType => BASIC_MEDIA_TYPES.includes(mediaType))
+        .filter(mediaType => {
+            const cleanMediaType = mediaType.split(';')[0].trim();
+            return BASIC_MEDIA_TYPES.includes(cleanMediaType);
+        })
         .find(mediaType => isDefined(content[mediaType]?.schema));
     if (basicMediaTypeWithSchema) {
         return {

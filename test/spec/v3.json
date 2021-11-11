@@ -127,7 +127,6 @@
                     "nullable": true,
                     "content": {
                         "application/json": {
-                            "description": "Message for default response",
                             "schema": {
                                 "$ref": "#/components/schemas/ModelWithString"
                             }
@@ -239,7 +238,6 @@
                     "nullable": true,
                     "content": {
                         "application/json": {
-                            "description": "Message for default response",
                             "schema": {
                                 "$ref": "#/components/schemas/ModelWithString"
                             }
@@ -270,7 +268,6 @@
                     "required": true,
                     "content": {
                         "application/json": {
-                            "description": "Message for default response",
                             "schema": {
                                 "$ref": "#/components/schemas/ModelWithString"
                             }
@@ -299,7 +296,6 @@
                     "required": false,
                     "content": {
                         "application/json": {
-                            "description": "Message for default response",
                             "schema": {
                                 "$ref": "#/components/schemas/ModelWithString"
                             }
@@ -611,7 +607,6 @@
                     "default": {
                         "content": {
                             "application/json": {
-                                "description": "Message for default response",
                                 "schema": {
                                     "$ref": "#/components/schemas/ModelWithString"
                                 }
@@ -1303,7 +1298,7 @@
                     "200": {
                         "description": "Success",
                         "content": {
-                            "application/json": {
+                            "application/json; type=collection": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ModelWithString"
                                 }
