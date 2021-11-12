@@ -1333,6 +1333,42 @@
                     }
                 }
             }
+        },
+        "/api/v{api-version}/error": {
+            "post": {
+                "tags": [
+                    "Error"
+                ],
+                "operationId": "testErrorCode",
+                "parameters": [
+                    {
+                        "description": "Status code to return",
+                        "name": "status",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Custom message: Successful response"
+                    },
+                    "500": {
+                        "description": "Custom message: Internal Server Error"
+                    },
+                    "501": {
+                        "description": "Custom message: Not Implemented"
+                    },
+                    "502": {
+                        "description": "Custom message: Bad Gateway"
+                    },
+                    "503": {
+                        "description": "Custom message: Service Unavailable"
+                    }
+                }
+            }
         }
     },
     "components": {

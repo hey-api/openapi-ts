@@ -13,7 +13,7 @@ async function start() {
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
     page = await browser.newPage();
-    page.on('console', msg => console.log(msg.text()));
+    // page.on('console', msg => console.log(msg.text()));
     await page.goto(`http://localhost:3000/`, {
         waitUntil: 'networkidle0',
     });

@@ -571,6 +571,7 @@ export { CollectionFormatService } from './services/CollectionFormatService';
 export { ComplexService } from './services/ComplexService';
 export { DefaultsService } from './services/DefaultsService';
 export { DuplicateService } from './services/DuplicateService';
+export { ErrorService } from './services/ErrorService';
 export { HeaderService } from './services/HeaderService';
 export { MultipleTags1Service } from './services/MultipleTags1Service';
 export { MultipleTags2Service } from './services/MultipleTags2Service';
@@ -2179,6 +2180,42 @@ export class DuplicateService {
 }"
 `;
 
+exports[`v2 should generate: ./test/generated/v2/services/ErrorService.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { request as __request } from '../core/request';
+import { OpenAPI } from '../core/OpenAPI';
+
+export class ErrorService {
+
+    /**
+     * @param status Status code to return
+     * @returns any Custom message: Successful response
+     * @throws ApiError
+     */
+    public static testErrorCode(
+        status: string,
+    ): CancelablePromise<any> {
+        return __request({
+            method: 'POST',
+            path: \`/api/v\${OpenAPI.VERSION}/error\`,
+            query: {
+                'status': status,
+            },
+            errors: {
+                500: \`Custom message: Internal Server Error\`,
+                501: \`Custom message: Not Implemented\`,
+                502: \`Custom message: Bad Gateway\`,
+                503: \`Custom message: Service Unavailable\`,
+            },
+        });
+    }
+
+}"
+`;
+
 exports[`v2 should generate: ./test/generated/v2/services/HeaderService.ts 1`] = `
 "/* istanbul ignore file */
 /* tslint:disable */
@@ -3197,6 +3234,7 @@ export { CollectionFormatService } from './services/CollectionFormatService';
 export { ComplexService } from './services/ComplexService';
 export { DefaultsService } from './services/DefaultsService';
 export { DuplicateService } from './services/DuplicateService';
+export { ErrorService } from './services/ErrorService';
 export { FormDataService } from './services/FormDataService';
 export { HeaderService } from './services/HeaderService';
 export { MultipartService } from './services/MultipartService';
@@ -5221,6 +5259,42 @@ export class DuplicateService {
         return __request({
             method: 'DELETE',
             path: \`/api/v\${OpenAPI.VERSION}/duplicate\`,
+        });
+    }
+
+}"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/services/ErrorService.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { request as __request } from '../core/request';
+import { OpenAPI } from '../core/OpenAPI';
+
+export class ErrorService {
+
+    /**
+     * @param status Status code to return
+     * @returns any Custom message: Successful response
+     * @throws ApiError
+     */
+    public static testErrorCode(
+        status: number,
+    ): CancelablePromise<any> {
+        return __request({
+            method: 'POST',
+            path: \`/api/v\${OpenAPI.VERSION}/error\`,
+            query: {
+                'status': status,
+            },
+            errors: {
+                500: \`Custom message: Internal Server Error\`,
+                501: \`Custom message: Not Implemented\`,
+                502: \`Custom message: Bad Gateway\`,
+                503: \`Custom message: Service Unavailable\`,
+            },
         });
     }
 

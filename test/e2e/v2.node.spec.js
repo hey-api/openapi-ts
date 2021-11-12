@@ -37,6 +37,7 @@ describe('v2.node', () => {
     });
 
     it('can abort the request', async () => {
+        let error;
         try {
             const { SimpleService } = require('./generated/v2/node/index.js');
             const promise = SimpleService.getCallWithoutParametersAndResponse();
@@ -45,7 +46,62 @@ describe('v2.node', () => {
             }, 10);
             await promise;
         } catch (e) {
-            expect(e.message).toContain('The user aborted a request.');
+            error = e.message;
         }
+        expect(error).toContain('The user aborted a request.');
+    });
+
+    it('should throw known error (500)', async () => {
+        let error;
+        try {
+            const { ErrorService } = require('./generated/v2/node/index.js');
+            await ErrorService.testErrorCode(500);
+        } catch (e) {
+            error = JSON.stringify({
+                name: e.name,
+                message: e.message,
+                url: e.url,
+                status: e.status,
+                statusText: e.statusText,
+                body: e.body,
+            });
+        }
+        expect(error).toBe(
+            JSON.stringify({
+                name: 'ApiError',
+                message: 'Custom message: Internal Server Error',
+                url: 'http://localhost:3000/base/api/v1.0/error?status=500',
+                status: 500,
+                statusText: 'Internal Server Error',
+                body: 'Internal Server Error',
+            })
+        );
+    });
+
+    it('should throw unknown error (409)', async () => {
+        let error;
+        try {
+            const { ErrorService } = require('./generated/v2/node/index.js');
+            await ErrorService.testErrorCode(409);
+        } catch (e) {
+            error = JSON.stringify({
+                name: e.name,
+                message: e.message,
+                url: e.url,
+                status: e.status,
+                statusText: e.statusText,
+                body: e.body,
+            });
+        }
+        expect(error).toBe(
+            JSON.stringify({
+                name: 'ApiError',
+                message: 'Generic Error',
+                url: 'http://localhost:3000/base/api/v1.0/error?status=409',
+                status: 409,
+                statusText: 'Conflict',
+                body: 'Conflict',
+            })
+        );
     });
 });

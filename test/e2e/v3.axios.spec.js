@@ -49,13 +49,21 @@ describe('v3.node', () => {
 
     it('formData', async () => {
         const { ParametersService } = require('./generated/v3/axios/index.js');
-        const result = await ParametersService.callWithParameters('valueHeader', 'valueQuery', 'valueForm', 'valueCookie', 'valuePath', {
-            prop: 'valueBody',
-        });
+        const result = await ParametersService.callWithParameters(
+            'valueHeader',
+            'valueQuery',
+            'valueForm',
+            'valueCookie',
+            'valuePath',
+            {
+                prop: 'valueBody',
+            }
+        );
         expect(result).toBeDefined();
     });
 
     it('can abort the request', async () => {
+        let error;
         try {
             const { SimpleService } = require('./generated/v3/axios/index.js');
             const promise = SimpleService.getCallWithoutParametersAndResponse();
@@ -64,7 +72,8 @@ describe('v3.node', () => {
             }, 10);
             await promise;
         } catch (e) {
-            expect(e.message).toContain('The user aborted a request.');
+            error = e.message;
         }
+        expect(error).toContain('The user aborted a request.');
     });
 });

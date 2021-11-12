@@ -37,6 +37,7 @@ describe('v2.node', () => {
     });
 
     it('can abort the request', async () => {
+        let error;
         try {
             const { SimpleService } = require('./generated/v2/axios/index.js');
             const promise = SimpleService.getCallWithoutParametersAndResponse();
@@ -45,7 +46,8 @@ describe('v2.node', () => {
             }, 10);
             await promise;
         } catch (e) {
-            expect(e.message).toContain('The user aborted a request.');
+            error = e.message;
         }
+        expect(error).toContain('The user aborted a request.');
     });
 });
