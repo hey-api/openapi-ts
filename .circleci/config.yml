@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/repo
     docker:
-      - image: circleci/node:latest-browsers
+      - image: cimg/node:lts-browsers
     steps:
       - checkout
       - restore_cache:
