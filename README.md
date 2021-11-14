@@ -459,17 +459,10 @@ classes in NodeJS).
 npm install axios --save-dev
 npm install cross-blob@2.x --save-dev
 npm install form-data@4.x --save-dev
-npm install node-fetch@2.x --save-dev
 ```
 
 In order to compile the project and resolve the imports, you will need to enable the `allowSyntheticDefaultImports`
 in your `tsconfig.json` file.
-
-```json
-{
-    "allowSyntheticDefaultImports": true
-}
-```
 
 
 ### Node-Fetch support
@@ -495,12 +488,6 @@ npm install node-fetch@2.x --save-dev
 
 In order to compile the project and resolve the imports, you will need to enable the `allowSyntheticDefaultImports`
 in your `tsconfig.json` file.
-
-```json
-{
-    "allowSyntheticDefaultImports": true
-}
-```
 
 
 [npm-url]: https://npmjs.org/package/openapi-typescript-codegen
