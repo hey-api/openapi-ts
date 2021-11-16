@@ -17,6 +17,7 @@ async function sendRequest(
     return new Promise<XMLHttpRequest>((resolve, reject) => {
         xhr.onload = () => resolve(xhr);
         xhr.onabort = () => reject(new Error('The user aborted a request.'));
+        xhr.onerror = () => reject(new Error('Network error.'));
         xhr.send(body || formData);
 
         onCancel(() => xhr.abort());
