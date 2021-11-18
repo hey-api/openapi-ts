@@ -22,8 +22,9 @@ async function sendRequest(
     try {
         return await axios.request(config);
     } catch (error) {
-        if (error.response) {
-            return error.response;
+        const axiosError = error as AxiosError;
+        if (axiosError.response) {
+            return axiosError.response;
         }
         throw error;
     }
