@@ -9,5 +9,5 @@ export function getServer(openApi: OpenApi): string {
             url = url.replace(`{${variable}}`, variables[variable].default);
         }
     }
-    return url;
+    return url.replace(/\/$/g, '');
 }
