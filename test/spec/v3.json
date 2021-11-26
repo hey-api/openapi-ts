@@ -525,6 +525,27 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "description": "This is a string that can be null with no default",
+                        "name": "parameterStringNullableWithNoDefault",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "nullable": true
+                        }
+                    },
+                    {
+                        "description": "This is a string that can be null with default",
+                        "name": "parameterStringNullableWithDefault",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "nullable": true,
+                            "default": null
+                        }
                     }
                 ]
             }

@@ -340,6 +340,23 @@
                         "in": "query",
                         "required": true,
                         "type": "string"
+                    },
+                    {
+                        "x-nullable": true,
+                        "description": "This is a string that can be null with no default",
+                        "name": "parameterStringNullableWithNoDefault",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "x-nullable": true,
+                        "description": "This is a string that can be null with default",
+                        "name": "parameterStringNullableWithDefault",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "default": null
                     }
                 ]
             }
