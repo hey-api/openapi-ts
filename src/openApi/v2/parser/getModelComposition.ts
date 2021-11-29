@@ -59,6 +59,9 @@ export function getModelComposition(
         modelProperties.forEach(modelProperty => {
             composition.imports.push(...modelProperty.imports);
             composition.enums.push(...modelProperty.enums);
+            if (modelProperty.export === 'enum') {
+                composition.enums.push(modelProperty);
+            }
         });
         properties.push(...modelProperties);
     }
