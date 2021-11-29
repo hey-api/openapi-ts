@@ -2,13 +2,21 @@ function getFormData(options: ApiRequestOptions): FormData | undefined {
     if (options.formData) {
         const formData = new FormData();
 
+        const append = (key: string, value: any) => {
+            if (isString(value) || isBlob(value)) {
+                formData.append(key, value);
+            } else {
+                formData.append(key, JSON.stringify(value));
+            }
+        };
+
         Object.entries(options.formData)
             .filter(([_, value]) => isDefined(value))
             .forEach(([key, value]) => {
-                if (isString(value) || isBlob(value)) {
-                    formData.append(key, value);
+                if (Array.isArray(value)) {
+                    value.forEach(v => append(key, v));
                 } else {
-                    formData.append(key, JSON.stringify(value));
+                    append(key, value);
                 }
             });
 

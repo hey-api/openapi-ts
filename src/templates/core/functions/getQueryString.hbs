@@ -1,18 +1,19 @@
 function getQueryString(params: Record<string, any>): string {
     const qs: string[] = [];
 
-    Object.keys(params).forEach(key => {
-        const value = params[key];
-        if (isDefined(value)) {
+    const append = (key: string, value: any) => {
+        qs.push(`${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`);
+    };
+
+    Object.entries(params)
+        .filter(([_, value]) => isDefined(value))
+        .forEach(([key, value]) => {
             if (Array.isArray(value)) {
-                value.forEach(value => {
-                    qs.push(`${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`);
-                });
+                value.forEach(v => append(key, v));
             } else {
-                qs.push(`${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`);
+                append(key, value);
             }
-        }
-    });
+        });
 
     if (qs.length > 0) {
         return `?${qs.join('&')}`;
