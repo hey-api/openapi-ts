@@ -2,6 +2,9 @@
 {{#if type}}
     type: '{{{base}}}',
 {{/if}}
+{{#if description}}
+    description: '{{{escapeQuotes description}}}',
+{{/if}}
 {{#if isReadOnly}}
     isReadOnly: {{{isReadOnly}}},
 {{/if}}

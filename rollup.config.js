@@ -32,6 +32,7 @@ const handlebarsPlugin = () => ({
                 preventIndent: true,
                 knownHelpersOnly: true,
                 knownHelpers: {
+                    escapeQuotes: true,
                     equals: true,
                     notEquals: true,
                     containsSpaces: true,
