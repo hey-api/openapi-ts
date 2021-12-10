@@ -1,7 +1,7 @@
 {
     type: '{{export}}',
 {{#if description}}
-    description: '{{{escapeQuotes description}}}',
+    description: '{{{escapeSinglequotes description}}}',
 {{/if}}
     contains: [{{#each properties}}{{>schema}}{{#unless @last}}, {{/unless}}{{/each}}],
 {{#if isReadOnly}}

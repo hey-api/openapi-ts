@@ -11,7 +11,7 @@ export function registerHandlebarHelpers(root: {
     useUnionTypes: boolean;
 }): void {
     Handlebars.registerHelper('escapeQuotes', function (value: string): string {
-        return value.replace(/(['"])/g, '\\$1');
+        return value.replace(/(')/g, '\\$1');
     });
 
     Handlebars.registerHelper(
