@@ -3169,6 +3169,7 @@ export type { CompositionWithAnyOfAnonymous } from './models/CompositionWithAnyO
 export type { CompositionWithOneOf } from './models/CompositionWithOneOf';
 export type { CompositionWithOneOfAndNullable } from './models/CompositionWithOneOfAndNullable';
 export type { CompositionWithOneOfAnonymous } from './models/CompositionWithOneOfAnonymous';
+export type { CompositionWithOneOfDiscriminator } from './models/CompositionWithOneOfDiscriminator';
 export type { DictionaryWithArray } from './models/DictionaryWithArray';
 export type { DictionaryWithDictionary } from './models/DictionaryWithDictionary';
 export type { DictionaryWithProperties } from './models/DictionaryWithProperties';
@@ -3178,6 +3179,8 @@ export type { EnumFromDescription } from './models/EnumFromDescription';
 export { EnumWithExtensions } from './models/EnumWithExtensions';
 export { EnumWithNumbers } from './models/EnumWithNumbers';
 export { EnumWithStrings } from './models/EnumWithStrings';
+export type { ModelCircle } from './models/ModelCircle';
+export type { ModelSquare } from './models/ModelSquare';
 export type { ModelThatExtends } from './models/ModelThatExtends';
 export type { ModelThatExtendsExtends } from './models/ModelThatExtendsExtends';
 export type { ModelWithArray } from './models/ModelWithArray';
@@ -3220,6 +3223,7 @@ export { $CompositionWithAnyOfAnonymous } from './schemas/$CompositionWithAnyOfA
 export { $CompositionWithOneOf } from './schemas/$CompositionWithOneOf';
 export { $CompositionWithOneOfAndNullable } from './schemas/$CompositionWithOneOfAndNullable';
 export { $CompositionWithOneOfAnonymous } from './schemas/$CompositionWithOneOfAnonymous';
+export { $CompositionWithOneOfDiscriminator } from './schemas/$CompositionWithOneOfDiscriminator';
 export { $DictionaryWithArray } from './schemas/$DictionaryWithArray';
 export { $DictionaryWithDictionary } from './schemas/$DictionaryWithDictionary';
 export { $DictionaryWithProperties } from './schemas/$DictionaryWithProperties';
@@ -3229,6 +3233,8 @@ export { $EnumFromDescription } from './schemas/$EnumFromDescription';
 export { $EnumWithExtensions } from './schemas/$EnumWithExtensions';
 export { $EnumWithNumbers } from './schemas/$EnumWithNumbers';
 export { $EnumWithStrings } from './schemas/$EnumWithStrings';
+export { $ModelCircle } from './schemas/$ModelCircle';
+export { $ModelSquare } from './schemas/$ModelSquare';
 export { $ModelThatExtends } from './schemas/$ModelThatExtends';
 export { $ModelThatExtendsExtends } from './schemas/$ModelThatExtendsExtends';
 export { $ModelWithArray } from './schemas/$ModelWithArray';
@@ -3513,6 +3519,21 @@ export type CompositionWithOneOfAnonymous = {
 "
 `;
 
+exports[`v3 should generate: ./test/generated/v3/models/CompositionWithOneOfDiscriminator.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+import type { ModelCircle } from './ModelCircle';
+import type { ModelSquare } from './ModelSquare';
+
+/**
+ * This is a model with one property with a 'one of' relationship where the options are not $ref
+ */
+export type CompositionWithOneOfDiscriminator = (ModelCircle | ModelSquare);
+"
+`;
+
 exports[`v3 should generate: ./test/generated/v3/models/DictionaryWithArray.ts 1`] = `
 "/* istanbul ignore file */
 /* tslint:disable */
@@ -3650,6 +3671,36 @@ export enum EnumWithStrings {
     WARNING = 'Warning',
     ERROR = 'Error',
 }"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/models/ModelCircle.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+/**
+ * Circle
+ */
+export type ModelCircle = {
+    kind: 'circle';
+    radius?: number;
+}
+"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/models/ModelSquare.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+/**
+ * Square
+ */
+export type ModelSquare = {
+    kind: 'square';
+    sideLength?: number;
+}
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/models/ModelThatExtends.ts 1`] = `
@@ -4422,6 +4473,20 @@ export const $CompositionWithOneOfAnonymous = {
 } as const;"
 `;
 
+exports[`v3 should generate: ./test/generated/v3/schemas/$CompositionWithOneOfDiscriminator.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $CompositionWithOneOfDiscriminator = {
+    type: 'one-of',
+    contains: [{
+        type: 'ModelCircle',
+    }, {
+        type: 'ModelSquare',
+    }],
+} as const;"
+`;
+
 exports[`v3 should generate: ./test/generated/v3/schemas/$DictionaryWithArray.ts 1`] = `
 "/* istanbul ignore file */
 /* tslint:disable */
@@ -4528,6 +4593,40 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$EnumWithStrings.ts 1`]
 /* eslint-disable */
 export const $EnumWithStrings = {
     type: 'Enum',
+} as const;"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/schemas/$ModelCircle.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $ModelCircle = {
+    properties: {
+        kind: {
+            type: 'string',
+            isRequired: true,
+        },
+        radius: {
+            type: 'number',
+        },
+    },
+} as const;"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/schemas/$ModelSquare.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $ModelSquare = {
+    properties: {
+        kind: {
+            type: 'string',
+            isRequired: true,
+        },
+        sideLength: {
+            type: 'number',
+        },
+    },
 } as const;"
 `;
 
