@@ -82,7 +82,6 @@ export function getModelProperties(
                     template: model.template,
                     link: model.link,
                     isNullable: model.isNullable || property.nullable === true,
-
                     imports: model.imports,
                     enum: model.enum,
                     enums: model.enums,
