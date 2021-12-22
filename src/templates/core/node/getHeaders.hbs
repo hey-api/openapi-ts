@@ -33,7 +33,7 @@ async function getHeaders(options: ApiRequestOptions): Promise<Headers> {
             headers.append('Content-Type', 'application/octet-stream');
         } else if (isString(options.body)) {
             headers.append('Content-Type', 'text/plain');
-        } else {
+        } else if (!isFormData(options.body)) {
             headers.append('Content-Type', 'application/json');
         }
     }

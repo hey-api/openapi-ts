@@ -1863,6 +1863,51 @@
                     }
                 }
             },
+            "ModelCircle": {
+                "description": "Circle",
+                "type": "object",
+                "required": ["kind"],
+                "properties": {
+                    "kind": {
+                        "type": "string"
+                    },
+                    "radius": {
+                        "type": "number"
+                    } 
+                }
+            },
+            "ModelSquare": {
+                "description": "Square",
+                "type": "object",
+                "required": ["kind"],
+                "properties": {
+                    "kind": {
+                        "type": "string"
+                    },
+                    "sideLength": {
+                        "type": "number"
+                    }
+                }
+            },
+            "CompositionWithOneOfDiscriminator": {
+                "description": "This is a model with one property with a 'one of' relationship where the options are not $ref",
+                "type": "object",
+                "oneOf": [
+                    {
+                        "$ref": "#/components/schemas/ModelCircle"
+                    },
+                    {
+                        "$ref": "#/components/schemas/ModelSquare"
+                    }
+                ],
+                "discriminator": {
+                    "propertyName": "kind",
+                    "mapping": {
+                        "circle": "#/components/schemas/ModelCircle",
+                        "square": "#/components/schemas/ModelSquare"
+                    }
+                }
+            },
             "CompositionWithAnyOf": {
                 "description": "This is a model with one property with a 'any of' relationship",
                 "type": "object",

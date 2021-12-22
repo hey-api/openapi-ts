@@ -1,6 +1,9 @@
 {
 {{#if type}}
-    type: '{{{base}}}',
+    type: '{{{type}}}',
+{{/if}}
+{{#if description}}
+    description: '{{{escapeSinglequotes description}}}',
 {{/if}}
 {{#if isReadOnly}}
     isReadOnly: {{{isReadOnly}}},

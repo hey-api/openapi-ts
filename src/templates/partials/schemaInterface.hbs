@@ -1,4 +1,7 @@
 {
+{{#if description}}
+    description: '{{{escapeSinglequotes description}}}',
+{{/if}}
     properties: {
 {{#if properties}}
     {{#each properties}}
