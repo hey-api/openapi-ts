@@ -1368,6 +1368,7 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$Date.ts 1`] = `
 /* eslint-disable */
 export const $Date = {
     type: 'string',
+    description: 'This is a type-only model that defines Date as a string',
 } as const;"
 `;
 
@@ -1450,6 +1451,7 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$EnumFromDescription.ts
 /* eslint-disable */
 export const $EnumFromDescription = {
     type: 'number',
+    description: 'Success=1,Warning=2,Error=3',
 } as const;"
 `;
 
@@ -1486,6 +1488,7 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$ModelThatExtends.ts 1`
 /* eslint-disable */
 export const $ModelThatExtends = {
     type: 'all-of',
+    description: 'This is a model that extends another model',
     contains: [{
         type: 'ModelWithString',
     }, {
@@ -1507,6 +1510,7 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$ModelThatExtendsExtend
 /* eslint-disable */
 export const $ModelThatExtendsExtends = {
     type: 'all-of',
+    description: 'This is a model that extends another model',
     contains: [{
         type: 'ModelWithString',
     }, {
@@ -1529,6 +1533,7 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithArray.ts 1`] 
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithArray = {
+    description: 'This is a model with one property containing an array',
     properties: {
         prop: {
             type: 'array',
@@ -1557,9 +1562,11 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithBoolean.ts 1`
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithBoolean = {
+    description: 'This is a model with one boolean property',
     properties: {
         prop: {
             type: 'boolean',
+            description: 'This is a simple boolean property',
         },
     },
 } as const;"
@@ -1570,6 +1577,7 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithCircularRefer
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithCircularReference = {
+    description: 'This is a model with one property containing a circular reference',
     properties: {
         prop: {
             type: 'ModelWithCircularReference',
@@ -1583,6 +1591,7 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithDictionary.ts
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithDictionary = {
+    description: 'This is a model with one property containing a dictionary',
     properties: {
         prop: {
             type: 'dictionary',
@@ -1599,6 +1608,7 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithDuplicateImpo
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithDuplicateImports = {
+    description: 'This is a model with duplicated imports',
     properties: {
         propA: {
             type: 'ModelWithString',
@@ -1618,6 +1628,7 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithDuplicateProp
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithDuplicateProperties = {
+    description: 'This is a model with duplicated properties',
     properties: {
         prop: {
             type: 'ModelWithString',
@@ -1631,6 +1642,7 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithEnum.ts 1`] =
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithEnum = {
+    description: 'This is a model with one enum',
     properties: {
         test: {
             type: 'Enum',
@@ -1640,6 +1652,7 @@ export const $ModelWithEnum = {
         },
         bool: {
             type: 'boolean',
+            description: 'Simple boolean enum',
         },
     },
 } as const;"
@@ -1650,6 +1663,7 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithEnumFromDescr
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithEnumFromDescription = {
+    description: 'This is a model with one enum',
     properties: {
         test: {
             type: 'Enum',
@@ -1663,9 +1677,11 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithInteger.ts 1`
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithInteger = {
+    description: 'This is a model with one number property',
     properties: {
         prop: {
             type: 'number',
+            description: 'This is a simple number property',
         },
     },
 } as const;"
@@ -1676,6 +1692,7 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithNestedEnums.t
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithNestedEnums = {
+    description: 'This is a model with nested enums',
     properties: {
         dictionaryWithEnum: {
             type: 'dictionary',
@@ -1710,6 +1727,7 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithNestedPropert
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithNestedProperties = {
+    description: 'This is a model with one nested property',
     properties: {
         first: {
             properties: {
@@ -1737,13 +1755,16 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithNullableStrin
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithNullableString = {
+    description: 'This is a model with one string property',
     properties: {
         nullableProp: {
             type: 'string',
+            description: 'This is a simple string property',
             isNullable: true,
         },
         nullableRequiredProp: {
             type: 'string',
+            description: 'This is a simple string property',
             isRequired: true,
             isNullable: true,
         },
@@ -1756,6 +1777,7 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithOrderedProper
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithOrderedProperties = {
+    description: 'This is a model with ordered properties',
     properties: {
         zebra: {
             type: 'string',
@@ -1775,6 +1797,7 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithPattern.ts 1`
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithPattern = {
+    description: 'This is a model that contains a some patterns',
     properties: {
         key: {
             type: 'string',
@@ -1813,6 +1836,7 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithProperties.ts
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithProperties = {
+    description: 'This is a model with one nested property',
     properties: {
         required: {
             type: 'string',
@@ -1861,6 +1885,7 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithReference.ts 
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithReference = {
+    description: 'This is a model with one property containing a reference',
     properties: {
         prop: {
             type: 'ModelWithProperties',
@@ -1874,9 +1899,11 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithString.ts 1`]
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithString = {
+    description: 'This is a model with one string property',
     properties: {
         prop: {
             type: 'string',
+            description: 'This is a simple string property',
         },
     },
 } as const;"
@@ -1888,6 +1915,10 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$MultilineComment.ts 1`
 /* eslint-disable */
 export const $MultilineComment = {
     type: 'number',
+    description: 'Testing multiline comments.
+     * This must go to the next line.
+     *
+     * This will contain a break.',
 } as const;"
 `;
 
@@ -1897,6 +1928,7 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$SimpleBoolean.ts 1`] =
 /* eslint-disable */
 export const $SimpleBoolean = {
     type: 'boolean',
+    description: 'This is a simple boolean',
 } as const;"
 `;
 
@@ -1906,6 +1938,7 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$SimpleFile.ts 1`] = `
 /* eslint-disable */
 export const $SimpleFile = {
     type: 'binary',
+    description: 'This is a simple file',
 } as const;"
 `;
 
@@ -1915,6 +1948,7 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$SimpleInteger.ts 1`] =
 /* eslint-disable */
 export const $SimpleInteger = {
     type: 'number',
+    description: 'This is a simple number',
 } as const;"
 `;
 
@@ -1924,6 +1958,7 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$SimpleReference.ts 1`]
 /* eslint-disable */
 export const $SimpleReference = {
     type: 'ModelWithString',
+    description: 'This is a simple reference',
 } as const;"
 `;
 
@@ -1933,6 +1968,7 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$SimpleString.ts 1`] = 
 /* eslint-disable */
 export const $SimpleString = {
     type: 'string',
+    description: 'This is a simple string',
 } as const;"
 `;
 
@@ -1942,6 +1978,7 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$SimpleStringWithPatter
 /* eslint-disable */
 export const $SimpleStringWithPattern = {
     type: 'string',
+    description: 'This is a simple string',
     maxLength: 64,
     pattern: '^[a-zA-Z0-9_]*$',
 } as const;"
@@ -4211,6 +4248,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$CompositionBaseModel.t
 /* tslint:disable */
 /* eslint-disable */
 export const $CompositionBaseModel = {
+    description: 'This is a base model with two simple optional properties',
     properties: {
         firstName: {
             type: 'string',
@@ -4228,6 +4266,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$CompositionExtendedMod
 /* eslint-disable */
 export const $CompositionExtendedModel = {
     type: 'all-of',
+    description: 'This is a model that extends the base model',
     contains: [{
         type: 'CompositionBaseModel',
     }, {
@@ -4254,6 +4293,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$CompositionWithAllOfAn
 /* tslint:disable */
 /* eslint-disable */
 export const $CompositionWithAllOfAndNullable = {
+    description: 'This is a model with one property with a \\\\'all of\\\\' relationship',
     properties: {
         propA: {
             type: 'all-of',
@@ -4281,6 +4321,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$CompositionWithAnyOf.t
 /* tslint:disable */
 /* eslint-disable */
 export const $CompositionWithAnyOf = {
+    description: 'This is a model with one property with a \\\\'any of\\\\' relationship',
     properties: {
         propA: {
             type: 'any-of',
@@ -4303,6 +4344,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$CompositionWithAnyOfAn
 /* tslint:disable */
 /* eslint-disable */
 export const $CompositionWithAnyOfAndNullable = {
+    description: 'This is a model with one property with a \\\\'any of\\\\' relationship',
     properties: {
         propA: {
             type: 'any-of',
@@ -4330,10 +4372,12 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$CompositionWithAnyOfAn
 /* tslint:disable */
 /* eslint-disable */
 export const $CompositionWithAnyOfAnonymous = {
+    description: 'This is a model with one property with a \\\\'any of\\\\' relationship where the options are not $ref',
     properties: {
         propA: {
             type: 'any-of',
             contains: [{
+                description: 'Anonymous object type',
                 properties: {
                     propA: {
                         type: 'string',
@@ -4341,8 +4385,10 @@ export const $CompositionWithAnyOfAnonymous = {
                 },
             }, {
                 type: 'string',
+                description: 'Anonymous string type',
             }, {
                 type: 'number',
+                description: 'Anonymous integer type',
             }],
         },
     },
@@ -4354,6 +4400,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$CompositionWithOneOf.t
 /* tslint:disable */
 /* eslint-disable */
 export const $CompositionWithOneOf = {
+    description: 'This is a model with one property with a \\\\'one of\\\\' relationship',
     properties: {
         propA: {
             type: 'one-of',
@@ -4376,6 +4423,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$CompositionWithOneOfAn
 /* tslint:disable */
 /* eslint-disable */
 export const $CompositionWithOneOfAndNullable = {
+    description: 'This is a model with one property with a \\\\'one of\\\\' relationship',
     properties: {
         propA: {
             type: 'one-of',
@@ -4403,10 +4451,12 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$CompositionWithOneOfAn
 /* tslint:disable */
 /* eslint-disable */
 export const $CompositionWithOneOfAnonymous = {
+    description: 'This is a model with one property with a \\\\'one of\\\\' relationship where the options are not $ref',
     properties: {
         propA: {
             type: 'one-of',
             contains: [{
+                description: 'Anonymous object type',
                 properties: {
                     propA: {
                         type: 'string',
@@ -4414,8 +4464,10 @@ export const $CompositionWithOneOfAnonymous = {
                 },
             }, {
                 type: 'string',
+                description: 'Anonymous string type',
             }, {
                 type: 'number',
+                description: 'Anonymous integer type',
             }],
         },
     },
@@ -4501,6 +4553,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$EnumFromDescription.ts
 /* eslint-disable */
 export const $EnumFromDescription = {
     type: 'number',
+    description: 'Success=1,Warning=2,Error=3',
 } as const;"
 `;
 
@@ -4537,6 +4590,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$ModelThatExtends.ts 1`
 /* eslint-disable */
 export const $ModelThatExtends = {
     type: 'all-of',
+    description: 'This is a model that extends another model',
     contains: [{
         type: 'ModelWithString',
     }, {
@@ -4558,6 +4612,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$ModelThatExtendsExtend
 /* eslint-disable */
 export const $ModelThatExtendsExtends = {
     type: 'all-of',
+    description: 'This is a model that extends another model',
     contains: [{
         type: 'ModelWithString',
     }, {
@@ -4580,6 +4635,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithArray.ts 1`] 
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithArray = {
+    description: 'This is a model with one property containing an array',
     properties: {
         prop: {
             type: 'array',
@@ -4608,9 +4664,11 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithBoolean.ts 1`
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithBoolean = {
+    description: 'This is a model with one boolean property',
     properties: {
         prop: {
             type: 'boolean',
+            description: 'This is a simple boolean property',
         },
     },
 } as const;"
@@ -4621,6 +4679,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithCircularRefer
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithCircularReference = {
+    description: 'This is a model with one property containing a circular reference',
     properties: {
         prop: {
             type: 'ModelWithCircularReference',
@@ -4634,6 +4693,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithDictionary.ts
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithDictionary = {
+    description: 'This is a model with one property containing a dictionary',
     properties: {
         prop: {
             type: 'dictionary',
@@ -4650,6 +4710,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithDuplicateImpo
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithDuplicateImports = {
+    description: 'This is a model with duplicated imports',
     properties: {
         propA: {
             type: 'ModelWithString',
@@ -4669,6 +4730,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithDuplicateProp
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithDuplicateProperties = {
+    description: 'This is a model with duplicated properties',
     properties: {
         prop: {
             type: 'ModelWithString',
@@ -4682,6 +4744,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithEnum.ts 1`] =
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithEnum = {
+    description: 'This is a model with one enum',
     properties: {
         test: {
             type: 'Enum',
@@ -4691,6 +4754,7 @@ export const $ModelWithEnum = {
         },
         bool: {
             type: 'boolean',
+            description: 'Simple boolean enum',
         },
     },
 } as const;"
@@ -4701,6 +4765,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithEnumFromDescr
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithEnumFromDescription = {
+    description: 'This is a model with one enum',
     properties: {
         test: {
             type: 'Enum',
@@ -4714,9 +4779,11 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithInteger.ts 1`
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithInteger = {
+    description: 'This is a model with one number property',
     properties: {
         prop: {
             type: 'number',
+            description: 'This is a simple number property',
         },
     },
 } as const;"
@@ -4727,6 +4794,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithNestedEnums.t
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithNestedEnums = {
+    description: 'This is a model with nested enums',
     properties: {
         dictionaryWithEnum: {
             type: 'dictionary',
@@ -4761,6 +4829,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithNestedPropert
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithNestedProperties = {
+    description: 'This is a model with one nested property',
     properties: {
         first: {
             properties: {
@@ -4791,22 +4860,27 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithNullableStrin
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithNullableString = {
+    description: 'This is a model with one string property',
     properties: {
         nullableProp1: {
             type: 'string',
+            description: 'This is a simple string property',
             isNullable: true,
         },
         nullableRequiredProp1: {
             type: 'string',
+            description: 'This is a simple string property',
             isRequired: true,
             isNullable: true,
         },
         nullableProp2: {
             type: 'string',
+            description: 'This is a simple string property',
             isNullable: true,
         },
         nullableRequiredProp2: {
             type: 'string',
+            description: 'This is a simple string property',
             isRequired: true,
             isNullable: true,
         },
@@ -4819,6 +4893,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithOrderedProper
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithOrderedProperties = {
+    description: 'This is a model with ordered properties',
     properties: {
         zebra: {
             type: 'string',
@@ -4838,6 +4913,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithPattern.ts 1`
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithPattern = {
+    description: 'This is a model that contains a some patterns',
     properties: {
         key: {
             type: 'string',
@@ -4876,6 +4952,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithProperties.ts
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithProperties = {
+    description: 'This is a model with one nested property',
     properties: {
         required: {
             type: 'string',
@@ -4929,6 +5006,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithReference.ts 
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithReference = {
+    description: 'This is a model with one property containing a reference',
     properties: {
         prop: {
             type: 'ModelWithProperties',
@@ -4942,9 +5020,11 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithString.ts 1`]
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelWithString = {
+    description: 'This is a model with one string property',
     properties: {
         prop: {
             type: 'string',
+            description: 'This is a simple string property',
         },
     },
 } as const;"
@@ -4956,6 +5036,10 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$MultilineComment.ts 1`
 /* eslint-disable */
 export const $MultilineComment = {
     type: 'number',
+    description: 'Testing multiline comments.
+     * This must go to the next line.
+     *
+     * This will contain a break.',
 } as const;"
 `;
 
@@ -4965,6 +5049,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$SimpleBoolean.ts 1`] =
 /* eslint-disable */
 export const $SimpleBoolean = {
     type: 'boolean',
+    description: 'This is a simple boolean',
 } as const;"
 `;
 
@@ -4974,6 +5059,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$SimpleFile.ts 1`] = `
 /* eslint-disable */
 export const $SimpleFile = {
     type: 'binary',
+    description: 'This is a simple file',
 } as const;"
 `;
 
@@ -4983,6 +5069,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$SimpleInteger.ts 1`] =
 /* eslint-disable */
 export const $SimpleInteger = {
     type: 'number',
+    description: 'This is a simple number',
 } as const;"
 `;
 
@@ -4992,6 +5079,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$SimpleReference.ts 1`]
 /* eslint-disable */
 export const $SimpleReference = {
     type: 'ModelWithString',
+    description: 'This is a simple reference',
 } as const;"
 `;
 
@@ -5001,6 +5089,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$SimpleString.ts 1`] = 
 /* eslint-disable */
 export const $SimpleString = {
     type: 'string',
+    description: 'This is a simple string',
 } as const;"
 `;
 
@@ -5010,6 +5099,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$SimpleStringWithPatter
 /* eslint-disable */
 export const $SimpleStringWithPattern = {
     type: 'string',
+    description: 'This is a simple string',
     isNullable: true,
     maxLength: 64,
     pattern: '^[a-zA-Z0-9_]*$',
