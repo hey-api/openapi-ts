@@ -1,5 +1,4 @@
 const TYPE_MAPPINGS = new Map<string, string>([
-    ['File', 'binary'],
     ['file', 'binary'],
     ['any', 'any'],
     ['object', 'any'],

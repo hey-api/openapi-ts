@@ -2241,6 +2241,44 @@
                         "pattern": "^\\w+$"
                     }
                 }
+            },
+            "File": {
+                "required": [
+                    "mime"
+                ],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "title": "Id",
+                        "type": "string",
+                        "readOnly": true,
+                        "minLength": 1
+                    },
+                    "updated_at": {
+                        "title": "Updated at",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "created_at": {
+                        "title": "Created at",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "mime": {
+                        "title": "Mime",
+                        "type": "string",
+                        "maxLength": 24,
+                        "minLength": 1
+                    },
+                    "file": {
+                        "title": "File",
+                        "type": "string",
+                        "readOnly": true,
+                        "format": "uri"
+                    }
+                }
             }
         }
     }

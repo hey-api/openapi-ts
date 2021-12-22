@@ -2,7 +2,6 @@ import { getMappedType } from './getMappedType';
 
 describe('getMappedType', () => {
     it('should map types to the basics', () => {
-        expect(getMappedType('File')).toEqual('binary');
         expect(getMappedType('file')).toEqual('binary');
         expect(getMappedType('string')).toEqual('string');
         expect(getMappedType('date')).toEqual('string');
