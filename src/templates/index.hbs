@@ -2,7 +2,7 @@
 {{#if @root.exportCore}}
 
 export { ApiError } from './core/ApiError';
-export { CancelablePromise } from './core/CancelablePromise';
+export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 {{/if}}
 {{#if @root.exportModels}}

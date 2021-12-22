@@ -32,13 +32,13 @@ const handlebarsPlugin = () => ({
                 preventIndent: true,
                 knownHelpersOnly: true,
                 knownHelpers: {
-                    escapeSinglequotes: true,
                     equals: true,
                     notEquals: true,
                     containsSpaces: true,
                     union: true,
                     intersection: true,
                     enumerator: true,
+                    escapeQuotes: true,
                 },
             });
             return `export default ${templateSpec};`;

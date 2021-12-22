@@ -492,7 +492,7 @@ exports[`v2 should generate: ./test/generated/v2/index.ts 1`] = `
 /* tslint:disable */
 /* eslint-disable */
 export { ApiError } from './core/ApiError';
-export { CancelablePromise } from './core/CancelablePromise';
+export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 
 export type { ArrayWithArray } from './models/ArrayWithArray';
@@ -3196,7 +3196,7 @@ exports[`v3 should generate: ./test/generated/v3/index.ts 1`] = `
 /* tslint:disable */
 /* eslint-disable */
 export { ApiError } from './core/ApiError';
-export { CancelablePromise } from './core/CancelablePromise';
+export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 
 export type { ArrayWithArray } from './models/ArrayWithArray';
@@ -3224,6 +3224,7 @@ export type { EnumFromDescription } from './models/EnumFromDescription';
 export { EnumWithExtensions } from './models/EnumWithExtensions';
 export { EnumWithNumbers } from './models/EnumWithNumbers';
 export { EnumWithStrings } from './models/EnumWithStrings';
+export type { File } from './models/File';
 export type { ModelCircle } from './models/ModelCircle';
 export type { ModelSquare } from './models/ModelSquare';
 export type { ModelThatExtends } from './models/ModelThatExtends';
@@ -3278,6 +3279,7 @@ export { $EnumFromDescription } from './schemas/$EnumFromDescription';
 export { $EnumWithExtensions } from './schemas/$EnumWithExtensions';
 export { $EnumWithNumbers } from './schemas/$EnumWithNumbers';
 export { $EnumWithStrings } from './schemas/$EnumWithStrings';
+export { $File } from './schemas/$File';
 export { $ModelCircle } from './schemas/$ModelCircle';
 export { $ModelSquare } from './schemas/$ModelSquare';
 export { $ModelThatExtends } from './schemas/$ModelThatExtends';
@@ -3716,6 +3718,21 @@ export enum EnumWithStrings {
     WARNING = 'Warning',
     ERROR = 'Error',
 }"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/models/File.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+export type File = {
+    readonly id?: string;
+    readonly updated_at?: string;
+    readonly created_at?: string;
+    mime: string;
+    readonly file?: string;
+}
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/models/ModelCircle.ts 1`] = `
@@ -4539,6 +4556,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$CompositionWithOneOfDi
 /* eslint-disable */
 export const $CompositionWithOneOfDiscriminator = {
     type: 'one-of',
+    description: 'This is a model with one property with a \\\\'one of\\\\' relationship where the options are not $ref',
     contains: [{
         type: 'ModelCircle',
     }, {
@@ -4657,11 +4675,48 @@ export const $EnumWithStrings = {
 } as const;"
 `;
 
+exports[`v3 should generate: ./test/generated/v3/schemas/$File.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $File = {
+    properties: {
+        id: {
+            type: 'string',
+            isReadOnly: true,
+            minLength: 1,
+        },
+        updated_at: {
+            type: 'string',
+            isReadOnly: true,
+            format: 'date-time',
+        },
+        created_at: {
+            type: 'string',
+            isReadOnly: true,
+            format: 'date-time',
+        },
+        mime: {
+            type: 'string',
+            isRequired: true,
+            maxLength: 24,
+            minLength: 1,
+        },
+        file: {
+            type: 'string',
+            isReadOnly: true,
+            format: 'uri',
+        },
+    },
+} as const;"
+`;
+
 exports[`v3 should generate: ./test/generated/v3/schemas/$ModelCircle.ts 1`] = `
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelCircle = {
+    description: 'Circle',
     properties: {
         kind: {
             type: 'string',
@@ -4679,6 +4734,7 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$ModelSquare.ts 1`] = `
 /* tslint:disable */
 /* eslint-disable */
 export const $ModelSquare = {
+    description: 'Square',
     properties: {
         kind: {
             type: 'string',

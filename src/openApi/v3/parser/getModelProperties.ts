@@ -23,7 +23,19 @@ export function getModelProperties(
         if (definition.properties.hasOwnProperty(propertyName)) {
             const property = definition.properties[propertyName];
             const propertyRequired = !!definition.required?.includes(propertyName);
-            const propertyValues = {
+            const propertyValues: Omit<
+                Model,
+                | 'export'
+                | 'type'
+                | 'base'
+                | 'template'
+                | 'link'
+                | 'isNullable'
+                | 'imports'
+                | 'enum'
+                | 'enums'
+                | 'properties'
+            > = {
                 name: escapeName(propertyName),
                 description: getComment(property.description),
                 isDefinition: false,
