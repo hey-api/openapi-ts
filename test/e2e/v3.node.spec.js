@@ -35,7 +35,7 @@ describe('v3.node', () => {
         expect(result.headers.authorization).toBe('Basic dXNlcm5hbWU6cGFzc3dvcmQ=');
     });
 
-    it('complexService', async () => {
+    it('supports complex params', async () => {
         const { ComplexService } = require('./generated/v3/node/index.js');
         const result = await ComplexService.complexTypes({
             first: {
@@ -47,7 +47,7 @@ describe('v3.node', () => {
         expect(result).toBeDefined();
     });
 
-    it('formData', async () => {
+    it('support form data', async () => {
         const { ParametersService } = require('./generated/v3/node/index.js');
         const result = await ParametersService.callWithParameters(
             'valueHeader',

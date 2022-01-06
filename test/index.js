@@ -7,7 +7,7 @@ async function generate(input, output) {
     await OpenAPI.generate({
         input,
         output,
-        httpClient: OpenAPI.HttpClient.FETCH,
+        httpClient: OpenAPI.HttpClient.AXIOS,
         useOptions: false,
         useUnionTypes: false,
         exportCore: true,

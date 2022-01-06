@@ -457,7 +457,6 @@ classes in NodeJS).
 
 ```
 npm install axios --save-dev
-npm install cross-blob@2.x --save-dev
 npm install form-data@4.x --save-dev
 ```
 
@@ -481,7 +480,6 @@ in order to compile and run this client, you might need to install the `node-fet
 ```
 npm install @types/node-fetch@2.x --save-dev
 npm install abort-controller@3.x --save-dev
-npm install cross-blob@2.x --save-dev
 npm install form-data@4.x --save-dev
 npm install node-fetch@2.x --save-dev
 ```

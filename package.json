@@ -65,7 +65,6 @@
         "axios": "^0.24.0",
         "camelcase": "^6.3.0",
         "commander": "^8.3.0",
-        "cross-blob": "^2.0.1",
         "form-data": "^4.0.0",
         "handlebars": "^4.7.6",
         "json-schema-ref-parser": "^9.0.7",

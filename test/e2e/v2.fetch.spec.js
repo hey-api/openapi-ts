@@ -30,7 +30,7 @@ describe('v2.fetch', () => {
         expect(result.headers.authorization).toBe('Bearer MY_TOKEN');
     });
 
-    it('complexService', async () => {
+    it('supports complex params', async () => {
         const result = await browser.evaluate(async () => {
             const { ComplexService } = window.api;
             return await ComplexService.complexTypes({

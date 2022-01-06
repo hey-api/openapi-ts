@@ -43,7 +43,7 @@ describe('v3.fetch', () => {
         expect(result.headers.authorization).toBe('Basic dXNlcm5hbWU6cGFzc3dvcmQ=');
     });
 
-    it('complexService', async () => {
+    it('supports complex params', async () => {
         const result = await browser.evaluate(async () => {
             const { ComplexService } = window.api;
             return await ComplexService.complexTypes({
@@ -57,7 +57,7 @@ describe('v3.fetch', () => {
         expect(result).toBeDefined();
     });
 
-    it('formData', async () => {
+    it('support form data', async () => {
         const result = await browser.evaluate(async () => {
             const { ParametersService } = window.api;
             return await ParametersService.callWithParameters(

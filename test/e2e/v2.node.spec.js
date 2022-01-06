@@ -24,7 +24,7 @@ describe('v2.node', () => {
         expect(result.headers.authorization).toBe('Bearer MY_TOKEN');
     });
 
-    it('complexService', async () => {
+    it('supports complex params', async () => {
         const { ComplexService } = require('./generated/v2/node/index.js');
         const result = await ComplexService.complexTypes({
             first: {

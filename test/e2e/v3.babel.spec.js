@@ -43,7 +43,7 @@ describe('v3.babel', () => {
         expect(result.headers.authorization).toBe('Basic dXNlcm5hbWU6cGFzc3dvcmQ=');
     });
 
-    it('complexService', async () => {
+    it('supports complex params', async () => {
         const result = await browser.evaluate(async () => {
             const { ComplexService } = window.api;
             return await ComplexService.complexTypes({
