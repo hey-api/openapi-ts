@@ -1,18 +1,15 @@
-'use strict';
+import browser from './scripts/browser';
+import { compileWithTypescript } from './scripts/compileWithTypescript';
+import { copy } from './scripts/copy';
+import { generate } from './scripts/generate';
+import server from './scripts/server';
 
-const generate = require('./scripts/generate');
-const copy = require('./scripts/copy');
-const compileWithTypescript = require('./scripts/compileWithTypescript');
-const server = require('./scripts/server');
-const browser = require('./scripts/browser');
-const {ErrorService} = require("./generated/v3/node/index.js");
-
-describe('v2.xhr', () => {
+describe('v2.fetch', () => {
     beforeAll(async () => {
-        await generate('v2/xhr', 'v2', 'xhr');
-        await copy('v2/xhr');
-        compileWithTypescript('v2/xhr');
-        await server.start('v2/xhr');
+        await generate('v2/fetch', 'v2', 'fetch');
+        await copy('v2/fetch');
+        compileWithTypescript('v2/fetch');
+        await server.start('v2/fetch');
         await browser.start();
     }, 30000);
 
@@ -24,8 +21,8 @@ describe('v2.xhr', () => {
     it('requests token', async () => {
         await browser.exposeFunction('tokenRequest', jest.fn().mockResolvedValue('MY_TOKEN'));
         const result = await browser.evaluate(async () => {
-            const { OpenAPI, SimpleService } = window.api;
-            OpenAPI.TOKEN = window.tokenRequest;
+            const { OpenAPI, SimpleService } = (window as any).api;
+            OpenAPI.TOKEN = (window as any).tokenRequest;
             return await SimpleService.getCallWithoutParametersAndResponse();
         });
         expect(result.headers.authorization).toBe('Bearer MY_TOKEN');
@@ -33,7 +30,7 @@ describe('v2.xhr', () => {
 
     it('supports complex params', async () => {
         const result = await browser.evaluate(async () => {
-            const { ComplexService } = window.api;
+            const { ComplexService } = (window as any).api;
             return await ComplexService.complexTypes({
                 first: {
                     second: {
@@ -49,7 +46,7 @@ describe('v2.xhr', () => {
         let error;
         try {
             await browser.evaluate(async () => {
-                const { SimpleService } = window.api;
+                const { SimpleService } = (window as any).api;
                 const promise = SimpleService.getCallWithoutParametersAndResponse();
                 setTimeout(() => {
                     promise.cancel();
@@ -57,7 +54,7 @@ describe('v2.xhr', () => {
                 await promise;
             });
         } catch (e) {
-            error = e.message;
+            error = (e as Error).message;
         }
         expect(error).toContain('The user aborted a request.');
     });
@@ -65,18 +62,20 @@ describe('v2.xhr', () => {
     it('should throw known error (500)', async () => {
         const error = await browser.evaluate(async () => {
             try {
-                const { ErrorService } = window.api;
+                const { ErrorService } = (window as any).api;
                 await ErrorService.testErrorCode(500);
             } catch (e) {
+                const error = e as any;
                 return JSON.stringify({
-                    name: e.name,
-                    message: e.message,
-                    url: e.url,
-                    status: e.status,
-                    statusText: e.statusText,
-                    body: e.body,
+                    name: error.name,
+                    message: error.message,
+                    url: error.url,
+                    status: error.status,
+                    statusText: error.statusText,
+                    body: error.body,
                 });
             }
+            return;
         });
 
         expect(error).toBe(
@@ -94,18 +93,20 @@ describe('v2.xhr', () => {
     it('should throw unknown error (409)', async () => {
         const error = await browser.evaluate(async () => {
             try {
-                const { ErrorService } = window.api;
+                const { ErrorService } = (window as any).api;
                 await ErrorService.testErrorCode(409);
             } catch (e) {
+                const error = e as any;
                 return JSON.stringify({
-                    name: e.name,
-                    message: e.message,
-                    url: e.url,
-                    status: e.status,
-                    statusText: e.statusText,
-                    body: e.body,
+                    name: error.name,
+                    message: error.message,
+                    url: error.url,
+                    status: error.status,
+                    statusText: error.statusText,
+                    body: error.body,
                 });
             }
+            return;
         });
         expect(error).toBe(
             JSON.stringify({

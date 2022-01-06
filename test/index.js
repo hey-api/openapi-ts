@@ -1,13 +1,13 @@
 'use strict';
 
-const OpenAPI = require('../dist');
+const OpenAPI = require('../');
 const fetch = require('node-fetch');
 
-async function generate(input, output) {
+const generate = async (input, output) => {
     await OpenAPI.generate({
         input,
         output,
-        httpClient: OpenAPI.HttpClient.AXIOS,
+        httpClient: OpenAPI.HttpClient.NODE,
         useOptions: false,
         useUnionTypes: false,
         exportCore: true,
@@ -17,9 +17,10 @@ async function generate(input, output) {
         // postfix: 'Api',
         // request: './test/custom/request.ts',
     });
-}
+};
 
-async function generateRealWorldSpecs() {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const generateRealWorldSpecs = async () => {
     const response = await fetch('https://api.apis.guru/v2/list.json');
 
     const list = await response.json();
@@ -51,12 +52,12 @@ async function generateRealWorldSpecs() {
         const spec = specs[i];
         await generate(spec.url, `./test/generated/${spec.name}/`);
     }
-}
+};
 
-async function main() {
+const main = async () => {
     await generate('./test/spec/v2.json', './test/generated/v2/');
     await generate('./test/spec/v3.json', './test/generated/v3/');
     // await generateRealWorldSpecs();
-}
+};
 
 main();

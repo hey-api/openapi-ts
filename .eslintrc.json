@@ -1,18 +1,12 @@
 {
     "parser": "@typescript-eslint/parser",
-    "extends": [
-        "plugin:@typescript-eslint/recommended",
-        "plugin:prettier/recommended",
-        "prettier"
-    ],
+    "extends": ["plugin:@typescript-eslint/recommended", "plugin:prettier/recommended", "prettier"],
     "env": {
         "es6": true,
         "node": true,
         "jest": true
     },
-    "plugins": [
-        "simple-import-sort"
-    ],
+    "plugins": ["simple-import-sort"],
     "rules": {
         "@typescript-eslint/no-explicit-any": 0,
         "@typescript-eslint/no-inferrable-types": 0,

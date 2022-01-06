@@ -1,10 +1,8 @@
-'use strict';
-
-const generate = require('./scripts/generate');
-const copy = require('./scripts/copy');
-const compileWithBabel = require('./scripts/compileWithBabel');
-const server = require('./scripts/server');
-const browser = require('./scripts/browser');
+import browser from './scripts/browser';
+import { compileWithBabel } from './scripts/compileWithBabel';
+import { copy } from './scripts/copy';
+import { generate } from './scripts/generate';
+import server from './scripts/server';
 
 describe('v2.babel', () => {
     beforeAll(async () => {
@@ -23,8 +21,8 @@ describe('v2.babel', () => {
     it('requests token', async () => {
         await browser.exposeFunction('tokenRequest', jest.fn().mockResolvedValue('MY_TOKEN'));
         const result = await browser.evaluate(async () => {
-            const { OpenAPI, SimpleService } = window.api;
-            OpenAPI.TOKEN = window.tokenRequest;
+            const { OpenAPI, SimpleService } = (window as any).api;
+            OpenAPI.TOKEN = (window as any).tokenRequest;
             return await SimpleService.getCallWithoutParametersAndResponse();
         });
         expect(result.headers.authorization).toBe('Bearer MY_TOKEN');
@@ -32,7 +30,7 @@ describe('v2.babel', () => {
 
     it('supports complex params', async () => {
         const result = await browser.evaluate(async () => {
-            const { ComplexService } = window.api;
+            const { ComplexService } = (window as any).api;
             return await ComplexService.complexTypes({
                 first: {
                     second: {

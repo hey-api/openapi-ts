@@ -1,4 +1,4 @@
-import * as Handlebars from 'handlebars/runtime';
+import Handlebars from 'handlebars';
 
 import { Enum } from '../client/interfaces/Enum';
 import { Model } from '../client/interfaces/Model';
@@ -79,8 +79,4 @@ export function registerHandlebarHelpers(root: {
             );
         }
     );
-
-    Handlebars.registerHelper('escapeQuotes', function (value: string): string {
-        return value.replace(/(')/g, '\\$1');
-    });
 }

@@ -1,8 +1,6 @@
-'use strict';
-
-const generate = require('./scripts/generate');
-const compileWithTypescript = require('./scripts/compileWithTypescript');
-const server = require('./scripts/server');
+import { compileWithTypescript } from './scripts/compileWithTypescript';
+import { generate } from './scripts/generate';
+import server from './scripts/server';
 
 describe('v2.node', () => {
     beforeAll(async () => {
@@ -46,7 +44,7 @@ describe('v2.node', () => {
             }, 10);
             await promise;
         } catch (e) {
-            error = e.message;
+            error = (e as Error).message;
         }
         expect(error).toContain('The user aborted a request.');
     });
@@ -57,13 +55,14 @@ describe('v2.node', () => {
             const { ErrorService } = require('./generated/v2/node/index.js');
             await ErrorService.testErrorCode(500);
         } catch (e) {
+            const err = e as any;
             error = JSON.stringify({
-                name: e.name,
-                message: e.message,
-                url: e.url,
-                status: e.status,
-                statusText: e.statusText,
-                body: e.body,
+                name: err.name,
+                message: err.message,
+                url: err.url,
+                status: err.status,
+                statusText: err.statusText,
+                body: err.body,
             });
         }
         expect(error).toBe(
@@ -84,13 +83,14 @@ describe('v2.node', () => {
             const { ErrorService } = require('./generated/v2/node/index.js');
             await ErrorService.testErrorCode(409);
         } catch (e) {
+            const err = e as any;
             error = JSON.stringify({
-                name: e.name,
-                message: e.message,
-                url: e.url,
-                status: e.status,
-                statusText: e.statusText,
-                body: e.body,
+                name: err.name,
+                message: err.message,
+                url: err.url,
+                status: err.status,
+                statusText: err.statusText,
+                body: err.body,
             });
         }
         expect(error).toBe(

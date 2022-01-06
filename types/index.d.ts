@@ -8,7 +8,7 @@ export declare enum HttpClient {
 export type Options = {
     input: string | Record<string, any>;
     output: string;
-    httpClient?: HttpClient;
+    httpClient?: HttpClient | 'fetch' | 'xhr' | 'node' | 'axios';
     useOptions?: boolean;
     useUnionTypes?: boolean;
     exportCore?: boolean;
@@ -20,3 +20,8 @@ export type Options = {
 };
 
 export declare function generate(options: Options): Promise<void>;
+
+export default {
+    HttpClient,
+    generate,
+};

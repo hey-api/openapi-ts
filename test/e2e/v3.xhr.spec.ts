@@ -1,17 +1,15 @@
-'use strict';
+import browser from './scripts/browser';
+import { compileWithTypescript } from './scripts/compileWithTypescript';
+import { copy } from './scripts/copy';
+import { generate } from './scripts/generate';
+import server from './scripts/server';
 
-const generate = require('./scripts/generate');
-const copy = require('./scripts/copy');
-const compileWithTypescript = require('./scripts/compileWithTypescript');
-const server = require('./scripts/server');
-const browser = require('./scripts/browser');
-
-describe('v3.fetch', () => {
+describe('v3.xhr', () => {
     beforeAll(async () => {
-        await generate('v3/fetch', 'v3', 'fetch');
-        await copy('v3/fetch');
-        compileWithTypescript('v3/fetch');
-        await server.start('v3/fetch');
+        await generate('v3/xhr', 'v3', 'xhr');
+        await copy('v3/xhr');
+        compileWithTypescript('v3/xhr');
+        await server.start('v3/xhr');
         await browser.start();
     }, 30000);
 
@@ -23,8 +21,8 @@ describe('v3.fetch', () => {
     it('requests token', async () => {
         await browser.exposeFunction('tokenRequest', jest.fn().mockResolvedValue('MY_TOKEN'));
         const result = await browser.evaluate(async () => {
-            const { OpenAPI, SimpleService } = window.api;
-            OpenAPI.TOKEN = window.tokenRequest;
+            const { OpenAPI, SimpleService } = (window as any).api;
+            OpenAPI.TOKEN = (window as any).tokenRequest;
             OpenAPI.USERNAME = undefined;
             OpenAPI.PASSWORD = undefined;
             return await SimpleService.getCallWithoutParametersAndResponse();
@@ -34,7 +32,7 @@ describe('v3.fetch', () => {
 
     it('uses credentials', async () => {
         const result = await browser.evaluate(async () => {
-            const { OpenAPI, SimpleService } = window.api;
+            const { OpenAPI, SimpleService } = (window as any).api;
             OpenAPI.TOKEN = undefined;
             OpenAPI.USERNAME = 'username';
             OpenAPI.PASSWORD = 'password';
@@ -45,7 +43,7 @@ describe('v3.fetch', () => {
 
     it('supports complex params', async () => {
         const result = await browser.evaluate(async () => {
-            const { ComplexService } = window.api;
+            const { ComplexService } = (window as any).api;
             return await ComplexService.complexTypes({
                 first: {
                     second: {
@@ -57,28 +55,10 @@ describe('v3.fetch', () => {
         expect(result).toBeDefined();
     });
 
-    it('support form data', async () => {
-        const result = await browser.evaluate(async () => {
-            const { ParametersService } = window.api;
-            return await ParametersService.callWithParameters(
-                'valueHeader',
-                'valueQuery',
-                'valueForm',
-                'valueCookie',
-                'valuePath',
-                {
-                    prop: 'valueBody',
-                }
-            );
-        });
-        expect(result).toBeDefined();
-    });
-
     it('can abort the request', async () => {
-        let error;
         try {
             await browser.evaluate(async () => {
-                const { SimpleService } = window.api;
+                const { SimpleService } = (window as any).api;
                 const promise = SimpleService.getCallWithoutParametersAndResponse();
                 setTimeout(() => {
                     promise.cancel();
@@ -86,28 +66,28 @@ describe('v3.fetch', () => {
                 await promise;
             });
         } catch (e) {
-            error = e.message;
+            expect((e as Error).message).toContain('The user aborted a request.');
         }
-        expect(error).toContain('The user aborted a request.');
     });
 
     it('should throw known error (500)', async () => {
         const error = await browser.evaluate(async () => {
             try {
-                const { ErrorService } = window.api;
+                const { ErrorService } = (window as any).api;
                 await ErrorService.testErrorCode(500);
             } catch (e) {
+                const error = e as any;
                 return JSON.stringify({
-                    name: e.name,
-                    message: e.message,
-                    url: e.url,
-                    status: e.status,
-                    statusText: e.statusText,
-                    body: e.body,
+                    name: error.name,
+                    message: error.message,
+                    url: error.url,
+                    status: error.status,
+                    statusText: error.statusText,
+                    body: error.body,
                 });
             }
+            return;
         });
-
         expect(error).toBe(
             JSON.stringify({
                 name: 'ApiError',
@@ -123,18 +103,20 @@ describe('v3.fetch', () => {
     it('should throw unknown error (409)', async () => {
         const error = await browser.evaluate(async () => {
             try {
-                const { ErrorService } = window.api;
+                const { ErrorService } = (window as any).api;
                 await ErrorService.testErrorCode(409);
             } catch (e) {
+                const error = e as any;
                 return JSON.stringify({
-                    name: e.name,
-                    message: e.message,
-                    url: e.url,
-                    status: e.status,
-                    statusText: e.statusText,
-                    body: e.body,
+                    name: error.name,
+                    message: error.message,
+                    url: error.url,
+                    status: error.status,
+                    statusText: error.statusText,
+                    body: error.body,
                 });
             }
+            return;
         });
         expect(error).toBe(
             JSON.stringify({

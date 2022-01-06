@@ -108,3 +108,8 @@ export async function generate({
         }
     }
 }
+
+export default {
+    HttpClient,
+    generate,
+};

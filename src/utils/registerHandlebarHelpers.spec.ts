@@ -1,4 +1,4 @@
-import * as Handlebars from 'handlebars/runtime';
+import Handlebars from 'handlebars';
 
 import { HttpClient } from '../HttpClient';
 import { registerHandlebarHelpers } from './registerHandlebarHelpers';
@@ -17,6 +17,5 @@ describe('registerHandlebarHelpers', () => {
         expect(helpers).toContain('union');
         expect(helpers).toContain('intersection');
         expect(helpers).toContain('enumerator');
-        expect(helpers).toContain('escapeQuotes');
     });
 });

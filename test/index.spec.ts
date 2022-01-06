@@ -1,15 +1,14 @@
-'use strict';
+import { readFileSync } from 'fs';
+import { sync } from 'glob';
 
-const OpenAPI = require('../dist');
-const glob = require('glob');
-const fs = require('fs');
+import { generate, HttpClient } from '../';
 
 describe('v2', () => {
     it('should generate', async () => {
-        await OpenAPI.generate({
+        await generate({
             input: './test/spec/v2.json',
             output: './test/generated/v2/',
-            httpClient: OpenAPI.HttpClient.FETCH,
+            httpClient: HttpClient.FETCH,
             useOptions: false,
             useUnionTypes: false,
             exportCore: true,
@@ -18,8 +17,8 @@ describe('v2', () => {
             exportServices: true,
         });
 
-        glob.sync('./test/generated/v2/**/*.ts').forEach(file => {
-            const content = fs.readFileSync(file, 'utf8').toString();
+        sync('./test/generated/v2/**/*.ts').forEach(file => {
+            const content = readFileSync(file, 'utf8').toString();
             expect(content).toMatchSnapshot(file);
         });
     });
@@ -27,10 +26,10 @@ describe('v2', () => {
 
 describe('v3', () => {
     it('should generate', async () => {
-        await OpenAPI.generate({
+        await generate({
             input: './test/spec/v3.json',
             output: './test/generated/v3/',
-            httpClient: OpenAPI.HttpClient.FETCH,
+            httpClient: HttpClient.FETCH,
             useOptions: false,
             useUnionTypes: false,
             exportCore: true,
@@ -39,8 +38,8 @@ describe('v3', () => {
             exportServices: true,
         });
 
-        glob.sync('./test/generated/v3/**/*.ts').forEach(file => {
-            const content = fs.readFileSync(file, 'utf8').toString();
+        sync('./test/generated/v3/**/*.ts').forEach(file => {
+            const content = readFileSync(file, 'utf8').toString();
             expect(content).toMatchSnapshot(file);
         });
     });
