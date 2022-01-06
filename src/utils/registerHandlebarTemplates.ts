@@ -1,4 +1,4 @@
-import Handlebars from 'handlebars';
+import Handlebars from 'handlebars/runtime';
 
 import { HttpClient } from '../HttpClient';
 import templateCoreApiError from '../templates/core/ApiError.hbs';

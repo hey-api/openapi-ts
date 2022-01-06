@@ -1,4 +1,4 @@
-import Handlebars from 'handlebars';
+import Handlebars from 'handlebars/runtime';
 
 import { Enum } from '../client/interfaces/Enum';
 import { Model } from '../client/interfaces/Model';

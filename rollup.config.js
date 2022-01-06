@@ -1,4 +1,3 @@
-import alias from '@rollup/plugin-alias';
 import commonjs from '@rollup/plugin-commonjs';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
@@ -55,11 +54,6 @@ const getPlugins = () => {
         handlebarsPlugin(),
         typescript({
             module: 'esnext',
-        }),
-        alias({
-            entries: {
-                handlebars: 'handlebars/lib/handlebars.runtime',
-            },
         }),
     ];
     if (process.env.NODE_ENV === 'development') {
