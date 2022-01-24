@@ -16,7 +16,7 @@ export interface OpenApiOperation {
     produces?: string[];
     parameters?: OpenApiParameter[];
     responses: OpenApiResponses;
-    schemes: ('http' | 'https' | 'ws' | 'wss')[];
+    schemes?: ('http' | 'https' | 'ws' | 'wss')[];
     deprecated?: boolean;
     security?: OpenApiSecurityRequirement[];
 }

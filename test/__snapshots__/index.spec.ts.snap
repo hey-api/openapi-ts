@@ -272,7 +272,7 @@ function base64(str: string): string {
 function getQueryString(params: Record<string, any>): string {
     const searchParams = new URLSearchParams();
 
-    const process = (key:string, value: any) => {
+    const process = (key: string, value: any) => {
         if (isDefined(value)) {
             if (Array.isArray(value)) {
                 value.forEach(v => {
@@ -326,7 +326,7 @@ function getFormData(options: ApiRequestOptions): FormData | undefined {
             .filter(([_, value]) => isDefined(value))
             .forEach(([key, value]) => {
                 if (Array.isArray(value)) {
-                    value.forEach(v => append(key, v));
+                    value.forEach(v => process(key, v));
                 } else {
                     process(key, value);
                 }
@@ -3121,7 +3121,7 @@ function base64(str: string): string {
 function getQueryString(params: Record<string, any>): string {
     const searchParams = new URLSearchParams();
 
-    const process = (key:string, value: any) => {
+    const process = (key: string, value: any) => {
         if (isDefined(value)) {
             if (Array.isArray(value)) {
                 value.forEach(v => {
@@ -3175,7 +3175,7 @@ function getFormData(options: ApiRequestOptions): FormData | undefined {
             .filter(([_, value]) => isDefined(value))
             .forEach(([key, value]) => {
                 if (Array.isArray(value)) {
-                    value.forEach(v => append(key, v));
+                    value.forEach(v => process(key, v));
                 } else {
                     process(key, value);
                 }
