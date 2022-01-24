@@ -15,6 +15,7 @@ export type Options = {
     exportServices?: boolean;
     exportModels?: boolean;
     exportSchemas?: boolean;
+    postfix?: string;
     request?: string;
     write?: boolean;
 };
