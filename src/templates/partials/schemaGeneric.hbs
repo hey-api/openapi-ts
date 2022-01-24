@@ -3,7 +3,7 @@
     type: '{{{type}}}',
 {{/if}}
 {{#if description}}
-    description: `{{{description}}}`,
+    description: `{{{escapeDescription description}}}`,
 {{/if}}
 {{#if isReadOnly}}
     isReadOnly: {{{isReadOnly}}},

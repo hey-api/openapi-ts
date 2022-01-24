@@ -3,7 +3,6 @@ import { getPattern } from '../../../utils/getPattern';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 import { extendEnum } from './extendEnum';
-import { getComment } from './getComment';
 import { getEnum } from './getEnum';
 import { getEnumFromDescription } from './getEnumFromDescription';
 import { getModelComposition } from './getModelComposition';
@@ -24,7 +23,7 @@ export function getModel(
         base: 'any',
         template: null,
         link: null,
-        description: getComment(definition.description),
+        description: definition.description || null,
         isDefinition,
         isReadOnly: definition.readOnly === true,
         isNullable: definition.nullable === true,

@@ -524,6 +524,12 @@ export type { ArrayWithNumbers } from './models/ArrayWithNumbers';
 export type { ArrayWithProperties } from './models/ArrayWithProperties';
 export type { ArrayWithReferences } from './models/ArrayWithReferences';
 export type { ArrayWithStrings } from './models/ArrayWithStrings';
+export type { CommentWithBackticks } from './models/CommentWithBackticks';
+export type { CommentWithBreaks } from './models/CommentWithBreaks';
+export type { CommentWithExpressionPlaceholders } from './models/CommentWithExpressionPlaceholders';
+export type { CommentWithQuotes } from './models/CommentWithQuotes';
+export type { CommentWithReservedCharacters } from './models/CommentWithReservedCharacters';
+export type { CommentWithSlashes } from './models/CommentWithSlashes';
 export type { Date } from './models/Date';
 export type { DictionaryWithArray } from './models/DictionaryWithArray';
 export type { DictionaryWithDictionary } from './models/DictionaryWithDictionary';
@@ -553,7 +559,6 @@ export type { ModelWithPattern } from './models/ModelWithPattern';
 export type { ModelWithProperties } from './models/ModelWithProperties';
 export type { ModelWithReference } from './models/ModelWithReference';
 export type { ModelWithString } from './models/ModelWithString';
-export type { MultilineComment } from './models/MultilineComment';
 export type { SimpleBoolean } from './models/SimpleBoolean';
 export type { SimpleFile } from './models/SimpleFile';
 export type { SimpleInteger } from './models/SimpleInteger';
@@ -567,6 +572,12 @@ export { $ArrayWithNumbers } from './schemas/$ArrayWithNumbers';
 export { $ArrayWithProperties } from './schemas/$ArrayWithProperties';
 export { $ArrayWithReferences } from './schemas/$ArrayWithReferences';
 export { $ArrayWithStrings } from './schemas/$ArrayWithStrings';
+export { $CommentWithBackticks } from './schemas/$CommentWithBackticks';
+export { $CommentWithBreaks } from './schemas/$CommentWithBreaks';
+export { $CommentWithExpressionPlaceholders } from './schemas/$CommentWithExpressionPlaceholders';
+export { $CommentWithQuotes } from './schemas/$CommentWithQuotes';
+export { $CommentWithReservedCharacters } from './schemas/$CommentWithReservedCharacters';
+export { $CommentWithSlashes } from './schemas/$CommentWithSlashes';
 export { $Date } from './schemas/$Date';
 export { $DictionaryWithArray } from './schemas/$DictionaryWithArray';
 export { $DictionaryWithDictionary } from './schemas/$DictionaryWithDictionary';
@@ -596,7 +607,6 @@ export { $ModelWithPattern } from './schemas/$ModelWithPattern';
 export { $ModelWithProperties } from './schemas/$ModelWithProperties';
 export { $ModelWithReference } from './schemas/$ModelWithReference';
 export { $ModelWithString } from './schemas/$ModelWithString';
-export { $MultilineComment } from './schemas/$MultilineComment';
 export { $SimpleBoolean } from './schemas/$SimpleBoolean';
 export { $SimpleFile } from './schemas/$SimpleFile';
 export { $SimpleInteger } from './schemas/$SimpleInteger';
@@ -692,6 +702,75 @@ exports[`v2 should generate: ./test/generated/v2/models/ArrayWithStrings.ts 1`] 
  * This is a simple array with strings
  */
 export type ArrayWithStrings = Array<string>;"
+`;
+
+exports[`v2 should generate: ./test/generated/v2/models/CommentWithBackticks.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+/**
+ * Testing backticks in string: \`backticks\` and \`\`\`multiple backticks\`\`\` should work
+ */
+export type CommentWithBackticks = number;"
+`;
+
+exports[`v2 should generate: ./test/generated/v2/models/CommentWithBreaks.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+/**
+ * Testing multiline comments in string: First line
+ * Second line
+ *
+ * Fourth line
+ */
+export type CommentWithBreaks = number;"
+`;
+
+exports[`v2 should generate: ./test/generated/v2/models/CommentWithExpressionPlaceholders.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+/**
+ * Testing expression placeholders in string: \${expression} should work
+ */
+export type CommentWithExpressionPlaceholders = number;"
+`;
+
+exports[`v2 should generate: ./test/generated/v2/models/CommentWithQuotes.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+/**
+ * Testing quotes in string: 'single quote''' and \\"double quotes\\"\\"\\" should work
+ */
+export type CommentWithQuotes = number;"
+`;
+
+exports[`v2 should generate: ./test/generated/v2/models/CommentWithReservedCharacters.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+/**
+ * Testing reserved characters in string: * inline * and ** inline ** should work
+ */
+export type CommentWithReservedCharacters = number;"
+`;
+
+exports[`v2 should generate: ./test/generated/v2/models/CommentWithSlashes.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+/**
+ * Testing slashes in string: \\\\backwards\\\\\\\\\\\\ and /forwards/// should work
+ */
+export type CommentWithSlashes = number;"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/models/Date.ts 1`] = `
@@ -1225,20 +1304,6 @@ export type ModelWithString = {
 "
 `;
 
-exports[`v2 should generate: ./test/generated/v2/models/MultilineComment.ts 1`] = `
-"/* istanbul ignore file */
-/* tslint:disable */
-/* eslint-disable */
-
-/**
- * Testing multiline comments.
- * This must go to the next line.
- *
- * This will contain a break.
- */
-export type MultilineComment = number;"
-`;
-
 exports[`v2 should generate: ./test/generated/v2/models/SimpleBoolean.ts 1`] = `
 "/* istanbul ignore file */
 /* tslint:disable */
@@ -1386,6 +1451,69 @@ export const $ArrayWithStrings = {
     contains: {
         type: 'string',
     },
+} as const;"
+`;
+
+exports[`v2 should generate: ./test/generated/v2/schemas/$CommentWithBackticks.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $CommentWithBackticks = {
+    type: 'number',
+    description: \`Testing backticks in string: \\\\\`backticks\\\\\` and \\\\\`\\\\\`\\\\\`multiple backticks\\\\\`\\\\\`\\\\\` should work\`,
+} as const;"
+`;
+
+exports[`v2 should generate: ./test/generated/v2/schemas/$CommentWithBreaks.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $CommentWithBreaks = {
+    type: 'number',
+    description: \`Testing multiline comments in string: First line
+    Second line
+
+    Fourth line\`,
+} as const;"
+`;
+
+exports[`v2 should generate: ./test/generated/v2/schemas/$CommentWithExpressionPlaceholders.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $CommentWithExpressionPlaceholders = {
+    type: 'number',
+    description: \`Testing expression placeholders in string: \\\\\${expression} should work\`,
+} as const;"
+`;
+
+exports[`v2 should generate: ./test/generated/v2/schemas/$CommentWithQuotes.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $CommentWithQuotes = {
+    type: 'number',
+    description: \`Testing quotes in string: 'single quote''' and \\"double quotes\\"\\"\\" should work\`,
+} as const;"
+`;
+
+exports[`v2 should generate: ./test/generated/v2/schemas/$CommentWithReservedCharacters.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $CommentWithReservedCharacters = {
+    type: 'number',
+    description: \`Testing reserved characters in string: /* inline */ and /** inline **/ should work\`,
+} as const;"
+`;
+
+exports[`v2 should generate: ./test/generated/v2/schemas/$CommentWithSlashes.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $CommentWithSlashes = {
+    type: 'number',
+    description: \`Testing slashes in string: \\\\\\\\backwards\\\\\\\\\\\\\\\\\\\\\\\\ and /forwards/// should work\`,
 } as const;"
 `;
 
@@ -1933,19 +2061,6 @@ export const $ModelWithString = {
             description: \`This is a simple string property\`,
         },
     },
-} as const;"
-`;
-
-exports[`v2 should generate: ./test/generated/v2/schemas/$MultilineComment.ts 1`] = `
-"/* istanbul ignore file */
-/* tslint:disable */
-/* eslint-disable */
-export const $MultilineComment = {
-    type: 'number',
-    description: \`Testing multiline comments.
-     * This must go to the next line.
-     *
-     * This will contain a break.\`,
 } as const;"
 `;
 
@@ -3251,6 +3366,12 @@ export type { ArrayWithNumbers } from './models/ArrayWithNumbers';
 export type { ArrayWithProperties } from './models/ArrayWithProperties';
 export type { ArrayWithReferences } from './models/ArrayWithReferences';
 export type { ArrayWithStrings } from './models/ArrayWithStrings';
+export type { CommentWithBackticks } from './models/CommentWithBackticks';
+export type { CommentWithBreaks } from './models/CommentWithBreaks';
+export type { CommentWithExpressionPlaceholders } from './models/CommentWithExpressionPlaceholders';
+export type { CommentWithQuotes } from './models/CommentWithQuotes';
+export type { CommentWithReservedCharacters } from './models/CommentWithReservedCharacters';
+export type { CommentWithSlashes } from './models/CommentWithSlashes';
 export type { CompositionBaseModel } from './models/CompositionBaseModel';
 export type { CompositionExtendedModel } from './models/CompositionExtendedModel';
 export type { CompositionWithAllOfAndNullable } from './models/CompositionWithAllOfAndNullable';
@@ -3292,7 +3413,6 @@ export type { ModelWithPattern } from './models/ModelWithPattern';
 export type { ModelWithProperties } from './models/ModelWithProperties';
 export type { ModelWithReference } from './models/ModelWithReference';
 export type { ModelWithString } from './models/ModelWithString';
-export type { MultilineComment } from './models/MultilineComment';
 export type { SimpleBoolean } from './models/SimpleBoolean';
 export type { SimpleFile } from './models/SimpleFile';
 export type { SimpleInteger } from './models/SimpleInteger';
@@ -3306,6 +3426,12 @@ export { $ArrayWithNumbers } from './schemas/$ArrayWithNumbers';
 export { $ArrayWithProperties } from './schemas/$ArrayWithProperties';
 export { $ArrayWithReferences } from './schemas/$ArrayWithReferences';
 export { $ArrayWithStrings } from './schemas/$ArrayWithStrings';
+export { $CommentWithBackticks } from './schemas/$CommentWithBackticks';
+export { $CommentWithBreaks } from './schemas/$CommentWithBreaks';
+export { $CommentWithExpressionPlaceholders } from './schemas/$CommentWithExpressionPlaceholders';
+export { $CommentWithQuotes } from './schemas/$CommentWithQuotes';
+export { $CommentWithReservedCharacters } from './schemas/$CommentWithReservedCharacters';
+export { $CommentWithSlashes } from './schemas/$CommentWithSlashes';
 export { $CompositionBaseModel } from './schemas/$CompositionBaseModel';
 export { $CompositionExtendedModel } from './schemas/$CompositionExtendedModel';
 export { $CompositionWithAllOfAndNullable } from './schemas/$CompositionWithAllOfAndNullable';
@@ -3347,7 +3473,6 @@ export { $ModelWithPattern } from './schemas/$ModelWithPattern';
 export { $ModelWithProperties } from './schemas/$ModelWithProperties';
 export { $ModelWithReference } from './schemas/$ModelWithReference';
 export { $ModelWithString } from './schemas/$ModelWithString';
-export { $MultilineComment } from './schemas/$MultilineComment';
 export { $SimpleBoolean } from './schemas/$SimpleBoolean';
 export { $SimpleFile } from './schemas/$SimpleFile';
 export { $SimpleInteger } from './schemas/$SimpleInteger';
@@ -3447,6 +3572,75 @@ exports[`v3 should generate: ./test/generated/v3/models/ArrayWithStrings.ts 1`] 
  * This is a simple array with strings
  */
 export type ArrayWithStrings = Array<string>;"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/models/CommentWithBackticks.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+/**
+ * Testing backticks in string: \`backticks\` and \`\`\`multiple backticks\`\`\` should work
+ */
+export type CommentWithBackticks = number;"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/models/CommentWithBreaks.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+/**
+ * Testing multiline comments in string: First line
+ * Second line
+ *
+ * Fourth line
+ */
+export type CommentWithBreaks = number;"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/models/CommentWithExpressionPlaceholders.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+/**
+ * Testing expression placeholders in string: \${expression} should work
+ */
+export type CommentWithExpressionPlaceholders = number;"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/models/CommentWithQuotes.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+/**
+ * Testing quotes in string: 'single quote''' and \\"double quotes\\"\\"\\" should work
+ */
+export type CommentWithQuotes = number;"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/models/CommentWithReservedCharacters.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+/**
+ * Testing reserved characters in string: * inline * and ** inline ** should work
+ */
+export type CommentWithReservedCharacters = number;"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/models/CommentWithSlashes.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+/**
+ * Testing slashes in string: \\\\backwards\\\\\\\\\\\\ and /forwards/// should work
+ */
+export type CommentWithSlashes = number;"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/models/CompositionBaseModel.ts 1`] = `
@@ -4201,20 +4395,6 @@ export type ModelWithString = {
 "
 `;
 
-exports[`v3 should generate: ./test/generated/v3/models/MultilineComment.ts 1`] = `
-"/* istanbul ignore file */
-/* tslint:disable */
-/* eslint-disable */
-
-/**
- * Testing multiline comments.
- * This must go to the next line.
- *
- * This will contain a break.
- */
-export type MultilineComment = number;"
-`;
-
 exports[`v3 should generate: ./test/generated/v3/models/SimpleBoolean.ts 1`] = `
 "/* istanbul ignore file */
 /* tslint:disable */
@@ -4362,6 +4542,69 @@ export const $ArrayWithStrings = {
     contains: {
         type: 'string',
     },
+} as const;"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/schemas/$CommentWithBackticks.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $CommentWithBackticks = {
+    type: 'number',
+    description: \`Testing backticks in string: \\\\\`backticks\\\\\` and \\\\\`\\\\\`\\\\\`multiple backticks\\\\\`\\\\\`\\\\\` should work\`,
+} as const;"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/schemas/$CommentWithBreaks.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $CommentWithBreaks = {
+    type: 'number',
+    description: \`Testing multiline comments in string: First line
+    Second line
+
+    Fourth line\`,
+} as const;"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/schemas/$CommentWithExpressionPlaceholders.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $CommentWithExpressionPlaceholders = {
+    type: 'number',
+    description: \`Testing expression placeholders in string: \\\\\${expression} should work\`,
+} as const;"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/schemas/$CommentWithQuotes.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $CommentWithQuotes = {
+    type: 'number',
+    description: \`Testing quotes in string: 'single quote''' and \\"double quotes\\"\\"\\" should work\`,
+} as const;"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/schemas/$CommentWithReservedCharacters.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $CommentWithReservedCharacters = {
+    type: 'number',
+    description: \`Testing reserved characters in string: /* inline */ and /** inline **/ should work\`,
+} as const;"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/schemas/$CommentWithSlashes.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $CommentWithSlashes = {
+    type: 'number',
+    description: \`Testing slashes in string: \\\\\\\\backwards\\\\\\\\\\\\\\\\\\\\\\\\ and /forwards/// should work\`,
 } as const;"
 `;
 
@@ -5236,19 +5479,6 @@ export const $ModelWithString = {
             description: \`This is a simple string property\`,
         },
     },
-} as const;"
-`;
-
-exports[`v3 should generate: ./test/generated/v3/schemas/$MultilineComment.ts 1`] = `
-"/* istanbul ignore file */
-/* tslint:disable */
-/* eslint-disable */
-export const $MultilineComment = {
-    type: 'number',
-    description: \`Testing multiline comments.
-     * This must go to the next line.
-     *
-     * This will contain a break.\`,
 } as const;"
 `;
 

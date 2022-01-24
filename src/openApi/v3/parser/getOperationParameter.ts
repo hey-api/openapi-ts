@@ -3,7 +3,6 @@ import { getPattern } from '../../../utils/getPattern';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiParameter } from '../interfaces/OpenApiParameter';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
-import { getComment } from './getComment';
 import { getModel } from './getModel';
 import { getModelDefault } from './getModelDefault';
 import { getOperationParameterName } from './getOperationParameterName';
@@ -20,7 +19,7 @@ export function getOperationParameter(openApi: OpenApi, parameter: OpenApiParame
         base: 'any',
         template: null,
         link: null,
-        description: getComment(parameter.description),
+        description: parameter.description || null,
         isDefinition: false,
         isReadOnly: false,
         isRequired: parameter.required === true,

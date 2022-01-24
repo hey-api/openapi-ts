@@ -34,6 +34,8 @@ const handlebarsPlugin = () => ({
                     union: true,
                     intersection: true,
                     enumerator: true,
+                    escapeComment: true,
+                    escapeDescription: true,
                 },
             });
             return `export default ${templateSpec};`;

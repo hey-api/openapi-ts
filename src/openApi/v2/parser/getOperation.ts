@@ -2,7 +2,6 @@ import type { Operation } from '../../../client/interfaces/Operation';
 import type { OperationParameters } from '../../../client/interfaces/OperationParameters';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiOperation } from '../interfaces/OpenApiOperation';
-import { getComment } from './getComment';
 import { getOperationErrors } from './getOperationErrors';
 import { getOperationName } from './getOperationName';
 import { getOperationParameters } from './getOperationParameters';
@@ -30,8 +29,8 @@ export function getOperation(
     const operation: Operation = {
         service: serviceName,
         name: operationName,
-        summary: getComment(op.summary),
-        description: getComment(op.description),
+        summary: op.summary || null,
+        description: op.description || null,
         deprecated: op.deprecated === true,
         method: method.toUpperCase(),
         path: operationPath,

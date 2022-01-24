@@ -4,7 +4,6 @@ import { getPattern } from '../../../utils/getPattern';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 import { escapeName } from './escapeName';
-import { getComment } from './getComment';
 import type { getModel } from './getModel';
 import { getType } from './getType';
 
@@ -37,7 +36,7 @@ export function getModelProperties(
                 | 'properties'
             > = {
                 name: escapeName(propertyName),
-                description: getComment(property.description),
+                description: property.description || null,
                 isDefinition: false,
                 isReadOnly: property.readOnly === true,
                 isRequired: propertyRequired,

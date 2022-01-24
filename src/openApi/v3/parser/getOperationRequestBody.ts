@@ -2,7 +2,6 @@ import type { OperationParameter } from '../../../client/interfaces/OperationPar
 import { getPattern } from '../../../utils/getPattern';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiRequestBody } from '../interfaces/OpenApiRequestBody';
-import { getComment } from './getComment';
 import { getContent } from './getContent';
 import { getModel } from './getModel';
 import { getType } from './getType';
@@ -17,7 +16,7 @@ export function getOperationRequestBody(openApi: OpenApi, body: OpenApiRequestBo
         base: 'any',
         template: null,
         link: null,
-        description: getComment(body.description),
+        description: body.description || null,
         default: undefined,
         isDefinition: false,
         isReadOnly: false,

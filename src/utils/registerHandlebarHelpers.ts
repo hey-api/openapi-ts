@@ -1,4 +1,5 @@
 import Handlebars from 'handlebars/runtime';
+import { EOL } from 'os';
 
 import { Enum } from '../client/interfaces/Enum';
 import { Model } from '../client/interfaces/Model';
@@ -79,4 +80,15 @@ export function registerHandlebarHelpers(root: {
             );
         }
     );
+
+    Handlebars.registerHelper('escapeComment', function (value: string): string {
+        return value
+            .replace(/\*\//g, '*')
+            .replace(/\/\*/g, '*')
+            .replace(/\r?\n(.*)/g, (_, w) => `${EOL} * ${w.trim()}`);
+    });
+
+    Handlebars.registerHelper('escapeDescription', function (value: string): string {
+        return value.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\${/g, '\\${');
+    });
 }

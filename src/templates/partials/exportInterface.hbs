@@ -1,13 +1,13 @@
 {{#if description}}
 /**
- * {{{description}}}
+ * {{{escapeComment description}}}
  */
 {{/if}}
 export type {{{name}}} = {
     {{#each properties}}
     {{#if description}}
     /**
-     * {{{description}}}
+     * {{{escapeComment description}}}
      */
     {{/if}}
     {{>isReadOnly}}{{{name}}}{{>isRequired}}: {{>type parent=../name}};
@@ -21,7 +21,7 @@ export namespace {{{name}}} {
     {{#each enums}}
     {{#if description}}
     /**
-     * {{{description}}}
+     * {{{escapeComment description}}}
      */
     {{/if}}
     export enum {{{name}}} {

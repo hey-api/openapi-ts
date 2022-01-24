@@ -3,7 +3,6 @@ import { getPattern } from '../../../utils/getPattern';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 import { escapeName } from './escapeName';
-import { getComment } from './getComment';
 import type { getModel } from './getModel';
 import { getType } from './getType';
 
@@ -25,7 +24,7 @@ export function getModelProperties(openApi: OpenApi, definition: OpenApiSchema, 
                     base: model.base,
                     template: model.template,
                     link: null,
-                    description: getComment(property.description),
+                    description: property.description || null,
                     isDefinition: false,
                     isReadOnly: property.readOnly === true,
                     isRequired: propertyRequired,
@@ -58,7 +57,7 @@ export function getModelProperties(openApi: OpenApi, definition: OpenApiSchema, 
                     base: model.base,
                     template: model.template,
                     link: model.link,
-                    description: getComment(property.description),
+                    description: property.description || null,
                     isDefinition: false,
                     isReadOnly: property.readOnly === true,
                     isRequired: propertyRequired,

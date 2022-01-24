@@ -19,20 +19,20 @@ export class {{{name}}}{{{@root.postfix}}} {
      * @deprecated
     {{/if}}
     {{#if summary}}
-     * {{{summary}}}
+     * {{{escapeComment summary}}}
     {{/if}}
     {{#if description}}
-     * {{{description}}}
+     * {{{escapeComment description}}}
     {{/if}}
     {{#unless @root.useOptions}}
     {{#if parameters}}
     {{#each parameters}}
-     * @param {{{name}}} {{{description}}}
+     * @param {{{name}}} {{#if description}}{{{escapeComment description}}}{{/if}}
     {{/each}}
     {{/if}}
     {{/unless}}
     {{#each results}}
-     * @returns {{{type}}} {{{description}}}
+     * @returns {{{type}}} {{#if description}}{{{escapeComment description}}}{{/if}}
     {{/each}}
      * @throws ApiError
      */

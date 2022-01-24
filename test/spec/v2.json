@@ -856,8 +856,28 @@
         }
     },
     "definitions": {
-        "MultilineComment": {
-            "description": "Testing multiline comments.\nThis must go to the next line.\n\nThis will contain a break.",
+        "CommentWithBreaks": {
+            "description": "Testing multiline comments in string: First line\nSecond line\n\nFourth line",
+            "type": "integer"
+        },
+        "CommentWithBackticks": {
+            "description": "Testing backticks in string: `backticks` and ```multiple backticks``` should work",
+            "type": "integer"
+        },
+        "CommentWithSlashes": {
+            "description": "Testing slashes in string: \\backwards\\\\\\ and /forwards/// should work",
+            "type": "integer"
+        },
+        "CommentWithExpressionPlaceholders": {
+            "description": "Testing expression placeholders in string: ${expression} should work",
+            "type": "integer"
+        },
+        "CommentWithQuotes": {
+            "description": "Testing quotes in string: 'single quote''' and \"double quotes\"\"\" should work",
+            "type": "integer"
+        },
+        "CommentWithReservedCharacters": {
+            "description": "Testing reserved characters in string: /* inline */ and /** inline **/ should work",
             "type": "integer"
         },
         "SimpleInteger": {
