@@ -15,7 +15,7 @@ type Config = {
     PASSWORD?: string | Resolver<string>;
     HEADERS?: Headers | Resolver<Headers>;
     ENCODE_PATH?: (path: string) => string;
-}
+};
 
 export const OpenAPI: Config = {
     BASE: '{{{server}}}',

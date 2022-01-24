@@ -56,7 +56,7 @@ describe('v2.fetch', () => {
         } catch (e) {
             error = (e as Error).message;
         }
-        expect(error).toContain('The user aborted a request.');
+        expect(error).toContain('CancelError: Request aborted');
     });
 
     it('should throw known error (500)', async () => {

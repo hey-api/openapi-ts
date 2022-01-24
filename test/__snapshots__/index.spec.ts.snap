@@ -39,7 +39,7 @@ export type ApiRequestOptions = {
     readonly mediaType?: string;
     readonly responseHeader?: string;
     readonly errors?: Record<number, string>;
-}"
+};"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/core/ApiResult.ts 1`] = `
@@ -52,7 +52,7 @@ export type ApiResult = {
     readonly status: number;
     readonly statusText: string;
     readonly body: any;
-}"
+};"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/core/CancelablePromise.ts 1`] = `
@@ -61,8 +61,8 @@ exports[`v2 should generate: ./test/generated/v2/core/CancelablePromise.ts 1`] =
 /* eslint-disable */
 export class CancelError extends Error {
 
-    constructor(reason: string = 'Promise was canceled') {
-        super(reason);
+    constructor(message: string) {
+        super(message);
         this.name = 'CancelError';
     }
 
@@ -72,7 +72,8 @@ export class CancelError extends Error {
 }
 
 export interface OnCancel {
-    readonly isPending: boolean;
+    readonly isResolved: boolean;
+    readonly isRejected: boolean;
     readonly isCancelled: boolean;
 
     (cancelHandler: () => void): void;
@@ -81,7 +82,8 @@ export interface OnCancel {
 export class CancelablePromise<T> implements Promise<T> {
     readonly [Symbol.toStringTag]: string;
 
-    #isPending: boolean;
+    #isResolved: boolean;
+    #isRejected: boolean;
     #isCancelled: boolean;
     readonly #cancelHandlers: (() => void)[];
     readonly #promise: Promise<T>;
@@ -95,7 +97,8 @@ export class CancelablePromise<T> implements Promise<T> {
             onCancel: OnCancel
         ) => void
     ) {
-        this.#isPending = true;
+        this.#isResolved = false;
+        this.#isRejected = false;
         this.#isCancelled = false;
         this.#cancelHandlers = [];
         this.#promise = new Promise<T>((resolve, reject) => {
@@ -103,25 +106,34 @@ export class CancelablePromise<T> implements Promise<T> {
             this.#reject = reject;
 
             const onResolve = (value: T | PromiseLike<T>): void => {
-                if (!this.#isCancelled) {
-                    this.#isPending = false;
-                    this.#resolve?.(value);
+                if (this.#isResolved || this.#isRejected || this.#isCancelled) {
+                    return;
                 }
+                this.#isResolved = true;
+                this.#resolve?.(value);
             };
 
             const onReject = (reason?: any): void => {
-                this.#isPending = false;
+                if (this.#isResolved || this.#isRejected || this.#isCancelled) {
+                    return;
+                }
+                this.#isRejected = true;
                 this.#reject?.(reason);
             };
 
             const onCancel = (cancelHandler: () => void): void => {
-                if (this.#isPending) {
-                    this.#cancelHandlers.push(cancelHandler);
+                if (this.#isResolved || this.#isRejected || this.#isCancelled) {
+                    return;
                 }
+                this.#cancelHandlers.push(cancelHandler);
             };
 
-            Object.defineProperty(onCancel, 'isPending', {
-                get: (): boolean => this.#isPending,
+            Object.defineProperty(onCancel, 'isResolved', {
+                get: (): boolean => this.#isResolved,
+            });
+
+            Object.defineProperty(onCancel, 'isRejected', {
+                get: (): boolean => this.#isRejected,
             });
 
             Object.defineProperty(onCancel, 'isCancelled', {
@@ -150,7 +162,7 @@ export class CancelablePromise<T> implements Promise<T> {
     }
 
     public cancel(): void {
-        if (!this.#isPending || this.#isCancelled) {
+        if (this.#isResolved || this.#isRejected || this.#isCancelled) {
             return;
         }
         this.#isCancelled = true;
@@ -160,10 +172,12 @@ export class CancelablePromise<T> implements Promise<T> {
                     cancelHandler();
                 }
             } catch (error) {
-                this.#reject?.(error);
+                console.warn('Cancellation threw an error', error);
                 return;
             }
         }
+        this.#cancelHandlers.length = 0;
+        this.#reject?.(new CancelError('Request aborted'));
     }
 
     public get isCancelled(): boolean {
@@ -191,7 +205,7 @@ type Config = {
     PASSWORD?: string | Resolver<string>;
     HEADERS?: Headers | Resolver<Headers>;
     ENCODE_PATH?: (path: string) => string;
-}
+};
 
 export const OpenAPI: Config = {
     BASE: 'http://localhost:3000/base',
@@ -460,7 +474,7 @@ function catchErrors(options: ApiRequestOptions, result: ApiResult): void {
 
 /**
  * Request using fetch client
- * @param options The request options from the the service
+ * @param options The request options from the service
  * @returns CancelablePromise<T>
  * @throws ApiError
  */
@@ -879,7 +893,7 @@ export type ModelWithArray = {
     prop?: Array<ModelWithString>;
     propWithFile?: Array<Blob>;
     propWithNumber?: Array<number>;
-}
+};
 "
 `;
 
@@ -896,7 +910,7 @@ export type ModelWithBoolean = {
      * This is a simple boolean property
      */
     prop?: boolean;
-}
+};
 "
 `;
 
@@ -910,7 +924,7 @@ exports[`v2 should generate: ./test/generated/v2/models/ModelWithCircularReferen
  */
 export type ModelWithCircularReference = {
     prop?: ModelWithCircularReference;
-}
+};
 "
 `;
 
@@ -924,7 +938,7 @@ exports[`v2 should generate: ./test/generated/v2/models/ModelWithDictionary.ts 1
  */
 export type ModelWithDictionary = {
     prop?: Record<string, string>;
-}
+};
 "
 `;
 
@@ -942,7 +956,7 @@ export type ModelWithDuplicateImports = {
     propA?: ModelWithString;
     propB?: ModelWithString;
     propC?: ModelWithString;
-}
+};
 "
 `;
 
@@ -958,7 +972,7 @@ import type { ModelWithString } from './ModelWithString';
  */
 export type ModelWithDuplicateProperties = {
     prop?: ModelWithString;
-}
+};
 "
 `;
 
@@ -983,7 +997,7 @@ export type ModelWithEnum = {
      * Simple boolean enum
      */
     bool?: boolean;
-}
+};
 
 export namespace ModelWithEnum {
 
@@ -1026,7 +1040,7 @@ export type ModelWithEnumFromDescription = {
      * Success=1,Warning=2,Error=3
      */
     test?: ModelWithEnumFromDescription.test;
-}
+};
 
 export namespace ModelWithEnumFromDescription {
 
@@ -1057,7 +1071,7 @@ export type ModelWithInteger = {
      * This is a simple number property
      */
     prop?: number;
-}
+};
 "
 `;
 
@@ -1074,7 +1088,7 @@ export type ModelWithNestedEnums = {
     dictionaryWithEnumFromDescription?: Record<string, 1 | 2 | 3>;
     arrayWithEnum?: Array<'Success' | 'Warning' | 'Error'>;
     arrayWithDescription?: Array<1 | 2 | 3>;
-}
+};
 "
 `;
 
@@ -1092,7 +1106,7 @@ export type ModelWithNestedProperties = {
             readonly third: string;
         };
     };
-}
+};
 "
 `;
 
@@ -1113,7 +1127,7 @@ export type ModelWithNullableString = {
      * This is a simple string property
      */
     nullableRequiredProp: string | null;
-}
+};
 "
 `;
 
@@ -1129,7 +1143,7 @@ export type ModelWithOrderedProperties = {
     zebra?: string;
     apple?: string;
     hawaii?: string;
-}
+};
 "
 `;
 
@@ -1148,7 +1162,7 @@ export type ModelWithPattern = {
     readonly modified?: string;
     id?: string;
     text?: string;
-}
+};
 "
 `;
 
@@ -1174,7 +1188,7 @@ export type ModelWithProperties = {
     try?: string;
     readonly '@namespace.string'?: string;
     readonly '@namespace.integer'?: number;
-}
+};
 "
 `;
 
@@ -1190,7 +1204,7 @@ import type { ModelWithProperties } from './ModelWithProperties';
  */
 export type ModelWithReference = {
     prop?: ModelWithProperties;
-}
+};
 "
 `;
 
@@ -1207,7 +1221,7 @@ export type ModelWithString = {
      * This is a simple string property
      */
     prop?: string;
-}
+};
 "
 `;
 
@@ -2752,7 +2766,7 @@ export type ApiRequestOptions = {
     readonly mediaType?: string;
     readonly responseHeader?: string;
     readonly errors?: Record<number, string>;
-}"
+};"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/core/ApiResult.ts 1`] = `
@@ -2765,7 +2779,7 @@ export type ApiResult = {
     readonly status: number;
     readonly statusText: string;
     readonly body: any;
-}"
+};"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/core/CancelablePromise.ts 1`] = `
@@ -2774,8 +2788,8 @@ exports[`v3 should generate: ./test/generated/v3/core/CancelablePromise.ts 1`] =
 /* eslint-disable */
 export class CancelError extends Error {
 
-    constructor(reason: string = 'Promise was canceled') {
-        super(reason);
+    constructor(message: string) {
+        super(message);
         this.name = 'CancelError';
     }
 
@@ -2785,7 +2799,8 @@ export class CancelError extends Error {
 }
 
 export interface OnCancel {
-    readonly isPending: boolean;
+    readonly isResolved: boolean;
+    readonly isRejected: boolean;
     readonly isCancelled: boolean;
 
     (cancelHandler: () => void): void;
@@ -2794,7 +2809,8 @@ export interface OnCancel {
 export class CancelablePromise<T> implements Promise<T> {
     readonly [Symbol.toStringTag]: string;
 
-    #isPending: boolean;
+    #isResolved: boolean;
+    #isRejected: boolean;
     #isCancelled: boolean;
     readonly #cancelHandlers: (() => void)[];
     readonly #promise: Promise<T>;
@@ -2808,7 +2824,8 @@ export class CancelablePromise<T> implements Promise<T> {
             onCancel: OnCancel
         ) => void
     ) {
-        this.#isPending = true;
+        this.#isResolved = false;
+        this.#isRejected = false;
         this.#isCancelled = false;
         this.#cancelHandlers = [];
         this.#promise = new Promise<T>((resolve, reject) => {
@@ -2816,25 +2833,34 @@ export class CancelablePromise<T> implements Promise<T> {
             this.#reject = reject;
 
             const onResolve = (value: T | PromiseLike<T>): void => {
-                if (!this.#isCancelled) {
-                    this.#isPending = false;
-                    this.#resolve?.(value);
+                if (this.#isResolved || this.#isRejected || this.#isCancelled) {
+                    return;
                 }
+                this.#isResolved = true;
+                this.#resolve?.(value);
             };
 
             const onReject = (reason?: any): void => {
-                this.#isPending = false;
+                if (this.#isResolved || this.#isRejected || this.#isCancelled) {
+                    return;
+                }
+                this.#isRejected = true;
                 this.#reject?.(reason);
             };
 
             const onCancel = (cancelHandler: () => void): void => {
-                if (this.#isPending) {
-                    this.#cancelHandlers.push(cancelHandler);
+                if (this.#isResolved || this.#isRejected || this.#isCancelled) {
+                    return;
                 }
+                this.#cancelHandlers.push(cancelHandler);
             };
 
-            Object.defineProperty(onCancel, 'isPending', {
-                get: (): boolean => this.#isPending,
+            Object.defineProperty(onCancel, 'isResolved', {
+                get: (): boolean => this.#isResolved,
+            });
+
+            Object.defineProperty(onCancel, 'isRejected', {
+                get: (): boolean => this.#isRejected,
             });
 
             Object.defineProperty(onCancel, 'isCancelled', {
@@ -2863,7 +2889,7 @@ export class CancelablePromise<T> implements Promise<T> {
     }
 
     public cancel(): void {
-        if (!this.#isPending || this.#isCancelled) {
+        if (this.#isResolved || this.#isRejected || this.#isCancelled) {
             return;
         }
         this.#isCancelled = true;
@@ -2873,10 +2899,12 @@ export class CancelablePromise<T> implements Promise<T> {
                     cancelHandler();
                 }
             } catch (error) {
-                this.#reject?.(error);
+                console.warn('Cancellation threw an error', error);
                 return;
             }
         }
+        this.#cancelHandlers.length = 0;
+        this.#reject?.(new CancelError('Request aborted'));
     }
 
     public get isCancelled(): boolean {
@@ -2904,7 +2932,7 @@ type Config = {
     PASSWORD?: string | Resolver<string>;
     HEADERS?: Headers | Resolver<Headers>;
     ENCODE_PATH?: (path: string) => string;
-}
+};
 
 export const OpenAPI: Config = {
     BASE: 'http://localhost:3000/base',
@@ -3173,7 +3201,7 @@ function catchErrors(options: ApiRequestOptions, result: ApiResult): void {
 
 /**
  * Request using fetch client
- * @param options The request options from the the service
+ * @param options The request options from the service
  * @returns CancelablePromise<T>
  * @throws ApiError
  */
@@ -3432,7 +3460,7 @@ exports[`v3 should generate: ./test/generated/v3/models/CompositionBaseModel.ts 
 export type CompositionBaseModel = {
     firstName?: string;
     lastname?: string;
-}
+};
 "
 `;
 
@@ -3470,7 +3498,7 @@ export type CompositionWithAllOfAndNullable = {
     propA?: ({
         boolean?: boolean;
     } & ModelWithEnum & ModelWithArray & ModelWithDictionary) | null;
-}
+};
 "
 `;
 
@@ -3489,7 +3517,7 @@ import type { ModelWithString } from './ModelWithString';
  */
 export type CompositionWithAnyOf = {
     propA?: (ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary);
-}
+};
 "
 `;
 
@@ -3509,7 +3537,7 @@ export type CompositionWithAnyOfAndNullable = {
     propA?: ({
         boolean?: boolean;
     } | ModelWithEnum | ModelWithArray | ModelWithDictionary) | null;
-}
+};
 "
 `;
 
@@ -3525,7 +3553,7 @@ export type CompositionWithAnyOfAnonymous = {
     propA?: ({
         propA?: string;
     } | string | number);
-}
+};
 "
 `;
 
@@ -3544,7 +3572,7 @@ import type { ModelWithString } from './ModelWithString';
  */
 export type CompositionWithOneOf = {
     propA?: (ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary);
-}
+};
 "
 `;
 
@@ -3564,7 +3592,7 @@ export type CompositionWithOneOfAndNullable = {
     propA?: ({
         boolean?: boolean;
     } | ModelWithEnum | ModelWithArray | ModelWithDictionary) | null;
-}
+};
 "
 `;
 
@@ -3580,7 +3608,7 @@ export type CompositionWithOneOfAnonymous = {
     propA?: ({
         propA?: string;
     } | string | number);
-}
+};
 "
 `;
 
@@ -3749,7 +3777,7 @@ export type File = {
     readonly created_at?: string;
     mime: string;
     readonly file?: string;
-}
+};
 "
 `;
 
@@ -3764,7 +3792,7 @@ exports[`v3 should generate: ./test/generated/v3/models/ModelCircle.ts 1`] = `
 export type ModelCircle = {
     kind: 'circle';
     radius?: number;
-}
+};
 "
 `;
 
@@ -3779,7 +3807,7 @@ exports[`v3 should generate: ./test/generated/v3/models/ModelSquare.ts 1`] = `
 export type ModelSquare = {
     kind: 'square';
     sideLength?: number;
-}
+};
 "
 `;
 
@@ -3832,7 +3860,7 @@ export type ModelWithArray = {
     prop?: Array<ModelWithString>;
     propWithFile?: Array<Blob>;
     propWithNumber?: Array<number>;
-}
+};
 "
 `;
 
@@ -3849,7 +3877,7 @@ export type ModelWithBoolean = {
      * This is a simple boolean property
      */
     prop?: boolean;
-}
+};
 "
 `;
 
@@ -3863,7 +3891,7 @@ exports[`v3 should generate: ./test/generated/v3/models/ModelWithCircularReferen
  */
 export type ModelWithCircularReference = {
     prop?: ModelWithCircularReference;
-}
+};
 "
 `;
 
@@ -3877,7 +3905,7 @@ exports[`v3 should generate: ./test/generated/v3/models/ModelWithDictionary.ts 1
  */
 export type ModelWithDictionary = {
     prop?: Record<string, string>;
-}
+};
 "
 `;
 
@@ -3895,7 +3923,7 @@ export type ModelWithDuplicateImports = {
     propA?: ModelWithString;
     propB?: ModelWithString;
     propC?: ModelWithString;
-}
+};
 "
 `;
 
@@ -3911,7 +3939,7 @@ import type { ModelWithString } from './ModelWithString';
  */
 export type ModelWithDuplicateProperties = {
     prop?: ModelWithString;
-}
+};
 "
 `;
 
@@ -3936,7 +3964,7 @@ export type ModelWithEnum = {
      * Simple boolean enum
      */
     bool?: boolean;
-}
+};
 
 export namespace ModelWithEnum {
 
@@ -3979,7 +4007,7 @@ export type ModelWithEnumFromDescription = {
      * Success=1,Warning=2,Error=3
      */
     test?: ModelWithEnumFromDescription.test;
-}
+};
 
 export namespace ModelWithEnumFromDescription {
 
@@ -4010,7 +4038,7 @@ export type ModelWithInteger = {
      * This is a simple number property
      */
     prop?: number;
-}
+};
 "
 `;
 
@@ -4027,7 +4055,7 @@ export type ModelWithNestedEnums = {
     dictionaryWithEnumFromDescription?: Record<string, 1 | 2 | 3>;
     arrayWithEnum?: Array<'Success' | 'Warning' | 'Error'>;
     arrayWithDescription?: Array<1 | 2 | 3>;
-}
+};
 "
 `;
 
@@ -4045,7 +4073,7 @@ export type ModelWithNestedProperties = {
             readonly third: string | null;
         } | null;
     } | null;
-}
+};
 "
 `;
 
@@ -4074,7 +4102,7 @@ export type ModelWithNullableString = {
      * This is a simple string property
      */
     nullableRequiredProp2: string | null;
-}
+};
 "
 `;
 
@@ -4090,7 +4118,7 @@ export type ModelWithOrderedProperties = {
     zebra?: string;
     apple?: string;
     hawaii?: string;
-}
+};
 "
 `;
 
@@ -4109,7 +4137,7 @@ export type ModelWithPattern = {
     readonly modified?: string;
     id?: string;
     text?: string;
-}
+};
 "
 `;
 
@@ -4136,7 +4164,7 @@ export type ModelWithProperties = {
     try?: string;
     readonly '@namespace.string'?: string;
     readonly '@namespace.integer'?: number;
-}
+};
 "
 `;
 
@@ -4152,7 +4180,7 @@ import type { ModelWithProperties } from './ModelWithProperties';
  */
 export type ModelWithReference = {
     prop?: ModelWithProperties;
-}
+};
 "
 `;
 
@@ -4169,7 +4197,7 @@ export type ModelWithString = {
      * This is a simple string property
      */
     prop?: string;
-}
+};
 "
 `;
 

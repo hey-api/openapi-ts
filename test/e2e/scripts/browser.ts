@@ -11,7 +11,7 @@ const start = async () => {
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
     _page = await _browser.newPage();
-    // page.on('console', msg => console.log(msg.text()));
+    // _page.on('console', msg => console.log(msg.text()));
     await _page.goto(`http://localhost:3000/`, {
         waitUntil: 'networkidle0',
     });

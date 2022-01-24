@@ -56,6 +56,7 @@ describe('v3.xhr', () => {
     });
 
     it('can abort the request', async () => {
+        let error;
         try {
             await browser.evaluate(async () => {
                 const { SimpleService } = (window as any).api;
@@ -66,8 +67,9 @@ describe('v3.xhr', () => {
                 await promise;
             });
         } catch (e) {
-            expect((e as Error).message).toContain('The user aborted a request.');
+            error = (e as Error).message;
         }
+        expect(error).toContain('CancelError: Request aborted');
     });
 
     it('should throw known error (500)', async () => {

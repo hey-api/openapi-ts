@@ -46,6 +46,6 @@ describe('v2.node', () => {
         } catch (e) {
             error = (e as Error).message;
         }
-        expect(error).toContain('The user aborted a request.');
+        expect(error).toContain('Request aborted');
     });
 });

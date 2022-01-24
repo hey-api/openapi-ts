@@ -12,7 +12,7 @@ export type {{{name}}} = {
     {{/if}}
     {{>isReadOnly}}{{{name}}}{{>isRequired}}: {{>type parent=../name}};
     {{/each}}
-}
+};
 {{#if enums}}
 {{#unless @root.useUnionTypes}}
 
