@@ -1,0 +1,25 @@
+async function sendRequest(
+    options: ApiRequestOptions,
+    url: string,
+    formData: FormData | undefined,
+    body: BodyInit | undefined,
+    headers: Headers,
+    onCancel: OnCancel
+): Promise<Response> {
+    const controller = new AbortController();
+
+    const request: RequestInit = {
+        headers,
+        body: body || formData,
+        method: options.method,
+        signal: controller.signal,
+    };
+
+    if (OpenAPI.WITH_CREDENTIALS) {
+        request.credentials = OpenAPI.CREDENTIALS;
+    }
+
+    onCancel(() => controller.abort());
+
+    return await fetch(url, request);
+}

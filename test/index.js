@@ -7,7 +7,7 @@ const generate = async (input, output) => {
     await OpenAPI.generate({
         input,
         output,
-        httpClient: OpenAPI.HttpClient.NODE,
+        httpClient: OpenAPI.HttpClient.ANGULAR,
         useOptions: false,
         useUnionTypes: false,
         exportCore: true,

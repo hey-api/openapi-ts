@@ -1,5 +1,8 @@
 {{>header}}
 
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
 import { ApiError } from './ApiError';
 import type { ApiRequestOptions } from './ApiRequestOptions';
 import type { ApiResult } from './ApiResult';
@@ -37,19 +40,19 @@ import { OpenAPI } from './OpenAPI';
 {{>functions/resolve}}
 
 
-{{>fetch/getHeaders}}
+{{>angular/getHeaders}}
 
 
-{{>fetch/getRequestBody}}
+{{>angular/getRequestBody}}
 
 
-{{>fetch/sendRequest}}
+{{>angular/sendRequest}}
 
 
-{{>fetch/getResponseHeader}}
+{{>angular/getResponseHeader}}
 
 
-{{>fetch/getResponseBody}}
+{{>angular/getResponseBody}}
 
 
 {{>functions/catchErrors}}
@@ -57,11 +60,12 @@ import { OpenAPI } from './OpenAPI';
 
 /**
  * Request using fetch client
+ * @param http The Angular HTTP client
  * @param options The request options from the service
  * @returns CancelablePromise<T>
  * @throws ApiError
  */
-export function request<T>(options: ApiRequestOptions): CancelablePromise<T> {
+export function request<T>(http: HttpClient, options: ApiRequestOptions): Observable<T> {
     return new CancelablePromise<T>(async (resolve, reject, onCancel) => {
         try {
             const url = getUrl(options);

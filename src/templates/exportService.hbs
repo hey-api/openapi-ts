@@ -1,17 +1,35 @@
 {{>header}}
 
+{{#equals @root.httpClient 'angular'}}
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+{{/equals}}
+
 {{#if imports}}
 {{#each imports}}
 import type { {{{this}}} } from '../models/{{{this}}}';
 {{/each}}
 {{/if}}
+{{#notEquals @root.httpClient 'angular'}}
 import type { CancelablePromise } from '../core/CancelablePromise';
+{{/notEquals}}
 import { request as __request } from '../core/request';
 {{#if @root.useVersion}}
 import { OpenAPI } from '../core/OpenAPI';
 {{/if}}
 
+{{#equals @root.httpClient 'angular'}}
+@Injectable()
+{{/equals}}
 export class {{{name}}}{{{@root.postfix}}} {
+    {{#equals @root.httpClient 'angular'}}
+    private readonly http: HttpClient;
+
+    constructor(http: HttpClient) {
+        this.http = http;
+    }
+    {{/equals}}
 
     {{#each operations}}
     /**
@@ -36,8 +54,14 @@ export class {{{name}}}{{{@root.postfix}}} {
     {{/each}}
      * @throws ApiError
      */
+    {{#equals @root.httpClient 'angular'}}
+    public {{{name}}}({{>parameters}}): Observable<{{>result}}> {
+        return __request(this.http, {
+    {{/equals}}
+    {{#notEquals @root.httpClient 'angular'}}
     public static {{{name}}}({{>parameters}}): CancelablePromise<{{>result}}> {
         return __request({
+    {{/notEquals}}
             method: '{{{method}}}',
             path: `{{{path}}}`,
             {{#if parametersCookie}}

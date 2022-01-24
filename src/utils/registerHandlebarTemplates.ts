@@ -17,6 +17,12 @@ import fetchGetResponseBody from '../templates/core/fetch/getResponseBody.hbs';
 import fetchGetResponseHeader from '../templates/core/fetch/getResponseHeader.hbs';
 import fetchRequest from '../templates/core/fetch/request.hbs';
 import fetchSendRequest from '../templates/core/fetch/sendRequest.hbs';
+import angularGetHeaders from '../templates/core/angular/getHeaders.hbs';
+import angularGetRequestBody from '../templates/core/angular/getRequestBody.hbs';
+import angularGetResponseBody from '../templates/core/angular/getResponseBody.hbs';
+import angularGetResponseHeader from '../templates/core/angular/getResponseHeader.hbs';
+import angularRequest from '../templates/core/angular/request.hbs';
+import angularSendRequest from '../templates/core/angular/sendRequest.hbs';
 import functionBase64 from '../templates/core/functions/base64.hbs';
 import functionCatchErrors from '../templates/core/functions/catchErrors.hbs';
 import functionGetFormData from '../templates/core/functions/getFormData.hbs';
@@ -196,6 +202,14 @@ export function registerHandlebarTemplates(root: {
     Handlebars.registerPartial('axios/getResponseHeader', Handlebars.template(axiosGetResponseHeader));
     Handlebars.registerPartial('axios/sendRequest', Handlebars.template(axiosSendRequest));
     Handlebars.registerPartial('axios/request', Handlebars.template(axiosRequest));
+
+    // Specific files for the angular client implementation
+    Handlebars.registerPartial('angular/getHeaders', Handlebars.template(angularGetHeaders));
+    Handlebars.registerPartial('angular/getRequestBody', Handlebars.template(angularGetRequestBody));
+    Handlebars.registerPartial('angular/getResponseBody', Handlebars.template(angularGetResponseBody));
+    Handlebars.registerPartial('angular/getResponseHeader', Handlebars.template(angularGetResponseHeader));
+    Handlebars.registerPartial('angular/sendRequest', Handlebars.template(angularSendRequest));
+    Handlebars.registerPartial('angular/request', Handlebars.template(angularRequest));
 
     return templates;
 }
