@@ -4,16 +4,16 @@
  */
 {{/if}}
 export enum {{{name}}} {
-    {{#each enum}}
-    {{#if description}}
-    /**
-     * {{{escapeComment description}}}
-     */
-    {{/if}}
-    {{#containsSpaces name}}
-    "{{{name}}}" = {{{value}}},
-    {{else}}
-    {{{name}}} = {{{value}}},
-    {{/containsSpaces}}
-    {{/each}}
+	{{#each enum}}
+	{{#if description}}
+	/**
+	 * {{{escapeComment description}}}
+	 */
+	{{/if}}
+	{{#containsSpaces name}}
+	"{{{name}}}" = {{{value}}},
+	{{else}}
+	{{{name}}} = {{{value}}},
+	{{/containsSpaces}}
+	{{/each}}
 }

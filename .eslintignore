@@ -1,4 +1,5 @@
 dist
+samples
 test/generated
 test/e2e/generated
 node_modules

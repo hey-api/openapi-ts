@@ -1,31 +1,31 @@
 async function sendRequest(
-    options: ApiRequestOptions,
-    url: string,
-    formData: FormData | undefined,
-    body: any,
-    headers: Record<string, string>,
-    onCancel: OnCancel
+	options: ApiRequestOptions,
+	url: string,
+	formData: FormData | undefined,
+	body: any,
+	headers: Record<string, string>,
+	onCancel: OnCancel
 ): Promise<AxiosResponse<any>> {
-    const source = axios.CancelToken.source();
+	const source = axios.CancelToken.source();
 
-    const config: AxiosRequestConfig = {
-        url,
-        headers,
-        data: body || formData,
-        method: options.method,
-        withCredentials: OpenAPI.WITH_CREDENTIALS,
-        cancelToken: source.token,
-    };
+	const config: AxiosRequestConfig = {
+		url,
+		headers,
+		data: body || formData,
+		method: options.method,
+		withCredentials: OpenAPI.WITH_CREDENTIALS,
+		cancelToken: source.token,
+	};
 
-    onCancel(() => source.cancel('The user aborted a request.'));
+	onCancel(() => source.cancel('The user aborted a request.'));
 
-    try {
-        return await axios.request(config);
-    } catch (error) {
-        const axiosError = error as AxiosError;
-        if (axiosError.response) {
-            return axiosError.response;
-        }
-        throw error;
-    }
+	try {
+		return await axios.request(config);
+	} catch (error) {
+		const axiosError = error as AxiosError;
+		if (axiosError.response) {
+			return axiosError.response;
+		}
+		throw error;
+	}
 }

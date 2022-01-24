@@ -14,8 +14,8 @@ bar: 123
 }`;
 
 const output3 = `{
-    foo: true,
-    bar: 123
+\tfoo: true,
+\tbar: 123
 }`;
 
 const input4 = `{
@@ -24,8 +24,8 @@ const input4 = `{
 }`;
 
 const output4 = `{
-    foo: true,
-    bar: 123
+\tfoo: true,
+\tbar: 123
 }`;
 
 describe('format', () => {

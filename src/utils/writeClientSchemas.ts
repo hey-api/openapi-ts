@@ -4,6 +4,7 @@ import type { Model } from '../client/interfaces/Model';
 import { HttpClient } from '../HttpClient';
 import { writeFile } from './fileSystem';
 import { format } from './format';
+import { indent } from './indent';
 import { Templates } from './registerHandlebarTemplates';
 
 /**
@@ -28,6 +29,6 @@ export async function writeClientSchemas(
             httpClient,
             useUnionTypes,
         });
-        await writeFile(file, format(templateResult));
+        await writeFile(file, indent(format(templateResult)));
     }
 }

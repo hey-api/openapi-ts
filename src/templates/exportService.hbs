@@ -13,84 +13,84 @@ import { OpenAPI } from '../core/OpenAPI';
 
 export class {{{name}}}{{{@root.postfix}}} {
 
-    {{#each operations}}
-    /**
-    {{#if deprecated}}
-     * @deprecated
-    {{/if}}
-    {{#if summary}}
-     * {{{escapeComment summary}}}
-    {{/if}}
-    {{#if description}}
-     * {{{escapeComment description}}}
-    {{/if}}
-    {{#unless @root.useOptions}}
-    {{#if parameters}}
-    {{#each parameters}}
-     * @param {{{name}}} {{#if description}}{{{escapeComment description}}}{{/if}}
-    {{/each}}
-    {{/if}}
-    {{/unless}}
-    {{#each results}}
-     * @returns {{{type}}} {{#if description}}{{{escapeComment description}}}{{/if}}
-    {{/each}}
-     * @throws ApiError
-     */
-    public static {{{name}}}({{>parameters}}): CancelablePromise<{{>result}}> {
-        return __request({
-            method: '{{{method}}}',
-            path: `{{{path}}}`,
-            {{#if parametersCookie}}
-            cookies: {
-                {{#each parametersCookie}}
-                '{{{prop}}}': {{{name}}},
-                {{/each}}
-            },
-            {{/if}}
-            {{#if parametersHeader}}
-            headers: {
-                {{#each parametersHeader}}
-                '{{{prop}}}': {{{name}}},
-                {{/each}}
-            },
-            {{/if}}
-            {{#if parametersQuery}}
-            query: {
-                {{#each parametersQuery}}
-                '{{{prop}}}': {{{name}}},
-                {{/each}}
-            },
-            {{/if}}
-            {{#if parametersForm}}
-            formData: {
-                {{#each parametersForm}}
-                '{{{prop}}}': {{{name}}},
-                {{/each}}
-            },
-            {{/if}}
-            {{#if parametersBody}}
-            {{#equals parametersBody.in 'formData'}}
-            formData: {{{parametersBody.name}}},
-            {{/equals}}
-            {{#equals parametersBody.in 'body'}}
-            body: {{{parametersBody.name}}},
-            {{/equals}}
-            {{#if parametersBody.mediaType}}
-            mediaType: '{{{parametersBody.mediaType}}}',
-            {{/if}}
-            {{/if}}
-            {{#if responseHeader}}
-            responseHeader: '{{{responseHeader}}}',
-            {{/if}}
-            {{#if errors}}
-            errors: {
-                {{#each errors}}
-                {{{code}}}: `{{{description}}}`,
-                {{/each}}
-            },
-            {{/if}}
-        });
-    }
+	{{#each operations}}
+	/**
+	{{#if deprecated}}
+	 * @deprecated
+	{{/if}}
+	{{#if summary}}
+	 * {{{escapeComment summary}}}
+	{{/if}}
+	{{#if description}}
+	 * {{{escapeComment description}}}
+	{{/if}}
+	{{#unless @root.useOptions}}
+	{{#if parameters}}
+	{{#each parameters}}
+	 * @param {{{name}}} {{#if description}}{{{escapeComment description}}}{{/if}}
+	{{/each}}
+	{{/if}}
+	{{/unless}}
+	{{#each results}}
+	 * @returns {{{type}}} {{#if description}}{{{escapeComment description}}}{{/if}}
+	{{/each}}
+	 * @throws ApiError
+	 */
+	public static {{{name}}}({{>parameters}}): CancelablePromise<{{>result}}> {
+		return __request({
+			method: '{{{method}}}',
+			path: `{{{path}}}`,
+			{{#if parametersCookie}}
+			cookies: {
+				{{#each parametersCookie}}
+				'{{{prop}}}': {{{name}}},
+				{{/each}}
+			},
+			{{/if}}
+			{{#if parametersHeader}}
+			headers: {
+				{{#each parametersHeader}}
+				'{{{prop}}}': {{{name}}},
+				{{/each}}
+			},
+			{{/if}}
+			{{#if parametersQuery}}
+			query: {
+				{{#each parametersQuery}}
+				'{{{prop}}}': {{{name}}},
+				{{/each}}
+			},
+			{{/if}}
+			{{#if parametersForm}}
+			formData: {
+				{{#each parametersForm}}
+				'{{{prop}}}': {{{name}}},
+				{{/each}}
+			},
+			{{/if}}
+			{{#if parametersBody}}
+			{{#equals parametersBody.in 'formData'}}
+			formData: {{{parametersBody.name}}},
+			{{/equals}}
+			{{#equals parametersBody.in 'body'}}
+			body: {{{parametersBody.name}}},
+			{{/equals}}
+			{{#if parametersBody.mediaType}}
+			mediaType: '{{{parametersBody.mediaType}}}',
+			{{/if}}
+			{{/if}}
+			{{#if responseHeader}}
+			responseHeader: '{{{responseHeader}}}',
+			{{/if}}
+			{{#if errors}}
+			errors: {
+				{{#each errors}}
+				{{{code}}}: `{{{description}}}`,
+				{{/each}}
+			},
+			{{/if}}
+		});
+	}
 
-    {{/each}}
+	{{/each}}
 }

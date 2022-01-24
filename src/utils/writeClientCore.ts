@@ -3,6 +3,7 @@ import { resolve } from 'path';
 import type { Client } from '../client/interfaces/Client';
 import { HttpClient } from '../HttpClient';
 import { copyFile, exists, writeFile } from './fileSystem';
+import { indent } from './indent';
 import { Templates } from './registerHandlebarTemplates';
 
 /**
@@ -26,12 +27,12 @@ export async function writeClientCore(
         version: client.version,
     };
 
-    await writeFile(resolve(outputPath, 'OpenAPI.ts'), templates.core.settings(context));
-    await writeFile(resolve(outputPath, 'ApiError.ts'), templates.core.apiError({}));
-    await writeFile(resolve(outputPath, 'ApiRequestOptions.ts'), templates.core.apiRequestOptions({}));
-    await writeFile(resolve(outputPath, 'ApiResult.ts'), templates.core.apiResult({}));
-    await writeFile(resolve(outputPath, 'CancelablePromise.ts'), templates.core.cancelablePromise({}));
-    await writeFile(resolve(outputPath, 'request.ts'), templates.core.request(context));
+    await writeFile(resolve(outputPath, 'OpenAPI.ts'), indent(templates.core.settings(context)));
+    await writeFile(resolve(outputPath, 'ApiError.ts'), indent(templates.core.apiError({})));
+    await writeFile(resolve(outputPath, 'ApiRequestOptions.ts'), indent(templates.core.apiRequestOptions({})));
+    await writeFile(resolve(outputPath, 'ApiResult.ts'), indent(templates.core.apiResult({})));
+    await writeFile(resolve(outputPath, 'CancelablePromise.ts'), indent(templates.core.cancelablePromise({})));
+    await writeFile(resolve(outputPath, 'request.ts'), indent(templates.core.request(context)));
 
     if (request) {
         const requestFile = resolve(process.cwd(), request);

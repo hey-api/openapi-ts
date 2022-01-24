@@ -4,6 +4,7 @@ import type { Service } from '../client/interfaces/Service';
 import { HttpClient } from '../HttpClient';
 import { writeFile } from './fileSystem';
 import { format } from './format';
+import { indent } from './indent';
 import { Templates } from './registerHandlebarTemplates';
 
 const VERSION_TEMPLATE_STRING = 'OpenAPI.VERSION';
@@ -38,6 +39,6 @@ export async function writeClientServices(
             useOptions,
             postfix,
         });
-        await writeFile(file, format(templateResult));
+        await writeFile(file, indent(format(templateResult)));
     }
 }

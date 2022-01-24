@@ -13,7 +13,7 @@ export function format(s: string): string {
             indent--;
             i--;
         }
-        const result = `${'    '.repeat(i)}${line}`;
+        const result = `${'\t'.repeat(i)}${line}`;
         if (result.trim() === '') {
             return '';
         }
