@@ -1,12 +1,12 @@
-function getRequestBody(options: ApiRequestOptions): BodyInit | undefined {
-    if (options.body) {
-        if (options.mediaType?.includes('/json')) {
-            return JSON.stringify(options.body)
-        } else if (isString(options.body) || isBlob(options.body) || isFormData(options.body)) {
-            return options.body;
-        } else {
-            return JSON.stringify(options.body);
-        }
-    }
-    return;
-}
+const getRequestBody = (options: ApiRequestOptions): BodyInit | undefined => {
+	if (options.body) {
+		if (options.mediaType?.includes('/json')) {
+			return JSON.stringify(options.body)
+		} else if (isString(options.body) || isBlob(options.body) || isFormData(options.body)) {
+			return options.body;
+		} else {
+			return JSON.stringify(options.body);
+		}
+	}
+	return;
+};

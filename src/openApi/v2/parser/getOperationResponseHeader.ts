@@ -1,6 +1,6 @@
 import type { OperationResponse } from '../../../client/interfaces/OperationResponse';
 
-export function getOperationResponseHeader(operationResponses: OperationResponse[]): string | null {
+export const getOperationResponseHeader = (operationResponses: OperationResponse[]): string | null => {
     const header = operationResponses.find(operationResponses => {
         return operationResponses.in === 'header';
     });
@@ -8,4 +8,4 @@ export function getOperationResponseHeader(operationResponses: OperationResponse
         return header.name;
     }
     return null;
-}
+};

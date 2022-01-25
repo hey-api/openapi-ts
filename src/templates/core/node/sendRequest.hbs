@@ -1,21 +1,21 @@
-async function sendRequest(
-    options: ApiRequestOptions,
-    url: string,
-    formData: FormData | undefined,
-    body: BodyInit | undefined,
-    headers: Headers,
-    onCancel: OnCancel
-): Promise<Response> {
-    const controller = new AbortController();
+export const sendRequest = async (
+	options: ApiRequestOptions,
+	url: string,
+	formData: FormData | undefined,
+	body: BodyInit | undefined,
+	headers: Headers,
+	onCancel: OnCancel
+): Promise<Response> => {
+	const controller = new AbortController();
 
-    const request: RequestInit = {
-        headers,
-        method: options.method,
-        body: body || formData,
-        signal: controller.signal,
-    };
+	const request: RequestInit = {
+		headers,
+		method: options.method,
+		body: body ?? formData,
+		signal: controller.signal,
+	};
 
-    onCancel(() => controller.abort());
+	onCancel(() => controller.abort());
 
-    return await fetch(url, request);
-}
+	return await fetch(url, request);
+};

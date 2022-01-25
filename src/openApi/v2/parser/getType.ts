@@ -2,16 +2,16 @@ import type { Type } from '../../../client/interfaces/Type';
 import { getMappedType } from './getMappedType';
 import { stripNamespace } from './stripNamespace';
 
-function encode(value: string): string {
+const encode = (value: string): string => {
     return value.replace(/^[^a-zA-Z_$]+/g, '').replace(/[^\w$]+/g, '_');
-}
+};
 
 /**
  * Parse any string value into a type object.
  * @param type String value like "integer" or "Link[Model]".
  * @param format String value like "binary" or "date".
  */
-export function getType(type: string = 'any', format?: string): Type {
+export const getType = (type: string = 'any', format?: string): Type => {
     const result: Type = {
         type: 'any',
         base: 'any',
@@ -64,4 +64,4 @@ export function getType(type: string = 'any', format?: string): Type {
     }
 
     return result;
-}
+};

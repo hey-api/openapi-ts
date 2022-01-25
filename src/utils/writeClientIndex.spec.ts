@@ -1,6 +1,6 @@
 import type { Client } from '../client/interfaces/Client';
 import { writeFile } from './fileSystem';
-import { Templates } from './registerHandlebarTemplates';
+import type { Templates } from './registerHandlebarTemplates';
 import { writeClientIndex } from './writeClientIndex';
 
 jest.mock('./fileSystem');
@@ -16,6 +16,7 @@ describe('writeClientIndex', () => {
 
         const templates: Templates = {
             index: () => 'index',
+            client: () => 'client',
             exports: {
                 model: () => 'model',
                 schema: () => 'schema',
@@ -28,6 +29,8 @@ describe('writeClientIndex', () => {
                 apiResult: () => 'apiResult',
                 cancelablePromise: () => 'cancelablePromise',
                 request: () => 'request',
+                baseHttpRequest: () => 'baseHttpRequest',
+                httpRequest: () => 'httpRequest',
             },
         };
 

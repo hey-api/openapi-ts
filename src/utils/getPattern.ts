@@ -5,6 +5,6 @@
  * to make it a valid regexp string.
  * @param pattern
  */
-export function getPattern(pattern?: string): string | undefined {
+export const getPattern = (pattern?: string): string | undefined => {
     return pattern?.replace(/\\/g, '\\\\');
-}
+};

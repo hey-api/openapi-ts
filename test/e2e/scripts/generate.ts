@@ -5,7 +5,8 @@ export const generate = async (
     version: string,
     client: 'fetch' | 'xhr' | 'node' | 'axios',
     useOptions: boolean = false,
-    useUnionTypes: boolean = false
+    useUnionTypes: boolean = false,
+    clientName?: string
 ) => {
     await __generate({
         input: `./test/spec/${version}.json`,
@@ -13,5 +14,6 @@ export const generate = async (
         httpClient: client,
         useOptions,
         useUnionTypes,
+        clientName,
     });
 };

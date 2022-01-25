@@ -1,8 +1,8 @@
 type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
 
-async function resolve<T>(options: ApiRequestOptions, resolver?: T | Resolver<T>): Promise<T | undefined> {
-    if (typeof resolver === 'function') {
-        return (resolver as Resolver<T>)(options);
-    }
-    return resolver;
-}
+const resolve = async <T>(options: ApiRequestOptions, resolver?: T | Resolver<T>): Promise<T | undefined> => {
+	if (typeof resolver === 'function') {
+		return (resolver as Resolver<T>)(options);
+	}
+	return resolver;
+};

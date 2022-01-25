@@ -1,16 +1,16 @@
 {
-    type: '{{export}}',
+	type: '{{export}}',
 {{#if description}}
-    description: `{{{escapeDescription description}}}`,
+	description: `{{{escapeDescription description}}}`,
 {{/if}}
-    contains: [{{#each properties}}{{>schema}}{{#unless @last}}, {{/unless}}{{/each}}],
+	contains: [{{#each properties}}{{>schema}}{{#unless @last}}, {{/unless}}{{/each}}],
 {{#if isReadOnly}}
-    isReadOnly: {{{isReadOnly}}},
+	isReadOnly: {{{isReadOnly}}},
 {{/if}}
 {{#if isRequired}}
-    isRequired: {{{isRequired}}},
+	isRequired: {{{isRequired}}},
 {{/if}}
 {{#if isNullable}}
-    isNullable: {{{isNullable}}},
+	isNullable: {{{isNullable}}},
 {{/if}}
 }

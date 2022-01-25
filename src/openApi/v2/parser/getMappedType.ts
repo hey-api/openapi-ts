@@ -24,9 +24,9 @@ const TYPE_MAPPINGS = new Map<string, string>([
 /**
  * Get mapped type for given type to any basic Typescript/Javascript type.
  */
-export function getMappedType(type: string, format?: string): string | undefined {
+export const getMappedType = (type: string, format?: string): string | undefined => {
     if (format === 'binary') {
         return 'binary';
     }
     return TYPE_MAPPINGS.get(type);
-}
+};

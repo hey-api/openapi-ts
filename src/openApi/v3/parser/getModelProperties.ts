@@ -10,12 +10,12 @@ import { getType } from './getType';
 // Fix for circular dependency
 export type GetModelFn = typeof getModel;
 
-export function getModelProperties(
+export const getModelProperties = (
     openApi: OpenApi,
     definition: OpenApiSchema,
     getModel: GetModelFn,
     parent?: Model
-): Model[] {
+): Model[] => {
     const models: Model[] = [];
     const discriminator = findOneOfParentDiscriminator(openApi, parent);
     for (const propertyName in definition.properties) {
@@ -104,4 +104,4 @@ export function getModelProperties(
     }
 
     return models;
-}
+};

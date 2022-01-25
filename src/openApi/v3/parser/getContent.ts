@@ -21,7 +21,7 @@ const BASIC_MEDIA_TYPES = [
     'multipart/batch',
 ];
 
-export function getContent(openApi: OpenApi, content: Dictionary<OpenApiMediaType>): Content | null {
+export const getContent = (openApi: OpenApi, content: Dictionary<OpenApiMediaType>): Content | null => {
     const basicMediaTypeWithSchema = Object.keys(content)
         .filter(mediaType => {
             const cleanMediaType = mediaType.split(';')[0].trim();
@@ -43,4 +43,4 @@ export function getContent(openApi: OpenApi, content: Dictionary<OpenApiMediaTyp
         };
     }
     return null;
-}
+};

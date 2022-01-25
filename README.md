@@ -41,13 +41,15 @@ $ openapi --help
     -i, --input <value>       OpenAPI specification, can be a path, url or string content (required)
     -o, --output <value>      Output directory (required)
     -c, --client <value>      HTTP client to generate [fetch, xhr, axios, node] (default: "fetch")
+    --name <value>            Custom client class name
     --useOptions              Use options instead of arguments
     --useUnionTypes           Use union types instead of enums
     --exportCore <value>      Write core files to disk (default: true)
     --exportServices <value>  Write services to disk (default: true)
     --exportModels <value>    Write models to disk (default: true)
     --exportSchemas <value>   Write schemas to disk (default: false)
-    --postfix <value>         Service name postfix (default: "Service")
+    --indent <value>         Service name postfix (default: "Service")
+    --postfix <value>         Indentation options [4, 2, tab] (default: "5")
     --request <value>         Path to custom request file
     -h, --help                display help for command
 
@@ -94,6 +96,33 @@ OpenAPI.generate({
 
 
 ## Features
+
+
+### Generate client instance with `--name` option
+The OpenAPI generator allows creation of client instances to support the multiple backend services use case.
+The generated client uses an instance of the server configuration and not the global `OpenAPI` constant.
+To generate a client instance, set a custom name to the client class, use `--name` option.
+
+```
+openapi --input ./spec.json --output ./dist ---name AppClient
+```
+
+The generated client will be exported from the `index` file and can be used as shown below:
+
+```typescript
+// Create the client instance with server and authentication details
+const appClient = new AppClient({
+    BASE: 'http://server-host.com',
+    TOKEN: '1234'
+});
+
+// Use the client instance to make the API call
+const res = await appClient.organizations.createOrganization({
+  name: 'OrgName',
+  description: 'OrgDescription',
+});
+```
+
 
 ### Argument style vs. Object style `--useOptions`
 There's no [named parameter](https://en.wikipedia.org/wiki/Named_parameter) in JavaScript or TypeScript, because of

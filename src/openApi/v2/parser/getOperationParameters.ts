@@ -4,7 +4,7 @@ import type { OpenApiParameter } from '../interfaces/OpenApiParameter';
 import { getOperationParameter } from './getOperationParameter';
 import { getRef } from './getRef';
 
-export function getOperationParameters(openApi: OpenApi, parameters: OpenApiParameter[]): OperationParameters {
+export const getOperationParameters = (openApi: OpenApi, parameters: OpenApiParameter[]): OperationParameters => {
     const operationParameters: OperationParameters = {
         imports: [],
         parameters: [],
@@ -58,4 +58,4 @@ export function getOperationParameters(openApi: OpenApi, parameters: OpenApiPara
         }
     });
     return operationParameters;
-}
+};

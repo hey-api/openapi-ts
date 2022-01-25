@@ -7,7 +7,7 @@ import { getOperationParameters } from './getOperationParameters';
 /**
  * Get the OpenAPI services
  */
-export function getServices(openApi: OpenApi): Service[] {
+export const getServices = (openApi: OpenApi): Service[] => {
     const services = new Map<string, Service>();
     for (const url in openApi.paths) {
         if (openApi.paths.hasOwnProperty(url)) {
@@ -28,7 +28,7 @@ export function getServices(openApi: OpenApi): Service[] {
                         case 'patch':
                             // Each method contains an OpenAPI operation, we parse the operation
                             const op = path[method]!;
-                            const tags = op.tags?.length ? op.tags.filter(unique) : [''];
+                            const tags = op.tags?.length ? op.tags.filter(unique) : ['Default'];
                             tags.forEach(tag => {
                                 const operation = getOperation(openApi, url, method, tag, op, pathParams);
 
@@ -52,4 +52,4 @@ export function getServices(openApi: OpenApi): Service[] {
         }
     }
     return Array.from(services.values());
-}
+};

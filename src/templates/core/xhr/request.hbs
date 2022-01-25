@@ -5,7 +5,7 @@ import type { ApiRequestOptions } from './ApiRequestOptions';
 import type { ApiResult } from './ApiResult';
 import { CancelablePromise } from './CancelablePromise';
 import type { OnCancel } from './CancelablePromise';
-import { OpenAPI } from './OpenAPI';
+import type { OpenAPIConfig } from './OpenAPI';
 
 {{>functions/isDefined}}
 
@@ -59,38 +59,39 @@ import { OpenAPI } from './OpenAPI';
 
 
 /**
- * Request using XHR client
+ * Request method
+ * @param config The OpenAPI configuration object
  * @param options The request options from the service
  * @returns CancelablePromise<T>
  * @throws ApiError
  */
-export function request<T>(options: ApiRequestOptions): CancelablePromise<T> {
-    return new CancelablePromise<T>(async (resolve, reject, onCancel) => {
-        try {
-            const url = getUrl(options);
-            const formData = getFormData(options);
-            const body = getRequestBody(options);
-            const headers = await getHeaders(options);
+export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): CancelablePromise<T> => {
+	return new CancelablePromise(async (resolve, reject, onCancel) => {
+		try {
+			const url = getUrl(config, options);
+			const formData = getFormData(options);
+			const body = getRequestBody(options);
+			const headers = await getHeaders(config, options);
 
-            if (!onCancel.isCancelled) {
-                const response = await sendRequest(options, url, formData, body, headers, onCancel);
-                const responseBody = getResponseBody(response);
-                const responseHeader = getResponseHeader(response, options.responseHeader);
+			if (!onCancel.isCancelled) {
+				const response = await sendRequest(config, options, url, formData, body, headers, onCancel);
+				const responseBody = getResponseBody(response);
+				const responseHeader = getResponseHeader(response, options.responseHeader);
 
-                const result: ApiResult = {
-                    url,
-                    ok: isSuccess(response.status),
-                    status: response.status,
-                    statusText: response.statusText,
-                    body: responseHeader || responseBody,
-                };
+				const result: ApiResult = {
+					url,
+					ok: isSuccess(response.status),
+					status: response.status,
+					statusText: response.statusText,
+					body: responseHeader ?? responseBody,
+				};
 
-                catchErrors(options, result);
+				catchErrors(options, result);
 
-                resolve(result.body);
-            }
-        } catch (error) {
-            reject(error);
-        }
-    });
-}
+				resolve(result.body);
+			}
+		} catch (error) {
+			reject(error);
+		}
+	});
+};

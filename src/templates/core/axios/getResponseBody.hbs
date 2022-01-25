@@ -1,6 +1,6 @@
-function getResponseBody(response: AxiosResponse<any>): any {
-    if (response.status !== 204) {
-        return response.data;
-    }
-    return;
-}
+const getResponseBody = (response: AxiosResponse<any>): any => {
+	if (response.status !== 204) {
+		return response.data;
+	}
+	return;
+};

@@ -9,19 +9,19 @@ export type {{{name}}} = {{>type parent=name}};
 
 export namespace {{{name}}} {
 
-    {{#each enums}}
-    {{#if description}}
-    /**
-     * {{{escapeComment description}}}
-     */
-    {{/if}}
-    export enum {{{name}}} {
-        {{#each enum}}
-        {{{name}}} = {{{value}}},
-        {{/each}}
-    }
+	{{#each enums}}
+	{{#if description}}
+	/**
+	 * {{{escapeComment description}}}
+	 */
+	{{/if}}
+	export enum {{{name}}} {
+		{{#each enum}}
+		{{{name}}} = {{{value}}},
+		{{/each}}
+	}
 
-    {{/each}}
+	{{/each}}
 
 }
 {{/unless}}

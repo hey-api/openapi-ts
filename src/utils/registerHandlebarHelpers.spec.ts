@@ -19,5 +19,6 @@ describe('registerHandlebarHelpers', () => {
         expect(helpers).toContain('enumerator');
         expect(helpers).toContain('escapeComment');
         expect(helpers).toContain('escapeDescription');
+        expect(helpers).toContain('camelCase');
     });
 });

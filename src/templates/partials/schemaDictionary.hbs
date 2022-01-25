@@ -1,19 +1,19 @@
 {
-    type: 'dictionary',
+	type: 'dictionary',
 {{#if link}}
-    contains: {{>schema link}},
+	contains: {{>schema link}},
 {{else}}
-    contains: {
-        type: '{{{base}}}',
-    },
+	contains: {
+		type: '{{{base}}}',
+	},
 {{/if}}
 {{#if isReadOnly}}
-    isReadOnly: {{{isReadOnly}}},
+	isReadOnly: {{{isReadOnly}}},
 {{/if}}
 {{#if isRequired}}
-    isRequired: {{{isRequired}}},
+	isRequired: {{{isRequired}}},
 {{/if}}
 {{#if isNullable}}
-    isNullable: {{{isNullable}}},
+	isNullable: {{{isNullable}}},
 {{/if}}
 }

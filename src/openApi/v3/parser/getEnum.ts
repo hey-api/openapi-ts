@@ -1,7 +1,7 @@
 import type { Enum } from '../../../client/interfaces/Enum';
 import { isDefined } from '../../../utils/isDefined';
 
-export function getEnum(values?: (string | number)[]): Enum[] {
+export const getEnum = (values?: (string | number)[]): Enum[] => {
     if (Array.isArray(values)) {
         return values
             .filter((value, index, arr) => {
@@ -30,4 +30,4 @@ export function getEnum(values?: (string | number)[]): Enum[] {
             });
     }
     return [];
-}
+};

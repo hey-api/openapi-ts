@@ -3,16 +3,16 @@ import { isDefined } from '../../../utils/isDefined';
 import { getMappedType } from './getMappedType';
 import { stripNamespace } from './stripNamespace';
 
-function encode(value: string): string {
+const encode = (value: string): string => {
     return value.replace(/^[^a-zA-Z_$]+/g, '').replace(/[^\w$]+/g, '_');
-}
+};
 
 /**
  * Parse any string value into a type object.
  * @param type String or String[] value like "integer", "Link[Model]" or ["string", "null"].
  * @param format String value like "binary" or "date".
  */
-export function getType(type: string | string[] = 'any', format?: string): Type {
+export const getType = (type: string | string[] = 'any', format?: string): Type => {
     const result: Type = {
         type: 'any',
         base: 'any',
@@ -79,4 +79,4 @@ export function getType(type: string | string[] = 'any', format?: string): Type 
     }
 
     return result;
-}
+};

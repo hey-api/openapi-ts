@@ -7,7 +7,7 @@ import type { WithEnumExtension } from '../interfaces/Extensions/WithEnumExtensi
  * @param enumerators
  * @param definition
  */
-export function extendEnum(enumerators: Enum[], definition: WithEnumExtension): Enum[] {
+export const extendEnum = (enumerators: Enum[], definition: WithEnumExtension): Enum[] => {
     const names = definition['x-enum-varnames'];
     const descriptions = definition['x-enum-descriptions'];
 
@@ -17,4 +17,4 @@ export function extendEnum(enumerators: Enum[], definition: WithEnumExtension): 
         value: enumerator.value,
         type: enumerator.type,
     }));
-}
+};

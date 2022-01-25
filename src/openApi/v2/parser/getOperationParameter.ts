@@ -12,7 +12,7 @@ import { getOperationParameterName } from './getOperationParameterName';
 import { getRef } from './getRef';
 import { getType } from './getType';
 
-export function getOperationParameter(openApi: OpenApi, parameter: OpenApiParameter): OperationParameter {
+export const getOperationParameter = (openApi: OpenApi, parameter: OpenApiParameter): OperationParameter => {
     const operationParameter: OperationParameter = {
         in: parameter.in,
         prop: parameter.name,
@@ -147,4 +147,4 @@ export function getOperationParameter(openApi: OpenApi, parameter: OpenApiParame
     }
 
     return operationParameter;
-}
+};

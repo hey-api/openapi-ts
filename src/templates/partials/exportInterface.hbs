@@ -4,33 +4,33 @@
  */
 {{/if}}
 export type {{{name}}} = {
-    {{#each properties}}
-    {{#if description}}
-    /**
-     * {{{escapeComment description}}}
-     */
-    {{/if}}
-    {{>isReadOnly}}{{{name}}}{{>isRequired}}: {{>type parent=../name}};
-    {{/each}}
+	{{#each properties}}
+	{{#if description}}
+	/**
+	 * {{{escapeComment description}}}
+	 */
+	{{/if}}
+	{{>isReadOnly}}{{{name}}}{{>isRequired}}: {{>type parent=../name}};
+	{{/each}}
 };
 {{#if enums}}
 {{#unless @root.useUnionTypes}}
 
 export namespace {{{name}}} {
 
-    {{#each enums}}
-    {{#if description}}
-    /**
-     * {{{escapeComment description}}}
-     */
-    {{/if}}
-    export enum {{{name}}} {
-        {{#each enum}}
-        {{{name}}} = {{{value}}},
-        {{/each}}
-    }
+	{{#each enums}}
+	{{#if description}}
+	/**
+	 * {{{escapeComment description}}}
+	 */
+	{{/if}}
+	export enum {{{name}}} {
+		{{#each enum}}
+		{{{name}}} = {{{value}}},
+		{{/each}}
+	}
 
-    {{/each}}
+	{{/each}}
 
 }
 {{/unless}}

@@ -2,7 +2,7 @@ import type { Operation } from '../client/interfaces/Operation';
 import type { Service } from '../client/interfaces/Service';
 import { flatMap } from './flatMap';
 
-export function postProcessServiceOperations(service: Service): Operation[] {
+export const postProcessServiceOperations = (service: Service): Operation[] => {
     const names = new Map<string, number>();
 
     return service.operations.map(operation => {
@@ -23,4 +23,4 @@ export function postProcessServiceOperations(service: Service): Operation[] {
 
         return clone;
     });
-}
+};

@@ -5,7 +5,7 @@ import type { OperationResponse } from '../../../client/interfaces/OperationResp
  *
  * @param operationResponses
  */
-export function getOperationErrors(operationResponses: OperationResponse[]): OperationError[] {
+export const getOperationErrors = (operationResponses: OperationResponse[]): OperationError[] => {
     return operationResponses
         .filter(operationResponse => {
             return operationResponse.code >= 300 && operationResponse.description;
@@ -14,4 +14,4 @@ export function getOperationErrors(operationResponses: OperationResponse[]): Ope
             code: response.code,
             description: response.description!,
         }));
-}
+};

@@ -3,7 +3,7 @@ import type { Enum } from '../../../client/interfaces/Enum';
 /**
  * @deprecated
  */
-export function getEnumFromDescription(description: string): Enum[] {
+export const getEnumFromDescription = (description: string): Enum[] => {
     // Check if we can find this special format string:
     // None=0,Something=1,AnotherThing=2
     if (/^(\w+=[0-9]+)/g.test(description)) {
@@ -36,4 +36,4 @@ export function getEnumFromDescription(description: string): Enum[] {
     }
 
     return [];
-}
+};

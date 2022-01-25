@@ -1,21 +1,21 @@
 {
 {{#if description}}
-    description: `{{{escapeDescription description}}}`,
+	description: `{{{escapeDescription description}}}`,
 {{/if}}
-    properties: {
+	properties: {
 {{#if properties}}
-    {{#each properties}}
-        {{{name}}}: {{>schema}},
-    {{/each}}
+	{{#each properties}}
+		{{{name}}}: {{>schema}},
+	{{/each}}
 {{/if}}
-    },
+	},
 {{#if isReadOnly}}
-    isReadOnly: {{{isReadOnly}}},
+	isReadOnly: {{{isReadOnly}}},
 {{/if}}
 {{#if isRequired}}
-    isRequired: {{{isRequired}}},
+	isRequired: {{{isRequired}}},
 {{/if}}
 {{#if isNullable}}
-    isNullable: {{{isNullable}}},
+	isNullable: {{{isNullable}}},
 {{/if}}
 }

@@ -1,25 +1,26 @@
-async function sendRequest(
-    options: ApiRequestOptions,
-    url: string,
-    formData: FormData | undefined,
-    body: BodyInit | undefined,
-    headers: Headers,
-    onCancel: OnCancel
-): Promise<Response> {
-    const controller = new AbortController();
+export const sendRequest = async (
+	config: OpenAPIConfig,
+	options: ApiRequestOptions,
+	url: string,
+	formData: FormData | undefined,
+	body: BodyInit | undefined,
+	headers: Headers,
+	onCancel: OnCancel
+): Promise<Response> => {
+	const controller = new AbortController();
 
-    const request: RequestInit = {
-        headers,
-        body: body || formData,
-        method: options.method,
-        signal: controller.signal,
-    };
+	const request: RequestInit = {
+		headers,
+		body: body ?? formData,
+		method: options.method,
+		signal: controller.signal,
+	};
 
-    if (OpenAPI.WITH_CREDENTIALS) {
-        request.credentials = OpenAPI.CREDENTIALS;
-    }
+	if (config.WITH_CREDENTIALS) {
+		request.credentials = config.CREDENTIALS;
+	}
 
-    onCancel(() => controller.abort());
+	onCancel(() => controller.abort());
 
-    return await fetch(url, request);
-}
+	return await fetch(url, request);
+};

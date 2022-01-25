@@ -6,7 +6,6 @@ import type { OpenApiRequestBody } from '../interfaces/OpenApiRequestBody';
 import { getOperationErrors } from './getOperationErrors';
 import { getOperationName } from './getOperationName';
 import { getOperationParameters } from './getOperationParameters';
-import { getOperationPath } from './getOperationPath';
 import { getOperationRequestBody } from './getOperationRequestBody';
 import { getOperationResponseHeader } from './getOperationResponseHeader';
 import { getOperationResponses } from './getOperationResponses';
@@ -15,18 +14,16 @@ import { getRef } from './getRef';
 import { getServiceName } from './getServiceName';
 import { sortByRequired } from './sortByRequired';
 
-export function getOperation(
+export const getOperation = (
     openApi: OpenApi,
     url: string,
     method: string,
     tag: string,
     op: OpenApiOperation,
     pathParams: OperationParameters
-): Operation {
+): Operation => {
     const serviceName = getServiceName(tag);
-    const operationNameFallback = `${method}${serviceName}`;
-    const operationName = getOperationName(op.operationId || operationNameFallback);
-    const operationPath = getOperationPath(url);
+    const operationName = getOperationName(op.operationId || `${method}`);
 
     // Create a new operation object for this method.
     const operation: Operation = {
@@ -36,7 +33,7 @@ export function getOperation(
         description: op.description || null,
         deprecated: op.deprecated === true,
         method: method.toUpperCase(),
-        path: operationPath,
+        path: url,
         parameters: [...pathParams.parameters],
         parametersPath: [...pathParams.parametersPath],
         parametersQuery: [...pathParams.parametersQuery],
@@ -87,4 +84,4 @@ export function getOperation(
     operation.parameters = operation.parameters.sort(sortByRequired);
 
     return operation;
-}
+};

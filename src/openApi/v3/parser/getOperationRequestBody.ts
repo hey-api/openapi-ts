@@ -6,7 +6,7 @@ import { getContent } from './getContent';
 import { getModel } from './getModel';
 import { getType } from './getType';
 
-export function getOperationRequestBody(openApi: OpenApi, body: OpenApiRequestBody): OperationParameter {
+export const getOperationRequestBody = (openApi: OpenApi, body: OpenApiRequestBody): OperationParameter => {
     const requestBody: OperationParameter = {
         in: 'body',
         export: 'interface',
@@ -83,4 +83,4 @@ export function getOperationRequestBody(openApi: OpenApi, body: OpenApiRequestBo
     }
 
     return requestBody;
-}
+};

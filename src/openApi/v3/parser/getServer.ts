@@ -1,6 +1,6 @@
 import type { OpenApi } from '../interfaces/OpenApi';
 
-export function getServer(openApi: OpenApi): string {
+export const getServer = (openApi: OpenApi): string => {
     const server = openApi.servers?.[0];
     const variables = server?.variables || {};
     let url = server?.url || '';
@@ -10,4 +10,4 @@ export function getServer(openApi: OpenApi): string {
         }
     }
     return url.replace(/\/$/g, '');
-}
+};

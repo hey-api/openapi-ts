@@ -2,119 +2,141 @@
 
 {{#equals @root.httpClient 'angular'}}
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-{{/equals}}
+import type { HttpClient } from '@angular/common/http';
+import type { Observable } from 'rxjs';
 
+{{/equals}}
 {{#if imports}}
 {{#each imports}}
 import type { {{{this}}} } from '../models/{{{this}}}';
 {{/each}}
+
 {{/if}}
 {{#notEquals @root.httpClient 'angular'}}
 import type { CancelablePromise } from '../core/CancelablePromise';
 {{/notEquals}}
-import { request as __request } from '../core/request';
-{{#if @root.useVersion}}
+{{#if @root.exportClient}}
+import type { BaseHttpRequest } from '../core/BaseHttpRequest';
+{{else}}
 import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
 {{/if}}
 
 {{#equals @root.httpClient 'angular'}}
 @Injectable()
 {{/equals}}
 export class {{{name}}}{{{@root.postfix}}} {
-    {{#equals @root.httpClient 'angular'}}
-    private readonly http: HttpClient;
+	{{#if @root.exportClient}}
 
-    constructor(http: HttpClient) {
-        this.http = http;
-    }
-    {{/equals}}
+	private readonly httpRequest: BaseHttpRequest;
 
-    {{#each operations}}
-    /**
-    {{#if deprecated}}
-     * @deprecated
-    {{/if}}
-    {{#if summary}}
-     * {{{escapeComment summary}}}
-    {{/if}}
-    {{#if description}}
-     * {{{escapeComment description}}}
-    {{/if}}
-    {{#unless @root.useOptions}}
-    {{#if parameters}}
-    {{#each parameters}}
-     * @param {{{name}}} {{#if description}}{{{escapeComment description}}}{{/if}}
-    {{/each}}
-    {{/if}}
-    {{/unless}}
-    {{#each results}}
-     * @returns {{{type}}} {{#if description}}{{{escapeComment description}}}{{/if}}
-    {{/each}}
-     * @throws ApiError
-     */
-    {{#equals @root.httpClient 'angular'}}
-    public {{{name}}}({{>parameters}}): Observable<{{>result}}> {
-        return __request(this.http, {
-    {{/equals}}
-    {{#notEquals @root.httpClient 'angular'}}
-    public static {{{name}}}({{>parameters}}): CancelablePromise<{{>result}}> {
-        return __request({
-    {{/notEquals}}
-            method: '{{{method}}}',
-            path: `{{{path}}}`,
-            {{#if parametersCookie}}
-            cookies: {
-                {{#each parametersCookie}}
-                '{{{prop}}}': {{{name}}},
-                {{/each}}
-            },
-            {{/if}}
-            {{#if parametersHeader}}
-            headers: {
-                {{#each parametersHeader}}
-                '{{{prop}}}': {{{name}}},
-                {{/each}}
-            },
-            {{/if}}
-            {{#if parametersQuery}}
-            query: {
-                {{#each parametersQuery}}
-                '{{{prop}}}': {{{name}}},
-                {{/each}}
-            },
-            {{/if}}
-            {{#if parametersForm}}
-            formData: {
-                {{#each parametersForm}}
-                '{{{prop}}}': {{{name}}},
-                {{/each}}
-            },
-            {{/if}}
-            {{#if parametersBody}}
-            {{#equals parametersBody.in 'formData'}}
-            formData: {{{parametersBody.name}}},
-            {{/equals}}
-            {{#equals parametersBody.in 'body'}}
-            body: {{{parametersBody.name}}},
-            {{/equals}}
-            {{#if parametersBody.mediaType}}
-            mediaType: '{{{parametersBody.mediaType}}}',
-            {{/if}}
-            {{/if}}
-            {{#if responseHeader}}
-            responseHeader: '{{{responseHeader}}}',
-            {{/if}}
-            {{#if errors}}
-            errors: {
-                {{#each errors}}
-                {{{code}}}: `{{{description}}}`,
-                {{/each}}
-            },
-            {{/if}}
-        });
-    }
+	constructor(httpRequest: BaseHttpRequest) {
+		this.httpRequest = httpRequest;
+	}
+	{{/if}}
+	{{#equals @root.httpClient 'angular'}}
 
-    {{/each}}
+	private readonly http: HttpClient;
+
+	constructor(http: HttpClient) {
+		this.http = http;
+	}
+	{{/equals}}
+
+	{{#each operations}}
+	/**
+	{{#if deprecated}}
+	 * @deprecated
+	{{/if}}
+	{{#if summary}}
+	 * {{{escapeComment summary}}}
+	{{/if}}
+	{{#if description}}
+	 * {{{escapeComment description}}}
+	{{/if}}
+	{{#unless @root.useOptions}}
+	{{#if parameters}}
+	{{#each parameters}}
+	 * @param {{{name}}} {{#if description}}{{{escapeComment description}}}{{/if}}
+	{{/each}}
+	{{/if}}
+	{{/unless}}
+	{{#each results}}
+	 * @returns {{{type}}} {{#if description}}{{{escapeComment description}}}{{/if}}
+	{{/each}}
+	 * @throws ApiError
+	 */
+	{{#if @root.exportClient}}
+	public {{{name}}}({{>parameters}}): CancelablePromise<{{>result}}> {
+		return this.httpRequest.request({
+	{{else}}
+	{{#equals @root.httpClient 'angular'}}
+	public {{{name}}}({{>parameters}}): Observable<{{>result}}> {
+	{{else}}
+	public static {{{name}}}({{>parameters}}): CancelablePromise<{{>result}}> {
+	{{/equals}}
+		return __request(OpenAPI, {
+	{{/if}}
+			method: '{{{method}}}',
+			url: '{{{path}}}',
+			{{#if parametersPath}}
+			path: {
+				{{#each parametersPath}}
+				'{{{prop}}}': {{{name}}},
+				{{/each}}
+			},
+			{{/if}}
+			{{#if parametersCookie}}
+			cookies: {
+				{{#each parametersCookie}}
+				'{{{prop}}}': {{{name}}},
+				{{/each}}
+			},
+			{{/if}}
+			{{#if parametersHeader}}
+			headers: {
+				{{#each parametersHeader}}
+				'{{{prop}}}': {{{name}}},
+				{{/each}}
+			},
+			{{/if}}
+			{{#if parametersQuery}}
+			query: {
+				{{#each parametersQuery}}
+				'{{{prop}}}': {{{name}}},
+				{{/each}}
+			},
+			{{/if}}
+			{{#if parametersForm}}
+			formData: {
+				{{#each parametersForm}}
+				'{{{prop}}}': {{{name}}},
+				{{/each}}
+			},
+			{{/if}}
+			{{#if parametersBody}}
+			{{#equals parametersBody.in 'formData'}}
+			formData: {{{parametersBody.name}}},
+			{{/equals}}
+			{{#equals parametersBody.in 'body'}}
+			body: {{{parametersBody.name}}},
+			{{/equals}}
+			{{#if parametersBody.mediaType}}
+			mediaType: '{{{parametersBody.mediaType}}}',
+			{{/if}}
+			{{/if}}
+			{{#if responseHeader}}
+			responseHeader: '{{{responseHeader}}}',
+			{{/if}}
+			{{#if errors}}
+			errors: {
+				{{#each errors}}
+				{{{code}}}: `{{{description}}}`,
+				{{/each}}
+			},
+			{{/if}}
+		});
+	}
+
+	{{/each}}
 }

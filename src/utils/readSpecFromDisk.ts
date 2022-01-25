@@ -6,7 +6,7 @@ import { exists, readFile } from './fileSystem';
  * Check if given file exists and try to read the content as string.
  * @param input
  */
-export async function readSpecFromDisk(input: string): Promise<string> {
+export const readSpecFromDisk = async (input: string): Promise<string> => {
     const filePath = resolve(process.cwd(), input);
     const fileExists = await exists(filePath);
     if (fileExists) {
@@ -18,4 +18,4 @@ export async function readSpecFromDisk(input: string): Promise<string> {
         }
     }
     throw new Error(`Could not find OpenApi spec: "${filePath}"`);
-}
+};
