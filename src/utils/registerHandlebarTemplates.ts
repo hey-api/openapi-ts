@@ -126,8 +126,8 @@ export function registerHandlebarTemplates(root: {
             apiResult: Handlebars.template(templateCoreApiResult),
             cancelablePromise: Handlebars.template(templateCancelablePromise),
             request: Handlebars.template(templateCoreRequest),
-            httpRequest: Handlebars.template(templateCoreBaseHttpRequest),
-            baseHttpRequest: Handlebars.template(templateCoreHttpRequest),
+            baseHttpRequest: Handlebars.template(templateCoreBaseHttpRequest),
+            httpRequest: Handlebars.template(templateCoreHttpRequest),
         },
     };
 

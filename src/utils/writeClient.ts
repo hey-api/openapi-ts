@@ -61,7 +61,7 @@ export async function writeClient(
     if (exportCore) {
         await rmdir(outputPathCore);
         await mkdir(outputPathCore);
-        await writeClientCore(client, templates, outputPathCore, httpClient, indent, request);
+        await writeClientCore(client, templates, outputPathCore, httpClient, indent, clientName, request);
     }
 
     if (exportServices) {

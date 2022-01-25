@@ -37,7 +37,7 @@ export async function writeClientClass(
         version: client.version,
         models: sortModelsByName(client.models),
         services: sortServicesByName(client.services),
-        httpRequest: 'XhrBaseRequest',
+        httpRequest: 'XHRHttpRequest',
     });
 
     await writeFile(resolve(outputPath, 'client.ts'), i(f(templateResult), indent));

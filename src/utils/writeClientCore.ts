@@ -3,9 +3,11 @@ import { resolve } from 'path';
 import type { Client } from '../client/interfaces/Client';
 import { HttpClient } from '../HttpClient';
 import { Indent } from '../Indent';
-import { copyFile, exists, writeFile } from './fileSystem';
+import { copyFile, exists, mkdir, writeFile } from './fileSystem';
 import { formatIndentation as i } from './formatIndentation';
+import { isDefined } from './isDefined';
 import { Templates } from './registerHandlebarTemplates';
+import { writeClientClass } from './writeClientClass';
 
 /**
  * Generate OpenAPI core files, this includes the basic boilerplate code to handle requests.
@@ -22,12 +24,15 @@ export async function writeClientCore(
     outputPath: string,
     httpClient: HttpClient,
     indent: Indent,
+    clientName?: string,
     request?: string
 ): Promise<void> {
     const context = {
         httpClient,
+        clientName,
         server: client.server,
         version: client.version,
+        httpRequest: 'XHRHttpRequest',
     };
 
     await writeFile(resolve(outputPath, 'OpenAPI.ts'), i(templates.core.settings(context), indent));
@@ -36,6 +41,11 @@ export async function writeClientCore(
     await writeFile(resolve(outputPath, 'ApiResult.ts'), i(templates.core.apiResult(context), indent));
     await writeFile(resolve(outputPath, 'CancelablePromise.ts'), i(templates.core.cancelablePromise(context), indent));
     await writeFile(resolve(outputPath, 'request.ts'), i(templates.core.request(context), indent));
+
+    if (isDefined(clientName)) {
+        await writeFile(resolve(outputPath, 'BaseHttpRequest.ts'), i(templates.core.baseHttpRequest(context), indent));
+        await writeFile(resolve(outputPath, 'XHRHttpRequest.ts'), i(templates.core.httpRequest(context), indent));
+    }
 
     if (request) {
         const requestFile = resolve(process.cwd(), request);
