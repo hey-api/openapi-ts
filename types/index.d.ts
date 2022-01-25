@@ -5,6 +5,12 @@ export declare enum HttpClient {
     AXIOS = 'axios',
 }
 
+export declare enum Indent {
+    SPACE_4 = '4',
+    SPACE_2 = '2',
+    TAB = 'tab',
+}
+
 export type Options = {
     input: string | Record<string, any>;
     output: string;
@@ -15,6 +21,7 @@ export type Options = {
     exportServices?: boolean;
     exportModels?: boolean;
     exportSchemas?: boolean;
+    indent?: Indent | '4' | '2' | 'tab';
     postfix?: string;
     request?: string;
     write?: boolean;

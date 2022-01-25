@@ -47,7 +47,8 @@ $ openapi --help
     --exportServices <value>  Write services to disk (default: true)
     --exportModels <value>    Write models to disk (default: true)
     --exportSchemas <value>   Write schemas to disk (default: false)
-    --postfix <value>         Service name postfix (default: "Service")
+    --indent <value>         Service name postfix (default: "Service")
+    --postfix <value>         Indentation options [4, 2, tab] (default: "5")
     --request <value>         Path to custom request file
     -h, --help                display help for command
 

@@ -2,9 +2,10 @@ import { resolve } from 'path';
 
 import type { Model } from '../client/interfaces/Model';
 import { HttpClient } from '../HttpClient';
+import { Indent } from '../Indent';
 import { writeFile } from './fileSystem';
-import { format } from './format';
-import { indent } from './indent';
+import { formatCode as f } from './formatCode';
+import { formatIndentation as i } from './formatIndentation';
 import { Templates } from './registerHandlebarTemplates';
 
 /**
@@ -14,13 +15,15 @@ import { Templates } from './registerHandlebarTemplates';
  * @param outputPath Directory to write the generated files to
  * @param httpClient The selected httpClient (fetch, xhr, node or axios)
  * @param useUnionTypes Use union types instead of enums
+ * @param indent: Indentation options (4, 2 or tab)
  */
 export async function writeClientSchemas(
     models: Model[],
     templates: Templates,
     outputPath: string,
     httpClient: HttpClient,
-    useUnionTypes: boolean
+    useUnionTypes: boolean,
+    indent: Indent
 ): Promise<void> {
     for (const model of models) {
         const file = resolve(outputPath, `$${model.name}.ts`);
@@ -29,6 +32,6 @@ export async function writeClientSchemas(
             httpClient,
             useUnionTypes,
         });
-        await writeFile(file, indent(format(templateResult)));
+        await writeFile(file, i(f(templateResult), indent));
     }
 }

@@ -1,5 +1,6 @@
 import type { Model } from '../client/interfaces/Model';
 import { HttpClient } from '../HttpClient';
+import { Indent } from '../Indent';
 import { writeFile } from './fileSystem';
 import { Templates } from './registerHandlebarTemplates';
 import { writeClientModels } from './writeClientModels';
@@ -45,7 +46,7 @@ describe('writeClientModels', () => {
             },
         };
 
-        await writeClientModels(models, templates, '/', HttpClient.FETCH, false);
+        await writeClientModels(models, templates, '/', HttpClient.FETCH, false, Indent.SPACE_4);
 
         expect(writeFile).toBeCalledWith('/User.ts', 'model');
     });

@@ -1,5 +1,6 @@
 import type { Client } from '../client/interfaces/Client';
 import { HttpClient } from '../HttpClient';
+import { Indent } from '../Indent';
 import { mkdir, rmdir, writeFile } from './fileSystem';
 import { Templates } from './registerHandlebarTemplates';
 import { writeClient } from './writeClient';
@@ -32,7 +33,20 @@ describe('writeClient', () => {
             },
         };
 
-        await writeClient(client, templates, './dist', HttpClient.FETCH, false, false, true, true, true, true, '');
+        await writeClient(
+            client,
+            templates,
+            './dist',
+            HttpClient.FETCH,
+            false,
+            false,
+            true,
+            true,
+            true,
+            true,
+            Indent.SPACE_4,
+            ''
+        );
 
         expect(rmdir).toBeCalled();
         expect(mkdir).toBeCalled();

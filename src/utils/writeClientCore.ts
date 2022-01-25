@@ -2,8 +2,9 @@ import { resolve } from 'path';
 
 import type { Client } from '../client/interfaces/Client';
 import { HttpClient } from '../HttpClient';
+import { Indent } from '../Indent';
 import { copyFile, exists, writeFile } from './fileSystem';
-import { indent } from './indent';
+import { formatIndentation as i } from './formatIndentation';
 import { Templates } from './registerHandlebarTemplates';
 
 /**
@@ -12,6 +13,7 @@ import { Templates } from './registerHandlebarTemplates';
  * @param templates The loaded handlebar templates
  * @param outputPath Directory to write the generated files to
  * @param httpClient The selected httpClient (fetch, xhr, node or axios)
+ * @param indent: Indentation options (4, 2 or tab)
  * @param request: Path to custom request file
  */
 export async function writeClientCore(
@@ -19,6 +21,7 @@ export async function writeClientCore(
     templates: Templates,
     outputPath: string,
     httpClient: HttpClient,
+    indent: Indent,
     request?: string
 ): Promise<void> {
     const context = {
@@ -27,12 +30,12 @@ export async function writeClientCore(
         version: client.version,
     };
 
-    await writeFile(resolve(outputPath, 'OpenAPI.ts'), indent(templates.core.settings(context)));
-    await writeFile(resolve(outputPath, 'ApiError.ts'), indent(templates.core.apiError({})));
-    await writeFile(resolve(outputPath, 'ApiRequestOptions.ts'), indent(templates.core.apiRequestOptions({})));
-    await writeFile(resolve(outputPath, 'ApiResult.ts'), indent(templates.core.apiResult({})));
-    await writeFile(resolve(outputPath, 'CancelablePromise.ts'), indent(templates.core.cancelablePromise({})));
-    await writeFile(resolve(outputPath, 'request.ts'), indent(templates.core.request(context)));
+    await writeFile(resolve(outputPath, 'OpenAPI.ts'), i(templates.core.settings(context), indent));
+    await writeFile(resolve(outputPath, 'ApiError.ts'), i(templates.core.apiError(context), indent));
+    await writeFile(resolve(outputPath, 'ApiRequestOptions.ts'), i(templates.core.apiRequestOptions(context), indent));
+    await writeFile(resolve(outputPath, 'ApiResult.ts'), i(templates.core.apiResult(context), indent));
+    await writeFile(resolve(outputPath, 'CancelablePromise.ts'), i(templates.core.cancelablePromise(context), indent));
+    await writeFile(resolve(outputPath, 'request.ts'), i(templates.core.request(context), indent));
 
     if (request) {
         const requestFile = resolve(process.cwd(), request);

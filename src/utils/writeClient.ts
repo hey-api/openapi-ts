@@ -2,6 +2,7 @@ import { resolve } from 'path';
 
 import type { Client } from '../client/interfaces/Client';
 import { HttpClient } from '../HttpClient';
+import { Indent } from '../Indent';
 import { mkdir, rmdir } from './fileSystem';
 import { isSubDirectory } from './isSubdirectory';
 import { Templates } from './registerHandlebarTemplates';
@@ -24,6 +25,7 @@ import { writeClientServices } from './writeClientServices';
  * @param exportModels: Generate models
  * @param exportSchemas: Generate schemas
  * @param exportSchemas: Generate schemas
+ * @param indent: Indentation options (4, 2 or tab)
  * @param postfix: Service name postfix
  * @param request: Path to custom request file
  */
@@ -38,6 +40,7 @@ export async function writeClient(
     exportServices: boolean,
     exportModels: boolean,
     exportSchemas: boolean,
+    indent: Indent,
     postfix: string,
     request?: string
 ): Promise<void> {
@@ -54,7 +57,7 @@ export async function writeClient(
     if (exportCore) {
         await rmdir(outputPathCore);
         await mkdir(outputPathCore);
-        await writeClientCore(client, templates, outputPathCore, httpClient, request);
+        await writeClientCore(client, templates, outputPathCore, httpClient, indent, request);
     }
 
     if (exportServices) {
@@ -67,6 +70,7 @@ export async function writeClient(
             httpClient,
             useUnionTypes,
             useOptions,
+            indent,
             postfix
         );
     }
@@ -74,13 +78,13 @@ export async function writeClient(
     if (exportSchemas) {
         await rmdir(outputPathSchemas);
         await mkdir(outputPathSchemas);
-        await writeClientSchemas(client.models, templates, outputPathSchemas, httpClient, useUnionTypes);
+        await writeClientSchemas(client.models, templates, outputPathSchemas, httpClient, useUnionTypes, indent);
     }
 
     if (exportModels) {
         await rmdir(outputPathModels);
         await mkdir(outputPathModels);
-        await writeClientModels(client.models, templates, outputPathModels, httpClient, useUnionTypes);
+        await writeClientModels(client.models, templates, outputPathModels, httpClient, useUnionTypes, indent);
     }
 
     if (exportCore || exportServices || exportSchemas || exportModels) {

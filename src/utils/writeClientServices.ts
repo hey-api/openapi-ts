@@ -2,9 +2,10 @@ import { resolve } from 'path';
 
 import type { Service } from '../client/interfaces/Service';
 import { HttpClient } from '../HttpClient';
+import { Indent } from '../Indent';
 import { writeFile } from './fileSystem';
-import { format } from './format';
-import { indent } from './indent';
+import { formatCode as f } from './formatCode';
+import { formatIndentation as i } from './formatIndentation';
 import { Templates } from './registerHandlebarTemplates';
 
 const VERSION_TEMPLATE_STRING = 'OpenAPI.VERSION';
@@ -17,6 +18,7 @@ const VERSION_TEMPLATE_STRING = 'OpenAPI.VERSION';
  * @param httpClient The selected httpClient (fetch, xhr, node or axios)
  * @param useUnionTypes Use union types instead of enums
  * @param useOptions Use options or arguments functions
+ * @param indent: Indentation options (4, 2 or tab)
  * @param postfix: Service name postfix
  */
 export async function writeClientServices(
@@ -26,6 +28,7 @@ export async function writeClientServices(
     httpClient: HttpClient,
     useUnionTypes: boolean,
     useOptions: boolean,
+    indent: Indent,
     postfix: string
 ): Promise<void> {
     for (const service of services) {
@@ -39,6 +42,6 @@ export async function writeClientServices(
             useOptions,
             postfix,
         });
-        await writeFile(file, indent(format(templateResult)));
+        await writeFile(file, i(f(templateResult), indent));
     }
 }

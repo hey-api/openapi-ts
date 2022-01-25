@@ -1,4 +1,4 @@
-import { format } from './format';
+import { formatCode } from './formatCode';
 
 const input1 = `{ foo: true }`;
 
@@ -30,11 +30,11 @@ const output4 = `{
 
 describe('format', () => {
     it('should produce correct result', () => {
-        expect(format(``)).toEqual('');
-        expect(format(`{}`)).toEqual('{}');
-        expect(format(input1)).toEqual(output1);
-        expect(format(input2)).toEqual(output2);
-        expect(format(input3)).toEqual(output3);
-        expect(format(input4)).toEqual(output4);
+        expect(formatCode(``)).toEqual('');
+        expect(formatCode(`{}`)).toEqual('{}');
+        expect(formatCode(input1)).toEqual(output1);
+        expect(formatCode(input2)).toEqual(output2);
+        expect(formatCode(input3)).toEqual(output3);
+        expect(formatCode(input4)).toEqual(output4);
     });
 });

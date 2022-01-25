@@ -1,4 +1,5 @@
 import { HttpClient } from './HttpClient';
+import { Indent } from './Indent';
 import { parse as parseV2 } from './openApi/v2';
 import { parse as parseV3 } from './openApi/v3';
 import { getOpenApiSpec } from './utils/getOpenApiSpec';
@@ -9,6 +10,7 @@ import { registerHandlebarTemplates } from './utils/registerHandlebarTemplates';
 import { writeClient } from './utils/writeClient';
 
 export { HttpClient } from './HttpClient';
+export { Indent } from './Indent';
 
 export type Options = {
     input: string | Record<string, any>;
@@ -20,6 +22,7 @@ export type Options = {
     exportServices?: boolean;
     exportModels?: boolean;
     exportSchemas?: boolean;
+    indent?: Indent;
     postfix?: string;
     request?: string;
     write?: boolean;
@@ -38,6 +41,7 @@ export type Options = {
  * @param exportServices: Generate services
  * @param exportModels: Generate models
  * @param exportSchemas: Generate schemas
+ * @param indent: Indentation options (4, 2 or tab)
  * @param postfix: Service name postfix
  * @param request: Path to custom request file
  * @param write Write the files to disk (true or false)
@@ -52,6 +56,7 @@ export async function generate({
     exportServices = true,
     exportModels = true,
     exportSchemas = false,
+    indent = Indent.SPACE_4,
     postfix = 'Service',
     request,
     write = true,
@@ -80,6 +85,7 @@ export async function generate({
                 exportServices,
                 exportModels,
                 exportSchemas,
+                indent,
                 postfix,
                 request
             );
@@ -101,6 +107,7 @@ export async function generate({
                 exportServices,
                 exportModels,
                 exportSchemas,
+                indent,
                 postfix,
                 request
             );

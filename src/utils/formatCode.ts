@@ -1,6 +1,6 @@
 import { EOL } from 'os';
 
-export function format(s: string): string {
+export function formatCode(s: string): string {
     let indent: number = 0;
     let lines = s.split(EOL);
     lines = lines.map(line => {
