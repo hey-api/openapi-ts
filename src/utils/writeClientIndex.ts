@@ -2,6 +2,7 @@ import { resolve } from 'path';
 
 import type { Client } from '../client/interfaces/Client';
 import { writeFile } from './fileSystem';
+import { isDefined } from './isDefined';
 import { Templates } from './registerHandlebarTemplates';
 import { sortModelsByName } from './sortModelsByName';
 import { sortServicesByName } from './sortServicesByName';
@@ -19,6 +20,7 @@ import { sortServicesByName } from './sortServicesByName';
  * @param exportModels Generate models
  * @param exportSchemas Generate schemas
  * @param postfix Service name postfix
+ * @param clientName Custom client class name
  */
 export const writeClientIndex = async (
     client: Client,
@@ -29,7 +31,8 @@ export const writeClientIndex = async (
     exportServices: boolean,
     exportModels: boolean,
     exportSchemas: boolean,
-    postfix: string
+    postfix: string,
+    clientName?: string
 ): Promise<void> => {
     const templateResult = templates.index({
         exportCore,
@@ -42,6 +45,7 @@ export const writeClientIndex = async (
         version: client.version,
         models: sortModelsByName(client.models),
         services: sortServicesByName(client.services),
+        exportClient: isDefined(clientName),
     });
 
     await writeFile(resolve(outputPath, 'index.ts'), templateResult);

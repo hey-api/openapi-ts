@@ -20,7 +20,7 @@ export class {{{clientName}}} {
 
 	private readonly request: BaseHttpRequest;
 
-	constructor(config?: OpenAPIConfig, HttpRequest: HttpRequestConstructor = {{{httpRequest}}}) {
+	constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = {{{httpRequest}}}) {
 		this.request = new HttpRequest({
 			BASE: config?.BASE ?? '{{{server}}}',
 			VERSION: config?.VERSION ?? '{{{version}}}',

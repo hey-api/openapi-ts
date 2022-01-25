@@ -14,7 +14,7 @@ const generate = async (input, output) => {
         exportSchemas: true,
         exportModels: true,
         exportServices: true,
-        clientName: 'AppClient',
+        // clientName: 'AppClient',
         // indent: OpenAPI.Indent.SPACE_2,
         // postfix: 'Api',
         // request: './test/custom/request.ts',

@@ -108,7 +108,8 @@ export const writeClient = async (
             exportServices,
             exportModels,
             exportSchemas,
-            postfix
+            postfix,
+            clientName
         );
     }
 };

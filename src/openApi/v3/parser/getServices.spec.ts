@@ -26,6 +26,6 @@ describe('getServices', () => {
         });
 
         expect(services).toHaveLength(1);
-        expect(services[0].name).toEqual('');
+        expect(services[0].name).toEqual('Default');
     });
 });
