@@ -1,33 +1,20 @@
-import type { Model } from '../client/interfaces/Model';
+import type { Client } from '../client/interfaces/Client';
 import { HttpClient } from '../HttpClient';
 import { Indent } from '../Indent';
-import { writeFile } from './fileSystem';
+import { mkdir, rmdir, writeFile } from './fileSystem';
 import { Templates } from './registerHandlebarTemplates';
-import { writeClientSchemas } from './writeClientSchemas';
+import { writeClientClass } from './writeClientClass';
 
 jest.mock('./fileSystem');
 
-describe('writeClientSchemas', () => {
+describe('writeClientClass', () => {
     it('should write to filesystem', async () => {
-        const models: Model[] = [
-            {
-                export: 'interface',
-                name: 'User',
-                type: 'User',
-                base: 'User',
-                template: null,
-                link: null,
-                description: null,
-                isDefinition: true,
-                isReadOnly: false,
-                isRequired: false,
-                isNullable: false,
-                imports: [],
-                enum: [],
-                enums: [],
-                properties: [],
-            },
-        ];
+        const client: Client = {
+            server: 'http://localhost:8080',
+            version: 'v1',
+            models: [],
+            services: [],
+        };
 
         const templates: Templates = {
             index: () => 'index',
@@ -49,8 +36,10 @@ describe('writeClientSchemas', () => {
             },
         };
 
-        await writeClientSchemas(models, templates, '/', HttpClient.FETCH, false, Indent.SPACE_4);
+        await writeClientClass(client, templates, './dist', HttpClient.FETCH, 'AppClient', Indent.SPACE_4, '');
 
-        expect(writeFile).toBeCalledWith('/$User.ts', 'schema');
+        expect(rmdir).toBeCalled();
+        expect(mkdir).toBeCalled();
+        expect(writeFile).toBeCalled();
     });
 });

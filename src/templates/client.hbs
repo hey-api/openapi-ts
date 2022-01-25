@@ -5,7 +5,7 @@ import type { OpenAPIConfig } from './core/OpenAPI';
 import { {{{httpRequest}}} } from './core/{{{httpRequest}}}';
 {{#if services}}
 {{#each services}}
-import { {{{name}}} } from './services/{{{name}}}';
+import { {{{name}}}{{{@root.postfix}}} } from './services/{{{name}}}{{{@root.postfix}}}';
 {{/each}}
 {{/if}}
 
@@ -14,10 +14,10 @@ type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 export class {{{clientName}}} {
 
 {{#each services}}
-	readonly {{{name}}}: {{{name}}};
+	public readonly {{{name}}}: {{{name}}}{{{@root.postfix}}};
 {{/each}}
 
-	readonly request: BaseHttpRequest;
+	public readonly request: BaseHttpRequest;
 
 	constructor(config?: OpenAPIConfig, HttpRequest: HttpRequestConstructor = {{{httpRequest}}}) {
 		this.request = new HttpRequest({
@@ -33,7 +33,7 @@ export class {{{clientName}}} {
 		});
 
 		{{#each services}}
-		this.{{{name}}} = new {{{name}}}(this.request);
+		this.{{{name}}} = new {{{name}}}{{{@root.postfix}}}(this.request);
 		{{/each}}
 	}
 }

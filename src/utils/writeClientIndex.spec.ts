@@ -16,6 +16,7 @@ describe('writeClientIndex', () => {
 
         const templates: Templates = {
             index: () => 'index',
+            client: () => 'client',
             exports: {
                 model: () => 'model',
                 schema: () => 'schema',
@@ -28,6 +29,8 @@ describe('writeClientIndex', () => {
                 apiResult: () => 'apiResult',
                 cancelablePromise: () => 'cancelablePromise',
                 request: () => 'request',
+                baseHttpRequest: () => 'baseHttpRequest',
+                httpRequest: () => 'httpRequest',
             },
         };
 

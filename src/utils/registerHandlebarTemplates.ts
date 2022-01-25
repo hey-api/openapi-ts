@@ -1,6 +1,7 @@
 import Handlebars from 'handlebars/runtime';
 
 import { HttpClient } from '../HttpClient';
+import templateClient from '../templates/client.hbs';
 import templateCoreApiError from '../templates/core/ApiError.hbs';
 import templateCoreApiRequestOptions from '../templates/core/ApiRequestOptions.hbs';
 import templateCoreApiResult from '../templates/core/ApiResult.hbs';
@@ -10,6 +11,7 @@ import axiosGetResponseBody from '../templates/core/axios/getResponseBody.hbs';
 import axiosGetResponseHeader from '../templates/core/axios/getResponseHeader.hbs';
 import axiosRequest from '../templates/core/axios/request.hbs';
 import axiosSendRequest from '../templates/core/axios/sendRequest.hbs';
+import templateCoreBaseHttpRequest from '../templates/core/BaseHttpRequest.hbs';
 import templateCancelablePromise from '../templates/core/CancelablePromise.hbs';
 import fetchGetHeaders from '../templates/core/fetch/getHeaders.hbs';
 import fetchGetRequestBody from '../templates/core/fetch/getRequestBody.hbs';
@@ -29,6 +31,7 @@ import functionIsString from '../templates/core/functions/isString.hbs';
 import functionIsStringWithValue from '../templates/core/functions/isStringWithValue.hbs';
 import functionIsSuccess from '../templates/core/functions/isSuccess.hbs';
 import functionResolve from '../templates/core/functions/resolve.hbs';
+import templateCoreHttpRequest from '../templates/core/HttpRequest.hbs';
 import nodeGetHeaders from '../templates/core/node/getHeaders.hbs';
 import nodeGetRequestBody from '../templates/core/node/getRequestBody.hbs';
 import nodeGetResponseBody from '../templates/core/node/getResponseBody.hbs';
@@ -78,6 +81,7 @@ import { registerHandlebarHelpers } from './registerHandlebarHelpers';
 
 export interface Templates {
     index: Handlebars.TemplateDelegate;
+    client: Handlebars.TemplateDelegate;
     exports: {
         model: Handlebars.TemplateDelegate;
         schema: Handlebars.TemplateDelegate;
@@ -90,6 +94,8 @@ export interface Templates {
         apiResult: Handlebars.TemplateDelegate;
         cancelablePromise: Handlebars.TemplateDelegate;
         request: Handlebars.TemplateDelegate;
+        baseHttpRequest: Handlebars.TemplateDelegate;
+        httpRequest: Handlebars.TemplateDelegate;
     };
 }
 
@@ -107,6 +113,7 @@ export function registerHandlebarTemplates(root: {
     // Main templates (entry points for the files we write to disk)
     const templates: Templates = {
         index: Handlebars.template(templateIndex),
+        client: Handlebars.template(templateClient),
         exports: {
             model: Handlebars.template(templateExportModel),
             schema: Handlebars.template(templateExportSchema),
@@ -119,6 +126,8 @@ export function registerHandlebarTemplates(root: {
             apiResult: Handlebars.template(templateCoreApiResult),
             cancelablePromise: Handlebars.template(templateCancelablePromise),
             request: Handlebars.template(templateCoreRequest),
+            httpRequest: Handlebars.template(templateCoreBaseHttpRequest),
+            baseHttpRequest: Handlebars.template(templateCoreHttpRequest),
         },
     };
 

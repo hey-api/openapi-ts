@@ -36,6 +36,7 @@ export type Options = {
  * @param input The relative location of the OpenAPI spec
  * @param output The relative location of the output directory
  * @param httpClient The selected httpClient (fetch, xhr, node or axios)
+ * @param clientName Custom client class name
  * @param useOptions Use options or arguments functions
  * @param useUnionTypes Use union types instead of enums
  * @param exportCore: Generate core client classes
@@ -51,6 +52,7 @@ export async function generate({
     input,
     output,
     httpClient = HttpClient.FETCH,
+    clientName,
     useOptions = false,
     useUnionTypes = false,
     exportCore = true,
@@ -88,6 +90,7 @@ export async function generate({
                 exportSchemas,
                 indent,
                 postfix,
+                clientName,
                 request
             );
             break;
@@ -110,6 +113,7 @@ export async function generate({
                 exportSchemas,
                 indent,
                 postfix,
+                clientName,
                 request
             );
             break;

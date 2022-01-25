@@ -6,9 +6,9 @@ import { request as __request } from './request';
 
 export class {{HttpRequest}} extends BaseHttpRequest {
 
-    constructor(config: OpenAPIConfig) {
-        super(config);
-    }
+	constructor(config: OpenAPIConfig) {
+		super(config);
+	}
 
 	/**
 	 * Request method
@@ -16,7 +16,7 @@ export class {{HttpRequest}} extends BaseHttpRequest {
 	 * @returns CancelablePromise<T>
 	 * @throws ApiError
 	 */
-    public request<T>(options: ApiRequestOptions): CancelablePromise<T> {
-        return __request(this.config, options);
-    }
+	public request<T>(options: ApiRequestOptions): CancelablePromise<T> {
+		return __request(this.config, options);
+	}
 }

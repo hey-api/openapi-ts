@@ -18,6 +18,7 @@ describe('writeClient', () => {
 
         const templates: Templates = {
             index: () => 'index',
+            client: () => 'client',
             exports: {
                 model: () => 'model',
                 schema: () => 'schema',
@@ -30,6 +31,8 @@ describe('writeClient', () => {
                 apiResult: () => 'apiResult',
                 cancelablePromise: () => 'cancelablePromise',
                 request: () => 'request',
+                baseHttpRequest: () => 'baseHttpRequest',
+                httpRequest: () => 'httpRequest',
             },
         };
 
@@ -45,7 +48,8 @@ describe('writeClient', () => {
             true,
             true,
             Indent.SPACE_4,
-            ''
+            'Service',
+            'AppClient'
         );
 
         expect(rmdir).toBeCalled();

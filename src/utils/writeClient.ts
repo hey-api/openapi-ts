@@ -4,8 +4,10 @@ import type { Client } from '../client/interfaces/Client';
 import { HttpClient } from '../HttpClient';
 import { Indent } from '../Indent';
 import { mkdir, rmdir } from './fileSystem';
+import { isDefined } from './isDefined';
 import { isSubDirectory } from './isSubdirectory';
 import { Templates } from './registerHandlebarTemplates';
+import { writeClientClass } from './writeClientClass';
 import { writeClientCore } from './writeClientCore';
 import { writeClientIndex } from './writeClientIndex';
 import { writeClientModels } from './writeClientModels';
@@ -27,6 +29,7 @@ import { writeClientServices } from './writeClientServices';
  * @param exportSchemas: Generate schemas
  * @param indent: Indentation options (4, 2 or tab)
  * @param postfix: Service name postfix
+ * @param clientName: Custom client class name
  * @param request: Path to custom request file
  */
 export async function writeClient(
@@ -42,6 +45,7 @@ export async function writeClient(
     exportSchemas: boolean,
     indent: Indent,
     postfix: string,
+    clientName?: string,
     request?: string
 ): Promise<void> {
     const outputPath = resolve(process.cwd(), output);
@@ -85,6 +89,11 @@ export async function writeClient(
         await rmdir(outputPathModels);
         await mkdir(outputPathModels);
         await writeClientModels(client.models, templates, outputPathModels, httpClient, useUnionTypes, indent);
+    }
+
+    if (isDefined(clientName)) {
+        await mkdir(outputPath);
+        await writeClientClass(client, templates, outputPath, httpClient, clientName, indent, postfix);
     }
 
     if (exportCore || exportServices || exportSchemas || exportModels) {
