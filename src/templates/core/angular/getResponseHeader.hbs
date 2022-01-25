@@ -1,8 +1,8 @@
-const getResponseHeader = (response: Response, responseHeader?: string): string | undefined => {
+const getResponseHeader = <T>(response: HttpResponse<T>, responseHeader?: string): string | undefined => {
 	if (responseHeader) {
-		const content = response.headers.get(responseHeader);
-		if (isString(content)) {
-			return content;
+		const value = response.headers.get(responseHeader);
+		if (isString(value)) {
+			return value;
 		}
 	}
 	return;

@@ -72,10 +72,11 @@ export class {{{name}}}{{{@root.postfix}}} {
 	{{else}}
 	{{#equals @root.httpClient 'angular'}}
 	public {{{name}}}({{>parameters}}): Observable<{{>result}}> {
+		return __request(OpenAPI, this.http, {
 	{{else}}
 	public static {{{name}}}({{>parameters}}): CancelablePromise<{{>result}}> {
-	{{/equals}}
 		return __request(OpenAPI, {
+	{{/equals}}
 	{{/if}}
 			method: '{{{method}}}',
 			url: '{{{path}}}',

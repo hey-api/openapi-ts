@@ -1,4 +1,4 @@
-const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptions): Promise<Headers> => {
+const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptions): Promise<HttpHeaders> => {
 	const token = await resolve(options, config.TOKEN);
 	const username = await resolve(options, config.USERNAME);
 	const password = await resolve(options, config.PASSWORD);
@@ -15,7 +15,7 @@ const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptions): Pr
 			[key]: String(value),
 		}), {} as Record<string, string>);
 
-	const headers = new Headers(defaultHeaders);
+	const headers = new HttpHeaders(defaultHeaders);
 
 	if (isStringWithValue(token)) {
 		headers.append('Authorization', `Bearer ${token}`);

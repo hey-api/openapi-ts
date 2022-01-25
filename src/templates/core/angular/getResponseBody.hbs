@@ -1,18 +1,6 @@
-const getResponseBody = async (response: Response): Promise<any> => {
-	if (response.status !== 204) {
-		try {
-			const contentType = response.headers.get('Content-Type');
-			if (contentType) {
-				const isJSON = contentType.toLowerCase().startsWith('application/json');
-				if (isJSON) {
-					return await response.json();
-				} else {
-					return await response.text();
-				}
-			}
-		} catch (error) {
-			console.error(error);
-		}
+const getResponseBody = <T>(response: HttpResponse<T>): T | undefined => {
+	if (response.status !== 204 && response.body !== null) {
+		return response.body;
 	}
 	return;
 };
