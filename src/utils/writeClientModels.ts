@@ -15,7 +15,7 @@ import type { Templates } from './registerHandlebarTemplates';
  * @param outputPath Directory to write the generated files to
  * @param httpClient The selected httpClient (fetch, xhr, node or axios)
  * @param useUnionTypes Use union types instead of enums
- * @param indent: Indentation options (4, 2 or tab)
+ * @param indent Indentation options (4, 2 or tab)
  */
 export const writeClientModels = async (
     models: Model[],

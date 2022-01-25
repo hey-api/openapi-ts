@@ -22,15 +22,15 @@ import { writeClientServices } from './writeClientServices';
  * @param httpClient The selected httpClient (fetch, xhr, node or axios)
  * @param useOptions Use options or arguments functions
  * @param useUnionTypes Use union types instead of enums
- * @param exportCore: Generate core client classes
- * @param exportServices: Generate services
- * @param exportModels: Generate models
- * @param exportSchemas: Generate schemas
- * @param exportSchemas: Generate schemas
- * @param indent: Indentation options (4, 2 or tab)
- * @param postfix: Service name postfix
- * @param clientName: Custom client class name
- * @param request: Path to custom request file
+ * @param exportCore Generate core client classes
+ * @param exportServices Generate services
+ * @param exportModels Generate models
+ * @param exportSchemas Generate schemas
+ * @param exportSchemas Generate schemas
+ * @param indent Indentation options (4, 2 or tab)
+ * @param postfix Service name postfix
+ * @param clientName Custom client class name
+ * @param request Path to custom request file
  */
 export const writeClient = async (
     client: Client,
@@ -75,7 +75,8 @@ export const writeClient = async (
             useUnionTypes,
             useOptions,
             indent,
-            postfix
+            postfix,
+            clientName
         );
     }
 

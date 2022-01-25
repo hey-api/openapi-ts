@@ -6,12 +6,22 @@ import type { {{{this}}} } from '../models/{{{this}}}';
 {{/each}}
 {{/if}}
 import type { CancelablePromise } from '../core/CancelablePromise';
-import { request as __request } from '../core/request';
-{{#if @root.useVersion}}
+{{#if @root.exportClient}}
+import type { BaseHttpRequest } from '../core/BaseHttpRequest';
+{{else}}
 import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
 {{/if}}
 
 export class {{{name}}}{{{@root.postfix}}} {
+	{{#if @root.exportClient}}
+
+	private readonly httpRequest: BaseHttpRequest;
+
+	constructor(httpRequest: BaseHttpRequest) {
+		this.httpRequest = httpRequest;
+	}
+	{{/if}}
 
 	{{#each operations}}
 	/**
@@ -36,10 +46,23 @@ export class {{{name}}}{{{@root.postfix}}} {
 	{{/each}}
 	 * @throws ApiError
 	 */
+	{{#if @root.exportClient}}
+	public {{{name}}}({{>parameters}}): CancelablePromise<{{>result}}> {
+		return this.httpRequest.request({
+	{{/if}}
+	{{#unless @root.exportClient}}
 	public static {{{name}}}({{>parameters}}): CancelablePromise<{{>result}}> {
 		return __request(OpenAPI, {
+	{{/unless}}
 			method: '{{{method}}}',
-			path: `{{{path}}}`,
+			url: '{{{path}}}',
+			{{#if parametersPath}}
+			path: {
+				{{#each parametersPath}}
+				'{{{prop}}}': {{{name}}},
+				{{/each}}
+			},
+			{{/if}}
 			{{#if parametersCookie}}
 			cookies: {
 				{{#each parametersCookie}}

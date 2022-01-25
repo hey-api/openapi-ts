@@ -89,7 +89,7 @@
                         "required": true
                     },
                     {
-                        "description": "This is the parameter that is send as request body",
+                        "description": "This is the parameter that is sent as request body",
                         "name": "parameterBody",
                         "in": "body",
                         "type": "string",
@@ -168,7 +168,7 @@
                         "required": true
                     },
                     {
-                        "description": "This is the parameter that is send as request body",
+                        "description": "This is the parameter that is sent as request body",
                         "name": "PARAMETER-BODY",
                         "in": "body",
                         "type": "string",
@@ -574,7 +574,7 @@
                 "operationId": "CollectionFormat",
                 "parameters": [
                     {
-                        "description": "This is an array parameter that is send as csv format (comma-separated values)",
+                        "description": "This is an array parameter that is sent as csv format (comma-separated values)",
                         "name": "parameterArrayCSV",
                         "in": "query",
                         "required": true,
@@ -585,7 +585,7 @@
                         "collectionFormat": "csv"
                     },
                     {
-                        "description": "This is an array parameter that is send as ssv format (space-separated values)",
+                        "description": "This is an array parameter that is sent as ssv format (space-separated values)",
                         "name": "parameterArraySSV",
                         "in": "query",
                         "required": true,
@@ -596,7 +596,7 @@
                         "collectionFormat": "ssv"
                     },
                     {
-                        "description": "This is an array parameter that is send as tsv format (tab-separated values)",
+                        "description": "This is an array parameter that is sent as tsv format (tab-separated values)",
                         "name": "parameterArrayTSV",
                         "in": "query",
                         "required": true,
@@ -607,7 +607,7 @@
                         "collectionFormat": "tsv"
                     },
                     {
-                        "description": "This is an array parameter that is send as pipes format (pipe-separated values)",
+                        "description": "This is an array parameter that is sent as pipes format (pipe-separated values)",
                         "name": "parameterArrayPipes",
                         "in": "query",
                         "required": true,
@@ -618,7 +618,7 @@
                         "collectionFormat": "pipes"
                     },
                     {
-                        "description": "This is an array parameter that is send as multi format (multiple parameter instances)",
+                        "description": "This is an array parameter that is sent as multi format (multiple parameter instances)",
                         "name": "parameterArrayMulti",
                         "in": "query",
                         "required": true,

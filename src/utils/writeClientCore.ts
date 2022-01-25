@@ -15,8 +15,9 @@ import type { Templates } from './registerHandlebarTemplates';
  * @param templates The loaded handlebar templates
  * @param outputPath Directory to write the generated files to
  * @param httpClient The selected httpClient (fetch, xhr, node or axios)
- * @param indent: Indentation options (4, 2 or tab)
- * @param request: Path to custom request file
+ * @param indent Indentation options (4, 2 or tab)
+ * @param clientName Custom client class name
+ * @param request Path to custom request file
  */
 export const writeClientCore = async (
     client: Client,

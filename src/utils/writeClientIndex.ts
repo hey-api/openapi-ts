@@ -14,11 +14,11 @@ import { sortServicesByName } from './sortServicesByName';
  * @param templates The loaded handlebar templates
  * @param outputPath Directory to write the generated files to
  * @param useUnionTypes Use union types instead of enums
- * @param exportCore: Generate core
- * @param exportServices: Generate services
- * @param exportModels: Generate models
- * @param exportSchemas: Generate schemas
- * @param postfix: Service name postfix
+ * @param exportCore Generate core
+ * @param exportServices Generate services
+ * @param exportModels Generate models
+ * @param exportSchemas Generate schemas
+ * @param postfix Service name postfix
  */
 export const writeClientIndex = async (
     client: Client,

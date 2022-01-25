@@ -6,7 +6,6 @@ import type { OpenApiRequestBody } from '../interfaces/OpenApiRequestBody';
 import { getOperationErrors } from './getOperationErrors';
 import { getOperationName } from './getOperationName';
 import { getOperationParameters } from './getOperationParameters';
-import { getOperationPath } from './getOperationPath';
 import { getOperationRequestBody } from './getOperationRequestBody';
 import { getOperationResponseHeader } from './getOperationResponseHeader';
 import { getOperationResponses } from './getOperationResponses';
@@ -25,7 +24,6 @@ export const getOperation = (
 ): Operation => {
     const serviceName = getServiceName(tag);
     const operationName = getOperationName(op.operationId || `${method}`);
-    const operationPath = getOperationPath(url);
 
     // Create a new operation object for this method.
     const operation: Operation = {
@@ -35,7 +33,7 @@ export const getOperation = (
         description: op.description || null,
         deprecated: op.deprecated === true,
         method: method.toUpperCase(),
-        path: operationPath,
+        path: url,
         parameters: [...pathParams.parameters],
         parametersPath: [...pathParams.parametersPath],
         parametersQuery: [...pathParams.parametersQuery],

@@ -39,13 +39,13 @@ export type Options = {
  * @param clientName Custom client class name
  * @param useOptions Use options or arguments functions
  * @param useUnionTypes Use union types instead of enums
- * @param exportCore: Generate core client classes
- * @param exportServices: Generate services
- * @param exportModels: Generate models
- * @param exportSchemas: Generate schemas
- * @param indent: Indentation options (4, 2 or tab)
- * @param postfix: Service name postfix
- * @param request: Path to custom request file
+ * @param exportCore Generate core client classes
+ * @param exportServices Generate services
+ * @param exportModels Generate models
+ * @param exportSchemas Generate schemas
+ * @param indent Indentation options (4, 2 or tab)
+ * @param postfix Service name postfix
+ * @param request Path to custom request file
  * @param write Write the files to disk (true or false)
  */
 export const generate = async ({

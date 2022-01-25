@@ -20,8 +20,8 @@ import { sortServicesByName } from './sortServicesByName';
  * @param outputPath Directory to write the generated files to
  * @param httpClient The selected httpClient (fetch, xhr, node or axios)
  * @param clientName Custom client class name
- * @param indent: Indentation options (4, 2 or tab)
- * @param postfix: Service name postfix
+ * @param indent Indentation options (4, 2 or tab)
+ * @param postfix Service name postfix
  */
 export const writeClientClass = async (
     client: Client,
