@@ -3,7 +3,7 @@ import { generate as __generate } from '../../../';
 export const generate = async (
     dir: string,
     version: string,
-    client: 'fetch' | 'xhr' | 'node' | 'axios',
+    client: 'fetch' | 'xhr' | 'node' | 'axios' | 'angular',
     useOptions: boolean = false,
     useUnionTypes: boolean = false,
     clientName?: string

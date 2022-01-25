@@ -7,7 +7,7 @@ import server from './scripts/server';
 describe('v3.babel', () => {
     beforeAll(async () => {
         await generate('v3/babel', 'v3', 'fetch', true, true);
-        await copy('v3/babel');
+        await copy('script.js', 'v3/babel/script.js');
         compileWithBabel('v3/babel');
         await server.start('v3/babel');
         await browser.start();

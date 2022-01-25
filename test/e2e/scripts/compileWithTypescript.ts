@@ -27,8 +27,9 @@ export const compileWithTypescript = (dir: string) => {
             strict: true,
             skipLibCheck: true,
             allowSyntheticDefaultImports: true,
+            experimentalDecorators: true,
         },
-        include: ['./index.ts'],
+        include: ['./index.ts', './main.ts'],
     };
 
     // Compile files to JavaScript (ES6 modules)

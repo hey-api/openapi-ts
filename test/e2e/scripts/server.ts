@@ -1,5 +1,6 @@
 import express, { Express } from 'express';
 import { Server } from 'http';
+import { EOL } from 'os';
 
 let _app: Express;
 let _server: Server;
@@ -23,7 +24,22 @@ const start = async (dir: string) => {
         // This file is copied from test/e2e/assets/script.js to the output directory
         // of the specific version and client.
         _app.get('/', (req, res) => {
-            res.send('<script src="js/script.js"></script>');
+            res.send(
+                [
+                    '<!DOCTYPE html>',
+                    '<html>',
+                    '<head>',
+                    '<meta charset="utf-8">',
+                    '<title>Test</title>',
+                    '</head>',
+                    '<body>',
+                    '<app-root></app-root>',
+                    '<script src="js/main.js"></script>',
+                    '<script src="js/script.js"></script>',
+                    '</body>',
+                    '</html>',
+                ].join(EOL)
+            );
         });
 
         // Register an 'echo' server for testing error codes. This will just grab the
