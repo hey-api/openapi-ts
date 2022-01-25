@@ -3,6 +3,7 @@
 import type { BaseHttpRequest } from './core/BaseHttpRequest';
 import type { OpenAPIConfig } from './core/OpenAPI';
 import { {{{httpRequest}}} } from './core/{{{httpRequest}}}';
+
 {{#if services}}
 {{#each services}}
 import { {{{name}}}{{{@root.postfix}}} } from './services/{{{name}}}{{{@root.postfix}}}';
@@ -17,7 +18,7 @@ export class {{{clientName}}} {
 	public readonly {{{camelCase name}}}: {{{name}}}{{{@root.postfix}}};
 {{/each}}
 
-	public readonly request: BaseHttpRequest;
+	private readonly request: BaseHttpRequest;
 
 	constructor(config?: OpenAPIConfig, HttpRequest: HttpRequestConstructor = {{{httpRequest}}}) {
 		this.request = new HttpRequest({

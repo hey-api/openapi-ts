@@ -2,7 +2,7 @@ import type { Service } from '../client/interfaces/Service';
 import { HttpClient } from '../HttpClient';
 import { Indent } from '../Indent';
 import { writeFile } from './fileSystem';
-import { Templates } from './registerHandlebarTemplates';
+import type { Templates } from './registerHandlebarTemplates';
 import { writeClientServices } from './writeClientServices';
 
 jest.mock('./fileSystem');

@@ -2,9 +2,9 @@ import camelCase from 'camelcase';
 import Handlebars from 'handlebars/runtime';
 import { EOL } from 'os';
 
-import { Enum } from '../client/interfaces/Enum';
-import { Model } from '../client/interfaces/Model';
-import { HttpClient } from '../HttpClient';
+import type { Enum } from '../client/interfaces/Enum';
+import type { Model } from '../client/interfaces/Model';
+import type { HttpClient } from '../HttpClient';
 import { unique } from './unique';
 
 export const registerHandlebarHelpers = (root: {

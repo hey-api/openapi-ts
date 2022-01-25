@@ -1,12 +1,12 @@
 import { resolve } from 'path';
 
 import type { Model } from '../client/interfaces/Model';
-import { HttpClient } from '../HttpClient';
-import { Indent } from '../Indent';
+import type { HttpClient } from '../HttpClient';
+import type { Indent } from '../Indent';
 import { writeFile } from './fileSystem';
 import { formatCode as f } from './formatCode';
 import { formatIndentation as i } from './formatIndentation';
-import { Templates } from './registerHandlebarTemplates';
+import type { Templates } from './registerHandlebarTemplates';
 
 /**
  * Generate Models using the Handlebar template and write to disk.

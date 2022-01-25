@@ -1,12 +1,12 @@
 import { resolve } from 'path';
 
 import type { Client } from '../client/interfaces/Client';
-import { HttpClient } from '../HttpClient';
-import { Indent } from '../Indent';
+import type { HttpClient } from '../HttpClient';
+import type { Indent } from '../Indent';
 import { mkdir, rmdir } from './fileSystem';
 import { isDefined } from './isDefined';
 import { isSubDirectory } from './isSubdirectory';
-import { Templates } from './registerHandlebarTemplates';
+import type { Templates } from './registerHandlebarTemplates';
 import { writeClientClass } from './writeClientClass';
 import { writeClientCore } from './writeClientCore';
 import { writeClientIndex } from './writeClientIndex';

@@ -1,12 +1,12 @@
 import { resolve } from 'path';
 
 import type { Service } from '../client/interfaces/Service';
-import { HttpClient } from '../HttpClient';
-import { Indent } from '../Indent';
+import type { HttpClient } from '../HttpClient';
+import type { Indent } from '../Indent';
 import { writeFile } from './fileSystem';
 import { formatCode as f } from './formatCode';
 import { formatIndentation as i } from './formatIndentation';
-import { Templates } from './registerHandlebarTemplates';
+import type { Templates } from './registerHandlebarTemplates';
 
 const VERSION_TEMPLATE_STRING = 'OpenAPI.VERSION';
 
