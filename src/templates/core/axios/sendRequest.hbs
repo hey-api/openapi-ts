@@ -9,7 +9,7 @@ const sendRequest = async (
 ): Promise<AxiosResponse<any>> => {
 	const source = axios.CancelToken.source();
 
-	const config: AxiosRequestConfig = {
+	const requestConfig: AxiosRequestConfig = {
 		url,
 		headers,
 		data: body || formData,
@@ -21,7 +21,7 @@ const sendRequest = async (
 	onCancel(() => source.cancel('The user aborted a request.'));
 
 	try {
-		return await axios.request(config);
+		return await axios.request(requestConfig);
 	} catch (error) {
 		const axiosError = error as AxiosError;
 		if (axiosError.response) {
