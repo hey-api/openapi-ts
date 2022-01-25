@@ -1,4 +1,4 @@
-function isBlob(value: any): value is Blob {
+const isBlob = (value: any): value is Blob => {
 	return (
 		typeof value === 'object' &&
 		typeof value.type === 'string' &&
@@ -9,4 +9,4 @@ function isBlob(value: any): value is Blob {
 		/^(Blob|File)$/.test(value.constructor.name) &&
 		/^(Blob|File)$/.test(value[Symbol.toStringTag])
 	);
-}
+};

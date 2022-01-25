@@ -1,14 +1,15 @@
-async function sendRequest(
+export const sendRequest = async (
+	config: OpenAPIConfig,
 	options: ApiRequestOptions,
 	url: string,
 	formData: FormData | undefined,
 	body: any,
 	headers: Headers,
 	onCancel: OnCancel
-): Promise<XMLHttpRequest> {
+): Promise<XMLHttpRequest> => {
 	const xhr = new XMLHttpRequest();
 	xhr.open(options.method, url, true);
-	xhr.withCredentials = OpenAPI.WITH_CREDENTIALS;
+	xhr.withCredentials = config.WITH_CREDENTIALS;
 
 	headers.forEach((value, key) => {
 		xhr.setRequestHeader(key, value);
@@ -22,4 +23,4 @@ async function sendRequest(
 
 		onCancel(() => xhr.abort());
 	});
-}
+};

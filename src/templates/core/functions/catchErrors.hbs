@@ -1,4 +1,4 @@
-function catchErrors(options: ApiRequestOptions, result: ApiResult): void {
+const catchErrors = (options: ApiRequestOptions, result: ApiResult): void => {
 	const errors: Record<number, string> = {
 		400: 'Bad Request',
 		401: 'Unauthorized',
@@ -18,4 +18,4 @@ function catchErrors(options: ApiRequestOptions, result: ApiResult): void {
 	if (!result.ok) {
 		throw new ApiError(result, 'Generic Error');
 	}
-}
+};

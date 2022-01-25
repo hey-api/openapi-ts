@@ -5,7 +5,7 @@ import type { ApiRequestOptions } from './ApiRequestOptions';
 type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
 type Headers = Record<string, string>;
 
-type Config = {
+export type OpenAPIConfig = {
 	BASE: string;
 	VERSION: string;
 	WITH_CREDENTIALS: boolean;
@@ -17,7 +17,7 @@ type Config = {
 	ENCODE_PATH?: (path: string) => string;
 };
 
-export const OpenAPI: Config = {
+export const OpenAPI: OpenAPIConfig = {
 	BASE: '{{{server}}}',
 	VERSION: '{{{version}}}',
 	WITH_CREDENTIALS: false,

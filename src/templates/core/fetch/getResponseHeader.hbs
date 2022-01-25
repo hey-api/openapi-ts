@@ -1,4 +1,4 @@
-function getResponseHeader(response: Response, responseHeader?: string): string | undefined {
+const getResponseHeader = (response: Response, responseHeader?: string): string | undefined => {
 	if (responseHeader) {
 		const content = response.headers.get(responseHeader);
 		if (isString(content)) {
@@ -6,4 +6,4 @@ function getResponseHeader(response: Response, responseHeader?: string): string 
 		}
 	}
 	return;
-}
+};

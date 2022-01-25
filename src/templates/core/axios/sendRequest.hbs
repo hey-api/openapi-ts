@@ -1,11 +1,12 @@
-async function sendRequest(
+const sendRequest = async (
+	config: OpenAPIConfig,
 	options: ApiRequestOptions,
 	url: string,
 	formData: FormData | undefined,
 	body: any,
 	headers: Record<string, string>,
 	onCancel: OnCancel
-): Promise<AxiosResponse<any>> {
+): Promise<AxiosResponse<any>> => {
 	const source = axios.CancelToken.source();
 
 	const config: AxiosRequestConfig = {
@@ -13,7 +14,7 @@ async function sendRequest(
 		headers,
 		data: body || formData,
 		method: options.method,
-		withCredentials: OpenAPI.WITH_CREDENTIALS,
+		withCredentials: config.WITH_CREDENTIALS,
 		cancelToken: source.token,
 	};
 
@@ -28,4 +29,4 @@ async function sendRequest(
 		}
 		throw error;
 	}
-}
+};

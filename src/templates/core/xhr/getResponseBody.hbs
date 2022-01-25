@@ -1,4 +1,4 @@
-function getResponseBody(xhr: XMLHttpRequest): any {
+const getResponseBody = (xhr: XMLHttpRequest): any => {
 	if (xhr.status !== 204) {
 		try {
 			const contentType = xhr.getResponseHeader('Content-Type');
@@ -15,4 +15,4 @@ function getResponseBody(xhr: XMLHttpRequest): any {
 		}
 	}
 	return;
-}
+};

@@ -1,4 +1,4 @@
-function getRequestBody(options: ApiRequestOptions): BodyInit | undefined {
+const getRequestBody = (options: ApiRequestOptions): BodyInit | undefined => {
 	if (options.body) {
 		if (options.mediaType?.includes('/json')) {
 			return JSON.stringify(options.body)
@@ -9,4 +9,4 @@ function getRequestBody(options: ApiRequestOptions): BodyInit | undefined {
 		}
 	}
 	return;
-}
+};

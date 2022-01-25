@@ -1,11 +1,12 @@
-async function sendRequest(
+export const sendRequest = async (
+	config: OpenAPIConfig,
 	options: ApiRequestOptions,
 	url: string,
 	formData: FormData | undefined,
 	body: BodyInit | undefined,
 	headers: Headers,
 	onCancel: OnCancel
-): Promise<Response> {
+): Promise<Response> => {
 	const controller = new AbortController();
 
 	const request: RequestInit = {
@@ -15,11 +16,11 @@ async function sendRequest(
 		signal: controller.signal,
 	};
 
-	if (OpenAPI.WITH_CREDENTIALS) {
-		request.credentials = OpenAPI.CREDENTIALS;
+	if (config.WITH_CREDENTIALS) {
+		request.credentials = config.CREDENTIALS;
 	}
 
 	onCancel(() => controller.abort());
 
 	return await fetch(url, request);
-}
+};

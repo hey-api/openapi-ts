@@ -1,8 +1,8 @@
-async function getHeaders(options: ApiRequestOptions, formData?: FormData): Promise<Record<string, string>> {
-	const token = await resolve(options, OpenAPI.TOKEN);
-	const username = await resolve(options, OpenAPI.USERNAME);
-	const password = await resolve(options, OpenAPI.PASSWORD);
-	const additionalHeaders = await resolve(options, OpenAPI.HEADERS);
+const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptions, formData?: FormData): Promise<Record<string, string>> => {
+	const token = await resolve(options, config.TOKEN);
+	const username = await resolve(options, config.USERNAME);
+	const password = await resolve(options, config.PASSWORD);
+	const additionalHeaders = await resolve(options, config.HEADERS);
 	const formHeaders = typeof formData?.getHeaders === 'function' && formData?.getHeaders() || {}
 
 	const headers = Object.entries({
@@ -27,4 +27,4 @@ async function getHeaders(options: ApiRequestOptions, formData?: FormData): Prom
 	}
 
 	return headers;
-}
+};

@@ -37,7 +37,7 @@ export class {{{name}}}{{{@root.postfix}}} {
 	 * @throws ApiError
 	 */
 	public static {{{name}}}({{>parameters}}): CancelablePromise<{{>result}}> {
-		return __request({
+		return __request(OpenAPI, {
 			method: '{{{method}}}',
 			path: `{{{path}}}`,
 			{{#if parametersCookie}}

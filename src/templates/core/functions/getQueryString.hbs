@@ -1,4 +1,4 @@
-function getQueryString(params: Record<string, any>): string {
+const getQueryString = (params: Record<string, any>): string => {
 	const searchParams = new URLSearchParams();
 
 	const process = (key: string, value: any) => {
@@ -27,4 +27,4 @@ function getQueryString(params: Record<string, any>): string {
 	}
 
 	return '';
-}
+};

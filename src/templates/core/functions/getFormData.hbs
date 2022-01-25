@@ -1,4 +1,4 @@
-function getFormData(options: ApiRequestOptions): FormData | undefined {
+const getFormData = (options: ApiRequestOptions): FormData | undefined => {
 	if (options.formData) {
 		const formData = new FormData();
 
@@ -23,4 +23,4 @@ function getFormData(options: ApiRequestOptions): FormData | undefined {
 		return formData;
 	}
 	return;
-}
+};

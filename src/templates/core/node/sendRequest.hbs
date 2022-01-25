@@ -1,11 +1,11 @@
-async function sendRequest(
+export const sendRequest = async (
 	options: ApiRequestOptions,
 	url: string,
 	formData: FormData | undefined,
 	body: BodyInit | undefined,
 	headers: Headers,
 	onCancel: OnCancel
-): Promise<Response> {
+): Promise<Response> => {
 	const controller = new AbortController();
 
 	const request: RequestInit = {
@@ -18,4 +18,4 @@ async function sendRequest(
 	onCancel(() => controller.abort());
 
 	return await fetch(url, request);
-}
+};

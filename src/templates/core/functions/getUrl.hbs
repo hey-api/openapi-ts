@@ -1,9 +1,9 @@
-function getUrl(options: ApiRequestOptions): string {
-	const path = OpenAPI.ENCODE_PATH ? OpenAPI.ENCODE_PATH(options.path) : options.path;
-	const url = `${OpenAPI.BASE}${path}`;
+const getUrl = (config: OpenAPIConfig, options: ApiRequestOptions): string => {
+	const path = config.ENCODE_PATH ? config.ENCODE_PATH(options.path) : options.path;
+	const url = `${config.BASE}${path}`;
 	if (options.query) {
 		return `${url}${getQueryString(options.query)}`;
 	}
 
 	return url;
-}
+};
