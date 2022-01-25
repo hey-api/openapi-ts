@@ -10,6 +10,12 @@
         "http"
     ],
     "paths": {
+        "/api/v{api-version}/no-tag": {
+            "tags": [],
+            "get": {
+                "operationId": "ServiceWithEmptyTag"
+            }
+        },
         "/api/v{api-version}/simple": {
             "get": {
                 "tags": [

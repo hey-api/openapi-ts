@@ -1,3 +1,4 @@
+import camelCase from 'camelcase';
 import Handlebars from 'handlebars/runtime';
 import { EOL } from 'os';
 
@@ -6,11 +7,11 @@ import { Model } from '../client/interfaces/Model';
 import { HttpClient } from '../HttpClient';
 import { unique } from './unique';
 
-export function registerHandlebarHelpers(root: {
+export const registerHandlebarHelpers = (root: {
     httpClient: HttpClient;
     useOptions: boolean;
     useUnionTypes: boolean;
-}): void {
+}): void => {
     Handlebars.registerHelper(
         'equals',
         function (this: any, a: string, b: string, options: Handlebars.HelperOptions): string {
@@ -91,4 +92,8 @@ export function registerHandlebarHelpers(root: {
     Handlebars.registerHelper('escapeDescription', function (value: string): string {
         return value.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\${/g, '\\${');
     });
-}
+
+    Handlebars.registerHelper('camelCase', function (value: string): string {
+        return camelCase(value);
+    });
+};

@@ -1,4 +1,4 @@
-export function getOperationResponseCode(value: string | 'default'): number | null {
+export const getOperationResponseCode = (value: string | 'default'): number | null => {
     // You can specify a "default" response, this is treated as HTTP code 200
     if (value === 'default') {
         return 200;
@@ -13,4 +13,4 @@ export function getOperationResponseCode(value: string | 'default'): number | nu
     }
 
     return null;
-}
+};

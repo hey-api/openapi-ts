@@ -8,11 +8,11 @@ import { getModel } from './getModel';
 import { getRef } from './getRef';
 import { getType } from './getType';
 
-export function getOperationResponse(
+export const getOperationResponse = (
     openApi: OpenApi,
     response: OpenApiResponse,
     responseCode: number
-): OperationResponse {
+): OperationResponse => {
     const operationResponse: OperationResponse = {
         in: 'response',
         name: '',
@@ -95,4 +95,4 @@ export function getOperationResponse(
     }
 
     return operationResponse;
-}
+};

@@ -21,7 +21,7 @@ import { sortServicesByName } from './sortServicesByName';
  * @param indent: Indentation options (4, 2 or tab)
  * @param postfix: Service name postfix
  */
-export async function writeClientClass(
+export const writeClientClass = async (
     client: Client,
     templates: Templates,
     outputPath: string,
@@ -29,7 +29,7 @@ export async function writeClientClass(
     clientName: string,
     indent: Indent,
     postfix: string
-): Promise<void> {
+): Promise<void> => {
     const templateResult = templates.client({
         clientName,
         postfix,
@@ -41,4 +41,4 @@ export async function writeClientClass(
     });
 
     await writeFile(resolve(outputPath, 'client.ts'), i(f(templateResult), indent));
-}
+};

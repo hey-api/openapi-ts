@@ -48,7 +48,7 @@ export type Options = {
  * @param request: Path to custom request file
  * @param write Write the files to disk (true or false)
  */
-export async function generate({
+export const generate = async ({
     input,
     output,
     httpClient = HttpClient.FETCH,
@@ -63,7 +63,7 @@ export async function generate({
     postfix = 'Service',
     request,
     write = true,
-}: Options): Promise<void> {
+}: Options): Promise<void> => {
     const openApi = isString(input) ? await getOpenApiSpec(input) : input;
     const openApiVersion = getOpenApiVersion(openApi);
     const templates = registerHandlebarTemplates({
@@ -119,7 +119,7 @@ export async function generate({
             break;
         }
     }
-}
+};
 
 export default {
     HttpClient,

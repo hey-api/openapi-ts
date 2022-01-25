@@ -4,7 +4,7 @@ import type { OpenApiReference } from '../interfaces/OpenApiReference';
 const ESCAPED_REF_SLASH = /~1/g;
 const ESCAPED_REF_TILDE = /~0/g;
 
-export function getRef<T>(openApi: OpenApi, item: T & OpenApiReference): T {
+export const getRef = <T>(openApi: OpenApi, item: T & OpenApiReference): T => {
     if (item.$ref) {
         // Fetch the paths to the definitions, this converts:
         // "#/definitions/Form" to ["definitions", "Form"]
@@ -29,4 +29,4 @@ export function getRef<T>(openApi: OpenApi, item: T & OpenApiReference): T {
         return result as T;
     }
     return item as T;
-}
+};

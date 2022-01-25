@@ -32,7 +32,7 @@ import { writeClientServices } from './writeClientServices';
  * @param clientName: Custom client class name
  * @param request: Path to custom request file
  */
-export async function writeClient(
+export const writeClient = async (
     client: Client,
     templates: Templates,
     output: string,
@@ -47,7 +47,7 @@ export async function writeClient(
     postfix: string,
     clientName?: string,
     request?: string
-): Promise<void> {
+): Promise<void> => {
     const outputPath = resolve(process.cwd(), output);
     const outputPathCore = resolve(outputPath, 'core');
     const outputPathModels = resolve(outputPath, 'models');
@@ -110,4 +110,4 @@ export async function writeClient(
             postfix
         );
     }
-}
+};

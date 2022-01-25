@@ -3,7 +3,7 @@ import type { OpenApi } from '../interfaces/OpenApi';
 import { getModel } from './getModel';
 import { getType } from './getType';
 
-export function getModels(openApi: OpenApi): Model[] {
+export const getModels = (openApi: OpenApi): Model[] => {
     const models: Model[] = [];
     if (openApi.components) {
         for (const definitionName in openApi.components.schemas) {
@@ -16,4 +16,4 @@ export function getModels(openApi: OpenApi): Model[] {
         }
     }
     return models;
-}
+};

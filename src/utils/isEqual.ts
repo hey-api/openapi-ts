@@ -1,4 +1,4 @@
-export function isEqual(a: any, b: any): boolean {
+export const isEqual = (a: any, b: any): boolean => {
     if (a === b) {
         return true;
     }
@@ -35,4 +35,4 @@ export function isEqual(a: any, b: any): boolean {
     }
 
     return a !== a && b !== b;
-}
+};

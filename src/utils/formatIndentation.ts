@@ -2,7 +2,7 @@ import { EOL } from 'os';
 
 import { Indent } from '../Indent';
 
-export function formatIndentation(s: string, indent: Indent): string {
+export const formatIndentation = (s: string, indent: Indent): string => {
     let lines = s.split(EOL);
     lines = lines.map(line => {
         switch (indent) {
@@ -15,4 +15,4 @@ export function formatIndentation(s: string, indent: Indent): string {
         }
     });
     return lines.join(EOL);
-}
+};

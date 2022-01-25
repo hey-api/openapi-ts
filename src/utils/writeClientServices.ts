@@ -21,7 +21,7 @@ const VERSION_TEMPLATE_STRING = 'OpenAPI.VERSION';
  * @param indent: Indentation options (4, 2 or tab)
  * @param postfix: Service name postfix
  */
-export async function writeClientServices(
+export const writeClientServices = async (
     services: Service[],
     templates: Templates,
     outputPath: string,
@@ -30,7 +30,7 @@ export async function writeClientServices(
     useOptions: boolean,
     indent: Indent,
     postfix: string
-): Promise<void> {
+): Promise<void> => {
     for (const service of services) {
         const file = resolve(outputPath, `${service.name}${postfix}.ts`);
         const useVersion = service.operations.some(operation => operation.path.includes(VERSION_TEMPLATE_STRING));
@@ -44,4 +44,4 @@ export async function writeClientServices(
         });
         await writeFile(file, i(f(templateResult), indent));
     }
-}
+};

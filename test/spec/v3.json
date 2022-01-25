@@ -10,6 +10,12 @@
         }
     ],
     "paths": {
+        "/api/v{api-version}/no-tag": {
+            "tags": [],
+            "get": {
+                "operationId": "ServiceWithEmptyTag"
+            }
+        },
         "/api/v{api-version}/simple": {
             "get": {
                 "tags": [
@@ -1886,7 +1892,9 @@
             "ModelCircle": {
                 "description": "Circle",
                 "type": "object",
-                "required": ["kind"],
+                "required": [
+                    "kind"
+                ],
                 "properties": {
                     "kind": {
                         "type": "string"
@@ -1899,7 +1907,9 @@
             "ModelSquare": {
                 "description": "Square",
                 "type": "object",
-                "required": ["kind"],
+                "required": [
+                    "kind"
+                ],
                 "properties": {
                     "kind": {
                         "type": "string"

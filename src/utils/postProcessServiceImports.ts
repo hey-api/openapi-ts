@@ -6,6 +6,6 @@ import { unique } from './unique';
  * Set unique imports, sorted by name
  * @param service
  */
-export function postProcessServiceImports(service: Service): string[] {
+export const postProcessServiceImports = (service: Service): string[] => {
     return service.imports.filter(unique).sort(sort);
-}
+};

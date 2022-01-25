@@ -15,17 +15,16 @@ import { getRef } from './getRef';
 import { getServiceName } from './getServiceName';
 import { sortByRequired } from './sortByRequired';
 
-export function getOperation(
+export const getOperation = (
     openApi: OpenApi,
     url: string,
     method: string,
     tag: string,
     op: OpenApiOperation,
     pathParams: OperationParameters
-): Operation {
+): Operation => {
     const serviceName = getServiceName(tag);
-    const operationNameFallback = `${method}${serviceName}`;
-    const operationName = getOperationName(op.operationId || operationNameFallback);
+    const operationName = getOperationName(op.operationId || `${method}`);
     const operationPath = getOperationPath(url);
 
     // Create a new operation object for this method.
@@ -87,4 +86,4 @@ export function getOperation(
     operation.parameters = operation.parameters.sort(sortByRequired);
 
     return operation;
-}
+};

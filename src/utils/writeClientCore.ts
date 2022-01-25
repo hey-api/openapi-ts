@@ -3,11 +3,10 @@ import { resolve } from 'path';
 import type { Client } from '../client/interfaces/Client';
 import { HttpClient } from '../HttpClient';
 import { Indent } from '../Indent';
-import { copyFile, exists, mkdir, writeFile } from './fileSystem';
+import { copyFile, exists, writeFile } from './fileSystem';
 import { formatIndentation as i } from './formatIndentation';
 import { isDefined } from './isDefined';
 import { Templates } from './registerHandlebarTemplates';
-import { writeClientClass } from './writeClientClass';
 
 /**
  * Generate OpenAPI core files, this includes the basic boilerplate code to handle requests.
@@ -18,7 +17,7 @@ import { writeClientClass } from './writeClientClass';
  * @param indent: Indentation options (4, 2 or tab)
  * @param request: Path to custom request file
  */
-export async function writeClientCore(
+export const writeClientCore = async (
     client: Client,
     templates: Templates,
     outputPath: string,
@@ -26,7 +25,7 @@ export async function writeClientCore(
     indent: Indent,
     clientName?: string,
     request?: string
-): Promise<void> {
+): Promise<void> => {
     const context = {
         httpClient,
         clientName,
@@ -55,4 +54,4 @@ export async function writeClientCore(
         }
         await copyFile(requestFile, resolve(outputPath, 'request.ts'));
     }
-}
+};

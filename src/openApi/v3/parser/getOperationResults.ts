@@ -1,15 +1,15 @@
 import type { Model } from '../../../client/interfaces/Model';
 import type { OperationResponse } from '../../../client/interfaces/OperationResponse';
 
-function areEqual(a: Model, b: Model): boolean {
+const areEqual = (a: Model, b: Model): boolean => {
     const equal = a.type === b.type && a.base === b.base && a.template === b.template;
     if (equal && a.link && b.link) {
         return areEqual(a.link, b.link);
     }
     return equal;
-}
+};
 
-export function getOperationResults(operationResponses: OperationResponse[]): OperationResponse[] {
+export const getOperationResults = (operationResponses: OperationResponse[]): OperationResponse[] => {
     const operationResults: OperationResponse[] = [];
 
     // Filter out success response codes, but skip "204 No Content"
@@ -49,4 +49,4 @@ export function getOperationResults(operationResponses: OperationResponse[]): Op
             }) === index
         );
     });
-}
+};

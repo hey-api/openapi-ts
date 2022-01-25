@@ -4,7 +4,7 @@ import { get } from 'http';
  * Download the spec file from a HTTP resource
  * @param url
  */
-export async function readSpecFromHttp(url: string): Promise<string> {
+export const readSpecFromHttp = async (url: string): Promise<string> => {
     return new Promise<string>((resolve, reject) => {
         get(url, response => {
             let body = '';
@@ -19,4 +19,4 @@ export async function readSpecFromHttp(url: string): Promise<string> {
             });
         });
     });
-}
+};

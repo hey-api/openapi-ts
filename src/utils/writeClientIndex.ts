@@ -20,7 +20,7 @@ import { sortServicesByName } from './sortServicesByName';
  * @param exportSchemas: Generate schemas
  * @param postfix: Service name postfix
  */
-export async function writeClientIndex(
+export const writeClientIndex = async (
     client: Client,
     templates: Templates,
     outputPath: string,
@@ -30,7 +30,7 @@ export async function writeClientIndex(
     exportModels: boolean,
     exportSchemas: boolean,
     postfix: string
-): Promise<void> {
+): Promise<void> => {
     const templateResult = templates.index({
         exportCore,
         exportServices,
@@ -45,4 +45,4 @@ export async function writeClientIndex(
     });
 
     await writeFile(resolve(outputPath, 'index.ts'), templateResult);
-}
+};

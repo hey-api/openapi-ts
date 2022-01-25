@@ -6,7 +6,7 @@ import { getOperationResponse } from './getOperationResponse';
 import { getOperationResponseCode } from './getOperationResponseCode';
 import { getRef } from './getRef';
 
-export function getOperationResponses(openApi: OpenApi, responses: OpenApiResponses): OperationResponse[] {
+export const getOperationResponses = (openApi: OpenApi, responses: OpenApiResponses): OperationResponse[] => {
     const operationResponses: OperationResponse[] = [];
 
     // Iterate over each response code and get the
@@ -28,4 +28,4 @@ export function getOperationResponses(openApi: OpenApi, responses: OpenApiRespon
     return operationResponses.sort((a, b): number => {
         return a.code < b.code ? -1 : a.code > b.code ? 1 : 0;
     });
-}
+};

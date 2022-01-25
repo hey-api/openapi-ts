@@ -2,7 +2,7 @@ import type { Service } from '../client/interfaces/Service';
 import { postProcessServiceImports } from './postProcessServiceImports';
 import { postProcessServiceOperations } from './postProcessServiceOperations';
 
-export function postProcessService(service: Service): Service {
+export const postProcessService = (service: Service): Service => {
     const clone = { ...service };
     clone.operations = postProcessServiceOperations(clone);
     clone.operations.forEach(operation => {
@@ -10,4 +10,4 @@ export function postProcessService(service: Service): Service {
     });
     clone.imports = postProcessServiceImports(clone);
     return clone;
-}
+};

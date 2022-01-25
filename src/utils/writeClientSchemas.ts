@@ -17,14 +17,14 @@ import { Templates } from './registerHandlebarTemplates';
  * @param useUnionTypes Use union types instead of enums
  * @param indent: Indentation options (4, 2 or tab)
  */
-export async function writeClientSchemas(
+export const writeClientSchemas = async (
     models: Model[],
     templates: Templates,
     outputPath: string,
     httpClient: HttpClient,
     useUnionTypes: boolean,
     indent: Indent
-): Promise<void> {
+): Promise<void> => {
     for (const model of models) {
         const file = resolve(outputPath, `$${model.name}.ts`);
         const templateResult = templates.exports.schema({
@@ -34,4 +34,4 @@ export async function writeClientSchemas(
         });
         await writeFile(file, i(f(templateResult), indent));
     }
-}
+};

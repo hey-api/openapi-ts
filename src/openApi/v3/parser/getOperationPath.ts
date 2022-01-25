@@ -7,10 +7,10 @@ import { getOperationParameterName } from './getOperationParameterName';
  * Plus we return the correct parameter names to replace in the URL.
  * @param path
  */
-export function getOperationPath(path: string): string {
+export const getOperationPath = (path: string): string => {
     return path
         .replace(/\{(.*?)\}/g, (_, w: string) => {
             return `\${${getOperationParameterName(w)}}`;
         })
         .replace('${apiVersion}', '${OpenAPI.VERSION}');
-}
+};

@@ -6,6 +6,6 @@ import RefParser from 'json-schema-ref-parser';
  * on parsing the file as JSON.
  * @param location: Path or url
  */
-export async function getOpenApiSpec(location: string): Promise<any> {
+export const getOpenApiSpec = async (location: string): Promise<any> => {
     return await RefParser.bundle(location, location, {});
-}
+};

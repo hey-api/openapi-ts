@@ -103,11 +103,11 @@ export interface Templates {
  * Read all the Handlebar templates that we need and return on wrapper object
  * so we can easily access the templates in out generator / write functions.
  */
-export function registerHandlebarTemplates(root: {
+export const registerHandlebarTemplates = (root: {
     httpClient: HttpClient;
     useOptions: boolean;
     useUnionTypes: boolean;
-}): Templates {
+}): Templates => {
     registerHandlebarHelpers(root);
 
     // Main templates (entry points for the files we write to disk)
@@ -207,4 +207,4 @@ export function registerHandlebarTemplates(root: {
     Handlebars.registerPartial('axios/request', Handlebars.template(axiosRequest));
 
     return templates;
-}
+};

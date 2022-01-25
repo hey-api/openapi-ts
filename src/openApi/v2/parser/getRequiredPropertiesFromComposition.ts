@@ -7,12 +7,12 @@ import { getRef } from './getRef';
 // Fix for circular dependency
 export type GetModelFn = typeof getModel;
 
-export function getRequiredPropertiesFromComposition(
+export const getRequiredPropertiesFromComposition = (
     openApi: OpenApi,
     required: string[],
     definitions: OpenApiSchema[],
     getModel: GetModelFn
-): Model[] {
+): Model[] => {
     return definitions
         .reduce((properties, definition) => {
             if (definition.$ref) {
@@ -30,4 +30,4 @@ export function getRequiredPropertiesFromComposition(
                 isRequired: true,
             };
         });
-}
+};

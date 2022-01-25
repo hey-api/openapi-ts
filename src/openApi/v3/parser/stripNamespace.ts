@@ -2,7 +2,7 @@
  * Strip (OpenAPI) namespaces fom values.
  * @param value
  */
-export function stripNamespace(value: string): string {
+export const stripNamespace = (value: string): string => {
     return value
         .trim()
         .replace(/^#\/components\/schemas\//, '')
@@ -14,4 +14,4 @@ export function stripNamespace(value: string): string {
         .replace(/^#\/components\/securitySchemes\//, '')
         .replace(/^#\/components\/links\//, '')
         .replace(/^#\/components\/callbacks\//, '');
-}
+};
