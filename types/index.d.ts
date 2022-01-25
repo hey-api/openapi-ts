@@ -15,6 +15,7 @@ export type Options = {
     input: string | Record<string, any>;
     output: string;
     httpClient?: HttpClient | 'fetch' | 'xhr' | 'node' | 'axios';
+    clientName?: string;
     useOptions?: boolean;
     useUnionTypes?: boolean;
     exportCore?: boolean;
@@ -31,5 +32,6 @@ export declare function generate(options: Options): Promise<void>;
 
 export default {
     HttpClient,
+    Indent,
     generate,
 };

@@ -16,6 +16,7 @@ export type Options = {
     input: string | Record<string, any>;
     output: string;
     httpClient?: HttpClient;
+    clientName?: string;
     useOptions?: boolean;
     useUnionTypes?: boolean;
     exportCore?: boolean;
