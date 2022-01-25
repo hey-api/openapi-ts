@@ -1,0 +1,22 @@
+{{>header}}
+
+import type { BaseHttpRequest } from './BaseHttpRequest';
+import type { OpenAPIConfig } from './OpenAPI';
+import { request as __request } from './request';
+
+export class {{HttpRequest}} extends BaseHttpRequest {
+
+    constructor(config: OpenAPIConfig) {
+        super(config);
+    }
+
+	/**
+	 * Request method
+	 * @param options The request options from the service
+	 * @returns CancelablePromise<T>
+	 * @throws ApiError
+	 */
+    public request<T>(options: ApiRequestOptions): CancelablePromise<T> {
+        return __request(this.config, options);
+    }
+}

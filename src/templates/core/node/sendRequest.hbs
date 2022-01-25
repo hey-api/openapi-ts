@@ -11,7 +11,7 @@ export const sendRequest = async (
 	const request: RequestInit = {
 		headers,
 		method: options.method,
-		body: body || formData,
+		body: body ?? formData,
 		signal: controller.signal,
 	};
 

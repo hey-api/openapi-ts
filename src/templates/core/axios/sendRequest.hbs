@@ -12,7 +12,7 @@ const sendRequest = async (
 	const requestConfig: AxiosRequestConfig = {
 		url,
 		headers,
-		data: body || formData,
+		data: body ?? formData,
 		method: options.method,
 		withCredentials: config.WITH_CREDENTIALS,
 		cancelToken: source.token,

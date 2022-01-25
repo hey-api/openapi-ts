@@ -59,7 +59,7 @@ import type { OpenAPIConfig } from './OpenAPI';
 
 
 /**
- * Request using XHR client
+ * Request method
  * @param config The OpenAPI configuration object
  * @param options The request options from the service
  * @returns CancelablePromise<T>
@@ -83,7 +83,7 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): C
 					ok: isSuccess(response.status),
 					status: response.status,
 					statusText: response.statusText,
-					body: responseHeader || responseBody,
+					body: responseHeader ?? responseBody,
 				};
 
 				catchErrors(options, result);
