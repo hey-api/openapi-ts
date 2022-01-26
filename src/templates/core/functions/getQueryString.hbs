@@ -1,5 +1,9 @@
 const getQueryString = (params: Record<string, any>): string => {
-	const searchParams = new URLSearchParams();
+	const qs: string[] = [];
+
+	const append = (key: string, value: any) => {
+		qs.push(`${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`);
+	};
 
 	const process = (key: string, value: any) => {
 		if (isDefined(value)) {
@@ -12,7 +16,7 @@ const getQueryString = (params: Record<string, any>): string => {
 					process(`${key}[${k}]`, v);
 				});
 			} else {
-				searchParams.append(key, value);
+				append(key, value);
 			}
 		}
 	};
@@ -21,9 +25,8 @@ const getQueryString = (params: Record<string, any>): string => {
 		process(key, value);
 	});
 
-	const query = searchParams.toString();
-	if (query.length) {
-		return `?${query}`;
+	if (qs.length > 0) {
+		return `?${qs.join('&')}`;
 	}
 
 	return '';

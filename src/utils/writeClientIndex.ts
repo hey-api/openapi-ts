@@ -41,6 +41,7 @@ export const writeClientIndex = async (
         exportSchemas,
         useUnionTypes,
         postfix,
+        clientName,
         server: client.server,
         version: client.version,
         models: sortModelsByName(client.models),

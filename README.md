@@ -20,7 +20,7 @@
 - Supports generation through CLI, Node.js and NPX
 - Supports tsc and @babel/plugin-transform-typescript
 - Supports aborting of requests (cancelable promise pattern)
-- Supports external references using [`json-schema-ref-parser`](https://github.com/APIDevTools/json-schema-ref-parser/)
+- Supports external references using [json-schema-ref-parser](https://github.com/APIDevTools/json-schema-ref-parser/)
 
 ## Install
 
@@ -117,7 +117,7 @@ const appClient = new AppClient({
 });
 
 // Use the client instance to make the API call
-const res = await appClient.organizations.createOrganization({
+const response = await appClient.organizations.createOrganization({
   name: 'OrgName',
   description: 'OrgDescription',
 });
