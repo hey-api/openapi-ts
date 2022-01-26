@@ -4,7 +4,7 @@ const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptions): Pr
 	const password = await resolve(options, config.PASSWORD);
 	const additionalHeaders = await resolve(options, config.HEADERS);
 
-	const defaultHeaders = Object.entries({
+	const headers = Object.entries({
 		Accept: 'application/json',
 		...additionalHeaders,
 		...options.headers,

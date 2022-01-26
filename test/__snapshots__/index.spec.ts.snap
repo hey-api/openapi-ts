@@ -376,8 +376,6 @@ const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptions): Pr
             [key]: String(value),
         }), {} as Record<string, string>);
 
-    const headers =
-
     if (isStringWithValue(token)) {
         headers['Authorization'] = \`Bearer \${token}\`;
     }
@@ -3278,8 +3276,6 @@ const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptions): Pr
             ...headers,
             [key]: String(value),
         }), {} as Record<string, string>);
-
-    const headers =
 
     if (isStringWithValue(token)) {
         headers['Authorization'] = \`Bearer \${token}\`;
