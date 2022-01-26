@@ -11,7 +11,7 @@ import {
 } from 'typescript';
 
 export const compileWithTypescript = (dir: string) => {
-    const baseDir = `./test/e2e/generated/${dir}/`;
+    const cwd = `./test/e2e/generated/${dir}/`;
     const tsconfig = {
         compilerOptions: {
             target: 'es2020',
@@ -37,7 +37,7 @@ export const compileWithTypescript = (dir: string) => {
     const configFileResult = parseJsonConfigFileContent(
         configFile.config,
         sys,
-        resolve(process.cwd(), baseDir),
+        resolve(process.cwd(), cwd),
         undefined,
         'tsconfig.json'
     );

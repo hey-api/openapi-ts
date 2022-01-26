@@ -1,14 +1,16 @@
 import browser from './scripts/browser';
+import { cleanup } from './scripts/cleanup';
 import { compileWithTypescript } from './scripts/compileWithTypescript';
-import { copy } from './scripts/copy';
-import { generate } from './scripts/generate';
+import { copyAsset } from './scripts/copyAsset';
+import { generateClient } from './scripts/generateClient';
 import server from './scripts/server';
 
 describe('v3.fetch', () => {
     beforeAll(async () => {
-        await generate('client/fetch', 'v3', 'fetch', false, false, 'AppClient');
-        await copy('index.html', 'client/fetch/index.html');
-        await copy('main.ts', 'client/fetch/main.ts');
+        cleanup('client/fetch');
+        await generateClient('client/fetch', 'v3', 'fetch', false, false, 'AppClient');
+        copyAsset('index.html', 'client/fetch/index.html');
+        copyAsset('main.ts', 'client/fetch/main.ts');
         compileWithTypescript('client/fetch');
         await server.start('client/fetch');
         await browser.start();

@@ -1,9 +1,7 @@
-import 'zone.js';
-
-// import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { Component, NgModule } from '@angular/core';
-// import { BrowserModule } from '@angular/platform-browser';
-// import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { BrowserModule } from '@angular/platform-browser';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { CollectionFormatService } from './services/CollectionFormatService';
 import { ComplexService } from './services/ComplexService';
@@ -25,10 +23,46 @@ import { TypesService } from './services/TypesService';
     selector: 'app-root',
     template: `<div>Angular</div>`,
 })
-export class AppComponent {}
+export class AppComponent {
+    constructor(
+        private readonly collectionFormatService: CollectionFormatService,
+        private readonly complexServiceService: ComplexService,
+        private readonly defaultServiceService: DefaultService,
+        private readonly defaultsServiceService: DefaultsService,
+        private readonly duplicateServiceService: DuplicateService,
+        private readonly errorServiceService: ErrorService,
+        private readonly headerServiceService: HeaderService,
+        private readonly multipleTags1ServiceService: MultipleTags1Service,
+        private readonly multipleTags2ServiceService: MultipleTags2Service,
+        private readonly multipleTags3ServiceService: MultipleTags3Service,
+        private readonly noContentServiceService: NoContentService,
+        private readonly parametersServiceService: ParametersService,
+        private readonly responseServiceService: ResponseService,
+        private readonly simpleServiceService: SimpleService,
+        private readonly typesServiceService: TypesService
+    ) {
+        (window as any).api = {
+            collectionFormatService,
+            complexServiceService,
+            defaultServiceService,
+            defaultsServiceService,
+            duplicateServiceService,
+            errorServiceService,
+            headerServiceService,
+            multipleTags1ServiceService,
+            multipleTags2ServiceService,
+            multipleTags3ServiceService,
+            noContentServiceService,
+            parametersServiceService,
+            responseServiceService,
+            simpleServiceService,
+            typesServiceService,
+        };
+    }
+}
 
 @NgModule({
-    // imports: [BrowserModule, HttpClientModule],
+    imports: [BrowserModule, HttpClientModule],
     providers: [
         CollectionFormatService,
         ComplexService,
@@ -50,6 +84,6 @@ export class AppComponent {}
 })
 export class AppModule {}
 
-// platformBrowserDynamic().bootstrapModule(AppModule);
-
-console.log('oke');
+platformBrowserDynamic()
+    .bootstrapModule(AppModule)
+    .catch(err => console.error(err));

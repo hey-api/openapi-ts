@@ -2,7 +2,7 @@
 
 {{#equals @root.httpClient 'angular'}}
 import { Injectable } from '@angular/core';
-import type { HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import type { Observable } from 'rxjs';
 
 {{/equals}}
@@ -28,17 +28,13 @@ import { request as __request } from '../core/request';
 export class {{{name}}}{{{@root.postfix}}} {
 	{{#if @root.exportClient}}
 
-	private readonly httpRequest: BaseHttpRequest;
-
-	constructor(httpRequest: BaseHttpRequest) {
+	constructor(private readonly httpRequest: BaseHttpRequest) {
 		this.httpRequest = httpRequest;
 	}
 	{{/if}}
 	{{#equals @root.httpClient 'angular'}}
 
-	private readonly http: HttpClient;
-
-	constructor(http: HttpClient) {
+	constructor(private readonly http: HttpClient) {
 		this.http = http;
 	}
 	{{/equals}}

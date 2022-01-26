@@ -20,7 +20,33 @@ const start = async (dir: string) => {
             })
         );
 
-        // Serve the index.html file
+        _app.use(
+            '/js',
+            express.static(`./test/e2e/generated/${dir}/`, {
+                extensions: ['', 'js'],
+                index: 'index.js',
+            })
+        );
+
+        // Serve static assets
+        _app.get('/runtime.js', (req, res) => {
+            res.sendFile(resolvePath(`./test/e2e/generated/${dir}/runtime.js`));
+        });
+        _app.get('/polyfills.js', (req, res) => {
+            res.sendFile(resolvePath(`./test/e2e/generated/${dir}/polyfills.js`));
+        });
+        _app.get('/vendor.js', (req, res) => {
+            res.sendFile(resolvePath(`./test/e2e/generated/${dir}/vendor.js`));
+        });
+        _app.get('/main.js', (req, res) => {
+            res.sendFile(resolvePath(`./test/e2e/generated/${dir}/main.js`));
+        });
+        _app.get('/styles.css', (req, res) => {
+            res.sendFile(resolvePath(`./test/e2e/generated/${dir}/styles.css`));
+        });
+        _app.get('/favicon.ico', (req, res) => {
+            res.sendFile(resolvePath(`./test/e2e/generated/${dir}/favicon.ico`));
+        });
         _app.get('/', (req, res) => {
             res.sendFile(resolvePath(`./test/e2e/generated/${dir}/index.html`));
         });

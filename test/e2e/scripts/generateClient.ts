@@ -1,6 +1,6 @@
 import { generate as __generate } from '../../../';
 
-export const generate = async (
+export const generateClient = async (
     dir: string,
     version: string,
     client: 'fetch' | 'xhr' | 'node' | 'axios' | 'angular',

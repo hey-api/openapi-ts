@@ -1,14 +1,16 @@
 import browser from './scripts/browser';
+import { cleanup } from './scripts/cleanup';
 import { compileWithTypescript } from './scripts/compileWithTypescript';
-import { copy } from './scripts/copy';
-import { generate } from './scripts/generate';
+import { copyAsset } from './scripts/copyAsset';
+import { generateClient } from './scripts/generateClient';
 import server from './scripts/server';
 
 describe('v3.xhr', () => {
     beforeAll(async () => {
-        await generate('client/xhr', 'v3', 'xhr', false, false, 'AppClient');
-        await copy('index.html', 'client/xhr/index.html');
-        await copy('main.ts', 'client/xhr/main.ts');
+        cleanup('client/xhr');
+        await generateClient('client/xhr', 'v3', 'xhr', false, false, 'AppClient');
+        copyAsset('index.html', 'client/xhr/index.html');
+        copyAsset('main.ts', 'client/xhr/main.ts');
         compileWithTypescript('client/xhr');
         await server.start('client/xhr');
         await browser.start();
