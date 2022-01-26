@@ -28,15 +28,11 @@ import { request as __request } from '../core/request';
 export class {{{name}}}{{{@root.postfix}}} {
 	{{#if @root.exportClient}}
 
-	constructor(private readonly httpRequest: BaseHttpRequest) {
-		this.httpRequest = httpRequest;
-	}
+	constructor(private readonly httpRequest: BaseHttpRequest) {}
 	{{/if}}
 	{{#equals @root.httpClient 'angular'}}
 
-	constructor(private readonly http: HttpClient) {
-		this.http = http;
-	}
+	constructor(private readonly http: HttpClient) {}
 	{{/equals}}
 
 	{{#each operations}}
