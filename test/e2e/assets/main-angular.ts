@@ -3,6 +3,7 @@ import { Component, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
+import { OpenAPI } from './core/OpenAPI';
 import { CollectionFormatService } from './services/CollectionFormatService';
 import { ComplexService } from './services/ComplexService';
 import { DefaultService } from './services/DefaultService';
@@ -21,42 +22,43 @@ import { TypesService } from './services/TypesService';
 
 @Component({
     selector: 'app-root',
-    template: `<div>Angular</div>`,
+    template: `<div>Angular is ready</div>`,
 })
 export class AppComponent {
     constructor(
         private readonly collectionFormatService: CollectionFormatService,
-        private readonly complexServiceService: ComplexService,
-        private readonly defaultServiceService: DefaultService,
-        private readonly defaultsServiceService: DefaultsService,
-        private readonly duplicateServiceService: DuplicateService,
-        private readonly errorServiceService: ErrorService,
-        private readonly headerServiceService: HeaderService,
-        private readonly multipleTags1ServiceService: MultipleTags1Service,
-        private readonly multipleTags2ServiceService: MultipleTags2Service,
-        private readonly multipleTags3ServiceService: MultipleTags3Service,
-        private readonly noContentServiceService: NoContentService,
-        private readonly parametersServiceService: ParametersService,
-        private readonly responseServiceService: ResponseService,
-        private readonly simpleServiceService: SimpleService,
-        private readonly typesServiceService: TypesService
+        private readonly complexService: ComplexService,
+        private readonly defaultService: DefaultService,
+        private readonly defaultsService: DefaultsService,
+        private readonly duplicateService: DuplicateService,
+        private readonly errorService: ErrorService,
+        private readonly headerService: HeaderService,
+        private readonly multipleTags1Service: MultipleTags1Service,
+        private readonly multipleTags2Service: MultipleTags2Service,
+        private readonly multipleTags3Service: MultipleTags3Service,
+        private readonly noContentService: NoContentService,
+        private readonly parametersService: ParametersService,
+        private readonly responseService: ResponseService,
+        private readonly simpleService: SimpleService,
+        private readonly typesService: TypesService
     ) {
         (window as any).api = {
-            collectionFormatService,
-            complexServiceService,
-            defaultServiceService,
-            defaultsServiceService,
-            duplicateServiceService,
-            errorServiceService,
-            headerServiceService,
-            multipleTags1ServiceService,
-            multipleTags2ServiceService,
-            multipleTags3ServiceService,
-            noContentServiceService,
-            parametersServiceService,
-            responseServiceService,
-            simpleServiceService,
-            typesServiceService,
+            OpenAPI,
+            CollectionFormatService: collectionFormatService,
+            ComplexService: complexService,
+            DefaultService: defaultService,
+            DefaultsService: defaultsService,
+            DuplicateService: duplicateService,
+            ErrorService: errorService,
+            HeaderService: headerService,
+            MultipleTags1Service: multipleTags1Service,
+            MultipleTags2Service: multipleTags2Service,
+            MultipleTags3Service: multipleTags3Service,
+            NoContentService: noContentService,
+            ParametersService: parametersService,
+            ResponseService: responseService,
+            SimpleService: simpleService,
+            TypesService: typesService,
         };
     }
 }

@@ -25,6 +25,30 @@ describe('v2.angular', () => {
     });
 
     it('requests token', async () => {
-        expect(true).toBe(true);
+        await browser.exposeFunction('tokenRequest', jest.fn().mockResolvedValue('MY_TOKEN'));
+        const result = await browser.evaluate(async () => {
+            return await new Promise<any>(resolve => {
+                const { OpenAPI, SimpleService } = (window as any).api;
+                OpenAPI.TOKEN = (window as any).tokenRequest;
+                SimpleService.getCallWithoutParametersAndResponse().subscribe(resolve);
+            });
+        });
+        expect(result.headers.authorization).toBe('Bearer MY_TOKEN');
+    });
+
+    it('supports complex params', async () => {
+        const result = await browser.evaluate(async () => {
+            return await new Promise<any>(resolve => {
+                const { ComplexService } = (window as any).api;
+                ComplexService.complexTypes({
+                    first: {
+                        second: {
+                            third: 'Hello World!',
+                        },
+                    },
+                }).subscribe(resolve);
+            });
+        });
+        expect(result).toBeDefined();
     });
 });
