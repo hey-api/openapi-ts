@@ -26,7 +26,7 @@ const config: Config.InitialOptions = {
                 // '<rootDir>/test/e2e/v3.node.spec.ts',
                 // '<rootDir>/test/e2e/v3.axios.spec.ts',
                 // '<rootDir>/test/e2e/v3.babel.spec.ts',
-                '<rootDir>/test/e2e/v3.angular.spec.ts',
+                // '<rootDir>/test/e2e/v3.angular.spec.ts',
                 // '<rootDir>/test/e2e/client.fetch.spec.ts',
                 // '<rootDir>/test/e2e/client.xhr.spec.ts',
                 // '<rootDir>/test/e2e/client.node.spec.ts',

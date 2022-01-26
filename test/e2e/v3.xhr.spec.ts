@@ -7,7 +7,8 @@ import server from './scripts/server';
 describe('v3.xhr', () => {
     beforeAll(async () => {
         await generate('v3/xhr', 'v3', 'xhr');
-        await copy('script.js', 'v3/xhr/script.js');
+        await copy('index.html', 'v3/xhr/index.html');
+        await copy('main.ts', 'v3/xhr/main.ts');
         compileWithTypescript('v3/xhr');
         await server.start('v3/xhr');
         await browser.start();

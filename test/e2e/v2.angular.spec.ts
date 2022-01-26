@@ -3,13 +3,15 @@ import { compileWithTypescript } from './scripts/compileWithTypescript';
 import { copy } from './scripts/copy';
 import { generate } from './scripts/generate';
 import server from './scripts/server';
+import {createAngularProject} from "./scripts/createAngularProject";
 
 describe('v2.angular', () => {
     beforeAll(async () => {
         await generate('v2/angular', 'v2', 'angular');
-        await copy('script.js', 'v2/angular/script.js');
-        await copy('angular-openapi-v2.ts', 'v2/angular/main.ts');
-        compileWithTypescript('v2/angular');
+        // await copy('index.html', 'v2/angular/index.html');
+        // await copy('main-angular.ts', 'v2/angular/main.ts');
+        // compileWithTypescript('v2/angular');
+        await createAngularProject('v2/angular/');
         await server.start('v2/angular');
         await browser.start();
     }, 30000);

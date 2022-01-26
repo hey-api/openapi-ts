@@ -5,7 +5,7 @@ import server from './scripts/server';
 describe('v3.node', () => {
     beforeAll(async () => {
         await generate('client/axios', 'v3', 'axios', false, false, 'AppClient');
-        compileWithTypescript('client/axios');
+        compileWithTypescript('client/axios', 'index.ts');
         await server.start('client/axios');
     }, 30000);
 

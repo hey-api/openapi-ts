@@ -7,7 +7,8 @@ import server from './scripts/server';
 describe('v3.fetch', () => {
     beforeAll(async () => {
         await generate('client/fetch', 'v3', 'fetch', false, false, 'AppClient');
-        await copy('script.js', 'client/fetch/script.js');
+        await copy('index.html', 'client/fetch/index.html');
+        await copy('main.ts', 'client/fetch/main.ts');
         compileWithTypescript('client/fetch');
         await server.start('client/fetch');
         await browser.start();
