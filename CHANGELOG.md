@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.17.0] - 2021-01-26
+### Fixed
+- Shorthand notation for properties passed through constructor
+- Simplified creation of headers
+- Prepare codebase for Angular client
+
 ## [0.16.2] - 2021-01-26
 ### Fixed
 - Removed dependency on `URLSearchParams` to support browser and node without any additional imports
