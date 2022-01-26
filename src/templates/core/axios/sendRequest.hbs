@@ -1,12 +1,12 @@
-const sendRequest = async (
+const sendRequest = async <T>(
 	config: OpenAPIConfig,
 	options: ApiRequestOptions,
 	url: string,
-	formData: FormData | undefined,
 	body: any,
+	formData: FormData | undefined,
 	headers: Record<string, string>,
 	onCancel: OnCancel
-): Promise<AxiosResponse<any>> => {
+): Promise<AxiosResponse<T>> => {
 	const source = axios.CancelToken.source();
 
 	const requestConfig: AxiosRequestConfig = {

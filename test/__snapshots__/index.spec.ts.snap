@@ -365,7 +365,7 @@ const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptions): Pr
     const password = await resolve(options, config.PASSWORD);
     const additionalHeaders = await resolve(options, config.HEADERS);
 
-    const defaultHeaders = Object.entries({
+    const headers = Object.entries({
         Accept: 'application/json',
         ...additionalHeaders,
         ...options.headers,
@@ -376,33 +376,31 @@ const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptions): Pr
             [key]: String(value),
         }), {} as Record<string, string>);
 
-    const headers = new Headers(defaultHeaders);
-
     if (isStringWithValue(token)) {
-        headers.append('Authorization', \`Bearer \${token}\`);
+        headers['Authorization'] = \`Bearer \${token}\`;
     }
 
     if (isStringWithValue(username) && isStringWithValue(password)) {
         const credentials = base64(\`\${username}:\${password}\`);
-        headers.append('Authorization', \`Basic \${credentials}\`);
+        headers['Authorization'] = \`Basic \${credentials}\`;
     }
 
     if (options.body) {
         if (options.mediaType) {
-            headers.append('Content-Type', options.mediaType);
+            headers['Content-Type'] = options.mediaType;
         } else if (isBlob(options.body)) {
-            headers.append('Content-Type', options.body.type || 'application/octet-stream');
+            headers['Content-Type'] = options.body.type || 'application/octet-stream';
         } else if (isString(options.body)) {
-            headers.append('Content-Type', 'text/plain');
+            headers['Content-Type'] = 'text/plain';
         } else if (!isFormData(options.body)) {
-            headers.append('Content-Type', 'application/json');
+            headers['Content-Type'] = 'application/json';
         }
     }
 
-    return headers;
+    return new Headers(headers);
 };
 
-const getRequestBody = (options: ApiRequestOptions): BodyInit | undefined => {
+const getRequestBody = (options: ApiRequestOptions): any => {
     if (options.body) {
         if (options.mediaType?.includes('/json')) {
             return JSON.stringify(options.body)
@@ -419,8 +417,8 @@ export const sendRequest = async (
     config: OpenAPIConfig,
     options: ApiRequestOptions,
     url: string,
+    body: any,
     formData: FormData | undefined,
-    body: BodyInit | undefined,
     headers: Headers,
     onCancel: OnCancel
 ): Promise<Response> => {
@@ -509,7 +507,7 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): C
             const headers = await getHeaders(config, options);
 
             if (!onCancel.isCancelled) {
-                const response = await sendRequest(config, options, url, formData, body, headers, onCancel);
+                const response = await sendRequest(config, options, url, body, formData, headers, onCancel);
                 const responseBody = await getResponseBody(response);
                 const responseHeader = getResponseHeader(response, options.responseHeader);
 
@@ -2196,6 +2194,7 @@ exports[`v2 should generate: ./test/generated/v2/services/ComplexService.ts 1`] 
 /* tslint:disable */
 /* eslint-disable */
 import type { ModelWithString } from '../models/ModelWithString';
+
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -2263,6 +2262,7 @@ exports[`v2 should generate: ./test/generated/v2/services/DefaultsService.ts 1`]
 /* tslint:disable */
 /* eslint-disable */
 import type { ModelWithString } from '../models/ModelWithString';
+
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -2702,6 +2702,7 @@ exports[`v2 should generate: ./test/generated/v2/services/ResponseService.ts 1`]
 import type { ModelThatExtends } from '../models/ModelThatExtends';
 import type { ModelThatExtendsExtends } from '../models/ModelThatExtendsExtends';
 import type { ModelWithString } from '../models/ModelWithString';
+
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -3265,7 +3266,7 @@ const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptions): Pr
     const password = await resolve(options, config.PASSWORD);
     const additionalHeaders = await resolve(options, config.HEADERS);
 
-    const defaultHeaders = Object.entries({
+    const headers = Object.entries({
         Accept: 'application/json',
         ...additionalHeaders,
         ...options.headers,
@@ -3276,33 +3277,31 @@ const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptions): Pr
             [key]: String(value),
         }), {} as Record<string, string>);
 
-    const headers = new Headers(defaultHeaders);
-
     if (isStringWithValue(token)) {
-        headers.append('Authorization', \`Bearer \${token}\`);
+        headers['Authorization'] = \`Bearer \${token}\`;
     }
 
     if (isStringWithValue(username) && isStringWithValue(password)) {
         const credentials = base64(\`\${username}:\${password}\`);
-        headers.append('Authorization', \`Basic \${credentials}\`);
+        headers['Authorization'] = \`Basic \${credentials}\`;
     }
 
     if (options.body) {
         if (options.mediaType) {
-            headers.append('Content-Type', options.mediaType);
+            headers['Content-Type'] = options.mediaType;
         } else if (isBlob(options.body)) {
-            headers.append('Content-Type', options.body.type || 'application/octet-stream');
+            headers['Content-Type'] = options.body.type || 'application/octet-stream';
         } else if (isString(options.body)) {
-            headers.append('Content-Type', 'text/plain');
+            headers['Content-Type'] = 'text/plain';
         } else if (!isFormData(options.body)) {
-            headers.append('Content-Type', 'application/json');
+            headers['Content-Type'] = 'application/json';
         }
     }
 
-    return headers;
+    return new Headers(headers);
 };
 
-const getRequestBody = (options: ApiRequestOptions): BodyInit | undefined => {
+const getRequestBody = (options: ApiRequestOptions): any => {
     if (options.body) {
         if (options.mediaType?.includes('/json')) {
             return JSON.stringify(options.body)
@@ -3319,8 +3318,8 @@ export const sendRequest = async (
     config: OpenAPIConfig,
     options: ApiRequestOptions,
     url: string,
+    body: any,
     formData: FormData | undefined,
-    body: BodyInit | undefined,
     headers: Headers,
     onCancel: OnCancel
 ): Promise<Response> => {
@@ -3409,7 +3408,7 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): C
             const headers = await getHeaders(config, options);
 
             if (!onCancel.isCancelled) {
-                const response = await sendRequest(config, options, url, formData, body, headers, onCancel);
+                const response = await sendRequest(config, options, url, body, formData, headers, onCancel);
                 const responseBody = await getResponseBody(response);
                 const responseHeader = getResponseHeader(response, options.responseHeader);
 
@@ -5676,6 +5675,7 @@ import type { ModelWithArray } from '../models/ModelWithArray';
 import type { ModelWithDictionary } from '../models/ModelWithDictionary';
 import type { ModelWithEnum } from '../models/ModelWithEnum';
 import type { ModelWithString } from '../models/ModelWithString';
+
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -5776,6 +5776,7 @@ exports[`v3 should generate: ./test/generated/v3/services/DefaultsService.ts 1`]
 /* tslint:disable */
 /* eslint-disable */
 import type { ModelWithString } from '../models/ModelWithString';
+
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -5976,6 +5977,7 @@ exports[`v3 should generate: ./test/generated/v3/services/FormDataService.ts 1`]
 /* tslint:disable */
 /* eslint-disable */
 import type { ModelWithString } from '../models/ModelWithString';
+
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -6039,6 +6041,7 @@ exports[`v3 should generate: ./test/generated/v3/services/MultipartService.ts 1`
 /* tslint:disable */
 /* eslint-disable */
 import type { ModelWithString } from '../models/ModelWithString';
+
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -6206,6 +6209,7 @@ exports[`v3 should generate: ./test/generated/v3/services/ParametersService.ts 1
 /* tslint:disable */
 /* eslint-disable */
 import type { ModelWithString } from '../models/ModelWithString';
+
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -6349,6 +6353,7 @@ exports[`v3 should generate: ./test/generated/v3/services/RequestBodyService.ts 
 /* tslint:disable */
 /* eslint-disable */
 import type { ModelWithString } from '../models/ModelWithString';
+
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -6385,6 +6390,7 @@ exports[`v3 should generate: ./test/generated/v3/services/ResponseService.ts 1`]
 import type { ModelThatExtends } from '../models/ModelThatExtends';
 import type { ModelThatExtendsExtends } from '../models/ModelThatExtendsExtends';
 import type { ModelWithString } from '../models/ModelWithString';
+
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';

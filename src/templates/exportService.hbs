@@ -4,6 +4,7 @@
 {{#each imports}}
 import type { {{{this}}} } from '../models/{{{this}}}';
 {{/each}}
+
 {{/if}}
 import type { CancelablePromise } from '../core/CancelablePromise';
 {{#if @root.exportClient}}
@@ -16,9 +17,7 @@ import { request as __request } from '../core/request';
 export class {{{name}}}{{{@root.postfix}}} {
 	{{#if @root.exportClient}}
 
-	private readonly httpRequest: BaseHttpRequest;
-
-	constructor(httpRequest: BaseHttpRequest) {
+	constructor(private readonly httpRequest: BaseHttpRequest) {
 		this.httpRequest = httpRequest;
 	}
 	{{/if}}
@@ -49,11 +48,10 @@ export class {{{name}}}{{{@root.postfix}}} {
 	{{#if @root.exportClient}}
 	public {{{name}}}({{>parameters}}): CancelablePromise<{{>result}}> {
 		return this.httpRequest.request({
-	{{/if}}
-	{{#unless @root.exportClient}}
+	{{else}}
 	public static {{{name}}}({{>parameters}}): CancelablePromise<{{>result}}> {
 		return __request(OpenAPI, {
-	{{/unless}}
+	{{/if}}
 			method: '{{{method}}}',
 			url: '{{{path}}}',
 			{{#if parametersPath}}

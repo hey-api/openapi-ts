@@ -8,7 +8,7 @@ Before working on a Pull Request, create an issue explaining what you want to co
 This ensures that your pull request won't go unnoticed, and that you are not contributing
 something that is not suitable for the project.
 
-If you are unfamiliar with Github Pull Requests, please read the following documentation:
+If you are unfamiliar with GitHub Pull Requests, please read the following documentation:
 https://help.github.com/articles/using-pull-requests
 
 **Your Pull Request must:**

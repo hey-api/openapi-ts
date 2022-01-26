@@ -1,10 +1,12 @@
+import { cleanup } from './scripts/cleanup';
 import { compileWithTypescript } from './scripts/compileWithTypescript';
-import { generate } from './scripts/generate';
+import { generateClient } from './scripts/generateClient';
 import server from './scripts/server';
 
 describe('v2.node', () => {
     beforeAll(async () => {
-        await generate('v2/axios', 'v2', 'axios');
+        cleanup('v2/axios');
+        await generateClient('v2/axios', 'v2', 'axios');
         compileWithTypescript('v2/axios');
         await server.start('v2/axios');
     }, 30000);

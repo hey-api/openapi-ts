@@ -1,5 +1,6 @@
 import express, { Express } from 'express';
 import { Server } from 'http';
+import { resolve as resolvePath } from 'path';
 
 let _app: Express;
 let _server: Server;
@@ -19,11 +20,16 @@ const start = async (dir: string) => {
             })
         );
 
-        // When we request the index then we can just return the script loader.
-        // This file is copied from test/e2e/assets/script.js to the output directory
-        // of the specific version and client.
+        _app.use(
+            '/js',
+            express.static(`./test/e2e/generated/${dir}/`, {
+                extensions: ['', 'js'],
+                index: 'index.js',
+            })
+        );
+
         _app.get('/', (req, res) => {
-            res.send('<script src="js/script.js"></script>');
+            res.sendFile(resolvePath(`./test/e2e/generated/${dir}/index.html`));
         });
 
         // Register an 'echo' server for testing error codes. This will just grab the
@@ -51,7 +57,9 @@ const start = async (dir: string) => {
                 });
             }, 100);
         });
-        _server = _app.listen(3000, resolve);
+        _server = _app.listen(3000, () => {
+            resolve();
+        });
     });
 };
 

@@ -1,13 +1,16 @@
 import browser from './scripts/browser';
+import { cleanup } from './scripts/cleanup';
 import { compileWithBabel } from './scripts/compileWithBabel';
-import { copy } from './scripts/copy';
-import { generate } from './scripts/generate';
+import { copyAsset } from './scripts/copyAsset';
+import { generateClient } from './scripts/generateClient';
 import server from './scripts/server';
 
 describe('v3.babel', () => {
     beforeAll(async () => {
-        await generate('client/babel', 'v3', 'fetch', true, true, 'AppClient');
-        await copy('client/babel');
+        cleanup('client/babel');
+        await generateClient('client/babel', 'v3', 'fetch', true, true, 'AppClient');
+        copyAsset('index.html', 'client/babel/index.html');
+        copyAsset('main.ts', 'client/babel/main.ts');
         compileWithBabel('client/babel');
         await server.start('client/babel');
         await browser.start();
