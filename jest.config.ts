@@ -33,7 +33,7 @@ const config: Config.InitialOptions = {
                 '<rootDir>/test/e2e/client.axios.spec.ts',
                 '<rootDir>/test/e2e/client.babel.spec.ts',
             ],
-             modulePathIgnorePatterns: ['<rootDir>/test/e2e/generated'],
+            modulePathIgnorePatterns: ['<rootDir>/test/e2e/generated'],
         },
     ],
     collectCoverageFrom: ['<rootDir>/src/**/*.ts', '!<rootDir>/src/**/*.d.ts', '!<rootDir>/bin', '!<rootDir>/dist'],

@@ -469,7 +469,7 @@ const getResponseBody = async (response: Response): Promise<any> => {
     return;
 };
 
-const catchErrors = (options: ApiRequestOptions, result: ApiResult): void => {
+const catchErrorCodes = (options: ApiRequestOptions, result: ApiResult): void => {
     const errors: Record<number, string> = {
         400: 'Bad Request',
         401: 'Unauthorized',
@@ -519,7 +519,7 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): C
                     body: responseHeader ?? responseBody,
                 };
 
-                catchErrors(options, result);
+                catchErrorCodes(options, result);
 
                 resolve(result.body);
             }
@@ -3370,7 +3370,7 @@ const getResponseBody = async (response: Response): Promise<any> => {
     return;
 };
 
-const catchErrors = (options: ApiRequestOptions, result: ApiResult): void => {
+const catchErrorCodes = (options: ApiRequestOptions, result: ApiResult): void => {
     const errors: Record<number, string> = {
         400: 'Bad Request',
         401: 'Unauthorized',
@@ -3420,7 +3420,7 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): C
                     body: responseHeader ?? responseBody,
                 };
 
-                catchErrors(options, result);
+                catchErrorCodes(options, result);
 
                 resolve(result.body);
             }

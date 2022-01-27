@@ -51,7 +51,7 @@
         "test:update": "jest --selectProjects UNIT --updateSnapshot",
         "test:watch": "jest --selectProjects UNIT --watch",
         "test:coverage": "jest --selectProjects UNIT --coverage",
-        "test:e2e": "jest --selectProjects E2E --runInBand",
+        "test:e2e": "jest --selectProjects E2E --runInBand --verbose",
         "eslint": "eslint .",
         "eslint:fix": "eslint . --fix",
         "prepublishOnly": "yarn run clean && yarn run release",

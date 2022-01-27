@@ -52,7 +52,7 @@ import type { OpenAPIConfig } from './OpenAPI';
 {{>fetch/getResponseBody}}
 
 
-{{>functions/catchErrors}}
+{{>functions/catchErrorCodes}}
 
 
 /**
@@ -83,7 +83,7 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): C
 					body: responseHeader ?? responseBody,
 				};
 
-				catchErrors(options, result);
+				catchErrorCodes(options, result);
 
 				resolve(result.body);
 			}

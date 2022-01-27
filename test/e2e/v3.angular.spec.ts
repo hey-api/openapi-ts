@@ -83,4 +83,70 @@ describe('v3.angular', () => {
         });
         expect(result).toBeDefined();
     });
+
+    it('should throw known error (500)', async () => {
+        const error = await browser.evaluate(async () => {
+            try {
+                await new Promise<any>((resolve, reject) => {
+                    const { ErrorService } = (window as any).api;
+                    ErrorService.testErrorCode(500).subscribe(resolve, reject);
+                });
+            } catch (e) {
+                const error = e as any;
+                return JSON.stringify({
+                    name: error.name,
+                    message: error.message,
+                    url: error.url,
+                    status: error.status,
+                    statusText: error.statusText,
+                    body: error.body,
+                });
+            }
+            return;
+        });
+        expect(error).toBe(
+            JSON.stringify({
+                name: 'ApiError',
+                message: 'Custom message: Internal Server Error',
+                url: 'http://localhost:3000/base/api/v1.0/error?status=500',
+                status: 500,
+                statusText: 'Internal Server Error',
+                body: 'Internal Server Error',
+            })
+        );
+    });
+
+    it('should throw unknown error (409)', async () => {
+        const error = await browser.evaluate(async () => {
+            const { ErrorService } = (window as any).api;
+            ErrorService.testErrorCode(409).subscribe(console.log, console.log);
+            try {
+                await new Promise<any>((resolve, reject) => {
+                    // const { ErrorService } = (window as any).api;
+                    ErrorService.testErrorCode(409).subscribe(resolve, reject);
+                });
+            } catch (e) {
+                const error = e as any;
+                return JSON.stringify({
+                    name: error.name,
+                    message: error.message,
+                    url: error.url,
+                    status: error.status,
+                    statusText: error.statusText,
+                    body: error.body,
+                });
+            }
+            return;
+        });
+        expect(error).toBe(
+            JSON.stringify({
+                name: 'ApiError',
+                message: 'Generic Error',
+                url: 'http://localhost:3000/base/api/v1.0/error?status=409',
+                status: 409,
+                statusText: 'Conflict',
+                body: 'Conflict',
+            })
+        );
+    });
 });
