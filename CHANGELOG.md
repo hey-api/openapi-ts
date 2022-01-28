@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.18.0] - 2021-01-28
+### Added
+- Angular client generation!
+- Updated documentation with more examples and better descriptions
+
 ## [0.17.0] - 2021-01-26
 ### Fixed
 - Shorthand notation for properties passed through constructor
