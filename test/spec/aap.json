@@ -1,0 +1,28 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "Header Problem",
+        "version": "1.0.0"
+    },
+    "paths": {},
+    "components": {
+        "headers": {
+            "Generic-Header": {
+                "description": "Generic-Header description",
+                "schema": {
+                    "type": "string"
+                },
+                "example": "123",
+                "required": true
+            }
+        },
+        "schemas": {
+            "Generic-Schema": {
+                "description": "Generic-Schema description",
+                "type": "string",
+                "example": "234",
+                "required": true
+            }
+        }
+    }
+}
