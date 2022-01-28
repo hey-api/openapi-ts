@@ -7,7 +7,7 @@ const generate = async (input, output) => {
     await OpenAPI.generate({
         input,
         output,
-        httpClient: OpenAPI.HttpClient.ANGULAR,
+        httpClient: OpenAPI.HttpClient.FETCH,
         useOptions: false,
         useUnionTypes: false,
         exportCore: true,
@@ -57,8 +57,8 @@ const generateRealWorldSpecs = async () => {
 };
 
 const main = async () => {
-    await generate('./test/spec/aap.json', './test/generated/aap/');
-    // await generate('./test/spec/v3.json', './test/generated/v3/');
+    await generate('./test/spec/v2.json', './test/generated/v2/');
+    await generate('./test/spec/v3.json', './test/generated/v3/');
     // await generateRealWorldSpecs();
 };
 
