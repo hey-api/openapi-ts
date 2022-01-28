@@ -35,9 +35,11 @@ describe('v2.babel', () => {
         const result = await browser.evaluate(async () => {
             const { ComplexService } = (window as any).api;
             return await ComplexService.complexTypes({
-                first: {
-                    second: {
-                        third: 'Hello World!',
+                parameterObject: {
+                    first: {
+                        second: {
+                            third: 'Hello World!',
+                        },
                     },
                 },
             });

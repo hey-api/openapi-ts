@@ -3,7 +3,7 @@ import { compileWithTypescript } from './scripts/compileWithTypescript';
 import { generateClient } from './scripts/generateClient';
 import server from './scripts/server';
 
-describe('v3.node', () => {
+describe('client.node', () => {
     beforeAll(async () => {
         cleanup('client/node');
         await generateClient('client/node', 'v3', 'node', false, false, 'AppClient');
@@ -108,7 +108,10 @@ describe('v3.node', () => {
                 url: 'http://localhost:3000/base/api/v1.0/error?status=500',
                 status: 500,
                 statusText: 'Internal Server Error',
-                body: 'Internal Server Error',
+                body: {
+                    status: 500,
+                    message: 'hello world',
+                },
             })
         );
     });
@@ -137,7 +140,10 @@ describe('v3.node', () => {
                 url: 'http://localhost:3000/base/api/v1.0/error?status=409',
                 status: 409,
                 statusText: 'Conflict',
-                body: 'Conflict',
+                body: {
+                    status: 409,
+                    message: 'hello world',
+                },
             })
         );
     });

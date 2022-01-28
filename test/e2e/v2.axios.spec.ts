@@ -35,19 +35,4 @@ describe('v2.node', () => {
         });
         expect(result).toBeDefined();
     });
-
-    it('can abort the request', async () => {
-        let error;
-        try {
-            const { SimpleService } = require('./generated/v2/axios/index.js');
-            const promise = SimpleService.getCallWithoutParametersAndResponse();
-            setTimeout(() => {
-                promise.cancel();
-            }, 10);
-            await promise;
-        } catch (e) {
-            error = (e as Error).message;
-        }
-        expect(error).toContain('Request aborted');
-    });
 });

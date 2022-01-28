@@ -56,7 +56,10 @@ const start = async (dir: string) => {
         // See the spec files for more information.
         _app.all('/base/api/v1.0/error', (req, res) => {
             const status = parseInt(String(req.query.status));
-            res.sendStatus(status);
+            res.status(status).json({
+                status,
+                message: 'hello world',
+            });
         });
 
         // Register an 'echo' server that just returns all data from the API calls.

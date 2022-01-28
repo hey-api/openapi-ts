@@ -58,6 +58,23 @@ describe('v3.xhr', () => {
         expect(result).toBeDefined();
     });
 
+    it('support form data', async () => {
+        const result = await browser.evaluate(async () => {
+            const { ParametersService } = (window as any).api;
+            return await ParametersService.callWithParameters(
+                'valueHeader',
+                'valueQuery',
+                'valueForm',
+                'valueCookie',
+                'valuePath',
+                {
+                    prop: 'valueBody',
+                }
+            );
+        });
+        expect(result).toBeDefined();
+    });
+
     it('can abort the request', async () => {
         let error;
         try {
@@ -100,7 +117,10 @@ describe('v3.xhr', () => {
                 url: 'http://localhost:3000/base/api/v1.0/error?status=500',
                 status: 500,
                 statusText: 'Internal Server Error',
-                body: 'Internal Server Error',
+                body: {
+                    status: 500,
+                    message: 'hello world',
+                },
             })
         );
     });
@@ -130,7 +150,10 @@ describe('v3.xhr', () => {
                 url: 'http://localhost:3000/base/api/v1.0/error?status=409',
                 status: 409,
                 statusText: 'Conflict',
-                body: 'Conflict',
+                body: {
+                    status: 409,
+                    message: 'hello world',
+                },
             })
         );
     });
