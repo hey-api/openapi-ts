@@ -3,7 +3,7 @@ import { compileWithTypescript } from './scripts/compileWithTypescript';
 import { generateClient } from './scripts/generateClient';
 import server from './scripts/server';
 
-describe('client.node', () => {
+describe('client.axios', () => {
     beforeAll(async () => {
         cleanup('client/axios');
         await generateClient('client/axios', 'v3', 'axios', false, false, 'AppClient');

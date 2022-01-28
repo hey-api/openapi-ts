@@ -1,5 +1,3 @@
-// import browser from './scripts/browser';
-// import { compileWithTypescript } from './scripts/compileWithTypescript';
 import browser from './scripts/browser';
 import { buildAngularProject } from './scripts/buildAngularProject';
 import { cleanup } from './scripts/cleanup';
