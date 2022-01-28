@@ -49,6 +49,8 @@ Inside the component you can inject the service and just use it as you would wit
 
 ```typescript
 import { Component } from '@angular/core';
+import { throwError} from 'rxjs';
+import { catchError, map, retry } from 'rxjs/operators';
 
 import type { OrganizationService } from './generated/services/OrganizationService';
 
@@ -59,7 +61,7 @@ import type { OrganizationService } from './generated/services/OrganizationServi
 export class AppComponent {
     constructor(private readonly organizationService: OrganizationService) {
 
-        // Make a call
+        // Supports making a simple call
         this.organizationService
             .createOrganization({
                 name: 'OrgName',
@@ -69,12 +71,15 @@ export class AppComponent {
                 console.log(organization);
             });
 
-        // Or even map result and retry on error
+        // Or creating flows with rety(), catchError() and map()
         this.organizationService
             .getOrganizations()
             .pipe(
+                retry(3),
+                catchError(error =>
+                    throwError(error)
+                ),
                 map(organizations => organizations[0]),
-                retryWhen(error => error)
             )
             .subscribe(organization => {
                 console.log(organization);
