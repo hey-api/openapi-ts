@@ -22,13 +22,11 @@
 - Supports aborting of requests (cancelable promise pattern)
 - Supports external references using [json-schema-ref-parser](https://github.com/APIDevTools/json-schema-ref-parser/)
 
-
 ## Install
 
 ```
 npm install openapi-typescript-codegen --save-dev
 ```
-
 
 ## Usage
 
@@ -59,7 +57,6 @@ $ openapi --help
     $ openapi --input ./spec.json --output ./generated --client xhr
 ```
 
-
 Documentation
 ===
 - [Basic usage](docs/basic-usage.md)
@@ -73,14 +70,12 @@ Documentation
 - [Authorization](docs/authorization.md)
 - [External references](docs/external-references.md)
 
-
 Support
 ===
 - [Babel support](docs/babel-support.md)
 - [Axios support](docs/axios-support.md)
 - [Angular support](docs/angular-support.md)
 - [Node-Fetch support](docs/node-fetch-support.md)
-
 
 [npm-url]: https://npmjs.org/package/openapi-typescript-codegen
 [npm-image]: https://img.shields.io/npm/v/openapi-typescript-codegen.svg

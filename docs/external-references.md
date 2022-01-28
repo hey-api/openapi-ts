@@ -8,13 +8,15 @@ down your openapi.yml into multiple sub-files, or incorporate third-party schema
 as part of your types to ensure everything is able to be TypeScript generated.
 
 External references may be:
+
 * *relative references* - references to other files at the same location e.g.
   `{ $ref: 'schemas/customer.yml' }`
-* *remote references* - fully qualified references to another remote location
-  e.g. `{ $ref: 'https://myexampledomain.com/schemas/customer_schema.yml' }`
 
-  For remote references, both files (when the file is on the current filesystem)
-  and http(s) URLs are supported.
+* *remote references* - fully qualified references to another remote location e.g.
+  `{ $ref: 'https://myexampledomain.com/schemas/customer_schema.yml' }`
+
+For remote references, both files (when the file is on the current filesystem)
+and http(s) URLs are supported.
 
 External references may also contain internal paths in the external schema (e.g.
 `schemas/collection.yml#/definitions/schemas/Customer`) and back-references to

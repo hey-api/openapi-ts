@@ -6,6 +6,7 @@ There's no [named parameter](https://en.wikipedia.org/wiki/Named_parameter) in J
 that, we offer the flag `--useOptions` to generate code in two different styles.
 
 **Argument style:**
+
 ```typescript
 const createUser = (name: string, password: string, type?: string, address?: string) => {
     // ...
@@ -16,6 +17,7 @@ createUser('Jack', '123456', undefined, 'NY US');
 ```
 
 **Object style:**
+
 ```typescript
 const createUser = ({ name, password, type, address }: {
     name: string,

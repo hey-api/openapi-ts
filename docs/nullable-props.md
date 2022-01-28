@@ -29,6 +29,7 @@ to generate nullable properties in OpenApi v2.
 ```
 
 Generated code:
+
 ```typescript
 export type ModelWithNullableString = {
     prop?: string | null;

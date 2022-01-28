@@ -10,6 +10,7 @@ we offer the flag `--useUnionTypes` to generate [union types](https://www.typesc
 instead of the traditional enums. The difference can be seen below:
 
 **Enums:**
+
 ```typescript
 // Model
 export type Order = {
@@ -35,6 +36,7 @@ const order: Order = {
 ```
 
 **Union Types:**
+
 ```typescript
 // Model
 export type Order = {

@@ -3,6 +3,7 @@
 You can use `x-enum-varnames` and `x-enum-descriptions` in your spec to generate enum with custom names and descriptions.
 It's not in official [spec](https://github.com/OAI/OpenAPI-Specification/issues/681) yet. But it's a supported extension
 that can help developers use more meaningful enumerators.
+
 ```json
 {
     "EnumWithStrings": {
@@ -27,6 +28,7 @@ that can help developers use more meaningful enumerators.
 ```
 
 Generated code:
+
 ```typescript
 enum EnumWithStrings {
     /*

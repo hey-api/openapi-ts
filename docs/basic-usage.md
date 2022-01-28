@@ -26,7 +26,6 @@ $ openapi --help
     $ openapi --input ./spec.json --output ./generated
 ```
 
-
 ## Example
 
 **package.json**
