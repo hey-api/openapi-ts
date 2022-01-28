@@ -1,0 +1,84 @@
+# Angular support
+
+This tool allows you to generate a client based on the [`Angular HttpClient`](https://angular.io/guide/http).
+The generated services are fully injectable and make use of the [RxJS](https://rxjs.dev/) Observer pattern.
+If you want to generate the Angular based client then you can specify `--client angular` in the openapi call:
+
+`openapi --input ./spec.json --output ./generated --client angular`
+
+The Angular client has been tested with the following versions:
+
+```
+"@angular/common": "13.1.3",
+"@angular/core": "13.1.3",
+"rxjs": "7.5.2",
+```
+
+## Example
+
+In the AppModule you can import the services and add them to the list of injectable services:
+
+```typescript
+import { HttpClientModule } from '@angular/common/http';
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+
+import { OrganizationService } from './generated/services/OrganizationService';
+
+@NgModule({
+    imports: [
+        BrowserModule,
+        HttpClientModule,
+    ],
+    providers: [
+        OrganizationService,
+    ],
+    bootstrap: [
+        AppComponent,
+    ],
+})
+export class AppModule {}
+
+platformBrowserDynamic()
+    .bootstrapModule(AppModule)
+    .catch(err => console.error(err));
+```
+
+Inside the component you can inject the service and just use it as you would with any observable:
+
+```typescript
+import { Component } from '@angular/core';
+
+import type { OrganizationService } from './generated/services/OrganizationService';
+
+@Component({
+    selector: 'app-root',
+    template: `<div>Angular is ready</div>`,
+})
+export class AppComponent {
+    constructor(private readonly organizationService: OrganizationService) {
+
+        // Make a call
+        this.organizationService
+            .createOrganization({
+                name: 'OrgName',
+                description: 'OrgDescription',
+            })
+            .subscribe(organization => {
+                console.log(organization);
+            });
+
+        // Or even map result and retry on error
+        this.organizationService
+            .getOrganizations()
+            .pipe(
+                map(organizations => organizations[0]),
+                retryWhen(error => error)
+            )
+            .subscribe(organization => {
+                console.log(organization);
+            });
+    }
+}
+```

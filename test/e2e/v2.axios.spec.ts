@@ -3,7 +3,7 @@ import { compileWithTypescript } from './scripts/compileWithTypescript';
 import { generateClient } from './scripts/generateClient';
 import server from './scripts/server';
 
-describe('v2.node', () => {
+describe('v2.axios', () => {
     beforeAll(async () => {
         cleanup('v2/axios');
         await generateClient('v2/axios', 'v2', 'axios');
@@ -34,20 +34,5 @@ describe('v2.node', () => {
             },
         });
         expect(result).toBeDefined();
-    });
-
-    it('can abort the request', async () => {
-        let error;
-        try {
-            const { SimpleService } = require('./generated/v2/axios/index.js');
-            const promise = SimpleService.getCallWithoutParametersAndResponse();
-            setTimeout(() => {
-                promise.cancel();
-            }, 10);
-            await promise;
-        } catch (e) {
-            error = (e as Error).message;
-        }
-        expect(error).toContain('Request aborted');
     });
 });

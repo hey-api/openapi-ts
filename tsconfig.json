@@ -14,7 +14,8 @@
         "noImplicitAny": true,
         "strict": true,
         "skipLibCheck": true,
-        "allowSyntheticDefaultImports": true
+        "allowSyntheticDefaultImports": true,
+        "experimentalDecorators": true
     },
 
     "files": [

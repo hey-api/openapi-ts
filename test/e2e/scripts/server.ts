@@ -28,6 +28,25 @@ const start = async (dir: string) => {
             })
         );
 
+        // Serve static assets
+        _app.get('/runtime.js', (req, res) => {
+            res.sendFile(resolvePath(`./test/e2e/generated/${dir}/runtime.js`));
+        });
+        _app.get('/polyfills.js', (req, res) => {
+            res.sendFile(resolvePath(`./test/e2e/generated/${dir}/polyfills.js`));
+        });
+        _app.get('/vendor.js', (req, res) => {
+            res.sendFile(resolvePath(`./test/e2e/generated/${dir}/vendor.js`));
+        });
+        _app.get('/main.js', (req, res) => {
+            res.sendFile(resolvePath(`./test/e2e/generated/${dir}/main.js`));
+        });
+        _app.get('/styles.css', (req, res) => {
+            res.sendFile(resolvePath(`./test/e2e/generated/${dir}/styles.css`));
+        });
+        _app.get('/favicon.ico', (req, res) => {
+            res.sendFile(resolvePath(`./test/e2e/generated/${dir}/favicon.ico`));
+        });
         _app.get('/', (req, res) => {
             res.sendFile(resolvePath(`./test/e2e/generated/${dir}/index.html`));
         });
@@ -37,7 +56,10 @@ const start = async (dir: string) => {
         // See the spec files for more information.
         _app.all('/base/api/v1.0/error', (req, res) => {
             const status = parseInt(String(req.query.status));
-            res.sendStatus(status);
+            res.status(status).json({
+                status,
+                message: 'hello world',
+            });
         });
 
         // Register an 'echo' server that just returns all data from the API calls.

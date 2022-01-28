@@ -1,18 +1,19 @@
 import browser from './scripts/browser';
+import { buildAngularProject } from './scripts/buildAngularProject';
 import { cleanup } from './scripts/cleanup';
-import { compileWithBabel } from './scripts/compileWithBabel';
 import { copyAsset } from './scripts/copyAsset';
+import { createAngularProject } from './scripts/createAngularProject';
 import { generateClient } from './scripts/generateClient';
 import server from './scripts/server';
 
-describe('v2.babel', () => {
+describe('v2.angular', () => {
     beforeAll(async () => {
-        cleanup('v2/babel');
-        await generateClient('v2/babel', 'v2', 'fetch', true, true);
-        copyAsset('index.html', 'v2/babel/index.html');
-        copyAsset('main.ts', 'v2/babel/main.ts');
-        compileWithBabel('v2/babel');
-        await server.start('v2/babel');
+        cleanup('v2/angular');
+        createAngularProject('v2/angular', 'app');
+        await generateClient('v2/angular/app/src', 'v2', 'angular');
+        copyAsset('main-angular.ts', 'v2/angular/app/src/main.ts');
+        buildAngularProject('v2/angular', 'app', 'dist');
+        await server.start('v2/angular/app/dist');
         await browser.start();
     }, 30000);
 
@@ -24,24 +25,26 @@ describe('v2.babel', () => {
     it('requests token', async () => {
         await browser.exposeFunction('tokenRequest', jest.fn().mockResolvedValue('MY_TOKEN'));
         const result = await browser.evaluate(async () => {
-            const { OpenAPI, SimpleService } = (window as any).api;
-            OpenAPI.TOKEN = (window as any).tokenRequest;
-            return await SimpleService.getCallWithoutParametersAndResponse();
+            return await new Promise<any>(resolve => {
+                const { OpenAPI, SimpleService } = (window as any).api;
+                OpenAPI.TOKEN = (window as any).tokenRequest;
+                SimpleService.getCallWithoutParametersAndResponse().subscribe(resolve);
+            });
         });
         expect(result.headers.authorization).toBe('Bearer MY_TOKEN');
     });
 
     it('supports complex params', async () => {
         const result = await browser.evaluate(async () => {
-            const { ComplexService } = (window as any).api;
-            return await ComplexService.complexTypes({
-                parameterObject: {
+            return await new Promise<any>(resolve => {
+                const { ComplexService } = (window as any).api;
+                ComplexService.complexTypes({
                     first: {
                         second: {
                             third: 'Hello World!',
                         },
                     },
-                },
+                }).subscribe(resolve);
             });
         });
         expect(result).toBeDefined();
