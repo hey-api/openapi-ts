@@ -1,5 +1,86 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`v2 should generate: ./test/generated/v2/client.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { BaseHttpRequest } from './core/BaseHttpRequest';
+import type { OpenAPIConfig } from './core/OpenAPI';
+import { FetchHttpRequest } from './core/FetchHttpRequest';
+
+import { CollectionFormatService } from './services/CollectionFormatService';
+import { ComplexService } from './services/ComplexService';
+import { DefaultService } from './services/DefaultService';
+import { DefaultsService } from './services/DefaultsService';
+import { DescriptionsService } from './services/DescriptionsService';
+import { DuplicateService } from './services/DuplicateService';
+import { ErrorService } from './services/ErrorService';
+import { HeaderService } from './services/HeaderService';
+import { MultipleTags1Service } from './services/MultipleTags1Service';
+import { MultipleTags2Service } from './services/MultipleTags2Service';
+import { MultipleTags3Service } from './services/MultipleTags3Service';
+import { NoContentService } from './services/NoContentService';
+import { ParametersService } from './services/ParametersService';
+import { ResponseService } from './services/ResponseService';
+import { SimpleService } from './services/SimpleService';
+import { TypesService } from './services/TypesService';
+
+type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
+
+export class DemoAppClient {
+
+    public readonly collectionFormat: CollectionFormatService;
+    public readonly complex: ComplexService;
+    public readonly default: DefaultService;
+    public readonly defaults: DefaultsService;
+    public readonly descriptions: DescriptionsService;
+    public readonly duplicate: DuplicateService;
+    public readonly error: ErrorService;
+    public readonly header: HeaderService;
+    public readonly multipleTags1: MultipleTags1Service;
+    public readonly multipleTags2: MultipleTags2Service;
+    public readonly multipleTags3: MultipleTags3Service;
+    public readonly noContent: NoContentService;
+    public readonly parameters: ParametersService;
+    public readonly response: ResponseService;
+    public readonly simple: SimpleService;
+    public readonly types: TypesService;
+
+    public readonly request: BaseHttpRequest;
+
+    constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {
+        this.request = new HttpRequest({
+            BASE: config?.BASE ?? 'http://localhost:3000/base',
+            VERSION: config?.VERSION ?? '1.0',
+            WITH_CREDENTIALS: config?.WITH_CREDENTIALS ?? false,
+            CREDENTIALS: config?.CREDENTIALS ?? 'include',
+            TOKEN: config?.TOKEN,
+            USERNAME: config?.USERNAME,
+            PASSWORD: config?.PASSWORD,
+            HEADERS: config?.HEADERS,
+            ENCODE_PATH: config?.ENCODE_PATH,
+        });
+
+        this.collectionFormat = new CollectionFormatService(this.request);
+        this.complex = new ComplexService(this.request);
+        this.default = new DefaultService(this.request);
+        this.defaults = new DefaultsService(this.request);
+        this.descriptions = new DescriptionsService(this.request);
+        this.duplicate = new DuplicateService(this.request);
+        this.error = new ErrorService(this.request);
+        this.header = new HeaderService(this.request);
+        this.multipleTags1 = new MultipleTags1Service(this.request);
+        this.multipleTags2 = new MultipleTags2Service(this.request);
+        this.multipleTags3 = new MultipleTags3Service(this.request);
+        this.noContent = new NoContentService(this.request);
+        this.parameters = new ParametersService(this.request);
+        this.response = new ResponseService(this.request);
+        this.simple = new SimpleService(this.request);
+        this.types = new TypesService(this.request);
+    }
+}"
+`;
+
 exports[`v2 should generate: ./test/generated/v2/core/ApiError.ts 1`] = `
 "/* istanbul ignore file */
 /* tslint:disable */
@@ -639,6 +720,7 @@ export { CollectionFormatService } from './services/CollectionFormatService';
 export { ComplexService } from './services/ComplexService';
 export { DefaultService } from './services/DefaultService';
 export { DefaultsService } from './services/DefaultsService';
+export { DescriptionsService } from './services/DescriptionsService';
 export { DuplicateService } from './services/DuplicateService';
 export { ErrorService } from './services/ErrorService';
 export { HeaderService } from './services/HeaderService';
@@ -2369,6 +2451,53 @@ export class DefaultsService {
 }"
 `;
 
+exports[`v2 should generate: ./test/generated/v2/services/DescriptionsService.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+
+export class DescriptionsService {
+
+    /**
+     * @param parameterWithBreaks Testing multiline comments in string: First line
+     * Second line
+     *
+     * Fourth line
+     * @param parameterWithBackticks Testing backticks in string: \`backticks\` and \`\`\`multiple backticks\`\`\` should work
+     * @param parameterWithSlashes Testing slashes in string: \\\\backwards\\\\\\\\\\\\ and /forwards/// should work
+     * @param parameterWithExpressionPlaceholders Testing expression placeholders in string: \${expression} should work
+     * @param parameterWithQuotes Testing quotes in string: 'single quote''' and \\"double quotes\\"\\"\\" should work
+     * @param parameterWithReservedCharacters Testing reserved characters in string: * inline * and ** inline ** should work
+     * @throws ApiError
+     */
+    public static callWithDescriptions(
+        parameterWithBreaks?: string,
+        parameterWithBackticks?: string,
+        parameterWithSlashes?: string,
+        parameterWithExpressionPlaceholders?: string,
+        parameterWithQuotes?: string,
+        parameterWithReservedCharacters?: string,
+    ): CancelablePromise<void> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v{api-version}/descriptions/',
+            query: {
+                'parameterWithBreaks': parameterWithBreaks,
+                'parameterWithBackticks': parameterWithBackticks,
+                'parameterWithSlashes': parameterWithSlashes,
+                'parameterWithExpressionPlaceholders': parameterWithExpressionPlaceholders,
+                'parameterWithQuotes': parameterWithQuotes,
+                'parameterWithReservedCharacters': parameterWithReservedCharacters,
+            },
+        });
+    }
+
+}"
+`;
+
 exports[`v2 should generate: ./test/generated/v2/services/DuplicateService.ts 1`] = `
 "/* istanbul ignore file */
 /* tslint:disable */
@@ -2898,6 +3027,99 @@ export class TypesService {
         });
     }
 
+}"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/client.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { BaseHttpRequest } from './core/BaseHttpRequest';
+import type { OpenAPIConfig } from './core/OpenAPI';
+import { FetchHttpRequest } from './core/FetchHttpRequest';
+
+import { CollectionFormatService } from './services/CollectionFormatService';
+import { ComplexService } from './services/ComplexService';
+import { DefaultService } from './services/DefaultService';
+import { DefaultsService } from './services/DefaultsService';
+import { DescriptionsService } from './services/DescriptionsService';
+import { DuplicateService } from './services/DuplicateService';
+import { ErrorService } from './services/ErrorService';
+import { FormDataService } from './services/FormDataService';
+import { HeaderService } from './services/HeaderService';
+import { MultipartService } from './services/MultipartService';
+import { MultipleTags1Service } from './services/MultipleTags1Service';
+import { MultipleTags2Service } from './services/MultipleTags2Service';
+import { MultipleTags3Service } from './services/MultipleTags3Service';
+import { NoContentService } from './services/NoContentService';
+import { ParametersService } from './services/ParametersService';
+import { RequestBodyService } from './services/RequestBodyService';
+import { ResponseService } from './services/ResponseService';
+import { SimpleService } from './services/SimpleService';
+import { TypesService } from './services/TypesService';
+import { UploadService } from './services/UploadService';
+
+type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
+
+export class DemoAppClient {
+
+    public readonly collectionFormat: CollectionFormatService;
+    public readonly complex: ComplexService;
+    public readonly default: DefaultService;
+    public readonly defaults: DefaultsService;
+    public readonly descriptions: DescriptionsService;
+    public readonly duplicate: DuplicateService;
+    public readonly error: ErrorService;
+    public readonly formData: FormDataService;
+    public readonly header: HeaderService;
+    public readonly multipart: MultipartService;
+    public readonly multipleTags1: MultipleTags1Service;
+    public readonly multipleTags2: MultipleTags2Service;
+    public readonly multipleTags3: MultipleTags3Service;
+    public readonly noContent: NoContentService;
+    public readonly parameters: ParametersService;
+    public readonly requestBody: RequestBodyService;
+    public readonly response: ResponseService;
+    public readonly simple: SimpleService;
+    public readonly types: TypesService;
+    public readonly upload: UploadService;
+
+    public readonly request: BaseHttpRequest;
+
+    constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {
+        this.request = new HttpRequest({
+            BASE: config?.BASE ?? 'http://localhost:3000/base',
+            VERSION: config?.VERSION ?? '1.0',
+            WITH_CREDENTIALS: config?.WITH_CREDENTIALS ?? false,
+            CREDENTIALS: config?.CREDENTIALS ?? 'include',
+            TOKEN: config?.TOKEN,
+            USERNAME: config?.USERNAME,
+            PASSWORD: config?.PASSWORD,
+            HEADERS: config?.HEADERS,
+            ENCODE_PATH: config?.ENCODE_PATH,
+        });
+
+        this.collectionFormat = new CollectionFormatService(this.request);
+        this.complex = new ComplexService(this.request);
+        this.default = new DefaultService(this.request);
+        this.defaults = new DefaultsService(this.request);
+        this.descriptions = new DescriptionsService(this.request);
+        this.duplicate = new DuplicateService(this.request);
+        this.error = new ErrorService(this.request);
+        this.formData = new FormDataService(this.request);
+        this.header = new HeaderService(this.request);
+        this.multipart = new MultipartService(this.request);
+        this.multipleTags1 = new MultipleTags1Service(this.request);
+        this.multipleTags2 = new MultipleTags2Service(this.request);
+        this.multipleTags3 = new MultipleTags3Service(this.request);
+        this.noContent = new NoContentService(this.request);
+        this.parameters = new ParametersService(this.request);
+        this.requestBody = new RequestBodyService(this.request);
+        this.response = new ResponseService(this.request);
+        this.simple = new SimpleService(this.request);
+        this.types = new TypesService(this.request);
+        this.upload = new UploadService(this.request);
+    }
 }"
 `;
 
@@ -3564,6 +3786,7 @@ export { CollectionFormatService } from './services/CollectionFormatService';
 export { ComplexService } from './services/ComplexService';
 export { DefaultService } from './services/DefaultService';
 export { DefaultsService } from './services/DefaultsService';
+export { DescriptionsService } from './services/DescriptionsService';
 export { DuplicateService } from './services/DuplicateService';
 export { ErrorService } from './services/ErrorService';
 export { FormDataService } from './services/FormDataService';
@@ -5876,6 +6099,53 @@ export class DefaultsService {
                 'parameterStringWithNoDefault': parameterStringWithNoDefault,
                 'parameterStringNullableWithNoDefault': parameterStringNullableWithNoDefault,
                 'parameterStringNullableWithDefault': parameterStringNullableWithDefault,
+            },
+        });
+    }
+
+}"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/services/DescriptionsService.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+
+export class DescriptionsService {
+
+    /**
+     * @param parameterWithBreaks Testing multiline comments in string: First line
+     * Second line
+     *
+     * Fourth line
+     * @param parameterWithBackticks Testing backticks in string: \`backticks\` and \`\`\`multiple backticks\`\`\` should work
+     * @param parameterWithSlashes Testing slashes in string: \\\\backwards\\\\\\\\\\\\ and /forwards/// should work
+     * @param parameterWithExpressionPlaceholders Testing expression placeholders in string: \${expression} should work
+     * @param parameterWithQuotes Testing quotes in string: 'single quote''' and \\"double quotes\\"\\"\\" should work
+     * @param parameterWithReservedCharacters Testing reserved characters in string: * inline * and ** inline ** should work
+     * @throws ApiError
+     */
+    public static callWithDescriptions(
+        parameterWithBreaks?: any,
+        parameterWithBackticks?: any,
+        parameterWithSlashes?: any,
+        parameterWithExpressionPlaceholders?: any,
+        parameterWithQuotes?: any,
+        parameterWithReservedCharacters?: any,
+    ): CancelablePromise<void> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v{api-version}/descriptions/',
+            query: {
+                'parameterWithBreaks': parameterWithBreaks,
+                'parameterWithBackticks': parameterWithBackticks,
+                'parameterWithSlashes': parameterWithSlashes,
+                'parameterWithExpressionPlaceholders': parameterWithExpressionPlaceholders,
+                'parameterWithQuotes': parameterWithQuotes,
+                'parameterWithReservedCharacters': parameterWithReservedCharacters,
             },
         });
     }

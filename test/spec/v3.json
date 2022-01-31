@@ -60,6 +60,52 @@
                 "operationId": "PatchCallWithoutParametersAndResponse"
             }
         },
+        "/api/v{api-version}/descriptions/": {
+            "post": {
+                "tags": [
+                    "Descriptions"
+                ],
+                "operationId": "CallWithDescriptions",
+                "parameters": [
+                    {
+                        "description": "Testing multiline comments in string: First line\nSecond line\n\nFourth line",
+                        "name": "parameterWithBreaks",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "description": "Testing backticks in string: `backticks` and ```multiple backticks``` should work",
+                        "name": "parameterWithBackticks",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "description": "Testing slashes in string: \\backwards\\\\\\ and /forwards/// should work",
+                        "name": "parameterWithSlashes",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "description": "Testing expression placeholders in string: ${expression} should work",
+                        "name": "parameterWithExpressionPlaceholders",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "description": "Testing quotes in string: 'single quote''' and \"double quotes\"\"\" should work",
+                        "name": "parameterWithQuotes",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "description": "Testing reserved characters in string: /* inline */ and /** inline **/ should work",
+                        "name": "parameterWithReservedCharacters",
+                        "in": "query",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
         "/api/v{api-version}/parameters/{parameterPath}": {
             "post": {
                 "tags": [

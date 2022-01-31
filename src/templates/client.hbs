@@ -18,7 +18,7 @@ export class {{{clientName}}} {
 	public readonly {{{camelCase name}}}: {{{name}}}{{{@root.postfix}}};
 	{{/each}}
 
-	private readonly request: BaseHttpRequest;
+	public readonly request: BaseHttpRequest;
 
 	constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = {{{httpRequest}}}) {
 		this.request = new HttpRequest({

@@ -6,7 +6,7 @@ import type { OpenAPIConfig } from './OpenAPI';
 
 export class BaseHttpRequest {
 
-	constructor(protected readonly config: OpenAPIConfig) {}
+	constructor(public readonly config: OpenAPIConfig) {}
 
 	public request<T>(options: ApiRequestOptions): CancelablePromise<T> {
 		throw new Error('Not Implemented');

@@ -1,7 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.18.0] - 2022-01-28
+## [0.18.1] - 2022-01-31
+### Fixed
+- Escaping error description
+- Made `Client.request` and `BaseHttpRequest.config` props public
+
+_## [0.18.0] - 2022-01-28
 ### Added
 - Angular client generation!
 - Updated documentation with more examples and better descriptions
