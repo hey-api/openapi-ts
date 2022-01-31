@@ -1,6 +1,6 @@
 # Angular support
 
-This tool allows you to generate a client based on the [`Angular HttpClient`](https://angular.io/guide/http).
+This tool allows you to generate a client based on the Angular [`HttpClient`](https://angular.io/guide/http).
 The generated services are fully injectable and make use of the [RxJS](https://rxjs.dev/) Observer pattern.
 If you want to generate the Angular based client then you can specify `--client angular` in the openapi call:
 

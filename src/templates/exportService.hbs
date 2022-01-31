@@ -124,7 +124,7 @@ export class {{{name}}}{{{@root.postfix}}} {
 			{{#if errors}}
 			errors: {
 				{{#each errors}}
-				{{{code}}}: `{{{description}}}`,
+				{{{code}}}: `{{{escapeDescription description}}}`,
 				{{/each}}
 			},
 			{{/if}}

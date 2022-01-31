@@ -22,6 +22,7 @@
         "fetch",
         "xhr",
         "axios",
+        "angular",
         "node"
     ],
     "maintainers": [
