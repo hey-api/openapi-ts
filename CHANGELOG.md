@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.19.0] - 2022-02-02
+### Fixed
+- Updated dependencies
+### Added
+- Added test cases for CLI commands
+
 ## [0.18.1] - 2022-01-31
 ### Fixed
 - Escaping error description

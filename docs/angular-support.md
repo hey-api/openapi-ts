@@ -9,9 +9,9 @@ If you want to generate the Angular based client then you can specify `--client 
 The Angular client has been tested with the following versions:
 
 ```
-"@angular/common": "13.1.3",
-"@angular/core": "13.1.3",
-"rxjs": "7.5.2",
+"@angular/common": "13.1.x",
+"@angular/core": "13.1.x",
+"rxjs": "7.5.x",
 ```
 
 ## Example
