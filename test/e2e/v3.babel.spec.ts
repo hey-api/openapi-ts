@@ -164,4 +164,18 @@ describe('v3.babel', () => {
             })
         );
     });
+
+    it('it should parse query params', async () => {
+        const result = await browser.evaluate(async () => {
+            const { ParametersService } = (window as any).api;
+            return (await ParametersService.postCallWithOptionalParam({
+                parameter: {
+                    page: 0,
+                    size: 1,
+                    sort: ['location'],
+                },
+            })) as Promise<any>;
+        });
+        expect(result.query).toStrictEqual({ parameter: { page: '0', size: '1', sort: 'location' } });
+    });
 });

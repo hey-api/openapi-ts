@@ -138,4 +138,14 @@ describe('v3.axios', () => {
             })
         );
     });
+
+    it('it should parse query params', async () => {
+        const { ParametersService } = require('./generated/v3/axios/index.js');
+        const result = (await ParametersService.postCallWithOptionalParam({
+            page: 0,
+            size: 1,
+            sort: ['location'],
+        })) as Promise<any>;
+        expect((result as any).query).toStrictEqual({ parameter: { page: '0', size: '1', sort: 'location' } });
+    });
 });

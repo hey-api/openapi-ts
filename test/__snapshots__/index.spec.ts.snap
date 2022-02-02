@@ -3541,6 +3541,7 @@ export type { ModelWithPattern } from './models/ModelWithPattern';
 export type { ModelWithProperties } from './models/ModelWithProperties';
 export type { ModelWithReference } from './models/ModelWithReference';
 export type { ModelWithString } from './models/ModelWithString';
+export type { Pageable } from './models/Pageable';
 export type { SimpleBoolean } from './models/SimpleBoolean';
 export type { SimpleFile } from './models/SimpleFile';
 export type { SimpleInteger } from './models/SimpleInteger';
@@ -3601,6 +3602,7 @@ export { $ModelWithPattern } from './schemas/$ModelWithPattern';
 export { $ModelWithProperties } from './schemas/$ModelWithProperties';
 export { $ModelWithReference } from './schemas/$ModelWithReference';
 export { $ModelWithString } from './schemas/$ModelWithString';
+export { $Pageable } from './schemas/$Pageable';
 export { $SimpleBoolean } from './schemas/$SimpleBoolean';
 export { $SimpleFile } from './schemas/$SimpleFile';
 export { $SimpleInteger } from './schemas/$SimpleInteger';
@@ -4521,6 +4523,19 @@ export type ModelWithString = {
      * This is a simple string property
      */
     prop?: string;
+};
+"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/models/Pageable.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+export type Pageable = {
+    page?: number;
+    size?: number;
+    sort?: Array<string>;
 };
 "
 `;
@@ -5612,6 +5627,31 @@ export const $ModelWithString = {
 } as const;"
 `;
 
+exports[`v3 should generate: ./test/generated/v3/schemas/$Pageable.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $Pageable = {
+    properties: {
+        page: {
+            type: 'number',
+            format: 'int32',
+        },
+        size: {
+            type: 'number',
+            format: 'int32',
+            minimum: 1,
+        },
+        sort: {
+            type: 'array',
+            contains: {
+                type: 'string',
+            },
+        },
+    },
+} as const;"
+`;
+
 exports[`v3 should generate: ./test/generated/v3/schemas/$SimpleBoolean.ts 1`] = `
 "/* istanbul ignore file */
 /* tslint:disable */
@@ -6305,6 +6345,7 @@ exports[`v3 should generate: ./test/generated/v3/services/ParametersService.ts 1
 /* tslint:disable */
 /* eslint-disable */
 import type { ModelWithString } from '../models/ModelWithString';
+import type { Pageable } from '../models/Pageable';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -6427,7 +6468,7 @@ export class ParametersService {
      * @throws ApiError
      */
     public static postCallWithOptionalParam(
-        parameter: string,
+        parameter: Pageable,
         requestBody?: ModelWithString,
     ): CancelablePromise<void> {
         return __request(OpenAPI, {

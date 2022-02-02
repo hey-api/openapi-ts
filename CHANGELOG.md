@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 - Updated dependencies
 ### Added
 - Added test cases for CLI commands
+- Added test cases for query parsing
 
 ## [0.18.1] - 2022-01-31
 ### Fixed
