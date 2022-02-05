@@ -31,8 +31,10 @@ export type Options = {
 
 export declare function generate(options: Options): Promise<void>;
 
-export default {
-    HttpClient,
-    Indent,
-    generate,
+declare type OpenAPI = {
+    HttpClient: HttpClient;
+    Indent: Indent;
+    generate: typeof generate;
 };
+
+export default OpenAPI;
