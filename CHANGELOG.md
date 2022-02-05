@@ -1,9 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.19.0] - 2022-02-02
+## [0.18.2] - 2022-02-02
 ### Fixed
 - Updated dependencies
+- Fixed type definition
 ### Added
 - Added test cases for CLI commands
 - Added test cases for query parsing
