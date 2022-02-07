@@ -34,6 +34,7 @@ export const writeClientClass = async (
 ): Promise<void> => {
     const templateResult = templates.client({
         clientName,
+        httpClient,
         postfix,
         server: client.server,
         version: client.version,
@@ -42,5 +43,5 @@ export const writeClientClass = async (
         httpRequest: getHttpRequestName(httpClient),
     });
 
-    await writeFile(resolve(outputPath, 'client.ts'), i(f(templateResult), indent));
+    await writeFile(resolve(outputPath, `${clientName}.ts`), i(f(templateResult), indent));
 };

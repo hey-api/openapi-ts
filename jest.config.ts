@@ -32,6 +32,7 @@ const config: Config.InitialOptions = {
                 '<rootDir>/test/e2e/client.node.spec.ts',
                 '<rootDir>/test/e2e/client.axios.spec.ts',
                 '<rootDir>/test/e2e/client.babel.spec.ts',
+                '<rootDir>/test/e2e/client.angular.spec.ts',
             ],
             modulePathIgnorePatterns: ['<rootDir>/test/e2e/generated'],
         },

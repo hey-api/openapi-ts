@@ -1,14 +1,35 @@
 {{>header}}
 
+{{#equals @root.httpClient 'angular'}}
+import type { HttpClient } from '@angular/common/http';
+import type { Observable } from 'rxjs';
+
+import type { ApiRequestOptions } from './ApiRequestOptions';
+import type { OpenAPIConfig } from './OpenAPI';
+{{else}}
 import type { ApiRequestOptions } from './ApiRequestOptions';
 import type { CancelablePromise } from './CancelablePromise';
 import type { OpenAPIConfig } from './OpenAPI';
+{{/equals}}
 
 export class BaseHttpRequest {
 
+	{{#equals @root.httpClient 'angular'}}
+	constructor(
+		public readonly config: OpenAPIConfig,
+		public readonly http: HttpClient,
+	) {}
+	{{else}}
 	constructor(public readonly config: OpenAPIConfig) {}
+	{{/equals}}
 
+	{{#equals @root.httpClient 'angular'}}
+	public request<T>(options: ApiRequestOptions): Observable<T> {
+		throw new Error('Not Implemented');
+	}
+	{{else}}
 	public request<T>(options: ApiRequestOptions): CancelablePromise<T> {
 		throw new Error('Not Implemented');
 	}
+	{{/equals}}
 }

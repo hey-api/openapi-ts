@@ -8,7 +8,7 @@ import server from './scripts/server';
 describe('client.babel', () => {
     beforeAll(async () => {
         cleanup('client/babel');
-        await generateClient('client/babel', 'v3', 'fetch', true, true, 'AppClient');
+        await generateClient('client/babel', 'v3', 'fetch', true, true, 'ApiClient');
         copyAsset('index.html', 'client/babel/index.html');
         copyAsset('main.ts', 'client/babel/main.ts');
         compileWithBabel('client/babel');
@@ -24,8 +24,8 @@ describe('client.babel', () => {
     it('requests token', async () => {
         await browser.exposeFunction('tokenRequest', jest.fn().mockResolvedValue('MY_TOKEN'));
         const result = await browser.evaluate(async () => {
-            const { AppClient } = (window as any).api;
-            const client = new AppClient({
+            const { ApiClient } = (window as any).api;
+            const client = new ApiClient({
                 TOKEN: (window as any).tokenRequest,
                 USERNAME: undefined,
                 PASSWORD: undefined,
@@ -37,8 +37,8 @@ describe('client.babel', () => {
 
     it('uses credentials', async () => {
         const result = await browser.evaluate(async () => {
-            const { AppClient } = (window as any).api;
-            const client = new AppClient({
+            const { ApiClient } = (window as any).api;
+            const client = new ApiClient({
                 TOKEN: undefined,
                 USERNAME: 'username',
                 PASSWORD: 'password',
@@ -50,8 +50,8 @@ describe('client.babel', () => {
 
     it('supports complex params', async () => {
         const result = await browser.evaluate(async () => {
-            const { AppClient } = (window as any).api;
-            const client = new AppClient();
+            const { ApiClient } = (window as any).api;
+            const client = new ApiClient();
             return await client.complex.complexTypes({
                 parameterObject: {
                     first: {
@@ -67,8 +67,8 @@ describe('client.babel', () => {
 
     it('support form data', async () => {
         const result = await browser.evaluate(async () => {
-            const { AppClient } = (window as any).api;
-            const client = new AppClient();
+            const { ApiClient } = (window as any).api;
+            const client = new ApiClient();
             return await client.parameters.callWithParameters({
                 parameterHeader: 'valueHeader',
                 parameterQuery: 'valueQuery',
@@ -87,8 +87,8 @@ describe('client.babel', () => {
         let error;
         try {
             await browser.evaluate(async () => {
-                const { AppClient } = (window as any).api;
-                const client = new AppClient();
+                const { ApiClient } = (window as any).api;
+                const client = new ApiClient();
                 const promise = client.simple.getCallWithoutParametersAndResponse();
                 setTimeout(() => {
                     promise.cancel();
@@ -104,8 +104,8 @@ describe('client.babel', () => {
     it('should throw known error (500)', async () => {
         const error = await browser.evaluate(async () => {
             try {
-                const { AppClient } = (window as any).api;
-                const client = new AppClient();
+                const { ApiClient } = (window as any).api;
+                const client = new ApiClient();
                 await client.error.testErrorCode({
                     status: 500,
                 });
@@ -140,8 +140,8 @@ describe('client.babel', () => {
     it('should throw unknown error (409)', async () => {
         const error = await browser.evaluate(async () => {
             try {
-                const { AppClient } = (window as any).api;
-                const client = new AppClient();
+                const { ApiClient } = (window as any).api;
+                const client = new ApiClient();
                 await client.error.testErrorCode({
                     status: 409,
                 });

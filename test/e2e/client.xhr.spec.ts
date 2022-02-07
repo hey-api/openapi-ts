@@ -8,7 +8,7 @@ import server from './scripts/server';
 describe('client.xhr', () => {
     beforeAll(async () => {
         cleanup('client/xhr');
-        await generateClient('client/xhr', 'v3', 'xhr', false, false, 'AppClient');
+        await generateClient('client/xhr', 'v3', 'xhr', false, false, 'ApiClient');
         copyAsset('index.html', 'client/xhr/index.html');
         copyAsset('main.ts', 'client/xhr/main.ts');
         compileWithTypescript('client/xhr');
@@ -24,8 +24,8 @@ describe('client.xhr', () => {
     it('requests token', async () => {
         await browser.exposeFunction('tokenRequest', jest.fn().mockResolvedValue('MY_TOKEN'));
         const result = await browser.evaluate(async () => {
-            const { AppClient } = (window as any).api;
-            const client = new AppClient({
+            const { ApiClient } = (window as any).api;
+            const client = new ApiClient({
                 TOKEN: (window as any).tokenRequest,
                 USERNAME: undefined,
                 PASSWORD: undefined,
@@ -37,8 +37,8 @@ describe('client.xhr', () => {
 
     it('uses credentials', async () => {
         const result = await browser.evaluate(async () => {
-            const { AppClient } = (window as any).api;
-            const client = new AppClient({
+            const { ApiClient } = (window as any).api;
+            const client = new ApiClient({
                 TOKEN: undefined,
                 USERNAME: 'username',
                 PASSWORD: 'password',
@@ -50,8 +50,8 @@ describe('client.xhr', () => {
 
     it('supports complex params', async () => {
         const result = await browser.evaluate(async () => {
-            const { AppClient } = (window as any).api;
-            const client = new AppClient();
+            const { ApiClient } = (window as any).api;
+            const client = new ApiClient();
             return await client.complex.complexTypes({
                 first: {
                     second: {
@@ -65,8 +65,8 @@ describe('client.xhr', () => {
 
     it('support form data', async () => {
         const result = await browser.evaluate(async () => {
-            const { AppClient } = (window as any).api;
-            const client = new AppClient();
+            const { ApiClient } = (window as any).api;
+            const client = new ApiClient();
             return await client.parameters.callWithParameters(
                 'valueHeader',
                 'valueQuery',
@@ -85,8 +85,8 @@ describe('client.xhr', () => {
         let error;
         try {
             await browser.evaluate(async () => {
-                const { AppClient } = (window as any).api;
-                const client = new AppClient();
+                const { ApiClient } = (window as any).api;
+                const client = new ApiClient();
                 const promise = client.simple.getCallWithoutParametersAndResponse();
                 setTimeout(() => {
                     promise.cancel();
@@ -102,8 +102,8 @@ describe('client.xhr', () => {
     it('should throw known error (500)', async () => {
         const error = await browser.evaluate(async () => {
             try {
-                const { AppClient } = (window as any).api;
-                const client = new AppClient();
+                const { ApiClient } = (window as any).api;
+                const client = new ApiClient();
                 await client.error.testErrorCode(500);
             } catch (e) {
                 const error = e as any;
@@ -136,8 +136,8 @@ describe('client.xhr', () => {
     it('should throw unknown error (409)', async () => {
         const error = await browser.evaluate(async () => {
             try {
-                const { AppClient } = (window as any).api;
-                const client = new AppClient();
+                const { ApiClient } = (window as any).api;
+                const client = new ApiClient();
                 await client.error.testErrorCode(409);
             } catch (e) {
                 const error = e as any;

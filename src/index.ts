@@ -4,7 +4,6 @@ import { parse as parseV2 } from './openApi/v2';
 import { parse as parseV3 } from './openApi/v3';
 import { getOpenApiSpec } from './utils/getOpenApiSpec';
 import { getOpenApiVersion, OpenApiVersion } from './utils/getOpenApiVersion';
-import { isDefined } from './utils/isDefined';
 import { isString } from './utils/isString';
 import { postProcessClient } from './utils/postProcessClient';
 import { registerHandlebarTemplates } from './utils/registerHandlebarTemplates';
@@ -65,10 +64,6 @@ export const generate = async ({
     request,
     write = true,
 }: Options): Promise<void> => {
-    if (httpClient === HttpClient.ANGULAR && isDefined(clientName)) {
-        throw new Error('Angular client does not support --name property');
-    }
-
     const openApi = isString(input) ? await getOpenApiSpec(input) : input;
     const openApiVersion = getOpenApiVersion(openApi);
     const templates = registerHandlebarTemplates({

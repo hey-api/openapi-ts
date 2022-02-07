@@ -1,7 +1,8 @@
 {{>header}}
 
 {{#if @root.exportClient}}
-export { {{{clientName}}} } from './client';
+export { {{{clientName}}} } from './{{{clientName}}}';
+
 {{/if}}
 {{#if @root.exportCore}}
 export { ApiError } from './core/ApiError';

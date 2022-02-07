@@ -1,8 +1,18 @@
 {{>header}}
 
+{{#equals @root.httpClient 'angular'}}
+import { NgModule} from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
+
+import { AngularHttpRequest } from './core/AngularHttpRequest';
+import { BaseHttpRequest } from './core/BaseHttpRequest';
+import type { OpenAPIConfig } from './core/OpenAPI';
+import { OpenAPI } from './core/OpenAPI';
+{{else}}
 import type { BaseHttpRequest } from './core/BaseHttpRequest';
 import type { OpenAPIConfig } from './core/OpenAPI';
 import { {{{httpRequest}}} } from './core/{{{httpRequest}}}';
+{{/equals}}
 
 {{#if services}}
 {{#each services}}
@@ -10,6 +20,35 @@ import { {{{name}}}{{{@root.postfix}}} } from './services/{{{name}}}{{{@root.pos
 {{/each}}
 {{/if}}
 
+{{#equals @root.httpClient 'angular'}}
+@NgModule({
+	imports: [HttpClientModule],
+	providers: [
+		{
+			provide: OpenAPI,
+			useValue: {
+				BASE: OpenAPI?.BASE ?? '{{{server}}}',
+				VERSION: OpenAPI?.VERSION ?? '{{{version}}}',
+				WITH_CREDENTIALS: OpenAPI?.WITH_CREDENTIALS ?? false,
+				CREDENTIALS: OpenAPI?.CREDENTIALS ?? 'include',
+				TOKEN: OpenAPI?.TOKEN,
+				USERNAME: OpenAPI?.USERNAME,
+				PASSWORD: OpenAPI?.PASSWORD,
+				HEADERS: OpenAPI?.HEADERS,
+				ENCODE_PATH: OpenAPI?.ENCODE_PATH,
+			} as OpenAPIConfig,
+		},
+		{
+			provide: BaseHttpRequest,
+			useClass: AngularHttpRequest,
+		},
+		{{#each services}}
+		{{{name}}}{{{@root.postfix}}},
+		{{/each}}
+	]
+})
+export class {{{clientName}}} {}
+{{else}}
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 
 export class {{{clientName}}} {
@@ -38,3 +77,4 @@ export class {{{clientName}}} {
 		{{/each}}
 	}
 }
+{{/equals}}

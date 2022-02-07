@@ -6,7 +6,7 @@ import server from './scripts/server';
 describe('client.axios', () => {
     beforeAll(async () => {
         cleanup('client/axios');
-        await generateClient('client/axios', 'v3', 'axios', false, false, 'AppClient');
+        await generateClient('client/axios', 'v3', 'axios', false, false, 'ApiClient');
         compileWithTypescript('client/axios');
         await server.start('client/axios');
     }, 30000);
@@ -16,9 +16,9 @@ describe('client.axios', () => {
     });
 
     it('requests token', async () => {
-        const { AppClient } = require('./generated/client/axios/index.js');
+        const { ApiClient } = require('./generated/client/axios/index.js');
         const tokenRequest = jest.fn().mockResolvedValue('MY_TOKEN');
-        const client = new AppClient({
+        const client = new ApiClient({
             TOKEN: tokenRequest,
             USERNAME: undefined,
             PASSWORD: undefined,
@@ -29,8 +29,8 @@ describe('client.axios', () => {
     });
 
     it('uses credentials', async () => {
-        const { AppClient } = require('./generated/client/axios/index.js');
-        const client = new AppClient({
+        const { ApiClient } = require('./generated/client/axios/index.js');
+        const client = new ApiClient({
             TOKEN: undefined,
             USERNAME: 'username',
             PASSWORD: 'password',
@@ -40,8 +40,8 @@ describe('client.axios', () => {
     });
 
     it('supports complex params', async () => {
-        const { AppClient } = require('./generated/client/axios/index.js');
-        const client = new AppClient();
+        const { ApiClient } = require('./generated/client/axios/index.js');
+        const client = new ApiClient();
         const result = await client.complex.complexTypes({
             first: {
                 second: {
@@ -53,8 +53,8 @@ describe('client.axios', () => {
     });
 
     it('supports form data', async () => {
-        const { AppClient } = require('./generated/client/axios/index.js');
-        const client = new AppClient();
+        const { ApiClient } = require('./generated/client/axios/index.js');
+        const client = new ApiClient();
         const result = await client.parameters.callWithParameters(
             'valueHeader',
             'valueQuery',
@@ -71,8 +71,8 @@ describe('client.axios', () => {
     it('can abort the request', async () => {
         let error;
         try {
-            const { AppClient } = require('./generated/client/axios/index.js');
-            const client = new AppClient();
+            const { ApiClient } = require('./generated/client/axios/index.js');
+            const client = new ApiClient();
             const promise = client.simple.getCallWithoutParametersAndResponse();
             setTimeout(() => {
                 promise.cancel();
@@ -87,8 +87,8 @@ describe('client.axios', () => {
     it('should throw known error (500)', async () => {
         let error;
         try {
-            const { AppClient } = require('./generated/client/axios/index.js');
-            const client = new AppClient();
+            const { ApiClient } = require('./generated/client/axios/index.js');
+            const client = new ApiClient();
             await client.error.testErrorCode(500);
         } catch (e) {
             const err = e as any;
@@ -119,8 +119,8 @@ describe('client.axios', () => {
     it('should throw unknown error (409)', async () => {
         let error;
         try {
-            const { AppClient } = require('./generated/client/axios/index.js');
-            const client = new AppClient();
+            const { ApiClient } = require('./generated/client/axios/index.js');
+            const client = new ApiClient();
             await client.error.testErrorCode(409);
         } catch (e) {
             const err = e as any;
