@@ -1,8 +1,8 @@
 {{>header}}
 
 {{#equals @root.httpClient 'angular'}}
-import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import type { Observable } from 'rxjs';
 
 import type { ApiRequestOptions } from './ApiRequestOptions';
