@@ -2,7 +2,7 @@ import { escapeName } from './escapeName';
 
 describe('escapeName', () => {
     it('should escape', () => {
-        expect(escapeName('')).toEqual('');
+        expect(escapeName('')).toEqual("''");
         expect(escapeName('fooBar')).toEqual('fooBar');
         expect(escapeName('Foo Bar')).toEqual(`'Foo Bar'`);
         expect(escapeName('foo bar')).toEqual(`'foo bar'`);
