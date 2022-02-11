@@ -12,20 +12,20 @@ jobs:
             - v1-dependencies-
       - run:
           name: Install dependencies
-          command: yarn install
+          command: npm install
       - save_cache:
           key: v1-dependencies-{{ checksum "package.json" }}
           paths:
             - node_modules
       - run:
           name: Build library
-          command: yarn run release
+          command: npm run release
       - run:
           name: Run unit tests
-          command: yarn run test:coverage
+          command: npm run test:coverage
       - run:
           name: Run e2e tests
-          command: yarn run test:e2e
+          command: npm run test:e2e
       - run:
          name: Submit to Codecov
-         command: yarn run codecov
+         command: npm run codecov
