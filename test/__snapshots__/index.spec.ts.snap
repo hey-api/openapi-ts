@@ -1000,7 +1000,7 @@ export enum EnumWithStrings {
     /**
      * null
      */
-    _SINGLE_QUOTE_ = ''Single Quote'',
+    _SINGLE_QUOTE_ = '\\\\'Single Quote\\\\'',
     /**
      * null
      */
