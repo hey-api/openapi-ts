@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.20.0] - 2022-02-25
 ### Fixed
+- Updated dependencies
 - Support enums with single quotes in names
 - Generating better names when `operationId` is not given (breaking change)
 - Fixed issue where `x-enum` flags where breaking due to non-string values
