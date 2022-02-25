@@ -20,7 +20,7 @@ export const getOperation = (
     pathParams: OperationParameters
 ): Operation => {
     const serviceName = getServiceName(tag);
-    const operationName = getOperationName(op.operationId || `${method}`);
+    const operationName = getOperationName(url, method, op.operationId);
 
     // Create a new operation object for this method.
     const operation: Operation = {

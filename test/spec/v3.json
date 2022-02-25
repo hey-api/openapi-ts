@@ -1537,7 +1537,9 @@
                 "enum": [
                     "Success",
                     "Warning",
-                    "Error"
+                    "Error",
+                    "'Single Quote'",
+                    "\"Double Quotes\""
                 ]
             },
             "EnumWithNumbers": {

@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.20.0] - 2022-02-25
+### Fixed
+- Support enums with single quotes in names
+- Generating better names when `operationId` is not given (breaking change)
+
 ## [0.19.0] - 2022-02-02
 ### Added
 - Support for Angular client with `--name` option

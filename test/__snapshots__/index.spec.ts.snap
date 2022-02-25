@@ -1,5 +1,77 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`v2 should generate: ./test/generated/v2/Demo.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import { NgModule} from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
+
+import { AngularHttpRequest } from './core/AngularHttpRequest';
+import { BaseHttpRequest } from './core/BaseHttpRequest';
+import type { OpenAPIConfig } from './core/OpenAPI';
+import { OpenAPI } from './core/OpenAPI';
+
+import { CollectionFormatService } from './services/CollectionFormatService';
+import { ComplexService } from './services/ComplexService';
+import { DefaultService } from './services/DefaultService';
+import { DefaultsService } from './services/DefaultsService';
+import { DescriptionsService } from './services/DescriptionsService';
+import { DuplicateService } from './services/DuplicateService';
+import { ErrorService } from './services/ErrorService';
+import { HeaderService } from './services/HeaderService';
+import { MultipleTags1Service } from './services/MultipleTags1Service';
+import { MultipleTags2Service } from './services/MultipleTags2Service';
+import { MultipleTags3Service } from './services/MultipleTags3Service';
+import { NoContentService } from './services/NoContentService';
+import { ParametersService } from './services/ParametersService';
+import { ResponseService } from './services/ResponseService';
+import { SimpleService } from './services/SimpleService';
+import { TypesService } from './services/TypesService';
+
+@NgModule({
+    imports: [HttpClientModule],
+    providers: [
+        {
+            provide: OpenAPI,
+            useValue: {
+                BASE: OpenAPI?.BASE ?? 'http://localhost:3000/base',
+                VERSION: OpenAPI?.VERSION ?? '1.0',
+                WITH_CREDENTIALS: OpenAPI?.WITH_CREDENTIALS ?? false,
+                CREDENTIALS: OpenAPI?.CREDENTIALS ?? 'include',
+                TOKEN: OpenAPI?.TOKEN,
+                USERNAME: OpenAPI?.USERNAME,
+                PASSWORD: OpenAPI?.PASSWORD,
+                HEADERS: OpenAPI?.HEADERS,
+                ENCODE_PATH: OpenAPI?.ENCODE_PATH,
+            } as OpenAPIConfig,
+        },
+        {
+            provide: BaseHttpRequest,
+            useClass: AngularHttpRequest,
+        },
+        CollectionFormatService,
+        ComplexService,
+        DefaultService,
+        DefaultsService,
+        DescriptionsService,
+        DuplicateService,
+        ErrorService,
+        HeaderService,
+        MultipleTags1Service,
+        MultipleTags2Service,
+        MultipleTags3Service,
+        NoContentService,
+        ParametersService,
+        ResponseService,
+        SimpleService,
+        TypesService,
+    ]
+})
+export class Demo {}
+"
+`;
+
 exports[`v2 should generate: ./test/generated/v2/core/ApiError.ts 1`] = `
 "/* istanbul ignore file */
 /* tslint:disable */
@@ -943,6 +1015,8 @@ export enum EnumWithStrings {
     SUCCESS = 'Success',
     WARNING = 'Warning',
     ERROR = 'Error',
+    _SINGLE_QUOTE_ = ''Single Quote'',
+    _DOUBLE_QUOTES_ = '\\"Double Quotes\\"',
 }"
 `;
 
@@ -2949,6 +3023,86 @@ export class TypesService {
 }"
 `;
 
+exports[`v3 should generate: ./test/generated/v3/Demo.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import { NgModule} from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
+
+import { AngularHttpRequest } from './core/AngularHttpRequest';
+import { BaseHttpRequest } from './core/BaseHttpRequest';
+import type { OpenAPIConfig } from './core/OpenAPI';
+import { OpenAPI } from './core/OpenAPI';
+
+import { CollectionFormatService } from './services/CollectionFormatService';
+import { ComplexService } from './services/ComplexService';
+import { DefaultService } from './services/DefaultService';
+import { DefaultsService } from './services/DefaultsService';
+import { DescriptionsService } from './services/DescriptionsService';
+import { DuplicateService } from './services/DuplicateService';
+import { ErrorService } from './services/ErrorService';
+import { FormDataService } from './services/FormDataService';
+import { HeaderService } from './services/HeaderService';
+import { MultipartService } from './services/MultipartService';
+import { MultipleTags1Service } from './services/MultipleTags1Service';
+import { MultipleTags2Service } from './services/MultipleTags2Service';
+import { MultipleTags3Service } from './services/MultipleTags3Service';
+import { NoContentService } from './services/NoContentService';
+import { ParametersService } from './services/ParametersService';
+import { RequestBodyService } from './services/RequestBodyService';
+import { ResponseService } from './services/ResponseService';
+import { SimpleService } from './services/SimpleService';
+import { TypesService } from './services/TypesService';
+import { UploadService } from './services/UploadService';
+
+@NgModule({
+    imports: [HttpClientModule],
+    providers: [
+        {
+            provide: OpenAPI,
+            useValue: {
+                BASE: OpenAPI?.BASE ?? 'http://localhost:3000/base',
+                VERSION: OpenAPI?.VERSION ?? '1.0',
+                WITH_CREDENTIALS: OpenAPI?.WITH_CREDENTIALS ?? false,
+                CREDENTIALS: OpenAPI?.CREDENTIALS ?? 'include',
+                TOKEN: OpenAPI?.TOKEN,
+                USERNAME: OpenAPI?.USERNAME,
+                PASSWORD: OpenAPI?.PASSWORD,
+                HEADERS: OpenAPI?.HEADERS,
+                ENCODE_PATH: OpenAPI?.ENCODE_PATH,
+            } as OpenAPIConfig,
+        },
+        {
+            provide: BaseHttpRequest,
+            useClass: AngularHttpRequest,
+        },
+        CollectionFormatService,
+        ComplexService,
+        DefaultService,
+        DefaultsService,
+        DescriptionsService,
+        DuplicateService,
+        ErrorService,
+        FormDataService,
+        HeaderService,
+        MultipartService,
+        MultipleTags1Service,
+        MultipleTags2Service,
+        MultipleTags3Service,
+        NoContentService,
+        ParametersService,
+        RequestBodyService,
+        ResponseService,
+        SimpleService,
+        TypesService,
+        UploadService,
+    ]
+})
+export class Demo {}
+"
+`;
+
 exports[`v3 should generate: ./test/generated/v3/core/ApiError.ts 1`] = `
 "/* istanbul ignore file */
 /* tslint:disable */
@@ -4089,6 +4243,8 @@ export enum EnumWithStrings {
     SUCCESS = 'Success',
     WARNING = 'Warning',
     ERROR = 'Error',
+    _SINGLE_QUOTE_ = '\\\\'Single Quote\\\\'',
+    _DOUBLE_QUOTES_ = '\\"Double Quotes\\"',
 }"
 `;
 
@@ -6125,7 +6281,7 @@ export class FormDataService {
      * @param formData A reusable request body
      * @throws ApiError
      */
-    public static post(
+    public static postApiFormData(
         parameter?: string,
         formData?: ModelWithString,
     ): CancelablePromise<void> {
@@ -6502,7 +6658,7 @@ export class RequestBodyService {
      * @param requestBody A reusable request body
      * @throws ApiError
      */
-    public static post(
+    public static postApiRequestBody(
         parameter?: string,
         requestBody?: ModelWithString,
     ): CancelablePromise<void> {
