@@ -2066,6 +2066,76 @@
                     }
                 }
             },
+            "CompositionWithOneOfAndSimpleDictionary": {
+                "description": "This is a model that contains a simple dictionary within composition",
+                "type": "object",
+                "properties": {
+                    "propA": {
+                        "oneOf": [
+                            {
+                                "type": "boolean"
+                            },
+                            {
+                                "type": "object",
+                                "additionalProperties": {
+                                    "type": "number"
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            "CompositionWithOneOfAndSimpleArrayDictionary": {
+                "description": "This is a model that contains a dictionary of simple arrays within composition",
+                "type": "object",
+                "properties": {
+                    "propA": {
+                        "oneOf": [
+                            {
+                                "type": "boolean"
+                            },
+                            {
+                                "type": "object",
+                                "additionalProperties": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            "CompositionWithOneOfAndComplexArrayDictionary": {
+                "description": "This is a model that contains a dictionary of complex arrays (composited) within composition",
+                "type": "object",
+                "properties": {
+                    "propA": {
+                        "oneOf": [
+                            {
+                                "type": "boolean"
+                            },
+                            {
+                                "type": "object",
+                                "additionalProperties": {
+                                    "type": "array",
+                                    "items": {
+                                        "oneOf": [
+                                            {
+                                                "type": "number"
+                                            },
+                                            {
+                                                "type": "string"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
             "CompositionWithAllOfAndNullable": {
                 "description": "This is a model with one property with a 'all of' relationship",
                 "type": "object",

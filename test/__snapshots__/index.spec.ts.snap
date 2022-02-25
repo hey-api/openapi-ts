@@ -3661,7 +3661,10 @@ export type { CompositionWithAnyOf } from './models/CompositionWithAnyOf';
 export type { CompositionWithAnyOfAndNullable } from './models/CompositionWithAnyOfAndNullable';
 export type { CompositionWithAnyOfAnonymous } from './models/CompositionWithAnyOfAnonymous';
 export type { CompositionWithOneOf } from './models/CompositionWithOneOf';
+export type { CompositionWithOneOfAndComplexArrayDictionary } from './models/CompositionWithOneOfAndComplexArrayDictionary';
 export type { CompositionWithOneOfAndNullable } from './models/CompositionWithOneOfAndNullable';
+export type { CompositionWithOneOfAndSimpleArrayDictionary } from './models/CompositionWithOneOfAndSimpleArrayDictionary';
+export type { CompositionWithOneOfAndSimpleDictionary } from './models/CompositionWithOneOfAndSimpleDictionary';
 export type { CompositionWithOneOfAnonymous } from './models/CompositionWithOneOfAnonymous';
 export type { CompositionWithOneOfDiscriminator } from './models/CompositionWithOneOfDiscriminator';
 export type { DictionaryWithArray } from './models/DictionaryWithArray';
@@ -3722,7 +3725,10 @@ export { $CompositionWithAnyOf } from './schemas/$CompositionWithAnyOf';
 export { $CompositionWithAnyOfAndNullable } from './schemas/$CompositionWithAnyOfAndNullable';
 export { $CompositionWithAnyOfAnonymous } from './schemas/$CompositionWithAnyOfAnonymous';
 export { $CompositionWithOneOf } from './schemas/$CompositionWithOneOf';
+export { $CompositionWithOneOfAndComplexArrayDictionary } from './schemas/$CompositionWithOneOfAndComplexArrayDictionary';
 export { $CompositionWithOneOfAndNullable } from './schemas/$CompositionWithOneOfAndNullable';
+export { $CompositionWithOneOfAndSimpleArrayDictionary } from './schemas/$CompositionWithOneOfAndSimpleArrayDictionary';
+export { $CompositionWithOneOfAndSimpleDictionary } from './schemas/$CompositionWithOneOfAndSimpleDictionary';
 export { $CompositionWithOneOfAnonymous } from './schemas/$CompositionWithOneOfAnonymous';
 export { $CompositionWithOneOfDiscriminator } from './schemas/$CompositionWithOneOfDiscriminator';
 export { $DictionaryWithArray } from './schemas/$DictionaryWithArray';
@@ -4056,6 +4062,20 @@ export type CompositionWithOneOf = {
 "
 `;
 
+exports[`v3 should generate: ./test/generated/v3/models/CompositionWithOneOfAndComplexArrayDictionary.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+/**
+ * This is a model that contains a dictionary of complex arrays (composited) within composition
+ */
+export type CompositionWithOneOfAndComplexArrayDictionary = {
+    propA?: (boolean | Record<string, Array<(number | string)>>);
+};
+"
+`;
+
 exports[`v3 should generate: ./test/generated/v3/models/CompositionWithOneOfAndNullable.ts 1`] = `
 "/* istanbul ignore file */
 /* tslint:disable */
@@ -4072,6 +4092,34 @@ export type CompositionWithOneOfAndNullable = {
     propA?: ({
         boolean?: boolean;
     } | ModelWithEnum | ModelWithArray | ModelWithDictionary) | null;
+};
+"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/models/CompositionWithOneOfAndSimpleArrayDictionary.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+/**
+ * This is a model that contains a dictionary of simple arrays within composition
+ */
+export type CompositionWithOneOfAndSimpleArrayDictionary = {
+    propA?: (boolean | Record<string, Array<boolean>>);
+};
+"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/models/CompositionWithOneOfAndSimpleDictionary.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+/**
+ * This is a model that contains a simple dictionary within composition
+ */
+export type CompositionWithOneOfAndSimpleDictionary = {
+    propA?: (boolean | Record<string, number>);
 };
 "
 `;
@@ -5084,6 +5132,36 @@ export const $CompositionWithOneOf = {
 } as const;"
 `;
 
+exports[`v3 should generate: ./test/generated/v3/schemas/$CompositionWithOneOfAndComplexArrayDictionary.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $CompositionWithOneOfAndComplexArrayDictionary = {
+    description: \`This is a model that contains a dictionary of complex arrays (composited) within composition\`,
+    properties: {
+        propA: {
+            type: 'one-of',
+            contains: [{
+                type: 'boolean',
+            }, {
+                type: 'dictionary',
+                contains: {
+                    type: 'array',
+                    contains: {
+                        type: 'one-of',
+                        contains: [{
+                            type: 'number',
+                        }, {
+                            type: 'string',
+                        }],
+                    },
+                },
+            }],
+        },
+    },
+} as const;"
+`;
+
 exports[`v3 should generate: ./test/generated/v3/schemas/$CompositionWithOneOfAndNullable.ts 1`] = `
 "/* istanbul ignore file */
 /* tslint:disable */
@@ -5107,6 +5185,53 @@ export const $CompositionWithOneOfAndNullable = {
                 type: 'ModelWithDictionary',
             }],
             isNullable: true,
+        },
+    },
+} as const;"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/schemas/$CompositionWithOneOfAndSimpleArrayDictionary.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $CompositionWithOneOfAndSimpleArrayDictionary = {
+    description: \`This is a model that contains a dictionary of simple arrays within composition\`,
+    properties: {
+        propA: {
+            type: 'one-of',
+            contains: [{
+                type: 'boolean',
+            }, {
+                type: 'dictionary',
+                contains: {
+                    type: 'array',
+                    contains: {
+                        type: 'boolean',
+                    },
+                },
+            }],
+        },
+    },
+} as const;"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/schemas/$CompositionWithOneOfAndSimpleDictionary.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $CompositionWithOneOfAndSimpleDictionary = {
+    description: \`This is a model that contains a simple dictionary within composition\`,
+    properties: {
+        propA: {
+            type: 'one-of',
+            contains: [{
+                type: 'boolean',
+            }, {
+                type: 'dictionary',
+                contains: {
+                    type: 'number',
+                },
+            }],
         },
     },
 } as const;"

@@ -31,8 +31,9 @@ export const getModelComposition = (
             const hasProperties = model.properties.length;
             const hasEnums = model.enums.length;
             const isObject = model.type === 'any';
+            const isDictionary = model.export === 'dictionary';
             const isEmpty = isObject && !hasProperties && !hasEnums;
-            return !isEmpty;
+            return !isEmpty || isDictionary;
         })
         .forEach(model => {
             composition.imports.push(...model.imports);
