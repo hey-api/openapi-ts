@@ -12,7 +12,7 @@ import type { CancelablePromise } from './CancelablePromise';
 import type { OpenAPIConfig } from './OpenAPI';
 {{/equals}}
 
-export class BaseHttpRequest {
+export abstract class BaseHttpRequest {
 
 	{{#equals @root.httpClient 'angular'}}
 	constructor(
@@ -24,12 +24,8 @@ export class BaseHttpRequest {
 	{{/equals}}
 
 	{{#equals @root.httpClient 'angular'}}
-	public request<T>(options: ApiRequestOptions): Observable<T> {
-		throw new Error('Not Implemented');
-	}
+	public abstract request<T>(options: ApiRequestOptions): Observable<T>;
 	{{else}}
-	public request<T>(options: ApiRequestOptions): CancelablePromise<T> {
-		throw new Error('Not Implemented');
-	}
+	public abstract request<T>(options: ApiRequestOptions): CancelablePromise<T>;
 	{{/equals}}
 }
