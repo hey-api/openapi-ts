@@ -7,7 +7,7 @@ The generated client uses an instance of the server configuration and not the gl
 To generate a client instance, set a custom name to the client class, use `--name` option.
 
 ```
-openapi --input ./spec.json --output ./generated ---name AppClient
+openapi --input ./spec.json --output ./generated --name AppClient
 ```
 
 The generated client will be exported from the `index` file and can be used as shown below:
