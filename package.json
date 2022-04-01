@@ -77,7 +77,7 @@
         "@angular/platform-browser-dynamic": "13.2.4",
         "@angular/router": "13.2.4",
         "@babel/cli": "7.17.6",
-        "@babel/core": "7.17.5",
+        "@babel/core": "7.17.8",
         "@babel/preset-env": "7.16.11",
         "@babel/preset-typescript": "7.16.7",
         "@rollup/plugin-commonjs": "21.0.2",
