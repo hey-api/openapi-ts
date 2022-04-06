@@ -24,7 +24,7 @@ export const getEnum = (values?: (string | number)[]): Enum[] => {
                         .replace(/^(\d+)/g, '_$1')
                         .replace(/([a-z])([A-Z]+)/g, '$1_$2')
                         .toUpperCase(),
-                    value: `'${value.replace(/'/g, '\\\'')}'`,
+                    value: `'${value.replace(/'/g, "\\'")}'`,
                     type: 'string',
                     description: null,
                 };

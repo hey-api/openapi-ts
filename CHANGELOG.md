@@ -1,10 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.20.2] - 2022-02-25
+## [0.21.0] - 2022-04-06
 ### Fixed
 - Return `undefined` to match `noImplicitReturns` rule
 - Made `BaseHttpRequest` class abstract
+- Removed private fields using `#` inside `CancelablePromise`
 - Filter out wrong enum values
 
 ## [0.20.1] - 2022-02-25
