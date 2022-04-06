@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.20.2] - 2022-02-25
+### Fixed
+- Return `undefined` to match `noImplicitReturns` rule
+- Made `BaseHttpRequest` class abstract
+- Filter out wrong enum values
+
 ## [0.20.1] - 2022-02-25
 ### Fixed
 - Support enums with single quotes in names for V2

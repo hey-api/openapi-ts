@@ -410,7 +410,7 @@ const getRequestBody = (options: ApiRequestOptions): any => {
             return JSON.stringify(options.body);
         }
     }
-    return;
+    return undefined;
 };
 
 export const sendRequest = async (
@@ -466,7 +466,7 @@ const getResponseBody = async (response: Response): Promise<any> => {
             console.error(error);
         }
     }
-    return;
+    return undefined;
 };
 
 const catchErrorCodes = (options: ApiRequestOptions, result: ApiResult): void => {
@@ -3421,7 +3421,7 @@ const getRequestBody = (options: ApiRequestOptions): any => {
             return JSON.stringify(options.body);
         }
     }
-    return;
+    return undefined;
 };
 
 export const sendRequest = async (
@@ -3477,7 +3477,7 @@ const getResponseBody = async (response: Response): Promise<any> => {
             console.error(error);
         }
     }
-    return;
+    return undefined;
 };
 
 const catchErrorCodes = (options: ApiRequestOptions, result: ApiResult): void => {

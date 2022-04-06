@@ -6,7 +6,7 @@ export const getOperationParameterDefault = (
     operationParameter: OperationParameter
 ): string | undefined => {
     if (parameter.default === undefined) {
-        return;
+        return undefined;
     }
 
     if (parameter.default === null) {
@@ -38,5 +38,5 @@ export const getOperationParameterDefault = (
             }
     }
 
-    return;
+    return undefined;
 };
