@@ -347,7 +347,7 @@ const getFormData = (options: ApiRequestOptions): FormData | undefined => {
 
         return formData;
     }
-    return;
+    return undefined;
 };
 
 type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
@@ -447,7 +447,7 @@ const getResponseHeader = (response: Response, responseHeader?: string): string 
             return content;
         }
     }
-    return;
+    return undefined;
 };
 
 const getResponseBody = async (response: Response): Promise<any> => {
@@ -3358,7 +3358,7 @@ const getFormData = (options: ApiRequestOptions): FormData | undefined => {
 
         return formData;
     }
-    return;
+    return undefined;
 };
 
 type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
@@ -3458,7 +3458,7 @@ const getResponseHeader = (response: Response, responseHeader?: string): string 
             return content;
         }
     }
-    return;
+    return undefined;
 };
 
 const getResponseBody = async (response: Response): Promise<any> => {
