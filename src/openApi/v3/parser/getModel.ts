@@ -4,7 +4,6 @@ import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 import { extendEnum } from './extendEnum';
 import { getEnum } from './getEnum';
-import { getEnumFromDescription } from './getEnumFromDescription';
 import { getModelComposition } from './getModelComposition';
 import { getModelDefault } from './getModelDefault';
 import { getModelProperties } from './getModelProperties';
@@ -67,18 +66,6 @@ export const getModel = (
             model.type = 'string';
             model.base = 'string';
             model.enum.push(...extendedEnumerators);
-            model.default = getModelDefault(definition, model);
-            return model;
-        }
-    }
-
-    if ((definition.type === 'int' || definition.type === 'integer') && definition.description) {
-        const enumerators = getEnumFromDescription(definition.description);
-        if (enumerators.length) {
-            model.export = 'enum';
-            model.type = 'number';
-            model.base = 'number';
-            model.enum.push(...enumerators);
             model.default = getModelDefault(definition, model);
             return model;
         }

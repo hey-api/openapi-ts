@@ -23,7 +23,7 @@ const sendRequest = async <T>(
 	try {
 		return await axios.request(requestConfig);
 	} catch (error) {
-		const axiosError = error as AxiosError;
+		const axiosError = error as AxiosError<T>;
 		if (axiosError.response) {
 			return axiosError.response;
 		}

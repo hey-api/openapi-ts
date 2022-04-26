@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.22.0] - 2022-04-26
+### Fixed
+- Upgraded dependencies
+- Fixed issue with `null` value inside comments for OpenAPI v2 enums
+- Fixed issue with compatibility for latest version of Axios (0.27.x)
+### Removed
+- Removed deprecated enum model generation
+
 ## [0.21.0] - 2022-04-06
 ### Fixed
 - Return `undefined` to match `noImplicitReturns` rule
