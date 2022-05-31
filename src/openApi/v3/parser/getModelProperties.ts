@@ -37,6 +37,7 @@ export const getModelProperties = (
             > = {
                 name: escapeName(propertyName),
                 description: property.description || null,
+                deprecated: property.deprecated === true,
                 isDefinition: false,
                 isReadOnly: property.readOnly === true,
                 isRequired: propertyRequired,

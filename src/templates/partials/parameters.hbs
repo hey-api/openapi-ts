@@ -6,9 +6,16 @@
 {{/each}}
 }: {
 {{#each parameters}}
+{{#ifdef description deprecated}}
+/**
 {{#if description}}
-/** {{{escapeComment description}}} **/
+ * {{{escapeComment description}}}
 {{/if}}
+{{#if deprecated}}
+ * @deprecated
+{{/if}}
+ */
+{{/ifdef}}
 {{{name}}}{{>isRequired}}: {{>type}},
 {{/each}}
 }

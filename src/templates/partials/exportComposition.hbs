@@ -1,8 +1,13 @@
-{{#if description}}
+{{#ifdef description deprecated}}
 /**
+{{#if description}}
  * {{{escapeComment description}}}
- */
 {{/if}}
+{{#if deprecated}}
+ * @deprecated
+{{/if}}
+ */
+{{/ifdef}}
 export type {{{name}}} = {{>type parent=name}};
 {{#if enums}}
 {{#unless @root.useUnionTypes}}
@@ -10,11 +15,16 @@ export type {{{name}}} = {{>type parent=name}};
 export namespace {{{name}}} {
 
 	{{#each enums}}
-	{{#if description}}
+	{{#ifdef description deprecated}}
 	/**
+	{{#if description}}
 	 * {{{escapeComment description}}}
-	 */
 	{{/if}}
+	{{#if deprecated}}
+	 * @deprecated
+	{{/if}}
+	 */
+	{{/ifdef}}
 	export enum {{{name}}} {
 		{{#each enum}}
 		{{{name}}} = {{{value}}},

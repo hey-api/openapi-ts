@@ -3632,6 +3632,7 @@ export type { CompositionWithOneOfAndSimpleArrayDictionary } from './models/Comp
 export type { CompositionWithOneOfAndSimpleDictionary } from './models/CompositionWithOneOfAndSimpleDictionary';
 export type { CompositionWithOneOfAnonymous } from './models/CompositionWithOneOfAnonymous';
 export type { CompositionWithOneOfDiscriminator } from './models/CompositionWithOneOfDiscriminator';
+export type { DeprecatedModel } from './models/DeprecatedModel';
 export type { DictionaryWithArray } from './models/DictionaryWithArray';
 export type { DictionaryWithDictionary } from './models/DictionaryWithDictionary';
 export type { DictionaryWithProperties } from './models/DictionaryWithProperties';
@@ -3696,6 +3697,7 @@ export { $CompositionWithOneOfAndSimpleArrayDictionary } from './schemas/$Compos
 export { $CompositionWithOneOfAndSimpleDictionary } from './schemas/$CompositionWithOneOfAndSimpleDictionary';
 export { $CompositionWithOneOfAnonymous } from './schemas/$CompositionWithOneOfAnonymous';
 export { $CompositionWithOneOfDiscriminator } from './schemas/$CompositionWithOneOfDiscriminator';
+export { $DeprecatedModel } from './schemas/$DeprecatedModel';
 export { $DictionaryWithArray } from './schemas/$DictionaryWithArray';
 export { $DictionaryWithDictionary } from './schemas/$DictionaryWithDictionary';
 export { $DictionaryWithProperties } from './schemas/$DictionaryWithProperties';
@@ -3739,6 +3741,7 @@ export { CollectionFormatService } from './services/CollectionFormatService';
 export { ComplexService } from './services/ComplexService';
 export { DefaultService } from './services/DefaultService';
 export { DefaultsService } from './services/DefaultsService';
+export { DeprecatedService } from './services/DeprecatedService';
 export { DescriptionsService } from './services/DescriptionsService';
 export { DuplicateService } from './services/DuplicateService';
 export { ErrorService } from './services/ErrorService';
@@ -4141,6 +4144,26 @@ import type { ModelSquare } from './ModelSquare';
  * This is a model with one property with a 'one of' relationship where the options are not $ref
  */
 export type CompositionWithOneOfDiscriminator = (ModelCircle | ModelSquare);
+
+"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/models/DeprecatedModel.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+/**
+ * This is a deprecated model with a deprecated property
+ * @deprecated
+ */
+export type DeprecatedModel = {
+    /**
+     * This is a deprecated property
+     * @deprecated
+     */
+    prop?: string;
+};
 
 "
 `;
@@ -5319,6 +5342,22 @@ export const $CompositionWithOneOfDiscriminator = {
 "
 `;
 
+exports[`v3 should generate: ./test/generated/v3/schemas/$DeprecatedModel.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $DeprecatedModel = {
+    description: \`This is a deprecated model with a deprecated property\`,
+    properties: {
+        prop: {
+            type: 'string',
+            description: \`This is a deprecated property\`,
+        },
+    },
+} as const;
+"
+`;
+
 exports[`v3 should generate: ./test/generated/v3/schemas/$DictionaryWithArray.ts 1`] = `
 "/* istanbul ignore file */
 /* tslint:disable */
@@ -6329,6 +6368,39 @@ export class DefaultsService {
                 'parameterStringWithNoDefault': parameterStringWithNoDefault,
                 'parameterStringNullableWithNoDefault': parameterStringNullableWithNoDefault,
                 'parameterStringNullableWithDefault': parameterStringNullableWithDefault,
+            },
+        });
+    }
+
+}
+"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/services/DeprecatedService.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { DeprecatedModel } from '../models/DeprecatedModel';
+
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+
+export class DeprecatedService {
+
+    /**
+     * @deprecated
+     * @param parameter This parameter is deprecated
+     * @throws ApiError
+     */
+    public static deprecatedCall(
+        parameter: DeprecatedModel | null,
+    ): CancelablePromise<void> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v{api-version}/parameters/deprecated',
+            headers: {
+                'parameter': parameter,
             },
         });
     }

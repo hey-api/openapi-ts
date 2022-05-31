@@ -12,6 +12,14 @@ export const registerHandlebarHelpers = (root: {
     useOptions: boolean;
     useUnionTypes: boolean;
 }): void => {
+    Handlebars.registerHelper('ifdef', function (this: any, ...args): string {
+        const options = args.pop();
+        if (!args.every(value => !value)) {
+            return options.fn(this);
+        }
+        return options.inverse(this);
+    });
+
     Handlebars.registerHelper(
         'equals',
         function (this: any, a: string, b: string, options: Handlebars.HelperOptions): string {

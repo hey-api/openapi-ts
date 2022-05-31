@@ -106,6 +106,28 @@
                 ]
             }
         },
+        "/api/v{api-version}/parameters/deprecated": {
+            "post": {
+                "tags": [
+                    "Deprecated"
+                ],
+                "deprecated": true,
+                "operationId": "DeprecatedCall",
+                "parameters": [
+                    {
+                        "deprecated": true,
+                        "description": "This parameter is deprecated",
+                        "name": "parameter",
+                        "in": "header",
+                        "required": true,
+                        "nullable": true,
+                        "schema": {
+                            "$ref": "#/components/schemas/DeprecatedModel"
+                        }
+                    }
+                ]
+            }
+        },
         "/api/v{api-version}/parameters/{parameterPath}": {
             "post": {
                 "tags": [
@@ -1874,6 +1896,18 @@
                         "additionalProperties": {
                             "type": "string"
                         }
+                    }
+                }
+            },
+            "DeprecatedModel": {
+                "deprecated": true,
+                "description": "This is a deprecated model with a deprecated property",
+                "type": "object",
+                "properties": {
+                    "prop": {
+                        "deprecated": true,
+                        "description": "This is a deprecated property",
+                        "type": "string"
                     }
                 }
             },

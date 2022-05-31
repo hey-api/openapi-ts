@@ -20,6 +20,7 @@ export const getOperationParameter = (openApi: OpenApi, parameter: OpenApiParame
         template: null,
         link: null,
         description: parameter.description || null,
+        deprecated: parameter.deprecated === true,
         isDefinition: false,
         isReadOnly: false,
         isRequired: parameter.required === true,
