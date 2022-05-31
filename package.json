@@ -105,7 +105,7 @@
         "glob": "8.0.3",
         "jest": "28.1.0",
         "jest-cli": "28.1.0",
-        "node-fetch": "3.2.4",
+        "node-fetch": "2.6.7",
         "prettier": "2.6.2",
         "puppeteer": "14.1.2",
         "qs": "6.10.3",

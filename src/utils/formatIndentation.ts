@@ -14,5 +14,7 @@ export const formatIndentation = (s: string, indent: Indent): string => {
                 return line; // Default output is tab formatted
         }
     });
-    return lines.join(EOL);
+    // Make sure we have a blank line at the end
+    const content = lines.join(EOL);
+    return `${content}${EOL}`;
 };

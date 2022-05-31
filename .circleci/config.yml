@@ -12,7 +12,7 @@ jobs:
             - v1-dependencies-
       - run:
           name: Install dependencies
-          command: npm install
+          command: npm install --force
       - save_cache:
           key: v1-dependencies-{{ checksum "package.json" }}
           paths:
