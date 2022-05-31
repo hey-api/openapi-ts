@@ -1,3 +1,5 @@
+import { EOL } from 'os';
+
 import type { Service } from '../client/interfaces/Service';
 import { HttpClient } from '../HttpClient';
 import { Indent } from '../Indent';
@@ -39,6 +41,6 @@ describe('writeClientServices', () => {
 
         await writeClientServices(services, templates, '/', HttpClient.FETCH, false, false, Indent.SPACE_4, 'Service');
 
-        expect(writeFile).toBeCalledWith('/UserService.ts', 'service');
+        expect(writeFile).toBeCalledWith('/UserService.ts', `service${EOL}`);
     });
 });

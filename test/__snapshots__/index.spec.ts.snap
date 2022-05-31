@@ -4,6 +4,7 @@ exports[`v2 should generate: ./test/generated/v2/core/ApiError.ts 1`] = `
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { ApiRequestOptions } from './ApiRequestOptions';
 import type { ApiResult } from './ApiResult';
 
 export class ApiError extends Error {
@@ -11,8 +12,9 @@ export class ApiError extends Error {
     public readonly status: number;
     public readonly statusText: string;
     public readonly body: any;
+    public readonly request: ApiRequestOptions;
 
-    constructor(response: ApiResult, message: string) {
+    constructor(request: ApiRequestOptions, response: ApiResult, message: string) {
         super(message);
 
         this.name = 'ApiError';
@@ -20,8 +22,10 @@ export class ApiError extends Error {
         this.status = response.status;
         this.statusText = response.statusText;
         this.body = response.body;
+        this.request = request;
     }
-}"
+}
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/core/ApiRequestOptions.ts 1`] = `
@@ -40,7 +44,8 @@ export type ApiRequestOptions = {
     readonly mediaType?: string;
     readonly responseHeader?: string;
     readonly errors?: Record<number, string>;
-};"
+};
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/core/ApiResult.ts 1`] = `
@@ -53,7 +58,8 @@ export type ApiResult = {
     readonly status: number;
     readonly statusText: string;
     readonly body: any;
-};"
+};
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/core/CancelablePromise.ts 1`] = `
@@ -81,7 +87,7 @@ export interface OnCancel {
 }
 
 export class CancelablePromise<T> implements Promise<T> {
-    readonly [Symbol.toStringTag]: string;
+    readonly [Symbol.toStringTag]!: string;
 
     private _isResolved: boolean;
     private _isRejected: boolean;
@@ -184,7 +190,8 @@ export class CancelablePromise<T> implements Promise<T> {
     public get isCancelled(): boolean {
         return this._isCancelled;
     }
-}"
+}
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/core/OpenAPI.ts 1`] = `
@@ -218,7 +225,8 @@ export const OpenAPI: OpenAPIConfig = {
     PASSWORD: undefined,
     HEADERS: undefined,
     ENCODE_PATH: undefined,
-};"
+};
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/core/request.ts 1`] = `
@@ -483,11 +491,11 @@ const catchErrorCodes = (options: ApiRequestOptions, result: ApiResult): void =>
 
     const error = errors[result.status];
     if (error) {
-        throw new ApiError(result, error);
+        throw new ApiError(options, result, error);
     }
 
     if (!result.ok) {
-        throw new ApiError(result, 'Generic Error');
+        throw new ApiError(options, result, 'Generic Error');
     }
 };
 
@@ -527,7 +535,8 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): C
             reject(error);
         }
     });
-};"
+};
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/index.ts 1`] = `
@@ -664,7 +673,8 @@ import type { ModelWithString } from './ModelWithString';
 /**
  * This is a simple array containing an array
  */
-export type ArrayWithArray = Array<Array<ModelWithString>>;"
+export type ArrayWithArray = Array<Array<ModelWithString>>;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/models/ArrayWithBooleans.ts 1`] = `
@@ -675,7 +685,8 @@ exports[`v2 should generate: ./test/generated/v2/models/ArrayWithBooleans.ts 1`]
 /**
  * This is a simple array with booleans
  */
-export type ArrayWithBooleans = Array<boolean>;"
+export type ArrayWithBooleans = Array<boolean>;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/models/ArrayWithNumbers.ts 1`] = `
@@ -686,7 +697,8 @@ exports[`v2 should generate: ./test/generated/v2/models/ArrayWithNumbers.ts 1`] 
 /**
  * This is a simple array with numbers
  */
-export type ArrayWithNumbers = Array<number>;"
+export type ArrayWithNumbers = Array<number>;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/models/ArrayWithProperties.ts 1`] = `
@@ -700,7 +712,8 @@ exports[`v2 should generate: ./test/generated/v2/models/ArrayWithProperties.ts 1
 export type ArrayWithProperties = Array<{
     foo?: string;
     bar?: string;
-}>;"
+}>;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/models/ArrayWithReferences.ts 1`] = `
@@ -713,7 +726,8 @@ import type { ModelWithString } from './ModelWithString';
 /**
  * This is a simple array with references
  */
-export type ArrayWithReferences = Array<ModelWithString>;"
+export type ArrayWithReferences = Array<ModelWithString>;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/models/ArrayWithStrings.ts 1`] = `
@@ -724,7 +738,8 @@ exports[`v2 should generate: ./test/generated/v2/models/ArrayWithStrings.ts 1`] 
 /**
  * This is a simple array with strings
  */
-export type ArrayWithStrings = Array<string>;"
+export type ArrayWithStrings = Array<string>;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/models/CommentWithBackticks.ts 1`] = `
@@ -735,7 +750,8 @@ exports[`v2 should generate: ./test/generated/v2/models/CommentWithBackticks.ts 
 /**
  * Testing backticks in string: \`backticks\` and \`\`\`multiple backticks\`\`\` should work
  */
-export type CommentWithBackticks = number;"
+export type CommentWithBackticks = number;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/models/CommentWithBreaks.ts 1`] = `
@@ -749,7 +765,8 @@ exports[`v2 should generate: ./test/generated/v2/models/CommentWithBreaks.ts 1`]
  *
  * Fourth line
  */
-export type CommentWithBreaks = number;"
+export type CommentWithBreaks = number;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/models/CommentWithExpressionPlaceholders.ts 1`] = `
@@ -760,7 +777,8 @@ exports[`v2 should generate: ./test/generated/v2/models/CommentWithExpressionPla
 /**
  * Testing expression placeholders in string: \${expression} should work
  */
-export type CommentWithExpressionPlaceholders = number;"
+export type CommentWithExpressionPlaceholders = number;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/models/CommentWithQuotes.ts 1`] = `
@@ -771,7 +789,8 @@ exports[`v2 should generate: ./test/generated/v2/models/CommentWithQuotes.ts 1`]
 /**
  * Testing quotes in string: 'single quote''' and \\"double quotes\\"\\"\\" should work
  */
-export type CommentWithQuotes = number;"
+export type CommentWithQuotes = number;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/models/CommentWithReservedCharacters.ts 1`] = `
@@ -782,7 +801,8 @@ exports[`v2 should generate: ./test/generated/v2/models/CommentWithReservedChara
 /**
  * Testing reserved characters in string: * inline * and ** inline ** should work
  */
-export type CommentWithReservedCharacters = number;"
+export type CommentWithReservedCharacters = number;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/models/CommentWithSlashes.ts 1`] = `
@@ -793,7 +813,8 @@ exports[`v2 should generate: ./test/generated/v2/models/CommentWithSlashes.ts 1`
 /**
  * Testing slashes in string: \\\\backwards\\\\\\\\\\\\ and /forwards/// should work
  */
-export type CommentWithSlashes = number;"
+export type CommentWithSlashes = number;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/models/Date.ts 1`] = `
@@ -804,7 +825,8 @@ exports[`v2 should generate: ./test/generated/v2/models/Date.ts 1`] = `
 /**
  * This is a type-only model that defines Date as a string
  */
-export type Date = string;"
+export type Date = string;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/models/DictionaryWithArray.ts 1`] = `
@@ -817,7 +839,8 @@ import type { ModelWithString } from './ModelWithString';
 /**
  * This is a complex dictionary
  */
-export type DictionaryWithArray = Record<string, Array<ModelWithString>>;"
+export type DictionaryWithArray = Record<string, Array<ModelWithString>>;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/models/DictionaryWithDictionary.ts 1`] = `
@@ -828,7 +851,8 @@ exports[`v2 should generate: ./test/generated/v2/models/DictionaryWithDictionary
 /**
  * This is a string dictionary
  */
-export type DictionaryWithDictionary = Record<string, Record<string, string>>;"
+export type DictionaryWithDictionary = Record<string, Record<string, string>>;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/models/DictionaryWithProperties.ts 1`] = `
@@ -842,7 +866,8 @@ exports[`v2 should generate: ./test/generated/v2/models/DictionaryWithProperties
 export type DictionaryWithProperties = Record<string, {
     foo?: string;
     bar?: string;
-}>;"
+}>;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/models/DictionaryWithReference.ts 1`] = `
@@ -855,7 +880,8 @@ import type { ModelWithString } from './ModelWithString';
 /**
  * This is a string reference
  */
-export type DictionaryWithReference = Record<string, ModelWithString>;"
+export type DictionaryWithReference = Record<string, ModelWithString>;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/models/DictionaryWithString.ts 1`] = `
@@ -866,7 +892,8 @@ exports[`v2 should generate: ./test/generated/v2/models/DictionaryWithString.ts 
 /**
  * This is a string dictionary
  */
-export type DictionaryWithString = Record<string, string>;"
+export type DictionaryWithString = Record<string, string>;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/models/EnumFromDescription.ts 1`] = `
@@ -877,7 +904,8 @@ exports[`v2 should generate: ./test/generated/v2/models/EnumFromDescription.ts 1
 /**
  * Success=1,Warning=2,Error=3
  */
-export type EnumFromDescription = number;"
+export type EnumFromDescription = number;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/models/EnumWithExtensions.ts 1`] = `
@@ -901,7 +929,8 @@ export enum EnumWithExtensions {
      * Used when the status of something has an error
      */
     CUSTOM_ERROR = 500,
-}"
+}
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/models/EnumWithNumbers.ts 1`] = `
@@ -928,7 +957,8 @@ export enum EnumWithNumbers {
     '_-1.1' = -1.1,
     '_-1.2' = -1.2,
     '_-1.3' = -1.3,
-}"
+}
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/models/EnumWithStrings.ts 1`] = `
@@ -945,7 +975,8 @@ export enum EnumWithStrings {
     ERROR = 'Error',
     _SINGLE_QUOTE_ = '\\\\'Single Quote\\\\'',
     _DOUBLE_QUOTES_ = '\\"Double Quotes\\"',
-}"
+}
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/models/ModelThatExtends.ts 1`] = `
@@ -962,6 +993,7 @@ export type ModelThatExtends = (ModelWithString & {
     propExtendsA?: string;
     propExtendsB?: ModelWithString;
 });
+
 "
 `;
 
@@ -980,6 +1012,7 @@ export type ModelThatExtendsExtends = (ModelWithString & ModelThatExtends & {
     propExtendsC?: string;
     propExtendsD?: ModelWithString;
 });
+
 "
 `;
 
@@ -998,6 +1031,7 @@ export type ModelWithArray = {
     propWithFile?: Array<Blob>;
     propWithNumber?: Array<number>;
 };
+
 "
 `;
 
@@ -1015,6 +1049,7 @@ export type ModelWithBoolean = {
      */
     prop?: boolean;
 };
+
 "
 `;
 
@@ -1029,6 +1064,7 @@ exports[`v2 should generate: ./test/generated/v2/models/ModelWithCircularReferen
 export type ModelWithCircularReference = {
     prop?: ModelWithCircularReference;
 };
+
 "
 `;
 
@@ -1043,6 +1079,7 @@ exports[`v2 should generate: ./test/generated/v2/models/ModelWithDictionary.ts 1
 export type ModelWithDictionary = {
     prop?: Record<string, string>;
 };
+
 "
 `;
 
@@ -1061,6 +1098,7 @@ export type ModelWithDuplicateImports = {
     propB?: ModelWithString;
     propC?: ModelWithString;
 };
+
 "
 `;
 
@@ -1077,6 +1115,7 @@ import type { ModelWithString } from './ModelWithString';
 export type ModelWithDuplicateProperties = {
     prop?: ModelWithString;
 };
+
 "
 `;
 
@@ -1128,6 +1167,7 @@ export namespace ModelWithEnum {
 
 
 }
+
 "
 `;
 
@@ -1145,6 +1185,7 @@ export type ModelWithEnumFromDescription = {
      */
     test?: number;
 };
+
 "
 `;
 
@@ -1162,6 +1203,7 @@ export type ModelWithInteger = {
      */
     prop?: number;
 };
+
 "
 `;
 
@@ -1179,6 +1221,7 @@ export type ModelWithNestedEnums = {
     arrayWithEnum?: Array<'Success' | 'Warning' | 'Error'>;
     arrayWithDescription?: Array<number>;
 };
+
 "
 `;
 
@@ -1197,6 +1240,7 @@ export type ModelWithNestedProperties = {
         };
     };
 };
+
 "
 `;
 
@@ -1218,6 +1262,7 @@ export type ModelWithNullableString = {
      */
     nullableRequiredProp: string | null;
 };
+
 "
 `;
 
@@ -1234,6 +1279,7 @@ export type ModelWithOrderedProperties = {
     apple?: string;
     hawaii?: string;
 };
+
 "
 `;
 
@@ -1253,6 +1299,7 @@ export type ModelWithPattern = {
     id?: string;
     text?: string;
 };
+
 "
 `;
 
@@ -1279,6 +1326,7 @@ export type ModelWithProperties = {
     readonly '@namespace.string'?: string;
     readonly '@namespace.integer'?: number;
 };
+
 "
 `;
 
@@ -1295,6 +1343,7 @@ import type { ModelWithProperties } from './ModelWithProperties';
 export type ModelWithReference = {
     prop?: ModelWithProperties;
 };
+
 "
 `;
 
@@ -1312,6 +1361,7 @@ export type ModelWithString = {
      */
     prop?: string;
 };
+
 "
 `;
 
@@ -1323,7 +1373,8 @@ exports[`v2 should generate: ./test/generated/v2/models/SimpleBoolean.ts 1`] = `
 /**
  * This is a simple boolean
  */
-export type SimpleBoolean = boolean;"
+export type SimpleBoolean = boolean;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/models/SimpleFile.ts 1`] = `
@@ -1334,7 +1385,8 @@ exports[`v2 should generate: ./test/generated/v2/models/SimpleFile.ts 1`] = `
 /**
  * This is a simple file
  */
-export type SimpleFile = Blob;"
+export type SimpleFile = Blob;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/models/SimpleInteger.ts 1`] = `
@@ -1345,7 +1397,8 @@ exports[`v2 should generate: ./test/generated/v2/models/SimpleInteger.ts 1`] = `
 /**
  * This is a simple number
  */
-export type SimpleInteger = number;"
+export type SimpleInteger = number;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/models/SimpleReference.ts 1`] = `
@@ -1358,7 +1411,8 @@ import type { ModelWithString } from './ModelWithString';
 /**
  * This is a simple reference
  */
-export type SimpleReference = ModelWithString;"
+export type SimpleReference = ModelWithString;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/models/SimpleString.ts 1`] = `
@@ -1369,7 +1423,8 @@ exports[`v2 should generate: ./test/generated/v2/models/SimpleString.ts 1`] = `
 /**
  * This is a simple string
  */
-export type SimpleString = string;"
+export type SimpleString = string;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/models/SimpleStringWithPattern.ts 1`] = `
@@ -1380,7 +1435,8 @@ exports[`v2 should generate: ./test/generated/v2/models/SimpleStringWithPattern.
 /**
  * This is a simple string
  */
-export type SimpleStringWithPattern = string;"
+export type SimpleStringWithPattern = string;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$ArrayWithArray.ts 1`] = `
@@ -1395,7 +1451,8 @@ export const $ArrayWithArray = {
             type: 'ModelWithString',
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$ArrayWithBooleans.ts 1`] = `
@@ -1407,7 +1464,8 @@ export const $ArrayWithBooleans = {
     contains: {
         type: 'boolean',
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$ArrayWithNumbers.ts 1`] = `
@@ -1419,7 +1477,8 @@ export const $ArrayWithNumbers = {
     contains: {
         type: 'number',
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$ArrayWithProperties.ts 1`] = `
@@ -1438,7 +1497,8 @@ export const $ArrayWithProperties = {
             },
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$ArrayWithReferences.ts 1`] = `
@@ -1450,7 +1510,8 @@ export const $ArrayWithReferences = {
     contains: {
         type: 'ModelWithString',
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$ArrayWithStrings.ts 1`] = `
@@ -1462,7 +1523,8 @@ export const $ArrayWithStrings = {
     contains: {
         type: 'string',
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$CommentWithBackticks.ts 1`] = `
@@ -1472,7 +1534,8 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$CommentWithBackticks.t
 export const $CommentWithBackticks = {
     type: 'number',
     description: \`Testing backticks in string: \\\\\`backticks\\\\\` and \\\\\`\\\\\`\\\\\`multiple backticks\\\\\`\\\\\`\\\\\` should work\`,
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$CommentWithBreaks.ts 1`] = `
@@ -1485,7 +1548,8 @@ export const $CommentWithBreaks = {
     Second line
 
     Fourth line\`,
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$CommentWithExpressionPlaceholders.ts 1`] = `
@@ -1495,7 +1559,8 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$CommentWithExpressionP
 export const $CommentWithExpressionPlaceholders = {
     type: 'number',
     description: \`Testing expression placeholders in string: \\\\\${expression} should work\`,
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$CommentWithQuotes.ts 1`] = `
@@ -1505,7 +1570,8 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$CommentWithQuotes.ts 1
 export const $CommentWithQuotes = {
     type: 'number',
     description: \`Testing quotes in string: 'single quote''' and \\"double quotes\\"\\"\\" should work\`,
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$CommentWithReservedCharacters.ts 1`] = `
@@ -1515,7 +1581,8 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$CommentWithReservedCha
 export const $CommentWithReservedCharacters = {
     type: 'number',
     description: \`Testing reserved characters in string: /* inline */ and /** inline **/ should work\`,
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$CommentWithSlashes.ts 1`] = `
@@ -1525,7 +1592,8 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$CommentWithSlashes.ts 
 export const $CommentWithSlashes = {
     type: 'number',
     description: \`Testing slashes in string: \\\\\\\\backwards\\\\\\\\\\\\\\\\\\\\\\\\ and /forwards/// should work\`,
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$Date.ts 1`] = `
@@ -1535,7 +1603,8 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$Date.ts 1`] = `
 export const $Date = {
     type: 'string',
     description: \`This is a type-only model that defines Date as a string\`,
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$DictionaryWithArray.ts 1`] = `
@@ -1550,7 +1619,8 @@ export const $DictionaryWithArray = {
             type: 'ModelWithString',
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$DictionaryWithDictionary.ts 1`] = `
@@ -1565,7 +1635,8 @@ export const $DictionaryWithDictionary = {
             type: 'string',
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$DictionaryWithProperties.ts 1`] = `
@@ -1584,7 +1655,8 @@ export const $DictionaryWithProperties = {
             },
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$DictionaryWithReference.ts 1`] = `
@@ -1596,7 +1668,8 @@ export const $DictionaryWithReference = {
     contains: {
         type: 'ModelWithString',
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$DictionaryWithString.ts 1`] = `
@@ -1608,7 +1681,8 @@ export const $DictionaryWithString = {
     contains: {
         type: 'string',
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$EnumFromDescription.ts 1`] = `
@@ -1618,7 +1692,8 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$EnumFromDescription.ts
 export const $EnumFromDescription = {
     type: 'number',
     description: \`Success=1,Warning=2,Error=3\`,
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$EnumWithExtensions.ts 1`] = `
@@ -1627,7 +1702,8 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$EnumWithExtensions.ts 
 /* eslint-disable */
 export const $EnumWithExtensions = {
     type: 'Enum',
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$EnumWithNumbers.ts 1`] = `
@@ -1636,7 +1712,8 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$EnumWithNumbers.ts 1`]
 /* eslint-disable */
 export const $EnumWithNumbers = {
     type: 'Enum',
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$EnumWithStrings.ts 1`] = `
@@ -1645,7 +1722,8 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$EnumWithStrings.ts 1`]
 /* eslint-disable */
 export const $EnumWithStrings = {
     type: 'Enum',
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$ModelThatExtends.ts 1`] = `
@@ -1667,7 +1745,8 @@ export const $ModelThatExtends = {
             },
         },
     }],
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$ModelThatExtendsExtends.ts 1`] = `
@@ -1691,7 +1770,8 @@ export const $ModelThatExtendsExtends = {
             },
         },
     }],
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithArray.ts 1`] = `
@@ -1720,7 +1800,8 @@ export const $ModelWithArray = {
             },
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithBoolean.ts 1`] = `
@@ -1735,7 +1816,8 @@ export const $ModelWithBoolean = {
             description: \`This is a simple boolean property\`,
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithCircularReference.ts 1`] = `
@@ -1749,7 +1831,8 @@ export const $ModelWithCircularReference = {
             type: 'ModelWithCircularReference',
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithDictionary.ts 1`] = `
@@ -1766,7 +1849,8 @@ export const $ModelWithDictionary = {
             },
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithDuplicateImports.ts 1`] = `
@@ -1786,7 +1870,8 @@ export const $ModelWithDuplicateImports = {
             type: 'ModelWithString',
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithDuplicateProperties.ts 1`] = `
@@ -1800,7 +1885,8 @@ export const $ModelWithDuplicateProperties = {
             type: 'ModelWithString',
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithEnum.ts 1`] = `
@@ -1821,7 +1907,8 @@ export const $ModelWithEnum = {
             description: \`Simple boolean enum\`,
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithEnumFromDescription.ts 1`] = `
@@ -1836,7 +1923,8 @@ export const $ModelWithEnumFromDescription = {
             description: \`Success=1,Warning=2,Error=3\`,
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithInteger.ts 1`] = `
@@ -1851,7 +1939,8 @@ export const $ModelWithInteger = {
             description: \`This is a simple number property\`,
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithNestedEnums.ts 1`] = `
@@ -1888,7 +1977,8 @@ export const $ModelWithNestedEnums = {
             },
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithNestedProperties.ts 1`] = `
@@ -1916,7 +2006,8 @@ export const $ModelWithNestedProperties = {
             isRequired: true,
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithNullableString.ts 1`] = `
@@ -1938,7 +2029,8 @@ export const $ModelWithNullableString = {
             isNullable: true,
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithOrderedProperties.ts 1`] = `
@@ -1958,7 +2050,8 @@ export const $ModelWithOrderedProperties = {
             type: 'string',
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithPattern.ts 1`] = `
@@ -1997,7 +2090,8 @@ export const $ModelWithPattern = {
             pattern: '^\\\\\\\\w+$',
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithProperties.ts 1`] = `
@@ -2046,7 +2140,8 @@ export const $ModelWithProperties = {
             isReadOnly: true,
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithReference.ts 1`] = `
@@ -2060,7 +2155,8 @@ export const $ModelWithReference = {
             type: 'ModelWithProperties',
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$ModelWithString.ts 1`] = `
@@ -2075,7 +2171,8 @@ export const $ModelWithString = {
             description: \`This is a simple string property\`,
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$SimpleBoolean.ts 1`] = `
@@ -2085,7 +2182,8 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$SimpleBoolean.ts 1`] =
 export const $SimpleBoolean = {
     type: 'boolean',
     description: \`This is a simple boolean\`,
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$SimpleFile.ts 1`] = `
@@ -2095,7 +2193,8 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$SimpleFile.ts 1`] = `
 export const $SimpleFile = {
     type: 'binary',
     description: \`This is a simple file\`,
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$SimpleInteger.ts 1`] = `
@@ -2105,7 +2204,8 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$SimpleInteger.ts 1`] =
 export const $SimpleInteger = {
     type: 'number',
     description: \`This is a simple number\`,
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$SimpleReference.ts 1`] = `
@@ -2115,7 +2215,8 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$SimpleReference.ts 1`]
 export const $SimpleReference = {
     type: 'ModelWithString',
     description: \`This is a simple reference\`,
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$SimpleString.ts 1`] = `
@@ -2125,7 +2226,8 @@ exports[`v2 should generate: ./test/generated/v2/schemas/$SimpleString.ts 1`] = 
 export const $SimpleString = {
     type: 'string',
     description: \`This is a simple string\`,
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/schemas/$SimpleStringWithPattern.ts 1`] = `
@@ -2137,7 +2239,8 @@ export const $SimpleStringWithPattern = {
     description: \`This is a simple string\`,
     maxLength: 64,
     pattern: '^[a-zA-Z0-9_]*$',
-} as const;"
+} as const;
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/services/CollectionFormatService.ts 1`] = `
@@ -2178,7 +2281,8 @@ export class CollectionFormatService {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/services/ComplexService.ts 1`] = `
@@ -2223,7 +2327,8 @@ export class ComplexService {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/services/DefaultService.ts 1`] = `
@@ -2246,7 +2351,8 @@ export class DefaultService {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/services/DefaultsService.ts 1`] = `
@@ -2358,7 +2464,8 @@ export class DefaultsService {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/services/DescriptionsService.ts 1`] = `
@@ -2405,7 +2512,8 @@ export class DescriptionsService {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/services/DuplicateService.ts 1`] = `
@@ -2458,7 +2566,8 @@ export class DuplicateService {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/services/ErrorService.ts 1`] = `
@@ -2494,7 +2603,8 @@ export class ErrorService {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/services/HeaderService.ts 1`] = `
@@ -2523,7 +2633,8 @@ export class HeaderService {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/services/MultipleTags1Service.ts 1`] = `
@@ -2558,7 +2669,8 @@ export class MultipleTags1Service {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/services/MultipleTags2Service.ts 1`] = `
@@ -2593,7 +2705,8 @@ export class MultipleTags2Service {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/services/MultipleTags3Service.ts 1`] = `
@@ -2617,7 +2730,8 @@ export class MultipleTags3Service {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/services/NoContentService.ts 1`] = `
@@ -2641,7 +2755,8 @@ export class NoContentService {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/services/ParametersService.ts 1`] = `
@@ -2731,7 +2846,8 @@ export class ParametersService {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/services/ResponseService.ts 1`] = `
@@ -2798,7 +2914,8 @@ export class ResponseService {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/services/SimpleService.ts 1`] = `
@@ -2881,7 +2998,8 @@ export class SimpleService {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/services/TypesService.ts 1`] = `
@@ -2937,13 +3055,15 @@ export class TypesService {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/core/ApiError.ts 1`] = `
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { ApiRequestOptions } from './ApiRequestOptions';
 import type { ApiResult } from './ApiResult';
 
 export class ApiError extends Error {
@@ -2951,8 +3071,9 @@ export class ApiError extends Error {
     public readonly status: number;
     public readonly statusText: string;
     public readonly body: any;
+    public readonly request: ApiRequestOptions;
 
-    constructor(response: ApiResult, message: string) {
+    constructor(request: ApiRequestOptions, response: ApiResult, message: string) {
         super(message);
 
         this.name = 'ApiError';
@@ -2960,8 +3081,10 @@ export class ApiError extends Error {
         this.status = response.status;
         this.statusText = response.statusText;
         this.body = response.body;
+        this.request = request;
     }
-}"
+}
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/core/ApiRequestOptions.ts 1`] = `
@@ -2980,7 +3103,8 @@ export type ApiRequestOptions = {
     readonly mediaType?: string;
     readonly responseHeader?: string;
     readonly errors?: Record<number, string>;
-};"
+};
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/core/ApiResult.ts 1`] = `
@@ -2993,7 +3117,8 @@ export type ApiResult = {
     readonly status: number;
     readonly statusText: string;
     readonly body: any;
-};"
+};
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/core/CancelablePromise.ts 1`] = `
@@ -3021,7 +3146,7 @@ export interface OnCancel {
 }
 
 export class CancelablePromise<T> implements Promise<T> {
-    readonly [Symbol.toStringTag]: string;
+    readonly [Symbol.toStringTag]!: string;
 
     private _isResolved: boolean;
     private _isRejected: boolean;
@@ -3124,7 +3249,8 @@ export class CancelablePromise<T> implements Promise<T> {
     public get isCancelled(): boolean {
         return this._isCancelled;
     }
-}"
+}
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/core/OpenAPI.ts 1`] = `
@@ -3158,7 +3284,8 @@ export const OpenAPI: OpenAPIConfig = {
     PASSWORD: undefined,
     HEADERS: undefined,
     ENCODE_PATH: undefined,
-};"
+};
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/core/request.ts 1`] = `
@@ -3423,11 +3550,11 @@ const catchErrorCodes = (options: ApiRequestOptions, result: ApiResult): void =>
 
     const error = errors[result.status];
     if (error) {
-        throw new ApiError(result, error);
+        throw new ApiError(options, result, error);
     }
 
     if (!result.ok) {
-        throw new ApiError(result, 'Generic Error');
+        throw new ApiError(options, result, 'Generic Error');
     }
 };
 
@@ -3467,7 +3594,8 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): C
             reject(error);
         }
     });
-};"
+};
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/index.ts 1`] = `
@@ -3640,7 +3768,8 @@ import type { ModelWithString } from './ModelWithString';
 /**
  * This is a simple array containing an array
  */
-export type ArrayWithArray = Array<Array<ModelWithString>>;"
+export type ArrayWithArray = Array<Array<ModelWithString>>;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/models/ArrayWithBooleans.ts 1`] = `
@@ -3651,7 +3780,8 @@ exports[`v3 should generate: ./test/generated/v3/models/ArrayWithBooleans.ts 1`]
 /**
  * This is a simple array with booleans
  */
-export type ArrayWithBooleans = Array<boolean>;"
+export type ArrayWithBooleans = Array<boolean>;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/models/ArrayWithNumbers.ts 1`] = `
@@ -3662,7 +3792,8 @@ exports[`v3 should generate: ./test/generated/v3/models/ArrayWithNumbers.ts 1`] 
 /**
  * This is a simple array with numbers
  */
-export type ArrayWithNumbers = Array<number>;"
+export type ArrayWithNumbers = Array<number>;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/models/ArrayWithProperties.ts 1`] = `
@@ -3676,7 +3807,8 @@ exports[`v3 should generate: ./test/generated/v3/models/ArrayWithProperties.ts 1
 export type ArrayWithProperties = Array<{
     foo?: string;
     bar?: string;
-}>;"
+}>;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/models/ArrayWithReferences.ts 1`] = `
@@ -3689,7 +3821,8 @@ import type { ModelWithString } from './ModelWithString';
 /**
  * This is a simple array with references
  */
-export type ArrayWithReferences = Array<ModelWithString>;"
+export type ArrayWithReferences = Array<ModelWithString>;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/models/ArrayWithStrings.ts 1`] = `
@@ -3700,7 +3833,8 @@ exports[`v3 should generate: ./test/generated/v3/models/ArrayWithStrings.ts 1`] 
 /**
  * This is a simple array with strings
  */
-export type ArrayWithStrings = Array<string>;"
+export type ArrayWithStrings = Array<string>;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/models/CommentWithBackticks.ts 1`] = `
@@ -3711,7 +3845,8 @@ exports[`v3 should generate: ./test/generated/v3/models/CommentWithBackticks.ts 
 /**
  * Testing backticks in string: \`backticks\` and \`\`\`multiple backticks\`\`\` should work
  */
-export type CommentWithBackticks = number;"
+export type CommentWithBackticks = number;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/models/CommentWithBreaks.ts 1`] = `
@@ -3725,7 +3860,8 @@ exports[`v3 should generate: ./test/generated/v3/models/CommentWithBreaks.ts 1`]
  *
  * Fourth line
  */
-export type CommentWithBreaks = number;"
+export type CommentWithBreaks = number;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/models/CommentWithExpressionPlaceholders.ts 1`] = `
@@ -3736,7 +3872,8 @@ exports[`v3 should generate: ./test/generated/v3/models/CommentWithExpressionPla
 /**
  * Testing expression placeholders in string: \${expression} should work
  */
-export type CommentWithExpressionPlaceholders = number;"
+export type CommentWithExpressionPlaceholders = number;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/models/CommentWithQuotes.ts 1`] = `
@@ -3747,7 +3884,8 @@ exports[`v3 should generate: ./test/generated/v3/models/CommentWithQuotes.ts 1`]
 /**
  * Testing quotes in string: 'single quote''' and \\"double quotes\\"\\"\\" should work
  */
-export type CommentWithQuotes = number;"
+export type CommentWithQuotes = number;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/models/CommentWithReservedCharacters.ts 1`] = `
@@ -3758,7 +3896,8 @@ exports[`v3 should generate: ./test/generated/v3/models/CommentWithReservedChara
 /**
  * Testing reserved characters in string: * inline * and ** inline ** should work
  */
-export type CommentWithReservedCharacters = number;"
+export type CommentWithReservedCharacters = number;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/models/CommentWithSlashes.ts 1`] = `
@@ -3769,7 +3908,8 @@ exports[`v3 should generate: ./test/generated/v3/models/CommentWithSlashes.ts 1`
 /**
  * Testing slashes in string: \\\\backwards\\\\\\\\\\\\ and /forwards/// should work
  */
-export type CommentWithSlashes = number;"
+export type CommentWithSlashes = number;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/models/CompositionBaseModel.ts 1`] = `
@@ -3784,6 +3924,7 @@ export type CompositionBaseModel = {
     firstName?: string;
     lastname?: string;
 };
+
 "
 `;
 
@@ -3802,6 +3943,7 @@ export type CompositionExtendedModel = (CompositionBaseModel & {
     lastname: string;
     age: number;
 });
+
 "
 `;
 
@@ -3822,6 +3964,7 @@ export type CompositionWithAllOfAndNullable = {
         boolean?: boolean;
     } & ModelWithEnum & ModelWithArray & ModelWithDictionary) | null;
 };
+
 "
 `;
 
@@ -3841,6 +3984,7 @@ import type { ModelWithString } from './ModelWithString';
 export type CompositionWithAnyOf = {
     propA?: (ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary);
 };
+
 "
 `;
 
@@ -3861,6 +4005,7 @@ export type CompositionWithAnyOfAndNullable = {
         boolean?: boolean;
     } | ModelWithEnum | ModelWithArray | ModelWithDictionary) | null;
 };
+
 "
 `;
 
@@ -3877,6 +4022,7 @@ export type CompositionWithAnyOfAnonymous = {
         propA?: string;
     } | string | number);
 };
+
 "
 `;
 
@@ -3896,6 +4042,7 @@ import type { ModelWithString } from './ModelWithString';
 export type CompositionWithOneOf = {
     propA?: (ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary);
 };
+
 "
 `;
 
@@ -3910,6 +4057,7 @@ exports[`v3 should generate: ./test/generated/v3/models/CompositionWithOneOfAndC
 export type CompositionWithOneOfAndComplexArrayDictionary = {
     propA?: (boolean | Record<string, Array<(number | string)>>);
 };
+
 "
 `;
 
@@ -3930,6 +4078,7 @@ export type CompositionWithOneOfAndNullable = {
         boolean?: boolean;
     } | ModelWithEnum | ModelWithArray | ModelWithDictionary) | null;
 };
+
 "
 `;
 
@@ -3944,6 +4093,7 @@ exports[`v3 should generate: ./test/generated/v3/models/CompositionWithOneOfAndS
 export type CompositionWithOneOfAndSimpleArrayDictionary = {
     propA?: (boolean | Record<string, Array<boolean>>);
 };
+
 "
 `;
 
@@ -3958,6 +4108,7 @@ exports[`v3 should generate: ./test/generated/v3/models/CompositionWithOneOfAndS
 export type CompositionWithOneOfAndSimpleDictionary = {
     propA?: (boolean | Record<string, number>);
 };
+
 "
 `;
 
@@ -3974,6 +4125,7 @@ export type CompositionWithOneOfAnonymous = {
         propA?: string;
     } | string | number);
 };
+
 "
 `;
 
@@ -3989,6 +4141,7 @@ import type { ModelSquare } from './ModelSquare';
  * This is a model with one property with a 'one of' relationship where the options are not $ref
  */
 export type CompositionWithOneOfDiscriminator = (ModelCircle | ModelSquare);
+
 "
 `;
 
@@ -4002,7 +4155,8 @@ import type { ModelWithString } from './ModelWithString';
 /**
  * This is a complex dictionary
  */
-export type DictionaryWithArray = Record<string, Array<ModelWithString>>;"
+export type DictionaryWithArray = Record<string, Array<ModelWithString>>;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/models/DictionaryWithDictionary.ts 1`] = `
@@ -4013,7 +4167,8 @@ exports[`v3 should generate: ./test/generated/v3/models/DictionaryWithDictionary
 /**
  * This is a string dictionary
  */
-export type DictionaryWithDictionary = Record<string, Record<string, string>>;"
+export type DictionaryWithDictionary = Record<string, Record<string, string>>;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/models/DictionaryWithProperties.ts 1`] = `
@@ -4027,7 +4182,8 @@ exports[`v3 should generate: ./test/generated/v3/models/DictionaryWithProperties
 export type DictionaryWithProperties = Record<string, {
     foo?: string;
     bar?: string;
-}>;"
+}>;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/models/DictionaryWithReference.ts 1`] = `
@@ -4040,7 +4196,8 @@ import type { ModelWithString } from './ModelWithString';
 /**
  * This is a string reference
  */
-export type DictionaryWithReference = Record<string, ModelWithString>;"
+export type DictionaryWithReference = Record<string, ModelWithString>;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/models/DictionaryWithString.ts 1`] = `
@@ -4051,7 +4208,8 @@ exports[`v3 should generate: ./test/generated/v3/models/DictionaryWithString.ts 
 /**
  * This is a string dictionary
  */
-export type DictionaryWithString = Record<string, string>;"
+export type DictionaryWithString = Record<string, string>;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/models/EnumFromDescription.ts 1`] = `
@@ -4062,7 +4220,8 @@ exports[`v3 should generate: ./test/generated/v3/models/EnumFromDescription.ts 1
 /**
  * Success=1,Warning=2,Error=3
  */
-export type EnumFromDescription = number;"
+export type EnumFromDescription = number;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/models/EnumWithExtensions.ts 1`] = `
@@ -4086,7 +4245,8 @@ export enum EnumWithExtensions {
      * Used when the status of something has an error
      */
     CUSTOM_ERROR = 500,
-}"
+}
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/models/EnumWithNumbers.ts 1`] = `
@@ -4113,7 +4273,8 @@ export enum EnumWithNumbers {
     '_-1.1' = -1.1,
     '_-1.2' = -1.2,
     '_-1.3' = -1.3,
-}"
+}
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/models/EnumWithStrings.ts 1`] = `
@@ -4130,7 +4291,8 @@ export enum EnumWithStrings {
     ERROR = 'Error',
     _SINGLE_QUOTE_ = '\\\\'Single Quote\\\\'',
     _DOUBLE_QUOTES_ = '\\"Double Quotes\\"',
-}"
+}
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/models/File.ts 1`] = `
@@ -4145,6 +4307,7 @@ export type File = {
     mime: string;
     readonly file?: string;
 };
+
 "
 `;
 
@@ -4160,6 +4323,7 @@ export type ModelCircle = {
     kind: 'circle';
     radius?: number;
 };
+
 "
 `;
 
@@ -4175,6 +4339,7 @@ export type ModelSquare = {
     kind: 'square';
     sideLength?: number;
 };
+
 "
 `;
 
@@ -4192,6 +4357,7 @@ export type ModelThatExtends = (ModelWithString & {
     propExtendsA?: string;
     propExtendsB?: ModelWithString;
 });
+
 "
 `;
 
@@ -4210,6 +4376,7 @@ export type ModelThatExtendsExtends = (ModelWithString & ModelThatExtends & {
     propExtendsC?: string;
     propExtendsD?: ModelWithString;
 });
+
 "
 `;
 
@@ -4228,6 +4395,7 @@ export type ModelWithArray = {
     propWithFile?: Array<Blob>;
     propWithNumber?: Array<number>;
 };
+
 "
 `;
 
@@ -4245,6 +4413,7 @@ export type ModelWithBoolean = {
      */
     prop?: boolean;
 };
+
 "
 `;
 
@@ -4259,6 +4428,7 @@ exports[`v3 should generate: ./test/generated/v3/models/ModelWithCircularReferen
 export type ModelWithCircularReference = {
     prop?: ModelWithCircularReference;
 };
+
 "
 `;
 
@@ -4273,6 +4443,7 @@ exports[`v3 should generate: ./test/generated/v3/models/ModelWithDictionary.ts 1
 export type ModelWithDictionary = {
     prop?: Record<string, string>;
 };
+
 "
 `;
 
@@ -4291,6 +4462,7 @@ export type ModelWithDuplicateImports = {
     propB?: ModelWithString;
     propC?: ModelWithString;
 };
+
 "
 `;
 
@@ -4307,6 +4479,7 @@ import type { ModelWithString } from './ModelWithString';
 export type ModelWithDuplicateProperties = {
     prop?: ModelWithString;
 };
+
 "
 `;
 
@@ -4358,6 +4531,7 @@ export namespace ModelWithEnum {
 
 
 }
+
 "
 `;
 
@@ -4375,6 +4549,7 @@ export type ModelWithEnumFromDescription = {
      */
     test?: number;
 };
+
 "
 `;
 
@@ -4392,6 +4567,7 @@ export type ModelWithInteger = {
      */
     prop?: number;
 };
+
 "
 `;
 
@@ -4409,6 +4585,7 @@ export type ModelWithNestedEnums = {
     arrayWithEnum?: Array<'Success' | 'Warning' | 'Error'>;
     arrayWithDescription?: Array<number>;
 };
+
 "
 `;
 
@@ -4427,6 +4604,7 @@ export type ModelWithNestedProperties = {
         } | null;
     } | null;
 };
+
 "
 `;
 
@@ -4456,6 +4634,7 @@ export type ModelWithNullableString = {
      */
     nullableRequiredProp2: string | null;
 };
+
 "
 `;
 
@@ -4472,6 +4651,7 @@ export type ModelWithOrderedProperties = {
     apple?: string;
     hawaii?: string;
 };
+
 "
 `;
 
@@ -4491,6 +4671,7 @@ export type ModelWithPattern = {
     id?: string;
     text?: string;
 };
+
 "
 `;
 
@@ -4518,6 +4699,7 @@ export type ModelWithProperties = {
     readonly '@namespace.string'?: string;
     readonly '@namespace.integer'?: number;
 };
+
 "
 `;
 
@@ -4534,6 +4716,7 @@ import type { ModelWithProperties } from './ModelWithProperties';
 export type ModelWithReference = {
     prop?: ModelWithProperties;
 };
+
 "
 `;
 
@@ -4551,6 +4734,7 @@ export type ModelWithString = {
      */
     prop?: string;
 };
+
 "
 `;
 
@@ -4564,6 +4748,7 @@ export type Pageable = {
     size?: number;
     sort?: Array<string>;
 };
+
 "
 `;
 
@@ -4575,7 +4760,8 @@ exports[`v3 should generate: ./test/generated/v3/models/SimpleBoolean.ts 1`] = `
 /**
  * This is a simple boolean
  */
-export type SimpleBoolean = boolean;"
+export type SimpleBoolean = boolean;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/models/SimpleFile.ts 1`] = `
@@ -4586,7 +4772,8 @@ exports[`v3 should generate: ./test/generated/v3/models/SimpleFile.ts 1`] = `
 /**
  * This is a simple file
  */
-export type SimpleFile = Blob;"
+export type SimpleFile = Blob;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/models/SimpleInteger.ts 1`] = `
@@ -4597,7 +4784,8 @@ exports[`v3 should generate: ./test/generated/v3/models/SimpleInteger.ts 1`] = `
 /**
  * This is a simple number
  */
-export type SimpleInteger = number;"
+export type SimpleInteger = number;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/models/SimpleReference.ts 1`] = `
@@ -4610,7 +4798,8 @@ import type { ModelWithString } from './ModelWithString';
 /**
  * This is a simple reference
  */
-export type SimpleReference = ModelWithString;"
+export type SimpleReference = ModelWithString;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/models/SimpleString.ts 1`] = `
@@ -4621,7 +4810,8 @@ exports[`v3 should generate: ./test/generated/v3/models/SimpleString.ts 1`] = `
 /**
  * This is a simple string
  */
-export type SimpleString = string;"
+export type SimpleString = string;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/models/SimpleStringWithPattern.ts 1`] = `
@@ -4632,7 +4822,8 @@ exports[`v3 should generate: ./test/generated/v3/models/SimpleStringWithPattern.
 /**
  * This is a simple string
  */
-export type SimpleStringWithPattern = string | null;"
+export type SimpleStringWithPattern = string | null;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$ArrayWithArray.ts 1`] = `
@@ -4647,7 +4838,8 @@ export const $ArrayWithArray = {
             type: 'ModelWithString',
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$ArrayWithBooleans.ts 1`] = `
@@ -4659,7 +4851,8 @@ export const $ArrayWithBooleans = {
     contains: {
         type: 'boolean',
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$ArrayWithNumbers.ts 1`] = `
@@ -4671,7 +4864,8 @@ export const $ArrayWithNumbers = {
     contains: {
         type: 'number',
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$ArrayWithProperties.ts 1`] = `
@@ -4690,7 +4884,8 @@ export const $ArrayWithProperties = {
             },
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$ArrayWithReferences.ts 1`] = `
@@ -4702,7 +4897,8 @@ export const $ArrayWithReferences = {
     contains: {
         type: 'ModelWithString',
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$ArrayWithStrings.ts 1`] = `
@@ -4714,7 +4910,8 @@ export const $ArrayWithStrings = {
     contains: {
         type: 'string',
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$CommentWithBackticks.ts 1`] = `
@@ -4724,7 +4921,8 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$CommentWithBackticks.t
 export const $CommentWithBackticks = {
     type: 'number',
     description: \`Testing backticks in string: \\\\\`backticks\\\\\` and \\\\\`\\\\\`\\\\\`multiple backticks\\\\\`\\\\\`\\\\\` should work\`,
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$CommentWithBreaks.ts 1`] = `
@@ -4737,7 +4935,8 @@ export const $CommentWithBreaks = {
     Second line
 
     Fourth line\`,
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$CommentWithExpressionPlaceholders.ts 1`] = `
@@ -4747,7 +4946,8 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$CommentWithExpressionP
 export const $CommentWithExpressionPlaceholders = {
     type: 'number',
     description: \`Testing expression placeholders in string: \\\\\${expression} should work\`,
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$CommentWithQuotes.ts 1`] = `
@@ -4757,7 +4957,8 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$CommentWithQuotes.ts 1
 export const $CommentWithQuotes = {
     type: 'number',
     description: \`Testing quotes in string: 'single quote''' and \\"double quotes\\"\\"\\" should work\`,
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$CommentWithReservedCharacters.ts 1`] = `
@@ -4767,7 +4968,8 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$CommentWithReservedCha
 export const $CommentWithReservedCharacters = {
     type: 'number',
     description: \`Testing reserved characters in string: /* inline */ and /** inline **/ should work\`,
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$CommentWithSlashes.ts 1`] = `
@@ -4777,7 +4979,8 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$CommentWithSlashes.ts 
 export const $CommentWithSlashes = {
     type: 'number',
     description: \`Testing slashes in string: \\\\\\\\backwards\\\\\\\\\\\\\\\\\\\\\\\\ and /forwards/// should work\`,
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$CompositionBaseModel.ts 1`] = `
@@ -4794,7 +4997,8 @@ export const $CompositionBaseModel = {
             type: 'string',
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$CompositionExtendedModel.ts 1`] = `
@@ -4822,7 +5026,8 @@ export const $CompositionExtendedModel = {
             },
         },
     }],
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$CompositionWithAllOfAndNullable.ts 1`] = `
@@ -4850,7 +5055,8 @@ export const $CompositionWithAllOfAndNullable = {
             isNullable: true,
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$CompositionWithAnyOf.ts 1`] = `
@@ -4873,7 +5079,8 @@ export const $CompositionWithAnyOf = {
             }],
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$CompositionWithAnyOfAndNullable.ts 1`] = `
@@ -4901,7 +5108,8 @@ export const $CompositionWithAnyOfAndNullable = {
             isNullable: true,
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$CompositionWithAnyOfAnonymous.ts 1`] = `
@@ -4929,7 +5137,8 @@ export const $CompositionWithAnyOfAnonymous = {
             }],
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$CompositionWithOneOf.ts 1`] = `
@@ -4952,7 +5161,8 @@ export const $CompositionWithOneOf = {
             }],
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$CompositionWithOneOfAndComplexArrayDictionary.ts 1`] = `
@@ -4982,7 +5192,8 @@ export const $CompositionWithOneOfAndComplexArrayDictionary = {
             }],
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$CompositionWithOneOfAndNullable.ts 1`] = `
@@ -5010,7 +5221,8 @@ export const $CompositionWithOneOfAndNullable = {
             isNullable: true,
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$CompositionWithOneOfAndSimpleArrayDictionary.ts 1`] = `
@@ -5035,7 +5247,8 @@ export const $CompositionWithOneOfAndSimpleArrayDictionary = {
             }],
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$CompositionWithOneOfAndSimpleDictionary.ts 1`] = `
@@ -5057,7 +5270,8 @@ export const $CompositionWithOneOfAndSimpleDictionary = {
             }],
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$CompositionWithOneOfAnonymous.ts 1`] = `
@@ -5085,7 +5299,8 @@ export const $CompositionWithOneOfAnonymous = {
             }],
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$CompositionWithOneOfDiscriminator.ts 1`] = `
@@ -5100,7 +5315,8 @@ export const $CompositionWithOneOfDiscriminator = {
     }, {
         type: 'ModelSquare',
     }],
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$DictionaryWithArray.ts 1`] = `
@@ -5115,7 +5331,8 @@ export const $DictionaryWithArray = {
             type: 'ModelWithString',
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$DictionaryWithDictionary.ts 1`] = `
@@ -5130,7 +5347,8 @@ export const $DictionaryWithDictionary = {
             type: 'string',
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$DictionaryWithProperties.ts 1`] = `
@@ -5149,7 +5367,8 @@ export const $DictionaryWithProperties = {
             },
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$DictionaryWithReference.ts 1`] = `
@@ -5161,7 +5380,8 @@ export const $DictionaryWithReference = {
     contains: {
         type: 'ModelWithString',
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$DictionaryWithString.ts 1`] = `
@@ -5173,7 +5393,8 @@ export const $DictionaryWithString = {
     contains: {
         type: 'string',
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$EnumFromDescription.ts 1`] = `
@@ -5183,7 +5404,8 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$EnumFromDescription.ts
 export const $EnumFromDescription = {
     type: 'number',
     description: \`Success=1,Warning=2,Error=3\`,
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$EnumWithExtensions.ts 1`] = `
@@ -5192,7 +5414,8 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$EnumWithExtensions.ts 
 /* eslint-disable */
 export const $EnumWithExtensions = {
     type: 'Enum',
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$EnumWithNumbers.ts 1`] = `
@@ -5201,7 +5424,8 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$EnumWithNumbers.ts 1`]
 /* eslint-disable */
 export const $EnumWithNumbers = {
     type: 'Enum',
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$EnumWithStrings.ts 1`] = `
@@ -5210,7 +5434,8 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$EnumWithStrings.ts 1`]
 /* eslint-disable */
 export const $EnumWithStrings = {
     type: 'Enum',
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$File.ts 1`] = `
@@ -5246,7 +5471,8 @@ export const $File = {
             format: 'uri',
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$ModelCircle.ts 1`] = `
@@ -5264,7 +5490,8 @@ export const $ModelCircle = {
             type: 'number',
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$ModelSquare.ts 1`] = `
@@ -5282,7 +5509,8 @@ export const $ModelSquare = {
             type: 'number',
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$ModelThatExtends.ts 1`] = `
@@ -5304,7 +5532,8 @@ export const $ModelThatExtends = {
             },
         },
     }],
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$ModelThatExtendsExtends.ts 1`] = `
@@ -5328,7 +5557,8 @@ export const $ModelThatExtendsExtends = {
             },
         },
     }],
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithArray.ts 1`] = `
@@ -5357,7 +5587,8 @@ export const $ModelWithArray = {
             },
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithBoolean.ts 1`] = `
@@ -5372,7 +5603,8 @@ export const $ModelWithBoolean = {
             description: \`This is a simple boolean property\`,
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithCircularReference.ts 1`] = `
@@ -5386,7 +5618,8 @@ export const $ModelWithCircularReference = {
             type: 'ModelWithCircularReference',
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithDictionary.ts 1`] = `
@@ -5403,7 +5636,8 @@ export const $ModelWithDictionary = {
             },
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithDuplicateImports.ts 1`] = `
@@ -5423,7 +5657,8 @@ export const $ModelWithDuplicateImports = {
             type: 'ModelWithString',
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithDuplicateProperties.ts 1`] = `
@@ -5437,7 +5672,8 @@ export const $ModelWithDuplicateProperties = {
             type: 'ModelWithString',
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithEnum.ts 1`] = `
@@ -5458,7 +5694,8 @@ export const $ModelWithEnum = {
             description: \`Simple boolean enum\`,
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithEnumFromDescription.ts 1`] = `
@@ -5473,7 +5710,8 @@ export const $ModelWithEnumFromDescription = {
             description: \`Success=1,Warning=2,Error=3\`,
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithInteger.ts 1`] = `
@@ -5488,7 +5726,8 @@ export const $ModelWithInteger = {
             description: \`This is a simple number property\`,
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithNestedEnums.ts 1`] = `
@@ -5525,7 +5764,8 @@ export const $ModelWithNestedEnums = {
             },
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithNestedProperties.ts 1`] = `
@@ -5556,7 +5796,8 @@ export const $ModelWithNestedProperties = {
             isNullable: true,
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithNullableString.ts 1`] = `
@@ -5589,7 +5830,8 @@ export const $ModelWithNullableString = {
             isNullable: true,
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithOrderedProperties.ts 1`] = `
@@ -5609,7 +5851,8 @@ export const $ModelWithOrderedProperties = {
             type: 'string',
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithPattern.ts 1`] = `
@@ -5648,7 +5891,8 @@ export const $ModelWithPattern = {
             pattern: '^\\\\\\\\w+$',
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithProperties.ts 1`] = `
@@ -5702,7 +5946,8 @@ export const $ModelWithProperties = {
             isReadOnly: true,
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithReference.ts 1`] = `
@@ -5716,7 +5961,8 @@ export const $ModelWithReference = {
             type: 'ModelWithProperties',
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$ModelWithString.ts 1`] = `
@@ -5731,7 +5977,8 @@ export const $ModelWithString = {
             description: \`This is a simple string property\`,
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$Pageable.ts 1`] = `
@@ -5756,7 +6003,8 @@ export const $Pageable = {
             },
         },
     },
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$SimpleBoolean.ts 1`] = `
@@ -5766,7 +6014,8 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$SimpleBoolean.ts 1`] =
 export const $SimpleBoolean = {
     type: 'boolean',
     description: \`This is a simple boolean\`,
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$SimpleFile.ts 1`] = `
@@ -5776,7 +6025,8 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$SimpleFile.ts 1`] = `
 export const $SimpleFile = {
     type: 'binary',
     description: \`This is a simple file\`,
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$SimpleInteger.ts 1`] = `
@@ -5786,7 +6036,8 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$SimpleInteger.ts 1`] =
 export const $SimpleInteger = {
     type: 'number',
     description: \`This is a simple number\`,
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$SimpleReference.ts 1`] = `
@@ -5796,7 +6047,8 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$SimpleReference.ts 1`]
 export const $SimpleReference = {
     type: 'ModelWithString',
     description: \`This is a simple reference\`,
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$SimpleString.ts 1`] = `
@@ -5806,7 +6058,8 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$SimpleString.ts 1`] = 
 export const $SimpleString = {
     type: 'string',
     description: \`This is a simple string\`,
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/schemas/$SimpleStringWithPattern.ts 1`] = `
@@ -5819,7 +6072,8 @@ export const $SimpleStringWithPattern = {
     isNullable: true,
     maxLength: 64,
     pattern: '^[a-zA-Z0-9_]*$',
-} as const;"
+} as const;
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/services/CollectionFormatService.ts 1`] = `
@@ -5860,7 +6114,8 @@ export class CollectionFormatService {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/services/ComplexService.ts 1`] = `
@@ -5941,7 +6196,8 @@ export class ComplexService {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/services/DefaultService.ts 1`] = `
@@ -5964,7 +6220,8 @@ export class DefaultService {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/services/DefaultsService.ts 1`] = `
@@ -6076,7 +6333,8 @@ export class DefaultsService {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/services/DescriptionsService.ts 1`] = `
@@ -6123,7 +6381,8 @@ export class DescriptionsService {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/services/DuplicateService.ts 1`] = `
@@ -6176,7 +6435,8 @@ export class DuplicateService {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/services/ErrorService.ts 1`] = `
@@ -6212,7 +6472,8 @@ export class ErrorService {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/services/FormDataService.ts 1`] = `
@@ -6247,7 +6508,8 @@ export class FormDataService {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/services/HeaderService.ts 1`] = `
@@ -6276,7 +6538,8 @@ export class HeaderService {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/services/MultipartService.ts 1`] = `
@@ -6326,7 +6589,8 @@ export class MultipartService {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/services/MultipleTags1Service.ts 1`] = `
@@ -6361,7 +6625,8 @@ export class MultipleTags1Service {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/services/MultipleTags2Service.ts 1`] = `
@@ -6396,7 +6661,8 @@ export class MultipleTags2Service {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/services/MultipleTags3Service.ts 1`] = `
@@ -6420,7 +6686,8 @@ export class MultipleTags3Service {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/services/NoContentService.ts 1`] = `
@@ -6444,7 +6711,8 @@ export class NoContentService {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/services/ParametersService.ts 1`] = `
@@ -6589,7 +6857,8 @@ export class ParametersService {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/services/RequestBodyService.ts 1`] = `
@@ -6624,7 +6893,8 @@ export class RequestBodyService {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/services/ResponseService.ts 1`] = `
@@ -6691,7 +6961,8 @@ export class ResponseService {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/services/SimpleService.ts 1`] = `
@@ -6774,7 +7045,8 @@ export class SimpleService {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/services/TypesService.ts 1`] = `
@@ -6830,7 +7102,8 @@ export class TypesService {
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/services/UploadService.ts 1`] = `
@@ -6860,5 +7133,6 @@ export class UploadService {
         });
     }
 
-}"
+}
+"
 `;
