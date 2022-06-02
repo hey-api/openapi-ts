@@ -69,6 +69,8 @@ Documentation
 - [Nullable props (OpenAPI v2)](docs/nullable-props.md)
 - [Authorization](docs/authorization.md)
 - [External references](docs/external-references.md)
+- [Canceling requests](docs/canceling-requests.md)
+- [Custom request file](docs/custom-request-file.md)
 
 Support
 ===

@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.23.0] - 2022-06-02
+### Fixed
+- Upgraded dependencies
+- Added blank line at the end of generated files
+- Added support for Node.js v12
+### Added
+- Added `request` property inside `ApiError`
+- Added support for `@depricated` inside models and operations
+
 ## [0.22.0] - 2022-04-26
 ### Fixed
 - Upgraded dependencies
