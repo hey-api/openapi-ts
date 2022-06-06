@@ -3,9 +3,7 @@ updates:
 - package-ecosystem: npm
   directory: "/"
   schedule:
-    interval: monthly
-    time: "04:00"
-  open-pull-requests-limit: 10
+    interval: "daily"
   ignore:
     - dependency-name: "@types/node-fetch"
     - dependency-name: "node-fetch"
