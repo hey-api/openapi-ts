@@ -16,5 +16,5 @@ accepted = [
 ignored = []
 
 [behavior]
-run_only_on_dependency_modification = false
+run_only_on_dependency_modification = true
 do_not_block_pr = true
