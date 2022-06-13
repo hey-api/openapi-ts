@@ -1,7 +1,9 @@
 {{>header}}
 
 import FormData from 'form-data';
-import fetch, { Headers, RequestInit, Response } from 'node-fetch';
+import fetch, { Headers } from 'node-fetch';
+import type { RequestInit, Response } from 'node-fetch';
+import type { AbortSignal } from 'node-fetch/externals';
 
 import { ApiError } from './ApiError';
 import type { ApiRequestOptions } from './ApiRequestOptions';
