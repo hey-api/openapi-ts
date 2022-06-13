@@ -1,13 +1,14 @@
 name: auto-merge
 
-on:
-  pull_request:
+on: [push, pull_request]
 
 jobs:
   auto-merge:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: write
     steps:
-      - uses: actions/checkout@v2
-      - uses: ahmadnassri/action-dependabot-auto-merge@v2
+      - uses: fastify/github-action-merge-dependabot@v3
         with:
           github-token: ${{ secrets.TOKEN }}
