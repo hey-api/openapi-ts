@@ -9,6 +9,6 @@ jobs:
       pull-requests: write
       contents: write
     steps:
-      - uses: fastify/github-action-merge-dependabot@v3
+      - uses: fastify/github-action-merge-dependabot@v3.0.0
         with:
           github-token: ${{ secrets.TOKEN }}
