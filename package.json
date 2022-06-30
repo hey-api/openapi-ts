@@ -100,7 +100,7 @@
         "cross-spawn": "7.0.3",
         "eslint": "8.18.0",
         "eslint-config-prettier": "8.5.0",
-        "eslint-plugin-prettier": "4.1.0",
+        "eslint-plugin-prettier": "4.2.1",
         "eslint-plugin-simple-import-sort": "7.0.0",
         "express": "4.18.1",
         "form-data": "4.0.0",
