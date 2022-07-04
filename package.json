@@ -114,7 +114,7 @@
         "rollup": "2.75.7",
         "rollup-plugin-terser": "7.0.2",
         "rxjs": "7.5.5",
-        "ts-node": "10.8.1",
+        "ts-node": "10.8.2",
         "tslib": "2.4.0",
         "typescript": "4.7.3",
         "zone.js": "0.11.6"
