@@ -108,7 +108,7 @@
         "jest": "28.1.2",
         "jest-cli": "28.1.2",
         "prettier": "2.7.1",
-        "puppeteer": "15.3.1",
+        "puppeteer": "15.3.2",
         "qs": "6.11.0",
         "rimraf": "3.0.2",
         "rollup": "2.75.7",
