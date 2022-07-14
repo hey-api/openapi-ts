@@ -21,7 +21,9 @@ const params = program
     .option('--exportModels <value>', 'Write models to disk', true)
     .option('--exportSchemas <value>', 'Write schemas to disk', false)
     .option('--indent <value>', 'Indentation options [4, 2, tabs]', '4')
-    .option('--postfix <value>', 'Service name postfix', 'Service')
+    .option('--postfix <value>', 'Deprecated: Use --postfixServices instead. Service name postfix', 'Service')
+    .option('--postfixServices <value>', 'Service name postfix', 'Service')
+    .option('--postfixModels <value>', 'Model name postfix', '')
     .option('--request <value>', 'Path to custom request file')
     .parse(process.argv)
     .opts();
