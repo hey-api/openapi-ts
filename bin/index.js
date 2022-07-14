@@ -43,7 +43,7 @@ if (OpenAPI) {
         exportModels: JSON.parse(params.exportModels) === true,
         exportSchemas: JSON.parse(params.exportSchemas) === true,
         indent: params.indent,
-        postfixServices: params.postfix ?? params.postfixServices,
+        postfixServices: params.postfixServices ?? params.postfix,
         postfixModels: params.postfixModels,
         request: params.request,
     })
