@@ -18,13 +18,13 @@ export type { OpenAPIConfig } from './core/OpenAPI';
 
 {{#each models}}
 {{#if @root.useUnionTypes}}
-export type { {{{name}}} as {{{name}}}{{{@root.postfixModels}}} } from './models/{{{name}}}';
+export type { {{{name}}}{{#if @root.postfixModels}} as {{{name}}}{{{@root.postfixModels}}}{{/if}} } from './models/{{{name}}}';
 {{else if enum}}
-export { {{{name}}} as {{{name}}}{{{@root.postfixModels}}} } from './models/{{{name}}}';
+export { {{{name}}}{{#if @root.postfixModels}} as {{{name}}}{{{@root.postfixModels}}}{{/if}} } from './models/{{{name}}}';
 {{else if enums}}
-export { {{{name}}} as {{{name}}}{{{@root.postfixModels}}} } from './models/{{{name}}}';
+export { {{{name}}}{{#if @root.postfixModels}} as {{{name}}}{{{@root.postfixModels}}}{{/if}} } from './models/{{{name}}}';
 {{else}}
-export type { {{{name}}} as {{{name}}}{{{@root.postfixModels}}} } from './models/{{{name}}}';
+export type { {{{name}}}{{#if @root.postfixModels}} as {{{name}}}{{{@root.postfixModels}}}{{/if}} } from './models/{{{name}}}';
 {{/if}}
 {{/each}}
 {{/if}}
