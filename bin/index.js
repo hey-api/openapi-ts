@@ -23,7 +23,7 @@ const params = program
     .option('--indent <value>', 'Indentation options [4, 2, tabs]', '4')
     .option('--postfix <value>', 'Deprecated: Use --postfixServices instead. Service name postfix', 'Service')
     .option('--postfixServices <value>', 'Service name postfix', 'Service')
-    .option('--postfixModels <value>', 'Model name postfix', '')
+    .option('--postfixModels <value>', 'Model name postfix')
     .option('--request <value>', 'Path to custom request file')
     .parse(process.argv)
     .opts();
