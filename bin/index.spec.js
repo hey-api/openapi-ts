@@ -34,8 +34,10 @@ describe('bin', () => {
             'true',
             '--indent',
             '4',
-            '--postfix',
+            '--postfixServices',
             'Service',
+            '--postfixModels',
+            'Dto',
         ]);
         expect(result.stdout.toString()).toBe('');
         expect(result.stderr.toString()).toBe('');
@@ -65,6 +67,20 @@ describe('bin', () => {
         expect(result.stdout.toString()).toContain(`Usage: openapi [options]`);
         expect(result.stdout.toString()).toContain(`-i, --input <value>`);
         expect(result.stdout.toString()).toContain(`-o, --output <value>`);
+        expect(result.stderr.toString()).toBe('');
+    });
+
+    it('should still support the deprecated --postfix paramtert', () => {
+        const result = crossSpawn.sync('node', [
+            './bin/index.js',
+            '--input',
+            './test/spec/v3.json',
+            '--output',
+            './test/generated/bin',
+            '--postfix',
+            'Service',
+        ]);
+        expect(result.stdout.toString()).toBe('');
         expect(result.stderr.toString()).toBe('');
     });
 });
