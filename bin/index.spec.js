@@ -70,7 +70,7 @@ describe('bin', () => {
         expect(result.stderr.toString()).toBe('');
     });
 
-    it('should still support the deprecated --postfix paramtert', () => {
+    it('should still support the deprecated --postfix parameter', () => {
         const result = crossSpawn.sync('node', [
             './bin/index.js',
             '--input',
