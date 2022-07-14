@@ -18,13 +18,13 @@ export type { OpenAPIConfig } from './core/OpenAPI';
 
 {{#each models}}
 {{#if @root.useUnionTypes}}
-export type { {{{name}}} } from './models/{{{name}}}';
+export type { {{{name}}} as {{{name}}}{{{@root.postfixModels}}} } from './models/{{{name}}}';
 {{else if enum}}
-export { {{{name}}} } from './models/{{{name}}}';
+export { {{{name}}} as {{{name}}}{{{@root.postfixModels}}} } from './models/{{{name}}}';
 {{else if enums}}
-export { {{{name}}} } from './models/{{{name}}}';
+export { {{{name}}} as {{{name}}}{{{@root.postfixModels}}} } from './models/{{{name}}}';
 {{else}}
-export type { {{{name}}} } from './models/{{{name}}}';
+export type { {{{name}}} as {{{name}}}{{{@root.postfixModels}}} } from './models/{{{name}}}';
 {{/if}}
 {{/each}}
 {{/if}}
@@ -41,7 +41,7 @@ export { ${{{name}}} } from './schemas/${{{name}}}';
 {{#if services}}
 
 {{#each services}}
-export { {{{name}}}{{{@root.postfix}}} } from './services/{{{name}}}{{{@root.postfix}}}';
+export { {{{name}}}{{{@root.postfixServices}}} } from './services/{{{name}}}{{{@root.postfixServices}}}';
 {{/each}}
 {{/if}}
 {{/if}}
