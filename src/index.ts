@@ -24,10 +24,6 @@ export type Options = {
     exportModels?: boolean;
     exportSchemas?: boolean;
     indent?: Indent;
-    /**
-     * @deprecated use postfixServices instead
-     */
-    postfix?: string;
     postfixServices?: string;
     postfixModels?: string;
     request?: string;
@@ -49,7 +45,6 @@ export type Options = {
  * @param exportModels Generate models
  * @param exportSchemas Generate schemas
  * @param indent Indentation options (4, 2 or tab)
- * @param postfix Deprecated: Param to support old parameter postfix, use postfixServices instead
  * @param postfixServices Service name postfix
  * @param postfixModels Model name postfix
  * @param request Path to custom request file
@@ -67,7 +62,6 @@ export const generate = async ({
     exportModels = true,
     exportSchemas = false,
     indent = Indent.SPACE_4,
-    postfix,
     postfixServices = 'Service',
     postfixModels = '',
     request,
@@ -98,7 +92,7 @@ export const generate = async ({
                 exportModels,
                 exportSchemas,
                 indent,
-                postfix ?? postfixServices,
+                postfixServices,
                 postfixModels,
                 clientName,
                 request
@@ -122,7 +116,7 @@ export const generate = async ({
                 exportModels,
                 exportSchemas,
                 indent,
-                postfix ?? postfixServices,
+                postfixServices,
                 postfixModels,
                 clientName,
                 request
