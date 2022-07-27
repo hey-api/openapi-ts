@@ -2527,6 +2527,20 @@
                         }
                     }
                 }
+            },
+            "FreeFormObjectWithoutAdditionalProperties": {
+                "description": "This is a free-form object without additionalProperties.",
+                "type": "object"
+            },
+            "FreeFormObjectWithAdditionalPropertiesEqTrue": {
+                "description": "This is a free-form object with additionalProperties: true.",
+                "type": "object",
+                "additionalProperties": true
+            },
+            "FreeFormObjectWithAdditionalPropertiesEqEmptyObject": {
+                "description": "This is a free-form object with additionalProperties: {}.",
+                "type": "object",
+                "additionalProperties": {}
             }
         }
     }

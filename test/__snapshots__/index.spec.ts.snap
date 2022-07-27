@@ -3643,6 +3643,9 @@ export { EnumWithExtensions } from './models/EnumWithExtensions';
 export { EnumWithNumbers } from './models/EnumWithNumbers';
 export { EnumWithStrings } from './models/EnumWithStrings';
 export type { File } from './models/File';
+export type { FreeFormObjectWithAdditionalPropertiesEqEmptyObject } from './models/FreeFormObjectWithAdditionalPropertiesEqEmptyObject';
+export type { FreeFormObjectWithAdditionalPropertiesEqTrue } from './models/FreeFormObjectWithAdditionalPropertiesEqTrue';
+export type { FreeFormObjectWithoutAdditionalProperties } from './models/FreeFormObjectWithoutAdditionalProperties';
 export type { ModelCircle } from './models/ModelCircle';
 export type { ModelSquare } from './models/ModelSquare';
 export type { ModelThatExtends } from './models/ModelThatExtends';
@@ -3708,6 +3711,9 @@ export { $EnumWithExtensions } from './schemas/$EnumWithExtensions';
 export { $EnumWithNumbers } from './schemas/$EnumWithNumbers';
 export { $EnumWithStrings } from './schemas/$EnumWithStrings';
 export { $File } from './schemas/$File';
+export { $FreeFormObjectWithAdditionalPropertiesEqEmptyObject } from './schemas/$FreeFormObjectWithAdditionalPropertiesEqEmptyObject';
+export { $FreeFormObjectWithAdditionalPropertiesEqTrue } from './schemas/$FreeFormObjectWithAdditionalPropertiesEqTrue';
+export { $FreeFormObjectWithoutAdditionalProperties } from './schemas/$FreeFormObjectWithoutAdditionalProperties';
 export { $ModelCircle } from './schemas/$ModelCircle';
 export { $ModelSquare } from './schemas/$ModelSquare';
 export { $ModelThatExtends } from './schemas/$ModelThatExtends';
@@ -4331,6 +4337,42 @@ export type File = {
     readonly file?: string;
 };
 
+"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/models/FreeFormObjectWithAdditionalPropertiesEqEmptyObject.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+/**
+ * This is a free-form object with additionalProperties: {}.
+ */
+export type FreeFormObjectWithAdditionalPropertiesEqEmptyObject = Record<string, any>;
+"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/models/FreeFormObjectWithAdditionalPropertiesEqTrue.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+/**
+ * This is a free-form object with additionalProperties: true.
+ */
+export type FreeFormObjectWithAdditionalPropertiesEqTrue = Record<string, any>;
+"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/models/FreeFormObjectWithoutAdditionalProperties.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+/**
+ * This is a free-form object without additionalProperties.
+ */
+export type FreeFormObjectWithoutAdditionalProperties = Record<string, any>;
 "
 `;
 
@@ -5508,6 +5550,48 @@ export const $File = {
             type: 'string',
             isReadOnly: true,
             format: 'uri',
+        },
+    },
+} as const;
+"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/schemas/$FreeFormObjectWithAdditionalPropertiesEqEmptyObject.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $FreeFormObjectWithAdditionalPropertiesEqEmptyObject = {
+    type: 'dictionary',
+    contains: {
+        properties: {
+        },
+    },
+} as const;
+"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/schemas/$FreeFormObjectWithAdditionalPropertiesEqTrue.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $FreeFormObjectWithAdditionalPropertiesEqTrue = {
+    type: 'dictionary',
+    contains: {
+        properties: {
+        },
+    },
+} as const;
+"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/schemas/$FreeFormObjectWithoutAdditionalProperties.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $FreeFormObjectWithoutAdditionalProperties = {
+    type: 'dictionary',
+    contains: {
+        properties: {
         },
     },
 } as const;
@@ -7148,14 +7232,14 @@ export class TypesService {
      */
     public static types(
         parameterArray: Array<string> | null,
-        parameterDictionary: any,
+        parameterDictionary: Record<string, any> | null,
         parameterEnum: 'Success' | 'Warning' | 'Error' | null,
         parameterNumber: number = 123,
         parameterString: string | null = 'default',
         parameterBoolean: boolean | null = true,
-        parameterObject: any = null,
+        parameterObject: Record<string, any> | null = null,
         id?: number,
-    ): CancelablePromise<number | string | boolean | any> {
+    ): CancelablePromise<number | string | boolean | Record<string, any>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/types',
