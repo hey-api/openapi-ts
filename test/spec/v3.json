@@ -2507,6 +2507,14 @@
                     }
                 }
             },
+            "default": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    }
+                }
+            },
             "Pageable": {
                 "type": "object",
                 "properties": {
