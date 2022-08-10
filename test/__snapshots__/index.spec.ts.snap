@@ -548,6 +548,7 @@ export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
+export type { _default } from './models/_default';
 export type { ArrayWithArray } from './models/ArrayWithArray';
 export type { ArrayWithBooleans } from './models/ArrayWithBooleans';
 export type { ArrayWithNumbers } from './models/ArrayWithNumbers';
@@ -596,6 +597,7 @@ export type { SimpleReference } from './models/SimpleReference';
 export type { SimpleString } from './models/SimpleString';
 export type { SimpleStringWithPattern } from './models/SimpleStringWithPattern';
 
+export { $_default } from './schemas/$_default';
 export { $ArrayWithArray } from './schemas/$ArrayWithArray';
 export { $ArrayWithBooleans } from './schemas/$ArrayWithBooleans';
 export { $ArrayWithNumbers } from './schemas/$ArrayWithNumbers';
@@ -660,6 +662,18 @@ export { ParametersService } from './services/ParametersService';
 export { ResponseService } from './services/ResponseService';
 export { SimpleService } from './services/SimpleService';
 export { TypesService } from './services/TypesService';
+"
+`;
+
+exports[`v2 should generate: ./test/generated/v2/models/_default.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+export type _default = {
+    name?: string;
+};
+
 "
 `;
 
@@ -1436,6 +1450,20 @@ exports[`v2 should generate: ./test/generated/v2/models/SimpleStringWithPattern.
  * This is a simple string
  */
 export type SimpleStringWithPattern = string;
+"
+`;
+
+exports[`v2 should generate: ./test/generated/v2/schemas/$_default.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $_default = {
+    properties: {
+        name: {
+            type: 'string',
+        },
+    },
+} as const;
 "
 `;
 
