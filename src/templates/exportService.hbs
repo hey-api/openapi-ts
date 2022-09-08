@@ -32,7 +32,9 @@ import { request as __request } from '../core/request';
 {{/if}}
 
 {{#equals @root.httpClient 'angular'}}
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 {{/equals}}
 export class {{{name}}}{{{@root.postfix}}} {
 	{{#if @root.exportClient}}
