@@ -1298,6 +1298,7 @@ export type ModelWithPattern = {
     readonly modified?: string;
     id?: string;
     text?: string;
+    patternWithSingleQuotes?: string;
 };
 
 "
@@ -2088,6 +2089,10 @@ export const $ModelWithPattern = {
         text: {
             type: 'string',
             pattern: '^\\\\\\\\w+$',
+        },
+        patternWithSingleQuotes: {
+            type: 'string',
+            pattern: '^[a-zA-Z0-9\\\\']*$',
         },
     },
 } as const;
@@ -4693,6 +4698,7 @@ export type ModelWithPattern = {
     readonly modified?: string;
     id?: string;
     text?: string;
+    patternWithSingleQuotes?: string;
 };
 
 "
@@ -5928,6 +5934,10 @@ export const $ModelWithPattern = {
         text: {
             type: 'string',
             pattern: '^\\\\\\\\w+$',
+        },
+        patternWithSingleQuotes: {
+            type: 'string',
+            pattern: '^[a-zA-Z0-9\\\\']*$',
         },
     },
 } as const;
