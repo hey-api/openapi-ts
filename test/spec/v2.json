@@ -1466,6 +1466,14 @@
                 }
             ]
         },
+        "default": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "ModelWithPattern": {
             "description": "This is a model that contains a some patterns",
             "type": "object",

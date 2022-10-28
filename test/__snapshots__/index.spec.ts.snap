@@ -549,54 +549,7 @@ export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
-export type { ArrayWithArray as ArrayWithArrayDto } from './models/ArrayWithArray';
-export type { ArrayWithBooleans as ArrayWithBooleansDto } from './models/ArrayWithBooleans';
-export type { ArrayWithNumbers as ArrayWithNumbersDto } from './models/ArrayWithNumbers';
-export type { ArrayWithProperties as ArrayWithPropertiesDto } from './models/ArrayWithProperties';
-export type { ArrayWithReferences as ArrayWithReferencesDto } from './models/ArrayWithReferences';
-export type { ArrayWithStrings as ArrayWithStringsDto } from './models/ArrayWithStrings';
-export type { CommentWithBackticks as CommentWithBackticksDto } from './models/CommentWithBackticks';
-export type { CommentWithBreaks as CommentWithBreaksDto } from './models/CommentWithBreaks';
-export type { CommentWithExpressionPlaceholders as CommentWithExpressionPlaceholdersDto } from './models/CommentWithExpressionPlaceholders';
-export type { CommentWithQuotes as CommentWithQuotesDto } from './models/CommentWithQuotes';
-export type { CommentWithReservedCharacters as CommentWithReservedCharactersDto } from './models/CommentWithReservedCharacters';
-export type { CommentWithSlashes as CommentWithSlashesDto } from './models/CommentWithSlashes';
-export type { Date as DateDto } from './models/Date';
-export type { DictionaryWithArray as DictionaryWithArrayDto } from './models/DictionaryWithArray';
-export type { DictionaryWithDictionary as DictionaryWithDictionaryDto } from './models/DictionaryWithDictionary';
-export type { DictionaryWithProperties as DictionaryWithPropertiesDto } from './models/DictionaryWithProperties';
-export type { DictionaryWithReference as DictionaryWithReferenceDto } from './models/DictionaryWithReference';
-export type { DictionaryWithString as DictionaryWithStringDto } from './models/DictionaryWithString';
-export type { EnumFromDescription as EnumFromDescriptionDto } from './models/EnumFromDescription';
-export { EnumWithExtensions as EnumWithExtensionsDto } from './models/EnumWithExtensions';
-export { EnumWithNumbers as EnumWithNumbersDto } from './models/EnumWithNumbers';
-export { EnumWithStrings as EnumWithStringsDto } from './models/EnumWithStrings';
-export type { ModelThatExtends as ModelThatExtendsDto } from './models/ModelThatExtends';
-export type { ModelThatExtendsExtends as ModelThatExtendsExtendsDto } from './models/ModelThatExtendsExtends';
-export type { ModelWithArray as ModelWithArrayDto } from './models/ModelWithArray';
-export type { ModelWithBoolean as ModelWithBooleanDto } from './models/ModelWithBoolean';
-export type { ModelWithCircularReference as ModelWithCircularReferenceDto } from './models/ModelWithCircularReference';
-export type { ModelWithDictionary as ModelWithDictionaryDto } from './models/ModelWithDictionary';
-export type { ModelWithDuplicateImports as ModelWithDuplicateImportsDto } from './models/ModelWithDuplicateImports';
-export type { ModelWithDuplicateProperties as ModelWithDuplicatePropertiesDto } from './models/ModelWithDuplicateProperties';
-export { ModelWithEnum as ModelWithEnumDto } from './models/ModelWithEnum';
-export type { ModelWithEnumFromDescription as ModelWithEnumFromDescriptionDto } from './models/ModelWithEnumFromDescription';
-export type { ModelWithInteger as ModelWithIntegerDto } from './models/ModelWithInteger';
-export type { ModelWithNestedEnums as ModelWithNestedEnumsDto } from './models/ModelWithNestedEnums';
-export type { ModelWithNestedProperties as ModelWithNestedPropertiesDto } from './models/ModelWithNestedProperties';
-export type { ModelWithNullableString as ModelWithNullableStringDto } from './models/ModelWithNullableString';
-export type { ModelWithOrderedProperties as ModelWithOrderedPropertiesDto } from './models/ModelWithOrderedProperties';
-export type { ModelWithPattern as ModelWithPatternDto } from './models/ModelWithPattern';
-export type { ModelWithProperties as ModelWithPropertiesDto } from './models/ModelWithProperties';
-export type { ModelWithReference as ModelWithReferenceDto } from './models/ModelWithReference';
-export type { ModelWithString as ModelWithStringDto } from './models/ModelWithString';
-export type { SimpleBoolean as SimpleBooleanDto } from './models/SimpleBoolean';
-export type { SimpleFile as SimpleFileDto } from './models/SimpleFile';
-export type { SimpleInteger as SimpleIntegerDto } from './models/SimpleInteger';
-export type { SimpleReference as SimpleReferenceDto } from './models/SimpleReference';
-export type { SimpleString as SimpleStringDto } from './models/SimpleString';
-export type { SimpleStringWithPattern as SimpleStringWithPatternDto } from './models/SimpleStringWithPattern';
-
+export { $_default } from './schemas/$_default';
 export { $ArrayWithArray } from './schemas/$ArrayWithArray';
 export { $ArrayWithBooleans } from './schemas/$ArrayWithBooleans';
 export { $ArrayWithNumbers } from './schemas/$ArrayWithNumbers';
@@ -661,6 +614,18 @@ export { ParametersService } from './services/ParametersService';
 export { ResponseService } from './services/ResponseService';
 export { SimpleService } from './services/SimpleService';
 export { TypesService } from './services/TypesService';
+"
+`;
+
+exports[`v2 should generate: ./test/generated/v2/models/_default.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+export type _default = {
+    name?: string;
+};
+
 "
 `;
 
@@ -1438,6 +1403,20 @@ exports[`v2 should generate: ./test/generated/v2/models/SimpleStringWithPattern.
  * This is a simple string
  */
 export type SimpleStringWithPattern = string;
+"
+`;
+
+exports[`v2 should generate: ./test/generated/v2/schemas/$_default.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $_default = {
+    properties: {
+        name: {
+            type: 'string',
+        },
+    },
+} as const;
 "
 `;
 
@@ -3614,6 +3593,7 @@ export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
+
 export { $ArrayWithArray } from './schemas/$ArrayWithArray';
 export { $ArrayWithBooleans } from './schemas/$ArrayWithBooleans';
 export { $ArrayWithNumbers } from './schemas/$ArrayWithNumbers';
@@ -3703,6 +3683,18 @@ export { ResponseService } from './services/ResponseService';
 export { SimpleService } from './services/SimpleService';
 export { TypesService } from './services/TypesService';
 export { UploadService } from './services/UploadService';
+"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/models/_default.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+export type _default = {
+    name?: string;
+};
+
 "
 `;
 
@@ -4828,6 +4820,20 @@ exports[`v3 should generate: ./test/generated/v3/models/SimpleStringWithPattern.
  * This is a simple string
  */
 export type SimpleStringWithPattern = string | null;
+"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/schemas/$_default.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $_default = {
+    properties: {
+        name: {
+            type: 'string',
+        },
+    },
+} as const;
 "
 `;
 
