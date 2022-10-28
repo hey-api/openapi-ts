@@ -2,9 +2,11 @@ import commonjs from '@rollup/plugin-commonjs';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import { readFileSync } from 'fs';
-import { precompile } from 'handlebars';
+import handlebars from 'handlebars';
 import { dirname, extname, resolve } from 'path';
 import { terser } from 'rollup-plugin-terser';
+
+const { precompile } = handlebars;
 
 /**
  * Custom plugin to parse handlebar imports and precompile
