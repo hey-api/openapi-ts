@@ -463,7 +463,8 @@ const getResponseBody = async (response: Response): Promise<any> => {
         try {
             const contentType = response.headers.get('Content-Type');
             if (contentType) {
-                const isJSON = contentType.toLowerCase().startsWith('application/json');
+                const jsonTypes = ['application/json', 'application/problem+json']
+                const isJSON = jsonTypes.some(type => contentType.toLowerCase().startsWith(type));
                 if (isJSON) {
                     return await response.json();
                 } else {
@@ -547,55 +548,6 @@ export { ApiError } from './core/ApiError';
 export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
-
-export type { _default } from './models/_default';
-export type { ArrayWithArray } from './models/ArrayWithArray';
-export type { ArrayWithBooleans } from './models/ArrayWithBooleans';
-export type { ArrayWithNumbers } from './models/ArrayWithNumbers';
-export type { ArrayWithProperties } from './models/ArrayWithProperties';
-export type { ArrayWithReferences } from './models/ArrayWithReferences';
-export type { ArrayWithStrings } from './models/ArrayWithStrings';
-export type { CommentWithBackticks } from './models/CommentWithBackticks';
-export type { CommentWithBreaks } from './models/CommentWithBreaks';
-export type { CommentWithExpressionPlaceholders } from './models/CommentWithExpressionPlaceholders';
-export type { CommentWithQuotes } from './models/CommentWithQuotes';
-export type { CommentWithReservedCharacters } from './models/CommentWithReservedCharacters';
-export type { CommentWithSlashes } from './models/CommentWithSlashes';
-export type { Date } from './models/Date';
-export type { DictionaryWithArray } from './models/DictionaryWithArray';
-export type { DictionaryWithDictionary } from './models/DictionaryWithDictionary';
-export type { DictionaryWithProperties } from './models/DictionaryWithProperties';
-export type { DictionaryWithReference } from './models/DictionaryWithReference';
-export type { DictionaryWithString } from './models/DictionaryWithString';
-export type { EnumFromDescription } from './models/EnumFromDescription';
-export { EnumWithExtensions } from './models/EnumWithExtensions';
-export { EnumWithNumbers } from './models/EnumWithNumbers';
-export { EnumWithStrings } from './models/EnumWithStrings';
-export type { ModelThatExtends } from './models/ModelThatExtends';
-export type { ModelThatExtendsExtends } from './models/ModelThatExtendsExtends';
-export type { ModelWithArray } from './models/ModelWithArray';
-export type { ModelWithBoolean } from './models/ModelWithBoolean';
-export type { ModelWithCircularReference } from './models/ModelWithCircularReference';
-export type { ModelWithDictionary } from './models/ModelWithDictionary';
-export type { ModelWithDuplicateImports } from './models/ModelWithDuplicateImports';
-export type { ModelWithDuplicateProperties } from './models/ModelWithDuplicateProperties';
-export { ModelWithEnum } from './models/ModelWithEnum';
-export type { ModelWithEnumFromDescription } from './models/ModelWithEnumFromDescription';
-export type { ModelWithInteger } from './models/ModelWithInteger';
-export type { ModelWithNestedEnums } from './models/ModelWithNestedEnums';
-export type { ModelWithNestedProperties } from './models/ModelWithNestedProperties';
-export type { ModelWithNullableString } from './models/ModelWithNullableString';
-export type { ModelWithOrderedProperties } from './models/ModelWithOrderedProperties';
-export type { ModelWithPattern } from './models/ModelWithPattern';
-export type { ModelWithProperties } from './models/ModelWithProperties';
-export type { ModelWithReference } from './models/ModelWithReference';
-export type { ModelWithString } from './models/ModelWithString';
-export type { SimpleBoolean } from './models/SimpleBoolean';
-export type { SimpleFile } from './models/SimpleFile';
-export type { SimpleInteger } from './models/SimpleInteger';
-export type { SimpleReference } from './models/SimpleReference';
-export type { SimpleString } from './models/SimpleString';
-export type { SimpleStringWithPattern } from './models/SimpleStringWithPattern';
 
 export { $_default } from './schemas/$_default';
 export { $ArrayWithArray } from './schemas/$ArrayWithArray';
@@ -1312,6 +1264,7 @@ export type ModelWithPattern = {
     readonly modified?: string;
     id?: string;
     text?: string;
+    patternWithSingleQuotes?: string;
 };
 
 "
@@ -2116,6 +2069,10 @@ export const $ModelWithPattern = {
         text: {
             type: 'string',
             pattern: '^\\\\\\\\w+$',
+        },
+        patternWithSingleQuotes: {
+            type: 'string',
+            pattern: '^[a-zA-Z0-9\\\\']*$',
         },
     },
 } as const;
@@ -3550,7 +3507,8 @@ const getResponseBody = async (response: Response): Promise<any> => {
         try {
             const contentType = response.headers.get('Content-Type');
             if (contentType) {
-                const isJSON = contentType.toLowerCase().startsWith('application/json');
+                const jsonTypes = ['application/json', 'application/problem+json']
+                const isJSON = jsonTypes.some(type => contentType.toLowerCase().startsWith(type));
                 if (isJSON) {
                     return await response.json();
                 } else {
@@ -3635,73 +3593,7 @@ export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
-export type { _default } from './models/_default';
-export type { ArrayWithArray } from './models/ArrayWithArray';
-export type { ArrayWithBooleans } from './models/ArrayWithBooleans';
-export type { ArrayWithNumbers } from './models/ArrayWithNumbers';
-export type { ArrayWithProperties } from './models/ArrayWithProperties';
-export type { ArrayWithReferences } from './models/ArrayWithReferences';
-export type { ArrayWithStrings } from './models/ArrayWithStrings';
-export type { CommentWithBackticks } from './models/CommentWithBackticks';
-export type { CommentWithBreaks } from './models/CommentWithBreaks';
-export type { CommentWithExpressionPlaceholders } from './models/CommentWithExpressionPlaceholders';
-export type { CommentWithQuotes } from './models/CommentWithQuotes';
-export type { CommentWithReservedCharacters } from './models/CommentWithReservedCharacters';
-export type { CommentWithSlashes } from './models/CommentWithSlashes';
-export type { CompositionBaseModel } from './models/CompositionBaseModel';
-export type { CompositionExtendedModel } from './models/CompositionExtendedModel';
-export type { CompositionWithAllOfAndNullable } from './models/CompositionWithAllOfAndNullable';
-export type { CompositionWithAnyOf } from './models/CompositionWithAnyOf';
-export type { CompositionWithAnyOfAndNullable } from './models/CompositionWithAnyOfAndNullable';
-export type { CompositionWithAnyOfAnonymous } from './models/CompositionWithAnyOfAnonymous';
-export type { CompositionWithOneOf } from './models/CompositionWithOneOf';
-export type { CompositionWithOneOfAndComplexArrayDictionary } from './models/CompositionWithOneOfAndComplexArrayDictionary';
-export type { CompositionWithOneOfAndNullable } from './models/CompositionWithOneOfAndNullable';
-export type { CompositionWithOneOfAndSimpleArrayDictionary } from './models/CompositionWithOneOfAndSimpleArrayDictionary';
-export type { CompositionWithOneOfAndSimpleDictionary } from './models/CompositionWithOneOfAndSimpleDictionary';
-export type { CompositionWithOneOfAnonymous } from './models/CompositionWithOneOfAnonymous';
-export type { CompositionWithOneOfDiscriminator } from './models/CompositionWithOneOfDiscriminator';
-export type { DeprecatedModel } from './models/DeprecatedModel';
-export type { DictionaryWithArray } from './models/DictionaryWithArray';
-export type { DictionaryWithDictionary } from './models/DictionaryWithDictionary';
-export type { DictionaryWithProperties } from './models/DictionaryWithProperties';
-export type { DictionaryWithReference } from './models/DictionaryWithReference';
-export type { DictionaryWithString } from './models/DictionaryWithString';
-export type { EnumFromDescription } from './models/EnumFromDescription';
-export { EnumWithExtensions } from './models/EnumWithExtensions';
-export { EnumWithNumbers } from './models/EnumWithNumbers';
-export { EnumWithStrings } from './models/EnumWithStrings';
-export type { File } from './models/File';
-export type { ModelCircle } from './models/ModelCircle';
-export type { ModelSquare } from './models/ModelSquare';
-export type { ModelThatExtends } from './models/ModelThatExtends';
-export type { ModelThatExtendsExtends } from './models/ModelThatExtendsExtends';
-export type { ModelWithArray } from './models/ModelWithArray';
-export type { ModelWithBoolean } from './models/ModelWithBoolean';
-export type { ModelWithCircularReference } from './models/ModelWithCircularReference';
-export type { ModelWithDictionary } from './models/ModelWithDictionary';
-export type { ModelWithDuplicateImports } from './models/ModelWithDuplicateImports';
-export type { ModelWithDuplicateProperties } from './models/ModelWithDuplicateProperties';
-export { ModelWithEnum } from './models/ModelWithEnum';
-export type { ModelWithEnumFromDescription } from './models/ModelWithEnumFromDescription';
-export type { ModelWithInteger } from './models/ModelWithInteger';
-export type { ModelWithNestedEnums } from './models/ModelWithNestedEnums';
-export type { ModelWithNestedProperties } from './models/ModelWithNestedProperties';
-export type { ModelWithNullableString } from './models/ModelWithNullableString';
-export type { ModelWithOrderedProperties } from './models/ModelWithOrderedProperties';
-export type { ModelWithPattern } from './models/ModelWithPattern';
-export type { ModelWithProperties } from './models/ModelWithProperties';
-export type { ModelWithReference } from './models/ModelWithReference';
-export type { ModelWithString } from './models/ModelWithString';
-export type { Pageable } from './models/Pageable';
-export type { SimpleBoolean } from './models/SimpleBoolean';
-export type { SimpleFile } from './models/SimpleFile';
-export type { SimpleInteger } from './models/SimpleInteger';
-export type { SimpleReference } from './models/SimpleReference';
-export type { SimpleString } from './models/SimpleString';
-export type { SimpleStringWithPattern } from './models/SimpleStringWithPattern';
 
-export { $_default } from './schemas/$_default';
 export { $ArrayWithArray } from './schemas/$ArrayWithArray';
 export { $ArrayWithBooleans } from './schemas/$ArrayWithBooleans';
 export { $ArrayWithNumbers } from './schemas/$ArrayWithNumbers';
@@ -3738,6 +3630,9 @@ export { $EnumWithExtensions } from './schemas/$EnumWithExtensions';
 export { $EnumWithNumbers } from './schemas/$EnumWithNumbers';
 export { $EnumWithStrings } from './schemas/$EnumWithStrings';
 export { $File } from './schemas/$File';
+export { $FreeFormObjectWithAdditionalPropertiesEqEmptyObject } from './schemas/$FreeFormObjectWithAdditionalPropertiesEqEmptyObject';
+export { $FreeFormObjectWithAdditionalPropertiesEqTrue } from './schemas/$FreeFormObjectWithAdditionalPropertiesEqTrue';
+export { $FreeFormObjectWithoutAdditionalProperties } from './schemas/$FreeFormObjectWithoutAdditionalProperties';
 export { $ModelCircle } from './schemas/$ModelCircle';
 export { $ModelSquare } from './schemas/$ModelSquare';
 export { $ModelThatExtends } from './schemas/$ModelThatExtends';
@@ -4376,6 +4271,42 @@ export type File = {
 "
 `;
 
+exports[`v3 should generate: ./test/generated/v3/models/FreeFormObjectWithAdditionalPropertiesEqEmptyObject.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+/**
+ * This is a free-form object with additionalProperties: {}.
+ */
+export type FreeFormObjectWithAdditionalPropertiesEqEmptyObject = Record<string, any>;
+"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/models/FreeFormObjectWithAdditionalPropertiesEqTrue.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+/**
+ * This is a free-form object with additionalProperties: true.
+ */
+export type FreeFormObjectWithAdditionalPropertiesEqTrue = Record<string, any>;
+"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/models/FreeFormObjectWithoutAdditionalProperties.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+/**
+ * This is a free-form object without additionalProperties.
+ */
+export type FreeFormObjectWithoutAdditionalProperties = Record<string, any>;
+"
+`;
+
 exports[`v3 should generate: ./test/generated/v3/models/ModelCircle.ts 1`] = `
 "/* istanbul ignore file */
 /* tslint:disable */
@@ -4735,6 +4666,7 @@ export type ModelWithPattern = {
     readonly modified?: string;
     id?: string;
     text?: string;
+    patternWithSingleQuotes?: string;
 };
 
 "
@@ -5570,6 +5502,48 @@ export const $File = {
 "
 `;
 
+exports[`v3 should generate: ./test/generated/v3/schemas/$FreeFormObjectWithAdditionalPropertiesEqEmptyObject.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $FreeFormObjectWithAdditionalPropertiesEqEmptyObject = {
+    type: 'dictionary',
+    contains: {
+        properties: {
+        },
+    },
+} as const;
+"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/schemas/$FreeFormObjectWithAdditionalPropertiesEqTrue.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $FreeFormObjectWithAdditionalPropertiesEqTrue = {
+    type: 'dictionary',
+    contains: {
+        properties: {
+        },
+    },
+} as const;
+"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/schemas/$FreeFormObjectWithoutAdditionalProperties.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $FreeFormObjectWithoutAdditionalProperties = {
+    type: 'dictionary',
+    contains: {
+        properties: {
+        },
+    },
+} as const;
+"
+`;
+
 exports[`v3 should generate: ./test/generated/v3/schemas/$ModelCircle.ts 1`] = `
 "/* istanbul ignore file */
 /* tslint:disable */
@@ -5984,6 +5958,10 @@ export const $ModelWithPattern = {
         text: {
             type: 'string',
             pattern: '^\\\\\\\\w+$',
+        },
+        patternWithSingleQuotes: {
+            type: 'string',
+            pattern: '^[a-zA-Z0-9\\\\']*$',
         },
     },
 } as const;
@@ -7204,14 +7182,14 @@ export class TypesService {
      */
     public static types(
         parameterArray: Array<string> | null,
-        parameterDictionary: any,
+        parameterDictionary: Record<string, any> | null,
         parameterEnum: 'Success' | 'Warning' | 'Error' | null,
         parameterNumber: number = 123,
         parameterString: string | null = 'default',
         parameterBoolean: boolean | null = true,
-        parameterObject: any = null,
+        parameterObject: Record<string, any> | null = null,
         id?: number,
-    ): CancelablePromise<number | string | boolean | any> {
+    ): CancelablePromise<number | string | boolean | Record<string, any>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/types',

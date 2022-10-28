@@ -28,7 +28,8 @@ import { writeClientServices } from './writeClientServices';
  * @param exportSchemas Generate schemas
  * @param exportSchemas Generate schemas
  * @param indent Indentation options (4, 2 or tab)
- * @param postfix Service name postfix
+ * @param postfixServices Service name postfix
+ * @param postfixModels Model name postfix
  * @param clientName Custom client class name
  * @param request Path to custom request file
  */
@@ -44,7 +45,8 @@ export const writeClient = async (
     exportModels: boolean,
     exportSchemas: boolean,
     indent: Indent,
-    postfix: string,
+    postfixServices: string,
+    postfixModels: string,
     clientName?: string,
     request?: string
 ): Promise<void> => {
@@ -75,7 +77,7 @@ export const writeClient = async (
             useUnionTypes,
             useOptions,
             indent,
-            postfix,
+            postfixServices,
             clientName
         );
     }
@@ -94,7 +96,7 @@ export const writeClient = async (
 
     if (isDefined(clientName)) {
         await mkdir(outputPath);
-        await writeClientClass(client, templates, outputPath, httpClient, clientName, indent, postfix);
+        await writeClientClass(client, templates, outputPath, httpClient, clientName, indent, postfixServices);
     }
 
     if (exportCore || exportServices || exportSchemas || exportModels) {
@@ -108,7 +110,8 @@ export const writeClient = async (
             exportServices,
             exportModels,
             exportSchemas,
-            postfix,
+            postfixServices,
+            postfixModels,
             clientName
         );
     }
