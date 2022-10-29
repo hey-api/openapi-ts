@@ -3,19 +3,19 @@ jobs:
   build:
     docker:
       - image: cimg/node:lts-browsers
-    resource_class: large
+    resource_class: xlarge
     working_directory: ~/repo
     steps:
       - checkout
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-{{ checksum "package-lock.json" }}
             - v1-dependencies-
       - run:
           name: Install dependencies
-          command: npm install --force
+          command: npm install
       - save_cache:
-          key: v1-dependencies-{{ checksum "package.json" }}
+          key: v1-dependencies-{{ checksum "package-lock.json" }}
           paths:
             - node_modules
       - run:
