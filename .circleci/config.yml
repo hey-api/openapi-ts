@@ -4,7 +4,6 @@ jobs:
     docker:
       - image: cimg/node:lts-browsers
     resource_class: large
-    parallelism: 5
     working_directory: ~/repo
     steps:
       - checkout
@@ -24,10 +23,10 @@ jobs:
           command: npm run release
       - run:
           name: Run unit tests
-          command: npm run test --shard=$(expr $CIRCLE_NODE_INDEX + 1)/$CIRCLE_NODE_TOTAL
+          command: npm run test
       - run:
           name: Run e2e tests
-          command: npm run test:e2e --shard=$(expr $CIRCLE_NODE_INDEX + 1)/$CIRCLE_NODE_TOTAL
+          command: npm run test:e2e
       - run:
          name: Submit to Codecov
          command: npm run codecov
