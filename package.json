@@ -109,7 +109,7 @@
         "jest-cli": "29.3.0",
         "node-fetch": "2.6.7",
         "prettier": "2.7.1",
-        "puppeteer": "19.2.1",
+        "puppeteer": "19.2.2",
         "qs": "6.11.0",
         "rimraf": "3.0.2",
         "rollup": "3.2.3",
