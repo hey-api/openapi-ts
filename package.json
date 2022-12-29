@@ -95,7 +95,7 @@
         "@typescript-eslint/eslint-plugin": "5.47.1",
         "@typescript-eslint/parser": "5.47.1",
         "abort-controller": "3.0.0",
-        "axios": "1.2.1",
+        "axios": "1.2.2",
         "codecov": "3.8.3",
         "cross-spawn": "7.0.3",
         "eslint": "8.30.0",
