@@ -56,7 +56,8 @@
         "eslint": "eslint .",
         "eslint:fix": "eslint . --fix",
         "prepublishOnly": "npm run clean && npm run release",
-        "codecov": "codecov --token=66c30c23-8954-4892-bef9-fbaed0a2e42b"
+        "codecov": "codecov --token=66c30c23-8954-4892-bef9-fbaed0a2e42b",
+        "docker": "docker build -t eeelenbaas/openapi-typescript-codegen ."
     },
     "dependencies": {
         "camelcase": "^6.3.0",

@@ -58,6 +58,20 @@ $ openapi --help
     $ openapi --input ./spec.json --output ./generated --client xhr
 ```
 
+## Docker usage
+
+* Help screen
+
+  ```
+  docker run leeelenbaas/openapi-typescript-codegen --help
+  ```
+
+* Generate client for `sample.yaml` in current folder to the `client` subfolder
+
+  ```
+  docker run -v "$PWD:/src" leeelenbaas/openapi-typescript-codegen -i sample.yaml -o client
+  ```
+
 Documentation
 ===
 - [Basic usage](docs/basic-usage.md)
