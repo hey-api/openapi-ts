@@ -87,7 +87,7 @@
         "@types/cross-spawn": "6.0.2",
         "@types/express": "4.17.15",
         "@types/fs-extra": "^9.0.13",
-        "@types/glob": "8.0.0",
+        "@types/glob": "8.0.1",
         "@types/jest": "29.2.5",
         "@types/node": "18.11.18",
         "@types/node-fetch": "2.6.2",
