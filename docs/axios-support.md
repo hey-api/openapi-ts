@@ -24,3 +24,51 @@ in your `tsconfig.json` file:
     }
 }
 ```
+
+
+## Using a custom Axios client
+
+Sometime you may want to use your own Axios client created by `axios.create` for advanced configuration (e.g. Usage of the popular [axios-retry](https://github.com/softonic/axios-retry) interceptor) without having to [reimplement](./custom-request-file.md) the entire generated Axios request function.
+
+In those cases, simply construct your own HttpRequest wrapper implementation and pass it into your API client
+
+## Example
+
+Create a file that looks like this, that references file from the `/core` folder of the generated client.
+
+```typescript
+
+import axios from 'axios';
+import axiosRetry from 'axios-retry';
+import { request as __request } from './request';
+import { CancelablePromise } from './CancelablePromise';
+import { BaseHttpRequest } from './BaseHttpRequest';
+import { ApiRequestOptions } from './ApiRequestOptions';
+import type { OpenAPIConfig } from './OpenAPI';
+
+
+export class AxiosHttpRequestWithRetry extends BaseHttpRequest {
+  axiosInstance = axios.create();
+
+  constructor(config: OpenAPIConfig) {
+    super(config);
+    axiosRetry(this.axiosInstance);
+  }
+
+  public override request<T>(options: ApiRequestOptions): CancelablePromise<T> {
+    return __request(this.config, options, this.axiosInstance);
+  }
+}
+
+```
+
+Then, when instantiating your generated test client, pass in your custom request wrapper class:
+
+```typescript
+
+import { AxiosHttpRequestWithRetry } from './AxiosRequestWithRetry';
+import { GeneratedClient } from './generated/client';
+
+const client = new GeneratedClient({ BASE: 'http://localhost:8123' }, AxiosHttpRequestWithRetry)
+
+```
