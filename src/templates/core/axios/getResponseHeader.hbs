@@ -1,4 +1,4 @@
-const getResponseHeader = (response: AxiosResponse<any>, responseHeader?: string): string | undefined => {
+export const getResponseHeader = (response: AxiosResponse<any>, responseHeader?: string): string | undefined => {
 	if (responseHeader) {
 		const content = response.headers[responseHeader];
 		if (isString(content)) {

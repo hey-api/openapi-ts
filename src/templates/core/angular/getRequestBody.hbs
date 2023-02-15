@@ -1,4 +1,4 @@
-const getRequestBody = (options: ApiRequestOptions): any => {
+export const getRequestBody = (options: ApiRequestOptions): any => {
 	if (options.body) {
 		if (options.mediaType?.includes('/json')) {
 			return JSON.stringify(options.body)

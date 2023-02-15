@@ -1,4 +1,4 @@
-const getResponseBody = async (response: Response): Promise<any> => {
+export const getResponseBody = async (response: Response): Promise<any> => {
 	if (response.status !== 204) {
 		try {
 			const contentType = response.headers.get('Content-Type');
