@@ -21,8 +21,6 @@ export interface OnCancel {
 }
 
 export class CancelablePromise<T> implements Promise<T> {
-	readonly [Symbol.toStringTag]: string;
-
 	#isResolved: boolean;
 	#isRejected: boolean;
 	#isCancelled: boolean;
@@ -84,6 +82,10 @@ export class CancelablePromise<T> implements Promise<T> {
 			return executor(onResolve, onReject, onCancel as OnCancel);
 		});
 	}
+
+	 get [Symbol.toStringTag]() {
+            return "Cancellable Promise";
+     }
 
 	public then<TResult1 = T, TResult2 = never>(
 		onFulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | null,
