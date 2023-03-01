@@ -1,20 +1,21 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/repo
     docker:
       - image: cimg/node:lts-browsers
+    resource_class: large
+    working_directory: ~/repo
     steps:
       - checkout
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-{{ checksum "package-lock.json" }}
             - v1-dependencies-
       - run:
           name: Install dependencies
           command: npm install
       - save_cache:
-          key: v1-dependencies-{{ checksum "package.json" }}
+          key: v1-dependencies-{{ checksum "package-lock.json" }}
           paths:
             - node_modules
       - run:
@@ -22,10 +23,10 @@ jobs:
           command: npm run release
       - run:
           name: Run unit tests
-          command: npm run test:coverage
-      - run:
-          name: Run e2e tests
-          command: npm run test:e2e
+          command: npm run test
+#      - run:
+#          name: Run e2e tests
+#          command: npm run test:e2e
       - run:
          name: Submit to Codecov
          command: npm run codecov

@@ -12,7 +12,7 @@ export const sendRequest = async (
 		headers,
 		method: options.method,
 		body: body ?? formData,
-		signal: controller.signal,
+		signal: controller.signal as AbortSignal,
 	};
 
 	onCancel(() => controller.abort());

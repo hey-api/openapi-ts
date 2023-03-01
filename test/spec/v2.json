@@ -963,7 +963,9 @@
             "enum": [
                 "Success",
                 "Warning",
-                "Error"
+                "Error",
+                "'Single Quote'",
+                "\"Double Quotes\""
             ]
         },
         "EnumWithNumbers": {
@@ -1464,6 +1466,14 @@
                 }
             ]
         },
+        "default": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "ModelWithPattern": {
             "description": "This is a model that contains a some patterns",
             "type": "object",
@@ -1497,6 +1507,10 @@
                 "text": {
                     "type": "string",
                     "pattern": "^\\w+$"
+                },
+                "patternWithSingleQuotes": {
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9']*$"
                 }
             }
         }

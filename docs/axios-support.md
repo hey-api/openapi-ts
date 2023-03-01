@@ -14,5 +14,13 @@ npm install axios --save-dev
 npm install form-data@4.x --save-dev
 ```
 
-In order to compile the project and resolve the imports, you will need to enable the `allowSyntheticDefaultImports`
-in your `tsconfig.json` file.
+In order to compile the project and resolve the imports, you will need to add the following properties
+in your `tsconfig.json` file:
+```json
+{
+    "compilerOptions": {
+        "lib": ["...", "dom"],
+        "allowSyntheticDefaultImports": true
+    }
+}
+```

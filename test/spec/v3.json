@@ -106,6 +106,28 @@
                 ]
             }
         },
+        "/api/v{api-version}/parameters/deprecated": {
+            "post": {
+                "tags": [
+                    "Deprecated"
+                ],
+                "deprecated": true,
+                "operationId": "DeprecatedCall",
+                "parameters": [
+                    {
+                        "deprecated": true,
+                        "description": "This parameter is deprecated",
+                        "name": "parameter",
+                        "in": "header",
+                        "required": true,
+                        "nullable": true,
+                        "schema": {
+                            "$ref": "#/components/schemas/DeprecatedModel"
+                        }
+                    }
+                ]
+            }
+        },
         "/api/v{api-version}/parameters/{parameterPath}": {
             "post": {
                 "tags": [
@@ -1537,7 +1559,9 @@
                 "enum": [
                     "Success",
                     "Warning",
-                    "Error"
+                    "Error",
+                    "'Single Quote'",
+                    "\"Double Quotes\""
                 ]
             },
             "EnumWithNumbers": {
@@ -1875,6 +1899,18 @@
                     }
                 }
             },
+            "DeprecatedModel": {
+                "deprecated": true,
+                "description": "This is a deprecated model with a deprecated property",
+                "type": "object",
+                "properties": {
+                    "prop": {
+                        "deprecated": true,
+                        "description": "This is a deprecated property",
+                        "type": "string"
+                    }
+                }
+            },
             "ModelWithCircularReference": {
                 "description": "This is a model with one property containing a circular reference",
                 "type": "object",
@@ -2059,6 +2095,76 @@
                             },
                             {
                                 "$ref": "#/components/schemas/ModelWithDictionary"
+                            }
+                        ]
+                    }
+                }
+            },
+            "CompositionWithOneOfAndSimpleDictionary": {
+                "description": "This is a model that contains a simple dictionary within composition",
+                "type": "object",
+                "properties": {
+                    "propA": {
+                        "oneOf": [
+                            {
+                                "type": "boolean"
+                            },
+                            {
+                                "type": "object",
+                                "additionalProperties": {
+                                    "type": "number"
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            "CompositionWithOneOfAndSimpleArrayDictionary": {
+                "description": "This is a model that contains a dictionary of simple arrays within composition",
+                "type": "object",
+                "properties": {
+                    "propA": {
+                        "oneOf": [
+                            {
+                                "type": "boolean"
+                            },
+                            {
+                                "type": "object",
+                                "additionalProperties": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            "CompositionWithOneOfAndComplexArrayDictionary": {
+                "description": "This is a model that contains a dictionary of complex arrays (composited) within composition",
+                "type": "object",
+                "properties": {
+                    "propA": {
+                        "oneOf": [
+                            {
+                                "type": "boolean"
+                            },
+                            {
+                                "type": "object",
+                                "additionalProperties": {
+                                    "type": "array",
+                                    "items": {
+                                        "oneOf": [
+                                            {
+                                                "type": "number"
+                                            },
+                                            {
+                                                "type": "string"
+                                            }
+                                        ]
+                                    }
+                                }
                             }
                         ]
                     }
@@ -2360,6 +2466,10 @@
                     "text": {
                         "type": "string",
                         "pattern": "^\\w+$"
+                    },
+                    "patternWithSingleQuotes": {
+                        "type": "string",
+                        "pattern": "^[a-zA-Z0-9']*$"
                     }
                 }
             },
@@ -2401,6 +2511,14 @@
                     }
                 }
             },
+            "default": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    }
+                }
+            },
             "Pageable": {
                 "type": "object",
                 "properties": {
@@ -2421,6 +2539,20 @@
                         }
                     }
                 }
+            },
+            "FreeFormObjectWithoutAdditionalProperties": {
+                "description": "This is a free-form object without additionalProperties.",
+                "type": "object"
+            },
+            "FreeFormObjectWithAdditionalPropertiesEqTrue": {
+                "description": "This is a free-form object with additionalProperties: true.",
+                "type": "object",
+                "additionalProperties": true
+            },
+            "FreeFormObjectWithAdditionalPropertiesEqEmptyObject": {
+                "description": "This is a free-form object with additionalProperties: {}.",
+                "type": "object",
+                "additionalProperties": {}
             }
         }
     }

@@ -48,7 +48,8 @@ $ openapi --help
     --exportModels <value>    Write models to disk (default: true)
     --exportSchemas <value>   Write schemas to disk (default: false)
     --indent <value>          Indentation options [4, 2, tab] (default: "4")
-    --postfix <value>         Service name postfix (default: "Service")
+    --postfixServices         Service name postfix (default: "Service")
+    --postfixModels           Model name postfix
     --request <value>         Path to custom request file
     -h, --help                display help for command
 
@@ -69,6 +70,8 @@ Documentation
 - [Nullable props (OpenAPI v2)](docs/nullable-props.md)
 - [Authorization](docs/authorization.md)
 - [External references](docs/external-references.md)
+- [Canceling requests](docs/canceling-requests.md)
+- [Custom request file](docs/custom-request-file.md)
 
 Support
 ===

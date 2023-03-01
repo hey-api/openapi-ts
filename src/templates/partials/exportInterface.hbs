@@ -1,15 +1,25 @@
-{{#if description}}
+{{#ifdef description deprecated}}
 /**
+{{#if description}}
  * {{{escapeComment description}}}
- */
 {{/if}}
+{{#if deprecated}}
+ * @deprecated
+{{/if}}
+ */
+{{/ifdef}}
 export type {{{name}}} = {
 	{{#each properties}}
-	{{#if description}}
+	{{#ifdef description deprecated}}
 	/**
+	{{#if description}}
 	 * {{{escapeComment description}}}
-	 */
 	{{/if}}
+	{{#if deprecated}}
+	 * @deprecated
+	{{/if}}
+	 */
+	{{/ifdef}}
 	{{>isReadOnly}}{{{name}}}{{>isRequired}}: {{>type parent=../name}};
 	{{/each}}
 };

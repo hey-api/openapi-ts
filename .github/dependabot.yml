@@ -3,9 +3,20 @@ updates:
 - package-ecosystem: npm
   directory: "/"
   schedule:
-    interval: monthly
-    time: "04:00"
-  open-pull-requests-limit: 10
+    interval: "daily"
   ignore:
     - dependency-name: "@types/node-fetch"
     - dependency-name: "node-fetch"
+    - dependency-name: "camelcase"
+    - dependency-name: "@angular-devkit/build-angular"
+    - dependency-name: "@angular/animations"
+    - dependency-name: "@angular/cli"
+    - dependency-name: "@angular/common"
+    - dependency-name: "@angular/compiler"
+    - dependency-name: "@angular/compiler-cli"
+    - dependency-name: "@angular/core"
+    - dependency-name: "@angular/forms"
+    - dependency-name: "@angular/platform-browser"
+    - dependency-name: "@angular/platform-browser-dynamic"
+    - dependency-name: "@angular/router"
+    - dependency-name: "typescript"

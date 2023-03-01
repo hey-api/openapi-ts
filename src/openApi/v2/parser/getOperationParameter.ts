@@ -5,7 +5,6 @@ import type { OpenApiParameter } from '../interfaces/OpenApiParameter';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 import { extendEnum } from './extendEnum';
 import { getEnum } from './getEnum';
-import { getEnumFromDescription } from './getEnumFromDescription';
 import { getModel } from './getModel';
 import { getOperationParameterDefault } from './getOperationParameterDefault';
 import { getOperationParameterName } from './getOperationParameterName';
@@ -65,18 +64,6 @@ export const getOperationParameter = (openApi: OpenApi, parameter: OpenApiParame
             operationParameter.type = 'string';
             operationParameter.base = 'string';
             operationParameter.enum.push(...extendedEnumerators);
-            operationParameter.default = getOperationParameterDefault(parameter, operationParameter);
-            return operationParameter;
-        }
-    }
-
-    if ((parameter.type === 'int' || parameter.type === 'integer') && parameter.description) {
-        const enumerators = getEnumFromDescription(parameter.description);
-        if (enumerators.length) {
-            operationParameter.export = 'enum';
-            operationParameter.type = 'number';
-            operationParameter.base = 'number';
-            operationParameter.enum.push(...enumerators);
             operationParameter.default = getOperationParameterDefault(parameter, operationParameter);
             return operationParameter;
         }

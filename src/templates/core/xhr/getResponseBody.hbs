@@ -3,7 +3,8 @@ const getResponseBody = (xhr: XMLHttpRequest): any => {
 		try {
 			const contentType = xhr.getResponseHeader('Content-Type');
 			if (contentType) {
-				const isJSON = contentType.toLowerCase().startsWith('application/json');
+				const jsonTypes = ['application/json', 'application/problem+json']
+				const isJSON = jsonTypes.some(type => contentType.toLowerCase().startsWith(type));
 				if (isJSON) {
 					return JSON.parse(xhr.responseText);
 				} else {
@@ -14,5 +15,5 @@ const getResponseBody = (xhr: XMLHttpRequest): any => {
 			console.error(error);
 		}
 	}
-	return;
+	return undefined;
 };

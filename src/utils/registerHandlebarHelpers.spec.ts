@@ -11,6 +11,7 @@ describe('registerHandlebarHelpers', () => {
             useUnionTypes: false,
         });
         const helpers = Object.keys(Handlebars.helpers);
+        expect(helpers).toContain('ifdef');
         expect(helpers).toContain('equals');
         expect(helpers).toContain('notEquals');
         expect(helpers).toContain('containsSpaces');

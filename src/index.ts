@@ -24,7 +24,8 @@ export type Options = {
     exportModels?: boolean;
     exportSchemas?: boolean;
     indent?: Indent;
-    postfix?: string;
+    postfixServices?: string;
+    postfixModels?: string;
     request?: string;
     write?: boolean;
 };
@@ -44,7 +45,8 @@ export type Options = {
  * @param exportModels Generate models
  * @param exportSchemas Generate schemas
  * @param indent Indentation options (4, 2 or tab)
- * @param postfix Service name postfix
+ * @param postfixServices Service name postfix
+ * @param postfixModels Model name postfix
  * @param request Path to custom request file
  * @param write Write the files to disk (true or false)
  */
@@ -60,7 +62,8 @@ export const generate = async ({
     exportModels = true,
     exportSchemas = false,
     indent = Indent.SPACE_4,
-    postfix = 'Service',
+    postfixServices = 'Service',
+    postfixModels = '',
     request,
     write = true,
 }: Options): Promise<void> => {
@@ -89,7 +92,8 @@ export const generate = async ({
                 exportModels,
                 exportSchemas,
                 indent,
-                postfix,
+                postfixServices,
+                postfixModels,
                 clientName,
                 request
             );
@@ -112,7 +116,8 @@ export const generate = async ({
                 exportModels,
                 exportSchemas,
                 indent,
-                postfix,
+                postfixServices,
+                postfixModels,
                 clientName,
                 request
             );

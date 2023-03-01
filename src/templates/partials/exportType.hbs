@@ -1,6 +1,11 @@
-{{#if description}}
+{{#ifdef description deprecated}}
 /**
+{{#if description}}
  * {{{escapeComment description}}}
- */
 {{/if}}
+{{#if deprecated}}
+ * @deprecated
+{{/if}}
+ */
+{{/ifdef}}
 export type {{{name}}} = {{>type}};
