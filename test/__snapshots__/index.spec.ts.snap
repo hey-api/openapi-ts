@@ -4903,6 +4903,18 @@ export type SimpleInteger = number;
 "
 `;
 
+exports[`v3 should generate: ./test/generated/v3/models/SimpleParameter.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+/**
+ * This is a reusable parameter
+ */
+export type SimpleParameter = string;
+"
+`;
+
 exports[`v3 should generate: ./test/generated/v3/models/SimpleReference.ts 1`] = `
 "/* istanbul ignore file */
 /* tslint:disable */
@@ -6227,6 +6239,17 @@ exports[`v3 should generate: ./test/generated/v3/schemas/$SimpleInteger.ts 1`] =
 export const $SimpleInteger = {
     type: 'number',
     description: \`This is a simple number\`,
+} as const;
+"
+`;
+
+exports[`v3 should generate: ./test/generated/v3/schemas/$SimpleParameter.ts 1`] = `
+"/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $SimpleParameter = {
+    type: 'string',
+    description: \`This is a reusable parameter\`,
 } as const;
 "
 `;
