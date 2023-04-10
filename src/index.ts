@@ -1,7 +1,7 @@
 import { HttpClient } from './HttpClient';
 import { Indent } from './Indent';
-import { parse as parseV2 } from './openApi/v2';
-import { parse as parseV3 } from './openApi/v3';
+import { parse as parseV2 } from './openapi/v2';
+import { parse as parseV3 } from './openapi/v3';
 import { getOpenApiSpec } from './utils/getOpenApiSpec';
 import { getOpenApiVersion, OpenApiVersion } from './utils/getOpenApiVersion';
 import { isString } from './utils/isString';
