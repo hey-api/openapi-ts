@@ -1,5 +1,5 @@
 import type { Model } from '../../../client/interfaces/Model';
-import { reservedWords } from '../../v3/parser/getOperationParameterName';
+import { reservedWords } from '../../../utils/reservedWords';
 import type { OpenApi } from '../interfaces/OpenApi';
 import { getModel } from './getModel';
 import { getType } from './getType';

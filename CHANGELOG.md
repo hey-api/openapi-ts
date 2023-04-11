@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.24.0] - 2023-04-10
+### Fixed
+- Upgraded dependencies
+- Fixed issue with Cancelable promise
+- Fixed issue with escaping reserved keywords in schema names
+### Added
+- Added `--postfixModels` option
+
 ## [0.23.0] - 2022-06-02
 ### Fixed
 - Upgraded dependencies

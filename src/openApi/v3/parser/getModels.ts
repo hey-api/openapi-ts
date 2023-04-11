@@ -1,7 +1,7 @@
 import type { Model } from '../../../client/interfaces/Model';
+import { reservedWords } from '../../../utils/reservedWords';
 import type { OpenApi } from '../interfaces/OpenApi';
 import { getModel } from './getModel';
-import { reservedWords } from './getOperationParameterName';
 import { getType } from './getType';
 
 export const getModels = (openApi: OpenApi): Model[] => {

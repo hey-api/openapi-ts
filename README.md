@@ -3,8 +3,6 @@
 [![NPM][npm-image]][npm-url]
 [![License][license-image]][license-url]
 [![Coverage][coverage-image]][coverage-url]
-[![Quality][quality-image]][quality-url]
-[![Code Climate][climate-image]][climate-url]
 [![Downloads][downloads-image]][downloads-url]
 [![Build][build-image]][build-url]
 
@@ -14,7 +12,7 @@
 - Frontend ❤️ OpenAPI, but we do not want to use JAVA codegen in our builds
 - Quick, lightweight, robust and framework-agnostic 🚀
 - Supports generation of TypeScript clients
-- Supports generations of Fetch, [Node-Fetch](#node-fetch-support), [Axios](#axios-support), [Angular](#angular-support) and XHR http clients
+- Supports generations of Fetch, Node-Fetch, Axios, Angular and XHR http clients
 - Supports OpenAPI specification v2.0 and v3.0
 - Supports JSON and YAML files for input
 - Supports generation through CLI, Node.js and NPX
@@ -86,10 +84,6 @@ Support
 [license-image]: http://img.shields.io/npm/l/openapi-typescript-codegen.svg
 [coverage-url]: https://codecov.io/gh/ferdikoomen/openapi-typescript-codegen
 [coverage-image]: https://img.shields.io/codecov/c/github/ferdikoomen/openapi-typescript-codegen.svg
-[quality-url]: https://lgtm.com/projects/g/ferdikoomen/openapi-typescript-codegen
-[quality-image]: https://img.shields.io/lgtm/grade/javascript/g/ferdikoomen/openapi-typescript-codegen.svg
-[climate-url]: https://codeclimate.com/github/ferdikoomen/openapi-typescript-codegen
-[climate-image]: https://img.shields.io/codeclimate/maintainability/ferdikoomen/openapi-typescript-codegen.svg
 [downloads-url]: http://npm-stat.com/charts.html?package=openapi-typescript-codegen
 [downloads-image]: http://img.shields.io/npm/dm/openapi-typescript-codegen.svg
 [build-url]: https://circleci.com/gh/ferdikoomen/openapi-typescript-codegen/tree/master

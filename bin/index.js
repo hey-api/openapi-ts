@@ -21,7 +21,6 @@ const params = program
     .option('--exportModels <value>', 'Write models to disk', true)
     .option('--exportSchemas <value>', 'Write schemas to disk', false)
     .option('--indent <value>', 'Indentation options [4, 2, tabs]', '4')
-    .option('--postfix <value>', 'Deprecated: Use --postfixServices instead. Service name postfix', 'Service')
     .option('--postfixServices <value>', 'Service name postfix', 'Service')
     .option('--postfixModels <value>', 'Model name postfix')
     .option('--request <value>', 'Path to custom request file')
@@ -43,7 +42,7 @@ if (OpenAPI) {
         exportModels: JSON.parse(params.exportModels) === true,
         exportSchemas: JSON.parse(params.exportSchemas) === true,
         indent: params.indent,
-        postfixServices: params.postfixServices ?? params.postfix,
+        postfixServices: params.postfixServices,
         postfixModels: params.postfixModels,
         request: params.request,
     })
