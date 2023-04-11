@@ -1,3 +1,5 @@
+
+
 export const catchErrorCodes = (options: ApiRequestOptions, result: ApiResult): void => {
 	const errors: Record<number, string> = {
 		400: 'Bad Request',
@@ -16,16 +18,18 @@ export const catchErrorCodes = (options: ApiRequestOptions, result: ApiResult): 
 	}
 
 	if (!result.ok) {
-		const resultBody = (() => {
-      try {
-        return JSON.stringify(result.body, null, 2);
-      } catch (err) {
-        return undefined;
-      }
-    })();
-    throw new ApiError(
-      result,
-      `Generic Error: status: ${result.status ?? 'unknown'}; status text: ${result.statusText}; body: ${resultBody}`
-    );
+		const errorStatus = result.status ?? 'unknown';
+		const errorStatusText = result.statusText ?? 'unknown';
+		const errorBody = (() => {
+			try {
+				return JSON.stringify(result.body, null, 2);
+			} catch (e) {
+				return undefined;
+			}
+		})();
+
+		throw new ApiError(options, result,
+			`Generic Error: status: ${errorStatus}; status text: ${errorStatusText}; body: ${errorBody}`
+		);
 	}
 };
