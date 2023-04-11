@@ -143,7 +143,8 @@ describe('client.angular', () => {
         expect(error).toBe(
             JSON.stringify({
                 name: 'ApiError',
-                message: 'Generic Error: status: 409; status text: Conflict; body: {\n  "status": 409,\n  "message": "hello world"\n}',
+                message:
+                    'Generic Error: status: 409; status text: Conflict; body: {\n  "status": 409,\n  "message": "hello world"\n}',
                 url: 'http://localhost:3000/base/api/v1.0/error?status=409',
                 status: 409,
                 statusText: 'Conflict',
