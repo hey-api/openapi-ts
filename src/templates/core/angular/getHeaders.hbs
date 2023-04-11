@@ -1,4 +1,4 @@
-const getHeaders = (config: OpenAPIConfig, options: ApiRequestOptions): Observable<HttpHeaders> => {
+export const getHeaders = (config: OpenAPIConfig, options: ApiRequestOptions): Observable<HttpHeaders> => {
 	return forkJoin({
 		token: resolve(options, config.TOKEN),
 		username: resolve(options, config.USERNAME),

@@ -1,4 +1,4 @@
-const isBlob = (value: any): value is Blob => {
+export const isBlob = (value: any): value is Blob => {
 	return (
 		typeof value === 'object' &&
 		typeof value.type === 'string' &&

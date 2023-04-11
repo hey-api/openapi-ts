@@ -1,4 +1,4 @@
-const getResponseHeader = (response: Response, responseHeader?: string): string | undefined => {
+export const getResponseHeader = (response: Response, responseHeader?: string): string | undefined => {
 	if (responseHeader) {
 		const content = response.headers.get(responseHeader);
 		if (isString(content)) {

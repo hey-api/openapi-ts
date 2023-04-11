@@ -1,4 +1,4 @@
-const getResponseHeader = (xhr: XMLHttpRequest, responseHeader?: string): string | undefined => {
+export const getResponseHeader = (xhr: XMLHttpRequest, responseHeader?: string): string | undefined => {
 	if (responseHeader) {
 		const content = xhr.getResponseHeader(responseHeader);
 		if (isString(content)) {
