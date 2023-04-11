@@ -16,6 +16,16 @@ export const catchErrorCodes = (options: ApiRequestOptions, result: ApiResult): 
 	}
 
 	if (!result.ok) {
-		throw new ApiError(options, result, 'Generic Error');
+		const resultBody = (() => {
+      try {
+        return JSON.stringify(result.body, null, 2);
+      } catch (err) {
+        return undefined;
+      }
+    })();
+    throw new ApiError(
+      result,
+      `Generic Error: status: ${result.status ?? 'unknown'}; status text: ${result.statusText}; body: ${resultBody}`
+    );
 	}
 };
