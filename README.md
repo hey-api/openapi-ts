@@ -3,6 +3,7 @@
 [![NPM][npm-image]][npm-url]
 [![License][license-image]][license-url]
 [![Coverage][coverage-image]][coverage-url]
+[![Coverage][coverage-image]][coverage-url]
 [![Downloads][downloads-image]][downloads-url]
 [![Build][build-image]][build-url]
 
@@ -58,17 +59,18 @@ $ openapi --help
 
 ## Docker usage
 
-* Help screen
+To build the Docker container, execute the following command:
 
-  ```
-  docker run leeelenbaas/openapi-typescript-codegen --help
-  ```
+```
+docker build . --tag openapi-typescript-codegen
+```
 
-* Generate client for `sample.yaml` in current folder to the `client` subfolder
+After this is done, you can execute the CLI commands:
 
-  ```
-  docker run -v "$PWD:/src" leeelenbaas/openapi-typescript-codegen -i sample.yaml -o client
-  ```
+```
+docker run openapi-typescript-codegen --help
+docker run openapi-typescript-codegen --input sample.yaml --output client
+```
 
 Documentation
 ===
