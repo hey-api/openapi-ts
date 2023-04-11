@@ -4907,7 +4907,6 @@ export type SimpleInteger = number;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/SimpleReference.ts 1`] = `
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */

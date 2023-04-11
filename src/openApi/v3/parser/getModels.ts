@@ -15,6 +15,19 @@ export const getModels = (openApi: OpenApi): Model[] => {
                 models.push(model);
             }
         }
+        for (const definitionName in openApi.components.parameters) {
+            if (openApi.components.parameters.hasOwnProperty(definitionName)) {
+                const definition = openApi.components.parameters[definitionName];
+                const definitionType = getType(definitionName);
+                const schema = definition.schema;
+                if (schema) {
+                    const model = getModel(openApi, schema, true, definitionType.base.replace(reservedWords, '_$1'));
+                    model.description = definition.description || null;
+                    model.deprecated = definition.deprecated;
+                    models.push(model);
+                }
+            }
+        }
     }
     return models;
 };
