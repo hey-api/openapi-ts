@@ -81,7 +81,7 @@
         "@babel/cli": "7.21.0",
         "@babel/core": "7.21.4",
         "@babel/preset-env": "7.21.4",
-        "@babel/preset-typescript": "7.21.4",
+        "@babel/preset-typescript": "7.21.5",
         "@rollup/plugin-commonjs": "24.1.0",
         "@rollup/plugin-node-resolve": "15.0.2",
         "@rollup/plugin-typescript": "11.1.0",
