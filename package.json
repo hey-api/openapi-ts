@@ -84,7 +84,7 @@
         "@babel/preset-typescript": "7.21.5",
         "@rollup/plugin-commonjs": "24.1.0",
         "@rollup/plugin-node-resolve": "15.0.2",
-        "@rollup/plugin-typescript": "11.1.0",
+        "@rollup/plugin-typescript": "11.1.1",
         "@types/cross-spawn": "6.0.2",
         "@types/express": "4.17.17",
         "@types/fs-extra": "^11.0.1",
