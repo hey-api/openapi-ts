@@ -89,7 +89,7 @@
         "@types/express": "4.17.17",
         "@types/fs-extra": "^11.0.1",
         "@types/glob": "8.1.0",
-        "@types/jest": "29.5.1",
+        "@types/jest": "29.5.2",
         "@types/node": "18.16.3",
         "@types/node-fetch": "2.6.3",
         "@types/qs": "6.9.7",
