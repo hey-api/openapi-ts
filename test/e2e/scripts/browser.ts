@@ -8,6 +8,7 @@ const start = async () => {
     // and load the localhost page, this page will load the
     // javascript modules (see server.js for more info)
     _browser = await puppeteer.launch({
+        headless: 'new',
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
     _page = await _browser.newPage();

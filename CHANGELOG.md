@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.25.0] - 2023-07-05
+### Fixed
+- Upgraded dependencies
+### Added
+- Allow usage of a custom axios instance
+- Added message in generated files
+
 ## [0.24.0] - 2023-04-10
 ### Fixed
 - Upgraded dependencies
