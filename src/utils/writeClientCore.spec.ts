@@ -1,4 +1,5 @@
 import { EOL } from 'os';
+import { resolve } from 'path';
 
 import type { Client } from '../client/interfaces/Client';
 import { HttpClient } from '../HttpClient';
@@ -40,11 +41,11 @@ describe('writeClientCore', () => {
 
         await writeClientCore(client, templates, '/', HttpClient.FETCH, Indent.SPACE_4);
 
-        expect(writeFile).toBeCalledWith('/OpenAPI.ts', `settings${EOL}`);
-        expect(writeFile).toBeCalledWith('/ApiError.ts', `apiError${EOL}`);
-        expect(writeFile).toBeCalledWith('/ApiRequestOptions.ts', `apiRequestOptions${EOL}`);
-        expect(writeFile).toBeCalledWith('/ApiResult.ts', `apiResult${EOL}`);
-        expect(writeFile).toBeCalledWith('/CancelablePromise.ts', `cancelablePromise${EOL}`);
-        expect(writeFile).toBeCalledWith('/request.ts', `request${EOL}`);
+        expect(writeFile).toBeCalledWith(resolve('/', '/OpenAPI.ts'), `settings${EOL}`);
+        expect(writeFile).toBeCalledWith(resolve('/', '/ApiError.ts'), `apiError${EOL}`);
+        expect(writeFile).toBeCalledWith(resolve('/', '/ApiRequestOptions.ts'), `apiRequestOptions${EOL}`);
+        expect(writeFile).toBeCalledWith(resolve('/', '/ApiResult.ts'), `apiResult${EOL}`);
+        expect(writeFile).toBeCalledWith(resolve('/', '/CancelablePromise.ts'), `cancelablePromise${EOL}`);
+        expect(writeFile).toBeCalledWith(resolve('/', '/request.ts'), `request${EOL}`);
     });
 });

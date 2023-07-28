@@ -1,3 +1,5 @@
+import { resolve } from 'path';
+
 import type { Client } from '../client/interfaces/Client';
 import { writeFile } from './fileSystem';
 import type { Templates } from './registerHandlebarTemplates';
@@ -36,6 +38,6 @@ describe('writeClientIndex', () => {
 
         await writeClientIndex(client, templates, '/', true, true, true, true, true, 'Service', '');
 
-        expect(writeFile).toBeCalledWith('/index.ts', 'index');
+        expect(writeFile).toBeCalledWith(resolve('/', '/index.ts'), 'index');
     });
 });
