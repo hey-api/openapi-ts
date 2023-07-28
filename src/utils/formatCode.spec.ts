@@ -1,4 +1,5 @@
-import {EOL} from 'os';
+import { EOL } from 'os';
+
 import { formatCode } from './formatCode';
 
 const input1 = `{ foo: true }`;
