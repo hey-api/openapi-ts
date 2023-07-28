@@ -1,3 +1,4 @@
+import {EOL} from 'os';
 import { formatCode } from './formatCode';
 
 const input1 = `{ foo: true }`;
@@ -13,20 +14,14 @@ foo: true,
 bar: 123
 }`;
 
-const output3 = `{
-\tfoo: true,
-\tbar: 123
-}`;
+const output3 = `{${EOL}\tfoo: true,${EOL}\tbar: 123${EOL}}`;
 
 const input4 = `{
 \t\t\t\tfoo: true,
 \t\t\t\tbar: 123
 }`;
 
-const output4 = `{
-\tfoo: true,
-\tbar: 123
-}`;
+const output4 = `{${EOL}\tfoo: true,${EOL}\tbar: 123${EOL}}`;
 
 describe('format', () => {
     it('should produce correct result', () => {
