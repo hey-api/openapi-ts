@@ -78,7 +78,7 @@
         "@angular/platform-browser": "16.1.3",
         "@angular/platform-browser-dynamic": "16.1.3",
         "@angular/router": "16.1.3",
-        "@babel/cli": "7.22.10",
+        "@babel/cli": "7.22.15",
         "@babel/core": "7.22.11",
         "@babel/preset-env": "7.22.14",
         "@babel/preset-typescript": "7.22.15",
