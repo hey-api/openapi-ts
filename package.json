@@ -83,7 +83,7 @@
         "@babel/preset-env": "7.22.20",
         "@babel/preset-typescript": "7.23.0",
         "@rollup/plugin-commonjs": "25.0.5",
-        "@rollup/plugin-node-resolve": "15.2.1",
+        "@rollup/plugin-node-resolve": "15.2.2",
         "@rollup/plugin-typescript": "11.1.5",
         "@types/cross-spawn": "6.0.3",
         "@types/express": "4.17.18",
