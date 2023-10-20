@@ -99,7 +99,7 @@
         "axios": "1.5.1",
         "codecov": "3.8.3",
         "cross-spawn": "7.0.3",
-        "eslint": "8.51.0",
+        "eslint": "8.52.0",
         "eslint-config-prettier": "8.10.0",
         "eslint-plugin-prettier": "5.0.1",
         "eslint-plugin-simple-import-sort": "10.0.0",
