@@ -1,4 +1,4 @@
-import RefParser from 'json-schema-ref-parser';
+import RefParser from '@apidevtools/json-schema-ref-parser';
 
 /**
  * Load and parse te open api spec. If the file extension is ".yml" or ".yaml"

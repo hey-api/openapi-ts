@@ -71,6 +71,6 @@ export default {
         file: './dist/index.js',
         format: 'cjs',
     },
-    external: ['camelcase', 'commander', 'fs-extra', 'handlebars', 'json-schema-ref-parser'],
+    external: ['camelcase', 'commander', 'fs-extra', 'handlebars', '@apidevtools/json-schema-ref-parser'],
     plugins: getPlugins(),
 };

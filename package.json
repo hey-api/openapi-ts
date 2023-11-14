@@ -60,11 +60,11 @@
         "docker": "docker build -t eeelenbaas/openapi-typescript-codegen ."
     },
     "dependencies": {
+        "@apidevtools/json-schema-ref-parser": "^11.1.0",
         "camelcase": "^6.3.0",
         "commander": "^11.0.0",
         "fs-extra": "^11.1.1",
-        "handlebars": "^4.7.7",
-        "json-schema-ref-parser": "^9.0.9"
+        "handlebars": "^4.7.7"
     },
     "devDependencies": {
         "@angular-devkit/build-angular": "16.1.3",
