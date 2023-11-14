@@ -13,7 +13,7 @@ describe('v3.angular', () => {
         await generateClient('v3/angular/app/src', 'v3', 'angular');
         copyAsset('main-angular.ts', 'v3/angular/app/src/main.ts');
         buildAngularProject('v3/angular', 'app', 'dist');
-        await server.start('v3/angular/app/dist');
+        await server.start('v3/angular/app/dist/browser');
         await browser.start();
     }, 30000);
 
