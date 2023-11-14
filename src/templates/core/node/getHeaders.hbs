@@ -1,5 +1,5 @@
 export const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptions): Promise<Headers> => {
-	const [token, username, password, additionalHeaders] = Promise.all([
+	const [token, username, password, additionalHeaders] = await Promise.all([
 		resolve(options, config.TOKEN),
 		resolve(options, config.USERNAME),
 		resolve(options, config.PASSWORD),

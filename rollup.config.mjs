@@ -1,10 +1,10 @@
 import commonjs from '@rollup/plugin-commonjs';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
+import terser from '@rollup/plugin-terser';
 import typescript from '@rollup/plugin-typescript';
 import { readFileSync } from 'fs';
 import handlebars from 'handlebars';
 import { dirname, extname, resolve } from 'path';
-import { terser } from 'rollup-plugin-terser';
 
 const { precompile } = handlebars;
 

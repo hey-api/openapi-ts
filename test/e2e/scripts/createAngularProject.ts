@@ -22,6 +22,8 @@ export const createAngularProject = (dir: string, name: string) => {
             'true',
             '--routing',
             'false',
+            '--ssr',
+            'false',
             '--skip-tests',
             'true',
             '--skip-install',
