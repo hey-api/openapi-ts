@@ -74,25 +74,8 @@ docker run openapi-typescript-codegen --input sample.yaml --output client
 
 Documentation
 ===
-- [Basic usage](docs/basic-usage.md)
-- [OpenAPI object](docs/openapi-object.md)
-- [Client instances](docs/client-instances.md) `--name`
-- [Argument vs. Object style](docs/arguments-vs-object-style.md) `--useOptions`
-- [Enums vs. Union types](docs/enum-vs-union-types.md) `--useUnionTypes`
-- [Runtime schemas](docs/runtime-schemas.md) `--exportSchemas`
-- [Enum with custom names and descriptions](docs/custom-enums.md)
-- [Nullable props (OpenAPI v2)](docs/nullable-props.md)
-- [Authorization](docs/authorization.md)
-- [External references](docs/external-references.md)
-- [Canceling requests](docs/canceling-requests.md)
-- [Custom request file](docs/custom-request-file.md)
 
-Support
-===
-- [Babel support](docs/babel-support.md)
-- [Axios support](docs/axios-support.md)
-- [Angular support](docs/angular-support.md)
-- [Node-Fetch support](docs/node-fetch-support.md)
+The main documentation can be found in the [openapi-typescript-codegen/wiki](https://github.com/ferdikoomen/openapi-typescript-codegen/wiki)
 
 [npm-url]: https://npmjs.org/package/openapi-typescript-codegen
 [npm-image]: https://img.shields.io/npm/v/openapi-typescript-codegen.svg
