@@ -94,7 +94,7 @@
         "@types/node": "20.10.5",
         "@types/node-fetch": "2.6.9",
         "@types/qs": "6.9.11",
-        "@typescript-eslint/eslint-plugin": "6.16.0",
+        "@typescript-eslint/eslint-plugin": "6.17.0",
         "@typescript-eslint/parser": "6.16.0",
         "abort-controller": "3.0.0",
         "axios": "1.6.3",
