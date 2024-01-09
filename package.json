@@ -91,7 +91,7 @@
         "@types/fs-extra": "^11.0.4",
         "@types/glob": "8.1.0",
         "@types/jest": "29.5.11",
-        "@types/node": "20.10.7",
+        "@types/node": "20.10.8",
         "@types/node-fetch": "2.6.10",
         "@types/qs": "6.9.11",
         "@typescript-eslint/eslint-plugin": "6.18.0",
