@@ -2557,17 +2557,18 @@
             "ModelWithConst": {
                 "type": "object",
                 "properties": {
-                    "string": {
-                        "const": "string"
+                    "String": {
+                        "const": "String"
                     },
                     "number": {
                         "const": 0
                     },
-                    "boolean": {
-                        "const": false
-                    },
                     "null": {
                         "const": null
+                    },
+                    "withType": {
+                        "type": "string",
+                        "const": "Some string"
                     }
                 }
             }

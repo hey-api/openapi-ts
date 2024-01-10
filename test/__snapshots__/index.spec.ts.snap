@@ -4567,10 +4567,10 @@ exports[`v3 should generate: test/generated/v3/models/ModelWithConst.ts 1`] = `
 /* tslint:disable */
 /* eslint-disable */
 export type ModelWithConst = {
-    string?: "string";
+    String?: "String";
     number?: 0;
-    boolean?: false;
     null?: null;
+    withType?: "Some string";
 };
 
 "
@@ -5894,17 +5894,17 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelWithConst.ts 1`] = 
 /* eslint-disable */
 export const $ModelWithConst = {
     properties: {
-        string: {
-            type: '"string"',
+        String: {
+            type: '"String"',
         },
         number: {
             type: '0',
         },
-        boolean: {
-            type: 'false',
-        },
         null: {
             type: 'null',
+        },
+        withType: {
+            type: '"Some string"',
         },
     },
 } as const;
