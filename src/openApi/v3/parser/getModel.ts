@@ -82,6 +82,8 @@ export const getModel = (
             model.imports.push(...arrayItems.imports);
             model.default = getModelDefault(definition, model);
             return model;
+        } else if (definition.items.anyOf) {
+            return getModel(openApi, definition.items);
         } else {
             const arrayItems = getModel(openApi, definition.items);
             model.export = 'array';
