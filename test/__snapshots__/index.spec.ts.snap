@@ -3714,6 +3714,7 @@ export type { ModelThatExtendsExtends } from './models/ModelThatExtendsExtends';
 export type { ModelWithArray } from './models/ModelWithArray';
 export type { ModelWithBoolean } from './models/ModelWithBoolean';
 export type { ModelWithCircularReference } from './models/ModelWithCircularReference';
+export type { ModelWithConst } from './models/ModelWithConst';
 export type { ModelWithDictionary } from './models/ModelWithDictionary';
 export type { ModelWithDuplicateImports } from './models/ModelWithDuplicateImports';
 export type { ModelWithDuplicateProperties } from './models/ModelWithDuplicateProperties';
@@ -3784,6 +3785,7 @@ export { $ModelThatExtendsExtends } from './schemas/$ModelThatExtendsExtends';
 export { $ModelWithArray } from './schemas/$ModelWithArray';
 export { $ModelWithBoolean } from './schemas/$ModelWithBoolean';
 export { $ModelWithCircularReference } from './schemas/$ModelWithCircularReference';
+export { $ModelWithConst } from './schemas/$ModelWithConst';
 export { $ModelWithDictionary } from './schemas/$ModelWithDictionary';
 export { $ModelWithDuplicateImports } from './schemas/$ModelWithDuplicateImports';
 export { $ModelWithDuplicateProperties } from './schemas/$ModelWithDuplicateProperties';
@@ -4554,6 +4556,21 @@ exports[`v3 should generate: test/generated/v3/models/ModelWithCircularReference
  */
 export type ModelWithCircularReference = {
     prop?: ModelWithCircularReference;
+};
+
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/models/ModelWithConst.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export type ModelWithConst = {
+    string?: "string";
+    number?: 0;
+    boolean?: false;
+    null?: null;
 };
 
 "
@@ -5864,6 +5881,30 @@ export const $ModelWithCircularReference = {
     properties: {
         prop: {
             type: 'ModelWithCircularReference',
+        },
+    },
+} as const;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/schemas/$ModelWithConst.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $ModelWithConst = {
+    properties: {
+        string: {
+            type: '"string"',
+        },
+        number: {
+            type: '0',
+        },
+        boolean: {
+            type: 'false',
+        },
+        null: {
+            type: 'null',
         },
     },
 } as const;
