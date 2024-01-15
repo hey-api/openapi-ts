@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.27.0] - 2024-01-15
+### Fixed
+- Reverted `@apidevtools/json-schema-ref-parser` to version 10.1.0
+
+## [0.26.0] - 2024-01-07
+### Fixed
+- Upgraded dependencies
+
 ## [0.25.0] - 2023-07-05
 ### Fixed
 - Upgraded dependencies
