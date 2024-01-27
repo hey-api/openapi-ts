@@ -2809,6 +2809,16 @@ export class NoContentService {
             url: '/api/v{api-version}/no-content',
         });
     }
+    /**
+     * @returns any Response is a simple number
+     * @throws ApiError
+     */
+    public static callWithResponseAndNoContentResponse(): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v{api-version}/multiple-tags/response-and-no-content',
+        });
+    }
 }
 "
 `;
@@ -2913,6 +2923,16 @@ import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class ResponseService {
+    /**
+     * @returns any Response is a simple number
+     * @throws ApiError
+     */
+    public static callWithResponseAndNoContentResponse(): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v{api-version}/multiple-tags/response-and-no-content',
+        });
+    }
     /**
      * @returns ModelWithString Message for default response
      * @throws ApiError
@@ -6985,6 +7005,16 @@ export class NoContentService {
             url: '/api/v{api-version}/no-content',
         });
     }
+    /**
+     * @returns number Response is a simple number
+     * @throws ApiError
+     */
+    public static callWithResponseAndNoContentResponse(): CancelablePromise<number> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v{api-version}/multiple-tags/response-and-no-content',
+        });
+    }
 }
 "
 `;
@@ -7174,6 +7204,16 @@ import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class ResponseService {
+    /**
+     * @returns number Response is a simple number
+     * @throws ApiError
+     */
+    public static callWithResponseAndNoContentResponse(): CancelablePromise<number> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v{api-version}/multiple-tags/response-and-no-content',
+        });
+    }
     /**
      * @returns ModelWithString
      * @throws ApiError

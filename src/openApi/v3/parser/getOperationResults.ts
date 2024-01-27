@@ -12,35 +12,13 @@ const areEqual = (a: Model, b: Model): boolean => {
 export const getOperationResults = (operationResponses: OperationResponse[]): OperationResponse[] => {
     const operationResults: OperationResponse[] = [];
 
-    // Filter out success response codes, but skip "204 No Content"
+    // Filter out success response codes
     operationResponses.forEach(operationResponse => {
         const { code } = operationResponse;
-        if (code && code !== 204 && code >= 200 && code < 300) {
+        if (code && code >= 200 && code < 300) {
             operationResults.push(operationResponse);
         }
     });
-
-    if (!operationResults.length) {
-        operationResults.push({
-            in: 'response',
-            name: '',
-            code: 200,
-            description: '',
-            export: 'generic',
-            type: 'void',
-            base: 'void',
-            template: null,
-            link: null,
-            isDefinition: false,
-            isReadOnly: false,
-            isRequired: false,
-            isNullable: false,
-            imports: [],
-            enum: [],
-            enums: [],
-            properties: [],
-        });
-    }
 
     return operationResults.filter((operationResult, index, arr) => {
         return (
