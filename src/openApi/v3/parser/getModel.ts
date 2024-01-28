@@ -82,6 +82,8 @@ export const getModel = (
             model.imports.push(...arrayItems.imports);
             model.default = getModelDefault(definition, model);
             return model;
+        } else if (definition.items.anyOf) {
+            return getModel(openApi, definition.items);
         } else {
             const arrayItems = getModel(openApi, definition.items);
             model.export = 'array';
@@ -177,6 +179,15 @@ export const getModel = (
             model.default = getModelDefault(definition, model);
             return model;
         }
+    }
+
+    if (definition.const !== undefined) {
+        model.export = 'const';
+        const definitionConst = definition.const;
+        const modelConst = typeof definitionConst === 'string' ? `"${definitionConst}"` : `${definitionConst}`;
+        model.type = modelConst;
+        model.base = modelConst;
+        return model;
     }
 
     // If the schema has a type than it can be a basic or generic type.

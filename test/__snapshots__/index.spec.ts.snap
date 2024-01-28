@@ -3706,6 +3706,7 @@ export type { CompositionWithAllOfAndNullable } from './models/CompositionWithAl
 export type { CompositionWithAnyOf } from './models/CompositionWithAnyOf';
 export type { CompositionWithAnyOfAndNullable } from './models/CompositionWithAnyOfAndNullable';
 export type { CompositionWithAnyOfAnonymous } from './models/CompositionWithAnyOfAnonymous';
+export type { CompositionWithNestedAnyOfAndNull } from './models/CompositionWithNestedAnyOfAndNull';
 export type { CompositionWithOneOf } from './models/CompositionWithOneOf';
 export type { CompositionWithOneOfAndComplexArrayDictionary } from './models/CompositionWithOneOfAndComplexArrayDictionary';
 export type { CompositionWithOneOfAndNullable } from './models/CompositionWithOneOfAndNullable';
@@ -3713,12 +3714,14 @@ export type { CompositionWithOneOfAndSimpleArrayDictionary } from './models/Comp
 export type { CompositionWithOneOfAndSimpleDictionary } from './models/CompositionWithOneOfAndSimpleDictionary';
 export type { CompositionWithOneOfAnonymous } from './models/CompositionWithOneOfAnonymous';
 export type { CompositionWithOneOfDiscriminator } from './models/CompositionWithOneOfDiscriminator';
+export type { ConstValue } from './models/ConstValue';
 export type { DeprecatedModel } from './models/DeprecatedModel';
 export type { DictionaryWithArray } from './models/DictionaryWithArray';
 export type { DictionaryWithDictionary } from './models/DictionaryWithDictionary';
 export type { DictionaryWithProperties } from './models/DictionaryWithProperties';
 export type { DictionaryWithReference } from './models/DictionaryWithReference';
 export type { DictionaryWithString } from './models/DictionaryWithString';
+export { Enum1 } from './models/Enum1';
 export type { EnumFromDescription } from './models/EnumFromDescription';
 export { EnumWithExtensions } from './models/EnumWithExtensions';
 export { EnumWithNumbers } from './models/EnumWithNumbers';
@@ -3734,6 +3737,7 @@ export type { ModelThatExtendsExtends } from './models/ModelThatExtendsExtends';
 export type { ModelWithArray } from './models/ModelWithArray';
 export type { ModelWithBoolean } from './models/ModelWithBoolean';
 export type { ModelWithCircularReference } from './models/ModelWithCircularReference';
+export type { ModelWithConst } from './models/ModelWithConst';
 export type { ModelWithDictionary } from './models/ModelWithDictionary';
 export type { ModelWithDuplicateImports } from './models/ModelWithDuplicateImports';
 export type { ModelWithDuplicateProperties } from './models/ModelWithDuplicateProperties';
@@ -3776,6 +3780,7 @@ export { $CompositionWithAllOfAndNullable } from './schemas/$CompositionWithAllO
 export { $CompositionWithAnyOf } from './schemas/$CompositionWithAnyOf';
 export { $CompositionWithAnyOfAndNullable } from './schemas/$CompositionWithAnyOfAndNullable';
 export { $CompositionWithAnyOfAnonymous } from './schemas/$CompositionWithAnyOfAnonymous';
+export { $CompositionWithNestedAnyOfAndNull } from './schemas/$CompositionWithNestedAnyOfAndNull';
 export { $CompositionWithOneOf } from './schemas/$CompositionWithOneOf';
 export { $CompositionWithOneOfAndComplexArrayDictionary } from './schemas/$CompositionWithOneOfAndComplexArrayDictionary';
 export { $CompositionWithOneOfAndNullable } from './schemas/$CompositionWithOneOfAndNullable';
@@ -3783,12 +3788,14 @@ export { $CompositionWithOneOfAndSimpleArrayDictionary } from './schemas/$Compos
 export { $CompositionWithOneOfAndSimpleDictionary } from './schemas/$CompositionWithOneOfAndSimpleDictionary';
 export { $CompositionWithOneOfAnonymous } from './schemas/$CompositionWithOneOfAnonymous';
 export { $CompositionWithOneOfDiscriminator } from './schemas/$CompositionWithOneOfDiscriminator';
+export { $ConstValue } from './schemas/$ConstValue';
 export { $DeprecatedModel } from './schemas/$DeprecatedModel';
 export { $DictionaryWithArray } from './schemas/$DictionaryWithArray';
 export { $DictionaryWithDictionary } from './schemas/$DictionaryWithDictionary';
 export { $DictionaryWithProperties } from './schemas/$DictionaryWithProperties';
 export { $DictionaryWithReference } from './schemas/$DictionaryWithReference';
 export { $DictionaryWithString } from './schemas/$DictionaryWithString';
+export { $Enum1 } from './schemas/$Enum1';
 export { $EnumFromDescription } from './schemas/$EnumFromDescription';
 export { $EnumWithExtensions } from './schemas/$EnumWithExtensions';
 export { $EnumWithNumbers } from './schemas/$EnumWithNumbers';
@@ -3804,6 +3811,7 @@ export { $ModelThatExtendsExtends } from './schemas/$ModelThatExtendsExtends';
 export { $ModelWithArray } from './schemas/$ModelWithArray';
 export { $ModelWithBoolean } from './schemas/$ModelWithBoolean';
 export { $ModelWithCircularReference } from './schemas/$ModelWithCircularReference';
+export { $ModelWithConst } from './schemas/$ModelWithConst';
 export { $ModelWithDictionary } from './schemas/$ModelWithDictionary';
 export { $ModelWithDuplicateImports } from './schemas/$ModelWithDuplicateImports';
 export { $ModelWithDuplicateProperties } from './schemas/$ModelWithDuplicateProperties';
@@ -4125,6 +4133,23 @@ export type CompositionWithAnyOfAnonymous = {
 "
 `;
 
+exports[`v3 should generate: test/generated/v3/models/CompositionWithNestedAnyOfAndNull.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { ConstValue } from './ConstValue';
+import type { Enum1 } from './Enum1';
+/**
+ * This is a model with one property with a 'any of' relationship where the options are not $ref
+ */
+export type CompositionWithNestedAnyOfAndNull = {
+    propA?: ((Enum1 | ConstValue) | null);
+};
+
+"
+`;
+
 exports[`v3 should generate: test/generated/v3/models/CompositionWithOneOf.ts 1`] = `
 "/* generated using openapi-typescript-codegen -- do no edit */
 /* istanbul ignore file */
@@ -4241,6 +4266,15 @@ export type CompositionWithOneOfDiscriminator = (ModelCircle | ModelSquare);
 "
 `;
 
+exports[`v3 should generate: test/generated/v3/models/ConstValue.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export type ConstValue = "ConstValue";
+"
+`;
+
 exports[`v3 should generate: test/generated/v3/models/DeprecatedModel.ts 1`] = `
 "/* generated using openapi-typescript-codegen -- do no edit */
 /* istanbul ignore file */
@@ -4323,6 +4357,18 @@ exports[`v3 should generate: test/generated/v3/models/DictionaryWithString.ts 1`
  * This is a string dictionary
  */
 export type DictionaryWithString = Record<string, string>;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/models/Enum1.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export enum Enum1 {
+    BIRD = 'Bird',
+    DOG = 'Dog',
+}
 "
 `;
 
@@ -4574,6 +4620,21 @@ exports[`v3 should generate: test/generated/v3/models/ModelWithCircularReference
  */
 export type ModelWithCircularReference = {
     prop?: ModelWithCircularReference;
+};
+
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/models/ModelWithConst.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export type ModelWithConst = {
+    String?: "String";
+    number?: 0;
+    null?: null;
+    withType?: "Some string";
 };
 
 "
@@ -5323,6 +5384,32 @@ export const $CompositionWithAnyOfAnonymous = {
 "
 `;
 
+exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithNestedAnyOfAndNull.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $CompositionWithNestedAnyOfAndNull = {
+    description: \`This is a model with one property with a 'any of' relationship where the options are not $ref\`,
+    properties: {
+        propA: {
+            type: 'any-of',
+            contains: [{
+                type: 'any-of',
+                contains: [{
+                    type: 'Enum1',
+                }, {
+                    type: 'ConstValue',
+                }],
+            }, {
+                type: 'null',
+            }],
+        },
+    },
+} as const;
+"
+`;
+
 exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithOneOf.ts 1`] = `
 "/* generated using openapi-typescript-codegen -- do no edit */
 /* istanbul ignore file */
@@ -5508,6 +5595,17 @@ export const $CompositionWithOneOfDiscriminator = {
 "
 `;
 
+exports[`v3 should generate: test/generated/v3/schemas/$ConstValue.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $ConstValue = {
+    type: '"ConstValue"',
+} as const;
+"
+`;
+
 exports[`v3 should generate: test/generated/v3/schemas/$DeprecatedModel.ts 1`] = `
 "/* generated using openapi-typescript-codegen -- do no edit */
 /* istanbul ignore file */
@@ -5604,6 +5702,17 @@ export const $DictionaryWithString = {
     contains: {
         type: 'string',
     },
+} as const;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/schemas/$Enum1.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $Enum1 = {
+    type: 'Enum',
 } as const;
 "
 `;
@@ -5884,6 +5993,30 @@ export const $ModelWithCircularReference = {
     properties: {
         prop: {
             type: 'ModelWithCircularReference',
+        },
+    },
+} as const;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/schemas/$ModelWithConst.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $ModelWithConst = {
+    properties: {
+        String: {
+            type: '"String"',
+        },
+        number: {
+            type: '0',
+        },
+        null: {
+            type: 'null',
+        },
+        withType: {
+            type: '"Some string"',
         },
     },
 } as const;

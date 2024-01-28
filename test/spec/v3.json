@@ -2095,6 +2095,44 @@
                     }
                 }
             },
+            "Enum1":{
+                "enum": [
+                    "Bird",
+                    "Dog"
+                ],
+                "type": "string"
+            },
+            "ConstValue": {
+                "type": "string",
+                "const": "ConstValue"
+            },
+            "CompositionWithNestedAnyOfAndNull": {
+                "description": "This is a model with one property with a 'any of' relationship where the options are not $ref",
+                "type": "object",
+                "properties": {
+                    "propA": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "$ref": "#/components/schemas/Enum1"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/ConstValue"
+                                        }
+                                    ]
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Scopes"
+                    }
+                }
+            },
             "CompositionWithOneOfAndNullable": {
                 "description": "This is a model with one property with a 'one of' relationship",
                 "type": "object",
@@ -2577,6 +2615,24 @@
                 "description": "This is a free-form object with additionalProperties: {}.",
                 "type": "object",
                 "additionalProperties": {}
+            },
+            "ModelWithConst": {
+                "type": "object",
+                "properties": {
+                    "String": {
+                        "const": "String"
+                    },
+                    "number": {
+                        "const": 0
+                    },
+                    "null": {
+                        "const": null
+                    },
+                    "withType": {
+                        "type": "string",
+                        "const": "Some string"
+                    }
+                }
             }
         }
     }
