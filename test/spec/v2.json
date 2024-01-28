@@ -456,6 +456,30 @@
                 }
             }
         },
+        "/api/v{api-version}/multiple-tags/response-and-no-content": {
+            "get": {
+                "tags": [
+                    "Response",
+                    "NoContent"
+                ],
+                "operationId": "CallWithResponseAndNoContentResponse",
+                "responses": {
+                    "200": {
+                        "description": "Response is a simple number",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "number"
+                                }
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
         "/api/v{api-version}/multiple-tags/a": {
             "get": {
                 "tags": [
