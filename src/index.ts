@@ -75,35 +75,24 @@ export const generate = async ({
         useOptions,
     });
 
+    let parser: typeof parseV2 | typeof parseV3;
+
     switch (openApiVersion) {
         case OpenApiVersion.V2: {
-            const client = parseV2(openApi);
-            const clientFinal = postProcessClient(client);
-            if (!write) break;
-            await writeClient(
-                clientFinal,
-                templates,
-                output,
-                httpClient,
-                useOptions,
-                useUnionTypes,
-                exportCore,
-                exportServices,
-                exportModels,
-                exportSchemas,
-                indent,
-                postfixServices,
-                postfixModels,
-                clientName,
-                request
-            );
+            parser = parseV2;
             break;
         }
 
         case OpenApiVersion.V3: {
-            const client = parseV3(openApi);
-            const clientFinal = postProcessClient(client);
-            if (!write) break;
+            parser = parseV3;
+            break;
+        }
+    }
+
+    if (parser) {
+        const client = parser(openApi);
+        const clientFinal = postProcessClient(client);
+        if (write) {
             await writeClient(
                 clientFinal,
                 templates,
@@ -121,7 +110,6 @@ export const generate = async ({
                 clientName,
                 request
             );
-            break;
         }
     }
 };
