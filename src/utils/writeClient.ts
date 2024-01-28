@@ -41,7 +41,7 @@ export const writeClient = async (
     useOptions: boolean,
     useUnionTypes: boolean,
     exportCore: boolean,
-    exportServices: boolean,
+    exportServices: boolean | string,
     exportModels: boolean,
     exportSchemas: boolean,
     indent: Indent,
@@ -58,6 +58,11 @@ export const writeClient = async (
 
     if (!isSubDirectory(process.cwd(), output)) {
         throw new Error(`Output folder is not a subdirectory of the current working directory`);
+    }
+
+    if (typeof exportServices === 'string') {
+        const regexp = new RegExp(exportServices);
+        client.services = client.services.filter(service => regexp.test(service.name));
     }
 
     if (exportCore) {
