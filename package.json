@@ -1,5 +1,5 @@
 {
-    "name": "@canoapbc/openapi-typescript-codegen",
+    "name": "@nicolas-chaulet/openapi-typescript-codegen",
     "version": "0.27.2",
     "description": "Library that generates Typescript clients based on the OpenAPI specification.",
     "author": "Ferdi Koomen",
