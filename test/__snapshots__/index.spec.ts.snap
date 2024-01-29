@@ -3710,6 +3710,7 @@ export type { CompositionWithAllOfAndNullable } from './models/CompositionWithAl
 export type { CompositionWithAnyOf } from './models/CompositionWithAnyOf';
 export type { CompositionWithAnyOfAndNullable } from './models/CompositionWithAnyOfAndNullable';
 export type { CompositionWithAnyOfAnonymous } from './models/CompositionWithAnyOfAnonymous';
+export type { CompositionWithNestedAnyAndTypeNull } from './models/CompositionWithNestedAnyAndTypeNull';
 export type { CompositionWithNestedAnyOfAndNull } from './models/CompositionWithNestedAnyOfAndNull';
 export type { CompositionWithOneOf } from './models/CompositionWithOneOf';
 export type { CompositionWithOneOfAndComplexArrayDictionary } from './models/CompositionWithOneOfAndComplexArrayDictionary';
@@ -3786,6 +3787,7 @@ export { $CompositionWithAllOfAndNullable } from './schemas/$CompositionWithAllO
 export { $CompositionWithAnyOf } from './schemas/$CompositionWithAnyOf';
 export { $CompositionWithAnyOfAndNullable } from './schemas/$CompositionWithAnyOfAndNullable';
 export { $CompositionWithAnyOfAnonymous } from './schemas/$CompositionWithAnyOfAnonymous';
+export { $CompositionWithNestedAnyAndTypeNull } from './schemas/$CompositionWithNestedAnyAndTypeNull';
 export { $CompositionWithNestedAnyOfAndNull } from './schemas/$CompositionWithNestedAnyOfAndNull';
 export { $CompositionWithOneOf } from './schemas/$CompositionWithOneOf';
 export { $CompositionWithOneOfAndComplexArrayDictionary } from './schemas/$CompositionWithOneOfAndComplexArrayDictionary';
@@ -3894,11 +3896,14 @@ exports[`v3 should generate: test/generated/v3/models/AnyOfArrays.ts 1`] = `
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+/**
+ * This is a simple array with any of properties
+ */
 export type AnyOfArrays = {
     results?: Array<({
-        onePro?: boolean;
+        foo?: string;
     } | {
-        anotherProp?: boolean;
+        bar?: string;
     })>;
 };
 
@@ -4162,6 +4167,23 @@ export type CompositionWithAnyOfAnonymous = {
     propA?: ({
         propA?: string;
     } | string | number);
+};
+
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/models/CompositionWithNestedAnyAndTypeNull.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { ModelWithArray } from './ModelWithArray';
+import type { ModelWithDictionary } from './ModelWithDictionary';
+/**
+ * This is a model with nested 'any of' property with a type null
+ */
+export type CompositionWithNestedAnyAndTypeNull = {
+    propA?: ((ModelWithDictionary | null) | (ModelWithArray | null));
 };
 
 "
@@ -5110,19 +5132,20 @@ exports[`v3 should generate: test/generated/v3/schemas/$AnyOfArrays.ts 1`] = `
 /* tslint:disable */
 /* eslint-disable */
 export const $AnyOfArrays = {
+    description: \`This is a simple array with any of properties\`,
     properties: {
         results: {
             type: 'any-of',
             contains: [{
                 properties: {
-                    onePro: {
-                        type: 'boolean',
+                    foo: {
+                        type: 'string',
                     },
                 },
             }, {
                 properties: {
-                    anotherProp: {
-                        type: 'boolean',
+                    bar: {
+                        type: 'string',
                     },
                 },
             }],
@@ -5457,6 +5480,37 @@ export const $CompositionWithAnyOfAnonymous = {
             }, {
                 type: 'number',
                 description: \`Anonymous integer type\`,
+            }],
+        },
+    },
+} as const;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithNestedAnyAndTypeNull.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $CompositionWithNestedAnyAndTypeNull = {
+    description: \`This is a model with nested 'any of' property with a type null\`,
+    properties: {
+        propA: {
+            type: 'any-of',
+            contains: [{
+                type: 'any-of',
+                contains: [{
+                    type: 'ModelWithDictionary',
+                }, {
+                    type: 'null',
+                }],
+            }, {
+                type: 'any-of',
+                contains: [{
+                    type: 'ModelWithArray',
+                }, {
+                    type: 'null',
+                }],
             }],
         },
     },

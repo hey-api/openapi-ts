@@ -2095,6 +2095,43 @@
                     }
                 }
             },
+            "CompositionWithNestedAnyAndTypeNull": {
+                "description": "This is a model with nested 'any of' property with a type null",
+                "type": "object",
+                "properties": {
+                    "propA": {
+                        "type": "object",
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ModelWithDictionary"
+                                        },
+                                        {
+                                            "type": "null"
+                                        }
+                                    ]
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ModelWithArray"
+                                        },
+                                        {
+                                            "type": "null"
+                                        }
+                                    ]
+                                },
+                                "type": "array"
+                            }
+                        ]
+                    }
+                }
+            },
             "Enum1": {
                 "enum": [
                     "Bird",
@@ -2304,6 +2341,7 @@
                 }
             },
             "AnyOfArrays": {
+                "description": "This is a simple array with any of properties",
                 "type": "object",
                 "properties": {
                     "results": {
@@ -2312,16 +2350,16 @@
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "oneProp": {
-                                            "type": "boolean"
+                                        "foo": {
+                                            "type": "string"
                                         }
                                     }
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "anotherProp": {
-                                            "type": "boolean"
+                                        "bar": {
+                                            "type": "string"
                                         }
                                     }
                                 }
