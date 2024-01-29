@@ -43,6 +43,20 @@ describe('bin', () => {
         expect(result.stderr.toString()).toBe('');
     });
 
+    it('it should support regexp in exportSchemas', async () => {
+        const result = crossSpawn.sync('node', [
+            './bin/index.js',
+            '--input',
+            './test/spec/v3.json',
+            '--output',
+            './test/generated/bin',
+            '--exportServices',
+            '^(Simple|Types)',
+        ]);
+        expect(result.stdout.toString()).toBe('');
+        expect(result.stderr.toString()).toBe('');
+    });
+
     it('it should throw error without params', async () => {
         const result = crossSpawn.sync('node', ['./bin/index.js']);
         expect(result.stdout.toString()).toBe('');

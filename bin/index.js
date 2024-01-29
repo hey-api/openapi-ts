@@ -30,6 +30,12 @@ const params = program
 const OpenAPI = require(path.resolve(__dirname, '../dist/index.js'));
 
 if (OpenAPI) {
+    let exportServices;
+    try {
+        exportServices = JSON.parse(params.exportServices) === true;
+    } catch (error) {
+        exportServices = params.exportServices;
+    }
     OpenAPI.generate({
         input: params.input,
         output: params.output,
@@ -38,7 +44,7 @@ if (OpenAPI) {
         useOptions: params.useOptions,
         useUnionTypes: params.useUnionTypes,
         exportCore: JSON.parse(params.exportCore) === true,
-        exportServices: JSON.parse(params.exportServices) === true,
+        exportServices,
         exportModels: JSON.parse(params.exportModels) === true,
         exportSchemas: JSON.parse(params.exportSchemas) === true,
         indent: params.indent,

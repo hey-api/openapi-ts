@@ -20,7 +20,7 @@ export type Options = {
     useOptions?: boolean;
     useUnionTypes?: boolean;
     exportCore?: boolean;
-    exportServices?: boolean;
+    exportServices?: boolean | string;
     exportModels?: boolean;
     exportSchemas?: boolean;
     indent?: Indent | '4' | '2' | 'tab';

@@ -29,7 +29,7 @@ export const writeClientIndex = async (
     outputPath: string,
     useUnionTypes: boolean,
     exportCore: boolean,
-    exportServices: boolean,
+    exportServices: boolean | string,
     exportModels: boolean,
     exportSchemas: boolean,
     postfixServices: string,
