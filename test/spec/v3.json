@@ -2095,7 +2095,7 @@
                     }
                 }
             },
-            "Enum1":{
+            "Enum1": {
                 "enum": [
                     "Bird",
                     "Dog"
@@ -2287,6 +2287,48 @@
                                 "$ref": "#/components/schemas/ModelWithDictionary"
                             }
                         ]
+                    }
+                }
+            },
+            "AnyOfAnyAndNull": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "anyOf": [
+                            {},
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                }
+            },
+            "AnyOfArrays": {
+                "type": "object",
+                "properties": {
+                    "results": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "oneProp": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "anotherProp": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Results"
                     }
                 }
             },

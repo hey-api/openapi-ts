@@ -3690,6 +3690,8 @@ export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
 export type { _default } from './models/_default';
+export type { AnyOfAnyAndNull } from './models/AnyOfAnyAndNull';
+export type { AnyOfArrays } from './models/AnyOfArrays';
 export type { ArrayWithArray } from './models/ArrayWithArray';
 export type { ArrayWithBooleans } from './models/ArrayWithBooleans';
 export type { ArrayWithNumbers } from './models/ArrayWithNumbers';
@@ -3764,6 +3766,8 @@ export type { SimpleString } from './models/SimpleString';
 export type { SimpleStringWithPattern } from './models/SimpleStringWithPattern';
 
 export { $_default } from './schemas/$_default';
+export { $AnyOfAnyAndNull } from './schemas/$AnyOfAnyAndNull';
+export { $AnyOfArrays } from './schemas/$AnyOfArrays';
 export { $ArrayWithArray } from './schemas/$ArrayWithArray';
 export { $ArrayWithBooleans } from './schemas/$ArrayWithBooleans';
 export { $ArrayWithNumbers } from './schemas/$ArrayWithNumbers';
@@ -3868,6 +3872,34 @@ exports[`v3 should generate: test/generated/v3/models/_default.ts 1`] = `
 /* eslint-disable */
 export type _default = {
     name?: string;
+};
+
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/models/AnyOfAnyAndNull.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export type AnyOfAnyAndNull = {
+    data?: any | null;
+};
+
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/models/AnyOfArrays.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export type AnyOfArrays = {
+    results?: Array<({
+        onePro?: boolean;
+    } | {
+        anotherProp?: boolean;
+    })>;
 };
 
 "
@@ -5048,6 +5080,52 @@ export const $_default = {
     properties: {
         name: {
             type: 'string',
+        },
+    },
+} as const;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/schemas/$AnyOfAnyAndNull.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $AnyOfAnyAndNull = {
+    properties: {
+        data: {
+            type: 'any-of',
+            contains: [{
+                type: 'null',
+            }],
+        },
+    },
+} as const;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/schemas/$AnyOfArrays.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $AnyOfArrays = {
+    properties: {
+        results: {
+            type: 'any-of',
+            contains: [{
+                properties: {
+                    onePro: {
+                        type: 'boolean',
+                    },
+                },
+            }, {
+                properties: {
+                    anotherProp: {
+                        type: 'boolean',
+                    },
+                },
+            }],
         },
     },
 } as const;
