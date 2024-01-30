@@ -21,7 +21,7 @@ export type Options = {
     useUnionTypes?: boolean;
     exportCore?: boolean;
     exportServices?: boolean | string;
-    exportModels?: boolean;
+    exportModels?: boolean | string;
     exportSchemas?: boolean;
     indent?: Indent | '4' | '2' | 'tab';
     postfixServices?: string;

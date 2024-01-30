@@ -42,7 +42,7 @@ export const writeClient = async (
     useUnionTypes: boolean,
     exportCore: boolean,
     exportServices: boolean | string,
-    exportModels: boolean,
+    exportModels: boolean | string,
     exportSchemas: boolean,
     indent: Indent,
     postfixServices: string,
@@ -63,6 +63,11 @@ export const writeClient = async (
     if (typeof exportServices === 'string') {
         const regexp = new RegExp(exportServices);
         client.services = client.services.filter(service => regexp.test(service.name));
+    }
+
+    if (typeof exportModels === 'string') {
+        const regexp = new RegExp(exportModels);
+        client.models = client.models.filter(model => regexp.test(model.name));
     }
 
     if (exportCore) {

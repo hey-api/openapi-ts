@@ -29,13 +29,15 @@ const params = program
 
 const OpenAPI = require(path.resolve(__dirname, '../dist/index.js'));
 
-if (OpenAPI) {
-    let exportServices;
+const parseBooleanOrString = value => {
     try {
-        exportServices = JSON.parse(params.exportServices) === true;
+        return JSON.parse(value) === true;
     } catch (error) {
-        exportServices = params.exportServices;
+        return value;
     }
+};
+
+if (OpenAPI) {
     OpenAPI.generate({
         input: params.input,
         output: params.output,
@@ -44,8 +46,8 @@ if (OpenAPI) {
         useOptions: params.useOptions,
         useUnionTypes: params.useUnionTypes,
         exportCore: JSON.parse(params.exportCore) === true,
-        exportServices,
-        exportModels: JSON.parse(params.exportModels) === true,
+        exportServices: parseBooleanOrString(params.exportServices),
+        exportModels: parseBooleanOrString(params.exportModels),
         exportSchemas: JSON.parse(params.exportSchemas) === true,
         indent: params.indent,
         postfixServices: params.postfixServices,

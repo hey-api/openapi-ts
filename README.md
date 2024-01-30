@@ -44,7 +44,7 @@ $ openapi --help
     --useUnionTypes           Use union types instead of enums
     --exportCore <value>      Write core files to disk (default: true)
     --exportServices <value>  Write services to disk [true, false, regexp] (default: true)
-    --exportModels <value>    Write models to disk (default: true)
+    --exportModels <value>    Write models to disk [true, false, regexp] (default: true)
     --exportSchemas <value>   Write schemas to disk (default: false)
     --indent <value>          Indentation options [4, 2, tab] (default: "4")
     --postfixServices         Service name postfix (default: "Service")
