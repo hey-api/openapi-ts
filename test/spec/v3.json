@@ -2712,7 +2712,12 @@
             "FreeFormObjectWithAdditionalPropertiesEqTrue": {
                 "description": "This is a free-form object with additionalProperties: true.",
                 "type": "object",
-                "additionalProperties": true
+                "additionalProperties": true,
+                "properties": {
+                    "foo": {
+                        "type": "string"
+                    }
+                }
             },
             "FreeFormObjectWithAdditionalPropertiesEqEmptyObject": {
                 "description": "This is a free-form object with additionalProperties: {}.",
