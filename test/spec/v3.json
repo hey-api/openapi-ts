@@ -2741,6 +2741,31 @@
                         "const": "Some string"
                     }
                 }
+            },
+            "AnyOfArrys": {
+                "properties": {
+                    "anyarray": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "type": "string"
+                                        },
+                                        {
+                                            "type": "boolean"
+                                        }
+                                    ]
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                },
+                "type": "object"
             }
         }
     }
