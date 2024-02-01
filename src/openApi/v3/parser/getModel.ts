@@ -13,7 +13,8 @@ export const getModel = (
     openApi: OpenApi,
     definition: OpenApiSchema,
     isDefinition: boolean = false,
-    name: string = ''
+    name: string = '',
+    parentDefinition: OpenApiSchema | null = null
 ): Model => {
     const model: Model = {
         name,
@@ -82,7 +83,7 @@ export const getModel = (
             model.imports.push(...arrayItems.imports);
             model.default = getModelDefault(definition, model);
             return model;
-        } else if (definition.items.anyOf) {
+        } else if (definition.items.anyOf && parentDefinition) {
             return getModel(openApi, definition.items);
         } else {
             const arrayItems = getModel(openApi, definition.items);

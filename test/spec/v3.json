@@ -1683,6 +1683,72 @@
                     }
                 }
             },
+            "ArrayWithAnyOfProperties": {
+                "description": "This is a simple array with any of properties",
+                "type": "array",
+                "items": {
+                    "anyOf": [
+                        {
+                            "type": "object",
+                            "properties": {
+                                "foo": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        {
+                            "type": "object",
+                            "properties": {
+                                "bar": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    ]
+                }
+            },
+            "AnyOfAnyAndNull": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "anyOf": [
+                            {},
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                }
+            },
+            "AnyOfArrays": {
+                "description": "This is a simple array with any of properties",
+                "type": "object",
+                "properties": {
+                    "results": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "foo": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "bar": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        "type": "array"
+                    }
+                }
+            },
             "DictionaryWithString": {
                 "description": "This is a string dictionary",
                 "type": "object",
@@ -2324,49 +2390,6 @@
                                 "$ref": "#/components/schemas/ModelWithDictionary"
                             }
                         ]
-                    }
-                }
-            },
-            "AnyOfAnyAndNull": {
-                "type": "object",
-                "properties": {
-                    "data": {
-                        "anyOf": [
-                            {},
-                            {
-                                "type": "null"
-                            }
-                        ]
-                    }
-                }
-            },
-            "AnyOfArrays": {
-                "description": "This is a simple array with any of properties",
-                "type": "object",
-                "properties": {
-                    "results": {
-                        "items": {
-                            "anyOf": [
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "foo": {
-                                            "type": "string"
-                                        }
-                                    }
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "bar": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        },
-                        "type": "array",
-                        "title": "Results"
                     }
                 }
             },

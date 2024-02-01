@@ -3692,6 +3692,7 @@ export type { OpenAPIConfig } from './core/OpenAPI';
 export type { _default } from './models/_default';
 export type { AnyOfAnyAndNull } from './models/AnyOfAnyAndNull';
 export type { AnyOfArrays } from './models/AnyOfArrays';
+export type { ArrayWithAnyOfProperties } from './models/ArrayWithAnyOfProperties';
 export type { ArrayWithArray } from './models/ArrayWithArray';
 export type { ArrayWithBooleans } from './models/ArrayWithBooleans';
 export type { ArrayWithNumbers } from './models/ArrayWithNumbers';
@@ -3769,6 +3770,7 @@ export type { SimpleStringWithPattern } from './models/SimpleStringWithPattern';
 export { $_default } from './schemas/$_default';
 export { $AnyOfAnyAndNull } from './schemas/$AnyOfAnyAndNull';
 export { $AnyOfArrays } from './schemas/$AnyOfArrays';
+export { $ArrayWithAnyOfProperties } from './schemas/$ArrayWithAnyOfProperties';
 export { $ArrayWithArray } from './schemas/$ArrayWithArray';
 export { $ArrayWithBooleans } from './schemas/$ArrayWithBooleans';
 export { $ArrayWithNumbers } from './schemas/$ArrayWithNumbers';
@@ -3885,7 +3887,7 @@ exports[`v3 should generate: test/generated/v3/models/AnyOfAnyAndNull.ts 1`] = `
 /* tslint:disable */
 /* eslint-disable */
 export type AnyOfAnyAndNull = {
-    data?: any | null;
+    data?: (any | null);
 };
 
 "
@@ -3907,6 +3909,22 @@ export type AnyOfArrays = {
     })>;
 };
 
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/models/ArrayWithAnyOfProperties.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+/**
+ * This is a simple array with any of properties
+ */
+export type ArrayWithAnyOfProperties = Array<({
+    foo?: string;
+} | {
+    bar?: string;
+})>;
 "
 `;
 
@@ -5118,6 +5136,9 @@ export const $AnyOfAnyAndNull = {
         data: {
             type: 'any-of',
             contains: [{
+                properties: {
+                },
+            }, {
                 type: 'null',
             }],
         },
@@ -5135,21 +5156,51 @@ export const $AnyOfArrays = {
     description: \`This is a simple array with any of properties\`,
     properties: {
         results: {
-            type: 'any-of',
-            contains: [{
-                properties: {
-                    foo: {
-                        type: 'string',
+            type: 'array',
+            contains: {
+                type: 'any-of',
+                contains: [{
+                    properties: {
+                        foo: {
+                            type: 'string',
+                        },
                     },
-                },
-            }, {
-                properties: {
-                    bar: {
-                        type: 'string',
+                }, {
+                    properties: {
+                        bar: {
+                            type: 'string',
+                        },
                     },
-                },
-            }],
+                }],
+            },
         },
+    },
+} as const;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/schemas/$ArrayWithAnyOfProperties.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $ArrayWithAnyOfProperties = {
+    type: 'array',
+    contains: {
+        type: 'any-of',
+        contains: [{
+            properties: {
+                foo: {
+                    type: 'string',
+                },
+            },
+        }, {
+            properties: {
+                bar: {
+                    type: 'string',
+                },
+            },
+        }],
     },
 } as const;
 "

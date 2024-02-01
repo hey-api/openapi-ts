@@ -26,17 +26,7 @@ export const getModelComposition = (
     const properties: Model[] = [];
 
     definitions
-        .map(definition => getModel(openApi, definition))
-        .filter(model => {
-            const hasProperties = model.properties.length;
-            const hasEnums = model.enums.length;
-            const hasLink = typeof model.link !== 'undefined' && model.link !== null;
-            console.log(model.name, model)
-            const isObject = model.type === 'any';
-            const isDictionary = model.export === 'dictionary';
-            const isEmpty = isObject && !hasProperties && !hasEnums && !hasLink;
-            return !isEmpty || isDictionary;
-        })
+        .map(def => getModel(openApi, def, undefined, undefined, definition))
         .forEach(model => {
             composition.imports.push(...model.imports);
             composition.enums.push(...model.enums);
