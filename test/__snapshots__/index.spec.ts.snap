@@ -3690,6 +3690,9 @@ export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
 export type { _default } from './models/_default';
+export type { AnyOfAnyAndNull } from './models/AnyOfAnyAndNull';
+export type { AnyOfArrays } from './models/AnyOfArrays';
+export type { ArrayWithAnyOfProperties } from './models/ArrayWithAnyOfProperties';
 export type { ArrayWithArray } from './models/ArrayWithArray';
 export type { ArrayWithBooleans } from './models/ArrayWithBooleans';
 export type { ArrayWithNumbers } from './models/ArrayWithNumbers';
@@ -3708,6 +3711,7 @@ export type { CompositionWithAllOfAndNullable } from './models/CompositionWithAl
 export type { CompositionWithAnyOf } from './models/CompositionWithAnyOf';
 export type { CompositionWithAnyOfAndNullable } from './models/CompositionWithAnyOfAndNullable';
 export type { CompositionWithAnyOfAnonymous } from './models/CompositionWithAnyOfAnonymous';
+export type { CompositionWithNestedAnyAndTypeNull } from './models/CompositionWithNestedAnyAndTypeNull';
 export type { CompositionWithNestedAnyOfAndNull } from './models/CompositionWithNestedAnyOfAndNull';
 export type { CompositionWithOneOf } from './models/CompositionWithOneOf';
 export type { CompositionWithOneOfAndComplexArrayDictionary } from './models/CompositionWithOneOfAndComplexArrayDictionary';
@@ -3764,6 +3768,9 @@ export type { SimpleString } from './models/SimpleString';
 export type { SimpleStringWithPattern } from './models/SimpleStringWithPattern';
 
 export { $_default } from './schemas/$_default';
+export { $AnyOfAnyAndNull } from './schemas/$AnyOfAnyAndNull';
+export { $AnyOfArrays } from './schemas/$AnyOfArrays';
+export { $ArrayWithAnyOfProperties } from './schemas/$ArrayWithAnyOfProperties';
 export { $ArrayWithArray } from './schemas/$ArrayWithArray';
 export { $ArrayWithBooleans } from './schemas/$ArrayWithBooleans';
 export { $ArrayWithNumbers } from './schemas/$ArrayWithNumbers';
@@ -3782,6 +3789,7 @@ export { $CompositionWithAllOfAndNullable } from './schemas/$CompositionWithAllO
 export { $CompositionWithAnyOf } from './schemas/$CompositionWithAnyOf';
 export { $CompositionWithAnyOfAndNullable } from './schemas/$CompositionWithAnyOfAndNullable';
 export { $CompositionWithAnyOfAnonymous } from './schemas/$CompositionWithAnyOfAnonymous';
+export { $CompositionWithNestedAnyAndTypeNull } from './schemas/$CompositionWithNestedAnyAndTypeNull';
 export { $CompositionWithNestedAnyOfAndNull } from './schemas/$CompositionWithNestedAnyOfAndNull';
 export { $CompositionWithOneOf } from './schemas/$CompositionWithOneOf';
 export { $CompositionWithOneOfAndComplexArrayDictionary } from './schemas/$CompositionWithOneOfAndComplexArrayDictionary';
@@ -3870,6 +3878,53 @@ export type _default = {
     name?: string;
 };
 
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/models/AnyOfAnyAndNull.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export type AnyOfAnyAndNull = {
+    data?: (any | null);
+};
+
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/models/AnyOfArrays.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+/**
+ * This is a simple array with any of properties
+ */
+export type AnyOfArrays = {
+    results?: Array<({
+        foo?: string;
+    } | {
+        bar?: string;
+    })>;
+};
+
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/models/ArrayWithAnyOfProperties.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+/**
+ * This is a simple array with any of properties
+ */
+export type ArrayWithAnyOfProperties = Array<({
+    foo?: string;
+} | {
+    bar?: string;
+})>;
 "
 `;
 
@@ -4130,6 +4185,23 @@ export type CompositionWithAnyOfAnonymous = {
     propA?: ({
         propA?: string;
     } | string | number);
+};
+
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/models/CompositionWithNestedAnyAndTypeNull.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { ModelWithArray } from './ModelWithArray';
+import type { ModelWithDictionary } from './ModelWithDictionary';
+/**
+ * This is a model with nested 'any of' property with a type null
+ */
+export type CompositionWithNestedAnyAndTypeNull = {
+    propA?: ((ModelWithDictionary | null) | (ModelWithArray | null));
 };
 
 "
@@ -5054,6 +5126,86 @@ export const $_default = {
 "
 `;
 
+exports[`v3 should generate: test/generated/v3/schemas/$AnyOfAnyAndNull.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $AnyOfAnyAndNull = {
+    properties: {
+        data: {
+            type: 'any-of',
+            contains: [{
+                properties: {
+                },
+            }, {
+                type: 'null',
+            }],
+        },
+    },
+} as const;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/schemas/$AnyOfArrays.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $AnyOfArrays = {
+    description: \`This is a simple array with any of properties\`,
+    properties: {
+        results: {
+            type: 'array',
+            contains: {
+                type: 'any-of',
+                contains: [{
+                    properties: {
+                        foo: {
+                            type: 'string',
+                        },
+                    },
+                }, {
+                    properties: {
+                        bar: {
+                            type: 'string',
+                        },
+                    },
+                }],
+            },
+        },
+    },
+} as const;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/schemas/$ArrayWithAnyOfProperties.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $ArrayWithAnyOfProperties = {
+    type: 'array',
+    contains: {
+        type: 'any-of',
+        contains: [{
+            properties: {
+                foo: {
+                    type: 'string',
+                },
+            },
+        }, {
+            properties: {
+                bar: {
+                    type: 'string',
+                },
+            },
+        }],
+    },
+} as const;
+"
+`;
+
 exports[`v3 should generate: test/generated/v3/schemas/$ArrayWithArray.ts 1`] = `
 "/* generated using openapi-typescript-codegen -- do no edit */
 /* istanbul ignore file */
@@ -5379,6 +5531,37 @@ export const $CompositionWithAnyOfAnonymous = {
             }, {
                 type: 'number',
                 description: \`Anonymous integer type\`,
+            }],
+        },
+    },
+} as const;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithNestedAnyAndTypeNull.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $CompositionWithNestedAnyAndTypeNull = {
+    description: \`This is a model with nested 'any of' property with a type null\`,
+    properties: {
+        propA: {
+            type: 'any-of',
+            contains: [{
+                type: 'any-of',
+                contains: [{
+                    type: 'ModelWithDictionary',
+                }, {
+                    type: 'null',
+                }],
+            }, {
+                type: 'any-of',
+                contains: [{
+                    type: 'ModelWithArray',
+                }, {
+                    type: 'null',
+                }],
             }],
         },
     },

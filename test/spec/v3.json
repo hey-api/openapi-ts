@@ -1683,6 +1683,72 @@
                     }
                 }
             },
+            "ArrayWithAnyOfProperties": {
+                "description": "This is a simple array with any of properties",
+                "type": "array",
+                "items": {
+                    "anyOf": [
+                        {
+                            "type": "object",
+                            "properties": {
+                                "foo": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        {
+                            "type": "object",
+                            "properties": {
+                                "bar": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    ]
+                }
+            },
+            "AnyOfAnyAndNull": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "anyOf": [
+                            {},
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                }
+            },
+            "AnyOfArrays": {
+                "description": "This is a simple array with any of properties",
+                "type": "object",
+                "properties": {
+                    "results": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "foo": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "bar": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        "type": "array"
+                    }
+                }
+            },
             "DictionaryWithString": {
                 "description": "This is a string dictionary",
                 "type": "object",
@@ -2095,7 +2161,44 @@
                     }
                 }
             },
-            "Enum1":{
+            "CompositionWithNestedAnyAndTypeNull": {
+                "description": "This is a model with nested 'any of' property with a type null",
+                "type": "object",
+                "properties": {
+                    "propA": {
+                        "type": "object",
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ModelWithDictionary"
+                                        },
+                                        {
+                                            "type": "null"
+                                        }
+                                    ]
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ModelWithArray"
+                                        },
+                                        {
+                                            "type": "null"
+                                        }
+                                    ]
+                                },
+                                "type": "array"
+                            }
+                        ]
+                    }
+                }
+            },
+            "Enum1": {
                 "enum": [
                     "Bird",
                     "Dog"
