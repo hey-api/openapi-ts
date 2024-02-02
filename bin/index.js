@@ -16,6 +16,7 @@ const params = program
     .option('--name <value>', 'Custom client class name')
     .option('--useOptions', 'Use options instead of arguments')
     .option('--useUnionTypes', 'Use union types instead of enums')
+    .option('--autoformat <value>', 'Process generated files with autoformatter', false)
     .option('--exportCore <value>', 'Write core files to disk', true)
     .option('--exportServices <value>', 'Write services to disk', true)
     .option('--exportModels <value>', 'Write models to disk', true)
@@ -45,6 +46,7 @@ if (OpenAPI) {
         clientName: params.name,
         useOptions: params.useOptions,
         useUnionTypes: params.useUnionTypes,
+        autoformat: JSON.parse(params.autoformat) === true,
         exportCore: JSON.parse(params.exportCore) === true,
         exportServices: parseBooleanOrString(params.exportServices),
         exportModels: parseBooleanOrString(params.exportModels),

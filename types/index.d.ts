@@ -19,6 +19,7 @@ export type Options = {
     clientName?: string;
     useOptions?: boolean;
     useUnionTypes?: boolean;
+    autoformat?: boolean;
     exportCore?: boolean;
     exportServices?: boolean | string;
     exportModels?: boolean | string;
