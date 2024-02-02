@@ -1,3 +1,5 @@
+import { spawnSync } from 'child_process';
+import { createRequire } from 'module';
 import { resolve } from 'path';
 
 import type { Client } from '../client/interfaces/Client';
@@ -40,6 +42,7 @@ export const writeClient = async (
     httpClient: HttpClient,
     useOptions: boolean,
     useUnionTypes: boolean,
+    autoformat: boolean,
     exportCore: boolean,
     exportServices: boolean | string,
     exportModels: boolean | string,
@@ -124,5 +127,15 @@ export const writeClient = async (
             postfixModels,
             clientName
         );
+    }
+
+    if (autoformat) {
+        const pathPackageJson = resolve(process.cwd(), 'package.json');
+        const require = createRequire('/');
+        const json = require(pathPackageJson);
+        const usesPrettier = [json.dependencies, json.devDependencies].some(deps => Boolean(deps.prettier));
+        if (usesPrettier) {
+            spawnSync('prettier', ['--ignore-unknown', '--write', output]);
+        }
     }
 };
