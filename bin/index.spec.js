@@ -59,6 +59,20 @@ describe('bin', () => {
         expect(result.stderr.toString()).toBe('');
     });
 
+    it('should autoformat with Prettier', async () => {
+        const result = crossSpawn.sync('node', [
+            './bin/index.js',
+            '--input',
+            './test/spec/v3.json',
+            '--output',
+            './test/generated/bin',
+            '--autoformat',
+            'true',
+        ]);
+        expect(result.stdout.toString()).toBe('');
+        expect(result.stderr.toString()).toBe('');
+    });
+
     it('it should throw error without params', async () => {
         const result = crossSpawn.sync('node', ['./bin/index.js']);
         expect(result.stdout.toString()).toBe('');

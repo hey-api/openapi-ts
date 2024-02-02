@@ -19,6 +19,7 @@ export type Options = {
     clientName?: string;
     useOptions?: boolean;
     useUnionTypes?: boolean;
+    autoformat?: boolean;
     exportCore?: boolean;
     exportServices?: boolean | string;
     exportModels?: boolean | string;
@@ -57,6 +58,7 @@ export const generate = async ({
     clientName,
     useOptions = false,
     useUnionTypes = false,
+    autoformat = false,
     exportCore = true,
     exportServices = true,
     exportModels = true,
@@ -100,6 +102,7 @@ export const generate = async ({
                 httpClient,
                 useOptions,
                 useUnionTypes,
+                autoformat,
                 exportCore,
                 exportServices,
                 exportModels,
