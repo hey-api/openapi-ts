@@ -111,7 +111,7 @@
         "jest-cli": "29.7.0",
         "node-fetch": "2.7.0",
         "prettier": "3.2.4",
-        "puppeteer": "21.10.0",
+        "puppeteer": "21.11.0",
         "qs": "6.11.2",
         "rimraf": "5.0.5",
         "rollup": "4.7.0",
