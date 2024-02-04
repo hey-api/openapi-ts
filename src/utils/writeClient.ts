@@ -28,7 +28,6 @@ import { writeClientServices } from './writeClientServices';
  * @param exportServices Generate services
  * @param exportModels Generate models
  * @param exportSchemas Generate schemas
- * @param exportSchemas Generate schemas
  * @param indent Indentation options (4, 2 or tab)
  * @param postfixServices Service name postfix
  * @param postfixModels Model name postfix
