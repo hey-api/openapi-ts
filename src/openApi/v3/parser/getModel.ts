@@ -6,7 +6,7 @@ import { extendEnum } from './extendEnum';
 import { getEnum } from './getEnum';
 import { findModelComposition, getModelComposition } from './getModelComposition';
 import { getModelDefault } from './getModelDefault';
-import { getModelProperties } from './getModelProperties';
+import { getAdditionalPropertiesModel, getModelProperties } from './getModelProperties';
 import { getType } from './getType';
 
 export const getModel = (
@@ -103,33 +103,6 @@ export const getModel = (
         return model;
     }
 
-    if (
-        definition.type === 'object' &&
-        (typeof definition.additionalProperties === 'object' || definition.additionalProperties === true)
-    ) {
-        const ap = typeof definition.additionalProperties === 'object' ? definition.additionalProperties : {};
-        if (ap.$ref) {
-            const additionalProperties = getType(ap.$ref);
-            model.export = 'dictionary';
-            model.type = additionalProperties.type;
-            model.base = additionalProperties.base;
-            model.template = additionalProperties.template;
-            model.imports.push(...additionalProperties.imports);
-            model.default = getModelDefault(definition, model);
-            return model;
-        } else {
-            const additionalProperties = getModel(openApi, ap);
-            model.export = 'dictionary';
-            model.type = additionalProperties.type;
-            model.base = additionalProperties.base;
-            model.template = additionalProperties.template;
-            model.link = additionalProperties;
-            model.imports.push(...additionalProperties.imports);
-            model.default = getModelDefault(definition, model);
-            return model;
-        }
-    }
-
     const foundComposition = findModelComposition(definition);
     if (foundComposition) {
         const composition = getModelComposition({
@@ -158,18 +131,16 @@ export const getModel = (
                     model.enums.push(modelProperty);
                 }
             });
-            return model;
-        } else {
-            const additionalProperties = getModel(openApi, {});
-            model.export = 'dictionary';
-            model.type = additionalProperties.type;
-            model.base = additionalProperties.base;
-            model.template = additionalProperties.template;
-            model.link = additionalProperties;
-            model.imports.push(...additionalProperties.imports);
-            model.default = getModelDefault(definition, model);
+
+            if (definition.additionalProperties === true) {
+                const modelProperty = getAdditionalPropertiesModel(openApi, definition, getModel, model);
+                model.properties.push(modelProperty);
+            }
+
             return model;
         }
+
+        return getAdditionalPropertiesModel(openApi, definition, getModel, model);
     }
 
     if (definition.const !== undefined) {

@@ -3740,6 +3740,7 @@ export type { ModelCircle } from './models/ModelCircle';
 export type { ModelSquare } from './models/ModelSquare';
 export type { ModelThatExtends } from './models/ModelThatExtends';
 export type { ModelThatExtendsExtends } from './models/ModelThatExtendsExtends';
+export type { ModelWithAdditionalPropertiesEqTrue } from './models/ModelWithAdditionalPropertiesEqTrue';
 export type { ModelWithArray } from './models/ModelWithArray';
 export type { ModelWithBoolean } from './models/ModelWithBoolean';
 export type { ModelWithCircularReference } from './models/ModelWithCircularReference';
@@ -3819,6 +3820,7 @@ export { $ModelCircle } from './schemas/$ModelCircle';
 export { $ModelSquare } from './schemas/$ModelSquare';
 export { $ModelThatExtends } from './schemas/$ModelThatExtends';
 export { $ModelThatExtendsExtends } from './schemas/$ModelThatExtendsExtends';
+export { $ModelWithAdditionalPropertiesEqTrue } from './schemas/$ModelWithAdditionalPropertiesEqTrue';
 export { $ModelWithArray } from './schemas/$ModelWithArray';
 export { $ModelWithBoolean } from './schemas/$ModelWithBoolean';
 export { $ModelWithCircularReference } from './schemas/$ModelWithCircularReference';
@@ -4646,6 +4648,25 @@ export type ModelThatExtendsExtends = (ModelWithString & ModelThatExtends & {
     propExtendsC?: string;
     propExtendsD?: ModelWithString;
 });
+
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/models/ModelWithAdditionalPropertiesEqTrue.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+/**
+ * This is a model with one property and additionalProperties: true
+ */
+export type ModelWithAdditionalPropertiesEqTrue = {
+    /**
+     * This is a simple string property
+     */
+    prop?: string;
+    [key: string]: any;
+};
 
 "
 `;
@@ -6139,6 +6160,27 @@ export const $ModelThatExtendsExtends = {
             },
         },
     }],
+} as const;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/schemas/$ModelWithAdditionalPropertiesEqTrue.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $ModelWithAdditionalPropertiesEqTrue = {
+    description: \`This is a model with one property and additionalProperties: true\`,
+    properties: {
+        prop: {
+            type: 'string',
+            description: \`This is a simple string property\`,
+        },
+        [key: string]: {
+            type: 'any',
+            isRequired: true,
+        },
+    },
 } as const;
 "
 `;
