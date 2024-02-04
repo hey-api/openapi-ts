@@ -5,10 +5,49 @@ import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 import { escapeName } from './escapeName';
 import type { getModel } from './getModel';
+import { getModelDefault } from './getModelDefault';
 import { getType } from './getType';
 
 // Fix for circular dependency
 export type GetModelFn = typeof getModel;
+
+export const getAdditionalPropertiesModel = (
+    openApi: OpenApi,
+    definition: OpenApiSchema,
+    getModel: GetModelFn,
+    model: Model
+): Model => {
+    const ap = typeof definition.additionalProperties === 'object' ? definition.additionalProperties : {};
+    const apModel = getModel(openApi, ap);
+
+    if (definition.additionalProperties === true && definition.properties) {
+        apModel.default = getModelDefault(definition, model);
+        apModel.export = 'generic';
+        apModel.isRequired = true;
+        apModel.name = '[key: string]';
+        return apModel;
+    }
+
+    if (ap.$ref) {
+        const apType = getType(ap.$ref);
+        model.base = apType.base;
+        model.default = getModelDefault(definition, model);
+        model.export = 'dictionary';
+        model.imports.push(...apType.imports);
+        model.template = apType.template;
+        model.type = apType.type;
+        return model;
+    }
+
+    model.base = apModel.base;
+    model.default = getModelDefault(definition, model);
+    model.export = 'dictionary';
+    model.imports.push(...apModel.imports);
+    model.link = apModel;
+    model.template = apModel.template;
+    model.type = apModel.type;
+    return model;
+};
 
 export const getModelProperties = (
     openApi: OpenApi,

@@ -2737,6 +2737,17 @@
                     }
                 }
             },
+            "ModelWithAdditionalPropertiesEqTrue": {
+                "description": "This is a model with one property and additionalProperties: true",
+                "type": "object",
+                "properties": {
+                    "prop": {
+                        "description": "This is a simple string property",
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": true
+            },
             "NestedAnyOfArraysNullable": {
                 "properties": {
                     "nullableArray": {
