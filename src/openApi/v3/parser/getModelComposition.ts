@@ -9,18 +9,50 @@ import { getRequiredPropertiesFromComposition } from './getRequiredPropertiesFro
 // Fix for circular dependency
 export type GetModelFn = typeof getModel;
 
-export const getModelComposition = (
-    openApi: OpenApi,
-    definition: OpenApiSchema,
-    definitions: OpenApiSchema[],
-    type: 'one-of' | 'any-of' | 'all-of',
-    getModel: GetModelFn
-): ModelComposition => {
+type Composition = {
+    definitions: OpenApiSchema[];
+    type: ModelComposition['export'];
+};
+
+export const findModelComposition = (definition: OpenApiSchema): Composition | undefined => {
+    const compositions: ReadonlyArray<{
+        definitions: Composition['definitions'] | undefined;
+        type: Composition['type'];
+    }> = [
+        {
+            definitions: definition.allOf,
+            type: 'all-of',
+        },
+        {
+            definitions: definition.anyOf,
+            type: 'any-of',
+        },
+        {
+            definitions: definition.oneOf,
+            type: 'one-of',
+        },
+    ];
+    return compositions.find(composition => composition.definitions?.length) as ReturnType<typeof findModelComposition>;
+};
+
+export const getModelComposition = ({
+    definition,
+    definitions,
+    getModel,
+    model,
+    openApi,
+    type,
+}: Composition & {
+    definition: OpenApiSchema;
+    getModel: GetModelFn;
+    model: Model;
+    openApi: OpenApi;
+}): ModelComposition => {
     const composition: ModelComposition = {
-        type,
-        imports: [],
-        enums: [],
-        properties: [],
+        enums: model.enums,
+        export: type,
+        imports: model.imports,
+        properties: model.properties,
     };
 
     const properties: Model[] = [];

@@ -3758,6 +3758,7 @@ export type { ModelWithPattern } from './models/ModelWithPattern';
 export type { ModelWithProperties } from './models/ModelWithProperties';
 export type { ModelWithReference } from './models/ModelWithReference';
 export type { ModelWithString } from './models/ModelWithString';
+export type { NestedAnyOfArraysNullable } from './models/NestedAnyOfArraysNullable';
 export type { Pageable } from './models/Pageable';
 export type { SimpleBoolean } from './models/SimpleBoolean';
 export type { SimpleFile } from './models/SimpleFile';
@@ -3836,6 +3837,7 @@ export { $ModelWithPattern } from './schemas/$ModelWithPattern';
 export { $ModelWithProperties } from './schemas/$ModelWithProperties';
 export { $ModelWithReference } from './schemas/$ModelWithReference';
 export { $ModelWithString } from './schemas/$ModelWithString';
+export { $NestedAnyOfArraysNullable } from './schemas/$NestedAnyOfArraysNullable';
 export { $Pageable } from './schemas/$Pageable';
 export { $SimpleBoolean } from './schemas/$SimpleBoolean';
 export { $SimpleFile } from './schemas/$SimpleFile';
@@ -4201,7 +4203,7 @@ import type { ModelWithDictionary } from './ModelWithDictionary';
  * This is a model with nested 'any of' property with a type null
  */
 export type CompositionWithNestedAnyAndTypeNull = {
-    propA?: ((ModelWithDictionary | null) | (ModelWithArray | null));
+    propA?: (Array<(ModelWithDictionary | null)> | Array<(ModelWithArray | null)>);
 };
 
 "
@@ -4218,7 +4220,7 @@ import type { Enum1 } from './Enum1';
  * This is a model with one property with a 'any of' relationship where the options are not $ref
  */
 export type CompositionWithNestedAnyOfAndNull = {
-    propA?: ((Enum1 | ConstValue) | null);
+    propA?: (Array<(Enum1 | ConstValue)> | null);
 };
 
 "
@@ -5012,6 +5014,18 @@ export type ModelWithString = {
 "
 `;
 
+exports[`v3 should generate: test/generated/v3/models/NestedAnyOfArraysNullable.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export type NestedAnyOfArraysNullable = {
+    nullableArray?: (Array<(string | boolean)> | null);
+};
+
+"
+`;
+
 exports[`v3 should generate: test/generated/v3/models/Pageable.ts 1`] = `
 "/* generated using openapi-typescript-codegen -- do no edit */
 /* istanbul ignore file */
@@ -5549,19 +5563,25 @@ export const $CompositionWithNestedAnyAndTypeNull = {
         propA: {
             type: 'any-of',
             contains: [{
-                type: 'any-of',
-                contains: [{
-                    type: 'ModelWithDictionary',
-                }, {
-                    type: 'null',
-                }],
+                type: 'array',
+                contains: {
+                    type: 'any-of',
+                    contains: [{
+                        type: 'ModelWithDictionary',
+                    }, {
+                        type: 'null',
+                    }],
+                },
             }, {
-                type: 'any-of',
-                contains: [{
-                    type: 'ModelWithArray',
-                }, {
-                    type: 'null',
-                }],
+                type: 'array',
+                contains: {
+                    type: 'any-of',
+                    contains: [{
+                        type: 'ModelWithArray',
+                    }, {
+                        type: 'null',
+                    }],
+                },
             }],
         },
     },
@@ -5580,12 +5600,15 @@ export const $CompositionWithNestedAnyOfAndNull = {
         propA: {
             type: 'any-of',
             contains: [{
-                type: 'any-of',
-                contains: [{
-                    type: 'Enum1',
-                }, {
-                    type: 'ConstValue',
-                }],
+                type: 'array',
+                contains: {
+                    type: 'any-of',
+                    contains: [{
+                        type: 'Enum1',
+                    }, {
+                        type: 'ConstValue',
+                    }],
+                },
             }, {
                 type: 'null',
             }],
@@ -6579,6 +6602,34 @@ export const $ModelWithString = {
         prop: {
             type: 'string',
             description: \`This is a simple string property\`,
+        },
+    },
+} as const;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/schemas/$NestedAnyOfArraysNullable.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $NestedAnyOfArraysNullable = {
+    properties: {
+        nullableArray: {
+            type: 'any-of',
+            contains: [{
+                type: 'array',
+                contains: {
+                    type: 'any-of',
+                    contains: [{
+                        type: 'string',
+                    }, {
+                        type: 'boolean',
+                    }],
+                },
+            }, {
+                type: 'null',
+            }],
         },
     },
 } as const;
