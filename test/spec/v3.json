@@ -1493,6 +1493,7 @@
     "components": {
         "requestBodies": {
             "SimpleRequestBody": {
+                "x-body-name": "foo",
                 "description": "A reusable request body",
                 "required": false,
                 "content": {

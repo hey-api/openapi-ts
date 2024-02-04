@@ -7583,12 +7583,12 @@ import { request as __request } from '../core/request';
 export class RequestBodyService {
     /**
      * @param parameter This is a reusable parameter
-     * @param requestBody A reusable request body
+     * @param foo A reusable request body
      * @throws ApiError
      */
     public static postApiRequestBody(
         parameter?: string,
-        requestBody?: ModelWithString,
+        foo?: ModelWithString,
     ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'POST',
@@ -7596,7 +7596,7 @@ export class RequestBodyService {
             query: {
                 'parameter': parameter,
             },
-            body: requestBody,
+            body: foo,
             mediaType: 'application/json',
         });
     }
