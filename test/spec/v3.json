@@ -2736,6 +2736,31 @@
                         "const": "Some string"
                     }
                 }
+            },
+            "NestedAnyOfArraysNullable": {
+                "properties": {
+                    "nullableArray": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "type": "string"
+                                        },
+                                        {
+                                            "type": "boolean"
+                                        }
+                                    ]
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                },
+                "type": "object"
             }
         }
     }

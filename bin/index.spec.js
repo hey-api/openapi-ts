@@ -67,7 +67,6 @@ describe('bin', () => {
             '--output',
             './test/generated/bin',
             '--autoformat',
-            'true',
         ]);
         expect(result.stdout.toString()).toBe('');
         expect(result.stderr.toString()).toBe('');

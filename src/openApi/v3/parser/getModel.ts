@@ -4,7 +4,7 @@ import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 import { extendEnum } from './extendEnum';
 import { getEnum } from './getEnum';
-import { getModelComposition } from './getModelComposition';
+import { findModelComposition, getModelComposition } from './getModelComposition';
 import { getModelDefault } from './getModelDefault';
 import { getModelProperties } from './getModelProperties';
 import { getType } from './getType';
@@ -83,19 +83,24 @@ export const getModel = (
             model.imports.push(...arrayItems.imports);
             model.default = getModelDefault(definition, model);
             return model;
-        } else if (definition.items.anyOf && parentDefinition) {
-            return getModel(openApi, definition.items);
-        } else {
-            const arrayItems = getModel(openApi, definition.items);
-            model.export = 'array';
-            model.type = arrayItems.type;
-            model.base = arrayItems.base;
-            model.template = arrayItems.template;
-            model.link = arrayItems;
-            model.imports.push(...arrayItems.imports);
-            model.default = getModelDefault(definition, model);
-            return model;
         }
+
+        if (definition.items.anyOf && parentDefinition && parentDefinition.type) {
+            const foundComposition = findModelComposition(parentDefinition);
+            if (foundComposition && foundComposition.definitions.some(definition => definition.type !== 'array')) {
+                return getModel(openApi, definition.items);
+            }
+        }
+
+        const arrayItems = getModel(openApi, definition.items);
+        model.export = 'array';
+        model.type = arrayItems.type;
+        model.base = arrayItems.base;
+        model.template = arrayItems.template;
+        model.link = arrayItems;
+        model.imports.push(...arrayItems.imports);
+        model.default = getModelDefault(definition, model);
+        return model;
     }
 
     if (
@@ -125,31 +130,16 @@ export const getModel = (
         }
     }
 
-    if (definition.oneOf?.length) {
-        const composition = getModelComposition(openApi, definition, definition.oneOf, 'one-of', getModel);
-        model.export = composition.type;
-        model.imports.push(...composition.imports);
-        model.properties.push(...composition.properties);
-        model.enums.push(...composition.enums);
-        return model;
-    }
-
-    if (definition.anyOf?.length) {
-        const composition = getModelComposition(openApi, definition, definition.anyOf, 'any-of', getModel);
-        model.export = composition.type;
-        model.imports.push(...composition.imports);
-        model.properties.push(...composition.properties);
-        model.enums.push(...composition.enums);
-        return model;
-    }
-
-    if (definition.allOf?.length) {
-        const composition = getModelComposition(openApi, definition, definition.allOf, 'all-of', getModel);
-        model.export = composition.type;
-        model.imports.push(...composition.imports);
-        model.properties.push(...composition.properties);
-        model.enums.push(...composition.enums);
-        return model;
+    const foundComposition = findModelComposition(definition);
+    if (foundComposition) {
+        const composition = getModelComposition({
+            ...foundComposition,
+            definition,
+            getModel,
+            model,
+            openApi,
+        });
+        return { ...model, ...composition };
     }
 
     if (definition.type === 'object') {
