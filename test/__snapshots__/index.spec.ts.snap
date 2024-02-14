@@ -614,6 +614,7 @@ export type { ModelWithPattern } from './models/ModelWithPattern';
 export type { ModelWithProperties } from './models/ModelWithProperties';
 export type { ModelWithReference } from './models/ModelWithReference';
 export type { ModelWithString } from './models/ModelWithString';
+export type { NonAsciiStringæøåÆØÅöôêÊ } from './models/NonAsciiStringæøåÆØÅöôêÊ';
 export type { SimpleBoolean } from './models/SimpleBoolean';
 export type { SimpleFile } from './models/SimpleFile';
 export type { SimpleInteger } from './models/SimpleInteger';
@@ -663,6 +664,7 @@ export { $ModelWithPattern } from './schemas/$ModelWithPattern';
 export { $ModelWithProperties } from './schemas/$ModelWithProperties';
 export { $ModelWithReference } from './schemas/$ModelWithReference';
 export { $ModelWithString } from './schemas/$ModelWithString';
+export { $NonAsciiStringæøåÆØÅöôêÊ } from './schemas/$NonAsciiStringæøåÆØÅöôêÊ';
 export { $SimpleBoolean } from './schemas/$SimpleBoolean';
 export { $SimpleFile } from './schemas/$SimpleFile';
 export { $SimpleInteger } from './schemas/$SimpleInteger';
@@ -1009,6 +1011,7 @@ export enum EnumWithStrings {
     ERROR = 'Error',
     _SINGLE_QUOTE_ = '\\'Single Quote\\'',
     _DOUBLE_QUOTES_ = '"Double Quotes"',
+    NON_ASCII__ØÆÅÔÖ_ØÆÅÔÖ = 'Non-ascii: øæåôöØÆÅÔÖ',
 }
 "
 `;
@@ -1178,6 +1181,7 @@ export namespace ModelWithEnum {
         SUCCESS = 'Success',
         WARNING = 'Warning',
         ERROR = 'Error',
+        ØÆÅ = 'ØÆÅ',
     }
     /**
      * These are the HTTP error code enums
@@ -1385,6 +1389,30 @@ export type ModelWithString = {
     prop?: string;
 };
 
+"
+`;
+
+exports[`v2 should generate: test/generated/v2/models/NonAsciiStringæøåÆØÅöôêÊ.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+/**
+ * A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ)
+ */
+export type NonAsciiStringæøåÆØÅöôêÊ = string;
+"
+`;
+
+exports[`v2 should generate: test/generated/v2/models/NonAsciiStringæøåÆØÅöôêÊ字符串.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+/**
+ * A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)
+ */
+export type NonAsciiStringæøåÆØÅöôêÊ字符串 = string;
 "
 `;
 
@@ -2252,6 +2280,30 @@ export const $ModelWithString = {
             description: \`This is a simple string property\`,
         },
     },
+} as const;
+"
+`;
+
+exports[`v2 should generate: test/generated/v2/schemas/$NonAsciiStringæøåÆØÅöôêÊ.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $NonAsciiStringæøåÆØÅöôêÊ = {
+    type: 'string',
+    description: \`A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ)\`,
+} as const;
+"
+`;
+
+exports[`v2 should generate: test/generated/v2/schemas/$NonAsciiStringæøåÆØÅöôêÊ字符串.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $NonAsciiStringæøåÆØÅöôêÊ字符串 = {
+    type: 'string',
+    description: \`A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)\`,
 } as const;
 "
 `;
@@ -3728,6 +3780,7 @@ export type { ModelWithPattern } from './models/ModelWithPattern';
 export type { ModelWithProperties } from './models/ModelWithProperties';
 export type { ModelWithReference } from './models/ModelWithReference';
 export type { ModelWithString } from './models/ModelWithString';
+export type { NonAsciiStringæøåÆØÅöôêÊ } from './models/NonAsciiStringæøåÆØÅöôêÊ';
 export type { Pageable } from './models/Pageable';
 export type { SimpleBoolean } from './models/SimpleBoolean';
 export type { SimpleFile } from './models/SimpleFile';
@@ -3798,6 +3851,7 @@ export { $ModelWithPattern } from './schemas/$ModelWithPattern';
 export { $ModelWithProperties } from './schemas/$ModelWithProperties';
 export { $ModelWithReference } from './schemas/$ModelWithReference';
 export { $ModelWithString } from './schemas/$ModelWithString';
+export { $NonAsciiStringæøåÆØÅöôêÊ } from './schemas/$NonAsciiStringæøåÆØÅöôêÊ';
 export { $Pageable } from './schemas/$Pageable';
 export { $SimpleBoolean } from './schemas/$SimpleBoolean';
 export { $SimpleFile } from './schemas/$SimpleFile';
@@ -4385,6 +4439,7 @@ export enum EnumWithStrings {
     ERROR = 'Error',
     _SINGLE_QUOTE_ = '\\'Single Quote\\'',
     _DOUBLE_QUOTES_ = '"Double Quotes"',
+    NON_ASCII__ØÆÅÔÖ_ØÆÅÔÖ = 'Non-ascii: øæåôöØÆÅÔÖ',
 }
 "
 `;
@@ -4638,6 +4693,7 @@ export namespace ModelWithEnum {
         SUCCESS = 'Success',
         WARNING = 'Warning',
         ERROR = 'Error',
+        ØÆÅ = 'ØÆÅ',
     }
     /**
      * These are the HTTP error code enums
@@ -4854,6 +4910,30 @@ export type ModelWithString = {
     prop?: string;
 };
 
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/models/NonAsciiStringæøåÆØÅöôêÊ.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+/**
+ * A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ)
+ */
+export type NonAsciiStringæøåÆØÅöôêÊ = string;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/models/NonAsciiStringæøåÆØÅöôêÊ字符串.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+/**
+ * A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)
+ */
+export type NonAsciiStringæøåÆØÅöôêÊ字符串 = string;
 "
 `;
 
@@ -6243,6 +6323,30 @@ export const $ModelWithString = {
             description: \`This is a simple string property\`,
         },
     },
+} as const;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/schemas/$NonAsciiStringæøåÆØÅöôêÊ.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $NonAsciiStringæøåÆØÅöôêÊ = {
+    type: 'string',
+    description: \`A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ)\`,
+} as const;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/schemas/$NonAsciiStringæøåÆØÅöôêÊ字符串.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $NonAsciiStringæøåÆØÅöôêÊ字符串 = {
+    type: 'string',
+    description: \`A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)\`,
 } as const;
 "
 `;

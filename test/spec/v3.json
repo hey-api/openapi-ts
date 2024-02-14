@@ -1539,6 +1539,10 @@
                 "description": "This is a simple string",
                 "type": "string"
             },
+            "NonAsciiStringæøåÆØÅöôêÊ字符串": {
+                "description": "A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)",
+                "type": "string"
+            },
             "SimpleFile": {
                 "description": "This is a simple file",
                 "type": "file"
@@ -1561,7 +1565,8 @@
                     "Warning",
                     "Error",
                     "'Single Quote'",
-                    "\"Double Quotes\""
+                    "\"Double Quotes\"",
+                    "Non-ascii: øæåôöØÆÅÔÖ字符串"
                 ]
             },
             "EnumWithNumbers": {
@@ -1781,7 +1786,8 @@
                         "enum": [
                             "Success",
                             "Warning",
-                            "Error"
+                            "Error",
+                            "ØÆÅ字符串"
                         ]
                     },
                     "statusCode": {
