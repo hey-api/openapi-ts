@@ -1,3 +1,5 @@
+import { spawnSync } from 'child_process';
+import { createRequire } from 'module';
 import { resolve } from 'path';
 
 import type { Client } from '../client/interfaces/Client';
@@ -26,7 +28,6 @@ import { writeClientServices } from './writeClientServices';
  * @param exportServices Generate services
  * @param exportModels Generate models
  * @param exportSchemas Generate schemas
- * @param exportSchemas Generate schemas
  * @param indent Indentation options (4, 2 or tab)
  * @param postfixServices Service name postfix
  * @param postfixModels Model name postfix
@@ -40,9 +41,10 @@ export const writeClient = async (
     httpClient: HttpClient,
     useOptions: boolean,
     useUnionTypes: boolean,
+    autoformat: boolean,
     exportCore: boolean,
-    exportServices: boolean,
-    exportModels: boolean,
+    exportServices: boolean | string,
+    exportModels: boolean | string,
     exportSchemas: boolean,
     indent: Indent,
     postfixServices: string,
@@ -58,6 +60,16 @@ export const writeClient = async (
 
     if (!isSubDirectory(process.cwd(), output)) {
         throw new Error(`Output folder is not a subdirectory of the current working directory`);
+    }
+
+    if (typeof exportServices === 'string') {
+        const regexp = new RegExp(exportServices);
+        client.services = client.services.filter(service => regexp.test(service.name));
+    }
+
+    if (typeof exportModels === 'string') {
+        const regexp = new RegExp(exportModels);
+        client.models = client.models.filter(model => regexp.test(model.name));
     }
 
     if (exportCore) {
@@ -114,5 +126,15 @@ export const writeClient = async (
             postfixModels,
             clientName
         );
+    }
+
+    if (autoformat) {
+        const pathPackageJson = resolve(process.cwd(), 'package.json');
+        const require = createRequire('/');
+        const json = require(pathPackageJson);
+        const usesPrettier = [json.dependencies, json.devDependencies].some(deps => Boolean(deps.prettier));
+        if (usesPrettier) {
+            spawnSync('prettier', ['--ignore-unknown', '--write', output]);
+        }
     }
 };
