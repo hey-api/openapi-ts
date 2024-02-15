@@ -1,11 +1,10 @@
 import type { Type } from '../../../client/interfaces/Type';
 import { isDefined } from '../../../utils/isDefined';
+import sanitizeTypeName from '../../../utils/sanitizeTypeName';
 import { getMappedType } from './getMappedType';
 import { stripNamespace } from './stripNamespace';
 
-const encode = (value: string): string => {
-    return value.replace(/^[^a-zA-Z_$]+/g, '').replace(/[^\w$]+/g, '_');
-};
+const encode = (value: string): string => sanitizeTypeName(value);
 
 /**
  * Parse any string value into a type object.
