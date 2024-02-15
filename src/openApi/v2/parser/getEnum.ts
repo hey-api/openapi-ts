@@ -1,4 +1,5 @@
 import type { Enum } from '../../../client/interfaces/Enum';
+import sanitizeEnumName from '../../../utils/sanitizeEnumName';
 
 export const getEnum = (values?: (string | number)[]): Enum[] => {
     if (Array.isArray(values)) {
@@ -19,11 +20,7 @@ export const getEnum = (values?: (string | number)[]): Enum[] => {
                     };
                 }
                 return {
-                    name: String(value)
-                        .replace(/\W+/g, '_')
-                        .replace(/^(\d+)/g, '_$1')
-                        .replace(/([a-z])([A-Z]+)/g, '$1_$2')
-                        .toUpperCase(),
+                    name: sanitizeEnumName(String(value)),
                     value: `'${value.replace(/'/g, "\\'")}'`,
                     type: 'string',
                     description: null,
