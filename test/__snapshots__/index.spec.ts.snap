@@ -5088,7 +5088,6 @@ exports[`v3 should generate: test/generated/v3/models/NonAsciiStringæøåÆØÅ
  * A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)
  */
 export type NonAsciiStringæøåÆØÅöôêÊ字符串 = string;
-
 "
 `;
 
