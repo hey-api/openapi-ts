@@ -9,5 +9,6 @@ describe('getServiceName', () => {
         expect(getServiceName('@fooBar')).toEqual('FooBar');
         expect(getServiceName('$fooBar')).toEqual('FooBar');
         expect(getServiceName('123fooBar')).toEqual('FooBar');
+        expect(getServiceName('non-ascii-æøåÆØÅöôêÊ字符串')).toEqual('NonAsciiÆøåÆøÅöôêÊ字符串');
     });
 });

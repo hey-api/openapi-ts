@@ -684,6 +684,7 @@ export { MultipleTags1Service } from './services/MultipleTags1Service';
 export { MultipleTags2Service } from './services/MultipleTags2Service';
 export { MultipleTags3Service } from './services/MultipleTags3Service';
 export { NoContentService } from './services/NoContentService';
+export { NonAsciiÆøåÆøÅöôêÊService } from './services/NonAsciiÆøåÆøÅöôêÊService';
 export { ParametersService } from './services/ParametersService';
 export { ResponseService } from './services/ResponseService';
 export { SimpleService } from './services/SimpleService';
@@ -2852,6 +2853,36 @@ export class NoContentService {
 "
 `;
 
+exports[`v2 should generate: test/generated/v2/services/NonAsciiÆøåÆøÅöôêÊService.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { NonAsciiStringæøåÆØÅöôêÊ字符串 } from '../models/NonAsciiStringæøåÆØÅöôêÊ字符串';
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+export class NonAsciiÆøåÆøÅöôêÊService {
+    /**
+     * @param nonAsciiParamæøåÆøÅöôêÊ Dummy input param
+     * @returns NonAsciiStringæøåÆØÅöôêÊ字符串 Successful response
+     * @throws ApiError
+     */
+    public static nonAsciiæøåÆøÅöôêÊ字符串(
+        nonAsciiParamæøåÆøÅöôêÊ: number,
+    ): CancelablePromise<NonAsciiStringæøåÆØÅöôêÊ字符串> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
+            query: {
+                'nonAsciiParamæøåÆØÅöôêÊ': nonAsciiParamæøåÆøÅöôêÊ,
+            },
+        });
+    }
+}
+"
+`;
+
 exports[`v2 should generate: test/generated/v2/services/ParametersService.ts 1`] = `
 "/* generated using openapi-typescript-codegen -- do no edit */
 /* istanbul ignore file */
@@ -3894,6 +3925,7 @@ export { MultipleTags1Service } from './services/MultipleTags1Service';
 export { MultipleTags2Service } from './services/MultipleTags2Service';
 export { MultipleTags3Service } from './services/MultipleTags3Service';
 export { NoContentService } from './services/NoContentService';
+export { NonAsciiÆøåÆøÅöôêÊService } from './services/NonAsciiÆøåÆøÅöôêÊService';
 export { ParametersService } from './services/ParametersService';
 export { RequestBodyService } from './services/RequestBodyService';
 export { ResponseService } from './services/ResponseService';
@@ -7481,6 +7513,36 @@ export class NoContentService {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/response-and-no-content',
+        });
+    }
+}
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/services/NonAsciiÆøåÆøÅöôêÊService.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { NonAsciiStringæøåÆØÅöôêÊ字符串 } from '../models/NonAsciiStringæøåÆØÅöôêÊ字符串';
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+export class NonAsciiÆøåÆøÅöôêÊService {
+    /**
+     * @param nonAsciiParamæøåÆøÅöôêÊ Dummy input param
+     * @returns NonAsciiStringæøåÆØÅöôêÊ字符串 Successful response
+     * @throws ApiError
+     */
+    public static nonAsciiæøåÆøÅöôêÊ字符串(
+        nonAsciiParamæøåÆøÅöôêÊ: number,
+    ): CancelablePromise<Array<NonAsciiStringæøåÆØÅöôêÊ字符串>> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
+            query: {
+                'nonAsciiParamæøåÆØÅöôêÊ': nonAsciiParamæøåÆøÅöôêÊ,
+            },
         });
     }
 }

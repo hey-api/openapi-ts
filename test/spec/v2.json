@@ -929,6 +929,33 @@
                     }
                 }
             }
+        },
+        "/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串": {
+            "post": {
+                "tags": [
+                    "Non-Ascii-æøåÆØÅöôêÊ"
+                ],
+                "operationId": "nonAsciiæøåÆØÅöôêÊ字符串",
+                "parameters": [
+                    {
+                        "description": "Dummy input param",
+                        "name": "nonAsciiParamæøåÆØÅöôêÊ",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "$ref": "#/definitions/NonAsciiStringæøåÆØÅöôêÊ字符串"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
