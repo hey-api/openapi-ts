@@ -1,5 +1,7 @@
 import camelCase from 'camelcase';
 
+import sanitizeOperationName from '../../../utils/sanitizeOperationName';
+
 /**
  * Convert the input value to a correct operation (method) classname.
  * This will use the operation ID - if available - and otherwise fallback
@@ -7,12 +9,7 @@ import camelCase from 'camelcase';
  */
 export const getOperationName = (url: string, method: string, operationId?: string): string => {
     if (operationId) {
-        return camelCase(
-            operationId
-                .replace(/^[^a-zA-Z]+/g, '')
-                .replace(/[^\w\-]+/g, '-')
-                .trim()
-        );
+        return camelCase(sanitizeOperationName(operationId).trim());
     }
 
     const urlWithoutPlaceholders = url
