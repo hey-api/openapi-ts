@@ -19,6 +19,7 @@ const params = program
     .option('--exportCore <value>', 'Write core files to disk', true)
     .option('--exportServices <value>', 'Write services to disk', true)
     .option('--exportModels <value>', 'Write models to disk', true)
+    .option('--ignoreOperationId <value>', 'Use operation id', true)
     .option('--exportSchemas <value>', 'Write schemas to disk', false)
     .option('--indent <value>', 'Indentation options [4, 2, tabs]', '4')
     .option('--postfixServices <value>', 'Service name postfix', 'Service')
@@ -41,6 +42,7 @@ if (OpenAPI) {
         exportServices: JSON.parse(params.exportServices) === true,
         exportModels: JSON.parse(params.exportModels) === true,
         exportSchemas: JSON.parse(params.exportSchemas) === true,
+        ignoreOperationId: JSON.parse(params.ignoreOperationId) === true,
         indent: params.indent,
         postfixServices: params.postfixServices,
         postfixModels: params.postfixModels,

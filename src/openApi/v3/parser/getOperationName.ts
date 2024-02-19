@@ -5,8 +5,13 @@ import camelCase from 'camelcase';
  * This will use the operation ID - if available - and otherwise fallback
  * on a generated name from the URL
  */
-export const getOperationName = (url: string, method: string, operationId?: string): string => {
-    if (operationId) {
+export const getOperationName = (
+    url: string,
+    method: string,
+    ignoreOperationId: boolean,
+    operationId?: string
+): string => {
+    if (operationId && !ignoreOperationId) {
         return camelCase(
             operationId
                 .replace(/^[^a-zA-Z]+/g, '')
@@ -17,7 +22,7 @@ export const getOperationName = (url: string, method: string, operationId?: stri
 
     const urlWithoutPlaceholders = url
         .replace(/[^/]*?{api-version}.*?\//g, '')
-        .replace(/{(.*?)}/g, '')
+        .replace(/{(.*?)}/g, 'by-$1')
         .replace(/\//g, '-');
 
     return camelCase(`${method}-${urlWithoutPlaceholders}`);
