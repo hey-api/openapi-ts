@@ -2813,6 +2813,52 @@
                     }
                 },
                 "type": "object"
+            },
+            "CompositionWithOneOfAndProperties": {
+                "type": "object",
+                "oneOf": [
+                    {
+                        "type": "object",
+                        "required": [
+                            "foo"
+                        ],
+                        "properties": {
+                            "foo": {
+                                "$ref": "#/components/parameters/SimpleParameter"
+                            }
+                        },
+                        "additionalProperties": false
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "bar"
+                        ],
+                        "properties": {
+                            "bar": {
+                                "$ref": "#/components/schemas/NonAsciiStringæøåÆØÅöôêÊ字符串"
+                            }
+                        },
+                        "additionalProperties": false
+                    }
+                ],
+                "required": [
+                    "baz",
+                    "qux"
+                ],
+                "properties": {
+                    "baz": {
+                        "type": "integer",
+                        "format": "uint16",
+                        "minimum": 0.0,
+                        "nullable": true
+                    },
+                    "qux": {
+                        "type": "integer",
+                        "format": "uint8",
+                        "minimum": 0.0
+                    }
+                }
             }
         }
     }

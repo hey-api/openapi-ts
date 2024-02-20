@@ -3775,6 +3775,7 @@ export type { CompositionWithNestedAnyOfAndNull } from './models/CompositionWith
 export type { CompositionWithOneOf } from './models/CompositionWithOneOf';
 export type { CompositionWithOneOfAndComplexArrayDictionary } from './models/CompositionWithOneOfAndComplexArrayDictionary';
 export type { CompositionWithOneOfAndNullable } from './models/CompositionWithOneOfAndNullable';
+export type { CompositionWithOneOfAndProperties } from './models/CompositionWithOneOfAndProperties';
 export type { CompositionWithOneOfAndSimpleArrayDictionary } from './models/CompositionWithOneOfAndSimpleArrayDictionary';
 export type { CompositionWithOneOfAndSimpleDictionary } from './models/CompositionWithOneOfAndSimpleDictionary';
 export type { CompositionWithOneOfAnonymous } from './models/CompositionWithOneOfAnonymous';
@@ -3856,6 +3857,7 @@ export { $CompositionWithNestedAnyOfAndNull } from './schemas/$CompositionWithNe
 export { $CompositionWithOneOf } from './schemas/$CompositionWithOneOf';
 export { $CompositionWithOneOfAndComplexArrayDictionary } from './schemas/$CompositionWithOneOfAndComplexArrayDictionary';
 export { $CompositionWithOneOfAndNullable } from './schemas/$CompositionWithOneOfAndNullable';
+export { $CompositionWithOneOfAndProperties } from './schemas/$CompositionWithOneOfAndProperties';
 export { $CompositionWithOneOfAndSimpleArrayDictionary } from './schemas/$CompositionWithOneOfAndSimpleArrayDictionary';
 export { $CompositionWithOneOfAndSimpleDictionary } from './schemas/$CompositionWithOneOfAndSimpleDictionary';
 export { $CompositionWithOneOfAnonymous } from './schemas/$CompositionWithOneOfAnonymous';
@@ -4340,6 +4342,26 @@ export type CompositionWithOneOfAndNullable = {
         boolean?: boolean;
     } | ModelWithEnum | ModelWithArray | ModelWithDictionary) | null;
 };
+
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/models/CompositionWithOneOfAndProperties.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { NonAsciiStringæøåÆØÅöôêÊ字符串 } from './NonAsciiStringæøåÆØÅöôêÊ字符串';
+import type { SimpleParameter } from './SimpleParameter';
+export type CompositionWithOneOfAndProperties = ({
+    foo: SimpleParameter;
+    baz: number | null;
+    qux: number;
+} | {
+    bar: NonAsciiStringæøåÆØÅöôêÊ字符串;
+    baz: number | null;
+    qux: number;
+});
 
 "
 `;
@@ -5798,6 +5820,54 @@ export const $CompositionWithOneOfAndNullable = {
             isNullable: true,
         },
     },
+} as const;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithOneOfAndProperties.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $CompositionWithOneOfAndProperties = {
+    type: 'one-of',
+    contains: [{
+        properties: {
+            foo: {
+                type: 'SimpleParameter',
+                isRequired: true,
+            },
+            baz: {
+                type: 'number',
+                isRequired: true,
+                isNullable: true,
+                format: 'uint16',
+            },
+            qux: {
+                type: 'number',
+                isRequired: true,
+                format: 'uint8',
+            },
+        },
+    }, {
+        properties: {
+            bar: {
+                type: 'NonAsciiStringæøåÆØÅöôêÊ字符串',
+                isRequired: true,
+            },
+            baz: {
+                type: 'number',
+                isRequired: true,
+                isNullable: true,
+                format: 'uint16',
+            },
+            qux: {
+                type: 'number',
+                isRequired: true,
+                format: 'uint8',
+            },
+        },
+    }],
 } as const;
 "
 `;
