@@ -1,5 +1,6 @@
 import type { Operation } from '../../../client/interfaces/Operation';
 import type { OperationParameters } from '../../../client/interfaces/OperationParameters';
+import type { Options } from '../../../client/interfaces/Options';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiOperation } from '../interfaces/OpenApiOperation';
 import { getOperationErrors } from './getOperationErrors';
@@ -18,10 +19,10 @@ export const getOperation = (
     tag: string,
     op: OpenApiOperation,
     pathParams: OperationParameters,
-    useOperationId: boolean
+    options: Options
 ): Operation => {
     const serviceName = getServiceName(tag);
-    const operationName = getOperationName(url, method, useOperationId, op.operationId);
+    const operationName = getOperationName(url, method, options, op.operationId);
 
     // Create a new operation object for this method.
     const operation: Operation = {

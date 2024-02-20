@@ -43,14 +43,17 @@ describe('writeClient', () => {
             HttpClient.FETCH,
             false,
             false,
-            false,
             true,
             true,
             true,
             true,
             Indent.SPACE_4,
             'Service',
-            'AppClient'
+            'AppClient',
+            {
+                input: '',
+                output: '',
+            }
         );
 
         expect(rmdir).toBeCalled();

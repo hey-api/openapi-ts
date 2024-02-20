@@ -6,6 +6,7 @@ Mainly, it's because the original project maintainer [doesn't have time](https:/
 - ability to select which services to export and naming strategies for generated methods
 - support for non-ASCII characters
 - support for x-body-name header (compatible with Connexion v3.x)
+- ability to autoformat output with Prettier
 
 # OpenAPI Typescript Codegen
 
