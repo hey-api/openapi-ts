@@ -7,7 +7,7 @@ import { getOperationParameters } from './getOperationParameters';
 /**
  * Get the OpenAPI services
  */
-export const getServices = (openApi: OpenApi, ignoreOperationId: boolean): Service[] => {
+export const getServices = (openApi: OpenApi, useOperationId: boolean): Service[] => {
     const services = new Map<string, Service>();
     for (const url in openApi.paths) {
         if (openApi.paths.hasOwnProperty(url)) {
@@ -37,7 +37,7 @@ export const getServices = (openApi: OpenApi, ignoreOperationId: boolean): Servi
                                     tag,
                                     op,
                                     pathParams,
-                                    ignoreOperationId
+                                    useOperationId
                                 );
 
                                 // If we have already declared a service, then we should fetch that and

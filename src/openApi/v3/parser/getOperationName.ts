@@ -8,10 +8,10 @@ import camelCase from 'camelcase';
 export const getOperationName = (
     url: string,
     method: string,
-    ignoreOperationId: boolean,
+    useOperationId: boolean,
     operationId?: string
 ): string => {
-    if (operationId && !ignoreOperationId) {
+    if (useOperationId && operationId) {
         return camelCase(
             operationId
                 .replace(/^[^a-zA-Z]+/g, '')

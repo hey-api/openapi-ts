@@ -23,7 +23,7 @@ export type Options = {
     exportServices?: boolean;
     exportModels?: boolean;
     exportSchemas?: boolean;
-    ignoreOperationId?: boolean;
+    useOperationId?: boolean;
     indent?: Indent;
     postfixServices?: string;
     postfixModels?: string;
@@ -63,7 +63,7 @@ export const generate = async ({
     exportServices = true,
     exportModels = true,
     exportSchemas = false,
-    ignoreOperationId = false,
+    useOperationId = true,
     indent = Indent.SPACE_4,
     postfixServices = 'Service',
     postfixModels = '',
@@ -104,7 +104,7 @@ export const generate = async ({
         }
 
         case OpenApiVersion.V3: {
-            const client = parseV3(openApi, ignoreOperationId);
+            const client = parseV3(openApi, useOperationId);
             const clientFinal = postProcessClient(client);
             if (!write) break;
             await writeClient(
