@@ -1,5 +1,6 @@
 import camelCase from 'camelcase';
 
+import type { Options } from '../../../client/interfaces/Options';
 import sanitizeOperationName from '../../../utils/sanitizeOperationName';
 
 /**
@@ -7,12 +8,8 @@ import sanitizeOperationName from '../../../utils/sanitizeOperationName';
  * This will use the operation ID - if available - and otherwise fallback
  * on a generated name from the URL
  */
-export const getOperationName = (
-    url: string,
-    method: string,
-    useOperationId: boolean,
-    operationId?: string
-): string => {
+export const getOperationName = (url: string, method: string, options: Options, operationId?: string): string => {
+    const { useOperationId = true } = options;
     if (useOperationId && operationId) {
         return camelCase(sanitizeOperationName(operationId).trim());
     }

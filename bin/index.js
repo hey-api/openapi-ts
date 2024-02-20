@@ -20,10 +20,10 @@ const params = program
     .option('--exportCore <value>', 'Write core files to disk', true)
     .option('--exportServices <value>', 'Write services to disk', true)
     .option('--exportModels <value>', 'Write models to disk', true)
-    .option('--useOperationId <value>', 'Use operation id to generate operation names', true)
     .option('--exportSchemas <value>', 'Write schemas to disk', false)
     .option('--indent <value>', 'Indentation options [4, 2, tabs]', '4')
     .option('--postfixServices <value>', 'Service name postfix', 'Service')
+    .option('--useOperationId <value>', 'Use operation id to generate operation names', true)
     .option('--postfixModels <value>', 'Model name postfix')
     .option('--request <value>', 'Path to custom request file')
     .parse(process.argv)
@@ -41,22 +41,22 @@ const parseBooleanOrString = value => {
 
 if (OpenAPI) {
     OpenAPI.generate({
-        input: params.input,
-        output: params.output,
-        httpClient: params.client,
-        clientName: params.name,
-        useOptions: params.useOptions,
-        useUnionTypes: params.useUnionTypes,
         autoformat: JSON.parse(params.autoformat) === true,
+        clientName: params.name,
         exportCore: JSON.parse(params.exportCore) === true,
-        exportServices: parseBooleanOrString(params.exportServices),
         exportModels: parseBooleanOrString(params.exportModels),
         exportSchemas: JSON.parse(params.exportSchemas) === true,
-        useOperationId: JSON.parse(params.useOperationId) === true,
+        exportServices: parseBooleanOrString(params.exportServices),
+        httpClient: params.client,
         indent: params.indent,
-        postfixServices: params.postfixServices,
+        input: params.input,
+        output: params.output,
         postfixModels: params.postfixModels,
+        postfixServices: params.postfixServices,
         request: params.request,
+        useOperationId: JSON.parse(params.useOperationId) === true,
+        useOptions: params.useOptions,
+        useUnionTypes: params.useUnionTypes,
     })
         .then(() => {
             process.exit(0);

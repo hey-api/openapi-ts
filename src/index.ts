@@ -1,3 +1,4 @@
+import type { Options } from './client/interfaces/Options';
 import { HttpClient } from './HttpClient';
 import { Indent } from './Indent';
 import { parse as parseV2 } from './openApi/v2';
@@ -11,26 +12,6 @@ import { writeClient } from './utils/writeClient';
 
 export { HttpClient } from './HttpClient';
 export { Indent } from './Indent';
-
-export type Options = {
-    input: string | Record<string, any>;
-    output: string;
-    httpClient?: HttpClient;
-    clientName?: string;
-    useOptions?: boolean;
-    useUnionTypes?: boolean;
-    autoformat?: boolean;
-    exportCore?: boolean;
-    exportServices?: boolean | string;
-    exportModels?: boolean | string;
-    exportSchemas?: boolean;
-    useOperationId?: boolean;
-    indent?: Indent;
-    postfixServices?: string;
-    postfixModels?: string;
-    request?: string;
-    write?: boolean;
-};
 
 /**
  * Generate the OpenAPI client. This method will read the OpenAPI specification and based on the
@@ -54,26 +35,21 @@ export type Options = {
  * @param request Path to custom request file
  * @param write Write the files to disk (true or false)
  */
-export const generate = async ({
-    input,
-    output,
-    httpClient = HttpClient.FETCH,
-    clientName,
-    useOptions = false,
-    useUnionTypes = false,
-    autoformat = false,
-    exportCore = true,
-    exportServices = true,
-    exportModels = true,
-    exportSchemas = false,
-    useOperationId = true,
-    indent = Indent.SPACE_4,
-    postfixServices = 'Service',
-    postfixModels = '',
-    request,
-    write = true,
-}: Options): Promise<void> => {
-    const openApi = isString(input) ? await getOpenApiSpec(input) : input;
+export const generate = async (options: Options): Promise<void> => {
+    const {
+        httpClient = HttpClient.FETCH,
+        useOptions = false,
+        useUnionTypes = false,
+        exportCore = true,
+        exportServices = true,
+        exportModels = true,
+        exportSchemas = false,
+        indent = Indent.SPACE_4,
+        postfixServices = 'Service',
+        postfixModels = '',
+        write = true,
+    } = options;
+    const openApi = isString(options.input) ? await getOpenApiSpec(options.input) : options.input;
     const openApiVersion = getOpenApiVersion(openApi);
     const templates = registerHandlebarTemplates({
         httpClient,
@@ -96,17 +72,16 @@ export const generate = async ({
     }
 
     if (parser) {
-        const client = parser(openApi, useOperationId);
+        const client = parser(openApi, options);
         const clientFinal = postProcessClient(client);
         if (write) {
             await writeClient(
                 clientFinal,
                 templates,
-                output,
+                options.output,
                 httpClient,
                 useOptions,
                 useUnionTypes,
-                autoformat,
                 exportCore,
                 exportServices,
                 exportModels,
@@ -114,8 +89,7 @@ export const generate = async ({
                 indent,
                 postfixServices,
                 postfixModels,
-                clientName,
-                request
+                options
             );
         }
     }
