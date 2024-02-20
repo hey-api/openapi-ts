@@ -92,23 +92,30 @@ export const getModelComposition = ({
     }
 
     if (properties.length) {
-        composition.properties.push({
-            name: 'properties',
-            export: 'interface',
-            type: 'any',
-            base: 'any',
-            template: null,
-            link: null,
-            description: '',
-            isDefinition: false,
-            isReadOnly: false,
-            isNullable: false,
-            isRequired: false,
-            imports: [],
-            enum: [],
-            enums: [],
-            properties,
-        });
+        const foundComposition = findModelComposition(definition);
+        if (foundComposition?.type === 'one-of') {
+            composition.properties.forEach(property => {
+                property.properties.push(...properties);
+            });
+        } else {
+            composition.properties.push({
+                name: 'properties',
+                export: 'interface',
+                type: 'any',
+                base: 'any',
+                template: null,
+                link: null,
+                description: '',
+                isDefinition: false,
+                isReadOnly: false,
+                isNullable: false,
+                isRequired: false,
+                imports: [],
+                enum: [],
+                enums: [],
+                properties,
+            });
+        }
     }
 
     return composition;
