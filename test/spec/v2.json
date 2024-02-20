@@ -456,6 +456,30 @@
                 }
             }
         },
+        "/api/v{api-version}/multiple-tags/response-and-no-content": {
+            "get": {
+                "tags": [
+                    "Response",
+                    "NoContent"
+                ],
+                "operationId": "CallWithResponseAndNoContentResponse",
+                "responses": {
+                    "200": {
+                        "description": "Response is a simple number",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "number"
+                                }
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
         "/api/v{api-version}/multiple-tags/a": {
             "get": {
                 "tags": [
@@ -905,6 +929,33 @@
                     }
                 }
             }
+        },
+        "/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串": {
+            "post": {
+                "tags": [
+                    "Non-Ascii-æøåÆØÅöôêÊ"
+                ],
+                "operationId": "nonAsciiæøåÆØÅöôêÊ字符串",
+                "parameters": [
+                    {
+                        "description": "Dummy input param",
+                        "name": "nonAsciiParamæøåÆØÅöôêÊ",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "$ref": "#/definitions/NonAsciiStringæøåÆØÅöôêÊ字符串"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -944,6 +995,10 @@
             "description": "This is a simple string",
             "type": "string"
         },
+        "NonAsciiStringæøåÆØÅöôêÊ字符串": {
+            "description": "A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)",
+            "type": "string"
+        },
         "SimpleFile": {
             "description": "This is a simple file",
             "type": "file"
@@ -965,7 +1020,8 @@
                 "Warning",
                 "Error",
                 "'Single Quote'",
-                "\"Double Quotes\""
+                "\"Double Quotes\"",
+                "Non-ascii: øæåôöØÆÅÔÖ字符串"
             ]
         },
         "EnumWithNumbers": {
@@ -1174,7 +1230,8 @@
                     "enum": [
                         "Success",
                         "Warning",
-                        "Error"
+                        "Error",
+                        "ØÆÅ字符串"
                     ]
                 },
                 "statusCode": {

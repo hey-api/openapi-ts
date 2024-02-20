@@ -19,9 +19,10 @@ export type Options = {
     clientName?: string;
     useOptions?: boolean;
     useUnionTypes?: boolean;
+    autoformat?: boolean;
     exportCore?: boolean;
-    exportServices?: boolean;
-    exportModels?: boolean;
+    exportServices?: boolean | string;
+    exportModels?: boolean | string;
     exportSchemas?: boolean;
     useOperationId?: boolean;
     indent?: Indent;
@@ -59,6 +60,7 @@ export const generate = async ({
     clientName,
     useOptions = false,
     useUnionTypes = false,
+    autoformat = false,
     exportCore = true,
     exportServices = true,
     exportModels = true,
@@ -78,35 +80,24 @@ export const generate = async ({
         useOptions,
     });
 
+    let parser: typeof parseV2 | typeof parseV3;
+
     switch (openApiVersion) {
         case OpenApiVersion.V2: {
-            const client = parseV2(openApi, useOperationId);
-            const clientFinal = postProcessClient(client);
-            if (!write) break;
-            await writeClient(
-                clientFinal,
-                templates,
-                output,
-                httpClient,
-                useOptions,
-                useUnionTypes,
-                exportCore,
-                exportServices,
-                exportModels,
-                exportSchemas,
-                indent,
-                postfixServices,
-                postfixModels,
-                clientName,
-                request
-            );
+            parser = parseV2;
             break;
         }
 
         case OpenApiVersion.V3: {
-            const client = parseV3(openApi, useOperationId);
-            const clientFinal = postProcessClient(client);
-            if (!write) break;
+            parser = parseV3;
+            break;
+        }
+    }
+
+    if (parser) {
+        const client = parser(openApi, useOperationId);
+        const clientFinal = postProcessClient(client);
+        if (write) {
             await writeClient(
                 clientFinal,
                 templates,
@@ -114,6 +105,7 @@ export const generate = async ({
                 httpClient,
                 useOptions,
                 useUnionTypes,
+                autoformat,
                 exportCore,
                 exportServices,
                 exportModels,
@@ -124,7 +116,6 @@ export const generate = async ({
                 clientName,
                 request
             );
-            break;
         }
     }
 };

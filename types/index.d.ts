@@ -19,9 +19,10 @@ export type Options = {
     clientName?: string;
     useOptions?: boolean;
     useUnionTypes?: boolean;
+    autoformat?: boolean;
     exportCore?: boolean;
-    exportServices?: boolean;
-    exportModels?: boolean;
+    exportServices?: boolean | string;
+    exportModels?: boolean | string;
     exportSchemas?: boolean;
     indent?: Indent | '4' | '2' | 'tab';
     postfixServices?: string;
