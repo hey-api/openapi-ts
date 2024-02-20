@@ -80,7 +80,7 @@ export const generate = async ({
 
     switch (openApiVersion) {
         case OpenApiVersion.V2: {
-            const client = parseV2(openApi);
+            const client = parseV2(openApi, useOperationId);
             const clientFinal = postProcessClient(client);
             if (!write) break;
             await writeClient(
