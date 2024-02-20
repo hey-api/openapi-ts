@@ -17,9 +17,9 @@ export const getModelComposition = (
     getModel: GetModelFn
 ): ModelComposition => {
     const composition: ModelComposition = {
-        type,
-        imports: [],
         enums: [],
+        export: type,
+        imports: [],
         properties: [],
     };
 

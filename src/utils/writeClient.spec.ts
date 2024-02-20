@@ -43,6 +43,7 @@ describe('writeClient', () => {
             HttpClient.FETCH,
             false,
             false,
+            false,
             true,
             true,
             true,

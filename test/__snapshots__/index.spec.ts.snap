@@ -614,6 +614,7 @@ export type { ModelWithPattern } from './models/ModelWithPattern';
 export type { ModelWithProperties } from './models/ModelWithProperties';
 export type { ModelWithReference } from './models/ModelWithReference';
 export type { ModelWithString } from './models/ModelWithString';
+export type { NonAsciiStringæøåÆØÅöôêÊ字符串 } from './models/NonAsciiStringæøåÆØÅöôêÊ字符串';
 export type { SimpleBoolean } from './models/SimpleBoolean';
 export type { SimpleFile } from './models/SimpleFile';
 export type { SimpleInteger } from './models/SimpleInteger';
@@ -663,6 +664,7 @@ export { $ModelWithPattern } from './schemas/$ModelWithPattern';
 export { $ModelWithProperties } from './schemas/$ModelWithProperties';
 export { $ModelWithReference } from './schemas/$ModelWithReference';
 export { $ModelWithString } from './schemas/$ModelWithString';
+export { $NonAsciiStringæøåÆØÅöôêÊ字符串 } from './schemas/$NonAsciiStringæøåÆØÅöôêÊ字符串';
 export { $SimpleBoolean } from './schemas/$SimpleBoolean';
 export { $SimpleFile } from './schemas/$SimpleFile';
 export { $SimpleInteger } from './schemas/$SimpleInteger';
@@ -682,6 +684,7 @@ export { MultipleTags1Service } from './services/MultipleTags1Service';
 export { MultipleTags2Service } from './services/MultipleTags2Service';
 export { MultipleTags3Service } from './services/MultipleTags3Service';
 export { NoContentService } from './services/NoContentService';
+export { NonAsciiÆøåÆøÅöôêÊService } from './services/NonAsciiÆøåÆøÅöôêÊService';
 export { ParametersService } from './services/ParametersService';
 export { ResponseService } from './services/ResponseService';
 export { SimpleService } from './services/SimpleService';
@@ -1009,6 +1012,7 @@ export enum EnumWithStrings {
     ERROR = 'Error',
     _SINGLE_QUOTE_ = '\\'Single Quote\\'',
     _DOUBLE_QUOTES_ = '"Double Quotes"',
+    NON_ASCII__ØÆÅÔÖ_ØÆÅÔÖ字符串 = 'Non-ascii: øæåôöØÆÅÔÖ字符串',
 }
 "
 `;
@@ -1178,6 +1182,7 @@ export namespace ModelWithEnum {
         SUCCESS = 'Success',
         WARNING = 'Warning',
         ERROR = 'Error',
+        ØÆÅ字符串 = 'ØÆÅ字符串',
     }
     /**
      * These are the HTTP error code enums
@@ -1385,6 +1390,18 @@ export type ModelWithString = {
     prop?: string;
 };
 
+"
+`;
+
+exports[`v2 should generate: test/generated/v2/models/NonAsciiStringæøåÆØÅöôêÊ字符串.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+/**
+ * A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)
+ */
+export type NonAsciiStringæøåÆØÅöôêÊ字符串 = string;
 "
 `;
 
@@ -2256,6 +2273,18 @@ export const $ModelWithString = {
 "
 `;
 
+exports[`v2 should generate: test/generated/v2/schemas/$NonAsciiStringæøåÆØÅöôêÊ字符串.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $NonAsciiStringæøåÆØÅöôêÊ字符串 = {
+    type: 'string',
+    description: \`A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)\`,
+} as const;
+"
+`;
+
 exports[`v2 should generate: test/generated/v2/schemas/$SimpleBoolean.ts 1`] = `
 "/* generated using openapi-typescript-codegen -- do no edit */
 /* istanbul ignore file */
@@ -2711,7 +2740,7 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class MultipleTags1Service {
     /**
-     * @returns void
+     * @returns void Success
      * @throws ApiError
      */
     public static dummyA(): CancelablePromise<void> {
@@ -2721,7 +2750,7 @@ export class MultipleTags1Service {
         });
     }
     /**
-     * @returns void
+     * @returns void Success
      * @throws ApiError
      */
     public static dummyB(): CancelablePromise<void> {
@@ -2744,7 +2773,7 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class MultipleTags2Service {
     /**
-     * @returns void
+     * @returns void Success
      * @throws ApiError
      */
     public static dummyA(): CancelablePromise<void> {
@@ -2754,7 +2783,7 @@ export class MultipleTags2Service {
         });
     }
     /**
-     * @returns void
+     * @returns void Success
      * @throws ApiError
      */
     public static dummyB(): CancelablePromise<void> {
@@ -2777,7 +2806,7 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class MultipleTags3Service {
     /**
-     * @returns void
+     * @returns void Success
      * @throws ApiError
      */
     public static dummyB(): CancelablePromise<void> {
@@ -2800,13 +2829,54 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class NoContentService {
     /**
-     * @returns void
+     * @returns void Success
      * @throws ApiError
      */
     public static callWithNoContentResponse(): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/no-content',
+        });
+    }
+    /**
+     * @returns any Response is a simple number
+     * @returns void Success
+     * @throws ApiError
+     */
+    public static callWithResponseAndNoContentResponse(): CancelablePromise<any | void> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v{api-version}/multiple-tags/response-and-no-content',
+        });
+    }
+}
+"
+`;
+
+exports[`v2 should generate: test/generated/v2/services/NonAsciiÆøåÆøÅöôêÊService.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { NonAsciiStringæøåÆØÅöôêÊ字符串 } from '../models/NonAsciiStringæøåÆØÅöôêÊ字符串';
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+export class NonAsciiÆøåÆøÅöôêÊService {
+    /**
+     * @param nonAsciiParamæøåÆøÅöôêÊ Dummy input param
+     * @returns NonAsciiStringæøåÆØÅöôêÊ字符串 Successful response
+     * @throws ApiError
+     */
+    public static nonAsciiæøåÆøÅöôêÊ字符串(
+        nonAsciiParamæøåÆøÅöôêÊ: number,
+    ): CancelablePromise<NonAsciiStringæøåÆØÅöôêÊ字符串> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
+            query: {
+                'nonAsciiParamæøåÆØÅöôêÊ': nonAsciiParamæøåÆøÅöôêÊ,
+            },
         });
     }
 }
@@ -2913,6 +2983,17 @@ import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class ResponseService {
+    /**
+     * @returns any Response is a simple number
+     * @returns void Success
+     * @throws ApiError
+     */
+    public static callWithResponseAndNoContentResponse(): CancelablePromise<any | void> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v{api-version}/multiple-tags/response-and-no-content',
+        });
+    }
     /**
      * @returns ModelWithString Message for default response
      * @throws ApiError
@@ -3668,6 +3749,9 @@ export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
 export type { _default } from './models/_default';
+export type { AnyOfAnyAndNull } from './models/AnyOfAnyAndNull';
+export type { AnyOfArrays } from './models/AnyOfArrays';
+export type { ArrayWithAnyOfProperties } from './models/ArrayWithAnyOfProperties';
 export type { ArrayWithArray } from './models/ArrayWithArray';
 export type { ArrayWithBooleans } from './models/ArrayWithBooleans';
 export type { ArrayWithNumbers } from './models/ArrayWithNumbers';
@@ -3686,6 +3770,8 @@ export type { CompositionWithAllOfAndNullable } from './models/CompositionWithAl
 export type { CompositionWithAnyOf } from './models/CompositionWithAnyOf';
 export type { CompositionWithAnyOfAndNullable } from './models/CompositionWithAnyOfAndNullable';
 export type { CompositionWithAnyOfAnonymous } from './models/CompositionWithAnyOfAnonymous';
+export type { CompositionWithNestedAnyAndTypeNull } from './models/CompositionWithNestedAnyAndTypeNull';
+export type { CompositionWithNestedAnyOfAndNull } from './models/CompositionWithNestedAnyOfAndNull';
 export type { CompositionWithOneOf } from './models/CompositionWithOneOf';
 export type { CompositionWithOneOfAndComplexArrayDictionary } from './models/CompositionWithOneOfAndComplexArrayDictionary';
 export type { CompositionWithOneOfAndNullable } from './models/CompositionWithOneOfAndNullable';
@@ -3693,12 +3779,14 @@ export type { CompositionWithOneOfAndSimpleArrayDictionary } from './models/Comp
 export type { CompositionWithOneOfAndSimpleDictionary } from './models/CompositionWithOneOfAndSimpleDictionary';
 export type { CompositionWithOneOfAnonymous } from './models/CompositionWithOneOfAnonymous';
 export type { CompositionWithOneOfDiscriminator } from './models/CompositionWithOneOfDiscriminator';
+export type { ConstValue } from './models/ConstValue';
 export type { DeprecatedModel } from './models/DeprecatedModel';
 export type { DictionaryWithArray } from './models/DictionaryWithArray';
 export type { DictionaryWithDictionary } from './models/DictionaryWithDictionary';
 export type { DictionaryWithProperties } from './models/DictionaryWithProperties';
 export type { DictionaryWithReference } from './models/DictionaryWithReference';
 export type { DictionaryWithString } from './models/DictionaryWithString';
+export { Enum1 } from './models/Enum1';
 export type { EnumFromDescription } from './models/EnumFromDescription';
 export { EnumWithExtensions } from './models/EnumWithExtensions';
 export { EnumWithNumbers } from './models/EnumWithNumbers';
@@ -3711,9 +3799,11 @@ export type { ModelCircle } from './models/ModelCircle';
 export type { ModelSquare } from './models/ModelSquare';
 export type { ModelThatExtends } from './models/ModelThatExtends';
 export type { ModelThatExtendsExtends } from './models/ModelThatExtendsExtends';
+export type { ModelWithAdditionalPropertiesEqTrue } from './models/ModelWithAdditionalPropertiesEqTrue';
 export type { ModelWithArray } from './models/ModelWithArray';
 export type { ModelWithBoolean } from './models/ModelWithBoolean';
 export type { ModelWithCircularReference } from './models/ModelWithCircularReference';
+export type { ModelWithConst } from './models/ModelWithConst';
 export type { ModelWithDictionary } from './models/ModelWithDictionary';
 export type { ModelWithDuplicateImports } from './models/ModelWithDuplicateImports';
 export type { ModelWithDuplicateProperties } from './models/ModelWithDuplicateProperties';
@@ -3728,6 +3818,8 @@ export type { ModelWithPattern } from './models/ModelWithPattern';
 export type { ModelWithProperties } from './models/ModelWithProperties';
 export type { ModelWithReference } from './models/ModelWithReference';
 export type { ModelWithString } from './models/ModelWithString';
+export type { NestedAnyOfArraysNullable } from './models/NestedAnyOfArraysNullable';
+export type { NonAsciiStringæøåÆØÅöôêÊ字符串 } from './models/NonAsciiStringæøåÆØÅöôêÊ字符串';
 export type { Pageable } from './models/Pageable';
 export type { SimpleBoolean } from './models/SimpleBoolean';
 export type { SimpleFile } from './models/SimpleFile';
@@ -3738,6 +3830,9 @@ export type { SimpleString } from './models/SimpleString';
 export type { SimpleStringWithPattern } from './models/SimpleStringWithPattern';
 
 export { $_default } from './schemas/$_default';
+export { $AnyOfAnyAndNull } from './schemas/$AnyOfAnyAndNull';
+export { $AnyOfArrays } from './schemas/$AnyOfArrays';
+export { $ArrayWithAnyOfProperties } from './schemas/$ArrayWithAnyOfProperties';
 export { $ArrayWithArray } from './schemas/$ArrayWithArray';
 export { $ArrayWithBooleans } from './schemas/$ArrayWithBooleans';
 export { $ArrayWithNumbers } from './schemas/$ArrayWithNumbers';
@@ -3756,6 +3851,8 @@ export { $CompositionWithAllOfAndNullable } from './schemas/$CompositionWithAllO
 export { $CompositionWithAnyOf } from './schemas/$CompositionWithAnyOf';
 export { $CompositionWithAnyOfAndNullable } from './schemas/$CompositionWithAnyOfAndNullable';
 export { $CompositionWithAnyOfAnonymous } from './schemas/$CompositionWithAnyOfAnonymous';
+export { $CompositionWithNestedAnyAndTypeNull } from './schemas/$CompositionWithNestedAnyAndTypeNull';
+export { $CompositionWithNestedAnyOfAndNull } from './schemas/$CompositionWithNestedAnyOfAndNull';
 export { $CompositionWithOneOf } from './schemas/$CompositionWithOneOf';
 export { $CompositionWithOneOfAndComplexArrayDictionary } from './schemas/$CompositionWithOneOfAndComplexArrayDictionary';
 export { $CompositionWithOneOfAndNullable } from './schemas/$CompositionWithOneOfAndNullable';
@@ -3763,12 +3860,14 @@ export { $CompositionWithOneOfAndSimpleArrayDictionary } from './schemas/$Compos
 export { $CompositionWithOneOfAndSimpleDictionary } from './schemas/$CompositionWithOneOfAndSimpleDictionary';
 export { $CompositionWithOneOfAnonymous } from './schemas/$CompositionWithOneOfAnonymous';
 export { $CompositionWithOneOfDiscriminator } from './schemas/$CompositionWithOneOfDiscriminator';
+export { $ConstValue } from './schemas/$ConstValue';
 export { $DeprecatedModel } from './schemas/$DeprecatedModel';
 export { $DictionaryWithArray } from './schemas/$DictionaryWithArray';
 export { $DictionaryWithDictionary } from './schemas/$DictionaryWithDictionary';
 export { $DictionaryWithProperties } from './schemas/$DictionaryWithProperties';
 export { $DictionaryWithReference } from './schemas/$DictionaryWithReference';
 export { $DictionaryWithString } from './schemas/$DictionaryWithString';
+export { $Enum1 } from './schemas/$Enum1';
 export { $EnumFromDescription } from './schemas/$EnumFromDescription';
 export { $EnumWithExtensions } from './schemas/$EnumWithExtensions';
 export { $EnumWithNumbers } from './schemas/$EnumWithNumbers';
@@ -3781,9 +3880,11 @@ export { $ModelCircle } from './schemas/$ModelCircle';
 export { $ModelSquare } from './schemas/$ModelSquare';
 export { $ModelThatExtends } from './schemas/$ModelThatExtends';
 export { $ModelThatExtendsExtends } from './schemas/$ModelThatExtendsExtends';
+export { $ModelWithAdditionalPropertiesEqTrue } from './schemas/$ModelWithAdditionalPropertiesEqTrue';
 export { $ModelWithArray } from './schemas/$ModelWithArray';
 export { $ModelWithBoolean } from './schemas/$ModelWithBoolean';
 export { $ModelWithCircularReference } from './schemas/$ModelWithCircularReference';
+export { $ModelWithConst } from './schemas/$ModelWithConst';
 export { $ModelWithDictionary } from './schemas/$ModelWithDictionary';
 export { $ModelWithDuplicateImports } from './schemas/$ModelWithDuplicateImports';
 export { $ModelWithDuplicateProperties } from './schemas/$ModelWithDuplicateProperties';
@@ -3798,6 +3899,8 @@ export { $ModelWithPattern } from './schemas/$ModelWithPattern';
 export { $ModelWithProperties } from './schemas/$ModelWithProperties';
 export { $ModelWithReference } from './schemas/$ModelWithReference';
 export { $ModelWithString } from './schemas/$ModelWithString';
+export { $NestedAnyOfArraysNullable } from './schemas/$NestedAnyOfArraysNullable';
+export { $NonAsciiStringæøåÆØÅöôêÊ字符串 } from './schemas/$NonAsciiStringæøåÆØÅöôêÊ字符串';
 export { $Pageable } from './schemas/$Pageable';
 export { $SimpleBoolean } from './schemas/$SimpleBoolean';
 export { $SimpleFile } from './schemas/$SimpleFile';
@@ -3822,6 +3925,7 @@ export { MultipleTags1Service } from './services/MultipleTags1Service';
 export { MultipleTags2Service } from './services/MultipleTags2Service';
 export { MultipleTags3Service } from './services/MultipleTags3Service';
 export { NoContentService } from './services/NoContentService';
+export { NonAsciiÆøåÆøÅöôêÊService } from './services/NonAsciiÆøåÆøÅöôêÊService';
 export { ParametersService } from './services/ParametersService';
 export { RequestBodyService } from './services/RequestBodyService';
 export { ResponseService } from './services/ResponseService';
@@ -3840,6 +3944,53 @@ export type _default = {
     name?: string;
 };
 
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/models/AnyOfAnyAndNull.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export type AnyOfAnyAndNull = {
+    data?: (any | null);
+};
+
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/models/AnyOfArrays.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+/**
+ * This is a simple array with any of properties
+ */
+export type AnyOfArrays = {
+    results?: Array<({
+        foo?: string;
+    } | {
+        bar?: string;
+    })>;
+};
+
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/models/ArrayWithAnyOfProperties.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+/**
+ * This is a simple array with any of properties
+ */
+export type ArrayWithAnyOfProperties = Array<({
+    foo?: string;
+} | {
+    bar?: string;
+})>;
 "
 `;
 
@@ -4105,6 +4256,40 @@ export type CompositionWithAnyOfAnonymous = {
 "
 `;
 
+exports[`v3 should generate: test/generated/v3/models/CompositionWithNestedAnyAndTypeNull.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { ModelWithArray } from './ModelWithArray';
+import type { ModelWithDictionary } from './ModelWithDictionary';
+/**
+ * This is a model with nested 'any of' property with a type null
+ */
+export type CompositionWithNestedAnyAndTypeNull = {
+    propA?: (Array<(ModelWithDictionary | null)> | Array<(ModelWithArray | null)>);
+};
+
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/models/CompositionWithNestedAnyOfAndNull.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { ConstValue } from './ConstValue';
+import type { Enum1 } from './Enum1';
+/**
+ * This is a model with one property with a 'any of' relationship where the options are not $ref
+ */
+export type CompositionWithNestedAnyOfAndNull = {
+    propA?: (Array<(Enum1 | ConstValue)> | null);
+};
+
+"
+`;
+
 exports[`v3 should generate: test/generated/v3/models/CompositionWithOneOf.ts 1`] = `
 "/* generated using openapi-typescript-codegen -- do no edit */
 /* istanbul ignore file */
@@ -4221,6 +4406,15 @@ export type CompositionWithOneOfDiscriminator = (ModelCircle | ModelSquare);
 "
 `;
 
+exports[`v3 should generate: test/generated/v3/models/ConstValue.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export type ConstValue = "ConstValue";
+"
+`;
+
 exports[`v3 should generate: test/generated/v3/models/DeprecatedModel.ts 1`] = `
 "/* generated using openapi-typescript-codegen -- do no edit */
 /* istanbul ignore file */
@@ -4306,6 +4500,18 @@ export type DictionaryWithString = Record<string, string>;
 "
 `;
 
+exports[`v3 should generate: test/generated/v3/models/Enum1.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export enum Enum1 {
+    BIRD = 'Bird',
+    DOG = 'Dog',
+}
+"
+`;
+
 exports[`v3 should generate: test/generated/v3/models/EnumFromDescription.ts 1`] = `
 "/* generated using openapi-typescript-codegen -- do no edit */
 /* istanbul ignore file */
@@ -4385,6 +4591,7 @@ export enum EnumWithStrings {
     ERROR = 'Error',
     _SINGLE_QUOTE_ = '\\'Single Quote\\'',
     _DOUBLE_QUOTES_ = '"Double Quotes"',
+    NON_ASCII__ØÆÅÔÖ_ØÆÅÔÖ字符串 = 'Non-ascii: øæåôöØÆÅÔÖ字符串',
 }
 "
 `;
@@ -4508,6 +4715,25 @@ export type ModelThatExtendsExtends = (ModelWithString & ModelThatExtends & {
 "
 `;
 
+exports[`v3 should generate: test/generated/v3/models/ModelWithAdditionalPropertiesEqTrue.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+/**
+ * This is a model with one property and additionalProperties: true
+ */
+export type ModelWithAdditionalPropertiesEqTrue = {
+    /**
+     * This is a simple string property
+     */
+    prop?: string;
+    [key: string]: any;
+};
+
+"
+`;
+
 exports[`v3 should generate: test/generated/v3/models/ModelWithArray.ts 1`] = `
 "/* generated using openapi-typescript-codegen -- do no edit */
 /* istanbul ignore file */
@@ -4554,6 +4780,21 @@ exports[`v3 should generate: test/generated/v3/models/ModelWithCircularReference
  */
 export type ModelWithCircularReference = {
     prop?: ModelWithCircularReference;
+};
+
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/models/ModelWithConst.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export type ModelWithConst = {
+    String?: "String";
+    number?: 0;
+    null?: null;
+    withType?: "Some string";
 };
 
 "
@@ -4638,6 +4879,7 @@ export namespace ModelWithEnum {
         SUCCESS = 'Success',
         WARNING = 'Warning',
         ERROR = 'Error',
+        ØÆÅ字符串 = 'ØÆÅ字符串',
     }
     /**
      * These are the HTTP error code enums
@@ -4857,6 +5099,30 @@ export type ModelWithString = {
 "
 `;
 
+exports[`v3 should generate: test/generated/v3/models/NestedAnyOfArraysNullable.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export type NestedAnyOfArraysNullable = {
+    nullableArray?: (Array<(string | boolean)> | null);
+};
+
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/models/NonAsciiStringæøåÆØÅöôêÊ字符串.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+/**
+ * A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)
+ */
+export type NonAsciiStringæøåÆØÅöôêÊ字符串 = string;
+"
+`;
+
 exports[`v3 should generate: test/generated/v3/models/Pageable.ts 1`] = `
 "/* generated using openapi-typescript-codegen -- do no edit */
 /* istanbul ignore file */
@@ -4966,6 +5232,86 @@ export const $_default = {
         name: {
             type: 'string',
         },
+    },
+} as const;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/schemas/$AnyOfAnyAndNull.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $AnyOfAnyAndNull = {
+    properties: {
+        data: {
+            type: 'any-of',
+            contains: [{
+                properties: {
+                },
+            }, {
+                type: 'null',
+            }],
+        },
+    },
+} as const;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/schemas/$AnyOfArrays.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $AnyOfArrays = {
+    description: \`This is a simple array with any of properties\`,
+    properties: {
+        results: {
+            type: 'array',
+            contains: {
+                type: 'any-of',
+                contains: [{
+                    properties: {
+                        foo: {
+                            type: 'string',
+                        },
+                    },
+                }, {
+                    properties: {
+                        bar: {
+                            type: 'string',
+                        },
+                    },
+                }],
+            },
+        },
+    },
+} as const;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/schemas/$ArrayWithAnyOfProperties.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $ArrayWithAnyOfProperties = {
+    type: 'array',
+    contains: {
+        type: 'any-of',
+        contains: [{
+            properties: {
+                foo: {
+                    type: 'string',
+                },
+            },
+        }, {
+            properties: {
+                bar: {
+                    type: 'string',
+                },
+            },
+        }],
     },
 } as const;
 "
@@ -5303,6 +5649,72 @@ export const $CompositionWithAnyOfAnonymous = {
 "
 `;
 
+exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithNestedAnyAndTypeNull.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $CompositionWithNestedAnyAndTypeNull = {
+    description: \`This is a model with nested 'any of' property with a type null\`,
+    properties: {
+        propA: {
+            type: 'any-of',
+            contains: [{
+                type: 'array',
+                contains: {
+                    type: 'any-of',
+                    contains: [{
+                        type: 'ModelWithDictionary',
+                    }, {
+                        type: 'null',
+                    }],
+                },
+            }, {
+                type: 'array',
+                contains: {
+                    type: 'any-of',
+                    contains: [{
+                        type: 'ModelWithArray',
+                    }, {
+                        type: 'null',
+                    }],
+                },
+            }],
+        },
+    },
+} as const;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithNestedAnyOfAndNull.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $CompositionWithNestedAnyOfAndNull = {
+    description: \`This is a model with one property with a 'any of' relationship where the options are not $ref\`,
+    properties: {
+        propA: {
+            type: 'any-of',
+            contains: [{
+                type: 'array',
+                contains: {
+                    type: 'any-of',
+                    contains: [{
+                        type: 'Enum1',
+                    }, {
+                        type: 'ConstValue',
+                    }],
+                },
+            }, {
+                type: 'null',
+            }],
+        },
+    },
+} as const;
+"
+`;
+
 exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithOneOf.ts 1`] = `
 "/* generated using openapi-typescript-codegen -- do no edit */
 /* istanbul ignore file */
@@ -5488,6 +5900,17 @@ export const $CompositionWithOneOfDiscriminator = {
 "
 `;
 
+exports[`v3 should generate: test/generated/v3/schemas/$ConstValue.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $ConstValue = {
+    type: '"ConstValue"',
+} as const;
+"
+`;
+
 exports[`v3 should generate: test/generated/v3/schemas/$DeprecatedModel.ts 1`] = `
 "/* generated using openapi-typescript-codegen -- do no edit */
 /* istanbul ignore file */
@@ -5584,6 +6007,17 @@ export const $DictionaryWithString = {
     contains: {
         type: 'string',
     },
+} as const;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/schemas/$Enum1.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $Enum1 = {
+    type: 'Enum',
 } as const;
 "
 `;
@@ -5806,6 +6240,27 @@ export const $ModelThatExtendsExtends = {
 "
 `;
 
+exports[`v3 should generate: test/generated/v3/schemas/$ModelWithAdditionalPropertiesEqTrue.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $ModelWithAdditionalPropertiesEqTrue = {
+    description: \`This is a model with one property and additionalProperties: true\`,
+    properties: {
+        prop: {
+            type: 'string',
+            description: \`This is a simple string property\`,
+        },
+        [key: string]: {
+            type: 'any',
+            isRequired: true,
+        },
+    },
+} as const;
+"
+`;
+
 exports[`v3 should generate: test/generated/v3/schemas/$ModelWithArray.ts 1`] = `
 "/* generated using openapi-typescript-codegen -- do no edit */
 /* istanbul ignore file */
@@ -5864,6 +6319,30 @@ export const $ModelWithCircularReference = {
     properties: {
         prop: {
             type: 'ModelWithCircularReference',
+        },
+    },
+} as const;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/schemas/$ModelWithConst.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $ModelWithConst = {
+    properties: {
+        String: {
+            type: '"String"',
+        },
+        number: {
+            type: '0',
+        },
+        null: {
+            type: 'null',
+        },
+        withType: {
+            type: '"Some string"',
         },
     },
 } as const;
@@ -6243,6 +6722,46 @@ export const $ModelWithString = {
             description: \`This is a simple string property\`,
         },
     },
+} as const;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/schemas/$NestedAnyOfArraysNullable.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $NestedAnyOfArraysNullable = {
+    properties: {
+        nullableArray: {
+            type: 'any-of',
+            contains: [{
+                type: 'array',
+                contains: {
+                    type: 'any-of',
+                    contains: [{
+                        type: 'string',
+                    }, {
+                        type: 'boolean',
+                    }],
+                },
+            }, {
+                type: 'null',
+            }],
+        },
+    },
+} as const;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/schemas/$NonAsciiStringæøåÆØÅöôêÊ字符串.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $NonAsciiStringæøåÆØÅöôêÊ字符串 = {
+    type: 'string',
+    description: \`A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)\`,
 } as const;
 "
 `;
@@ -6887,7 +7406,7 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class MultipleTags1Service {
     /**
-     * @returns void
+     * @returns void Success
      * @throws ApiError
      */
     public static dummyA(): CancelablePromise<void> {
@@ -6897,7 +7416,7 @@ export class MultipleTags1Service {
         });
     }
     /**
-     * @returns void
+     * @returns void Success
      * @throws ApiError
      */
     public static dummyB(): CancelablePromise<void> {
@@ -6920,7 +7439,7 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class MultipleTags2Service {
     /**
-     * @returns void
+     * @returns void Success
      * @throws ApiError
      */
     public static dummyA(): CancelablePromise<void> {
@@ -6930,7 +7449,7 @@ export class MultipleTags2Service {
         });
     }
     /**
-     * @returns void
+     * @returns void Success
      * @throws ApiError
      */
     public static dummyB(): CancelablePromise<void> {
@@ -6953,7 +7472,7 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class MultipleTags3Service {
     /**
-     * @returns void
+     * @returns void Success
      * @throws ApiError
      */
     public static dummyB(): CancelablePromise<void> {
@@ -6976,13 +7495,54 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class NoContentService {
     /**
-     * @returns void
+     * @returns void Success
      * @throws ApiError
      */
     public static callWithNoContentResponse(): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/no-content',
+        });
+    }
+    /**
+     * @returns number Response is a simple number
+     * @returns void Success
+     * @throws ApiError
+     */
+    public static callWithResponseAndNoContentResponse(): CancelablePromise<number | void> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v{api-version}/multiple-tags/response-and-no-content',
+        });
+    }
+}
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/services/NonAsciiÆøåÆøÅöôêÊService.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { NonAsciiStringæøåÆØÅöôêÊ字符串 } from '../models/NonAsciiStringæøåÆØÅöôêÊ字符串';
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+export class NonAsciiÆøåÆøÅöôêÊService {
+    /**
+     * @param nonAsciiParamæøåÆøÅöôêÊ Dummy input param
+     * @returns NonAsciiStringæøåÆØÅöôêÊ字符串 Successful response
+     * @throws ApiError
+     */
+    public static nonAsciiæøåÆøÅöôêÊ字符串(
+        nonAsciiParamæøåÆøÅöôêÊ: number,
+    ): CancelablePromise<Array<NonAsciiStringæøåÆØÅöôêÊ字符串>> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
+            query: {
+                'nonAsciiParamæøåÆØÅöôêÊ': nonAsciiParamæøåÆøÅöôêÊ,
+            },
         });
     }
 }
@@ -7141,12 +7701,12 @@ import { request as __request } from '../core/request';
 export class RequestBodyService {
     /**
      * @param parameter This is a reusable parameter
-     * @param requestBody A reusable request body
+     * @param foo A reusable request body
      * @throws ApiError
      */
     public static postApiRequestBody(
         parameter?: string,
-        requestBody?: ModelWithString,
+        foo?: ModelWithString,
     ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'POST',
@@ -7154,7 +7714,7 @@ export class RequestBodyService {
             query: {
                 'parameter': parameter,
             },
-            body: requestBody,
+            body: foo,
             mediaType: 'application/json',
         });
     }
@@ -7174,6 +7734,17 @@ import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class ResponseService {
+    /**
+     * @returns number Response is a simple number
+     * @returns void Success
+     * @throws ApiError
+     */
+    public static callWithResponseAndNoContentResponse(): CancelablePromise<number | void> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v{api-version}/multiple-tags/response-and-no-content',
+        });
+    }
     /**
      * @returns ModelWithString
      * @throws ApiError

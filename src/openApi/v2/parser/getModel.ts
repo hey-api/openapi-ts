@@ -112,7 +112,7 @@ export const getModel = (
 
     if (definition.allOf?.length) {
         const composition = getModelComposition(openApi, definition, definition.allOf, 'all-of', getModel);
-        model.export = composition.type;
+        model.export = composition.export;
         model.imports.push(...composition.imports);
         model.properties.push(...composition.properties);
         model.enums.push(...composition.enums);

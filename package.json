@@ -1,12 +1,12 @@
 {
-    "name": "openapi-typescript-codegen",
-    "version": "0.27.0",
+    "name": "@nicolas-chaulet/openapi-typescript-codegen",
+    "version": "0.27.8",
     "description": "Library that generates Typescript clients based on the OpenAPI specification.",
     "author": "Ferdi Koomen",
-    "homepage": "https://github.com/ferdikoomen/openapi-typescript-codegen",
+    "homepage": "https://github.com/CanoaPBC/openapi-typescript-codegen",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/ferdikoomen/openapi-typescript-codegen.git"
+        "url": "git+https://github.com/CanoaPBC/openapi-typescript-codegen.git"
     },
     "bugs": {
         "url": "https://github.com/ferdikoomen/openapi-typescript-codegen/issues"

@@ -4,16 +4,17 @@ import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 import { extendEnum } from './extendEnum';
 import { getEnum } from './getEnum';
-import { getModelComposition } from './getModelComposition';
+import { findModelComposition, getModelComposition } from './getModelComposition';
 import { getModelDefault } from './getModelDefault';
-import { getModelProperties } from './getModelProperties';
+import { getAdditionalPropertiesModel, getModelProperties } from './getModelProperties';
 import { getType } from './getType';
 
 export const getModel = (
     openApi: OpenApi,
     definition: OpenApiSchema,
     isDefinition: boolean = false,
-    name: string = ''
+    name: string = '',
+    parentDefinition: OpenApiSchema | null = null
 ): Model => {
     const model: Model = {
         name,
@@ -82,71 +83,36 @@ export const getModel = (
             model.imports.push(...arrayItems.imports);
             model.default = getModelDefault(definition, model);
             return model;
-        } else {
-            const arrayItems = getModel(openApi, definition.items);
-            model.export = 'array';
-            model.type = arrayItems.type;
-            model.base = arrayItems.base;
-            model.template = arrayItems.template;
-            model.link = arrayItems;
-            model.imports.push(...arrayItems.imports);
-            model.default = getModelDefault(definition, model);
-            return model;
         }
-    }
 
-    if (
-        definition.type === 'object' &&
-        (typeof definition.additionalProperties === 'object' || definition.additionalProperties === true)
-    ) {
-        const ap = typeof definition.additionalProperties === 'object' ? definition.additionalProperties : {};
-        if (ap.$ref) {
-            const additionalProperties = getType(ap.$ref);
-            model.export = 'dictionary';
-            model.type = additionalProperties.type;
-            model.base = additionalProperties.base;
-            model.template = additionalProperties.template;
-            model.imports.push(...additionalProperties.imports);
-            model.default = getModelDefault(definition, model);
-            return model;
-        } else {
-            const additionalProperties = getModel(openApi, ap);
-            model.export = 'dictionary';
-            model.type = additionalProperties.type;
-            model.base = additionalProperties.base;
-            model.template = additionalProperties.template;
-            model.link = additionalProperties;
-            model.imports.push(...additionalProperties.imports);
-            model.default = getModelDefault(definition, model);
-            return model;
+        if (definition.items.anyOf && parentDefinition && parentDefinition.type) {
+            const foundComposition = findModelComposition(parentDefinition);
+            if (foundComposition && foundComposition.definitions.some(definition => definition.type !== 'array')) {
+                return getModel(openApi, definition.items);
+            }
         }
-    }
 
-    if (definition.oneOf?.length) {
-        const composition = getModelComposition(openApi, definition, definition.oneOf, 'one-of', getModel);
-        model.export = composition.type;
-        model.imports.push(...composition.imports);
-        model.properties.push(...composition.properties);
-        model.enums.push(...composition.enums);
+        const arrayItems = getModel(openApi, definition.items);
+        model.export = 'array';
+        model.type = arrayItems.type;
+        model.base = arrayItems.base;
+        model.template = arrayItems.template;
+        model.link = arrayItems;
+        model.imports.push(...arrayItems.imports);
+        model.default = getModelDefault(definition, model);
         return model;
     }
 
-    if (definition.anyOf?.length) {
-        const composition = getModelComposition(openApi, definition, definition.anyOf, 'any-of', getModel);
-        model.export = composition.type;
-        model.imports.push(...composition.imports);
-        model.properties.push(...composition.properties);
-        model.enums.push(...composition.enums);
-        return model;
-    }
-
-    if (definition.allOf?.length) {
-        const composition = getModelComposition(openApi, definition, definition.allOf, 'all-of', getModel);
-        model.export = composition.type;
-        model.imports.push(...composition.imports);
-        model.properties.push(...composition.properties);
-        model.enums.push(...composition.enums);
-        return model;
+    const foundComposition = findModelComposition(definition);
+    if (foundComposition) {
+        const composition = getModelComposition({
+            ...foundComposition,
+            definition,
+            getModel,
+            model,
+            openApi,
+        });
+        return { ...model, ...composition };
     }
 
     if (definition.type === 'object') {
@@ -165,18 +131,25 @@ export const getModel = (
                     model.enums.push(modelProperty);
                 }
             });
-            return model;
-        } else {
-            const additionalProperties = getModel(openApi, {});
-            model.export = 'dictionary';
-            model.type = additionalProperties.type;
-            model.base = additionalProperties.base;
-            model.template = additionalProperties.template;
-            model.link = additionalProperties;
-            model.imports.push(...additionalProperties.imports);
-            model.default = getModelDefault(definition, model);
+
+            if (definition.additionalProperties === true) {
+                const modelProperty = getAdditionalPropertiesModel(openApi, definition, getModel, model);
+                model.properties.push(modelProperty);
+            }
+
             return model;
         }
+
+        return getAdditionalPropertiesModel(openApi, definition, getModel, model);
+    }
+
+    if (definition.const !== undefined) {
+        model.export = 'const';
+        const definitionConst = definition.const;
+        const modelConst = typeof definitionConst === 'string' ? `"${definitionConst}"` : `${definitionConst}`;
+        model.type = modelConst;
+        model.base = modelConst;
+        return model;
     }
 
     // If the schema has a type than it can be a basic or generic type.

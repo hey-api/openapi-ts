@@ -10,8 +10,8 @@ export const getOperationRequestBody = (openApi: OpenApi, body: OpenApiRequestBo
     const requestBody: OperationParameter = {
         in: 'body',
         export: 'interface',
-        prop: 'requestBody',
-        name: 'requestBody',
+        prop: body['x-body-name'] ?? 'requestBody',
+        name: body['x-body-name'] ?? 'requestBody',
         type: 'any',
         base: 'any',
         template: null,

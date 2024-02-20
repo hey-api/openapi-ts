@@ -16,6 +16,7 @@ const params = program
     .option('--name <value>', 'Custom client class name')
     .option('--useOptions', 'Use options instead of arguments')
     .option('--useUnionTypes', 'Use union types instead of enums')
+    .option('--autoformat', 'Process generated files with autoformatter', false)
     .option('--exportCore <value>', 'Write core files to disk', true)
     .option('--exportServices <value>', 'Write services to disk', true)
     .option('--exportModels <value>', 'Write models to disk', true)
@@ -30,6 +31,14 @@ const params = program
 
 const OpenAPI = require(path.resolve(__dirname, '../dist/index.js'));
 
+const parseBooleanOrString = value => {
+    try {
+        return JSON.parse(value) === true;
+    } catch (error) {
+        return value;
+    }
+};
+
 if (OpenAPI) {
     OpenAPI.generate({
         input: params.input,
@@ -38,9 +47,10 @@ if (OpenAPI) {
         clientName: params.name,
         useOptions: params.useOptions,
         useUnionTypes: params.useUnionTypes,
+        autoformat: JSON.parse(params.autoformat) === true,
         exportCore: JSON.parse(params.exportCore) === true,
-        exportServices: JSON.parse(params.exportServices) === true,
-        exportModels: JSON.parse(params.exportModels) === true,
+        exportServices: parseBooleanOrString(params.exportServices),
+        exportModels: parseBooleanOrString(params.exportModels),
         exportSchemas: JSON.parse(params.exportSchemas) === true,
         useOperationId: JSON.parse(params.useOperationId) === true,
         indent: params.indent,

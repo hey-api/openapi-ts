@@ -663,6 +663,30 @@
                 }
             }
         },
+        "/api/v{api-version}/multiple-tags/response-and-no-content": {
+            "get": {
+                "tags": [
+                    "Response",
+                    "NoContent"
+                ],
+                "operationId": "CallWithResponseAndNoContentResponse",
+                "responses": {
+                    "200": {
+                        "description": "Response is a simple number",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "number"
+                                }
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
         "/api/v{api-version}/multiple-tags/a": {
             "get": {
                 "tags": [
@@ -1464,11 +1488,46 @@
                     }
                 }
             }
+        },
+        "/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串": {
+            "post": {
+                "tags": [
+                    "Non-Ascii-æøåÆØÅöôêÊ"
+                ],
+                "operationId": "nonAsciiæøåÆØÅöôêÊ字符串",
+                "parameters": [
+                    {
+                        "description": "Dummy input param",
+                        "name": "nonAsciiParamæøåÆØÅöôêÊ",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/NonAsciiStringæøåÆØÅöôêÊ字符串"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
         "requestBodies": {
             "SimpleRequestBody": {
+                "x-body-name": "foo",
                 "description": "A reusable request body",
                 "required": false,
                 "content": {
@@ -1539,6 +1598,10 @@
                 "description": "This is a simple string",
                 "type": "string"
             },
+            "NonAsciiStringæøåÆØÅöôêÊ字符串": {
+                "description": "A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)",
+                "type": "string"
+            },
             "SimpleFile": {
                 "description": "This is a simple file",
                 "type": "file"
@@ -1561,7 +1624,8 @@
                     "Warning",
                     "Error",
                     "'Single Quote'",
-                    "\"Double Quotes\""
+                    "\"Double Quotes\"",
+                    "Non-ascii: øæåôöØÆÅÔÖ字符串"
                 ]
             },
             "EnumWithNumbers": {
@@ -1656,6 +1720,72 @@
                         "bar": {
                             "type": "string"
                         }
+                    }
+                }
+            },
+            "ArrayWithAnyOfProperties": {
+                "description": "This is a simple array with any of properties",
+                "type": "array",
+                "items": {
+                    "anyOf": [
+                        {
+                            "type": "object",
+                            "properties": {
+                                "foo": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        {
+                            "type": "object",
+                            "properties": {
+                                "bar": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    ]
+                }
+            },
+            "AnyOfAnyAndNull": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "anyOf": [
+                            {},
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                }
+            },
+            "AnyOfArrays": {
+                "description": "This is a simple array with any of properties",
+                "type": "object",
+                "properties": {
+                    "results": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "foo": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "bar": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        "type": "array"
                     }
                 }
             },
@@ -1781,7 +1911,8 @@
                         "enum": [
                             "Success",
                             "Warning",
-                            "Error"
+                            "Error",
+                            "ØÆÅ字符串"
                         ]
                     },
                     "statusCode": {
@@ -2068,6 +2199,81 @@
                                 "type": "integer"
                             }
                         ]
+                    }
+                }
+            },
+            "CompositionWithNestedAnyAndTypeNull": {
+                "description": "This is a model with nested 'any of' property with a type null",
+                "type": "object",
+                "properties": {
+                    "propA": {
+                        "type": "object",
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ModelWithDictionary"
+                                        },
+                                        {
+                                            "type": "null"
+                                        }
+                                    ]
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ModelWithArray"
+                                        },
+                                        {
+                                            "type": "null"
+                                        }
+                                    ]
+                                },
+                                "type": "array"
+                            }
+                        ]
+                    }
+                }
+            },
+            "Enum1": {
+                "enum": [
+                    "Bird",
+                    "Dog"
+                ],
+                "type": "string"
+            },
+            "ConstValue": {
+                "type": "string",
+                "const": "ConstValue"
+            },
+            "CompositionWithNestedAnyOfAndNull": {
+                "description": "This is a model with one property with a 'any of' relationship where the options are not $ref",
+                "type": "object",
+                "properties": {
+                    "propA": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "$ref": "#/components/schemas/Enum1"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/ConstValue"
+                                        }
+                                    ]
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Scopes"
                     }
                 }
             },
@@ -2553,6 +2759,60 @@
                 "description": "This is a free-form object with additionalProperties: {}.",
                 "type": "object",
                 "additionalProperties": {}
+            },
+            "ModelWithConst": {
+                "type": "object",
+                "properties": {
+                    "String": {
+                        "const": "String"
+                    },
+                    "number": {
+                        "const": 0
+                    },
+                    "null": {
+                        "const": null
+                    },
+                    "withType": {
+                        "type": "string",
+                        "const": "Some string"
+                    }
+                }
+            },
+            "ModelWithAdditionalPropertiesEqTrue": {
+                "description": "This is a model with one property and additionalProperties: true",
+                "type": "object",
+                "properties": {
+                    "prop": {
+                        "description": "This is a simple string property",
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": true
+            },
+            "NestedAnyOfArraysNullable": {
+                "properties": {
+                    "nullableArray": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "type": "string"
+                                        },
+                                        {
+                                            "type": "boolean"
+                                        }
+                                    ]
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                },
+                "type": "object"
             }
         }
     }
