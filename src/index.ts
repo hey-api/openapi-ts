@@ -42,11 +42,12 @@ export type Options = {
  * @param clientName Custom client class name
  * @param useOptions Use options or arguments functions
  * @param useUnionTypes Use union types instead of enums
+ * @param autoformat Process generated files with autoformatter
  * @param exportCore Generate core client classes
  * @param exportServices Generate services
  * @param exportModels Generate models
  * @param exportSchemas Generate schemas
- * @param ignoreOperationId Ignore operationId
+ * @param useOperationId should the operationId be used when generating operation names
  * @param indent Indentation options (4, 2 or tab)
  * @param postfixServices Service name postfix
  * @param postfixModels Model name postfix
