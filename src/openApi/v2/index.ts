@@ -1,4 +1,5 @@
 import type { Client } from '../../client/interfaces/Client';
+import type { Options } from '../../client/interfaces/Options';
 import type { OpenApi } from './interfaces/OpenApi';
 import { getModels } from './parser/getModels';
 import { getServer } from './parser/getServer';
@@ -9,13 +10,13 @@ import { getServiceVersion } from './parser/getServiceVersion';
  * Parse the OpenAPI specification to a Client model that contains
  * all the models, services and schema's we should output.
  * @param openApi The OpenAPI spec that we have loaded from disk.
- * @param useOperationId should the operationId be used when generating operation names
+ * @param options Options passed to the generate method
  */
-export const parse = (openApi: OpenApi, useOperationId: boolean): Client => {
+export const parse = (openApi: OpenApi, options: Options): Client => {
     const version = getServiceVersion(openApi.info.version);
     const server = getServer(openApi);
     const models = getModels(openApi);
-    const services = getServices(openApi, useOperationId);
+    const services = getServices(openApi, options);
 
     return { version, server, models, services };
 };

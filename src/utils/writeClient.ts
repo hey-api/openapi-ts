@@ -3,6 +3,7 @@ import { createRequire } from 'module';
 import { resolve } from 'path';
 
 import type { Client } from '../client/interfaces/Client';
+import type { Options } from '../client/interfaces/Options';
 import type { HttpClient } from '../HttpClient';
 import type { Indent } from '../Indent';
 import { mkdir, rmdir } from './fileSystem';
@@ -41,7 +42,6 @@ export const writeClient = async (
     httpClient: HttpClient,
     useOptions: boolean,
     useUnionTypes: boolean,
-    autoformat: boolean,
     exportCore: boolean,
     exportServices: boolean | string,
     exportModels: boolean | string,
@@ -49,8 +49,7 @@ export const writeClient = async (
     indent: Indent,
     postfixServices: string,
     postfixModels: string,
-    clientName?: string,
-    request?: string
+    options: Options
 ): Promise<void> => {
     const outputPath = resolve(process.cwd(), output);
     const outputPathCore = resolve(outputPath, 'core');
@@ -75,7 +74,15 @@ export const writeClient = async (
     if (exportCore) {
         await rmdir(outputPathCore);
         await mkdir(outputPathCore);
-        await writeClientCore(client, templates, outputPathCore, httpClient, indent, clientName, request);
+        await writeClientCore(
+            client,
+            templates,
+            outputPathCore,
+            httpClient,
+            indent,
+            options.clientName,
+            options.request
+        );
     }
 
     if (exportServices) {
@@ -90,7 +97,7 @@ export const writeClient = async (
             useOptions,
             indent,
             postfixServices,
-            clientName
+            options.clientName
         );
     }
 
@@ -106,9 +113,9 @@ export const writeClient = async (
         await writeClientModels(client.models, templates, outputPathModels, httpClient, useUnionTypes, indent);
     }
 
-    if (isDefined(clientName)) {
+    if (isDefined(options.clientName)) {
         await mkdir(outputPath);
-        await writeClientClass(client, templates, outputPath, httpClient, clientName, indent, postfixServices);
+        await writeClientClass(client, templates, outputPath, httpClient, options.clientName, indent, postfixServices);
     }
 
     if (exportCore || exportServices || exportSchemas || exportModels) {
@@ -124,11 +131,11 @@ export const writeClient = async (
             exportSchemas,
             postfixServices,
             postfixModels,
-            clientName
+            options.clientName
         );
     }
 
-    if (autoformat) {
+    if (options.autoformat) {
         const pathPackageJson = resolve(process.cwd(), 'package.json');
         const require = createRequire('/');
         const json = require(pathPackageJson);

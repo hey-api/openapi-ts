@@ -1,8 +1,13 @@
-/* eslint-disable */
+import type { Options } from '../../../client/interfaces/Options';
 import { getServices } from './getServices';
 
 describe('getServices', () => {
     it('should create a unnamed service if tags are empty', () => {
+        const options: Options = {
+            input: '',
+            output: '',
+            useOperationId: false,
+        };
         const services = getServices(
             {
                 openapi: '3.0.0',
@@ -26,7 +31,7 @@ describe('getServices', () => {
                     },
                 },
             },
-            false,
+            options
         );
 
         expect(services).toHaveLength(1);
