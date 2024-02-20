@@ -7,7 +7,7 @@ import { getOperationParameters } from './getOperationParameters';
 /**
  * Get the OpenAPI services
  */
-export const getServices = (openApi: OpenApi): Service[] => {
+export const getServices = (openApi: OpenApi, useOperationId: boolean): Service[] => {
     const services = new Map<string, Service>();
     for (const url in openApi.paths) {
         if (openApi.paths.hasOwnProperty(url)) {
@@ -30,7 +30,15 @@ export const getServices = (openApi: OpenApi): Service[] => {
                             const op = path[method]!;
                             const tags = op.tags?.length ? op.tags.filter(unique) : ['Default'];
                             tags.forEach(tag => {
-                                const operation = getOperation(openApi, url, method, tag, op, pathParams);
+                                const operation = getOperation(
+                                    openApi,
+                                    url,
+                                    method,
+                                    tag,
+                                    op,
+                                    pathParams,
+                                    useOperationId
+                                );
 
                                 // If we have already declared a service, then we should fetch that and
                                 // append the new method to it. Otherwise we should create a new service object.

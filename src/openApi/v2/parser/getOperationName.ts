@@ -7,14 +7,19 @@ import sanitizeOperationName from '../../../utils/sanitizeOperationName';
  * This will use the operation ID - if available - and otherwise fallback
  * on a generated name from the URL
  */
-export const getOperationName = (url: string, method: string, operationId?: string): string => {
-    if (operationId) {
+export const getOperationName = (
+    url: string,
+    method: string,
+    useOperationId: boolean,
+    operationId?: string
+): string => {
+    if (useOperationId && operationId) {
         return camelCase(sanitizeOperationName(operationId).trim());
     }
 
     const urlWithoutPlaceholders = url
         .replace(/[^/]*?{api-version}.*?\//g, '')
-        .replace(/{(.*?)}/g, '')
+        .replace(/{(.*?)}/g, 'by-$1')
         .replace(/\//g, '-');
 
     return camelCase(`${method}-${urlWithoutPlaceholders}`);
