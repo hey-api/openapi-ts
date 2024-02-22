@@ -2676,6 +2676,14 @@
                     "patternWithSingleQuotes": {
                         "type": "string",
                         "pattern": "^[a-zA-Z0-9']*$"
+                    },
+                    "patternWithNewline": {
+                        "type": "string",
+                        "pattern": "aaa\nbbb"
+                    },
+                    "patternWithBacktick": {
+                        "type": "string",
+                        "pattern": "aaa`bbb"
                     }
                 }
             },

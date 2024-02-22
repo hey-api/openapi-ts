@@ -104,4 +104,8 @@ export const registerHandlebarHelpers = (root: {
     Handlebars.registerHelper('camelCase', function (value: string): string {
         return camelCase(value);
     });
+
+    Handlebars.registerHelper('escapeNewline', function (value: string): string {
+        return value.replace(/\n/g, '\\n');
+    });
 };
