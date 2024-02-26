@@ -149,4 +149,19 @@ describe('v3.axios', () => {
         })) as Promise<any>;
         expect((result as any).query).toStrictEqual({ parameter: { page: '0', size: '1', sort: 'location' } });
     });
+
+    it.skip('should return result from header in body (old approach)', async () => {
+        const { HeaderService } = require('./generated/v3/axios/index.js');
+        const result = (await HeaderService.callWithResultFromHeader()) as Promise<any>;
+        expect(result).toStrictEqual('foo');
+    });
+
+    it.skip('should return all headers in result (new approach)', async () => {
+        const { HeaderService } = require('./generated/v3/axios/index.js');
+        // TODO: call method with new flag to return whole result
+        const result = (await HeaderService.getCallWithHeadersAndContent('foo')) as Promise<any>;
+        expect((result as any).query).toStrictEqual({ foo: 'foo' });
+        expect((result as any).headers['x-expires-after']).toStrictEqual('Wed, 14 Jun 2017 07:00:00 GMT');
+        expect((result as any).headers['x-rate-limit']).toStrictEqual('10');
+    });
 });

@@ -13,4 +13,5 @@ export interface Operation extends OperationParameters {
     errors: OperationError[];
     results: OperationResponse[];
     responseHeader: string | null;
+    responseHeaders: ReadonlyArray<string> | null;
 }

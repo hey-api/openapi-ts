@@ -47,6 +47,7 @@ export const getOperation = (
         errors: [],
         results: [],
         responseHeader: null,
+        responseHeaders: null,
     };
 
     // Parse the operation parameters (path, query, body, etc).
@@ -76,6 +77,8 @@ export const getOperation = (
         const operationResults = getOperationResults(operationResponses);
         operation.errors = getOperationErrors(operationResponses);
         operation.responseHeader = getOperationResponseHeader(operationResults);
+        const responseHeaders = operationResults.filter(result => result.in === 'header').map(result => result.name);
+        operation.responseHeaders = responseHeaders.length > 0 ? responseHeaders : null;
 
         operationResults.forEach(operationResult => {
             operation.results.push(operationResult);
