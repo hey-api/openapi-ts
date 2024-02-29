@@ -21,7 +21,7 @@ const params = program
     .option('--exportServices <value>', 'Write services to disk', true)
     .option('--exportModels <value>', 'Write models to disk', true)
     .option('--exportSchemas <value>', 'Write schemas to disk', false)
-    .option('--indent <value>', 'Indentation options [4, 2, tabs]', '4')
+    .option('--indent <value>', 'Indentation options [4, 2, tab]', '4')
     .option('--postfixServices <value>', 'Service name postfix', 'Service')
     .option('--useOperationId <value>', 'Use operation id to generate operation names', true)
     .option('--postfixModels <value>', 'Model name postfix')
