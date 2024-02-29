@@ -34,7 +34,7 @@ export namespace {{{name}}} {
 	 * {{{escapeComment description}}}
 	 */
 	{{/if}}
-	export enum {{{name}}} {
+	export enum {{{escapeEnumName name}}} {
 		{{#each enum}}
 		{{{name}}} = {{{value}}},
 		{{/each}}

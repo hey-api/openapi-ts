@@ -29,17 +29,18 @@ const handlebarsPlugin = () => ({
                 preventIndent: true,
                 knownHelpersOnly: true,
                 knownHelpers: {
-                    ifdef: true,
-                    equals: true,
-                    notEquals: true,
+                    camelCase: true,
                     containsSpaces: true,
-                    union: true,
-                    intersection: true,
                     enumerator: true,
+                    equals: true,
                     escapeComment: true,
                     escapeDescription: true,
-                    camelCase: true,
-                    escapeNewline: true
+                    escapeEnumName: true,
+                    escapeNewline: true,
+                    ifdef: true,
+                    intersection: true,
+                    notEquals: true,
+                    union: true,
                 },
             });
             return `export default ${templateSpec};`;
