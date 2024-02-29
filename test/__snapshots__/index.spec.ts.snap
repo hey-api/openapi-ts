@@ -3820,6 +3820,7 @@ export type { ModelWithDuplicateImports } from './models/ModelWithDuplicateImpor
 export type { ModelWithDuplicateProperties } from './models/ModelWithDuplicateProperties';
 export { ModelWithEnum } from './models/ModelWithEnum';
 export type { ModelWithEnumFromDescription } from './models/ModelWithEnumFromDescription';
+export { ModelWithEnumWithHyphen } from './models/ModelWithEnumWithHyphen';
 export type { ModelWithInteger } from './models/ModelWithInteger';
 export type { ModelWithNestedEnums } from './models/ModelWithNestedEnums';
 export type { ModelWithNestedProperties } from './models/ModelWithNestedProperties';
@@ -3902,6 +3903,7 @@ export { $ModelWithDuplicateImports } from './schemas/$ModelWithDuplicateImports
 export { $ModelWithDuplicateProperties } from './schemas/$ModelWithDuplicateProperties';
 export { $ModelWithEnum } from './schemas/$ModelWithEnum';
 export { $ModelWithEnumFromDescription } from './schemas/$ModelWithEnumFromDescription';
+export { $ModelWithEnumWithHyphen } from './schemas/$ModelWithEnumWithHyphen';
 export { $ModelWithInteger } from './schemas/$ModelWithInteger';
 export { $ModelWithNestedEnums } from './schemas/$ModelWithNestedEnums';
 export { $ModelWithNestedProperties } from './schemas/$ModelWithNestedProperties';
@@ -4943,6 +4945,26 @@ export type ModelWithEnumFromDescription = {
      */
     test?: number;
 };
+
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/models/ModelWithEnumWithHyphen.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+/**
+ * This is a model with one enum with escaped name
+ */
+export type ModelWithEnumWithHyphen = {
+    'foo-bar-baz-qux'?: ModelWithEnumWithHyphen.fooBarBazQux;
+};
+export namespace ModelWithEnumWithHyphen {
+    export enum fooBarBazQux {
+        _3_0 = '3.0',
+    }
+}
 
 "
 `;
@@ -6522,6 +6544,22 @@ export const $ModelWithEnumFromDescription = {
         test: {
             type: 'number',
             description: \`Success=1,Warning=2,Error=3\`,
+        },
+    },
+} as const;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/schemas/$ModelWithEnumWithHyphen.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $ModelWithEnumWithHyphen = {
+    description: \`This is a model with one enum with escaped name\`,
+    properties: {
+        'foo-bar-baz-qux': {
+            type: 'Enum',
         },
     },
 } as const;

@@ -57,87 +57,89 @@ export const getModelProperties = (
 ): Model[] => {
     const models: Model[] = [];
     const discriminator = findOneOfParentDiscriminator(openApi, parent);
+
     for (const propertyName in definition.properties) {
         if (definition.properties.hasOwnProperty(propertyName)) {
             const property = definition.properties[propertyName];
             const propertyRequired = !!definition.required?.includes(propertyName);
             const propertyValues: Omit<
                 Model,
-                | 'export'
-                | 'type'
                 | 'base'
-                | 'template'
-                | 'link'
-                | 'isNullable'
-                | 'imports'
                 | 'enum'
                 | 'enums'
+                | 'export'
+                | 'imports'
+                | 'isNullable'
+                | 'link'
                 | 'properties'
+                | 'template'
+                | 'type'
             > = {
-                name: escapeName(propertyName),
-                description: property.description || null,
                 deprecated: property.deprecated === true,
+                description: property.description || null,
+                exclusiveMaximum: property.exclusiveMaximum,
+                exclusiveMinimum: property.exclusiveMinimum,
+                format: property.format,
                 isDefinition: false,
                 isReadOnly: property.readOnly === true,
                 isRequired: propertyRequired,
-                format: property.format,
                 maximum: property.maximum,
-                exclusiveMaximum: property.exclusiveMaximum,
-                minimum: property.minimum,
-                exclusiveMinimum: property.exclusiveMinimum,
-                multipleOf: property.multipleOf,
-                maxLength: property.maxLength,
-                minLength: property.minLength,
                 maxItems: property.maxItems,
-                minItems: property.minItems,
-                uniqueItems: property.uniqueItems,
+                maxLength: property.maxLength,
                 maxProperties: property.maxProperties,
+                minimum: property.minimum,
+                minItems: property.minItems,
+                minLength: property.minLength,
                 minProperties: property.minProperties,
+                multipleOf: property.multipleOf,
+                name: escapeName(propertyName),
                 pattern: getPattern(property.pattern),
+                uniqueItems: property.uniqueItems,
             };
+
             if (parent && discriminator?.propertyName == propertyName) {
                 models.push({
-                    export: 'reference',
-                    type: 'string',
+                    ...propertyValues,
                     base: `'${mapPropertyValue(discriminator, parent)}'`,
-                    template: null,
-                    isNullable: property.nullable === true,
-                    link: null,
-                    imports: [],
                     enum: [],
                     enums: [],
+                    export: 'reference',
+                    imports: [],
+                    isNullable: property.nullable === true,
+                    link: null,
                     properties: [],
-                    ...propertyValues,
+                    template: null,
+                    type: 'string',
                 });
             } else if (property.$ref) {
                 const model = getType(property.$ref);
                 models.push({
-                    export: 'reference',
-                    type: model.type,
+                    ...propertyValues,
                     base: model.base,
-                    template: model.template,
-                    link: null,
-                    isNullable: model.isNullable || property.nullable === true,
-                    imports: model.imports,
                     enum: [],
                     enums: [],
+                    export: 'reference',
+                    imports: model.imports,
+                    isNullable: model.isNullable || property.nullable === true,
+                    link: null,
                     properties: [],
-                    ...propertyValues,
+                    template: model.template,
+                    type: model.type,
                 });
             } else {
                 const model = getModel(openApi, property);
                 models.push({
-                    export: model.export,
-                    type: model.type,
+                    ...propertyValues,
                     base: model.base,
-                    template: model.template,
-                    link: model.link,
-                    isNullable: model.isNullable || property.nullable === true,
-                    imports: model.imports,
                     enum: model.enum,
                     enums: model.enums,
+                    export: model.export,
+                    imports: model.imports,
+                    isNullable: model.isNullable || property.nullable === true,
+                    link: model.link,
                     properties: model.properties,
-                    ...propertyValues,
+                    template: model.template,
+                    type: model.type,
                 });
             }
         }
