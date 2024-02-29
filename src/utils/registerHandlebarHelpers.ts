@@ -7,6 +7,22 @@ import type { Model } from '../client/interfaces/Model';
 import type { HttpClient } from '../HttpClient';
 import { unique } from './unique';
 
+/**
+ * Enums can't contain hyphens in their name. Additionally, name might've been
+ * already escaped, so we need to remove quotes around it.
+ * {@link https://github.com/ferdikoomen/openapi-typescript-codegen/issues/1969}
+ */
+const escapeEnumName = (name?: string) => {
+    if (!name) {
+        return name;
+    }
+    let escapedName = name;
+    if (name.startsWith("'") && name.endsWith("'")) {
+        escapedName = name.slice(1, name.length - 1);
+    }
+    return escapedName.replace(/-([a-z])/gi, ($0, $1: string) => $1.toLocaleUpperCase());
+};
+
 export const registerHandlebarHelpers = (root: {
     httpClient: HttpClient;
     useOptions: boolean;
@@ -79,7 +95,7 @@ export const registerHandlebarHelpers = (root: {
             options: Handlebars.HelperOptions
         ) {
             if (!root.useUnionTypes && parent && name) {
-                return `${parent}.${name}`;
+                return `${parent}.${escapeEnumName(name)}`;
             }
             return options.fn(
                 enumerators
@@ -99,6 +115,10 @@ export const registerHandlebarHelpers = (root: {
 
     Handlebars.registerHelper('escapeDescription', function (value: string): string {
         return value.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\${/g, '\\${');
+    });
+
+    Handlebars.registerHelper('escapeEnumName', function (this: any, name: string | undefined) {
+        return escapeEnumName(name);
     });
 
     Handlebars.registerHelper('camelCase', function (value: string): string {
