@@ -25,7 +25,7 @@ export namespace {{{name}}} {
 	{{/if}}
 	 */
 	{{/ifdef}}
-	export enum {{{name}}} {
+	export enum {{{escapeEnumName name}}} {
 		{{#each enum}}
 		{{{name}}} = {{{value}}},
 		{{/each}}

@@ -11,16 +11,17 @@ describe('registerHandlebarHelpers', () => {
             useUnionTypes: false,
         });
         const helpers = Object.keys(Handlebars.helpers);
-        expect(helpers).toContain('ifdef');
-        expect(helpers).toContain('equals');
-        expect(helpers).toContain('notEquals');
+        expect(helpers).toContain('camelCase');
         expect(helpers).toContain('containsSpaces');
-        expect(helpers).toContain('union');
-        expect(helpers).toContain('intersection');
         expect(helpers).toContain('enumerator');
+        expect(helpers).toContain('equals');
         expect(helpers).toContain('escapeComment');
         expect(helpers).toContain('escapeDescription');
-        expect(helpers).toContain('camelCase');
+        expect(helpers).toContain('escapeEnumName');
         expect(helpers).toContain('escapeNewline');
+        expect(helpers).toContain('ifdef');
+        expect(helpers).toContain('intersection');
+        expect(helpers).toContain('notEquals');
+        expect(helpers).toContain('union');
     });
 });
