@@ -23,5 +23,6 @@ describe('registerHandlebarHelpers', () => {
         expect(helpers).toContain('intersection');
         expect(helpers).toContain('notEquals');
         expect(helpers).toContain('union');
+        expect(helpers).toContain('useDateType');
     });
 });

@@ -45,4 +45,25 @@ describe('v3', () => {
             expect(content).toMatchSnapshot(file);
         });
     });
+
+    it('should generate Date types', async () => {
+        await generate({
+            autoformat: false,
+            exportCore: false,
+            exportModels: '^ModelWithPattern',
+            exportSchemas: true,
+            exportServices: false,
+            httpClient: HttpClient.FETCH,
+            input: './test/spec/v3.json',
+            output: './test/generated/v3_date/',
+            useDateType: true,
+            useOptions: false,
+            useUnionTypes: false,
+        });
+
+        sync('./test/generated/v3_date/**/*.ts').forEach(file => {
+            const content = readFileSync(file, 'utf8').toString();
+            expect(content).toMatchSnapshot(file);
+        });
+    });
 });

@@ -36,25 +36,21 @@ describe('writeClient', () => {
             },
         };
 
-        await writeClient(
-            client,
-            templates,
-            './dist',
-            HttpClient.FETCH,
-            false,
-            false,
-            true,
-            true,
-            true,
-            true,
-            Indent.SPACE_4,
-            'Service',
-            'AppClient',
-            {
-                input: '',
-                output: '',
-            }
-        );
+        await writeClient(client, templates, {
+            exportCore: true,
+            exportModels: true,
+            exportSchemas: true,
+            exportServices: true,
+            indent: Indent.SPACE_4,
+            input: '',
+            output: './dist',
+            httpClient: HttpClient.FETCH,
+            postfixModels: 'AppClient',
+            postfixServices: 'Service',
+            useDateType: false,
+            useOptions: false,
+            useUnionTypes: false,
+        });
 
         expect(rmdir).toBeCalled();
         expect(mkdir).toBeCalled();
