@@ -12,6 +12,7 @@ export interface Options {
     postfixModels?: string;
     postfixServices?: string;
     request?: string;
+    useDateType?: boolean;
     useOperationId?: boolean;
     useOptions?: boolean;
     useUnionTypes?: boolean;

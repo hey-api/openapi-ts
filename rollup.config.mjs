@@ -41,6 +41,7 @@ const handlebarsPlugin = () => ({
                     intersection: true,
                     notEquals: true,
                     union: true,
+                    useDateType: true,
                 },
             });
             return `export default ${templateSpec};`;

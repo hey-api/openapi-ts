@@ -28,6 +28,7 @@ export { Indent } from './Indent';
  * @param exportServices Generate services
  * @param exportModels Generate models
  * @param exportSchemas Generate schemas
+ * @param useDateType Output Date instead of string for the format "date-time" in the models
  * @param useOperationId should the operationId be used when generating operation names
  * @param indent Indentation options (4, 2 or tab)
  * @param postfixServices Service name postfix
@@ -37,16 +38,17 @@ export { Indent } from './Indent';
  */
 export const generate = async (options: Options): Promise<void> => {
     const {
-        httpClient = HttpClient.FETCH,
-        useOptions = false,
-        useUnionTypes = false,
         exportCore = true,
-        exportServices = true,
         exportModels = true,
         exportSchemas = false,
+        exportServices = true,
+        httpClient = HttpClient.FETCH,
         indent = Indent.SPACE_4,
-        postfixServices = 'Service',
         postfixModels = '',
+        postfixServices = 'Service',
+        useDateType = false,
+        useOptions = false,
+        useUnionTypes = false,
         write = true,
     } = options;
     const openApi = isString(options.input) ? await getOpenApiSpec(options.input) : options.input;
@@ -71,27 +73,27 @@ export const generate = async (options: Options): Promise<void> => {
         }
     }
 
-    if (parser) {
-        const client = parser(openApi, options);
-        const clientFinal = postProcessClient(client);
-        if (write) {
-            await writeClient(
-                clientFinal,
-                templates,
-                options.output,
-                httpClient,
-                useOptions,
-                useUnionTypes,
-                exportCore,
-                exportServices,
-                exportModels,
-                exportSchemas,
-                indent,
-                postfixServices,
-                postfixModels,
-                options
-            );
-        }
+    if (!parser) {
+        return;
+    }
+
+    const client = parser(openApi, options);
+    const clientFinal = postProcessClient(client);
+    if (write) {
+        await writeClient(clientFinal, templates, {
+            ...options,
+            exportCore,
+            exportModels,
+            exportSchemas,
+            exportServices,
+            httpClient,
+            indent,
+            postfixModels,
+            postfixServices,
+            useDateType,
+            useOptions,
+            useUnionTypes,
+        });
     }
 };
 
