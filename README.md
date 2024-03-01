@@ -59,6 +59,8 @@ $ openapi --help
     --postfixServices         Service name postfix (default: "Service")
     --postfixModels           Model name postfix
     --request <value>         Path to custom request file
+    --useDateType <value>     Output Date instead of string for the format "date-time" in the models (default: false)
+    --useOperationId <value>  Use operation id to generate operation names (default: true)
     -h, --help                display help for command
 
   Examples

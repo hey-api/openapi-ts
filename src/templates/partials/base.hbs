@@ -5,5 +5,9 @@
 {{~#equals @root.httpClient 'angular'}}Blob{{/equals~}}
 {{~#equals @root.httpClient 'node'}}Blob{{/equals~}}
 {{~else~}}
+{{~#useDateType @root.useDateType format~}}
+Date
+{{~else~}}
 {{{base}}}
+{{~/useDateType~}}
 {{~/equals~}}
