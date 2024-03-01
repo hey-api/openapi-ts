@@ -3186,6 +3186,94 @@ export class TypesService {
 "
 `;
 
+exports[`v3 should generate Date types: test/generated/v3_date/index.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+export type { ModelWithPattern } from './models/ModelWithPattern';
+
+export { $ModelWithPattern } from './schemas/$ModelWithPattern';
+"
+`;
+
+exports[`v3 should generate Date types: test/generated/v3_date/models/ModelWithPattern.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+/**
+ * This is a model that contains a some patterns
+ */
+export type ModelWithPattern = {
+    key: string;
+    name: string;
+    readonly enabled?: boolean;
+    readonly modified?: Date;
+    id?: string;
+    text?: string;
+    patternWithSingleQuotes?: string;
+    patternWithNewline?: string;
+    patternWithBacktick?: string;
+};
+
+"
+`;
+
+exports[`v3 should generate Date types: test/generated/v3_date/schemas/$ModelWithPattern.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $ModelWithPattern = {
+    description: \`This is a model that contains a some patterns\`,
+    properties: {
+        key: {
+            type: 'string',
+            isRequired: true,
+            maxLength: 64,
+            pattern: '^[a-zA-Z0-9_]*$',
+        },
+        name: {
+            type: 'string',
+            isRequired: true,
+            maxLength: 255,
+        },
+        enabled: {
+            type: 'boolean',
+            isReadOnly: true,
+        },
+        modified: {
+            type: 'string',
+            isReadOnly: true,
+            format: 'date-time',
+        },
+        id: {
+            type: 'string',
+            pattern: '^\\\\d{2}-\\\\d{3}-\\\\d{4}$',
+        },
+        text: {
+            type: 'string',
+            pattern: '^\\\\w+$',
+        },
+        patternWithSingleQuotes: {
+            type: 'string',
+            pattern: '^[a-zA-Z0-9\\']*$',
+        },
+        patternWithNewline: {
+            type: 'string',
+            pattern: 'aaa\\nbbb',
+        },
+        patternWithBacktick: {
+            type: 'string',
+            pattern: 'aaa\`bbb',
+        },
+    },
+} as const;
+"
+`;
+
 exports[`v3 should generate: test/generated/v3/core/ApiError.ts 1`] = `
 "/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */

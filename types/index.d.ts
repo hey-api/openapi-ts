@@ -13,21 +13,22 @@ export declare enum Indent {
 }
 
 export type Options = {
-    input: string | Record<string, any>;
-    output: string;
-    httpClient?: HttpClient | 'fetch' | 'xhr' | 'node' | 'axios' | 'angular';
-    clientName?: string;
-    useOptions?: boolean;
-    useUnionTypes?: boolean;
     autoformat?: boolean;
+    clientName?: string;
     exportCore?: boolean;
-    exportServices?: boolean | string;
     exportModels?: boolean | string;
     exportSchemas?: boolean;
+    exportServices?: boolean | string;
+    httpClient?: HttpClient | 'fetch' | 'xhr' | 'node' | 'axios' | 'angular';
     indent?: Indent | '4' | '2' | 'tab';
-    postfixServices?: string;
+    input: string | Record<string, any>;
+    output: string;
     postfixModels?: string;
+    postfixServices?: string;
     request?: string;
+    useDateType?: boolean;
+    useOptions?: boolean;
+    useUnionTypes?: boolean;
     write?: boolean;
 };
 
