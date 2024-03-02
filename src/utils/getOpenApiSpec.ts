@@ -1,4 +1,7 @@
 import RefParser from '@apidevtools/json-schema-ref-parser';
+import { resolve } from 'path';
+
+import { exists } from './fileSystem';
 
 /**
  * Load and parse te open api spec. If the file extension is ".yml" or ".yaml"
@@ -7,5 +10,6 @@ import RefParser from '@apidevtools/json-schema-ref-parser';
  * @param location: Path or url
  */
 export const getOpenApiSpec = async (location: string): Promise<any> => {
-    return await RefParser.bundle(location, location, {});
+    const absolutePathOrUrl = (await exists(location)) ? resolve(location) : location;
+    return await RefParser.bundle(absolutePathOrUrl, absolutePathOrUrl, {});
 };
