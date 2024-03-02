@@ -1,13 +1,13 @@
-import type { Model } from '../../../client/interfaces/Model';
+// import type { Model } from '../../../client/interfaces/Model';
 import type { OperationResponse } from '../../../client/interfaces/OperationResponse';
 
-const areEqual = (a: Model, b: Model): boolean => {
-    const equal = a.type === b.type && a.base === b.base && a.template === b.template;
-    if (equal && a.link && b.link) {
-        return areEqual(a.link, b.link);
-    }
-    return equal;
-};
+// const areEqual = (a: Model, b: Model): boolean => {
+//     const equal = a.type === b.type && a.base === b.base && a.template === b.template;
+//     if (equal && a.link && b.link) {
+//         return areEqual(a.link, b.link);
+//     }
+//     return equal;
+// };
 
 export const getOperationResults = (operationResponses: OperationResponse[]): OperationResponse[] => {
     const operationResults: OperationResponse[] = [];
@@ -20,11 +20,12 @@ export const getOperationResults = (operationResponses: OperationResponse[]): Op
         }
     });
 
-    return operationResults.filter((operationResult, index, arr) => {
-        return (
-            arr.findIndex(item => {
-                return areEqual(item, operationResult);
-            }) === index
-        );
-    });
+    return operationResults;
+    // return operationResults.filter((operationResult, index, arr) => {
+    //     return (
+    //         arr.findIndex(item => {
+    //             return areEqual(item, operationResult);
+    //         }) === index
+    //     );
+    // });
 };

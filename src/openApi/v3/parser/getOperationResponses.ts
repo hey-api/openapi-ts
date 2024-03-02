@@ -18,8 +18,8 @@ export const getOperationResponses = (openApi: OpenApi, responses: OpenApiRespon
             const responseCode = getOperationResponseCode(code);
 
             if (responseCode) {
-                const operationResponse = getOperationResponse(openApi, response, responseCode);
-                operationResponses.push(operationResponse);
+                const responses = getOperationResponse(openApi, response, responseCode);
+                operationResponses.push(...responses);
             }
         }
     }

@@ -67,6 +67,11 @@ const start = async (dir: string) => {
         // the majority of API calls.
         _app.all('/base/api/v1.0/*', (req, res) => {
             setTimeout(() => {
+                // return a bunch of known headers from spec so we can
+                // test they get properly processed
+                res.header('operation-location', 'foo');
+                res.header('X-Expires-After', 'Wed, 14 Jun 2017 07:00:00 GMT');
+                res.header('X-Rate-Limit', '10');
                 res.json({
                     method: req.method,
                     protocol: req.protocol,

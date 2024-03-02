@@ -81,6 +81,7 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions, ax
 			if (!onCancel.isCancelled) {
 				const response = await sendRequest<T>(config, options, url, body, formData, headers, onCancel, axiosClient);
 				const responseBody = getResponseBody(response);
+				{{!-- TODO: ensure `responseHeader` is always falsy under new flag --}}
 				const responseHeader = getResponseHeader(response, options.responseHeader);
 
 				const result: ApiResult = {
@@ -88,11 +89,18 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions, ax
 					ok: isSuccess(response.status),
 					status: response.status,
 					statusText: response.statusText,
+					{{!-- TODO: revert this change to `body` --}}
 					body: responseHeader ?? responseBody,
+					{{!-- body: responseBody, --}}
+					{{!-- TODO: make headers typed so they can be accessed via
+					response.headers['my-header'] and TypeScript won't complain --}}
+					headers: response.headers,
 				};
 
 				catchErrorCodes(options, result);
 
+				{{!-- TODO: ensure whole `result` is returned under new flag --}}
+				{{!-- resolve(result); --}}
 				resolve(result.body);
 			}
 		} catch (error) {

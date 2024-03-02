@@ -138,6 +138,9 @@ export class {{{name}}}{{{@root.postfix}}} {
 			{{#if responseHeader}}
 			responseHeader: '{{{responseHeader}}}',
 			{{/if}}
+			{{#if responseHeaders}}
+			responseHeaders: [{{#each responseHeaders}}'{{{this}}}'{{#unless @last}}, {{/unless}}{{/each}}],
+			{{/if}}
 			{{#if errors}}
 			errors: {
 				{{#each errors}}
