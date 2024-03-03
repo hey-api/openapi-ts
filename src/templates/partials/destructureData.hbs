@@ -1,0 +1,9 @@
+{{#if parameters}}
+{{#if @root.useOptions~}}
+const {
+{{#each parameters}}
+{{{name}}}{{#if default}} = {{{default}}}{{/if}},
+{{/each}}
+} = data;
+{{/if}}
+{{/if}}

@@ -248,10 +248,6 @@ import { CancelablePromise } from './CancelablePromise';
 import type { OnCancel } from './CancelablePromise';
 import type { OpenAPIConfig } from './OpenAPI';
 
-export const isDefined = <T>(value: T | null | undefined): value is Exclude<T, null | undefined> => {
-    return value !== undefined && value !== null;
-};
-
 export const isString = (value: any): value is string => {
     return typeof value === 'string';
 };
@@ -294,7 +290,7 @@ export const getQueryString = (params: Record<string, any>): string => {
     };
 
     const process = (key: string, value: any) => {
-        if (isDefined(value)) {
+        if (value) {
             if (Array.isArray(value)) {
                 value.forEach(v => {
                     process(key, v);
@@ -352,7 +348,7 @@ export const getFormData = (options: ApiRequestOptions): FormData | undefined =>
         };
 
         Object.entries(options.formData)
-            .filter(([_, value]) => isDefined(value))
+            .filter(([_, value]) => value)
             .forEach(([key, value]) => {
                 if (Array.isArray(value)) {
                     value.forEach(v => process(key, v));
@@ -388,7 +384,7 @@ export const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptio
         ...additionalHeaders,
         ...options.headers,
     })
-        .filter(([_, value]) => isDefined(value))
+        .filter(([_, value]) => value)
         .reduce((headers, [key, value]) => ({
             ...headers,
             [key]: String(value),
@@ -3274,6 +3270,153 @@ export const $ModelWithPattern = {
 "
 `;
 
+exports[`v3 should generate optional argument: test/generated/v3_options/index.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+export type { ModelWithString } from './models/ModelWithString';
+
+export { DefaultsService } from './services/DefaultsService';
+"
+`;
+
+exports[`v3 should generate optional argument: test/generated/v3_options/models/ModelWithString.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+/**
+ * This is a model with one string property
+ */
+export type ModelWithString = {
+    /**
+     * This is a simple string property
+     */
+    prop?: string;
+};
+
+"
+`;
+
+exports[`v3 should generate optional argument: test/generated/v3_options/services/DefaultsService.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { ModelWithString } from '../models/ModelWithString';
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+type TDataCallWithDefaultParameters = {
+    parameterString?: string | null,
+    parameterNumber?: number | null,
+    parameterBoolean?: boolean | null,
+    parameterEnum?: 'Success' | 'Warning' | 'Error',
+    parameterModel?: ModelWithString | null,
+}
+type TDataCallWithDefaultOptionalParameters = {
+    parameterString?: string,
+    parameterNumber?: number,
+    parameterBoolean?: boolean,
+    parameterEnum?: 'Success' | 'Warning' | 'Error',
+    parameterModel?: ModelWithString,
+}
+type TDataCallToTestOrderOfParams = {
+    parameterStringWithNoDefault: string,
+    parameterOptionalStringWithDefault?: string,
+    parameterOptionalStringWithEmptyDefault?: string,
+    parameterOptionalStringWithNoDefault?: string,
+    parameterStringWithDefault?: string,
+    parameterStringWithEmptyDefault?: string,
+    parameterStringNullableWithNoDefault?: string | null,
+    parameterStringNullableWithDefault?: string | null,
+}
+export class DefaultsService {
+    /**
+     * @throws ApiError
+     */
+    public static callWithDefaultParameters(data: TDataCallWithDefaultParameters = {}): CancelablePromise<void> {
+        const {
+            parameterString = 'Hello World!',
+            parameterNumber = 123,
+            parameterBoolean = true,
+            parameterEnum = 'Success',
+            parameterModel = {
+                "prop": "Hello World!"
+            },
+        } = data;
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v{api-version}/defaults',
+            query: {
+                'parameterString': parameterString,
+                'parameterNumber': parameterNumber,
+                'parameterBoolean': parameterBoolean,
+                'parameterEnum': parameterEnum,
+                'parameterModel': parameterModel,
+            },
+        });
+    }
+    /**
+     * @throws ApiError
+     */
+    public static callWithDefaultOptionalParameters(data: TDataCallWithDefaultOptionalParameters = {}): CancelablePromise<void> {
+        const {
+            parameterString = 'Hello World!',
+            parameterNumber = 123,
+            parameterBoolean = true,
+            parameterEnum = 'Success',
+            parameterModel = {
+                "prop": "Hello World!"
+            },
+        } = data;
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v{api-version}/defaults',
+            query: {
+                'parameterString': parameterString,
+                'parameterNumber': parameterNumber,
+                'parameterBoolean': parameterBoolean,
+                'parameterEnum': parameterEnum,
+                'parameterModel': parameterModel,
+            },
+        });
+    }
+    /**
+     * @throws ApiError
+     */
+    public static callToTestOrderOfParams(data: TDataCallToTestOrderOfParams): CancelablePromise<void> {
+        const {
+            parameterStringWithNoDefault,
+            parameterOptionalStringWithDefault = 'Hello World!',
+            parameterOptionalStringWithEmptyDefault = '',
+            parameterOptionalStringWithNoDefault,
+            parameterStringWithDefault = 'Hello World!',
+            parameterStringWithEmptyDefault = '',
+            parameterStringNullableWithNoDefault,
+            parameterStringNullableWithDefault = null,
+        } = data;
+        return __request(OpenAPI, {
+            method: 'PUT',
+            url: '/api/v{api-version}/defaults',
+            query: {
+                'parameterOptionalStringWithDefault': parameterOptionalStringWithDefault,
+                'parameterOptionalStringWithEmptyDefault': parameterOptionalStringWithEmptyDefault,
+                'parameterOptionalStringWithNoDefault': parameterOptionalStringWithNoDefault,
+                'parameterStringWithDefault': parameterStringWithDefault,
+                'parameterStringWithEmptyDefault': parameterStringWithEmptyDefault,
+                'parameterStringWithNoDefault': parameterStringWithNoDefault,
+                'parameterStringNullableWithNoDefault': parameterStringNullableWithNoDefault,
+                'parameterStringNullableWithDefault': parameterStringNullableWithDefault,
+            },
+        });
+    }
+}
+"
+`;
+
 exports[`v3 should generate: test/generated/v3/core/ApiError.ts 1`] = `
 "/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
@@ -3522,10 +3665,6 @@ import { CancelablePromise } from './CancelablePromise';
 import type { OnCancel } from './CancelablePromise';
 import type { OpenAPIConfig } from './OpenAPI';
 
-export const isDefined = <T>(value: T | null | undefined): value is Exclude<T, null | undefined> => {
-    return value !== undefined && value !== null;
-};
-
 export const isString = (value: any): value is string => {
     return typeof value === 'string';
 };
@@ -3568,7 +3707,7 @@ export const getQueryString = (params: Record<string, any>): string => {
     };
 
     const process = (key: string, value: any) => {
-        if (isDefined(value)) {
+        if (value) {
             if (Array.isArray(value)) {
                 value.forEach(v => {
                     process(key, v);
@@ -3626,7 +3765,7 @@ export const getFormData = (options: ApiRequestOptions): FormData | undefined =>
         };
 
         Object.entries(options.formData)
-            .filter(([_, value]) => isDefined(value))
+            .filter(([_, value]) => value)
             .forEach(([key, value]) => {
                 if (Array.isArray(value)) {
                     value.forEach(v => process(key, v));
@@ -3662,7 +3801,7 @@ export const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptio
         ...additionalHeaders,
         ...options.headers,
     })
-        .filter(([_, value]) => isDefined(value))
+        .filter(([_, value]) => value)
         .reduce((headers, [key, value]) => ({
             ...headers,
             [key]: String(value),

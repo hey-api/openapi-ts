@@ -1,9 +1,16 @@
+import type { Operation } from '../../../client/interfaces/Operation';
 import type { Options } from '../../../client/interfaces/Options';
 import type { Service } from '../../../client/interfaces/Service';
 import { unique } from '../../../utils/unique';
 import type { OpenApi } from '../interfaces/OpenApi';
 import { getOperation } from './getOperation';
 import { getOperationParameters } from './getOperationParameters';
+
+const getNewService = (operation: Operation): Service => ({
+    imports: [],
+    name: operation.service,
+    operations: [],
+});
 
 /**
  * Get the OpenAPI services
@@ -20,30 +27,21 @@ export const getServices = (openApi: OpenApi, options: Options): Service[] => {
             for (const method in path) {
                 if (path.hasOwnProperty(method)) {
                     switch (method) {
-                        case 'get':
-                        case 'put':
-                        case 'post':
                         case 'delete':
-                        case 'options':
+                        case 'get':
                         case 'head':
+                        case 'options':
                         case 'patch':
+                        case 'post':
+                        case 'put':
                             // Each method contains an OpenAPI operation, we parse the operation
                             const op = path[method]!;
                             const tags = op.tags?.length ? op.tags.filter(unique) : ['Default'];
                             tags.forEach(tag => {
                                 const operation = getOperation(openApi, url, method, tag, op, pathParams, options);
-
-                                // If we have already declared a service, then we should fetch that and
-                                // append the new method to it. Otherwise we should create a new service object.
-                                const service: Service = services.get(operation.service) || {
-                                    name: operation.service,
-                                    operations: [],
-                                    imports: [],
-                                };
-
-                                // Push the operation in the service
-                                service.operations.push(operation);
-                                service.imports.push(...operation.imports);
+                                const service = services.get(operation.service) || getNewService(operation);
+                                service.imports = [...service.imports, ...operation.imports];
+                                service.operations = [...service.operations, operation];
                                 services.set(operation.service, service);
                             });
                             break;

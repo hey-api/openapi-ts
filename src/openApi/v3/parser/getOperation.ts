@@ -24,29 +24,29 @@ export const getOperation = (
     pathParams: OperationParameters,
     options: Options
 ): Operation => {
-    const serviceName = getServiceName(tag);
-    const operationName = getOperationName(url, method, options, op.operationId);
+    const service = getServiceName(tag);
+    const name = getOperationName(url, method, options, op.operationId);
 
     // Create a new operation object for this method.
     const operation: Operation = {
-        service: serviceName,
-        name: operationName,
-        summary: op.summary || null,
+        deprecated: Boolean(op.deprecated),
         description: op.description || null,
-        deprecated: op.deprecated === true,
+        errors: [],
+        imports: [],
         method: method.toUpperCase(),
-        path: url,
+        name,
         parameters: [...pathParams.parameters],
-        parametersPath: [...pathParams.parametersPath],
-        parametersQuery: [...pathParams.parametersQuery],
+        parametersBody: pathParams.parametersBody,
+        parametersCookie: [...pathParams.parametersCookie],
         parametersForm: [...pathParams.parametersForm],
         parametersHeader: [...pathParams.parametersHeader],
-        parametersCookie: [...pathParams.parametersCookie],
-        parametersBody: pathParams.parametersBody,
-        imports: [],
-        errors: [],
-        results: [],
+        parametersPath: [...pathParams.parametersPath],
+        parametersQuery: [...pathParams.parametersQuery],
+        path: url,
         responseHeader: null,
+        results: [],
+        service,
+        summary: op.summary || null,
     };
 
     // Parse the operation parameters (path, query, body, etc).
@@ -54,12 +54,12 @@ export const getOperation = (
         const parameters = getOperationParameters(openApi, op.parameters);
         operation.imports.push(...parameters.imports);
         operation.parameters.push(...parameters.parameters);
-        operation.parametersPath.push(...parameters.parametersPath);
-        operation.parametersQuery.push(...parameters.parametersQuery);
+        operation.parametersBody = parameters.parametersBody;
+        operation.parametersCookie.push(...parameters.parametersCookie);
         operation.parametersForm.push(...parameters.parametersForm);
         operation.parametersHeader.push(...parameters.parametersHeader);
-        operation.parametersCookie.push(...parameters.parametersCookie);
-        operation.parametersBody = parameters.parametersBody;
+        operation.parametersPath.push(...parameters.parametersPath);
+        operation.parametersQuery.push(...parameters.parametersQuery);
     }
 
     if (op.requestBody) {
@@ -78,8 +78,8 @@ export const getOperation = (
         operation.responseHeader = getOperationResponseHeader(operationResults);
 
         operationResults.forEach(operationResult => {
-            operation.results.push(operationResult);
             operation.imports.push(...operationResult.imports);
+            operation.results.push(operationResult);
         });
     }
 
