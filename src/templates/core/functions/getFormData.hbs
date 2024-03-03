@@ -11,7 +11,7 @@ export const getFormData = (options: ApiRequestOptions): FormData | undefined =>
 		};
 
 		Object.entries(options.formData)
-			.filter(([_, value]) => isDefined(value))
+			.filter(([_, value]) => value)
 			.forEach(([key, value]) => {
 				if (Array.isArray(value)) {
 					value.forEach(v => process(key, v));

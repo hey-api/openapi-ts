@@ -4,7 +4,8 @@ import { EOL } from 'os';
 
 import type { Enum } from '../client/interfaces/Enum';
 import type { Model } from '../client/interfaces/Model';
-import type { HttpClient } from '../HttpClient';
+import type { OperationParameter } from '../client/interfaces/OperationParameter';
+import type { Options } from '../client/interfaces/Options';
 import { unique } from './unique';
 
 /**
@@ -23,11 +24,9 @@ const escapeEnumName = (name?: string) => {
     return escapedName.replace(/-([a-z])/gi, ($0, $1: string) => $1.toLocaleUpperCase());
 };
 
-export const registerHandlebarHelpers = (root: {
-    httpClient: HttpClient;
-    useOptions: boolean;
-    useUnionTypes: boolean;
-}): void => {
+export const registerHandlebarHelpers = (
+    root: Pick<Required<Options>, 'httpClient' | 'useOptions' | 'useUnionTypes'>
+): void => {
     Handlebars.registerHelper('camelCase', function (value: string): string {
         return camelCase(value);
     });
@@ -95,6 +94,13 @@ export const registerHandlebarHelpers = (root: {
     });
 
     Handlebars.registerHelper(
+        'ifOperationDataOptional',
+        function (this: any, parameters: OperationParameter[], options: Handlebars.HelperOptions): string {
+            return parameters.every(parameter => !parameter.isRequired) ? options.fn(this) : options.inverse(this);
+        }
+    );
+
+    Handlebars.registerHelper(
         'intersection',
         function (this: any, properties: Model[], parent: string | undefined, options: Handlebars.HelperOptions) {
             const type = Handlebars.partials['type'];
@@ -107,6 +113,10 @@ export const registerHandlebarHelpers = (root: {
             return options.fn(uniqueTypesString);
         }
     );
+
+    Handlebars.registerHelper('nameOperationDataType', function (value: string): string {
+        return camelCase(['TData', value].join('-'), { pascalCase: true });
+    });
 
     Handlebars.registerHelper(
         'notEquals',

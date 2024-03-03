@@ -1,11 +1,10 @@
 import { spawnSync } from 'child_process';
 import { createRequire } from 'module';
-import { resolve } from 'path';
+import Path from 'path';
 
 import type { Client } from '../client/interfaces/Client';
 import type { Options } from '../client/interfaces/Options';
 import { mkdir, rmdir } from './fileSystem';
-import { isDefined } from './isDefined';
 import { isSubDirectory } from './isSubdirectory';
 import type { Templates } from './registerHandlebarTemplates';
 import { writeClientClass } from './writeClientClass';
@@ -55,11 +54,7 @@ export const writeClient = async (
             | 'useUnionTypes'
         >
 ): Promise<void> => {
-    const outputPath = resolve(process.cwd(), options.output);
-    const outputPathCore = resolve(outputPath, 'core');
-    const outputPathModels = resolve(outputPath, 'models');
-    const outputPathSchemas = resolve(outputPath, 'schemas');
-    const outputPathServices = resolve(outputPath, 'services');
+    const outputPath = Path.resolve(process.cwd(), options.output);
 
     if (!isSubDirectory(process.cwd(), options.output)) {
         throw new Error(`Output folder is not a subdirectory of the current working directory`);
@@ -76,6 +71,7 @@ export const writeClient = async (
     }
 
     if (options.exportCore) {
+        const outputPathCore = Path.resolve(outputPath, 'core');
         await rmdir(outputPathCore);
         await mkdir(outputPathCore);
         await writeClientCore(
@@ -90,22 +86,14 @@ export const writeClient = async (
     }
 
     if (options.exportServices) {
+        const outputPathServices = Path.resolve(outputPath, 'services');
         await rmdir(outputPathServices);
         await mkdir(outputPathServices);
-        await writeClientServices(
-            client.services,
-            templates,
-            outputPathServices,
-            options.httpClient,
-            options.useUnionTypes,
-            options.useOptions,
-            options.indent,
-            options.postfixServices,
-            options.clientName
-        );
+        await writeClientServices(client.services, templates, outputPathServices, options);
     }
 
     if (options.exportSchemas) {
+        const outputPathSchemas = Path.resolve(outputPath, 'schemas');
         await rmdir(outputPathSchemas);
         await mkdir(outputPathSchemas);
         await writeClientSchemas(
@@ -119,12 +107,13 @@ export const writeClient = async (
     }
 
     if (options.exportModels) {
+        const outputPathModels = Path.resolve(outputPath, 'models');
         await rmdir(outputPathModels);
         await mkdir(outputPathModels);
         await writeClientModels(client.models, templates, outputPathModels, options);
     }
 
-    if (isDefined(options.clientName)) {
+    if (options.clientName) {
         await mkdir(outputPath);
         await writeClientClass(
             client,
@@ -155,7 +144,7 @@ export const writeClient = async (
     }
 
     if (options.autoformat) {
-        const pathPackageJson = resolve(process.cwd(), 'package.json');
+        const pathPackageJson = Path.resolve(process.cwd(), 'package.json');
         const require = createRequire('/');
         const json = require(pathPackageJson);
         const usesPrettier = [json.dependencies, json.devDependencies].some(deps => Boolean(deps.prettier));

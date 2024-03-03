@@ -3,14 +3,21 @@ import type { OperationParameters } from './OperationParameters';
 import type { OperationResponse } from './OperationResponse';
 
 export interface Operation extends OperationParameters {
-    service: string;
-    name: string;
-    summary: string | null;
-    description: string | null;
     deprecated: boolean;
-    method: string;
-    path: string;
+    description: string | null;
     errors: OperationError[];
-    results: OperationResponse[];
+    method: string;
+    /**
+     * Method name. Methods contain the request logic.
+     */
+    name: string;
+    path: string;
     responseHeader: string | null;
+    results: OperationResponse[];
+    /**
+     * Service name, might be without postfix. This will be used to name the
+     * exported class.
+     */
+    service: string;
+    summary: string | null;
 }
