@@ -1,5 +1,4 @@
 import type { Type } from '../../../client/interfaces/Type';
-import { isDefined } from '../../../utils/isDefined';
 import sanitizeTypeName from '../../../utils/sanitizeTypeName';
 import { getMappedType } from './getMappedType';
 import { stripNamespace } from './stripNamespace';
@@ -26,7 +25,7 @@ export const getType = (type: string | string[] = 'any', format?: string): Type 
         const joinedType = type
             .filter(value => value !== 'null')
             .map(value => getMappedType(value, format))
-            .filter(isDefined)
+            .filter(Boolean)
             .join(' | ');
         result.type = joinedType;
         result.base = joinedType;

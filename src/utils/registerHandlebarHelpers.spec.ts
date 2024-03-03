@@ -20,7 +20,9 @@ describe('registerHandlebarHelpers', () => {
         expect(helpers).toContain('escapeEnumName');
         expect(helpers).toContain('escapeNewline');
         expect(helpers).toContain('ifdef');
+        expect(helpers).toContain('ifOperationDataOptional');
         expect(helpers).toContain('intersection');
+        expect(helpers).toContain('nameOperationDataType');
         expect(helpers).toContain('notEquals');
         expect(helpers).toContain('union');
         expect(helpers).toContain('useDateType');

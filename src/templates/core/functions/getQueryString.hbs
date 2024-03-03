@@ -6,7 +6,7 @@ export const getQueryString = (params: Record<string, any>): string => {
 	};
 
 	const process = (key: string, value: any) => {
-		if (isDefined(value)) {
+		if (value) {
 			if (Array.isArray(value)) {
 				value.forEach(v => {
 					process(key, v);

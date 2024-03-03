@@ -14,7 +14,7 @@ const params = program
     .requiredOption('-o, --output <value>', 'Output directory (required)')
     .option('-c, --client <value>', 'HTTP client to generate [fetch, xhr, node, axios, angular]', 'fetch')
     .option('--name <value>', 'Custom client class name')
-    .option('--useOptions', 'Use options instead of arguments')
+    .option('--useOptions [value]', 'Use options instead of arguments', false)
     .option('--useUnionTypes', 'Use union types instead of enums')
     .option('--autoformat', 'Process generated files with autoformatter', false)
     .option('--exportCore <value>', 'Write core files to disk', true)
@@ -57,7 +57,7 @@ if (OpenAPI) {
         request: params.request,
         useDateType: JSON.parse(params.useDateType) === true,
         useOperationId: JSON.parse(params.useOperationId) === true,
-        useOptions: params.useOptions,
+        useOptions: JSON.parse(params.useOptions) === true,
         useUnionTypes: params.useUnionTypes,
     })
         .then(() => {

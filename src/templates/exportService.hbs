@@ -31,6 +31,18 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 {{/if}}
 
+{{#if @root.useOptions}}
+{{#each operations}}
+{{#if parameters}}
+type {{{nameOperationDataType name}}} = {
+{{#each parameters}}
+{{{name}}}{{>isRequired}}: {{>type}},
+{{/each}}
+}
+{{/if}}
+{{/each}}
+{{/if}}
+
 {{#equals @root.httpClient 'angular'}}
 @Injectable({
   providedIn: 'root',
@@ -73,17 +85,21 @@ export class {{{name}}}{{{@root.postfix}}} {
 	{{#if @root.exportClient}}
 	{{#equals @root.httpClient 'angular'}}
 	public {{{name}}}({{>parameters}}): Observable<{{>result}}> {
+		{{>destructureData}}
 		return this.httpRequest.request({
 	{{else}}
 	public {{{name}}}({{>parameters}}): CancelablePromise<{{>result}}> {
+		{{>destructureData}}
 		return this.httpRequest.request({
 	{{/equals}}
 	{{else}}
 	{{#equals @root.httpClient 'angular'}}
 	public {{{name}}}({{>parameters}}): Observable<{{>result}}> {
+		{{>destructureData}}
 		return __request(OpenAPI, this.http, {
 	{{else}}
 	public static {{{name}}}({{>parameters}}): CancelablePromise<{{>result}}> {
+		{{>destructureData}}
 		return __request(OpenAPI, {
 	{{/equals}}
 	{{/if}}

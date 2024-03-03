@@ -1,3 +1,6 @@
+import { HttpClient } from '../../HttpClient';
+import { Indent } from '../interfaces/Indent';
+
 export interface Options {
     autoformat?: boolean;
     clientName?: string;
