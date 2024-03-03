@@ -11,7 +11,7 @@ export const getHeaders = (config: OpenAPIConfig, options: ApiRequestOptions): O
 				...additionalHeaders,
 				...options.headers,
 			})
-				.filter(([_, value]) => isDefined(value))
+				.filter(([_, value]) => value)
 				.reduce((headers, [key, value]) => ({
 					...headers,
 					[key]: String(value),

@@ -1,8 +1,7 @@
-import { resolve } from 'path';
+import Path from 'path';
 
 import type { Client } from '../client/interfaces/Client';
 import { writeFile } from './fileSystem';
-import { isDefined } from './isDefined';
 import { Templates } from './registerHandlebarTemplates';
 import { sortModelsByName } from './sortModelsByName';
 import { sortServicesByName } from './sortServicesByName';
@@ -49,8 +48,8 @@ export const writeClientIndex = async (
         version: client.version,
         models: sortModelsByName(client.models),
         services: sortServicesByName(client.services),
-        exportClient: isDefined(clientName),
+        exportClient: Boolean(clientName),
     });
 
-    await writeFile(resolve(outputPath, 'index.ts'), templateResult);
+    await writeFile(Path.resolve(outputPath, 'index.ts'), templateResult);
 };
