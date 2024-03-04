@@ -9,51 +9,51 @@ import type { OpenApiXml } from './OpenApiXml';
  * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#schemaObject
  */
 export interface OpenApiSchema extends OpenApiReference, WithEnumExtension {
-    title?: string;
-    multipleOf?: number;
-    maximum?: number;
-    exclusiveMaximum?: boolean;
-    minimum?: number;
-    exclusiveMinimum?: boolean;
-    maxLength?: number;
-    minLength?: number;
-    pattern?: string;
-    maxItems?: number;
-    minItems?: number;
-    uniqueItems?: boolean;
-    maxProperties?: number;
-    minProperties?: number;
-    required?: string[];
-    enum?: (string | number)[];
-    type?: string | string[];
-    const?: string | number | boolean | null;
-    allOf?: OpenApiSchema[];
-    oneOf?: OpenApiSchema[];
-    anyOf?: OpenApiSchema[];
-    not?: OpenApiSchema[];
-    items?: OpenApiSchema;
-    properties?: Dictionary<OpenApiSchema>;
     additionalProperties?: boolean | OpenApiSchema;
+    allOf?: OpenApiSchema[];
+    anyOf?: OpenApiSchema[];
+    const?: string | number | boolean | null;
+    default?: any;
+    deprecated?: boolean;
     description?: string;
+    discriminator?: OpenApiDiscriminator;
+    enum?: (string | number)[];
+    example?: any;
+    exclusiveMaximum?: boolean;
+    exclusiveMinimum?: boolean;
+    externalDocs?: OpenApiExternalDocs;
     format?:
-        | 'int32'
-        | 'int64'
-        | 'float'
-        | 'double'
-        | 'string'
+        | 'binary'
         | 'boolean'
         | 'byte'
-        | 'binary'
-        | 'date'
         | 'date-time'
-        | 'password';
-    default?: any;
+        | 'date'
+        | 'double'
+        | 'float'
+        | 'int32'
+        | 'int64'
+        | 'password'
+        | 'string';
+    items?: OpenApiSchema;
+    maximum?: number;
+    maxItems?: number;
+    maxLength?: number;
+    maxProperties?: number;
+    minimum?: number;
+    minItems?: number;
+    minLength?: number;
+    minProperties?: number;
+    multipleOf?: number;
+    not?: OpenApiSchema[];
     nullable?: boolean;
-    discriminator?: OpenApiDiscriminator;
+    oneOf?: OpenApiSchema[];
+    pattern?: string;
+    properties?: Dictionary<OpenApiSchema>;
     readOnly?: boolean;
+    required?: string[];
+    title?: string;
+    type?: string | string[];
+    uniqueItems?: boolean;
     writeOnly?: boolean;
     xml?: OpenApiXml;
-    externalDocs?: OpenApiExternalDocs;
-    example?: any;
-    deprecated?: boolean;
 }
