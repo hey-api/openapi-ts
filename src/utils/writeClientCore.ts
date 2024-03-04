@@ -48,6 +48,7 @@ export const writeClientCore = async (
         i(templates.core.cancelablePromise(context), indent)
     );
     await writeFile(Path.resolve(outputPath, 'request.ts'), i(templates.core.request(context), indent));
+    await writeFile(Path.resolve(outputPath, 'types.ts'), i(templates.core.types(context), indent));
 
     if (Boolean(clientName)) {
         await writeFile(

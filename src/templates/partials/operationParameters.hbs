@@ -1,0 +1,10 @@
+{{#if @root.useOptions~}}
+data: {{#if parameters}}{{{nameOperationDataType name}}} & {{/if}}TConfig<T>{{#ifOperationDataOptional parameters}} = {}{{/ifOperationDataOptional}}
+{{~else}}
+{{#if parameters}}
+
+{{#each parameters}}
+{{{name}}}{{>isRequired}}: {{>type}}{{#if default}} = {{{default}}}{{/if}},
+{{/each}}
+{{/if}}
+{{/if}}
