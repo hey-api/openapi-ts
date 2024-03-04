@@ -1,30 +1,47 @@
 {{>header}}
 
 import type { ApiRequestOptions } from './ApiRequestOptions';
+import type { TConfig, TResult } from './types';
 
 type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
 type Headers = Record<string, string>;
 
 export type OpenAPIConfig = {
 	BASE: string;
-	VERSION: string;
-	WITH_CREDENTIALS: boolean;
 	CREDENTIALS: 'include' | 'omit' | 'same-origin';
+	ENCODE_PATH?: ((path: string) => string) | undefined;
+	HEADERS?: Headers | Resolver<Headers> | undefined;
+	PASSWORD?: string | Resolver<string> | undefined;
+	RESULT?: TResult;
 	TOKEN?: string | Resolver<string> | undefined;
 	USERNAME?: string | Resolver<string> | undefined;
-	PASSWORD?: string | Resolver<string> | undefined;
-	HEADERS?: Headers | Resolver<Headers> | undefined;
-	ENCODE_PATH?: ((path: string) => string) | undefined;
+	VERSION: string;
+	WITH_CREDENTIALS: boolean;
 };
 
 export const OpenAPI: OpenAPIConfig = {
 	BASE: '{{{server}}}',
-	VERSION: '{{{version}}}',
-	WITH_CREDENTIALS: false,
 	CREDENTIALS: 'include',
+	ENCODE_PATH: undefined,
+	HEADERS: undefined,
+	PASSWORD: undefined,
+	RESULT: 'body',
 	TOKEN: undefined,
 	USERNAME: undefined,
-	PASSWORD: undefined,
-	HEADERS: undefined,
-	ENCODE_PATH: undefined,
+	VERSION: '{{{version}}}',
+	WITH_CREDENTIALS: false,
+};
+
+export const mergeOpenApiConfig = <T extends TResult>(config: OpenAPIConfig, overrides: TConfig<T>) => {
+	const merged = { ...config };
+	Object.entries(overrides)
+		.filter(([key]) => key.startsWith('_'))
+		.forEach(([key, value]) => {
+			const k = key.slice(1).toLocaleUpperCase() as keyof typeof merged;
+			if (merged.hasOwnProperty(k)) {
+				// @ts-ignore
+				merged[k] = value;
+			}
+		});
+	return merged;
 };

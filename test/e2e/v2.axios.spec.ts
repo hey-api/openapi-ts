@@ -36,3 +36,38 @@ describe('v2.axios', () => {
         expect(result).toBeDefined();
     });
 });
+
+describe('v2.axios useOptions', () => {
+    beforeAll(async () => {
+        cleanup('v2/axios');
+        await generateClient('v2/axios', 'v2', 'axios', true);
+        compileWithTypescript('v2/axios');
+        await server.start('v2/axios');
+    }, 30000);
+
+    afterAll(async () => {
+        await server.stop();
+    });
+
+    it('returns result body by default', async () => {
+        const { SimpleService } = require('./generated/v2/axios/index.js');
+        const result = await SimpleService.getCallWithoutParametersAndResponse();
+        expect(result.body).toBeUndefined();
+    });
+
+    it('returns result body', async () => {
+        const { SimpleService } = require('./generated/v2/axios/index.js');
+        const result = await SimpleService.getCallWithoutParametersAndResponse({
+            _result: 'body',
+        });
+        expect(result.body).toBeUndefined();
+    });
+
+    it('returns raw result', async () => {
+        const { SimpleService } = require('./generated/v2/axios/index.js');
+        const result = await SimpleService.getCallWithoutParametersAndResponse({
+            _result: 'raw',
+        });
+        expect(result.body).not.toBeUndefined();
+    });
+});

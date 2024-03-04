@@ -27,10 +27,13 @@ import { BaseHttpRequest } from '../core/BaseHttpRequest';
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
 {{/equals}}
 {{else}}
+{{#if @root.useOptions}}
+import { mergeOpenApiConfig, OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+import type { TApiResponse, TConfig, TResult } from '../core/types';
+{{else}}
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
-{{#if @root.useOptions}}
-import type { TApiResponse, TConfig, TResult } from '../core/types';
 {{/if}}
 {{/if}}
 
@@ -99,11 +102,11 @@ export class {{{name}}}{{{@root.postfix}}} {
 	{{#equals @root.httpClient 'angular'}}
 	public {{{name}}}{{>operationTypes}}({{>operationParameters}}): Observable<{{>operationResult}}> {
 		{{>destructureData}}
-		return __request(OpenAPI, this.http, {
+		return __request({{>requestConfig}}, this.http, {
 	{{else}}
 	public static {{{name}}}{{>operationTypes}}({{>operationParameters}}): CancelablePromise<{{>operationResult}}> {
 		{{>destructureData}}
-		return __request(OpenAPI, {
+		return __request({{>requestConfig}}, {
 	{{/equals}}
 	{{/if}}
 			method: '{{{method}}}',

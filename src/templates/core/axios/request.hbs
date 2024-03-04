@@ -90,7 +90,7 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions, ax
 
 				catchErrorCodes(options, result);
 
-				resolve(result.body);
+				resolve(config.RESULT === 'raw' ? result : result.body);
 			}
 		} catch (error) {
 			reject(error);
