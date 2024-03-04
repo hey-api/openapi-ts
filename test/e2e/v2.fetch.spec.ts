@@ -45,3 +45,48 @@ describe('v2.fetch', () => {
         expect(result).toBeDefined();
     });
 });
+
+describe('v2.fetch useOptions', () => {
+    beforeAll(async () => {
+        cleanup('v2/fetch');
+        await generateClient('v2/fetch', 'v2', 'fetch', true);
+        copyAsset('index.html', 'v2/fetch/index.html');
+        copyAsset('main.ts', 'v2/fetch/main.ts');
+        compileWithTypescript('v2/fetch');
+        await server.start('v2/fetch');
+        await browser.start();
+    }, 30000);
+
+    afterAll(async () => {
+        await browser.stop();
+        await server.stop();
+    });
+
+    it('returns result body by default', async () => {
+        const result = await browser.evaluate(async () => {
+            const { SimpleService } = (window as any).api;
+            return await SimpleService.getCallWithoutParametersAndResponse();
+        });
+        expect(result.body).toBeUndefined();
+    });
+
+    it('returns result body', async () => {
+        const result = await browser.evaluate(async () => {
+            const { SimpleService } = (window as any).api;
+            return await SimpleService.getCallWithoutParametersAndResponse({
+                _result: 'body',
+            });
+        });
+        expect(result.body).toBeUndefined();
+    });
+
+    it('returns raw result', async () => {
+        const result = await browser.evaluate(async () => {
+            const { SimpleService } = (window as any).api;
+            return await SimpleService.getCallWithoutParametersAndResponse({
+                _result: 'raw',
+            });
+        });
+        expect(result.body).not.toBeUndefined();
+    });
+});

@@ -51,3 +51,38 @@ describe('v2.node', () => {
         expect(error).toContain('Request aborted');
     });
 });
+
+describe('v2.node useOptions', () => {
+    beforeAll(async () => {
+        cleanup('v2/node');
+        await generateClient('v2/node', 'v2', 'node', true);
+        compileWithTypescript('v2/node');
+        await server.start('v2/node');
+    }, 30000);
+
+    afterAll(async () => {
+        await server.stop();
+    });
+
+    it('returns result body by default', async () => {
+        const { SimpleService } = require('./generated/v2/node/index.js');
+        const result = await SimpleService.getCallWithoutParametersAndResponse();
+        expect(result.body).toBeUndefined();
+    });
+
+    it('returns result body', async () => {
+        const { SimpleService } = require('./generated/v2/node/index.js');
+        const result = await SimpleService.getCallWithoutParametersAndResponse({
+            _result: 'body',
+        });
+        expect(result.body).toBeUndefined();
+    });
+
+    it('returns raw result', async () => {
+        const { SimpleService } = require('./generated/v2/node/index.js');
+        const result = await SimpleService.getCallWithoutParametersAndResponse({
+            _result: 'raw',
+        });
+        expect(result.body).not.toBeUndefined();
+    });
+});

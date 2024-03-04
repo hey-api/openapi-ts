@@ -180,3 +180,48 @@ describe('v3.babel', () => {
         expect(result.query).toStrictEqual({ parameter: { page: '0', size: '1', sort: 'location' } });
     });
 });
+
+describe('v3.babel useOptions', () => {
+    beforeAll(async () => {
+        cleanup('v3/babel');
+        await generateClient('v3/babel', 'v3', 'fetch', true, true);
+        copyAsset('index.html', 'v3/babel/index.html');
+        copyAsset('main.ts', 'v3/babel/main.ts');
+        compileWithBabel('v3/babel');
+        await server.start('v3/babel');
+        await browser.start();
+    }, 30000);
+
+    afterAll(async () => {
+        await browser.stop();
+        await server.stop();
+    });
+
+    it('returns result body by default', async () => {
+        const result = await browser.evaluate(async () => {
+            const { SimpleService } = (window as any).api;
+            return await SimpleService.getCallWithoutParametersAndResponse();
+        });
+        expect(result.body).toBeUndefined();
+    });
+
+    it('returns result body', async () => {
+        const result = await browser.evaluate(async () => {
+            const { SimpleService } = (window as any).api;
+            return await SimpleService.getCallWithoutParametersAndResponse({
+                _result: 'body',
+            });
+        });
+        expect(result.body).toBeUndefined();
+    });
+
+    it('returns raw result', async () => {
+        const result = await browser.evaluate(async () => {
+            const { SimpleService } = (window as any).api;
+            return await SimpleService.getCallWithoutParametersAndResponse({
+                _result: 'raw',
+            });
+        });
+        expect(result.body).not.toBeUndefined();
+    });
+});

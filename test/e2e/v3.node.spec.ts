@@ -150,3 +150,38 @@ describe('v3.node', () => {
         expect((result as any).query).toStrictEqual({ parameter: { page: '0', size: '1', sort: 'location' } });
     });
 });
+
+describe('v3.node useOptions', () => {
+    beforeAll(async () => {
+        cleanup('v3/node');
+        await generateClient('v3/node', 'v3', 'node', true);
+        compileWithTypescript('v3/node');
+        await server.start('v3/node');
+    }, 30000);
+
+    afterAll(async () => {
+        await server.stop();
+    });
+
+    it('returns result body by default', async () => {
+        const { SimpleService } = require('./generated/v3/node/index.js');
+        const result = await SimpleService.getCallWithoutParametersAndResponse();
+        expect(result.body).toBeUndefined();
+    });
+
+    it('returns result body', async () => {
+        const { SimpleService } = require('./generated/v3/node/index.js');
+        const result = await SimpleService.getCallWithoutParametersAndResponse({
+            _result: 'body',
+        });
+        expect(result.body).toBeUndefined();
+    });
+
+    it('returns raw result', async () => {
+        const { SimpleService } = require('./generated/v3/node/index.js');
+        const result = await SimpleService.getCallWithoutParametersAndResponse({
+            _result: 'raw',
+        });
+        expect(result.body).not.toBeUndefined();
+    });
+});
