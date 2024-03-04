@@ -70,7 +70,7 @@ describe('v3', () => {
     it('should generate optional argument', async () => {
         await generate({
             autoformat: false,
-            exportCore: false,
+            exportCore: true,
             exportModels: '^ModelWithString',
             exportSchemas: false,
             exportServices: '^Defaults',

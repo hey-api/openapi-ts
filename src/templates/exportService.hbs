@@ -29,6 +29,9 @@ import type { BaseHttpRequest } from '../core/BaseHttpRequest';
 {{else}}
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
+{{#if @root.useOptions}}
+import type { TApiResponse, TConfig, TResult } from '../core/types';
+{{/if}}
 {{/if}}
 
 {{#if @root.useOptions}}
@@ -84,21 +87,21 @@ export class {{{name}}}{{{@root.postfix}}} {
 	 */
 	{{#if @root.exportClient}}
 	{{#equals @root.httpClient 'angular'}}
-	public {{{name}}}({{>parameters}}): Observable<{{>result}}> {
+	public {{{name}}}{{>operationTypes}}({{>operationParameters}}): Observable<{{>operationResult}}> {
 		{{>destructureData}}
 		return this.httpRequest.request({
 	{{else}}
-	public {{{name}}}({{>parameters}}): CancelablePromise<{{>result}}> {
+	public {{{name}}}{{>operationTypes}}({{>operationParameters}}): CancelablePromise<{{>operationResult}}> {
 		{{>destructureData}}
 		return this.httpRequest.request({
 	{{/equals}}
 	{{else}}
 	{{#equals @root.httpClient 'angular'}}
-	public {{{name}}}({{>parameters}}): Observable<{{>result}}> {
+	public {{{name}}}{{>operationTypes}}({{>operationParameters}}): Observable<{{>operationResult}}> {
 		{{>destructureData}}
 		return __request(OpenAPI, this.http, {
 	{{else}}
-	public static {{{name}}}({{>parameters}}): CancelablePromise<{{>result}}> {
+	public static {{{name}}}{{>operationTypes}}({{>operationParameters}}): CancelablePromise<{{>operationResult}}> {
 		{{>destructureData}}
 		return __request(OpenAPI, {
 	{{/equals}}
