@@ -171,3 +171,48 @@ describe('v3.xhr', () => {
         expect(result.query).toStrictEqual({ parameter: { page: '0', size: '1', sort: 'location' } });
     });
 });
+
+describe('v3.xhr useOptions', () => {
+    beforeAll(async () => {
+        cleanup('v3/xhr');
+        await generateClient('v3/xhr', 'v3', 'xhr', true);
+        copyAsset('index.html', 'v3/xhr/index.html');
+        copyAsset('main.ts', 'v3/xhr/main.ts');
+        compileWithTypescript('v3/xhr');
+        await server.start('v3/xhr');
+        await browser.start();
+    }, 30000);
+
+    afterAll(async () => {
+        await browser.stop();
+        await server.stop();
+    });
+
+    it('returns result body by default', async () => {
+        const result = await browser.evaluate(async () => {
+            const { SimpleService } = (window as any).api;
+            return await SimpleService.getCallWithoutParametersAndResponse();
+        });
+        expect(result.body).toBeUndefined();
+    });
+
+    it('returns result body', async () => {
+        const result = await browser.evaluate(async () => {
+            const { SimpleService } = (window as any).api;
+            return await SimpleService.getCallWithoutParametersAndResponse({
+                _result: 'body',
+            });
+        });
+        expect(result.body).toBeUndefined();
+    });
+
+    it('returns raw result', async () => {
+        const result = await browser.evaluate(async () => {
+            const { SimpleService } = (window as any).api;
+            return await SimpleService.getCallWithoutParametersAndResponse({
+                _result: 'raw',
+            });
+        });
+        expect(result.body).not.toBeUndefined();
+    });
+});

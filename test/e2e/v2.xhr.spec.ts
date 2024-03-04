@@ -45,3 +45,48 @@ describe('v2.xhr', () => {
         expect(result).toBeDefined();
     });
 });
+
+describe('v2.xhr useOptions', () => {
+    beforeAll(async () => {
+        cleanup('v2/xhr');
+        await generateClient('v2/xhr', 'v2', 'xhr', true);
+        copyAsset('index.html', 'v2/xhr/index.html');
+        copyAsset('main.ts', 'v2/xhr/main.ts');
+        compileWithTypescript('v2/xhr');
+        await server.start('v2/xhr');
+        await browser.start();
+    }, 30000);
+
+    afterAll(async () => {
+        await browser.stop();
+        await server.stop();
+    });
+
+    it('returns result body by default', async () => {
+        const result = await browser.evaluate(async () => {
+            const { SimpleService } = (window as any).api;
+            return await SimpleService.getCallWithoutParametersAndResponse();
+        });
+        expect(result.body).toBeUndefined();
+    });
+
+    it('returns result body', async () => {
+        const result = await browser.evaluate(async () => {
+            const { SimpleService } = (window as any).api;
+            return await SimpleService.getCallWithoutParametersAndResponse({
+                _result: 'body',
+            });
+        });
+        expect(result.body).toBeUndefined();
+    });
+
+    it('returns raw result', async () => {
+        const result = await browser.evaluate(async () => {
+            const { SimpleService } = (window as any).api;
+            return await SimpleService.getCallWithoutParametersAndResponse({
+                _result: 'raw',
+            });
+        });
+        expect(result.body).not.toBeUndefined();
+    });
+});

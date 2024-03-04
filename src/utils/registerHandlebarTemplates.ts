@@ -69,6 +69,7 @@ import partialIsRequired from '../templates/partials/isRequired.hbs';
 import partialOperationParameters from '../templates/partials/operationParameters.hbs';
 import partialOperationResult from '../templates/partials/operationResult.hbs';
 import partialOperationTypes from '../templates/partials/operationTypes.hbs';
+import partialRequestConfig from '../templates/partials/requestConfig.hbs';
 import partialSchema from '../templates/partials/schema.hbs';
 import partialSchemaArray from '../templates/partials/schemaArray.hbs';
 import partialSchemaComposition from '../templates/partials/schemaComposition.hbs';
@@ -153,6 +154,7 @@ export const registerHandlebarTemplates = (
     Handlebars.registerPartial('operationParameters', Handlebars.template(partialOperationParameters));
     Handlebars.registerPartial('operationResult', Handlebars.template(partialOperationResult));
     Handlebars.registerPartial('operationTypes', Handlebars.template(partialOperationTypes));
+    Handlebars.registerPartial('requestConfig', Handlebars.template(partialRequestConfig));
     Handlebars.registerPartial('schema', Handlebars.template(partialSchema));
     Handlebars.registerPartial('schemaArray', Handlebars.template(partialSchemaArray));
     Handlebars.registerPartial('schemaComposition', Handlebars.template(partialSchemaComposition));
