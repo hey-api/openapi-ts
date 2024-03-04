@@ -99,21 +99,21 @@ export const getModelComposition = ({
             });
         } else {
             composition.properties.push({
-                name: 'properties',
-                export: 'interface',
-                type: 'any',
                 base: 'any',
-                template: null,
-                link: null,
                 description: '',
-                isDefinition: false,
-                isReadOnly: false,
-                isNullable: false,
-                isRequired: false,
-                imports: [],
                 enum: [],
                 enums: [],
+                export: 'interface',
+                imports: [],
+                isDefinition: false,
+                isNullable: false,
+                isReadOnly: false,
+                isRequired: false,
+                link: null,
+                name: 'properties',
                 properties,
+                template: null,
+                type: 'any',
             });
         }
     }

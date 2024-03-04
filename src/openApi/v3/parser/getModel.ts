@@ -17,45 +17,45 @@ export const getModel = (
     parentDefinition: OpenApiSchema | null = null
 ): Model => {
     const model: Model = {
-        name,
-        export: 'interface',
-        type: 'any',
         base: 'any',
-        template: null,
-        link: null,
+        deprecated: Boolean(definition.deprecated),
         description: definition.description || null,
-        deprecated: definition.deprecated === true,
-        isDefinition,
-        isReadOnly: definition.readOnly === true,
-        isNullable: definition.nullable === true,
-        isRequired: false,
-        format: definition.format,
-        maximum: definition.maximum,
-        exclusiveMaximum: definition.exclusiveMaximum,
-        minimum: definition.minimum,
-        exclusiveMinimum: definition.exclusiveMinimum,
-        multipleOf: definition.multipleOf,
-        maxLength: definition.maxLength,
-        minLength: definition.minLength,
-        maxItems: definition.maxItems,
-        minItems: definition.minItems,
-        uniqueItems: definition.uniqueItems,
-        maxProperties: definition.maxProperties,
-        minProperties: definition.minProperties,
-        pattern: getPattern(definition.pattern),
-        imports: [],
         enum: [],
         enums: [],
+        exclusiveMaximum: definition.exclusiveMaximum,
+        exclusiveMinimum: definition.exclusiveMinimum,
+        export: 'interface',
+        format: definition.format,
+        imports: [],
+        isDefinition,
+        isNullable: definition.nullable === true,
+        isReadOnly: definition.readOnly === true,
+        isRequired: false,
+        link: null,
+        maximum: definition.maximum,
+        maxItems: definition.maxItems,
+        maxLength: definition.maxLength,
+        maxProperties: definition.maxProperties,
+        minimum: definition.minimum,
+        minItems: definition.minItems,
+        minLength: definition.minLength,
+        minProperties: definition.minProperties,
+        multipleOf: definition.multipleOf,
+        name,
+        pattern: getPattern(definition.pattern),
         properties: [],
+        template: null,
+        type: 'any',
+        uniqueItems: definition.uniqueItems,
     };
 
     if (definition.$ref) {
         const definitionRef = getType(definition.$ref);
-        model.export = 'reference';
-        model.type = definitionRef.type;
         model.base = definitionRef.base;
-        model.template = definitionRef.template;
+        model.export = 'reference';
         model.imports.push(...definitionRef.imports);
+        model.template = definitionRef.template;
+        model.type = definitionRef.type;
         model.default = getModelDefault(definition, model);
         return model;
     }
@@ -64,10 +64,10 @@ export const getModel = (
         const enumerators = getEnum(definition.enum);
         const extendedEnumerators = extendEnum(enumerators, definition);
         if (extendedEnumerators.length) {
-            model.export = 'enum';
-            model.type = 'string';
             model.base = 'string';
             model.enum.push(...extendedEnumerators);
+            model.export = 'enum';
+            model.type = 'string';
             model.default = getModelDefault(definition, model);
             return model;
         }
@@ -76,11 +76,11 @@ export const getModel = (
     if (definition.type === 'array' && definition.items) {
         if (definition.items.$ref) {
             const arrayItems = getType(definition.items.$ref);
-            model.export = 'array';
-            model.type = arrayItems.type;
             model.base = arrayItems.base;
-            model.template = arrayItems.template;
+            model.export = 'array';
             model.imports.push(...arrayItems.imports);
+            model.template = arrayItems.template;
+            model.type = arrayItems.type;
             model.default = getModelDefault(definition, model);
             return model;
         }
@@ -93,12 +93,12 @@ export const getModel = (
         }
 
         const arrayItems = getModel(openApi, definition.items);
-        model.export = 'array';
-        model.type = arrayItems.type;
         model.base = arrayItems.base;
-        model.template = arrayItems.template;
-        model.link = arrayItems;
+        model.export = 'array';
         model.imports.push(...arrayItems.imports);
+        model.link = arrayItems;
+        model.template = arrayItems.template;
+        model.type = arrayItems.type;
         model.default = getModelDefault(definition, model);
         return model;
     }
@@ -117,15 +117,15 @@ export const getModel = (
 
     if (definition.type === 'object') {
         if (definition.properties) {
+            model.base = 'any';
             model.export = 'interface';
             model.type = 'any';
-            model.base = 'any';
             model.default = getModelDefault(definition, model);
 
             const modelProperties = getModelProperties(openApi, definition, getModel, model);
             modelProperties.forEach(modelProperty => {
-                model.imports.push(...modelProperty.imports);
                 model.enums.push(...modelProperty.enums);
+                model.imports.push(...modelProperty.imports);
                 model.properties.push(modelProperty);
                 if (modelProperty.export === 'enum') {
                     model.enums.push(modelProperty);
@@ -144,23 +144,23 @@ export const getModel = (
     }
 
     if (definition.const !== undefined) {
-        model.export = 'const';
         const definitionConst = definition.const;
         const modelConst = typeof definitionConst === 'string' ? `"${definitionConst}"` : `${definitionConst}`;
-        model.type = modelConst;
         model.base = modelConst;
+        model.export = 'const';
+        model.type = modelConst;
         return model;
     }
 
     // If the schema has a type than it can be a basic or generic type.
     if (definition.type) {
         const definitionType = getType(definition.type, definition.format);
-        model.export = 'generic';
-        model.type = definitionType.type;
         model.base = definitionType.base;
-        model.template = definitionType.template;
-        model.isNullable = definitionType.isNullable || model.isNullable;
+        model.export = 'generic';
         model.imports.push(...definitionType.imports);
+        model.isNullable = definitionType.isNullable || model.isNullable;
+        model.template = definitionType.template;
+        model.type = definitionType.type;
         model.default = getModelDefault(definition, model);
         return model;
     }
