@@ -206,32 +206,49 @@ exports[`v2 should generate: test/generated/v2/core/OpenAPI.ts 1`] = `
 /* tslint:disable */
 /* eslint-disable */
 import type { ApiRequestOptions } from './ApiRequestOptions';
+import type { TConfig, TResult } from './types';
 
 type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
 type Headers = Record<string, string>;
 
 export type OpenAPIConfig = {
     BASE: string;
-    VERSION: string;
-    WITH_CREDENTIALS: boolean;
     CREDENTIALS: 'include' | 'omit' | 'same-origin';
+    ENCODE_PATH?: ((path: string) => string) | undefined;
+    HEADERS?: Headers | Resolver<Headers> | undefined;
+    PASSWORD?: string | Resolver<string> | undefined;
+    RESULT?: TResult;
     TOKEN?: string | Resolver<string> | undefined;
     USERNAME?: string | Resolver<string> | undefined;
-    PASSWORD?: string | Resolver<string> | undefined;
-    HEADERS?: Headers | Resolver<Headers> | undefined;
-    ENCODE_PATH?: ((path: string) => string) | undefined;
+    VERSION: string;
+    WITH_CREDENTIALS: boolean;
 };
 
 export const OpenAPI: OpenAPIConfig = {
     BASE: 'http://localhost:3000/base',
-    VERSION: '1.0',
-    WITH_CREDENTIALS: false,
     CREDENTIALS: 'include',
+    ENCODE_PATH: undefined,
+    HEADERS: undefined,
+    PASSWORD: undefined,
+    RESULT: 'body',
     TOKEN: undefined,
     USERNAME: undefined,
-    PASSWORD: undefined,
-    HEADERS: undefined,
-    ENCODE_PATH: undefined,
+    VERSION: '1.0',
+    WITH_CREDENTIALS: false,
+};
+
+export const mergeOpenApiConfig = <T extends TResult>(config: OpenAPIConfig, overrides: TConfig<T>) => {
+    const merged = { ...config };
+    Object.entries(overrides)
+        .filter(([key]) => key.startsWith('_'))
+        .forEach(([key, value]) => {
+            const k = key.slice(1).toLocaleUpperCase() as keyof typeof merged;
+            if (merged.hasOwnProperty(k)) {
+                // @ts-ignore
+                merged[k] = value;
+            }
+        });
+    return merged;
 };
 "
 `;
@@ -548,7 +565,7 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): C
 
                 catchErrorCodes(options, result);
 
-                resolve(result.body);
+                resolve(config.RESULT === 'raw' ? result : result.body);
             }
         } catch (error) {
             reject(error);
@@ -3496,32 +3513,49 @@ exports[`v3 should generate optional argument: test/generated/v3_options/core/Op
 /* tslint:disable */
 /* eslint-disable */
 import type { ApiRequestOptions } from './ApiRequestOptions';
+import type { TConfig, TResult } from './types';
 
 type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
 type Headers = Record<string, string>;
 
 export type OpenAPIConfig = {
     BASE: string;
-    VERSION: string;
-    WITH_CREDENTIALS: boolean;
     CREDENTIALS: 'include' | 'omit' | 'same-origin';
+    ENCODE_PATH?: ((path: string) => string) | undefined;
+    HEADERS?: Headers | Resolver<Headers> | undefined;
+    PASSWORD?: string | Resolver<string> | undefined;
+    RESULT?: TResult;
     TOKEN?: string | Resolver<string> | undefined;
     USERNAME?: string | Resolver<string> | undefined;
-    PASSWORD?: string | Resolver<string> | undefined;
-    HEADERS?: Headers | Resolver<Headers> | undefined;
-    ENCODE_PATH?: ((path: string) => string) | undefined;
+    VERSION: string;
+    WITH_CREDENTIALS: boolean;
 };
 
 export const OpenAPI: OpenAPIConfig = {
     BASE: 'http://localhost:3000/base',
-    VERSION: '1.0',
-    WITH_CREDENTIALS: false,
     CREDENTIALS: 'include',
+    ENCODE_PATH: undefined,
+    HEADERS: undefined,
+    PASSWORD: undefined,
+    RESULT: 'body',
     TOKEN: undefined,
     USERNAME: undefined,
-    PASSWORD: undefined,
-    HEADERS: undefined,
-    ENCODE_PATH: undefined,
+    VERSION: '1.0',
+    WITH_CREDENTIALS: false,
+};
+
+export const mergeOpenApiConfig = <T extends TResult>(config: OpenAPIConfig, overrides: TConfig<T>) => {
+    const merged = { ...config };
+    Object.entries(overrides)
+        .filter(([key]) => key.startsWith('_'))
+        .forEach(([key, value]) => {
+            const k = key.slice(1).toLocaleUpperCase() as keyof typeof merged;
+            if (merged.hasOwnProperty(k)) {
+                // @ts-ignore
+                merged[k] = value;
+            }
+        });
+    return merged;
 };
 "
 `;
@@ -3838,7 +3872,7 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): C
 
                 catchErrorCodes(options, result);
 
-                resolve(result.body);
+                resolve(config.RESULT === 'raw' ? result : result.body);
             }
         } catch (error) {
             reject(error);
@@ -3909,7 +3943,7 @@ exports[`v3 should generate optional argument: test/generated/v3_options/service
 /* eslint-disable */
 import type { ModelWithString } from '../models/ModelWithString';
 import type { CancelablePromise } from '../core/CancelablePromise';
-import { OpenAPI } from '../core/OpenAPI';
+import { mergeOpenApiConfig, OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 import type { TApiResponse, TConfig, TResult } from '../core/types';
 type TDataCallWithDefaultParameters = {
@@ -3949,8 +3983,9 @@ export class DefaultsService {
             parameterModel = {
                 "prop": "Hello World!"
             },
+            ...overrides
         } = data;
-        return __request(OpenAPI, {
+        return __request(mergeOpenApiConfig(OpenAPI, overrides), {
             method: 'GET',
             url: '/api/v{api-version}/defaults',
             query: {
@@ -3974,8 +4009,9 @@ export class DefaultsService {
             parameterModel = {
                 "prop": "Hello World!"
             },
+            ...overrides
         } = data;
-        return __request(OpenAPI, {
+        return __request(mergeOpenApiConfig(OpenAPI, overrides), {
             method: 'POST',
             url: '/api/v{api-version}/defaults',
             query: {
@@ -4000,8 +4036,9 @@ export class DefaultsService {
             parameterStringWithEmptyDefault = '',
             parameterStringNullableWithNoDefault,
             parameterStringNullableWithDefault = null,
+            ...overrides
         } = data;
-        return __request(OpenAPI, {
+        return __request(mergeOpenApiConfig(OpenAPI, overrides), {
             method: 'PUT',
             url: '/api/v{api-version}/defaults',
             query: {
@@ -4226,32 +4263,49 @@ exports[`v3 should generate: test/generated/v3/core/OpenAPI.ts 1`] = `
 /* tslint:disable */
 /* eslint-disable */
 import type { ApiRequestOptions } from './ApiRequestOptions';
+import type { TConfig, TResult } from './types';
 
 type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
 type Headers = Record<string, string>;
 
 export type OpenAPIConfig = {
     BASE: string;
-    VERSION: string;
-    WITH_CREDENTIALS: boolean;
     CREDENTIALS: 'include' | 'omit' | 'same-origin';
+    ENCODE_PATH?: ((path: string) => string) | undefined;
+    HEADERS?: Headers | Resolver<Headers> | undefined;
+    PASSWORD?: string | Resolver<string> | undefined;
+    RESULT?: TResult;
     TOKEN?: string | Resolver<string> | undefined;
     USERNAME?: string | Resolver<string> | undefined;
-    PASSWORD?: string | Resolver<string> | undefined;
-    HEADERS?: Headers | Resolver<Headers> | undefined;
-    ENCODE_PATH?: ((path: string) => string) | undefined;
+    VERSION: string;
+    WITH_CREDENTIALS: boolean;
 };
 
 export const OpenAPI: OpenAPIConfig = {
     BASE: 'http://localhost:3000/base',
-    VERSION: '1.0',
-    WITH_CREDENTIALS: false,
     CREDENTIALS: 'include',
+    ENCODE_PATH: undefined,
+    HEADERS: undefined,
+    PASSWORD: undefined,
+    RESULT: 'body',
     TOKEN: undefined,
     USERNAME: undefined,
-    PASSWORD: undefined,
-    HEADERS: undefined,
-    ENCODE_PATH: undefined,
+    VERSION: '1.0',
+    WITH_CREDENTIALS: false,
+};
+
+export const mergeOpenApiConfig = <T extends TResult>(config: OpenAPIConfig, overrides: TConfig<T>) => {
+    const merged = { ...config };
+    Object.entries(overrides)
+        .filter(([key]) => key.startsWith('_'))
+        .forEach(([key, value]) => {
+            const k = key.slice(1).toLocaleUpperCase() as keyof typeof merged;
+            if (merged.hasOwnProperty(k)) {
+                // @ts-ignore
+                merged[k] = value;
+            }
+        });
+    return merged;
 };
 "
 `;
@@ -4568,7 +4622,7 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): C
 
                 catchErrorCodes(options, result);
 
-                resolve(result.body);
+                resolve(config.RESULT === 'raw' ? result : result.body);
             }
         } catch (error) {
             reject(error);
