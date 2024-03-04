@@ -22,7 +22,7 @@ export type {{{name}}} = {
 	{{/ifdef}}
 	{{>isReadOnly}}{{{name}}}{{>isRequired}}: {{>type parent=../name}};
 	{{/each}}
-};
+}{{>isNullable}};
 {{#if enums}}
 {{#unless @root.useUnionTypes}}
 

@@ -4051,6 +4051,7 @@ export { ModelWithEnumWithHyphen } from './models/ModelWithEnumWithHyphen';
 export type { ModelWithInteger } from './models/ModelWithInteger';
 export type { ModelWithNestedEnums } from './models/ModelWithNestedEnums';
 export type { ModelWithNestedProperties } from './models/ModelWithNestedProperties';
+export type { ModelWithNullableObject } from './models/ModelWithNullableObject';
 export type { ModelWithNullableString } from './models/ModelWithNullableString';
 export type { ModelWithOrderedProperties } from './models/ModelWithOrderedProperties';
 export type { ModelWithPattern } from './models/ModelWithPattern';
@@ -4059,6 +4060,7 @@ export type { ModelWithReference } from './models/ModelWithReference';
 export type { ModelWithString } from './models/ModelWithString';
 export type { NestedAnyOfArraysNullable } from './models/NestedAnyOfArraysNullable';
 export type { NonAsciiStringæøåÆØÅöôêÊ字符串 } from './models/NonAsciiStringæøåÆØÅöôêÊ字符串';
+export type { NullableObject } from './models/NullableObject';
 export type { Pageable } from './models/Pageable';
 export type { SimpleBoolean } from './models/SimpleBoolean';
 export type { SimpleFile } from './models/SimpleFile';
@@ -4134,6 +4136,7 @@ export { $ModelWithEnumWithHyphen } from './schemas/$ModelWithEnumWithHyphen';
 export { $ModelWithInteger } from './schemas/$ModelWithInteger';
 export { $ModelWithNestedEnums } from './schemas/$ModelWithNestedEnums';
 export { $ModelWithNestedProperties } from './schemas/$ModelWithNestedProperties';
+export { $ModelWithNullableObject } from './schemas/$ModelWithNullableObject';
 export { $ModelWithNullableString } from './schemas/$ModelWithNullableString';
 export { $ModelWithOrderedProperties } from './schemas/$ModelWithOrderedProperties';
 export { $ModelWithPattern } from './schemas/$ModelWithPattern';
@@ -4142,6 +4145,7 @@ export { $ModelWithReference } from './schemas/$ModelWithReference';
 export { $ModelWithString } from './schemas/$ModelWithString';
 export { $NestedAnyOfArraysNullable } from './schemas/$NestedAnyOfArraysNullable';
 export { $NonAsciiStringæøåÆØÅöôêÊ字符串 } from './schemas/$NonAsciiStringæøåÆØÅöôêÊ字符串';
+export { $NullableObject } from './schemas/$NullableObject';
 export { $Pageable } from './schemas/$Pageable';
 export { $SimpleBoolean } from './schemas/$SimpleBoolean';
 export { $SimpleFile } from './schemas/$SimpleFile';
@@ -5251,6 +5255,19 @@ export type ModelWithNestedProperties = {
 "
 `;
 
+exports[`v3 should generate: test/generated/v3/models/ModelWithNullableObject.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { NullableObject } from './NullableObject';
+export type ModelWithNullableObject = {
+    data?: NullableObject;
+};
+
+"
+`;
+
 exports[`v3 should generate: test/generated/v3/models/ModelWithNullableString.ts 1`] = `
 "/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
@@ -5403,6 +5420,21 @@ exports[`v3 should generate: test/generated/v3/models/NonAsciiStringæøåÆØÅ
  * A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)
  */
 export type NonAsciiStringæøåÆØÅöôêÊ字符串 = string;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/models/NullableObject.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+/**
+ * An object that can be null
+ */
+export type NullableObject = {
+    foo?: string;
+} | null;
+
 "
 `;
 
@@ -6882,6 +6914,21 @@ export const $ModelWithNestedProperties = {
 "
 `;
 
+exports[`v3 should generate: test/generated/v3/schemas/$ModelWithNullableObject.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $ModelWithNullableObject = {
+    properties: {
+        data: {
+            type: 'NullableObject',
+        },
+    },
+} as const;
+"
+`;
+
 exports[`v3 should generate: test/generated/v3/schemas/$ModelWithNullableString.ts 1`] = `
 "/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
@@ -7117,6 +7164,23 @@ exports[`v3 should generate: test/generated/v3/schemas/$NonAsciiStringæøåÆØ
 export const $NonAsciiStringæøåÆØÅöôêÊ字符串 = {
     type: 'string',
     description: \`A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)\`,
+} as const;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/schemas/$NullableObject.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $NullableObject = {
+    description: \`An object that can be null\`,
+    properties: {
+        foo: {
+            type: 'string',
+        },
+    },
+    isNullable: true,
 } as const;
 "
 `;
