@@ -20,23 +20,24 @@ describe('writeClientCore', () => {
         };
 
         const templates: Templates = {
-            index: () => 'index',
             client: () => 'client',
+            core: {
+                apiError: () => 'apiError',
+                apiRequestOptions: () => 'apiRequestOptions',
+                apiResult: () => 'apiResult',
+                baseHttpRequest: () => 'baseHttpRequest',
+                cancelablePromise: () => 'cancelablePromise',
+                httpRequest: () => 'httpRequest',
+                request: () => 'request',
+                settings: () => 'settings',
+                types: () => 'types',
+            },
             exports: {
                 model: () => 'model',
                 schema: () => 'schema',
                 service: () => 'service',
             },
-            core: {
-                settings: () => 'settings',
-                apiError: () => 'apiError',
-                apiRequestOptions: () => 'apiRequestOptions',
-                apiResult: () => 'apiResult',
-                cancelablePromise: () => 'cancelablePromise',
-                request: () => 'request',
-                baseHttpRequest: () => 'baseHttpRequest',
-                httpRequest: () => 'httpRequest',
-            },
+            index: () => 'index',
         };
 
         await writeClientCore(client, templates, '/', HttpClient.FETCH, Indent.SPACE_4);
@@ -47,5 +48,6 @@ describe('writeClientCore', () => {
         expect(writeFile).toBeCalledWith(resolve('/', '/ApiResult.ts'), `apiResult${EOL}`);
         expect(writeFile).toBeCalledWith(resolve('/', '/CancelablePromise.ts'), `cancelablePromise${EOL}`);
         expect(writeFile).toBeCalledWith(resolve('/', '/request.ts'), `request${EOL}`);
+        expect(writeFile).toBeCalledWith(resolve('/', '/types.ts'), `types${EOL}`);
     });
 });

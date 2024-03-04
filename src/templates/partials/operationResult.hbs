@@ -1,5 +1,10 @@
+{{~#if @root.useOptions~}}
+TApiResponse<T, {{/if~}}
 {{~#if results~}}
 {{#each results}}{{>type}}{{#unless @last}} | {{/unless}}{{/each}}
 {{~else~}}
 void
+{{~/if~}}
+{{~#if @root.useOptions~}}
+>
 {{~/if~}}

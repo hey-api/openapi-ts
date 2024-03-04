@@ -17,23 +17,24 @@ describe('writeClient', () => {
         };
 
         const templates: Templates = {
-            index: () => 'index',
             client: () => 'client',
+            core: {
+                apiError: () => 'apiError',
+                apiRequestOptions: () => 'apiRequestOptions',
+                apiResult: () => 'apiResult',
+                baseHttpRequest: () => 'baseHttpRequest',
+                cancelablePromise: () => 'cancelablePromise',
+                httpRequest: () => 'httpRequest',
+                request: () => 'request',
+                settings: () => 'settings',
+                types: () => 'types',
+            },
             exports: {
                 model: () => 'model',
                 schema: () => 'schema',
                 service: () => 'service',
             },
-            core: {
-                settings: () => 'settings',
-                apiError: () => 'apiError',
-                apiRequestOptions: () => 'apiRequestOptions',
-                apiResult: () => 'apiResult',
-                cancelablePromise: () => 'cancelablePromise',
-                request: () => 'request',
-                baseHttpRequest: () => 'baseHttpRequest',
-                httpRequest: () => 'httpRequest',
-            },
+            index: () => 'index',
         };
 
         await writeClient(client, templates, {
