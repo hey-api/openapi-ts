@@ -1,10 +1,10 @@
-{{~#if @root.useOptions~}}
-TApiResponse<T, {{/if~}}
+{{~#if @root.useOptions~}}{{~#unless @root.exportClient~}}
+TApiResponse<T, {{/unless}}{{/if~}}
 {{~#if results~}}
 {{#each results}}{{>type}}{{#unless @last}} | {{/unless}}{{/each}}
 {{~else~}}
 void
 {{~/if~}}
-{{~#if @root.useOptions~}}
+{{~#if @root.useOptions~}}{{~#unless @root.exportClient~}}
 >
-{{~/if~}}
+{{~/unless~}}{{~/if~}}
