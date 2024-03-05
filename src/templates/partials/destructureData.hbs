@@ -1,3 +1,14 @@
+{{~#if @root.exportClient~}}
+{{#if @root.useOptions~}}
+{{#if parameters}}
+const {
+{{#each parameters}}
+{{{name}}}{{#if default}} = {{{default}}}{{/if}},
+{{/each}}
+} = data;
+{{/if}}
+{{/if}}
+{{~else~}}
 {{#if @root.useOptions~}}
 const {
 {{#each parameters}}
@@ -6,3 +17,4 @@ const {
     ...overrides
 } = data;
 {{/if}}
+{{~/if~}}
