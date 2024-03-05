@@ -11,15 +11,16 @@ const generate = async (input, output) => {
         exportModels: true,
         exportSchemas: true,
         exportServices: true,
-        httpClient: OpenAPI.HttpClient.FETCH,
-        // indent: OpenAPI.Indent.SPACE_2,
+        httpClient: 'fetch',
+        // indent: '2',
         input,
         output,
-        // postfix: 'Service',
+        // postfixServices: 'Service',
+        postfixModels: '',
         // request: './test/custom/request.ts',
         useDateType: false,
         useOptions: true,
-        useUnionTypes: false,
+        useUnionTypes: true,
     });
 };
 
