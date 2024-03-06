@@ -115,7 +115,7 @@ export const getModel = (
         return { ...model, ...composition };
     }
 
-    if (definition.type === 'object') {
+    if (definition.type === 'object' || definition.properties) {
         if (definition.properties) {
             model.base = 'any';
             model.export = 'interface';
