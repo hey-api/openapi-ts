@@ -47,6 +47,7 @@ describe('writeClientServices', () => {
             input: '',
             output: '',
             postfixServices: 'Service',
+            serviceResponse: 'body',
             useOptions: false,
             useUnionTypes: false,
         });

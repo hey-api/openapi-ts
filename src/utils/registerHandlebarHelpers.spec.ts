@@ -7,6 +7,7 @@ describe('registerHandlebarHelpers', () => {
     it('should register the helpers', () => {
         registerHandlebarHelpers({
             httpClient: HttpClient.FETCH,
+            serviceResponse: 'body',
             useOptions: false,
             useUnionTypes: false,
         });

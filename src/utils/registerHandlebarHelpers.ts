@@ -25,7 +25,7 @@ const escapeEnumName = (name?: string) => {
 };
 
 export const registerHandlebarHelpers = (
-    root: Pick<Required<Options>, 'httpClient' | 'useOptions' | 'useUnionTypes'>
+    root: Pick<Required<Options>, 'httpClient' | 'serviceResponse' | 'useOptions' | 'useUnionTypes'>
 ): void => {
     Handlebars.registerHelper('camelCase', function (value: string): string {
         return camelCase(value);
