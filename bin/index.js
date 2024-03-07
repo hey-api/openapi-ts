@@ -23,6 +23,7 @@ const params = program
     .option('--exportSchemas <value>', 'Write schemas to disk', false)
     .option('--indent <value>', 'Indentation options [4, 2, tab]', '4')
     .option('--postfixServices <value>', 'Service name postfix', 'Service')
+    .option('--serviceResponse [value]', 'Define shape of returned value from service calls')
     .option('--useDateType <value>', 'Output Date instead of string for the format "date-time" in the models', false)
     .option('--useOperationId <value>', 'Use operation id to generate operation names', true)
     .option('--postfixModels <value>', 'Model name postfix')
@@ -55,6 +56,7 @@ if (OpenAPI) {
         postfixModels: params.postfixModels,
         postfixServices: params.postfixServices,
         request: params.request,
+        serviceResponse: params.serviceResponse,
         useDateType: JSON.parse(params.useDateType) === true,
         useOperationId: JSON.parse(params.useOperationId) === true,
         useOptions: JSON.parse(params.useOptions) === true,

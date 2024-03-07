@@ -2,7 +2,11 @@
 {{~#if @root.exportClient~}}
 {{#if parameters}}data: {{{nameOperationDataType name}}}{{#ifOperationDataOptional parameters}} = {}{{/ifOperationDataOptional}}{{/if}}
 {{~else~}}
+{{~#notEquals @root.serviceResponse 'generics'~}}
+{{#if parameters}}data: {{{nameOperationDataType name}}}{{#ifOperationDataOptional parameters}} = {}{{/ifOperationDataOptional}}{{/if}}
+{{~else~}}
 data: {{#if parameters}}{{{nameOperationDataType name}}} & {{/if}}TConfig<T>{{#ifOperationDataOptional parameters}} = {}{{/ifOperationDataOptional}}
+{{~/notEquals~}}
 {{~/if~}}
 {{~else}}
 {{#if parameters}}

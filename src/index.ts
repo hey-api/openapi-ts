@@ -17,23 +17,24 @@ export { Indent } from './Indent';
  * Generate the OpenAPI client. This method will read the OpenAPI specification and based on the
  * given language it will generate the client, including the typed models, validation schemas,
  * service layer, etc.
- * @param input The relative location of the OpenAPI spec
- * @param output The relative location of the output directory
- * @param httpClient The selected httpClient (fetch, xhr, node or axios)
- * @param clientName Custom client class name
- * @param useOptions Use options or arguments functions
- * @param useUnionTypes Use union types instead of enums
  * @param autoformat Process generated files with autoformatter
+ * @param clientName Custom client class name
  * @param exportCore Generate core client classes
- * @param exportServices Generate services
  * @param exportModels Generate models
  * @param exportSchemas Generate schemas
+ * @param exportServices Generate services
+ * @param httpClient The selected httpClient (fetch, xhr, node or axios)
+ * @param indent Indentation options (4, 2 or tab)
+ * @param input The relative location of the OpenAPI spec
+ * @param output The relative location of the output directory
+ * @param postfixModels Model name postfix
+ * @param postfixServices Service name postfix
+ * @param request Path to custom request file
+ * @param serviceResponse Define shape of returned value from service calls
  * @param useDateType Output Date instead of string for the format "date-time" in the models
  * @param useOperationId should the operationId be used when generating operation names
- * @param indent Indentation options (4, 2 or tab)
- * @param postfixServices Service name postfix
- * @param postfixModels Model name postfix
- * @param request Path to custom request file
+ * @param useOptions Use options or arguments functions
+ * @param useUnionTypes Use union types instead of enums
  * @param write Write the files to disk (true or false)
  */
 export const generate = async (options: Options): Promise<void> => {
@@ -46,6 +47,7 @@ export const generate = async (options: Options): Promise<void> => {
         indent = Indent.SPACE_4,
         postfixModels = '',
         postfixServices = 'Service',
+        serviceResponse = 'body',
         useDateType = false,
         useOptions = false,
         useUnionTypes = false,
@@ -55,6 +57,7 @@ export const generate = async (options: Options): Promise<void> => {
     const openApiVersion = getOpenApiVersion(openApi);
     const templates = registerHandlebarTemplates({
         httpClient,
+        serviceResponse,
         useUnionTypes,
         useOptions,
     });
@@ -90,6 +93,7 @@ export const generate = async (options: Options): Promise<void> => {
             indent,
             postfixModels,
             postfixServices,
+            serviceResponse,
             useDateType,
             useOptions,
             useUnionTypes,

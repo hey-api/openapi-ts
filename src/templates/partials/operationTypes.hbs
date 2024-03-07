@@ -1,5 +1,7 @@
 {{#if @root.useOptions~}}
+{{#equals @root.serviceResponse 'generics'}}
 {{~#unless @root.exportClient~}}
 <T extends TResult>
 {{~/unless~}}
+{{/equals}}
 {{~/if}}
