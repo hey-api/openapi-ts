@@ -17,6 +17,9 @@ import type { {{{this}}} } from '../models/{{{this}}}';
 {{/each}}
 
 {{/if}}
+{{#equals @root.serviceResponse 'response'}}
+import type { ApiResult } from '../core/ApiResult';
+{{/equals}}
 {{#notEquals @root.httpClient 'angular'}}
 import type { CancelablePromise } from '../core/CancelablePromise';
 {{/notEquals}}
@@ -28,9 +31,14 @@ import type { BaseHttpRequest } from '../core/BaseHttpRequest';
 {{/equals}}
 {{else}}
 {{#if @root.useOptions}}
+{{#equals @root.serviceResponse 'generics'}}
 import { mergeOpenApiConfig, OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 import type { TApiResponse, TConfig, TResult } from '../core/types';
+{{else}}
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+{{/equals}}
 {{else}}
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -40,7 +48,7 @@ import { request as __request } from '../core/request';
 {{#if @root.useOptions}}
 {{#each operations}}
 {{#if parameters}}
-type {{{nameOperationDataType name}}} = {
+export type {{{nameOperationDataType name}}} = {
 {{#each parameters}}
 {{{name}}}{{>isRequired}}: {{>type}},
 {{/each}}

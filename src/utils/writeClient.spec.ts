@@ -48,6 +48,7 @@ describe('writeClient', () => {
             httpClient: HttpClient.FETCH,
             postfixModels: 'AppClient',
             postfixServices: 'Service',
+            serviceResponse: 'body',
             useDateType: false,
             useOptions: false,
             useUnionTypes: false,

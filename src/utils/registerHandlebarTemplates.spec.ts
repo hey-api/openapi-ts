@@ -5,6 +5,7 @@ describe('registerHandlebarTemplates', () => {
     it('should return correct templates', () => {
         const templates = registerHandlebarTemplates({
             httpClient: HttpClient.FETCH,
+            serviceResponse: 'body',
             useOptions: false,
             useUnionTypes: false,
         });

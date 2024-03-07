@@ -1,5 +1,9 @@
 {{~#if @root.useOptions~}}
+{{~#equals @root.serviceResponse 'generics'~}}
 mergeOpenApiConfig(OpenAPI, overrides)
+{{~else~}}
+OpenAPI
+{{~/equals~}}
 {{~else~}}
 OpenAPI
 {{~/if~}}

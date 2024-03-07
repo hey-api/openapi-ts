@@ -34,6 +34,7 @@ export const writeClient = async (
         | 'output'
         | 'postfixModels'
         | 'postfixServices'
+        | 'serviceResponse'
         | 'useDateType'
         | 'useOptions'
         | 'useUnionTypes'
@@ -49,6 +50,7 @@ export const writeClient = async (
             | 'output'
             | 'postfixModels'
             | 'postfixServices'
+            | 'serviceResponse'
             | 'useDateType'
             | 'useOptions'
             | 'useUnionTypes'
@@ -74,15 +76,7 @@ export const writeClient = async (
         const outputPathCore = Path.resolve(outputPath, 'core');
         await rmdir(outputPathCore);
         await mkdir(outputPathCore);
-        await writeClientCore(
-            client,
-            templates,
-            outputPathCore,
-            options.httpClient,
-            options.indent,
-            options.clientName,
-            options.request
-        );
+        await writeClientCore(client, templates, outputPathCore, options);
     }
 
     if (options.exportServices) {

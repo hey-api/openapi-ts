@@ -18,18 +18,22 @@ export const writeClientServices = async (
     services: Service[],
     templates: Templates,
     outputPath: string,
-    options: Pick<Required<Options>, 'httpClient' | 'indent' | 'postfixServices' | 'useOptions' | 'useUnionTypes'> &
-        Omit<Options, 'httpClient' | 'indent' | 'postfixServices' | 'useOptions' | 'useUnionTypes'>
+    options: Pick<
+        Required<Options>,
+        'httpClient' | 'indent' | 'postfixServices' | 'serviceResponse' | 'useOptions' | 'useUnionTypes'
+    > &
+        Omit<Options, 'httpClient' | 'indent' | 'postfixServices' | 'serviceResponse' | 'useOptions' | 'useUnionTypes'>
 ): Promise<void> => {
     for (const service of services) {
         const file = Path.resolve(outputPath, `${service.name}${options.postfixServices}.ts`);
         const templateResult = templates.exports.service({
             ...service,
-            httpClient: options.httpClient,
-            useUnionTypes: options.useUnionTypes,
-            useOptions: options.useOptions,
-            postfix: options.postfixServices,
             exportClient: Boolean(options.clientName),
+            httpClient: options.httpClient,
+            postfix: options.postfixServices,
+            serviceResponse: options.serviceResponse,
+            useOptions: options.useOptions,
+            useUnionTypes: options.useUnionTypes,
         });
         await writeFile(file, i(f(templateResult), options.indent));
     }

@@ -40,7 +40,13 @@ describe('writeClientCore', () => {
             index: () => 'index',
         };
 
-        await writeClientCore(client, templates, '/', HttpClient.FETCH, Indent.SPACE_4);
+        await writeClientCore(client, templates, '/', {
+            httpClient: HttpClient.FETCH,
+            indent: Indent.SPACE_4,
+            input: '',
+            output: '',
+            serviceResponse: 'body',
+        });
 
         expect(writeFile).toBeCalledWith(resolve('/', '/OpenAPI.ts'), `settings${EOL}`);
         expect(writeFile).toBeCalledWith(resolve('/', '/ApiError.ts'), `apiError${EOL}`);

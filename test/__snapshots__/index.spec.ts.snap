@@ -565,7 +565,7 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): C
 
                 catchErrorCodes(options, result);
 
-                resolve(config.RESULT === 'raw' ? result : result.body);
+                resolve(result.body);
             }
         } catch (error) {
             reject(error);
@@ -3872,7 +3872,7 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): C
 
                 catchErrorCodes(options, result);
 
-                resolve(config.RESULT === 'raw' ? result : result.body);
+                resolve(result.body);
             }
         } catch (error) {
             reject(error);
@@ -3943,24 +3943,23 @@ exports[`v3 should generate optional argument: test/generated/v3_options/service
 /* eslint-disable */
 import type { ModelWithString } from '../models/ModelWithString';
 import type { CancelablePromise } from '../core/CancelablePromise';
-import { mergeOpenApiConfig, OpenAPI } from '../core/OpenAPI';
+import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
-import type { TApiResponse, TConfig, TResult } from '../core/types';
-type TDataCallWithDefaultParameters = {
+export type TDataCallWithDefaultParameters = {
     parameterString?: string | null,
     parameterNumber?: number | null,
     parameterBoolean?: boolean | null,
     parameterEnum?: 'Success' | 'Warning' | 'Error',
     parameterModel?: ModelWithString | null,
 }
-type TDataCallWithDefaultOptionalParameters = {
+export type TDataCallWithDefaultOptionalParameters = {
     parameterString?: string,
     parameterNumber?: number,
     parameterBoolean?: boolean,
     parameterEnum?: 'Success' | 'Warning' | 'Error',
     parameterModel?: ModelWithString,
 }
-type TDataCallToTestOrderOfParams = {
+export type TDataCallToTestOrderOfParams = {
     parameterStringWithNoDefault: string,
     parameterOptionalStringWithDefault?: string,
     parameterOptionalStringWithEmptyDefault?: string,
@@ -3974,7 +3973,7 @@ export class DefaultsService {
     /**
      * @throws ApiError
      */
-    public static callWithDefaultParameters<T extends TResult>(data: TDataCallWithDefaultParameters & TConfig<T> = {}): CancelablePromise<TApiResponse<T, void>> {
+    public static callWithDefaultParameters(data: TDataCallWithDefaultParameters = {}): CancelablePromise<void> {
         const {
             parameterString = 'Hello World!',
             parameterNumber = 123,
@@ -3983,9 +3982,8 @@ export class DefaultsService {
             parameterModel = {
                 "prop": "Hello World!"
             },
-            ...overrides
         } = data;
-        return __request(mergeOpenApiConfig(OpenAPI, overrides), {
+        return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/defaults',
             query: {
@@ -4000,7 +3998,7 @@ export class DefaultsService {
     /**
      * @throws ApiError
      */
-    public static callWithDefaultOptionalParameters<T extends TResult>(data: TDataCallWithDefaultOptionalParameters & TConfig<T> = {}): CancelablePromise<TApiResponse<T, void>> {
+    public static callWithDefaultOptionalParameters(data: TDataCallWithDefaultOptionalParameters = {}): CancelablePromise<void> {
         const {
             parameterString = 'Hello World!',
             parameterNumber = 123,
@@ -4009,9 +4007,8 @@ export class DefaultsService {
             parameterModel = {
                 "prop": "Hello World!"
             },
-            ...overrides
         } = data;
-        return __request(mergeOpenApiConfig(OpenAPI, overrides), {
+        return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v{api-version}/defaults',
             query: {
@@ -4026,7 +4023,7 @@ export class DefaultsService {
     /**
      * @throws ApiError
      */
-    public static callToTestOrderOfParams<T extends TResult>(data: TDataCallToTestOrderOfParams & TConfig<T>): CancelablePromise<TApiResponse<T, void>> {
+    public static callToTestOrderOfParams(data: TDataCallToTestOrderOfParams): CancelablePromise<void> {
         const {
             parameterStringWithNoDefault,
             parameterOptionalStringWithDefault = 'Hello World!',
@@ -4036,9 +4033,8 @@ export class DefaultsService {
             parameterStringWithEmptyDefault = '',
             parameterStringNullableWithNoDefault,
             parameterStringNullableWithDefault = null,
-            ...overrides
         } = data;
-        return __request(mergeOpenApiConfig(OpenAPI, overrides), {
+        return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/v{api-version}/defaults',
             query: {
@@ -4622,7 +4618,7 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): C
 
                 catchErrorCodes(options, result);
 
-                resolve(config.RESULT === 'raw' ? result : result.body);
+                resolve(result.body);
             }
         } catch (error) {
             reject(error);

@@ -18,6 +18,7 @@ const generate = async (input, output) => {
         // postfixServices: 'Service',
         postfixModels: '',
         // request: './test/custom/request.ts',
+        serviceResponse: 'body',
         useDateType: false,
         useOptions: true,
         useUnionTypes: true,

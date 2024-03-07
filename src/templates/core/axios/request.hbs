@@ -64,7 +64,7 @@ import type { OpenAPIConfig } from './OpenAPI';
  * @param config The OpenAPI configuration object
  * @param options The request options from the service
  * @param axiosClient The axios client instance to use
- * @returns CancelablePromise<T>
+ * @returns CancelablePromise<{{#equals @root.serviceResponse 'response'}}ApiResult<T>{{else}}T{{/equals}}>
  * @throws ApiError
  */
 export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions, axiosClient: AxiosInstance = axios): CancelablePromise<T> => {
@@ -90,7 +90,11 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions, ax
 
 				catchErrorCodes(options, result);
 
+				{{#equals @root.serviceResponse 'generics'}}
 				resolve(config.RESULT === 'raw' ? result : result.body);
+				{{else}}
+				resolve({{#equals @root.serviceResponse 'body'}}result.body{{else}}result{{/equals}});
+				{{/equals}}
 			}
 		} catch (error) {
 			reject(error);

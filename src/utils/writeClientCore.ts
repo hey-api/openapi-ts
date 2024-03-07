@@ -1,8 +1,7 @@
 import Path from 'path';
 
 import type { Client } from '../client/interfaces/Client';
-import type { HttpClient } from '../HttpClient';
-import type { Indent } from '../Indent';
+import type { Options } from '../client/interfaces/Options';
 import { copyFile, exists, writeFile } from './fileSystem';
 import { formatIndentation as i } from './formatIndentation';
 import { getHttpRequestName } from './getHttpRequestName';
@@ -13,26 +12,23 @@ import type { Templates } from './registerHandlebarTemplates';
  * @param client Client object, containing, models, schemas and services
  * @param templates The loaded handlebar templates
  * @param outputPath Directory to write the generated files to
- * @param httpClient The selected httpClient (fetch, xhr, node or axios)
- * @param indent Indentation options (4, 2 or tab)
- * @param clientName Custom client class name
- * @param request Path to custom request file
+ * @param options Options passed to the `generate()` function
  */
 export const writeClientCore = async (
     client: Client,
     templates: Templates,
     outputPath: string,
-    httpClient: HttpClient,
-    indent: Indent,
-    clientName?: string,
-    request?: string
+    options: Pick<Required<Options>, 'httpClient' | 'indent' | 'serviceResponse'> &
+        Omit<Options, 'httpClient' | 'indent' | 'serviceResponse'>
 ): Promise<void> => {
+    const { clientName, httpClient, indent, request, serviceResponse } = options;
     const httpRequest = getHttpRequestName(httpClient);
     const context = {
-        httpClient,
         clientName,
+        httpClient,
         httpRequest,
         server: client.server,
+        serviceResponse,
         version: client.version,
     };
 
