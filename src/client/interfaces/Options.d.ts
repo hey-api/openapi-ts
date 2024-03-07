@@ -1,5 +1,7 @@
 import { HttpClient } from '../../HttpClient';
-import { Indent } from '../interfaces/Indent';
+import { Indent } from '../../Indent';
+
+export type ServiceResponse = 'body' | 'generics' | 'response';
 
 export interface Options {
     autoformat?: boolean;
@@ -15,6 +17,7 @@ export interface Options {
     postfixModels?: string;
     postfixServices?: string;
     request?: string;
+    serviceResponse?: ServiceResponse;
     useDateType?: boolean;
     useOperationId?: boolean;
     useOptions?: boolean;

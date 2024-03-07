@@ -1,10 +1,19 @@
-{{~#if @root.useOptions~}}{{~#unless @root.exportClient~}}
-TApiResponse<T, {{/unless}}{{/if~}}
+{{~#if @root.useOptions~}}
+{{~#notEquals @root.serviceResponse 'generics'~}}
+{{~#equals @root.serviceResponse 'response'}}ApiResult<{{/equals~}}
+{{~else~}}
+{{~#unless @root.exportClient}}TApiResponse<T, {{/unless~}}
+{{~/notEquals~}}
+{{~/if~}}
 {{~#if results~}}
 {{#each results}}{{>type}}{{#unless @last}} | {{/unless}}{{/each}}
 {{~else~}}
 void
 {{~/if~}}
-{{~#if @root.useOptions~}}{{~#unless @root.exportClient~}}
->
-{{~/unless~}}{{~/if~}}
+{{~#if @root.useOptions~}}
+{{~#notEquals @root.serviceResponse 'generics'~}}
+{{~#equals @root.serviceResponse 'response'}}>{{/equals~}}
+{{~else~}}
+{{~#unless @root.exportClient}}>{{/unless~}}
+{{~/notEquals~}}
+{{~/if~}}

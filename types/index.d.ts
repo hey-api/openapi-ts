@@ -12,6 +12,8 @@ export declare enum Indent {
     TAB = 'tab',
 }
 
+export type ServiceResponse = 'body' | 'generics' | 'response';
+
 export type Options = {
     autoformat?: boolean;
     clientName?: string;
@@ -26,6 +28,7 @@ export type Options = {
     postfixModels?: string;
     postfixServices?: string;
     request?: string;
+    serviceResponse?: ServiceResponse;
     useDateType?: boolean;
     useOptions?: boolean;
     useUnionTypes?: boolean;

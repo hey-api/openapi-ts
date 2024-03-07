@@ -114,7 +114,7 @@ export interface Templates {
  * so we can easily access the templates in our generator/write functions.
  */
 export const registerHandlebarTemplates = (
-    root: Pick<Required<Options>, 'httpClient' | 'useOptions' | 'useUnionTypes'>
+    root: Pick<Required<Options>, 'httpClient' | 'serviceResponse' | 'useOptions' | 'useUnionTypes'>
 ): Templates => {
     registerHandlebarHelpers(root);
 

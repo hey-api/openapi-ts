@@ -8,13 +8,23 @@ const {
 } = data;
 {{/if}}
 {{/if}}
-{{~else~}}
+{{else~}}
 {{#if @root.useOptions~}}
+{{~#notEquals @root.serviceResponse 'generics'~}}
+{{~#if parameters~}}
+const {
+{{#each parameters}}
+{{{name}}}{{#if default}} = {{{default}}}{{/if}},
+{{/each}}
+} = data;
+{{/if}}
+{{else}}
 const {
 {{#each parameters}}
 {{{name}}}{{#if default}} = {{{default}}}{{/if}},
 {{/each}}
     ...overrides
 } = data;
+{{/notEquals}}
 {{/if}}
-{{~/if~}}
+{{/if}}
