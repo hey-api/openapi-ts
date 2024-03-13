@@ -37,6 +37,7 @@ const handlebarsPlugin = () => ({
                     escapeDescription: true,
                     escapeEnumName: true,
                     escapeNewline: true,
+                    exactArray: true,
                     ifdef: true,
                     ifOperationDataOptional: true,
                     intersection: true,
