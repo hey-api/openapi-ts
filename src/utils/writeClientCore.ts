@@ -27,7 +27,7 @@ export const writeClientCore = async (
         clientName,
         httpClient,
         httpRequest,
-        server: client.server,
+        server: options.base !== undefined ? options.base : client.server,
         serviceResponse,
         version: client.version,
     };
@@ -46,7 +46,7 @@ export const writeClientCore = async (
     await writeFile(Path.resolve(outputPath, 'request.ts'), i(templates.core.request(context), indent));
     await writeFile(Path.resolve(outputPath, 'types.ts'), i(templates.core.types(context), indent));
 
-    if (Boolean(clientName)) {
+    if (clientName) {
         await writeFile(
             Path.resolve(outputPath, 'BaseHttpRequest.ts'),
             i(templates.core.baseHttpRequest(context), indent)

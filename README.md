@@ -55,6 +55,7 @@ $ openapi --help
     --exportServices <value>  Write services to disk [true, false, regexp] (default: true)
     --exportModels <value>    Write models to disk [true, false, regexp] (default: true)
     --exportSchemas <value>   Write schemas to disk (default: false)
+    --base <value>            Manually set base in OpenAPI config instead of inferring from server value
     --indent <value>          Indentation options [4, 2, tab] (default: "4")
     --postfixServices         Service name postfix (default: "Service")
     --postfixModels           Model name postfix
