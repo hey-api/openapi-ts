@@ -17,6 +17,7 @@ const params = program
     .option('--useOptions [value]', 'Use options instead of arguments', false)
     .option('--useUnionTypes', 'Use union types instead of enums')
     .option('--autoformat', 'Process generated files with autoformatter', false)
+    .option('--base [value]', 'Manually set base in OpenAPI config instead of inferring from server value')
     .option('--exportCore <value>', 'Write core files to disk', true)
     .option('--exportServices <value>', 'Write services to disk', true)
     .option('--exportModels <value>', 'Write models to disk', true)
@@ -43,6 +44,7 @@ const parseBooleanOrString = value => {
 
 if (OpenAPI) {
     OpenAPI.generate({
+        ...params,
         autoformat: JSON.parse(params.autoformat) === true,
         clientName: params.name,
         exportCore: JSON.parse(params.exportCore) === true,
@@ -50,17 +52,9 @@ if (OpenAPI) {
         exportSchemas: JSON.parse(params.exportSchemas) === true,
         exportServices: parseBooleanOrString(params.exportServices),
         httpClient: params.client,
-        indent: params.indent,
-        input: params.input,
-        output: params.output,
-        postfixModels: params.postfixModels,
-        postfixServices: params.postfixServices,
-        request: params.request,
-        serviceResponse: params.serviceResponse,
         useDateType: JSON.parse(params.useDateType) === true,
         useOperationId: JSON.parse(params.useOperationId) === true,
         useOptions: JSON.parse(params.useOptions) === true,
-        useUnionTypes: params.useUnionTypes,
     })
         .then(() => {
             process.exit(0);
