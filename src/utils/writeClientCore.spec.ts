@@ -11,15 +11,9 @@ import { writeClientCore } from './writeClientCore';
 jest.mock('./fileSystem');
 
 describe('writeClientCore', () => {
-    it('should write to filesystem', async () => {
-        const client: Client = {
-            server: 'http://localhost:8080',
-            version: '1.0',
-            models: [],
-            services: [],
-        };
-
-        const templates: Templates = {
+    let templates: Templates;
+    beforeEach(() => {
+        const _templates: Templates = {
             client: () => 'client',
             core: {
                 apiError: () => 'apiError',
@@ -29,7 +23,7 @@ describe('writeClientCore', () => {
                 cancelablePromise: () => 'cancelablePromise',
                 httpRequest: () => 'httpRequest',
                 request: () => 'request',
-                settings: () => 'settings',
+                settings: jest.fn().mockReturnValue('settings'),
                 types: () => 'types',
             },
             exports: {
@@ -38,6 +32,16 @@ describe('writeClientCore', () => {
                 service: () => 'service',
             },
             index: () => 'index',
+        };
+        templates = _templates;
+    });
+
+    it('should write to filesystem', async () => {
+        const client: Client = {
+            models: [],
+            server: 'http://localhost:8080',
+            services: [],
+            version: '1.0',
         };
 
         await writeClientCore(client, templates, '/', {
@@ -48,12 +52,65 @@ describe('writeClientCore', () => {
             serviceResponse: 'body',
         });
 
-        expect(writeFile).toBeCalledWith(resolve('/', '/OpenAPI.ts'), `settings${EOL}`);
-        expect(writeFile).toBeCalledWith(resolve('/', '/ApiError.ts'), `apiError${EOL}`);
-        expect(writeFile).toBeCalledWith(resolve('/', '/ApiRequestOptions.ts'), `apiRequestOptions${EOL}`);
-        expect(writeFile).toBeCalledWith(resolve('/', '/ApiResult.ts'), `apiResult${EOL}`);
-        expect(writeFile).toBeCalledWith(resolve('/', '/CancelablePromise.ts'), `cancelablePromise${EOL}`);
-        expect(writeFile).toBeCalledWith(resolve('/', '/request.ts'), `request${EOL}`);
-        expect(writeFile).toBeCalledWith(resolve('/', '/types.ts'), `types${EOL}`);
+        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/OpenAPI.ts'), `settings${EOL}`);
+        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/ApiError.ts'), `apiError${EOL}`);
+        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/ApiRequestOptions.ts'), `apiRequestOptions${EOL}`);
+        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/ApiResult.ts'), `apiResult${EOL}`);
+        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/CancelablePromise.ts'), `cancelablePromise${EOL}`);
+        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/request.ts'), `request${EOL}`);
+        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/types.ts'), `types${EOL}`);
+    });
+
+    it('uses client server value for base', async () => {
+        const client: Client = {
+            models: [],
+            server: 'http://localhost:8080',
+            services: [],
+            version: '1.0',
+        };
+
+        await writeClientCore(client, templates, '/', {
+            httpClient: HttpClient.FETCH,
+            indent: Indent.SPACE_4,
+            input: '',
+            output: '',
+            serviceResponse: 'body',
+        });
+
+        expect(templates.core.settings).toHaveBeenCalledWith({
+            clientName: undefined,
+            httpClient: 'fetch',
+            httpRequest: 'FetchHttpRequest',
+            server: 'http://localhost:8080',
+            serviceResponse: 'body',
+            version: '1.0',
+        });
+    });
+
+    it('uses custom value for base', async () => {
+        const client: Client = {
+            models: [],
+            server: 'http://localhost:8080',
+            services: [],
+            version: '1.0',
+        };
+
+        await writeClientCore(client, templates, '/', {
+            base: 'foo',
+            httpClient: HttpClient.FETCH,
+            indent: Indent.SPACE_4,
+            input: '',
+            output: '',
+            serviceResponse: 'body',
+        });
+
+        expect(templates.core.settings).toHaveBeenCalledWith({
+            clientName: undefined,
+            httpClient: 'fetch',
+            httpRequest: 'FetchHttpRequest',
+            server: 'foo',
+            serviceResponse: 'body',
+            version: '1.0',
+        });
     });
 });
