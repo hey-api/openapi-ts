@@ -1,11 +1,8 @@
 import type { Options } from './client/interfaces/Options';
 import { HttpClient } from './HttpClient';
 import { Indent } from './Indent';
-import { parse as parseV2 } from './openApi/v2';
-import { parse as parseV3 } from './openApi/v3';
 import { getOpenApiSpec } from './utils/getOpenApiSpec';
-import { getOpenApiVersion, OpenApiVersion } from './utils/getOpenApiVersion';
-import { isString } from './utils/isString';
+import { getOpenApiSpecParser } from './utils/getOpenApiSpecParser';
 import { postProcessClient } from './utils/postProcessClient';
 import { registerHandlebarTemplates } from './utils/registerHandlebarTemplates';
 import { writeClient } from './utils/writeClient';
@@ -17,25 +14,7 @@ export { Indent } from './Indent';
  * Generate the OpenAPI client. This method will read the OpenAPI specification and based on the
  * given language it will generate the client, including the typed models, validation schemas,
  * service layer, etc.
- * @param autoformat Process generated files with autoformatter
- * @param clientName Custom client class name
- * @param exportCore Generate core client classes
- * @param exportModels Generate models
- * @param exportSchemas Generate schemas
- * @param exportServices Generate services
- * @param httpClient The selected httpClient (fetch, xhr, node or axios)
- * @param indent Indentation options (4, 2 or tab)
- * @param input The relative location of the OpenAPI spec
- * @param output The relative location of the output directory
- * @param postfixModels Model name postfix
- * @param postfixServices Service name postfix
- * @param request Path to custom request file
- * @param serviceResponse Define shape of returned value from service calls
- * @param useDateType Output Date instead of string for the format "date-time" in the models
- * @param useOperationId should the operationId be used when generating operation names
- * @param useOptions Use options or arguments functions
- * @param useUnionTypes Use union types instead of enums
- * @param write Write the files to disk (true or false)
+ * @param options Options passed to the generate method
  */
 export const generate = async (options: Options): Promise<void> => {
     const {
@@ -53,32 +32,14 @@ export const generate = async (options: Options): Promise<void> => {
         useUnionTypes = false,
         write = true,
     } = options;
-    const openApi = isString(options.input) ? await getOpenApiSpec(options.input) : options.input;
-    const openApiVersion = getOpenApiVersion(openApi);
+    const openApi = typeof options.input === 'string' ? await getOpenApiSpec(options.input) : options.input;
+    const parser = getOpenApiSpecParser(openApi);
     const templates = registerHandlebarTemplates({
         httpClient,
         serviceResponse,
         useUnionTypes,
         useOptions,
     });
-
-    let parser: typeof parseV2 | typeof parseV3;
-
-    switch (openApiVersion) {
-        case OpenApiVersion.V2: {
-            parser = parseV2;
-            break;
-        }
-
-        case OpenApiVersion.V3: {
-            parser = parseV3;
-            break;
-        }
-    }
-
-    if (!parser) {
-        return;
-    }
 
     const client = parser(openApi, options);
     const clientFinal = postProcessClient(client);
