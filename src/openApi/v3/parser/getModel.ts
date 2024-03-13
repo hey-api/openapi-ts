@@ -92,7 +92,16 @@ export const getModel = (
             }
         }
 
-        const arrayItems = getModel(openApi, definition.items);
+        /**
+         * if items are a plain array, infer any-of composition
+         * {@link} https://github.com/ferdikoomen/openapi-typescript-codegen/issues/2062
+         */
+        const arrayItemsDefinition: OpenApiSchema = Array.isArray(definition.items)
+            ? {
+                  anyOf: definition.items,
+              }
+            : definition.items;
+        const arrayItems = getModel(openApi, arrayItemsDefinition);
         model.base = arrayItems.base;
         model.export = 'array';
         model.imports.push(...arrayItems.imports);

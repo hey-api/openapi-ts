@@ -1,7 +1,7 @@
 import Handlebars from 'handlebars/runtime';
 
-import { HttpClient } from '../HttpClient';
-import { registerHandlebarHelpers } from './registerHandlebarHelpers';
+import { HttpClient } from '../../HttpClient';
+import { registerHandlebarHelpers } from '../registerHandlebarHelpers';
 
 describe('registerHandlebarHelpers', () => {
     it('should register the helpers', () => {
@@ -20,6 +20,7 @@ describe('registerHandlebarHelpers', () => {
         expect(helpers).toContain('escapeDescription');
         expect(helpers).toContain('escapeEnumName');
         expect(helpers).toContain('escapeNewline');
+        expect(helpers).toContain('exactArray');
         expect(helpers).toContain('ifdef');
         expect(helpers).toContain('ifOperationDataOptional');
         expect(helpers).toContain('intersection');
