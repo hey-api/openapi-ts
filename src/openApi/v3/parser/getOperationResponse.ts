@@ -8,11 +8,7 @@ import { getModel } from './getModel';
 import { getRef } from './getRef';
 import { getType } from './getType';
 
-export const getOperationResponse = (
-    openApi: OpenApi,
-    response: OpenApiResponse,
-    responseCode: number
-): OperationResponse => {
+const getOperationResponseModel = (response: OpenApiResponse, responseCode: number) => {
     const operationResponse: OperationResponse = {
         in: 'response',
         name: '',
@@ -32,6 +28,15 @@ export const getOperationResponse = (
         enums: [],
         properties: [],
     };
+    return operationResponse;
+};
+
+export const getOperationResponse = (
+    openApi: OpenApi,
+    response: OpenApiResponse,
+    responseCode: number
+): OperationResponse[] => {
+    const operationResponses: OperationResponse[] = [];
 
     if (response.content) {
         const content = getContent(openApi, response.content);
@@ -40,14 +45,16 @@ export const getOperationResponse = (
                 content.schema = getRef<OpenApiSchema>(openApi, content.schema);
             }
             if (content.schema.$ref) {
+                const operationResponse = getOperationResponseModel(response, responseCode);
                 const model = getType(content.schema.$ref);
                 operationResponse.export = 'reference';
                 operationResponse.type = model.type;
                 operationResponse.base = model.base;
                 operationResponse.template = model.template;
                 operationResponse.imports.push(...model.imports);
-                return operationResponse;
+                operationResponses.push(operationResponse);
             } else {
+                const operationResponse = getOperationResponseModel(response, responseCode);
                 const model = getModel(openApi, content.schema);
                 operationResponse.export = model.export;
                 operationResponse.type = model.type;
@@ -75,7 +82,7 @@ export const getOperationResponse = (
                 operationResponse.enum.push(...model.enum);
                 operationResponse.enums.push(...model.enums);
                 operationResponse.properties.push(...model.properties);
-                return operationResponse;
+                operationResponses.push(operationResponse);
             }
         }
     }
@@ -85,14 +92,20 @@ export const getOperationResponse = (
     if (response.headers) {
         for (const name in response.headers) {
             if (response.headers.hasOwnProperty(name)) {
+                const operationResponse = getOperationResponseModel(response, responseCode);
                 operationResponse.in = 'header';
                 operationResponse.name = name;
                 operationResponse.type = 'string';
                 operationResponse.base = 'string';
-                return operationResponse;
+                operationResponses.push(operationResponse);
             }
         }
     }
 
-    return operationResponse;
+    if (!operationResponses.length) {
+        const operationResponse = getOperationResponseModel(response, responseCode);
+        operationResponses.push(operationResponse);
+    }
+
+    return operationResponses;
 };

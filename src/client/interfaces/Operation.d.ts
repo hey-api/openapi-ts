@@ -13,6 +13,7 @@ export interface Operation extends OperationParameters {
     name: string;
     path: string;
     responseHeader: string | null;
+    responseHeaders: ReadonlyArray<string> | null;
     results: OperationResponse[];
     /**
      * Service name, might be without postfix. This will be used to name the

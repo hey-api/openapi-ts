@@ -85,7 +85,12 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions, ax
 					ok: isSuccess(response.status),
 					status: response.status,
 					statusText: response.statusText,
-					body: responseHeader ?? responseBody,
+					{{!-- TODO: revert this change to `body` --}}
+					{{!-- body: responseHeader ?? responseBody, --}}
+					body: responseBody,
+					{{!-- TODO: make headers typed so they can be accessed via
+					response.headers['my-header'] and TypeScript won't complain --}}
+					headers: response.headers,
 				};
 
 				catchErrorCodes(options, result);
