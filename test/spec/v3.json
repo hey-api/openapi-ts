@@ -2899,7 +2899,101 @@
                         "$ref": "#/components/schemas/NullableObject"
                     }
                 }
-            }
+            },
+            "ModelWithOneOfEnum": {
+                "oneOf": [
+                    {
+                        "type": "object",
+                        "required": [
+                            "foo"
+                        ],
+                        "properties": {
+                            "foo": {
+                                "type": "string",
+                                "enum": [
+                                    "Bar"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "foo"
+                        ],
+                        "properties": {
+                            "foo": {
+                                "type": "string",
+                                "enum": [
+                                    "Baz"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "foo"
+                        ],
+                        "properties": {
+                            "foo": {
+                                "type": "string",
+                                "enum": [
+                                    "Qux"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "content",
+                            "foo"
+                        ],
+                        "properties": {
+                            "content": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "foo": {
+                                "type": "string",
+                                "enum": [
+                                    "Quux"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "content",
+                            "foo"
+                        ],
+                        "properties": {
+                            "content": {
+                                "type": "array",
+                                "items": [
+                                    {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    {
+                                        "type": "string"
+                                    }
+                                ],
+                                "maxItems": 2,
+                                "minItems": 2
+                            },
+                            "foo": {
+                                "type": "string",
+                                "enum": [
+                                    "Corge"
+                                ]
+                            }
+                        }
+                    }
+                ]
+              }
         }
     }
 }

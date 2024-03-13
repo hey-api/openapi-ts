@@ -85,6 +85,13 @@ export const registerHandlebarHelpers = (
         return value.replace(/\n/g, '\\n');
     });
 
+    Handlebars.registerHelper('exactArray', function (this: any, model: Model, options: Handlebars.HelperOptions) {
+        if (model.export === 'array' && model.maxItems && model.minItems && model.maxItems === model.minItems) {
+            return options.fn(this);
+        }
+        return options.inverse(this);
+    });
+
     Handlebars.registerHelper('ifdef', function (this: any, ...args): string {
         const options = args.pop();
         if (!args.every(value => !value)) {
@@ -127,15 +134,22 @@ export const registerHandlebarHelpers = (
 
     Handlebars.registerHelper(
         'union',
-        function (this: any, properties: Model[], parent: string | undefined, options: Handlebars.HelperOptions) {
+        function (
+            this: any,
+            properties: Model[],
+            parent: string | undefined,
+            filterProperties: 'exact' | undefined,
+            options: Handlebars.HelperOptions
+        ) {
             const type = Handlebars.partials['type'];
-            const types = properties.map(property => type({ ...root, ...property, parent }));
-            const uniqueTypes = types.filter(unique);
-            let uniqueTypesString = uniqueTypes.join(' | ');
-            if (uniqueTypes.length > 1) {
-                uniqueTypesString = `(${uniqueTypesString})`;
+            const types = properties
+                .map(property => type({ ...root, ...property, parent }))
+                .filter((...args) => filterProperties === 'exact' || unique(...args));
+            let output = types.join(' | ');
+            if (types.length > 1 && types.length !== properties.length) {
+                output = `(${output})`;
             }
-            return options.fn(uniqueTypesString);
+            return options.fn(output);
         }
     );
 
