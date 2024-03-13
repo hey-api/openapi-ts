@@ -4726,6 +4726,7 @@ export type { ModelWithNestedEnums } from './models/ModelWithNestedEnums';
 export type { ModelWithNestedProperties } from './models/ModelWithNestedProperties';
 export type { ModelWithNullableObject } from './models/ModelWithNullableObject';
 export type { ModelWithNullableString } from './models/ModelWithNullableString';
+export { ModelWithOneOfEnum } from './models/ModelWithOneOfEnum';
 export type { ModelWithOrderedProperties } from './models/ModelWithOrderedProperties';
 export type { ModelWithPattern } from './models/ModelWithPattern';
 export type { ModelWithProperties } from './models/ModelWithProperties';
@@ -4811,6 +4812,7 @@ export { $ModelWithNestedEnums } from './schemas/$ModelWithNestedEnums';
 export { $ModelWithNestedProperties } from './schemas/$ModelWithNestedProperties';
 export { $ModelWithNullableObject } from './schemas/$ModelWithNullableObject';
 export { $ModelWithNullableString } from './schemas/$ModelWithNullableString';
+export { $ModelWithOneOfEnum } from './schemas/$ModelWithOneOfEnum';
 export { $ModelWithOrderedProperties } from './schemas/$ModelWithOrderedProperties';
 export { $ModelWithPattern } from './schemas/$ModelWithPattern';
 export { $ModelWithProperties } from './schemas/$ModelWithProperties';
@@ -4871,7 +4873,7 @@ exports[`v3 should generate: test/generated/v3/models/AnyOfAnyAndNull.ts 1`] = `
 /* tslint:disable */
 /* eslint-disable */
 export type AnyOfAnyAndNull = {
-    data?: (any | null);
+    data?: any | null;
 };
 
 "
@@ -4886,11 +4888,11 @@ exports[`v3 should generate: test/generated/v3/models/AnyOfArrays.ts 1`] = `
  * This is a simple array with any of properties
  */
 export type AnyOfArrays = {
-    results?: Array<({
+    results?: Array<{
         foo?: string;
     } | {
         bar?: string;
-    })>;
+    }>;
 };
 
 "
@@ -4904,11 +4906,11 @@ exports[`v3 should generate: test/generated/v3/models/ArrayWithAnyOfProperties.t
 /**
  * This is a simple array with any of properties
  */
-export type ArrayWithAnyOfProperties = Array<({
+export type ArrayWithAnyOfProperties = Array<{
     foo?: string;
 } | {
     bar?: string;
-})>;
+}>;
 "
 `;
 
@@ -5131,7 +5133,7 @@ import type { ModelWithString } from './ModelWithString';
  * This is a model with one property with a 'any of' relationship
  */
 export type CompositionWithAnyOf = {
-    propA?: (ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary);
+    propA?: ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary;
 };
 
 "
@@ -5149,9 +5151,9 @@ import type { ModelWithEnum } from './ModelWithEnum';
  * This is a model with one property with a 'any of' relationship
  */
 export type CompositionWithAnyOfAndNullable = {
-    propA?: ({
+    propA?: {
         boolean?: boolean;
-    } | ModelWithEnum | ModelWithArray | ModelWithDictionary) | null;
+    } | ModelWithEnum | ModelWithArray | ModelWithDictionary | null;
 };
 
 "
@@ -5166,9 +5168,9 @@ exports[`v3 should generate: test/generated/v3/models/CompositionWithAnyOfAnonym
  * This is a model with one property with a 'any of' relationship where the options are not $ref
  */
 export type CompositionWithAnyOfAnonymous = {
-    propA?: ({
+    propA?: {
         propA?: string;
-    } | string | number);
+    } | string | number;
 };
 
 "
@@ -5185,7 +5187,7 @@ import type { ModelWithDictionary } from './ModelWithDictionary';
  * This is a model with nested 'any of' property with a type null
  */
 export type CompositionWithNestedAnyAndTypeNull = {
-    propA?: (Array<(ModelWithDictionary | null)> | Array<(ModelWithArray | null)>);
+    propA?: Array<ModelWithDictionary | null> | Array<ModelWithArray | null>;
 };
 
 "
@@ -5202,7 +5204,7 @@ import type { Enum1 } from './Enum1';
  * This is a model with one property with a 'any of' relationship where the options are not $ref
  */
 export type CompositionWithNestedAnyOfAndNull = {
-    propA?: (Array<(Enum1 | ConstValue)> | null);
+    propA?: Array<Enum1 | ConstValue> | null;
 };
 
 "
@@ -5221,7 +5223,7 @@ import type { ModelWithString } from './ModelWithString';
  * This is a model with one property with a 'one of' relationship
  */
 export type CompositionWithOneOf = {
-    propA?: (ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary);
+    propA?: ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary;
 };
 
 "
@@ -5236,7 +5238,7 @@ exports[`v3 should generate: test/generated/v3/models/CompositionWithOneOfAndCom
  * This is a model that contains a dictionary of complex arrays (composited) within composition
  */
 export type CompositionWithOneOfAndComplexArrayDictionary = {
-    propA?: (boolean | Record<string, Array<(number | string)>>);
+    propA?: boolean | Record<string, Array<number | string>>;
 };
 
 "
@@ -5254,9 +5256,9 @@ import type { ModelWithEnum } from './ModelWithEnum';
  * This is a model with one property with a 'one of' relationship
  */
 export type CompositionWithOneOfAndNullable = {
-    propA?: ({
+    propA?: {
         boolean?: boolean;
-    } | ModelWithEnum | ModelWithArray | ModelWithDictionary) | null;
+    } | ModelWithEnum | ModelWithArray | ModelWithDictionary | null;
 };
 
 "
@@ -5269,7 +5271,7 @@ exports[`v3 should generate: test/generated/v3/models/CompositionWithOneOfAndPro
 /* eslint-disable */
 import type { NonAsciiStringæøåÆØÅöôêÊ字符串 } from './NonAsciiStringæøåÆØÅöôêÊ字符串';
 import type { SimpleParameter } from './SimpleParameter';
-export type CompositionWithOneOfAndProperties = ({
+export type CompositionWithOneOfAndProperties = {
     foo: SimpleParameter;
     baz: number | null;
     qux: number;
@@ -5277,7 +5279,7 @@ export type CompositionWithOneOfAndProperties = ({
     bar: NonAsciiStringæøåÆØÅöôêÊ字符串;
     baz: number | null;
     qux: number;
-});
+};
 
 "
 `;
@@ -5291,7 +5293,7 @@ exports[`v3 should generate: test/generated/v3/models/CompositionWithOneOfAndSim
  * This is a model that contains a dictionary of simple arrays within composition
  */
 export type CompositionWithOneOfAndSimpleArrayDictionary = {
-    propA?: (boolean | Record<string, Array<boolean>>);
+    propA?: boolean | Record<string, Array<boolean>>;
 };
 
 "
@@ -5306,7 +5308,7 @@ exports[`v3 should generate: test/generated/v3/models/CompositionWithOneOfAndSim
  * This is a model that contains a simple dictionary within composition
  */
 export type CompositionWithOneOfAndSimpleDictionary = {
-    propA?: (boolean | Record<string, number>);
+    propA?: boolean | Record<string, number>;
 };
 
 "
@@ -5321,9 +5323,9 @@ exports[`v3 should generate: test/generated/v3/models/CompositionWithOneOfAnonym
  * This is a model with one property with a 'one of' relationship where the options are not $ref
  */
 export type CompositionWithOneOfAnonymous = {
-    propA?: ({
+    propA?: {
         propA?: string;
-    } | string | number);
+    } | string | number;
 };
 
 "
@@ -5339,7 +5341,7 @@ import type { ModelSquare } from './ModelSquare';
 /**
  * This is a model with one property with a 'one of' relationship where the options are not $ref
  */
-export type CompositionWithOneOfDiscriminator = (ModelCircle | ModelSquare);
+export type CompositionWithOneOfDiscriminator = ModelCircle | ModelSquare;
 
 "
 `;
@@ -5971,6 +5973,29 @@ export type ModelWithNullableString = {
 "
 `;
 
+exports[`v3 should generate: test/generated/v3/models/ModelWithOneOfEnum.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export type ModelWithOneOfEnum = ({
+    foo: ModelWithOneOfEnum.foo;
+} | {
+    content: string;
+    foo: ModelWithOneOfEnum.foo;
+} | {
+    content: [string | string];
+    foo: ModelWithOneOfEnum.foo;
+});
+export namespace ModelWithOneOfEnum {
+    export enum foo {
+        BAR = 'Bar',
+    }
+}
+
+"
+`;
+
 exports[`v3 should generate: test/generated/v3/models/ModelWithOrderedProperties.ts 1`] = `
 "/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
@@ -6078,7 +6103,7 @@ exports[`v3 should generate: test/generated/v3/models/NestedAnyOfArraysNullable.
 /* tslint:disable */
 /* eslint-disable */
 export type NestedAnyOfArraysNullable = {
-    nullableArray?: (Array<(string | boolean)> | null);
+    nullableArray?: Array<string | boolean> | null;
 };
 
 "
@@ -7637,6 +7662,71 @@ export const $ModelWithNullableString = {
 "
 `;
 
+exports[`v3 should generate: test/generated/v3/schemas/$ModelWithOneOfEnum.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $ModelWithOneOfEnum = {
+    type: 'one-of',
+    contains: [{
+        properties: {
+            foo: {
+                type: 'Enum',
+                isRequired: true,
+            },
+        },
+    }, {
+        properties: {
+            foo: {
+                type: 'Enum',
+                isRequired: true,
+            },
+        },
+    }, {
+        properties: {
+            foo: {
+                type: 'Enum',
+                isRequired: true,
+            },
+        },
+    }, {
+        properties: {
+            content: {
+                type: 'string',
+                isRequired: true,
+                format: 'date-time',
+            },
+            foo: {
+                type: 'Enum',
+                isRequired: true,
+            },
+        },
+    }, {
+        properties: {
+            content: {
+                type: 'array',
+                contains: {
+                    type: 'any-of',
+                    contains: [{
+                        type: 'string',
+                        format: 'date-time',
+                    }, {
+                        type: 'string',
+                    }],
+                },
+                isRequired: true,
+            },
+            foo: {
+                type: 'Enum',
+                isRequired: true,
+            },
+        },
+    }],
+} as const;
+"
+`;
+
 exports[`v3 should generate: test/generated/v3/schemas/$ModelWithOrderedProperties.ts 1`] = `
 "/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
@@ -8069,7 +8159,7 @@ export class ComplexService {
             readonly type: 'Monkey' | 'Horse' | 'Bird';
             listOfModels?: Array<ModelWithString> | null;
             listOfStrings?: Array<string> | null;
-            parameters: (ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary);
+            parameters: ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary;
             readonly user?: {
                 readonly id?: number;
                 readonly name?: string | null;
