@@ -416,7 +416,7 @@ export const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptio
         headers['Authorization'] = \`Basic \${credentials}\`;
     }
 
-    if (options.body) {
+    if (options.body !== undefined) {
         if (options.mediaType) {
             headers['Content-Type'] = options.mediaType;
         } else if (isBlob(options.body)) {
@@ -3723,7 +3723,7 @@ export const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptio
         headers['Authorization'] = \`Basic \${credentials}\`;
     }
 
-    if (options.body) {
+    if (options.body !== undefined) {
         if (options.mediaType) {
             headers['Content-Type'] = options.mediaType;
         } else if (isBlob(options.body)) {
@@ -4469,7 +4469,7 @@ export const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptio
         headers['Authorization'] = \`Basic \${credentials}\`;
     }
 
-    if (options.body) {
+    if (options.body !== undefined) {
         if (options.mediaType) {
             headers['Content-Type'] = options.mediaType;
         } else if (isBlob(options.body)) {
