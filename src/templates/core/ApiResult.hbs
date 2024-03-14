@@ -2,6 +2,7 @@
 
 export type ApiResult<TData = any> = {
 	readonly body: TData;
+	readonly headers: Record<string, any>;
 	readonly ok: boolean;
 	readonly status: number;
 	readonly statusText: string;

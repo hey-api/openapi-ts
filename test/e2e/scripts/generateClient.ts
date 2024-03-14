@@ -1,19 +1,22 @@
+import type { Options } from '../../../';
 import { generate as __generate } from '../../../';
 
 export const generateClient = async (
     dir: string,
     version: string,
-    client: 'fetch' | 'xhr' | 'node' | 'axios' | 'angular',
+    client?: 'fetch' | 'xhr' | 'node' | 'axios' | 'angular',
     useOptions: boolean = false,
     useUnionTypes: boolean = false,
-    clientName?: string
+    clientName?: string,
+    options?: Options
 ) => {
     await __generate({
-        input: `./test/spec/${version}.json`,
-        output: `./test/e2e/generated/${dir}/`,
+        clientName,
         httpClient: client,
         useOptions,
         useUnionTypes,
-        clientName,
+        ...options,
+        input: `./test/spec/${version}.json`,
+        output: `./test/e2e/generated/${dir}/`,
     });
 };

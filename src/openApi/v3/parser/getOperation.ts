@@ -44,6 +44,7 @@ export const getOperation = (
         parametersQuery: [...pathParams.parametersQuery],
         path: url,
         responseHeader: null,
+        responseHeaders: null,
         results: [],
         service,
         summary: op.summary || null,
@@ -76,6 +77,8 @@ export const getOperation = (
         const operationResults = getOperationResults(operationResponses);
         operation.errors = getOperationErrors(operationResponses);
         operation.responseHeader = getOperationResponseHeader(operationResults);
+        const responseHeaders = operationResults.filter(result => result.in === 'header').map(result => result.name);
+        operation.responseHeaders = responseHeaders.length > 0 ? responseHeaders : null;
 
         operationResults.forEach(operationResult => {
             operation.imports.push(...operationResult.imports);

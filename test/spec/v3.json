@@ -10,6 +10,46 @@
         }
     ],
     "paths": {
+        "/api/v{api-version}/response-headers-and-content": {
+            "get": {
+                "tags": [
+                    "Header",
+                    "Response"
+                ],
+                "operationId": "GetCallWithHeadersAndContent",
+                "parameters": [
+                    {
+                        "name": "foo",
+                        "in": "query",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Response with headers",
+                        "headers": {
+                            "X-Rate-Limit": {
+                                "description": "calls per hour allowed by the user",
+                                "schema": {
+                                    "type": "integer",
+                                    "format": "int32"
+                                }
+                            },
+                            "X-Expires-After": {
+                                "description": "date in UTC when token expires",
+                                "schema": {
+                                    "type": "string",
+                                    "format": "date-time"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid username/password supplied"
+                    }
+                }
+            }
+        },
         "/api/v{api-version}/no-tag": {
             "tags": [],
             "get": {

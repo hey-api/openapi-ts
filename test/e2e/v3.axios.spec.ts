@@ -151,37 +151,100 @@ describe('v3.axios', () => {
     });
 });
 
-describe('v3.axios useOptions', () => {
+describe('v3.axios serviceResponse.body', () => {
     beforeAll(async () => {
-        cleanup('v3/axios');
-        await generateClient('v3/axios', 'v3', 'axios', true);
-        compileWithTypescript('v3/axios');
-        await server.start('v3/axios');
+        cleanup('v3/axios_body');
+        await generateClient('v3/axios_body', 'v3', undefined, undefined, undefined, undefined, {
+            input: '',
+            output: '',
+            httpClient: 'axios',
+            serviceResponse: 'body',
+            useOptions: true,
+        });
+        compileWithTypescript('v3/axios_body');
+        await server.start('v3/axios_body');
     }, 30000);
 
     afterAll(async () => {
         await server.stop();
     });
 
-    it('returns result body by default', async () => {
-        const { SimpleService } = require('./generated/v3/axios/index.js');
+    it('returns response body by default', async () => {
+        const { SimpleService } = require('./generated/v3/axios_body/index.js');
+        const result = await SimpleService.getCallWithoutParametersAndResponse();
+        expect(result.body).toBeUndefined();
+    });
+});
+
+describe('v3.axios serviceResponse.generics', () => {
+    beforeAll(async () => {
+        cleanup('v3/axios_generics');
+        await generateClient('v3/axios_generics', 'v3', undefined, undefined, undefined, undefined, {
+            input: '',
+            output: '',
+            httpClient: 'axios',
+            serviceResponse: 'generics',
+            useOptions: true,
+        });
+        compileWithTypescript('v3/axios_generics');
+        await server.start('v3/axios_generics');
+    }, 30000);
+
+    afterAll(async () => {
+        await server.stop();
+    });
+
+    it('returns response body by default', async () => {
+        const { SimpleService } = require('./generated/v3/axios_generics/index.js');
         const result = await SimpleService.getCallWithoutParametersAndResponse();
         expect(result.body).toBeUndefined();
     });
 
-    it('returns result body', async () => {
-        const { SimpleService } = require('./generated/v3/axios/index.js');
+    it('returns response body', async () => {
+        const { SimpleService } = require('./generated/v3/axios_generics/index.js');
         const result = await SimpleService.getCallWithoutParametersAndResponse({
             _result: 'body',
         });
         expect(result.body).toBeUndefined();
     });
 
-    it('returns raw result', async () => {
-        const { SimpleService } = require('./generated/v3/axios/index.js');
+    it('returns response', async () => {
+        const { SimpleService } = require('./generated/v3/axios_generics/index.js');
         const result = await SimpleService.getCallWithoutParametersAndResponse({
             _result: 'raw',
         });
         expect(result.body).not.toBeUndefined();
+    });
+});
+
+describe('v3.axios serviceResponse.response', () => {
+    beforeAll(async () => {
+        cleanup('v3/axios_response');
+        await generateClient('v3/axios_response', 'v3', undefined, undefined, undefined, undefined, {
+            input: '',
+            output: '',
+            httpClient: 'axios',
+            serviceResponse: 'response',
+            useOptions: true,
+        });
+        compileWithTypescript('v3/axios_response');
+        await server.start('v3/axios_response');
+    }, 30000);
+
+    afterAll(async () => {
+        await server.stop();
+    });
+
+    it('returns response by default', async () => {
+        const { SimpleService } = require('./generated/v3/axios_response/index.js');
+        const result = await SimpleService.getCallWithoutParametersAndResponse();
+        expect(result.body).not.toBeUndefined();
+    });
+
+    it('returns headers in response', async () => {
+        const { HeaderService } = require('./generated/v3/axios_response/index.js');
+        const result = await HeaderService.getCallWithHeadersAndContent({ foo: 'foo' });
+        expect(result.headers['x-expires-after']).toStrictEqual('Wed, 14 Jun 2017 07:00:00 GMT');
+        expect(result.headers['x-rate-limit']).toStrictEqual('10');
     });
 });
