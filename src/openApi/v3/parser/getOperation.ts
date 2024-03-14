@@ -29,6 +29,7 @@ export const getOperation = (
 
     // Create a new operation object for this method.
     const operation: Operation = {
+        $refs: [],
         deprecated: Boolean(op.deprecated),
         description: op.description || null,
         errors: [],
@@ -52,7 +53,8 @@ export const getOperation = (
     // Parse the operation parameters (path, query, body, etc).
     if (op.parameters) {
         const parameters = getOperationParameters(openApi, op.parameters);
-        operation.imports.push(...parameters.imports);
+        operation.$refs = [...operation.$refs, ...parameters.$refs];
+        operation.imports = [...operation.imports, ...parameters.imports];
         operation.parameters.push(...parameters.parameters);
         operation.parametersBody = parameters.parametersBody;
         operation.parametersCookie.push(...parameters.parametersCookie);
@@ -65,7 +67,8 @@ export const getOperation = (
     if (op.requestBody) {
         const requestBodyDef = getRef<OpenApiRequestBody>(openApi, op.requestBody);
         const requestBody = getOperationRequestBody(openApi, requestBodyDef);
-        operation.imports.push(...requestBody.imports);
+        operation.$refs = [...operation.$refs, ...requestBody.$refs];
+        operation.imports = [...operation.imports, ...requestBody.imports];
         operation.parameters.push(requestBody);
         operation.parametersBody = requestBody;
     }
@@ -78,7 +81,8 @@ export const getOperation = (
         operation.responseHeader = getOperationResponseHeader(operationResults);
 
         operationResults.forEach(operationResult => {
-            operation.imports.push(...operationResult.imports);
+            operation.$refs = [...operation.$refs, ...operationResult.$refs];
+            operation.imports = [...operation.imports, ...operationResult.imports];
             operation.results.push(operationResult);
         });
     }

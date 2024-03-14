@@ -51,7 +51,6 @@ describe('writeClient', () => {
             serviceResponse: 'body',
             useDateType: false,
             useOptions: false,
-            useUnionTypes: false,
         });
 
         expect(rmdir).toBeCalled();

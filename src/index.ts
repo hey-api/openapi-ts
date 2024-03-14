@@ -29,15 +29,13 @@ export const generate = async (options: Options): Promise<void> => {
         serviceResponse = 'body',
         useDateType = false,
         useOptions = false,
-        useUnionTypes = false,
         write = true,
     } = options;
     const openApi = typeof options.input === 'string' ? await getOpenApiSpec(options.input) : options.input;
     const parser = getOpenApiSpecParser(openApi);
-    const templates = registerHandlebarTemplates({
+    const templates = registerHandlebarTemplates(openApi, {
         httpClient,
         serviceResponse,
-        useUnionTypes,
         useOptions,
     });
 
@@ -57,7 +55,6 @@ export const generate = async (options: Options): Promise<void> => {
             serviceResponse,
             useDateType,
             useOptions,
-            useUnionTypes,
         });
     }
 };

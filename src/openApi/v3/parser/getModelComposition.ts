@@ -49,6 +49,7 @@ export const getModelComposition = ({
     openApi: OpenApi;
 }): ModelComposition => {
     const composition: ModelComposition = {
+        $refs: model.$refs,
         enums: model.enums,
         export: type,
         imports: model.imports,
@@ -60,7 +61,8 @@ export const getModelComposition = ({
     definitions
         .map(def => getModel(openApi, def, undefined, undefined, definition))
         .forEach(model => {
-            composition.imports.push(...model.imports);
+            composition.$refs = [...composition.$refs, ...model.$refs];
+            composition.imports = [...composition.imports, ...model.imports];
             composition.enums.push(...model.enums);
             composition.properties.push(model);
         });
@@ -73,7 +75,8 @@ export const getModelComposition = ({
             getModel
         );
         requiredProperties.forEach(requiredProperty => {
-            composition.imports.push(...requiredProperty.imports);
+            composition.$refs = [...composition.$refs, ...requiredProperty.$refs];
+            composition.imports = [...composition.imports, ...requiredProperty.imports];
             composition.enums.push(...requiredProperty.enums);
         });
         properties.push(...requiredProperties);
@@ -82,7 +85,8 @@ export const getModelComposition = ({
     if (definition.properties) {
         const modelProperties = getModelProperties(openApi, definition, getModel);
         modelProperties.forEach(modelProperty => {
-            composition.imports.push(...modelProperty.imports);
+            composition.$refs = [...composition.$refs, ...modelProperty.$refs];
+            composition.imports = [...composition.imports, ...modelProperty.imports];
             composition.enums.push(...modelProperty.enums);
             if (modelProperty.export === 'enum') {
                 composition.enums.push(modelProperty);
@@ -99,6 +103,7 @@ export const getModelComposition = ({
             });
         } else {
             composition.properties.push({
+                $refs: [],
                 base: 'any',
                 description: '',
                 enum: [],

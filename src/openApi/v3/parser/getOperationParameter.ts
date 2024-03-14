@@ -11,25 +11,26 @@ import { getType } from './getType';
 
 export const getOperationParameter = (openApi: OpenApi, parameter: OpenApiParameter): OperationParameter => {
     const operationParameter: OperationParameter = {
-        in: parameter.in,
-        prop: parameter.name,
-        export: 'interface',
-        name: getOperationParameterName(parameter.name),
-        type: 'any',
+        $refs: [],
         base: 'any',
-        template: null,
-        link: null,
-        description: parameter.description || null,
         deprecated: parameter.deprecated === true,
-        isDefinition: false,
-        isReadOnly: false,
-        isRequired: parameter.required === true,
-        isNullable: parameter.nullable === true,
-        imports: [],
+        description: parameter.description || null,
         enum: [],
         enums: [],
-        properties: [],
+        export: 'interface',
+        imports: [],
+        in: parameter.in,
+        isDefinition: false,
+        isNullable: parameter.nullable === true,
+        isReadOnly: false,
+        isRequired: parameter.required === true,
+        link: null,
         mediaType: null,
+        name: getOperationParameterName(parameter.name),
+        prop: parameter.name,
+        properties: [],
+        template: null,
+        type: 'any',
     };
 
     if (parameter.$ref) {
@@ -38,7 +39,8 @@ export const getOperationParameter = (openApi: OpenApi, parameter: OpenApiParame
         operationParameter.type = definitionRef.type;
         operationParameter.base = definitionRef.base;
         operationParameter.template = definitionRef.template;
-        operationParameter.imports.push(...definitionRef.imports);
+        operationParameter.$refs = [...operationParameter.$refs, ...definitionRef.$refs];
+        operationParameter.imports = [...operationParameter.imports, ...definitionRef.imports];
         return operationParameter;
     }
 
@@ -53,7 +55,8 @@ export const getOperationParameter = (openApi: OpenApi, parameter: OpenApiParame
             operationParameter.type = model.type;
             operationParameter.base = model.base;
             operationParameter.template = model.template;
-            operationParameter.imports.push(...model.imports);
+            operationParameter.$refs = [...operationParameter.$refs, ...model.$refs];
+            operationParameter.imports = [...operationParameter.imports, ...model.imports];
             operationParameter.default = getModelDefault(schema);
             return operationParameter;
         } else {
@@ -81,7 +84,8 @@ export const getOperationParameter = (openApi: OpenApi, parameter: OpenApiParame
             operationParameter.minProperties = model.minProperties;
             operationParameter.pattern = getPattern(model.pattern);
             operationParameter.default = model.default;
-            operationParameter.imports.push(...model.imports);
+            operationParameter.$refs = [...operationParameter.$refs, ...model.$refs];
+            operationParameter.imports = [...operationParameter.imports, ...model.imports];
             operationParameter.enum.push(...model.enum);
             operationParameter.enums.push(...model.enums);
             operationParameter.properties.push(...model.properties);

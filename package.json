@@ -60,11 +60,12 @@
         "docker": "docker build -t eeelenbaas/openapi-typescript-codegen ."
     },
     "dependencies": {
-        "@apidevtools/json-schema-ref-parser": "^11.1.0",
-        "camelcase": "^6.3.0",
-        "commander": "^11.1.0",
-        "fs-extra": "^11.2.0",
-        "handlebars": "^4.7.8"
+        "@apidevtools/json-schema-ref-parser": "11.5.4",
+        "camelcase": "6.3.0",
+        "commander": "11.1.0",
+        "fs-extra": "11.2.0",
+        "handlebars": "4.7.8",
+        "node-fetch": "2.7.0"
     },
     "devDependencies": {
         "@angular-devkit/build-angular": "17.0.9",
@@ -92,7 +93,7 @@
         "@types/glob": "8.1.0",
         "@types/jest": "29.5.12",
         "@types/node": "20.11.17",
-        "@types/node-fetch": "2.6.10",
+        "@types/node-fetch": "2.6.11",
         "@types/qs": "6.9.11",
         "@typescript-eslint/eslint-plugin": "6.21.0",
         "@typescript-eslint/parser": "6.21.0",
@@ -109,9 +110,8 @@
         "glob": "10.3.10",
         "jest": "29.7.0",
         "jest-cli": "29.7.0",
-        "node-fetch": "2.7.0",
         "prettier": "3.2.5",
-        "puppeteer": "21.11.0",
+        "puppeteer": "22.4.1",
         "qs": "6.11.2",
         "rimraf": "5.0.5",
         "rollup": "4.7.0",

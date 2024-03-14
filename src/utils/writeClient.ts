@@ -37,7 +37,6 @@ export const writeClient = async (
         | 'serviceResponse'
         | 'useDateType'
         | 'useOptions'
-        | 'useUnionTypes'
     > &
         Omit<
             Options,
@@ -53,7 +52,6 @@ export const writeClient = async (
             | 'serviceResponse'
             | 'useDateType'
             | 'useOptions'
-            | 'useUnionTypes'
         >
 ): Promise<void> => {
     const outputPath = Path.resolve(process.cwd(), options.output);
@@ -90,14 +88,7 @@ export const writeClient = async (
         const outputPathSchemas = Path.resolve(outputPath, 'schemas');
         await rmdir(outputPathSchemas);
         await mkdir(outputPathSchemas);
-        await writeClientSchemas(
-            client.models,
-            templates,
-            outputPathSchemas,
-            options.httpClient,
-            options.useUnionTypes,
-            options.indent
-        );
+        await writeClientSchemas(client.models, templates, outputPathSchemas, options.httpClient, options.indent);
     }
 
     if (options.exportModels) {
@@ -126,7 +117,6 @@ export const writeClient = async (
             client,
             templates,
             outputPath,
-            options.useUnionTypes,
             options.exportCore,
             options.exportServices,
             options.exportModels,

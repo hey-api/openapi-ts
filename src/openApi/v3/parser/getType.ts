@@ -12,11 +12,12 @@ const encode = (value: string): string => sanitizeTypeName(value);
  */
 export const getType = (type: string | string[] = 'any', format?: string): Type => {
     const result: Type = {
-        type: 'any',
+        $refs: [],
         base: 'any',
-        template: null,
         imports: [],
         isNullable: false,
+        template: null,
+        type: 'any',
     };
 
     // Special case for JSON Schema spec (december 2020, page 17),
@@ -51,6 +52,7 @@ export const getType = (type: string | string[] = 'any', format?: string): Type 
             if (match1.type === 'any[]') {
                 result.type = `${match2.type}[]`;
                 result.base = `${match2.type}`;
+                match1.$refs = [];
                 match1.imports = [];
             } else if (match2.type) {
                 result.type = `${match1.type}<${match2.type}>`;
@@ -62,17 +64,20 @@ export const getType = (type: string | string[] = 'any', format?: string): Type 
                 result.template = match1.type;
             }
 
-            result.imports.push(...match1.imports);
-            result.imports.push(...match2.imports);
+            result.$refs = [...result.$refs, ...match1.$refs, ...match2.$refs];
+            result.imports = [...result.imports, ...match1.imports, ...match2.imports];
             return result;
         }
     }
 
     if (typeWithoutNamespace) {
-        const type = encode(typeWithoutNamespace);
-        result.type = type;
-        result.base = type;
-        result.imports.push(type);
+        const encodedType = encode(typeWithoutNamespace);
+        result.type = encodedType;
+        result.base = encodedType;
+        if (type.startsWith('#')) {
+            result.$refs = [...result.$refs, type];
+        }
+        result.imports = [...result.imports, encodedType];
         return result;
     }
 

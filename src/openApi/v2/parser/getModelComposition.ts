@@ -17,6 +17,7 @@ export const getModelComposition = (
     getModel: GetModelFn
 ): ModelComposition => {
     const composition: ModelComposition = {
+        $refs: [],
         enums: [],
         export: type,
         imports: [],
@@ -68,21 +69,22 @@ export const getModelComposition = (
 
     if (properties.length) {
         composition.properties.push({
-            name: 'properties',
-            export: 'interface',
-            type: 'any',
+            $refs: [],
             base: 'any',
-            template: null,
-            link: null,
             description: '',
-            isDefinition: false,
-            isReadOnly: false,
-            isNullable: false,
-            isRequired: false,
-            imports: [],
             enum: [],
             enums: [],
+            export: 'interface',
+            imports: [],
+            isDefinition: false,
+            isNullable: false,
+            isReadOnly: false,
+            isRequired: false,
+            link: null,
+            name: 'properties',
             properties,
+            template: null,
+            type: 'any',
         });
     }
 

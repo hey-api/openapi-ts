@@ -8,6 +8,10 @@
 {{~#useDateType @root.useDateType format~}}
 Date
 {{~else~}}
+{{~#equals inline "enum"~}}
+{{{inlineEnum this}}}
+{{~else~}}
 {{{base}}}
+{{~/equals~}}
 {{~/useDateType~}}
 {{~/equals~}}
