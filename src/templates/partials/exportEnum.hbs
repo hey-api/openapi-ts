@@ -8,17 +8,21 @@
 {{/if}}
  */
 {{/ifdef}}
-export enum {{{escapeEnumName name}}} {
+{{#equals exportType "type"}}
+export type {{{enumName name exportType}}} = {{{enumUnionType enum}}};
+{{else}}
+export enum {{{enumName name}}} {
 	{{#each enum}}
-	{{#if description}}
+	{{#if x-enum-description}}
+	/**
+	 * {{{escapeComment x-enum-description}}}
+	 */
+	{{else if description}}
 	/**
 	 * {{{escapeComment description}}}
 	 */
 	{{/if}}
-	{{#containsSpaces name}}
-	'{{{name}}}' = {{{value}}},
-	{{else}}
-	{{{name}}} = {{{value}}},
-	{{/containsSpaces}}
+	{{{enumKey value x-enum-varname}}} = {{{enumValue value}}},
 	{{/each}}
 }
+{{/equals}}

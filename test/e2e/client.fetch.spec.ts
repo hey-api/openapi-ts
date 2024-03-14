@@ -8,7 +8,7 @@ import server from './scripts/server';
 describe('client.fetch', () => {
     beforeAll(async () => {
         cleanup('client/fetch');
-        await generateClient('client/fetch', 'v3', 'fetch', false, false, 'ApiClient');
+        await generateClient('client/fetch', 'v3', 'fetch', false, 'ApiClient');
         copyAsset('index.html', 'client/fetch/index.html');
         copyAsset('main.ts', 'client/fetch/main.ts');
         compileWithTypescript('client/fetch');

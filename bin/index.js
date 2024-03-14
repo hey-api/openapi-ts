@@ -15,7 +15,6 @@ const params = program
     .option('-c, --client <value>', 'HTTP client to generate [fetch, xhr, node, axios, angular]', 'fetch')
     .option('--name <value>', 'Custom client class name')
     .option('--useOptions [value]', 'Use options instead of arguments', false)
-    .option('--useUnionTypes', 'Use union types instead of enums')
     .option('--autoformat', 'Process generated files with autoformatter', false)
     .option('--base [value]', 'Manually set base in OpenAPI config instead of inferring from server value')
     .option('--exportCore <value>', 'Write core files to disk', true)

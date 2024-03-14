@@ -88,10 +88,6 @@ export type Options = {
      */
     useOptions?: boolean;
     /**
-     * Use union types instead of enums
-     */
-    useUnionTypes?: boolean;
-    /**
      * Write the files to disk (true or false)
      */
     write?: boolean;

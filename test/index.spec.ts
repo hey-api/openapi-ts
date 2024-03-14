@@ -15,7 +15,6 @@ describe('v2', () => {
             input: './test/spec/v2.json',
             output: './test/generated/v2/',
             useOptions: false,
-            useUnionTypes: false,
         });
 
         sync('./test/generated/v2/**/*.ts').forEach(file => {
@@ -37,7 +36,6 @@ describe('v3', () => {
             input: './test/spec/v3.json',
             output: './test/generated/v3/',
             useOptions: false,
-            useUnionTypes: false,
         });
 
         sync('./test/generated/v3/**/*.ts').forEach(file => {
@@ -58,7 +56,6 @@ describe('v3', () => {
             output: './test/generated/v3_date/',
             useDateType: true,
             useOptions: false,
-            useUnionTypes: false,
         });
 
         sync('./test/generated/v3_date/**/*.ts').forEach(file => {
@@ -79,7 +76,6 @@ describe('v3', () => {
             output: './test/generated/v3_options/',
             useDateType: true,
             useOptions: true,
-            useUnionTypes: false,
         });
 
         sync('./test/generated/v3_options/**/*.ts').forEach(file => {

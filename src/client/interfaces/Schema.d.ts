@@ -1,31 +1,31 @@
 export interface Schema {
-    isDefinition: boolean;
-    isReadOnly: boolean;
-    isRequired: boolean;
-    isNullable: boolean;
+    exclusiveMaximum?: boolean;
+    exclusiveMinimum?: boolean;
     format?:
-        | 'int32'
-        | 'int64'
-        | 'float'
-        | 'double'
-        | 'string'
+        | 'binary'
         | 'boolean'
         | 'byte'
-        | 'binary'
-        | 'date'
         | 'date-time'
-        | 'password';
+        | 'date'
+        | 'double'
+        | 'float'
+        | 'int32'
+        | 'int64'
+        | 'password'
+        | 'string';
+    isDefinition: boolean;
+    isNullable: boolean;
+    isReadOnly: boolean;
+    isRequired: boolean;
     maximum?: number;
-    exclusiveMaximum?: boolean;
-    minimum?: number;
-    exclusiveMinimum?: boolean;
-    multipleOf?: number;
-    maxLength?: number;
-    minLength?: number;
-    pattern?: string;
     maxItems?: number;
-    minItems?: number;
-    uniqueItems?: boolean;
+    maxLength?: number;
     maxProperties?: number;
+    minimum?: number;
+    minItems?: number;
+    minLength?: number;
     minProperties?: number;
+    multipleOf?: number;
+    pattern?: string;
+    uniqueItems?: boolean;
 }

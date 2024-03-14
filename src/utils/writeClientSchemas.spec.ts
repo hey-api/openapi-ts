@@ -14,21 +14,22 @@ describe('writeClientSchemas', () => {
     it('should write to filesystem', async () => {
         const models: Model[] = [
             {
-                export: 'interface',
-                name: 'User',
-                type: 'User',
+                $refs: [],
                 base: 'User',
-                template: null,
-                link: null,
                 description: null,
-                isDefinition: true,
-                isReadOnly: false,
-                isRequired: false,
-                isNullable: false,
-                imports: [],
                 enum: [],
                 enums: [],
+                export: 'interface',
+                imports: [],
+                isDefinition: true,
+                isNullable: false,
+                isReadOnly: false,
+                isRequired: false,
+                link: null,
+                name: 'User',
                 properties: [],
+                template: null,
+                type: 'User',
             },
         ];
 
@@ -53,7 +54,7 @@ describe('writeClientSchemas', () => {
             index: () => 'index',
         };
 
-        await writeClientSchemas(models, templates, '/', HttpClient.FETCH, false, Indent.SPACE_4);
+        await writeClientSchemas(models, templates, '/', HttpClient.FETCH, Indent.SPACE_4);
 
         expect(writeFile).toBeCalledWith(resolve('/', '/$User.ts'), `schema${EOL}`);
     });

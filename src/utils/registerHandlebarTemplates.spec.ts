@@ -3,12 +3,21 @@ import { registerHandlebarTemplates } from './registerHandlebarTemplates';
 
 describe('registerHandlebarTemplates', () => {
     it('should return correct templates', () => {
-        const templates = registerHandlebarTemplates({
-            httpClient: HttpClient.FETCH,
-            serviceResponse: 'body',
-            useOptions: false,
-            useUnionTypes: false,
-        });
+        const templates = registerHandlebarTemplates(
+            {
+                info: {
+                    title: '',
+                    version: '',
+                },
+                openapi: '',
+                paths: {},
+            },
+            {
+                httpClient: HttpClient.FETCH,
+                serviceResponse: 'body',
+                useOptions: false,
+            }
+        );
         expect(templates.index).toBeDefined();
         expect(templates.exports.model).toBeDefined();
         expect(templates.exports.schema).toBeDefined();

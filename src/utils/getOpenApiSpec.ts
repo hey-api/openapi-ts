@@ -1,7 +1,11 @@
-import RefParser from '@apidevtools/json-schema-ref-parser';
+import $RefParser from '@apidevtools/json-schema-ref-parser';
 import { resolve } from 'path';
 
 import { exists } from './fileSystem';
+
+const fetch = require('node-fetch');
+
+globalThis.fetch = fetch;
 
 /**
  * Load and parse te open api spec. If the file extension is ".yml" or ".yaml"
@@ -11,5 +15,6 @@ import { exists } from './fileSystem';
  */
 export const getOpenApiSpec = async (location: string): Promise<any> => {
     const absolutePathOrUrl = (await exists(location)) ? resolve(location) : location;
-    return await RefParser.bundle(absolutePathOrUrl, absolutePathOrUrl, {});
+    const schema = await $RefParser.bundle(absolutePathOrUrl, absolutePathOrUrl, {});
+    return schema;
 };

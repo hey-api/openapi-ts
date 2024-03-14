@@ -1,9 +1,8 @@
 import type { Model } from '../../../client/interfaces/Model';
+import { getEnums } from '../../../utils/getEnums';
 import { getPattern } from '../../../utils/getPattern';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
-import { extendEnum } from './extendEnum';
-import { getEnum } from './getEnum';
 import { getModelComposition } from './getModelComposition';
 import { getModelProperties } from './getModelProperties';
 import { getType } from './getType';
@@ -15,35 +14,36 @@ export const getModel = (
     name: string = ''
 ): Model => {
     const model: Model = {
-        name,
-        export: 'interface',
-        type: 'any',
+        $refs: [],
         base: 'any',
-        template: null,
-        link: null,
         description: definition.description || null,
-        isDefinition,
-        isReadOnly: definition.readOnly === true,
-        isNullable: definition['x-nullable'] === true,
-        isRequired: false,
-        format: definition.format,
-        maximum: definition.maximum,
-        exclusiveMaximum: definition.exclusiveMaximum,
-        minimum: definition.minimum,
-        exclusiveMinimum: definition.exclusiveMinimum,
-        multipleOf: definition.multipleOf,
-        maxLength: definition.maxLength,
-        minLength: definition.minLength,
-        maxItems: definition.maxItems,
-        minItems: definition.minItems,
-        uniqueItems: definition.uniqueItems,
-        maxProperties: definition.maxProperties,
-        minProperties: definition.minProperties,
-        pattern: getPattern(definition.pattern),
-        imports: [],
         enum: [],
         enums: [],
+        exclusiveMaximum: definition.exclusiveMaximum,
+        exclusiveMinimum: definition.exclusiveMinimum,
+        export: 'interface',
+        format: definition.format,
+        imports: [],
+        isDefinition,
+        isNullable: definition['x-nullable'] === true,
+        isReadOnly: definition.readOnly === true,
+        isRequired: false,
+        link: null,
+        maximum: definition.maximum,
+        maxItems: definition.maxItems,
+        maxLength: definition.maxLength,
+        maxProperties: definition.maxProperties,
+        minimum: definition.minimum,
+        minItems: definition.minItems,
+        minLength: definition.minLength,
+        minProperties: definition.minProperties,
+        multipleOf: definition.multipleOf,
+        name,
+        pattern: getPattern(definition.pattern),
         properties: [],
+        template: null,
+        type: 'any',
+        uniqueItems: definition.uniqueItems,
     };
 
     if (definition.$ref) {
@@ -57,13 +57,12 @@ export const getModel = (
     }
 
     if (definition.enum && definition.type !== 'boolean') {
-        const enumerators = getEnum(definition.enum);
-        const extendedEnumerators = extendEnum(enumerators, definition);
-        if (extendedEnumerators.length) {
+        const enums = getEnums(definition, definition.enum);
+        if (enums.length) {
+            model.base = 'string';
+            model.enum.push(...enums);
             model.export = 'enum';
             model.type = 'string';
-            model.base = 'string';
-            model.enum.push(...extendedEnumerators);
             return model;
         }
     }

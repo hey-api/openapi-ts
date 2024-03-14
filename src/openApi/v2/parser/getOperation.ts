@@ -26,6 +26,7 @@ export const getOperation = (
 
     // Create a new operation object for this method.
     const operation: Operation = {
+        $refs: [],
         service: serviceName,
         name: operationName,
         summary: op.summary || null,

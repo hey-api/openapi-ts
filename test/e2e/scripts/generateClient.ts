@@ -5,7 +5,6 @@ export const generateClient = async (
     version: string,
     client: 'fetch' | 'xhr' | 'node' | 'axios' | 'angular',
     useOptions: boolean = false,
-    useUnionTypes: boolean = false,
     clientName?: string
 ) => {
     await __generate({
@@ -13,7 +12,6 @@ export const generateClient = async (
         output: `./test/e2e/generated/${dir}/`,
         httpClient: client,
         useOptions,
-        useUnionTypes,
         clientName,
     });
 };

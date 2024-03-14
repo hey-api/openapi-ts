@@ -21,7 +21,6 @@ const generate = async (input, output) => {
         serviceResponse: 'body',
         useDateType: false,
         useOptions: true,
-        useUnionTypes: true,
     });
 };
 

@@ -11,12 +11,9 @@ import type { Observable } from 'rxjs';
 {{/if}}
 
 {{/equals}}
-{{#if imports}}
-{{#each imports}}
-import type { {{{this}}} } from '../models/{{{this}}}';
-{{/each}}
 
-{{/if}}
+{{{modelImports this '../models/'}}}
+
 {{#equals @root.serviceResponse 'response'}}
 import type { ApiResult } from '../core/ApiResult';
 {{/equals}}

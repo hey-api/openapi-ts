@@ -1,10 +1,9 @@
 import type { OperationParameter } from '../../../client/interfaces/OperationParameter';
+import { getEnums } from '../../../utils/getEnums';
 import { getPattern } from '../../../utils/getPattern';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiParameter } from '../interfaces/OpenApiParameter';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
-import { extendEnum } from './extendEnum';
-import { getEnum } from './getEnum';
 import { getModel } from './getModel';
 import { getOperationParameterDefault } from './getOperationParameterDefault';
 import { getOperationParameterName } from './getOperationParameterName';
@@ -13,36 +12,37 @@ import { getType } from './getType';
 
 export const getOperationParameter = (openApi: OpenApi, parameter: OpenApiParameter): OperationParameter => {
     const operationParameter: OperationParameter = {
-        in: parameter.in,
-        prop: parameter.name,
-        export: 'interface',
-        name: getOperationParameterName(parameter.name),
-        type: 'any',
+        $refs: [],
         base: 'any',
-        template: null,
-        link: null,
         description: parameter.description || null,
-        isDefinition: false,
-        isReadOnly: false,
-        isRequired: parameter.required === true,
-        isNullable: parameter['x-nullable'] === true,
-        format: parameter.format,
-        maximum: parameter.maximum,
-        exclusiveMaximum: parameter.exclusiveMaximum,
-        minimum: parameter.minimum,
-        exclusiveMinimum: parameter.exclusiveMinimum,
-        multipleOf: parameter.multipleOf,
-        maxLength: parameter.maxLength,
-        minLength: parameter.minLength,
-        maxItems: parameter.maxItems,
-        minItems: parameter.minItems,
-        uniqueItems: parameter.uniqueItems,
-        pattern: getPattern(parameter.pattern),
-        imports: [],
         enum: [],
         enums: [],
-        properties: [],
+        exclusiveMaximum: parameter.exclusiveMaximum,
+        exclusiveMinimum: parameter.exclusiveMinimum,
+        export: 'interface',
+        format: parameter.format,
+        imports: [],
+        in: parameter.in,
+        isDefinition: false,
+        isNullable: parameter['x-nullable'] === true,
+        isReadOnly: false,
+        isRequired: parameter.required === true,
+        link: null,
+        maximum: parameter.maximum,
+        maxItems: parameter.maxItems,
+        maxLength: parameter.maxLength,
         mediaType: null,
+        minimum: parameter.minimum,
+        minItems: parameter.minItems,
+        minLength: parameter.minLength,
+        multipleOf: parameter.multipleOf,
+        name: getOperationParameterName(parameter.name),
+        pattern: getPattern(parameter.pattern),
+        prop: parameter.name,
+        properties: [],
+        template: null,
+        type: 'any',
+        uniqueItems: parameter.uniqueItems,
     };
 
     if (parameter.$ref) {
@@ -57,13 +57,12 @@ export const getOperationParameter = (openApi: OpenApi, parameter: OpenApiParame
     }
 
     if (parameter.enum) {
-        const enumerators = getEnum(parameter.enum);
-        const extendedEnumerators = extendEnum(enumerators, parameter);
-        if (extendedEnumerators.length) {
+        const enums = getEnums(parameter, parameter.enum);
+        if (enums.length) {
+            operationParameter.base = 'string';
+            operationParameter.enum.push(...enums);
             operationParameter.export = 'enum';
             operationParameter.type = 'string';
-            operationParameter.base = 'string';
-            operationParameter.enum.push(...extendedEnumerators);
             operationParameter.default = getOperationParameterDefault(parameter, operationParameter);
             return operationParameter;
         }

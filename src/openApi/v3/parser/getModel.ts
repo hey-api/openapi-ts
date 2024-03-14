@@ -1,13 +1,13 @@
 import type { Model } from '../../../client/interfaces/Model';
+import { getEnums } from '../../../utils/getEnums';
 import { getPattern } from '../../../utils/getPattern';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
-import { extendEnum } from './extendEnum';
-import { getEnum } from './getEnum';
 import { findModelComposition, getModelComposition } from './getModelComposition';
 import { getModelDefault } from './getModelDefault';
 import { getAdditionalPropertiesModel, getModelProperties } from './getModelProperties';
 import { getType } from './getType';
+import { inferType } from './inferType';
 
 export const getModel = (
     openApi: OpenApi,
@@ -16,7 +16,9 @@ export const getModel = (
     name: string = '',
     parentDefinition: OpenApiSchema | null = null
 ): Model => {
+    const inferredType = inferType(definition);
     const model: Model = {
+        $refs: [],
         base: 'any',
         deprecated: Boolean(definition.deprecated),
         description: definition.description || null,
@@ -51,21 +53,21 @@ export const getModel = (
 
     if (definition.$ref) {
         const definitionRef = getType(definition.$ref);
+        model.$refs = [...model.$refs, definition.$ref];
         model.base = definitionRef.base;
         model.export = 'reference';
-        model.imports.push(...definitionRef.imports);
+        model.imports = [...model.imports, ...definitionRef.imports];
         model.template = definitionRef.template;
         model.type = definitionRef.type;
         model.default = getModelDefault(definition, model);
         return model;
     }
 
-    if (definition.enum && definition.type !== 'boolean') {
-        const enumerators = getEnum(definition.enum);
-        const extendedEnumerators = extendEnum(enumerators, definition);
-        if (extendedEnumerators.length) {
+    if (inferredType === 'enum') {
+        const enums = getEnums(definition, definition.enum);
+        if (enums.length) {
             model.base = 'string';
-            model.enum.push(...extendedEnumerators);
+            model.enum.push(...enums);
             model.export = 'enum';
             model.type = 'string';
             model.default = getModelDefault(definition, model);
@@ -76,9 +78,10 @@ export const getModel = (
     if (definition.type === 'array' && definition.items) {
         if (definition.items.$ref) {
             const arrayItems = getType(definition.items.$ref);
+            model.$refs = [...model.$refs, definition.items.$ref];
             model.base = arrayItems.base;
             model.export = 'array';
-            model.imports.push(...arrayItems.imports);
+            model.imports = [...model.imports, ...arrayItems.imports];
             model.template = arrayItems.template;
             model.type = arrayItems.type;
             model.default = getModelDefault(definition, model);
@@ -104,7 +107,8 @@ export const getModel = (
         const arrayItems = getModel(openApi, arrayItemsDefinition);
         model.base = arrayItems.base;
         model.export = 'array';
-        model.imports.push(...arrayItems.imports);
+        model.$refs = [...model.$refs, ...arrayItems.$refs];
+        model.imports = [...model.imports, ...arrayItems.imports];
         model.link = arrayItems;
         model.template = arrayItems.template;
         model.type = arrayItems.type;
@@ -133,8 +137,9 @@ export const getModel = (
 
             const modelProperties = getModelProperties(openApi, definition, getModel, model);
             modelProperties.forEach(modelProperty => {
+                model.$refs = [...model.$refs, ...modelProperty.$refs];
                 model.enums.push(...modelProperty.enums);
-                model.imports.push(...modelProperty.imports);
+                model.imports = [...model.imports, ...modelProperty.imports];
                 model.properties.push(modelProperty);
                 if (modelProperty.export === 'enum') {
                     model.enums.push(modelProperty);
@@ -166,7 +171,8 @@ export const getModel = (
         const definitionType = getType(definition.type, definition.format);
         model.base = definitionType.base;
         model.export = 'generic';
-        model.imports.push(...definitionType.imports);
+        model.$refs = [...model.$refs, ...definitionType.$refs];
+        model.imports = [...model.imports, ...definitionType.imports];
         model.isNullable = definitionType.isNullable || model.isNullable;
         model.template = definitionType.template;
         model.type = definitionType.type;

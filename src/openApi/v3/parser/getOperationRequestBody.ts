@@ -8,25 +8,26 @@ import { getType } from './getType';
 
 export const getOperationRequestBody = (openApi: OpenApi, body: OpenApiRequestBody): OperationParameter => {
     const requestBody: OperationParameter = {
-        in: 'body',
-        export: 'interface',
-        prop: body['x-body-name'] ?? 'requestBody',
-        name: body['x-body-name'] ?? 'requestBody',
-        type: 'any',
+        $refs: [],
         base: 'any',
-        template: null,
-        link: null,
-        description: body.description || null,
         default: undefined,
-        isDefinition: false,
-        isReadOnly: false,
-        isRequired: body.required === true,
-        isNullable: body.nullable === true,
-        imports: [],
+        description: body.description || null,
         enum: [],
         enums: [],
-        properties: [],
+        export: 'interface',
+        imports: [],
+        in: 'body',
+        isDefinition: false,
+        isNullable: body.nullable === true,
+        isReadOnly: false,
+        isRequired: body.required === true,
+        link: null,
         mediaType: null,
+        name: body['x-body-name'] ?? 'requestBody',
+        prop: body['x-body-name'] ?? 'requestBody',
+        properties: [],
+        template: null,
+        type: 'any',
     };
 
     if (body.content) {
@@ -47,7 +48,8 @@ export const getOperationRequestBody = (openApi: OpenApi, body: OpenApiRequestBo
                 requestBody.type = model.type;
                 requestBody.base = model.base;
                 requestBody.template = model.template;
-                requestBody.imports.push(...model.imports);
+                requestBody.$refs = [...requestBody.$refs, ...model.$refs];
+                requestBody.imports = [...requestBody.imports, ...model.imports];
                 return requestBody;
             } else {
                 const model = getModel(openApi, content.schema);
@@ -73,7 +75,8 @@ export const getOperationRequestBody = (openApi: OpenApi, body: OpenApiRequestBo
                 requestBody.maxProperties = model.maxProperties;
                 requestBody.minProperties = model.minProperties;
                 requestBody.pattern = getPattern(model.pattern);
-                requestBody.imports.push(...model.imports);
+                requestBody.$refs = [...requestBody.$refs, ...model.$refs];
+                requestBody.imports = [...requestBody.imports, ...model.imports];
                 requestBody.enum.push(...model.enum);
                 requestBody.enums.push(...model.enums);
                 requestBody.properties.push(...model.properties);

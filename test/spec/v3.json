@@ -146,6 +146,26 @@
                         }
                     },
                     {
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/components/schemas/ModelWithNestedArrayEnumsDataFoo"
+                        },
+                        "name": "foo_ref_enum",
+                        "in": "query"
+                    },
+                    {
+                        "required": true,
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/components/schemas/ModelWithNestedArrayEnumsDataFoo"
+                                }
+                            ]
+                        },
+                        "name": "foo_all_of_enum",
+                        "in": "query"
+                    },
+                    {
                         "description": "This is the parameter that goes into the query params",
                         "name": "parameterQuery",
                         "in": "query",
@@ -343,7 +363,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/ModelWithString"
+                                "$ref": "#/components/schemas/ModelWithOneOfEnum"
                             }
                         }
                     }
@@ -1627,6 +1647,16 @@
                     "\"Double Quotes\"",
                     "Non-ascii: øæåôöØÆÅÔÖ字符串"
                 ]
+            },
+            "EnumWithReplacedCharacters": {
+                "enum": [
+                    "'Single Quote'",
+                    "\"Double Quotes\"",
+                    "øæåôöØÆÅÔÖ字符串",
+                    3.1,
+                    ""
+                ],
+                "type": "string"
             },
             "EnumWithNumbers": {
                 "description": "This is a simple enum with numbers",
@@ -2993,7 +3023,68 @@
                         }
                     }
                 ]
-              }
+            },
+            "ModelWithNestedArrayEnumsDataFoo": {
+                "enum": [
+                    "foo",
+                    "bar"
+                ],
+                "type": "string"
+            },
+            "ModelWithNestedArrayEnumsDataBar": {
+                "enum": [
+                    "baz",
+                    "qux"
+                ],
+                "type": "string"
+            },
+            "ModelWithNestedArrayEnumsData": {
+                "type": "object",
+                "properties": {
+                    "foo": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ModelWithNestedArrayEnumsDataFoo"
+                        }
+                    },
+                    "bar": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ModelWithNestedArrayEnumsDataBar"
+                        }
+                    }
+                }
+            },
+            "ModelWithNestedArrayEnums": {
+                "type": "object",
+                "properties": {
+                    "array_strings": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "data": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ModelWithNestedArrayEnumsData"
+                            }
+                        ]
+                    }
+                }
+            },
+            "ModelWithNestedCompositionEnums": {
+                "type": "object",
+                "properties": {
+                    "foo": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ModelWithNestedArrayEnumsDataFoo"
+                            }
+                        ]
+                    }
+                }
+            }
         }
     }
 }

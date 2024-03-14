@@ -18,16 +18,15 @@ export const writeClientModels = async (
     models: Model[],
     templates: Templates,
     outputPath: string,
-    options: Pick<Required<Options>, 'httpClient' | 'indent' | 'useDateType' | 'useUnionTypes'>
+    options: Pick<Required<Options>, 'httpClient' | 'indent' | 'useDateType'>
 ): Promise<void> => {
-    const { httpClient, indent, useDateType, useUnionTypes } = options;
+    const { httpClient, indent, useDateType } = options;
     for (const model of models) {
         const file = resolve(outputPath, `${model.name}.ts`);
         const templateResult = templates.exports.model({
             ...model,
             httpClient,
             useDateType,
-            useUnionTypes,
         });
         await writeFile(file, i(f(templateResult), indent));
     }

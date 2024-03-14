@@ -64,6 +64,7 @@ export const getModelProperties = (
             const propertyRequired = !!definition.required?.includes(propertyName);
             const propertyValues: Omit<
                 Model,
+                | '$refs'
                 | 'base'
                 | 'enum'
                 | 'enums'
@@ -100,6 +101,7 @@ export const getModelProperties = (
             if (parent && discriminator?.propertyName == propertyName) {
                 models.push({
                     ...propertyValues,
+                    $refs: [],
                     base: `'${mapPropertyValue(discriminator, parent)}'`,
                     enum: [],
                     enums: [],
@@ -115,6 +117,7 @@ export const getModelProperties = (
                 const model = getType(property.$ref);
                 models.push({
                     ...propertyValues,
+                    $refs: model.$refs,
                     base: model.base,
                     enum: [],
                     enums: [],
@@ -130,6 +133,7 @@ export const getModelProperties = (
                 const model = getModel(openApi, property);
                 models.push({
                     ...propertyValues,
+                    $refs: model.$refs,
                     base: model.base,
                     enum: model.enum,
                     enums: model.enums,

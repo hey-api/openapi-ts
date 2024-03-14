@@ -7,6 +7,7 @@ import { getOperation } from './getOperation';
 import { getOperationParameters } from './getOperationParameters';
 
 const getNewService = (operation: Operation): Service => ({
+    $refs: [],
     imports: [],
     name: operation.service,
     operations: [],
@@ -40,6 +41,7 @@ export const getServices = (openApi: OpenApi, options: Options): Service[] => {
                             tags.forEach(tag => {
                                 const operation = getOperation(openApi, url, method, tag, op, pathParams, options);
                                 const service = services.get(operation.service) || getNewService(operation);
+                                service.$refs = [...service.$refs, ...operation.$refs];
                                 service.imports = [...service.imports, ...operation.imports];
                                 service.operations = [...service.operations, operation];
                                 services.set(operation.service, service);
