@@ -1,6 +1,6 @@
 export interface Enum {
-    name: string;
-    value: string;
-    type: string;
-    description: string | null;
+    'x-enum-description'?: string;
+    'x-enum-varname'?: string;
+    description?: string;
+    value: string | number;
 }

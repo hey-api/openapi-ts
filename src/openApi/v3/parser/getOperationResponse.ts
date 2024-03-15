@@ -14,23 +14,24 @@ export const getOperationResponse = (
     responseCode: number
 ): OperationResponse => {
     const operationResponse: OperationResponse = {
-        in: 'response',
-        name: '',
+        $refs: [],
+        base: responseCode !== 204 ? 'any' : 'void',
         code: responseCode,
         description: response.description || null,
-        export: 'generic',
-        type: responseCode !== 204 ? 'any' : 'void',
-        base: responseCode !== 204 ? 'any' : 'void',
-        template: null,
-        link: null,
-        isDefinition: false,
-        isReadOnly: false,
-        isRequired: false,
-        isNullable: false,
-        imports: [],
         enum: [],
         enums: [],
+        export: 'generic',
+        imports: [],
+        in: 'response',
+        isDefinition: false,
+        isNullable: false,
+        isReadOnly: false,
+        isRequired: false,
+        link: null,
+        name: '',
         properties: [],
+        template: null,
+        type: responseCode !== 204 ? 'any' : 'void',
     };
 
     if (response.content) {
@@ -41,11 +42,12 @@ export const getOperationResponse = (
             }
             if (content.schema.$ref) {
                 const model = getType(content.schema.$ref);
-                operationResponse.export = 'reference';
-                operationResponse.type = model.type;
                 operationResponse.base = model.base;
+                operationResponse.export = 'reference';
+                operationResponse.$refs = [...operationResponse.$refs, ...model.$refs];
+                operationResponse.imports = [...operationResponse.imports, ...model.imports];
                 operationResponse.template = model.template;
-                operationResponse.imports.push(...model.imports);
+                operationResponse.type = model.type;
                 return operationResponse;
             } else {
                 const model = getModel(openApi, content.schema);
@@ -71,7 +73,8 @@ export const getOperationResponse = (
                 operationResponse.maxProperties = model.maxProperties;
                 operationResponse.minProperties = model.minProperties;
                 operationResponse.pattern = getPattern(model.pattern);
-                operationResponse.imports.push(...model.imports);
+                operationResponse.$refs = [...operationResponse.$refs, ...model.$refs];
+                operationResponse.imports = [...operationResponse.imports, ...model.imports];
                 operationResponse.enum.push(...model.enum);
                 operationResponse.enums.push(...model.enums);
                 operationResponse.properties.push(...model.properties);

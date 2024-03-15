@@ -8,7 +8,7 @@ import server from './scripts/server';
 describe('client.babel', () => {
     beforeAll(async () => {
         cleanup('client/babel');
-        await generateClient('client/babel', 'v3', 'fetch', true, true, 'ApiClient');
+        await generateClient('client/babel', 'v3', 'fetch', true, 'ApiClient');
         copyAsset('index.html', 'client/babel/index.html');
         copyAsset('main.ts', 'client/babel/main.ts');
         compileWithBabel('client/babel');

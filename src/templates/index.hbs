@@ -17,9 +17,7 @@ export type { OpenAPIConfig } from './core/OpenAPI';
 {{#if models}}
 
 {{#each models}}
-{{#if @root.useUnionTypes}}
-export type { {{{name}}}{{#if @root.postfixModels}} as {{{name}}}{{{@root.postfixModels}}}{{/if}} } from './models/{{{name}}}';
-{{else if enum}}
+{{#if enum}}
 export { {{{name}}}{{#if @root.postfixModels}} as {{{name}}}{{{@root.postfixModels}}}{{/if}} } from './models/{{{name}}}';
 {{else if enums}}
 export { {{{name}}}{{#if @root.postfixModels}} as {{{name}}}{{{@root.postfixModels}}}{{/if}} } from './models/{{{name}}}';

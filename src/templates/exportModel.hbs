@@ -1,11 +1,6 @@
 {{>header}}
 
-{{#if imports}}
-
-{{#each imports}}
-import type { {{{this}}} } from './{{{this}}}';
-{{/each}}
-{{/if}}
+{{{modelImports this './'}}}
 
 {{#equals export 'interface'}}
 {{>exportInterface}}
@@ -16,11 +11,8 @@ import type { {{{this}}} } from './{{{this}}}';
 {{else equals export 'all-of'}}
 {{>exportComposition}}
 {{else equals export 'enum'}}
-{{#if @root.useUnionTypes}}
-{{>exportType}}
-{{else}}
 {{>exportEnum}}
-{{/if}}
+{{>exportEnum exportType="type"}}
 {{else}}
 {{>exportType}}
 {{/equals}}

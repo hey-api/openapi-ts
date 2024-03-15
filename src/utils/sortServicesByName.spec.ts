@@ -4,19 +4,22 @@ import { sortServicesByName } from './sortServicesByName';
 describe('sortServicesByName', () => {
     it('should return sorted list', () => {
         const john: Service = {
+            $refs: [],
+            imports: [],
             name: 'John',
             operations: [],
-            imports: [],
         };
         const jane: Service = {
+            $refs: [],
+            imports: [],
             name: 'Jane',
             operations: [],
-            imports: [],
         };
         const doe: Service = {
+            $refs: [],
+            imports: [],
             name: 'Doe',
             operations: [],
-            imports: [],
         };
 
         const services: Service[] = [john, jane, doe];

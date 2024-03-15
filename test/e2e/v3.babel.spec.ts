@@ -8,7 +8,7 @@ import server from './scripts/server';
 describe('v3.babel', () => {
     beforeAll(async () => {
         cleanup('v3/babel');
-        await generateClient('v3/babel', 'v3', 'fetch', true, true);
+        await generateClient('v3/babel', 'v3', 'fetch', true);
         copyAsset('index.html', 'v3/babel/index.html');
         copyAsset('main.ts', 'v3/babel/main.ts');
         compileWithBabel('v3/babel');
@@ -184,7 +184,7 @@ describe('v3.babel', () => {
 describe('v3.babel useOptions', () => {
     beforeAll(async () => {
         cleanup('v3/babel');
-        await generateClient('v3/babel', 'v3', 'fetch', true, true);
+        await generateClient('v3/babel', 'v3', 'fetch', true);
         copyAsset('index.html', 'v3/babel/index.html');
         copyAsset('main.ts', 'v3/babel/main.ts');
         compileWithBabel('v3/babel');

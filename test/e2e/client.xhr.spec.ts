@@ -8,7 +8,7 @@ import server from './scripts/server';
 describe('client.xhr', () => {
     beforeAll(async () => {
         cleanup('client/xhr');
-        await generateClient('client/xhr', 'v3', 'xhr', false, false, 'ApiClient');
+        await generateClient('client/xhr', 'v3', 'xhr', false, 'ApiClient');
         copyAsset('index.html', 'client/xhr/index.html');
         copyAsset('main.ts', 'client/xhr/main.ts');
         compileWithTypescript('client/xhr');

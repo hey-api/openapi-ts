@@ -3,22 +3,24 @@ import { getModelTemplate } from './getModelTemplate';
 describe('getModelTemplate', () => {
     it('should return generic for template type', () => {
         const template = getModelTemplate({
-            type: 'Link<Model>',
+            $refs: [],
             base: 'Link',
-            template: 'Model',
             imports: ['Model'],
             isNullable: false,
+            template: 'Model',
+            type: 'Link<Model>',
         });
         expect(template).toEqual('<T>');
     });
 
     it('should return empty for primary type', () => {
         const template = getModelTemplate({
-            type: 'string',
+            $refs: [],
             base: 'string',
-            template: null,
             imports: [],
             isNullable: false,
+            template: null,
+            type: 'string',
         });
         expect(template).toEqual('');
     });
