@@ -14,9 +14,10 @@ describe('writeClientServices', () => {
     it('should write to filesystem', async () => {
         const services: Service[] = [
             {
+                $refs: [],
+                imports: [],
                 name: 'User',
                 operations: [],
-                imports: [],
             },
         ];
 
@@ -49,7 +50,6 @@ describe('writeClientServices', () => {
             postfixServices: 'Service',
             serviceResponse: 'body',
             useOptions: false,
-            useUnionTypes: false,
         });
 
         expect(writeFile).toBeCalledWith(resolve('/', '/UserService.ts'), `service${EOL}`);

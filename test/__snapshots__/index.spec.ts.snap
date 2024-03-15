@@ -1000,6 +1000,11 @@ export enum EnumWithExtensions {
      */
     CUSTOM_ERROR = 500,
 }
+/**
+ * This is a simple enum with numbers
+ */
+export type TEnumWithExtensions = 200 | 400 | 500;
+
 "
 `;
 
@@ -1028,6 +1033,11 @@ export enum EnumWithNumbers {
     '_-1.2' = -1.2,
     '_-1.3' = -1.3,
 }
+/**
+ * This is a simple enum with numbers
+ */
+export type TEnumWithNumbers = 1 | 2 | 3 | 1.1 | 1.2 | 1.3 | 100 | 200 | 300 | -100 | -200 | -300 | -1.1 | -1.2 | -1.3;
+
 "
 `;
 
@@ -1047,6 +1057,11 @@ export enum EnumWithStrings {
     _DOUBLE_QUOTES_ = '"Double Quotes"',
     NON_ASCII__ØÆÅÔÖ_ØÆÅÔÖ字符串 = 'Non-ascii: øæåôöØÆÅÔÖ字符串',
 }
+/**
+ * This is a simple enum with strings
+ */
+export type TEnumWithStrings = 'Success' | 'Warning' | 'Error' | '\\'Single Quote\\'' | '"Double Quotes"' | 'Non-ascii: øæåôöØÆÅÔÖ字符串';
+
 "
 `;
 
@@ -1197,11 +1212,11 @@ export type ModelWithEnum = {
     /**
      * This is a simple enum with strings
      */
-    test?: ModelWithEnum.test;
+    test?: 'Success' | 'Warning' | 'Error' | 'ØÆÅ字符串';
     /**
      * These are the HTTP error code enums
      */
-    statusCode?: ModelWithEnum.statusCode;
+    statusCode?: '100' | '200 FOO' | '300 FOO_BAR' | '400 foo-bar' | '500 foo.bar' | '600 foo&bar';
     /**
      * Simple boolean enum
      */
@@ -4701,6 +4716,7 @@ export { Enum1 } from './models/Enum1';
 export type { EnumFromDescription } from './models/EnumFromDescription';
 export { EnumWithExtensions } from './models/EnumWithExtensions';
 export { EnumWithNumbers } from './models/EnumWithNumbers';
+export { EnumWithReplacedCharacters } from './models/EnumWithReplacedCharacters';
 export { EnumWithStrings } from './models/EnumWithStrings';
 export type { File } from './models/File';
 export type { FreeFormObjectWithAdditionalPropertiesEqEmptyObject } from './models/FreeFormObjectWithAdditionalPropertiesEqEmptyObject';
@@ -4722,6 +4738,11 @@ export { ModelWithEnum } from './models/ModelWithEnum';
 export type { ModelWithEnumFromDescription } from './models/ModelWithEnumFromDescription';
 export { ModelWithEnumWithHyphen } from './models/ModelWithEnumWithHyphen';
 export type { ModelWithInteger } from './models/ModelWithInteger';
+export type { ModelWithNestedArrayEnums } from './models/ModelWithNestedArrayEnums';
+export type { ModelWithNestedArrayEnumsData } from './models/ModelWithNestedArrayEnumsData';
+export { ModelWithNestedArrayEnumsDataBar } from './models/ModelWithNestedArrayEnumsDataBar';
+export { ModelWithNestedArrayEnumsDataFoo } from './models/ModelWithNestedArrayEnumsDataFoo';
+export type { ModelWithNestedCompositionEnums } from './models/ModelWithNestedCompositionEnums';
 export type { ModelWithNestedEnums } from './models/ModelWithNestedEnums';
 export type { ModelWithNestedProperties } from './models/ModelWithNestedProperties';
 export type { ModelWithNullableObject } from './models/ModelWithNullableObject';
@@ -4787,6 +4808,7 @@ export { $Enum1 } from './schemas/$Enum1';
 export { $EnumFromDescription } from './schemas/$EnumFromDescription';
 export { $EnumWithExtensions } from './schemas/$EnumWithExtensions';
 export { $EnumWithNumbers } from './schemas/$EnumWithNumbers';
+export { $EnumWithReplacedCharacters } from './schemas/$EnumWithReplacedCharacters';
 export { $EnumWithStrings } from './schemas/$EnumWithStrings';
 export { $File } from './schemas/$File';
 export { $FreeFormObjectWithAdditionalPropertiesEqEmptyObject } from './schemas/$FreeFormObjectWithAdditionalPropertiesEqEmptyObject';
@@ -4808,6 +4830,11 @@ export { $ModelWithEnum } from './schemas/$ModelWithEnum';
 export { $ModelWithEnumFromDescription } from './schemas/$ModelWithEnumFromDescription';
 export { $ModelWithEnumWithHyphen } from './schemas/$ModelWithEnumWithHyphen';
 export { $ModelWithInteger } from './schemas/$ModelWithInteger';
+export { $ModelWithNestedArrayEnums } from './schemas/$ModelWithNestedArrayEnums';
+export { $ModelWithNestedArrayEnumsData } from './schemas/$ModelWithNestedArrayEnumsData';
+export { $ModelWithNestedArrayEnumsDataBar } from './schemas/$ModelWithNestedArrayEnumsDataBar';
+export { $ModelWithNestedArrayEnumsDataFoo } from './schemas/$ModelWithNestedArrayEnumsDataFoo';
+export { $ModelWithNestedCompositionEnums } from './schemas/$ModelWithNestedCompositionEnums';
 export { $ModelWithNestedEnums } from './schemas/$ModelWithNestedEnums';
 export { $ModelWithNestedProperties } from './schemas/$ModelWithNestedProperties';
 export { $ModelWithNullableObject } from './schemas/$ModelWithNullableObject';
@@ -5199,12 +5226,12 @@ exports[`v3 should generate: test/generated/v3/models/CompositionWithNestedAnyOf
 /* tslint:disable */
 /* eslint-disable */
 import type { ConstValue } from './ConstValue';
-import type { Enum1 } from './Enum1';
+import type { TEnum1 } from './Enum1';
 /**
  * This is a model with one property with a 'any of' relationship where the options are not $ref
  */
 export type CompositionWithNestedAnyOfAndNull = {
-    propA?: Array<Enum1 | ConstValue> | null;
+    propA?: Array<TEnum1 | ConstValue> | null;
 };
 
 "
@@ -5449,6 +5476,8 @@ export enum Enum1 {
     BIRD = 'Bird',
     DOG = 'Dog',
 }
+export type TEnum1 = 'Bird' | 'Dog';
+
 "
 `;
 
@@ -5486,6 +5515,11 @@ export enum EnumWithExtensions {
      */
     CUSTOM_ERROR = 500,
 }
+/**
+ * This is a simple enum with numbers
+ */
+export type TEnumWithExtensions = 200 | 400 | 500;
+
 "
 `;
 
@@ -5514,6 +5548,28 @@ export enum EnumWithNumbers {
     '_-1.2' = -1.2,
     '_-1.3' = -1.3,
 }
+/**
+ * This is a simple enum with numbers
+ */
+export type TEnumWithNumbers = 1 | 2 | 3 | 1.1 | 1.2 | 1.3 | 100 | 200 | 300 | -100 | -200 | -300 | -1.1 | -1.2 | -1.3;
+
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/models/EnumWithReplacedCharacters.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export enum EnumWithReplacedCharacters {
+    _SINGLE_QUOTE_ = '\\'Single Quote\\'',
+    _DOUBLE_QUOTES_ = '"Double Quotes"',
+    ØÆÅÔÖ_ØÆÅÔÖ字符串 = 'øæåôöØÆÅÔÖ字符串',
+    '_3.1' = 3.1,
+    EMPTY_STRING = '',
+}
+export type TEnumWithReplacedCharacters = '\\'Single Quote\\'' | '"Double Quotes"' | 'øæåôöØÆÅÔÖ字符串' | 3.1 | '';
+
 "
 `;
 
@@ -5533,6 +5589,11 @@ export enum EnumWithStrings {
     _DOUBLE_QUOTES_ = '"Double Quotes"',
     NON_ASCII__ØÆÅÔÖ_ØÆÅÔÖ字符串 = 'Non-ascii: øæåôöØÆÅÔÖ字符串',
 }
+/**
+ * This is a simple enum with strings
+ */
+export type TEnumWithStrings = 'Success' | 'Warning' | 'Error' | '\\'Single Quote\\'' | '"Double Quotes"' | 'Non-ascii: øæåôöØÆÅÔÖ字符串';
+
 "
 `;
 
@@ -5801,11 +5862,11 @@ export type ModelWithEnum = {
     /**
      * This is a simple enum with strings
      */
-    test?: ModelWithEnum.test;
+    test?: 'Success' | 'Warning' | 'Error' | 'ØÆÅ字符串';
     /**
      * These are the HTTP error code enums
      */
-    statusCode?: ModelWithEnum.statusCode;
+    statusCode?: '100' | '200 FOO' | '300 FOO_BAR' | '400 foo-bar' | '500 foo.bar' | '600 foo&bar';
     /**
      * Simple boolean enum
      */
@@ -5864,7 +5925,7 @@ exports[`v3 should generate: test/generated/v3/models/ModelWithEnumWithHyphen.ts
  * This is a model with one enum with escaped name
  */
 export type ModelWithEnumWithHyphen = {
-    'foo-bar-baz-qux'?: ModelWithEnumWithHyphen.fooBarBazQux;
+    'foo-bar-baz-qux'?: '3.0';
 };
 export namespace ModelWithEnumWithHyphen {
     export enum fooBarBazQux {
@@ -5888,6 +5949,76 @@ export type ModelWithInteger = {
      * This is a simple number property
      */
     prop?: number;
+};
+
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/models/ModelWithNestedArrayEnums.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { ModelWithNestedArrayEnumsData } from './ModelWithNestedArrayEnumsData';
+export type ModelWithNestedArrayEnums = {
+    array_strings?: Array<string>;
+    data?: ModelWithNestedArrayEnumsData;
+};
+
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/models/ModelWithNestedArrayEnumsData.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { TModelWithNestedArrayEnumsDataBar } from './ModelWithNestedArrayEnumsDataBar';
+import type { TModelWithNestedArrayEnumsDataFoo } from './ModelWithNestedArrayEnumsDataFoo';
+export type ModelWithNestedArrayEnumsData = {
+    foo?: Array<TModelWithNestedArrayEnumsDataFoo>;
+    bar?: Array<TModelWithNestedArrayEnumsDataBar>;
+};
+
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/models/ModelWithNestedArrayEnumsDataBar.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export enum ModelWithNestedArrayEnumsDataBar {
+    BAZ = 'baz',
+    QUX = 'qux',
+}
+export type TModelWithNestedArrayEnumsDataBar = 'baz' | 'qux';
+
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/models/ModelWithNestedArrayEnumsDataFoo.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export enum ModelWithNestedArrayEnumsDataFoo {
+    FOO = 'foo',
+    BAR = 'bar',
+}
+export type TModelWithNestedArrayEnumsDataFoo = 'foo' | 'bar';
+
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/models/ModelWithNestedCompositionEnums.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { TModelWithNestedArrayEnumsDataFoo } from './ModelWithNestedArrayEnumsDataFoo';
+export type ModelWithNestedCompositionEnums = {
+    foo?: TModelWithNestedArrayEnumsDataFoo;
 };
 
 "
@@ -5978,15 +6109,19 @@ exports[`v3 should generate: test/generated/v3/models/ModelWithOneOfEnum.ts 1`] 
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type ModelWithOneOfEnum = ({
-    foo: ModelWithOneOfEnum.foo;
+export type ModelWithOneOfEnum = {
+    foo: 'Bar';
+} | {
+    foo: 'Baz';
+} | {
+    foo: 'Qux';
 } | {
     content: string;
-    foo: ModelWithOneOfEnum.foo;
+    foo: 'Quux';
 } | {
-    content: [string | string];
-    foo: ModelWithOneOfEnum.foo;
-});
+    content: [string, string];
+    foo: 'Corge';
+};
 export namespace ModelWithOneOfEnum {
     export enum foo {
         BAR = 'Bar',
@@ -7117,6 +7252,17 @@ export const $EnumWithNumbers = {
 "
 `;
 
+exports[`v3 should generate: test/generated/v3/schemas/$EnumWithReplacedCharacters.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $EnumWithReplacedCharacters = {
+    type: 'Enum',
+} as const;
+"
+`;
+
 exports[`v3 should generate: test/generated/v3/schemas/$EnumWithStrings.ts 1`] = `
 "/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
@@ -7534,6 +7680,94 @@ export const $ModelWithInteger = {
         prop: {
             type: 'number',
             description: \`This is a simple number property\`,
+        },
+    },
+} as const;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/schemas/$ModelWithNestedArrayEnums.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $ModelWithNestedArrayEnums = {
+    properties: {
+        array_strings: {
+            type: 'array',
+            contains: {
+                type: 'string',
+            },
+        },
+        data: {
+            type: 'all-of',
+            contains: [{
+                type: 'ModelWithNestedArrayEnumsData',
+            }],
+        },
+    },
+} as const;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/schemas/$ModelWithNestedArrayEnumsData.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $ModelWithNestedArrayEnumsData = {
+    properties: {
+        foo: {
+            type: 'array',
+            contains: {
+                type: 'ModelWithNestedArrayEnumsDataFoo',
+            },
+        },
+        bar: {
+            type: 'array',
+            contains: {
+                type: 'ModelWithNestedArrayEnumsDataBar',
+            },
+        },
+    },
+} as const;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/schemas/$ModelWithNestedArrayEnumsDataBar.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $ModelWithNestedArrayEnumsDataBar = {
+    type: 'Enum',
+} as const;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/schemas/$ModelWithNestedArrayEnumsDataFoo.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $ModelWithNestedArrayEnumsDataFoo = {
+    type: 'Enum',
+} as const;
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/schemas/$ModelWithNestedCompositionEnums.ts 1`] = `
+"/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export const $ModelWithNestedCompositionEnums = {
+    properties: {
+        foo: {
+            type: 'all-of',
+            contains: [{
+                type: 'ModelWithNestedArrayEnumsDataFoo',
+            }],
         },
     },
 } as const;
@@ -8736,6 +8970,8 @@ exports[`v3 should generate: test/generated/v3/services/ParametersService.ts 1`]
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { TModelWithNestedArrayEnumsDataFoo } from '../models/ModelWithNestedArrayEnumsDataFoo';
+import type { ModelWithOneOfEnum } from '../models/ModelWithOneOfEnum';
 import type { ModelWithString } from '../models/ModelWithString';
 import type { Pageable } from '../models/Pageable';
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -8744,20 +8980,24 @@ import { request as __request } from '../core/request';
 export class ParametersService {
     /**
      * @param parameterHeader This is the parameter that goes into the header
+     * @param fooAllOfEnum
      * @param parameterQuery This is the parameter that goes into the query params
      * @param parameterForm This is the parameter that goes into the form data
      * @param parameterCookie This is the parameter that goes into the cookie
      * @param parameterPath This is the parameter that goes into the path
      * @param requestBody This is the parameter that goes into the body
+     * @param fooRefEnum
      * @throws ApiError
      */
     public static callWithParameters(
         parameterHeader: string | null,
+        fooAllOfEnum: TModelWithNestedArrayEnumsDataFoo,
         parameterQuery: string | null,
         parameterForm: string | null,
         parameterCookie: string | null,
         parameterPath: string | null,
         requestBody: ModelWithString | null,
+        fooRefEnum?: TModelWithNestedArrayEnumsDataFoo,
     ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'POST',
@@ -8772,6 +9012,8 @@ export class ParametersService {
                 'parameterHeader': parameterHeader,
             },
             query: {
+                'foo_ref_enum': fooRefEnum,
+                'foo_all_of_enum': fooAllOfEnum,
                 'parameterQuery': parameterQuery,
             },
             formData: {
@@ -8835,7 +9077,7 @@ export class ParametersService {
      * @throws ApiError
      */
     public static getCallWithOptionalParam(
-        requestBody: ModelWithString,
+        requestBody: ModelWithOneOfEnum,
         parameter?: string,
     ): CancelablePromise<void> {
         return __request(OpenAPI, {

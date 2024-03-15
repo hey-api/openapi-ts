@@ -23,7 +23,6 @@ describe('bin', () => {
             '--client',
             'fetch',
             '--useOptions',
-            '--useUnionTypes',
             '--exportCore',
             'true',
             '--exportServices',

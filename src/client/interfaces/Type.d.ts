@@ -1,7 +1,8 @@
 export interface Type {
-    type: string;
+    $refs: string[];
     base: string;
-    template: string | null;
     imports: string[];
     isNullable: boolean;
+    template: string | null;
+    type: string;
 }

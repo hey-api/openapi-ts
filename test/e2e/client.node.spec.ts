@@ -6,7 +6,7 @@ import server from './scripts/server';
 describe('client.node', () => {
     beforeAll(async () => {
         cleanup('client/node');
-        await generateClient('client/node', 'v3', 'node', false, false, 'ApiClient');
+        await generateClient('client/node', 'v3', 'node', false, 'ApiClient');
         compileWithTypescript('client/node');
         await server.start('client/node');
     }, 30000);

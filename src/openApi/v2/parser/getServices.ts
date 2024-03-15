@@ -36,6 +36,7 @@ export const getServices = (openApi: OpenApi, options: Options): Service[] => {
                                 // If we have already declared a service, then we should fetch that and
                                 // append the new method to it. Otherwise we should create a new service object.
                                 const service: Service = services.get(operation.service) || {
+                                    $refs: [],
                                     name: operation.service,
                                     operations: [],
                                     imports: [],

@@ -6,7 +6,7 @@ import server from './scripts/server';
 describe('client.axios', () => {
     beforeAll(async () => {
         cleanup('client/axios');
-        await generateClient('client/axios', 'v3', 'axios', false, false, 'ApiClient');
+        await generateClient('client/axios', 'v3', 'axios', false, 'ApiClient');
         compileWithTypescript('client/axios');
         await server.start('client/axios');
     }, 30000);

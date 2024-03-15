@@ -12,11 +12,12 @@ const encode = (value: string): string => sanitizeTypeName(value);
  */
 export const getType = (type: string = 'any', format?: string): Type => {
     const result: Type = {
-        type: 'any',
+        $refs: [],
         base: 'any',
-        template: null,
         imports: [],
         isNullable: false,
+        template: null,
+        type: 'any',
     };
 
     const mapped = getMappedType(type, format);

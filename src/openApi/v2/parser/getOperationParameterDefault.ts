@@ -20,7 +20,8 @@ export const getOperationParameterDefault = (
         case 'integer':
         case 'number':
             if (operationParameter.export === 'enum' && operationParameter.enum?.[parameter.default]) {
-                return operationParameter.enum[parameter.default].value;
+                const { value } = operationParameter.enum[parameter.default];
+                return typeof value === 'string' ? `'${value}'` : String(value);
             }
             return parameter.default;
 

@@ -1,7 +1,7 @@
+import type { Model } from './Model';
 import type { OperationParameter } from './OperationParameter';
 
-export interface OperationParameters {
-    imports: string[];
+export interface OperationParameters extends Pick<Model, '$refs' | 'imports'> {
     parameters: OperationParameter[];
     parametersBody: OperationParameter | null;
     parametersCookie: OperationParameter[];

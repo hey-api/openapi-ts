@@ -1,7 +1,6 @@
+import type { Model } from './Model';
 import type { Operation } from './Operation';
 
-export interface Service {
-    imports: string[];
-    name: string;
+export interface Service extends Pick<Model, '$refs' | 'imports' | 'name'> {
     operations: Operation[];
 }

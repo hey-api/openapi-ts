@@ -6,6 +6,7 @@ import { getRef } from './getRef';
 
 export const getOperationParameters = (openApi: OpenApi, parameters: OpenApiParameter[]): OperationParameters => {
     const operationParameters: OperationParameters = {
+        $refs: [],
         imports: [],
         parameters: [],
         parametersPath: [],
@@ -28,31 +29,36 @@ export const getOperationParameters = (openApi: OpenApi, parameters: OpenApiPara
                 case 'path':
                     operationParameters.parametersPath.push(parameter);
                     operationParameters.parameters.push(parameter);
-                    operationParameters.imports.push(...parameter.imports);
+                    operationParameters.$refs = [...operationParameters.$refs, ...parameter.$refs];
+                    operationParameters.imports = [...operationParameters.imports, ...parameter.imports];
                     break;
 
                 case 'query':
                     operationParameters.parametersQuery.push(parameter);
                     operationParameters.parameters.push(parameter);
-                    operationParameters.imports.push(...parameter.imports);
+                    operationParameters.$refs = [...operationParameters.$refs, ...parameter.$refs];
+                    operationParameters.imports = [...operationParameters.imports, ...parameter.imports];
                     break;
 
                 case 'formData':
                     operationParameters.parametersForm.push(parameter);
                     operationParameters.parameters.push(parameter);
-                    operationParameters.imports.push(...parameter.imports);
+                    operationParameters.$refs = [...operationParameters.$refs, ...parameter.$refs];
+                    operationParameters.imports = [...operationParameters.imports, ...parameter.imports];
                     break;
 
                 case 'cookie':
                     operationParameters.parametersCookie.push(parameter);
                     operationParameters.parameters.push(parameter);
-                    operationParameters.imports.push(...parameter.imports);
+                    operationParameters.$refs = [...operationParameters.$refs, ...parameter.$refs];
+                    operationParameters.imports = [...operationParameters.imports, ...parameter.imports];
                     break;
 
                 case 'header':
                     operationParameters.parametersHeader.push(parameter);
                     operationParameters.parameters.push(parameter);
-                    operationParameters.imports.push(...parameter.imports);
+                    operationParameters.$refs = [...operationParameters.$refs, ...parameter.$refs];
+                    operationParameters.imports = [...operationParameters.imports, ...parameter.imports];
                     break;
             }
         }
