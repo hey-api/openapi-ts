@@ -7,23 +7,25 @@
     ],
     "env": {
         "es6": true,
-        "node": true,
-        "jest": true
+        "jest": true,
+        "node": true
     },
     "plugins": ["simple-import-sort"],
     "rules": {
+        "@typescript-eslint/ban-ts-comment": 0,
+        "@typescript-eslint/ban-ts-ignore": 0,
+        "@typescript-eslint/explicit-function-return-type": 0,
+        "@typescript-eslint/explicit-module-boundary-types": 0,
         "@typescript-eslint/no-explicit-any": 0,
         "@typescript-eslint/no-inferrable-types": 0,
         "@typescript-eslint/no-non-null-assertion": 0,
         "@typescript-eslint/no-var-requires": 0,
-        "@typescript-eslint/ban-ts-ignore": 0,
-        "@typescript-eslint/ban-ts-comment": 0,
-        "@typescript-eslint/explicit-function-return-type": 0,
-        "@typescript-eslint/explicit-module-boundary-types": 0,
-        "sort-imports": "off",
+        "arrow-body-style": "error",
         "import/order": "off",
-        "simple-import-sort/imports": "error",
+        "object-shorthand": "error",
+        "prettier/prettier": ["error"],
         "simple-import-sort/exports": "error",
-        "prettier/prettier": ["error"]
+        "simple-import-sort/imports": "error",
+        "sort-imports": "off"
     }
 }

@@ -126,12 +126,20 @@ export const writeClient = async (
         );
     }
 
+    const pathPackageJson = Path.resolve(process.cwd(), 'package.json');
+    const require = createRequire('/');
+    const json = require(pathPackageJson);
+
+    const allDependencies = [json.dependencies, json.devDependencies].reduce(
+        (res, deps) => ({
+            ...res,
+            ...deps,
+        }),
+        {}
+    );
+
     if (options.autoformat) {
-        const pathPackageJson = Path.resolve(process.cwd(), 'package.json');
-        const require = createRequire('/');
-        const json = require(pathPackageJson);
-        const usesPrettier = [json.dependencies, json.devDependencies].some(deps => Boolean(deps?.prettier));
-        if (usesPrettier) {
+        if (allDependencies.prettier) {
             spawnSync('prettier', [
                 '--ignore-unknown',
                 options.output,

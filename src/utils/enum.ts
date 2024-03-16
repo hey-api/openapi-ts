@@ -1,3 +1,5 @@
+import { unescapeName } from './escapeName';
+
 /**
  * Sanitizes names of enums, so they are valid typescript identifiers of a certain form.
  *
@@ -41,11 +43,7 @@ export const enumName = (name?: string, exportType?: 'type') => {
     if (!name) {
         return name;
     }
-    let escapedName = name;
-    if (name.startsWith("'") && name.endsWith("'")) {
-        escapedName = name.slice(1, name.length - 1);
-    }
-    escapedName = escapedName.replace(/-([a-z])/gi, ($0, $1: string) => $1.toLocaleUpperCase());
+    const escapedName = unescapeName(name).replace(/-([a-z])/gi, ($0, $1: string) => $1.toLocaleUpperCase());
     if (exportType !== 'type') {
         return escapedName;
     }

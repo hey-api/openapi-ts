@@ -8,7 +8,5 @@
  *
  * @param pattern
  */
-export const getPattern = (pattern?: string): string | undefined => {
-    // eslint-disable-next-line prettier/prettier
-    return pattern?.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-};
+export const getPattern = (pattern?: string): string | undefined =>
+    pattern?.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
