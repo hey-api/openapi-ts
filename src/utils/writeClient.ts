@@ -130,7 +130,7 @@ export const writeClient = async (
         const pathPackageJson = Path.resolve(process.cwd(), 'package.json');
         const require = createRequire('/');
         const json = require(pathPackageJson);
-        const usesPrettier = [json.dependencies, json.devDependencies].some(deps => Boolean(deps.prettier));
+        const usesPrettier = [json.dependencies, json.devDependencies].some(deps => Boolean(deps?.prettier));
         if (usesPrettier) {
             spawnSync('prettier', [
                 '--ignore-unknown',
