@@ -60,6 +60,54 @@
                 "operationId": "PatchCallWithoutParametersAndResponse"
             }
         },
+        "/api/v{api-version}/foo/{foo}/bar/{bar}": {
+            "delete": {
+                "tags": [
+                    "Parameters"
+                ],
+                "operationId": "deleteFoo",
+                "parameters": [
+                    {
+                        "description": "foo in method",
+                        "in": "path",
+                        "name": "foo",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "bar in method",
+                        "in": "path",
+                        "name": "bar",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            },
+            "parameters": [
+                {
+                    "description": "foo in global parameters",
+                    "in": "path",
+                    "name": "foo",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "description": "bar in global parameters",
+                    "in": "path",
+                    "name": "bar",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
         "/api/v{api-version}/descriptions/": {
             "post": {
                 "tags": [

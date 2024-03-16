@@ -3466,27 +3466,81 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 
 export type TDataCallWithDefaultParameters = {
+    /**
+     * This is a simple string with default value
+     */
     parameterString?: string | null;
+    /**
+     * This is a simple number with default value
+     */
     parameterNumber?: number | null;
+    /**
+     * This is a simple boolean with default value
+     */
     parameterBoolean?: boolean | null;
+    /**
+     * This is a simple enum with default value
+     */
     parameterEnum?: 'Success' | 'Warning' | 'Error';
+    /**
+     * This is a simple model with default value
+     */
     parameterModel?: ModelWithString | null;
 };
 export type TDataCallWithDefaultOptionalParameters = {
+    /**
+     * This is a simple string that is optional with default value
+     */
     parameterString?: string;
+    /**
+     * This is a simple number that is optional with default value
+     */
     parameterNumber?: number;
+    /**
+     * This is a simple boolean that is optional with default value
+     */
     parameterBoolean?: boolean;
+    /**
+     * This is a simple enum that is optional with default value
+     */
     parameterEnum?: 'Success' | 'Warning' | 'Error';
+    /**
+     * This is a simple model that is optional with default value
+     */
     parameterModel?: ModelWithString;
 };
 export type TDataCallToTestOrderOfParams = {
+    /**
+     * This is a string with no default
+     */
     parameterStringWithNoDefault: string;
+    /**
+     * This is a optional string with default
+     */
     parameterOptionalStringWithDefault?: string;
+    /**
+     * This is a optional string with empty default
+     */
     parameterOptionalStringWithEmptyDefault?: string;
+    /**
+     * This is a optional string with no default
+     */
     parameterOptionalStringWithNoDefault?: string;
+    /**
+     * This is a string with default
+     */
     parameterStringWithDefault?: string;
+    /**
+     * This is a string with empty default
+     */
     parameterStringWithEmptyDefault?: string;
+    /**
+     * This is a string that can be null with no default
+     */
     parameterStringNullableWithNoDefault?: string | null;
+    /**
+     * This is a string that can be null with default
+     */
     parameterStringNullableWithDefault?: string | null;
 };
 
@@ -7793,6 +7847,22 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 
 export class ParametersService {
+    /**
+     * @param foo foo in method
+     * @param bar bar in method
+     * @throws ApiError
+     */
+    public static deleteFoo(foo: string, bar: string): CancelablePromise<void> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/api/v{api-version}/foo/{foo}/bar/{bar}',
+            path: {
+                foo: foo,
+                bar: bar,
+            },
+        });
+    }
+
     /**
      * @param parameterHeader This is the parameter that goes into the header
      * @param fooAllOfEnum
