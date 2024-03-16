@@ -11,6 +11,7 @@ import type { OpenApi } from '../openApi/v3/interfaces/OpenApi';
 import type { OpenApiSchema } from '../openApi/v3/interfaces/OpenApiSchema';
 import { inferType } from '../openApi/v3/parser/inferType';
 import { enumKey, enumName, enumValue } from './enum';
+import { escapeName } from './escapeName';
 import { unique } from './unique';
 
 const inlineEnum = (openApi: OpenApi, model: Model) => {
@@ -63,11 +64,28 @@ const modelImports = (openApi: OpenApi, model: Model | Service, path: string) =>
     return imports.join('\n');
 };
 
+const dataParameters = (parameters: OperationParameter[]) => {
+    const output = parameters.map(parameter => {
+        const key = parameter.prop;
+        const value = parameter.name;
+        if (key === value) {
+            return key;
+        }
+        if (escapeName(key) === key) {
+            return `${key}: ${value}`;
+        }
+        return `'${key}': ${value}`;
+    });
+    return output.join(', ');
+};
+
 export const registerHandlebarHelpers = (
     openApi: OpenApi,
     root: Pick<Required<Options>, 'httpClient' | 'serviceResponse' | 'useOptions'>
 ): void => {
     Handlebars.registerHelper('camelCase', camelCase);
+
+    Handlebars.registerHelper('dataParameters', dataParameters);
 
     Handlebars.registerHelper('debugThis', function (value) {
         console.log(value);
