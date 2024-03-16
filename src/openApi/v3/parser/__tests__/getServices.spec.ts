@@ -1,5 +1,5 @@
-import type { Options } from '../../../client/interfaces/Options';
-import { getServices } from './getServices';
+import type { Options } from '../../../../client/interfaces/Options';
+import { getServices } from '../getServices';
 
 describe('getServices', () => {
     it('should create a unnamed service if tags are empty', () => {
