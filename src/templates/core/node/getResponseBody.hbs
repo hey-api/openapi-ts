@@ -9,7 +9,7 @@ export const getResponseBody = async (response: Response): Promise<any> => {
 				const isBinary = binaryTypes.some(type => contentType.toLowerCase().startsWith(type));
 				if (isJSON) {
 					return await response.json();
-				} else if (isBinary) {}
+				} else if (isBinary) {
 					return await response.blob();
 				} else {
 					return await response.text();

@@ -1229,6 +1229,49 @@
                 }
             }
         },
+        "/api/v{api-version}/file/{id}": {
+            "get": {
+                "tags": [
+                    "FileResponse"
+                ],
+                "operationId": "FileResponse",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "api-version",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "audio/*": {
+                                "schema": {
+                                    "type": "file"
+                                }
+                            },
+                            "video/*": {
+                                "schema": {
+                                    "type": "file"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v{api-version}/complex": {
             "get": {
                 "tags": [
