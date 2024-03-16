@@ -6,16 +6,16 @@ import type { OpenApiServer } from './OpenApiServer';
  * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#pathItemObject
  */
 export interface OpenApiPath {
-    summary?: string;
+    delete?: OpenApiOperation;
     description?: string;
     get?: OpenApiOperation;
-    put?: OpenApiOperation;
-    post?: OpenApiOperation;
-    delete?: OpenApiOperation;
-    options?: OpenApiOperation;
     head?: OpenApiOperation;
-    patch?: OpenApiOperation;
-    trace?: OpenApiOperation;
-    servers?: OpenApiServer[];
+    options?: OpenApiOperation;
     parameters?: OpenApiParameter[];
+    patch?: OpenApiOperation;
+    post?: OpenApiOperation;
+    put?: OpenApiOperation;
+    servers?: OpenApiServer[];
+    summary?: string;
+    trace?: OpenApiOperation;
 }

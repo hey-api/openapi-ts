@@ -42,6 +42,11 @@ import { request as __request } from '../core/request';
 {{#if parameters}}
 export type {{{nameOperationDataType name}}} = {
 {{#each parameters}}
+{{#if description}}
+/**
+ * {{{escapeComment description}}}
+ */
+{{/if}}
 {{{name}}}{{>isRequired}}: {{>type}},
 {{/each}}
 }
