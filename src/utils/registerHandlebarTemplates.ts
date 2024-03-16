@@ -58,7 +58,7 @@ import templateExportSchema from '../templates/exportSchema.hbs';
 import templateExportService from '../templates/exportService.hbs';
 import templateIndex from '../templates/index.hbs';
 import partialBase from '../templates/partials/base.hbs';
-import partialDestructureData from '../templates/partials/destructureData.hbs';
+import partialDataDestructure from '../templates/partials/dataDestructure.hbs';
 import partialExportComposition from '../templates/partials/exportComposition.hbs';
 import partialExportEnum from '../templates/partials/exportEnum.hbs';
 import partialExportInterface from '../templates/partials/exportInterface.hbs';
@@ -143,7 +143,7 @@ export const registerHandlebarTemplates = (
 
     // Partials for the generations of the models, services, etc.
     Handlebars.registerPartial('base', Handlebars.template(partialBase));
-    Handlebars.registerPartial('destructureData', Handlebars.template(partialDestructureData));
+    Handlebars.registerPartial('dataDestructure', Handlebars.template(partialDataDestructure));
     Handlebars.registerPartial('exportComposition', Handlebars.template(partialExportComposition));
     Handlebars.registerPartial('exportEnum', Handlebars.template(partialExportEnum));
     Handlebars.registerPartial('exportInterface', Handlebars.template(partialExportInterface));

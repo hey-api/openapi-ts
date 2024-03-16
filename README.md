@@ -71,13 +71,13 @@ $ openapi --help
 
 ## Formatting
 
-If you use Prettier, your client will be automatically formatted according to your configuration. To disable automatic formatting, run
+By default, your client will be automatically formatted according to your configuration. To disable automatic formatting, run
 
 ```sh
 openapi -i path/to/openapi.json -o src/client --no-autoformat
 ```
 
-To prevent your client from being processed by linters and similar tools, you should add your output path to the tool's ignore file (e.g. `.eslintignore`).
+You can also prevent your client from being processed by formatters and linters by adding your output path to the tool's ignore file (e.g. `.eslintignore`, `.prettierignore`).
 
 ## Contributing
 
