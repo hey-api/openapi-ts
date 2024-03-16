@@ -2,10 +2,7 @@ import { resolve } from 'path';
 
 import type { Model } from '../client/interfaces/Model';
 import type { HttpClient } from '../HttpClient';
-import type { Indent } from '../Indent';
 import { writeFile } from './fileSystem';
-import { formatCode as f } from './formatCode';
-import { formatIndentation as i } from './formatIndentation';
 import type { Templates } from './registerHandlebarTemplates';
 
 /**
@@ -14,14 +11,12 @@ import type { Templates } from './registerHandlebarTemplates';
  * @param templates The loaded handlebar templates
  * @param outputPath Directory to write the generated files to
  * @param httpClient The selected httpClient (fetch, xhr, node or axios)
- * @param indent Indentation options (4, 2 or tab)
  */
 export const writeClientSchemas = async (
     models: Model[],
     templates: Templates,
     outputPath: string,
-    httpClient: HttpClient,
-    indent: Indent
+    httpClient: HttpClient
 ): Promise<void> => {
     for (const model of models) {
         const file = resolve(outputPath, `$${model.name}.ts`);
@@ -29,6 +24,6 @@ export const writeClientSchemas = async (
             ...model,
             httpClient,
         });
-        await writeFile(file, i(f(templateResult), indent));
+        await writeFile(file, templateResult);
     }
 };

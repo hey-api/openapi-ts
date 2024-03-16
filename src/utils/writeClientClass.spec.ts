@@ -1,6 +1,5 @@
 import type { Client } from '../client/interfaces/Client';
 import { HttpClient } from '../HttpClient';
-import { Indent } from '../Indent';
 import { writeFile } from './fileSystem';
 import type { Templates } from './registerHandlebarTemplates';
 import { writeClientClass } from './writeClientClass';
@@ -37,8 +36,8 @@ describe('writeClientClass', () => {
             index: () => 'index',
         };
 
-        await writeClientClass(client, templates, './dist', HttpClient.FETCH, 'AppClient', Indent.SPACE_4, '');
+        await writeClientClass(client, templates, './dist', HttpClient.FETCH, 'AppClient', '');
 
-        expect(writeFile).toBeCalled();
+        expect(writeFile).toHaveBeenCalled();
     });
 });

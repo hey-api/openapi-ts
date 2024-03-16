@@ -6,12 +6,6 @@ export declare enum HttpClient {
     ANGULAR = 'angular',
 }
 
-export declare enum Indent {
-    SPACE_4 = '4',
-    SPACE_2 = '2',
-    TAB = 'tab',
-}
-
 export type ServiceResponse = 'body' | 'generics' | 'response';
 
 export type Options = {
@@ -47,10 +41,6 @@ export type Options = {
      * The selected httpClient (fetch, xhr, node or axios)
      */
     httpClient?: HttpClient | 'fetch' | 'xhr' | 'node' | 'axios' | 'angular';
-    /**
-     * Indentation options (4, 2 or tab)
-     */
-    indent?: Indent | '4' | '2' | 'tab';
     /**
      * The relative location of the OpenAPI spec
      */
@@ -97,7 +87,6 @@ export declare function generate(options: Options): Promise<void>;
 
 declare type OpenAPI = {
     HttpClient: HttpClient;
-    Indent: Indent;
     generate: typeof generate;
 };
 

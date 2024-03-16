@@ -3,8 +3,6 @@ import { resolve } from 'path';
 import type { Model } from '../client/interfaces/Model';
 import type { Options } from '../client/interfaces/Options';
 import { writeFile } from './fileSystem';
-import { formatCode as f } from './formatCode';
-import { formatIndentation as i } from './formatIndentation';
 import type { Templates } from './registerHandlebarTemplates';
 
 /**
@@ -18,9 +16,9 @@ export const writeClientModels = async (
     models: Model[],
     templates: Templates,
     outputPath: string,
-    options: Pick<Required<Options>, 'httpClient' | 'indent' | 'useDateType'>
+    options: Pick<Required<Options>, 'httpClient' | 'useDateType'>
 ): Promise<void> => {
-    const { httpClient, indent, useDateType } = options;
+    const { httpClient, useDateType } = options;
     for (const model of models) {
         const file = resolve(outputPath, `${model.name}.ts`);
         const templateResult = templates.exports.model({
@@ -28,6 +26,6 @@ export const writeClientModels = async (
             httpClient,
             useDateType,
         });
-        await writeFile(file, i(f(templateResult), indent));
+        await writeFile(file, templateResult);
     }
 };

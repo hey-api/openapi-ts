@@ -1,5 +1,3 @@
-{{>header}}
-
 {{#equals @root.httpClient 'angular'}}
 {{#if @root.exportClient}}
 import { Injectable } from '@angular/core';
@@ -9,11 +7,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import type { Observable } from 'rxjs';
 {{/if}}
-
 {{/equals}}
-
 {{{modelImports this '../models/'}}}
-
 {{#equals @root.serviceResponse 'response'}}
 import type { ApiResult } from '../core/ApiResult';
 {{/equals}}

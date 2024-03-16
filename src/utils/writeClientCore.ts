@@ -3,7 +3,6 @@ import Path from 'path';
 import type { Client } from '../client/interfaces/Client';
 import type { Options } from '../client/interfaces/Options';
 import { copyFile, exists, writeFile } from './fileSystem';
-import { formatIndentation as i } from './formatIndentation';
 import { getHttpRequestName } from './getHttpRequestName';
 import type { Templates } from './registerHandlebarTemplates';
 
@@ -18,10 +17,9 @@ export const writeClientCore = async (
     client: Client,
     templates: Templates,
     outputPath: string,
-    options: Pick<Required<Options>, 'httpClient' | 'indent' | 'serviceResponse'> &
-        Omit<Options, 'httpClient' | 'indent' | 'serviceResponse'>
+    options: Pick<Required<Options>, 'httpClient' | 'serviceResponse'> & Omit<Options, 'httpClient' | 'serviceResponse'>
 ): Promise<void> => {
-    const { clientName, httpClient, indent, request, serviceResponse } = options;
+    const { clientName, httpClient, request, serviceResponse } = options;
     const httpRequest = getHttpRequestName(httpClient);
     const context = {
         clientName,
@@ -32,26 +30,17 @@ export const writeClientCore = async (
         version: client.version,
     };
 
-    await writeFile(Path.resolve(outputPath, 'OpenAPI.ts'), i(templates.core.settings(context), indent));
-    await writeFile(Path.resolve(outputPath, 'ApiError.ts'), i(templates.core.apiError(context), indent));
-    await writeFile(
-        Path.resolve(outputPath, 'ApiRequestOptions.ts'),
-        i(templates.core.apiRequestOptions(context), indent)
-    );
-    await writeFile(Path.resolve(outputPath, 'ApiResult.ts'), i(templates.core.apiResult(context), indent));
-    await writeFile(
-        Path.resolve(outputPath, 'CancelablePromise.ts'),
-        i(templates.core.cancelablePromise(context), indent)
-    );
-    await writeFile(Path.resolve(outputPath, 'request.ts'), i(templates.core.request(context), indent));
-    await writeFile(Path.resolve(outputPath, 'types.ts'), i(templates.core.types(context), indent));
+    await writeFile(Path.resolve(outputPath, 'OpenAPI.ts'), templates.core.settings(context));
+    await writeFile(Path.resolve(outputPath, 'ApiError.ts'), templates.core.apiError(context));
+    await writeFile(Path.resolve(outputPath, 'ApiRequestOptions.ts'), templates.core.apiRequestOptions(context));
+    await writeFile(Path.resolve(outputPath, 'ApiResult.ts'), templates.core.apiResult(context));
+    await writeFile(Path.resolve(outputPath, 'CancelablePromise.ts'), templates.core.cancelablePromise(context));
+    await writeFile(Path.resolve(outputPath, 'request.ts'), templates.core.request(context));
+    await writeFile(Path.resolve(outputPath, 'types.ts'), templates.core.types(context));
 
     if (clientName) {
-        await writeFile(
-            Path.resolve(outputPath, 'BaseHttpRequest.ts'),
-            i(templates.core.baseHttpRequest(context), indent)
-        );
-        await writeFile(Path.resolve(outputPath, `${httpRequest}.ts`), i(templates.core.httpRequest(context), indent));
+        await writeFile(Path.resolve(outputPath, 'BaseHttpRequest.ts'), templates.core.baseHttpRequest(context));
+        await writeFile(Path.resolve(outputPath, `${httpRequest}.ts`), templates.core.httpRequest(context));
     }
 
     if (request) {

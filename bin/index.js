@@ -15,13 +15,12 @@ const params = program
     .option('-c, --client <value>', 'HTTP client to generate [fetch, xhr, node, axios, angular]', 'fetch')
     .option('--name <value>', 'Custom client class name')
     .option('--useOptions [value]', 'Use options instead of arguments', false)
-    .option('--autoformat', 'Process generated files with autoformatter', false)
     .option('--base [value]', 'Manually set base in OpenAPI config instead of inferring from server value')
+    .option('--no-autoformat', 'Disable processing generated files with formatter')
     .option('--exportCore <value>', 'Write core files to disk', true)
     .option('--exportServices <value>', 'Write services to disk', true)
     .option('--exportModels <value>', 'Write models to disk', true)
     .option('--exportSchemas <value>', 'Write schemas to disk', false)
-    .option('--indent <value>', 'Indentation options [4, 2, tab]', '4')
     .option('--postfixServices <value>', 'Service name postfix', 'Service')
     .option('--serviceResponse [value]', 'Define shape of returned value from service calls')
     .option('--useDateType <value>', 'Output Date instead of string for the format "date-time" in the models', false)
@@ -44,7 +43,6 @@ const parseBooleanOrString = value => {
 if (OpenAPI) {
     OpenAPI.generate({
         ...params,
-        autoformat: JSON.parse(params.autoformat) === true,
         clientName: params.name,
         exportCore: JSON.parse(params.exportCore) === true,
         exportModels: parseBooleanOrString(params.exportModels),

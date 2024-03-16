@@ -25,12 +25,12 @@ export const writeClient = async (
     templates: Templates,
     options: Pick<
         Required<Options>,
+        | 'autoformat'
         | 'exportCore'
         | 'exportModels'
         | 'exportSchemas'
         | 'exportServices'
         | 'httpClient'
-        | 'indent'
         | 'output'
         | 'postfixModels'
         | 'postfixServices'
@@ -40,12 +40,12 @@ export const writeClient = async (
     > &
         Omit<
             Options,
+            | 'autoformat'
             | 'exportCore'
             | 'exportModels'
             | 'exportSchemas'
             | 'exportServices'
             | 'httpClient'
-            | 'indent'
             | 'output'
             | 'postfixModels'
             | 'postfixServices'
@@ -88,7 +88,7 @@ export const writeClient = async (
         const outputPathSchemas = Path.resolve(outputPath, 'schemas');
         await rmdir(outputPathSchemas);
         await mkdir(outputPathSchemas);
-        await writeClientSchemas(client.models, templates, outputPathSchemas, options.httpClient, options.indent);
+        await writeClientSchemas(client.models, templates, outputPathSchemas, options.httpClient);
     }
 
     if (options.exportModels) {
@@ -106,7 +106,6 @@ export const writeClient = async (
             outputPath,
             options.httpClient,
             options.clientName,
-            options.indent,
             options.postfixServices
         );
     }
@@ -133,7 +132,13 @@ export const writeClient = async (
         const json = require(pathPackageJson);
         const usesPrettier = [json.dependencies, json.devDependencies].some(deps => Boolean(deps.prettier));
         if (usesPrettier) {
-            spawnSync('prettier', ['--ignore-unknown', '--write', options.output]);
+            spawnSync('prettier', [
+                '--ignore-unknown',
+                options.output,
+                '--write',
+                '--ignore-path',
+                './.prettierignore',
+            ]);
         }
     }
 };
