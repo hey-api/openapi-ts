@@ -1,6 +1,5 @@
 import type { Options } from './client/interfaces/Options';
 import { HttpClient } from './HttpClient';
-import { Indent } from './Indent';
 import { getOpenApiSpec } from './utils/getOpenApiSpec';
 import { getOpenApiSpecParser } from './utils/getOpenApiSpecParser';
 import { postProcessClient } from './utils/postProcessClient';
@@ -8,7 +7,6 @@ import { registerHandlebarTemplates } from './utils/registerHandlebarTemplates';
 import { writeClient } from './utils/writeClient';
 
 export { HttpClient } from './HttpClient';
-export { Indent } from './Indent';
 
 /**
  * Generate the OpenAPI client. This method will read the OpenAPI specification and based on the
@@ -18,12 +16,12 @@ export { Indent } from './Indent';
  */
 export const generate = async (options: Options): Promise<void> => {
     const {
+        autoformat = true,
         exportCore = true,
         exportModels = true,
         exportSchemas = false,
         exportServices = true,
         httpClient = HttpClient.FETCH,
-        indent = Indent.SPACE_4,
         postfixModels = '',
         postfixServices = 'Service',
         serviceResponse = 'body',
@@ -44,12 +42,12 @@ export const generate = async (options: Options): Promise<void> => {
     if (write) {
         await writeClient(clientFinal, templates, {
             ...options,
+            autoformat,
             exportCore,
             exportModels,
             exportSchemas,
             exportServices,
             httpClient,
-            indent,
             postfixModels,
             postfixServices,
             serviceResponse,

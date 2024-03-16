@@ -31,8 +31,6 @@ describe('bin', () => {
             'true',
             '--exportSchemas',
             'true',
-            '--indent',
-            '4',
             '--postfixServices',
             'Service',
             '--postfixModels',
@@ -65,7 +63,6 @@ describe('bin', () => {
             './test/spec/v3.json',
             '--output',
             './test/generated/bin',
-            '--autoformat',
         ]);
         expect(result.stdout.toString()).toBe('');
         expect(result.stderr.toString()).toBe('');

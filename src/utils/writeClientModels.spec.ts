@@ -1,9 +1,7 @@
-import { EOL } from 'os';
 import { resolve } from 'path';
 
 import type { Model } from '../client/interfaces/Model';
 import { HttpClient } from '../HttpClient';
-import { Indent } from '../Indent';
 import { writeFile } from './fileSystem';
 import type { Templates } from './registerHandlebarTemplates';
 import { writeClientModels } from './writeClientModels';
@@ -56,10 +54,9 @@ describe('writeClientModels', () => {
 
         await writeClientModels(models, templates, '/', {
             httpClient: HttpClient.FETCH,
-            indent: Indent.SPACE_4,
             useDateType: false,
         });
 
-        expect(writeFile).toBeCalledWith(resolve('/', '/User.ts'), `model${EOL}`);
+        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/User.ts'), 'model');
     });
 });

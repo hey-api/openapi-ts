@@ -6,7 +6,6 @@ import { generate, HttpClient } from '../';
 describe('v2', () => {
     it('should generate', async () => {
         await generate({
-            autoformat: false,
             exportCore: true,
             exportModels: true,
             exportSchemas: true,
@@ -27,7 +26,6 @@ describe('v2', () => {
 describe('v3', () => {
     it('should generate', async () => {
         await generate({
-            autoformat: false,
             exportCore: true,
             exportModels: true,
             exportSchemas: true,
@@ -46,7 +44,6 @@ describe('v3', () => {
 
     it('should generate Date types', async () => {
         await generate({
-            autoformat: false,
             exportCore: false,
             exportModels: '^ModelWithPattern',
             exportSchemas: true,
@@ -66,7 +63,6 @@ describe('v3', () => {
 
     it('should generate optional argument', async () => {
         await generate({
-            autoformat: false,
             exportCore: true,
             exportModels: '^ModelWithString',
             exportSchemas: false,

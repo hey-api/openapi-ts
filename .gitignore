@@ -6,13 +6,18 @@ junit.xml
 .DS_Store
 .tmp
 .idea
+
+# IDE config
 .vscode
+
 *.iml
 dist
 coverage
-test/generated
-test/e2e/generated
 samples/generated
 samples/swagger-codegen-cli-v2.jar
 samples/swagger-codegen-cli-v3.jar
 .env
+
+# test files
+test/generated
+test/e2e/generated
