@@ -15,6 +15,16 @@ This is an opinionated fork of the [openapi-typescript-codegen](https://github.c
 - can be used with CLI, Node.js, or npx
 - abortable requests through cancellable promise pattern
 
+## Quickstart
+
+The fastest way to use this package is via npx
+
+```sh
+npx @nicolas-chaulet/openapi-typescript-codegen -i path/to/openapi.json -o src/client
+```
+
+Congratulations on generating your first client! 🎉
+
 ## Install
 
 ```
@@ -64,7 +74,7 @@ $ openapi --help
 If you use Prettier, your client will be automatically formatted according to your configuration. To disable automatic formatting, run
 
 ```sh
-openapi --input path/to/openapi.json --output src/client --no-autoformat
+openapi -i path/to/openapi.json -o src/client --no-autoformat
 ```
 
 To prevent your client from being processed by linters and similar tools, you should add your output path to the tool's ignore file (e.g. `.eslintignore`).
