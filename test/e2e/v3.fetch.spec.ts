@@ -75,6 +75,14 @@ describe('v3.fetch', () => {
         expect(result).toBeDefined();
     });
 
+    it('support blob response data', async () => {
+        const result = await browser.evaluate(async () => {
+            const { FileResponseService } = (window as any).api;
+            return await FileResponseService.fileResponse('test');
+        });
+        expect(result).toBeDefined();
+    });
+
     it('can abort the request', async () => {
         let error;
         try {

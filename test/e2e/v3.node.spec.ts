@@ -62,6 +62,12 @@ describe('v3.node', () => {
         expect(result).toBeDefined();
     });
 
+    it('support blob response data', async () => {
+        const { FileResponseService } = require('./generated/v3/node/index.js');
+        const result = await FileResponseService.fileResponse('test');
+        expect(result).toBeDefined();
+    });
+
     it('can abort the request', async () => {
         let error;
         try {
