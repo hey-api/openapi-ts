@@ -22,6 +22,7 @@ describe('registerHandlebarHelpers', () => {
         );
         const helpers = Object.keys(Handlebars.helpers);
         expect(helpers).toContain('camelCase');
+        expect(helpers).toContain('dataParameters');
         expect(helpers).toContain('debugThis');
         expect(helpers).toContain('enumKey');
         expect(helpers).toContain('enumName');

@@ -10,7 +10,6 @@ describe('getPattern', () => {
         expect(getPattern('\\')).toEqual('\\\\');
         expect(getPattern('\\/')).toEqual('\\\\/');
         expect(getPattern('\\/\\/')).toEqual('\\\\/\\\\/');
-        // eslint-disable-next-line prettier/prettier
         expect(getPattern("'")).toEqual("\\'");
     });
 });

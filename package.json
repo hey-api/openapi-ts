@@ -42,22 +42,22 @@
         "types/index.d.ts"
     ],
     "scripts": {
-        "clean": "rimraf ./dist ./test/generated ./test/e2e/generated ./samples/generated ./coverage ./node_modules/.cache",
-        "build": "rollup --config --environment NODE_ENV:development",
         "build:watch": "rollup --config --environment NODE_ENV:development --watch",
+        "build": "rollup --config --environment NODE_ENV:development",
+        "clean": "rimraf ./dist ./test/generated ./test/e2e/generated ./samples/generated ./coverage ./node_modules/.cache",
+        "codecov": "codecov --token=66c30c23-8954-4892-bef9-fbaed0a2e42b",
+        "docker": "docker build -t eeelenbaas/openapi-typescript-codegen .",
+        "eslint:fix": "eslint . --fix",
+        "eslint": "eslint .",
+        "prepare": "npm run clean && npm run release",
         "release": "rollup --config --environment NODE_ENV:production",
-        "validate": "tsc --project tsconfig.json --noEmit",
         "run": "node ./test/index.js",
-        "test": "jest --selectProjects UNIT",
-        "test:update": "jest --selectProjects UNIT --updateSnapshot",
-        "test:watch": "jest --selectProjects UNIT --watch",
         "test:coverage": "jest --selectProjects UNIT --coverage",
         "test:e2e": "jest --selectProjects E2E --runInBand --verbose",
-        "eslint": "eslint .",
-        "eslint:fix": "eslint . --fix",
-        "prepare": "npm run clean && npm run release",
-        "codecov": "codecov --token=66c30c23-8954-4892-bef9-fbaed0a2e42b",
-        "docker": "docker build -t eeelenbaas/openapi-typescript-codegen ."
+        "test:update": "jest --selectProjects UNIT --updateSnapshot",
+        "test:watch": "jest --selectProjects UNIT --watch",
+        "test": "jest --selectProjects UNIT",
+        "validate": "tsc --project tsconfig.json --noEmit"
     },
     "dependencies": {
         "@apidevtools/json-schema-ref-parser": "11.5.4",

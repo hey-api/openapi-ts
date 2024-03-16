@@ -1,5 +1,5 @@
 dist
-samples
-test/generated
-test/e2e/generated
 node_modules
+samples
+test/e2e/generated
+test/generated

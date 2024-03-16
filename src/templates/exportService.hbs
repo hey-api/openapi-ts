@@ -96,21 +96,21 @@ export class {{{name}}}{{{@root.postfix}}} {
 	{{#if @root.exportClient}}
 	{{#equals @root.httpClient 'angular'}}
 	public {{{name}}}{{>operationTypes}}({{>operationParameters}}): Observable<{{>operationResult}}> {
-		{{>destructureData}}
+		{{>dataDestructure}}
 		return this.httpRequest.request({
 	{{else}}
 	public {{{name}}}{{>operationTypes}}({{>operationParameters}}): CancelablePromise<{{>operationResult}}> {
-		{{>destructureData}}
+		{{>dataDestructure}}
 		return this.httpRequest.request({
 	{{/equals}}
 	{{else}}
 	{{#equals @root.httpClient 'angular'}}
 	public {{{name}}}{{>operationTypes}}({{>operationParameters}}): Observable<{{>operationResult}}> {
-		{{>destructureData}}
+		{{>dataDestructure}}
 		return __request({{>requestConfig}}, this.http, {
 	{{else}}
 	public static {{{name}}}{{>operationTypes}}({{>operationParameters}}): CancelablePromise<{{>operationResult}}> {
-		{{>destructureData}}
+		{{>dataDestructure}}
 		return __request({{>requestConfig}}, {
 	{{/equals}}
 	{{/if}}
@@ -118,37 +118,27 @@ export class {{{name}}}{{{@root.postfix}}} {
 			url: '{{{path}}}',
 			{{#if parametersPath}}
 			path: {
-				{{#each parametersPath}}
-				'{{{prop}}}': {{{name}}},
-				{{/each}}
+				{{{dataParameters parametersPath}}}
 			},
 			{{/if}}
 			{{#if parametersCookie}}
 			cookies: {
-				{{#each parametersCookie}}
-				'{{{prop}}}': {{{name}}},
-				{{/each}}
+				{{{dataParameters parametersCookie}}}
 			},
 			{{/if}}
 			{{#if parametersHeader}}
 			headers: {
-				{{#each parametersHeader}}
-				'{{{prop}}}': {{{name}}},
-				{{/each}}
+				{{{dataParameters parametersHeader}}}
 			},
 			{{/if}}
 			{{#if parametersQuery}}
 			query: {
-				{{#each parametersQuery}}
-				'{{{prop}}}': {{{name}}},
-				{{/each}}
+				{{{dataParameters parametersQuery}}}
 			},
 			{{/if}}
 			{{#if parametersForm}}
 			formData: {
-				{{#each parametersForm}}
-				'{{{prop}}}': {{{name}}},
-				{{/each}}
+				{{{dataParameters parametersForm}}}
 			},
 			{{/if}}
 			{{#if parametersBody}}

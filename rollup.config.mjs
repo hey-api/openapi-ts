@@ -30,6 +30,7 @@ const handlebarsPlugin = () => ({
                 knownHelpersOnly: true,
                 knownHelpers: {
                     camelCase: true,
+                    dataParameters: true,
                     debugThis: true,
                     enumKey: true,
                     enumName: true,

@@ -2032,8 +2032,8 @@ export class CollectionFormatService {
                 parameterArrayCSV: parameterArrayCsv,
                 parameterArraySSV: parameterArraySsv,
                 parameterArrayTSV: parameterArrayTsv,
-                parameterArrayPipes: parameterArrayPipes,
-                parameterArrayMulti: parameterArrayMulti,
+                parameterArrayPipes,
+                parameterArrayMulti,
             },
         });
     }
@@ -2068,8 +2068,8 @@ export class ComplexService {
             method: 'GET',
             url: '/api/v{api-version}/complex',
             query: {
-                parameterObject: parameterObject,
-                parameterReference: parameterReference,
+                parameterObject,
+                parameterReference,
             },
             errors: {
                 400: \`400 server error\`,
@@ -2128,11 +2128,11 @@ export class DefaultsService {
             method: 'GET',
             url: '/api/v{api-version}/defaults',
             query: {
-                parameterString: parameterString,
-                parameterNumber: parameterNumber,
-                parameterBoolean: parameterBoolean,
-                parameterEnum: parameterEnum,
-                parameterModel: parameterModel,
+                parameterString,
+                parameterNumber,
+                parameterBoolean,
+                parameterEnum,
+                parameterModel,
             },
         });
     }
@@ -2158,11 +2158,11 @@ export class DefaultsService {
             method: 'POST',
             url: '/api/v{api-version}/defaults',
             query: {
-                parameterString: parameterString,
-                parameterNumber: parameterNumber,
-                parameterBoolean: parameterBoolean,
-                parameterEnum: parameterEnum,
-                parameterModel: parameterModel,
+                parameterString,
+                parameterNumber,
+                parameterBoolean,
+                parameterEnum,
+                parameterModel,
             },
         });
     }
@@ -2192,14 +2192,14 @@ export class DefaultsService {
             method: 'PUT',
             url: '/api/v{api-version}/defaults',
             query: {
-                parameterOptionalStringWithDefault: parameterOptionalStringWithDefault,
-                parameterOptionalStringWithEmptyDefault: parameterOptionalStringWithEmptyDefault,
-                parameterOptionalStringWithNoDefault: parameterOptionalStringWithNoDefault,
-                parameterStringWithDefault: parameterStringWithDefault,
-                parameterStringWithEmptyDefault: parameterStringWithEmptyDefault,
-                parameterStringWithNoDefault: parameterStringWithNoDefault,
-                parameterStringNullableWithNoDefault: parameterStringNullableWithNoDefault,
-                parameterStringNullableWithDefault: parameterStringNullableWithDefault,
+                parameterOptionalStringWithDefault,
+                parameterOptionalStringWithEmptyDefault,
+                parameterOptionalStringWithNoDefault,
+                parameterStringWithDefault,
+                parameterStringWithEmptyDefault,
+                parameterStringWithNoDefault,
+                parameterStringNullableWithNoDefault,
+                parameterStringNullableWithDefault,
             },
         });
     }
@@ -2237,12 +2237,12 @@ export class DescriptionsService {
             method: 'POST',
             url: '/api/v{api-version}/descriptions/',
             query: {
-                parameterWithBreaks: parameterWithBreaks,
-                parameterWithBackticks: parameterWithBackticks,
-                parameterWithSlashes: parameterWithSlashes,
-                parameterWithExpressionPlaceholders: parameterWithExpressionPlaceholders,
-                parameterWithQuotes: parameterWithQuotes,
-                parameterWithReservedCharacters: parameterWithReservedCharacters,
+                parameterWithBreaks,
+                parameterWithBackticks,
+                parameterWithSlashes,
+                parameterWithExpressionPlaceholders,
+                parameterWithQuotes,
+                parameterWithReservedCharacters,
             },
         });
     }
@@ -2315,7 +2315,7 @@ export class ErrorService {
             method: 'POST',
             url: '/api/v{api-version}/error',
             query: {
-                status: status,
+                status,
             },
             errors: {
                 500: \`Custom message: Internal Server Error\`,
@@ -2520,16 +2520,16 @@ export class ParametersService {
             method: 'POST',
             url: '/api/v{api-version}/parameters/{parameterPath}',
             path: {
-                parameterPath: parameterPath,
+                parameterPath,
             },
             headers: {
-                parameterHeader: parameterHeader,
+                parameterHeader,
             },
             query: {
-                parameterQuery: parameterQuery,
+                parameterQuery,
             },
             formData: {
-                parameterForm: parameterForm,
+                parameterForm,
             },
             body: parameterBody,
         });
@@ -2774,16 +2774,16 @@ export class TypesService {
             method: 'GET',
             url: '/api/v{api-version}/types',
             path: {
-                id: id,
+                id,
             },
             query: {
-                parameterNumber: parameterNumber,
-                parameterString: parameterString,
-                parameterBoolean: parameterBoolean,
-                parameterObject: parameterObject,
-                parameterArray: parameterArray,
-                parameterDictionary: parameterDictionary,
-                parameterEnum: parameterEnum,
+                parameterNumber,
+                parameterString,
+                parameterBoolean,
+                parameterObject,
+                parameterArray,
+                parameterDictionary,
+                parameterEnum,
             },
         });
     }
@@ -3562,11 +3562,11 @@ export class DefaultsService {
             method: 'GET',
             url: '/api/v{api-version}/defaults',
             query: {
-                parameterString: parameterString,
-                parameterNumber: parameterNumber,
-                parameterBoolean: parameterBoolean,
-                parameterEnum: parameterEnum,
-                parameterModel: parameterModel,
+                parameterString,
+                parameterNumber,
+                parameterBoolean,
+                parameterEnum,
+                parameterModel,
             },
         });
     }
@@ -3590,11 +3590,11 @@ export class DefaultsService {
             method: 'POST',
             url: '/api/v{api-version}/defaults',
             query: {
-                parameterString: parameterString,
-                parameterNumber: parameterNumber,
-                parameterBoolean: parameterBoolean,
-                parameterEnum: parameterEnum,
-                parameterModel: parameterModel,
+                parameterString,
+                parameterNumber,
+                parameterBoolean,
+                parameterEnum,
+                parameterModel,
             },
         });
     }
@@ -3617,14 +3617,14 @@ export class DefaultsService {
             method: 'PUT',
             url: '/api/v{api-version}/defaults',
             query: {
-                parameterOptionalStringWithDefault: parameterOptionalStringWithDefault,
-                parameterOptionalStringWithEmptyDefault: parameterOptionalStringWithEmptyDefault,
-                parameterOptionalStringWithNoDefault: parameterOptionalStringWithNoDefault,
-                parameterStringWithDefault: parameterStringWithDefault,
-                parameterStringWithEmptyDefault: parameterStringWithEmptyDefault,
-                parameterStringWithNoDefault: parameterStringWithNoDefault,
-                parameterStringNullableWithNoDefault: parameterStringNullableWithNoDefault,
-                parameterStringNullableWithDefault: parameterStringNullableWithDefault,
+                parameterOptionalStringWithDefault,
+                parameterOptionalStringWithEmptyDefault,
+                parameterOptionalStringWithNoDefault,
+                parameterStringWithDefault,
+                parameterStringWithEmptyDefault,
+                parameterStringWithNoDefault,
+                parameterStringNullableWithNoDefault,
+                parameterStringNullableWithDefault,
             },
         });
     }
@@ -7243,8 +7243,8 @@ export class CollectionFormatService {
                 parameterArrayCSV: parameterArrayCsv,
                 parameterArraySSV: parameterArraySsv,
                 parameterArrayTSV: parameterArrayTsv,
-                parameterArrayPipes: parameterArrayPipes,
-                parameterArrayMulti: parameterArrayMulti,
+                parameterArrayPipes,
+                parameterArrayMulti,
             },
         });
     }
@@ -7282,8 +7282,8 @@ export class ComplexService {
             method: 'GET',
             url: '/api/v{api-version}/complex',
             query: {
-                parameterObject: parameterObject,
-                parameterReference: parameterReference,
+                parameterObject,
+                parameterReference,
             },
             errors: {
                 400: \`400 server error\`,
@@ -7318,7 +7318,7 @@ export class ComplexService {
             method: 'PUT',
             url: '/api/v{api-version}/complex/{id}',
             path: {
-                id: id,
+                id,
             },
             body: requestBody,
             mediaType: 'application/json-patch+json',
@@ -7375,11 +7375,11 @@ export class DefaultsService {
             method: 'GET',
             url: '/api/v{api-version}/defaults',
             query: {
-                parameterString: parameterString,
-                parameterNumber: parameterNumber,
-                parameterBoolean: parameterBoolean,
-                parameterEnum: parameterEnum,
-                parameterModel: parameterModel,
+                parameterString,
+                parameterNumber,
+                parameterBoolean,
+                parameterEnum,
+                parameterModel,
             },
         });
     }
@@ -7405,11 +7405,11 @@ export class DefaultsService {
             method: 'POST',
             url: '/api/v{api-version}/defaults',
             query: {
-                parameterString: parameterString,
-                parameterNumber: parameterNumber,
-                parameterBoolean: parameterBoolean,
-                parameterEnum: parameterEnum,
-                parameterModel: parameterModel,
+                parameterString,
+                parameterNumber,
+                parameterBoolean,
+                parameterEnum,
+                parameterModel,
             },
         });
     }
@@ -7439,14 +7439,14 @@ export class DefaultsService {
             method: 'PUT',
             url: '/api/v{api-version}/defaults',
             query: {
-                parameterOptionalStringWithDefault: parameterOptionalStringWithDefault,
-                parameterOptionalStringWithEmptyDefault: parameterOptionalStringWithEmptyDefault,
-                parameterOptionalStringWithNoDefault: parameterOptionalStringWithNoDefault,
-                parameterStringWithDefault: parameterStringWithDefault,
-                parameterStringWithEmptyDefault: parameterStringWithEmptyDefault,
-                parameterStringWithNoDefault: parameterStringWithNoDefault,
-                parameterStringNullableWithNoDefault: parameterStringNullableWithNoDefault,
-                parameterStringNullableWithDefault: parameterStringNullableWithDefault,
+                parameterOptionalStringWithDefault,
+                parameterOptionalStringWithEmptyDefault,
+                parameterOptionalStringWithNoDefault,
+                parameterStringWithDefault,
+                parameterStringWithEmptyDefault,
+                parameterStringWithNoDefault,
+                parameterStringNullableWithNoDefault,
+                parameterStringNullableWithDefault,
             },
         });
     }
@@ -7471,7 +7471,7 @@ export class DeprecatedService {
             method: 'POST',
             url: '/api/v{api-version}/parameters/deprecated',
             headers: {
-                parameter: parameter,
+                parameter,
             },
         });
     }
@@ -7509,12 +7509,12 @@ export class DescriptionsService {
             method: 'POST',
             url: '/api/v{api-version}/descriptions/',
             query: {
-                parameterWithBreaks: parameterWithBreaks,
-                parameterWithBackticks: parameterWithBackticks,
-                parameterWithSlashes: parameterWithSlashes,
-                parameterWithExpressionPlaceholders: parameterWithExpressionPlaceholders,
-                parameterWithQuotes: parameterWithQuotes,
-                parameterWithReservedCharacters: parameterWithReservedCharacters,
+                parameterWithBreaks,
+                parameterWithBackticks,
+                parameterWithSlashes,
+                parameterWithExpressionPlaceholders,
+                parameterWithQuotes,
+                parameterWithReservedCharacters,
             },
         });
     }
@@ -7587,7 +7587,7 @@ export class ErrorService {
             method: 'POST',
             url: '/api/v{api-version}/error',
             query: {
-                status: status,
+                status,
             },
             errors: {
                 500: \`Custom message: Internal Server Error\`,
@@ -7618,7 +7618,7 @@ export class FormDataService {
             method: 'POST',
             url: '/api/v{api-version}/formData/',
             query: {
-                parameter: parameter,
+                parameter,
             },
             formData: formData,
             mediaType: 'multipart/form-data',
@@ -7857,8 +7857,8 @@ export class ParametersService {
             method: 'DELETE',
             url: '/api/v{api-version}/foo/{foo}/bar/{bar}',
             path: {
-                foo: foo,
-                bar: bar,
+                foo,
+                bar,
             },
         });
     }
@@ -7888,21 +7888,21 @@ export class ParametersService {
             method: 'POST',
             url: '/api/v{api-version}/parameters/{parameterPath}',
             path: {
-                parameterPath: parameterPath,
+                parameterPath,
             },
             cookies: {
-                parameterCookie: parameterCookie,
+                parameterCookie,
             },
             headers: {
-                parameterHeader: parameterHeader,
+                parameterHeader,
             },
             query: {
                 foo_ref_enum: fooRefEnum,
                 foo_all_of_enum: fooAllOfEnum,
-                parameterQuery: parameterQuery,
+                parameterQuery,
             },
             formData: {
-                parameterForm: parameterForm,
+                parameterForm,
             },
             body: requestBody,
             mediaType: 'application/json',
@@ -7971,7 +7971,7 @@ export class ParametersService {
             method: 'GET',
             url: '/api/v{api-version}/parameters/',
             query: {
-                parameter: parameter,
+                parameter,
             },
             body: requestBody,
             mediaType: 'application/json',
@@ -7991,7 +7991,7 @@ export class ParametersService {
             method: 'POST',
             url: '/api/v{api-version}/parameters/',
             query: {
-                parameter: parameter,
+                parameter,
             },
             body: requestBody,
             mediaType: 'application/json',
@@ -8018,7 +8018,7 @@ export class RequestBodyService {
             method: 'POST',
             url: '/api/v{api-version}/requestBody/',
             query: {
-                parameter: parameter,
+                parameter,
             },
             body: foo,
             mediaType: 'application/json',
@@ -8221,16 +8221,16 @@ export class TypesService {
             method: 'GET',
             url: '/api/v{api-version}/types',
             path: {
-                id: id,
+                id,
             },
             query: {
-                parameterNumber: parameterNumber,
-                parameterString: parameterString,
-                parameterBoolean: parameterBoolean,
-                parameterObject: parameterObject,
-                parameterArray: parameterArray,
-                parameterDictionary: parameterDictionary,
-                parameterEnum: parameterEnum,
+                parameterNumber,
+                parameterString,
+                parameterBoolean,
+                parameterObject,
+                parameterArray,
+                parameterDictionary,
+                parameterEnum,
             },
         });
     }
@@ -8254,7 +8254,7 @@ export class UploadService {
             method: 'POST',
             url: '/api/v{api-version}/upload',
             formData: {
-                file: file,
+                file,
             },
         });
     }

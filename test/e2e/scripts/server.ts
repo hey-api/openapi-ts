@@ -5,8 +5,8 @@ import { resolve as resolvePath } from 'path';
 let _app: Express;
 let _server: Server;
 
-const start = async (dir: string) => {
-    return new Promise<void>(resolve => {
+const start = async (dir: string) =>
+    new Promise<void>(resolve => {
         _app = express();
 
         // Serve the JavaScript files from the specific folder, since we are using browser
@@ -83,10 +83,9 @@ const start = async (dir: string) => {
             resolve();
         });
     });
-};
 
-const stop = async () => {
-    return new Promise<void>((resolve, reject) => {
+const stop = async () =>
+    new Promise<void>((resolve, reject) => {
         _server.close(err => {
             if (err) {
                 reject(err);
@@ -95,7 +94,6 @@ const stop = async () => {
             }
         });
     });
-};
 
 export default {
     start,
