@@ -7630,7 +7630,7 @@ export class FileResponseService {
             method: 'GET',
             url: '/api/v{api-version}/file/{id}',
             path: {
-                id: id,
+                id,
             },
         });
     }
