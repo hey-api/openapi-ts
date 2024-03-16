@@ -2,10 +2,7 @@ import { resolve } from 'path';
 
 import type { Client } from '../client/interfaces/Client';
 import type { HttpClient } from '../HttpClient';
-import type { Indent } from '../Indent';
 import { writeFile } from './fileSystem';
-import { formatCode as f } from './formatCode';
-import { formatIndentation as i } from './formatIndentation';
 import { getHttpRequestName } from './getHttpRequestName';
 import type { Templates } from './registerHandlebarTemplates';
 import { sortModelsByName } from './sortModelsByName';
@@ -20,7 +17,6 @@ import { sortServicesByName } from './sortServicesByName';
  * @param outputPath Directory to write the generated files to
  * @param httpClient The selected httpClient (fetch, xhr, node or axios)
  * @param clientName Custom client class name
- * @param indent Indentation options (4, 2 or tab)
  * @param postfix Service name postfix
  */
 export const writeClientClass = async (
@@ -29,7 +25,6 @@ export const writeClientClass = async (
     outputPath: string,
     httpClient: HttpClient,
     clientName: string,
-    indent: Indent,
     postfix: string
 ): Promise<void> => {
     const templateResult = templates.client({
@@ -43,5 +38,5 @@ export const writeClientClass = async (
         httpRequest: getHttpRequestName(httpClient),
     });
 
-    await writeFile(resolve(outputPath, `${clientName}.ts`), i(f(templateResult), indent));
+    await writeFile(resolve(outputPath, `${clientName}.ts`), templateResult);
 };

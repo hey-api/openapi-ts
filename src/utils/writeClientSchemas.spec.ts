@@ -1,9 +1,7 @@
-import { EOL } from 'os';
 import { resolve } from 'path';
 
 import type { Model } from '../client/interfaces/Model';
 import { HttpClient } from '../HttpClient';
-import { Indent } from '../Indent';
 import { writeFile } from './fileSystem';
 import type { Templates } from './registerHandlebarTemplates';
 import { writeClientSchemas } from './writeClientSchemas';
@@ -54,8 +52,8 @@ describe('writeClientSchemas', () => {
             index: () => 'index',
         };
 
-        await writeClientSchemas(models, templates, '/', HttpClient.FETCH, Indent.SPACE_4);
+        await writeClientSchemas(models, templates, '/', HttpClient.FETCH);
 
-        expect(writeFile).toBeCalledWith(resolve('/', '/$User.ts'), `schema${EOL}`);
+        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/$User.ts'), 'schema');
     });
 });

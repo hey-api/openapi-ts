@@ -1,11 +1,10 @@
 import { HttpClient } from '../../HttpClient';
-import { Indent } from '../../Indent';
 
 export type ServiceResponse = 'body' | 'generics' | 'response';
 
 export interface Options {
     /**
-     * Process generated files with autoformatter
+     * Process generated files with formatter?
      */
     autoformat?: boolean;
     /**
@@ -36,10 +35,6 @@ export interface Options {
      * The selected httpClient (fetch, xhr, node or axios)
      */
     httpClient?: HttpClient;
-    /**
-     * Indentation options (4, 2 or tab)
-     */
-    indent?: Indent;
     /**
      * The relative location of the OpenAPI spec
      */

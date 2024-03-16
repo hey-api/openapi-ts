@@ -1,9 +1,7 @@
-import { EOL } from 'os';
 import { resolve } from 'path';
 
 import type { Client } from '../client/interfaces/Client';
 import { HttpClient } from '../HttpClient';
-import { Indent } from '../Indent';
 import { writeFile } from './fileSystem';
 import type { Templates } from './registerHandlebarTemplates';
 import { writeClientCore } from './writeClientCore';
@@ -46,19 +44,18 @@ describe('writeClientCore', () => {
 
         await writeClientCore(client, templates, '/', {
             httpClient: HttpClient.FETCH,
-            indent: Indent.SPACE_4,
             input: '',
             output: '',
             serviceResponse: 'body',
         });
 
-        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/OpenAPI.ts'), `settings${EOL}`);
-        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/ApiError.ts'), `apiError${EOL}`);
-        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/ApiRequestOptions.ts'), `apiRequestOptions${EOL}`);
-        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/ApiResult.ts'), `apiResult${EOL}`);
-        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/CancelablePromise.ts'), `cancelablePromise${EOL}`);
-        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/request.ts'), `request${EOL}`);
-        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/types.ts'), `types${EOL}`);
+        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/OpenAPI.ts'), 'settings');
+        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/ApiError.ts'), 'apiError');
+        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/ApiRequestOptions.ts'), 'apiRequestOptions');
+        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/ApiResult.ts'), 'apiResult');
+        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/CancelablePromise.ts'), 'cancelablePromise');
+        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/request.ts'), 'request');
+        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/types.ts'), 'types');
     });
 
     it('uses client server value for base', async () => {
@@ -71,7 +68,6 @@ describe('writeClientCore', () => {
 
         await writeClientCore(client, templates, '/', {
             httpClient: HttpClient.FETCH,
-            indent: Indent.SPACE_4,
             input: '',
             output: '',
             serviceResponse: 'body',
@@ -98,7 +94,6 @@ describe('writeClientCore', () => {
         await writeClientCore(client, templates, '/', {
             base: 'foo',
             httpClient: HttpClient.FETCH,
-            indent: Indent.SPACE_4,
             input: '',
             output: '',
             serviceResponse: 'body',

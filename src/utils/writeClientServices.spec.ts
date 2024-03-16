@@ -1,9 +1,7 @@
-import { EOL } from 'os';
 import { resolve } from 'path';
 
 import type { Service } from '../client/interfaces/Service';
 import { HttpClient } from '../HttpClient';
-import { Indent } from '../Indent';
 import { writeFile } from './fileSystem';
 import type { Templates } from './registerHandlebarTemplates';
 import { writeClientServices } from './writeClientServices';
@@ -44,7 +42,6 @@ describe('writeClientServices', () => {
 
         await writeClientServices(services, templates, '/', {
             httpClient: HttpClient.FETCH,
-            indent: Indent.SPACE_4,
             input: '',
             output: '',
             postfixServices: 'Service',
@@ -52,6 +49,6 @@ describe('writeClientServices', () => {
             useOptions: false,
         });
 
-        expect(writeFile).toBeCalledWith(resolve('/', '/UserService.ts'), `service${EOL}`);
+        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/UserService.ts'), 'service');
     });
 });
