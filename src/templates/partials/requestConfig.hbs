@@ -1,5 +1,5 @@
-{{~#if @root.useOptions~}}
-{{~#equals @root.serviceResponse 'generics'~}}
+{{~#if @root.$config.useOptions~}}
+{{~#equals @root.$config.serviceResponse 'generics'~}}
 mergeOpenApiConfig(OpenAPI, overrides)
 {{~else~}}
 OpenAPI

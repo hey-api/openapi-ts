@@ -13,9 +13,22 @@ describe('registerHandlebarTemplates', () => {
                 paths: {},
             },
             {
+                autoformat: true,
+                enums: true,
+                exportCore: true,
+                exportModels: true,
+                exportSchemas: true,
+                exportServices: true,
                 httpClient: HttpClient.FETCH,
+                input: '',
+                operationId: true,
+                output: '',
+                postfixModels: '',
+                postfixServices: '',
                 serviceResponse: 'body',
+                useDateType: false,
                 useOptions: false,
+                write: true,
             }
         );
         expect(templates.index).toBeDefined();

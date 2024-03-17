@@ -1,28 +1,28 @@
 import { resolve } from 'path';
 
-import type { Model } from '../client/interfaces/Model';
-import type { HttpClient } from '../HttpClient';
-import { writeFile } from './fileSystem';
-import type { Templates } from './registerHandlebarTemplates';
+import type { Client } from '../../client/interfaces/Client';
+import type { Options } from '../../client/interfaces/Options';
+import { writeFile } from '../fileSystem';
+import type { Templates } from '../registerHandlebarTemplates';
 
 /**
  * Generate Schemas using the Handlebar template and write to disk.
- * @param models Array of Models to write
+ * @param client Client containing models, schemas, and services
  * @param templates The loaded handlebar templates
  * @param outputPath Directory to write the generated files to
- * @param httpClient The selected httpClient (fetch, xhr, node or axios)
+ * @param options Options passed to the `generate()` function
  */
 export const writeClientSchemas = async (
-    models: Model[],
+    client: Client,
     templates: Templates,
     outputPath: string,
-    httpClient: HttpClient
+    options: Pick<Required<Options>, 'enums' | 'httpClient'>
 ): Promise<void> => {
-    for (const model of models) {
+    for (const model of client.models) {
         const file = resolve(outputPath, `$${model.name}.ts`);
         const templateResult = templates.exports.schema({
+            $config: options,
             ...model,
-            httpClient,
         });
         await writeFile(file, templateResult);
     }

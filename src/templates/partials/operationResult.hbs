@@ -1,8 +1,8 @@
-{{~#if @root.useOptions~}}
-{{~#notEquals @root.serviceResponse 'generics'~}}
-{{~#equals @root.serviceResponse 'response'}}ApiResult<{{/equals~}}
+{{~#if @root.$config.useOptions~}}
+{{~#notEquals @root.$config.serviceResponse 'generics'~}}
+{{~#equals @root.$config.serviceResponse 'response'}}ApiResult<{{/equals~}}
 {{~else~}}
-{{~#unless @root.exportClient}}TApiResponse<T, {{/unless~}}
+{{~#unless @root.$config.clientName}}TApiResponse<T, {{/unless~}}
 {{~/notEquals~}}
 {{~/if~}}
 {{~#if results~}}
@@ -10,10 +10,10 @@
 {{~else~}}
 void
 {{~/if~}}
-{{~#if @root.useOptions~}}
-{{~#notEquals @root.serviceResponse 'generics'~}}
-{{~#equals @root.serviceResponse 'response'}}>{{/equals~}}
+{{~#if @root.$config.useOptions~}}
+{{~#notEquals @root.$config.serviceResponse 'generics'~}}
+{{~#equals @root.$config.serviceResponse 'response'}}>{{/equals~}}
 {{~else~}}
-{{~#unless @root.exportClient}}>{{/unless~}}
+{{~#unless @root.$config.clientName}}>{{/unless~}}
 {{~/notEquals~}}
 {{~/if~}}

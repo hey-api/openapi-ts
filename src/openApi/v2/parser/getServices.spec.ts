@@ -1,12 +1,11 @@
-import type { Options } from '../../../client/interfaces/Options';
 import { getServices } from './getServices';
 
 describe('getServices', () => {
     it('should create a unnamed service if tags are empty', () => {
-        const options: Options = {
+        const options: Parameters<typeof getServices>[1] = {
             input: '',
+            operationId: false,
             output: '',
-            useOperationId: false,
         };
         const services = getServices(
             {

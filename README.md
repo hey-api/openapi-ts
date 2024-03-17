@@ -51,17 +51,18 @@ $ openapi --help
     -c, --client <value>      HTTP client to generate [fetch, xhr, node, axios, angular] (default: "fetch")
     --name <value>            Custom client class name
     --useOptions <value>      Use options instead of arguments (default: false)
+    --no-autoformat           Disable processing generated files with formatter
+    --base <value>            Manually set base in OpenAPI config instead of inferring from server value
+    --enums                   Generate JavaScript objects from enum definitions (default: false)
     --exportCore <value>      Write core files to disk (default: true)
     --exportServices <value>  Write services to disk [true, false, regexp] (default: true)
     --exportModels <value>    Write models to disk [true, false, regexp] (default: true)
     --exportSchemas <value>   Write schemas to disk (default: false)
-    --base <value>            Manually set base in OpenAPI config instead of inferring from server value
-    --no-autoformat           Disable processing generated files with formatter
+    --no-operationId          Use path URL to generate operation ID
     --postfixServices         Service name postfix (default: "Service")
     --postfixModels           Model name postfix
     --request <value>         Path to custom request file
     --useDateType <value>     Output Date instead of string for the format "date-time" in the models (default: false)
-    --useOperationId <value>  Use operation id to generate operation names (default: true)
     -h, --help                display help for command
 
   Examples
@@ -78,6 +79,23 @@ openapi -i path/to/openapi.json -o src/client --no-autoformat
 ```
 
 You can also prevent your client from being processed by formatters and linters by adding your output path to the tool's ignore file (e.g. `.eslintignore`, `.prettierignore`).
+
+## Enums
+
+We do not generate TypeScript [enums](https://www.typescriptlang.org/docs/handbook/enums.html) because they are not standard JavaScript and pose [typing challenges](https://dev.to/ivanzm123/dont-use-enums-in-typescript-they-are-very-dangerous-57bh). If you want to iterate through possible field values without manually typing arrays, you can export enums by running
+
+```sh
+openapi -i path/to/openapi.json -o src/client --enums
+```
+
+This will export your enums as plain JavaScript objects. For example, `Foo` will generate the following
+
+```ts
+export const FooEnum = {
+  FOO: 'foo',
+  BAR: 'bar',
+} as const;
+```
 
 ## Contributing
 
