@@ -39,7 +39,6 @@ export const enumKey = (value?: string | number, key?: string) => {
 /**
  * Enums can't contain hyphens in their name. Additionally, name might've been
  * already escaped, so we need to remove quotes around it.
- * {@link https://github.com/ferdikoomen/openapi-typescript-codegen/issues/1969}
  */
 export const enumName = (name?: string) => {
     if (!name) {

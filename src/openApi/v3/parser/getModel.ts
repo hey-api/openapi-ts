@@ -97,7 +97,6 @@ export const getModel = (
 
         /**
          * if items are a plain array, infer any-of composition
-         * {@link} https://github.com/ferdikoomen/openapi-typescript-codegen/issues/2062
          */
         const arrayItemsDefinition: OpenApiSchema = Array.isArray(definition.items)
             ? {

@@ -3,7 +3,7 @@
     "version": "0.27.36",
     "type": "module",
     "description": "Library that generates Typescript clients based on the OpenAPI specification.",
-    "author": "Ferdi Koomen",
+    "author": "Nicolas Chaulet",
     "homepage": "https://github.com/nicolas-chaulet/openapi-typescript-codegen/",
     "repository": {
         "type": "git",
@@ -25,12 +25,6 @@
         "axios",
         "angular",
         "node"
-    ],
-    "maintainers": [
-        {
-            "name": "Ferdi Koomen",
-            "email": "info@madebyferdi.com"
-        }
     ],
     "main": "./dist/node/index.js",
     "types": "./dist/node/index.d.ts",
