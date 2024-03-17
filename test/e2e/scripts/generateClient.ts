@@ -8,10 +8,10 @@ export const generateClient = async (
     clientName?: string
 ) => {
     await __generate({
+        client,
+        clientName,
         input: `./test/spec/${version}.json`,
         output: `./test/e2e/generated/${dir}/`,
-        httpClient: client,
         useOptions,
-        clientName,
     });
 };

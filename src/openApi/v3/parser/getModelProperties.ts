@@ -2,11 +2,11 @@ import type { Model } from '../../../client/interfaces/Model';
 import { findOneOfParentDiscriminator, mapPropertyValue } from '../../../utils/discriminator';
 import { escapeName } from '../../../utils/escapeName';
 import { getPattern } from '../../../utils/getPattern';
+import { getType } from '../../../utils/type';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 import type { getModel } from './getModel';
 import { getModelDefault } from './getModelDefault';
-import { getType } from './getType';
 
 // Fix for circular dependency
 export type GetModelFn = typeof getModel;

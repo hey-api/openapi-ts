@@ -21,7 +21,7 @@ export interface OpenApiHeader {
         | 'password';
     items?: Dictionary<OpenApiItems>;
     collectionFormat?: 'csv' | 'ssv' | 'tsv' | 'pipes';
-    default?: any;
+    default?: unknown;
     maximum?: number;
     exclusiveMaximum?: boolean;
     minimum?: number;

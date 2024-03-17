@@ -15,6 +15,6 @@ export interface OpenApiHeader extends OpenApiReference {
     explode?: boolean;
     allowReserved?: boolean;
     schema?: OpenApiSchema;
-    example?: any;
+    example?: unknown;
     examples?: Dictionary<OpenApiExample>;
 }

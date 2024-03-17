@@ -1,5 +1,3 @@
-import { sync } from 'cross-spawn';
-import { createRequire } from 'module';
 import Path from 'path';
 
 import type { Client } from '../../client/interfaces/Client';
@@ -81,23 +79,5 @@ export const writeClient = async (
     if (options.exportCore || options.exportServices || options.exportSchemas || options.exportModels) {
         await mkdir(outputPath);
         await writeClientIndex(client, templates, outputPath, options);
-    }
-
-    const pathPackageJson = Path.resolve(process.cwd(), 'package.json');
-    const require = createRequire('/');
-    const json = require(pathPackageJson);
-
-    const allDependencies = [json.dependencies, json.devDependencies].reduce(
-        (res, deps) => ({
-            ...res,
-            ...deps,
-        }),
-        {}
-    );
-
-    if (options.autoformat) {
-        if (allDependencies.prettier) {
-            sync('prettier', ['--ignore-unknown', options.output, '--write', '--ignore-path', './.prettierignore']);
-        }
     }
 };

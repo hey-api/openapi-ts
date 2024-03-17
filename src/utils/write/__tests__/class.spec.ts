@@ -1,4 +1,3 @@
-import { HttpClient } from '../../../HttpClient';
 import { writeFile } from '../../fileSystem';
 import { writeClientClass } from '../class';
 
@@ -35,9 +34,9 @@ describe('writeClientClass', () => {
         };
 
         await writeClientClass(client, templates, './dist', {
+            client: 'fetch',
             clientName: 'AppClient',
             enums: true,
-            httpClient: HttpClient.FETCH,
             postfixServices: '',
         });
 

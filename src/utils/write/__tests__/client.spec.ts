@@ -1,4 +1,3 @@
-import { HttpClient } from '../../../HttpClient';
 import { mkdir, rmdir, writeFile } from '../../fileSystem';
 import { writeClient } from '../client';
 
@@ -36,6 +35,7 @@ describe('writeClient', () => {
 
         await writeClient(client, templates, {
             autoformat: true,
+            client: 'fetch',
             enums: true,
             exportCore: true,
             exportModels: true,
@@ -44,7 +44,6 @@ describe('writeClient', () => {
             input: '',
             operationId: true,
             output: './dist',
-            httpClient: HttpClient.FETCH,
             postfixModels: 'AppClient',
             postfixServices: 'Service',
             serviceResponse: 'body',

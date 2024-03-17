@@ -1,4 +1,4 @@
-{{#equals @root.$config.httpClient 'angular'}}
+{{#equals @root.$config.client 'angular'}}
 import type { HttpClient } from '@angular/common/http';
 import type { Observable } from 'rxjs';
 
@@ -12,7 +12,7 @@ import type { OpenAPIConfig } from './OpenAPI';
 
 export abstract class BaseHttpRequest {
 
-	{{#equals @root.$config.httpClient 'angular'}}
+	{{#equals @root.$config.client 'angular'}}
 	constructor(
 		public readonly config: OpenAPIConfig,
 		public readonly http: HttpClient,
@@ -21,7 +21,7 @@ export abstract class BaseHttpRequest {
 	constructor(public readonly config: OpenAPIConfig) {}
 	{{/equals}}
 
-	{{#equals @root.$config.httpClient 'angular'}}
+	{{#equals @root.$config.client 'angular'}}
 	public abstract request<T>(options: ApiRequestOptions): Observable<T>;
 	{{else}}
 	public abstract request<T>(options: ApiRequestOptions): CancelablePromise<T>;

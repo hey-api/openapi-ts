@@ -1,6 +1,5 @@
 import { resolve } from 'path';
 
-import { HttpClient } from '../../../HttpClient';
 import { writeFile } from '../../fileSystem';
 import { writeClientServices } from '../services';
 
@@ -44,7 +43,7 @@ describe('writeClientServices', () => {
         };
 
         await writeClientServices(client, templates, '/', {
-            httpClient: HttpClient.FETCH,
+            client: 'fetch',
             input: '',
             output: '',
             postfixServices: 'Service',

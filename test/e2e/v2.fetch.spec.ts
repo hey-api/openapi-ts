@@ -24,16 +24,20 @@ describe('v2.fetch', () => {
     it('requests token', async () => {
         await browser.exposeFunction('tokenRequest', jest.fn().mockResolvedValue('MY_TOKEN'));
         const result = await browser.evaluate(async () => {
-            const { OpenAPI, SimpleService } = (window as any).api;
-            OpenAPI.TOKEN = (window as any).tokenRequest;
+            // @ts-ignore
+            const { OpenAPI, SimpleService } = window.api;
+            // @ts-ignore
+            OpenAPI.TOKEN = window.tokenRequest;
             return await SimpleService.getCallWithoutParametersAndResponse();
         });
+        // @ts-ignore
         expect(result.headers.authorization).toBe('Bearer MY_TOKEN');
     });
 
     it('supports complex params', async () => {
         const result = await browser.evaluate(async () => {
-            const { ComplexService } = (window as any).api;
+            // @ts-ignore
+            const { ComplexService } = window.api;
             return await ComplexService.complexTypes({
                 first: {
                     second: {
@@ -64,29 +68,35 @@ describe('v2.fetch useOptions', () => {
 
     it('returns result body by default', async () => {
         const result = await browser.evaluate(async () => {
-            const { SimpleService } = (window as any).api;
+            // @ts-ignore
+            const { SimpleService } = window.api;
             return await SimpleService.getCallWithoutParametersAndResponse();
         });
+        // @ts-ignore
         expect(result.body).toBeUndefined();
     });
 
     it('returns result body', async () => {
         const result = await browser.evaluate(async () => {
-            const { SimpleService } = (window as any).api;
+            // @ts-ignore
+            const { SimpleService } = window.api;
             return await SimpleService.getCallWithoutParametersAndResponse({
                 _result: 'body',
             });
         });
+        // @ts-ignore
         expect(result.body).toBeUndefined();
     });
 
     it('returns raw result', async () => {
         const result = await browser.evaluate(async () => {
-            const { SimpleService } = (window as any).api;
+            // @ts-ignore
+            const { SimpleService } = window.api;
             return await SimpleService.getCallWithoutParametersAndResponse({
                 _result: 'raw',
             });
         });
+        // @ts-ignore
         expect(result.body).not.toBeUndefined();
     });
 });

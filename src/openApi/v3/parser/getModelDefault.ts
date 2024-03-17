@@ -20,7 +20,7 @@ export const getModelDefault = (definition: OpenApiSchema, model?: Model): strin
                 const { value } = model.enum[definition.default];
                 return typeof value === 'string' ? `'${value}'` : String(value);
             }
-            return definition.default;
+            return String(definition.default);
 
         case 'boolean':
             return JSON.stringify(definition.default);

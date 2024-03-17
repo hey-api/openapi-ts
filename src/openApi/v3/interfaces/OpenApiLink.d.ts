@@ -8,8 +8,8 @@ import type { OpenApiServer } from './OpenApiServer';
 export interface OpenApiLink extends OpenApiReference {
     operationRef?: string;
     operationId?: string;
-    parameters?: Dictionary<any>;
-    requestBody?: any;
+    parameters?: Dictionary<unknown>;
+    requestBody?: unknown;
     description?: string;
     server?: OpenApiServer;
 }

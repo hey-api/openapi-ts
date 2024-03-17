@@ -6,6 +6,4 @@ import type { Type } from '../../../client/interfaces/Type';
  * @param modelClass The parsed model class type.
  * @returns The model template type (<T> or empty).
  */
-export const getModelTemplate = (modelClass: Type): string => {
-    return modelClass.template ? '<T>' : '';
-};
+export const getModelTemplate = (modelClass: Type): string => (modelClass.template ? '<T>' : '');

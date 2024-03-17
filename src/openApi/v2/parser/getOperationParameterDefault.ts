@@ -23,7 +23,7 @@ export const getOperationParameterDefault = (
                 const { value } = operationParameter.enum[parameter.default];
                 return typeof value === 'string' ? `'${value}'` : String(value);
             }
-            return parameter.default;
+            return String(parameter.default);
 
         case 'boolean':
             return JSON.stringify(parameter.default);

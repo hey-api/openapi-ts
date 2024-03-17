@@ -1,7 +1,7 @@
 const { sync } = require('cross-spawn');
 
 describe('bin', () => {
-    it('it should support minimal params', async () => {
+    it('supports required parameters', async () => {
         const result = sync('node', [
             './bin/index.js',
             '--input',
@@ -10,11 +10,86 @@ describe('bin', () => {
             './test/generated/bin',
             '--no-write',
         ]);
-        expect(result.stdout.toString()).toBe('');
+        expect(result.stdout.toString()).not.toContain('Prettier');
+        expect(result.stdout.toString()).toContain('Done!');
         expect(result.stderr.toString()).toBe('');
     });
 
-    it('it should support all params', async () => {
+    it('generates angular client', async () => {
+        const result = sync('node', [
+            './bin/index.js',
+            '--input',
+            './test/spec/v3.json',
+            '--output',
+            './test/generated/bin',
+            '--client',
+            'angular',
+            '--no-write',
+        ]);
+        expect(result.stdout.toString()).toContain('Angular');
+        expect(result.stderr.toString()).toBe('');
+    });
+
+    it('generates axios client', async () => {
+        const result = sync('node', [
+            './bin/index.js',
+            '--input',
+            './test/spec/v3.json',
+            '--output',
+            './test/generated/bin',
+            '--client',
+            'axios',
+            '--no-write',
+        ]);
+        expect(result.stdout.toString()).toContain('Axios');
+        expect(result.stderr.toString()).toBe('');
+    });
+
+    it('generates fetch client', async () => {
+        const result = sync('node', [
+            './bin/index.js',
+            '--input',
+            './test/spec/v3.json',
+            '--output',
+            './test/generated/bin',
+            '--client',
+            'fetch',
+            '--no-write',
+        ]);
+        expect(result.stdout.toString()).toContain('Fetch');
+        expect(result.stderr.toString()).toBe('');
+    });
+    it('generates node client', async () => {
+        const result = sync('node', [
+            './bin/index.js',
+            '--input',
+            './test/spec/v3.json',
+            '--output',
+            './test/generated/bin',
+            '--client',
+            'node',
+            '--no-write',
+        ]);
+        expect(result.stdout.toString()).toContain('Node.js');
+        expect(result.stderr.toString()).toBe('');
+    });
+
+    it('generates xhr client', async () => {
+        const result = sync('node', [
+            './bin/index.js',
+            '--input',
+            './test/spec/v3.json',
+            '--output',
+            './test/generated/bin',
+            '--client',
+            'xhr',
+            '--no-write',
+        ]);
+        expect(result.stdout.toString()).toContain('XHR');
+        expect(result.stderr.toString()).toBe('');
+    });
+
+    it('supports all parameters', async () => {
         const result = sync('node', [
             './bin/index.js',
             '--input',
@@ -38,11 +113,11 @@ describe('bin', () => {
             'Dto',
             '--no-write',
         ]);
-        expect(result.stdout.toString()).toBe('');
+        expect(result.stdout.toString()).toContain('Done!');
         expect(result.stderr.toString()).toBe('');
     });
 
-    it('it should support regexp params', async () => {
+    it('supports regexp parameters', async () => {
         const result = sync('node', [
             './bin/index.js',
             '--input',
@@ -55,30 +130,29 @@ describe('bin', () => {
             '^(Simple|Types)',
             '--no-write',
         ]);
-        expect(result.stdout.toString()).toBe('');
+        expect(result.stdout.toString()).toContain('Done!');
         expect(result.stderr.toString()).toBe('');
     });
 
-    it('should autoformat with Prettier', async () => {
+    it('autoformats output with Prettier', async () => {
         const result = sync('node', [
             './bin/index.js',
             '--input',
             './test/spec/v3.json',
             '--output',
             './test/generated/bin',
-            '--no-write',
         ]);
-        expect(result.stdout.toString()).toBe('');
+        expect(result.stdout.toString()).toContain('Prettier');
         expect(result.stderr.toString()).toBe('');
     });
 
-    it('it should throw error without params', async () => {
+    it('throws error without parameters', async () => {
         const result = sync('node', ['./bin/index.js', '--no-write']);
         expect(result.stdout.toString()).toBe('');
         expect(result.stderr.toString()).toContain(`error: required option '-i, --input <value>' not specified`);
     });
 
-    it('it should throw error with wrong params', async () => {
+    it('throws error with wrong parameters', async () => {
         const result = sync('node', [
             './bin/index.js',
             '--input',
@@ -92,7 +166,7 @@ describe('bin', () => {
         expect(result.stderr.toString()).toContain(`error: unknown option '--unknown'`);
     });
 
-    it('it should display help', async () => {
+    it('displays help', async () => {
         const result = sync('node', ['./bin/index.js', '--help', '--no-write']);
         expect(result.stdout.toString()).toContain(`Usage: openapi-ts [options]`);
         expect(result.stdout.toString()).toContain(`-i, --input <value>`);

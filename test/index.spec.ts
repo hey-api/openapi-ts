@@ -1,17 +1,17 @@
 import { readFileSync } from 'fs';
 import { sync } from 'glob';
 
-import { generate, HttpClient } from '../';
+import { generate } from '../';
 
 describe('v2', () => {
     it('should generate', async () => {
         await generate({
+            client: 'fetch',
             enums: true,
             exportCore: true,
             exportModels: true,
             exportSchemas: true,
             exportServices: true,
-            httpClient: HttpClient.FETCH,
             input: './test/spec/v2.json',
             output: './test/generated/v2/',
             useOptions: false,
@@ -27,12 +27,12 @@ describe('v2', () => {
 describe('v3', () => {
     it('should generate', async () => {
         await generate({
+            client: 'fetch',
             enums: true,
             exportCore: true,
             exportModels: true,
             exportSchemas: true,
             exportServices: true,
-            httpClient: HttpClient.FETCH,
             input: './test/spec/v3.json',
             output: './test/generated/v3/',
             useOptions: false,
@@ -46,12 +46,12 @@ describe('v3', () => {
 
     it('should generate Date types', async () => {
         await generate({
+            client: 'fetch',
             enums: true,
             exportCore: false,
             exportModels: '^ModelWithPattern',
             exportSchemas: true,
             exportServices: false,
-            httpClient: HttpClient.FETCH,
             input: './test/spec/v3.json',
             output: './test/generated/v3_date/',
             useDateType: true,
@@ -66,12 +66,12 @@ describe('v3', () => {
 
     it('should generate optional argument', async () => {
         await generate({
+            client: 'fetch',
             enums: true,
             exportCore: true,
             exportModels: '^ModelWithString',
             exportSchemas: false,
             exportServices: '^Defaults',
-            httpClient: HttpClient.FETCH,
             input: './test/spec/v3.json',
             output: './test/generated/v3_options/',
             useDateType: true,

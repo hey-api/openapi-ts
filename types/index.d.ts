@@ -1,11 +1,3 @@
-export declare enum HttpClient {
-    FETCH = 'fetch',
-    XHR = 'xhr',
-    NODE = 'node',
-    AXIOS = 'axios',
-    ANGULAR = 'angular',
-}
-
 export type ServiceResponse = 'body' | 'generics' | 'response';
 
 export type Options = {
@@ -17,6 +9,10 @@ export type Options = {
      * Manually set base in OpenAPI config instead of inferring from server value
      */
     base?: string;
+    /**
+     * The selected HTTP client (fetch, xhr, node or axios)
+     */
+    client?: 'angular' | 'axios' | 'fetch' | 'node' | 'xhr';
     /**
      * Custom client class name
      */
@@ -42,13 +38,9 @@ export type Options = {
      */
     exportServices?: boolean | string;
     /**
-     * The selected httpClient (fetch, xhr, node or axios)
-     */
-    httpClient?: HttpClient | 'fetch' | 'xhr' | 'node' | 'axios' | 'angular';
-    /**
      * The relative location of the OpenAPI spec
      */
-    input: string | Record<string, any>;
+    input: string | Record<string, unknown>;
     /**
      * Use operation ID to generate operation names?
      */
@@ -90,7 +82,6 @@ export type Options = {
 export declare function generate(options: Options): Promise<void>;
 
 declare type OpenAPI = {
-    HttpClient: HttpClient;
     generate: typeof generate;
 };
 

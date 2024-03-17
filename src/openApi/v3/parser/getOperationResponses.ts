@@ -10,7 +10,7 @@ export const getOperationResponses = (openApi: OpenApi, responses: OpenApiRespon
     const operationResponses: OperationResponse[] = [];
 
     // Iterate over each response code and get the
-    // status code and response message (if any).
+    // status code and response message
     for (const code in responses) {
         if (responses.hasOwnProperty(code)) {
             const responseOrReference = responses[code];
@@ -25,7 +25,5 @@ export const getOperationResponses = (openApi: OpenApi, responses: OpenApiRespon
     }
 
     // Sort the responses to 2XX success codes come before 4XX and 5XX error codes.
-    return operationResponses.sort((a, b): number => {
-        return a.code < b.code ? -1 : a.code > b.code ? 1 : 0;
-    });
+    return operationResponses.sort((a, b): number => (a.code < b.code ? -1 : a.code > b.code ? 1 : 0));
 };

@@ -6,6 +6,6 @@ import type { OpenApiReference } from './OpenApiReference';
 export interface OpenApiExample extends OpenApiReference {
     summary?: string;
     description?: string;
-    value?: any;
+    value?: unknown;
     externalValue?: string;
 }

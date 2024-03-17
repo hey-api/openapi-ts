@@ -1,6 +1,5 @@
 import { resolve } from 'path';
 
-import { HttpClient } from '../../../HttpClient';
 import { writeFile } from '../../fileSystem';
 import { writeClientSchemas } from '../schemas';
 
@@ -56,8 +55,8 @@ describe('writeClientSchemas', () => {
         };
 
         await writeClientSchemas(client, templates, '/', {
+            client: 'fetch',
             enums: true,
-            httpClient: HttpClient.FETCH,
         });
 
         expect(writeFile).toHaveBeenCalledWith(resolve('/', '/$User.ts'), 'schema');

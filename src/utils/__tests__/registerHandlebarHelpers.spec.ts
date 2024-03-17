@@ -1,6 +1,5 @@
 import Handlebars from 'handlebars/runtime';
 
-import { HttpClient } from '../../HttpClient';
 import { registerHandlebarHelpers } from '../registerHandlebarHelpers';
 
 describe('registerHandlebarHelpers', () => {
@@ -16,12 +15,12 @@ describe('registerHandlebarHelpers', () => {
             },
             {
                 autoformat: true,
+                client: 'fetch',
                 enums: true,
                 exportCore: true,
                 exportModels: true,
                 exportSchemas: true,
                 exportServices: true,
-                httpClient: HttpClient.FETCH,
                 input: '',
                 operationId: true,
                 output: '',

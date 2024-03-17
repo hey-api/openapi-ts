@@ -9,7 +9,7 @@ import type { OpenApiSchema } from './OpenApiSchema';
  */
 export interface OpenApiMediaType extends OpenApiReference {
     schema?: OpenApiSchema;
-    example?: any;
+    example?: unknown;
     examples?: Dictionary<OpenApiExample>;
     encoding?: Dictionary<OpenApiEncoding>;
 }
