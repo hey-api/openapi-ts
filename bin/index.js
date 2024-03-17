@@ -2,14 +2,14 @@
 
 'use strict';
 
-const path = require('path');
+const Path = require('path');
 const { program } = require('commander');
-const pkg = require('../package.json');
+const json = require('../package.json');
 
 const params = program
-    .name('openapi')
+    .name(Object.keys(json.bin)[0])
     .usage('[options]')
-    .version(pkg.version)
+    .version(json.version)
     .requiredOption('-i, --input <value>', 'OpenAPI specification, can be a path, url or string content (required)')
     .requiredOption('-o, --output <value>', 'Output directory (required)')
     .option('-c, --client <value>', 'HTTP client to generate [fetch, xhr, node, axios, angular]', 'fetch')
@@ -32,7 +32,7 @@ const params = program
     .parse(process.argv)
     .opts();
 
-const OpenAPI = require(path.resolve(__dirname, '../dist/index.js'));
+const OpenAPI = require(Path.resolve(__dirname, '../dist/index.js'));
 
 const parseBooleanOrString = value => (value === true || value === 'true' ? true : value);
 
