@@ -595,9 +595,12 @@ export type { DictionaryWithProperties } from './models/DictionaryWithProperties
 export type { DictionaryWithReference } from './models/DictionaryWithReference';
 export type { DictionaryWithString } from './models/DictionaryWithString';
 export type { EnumFromDescription } from './models/EnumFromDescription';
-export { EnumWithExtensions } from './models/EnumWithExtensions';
-export { EnumWithNumbers } from './models/EnumWithNumbers';
-export { EnumWithStrings } from './models/EnumWithStrings';
+export type { EnumWithExtensions } from './models/EnumWithExtensions';
+export { EnumWithExtensionsEnum } from './models/EnumWithExtensions';
+export type { EnumWithNumbers } from './models/EnumWithNumbers';
+export { EnumWithNumbersEnum } from './models/EnumWithNumbers';
+export type { EnumWithStrings } from './models/EnumWithStrings';
+export { EnumWithStringsEnum } from './models/EnumWithStrings';
 export type { ModelThatExtends } from './models/ModelThatExtends';
 export type { ModelThatExtendsExtends } from './models/ModelThatExtendsExtends';
 export type { ModelWithArray } from './models/ModelWithArray';
@@ -606,7 +609,8 @@ export type { ModelWithCircularReference } from './models/ModelWithCircularRefer
 export type { ModelWithDictionary } from './models/ModelWithDictionary';
 export type { ModelWithDuplicateImports } from './models/ModelWithDuplicateImports';
 export type { ModelWithDuplicateProperties } from './models/ModelWithDuplicateProperties';
-export { ModelWithEnum } from './models/ModelWithEnum';
+export type { ModelWithEnum } from './models/ModelWithEnum';
+export { TestEnum, StatusCodeEnum } from './models/ModelWithEnum';
 export type { ModelWithEnumFromDescription } from './models/ModelWithEnumFromDescription';
 export type { ModelWithInteger } from './models/ModelWithInteger';
 export type { ModelWithNestedEnums } from './models/ModelWithNestedEnums';
@@ -878,24 +882,22 @@ exports[`v2 should generate: test/generated/v2/models/EnumWithExtensions.ts 1`] 
 "/**
  * This is a simple enum with numbers
  */
-export enum EnumWithExtensions {
+export type EnumWithExtensions = 200 | 400 | 500;
+
+export const EnumWithExtensionsEnum = {
     /**
      * Used when the status of something is successful
      */
-    CUSTOM_SUCCESS = 200,
+    CUSTOM_SUCCESS: 200,
     /**
      * Used when the status of something has a warning
      */
-    CUSTOM_WARNING = 400,
+    CUSTOM_WARNING: 400,
     /**
      * Used when the status of something has an error
      */
-    CUSTOM_ERROR = 500,
-}
-/**
- * This is a simple enum with numbers
- */
-export type TEnumWithExtensions = 200 | 400 | 500;
+    CUSTOM_ERROR: 500,
+} as const;
 "
 `;
 
@@ -903,27 +905,25 @@ exports[`v2 should generate: test/generated/v2/models/EnumWithNumbers.ts 1`] = `
 "/**
  * This is a simple enum with numbers
  */
-export enum EnumWithNumbers {
-    '_1' = 1,
-    '_2' = 2,
-    '_3' = 3,
-    '_1.1' = 1.1,
-    '_1.2' = 1.2,
-    '_1.3' = 1.3,
-    '_100' = 100,
-    '_200' = 200,
-    '_300' = 300,
-    '_-100' = -100,
-    '_-200' = -200,
-    '_-300' = -300,
-    '_-1.1' = -1.1,
-    '_-1.2' = -1.2,
-    '_-1.3' = -1.3,
-}
-/**
- * This is a simple enum with numbers
- */
-export type TEnumWithNumbers = 1 | 2 | 3 | 1.1 | 1.2 | 1.3 | 100 | 200 | 300 | -100 | -200 | -300 | -1.1 | -1.2 | -1.3;
+export type EnumWithNumbers = 1 | 2 | 3 | 1.1 | 1.2 | 1.3 | 100 | 200 | 300 | -100 | -200 | -300 | -1.1 | -1.2 | -1.3;
+
+export const EnumWithNumbersEnum = {
+    _1: 1,
+    _2: 2,
+    _3: 3,
+    '_1.1': 1.1,
+    '_1.2': 1.2,
+    '_1.3': 1.3,
+    _100: 100,
+    _200: 200,
+    _300: 300,
+    '_-100': -100,
+    '_-200': -200,
+    '_-300': -300,
+    '_-1.1': -1.1,
+    '_-1.2': -1.2,
+    '_-1.3': -1.3,
+} as const;
 "
 `;
 
@@ -931,24 +931,22 @@ exports[`v2 should generate: test/generated/v2/models/EnumWithStrings.ts 1`] = `
 "/**
  * This is a simple enum with strings
  */
-export enum EnumWithStrings {
-    SUCCESS = 'Success',
-    WARNING = 'Warning',
-    ERROR = 'Error',
-    _SINGLE_QUOTE_ = "'Single Quote'",
-    _DOUBLE_QUOTES_ = '"Double Quotes"',
-    NON_ASCII__ØÆÅÔÖ_ØÆÅÔÖ字符串 = 'Non-ascii: øæåôöØÆÅÔÖ字符串',
-}
-/**
- * This is a simple enum with strings
- */
-export type TEnumWithStrings =
+export type EnumWithStrings =
     | 'Success'
     | 'Warning'
     | 'Error'
     | "'Single Quote'"
     | '"Double Quotes"'
     | 'Non-ascii: øæåôöØÆÅÔÖ字符串';
+
+export const EnumWithStringsEnum = {
+    SUCCESS: 'Success',
+    WARNING: 'Warning',
+    ERROR: 'Error',
+    _SINGLE_QUOTE_: "'Single Quote'",
+    _DOUBLE_QUOTES_: '"Double Quotes"',
+    NON_ASCII__ØÆÅÔÖ_ØÆÅÔÖ字符串: 'Non-ascii: øæåôöØÆÅÔÖ字符串',
+} as const;
 "
 `;
 
@@ -1072,29 +1070,21 @@ export type ModelWithEnum = {
     bool?: boolean;
 };
 
-export namespace ModelWithEnum {
-    /**
-     * This is a simple enum with strings
-     */
-    export enum test {
-        SUCCESS = 'Success',
-        WARNING = 'Warning',
-        ERROR = 'Error',
-        ØÆÅ字符串 = 'ØÆÅ字符串',
-    }
+export const TestEnum = {
+    SUCCESS: 'Success',
+    WARNING: 'Warning',
+    ERROR: 'Error',
+    ØÆÅ字符串: 'ØÆÅ字符串',
+} as const;
 
-    /**
-     * These are the HTTP error code enums
-     */
-    export enum statusCode {
-        _100 = '100',
-        _200_FOO = '200 FOO',
-        _300_FOO_BAR = '300 FOO_BAR',
-        _400_FOO_BAR = '400 foo-bar',
-        _500_FOO_BAR = '500 foo.bar',
-        _600_FOO_BAR = '600 foo&bar',
-    }
-}
+export const StatusCodeEnum = {
+    _100: '100',
+    _200_FOO: '200 FOO',
+    _300_FOO_BAR: '300 FOO_BAR',
+    _400_FOO_BAR: '400 foo-bar',
+    _500_FOO_BAR: '500 foo.bar',
+    _600_FOO_BAR: '600 foo&bar',
+} as const;
 "
 `;
 
@@ -4246,12 +4236,17 @@ export type { DictionaryWithDictionary } from './models/DictionaryWithDictionary
 export type { DictionaryWithProperties } from './models/DictionaryWithProperties';
 export type { DictionaryWithReference } from './models/DictionaryWithReference';
 export type { DictionaryWithString } from './models/DictionaryWithString';
-export { Enum1 } from './models/Enum1';
+export type { Enum1 } from './models/Enum1';
+export { Enum1Enum } from './models/Enum1';
 export type { EnumFromDescription } from './models/EnumFromDescription';
-export { EnumWithExtensions } from './models/EnumWithExtensions';
-export { EnumWithNumbers } from './models/EnumWithNumbers';
-export { EnumWithReplacedCharacters } from './models/EnumWithReplacedCharacters';
-export { EnumWithStrings } from './models/EnumWithStrings';
+export type { EnumWithExtensions } from './models/EnumWithExtensions';
+export { EnumWithExtensionsEnum } from './models/EnumWithExtensions';
+export type { EnumWithNumbers } from './models/EnumWithNumbers';
+export { EnumWithNumbersEnum } from './models/EnumWithNumbers';
+export type { EnumWithReplacedCharacters } from './models/EnumWithReplacedCharacters';
+export { EnumWithReplacedCharactersEnum } from './models/EnumWithReplacedCharacters';
+export type { EnumWithStrings } from './models/EnumWithStrings';
+export { EnumWithStringsEnum } from './models/EnumWithStrings';
 export type { File } from './models/File';
 export type { FreeFormObjectWithAdditionalPropertiesEqEmptyObject } from './models/FreeFormObjectWithAdditionalPropertiesEqEmptyObject';
 export type { FreeFormObjectWithAdditionalPropertiesEqTrue } from './models/FreeFormObjectWithAdditionalPropertiesEqTrue';
@@ -4268,20 +4263,25 @@ export type { ModelWithConst } from './models/ModelWithConst';
 export type { ModelWithDictionary } from './models/ModelWithDictionary';
 export type { ModelWithDuplicateImports } from './models/ModelWithDuplicateImports';
 export type { ModelWithDuplicateProperties } from './models/ModelWithDuplicateProperties';
-export { ModelWithEnum } from './models/ModelWithEnum';
+export type { ModelWithEnum } from './models/ModelWithEnum';
+export { TestEnum, StatusCodeEnum } from './models/ModelWithEnum';
 export type { ModelWithEnumFromDescription } from './models/ModelWithEnumFromDescription';
-export { ModelWithEnumWithHyphen } from './models/ModelWithEnumWithHyphen';
+export type { ModelWithEnumWithHyphen } from './models/ModelWithEnumWithHyphen';
+export { FooBarBazQuxEnum } from './models/ModelWithEnumWithHyphen';
 export type { ModelWithInteger } from './models/ModelWithInteger';
 export type { ModelWithNestedArrayEnums } from './models/ModelWithNestedArrayEnums';
 export type { ModelWithNestedArrayEnumsData } from './models/ModelWithNestedArrayEnumsData';
-export { ModelWithNestedArrayEnumsDataBar } from './models/ModelWithNestedArrayEnumsDataBar';
-export { ModelWithNestedArrayEnumsDataFoo } from './models/ModelWithNestedArrayEnumsDataFoo';
+export type { ModelWithNestedArrayEnumsDataBar } from './models/ModelWithNestedArrayEnumsDataBar';
+export { ModelWithNestedArrayEnumsDataBarEnum } from './models/ModelWithNestedArrayEnumsDataBar';
+export type { ModelWithNestedArrayEnumsDataFoo } from './models/ModelWithNestedArrayEnumsDataFoo';
+export { ModelWithNestedArrayEnumsDataFooEnum } from './models/ModelWithNestedArrayEnumsDataFoo';
 export type { ModelWithNestedCompositionEnums } from './models/ModelWithNestedCompositionEnums';
 export type { ModelWithNestedEnums } from './models/ModelWithNestedEnums';
 export type { ModelWithNestedProperties } from './models/ModelWithNestedProperties';
 export type { ModelWithNullableObject } from './models/ModelWithNullableObject';
 export type { ModelWithNullableString } from './models/ModelWithNullableString';
-export { ModelWithOneOfEnum } from './models/ModelWithOneOfEnum';
+export type { ModelWithOneOfEnum } from './models/ModelWithOneOfEnum';
+export { FooEnum } from './models/ModelWithOneOfEnum';
 export type { ModelWithOrderedProperties } from './models/ModelWithOrderedProperties';
 export type { ModelWithPattern } from './models/ModelWithPattern';
 export type { ModelWithProperties } from './models/ModelWithProperties';
@@ -4679,13 +4679,13 @@ export type CompositionWithNestedAnyAndTypeNull = {
 
 exports[`v3 should generate: test/generated/v3/models/CompositionWithNestedAnyOfAndNull.ts 1`] = `
 "import type { ConstValue } from './ConstValue';
-import type { TEnum1 } from './Enum1';
+import type { Enum1 } from './Enum1';
 
 /**
  * This is a model with one property with a 'any of' relationship where the options are not $ref
  */
 export type CompositionWithNestedAnyOfAndNull = {
-    propA?: Array<TEnum1 | ConstValue> | null;
+    propA?: Array<Enum1 | ConstValue> | null;
 };
 "
 `;
@@ -4871,11 +4871,12 @@ export type DictionaryWithString = Record<string, string>;
 `;
 
 exports[`v3 should generate: test/generated/v3/models/Enum1.ts 1`] = `
-"export enum Enum1 {
-    BIRD = 'Bird',
-    DOG = 'Dog',
-}
-export type TEnum1 = 'Bird' | 'Dog';
+"export type Enum1 = 'Bird' | 'Dog';
+
+export const Enum1Enum = {
+    BIRD: 'Bird',
+    DOG: 'Dog',
+} as const;
 "
 `;
 
@@ -4891,24 +4892,22 @@ exports[`v3 should generate: test/generated/v3/models/EnumWithExtensions.ts 1`] 
 "/**
  * This is a simple enum with numbers
  */
-export enum EnumWithExtensions {
+export type EnumWithExtensions = 200 | 400 | 500;
+
+export const EnumWithExtensionsEnum = {
     /**
      * Used when the status of something is successful
      */
-    CUSTOM_SUCCESS = 200,
+    CUSTOM_SUCCESS: 200,
     /**
      * Used when the status of something has a warning
      */
-    CUSTOM_WARNING = 400,
+    CUSTOM_WARNING: 400,
     /**
      * Used when the status of something has an error
      */
-    CUSTOM_ERROR = 500,
-}
-/**
- * This is a simple enum with numbers
- */
-export type TEnumWithExtensions = 200 | 400 | 500;
+    CUSTOM_ERROR: 500,
+} as const;
 "
 `;
 
@@ -4916,39 +4915,38 @@ exports[`v3 should generate: test/generated/v3/models/EnumWithNumbers.ts 1`] = `
 "/**
  * This is a simple enum with numbers
  */
-export enum EnumWithNumbers {
-    '_1' = 1,
-    '_2' = 2,
-    '_3' = 3,
-    '_1.1' = 1.1,
-    '_1.2' = 1.2,
-    '_1.3' = 1.3,
-    '_100' = 100,
-    '_200' = 200,
-    '_300' = 300,
-    '_-100' = -100,
-    '_-200' = -200,
-    '_-300' = -300,
-    '_-1.1' = -1.1,
-    '_-1.2' = -1.2,
-    '_-1.3' = -1.3,
-}
-/**
- * This is a simple enum with numbers
- */
-export type TEnumWithNumbers = 1 | 2 | 3 | 1.1 | 1.2 | 1.3 | 100 | 200 | 300 | -100 | -200 | -300 | -1.1 | -1.2 | -1.3;
+export type EnumWithNumbers = 1 | 2 | 3 | 1.1 | 1.2 | 1.3 | 100 | 200 | 300 | -100 | -200 | -300 | -1.1 | -1.2 | -1.3;
+
+export const EnumWithNumbersEnum = {
+    _1: 1,
+    _2: 2,
+    _3: 3,
+    '_1.1': 1.1,
+    '_1.2': 1.2,
+    '_1.3': 1.3,
+    _100: 100,
+    _200: 200,
+    _300: 300,
+    '_-100': -100,
+    '_-200': -200,
+    '_-300': -300,
+    '_-1.1': -1.1,
+    '_-1.2': -1.2,
+    '_-1.3': -1.3,
+} as const;
 "
 `;
 
 exports[`v3 should generate: test/generated/v3/models/EnumWithReplacedCharacters.ts 1`] = `
-"export enum EnumWithReplacedCharacters {
-    _SINGLE_QUOTE_ = "'Single Quote'",
-    _DOUBLE_QUOTES_ = '"Double Quotes"',
-    ØÆÅÔÖ_ØÆÅÔÖ字符串 = 'øæåôöØÆÅÔÖ字符串',
-    '_3.1' = 3.1,
-    EMPTY_STRING = '',
-}
-export type TEnumWithReplacedCharacters = "'Single Quote'" | '"Double Quotes"' | 'øæåôöØÆÅÔÖ字符串' | 3.1 | '';
+"export type EnumWithReplacedCharacters = "'Single Quote'" | '"Double Quotes"' | 'øæåôöØÆÅÔÖ字符串' | 3.1 | '';
+
+export const EnumWithReplacedCharactersEnum = {
+    _SINGLE_QUOTE_: "'Single Quote'",
+    _DOUBLE_QUOTES_: '"Double Quotes"',
+    ØÆÅÔÖ_ØÆÅÔÖ字符串: 'øæåôöØÆÅÔÖ字符串',
+    '_3.1': 3.1,
+    EMPTY_STRING: '',
+} as const;
 "
 `;
 
@@ -4956,24 +4954,22 @@ exports[`v3 should generate: test/generated/v3/models/EnumWithStrings.ts 1`] = `
 "/**
  * This is a simple enum with strings
  */
-export enum EnumWithStrings {
-    SUCCESS = 'Success',
-    WARNING = 'Warning',
-    ERROR = 'Error',
-    _SINGLE_QUOTE_ = "'Single Quote'",
-    _DOUBLE_QUOTES_ = '"Double Quotes"',
-    NON_ASCII__ØÆÅÔÖ_ØÆÅÔÖ字符串 = 'Non-ascii: øæåôöØÆÅÔÖ字符串',
-}
-/**
- * This is a simple enum with strings
- */
-export type TEnumWithStrings =
+export type EnumWithStrings =
     | 'Success'
     | 'Warning'
     | 'Error'
     | "'Single Quote'"
     | '"Double Quotes"'
     | 'Non-ascii: øæåôöØÆÅÔÖ字符串';
+
+export const EnumWithStringsEnum = {
+    SUCCESS: 'Success',
+    WARNING: 'Warning',
+    ERROR: 'Error',
+    _SINGLE_QUOTE_: "'Single Quote'",
+    _DOUBLE_QUOTES_: '"Double Quotes"',
+    NON_ASCII__ØÆÅÔÖ_ØÆÅÔÖ字符串: 'Non-ascii: øæåôöØÆÅÔÖ字符串',
+} as const;
 "
 `;
 
@@ -5178,29 +5174,21 @@ export type ModelWithEnum = {
     bool?: boolean;
 };
 
-export namespace ModelWithEnum {
-    /**
-     * This is a simple enum with strings
-     */
-    export enum test {
-        SUCCESS = 'Success',
-        WARNING = 'Warning',
-        ERROR = 'Error',
-        ØÆÅ字符串 = 'ØÆÅ字符串',
-    }
+export const TestEnum = {
+    SUCCESS: 'Success',
+    WARNING: 'Warning',
+    ERROR: 'Error',
+    ØÆÅ字符串: 'ØÆÅ字符串',
+} as const;
 
-    /**
-     * These are the HTTP error code enums
-     */
-    export enum statusCode {
-        _100 = '100',
-        _200_FOO = '200 FOO',
-        _300_FOO_BAR = '300 FOO_BAR',
-        _400_FOO_BAR = '400 foo-bar',
-        _500_FOO_BAR = '500 foo.bar',
-        _600_FOO_BAR = '600 foo&bar',
-    }
-}
+export const StatusCodeEnum = {
+    _100: '100',
+    _200_FOO: '200 FOO',
+    _300_FOO_BAR: '300 FOO_BAR',
+    _400_FOO_BAR: '400 foo-bar',
+    _500_FOO_BAR: '500 foo.bar',
+    _600_FOO_BAR: '600 foo&bar',
+} as const;
 "
 `;
 
@@ -5225,11 +5213,9 @@ export type ModelWithEnumWithHyphen = {
     'foo-bar-baz-qux'?: '3.0';
 };
 
-export namespace ModelWithEnumWithHyphen {
-    export enum fooBarBazQux {
-        _3_0 = '3.0',
-    }
-}
+export const FooBarBazQuxEnum = {
+    _3_0: '3.0',
+} as const;
 "
 `;
 
@@ -5257,39 +5243,41 @@ export type ModelWithNestedArrayEnums = {
 `;
 
 exports[`v3 should generate: test/generated/v3/models/ModelWithNestedArrayEnumsData.ts 1`] = `
-"import type { TModelWithNestedArrayEnumsDataBar } from './ModelWithNestedArrayEnumsDataBar';
-import type { TModelWithNestedArrayEnumsDataFoo } from './ModelWithNestedArrayEnumsDataFoo';
+"import type { ModelWithNestedArrayEnumsDataBar } from './ModelWithNestedArrayEnumsDataBar';
+import type { ModelWithNestedArrayEnumsDataFoo } from './ModelWithNestedArrayEnumsDataFoo';
 
 export type ModelWithNestedArrayEnumsData = {
-    foo?: Array<TModelWithNestedArrayEnumsDataFoo>;
-    bar?: Array<TModelWithNestedArrayEnumsDataBar>;
+    foo?: Array<ModelWithNestedArrayEnumsDataFoo>;
+    bar?: Array<ModelWithNestedArrayEnumsDataBar>;
 };
 "
 `;
 
 exports[`v3 should generate: test/generated/v3/models/ModelWithNestedArrayEnumsDataBar.ts 1`] = `
-"export enum ModelWithNestedArrayEnumsDataBar {
-    BAZ = 'baz',
-    QUX = 'qux',
-}
-export type TModelWithNestedArrayEnumsDataBar = 'baz' | 'qux';
+"export type ModelWithNestedArrayEnumsDataBar = 'baz' | 'qux';
+
+export const ModelWithNestedArrayEnumsDataBarEnum = {
+    BAZ: 'baz',
+    QUX: 'qux',
+} as const;
 "
 `;
 
 exports[`v3 should generate: test/generated/v3/models/ModelWithNestedArrayEnumsDataFoo.ts 1`] = `
-"export enum ModelWithNestedArrayEnumsDataFoo {
-    FOO = 'foo',
-    BAR = 'bar',
-}
-export type TModelWithNestedArrayEnumsDataFoo = 'foo' | 'bar';
+"export type ModelWithNestedArrayEnumsDataFoo = 'foo' | 'bar';
+
+export const ModelWithNestedArrayEnumsDataFooEnum = {
+    FOO: 'foo',
+    BAR: 'bar',
+} as const;
 "
 `;
 
 exports[`v3 should generate: test/generated/v3/models/ModelWithNestedCompositionEnums.ts 1`] = `
-"import type { TModelWithNestedArrayEnumsDataFoo } from './ModelWithNestedArrayEnumsDataFoo';
+"import type { ModelWithNestedArrayEnumsDataFoo } from './ModelWithNestedArrayEnumsDataFoo';
 
 export type ModelWithNestedCompositionEnums = {
-    foo?: TModelWithNestedArrayEnumsDataFoo;
+    foo?: ModelWithNestedArrayEnumsDataFoo;
 };
 "
 `;
@@ -5375,11 +5363,9 @@ exports[`v3 should generate: test/generated/v3/models/ModelWithOneOfEnum.ts 1`] 
           foo: 'Corge';
       };
 
-export namespace ModelWithOneOfEnum {
-    export enum foo {
-        BAR = 'Bar',
-    }
-}
+export const FooEnum = {
+    BAR: 'Bar',
+} as const;
 "
 `;
 
@@ -7838,7 +7824,7 @@ export class NonAsciiÆøåÆøÅöôêÊService {
 `;
 
 exports[`v3 should generate: test/generated/v3/services/ParametersService.ts 1`] = `
-"import type { TModelWithNestedArrayEnumsDataFoo } from '../models/ModelWithNestedArrayEnumsDataFoo';
+"import type { ModelWithNestedArrayEnumsDataFoo } from '../models/ModelWithNestedArrayEnumsDataFoo';
 import type { ModelWithOneOfEnum } from '../models/ModelWithOneOfEnum';
 import type { ModelWithString } from '../models/ModelWithString';
 import type { Pageable } from '../models/Pageable';
@@ -7876,13 +7862,13 @@ export class ParametersService {
      */
     public static callWithParameters(
         parameterHeader: string | null,
-        fooAllOfEnum: TModelWithNestedArrayEnumsDataFoo,
+        fooAllOfEnum: ModelWithNestedArrayEnumsDataFoo,
         parameterQuery: string | null,
         parameterForm: string | null,
         parameterCookie: string | null,
         parameterPath: string | null,
         requestBody: ModelWithString | null,
-        fooRefEnum?: TModelWithNestedArrayEnumsDataFoo
+        fooRefEnum?: ModelWithNestedArrayEnumsDataFoo
     ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'POST',

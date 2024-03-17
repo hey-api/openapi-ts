@@ -1,25 +1,28 @@
 import { resolve } from 'path';
 
-import type { Service } from '../client/interfaces/Service';
-import { HttpClient } from '../HttpClient';
-import { writeFile } from './fileSystem';
-import type { Templates } from './registerHandlebarTemplates';
-import { writeClientServices } from './writeClientServices';
+import { HttpClient } from '../../../HttpClient';
+import { writeFile } from '../../fileSystem';
+import { writeClientServices } from '../services';
 
-jest.mock('./fileSystem');
+jest.mock('../../fileSystem');
 
 describe('writeClientServices', () => {
     it('should write to filesystem', async () => {
-        const services: Service[] = [
-            {
-                $refs: [],
-                imports: [],
-                name: 'User',
-                operations: [],
-            },
-        ];
+        const client: Parameters<typeof writeClientServices>[0] = {
+            server: 'http://localhost:8080',
+            version: 'v1',
+            models: [],
+            services: [
+                {
+                    $refs: [],
+                    imports: [],
+                    name: 'User',
+                    operations: [],
+                },
+            ],
+        };
 
-        const templates: Templates = {
+        const templates: Parameters<typeof writeClientServices>[1] = {
             client: () => 'client',
             core: {
                 apiError: () => 'apiError',
@@ -40,7 +43,7 @@ describe('writeClientServices', () => {
             index: () => 'index',
         };
 
-        await writeClientServices(services, templates, '/', {
+        await writeClientServices(client, templates, '/', {
             httpClient: HttpClient.FETCH,
             input: '',
             output: '',

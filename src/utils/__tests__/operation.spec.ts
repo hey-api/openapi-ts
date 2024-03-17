@@ -1,11 +1,9 @@
-import type { Options } from '../../../client/interfaces/Options';
-import { getOperationName } from './getOperationName';
+import { getOperationName } from '../operation';
 
 describe('getOperationName', () => {
     it('should produce correct result', () => {
-        const options: Options = {
-            input: '',
-            output: '',
+        const options: Parameters<typeof getOperationName>[2] = {
+            operationId: true,
         };
         expect(getOperationName('/api/v{api-version}/users', 'GET', options, 'GetAllUsers')).toEqual('getAllUsers');
         expect(getOperationName('/api/v{api-version}/users', 'GET', options, undefined)).toEqual('getApiUsers');
@@ -29,9 +27,8 @@ describe('getOperationName', () => {
         expect(getOperationName('/api/v{api-version}/users', 'GET', options, '-foo.bar')).toEqual('fooBar');
         expect(getOperationName('/api/v{api-version}/users', 'GET', options, '123.foo.bar')).toEqual('fooBar');
 
-        const optionsIgnoreOperationId: Options = {
-            ...options,
-            useOperationId: false,
+        const optionsIgnoreOperationId: Parameters<typeof getOperationName>[2] = {
+            operationId: false,
         };
         expect(getOperationName('/api/v1/users', 'GET', optionsIgnoreOperationId, 'GetAllUsers')).toEqual(
             'getApiV1Users'

@@ -115,9 +115,9 @@ export interface Templates {
  */
 export const registerHandlebarTemplates = (
     openApi: OpenApi,
-    root: Pick<Required<Options>, 'httpClient' | 'serviceResponse' | 'useOptions'>
+    options: Omit<Required<Options>, 'base' | 'clientName' | 'request'>
 ): Templates => {
-    registerHandlebarHelpers(openApi, root);
+    registerHandlebarHelpers(openApi, options);
 
     // Main templates (entry points for the files we write to disk)
     const templates: Templates = {

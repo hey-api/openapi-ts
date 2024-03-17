@@ -1,6 +1,6 @@
-{{#if @root.useOptions~}}
-{{#equals @root.serviceResponse 'generics'}}
-{{~#unless @root.exportClient~}}
+{{#if @root.$config.useOptions~}}
+{{#equals @root.$config.serviceResponse 'generics'}}
+{{~#unless @root.$config.clientName~}}
 <T extends TResult>
 {{~/unless~}}
 {{/equals}}
