@@ -88,8 +88,7 @@ describe('v3.node', () => {
         try {
             const { ErrorService } = require('./generated/v3/node/index.js');
             await ErrorService.testErrorCode(500);
-        } catch (e) {
-            const err = e as any;
+        } catch (err) {
             error = JSON.stringify({
                 name: err.name,
                 message: err.message,
@@ -119,8 +118,7 @@ describe('v3.node', () => {
         try {
             const { ErrorService } = require('./generated/v3/node/index.js');
             await ErrorService.testErrorCode(409);
-        } catch (e) {
-            const err = e as any;
+        } catch (err) {
             error = JSON.stringify({
                 name: err.name,
                 message: err.message,
@@ -148,12 +146,12 @@ describe('v3.node', () => {
 
     it('it should parse query params', async () => {
         const { ParametersService } = require('./generated/v3/node/index.js');
-        const result = (await ParametersService.postCallWithOptionalParam({
+        const result = await ParametersService.postCallWithOptionalParam({
             page: 0,
             size: 1,
             sort: ['location'],
-        })) as Promise<any>;
-        expect((result as any).query).toStrictEqual({ parameter: { page: '0', size: '1', sort: 'location' } });
+        });
+        expect(result.query).toStrictEqual({ parameter: { page: '0', size: '1', sort: 'location' } });
     });
 });
 

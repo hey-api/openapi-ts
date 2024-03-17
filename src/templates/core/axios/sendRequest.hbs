@@ -2,7 +2,7 @@ export const sendRequest = async <T>(
 	config: OpenAPIConfig,
 	options: ApiRequestOptions,
 	url: string,
-	body: any,
+	body: unknown,
 	formData: FormData | undefined,
 	headers: Record<string, string>,
 	onCancel: OnCancel,

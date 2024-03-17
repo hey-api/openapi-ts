@@ -1,6 +1,5 @@
 import { resolve } from 'path';
 
-import { HttpClient } from '../../../HttpClient';
 import { writeFile } from '../../fileSystem';
 import { writeClientCore } from '../core';
 
@@ -41,7 +40,7 @@ describe('writeClientCore', () => {
         };
 
         const config: Parameters<typeof writeClientCore>[3] = {
-            httpClient: HttpClient.FETCH,
+            client: 'fetch',
             input: '',
             output: '',
             serviceResponse: 'body',
@@ -67,7 +66,7 @@ describe('writeClientCore', () => {
         };
 
         const config: Parameters<typeof writeClientCore>[3] = {
-            httpClient: HttpClient.FETCH,
+            client: 'fetch',
             input: '',
             output: '',
             serviceResponse: 'body',
@@ -93,7 +92,7 @@ describe('writeClientCore', () => {
 
         const config: Parameters<typeof writeClientCore>[3] = {
             base: 'foo',
-            httpClient: HttpClient.FETCH,
+            client: 'fetch',
             input: '',
             output: '',
             serviceResponse: 'body',

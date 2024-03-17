@@ -1,4 +1,4 @@
-{{#equals @root.$config.httpClient 'angular'}}
+{{#equals @root.$config.client 'angular'}}
 import { NgModule} from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -18,7 +18,7 @@ import { {{{name}}}{{{@root.$config.postfixServices}}} } from './services/{{{nam
 {{/each}}
 {{/if}}
 
-{{#equals @root.$config.httpClient 'angular'}}
+{{#equals @root.$config.client 'angular'}}
 @NgModule({
 	imports: [HttpClientModule],
 	providers: [

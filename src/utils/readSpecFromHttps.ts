@@ -4,8 +4,8 @@ import { get } from 'https';
  * Download the spec file from a HTTPS resource
  * @param url
  */
-export const readSpecFromHttps = async (url: string): Promise<string> => {
-    return new Promise<string>((resolve, reject) => {
+export const readSpecFromHttps = async (url: string): Promise<string> =>
+    new Promise<string>((resolve, reject) => {
         get(url, response => {
             let body = '';
             response.on('data', chunk => {
@@ -19,4 +19,3 @@ export const readSpecFromHttps = async (url: string): Promise<string> => {
             });
         });
     });
-};

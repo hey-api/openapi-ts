@@ -29,7 +29,7 @@ export interface OpenApiParameter extends OpenApiReference, WithEnumExtension, W
     allowEmptyValue?: boolean;
     items?: OpenApiItems;
     collectionFormat?: 'csv' | 'ssv' | 'tsv' | 'pipes' | 'multi';
-    default?: any;
+    default?: number;
     maximum?: number;
     exclusiveMaximum?: boolean;
     minimum?: number;

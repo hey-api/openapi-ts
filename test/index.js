@@ -5,13 +5,13 @@ const fetch = require('node-fetch');
 
 const generate = async (input, output) => {
     await OpenAPI.generate({
+        client: 'fetch',
         // clientName: 'Demo',
         enums: true,
         exportCore: true,
         exportModels: true,
         exportSchemas: true,
         exportServices: true,
-        httpClient: 'fetch',
         input,
         output,
         postfixModels: '',

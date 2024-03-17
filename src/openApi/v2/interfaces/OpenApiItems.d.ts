@@ -19,7 +19,7 @@ export interface OpenApiItems extends WithEnumExtension {
         | 'password';
     items?: OpenApiItems;
     collectionFormat?: 'csv' | 'ssv' | 'tsv' | 'pipes';
-    default?: any;
+    default?: unknown;
     maximum?: number;
     exclusiveMaximum?: number;
     minimum?: number;

@@ -12,7 +12,7 @@ const params = program
     .version(json.version)
     .requiredOption('-i, --input <value>', 'OpenAPI specification, can be a path, url or string content (required)')
     .requiredOption('-o, --output <value>', 'Output directory (required)')
-    .option('-c, --client <value>', 'HTTP client to generate [fetch, xhr, node, axios, angular]', 'fetch')
+    .option('-c, --client <value>', 'HTTP client to generate [fetch, xhr, node, axios, angular]')
     .option('--name <value>', 'Custom client class name')
     .option('--useOptions [value]', 'Use options instead of arguments', false)
     .option('--no-autoformat', 'Disable processing generated files with formatter')
@@ -44,7 +44,6 @@ if (OpenAPI) {
         exportModels: parseBooleanOrString(params.exportModels),
         exportSchemas: JSON.parse(params.exportSchemas) === true,
         exportServices: parseBooleanOrString(params.exportServices),
-        httpClient: params.client,
         useDateType: JSON.parse(params.useDateType) === true,
         useOptions: JSON.parse(params.useOptions) === true,
     })

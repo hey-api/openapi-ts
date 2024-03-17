@@ -1,4 +1,4 @@
-export const getResponseBody = (xhr: XMLHttpRequest): any => {
+export const getResponseBody = (xhr: XMLHttpRequest): unknown => {
 	if (xhr.status !== 204) {
 		try {
 			const contentType = xhr.getResponseHeader('Content-Type');

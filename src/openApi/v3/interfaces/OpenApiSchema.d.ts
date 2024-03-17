@@ -13,12 +13,12 @@ export interface OpenApiSchema extends OpenApiReference, WithEnumExtension {
     allOf?: OpenApiSchema[];
     anyOf?: OpenApiSchema[];
     const?: string | number | boolean | null;
-    default?: any;
+    default?: number;
     deprecated?: boolean;
     description?: string;
     discriminator?: OpenApiDiscriminator;
     enum?: (string | number)[];
-    example?: any;
+    example?: unknown;
     exclusiveMaximum?: boolean;
     exclusiveMinimum?: boolean;
     externalDocs?: OpenApiExternalDocs;

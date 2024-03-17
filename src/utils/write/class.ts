@@ -21,11 +21,11 @@ export const writeClientClass = async (
     client: Client,
     templates: Templates,
     outputPath: string,
-    options: Pick<Required<Options>, 'clientName' | 'enums' | 'httpClient' | 'postfixServices'>
+    options: Pick<Required<Options>, 'client' | 'clientName' | 'enums' | 'postfixServices'>
 ): Promise<void> => {
     const templateResult = templates.client({
         $config: options,
-        httpRequest: getHttpRequestName(options.httpClient),
+        httpRequest: getHttpRequestName(options.client),
         models: sortModelsByName(client.models),
         server: client.server,
         services: sortServicesByName(client.services),

@@ -1,4 +1,4 @@
-{{#equals @root.$config.httpClient 'angular'}}
+{{#equals @root.$config.client 'angular'}}
 {{#if @root.$config.clientName}}
 import { Injectable } from '@angular/core';
 import type { Observable } from 'rxjs';
@@ -12,11 +12,11 @@ import type { Observable } from 'rxjs';
 {{#equals @root.$config.serviceResponse 'response'}}
 import type { ApiResult } from '../core/ApiResult';
 {{/equals}}
-{{#notEquals @root.$config.httpClient 'angular'}}
+{{#notEquals @root.$config.client 'angular'}}
 import type { CancelablePromise } from '../core/CancelablePromise';
 {{/notEquals}}
 {{#if @root.$config.clientName}}
-{{#equals @root.$config.httpClient 'angular'}}
+{{#equals @root.$config.client 'angular'}}
 import { BaseHttpRequest } from '../core/BaseHttpRequest';
 {{else}}
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
@@ -54,7 +54,7 @@ export type {{{nameOperationDataType name}}} = {
 {{/each}}
 {{/if}}
 
-{{#equals @root.$config.httpClient 'angular'}}
+{{#equals @root.$config.client 'angular'}}
 @Injectable({
   providedIn: 'root',
 })
@@ -64,7 +64,7 @@ export class {{{name}}}{{{@root.$config.postfixServices}}} {
 
 	constructor(public readonly httpRequest: BaseHttpRequest) {}
 	{{else}}
-	{{#equals @root.$config.httpClient 'angular'}}
+	{{#equals @root.$config.client 'angular'}}
 
 	constructor(public readonly http: HttpClient) {}
 	{{/equals}}
@@ -94,7 +94,7 @@ export class {{{name}}}{{{@root.$config.postfixServices}}} {
 	 * @throws ApiError
 	 */
 	{{#if @root.$config.clientName}}
-	{{#equals @root.$config.httpClient 'angular'}}
+	{{#equals @root.$config.client 'angular'}}
 	public {{{name}}}{{>operationTypes}}({{>operationParameters}}): Observable<{{>operationResult}}> {
 		{{>dataDestructure}}
 		return this.httpRequest.request({
@@ -104,7 +104,7 @@ export class {{{name}}}{{{@root.$config.postfixServices}}} {
 		return this.httpRequest.request({
 	{{/equals}}
 	{{else}}
-	{{#equals @root.$config.httpClient 'angular'}}
+	{{#equals @root.$config.client 'angular'}}
 	public {{{name}}}{{>operationTypes}}({{>operationParameters}}): Observable<{{>operationResult}}> {
 		{{>dataDestructure}}
 		return __request({{>requestConfig}}, this.http, {

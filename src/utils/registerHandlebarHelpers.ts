@@ -6,7 +6,8 @@ import type { Model } from '../client/interfaces/Model';
 import type { OperationParameter } from '../client/interfaces/OperationParameter';
 import type { Options } from '../client/interfaces/Options';
 import type { Service } from '../client/interfaces/Service';
-import type { OpenApi } from '../openApi/v3/interfaces/OpenApi';
+import type { OpenApi as OpenApiV2 } from '../openApi/v2/interfaces/OpenApi';
+import type { OpenApi as OpenApiV3 } from '../openApi/v3/interfaces/OpenApi';
 import { enumKey, enumName, enumUnionType, enumValue } from './enum';
 import { escapeName } from './escapeName';
 import { unique } from './unique';
@@ -51,13 +52,13 @@ const dataParameters = (parameters: OperationParameter[]) => {
     return output.join(', ');
 };
 
-const debugThis = (value: any) => {
+const debugThis = (value: unknown) => {
     console.log(value);
     return '';
 };
 
 export const registerHandlebarHelpers = (
-    openApi: OpenApi,
+    openApi: OpenApiV3 | OpenApiV2,
     config: Omit<Required<Options>, 'base' | 'clientName' | 'request'>
 ): void => {
     Handlebars.registerHelper('camelCase', camelCase);
@@ -68,9 +69,12 @@ export const registerHandlebarHelpers = (
     Handlebars.registerHelper('enumUnionType', enumUnionType);
     Handlebars.registerHelper('enumValue', enumValue);
 
-    Handlebars.registerHelper('equals', function (this: any, a: string, b: string, options: Handlebars.HelperOptions) {
-        return a === b ? options.fn(this) : options.inverse(this);
-    });
+    Handlebars.registerHelper(
+        'equals',
+        function (this: unknown, a: string, b: string, options: Handlebars.HelperOptions) {
+            return a === b ? options.fn(this) : options.inverse(this);
+        }
+    );
 
     Handlebars.registerHelper('escapeComment', function (value: string) {
         return value
@@ -87,14 +91,14 @@ export const registerHandlebarHelpers = (
         return value.replace(/\n/g, '\\n');
     });
 
-    Handlebars.registerHelper('exactArray', function (this: any, model: Model, options: Handlebars.HelperOptions) {
+    Handlebars.registerHelper('exactArray', function (this: unknown, model: Model, options: Handlebars.HelperOptions) {
         if (model.export === 'array' && model.maxItems && model.minItems && model.maxItems === model.minItems) {
             return options.fn(this);
         }
         return options.inverse(this);
     });
 
-    Handlebars.registerHelper('ifdef', function (this: any, ...args): string {
+    Handlebars.registerHelper('ifdef', function (this: unknown, ...args): string {
         const options = args.pop();
         if (!args.every(value => !value)) {
             return options.fn(this);
@@ -104,14 +108,14 @@ export const registerHandlebarHelpers = (
 
     Handlebars.registerHelper(
         'ifOperationDataOptional',
-        function (this: any, parameters: OperationParameter[], options: Handlebars.HelperOptions) {
+        function (this: unknown, parameters: OperationParameter[], options: Handlebars.HelperOptions) {
             return parameters.every(parameter => !parameter.isRequired) ? options.fn(this) : options.inverse(this);
         }
     );
 
     Handlebars.registerHelper(
         'intersection',
-        function (this: any, models: Model[], parent: string | undefined, options: Handlebars.HelperOptions) {
+        function (this: unknown, models: Model[], parent: string | undefined, options: Handlebars.HelperOptions) {
             const partialType = Handlebars.partials['type'];
             const types = models.map(model => partialType({ $config: config, ...model, parent }));
             const uniqueTypes = types.filter(unique);
@@ -144,14 +148,14 @@ export const registerHandlebarHelpers = (
 
     Handlebars.registerHelper(
         'notEquals',
-        function (this: any, a: string, b: string, options: Handlebars.HelperOptions) {
+        function (this: unknown, a: string, b: string, options: Handlebars.HelperOptions) {
             return a !== b ? options.fn(this) : options.inverse(this);
         }
     );
 
     Handlebars.registerHelper(
         'useDateType',
-        function (this: any, config: Options, format: string | undefined, options: Handlebars.HelperOptions) {
+        function (this: unknown, config: Options, format: string | undefined, options: Handlebars.HelperOptions) {
             return config.useDateType && format === 'date-time' ? options.fn(this) : options.inverse(this);
         }
     );

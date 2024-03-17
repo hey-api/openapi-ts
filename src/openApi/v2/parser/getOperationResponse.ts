@@ -1,11 +1,11 @@
 import type { OperationResponse } from '../../../client/interfaces/OperationResponse';
 import { getPattern } from '../../../utils/getPattern';
+import { getType } from '../../../utils/type';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiResponse } from '../interfaces/OpenApiResponse';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 import { getModel } from './getModel';
 import { getRef } from './getRef';
-import { getType } from './getType';
 
 export const getOperationResponse = (
     openApi: OpenApi,

@@ -43,7 +43,8 @@ export class AppComponent {
         private readonly simpleService: SimpleService,
         private readonly typesService: TypesService
     ) {
-        (window as any).api = {
+        // @ts-ignore
+        window.api = {
             OpenAPI,
             ApiModule,
             CollectionFormatService: this.collectionFormatService,

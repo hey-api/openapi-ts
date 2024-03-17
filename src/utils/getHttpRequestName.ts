@@ -1,20 +1,21 @@
-import { HttpClient } from '../HttpClient';
+import type { Options } from '../client/interfaces/Options';
 
 /**
  * Generate the HttpRequest filename based on the selected client
- * @param httpClient The selected httpClient (fetch, xhr, node or axios)
+ * @param client The selected HTTP client (fetch, xhr, node or axios)
  */
-export const getHttpRequestName = (httpClient: HttpClient): string => {
-    switch (httpClient) {
-        case HttpClient.FETCH:
-            return 'FetchHttpRequest';
-        case HttpClient.XHR:
-            return 'XHRHttpRequest';
-        case HttpClient.NODE:
-            return 'NodeHttpRequest';
-        case HttpClient.AXIOS:
-            return 'AxiosHttpRequest';
-        case HttpClient.ANGULAR:
+export const getHttpRequestName = (client: Options['client']): string => {
+    switch (client) {
+        case 'angular':
             return 'AngularHttpRequest';
+        case 'axios':
+            return 'AxiosHttpRequest';
+        case 'node':
+            return 'NodeHttpRequest';
+        case 'xhr':
+            return 'XHRHttpRequest';
+        case 'fetch':
+        default:
+            return 'FetchHttpRequest';
     }
 };

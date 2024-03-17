@@ -1,3 +1,3 @@
-export const isFormData = (value: any): value is FormData => {
+export const isFormData = (value: unknown): value is FormData => {
 	return value instanceof FormData;
 };

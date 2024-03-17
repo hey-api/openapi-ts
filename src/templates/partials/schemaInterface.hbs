@@ -5,7 +5,9 @@
 	properties: {
 {{#if properties}}
 	{{#each properties}}
+		{{#notEquals name "[key: string]"}}
 		{{{name}}}: {{>schema}},
+		{{/notEquals}}
 	{{/each}}
 {{/if}}
 	},
