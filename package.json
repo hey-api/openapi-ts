@@ -1,6 +1,6 @@
 {
     "name": "@nicolas-chaulet/openapi-typescript-codegen",
-    "version": "0.27.28",
+    "version": "0.27.29",
     "description": "Library that generates Typescript clients based on the OpenAPI specification.",
     "author": "Ferdi Koomen",
     "homepage": "https://github.com/nicolas-chaulet/openapi-typescript-codegen/",
