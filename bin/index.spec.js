@@ -94,7 +94,7 @@ describe('bin', () => {
 
     it('it should display help', async () => {
         const result = sync('node', ['./bin/index.js', '--help', '--no-write']);
-        expect(result.stdout.toString()).toContain(`Usage: openapi [options]`);
+        expect(result.stdout.toString()).toContain(`Usage: openapi-ts [options]`);
         expect(result.stdout.toString()).toContain(`-i, --input <value>`);
         expect(result.stdout.toString()).toContain(`-o, --output <value>`);
         expect(result.stderr.toString()).toBe('');

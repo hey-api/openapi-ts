@@ -40,9 +40,9 @@ yarn add @nicolas-chaulet/openapi-typescript-codegen -D
 ## Usage
 
 ```
-$ openapi --help
+$ openapi-ts --help
 
-  Usage: openapi [options]
+  Usage: openapi-ts [options]
 
   Options:
     -V, --version             output the version number
@@ -64,10 +64,6 @@ $ openapi --help
     --request <value>         Path to custom request file
     --useDateType <value>     Output Date instead of string for the format "date-time" in the models (default: false)
     -h, --help                display help for command
-
-  Examples
-    $ openapi --input ./spec.json --output ./generated
-    $ openapi --input ./spec.json --output ./generated --client xhr
 ```
 
 ## Formatting
@@ -75,7 +71,7 @@ $ openapi --help
 By default, your client will be automatically formatted according to your configuration. To disable automatic formatting, run
 
 ```sh
-openapi -i path/to/openapi.json -o src/client --no-autoformat
+openapi-ts -i path/to/openapi.json -o src/client --no-autoformat
 ```
 
 You can also prevent your client from being processed by formatters and linters by adding your output path to the tool's ignore file (e.g. `.eslintignore`, `.prettierignore`).
@@ -85,7 +81,7 @@ You can also prevent your client from being processed by formatters and linters 
 We do not generate TypeScript [enums](https://www.typescriptlang.org/docs/handbook/enums.html) because they are not standard JavaScript and pose [typing challenges](https://dev.to/ivanzm123/dont-use-enums-in-typescript-they-are-very-dangerous-57bh). If you want to iterate through possible field values without manually typing arrays, you can export enums by running
 
 ```sh
-openapi -i path/to/openapi.json -o src/client --enums
+openapi-ts -i path/to/openapi.json -o src/client --enums
 ```
 
 This will export your enums as plain JavaScript objects. For example, `Foo` will generate the following
