@@ -1,33 +1,29 @@
 import Path from 'path';
 
-import type { Options } from '../client/interfaces/Options';
-import type { Service } from '../client/interfaces/Service';
-import { writeFile } from './fileSystem';
-import type { Templates } from './registerHandlebarTemplates';
+import type { Client } from '../../client/interfaces/Client';
+import type { Options } from '../../client/interfaces/Options';
+import { writeFile } from '../fileSystem';
+import type { Templates } from '../registerHandlebarTemplates';
 
 /**
  * Generate Services using the Handlebar template and write to disk.
- * @param services Array of Services to write
+ * @param client Client containing models, schemas, and services
  * @param templates The loaded handlebar templates
  * @param outputPath Directory to write the generated files to
  * @param options Options passed to the `generate()` function
  */
 export const writeClientServices = async (
-    services: Service[],
+    client: Client,
     templates: Templates,
     outputPath: string,
     options: Pick<Required<Options>, 'httpClient' | 'postfixServices' | 'serviceResponse' | 'useOptions'> &
         Omit<Options, 'httpClient' | 'postfixServices' | 'serviceResponse' | 'useOptions'>
 ): Promise<void> => {
-    for (const service of services) {
+    for (const service of client.services) {
         const file = Path.resolve(outputPath, `${service.name}${options.postfixServices}.ts`);
         const templateResult = templates.exports.service({
+            $config: options,
             ...service,
-            exportClient: Boolean(options.clientName),
-            httpClient: options.httpClient,
-            postfix: options.postfixServices,
-            serviceResponse: options.serviceResponse,
-            useOptions: options.useOptions,
         });
         await writeFile(file, templateResult);
     }

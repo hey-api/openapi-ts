@@ -1,5 +1,5 @@
-{{~#if @root.exportClient~}}
-{{#if @root.useOptions~}}
+{{~#if @root.$config.clientName~}}
+{{#if @root.$config.useOptions~}}
 {{#if parameters}}
 const {
 {{#each parameters}}
@@ -9,8 +9,8 @@ const {
 {{/if}}
 {{/if}}
 {{else~}}
-{{#if @root.useOptions~}}
-{{~#notEquals @root.serviceResponse 'generics'~}}
+{{#if @root.$config.useOptions~}}
+{{~#notEquals @root.$config.serviceResponse 'generics'~}}
 {{~#if parameters~}}
 const {
 {{#each parameters}}

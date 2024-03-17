@@ -60,7 +60,7 @@ export const getModel = (
         const enums = getEnums(definition, definition.enum);
         if (enums.length) {
             model.base = 'string';
-            model.enum.push(...enums);
+            model.enum = [...model.enum, ...enums];
             model.export = 'enum';
             model.type = 'string';
             return model;
@@ -114,7 +114,7 @@ export const getModel = (
         model.export = composition.export;
         model.imports.push(...composition.imports);
         model.properties.push(...composition.properties);
-        model.enums.push(...composition.enums);
+        model.enums = [...model.enums, ...composition.enums];
         return model;
     }
 
@@ -127,10 +127,10 @@ export const getModel = (
             const modelProperties = getModelProperties(openApi, definition, getModel);
             modelProperties.forEach(modelProperty => {
                 model.imports.push(...modelProperty.imports);
-                model.enums.push(...modelProperty.enums);
+                model.enums = [...model.enums, ...modelProperty.enums];
                 model.properties.push(modelProperty);
                 if (modelProperty.export === 'enum') {
-                    model.enums.push(modelProperty);
+                    model.enums = [...model.enums, modelProperty];
                 }
             });
         }

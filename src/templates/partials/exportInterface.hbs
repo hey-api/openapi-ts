@@ -23,14 +23,9 @@ export type {{{name}}} = {
 	{{>isReadOnly}}{{{name}}}{{>isRequired}}: {{>type parent=../name}};
 	{{/each}}
 }{{>isNullable}};
+
 {{#if enums}}
-
-export namespace {{{name}}} {
-
-	{{#each enums}}
-	{{>exportEnum}}
-
-	{{/each}}
-
-}
+{{#each enums}}
+{{>exportEnum}}
+{{/each}}
 {{/if}}

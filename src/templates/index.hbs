@@ -1,43 +1,35 @@
-{{#if @root.exportClient}}
-export { {{{clientName}}} } from './{{{clientName}}}';
-
+{{#if @root.$config.clientName}}
+export { {{{@root.$config.clientName}}} } from './{{{@root.$config.clientName}}}';
 {{/if}}
-{{#if @root.exportCore}}
+
+{{#if @root.$config.exportCore}}
 export { ApiError } from './core/ApiError';
-{{#if @root.exportClient}}
+{{#if @root.$config.clientName}}
 export { BaseHttpRequest } from './core/BaseHttpRequest';
 {{/if}}
 export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 {{/if}}
-{{#if @root.exportModels}}
-{{#if models}}
 
-{{#each models}}
-{{#if enum}}
-export { {{{name}}}{{#if @root.postfixModels}} as {{{name}}}{{{@root.postfixModels}}}{{/if}} } from './models/{{{name}}}';
-{{else if enums}}
-export { {{{name}}}{{#if @root.postfixModels}} as {{{name}}}{{{@root.postfixModels}}}{{/if}} } from './models/{{{name}}}';
-{{else}}
-export type { {{{name}}}{{#if @root.postfixModels}} as {{{name}}}{{{@root.postfixModels}}}{{/if}} } from './models/{{{name}}}';
-{{/if}}
-{{/each}}
-{{/if}}
-{{/if}}
-{{#if @root.exportSchemas}}
+{{#if @root.$config.exportModels}}
 {{#if models}}
+{{{modelsExports @root.$config models './models/'}}}
+{{/if}}
+{{/if}}
 
+{{#if @root.$config.exportSchemas}}
+{{#if models}}
 {{#each models}}
 export { ${{{name}}} } from './schemas/${{{name}}}';
 {{/each}}
 {{/if}}
 {{/if}}
-{{#if @root.exportServices}}
-{{#if services}}
 
+{{#if @root.$config.exportServices}}
+{{#if services}}
 {{#each services}}
-export { {{{name}}}{{{@root.postfixServices}}} } from './services/{{{name}}}{{{@root.postfixServices}}}';
+export { {{{name}}}{{{@root.$config.postfixServices}}} } from './services/{{{name}}}{{{@root.$config.postfixServices}}}';
 {{/each}}
 {{/if}}
 {{/if}}

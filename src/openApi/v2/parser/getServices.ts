@@ -8,7 +8,10 @@ import { getOperationParameters } from './getOperationParameters';
 /**
  * Get the OpenAPI services
  */
-export const getServices = (openApi: OpenApi, options: Options): Service[] => {
+export const getServices = (
+    openApi: OpenApi,
+    options: Pick<Required<Options>, 'operationId'> & Omit<Options, 'operationId'>
+): Service[] => {
     const services = new Map<string, Service>();
     for (const url in openApi.paths) {
         if (openApi.paths.hasOwnProperty(url)) {
