@@ -1,3 +1,4 @@
+{{#if exportType}}
 {{#ifdef description deprecated}}
 /**
 {{#if description}}
@@ -8,10 +9,11 @@
 {{/if}}
  */
 {{/ifdef}}
-{{#equals exportType "type"}}
-export type {{{enumName name exportType}}} = {{{enumUnionType enum}}};
-{{else}}
-export enum {{{enumName name}}} {
+export type {{{name}}} = {{{enumUnionType enum}}};
+{{/if}}
+
+{{#if @root.$config.enums}}
+export const {{{enumName name }}} = {
 	{{#each enum}}
 	{{#if x-enum-description}}
 	/**
@@ -22,7 +24,7 @@ export enum {{{enumName name}}} {
 	 * {{{escapeComment description}}}
 	 */
 	{{/if}}
-	{{{enumKey value x-enum-varname}}} = {{{enumValue value}}},
+	{{{enumKey value x-enum-varname}}}: {{{enumValue value}}},
 	{{/each}}
-}
-{{/equals}}
+} as const;
+{{/if}}

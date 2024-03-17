@@ -1,10 +1,10 @@
 import type { Operation } from '../../../client/interfaces/Operation';
 import type { OperationParameters } from '../../../client/interfaces/OperationParameters';
 import type { Options } from '../../../client/interfaces/Options';
+import { getOperationName } from '../../../utils/operation';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiOperation } from '../interfaces/OpenApiOperation';
 import { getOperationErrors } from './getOperationErrors';
-import { getOperationName } from './getOperationName';
 import { getOperationParameters } from './getOperationParameters';
 import { getOperationResponseHeader } from './getOperationResponseHeader';
 import { getOperationResponses } from './getOperationResponses';
@@ -19,16 +19,16 @@ export const getOperation = (
     tag: string,
     op: OpenApiOperation,
     pathParams: OperationParameters,
-    options: Options
+    options: Pick<Required<Options>, 'operationId'> & Omit<Options, 'operationId'>
 ): Operation => {
     const serviceName = getServiceName(tag);
-    const operationName = getOperationName(url, method, options, op.operationId);
+    const name = getOperationName(url, method, options, op.operationId);
 
     // Create a new operation object for this method.
     const operation: Operation = {
         $refs: [],
         service: serviceName,
-        name: operationName,
+        name,
         summary: op.summary || null,
         description: op.description || null,
         deprecated: op.deprecated === true,

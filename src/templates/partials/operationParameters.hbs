@@ -1,8 +1,8 @@
-{{#if @root.useOptions~}}
-{{~#if @root.exportClient~}}
+{{#if @root.$config.useOptions~}}
+{{~#if @root.$config.clientName~}}
 {{#if parameters}}data: {{{nameOperationDataType name}}}{{#ifOperationDataOptional parameters}} = {}{{/ifOperationDataOptional}}{{/if}}
 {{~else~}}
-{{~#notEquals @root.serviceResponse 'generics'~}}
+{{~#notEquals @root.$config.serviceResponse 'generics'~}}
 {{#if parameters}}data: {{{nameOperationDataType name}}}{{#ifOperationDataOptional parameters}} = {}{{/ifOperationDataOptional}}{{/if}}
 {{~else~}}
 data: {{#if parameters}}{{{nameOperationDataType name}}} & {{/if}}TConfig<T>{{#ifOperationDataOptional parameters}} = {}{{/ifOperationDataOptional}}

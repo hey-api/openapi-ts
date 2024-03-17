@@ -1,4 +1,4 @@
-{{~#if @root.useOptions~}}
+{{~#if @root.$config.useOptions~}}
 {{#unless isRequired}}?{{else if default}}?{{/unless}}
 {{~else~}}
 {{#unless isRequired}}{{#unless default}}?{{/unless}}{{/unless}}

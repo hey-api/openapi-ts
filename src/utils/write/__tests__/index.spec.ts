@@ -1,21 +1,20 @@
-import type { Client } from '../client/interfaces/Client';
-import { HttpClient } from '../HttpClient';
-import { writeFile } from './fileSystem';
-import type { Templates } from './registerHandlebarTemplates';
-import { writeClientClass } from './writeClientClass';
+import { resolve } from 'path';
 
-jest.mock('./fileSystem');
+import { writeFile } from '../../fileSystem';
+import { writeClientIndex } from '../index';
 
-describe('writeClientClass', () => {
+jest.mock('../../fileSystem');
+
+describe('writeClientIndex', () => {
     it('should write to filesystem', async () => {
-        const client: Client = {
+        const client: Parameters<typeof writeClientIndex>[0] = {
             server: 'http://localhost:8080',
-            version: 'v1',
+            version: '1.0',
             models: [],
             services: [],
         };
 
-        const templates: Templates = {
+        const templates: Parameters<typeof writeClientIndex>[1] = {
             client: () => 'client',
             core: {
                 apiError: () => 'apiError',
@@ -36,8 +35,16 @@ describe('writeClientClass', () => {
             index: () => 'index',
         };
 
-        await writeClientClass(client, templates, './dist', HttpClient.FETCH, 'AppClient', '');
+        await writeClientIndex(client, templates, '/', {
+            enums: true,
+            exportCore: true,
+            exportServices: true,
+            exportModels: true,
+            exportSchemas: true,
+            postfixServices: 'Service',
+            postfixModels: '',
+        });
 
-        expect(writeFile).toHaveBeenCalled();
+        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/index.ts'), 'index');
     });
 });

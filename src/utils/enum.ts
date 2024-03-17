@@ -1,4 +1,6 @@
+import type { Enum } from '../client/interfaces/Enum';
 import { unescapeName } from './escapeName';
+import { unique } from './unique';
 
 /**
  * Sanitizes names of enums, so they are valid typescript identifiers of a certain form.
@@ -39,16 +41,19 @@ export const enumKey = (value?: string | number, key?: string) => {
  * already escaped, so we need to remove quotes around it.
  * {@link https://github.com/ferdikoomen/openapi-typescript-codegen/issues/1969}
  */
-export const enumName = (name?: string, exportType?: 'type') => {
+export const enumName = (name?: string) => {
     if (!name) {
         return name;
     }
     const escapedName = unescapeName(name).replace(/-([a-z])/gi, ($0, $1: string) => $1.toLocaleUpperCase());
-    if (exportType !== 'type') {
-        return escapedName;
-    }
-    return `T${escapedName.charAt(0).toLocaleUpperCase()}${escapedName.slice(1)}`;
+    return `${escapedName.charAt(0).toLocaleUpperCase()}${escapedName.slice(1)}Enum`;
 };
+
+export const enumUnionType = (enums: Enum[]) =>
+    enums
+        .map(enumerator => enumValue(enumerator.value))
+        .filter(unique)
+        .join(' | ');
 
 export const enumValue = (value?: string | number) => {
     if (typeof value === 'number') {

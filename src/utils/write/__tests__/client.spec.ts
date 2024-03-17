@@ -1,21 +1,19 @@
-import type { Client } from '../client/interfaces/Client';
-import { HttpClient } from '../HttpClient';
-import { mkdir, rmdir, writeFile } from './fileSystem';
-import type { Templates } from './registerHandlebarTemplates';
-import { writeClient } from './writeClient';
+import { HttpClient } from '../../../HttpClient';
+import { mkdir, rmdir, writeFile } from '../../fileSystem';
+import { writeClient } from '../client';
 
-jest.mock('./fileSystem');
+jest.mock('../../fileSystem');
 
 describe('writeClient', () => {
     it('should write to filesystem', async () => {
-        const client: Client = {
+        const client: Parameters<typeof writeClient>[0] = {
             server: 'http://localhost:8080',
             version: 'v1',
             models: [],
             services: [],
         };
 
-        const templates: Templates = {
+        const templates: Parameters<typeof writeClient>[1] = {
             client: () => 'client',
             core: {
                 apiError: () => 'apiError',
@@ -38,11 +36,13 @@ describe('writeClient', () => {
 
         await writeClient(client, templates, {
             autoformat: true,
+            enums: true,
             exportCore: true,
             exportModels: true,
             exportSchemas: true,
             exportServices: true,
             input: '',
+            operationId: true,
             output: './dist',
             httpClient: HttpClient.FETCH,
             postfixModels: 'AppClient',
@@ -50,6 +50,7 @@ describe('writeClient', () => {
             serviceResponse: 'body',
             useDateType: false,
             useOptions: false,
+            write: true,
         });
 
         expect(rmdir).toHaveBeenCalled();

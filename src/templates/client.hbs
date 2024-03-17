@@ -1,4 +1,4 @@
-{{#equals @root.httpClient 'angular'}}
+{{#equals @root.$config.httpClient 'angular'}}
 import { NgModule} from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -14,11 +14,11 @@ import { {{{httpRequest}}} } from './core/{{{httpRequest}}}';
 
 {{#if services}}
 {{#each services}}
-import { {{{name}}}{{{@root.postfix}}} } from './services/{{{name}}}{{{@root.postfix}}}';
+import { {{{name}}}{{{@root.$config.postfixServices}}} } from './services/{{{name}}}{{{@root.$config.postfixServices}}}';
 {{/each}}
 {{/if}}
 
-{{#equals @root.httpClient 'angular'}}
+{{#equals @root.$config.httpClient 'angular'}}
 @NgModule({
 	imports: [HttpClientModule],
 	providers: [
@@ -41,18 +41,18 @@ import { {{{name}}}{{{@root.postfix}}} } from './services/{{{name}}}{{{@root.pos
 			useClass: AngularHttpRequest,
 		},
 		{{#each services}}
-		{{{name}}}{{{@root.postfix}}},
+		{{{name}}}{{{@root.$config.postfixServices}}},
 		{{/each}}
 	]
 })
-export class {{{clientName}}} {}
+export class {{{@root.$config.clientName}}} {}
 {{else}}
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 
-export class {{{clientName}}} {
+export class {{{@root.$config.clientName}}} {
 
 	{{#each services}}
-	public readonly {{{camelCase name}}}: {{{name}}}{{{@root.postfix}}};
+	public readonly {{{camelCase name}}}: {{{name}}}{{{@root.$config.postfixServices}}};
 	{{/each}}
 
 	public readonly request: BaseHttpRequest;
@@ -71,7 +71,7 @@ export class {{{clientName}}} {
 		});
 
 		{{#each services}}
-		this.{{{camelCase name}}} = new {{{name}}}{{{@root.postfix}}}(this.request);
+		this.{{{camelCase name}}} = new {{{name}}}{{{@root.$config.postfixServices}}}(this.request);
 		{{/each}}
 	}
 }

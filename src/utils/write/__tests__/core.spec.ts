@@ -1,17 +1,15 @@
 import { resolve } from 'path';
 
-import type { Client } from '../client/interfaces/Client';
-import { HttpClient } from '../HttpClient';
-import { writeFile } from './fileSystem';
-import type { Templates } from './registerHandlebarTemplates';
-import { writeClientCore } from './writeClientCore';
+import { HttpClient } from '../../../HttpClient';
+import { writeFile } from '../../fileSystem';
+import { writeClientCore } from '../core';
 
-jest.mock('./fileSystem');
+jest.mock('../../fileSystem');
 
 describe('writeClientCore', () => {
-    let templates: Templates;
+    let templates: Parameters<typeof writeClientCore>[1];
     beforeEach(() => {
-        const _templates: Templates = {
+        const _templates: Parameters<typeof writeClientCore>[1] = {
             client: () => 'client',
             core: {
                 apiError: () => 'apiError',
@@ -35,19 +33,21 @@ describe('writeClientCore', () => {
     });
 
     it('should write to filesystem', async () => {
-        const client: Client = {
+        const client: Parameters<typeof writeClientCore>[0] = {
             models: [],
             server: 'http://localhost:8080',
             services: [],
             version: '1.0',
         };
 
-        await writeClientCore(client, templates, '/', {
+        const config: Parameters<typeof writeClientCore>[3] = {
             httpClient: HttpClient.FETCH,
             input: '',
             output: '',
             serviceResponse: 'body',
-        });
+        };
+
+        await writeClientCore(client, templates, '/', config);
 
         expect(writeFile).toHaveBeenCalledWith(resolve('/', '/OpenAPI.ts'), 'settings');
         expect(writeFile).toHaveBeenCalledWith(resolve('/', '/ApiError.ts'), 'apiError');
@@ -59,52 +59,52 @@ describe('writeClientCore', () => {
     });
 
     it('uses client server value for base', async () => {
-        const client: Client = {
+        const client: Parameters<typeof writeClientCore>[0] = {
             models: [],
             server: 'http://localhost:8080',
             services: [],
             version: '1.0',
         };
 
-        await writeClientCore(client, templates, '/', {
+        const config: Parameters<typeof writeClientCore>[3] = {
             httpClient: HttpClient.FETCH,
             input: '',
             output: '',
             serviceResponse: 'body',
-        });
+        };
+
+        await writeClientCore(client, templates, '/', config);
 
         expect(templates.core.settings).toHaveBeenCalledWith({
-            clientName: undefined,
-            httpClient: 'fetch',
+            $config: config,
             httpRequest: 'FetchHttpRequest',
             server: 'http://localhost:8080',
-            serviceResponse: 'body',
             version: '1.0',
         });
     });
 
     it('uses custom value for base', async () => {
-        const client: Client = {
+        const client: Parameters<typeof writeClientCore>[0] = {
             models: [],
             server: 'http://localhost:8080',
             services: [],
             version: '1.0',
         };
 
-        await writeClientCore(client, templates, '/', {
+        const config: Parameters<typeof writeClientCore>[3] = {
             base: 'foo',
             httpClient: HttpClient.FETCH,
             input: '',
             output: '',
             serviceResponse: 'body',
-        });
+        };
+
+        await writeClientCore(client, templates, '/', config);
 
         expect(templates.core.settings).toHaveBeenCalledWith({
-            clientName: undefined,
-            httpClient: 'fetch',
+            $config: config,
             httpRequest: 'FetchHttpRequest',
             server: 'foo',
-            serviceResponse: 'body',
             version: '1.0',
         });
     });

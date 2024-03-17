@@ -16,6 +16,10 @@ export interface Options {
      */
     clientName?: string;
     /**
+     * Generate JavaScript objects from enum definitions
+     */
+    enums?: boolean;
+    /**
      * Generate core client classes
      */
     exportCore?: boolean;
@@ -40,6 +44,10 @@ export interface Options {
      */
     input: string | Record<string, any>;
     /**
+     * Use operation ID to generate operation names?
+     */
+    operationId?: boolean;
+    /**
      * The relative location of the output directory
      */
     output: string;
@@ -63,10 +71,6 @@ export interface Options {
      * Output Date instead of string for the format "date-time" in the models
      */
     useDateType?: boolean;
-    /**
-     * Should the operationId be used when generating operation names?
-     */
-    useOperationId?: boolean;
     /**
      * Use options or arguments functions
      */

@@ -1,5 +1,5 @@
-{{#equals @root.httpClient 'angular'}}
-{{#if @root.exportClient}}
+{{#equals @root.$config.httpClient 'angular'}}
+{{#if @root.$config.clientName}}
 import { Injectable } from '@angular/core';
 import type { Observable } from 'rxjs';
 {{else}}
@@ -9,21 +9,21 @@ import type { Observable } from 'rxjs';
 {{/if}}
 {{/equals}}
 {{{modelImports this '../models/'}}}
-{{#equals @root.serviceResponse 'response'}}
+{{#equals @root.$config.serviceResponse 'response'}}
 import type { ApiResult } from '../core/ApiResult';
 {{/equals}}
-{{#notEquals @root.httpClient 'angular'}}
+{{#notEquals @root.$config.httpClient 'angular'}}
 import type { CancelablePromise } from '../core/CancelablePromise';
 {{/notEquals}}
-{{#if @root.exportClient}}
-{{#equals @root.httpClient 'angular'}}
+{{#if @root.$config.clientName}}
+{{#equals @root.$config.httpClient 'angular'}}
 import { BaseHttpRequest } from '../core/BaseHttpRequest';
 {{else}}
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
 {{/equals}}
 {{else}}
-{{#if @root.useOptions}}
-{{#equals @root.serviceResponse 'generics'}}
+{{#if @root.$config.useOptions}}
+{{#equals @root.$config.serviceResponse 'generics'}}
 import { mergeOpenApiConfig, OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 import type { TApiResponse, TConfig, TResult } from '../core/types';
@@ -37,7 +37,7 @@ import { request as __request } from '../core/request';
 {{/if}}
 {{/if}}
 
-{{#if @root.useOptions}}
+{{#if @root.$config.useOptions}}
 {{#each operations}}
 {{#if parameters}}
 export type {{{nameOperationDataType name}}} = {
@@ -54,17 +54,17 @@ export type {{{nameOperationDataType name}}} = {
 {{/each}}
 {{/if}}
 
-{{#equals @root.httpClient 'angular'}}
+{{#equals @root.$config.httpClient 'angular'}}
 @Injectable({
   providedIn: 'root',
 })
 {{/equals}}
-export class {{{name}}}{{{@root.postfix}}} {
-	{{#if @root.exportClient}}
+export class {{{name}}}{{{@root.$config.postfixServices}}} {
+	{{#if @root.$config.clientName}}
 
 	constructor(public readonly httpRequest: BaseHttpRequest) {}
 	{{else}}
-	{{#equals @root.httpClient 'angular'}}
+	{{#equals @root.$config.httpClient 'angular'}}
 
 	constructor(public readonly http: HttpClient) {}
 	{{/equals}}
@@ -81,7 +81,7 @@ export class {{{name}}}{{{@root.postfix}}} {
 	{{#if description}}
 	 * {{{escapeComment description}}}
 	{{/if}}
-	{{#unless @root.useOptions}}
+	{{#unless @root.$config.useOptions}}
 	{{#if parameters}}
 	{{#each parameters}}
 	 * @param {{{name}}} {{#if description}}{{{escapeComment description}}}{{/if}}
@@ -93,8 +93,8 @@ export class {{{name}}}{{{@root.postfix}}} {
 	{{/each}}
 	 * @throws ApiError
 	 */
-	{{#if @root.exportClient}}
-	{{#equals @root.httpClient 'angular'}}
+	{{#if @root.$config.clientName}}
+	{{#equals @root.$config.httpClient 'angular'}}
 	public {{{name}}}{{>operationTypes}}({{>operationParameters}}): Observable<{{>operationResult}}> {
 		{{>dataDestructure}}
 		return this.httpRequest.request({
@@ -104,7 +104,7 @@ export class {{{name}}}{{{@root.postfix}}} {
 		return this.httpRequest.request({
 	{{/equals}}
 	{{else}}
-	{{#equals @root.httpClient 'angular'}}
+	{{#equals @root.$config.httpClient 'angular'}}
 	public {{{name}}}{{>operationTypes}}({{>operationParameters}}): Observable<{{>operationResult}}> {
 		{{>dataDestructure}}
 		return __request({{>requestConfig}}, this.http, {

@@ -9,8 +9,7 @@
 {{else equals export 'all-of'}}
 {{>exportComposition}}
 {{else equals export 'enum'}}
-{{>exportEnum}}
-{{>exportEnum exportType="type"}}
+{{>exportEnum exportType="true"}}
 {{else}}
 {{>exportType}}
 {{/equals}}
