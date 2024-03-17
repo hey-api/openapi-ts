@@ -1,4 +1,5 @@
-export const isEqual = (a: any, b: any): boolean => {
+export const isEqual = <A, B>(a: A, b: B): boolean => {
+    // @ts-ignore
     if (a === b) {
         return true;
     }
@@ -27,6 +28,7 @@ export const isEqual = (a: any, b: any): boolean => {
             if (!Object.prototype.hasOwnProperty.call(b, key)) {
                 return false;
             }
+            // @ts-ignore
             if (!isEqual(a[key], b[key])) {
                 return false;
             }

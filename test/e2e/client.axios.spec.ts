@@ -90,8 +90,7 @@ describe('client.axios', () => {
             const { ApiClient } = require('./generated/client/axios/index.js');
             const client = new ApiClient();
             await client.error.testErrorCode(500);
-        } catch (e) {
-            const err = e as any;
+        } catch (err) {
             error = JSON.stringify({
                 name: err.name,
                 message: err.message,
@@ -122,8 +121,7 @@ describe('client.axios', () => {
             const { ApiClient } = require('./generated/client/axios/index.js');
             const client = new ApiClient();
             await client.error.testErrorCode(409);
-        } catch (e) {
-            const err = e as any;
+        } catch (err) {
             error = JSON.stringify({
                 name: err.name,
                 message: err.message,

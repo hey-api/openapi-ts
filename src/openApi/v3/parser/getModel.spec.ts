@@ -1,6 +1,6 @@
 import { reservedWords } from '../../../utils/reservedWords';
+import { getType } from '../../../utils/type';
 import { getModel } from './getModel';
-import { getType } from './getType';
 
 const openApi = {
     openapi: '3.0',

@@ -1,4 +1,5 @@
-import { HttpClient } from '../../HttpClient';
+import type { OpenApi as OpenApiV2 } from '../../openApi/v2/interfaces/OpenApi';
+import type { OpenApi as OpenApiV3 } from '../../openApi/v3/interfaces/OpenApi';
 
 export type ServiceResponse = 'body' | 'generics' | 'response';
 
@@ -11,6 +12,10 @@ export interface Options {
      * Manually set base in OpenAPI config instead of inferring from server value
      */
     base?: string;
+    /**
+     * The selected HTTP client (fetch, xhr, node or axios)
+     */
+    client?: 'angular' | 'axios' | 'fetch' | 'node' | 'xhr';
     /**
      * Custom client class name
      */
@@ -36,13 +41,9 @@ export interface Options {
      */
     exportServices?: boolean | string;
     /**
-     * The selected httpClient (fetch, xhr, node or axios)
-     */
-    httpClient?: HttpClient;
-    /**
      * The relative location of the OpenAPI spec
      */
-    input: string | Record<string, any>;
+    input: string | OpenApiV2 | OpenApiV3;
     /**
      * Use operation ID to generate operation names?
      */

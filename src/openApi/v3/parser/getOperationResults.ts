@@ -20,11 +20,7 @@ export const getOperationResults = (operationResponses: OperationResponse[]): Op
         }
     });
 
-    return operationResults.filter((operationResult, index, arr) => {
-        return (
-            arr.findIndex(item => {
-                return areEqual(item, operationResult);
-            }) === index
-        );
-    });
+    return operationResults.filter(
+        (operationResult, index, arr) => arr.findIndex(item => areEqual(item, operationResult)) === index
+    );
 };

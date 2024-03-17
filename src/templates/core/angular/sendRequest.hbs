@@ -3,7 +3,7 @@ export const sendRequest = <T>(
 	options: ApiRequestOptions,
 	http: HttpClient,
 	url: string,
-	body: any,
+	body: unknown,
 	formData: FormData | undefined,
 	headers: HttpHeaders
 ): Observable<HttpResponse<T>> => {

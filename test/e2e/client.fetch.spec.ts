@@ -24,20 +24,24 @@ describe('client.fetch', () => {
     it('requests token', async () => {
         await browser.exposeFunction('tokenRequest', jest.fn().mockResolvedValue('MY_TOKEN'));
         const result = await browser.evaluate(async () => {
-            const { ApiClient } = (window as any).api;
+            // @ts-ignore
+            const { ApiClient } = window.api;
             const client = new ApiClient({
-                TOKEN: (window as any).tokenRequest,
+                // @ts-ignore
+                TOKEN: window.tokenRequest,
                 USERNAME: undefined,
                 PASSWORD: undefined,
             });
             return await client.simple.getCallWithoutParametersAndResponse();
         });
+        // @ts-ignore
         expect(result.headers.authorization).toBe('Bearer MY_TOKEN');
     });
 
     it('uses credentials', async () => {
         const result = await browser.evaluate(async () => {
-            const { ApiClient } = (window as any).api;
+            // @ts-ignore
+            const { ApiClient } = window.api;
             const client = new ApiClient({
                 TOKEN: undefined,
                 USERNAME: 'username',
@@ -45,12 +49,14 @@ describe('client.fetch', () => {
             });
             return await client.simple.getCallWithoutParametersAndResponse();
         });
+        // @ts-ignore
         expect(result.headers.authorization).toBe('Basic dXNlcm5hbWU6cGFzc3dvcmQ=');
     });
 
     it('supports complex params', async () => {
         const result = await browser.evaluate(async () => {
-            const { ApiClient } = (window as any).api;
+            // @ts-ignore
+            const { ApiClient } = window.api;
             const client = new ApiClient();
             return await client.complex.complexTypes({
                 first: {
@@ -65,7 +71,8 @@ describe('client.fetch', () => {
 
     it('support form data', async () => {
         const result = await browser.evaluate(async () => {
-            const { ApiClient } = (window as any).api;
+            // @ts-ignore
+            const { ApiClient } = window.api;
             const client = new ApiClient();
             return await client.parameters.callWithParameters(
                 'valueHeader',
@@ -85,7 +92,8 @@ describe('client.fetch', () => {
         let error;
         try {
             await browser.evaluate(async () => {
-                const { ApiClient } = (window as any).api;
+                // @ts-ignore
+                const { ApiClient } = window.api;
                 const client = new ApiClient();
                 const promise = client.simple.getCallWithoutParametersAndResponse();
                 setTimeout(() => {
@@ -102,11 +110,11 @@ describe('client.fetch', () => {
     it('should throw known error (500)', async () => {
         const error = await browser.evaluate(async () => {
             try {
-                const { ApiClient } = (window as any).api;
+                // @ts-ignore
+                const { ApiClient } = window.api;
                 const client = new ApiClient();
                 await client.error.testErrorCode(500);
-            } catch (e) {
-                const error = e as any;
+            } catch (error) {
                 return JSON.stringify({
                     name: error.name,
                     message: error.message,
@@ -137,11 +145,11 @@ describe('client.fetch', () => {
     it('should throw unknown error (409)', async () => {
         const error = await browser.evaluate(async () => {
             try {
-                const { ApiClient } = (window as any).api;
+                // @ts-ignore
+                const { ApiClient } = window.api;
                 const client = new ApiClient();
                 await client.error.testErrorCode(409);
-            } catch (e) {
-                const error = e as any;
+            } catch (error) {
                 return JSON.stringify({
                     name: error.name,
                     message: error.message,

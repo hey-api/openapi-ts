@@ -26,6 +26,9 @@ jobs:
       - name: Build library
         run: npm run release
 
+      - name: Run linter
+        run: npm run eslint
+
       - name: Run unit tests
         run: npm run test
 

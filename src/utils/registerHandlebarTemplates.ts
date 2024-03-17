@@ -1,7 +1,8 @@
 import Handlebars from 'handlebars/runtime';
 
 import type { Options } from '../client/interfaces/Options';
-import type { OpenApi } from '../openApi/v3/interfaces/OpenApi';
+import type { OpenApi as OpenApiV2 } from '../openApi/v2/interfaces/OpenApi';
+import type { OpenApi as OpenApiV3 } from '../openApi/v3/interfaces/OpenApi';
 import templateClient from '../templates/client.hbs';
 import angularGetHeaders from '../templates/core/angular/getHeaders.hbs';
 import angularGetRequestBody from '../templates/core/angular/getRequestBody.hbs';
@@ -114,7 +115,7 @@ export interface Templates {
  * so we can easily access the templates in our generator/write functions.
  */
 export const registerHandlebarTemplates = (
-    openApi: OpenApi,
+    openApi: OpenApiV3 | OpenApiV2,
     options: Omit<Required<Options>, 'base' | 'clientName' | 'request'>
 ): Templates => {
     registerHandlebarHelpers(openApi, options);

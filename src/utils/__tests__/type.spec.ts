@@ -1,4 +1,30 @@
-import { getType } from './getType';
+import { getMappedType, getType } from '../type';
+
+describe('getMappedType', () => {
+    it('should map types to the basics', () => {
+        expect(getMappedType('')).toEqual(undefined);
+        expect(getMappedType('any')).toEqual('unknown');
+        expect(getMappedType('array')).toEqual('unknown[]');
+        expect(getMappedType('boolean')).toEqual('boolean');
+        expect(getMappedType('byte')).toEqual('number');
+        expect(getMappedType('char')).toEqual('string');
+        expect(getMappedType('date-time')).toEqual('string');
+        expect(getMappedType('date')).toEqual('string');
+        expect(getMappedType('double')).toEqual('number');
+        expect(getMappedType('file')).toEqual('binary');
+        expect(getMappedType('float')).toEqual('number');
+        expect(getMappedType('int')).toEqual('number');
+        expect(getMappedType('integer')).toEqual('number');
+        expect(getMappedType('long')).toEqual('number');
+        expect(getMappedType('null')).toEqual('null');
+        expect(getMappedType('number')).toEqual('number');
+        expect(getMappedType('object')).toEqual('unknown');
+        expect(getMappedType('password')).toEqual('string');
+        expect(getMappedType('short')).toEqual('number');
+        expect(getMappedType('string')).toEqual('string');
+        expect(getMappedType('void')).toEqual('void');
+    });
+});
 
 describe('getType', () => {
     it('should convert int', () => {

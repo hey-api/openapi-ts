@@ -1,6 +1,5 @@
 import { resolve } from 'path';
 
-import { HttpClient } from '../../../HttpClient';
 import { writeClientModels } from '../models';
 import { writeFile } from './../../fileSystem';
 
@@ -56,8 +55,8 @@ describe('writeClientModels', () => {
         };
 
         await writeClientModels(client, templates, '/', {
+            client: 'fetch',
             enums: true,
-            httpClient: HttpClient.FETCH,
             useDateType: false,
         });
 

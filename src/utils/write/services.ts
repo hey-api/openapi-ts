@@ -16,8 +16,8 @@ export const writeClientServices = async (
     client: Client,
     templates: Templates,
     outputPath: string,
-    options: Pick<Required<Options>, 'httpClient' | 'postfixServices' | 'serviceResponse' | 'useOptions'> &
-        Omit<Options, 'httpClient' | 'postfixServices' | 'serviceResponse' | 'useOptions'>
+    options: Pick<Required<Options>, 'client' | 'postfixServices' | 'serviceResponse' | 'useOptions'> &
+        Omit<Options, 'client' | 'postfixServices' | 'serviceResponse' | 'useOptions'>
 ): Promise<void> => {
     for (const service of client.services) {
         const file = Path.resolve(outputPath, `${service.name}${options.postfixServices}.ts`);

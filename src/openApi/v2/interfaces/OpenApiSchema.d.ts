@@ -11,7 +11,7 @@ import type { OpenApiXml } from './OpenApiXml';
 export interface OpenApiSchema extends OpenApiReference, WithEnumExtension, WithNullableExtension {
     title?: string;
     description?: string;
-    default?: any;
+    default?: unknown;
     multipleOf?: number;
     maximum?: number;
     exclusiveMaximum?: boolean;
@@ -48,5 +48,5 @@ export interface OpenApiSchema extends OpenApiReference, WithEnumExtension, With
     readOnly?: boolean;
     xml?: OpenApiXml;
     externalDocs?: OpenApiExternalDocs;
-    example?: any;
+    example?: unknown;
 }

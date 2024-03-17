@@ -8,7 +8,7 @@ export class ApiError extends Error {
     public readonly url: string;
     public readonly status: number;
     public readonly statusText: string;
-    public readonly body: any;
+    public readonly body: unknown;
     public readonly request: ApiRequestOptions;
 
     constructor(request: ApiRequestOptions, response: ApiResult, message: string) {
@@ -29,11 +29,11 @@ exports[`v2 should generate: test/generated/v2/core/ApiRequestOptions.ts 1`] = `
 "export type ApiRequestOptions = {
     readonly method: 'GET' | 'PUT' | 'POST' | 'DELETE' | 'OPTIONS' | 'HEAD' | 'PATCH';
     readonly url: string;
-    readonly path?: Record<string, any>;
-    readonly cookies?: Record<string, any>;
-    readonly headers?: Record<string, any>;
-    readonly query?: Record<string, any>;
-    readonly formData?: Record<string, any>;
+    readonly path?: Record<string, unknown>;
+    readonly cookies?: Record<string, unknown>;
+    readonly headers?: Record<string, unknown>;
+    readonly query?: Record<string, unknown>;
+    readonly formData?: Record<string, unknown>;
     readonly body?: any;
     readonly mediaType?: string;
     readonly responseHeader?: string;
@@ -80,12 +80,12 @@ export class CancelablePromise<T> implements Promise<T> {
     readonly #cancelHandlers: (() => void)[];
     readonly #promise: Promise<T>;
     #resolve?: (value: T | PromiseLike<T>) => void;
-    #reject?: (reason?: any) => void;
+    #reject?: (reason?: unknown) => void;
 
     constructor(
         executor: (
             resolve: (value: T | PromiseLike<T>) => void,
-            reject: (reason?: any) => void,
+            reject: (reason?: unknown) => void,
             onCancel: OnCancel
         ) => void
     ) {
@@ -105,7 +105,7 @@ export class CancelablePromise<T> implements Promise<T> {
                 if (this.#resolve) this.#resolve(value);
             };
 
-            const onReject = (reason?: any): void => {
+            const onReject = (reason?: unknown): void => {
                 if (this.#isResolved || this.#isRejected || this.#isCancelled) {
                     return;
                 }
@@ -142,13 +142,13 @@ export class CancelablePromise<T> implements Promise<T> {
 
     public then<TResult1 = T, TResult2 = never>(
         onFulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | null,
-        onRejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | null
+        onRejected?: ((reason: unknown) => TResult2 | PromiseLike<TResult2>) | null
     ): Promise<TResult1 | TResult2> {
         return this.#promise.then(onFulfilled, onRejected);
     }
 
     public catch<TResult = never>(
-        onRejected?: ((reason: any) => TResult | PromiseLike<TResult>) | null
+        onRejected?: ((reason: unknown) => TResult | PromiseLike<TResult>) | null
     ): Promise<T | TResult> {
         return this.#promise.catch(onRejected);
     }
@@ -240,16 +240,17 @@ import { CancelablePromise } from './CancelablePromise';
 import type { OnCancel } from './CancelablePromise';
 import type { OpenAPIConfig } from './OpenAPI';
 
-export const isString = (value: any): value is string => {
+export const isString = (value: unknown): value is string => {
     return typeof value === 'string';
 };
 
-export const isStringWithValue = (value: any): value is string => {
+export const isStringWithValue = (value: unknown): value is string => {
     return isString(value) && value !== '';
 };
 
 export const isBlob = (value: any): value is Blob => {
     return (
+        value !== null &&
         typeof value === 'object' &&
         typeof value.type === 'string' &&
         typeof value.stream === 'function' &&
@@ -257,11 +258,12 @@ export const isBlob = (value: any): value is Blob => {
         typeof value.constructor === 'function' &&
         typeof value.constructor.name === 'string' &&
         /^(Blob|File)$/.test(value.constructor.name) &&
+        // @ts-ignore
         /^(Blob|File)$/.test(value[Symbol.toStringTag])
     );
 };
 
-export const isFormData = (value: any): value is FormData => {
+export const isFormData = (value: unknown): value is FormData => {
     return value instanceof FormData;
 };
 
@@ -274,14 +276,14 @@ export const base64 = (str: string): string => {
     }
 };
 
-export const getQueryString = (params: Record<string, any>): string => {
+export const getQueryString = (params: Record<string, unknown>): string => {
     const qs: string[] = [];
 
-    const append = (key: string, value: any) => {
+    const append = (key: string, value: unknown) => {
         qs.push(\`\${encodeURIComponent(key)}=\${encodeURIComponent(String(value))}\`);
     };
 
-    const process = (key: string, value: any) => {
+    const process = (key: string, value: unknown) => {
         if (value) {
             if (Array.isArray(value)) {
                 value.forEach(v => {
@@ -409,7 +411,7 @@ export const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptio
     return new Headers(headers);
 };
 
-export const getRequestBody = (options: ApiRequestOptions): any => {
+export const getRequestBody = (options: ApiRequestOptions): unknown => {
     if (options.body !== undefined) {
         if (options.mediaType?.includes('/json')) {
             return JSON.stringify(options.body);
@@ -459,7 +461,7 @@ export const getResponseHeader = (response: Response, responseHeader?: string): 
     return undefined;
 };
 
-export const getResponseBody = async (response: Response): Promise<any> => {
+export const getResponseBody = async (response: Response): Promise<unknown> => {
     if (response.status !== 204) {
         try {
             const contentType = response.headers.get('Content-Type');
@@ -2761,9 +2763,9 @@ export class TypesService {
         parameterNumber: number = 123,
         parameterString: string = 'default',
         parameterBoolean: boolean = true,
-        parameterObject: any = null,
+        parameterObject: unknown = null,
         id?: number
-    ): CancelablePromise<number | string | boolean | any> {
+    ): CancelablePromise<number | string | boolean | unknown> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/types',
@@ -2867,7 +2869,7 @@ export class ApiError extends Error {
     public readonly url: string;
     public readonly status: number;
     public readonly statusText: string;
-    public readonly body: any;
+    public readonly body: unknown;
     public readonly request: ApiRequestOptions;
 
     constructor(request: ApiRequestOptions, response: ApiResult, message: string) {
@@ -2888,11 +2890,11 @@ exports[`v3 should generate optional argument: test/generated/v3_options/core/Ap
 "export type ApiRequestOptions = {
     readonly method: 'GET' | 'PUT' | 'POST' | 'DELETE' | 'OPTIONS' | 'HEAD' | 'PATCH';
     readonly url: string;
-    readonly path?: Record<string, any>;
-    readonly cookies?: Record<string, any>;
-    readonly headers?: Record<string, any>;
-    readonly query?: Record<string, any>;
-    readonly formData?: Record<string, any>;
+    readonly path?: Record<string, unknown>;
+    readonly cookies?: Record<string, unknown>;
+    readonly headers?: Record<string, unknown>;
+    readonly query?: Record<string, unknown>;
+    readonly formData?: Record<string, unknown>;
     readonly body?: any;
     readonly mediaType?: string;
     readonly responseHeader?: string;
@@ -2939,12 +2941,12 @@ export class CancelablePromise<T> implements Promise<T> {
     readonly #cancelHandlers: (() => void)[];
     readonly #promise: Promise<T>;
     #resolve?: (value: T | PromiseLike<T>) => void;
-    #reject?: (reason?: any) => void;
+    #reject?: (reason?: unknown) => void;
 
     constructor(
         executor: (
             resolve: (value: T | PromiseLike<T>) => void,
-            reject: (reason?: any) => void,
+            reject: (reason?: unknown) => void,
             onCancel: OnCancel
         ) => void
     ) {
@@ -2964,7 +2966,7 @@ export class CancelablePromise<T> implements Promise<T> {
                 if (this.#resolve) this.#resolve(value);
             };
 
-            const onReject = (reason?: any): void => {
+            const onReject = (reason?: unknown): void => {
                 if (this.#isResolved || this.#isRejected || this.#isCancelled) {
                     return;
                 }
@@ -3001,13 +3003,13 @@ export class CancelablePromise<T> implements Promise<T> {
 
     public then<TResult1 = T, TResult2 = never>(
         onFulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | null,
-        onRejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | null
+        onRejected?: ((reason: unknown) => TResult2 | PromiseLike<TResult2>) | null
     ): Promise<TResult1 | TResult2> {
         return this.#promise.then(onFulfilled, onRejected);
     }
 
     public catch<TResult = never>(
-        onRejected?: ((reason: any) => TResult | PromiseLike<TResult>) | null
+        onRejected?: ((reason: unknown) => TResult | PromiseLike<TResult>) | null
     ): Promise<T | TResult> {
         return this.#promise.catch(onRejected);
     }
@@ -3099,16 +3101,17 @@ import { CancelablePromise } from './CancelablePromise';
 import type { OnCancel } from './CancelablePromise';
 import type { OpenAPIConfig } from './OpenAPI';
 
-export const isString = (value: any): value is string => {
+export const isString = (value: unknown): value is string => {
     return typeof value === 'string';
 };
 
-export const isStringWithValue = (value: any): value is string => {
+export const isStringWithValue = (value: unknown): value is string => {
     return isString(value) && value !== '';
 };
 
 export const isBlob = (value: any): value is Blob => {
     return (
+        value !== null &&
         typeof value === 'object' &&
         typeof value.type === 'string' &&
         typeof value.stream === 'function' &&
@@ -3116,11 +3119,12 @@ export const isBlob = (value: any): value is Blob => {
         typeof value.constructor === 'function' &&
         typeof value.constructor.name === 'string' &&
         /^(Blob|File)$/.test(value.constructor.name) &&
+        // @ts-ignore
         /^(Blob|File)$/.test(value[Symbol.toStringTag])
     );
 };
 
-export const isFormData = (value: any): value is FormData => {
+export const isFormData = (value: unknown): value is FormData => {
     return value instanceof FormData;
 };
 
@@ -3133,14 +3137,14 @@ export const base64 = (str: string): string => {
     }
 };
 
-export const getQueryString = (params: Record<string, any>): string => {
+export const getQueryString = (params: Record<string, unknown>): string => {
     const qs: string[] = [];
 
-    const append = (key: string, value: any) => {
+    const append = (key: string, value: unknown) => {
         qs.push(\`\${encodeURIComponent(key)}=\${encodeURIComponent(String(value))}\`);
     };
 
-    const process = (key: string, value: any) => {
+    const process = (key: string, value: unknown) => {
         if (value) {
             if (Array.isArray(value)) {
                 value.forEach(v => {
@@ -3268,7 +3272,7 @@ export const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptio
     return new Headers(headers);
 };
 
-export const getRequestBody = (options: ApiRequestOptions): any => {
+export const getRequestBody = (options: ApiRequestOptions): unknown => {
     if (options.body !== undefined) {
         if (options.mediaType?.includes('/json')) {
             return JSON.stringify(options.body);
@@ -3318,7 +3322,7 @@ export const getResponseHeader = (response: Response, responseHeader?: string): 
     return undefined;
 };
 
-export const getResponseBody = async (response: Response): Promise<any> => {
+export const getResponseBody = async (response: Response): Promise<unknown> => {
     if (response.status !== 204) {
         try {
             const contentType = response.headers.get('Content-Type');
@@ -3638,7 +3642,7 @@ export class ApiError extends Error {
     public readonly url: string;
     public readonly status: number;
     public readonly statusText: string;
-    public readonly body: any;
+    public readonly body: unknown;
     public readonly request: ApiRequestOptions;
 
     constructor(request: ApiRequestOptions, response: ApiResult, message: string) {
@@ -3659,11 +3663,11 @@ exports[`v3 should generate: test/generated/v3/core/ApiRequestOptions.ts 1`] = `
 "export type ApiRequestOptions = {
     readonly method: 'GET' | 'PUT' | 'POST' | 'DELETE' | 'OPTIONS' | 'HEAD' | 'PATCH';
     readonly url: string;
-    readonly path?: Record<string, any>;
-    readonly cookies?: Record<string, any>;
-    readonly headers?: Record<string, any>;
-    readonly query?: Record<string, any>;
-    readonly formData?: Record<string, any>;
+    readonly path?: Record<string, unknown>;
+    readonly cookies?: Record<string, unknown>;
+    readonly headers?: Record<string, unknown>;
+    readonly query?: Record<string, unknown>;
+    readonly formData?: Record<string, unknown>;
     readonly body?: any;
     readonly mediaType?: string;
     readonly responseHeader?: string;
@@ -3710,12 +3714,12 @@ export class CancelablePromise<T> implements Promise<T> {
     readonly #cancelHandlers: (() => void)[];
     readonly #promise: Promise<T>;
     #resolve?: (value: T | PromiseLike<T>) => void;
-    #reject?: (reason?: any) => void;
+    #reject?: (reason?: unknown) => void;
 
     constructor(
         executor: (
             resolve: (value: T | PromiseLike<T>) => void,
-            reject: (reason?: any) => void,
+            reject: (reason?: unknown) => void,
             onCancel: OnCancel
         ) => void
     ) {
@@ -3735,7 +3739,7 @@ export class CancelablePromise<T> implements Promise<T> {
                 if (this.#resolve) this.#resolve(value);
             };
 
-            const onReject = (reason?: any): void => {
+            const onReject = (reason?: unknown): void => {
                 if (this.#isResolved || this.#isRejected || this.#isCancelled) {
                     return;
                 }
@@ -3772,13 +3776,13 @@ export class CancelablePromise<T> implements Promise<T> {
 
     public then<TResult1 = T, TResult2 = never>(
         onFulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | null,
-        onRejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | null
+        onRejected?: ((reason: unknown) => TResult2 | PromiseLike<TResult2>) | null
     ): Promise<TResult1 | TResult2> {
         return this.#promise.then(onFulfilled, onRejected);
     }
 
     public catch<TResult = never>(
-        onRejected?: ((reason: any) => TResult | PromiseLike<TResult>) | null
+        onRejected?: ((reason: unknown) => TResult | PromiseLike<TResult>) | null
     ): Promise<T | TResult> {
         return this.#promise.catch(onRejected);
     }
@@ -3870,16 +3874,17 @@ import { CancelablePromise } from './CancelablePromise';
 import type { OnCancel } from './CancelablePromise';
 import type { OpenAPIConfig } from './OpenAPI';
 
-export const isString = (value: any): value is string => {
+export const isString = (value: unknown): value is string => {
     return typeof value === 'string';
 };
 
-export const isStringWithValue = (value: any): value is string => {
+export const isStringWithValue = (value: unknown): value is string => {
     return isString(value) && value !== '';
 };
 
 export const isBlob = (value: any): value is Blob => {
     return (
+        value !== null &&
         typeof value === 'object' &&
         typeof value.type === 'string' &&
         typeof value.stream === 'function' &&
@@ -3887,11 +3892,12 @@ export const isBlob = (value: any): value is Blob => {
         typeof value.constructor === 'function' &&
         typeof value.constructor.name === 'string' &&
         /^(Blob|File)$/.test(value.constructor.name) &&
+        // @ts-ignore
         /^(Blob|File)$/.test(value[Symbol.toStringTag])
     );
 };
 
-export const isFormData = (value: any): value is FormData => {
+export const isFormData = (value: unknown): value is FormData => {
     return value instanceof FormData;
 };
 
@@ -3904,14 +3910,14 @@ export const base64 = (str: string): string => {
     }
 };
 
-export const getQueryString = (params: Record<string, any>): string => {
+export const getQueryString = (params: Record<string, unknown>): string => {
     const qs: string[] = [];
 
-    const append = (key: string, value: any) => {
+    const append = (key: string, value: unknown) => {
         qs.push(\`\${encodeURIComponent(key)}=\${encodeURIComponent(String(value))}\`);
     };
 
-    const process = (key: string, value: any) => {
+    const process = (key: string, value: unknown) => {
         if (value) {
             if (Array.isArray(value)) {
                 value.forEach(v => {
@@ -4039,7 +4045,7 @@ export const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptio
     return new Headers(headers);
 };
 
-export const getRequestBody = (options: ApiRequestOptions): any => {
+export const getRequestBody = (options: ApiRequestOptions): unknown => {
     if (options.body !== undefined) {
         if (options.mediaType?.includes('/json')) {
             return JSON.stringify(options.body);
@@ -4089,7 +4095,7 @@ export const getResponseHeader = (response: Response, responseHeader?: string): 
     return undefined;
 };
 
-export const getResponseBody = async (response: Response): Promise<any> => {
+export const getResponseBody = async (response: Response): Promise<unknown> => {
     if (response.status !== 204) {
         try {
             const contentType = response.headers.get('Content-Type');
@@ -4438,7 +4444,7 @@ exports[`v3 should generate: test/generated/v3/models/_default.ts 1`] = `
 
 exports[`v3 should generate: test/generated/v3/models/AnyOfAnyAndNull.ts 1`] = `
 "export type AnyOfAnyAndNull = {
-    data?: any | null;
+    data?: unknown | null;
 };
 "
 `;
@@ -5001,7 +5007,7 @@ exports[`v3 should generate: test/generated/v3/models/FreeFormObjectWithAddition
 "/**
  * This is a free-form object with additionalProperties: {}.
  */
-export type FreeFormObjectWithAdditionalPropertiesEqEmptyObject = Record<string, any>;
+export type FreeFormObjectWithAdditionalPropertiesEqEmptyObject = Record<string, unknown>;
 "
 `;
 
@@ -5009,7 +5015,7 @@ exports[`v3 should generate: test/generated/v3/models/FreeFormObjectWithAddition
 "/**
  * This is a free-form object with additionalProperties: true.
  */
-export type FreeFormObjectWithAdditionalPropertiesEqTrue = Record<string, any>;
+export type FreeFormObjectWithAdditionalPropertiesEqTrue = Record<string, unknown>;
 "
 `;
 
@@ -5017,7 +5023,7 @@ exports[`v3 should generate: test/generated/v3/models/FreeFormObjectWithoutAddit
 "/**
  * This is a free-form object without additionalProperties.
  */
-export type FreeFormObjectWithoutAdditionalProperties = Record<string, any>;
+export type FreeFormObjectWithoutAdditionalProperties = Record<string, unknown>;
 "
 `;
 
@@ -5080,7 +5086,7 @@ export type ModelWithAdditionalPropertiesEqTrue = {
      * This is a simple string property
      */
     prop?: string;
-    [key: string]: any;
+    [key: string]: unknown;
 };
 "
 `;
@@ -6501,18 +6507,15 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelThatExtendsExtends.
 
 exports[`v3 should generate: test/generated/v3/schemas/$ModelWithAdditionalPropertiesEqTrue.ts 1`] = `
 "export const $ModelWithAdditionalPropertiesEqTrue = {
-	description: \`This is a model with one property and additionalProperties: true\`,
-	properties: {
-		prop: {
-	type: 'string',
-	description: \`This is a simple string property\`,
-},
-		[key: string]: {
-	type: 'any',
-	isRequired: true,
-},
-	},
-} as const;"
+    description: \`This is a model with one property and additionalProperties: true\`,
+    properties: {
+        prop: {
+            type: 'string',
+            description: \`This is a simple string property\`,
+        },
+    },
+} as const;
+"
 `;
 
 exports[`v3 should generate: test/generated/v3/schemas/$ModelWithArray.ts 1`] = `
@@ -7497,12 +7500,12 @@ export class DescriptionsService {
      * @throws ApiError
      */
     public static callWithDescriptions(
-        parameterWithBreaks?: any,
-        parameterWithBackticks?: any,
-        parameterWithSlashes?: any,
-        parameterWithExpressionPlaceholders?: any,
-        parameterWithQuotes?: any,
-        parameterWithReservedCharacters?: any
+        parameterWithBreaks?: unknown,
+        parameterWithBackticks?: unknown,
+        parameterWithSlashes?: unknown,
+        parameterWithExpressionPlaceholders?: unknown,
+        parameterWithQuotes?: unknown,
+        parameterWithReservedCharacters?: unknown
     ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'POST',
@@ -8227,19 +8230,19 @@ export class TypesService {
      * @returns number Response is a simple number
      * @returns string Response is a simple string
      * @returns boolean Response is a simple boolean
-     * @returns any Response is a simple object
+     * @returns unknown Response is a simple object
      * @throws ApiError
      */
     public static types(
         parameterArray: Array<string> | null,
-        parameterDictionary: Record<string, any> | null,
+        parameterDictionary: Record<string, unknown> | null,
         parameterEnum: 'Success' | 'Warning' | 'Error' | null,
         parameterNumber: number = 123,
         parameterString: string | null = 'default',
         parameterBoolean: boolean | null = true,
-        parameterObject: Record<string, any> | null = null,
+        parameterObject: Record<string, unknown> | null = null,
         id?: number
-    ): CancelablePromise<number | string | boolean | Record<string, any>> {
+    ): CancelablePromise<number | string | boolean | Record<string, unknown>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/types',

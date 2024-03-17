@@ -45,7 +45,7 @@ export const compileWithTypescript = (dir: string) => {
     const compiler = createProgram(configFileResult.fileNames, configFileResult.options, compilerHost);
     const result = compiler.emit();
 
-    // Show errors or warnings (if any)
+    // Show errors or warnings
     const diagnostics = getPreEmitDiagnostics(compiler).concat(result.diagnostics);
     if (diagnostics.length) {
         const message = formatDiagnosticsWithColorAndContext(diagnostics, {

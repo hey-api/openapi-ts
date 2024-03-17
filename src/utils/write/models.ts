@@ -16,7 +16,7 @@ export const writeClientModels = async (
     client: Client,
     templates: Templates,
     outputPath: string,
-    options: Pick<Required<Options>, 'enums' | 'httpClient' | 'useDateType'>
+    options: Pick<Required<Options>, 'client' | 'enums' | 'useDateType'>
 ): Promise<void> => {
     for (const model of client.models) {
         const file = resolve(outputPath, `${model.name}.ts`);

@@ -1,4 +1,4 @@
-export const getResponseBody = (response: AxiosResponse<any>): any => {
+export const getResponseBody = (response: AxiosResponse<unknown>): unknown => {
 	if (response.status !== 204) {
 		return response.data;
 	}
