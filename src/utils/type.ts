@@ -1,7 +1,39 @@
-import type { Type } from '../../../client/interfaces/Type';
-import sanitizeTypeName from '../../../utils/sanitizeTypeName';
-import { getMappedType } from './getMappedType';
+import type { Type } from '../client/interfaces/Type';
+import sanitizeTypeName from './sanitizeTypeName';
 import { stripNamespace } from './stripNamespace';
+
+const TYPE_MAPPINGS = new Map<string, string>([
+    ['any', 'unknown'],
+    ['array', 'unknown[]'],
+    ['boolean', 'boolean'],
+    ['byte', 'number'],
+    ['char', 'string'],
+    ['date-time', 'string'],
+    ['date', 'string'],
+    ['double', 'number'],
+    ['file', 'binary'],
+    ['float', 'number'],
+    ['int', 'number'],
+    ['integer', 'number'],
+    ['long', 'number'],
+    ['null', 'null'],
+    ['number', 'number'],
+    ['object', 'unknown'],
+    ['password', 'string'],
+    ['short', 'number'],
+    ['string', 'string'],
+    ['void', 'void'],
+]);
+
+/**
+ * Get mapped type for given type to basic Typescript/Javascript type.
+ */
+export const getMappedType = (type: string, format?: string): string | undefined => {
+    if (format === 'binary') {
+        return 'binary';
+    }
+    return TYPE_MAPPINGS.get(type);
+};
 
 const encode = (value: string): string => sanitizeTypeName(value);
 
@@ -10,14 +42,14 @@ const encode = (value: string): string => sanitizeTypeName(value);
  * @param type String or String[] value like "integer", "Link[Model]" or ["string", "null"].
  * @param format String value like "binary" or "date".
  */
-export const getType = (type: string | string[] = 'any', format?: string): Type => {
+export const getType = (type: string | string[] = 'unknown', format?: string): Type => {
     const result: Type = {
         $refs: [],
-        base: 'any',
+        base: 'unknown',
         imports: [],
         isNullable: false,
         template: null,
-        type: 'any',
+        type: 'unknown',
     };
 
     // Special case for JSON Schema spec (december 2020, page 17),
@@ -49,7 +81,7 @@ export const getType = (type: string | string[] = 'any', format?: string): Type 
             const match1 = getType(encode(matches[1]));
             const match2 = getType(encode(matches[2]));
 
-            if (match1.type === 'any[]') {
+            if (match1.type === 'unknown[]') {
                 result.type = `${match2.type}[]`;
                 result.base = `${match2.type}`;
                 match1.$refs = [];

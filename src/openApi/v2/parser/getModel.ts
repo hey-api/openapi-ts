@@ -1,11 +1,11 @@
 import type { Model } from '../../../client/interfaces/Model';
 import { getEnums } from '../../../utils/getEnums';
 import { getPattern } from '../../../utils/getPattern';
+import { getType } from '../../../utils/type';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 import { getModelComposition } from './getModelComposition';
 import { getModelProperties } from './getModelProperties';
-import { getType } from './getType';
 
 export const getModel = (
     openApi: OpenApi,

@@ -24,29 +24,35 @@ describe('v2.angular', () => {
 
     it('requests token', async () => {
         await browser.exposeFunction('tokenRequest', jest.fn().mockResolvedValue('MY_TOKEN'));
-        const result = await browser.evaluate(async () => {
-            return await new Promise<any>(resolve => {
-                const { OpenAPI, SimpleService } = (window as any).api;
-                OpenAPI.TOKEN = (window as any).tokenRequest;
-                SimpleService.getCallWithoutParametersAndResponse().subscribe(resolve);
-            });
-        });
+        const result = await browser.evaluate(
+            async () =>
+                await new Promise(resolve => {
+                    // @ts-ignore
+                    const { OpenAPI, SimpleService } = window.api;
+                    // @ts-ignore
+                    OpenAPI.TOKEN = window.tokenRequest;
+                    SimpleService.getCallWithoutParametersAndResponse().subscribe(resolve);
+                })
+        );
+        // @ts-ignore
         expect(result.headers.authorization).toBe('Bearer MY_TOKEN');
     });
 
     it('supports complex params', async () => {
-        const result = await browser.evaluate(async () => {
-            return await new Promise<any>(resolve => {
-                const { ComplexService } = (window as any).api;
-                ComplexService.complexTypes({
-                    first: {
-                        second: {
-                            third: 'Hello World!',
+        const result = await browser.evaluate(
+            async () =>
+                await new Promise(resolve => {
+                    // @ts-ignore
+                    const { ComplexService } = window.api;
+                    ComplexService.complexTypes({
+                        first: {
+                            second: {
+                                third: 'Hello World!',
+                            },
                         },
-                    },
-                }).subscribe(resolve);
-            });
-        });
+                    }).subscribe(resolve);
+                })
+        );
         expect(result).toBeDefined();
     });
 });

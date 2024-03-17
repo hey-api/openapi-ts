@@ -1,9 +1,9 @@
 {{~#equals base 'binary'~}}
-{{~#equals @root.$config.httpClient 'fetch'}}Blob{{/equals~}}
-{{~#equals @root.$config.httpClient 'xhr'}}Blob{{/equals~}}
-{{~#equals @root.$config.httpClient 'axios'}}Blob{{/equals~}}
-{{~#equals @root.$config.httpClient 'angular'}}Blob{{/equals~}}
-{{~#equals @root.$config.httpClient 'node'}}Blob{{/equals~}}
+{{~#equals @root.$config.client 'fetch'}}Blob{{/equals~}}
+{{~#equals @root.$config.client 'xhr'}}Blob{{/equals~}}
+{{~#equals @root.$config.client 'axios'}}Blob{{/equals~}}
+{{~#equals @root.$config.client 'angular'}}Blob{{/equals~}}
+{{~#equals @root.$config.client 'node'}}Blob{{/equals~}}
 {{~else~}}
 {{~#useDateType @root.$config format~}}
 Date

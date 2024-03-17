@@ -24,29 +24,35 @@ describe('v3.babel', () => {
     it('requests token', async () => {
         await browser.exposeFunction('tokenRequest', jest.fn().mockResolvedValue('MY_TOKEN'));
         const result = await browser.evaluate(async () => {
-            const { OpenAPI, SimpleService } = (window as any).api;
-            OpenAPI.TOKEN = (window as any).tokenRequest;
+            // @ts-ignore
+            const { OpenAPI, SimpleService } = window.api;
+            // @ts-ignore
+            OpenAPI.TOKEN = window.tokenRequest;
             OpenAPI.USERNAME = undefined;
             OpenAPI.PASSWORD = undefined;
             return await SimpleService.getCallWithoutParametersAndResponse();
         });
+        // @ts-ignore
         expect(result.headers.authorization).toBe('Bearer MY_TOKEN');
     });
 
     it('uses credentials', async () => {
         const result = await browser.evaluate(async () => {
-            const { OpenAPI, SimpleService } = (window as any).api;
+            // @ts-ignore
+            const { OpenAPI, SimpleService } = window.api;
             OpenAPI.TOKEN = undefined;
             OpenAPI.USERNAME = 'username';
             OpenAPI.PASSWORD = 'password';
             return await SimpleService.getCallWithoutParametersAndResponse();
         });
+        // @ts-ignore
         expect(result.headers.authorization).toBe('Basic dXNlcm5hbWU6cGFzc3dvcmQ=');
     });
 
     it('supports complex params', async () => {
         const result = await browser.evaluate(async () => {
-            const { ComplexService } = (window as any).api;
+            // @ts-ignore
+            const { ComplexService } = window.api;
             return await ComplexService.complexTypes({
                 parameterObject: {
                     first: {
@@ -62,7 +68,8 @@ describe('v3.babel', () => {
 
     it('support form data', async () => {
         const result = await browser.evaluate(async () => {
-            const { ParametersService } = (window as any).api;
+            // @ts-ignore
+            const { ParametersService } = window.api;
             return await ParametersService.callWithParameters({
                 parameterHeader: 'valueHeader',
                 parameterQuery: 'valueQuery',
@@ -81,7 +88,8 @@ describe('v3.babel', () => {
         let error;
         try {
             await browser.evaluate(async () => {
-                const { SimpleService } = (window as any).api;
+                // @ts-ignore
+                const { SimpleService } = window.api;
                 const promise = SimpleService.getCallWithoutParametersAndResponse();
                 setTimeout(() => {
                     promise.cancel();
@@ -97,12 +105,12 @@ describe('v3.babel', () => {
     it('should throw known error (500)', async () => {
         const error = await browser.evaluate(async () => {
             try {
-                const { ErrorService } = (window as any).api;
+                // @ts-ignore
+                const { ErrorService } = window.api;
                 await ErrorService.testErrorCode({
                     status: 500,
                 });
-            } catch (e) {
-                const error = e as any;
+            } catch (error) {
                 return JSON.stringify({
                     name: error.name,
                     message: error.message,
@@ -133,12 +141,12 @@ describe('v3.babel', () => {
     it('should throw unknown error (409)', async () => {
         const error = await browser.evaluate(async () => {
             try {
-                const { ErrorService } = (window as any).api;
+                // @ts-ignore
+                const { ErrorService } = window.api;
                 await ErrorService.testErrorCode({
                     status: 409,
                 });
-            } catch (e) {
-                const error = e as any;
+            } catch (error) {
                 return JSON.stringify({
                     name: error.name,
                     message: error.message,
@@ -168,15 +176,17 @@ describe('v3.babel', () => {
 
     it('it should parse query params', async () => {
         const result = await browser.evaluate(async () => {
-            const { ParametersService } = (window as any).api;
-            return (await ParametersService.postCallWithOptionalParam({
+            // @ts-ignore
+            const { ParametersService } = window.api;
+            return await ParametersService.postCallWithOptionalParam({
                 parameter: {
                     page: 0,
                     size: 1,
                     sort: ['location'],
                 },
-            })) as Promise<any>;
+            });
         });
+        // @ts-ignore
         expect(result.query).toStrictEqual({ parameter: { page: '0', size: '1', sort: 'location' } });
     });
 });
@@ -199,29 +209,35 @@ describe('v3.babel useOptions', () => {
 
     it('returns result body by default', async () => {
         const result = await browser.evaluate(async () => {
-            const { SimpleService } = (window as any).api;
+            // @ts-ignore
+            const { SimpleService } = window.api;
             return await SimpleService.getCallWithoutParametersAndResponse();
         });
+        // @ts-ignore
         expect(result.body).toBeUndefined();
     });
 
     it('returns result body', async () => {
         const result = await browser.evaluate(async () => {
-            const { SimpleService } = (window as any).api;
+            // @ts-ignore
+            const { SimpleService } = window.api;
             return await SimpleService.getCallWithoutParametersAndResponse({
                 _result: 'body',
             });
         });
+        // @ts-ignore
         expect(result.body).toBeUndefined();
     });
 
     it('returns raw result', async () => {
         const result = await browser.evaluate(async () => {
-            const { SimpleService } = (window as any).api;
+            // @ts-ignore
+            const { SimpleService } = window.api;
             return await SimpleService.getCallWithoutParametersAndResponse({
                 _result: 'raw',
             });
         });
+        // @ts-ignore
         expect(result.body).not.toBeUndefined();
     });
 });

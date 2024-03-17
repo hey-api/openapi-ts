@@ -17,10 +17,10 @@ export const writeClientCore = async (
     client: Client,
     templates: Templates,
     outputPath: string,
-    options: Pick<Required<Options>, 'httpClient' | 'serviceResponse'> & Omit<Options, 'httpClient' | 'serviceResponse'>
+    options: Pick<Required<Options>, 'client' | 'serviceResponse'> & Omit<Options, 'client' | 'serviceResponse'>
 ): Promise<void> => {
     const context = {
-        httpRequest: getHttpRequestName(options.httpClient),
+        httpRequest: getHttpRequestName(options.client),
         server: options.base !== undefined ? options.base : client.server,
         version: client.version,
     };

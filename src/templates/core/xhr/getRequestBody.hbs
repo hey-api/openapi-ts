@@ -1,4 +1,4 @@
-export const getRequestBody = (options: ApiRequestOptions): any => {
+export const getRequestBody = (options: ApiRequestOptions): unknown => {
 	if (options.body !== undefined) {
 		if (options.mediaType?.includes('/json')) {
 			return JSON.stringify(options.body)

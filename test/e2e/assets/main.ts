@@ -1,3 +1,4 @@
 import * as api from './index';
 
-(window as any).api = api;
+// @ts-ignore
+window.api = api;

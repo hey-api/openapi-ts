@@ -1,4 +1,3 @@
-import { HttpClient } from '../HttpClient';
 import { registerHandlebarTemplates } from './registerHandlebarTemplates';
 
 describe('registerHandlebarTemplates', () => {
@@ -14,12 +13,12 @@ describe('registerHandlebarTemplates', () => {
             },
             {
                 autoformat: true,
+                client: 'fetch',
                 enums: true,
                 exportCore: true,
                 exportModels: true,
                 exportSchemas: true,
                 exportServices: true,
-                httpClient: HttpClient.FETCH,
                 input: '',
                 operationId: true,
                 output: '',
