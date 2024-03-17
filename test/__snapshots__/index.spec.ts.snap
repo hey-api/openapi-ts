@@ -465,9 +465,13 @@ export const getResponseBody = async (response: Response): Promise<any> => {
             const contentType = response.headers.get('Content-Type');
             if (contentType) {
                 const jsonTypes = ['application/json', 'application/problem+json'];
+                const binaryTypes = ['audio/', 'image/', 'video/'];
                 const isJSON = jsonTypes.some(type => contentType.toLowerCase().startsWith(type));
+                const isBinary = binaryTypes.some(type => contentType.toLowerCase().startsWith(type));
                 if (isJSON) {
                     return await response.json();
+                } else if (isBinary) {
+                    return await response.blob();
                 } else {
                     return await response.text();
                 }
@@ -3320,9 +3324,13 @@ export const getResponseBody = async (response: Response): Promise<any> => {
             const contentType = response.headers.get('Content-Type');
             if (contentType) {
                 const jsonTypes = ['application/json', 'application/problem+json'];
+                const binaryTypes = ['audio/', 'image/', 'video/'];
                 const isJSON = jsonTypes.some(type => contentType.toLowerCase().startsWith(type));
+                const isBinary = binaryTypes.some(type => contentType.toLowerCase().startsWith(type));
                 if (isJSON) {
                     return await response.json();
+                } else if (isBinary) {
+                    return await response.blob();
                 } else {
                     return await response.text();
                 }
@@ -4087,9 +4095,13 @@ export const getResponseBody = async (response: Response): Promise<any> => {
             const contentType = response.headers.get('Content-Type');
             if (contentType) {
                 const jsonTypes = ['application/json', 'application/problem+json'];
+                const binaryTypes = ['audio/', 'image/', 'video/'];
                 const isJSON = jsonTypes.some(type => contentType.toLowerCase().startsWith(type));
+                const isBinary = binaryTypes.some(type => contentType.toLowerCase().startsWith(type));
                 if (isJSON) {
                     return await response.json();
+                } else if (isBinary) {
+                    return await response.blob();
                 } else {
                     return await response.text();
                 }
@@ -4399,6 +4411,7 @@ export { DeprecatedService } from './services/DeprecatedService';
 export { DescriptionsService } from './services/DescriptionsService';
 export { DuplicateService } from './services/DuplicateService';
 export { ErrorService } from './services/ErrorService';
+export { FileResponseService } from './services/FileResponseService';
 export { FormDataService } from './services/FormDataService';
 export { HeaderService } from './services/HeaderService';
 export { MultipartService } from './services/MultipartService';
@@ -7580,6 +7593,30 @@ export class ErrorService {
                 501: \`Custom message: Not Implemented\`,
                 502: \`Custom message: Bad Gateway\`,
                 503: \`Custom message: Service Unavailable\`,
+            },
+        });
+    }
+}
+"
+`;
+
+exports[`v3 should generate: test/generated/v3/services/FileResponseService.ts 1`] = `
+"import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+
+export class FileResponseService {
+    /**
+     * @param id
+     * @returns binary Success
+     * @throws ApiError
+     */
+    public static fileResponse(id: string): CancelablePromise<Blob> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v{api-version}/file/{id}',
+            path: {
+                id,
             },
         });
     }
