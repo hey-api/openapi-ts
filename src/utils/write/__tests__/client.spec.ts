@@ -1,7 +1,8 @@
-import { mkdir, rmdir, writeFile } from '../../fileSystem';
+import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
+
 import { writeClient } from '../client';
 
-jest.mock('../../fileSystem');
+jest.mock('node:fs');
 
 describe('writeClient', () => {
     it('should write to filesystem', async () => {
@@ -52,8 +53,8 @@ describe('writeClient', () => {
             write: true,
         });
 
-        expect(rmdir).toHaveBeenCalled();
-        expect(mkdir).toHaveBeenCalled();
-        expect(writeFile).toHaveBeenCalled();
+        expect(rmSync).toHaveBeenCalled();
+        expect(mkdirSync).toHaveBeenCalled();
+        expect(writeFileSync).toHaveBeenCalled();
     });
 });

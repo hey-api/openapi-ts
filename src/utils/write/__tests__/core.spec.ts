@@ -1,9 +1,9 @@
-import { resolve } from 'path';
+import { writeFileSync } from 'node:fs';
+import path from 'node:path';
 
-import { writeFile } from '../../fileSystem';
 import { writeClientCore } from '../core';
 
-jest.mock('../../fileSystem');
+jest.mock('node:fs');
 
 describe('writeClientCore', () => {
     let templates: Parameters<typeof writeClientCore>[1];
@@ -48,13 +48,13 @@ describe('writeClientCore', () => {
 
         await writeClientCore(client, templates, '/', config);
 
-        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/OpenAPI.ts'), 'settings');
-        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/ApiError.ts'), 'apiError');
-        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/ApiRequestOptions.ts'), 'apiRequestOptions');
-        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/ApiResult.ts'), 'apiResult');
-        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/CancelablePromise.ts'), 'cancelablePromise');
-        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/request.ts'), 'request');
-        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/types.ts'), 'types');
+        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/OpenAPI.ts'), 'settings');
+        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/ApiError.ts'), 'apiError');
+        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/ApiRequestOptions.ts'), 'apiRequestOptions');
+        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/ApiResult.ts'), 'apiResult');
+        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/CancelablePromise.ts'), 'cancelablePromise');
+        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/request.ts'), 'request');
+        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/types.ts'), 'types');
     });
 
     it('uses client server value for base', async () => {

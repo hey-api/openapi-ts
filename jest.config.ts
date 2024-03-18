@@ -5,7 +5,7 @@ const config: Config.InitialOptions = {
         {
             displayName: 'UNIT',
             testEnvironment: 'node',
-            testMatch: ['<rootDir>/test/index.spec.ts', '<rootDir>/bin/index.spec.js', '<rootDir>/src/**/*.spec.ts'],
+            testMatch: ['<rootDir>/test/index.spec.ts', '<rootDir>/test/bin.spec.ts', '<rootDir>/src/**/*.spec.ts'],
             moduleFileExtensions: ['js', 'ts', 'd.ts'],
             moduleNameMapper: {
                 '\\.hbs$': '<rootDir>/src/templates/__mocks__/index.ts',

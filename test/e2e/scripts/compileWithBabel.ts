@@ -1,5 +1,6 @@
+import { readFileSync, writeFileSync } from 'node:fs';
+
 import { transformSync } from '@babel/core';
-import { readFileSync, writeFileSync } from 'fs';
 import { sync } from 'glob';
 
 export const compileWithBabel = (dir: string) => {

@@ -1,6 +1,7 @@
+import { mkdirSync, rmSync } from 'node:fs';
+import path from 'node:path';
+
 import { sync } from 'cross-spawn';
-import { mkdirSync, rmSync } from 'fs';
-import { resolve as resolvePath } from 'path';
 
 export const createAngularProject = (dir: string, name: string) => {
     const cwd = `./test/e2e/generated/${dir}/`;
@@ -35,7 +36,7 @@ export const createAngularProject = (dir: string, name: string) => {
             '--force',
         ],
         {
-            cwd: resolvePath(cwd),
+            cwd: path.resolve(cwd),
             stdio: 'inherit',
         }
     );

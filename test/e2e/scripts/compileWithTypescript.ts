@@ -1,5 +1,6 @@
+import path from 'node:path';
+
 import { EOL } from 'os';
-import { resolve } from 'path';
 import {
     createCompilerHost,
     createProgram,
@@ -37,7 +38,7 @@ export const compileWithTypescript = (dir: string) => {
     const configFileResult = parseJsonConfigFileContent(
         configFile.config,
         sys,
-        resolve(process.cwd(), cwd),
+        path.resolve(process.cwd(), cwd),
         undefined,
         'tsconfig.json'
     );

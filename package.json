@@ -1,6 +1,7 @@
 {
     "name": "@nicolas-chaulet/openapi-typescript-codegen",
     "version": "0.27.30",
+    "type": "module",
     "description": "Library that generates Typescript clients based on the OpenAPI specification.",
     "author": "Ferdi Koomen",
     "homepage": "https://github.com/nicolas-chaulet/openapi-typescript-codegen/",
@@ -31,46 +32,50 @@
             "email": "info@madebyferdi.com"
         }
     ],
-    "main": "dist/index.js",
-    "types": "types/index.d.ts",
+    "main": "./dist/index.js",
+    "types": "./dist/node/index.d.ts",
     "bin": {
         "openapi-ts": "bin/index.js"
     },
     "files": [
-        "bin/index.js",
-        "dist/index.js",
-        "types/index.d.ts"
+        "bin",
+        "dist"
     ],
     "scripts": {
-        "build:watch": "rollup --config --environment NODE_ENV:development --watch",
-        "build": "rollup --config --environment NODE_ENV:development",
-        "clean": "rimraf ./dist ./test/generated ./test/e2e/generated ./samples/generated ./coverage ./node_modules/.cache",
+        "dev": "rimraf dist && npm run build-bundle -- --watch",
+        "build": "run-s clean build-bundle build-types",
+        "build-bundle": "rollup --config rollup.config.ts --configPlugin typescript",
+        "build-types": "run-s build-types-temp build-types-roll build-types-check",
+        "build-types-check": "tsc --project tsconfig.check.json",
+        "build-types-roll": "rollup --config rollup.dts.config.ts --configPlugin typescript && rimraf temp",
+        "build-types-temp": "tsc --emitDeclarationOnly --outDir temp -p src/node",
+        "clean": "rimraf dist test/generated test/e2e/generated samples/generated coverage node_modules/.cache",
         "codecov": "codecov --token=66c30c23-8954-4892-bef9-fbaed0a2e42b",
         "docker": "docker build -t eeelenbaas/openapi-typescript-codegen .",
         "eslint:fix": "eslint . --fix",
         "eslint": "eslint .",
-        "prepare": "npm run clean && npm run release",
-        "release": "rollup --config --environment NODE_ENV:production",
+        "prepublishOnly": "npm run build",
         "run": "node ./test/index.js",
+        "test": "jest --selectProjects UNIT",
         "test:coverage": "jest --selectProjects UNIT --coverage",
         "test:e2e": "jest --selectProjects E2E --runInBand --verbose",
         "test:update": "jest --selectProjects UNIT --updateSnapshot",
         "test:watch": "jest --selectProjects UNIT --watch",
-        "test": "jest --selectProjects UNIT",
-        "validate": "tsc --project tsconfig.json --noEmit"
+        "typecheck": "tsc --noEmit"
+    },
+    "engines": {
+        "node": "^18.0.0 || >=20.0.0"
     },
     "dependencies": {
         "@apidevtools/json-schema-ref-parser": "11.5.4",
         "camelcase": "6.3.0",
         "commander": "11.1.0",
-        "fs-extra": "11.2.0",
-        "handlebars": "4.7.8",
-        "node-fetch": "2.7.0"
+        "handlebars": "4.7.8"
     },
     "devDependencies": {
         "@angular-devkit/build-angular": "17.0.9",
         "@angular/animations": "17.0.8",
-        "@angular/cli": "17.0.9",
+        "@angular/cli": "17.3.0",
         "@angular/common": "17.0.8",
         "@angular/compiler": "17.0.8",
         "@angular/compiler-cli": "17.0.8",
@@ -84,16 +89,14 @@
         "@babel/preset-env": "7.23.9",
         "@babel/preset-typescript": "7.23.3",
         "@rollup/plugin-commonjs": "25.0.7",
+        "@rollup/plugin-json": "6.1.0",
         "@rollup/plugin-node-resolve": "15.2.3",
-        "@rollup/plugin-terser": "^0.4.4",
+        "@rollup/plugin-terser": "0.4.4",
         "@rollup/plugin-typescript": "11.1.6",
         "@types/cross-spawn": "6.0.6",
         "@types/express": "4.17.21",
-        "@types/fs-extra": "^11.0.4",
-        "@types/glob": "8.1.0",
         "@types/jest": "29.5.12",
         "@types/node": "20.11.17",
-        "@types/node-fetch": "2.6.11",
         "@types/qs": "6.9.11",
         "@typescript-eslint/eslint-plugin": "6.21.0",
         "@typescript-eslint/parser": "6.21.0",
@@ -110,19 +113,17 @@
         "glob": "10.3.10",
         "jest": "29.7.0",
         "jest-cli": "29.7.0",
+        "npm-run-all2": "6.1.2",
         "prettier": "3.2.5",
         "puppeteer": "22.4.1",
         "qs": "6.11.2",
         "rimraf": "5.0.5",
-        "rollup": "4.7.0",
+        "rollup": "4.13.0",
+        "rollup-plugin-dts": "6.1.0",
         "rxjs": "7.8.1",
         "ts-node": "10.9.2",
         "tslib": "2.6.2",
         "typescript": "5.2.2",
         "zone.js": "0.14.3"
-    },
-    "overrides": {
-        "node-fetch": "2.7.0",
-        "rollup": "4.7.0"
     }
 }

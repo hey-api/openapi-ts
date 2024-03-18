@@ -2,56 +2,53 @@
 
 'use strict';
 
-const Path = require('path');
-const { program } = require('commander');
-const json = require('../package.json');
+import { readFileSync } from 'node:fs';
+
+import { program } from 'commander';
+
+const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url)).toString());
 
 const params = program
-    .name(Object.keys(json.bin)[0])
+    .name(Object.keys(pkg.bin)[0])
     .usage('[options]')
-    .version(json.version)
-    .requiredOption('-i, --input <value>', 'OpenAPI specification, can be a path, url or string content (required)')
-    .requiredOption('-o, --output <value>', 'Output directory (required)')
-    .option('-c, --client <value>', 'HTTP client to generate [fetch, xhr, node, axios, angular]')
+    .version(pkg.version)
+    .option('-i, --input <value>', 'OpenAPI specification (path, url, or string content)')
+    .option('-o, --output <value>', 'Output directory')
+    .option('-c, --client <value>', 'HTTP client to generate [angular, axios, fetch, node, xhr]')
     .option('--name <value>', 'Custom client class name')
-    .option('--useOptions [value]', 'Use options instead of arguments', false)
+    .option('--useOptions [value]', 'Use options instead of arguments')
+    .option('--autoformat', 'Process generated files with formatter?')
     .option('--no-autoformat', 'Disable processing generated files with formatter')
     .option('--base [value]', 'Manually set base in OpenAPI config instead of inferring from server value')
-    .option('--enums', 'Generate JavaScript objects from enum definitions', false)
-    .option('--exportCore <value>', 'Write core files to disk', true)
-    .option('--exportServices <value>', 'Write services to disk', true)
-    .option('--exportModels <value>', 'Write models to disk', true)
-    .option('--exportSchemas <value>', 'Write schemas to disk', false)
+    .option('--enums', 'Generate JavaScript objects from enum definitions')
+    .option('--exportCore <value>', 'Write core files to disk')
+    .option('--exportServices <value>', 'Write services to disk')
+    .option('--exportModels <value>', 'Write models to disk')
+    .option('--exportSchemas <value>', 'Write schemas to disk')
+    .option('--operationId', 'Use operationd ID?')
     .option('--no-operationId', 'Use path URL to generate operation ID')
-    .option('--postfixServices <value>', 'Service name postfix', 'Service')
+    .option('--postfixServices <value>', 'Service name postfix')
     .option('--serviceResponse [value]', 'Define shape of returned value from service calls')
-    .option('--useDateType <value>', 'Output Date instead of string for the format "date-time" in the models', false)
+    .option('--useDateType <value>', 'Output Date instead of string for the format "date-time" in the models')
     .option('--postfixModels <value>', 'Model name postfix')
     .option('--request <value>', 'Path to custom request file')
+    .option('--write', 'Write files to disk? (used for testing)')
     .option('--no-write', 'Skip writing files to disk (used for testing)')
     .parse(process.argv)
     .opts();
 
-const OpenAPI = require(Path.resolve(__dirname, '../dist/index.js'));
-
-const parseBooleanOrString = value => (value === true || value === 'true' ? true : value);
-
-if (OpenAPI) {
-    OpenAPI.generate({
-        ...params,
-        clientName: params.name,
-        exportCore: JSON.parse(params.exportCore) === true,
-        exportModels: parseBooleanOrString(params.exportModels),
-        exportSchemas: JSON.parse(params.exportSchemas) === true,
-        exportServices: parseBooleanOrString(params.exportServices),
-        useDateType: JSON.parse(params.useDateType) === true,
-        useOptions: JSON.parse(params.useOptions) === true,
-    })
-        .then(() => {
-            process.exit(0);
-        })
-        .catch(error => {
-            console.error(error);
-            process.exit(1);
+async function start() {
+    try {
+        const OpenAPI = await import(new URL('../dist/index.js', import.meta.url));
+        await OpenAPI.generate({
+            ...params,
+            clientName: params.name,
         });
+        process.exit(0);
+    } catch (error) {
+        console.error(error);
+        process.exit(1);
+    }
 }
+
+start();

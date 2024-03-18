@@ -1,7 +1,7 @@
 import type { Operation } from '../../../client/interfaces/Operation';
 import type { OperationParameter } from '../../../client/interfaces/OperationParameter';
 import type { OperationParameters } from '../../../client/interfaces/OperationParameters';
-import type { Options } from '../../../client/interfaces/Options';
+import type { Config } from '../../../node';
 import { getOperationName } from '../../../utils/operation';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiOperation } from '../interfaces/OpenApiOperation';
@@ -34,7 +34,7 @@ const mergeParameters = (opParams: OperationParameter[], globalParams: Operation
 
 export const getOperation = (
     openApi: OpenApi,
-    options: Pick<Required<Options>, 'operationId'> & Omit<Options, 'operationId'>,
+    options: Pick<Required<Config>, 'operationId'> & Omit<Config, 'operationId'>,
     data: {
         method: (typeof allowedServiceMethods)[number];
         op: OpenApiOperation;

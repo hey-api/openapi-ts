@@ -1,9 +1,9 @@
-import { resolve } from 'path';
+import { writeFileSync } from 'node:fs';
+import path from 'node:path';
 
 import { writeClientModels } from '../models';
-import { writeFile } from './../../fileSystem';
 
-jest.mock('../../fileSystem');
+jest.mock('node:fs');
 
 describe('writeClientModels', () => {
     it('should write to filesystem', async () => {
@@ -60,6 +60,6 @@ describe('writeClientModels', () => {
             useDateType: false,
         });
 
-        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/User.ts'), 'model');
+        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/User.ts'), 'model');
     });
 });

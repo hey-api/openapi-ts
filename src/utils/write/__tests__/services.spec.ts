@@ -1,9 +1,9 @@
-import { resolve } from 'path';
+import { writeFileSync } from 'node:fs';
+import path from 'node:path';
 
-import { writeFile } from '../../fileSystem';
 import { writeClientServices } from '../services';
 
-jest.mock('../../fileSystem');
+jest.mock('node:fs');
 
 describe('writeClientServices', () => {
     it('should write to filesystem', async () => {
@@ -51,6 +51,6 @@ describe('writeClientServices', () => {
             useOptions: false,
         });
 
-        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/UserService.ts'), 'service');
+        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/UserService.ts'), 'service');
     });
 });
