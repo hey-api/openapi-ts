@@ -1,0 +1,11 @@
+{
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    },
+    "editor.quickSuggestions": {
+      "strings": true
+    },
+    "eslint.format.enable": true,
+    "typescript.preferences.autoImportFileExcludePatterns": ["dist/**"],
+    "typescript.tsdk": "node_modules/typescript/lib"
+}
