@@ -4,8 +4,7 @@ import path from 'node:path';
 import type { Client } from '../../client/interfaces/Client';
 import type { Config } from '../../node';
 import { Templates } from '../registerHandlebarTemplates';
-import { sortModelsByName } from '../sortModelsByName';
-import { sortServicesByName } from '../sortServicesByName';
+import { sortByName } from '../sortByName';
 
 /**
  * Generate the OpenAPI client index file using the Handlebar template and write it to disk.
@@ -34,9 +33,9 @@ export const writeClientIndex = async (
 ): Promise<void> => {
     const templateResult = templates.index({
         $config: options,
-        models: sortModelsByName(client.models),
+        models: sortByName(client.models),
         server: client.server,
-        services: sortServicesByName(client.services),
+        services: sortByName(client.services),
         version: client.version,
     });
 

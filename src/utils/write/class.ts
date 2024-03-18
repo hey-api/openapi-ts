@@ -5,8 +5,7 @@ import type { Client } from '../../client/interfaces/Client';
 import type { Config } from '../../node';
 import { getHttpRequestName } from '../getHttpRequestName';
 import type { Templates } from '../registerHandlebarTemplates';
-import { sortModelsByName } from '../sortModelsByName';
-import { sortServicesByName } from '../sortServicesByName';
+import { sortByName } from '../sortByName';
 
 /**
  * Generate the OpenAPI client index file using the Handlebar template and write it to disk.
@@ -26,9 +25,9 @@ export const writeClientClass = async (
     const templateResult = templates.client({
         $config: options,
         httpRequest: getHttpRequestName(options.client),
-        models: sortModelsByName(client.models),
+        models: sortByName(client.models),
         server: client.server,
-        services: sortServicesByName(client.services),
+        services: sortByName(client.services),
         version: client.version,
     });
 

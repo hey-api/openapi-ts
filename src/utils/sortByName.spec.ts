@@ -1,8 +1,13 @@
 import type { Model } from '../client/interfaces/Model';
-import { sortModelsByName } from './sortModelsByName';
+import type { Service } from '../client/interfaces/Service';
+import { sortByName } from './sortByName';
 
-describe('sortModelsByName', () => {
-    it('should return sorted list', () => {
+describe('sortByName', () => {
+    it('should handle empty lists', () => {
+        expect(sortByName([])).toEqual([]);
+    });
+
+    it('should return sorted list of models', () => {
         const john: Model = {
             $refs: [],
             base: 'John',
@@ -58,8 +63,35 @@ describe('sortModelsByName', () => {
             type: 'Doe',
         };
         const models: Model[] = [john, jane, doe];
+        expect(sortByName(models)).toEqual([doe, jane, john]);
+    });
 
-        expect(sortModelsByName([])).toEqual([]);
-        expect(sortModelsByName(models)).toEqual([doe, jane, john]);
+    it('should return sorted list of services', () => {
+        const john: Service = {
+            $refs: [],
+            imports: [],
+            name: 'John',
+            operations: [],
+        };
+        const jane: Service = {
+            $refs: [],
+            imports: [],
+            name: 'Jane',
+            operations: [],
+        };
+        const doe: Service = {
+            $refs: [],
+            imports: [],
+            name: 'Doe',
+            operations: [],
+        };
+        const services: Service[] = [john, jane, doe];
+        expect(sortByName(services)).toEqual([doe, jane, john]);
+    });
+
+    it('should throw errors when trying to sort without a name entry', () => {
+        const values = ['some', 'string', 'array'];
+        // @ts-ignore
+        expect(() => sortByName(values)).toThrow(TypeError);
     });
 });

@@ -8,9 +8,6 @@ temp
 yarn-debug.log*
 yarn-error.log*
 
-# IDE config
-.vscode
-
 *.iml
 dist
 coverage
