@@ -1,6 +1,6 @@
 import type { Operation } from '../../../client/interfaces/Operation';
-import type { Options } from '../../../client/interfaces/Options';
 import type { Service } from '../../../client/interfaces/Service';
+import type { Config } from '../../../node';
 import { unique } from '../../../utils/unique';
 import type { OpenApi } from '../interfaces/OpenApi';
 import { getOperationParameters } from './getOperationParameters';
@@ -16,7 +16,7 @@ const getNewService = (operation: Operation): Service => ({
 
 export const getServices = (
     openApi: OpenApi,
-    options: Pick<Required<Options>, 'operationId'> & Omit<Options, 'operationId'>
+    options: Pick<Required<Config>, 'operationId'> & Omit<Config, 'operationId'>
 ): Service[] => {
     const services = new Map<string, Service>();
 

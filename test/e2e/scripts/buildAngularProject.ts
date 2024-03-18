@@ -1,5 +1,6 @@
+import path from 'node:path';
+
 import { sync } from 'cross-spawn';
-import { resolve as resolvePath } from 'path';
 
 export const buildAngularProject = (dir: string, name: string, output: string) => {
     const cwd = `./test/e2e/generated/${dir}/${name}/`;
@@ -17,7 +18,7 @@ export const buildAngularProject = (dir: string, name: string, output: string) =
             'false',
         ],
         {
-            cwd: resolvePath(cwd),
+            cwd: path.resolve(cwd),
             stdio: 'inherit',
         }
     );

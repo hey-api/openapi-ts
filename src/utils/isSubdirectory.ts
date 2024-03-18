@@ -1,3 +1,3 @@
-import { relative } from 'path';
+import path from 'node:path';
 
-export const isSubDirectory = (parent: string, child: string) => relative(child, parent).startsWith('..');
+export const isSubDirectory = (parent: string, child: string) => path.relative(child, parent).startsWith('..');

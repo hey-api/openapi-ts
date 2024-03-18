@@ -1,8 +1,8 @@
-import { resolve } from 'path';
+import { writeFileSync } from 'node:fs';
+import path from 'node:path';
 
 import type { Client } from '../../client/interfaces/Client';
-import type { Options } from '../../client/interfaces/Options';
-import { writeFile } from '../fileSystem';
+import type { Config } from '../../node';
 import { getHttpRequestName } from '../getHttpRequestName';
 import type { Templates } from '../registerHandlebarTemplates';
 import { sortByName } from '../sortByName';
@@ -20,7 +20,7 @@ export const writeClientClass = async (
     client: Client,
     templates: Templates,
     outputPath: string,
-    options: Pick<Required<Options>, 'client' | 'clientName' | 'enums' | 'postfixServices'>
+    options: Pick<Required<Config>, 'client' | 'clientName' | 'enums' | 'postfixServices'>
 ): Promise<void> => {
     const templateResult = templates.client({
         $config: options,
@@ -31,5 +31,5 @@ export const writeClientClass = async (
         version: client.version,
     });
 
-    await writeFile(resolve(outputPath, `${options.clientName}.ts`), templateResult);
+    await writeFileSync(path.resolve(outputPath, `${options.clientName}.ts`), templateResult);
 };

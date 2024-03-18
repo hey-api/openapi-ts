@@ -1,8 +1,8 @@
-import Path from 'path';
+import { writeFileSync } from 'node:fs';
+import path from 'node:path';
 
 import type { Client } from '../../client/interfaces/Client';
-import type { Options } from '../../client/interfaces/Options';
-import { writeFile } from '../fileSystem';
+import type { Config } from '../../node';
 import type { Templates } from '../registerHandlebarTemplates';
 
 /**
@@ -16,15 +16,15 @@ export const writeClientServices = async (
     client: Client,
     templates: Templates,
     outputPath: string,
-    options: Pick<Required<Options>, 'client' | 'postfixServices' | 'serviceResponse' | 'useOptions'> &
-        Omit<Options, 'client' | 'postfixServices' | 'serviceResponse' | 'useOptions'>
+    options: Pick<Required<Config>, 'client' | 'postfixServices' | 'serviceResponse' | 'useOptions'> &
+        Omit<Config, 'client' | 'postfixServices' | 'serviceResponse' | 'useOptions'>
 ): Promise<void> => {
     for (const service of client.services) {
-        const file = Path.resolve(outputPath, `${service.name}${options.postfixServices}.ts`);
+        const file = path.resolve(outputPath, `${service.name}${options.postfixServices}.ts`);
         const templateResult = templates.exports.service({
             $config: options,
             ...service,
         });
-        await writeFile(file, templateResult);
+        await writeFileSync(file, templateResult);
     }
 };
