@@ -1,8 +1,10 @@
 import { writeFileSync } from 'node:fs';
 
+import { describe, expect, it, vi } from 'vitest';
+
 import { writeClientClass } from '../class';
 
-jest.mock('node:fs');
+vi.mock('node:fs');
 
 describe('writeClientClass', () => {
     it('should write to filesystem', async () => {

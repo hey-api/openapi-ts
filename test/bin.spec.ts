@@ -1,4 +1,5 @@
 import { sync } from 'cross-spawn';
+import { describe, expect, it } from 'vitest';
 
 describe('bin', () => {
     it('supports required parameters', async () => {
@@ -146,7 +147,7 @@ describe('bin', () => {
         expect(result.stderr.toString()).toBe('');
     });
 
-    it('auto fixs output with Eslint', async () => {
+    it('auto fixes output with Eslint', async () => {
         const result = sync('node', [
             './bin/index.js',
             '--input',

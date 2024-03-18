@@ -1,6 +1,8 @@
-export const readFile = jest.fn();
-export const writeFile = jest.fn();
-export const copyFile = jest.fn();
-export const exists = jest.fn();
-export const rmdir = jest.fn();
-export const mkdir = jest.fn();
+import { vi } from 'vitest';
+
+export const readFile = vi.fn();
+export const writeFile = vi.fn();
+export const copyFile = vi.fn();
+export const exists = vi.fn();
+export const rmdir = vi.fn();
+export const mkdir = vi.fn();

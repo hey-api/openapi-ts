@@ -1,3 +1,5 @@
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+
 import { cleanup } from './scripts/cleanup';
 import { compileWithTypescript } from './scripts/compileWithTypescript';
 import { generateClient } from './scripts/generateClient';
@@ -17,7 +19,7 @@ describe('v3.node', () => {
 
     it('requests token', async () => {
         const { OpenAPI, SimpleService } = require('./generated/v3/node/index.js');
-        const tokenRequest = jest.fn().mockResolvedValue('MY_TOKEN');
+        const tokenRequest = vi.fn().mockResolvedValue('MY_TOKEN');
         OpenAPI.TOKEN = tokenRequest;
         OpenAPI.USERNAME = undefined;
         OpenAPI.PASSWORD = undefined;

@@ -1,4 +1,5 @@
 import Handlebars from 'handlebars/runtime';
+import { describe, expect, it } from 'vitest';
 
 import { registerHandlebarHelpers, registerHandlebarTemplates } from '../handlebars';
 
