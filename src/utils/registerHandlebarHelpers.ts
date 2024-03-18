@@ -4,15 +4,15 @@ import { EOL } from 'os';
 
 import type { Model } from '../client/interfaces/Model';
 import type { OperationParameter } from '../client/interfaces/OperationParameter';
-import type { Options } from '../client/interfaces/Options';
 import type { Service } from '../client/interfaces/Service';
+import type { Config } from '../node';
 import type { OpenApi as OpenApiV2 } from '../openApi/v2/interfaces/OpenApi';
 import type { OpenApi as OpenApiV3 } from '../openApi/v3/interfaces/OpenApi';
 import { enumKey, enumName, enumUnionType, enumValue } from './enum';
 import { escapeName } from './escapeName';
 import { unique } from './unique';
 
-const modelsExports = (config: Options, models: Model[], path: string) => {
+const modelsExports = (config: Config, models: Model[], path: string) => {
     const output = models.map(model => {
         const importedModel = config.postfixModels
             ? `${model.name} as ${model.name + config.postfixModels}`
@@ -59,7 +59,7 @@ const debugThis = (value: unknown) => {
 
 export const registerHandlebarHelpers = (
     openApi: OpenApiV3 | OpenApiV2,
-    config: Omit<Required<Options>, 'base' | 'clientName' | 'request'>
+    config: Omit<Required<Config>, 'base' | 'clientName' | 'request'>
 ): void => {
     Handlebars.registerHelper('camelCase', camelCase);
     Handlebars.registerHelper('dataParameters', dataParameters);
@@ -155,7 +155,7 @@ export const registerHandlebarHelpers = (
 
     Handlebars.registerHelper(
         'useDateType',
-        function (this: unknown, config: Options, format: string | undefined, options: Handlebars.HelperOptions) {
+        function (this: unknown, config: Config, format: string | undefined, options: Handlebars.HelperOptions) {
             return config.useDateType && format === 'date-time' ? options.fn(this) : options.inverse(this);
         }
     );

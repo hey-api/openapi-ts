@@ -1,4 +1,4 @@
-import { rmSync } from 'fs';
+import { rmSync } from 'node:fs';
 
 export const cleanup = (dir: string) => {
     rmSync(`./test/e2e/generated/${dir}/`, {

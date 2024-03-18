@@ -1,6 +1,6 @@
 import type { Operation } from '../../../client/interfaces/Operation';
 import type { OperationParameters } from '../../../client/interfaces/OperationParameters';
-import type { Options } from '../../../client/interfaces/Options';
+import type { Config } from '../../../node';
 import { getOperationName } from '../../../utils/operation';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiOperation } from '../interfaces/OpenApiOperation';
@@ -19,7 +19,7 @@ export const getOperation = (
     tag: string,
     op: OpenApiOperation,
     pathParams: OperationParameters,
-    options: Pick<Required<Options>, 'operationId'> & Omit<Options, 'operationId'>
+    options: Pick<Required<Config>, 'operationId'> & Omit<Config, 'operationId'>
 ): Operation => {
     const serviceName = getServiceName(tag);
     const name = getOperationName(url, method, options, op.operationId);

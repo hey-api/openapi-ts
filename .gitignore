@@ -1,11 +1,12 @@
+.DS_Store
+.idea
+.tmp
+junit.xml
 node_modules
 npm-debug.log*
+temp
 yarn-debug.log*
 yarn-error.log*
-junit.xml
-.DS_Store
-.tmp
-.idea
 
 # IDE config
 .vscode

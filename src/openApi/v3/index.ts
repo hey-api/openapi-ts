@@ -1,5 +1,5 @@
 import type { Client } from '../../client/interfaces/Client';
-import type { Options } from '../../client/interfaces/Options';
+import type { Config } from '../../node';
 import type { OpenApi } from './interfaces/OpenApi';
 import { getModels } from './parser/getModels';
 import { getServer } from './parser/getServer';
@@ -14,7 +14,7 @@ import { getServiceVersion } from './parser/service';
  */
 export const parse = (
     openApi: OpenApi,
-    options: Pick<Required<Options>, 'operationId'> & Omit<Options, 'operationId'>
+    options: Pick<Required<Config>, 'operationId'> & Omit<Config, 'operationId'>
 ): Client => {
     const version = getServiceVersion(openApi.info.version);
     const server = getServer(openApi);
