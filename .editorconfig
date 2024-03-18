@@ -10,3 +10,6 @@ indent_size = 4
 
 [*.hbs]
 indent_style = tab
+
+[*.yml]
+indent_size = 2
