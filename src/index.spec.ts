@@ -1,3 +1,5 @@
+import { afterEach, describe, expect, it, vi } from 'vitest';
+
 import { createClient, parseOpenApiSpecification } from './index';
 import * as parseV2 from './openApi/v2';
 import * as parseV3 from './openApi/v3';
@@ -38,7 +40,7 @@ describe('index', () => {
 
 describe('parseOpenApiSpecification', () => {
     afterEach(() => {
-        jest.restoreAllMocks();
+        vi.restoreAllMocks();
     });
 
     const options: Parameters<typeof parseOpenApiSpecification>[1] = {
@@ -61,7 +63,7 @@ describe('parseOpenApiSpecification', () => {
     };
 
     it('uses v2 parser', () => {
-        const spy = jest.spyOn(parseV2, 'parse');
+        const spy = vi.spyOn(parseV2, 'parse');
 
         const spec: Parameters<typeof parseOpenApiSpecification>[0] = {
             info: {
@@ -87,7 +89,7 @@ describe('parseOpenApiSpecification', () => {
     });
 
     it('uses v3 parser', () => {
-        const spy = jest.spyOn(parseV3, 'parse');
+        const spy = vi.spyOn(parseV3, 'parse');
 
         const spec: Parameters<typeof parseOpenApiSpecification>[0] = {
             info: {

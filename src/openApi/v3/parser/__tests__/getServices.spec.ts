@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { getServices } from '../getServices';
 
 describe('getServices', () => {

@@ -1,6 +1,12 @@
 {
     "extends": "./tsconfig.base.json",
     "compilerOptions": {
+        "outDir": "./dist",
+        "target": "es2019",
+        "module": "ESNext",
+        "moduleResolution": "node",
+        "lib": ["es2019", "dom"],
+        "types": ["node"],
         "declaration": false,
         "esModuleInterop": true,
         "resolveJsonModule": true
