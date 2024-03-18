@@ -2,6 +2,18 @@
 
 > ✨ Turn your OpenAPI specification into a beautiful TypeScript client
 
+## Table of Contents
+- [Table of Contents](#table-of-contents)
+- [About](#about)
+- [Features](#features)
+- [Quick Start](#quick-start)
+- [Installation](#installation)
+- [Configuration](#configuration)
+  - [Formatting](#formatting)
+  - [Enums](#enums)
+  - [Config API](#config-api)
+- [Contributing](#contributing)
+
 ## About
 
 This is an opinionated fork of the [openapi-typescript-codegen](https://github.com/ferdikoomen/openapi-typescript-codegen) package. We created it after the original project became [unmaintained](https://github.com/ferdikoomen/openapi-typescript-codegen/issues/1276#issuecomment-1302392146) because we wanted to support OpenAPI v3.1 introduced in the FastAPI [v0.99.0](https://fastapi.tiangolo.com/release-notes/#0990) release. We plan to resolve the most pressing issues in the original project – open an issue if you'd like to prioritise your use case!
@@ -15,31 +27,105 @@ This is an opinionated fork of the [openapi-typescript-codegen](https://github.c
 - can be used with CLI, Node.js, or npx
 - abortable requests through cancellable promise pattern
 
-## Quickstart
+## Quick Start
 
-The fastest way to use this package is via npx
+The fastest way to use `openapi-ts` is via npx
 
 ```sh
 npx @nicolas-chaulet/openapi-typescript-codegen -i path/to/openapi.json -o src/client
 ```
 
-Congratulations on generating your first client! 🎉
+Congratulations on creating your first client! 🎉
 
-## Install
+## Installation
 
-```
+```sh
 npm install @nicolas-chaulet/openapi-typescript-codegen --save-dev
 ```
 
 or
 
-```
+```sh
 yarn add @nicolas-chaulet/openapi-typescript-codegen -D
 ```
 
-## Usage
+and add a script to your `package.json` file
 
+```json
+"scripts": {
+  "openapi-ts": "openapi-ts"
+}
 ```
+
+> ⚠️ You need to be running Node.js v18 or newer 
+
+## Configuration
+
+<!-- `openapi-ts` supports loading configuration from a file inside your project root directory. You can either create a `openapi-ts.config.js` file -->
+
+`openapi-ts` supports loading configuration from a file inside your project root directory. You just need to create a `openapi-ts.config.js` file
+
+```js
+/** @type {import('@nicolas-chaulet/openapi-typescript-codegen').Config} */
+export default {
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+}
+```
+
+<!-- or `openapi-ts.config.ts`
+
+```ts
+import { defineConfig } from '@nicolas-chaulet/openapi-typescript-codegen';
+
+export default defineConfig({
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+})
+``` -->
+
+### Formatting
+
+By default, `openapi-ts` will automatically format your client according to your project configuration. To disable automatic formatting, set `autoformat` to false
+
+```ts
+import { defineConfig } from '@nicolas-chaulet/openapi-typescript-codegen';
+
+export default defineConfig({
+  autoformat: false,
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+})
+```
+
+You can also prevent your client from being processed by formatters and linters by adding your output path to the tool's ignore file (e.g. `.eslintignore`, `.prettierignore`).
+
+### Enums
+
+We do not generate TypeScript [enums](https://www.typescriptlang.org/docs/handbook/enums.html) because they are not standard JavaScript and pose [typing challenges](https://dev.to/ivanzm123/dont-use-enums-in-typescript-they-are-very-dangerous-57bh). If you want to iterate through possible field values without manually typing arrays, you can export enums by running
+
+```ts
+import { defineConfig } from '@nicolas-chaulet/openapi-typescript-codegen';
+
+export default defineConfig({
+  enums: true,
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+})
+```
+
+This will export your enums as plain JavaScript objects. For example, `Foo` will generate the following
+
+```ts
+export const FooEnum = {
+  FOO: 'foo',
+  BAR: 'bar',
+} as const;
+```
+
+### Config API
+
+```sh
 $ openapi-ts --help
 
   Usage: openapi-ts [options]
@@ -66,41 +152,9 @@ $ openapi-ts --help
     -h, --help                display help for command
 ```
 
-## Formatting
-
-By default, your client will be automatically formatted according to your configuration. To disable automatic formatting, run
-
-```sh
-openapi-ts -i path/to/openapi.json -o src/client --no-autoformat
-```
-
-You can also prevent your client from being processed by formatters and linters by adding your output path to the tool's ignore file (e.g. `.eslintignore`, `.prettierignore`).
-
-## Enums
-
-We do not generate TypeScript [enums](https://www.typescriptlang.org/docs/handbook/enums.html) because they are not standard JavaScript and pose [typing challenges](https://dev.to/ivanzm123/dont-use-enums-in-typescript-they-are-very-dangerous-57bh). If you want to iterate through possible field values without manually typing arrays, you can export enums by running
-
-```sh
-openapi-ts -i path/to/openapi.json -o src/client --enums
-```
-
-This will export your enums as plain JavaScript objects. For example, `Foo` will generate the following
-
-```ts
-export const FooEnum = {
-  FOO: 'foo',
-  BAR: 'bar',
-} as const;
-```
-
 ## Contributing
 
 This section is WIP.
 
 - recommend using VS Code
 - configure Prettier
-
-## Documentation
-
-The original documentation can be found in the [openapi-typescript-codegen/wiki](https://github.com/ferdikoomen/openapi-typescript-codegen/wiki)
-

@@ -1,9 +1,9 @@
-import { resolve } from 'path';
+import { writeFileSync } from 'node:fs';
+import path from 'node:path';
 
-import { writeFile } from '../../fileSystem';
 import { writeClientSchemas } from '../schemas';
 
-jest.mock('../../fileSystem');
+jest.mock('node:fs');
 
 describe('writeClientSchemas', () => {
     it('should write to filesystem', async () => {
@@ -59,6 +59,6 @@ describe('writeClientSchemas', () => {
             enums: true,
         });
 
-        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/$User.ts'), 'schema');
+        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/$User.ts'), 'schema');
     });
 });

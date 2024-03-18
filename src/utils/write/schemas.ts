@@ -1,8 +1,8 @@
-import { resolve } from 'path';
+import { writeFileSync } from 'node:fs';
+import path from 'node:path';
 
 import type { Client } from '../../client/interfaces/Client';
-import type { Options } from '../../client/interfaces/Options';
-import { writeFile } from '../fileSystem';
+import type { Config } from '../../node';
 import type { Templates } from '../registerHandlebarTemplates';
 
 /**
@@ -16,14 +16,14 @@ export const writeClientSchemas = async (
     client: Client,
     templates: Templates,
     outputPath: string,
-    options: Pick<Required<Options>, 'client' | 'enums'>
+    options: Pick<Required<Config>, 'client' | 'enums'>
 ): Promise<void> => {
     for (const model of client.models) {
-        const file = resolve(outputPath, `$${model.name}.ts`);
+        const file = path.resolve(outputPath, `$${model.name}.ts`);
         const templateResult = templates.exports.schema({
             $config: options,
             ...model,
         });
-        await writeFile(file, templateResult);
+        await writeFileSync(file, templateResult);
     }
 };

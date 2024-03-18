@@ -1,6 +1,6 @@
 import Handlebars from 'handlebars/runtime';
 
-import type { Options } from '../client/interfaces/Options';
+import type { Config } from '../node';
 import type { OpenApi as OpenApiV2 } from '../openApi/v2/interfaces/OpenApi';
 import type { OpenApi as OpenApiV3 } from '../openApi/v3/interfaces/OpenApi';
 import templateClient from '../templates/client.hbs';
@@ -116,7 +116,7 @@ export interface Templates {
  */
 export const registerHandlebarTemplates = (
     openApi: OpenApiV3 | OpenApiV2,
-    options: Omit<Required<Options>, 'base' | 'clientName' | 'request'>
+    options: Omit<Required<Config>, 'base' | 'clientName' | 'request'>
 ): Templates => {
     registerHandlebarHelpers(openApi, options);
 

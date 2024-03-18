@@ -1,6 +1,7 @@
+import path from 'node:path';
+
 import express, { Express } from 'express';
 import { Server } from 'http';
-import { resolve as resolvePath } from 'path';
 
 let _app: Express;
 let _server: Server;
@@ -30,25 +31,25 @@ const start = async (dir: string) =>
 
         // Serve static assets
         _app.get('/runtime.js', (req, res) => {
-            res.sendFile(resolvePath(`./test/e2e/generated/${dir}/runtime.js`));
+            res.sendFile(path.resolve(`./test/e2e/generated/${dir}/runtime.js`));
         });
         _app.get('/polyfills.js', (req, res) => {
-            res.sendFile(resolvePath(`./test/e2e/generated/${dir}/polyfills.js`));
+            res.sendFile(path.resolve(`./test/e2e/generated/${dir}/polyfills.js`));
         });
         _app.get('/vendor.js', (req, res) => {
-            res.sendFile(resolvePath(`./test/e2e/generated/${dir}/vendor.js`));
+            res.sendFile(path.resolve(`./test/e2e/generated/${dir}/vendor.js`));
         });
         _app.get('/main.js', (req, res) => {
-            res.sendFile(resolvePath(`./test/e2e/generated/${dir}/main.js`));
+            res.sendFile(path.resolve(`./test/e2e/generated/${dir}/main.js`));
         });
         _app.get('/styles.css', (req, res) => {
-            res.sendFile(resolvePath(`./test/e2e/generated/${dir}/styles.css`));
+            res.sendFile(path.resolve(`./test/e2e/generated/${dir}/styles.css`));
         });
         _app.get('/favicon.ico', (req, res) => {
-            res.sendFile(resolvePath(`./test/e2e/generated/${dir}/favicon.ico`));
+            res.sendFile(path.resolve(`./test/e2e/generated/${dir}/favicon.ico`));
         });
         _app.get('/', (req, res) => {
-            res.sendFile(resolvePath(`./test/e2e/generated/${dir}/index.html`));
+            res.sendFile(path.resolve(`./test/e2e/generated/${dir}/index.html`));
         });
 
         // Register an 'echo' server for testing error codes. This will just grab the

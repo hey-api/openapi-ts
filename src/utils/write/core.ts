@@ -1,8 +1,8 @@
-import Path from 'path';
+import { copyFileSync, existsSync, writeFileSync } from 'node:fs';
+import path from 'node:path';
 
 import type { Client } from '../../client/interfaces/Client';
-import type { Options } from '../../client/interfaces/Options';
-import { copyFile, exists, writeFile } from '../fileSystem';
+import type { Config } from '../../node';
 import { getHttpRequestName } from '../getHttpRequestName';
 import type { Templates } from '../registerHandlebarTemplates';
 
@@ -17,7 +17,7 @@ export const writeClientCore = async (
     client: Client,
     templates: Templates,
     outputPath: string,
-    options: Pick<Required<Options>, 'client' | 'serviceResponse'> & Omit<Options, 'client' | 'serviceResponse'>
+    options: Pick<Required<Config>, 'client' | 'serviceResponse'> & Omit<Config, 'client' | 'serviceResponse'>
 ): Promise<void> => {
     const context = {
         httpRequest: getHttpRequestName(options.client),
@@ -25,50 +25,50 @@ export const writeClientCore = async (
         version: client.version,
     };
 
-    await writeFile(
-        Path.resolve(outputPath, 'OpenAPI.ts'),
+    await writeFileSync(
+        path.resolve(outputPath, 'OpenAPI.ts'),
         templates.core.settings({
             $config: options,
             ...context,
         })
     );
-    await writeFile(
-        Path.resolve(outputPath, 'ApiError.ts'),
+    await writeFileSync(
+        path.resolve(outputPath, 'ApiError.ts'),
         templates.core.apiError({
             $config: options,
             ...context,
         })
     );
-    await writeFile(
-        Path.resolve(outputPath, 'ApiRequestOptions.ts'),
+    await writeFileSync(
+        path.resolve(outputPath, 'ApiRequestOptions.ts'),
         templates.core.apiRequestOptions({
             $config: options,
             ...context,
         })
     );
-    await writeFile(
-        Path.resolve(outputPath, 'ApiResult.ts'),
+    await writeFileSync(
+        path.resolve(outputPath, 'ApiResult.ts'),
         templates.core.apiResult({
             $config: options,
             ...context,
         })
     );
-    await writeFile(
-        Path.resolve(outputPath, 'CancelablePromise.ts'),
+    await writeFileSync(
+        path.resolve(outputPath, 'CancelablePromise.ts'),
         templates.core.cancelablePromise({
             $config: options,
             ...context,
         })
     );
-    await writeFile(
-        Path.resolve(outputPath, 'request.ts'),
+    await writeFileSync(
+        path.resolve(outputPath, 'request.ts'),
         templates.core.request({
             $config: options,
             ...context,
         })
     );
-    await writeFile(
-        Path.resolve(outputPath, 'types.ts'),
+    await writeFileSync(
+        path.resolve(outputPath, 'types.ts'),
         templates.core.types({
             $config: options,
             ...context,
@@ -76,15 +76,15 @@ export const writeClientCore = async (
     );
 
     if (options.clientName) {
-        await writeFile(
-            Path.resolve(outputPath, 'BaseHttpRequest.ts'),
+        await writeFileSync(
+            path.resolve(outputPath, 'BaseHttpRequest.ts'),
             templates.core.baseHttpRequest({
                 $config: options,
                 ...context,
             })
         );
-        await writeFile(
-            Path.resolve(outputPath, `${context.httpRequest}.ts`),
+        await writeFileSync(
+            path.resolve(outputPath, `${context.httpRequest}.ts`),
             templates.core.httpRequest({
                 $config: options,
                 ...context,
@@ -93,11 +93,11 @@ export const writeClientCore = async (
     }
 
     if (options.request) {
-        const requestFile = Path.resolve(process.cwd(), options.request);
-        const requestFileExists = await exists(requestFile);
+        const requestFile = path.resolve(process.cwd(), options.request);
+        const requestFileExists = await existsSync(requestFile);
         if (!requestFileExists) {
             throw new Error(`Custom request file "${requestFile}" does not exists`);
         }
-        await copyFile(requestFile, Path.resolve(outputPath, 'request.ts'));
+        await copyFileSync(requestFile, path.resolve(outputPath, 'request.ts'));
     }
 };

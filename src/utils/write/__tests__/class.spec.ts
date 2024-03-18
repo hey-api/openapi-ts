@@ -1,7 +1,8 @@
-import { writeFile } from '../../fileSystem';
+import { writeFileSync } from 'node:fs';
+
 import { writeClientClass } from '../class';
 
-jest.mock('../../fileSystem');
+jest.mock('node:fs');
 
 describe('writeClientClass', () => {
     it('should write to filesystem', async () => {
@@ -40,6 +41,6 @@ describe('writeClientClass', () => {
             postfixServices: '',
         });
 
-        expect(writeFile).toHaveBeenCalled();
+        expect(writeFileSync).toHaveBeenCalled();
     });
 });

@@ -1,6 +1,6 @@
 import camelCase from 'camelcase';
 
-import type { Options } from '../client/interfaces/Options';
+import type { Config } from '../node';
 import sanitizeOperationName from './sanitizeOperationName';
 
 /**
@@ -11,7 +11,7 @@ import sanitizeOperationName from './sanitizeOperationName';
 export const getOperationName = (
     url: string,
     method: string,
-    options: Pick<Required<Options>, 'operationId'>,
+    options: Pick<Required<Config>, 'operationId'>,
     operationId?: string
 ): string => {
     if (options.operationId && operationId) {

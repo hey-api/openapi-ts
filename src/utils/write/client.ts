@@ -1,8 +1,8 @@
-import Path from 'path';
+import { mkdirSync, rmSync } from 'node:fs';
+import path from 'node:path';
 
 import type { Client } from '../../client/interfaces/Client';
-import type { Options } from '../../client/interfaces/Options';
-import { mkdir, rmdir } from '../fileSystem';
+import type { Config } from '../../node';
 import { isSubDirectory } from '../isSubdirectory';
 import type { Templates } from '../registerHandlebarTemplates';
 import { writeClientClass } from './class';
@@ -21,10 +21,9 @@ import { writeClientServices } from './services';
 export const writeClient = async (
     client: Client,
     templates: Templates,
-    options: Omit<Required<Options>, 'base' | 'clientName' | 'request'> &
-        Pick<Options, 'base' | 'clientName' | 'request'>
+    options: Omit<Required<Config>, 'base' | 'clientName' | 'request'> & Pick<Config, 'base' | 'clientName' | 'request'>
 ): Promise<void> => {
-    const outputPath = Path.resolve(process.cwd(), options.output);
+    const outputPath = path.resolve(process.cwd(), options.output);
 
     if (!isSubDirectory(process.cwd(), options.output)) {
         throw new Error(`Output folder is not a subdirectory of the current working directory`);
@@ -41,35 +40,57 @@ export const writeClient = async (
     }
 
     if (options.exportCore) {
-        const outputPathCore = Path.resolve(outputPath, 'core');
-        await rmdir(outputPathCore);
-        await mkdir(outputPathCore);
+        const outputPathCore = path.resolve(outputPath, 'core');
+        await rmSync(outputPathCore, {
+            force: true,
+            recursive: true,
+        });
+        await mkdirSync(outputPathCore, {
+            recursive: true,
+        });
         await writeClientCore(client, templates, outputPathCore, options);
     }
 
     if (options.exportServices) {
-        const outputPathServices = Path.resolve(outputPath, 'services');
-        await rmdir(outputPathServices);
-        await mkdir(outputPathServices);
+        const outputPathServices = path.resolve(outputPath, 'services');
+        await rmSync(outputPathServices, {
+            force: true,
+            recursive: true,
+        });
+        await mkdirSync(outputPathServices, {
+            recursive: true,
+        });
         await writeClientServices(client, templates, outputPathServices, options);
     }
 
     if (options.exportSchemas) {
-        const outputPathSchemas = Path.resolve(outputPath, 'schemas');
-        await rmdir(outputPathSchemas);
-        await mkdir(outputPathSchemas);
+        const outputPathSchemas = path.resolve(outputPath, 'schemas');
+        await rmSync(outputPathSchemas, {
+            force: true,
+            recursive: true,
+        });
+        await mkdirSync(outputPathSchemas, {
+            recursive: true,
+        });
         await writeClientSchemas(client, templates, outputPathSchemas, options);
     }
 
     if (options.exportModels) {
-        const outputPathModels = Path.resolve(outputPath, 'models');
-        await rmdir(outputPathModels);
-        await mkdir(outputPathModels);
+        const outputPathModels = path.resolve(outputPath, 'models');
+        await rmSync(outputPathModels, {
+            force: true,
+            recursive: true,
+        });
+        await mkdirSync(outputPathModels, {
+            recursive: true,
+        });
         await writeClientModels(client, templates, outputPathModels, options);
     }
 
     if (options.clientName) {
-        await mkdir(outputPath);
+        await mkdirSync(outputPath, {
+            recursive: true,
+        });
         await writeClientClass(client, templates, outputPath, {
             ...options,
             clientName: options.clientName,
@@ -77,7 +98,9 @@ export const writeClient = async (
     }
 
     if (options.exportCore || options.exportServices || options.exportSchemas || options.exportModels) {
-        await mkdir(outputPath);
+        await mkdirSync(outputPath, {
+            recursive: true,
+        });
         await writeClientIndex(client, templates, outputPath, options);
     }
 };

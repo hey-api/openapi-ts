@@ -1,9 +1,9 @@
-import { resolve } from 'path';
+import { writeFileSync } from 'node:fs';
+import path from 'node:path';
 
-import { writeFile } from '../../fileSystem';
 import { writeClientIndex } from '../index';
 
-jest.mock('../../fileSystem');
+jest.mock('node:fs');
 
 describe('writeClientIndex', () => {
     it('should write to filesystem', async () => {
@@ -45,6 +45,6 @@ describe('writeClientIndex', () => {
             postfixModels: '',
         });
 
-        expect(writeFile).toHaveBeenCalledWith(resolve('/', '/index.ts'), 'index');
+        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/index.ts'), 'index');
     });
 });

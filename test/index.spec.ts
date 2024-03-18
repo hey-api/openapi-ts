@@ -1,4 +1,5 @@
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
+
 import { sync } from 'glob';
 
 import { generate } from '../';

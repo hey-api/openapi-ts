@@ -1,8 +1,9 @@
-import { sync } from 'cross-spawn';
-import { createRequire } from 'module';
-import Path from 'path';
+import { existsSync, readFileSync } from 'node:fs';
+import path from 'node:path';
 
-import type { Options } from './client/interfaces/Options';
+import { sync } from 'cross-spawn';
+
+import type { Config } from './node';
 import { parse as parseV2 } from './openApi/v2';
 import { parse as parseV3 } from './openApi/v3';
 import { getOpenApiSpec } from './utils/getOpenApiSpec';
@@ -10,10 +11,19 @@ import { postProcessClient } from './utils/postProcessClient';
 import { registerHandlebarTemplates } from './utils/registerHandlebarTemplates';
 import { writeClient } from './utils/write/client';
 
-type DefaultOptions = Omit<Required<Options>, 'base' | 'clientName' | 'request'> &
-    Pick<Options, 'base' | 'clientName' | 'request'>;
+type DefaultOptions = Omit<Required<Config>, 'base' | 'clientName' | 'request'> &
+    Pick<Config, 'base' | 'clientName' | 'request'>;
 
-export const parseOpenApiSpecification = (openApi: Exclude<Options['input'], string>, options: DefaultOptions) => {
+type Dependencies = Record<string, unknown>;
+
+// const configFiles = ['openapi-ts.config.js', 'openapi-ts.config.ts'];
+// add support for `openapi-ts.config.ts`
+const configFiles = ['openapi-ts.config.js'];
+
+export const parseOpenApiSpecification = (
+    openApi: Awaited<ReturnType<typeof getOpenApiSpec>>,
+    options: DefaultOptions
+) => {
     if ('swagger' in openApi) {
         return parseV2(openApi, options);
     }
@@ -23,7 +33,7 @@ export const parseOpenApiSpecification = (openApi: Exclude<Options['input'], str
     throw new Error(`Unsupported Open API specification: ${JSON.stringify(openApi, null, 2)}`);
 };
 
-const formatClient = (options: DefaultOptions, dependencies: Record<string, unknown>) => {
+const formatClient = (options: DefaultOptions, dependencies: Dependencies) => {
     if (!options.autoformat) {
         return;
     }
@@ -34,51 +44,47 @@ const formatClient = (options: DefaultOptions, dependencies: Record<string, unkn
     }
 };
 
-const getClientType = (options: Options, dependencies: Record<string, unknown>): DefaultOptions['client'] => {
-    let { client } = options;
-    if (!client) {
-        if (dependencies.axios) {
-            client = 'axios';
-        }
+const inferClient = (dependencies: Dependencies): DefaultOptions['client'] => {
+    if (dependencies['@angular/cli']) {
+        return 'angular';
     }
+    if (dependencies.axios) {
+        return 'axios';
+    }
+    return 'fetch';
+};
+
+const logClientMessage = (client: DefaultOptions['client']) => {
     switch (client) {
         case 'angular':
-            console.log('✨ Creating Angular client');
-            return client;
+            return console.log('✨ Creating Angular client');
         case 'axios':
-            console.log('✨ Creating Axios client');
-            return client;
-        case 'node':
-            console.log('✨ Creating Node.js client');
-            return client;
-        case 'xhr':
-            console.log('✨ Creating XHR client');
-            return client;
+            return console.log('✨ Creating Axios client');
         case 'fetch':
-        default:
-            console.log('✨ Creating Fetch client');
-            return 'fetch';
+            return console.log('✨ Creating Fetch client');
+        case 'node':
+            return console.log('✨ Creating Node.js client');
+        case 'xhr':
+            return console.log('✨ Creating XHR client');
     }
 };
 
-/**
- * Generate the OpenAPI client. This method will read the OpenAPI specification and based on the
- * given language it will generate the client, including the typed models, validation schemas,
- * service layer, etc.
- * @param options Options passed to the generate method
- */
-export const generate = async (options: Options): Promise<void> => {
-    const pathPackageJson = Path.resolve(process.cwd(), 'package.json');
-    const require = createRequire('/');
-    const json = require(pathPackageJson);
+const getOptionsFromConfig = async (): Promise<Config | undefined> => {
+    const configPath = configFiles
+        .map(file => path.resolve(process.cwd(), file))
+        .find(filePath => existsSync(filePath));
+    if (!configPath) {
+        return;
+    }
+    const exported = await import(configPath);
+    return exported.default as Config;
+};
 
-    const dependencies = [json.dependencies, json.devDependencies].reduce(
-        (res, deps) => ({
-            ...res,
-            ...deps,
-        }),
-        {}
-    );
+const getOptions = async (options: Config, dependencies: Dependencies) => {
+    const configOptions = await getOptionsFromConfig();
+    if (configOptions) {
+        options = { ...options, ...configOptions };
+    }
 
     const {
         autoformat = true,
@@ -101,7 +107,7 @@ export const generate = async (options: Options): Promise<void> => {
         write = true,
     } = options;
 
-    const client = getClientType(options, dependencies);
+    const client = options.client || inferClient(dependencies);
 
     const defaultOptions: DefaultOptions = {
         autoformat,
@@ -125,19 +131,52 @@ export const generate = async (options: Options): Promise<void> => {
         write,
     };
 
-    const openApi =
-        typeof defaultOptions.input === 'string' ? await getOpenApiSpec(defaultOptions.input) : defaultOptions.input;
-    const templates = registerHandlebarTemplates(openApi, defaultOptions);
-
-    const parsedClient = parseOpenApiSpecification(openApi, defaultOptions);
-    const finalClient = postProcessClient(parsedClient);
-
-    if (write) {
-        await writeClient(finalClient, templates, defaultOptions);
-        formatClient(defaultOptions, dependencies);
+    if (!input) {
+        throw new Error('🚫 input not provided - provide path to OpenAPI specification');
     }
 
-    console.log('✨ Done! Your client is located in:', output);
+    if (!output) {
+        throw new Error('🚫 output not provided - provide path where we should generate your client');
+    }
+
+    return defaultOptions;
+};
+
+/**
+ * Generate the OpenAPI client. This method will read the OpenAPI specification and based on the
+ * given language it will generate the client, including the typed models, validation schemas,
+ * service layer, etc.
+ * @param options Options passed to the generate method
+ */
+export const generate = async (options: Config): Promise<void> => {
+    const pkg = JSON.parse(readFileSync(path.resolve(process.cwd(), 'package.json')).toString());
+
+    const dependencies = [pkg.dependencies, pkg.devDependencies].reduce(
+        (res, deps) => ({
+            ...res,
+            ...deps,
+        }),
+        {}
+    );
+
+    const config = await getOptions(options, dependencies);
+
+    const openApi =
+        typeof config.input === 'string'
+            ? await getOpenApiSpec(config.input)
+            : (config.input as unknown as Awaited<ReturnType<typeof getOpenApiSpec>>);
+    const templates = registerHandlebarTemplates(openApi, config);
+
+    const parsedClient = parseOpenApiSpecification(openApi, config);
+    const finalClient = postProcessClient(parsedClient);
+
+    if (config.write) {
+        logClientMessage(config.client);
+        await writeClient(finalClient, templates, config);
+        formatClient(config, dependencies);
+    }
+
+    console.log('✨ Done! Your client is located in:', config.output);
 };
 
 export default {

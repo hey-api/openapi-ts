@@ -1,7 +1,6 @@
 'use strict';
 
 const OpenAPI = require('../');
-const fetch = require('node-fetch');
 
 const generate = async (input, output) => {
     await OpenAPI.generate({
