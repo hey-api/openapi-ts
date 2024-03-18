@@ -7,9 +7,6 @@ junit.xml
 .tmp
 .idea
 
-# IDE config
-.vscode
-
 *.iml
 dist
 coverage
