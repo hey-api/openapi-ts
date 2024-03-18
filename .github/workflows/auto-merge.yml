@@ -1,6 +1,7 @@
 name: auto-merge
 
-on: pull_request_target
+on:
+  pull_request_target:
 
 permissions:
   pull-requests: write
