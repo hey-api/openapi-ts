@@ -57,7 +57,7 @@ and add a script to your `package.json` file
 }
 ```
 
-> ⚠️ You need to be running Node.js v18 or newer 
+> ⚠️ You need to be running Node.js v18 or newer
 
 ## Configuration
 
@@ -154,7 +154,4 @@ $ openapi-ts --help
 
 ## Contributing
 
-This section is WIP.
-
-- recommend using VS Code
-- configure Prettier
+Please refer to the [contributing guide](CONTRIBUTING.md) for how to install the project for development purposes.
