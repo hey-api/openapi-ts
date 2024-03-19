@@ -1,13 +1,12 @@
 import { readSpecFromDisk } from './readSpecFromDisk';
-import { readSpecFromHttp } from './readSpecFromHttp';
-import { readSpecFromHttps } from './readSpecFromHttps';
+import { readSpecFromUrl } from './readSpecFromUrl';
 
 export const readSpec = async (input: string): Promise<string> => {
     if (input.startsWith('https://')) {
-        return await readSpecFromHttps(input);
+        return await readSpecFromUrl(input, 'https');
     }
     if (input.startsWith('http://')) {
-        return await readSpecFromHttp(input);
+        return await readSpecFromUrl(input, 'http');
     }
     return await readSpecFromDisk(input);
 };
