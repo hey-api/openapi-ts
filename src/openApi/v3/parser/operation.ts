@@ -1,7 +1,7 @@
 import type { Operation } from '../../../client/interfaces/Operation';
 import type { OperationParameter } from '../../../client/interfaces/OperationParameter';
 import type { OperationParameters } from '../../../client/interfaces/OperationParameters';
-import type { Config } from '../../../node';
+import type { Config } from '../../../types/config';
 import { getOperationName } from '../../../utils/operation';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiOperation } from '../interfaces/OpenApiOperation';
@@ -13,7 +13,7 @@ import { getOperationResponseHeader } from './getOperationResponseHeader';
 import { getOperationResponses } from './getOperationResponses';
 import { getOperationResults } from './getOperationResults';
 import { getRef } from './getRef';
-import { allowedServiceMethods, getServiceName } from './service';
+import { getServiceName } from './service';
 
 // add global path parameters, skip duplicate names
 const mergeParameters = (opParams: OperationParameter[], globalParams: OperationParameter[]): OperationParameter[] => {
@@ -34,9 +34,9 @@ const mergeParameters = (opParams: OperationParameter[], globalParams: Operation
 
 export const getOperation = (
     openApi: OpenApi,
-    options: Pick<Required<Config>, 'operationId'> & Omit<Config, 'operationId'>,
+    options: Config,
     data: {
-        method: (typeof allowedServiceMethods)[number];
+        method: Lowercase<Operation['method']>;
         op: OpenApiOperation;
         pathParams: OperationParameters;
         tag: string;
@@ -53,7 +53,7 @@ export const getOperation = (
         description: op.description || null,
         errors: [],
         imports: [],
-        method: method.toUpperCase(),
+        method: method.toUpperCase() as Operation['method'],
         name,
         parameters: [],
         parametersBody: pathParams.parametersBody,

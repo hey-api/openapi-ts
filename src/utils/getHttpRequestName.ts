@@ -1,10 +1,10 @@
-import type { Config } from '../node';
+import type { UserConfig } from '../node';
 
 /**
  * Generate the HttpRequest filename based on the selected client
  * @param client The selected HTTP client (fetch, xhr, node or axios)
  */
-export const getHttpRequestName = (client: Config['client']): string => {
+export const getHttpRequestName = (client: UserConfig['client']): string => {
     switch (client) {
         case 'angular':
             return 'AngularHttpRequest';

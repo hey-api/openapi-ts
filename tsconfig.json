@@ -10,7 +10,7 @@
         "**/__mocks__"
     ],
     "files": [
-        "./src/typings/hbs.d.ts"
+        "./src/types/hbs.d.ts"
     ],
     "include": [
         "./src/**/*.ts",
