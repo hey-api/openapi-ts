@@ -15,7 +15,7 @@ describe('v2', () => {
             exportServices: true,
             input: './test/spec/v2.json',
             output: './test/generated/v2/',
-            useOptions: false,
+            useOptions: true,
         });
 
         sync('./test/generated/v2/**/*.ts').forEach(file => {
@@ -36,7 +36,7 @@ describe('v3', () => {
             exportServices: true,
             input: './test/spec/v3.json',
             output: './test/generated/v3/',
-            useOptions: false,
+            useOptions: true,
         });
 
         sync('./test/generated/v3/**/*.ts').forEach(file => {
@@ -56,7 +56,7 @@ describe('v3', () => {
             input: './test/spec/v3.json',
             output: './test/generated/v3_date/',
             useDateType: true,
-            useOptions: false,
+            useOptions: true,
         });
 
         sync('./test/generated/v3_date/**/*.ts').forEach(file => {

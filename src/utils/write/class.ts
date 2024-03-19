@@ -2,9 +2,9 @@ import { writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import type { Client } from '../../client/interfaces/Client';
-import type { Config } from '../../node';
+import type { UserConfig } from '../../node';
 import { getHttpRequestName } from '../getHttpRequestName';
-import type { Templates } from '../registerHandlebarTemplates';
+import type { Templates } from '../handlebars';
 import { sortByName } from '../sortByName';
 
 /**
@@ -20,7 +20,7 @@ export const writeClientClass = async (
     client: Client,
     templates: Templates,
     outputPath: string,
-    options: Pick<Required<Config>, 'client' | 'clientName' | 'enums' | 'postfixServices'>
+    options: Pick<Required<UserConfig>, 'client' | 'clientName' | 'enums' | 'postfixServices'>
 ): Promise<void> => {
     const templateResult = templates.client({
         $config: options,

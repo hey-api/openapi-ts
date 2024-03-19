@@ -2,9 +2,9 @@ import { mkdirSync, rmSync } from 'node:fs';
 import path from 'node:path';
 
 import type { Client } from '../../client/interfaces/Client';
-import type { Config } from '../../node';
+import type { Config } from '../../types/config';
+import type { Templates } from '../handlebars';
 import { isSubDirectory } from '../isSubdirectory';
-import type { Templates } from '../registerHandlebarTemplates';
 import { writeClientClass } from './class';
 import { writeClientCore } from './core';
 import { writeClientIndex } from './index';
@@ -16,13 +16,9 @@ import { writeClientServices } from './services';
  * Write our OpenAPI client, using the given templates at the given output
  * @param client Client containing models, schemas, and services
  * @param templates Templates wrapper with all loaded Handlebars templates
- * @param options Options passed to the `generate()` function
+ * @param options {@link Config} passed to the `generate()` function
  */
-export const writeClient = async (
-    client: Client,
-    templates: Templates,
-    options: Omit<Required<Config>, 'base' | 'clientName' | 'request'> & Pick<Config, 'base' | 'clientName' | 'request'>
-): Promise<void> => {
+export const writeClient = async (client: Client, templates: Templates, options: Config): Promise<void> => {
     const outputPath = path.resolve(process.cwd(), options.output);
 
     if (!isSubDirectory(process.cwd(), options.output)) {
@@ -51,18 +47,6 @@ export const writeClient = async (
         await writeClientCore(client, templates, outputPathCore, options);
     }
 
-    if (options.exportServices) {
-        const outputPathServices = path.resolve(outputPath, 'services');
-        await rmSync(outputPathServices, {
-            force: true,
-            recursive: true,
-        });
-        await mkdirSync(outputPathServices, {
-            recursive: true,
-        });
-        await writeClientServices(client, templates, outputPathServices, options);
-    }
-
     if (options.exportSchemas) {
         const outputPathSchemas = path.resolve(outputPath, 'schemas');
         await rmSync(outputPathSchemas, {
@@ -85,6 +69,18 @@ export const writeClient = async (
             recursive: true,
         });
         await writeClientModels(client, templates, outputPathModels, options);
+    }
+
+    if (options.exportServices) {
+        const outputPathServices = path.resolve(outputPath, 'services');
+        await rmSync(outputPathServices, {
+            force: true,
+            recursive: true,
+        });
+        await mkdirSync(outputPathServices, {
+            recursive: true,
+        });
+        await writeClientServices(client, templates, outputPathServices, options);
     }
 
     if (options.clientName) {

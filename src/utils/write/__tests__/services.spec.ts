@@ -43,12 +43,22 @@ describe('writeClientServices', () => {
         };
 
         await writeClientServices(client, templates, '/', {
+            autoformat: false,
             client: 'fetch',
+            enums: false,
+            exportCore: true,
+            exportModels: true,
+            exportSchemas: true,
+            exportServices: true,
             input: '',
+            operationId: true,
             output: '',
+            postfixModels: '',
             postfixServices: 'Service',
             serviceResponse: 'body',
+            useDateType: false,
             useOptions: false,
+            write: true,
         });
 
         expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/UserService.ts'), 'service');

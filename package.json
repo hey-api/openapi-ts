@@ -53,10 +53,10 @@
         "eslint:fix": "eslint . --fix",
         "eslint": "eslint .",
         "prepublishOnly": "npm run build",
-        "run": "node ./test/index.js",
         "test": "jest --selectProjects UNIT",
         "test:coverage": "jest --selectProjects UNIT --coverage",
         "test:e2e": "jest --selectProjects E2E --runInBand --verbose",
+        "test:sample": "node test/sample.cjs",
         "test:update": "jest --selectProjects UNIT --updateSnapshot",
         "test:watch": "jest --selectProjects UNIT --watch",
         "typecheck": "tsc --noEmit"

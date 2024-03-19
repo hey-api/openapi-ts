@@ -14,6 +14,38 @@
             "tags": [],
             "get": {
                 "operationId": "ServiceWithEmptyTag"
+            },
+            "post": {
+                "operationId": "PostServiceWithEmptyTag",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "oneOf": [
+                                    {
+                                        "$ref": "#/components/schemas/ModelWithReadOnlyAndWriteOnly"
+                                    },
+                                    {
+                                        "$ref": "#/components/schemas/ModelWithArrayReadOnlyAndWriteOnly"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ModelWithReadOnlyAndWriteOnly"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/api/v{api-version}/simple": {
@@ -2129,6 +2161,30 @@
                     }
                 }
             },
+            "ModelWithArrayReadOnlyAndWriteOnly": {
+                "description": "This is a model with one property containing an array",
+                "type": "object",
+                "properties": {
+                    "prop": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ModelWithReadOnlyAndWriteOnly"
+                        }
+                    },
+                    "propWithFile": {
+                        "type": "array",
+                        "items": {
+                            "type": "file"
+                        }
+                    },
+                    "propWithNumber": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        }
+                    }
+                }
+            },
             "ModelWithArray": {
                 "description": "This is a model with one property containing an array",
                 "type": "object",
@@ -3173,6 +3229,27 @@
                                 "$ref": "#/components/schemas/ModelWithNestedArrayEnumsDataFoo"
                             }
                         ]
+                    }
+                }
+            },
+            "ModelWithReadOnlyAndWriteOnly": {
+                "type": "object",
+                "required": [
+                    "foo",
+                    "bar",
+                    "baz"
+                ],
+                "properties": {
+                    "foo": {
+                        "type": "string"
+                    },
+                    "bar": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "baz": {
+                        "type": "string",
+                        "writeOnly": true
                     }
                 }
             }
