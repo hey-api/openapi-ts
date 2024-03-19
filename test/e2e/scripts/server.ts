@@ -1,7 +1,7 @@
+import { Server } from 'node:http';
 import path from 'node:path';
 
 import express, { Express } from 'express';
-import { Server } from 'http';
 
 let _app: Express;
 let _server: Server;
