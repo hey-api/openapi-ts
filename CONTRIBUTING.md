@@ -1,22 +1,36 @@
-# Contributing to Webpack Typings for JSON
+# Contributing to OpenAPI TypeScript Codegen
 
 Thanks for your interest in contributing to this project.
 
-## Pull Request guidelines
+## Development Requirements
 
-Before working on a Pull Request, create an issue explaining what you want to contribute.
-This ensures that your pull request won't go unnoticed, and that you are not contributing
-something that is not suitable for the project.
+-   [git](https://git-scm.com/)
+-   [node](https://nodejs.org/en) (version `18.0` or higher)
+
+## Setting up for Development
+
+For this project we use NPM as our package manager. You can setup and install all dependencies running the following commands:
+
+```sh
+# Enable corepack, it is disabled by default in the supported versions of NodeJS
+corepack enable
+# Prepare corepack based on the packageManager specified in the projects package.json
+corepack prepare
+# Install all dependencies
+npm install
+```
+
+## Pull Request Guidelines
 
 If you are unfamiliar with GitHub Pull Requests, please read the following documentation:
 https://help.github.com/articles/using-pull-requests
 
 **Your Pull Request must:**
 
-* Address a single issue or add a single item of functionality.
-* Contain a clean history of small, incremental, logically separate commits, with no merge commits.
-* Use clear commit messages.
-* Be possible to merge automatically.
+-   Address a single issue or add a single item of functionality.
+-   Contain a clean history of small, incremental, logically separate commits, with no merge commits.
+-   Use clear commit messages.
+-   Be possible to merge automatically.
 
 ## Submitting a Pull Request
 
@@ -27,5 +41,4 @@ https://help.github.com/articles/using-pull-requests
 5. Ensure the code is formatted by running: `npm run eslint:fix`
 6. Commit your changes using a descriptive commit message
 
-After your Pull Request is created, it will automatically be build using Circle CI.
-When the build is successful then the Pull Request is ready for review.
+After your Pull Request is created, it will automatically be build and tested in GitHub actions. Once successful it will be ready for review.
