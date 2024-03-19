@@ -1,5 +1,5 @@
 import type { Client } from '../../client/interfaces/Client';
-import type { Config } from '../../node';
+import type { Config } from '../../types/config';
 import type { OpenApi } from './interfaces/OpenApi';
 import { getModels } from './parser/getModels';
 import { getServer } from './parser/getServer';
@@ -12,10 +12,7 @@ import { getServiceVersion } from './parser/service';
  * @param openApi The OpenAPI spec that we have loaded from disk.
  * @param options Options passed to the generate method
  */
-export const parse = (
-    openApi: OpenApi,
-    options: Pick<Required<Config>, 'operationId'> & Omit<Config, 'operationId'>
-): Client => {
+export const parse = (openApi: OpenApi, options: Config): Client => {
     const version = getServiceVersion(openApi.info.version);
     const server = getServer(openApi);
     const models = getModels(openApi);

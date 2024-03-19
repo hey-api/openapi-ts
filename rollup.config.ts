@@ -50,6 +50,7 @@ function handlebarsPlugin(): Plugin {
                         modelUnionType: true,
                         nameOperationDataType: true,
                         notEquals: true,
+                        operationDataType: true,
                         useDateType: true,
                     },
                     knownHelpersOnly: true,
