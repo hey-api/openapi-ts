@@ -37,6 +37,11 @@ const formatClient = (options: Config, dependencies: Dependencies) => {
         console.log('✨ Running Prettier');
         sync('prettier', ['--ignore-unknown', options.output, '--write', '--ignore-path', './.prettierignore']);
     }
+
+    if (dependencies.eslint) {
+        console.log('✨ Running Eslint');
+        sync('eslint', [options.output, '--fix', '--quiet', '--ignore-path', './.eslintignore']);
+    }
 };
 
 const inferClient = (dependencies: Dependencies): Config['client'] => {
