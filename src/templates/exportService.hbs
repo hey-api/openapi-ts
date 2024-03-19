@@ -37,22 +37,7 @@ import { request as __request } from '../core/request';
 {{/if}}
 {{/if}}
 
-{{#if @root.$config.useOptions}}
-{{#each operations}}
-{{#if parameters}}
-export type {{{nameOperationDataType name}}} = {
-{{#each parameters}}
-{{#if description}}
-/**
- * {{{escapeComment description}}}
- */
-{{/if}}
-{{{name}}}{{>isRequired}}: {{>type}},
-{{/each}}
-}
-{{/if}}
-{{/each}}
-{{/if}}
+{{{operationDataType this}}}
 
 {{#equals @root.$config.client 'angular'}}
 @Injectable({

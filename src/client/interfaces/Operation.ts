@@ -6,7 +6,7 @@ export interface Operation extends OperationParameters {
     deprecated: boolean;
     description: string | null;
     errors: OperationError[];
-    method: string;
+    method: 'DELETE' | 'GET' | 'HEAD' | 'OPTIONS' | 'PATCH' | 'POST' | 'PUT';
     /**
      * Method name. Methods contain the request logic.
      */
