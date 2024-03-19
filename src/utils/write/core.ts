@@ -2,9 +2,9 @@ import { copyFileSync, existsSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import type { Client } from '../../client/interfaces/Client';
-import type { Config } from '../../node';
+import type { UserConfig } from '../../node';
 import { getHttpRequestName } from '../getHttpRequestName';
-import type { Templates } from '../registerHandlebarTemplates';
+import type { Templates } from '../handlebars';
 
 /**
  * Generate OpenAPI core files, this includes the basic boilerplate code to handle requests.
@@ -17,7 +17,7 @@ export const writeClientCore = async (
     client: Client,
     templates: Templates,
     outputPath: string,
-    options: Pick<Required<Config>, 'client' | 'serviceResponse'> & Omit<Config, 'client' | 'serviceResponse'>
+    options: Pick<Required<UserConfig>, 'client' | 'serviceResponse'> & Omit<UserConfig, 'client' | 'serviceResponse'>
 ): Promise<void> => {
     const context = {
         httpRequest: getHttpRequestName(options.client),

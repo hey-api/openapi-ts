@@ -1,6 +1,6 @@
-import type { Model } from '../client/interfaces/Model';
-import type { Service } from '../client/interfaces/Service';
-import { sortByName } from './sortByName';
+import type { Model } from '../../client/interfaces/Model';
+import type { Service } from '../../client/interfaces/Service';
+import { sortByName } from '../sortByName';
 
 describe('sortByName', () => {
     it('should handle empty lists', () => {

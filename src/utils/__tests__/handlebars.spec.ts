@@ -1,18 +1,10 @@
 import Handlebars from 'handlebars/runtime';
 
-import { registerHandlebarHelpers } from '../registerHandlebarHelpers';
+import { registerHandlebarHelpers, registerHandlebarTemplates } from '../handlebars';
 
 describe('registerHandlebarHelpers', () => {
     it('should register the helpers', () => {
         registerHandlebarHelpers(
-            {
-                info: {
-                    title: '',
-                    version: '',
-                },
-                openapi: '',
-                paths: {},
-            },
             {
                 autoformat: true,
                 client: 'fetch',
@@ -30,6 +22,12 @@ describe('registerHandlebarHelpers', () => {
                 useDateType: false,
                 useOptions: false,
                 write: true,
+            },
+            {
+                models: [],
+                server: '',
+                services: [],
+                version: '',
             }
         );
         const helpers = Object.keys(Handlebars.helpers);
@@ -51,6 +49,47 @@ describe('registerHandlebarHelpers', () => {
         expect(helpers).toContain('modelUnionType');
         expect(helpers).toContain('nameOperationDataType');
         expect(helpers).toContain('notEquals');
+        expect(helpers).toContain('operationDataType');
         expect(helpers).toContain('useDateType');
+    });
+});
+
+describe('registerHandlebarTemplates', () => {
+    it('should return correct templates', () => {
+        const templates = registerHandlebarTemplates(
+            {
+                autoformat: true,
+                client: 'fetch',
+                enums: true,
+                exportCore: true,
+                exportModels: true,
+                exportSchemas: true,
+                exportServices: true,
+                input: '',
+                operationId: true,
+                output: '',
+                postfixModels: '',
+                postfixServices: '',
+                serviceResponse: 'body',
+                useDateType: false,
+                useOptions: false,
+                write: true,
+            },
+            {
+                models: [],
+                server: '',
+                services: [],
+                version: '',
+            }
+        );
+        expect(templates.index).toBeDefined();
+        expect(templates.exports.model).toBeDefined();
+        expect(templates.exports.schema).toBeDefined();
+        expect(templates.exports.service).toBeDefined();
+        expect(templates.core.settings).toBeDefined();
+        expect(templates.core.apiError).toBeDefined();
+        expect(templates.core.apiRequestOptions).toBeDefined();
+        expect(templates.core.apiResult).toBeDefined();
+        expect(templates.core.request).toBeDefined();
     });
 });
