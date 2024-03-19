@@ -1,6 +1,6 @@
 import type { Operation } from '../../../client/interfaces/Operation';
 import type { OperationParameters } from '../../../client/interfaces/OperationParameters';
-import type { Config } from '../../../node';
+import type { Config } from '../../../types/config';
 import { getOperationName } from '../../../utils/operation';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiOperation } from '../interfaces/OpenApiOperation';
@@ -15,11 +15,11 @@ import { sortByRequired } from './sortByRequired';
 export const getOperation = (
     openApi: OpenApi,
     url: string,
-    method: string,
+    method: Lowercase<Operation['method']>,
     tag: string,
     op: OpenApiOperation,
     pathParams: OperationParameters,
-    options: Pick<Required<Config>, 'operationId'> & Omit<Config, 'operationId'>
+    options: Config
 ): Operation => {
     const serviceName = getServiceName(tag);
     const name = getOperationName(url, method, options, op.operationId);
@@ -32,7 +32,7 @@ export const getOperation = (
         summary: op.summary || null,
         description: op.description || null,
         deprecated: op.deprecated === true,
-        method: method.toUpperCase(),
+        method: method.toUpperCase() as Operation['method'],
         path: url,
         parameters: [...pathParams.parameters],
         parametersPath: [...pathParams.parametersPath],

@@ -66,7 +66,7 @@ and add a script to your `package.json` file
 `openapi-ts` supports loading configuration from a file inside your project root directory. You just need to create a `openapi-ts.config.js` file
 
 ```js
-/** @type {import('@nicolas-chaulet/openapi-typescript-codegen').Config} */
+/** @type {import('@nicolas-chaulet/openapi-typescript-codegen').UserConfig} */
 export default {
   input: 'path/to/openapi.json',
   output: 'src/client',

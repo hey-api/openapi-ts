@@ -1,5 +1,5 @@
 import type { Service } from '../../../client/interfaces/Service';
-import type { Config } from '../../../node';
+import type { Config } from '../../../types/config';
 import { unique } from '../../../utils/unique';
 import type { OpenApi } from '../interfaces/OpenApi';
 import { getOperation } from './getOperation';
@@ -8,10 +8,7 @@ import { getOperationParameters } from './getOperationParameters';
 /**
  * Get the OpenAPI services
  */
-export const getServices = (
-    openApi: OpenApi,
-    options: Pick<Required<Config>, 'operationId'> & Omit<Config, 'operationId'>
-): Service[] => {
+export const getServices = (openApi: OpenApi, options: Config): Service[] => {
     const services = new Map<string, Service>();
     for (const url in openApi.paths) {
         if (openApi.paths.hasOwnProperty(url)) {

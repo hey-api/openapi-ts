@@ -1,6 +1,6 @@
 import type { Operation } from '../../../client/interfaces/Operation';
 import type { Service } from '../../../client/interfaces/Service';
-import type { Config } from '../../../node';
+import type { Config } from '../../../types/config';
 import { unique } from '../../../utils/unique';
 import type { OpenApi } from '../interfaces/OpenApi';
 import { getOperationParameters } from './getOperationParameters';
@@ -14,10 +14,7 @@ const getNewService = (operation: Operation): Service => ({
     operations: [],
 });
 
-export const getServices = (
-    openApi: OpenApi,
-    options: Pick<Required<Config>, 'operationId'> & Omit<Config, 'operationId'>
-): Service[] => {
+export const getServices = (openApi: OpenApi, options: Config): Service[] => {
     const services = new Map<string, Service>();
 
     for (const url in openApi.paths) {
@@ -25,7 +22,7 @@ export const getServices = (
         const pathParams = getOperationParameters(openApi, path.parameters ?? []);
 
         for (const key in path) {
-            const method = key as (typeof allowedServiceMethods)[number];
+            const method = key as Lowercase<Operation['method']>;
             if (allowedServiceMethods.includes(method)) {
                 const op = path[method]!;
                 const tags = op.tags?.length ? op.tags.filter(unique) : ['Default'];
