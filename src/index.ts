@@ -4,9 +4,9 @@ import { pathToFileURL } from 'node:url';
 
 import { sync } from 'cross-spawn';
 
-import type { Client } from './client/interfaces/Client';
 import { parse as parseV2 } from './openApi/v2';
 import { parse as parseV3 } from './openApi/v3';
+import type { Client } from './types/client';
 import type { Config, UserConfig } from './types/config';
 import { getOpenApiSpec } from './utils/getOpenApiSpec';
 import { registerHandlebarTemplates } from './utils/handlebars';

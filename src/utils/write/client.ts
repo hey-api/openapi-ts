@@ -1,7 +1,7 @@
 import { mkdirSync, rmSync } from 'node:fs';
 import path from 'node:path';
 
-import type { Client } from '../../client/interfaces/Client';
+import type { Client } from '../../types/client';
 import type { Config } from '../../types/config';
 import type { Templates } from '../handlebars';
 import { isSubDirectory } from '../isSubdirectory';

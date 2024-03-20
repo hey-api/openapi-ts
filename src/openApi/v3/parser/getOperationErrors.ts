@@ -1,5 +1,4 @@
-import type { OperationError } from '../../../client/interfaces/OperationError';
-import type { OperationResponse } from '../../../client/interfaces/OperationResponse';
+import type { OperationError, OperationResponse } from '../../../types/client';
 
 export const getOperationErrors = (operationResponses: OperationResponse[]): OperationError[] =>
     operationResponses

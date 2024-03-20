@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import sanitizeTypeName from './sanitizeTypeName';
+import sanitizeTypeName from '../sanitizeTypeName';
 
 describe('sanitizeTypeName', () => {
     it('should remove/replace illegal characters', () => {

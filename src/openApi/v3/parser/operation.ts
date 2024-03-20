@@ -1,6 +1,4 @@
-import type { Operation } from '../../../client/interfaces/Operation';
-import type { OperationParameter } from '../../../client/interfaces/OperationParameter';
-import type { OperationParameters } from '../../../client/interfaces/OperationParameters';
+import type { Operation, OperationParameter, OperationParameters } from '../../../types/client';
 import type { Config } from '../../../types/config';
 import { getOperationName } from '../../../utils/operation';
 import type { OpenApi } from '../interfaces/OpenApi';

@@ -1,6 +1,6 @@
-import type { Model } from '../client/interfaces/Model';
 import type { OpenApi } from '../openApi/v3/interfaces/OpenApi';
 import type { OpenApiDiscriminator } from '../openApi/v3/interfaces/OpenApiDiscriminator';
+import type { Model } from '../types/client';
 import { stripNamespace } from './stripNamespace';
 import type { Dictionary } from './types';
 

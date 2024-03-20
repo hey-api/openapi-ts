@@ -1,4 +1,4 @@
-import type { OperationParameter } from '../../../client/interfaces/OperationParameter';
+import type { OperationParameter } from '../../../types/client';
 import { getPattern } from '../../../utils/getPattern';
 import { getType } from '../../../utils/type';
 import type { OpenApi } from '../interfaces/OpenApi';

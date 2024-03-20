@@ -1,4 +1,4 @@
-import type { OperationResponse } from '../../../client/interfaces/OperationResponse';
+import type { OperationResponse } from '../../../types/client';
 import { getPattern } from '../../../utils/getPattern';
 import { getType } from '../../../utils/type';
 import type { OpenApi } from '../interfaces/OpenApi';
