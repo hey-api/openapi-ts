@@ -19,9 +19,9 @@ const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url)).
 function createConfig(isProduction: boolean) {
     return defineConfig({
         external: [...Object.keys(pkg.dependencies)],
-        input: path.resolve(__dirname, 'src/index.ts'),
+        input: path.resolve(__dirname, 'src/node/index.ts'),
         output: {
-            file: path.resolve(__dirname, 'dist/index.js'),
+            file: path.resolve(__dirname, 'dist/node/index.js'),
             format: 'esm',
         },
         plugins: [
