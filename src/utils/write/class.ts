@@ -20,7 +20,7 @@ export const writeClientClass = async (
     client: Client,
     templates: Templates,
     outputPath: string,
-    options: Pick<Required<UserConfig>, 'client' | 'clientName' | 'enums' | 'postfixServices'>
+    options: Pick<Required<UserConfig>, 'client' | 'enums' | 'name' | 'postfixServices'>
 ): Promise<void> => {
     const templateResult = templates.client({
         $config: options,
@@ -31,5 +31,5 @@ export const writeClientClass = async (
         version: client.version,
     });
 
-    await writeFileSync(path.resolve(outputPath, `${options.clientName}.ts`), templateResult);
+    await writeFileSync(path.resolve(outputPath, `${options.name}.ts`), templateResult);
 };

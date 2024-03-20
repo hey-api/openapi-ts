@@ -1,10 +1,10 @@
-{{#if @root.$config.clientName}}
-export { {{{@root.$config.clientName}}} } from './{{{@root.$config.clientName}}}';
+{{#if @root.$config.name}}
+export { {{{@root.$config.name}}} } from './{{{@root.$config.name}}}';
 {{/if}}
 
 {{#if @root.$config.exportCore}}
 export { ApiError } from './core/ApiError';
-{{#if @root.$config.clientName}}
+{{#if @root.$config.name}}
 export { BaseHttpRequest } from './core/BaseHttpRequest';
 {{/if}}
 export { CancelablePromise, CancelError } from './core/CancelablePromise';
