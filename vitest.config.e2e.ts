@@ -2,7 +2,7 @@ import { fileURLToPath } from 'node:url';
 
 import { defineConfig } from 'vitest/config';
 
-import { handlebarsPlugin } from './handlebars';
+import { handlebarsPlugin } from './rollup.config';
 
 export default defineConfig({
     plugins: [handlebarsPlugin()],
