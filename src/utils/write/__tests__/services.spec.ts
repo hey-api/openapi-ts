@@ -43,14 +43,15 @@ describe('writeClientServices', () => {
         };
 
         await writeClientServices(client, templates, '/', {
-            autoformat: false,
             client: 'fetch',
             enums: false,
             exportCore: true,
             exportModels: true,
             exportSchemas: true,
             exportServices: true,
+            format: false,
             input: '',
+            lint: false,
             operationId: true,
             output: '',
             postfixModels: '',

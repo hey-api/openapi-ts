@@ -19,29 +19,29 @@ type Dependencies = Record<string, unknown>;
 // add support for `openapi-ts.config.ts`
 const configFiles = ['openapi-ts.config.js'];
 
-export const parseOpenApiSpecification = (openApi: Awaited<ReturnType<typeof getOpenApiSpec>>, options: Config) => {
-    if ('swagger' in openApi) {
-        return parseV2(openApi, options);
-    }
+export const parseOpenApiSpecification = (openApi: Awaited<ReturnType<typeof getOpenApiSpec>>, config: Config) => {
     if ('openapi' in openApi) {
-        return parseV3(openApi, options);
+        return parseV3(openApi, config);
+    }
+    if ('swagger' in openApi) {
+        return parseV2(openApi, config);
     }
     throw new Error(`Unsupported Open API specification: ${JSON.stringify(openApi, null, 2)}`);
 };
 
-const formatClient = (options: Config, dependencies: Dependencies) => {
-    if (!options.autoformat) {
-        return;
+const processOutput = (config: Config, dependencies: Dependencies) => {
+    if (config.format) {
+        if (dependencies.prettier) {
+            console.log('✨ Running Prettier');
+            sync('prettier', ['--ignore-unknown', config.output, '--write', '--ignore-path', './.prettierignore']);
+        }
     }
 
-    if (dependencies.prettier) {
-        console.log('✨ Running Prettier');
-        sync('prettier', ['--ignore-unknown', options.output, '--write', '--ignore-path', './.prettierignore']);
-    }
-
-    if (dependencies.eslint) {
-        console.log('✨ Running Eslint');
-        sync('eslint', [options.output, '--fix', '--quiet', '--ignore-path', './.eslintignore']);
+    if (config.lint) {
+        if (dependencies.eslint) {
+            console.log('✨ Running ESLint');
+            sync('eslint', [config.output, '--fix', '--quiet', '--ignore-path', './.eslintignore']);
+        }
     }
 };
 
@@ -89,14 +89,15 @@ const getConfig = async (userConfig: UserConfig, dependencies: Dependencies) => 
     }
 
     const {
-        autoformat = true,
         base,
         enums = false,
         exportCore = true,
         exportModels = true,
         exportSchemas = false,
         exportServices = true,
+        format = true,
         input,
+        lint = false,
         name,
         operationId = true,
         output,
@@ -112,7 +113,6 @@ const getConfig = async (userConfig: UserConfig, dependencies: Dependencies) => 
     const client = userConfig.client || inferClient(dependencies);
 
     const config: Config = {
-        autoformat,
         base,
         client,
         enums,
@@ -120,7 +120,9 @@ const getConfig = async (userConfig: UserConfig, dependencies: Dependencies) => 
         exportModels,
         exportSchemas,
         exportServices,
+        format,
         input,
+        lint,
         name,
         operationId,
         output,
@@ -174,7 +176,7 @@ export async function createClient(userConfig: UserConfig): Promise<Client> {
     if (config.write) {
         logClientMessage(config.client);
         await writeClient(client, templates, config);
-        formatClient(config, dependencies);
+        processOutput(config, dependencies);
     }
 
     console.log('✨ Done! Your client is located in:', config.output);
