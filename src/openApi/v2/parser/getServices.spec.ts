@@ -3,14 +3,15 @@ import { getServices } from './getServices';
 describe('getServices', () => {
     it('should create a unnamed service if tags are empty', () => {
         const options: Parameters<typeof getServices>[1] = {
-            autoformat: false,
             client: 'fetch',
             enums: false,
             exportCore: true,
             exportModels: true,
             exportSchemas: true,
             exportServices: true,
+            format: false,
             input: '',
+            lint: false,
             operationId: false,
             output: '',
             postfixModels: '',

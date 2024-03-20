@@ -134,7 +134,7 @@ describe('bin', () => {
         expect(result.stderr.toString()).toBe('');
     });
 
-    it('autoformats output with Prettier', async () => {
+    it('formats output with Prettier', async () => {
         const result = sync('node', [
             './bin/index.js',
             '--input',
@@ -146,15 +146,16 @@ describe('bin', () => {
         expect(result.stderr.toString()).toBe('');
     });
 
-    it('auto fixs output with Eslint', async () => {
+    it('lints output with ESLint', async () => {
         const result = sync('node', [
             './bin/index.js',
             '--input',
             './test/spec/v3.json',
             '--output',
             './test/generated/bin',
+            '--lint',
         ]);
-        expect(result.stdout.toString()).toContain('Eslint');
+        expect(result.stdout.toString()).toContain('ESLint');
         expect(result.stderr.toString()).toBe('');
     });
 
