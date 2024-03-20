@@ -14,7 +14,7 @@ export const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptio
 		...options.headers,
 		...formHeaders,
 	})
-	.filter(([_, value]) => value)
+	.filter(([_, value]) => value !== undefined && value !== null)
 	.reduce((headers, [key, value]) => ({
 		...headers,
 		[key]: String(value),
