@@ -10,9 +10,6 @@ const getUrl = (config: OpenAPIConfig, options: ApiRequestOptions): string => {
 			return substring;
 		});
 
-	const url = `${config.BASE}${path}`;
-	if (options.query) {
-		return `${url}${getQueryString(options.query)}`;
-	}
-	return url;
+	const url = config.BASE + path;
+	return options.query ? url + getQueryString(options.query) : url;
 };
