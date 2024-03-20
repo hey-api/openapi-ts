@@ -150,7 +150,7 @@ const debugThis = (value: unknown) => {
 // same as `>isRequired` partial
 const isRequired = (model: Pick<Model, 'default' | 'isRequired'>) => (model.isRequired && !model.default ? '' : '?');
 
-const nameOperationDataType = (value: string) => camelCase(['TData', value].join('-'), { pascalCase: true });
+const nameOperationDataType = (value: string) => camelCase(['T', 'Data', value].join('-'), { pascalCase: true });
 
 const operationDataType = (config: Config, service: Service) => {
     if (!config.useOptions) {
