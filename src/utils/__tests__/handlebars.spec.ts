@@ -7,14 +7,15 @@ describe('registerHandlebarHelpers', () => {
     it('should register the helpers', () => {
         registerHandlebarHelpers(
             {
-                autoformat: true,
                 client: 'fetch',
                 enums: true,
                 exportCore: true,
                 exportModels: true,
                 exportSchemas: true,
                 exportServices: true,
+                format: true,
                 input: '',
+                lint: false,
                 operationId: true,
                 output: '',
                 postfixModels: '',
@@ -59,14 +60,15 @@ describe('registerHandlebarTemplates', () => {
     it('should return correct templates', () => {
         const templates = registerHandlebarTemplates(
             {
-                autoformat: true,
                 client: 'fetch',
                 enums: true,
                 exportCore: true,
                 exportModels: true,
                 exportSchemas: true,
                 exportServices: true,
+                format: true,
                 input: '',
+                lint: false,
                 operationId: true,
                 output: '',
                 postfixModels: '',

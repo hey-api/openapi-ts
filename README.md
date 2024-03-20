@@ -10,6 +10,7 @@
 - [Installation](#installation)
 - [Configuration](#configuration)
   - [Formatting](#formatting)
+  - [Linting](#linting)
   - [Enums](#enums)
   - [Config API](#config-api)
 - [Contributing](#contributing)
@@ -97,19 +98,35 @@ export default defineConfig({
 
 ### Formatting
 
-By default, `openapi-ts` will automatically format your client according to your project configuration. To disable automatic formatting, set `autoformat` to false
+By default, `openapi-ts` will automatically format your client according to your project configuration. To disable automatic formatting, set `format` to false
 
 ```ts
 import { defineConfig } from '@nicolas-chaulet/openapi-typescript-codegen';
 
 export default defineConfig({
-  autoformat: false,
+  format: false,
   input: 'path/to/openapi.json',
   output: 'src/client',
 })
 ```
 
-You can also prevent your client from being processed by formatters and linters by adding your output path to the tool's ignore file (e.g. `.eslintignore`, `.prettierignore`).
+You can also prevent your client from being processed by formatters by adding your output path to the tool's ignore file (e.g. `.prettierignore`).
+
+### Linting
+
+For performance reasons, `openapi-ts` does not automatically lint your client. To enable this feature, set `lint` to true
+
+```ts
+import { defineConfig } from '@nicolas-chaulet/openapi-typescript-codegen';
+
+export default defineConfig({
+  input: 'path/to/openapi.json',
+  lint: true,
+  output: 'src/client',
+})
+```
+
+You can also prevent your client from being processed by linters by adding your output path to the tool's ignore file (e.g. `.eslintignore`).
 
 ### Enums
 
@@ -148,13 +165,16 @@ $ openapi-ts --help
     -c, --client <value>      HTTP client to generate [fetch, xhr, node, axios, angular] (default: "fetch")
     --name <value>            Custom client class name
     --useOptions <value>      Use options instead of arguments (default: false)
-    --no-autoformat           Disable processing generated files with formatter
     --base <value>            Manually set base in OpenAPI config instead of inferring from server value
     --enums                   Generate JavaScript objects from enum definitions (default: false)
     --exportCore <value>      Write core files to disk (default: true)
     --exportServices <value>  Write services to disk [true, false, regexp] (default: true)
     --exportModels <value>    Write models to disk [true, false, regexp] (default: true)
     --exportSchemas <value>   Write schemas to disk (default: false)
+    --format                  Process output folder with formatter?
+    --no-format               Disable processing output folder with formatter
+    --lint                    Process output folder with linter?
+    --no-lint                 Disable processing output folder with linter
     --no-operationId          Use path URL to generate operation ID
     --postfixServices         Service name postfix (default: "Service")
     --postfixModels           Model name postfix
