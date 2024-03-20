@@ -42,14 +42,15 @@ describe('parseOpenApiSpecification', () => {
     });
 
     const options: Parameters<typeof parseOpenApiSpecification>[1] = {
-        autoformat: true,
         client: 'fetch',
         enums: true,
         exportCore: true,
         exportModels: true,
         exportSchemas: true,
         exportServices: true,
+        format: true,
         input: '',
+        lint: false,
         operationId: true,
         output: '',
         postfixModels: '',

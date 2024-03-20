@@ -1,10 +1,5 @@
 export interface UserConfig {
     /**
-     * Process generated files with autoformatter
-     * @default true
-     */
-    autoformat?: boolean;
-    /**
      * Manually set base in OpenAPI config instead of inferring from server value
      */
     base?: string;
@@ -39,9 +34,19 @@ export interface UserConfig {
      */
     exportServices?: boolean | string;
     /**
+     * Process output folder with formatter?
+     * @default true
+     */
+    format?: boolean;
+    /**
      * The relative location of the OpenAPI spec
      */
     input: string | Record<string, unknown>;
+    /**
+     * Process output folder with linter?
+     * @default false
+     */
+    lint?: boolean;
     /**
      * Custom client class name
      */
