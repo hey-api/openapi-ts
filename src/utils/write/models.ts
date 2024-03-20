@@ -1,8 +1,8 @@
 import { writeFileSync } from 'node:fs';
 import path from 'node:path';
 
-import type { Client } from '../../client/interfaces/Client';
-import type { UserConfig } from '../../node';
+import type { Client } from '../../types/client';
+import type { UserConfig } from '../../types/config';
 import type { Templates } from '../handlebars';
 
 /**

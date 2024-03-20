@@ -2,7 +2,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { isSubDirectory } from './isSubdirectory';
+import { isSubDirectory } from '../isSubdirectory';
 
 describe('isSubDirectory', () => {
     it('should return correct result', () => {

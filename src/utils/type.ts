@@ -1,4 +1,4 @@
-import type { Type } from '../client/interfaces/Type';
+import type { Type } from '../types/client';
 import sanitizeTypeName from './sanitizeTypeName';
 import { stripNamespace } from './stripNamespace';
 
