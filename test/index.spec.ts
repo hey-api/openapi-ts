@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 
 import { sync } from 'glob';
+import { describe, expect, it } from 'vitest';
 
 import { createClient } from '../';
 

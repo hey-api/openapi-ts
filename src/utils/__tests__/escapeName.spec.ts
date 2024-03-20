@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { escapeName, unescapeName } from '../escapeName';
 
 const data = [

@@ -16,7 +16,7 @@ import { defineConfig } from 'rollup';
  * the template on the fly. This reduces runtime by about
  * half on large projects.
  */
-function handlebarsPlugin(): Plugin {
+export function handlebarsPlugin(): Plugin {
     return {
         name: 'handlebars',
         resolveId: (file: any, importer: any) => {
