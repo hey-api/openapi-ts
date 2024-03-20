@@ -146,6 +146,18 @@ describe('bin', () => {
         expect(result.stderr.toString()).toBe('');
     });
 
+    it('auto fixs output with Eslint', async () => {
+        const result = sync('node', [
+            './bin/index.js',
+            '--input',
+            './test/spec/v3.json',
+            '--output',
+            './test/generated/bin',
+        ]);
+        expect(result.stdout.toString()).toContain('Eslint');
+        expect(result.stderr.toString()).toBe('');
+    });
+
     it('throws error without parameters', async () => {
         const result = sync('node', ['./bin/index.js', '--no-write']);
         expect(result.stdout.toString()).toBe('');
