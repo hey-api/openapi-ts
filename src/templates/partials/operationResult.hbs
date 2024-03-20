@@ -2,7 +2,7 @@
 {{~#notEquals @root.$config.serviceResponse 'generics'~}}
 {{~#equals @root.$config.serviceResponse 'response'}}ApiResult<{{/equals~}}
 {{~else~}}
-{{~#unless @root.$config.clientName}}TApiResponse<T, {{/unless~}}
+{{~#unless @root.$config.name}}TApiResponse<T, {{/unless~}}
 {{~/notEquals~}}
 {{~/if~}}
 {{~#if results~}}
@@ -14,6 +14,6 @@ void
 {{~#notEquals @root.$config.serviceResponse 'generics'~}}
 {{~#equals @root.$config.serviceResponse 'response'}}>{{/equals~}}
 {{~else~}}
-{{~#unless @root.$config.clientName}}>{{/unless~}}
+{{~#unless @root.$config.name}}>{{/unless~}}
 {{~/notEquals~}}
 {{~/if~}}

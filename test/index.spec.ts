@@ -2,11 +2,11 @@ import { readFileSync } from 'node:fs';
 
 import { sync } from 'glob';
 
-import { generate } from '../';
+import { createClient } from '../';
 
 describe('v2', () => {
     it('should generate', async () => {
-        await generate({
+        await createClient({
             client: 'fetch',
             enums: true,
             exportCore: true,
@@ -27,7 +27,7 @@ describe('v2', () => {
 
 describe('v3', () => {
     it('should generate', async () => {
-        await generate({
+        await createClient({
             client: 'fetch',
             enums: true,
             exportCore: true,
@@ -46,7 +46,7 @@ describe('v3', () => {
     });
 
     it('should generate Date types', async () => {
-        await generate({
+        await createClient({
             client: 'fetch',
             enums: true,
             exportCore: false,
@@ -66,7 +66,7 @@ describe('v3', () => {
     });
 
     it('should generate optional argument', async () => {
-        await generate({
+        await createClient({
             client: 'fetch',
             enums: true,
             exportCore: true,
