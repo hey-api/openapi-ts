@@ -331,7 +331,7 @@ export const getFormData = (options: ApiRequestOptions): FormData | undefined =>
         };
 
         Object.entries(options.formData)
-            .filter(([_, value]) => value)
+            .filter(([_, value]) => value !== undefined && value !== null)
             .forEach(([key, value]) => {
                 if (Array.isArray(value)) {
                     value.forEach(v => process(key, v));
@@ -367,7 +367,7 @@ export const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptio
         ...additionalHeaders,
         ...options.headers,
     })
-        .filter(([_, value]) => value)
+        .filter(([_, value]) => value !== undefined && value !== null)
         .reduce(
             (headers, [key, value]) => ({
                 ...headers,
@@ -3298,7 +3298,7 @@ export const getFormData = (options: ApiRequestOptions): FormData | undefined =>
         };
 
         Object.entries(options.formData)
-            .filter(([_, value]) => value)
+            .filter(([_, value]) => value !== undefined && value !== null)
             .forEach(([key, value]) => {
                 if (Array.isArray(value)) {
                     value.forEach(v => process(key, v));
@@ -3334,7 +3334,7 @@ export const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptio
         ...additionalHeaders,
         ...options.headers,
     })
-        .filter(([_, value]) => value)
+        .filter(([_, value]) => value !== undefined && value !== null)
         .reduce(
             (headers, [key, value]) => ({
                 ...headers,
@@ -8378,7 +8378,7 @@ export const getFormData = (options: ApiRequestOptions): FormData | undefined =>
         };
 
         Object.entries(options.formData)
-            .filter(([_, value]) => value)
+            .filter(([_, value]) => value !== undefined && value !== null)
             .forEach(([key, value]) => {
                 if (Array.isArray(value)) {
                     value.forEach(v => process(key, v));
@@ -8414,7 +8414,7 @@ export const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptio
         ...additionalHeaders,
         ...options.headers,
     })
-        .filter(([_, value]) => value)
+        .filter(([_, value]) => value !== undefined && value !== null)
         .reduce(
             (headers, [key, value]) => ({
                 ...headers,
