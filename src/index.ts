@@ -4,6 +4,7 @@ import { pathToFileURL } from 'node:url';
 
 import { sync } from 'cross-spawn';
 
+import type { Client } from './client/interfaces/Client';
 import { parse as parseV2 } from './openApi/v2';
 import { parse as parseV3 } from './openApi/v3';
 import type { Config, UserConfig } from './types/config';
@@ -84,19 +85,19 @@ const getConfigFromFile = async (): Promise<UserConfig | undefined> => {
 const getConfig = async (userConfig: UserConfig, dependencies: Dependencies) => {
     const userConfigFromFile = await getConfigFromFile();
     if (userConfigFromFile) {
-        userConfig = { ...userConfig, ...userConfigFromFile };
+        userConfig = { ...userConfigFromFile, ...userConfig };
     }
 
     const {
         autoformat = true,
         base,
-        clientName,
         enums = false,
         exportCore = true,
         exportModels = true,
         exportSchemas = false,
         exportServices = true,
         input,
+        name,
         operationId = true,
         output,
         postfixModels = '',
@@ -114,13 +115,13 @@ const getConfig = async (userConfig: UserConfig, dependencies: Dependencies) => 
         autoformat,
         base,
         client,
-        clientName,
         enums,
         exportCore,
         exportModels,
         exportSchemas,
         exportServices,
         input,
+        name,
         operationId,
         output,
         postfixModels,
@@ -147,9 +148,9 @@ const getConfig = async (userConfig: UserConfig, dependencies: Dependencies) => 
  * Generate the OpenAPI client. This method will read the OpenAPI specification and based on the
  * given language it will generate the client, including the typed models, validation schemas,
  * service layer, etc.
- * @param userConfig {@link UserConfig} passed to the generate method
+ * @param userConfig {@link UserConfig} passed to the `createClient()` method
  */
-export const generate = async (userConfig: UserConfig): Promise<void> => {
+export async function createClient(userConfig: UserConfig): Promise<Client> {
     const pkg = JSON.parse(readFileSync(path.resolve(process.cwd(), 'package.json')).toString());
 
     const dependencies = [pkg.dependencies, pkg.devDependencies].reduce(
@@ -177,8 +178,17 @@ export const generate = async (userConfig: UserConfig): Promise<void> => {
     }
 
     console.log('✨ Done! Your client is located in:', config.output);
-};
+    return client;
+}
+
+/**
+ * Type helper for openapi-ts.config.ts, returns {@link UserConfig} object
+ */
+export function defineConfig(config: UserConfig): UserConfig {
+    return config;
+}
 
 export default {
-    generate,
+    createClient,
+    defineConfig,
 };

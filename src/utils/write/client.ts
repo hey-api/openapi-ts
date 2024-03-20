@@ -16,7 +16,7 @@ import { writeClientServices } from './services';
  * Write our OpenAPI client, using the given templates at the given output
  * @param client Client containing models, schemas, and services
  * @param templates Templates wrapper with all loaded Handlebars templates
- * @param options {@link Config} passed to the `generate()` function
+ * @param options {@link Config} passed to the `createClient()` method
  */
 export const writeClient = async (client: Client, templates: Templates, options: Config): Promise<void> => {
     const outputPath = path.resolve(process.cwd(), options.output);
@@ -83,13 +83,13 @@ export const writeClient = async (client: Client, templates: Templates, options:
         await writeClientServices(client, templates, outputPathServices, options);
     }
 
-    if (options.clientName) {
+    if (options.name) {
         await mkdirSync(outputPath, {
             recursive: true,
         });
         await writeClientClass(client, templates, outputPath, {
             ...options,
-            clientName: options.clientName,
+            name: options.name,
         });
     }
 

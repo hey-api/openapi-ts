@@ -1,6 +1,5 @@
 dist
 node_modules
-samples
 temp
 test/e2e/generated
 test/generated

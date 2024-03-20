@@ -1,5 +1,5 @@
 {{#equals @root.$config.client 'angular'}}
-{{#if @root.$config.clientName}}
+{{#if @root.$config.name}}
 import { Injectable } from '@angular/core';
 import type { Observable } from 'rxjs';
 {{else}}
@@ -15,7 +15,7 @@ import type { ApiResult } from '../core/ApiResult';
 {{#notEquals @root.$config.client 'angular'}}
 import type { CancelablePromise } from '../core/CancelablePromise';
 {{/notEquals}}
-{{#if @root.$config.clientName}}
+{{#if @root.$config.name}}
 {{#equals @root.$config.client 'angular'}}
 import { BaseHttpRequest } from '../core/BaseHttpRequest';
 {{else}}
@@ -45,7 +45,7 @@ import { request as __request } from '../core/request';
 })
 {{/equals}}
 export class {{{name}}}{{{@root.$config.postfixServices}}} {
-	{{#if @root.$config.clientName}}
+	{{#if @root.$config.name}}
 
 	constructor(public readonly httpRequest: BaseHttpRequest) {}
 	{{else}}
@@ -78,7 +78,7 @@ export class {{{name}}}{{{@root.$config.postfixServices}}} {
 	{{/each}}
 	 * @throws ApiError
 	 */
-	{{#if @root.$config.clientName}}
+	{{#if @root.$config.name}}
 	{{#equals @root.$config.client 'angular'}}
 	public {{{name}}}{{>operationTypes}}({{>operationParameters}}): Observable<{{>operationResult}}> {
 		{{>dataDestructure}}
