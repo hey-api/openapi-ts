@@ -18,7 +18,7 @@ describe('client.axios', () => {
     });
 
     it('requests token', async () => {
-        const { ApiClient } = require('./generated/client/axios/index.js');
+        const { ApiClient } = await import('./generated/client/axios/index.js');
         const tokenRequest = vi.fn().mockResolvedValue('MY_TOKEN');
         const client = new ApiClient({
             TOKEN: tokenRequest,
@@ -27,23 +27,26 @@ describe('client.axios', () => {
         });
         const result = await client.simple.getCallWithoutParametersAndResponse();
         expect(tokenRequest.mock.calls.length).toBe(1);
+        // @ts-ignore
         expect(result.headers.authorization).toBe('Bearer MY_TOKEN');
     });
 
     it('uses credentials', async () => {
-        const { ApiClient } = require('./generated/client/axios/index.js');
+        const { ApiClient } = await import('./generated/client/axios/index.js');
         const client = new ApiClient({
             TOKEN: undefined,
             USERNAME: 'username',
             PASSWORD: 'password',
         });
         const result = await client.simple.getCallWithoutParametersAndResponse();
+        // @ts-ignore
         expect(result.headers.authorization).toBe('Basic dXNlcm5hbWU6cGFzc3dvcmQ=');
     });
 
     it('supports complex params', async () => {
-        const { ApiClient } = require('./generated/client/axios/index.js');
+        const { ApiClient } = await import('./generated/client/axios/index.js');
         const client = new ApiClient();
+        // @ts-ignore
         const result = await client.complex.complexTypes({
             first: {
                 second: {
@@ -55,8 +58,9 @@ describe('client.axios', () => {
     });
 
     it('supports form data', async () => {
-        const { ApiClient } = require('./generated/client/axios/index.js');
+        const { ApiClient } = await import('./generated/client/axios/index.js');
         const client = new ApiClient();
+        // @ts-ignore
         const result = await client.parameters.callWithParameters(
             'valueHeader',
             'valueQuery',
@@ -73,7 +77,7 @@ describe('client.axios', () => {
     it('can abort the request', async () => {
         let error;
         try {
-            const { ApiClient } = require('./generated/client/axios/index.js');
+            const { ApiClient } = await import('./generated/client/axios/index.js');
             const client = new ApiClient();
             const promise = client.simple.getCallWithoutParametersAndResponse();
             setTimeout(() => {
@@ -89,7 +93,7 @@ describe('client.axios', () => {
     it('should throw known error (500)', async () => {
         let error;
         try {
-            const { ApiClient } = require('./generated/client/axios/index.js');
+            const { ApiClient } = await import('./generated/client/axios/index.js');
             const client = new ApiClient();
             await client.error.testErrorCode(500);
         } catch (err) {
@@ -120,7 +124,7 @@ describe('client.axios', () => {
     it('should throw unknown error (409)', async () => {
         let error;
         try {
-            const { ApiClient } = require('./generated/client/axios/index.js');
+            const { ApiClient } = await import('./generated/client/axios/index.js');
             const client = new ApiClient();
             await client.error.testErrorCode(409);
         } catch (err) {

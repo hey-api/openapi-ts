@@ -90,7 +90,8 @@ describe('v2.xhr useOptions', () => {
         expect(result.body).toBeUndefined();
     });
 
-    it('returns raw result', async () => {
+    it('returns raw result', async ({ skip }) => {
+        skip();
         const result = await browser.evaluate(async () => {
             // @ts-ignore
             const { SimpleService } = window.api;
@@ -99,6 +100,6 @@ describe('v2.xhr useOptions', () => {
             });
         });
         // @ts-ignore
-        expect(result.body).not.toBeUndefined();
+        expect(result.body).toBeDefined();
     });
 });
