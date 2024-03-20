@@ -1,4 +1,4 @@
-import type { OperationResponse } from '../../../client/interfaces/OperationResponse';
+import type { OperationResponse } from '../../../types/client';
 
 export const getOperationResponseHeader = (operationResponses: OperationResponse[]): string | null => {
     const header = operationResponses.find(operationResponses => operationResponses.in === 'header');

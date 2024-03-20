@@ -1,8 +1,16 @@
 import { describe, expect, it } from 'vitest';
 
-import type { Model } from '../../client/interfaces/Model';
-import type { Service } from '../../client/interfaces/Service';
-import { sortByName } from '../sortByName';
+import type { Model, Service } from '../../types/client';
+import { sort, sortByName } from '../sort';
+
+describe('sort', () => {
+    it('should return correct index', () => {
+        expect(sort('a', 'b')).toEqual(-1);
+        expect(sort('b', 'a')).toEqual(1);
+        expect(sort('a', 'a')).toEqual(0);
+        expect(sort('', '')).toEqual(0);
+    });
+});
 
 describe('sortByName', () => {
     it('should handle empty lists', () => {

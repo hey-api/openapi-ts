@@ -1,4 +1,4 @@
-import type { Enum } from '../client/interfaces/Enum';
+import type { Enum } from '../types/client';
 import { unescapeName } from './escapeName';
 import { unique } from './unique';
 

@@ -1,4 +1,4 @@
-import type { Service } from '../../../client/interfaces/Service';
+import type { Service } from '../../../types/client';
 import type { Config } from '../../../types/config';
 import { unique } from '../../../utils/unique';
 import type { OpenApi } from '../interfaces/OpenApi';

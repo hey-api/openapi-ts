@@ -1,5 +1,4 @@
-import type { Model } from '../../../client/interfaces/Model';
-import type { OperationResponse } from '../../../client/interfaces/OperationResponse';
+import type { Model, OperationResponse } from '../../../types/client';
 
 const areEqual = (a: Model, b: Model): boolean => {
     const equal = a.type === b.type && a.base === b.base && a.template === b.template;
