@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { getServiceName, getServiceVersion } from '../service';
 
 describe('getServiceName', () => {

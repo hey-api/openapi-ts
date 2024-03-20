@@ -1,3 +1,5 @@
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+
 import { cleanup } from './scripts/cleanup';
 import { compileWithTypescript } from './scripts/compileWithTypescript';
 import { generateClient } from './scripts/generateClient';
@@ -17,7 +19,7 @@ describe('client.axios', () => {
 
     it('requests token', async () => {
         const { ApiClient } = require('./generated/client/axios/index.js');
-        const tokenRequest = jest.fn().mockResolvedValue('MY_TOKEN');
+        const tokenRequest = vi.fn().mockResolvedValue('MY_TOKEN');
         const client = new ApiClient({
             TOKEN: tokenRequest,
             USERNAME: undefined,

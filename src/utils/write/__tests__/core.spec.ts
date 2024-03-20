@@ -1,9 +1,11 @@
 import { writeFileSync } from 'node:fs';
 import path from 'node:path';
 
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { writeClientCore } from '../core';
 
-jest.mock('node:fs');
+vi.mock('node:fs');
 
 describe('writeClientCore', () => {
     let templates: Parameters<typeof writeClientCore>[1];
@@ -18,7 +20,7 @@ describe('writeClientCore', () => {
                 cancelablePromise: () => 'cancelablePromise',
                 httpRequest: () => 'httpRequest',
                 request: () => 'request',
-                settings: jest.fn().mockReturnValue('settings'),
+                settings: vi.fn().mockReturnValue('settings'),
                 types: () => 'types',
             },
             exports: {

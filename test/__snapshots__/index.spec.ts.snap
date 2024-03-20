@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`v2 should generate: test/generated/v2/core/ApiError.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/core/ApiError.ts 1`] = `
 "import type { ApiRequestOptions } from './ApiRequestOptions';
 import type { ApiResult } from './ApiResult';
 
@@ -25,7 +25,7 @@ export class ApiError extends Error {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/core/ApiRequestOptions.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/core/ApiRequestOptions.ts 1`] = `
 "export type ApiRequestOptions = {
     readonly method: 'GET' | 'PUT' | 'POST' | 'DELETE' | 'OPTIONS' | 'HEAD' | 'PATCH';
     readonly url: string;
@@ -42,7 +42,7 @@ exports[`v2 should generate: test/generated/v2/core/ApiRequestOptions.ts 1`] = `
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/core/ApiResult.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/core/ApiResult.ts 1`] = `
 "export type ApiResult<TData = any> = {
     readonly body: TData;
     readonly ok: boolean;
@@ -53,7 +53,7 @@ exports[`v2 should generate: test/generated/v2/core/ApiResult.ts 1`] = `
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/core/CancelablePromise.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/core/CancelablePromise.ts 1`] = `
 "export class CancelError extends Error {
     constructor(message: string) {
         super(message);
@@ -183,7 +183,7 @@ export class CancelablePromise<T> implements Promise<T> {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/core/OpenAPI.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/core/OpenAPI.ts 1`] = `
 "import type { ApiRequestOptions } from './ApiRequestOptions';
 import type { TConfig, TResult } from './types';
 
@@ -232,7 +232,7 @@ export const mergeOpenApiConfig = <T extends TResult>(config: OpenAPIConfig, ove
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/core/request.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/core/request.ts 1`] = `
 "import { ApiError } from './ApiError';
 import type { ApiRequestOptions } from './ApiRequestOptions';
 import type { ApiResult } from './ApiResult';
@@ -561,7 +561,7 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): C
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/core/types.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/core/types.ts 1`] = `
 "import type { ApiResult } from './ApiResult';
 
 export type TResult = 'body' | 'raw';
@@ -575,7 +575,7 @@ export type TConfig<T extends TResult> = {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/index.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/index.ts 1`] = `
 "export { ApiError } from './core/ApiError';
 export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
@@ -705,14 +705,14 @@ export { TypesService } from './services/TypesService';
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/_default.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/_default.ts 1`] = `
 "export type _default = {
     name?: string;
 };
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/ArrayWithArray.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/ArrayWithArray.ts 1`] = `
 "import type { ModelWithString } from './ModelWithString';
 
 /**
@@ -722,7 +722,7 @@ export type ArrayWithArray = Array<Array<ModelWithString>>;
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/ArrayWithBooleans.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/ArrayWithBooleans.ts 1`] = `
 "/**
  * This is a simple array with booleans
  */
@@ -730,7 +730,7 @@ export type ArrayWithBooleans = Array<boolean>;
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/ArrayWithNumbers.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/ArrayWithNumbers.ts 1`] = `
 "/**
  * This is a simple array with numbers
  */
@@ -738,7 +738,7 @@ export type ArrayWithNumbers = Array<number>;
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/ArrayWithProperties.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/ArrayWithProperties.ts 1`] = `
 "/**
  * This is a simple array with properties
  */
@@ -749,7 +749,7 @@ export type ArrayWithProperties = Array<{
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/ArrayWithReferences.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/ArrayWithReferences.ts 1`] = `
 "import type { ModelWithString } from './ModelWithString';
 
 /**
@@ -759,7 +759,7 @@ export type ArrayWithReferences = Array<ModelWithString>;
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/ArrayWithStrings.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/ArrayWithStrings.ts 1`] = `
 "/**
  * This is a simple array with strings
  */
@@ -767,7 +767,7 @@ export type ArrayWithStrings = Array<string>;
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/CommentWithBackticks.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/CommentWithBackticks.ts 1`] = `
 "/**
  * Testing backticks in string: \`backticks\` and \`\`\`multiple backticks\`\`\` should work
  */
@@ -775,7 +775,7 @@ export type CommentWithBackticks = number;
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/CommentWithBreaks.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/CommentWithBreaks.ts 1`] = `
 "/**
  * Testing multiline comments in string: First line
  * Second line
@@ -786,7 +786,7 @@ export type CommentWithBreaks = number;
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/CommentWithExpressionPlaceholders.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/CommentWithExpressionPlaceholders.ts 1`] = `
 "/**
  * Testing expression placeholders in string: \${expression} should work
  */
@@ -794,7 +794,7 @@ export type CommentWithExpressionPlaceholders = number;
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/CommentWithQuotes.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/CommentWithQuotes.ts 1`] = `
 "/**
  * Testing quotes in string: 'single quote''' and "double quotes""" should work
  */
@@ -802,7 +802,7 @@ export type CommentWithQuotes = number;
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/CommentWithReservedCharacters.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/CommentWithReservedCharacters.ts 1`] = `
 "/**
  * Testing reserved characters in string: * inline * and ** inline ** should work
  */
@@ -810,7 +810,7 @@ export type CommentWithReservedCharacters = number;
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/CommentWithSlashes.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/CommentWithSlashes.ts 1`] = `
 "/**
  * Testing slashes in string: \\backwards\\\\\\ and /forwards/// should work
  */
@@ -818,7 +818,7 @@ export type CommentWithSlashes = number;
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/Date.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/Date.ts 1`] = `
 "/**
  * This is a type-only model that defines Date as a string
  */
@@ -826,7 +826,7 @@ export type Date = string;
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/DictionaryWithArray.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/DictionaryWithArray.ts 1`] = `
 "import type { ModelWithString } from './ModelWithString';
 
 /**
@@ -836,7 +836,7 @@ export type DictionaryWithArray = Record<string, Array<ModelWithString>>;
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/DictionaryWithDictionary.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/DictionaryWithDictionary.ts 1`] = `
 "/**
  * This is a string dictionary
  */
@@ -844,7 +844,7 @@ export type DictionaryWithDictionary = Record<string, Record<string, string>>;
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/DictionaryWithProperties.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/DictionaryWithProperties.ts 1`] = `
 "/**
  * This is a complex dictionary
  */
@@ -858,7 +858,7 @@ export type DictionaryWithProperties = Record<
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/DictionaryWithReference.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/DictionaryWithReference.ts 1`] = `
 "import type { ModelWithString } from './ModelWithString';
 
 /**
@@ -868,7 +868,7 @@ export type DictionaryWithReference = Record<string, ModelWithString>;
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/DictionaryWithString.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/DictionaryWithString.ts 1`] = `
 "/**
  * This is a string dictionary
  */
@@ -876,7 +876,7 @@ export type DictionaryWithString = Record<string, string>;
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/EnumFromDescription.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/EnumFromDescription.ts 1`] = `
 "/**
  * Success=1,Warning=2,Error=3
  */
@@ -884,7 +884,7 @@ export type EnumFromDescription = number;
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/EnumWithExtensions.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/EnumWithExtensions.ts 1`] = `
 "/**
  * This is a simple enum with numbers
  */
@@ -907,7 +907,7 @@ export const EnumWithExtensionsEnum = {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/EnumWithNumbers.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/EnumWithNumbers.ts 1`] = `
 "/**
  * This is a simple enum with numbers
  */
@@ -933,7 +933,7 @@ export const EnumWithNumbersEnum = {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/EnumWithStrings.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/EnumWithStrings.ts 1`] = `
 "/**
  * This is a simple enum with strings
  */
@@ -956,7 +956,7 @@ export const EnumWithStringsEnum = {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/ModelThatExtends.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/ModelThatExtends.ts 1`] = `
 "import type { ModelWithString } from './ModelWithString';
 
 /**
@@ -969,7 +969,7 @@ export type ModelThatExtends = ModelWithString & {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/ModelThatExtendsExtends.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/ModelThatExtendsExtends.ts 1`] = `
 "import type { ModelThatExtends } from './ModelThatExtends';
 import type { ModelWithString } from './ModelWithString';
 
@@ -984,7 +984,7 @@ export type ModelThatExtendsExtends = ModelWithString &
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/ModelWithArray.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/ModelWithArray.ts 1`] = `
 "import type { ModelWithString } from './ModelWithString';
 
 /**
@@ -998,7 +998,7 @@ export type ModelWithArray = {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/ModelWithBoolean.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/ModelWithBoolean.ts 1`] = `
 "/**
  * This is a model with one boolean property
  */
@@ -1011,7 +1011,7 @@ export type ModelWithBoolean = {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/ModelWithCircularReference.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/ModelWithCircularReference.ts 1`] = `
 "/**
  * This is a model with one property containing a circular reference
  */
@@ -1021,7 +1021,7 @@ export type ModelWithCircularReference = {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/ModelWithDictionary.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/ModelWithDictionary.ts 1`] = `
 "/**
  * This is a model with one property containing a dictionary
  */
@@ -1031,7 +1031,7 @@ export type ModelWithDictionary = {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/ModelWithDuplicateImports.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/ModelWithDuplicateImports.ts 1`] = `
 "import type { ModelWithString } from './ModelWithString';
 
 /**
@@ -1045,7 +1045,7 @@ export type ModelWithDuplicateImports = {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/ModelWithDuplicateProperties.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/ModelWithDuplicateProperties.ts 1`] = `
 "import type { ModelWithString } from './ModelWithString';
 
 /**
@@ -1057,7 +1057,7 @@ export type ModelWithDuplicateProperties = {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/ModelWithEnum.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/ModelWithEnum.ts 1`] = `
 "/**
  * This is a model with one enum
  */
@@ -1094,7 +1094,7 @@ export const StatusCodeEnum = {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/ModelWithEnumFromDescription.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/ModelWithEnumFromDescription.ts 1`] = `
 "/**
  * This is a model with one enum
  */
@@ -1107,7 +1107,7 @@ export type ModelWithEnumFromDescription = {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/ModelWithInteger.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/ModelWithInteger.ts 1`] = `
 "/**
  * This is a model with one number property
  */
@@ -1120,7 +1120,7 @@ export type ModelWithInteger = {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/ModelWithNestedEnums.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/ModelWithNestedEnums.ts 1`] = `
 "/**
  * This is a model with nested enums
  */
@@ -1133,7 +1133,7 @@ export type ModelWithNestedEnums = {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/ModelWithNestedProperties.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/ModelWithNestedProperties.ts 1`] = `
 "/**
  * This is a model with one nested property
  */
@@ -1147,7 +1147,7 @@ export type ModelWithNestedProperties = {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/ModelWithNullableString.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/ModelWithNullableString.ts 1`] = `
 "/**
  * This is a model with one string property
  */
@@ -1164,7 +1164,7 @@ export type ModelWithNullableString = {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/ModelWithOrderedProperties.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/ModelWithOrderedProperties.ts 1`] = `
 "/**
  * This is a model with ordered properties
  */
@@ -1176,7 +1176,7 @@ export type ModelWithOrderedProperties = {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/ModelWithPattern.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/ModelWithPattern.ts 1`] = `
 "/**
  * This is a model that contains a some patterns
  */
@@ -1194,7 +1194,7 @@ export type ModelWithPattern = {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/ModelWithProperties.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/ModelWithProperties.ts 1`] = `
 "import type { ModelWithString } from './ModelWithString';
 
 /**
@@ -1216,7 +1216,7 @@ export type ModelWithProperties = {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/ModelWithReference.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/ModelWithReference.ts 1`] = `
 "import type { ModelWithProperties } from './ModelWithProperties';
 
 /**
@@ -1228,7 +1228,7 @@ export type ModelWithReference = {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/ModelWithString.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/ModelWithString.ts 1`] = `
 "/**
  * This is a model with one string property
  */
@@ -1241,7 +1241,7 @@ export type ModelWithString = {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/NonAsciiStringæøåÆØÅöôêÊ字符串.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/NonAsciiStringæøåÆØÅöôêÊ字符串.ts 1`] = `
 "/**
  * A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)
  */
@@ -1249,7 +1249,7 @@ export type NonAsciiStringæøåÆØÅöôêÊ字符串 = string;
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/SimpleBoolean.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/SimpleBoolean.ts 1`] = `
 "/**
  * This is a simple boolean
  */
@@ -1257,7 +1257,7 @@ export type SimpleBoolean = boolean;
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/SimpleFile.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/SimpleFile.ts 1`] = `
 "/**
  * This is a simple file
  */
@@ -1265,7 +1265,7 @@ export type SimpleFile = Blob;
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/SimpleInteger.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/SimpleInteger.ts 1`] = `
 "/**
  * This is a simple number
  */
@@ -1273,7 +1273,7 @@ export type SimpleInteger = number;
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/SimpleReference.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/SimpleReference.ts 1`] = `
 "import type { ModelWithString } from './ModelWithString';
 
 /**
@@ -1283,7 +1283,7 @@ export type SimpleReference = ModelWithString;
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/SimpleString.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/SimpleString.ts 1`] = `
 "/**
  * This is a simple string
  */
@@ -1291,7 +1291,7 @@ export type SimpleString = string;
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/models/SimpleStringWithPattern.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/models/SimpleStringWithPattern.ts 1`] = `
 "/**
  * This is a simple string
  */
@@ -1299,7 +1299,7 @@ export type SimpleStringWithPattern = string;
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$_default.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$_default.ts 1`] = `
 "export const $_default = {
     properties: {
         name: {
@@ -1310,7 +1310,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$_default.ts 1`] = `
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$ArrayWithArray.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$ArrayWithArray.ts 1`] = `
 "export const $ArrayWithArray = {
     type: 'array',
     contains: {
@@ -1323,7 +1323,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$ArrayWithArray.ts 1`] = 
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$ArrayWithBooleans.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$ArrayWithBooleans.ts 1`] = `
 "export const $ArrayWithBooleans = {
     type: 'array',
     contains: {
@@ -1333,7 +1333,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$ArrayWithBooleans.ts 1`]
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$ArrayWithNumbers.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$ArrayWithNumbers.ts 1`] = `
 "export const $ArrayWithNumbers = {
     type: 'array',
     contains: {
@@ -1343,7 +1343,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$ArrayWithNumbers.ts 1`] 
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$ArrayWithProperties.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$ArrayWithProperties.ts 1`] = `
 "export const $ArrayWithProperties = {
     type: 'array',
     contains: {
@@ -1360,7 +1360,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$ArrayWithProperties.ts 1
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$ArrayWithReferences.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$ArrayWithReferences.ts 1`] = `
 "export const $ArrayWithReferences = {
     type: 'array',
     contains: {
@@ -1370,7 +1370,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$ArrayWithReferences.ts 1
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$ArrayWithStrings.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$ArrayWithStrings.ts 1`] = `
 "export const $ArrayWithStrings = {
     type: 'array',
     contains: {
@@ -1380,7 +1380,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$ArrayWithStrings.ts 1`] 
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$CommentWithBackticks.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$CommentWithBackticks.ts 1`] = `
 "export const $CommentWithBackticks = {
     type: 'number',
     description: \`Testing backticks in string: \\\`backticks\\\` and \\\`\\\`\\\`multiple backticks\\\`\\\`\\\` should work\`,
@@ -1388,7 +1388,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$CommentWithBackticks.ts 
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$CommentWithBreaks.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$CommentWithBreaks.ts 1`] = `
 "export const $CommentWithBreaks = {
     type: 'number',
     description: \`Testing multiline comments in string: First line
@@ -1399,7 +1399,7 @@ Fourth line\`,
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$CommentWithExpressionPlaceholders.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$CommentWithExpressionPlaceholders.ts 1`] = `
 "export const $CommentWithExpressionPlaceholders = {
     type: 'number',
     description: \`Testing expression placeholders in string: \\\${expression} should work\`,
@@ -1407,7 +1407,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$CommentWithExpressionPla
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$CommentWithQuotes.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$CommentWithQuotes.ts 1`] = `
 "export const $CommentWithQuotes = {
     type: 'number',
     description: \`Testing quotes in string: 'single quote''' and "double quotes""" should work\`,
@@ -1415,7 +1415,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$CommentWithQuotes.ts 1`]
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$CommentWithReservedCharacters.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$CommentWithReservedCharacters.ts 1`] = `
 "export const $CommentWithReservedCharacters = {
     type: 'number',
     description: \`Testing reserved characters in string: /* inline */ and /** inline **/ should work\`,
@@ -1423,7 +1423,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$CommentWithReservedChara
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$CommentWithSlashes.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$CommentWithSlashes.ts 1`] = `
 "export const $CommentWithSlashes = {
     type: 'number',
     description: \`Testing slashes in string: \\\\backwards\\\\\\\\\\\\ and /forwards/// should work\`,
@@ -1431,7 +1431,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$CommentWithSlashes.ts 1`
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$Date.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$Date.ts 1`] = `
 "export const $Date = {
     type: 'string',
     description: \`This is a type-only model that defines Date as a string\`,
@@ -1439,7 +1439,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$Date.ts 1`] = `
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$DictionaryWithArray.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$DictionaryWithArray.ts 1`] = `
 "export const $DictionaryWithArray = {
     type: 'dictionary',
     contains: {
@@ -1452,7 +1452,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$DictionaryWithArray.ts 1
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$DictionaryWithDictionary.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$DictionaryWithDictionary.ts 1`] = `
 "export const $DictionaryWithDictionary = {
     type: 'dictionary',
     contains: {
@@ -1465,7 +1465,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$DictionaryWithDictionary
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$DictionaryWithProperties.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$DictionaryWithProperties.ts 1`] = `
 "export const $DictionaryWithProperties = {
     type: 'dictionary',
     contains: {
@@ -1482,7 +1482,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$DictionaryWithProperties
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$DictionaryWithReference.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$DictionaryWithReference.ts 1`] = `
 "export const $DictionaryWithReference = {
     type: 'dictionary',
     contains: {
@@ -1492,7 +1492,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$DictionaryWithReference.
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$DictionaryWithString.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$DictionaryWithString.ts 1`] = `
 "export const $DictionaryWithString = {
     type: 'dictionary',
     contains: {
@@ -1502,7 +1502,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$DictionaryWithString.ts 
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$EnumFromDescription.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$EnumFromDescription.ts 1`] = `
 "export const $EnumFromDescription = {
     type: 'number',
     description: \`Success=1,Warning=2,Error=3\`,
@@ -1510,28 +1510,28 @@ exports[`v2 should generate: test/generated/v2/schemas/$EnumFromDescription.ts 1
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$EnumWithExtensions.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$EnumWithExtensions.ts 1`] = `
 "export const $EnumWithExtensions = {
     type: 'Enum',
 } as const;
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$EnumWithNumbers.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$EnumWithNumbers.ts 1`] = `
 "export const $EnumWithNumbers = {
     type: 'Enum',
 } as const;
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$EnumWithStrings.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$EnumWithStrings.ts 1`] = `
 "export const $EnumWithStrings = {
     type: 'Enum',
 } as const;
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$ModelThatExtends.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$ModelThatExtends.ts 1`] = `
 "export const $ModelThatExtends = {
     type: 'all-of',
     description: \`This is a model that extends another model\`,
@@ -1554,7 +1554,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$ModelThatExtends.ts 1`] 
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$ModelThatExtendsExtends.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$ModelThatExtendsExtends.ts 1`] = `
 "export const $ModelThatExtendsExtends = {
     type: 'all-of',
     description: \`This is a model that extends another model\`,
@@ -1580,7 +1580,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$ModelThatExtendsExtends.
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$ModelWithArray.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$ModelWithArray.ts 1`] = `
 "export const $ModelWithArray = {
     description: \`This is a model with one property containing an array\`,
     properties: {
@@ -1607,7 +1607,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$ModelWithArray.ts 1`] = 
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$ModelWithBoolean.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$ModelWithBoolean.ts 1`] = `
 "export const $ModelWithBoolean = {
     description: \`This is a model with one boolean property\`,
     properties: {
@@ -1620,7 +1620,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$ModelWithBoolean.ts 1`] 
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$ModelWithCircularReference.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$ModelWithCircularReference.ts 1`] = `
 "export const $ModelWithCircularReference = {
     description: \`This is a model with one property containing a circular reference\`,
     properties: {
@@ -1632,7 +1632,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$ModelWithCircularReferen
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$ModelWithDictionary.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$ModelWithDictionary.ts 1`] = `
 "export const $ModelWithDictionary = {
     description: \`This is a model with one property containing a dictionary\`,
     properties: {
@@ -1647,7 +1647,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$ModelWithDictionary.ts 1
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$ModelWithDuplicateImports.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$ModelWithDuplicateImports.ts 1`] = `
 "export const $ModelWithDuplicateImports = {
     description: \`This is a model with duplicated imports\`,
     properties: {
@@ -1665,7 +1665,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$ModelWithDuplicateImport
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$ModelWithDuplicateProperties.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$ModelWithDuplicateProperties.ts 1`] = `
 "export const $ModelWithDuplicateProperties = {
     description: \`This is a model with duplicated properties\`,
     properties: {
@@ -1677,7 +1677,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$ModelWithDuplicateProper
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$ModelWithEnum.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$ModelWithEnum.ts 1`] = `
 "export const $ModelWithEnum = {
     description: \`This is a model with one enum\`,
     properties: {
@@ -1696,7 +1696,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$ModelWithEnum.ts 1`] = `
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$ModelWithEnumFromDescription.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$ModelWithEnumFromDescription.ts 1`] = `
 "export const $ModelWithEnumFromDescription = {
     description: \`This is a model with one enum\`,
     properties: {
@@ -1709,7 +1709,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$ModelWithEnumFromDescrip
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$ModelWithInteger.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$ModelWithInteger.ts 1`] = `
 "export const $ModelWithInteger = {
     description: \`This is a model with one number property\`,
     properties: {
@@ -1722,7 +1722,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$ModelWithInteger.ts 1`] 
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$ModelWithNestedEnums.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$ModelWithNestedEnums.ts 1`] = `
 "export const $ModelWithNestedEnums = {
     description: \`This is a model with nested enums\`,
     properties: {
@@ -1757,7 +1757,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$ModelWithNestedEnums.ts 
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$ModelWithNestedProperties.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$ModelWithNestedProperties.ts 1`] = `
 "export const $ModelWithNestedProperties = {
     description: \`This is a model with one nested property\`,
     properties: {
@@ -1783,7 +1783,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$ModelWithNestedPropertie
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$ModelWithNullableString.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$ModelWithNullableString.ts 1`] = `
 "export const $ModelWithNullableString = {
     description: \`This is a model with one string property\`,
     properties: {
@@ -1803,7 +1803,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$ModelWithNullableString.
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$ModelWithOrderedProperties.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$ModelWithOrderedProperties.ts 1`] = `
 "export const $ModelWithOrderedProperties = {
     description: \`This is a model with ordered properties\`,
     properties: {
@@ -1821,7 +1821,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$ModelWithOrderedProperti
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$ModelWithPattern.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$ModelWithPattern.ts 1`] = `
 "export const $ModelWithPattern = {
     description: \`This is a model that contains a some patterns\`,
     properties: {
@@ -1870,7 +1870,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$ModelWithPattern.ts 1`] 
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$ModelWithProperties.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$ModelWithProperties.ts 1`] = `
 "export const $ModelWithProperties = {
     description: \`This is a model with one nested property\`,
     properties: {
@@ -1917,7 +1917,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$ModelWithProperties.ts 1
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$ModelWithReference.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$ModelWithReference.ts 1`] = `
 "export const $ModelWithReference = {
     description: \`This is a model with one property containing a reference\`,
     properties: {
@@ -1929,7 +1929,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$ModelWithReference.ts 1`
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$ModelWithString.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$ModelWithString.ts 1`] = `
 "export const $ModelWithString = {
     description: \`This is a model with one string property\`,
     properties: {
@@ -1942,7 +1942,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$ModelWithString.ts 1`] =
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$NonAsciiStringæøåÆØÅöôêÊ字符串.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$NonAsciiStringæøåÆØÅöôêÊ字符串.ts 1`] = `
 "export const $NonAsciiStringæøåÆØÅöôêÊ字符串 = {
     type: 'string',
     description: \`A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)\`,
@@ -1950,7 +1950,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$NonAsciiStringæøåÆØ
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$SimpleBoolean.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$SimpleBoolean.ts 1`] = `
 "export const $SimpleBoolean = {
     type: 'boolean',
     description: \`This is a simple boolean\`,
@@ -1958,7 +1958,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$SimpleBoolean.ts 1`] = `
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$SimpleFile.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$SimpleFile.ts 1`] = `
 "export const $SimpleFile = {
     type: 'binary',
     description: \`This is a simple file\`,
@@ -1966,7 +1966,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$SimpleFile.ts 1`] = `
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$SimpleInteger.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$SimpleInteger.ts 1`] = `
 "export const $SimpleInteger = {
     type: 'number',
     description: \`This is a simple number\`,
@@ -1974,7 +1974,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$SimpleInteger.ts 1`] = `
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$SimpleReference.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$SimpleReference.ts 1`] = `
 "export const $SimpleReference = {
     type: 'ModelWithString',
     description: \`This is a simple reference\`,
@@ -1982,7 +1982,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$SimpleReference.ts 1`] =
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$SimpleString.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$SimpleString.ts 1`] = `
 "export const $SimpleString = {
     type: 'string',
     description: \`This is a simple string\`,
@@ -1990,7 +1990,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$SimpleString.ts 1`] = `
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/schemas/$SimpleStringWithPattern.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/schemas/$SimpleStringWithPattern.ts 1`] = `
 "export const $SimpleStringWithPattern = {
     type: 'string',
     description: \`This is a simple string\`,
@@ -2000,7 +2000,7 @@ exports[`v2 should generate: test/generated/v2/schemas/$SimpleStringWithPattern.
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/services/CollectionFormatService.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/services/CollectionFormatService.ts 1`] = `
 "import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -2051,7 +2051,7 @@ export class CollectionFormatService {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/services/ComplexService.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/services/ComplexService.ts 1`] = `
 "import type { ModelWithString } from '../models/ModelWithString';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -2098,7 +2098,7 @@ export class ComplexService {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/services/DefaultService.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/services/DefaultService.ts 1`] = `
 "import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -2117,7 +2117,7 @@ export class DefaultService {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/services/DefaultsService.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/services/DefaultsService.ts 1`] = `
 "import type { ModelWithString } from '../models/ModelWithString';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -2290,7 +2290,7 @@ export class DefaultsService {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/services/DescriptionsService.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/services/DescriptionsService.ts 1`] = `
 "import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -2355,7 +2355,7 @@ export class DescriptionsService {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/services/DuplicateService.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/services/DuplicateService.ts 1`] = `
 "import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -2404,7 +2404,7 @@ export class DuplicateService {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/services/ErrorService.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/services/ErrorService.ts 1`] = `
 "import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -2441,7 +2441,7 @@ export class ErrorService {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/services/HeaderService.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/services/HeaderService.ts 1`] = `
 "import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -2466,7 +2466,7 @@ export class HeaderService {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/services/MultipleTags1Service.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/services/MultipleTags1Service.ts 1`] = `
 "import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -2497,7 +2497,7 @@ export class MultipleTags1Service {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/services/MultipleTags2Service.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/services/MultipleTags2Service.ts 1`] = `
 "import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -2528,7 +2528,7 @@ export class MultipleTags2Service {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/services/MultipleTags3Service.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/services/MultipleTags3Service.ts 1`] = `
 "import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -2548,7 +2548,7 @@ export class MultipleTags3Service {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/services/NoContentService.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/services/NoContentService.ts 1`] = `
 "import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -2580,7 +2580,7 @@ export class NoContentService {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/services/NonAsciiÆøåÆøÅöôêÊService.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/services/NonAsciiÆøåÆøÅöôêÊService.ts 1`] = `
 "import type { NonAsciiStringæøåÆØÅöôêÊ字符串 } from '../models/NonAsciiStringæøåÆØÅöôêÊ字符串';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -2614,7 +2614,7 @@ export class NonAsciiÆøåÆøÅöôêÊService {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/services/ParametersService.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/services/ParametersService.ts 1`] = `
 "import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -2740,7 +2740,7 @@ export class ParametersService {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/services/ResponseService.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/services/ResponseService.ts 1`] = `
 "import type { ModelThatExtends } from '../models/ModelThatExtends';
 import type { ModelThatExtendsExtends } from '../models/ModelThatExtendsExtends';
 import type { ModelWithString } from '../models/ModelWithString';
@@ -2819,7 +2819,7 @@ export class ResponseService {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/services/SimpleService.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/services/SimpleService.ts 1`] = `
 "import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -2898,7 +2898,7 @@ export class SimpleService {
 "
 `;
 
-exports[`v2 should generate: test/generated/v2/services/TypesService.ts 1`] = `
+exports[`v2 > should generate > ./test/generated/v2/services/TypesService.ts 1`] = `
 "import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -2978,81 +2978,7 @@ export class TypesService {
 "
 `;
 
-exports[`v3 should generate Date types: test/generated/v3_date/index.ts 1`] = `
-"export type { ModelWithPattern } from './models/ModelWithPattern';
-
-export { $ModelWithPattern } from './schemas/$ModelWithPattern';
-"
-`;
-
-exports[`v3 should generate Date types: test/generated/v3_date/models/ModelWithPattern.ts 1`] = `
-"/**
- * This is a model that contains a some patterns
- */
-export type ModelWithPattern = {
-    key: string;
-    name: string;
-    readonly enabled?: boolean;
-    readonly modified?: Date;
-    id?: string;
-    text?: string;
-    patternWithSingleQuotes?: string;
-    patternWithNewline?: string;
-    patternWithBacktick?: string;
-};
-"
-`;
-
-exports[`v3 should generate Date types: test/generated/v3_date/schemas/$ModelWithPattern.ts 1`] = `
-"export const $ModelWithPattern = {
-    description: \`This is a model that contains a some patterns\`,
-    properties: {
-        key: {
-            type: 'string',
-            isRequired: true,
-            maxLength: 64,
-            pattern: '^[a-zA-Z0-9_]*$',
-        },
-        name: {
-            type: 'string',
-            isRequired: true,
-            maxLength: 255,
-        },
-        enabled: {
-            type: 'boolean',
-            isReadOnly: true,
-        },
-        modified: {
-            type: 'string',
-            isReadOnly: true,
-            format: 'date-time',
-        },
-        id: {
-            type: 'string',
-            pattern: '^\\\\d{2}-\\\\d{3}-\\\\d{4}$',
-        },
-        text: {
-            type: 'string',
-            pattern: '^\\\\w+$',
-        },
-        patternWithSingleQuotes: {
-            type: 'string',
-            pattern: "^[a-zA-Z0-9']*$",
-        },
-        patternWithNewline: {
-            type: 'string',
-            pattern: 'aaa\\nbbb',
-        },
-        patternWithBacktick: {
-            type: 'string',
-            pattern: 'aaa\`bbb',
-        },
-    },
-} as const;
-"
-`;
-
-exports[`v3 should generate optional argument: test/generated/v3_options/core/ApiError.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/core/ApiError.ts 1`] = `
 "import type { ApiRequestOptions } from './ApiRequestOptions';
 import type { ApiResult } from './ApiResult';
 
@@ -3077,7 +3003,7 @@ export class ApiError extends Error {
 "
 `;
 
-exports[`v3 should generate optional argument: test/generated/v3_options/core/ApiRequestOptions.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/core/ApiRequestOptions.ts 1`] = `
 "export type ApiRequestOptions = {
     readonly method: 'GET' | 'PUT' | 'POST' | 'DELETE' | 'OPTIONS' | 'HEAD' | 'PATCH';
     readonly url: string;
@@ -3094,7 +3020,7 @@ exports[`v3 should generate optional argument: test/generated/v3_options/core/Ap
 "
 `;
 
-exports[`v3 should generate optional argument: test/generated/v3_options/core/ApiResult.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/core/ApiResult.ts 1`] = `
 "export type ApiResult<TData = any> = {
     readonly body: TData;
     readonly ok: boolean;
@@ -3105,7 +3031,7 @@ exports[`v3 should generate optional argument: test/generated/v3_options/core/Ap
 "
 `;
 
-exports[`v3 should generate optional argument: test/generated/v3_options/core/CancelablePromise.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/core/CancelablePromise.ts 1`] = `
 "export class CancelError extends Error {
     constructor(message: string) {
         super(message);
@@ -3235,7 +3161,7 @@ export class CancelablePromise<T> implements Promise<T> {
 "
 `;
 
-exports[`v3 should generate optional argument: test/generated/v3_options/core/OpenAPI.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/core/OpenAPI.ts 1`] = `
 "import type { ApiRequestOptions } from './ApiRequestOptions';
 import type { TConfig, TResult } from './types';
 
@@ -3284,7 +3210,7 @@ export const mergeOpenApiConfig = <T extends TResult>(config: OpenAPIConfig, ove
 "
 `;
 
-exports[`v3 should generate optional argument: test/generated/v3_options/core/request.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/core/request.ts 1`] = `
 "import { ApiError } from './ApiError';
 import type { ApiRequestOptions } from './ApiRequestOptions';
 import type { ApiResult } from './ApiResult';
@@ -3613,7 +3539,7 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): C
 "
 `;
 
-exports[`v3 should generate optional argument: test/generated/v3_options/core/types.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/core/types.ts 1`] = `
 "import type { ApiResult } from './ApiResult';
 
 export type TResult = 'body' | 'raw';
@@ -3627,780 +3553,7 @@ export type TConfig<T extends TResult> = {
 "
 `;
 
-exports[`v3 should generate optional argument: test/generated/v3_options/index.ts 1`] = `
-"export { ApiError } from './core/ApiError';
-export { CancelablePromise, CancelError } from './core/CancelablePromise';
-export { OpenAPI } from './core/OpenAPI';
-export type { OpenAPIConfig } from './core/OpenAPI';
-
-export type { ModelWithString } from './models/ModelWithString';
-
-export { DefaultsService } from './services/DefaultsService';
-"
-`;
-
-exports[`v3 should generate optional argument: test/generated/v3_options/models/ModelWithString.ts 1`] = `
-"/**
- * This is a model with one string property
- */
-export type ModelWithString = {
-    /**
-     * This is a simple string property
-     */
-    prop?: string;
-};
-"
-`;
-
-exports[`v3 should generate optional argument: test/generated/v3_options/services/DefaultsService.ts 1`] = `
-"import type { ModelWithString } from '../models/ModelWithString';
-import type { CancelablePromise } from '../core/CancelablePromise';
-import { OpenAPI } from '../core/OpenAPI';
-import { request as __request } from '../core/request';
-
-export type TDataCallWithDefaultParameters = {
-    /**
-     * This is a simple boolean with default value
-     */
-    parameterBoolean?: boolean | null;
-    /**
-     * This is a simple enum with default value
-     */
-    parameterEnum?: 'Success' | 'Warning' | 'Error';
-    /**
-     * This is a simple model with default value
-     */
-    parameterModel?: ModelWithString | null;
-    /**
-     * This is a simple number with default value
-     */
-    parameterNumber?: number | null;
-    /**
-     * This is a simple string with default value
-     */
-    parameterString?: string | null;
-};
-export type TDataCallWithDefaultOptionalParameters = {
-    /**
-     * This is a simple boolean that is optional with default value
-     */
-    parameterBoolean?: boolean;
-    /**
-     * This is a simple enum that is optional with default value
-     */
-    parameterEnum?: 'Success' | 'Warning' | 'Error';
-    /**
-     * This is a simple model that is optional with default value
-     */
-    parameterModel?: ModelWithString;
-    /**
-     * This is a simple number that is optional with default value
-     */
-    parameterNumber?: number;
-    /**
-     * This is a simple string that is optional with default value
-     */
-    parameterString?: string;
-};
-export type TDataCallToTestOrderOfParams = {
-    /**
-     * This is a optional string with default
-     */
-    parameterOptionalStringWithDefault?: string;
-    /**
-     * This is a optional string with empty default
-     */
-    parameterOptionalStringWithEmptyDefault?: string;
-    /**
-     * This is a optional string with no default
-     */
-    parameterOptionalStringWithNoDefault?: string;
-    /**
-     * This is a string that can be null with default
-     */
-    parameterStringNullableWithDefault?: string | null;
-    /**
-     * This is a string that can be null with no default
-     */
-    parameterStringNullableWithNoDefault?: string | null;
-    /**
-     * This is a string with default
-     */
-    parameterStringWithDefault?: string;
-    /**
-     * This is a string with empty default
-     */
-    parameterStringWithEmptyDefault?: string;
-    /**
-     * This is a string with no default
-     */
-    parameterStringWithNoDefault: string;
-};
-
-export class DefaultsService {
-    /**
-     * @throws ApiError
-     */
-    public static callWithDefaultParameters(data: TDataCallWithDefaultParameters = {}): CancelablePromise<void> {
-        const {
-            parameterBoolean = true,
-            parameterEnum = 'Success',
-            parameterModel = {
-                prop: 'Hello World!',
-            },
-            parameterNumber = 123,
-            parameterString = 'Hello World!',
-        } = data;
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/v{api-version}/defaults',
-            query: {
-                parameterString,
-                parameterNumber,
-                parameterBoolean,
-                parameterEnum,
-                parameterModel,
-            },
-        });
-    }
-
-    /**
-     * @throws ApiError
-     */
-    public static callWithDefaultOptionalParameters(
-        data: TDataCallWithDefaultOptionalParameters = {}
-    ): CancelablePromise<void> {
-        const {
-            parameterBoolean = true,
-            parameterEnum = 'Success',
-            parameterModel = {
-                prop: 'Hello World!',
-            },
-            parameterNumber = 123,
-            parameterString = 'Hello World!',
-        } = data;
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v{api-version}/defaults',
-            query: {
-                parameterString,
-                parameterNumber,
-                parameterBoolean,
-                parameterEnum,
-                parameterModel,
-            },
-        });
-    }
-
-    /**
-     * @throws ApiError
-     */
-    public static callToTestOrderOfParams(data: TDataCallToTestOrderOfParams): CancelablePromise<void> {
-        const {
-            parameterOptionalStringWithDefault = 'Hello World!',
-            parameterOptionalStringWithEmptyDefault = '',
-            parameterOptionalStringWithNoDefault,
-            parameterStringNullableWithDefault = null,
-            parameterStringNullableWithNoDefault,
-            parameterStringWithDefault = 'Hello World!',
-            parameterStringWithEmptyDefault = '',
-            parameterStringWithNoDefault,
-        } = data;
-        return __request(OpenAPI, {
-            method: 'PUT',
-            url: '/api/v{api-version}/defaults',
-            query: {
-                parameterOptionalStringWithDefault,
-                parameterOptionalStringWithEmptyDefault,
-                parameterOptionalStringWithNoDefault,
-                parameterStringWithDefault,
-                parameterStringWithEmptyDefault,
-                parameterStringWithNoDefault,
-                parameterStringNullableWithNoDefault,
-                parameterStringNullableWithDefault,
-            },
-        });
-    }
-}
-"
-`;
-
-exports[`v3 should generate: test/generated/v3/core/ApiError.ts 1`] = `
-"import type { ApiRequestOptions } from './ApiRequestOptions';
-import type { ApiResult } from './ApiResult';
-
-export class ApiError extends Error {
-    public readonly url: string;
-    public readonly status: number;
-    public readonly statusText: string;
-    public readonly body: unknown;
-    public readonly request: ApiRequestOptions;
-
-    constructor(request: ApiRequestOptions, response: ApiResult, message: string) {
-        super(message);
-
-        this.name = 'ApiError';
-        this.url = response.url;
-        this.status = response.status;
-        this.statusText = response.statusText;
-        this.body = response.body;
-        this.request = request;
-    }
-}
-"
-`;
-
-exports[`v3 should generate: test/generated/v3/core/ApiRequestOptions.ts 1`] = `
-"export type ApiRequestOptions = {
-    readonly method: 'GET' | 'PUT' | 'POST' | 'DELETE' | 'OPTIONS' | 'HEAD' | 'PATCH';
-    readonly url: string;
-    readonly path?: Record<string, unknown>;
-    readonly cookies?: Record<string, unknown>;
-    readonly headers?: Record<string, unknown>;
-    readonly query?: Record<string, unknown>;
-    readonly formData?: Record<string, unknown>;
-    readonly body?: any;
-    readonly mediaType?: string;
-    readonly responseHeader?: string;
-    readonly errors?: Record<number, string>;
-};
-"
-`;
-
-exports[`v3 should generate: test/generated/v3/core/ApiResult.ts 1`] = `
-"export type ApiResult<TData = any> = {
-    readonly body: TData;
-    readonly ok: boolean;
-    readonly status: number;
-    readonly statusText: string;
-    readonly url: string;
-};
-"
-`;
-
-exports[`v3 should generate: test/generated/v3/core/CancelablePromise.ts 1`] = `
-"export class CancelError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = 'CancelError';
-    }
-
-    public get isCancelled(): boolean {
-        return true;
-    }
-}
-
-export interface OnCancel {
-    readonly isResolved: boolean;
-    readonly isRejected: boolean;
-    readonly isCancelled: boolean;
-
-    (cancelHandler: () => void): void;
-}
-
-export class CancelablePromise<T> implements Promise<T> {
-    #isResolved: boolean;
-    #isRejected: boolean;
-    #isCancelled: boolean;
-    readonly #cancelHandlers: (() => void)[];
-    readonly #promise: Promise<T>;
-    #resolve?: (value: T | PromiseLike<T>) => void;
-    #reject?: (reason?: unknown) => void;
-
-    constructor(
-        executor: (
-            resolve: (value: T | PromiseLike<T>) => void,
-            reject: (reason?: unknown) => void,
-            onCancel: OnCancel
-        ) => void
-    ) {
-        this.#isResolved = false;
-        this.#isRejected = false;
-        this.#isCancelled = false;
-        this.#cancelHandlers = [];
-        this.#promise = new Promise<T>((resolve, reject) => {
-            this.#resolve = resolve;
-            this.#reject = reject;
-
-            const onResolve = (value: T | PromiseLike<T>): void => {
-                if (this.#isResolved || this.#isRejected || this.#isCancelled) {
-                    return;
-                }
-                this.#isResolved = true;
-                if (this.#resolve) this.#resolve(value);
-            };
-
-            const onReject = (reason?: unknown): void => {
-                if (this.#isResolved || this.#isRejected || this.#isCancelled) {
-                    return;
-                }
-                this.#isRejected = true;
-                if (this.#reject) this.#reject(reason);
-            };
-
-            const onCancel = (cancelHandler: () => void): void => {
-                if (this.#isResolved || this.#isRejected || this.#isCancelled) {
-                    return;
-                }
-                this.#cancelHandlers.push(cancelHandler);
-            };
-
-            Object.defineProperty(onCancel, 'isResolved', {
-                get: (): boolean => this.#isResolved,
-            });
-
-            Object.defineProperty(onCancel, 'isRejected', {
-                get: (): boolean => this.#isRejected,
-            });
-
-            Object.defineProperty(onCancel, 'isCancelled', {
-                get: (): boolean => this.#isCancelled,
-            });
-
-            return executor(onResolve, onReject, onCancel as OnCancel);
-        });
-    }
-
-    get [Symbol.toStringTag]() {
-        return 'Cancellable Promise';
-    }
-
-    public then<TResult1 = T, TResult2 = never>(
-        onFulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | null,
-        onRejected?: ((reason: unknown) => TResult2 | PromiseLike<TResult2>) | null
-    ): Promise<TResult1 | TResult2> {
-        return this.#promise.then(onFulfilled, onRejected);
-    }
-
-    public catch<TResult = never>(
-        onRejected?: ((reason: unknown) => TResult | PromiseLike<TResult>) | null
-    ): Promise<T | TResult> {
-        return this.#promise.catch(onRejected);
-    }
-
-    public finally(onFinally?: (() => void) | null): Promise<T> {
-        return this.#promise.finally(onFinally);
-    }
-
-    public cancel(): void {
-        if (this.#isResolved || this.#isRejected || this.#isCancelled) {
-            return;
-        }
-        this.#isCancelled = true;
-        if (this.#cancelHandlers.length) {
-            try {
-                for (const cancelHandler of this.#cancelHandlers) {
-                    cancelHandler();
-                }
-            } catch (error) {
-                console.warn('Cancellation threw an error', error);
-                return;
-            }
-        }
-        this.#cancelHandlers.length = 0;
-        if (this.#reject) this.#reject(new CancelError('Request aborted'));
-    }
-
-    public get isCancelled(): boolean {
-        return this.#isCancelled;
-    }
-}
-"
-`;
-
-exports[`v3 should generate: test/generated/v3/core/OpenAPI.ts 1`] = `
-"import type { ApiRequestOptions } from './ApiRequestOptions';
-import type { TConfig, TResult } from './types';
-
-type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
-type Headers = Record<string, string>;
-
-export type OpenAPIConfig = {
-    BASE: string;
-    CREDENTIALS: 'include' | 'omit' | 'same-origin';
-    ENCODE_PATH?: ((path: string) => string) | undefined;
-    HEADERS?: Headers | Resolver<Headers> | undefined;
-    PASSWORD?: string | Resolver<string> | undefined;
-    RESULT?: TResult;
-    TOKEN?: string | Resolver<string> | undefined;
-    USERNAME?: string | Resolver<string> | undefined;
-    VERSION: string;
-    WITH_CREDENTIALS: boolean;
-};
-
-export const OpenAPI: OpenAPIConfig = {
-    BASE: 'http://localhost:3000/base',
-    CREDENTIALS: 'include',
-    ENCODE_PATH: undefined,
-    HEADERS: undefined,
-    PASSWORD: undefined,
-    RESULT: 'body',
-    TOKEN: undefined,
-    USERNAME: undefined,
-    VERSION: '1.0',
-    WITH_CREDENTIALS: false,
-};
-
-export const mergeOpenApiConfig = <T extends TResult>(config: OpenAPIConfig, overrides: TConfig<T>) => {
-    const merged = { ...config };
-    Object.entries(overrides)
-        .filter(([key]) => key.startsWith('_'))
-        .forEach(([key, value]) => {
-            const k = key.slice(1).toLocaleUpperCase() as keyof typeof merged;
-            if (merged.hasOwnProperty(k)) {
-                // @ts-ignore
-                merged[k] = value;
-            }
-        });
-    return merged;
-};
-"
-`;
-
-exports[`v3 should generate: test/generated/v3/core/request.ts 1`] = `
-"import { ApiError } from './ApiError';
-import type { ApiRequestOptions } from './ApiRequestOptions';
-import type { ApiResult } from './ApiResult';
-import { CancelablePromise } from './CancelablePromise';
-import type { OnCancel } from './CancelablePromise';
-import type { OpenAPIConfig } from './OpenAPI';
-
-export const isString = (value: unknown): value is string => {
-    return typeof value === 'string';
-};
-
-export const isStringWithValue = (value: unknown): value is string => {
-    return isString(value) && value !== '';
-};
-
-export const isBlob = (value: any): value is Blob => {
-    return (
-        value !== null &&
-        typeof value === 'object' &&
-        typeof value.type === 'string' &&
-        typeof value.stream === 'function' &&
-        typeof value.arrayBuffer === 'function' &&
-        typeof value.constructor === 'function' &&
-        typeof value.constructor.name === 'string' &&
-        /^(Blob|File)$/.test(value.constructor.name) &&
-        // @ts-ignore
-        /^(Blob|File)$/.test(value[Symbol.toStringTag])
-    );
-};
-
-export const isFormData = (value: unknown): value is FormData => {
-    return value instanceof FormData;
-};
-
-export const base64 = (str: string): string => {
-    try {
-        return btoa(str);
-    } catch (err) {
-        // @ts-ignore
-        return Buffer.from(str).toString('base64');
-    }
-};
-
-export const getQueryString = (params: Record<string, unknown>): string => {
-    const qs: string[] = [];
-
-    const append = (key: string, value: unknown) => {
-        qs.push(\`\${encodeURIComponent(key)}=\${encodeURIComponent(String(value))}\`);
-    };
-
-    const process = (key: string, value: unknown) => {
-        if (value) {
-            if (Array.isArray(value)) {
-                value.forEach(v => {
-                    process(key, v);
-                });
-            } else if (typeof value === 'object') {
-                Object.entries(value).forEach(([k, v]) => {
-                    process(\`\${key}[\${k}]\`, v);
-                });
-            } else {
-                append(key, value);
-            }
-        }
-    };
-
-    Object.entries(params).forEach(([key, value]) => {
-        process(key, value);
-    });
-
-    if (qs.length > 0) {
-        return \`?\${qs.join('&')}\`;
-    }
-
-    return '';
-};
-
-const getUrl = (config: OpenAPIConfig, options: ApiRequestOptions): string => {
-    const encoder = config.ENCODE_PATH || encodeURI;
-
-    const path = options.url
-        .replace('{api-version}', config.VERSION)
-        .replace(/{(.*?)}/g, (substring: string, group: string) => {
-            if (options.path?.hasOwnProperty(group)) {
-                return encoder(String(options.path[group]));
-            }
-            return substring;
-        });
-
-    const url = \`\${config.BASE}\${path}\`;
-    if (options.query) {
-        return \`\${url}\${getQueryString(options.query)}\`;
-    }
-    return url;
-};
-
-export const getFormData = (options: ApiRequestOptions): FormData | undefined => {
-    if (options.formData) {
-        const formData = new FormData();
-
-        const process = (key: string, value: any) => {
-            if (isString(value) || isBlob(value)) {
-                formData.append(key, value);
-            } else {
-                formData.append(key, JSON.stringify(value));
-            }
-        };
-
-        Object.entries(options.formData)
-            .filter(([_, value]) => value)
-            .forEach(([key, value]) => {
-                if (Array.isArray(value)) {
-                    value.forEach(v => process(key, v));
-                } else {
-                    process(key, value);
-                }
-            });
-
-        return formData;
-    }
-    return undefined;
-};
-
-type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
-
-export const resolve = async <T>(options: ApiRequestOptions, resolver?: T | Resolver<T>): Promise<T | undefined> => {
-    if (typeof resolver === 'function') {
-        return (resolver as Resolver<T>)(options);
-    }
-    return resolver;
-};
-
-export const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptions): Promise<Headers> => {
-    const [token, username, password, additionalHeaders] = await Promise.all([
-        resolve(options, config.TOKEN),
-        resolve(options, config.USERNAME),
-        resolve(options, config.PASSWORD),
-        resolve(options, config.HEADERS),
-    ]);
-
-    const headers = Object.entries({
-        Accept: 'application/json',
-        ...additionalHeaders,
-        ...options.headers,
-    })
-        .filter(([_, value]) => value)
-        .reduce(
-            (headers, [key, value]) => ({
-                ...headers,
-                [key]: String(value),
-            }),
-            {} as Record<string, string>
-        );
-
-    if (isStringWithValue(token)) {
-        headers['Authorization'] = \`Bearer \${token}\`;
-    }
-
-    if (isStringWithValue(username) && isStringWithValue(password)) {
-        const credentials = base64(\`\${username}:\${password}\`);
-        headers['Authorization'] = \`Basic \${credentials}\`;
-    }
-
-    if (options.body !== undefined) {
-        if (options.mediaType) {
-            headers['Content-Type'] = options.mediaType;
-        } else if (isBlob(options.body)) {
-            headers['Content-Type'] = options.body.type || 'application/octet-stream';
-        } else if (isString(options.body)) {
-            headers['Content-Type'] = 'text/plain';
-        } else if (!isFormData(options.body)) {
-            headers['Content-Type'] = 'application/json';
-        }
-    }
-
-    return new Headers(headers);
-};
-
-export const getRequestBody = (options: ApiRequestOptions): unknown => {
-    if (options.body !== undefined) {
-        if (options.mediaType?.includes('/json')) {
-            return JSON.stringify(options.body);
-        } else if (isString(options.body) || isBlob(options.body) || isFormData(options.body)) {
-            return options.body;
-        } else {
-            return JSON.stringify(options.body);
-        }
-    }
-    return undefined;
-};
-
-export const sendRequest = async (
-    config: OpenAPIConfig,
-    options: ApiRequestOptions,
-    url: string,
-    body: any,
-    formData: FormData | undefined,
-    headers: Headers,
-    onCancel: OnCancel
-): Promise<Response> => {
-    const controller = new AbortController();
-
-    const request: RequestInit = {
-        headers,
-        body: body ?? formData,
-        method: options.method,
-        signal: controller.signal,
-    };
-
-    if (config.WITH_CREDENTIALS) {
-        request.credentials = config.CREDENTIALS;
-    }
-
-    onCancel(() => controller.abort());
-
-    return await fetch(url, request);
-};
-
-export const getResponseHeader = (response: Response, responseHeader?: string): string | undefined => {
-    if (responseHeader) {
-        const content = response.headers.get(responseHeader);
-        if (isString(content)) {
-            return content;
-        }
-    }
-    return undefined;
-};
-
-export const getResponseBody = async (response: Response): Promise<unknown> => {
-    if (response.status !== 204) {
-        try {
-            const contentType = response.headers.get('Content-Type');
-            if (contentType) {
-                const jsonTypes = ['application/json', 'application/problem+json'];
-                const binaryTypes = ['audio/', 'image/', 'video/'];
-                const isJSON = jsonTypes.some(type => contentType.toLowerCase().startsWith(type));
-                const isBinary = binaryTypes.some(type => contentType.toLowerCase().startsWith(type));
-                if (isJSON) {
-                    return await response.json();
-                } else if (isBinary) {
-                    return await response.blob();
-                } else {
-                    return await response.text();
-                }
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    }
-    return undefined;
-};
-
-export const catchErrorCodes = (options: ApiRequestOptions, result: ApiResult): void => {
-    const errors: Record<number, string> = {
-        400: 'Bad Request',
-        401: 'Unauthorized',
-        403: 'Forbidden',
-        404: 'Not Found',
-        500: 'Internal Server Error',
-        502: 'Bad Gateway',
-        503: 'Service Unavailable',
-        ...options.errors,
-    };
-
-    const error = errors[result.status];
-    if (error) {
-        throw new ApiError(options, result, error);
-    }
-
-    if (!result.ok) {
-        const errorStatus = result.status ?? 'unknown';
-        const errorStatusText = result.statusText ?? 'unknown';
-        const errorBody = (() => {
-            try {
-                return JSON.stringify(result.body, null, 2);
-            } catch (e) {
-                return undefined;
-            }
-        })();
-
-        throw new ApiError(
-            options,
-            result,
-            \`Generic Error: status: \${errorStatus}; status text: \${errorStatusText}; body: \${errorBody}\`
-        );
-    }
-};
-
-/**
- * Request method
- * @param config The OpenAPI configuration object
- * @param options The request options from the service
- * @returns CancelablePromise<T>
- * @throws ApiError
- */
-export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): CancelablePromise<T> => {
-    return new CancelablePromise(async (resolve, reject, onCancel) => {
-        try {
-            const url = getUrl(config, options);
-            const formData = getFormData(options);
-            const body = getRequestBody(options);
-            const headers = await getHeaders(config, options);
-
-            if (!onCancel.isCancelled) {
-                const response = await sendRequest(config, options, url, body, formData, headers, onCancel);
-                const responseBody = await getResponseBody(response);
-                const responseHeader = getResponseHeader(response, options.responseHeader);
-
-                const result: ApiResult = {
-                    url,
-                    ok: response.ok,
-                    status: response.status,
-                    statusText: response.statusText,
-                    body: responseHeader ?? responseBody,
-                };
-
-                catchErrorCodes(options, result);
-
-                resolve(result.body);
-            }
-        } catch (error) {
-            reject(error);
-        }
-    });
-};
-"
-`;
-
-exports[`v3 should generate: test/generated/v3/core/types.ts 1`] = `
-"import type { ApiResult } from './ApiResult';
-
-export type TResult = 'body' | 'raw';
-
-export type TApiResponse<T extends TResult, TData> =
-    Exclude<T, 'raw'> extends never ? ApiResult<TData> : ApiResult<TData>['body'];
-
-export type TConfig<T extends TResult> = {
-    _result?: T;
-};
-"
-`;
-
-exports[`v3 should generate: test/generated/v3/index.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/index.ts 1`] = `
 "export { ApiError } from './core/ApiError';
 export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
@@ -4630,21 +3783,21 @@ export { UploadService } from './services/UploadService';
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/_default.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/_default.ts 1`] = `
 "export type _default = {
     name?: string;
 };
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/AnyOfAnyAndNull.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/AnyOfAnyAndNull.ts 1`] = `
 "export type AnyOfAnyAndNull = {
     data?: unknown | null;
 };
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/AnyOfArrays.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/AnyOfArrays.ts 1`] = `
 "/**
  * This is a simple array with any of properties
  */
@@ -4661,7 +3814,7 @@ export type AnyOfArrays = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ArrayWithAnyOfProperties.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ArrayWithAnyOfProperties.ts 1`] = `
 "/**
  * This is a simple array with any of properties
  */
@@ -4676,7 +3829,7 @@ export type ArrayWithAnyOfProperties = Array<
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ArrayWithArray.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ArrayWithArray.ts 1`] = `
 "import type { ModelWithString } from './ModelWithString';
 
 /**
@@ -4686,7 +3839,7 @@ export type ArrayWithArray = Array<Array<ModelWithString>>;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ArrayWithBooleans.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ArrayWithBooleans.ts 1`] = `
 "/**
  * This is a simple array with booleans
  */
@@ -4694,7 +3847,7 @@ export type ArrayWithBooleans = Array<boolean>;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ArrayWithNumbers.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ArrayWithNumbers.ts 1`] = `
 "/**
  * This is a simple array with numbers
  */
@@ -4702,7 +3855,7 @@ export type ArrayWithNumbers = Array<number>;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ArrayWithProperties.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ArrayWithProperties.ts 1`] = `
 "/**
  * This is a simple array with properties
  */
@@ -4713,7 +3866,7 @@ export type ArrayWithProperties = Array<{
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ArrayWithReferences.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ArrayWithReferences.ts 1`] = `
 "import type { ModelWithString } from './ModelWithString';
 
 /**
@@ -4723,7 +3876,7 @@ export type ArrayWithReferences = Array<ModelWithString>;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ArrayWithStrings.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ArrayWithStrings.ts 1`] = `
 "/**
  * This is a simple array with strings
  */
@@ -4731,7 +3884,7 @@ export type ArrayWithStrings = Array<string>;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/CommentWithBackticks.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/CommentWithBackticks.ts 1`] = `
 "/**
  * Testing backticks in string: \`backticks\` and \`\`\`multiple backticks\`\`\` should work
  */
@@ -4739,7 +3892,7 @@ export type CommentWithBackticks = number;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/CommentWithBreaks.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/CommentWithBreaks.ts 1`] = `
 "/**
  * Testing multiline comments in string: First line
  * Second line
@@ -4750,7 +3903,7 @@ export type CommentWithBreaks = number;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/CommentWithExpressionPlaceholders.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/CommentWithExpressionPlaceholders.ts 1`] = `
 "/**
  * Testing expression placeholders in string: \${expression} should work
  */
@@ -4758,7 +3911,7 @@ export type CommentWithExpressionPlaceholders = number;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/CommentWithQuotes.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/CommentWithQuotes.ts 1`] = `
 "/**
  * Testing quotes in string: 'single quote''' and "double quotes""" should work
  */
@@ -4766,7 +3919,7 @@ export type CommentWithQuotes = number;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/CommentWithReservedCharacters.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/CommentWithReservedCharacters.ts 1`] = `
 "/**
  * Testing reserved characters in string: * inline * and ** inline ** should work
  */
@@ -4774,7 +3927,7 @@ export type CommentWithReservedCharacters = number;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/CommentWithSlashes.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/CommentWithSlashes.ts 1`] = `
 "/**
  * Testing slashes in string: \\backwards\\\\\\ and /forwards/// should work
  */
@@ -4782,7 +3935,7 @@ export type CommentWithSlashes = number;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/CompositionBaseModel.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/CompositionBaseModel.ts 1`] = `
 "/**
  * This is a base model with two simple optional properties
  */
@@ -4793,7 +3946,7 @@ export type CompositionBaseModel = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/CompositionExtendedModel.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/CompositionExtendedModel.ts 1`] = `
 "import type { CompositionBaseModel } from './CompositionBaseModel';
 
 /**
@@ -4807,7 +3960,7 @@ export type CompositionExtendedModel = CompositionBaseModel & {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/CompositionWithAllOfAndNullable.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/CompositionWithAllOfAndNullable.ts 1`] = `
 "import type { ModelWithArray } from './ModelWithArray';
 import type { ModelWithDictionary } from './ModelWithDictionary';
 import type { ModelWithEnum } from './ModelWithEnum';
@@ -4827,7 +3980,7 @@ export type CompositionWithAllOfAndNullable = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/CompositionWithAnyOf.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/CompositionWithAnyOf.ts 1`] = `
 "import type { ModelWithArray } from './ModelWithArray';
 import type { ModelWithDictionary } from './ModelWithDictionary';
 import type { ModelWithEnum } from './ModelWithEnum';
@@ -4842,7 +3995,7 @@ export type CompositionWithAnyOf = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/CompositionWithAnyOfAndNullable.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/CompositionWithAnyOfAndNullable.ts 1`] = `
 "import type { ModelWithArray } from './ModelWithArray';
 import type { ModelWithDictionary } from './ModelWithDictionary';
 import type { ModelWithEnum } from './ModelWithEnum';
@@ -4863,7 +4016,7 @@ export type CompositionWithAnyOfAndNullable = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/CompositionWithAnyOfAnonymous.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/CompositionWithAnyOfAnonymous.ts 1`] = `
 "/**
  * This is a model with one property with a 'any of' relationship where the options are not $ref
  */
@@ -4878,7 +4031,7 @@ export type CompositionWithAnyOfAnonymous = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/CompositionWithNestedAnyAndTypeNull.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/CompositionWithNestedAnyAndTypeNull.ts 1`] = `
 "import type { ModelWithArray } from './ModelWithArray';
 import type { ModelWithDictionary } from './ModelWithDictionary';
 
@@ -4891,7 +4044,7 @@ export type CompositionWithNestedAnyAndTypeNull = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/CompositionWithNestedAnyOfAndNull.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/CompositionWithNestedAnyOfAndNull.ts 1`] = `
 "import type { ConstValue } from './ConstValue';
 import type { Enum1 } from './Enum1';
 
@@ -4904,7 +4057,7 @@ export type CompositionWithNestedAnyOfAndNull = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/CompositionWithOneOf.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/CompositionWithOneOf.ts 1`] = `
 "import type { ModelWithArray } from './ModelWithArray';
 import type { ModelWithDictionary } from './ModelWithDictionary';
 import type { ModelWithEnum } from './ModelWithEnum';
@@ -4919,7 +4072,7 @@ export type CompositionWithOneOf = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/CompositionWithOneOfAndComplexArrayDictionary.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/CompositionWithOneOfAndComplexArrayDictionary.ts 1`] = `
 "/**
  * This is a model that contains a dictionary of complex arrays (composited) within composition
  */
@@ -4929,7 +4082,7 @@ export type CompositionWithOneOfAndComplexArrayDictionary = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/CompositionWithOneOfAndNullable.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/CompositionWithOneOfAndNullable.ts 1`] = `
 "import type { ModelWithArray } from './ModelWithArray';
 import type { ModelWithDictionary } from './ModelWithDictionary';
 import type { ModelWithEnum } from './ModelWithEnum';
@@ -4950,7 +4103,7 @@ export type CompositionWithOneOfAndNullable = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/CompositionWithOneOfAndProperties.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/CompositionWithOneOfAndProperties.ts 1`] = `
 "import type { NonAsciiStringæøåÆØÅöôêÊ字符串 } from './NonAsciiStringæøåÆØÅöôêÊ字符串';
 import type { SimpleParameter } from './SimpleParameter';
 
@@ -4968,7 +4121,7 @@ export type CompositionWithOneOfAndProperties =
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/CompositionWithOneOfAndSimpleArrayDictionary.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/CompositionWithOneOfAndSimpleArrayDictionary.ts 1`] = `
 "/**
  * This is a model that contains a dictionary of simple arrays within composition
  */
@@ -4978,7 +4131,7 @@ export type CompositionWithOneOfAndSimpleArrayDictionary = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/CompositionWithOneOfAndSimpleDictionary.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/CompositionWithOneOfAndSimpleDictionary.ts 1`] = `
 "/**
  * This is a model that contains a simple dictionary within composition
  */
@@ -4988,7 +4141,7 @@ export type CompositionWithOneOfAndSimpleDictionary = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/CompositionWithOneOfAnonymous.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/CompositionWithOneOfAnonymous.ts 1`] = `
 "/**
  * This is a model with one property with a 'one of' relationship where the options are not $ref
  */
@@ -5003,7 +4156,7 @@ export type CompositionWithOneOfAnonymous = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/CompositionWithOneOfDiscriminator.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/CompositionWithOneOfDiscriminator.ts 1`] = `
 "import type { ModelCircle } from './ModelCircle';
 import type { ModelSquare } from './ModelSquare';
 
@@ -5014,12 +4167,12 @@ export type CompositionWithOneOfDiscriminator = ModelCircle | ModelSquare;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ConstValue.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ConstValue.ts 1`] = `
 "export type ConstValue = 'ConstValue';
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/DeprecatedModel.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/DeprecatedModel.ts 1`] = `
 "/**
  * This is a deprecated model with a deprecated property
  * @deprecated
@@ -5034,7 +4187,7 @@ export type DeprecatedModel = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/DictionaryWithArray.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/DictionaryWithArray.ts 1`] = `
 "import type { ModelWithString } from './ModelWithString';
 
 /**
@@ -5044,7 +4197,7 @@ export type DictionaryWithArray = Record<string, Array<ModelWithString>>;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/DictionaryWithDictionary.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/DictionaryWithDictionary.ts 1`] = `
 "/**
  * This is a string dictionary
  */
@@ -5052,7 +4205,7 @@ export type DictionaryWithDictionary = Record<string, Record<string, string>>;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/DictionaryWithProperties.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/DictionaryWithProperties.ts 1`] = `
 "/**
  * This is a complex dictionary
  */
@@ -5066,7 +4219,7 @@ export type DictionaryWithProperties = Record<
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/DictionaryWithReference.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/DictionaryWithReference.ts 1`] = `
 "import type { ModelWithString } from './ModelWithString';
 
 /**
@@ -5076,7 +4229,7 @@ export type DictionaryWithReference = Record<string, ModelWithString>;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/DictionaryWithString.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/DictionaryWithString.ts 1`] = `
 "/**
  * This is a string dictionary
  */
@@ -5084,7 +4237,7 @@ export type DictionaryWithString = Record<string, string>;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/Enum1.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/Enum1.ts 1`] = `
 "export type Enum1 = 'Bird' | 'Dog';
 
 export const Enum1Enum = {
@@ -5094,7 +4247,7 @@ export const Enum1Enum = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/EnumFromDescription.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/EnumFromDescription.ts 1`] = `
 "/**
  * Success=1,Warning=2,Error=3
  */
@@ -5102,7 +4255,7 @@ export type EnumFromDescription = number;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/EnumWithExtensions.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/EnumWithExtensions.ts 1`] = `
 "/**
  * This is a simple enum with numbers
  */
@@ -5125,7 +4278,7 @@ export const EnumWithExtensionsEnum = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/EnumWithNumbers.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/EnumWithNumbers.ts 1`] = `
 "/**
  * This is a simple enum with numbers
  */
@@ -5151,7 +4304,7 @@ export const EnumWithNumbersEnum = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/EnumWithReplacedCharacters.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/EnumWithReplacedCharacters.ts 1`] = `
 "export type EnumWithReplacedCharacters = "'Single Quote'" | '"Double Quotes"' | 'øæåôöØÆÅÔÖ字符串' | 3.1 | '';
 
 export const EnumWithReplacedCharactersEnum = {
@@ -5164,7 +4317,7 @@ export const EnumWithReplacedCharactersEnum = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/EnumWithStrings.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/EnumWithStrings.ts 1`] = `
 "/**
  * This is a simple enum with strings
  */
@@ -5187,7 +4340,7 @@ export const EnumWithStringsEnum = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/File.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/File.ts 1`] = `
 "export type File = {
     readonly id?: string;
     readonly updated_at?: string;
@@ -5198,7 +4351,7 @@ exports[`v3 should generate: test/generated/v3/models/File.ts 1`] = `
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/FreeFormObjectWithAdditionalPropertiesEqEmptyObject.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/FreeFormObjectWithAdditionalPropertiesEqEmptyObject.ts 1`] = `
 "/**
  * This is a free-form object with additionalProperties: {}.
  */
@@ -5206,7 +4359,7 @@ export type FreeFormObjectWithAdditionalPropertiesEqEmptyObject = Record<string,
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/FreeFormObjectWithAdditionalPropertiesEqTrue.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/FreeFormObjectWithAdditionalPropertiesEqTrue.ts 1`] = `
 "/**
  * This is a free-form object with additionalProperties: true.
  */
@@ -5214,7 +4367,7 @@ export type FreeFormObjectWithAdditionalPropertiesEqTrue = Record<string, unknow
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/FreeFormObjectWithoutAdditionalProperties.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/FreeFormObjectWithoutAdditionalProperties.ts 1`] = `
 "/**
  * This is a free-form object without additionalProperties.
  */
@@ -5222,7 +4375,7 @@ export type FreeFormObjectWithoutAdditionalProperties = Record<string, unknown>;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelCircle.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelCircle.ts 1`] = `
 "/**
  * Circle
  */
@@ -5233,7 +4386,7 @@ export type ModelCircle = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelSquare.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelSquare.ts 1`] = `
 "/**
  * Square
  */
@@ -5244,7 +4397,7 @@ export type ModelSquare = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelThatExtends.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelThatExtends.ts 1`] = `
 "import type { ModelWithString } from './ModelWithString';
 
 /**
@@ -5257,7 +4410,7 @@ export type ModelThatExtends = ModelWithString & {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelThatExtendsExtends.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelThatExtendsExtends.ts 1`] = `
 "import type { ModelThatExtends } from './ModelThatExtends';
 import type { ModelWithString } from './ModelWithString';
 
@@ -5272,7 +4425,7 @@ export type ModelThatExtendsExtends = ModelWithString &
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelWithAdditionalPropertiesEqTrue.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelWithAdditionalPropertiesEqTrue.ts 1`] = `
 "/**
  * This is a model with one property and additionalProperties: true
  */
@@ -5286,7 +4439,7 @@ export type ModelWithAdditionalPropertiesEqTrue = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelWithArray.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelWithArray.ts 1`] = `
 "import type { ModelWithString } from './ModelWithString';
 
 /**
@@ -5300,7 +4453,7 @@ export type ModelWithArray = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelWithArrayReadOnlyAndWriteOnly.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelWithArrayReadOnlyAndWriteOnly.ts 1`] = `
 "import type { ModelWithReadOnlyAndWriteOnly } from './ModelWithReadOnlyAndWriteOnly';
 
 /**
@@ -5314,7 +4467,7 @@ export type ModelWithArrayReadOnlyAndWriteOnly = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelWithBoolean.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelWithBoolean.ts 1`] = `
 "/**
  * This is a model with one boolean property
  */
@@ -5327,7 +4480,7 @@ export type ModelWithBoolean = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelWithCircularReference.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelWithCircularReference.ts 1`] = `
 "/**
  * This is a model with one property containing a circular reference
  */
@@ -5337,7 +4490,7 @@ export type ModelWithCircularReference = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelWithConst.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelWithConst.ts 1`] = `
 "export type ModelWithConst = {
     String?: 'String';
     number?: 0;
@@ -5347,7 +4500,7 @@ exports[`v3 should generate: test/generated/v3/models/ModelWithConst.ts 1`] = `
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelWithDictionary.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelWithDictionary.ts 1`] = `
 "/**
  * This is a model with one property containing a dictionary
  */
@@ -5357,7 +4510,7 @@ export type ModelWithDictionary = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelWithDuplicateImports.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelWithDuplicateImports.ts 1`] = `
 "import type { ModelWithString } from './ModelWithString';
 
 /**
@@ -5371,7 +4524,7 @@ export type ModelWithDuplicateImports = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelWithDuplicateProperties.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelWithDuplicateProperties.ts 1`] = `
 "import type { ModelWithString } from './ModelWithString';
 
 /**
@@ -5383,7 +4536,7 @@ export type ModelWithDuplicateProperties = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelWithEnum.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelWithEnum.ts 1`] = `
 "/**
  * This is a model with one enum
  */
@@ -5420,7 +4573,7 @@ export const StatusCodeEnum = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelWithEnumFromDescription.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelWithEnumFromDescription.ts 1`] = `
 "/**
  * This is a model with one enum
  */
@@ -5433,7 +4586,7 @@ export type ModelWithEnumFromDescription = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelWithEnumWithHyphen.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelWithEnumWithHyphen.ts 1`] = `
 "/**
  * This is a model with one enum with escaped name
  */
@@ -5447,7 +4600,7 @@ export const FooBarBazQuxEnum = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelWithInteger.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelWithInteger.ts 1`] = `
 "/**
  * This is a model with one number property
  */
@@ -5460,7 +4613,7 @@ export type ModelWithInteger = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelWithNestedArrayEnums.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelWithNestedArrayEnums.ts 1`] = `
 "import type { ModelWithNestedArrayEnumsData } from './ModelWithNestedArrayEnumsData';
 
 export type ModelWithNestedArrayEnums = {
@@ -5470,7 +4623,7 @@ export type ModelWithNestedArrayEnums = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelWithNestedArrayEnumsData.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelWithNestedArrayEnumsData.ts 1`] = `
 "import type { ModelWithNestedArrayEnumsDataBar } from './ModelWithNestedArrayEnumsDataBar';
 import type { ModelWithNestedArrayEnumsDataFoo } from './ModelWithNestedArrayEnumsDataFoo';
 
@@ -5481,7 +4634,7 @@ export type ModelWithNestedArrayEnumsData = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelWithNestedArrayEnumsDataBar.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelWithNestedArrayEnumsDataBar.ts 1`] = `
 "export type ModelWithNestedArrayEnumsDataBar = 'baz' | 'qux';
 
 export const ModelWithNestedArrayEnumsDataBarEnum = {
@@ -5491,7 +4644,7 @@ export const ModelWithNestedArrayEnumsDataBarEnum = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelWithNestedArrayEnumsDataFoo.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelWithNestedArrayEnumsDataFoo.ts 1`] = `
 "export type ModelWithNestedArrayEnumsDataFoo = 'foo' | 'bar';
 
 export const ModelWithNestedArrayEnumsDataFooEnum = {
@@ -5501,7 +4654,7 @@ export const ModelWithNestedArrayEnumsDataFooEnum = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelWithNestedCompositionEnums.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelWithNestedCompositionEnums.ts 1`] = `
 "import type { ModelWithNestedArrayEnumsDataFoo } from './ModelWithNestedArrayEnumsDataFoo';
 
 export type ModelWithNestedCompositionEnums = {
@@ -5510,7 +4663,7 @@ export type ModelWithNestedCompositionEnums = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelWithNestedEnums.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelWithNestedEnums.ts 1`] = `
 "/**
  * This is a model with nested enums
  */
@@ -5523,7 +4676,7 @@ export type ModelWithNestedEnums = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelWithNestedProperties.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelWithNestedProperties.ts 1`] = `
 "/**
  * This is a model with one nested property
  */
@@ -5537,7 +4690,7 @@ export type ModelWithNestedProperties = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelWithNullableObject.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelWithNullableObject.ts 1`] = `
 "import type { NullableObject } from './NullableObject';
 
 export type ModelWithNullableObject = {
@@ -5546,7 +4699,7 @@ export type ModelWithNullableObject = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelWithNullableString.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelWithNullableString.ts 1`] = `
 "/**
  * This is a model with one string property
  */
@@ -5571,7 +4724,7 @@ export type ModelWithNullableString = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelWithOneOfEnum.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelWithOneOfEnum.ts 1`] = `
 "export type ModelWithOneOfEnum =
     | {
           foo: 'Bar';
@@ -5597,7 +4750,7 @@ export const FooEnum = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelWithOrderedProperties.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelWithOrderedProperties.ts 1`] = `
 "/**
  * This is a model with ordered properties
  */
@@ -5609,7 +4762,7 @@ export type ModelWithOrderedProperties = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelWithPattern.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelWithPattern.ts 1`] = `
 "/**
  * This is a model that contains a some patterns
  */
@@ -5627,7 +4780,7 @@ export type ModelWithPattern = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelWithProperties.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelWithProperties.ts 1`] = `
 "import type { ModelWithString } from './ModelWithString';
 
 /**
@@ -5650,7 +4803,7 @@ export type ModelWithProperties = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelWithReadOnlyAndWriteOnly.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelWithReadOnlyAndWriteOnly.ts 1`] = `
 "export type ModelWithReadOnlyAndWriteOnly = {
     foo: string;
     readonly bar: string;
@@ -5659,7 +4812,7 @@ exports[`v3 should generate: test/generated/v3/models/ModelWithReadOnlyAndWriteO
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelWithReference.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelWithReference.ts 1`] = `
 "import type { ModelWithProperties } from './ModelWithProperties';
 
 /**
@@ -5671,7 +4824,7 @@ export type ModelWithReference = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/ModelWithString.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/ModelWithString.ts 1`] = `
 "/**
  * This is a model with one string property
  */
@@ -5684,14 +4837,14 @@ export type ModelWithString = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/NestedAnyOfArraysNullable.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/NestedAnyOfArraysNullable.ts 1`] = `
 "export type NestedAnyOfArraysNullable = {
     nullableArray?: Array<string | boolean> | null;
 };
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/NonAsciiStringæøåÆØÅöôêÊ字符串.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/NonAsciiStringæøåÆØÅöôêÊ字符串.ts 1`] = `
 "/**
  * A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)
  */
@@ -5699,7 +4852,7 @@ export type NonAsciiStringæøåÆØÅöôêÊ字符串 = string;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/NullableObject.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/NullableObject.ts 1`] = `
 "/**
  * An object that can be null
  */
@@ -5709,7 +4862,7 @@ export type NullableObject = {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/Pageable.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/Pageable.ts 1`] = `
 "export type Pageable = {
     page?: number;
     size?: number;
@@ -5718,7 +4871,7 @@ exports[`v3 should generate: test/generated/v3/models/Pageable.ts 1`] = `
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/SimpleBoolean.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/SimpleBoolean.ts 1`] = `
 "/**
  * This is a simple boolean
  */
@@ -5726,7 +4879,7 @@ export type SimpleBoolean = boolean;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/SimpleFile.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/SimpleFile.ts 1`] = `
 "/**
  * This is a simple file
  */
@@ -5734,7 +4887,7 @@ export type SimpleFile = Blob;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/SimpleInteger.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/SimpleInteger.ts 1`] = `
 "/**
  * This is a simple number
  */
@@ -5742,7 +4895,7 @@ export type SimpleInteger = number;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/SimpleParameter.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/SimpleParameter.ts 1`] = `
 "/**
  * This is a reusable parameter
  */
@@ -5750,7 +4903,7 @@ export type SimpleParameter = string;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/SimpleReference.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/SimpleReference.ts 1`] = `
 "import type { ModelWithString } from './ModelWithString';
 
 /**
@@ -5760,7 +4913,7 @@ export type SimpleReference = ModelWithString;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/SimpleString.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/SimpleString.ts 1`] = `
 "/**
  * This is a simple string
  */
@@ -5768,7 +4921,7 @@ export type SimpleString = string;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/models/SimpleStringWithPattern.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/models/SimpleStringWithPattern.ts 1`] = `
 "/**
  * This is a simple string
  */
@@ -5776,7 +4929,7 @@ export type SimpleStringWithPattern = string | null;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$_default.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$_default.ts 1`] = `
 "export const $_default = {
     properties: {
         name: {
@@ -5787,7 +4940,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$_default.ts 1`] = `
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$AnyOfAnyAndNull.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$AnyOfAnyAndNull.ts 1`] = `
 "export const $AnyOfAnyAndNull = {
     properties: {
         data: {
@@ -5806,7 +4959,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$AnyOfAnyAndNull.ts 1`] =
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$AnyOfArrays.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$AnyOfArrays.ts 1`] = `
 "export const $AnyOfArrays = {
     description: \`This is a simple array with any of properties\`,
     properties: {
@@ -5837,7 +4990,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$AnyOfArrays.ts 1`] = `
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ArrayWithAnyOfProperties.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ArrayWithAnyOfProperties.ts 1`] = `
 "export const $ArrayWithAnyOfProperties = {
     type: 'array',
     contains: {
@@ -5863,7 +5016,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ArrayWithAnyOfProperties
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ArrayWithArray.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ArrayWithArray.ts 1`] = `
 "export const $ArrayWithArray = {
     type: 'array',
     contains: {
@@ -5876,7 +5029,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ArrayWithArray.ts 1`] = 
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ArrayWithBooleans.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ArrayWithBooleans.ts 1`] = `
 "export const $ArrayWithBooleans = {
     type: 'array',
     contains: {
@@ -5886,7 +5039,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ArrayWithBooleans.ts 1`]
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ArrayWithNumbers.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ArrayWithNumbers.ts 1`] = `
 "export const $ArrayWithNumbers = {
     type: 'array',
     contains: {
@@ -5896,7 +5049,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ArrayWithNumbers.ts 1`] 
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ArrayWithProperties.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ArrayWithProperties.ts 1`] = `
 "export const $ArrayWithProperties = {
     type: 'array',
     contains: {
@@ -5913,7 +5066,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ArrayWithProperties.ts 1
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ArrayWithReferences.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ArrayWithReferences.ts 1`] = `
 "export const $ArrayWithReferences = {
     type: 'array',
     contains: {
@@ -5923,7 +5076,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ArrayWithReferences.ts 1
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ArrayWithStrings.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ArrayWithStrings.ts 1`] = `
 "export const $ArrayWithStrings = {
     type: 'array',
     contains: {
@@ -5933,7 +5086,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ArrayWithStrings.ts 1`] 
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$CommentWithBackticks.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$CommentWithBackticks.ts 1`] = `
 "export const $CommentWithBackticks = {
     type: 'number',
     description: \`Testing backticks in string: \\\`backticks\\\` and \\\`\\\`\\\`multiple backticks\\\`\\\`\\\` should work\`,
@@ -5941,7 +5094,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$CommentWithBackticks.ts 
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$CommentWithBreaks.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$CommentWithBreaks.ts 1`] = `
 "export const $CommentWithBreaks = {
     type: 'number',
     description: \`Testing multiline comments in string: First line
@@ -5952,7 +5105,7 @@ Fourth line\`,
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$CommentWithExpressionPlaceholders.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$CommentWithExpressionPlaceholders.ts 1`] = `
 "export const $CommentWithExpressionPlaceholders = {
     type: 'number',
     description: \`Testing expression placeholders in string: \\\${expression} should work\`,
@@ -5960,7 +5113,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$CommentWithExpressionPla
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$CommentWithQuotes.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$CommentWithQuotes.ts 1`] = `
 "export const $CommentWithQuotes = {
     type: 'number',
     description: \`Testing quotes in string: 'single quote''' and "double quotes""" should work\`,
@@ -5968,7 +5121,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$CommentWithQuotes.ts 1`]
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$CommentWithReservedCharacters.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$CommentWithReservedCharacters.ts 1`] = `
 "export const $CommentWithReservedCharacters = {
     type: 'number',
     description: \`Testing reserved characters in string: /* inline */ and /** inline **/ should work\`,
@@ -5976,7 +5129,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$CommentWithReservedChara
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$CommentWithSlashes.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$CommentWithSlashes.ts 1`] = `
 "export const $CommentWithSlashes = {
     type: 'number',
     description: \`Testing slashes in string: \\\\backwards\\\\\\\\\\\\ and /forwards/// should work\`,
@@ -5984,7 +5137,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$CommentWithSlashes.ts 1`
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$CompositionBaseModel.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$CompositionBaseModel.ts 1`] = `
 "export const $CompositionBaseModel = {
     description: \`This is a base model with two simple optional properties\`,
     properties: {
@@ -5999,7 +5152,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$CompositionBaseModel.ts 
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$CompositionExtendedModel.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$CompositionExtendedModel.ts 1`] = `
 "export const $CompositionExtendedModel = {
     type: 'all-of',
     description: \`This is a model that extends the base model\`,
@@ -6028,7 +5181,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$CompositionExtendedModel
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithAllOfAndNullable.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$CompositionWithAllOfAndNullable.ts 1`] = `
 "export const $CompositionWithAllOfAndNullable = {
     description: \`This is a model with one property with a 'all of' relationship\`,
     properties: {
@@ -6059,7 +5212,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithAllOfAndN
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithAnyOf.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$CompositionWithAnyOf.ts 1`] = `
 "export const $CompositionWithAnyOf = {
     description: \`This is a model with one property with a 'any of' relationship\`,
     properties: {
@@ -6085,7 +5238,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithAnyOf.ts 
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithAnyOfAndNullable.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$CompositionWithAnyOfAndNullable.ts 1`] = `
 "export const $CompositionWithAnyOfAndNullable = {
     description: \`This is a model with one property with a 'any of' relationship\`,
     properties: {
@@ -6116,7 +5269,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithAnyOfAndN
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithAnyOfAnonymous.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$CompositionWithAnyOfAnonymous.ts 1`] = `
 "export const $CompositionWithAnyOfAnonymous = {
     description: \`This is a model with one property with a 'any of' relationship where the options are not $ref\`,
     properties: {
@@ -6146,7 +5299,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithAnyOfAnon
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithNestedAnyAndTypeNull.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$CompositionWithNestedAnyAndTypeNull.ts 1`] = `
 "export const $CompositionWithNestedAnyAndTypeNull = {
     description: \`This is a model with nested 'any of' property with a type null\`,
     properties: {
@@ -6188,7 +5341,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithNestedAny
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithNestedAnyOfAndNull.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$CompositionWithNestedAnyOfAndNull.ts 1`] = `
 "export const $CompositionWithNestedAnyOfAndNull = {
     description: \`This is a model with one property with a 'any of' relationship where the options are not $ref\`,
     properties: {
@@ -6219,7 +5372,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithNestedAny
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithOneOf.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$CompositionWithOneOf.ts 1`] = `
 "export const $CompositionWithOneOf = {
     description: \`This is a model with one property with a 'one of' relationship\`,
     properties: {
@@ -6245,7 +5398,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithOneOf.ts 
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithOneOfAndComplexArrayDictionary.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$CompositionWithOneOfAndComplexArrayDictionary.ts 1`] = `
 "export const $CompositionWithOneOfAndComplexArrayDictionary = {
     description: \`This is a model that contains a dictionary of complex arrays (composited) within composition\`,
     properties: {
@@ -6279,7 +5432,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithOneOfAndC
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithOneOfAndNullable.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$CompositionWithOneOfAndNullable.ts 1`] = `
 "export const $CompositionWithOneOfAndNullable = {
     description: \`This is a model with one property with a 'one of' relationship\`,
     properties: {
@@ -6310,7 +5463,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithOneOfAndN
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithOneOfAndProperties.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$CompositionWithOneOfAndProperties.ts 1`] = `
 "export const $CompositionWithOneOfAndProperties = {
     type: 'one-of',
     contains: [
@@ -6357,7 +5510,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithOneOfAndP
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithOneOfAndSimpleArrayDictionary.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$CompositionWithOneOfAndSimpleArrayDictionary.ts 1`] = `
 "export const $CompositionWithOneOfAndSimpleArrayDictionary = {
     description: \`This is a model that contains a dictionary of simple arrays within composition\`,
     properties: {
@@ -6383,7 +5536,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithOneOfAndS
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithOneOfAndSimpleDictionary.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$CompositionWithOneOfAndSimpleDictionary.ts 1`] = `
 "export const $CompositionWithOneOfAndSimpleDictionary = {
     description: \`This is a model that contains a simple dictionary within composition\`,
     properties: {
@@ -6406,7 +5559,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithOneOfAndS
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithOneOfAnonymous.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$CompositionWithOneOfAnonymous.ts 1`] = `
 "export const $CompositionWithOneOfAnonymous = {
     description: \`This is a model with one property with a 'one of' relationship where the options are not $ref\`,
     properties: {
@@ -6436,7 +5589,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithOneOfAnon
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithOneOfDiscriminator.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$CompositionWithOneOfDiscriminator.ts 1`] = `
 "export const $CompositionWithOneOfDiscriminator = {
     type: 'one-of',
     description: \`This is a model with one property with a 'one of' relationship where the options are not $ref\`,
@@ -6452,14 +5605,14 @@ exports[`v3 should generate: test/generated/v3/schemas/$CompositionWithOneOfDisc
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ConstValue.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ConstValue.ts 1`] = `
 "export const $ConstValue = {
     type: '"ConstValue"',
 } as const;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$DeprecatedModel.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$DeprecatedModel.ts 1`] = `
 "export const $DeprecatedModel = {
     description: \`This is a deprecated model with a deprecated property\`,
     properties: {
@@ -6472,7 +5625,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$DeprecatedModel.ts 1`] =
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$DictionaryWithArray.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$DictionaryWithArray.ts 1`] = `
 "export const $DictionaryWithArray = {
     type: 'dictionary',
     contains: {
@@ -6485,7 +5638,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$DictionaryWithArray.ts 1
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$DictionaryWithDictionary.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$DictionaryWithDictionary.ts 1`] = `
 "export const $DictionaryWithDictionary = {
     type: 'dictionary',
     contains: {
@@ -6498,7 +5651,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$DictionaryWithDictionary
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$DictionaryWithProperties.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$DictionaryWithProperties.ts 1`] = `
 "export const $DictionaryWithProperties = {
     type: 'dictionary',
     contains: {
@@ -6515,7 +5668,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$DictionaryWithProperties
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$DictionaryWithReference.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$DictionaryWithReference.ts 1`] = `
 "export const $DictionaryWithReference = {
     type: 'dictionary',
     contains: {
@@ -6525,7 +5678,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$DictionaryWithReference.
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$DictionaryWithString.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$DictionaryWithString.ts 1`] = `
 "export const $DictionaryWithString = {
     type: 'dictionary',
     contains: {
@@ -6535,14 +5688,14 @@ exports[`v3 should generate: test/generated/v3/schemas/$DictionaryWithString.ts 
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$Enum1.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$Enum1.ts 1`] = `
 "export const $Enum1 = {
     type: 'Enum',
 } as const;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$EnumFromDescription.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$EnumFromDescription.ts 1`] = `
 "export const $EnumFromDescription = {
     type: 'number',
     description: \`Success=1,Warning=2,Error=3\`,
@@ -6550,35 +5703,35 @@ exports[`v3 should generate: test/generated/v3/schemas/$EnumFromDescription.ts 1
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$EnumWithExtensions.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$EnumWithExtensions.ts 1`] = `
 "export const $EnumWithExtensions = {
     type: 'Enum',
 } as const;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$EnumWithNumbers.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$EnumWithNumbers.ts 1`] = `
 "export const $EnumWithNumbers = {
     type: 'Enum',
 } as const;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$EnumWithReplacedCharacters.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$EnumWithReplacedCharacters.ts 1`] = `
 "export const $EnumWithReplacedCharacters = {
     type: 'Enum',
 } as const;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$EnumWithStrings.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$EnumWithStrings.ts 1`] = `
 "export const $EnumWithStrings = {
     type: 'Enum',
 } as const;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$File.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$File.ts 1`] = `
 "export const $File = {
     properties: {
         id: {
@@ -6612,7 +5765,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$File.ts 1`] = `
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$FreeFormObjectWithAdditionalPropertiesEqEmptyObject.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$FreeFormObjectWithAdditionalPropertiesEqEmptyObject.ts 1`] = `
 "export const $FreeFormObjectWithAdditionalPropertiesEqEmptyObject = {
     type: 'dictionary',
     contains: {
@@ -6622,7 +5775,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$FreeFormObjectWithAdditi
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$FreeFormObjectWithAdditionalPropertiesEqTrue.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$FreeFormObjectWithAdditionalPropertiesEqTrue.ts 1`] = `
 "export const $FreeFormObjectWithAdditionalPropertiesEqTrue = {
     type: 'dictionary',
     contains: {
@@ -6632,7 +5785,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$FreeFormObjectWithAdditi
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$FreeFormObjectWithoutAdditionalProperties.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$FreeFormObjectWithoutAdditionalProperties.ts 1`] = `
 "export const $FreeFormObjectWithoutAdditionalProperties = {
     type: 'dictionary',
     contains: {
@@ -6642,7 +5795,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$FreeFormObjectWithoutAdd
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelCircle.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelCircle.ts 1`] = `
 "export const $ModelCircle = {
     description: \`Circle\`,
     properties: {
@@ -6658,7 +5811,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelCircle.ts 1`] = `
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelSquare.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelSquare.ts 1`] = `
 "export const $ModelSquare = {
     description: \`Square\`,
     properties: {
@@ -6674,7 +5827,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelSquare.ts 1`] = `
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelThatExtends.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelThatExtends.ts 1`] = `
 "export const $ModelThatExtends = {
     type: 'all-of',
     description: \`This is a model that extends another model\`,
@@ -6697,7 +5850,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelThatExtends.ts 1`] 
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelThatExtendsExtends.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelThatExtendsExtends.ts 1`] = `
 "export const $ModelThatExtendsExtends = {
     type: 'all-of',
     description: \`This is a model that extends another model\`,
@@ -6723,7 +5876,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelThatExtendsExtends.
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelWithAdditionalPropertiesEqTrue.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelWithAdditionalPropertiesEqTrue.ts 1`] = `
 "export const $ModelWithAdditionalPropertiesEqTrue = {
     description: \`This is a model with one property and additionalProperties: true\`,
     properties: {
@@ -6736,7 +5889,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelWithAdditionalPrope
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelWithArray.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelWithArray.ts 1`] = `
 "export const $ModelWithArray = {
     description: \`This is a model with one property containing an array\`,
     properties: {
@@ -6763,7 +5916,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelWithArray.ts 1`] = 
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelWithArrayReadOnlyAndWriteOnly.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelWithArrayReadOnlyAndWriteOnly.ts 1`] = `
 "export const $ModelWithArrayReadOnlyAndWriteOnly = {
     description: \`This is a model with one property containing an array\`,
     properties: {
@@ -6790,7 +5943,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelWithArrayReadOnlyAn
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelWithBoolean.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelWithBoolean.ts 1`] = `
 "export const $ModelWithBoolean = {
     description: \`This is a model with one boolean property\`,
     properties: {
@@ -6803,7 +5956,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelWithBoolean.ts 1`] 
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelWithCircularReference.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelWithCircularReference.ts 1`] = `
 "export const $ModelWithCircularReference = {
     description: \`This is a model with one property containing a circular reference\`,
     properties: {
@@ -6815,7 +5968,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelWithCircularReferen
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelWithConst.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelWithConst.ts 1`] = `
 "export const $ModelWithConst = {
     properties: {
         String: {
@@ -6835,7 +5988,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelWithConst.ts 1`] = 
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelWithDictionary.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelWithDictionary.ts 1`] = `
 "export const $ModelWithDictionary = {
     description: \`This is a model with one property containing a dictionary\`,
     properties: {
@@ -6850,7 +6003,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelWithDictionary.ts 1
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelWithDuplicateImports.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelWithDuplicateImports.ts 1`] = `
 "export const $ModelWithDuplicateImports = {
     description: \`This is a model with duplicated imports\`,
     properties: {
@@ -6868,7 +6021,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelWithDuplicateImport
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelWithDuplicateProperties.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelWithDuplicateProperties.ts 1`] = `
 "export const $ModelWithDuplicateProperties = {
     description: \`This is a model with duplicated properties\`,
     properties: {
@@ -6880,7 +6033,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelWithDuplicateProper
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelWithEnum.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelWithEnum.ts 1`] = `
 "export const $ModelWithEnum = {
     description: \`This is a model with one enum\`,
     properties: {
@@ -6899,7 +6052,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelWithEnum.ts 1`] = `
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelWithEnumFromDescription.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelWithEnumFromDescription.ts 1`] = `
 "export const $ModelWithEnumFromDescription = {
     description: \`This is a model with one enum\`,
     properties: {
@@ -6912,7 +6065,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelWithEnumFromDescrip
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelWithEnumWithHyphen.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelWithEnumWithHyphen.ts 1`] = `
 "export const $ModelWithEnumWithHyphen = {
     description: \`This is a model with one enum with escaped name\`,
     properties: {
@@ -6924,7 +6077,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelWithEnumWithHyphen.
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelWithInteger.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelWithInteger.ts 1`] = `
 "export const $ModelWithInteger = {
     description: \`This is a model with one number property\`,
     properties: {
@@ -6937,7 +6090,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelWithInteger.ts 1`] 
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelWithNestedArrayEnums.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelWithNestedArrayEnums.ts 1`] = `
 "export const $ModelWithNestedArrayEnums = {
     properties: {
         array_strings: {
@@ -6959,7 +6112,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelWithNestedArrayEnum
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelWithNestedArrayEnumsData.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelWithNestedArrayEnumsData.ts 1`] = `
 "export const $ModelWithNestedArrayEnumsData = {
     properties: {
         foo: {
@@ -6979,21 +6132,21 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelWithNestedArrayEnum
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelWithNestedArrayEnumsDataBar.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelWithNestedArrayEnumsDataBar.ts 1`] = `
 "export const $ModelWithNestedArrayEnumsDataBar = {
     type: 'Enum',
 } as const;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelWithNestedArrayEnumsDataFoo.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelWithNestedArrayEnumsDataFoo.ts 1`] = `
 "export const $ModelWithNestedArrayEnumsDataFoo = {
     type: 'Enum',
 } as const;
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelWithNestedCompositionEnums.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelWithNestedCompositionEnums.ts 1`] = `
 "export const $ModelWithNestedCompositionEnums = {
     properties: {
         foo: {
@@ -7009,7 +6162,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelWithNestedCompositi
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelWithNestedEnums.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelWithNestedEnums.ts 1`] = `
 "export const $ModelWithNestedEnums = {
     description: \`This is a model with nested enums\`,
     properties: {
@@ -7044,7 +6197,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelWithNestedEnums.ts 
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelWithNestedProperties.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelWithNestedProperties.ts 1`] = `
 "export const $ModelWithNestedProperties = {
     description: \`This is a model with one nested property\`,
     properties: {
@@ -7073,7 +6226,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelWithNestedPropertie
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelWithNullableObject.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelWithNullableObject.ts 1`] = `
 "export const $ModelWithNullableObject = {
     properties: {
         data: {
@@ -7084,7 +6237,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelWithNullableObject.
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelWithNullableString.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelWithNullableString.ts 1`] = `
 "export const $ModelWithNullableString = {
     description: \`This is a model with one string property\`,
     properties: {
@@ -7115,7 +6268,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelWithNullableString.
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelWithOneOfEnum.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelWithOneOfEnum.ts 1`] = `
 "export const $ModelWithOneOfEnum = {
     type: 'one-of',
     contains: [
@@ -7185,7 +6338,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelWithOneOfEnum.ts 1`
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelWithOrderedProperties.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelWithOrderedProperties.ts 1`] = `
 "export const $ModelWithOrderedProperties = {
     description: \`This is a model with ordered properties\`,
     properties: {
@@ -7203,7 +6356,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelWithOrderedProperti
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelWithPattern.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelWithPattern.ts 1`] = `
 "export const $ModelWithPattern = {
     description: \`This is a model that contains a some patterns\`,
     properties: {
@@ -7252,7 +6405,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelWithPattern.ts 1`] 
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelWithProperties.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelWithProperties.ts 1`] = `
 "export const $ModelWithProperties = {
     description: \`This is a model with one nested property\`,
     properties: {
@@ -7304,7 +6457,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelWithProperties.ts 1
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelWithReadOnlyAndWriteOnly.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelWithReadOnlyAndWriteOnly.ts 1`] = `
 "export const $ModelWithReadOnlyAndWriteOnly = {
     properties: {
         foo: {
@@ -7325,7 +6478,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelWithReadOnlyAndWrit
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelWithReference.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelWithReference.ts 1`] = `
 "export const $ModelWithReference = {
     description: \`This is a model with one property containing a reference\`,
     properties: {
@@ -7337,7 +6490,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelWithReference.ts 1`
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$ModelWithString.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$ModelWithString.ts 1`] = `
 "export const $ModelWithString = {
     description: \`This is a model with one string property\`,
     properties: {
@@ -7350,7 +6503,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$ModelWithString.ts 1`] =
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$NestedAnyOfArraysNullable.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$NestedAnyOfArraysNullable.ts 1`] = `
 "export const $NestedAnyOfArraysNullable = {
     properties: {
         nullableArray: {
@@ -7380,7 +6533,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$NestedAnyOfArraysNullabl
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$NonAsciiStringæøåÆØÅöôêÊ字符串.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$NonAsciiStringæøåÆØÅöôêÊ字符串.ts 1`] = `
 "export const $NonAsciiStringæøåÆØÅöôêÊ字符串 = {
     type: 'string',
     description: \`A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)\`,
@@ -7388,7 +6541,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$NonAsciiStringæøåÆØ
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$NullableObject.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$NullableObject.ts 1`] = `
 "export const $NullableObject = {
     description: \`An object that can be null\`,
     properties: {
@@ -7401,7 +6554,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$NullableObject.ts 1`] = 
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$Pageable.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$Pageable.ts 1`] = `
 "export const $Pageable = {
     properties: {
         page: {
@@ -7424,7 +6577,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$Pageable.ts 1`] = `
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$SimpleBoolean.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$SimpleBoolean.ts 1`] = `
 "export const $SimpleBoolean = {
     type: 'boolean',
     description: \`This is a simple boolean\`,
@@ -7432,7 +6585,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$SimpleBoolean.ts 1`] = `
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$SimpleFile.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$SimpleFile.ts 1`] = `
 "export const $SimpleFile = {
     type: 'binary',
     description: \`This is a simple file\`,
@@ -7440,7 +6593,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$SimpleFile.ts 1`] = `
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$SimpleInteger.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$SimpleInteger.ts 1`] = `
 "export const $SimpleInteger = {
     type: 'number',
     description: \`This is a simple number\`,
@@ -7448,7 +6601,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$SimpleInteger.ts 1`] = `
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$SimpleParameter.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$SimpleParameter.ts 1`] = `
 "export const $SimpleParameter = {
     type: 'string',
     description: \`This is a reusable parameter\`,
@@ -7456,7 +6609,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$SimpleParameter.ts 1`] =
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$SimpleReference.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$SimpleReference.ts 1`] = `
 "export const $SimpleReference = {
     type: 'ModelWithString',
     description: \`This is a simple reference\`,
@@ -7464,7 +6617,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$SimpleReference.ts 1`] =
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$SimpleString.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$SimpleString.ts 1`] = `
 "export const $SimpleString = {
     type: 'string',
     description: \`This is a simple string\`,
@@ -7472,7 +6625,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$SimpleString.ts 1`] = `
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/schemas/$SimpleStringWithPattern.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/schemas/$SimpleStringWithPattern.ts 1`] = `
 "export const $SimpleStringWithPattern = {
     type: 'string',
     description: \`This is a simple string\`,
@@ -7483,7 +6636,7 @@ exports[`v3 should generate: test/generated/v3/schemas/$SimpleStringWithPattern.
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/services/CollectionFormatService.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/services/CollectionFormatService.ts 1`] = `
 "import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -7534,7 +6687,7 @@ export class CollectionFormatService {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/services/ComplexService.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/services/ComplexService.ts 1`] = `
 "import type { ModelWithArray } from '../models/ModelWithArray';
 import type { ModelWithDictionary } from '../models/ModelWithDictionary';
 import type { ModelWithEnum } from '../models/ModelWithEnum';
@@ -7617,7 +6770,7 @@ export class ComplexService {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/services/DefaultService.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/services/DefaultService.ts 1`] = `
 "import type { ModelWithArrayReadOnlyAndWriteOnly } from '../models/ModelWithArrayReadOnlyAndWriteOnly';
 import type { ModelWithReadOnlyAndWriteOnly } from '../models/ModelWithReadOnlyAndWriteOnly';
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -7658,7 +6811,7 @@ export class DefaultService {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/services/DefaultsService.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/services/DefaultsService.ts 1`] = `
 "import type { ModelWithString } from '../models/ModelWithString';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -7831,7 +6984,7 @@ export class DefaultsService {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/services/DeprecatedService.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/services/DeprecatedService.ts 1`] = `
 "import type { DeprecatedModel } from '../models/DeprecatedModel';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -7863,7 +7016,7 @@ export class DeprecatedService {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/services/DescriptionsService.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/services/DescriptionsService.ts 1`] = `
 "import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -7928,7 +7081,7 @@ export class DescriptionsService {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/services/DuplicateService.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/services/DuplicateService.ts 1`] = `
 "import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -7977,7 +7130,7 @@ export class DuplicateService {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/services/ErrorService.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/services/ErrorService.ts 1`] = `
 "import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -8014,7 +7167,7 @@ export class ErrorService {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/services/FileResponseService.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/services/FileResponseService.ts 1`] = `
 "import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -8042,7 +7195,7 @@ export class FileResponseService {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/services/FormDataService.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/services/FormDataService.ts 1`] = `
 "import type { ModelWithString } from '../models/ModelWithString';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -8079,7 +7232,7 @@ export class FormDataService {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/services/HeaderService.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/services/HeaderService.ts 1`] = `
 "import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -8104,7 +7257,7 @@ export class HeaderService {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/services/MultipartService.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/services/MultipartService.ts 1`] = `
 "import type { ModelWithString } from '../models/ModelWithString';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -8151,7 +7304,7 @@ export class MultipartService {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/services/MultipleTags1Service.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/services/MultipleTags1Service.ts 1`] = `
 "import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -8182,7 +7335,7 @@ export class MultipleTags1Service {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/services/MultipleTags2Service.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/services/MultipleTags2Service.ts 1`] = `
 "import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -8213,7 +7366,7 @@ export class MultipleTags2Service {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/services/MultipleTags3Service.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/services/MultipleTags3Service.ts 1`] = `
 "import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -8233,7 +7386,7 @@ export class MultipleTags3Service {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/services/NoContentService.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/services/NoContentService.ts 1`] = `
 "import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -8265,7 +7418,7 @@ export class NoContentService {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/services/NonAsciiÆøåÆøÅöôêÊService.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/services/NonAsciiÆøåÆøÅöôêÊService.ts 1`] = `
 "import type { NonAsciiStringæøåÆØÅöôêÊ字符串 } from '../models/NonAsciiStringæøåÆØÅöôêÊ字符串';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -8299,7 +7452,7 @@ export class NonAsciiÆøåÆøÅöôêÊService {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/services/ParametersService.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/services/ParametersService.ts 1`] = `
 "import type { ModelWithNestedArrayEnumsDataFoo } from '../models/ModelWithNestedArrayEnumsDataFoo';
 import type { ModelWithOneOfEnum } from '../models/ModelWithOneOfEnum';
 import type { ModelWithString } from '../models/ModelWithString';
@@ -8536,7 +7689,7 @@ export class ParametersService {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/services/RequestBodyService.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/services/RequestBodyService.ts 1`] = `
 "import type { ModelWithString } from '../models/ModelWithString';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -8573,7 +7726,7 @@ export class RequestBodyService {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/services/ResponseService.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/services/ResponseService.ts 1`] = `
 "import type { ModelThatExtends } from '../models/ModelThatExtends';
 import type { ModelThatExtendsExtends } from '../models/ModelThatExtendsExtends';
 import type { ModelWithString } from '../models/ModelWithString';
@@ -8652,7 +7805,7 @@ export class ResponseService {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/services/SimpleService.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/services/SimpleService.ts 1`] = `
 "import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -8731,7 +7884,7 @@ export class SimpleService {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/services/TypesService.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/services/TypesService.ts 1`] = `
 "import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -8811,7 +7964,7 @@ export class TypesService {
 "
 `;
 
-exports[`v3 should generate: test/generated/v3/services/UploadService.ts 1`] = `
+exports[`v3 > should generate > ./test/generated/v3/services/UploadService.ts 1`] = `
 "import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -8835,6 +7988,853 @@ export class UploadService {
             url: '/api/v{api-version}/upload',
             formData: {
                 file,
+            },
+        });
+    }
+}
+"
+`;
+
+exports[`v3 > should generate Date types > ./test/generated/v3_date/index.ts 1`] = `
+"export type { ModelWithPattern } from './models/ModelWithPattern';
+
+export { $ModelWithPattern } from './schemas/$ModelWithPattern';
+"
+`;
+
+exports[`v3 > should generate Date types > ./test/generated/v3_date/models/ModelWithPattern.ts 1`] = `
+"/**
+ * This is a model that contains a some patterns
+ */
+export type ModelWithPattern = {
+    key: string;
+    name: string;
+    readonly enabled?: boolean;
+    readonly modified?: Date;
+    id?: string;
+    text?: string;
+    patternWithSingleQuotes?: string;
+    patternWithNewline?: string;
+    patternWithBacktick?: string;
+};
+"
+`;
+
+exports[`v3 > should generate Date types > ./test/generated/v3_date/schemas/$ModelWithPattern.ts 1`] = `
+"export const $ModelWithPattern = {
+    description: \`This is a model that contains a some patterns\`,
+    properties: {
+        key: {
+            type: 'string',
+            isRequired: true,
+            maxLength: 64,
+            pattern: '^[a-zA-Z0-9_]*$',
+        },
+        name: {
+            type: 'string',
+            isRequired: true,
+            maxLength: 255,
+        },
+        enabled: {
+            type: 'boolean',
+            isReadOnly: true,
+        },
+        modified: {
+            type: 'string',
+            isReadOnly: true,
+            format: 'date-time',
+        },
+        id: {
+            type: 'string',
+            pattern: '^\\\\d{2}-\\\\d{3}-\\\\d{4}$',
+        },
+        text: {
+            type: 'string',
+            pattern: '^\\\\w+$',
+        },
+        patternWithSingleQuotes: {
+            type: 'string',
+            pattern: "^[a-zA-Z0-9']*$",
+        },
+        patternWithNewline: {
+            type: 'string',
+            pattern: 'aaa\\nbbb',
+        },
+        patternWithBacktick: {
+            type: 'string',
+            pattern: 'aaa\`bbb',
+        },
+    },
+} as const;
+"
+`;
+
+exports[`v3 > should generate optional argument > ./test/generated/v3_options/core/ApiError.ts 1`] = `
+"import type { ApiRequestOptions } from './ApiRequestOptions';
+import type { ApiResult } from './ApiResult';
+
+export class ApiError extends Error {
+    public readonly url: string;
+    public readonly status: number;
+    public readonly statusText: string;
+    public readonly body: unknown;
+    public readonly request: ApiRequestOptions;
+
+    constructor(request: ApiRequestOptions, response: ApiResult, message: string) {
+        super(message);
+
+        this.name = 'ApiError';
+        this.url = response.url;
+        this.status = response.status;
+        this.statusText = response.statusText;
+        this.body = response.body;
+        this.request = request;
+    }
+}
+"
+`;
+
+exports[`v3 > should generate optional argument > ./test/generated/v3_options/core/ApiRequestOptions.ts 1`] = `
+"export type ApiRequestOptions = {
+    readonly method: 'GET' | 'PUT' | 'POST' | 'DELETE' | 'OPTIONS' | 'HEAD' | 'PATCH';
+    readonly url: string;
+    readonly path?: Record<string, unknown>;
+    readonly cookies?: Record<string, unknown>;
+    readonly headers?: Record<string, unknown>;
+    readonly query?: Record<string, unknown>;
+    readonly formData?: Record<string, unknown>;
+    readonly body?: any;
+    readonly mediaType?: string;
+    readonly responseHeader?: string;
+    readonly errors?: Record<number, string>;
+};
+"
+`;
+
+exports[`v3 > should generate optional argument > ./test/generated/v3_options/core/ApiResult.ts 1`] = `
+"export type ApiResult<TData = any> = {
+    readonly body: TData;
+    readonly ok: boolean;
+    readonly status: number;
+    readonly statusText: string;
+    readonly url: string;
+};
+"
+`;
+
+exports[`v3 > should generate optional argument > ./test/generated/v3_options/core/CancelablePromise.ts 1`] = `
+"export class CancelError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = 'CancelError';
+    }
+
+    public get isCancelled(): boolean {
+        return true;
+    }
+}
+
+export interface OnCancel {
+    readonly isResolved: boolean;
+    readonly isRejected: boolean;
+    readonly isCancelled: boolean;
+
+    (cancelHandler: () => void): void;
+}
+
+export class CancelablePromise<T> implements Promise<T> {
+    #isResolved: boolean;
+    #isRejected: boolean;
+    #isCancelled: boolean;
+    readonly #cancelHandlers: (() => void)[];
+    readonly #promise: Promise<T>;
+    #resolve?: (value: T | PromiseLike<T>) => void;
+    #reject?: (reason?: unknown) => void;
+
+    constructor(
+        executor: (
+            resolve: (value: T | PromiseLike<T>) => void,
+            reject: (reason?: unknown) => void,
+            onCancel: OnCancel
+        ) => void
+    ) {
+        this.#isResolved = false;
+        this.#isRejected = false;
+        this.#isCancelled = false;
+        this.#cancelHandlers = [];
+        this.#promise = new Promise<T>((resolve, reject) => {
+            this.#resolve = resolve;
+            this.#reject = reject;
+
+            const onResolve = (value: T | PromiseLike<T>): void => {
+                if (this.#isResolved || this.#isRejected || this.#isCancelled) {
+                    return;
+                }
+                this.#isResolved = true;
+                if (this.#resolve) this.#resolve(value);
+            };
+
+            const onReject = (reason?: unknown): void => {
+                if (this.#isResolved || this.#isRejected || this.#isCancelled) {
+                    return;
+                }
+                this.#isRejected = true;
+                if (this.#reject) this.#reject(reason);
+            };
+
+            const onCancel = (cancelHandler: () => void): void => {
+                if (this.#isResolved || this.#isRejected || this.#isCancelled) {
+                    return;
+                }
+                this.#cancelHandlers.push(cancelHandler);
+            };
+
+            Object.defineProperty(onCancel, 'isResolved', {
+                get: (): boolean => this.#isResolved,
+            });
+
+            Object.defineProperty(onCancel, 'isRejected', {
+                get: (): boolean => this.#isRejected,
+            });
+
+            Object.defineProperty(onCancel, 'isCancelled', {
+                get: (): boolean => this.#isCancelled,
+            });
+
+            return executor(onResolve, onReject, onCancel as OnCancel);
+        });
+    }
+
+    get [Symbol.toStringTag]() {
+        return 'Cancellable Promise';
+    }
+
+    public then<TResult1 = T, TResult2 = never>(
+        onFulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | null,
+        onRejected?: ((reason: unknown) => TResult2 | PromiseLike<TResult2>) | null
+    ): Promise<TResult1 | TResult2> {
+        return this.#promise.then(onFulfilled, onRejected);
+    }
+
+    public catch<TResult = never>(
+        onRejected?: ((reason: unknown) => TResult | PromiseLike<TResult>) | null
+    ): Promise<T | TResult> {
+        return this.#promise.catch(onRejected);
+    }
+
+    public finally(onFinally?: (() => void) | null): Promise<T> {
+        return this.#promise.finally(onFinally);
+    }
+
+    public cancel(): void {
+        if (this.#isResolved || this.#isRejected || this.#isCancelled) {
+            return;
+        }
+        this.#isCancelled = true;
+        if (this.#cancelHandlers.length) {
+            try {
+                for (const cancelHandler of this.#cancelHandlers) {
+                    cancelHandler();
+                }
+            } catch (error) {
+                console.warn('Cancellation threw an error', error);
+                return;
+            }
+        }
+        this.#cancelHandlers.length = 0;
+        if (this.#reject) this.#reject(new CancelError('Request aborted'));
+    }
+
+    public get isCancelled(): boolean {
+        return this.#isCancelled;
+    }
+}
+"
+`;
+
+exports[`v3 > should generate optional argument > ./test/generated/v3_options/core/OpenAPI.ts 1`] = `
+"import type { ApiRequestOptions } from './ApiRequestOptions';
+import type { TConfig, TResult } from './types';
+
+type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
+type Headers = Record<string, string>;
+
+export type OpenAPIConfig = {
+    BASE: string;
+    CREDENTIALS: 'include' | 'omit' | 'same-origin';
+    ENCODE_PATH?: ((path: string) => string) | undefined;
+    HEADERS?: Headers | Resolver<Headers> | undefined;
+    PASSWORD?: string | Resolver<string> | undefined;
+    RESULT?: TResult;
+    TOKEN?: string | Resolver<string> | undefined;
+    USERNAME?: string | Resolver<string> | undefined;
+    VERSION: string;
+    WITH_CREDENTIALS: boolean;
+};
+
+export const OpenAPI: OpenAPIConfig = {
+    BASE: 'http://localhost:3000/base',
+    CREDENTIALS: 'include',
+    ENCODE_PATH: undefined,
+    HEADERS: undefined,
+    PASSWORD: undefined,
+    RESULT: 'body',
+    TOKEN: undefined,
+    USERNAME: undefined,
+    VERSION: '1.0',
+    WITH_CREDENTIALS: false,
+};
+
+export const mergeOpenApiConfig = <T extends TResult>(config: OpenAPIConfig, overrides: TConfig<T>) => {
+    const merged = { ...config };
+    Object.entries(overrides)
+        .filter(([key]) => key.startsWith('_'))
+        .forEach(([key, value]) => {
+            const k = key.slice(1).toLocaleUpperCase() as keyof typeof merged;
+            if (merged.hasOwnProperty(k)) {
+                // @ts-ignore
+                merged[k] = value;
+            }
+        });
+    return merged;
+};
+"
+`;
+
+exports[`v3 > should generate optional argument > ./test/generated/v3_options/core/request.ts 1`] = `
+"import { ApiError } from './ApiError';
+import type { ApiRequestOptions } from './ApiRequestOptions';
+import type { ApiResult } from './ApiResult';
+import { CancelablePromise } from './CancelablePromise';
+import type { OnCancel } from './CancelablePromise';
+import type { OpenAPIConfig } from './OpenAPI';
+
+export const isString = (value: unknown): value is string => {
+    return typeof value === 'string';
+};
+
+export const isStringWithValue = (value: unknown): value is string => {
+    return isString(value) && value !== '';
+};
+
+export const isBlob = (value: any): value is Blob => {
+    return (
+        value !== null &&
+        typeof value === 'object' &&
+        typeof value.type === 'string' &&
+        typeof value.stream === 'function' &&
+        typeof value.arrayBuffer === 'function' &&
+        typeof value.constructor === 'function' &&
+        typeof value.constructor.name === 'string' &&
+        /^(Blob|File)$/.test(value.constructor.name) &&
+        // @ts-ignore
+        /^(Blob|File)$/.test(value[Symbol.toStringTag])
+    );
+};
+
+export const isFormData = (value: unknown): value is FormData => {
+    return value instanceof FormData;
+};
+
+export const base64 = (str: string): string => {
+    try {
+        return btoa(str);
+    } catch (err) {
+        // @ts-ignore
+        return Buffer.from(str).toString('base64');
+    }
+};
+
+export const getQueryString = (params: Record<string, unknown>): string => {
+    const qs: string[] = [];
+
+    const append = (key: string, value: unknown) => {
+        qs.push(\`\${encodeURIComponent(key)}=\${encodeURIComponent(String(value))}\`);
+    };
+
+    const process = (key: string, value: unknown) => {
+        if (value) {
+            if (Array.isArray(value)) {
+                value.forEach(v => {
+                    process(key, v);
+                });
+            } else if (typeof value === 'object') {
+                Object.entries(value).forEach(([k, v]) => {
+                    process(\`\${key}[\${k}]\`, v);
+                });
+            } else {
+                append(key, value);
+            }
+        }
+    };
+
+    Object.entries(params).forEach(([key, value]) => {
+        process(key, value);
+    });
+
+    if (qs.length > 0) {
+        return \`?\${qs.join('&')}\`;
+    }
+
+    return '';
+};
+
+const getUrl = (config: OpenAPIConfig, options: ApiRequestOptions): string => {
+    const encoder = config.ENCODE_PATH || encodeURI;
+
+    const path = options.url
+        .replace('{api-version}', config.VERSION)
+        .replace(/{(.*?)}/g, (substring: string, group: string) => {
+            if (options.path?.hasOwnProperty(group)) {
+                return encoder(String(options.path[group]));
+            }
+            return substring;
+        });
+
+    const url = \`\${config.BASE}\${path}\`;
+    if (options.query) {
+        return \`\${url}\${getQueryString(options.query)}\`;
+    }
+    return url;
+};
+
+export const getFormData = (options: ApiRequestOptions): FormData | undefined => {
+    if (options.formData) {
+        const formData = new FormData();
+
+        const process = (key: string, value: any) => {
+            if (isString(value) || isBlob(value)) {
+                formData.append(key, value);
+            } else {
+                formData.append(key, JSON.stringify(value));
+            }
+        };
+
+        Object.entries(options.formData)
+            .filter(([_, value]) => value)
+            .forEach(([key, value]) => {
+                if (Array.isArray(value)) {
+                    value.forEach(v => process(key, v));
+                } else {
+                    process(key, value);
+                }
+            });
+
+        return formData;
+    }
+    return undefined;
+};
+
+type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
+
+export const resolve = async <T>(options: ApiRequestOptions, resolver?: T | Resolver<T>): Promise<T | undefined> => {
+    if (typeof resolver === 'function') {
+        return (resolver as Resolver<T>)(options);
+    }
+    return resolver;
+};
+
+export const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptions): Promise<Headers> => {
+    const [token, username, password, additionalHeaders] = await Promise.all([
+        resolve(options, config.TOKEN),
+        resolve(options, config.USERNAME),
+        resolve(options, config.PASSWORD),
+        resolve(options, config.HEADERS),
+    ]);
+
+    const headers = Object.entries({
+        Accept: 'application/json',
+        ...additionalHeaders,
+        ...options.headers,
+    })
+        .filter(([_, value]) => value)
+        .reduce(
+            (headers, [key, value]) => ({
+                ...headers,
+                [key]: String(value),
+            }),
+            {} as Record<string, string>
+        );
+
+    if (isStringWithValue(token)) {
+        headers['Authorization'] = \`Bearer \${token}\`;
+    }
+
+    if (isStringWithValue(username) && isStringWithValue(password)) {
+        const credentials = base64(\`\${username}:\${password}\`);
+        headers['Authorization'] = \`Basic \${credentials}\`;
+    }
+
+    if (options.body !== undefined) {
+        if (options.mediaType) {
+            headers['Content-Type'] = options.mediaType;
+        } else if (isBlob(options.body)) {
+            headers['Content-Type'] = options.body.type || 'application/octet-stream';
+        } else if (isString(options.body)) {
+            headers['Content-Type'] = 'text/plain';
+        } else if (!isFormData(options.body)) {
+            headers['Content-Type'] = 'application/json';
+        }
+    }
+
+    return new Headers(headers);
+};
+
+export const getRequestBody = (options: ApiRequestOptions): unknown => {
+    if (options.body !== undefined) {
+        if (options.mediaType?.includes('/json')) {
+            return JSON.stringify(options.body);
+        } else if (isString(options.body) || isBlob(options.body) || isFormData(options.body)) {
+            return options.body;
+        } else {
+            return JSON.stringify(options.body);
+        }
+    }
+    return undefined;
+};
+
+export const sendRequest = async (
+    config: OpenAPIConfig,
+    options: ApiRequestOptions,
+    url: string,
+    body: any,
+    formData: FormData | undefined,
+    headers: Headers,
+    onCancel: OnCancel
+): Promise<Response> => {
+    const controller = new AbortController();
+
+    const request: RequestInit = {
+        headers,
+        body: body ?? formData,
+        method: options.method,
+        signal: controller.signal,
+    };
+
+    if (config.WITH_CREDENTIALS) {
+        request.credentials = config.CREDENTIALS;
+    }
+
+    onCancel(() => controller.abort());
+
+    return await fetch(url, request);
+};
+
+export const getResponseHeader = (response: Response, responseHeader?: string): string | undefined => {
+    if (responseHeader) {
+        const content = response.headers.get(responseHeader);
+        if (isString(content)) {
+            return content;
+        }
+    }
+    return undefined;
+};
+
+export const getResponseBody = async (response: Response): Promise<unknown> => {
+    if (response.status !== 204) {
+        try {
+            const contentType = response.headers.get('Content-Type');
+            if (contentType) {
+                const jsonTypes = ['application/json', 'application/problem+json'];
+                const binaryTypes = ['audio/', 'image/', 'video/'];
+                const isJSON = jsonTypes.some(type => contentType.toLowerCase().startsWith(type));
+                const isBinary = binaryTypes.some(type => contentType.toLowerCase().startsWith(type));
+                if (isJSON) {
+                    return await response.json();
+                } else if (isBinary) {
+                    return await response.blob();
+                } else {
+                    return await response.text();
+                }
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    return undefined;
+};
+
+export const catchErrorCodes = (options: ApiRequestOptions, result: ApiResult): void => {
+    const errors: Record<number, string> = {
+        400: 'Bad Request',
+        401: 'Unauthorized',
+        403: 'Forbidden',
+        404: 'Not Found',
+        500: 'Internal Server Error',
+        502: 'Bad Gateway',
+        503: 'Service Unavailable',
+        ...options.errors,
+    };
+
+    const error = errors[result.status];
+    if (error) {
+        throw new ApiError(options, result, error);
+    }
+
+    if (!result.ok) {
+        const errorStatus = result.status ?? 'unknown';
+        const errorStatusText = result.statusText ?? 'unknown';
+        const errorBody = (() => {
+            try {
+                return JSON.stringify(result.body, null, 2);
+            } catch (e) {
+                return undefined;
+            }
+        })();
+
+        throw new ApiError(
+            options,
+            result,
+            \`Generic Error: status: \${errorStatus}; status text: \${errorStatusText}; body: \${errorBody}\`
+        );
+    }
+};
+
+/**
+ * Request method
+ * @param config The OpenAPI configuration object
+ * @param options The request options from the service
+ * @returns CancelablePromise<T>
+ * @throws ApiError
+ */
+export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): CancelablePromise<T> => {
+    return new CancelablePromise(async (resolve, reject, onCancel) => {
+        try {
+            const url = getUrl(config, options);
+            const formData = getFormData(options);
+            const body = getRequestBody(options);
+            const headers = await getHeaders(config, options);
+
+            if (!onCancel.isCancelled) {
+                const response = await sendRequest(config, options, url, body, formData, headers, onCancel);
+                const responseBody = await getResponseBody(response);
+                const responseHeader = getResponseHeader(response, options.responseHeader);
+
+                const result: ApiResult = {
+                    url,
+                    ok: response.ok,
+                    status: response.status,
+                    statusText: response.statusText,
+                    body: responseHeader ?? responseBody,
+                };
+
+                catchErrorCodes(options, result);
+
+                resolve(result.body);
+            }
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+"
+`;
+
+exports[`v3 > should generate optional argument > ./test/generated/v3_options/core/types.ts 1`] = `
+"import type { ApiResult } from './ApiResult';
+
+export type TResult = 'body' | 'raw';
+
+export type TApiResponse<T extends TResult, TData> =
+    Exclude<T, 'raw'> extends never ? ApiResult<TData> : ApiResult<TData>['body'];
+
+export type TConfig<T extends TResult> = {
+    _result?: T;
+};
+"
+`;
+
+exports[`v3 > should generate optional argument > ./test/generated/v3_options/index.ts 1`] = `
+"export { ApiError } from './core/ApiError';
+export { CancelablePromise, CancelError } from './core/CancelablePromise';
+export { OpenAPI } from './core/OpenAPI';
+export type { OpenAPIConfig } from './core/OpenAPI';
+
+export type { ModelWithString } from './models/ModelWithString';
+
+export { DefaultsService } from './services/DefaultsService';
+"
+`;
+
+exports[`v3 > should generate optional argument > ./test/generated/v3_options/models/ModelWithString.ts 1`] = `
+"/**
+ * This is a model with one string property
+ */
+export type ModelWithString = {
+    /**
+     * This is a simple string property
+     */
+    prop?: string;
+};
+"
+`;
+
+exports[`v3 > should generate optional argument > ./test/generated/v3_options/services/DefaultsService.ts 1`] = `
+"import type { ModelWithString } from '../models/ModelWithString';
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+
+export type TDataCallWithDefaultParameters = {
+    /**
+     * This is a simple boolean with default value
+     */
+    parameterBoolean?: boolean | null;
+    /**
+     * This is a simple enum with default value
+     */
+    parameterEnum?: 'Success' | 'Warning' | 'Error';
+    /**
+     * This is a simple model with default value
+     */
+    parameterModel?: ModelWithString | null;
+    /**
+     * This is a simple number with default value
+     */
+    parameterNumber?: number | null;
+    /**
+     * This is a simple string with default value
+     */
+    parameterString?: string | null;
+};
+export type TDataCallWithDefaultOptionalParameters = {
+    /**
+     * This is a simple boolean that is optional with default value
+     */
+    parameterBoolean?: boolean;
+    /**
+     * This is a simple enum that is optional with default value
+     */
+    parameterEnum?: 'Success' | 'Warning' | 'Error';
+    /**
+     * This is a simple model that is optional with default value
+     */
+    parameterModel?: ModelWithString;
+    /**
+     * This is a simple number that is optional with default value
+     */
+    parameterNumber?: number;
+    /**
+     * This is a simple string that is optional with default value
+     */
+    parameterString?: string;
+};
+export type TDataCallToTestOrderOfParams = {
+    /**
+     * This is a optional string with default
+     */
+    parameterOptionalStringWithDefault?: string;
+    /**
+     * This is a optional string with empty default
+     */
+    parameterOptionalStringWithEmptyDefault?: string;
+    /**
+     * This is a optional string with no default
+     */
+    parameterOptionalStringWithNoDefault?: string;
+    /**
+     * This is a string that can be null with default
+     */
+    parameterStringNullableWithDefault?: string | null;
+    /**
+     * This is a string that can be null with no default
+     */
+    parameterStringNullableWithNoDefault?: string | null;
+    /**
+     * This is a string with default
+     */
+    parameterStringWithDefault?: string;
+    /**
+     * This is a string with empty default
+     */
+    parameterStringWithEmptyDefault?: string;
+    /**
+     * This is a string with no default
+     */
+    parameterStringWithNoDefault: string;
+};
+
+export class DefaultsService {
+    /**
+     * @throws ApiError
+     */
+    public static callWithDefaultParameters(data: TDataCallWithDefaultParameters = {}): CancelablePromise<void> {
+        const {
+            parameterBoolean = true,
+            parameterEnum = 'Success',
+            parameterModel = {
+                prop: 'Hello World!',
+            },
+            parameterNumber = 123,
+            parameterString = 'Hello World!',
+        } = data;
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v{api-version}/defaults',
+            query: {
+                parameterString,
+                parameterNumber,
+                parameterBoolean,
+                parameterEnum,
+                parameterModel,
+            },
+        });
+    }
+
+    /**
+     * @throws ApiError
+     */
+    public static callWithDefaultOptionalParameters(
+        data: TDataCallWithDefaultOptionalParameters = {}
+    ): CancelablePromise<void> {
+        const {
+            parameterBoolean = true,
+            parameterEnum = 'Success',
+            parameterModel = {
+                prop: 'Hello World!',
+            },
+            parameterNumber = 123,
+            parameterString = 'Hello World!',
+        } = data;
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v{api-version}/defaults',
+            query: {
+                parameterString,
+                parameterNumber,
+                parameterBoolean,
+                parameterEnum,
+                parameterModel,
+            },
+        });
+    }
+
+    /**
+     * @throws ApiError
+     */
+    public static callToTestOrderOfParams(data: TDataCallToTestOrderOfParams): CancelablePromise<void> {
+        const {
+            parameterOptionalStringWithDefault = 'Hello World!',
+            parameterOptionalStringWithEmptyDefault = '',
+            parameterOptionalStringWithNoDefault,
+            parameterStringNullableWithDefault = null,
+            parameterStringNullableWithNoDefault,
+            parameterStringWithDefault = 'Hello World!',
+            parameterStringWithEmptyDefault = '',
+            parameterStringWithNoDefault,
+        } = data;
+        return __request(OpenAPI, {
+            method: 'PUT',
+            url: '/api/v{api-version}/defaults',
+            query: {
+                parameterOptionalStringWithDefault,
+                parameterOptionalStringWithEmptyDefault,
+                parameterOptionalStringWithNoDefault,
+                parameterStringWithDefault,
+                parameterStringWithEmptyDefault,
+                parameterStringWithNoDefault,
+                parameterStringNullableWithNoDefault,
+                parameterStringNullableWithDefault,
             },
         });
     }

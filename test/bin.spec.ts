@@ -1,4 +1,5 @@
 import { sync } from 'cross-spawn';
+import { describe, expect, it } from 'vitest';
 
 describe('bin', () => {
     it('supports required parameters', async () => {
