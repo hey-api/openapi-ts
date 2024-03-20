@@ -1,5 +1,5 @@
 {{#if @root.$config.useOptions~}}
-{{~#if @root.$config.clientName~}}
+{{~#if @root.$config.name~}}
 {{#if parameters}}data: {{{nameOperationDataType name}}}{{#ifOperationDataOptional parameters}} = {}{{/ifOperationDataOptional}}{{/if}}
 {{~else~}}
 {{~#notEquals @root.$config.serviceResponse 'generics'~}}

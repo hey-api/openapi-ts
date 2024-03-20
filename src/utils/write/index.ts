@@ -29,7 +29,7 @@ export const writeClientIndex = async (
         | 'postfixServices'
         | 'postfixModels'
     > &
-        Pick<UserConfig, 'clientName'>
+        Pick<UserConfig, 'name'>
 ): Promise<void> => {
     const templateResult = templates.index({
         $config: options,

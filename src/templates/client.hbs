@@ -45,11 +45,11 @@ import { {{{name}}}{{{@root.$config.postfixServices}}} } from './services/{{{nam
 		{{/each}}
 	]
 })
-export class {{{@root.$config.clientName}}} {}
+export class {{{@root.$config.name}}} {}
 {{else}}
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 
-export class {{{@root.$config.clientName}}} {
+export class {{{@root.$config.name}}} {
 
 	{{#each services}}
 	public readonly {{{camelCase name}}}: {{{name}}}{{{@root.$config.postfixServices}}};
