@@ -32,7 +32,7 @@
             "email": "info@madebyferdi.com"
         }
     ],
-    "main": "./dist/index.js",
+    "main": "./dist/node/index.js",
     "types": "./dist/node/index.d.ts",
     "bin": {
         "openapi-ts": "bin/index.js"
