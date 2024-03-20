@@ -1,5 +1,4 @@
-import type { Operation } from '../../../client/interfaces/Operation';
-import type { OperationParameters } from '../../../client/interfaces/OperationParameters';
+import type { Operation, OperationParameter, OperationParameters } from '../../../types/client';
 import type { Config } from '../../../types/config';
 import { getOperationName } from '../../../utils/operation';
 import type { OpenApi } from '../interfaces/OpenApi';
@@ -10,7 +9,14 @@ import { getOperationResponseHeader } from './getOperationResponseHeader';
 import { getOperationResponses } from './getOperationResponses';
 import { getOperationResults } from './getOperationResults';
 import { getServiceName } from './getServiceName';
-import { sortByRequired } from './sortByRequired';
+
+const sortByRequired = (a: OperationParameter, b: OperationParameter): number => {
+    const aNeedsValue = a.isRequired && a.default === undefined;
+    const bNeedsValue = b.isRequired && b.default === undefined;
+    if (aNeedsValue && !bNeedsValue) return -1;
+    if (bNeedsValue && !aNeedsValue) return 1;
+    return 0;
+};
 
 export const getOperation = (
     openApi: OpenApi,

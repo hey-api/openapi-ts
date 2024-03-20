@@ -1,6 +1,6 @@
 import camelCase from 'camelcase';
 
-import type { UserConfig } from '../node';
+import type { UserConfig } from '../types/config';
 import sanitizeOperationName from './sanitizeOperationName';
 
 /**

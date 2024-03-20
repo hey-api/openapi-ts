@@ -1,4 +1,4 @@
-import type { Model } from '../../../client/interfaces/Model';
+import type { Model } from '../../../types/client';
 import { findOneOfParentDiscriminator, mapPropertyValue } from '../../../utils/discriminator';
 import { escapeName } from '../../../utils/escapeName';
 import { getPattern } from '../../../utils/getPattern';

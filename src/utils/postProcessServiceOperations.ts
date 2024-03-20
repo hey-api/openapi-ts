@@ -1,5 +1,4 @@
-import type { Operation } from '../client/interfaces/Operation';
-import type { Service } from '../client/interfaces/Service';
+import type { Operation, Service } from '../types/client';
 
 export const postProcessServiceOperations = (service: Service): Operation[] => {
     const names = new Map<string, number>();

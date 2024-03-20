@@ -1,4 +1,4 @@
-import type { UserConfig } from '../node';
+import type { UserConfig } from '../types/config';
 
 /**
  * Generate the HttpRequest filename based on the selected client

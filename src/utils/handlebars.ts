@@ -2,10 +2,6 @@ import camelCase from 'camelcase';
 import Handlebars from 'handlebars/runtime';
 import { EOL } from 'os';
 
-import type { Client } from '../client/interfaces/Client';
-import type { Model } from '../client/interfaces/Model';
-import type { OperationParameter } from '../client/interfaces/OperationParameter';
-import type { Service } from '../client/interfaces/Service';
 import templateClient from '../templates/client.hbs';
 import angularGetHeaders from '../templates/core/angular/getHeaders.hbs';
 import angularGetRequestBody from '../templates/core/angular/getRequestBody.hbs';
@@ -90,10 +86,11 @@ import partialTypeInterface from '../templates/partials/typeInterface.hbs';
 import partialTypeIntersection from '../templates/partials/typeIntersection.hbs';
 import partialTypeReference from '../templates/partials/typeReference.hbs';
 import partialTypeUnion from '../templates/partials/typeUnion.hbs';
+import type { Client, Model, OperationParameter, Service } from '../types/client';
 import type { Config, UserConfig } from '../types/config';
 import { enumKey, enumName, enumUnionType, enumValue } from './enum';
 import { escapeName } from './escapeName';
-import { sortByName } from './sortByName';
+import { sortByName } from './sort';
 import { unique } from './unique';
 
 const escapeComment = (value: string) =>

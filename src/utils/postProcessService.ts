@@ -1,4 +1,4 @@
-import type { Service } from '../client/interfaces/Service';
+import type { Service } from '../types/client';
 import { postProcessServiceImports } from './postProcessServiceImports';
 import { postProcessServiceOperations } from './postProcessServiceOperations';
 

@@ -1,4 +1,4 @@
-import type { Client } from '../../client/interfaces/Client';
+import type { Client } from '../../types/client';
 import type { Config } from '../../types/config';
 import type { OpenApi } from './interfaces/OpenApi';
 import { getModels } from './parser/getModels';

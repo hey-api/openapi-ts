@@ -1,4 +1,4 @@
-import type { OperationParameter } from '../../../client/interfaces/OperationParameter';
+import type { OperationParameter } from '../../../types/client';
 import type { OpenApiParameter } from '../interfaces/OpenApiParameter';
 
 export const getOperationParameterDefault = (
