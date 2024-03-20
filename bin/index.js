@@ -39,11 +39,8 @@ const params = program
 
 async function start() {
     try {
-        const OpenAPI = await import(new URL('../dist/index.js', import.meta.url));
-        await OpenAPI.generate({
-            ...params,
-            clientName: params.name,
-        });
+        const { createClient } = await import(new URL('../dist/index.js', import.meta.url));
+        await createClient(params);
         process.exit(0);
     } catch (error) {
         console.error(error);

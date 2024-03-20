@@ -1,6 +1,6 @@
 {
     "name": "@nicolas-chaulet/openapi-typescript-codegen",
-    "version": "0.27.32",
+    "version": "0.27.33",
     "type": "module",
     "description": "Library that generates Typescript clients based on the OpenAPI specification.",
     "author": "Ferdi Koomen",
@@ -49,7 +49,7 @@
         "build-types-check": "tsc --project tsconfig.check.json",
         "build-types-roll": "rollup --config rollup.dts.config.ts --configPlugin typescript && rimraf temp",
         "build-types-temp": "tsc --emitDeclarationOnly --outDir temp -p src/node",
-        "clean": "rimraf dist test/generated test/e2e/generated samples/generated coverage node_modules/.cache",
+        "clean": "rimraf dist test/generated test/e2e/generated coverage node_modules/.cache",
         "lint:fix": "eslint . --fix",
         "lint": "eslint .",
         "prepublishOnly": "npm run build",

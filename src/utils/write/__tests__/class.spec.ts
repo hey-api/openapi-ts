@@ -36,8 +36,8 @@ describe('writeClientClass', () => {
 
         await writeClientClass(client, templates, './dist', {
             client: 'fetch',
-            clientName: 'AppClient',
             enums: true,
+            name: 'AppClient',
             postfixServices: '',
         });
 
