@@ -14,10 +14,6 @@ export interface UserConfig {
      */
     client?: 'angular' | 'axios' | 'fetch' | 'node' | 'xhr';
     /**
-     * Custom client class name
-     */
-    clientName?: string;
-    /**
      * Generate JavaScript objects from enum definitions
      * @default false
      */
@@ -46,6 +42,10 @@ export interface UserConfig {
      * The relative location of the OpenAPI spec
      */
     input: string | Record<string, unknown>;
+    /**
+     * Custom client class name
+     */
+    name?: string;
     /**
      * Use operation ID to generate operation names?
      * @default true
@@ -91,5 +91,5 @@ export interface UserConfig {
     write?: boolean;
 }
 
-export type Config = Omit<Required<UserConfig>, 'base' | 'clientName' | 'request'> &
-    Pick<UserConfig, 'base' | 'clientName' | 'request'>;
+export type Config = Omit<Required<UserConfig>, 'base' | 'name' | 'request'> &
+    Pick<UserConfig, 'base' | 'name' | 'request'>;

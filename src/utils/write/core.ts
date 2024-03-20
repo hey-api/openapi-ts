@@ -75,7 +75,7 @@ export const writeClientCore = async (
         })
     );
 
-    if (options.clientName) {
+    if (options.name) {
         await writeFileSync(
             path.resolve(outputPath, 'BaseHttpRequest.ts'),
             templates.core.baseHttpRequest({

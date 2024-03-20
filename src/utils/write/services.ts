@@ -10,7 +10,7 @@ import type { Templates } from '../handlebars';
  * @param client Client containing models, schemas, and services
  * @param templates The loaded handlebar templates
  * @param outputPath Directory to write the generated files to
- * @param options {@link Config} passed to the `generate()` function
+ * @param options {@link Config} passed to the `createClient()` method
  */
 export const writeClientServices = async (
     client: Client,

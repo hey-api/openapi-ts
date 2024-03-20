@@ -49,12 +49,23 @@ or
 yarn add @nicolas-chaulet/openapi-typescript-codegen -D
 ```
 
-and add a script to your `package.json` file
+If you want to use `openapi-ts` with CLI, add a script to your `package.json` file
 
 ```json
 "scripts": {
   "openapi-ts": "openapi-ts"
 }
+```
+
+You can also generate your client programmatically by importing `openapi-ts` in a `.ts` file.
+
+```ts
+import { createClient } from '@nicolas-chaulet/openapi-typescript-codegen'
+
+createClient({
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+})
 ```
 
 > ⚠️ You need to be running Node.js v18 or newer

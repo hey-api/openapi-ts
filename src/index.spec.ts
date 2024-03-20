@@ -1,10 +1,10 @@
-import { generate, parseOpenApiSpecification } from './index';
+import { createClient, parseOpenApiSpecification } from './index';
 import * as parseV2 from './openApi/v2';
 import * as parseV3 from './openApi/v3';
 
 describe('index', () => {
     it('parses v2 without issues', async () => {
-        await generate({
+        await createClient({
             input: './test/spec/v2.json',
             output: './generated/v2/',
             write: false,
@@ -12,7 +12,7 @@ describe('index', () => {
     });
 
     it('parses v3 without issues', async () => {
-        await generate({
+        await createClient({
             input: './test/spec/v3.json',
             output: './generated/v3/',
             write: false,
@@ -20,7 +20,7 @@ describe('index', () => {
     });
 
     it('downloads and parses v2 without issues', async () => {
-        await generate({
+        await createClient({
             input: 'https://raw.githubusercontent.com/ferdikoomen/openapi-typescript-codegen/master/test/spec/v2.json',
             output: './generated/v2-downloaded/',
             write: false,
@@ -28,7 +28,7 @@ describe('index', () => {
     });
 
     it('downloads and parses v3 without issues', async () => {
-        await generate({
+        await createClient({
             input: 'https://raw.githubusercontent.com/ferdikoomen/openapi-typescript-codegen/master/test/spec/v3.json',
             output: './generated/v3-downloaded/',
             write: false,

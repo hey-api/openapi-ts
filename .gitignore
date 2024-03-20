@@ -11,9 +11,6 @@ yarn-error.log*
 *.iml
 dist
 coverage
-samples/generated
-samples/swagger-codegen-cli-v2.jar
-samples/swagger-codegen-cli-v3.jar
 .env
 
 # test files

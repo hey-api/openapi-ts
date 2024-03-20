@@ -11,8 +11,8 @@ const main = async () => {
         useOptions: true,
     };
 
-    const { generate } = await import(path.resolve(process.cwd(), 'dist/index.js'));
-    await generate(config);
+    const { createClient } = await import(path.resolve(process.cwd(), 'dist/index.js'));
+    await createClient(config);
 };
 
 main();
