@@ -9,7 +9,7 @@ describe('unique', () => {
         { value: 'a', index: 2, arr: ['a', 'b', 'c'], result: false },
         { value: 'a', index: 1, arr: ['z', 'a', 'b'], result: true },
         { value: 'a', index: 2, arr: ['y', 'z', 'a'], result: true },
-    ])('unique($value, $index, $arr) === $result', ({ value, index, arr, result }) => {
+    ])('unique($value, $index, $arr) -> $result', ({ value, index, arr, result }) => {
         expect(unique(value, index, arr)).toEqual(result);
     });
 

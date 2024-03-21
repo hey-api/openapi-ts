@@ -3,28 +3,30 @@ import { describe, expect, it } from 'vitest';
 import { getMappedType, getType } from '../type';
 
 describe('getMappedType', () => {
-    it('should map types to the basics', () => {
-        expect(getMappedType('')).toEqual(undefined);
-        expect(getMappedType('any')).toEqual('unknown');
-        expect(getMappedType('array')).toEqual('unknown[]');
-        expect(getMappedType('boolean')).toEqual('boolean');
-        expect(getMappedType('byte')).toEqual('number');
-        expect(getMappedType('char')).toEqual('string');
-        expect(getMappedType('date-time')).toEqual('string');
-        expect(getMappedType('date')).toEqual('string');
-        expect(getMappedType('double')).toEqual('number');
-        expect(getMappedType('file')).toEqual('binary');
-        expect(getMappedType('float')).toEqual('number');
-        expect(getMappedType('int')).toEqual('number');
-        expect(getMappedType('integer')).toEqual('number');
-        expect(getMappedType('long')).toEqual('number');
-        expect(getMappedType('null')).toEqual('null');
-        expect(getMappedType('number')).toEqual('number');
-        expect(getMappedType('object')).toEqual('unknown');
-        expect(getMappedType('password')).toEqual('string');
-        expect(getMappedType('short')).toEqual('number');
-        expect(getMappedType('string')).toEqual('string');
-        expect(getMappedType('void')).toEqual('void');
+    it.each([
+        { type: '', expected: undefined },
+        { type: 'any', expected: 'unknown' },
+        { type: 'array', expected: 'unknown[]' },
+        { type: 'boolean', expected: 'boolean' },
+        { type: 'byte', expected: 'number' },
+        { type: 'char', expected: 'string' },
+        { type: 'date-time', expected: 'string' },
+        { type: 'date', expected: 'string' },
+        { type: 'double', expected: 'number' },
+        { type: 'file', expected: 'binary' },
+        { type: 'float', expected: 'number' },
+        { type: 'int', expected: 'number' },
+        { type: 'integer', expected: 'number' },
+        { type: 'long', expected: 'number' },
+        { type: 'null', expected: 'null' },
+        { type: 'number', expected: 'number' },
+        { type: 'object', expected: 'unknown' },
+        { type: 'password', expected: 'string' },
+        { type: 'short', expected: 'number' },
+        { type: 'string', expected: 'string' },
+        { type: 'void', expected: 'void' },
+    ])('should map type $type to $expected', ({ type, expected }) => {
+        expect(getMappedType(type)).toEqual(expected);
     });
 });
 
