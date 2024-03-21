@@ -87,7 +87,7 @@ import partialTypeIntersection from '../templates/partials/typeIntersection.hbs'
 import partialTypeReference from '../templates/partials/typeReference.hbs';
 import partialTypeUnion from '../templates/partials/typeUnion.hbs';
 import type { Client, Model, OperationParameter, Service } from '../types/client';
-import type { Config, UserConfig } from '../types/config';
+import type { Config } from '../types/config';
 import { enumKey, enumName, enumUnionType, enumValue } from './enum';
 import { escapeName } from './escapeName';
 import { sortByName } from './sort';
@@ -99,8 +99,12 @@ const escapeComment = (value: string) =>
         .replace(/\/\*/g, '*')
         .replace(/\r?\n(.*)/g, (_, w) => `${EOL} * ${w.trim()}`);
 
-const modelsExports = (config: UserConfig, models: Model[], path: string) => {
-    const output = models.map(model => {
+const exportsModels = (config: Config, client: Client) => {
+    if (!config.exportModels) {
+        return '';
+    }
+    const path = './models/';
+    const output = client.models.map(model => {
         const importedModel = config.postfixModels
             ? `${model.name} as ${model.name + config.postfixModels}`
             : model.name;
@@ -116,10 +120,33 @@ const modelsExports = (config: UserConfig, models: Model[], path: string) => {
     return output.join('\n');
 };
 
-const modelImports = (model: Model | Service, path: string) => {
-    if (!model.imports.length) {
+const exportsSchemas = (config: Config, client: Client) => {
+    if (!config.exportSchemas) {
         return '';
     }
+    const path = './schemas/';
+    const output = client.models.map(model => {
+        const name = `$${model.name}`;
+        const result = [`export { ${name} } from '${path + name}';`];
+        return result.join('\n');
+    });
+    return output.join('\n');
+};
+
+const exportsServices = (config: Config, client: Client) => {
+    if (!config.exportServices) {
+        return '';
+    }
+    const path = './services/';
+    const output = client.services.map(service => {
+        const name = service.name + config.postfixServices;
+        const result = [`export { ${name} } from '${path + name}';`];
+        return result.join('\n');
+    });
+    return output.join('\n');
+};
+
+const modelImports = (model: Model | Service, path: string) => {
     const output = model.imports.map(item => `import type { ${item} } from '${path + item}';`);
     return output.join('\n');
 };
@@ -210,6 +237,18 @@ export const registerHandlebarHelpers = (config: Config, client: Client): void =
         return options.inverse(this);
     });
 
+    Handlebars.registerHelper('exportsModels', function () {
+        return exportsModels(config, client);
+    });
+
+    Handlebars.registerHelper('exportsSchemas', function () {
+        return exportsSchemas(config, client);
+    });
+
+    Handlebars.registerHelper('exportsServices', function () {
+        return exportsServices(config, client);
+    });
+
     Handlebars.registerHelper('ifdef', function (this: unknown, ...args): string {
         const options = args.pop();
         if (!args.every(value => !value)) {
@@ -240,7 +279,6 @@ export const registerHandlebarHelpers = (config: Config, client: Client): void =
     );
 
     Handlebars.registerHelper('modelImports', modelImports);
-    Handlebars.registerHelper('modelsExports', modelsExports);
 
     Handlebars.registerHelper(
         'modelUnionType',
@@ -269,7 +307,7 @@ export const registerHandlebarHelpers = (config: Config, client: Client): void =
 
     Handlebars.registerHelper(
         'useDateType',
-        function (this: unknown, config: UserConfig, format: string | undefined, options: Handlebars.HelperOptions) {
+        function (this: unknown, config: Config, format: string | undefined, options: Handlebars.HelperOptions) {
             return config.useDateType && format === 'date-time' ? options.fn(this) : options.inverse(this);
         }
     );

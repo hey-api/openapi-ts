@@ -12,24 +12,8 @@ export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 {{/if}}
 
-{{#if @root.$config.exportModels}}
-{{#if models}}
-{{{modelsExports @root.$config models './models/'}}}
-{{/if}}
-{{/if}}
+{{{exportsModels}}}
 
-{{#if @root.$config.exportSchemas}}
-{{#if models}}
-{{#each models}}
-export { ${{{name}}} } from './schemas/${{{name}}}';
-{{/each}}
-{{/if}}
-{{/if}}
+{{{exportsSchemas}}}
 
-{{#if @root.$config.exportServices}}
-{{#if services}}
-{{#each services}}
-export { {{{name}}}{{{@root.$config.postfixServices}}} } from './services/{{{name}}}{{{@root.$config.postfixServices}}}';
-{{/each}}
-{{/if}}
-{{/if}}
+{{{exportsServices}}}

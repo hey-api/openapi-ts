@@ -9,27 +9,27 @@ export interface UserConfig {
      */
     client?: 'angular' | 'axios' | 'fetch' | 'node' | 'xhr';
     /**
-     * Generate JavaScript objects from enum definitions
+     * Generate JavaScript objects from enum definitions?
      * @default false
      */
     enums?: boolean;
     /**
-     * Generate core client classes
+     * Generate core client classes?
      * @default true
      */
     exportCore?: boolean;
     /**
-     * Generate models
+     * Generate models?
      * @default true
      */
     exportModels?: boolean | string;
     /**
-     * Generate schemas
-     * @default false
+     * Generate schemas?
+     * @default true
      */
     exportSchemas?: boolean;
     /**
-     * Generate services
+     * Generate services?
      * @default true
      */
     exportServices?: boolean | string;
