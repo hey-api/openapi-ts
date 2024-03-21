@@ -10,14 +10,14 @@ import type { Client } from './types/client';
 import type { Config, UserConfig } from './types/config';
 import { getOpenApiSpec } from './utils/getOpenApiSpec';
 import { registerHandlebarTemplates } from './utils/handlebars';
+import { isSubDirectory } from './utils/isSubdirectory';
 import { postProcessClient } from './utils/postProcessClient';
 import { writeClient } from './utils/write/client';
 
 type Dependencies = Record<string, unknown>;
 
-// const configFiles = ['openapi-ts.config.js', 'openapi-ts.config.ts'];
-// add support for `openapi-ts.config.ts`
-const configFiles = ['openapi-ts.config.js'];
+// TODO: add support for `openapi-ts.config.ts`
+const configFiles = ['openapi-ts.config.js', 'openapi-ts.config.cjs', 'openapi-ts.config.mjs'];
 
 export const parseOpenApiSpecification = (openApi: Awaited<ReturnType<typeof getOpenApiSpec>>, config: Config) => {
     if ('openapi' in openApi) {
@@ -93,14 +93,13 @@ const getConfig = async (userConfig: UserConfig, dependencies: Dependencies) => 
         enums = false,
         exportCore = true,
         exportModels = true,
-        exportSchemas = false,
+        exportSchemas = true,
         exportServices = true,
         format = true,
         input,
         lint = false,
         name,
         operationId = true,
-        output,
         postfixModels = '',
         postfixServices = 'Service',
         request,
@@ -110,7 +109,20 @@ const getConfig = async (userConfig: UserConfig, dependencies: Dependencies) => 
         write = true,
     } = userConfig;
 
+    if (!input) {
+        throw new Error('🚫 input not provided - provide path to OpenAPI specification');
+    }
+
+    if (!userConfig.output) {
+        throw new Error('🚫 output not provided - provide path where we should generate your client');
+    }
+
+    if (!isSubDirectory(process.cwd(), userConfig.output)) {
+        throw new Error('🚫 output must be within the current working directory');
+    }
+
     const client = userConfig.client || inferClient(dependencies);
+    const output = path.resolve(process.cwd(), userConfig.output);
 
     const config: Config = {
         base,
@@ -134,14 +146,6 @@ const getConfig = async (userConfig: UserConfig, dependencies: Dependencies) => 
         useOptions,
         write,
     };
-
-    if (!input) {
-        throw new Error('🚫 input not provided - provide path to OpenAPI specification');
-    }
-
-    if (!output) {
-        throw new Error('🚫 output not provided - provide path where we should generate your client');
-    }
 
     return config;
 };

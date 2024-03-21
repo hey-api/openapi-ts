@@ -10,18 +10,18 @@ import type { Templates } from '../handlebars';
  * @param client Client containing models, schemas, and services
  * @param templates The loaded handlebar templates
  * @param outputPath Directory to write the generated files to
- * @param options {@link Config} passed to the `createClient()` method
+ * @param config {@link Config} passed to the `createClient()` method
  */
 export const writeClientServices = async (
     client: Client,
     templates: Templates,
     outputPath: string,
-    options: Config
+    config: Config
 ): Promise<void> => {
     for (const service of client.services) {
-        const file = path.resolve(outputPath, `${service.name}${options.postfixServices}.ts`);
+        const file = path.resolve(outputPath, `${service.name}${config.postfixServices}.ts`);
         const templateResult = templates.exports.service({
-            $config: options,
+            $config: config,
             ...service,
         });
         await writeFileSync(file, templateResult);
