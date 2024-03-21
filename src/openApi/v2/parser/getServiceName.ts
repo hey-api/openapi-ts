@@ -1,6 +1,6 @@
 import camelCase from 'camelcase';
 
-import sanitizeServiceName from '../../../utils/sanitizeServiceName';
+import { sanitizeServiceName } from '../../../utils/sanitize';
 
 /**
  * Convert the input value to a correct service name. This converts

@@ -1,5 +1,5 @@
 import type { Type } from '../types/client';
-import sanitizeTypeName from './sanitizeTypeName';
+import { sanitizeTypeName } from './sanitize';
 import { stripNamespace } from './stripNamespace';
 
 const TYPE_MAPPINGS = new Map<string, string>([

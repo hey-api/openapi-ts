@@ -1,7 +1,7 @@
 import camelCase from 'camelcase';
 
 import type { UserConfig } from '../types/config';
-import sanitizeOperationName from './sanitizeOperationName';
+import { sanitizeOperationName } from './sanitize';
 
 /**
  * Convert the input value to a correct operation (method) classname.
