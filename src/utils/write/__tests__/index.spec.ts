@@ -38,13 +38,23 @@ describe('writeClientIndex', () => {
         };
 
         await writeClientIndex(client, templates, '/', {
+            client: 'fetch',
             enums: true,
             exportCore: true,
-            exportServices: true,
             exportModels: true,
             exportSchemas: true,
-            postfixServices: 'Service',
+            exportServices: true,
+            format: false,
+            input: '',
+            lint: false,
+            operationId: true,
+            output: '',
             postfixModels: '',
+            postfixServices: 'Service',
+            serviceResponse: 'body',
+            useDateType: false,
+            useOptions: true,
+            write: true,
         });
 
         expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/index.ts'), 'index');

@@ -2,7 +2,7 @@ import { writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import type { Client } from '../../types/client';
-import type { UserConfig } from '../../types/config';
+import type { Config } from '../../types/config';
 import { Templates } from '../handlebars';
 import { sortByName } from '../sort';
 
@@ -13,30 +13,19 @@ import { sortByName } from '../sort';
  * @param client Client containing models, schemas, and services
  * @param templates The loaded handlebar templates
  * @param outputPath Directory to write the generated files to
- * @param options Options passed to the `generate()` function
+ * @param config {@link Config} passed to the `createClient()` method
  */
 export const writeClientIndex = async (
     client: Client,
     templates: Templates,
     outputPath: string,
-    options: Pick<
-        Required<UserConfig>,
-        | 'enums'
-        | 'exportCore'
-        | 'exportServices'
-        | 'exportModels'
-        | 'exportSchemas'
-        | 'postfixServices'
-        | 'postfixModels'
-    > &
-        Pick<UserConfig, 'name'>
+    config: Config
 ): Promise<void> => {
     const templateResult = templates.index({
-        $config: options,
+        $config: config,
+        ...client,
         models: sortByName(client.models),
-        server: client.server,
         services: sortByName(client.services),
-        version: client.version,
     });
 
     await writeFileSync(path.resolve(outputPath, 'index.ts'), templateResult);
