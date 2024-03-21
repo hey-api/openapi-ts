@@ -39,8 +39,22 @@ describe('writeClientClass', () => {
         await writeClientClass(client, templates, './dist', {
             client: 'fetch',
             enums: true,
+            exportCore: true,
+            exportModels: true,
+            exportSchemas: true,
+            exportServices: true,
+            format: false,
+            input: '',
+            lint: false,
             name: 'AppClient',
+            operationId: true,
+            output: '',
+            postfixModels: '',
             postfixServices: '',
+            serviceResponse: 'body',
+            useDateType: false,
+            useOptions: true,
+            write: true,
         });
 
         expect(writeFileSync).toHaveBeenCalled();

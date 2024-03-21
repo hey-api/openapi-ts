@@ -4,7 +4,6 @@ import path from 'node:path';
 import type { Client } from '../../types/client';
 import type { Config } from '../../types/config';
 import type { Templates } from '../handlebars';
-import { isSubDirectory } from '../isSubdirectory';
 import { writeClientClass } from './class';
 import { writeClientCore } from './core';
 import { writeClientIndex } from './index';
@@ -16,87 +15,72 @@ import { writeClientServices } from './services';
  * Write our OpenAPI client, using the given templates at the given output
  * @param client Client containing models, schemas, and services
  * @param templates Templates wrapper with all loaded Handlebars templates
- * @param options {@link Config} passed to the `createClient()` method
+ * @param config {@link Config} passed to the `createClient()` method
  */
-export const writeClient = async (client: Client, templates: Templates, options: Config): Promise<void> => {
-    const outputPath = path.resolve(process.cwd(), options.output);
+export const writeClient = async (client: Client, templates: Templates, config: Config): Promise<void> => {
+    await rmSync(config.output, {
+        force: true,
+        recursive: true,
+    });
 
-    if (!isSubDirectory(process.cwd(), options.output)) {
-        throw new Error(`Output folder is not a subdirectory of the current working directory`);
-    }
-
-    if (typeof options.exportServices === 'string') {
-        const regexp = new RegExp(options.exportServices);
+    if (typeof config.exportServices === 'string') {
+        const regexp = new RegExp(config.exportServices);
         client.services = client.services.filter(service => regexp.test(service.name));
     }
 
-    if (typeof options.exportModels === 'string') {
-        const regexp = new RegExp(options.exportModels);
+    if (typeof config.exportModels === 'string') {
+        const regexp = new RegExp(config.exportModels);
         client.models = client.models.filter(model => regexp.test(model.name));
     }
 
-    if (options.exportCore) {
-        const outputPathCore = path.resolve(outputPath, 'core');
-        await rmSync(outputPathCore, {
-            force: true,
-            recursive: true,
-        });
-        await mkdirSync(outputPathCore, {
-            recursive: true,
-        });
-        await writeClientCore(client, templates, outputPathCore, options);
+    const sections = [
+        {
+            dir: 'core',
+            enabled: config.exportCore,
+            fn: writeClientCore,
+        },
+        {
+            dir: 'schemas',
+            enabled: config.exportSchemas,
+            fn: writeClientSchemas,
+        },
+        {
+            dir: 'models',
+            enabled: config.exportModels,
+            fn: writeClientModels,
+        },
+        {
+            dir: 'services',
+            enabled: config.exportServices,
+            fn: writeClientServices,
+        },
+        {
+            dir: '',
+            enabled: config.name,
+            fn: writeClientClass,
+        },
+    ] as const;
+
+    for (const section of sections) {
+        if (section.enabled) {
+            const sectionPath = path.resolve(config.output, section.dir);
+            if (section.dir) {
+                await rmSync(sectionPath, {
+                    force: true,
+                    recursive: true,
+                });
+            }
+            await mkdirSync(sectionPath, {
+                recursive: true,
+            });
+            await section.fn(client, templates, sectionPath, {
+                ...config,
+                name: config.name!,
+            });
+        }
     }
 
-    if (options.exportSchemas) {
-        const outputPathSchemas = path.resolve(outputPath, 'schemas');
-        await rmSync(outputPathSchemas, {
-            force: true,
-            recursive: true,
-        });
-        await mkdirSync(outputPathSchemas, {
-            recursive: true,
-        });
-        await writeClientSchemas(client, templates, outputPathSchemas, options);
-    }
-
-    if (options.exportModels) {
-        const outputPathModels = path.resolve(outputPath, 'models');
-        await rmSync(outputPathModels, {
-            force: true,
-            recursive: true,
-        });
-        await mkdirSync(outputPathModels, {
-            recursive: true,
-        });
-        await writeClientModels(client, templates, outputPathModels, options);
-    }
-
-    if (options.exportServices) {
-        const outputPathServices = path.resolve(outputPath, 'services');
-        await rmSync(outputPathServices, {
-            force: true,
-            recursive: true,
-        });
-        await mkdirSync(outputPathServices, {
-            recursive: true,
-        });
-        await writeClientServices(client, templates, outputPathServices, options);
-    }
-
-    if (options.name) {
-        await mkdirSync(outputPath, {
-            recursive: true,
-        });
-        await writeClientClass(client, templates, outputPath, {
-            ...options,
-            name: options.name,
-        });
-    }
-
-    if (options.exportCore || options.exportServices || options.exportSchemas || options.exportModels) {
-        await mkdirSync(outputPath, {
-            recursive: true,
-        });
-        await writeClientIndex(client, templates, outputPath, options);
+    if (sections.some(section => section.enabled)) {
+        await writeClientIndex(client, templates, config.output, config);
     }
 };

@@ -73,9 +73,17 @@ createClient({
 
 ## Configuration
 
-<!-- `openapi-ts` supports loading configuration from a file inside your project root directory. You can either create a `openapi-ts.config.js` file -->
+`openapi-ts` supports loading configuration from a file inside your project root directory. You can either create a `openapi-ts.config.cjs` file
 
-`openapi-ts` supports loading configuration from a file inside your project root directory. You just need to create a `openapi-ts.config.js` file
+```js
+/** @type {import('@nicolas-chaulet/openapi-typescript-codegen').UserConfig} */
+module.exports = {
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+}
+```
+
+or `openapi-ts.config.mjs`
 
 ```js
 /** @type {import('@nicolas-chaulet/openapi-typescript-codegen').UserConfig} */
@@ -85,29 +93,19 @@ export default {
 }
 ```
 
-<!-- or `openapi-ts.config.ts`
-
-```ts
-import { defineConfig } from '@nicolas-chaulet/openapi-typescript-codegen';
-
-export default defineConfig({
-  input: 'path/to/openapi.json',
-  output: 'src/client',
-})
-``` -->
+Alternatively, you can use `openapi-ts.config.js` and configure the export statement depending on your project setup.
 
 ### Formatting
 
 By default, `openapi-ts` will automatically format your client according to your project configuration. To disable automatic formatting, set `format` to false
 
-```ts
-import { defineConfig } from '@nicolas-chaulet/openapi-typescript-codegen';
-
-export default defineConfig({
+```js
+/** @type {import('@nicolas-chaulet/openapi-typescript-codegen').UserConfig} */
+export default {
   format: false,
   input: 'path/to/openapi.json',
   output: 'src/client',
-})
+}
 ```
 
 You can also prevent your client from being processed by formatters by adding your output path to the tool's ignore file (e.g. `.prettierignore`).
@@ -116,14 +114,13 @@ You can also prevent your client from being processed by formatters by adding yo
 
 For performance reasons, `openapi-ts` does not automatically lint your client. To enable this feature, set `lint` to true
 
-```ts
-import { defineConfig } from '@nicolas-chaulet/openapi-typescript-codegen';
-
-export default defineConfig({
+```js
+/** @type {import('@nicolas-chaulet/openapi-typescript-codegen').UserConfig} */
+export default {
   input: 'path/to/openapi.json',
   lint: true,
   output: 'src/client',
-})
+}
 ```
 
 You can also prevent your client from being processed by linters by adding your output path to the tool's ignore file (e.g. `.eslintignore`).
@@ -132,14 +129,13 @@ You can also prevent your client from being processed by linters by adding your 
 
 We do not generate TypeScript [enums](https://www.typescriptlang.org/docs/handbook/enums.html) because they are not standard JavaScript and pose [typing challenges](https://dev.to/ivanzm123/dont-use-enums-in-typescript-they-are-very-dangerous-57bh). If you want to iterate through possible field values without manually typing arrays, you can export enums by running
 
-```ts
-import { defineConfig } from '@nicolas-chaulet/openapi-typescript-codegen';
-
-export default defineConfig({
+```js
+/** @type {import('@nicolas-chaulet/openapi-typescript-codegen').UserConfig} */
+export default {
   enums: true,
   input: 'path/to/openapi.json',
   output: 'src/client',
-})
+}
 ```
 
 This will export your enums as plain JavaScript objects. For example, `Foo` will generate the following
@@ -170,7 +166,7 @@ $ openapi-ts --help
     --exportCore <value>      Write core files to disk (default: true)
     --exportServices <value>  Write services to disk [true, false, regexp] (default: true)
     --exportModels <value>    Write models to disk [true, false, regexp] (default: true)
-    --exportSchemas <value>   Write schemas to disk (default: false)
+    --exportSchemas <value>   Write schemas to disk (default: true)
     --format                  Process output folder with formatter?
     --no-format               Disable processing output folder with formatter
     --lint                    Process output folder with linter?
