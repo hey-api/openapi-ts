@@ -1,7 +1,7 @@
 import camelCase from 'camelcase';
 
 import { reservedWords } from '../../../utils/reservedWords';
-import sanitizeOperationParameterName from '../../../utils/sanitizeOperationParameterName';
+import { sanitizeOperationParameterName } from '../../../utils/sanitize';
 
 /**
  * Replaces any invalid characters from a parameter name.
