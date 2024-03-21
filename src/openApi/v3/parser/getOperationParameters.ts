@@ -1,8 +1,8 @@
 import type { OperationParameters } from '../../../types/client';
+import { getRef } from '../../common/parser/getRef';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiParameter } from '../interfaces/OpenApiParameter';
 import { getOperationParameter } from './getOperationParameter';
-import { getRef } from './getRef';
 
 const allowedIn = ['cookie', 'formData', 'header', 'path', 'query'] as const;
 

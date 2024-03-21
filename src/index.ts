@@ -4,8 +4,7 @@ import { pathToFileURL } from 'node:url';
 
 import { sync } from 'cross-spawn';
 
-import { parse as parseV2 } from './openApi/v2';
-import { parse as parseV3 } from './openApi/v3';
+import { parse } from './openApi';
 import type { Client } from './types/client';
 import type { Config, UserConfig } from './types/config';
 import { getOpenApiSpec } from './utils/getOpenApiSpec';
@@ -18,16 +17,6 @@ type Dependencies = Record<string, unknown>;
 
 // TODO: add support for `openapi-ts.config.ts`
 const configFiles = ['openapi-ts.config.js', 'openapi-ts.config.cjs', 'openapi-ts.config.mjs'];
-
-export const parseOpenApiSpecification = (openApi: Awaited<ReturnType<typeof getOpenApiSpec>>, config: Config) => {
-    if ('openapi' in openApi) {
-        return parseV3(openApi, config);
-    }
-    if ('swagger' in openApi) {
-        return parseV2(openApi, config);
-    }
-    throw new Error(`Unsupported Open API specification: ${JSON.stringify(openApi, null, 2)}`);
-};
 
 const processOutput = (config: Config, dependencies: Dependencies) => {
     if (config.format) {
@@ -174,7 +163,7 @@ export async function createClient(userConfig: UserConfig): Promise<Client> {
             ? await getOpenApiSpec(config.input)
             : (config.input as unknown as Awaited<ReturnType<typeof getOpenApiSpec>>);
 
-    const client = postProcessClient(parseOpenApiSpecification(openApi, config));
+    const client = postProcessClient(parse(openApi, config));
     const templates = registerHandlebarTemplates(config, client);
 
     if (config.write) {

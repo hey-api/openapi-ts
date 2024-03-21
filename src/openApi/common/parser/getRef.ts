@@ -1,10 +1,11 @@
-import type { OpenApi } from '../interfaces/OpenApi';
-import type { OpenApiReference } from '../interfaces/OpenApiReference';
+import type { OpenApiReference as OpenApiReferenceV2 } from '../../v2/interfaces/OpenApiReference';
+import type { OpenApiReference as OpenApiReferenceV3 } from '../../v3/interfaces/OpenApiReference';
+import { OpenApi } from '../interfaces/OpenApi';
 
 const ESCAPED_REF_SLASH = /~1/g;
 const ESCAPED_REF_TILDE = /~0/g;
 
-export const getRef = <T>(openApi: OpenApi, item: T & OpenApiReference): T => {
+export function getRef<T>(openApi: OpenApi, item: T & (OpenApiReferenceV2 | OpenApiReferenceV3)): T {
     if (item.$ref) {
         // Fetch the paths to the definitions, this converts:
         // "#/components/schemas/Form" to ["components", "schemas", "Form"]
@@ -30,4 +31,4 @@ export const getRef = <T>(openApi: OpenApi, item: T & OpenApiReference): T => {
         return result as T;
     }
     return item as T;
-};
+}
