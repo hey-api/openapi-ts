@@ -2,6 +2,7 @@ import type { Operation, OperationParameter, OperationParameters } from '../../.
 import type { Config } from '../../../types/config';
 import { getOperationName } from '../../../utils/operation';
 import { getRef } from '../../common/parser/getRef';
+import { toSortedByRequired } from '../../common/parser/sort';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiOperation } from '../interfaces/OpenApiOperation';
 import type { OpenApiRequestBody } from '../interfaces/OpenApiRequestBody';
@@ -109,15 +110,8 @@ export const getOperation = (
     operation.parametersPath = mergeParameters(operation.parametersPath, pathParams.parametersPath);
     operation.parametersQuery = mergeParameters(operation.parametersQuery, pathParams.parametersQuery);
 
-    // place required parameters first so we don't generate invalid types since
-    // optional parameters cannot be positioned before required ones
-    operation.parameters = operation.parameters.sort((a: OperationParameter, b: OperationParameter): number => {
-        const aNeedsValue = a.isRequired && a.default === undefined;
-        const bNeedsValue = b.isRequired && b.default === undefined;
-        if (aNeedsValue && !bNeedsValue) return -1;
-        if (bNeedsValue && !aNeedsValue) return 1;
-        return 0;
-    });
+    // Sort by required
+    operation.parameters = toSortedByRequired(operation.parameters);
 
     return operation;
 };
