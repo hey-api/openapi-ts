@@ -1,10 +1,10 @@
 import type { Client } from '../../types/client';
 import type { Config } from '../../types/config';
+import { getServiceVersion } from '../common/parser/service';
 import type { OpenApi } from './interfaces/OpenApi';
 import { getModels } from './parser/getModels';
 import { getServer } from './parser/getServer';
 import { getServices } from './parser/getServices';
-import { getServiceVersion } from './parser/getServiceVersion';
 
 /**
  * Parse the OpenAPI specification to a Client model that contains
