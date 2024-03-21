@@ -10,7 +10,7 @@ import type { Client } from './types/client';
 import type { Config, UserConfig } from './types/config';
 import { getOpenApiSpec } from './utils/getOpenApiSpec';
 import { registerHandlebarTemplates } from './utils/handlebars';
-import { postProcessClient } from './utils/postProcessClient';
+import { postProcessClient } from './utils/postprocess';
 import { writeClient } from './utils/write/client';
 
 type Dependencies = Record<string, unknown>;
