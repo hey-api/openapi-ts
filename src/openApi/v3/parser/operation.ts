@@ -1,6 +1,7 @@
 import type { Operation, OperationParameter, OperationParameters } from '../../../types/client';
 import type { Config } from '../../../types/config';
 import { getOperationName } from '../../../utils/operation';
+import { getRef } from '../../common/parser/getRef';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiOperation } from '../interfaces/OpenApiOperation';
 import type { OpenApiRequestBody } from '../interfaces/OpenApiRequestBody';
@@ -10,7 +11,6 @@ import { getOperationRequestBody } from './getOperationRequestBody';
 import { getOperationResponseHeader } from './getOperationResponseHeader';
 import { getOperationResponses } from './getOperationResponses';
 import { getOperationResults } from './getOperationResults';
-import { getRef } from './getRef';
 import { getServiceName } from './service';
 
 // add global path parameters, skip duplicate names
