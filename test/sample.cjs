@@ -5,7 +5,6 @@ const main = async () => {
     const config = {
         client: 'fetch',
         enums: true,
-        exportSchemas: true,
         input: './test/spec/v3.json',
         output: './test/generated/v3/',
         useOptions: true,
