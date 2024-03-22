@@ -1,16 +1,15 @@
 {
-    "name": "@nicolas-chaulet/openapi-typescript-codegen",
+    "name": "@hey-api/openapi-ts",
     "version": "0.27.36",
     "type": "module",
-    "description": "Library that generates Typescript clients based on the OpenAPI specification.",
-    "author": "Ferdi Koomen",
-    "homepage": "https://github.com/nicolas-chaulet/openapi-typescript-codegen/",
+    "description": "Turn your OpenAPI specification into a beautiful TypeScript client",
+    "homepage": "https://github.com/hey-api/openapi-ts/",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/nicolas-chaulet/openapi-typescript-codegen.git"
+        "url": "git+https://github.com/hey-api/openapi-ts.git"
     },
     "bugs": {
-        "url": "https://github.com/nicolas-chaulet/openapi-typescript-codegen/issues"
+        "url": "https://github.com/hey-api/openapi-ts/issues"
     },
     "license": "MIT",
     "keywords": [
@@ -18,6 +17,8 @@
         "swagger",
         "generator",
         "typescript",
+        "javascript",
+        "codegen",
         "yaml",
         "json",
         "fetch",
@@ -25,12 +26,6 @@
         "axios",
         "angular",
         "node"
-    ],
-    "maintainers": [
-        {
-            "name": "Ferdi Koomen",
-            "email": "info@madebyferdi.com"
-        }
     ],
     "main": "./dist/node/index.js",
     "types": "./dist/node/index.d.ts",
@@ -42,23 +37,23 @@
         "dist"
     ],
     "scripts": {
-        "dev": "rimraf dist && npm run build-bundle -- --watch",
-        "build": "run-s clean build-bundle build-types",
         "build-bundle": "rollup --config rollup.config.ts --configPlugin typescript",
-        "build-types": "run-s build-types-temp build-types-roll build-types-check",
         "build-types-check": "tsc --project tsconfig.check.json",
         "build-types-roll": "rollup --config rollup.dts.config.ts --configPlugin typescript && rimraf temp",
         "build-types-temp": "tsc --emitDeclarationOnly --outDir temp -p src/node",
+        "build-types": "run-s build-types-temp build-types-roll build-types-check",
+        "build": "run-s clean build-bundle build-types",
         "clean": "rimraf dist test/generated test/e2e/generated coverage node_modules/.cache",
+        "dev": "rimraf dist && npm run build-bundle -- --watch",
         "lint:fix": "eslint . --fix",
         "lint": "eslint .",
         "prepublishOnly": "npm run build",
-        "test": "vitest run --config vitest.config.unit.ts",
         "test:coverage": "vitest run --config vitest.config.unit.ts --coverage",
         "test:e2e": "vitest run --config vitest.config.e2e.ts",
         "test:sample": "node test/sample.cjs",
         "test:update": "vitest run --config vitest.config.unit.ts --update",
         "test:watch": "vitest --config vitest.config.unit.ts --watch",
+        "test": "vitest run --config vitest.config.unit.ts",
         "typecheck": "tsc --noEmit"
     },
     "engines": {
