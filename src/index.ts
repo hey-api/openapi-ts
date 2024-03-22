@@ -20,7 +20,7 @@ const configFiles = ['openapi-ts.config.js', 'openapi-ts.config.cjs', 'openapi-t
 
 // Mapping of all dependencies required by each client. These should be installed in the generated client package
 const clientDependencies: Record<Config['client'], string[]> = {
-    angular: ['@angular/common', 'rxjs'],
+    angular: ['@angular/common', '@angular/core', 'rxjs'],
     axios: ['axios'],
     fetch: [],
     node: ['node-fetch'],
