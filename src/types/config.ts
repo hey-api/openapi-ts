@@ -86,7 +86,7 @@ export interface UserConfig {
     useDateType?: boolean;
     /**
      * Use options or arguments functions
-     * @default false
+     * @default true
      */
     useOptions?: boolean;
     /**
