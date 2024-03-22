@@ -94,7 +94,7 @@ const getConfig = async (userConfig: UserConfig, dependencies: Dependencies) => 
         request,
         serviceResponse = 'body',
         useDateType = false,
-        useOptions = false,
+        useOptions = true,
         write = true,
     } = userConfig;
 
@@ -108,6 +108,12 @@ const getConfig = async (userConfig: UserConfig, dependencies: Dependencies) => 
 
     if (!isSubDirectory(process.cwd(), userConfig.output)) {
         throw new Error('🚫 output must be within the current working directory');
+    }
+
+    if (!useOptions) {
+        console.warn(
+            '⚠️ Deprecation warning: useOptions set to false. This setting will be removed in future versions. Please migrate useOptions to true https://github.com/hey-api/openapi-ts#v0.27.38'
+        );
     }
 
     const client = userConfig.client || inferClient(dependencies);
