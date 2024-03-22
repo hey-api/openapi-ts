@@ -1,4 +1,4 @@
-# OpenAPI TypeScript Codegen
+# OpenAPI TypeScript 👋
 
 > ✨ Turn your OpenAPI specification into a beautiful TypeScript client
 
@@ -17,7 +17,7 @@
 
 ## About
 
-This is an opinionated fork of the [openapi-typescript-codegen](https://github.com/ferdikoomen/openapi-typescript-codegen) package. We created it after the original project became [unmaintained](https://github.com/ferdikoomen/openapi-typescript-codegen/issues/1276#issuecomment-1302392146) because we wanted to support OpenAPI v3.1 introduced in the FastAPI [v0.99.0](https://fastapi.tiangolo.com/release-notes/#0990) release. We plan to resolve the most pressing issues in the original project – open an issue if you'd like to prioritise your use case!
+`openapi-ts` started as a fork of [openapi-typescript-codegen](https://github.com/ferdikoomen/openapi-typescript-codegen). We created it after the original project became [unmaintained](https://github.com/ferdikoomen/openapi-typescript-codegen/issues/1276#issuecomment-1302392146) to add support for OpenAPI v3.1. We plan to resolve the most pressing issues in the original project – open an issue if you'd like to prioritise your use case!
 
 ## Features
 
@@ -33,7 +33,7 @@ This is an opinionated fork of the [openapi-typescript-codegen](https://github.c
 The fastest way to use `openapi-ts` is via npx
 
 ```sh
-npx @nicolas-chaulet/openapi-typescript-codegen -i path/to/openapi.json -o src/client
+npx @hey-api/openapi-ts -i path/to/openapi.json -o src/client
 ```
 
 Congratulations on creating your first client! 🎉
@@ -41,13 +41,13 @@ Congratulations on creating your first client! 🎉
 ## Installation
 
 ```sh
-npm install @nicolas-chaulet/openapi-typescript-codegen --save-dev
+npm install @hey-api/openapi-ts --save-dev
 ```
 
 or
 
 ```sh
-yarn add @nicolas-chaulet/openapi-typescript-codegen -D
+yarn add @hey-api/openapi-ts -D
 ```
 
 If you want to use `openapi-ts` with CLI, add a script to your `package.json` file
@@ -61,7 +61,7 @@ If you want to use `openapi-ts` with CLI, add a script to your `package.json` fi
 You can also generate your client programmatically by importing `openapi-ts` in a `.ts` file.
 
 ```ts
-import { createClient } from '@nicolas-chaulet/openapi-typescript-codegen'
+import { createClient } from '@hey-api/openapi-ts'
 
 createClient({
   input: 'path/to/openapi.json',
@@ -75,8 +75,8 @@ createClient({
 
 `openapi-ts` supports loading configuration from a file inside your project root directory. You can either create a `openapi-ts.config.cjs` file
 
-```js
-/** @type {import('@nicolas-chaulet/openapi-typescript-codegen').UserConfig} */
+```cjs
+/** @type {import('@hey-api/openapi-ts').UserConfig} */
 module.exports = {
   input: 'path/to/openapi.json',
   output: 'src/client',
@@ -85,8 +85,8 @@ module.exports = {
 
 or `openapi-ts.config.mjs`
 
-```js
-/** @type {import('@nicolas-chaulet/openapi-typescript-codegen').UserConfig} */
+```mjs
+/** @type {import('@hey-api/openapi-ts').UserConfig} */
 export default {
   input: 'path/to/openapi.json',
   output: 'src/client',
@@ -99,8 +99,8 @@ Alternatively, you can use `openapi-ts.config.js` and configure the export state
 
 By default, `openapi-ts` will automatically format your client according to your project configuration. To disable automatic formatting, set `format` to false
 
-```js
-/** @type {import('@nicolas-chaulet/openapi-typescript-codegen').UserConfig} */
+```mjs
+/** @type {import('@hey-api/openapi-ts').UserConfig} */
 export default {
   format: false,
   input: 'path/to/openapi.json',
@@ -114,8 +114,8 @@ You can also prevent your client from being processed by formatters by adding yo
 
 For performance reasons, `openapi-ts` does not automatically lint your client. To enable this feature, set `lint` to true
 
-```js
-/** @type {import('@nicolas-chaulet/openapi-typescript-codegen').UserConfig} */
+```mjs
+/** @type {import('@hey-api/openapi-ts').UserConfig} */
 export default {
   input: 'path/to/openapi.json',
   lint: true,
@@ -129,8 +129,8 @@ You can also prevent your client from being processed by linters by adding your 
 
 We do not generate TypeScript [enums](https://www.typescriptlang.org/docs/handbook/enums.html) because they are not standard JavaScript and pose [typing challenges](https://dev.to/ivanzm123/dont-use-enums-in-typescript-they-are-very-dangerous-57bh). If you want to iterate through possible field values without manually typing arrays, you can export enums by running
 
-```js
-/** @type {import('@nicolas-chaulet/openapi-typescript-codegen').UserConfig} */
+```mjs
+/** @type {import('@hey-api/openapi-ts').UserConfig} */
 export default {
   enums: true,
   input: 'path/to/openapi.json',

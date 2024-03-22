@@ -1,4 +1,4 @@
-# Contributing to OpenAPI TypeScript Codegen
+# Contributing to OpenAPI TypeScript 👋
 
 Thanks for your interest in contributing to this project.
 
