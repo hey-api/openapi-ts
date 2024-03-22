@@ -18,6 +18,15 @@ type Dependencies = Record<string, unknown>;
 // TODO: add support for `openapi-ts.config.ts`
 const configFiles = ['openapi-ts.config.js', 'openapi-ts.config.cjs', 'openapi-ts.config.mjs'];
 
+// Mapping of all dependencies used in each client. These should be installed in the generated client package
+const clientDependencies: Record<Config['client'], string[]> = {
+    angular: ['@angular/common', '@angular/core', 'rxjs'],
+    axios: ['axios'],
+    fetch: [],
+    node: ['node-fetch'],
+    xhr: [],
+};
+
 const processOutput = (config: Config, dependencies: Dependencies) => {
     if (config.format) {
         if (dependencies.prettier) {
@@ -35,11 +44,14 @@ const processOutput = (config: Config, dependencies: Dependencies) => {
 };
 
 const inferClient = (dependencies: Dependencies): Config['client'] => {
-    if (dependencies['@angular/cli']) {
+    if (Object.keys(dependencies).some(d => d.startsWith('@angular'))) {
         return 'angular';
     }
     if (dependencies.axios) {
         return 'axios';
+    }
+    if (dependencies['node-fetch']) {
+        return 'node';
     }
     return 'fetch';
 };
@@ -56,6 +68,13 @@ const logClientMessage = (client: Config['client']) => {
             return console.log('✨ Creating Node.js client');
         case 'xhr':
             return console.log('✨ Creating XHR client');
+    }
+};
+
+const logMissingDependenciesWarning = (client: Config['client'], dependencies: Dependencies) => {
+    const missing = clientDependencies[client].filter(d => dependencies[d] === undefined);
+    if (missing.length > 0) {
+        console.log('⚠️ Dependencies used in generated client are missing: ' + missing.join(' '));
     }
 };
 
@@ -179,6 +198,9 @@ export async function createClient(userConfig: UserConfig): Promise<Client> {
     }
 
     console.log('✨ Done! Your client is located in:', config.output);
+
+    logMissingDependenciesWarning(config.client, dependencies);
+
     return client;
 }
 
