@@ -184,7 +184,7 @@ $ openapi-ts --help
 
 While we try to avoid breaking changes, sometimes it's unavoidable in order to offer you the latest features.
 
-### v0.27.37
+### v0.27.38
 
 ### `useOptions: true`
 
