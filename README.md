@@ -13,6 +13,7 @@
   - [Linting](#linting)
   - [Enums](#enums)
   - [Config API](#config-api)
+- [Migrating](#migrating)
 - [Contributing](#contributing)
 
 ## About
@@ -160,7 +161,7 @@ $ openapi-ts --help
     -o, --output <value>      Output directory (required)
     -c, --client <value>      HTTP client to generate [fetch, xhr, node, axios, angular] (default: "fetch")
     --name <value>            Custom client class name
-    --useOptions <value>      Use options instead of arguments (default: false)
+    --useOptions <value>      Use options instead of arguments (default: true)
     --base <value>            Manually set base in OpenAPI config instead of inferring from server value
     --enums                   Generate JavaScript objects from enum definitions (default: false)
     --exportCore <value>      Write core files to disk (default: true)
@@ -178,6 +179,24 @@ $ openapi-ts --help
     --useDateType <value>     Output Date instead of string for the format "date-time" in the models (default: false)
     -h, --help                display help for command
 ```
+
+## Migrating
+
+While we try to avoid breaking changes, sometimes it's unavoidable in order to offer you the latest features.
+
+### v0.27.37
+
+### `useOptions: true`
+
+By default, generated clients will use a single object argument to pass values to API calls. This is a significant change from the previous default of unspecified array of arguments. If migrating your application in one go isn't feasible, we recommend deprecating your old client and generating a new client.
+
+```ts
+import { DefaultService } from 'client' // <-- old client with array arguments
+
+import { DefaultService } from 'client_v2' // <-- new client with options argument
+```
+
+This way, you can gradually switch over to the new syntax as you update parts of your code. Once you've removed all instances of `client` imports, you can safely delete the old `client` folder and find and replace all `client_v2` calls to `client`.
 
 ## Contributing
 
