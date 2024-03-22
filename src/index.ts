@@ -44,10 +44,14 @@ const processOutput = (config: Config, dependencies: Dependencies) => {
 };
 
 const inferClient = (dependencies: Dependencies): Config['client'] => {
-    for (const [c, deps] of Object.entries(clientDependencies)) {
-        if (deps.every(d => dependencies[d])) {
-            return c as Config['client'];
-        }
+    if (Object.keys(dependencies).some(d => d.startsWith('@angular'))) {
+        return 'angular';
+    }
+    if (dependencies.axios) {
+        return 'axios';
+    }
+    if (dependencies['node-fetch']) {
+        return 'node';
     }
     return 'fetch';
 };
