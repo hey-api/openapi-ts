@@ -13,6 +13,7 @@ export const getHttpRequestName = (client: Config['client']): string => {
         case 'fetch':
             return 'FetchHttpRequest';
         case 'node':
+        case 'node-experimental':
             return 'NodeHttpRequest';
         case 'xhr':
             return 'XHRHttpRequest';

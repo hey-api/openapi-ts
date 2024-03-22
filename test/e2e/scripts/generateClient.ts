@@ -1,9 +1,10 @@
 import { createClient } from '../../../';
+import type { Config } from '../../../src/types/config';
 
 export const generateClient = async (
     dir: string,
     version: string,
-    client: 'fetch' | 'xhr' | 'node' | 'axios' | 'angular',
+    client: Config['client'],
     useOptions: boolean = false,
     name?: string
 ) => {

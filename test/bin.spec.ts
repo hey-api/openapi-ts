@@ -60,6 +60,7 @@ describe('bin', () => {
         expect(result.stdout.toString()).toContain('');
         expect(result.stderr.toString()).toBe('');
     });
+
     it('generates node client', async () => {
         const result = sync('node', [
             './bin/index.js',
@@ -69,6 +70,21 @@ describe('bin', () => {
             './test/generated/bin',
             '--client',
             'node',
+            '--no-write',
+        ]);
+        expect(result.stdout.toString()).toContain('');
+        expect(result.stderr.toString()).toBe('');
+    });
+
+    it('generates node experimental client', async () => {
+        const result = sync('node', [
+            './bin/index.js',
+            '--input',
+            './test/spec/v3.json',
+            '--output',
+            './test/generated/bin',
+            '--client',
+            'node-experimental',
             '--no-write',
         ]);
         expect(result.stdout.toString()).toContain('');

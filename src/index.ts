@@ -54,6 +54,8 @@ const logClientMessage = (client: Config['client']) => {
             return console.log('✨ Creating Fetch client');
         case 'node':
             return console.log('✨ Creating Node.js client');
+        case 'node-experimental':
+            return console.log('✨ Creating Node.js (experimental) client');
         case 'xhr':
             return console.log('✨ Creating XHR client');
     }

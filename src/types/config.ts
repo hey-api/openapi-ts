@@ -7,7 +7,7 @@ export interface UserConfig {
      * The selected HTTP client (fetch, xhr, node or axios)
      * @default 'fetch'
      */
-    client?: 'angular' | 'axios' | 'fetch' | 'node' | 'xhr';
+    client?: 'angular' | 'axios' | 'fetch' | 'node' | 'node-experimental' | 'xhr';
     /**
      * Generate JavaScript objects from enum definitions?
      * @default false

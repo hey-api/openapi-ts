@@ -2,4 +2,5 @@
 {{~#equals @root.$config.client 'axios'}}{{>axios/request}}{{/equals~}}
 {{~#equals @root.$config.client 'fetch'}}{{>fetch/request}}{{/equals~}}
 {{~#equals @root.$config.client 'node'}}{{>node/request}}{{/equals~}}
+{{~#equals @root.$config.client 'node-experimental'}}{{>fetch/request}}{{/equals~}}
 {{~#equals @root.$config.client 'xhr'}}{{>xhr/request}}{{/equals~}}
