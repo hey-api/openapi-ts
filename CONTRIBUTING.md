@@ -34,7 +34,7 @@ https://help.github.com/articles/using-pull-requests
 
 ## Submitting a Pull Request
 
-1. Make your changes in a new git branch: `git checkout -b my-fix-branch master`
+1. Make your changes in a new git branch: `git checkout -b my-fix-branch main`
 2. Create your patch or feature
 3. Ensure the builds work by running: `npm run build`
 4. Ensure the tests will pass by running: `npm run test`
