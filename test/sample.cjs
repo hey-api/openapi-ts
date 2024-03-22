@@ -7,7 +7,6 @@ const main = async () => {
         enums: true,
         input: './test/spec/v3.json',
         output: './test/generated/v3/',
-        useOptions: true,
     };
 
     const { createClient } = await import(path.resolve(process.cwd(), 'dist/index.js'));
