@@ -109,6 +109,5 @@
         "tslib": "2.6.2",
         "typescript": "5.4.3",
         "vitest": "1.4.0"
-    },
-    "packageManager": "npm@10.5.0+sha256.17ca6e08e7633b624e8f870db81a78f46afe119de62bcaf0a7407574139198fc"
+    }
 }
