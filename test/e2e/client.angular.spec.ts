@@ -12,7 +12,7 @@ describe('client.angular', () => {
     beforeAll(async () => {
         cleanup('client/angular');
         createAngularProject('client/angular', 'app');
-        await generateClient('client/angular/app/src', 'v3', 'angular', false, 'ApiModule');
+        await generateClient('client/angular/app/src/client', 'v3', 'angular', false, 'ApiModule');
         copyAsset('main-angular-module.ts', 'client/angular/app/src/main.ts');
         buildAngularProject('client/angular', 'app', 'dist');
         await server.start('client/angular/app/dist/browser');
