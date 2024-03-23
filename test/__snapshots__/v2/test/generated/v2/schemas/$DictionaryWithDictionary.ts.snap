@@ -1,0 +1,9 @@
+export const $DictionaryWithDictionary = {
+    type: 'dictionary',
+    contains: {
+        type: 'dictionary',
+        contains: {
+            type: 'string',
+        },
+    },
+} as const;

@@ -1,0 +1,8 @@
+export const $ModelWithReference = {
+    description: `This is a model with one property containing a reference`,
+    properties: {
+        prop: {
+            type: 'ModelWithProperties',
+        },
+    },
+} as const;

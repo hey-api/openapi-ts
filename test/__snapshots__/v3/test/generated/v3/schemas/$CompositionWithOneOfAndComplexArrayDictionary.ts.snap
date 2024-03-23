@@ -1,0 +1,30 @@
+export const $CompositionWithOneOfAndComplexArrayDictionary = {
+    description: `This is a model that contains a dictionary of complex arrays (composited) within composition`,
+    properties: {
+        propA: {
+            type: 'one-of',
+            contains: [
+                {
+                    type: 'boolean',
+                },
+                {
+                    type: 'dictionary',
+                    contains: {
+                        type: 'array',
+                        contains: {
+                            type: 'one-of',
+                            contains: [
+                                {
+                                    type: 'number',
+                                },
+                                {
+                                    type: 'string',
+                                },
+                            ],
+                        },
+                    },
+                },
+            ],
+        },
+    },
+} as const;

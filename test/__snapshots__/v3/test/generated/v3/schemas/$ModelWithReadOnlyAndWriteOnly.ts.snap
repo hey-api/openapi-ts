@@ -1,0 +1,17 @@
+export const $ModelWithReadOnlyAndWriteOnly = {
+    properties: {
+        foo: {
+            type: 'string',
+            isRequired: true,
+        },
+        bar: {
+            type: 'string',
+            isReadOnly: true,
+            isRequired: true,
+        },
+        baz: {
+            type: 'string',
+            isRequired: true,
+        },
+    },
+} as const;

@@ -1,0 +1,28 @@
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+
+export class NoContentService {
+    /**
+     * @returns void Success
+     * @throws ApiError
+     */
+    public static callWithNoContentResponse(): CancelablePromise<void> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v{api-version}/no-content',
+        });
+    }
+
+    /**
+     * @returns any Response is a simple number
+     * @returns void Success
+     * @throws ApiError
+     */
+    public static callWithResponseAndNoContentResponse(): CancelablePromise<any | void> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v{api-version}/multiple-tags/response-and-no-content',
+        });
+    }
+}

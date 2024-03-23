@@ -1,0 +1,8 @@
+import type { ModelWithString } from './ModelWithString';
+
+/**
+ * This is a model with duplicated properties
+ */
+export type ModelWithDuplicateProperties = {
+    prop?: ModelWithString;
+};

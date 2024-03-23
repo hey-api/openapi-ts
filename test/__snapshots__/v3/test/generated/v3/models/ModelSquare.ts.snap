@@ -1,0 +1,7 @@
+/**
+ * Square
+ */
+export type ModelSquare = {
+    kind: 'square';
+    sideLength?: number;
+};

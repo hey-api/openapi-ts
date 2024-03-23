@@ -1,0 +1,31 @@
+export const $ModelWithNestedEnums = {
+    description: `This is a model with nested enums`,
+    properties: {
+        dictionaryWithEnum: {
+            type: 'dictionary',
+            contains: {
+                type: 'Enum',
+            },
+        },
+        dictionaryWithEnumFromDescription: {
+            type: 'dictionary',
+            contains: {
+                type: 'number',
+                description: `Success=1,Warning=2,Error=3`,
+            },
+        },
+        arrayWithEnum: {
+            type: 'array',
+            contains: {
+                type: 'Enum',
+            },
+        },
+        arrayWithDescription: {
+            type: 'array',
+            contains: {
+                type: 'number',
+                description: `Success=1,Warning=2,Error=3`,
+            },
+        },
+    },
+} as const;
