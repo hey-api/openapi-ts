@@ -9,6 +9,7 @@
 - [Quick Start](#quick-start)
 - [Installation](#installation)
 - [Configuration](#configuration)
+  - [Clients](#clients)
   - [Formatting](#formatting)
   - [Linting](#linting)
   - [Enums](#enums)
@@ -95,6 +96,17 @@ export default {
 ```
 
 Alternatively, you can use `openapi-ts.config.js` and configure the export statement depending on your project setup.
+
+### Clients
+
+We provide a variety of possible clients to use when generating your `openapi-ts` client. The following are available:
+
+- `angular`: An [Angular](https://angular.io/) client using [RxJS](https://rxjs.dev/).
+- `axios`: An [Axios](https://axios-http.com/docs/intro) client.
+- `fetch`: A [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) client.
+    > NOTE: The Fetch API is experimental in Node.js 18+ and was stabilized in [Node.js v21](https://nodejs.org/docs/latest-v21.x/api/globals.html#fetch)
+- `node`: A [Node.js](https://nodejs.org/) client using [node-fetch](https://www.npmjs.com/package/node-fetch).
+- `xhr`: A [XMLHttpRequest](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest) client.
 
 ### Formatting
 
