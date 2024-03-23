@@ -193,13 +193,12 @@ export async function createClient(userConfig: UserConfig): Promise<Client> {
 
     if (config.write) {
         logClientMessage(config.client);
+        logMissingDependenciesWarning(config.client, dependencies);
         await writeClient(client, templates, config);
         processOutput(config, dependencies);
     }
 
     console.log('✨ Done! Your client is located in:', config.output);
-
-    logMissingDependenciesWarning(config.client, dependencies);
 
     return client;
 }
