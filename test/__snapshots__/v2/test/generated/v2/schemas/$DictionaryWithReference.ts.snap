@@ -1,0 +1,6 @@
+export const $DictionaryWithReference = {
+    type: 'dictionary',
+    contains: {
+        type: 'ModelWithString',
+    },
+} as const;

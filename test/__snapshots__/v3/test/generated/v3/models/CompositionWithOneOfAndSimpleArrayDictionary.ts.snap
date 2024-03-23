@@ -1,0 +1,6 @@
+/**
+ * This is a model that contains a dictionary of simple arrays within composition
+ */
+export type CompositionWithOneOfAndSimpleArrayDictionary = {
+    propA?: boolean | Record<string, Array<boolean>>;
+};

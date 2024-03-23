@@ -1,0 +1,4 @@
+export const $Date = {
+    type: 'string',
+    description: `This is a type-only model that defines Date as a string`,
+} as const;
