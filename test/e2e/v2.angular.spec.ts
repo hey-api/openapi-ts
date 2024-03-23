@@ -12,7 +12,7 @@ describe('v2.angular', () => {
     beforeAll(async () => {
         cleanup('v2/angular');
         createAngularProject('v2/angular', 'app');
-        await generateClient('v2/angular/app/src', 'v2', 'angular');
+        await generateClient('v2/angular/app/src/client', 'v2', 'angular');
         copyAsset('main-angular.ts', 'v2/angular/app/src/main.ts');
         buildAngularProject('v2/angular', 'app', 'dist');
         await server.start('v2/angular/app/dist/browser');

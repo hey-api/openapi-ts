@@ -11,7 +11,6 @@ export default defineConfig({
         // And that the port was not previously taken.
         fileParallelism: false,
         include: ['test/e2e/**/*.spec.ts'],
-        exclude: ['test/e2e/**/*.angular.spec.ts'],
         root: fileURLToPath(new URL('./', import.meta.url)),
     },
 });

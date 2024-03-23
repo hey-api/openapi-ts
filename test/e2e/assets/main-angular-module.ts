@@ -3,23 +3,23 @@ import { Component, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
-import { ApiModule } from './ApiModule';
-import { OpenAPI } from './core/OpenAPI';
-import { CollectionFormatService } from './services/CollectionFormatService';
-import { ComplexService } from './services/ComplexService';
-import { DefaultService } from './services/DefaultService';
-import { DefaultsService } from './services/DefaultsService';
-import { DuplicateService } from './services/DuplicateService';
-import { ErrorService } from './services/ErrorService';
-import { HeaderService } from './services/HeaderService';
-import { MultipleTags1Service } from './services/MultipleTags1Service';
-import { MultipleTags2Service } from './services/MultipleTags2Service';
-import { MultipleTags3Service } from './services/MultipleTags3Service';
-import { NoContentService } from './services/NoContentService';
-import { ParametersService } from './services/ParametersService';
-import { ResponseService } from './services/ResponseService';
-import { SimpleService } from './services/SimpleService';
-import { TypesService } from './services/TypesService';
+import { ApiModule } from './client/ApiModule';
+import { OpenAPI } from './client/core/OpenAPI';
+import { CollectionFormatService } from './client/services/CollectionFormatService';
+import { ComplexService } from './client/services/ComplexService';
+import { DefaultService } from './client/services/DefaultService';
+import { DefaultsService } from './client/services/DefaultsService';
+import { DuplicateService } from './client/services/DuplicateService';
+import { ErrorService } from './client/services/ErrorService';
+import { HeaderService } from './client/services/HeaderService';
+import { MultipleTags1Service } from './client/services/MultipleTags1Service';
+import { MultipleTags2Service } from './client/services/MultipleTags2Service';
+import { MultipleTags3Service } from './client/services/MultipleTags3Service';
+import { NoContentService } from './client/services/NoContentService';
+import { ParametersService } from './client/services/ParametersService';
+import { ResponseService } from './client/services/ResponseService';
+import { SimpleService } from './client/services/SimpleService';
+import { TypesService } from './client/services/TypesService';
 
 @Component({
     selector: 'app-root',
