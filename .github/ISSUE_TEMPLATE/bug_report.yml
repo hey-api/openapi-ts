@@ -15,19 +15,19 @@ body:
     validations:
       required: true
   - type: textarea
-    id: reproduction
+    id: openapi-spec
     attributes:
-      label: Reproduction
-      description: Please provide steps to reproduce the bug. This may include code snippets, links to repositories, numeric steps, etc.
-      placeholder: Reproduction
+      label: OpenAPI specification
+      description: Please provide (if possible) the OpenAPI specification that you used to generate the client.
+      placeholder: OpenAPI Specification
     validations:
       required: true
   - type: textarea
-    id: logs
+    id: client
     attributes:
-      label: Logs
-      description: Please paste any output logs available as it will help in quickly fixing the issue.
-      render: Shell
+      label: Generated client
+      description: Please provide (if possible) the code of the generated client causing the bug.
+      placeholder: Generated client
   - type: textarea
     id: system-info
     attributes:
