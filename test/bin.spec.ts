@@ -60,6 +60,7 @@ describe('bin', () => {
         expect(result.stdout.toString()).toContain('');
         expect(result.stderr.toString()).toBe('');
     });
+
     it('generates node client', async () => {
         const result = sync('node', [
             './bin/index.js',
