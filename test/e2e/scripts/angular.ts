@@ -44,3 +44,25 @@ export const createAngularProject = (dir: string, name: string) => {
         recursive: true,
     });
 };
+
+export const buildAngularProject = (dir: string, name: string, output: string) => {
+    const cwd = `./test/e2e/generated/${dir}/${name}/`;
+    sync(
+        'ng',
+        [
+            'build',
+            '--output-path',
+            output,
+            '--optimization',
+            'false',
+            '--configuration',
+            'development',
+            '--source-map',
+            'false',
+        ],
+        {
+            cwd: path.resolve(cwd),
+            stdio: 'inherit',
+        }
+    );
+};

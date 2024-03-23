@@ -1,10 +1,9 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
+import { buildAngularProject, createAngularProject } from './scripts/angular';
 import browser from './scripts/browser';
-import { buildAngularProject } from './scripts/buildAngularProject';
 import { cleanup } from './scripts/cleanup';
 import { copyAsset } from './scripts/copyAsset';
-import { createAngularProject } from './scripts/createAngularProject';
 import { generateClient } from './scripts/generateClient';
 import server from './scripts/server';
 
