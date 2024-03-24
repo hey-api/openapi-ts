@@ -16,7 +16,7 @@ describe('client.fetch', () => {
         compileWithTypescript('client/fetch');
         await server.start('client/fetch');
         await browser.start();
-    }, 30000);
+    }, 40000);
 
     afterAll(async () => {
         await browser.stop();

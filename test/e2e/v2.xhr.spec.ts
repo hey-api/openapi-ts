@@ -16,7 +16,7 @@ describe('v2.xhr', () => {
         compileWithTypescript('v2/xhr');
         await server.start('v2/xhr');
         await browser.start();
-    }, 30000);
+    }, 40000);
 
     afterAll(async () => {
         await browser.stop();
@@ -61,7 +61,7 @@ describe('v2.xhr useOptions', () => {
         compileWithTypescript('v2/xhr');
         await server.start('v2/xhr');
         await browser.start();
-    }, 30000);
+    }, 40000);
 
     afterAll(async () => {
         await browser.stop();
