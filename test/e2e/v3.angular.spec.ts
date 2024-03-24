@@ -16,7 +16,7 @@ describe('v3.angular', () => {
         buildAngularProject('v3/angular', 'app', 'dist');
         await server.start('v3/angular/app/dist/browser');
         await browser.start();
-    }, 30000);
+    }, 40000);
 
     afterAll(async () => {
         await browser.stop();

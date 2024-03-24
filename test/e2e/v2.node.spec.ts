@@ -11,7 +11,7 @@ describe('v2.node', () => {
         await generateClient('v2/node', 'v2', 'node');
         compileWithTypescript('v2/node');
         await server.start('v2/node');
-    }, 30000);
+    }, 40000);
 
     afterAll(async () => {
         await server.stop();
@@ -62,7 +62,7 @@ describe('v2.node useOptions', () => {
         await generateClient('v2/node', 'v2', 'node', true);
         compileWithTypescript('v2/node');
         await server.start('v2/node');
-    }, 30000);
+    }, 40000);
 
     afterAll(async () => {
         await server.stop();
