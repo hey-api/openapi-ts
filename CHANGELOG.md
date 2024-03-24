@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.27.39
+
+### Patch Changes
+
+- Warn users about missing dependencies used in the generated client ([#124](https://github.com/hey-api/openapi-ts/pull/124))
+
+- Use AbortController in Axios client instead of deprecated CancelToken ([#124](https://github.com/hey-api/openapi-ts/pull/124))
+
 ## 0.27.38
 
 ### Minor Changes
