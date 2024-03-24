@@ -16,7 +16,7 @@ describe('v2.fetch', () => {
         compileWithTypescript('v2/fetch');
         await server.start('v2/fetch');
         await browser.start();
-    }, 30000);
+    }, 40000);
 
     afterAll(async () => {
         await browser.stop();
@@ -61,7 +61,7 @@ describe('v2.fetch useOptions', () => {
         compileWithTypescript('v2/fetch');
         await server.start('v2/fetch');
         await browser.start();
-    }, 30000);
+    }, 40000);
 
     afterAll(async () => {
         await browser.stop();
