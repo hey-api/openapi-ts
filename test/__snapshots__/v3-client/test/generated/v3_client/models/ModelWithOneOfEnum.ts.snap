@@ -1,0 +1,22 @@
+export type ModelWithOneOfEnum =
+    | {
+          foo: 'Bar';
+      }
+    | {
+          foo: 'Baz';
+      }
+    | {
+          foo: 'Qux';
+      }
+    | {
+          content: Date;
+          foo: 'Quux';
+      }
+    | {
+          content: [Date, string];
+          foo: 'Corge';
+      };
+
+export const FooEnum = {
+    BAR: 'Bar',
+} as const;

@@ -1,0 +1,10 @@
+/**
+ * This is a model with one property and additionalProperties: true
+ */
+export type ModelWithAdditionalPropertiesEqTrue = {
+    /**
+     * This is a simple string property
+     */
+    prop?: string;
+    [key: string]: unknown;
+};
