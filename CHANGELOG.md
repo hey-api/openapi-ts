@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.28.0
+
+### Minor Changes
+
+- Add `index.ts` file to models, schemas, and services ([#137](https://github.com/hey-api/openapi-ts/pull/137))
+
 ## 0.27.39
 
 ### Patch Changes
