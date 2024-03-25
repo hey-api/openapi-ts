@@ -21,7 +21,7 @@ describe('v2', () => {
 
         sync('./test/generated/v2/**/*.ts').forEach(file => {
             const content = readFileSync(file, 'utf8').toString();
-            expect(content).toMatchSnapshot(file);
+            expect(content).toMatchFileSnapshot(`./__snapshots__/v2/${file}.snap`);
         });
     });
 });
@@ -42,7 +42,7 @@ describe('v3', () => {
 
         sync('./test/generated/v3/**/*.ts').forEach(file => {
             const content = readFileSync(file, 'utf8').toString();
-            expect(content).toMatchSnapshot(file);
+            expect(content).toMatchFileSnapshot(`./__snapshots__/v3/${file}.snap`);
         });
     });
 
@@ -62,7 +62,7 @@ describe('v3', () => {
 
         sync('./test/generated/v3_date/**/*.ts').forEach(file => {
             const content = readFileSync(file, 'utf8').toString();
-            expect(content).toMatchSnapshot(file);
+            expect(content).toMatchFileSnapshot(`./__snapshots__/v3-date/${file}.snap`);
         });
     });
 
@@ -82,7 +82,7 @@ describe('v3', () => {
 
         sync('./test/generated/v3_options/**/*.ts').forEach(file => {
             const content = readFileSync(file, 'utf8').toString();
-            expect(content).toMatchSnapshot(file);
+            expect(content).toMatchFileSnapshot(`./__snapshots__/v3-options/${file}.snap`);
         });
     });
 });

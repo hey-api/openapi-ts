@@ -1,0 +1,9 @@
+export const $ModelWithString = {
+    description: `This is a model with one string property`,
+    properties: {
+        prop: {
+            type: 'string',
+            description: `This is a simple string property`,
+        },
+    },
+} as const;

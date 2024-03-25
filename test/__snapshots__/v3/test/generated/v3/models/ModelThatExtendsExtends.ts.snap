@@ -1,0 +1,11 @@
+import type { ModelThatExtends } from './ModelThatExtends';
+import type { ModelWithString } from './ModelWithString';
+
+/**
+ * This is a model that extends another model
+ */
+export type ModelThatExtendsExtends = ModelWithString &
+    ModelThatExtends & {
+        propExtendsC?: string;
+        propExtendsD?: ModelWithString;
+    };

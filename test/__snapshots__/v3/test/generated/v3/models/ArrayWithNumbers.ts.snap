@@ -1,0 +1,4 @@
+/**
+ * This is a simple array with numbers
+ */
+export type ArrayWithNumbers = Array<number>;
