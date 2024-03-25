@@ -1,0 +1,6 @@
+export type Enum1 = 'Bird' | 'Dog';
+
+export const Enum1Enum = {
+    BIRD: 'Bird',
+    DOG: 'Dog',
+} as const;

@@ -1,0 +1,76 @@
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+
+export type TDataTypes = {
+    /**
+     * This is a number parameter
+     */
+    id?: number;
+    /**
+     * This is an array parameter
+     */
+    parameterArray: Array<string>;
+    /**
+     * This is a boolean parameter
+     */
+    parameterBoolean?: boolean;
+    /**
+     * This is a dictionary parameter
+     */
+    parameterDictionary: Record<string, string>;
+    /**
+     * This is an enum parameter
+     */
+    parameterEnum: 'Success' | 'Warning' | 'Error';
+    /**
+     * This is a number parameter
+     */
+    parameterNumber?: number;
+    /**
+     * This is an object parameter
+     */
+    parameterObject?: unknown;
+    /**
+     * This is a string parameter
+     */
+    parameterString?: string;
+};
+
+export class TypesService {
+    /**
+     * @returns number Response is a simple number
+     * @returns string Response is a simple string
+     * @returns boolean Response is a simple boolean
+     * @returns any Response is a simple object
+     * @throws ApiError
+     */
+    public static types(data: TDataTypes): CancelablePromise<number | string | boolean | unknown> {
+        const {
+            id,
+            parameterArray,
+            parameterBoolean = true,
+            parameterDictionary,
+            parameterEnum,
+            parameterNumber = 123,
+            parameterObject = null,
+            parameterString = 'default',
+        } = data;
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v{api-version}/types',
+            path: {
+                id,
+            },
+            query: {
+                parameterNumber,
+                parameterString,
+                parameterBoolean,
+                parameterObject,
+                parameterArray,
+                parameterDictionary,
+                parameterEnum,
+            },
+        });
+    }
+}

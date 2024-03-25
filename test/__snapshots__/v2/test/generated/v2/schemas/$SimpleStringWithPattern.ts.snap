@@ -1,0 +1,6 @@
+export const $SimpleStringWithPattern = {
+    type: 'string',
+    description: `This is a simple string`,
+    maxLength: 64,
+    pattern: '^[a-zA-Z0-9_]*$',
+} as const;

@@ -1,0 +1,6 @@
+export const $ArrayWithNumbers = {
+    type: 'array',
+    contains: {
+        type: 'number',
+    },
+} as const;

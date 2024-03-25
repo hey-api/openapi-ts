@@ -1,0 +1,43 @@
+import type { ModelWithString } from '../models/ModelWithString';
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+
+export type TDataComplexTypes = {
+    /**
+     * Parameter containing object
+     */
+    parameterObject: {
+        first?: {
+            second?: {
+                third?: string;
+            };
+        };
+    };
+    /**
+     * Parameter containing reference
+     */
+    parameterReference: ModelWithString;
+};
+
+export class ComplexService {
+    /**
+     * @returns ModelWithString Successful response
+     * @throws ApiError
+     */
+    public static complexTypes(data: TDataComplexTypes): CancelablePromise<Array<ModelWithString>> {
+        const { parameterObject, parameterReference } = data;
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v{api-version}/complex',
+            query: {
+                parameterObject,
+                parameterReference,
+            },
+            errors: {
+                400: `400 server error`,
+                500: `500 server error`,
+            },
+        });
+    }
+}

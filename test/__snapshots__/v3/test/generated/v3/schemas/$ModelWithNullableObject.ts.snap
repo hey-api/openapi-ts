@@ -1,0 +1,7 @@
+export const $ModelWithNullableObject = {
+    properties: {
+        data: {
+            type: 'NullableObject',
+        },
+    },
+} as const;

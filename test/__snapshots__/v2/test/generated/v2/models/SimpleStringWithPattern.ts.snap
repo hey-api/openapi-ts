@@ -1,0 +1,4 @@
+/**
+ * This is a simple string
+ */
+export type SimpleStringWithPattern = string;

@@ -1,0 +1,8 @@
+export const $ModelWithEnumWithHyphen = {
+    description: `This is a model with one enum with escaped name`,
+    properties: {
+        'foo-bar-baz-qux': {
+            type: 'Enum',
+        },
+    },
+} as const;
