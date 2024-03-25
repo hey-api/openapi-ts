@@ -1,0 +1,80 @@
+import type { ModelWithArray } from '../models/ModelWithArray';
+import type { ModelWithDictionary } from '../models/ModelWithDictionary';
+import type { ModelWithEnum } from '../models/ModelWithEnum';
+import type { ModelWithString } from '../models/ModelWithString';
+import type { CancelablePromise } from '../core/CancelablePromise';
+import type { BaseHttpRequest } from '../core/BaseHttpRequest';
+
+export type TDataComplexTypes = {
+    /**
+     * Parameter containing object
+     */
+    parameterObject: {
+        first?: {
+            second?: {
+                third?: string;
+            };
+        };
+    };
+    /**
+     * Parameter containing reference
+     */
+    parameterReference: ModelWithString;
+};
+export type TDataComplexParams = {
+    id: number;
+    requestBody?: {
+        readonly key: string | null;
+        name: string | null;
+        enabled?: boolean;
+        readonly type: 'Monkey' | 'Horse' | 'Bird';
+        listOfModels?: Array<ModelWithString> | null;
+        listOfStrings?: Array<string> | null;
+        parameters: ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary;
+        readonly user?: {
+            readonly id?: number;
+            readonly name?: string | null;
+        };
+    };
+};
+
+export class ComplexService {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @returns ModelWithString Successful response
+     * @throws ApiError
+     */
+    public complexTypes(data: TDataComplexTypes): CancelablePromise<Array<ModelWithString>> {
+        const { parameterObject, parameterReference } = data;
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/complex',
+            query: {
+                parameterObject,
+                parameterReference,
+            },
+            errors: {
+                400: `400 server error`,
+                500: `500 server error`,
+            },
+        });
+    }
+
+    /**
+     * @returns ModelWithString Success
+     * @throws ApiError
+     */
+    public complexParams(data: TDataComplexParams): CancelablePromise<ModelWithString> {
+        const { id, requestBody } = data;
+        return this.httpRequest.request({
+            method: 'PUT',
+            url: '/api/v{api-version}/complex/{id}',
+            path: {
+                id,
+            },
+            body: requestBody,
+            mediaType: 'application/json-patch+json',
+        });
+    }
+}

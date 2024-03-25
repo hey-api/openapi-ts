@@ -1,0 +1,6 @@
+import type { ModelWithNestedArrayEnumsData } from './ModelWithNestedArrayEnumsData';
+
+export type ModelWithNestedArrayEnums = {
+    array_strings?: Array<string>;
+    data?: ModelWithNestedArrayEnumsData;
+};

@@ -1,0 +1,6 @@
+import type { ModelWithString } from './ModelWithString';
+
+/**
+ * This is a complex dictionary
+ */
+export type DictionaryWithArray = Record<string, Array<ModelWithString>>;

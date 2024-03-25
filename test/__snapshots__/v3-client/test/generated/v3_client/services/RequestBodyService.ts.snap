@@ -1,0 +1,34 @@
+import type { ModelWithString } from '../models/ModelWithString';
+import type { CancelablePromise } from '../core/CancelablePromise';
+import type { BaseHttpRequest } from '../core/BaseHttpRequest';
+
+export type TDataPostApiRequestBody = {
+    /**
+     * A reusable request body
+     */
+    foo?: ModelWithString;
+    /**
+     * This is a reusable parameter
+     */
+    parameter?: string;
+};
+
+export class RequestBodyService {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @throws ApiError
+     */
+    public postApiRequestBody(data: TDataPostApiRequestBody = {}): CancelablePromise<void> {
+        const { foo, parameter } = data;
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/v{api-version}/requestBody/',
+            query: {
+                parameter,
+            },
+            body: foo,
+            mediaType: 'application/json',
+        });
+    }
+}

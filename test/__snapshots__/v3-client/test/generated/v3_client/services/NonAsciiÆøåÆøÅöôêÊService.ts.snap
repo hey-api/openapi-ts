@@ -1,0 +1,31 @@
+import type { NonAsciiStringæøåÆØÅöôêÊ字符串 } from '../models/NonAsciiStringæøåÆØÅöôêÊ字符串';
+import type { CancelablePromise } from '../core/CancelablePromise';
+import type { BaseHttpRequest } from '../core/BaseHttpRequest';
+
+export type TDataNonAsciiæøåÆøÅöôêÊ字符串 = {
+    /**
+     * Dummy input param
+     */
+    nonAsciiParamæøåÆøÅöôêÊ: number;
+};
+
+export class NonAsciiÆøåÆøÅöôêÊService {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @returns NonAsciiStringæøåÆØÅöôêÊ字符串 Successful response
+     * @throws ApiError
+     */
+    public nonAsciiæøåÆøÅöôêÊ字符串(
+        data: TDataNonAsciiæøåÆøÅöôêÊ字符串
+    ): CancelablePromise<Array<NonAsciiStringæøåÆØÅöôêÊ字符串>> {
+        const { nonAsciiParamæøåÆøÅöôêÊ } = data;
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
+            query: {
+                nonAsciiParamæøåÆØÅöôêÊ: nonAsciiParamæøåÆøÅöôêÊ,
+            },
+        });
+    }
+}

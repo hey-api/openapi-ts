@@ -1,0 +1,16 @@
+import type { ModelWithArray } from './ModelWithArray';
+import type { ModelWithDictionary } from './ModelWithDictionary';
+import type { ModelWithEnum } from './ModelWithEnum';
+
+/**
+ * This is a model with one property with a 'all of' relationship
+ */
+export type CompositionWithAllOfAndNullable = {
+    propA?:
+        | ({
+              boolean?: boolean;
+          } & ModelWithEnum &
+              ModelWithArray &
+              ModelWithDictionary)
+        | null;
+};

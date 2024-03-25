@@ -4,6 +4,7 @@ import path from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 
 import { writeClientIndex } from '../index';
+import { mockTemplates } from './mocks';
 
 vi.mock('node:fs');
 
@@ -16,28 +17,7 @@ describe('writeClientIndex', () => {
             services: [],
         };
 
-        const templates: Parameters<typeof writeClientIndex>[1] = {
-            client: () => 'client',
-            core: {
-                apiError: () => 'apiError',
-                apiRequestOptions: () => 'apiRequestOptions',
-                apiResult: () => 'apiResult',
-                baseHttpRequest: () => 'baseHttpRequest',
-                cancelablePromise: () => 'cancelablePromise',
-                httpRequest: () => 'httpRequest',
-                request: () => 'request',
-                settings: () => 'settings',
-                types: () => 'types',
-            },
-            exports: {
-                model: () => 'model',
-                schema: () => 'schema',
-                service: () => 'service',
-            },
-            index: () => 'index',
-        };
-
-        await writeClientIndex(client, templates, '/', {
+        await writeClientIndex(client, mockTemplates, '/', {
             client: 'fetch',
             enums: true,
             exportCore: true,

@@ -1,0 +1,4 @@
+/**
+ * This is a free-form object with additionalProperties: true.
+ */
+export type FreeFormObjectWithAdditionalPropertiesEqTrue = Record<string, unknown>;

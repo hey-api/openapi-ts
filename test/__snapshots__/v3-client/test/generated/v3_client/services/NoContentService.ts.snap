@@ -1,0 +1,29 @@
+import type { CancelablePromise } from '../core/CancelablePromise';
+import type { BaseHttpRequest } from '../core/BaseHttpRequest';
+
+export class NoContentService {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @returns void Success
+     * @throws ApiError
+     */
+    public callWithNoContentResponse(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/no-content',
+        });
+    }
+
+    /**
+     * @returns number Response is a simple number
+     * @returns void Success
+     * @throws ApiError
+     */
+    public callWithResponseAndNoContentResponse(): CancelablePromise<number | void> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/multiple-tags/response-and-no-content',
+        });
+    }
+}

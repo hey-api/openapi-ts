@@ -1,0 +1,10 @@
+/**
+ * This is a model with one enum with escaped name
+ */
+export type ModelWithEnumWithHyphen = {
+    'foo-bar-baz-qux'?: '3.0';
+};
+
+export const FooBarBazQuxEnum = {
+    _3_0: '3.0',
+} as const;
