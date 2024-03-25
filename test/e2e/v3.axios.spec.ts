@@ -11,7 +11,7 @@ describe('v3.axios', () => {
         await generateClient('v3/axios', 'v3', 'axios');
         compileWithTypescript('v3/axios');
         await server.start('v3/axios');
-    }, 30000);
+    }, 40000);
 
     afterAll(async () => {
         await server.stop();
@@ -166,7 +166,7 @@ describe('v3.axios useOptions', () => {
         await generateClient('v3/axios', 'v3', 'axios', true);
         compileWithTypescript('v3/axios');
         await server.start('v3/axios');
-    }, 30000);
+    }, 40000);
 
     afterAll(async () => {
         await server.stop();

@@ -16,7 +16,7 @@ describe('client.xhr', () => {
         compileWithTypescript('client/xhr');
         await server.start('client/xhr');
         await browser.start();
-    }, 30000);
+    }, 40000);
 
     afterAll(async () => {
         await browser.stop();

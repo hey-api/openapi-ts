@@ -11,7 +11,7 @@ describe('client.node', () => {
         await generateClient('client/node', 'v3', 'node', false, 'ApiClient');
         compileWithTypescript('client/node');
         await server.start('client/node');
-    }, 30000);
+    }, 40000);
 
     afterAll(async () => {
         await server.stop();

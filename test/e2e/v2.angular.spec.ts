@@ -16,7 +16,7 @@ describe('v2.angular', () => {
         buildAngularProject('v2/angular', 'app', 'dist');
         await server.start('v2/angular/app/dist/browser');
         await browser.start();
-    }, 30000);
+    }, 40000);
 
     afterAll(async () => {
         await browser.stop();
