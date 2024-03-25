@@ -1,0 +1,48 @@
+import type { CancelablePromise } from '../core/CancelablePromise';
+import type { BaseHttpRequest } from '../core/BaseHttpRequest';
+
+export type TDataCollectionFormat = {
+    /**
+     * This is an array parameter that is sent as csv format (comma-separated values)
+     */
+    parameterArrayCsv: Array<string> | null;
+    /**
+     * This is an array parameter that is sent as multi format (multiple parameter instances)
+     */
+    parameterArrayMulti: Array<string> | null;
+    /**
+     * This is an array parameter that is sent as pipes format (pipe-separated values)
+     */
+    parameterArrayPipes: Array<string> | null;
+    /**
+     * This is an array parameter that is sent as ssv format (space-separated values)
+     */
+    parameterArraySsv: Array<string> | null;
+    /**
+     * This is an array parameter that is sent as tsv format (tab-separated values)
+     */
+    parameterArrayTsv: Array<string> | null;
+};
+
+export class CollectionFormatService {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @throws ApiError
+     */
+    public collectionFormat(data: TDataCollectionFormat): CancelablePromise<void> {
+        const { parameterArrayCsv, parameterArrayMulti, parameterArrayPipes, parameterArraySsv, parameterArrayTsv } =
+            data;
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/collectionFormat',
+            query: {
+                parameterArrayCSV: parameterArrayCsv,
+                parameterArraySSV: parameterArraySsv,
+                parameterArrayTSV: parameterArrayTsv,
+                parameterArrayPipes,
+                parameterArrayMulti,
+            },
+        });
+    }
+}

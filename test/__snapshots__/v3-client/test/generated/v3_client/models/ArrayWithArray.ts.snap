@@ -1,0 +1,6 @@
+import type { ModelWithString } from './ModelWithString';
+
+/**
+ * This is a simple array containing an array
+ */
+export type ArrayWithArray = Array<Array<ModelWithString>>;

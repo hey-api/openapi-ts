@@ -1,0 +1,11 @@
+/**
+ * This is a simple array with any of properties
+ */
+export type ArrayWithAnyOfProperties = Array<
+    | {
+          foo?: string;
+      }
+    | {
+          bar?: string;
+      }
+>;

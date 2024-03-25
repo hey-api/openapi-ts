@@ -85,4 +85,25 @@ describe('v3', () => {
             expect(content).toMatchFileSnapshot(`./__snapshots__/v3-options/${file}.snap`);
         });
     });
+
+    it('should generate a client', async () => {
+        await createClient({
+            client: 'fetch',
+            enums: true,
+            exportCore: true,
+            exportModels: true,
+            exportSchemas: false,
+            exportServices: true,
+            input: './test/spec/v3.json',
+            output: './test/generated/v3_client/',
+            useDateType: true,
+            useOptions: true,
+            name: 'ApiClient',
+        });
+
+        sync('./test/generated/v3_client/**/*.ts').forEach(file => {
+            const content = readFileSync(file, 'utf8').toString();
+            expect(content).toMatchFileSnapshot(`./__snapshots__/v3-client/${file}.snap`);
+        });
+    });
 });
