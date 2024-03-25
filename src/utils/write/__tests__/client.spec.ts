@@ -3,6 +3,7 @@ import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { writeClient } from '../client';
+import { mockTemplates } from './mocks';
 
 vi.mock('node:fs');
 
@@ -15,28 +16,7 @@ describe('writeClient', () => {
             services: [],
         };
 
-        const templates: Parameters<typeof writeClient>[1] = {
-            client: () => 'client',
-            core: {
-                apiError: () => 'apiError',
-                apiRequestOptions: () => 'apiRequestOptions',
-                apiResult: () => 'apiResult',
-                baseHttpRequest: () => 'baseHttpRequest',
-                cancelablePromise: () => 'cancelablePromise',
-                httpRequest: () => 'httpRequest',
-                request: () => 'request',
-                settings: () => 'settings',
-                types: () => 'types',
-            },
-            exports: {
-                model: () => 'model',
-                schema: () => 'schema',
-                service: () => 'service',
-            },
-            index: () => 'index',
-        };
-
-        await writeClient(client, templates, {
+        await writeClient(client, mockTemplates, {
             client: 'fetch',
             enums: true,
             exportCore: true,
