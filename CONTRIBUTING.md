@@ -39,6 +39,7 @@ https://help.github.com/articles/using-pull-requests
 3. Ensure the builds work by running: `npm run build`
 4. Ensure the tests will pass by running: `npm run test`
 5. Ensure the code is formatted by running: `npm run lint:fix`
-6. Commit your changes using a descriptive commit message
+6. Ensure that you create a changeset if required by running: `npm run changeset`
+7. Commit your changes using a descriptive commit message
 
 After your Pull Request is created, it will automatically be build and tested in GitHub actions. Once successful it will be ready for review.

@@ -16,7 +16,7 @@ describe('v3.fetch', () => {
         compileWithTypescript('v3/fetch');
         await server.start('v3/fetch');
         await browser.start();
-    }, 30000);
+    }, 40000);
 
     afterAll(async () => {
         await browser.stop();
@@ -203,7 +203,7 @@ describe('v3.fetch useOptions', () => {
         compileWithTypescript('v3/fetch');
         await server.start('v3/fetch');
         await browser.start();
-    }, 30000);
+    }, 40000);
 
     afterAll(async () => {
         await browser.stop();

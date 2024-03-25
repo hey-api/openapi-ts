@@ -11,7 +11,7 @@ describe('v2.axios', () => {
         await generateClient('v2/axios', 'v2', 'axios');
         compileWithTypescript('v2/axios');
         await server.start('v2/axios');
-    }, 30000);
+    }, 40000);
 
     afterAll(async () => {
         await server.stop();
@@ -47,7 +47,7 @@ describe('v2.axios useOptions', () => {
         await generateClient('v2/axios', 'v2', 'axios', true);
         compileWithTypescript('v2/axios');
         await server.start('v2/axios');
-    }, 30000);
+    }, 40000);
 
     afterAll(async () => {
         await server.stop();

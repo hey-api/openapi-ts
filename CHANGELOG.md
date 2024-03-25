@@ -1,117 +1,271 @@
-# Changelog
-All notable changes to this project will be documented in this file.
+# @hey-api/openapi-ts
 
-## [0.27.0] - 2024-01-15
-### Fixed
-- Reverted `@apidevtools/json-schema-ref-parser` to version 10.1.0
+## 0.27.39
 
-## [0.26.0] - 2024-01-07
-### Fixed
-- Upgraded dependencies
+### Patch Changes
 
-## [0.25.0] - 2023-07-05
-### Fixed
-- Upgraded dependencies
-### Added
-- Allow usage of a custom axios instance
-- Added message in generated files
+- Warn users about missing dependencies used in the generated client ([#124](https://github.com/hey-api/openapi-ts/pull/124))
 
-## [0.24.0] - 2023-04-10
-### Fixed
-- Upgraded dependencies
-- Fixed issue with Cancelable promise
-- Fixed issue with escaping reserved keywords in schema names
-### Added
-- Added `--postfixModels` option
+- Use AbortController in Axios client instead of deprecated CancelToken ([#124](https://github.com/hey-api/openapi-ts/pull/124))
 
-## [0.23.0] - 2022-06-02
-### Fixed
-- Upgraded dependencies
-- Added blank line at the end of generated files
-- Added support for Node.js v12
-### Added
-- Added `request` property inside `ApiError`
-- Added support for `@depricated` inside models and operations
+## 0.27.38
 
-## [0.22.0] - 2022-04-26
-### Fixed
-- Upgraded dependencies
-- Fixed issue with `null` value inside comments for OpenAPI v2 enums
-- Fixed issue with compatibility for latest version of Axios (0.27.x)
-### Removed
-- Removed deprecated enum model generation
+### Minor Changes
 
-## [0.21.0] - 2022-04-06
-### Fixed
-- Return `undefined` to match `noImplicitReturns` rule
-- Made `BaseHttpRequest` class abstract
-- Removed private fields using `#` inside `CancelablePromise`
-- Removed unneeded import `AbortController` from `node-fetch` client
-- Filter out wrong enum values
+- Make useOptions default to true
 
-## [0.20.1] - 2022-02-25
-### Fixed
-- Support enums with single quotes in names for V2
+## 0.27.37
 
-## [0.20.0] - 2022-02-25
-### Fixed
-- Updated dependencies
-- Support enums with single quotes in names for V3
-- Generating better names when `operationId` is not given (breaking change)
-- Fixed issue where `x-enum` flags where breaking due to non-string values
+### Minor Changes
 
-## [0.19.0] - 2022-02-02
-### Added
-- Support for Angular client with `--name` option
-- Added test cases for Angular client
+- Fix import error in generated Node client
 
-## [0.18.2] - 2022-02-02
-### Fixed
-- Updated dependencies
-- Fixed type definition
-### Added
-- Added test cases for CLI commands
-- Added test cases for query parsing
+- Update package dependencies
 
-## [0.18.1] - 2022-01-31
-### Fixed
-- Escaping error description
-- Made `Client.request` and `BaseHttpRequest.config` props public
+- Use engine-strict in .npmrc
 
-_## [0.18.0] - 2022-01-28
-### Added
-- Angular client generation!
-- Updated documentation with more examples and better descriptions
+## 0.27.36
 
-## [0.17.0] - 2022-01-26
-### Fixed
-- Shorthand notation for properties passed through constructor
-- Simplified creation of headers
-- Prepare codebase for Angular client
+### Minor Changes
 
-## [0.16.2] - 2022-01-26
-### Fixed
-- Removed dependency on `URLSearchParams` to support browser and node without any additional imports
+- Handle falsy values in header
 
-## [0.16.1] - 2022-01-26
-### Fixed
-- Correct export inside `index.ts` when giving a custom name
+- Export schemas by default
 
-## [0.16.0] - 2022-01-25
-### Added
-- Added option to set the indentation (spaces and tabs)
-- Added option to export separate client file that allows usage for multiple backends
-### Fixed
-- Decoupled OpenAPI object from requests
-- Updated dependencies
+## 0.27.35
 
-## [0.15.0] - 2022-01-24
-### Added
-- Added change log and releases on GitHub
+### Minor Changes
 
-## [0.14.0] - 2022-01-24
-### Fixed
-- Added missing `postfix` options to typedef
-- Updated escaping of comments and descriptions
-- Better handling of services without tags
-- Updated dependencies
+- Update all project dependencies
+
+- Discard only null or undefined in query string
+
+## 0.27.34
+
+### Minor Changes
+
+- Add flag for linting generated code (default: false)
+
+- Add flag for formatting generated code (default: true)
+
+## 0.27.33
+
+### Minor Changes
+
+- Auto format with Eslint if available
+
+- Add types for programmatic API
+
+## 0.27.32
+
+### Minor Changes
+
+- Rename Config type to UserConfig
+
+- Pass arguments in correct order in Angular client
+
+## 0.27.31
+
+### Minor Changes
+
+- Add support for openapi-ts.config.js file
+
+- Use built-in flat map
+
+## 0.27.30
+
+### Minor Changes
+
+- Prefer unknown instead of any in generated client
+
+## 0.27.29
+
+### Minor Changes
+
+- Rename openapi command to openapi-ts
+
+- Add basic support for response that are Blobs
+
+## 0.27.28
+
+### Minor Changes
+
+- Generate enums as JavaScript objects
+
+- Use shorthand object properties in service calls
+
+## 0.27.27
+
+### Minor Changes
+
+- Handle cases where a project does not have dependencies when checking to run Prettier
+
+## 0.27.26
+
+### Minor Changes
+
+- Skip global parameters if they are duplicates of path parameters
+
+- remove option to indent code
+
+## 0.27.25
+
+### Minor Changes
+
+- Correctly set content-type header, even when body is falsy
+
+## 0.27.24
+
+### Minor Changes
+
+- Remove union types flag (this is now default)
+
+## 0.27.23
+
+### Minor Changes
+
+- Support printing exact arrays
+
+## 0.27.22
+
+### Minor Changes
+
+- Add option to specify custom base path
+
+- Fix spacing in cancelable promise
+
+## 0.27.21
+
+### Minor Changes
+
+- Add explicit flags for generics
+
+## 0.27.20
+
+### Minor Changes
+
+- Do not require type to be set for object properties
+
+## 0.27.19
+
+### Minor Changes
+
+- Do not insert generics into custom client
+
+## 0.27.18
+
+### Minor Changes
+
+- Support returning raw result object
+
+- Allow passing config
+
+## 0.27.17
+
+### Minor Changes
+
+- Generate nullable interface when isNullable is true
+
+## 0.27.16
+
+### Minor Changes
+
+- Generate types for services when useOptions is true
+
+## 0.27.15
+
+### Minor Changes
+
+- Fix wrong path on Windows
+
+## 0.27.14
+
+### Minor Changes
+
+- Change imports to match project style
+
+## 0.27.13
+
+### Minor Changes
+
+- Support printing Date instead of string for date-time formats in models
+
+## 0.27.12
+
+### Minor Changes
+
+- Escape enum name when exported
+
+## 0.27.11
+
+### Minor Changes
+
+- Fix typo in template header
+
+## 0.27.10
+
+### Minor Changes
+
+- Escape newlines when outputting pattern string value in schemas
+
+## 0.27.9
+
+### Minor Changes
+
+- Start passing options object instead of positional parameters
+
+- Handle composition of any-of and properties
+
+- Allow ignoring operation ID when generating operation names
+
+- Propagate useVersionId to Swagger V2 parser
+
+- Change --ingoreOperationId to --useOperationId
+
+## 0.27.8
+
+### Minor Changes
+
+- Support non-ascii (unicode) characters in service name, operation name, and parameter name
+
+## 0.27.7
+
+### Minor Changes
+
+- Bump dependencies
+
+## 0.27.6
+
+### Minor Changes
+
+- Allow overriding request body name with x-body-name key
+
+## 0.27.5
+
+### Minor Changes
+
+- Type additional properties with properties
+
+- Parse array items only if parent definition has type
+
+## 0.27.4
+
+### Minor Changes
+
+- Bump dependencies
+
+## 0.27.3
+
+### Minor Changes
+
+- Support autoformat option flag
+
+- Handle more cases of any-of
+
+- Support regexp to select models to export
+
+- Return optional success response on 204 status code
+
+- Fix nested any-of
+
+- Add const support
