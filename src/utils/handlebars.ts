@@ -99,53 +99,6 @@ const escapeComment = (value: string) =>
         .replace(/\/\*/g, '*')
         .replace(/\r?\n(.*)/g, (_, w) => `${EOL} * ${w.trim()}`);
 
-const exportsModels = (config: Config, client: Client) => {
-    if (!config.exportModels) {
-        return '';
-    }
-    const path = './models/';
-    const output = client.models.map(model => {
-        const importedModel = config.postfixModels
-            ? `${model.name} as ${model.name + config.postfixModels}`
-            : model.name;
-        let result = [`export type { ${importedModel} } from '${path + model.name}';`];
-        if (config.enums && (model.enum.length || model.enums.length)) {
-            const names = model.enums.map(enumerator => enumerator.name).filter(Boolean);
-            const enumExports = names.length ? names : [model.name];
-            const enumExportsString = enumExports.map(name => enumName(name)).join(', ');
-            result = [...result, `export { ${enumExportsString} } from '${path + model.name}';`];
-        }
-        return result.join('\n');
-    });
-    return output.join('\n');
-};
-
-const exportsSchemas = (config: Config, client: Client) => {
-    if (!config.exportSchemas) {
-        return '';
-    }
-    const path = './schemas/';
-    const output = client.models.map(model => {
-        const name = `$${model.name}`;
-        const result = [`export { ${name} } from '${path + name}';`];
-        return result.join('\n');
-    });
-    return output.join('\n');
-};
-
-const exportsServices = (config: Config, client: Client) => {
-    if (!config.exportServices) {
-        return '';
-    }
-    const path = './services/';
-    const output = client.services.map(service => {
-        const name = service.name + config.postfixServices;
-        const result = [`export { ${name} } from '${path + name}';`];
-        return result.join('\n');
-    });
-    return output.join('\n');
-};
-
 const modelImports = (model: Model | Service, path: string) => {
     const output = model.imports.map(item => `import type { ${item} } from '${path + item}';`);
     return output.join('\n');
@@ -235,18 +188,6 @@ export const registerHandlebarHelpers = (config: Config, client: Client): void =
             return options.fn(this);
         }
         return options.inverse(this);
-    });
-
-    Handlebars.registerHelper('exportsModels', function () {
-        return exportsModels(config, client);
-    });
-
-    Handlebars.registerHelper('exportsSchemas', function () {
-        return exportsSchemas(config, client);
-    });
-
-    Handlebars.registerHelper('exportsServices', function () {
-        return exportsServices(config, client);
     });
 
     Handlebars.registerHelper('ifdef', function (this: unknown, ...args): string {
