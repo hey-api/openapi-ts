@@ -1,3 +1,2 @@
-export type { ModelWithPattern } from './models/ModelWithPattern';
-
-export { $ModelWithPattern } from './schemas/$ModelWithPattern';
+export * from './models';
+export * from './schemas';
