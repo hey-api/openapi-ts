@@ -1,0 +1,76 @@
+import type { CancelablePromise } from '../core/CancelablePromise';
+import type { BaseHttpRequest } from '../core/BaseHttpRequest';
+
+export class SimpleService {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @throws ApiError
+     */
+    public getCallWithoutParametersAndResponse(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/simple',
+        });
+    }
+
+    /**
+     * @throws ApiError
+     */
+    public putCallWithoutParametersAndResponse(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'PUT',
+            url: '/api/v{api-version}/simple',
+        });
+    }
+
+    /**
+     * @throws ApiError
+     */
+    public postCallWithoutParametersAndResponse(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/v{api-version}/simple',
+        });
+    }
+
+    /**
+     * @throws ApiError
+     */
+    public deleteCallWithoutParametersAndResponse(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'DELETE',
+            url: '/api/v{api-version}/simple',
+        });
+    }
+
+    /**
+     * @throws ApiError
+     */
+    public optionsCallWithoutParametersAndResponse(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'OPTIONS',
+            url: '/api/v{api-version}/simple',
+        });
+    }
+
+    /**
+     * @throws ApiError
+     */
+    public headCallWithoutParametersAndResponse(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'HEAD',
+            url: '/api/v{api-version}/simple',
+        });
+    }
+
+    /**
+     * @throws ApiError
+     */
+    public patchCallWithoutParametersAndResponse(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'PATCH',
+            url: '/api/v{api-version}/simple',
+        });
+    }
+}

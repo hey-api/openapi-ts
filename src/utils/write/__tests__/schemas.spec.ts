@@ -4,6 +4,7 @@ import path from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 
 import { writeClientSchemas } from '../schemas';
+import { mockTemplates } from './mocks';
 
 vi.mock('node:fs');
 
@@ -35,28 +36,7 @@ describe('writeClientSchemas', () => {
             services: [],
         };
 
-        const templates: Parameters<typeof writeClientSchemas>[1] = {
-            client: () => 'client',
-            core: {
-                apiError: () => 'apiError',
-                apiRequestOptions: () => 'apiRequestOptions',
-                apiResult: () => 'apiResult',
-                baseHttpRequest: () => 'baseHttpRequest',
-                cancelablePromise: () => 'cancelablePromise',
-                httpRequest: () => 'httpRequest',
-                request: () => 'request',
-                settings: () => 'settings',
-                types: () => 'types',
-            },
-            exports: {
-                model: () => 'model',
-                schema: () => 'schema',
-                service: () => 'service',
-            },
-            index: () => 'index',
-        };
-
-        await writeClientSchemas(client, templates, '/', {
+        await writeClientSchemas(client, mockTemplates, '/', {
             client: 'fetch',
             enums: true,
             exportCore: true,

@@ -1,0 +1,34 @@
+import type { ModelWithString } from '../models/ModelWithString';
+import type { CancelablePromise } from '../core/CancelablePromise';
+import type { BaseHttpRequest } from '../core/BaseHttpRequest';
+
+export type TDataPostApiFormData = {
+    /**
+     * A reusable request body
+     */
+    formData?: ModelWithString;
+    /**
+     * This is a reusable parameter
+     */
+    parameter?: string;
+};
+
+export class FormDataService {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @throws ApiError
+     */
+    public postApiFormData(data: TDataPostApiFormData = {}): CancelablePromise<void> {
+        const { formData, parameter } = data;
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/v{api-version}/formData/',
+            query: {
+                parameter,
+            },
+            formData: formData,
+            mediaType: 'multipart/form-data',
+        });
+    }
+}

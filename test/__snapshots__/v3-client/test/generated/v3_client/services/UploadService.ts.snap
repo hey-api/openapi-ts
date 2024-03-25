@@ -1,0 +1,28 @@
+import type { CancelablePromise } from '../core/CancelablePromise';
+import type { BaseHttpRequest } from '../core/BaseHttpRequest';
+
+export type TDataUploadFile = {
+    /**
+     * Supply a file reference for upload
+     */
+    file: Blob;
+};
+
+export class UploadService {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @returns boolean
+     * @throws ApiError
+     */
+    public uploadFile(data: TDataUploadFile): CancelablePromise<boolean> {
+        const { file } = data;
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/v{api-version}/upload',
+            formData: {
+                file,
+            },
+        });
+    }
+}

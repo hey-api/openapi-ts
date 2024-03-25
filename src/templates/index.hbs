@@ -12,8 +12,12 @@ export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 {{/if}}
 
-{{{exportsModels}}}
-
-{{{exportsSchemas}}}
-
-{{{exportsServices}}}
+{{#if @root.$config.exportModels}}
+export * from './models'
+{{/if}}
+{{#if @root.$config.exportSchemas}}
+export * from './schemas'
+{{/if}}
+{{#if @root.$config.exportServices}}
+export * from './services'
+{{/if}}

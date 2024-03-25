@@ -1,0 +1,44 @@
+import type { ModelWithString } from '../models/ModelWithString';
+import type { CancelablePromise } from '../core/CancelablePromise';
+import type { BaseHttpRequest } from '../core/BaseHttpRequest';
+
+export type TDataMultipartRequest = {
+    formData?: {
+        content?: Blob;
+        data?: ModelWithString | null;
+    };
+};
+
+export class MultipartService {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @throws ApiError
+     */
+    public multipartRequest(data: TDataMultipartRequest = {}): CancelablePromise<void> {
+        const { formData } = data;
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/v{api-version}/multipart',
+            formData: formData,
+            mediaType: 'multipart/form-data',
+        });
+    }
+
+    /**
+     * @returns any OK
+     * @throws ApiError
+     */
+    public multipartResponse(): CancelablePromise<{
+        file?: Blob;
+        metadata?: {
+            foo?: string;
+            bar?: string;
+        };
+    }> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/multipart',
+        });
+    }
+}

@@ -4,33 +4,14 @@ import path from 'node:path';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { writeClientCore } from '../core';
+import { mockTemplates } from './mocks';
 
 vi.mock('node:fs');
 
 describe('writeClientCore', () => {
     let templates: Parameters<typeof writeClientCore>[1];
     beforeEach(() => {
-        const _templates: Parameters<typeof writeClientCore>[1] = {
-            client: () => 'client',
-            core: {
-                apiError: () => 'apiError',
-                apiRequestOptions: () => 'apiRequestOptions',
-                apiResult: () => 'apiResult',
-                baseHttpRequest: () => 'baseHttpRequest',
-                cancelablePromise: () => 'cancelablePromise',
-                httpRequest: () => 'httpRequest',
-                request: () => 'request',
-                settings: vi.fn().mockReturnValue('settings'),
-                types: () => 'types',
-            },
-            exports: {
-                model: () => 'model',
-                schema: () => 'schema',
-                service: () => 'service',
-            },
-            index: () => 'index',
-        };
-        templates = _templates;
+        templates = mockTemplates;
     });
 
     it('should write to filesystem', async () => {
