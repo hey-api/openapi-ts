@@ -4,7 +4,7 @@ import type { OpenApiReference } from './OpenApiReference';
 import type { OpenApiSchema } from './OpenApiSchema';
 
 /**
- * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#headerObject
+ * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.1.0.md#header-object
  */
 export interface OpenApiHeader extends OpenApiReference {
     description?: string;
