@@ -3,7 +3,7 @@ import type { OpenApiParameter } from './OpenApiParameter';
 import type { OpenApiServer } from './OpenApiServer';
 
 /**
- * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#pathItemObject
+ * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.1.0.md#path-item-object
  */
 export interface OpenApiPath {
     delete?: OpenApiOperation;

@@ -1,7 +1,7 @@
 import type { Dictionary } from '../../../types/generic';
 
 /**
- * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#oauthFlowObject
+ * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.1.0.md#oauth-flow-object
  */
 export interface OpenApiOAuthFlow {
     authorizationUrl: string;

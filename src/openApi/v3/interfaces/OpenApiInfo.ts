@@ -2,7 +2,7 @@ import type { OpenApiContact } from './OpenApiContact';
 import type { OpenApiLicense } from './OpenApiLicense';
 
 /**
- * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#infoObject
+ * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.1.0.md#info-object
  */
 export interface OpenApiInfo {
     title: string;
