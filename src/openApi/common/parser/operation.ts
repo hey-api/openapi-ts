@@ -1,6 +1,6 @@
 import camelCase from 'camelcase';
 
-import type { OperationResponse } from '../../../types/client';
+import type { OperationError, OperationResponse } from '../../../types/client';
 import type { Config } from '../../../types/config';
 import { reservedWords } from '../../../utils/reservedWords';
 import { sanitizeOperationName, sanitizeOperationParameterName } from '../../../utils/sanitize';
@@ -61,3 +61,11 @@ export const getOperationResponseCode = (value: string | 'default'): number | nu
 
     return null;
 };
+
+export const getOperationErrors = (operationResponses: OperationResponse[]): OperationError[] =>
+    operationResponses
+        .filter(operationResponse => operationResponse.code >= 300 && operationResponse.description)
+        .map(response => ({
+            code: response.code,
+            description: response.description!,
+        }));
