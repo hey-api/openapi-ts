@@ -1,0 +1,6 @@
+/**
+ * This is a model that contains a simple dictionary within composition
+ */
+export type CompositionWithOneOfAndSimpleDictionary = {
+    propA?: boolean | Record<string, number>;
+};

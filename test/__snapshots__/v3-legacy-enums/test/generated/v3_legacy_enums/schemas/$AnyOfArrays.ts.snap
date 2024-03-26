@@ -1,0 +1,27 @@
+export const $AnyOfArrays = {
+    description: `This is a simple array with any of properties`,
+    properties: {
+        results: {
+            type: 'array',
+            contains: {
+                type: 'any-of',
+                contains: [
+                    {
+                        properties: {
+                            foo: {
+                                type: 'string',
+                            },
+                        },
+                    },
+                    {
+                        properties: {
+                            bar: {
+                                type: 'string',
+                            },
+                        },
+                    },
+                ],
+            },
+        },
+    },
+} as const;

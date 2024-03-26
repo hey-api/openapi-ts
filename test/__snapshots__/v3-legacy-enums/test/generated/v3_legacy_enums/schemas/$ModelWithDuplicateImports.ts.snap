@@ -1,0 +1,14 @@
+export const $ModelWithDuplicateImports = {
+    description: `This is a model with duplicated imports`,
+    properties: {
+        propA: {
+            type: 'ModelWithString',
+        },
+        propB: {
+            type: 'ModelWithString',
+        },
+        propC: {
+            type: 'ModelWithString',
+        },
+    },
+} as const;

@@ -9,7 +9,24 @@
 {{/if}}
  */
 {{/ifdef}}
+{{#if @root.$config.useLegacyEnums}}
+export enum {{{name}}} {
+	{{#each enum}}
+	{{#if x-enum-description}}
+	/**
+	 * {{{escapeComment x-enum-description}}}
+	 */
+	{{else if description}}
+	/**
+	 * {{{escapeComment description}}}
+	 */
+	{{/if}}
+	{{{enumKey value x-enum-varname}}} = {{{enumValue value}}},
+	{{/each}}
+}
+{{else}}
 export type {{{name}}} = {{{enumUnionType enum}}};
+{{/if}}
 {{/if}}
 
 {{#if @root.$config.enums}}

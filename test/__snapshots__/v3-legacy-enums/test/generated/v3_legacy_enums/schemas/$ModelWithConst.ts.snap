@@ -1,0 +1,16 @@
+export const $ModelWithConst = {
+    properties: {
+        String: {
+            type: '"String"',
+        },
+        number: {
+            type: '0',
+        },
+        null: {
+            type: 'null',
+        },
+        withType: {
+            type: '"Some string"',
+        },
+    },
+} as const;

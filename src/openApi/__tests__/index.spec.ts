@@ -26,6 +26,7 @@ describe('parse', () => {
         serviceResponse: 'body',
         useDateType: false,
         useOptions: true,
+        useLegacyEnums: false,
         write: false,
     };
 

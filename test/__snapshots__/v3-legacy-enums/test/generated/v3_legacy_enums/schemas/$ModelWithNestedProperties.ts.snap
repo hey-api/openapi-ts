@@ -1,0 +1,25 @@
+export const $ModelWithNestedProperties = {
+    description: `This is a model with one nested property`,
+    properties: {
+        first: {
+            properties: {
+                second: {
+                    properties: {
+                        third: {
+                            type: 'string',
+                            isReadOnly: true,
+                            isRequired: true,
+                            isNullable: true,
+                        },
+                    },
+                    isReadOnly: true,
+                    isRequired: true,
+                    isNullable: true,
+                },
+            },
+            isReadOnly: true,
+            isRequired: true,
+            isNullable: true,
+        },
+    },
+} as const;
