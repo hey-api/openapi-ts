@@ -73,6 +73,7 @@ describe('writeClientSchemas', () => {
             postfixServices: '',
             serviceResponse: 'body',
             useDateType: false,
+            useLegacyEnums: false,
             useOptions: true,
             write: true,
         });

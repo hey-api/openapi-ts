@@ -115,6 +115,7 @@ const getConfig = async (userConfig: UserConfig, dependencies: Dependencies) => 
         useDateType = false,
         useOptions = true,
         write = true,
+        useLegacyEnums = false,
     } = userConfig;
 
     if (!input) {
@@ -158,6 +159,7 @@ const getConfig = async (userConfig: UserConfig, dependencies: Dependencies) => 
         serviceResponse,
         useDateType,
         useOptions,
+        useLegacyEnums,
         write,
     };
 

@@ -25,6 +25,7 @@ describe('parse', () => {
         postfixServices: '',
         serviceResponse: 'body',
         useDateType: false,
+        useLegacyEnums: false,
         useOptions: true,
         write: false,
     };
