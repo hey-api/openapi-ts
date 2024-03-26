@@ -1,4 +1,4 @@
-import type { Dictionary } from '../../../types/generic';
+import type { Dictionary } from '../../common/interfaces/Dictionary';
 import type { OpenApiExternalDocs } from './OpenApiExternalDocs';
 import type { OpenApiInfo } from './OpenApiInfo';
 import type { OpenApiParameter } from './OpenApiParameter';
