@@ -1,4 +1,4 @@
-import type { Dictionary } from '../../../types/generic';
+import type { Dictionary } from '../../common/interfaces/Dictionary';
 import type { OpenApiHeader } from './OpenApiHeader';
 import type { OpenApiLink } from './OpenApiLink';
 import type { OpenApiMediaType } from './OpenApiMediaType';

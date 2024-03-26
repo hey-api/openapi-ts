@@ -2,8 +2,8 @@ import camelCase from 'camelcase';
 
 import type { OperationError, OperationResponse } from '../../../types/client';
 import type { Config } from '../../../types/config';
-import { reservedWords } from '../../../utils/reservedWords';
-import { sanitizeOperationName, sanitizeOperationParameterName } from '../../../utils/sanitize';
+import { reservedWords } from './reservedWords';
+import { sanitizeOperationName, sanitizeOperationParameterName } from './sanitize';
 
 /**
  * Convert the input value to a correct operation (method) classname.
