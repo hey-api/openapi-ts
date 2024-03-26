@@ -1,9 +1,9 @@
 import type { OperationParameter } from '../../../types/client';
 import { getEnums } from '../../../utils/getEnums';
 import { getPattern } from '../../../utils/getPattern';
-import { getType } from '../../../utils/type';
 import { getRef } from '../../common/parser/getRef';
 import { getOperationParameterName } from '../../common/parser/operation';
+import { getType } from '../../common/parser/type';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiParameter } from '../interfaces/OpenApiParameter';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
