@@ -1,0 +1,9 @@
+import type { ModelWithArray } from './ModelWithArray';
+import type { ModelWithDictionary } from './ModelWithDictionary';
+
+/**
+ * This is a model with nested 'any of' property with a type null
+ */
+export type CompositionWithNestedAnyAndTypeNull = {
+    propA?: Array<ModelWithDictionary | null> | Array<ModelWithArray | null>;
+};

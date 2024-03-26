@@ -1,0 +1,27 @@
+export const $CompositionWithOneOfAndNullable = {
+    description: `This is a model with one property with a 'one of' relationship`,
+    properties: {
+        propA: {
+            type: 'one-of',
+            contains: [
+                {
+                    properties: {
+                        boolean: {
+                            type: 'boolean',
+                        },
+                    },
+                },
+                {
+                    type: 'ModelWithEnum',
+                },
+                {
+                    type: 'ModelWithArray',
+                },
+                {
+                    type: 'ModelWithDictionary',
+                },
+            ],
+            isNullable: true,
+        },
+    },
+} as const;

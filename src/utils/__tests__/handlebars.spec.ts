@@ -23,6 +23,7 @@ describe('registerHandlebarHelpers', () => {
                 serviceResponse: 'body',
                 useDateType: false,
                 useOptions: false,
+                useLegacyEnums: false,
                 write: true,
             },
             {
@@ -76,6 +77,7 @@ describe('registerHandlebarTemplates', () => {
                 serviceResponse: 'body',
                 useDateType: false,
                 useOptions: false,
+                useLegacyEnums: false,
                 write: true,
             },
             {

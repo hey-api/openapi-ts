@@ -114,6 +114,7 @@ const getConfig = async (userConfig: UserConfig, dependencies: Dependencies) => 
         serviceResponse = 'body',
         useDateType = false,
         useOptions = true,
+        useLegacyEnums = false,
         write = true,
     } = userConfig;
 
@@ -158,6 +159,7 @@ const getConfig = async (userConfig: UserConfig, dependencies: Dependencies) => 
         serviceResponse,
         useDateType,
         useOptions,
+        useLegacyEnums,
         write,
     };
 

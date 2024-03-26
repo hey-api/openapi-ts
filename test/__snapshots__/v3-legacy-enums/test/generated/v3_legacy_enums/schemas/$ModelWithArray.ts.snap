@@ -1,0 +1,23 @@
+export const $ModelWithArray = {
+    description: `This is a model with one property containing an array`,
+    properties: {
+        prop: {
+            type: 'array',
+            contains: {
+                type: 'ModelWithString',
+            },
+        },
+        propWithFile: {
+            type: 'array',
+            contains: {
+                type: 'binary',
+            },
+        },
+        propWithNumber: {
+            type: 'array',
+            contains: {
+                type: 'number',
+            },
+        },
+    },
+} as const;
