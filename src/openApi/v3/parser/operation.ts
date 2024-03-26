@@ -1,7 +1,7 @@
 import type { Operation, OperationParameter, OperationParameters } from '../../../types/client';
 import type { Config } from '../../../types/config';
-import { getOperationName } from '../../../utils/operation';
 import { getRef } from '../../common/parser/getRef';
+import { getOperationName } from '../../common/parser/operation';
 import { toSortedByRequired } from '../../common/parser/sort';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiOperation } from '../interfaces/OpenApiOperation';
