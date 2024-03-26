@@ -1,6 +1,6 @@
-import { sanitizeTypeName } from '../../../utils/sanitize';
 import { stripNamespace } from '../../../utils/stripNamespace';
 import type { Type } from '../interfaces/Type';
+import { sanitizeTypeName } from './sanitize';
 
 /**
  * Get mapped type for given type to basic Typescript/Javascript type.
