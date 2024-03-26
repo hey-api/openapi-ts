@@ -22,6 +22,7 @@ describe('getServices', () => {
             useDateType: false,
             useOptions: true,
             write: false,
+            useLegacyEnums: false,
         };
         const services = getServices(
             {

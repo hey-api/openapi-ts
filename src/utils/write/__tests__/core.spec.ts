@@ -39,6 +39,7 @@ describe('writeClientCore', () => {
             postfixServices: '',
             serviceResponse: 'body',
             useDateType: false,
+            useLegacyEnums: false,
             useOptions: true,
             write: true,
         };
@@ -79,6 +80,7 @@ describe('writeClientCore', () => {
             postfixServices: '',
             serviceResponse: 'body',
             useDateType: false,
+            useLegacyEnums: false,
             useOptions: true,
             write: true,
         };
@@ -119,6 +121,7 @@ describe('writeClientCore', () => {
             postfixServices: '',
             serviceResponse: 'body',
             useDateType: false,
+            useLegacyEnums: false,
             useOptions: true,
             write: true,
         };

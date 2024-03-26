@@ -20,6 +20,7 @@ describe('getServices', () => {
             postfixServices: 'Service',
             serviceResponse: 'body',
             useDateType: false,
+            useLegacyEnums: false,
             useOptions: true,
             write: false,
         };
