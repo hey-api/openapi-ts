@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { getOperationName, getOperationParameterName } from '../operation';
+import { getOperationName, getOperationParameterName, getOperationResponseCode } from '../operation';
 
 describe('getOperationName', () => {
     const options1: Parameters<typeof getOperationName>[2] = {
@@ -180,5 +180,19 @@ describe('getOperationParameterName', () => {
         { input: 'foo.bar[]', expected: 'fooBarArray' },
     ])('getOperationParameterName($input) -> $expected', ({ input, expected }) => {
         expect(getOperationParameterName(input)).toEqual(expected);
+    });
+});
+
+describe('getOperationResponseCode', () => {
+    it.each([
+        { input: '', expected: null },
+        { input: 'default', expected: 200 },
+        { input: '200', expected: 200 },
+        { input: '300', expected: 300 },
+        { input: '400', expected: 400 },
+        { input: 'abc', expected: null },
+        { input: '-100', expected: 100 },
+    ])('getOperationResponseCode($input) -> $expected', ({ input, expected }) => {
+        expect(getOperationResponseCode(input)).toEqual(expected);
     });
 });
