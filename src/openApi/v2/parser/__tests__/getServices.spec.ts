@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { getServices } from './getServices';
+import { getServices } from '../getServices';
 
 describe('getServices', () => {
     it('should create a unnamed service if tags are empty', () => {
