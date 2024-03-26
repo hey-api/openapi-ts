@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { reservedWords } from '../../../../utils/reservedWords';
+import { reservedWords } from '../../../common/parser/reservedWords';
 import { getType } from '../../../common/parser/type';
 import { getModel } from '../getModel';
 

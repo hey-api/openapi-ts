@@ -2,7 +2,7 @@ import camelCase from 'camelcase';
 
 import type { OperationError, OperationResponse } from '../../../types/client';
 import type { Config } from '../../../types/config';
-import { reservedWords } from '../../../utils/reservedWords';
+import { reservedWords } from './reservedWords';
 import { sanitizeOperationName, sanitizeOperationParameterName } from './sanitize';
 
 /**
