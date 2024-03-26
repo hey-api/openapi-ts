@@ -2,29 +2,6 @@ import { sanitizeTypeName } from '../../../utils/sanitize';
 import { stripNamespace } from '../../../utils/stripNamespace';
 import type { Type } from '../interfaces/Type';
 
-const TYPE_MAPPINGS = new Map<string, string>([
-    ['any', 'unknown'],
-    ['array', 'unknown[]'],
-    ['boolean', 'boolean'],
-    ['byte', 'number'],
-    ['char', 'string'],
-    ['date-time', 'string'],
-    ['date', 'string'],
-    ['double', 'number'],
-    ['file', 'binary'],
-    ['float', 'number'],
-    ['int', 'number'],
-    ['integer', 'number'],
-    ['long', 'number'],
-    ['null', 'null'],
-    ['number', 'number'],
-    ['object', 'unknown'],
-    ['password', 'string'],
-    ['short', 'number'],
-    ['string', 'string'],
-    ['void', 'void'],
-]);
-
 /**
  * Get mapped type for given type to basic Typescript/Javascript type.
  */
@@ -32,7 +9,36 @@ export const getMappedType = (type: string, format?: string): string | undefined
     if (format === 'binary') {
         return 'binary';
     }
-    return TYPE_MAPPINGS.get(type);
+    switch (type) {
+        case 'any':
+        case 'object':
+            return 'unknown';
+        case 'array':
+            return 'unknown[]';
+        case 'boolean':
+            return 'boolean';
+        case 'byte':
+        case 'double':
+        case 'float':
+        case 'int':
+        case 'integer':
+        case 'long':
+        case 'number':
+        case 'short':
+            return 'number';
+        case 'char':
+        case 'date':
+        case 'date-time':
+        case 'password':
+        case 'string':
+            return 'string';
+        case 'file':
+            return 'binary';
+        case 'null':
+            return 'null';
+        case 'void':
+            return 'void';
+    }
 };
 
 const encode = (value: string): string => sanitizeTypeName(value);
