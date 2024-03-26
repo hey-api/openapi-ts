@@ -1,6 +1,7 @@
 /**
  * This is a simple enum with strings
  */
+
 export type EnumWithStrings =
     | 'Success'
     | 'Warning'

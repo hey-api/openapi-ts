@@ -1,6 +1,7 @@
 /**
  * This is a simple enum with numbers
  */
+
 export type EnumWithExtensions = 200 | 400 | 500;
 
 export const EnumWithExtensionsEnum = {
