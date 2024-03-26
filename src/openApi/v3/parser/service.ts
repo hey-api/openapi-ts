@@ -1,6 +1,6 @@
 import camelCase from 'camelcase';
 
-import { sanitizeServiceName } from '../../../utils/sanitize';
+import { sanitizeServiceName } from '../../common/parser/sanitize';
 
 export const allowedServiceMethods = ['delete', 'get', 'head', 'options', 'patch', 'post', 'put'] as const;
 
