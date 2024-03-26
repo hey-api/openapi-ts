@@ -1,8 +1,8 @@
-import type { OpenApi } from '../openApi/v3/interfaces/OpenApi';
-import type { OpenApiDiscriminator } from '../openApi/v3/interfaces/OpenApiDiscriminator';
-import type { Model } from '../types/client';
-import type { Dictionary } from '../types/generic';
-import { stripNamespace } from './stripNamespace';
+import type { Model } from '../../../types/client';
+import type { Dictionary } from '../../../types/generic';
+import { stripNamespace } from '../../../utils/stripNamespace';
+import type { OpenApi } from '../interfaces/OpenApi';
+import type { OpenApiDiscriminator } from '../interfaces/OpenApiDiscriminator';
 
 const inverseDictionary = (map: Dictionary<string>): Dictionary<string> => {
     const m2: Dictionary<string> = {};

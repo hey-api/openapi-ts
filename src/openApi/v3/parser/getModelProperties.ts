@@ -1,10 +1,10 @@
 import type { Model } from '../../../types/client';
-import { findOneOfParentDiscriminator, mapPropertyValue } from '../../../utils/discriminator';
 import { escapeName } from '../../../utils/escapeName';
 import { getPattern } from '../../../utils/getPattern';
 import { getType } from '../../../utils/type';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
+import { findOneOfParentDiscriminator, mapPropertyValue } from './discriminator';
 import type { getModel } from './getModel';
 import { getModelDefault } from './getModelDefault';
 
