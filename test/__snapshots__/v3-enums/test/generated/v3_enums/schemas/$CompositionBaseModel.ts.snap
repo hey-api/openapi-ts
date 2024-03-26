@@ -1,0 +1,11 @@
+export const $CompositionBaseModel = {
+    description: `This is a base model with two simple optional properties`,
+    properties: {
+        firstName: {
+            type: 'string',
+        },
+        lastname: {
+            type: 'string',
+        },
+    },
+} as const;

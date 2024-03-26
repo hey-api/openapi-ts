@@ -1,0 +1,4 @@
+/**
+ * Testing slashes in string: \backwards\\\ and /forwards/// should work
+ */
+export type CommentWithSlashes = number;

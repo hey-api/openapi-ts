@@ -1,0 +1,22 @@
+export const $CompositionWithAnyOf = {
+    description: `This is a model with one property with a 'any of' relationship`,
+    properties: {
+        propA: {
+            type: 'any-of',
+            contains: [
+                {
+                    type: 'ModelWithString',
+                },
+                {
+                    type: 'ModelWithEnum',
+                },
+                {
+                    type: 'ModelWithArray',
+                },
+                {
+                    type: 'ModelWithDictionary',
+                },
+            ],
+        },
+    },
+} as const;

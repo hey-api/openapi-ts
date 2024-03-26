@@ -9,7 +9,6 @@
 {{/if}}
  */
 {{/ifdef}}
-
 {{#if @root.$config.useLegacyEnums}}
 export enum {{{name}}} {
 	{{#each enum}}
@@ -28,9 +27,7 @@ export enum {{{name}}} {
 {{else}}
 export type {{{name}}} = {{{enumUnionType enum}}};
 {{/if}}
-
 {{/if}}
-
 {{#if @root.$config.enums}}
 export const {{{enumName name }}} = {
 	{{#each enum}}
