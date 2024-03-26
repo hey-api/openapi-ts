@@ -1,12 +1,3 @@
-export interface Type {
-    $refs: string[];
-    base: string;
-    imports: string[];
-    isNullable: boolean;
-    template: string | null;
-    type: string;
-}
-
 export interface ModelComposition extends Pick<Model, '$refs' | 'enums' | 'imports' | 'properties'> {
     export: Extract<Model['export'], 'all-of' | 'any-of' | 'one-of'>;
 }

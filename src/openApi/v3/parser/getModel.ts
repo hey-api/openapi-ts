@@ -1,7 +1,7 @@
 import type { Model } from '../../../types/client';
 import { getEnums } from '../../../utils/getEnums';
 import { getPattern } from '../../../utils/getPattern';
-import { getType } from '../../../utils/type';
+import { getType } from '../../common/parser/type';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 import { findModelComposition, getModelComposition } from './getModelComposition';
