@@ -1,7 +1,7 @@
 import camelCase from 'camelcase';
 
-import type { Config } from '../types/config';
-import { sanitizeOperationName } from './sanitize';
+import type { Config } from '../../../types/config';
+import { sanitizeOperationName } from '../../../utils/sanitize';
 
 /**
  * Convert the input value to a correct operation (method) classname.
