@@ -3,12 +3,12 @@ import { getEnums } from '../../../utils/getEnums';
 import { getPattern } from '../../../utils/getPattern';
 import { getType } from '../../../utils/type';
 import { getRef } from '../../common/parser/getRef';
+import { getOperationParameterName } from '../../common/parser/operation';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiParameter } from '../interfaces/OpenApiParameter';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 import { getModel } from './getModel';
 import { getOperationParameterDefault } from './getOperationParameterDefault';
-import { getOperationParameterName } from './getOperationParameterName';
 
 export const getOperationParameter = (openApi: OpenApi, parameter: OpenApiParameter): OperationParameter => {
     const operationParameter: OperationParameter = {
