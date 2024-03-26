@@ -2,7 +2,7 @@ import type { Dictionary } from '../../../types/generic';
 import type { OpenApiHeader } from './OpenApiHeader';
 
 /**
- * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#encodingObject
+ * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.1.0.md#encoding-object
  */
 export interface OpenApiEncoding {
     contentType?: string;
