@@ -1,6 +1,6 @@
-import type { Type } from '../types/client';
-import { sanitizeTypeName } from './sanitize';
-import { stripNamespace } from './stripNamespace';
+import { sanitizeTypeName } from '../../../utils/sanitize';
+import { stripNamespace } from '../../../utils/stripNamespace';
+import type { Type } from '../interfaces/Type';
 
 const TYPE_MAPPINGS = new Map<string, string>([
     ['any', 'unknown'],
