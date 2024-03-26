@@ -1,0 +1,4 @@
+export const $SimpleString = {
+    type: 'string',
+    description: `This is a simple string`,
+} as const;

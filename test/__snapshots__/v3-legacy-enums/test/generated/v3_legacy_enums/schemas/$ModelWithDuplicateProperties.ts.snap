@@ -1,0 +1,8 @@
+export const $ModelWithDuplicateProperties = {
+    description: `This is a model with duplicated properties`,
+    properties: {
+        prop: {
+            type: 'ModelWithString',
+        },
+    },
+} as const;
