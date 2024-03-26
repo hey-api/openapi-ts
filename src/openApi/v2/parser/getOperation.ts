@@ -1,12 +1,11 @@
 import type { Operation, OperationParameters } from '../../../types/client';
 import type { Config } from '../../../types/config';
-import { getOperationName } from '../../common/parser/operation';
+import { getOperationName, getOperationResponseHeader } from '../../common/parser/operation';
 import { toSortedByRequired } from '../../common/parser/sort';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiOperation } from '../interfaces/OpenApiOperation';
 import { getOperationErrors } from './getOperationErrors';
 import { getOperationParameters } from './getOperationParameters';
-import { getOperationResponseHeader } from './getOperationResponseHeader';
 import { getOperationResponses } from './getOperationResponses';
 import { getOperationResults } from './getOperationResults';
 import { getServiceName } from './getServiceName';
