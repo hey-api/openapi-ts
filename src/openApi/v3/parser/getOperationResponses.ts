@@ -1,10 +1,10 @@
 import type { OperationResponse } from '../../../types/client';
 import { getRef } from '../../common/parser/getRef';
+import { getOperationResponseCode } from '../../common/parser/operation';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiResponse } from '../interfaces/OpenApiResponse';
 import type { OpenApiResponses } from '../interfaces/OpenApiResponses';
 import { getOperationResponse } from './getOperationResponse';
-import { getOperationResponseCode } from './getOperationResponseCode';
 
 export const getOperationResponses = (openApi: OpenApi, responses: OpenApiResponses): OperationResponse[] => {
     const operationResponses: OperationResponse[] = [];

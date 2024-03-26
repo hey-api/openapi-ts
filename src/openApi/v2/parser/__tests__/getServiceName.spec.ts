@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { getServiceName } from './getServiceName';
+import { getServiceName } from '../getServiceName';
 
 describe('getServiceName', () => {
     it('should produce correct result', () => {

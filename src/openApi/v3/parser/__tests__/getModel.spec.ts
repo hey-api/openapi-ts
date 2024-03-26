@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { reservedWords } from '../../../utils/reservedWords';
-import { getType } from '../../../utils/type';
-import { getModel } from './getModel';
+import { reservedWords } from '../../../../utils/reservedWords';
+import { getType } from '../../../../utils/type';
+import { getModel } from '../getModel';
 
 const openApi = {
     openapi: '3.0',
