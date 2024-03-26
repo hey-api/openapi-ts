@@ -1,5 +1,6 @@
 import camelCase from 'camelcase';
 
+import type { OperationResponse } from '../../../types/client';
 import type { Config } from '../../../types/config';
 import { reservedWords } from '../../../utils/reservedWords';
 import { sanitizeOperationName, sanitizeOperationParameterName } from '../../../utils/sanitize';
@@ -34,4 +35,12 @@ export const getOperationName = (
 export const getOperationParameterName = (value: string): string => {
     const clean = sanitizeOperationParameterName(value).trim();
     return camelCase(clean).replace(reservedWords, '_$1');
+};
+
+export const getOperationResponseHeader = (operationResponses: OperationResponse[]): string | null => {
+    const header = operationResponses.find(operationResponses => operationResponses.in === 'header');
+    if (header) {
+        return header.name;
+    }
+    return null;
 };
