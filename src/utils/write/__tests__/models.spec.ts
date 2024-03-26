@@ -54,6 +54,7 @@ describe('writeClientModels', () => {
             serviceResponse: 'body',
             useDateType: false,
             useOptions: true,
+            useLegacyEnums: false,
             write: true,
         });
 

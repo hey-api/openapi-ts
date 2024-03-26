@@ -1,0 +1,4 @@
+export const $CommentWithQuotes = {
+    type: 'number',
+    description: `Testing quotes in string: 'single quote''' and "double quotes""" should work`,
+} as const;
