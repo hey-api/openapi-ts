@@ -2,7 +2,7 @@ import type { Dictionary } from '../../../types/generic';
 import type { OpenApiItems } from './OpenApiItems';
 
 /**
- * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#headerObject
+ * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#header-object
  */
 export interface OpenApiHeader {
     description?: string;

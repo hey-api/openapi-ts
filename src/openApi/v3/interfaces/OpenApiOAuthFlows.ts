@@ -1,7 +1,7 @@
 import type { OpenApiOAuthFlow } from './OpenApiOAuthFlow';
 
 /**
- * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#oauthFlowsObject
+ * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.1.0.md#oauth-flows-object
  */
 export interface OpenApiOAuthFlows {
     implicit?: OpenApiOAuthFlow;
