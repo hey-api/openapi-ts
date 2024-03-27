@@ -3,19 +3,21 @@ import { describe, expect, it } from 'vitest';
 import { stripNamespace } from '../stripNamespace';
 
 describe('stripNamespace', () => {
-    it('should strip namespace', () => {
-        expect(stripNamespace('#/definitions/Item')).toEqual('Item');
-        expect(stripNamespace('#/parameters/Item')).toEqual('Item');
-        expect(stripNamespace('#/responses/Item')).toEqual('Item');
-        expect(stripNamespace('#/securityDefinitions/Item')).toEqual('Item');
-        expect(stripNamespace('#/components/schemas/Item')).toEqual('Item');
-        expect(stripNamespace('#/components/responses/Item')).toEqual('Item');
-        expect(stripNamespace('#/components/parameters/Item')).toEqual('Item');
-        expect(stripNamespace('#/components/examples/Item')).toEqual('Item');
-        expect(stripNamespace('#/components/requestBodies/Item')).toEqual('Item');
-        expect(stripNamespace('#/components/headers/Item')).toEqual('Item');
-        expect(stripNamespace('#/components/securitySchemes/Item')).toEqual('Item');
-        expect(stripNamespace('#/components/links/Item')).toEqual('Item');
-        expect(stripNamespace('#/components/callbacks/Item')).toEqual('Item');
+    it.each([
+        { input: '#/definitions/Item', expected: 'Item' },
+        { input: '#/parameters/Item', expected: 'Item' },
+        { input: '#/responses/Item', expected: 'Item' },
+        { input: '#/securityDefinitions/Item', expected: 'Item' },
+        { input: '#/components/schemas/Item', expected: 'Item' },
+        { input: '#/components/responses/Item', expected: 'Item' },
+        { input: '#/components/parameters/Item', expected: 'Item' },
+        { input: '#/components/examples/Item', expected: 'Item' },
+        { input: '#/components/requestBodies/Item', expected: 'Item' },
+        { input: '#/components/headers/Item', expected: 'Item' },
+        { input: '#/components/securitySchemes/Item', expected: 'Item' },
+        { input: '#/components/links/Item', expected: 'Item' },
+        { input: '#/components/callbacks/Item', expected: 'Item' },
+    ])('stripNamespace($input) -> $expected', ({ input, expected }) => {
+        expect(stripNamespace(input)).toEqual(expected);
     });
 });
