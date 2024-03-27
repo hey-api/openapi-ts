@@ -1,0 +1,10 @@
+/**
+ * This is a simple enum with strings
+ */
+export type EnumWithStrings =
+    | 'Success'
+    | 'Warning'
+    | 'Error'
+    | "'Single Quote'"
+    | '"Double Quotes"'
+    | 'Non-ascii: øæåôöØÆÅÔÖ字符串';

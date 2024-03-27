@@ -1,0 +1,50 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import type { Observable } from 'rxjs';
+import type { ModelWithString } from '../models/ModelWithString';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+
+export type TDataMultipartRequest = {
+    formData?: {
+        content?: Blob;
+        data?: ModelWithString | null;
+    };
+};
+
+@Injectable({
+    providedIn: 'root',
+})
+export class MultipartService {
+    constructor(public readonly http: HttpClient) {}
+
+    /**
+     * @throws ApiError
+     */
+    public multipartRequest(data: TDataMultipartRequest = {}): Observable<void> {
+        const { formData } = data;
+        return __request(OpenAPI, this.http, {
+            method: 'POST',
+            url: '/api/v{api-version}/multipart',
+            formData: formData,
+            mediaType: 'multipart/form-data',
+        });
+    }
+
+    /**
+     * @returns any OK
+     * @throws ApiError
+     */
+    public multipartResponse(): Observable<{
+        file?: Blob;
+        metadata?: {
+            foo?: string;
+            bar?: string;
+        };
+    }> {
+        return __request(OpenAPI, this.http, {
+            method: 'GET',
+            url: '/api/v{api-version}/multipart',
+        });
+    }
+}

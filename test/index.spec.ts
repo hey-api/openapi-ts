@@ -126,4 +126,23 @@ describe('OpenAPI v3', () => {
             expect(content).toMatchFileSnapshot(toSnapshotPath(file));
         });
     });
+
+    it('should generate a angular client', async () => {
+        await createClient({
+            client: 'angular',
+            enums: false,
+            exportCore: true,
+            exportModels: true,
+            exportSchemas: true,
+            exportServices: true,
+            input: './test/spec/v3.json',
+            output: './test/generated/v3_angular/',
+            useOptions: true,
+        });
+
+        sync('./test/generated/v3_angular/**/*.ts').forEach(file => {
+            const content = readFileSync(file, 'utf8').toString();
+            expect(content).toMatchFileSnapshot(`./__snapshots__/v3-angular/${file}.snap`);
+        });
+    });
 });

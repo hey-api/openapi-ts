@@ -1,0 +1,4 @@
+export const $CommentWithBackticks = {
+    type: 'number',
+    description: `Testing backticks in string: \`backticks\` and \`\`\`multiple backticks\`\`\` should work`,
+} as const;
