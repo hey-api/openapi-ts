@@ -37,6 +37,7 @@ const params = program
     .option('--write', 'Write files to disk? (used for testing)')
     .option('--no-write', 'Skip writing files to disk (used for testing)')
     .option('--useLegacyEnums', 'Generate Typescript enum definitions')
+    .option('--header <value>', 'Specify the generated file header')
     .parse(process.argv)
     .opts();
 
