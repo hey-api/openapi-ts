@@ -1,5 +1,17 @@
 # @hey-api/openapi-ts
 
+## 0.29.2
+
+### Patch Changes
+
+- Fix export types as type only when using useLegacyEnums ([#160](https://github.com/hey-api/openapi-ts/pull/160))
+
+## 0.29.1
+
+### Patch Changes
+
+- Properly export enums when using useLegacyEnums ([#158](https://github.com/hey-api/openapi-ts/pull/158))
+
 ## 0.29.0
 
 ### Minor Changes
