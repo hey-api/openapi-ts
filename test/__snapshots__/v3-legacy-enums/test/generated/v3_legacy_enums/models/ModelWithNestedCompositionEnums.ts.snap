@@ -1,0 +1,5 @@
+import type { ModelWithNestedArrayEnumsDataFoo } from './ModelWithNestedArrayEnumsDataFoo';
+
+export type ModelWithNestedCompositionEnums = {
+    foo?: ModelWithNestedArrayEnumsDataFoo;
+};

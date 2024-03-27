@@ -1,11 +1,11 @@
-import type { WithEnumExtension } from '../../../types/client';
+import type { WithEnumExtension } from '../../common/interfaces/WithEnumExtension';
 import type { WithNullableExtension } from './Extensions/WithNullableExtension';
 import type { OpenApiItems } from './OpenApiItems';
 import type { OpenApiReference } from './OpenApiReference';
 import type { OpenApiSchema } from './OpenApiSchema';
 
 /**
- * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#parameterObject
+ * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#parameter-object
  */
 export interface OpenApiParameter extends OpenApiReference, WithEnumExtension, WithNullableExtension {
     name: string;

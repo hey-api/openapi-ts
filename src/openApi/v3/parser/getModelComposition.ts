@@ -1,4 +1,4 @@
-import type { Model, ModelComposition } from '../../../types/client';
+import type { Model, ModelComposition } from '../../common/interfaces/client';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 import type { getModel } from './getModel';

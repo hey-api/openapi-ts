@@ -1,5 +1,5 @@
-import type { Operation, OperationParameters } from '../../../types/client';
 import type { Config } from '../../../types/config';
+import type { Operation, OperationParameters } from '../../common/interfaces/client';
 import { getOperationErrors, getOperationName, getOperationResponseHeader } from '../../common/parser/operation';
 import { toSortedByRequired } from '../../common/parser/sort';
 import type { OpenApi } from '../interfaces/OpenApi';

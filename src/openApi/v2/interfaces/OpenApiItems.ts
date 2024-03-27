@@ -1,7 +1,7 @@
-import type { WithEnumExtension } from '../../../types/client';
+import type { WithEnumExtension } from '../../common/interfaces/WithEnumExtension';
 
 /**
- * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#itemsObject
+ * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#items-object)
  */
 export interface OpenApiItems extends WithEnumExtension {
     type?: string;

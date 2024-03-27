@@ -1,7 +1,7 @@
 import type { OpenApiPath } from './OpenApiPath';
 
 /**
- * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#pathsObject
+ * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.1.0.md#paths-object
  */
 export interface OpenApiPaths {
     [path: string]: OpenApiPath;

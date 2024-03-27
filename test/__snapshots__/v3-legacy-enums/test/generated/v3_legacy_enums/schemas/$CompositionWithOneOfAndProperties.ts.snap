@@ -1,0 +1,43 @@
+export const $CompositionWithOneOfAndProperties = {
+    type: 'one-of',
+    contains: [
+        {
+            properties: {
+                foo: {
+                    type: 'SimpleParameter',
+                    isRequired: true,
+                },
+                baz: {
+                    type: 'number',
+                    isRequired: true,
+                    isNullable: true,
+                    format: 'uint16',
+                },
+                qux: {
+                    type: 'number',
+                    isRequired: true,
+                    format: 'uint8',
+                },
+            },
+        },
+        {
+            properties: {
+                bar: {
+                    type: 'NonAsciiStringæøåÆØÅöôêÊ字符串',
+                    isRequired: true,
+                },
+                baz: {
+                    type: 'number',
+                    isRequired: true,
+                    isNullable: true,
+                    format: 'uint16',
+                },
+                qux: {
+                    type: 'number',
+                    isRequired: true,
+                    format: 'uint8',
+                },
+            },
+        },
+    ],
+} as const;

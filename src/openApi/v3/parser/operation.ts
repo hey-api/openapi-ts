@@ -1,5 +1,5 @@
-import type { Operation, OperationParameter, OperationParameters } from '../../../types/client';
 import type { Config } from '../../../types/config';
+import type { Operation, OperationParameter, OperationParameters } from '../../common/interfaces/client';
 import { getRef } from '../../common/parser/getRef';
 import { getOperationErrors, getOperationName, getOperationResponseHeader } from '../../common/parser/operation';
 import { toSortedByRequired } from '../../common/parser/sort';

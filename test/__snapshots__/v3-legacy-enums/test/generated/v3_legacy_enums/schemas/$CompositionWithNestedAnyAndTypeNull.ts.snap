@@ -1,0 +1,38 @@
+export const $CompositionWithNestedAnyAndTypeNull = {
+    description: `This is a model with nested 'any of' property with a type null`,
+    properties: {
+        propA: {
+            type: 'any-of',
+            contains: [
+                {
+                    type: 'array',
+                    contains: {
+                        type: 'any-of',
+                        contains: [
+                            {
+                                type: 'ModelWithDictionary',
+                            },
+                            {
+                                type: 'null',
+                            },
+                        ],
+                    },
+                },
+                {
+                    type: 'array',
+                    contains: {
+                        type: 'any-of',
+                        contains: [
+                            {
+                                type: 'ModelWithArray',
+                            },
+                            {
+                                type: 'null',
+                            },
+                        ],
+                    },
+                },
+            ],
+        },
+    },
+} as const;

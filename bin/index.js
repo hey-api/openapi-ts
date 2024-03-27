@@ -36,6 +36,7 @@ const params = program
     .option('--request <value>', 'Path to custom request file')
     .option('--write', 'Write files to disk? (used for testing)')
     .option('--no-write', 'Skip writing files to disk (used for testing)')
+    .option('--useLegacyEnums', 'Generate Typescript enum definitions')
     .parse(process.argv)
     .opts();
 

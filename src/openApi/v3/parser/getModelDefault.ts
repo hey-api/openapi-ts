@@ -1,4 +1,4 @@
-import type { Model } from '../../../types/client';
+import type { Model } from '../../common/interfaces/client';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 
 export const getModelDefault = (definition: OpenApiSchema, model?: Model): string | undefined => {

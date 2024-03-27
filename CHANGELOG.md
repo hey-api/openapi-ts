@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.29.0
+
+### Minor Changes
+
+- Add useLegacyEnums options to generate TypeScript enums ([#147](https://github.com/hey-api/openapi-ts/pull/147))
+
 ## 0.28.0
 
 ### Minor Changes

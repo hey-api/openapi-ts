@@ -1,11 +1,11 @@
-import type { Dictionary } from '../../../types/generic';
+import type { Dictionary } from '../../common/interfaces/Dictionary';
 import type { OpenApiHeader } from './OpenApiHeader';
 import type { OpenApiLink } from './OpenApiLink';
 import type { OpenApiMediaType } from './OpenApiMediaType';
 import type { OpenApiReference } from './OpenApiReference';
 
 /**
- * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#responseObject
+ * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.1.0.md#response-object
  */
 export interface OpenApiResponse extends OpenApiReference {
     description: string;

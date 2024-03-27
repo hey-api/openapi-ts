@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { reservedWords } from '../../../../utils/reservedWords';
-import { getType } from '../../../../utils/type';
+import { reservedWords } from '../../../common/parser/reservedWords';
+import { getType } from '../../../common/parser/type';
 import { getModel } from '../getModel';
 
 const openApi = {
