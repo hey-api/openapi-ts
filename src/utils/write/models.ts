@@ -40,14 +40,17 @@ const exportsModels = (config: Config, client: Client) => {
         const importedModel = config.postfixModels
             ? `${model.name} as ${model.name + config.postfixModels}`
             : model.name;
-        const exp = config.useLegacyEnums ? 'export' : 'export type';
-        let result = [`${exp} { ${importedModel} } from '${path + model.name}';`];
+        let result = [`export type { ${importedModel} } from '${path + model.name}';`];
         if (config.enums && (model.enum.length || model.enums.length)) {
             const names = model.enums.map(enumerator => enumerator.name).filter(Boolean);
             const enumExports = names.length ? names : [model.name];
             const enumExportsString = enumExports.map(name => enumName(name)).join(', ');
             result = [...result, `export { ${enumExportsString} } from '${path + model.name}';`];
         }
+        if (config.useLegacyEnums && model.enum.length) {
+            result = [`export { ${importedModel} } from '${path + model.name}';`];
+        }
+
         return result.join('\n');
     });
     return output.join('\n');
