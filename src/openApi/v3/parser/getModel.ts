@@ -1,4 +1,4 @@
-import type { Model } from '../../../types/client';
+import type { Model } from '../../common/interfaces/client';
 import { getEnums } from '../../common/parser/getEnums';
 import { getPattern } from '../../common/parser/getPattern';
 import { getType } from '../../common/parser/type';

@@ -1,5 +1,5 @@
-import type { Enum } from '../../../types/client';
 import { unique } from '../../../utils/unique';
+import type { Enum } from '../interfaces/client';
 import type { WithEnumExtension } from '../interfaces/WithEnumExtension';
 
 export const getEnums = (definition: WithEnumExtension, values?: ReadonlyArray<string | number>): Enum[] => {
