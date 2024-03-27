@@ -1,4 +1,4 @@
-import type { Dictionary } from '../../../types/generic';
+import type { Dictionary } from '../../common/interfaces/Dictionary';
 import type { OpenApiExternalDocs } from './OpenApiExternalDocs';
 import type { OpenApiInfo } from './OpenApiInfo';
 import type { OpenApiParameter } from './OpenApiParameter';
@@ -10,7 +10,7 @@ import type { OpenApiSecurityScheme } from './OpenApiSecurityScheme';
 import type { OpenApiTag } from './OpenApiTag';
 
 /**
- * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md
+ * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md
  */
 export interface OpenApi {
     basePath?: string;

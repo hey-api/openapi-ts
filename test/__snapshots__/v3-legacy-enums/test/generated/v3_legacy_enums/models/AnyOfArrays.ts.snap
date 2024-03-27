@@ -1,0 +1,13 @@
+/**
+ * This is a simple array with any of properties
+ */
+export type AnyOfArrays = {
+    results?: Array<
+        | {
+              foo?: string;
+          }
+        | {
+              bar?: string;
+          }
+    >;
+};

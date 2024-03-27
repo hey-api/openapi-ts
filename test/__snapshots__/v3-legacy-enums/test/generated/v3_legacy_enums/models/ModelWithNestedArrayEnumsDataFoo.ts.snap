@@ -1,0 +1,4 @@
+export enum ModelWithNestedArrayEnumsDataFoo {
+    FOO = 'foo',
+    BAR = 'bar',
+}

@@ -1,7 +1,7 @@
-import type { WithEnumExtension } from '../../../types/client';
+import type { WithEnumExtension } from '../../common/interfaces/WithEnumExtension';
 
 /**
- * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#serverVariableObject
+ * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.1.0.md#server-variable-object
  */
 export interface OpenApiServerVariable extends WithEnumExtension {
     enum?: (string | number)[];

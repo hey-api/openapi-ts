@@ -1,12 +1,12 @@
-import type { WithEnumExtension } from '../../../types/client';
-import type { Dictionary } from '../../../types/generic';
+import type { Dictionary } from '../../common/interfaces/Dictionary';
+import type { WithEnumExtension } from '../../common/interfaces/WithEnumExtension';
 import type { OpenApiDiscriminator } from './OpenApiDiscriminator';
 import type { OpenApiExternalDocs } from './OpenApiExternalDocs';
 import type { OpenApiReference } from './OpenApiReference';
 import type { OpenApiXml } from './OpenApiXml';
 
 /**
- * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#schemaObject
+ * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.1.0.md#schema-object
  */
 export interface OpenApiSchema extends OpenApiReference, WithEnumExtension {
     additionalProperties?: boolean | OpenApiSchema;

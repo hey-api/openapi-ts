@@ -90,6 +90,11 @@ export interface UserConfig {
      */
     useOptions?: boolean;
     /**
+     * Generate Typescript enum definitions
+     * @default false
+     */
+    useLegacyEnums?: boolean;
+    /**
      * Write the files to disk (true or false)
      * @default true
      */

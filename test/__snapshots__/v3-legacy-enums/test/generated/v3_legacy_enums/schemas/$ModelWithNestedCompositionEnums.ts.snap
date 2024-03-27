@@ -1,0 +1,12 @@
+export const $ModelWithNestedCompositionEnums = {
+    properties: {
+        foo: {
+            type: 'all-of',
+            contains: [
+                {
+                    type: 'ModelWithNestedArrayEnumsDataFoo',
+                },
+            ],
+        },
+    },
+} as const;

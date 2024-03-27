@@ -1,0 +1,10 @@
+/**
+ * This is a complex dictionary
+ */
+export type DictionaryWithProperties = Record<
+    string,
+    {
+        foo?: string;
+        bar?: string;
+    }
+>;

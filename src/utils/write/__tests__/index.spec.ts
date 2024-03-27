@@ -34,6 +34,7 @@ describe('writeClientIndex', () => {
             serviceResponse: 'body',
             useDateType: false,
             useOptions: true,
+            useLegacyEnums: false,
             write: true,
         });
 

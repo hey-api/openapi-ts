@@ -1,7 +1,7 @@
-import type { Dictionary } from '../../../types/generic';
+import type { Dictionary } from '../../common/interfaces/Dictionary';
 
 /**
- * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#discriminatorObject
+ * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.1.0.md#discriminator-object
  */
 export interface OpenApiDiscriminator {
     propertyName: string;

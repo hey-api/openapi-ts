@@ -1,9 +1,9 @@
-import type { Dictionary } from '../../../types/generic';
+import type { Dictionary } from '../../common/interfaces/Dictionary';
 import type { OpenApiMediaType } from './OpenApiMediaType';
 import type { OpenApiReference } from './OpenApiReference';
 
 /**
- * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#requestBodyObject
+ * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.1.0.md#request-body-object
  */
 export interface OpenApiRequestBody extends OpenApiReference {
     'x-body-name'?: string;

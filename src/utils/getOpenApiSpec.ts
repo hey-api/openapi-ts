@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import $RefParser from '@apidevtools/json-schema-ref-parser';
 
-import type { OpenApi } from '../openApi/common/interfaces/OpenApi';
+import type { OpenApi } from '../openApi';
 
 /**
  * Load and parse te open api spec. If the file extension is ".yml" or ".yaml"

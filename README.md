@@ -190,6 +190,7 @@ $ openapi-ts --help
     --postfixModels           Model name postfix
     --request <value>         Path to custom request file
     --useDateType <value>     Output Date instead of string for the format "date-time" in the models (default: false)
+    --useLegacyEnums          Generate Typescript enum definitions (default: false)
     -h, --help                display help for command
 ```
 

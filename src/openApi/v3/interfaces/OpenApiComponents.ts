@@ -1,4 +1,4 @@
-import type { Dictionary } from '../../../types/generic';
+import type { Dictionary } from '../../common/interfaces/Dictionary';
 import type { OpenApiCallback } from './OpenApiCallback';
 import type { OpenApiExample } from './OpenApiExample';
 import type { OpenApiHeader } from './OpenApiHeader';
@@ -10,7 +10,7 @@ import type { OpenApiSchema } from './OpenApiSchema';
 import type { OpenApiSecurityScheme } from './OpenApiSecurityScheme';
 
 /**
- * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#componentsObject
+ * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.1.0.md#components-object
  */
 export interface OpenApiComponents {
     schemas?: Dictionary<OpenApiSchema>;

@@ -1,7 +1,7 @@
-import type { Dictionary } from '../../../types/generic';
+import type { Dictionary } from '../../common/interfaces/Dictionary';
 
 /**
- * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#securitySchemeObject
+ * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#security-scheme-object
  */
 export interface OpenApiSecurityScheme {
     type: 'basic' | 'apiKey' | 'oauth2';
