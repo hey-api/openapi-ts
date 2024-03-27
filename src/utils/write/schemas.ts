@@ -31,5 +31,7 @@ export const writeClientSchemas = async (
     // Generate index file exporting all generated schema files.
     const file = path.resolve(outputPath, 'index.ts');
     const content = sortByName(client.models).map(model => `export { $${model.name} } from './$${model.name}';`);
-    await writeFileSync(file, content.join('\n'));
+    const result = [config.header, content.join('\n')].filter(Boolean).join('\n');
+
+    await writeFileSync(file, result);
 };

@@ -34,5 +34,7 @@ export const writeClientServices = async (
         service =>
             `export { ${service.name}${config.postfixServices} } from './${service.name}${config.postfixServices}'`
     );
-    await writeFileSync(file, content.join('\n'));
+    const result = [config.header, content.join('\n')].filter(Boolean).join('\n');
+
+    await writeFileSync(file, result);
 };

@@ -1,3 +1,6 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
 export type { _default } from './_default';
 export type { AnyOfAnyAndNull } from './AnyOfAnyAndNull';
 export type { AnyOfArrays } from './AnyOfArrays';
