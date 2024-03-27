@@ -1,0 +1,9 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $FreeFormObjectWithAdditionalPropertiesEqEmptyObject = {
+    type: 'dictionary',
+    contains: {
+        properties: {},
+    },
+} as const;

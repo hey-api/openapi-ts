@@ -1,0 +1,36 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+import type { ModelWithString } from '../models/ModelWithString';
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+
+export type TDataPostApiRequestBody = {
+    /**
+     * A reusable request body
+     */
+    foo?: ModelWithString;
+    /**
+     * This is a reusable parameter
+     */
+    parameter?: string;
+};
+
+export class RequestBodyService {
+    /**
+     * @throws ApiError
+     */
+    public static postApiRequestBody(data: TDataPostApiRequestBody = {}): CancelablePromise<void> {
+        const { foo, parameter } = data;
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v{api-version}/requestBody/',
+            query: {
+                parameter,
+            },
+            body: foo,
+            mediaType: 'application/json',
+        });
+    }
+}

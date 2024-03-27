@@ -1,0 +1,12 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $NullableObject = {
+    description: `An object that can be null`,
+    properties: {
+        foo: {
+            type: 'string',
+        },
+    },
+    isNullable: true,
+} as const;

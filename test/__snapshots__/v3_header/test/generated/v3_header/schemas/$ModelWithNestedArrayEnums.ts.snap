@@ -1,0 +1,21 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $ModelWithNestedArrayEnums = {
+    properties: {
+        array_strings: {
+            type: 'array',
+            contains: {
+                type: 'string',
+            },
+        },
+        data: {
+            type: 'all-of',
+            contains: [
+                {
+                    type: 'ModelWithNestedArrayEnumsData',
+                },
+            ],
+        },
+    },
+} as const;

@@ -1,0 +1,12 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+import type { ConstValue } from './ConstValue';
+import type { Enum1 } from './Enum1';
+
+/**
+ * This is a model with one property with a 'any of' relationship where the options are not $ref
+ */
+export type CompositionWithNestedAnyOfAndNull = {
+    propA?: Array<Enum1 | ConstValue> | null;
+};

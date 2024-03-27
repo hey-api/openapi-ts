@@ -1,0 +1,13 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+
+/**
+ * This is a model with nested enums
+ */
+export type ModelWithNestedEnums = {
+    dictionaryWithEnum?: Record<string, 'Success' | 'Warning' | 'Error'>;
+    dictionaryWithEnumFromDescription?: Record<string, number>;
+    arrayWithEnum?: Array<'Success' | 'Warning' | 'Error'>;
+    arrayWithDescription?: Array<number>;
+};

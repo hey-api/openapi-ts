@@ -1,0 +1,10 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $CommentWithBreaks = {
+    type: 'number',
+    description: `Testing multiline comments in string: First line
+Second line
+
+Fourth line`,
+} as const;

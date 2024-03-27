@@ -1,0 +1,9 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+import type { ModelWithNestedArrayEnumsData } from './ModelWithNestedArrayEnumsData';
+
+export type ModelWithNestedArrayEnums = {
+    array_strings?: Array<string>;
+    data?: ModelWithNestedArrayEnumsData;
+};

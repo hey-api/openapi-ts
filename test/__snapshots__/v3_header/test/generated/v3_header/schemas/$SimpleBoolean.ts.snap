@@ -1,0 +1,7 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $SimpleBoolean = {
+    type: 'boolean',
+    description: `This is a simple boolean`,
+} as const;

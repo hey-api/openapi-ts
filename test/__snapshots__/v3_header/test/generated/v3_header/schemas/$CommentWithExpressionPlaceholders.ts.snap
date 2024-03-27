@@ -1,0 +1,7 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $CommentWithExpressionPlaceholders = {
+    type: 'number',
+    description: `Testing expression placeholders in string: \${expression} should work`,
+} as const;

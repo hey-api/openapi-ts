@@ -1,0 +1,11 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+
+/**
+ * Square
+ */
+export type ModelSquare = {
+    kind: 'square';
+    sideLength?: number;
+};

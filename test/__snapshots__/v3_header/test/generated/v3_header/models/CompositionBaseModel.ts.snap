@@ -1,0 +1,11 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+
+/**
+ * This is a base model with two simple optional properties
+ */
+export type CompositionBaseModel = {
+    firstName?: string;
+    lastname?: string;
+};

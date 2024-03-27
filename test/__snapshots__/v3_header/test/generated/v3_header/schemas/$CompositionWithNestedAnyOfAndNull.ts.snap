@@ -1,0 +1,30 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $CompositionWithNestedAnyOfAndNull = {
+    description: `This is a model with one property with a 'any of' relationship where the options are not $ref`,
+    properties: {
+        propA: {
+            type: 'any-of',
+            contains: [
+                {
+                    type: 'array',
+                    contains: {
+                        type: 'any-of',
+                        contains: [
+                            {
+                                type: 'Enum1',
+                            },
+                            {
+                                type: 'ConstValue',
+                            },
+                        ],
+                    },
+                },
+                {
+                    type: 'null',
+                },
+            ],
+        },
+    },
+} as const;

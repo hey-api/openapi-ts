@@ -1,0 +1,18 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $AnyOfAnyAndNull = {
+    properties: {
+        data: {
+            type: 'any-of',
+            contains: [
+                {
+                    properties: {},
+                },
+                {
+                    type: 'null',
+                },
+            ],
+        },
+    },
+} as const;
