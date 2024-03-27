@@ -5,12 +5,6 @@ type Headers = Record<string, string>;
 type Middleware<T> = (value: T) => T | Promise<T>;
 type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
 
-interface Interceptor<T> {
-    _fns: ReadonlyArray<Middleware<T>>;
-    eject: (fn: Middleware<T>) => void;
-    use: (fn: Middleware<T>) => void;
-}
-
 export class Interceptors<T> {
     _fns: Middleware<T>[];
 
@@ -41,7 +35,7 @@ export type OpenAPIConfig = {
     USERNAME?: string | Resolver<string> | undefined;
     VERSION: string;
     WITH_CREDENTIALS: boolean;
-    interceptors: { request: Interceptor<RequestInit>; response: Interceptor<Response> };
+    interceptors: { request: Interceptors<RequestInit>; response: Interceptors<Response> };
 };
 
 export const OpenAPI: OpenAPIConfig = {
