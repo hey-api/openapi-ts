@@ -1,0 +1,25 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $ArrayWithAnyOfProperties = {
+    type: 'array',
+    contains: {
+        type: 'any-of',
+        contains: [
+            {
+                properties: {
+                    foo: {
+                        type: 'string',
+                    },
+                },
+            },
+            {
+                properties: {
+                    bar: {
+                        type: 'string',
+                    },
+                },
+            },
+        ],
+    },
+} as const;

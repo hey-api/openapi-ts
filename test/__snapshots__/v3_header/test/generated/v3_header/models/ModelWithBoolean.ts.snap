@@ -1,0 +1,13 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+
+/**
+ * This is a model with one boolean property
+ */
+export type ModelWithBoolean = {
+    /**
+     * This is a simple boolean property
+     */
+    prop?: boolean;
+};

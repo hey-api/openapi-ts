@@ -1,0 +1,9 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+import type { ModelWithString } from './ModelWithString';
+
+/**
+ * This is a string reference
+ */
+export type DictionaryWithReference = Record<string, ModelWithString>;

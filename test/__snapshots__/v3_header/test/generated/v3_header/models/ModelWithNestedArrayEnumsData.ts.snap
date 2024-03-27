@@ -1,0 +1,10 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+import type { ModelWithNestedArrayEnumsDataBar } from './ModelWithNestedArrayEnumsDataBar';
+import type { ModelWithNestedArrayEnumsDataFoo } from './ModelWithNestedArrayEnumsDataFoo';
+
+export type ModelWithNestedArrayEnumsData = {
+    foo?: Array<ModelWithNestedArrayEnumsDataFoo>;
+    bar?: Array<ModelWithNestedArrayEnumsDataBar>;
+};

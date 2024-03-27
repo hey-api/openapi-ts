@@ -1,0 +1,11 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+
+export type File = {
+    readonly id?: string;
+    readonly updated_at?: string;
+    readonly created_at?: string;
+    mime: string;
+    readonly file?: string;
+};

@@ -1,0 +1,12 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $ModelWithAdditionalPropertiesEqTrue = {
+    description: `This is a model with one property and additionalProperties: true`,
+    properties: {
+        prop: {
+            type: 'string',
+            description: `This is a simple string property`,
+        },
+    },
+} as const;

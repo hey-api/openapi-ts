@@ -1,0 +1,8 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+
+/**
+ * This is a free-form object with additionalProperties: {}.
+ */
+export type FreeFormObjectWithAdditionalPropertiesEqEmptyObject = Record<string, unknown>;

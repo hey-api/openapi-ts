@@ -1,0 +1,13 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+import type { CompositionBaseModel } from './CompositionBaseModel';
+
+/**
+ * This is a model that extends the base model
+ */
+export type CompositionExtendedModel = CompositionBaseModel & {
+    firstName: string;
+    lastname: string;
+    age: number;
+};

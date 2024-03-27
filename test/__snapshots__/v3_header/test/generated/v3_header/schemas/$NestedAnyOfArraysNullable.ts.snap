@@ -1,0 +1,29 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $NestedAnyOfArraysNullable = {
+    properties: {
+        nullableArray: {
+            type: 'any-of',
+            contains: [
+                {
+                    type: 'array',
+                    contains: {
+                        type: 'any-of',
+                        contains: [
+                            {
+                                type: 'string',
+                            },
+                            {
+                                type: 'boolean',
+                            },
+                        ],
+                    },
+                },
+                {
+                    type: 'null',
+                },
+            ],
+        },
+    },
+} as const;

@@ -1,0 +1,9 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $ArrayWithNumbers = {
+    type: 'array',
+    contains: {
+        type: 'number',
+    },
+} as const;

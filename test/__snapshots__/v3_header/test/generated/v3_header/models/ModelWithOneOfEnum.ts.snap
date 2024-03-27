@@ -1,0 +1,22 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+
+export type ModelWithOneOfEnum =
+    | {
+          foo: 'Bar';
+      }
+    | {
+          foo: 'Baz';
+      }
+    | {
+          foo: 'Qux';
+      }
+    | {
+          content: string;
+          foo: 'Quux';
+      }
+    | {
+          content: [string, string];
+          foo: 'Corge';
+      };

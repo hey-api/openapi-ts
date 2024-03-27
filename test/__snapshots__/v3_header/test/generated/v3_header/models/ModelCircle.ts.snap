@@ -1,0 +1,11 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+
+/**
+ * Circle
+ */
+export type ModelCircle = {
+    kind: 'circle';
+    radius?: number;
+};

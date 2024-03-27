@@ -1,0 +1,13 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+import type { ModelWithReadOnlyAndWriteOnly } from './ModelWithReadOnlyAndWriteOnly';
+
+/**
+ * This is a model with one property containing an array
+ */
+export type ModelWithArrayReadOnlyAndWriteOnly = {
+    prop?: Array<ModelWithReadOnlyAndWriteOnly>;
+    propWithFile?: Array<Blob>;
+    propWithNumber?: Array<number>;
+};

@@ -1,0 +1,8 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+
+/**
+ * This is a string dictionary
+ */
+export type DictionaryWithString = Record<string, string>;

@@ -1,0 +1,10 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $_default = {
+    properties: {
+        name: {
+            type: 'string',
+        },
+    },
+} as const;

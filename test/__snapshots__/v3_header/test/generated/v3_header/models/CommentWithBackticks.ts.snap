@@ -1,0 +1,8 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+
+/**
+ * Testing backticks in string: `backticks` and ```multiple backticks``` should work
+ */
+export type CommentWithBackticks = number;

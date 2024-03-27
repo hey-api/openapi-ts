@@ -64,6 +64,7 @@ import partialExportComposition from '../templates/partials/exportComposition.hb
 import partialExportEnum from '../templates/partials/exportEnum.hbs';
 import partialExportInterface from '../templates/partials/exportInterface.hbs';
 import partialExportType from '../templates/partials/exportType.hbs';
+import partialHeader from '../templates/partials/header.hbs';
 import partialIsNullable from '../templates/partials/isNullable.hbs';
 import partialIsReadOnly from '../templates/partials/isReadOnly.hbs';
 import partialIsRequired from '../templates/partials/isRequired.hbs';
@@ -306,6 +307,7 @@ export const registerHandlebarTemplates = (config: Config, client: Client): Temp
     Handlebars.registerPartial('exportEnum', Handlebars.template(partialExportEnum));
     Handlebars.registerPartial('exportInterface', Handlebars.template(partialExportInterface));
     Handlebars.registerPartial('exportType', Handlebars.template(partialExportType));
+    Handlebars.registerPartial('header', Handlebars.template(partialHeader));
     Handlebars.registerPartial('isNullable', Handlebars.template(partialIsNullable));
     Handlebars.registerPartial('isReadOnly', Handlebars.template(partialIsReadOnly));
     Handlebars.registerPartial('isRequired', Handlebars.template(partialIsRequired));

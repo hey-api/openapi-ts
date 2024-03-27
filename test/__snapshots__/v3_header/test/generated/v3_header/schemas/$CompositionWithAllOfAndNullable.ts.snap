@@ -1,0 +1,30 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $CompositionWithAllOfAndNullable = {
+    description: `This is a model with one property with a 'all of' relationship`,
+    properties: {
+        propA: {
+            type: 'all-of',
+            contains: [
+                {
+                    properties: {
+                        boolean: {
+                            type: 'boolean',
+                        },
+                    },
+                },
+                {
+                    type: 'ModelWithEnum',
+                },
+                {
+                    type: 'ModelWithArray',
+                },
+                {
+                    type: 'ModelWithDictionary',
+                },
+            ],
+            isNullable: true,
+        },
+    },
+} as const;

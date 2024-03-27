@@ -1,0 +1,25 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $ModelThatExtendsExtends = {
+    type: 'all-of',
+    description: `This is a model that extends another model`,
+    contains: [
+        {
+            type: 'ModelWithString',
+        },
+        {
+            type: 'ModelThatExtends',
+        },
+        {
+            properties: {
+                propExtendsC: {
+                    type: 'string',
+                },
+                propExtendsD: {
+                    type: 'ModelWithString',
+                },
+            },
+        },
+    ],
+} as const;
