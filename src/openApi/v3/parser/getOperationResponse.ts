@@ -1,4 +1,4 @@
-import type { OperationResponse } from '../../../types/client';
+import type { OperationResponse } from '../../common/interfaces/client';
 import { getPattern } from '../../common/parser/getPattern';
 import { getRef } from '../../common/parser/getRef';
 import { getType } from '../../common/parser/type';

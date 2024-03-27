@@ -1,4 +1,4 @@
-import type { Enum } from '../types/client';
+import type { Enum } from '../openApi';
 import { unescapeName } from './escapeName';
 import { unique } from './unique';
 

@@ -1,5 +1,5 @@
-import type { Model } from '../../../types/client';
 import { escapeName } from '../../../utils/escapeName';
+import type { Model } from '../../common/interfaces/client';
 import { getPattern } from '../../common/parser/getPattern';
 import { getType } from '../../common/parser/type';
 import type { OpenApi } from '../interfaces/OpenApi';
