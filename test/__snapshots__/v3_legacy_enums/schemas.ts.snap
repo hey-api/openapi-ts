@@ -1,0 +1,1427 @@
+export const $CommentWithBreaks = {
+    type: 'number',
+    description: `Testing multiline comments in string: First line
+Second line
+
+Fourth line`,
+} as const;
+
+export const $CommentWithBackticks = {
+    type: 'number',
+    description: `Testing backticks in string: \`backticks\` and \`\`\`multiple backticks\`\`\` should work`,
+} as const;
+
+export const $CommentWithSlashes = {
+    type: 'number',
+    description: `Testing slashes in string: \\backwards\\\\\\ and /forwards/// should work`,
+} as const;
+
+export const $CommentWithExpressionPlaceholders = {
+    type: 'number',
+    description: `Testing expression placeholders in string: \${expression} should work`,
+} as const;
+
+export const $CommentWithQuotes = {
+    type: 'number',
+    description: `Testing quotes in string: 'single quote''' and "double quotes""" should work`,
+} as const;
+
+export const $CommentWithReservedCharacters = {
+    type: 'number',
+    description: `Testing reserved characters in string: /* inline */ and /** inline **/ should work`,
+} as const;
+
+export const $SimpleInteger = {
+    type: 'number',
+    description: `This is a simple number`,
+} as const;
+
+export const $SimpleBoolean = {
+    type: 'boolean',
+    description: `This is a simple boolean`,
+} as const;
+
+export const $SimpleString = {
+    type: 'string',
+    description: `This is a simple string`,
+} as const;
+
+export const $NonAsciiStringæøåÆØÅöôêÊ字符串 = {
+    type: 'string',
+    description: `A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)`,
+} as const;
+
+export const $SimpleFile = {
+    type: 'binary',
+    description: `This is a simple file`,
+} as const;
+
+export const $SimpleReference = {
+    type: 'ModelWithString',
+    description: `This is a simple reference`,
+} as const;
+
+export const $SimpleStringWithPattern = {
+    type: 'string',
+    description: `This is a simple string`,
+    isNullable: true,
+    maxLength: 64,
+    pattern: '^[a-zA-Z0-9_]*$',
+} as const;
+
+export const $EnumWithStrings = {
+    type: 'Enum',
+} as const;
+
+export const $EnumWithReplacedCharacters = {
+    type: 'Enum',
+} as const;
+
+export const $EnumWithNumbers = {
+    type: 'Enum',
+} as const;
+
+export const $EnumFromDescription = {
+    type: 'number',
+    description: `Success=1,Warning=2,Error=3`,
+} as const;
+
+export const $EnumWithExtensions = {
+    type: 'Enum',
+} as const;
+
+export const $ArrayWithNumbers = {
+    type: 'array',
+    contains: {
+        type: 'number',
+    },
+} as const;
+
+export const $ArrayWithBooleans = {
+    type: 'array',
+    contains: {
+        type: 'boolean',
+    },
+} as const;
+
+export const $ArrayWithStrings = {
+    type: 'array',
+    contains: {
+        type: 'string',
+    },
+} as const;
+
+export const $ArrayWithReferences = {
+    type: 'array',
+    contains: {
+        type: 'ModelWithString',
+    },
+} as const;
+
+export const $ArrayWithArray = {
+    type: 'array',
+    contains: {
+        type: 'array',
+        contains: {
+            type: 'ModelWithString',
+        },
+    },
+} as const;
+
+export const $ArrayWithProperties = {
+    type: 'array',
+    contains: {
+        properties: {
+            foo: {
+                type: 'string',
+            },
+            bar: {
+                type: 'string',
+            },
+        },
+    },
+} as const;
+
+export const $ArrayWithAnyOfProperties = {
+    type: 'array',
+    contains: {
+        type: 'any-of',
+        contains: [
+            {
+                properties: {
+                    foo: {
+                        type: 'string',
+                    },
+                },
+            },
+            {
+                properties: {
+                    bar: {
+                        type: 'string',
+                    },
+                },
+            },
+        ],
+    },
+} as const;
+
+export const $AnyOfAnyAndNull = {
+    properties: {
+        data: {
+            type: 'any-of',
+            contains: [
+                {
+                    properties: {},
+                },
+                {
+                    type: 'null',
+                },
+            ],
+        },
+    },
+} as const;
+
+export const $AnyOfArrays = {
+    description: `This is a simple array with any of properties`,
+    properties: {
+        results: {
+            type: 'array',
+            contains: {
+                type: 'any-of',
+                contains: [
+                    {
+                        properties: {
+                            foo: {
+                                type: 'string',
+                            },
+                        },
+                    },
+                    {
+                        properties: {
+                            bar: {
+                                type: 'string',
+                            },
+                        },
+                    },
+                ],
+            },
+        },
+    },
+} as const;
+
+export const $DictionaryWithString = {
+    type: 'dictionary',
+    contains: {
+        type: 'string',
+    },
+} as const;
+
+export const $DictionaryWithReference = {
+    type: 'dictionary',
+    contains: {
+        type: 'ModelWithString',
+    },
+} as const;
+
+export const $DictionaryWithArray = {
+    type: 'dictionary',
+    contains: {
+        type: 'array',
+        contains: {
+            type: 'ModelWithString',
+        },
+    },
+} as const;
+
+export const $DictionaryWithDictionary = {
+    type: 'dictionary',
+    contains: {
+        type: 'dictionary',
+        contains: {
+            type: 'string',
+        },
+    },
+} as const;
+
+export const $DictionaryWithProperties = {
+    type: 'dictionary',
+    contains: {
+        properties: {
+            foo: {
+                type: 'string',
+            },
+            bar: {
+                type: 'string',
+            },
+        },
+    },
+} as const;
+
+export const $ModelWithInteger = {
+    description: `This is a model with one number property`,
+    properties: {
+        prop: {
+            type: 'number',
+            description: `This is a simple number property`,
+        },
+    },
+} as const;
+
+export const $ModelWithBoolean = {
+    description: `This is a model with one boolean property`,
+    properties: {
+        prop: {
+            type: 'boolean',
+            description: `This is a simple boolean property`,
+        },
+    },
+} as const;
+
+export const $ModelWithString = {
+    description: `This is a model with one string property`,
+    properties: {
+        prop: {
+            type: 'string',
+            description: `This is a simple string property`,
+        },
+    },
+} as const;
+
+export const $ModelWithNullableString = {
+    description: `This is a model with one string property`,
+    properties: {
+        nullableProp1: {
+            type: 'string',
+            description: `This is a simple string property`,
+            isNullable: true,
+        },
+        nullableRequiredProp1: {
+            type: 'string',
+            description: `This is a simple string property`,
+            isRequired: true,
+            isNullable: true,
+        },
+        nullableProp2: {
+            type: 'string',
+            description: `This is a simple string property`,
+            isNullable: true,
+        },
+        nullableRequiredProp2: {
+            type: 'string',
+            description: `This is a simple string property`,
+            isRequired: true,
+            isNullable: true,
+        },
+    },
+} as const;
+
+export const $ModelWithEnum = {
+    description: `This is a model with one enum`,
+    properties: {
+        test: {
+            type: 'Enum',
+        },
+        statusCode: {
+            type: 'Enum',
+        },
+        bool: {
+            type: 'boolean',
+            description: `Simple boolean enum`,
+        },
+    },
+} as const;
+
+export const $ModelWithEnumWithHyphen = {
+    description: `This is a model with one enum with escaped name`,
+    properties: {
+        'foo-bar-baz-qux': {
+            type: 'Enum',
+        },
+    },
+} as const;
+
+export const $ModelWithEnumFromDescription = {
+    description: `This is a model with one enum`,
+    properties: {
+        test: {
+            type: 'number',
+            description: `Success=1,Warning=2,Error=3`,
+        },
+    },
+} as const;
+
+export const $ModelWithNestedEnums = {
+    description: `This is a model with nested enums`,
+    properties: {
+        dictionaryWithEnum: {
+            type: 'dictionary',
+            contains: {
+                type: 'Enum',
+            },
+        },
+        dictionaryWithEnumFromDescription: {
+            type: 'dictionary',
+            contains: {
+                type: 'number',
+                description: `Success=1,Warning=2,Error=3`,
+            },
+        },
+        arrayWithEnum: {
+            type: 'array',
+            contains: {
+                type: 'Enum',
+            },
+        },
+        arrayWithDescription: {
+            type: 'array',
+            contains: {
+                type: 'number',
+                description: `Success=1,Warning=2,Error=3`,
+            },
+        },
+    },
+} as const;
+
+export const $ModelWithReference = {
+    description: `This is a model with one property containing a reference`,
+    properties: {
+        prop: {
+            type: 'ModelWithProperties',
+        },
+    },
+} as const;
+
+export const $ModelWithArrayReadOnlyAndWriteOnly = {
+    description: `This is a model with one property containing an array`,
+    properties: {
+        prop: {
+            type: 'array',
+            contains: {
+                type: 'ModelWithReadOnlyAndWriteOnly',
+            },
+        },
+        propWithFile: {
+            type: 'array',
+            contains: {
+                type: 'binary',
+            },
+        },
+        propWithNumber: {
+            type: 'array',
+            contains: {
+                type: 'number',
+            },
+        },
+    },
+} as const;
+
+export const $ModelWithArray = {
+    description: `This is a model with one property containing an array`,
+    properties: {
+        prop: {
+            type: 'array',
+            contains: {
+                type: 'ModelWithString',
+            },
+        },
+        propWithFile: {
+            type: 'array',
+            contains: {
+                type: 'binary',
+            },
+        },
+        propWithNumber: {
+            type: 'array',
+            contains: {
+                type: 'number',
+            },
+        },
+    },
+} as const;
+
+export const $ModelWithDictionary = {
+    description: `This is a model with one property containing a dictionary`,
+    properties: {
+        prop: {
+            type: 'dictionary',
+            contains: {
+                type: 'string',
+            },
+        },
+    },
+} as const;
+
+export const $DeprecatedModel = {
+    description: `This is a deprecated model with a deprecated property`,
+    properties: {
+        prop: {
+            type: 'string',
+            description: `This is a deprecated property`,
+        },
+    },
+} as const;
+
+export const $ModelWithCircularReference = {
+    description: `This is a model with one property containing a circular reference`,
+    properties: {
+        prop: {
+            type: 'ModelWithCircularReference',
+        },
+    },
+} as const;
+
+export const $CompositionWithOneOf = {
+    description: `This is a model with one property with a 'one of' relationship`,
+    properties: {
+        propA: {
+            type: 'one-of',
+            contains: [
+                {
+                    type: 'ModelWithString',
+                },
+                {
+                    type: 'ModelWithEnum',
+                },
+                {
+                    type: 'ModelWithArray',
+                },
+                {
+                    type: 'ModelWithDictionary',
+                },
+            ],
+        },
+    },
+} as const;
+
+export const $CompositionWithOneOfAnonymous = {
+    description: `This is a model with one property with a 'one of' relationship where the options are not $ref`,
+    properties: {
+        propA: {
+            type: 'one-of',
+            contains: [
+                {
+                    description: `Anonymous object type`,
+                    properties: {
+                        propA: {
+                            type: 'string',
+                        },
+                    },
+                },
+                {
+                    type: 'string',
+                    description: `Anonymous string type`,
+                },
+                {
+                    type: 'number',
+                    description: `Anonymous integer type`,
+                },
+            ],
+        },
+    },
+} as const;
+
+export const $ModelCircle = {
+    description: `Circle`,
+    properties: {
+        kind: {
+            type: 'string',
+            isRequired: true,
+        },
+        radius: {
+            type: 'number',
+        },
+    },
+} as const;
+
+export const $ModelSquare = {
+    description: `Square`,
+    properties: {
+        kind: {
+            type: 'string',
+            isRequired: true,
+        },
+        sideLength: {
+            type: 'number',
+        },
+    },
+} as const;
+
+export const $CompositionWithOneOfDiscriminator = {
+    type: 'one-of',
+    description: `This is a model with one property with a 'one of' relationship where the options are not $ref`,
+    contains: [
+        {
+            type: 'ModelCircle',
+        },
+        {
+            type: 'ModelSquare',
+        },
+    ],
+} as const;
+
+export const $CompositionWithAnyOf = {
+    description: `This is a model with one property with a 'any of' relationship`,
+    properties: {
+        propA: {
+            type: 'any-of',
+            contains: [
+                {
+                    type: 'ModelWithString',
+                },
+                {
+                    type: 'ModelWithEnum',
+                },
+                {
+                    type: 'ModelWithArray',
+                },
+                {
+                    type: 'ModelWithDictionary',
+                },
+            ],
+        },
+    },
+} as const;
+
+export const $CompositionWithAnyOfAnonymous = {
+    description: `This is a model with one property with a 'any of' relationship where the options are not $ref`,
+    properties: {
+        propA: {
+            type: 'any-of',
+            contains: [
+                {
+                    description: `Anonymous object type`,
+                    properties: {
+                        propA: {
+                            type: 'string',
+                        },
+                    },
+                },
+                {
+                    type: 'string',
+                    description: `Anonymous string type`,
+                },
+                {
+                    type: 'number',
+                    description: `Anonymous integer type`,
+                },
+            ],
+        },
+    },
+} as const;
+
+export const $CompositionWithNestedAnyAndTypeNull = {
+    description: `This is a model with nested 'any of' property with a type null`,
+    properties: {
+        propA: {
+            type: 'any-of',
+            contains: [
+                {
+                    type: 'array',
+                    contains: {
+                        type: 'any-of',
+                        contains: [
+                            {
+                                type: 'ModelWithDictionary',
+                            },
+                            {
+                                type: 'null',
+                            },
+                        ],
+                    },
+                },
+                {
+                    type: 'array',
+                    contains: {
+                        type: 'any-of',
+                        contains: [
+                            {
+                                type: 'ModelWithArray',
+                            },
+                            {
+                                type: 'null',
+                            },
+                        ],
+                    },
+                },
+            ],
+        },
+    },
+} as const;
+
+export const $Enum1 = {
+    type: 'Enum',
+} as const;
+
+export const $ConstValue = {
+    type: '"ConstValue"',
+} as const;
+
+export const $CompositionWithNestedAnyOfAndNull = {
+    description: `This is a model with one property with a 'any of' relationship where the options are not $ref`,
+    properties: {
+        propA: {
+            type: 'any-of',
+            contains: [
+                {
+                    type: 'array',
+                    contains: {
+                        type: 'any-of',
+                        contains: [
+                            {
+                                type: 'Enum1',
+                            },
+                            {
+                                type: 'ConstValue',
+                            },
+                        ],
+                    },
+                },
+                {
+                    type: 'null',
+                },
+            ],
+        },
+    },
+} as const;
+
+export const $CompositionWithOneOfAndNullable = {
+    description: `This is a model with one property with a 'one of' relationship`,
+    properties: {
+        propA: {
+            type: 'one-of',
+            contains: [
+                {
+                    properties: {
+                        boolean: {
+                            type: 'boolean',
+                        },
+                    },
+                },
+                {
+                    type: 'ModelWithEnum',
+                },
+                {
+                    type: 'ModelWithArray',
+                },
+                {
+                    type: 'ModelWithDictionary',
+                },
+            ],
+            isNullable: true,
+        },
+    },
+} as const;
+
+export const $CompositionWithOneOfAndSimpleDictionary = {
+    description: `This is a model that contains a simple dictionary within composition`,
+    properties: {
+        propA: {
+            type: 'one-of',
+            contains: [
+                {
+                    type: 'boolean',
+                },
+                {
+                    type: 'dictionary',
+                    contains: {
+                        type: 'number',
+                    },
+                },
+            ],
+        },
+    },
+} as const;
+
+export const $CompositionWithOneOfAndSimpleArrayDictionary = {
+    description: `This is a model that contains a dictionary of simple arrays within composition`,
+    properties: {
+        propA: {
+            type: 'one-of',
+            contains: [
+                {
+                    type: 'boolean',
+                },
+                {
+                    type: 'dictionary',
+                    contains: {
+                        type: 'array',
+                        contains: {
+                            type: 'boolean',
+                        },
+                    },
+                },
+            ],
+        },
+    },
+} as const;
+
+export const $CompositionWithOneOfAndComplexArrayDictionary = {
+    description: `This is a model that contains a dictionary of complex arrays (composited) within composition`,
+    properties: {
+        propA: {
+            type: 'one-of',
+            contains: [
+                {
+                    type: 'boolean',
+                },
+                {
+                    type: 'dictionary',
+                    contains: {
+                        type: 'array',
+                        contains: {
+                            type: 'one-of',
+                            contains: [
+                                {
+                                    type: 'number',
+                                },
+                                {
+                                    type: 'string',
+                                },
+                            ],
+                        },
+                    },
+                },
+            ],
+        },
+    },
+} as const;
+
+export const $CompositionWithAllOfAndNullable = {
+    description: `This is a model with one property with a 'all of' relationship`,
+    properties: {
+        propA: {
+            type: 'all-of',
+            contains: [
+                {
+                    properties: {
+                        boolean: {
+                            type: 'boolean',
+                        },
+                    },
+                },
+                {
+                    type: 'ModelWithEnum',
+                },
+                {
+                    type: 'ModelWithArray',
+                },
+                {
+                    type: 'ModelWithDictionary',
+                },
+            ],
+            isNullable: true,
+        },
+    },
+} as const;
+
+export const $CompositionWithAnyOfAndNullable = {
+    description: `This is a model with one property with a 'any of' relationship`,
+    properties: {
+        propA: {
+            type: 'any-of',
+            contains: [
+                {
+                    properties: {
+                        boolean: {
+                            type: 'boolean',
+                        },
+                    },
+                },
+                {
+                    type: 'ModelWithEnum',
+                },
+                {
+                    type: 'ModelWithArray',
+                },
+                {
+                    type: 'ModelWithDictionary',
+                },
+            ],
+            isNullable: true,
+        },
+    },
+} as const;
+
+export const $CompositionBaseModel = {
+    description: `This is a base model with two simple optional properties`,
+    properties: {
+        firstName: {
+            type: 'string',
+        },
+        lastname: {
+            type: 'string',
+        },
+    },
+} as const;
+
+export const $CompositionExtendedModel = {
+    type: 'all-of',
+    description: `This is a model that extends the base model`,
+    contains: [
+        {
+            type: 'CompositionBaseModel',
+        },
+        {
+            properties: {
+                firstName: {
+                    type: 'string',
+                    isRequired: true,
+                },
+                lastname: {
+                    type: 'string',
+                    isRequired: true,
+                },
+                age: {
+                    type: 'number',
+                    isRequired: true,
+                },
+            },
+        },
+    ],
+} as const;
+
+export const $ModelWithProperties = {
+    description: `This is a model with one nested property`,
+    properties: {
+        required: {
+            type: 'string',
+            isRequired: true,
+        },
+        requiredAndReadOnly: {
+            type: 'string',
+            isReadOnly: true,
+            isRequired: true,
+        },
+        requiredAndNullable: {
+            type: 'string',
+            isRequired: true,
+            isNullable: true,
+        },
+        string: {
+            type: 'string',
+        },
+        number: {
+            type: 'number',
+        },
+        boolean: {
+            type: 'boolean',
+        },
+        reference: {
+            type: 'ModelWithString',
+        },
+        'property with space': {
+            type: 'string',
+        },
+        default: {
+            type: 'string',
+        },
+        try: {
+            type: 'string',
+        },
+        '@namespace.string': {
+            type: 'string',
+            isReadOnly: true,
+        },
+        '@namespace.integer': {
+            type: 'number',
+            isReadOnly: true,
+        },
+    },
+} as const;
+
+export const $ModelWithNestedProperties = {
+    description: `This is a model with one nested property`,
+    properties: {
+        first: {
+            properties: {
+                second: {
+                    properties: {
+                        third: {
+                            type: 'string',
+                            isReadOnly: true,
+                            isRequired: true,
+                            isNullable: true,
+                        },
+                    },
+                    isReadOnly: true,
+                    isRequired: true,
+                    isNullable: true,
+                },
+            },
+            isReadOnly: true,
+            isRequired: true,
+            isNullable: true,
+        },
+    },
+} as const;
+
+export const $ModelWithDuplicateProperties = {
+    description: `This is a model with duplicated properties`,
+    properties: {
+        prop: {
+            type: 'ModelWithString',
+        },
+    },
+} as const;
+
+export const $ModelWithOrderedProperties = {
+    description: `This is a model with ordered properties`,
+    properties: {
+        zebra: {
+            type: 'string',
+        },
+        apple: {
+            type: 'string',
+        },
+        hawaii: {
+            type: 'string',
+        },
+    },
+} as const;
+
+export const $ModelWithDuplicateImports = {
+    description: `This is a model with duplicated imports`,
+    properties: {
+        propA: {
+            type: 'ModelWithString',
+        },
+        propB: {
+            type: 'ModelWithString',
+        },
+        propC: {
+            type: 'ModelWithString',
+        },
+    },
+} as const;
+
+export const $ModelThatExtends = {
+    type: 'all-of',
+    description: `This is a model that extends another model`,
+    contains: [
+        {
+            type: 'ModelWithString',
+        },
+        {
+            properties: {
+                propExtendsA: {
+                    type: 'string',
+                },
+                propExtendsB: {
+                    type: 'ModelWithString',
+                },
+            },
+        },
+    ],
+} as const;
+
+export const $ModelThatExtendsExtends = {
+    type: 'all-of',
+    description: `This is a model that extends another model`,
+    contains: [
+        {
+            type: 'ModelWithString',
+        },
+        {
+            type: 'ModelThatExtends',
+        },
+        {
+            properties: {
+                propExtendsC: {
+                    type: 'string',
+                },
+                propExtendsD: {
+                    type: 'ModelWithString',
+                },
+            },
+        },
+    ],
+} as const;
+
+export const $ModelWithPattern = {
+    description: `This is a model that contains a some patterns`,
+    properties: {
+        key: {
+            type: 'string',
+            isRequired: true,
+            maxLength: 64,
+            pattern: '^[a-zA-Z0-9_]*$',
+        },
+        name: {
+            type: 'string',
+            isRequired: true,
+            maxLength: 255,
+        },
+        enabled: {
+            type: 'boolean',
+            isReadOnly: true,
+        },
+        modified: {
+            type: 'string',
+            isReadOnly: true,
+            format: 'date-time',
+        },
+        id: {
+            type: 'string',
+            pattern: '^\\d{2}-\\d{3}-\\d{4}$',
+        },
+        text: {
+            type: 'string',
+            pattern: '^\\w+$',
+        },
+        patternWithSingleQuotes: {
+            type: 'string',
+            pattern: "^[a-zA-Z0-9']*$",
+        },
+        patternWithNewline: {
+            type: 'string',
+            pattern: 'aaa\nbbb',
+        },
+        patternWithBacktick: {
+            type: 'string',
+            pattern: 'aaa`bbb',
+        },
+    },
+} as const;
+
+export const $File = {
+    properties: {
+        id: {
+            type: 'string',
+            isReadOnly: true,
+            minLength: 1,
+        },
+        updated_at: {
+            type: 'string',
+            isReadOnly: true,
+            format: 'date-time',
+        },
+        created_at: {
+            type: 'string',
+            isReadOnly: true,
+            format: 'date-time',
+        },
+        mime: {
+            type: 'string',
+            isRequired: true,
+            maxLength: 24,
+            minLength: 1,
+        },
+        file: {
+            type: 'string',
+            isReadOnly: true,
+            format: 'uri',
+        },
+    },
+} as const;
+
+export const $_default = {
+    properties: {
+        name: {
+            type: 'string',
+        },
+    },
+} as const;
+
+export const $Pageable = {
+    properties: {
+        page: {
+            type: 'number',
+            format: 'int32',
+        },
+        size: {
+            type: 'number',
+            format: 'int32',
+            minimum: 1,
+        },
+        sort: {
+            type: 'array',
+            contains: {
+                type: 'string',
+            },
+        },
+    },
+} as const;
+
+export const $FreeFormObjectWithoutAdditionalProperties = {
+    type: 'dictionary',
+    contains: {
+        properties: {},
+    },
+} as const;
+
+export const $FreeFormObjectWithAdditionalPropertiesEqTrue = {
+    type: 'dictionary',
+    contains: {
+        properties: {},
+    },
+} as const;
+
+export const $FreeFormObjectWithAdditionalPropertiesEqEmptyObject = {
+    type: 'dictionary',
+    contains: {
+        properties: {},
+    },
+} as const;
+
+export const $ModelWithConst = {
+    properties: {
+        String: {
+            type: '"String"',
+        },
+        number: {
+            type: '0',
+        },
+        null: {
+            type: 'null',
+        },
+        withType: {
+            type: '"Some string"',
+        },
+    },
+} as const;
+
+export const $ModelWithAdditionalPropertiesEqTrue = {
+    description: `This is a model with one property and additionalProperties: true`,
+    properties: {
+        prop: {
+            type: 'string',
+            description: `This is a simple string property`,
+        },
+    },
+} as const;
+
+export const $NestedAnyOfArraysNullable = {
+    properties: {
+        nullableArray: {
+            type: 'any-of',
+            contains: [
+                {
+                    type: 'array',
+                    contains: {
+                        type: 'any-of',
+                        contains: [
+                            {
+                                type: 'string',
+                            },
+                            {
+                                type: 'boolean',
+                            },
+                        ],
+                    },
+                },
+                {
+                    type: 'null',
+                },
+            ],
+        },
+    },
+} as const;
+
+export const $CompositionWithOneOfAndProperties = {
+    type: 'one-of',
+    contains: [
+        {
+            properties: {
+                foo: {
+                    type: 'SimpleParameter',
+                    isRequired: true,
+                },
+                baz: {
+                    type: 'number',
+                    isRequired: true,
+                    isNullable: true,
+                    format: 'uint16',
+                },
+                qux: {
+                    type: 'number',
+                    isRequired: true,
+                    format: 'uint8',
+                },
+            },
+        },
+        {
+            properties: {
+                bar: {
+                    type: 'NonAsciiStringæøåÆØÅöôêÊ字符串',
+                    isRequired: true,
+                },
+                baz: {
+                    type: 'number',
+                    isRequired: true,
+                    isNullable: true,
+                    format: 'uint16',
+                },
+                qux: {
+                    type: 'number',
+                    isRequired: true,
+                    format: 'uint8',
+                },
+            },
+        },
+    ],
+} as const;
+
+export const $NullableObject = {
+    description: `An object that can be null`,
+    properties: {
+        foo: {
+            type: 'string',
+        },
+    },
+    isNullable: true,
+} as const;
+
+export const $ModelWithNullableObject = {
+    properties: {
+        data: {
+            type: 'NullableObject',
+        },
+    },
+} as const;
+
+export const $ModelWithOneOfEnum = {
+    type: 'one-of',
+    contains: [
+        {
+            properties: {
+                foo: {
+                    type: 'Enum',
+                    isRequired: true,
+                },
+            },
+        },
+        {
+            properties: {
+                foo: {
+                    type: 'Enum',
+                    isRequired: true,
+                },
+            },
+        },
+        {
+            properties: {
+                foo: {
+                    type: 'Enum',
+                    isRequired: true,
+                },
+            },
+        },
+        {
+            properties: {
+                content: {
+                    type: 'string',
+                    isRequired: true,
+                    format: 'date-time',
+                },
+                foo: {
+                    type: 'Enum',
+                    isRequired: true,
+                },
+            },
+        },
+        {
+            properties: {
+                content: {
+                    type: 'array',
+                    contains: {
+                        type: 'any-of',
+                        contains: [
+                            {
+                                type: 'string',
+                                format: 'date-time',
+                            },
+                            {
+                                type: 'string',
+                            },
+                        ],
+                    },
+                    isRequired: true,
+                },
+                foo: {
+                    type: 'Enum',
+                    isRequired: true,
+                },
+            },
+        },
+    ],
+} as const;
+
+export const $ModelWithNestedArrayEnumsDataFoo = {
+    type: 'Enum',
+} as const;
+
+export const $ModelWithNestedArrayEnumsDataBar = {
+    type: 'Enum',
+} as const;
+
+export const $ModelWithNestedArrayEnumsData = {
+    properties: {
+        foo: {
+            type: 'array',
+            contains: {
+                type: 'ModelWithNestedArrayEnumsDataFoo',
+            },
+        },
+        bar: {
+            type: 'array',
+            contains: {
+                type: 'ModelWithNestedArrayEnumsDataBar',
+            },
+        },
+    },
+} as const;
+
+export const $ModelWithNestedArrayEnums = {
+    properties: {
+        array_strings: {
+            type: 'array',
+            contains: {
+                type: 'string',
+            },
+        },
+        data: {
+            type: 'all-of',
+            contains: [
+                {
+                    type: 'ModelWithNestedArrayEnumsData',
+                },
+            ],
+        },
+    },
+} as const;
+
+export const $ModelWithNestedCompositionEnums = {
+    properties: {
+        foo: {
+            type: 'all-of',
+            contains: [
+                {
+                    type: 'ModelWithNestedArrayEnumsDataFoo',
+                },
+            ],
+        },
+    },
+} as const;
+
+export const $ModelWithReadOnlyAndWriteOnly = {
+    properties: {
+        foo: {
+            type: 'string',
+            isRequired: true,
+        },
+        bar: {
+            type: 'string',
+            isReadOnly: true,
+            isRequired: true,
+        },
+        baz: {
+            type: 'string',
+            isRequired: true,
+        },
+    },
+} as const;
+
+export const $SimpleParameter = {
+    type: 'string',
+    description: `This is a reusable parameter`,
+} as const;

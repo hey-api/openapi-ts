@@ -1,7 +1,7 @@
-import type { ModelWithNestedArrayEnumsDataFoo } from '../models/ModelWithNestedArrayEnumsDataFoo';
-import type { ModelWithOneOfEnum } from '../models/ModelWithOneOfEnum';
-import type { ModelWithString } from '../models/ModelWithString';
-import type { Pageable } from '../models/Pageable';
+import type { ModelWithNestedArrayEnumsDataFoo } from '../models';
+import type { ModelWithOneOfEnum } from '../models';
+import type { ModelWithString } from '../models';
+import type { Pageable } from '../models';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
 

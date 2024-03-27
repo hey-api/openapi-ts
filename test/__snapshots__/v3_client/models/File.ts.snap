@@ -1,7 +1,0 @@
-export type File = {
-    readonly id?: string;
-    readonly updated_at?: Date;
-    readonly created_at?: Date;
-    mime: string;
-    readonly file?: string;
-};

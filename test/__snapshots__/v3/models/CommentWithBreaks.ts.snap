@@ -1,7 +1,0 @@
-/**
- * Testing multiline comments in string: First line
- * Second line
- *
- * Fourth line
- */
-export type CommentWithBreaks = number;

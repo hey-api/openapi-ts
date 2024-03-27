@@ -1,6 +1,0 @@
-export type ModelWithNestedArrayEnumsDataFoo = 'foo' | 'bar';
-
-export const ModelWithNestedArrayEnumsDataFooEnum = {
-    FOO: 'foo',
-    BAR: 'bar',
-} as const;

@@ -1,6 +1,0 @@
-/**
- * An object that can be null
- */
-export type NullableObject = {
-    foo?: string;
-} | null;

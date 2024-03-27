@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import type { Observable } from 'rxjs';
 {{/if}}
 {{/equals}}
-{{{modelImports this '../models/'}}}
+{{{modelImports this '../models'}}}
 {{#equals @root.$config.serviceResponse 'response'}}
 import type { ApiResult } from '../core/ApiResult';
 {{/equals}}

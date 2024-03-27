@@ -1,4 +1,0 @@
-/**
- * This is a simple file
- */
-export type SimpleFile = Blob;

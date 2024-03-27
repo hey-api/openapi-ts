@@ -40,12 +40,12 @@ export const writeClient = async (client: Client, templates: Templates, config: 
             fn: writeClientCore,
         },
         {
-            dir: 'schemas',
+            dir: '',
             enabled: config.exportSchemas,
             fn: writeClientSchemas,
         },
         {
-            dir: 'models',
+            dir: '',
             enabled: config.exportModels,
             fn: writeClientModels,
         },

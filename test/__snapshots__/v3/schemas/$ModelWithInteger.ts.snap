@@ -1,9 +1,0 @@
-export const $ModelWithInteger = {
-    description: `This is a model with one number property`,
-    properties: {
-        prop: {
-            type: 'number',
-            description: `This is a simple number property`,
-        },
-    },
-} as const;

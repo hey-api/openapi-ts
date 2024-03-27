@@ -1,3 +1,0 @@
-export type NestedAnyOfArraysNullable = {
-    nullableArray?: Array<string | boolean> | null;
-};

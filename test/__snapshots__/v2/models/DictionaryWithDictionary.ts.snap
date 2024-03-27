@@ -1,4 +1,0 @@
-/**
- * This is a string dictionary
- */
-export type DictionaryWithDictionary = Record<string, Record<string, string>>;
