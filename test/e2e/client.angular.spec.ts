@@ -7,7 +7,7 @@ import { copyAsset } from './scripts/copyAsset';
 import { generateClient } from './scripts/generateClient';
 import server from './scripts/server';
 
-describe.skip('client.angular', () => {
+describe('client.angular', () => {
     beforeAll(async () => {
         cleanup('client/angular');
         createAngularProject('client/angular', 'app');
