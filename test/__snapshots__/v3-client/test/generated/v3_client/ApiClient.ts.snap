@@ -1,5 +1,6 @@
 import type { BaseHttpRequest } from './core/BaseHttpRequest';
 import type { OpenAPIConfig } from './core/OpenAPI';
+import { Interceptors } from './core/OpenAPI';
 import { FetchHttpRequest } from './core/FetchHttpRequest';
 
 import { CollectionFormatService } from './services/CollectionFormatService';
@@ -66,6 +67,10 @@ export class ApiClient {
             PASSWORD: config?.PASSWORD,
             HEADERS: config?.HEADERS,
             ENCODE_PATH: config?.ENCODE_PATH,
+            interceptors: {
+                request: new Interceptors(),
+                response: new Interceptors(),
+            },
         });
 
         this.collectionFormat = new CollectionFormatService(this.request);
