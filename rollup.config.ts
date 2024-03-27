@@ -32,7 +32,6 @@ export function handlebarsPlugin(): Plugin {
                     knownHelpers: {
                         camelCase: true,
                         dataParameters: true,
-                        debugThis: true,
                         enumKey: true,
                         enumName: true,
                         enumUnionType: true,
