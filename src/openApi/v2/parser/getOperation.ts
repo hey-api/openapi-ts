@@ -1,13 +1,13 @@
 import type { Config } from '../../../types/config';
 import type { Operation, OperationParameters } from '../../common/interfaces/client';
 import { getOperationErrors, getOperationName, getOperationResponseHeader } from '../../common/parser/operation';
+import { getServiceName } from '../../common/parser/service';
 import { toSortedByRequired } from '../../common/parser/sort';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiOperation } from '../interfaces/OpenApiOperation';
 import { getOperationParameters } from './getOperationParameters';
 import { getOperationResponses } from './getOperationResponses';
 import { getOperationResults } from './getOperationResults';
-import { getServiceName } from './getServiceName';
 
 export const getOperation = (
     openApi: OpenApi,
