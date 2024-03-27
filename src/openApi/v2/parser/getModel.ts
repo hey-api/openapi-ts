@@ -1,6 +1,6 @@
-import type { Model } from '../../../types/client';
-import { getEnums } from '../../../utils/getEnums';
-import { getPattern } from '../../../utils/getPattern';
+import type { Model } from '../../common/interfaces/client';
+import { getEnums } from '../../common/parser/getEnums';
+import { getPattern } from '../../common/parser/getPattern';
 import { getType } from '../../common/parser/type';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';

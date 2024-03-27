@@ -1,6 +1,6 @@
-import type { Operation, Service } from '../../../types/client';
 import type { Config } from '../../../types/config';
 import { unique } from '../../../utils/unique';
+import type { Operation, Service } from '../../common/interfaces/client';
 import type { OpenApi } from '../interfaces/OpenApi';
 import { getOperationParameters } from './getOperationParameters';
 import { getOperation } from './operation';

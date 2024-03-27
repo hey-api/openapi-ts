@@ -1,4 +1,4 @@
-import type { Model } from '../../../types/client';
+import type { Model } from '../../common/interfaces/client';
 import { reservedWords } from '../../common/parser/reservedWords';
 import { getType } from '../../common/parser/type';
 import type { OpenApi } from '../interfaces/OpenApi';

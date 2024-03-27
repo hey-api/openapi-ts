@@ -1,5 +1,5 @@
-import type { OperationResponse } from '../../../types/client';
-import { getPattern } from '../../../utils/getPattern';
+import type { OperationResponse } from '../../common/interfaces/client';
+import { getPattern } from '../../common/parser/getPattern';
 import { getRef } from '../../common/parser/getRef';
 import { getType } from '../../common/parser/type';
 import type { OpenApi } from '../interfaces/OpenApi';
