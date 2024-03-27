@@ -48,6 +48,10 @@ const exportsModels = (config: Config, client: Client) => {
             const enumExportsString = enumExports.map(name => enumName(name)).join(', ');
             result = [...result, `export { ${enumExportsString} } from '${path + model.name}';`];
         }
+        if (config.useLegacyEnums && model.enum.length) {
+            result = [`export { ${importedModel} } from '${path + model.name}';`];
+        }
+
         return result.join('\n');
     });
     return output.join('\n');
