@@ -192,7 +192,7 @@ export const sendRequest = async (
 ): Promise<Response> => {
     const controller = new AbortController();
 
-    const request: RequestInit = {
+    let request: RequestInit = {
         headers,
         body: body ?? formData,
         method: options.method,
@@ -201,6 +201,10 @@ export const sendRequest = async (
 
     if (config.WITH_CREDENTIALS) {
         request.credentials = config.CREDENTIALS;
+    }
+
+    for (const fn of config.interceptors.request._fns) {
+        request = await fn(request);
     }
 
     onCancel(() => controller.abort());
@@ -294,7 +298,12 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): C
             const headers = await getHeaders(config, options);
 
             if (!onCancel.isCancelled) {
-                const response = await sendRequest(config, options, url, body, formData, headers, onCancel);
+                let response = await sendRequest(config, options, url, body, formData, headers, onCancel);
+
+                for (const fn of config.interceptors.response._fns) {
+                    response = await fn(response);
+                }
+
                 const responseBody = await getResponseBody(response);
                 const responseHeader = getResponseHeader(response, options.responseHeader);
 
