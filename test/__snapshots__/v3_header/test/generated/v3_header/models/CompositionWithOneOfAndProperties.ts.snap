@@ -1,0 +1,17 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+import type { NonAsciiStringæøåÆØÅöôêÊ字符串 } from './NonAsciiStringæøåÆØÅöôêÊ字符串';
+import type { SimpleParameter } from './SimpleParameter';
+
+export type CompositionWithOneOfAndProperties =
+    | {
+          foo: SimpleParameter;
+          baz: number | null;
+          qux: number;
+      }
+    | {
+          bar: NonAsciiStringæøåÆØÅöôêÊ字符串;
+          baz: number | null;
+          qux: number;
+      };

@@ -1,0 +1,33 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $File = {
+    properties: {
+        id: {
+            type: 'string',
+            isReadOnly: true,
+            minLength: 1,
+        },
+        updated_at: {
+            type: 'string',
+            isReadOnly: true,
+            format: 'date-time',
+        },
+        created_at: {
+            type: 'string',
+            isReadOnly: true,
+            format: 'date-time',
+        },
+        mime: {
+            type: 'string',
+            isRequired: true,
+            maxLength: 24,
+            minLength: 1,
+        },
+        file: {
+            type: 'string',
+            isReadOnly: true,
+            format: 'uri',
+        },
+    },
+} as const;

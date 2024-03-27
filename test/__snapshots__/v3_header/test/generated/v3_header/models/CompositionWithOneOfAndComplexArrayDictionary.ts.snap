@@ -1,0 +1,10 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+
+/**
+ * This is a model that contains a dictionary of complex arrays (composited) within composition
+ */
+export type CompositionWithOneOfAndComplexArrayDictionary = {
+    propA?: boolean | Record<string, Array<number | string>>;
+};

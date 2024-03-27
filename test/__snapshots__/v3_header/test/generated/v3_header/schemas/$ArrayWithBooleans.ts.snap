@@ -1,0 +1,9 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $ArrayWithBooleans = {
+    type: 'array',
+    contains: {
+        type: 'boolean',
+    },
+} as const;

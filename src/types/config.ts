@@ -95,11 +95,15 @@ export interface UserConfig {
      */
     useLegacyEnums?: boolean;
     /**
+     * Header to include in the generated files
+     */
+    header?: string;
+    /**
      * Write the files to disk (true or false)
      * @default true
      */
     write?: boolean;
 }
 
-export type Config = Omit<Required<UserConfig>, 'base' | 'name' | 'request'> &
-    Pick<UserConfig, 'base' | 'name' | 'request'>;
+export type Config = Omit<Required<UserConfig>, 'base' | 'name' | 'request' | 'header'> &
+    Pick<UserConfig, 'base' | 'name' | 'request' | 'header'>;

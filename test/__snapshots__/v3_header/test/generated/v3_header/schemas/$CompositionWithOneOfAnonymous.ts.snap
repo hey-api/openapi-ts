@@ -1,0 +1,29 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $CompositionWithOneOfAnonymous = {
+    description: `This is a model with one property with a 'one of' relationship where the options are not $ref`,
+    properties: {
+        propA: {
+            type: 'one-of',
+            contains: [
+                {
+                    description: `Anonymous object type`,
+                    properties: {
+                        propA: {
+                            type: 'string',
+                        },
+                    },
+                },
+                {
+                    type: 'string',
+                    description: `Anonymous string type`,
+                },
+                {
+                    type: 'number',
+                    description: `Anonymous integer type`,
+                },
+            ],
+        },
+    },
+} as const;

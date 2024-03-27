@@ -1,0 +1,17 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $ModelWithOrderedProperties = {
+    description: `This is a model with ordered properties`,
+    properties: {
+        zebra: {
+            type: 'string',
+        },
+        apple: {
+            type: 'string',
+        },
+        hawaii: {
+            type: 'string',
+        },
+    },
+} as const;

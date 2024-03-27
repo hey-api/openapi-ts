@@ -1,0 +1,12 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $DeprecatedModel = {
+    description: `This is a deprecated model with a deprecated property`,
+    properties: {
+        prop: {
+            type: 'string',
+            description: `This is a deprecated property`,
+        },
+    },
+} as const;

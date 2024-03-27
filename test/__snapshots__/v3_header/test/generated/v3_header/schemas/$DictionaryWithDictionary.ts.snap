@@ -1,0 +1,12 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $DictionaryWithDictionary = {
+    type: 'dictionary',
+    contains: {
+        type: 'dictionary',
+        contains: {
+            type: 'string',
+        },
+    },
+} as const;

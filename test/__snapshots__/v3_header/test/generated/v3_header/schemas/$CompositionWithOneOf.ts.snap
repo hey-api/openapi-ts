@@ -1,0 +1,25 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $CompositionWithOneOf = {
+    description: `This is a model with one property with a 'one of' relationship`,
+    properties: {
+        propA: {
+            type: 'one-of',
+            contains: [
+                {
+                    type: 'ModelWithString',
+                },
+                {
+                    type: 'ModelWithEnum',
+                },
+                {
+                    type: 'ModelWithArray',
+                },
+                {
+                    type: 'ModelWithDictionary',
+                },
+            ],
+        },
+    },
+} as const;

@@ -1,0 +1,30 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $ModelWithNullableString = {
+    description: `This is a model with one string property`,
+    properties: {
+        nullableProp1: {
+            type: 'string',
+            description: `This is a simple string property`,
+            isNullable: true,
+        },
+        nullableRequiredProp1: {
+            type: 'string',
+            description: `This is a simple string property`,
+            isRequired: true,
+            isNullable: true,
+        },
+        nullableProp2: {
+            type: 'string',
+            description: `This is a simple string property`,
+            isNullable: true,
+        },
+        nullableRequiredProp2: {
+            type: 'string',
+            description: `This is a simple string property`,
+            isRequired: true,
+            isNullable: true,
+        },
+    },
+} as const;

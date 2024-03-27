@@ -1,0 +1,6 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $ModelWithNestedArrayEnumsDataBar = {
+    type: 'Enum',
+} as const;

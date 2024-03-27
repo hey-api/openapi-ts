@@ -1,0 +1,18 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $ModelWithEnum = {
+    description: `This is a model with one enum`,
+    properties: {
+        test: {
+            type: 'Enum',
+        },
+        statusCode: {
+            type: 'Enum',
+        },
+        bool: {
+            type: 'boolean',
+            description: `Simple boolean enum`,
+        },
+    },
+} as const;

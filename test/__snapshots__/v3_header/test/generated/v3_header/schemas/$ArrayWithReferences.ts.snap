@@ -1,0 +1,9 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $ArrayWithReferences = {
+    type: 'array',
+    contains: {
+        type: 'ModelWithString',
+    },
+} as const;

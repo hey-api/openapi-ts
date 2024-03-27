@@ -1,0 +1,7 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+
+export type _default = {
+    name?: string;
+};

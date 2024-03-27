@@ -1,0 +1,10 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+
+/**
+ * This is a model with one enum with escaped name
+ */
+export type ModelWithEnumWithHyphen = {
+    'foo-bar-baz-qux'?: '3.0';
+};

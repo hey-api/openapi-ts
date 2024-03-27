@@ -1,0 +1,14 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+import type { ModelWithArray } from './ModelWithArray';
+import type { ModelWithDictionary } from './ModelWithDictionary';
+import type { ModelWithEnum } from './ModelWithEnum';
+import type { ModelWithString } from './ModelWithString';
+
+/**
+ * This is a model with one property with a 'one of' relationship
+ */
+export type CompositionWithOneOf = {
+    propA?: ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary;
+};

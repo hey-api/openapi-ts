@@ -1,0 +1,11 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+import type { ModelWithProperties } from './ModelWithProperties';
+
+/**
+ * This is a model with one property containing a reference
+ */
+export type ModelWithReference = {
+    prop?: ModelWithProperties;
+};

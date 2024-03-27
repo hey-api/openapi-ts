@@ -1,0 +1,7 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $SimpleParameter = {
+    type: 'string',
+    description: `This is a reusable parameter`,
+} as const;

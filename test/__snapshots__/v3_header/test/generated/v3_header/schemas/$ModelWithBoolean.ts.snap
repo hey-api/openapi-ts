@@ -1,0 +1,12 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $ModelWithBoolean = {
+    description: `This is a model with one boolean property`,
+    properties: {
+        prop: {
+            type: 'boolean',
+            description: `This is a simple boolean property`,
+        },
+    },
+} as const;

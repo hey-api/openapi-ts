@@ -1,0 +1,15 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $ModelWithNestedCompositionEnums = {
+    properties: {
+        foo: {
+            type: 'all-of',
+            contains: [
+                {
+                    type: 'ModelWithNestedArrayEnumsDataFoo',
+                },
+            ],
+        },
+    },
+} as const;

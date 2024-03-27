@@ -161,6 +161,38 @@ export const FooEnum = {
 } as const;
 ```
 
+### File headers
+
+To add a header in the generated files, set the `header` parameter in your configuration file
+
+```mjs
+/** @type {import('@hey-api/openapi-ts').UserConfig} */
+export default {
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  header: `/**
+  * generated using openapi-ts -- do no edit
+  * Licensed under the MIT License.
+  */`
+}
+```
+
+### File headers
+
+To add a header in the generated files, set the `header` parameter in your configuration file
+
+```mjs
+/** @type {import('@hey-api/openapi-ts').UserConfig} */
+export default {
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  header: `/**
+  * generated using openapi-ts -- do no edit
+  * Licensed under the MIT License.
+  */`
+}
+```
+
 ### Config API
 
 ```sh
@@ -191,6 +223,7 @@ $ openapi-ts --help
     --request <value>         Path to custom request file
     --useDateType <value>     Output Date instead of string for the format "date-time" in the models (default: false)
     --useLegacyEnums          Generate Typescript enum definitions (default: false)
+    --header <value>          Add a header to the generated files
     -h, --help                display help for command
 ```
 

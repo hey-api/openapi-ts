@@ -1,0 +1,40 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+import type { ModelWithArrayReadOnlyAndWriteOnly } from '../models/ModelWithArrayReadOnlyAndWriteOnly';
+import type { ModelWithReadOnlyAndWriteOnly } from '../models/ModelWithReadOnlyAndWriteOnly';
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+
+export type TDataPostServiceWithEmptyTag = {
+    requestBody: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
+};
+
+export class DefaultService {
+    /**
+     * @throws ApiError
+     */
+    public static serviceWithEmptyTag(): CancelablePromise<void> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v{api-version}/no-tag',
+        });
+    }
+
+    /**
+     * @returns ModelWithReadOnlyAndWriteOnly
+     * @throws ApiError
+     */
+    public static postServiceWithEmptyTag(
+        data: TDataPostServiceWithEmptyTag
+    ): CancelablePromise<ModelWithReadOnlyAndWriteOnly> {
+        const { requestBody } = data;
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v{api-version}/no-tag',
+            body: requestBody,
+            mediaType: 'application/json',
+        });
+    }
+}

@@ -1,0 +1,7 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $SimpleInteger = {
+    type: 'number',
+    description: `This is a simple number`,
+} as const;

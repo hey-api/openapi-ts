@@ -1,0 +1,15 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $ModelSquare = {
+    description: `Square`,
+    properties: {
+        kind: {
+            type: 'string',
+            isRequired: true,
+        },
+        sideLength: {
+            type: 'number',
+        },
+    },
+} as const;

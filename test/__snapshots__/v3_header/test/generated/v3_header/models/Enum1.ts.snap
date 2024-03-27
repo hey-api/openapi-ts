@@ -1,0 +1,5 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+
+export type Enum1 = 'Bird' | 'Dog';

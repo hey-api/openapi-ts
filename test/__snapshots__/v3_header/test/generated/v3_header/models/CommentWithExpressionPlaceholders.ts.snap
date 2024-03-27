@@ -1,0 +1,8 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+
+/**
+ * Testing expression placeholders in string: ${expression} should work
+ */
+export type CommentWithExpressionPlaceholders = number;

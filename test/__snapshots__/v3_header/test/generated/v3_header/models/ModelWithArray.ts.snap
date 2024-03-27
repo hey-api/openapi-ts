@@ -1,0 +1,13 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+import type { ModelWithString } from './ModelWithString';
+
+/**
+ * This is a model with one property containing an array
+ */
+export type ModelWithArray = {
+    prop?: Array<ModelWithString>;
+    propWithFile?: Array<Blob>;
+    propWithNumber?: Array<number>;
+};

@@ -1,0 +1,7 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $CommentWithReservedCharacters = {
+    type: 'number',
+    description: `Testing reserved characters in string: /* inline */ and /** inline **/ should work`,
+} as const;

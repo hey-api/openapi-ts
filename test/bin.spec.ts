@@ -114,6 +114,9 @@ describe('bin', () => {
             '--postfixModels',
             'Dto',
             '--no-write',
+            '--useLegacyEnums',
+            '--header',
+            '/** comment /*',
         ]);
         expect(result.stdout.toString()).toContain('Done!');
         expect(result.stderr.toString()).toBe('');

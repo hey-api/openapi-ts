@@ -1,0 +1,28 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+
+export type TDataFileResponse = {
+    id: string;
+};
+
+export class FileResponseService {
+    /**
+     * @returns binary Success
+     * @throws ApiError
+     */
+    public static fileResponse(data: TDataFileResponse): CancelablePromise<Blob> {
+        const { id } = data;
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v{api-version}/file/{id}',
+            path: {
+                id,
+            },
+        });
+    }
+}

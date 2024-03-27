@@ -1,0 +1,8 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+
+/**
+ * This is a simple enum with numbers
+ */
+export type EnumWithExtensions = 200 | 400 | 500;

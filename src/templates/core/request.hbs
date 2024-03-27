@@ -1,3 +1,4 @@
+{{>header}}
 {{~#equals @root.$config.client 'angular'}}{{>angular/request}}{{/equals~}}
 {{~#equals @root.$config.client 'axios'}}{{>axios/request}}{{/equals~}}
 {{~#equals @root.$config.client 'fetch'}}{{>fetch/request}}{{/equals~}}

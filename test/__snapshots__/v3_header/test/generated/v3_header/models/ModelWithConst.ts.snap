@@ -1,0 +1,10 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+
+export type ModelWithConst = {
+    String?: 'String';
+    number?: 0;
+    null?: null;
+    withType?: 'Some string';
+};

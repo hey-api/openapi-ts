@@ -1,0 +1,15 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+
+/**
+ * This is a model with one property with a 'any of' relationship where the options are not $ref
+ */
+export type CompositionWithAnyOfAnonymous = {
+    propA?:
+        | {
+              propA?: string;
+          }
+        | string
+        | number;
+};

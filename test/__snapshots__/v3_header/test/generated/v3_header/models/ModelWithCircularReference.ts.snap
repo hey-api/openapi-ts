@@ -1,0 +1,10 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+
+/**
+ * This is a model with one property containing a circular reference
+ */
+export type ModelWithCircularReference = {
+    prop?: ModelWithCircularReference;
+};
