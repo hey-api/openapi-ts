@@ -1,5 +1,5 @@
 import type { Model } from '../../../types/client';
-import { getEnums } from '../../../utils/getEnums';
+import { getEnums } from '../../common/parser/getEnums';
 import { getPattern } from '../../common/parser/getPattern';
 import { getType } from '../../common/parser/type';
 import type { OpenApi } from '../interfaces/OpenApi';

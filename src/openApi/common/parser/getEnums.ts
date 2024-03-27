@@ -1,5 +1,5 @@
-import type { Enum, WithEnumExtension } from '../types/client';
-import { unique } from './unique';
+import type { Enum, WithEnumExtension } from '../../../types/client';
+import { unique } from '../../../utils/unique';
 
 export const getEnums = (definition: WithEnumExtension, values?: ReadonlyArray<string | number>): Enum[] => {
     if (!Array.isArray(values)) {
