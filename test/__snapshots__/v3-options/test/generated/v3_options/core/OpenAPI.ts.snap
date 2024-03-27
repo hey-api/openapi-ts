@@ -11,7 +11,7 @@ interface Interceptor<T> {
     use: (fn: Middleware<T>) => void;
 }
 
-class Interceptors<T> {
+export class Interceptors<T> {
     _fns: Middleware<T>[];
 
     constructor() {

@@ -1,4 +1,1 @@
-export enum ModelWithNestedArrayEnumsDataBar {
-    BAZ = 'baz',
-    QUX = 'qux',
-}
+export type ModelWithNestedArrayEnumsDataBar = 'baz' | 'qux';

@@ -1,11 +1,10 @@
 /**
  * This is a simple enum with strings
  */
-export enum EnumWithStrings {
-    SUCCESS = 'Success',
-    WARNING = 'Warning',
-    ERROR = 'Error',
-    _SINGLE_QUOTE_ = "'Single Quote'",
-    _DOUBLE_QUOTES_ = '"Double Quotes"',
-    NON_ASCII__ØÆÅÔÖ_ØÆÅÔÖ字符串 = 'Non-ascii: øæåôöØÆÅÔÖ字符串',
-}
+export type EnumWithStrings =
+    | 'Success'
+    | 'Warning'
+    | 'Error'
+    | "'Single Quote'"
+    | '"Double Quotes"'
+    | 'Non-ascii: øæåôöØÆÅÔÖ字符串';
