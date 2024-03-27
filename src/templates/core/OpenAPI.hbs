@@ -27,12 +27,6 @@ type Middleware<T> = (value: T) => T | Promise<T>;
 {{/equals}}
 type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
 
-interface Interceptor<T> {
-  _fns: ReadonlyArray<Middleware<T>>;
-  eject: (fn: Middleware<T>) => void;
-  use: (fn: Middleware<T>) => void;
-}
-
 export class Interceptors<T> {
   _fns: Middleware<T>[];
 
@@ -68,23 +62,23 @@ export type OpenAPIConfig = {
 	WITH_CREDENTIALS: boolean;
 	interceptors: {
 		{{~#equals @root.$config.client 'angular'~}}
-		response: Interceptor<HttpResponse<any>>;
+		response: Interceptors<HttpResponse<any>>;
 		{{~/equals~}}
 		{{~#equals @root.$config.client 'axios'~}}
-		request: Interceptor<AxiosRequestConfig>;
-		response: Interceptor<AxiosResponse>;
+		request: Interceptors<AxiosRequestConfig>;
+		response: Interceptors<AxiosResponse>;
 		{{~/equals~}}
 		{{~#equals @root.$config.client 'fetch'~}}
-		request: Interceptor<RequestInit>;
-		response: Interceptor<Response>;
+		request: Interceptors<RequestInit>;
+		response: Interceptors<Response>;
 		{{~/equals~}}
 		{{~#equals @root.$config.client 'node'~}}
-		request: Interceptor<RequestInit>;
-		response: Interceptor<Response>;
+		request: Interceptors<RequestInit>;
+		response: Interceptors<Response>;
 		{{~/equals~}}
 		{{~#equals @root.$config.client 'xhr'~}}
-		request: Interceptor<XMLHttpRequest>;
-		response: Interceptor<XMLHttpRequest>;
+		request: Interceptors<XMLHttpRequest>;
+		response: Interceptors<XMLHttpRequest>;
 		{{~/equals~}}
 	};
 };
