@@ -8,7 +8,6 @@ export const isBlob = (value: any): value is Blob => {
 		typeof value.constructor === 'function' &&
 		typeof value.constructor.name === 'string' &&
 		/^(Blob|File)$/.test(value.constructor.name) &&
-		// @ts-ignore
 		/^(Blob|File)$/.test(value[Symbol.toStringTag])
 	);
 };
