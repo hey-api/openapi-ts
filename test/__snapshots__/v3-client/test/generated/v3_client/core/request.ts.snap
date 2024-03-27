@@ -23,7 +23,6 @@ export const isBlob = (value: any): value is Blob => {
         typeof value.constructor === 'function' &&
         typeof value.constructor.name === 'string' &&
         /^(Blob|File)$/.test(value.constructor.name) &&
-        // @ts-ignore
         /^(Blob|File)$/.test(value[Symbol.toStringTag])
     );
 };
@@ -87,7 +86,7 @@ export const getFormData = (options: ApiRequestOptions): FormData | undefined =>
     if (options.formData) {
         const formData = new FormData();
 
-        const process = (key: string, value: any) => {
+        const process = (key: string, value: unknown) => {
             if (isString(value) || isBlob(value)) {
                 formData.append(key, value);
             } else {
@@ -96,7 +95,7 @@ export const getFormData = (options: ApiRequestOptions): FormData | undefined =>
         };
 
         Object.entries(options.formData)
-            .filter(([_, value]) => value !== undefined && value !== null)
+            .filter(([, value]) => value !== undefined && value !== null)
             .forEach(([key, value]) => {
                 if (Array.isArray(value)) {
                     value.forEach(v => process(key, v));
@@ -132,7 +131,7 @@ export const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptio
         ...additionalHeaders,
         ...options.headers,
     })
-        .filter(([_, value]) => value !== undefined && value !== null)
+        .filter(([, value]) => value !== undefined && value !== null)
         .reduce(
             (headers, [key, value]) => ({
                 ...headers,
