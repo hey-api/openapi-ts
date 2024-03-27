@@ -2,7 +2,7 @@ export const getFormData = (options: ApiRequestOptions): FormData | undefined =>
 	if (options.formData) {
 		const formData = new FormData();
 
-		const process = (key: string, value: any) => {
+		const process = (key: string, value: unknown) => {
 			if (isString(value) || isBlob(value)) {
 				formData.append(key, value);
 			} else {
@@ -11,7 +11,7 @@ export const getFormData = (options: ApiRequestOptions): FormData | undefined =>
 		};
 
 		Object.entries(options.formData)
-			.filter(([_, value]) => value !== undefined && value !== null)
+			.filter(([, value]) => value !== undefined && value !== null)
 			.forEach(([key, value]) => {
 				if (Array.isArray(value)) {
 					value.forEach(v => process(key, v));
