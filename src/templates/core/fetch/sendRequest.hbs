@@ -9,7 +9,7 @@ export const sendRequest = async (
 ): Promise<Response> => {
 	const controller = new AbortController();
 
-	const request: RequestInit = {
+	let request: RequestInit = {
 		headers,
 		body: body ?? formData,
 		method: options.method,
@@ -18,6 +18,10 @@ export const sendRequest = async (
 
 	if (config.WITH_CREDENTIALS) {
 		request.credentials = config.CREDENTIALS;
+	}
+
+	for (const fn of config.interceptors.request._fns) {
+		request = await fn(request)
 	}
 
 	onCancel(() => controller.abort());

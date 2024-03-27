@@ -70,7 +70,12 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): C
 			const headers = await getHeaders(config, options);
 
 			if (!onCancel.isCancelled) {
-				const response = await sendRequest(options, url, body, formData, headers, onCancel);
+				let response = await sendRequest(config, options, url, body, formData, headers, onCancel);
+
+				for (const fn of config.interceptors.response._fns) {
+					response = await fn(response)
+				}
+
 				const responseBody = await getResponseBody(response);
 				const responseHeader = getResponseHeader(response, options.responseHeader);
 
