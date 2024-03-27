@@ -2,6 +2,7 @@ import type { Config } from '../../../types/config';
 import type { Operation, OperationParameter, OperationParameters } from '../../common/interfaces/client';
 import { getRef } from '../../common/parser/getRef';
 import { getOperationErrors, getOperationName, getOperationResponseHeader } from '../../common/parser/operation';
+import { getServiceName } from '../../common/parser/service';
 import { toSortedByRequired } from '../../common/parser/sort';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiOperation } from '../interfaces/OpenApiOperation';
@@ -10,7 +11,6 @@ import { getOperationParameters } from './getOperationParameters';
 import { getOperationRequestBody } from './getOperationRequestBody';
 import { getOperationResponses } from './getOperationResponses';
 import { getOperationResults } from './getOperationResults';
-import { getServiceName } from './service';
 
 // add global path parameters, skip duplicate names
 const mergeParameters = (opParams: OperationParameter[], globalParams: OperationParameter[]): OperationParameter[] => {
