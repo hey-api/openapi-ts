@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.30.0
+
+### Minor Changes
+
+- add support for interceptors ([#153](https://github.com/hey-api/openapi-ts/pull/153))
+
 ## 0.29.2
 
 ### Patch Changes
