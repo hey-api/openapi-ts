@@ -4,7 +4,8 @@ import type { Operation, Service } from '../../common/interfaces/client';
 import type { OpenApi } from '../interfaces/OpenApi';
 import { getOperationParameters } from './getOperationParameters';
 import { getOperation } from './operation';
-import { allowedServiceMethods } from './service';
+
+const allowedServiceMethods = ['delete', 'get', 'head', 'options', 'patch', 'post', 'put'] as const;
 
 const getNewService = (operation: Operation): Service => ({
     $refs: [],
