@@ -1,8 +1,59 @@
-import type { ApiRequestOptions } from './ApiRequestOptions';
-import type { TConfig, TResult } from './types';
+{{~#equals @root.$config.client 'angular'~}}
+import type { HttpResponse } from '@angular/common/http';
+{{~/equals~}}
+{{~#equals @root.$config.client 'axios'~}}
+import type { AxiosRequestConfig, AxiosResponse } from 'axios';
+{{~/equals~}}
+{{~#equals @root.$config.client 'node'~}}
+import type { RequestInit, Response } from 'node-fetch';
+{{~/equals~}}
 
-type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
+import type { ApiRequestOptions } from './ApiRequestOptions';
+{{#if @root.$config.useOptions}}
+{{#equals @root.$config.serviceResponse 'generics'}}
+import type { TConfig, TResult } from './types';
+{{else}}
+import type { TResult } from './types';
+{{/equals}}
+{{else}}
+import type { TResult } from './types';
+{{/if}}
+
 type Headers = Record<string, string>;
+{{#equals @root.$config.client 'angular'}}
+type Middleware<T> = (value: T) => T;
+{{else}}
+type Middleware<T> = (value: T) => T | Promise<T>;
+{{/equals}}
+type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
+
+interface Interceptor<T> {
+  _fns: ReadonlyArray<Middleware<T>>;
+  eject: (fn: Middleware<T>) => void;
+  use: (fn: Middleware<T>) => void;
+}
+
+export class Interceptors<T> {
+  _fns: Middleware<T>[];
+
+  constructor() {
+    this._fns = [];
+  }
+
+  eject(fn: Middleware<T>) {
+    const index = this._fns.indexOf(fn);
+    if (index !== -1) {
+      this._fns = [
+        ...this._fns.slice(0, index),
+        ...this._fns.slice(index + 1),
+      ];
+    }
+  }
+
+  use(fn: Middleware<T>) {
+    this._fns = [...this._fns, fn];
+  }
+}
 
 export type OpenAPIConfig = {
 	BASE: string;
@@ -15,6 +66,27 @@ export type OpenAPIConfig = {
 	USERNAME?: string | Resolver<string> | undefined;
 	VERSION: string;
 	WITH_CREDENTIALS: boolean;
+	interceptors: {
+		{{~#equals @root.$config.client 'angular'~}}
+		response: Interceptor<HttpResponse<any>>;
+		{{~/equals~}}
+		{{~#equals @root.$config.client 'axios'~}}
+		request: Interceptor<AxiosRequestConfig>;
+		response: Interceptor<AxiosResponse>;
+		{{~/equals~}}
+		{{~#equals @root.$config.client 'fetch'~}}
+		request: Interceptor<RequestInit>;
+		response: Interceptor<Response>;
+		{{~/equals~}}
+		{{~#equals @root.$config.client 'node'~}}
+		request: Interceptor<RequestInit>;
+		response: Interceptor<Response>;
+		{{~/equals~}}
+		{{~#equals @root.$config.client 'xhr'~}}
+		request: Interceptor<XMLHttpRequest>;
+		response: Interceptor<XMLHttpRequest>;
+		{{~/equals~}}
+	};
 };
 
 export const OpenAPI: OpenAPIConfig = {
@@ -28,8 +100,16 @@ export const OpenAPI: OpenAPIConfig = {
 	USERNAME: undefined,
 	VERSION: '{{{version}}}',
 	WITH_CREDENTIALS: false,
+	interceptors: {
+		{{~#notEquals @root.$config.client 'angular'~}}
+		request: new Interceptors(),
+		{{~/notEquals~}}
+		response: new Interceptors(),
+	},
 };
 
+{{~#if @root.$config.useOptions~}}
+{{~#equals @root.$config.serviceResponse 'generics'~}}
 export const mergeOpenApiConfig = <T extends TResult>(config: OpenAPIConfig, overrides: TConfig<T>) => {
 	const merged = { ...config };
 	Object.entries(overrides)
@@ -43,3 +123,5 @@ export const mergeOpenApiConfig = <T extends TResult>(config: OpenAPIConfig, ove
 		});
 	return merged;
 };
+{{~/equals~}}
+{{~/if~}}

@@ -72,6 +72,9 @@ export const request = <T>(config: OpenAPIConfig, http: HttpClient, options: Api
 			return sendRequest<T>(config, options, http, url, body, formData, headers);
 		}),
 		map(response => {
+			for (const fn of config.interceptors.response._fns) {
+				response = fn(response)
+			}
 			const responseBody = getResponseBody(response);
 			const responseHeader = getResponseHeader(response, options.responseHeader);
 			return {
