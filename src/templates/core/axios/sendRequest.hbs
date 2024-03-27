@@ -10,16 +10,20 @@ export const sendRequest = async <T>(
 ): Promise<AxiosResponse<T>> => {
 	const controller = new AbortController();
 
-	const requestConfig: AxiosRequestConfig = {
-		url,
-		headers,
+	let requestConfig: AxiosRequestConfig = {
 		data: body ?? formData,
+		headers,
 		method: options.method,
-		withCredentials: config.WITH_CREDENTIALS,
 		signal: controller.signal,
+		url,
+		withCredentials: config.WITH_CREDENTIALS,
 	};
 
 	onCancel(() => controller.abort());
+
+	for (const fn of config.interceptors.request._fns) {
+		requestConfig = await fn(requestConfig)
+	}
 
 	try {
 		return await axiosClient.request(requestConfig);

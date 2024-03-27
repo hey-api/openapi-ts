@@ -7,7 +7,7 @@ export const sendRequest = async (
 	headers: Headers,
 	onCancel: OnCancel
 ): Promise<XMLHttpRequest> => {
-	const xhr = new XMLHttpRequest();
+	let xhr = new XMLHttpRequest();
 	xhr.open(options.method, url, true);
 	xhr.withCredentials = config.WITH_CREDENTIALS;
 
@@ -15,10 +15,15 @@ export const sendRequest = async (
 		xhr.setRequestHeader(key, value);
 	});
 
-	return new Promise<XMLHttpRequest>((resolve, reject) => {
+	return new Promise<XMLHttpRequest>(async (resolve, reject) => {
 		xhr.onload = () => resolve(xhr);
 		xhr.onabort = () => reject(new Error('Request aborted'));
 		xhr.onerror = () => reject(new Error('Network error'));
+
+		for (const fn of config.interceptors.request._fns) {
+			xhr = await fn(xhr)
+		}
+
 		xhr.send(body ?? formData);
 
 		onCancel(() => xhr.abort());

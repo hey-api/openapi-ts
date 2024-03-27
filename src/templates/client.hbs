@@ -9,6 +9,7 @@ import { OpenAPI } from './core/OpenAPI';
 {{else}}
 import type { BaseHttpRequest } from './core/BaseHttpRequest';
 import type { OpenAPIConfig } from './core/OpenAPI';
+import { Interceptors } from './core/OpenAPI';
 import { {{{httpRequest}}} } from './core/{{{httpRequest}}}';
 {{/equals}}
 
@@ -68,6 +69,10 @@ export class {{{@root.$config.name}}} {
 			PASSWORD: config?.PASSWORD,
 			HEADERS: config?.HEADERS,
 			ENCODE_PATH: config?.ENCODE_PATH,
+			interceptors: {
+                request: new Interceptors(),
+                response: new Interceptors(),
+            },
 		});
 
 		{{#each services}}
