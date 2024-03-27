@@ -120,11 +120,6 @@ const dataParameters = (parameters: OperationParameter[]) => {
     return output.join(', ');
 };
 
-const debugThis = (value: unknown) => {
-    console.log(value);
-    return '';
-};
-
 // same as `>isRequired` partial
 const isRequired = (model: Pick<Model, 'default' | 'isRequired'>) => (model.isRequired && !model.default ? '' : '?');
 
@@ -161,7 +156,6 @@ const operationDataType = (config: Config, service: Service) => {
 export const registerHandlebarHelpers = (config: Config, client: Client): void => {
     Handlebars.registerHelper('camelCase', camelCase);
     Handlebars.registerHelper('dataParameters', dataParameters);
-    Handlebars.registerHelper('debugThis', debugThis);
     Handlebars.registerHelper('enumKey', enumKey);
     Handlebars.registerHelper('enumName', enumName);
     Handlebars.registerHelper('enumUnionType', enumUnionType);
