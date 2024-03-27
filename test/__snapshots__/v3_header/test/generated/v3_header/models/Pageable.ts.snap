@@ -1,0 +1,9 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+
+export type Pageable = {
+    page?: number;
+    size?: number;
+    sort?: Array<string>;
+};

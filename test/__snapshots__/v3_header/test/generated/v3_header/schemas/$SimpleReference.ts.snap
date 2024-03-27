@@ -1,0 +1,7 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $SimpleReference = {
+    type: 'ModelWithString',
+    description: `This is a simple reference`,
+} as const;

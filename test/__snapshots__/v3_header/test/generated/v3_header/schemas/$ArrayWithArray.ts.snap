@@ -1,0 +1,12 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $ArrayWithArray = {
+    type: 'array',
+    contains: {
+        type: 'array',
+        contains: {
+            type: 'ModelWithString',
+        },
+    },
+} as const;

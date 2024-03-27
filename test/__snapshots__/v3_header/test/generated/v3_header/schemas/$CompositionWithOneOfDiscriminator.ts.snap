@@ -1,0 +1,15 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $CompositionWithOneOfDiscriminator = {
+    type: 'one-of',
+    description: `This is a model with one property with a 'one of' relationship where the options are not $ref`,
+    contains: [
+        {
+            type: 'ModelCircle',
+        },
+        {
+            type: 'ModelSquare',
+        },
+    ],
+} as const;

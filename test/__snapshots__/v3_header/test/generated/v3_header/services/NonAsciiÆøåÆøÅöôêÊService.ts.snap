@@ -1,0 +1,33 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+import type { NonAsciiStringæøåÆØÅöôêÊ字符串 } from '../models/NonAsciiStringæøåÆØÅöôêÊ字符串';
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+
+export type TDataNonAsciiæøåÆøÅöôêÊ字符串 = {
+    /**
+     * Dummy input param
+     */
+    nonAsciiParamæøåÆøÅöôêÊ: number;
+};
+
+export class NonAsciiÆøåÆøÅöôêÊService {
+    /**
+     * @returns NonAsciiStringæøåÆØÅöôêÊ字符串 Successful response
+     * @throws ApiError
+     */
+    public static nonAsciiæøåÆøÅöôêÊ字符串(
+        data: TDataNonAsciiæøåÆøÅöôêÊ字符串
+    ): CancelablePromise<Array<NonAsciiStringæøåÆØÅöôêÊ字符串>> {
+        const { nonAsciiParamæøåÆøÅöôêÊ } = data;
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
+            query: {
+                nonAsciiParamæøåÆØÅöôêÊ: nonAsciiParamæøåÆøÅöôêÊ,
+            },
+        });
+    }
+}

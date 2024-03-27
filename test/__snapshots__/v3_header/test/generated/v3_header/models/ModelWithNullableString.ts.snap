@@ -1,0 +1,25 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+
+/**
+ * This is a model with one string property
+ */
+export type ModelWithNullableString = {
+    /**
+     * This is a simple string property
+     */
+    nullableProp1?: string | null;
+    /**
+     * This is a simple string property
+     */
+    nullableRequiredProp1: string | null;
+    /**
+     * This is a simple string property
+     */
+    nullableProp2?: string | null;
+    /**
+     * This is a simple string property
+     */
+    nullableRequiredProp2: string | null;
+};

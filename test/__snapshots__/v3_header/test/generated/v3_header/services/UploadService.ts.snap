@@ -1,0 +1,31 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+
+export type TDataUploadFile = {
+    /**
+     * Supply a file reference for upload
+     */
+    file: Blob;
+};
+
+export class UploadService {
+    /**
+     * @returns boolean
+     * @throws ApiError
+     */
+    public static uploadFile(data: TDataUploadFile): CancelablePromise<boolean> {
+        const { file } = data;
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v{api-version}/upload',
+            formData: {
+                file,
+            },
+        });
+    }
+}

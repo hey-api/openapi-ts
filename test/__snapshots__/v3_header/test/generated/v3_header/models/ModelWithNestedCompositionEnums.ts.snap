@@ -1,0 +1,8 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+import type { ModelWithNestedArrayEnumsDataFoo } from './ModelWithNestedArrayEnumsDataFoo';
+
+export type ModelWithNestedCompositionEnums = {
+    foo?: ModelWithNestedArrayEnumsDataFoo;
+};

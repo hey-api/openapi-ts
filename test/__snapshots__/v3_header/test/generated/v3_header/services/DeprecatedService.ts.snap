@@ -1,0 +1,31 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+import type { DeprecatedModel } from '../models/DeprecatedModel';
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+
+export type TDataDeprecatedCall = {
+    /**
+     * This parameter is deprecated
+     */
+    parameter: DeprecatedModel | null;
+};
+
+export class DeprecatedService {
+    /**
+     * @deprecated
+     * @throws ApiError
+     */
+    public static deprecatedCall(data: TDataDeprecatedCall): CancelablePromise<void> {
+        const { parameter } = data;
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v{api-version}/parameters/deprecated',
+            headers: {
+                parameter,
+            },
+        });
+    }
+}

@@ -1,0 +1,12 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+
+/**
+ * This is a model with ordered properties
+ */
+export type ModelWithOrderedProperties = {
+    zebra?: string;
+    apple?: string;
+    hawaii?: string;
+};

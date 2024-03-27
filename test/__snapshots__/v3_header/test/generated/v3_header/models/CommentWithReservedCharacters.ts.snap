@@ -1,0 +1,8 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+
+/**
+ * Testing reserved characters in string: * inline * and ** inline ** should work
+ */
+export type CommentWithReservedCharacters = number;

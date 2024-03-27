@@ -1,0 +1,9 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+import type { ModelWithString } from './ModelWithString';
+
+/**
+ * This is a simple array with references
+ */
+export type ArrayWithReferences = Array<ModelWithString>;

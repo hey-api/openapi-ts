@@ -1,0 +1,11 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+
+/**
+ * This is a simple array with properties
+ */
+export type ArrayWithProperties = Array<{
+    foo?: string;
+    bar?: string;
+}>;

@@ -1,0 +1,36 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+import type { ModelWithString } from '../models/ModelWithString';
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+
+export type TDataPostApiFormData = {
+    /**
+     * A reusable request body
+     */
+    formData?: ModelWithString;
+    /**
+     * This is a reusable parameter
+     */
+    parameter?: string;
+};
+
+export class FormDataService {
+    /**
+     * @throws ApiError
+     */
+    public static postApiFormData(data: TDataPostApiFormData = {}): CancelablePromise<void> {
+        const { formData, parameter } = data;
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v{api-version}/formData/',
+            query: {
+                parameter,
+            },
+            formData: formData,
+            mediaType: 'multipart/form-data',
+        });
+    }
+}

@@ -126,4 +126,27 @@ describe('v3', () => {
             expect(content).toMatchFileSnapshot(`./__snapshots__/v3-legacy-enums/${file}.snap`);
         });
     });
+
+    it('should insert file header', async () => {
+        await createClient({
+            client: 'fetch',
+            enums: false,
+            exportCore: true,
+            exportModels: true,
+            exportSchemas: true,
+            exportServices: true,
+            input: './test/spec/v3.json',
+            output: './test/generated/v3_header/',
+            useOptions: true,
+            useLegacyEnums: false,
+            header: `/**
+            * generated using openapi-ts -- do no edit
+            */`,
+        });
+
+        sync('./test/generated/v3_header/**/*.ts').forEach(file => {
+            const content = readFileSync(file, 'utf8').toString();
+            expect(content).toMatchFileSnapshot(`./__snapshots__/v3_header/${file}.snap`);
+        });
+    });
 });

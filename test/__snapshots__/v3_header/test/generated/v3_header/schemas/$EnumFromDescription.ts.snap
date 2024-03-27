@@ -1,0 +1,7 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+export const $EnumFromDescription = {
+    type: 'number',
+    description: `Success=1,Warning=2,Error=3`,
+} as const;

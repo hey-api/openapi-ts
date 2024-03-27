@@ -1,0 +1,13 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
+
+/**
+ * This is a model with one number property
+ */
+export type ModelWithInteger = {
+    /**
+     * This is a simple number property
+     */
+    prop?: number;
+};
