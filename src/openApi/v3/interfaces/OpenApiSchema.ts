@@ -1,5 +1,5 @@
-import type { WithEnumExtension } from '../../../types/client';
 import type { Dictionary } from '../../common/interfaces/Dictionary';
+import type { WithEnumExtension } from '../../common/interfaces/WithEnumExtension';
 import type { OpenApiDiscriminator } from './OpenApiDiscriminator';
 import type { OpenApiExternalDocs } from './OpenApiExternalDocs';
 import type { OpenApiReference } from './OpenApiReference';

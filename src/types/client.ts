@@ -2,11 +2,6 @@ export interface ModelComposition extends Pick<Model, '$refs' | 'enums' | 'impor
     export: Extract<Model['export'], 'all-of' | 'any-of' | 'one-of'>;
 }
 
-export interface WithEnumExtension {
-    'x-enum-descriptions'?: ReadonlyArray<string>;
-    'x-enum-varnames'?: ReadonlyArray<string>;
-}
-
 export interface Enum {
     'x-enum-description'?: string;
     'x-enum-varname'?: string;
