@@ -1,1 +1,4 @@
-export type Enum1 = 'Bird' | 'Dog';
+export enum Enum1 {
+    BIRD = 'Bird',
+    DOG = 'Dog',
+}
