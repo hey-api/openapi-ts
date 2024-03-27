@@ -20,11 +20,7 @@ import type { TResult } from './types';
 {{/if}}
 
 type Headers = Record<string, string>;
-{{#equals @root.$config.client 'angular'}}
-type Middleware<T> = (value: T) => T;
-{{else}}
 type Middleware<T> = (value: T) => T | Promise<T>;
-{{/equals}}
 type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
 
 export class Interceptors<T> {
