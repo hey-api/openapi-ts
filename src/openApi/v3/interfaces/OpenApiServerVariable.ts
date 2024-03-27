@@ -1,4 +1,4 @@
-import type { WithEnumExtension } from '../../../types/client';
+import type { WithEnumExtension } from '../../common/interfaces/WithEnumExtension';
 
 /**
  * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.1.0.md#server-variable-object
