@@ -216,7 +216,7 @@ OpenAPI.interceptors.response.use(async (response) => {
 
 If you need to remove an interceptor, pass the same function to `OpenAPI.interceptors.request.eject()` or `OpenAPI.interceptors.response.eject()`.
 
-> ⚠️ Angular client does not currently support request interceptors and async response interceptors.
+> ⚠️ Angular client does not currently support request interceptors.
 
 ## Migrating
 
