@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.29.1
+
+### Patch Changes
+
+- Properly export enums when using useLegacyEnums ([#158](https://github.com/hey-api/openapi-ts/pull/158))
+
 ## 0.29.0
 
 ### Minor Changes
