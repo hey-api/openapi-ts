@@ -53,5 +53,5 @@ const exportsModels = (config: Config, client: Client) => {
 
         return result.join('\n');
     });
-    return output.join('\n');
+    return [config.header, output.join('\n')].filter(Boolean).join('\n');
 };

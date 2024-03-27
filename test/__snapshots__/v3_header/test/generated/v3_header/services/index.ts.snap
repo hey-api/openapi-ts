@@ -1,3 +1,6 @@
+/**
+ * generated using openapi-ts -- do no edit
+ */
 export { CollectionFormatService } from './CollectionFormatService';
 export { ComplexService } from './ComplexService';
 export { DefaultService } from './DefaultService';
