@@ -1,5 +1,5 @@
-import type { ModelWithArrayReadOnlyAndWriteOnly } from '../models/ModelWithArrayReadOnlyAndWriteOnly';
-import type { ModelWithReadOnlyAndWriteOnly } from '../models/ModelWithReadOnlyAndWriteOnly';
+import type { ModelWithArrayReadOnlyAndWriteOnly } from '../models';
+import type { ModelWithReadOnlyAndWriteOnly } from '../models';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';

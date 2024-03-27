@@ -1,3 +1,0 @@
-export const $EnumWithExtensions = {
-    type: 'Enum',
-} as const;

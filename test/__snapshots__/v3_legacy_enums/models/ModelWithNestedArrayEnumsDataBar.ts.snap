@@ -1,4 +1,0 @@
-export enum ModelWithNestedArrayEnumsDataBar {
-    BAZ = 'baz',
-    QUX = 'qux',
-}

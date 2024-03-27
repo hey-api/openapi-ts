@@ -1,4 +1,0 @@
-export const $NonAsciiStringæøåÆØÅöôêÊ字符串 = {
-    type: 'string',
-    description: `A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)`,
-} as const;

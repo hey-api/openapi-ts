@@ -1,6 +1,0 @@
-export const $DictionaryWithString = {
-    type: 'dictionary',
-    contains: {
-        type: 'string',
-    },
-} as const;

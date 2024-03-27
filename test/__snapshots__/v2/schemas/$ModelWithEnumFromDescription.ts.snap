@@ -1,9 +1,0 @@
-export const $ModelWithEnumFromDescription = {
-    description: `This is a model with one enum`,
-    properties: {
-        test: {
-            type: 'number',
-            description: `Success=1,Warning=2,Error=3`,
-        },
-    },
-} as const;

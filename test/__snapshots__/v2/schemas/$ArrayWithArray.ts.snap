@@ -1,9 +1,0 @@
-export const $ArrayWithArray = {
-    type: 'array',
-    contains: {
-        type: 'array',
-        contains: {
-            type: 'ModelWithString',
-        },
-    },
-} as const;

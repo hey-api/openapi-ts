@@ -4,7 +4,6 @@ import path from 'node:path';
 import type { Client } from '../../types/client';
 import type { Config } from '../../types/config';
 import type { Templates } from '../handlebars';
-import { sortByName } from '../sort';
 
 /**
  * Generate Schemas using the Handlebar template and write to disk.
@@ -19,17 +18,15 @@ export const writeClientSchemas = async (
     outputPath: string,
     config: Config
 ): Promise<void> => {
-    // Generate file for each models schema.
+    // Generate file with all schemas
+    const results: string[] = [];
     for (const model of client.models) {
-        const file = path.resolve(outputPath, `$${model.name}.ts`);
-        const templateResult = templates.exports.schema({
+        const result = templates.exports.schema({
             $config: config,
             ...model,
         });
-        await writeFileSync(file, templateResult);
+        results.push(result);
     }
-    // Generate index file exporting all generated schema files.
-    const file = path.resolve(outputPath, 'index.ts');
-    const content = sortByName(client.models).map(model => `export { $${model.name} } from './$${model.name}';`);
-    await writeFileSync(file, content.join('\n'));
+    const file = path.resolve(outputPath, 'schemas.ts');
+    await writeFileSync(file, results.join('\n\n'));
 };

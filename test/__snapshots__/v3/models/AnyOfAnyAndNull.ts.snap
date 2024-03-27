@@ -1,3 +1,0 @@
-export type AnyOfAnyAndNull = {
-    data?: unknown | null;
-};

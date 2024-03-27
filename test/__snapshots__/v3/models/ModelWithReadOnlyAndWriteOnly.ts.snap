@@ -1,5 +1,0 @@
-export type ModelWithReadOnlyAndWriteOnly = {
-    foo: string;
-    readonly bar: string;
-    baz: string;
-};
