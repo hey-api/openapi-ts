@@ -1,0 +1,86 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import type { Observable } from 'rxjs';
+import type { ModelWithArray } from '../models/ModelWithArray';
+import type { ModelWithDictionary } from '../models/ModelWithDictionary';
+import type { ModelWithEnum } from '../models/ModelWithEnum';
+import type { ModelWithString } from '../models/ModelWithString';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+
+export type TDataComplexTypes = {
+    /**
+     * Parameter containing object
+     */
+    parameterObject: {
+        first?: {
+            second?: {
+                third?: string;
+            };
+        };
+    };
+    /**
+     * Parameter containing reference
+     */
+    parameterReference: ModelWithString;
+};
+export type TDataComplexParams = {
+    id: number;
+    requestBody?: {
+        readonly key: string | null;
+        name: string | null;
+        enabled?: boolean;
+        readonly type: 'Monkey' | 'Horse' | 'Bird';
+        listOfModels?: Array<ModelWithString> | null;
+        listOfStrings?: Array<string> | null;
+        parameters: ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary;
+        readonly user?: {
+            readonly id?: number;
+            readonly name?: string | null;
+        };
+    };
+};
+
+@Injectable({
+    providedIn: 'root',
+})
+export class ComplexService {
+    constructor(public readonly http: HttpClient) {}
+
+    /**
+     * @returns ModelWithString Successful response
+     * @throws ApiError
+     */
+    public complexTypes(data: TDataComplexTypes): Observable<Array<ModelWithString>> {
+        const { parameterObject, parameterReference } = data;
+        return __request(OpenAPI, this.http, {
+            method: 'GET',
+            url: '/api/v{api-version}/complex',
+            query: {
+                parameterObject,
+                parameterReference,
+            },
+            errors: {
+                400: `400 server error`,
+                500: `500 server error`,
+            },
+        });
+    }
+
+    /**
+     * @returns ModelWithString Success
+     * @throws ApiError
+     */
+    public complexParams(data: TDataComplexParams): Observable<ModelWithString> {
+        const { id, requestBody } = data;
+        return __request(OpenAPI, this.http, {
+            method: 'PUT',
+            url: '/api/v{api-version}/complex/{id}',
+            path: {
+                id,
+            },
+            body: requestBody,
+            mediaType: 'application/json-patch+json',
+        });
+    }
+}

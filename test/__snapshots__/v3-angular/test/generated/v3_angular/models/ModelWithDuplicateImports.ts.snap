@@ -1,0 +1,10 @@
+import type { ModelWithString } from './ModelWithString';
+
+/**
+ * This is a model with duplicated imports
+ */
+export type ModelWithDuplicateImports = {
+    propA?: ModelWithString;
+    propB?: ModelWithString;
+    propC?: ModelWithString;
+};

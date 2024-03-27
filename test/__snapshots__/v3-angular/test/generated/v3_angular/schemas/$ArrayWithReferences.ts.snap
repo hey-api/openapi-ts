@@ -1,0 +1,6 @@
+export const $ArrayWithReferences = {
+    type: 'array',
+    contains: {
+        type: 'ModelWithString',
+    },
+} as const;

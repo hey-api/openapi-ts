@@ -1,0 +1,40 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import type { Observable } from 'rxjs';
+import type { ModelWithString } from '../models/ModelWithString';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+
+export type TDataPostApiFormData = {
+    /**
+     * A reusable request body
+     */
+    formData?: ModelWithString;
+    /**
+     * This is a reusable parameter
+     */
+    parameter?: string;
+};
+
+@Injectable({
+    providedIn: 'root',
+})
+export class FormDataService {
+    constructor(public readonly http: HttpClient) {}
+
+    /**
+     * @throws ApiError
+     */
+    public postApiFormData(data: TDataPostApiFormData = {}): Observable<void> {
+        const { formData, parameter } = data;
+        return __request(OpenAPI, this.http, {
+            method: 'POST',
+            url: '/api/v{api-version}/formData/',
+            query: {
+                parameter,
+            },
+            formData: formData,
+            mediaType: 'multipart/form-data',
+        });
+    }
+}

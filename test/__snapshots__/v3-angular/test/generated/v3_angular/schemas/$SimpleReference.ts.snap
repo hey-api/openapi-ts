@@ -1,0 +1,4 @@
+export const $SimpleReference = {
+    type: 'ModelWithString',
+    description: `This is a simple reference`,
+} as const;

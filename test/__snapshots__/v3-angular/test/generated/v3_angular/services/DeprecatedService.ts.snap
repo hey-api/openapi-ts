@@ -1,0 +1,35 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import type { Observable } from 'rxjs';
+import type { DeprecatedModel } from '../models/DeprecatedModel';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+
+export type TDataDeprecatedCall = {
+    /**
+     * This parameter is deprecated
+     */
+    parameter: DeprecatedModel | null;
+};
+
+@Injectable({
+    providedIn: 'root',
+})
+export class DeprecatedService {
+    constructor(public readonly http: HttpClient) {}
+
+    /**
+     * @deprecated
+     * @throws ApiError
+     */
+    public deprecatedCall(data: TDataDeprecatedCall): Observable<void> {
+        const { parameter } = data;
+        return __request(OpenAPI, this.http, {
+            method: 'POST',
+            url: '/api/v{api-version}/parameters/deprecated',
+            headers: {
+                parameter,
+            },
+        });
+    }
+}
