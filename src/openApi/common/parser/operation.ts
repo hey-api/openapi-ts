@@ -1,7 +1,7 @@
 import camelCase from 'camelcase';
 
-import type { OperationError, OperationResponse } from '../../../types/client';
 import type { Config } from '../../../types/config';
+import type { OperationError, OperationResponse } from '../interfaces/client';
 import { reservedWords } from './reservedWords';
 import { sanitizeOperationName, sanitizeOperationParameterName } from './sanitize';
 

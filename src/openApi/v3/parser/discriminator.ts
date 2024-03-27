@@ -1,4 +1,4 @@
-import type { Model } from '../../../types/client';
+import type { Model } from '../../common/interfaces/client';
 import type { Dictionary } from '../../common/interfaces/Dictionary';
 import { stripNamespace } from '../../common/parser/stripNamespace';
 import type { OpenApi } from '../interfaces/OpenApi';

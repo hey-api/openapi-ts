@@ -1,4 +1,5 @@
-import type { Client, Enum, Model, Operation, Service } from '../types/client';
+import type { Enum, Model, Operation, Service } from '../openApi';
+import type { Client } from '../types/client';
 import { sort } from './sort';
 import { unique } from './unique';
 

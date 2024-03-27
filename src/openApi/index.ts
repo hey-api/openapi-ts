@@ -4,6 +4,7 @@ import { OpenApi } from './common/interfaces/OpenApi';
 import { parse as parseV2 } from './v2/index';
 import { parse as parseV3 } from './v3/index';
 
+export { Enum, Model, Operation, OperationParameter, Service } from './common/interfaces/client';
 export { OpenApi } from './common/interfaces/OpenApi';
 
 /**

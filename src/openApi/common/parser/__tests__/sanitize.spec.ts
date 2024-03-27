@@ -8,47 +8,46 @@ import {
 } from '../sanitize';
 
 describe('sanitizeOperationName', () => {
-    it('should remove/replace illegal characters', () => {
-        expect(sanitizeOperationName('abc')).toEqual('abc');
-        expect(sanitizeOperationName('æbc')).toEqual('æbc');
-        expect(sanitizeOperationName('æb.c')).toEqual('æb-c');
-        expect(sanitizeOperationName('1æb.c')).toEqual('æb-c');
+    it.each([
+        { input: 'abc', expected: 'abc' },
+        { input: 'æbc', expected: 'æbc' },
+        { input: 'æb.c', expected: 'æb-c' },
+        { input: '1æb.c', expected: 'æb-c' },
+    ])('sanitizeOperationName($input) -> $expected', ({ input, expected }) => {
+        expect(sanitizeOperationName(input)).toEqual(expected);
     });
 });
 
 describe('sanitizeOperationParameterName', () => {
-    it('should remove/replace illegal characters', () => {
-        expect(sanitizeOperationParameterName('abc')).toEqual('abc');
-        expect(sanitizeOperationParameterName('æbc')).toEqual('æbc');
-        expect(sanitizeOperationParameterName('æb.c')).toEqual('æb-c');
-        expect(sanitizeOperationParameterName('1æb.c')).toEqual('æb-c');
-        expect(sanitizeOperationParameterName('unknown[]')).toEqual('unknownArray');
+    it.each([
+        { input: 'abc', expected: 'abc' },
+        { input: 'æbc', expected: 'æbc' },
+        { input: 'æb.c', expected: 'æb-c' },
+        { input: '1æb.c', expected: 'æb-c' },
+        { input: 'unknown[]', expected: 'unknownArray' },
+    ])('sanitizeOperationParameterName($input) -> $expected', ({ input, expected }) => {
+        expect(sanitizeOperationParameterName(input)).toEqual(expected);
     });
 });
 
 describe('sanitizeServiceName', () => {
-    it('should remove/replace illegal characters', () => {
-        expect(sanitizeServiceName('abc')).toEqual('abc');
-        expect(sanitizeServiceName('æbc')).toEqual('æbc');
-        expect(sanitizeServiceName('æb.c')).toEqual('æb-c');
-        expect(sanitizeServiceName('1æb.c')).toEqual('æb-c');
+    it.each([
+        { input: 'abc', expected: 'abc' },
+        { input: 'æbc', expected: 'æbc' },
+        { input: 'æb.c', expected: 'æb-c' },
+        { input: '1æb.c', expected: 'æb-c' },
+    ])('sanitizeServiceName($input) -> $expected', ({ input, expected }) => {
+        expect(sanitizeServiceName(input)).toEqual(expected);
     });
 });
 
 describe('sanitizeTypeName', () => {
-    it('should remove/replace illegal characters', () => {
-        expect(sanitizeTypeName('abc')).toEqual('abc');
-        expect(sanitizeTypeName('æbc')).toEqual('æbc');
-        expect(sanitizeTypeName('æb.c')).toEqual('æb_c');
-        expect(sanitizeTypeName('1æb.c')).toEqual('æb_c');
-    });
-});
-
-describe('sanitizeTypeName', () => {
-    it('should remove/replace illegal characters', () => {
-        expect(sanitizeTypeName('abc')).toEqual('abc');
-        expect(sanitizeTypeName('æbc')).toEqual('æbc');
-        expect(sanitizeTypeName('æb.c')).toEqual('æb_c');
-        expect(sanitizeTypeName('1æb.c')).toEqual('æb_c');
+    it.each([
+        { input: 'abc', expected: 'abc' },
+        { input: 'æbc', expected: 'æbc' },
+        { input: 'æb.c', expected: 'æb_c' },
+        { input: '1æb.c', expected: 'æb_c' },
+    ])('sanitizeTypeName($input) -> $expected', ({ input, expected }) => {
+        expect(sanitizeTypeName(input)).toEqual(expected);
     });
 });
