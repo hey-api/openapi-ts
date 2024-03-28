@@ -37,7 +37,6 @@ import { {{{name}}}{{{@root.$config.postfixServices}}} } from './services/{{{nam
 				HEADERS: OpenAPI?.HEADERS,
 				ENCODE_PATH: OpenAPI?.ENCODE_PATH,
 				interceptors: {
-					request: new Interceptors(),
 					response: new Interceptors(),
 				},
 			} as OpenAPIConfig,
