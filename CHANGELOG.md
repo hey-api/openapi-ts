@@ -1,5 +1,17 @@
 # @hey-api/openapi-ts
 
+## 0.31.0
+
+### Minor Changes
+
+- generate all models in single `models.ts` file ([#168](https://github.com/hey-api/openapi-ts/pull/168))
+
+- generate all schemas in single `schemas.ts` file ([#168](https://github.com/hey-api/openapi-ts/pull/168))
+
+### Patch Changes
+
+- fix various warnings in generated client code ([#164](https://github.com/hey-api/openapi-ts/pull/164))
+
 ## 0.30.0
 
 ### Minor Changes
