@@ -18,13 +18,13 @@ export interface OnCancel {
 }
 
 export class CancelablePromise<T> implements Promise<T> {
-	private isResolved: boolean;
-	private isRejected: boolean;
-	private isCancelled_: boolean;
+	private _isResolved: boolean;
+	private _isRejected: boolean;
+	private _isCancelled: boolean;
 	readonly cancelHandlers: (() => void)[];
 	readonly promise: Promise<T>;
-	private resolve?: (value: T | PromiseLike<T>) => void;
-	private reject?: (reason?: unknown) => void;
+	private _resolve?: (value: T | PromiseLike<T>) => void;
+	private _reject?: (reason?: unknown) => void;
 
 	constructor(
 		executor: (
@@ -33,47 +33,47 @@ export class CancelablePromise<T> implements Promise<T> {
 			onCancel: OnCancel
 		) => void
 	) {
-		this.isResolved = false;
-		this.isRejected = false;
-		this.isCancelled_ = false;
+		this._isResolved = false;
+		this._isRejected = false;
+		this._isCancelled = false;
 		this.cancelHandlers = [];
 		this.promise = new Promise<T>((resolve, reject) => {
-			this.resolve = resolve;
-			this.reject = reject;
+			this._resolve = resolve;
+			this._reject = reject;
 
 			const onResolve = (value: T | PromiseLike<T>): void => {
-				if (this.isResolved || this.isRejected || this.isCancelled) {
+				if (this._isResolved || this._isRejected || this._isCancelled) {
 					return;
 				}
-				this.isResolved = true;
-				if (this.resolve) this.resolve(value);
+				this._isResolved = true;
+				if (this._resolve) this._resolve(value);
 			};
 
 			const onReject = (reason?: unknown): void => {
-				if (this.isResolved || this.isRejected || this.isCancelled) {
+				if (this._isResolved || this._isRejected || this._isCancelled) {
 					return;
 				}
-				this.isRejected = true;
-				if (this.reject) this.reject(reason);
+				this._isRejected = true;
+				if (this._reject) this._reject(reason);
 			};
 
 			const onCancel = (cancelHandler: () => void): void => {
-				if (this.isResolved || this.isRejected || this.isCancelled) {
+				if (this._isResolved || this._isRejected || this._isCancelled) {
 					return;
 				}
 				this.cancelHandlers.push(cancelHandler);
 			};
 
 			Object.defineProperty(onCancel, 'isResolved', {
-				get: (): boolean => this.isResolved,
+				get: (): boolean => this._isResolved,
 			});
 
 			Object.defineProperty(onCancel, 'isRejected', {
-				get: (): boolean => this.isRejected,
+				get: (): boolean => this._isRejected,
 			});
 
 			Object.defineProperty(onCancel, 'isCancelled', {
-				get: (): boolean => this.isCancelled,
+				get: (): boolean => this._isCancelled,
 			});
 
 			return executor(onResolve, onReject, onCancel as OnCancel);
@@ -102,10 +102,10 @@ export class CancelablePromise<T> implements Promise<T> {
 	}
 
 	public cancel(): void {
-		if (this.isResolved || this.isRejected || this.isCancelled) {
+		if (this._isResolved || this._isRejected || this._isCancelled) {
 			return;
 		}
-		this.isCancelled_ = true;
+		this._isCancelled_ = true;
 		if (this.cancelHandlers.length) {
 			try {
 				for (const cancelHandler of this.cancelHandlers) {
@@ -117,10 +117,10 @@ export class CancelablePromise<T> implements Promise<T> {
 			}
 		}
 		this.cancelHandlers.length = 0;
-		if (this.reject) this.reject(new CancelError('Request aborted'));
+		if (this._reject) this._reject(new CancelError('Request aborted'));
 	}
 
 	public get isCancelled(): boolean {
-		return this.isCancelled_;
+		return this._isCancelled;
 	}
 }
