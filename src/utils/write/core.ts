@@ -53,13 +53,15 @@ export const writeClientCore = async (
             ...context,
         })
     );
-    await writeFileSync(
-        path.resolve(outputPath, 'CancelablePromise.ts'),
-        templates.core.cancelablePromise({
-            $config: config,
-            ...context,
-        })
-    );
+    if (config.client !== 'angular') {
+        await writeFileSync(
+            path.resolve(outputPath, 'CancelablePromise.ts'),
+            templates.core.cancelablePromise({
+                $config: config,
+                ...context,
+            })
+        );
+    }
     await writeFileSync(
         path.resolve(outputPath, 'request.ts'),
         templates.core.request({
