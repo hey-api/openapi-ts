@@ -1,4 +1,0 @@
-/**
- * This is a reusable parameter
- */
-export type SimpleParameter = string;

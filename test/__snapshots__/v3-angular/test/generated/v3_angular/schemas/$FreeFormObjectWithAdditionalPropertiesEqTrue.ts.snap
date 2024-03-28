@@ -1,6 +1,0 @@
-export const $FreeFormObjectWithAdditionalPropertiesEqTrue = {
-    type: 'dictionary',
-    contains: {
-        properties: {},
-    },
-} as const;

@@ -1,6 +1,0 @@
-export const $FreeFormObjectWithoutAdditionalProperties = {
-    type: 'dictionary',
-    contains: {
-        properties: {},
-    },
-} as const;
