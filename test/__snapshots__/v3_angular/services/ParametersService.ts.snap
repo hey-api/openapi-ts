@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import type { Observable } from 'rxjs';
-import type { ModelWithNestedArrayEnumsDataFoo } from '../models';
-import type { ModelWithOneOfEnum } from '../models';
-import type { ModelWithString } from '../models';
-import type { Pageable } from '../models';
+import type { ModelWithNestedArrayEnumsDataFoo, ModelWithOneOfEnum, ModelWithString, Pageable } from '../models';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 
