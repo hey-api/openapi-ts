@@ -1,7 +1,4 @@
-import type { ModelWithNestedArrayEnumsDataFoo } from '../models';
-import type { ModelWithOneOfEnum } from '../models';
-import type { ModelWithString } from '../models';
-import type { Pageable } from '../models';
+import type { ModelWithNestedArrayEnumsDataFoo, ModelWithOneOfEnum, ModelWithString, Pageable } from '../models';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';

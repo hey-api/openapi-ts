@@ -1,6 +1,4 @@
-import type { ModelThatExtends } from '../models';
-import type { ModelThatExtendsExtends } from '../models';
-import type { ModelWithString } from '../models';
+import type { ModelThatExtends, ModelThatExtendsExtends, ModelWithString } from '../models';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';

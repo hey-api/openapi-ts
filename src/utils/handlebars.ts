@@ -101,8 +101,10 @@ const escapeComment = (value: string) =>
         .replace(/\r?\n(.*)/g, (_, w) => `${EOL} * ${w.trim()}`);
 
 const modelImports = (model: Service, path: string) => {
-    const output = model.imports.map(item => `import type { ${item} } from '${path}';`);
-    return output.join('\n');
+    if (model.imports.length === 0) {
+        return '';
+    }
+    return `import type { ${model.imports.join(',')} } from '${path}';`;
 };
 
 const dataParameters = (parameters: OperationParameter[]) => {
