@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import type { Observable } from 'rxjs';
-import type { ModelWithArrayReadOnlyAndWriteOnly } from '../models';
-import type { ModelWithReadOnlyAndWriteOnly } from '../models';
+import type { ModelWithArrayReadOnlyAndWriteOnly, ModelWithReadOnlyAndWriteOnly } from '../models';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 

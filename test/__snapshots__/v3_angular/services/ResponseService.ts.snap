@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import type { Observable } from 'rxjs';
-import type { ModelThatExtends } from '../models';
-import type { ModelThatExtendsExtends } from '../models';
-import type { ModelWithString } from '../models';
+import type { ModelThatExtends, ModelThatExtendsExtends, ModelWithString } from '../models';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 
