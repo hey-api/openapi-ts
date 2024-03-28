@@ -1,4 +1,0 @@
-/**
- * This is a simple number
- */
-export type SimpleInteger = number;

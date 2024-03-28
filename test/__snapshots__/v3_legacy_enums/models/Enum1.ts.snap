@@ -1,4 +1,0 @@
-export enum Enum1 {
-    BIRD = 'Bird',
-    DOG = 'Dog',
-}

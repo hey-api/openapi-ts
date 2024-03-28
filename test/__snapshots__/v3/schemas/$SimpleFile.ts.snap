@@ -1,4 +1,0 @@
-export const $SimpleFile = {
-    type: 'binary',
-    description: `This is a simple file`,
-} as const;

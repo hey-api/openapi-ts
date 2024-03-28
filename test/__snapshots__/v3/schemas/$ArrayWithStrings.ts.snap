@@ -1,6 +1,0 @@
-export const $ArrayWithStrings = {
-    type: 'array',
-    contains: {
-        type: 'string',
-    },
-} as const;

@@ -1,9 +1,0 @@
-import type { ModelWithString } from './ModelWithString';
-
-/**
- * This is a model that extends another model
- */
-export type ModelThatExtends = ModelWithString & {
-    propExtendsA?: string;
-    propExtendsB?: ModelWithString;
-};
