@@ -1,4 +1,0 @@
-/**
- * This is a type-only model that defines Date as a string
- */
-export type Date = string;

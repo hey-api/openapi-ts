@@ -1,9 +1,0 @@
-/**
- * This is a model with one string property
- */
-export type ModelWithString = {
-    /**
-     * This is a simple string property
-     */
-    prop?: string;
-};

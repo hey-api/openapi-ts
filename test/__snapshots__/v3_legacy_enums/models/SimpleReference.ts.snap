@@ -1,6 +1,0 @@
-import type { ModelWithString } from './ModelWithString';
-
-/**
- * This is a simple reference
- */
-export type SimpleReference = ModelWithString;

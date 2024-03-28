@@ -1,4 +1,0 @@
-/**
- * This is a free-form object without additionalProperties.
- */
-export type FreeFormObjectWithoutAdditionalProperties = Record<string, unknown>;

@@ -1,4 +1,0 @@
-export const $SimpleInteger = {
-    type: 'number',
-    description: `This is a simple number`,
-} as const;

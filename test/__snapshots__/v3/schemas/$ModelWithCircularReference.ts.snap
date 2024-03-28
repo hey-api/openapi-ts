@@ -1,8 +1,0 @@
-export const $ModelWithCircularReference = {
-    description: `This is a model with one property containing a circular reference`,
-    properties: {
-        prop: {
-            type: 'ModelWithCircularReference',
-        },
-    },
-} as const;

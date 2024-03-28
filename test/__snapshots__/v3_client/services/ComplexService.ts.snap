@@ -1,7 +1,7 @@
-import type { ModelWithArray } from '../models/ModelWithArray';
-import type { ModelWithDictionary } from '../models/ModelWithDictionary';
-import type { ModelWithEnum } from '../models/ModelWithEnum';
-import type { ModelWithString } from '../models/ModelWithString';
+import type { ModelWithArray } from '../models';
+import type { ModelWithDictionary } from '../models';
+import type { ModelWithEnum } from '../models';
+import type { ModelWithString } from '../models';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
 

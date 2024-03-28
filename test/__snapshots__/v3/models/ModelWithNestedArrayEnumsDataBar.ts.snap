@@ -1,6 +1,0 @@
-export type ModelWithNestedArrayEnumsDataBar = 'baz' | 'qux';
-
-export const ModelWithNestedArrayEnumsDataBarEnum = {
-    BAZ: 'baz',
-    QUX: 'qux',
-} as const;

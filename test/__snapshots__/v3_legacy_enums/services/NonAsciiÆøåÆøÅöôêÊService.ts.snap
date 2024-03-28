@@ -1,4 +1,4 @@
-import type { NonAsciiStringæøåÆØÅöôêÊ字符串 } from '../models/NonAsciiStringæøåÆØÅöôêÊ字符串';
+import type { NonAsciiStringæøåÆØÅöôêÊ字符串 } from '../models';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
