@@ -114,6 +114,19 @@ describe('OpenAPI v3', () => {
                 useLegacyEnums: true,
             } as UserConfig,
         },
+        {
+            description: 'Should generate an angular client',
+            name: 'v3_angular',
+            config: {
+                client: 'angular',
+                enums: false,
+                exportCore: true,
+                exportModels: true,
+                exportSchemas: true,
+                exportServices: true,
+                useOptions: true,
+            } as UserConfig,
+        },
     ])('$description', async ({ name, config }) => {
         const output = toOutputPath(name);
         await createClient({

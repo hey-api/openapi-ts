@@ -1,0 +1,36 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import type { Observable } from 'rxjs';
+
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+
+@Injectable({
+    providedIn: 'root',
+})
+export class NoContentService {
+    constructor(public readonly http: HttpClient) {}
+
+    /**
+     * @returns void Success
+     * @throws ApiError
+     */
+    public callWithNoContentResponse(): Observable<void> {
+        return __request(OpenAPI, this.http, {
+            method: 'GET',
+            url: '/api/v{api-version}/no-content',
+        });
+    }
+
+    /**
+     * @returns number Response is a simple number
+     * @returns void Success
+     * @throws ApiError
+     */
+    public callWithResponseAndNoContentResponse(): Observable<number | void> {
+        return __request(OpenAPI, this.http, {
+            method: 'GET',
+            url: '/api/v{api-version}/multiple-tags/response-and-no-content',
+        });
+    }
+}

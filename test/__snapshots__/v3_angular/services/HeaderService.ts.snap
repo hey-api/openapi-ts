@@ -1,0 +1,29 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import type { Observable } from 'rxjs';
+
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+
+@Injectable({
+    providedIn: 'root',
+})
+export class HeaderService {
+    constructor(public readonly http: HttpClient) {}
+
+    /**
+     * @returns string Successful response
+     * @throws ApiError
+     */
+    public callWithResultFromHeader(): Observable<string> {
+        return __request(OpenAPI, this.http, {
+            method: 'POST',
+            url: '/api/v{api-version}/header',
+            responseHeader: 'operation-location',
+            errors: {
+                400: `400 server error`,
+                500: `500 server error`,
+            },
+        });
+    }
+}

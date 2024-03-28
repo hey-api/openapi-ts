@@ -7,7 +7,9 @@ export { ApiError } from './core/ApiError';
 {{#if @root.$config.name}}
 export { BaseHttpRequest } from './core/BaseHttpRequest';
 {{/if}}
+{{#notEquals @root.$config.client 'angular'}}
 export { CancelablePromise, CancelError } from './core/CancelablePromise';
+{{/notEquals}}
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 {{/if}}

@@ -1,0 +1,42 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import type { Observable } from 'rxjs';
+import type { ModelWithArrayReadOnlyAndWriteOnly } from '../models';
+import type { ModelWithReadOnlyAndWriteOnly } from '../models';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+
+export type TDataPostServiceWithEmptyTag = {
+    requestBody: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
+};
+
+@Injectable({
+    providedIn: 'root',
+})
+export class DefaultService {
+    constructor(public readonly http: HttpClient) {}
+
+    /**
+     * @throws ApiError
+     */
+    public serviceWithEmptyTag(): Observable<void> {
+        return __request(OpenAPI, this.http, {
+            method: 'GET',
+            url: '/api/v{api-version}/no-tag',
+        });
+    }
+
+    /**
+     * @returns ModelWithReadOnlyAndWriteOnly
+     * @throws ApiError
+     */
+    public postServiceWithEmptyTag(data: TDataPostServiceWithEmptyTag): Observable<ModelWithReadOnlyAndWriteOnly> {
+        const { requestBody } = data;
+        return __request(OpenAPI, this.http, {
+            method: 'POST',
+            url: '/api/v{api-version}/no-tag',
+            body: requestBody,
+            mediaType: 'application/json',
+        });
+    }
+}
