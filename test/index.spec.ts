@@ -3,127 +3,127 @@ import { readFileSync } from 'node:fs';
 import { sync } from 'glob';
 import { describe, expect, it } from 'vitest';
 
-import { createClient } from '../';
+import { createClient, UserConfig } from '../';
 
-describe('v2', () => {
-    it('should generate', async () => {
+const V2_SPEC_PATH = './test/spec/v2.json';
+const V3_SPEC_PATH = './test/spec/v3.json';
+
+const OUTPUT_PREFIX = './test/generated/';
+
+const toOutputPath = (name: string) => `${OUTPUT_PREFIX}${name}/`;
+const toSnapshotPath = (file: string) => `./__snapshots__/${file.replace(OUTPUT_PREFIX, '')}.snap`;
+
+describe('OpenAPI v2', () => {
+    it.each([
+        {
+            description: 'Should generate',
+            name: 'v2',
+            config: {
+                client: 'fetch',
+                enums: true,
+                exportCore: true,
+                exportModels: true,
+                exportSchemas: true,
+                exportServices: true,
+                useOptions: true,
+            } as UserConfig,
+        },
+    ])('$description', async ({ name, config }) => {
+        const output = toOutputPath(name);
         await createClient({
-            client: 'fetch',
-            enums: true,
-            exportCore: true,
-            exportModels: true,
-            exportSchemas: true,
-            exportServices: true,
-            input: './test/spec/v2.json',
-            output: './test/generated/v2/',
-            useOptions: true,
+            ...config,
+            input: V2_SPEC_PATH,
+            output,
         });
-
-        sync('./test/generated/v2/**/*.ts').forEach(file => {
+        sync(`${output}**/*.ts`).forEach(file => {
             const content = readFileSync(file, 'utf8').toString();
-            expect(content).toMatchFileSnapshot(`./__snapshots__/v2/${file}.snap`);
+            expect(content).toMatchFileSnapshot(toSnapshotPath(file));
         });
     });
 });
 
-describe('v3', () => {
-    it('should generate', async () => {
+describe('OpenAPI v3', () => {
+    it.each([
+        {
+            description: 'Should generate',
+            name: 'v3',
+            config: {
+                client: 'fetch',
+                enums: true,
+                exportCore: true,
+                exportModels: true,
+                exportSchemas: true,
+                exportServices: true,
+                useOptions: true,
+            } as UserConfig,
+        },
+        {
+            description: 'Should generate Date types',
+            name: 'v3_date',
+            config: {
+                client: 'fetch',
+                enums: true,
+                exportCore: false,
+                exportModels: '^ModelWithPattern',
+                exportSchemas: true,
+                exportServices: false,
+                useOptions: true,
+                useDateType: true,
+            } as UserConfig,
+        },
+        {
+            description: 'Should generate optional arguments',
+            name: 'v3_options',
+            config: {
+                client: 'fetch',
+                enums: true,
+                exportCore: true,
+                exportModels: '^ModelWithString',
+                exportSchemas: false,
+                exportServices: '^Defaults',
+                useOptions: true,
+                useDateType: true,
+            } as UserConfig,
+        },
+        {
+            description: 'Should generate a client',
+            name: 'v3_client',
+            config: {
+                client: 'fetch',
+                enums: true,
+                exportCore: true,
+                exportModels: true,
+                exportSchemas: false,
+                exportServices: true,
+                useOptions: true,
+                useDateType: true,
+                name: 'ApiClient',
+            } as UserConfig,
+        },
+        {
+            description: 'Should generate legacy enums',
+            name: 'v3_legacy_enums',
+            config: {
+                client: 'fetch',
+                enums: false,
+                exportCore: true,
+                exportModels: true,
+                exportSchemas: true,
+                exportServices: true,
+                useOptions: true,
+                useLegacyEnums: true,
+            } as UserConfig,
+        },
+    ])('$description', async ({ name, config }) => {
+        const output = toOutputPath(name);
         await createClient({
-            client: 'fetch',
-            enums: true,
-            exportCore: true,
-            exportModels: true,
-            exportSchemas: true,
-            exportServices: true,
-            input: './test/spec/v3.json',
-            output: './test/generated/v3/',
-            useOptions: true,
+            ...config,
+            input: V3_SPEC_PATH,
+            output,
         });
-
-        sync('./test/generated/v3/**/*.ts').forEach(file => {
+        sync(`${output}**/*.ts`).forEach(file => {
             const content = readFileSync(file, 'utf8').toString();
-            expect(content).toMatchFileSnapshot(`./__snapshots__/v3/${file}.snap`);
-        });
-    });
-
-    it('should generate Date types', async () => {
-        await createClient({
-            client: 'fetch',
-            enums: true,
-            exportCore: false,
-            exportModels: '^ModelWithPattern',
-            exportSchemas: true,
-            exportServices: false,
-            input: './test/spec/v3.json',
-            output: './test/generated/v3_date/',
-            useDateType: true,
-            useOptions: true,
-        });
-
-        sync('./test/generated/v3_date/**/*.ts').forEach(file => {
-            const content = readFileSync(file, 'utf8').toString();
-            expect(content).toMatchFileSnapshot(`./__snapshots__/v3-date/${file}.snap`);
-        });
-    });
-
-    it('should generate optional argument', async () => {
-        await createClient({
-            client: 'fetch',
-            enums: true,
-            exportCore: true,
-            exportModels: '^ModelWithString',
-            exportSchemas: false,
-            exportServices: '^Defaults',
-            input: './test/spec/v3.json',
-            output: './test/generated/v3_options/',
-            useDateType: true,
-            useOptions: true,
-        });
-
-        sync('./test/generated/v3_options/**/*.ts').forEach(file => {
-            const content = readFileSync(file, 'utf8').toString();
-            expect(content).toMatchFileSnapshot(`./__snapshots__/v3-options/${file}.snap`);
-        });
-    });
-
-    it('should generate a client', async () => {
-        await createClient({
-            client: 'fetch',
-            enums: true,
-            exportCore: true,
-            exportModels: true,
-            exportSchemas: false,
-            exportServices: true,
-            input: './test/spec/v3.json',
-            output: './test/generated/v3_client/',
-            useDateType: true,
-            useOptions: true,
-            name: 'ApiClient',
-        });
-
-        sync('./test/generated/v3_client/**/*.ts').forEach(file => {
-            const content = readFileSync(file, 'utf8').toString();
-            expect(content).toMatchFileSnapshot(`./__snapshots__/v3-client/${file}.snap`);
-        });
-    });
-
-    it('should generate legacy enums', async () => {
-        await createClient({
-            client: 'fetch',
-            enums: false,
-            exportCore: true,
-            exportModels: true,
-            exportSchemas: true,
-            exportServices: true,
-            input: './test/spec/v3.json',
-            output: './test/generated/v3_legacy_enums/',
-            useOptions: true,
-            useLegacyEnums: true,
-        });
-
-        sync('./test/generated/v3_legacy_enums/**/*.ts').forEach(file => {
-            const content = readFileSync(file, 'utf8').toString();
-            expect(content).toMatchFileSnapshot(`./__snapshots__/v3-legacy-enums/${file}.snap`);
+            expect(content).toMatchFileSnapshot(toSnapshotPath(file));
         });
     });
 });
