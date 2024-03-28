@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import type { Observable } from 'rxjs';
-import type { ModelWithArray } from '../models';
-import type { ModelWithDictionary } from '../models';
-import type { ModelWithEnum } from '../models';
-import type { ModelWithString } from '../models';
+import type { ModelWithArray, ModelWithDictionary, ModelWithEnum, ModelWithString } from '../models';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 
