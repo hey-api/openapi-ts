@@ -1,4 +1,0 @@
-/**
- * Testing expression placeholders in string: ${expression} should work
- */
-export type CommentWithExpressionPlaceholders = number;
