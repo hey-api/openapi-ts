@@ -71,9 +71,9 @@ export const request = <T>(config: OpenAPIConfig, http: HttpClient, options: Api
 		switchMap(headers => {
 			return sendRequest<T>(config, options, http, url, body, formData, headers);
 		}),
-		map(response => {
+		switchMap(async response => {
 			for (const fn of config.interceptors.response._fns) {
-				response = fn(response)
+				response = await fn(response)
 			}
 			const responseBody = getResponseBody(response);
 			const responseHeader = getResponseHeader(response, options.responseHeader);
@@ -87,7 +87,7 @@ export const request = <T>(config: OpenAPIConfig, http: HttpClient, options: Api
 		}),
 		catchError((error: HttpErrorResponse) => {
 			if (!error.status) {
-				return throwError(error);
+				return throwError(() => error);
 			}
 			return of({
 				url,
@@ -102,7 +102,7 @@ export const request = <T>(config: OpenAPIConfig, http: HttpClient, options: Api
 			return result.body as T;
 		}),
 		catchError((error: ApiError) => {
-			return throwError(error);
+			return throwError(() => error);
 		}),
 	);
 };

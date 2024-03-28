@@ -6,6 +6,7 @@ import { AngularHttpRequest } from './core/AngularHttpRequest';
 import { BaseHttpRequest } from './core/BaseHttpRequest';
 import type { OpenAPIConfig } from './core/OpenAPI';
 import { OpenAPI } from './core/OpenAPI';
+import { Interceptors } from './core/OpenAPI';
 {{else}}
 import type { BaseHttpRequest } from './core/BaseHttpRequest';
 import type { OpenAPIConfig } from './core/OpenAPI';
@@ -35,6 +36,9 @@ import { {{{name}}}{{{@root.$config.postfixServices}}} } from './services/{{{nam
 				PASSWORD: OpenAPI?.PASSWORD,
 				HEADERS: OpenAPI?.HEADERS,
 				ENCODE_PATH: OpenAPI?.ENCODE_PATH,
+				interceptors: {
+					response: new Interceptors(),
+				},
 			} as OpenAPIConfig,
 		},
 		{

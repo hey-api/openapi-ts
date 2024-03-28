@@ -1,0 +1,32 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import type { Observable } from 'rxjs';
+
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+
+export type TDataFileResponse = {
+    id: string;
+};
+
+@Injectable({
+    providedIn: 'root',
+})
+export class FileResponseService {
+    constructor(public readonly http: HttpClient) {}
+
+    /**
+     * @returns binary Success
+     * @throws ApiError
+     */
+    public fileResponse(data: TDataFileResponse): Observable<Blob> {
+        const { id } = data;
+        return __request(OpenAPI, this.http, {
+            method: 'GET',
+            url: '/api/v{api-version}/file/{id}',
+            path: {
+                id,
+            },
+        });
+    }
+}
