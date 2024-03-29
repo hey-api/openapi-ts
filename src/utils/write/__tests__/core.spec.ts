@@ -24,7 +24,7 @@ describe('writeClientCore', () => {
 
         const config: Parameters<typeof writeClientCore>[3] = {
             client: 'fetch',
-            enums: true,
+            enums: 'javascript',
             exportCore: true,
             exportModels: true,
             exportSchemas: true,
@@ -40,7 +40,6 @@ describe('writeClientCore', () => {
             serviceResponse: 'body',
             useDateType: false,
             useOptions: true,
-            useLegacyEnums: false,
             write: true,
         };
 
@@ -65,7 +64,7 @@ describe('writeClientCore', () => {
 
         const config: Parameters<typeof writeClientCore>[3] = {
             client: 'fetch',
-            enums: true,
+            enums: 'javascript',
             exportCore: true,
             exportModels: true,
             exportSchemas: true,
@@ -81,7 +80,6 @@ describe('writeClientCore', () => {
             serviceResponse: 'body',
             useDateType: false,
             useOptions: true,
-            useLegacyEnums: false,
             write: true,
         };
 
@@ -106,7 +104,7 @@ describe('writeClientCore', () => {
         const config: Parameters<typeof writeClientCore>[3] = {
             base: 'foo',
             client: 'fetch',
-            enums: true,
+            enums: 'javascript',
             exportCore: true,
             exportModels: true,
             exportSchemas: true,
@@ -122,7 +120,6 @@ describe('writeClientCore', () => {
             serviceResponse: 'body',
             useDateType: false,
             useOptions: true,
-            useLegacyEnums: false,
             write: true,
         };
 

@@ -9,7 +9,7 @@
 {{/if}}
  */
 {{/ifdef}}
-{{#if @root.$config.useLegacyEnums}}
+{{#equals @root.$config.enums 'typescript'}}
 export enum {{{name}}} {
 	{{#each enum}}
 	{{#if x-enum-description}}
@@ -26,10 +26,10 @@ export enum {{{name}}} {
 }
 {{else}}
 export type {{{name}}} = {{{enumUnionType enum}}};
-{{/if}}
+{{/equals}}
 {{/if}}
 
-{{#if @root.$config.enums}}
+{{#equals @root.$config.enums 'javascript'}}
 export const {{{enumName name }}} = {
 	{{#each enum}}
 	{{#if x-enum-description}}
@@ -44,4 +44,4 @@ export const {{{enumName name }}} = {
 	{{{enumKey value x-enum-varname}}}: {{{enumValue value}}},
 	{{/each}}
 } as const;
-{{/if}}
+{{/equals}}

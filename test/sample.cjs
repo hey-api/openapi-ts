@@ -4,7 +4,7 @@ const main = async () => {
     /** @type {import('../src/node/index').UserConfig} */
     const config = {
         client: 'fetch',
-        enums: true,
+        enums: 'javascript',
         input: './test/spec/v3.json',
         output: './test/generated/v3/',
     };

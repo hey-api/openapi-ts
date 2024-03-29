@@ -9,10 +9,10 @@ export interface UserConfig {
      */
     client?: 'angular' | 'axios' | 'fetch' | 'node' | 'xhr';
     /**
-     * Generate JavaScript objects from enum definitions?
+     * Export enum definitions?
      * @default false
      */
-    enums?: boolean;
+    enums?: 'javascript' | 'typescript' | false;
     /**
      * Generate core client classes?
      * @default true
@@ -89,11 +89,6 @@ export interface UserConfig {
      * @default true
      */
     useOptions?: boolean;
-    /**
-     * Generate Typescript enum definitions
-     * @default false
-     */
-    useLegacyEnums?: boolean;
     /**
      * Write the files to disk (true or false)
      * @default true

@@ -100,14 +100,29 @@ Alternatively, you can use `openapi-ts.config.js` and configure the export state
 
 ### Clients
 
-We provide a variety of possible clients to use when generating your `openapi-ts` client. If one is not specified by the user, we will try to infer the client to use. If the inferred client is not correct, you can set it with the client config parameter. The following are available:
+By default, `openapi-ts` will try to guess your client based on your project dependencies. If we don't get it right, you can specify the desired client
 
-- `angular`: An [Angular](https://angular.io/) client using [RxJS](https://rxjs.dev/).
-- `axios`: An [Axios](https://axios-http.com/docs/intro) client.
-- `fetch`: A [Fetch API](https://developer.mozilla.org/docs/Web/API/Fetch_API) client.
-    > NOTE: The Fetch API is experimental in Node.js 18+ and was stabilized in [Node.js v21](https://nodejs.org/docs/latest-v21.x/api/globals.html#fetch)
-- `node`: A [Node.js](https://nodejs.org/) client using [node-fetch](https://www.npmjs.com/package/node-fetch).
-- `xhr`: A [XMLHttpRequest](https://developer.mozilla.org/docs/Web/API/XMLHttpRequest) client.
+```mjs
+/** @type {import('@hey-api/openapi-ts').UserConfig} */
+export default {
+  client: 'fetch',
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+}
+```
+
+We support these clients:
+
+- [angular](https://angular.io/) (using [RxJS](https://rxjs.dev/))
+- [axios](https://axios-http.com/)
+- [fetch](https://developer.mozilla.org/docs/Web/API/Fetch_API)
+
+We also support the legacy Node.js and XHR clients:
+
+- [node](https://nodejs.org/) (using [node-fetch](https://www.npmjs.com/package/node-fetch))
+- [xhr](https://developer.mozilla.org/docs/Web/API/XMLHttpRequest)
+
+> ⚠️ You might not need a `node` client. Fetch API is [experimental](https://nodejs.org/docs/latest-v18.x/api/globals.html#fetch) in Node.js v18 and [stable](https://nodejs.org/docs/latest-v21.x/api/globals.html#fetch) in Node.js v21. We recommend upgrading to the latest Node.js version.
 
 ### Formatting
 
@@ -141,18 +156,18 @@ You can also prevent your client from being processed by linters by adding your 
 
 ### Enums
 
-We do not generate TypeScript [enums](https://www.typescriptlang.org/docs/handbook/enums.html) because they are not standard JavaScript and pose [typing challenges](https://dev.to/ivanzm123/dont-use-enums-in-typescript-they-are-very-dangerous-57bh). If you want to iterate through possible field values without manually typing arrays, you can export enums by running
+If you need to iterate through possible field values without manually typing arrays, you can export enums with
 
 ```mjs
 /** @type {import('@hey-api/openapi-ts').UserConfig} */
 export default {
-  enums: true,
+  enums: 'javascript',
   input: 'path/to/openapi.json',
   output: 'src/client',
 }
 ```
 
-This will export your enums as plain JavaScript objects. For example, `Foo` will generate the following
+This will export enums as plain JavaScript objects. For example, `Foo` would become
 
 ```ts
 export const FooEnum = {
@@ -161,38 +176,20 @@ export const FooEnum = {
 } as const;
 ```
 
+We discourage generating [TypeScript enums](https://www.typescriptlang.org/docs/handbook/enums.html) because they are not standard JavaScript and pose [typing challenges](https://dev.to/ivanzm123/dont-use-enums-in-typescript-they-are-very-dangerous-57bh). If you really need TypeScript enums, you can export them with
+
+```mjs
+/** @type {import('@hey-api/openapi-ts').UserConfig} */
+export default {
+  enums: 'typescript',
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+}
+```
+
 ### Config API
 
-```sh
-$ openapi-ts --help
-
-  Usage: openapi-ts [options]
-
-  Options:
-    -V, --version             output the version number
-    -i, --input <value>       OpenAPI specification, can be a path, url or string content (required)
-    -o, --output <value>      Output directory (required)
-    -c, --client <value>      HTTP client to generate [fetch, xhr, node, axios, angular] (default: "fetch")
-    --name <value>            Custom client class name
-    --useOptions <value>      Use options instead of arguments (default: true)
-    --base <value>            Manually set base in OpenAPI config instead of inferring from server value
-    --enums                   Generate JavaScript objects from enum definitions (default: false)
-    --exportCore <value>      Write core files to disk (default: true)
-    --exportServices <value>  Write services to disk [true, false, regexp] (default: true)
-    --exportModels <value>    Write models to disk [true, false, regexp] (default: true)
-    --exportSchemas <value>   Write schemas to disk (default: true)
-    --format                  Process output folder with formatter?
-    --no-format               Disable processing output folder with formatter
-    --lint                    Process output folder with linter?
-    --no-lint                 Disable processing output folder with linter
-    --no-operationId          Use path URL to generate operation ID
-    --postfixServices         Service name postfix (default: "Service")
-    --postfixModels           Model name postfix
-    --request <value>         Path to custom request file
-    --useDateType <value>     Output Date instead of string for the format "date-time" in the models (default: false)
-    --useLegacyEnums          Generate Typescript enum definitions (default: false)
-    -h, --help                display help for command
-```
+You can view the complete list of options in the [UserConfig](./src/types/config.ts) interface.
 
 ## Interceptors
 
