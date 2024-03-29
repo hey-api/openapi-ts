@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.31.1
+
+### Patch Changes
+
+- merge enums and useLegacyEnums into one option ([#178](https://github.com/hey-api/openapi-ts/pull/178))
+
+- use FormData from node-fetch in node client ([#173](https://github.com/hey-api/openapi-ts/pull/173))
+
 ## 0.31.0
 
 ### Minor Changes
