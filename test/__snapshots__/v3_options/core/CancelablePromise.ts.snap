@@ -105,7 +105,7 @@ export class CancelablePromise<T> implements Promise<T> {
         if (this._isResolved || this._isRejected || this._isCancelled) {
             return;
         }
-        this._isCancelled_ = true;
+        this._isCancelled = true;
         if (this.cancelHandlers.length) {
             try {
                 for (const cancelHandler of this.cancelHandlers) {
