@@ -18,7 +18,7 @@ describe('writeClientClass', () => {
 
         await writeClientClass(client, mockTemplates, './dist', {
             client: 'fetch',
-            enums: true,
+            enums: 'javascript',
             exportCore: true,
             exportModels: true,
             exportSchemas: true,
@@ -34,7 +34,6 @@ describe('writeClientClass', () => {
             serviceResponse: 'body',
             useDateType: false,
             useOptions: true,
-            useLegacyEnums: false,
             write: true,
         });
 
