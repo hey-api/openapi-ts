@@ -45,7 +45,7 @@ describe('OpenAPI v2', () => {
 describe('OpenAPI v3', () => {
     it.each([
         {
-            description: 'Should generate',
+            description: 'Should generate fetch',
             name: 'v3',
             config: {
                 client: 'fetch',
@@ -54,6 +54,58 @@ describe('OpenAPI v3', () => {
                 exportModels: true,
                 exportSchemas: true,
                 exportServices: true,
+                useOptions: true,
+            } as UserConfig,
+        },
+        {
+            description: 'Should generate an angular client',
+            name: 'v3_angular',
+            config: {
+                client: 'angular',
+                enums: false,
+                exportCore: true,
+                exportModels: true,
+                exportSchemas: true,
+                exportServices: true,
+                useOptions: true,
+            } as UserConfig,
+        },
+        {
+            description: 'Should generate an node client',
+            name: 'v3_node',
+            config: {
+                client: 'node',
+                enums: false,
+                exportCore: true,
+                exportModels: false,
+                exportSchemas: false,
+                exportServices: false,
+                useOptions: true,
+            } as UserConfig,
+        },
+        {
+            description: 'Should generate an axios client',
+            name: 'v3_axios',
+            config: {
+                client: 'axios',
+                enums: false,
+                exportCore: true,
+                exportModels: false,
+                exportSchemas: false,
+                exportServices: false,
+                useOptions: true,
+            } as UserConfig,
+        },
+        {
+            description: 'Should generate an XHR client',
+            name: 'v3_xhr',
+            config: {
+                client: 'xhr',
+                enums: false,
+                exportCore: true,
+                exportModels: false,
+                exportSchemas: false,
+                exportServices: false,
                 useOptions: true,
             } as UserConfig,
         },
@@ -112,19 +164,6 @@ describe('OpenAPI v3', () => {
                 exportServices: true,
                 useOptions: true,
                 useLegacyEnums: true,
-            } as UserConfig,
-        },
-        {
-            description: 'Should generate an angular client',
-            name: 'v3_angular',
-            config: {
-                client: 'angular',
-                enums: false,
-                exportCore: true,
-                exportModels: true,
-                exportSchemas: true,
-                exportServices: true,
-                useOptions: true,
             } as UserConfig,
         },
     ])('$description', async ({ name, config }) => {
