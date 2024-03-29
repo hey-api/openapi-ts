@@ -18,7 +18,7 @@ const params = program
     .option('--name <value>', 'Custom client class name')
     .option('--useOptions [value]', 'Use options instead of arguments')
     .option('--base [value]', 'Manually set base in OpenAPI config instead of inferring from server value')
-    .option('--enums', 'Generate JavaScript objects from enum definitions')
+    .option('--enums <value>', 'Export enum definitions (javascript, typescript)')
     .option('--exportCore <value>', 'Write core files to disk')
     .option('--exportServices <value>', 'Write services to disk')
     .option('--exportModels <value>', 'Write models to disk')
@@ -36,7 +36,6 @@ const params = program
     .option('--request <value>', 'Path to custom request file')
     .option('--write', 'Write files to disk? (used for testing)')
     .option('--no-write', 'Skip writing files to disk (used for testing)')
-    .option('--useLegacyEnums', 'Generate Typescript enum definitions')
     .parse(process.argv)
     .opts();
 

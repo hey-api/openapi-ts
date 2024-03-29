@@ -19,7 +19,7 @@ describe('writeClientIndex', () => {
 
         await writeClientIndex(client, mockTemplates, '/', {
             client: 'fetch',
-            enums: true,
+            enums: 'javascript',
             exportCore: true,
             exportModels: true,
             exportSchemas: true,
@@ -34,7 +34,6 @@ describe('writeClientIndex', () => {
             serviceResponse: 'body',
             useDateType: false,
             useOptions: true,
-            useLegacyEnums: false,
             write: true,
         });
 

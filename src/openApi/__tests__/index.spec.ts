@@ -11,7 +11,7 @@ describe('parse', () => {
 
     const options: Parameters<typeof parse>[1] = {
         client: 'fetch',
-        enums: true,
+        enums: 'javascript',
         exportCore: true,
         exportModels: true,
         exportSchemas: true,
@@ -26,7 +26,6 @@ describe('parse', () => {
         serviceResponse: 'body',
         useDateType: false,
         useOptions: true,
-        useLegacyEnums: false,
         write: false,
     };
 

@@ -16,11 +16,11 @@ const toSnapshotPath = (file: string) => `./__snapshots__/${file.replace(OUTPUT_
 describe('OpenAPI v2', () => {
     it.each([
         {
-            description: 'Should generate',
+            description: 'generate fetch client',
             name: 'v2',
             config: {
                 client: 'fetch',
-                enums: true,
+                enums: 'javascript',
                 exportCore: true,
                 exportModels: true,
                 exportSchemas: true,
@@ -45,11 +45,11 @@ describe('OpenAPI v2', () => {
 describe('OpenAPI v3', () => {
     it.each([
         {
-            description: 'Should generate fetch',
+            description: 'generate fetch client',
             name: 'v3',
             config: {
                 client: 'fetch',
-                enums: true,
+                enums: 'javascript',
                 exportCore: true,
                 exportModels: true,
                 exportSchemas: true,
@@ -58,7 +58,7 @@ describe('OpenAPI v3', () => {
             } as UserConfig,
         },
         {
-            description: 'Should generate an angular client',
+            description: 'generate angular client',
             name: 'v3_angular',
             config: {
                 client: 'angular',
@@ -71,7 +71,7 @@ describe('OpenAPI v3', () => {
             } as UserConfig,
         },
         {
-            description: 'Should generate an node client',
+            description: 'generate node client',
             name: 'v3_node',
             config: {
                 client: 'node',
@@ -84,7 +84,7 @@ describe('OpenAPI v3', () => {
             } as UserConfig,
         },
         {
-            description: 'Should generate an axios client',
+            description: 'generate axios client',
             name: 'v3_axios',
             config: {
                 client: 'axios',
@@ -97,7 +97,7 @@ describe('OpenAPI v3', () => {
             } as UserConfig,
         },
         {
-            description: 'Should generate an XHR client',
+            description: 'generate xhr client',
             name: 'v3_xhr',
             config: {
                 client: 'xhr',
@@ -110,11 +110,11 @@ describe('OpenAPI v3', () => {
             } as UserConfig,
         },
         {
-            description: 'Should generate Date types',
+            description: 'generate Date types',
             name: 'v3_date',
             config: {
                 client: 'fetch',
-                enums: true,
+                enums: 'javascript',
                 exportCore: false,
                 exportModels: '^ModelWithPattern',
                 exportSchemas: true,
@@ -124,11 +124,11 @@ describe('OpenAPI v3', () => {
             } as UserConfig,
         },
         {
-            description: 'Should generate optional arguments',
+            description: 'generate optional arguments',
             name: 'v3_options',
             config: {
                 client: 'fetch',
-                enums: true,
+                enums: 'javascript',
                 exportCore: true,
                 exportModels: '^ModelWithString',
                 exportSchemas: false,
@@ -138,11 +138,11 @@ describe('OpenAPI v3', () => {
             } as UserConfig,
         },
         {
-            description: 'Should generate a client',
+            description: 'generate client',
             name: 'v3_client',
             config: {
                 client: 'fetch',
-                enums: true,
+                enums: 'javascript',
                 exportCore: true,
                 exportModels: true,
                 exportSchemas: false,
@@ -153,17 +153,16 @@ describe('OpenAPI v3', () => {
             } as UserConfig,
         },
         {
-            description: 'Should generate legacy enums',
-            name: 'v3_legacy_enums',
+            description: 'generate TypeScript enums',
+            name: 'v3_enums_typescript',
             config: {
                 client: 'fetch',
-                enums: false,
+                enums: 'typescript',
                 exportCore: true,
                 exportModels: true,
                 exportSchemas: true,
                 exportServices: true,
                 useOptions: true,
-                useLegacyEnums: true,
             } as UserConfig,
         },
     ])('$description', async ({ name, config }) => {

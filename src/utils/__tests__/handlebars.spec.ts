@@ -8,7 +8,7 @@ describe('registerHandlebarHelpers', () => {
         registerHandlebarHelpers(
             {
                 client: 'fetch',
-                enums: true,
+                enums: 'javascript',
                 exportCore: true,
                 exportModels: true,
                 exportSchemas: true,
@@ -23,7 +23,6 @@ describe('registerHandlebarHelpers', () => {
                 serviceResponse: 'body',
                 useDateType: false,
                 useOptions: false,
-                useLegacyEnums: false,
                 write: true,
             },
             {
@@ -61,7 +60,7 @@ describe('registerHandlebarTemplates', () => {
         const templates = registerHandlebarTemplates(
             {
                 client: 'fetch',
-                enums: true,
+                enums: 'javascript',
                 exportCore: true,
                 exportModels: true,
                 exportSchemas: true,
@@ -76,7 +75,6 @@ describe('registerHandlebarTemplates', () => {
                 serviceResponse: 'body',
                 useDateType: false,
                 useOptions: false,
-                useLegacyEnums: false,
                 write: true,
             },
             {
