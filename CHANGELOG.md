@@ -1,5 +1,29 @@
 # @hey-api/openapi-ts
 
+## 0.31.0
+
+### Minor Changes
+
+- Import all required models for a service in one import ([#172](https://github.com/hey-api/openapi-ts/pull/172))
+
+- generate all models in single `models.ts` file ([#168](https://github.com/hey-api/openapi-ts/pull/168))
+
+- generate all schemas in single `schemas.ts` file ([#168](https://github.com/hey-api/openapi-ts/pull/168))
+
+### Patch Changes
+
+- fix async response interceptors when using angular client ([#167](https://github.com/hey-api/openapi-ts/pull/167))
+
+- fix deprecation warning on `throwError` in Angular client ([#167](https://github.com/hey-api/openapi-ts/pull/167))
+
+- Do not create or export CancelablePromise when using Angular client ([#167](https://github.com/hey-api/openapi-ts/pull/167))
+
+- Fix issue causing type error when targeting lower than ES2015 ([#171](https://github.com/hey-api/openapi-ts/pull/171))
+
+- fix various warnings in generated client code ([#164](https://github.com/hey-api/openapi-ts/pull/164))
+
+- fix providing interceptors in Angular client ([#167](https://github.com/hey-api/openapi-ts/pull/167))
+
 ## 0.30.0
 
 ### Minor Changes
