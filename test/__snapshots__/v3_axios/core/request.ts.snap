@@ -1,6 +1,5 @@
 import axios from 'axios';
 import type { AxiosError, AxiosRequestConfig, AxiosResponse, AxiosInstance } from 'axios';
-import FormData from 'form-data';
 
 import { ApiError } from './ApiError';
 import type { ApiRequestOptions } from './ApiRequestOptions';
@@ -80,33 +79,6 @@ const getUrl = (config: OpenAPIConfig, options: ApiRequestOptions): string => {
     return options.query ? url + getQueryString(options.query) : url;
 };
 
-export const getFormData = (options: ApiRequestOptions): FormData | undefined => {
-    if (options.formData) {
-        const formData = new FormData();
-
-        const process = (key: string, value: unknown) => {
-            if (isString(value) || isBlob(value)) {
-                formData.append(key, value);
-            } else {
-                formData.append(key, JSON.stringify(value));
-            }
-        };
-
-        Object.entries(options.formData)
-            .filter(([, value]) => value !== undefined && value !== null)
-            .forEach(([key, value]) => {
-                if (Array.isArray(value)) {
-                    value.forEach(v => process(key, v));
-                } else {
-                    process(key, value);
-                }
-            });
-
-        return formData;
-    }
-    return undefined;
-};
-
 type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
 
 export const resolve = async <T>(options: ApiRequestOptions, resolver?: T | Resolver<T>): Promise<T | undefined> => {
@@ -118,8 +90,7 @@ export const resolve = async <T>(options: ApiRequestOptions, resolver?: T | Reso
 
 export const getHeaders = async (
     config: OpenAPIConfig,
-    options: ApiRequestOptions,
-    formData?: FormData
+    options: ApiRequestOptions
 ): Promise<Record<string, string>> => {
     const [token, username, password, additionalHeaders] = await Promise.all([
         resolve(options, config.TOKEN),
@@ -128,13 +99,10 @@ export const getHeaders = async (
         resolve(options, config.HEADERS),
     ]);
 
-    const formHeaders = (typeof formData?.getHeaders === 'function' && formData?.getHeaders()) || {};
-
     const headers = Object.entries({
         Accept: 'application/json',
         ...additionalHeaders,
         ...options.headers,
-        ...formHeaders,
     })
         .filter(([, value]) => value !== undefined && value !== null)
         .reduce(
@@ -181,7 +149,7 @@ export const sendRequest = async <T>(
     options: ApiRequestOptions,
     url: string,
     body: unknown,
-    formData: FormData | undefined,
+    formData: Record<string, unknown> | undefined,
     headers: Record<string, string>,
     onCancel: OnCancel,
     axiosClient: AxiosInstance
@@ -316,9 +284,9 @@ export const request = <T>(
     return new CancelablePromise(async (resolve, reject, onCancel) => {
         try {
             const url = getUrl(config, options);
-            const formData = getFormData(options);
+            const formData = options.formData;
             const body = getRequestBody(options);
-            const headers = await getHeaders(config, options, formData);
+            const headers = await getHeaders(config, options);
 
             if (!onCancel.isCancelled) {
                 let response = await sendRequest<T>(
