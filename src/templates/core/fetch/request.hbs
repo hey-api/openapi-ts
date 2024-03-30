@@ -1,3 +1,8 @@
+{{#equals @root.$config.client 'node'}}
+import fetch, { FormData, Headers } from 'node-fetch';
+import type { RequestInit, Response } from 'node-fetch';
+
+{{/equals}}
 import { ApiError } from './ApiError';
 import type { ApiRequestOptions } from './ApiRequestOptions';
 import type { ApiResult } from './ApiResult';
