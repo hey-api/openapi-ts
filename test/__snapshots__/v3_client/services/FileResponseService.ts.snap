@@ -12,7 +12,7 @@ export class FileResponseService {
      * @returns binary Success
      * @throws ApiError
      */
-    public fileResponse(data: TDataFileResponse): CancelablePromise<Blob> {
+    public fileResponse(data: TDataFileResponse): CancelablePromise<Blob | File> {
         const { id } = data;
         return this.httpRequest.request({
             method: 'GET',

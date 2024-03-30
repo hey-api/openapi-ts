@@ -7,7 +7,7 @@ import { request as __request } from '../core/request';
 
 export type TDataMultipartRequest = {
     formData?: {
-        content?: Blob;
+        content?: Blob | File;
         data?: ModelWithString | null;
     };
 };
@@ -36,7 +36,7 @@ export class MultipartService {
      * @throws ApiError
      */
     public multipartResponse(): Observable<{
-        file?: Blob;
+        file?: Blob | File;
         metadata?: {
             foo?: string;
             bar?: string;

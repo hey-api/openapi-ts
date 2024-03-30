@@ -11,7 +11,7 @@ export class FileResponseService {
      * @returns binary Success
      * @throws ApiError
      */
-    public static fileResponse(data: TDataFileResponse): CancelablePromise<Blob> {
+    public static fileResponse(data: TDataFileResponse): CancelablePromise<Blob | File> {
         const { id } = data;
         return __request(OpenAPI, {
             method: 'GET',

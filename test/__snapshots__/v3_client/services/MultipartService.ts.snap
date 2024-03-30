@@ -4,7 +4,7 @@ import type { BaseHttpRequest } from '../core/BaseHttpRequest';
 
 export type TDataMultipartRequest = {
     formData?: {
-        content?: Blob;
+        content?: Blob | File;
         data?: ModelWithString | null;
     };
 };
@@ -30,7 +30,7 @@ export class MultipartService {
      * @throws ApiError
      */
     public multipartResponse(): CancelablePromise<{
-        file?: Blob;
+        file?: Blob | File;
         metadata?: {
             foo?: string;
             bar?: string;

@@ -19,7 +19,7 @@ export class FileResponseService {
      * @returns binary Success
      * @throws ApiError
      */
-    public fileResponse(data: TDataFileResponse): Observable<Blob> {
+    public fileResponse(data: TDataFileResponse): Observable<Blob | File> {
         const { id } = data;
         return __request(OpenAPI, this.http, {
             method: 'GET',
