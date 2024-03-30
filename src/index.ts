@@ -98,6 +98,7 @@ const getConfig = async (userConfig: UserConfig, dependencies: Dependencies) => 
 
     const {
         base,
+        debug = false,
         enums = false,
         exportCore = true,
         exportModels = true,
@@ -116,6 +117,10 @@ const getConfig = async (userConfig: UserConfig, dependencies: Dependencies) => 
         useOptions = true,
         write = true,
     } = userConfig;
+
+    if (debug) {
+        console.log('userConfig:', userConfig);
+    }
 
     if (!input) {
         throw new Error('🚫 input not provided - provide path to OpenAPI specification');
@@ -141,6 +146,7 @@ const getConfig = async (userConfig: UserConfig, dependencies: Dependencies) => 
     const config: Config = {
         base,
         client,
+        debug,
         enums,
         exportCore,
         exportModels,
