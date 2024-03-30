@@ -1,6 +1,5 @@
 import axios from 'axios';
 import type { AxiosError, AxiosRequestConfig, AxiosResponse, AxiosInstance } from 'axios';
-import FormData from 'form-data';
 
 import { ApiError } from './ApiError';
 import type { ApiRequestOptions } from './ApiRequestOptions';
@@ -31,9 +30,6 @@ import type { OpenAPIConfig } from './OpenAPI';
 
 
 {{>functions/getUrl}}
-
-
-{{>functions/getFormData}}
 
 
 {{>functions/resolve}}
@@ -69,9 +65,9 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions, ax
 	return new CancelablePromise(async (resolve, reject, onCancel) => {
 		try {
 			const url = getUrl(config, options);
-			const formData = getFormData(options);
+			const formData = options.formData;
 			const body = getRequestBody(options);
-			const headers = await getHeaders(config, options, formData);
+			const headers = await getHeaders(config, options);
 
 			if (!onCancel.isCancelled) {
 				let response = await sendRequest<T>(config, options, url, body, formData, headers, onCancel, axiosClient);
