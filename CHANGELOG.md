@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.32.1
+
+### Patch Changes
+
+- fix(schema): allow minimums/maximums to be 0 ([#194](https://github.com/hey-api/openapi-ts/pull/194))
+
+- fix(axios): let axios handle serializing form data ([#192](https://github.com/hey-api/openapi-ts/pull/192))
+
 ## 0.32.0
 
 ### Minor Changes
