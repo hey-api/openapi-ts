@@ -9,6 +9,11 @@ export interface UserConfig {
      */
     client?: 'angular' | 'axios' | 'fetch' | 'node' | 'xhr';
     /**
+     * Run in debug mode?
+     * @default false
+     */
+    debug?: boolean;
+    /**
      * Export enum definitions?
      * @default false
      */
