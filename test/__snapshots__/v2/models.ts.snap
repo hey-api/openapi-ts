@@ -54,7 +54,7 @@ export type NonAsciiStringæøåÆØÅöôêÊ字符串 = string;
 /**
  * This is a simple file
  */
-export type SimpleFile = Blob;
+export type SimpleFile = Blob | File;
 
 /**
  * This is a simple reference
@@ -313,7 +313,7 @@ export type ModelWithReference = {
  */
 export type ModelWithArray = {
     prop?: Array<ModelWithString>;
-    propWithFile?: Array<Blob>;
+    propWithFile?: Array<Blob | File>;
     propWithNumber?: Array<number>;
 };
 
