@@ -1,5 +1,23 @@
 # @hey-api/openapi-ts
 
+## 0.32.0
+
+### Minor Changes
+
+- Support all HTTP error codes ([#188](https://github.com/hey-api/openapi-ts/pull/188))
+
+- Use File or Blob type for binary types ([#186](https://github.com/hey-api/openapi-ts/pull/186))
+
+- Check value instanceof Blob when using isBlob ([#186](https://github.com/hey-api/openapi-ts/pull/186))
+
+### Patch Changes
+
+- fix(cli): properly handle booleans ([#190](https://github.com/hey-api/openapi-ts/pull/190))
+
+- Attempt to use body type as content type when sending Blob in node client ([#185](https://github.com/hey-api/openapi-ts/pull/185))
+
+- fix(api): add experimental flag ([#191](https://github.com/hey-api/openapi-ts/pull/191))
+
 ## 0.31.1
 
 ### Patch Changes
