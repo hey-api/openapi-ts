@@ -8,7 +8,9 @@ describe('registerHandlebarHelpers', () => {
         registerHandlebarHelpers(
             {
                 client: 'fetch',
+                debug: false,
                 enums: 'javascript',
+                experimental: false,
                 exportCore: true,
                 exportModels: true,
                 exportSchemas: true,
@@ -60,7 +62,9 @@ describe('registerHandlebarTemplates', () => {
         const templates = registerHandlebarTemplates(
             {
                 client: 'fetch',
+                debug: false,
                 enums: 'javascript',
+                experimental: false,
                 exportCore: true,
                 exportModels: true,
                 exportSchemas: true,

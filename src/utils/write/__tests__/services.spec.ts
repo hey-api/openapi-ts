@@ -26,7 +26,9 @@ describe('writeClientServices', () => {
 
         await writeClientServices(client, mockTemplates, '/', {
             client: 'fetch',
+            debug: false,
             enums: false,
+            experimental: false,
             exportCore: true,
             exportModels: true,
             exportSchemas: true,
