@@ -121,12 +121,12 @@ describe('client.node', () => {
         );
     });
 
-    it('should throw unknown error (409)', async () => {
+    it('should throw unknown error (599)', async () => {
         let error;
         try {
             const { ApiClient } = await import('./generated/client/node/index.js');
             const client = new ApiClient();
-            await client.error.testErrorCode(409);
+            await client.error.testErrorCode(599);
         } catch (err) {
             error = JSON.stringify({
                 name: err.name,
@@ -141,12 +141,12 @@ describe('client.node', () => {
             JSON.stringify({
                 name: 'ApiError',
                 message:
-                    'Generic Error: status: 409; status text: Conflict; body: {\n  "status": 409,\n  "message": "hello world"\n}',
-                url: 'http://localhost:3000/base/api/v1.0/error?status=409',
-                status: 409,
-                statusText: 'Conflict',
+                    'Generic Error: status: 599; status text: unknown; body: {\n  "status": 599,\n  "message": "hello world"\n}',
+                url: 'http://localhost:3000/base/api/v1.0/error?status=599',
+                status: 599,
+                statusText: 'unknown',
                 body: {
-                    status: 409,
+                    status: 599,
                     message: 'hello world',
                 },
             })
