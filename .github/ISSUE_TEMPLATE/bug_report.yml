@@ -20,6 +20,16 @@ body:
       label: OpenAPI specification
       description: Please provide (if possible) the OpenAPI specification that you used to generate the client.
       placeholder: OpenAPI Specification
+  - type: dropdown
+    id: client-type
+    attributes:
+      label: Client
+      options:
+        - Angular
+        - Axios
+        - Fetch
+        - Node
+        - XHR
     validations:
       required: true
   - type: textarea
@@ -35,8 +45,6 @@ body:
       description: Please provide as much system information as possible. This may include OS, browser, NPM version, Node version, etc.
       render: Shell
       placeholder: System information
-    validations:
-      required: true
   - type: dropdown
     id: severity
     attributes:
