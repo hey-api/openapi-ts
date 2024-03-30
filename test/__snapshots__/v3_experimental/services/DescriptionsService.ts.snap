@@ -1,0 +1,51 @@
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+
+export type TDataCallWithDescriptions = {
+    query?: {
+        /**
+         * Testing backticks in string: `backticks` and ```multiple backticks``` should work
+         */
+        parameterWithBackticks?: unknown;
+        /**
+         * Testing multiline comments in string: First line
+         * Second line
+         *
+         * Fourth line
+         */
+        parameterWithBreaks?: unknown;
+        /**
+         * Testing expression placeholders in string: ${expression} should work
+         */
+        parameterWithExpressionPlaceholders?: unknown;
+        /**
+         * Testing quotes in string: 'single quote''' and "double quotes""" should work
+         */
+        parameterWithQuotes?: unknown;
+        /**
+         * Testing reserved characters in string: * inline * and ** inline ** should work
+         */
+        parameterWithReservedCharacters?: unknown;
+        /**
+         * Testing slashes in string: \backwards\\\ and /forwards/// should work
+         */
+        parameterWithSlashes?: unknown;
+    };
+};
+
+export class DescriptionsService {
+    /**
+     * @throws ApiError
+     */
+    public static callWithDescriptions(data: TDataCallWithDescriptions = {}): CancelablePromise<void> {
+        const { query } = data;
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v{api-version}/descriptions/',
+            query: {
+                ...query,
+            },
+        });
+    }
+}

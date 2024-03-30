@@ -1,0 +1,77 @@
+import type { ModelWithArray, ModelWithDictionary, ModelWithEnum, ModelWithString } from '../models';
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+
+export type TDataComplexTypes = {
+    query: {
+        /**
+         * Parameter containing object
+         */
+        parameterObject: {
+            first?: {
+                second?: {
+                    third?: string;
+                };
+            };
+        };
+        /**
+         * Parameter containing reference
+         */
+        parameterReference: ModelWithString;
+    };
+};
+export type TDataComplexParams = {
+    id: number;
+    requestBody?: {
+        readonly key: string | null;
+        name: string | null;
+        enabled?: boolean;
+        readonly type: 'Monkey' | 'Horse' | 'Bird';
+        listOfModels?: Array<ModelWithString> | null;
+        listOfStrings?: Array<string> | null;
+        parameters: ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary;
+        readonly user?: {
+            readonly id?: number;
+            readonly name?: string | null;
+        };
+    };
+
+    query?: {};
+};
+
+export class ComplexService {
+    /**
+     * @returns ModelWithString Successful response
+     * @throws ApiError
+     */
+    public static complexTypes(data: TDataComplexTypes): CancelablePromise<Array<ModelWithString>> {
+        const { query } = data;
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v{api-version}/complex',
+            query: {
+                ...query,
+            },
+            errors: {
+                400: `400 server error`,
+                500: `500 server error`,
+            },
+        });
+    }
+
+    /**
+     * @returns ModelWithString Success
+     * @throws ApiError
+     */
+    public static complexParams(data: TDataComplexParams): CancelablePromise<ModelWithString> {
+        const { query, id, requestBody } = data;
+        return __request(OpenAPI, {
+            method: 'PUT',
+            url: '/api/v{api-version}/complex/{id}',
+            path: {},
+            body: requestBody,
+            mediaType: 'application/json-patch+json',
+        });
+    }
+}
