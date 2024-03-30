@@ -6,7 +6,7 @@ export type TDataUploadFile = {
     /**
      * Supply a file reference for upload
      */
-    file: Blob;
+    file: Blob | File;
 };
 
 export class UploadService {
