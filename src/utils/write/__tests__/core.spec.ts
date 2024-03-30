@@ -24,7 +24,9 @@ describe('writeClientCore', () => {
 
         const config: Parameters<typeof writeClientCore>[3] = {
             client: 'fetch',
+            debug: false,
             enums: 'javascript',
+            experimental: false,
             exportCore: true,
             exportModels: true,
             exportSchemas: true,
@@ -64,7 +66,9 @@ describe('writeClientCore', () => {
 
         const config: Parameters<typeof writeClientCore>[3] = {
             client: 'fetch',
+            debug: false,
             enums: 'javascript',
+            experimental: false,
             exportCore: true,
             exportModels: true,
             exportSchemas: true,
@@ -104,7 +108,9 @@ describe('writeClientCore', () => {
         const config: Parameters<typeof writeClientCore>[3] = {
             base: 'foo',
             client: 'fetch',
+            debug: false,
             enums: 'javascript',
+            experimental: false,
             exportCore: true,
             exportModels: true,
             exportSchemas: true,

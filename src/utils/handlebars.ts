@@ -101,7 +101,24 @@ const modelImports = (model: Service, path: string) => {
     return `import type { ${model.imports.join(',')} } from '${path}';`;
 };
 
-const dataParameters = (parameters: OperationParameter[]) => {
+const dataParameters = (config: Config, parameters: OperationParameter[]) => {
+    if (config.experimental) {
+        let output = parameters
+            .filter(parameter => parameter.default !== undefined)
+            .map(parameter => {
+                const key = parameter.prop;
+                const value = parameter.name;
+                if (key === value || escapeName(key) === key) {
+                    return `${key}: ${parameter.default}`;
+                }
+                return `'${key}': ${parameter.default}`;
+            });
+        if (parameters.every(parameter => parameter.in === 'query')) {
+            output = [...output, '...query'];
+        }
+        return output.join(', ');
+    }
+
     const output = parameters.map(parameter => {
         const key = parameter.prop;
         const value = parameter.name;
@@ -132,6 +149,12 @@ const operationDataType = (config: Config, service: Service) => {
             const name = nameOperationDataType(operation.name);
             return `export type ${name} = {
                 ${sortByName(operation.parameters)
+                    .filter(parameter => {
+                        if (!config.experimental) {
+                            return true;
+                        }
+                        return parameter.in !== 'query';
+                    })
                     .map(parameter => {
                         let comment: string[] = [];
                         if (parameter.description) {
@@ -143,6 +166,26 @@ const operationDataType = (config: Config, service: Service) => {
                         ].join('\n');
                     })
                     .join('\n')}
+                ${
+                    config.experimental
+                        ? `
+                query${operation.parametersQuery.every(parameter => !parameter.isRequired) ? '?' : ''}: {
+                    ${sortByName(operation.parametersQuery)
+                        .map(parameter => {
+                            let comment: string[] = [];
+                            if (parameter.description) {
+                                comment = ['/**', ` * ${escapeComment(parameter.description)}`, ' */'];
+                            }
+                            return [
+                                ...comment,
+                                `${parameter.name + isRequired(parameter)}: ${partialType({ $config: config, ...parameter })}`,
+                            ].join('\n');
+                        })
+                        .join('\n')}
+                }
+                `
+                        : ''
+                }
             }`;
         });
     return output.join('\n');
@@ -151,7 +194,11 @@ const operationDataType = (config: Config, service: Service) => {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const registerHandlebarHelpers = (config: Config, client: Client): void => {
     Handlebars.registerHelper('camelCase', camelCase);
-    Handlebars.registerHelper('dataParameters', dataParameters);
+
+    Handlebars.registerHelper('dataParameters', function (parameters: OperationParameter[]) {
+        return dataParameters(config, parameters);
+    });
+
     Handlebars.registerHelper('enumKey', enumKey);
     Handlebars.registerHelper('enumName', enumName);
     Handlebars.registerHelper('enumUnionType', enumUnionType);

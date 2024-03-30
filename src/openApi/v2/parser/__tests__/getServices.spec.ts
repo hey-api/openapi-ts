@@ -6,7 +6,9 @@ describe('getServices', () => {
     it('should create a unnamed service if tags are empty', () => {
         const options: Parameters<typeof getServices>[1] = {
             client: 'fetch',
+            debug: false,
             enums: false,
+            experimental: false,
             exportCore: true,
             exportModels: true,
             exportSchemas: true,
