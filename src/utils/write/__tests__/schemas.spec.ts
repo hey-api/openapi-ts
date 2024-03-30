@@ -38,7 +38,9 @@ describe('writeClientSchemas', () => {
 
         await writeClientSchemas(client, mockTemplates, '/', {
             client: 'fetch',
+            debug: false,
             enums: 'javascript',
+            experimental: false,
             exportCore: true,
             exportModels: true,
             exportSchemas: true,

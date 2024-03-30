@@ -13,8 +13,17 @@ const {
 {{~#notEquals @root.$config.serviceResponse 'generics'~}}
 {{~#if parameters~}}
 const {
+{{#if @root.$config.experimental}}
+query,
+{{/if}}
 {{#each parameters}}
+{{#if @root.$config.experimental}}
+{{#notEquals in 'query'}}
 {{{name}}}{{#if default}} = {{{default}}}{{/if}},
+{{/notEquals}}
+{{else}}
+{{{name}}}{{#if default}} = {{{default}}}{{/if}},
+{{/if}}
 {{/each}}
 } = data;
 {{/if}}
