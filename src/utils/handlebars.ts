@@ -237,6 +237,16 @@ export const registerHandlebarHelpers = (config: Config, client: Client): void =
     });
 
     Handlebars.registerHelper(
+        'ifNotNullNotUndefined',
+        function (this: unknown, value: unknown, options: Handlebars.HelperOptions): string {
+            if (value !== undefined && value !== null) {
+                return options.fn(this);
+            }
+            return options.inverse(this);
+        }
+    );
+
+    Handlebars.registerHelper(
         'ifOperationDataOptional',
         function (this: unknown, parameters: OperationParameter[], options: Handlebars.HelperOptions) {
             return parameters.every(parameter => !parameter.isRequired) ? options.fn(this) : options.inverse(this);

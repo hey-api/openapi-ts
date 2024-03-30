@@ -1127,6 +1127,7 @@ export const $Pageable = {
         page: {
             type: 'number',
             format: 'int32',
+            minimum: 0,
         },
         size: {
             type: 'number',
@@ -1231,11 +1232,13 @@ export const $CompositionWithOneOfAndProperties = {
                     isRequired: true,
                     isNullable: true,
                     format: 'uint16',
+                    minimum: 0,
                 },
                 qux: {
                     type: 'number',
                     isRequired: true,
                     format: 'uint8',
+                    minimum: 0,
                 },
             },
         },
@@ -1250,11 +1253,13 @@ export const $CompositionWithOneOfAndProperties = {
                     isRequired: true,
                     isNullable: true,
                     format: 'uint16',
+                    minimum: 0,
                 },
                 qux: {
                     type: 'number',
                     isRequired: true,
                     format: 'uint8',
+                    minimum: 0,
                 },
             },
         },
