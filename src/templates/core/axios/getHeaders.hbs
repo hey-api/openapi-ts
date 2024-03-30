@@ -1,4 +1,4 @@
-export const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptions, formData?: FormData): Promise<Record<string, string>> => {
+export const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptions): Promise<Record<string, string>> => {
 	const [token, username, password, additionalHeaders] = await Promise.all([
 		resolve(options, config.TOKEN),
 		resolve(options, config.USERNAME),
@@ -6,13 +6,10 @@ export const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptio
 		resolve(options, config.HEADERS),
 	]);
 
-	const formHeaders = typeof formData?.getHeaders === 'function' && formData?.getHeaders() || {}
-
 	const headers = Object.entries({
 		Accept: 'application/json',
 		...additionalHeaders,
 		...options.headers,
-		...formHeaders,
 	})
 	.filter(([, value]) => value !== undefined && value !== null)
 	.reduce((headers, [key, value]) => ({
