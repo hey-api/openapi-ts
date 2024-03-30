@@ -39,12 +39,6 @@ import functionIsStringWithValue from '../templates/core/functions/isStringWithV
 import functionIsSuccess from '../templates/core/functions/isSuccess.hbs';
 import functionResolve from '../templates/core/functions/resolve.hbs';
 import templateCoreHttpRequest from '../templates/core/HttpRequest.hbs';
-import nodeGetHeaders from '../templates/core/node/getHeaders.hbs';
-import nodeGetRequestBody from '../templates/core/node/getRequestBody.hbs';
-import nodeGetResponseBody from '../templates/core/node/getResponseBody.hbs';
-import nodeGetResponseHeader from '../templates/core/node/getResponseHeader.hbs';
-import nodeRequest from '../templates/core/node/request.hbs';
-import nodeSendRequest from '../templates/core/node/sendRequest.hbs';
 import templateCoreSettings from '../templates/core/OpenAPI.hbs';
 import templateCoreRequest from '../templates/core/request.hbs';
 import templateCoreTypes from '../templates/core/types.hbs';
@@ -360,14 +354,6 @@ export const registerHandlebarTemplates = (config: Config, client: Client): Temp
     Handlebars.registerPartial('xhr/getResponseHeader', Handlebars.template(xhrGetResponseHeader));
     Handlebars.registerPartial('xhr/request', Handlebars.template(xhrRequest));
     Handlebars.registerPartial('xhr/sendRequest', Handlebars.template(xhrSendRequest));
-
-    // Specific files for the node client implementation
-    Handlebars.registerPartial('node/getHeaders', Handlebars.template(nodeGetHeaders));
-    Handlebars.registerPartial('node/getRequestBody', Handlebars.template(nodeGetRequestBody));
-    Handlebars.registerPartial('node/getResponseBody', Handlebars.template(nodeGetResponseBody));
-    Handlebars.registerPartial('node/getResponseHeader', Handlebars.template(nodeGetResponseHeader));
-    Handlebars.registerPartial('node/request', Handlebars.template(nodeRequest));
-    Handlebars.registerPartial('node/sendRequest', Handlebars.template(nodeSendRequest));
 
     // Specific files for the axios client implementation
     Handlebars.registerPartial('axios/getHeaders', Handlebars.template(axiosGetHeaders));

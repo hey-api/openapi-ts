@@ -156,7 +156,7 @@ export const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptio
         if (options.mediaType) {
             headers['Content-Type'] = options.mediaType;
         } else if (isBlob(options.body)) {
-            headers['Content-Type'] = 'application/octet-stream';
+            headers['Content-Type'] = options.body.type || 'application/octet-stream';
         } else if (isString(options.body)) {
             headers['Content-Type'] = 'text/plain';
         } else if (!isFormData(options.body)) {
@@ -172,7 +172,7 @@ export const getRequestBody = (options: ApiRequestOptions): unknown => {
         if (options.mediaType?.includes('/json')) {
             return JSON.stringify(options.body);
         } else if (isString(options.body) || isBlob(options.body) || isFormData(options.body)) {
-            return options.body as unknown;
+            return options.body;
         } else {
             return JSON.stringify(options.body);
         }
@@ -193,8 +193,8 @@ export const sendRequest = async (
 
     let request: RequestInit = {
         headers,
-        method: options.method,
         body: body ?? formData,
+        method: options.method,
         signal: controller.signal,
     };
 

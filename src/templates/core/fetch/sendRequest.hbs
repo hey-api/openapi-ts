@@ -16,9 +16,11 @@ export const sendRequest = async (
 		signal: controller.signal,
 	};
 
+	{{#equals @root.$config.client 'fetch'}}
 	if (config.WITH_CREDENTIALS) {
 		request.credentials = config.CREDENTIALS;
 	}
+	{{/equals}}
 
 	for (const fn of config.interceptors.request._fns) {
 		request = await fn(request)
