@@ -51,8 +51,8 @@
         "test:coverage": "vitest run --config vitest.config.unit.ts --coverage",
         "test:e2e": "vitest run --config vitest.config.e2e.ts",
         "test:sample": "node test/sample.cjs",
-        "test:update": "vitest run --config vitest.config.unit.ts --update",
-        "test:watch": "vitest --config vitest.config.unit.ts --watch",
+        "test:update": "vitest watch --config vitest.config.unit.ts --update",
+        "test:watch": "vitest watch --config vitest.config.unit.ts",
         "test": "vitest run --config vitest.config.unit.ts",
         "typecheck": "tsc --noEmit",
         "changeset": "changeset"
