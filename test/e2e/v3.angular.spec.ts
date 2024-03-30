@@ -131,15 +131,14 @@ describe('v3.angular', () => {
         );
     });
 
-    it('should throw unknown error (409)', async () => {
+    it('should throw unknown error (599)', async () => {
         const error = await browser.evaluate(async () => {
             // @ts-ignore
             const { ErrorService } = window.api;
-            ErrorService.testErrorCode(409).subscribe(console.log, console.log);
             try {
                 await new Promise((resolve, reject) => {
                     // const { ErrorService } = window.api;
-                    ErrorService.testErrorCode(409).subscribe(resolve, reject);
+                    ErrorService.testErrorCode(599).subscribe(resolve, reject);
                 });
             } catch (error) {
                 return JSON.stringify({
@@ -157,12 +156,12 @@ describe('v3.angular', () => {
             JSON.stringify({
                 name: 'ApiError',
                 message:
-                    'Generic Error: status: 409; status text: Conflict; body: {\n  "status": 409,\n  "message": "hello world"\n}',
-                url: 'http://localhost:3000/base/api/v1.0/error?status=409',
-                status: 409,
-                statusText: 'Conflict',
+                    'Generic Error: status: 599; status text: unknown; body: {\n  "status": 599,\n  "message": "hello world"\n}',
+                url: 'http://localhost:3000/base/api/v1.0/error?status=599',
+                status: 599,
+                statusText: 'unknown',
                 body: {
-                    status: 409,
+                    status: 599,
                     message: 'hello world',
                 },
             })

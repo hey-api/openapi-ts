@@ -143,13 +143,13 @@ describe('client.xhr', () => {
         );
     });
 
-    it('should throw unknown error (409)', async () => {
+    it('should throw unknown error (599)', async () => {
         const error = await browser.evaluate(async () => {
             try {
                 // @ts-ignore
                 const { ApiClient } = window.api;
                 const client = new ApiClient();
-                await client.error.testErrorCode(409);
+                await client.error.testErrorCode(599);
             } catch (error) {
                 return JSON.stringify({
                     name: error.name,
@@ -166,12 +166,12 @@ describe('client.xhr', () => {
             JSON.stringify({
                 name: 'ApiError',
                 message:
-                    'Generic Error: status: 409; status text: Conflict; body: {\n  "status": 409,\n  "message": "hello world"\n}',
-                url: 'http://localhost:3000/base/api/v1.0/error?status=409',
-                status: 409,
-                statusText: 'Conflict',
+                    'Generic Error: status: 599; status text: unknown; body: {\n  "status": 599,\n  "message": "hello world"\n}',
+                url: 'http://localhost:3000/base/api/v1.0/error?status=599',
+                status: 599,
+                statusText: 'unknown',
                 body: {
-                    status: 409,
+                    status: 599,
                     message: 'hello world',
                 },
             })
