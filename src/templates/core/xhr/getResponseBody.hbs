@@ -3,9 +3,7 @@ export const getResponseBody = (xhr: XMLHttpRequest): unknown => {
 		try {
 			const contentType = xhr.getResponseHeader('Content-Type');
 			if (contentType) {
-				const jsonTypes = ['application/json', 'application/problem+json'];
-				const isJSON = jsonTypes.some(type => contentType.toLowerCase().startsWith(type));
-				if (isJSON) {
+				if (contentType.includes('application/json') || contentType.includes('+json')) {
 					return JSON.parse(xhr.responseText);
 				} else {
 					return xhr.responseText;

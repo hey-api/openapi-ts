@@ -160,7 +160,7 @@ export const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptio
 
 export const getRequestBody = (options: ApiRequestOptions): unknown => {
     if (options.body !== undefined) {
-        if (options.mediaType?.includes('/json')) {
+        if (options.mediaType?.includes('application/json') || options.mediaType?.includes('+json')) {
             return JSON.stringify(options.body);
         } else if (isString(options.body) || isBlob(options.body) || isFormData(options.body)) {
             return options.body;
@@ -218,9 +218,7 @@ export const getResponseBody = (xhr: XMLHttpRequest): unknown => {
         try {
             const contentType = xhr.getResponseHeader('Content-Type');
             if (contentType) {
-                const jsonTypes = ['application/json', 'application/problem+json'];
-                const isJSON = jsonTypes.some(type => contentType.toLowerCase().startsWith(type));
-                if (isJSON) {
+                if (contentType.includes('application/json') || contentType.includes('+json')) {
                     return JSON.parse(xhr.responseText);
                 } else {
                     return xhr.responseText;
