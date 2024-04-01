@@ -1,5 +1,19 @@
 # @hey-api/openapi-ts
 
+## 0.33.0
+
+### Minor Changes
+
+- feat(fetch): detect form data repsonses properly ([#195](https://github.com/hey-api/openapi-ts/pull/195))
+
+- feat(fetch): add application/octet-stream, application/pdf, and application/zip as binary response types ([#195](https://github.com/hey-api/openapi-ts/pull/195))
+
+### Patch Changes
+
+- fix(client): do not create or export empty files ([#200](https://github.com/hey-api/openapi-ts/pull/200))
+
+- client(angular/fetch/xhr): detect all application/json or +json as JSON ([#195](https://github.com/hey-api/openapi-ts/pull/195))
+
 ## 0.32.1
 
 ### Patch Changes
