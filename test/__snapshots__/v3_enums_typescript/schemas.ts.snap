@@ -71,14 +71,17 @@ export const $SimpleStringWithPattern = {
 
 export const $EnumWithStrings = {
     type: 'Enum',
+    enum: ['Success', 'Warning', 'Error', "'Single Quote'", '"Double Quotes"', 'Non-ascii: øæåôöØÆÅÔÖ字符串'],
 } as const;
 
 export const $EnumWithReplacedCharacters = {
     type: 'Enum',
+    enum: ["'Single Quote'", '"Double Quotes"', 'øæåôöØÆÅÔÖ字符串', 3.1, ''],
 } as const;
 
 export const $EnumWithNumbers = {
     type: 'Enum',
+    enum: [1, 2, 3, 1.1, 1.2, 1.3, 100, 200, 300, -100, -200, -300, -1.1, -1.2, -1.3],
     default: 200,
 } as const;
 
@@ -89,6 +92,7 @@ export const $EnumFromDescription = {
 
 export const $EnumWithExtensions = {
     type: 'Enum',
+    enum: [200, 400, 500],
 } as const;
 
 export const $ArrayWithNumbers = {
@@ -323,9 +327,11 @@ export const $ModelWithEnum = {
     properties: {
         test: {
             type: 'Enum',
+            enum: ['Success', 'Warning', 'Error', 'ØÆÅ字符串'],
         },
         statusCode: {
             type: 'Enum',
+            enum: ['100', '200 FOO', '300 FOO_BAR', '400 foo-bar', '500 foo.bar', '600 foo&bar'],
         },
         bool: {
             type: 'boolean',
@@ -339,6 +345,7 @@ export const $ModelWithEnumWithHyphen = {
     properties: {
         'foo-bar-baz-qux': {
             type: 'Enum',
+            enum: ['3.0'],
             default: '3.0',
         },
     },
@@ -361,6 +368,7 @@ export const $ModelWithNestedEnums = {
             type: 'dictionary',
             contains: {
                 type: 'Enum',
+                enum: ['Success', 'Warning', 'Error'],
             },
         },
         dictionaryWithEnumFromDescription: {
@@ -374,6 +382,7 @@ export const $ModelWithNestedEnums = {
             type: 'array',
             contains: {
                 type: 'Enum',
+                enum: ['Success', 'Warning', 'Error'],
             },
         },
         arrayWithDescription: {
@@ -654,6 +663,7 @@ export const $CompositionWithNestedAnyAndTypeNull = {
 
 export const $Enum1 = {
     type: 'Enum',
+    enum: ['Bird', 'Dog'],
 } as const;
 
 export const $ConstValue = {
@@ -1296,6 +1306,7 @@ export const $ModelWithOneOfEnum = {
             properties: {
                 foo: {
                     type: 'Enum',
+                    enum: ['Bar'],
                     isRequired: true,
                 },
             },
@@ -1304,6 +1315,7 @@ export const $ModelWithOneOfEnum = {
             properties: {
                 foo: {
                     type: 'Enum',
+                    enum: ['Baz'],
                     isRequired: true,
                 },
             },
@@ -1312,6 +1324,7 @@ export const $ModelWithOneOfEnum = {
             properties: {
                 foo: {
                     type: 'Enum',
+                    enum: ['Qux'],
                     isRequired: true,
                 },
             },
@@ -1325,6 +1338,7 @@ export const $ModelWithOneOfEnum = {
                 },
                 foo: {
                     type: 'Enum',
+                    enum: ['Quux'],
                     isRequired: true,
                 },
             },
@@ -1349,6 +1363,7 @@ export const $ModelWithOneOfEnum = {
                 },
                 foo: {
                     type: 'Enum',
+                    enum: ['Corge'],
                     isRequired: true,
                 },
             },
@@ -1358,10 +1373,12 @@ export const $ModelWithOneOfEnum = {
 
 export const $ModelWithNestedArrayEnumsDataFoo = {
     type: 'Enum',
+    enum: ['foo', 'bar'],
 } as const;
 
 export const $ModelWithNestedArrayEnumsDataBar = {
     type: 'Enum',
+    enum: ['baz', 'qux'],
 } as const;
 
 export const $ModelWithNestedArrayEnumsData = {
