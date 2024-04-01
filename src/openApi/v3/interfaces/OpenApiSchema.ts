@@ -13,7 +13,7 @@ export interface OpenApiSchema extends OpenApiReference, WithEnumExtension {
     allOf?: OpenApiSchema[];
     anyOf?: OpenApiSchema[];
     const?: string | number | boolean | null;
-    default?: number;
+    default?: unknown;
     deprecated?: boolean;
     description?: string;
     discriminator?: OpenApiDiscriminator;
@@ -52,7 +52,7 @@ export interface OpenApiSchema extends OpenApiReference, WithEnumExtension {
     readOnly?: boolean;
     required?: string[];
     title?: string;
-    type?: string | string[];
+    type?: string;
     uniqueItems?: boolean;
     writeOnly?: boolean;
     xml?: OpenApiXml;
