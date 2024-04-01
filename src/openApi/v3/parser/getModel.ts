@@ -1,11 +1,11 @@
 import type { Model } from '../../common/interfaces/client';
+import { getDefault } from '../../common/parser/getDefault';
 import { getEnums } from '../../common/parser/getEnums';
 import { getPattern } from '../../common/parser/getPattern';
 import { getType } from '../../common/parser/type';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 import { findModelComposition, getModelComposition } from './getModelComposition';
-import { getModelDefault } from './getModelDefault';
 import { getAdditionalPropertiesModel, getModelProperties } from './getModelProperties';
 import { inferType } from './inferType';
 
@@ -59,7 +59,7 @@ export const getModel = (
         model.imports = [...model.imports, ...definitionRef.imports];
         model.template = definitionRef.template;
         model.type = definitionRef.type;
-        model.default = getModelDefault(definition, model);
+        model.default = getDefault(definition, model);
         return model;
     }
 
@@ -70,7 +70,7 @@ export const getModel = (
             model.enum = [...model.enum, ...enums];
             model.export = 'enum';
             model.type = 'string';
-            model.default = getModelDefault(definition, model);
+            model.default = getDefault(definition, model);
             return model;
         }
     }
@@ -84,7 +84,7 @@ export const getModel = (
             model.imports = [...model.imports, ...arrayItems.imports];
             model.template = arrayItems.template;
             model.type = arrayItems.type;
-            model.default = getModelDefault(definition, model);
+            model.default = getDefault(definition, model);
             return model;
         }
 
@@ -112,7 +112,7 @@ export const getModel = (
         model.link = arrayItems;
         model.template = arrayItems.template;
         model.type = arrayItems.type;
-        model.default = getModelDefault(definition, model);
+        model.default = getDefault(definition, model);
         return model;
     }
 
@@ -133,7 +133,7 @@ export const getModel = (
             model.base = 'any';
             model.export = 'interface';
             model.type = 'any';
-            model.default = getModelDefault(definition, model);
+            model.default = getDefault(definition, model);
 
             const modelProperties = getModelProperties(openApi, definition, getModel, model);
             modelProperties.forEach(modelProperty => {
@@ -176,7 +176,7 @@ export const getModel = (
         model.isNullable = definitionType.isNullable || model.isNullable;
         model.template = definitionType.template;
         model.type = definitionType.type;
-        model.default = getModelDefault(definition, model);
+        model.default = getDefault(definition, model);
         return model;
     }
 

@@ -1,7 +1,12 @@
 import type { Model } from '../../common/interfaces/client';
-import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
+import type { OpenApiParameter } from '../../v2/interfaces/OpenApiParameter';
+import type { OpenApiSchema } from '../../v3/interfaces/OpenApiSchema';
+import type { OperationParameter } from '../interfaces/client';
 
-export const getModelDefault = (definition: OpenApiSchema, model?: Model): string | undefined => {
+export const getDefault = (
+    definition: OpenApiSchema | OpenApiParameter,
+    model?: Model | OperationParameter
+): string | undefined => {
     if (definition.default === undefined) {
         return undefined;
     }
@@ -16,8 +21,8 @@ export const getModelDefault = (definition: OpenApiSchema, model?: Model): strin
         case 'int':
         case 'integer':
         case 'number':
-            if (model?.export === 'enum' && model.enum?.[definition.default]) {
-                const { value } = model.enum[definition.default];
+            if (model?.export === 'enum' && model.enum?.[definition.default as number]) {
+                const { value } = model.enum[definition.default as number];
                 return typeof value === 'string' ? `'${value}'` : String(value);
             }
             return String(definition.default);
@@ -32,6 +37,5 @@ export const getModelDefault = (definition: OpenApiSchema, model?: Model): strin
                 // Ignore
             }
     }
-
     return undefined;
 };
