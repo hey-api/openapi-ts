@@ -1,5 +1,8 @@
 {
 	type: 'Enum',
+{{#if enum}}
+	enum: [{{#each enum}}{{{enumValue value}}},{{/each}}],
+{{/if}}
 {{#ifNotNullNotUndefined default}}
 	default: {{{default}}},
 {{/ifNotNullNotUndefined}}
