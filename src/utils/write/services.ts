@@ -19,6 +19,10 @@ export const writeClientServices = async (
     outputPath: string,
     config: Config
 ): Promise<void> => {
+    // Dont create empty file
+    if (client.services.length === 0) {
+        return;
+    }
     // Generate file for each service.
     for (const service of client.services) {
         const file = path.resolve(outputPath, `${service.name}${config.postfixServices}.ts`);
