@@ -3071,7 +3071,8 @@
                     "foo": {
                         "type": "string"
                     }
-                }
+                },
+                "default": null
             },
             "ModelWithNullableObject": {
                 "type": "object",

@@ -11,9 +11,9 @@
 	{{/each}}
 {{/if}}
 	},
-{{#ifNotNullNotUndefined default}}
+{{#ifNotUndefined default}}
 	default: {{{default}}},
-{{/ifNotNullNotUndefined}}
+{{/ifNotUndefined}}
 {{#if isReadOnly}}
 	isReadOnly: {{{isReadOnly}}},
 {{/if}}

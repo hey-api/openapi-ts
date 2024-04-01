@@ -43,6 +43,7 @@ export function handlebarsPlugin(): Plugin {
                         exactArray: true,
                         ifdef: true,
                         ifNotNullNotUndefined: true,
+                        ifNotUndefined: true,
                         ifOperationDataOptional: true,
                         intersection: true,
                         modelImports: true,

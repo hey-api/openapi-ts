@@ -1288,6 +1288,7 @@ export const $NullableObject = {
             type: 'string',
         },
     },
+    default: null,
     isNullable: true,
 } as const;
 
