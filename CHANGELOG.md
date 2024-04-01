@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.33.1
+
+### Patch Changes
+
+- fix(axios): set content type to multipart/form-data when using form data ([#204](https://github.com/hey-api/openapi-ts/pull/204))
+
 ## 0.33.0
 
 ### Minor Changes
