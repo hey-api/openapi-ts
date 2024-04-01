@@ -36,6 +36,8 @@ export const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptio
 		} else if (!isFormData(options.body)) {
 			headers['Content-Type'] = 'application/json';
 		}
+	} else if (options.formData !== undefined) {
+		headers['Content-Type'] = options.mediaType;
 	}
 
 	return headers;
