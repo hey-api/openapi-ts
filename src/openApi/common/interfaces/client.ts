@@ -56,6 +56,7 @@ export interface Operation extends OperationParameters {
 }
 
 export interface Schema {
+    default?: unknown;
     exclusiveMaximum?: boolean;
     exclusiveMinimum?: boolean;
     format?:
@@ -95,7 +96,6 @@ export interface Model extends Schema {
      */
     $refs: string[];
     base: string;
-    default?: string;
     deprecated?: boolean;
     description: string | null;
     enum: Enum[];
