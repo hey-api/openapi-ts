@@ -4,9 +4,9 @@
 	description: `{{{escapeDescription description}}}`,
 {{/if}}
 	contains: [{{#each properties}}{{>schema}}{{#unless @last}}, {{/unless}}{{/each}}],
-{{#ifNotNullNotUndefined default}}
+{{#ifNotUndefined default}}
 	default: {{{default}}},
-{{/ifNotNullNotUndefined}}
+{{/ifNotUndefined}}
 {{#if isReadOnly}}
 	isReadOnly: {{{isReadOnly}}},
 {{/if}}

@@ -245,6 +245,15 @@ export const registerHandlebarHelpers = (config: Config, client: Client): void =
             return options.inverse(this);
         }
     );
+    Handlebars.registerHelper(
+        'ifNotUndefined',
+        function (this: unknown, value: unknown, options: Handlebars.HelperOptions): string {
+            if (value !== undefined) {
+                return options.fn(this);
+            }
+            return options.inverse(this);
+        }
+    );
 
     Handlebars.registerHelper(
         'ifOperationDataOptional',

@@ -5,9 +5,9 @@
 {{#if description}}
 	description: `{{{escapeDescription description}}}`,
 {{/if}}
-{{#ifNotNullNotUndefined default}}
+{{#ifNotUndefined default}}
 	default: {{{default}}},
-{{/ifNotNullNotUndefined}}
+{{/ifNotUndefined}}
 {{#if isReadOnly}}
 	isReadOnly: {{{isReadOnly}}},
 {{/if}}
