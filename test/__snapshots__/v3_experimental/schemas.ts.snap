@@ -79,6 +79,7 @@ export const $EnumWithReplacedCharacters = {
 
 export const $EnumWithNumbers = {
     type: 'Enum',
+    default: 200,
 } as const;
 
 export const $EnumFromDescription = {
@@ -109,6 +110,7 @@ export const $ArrayWithStrings = {
     contains: {
         type: 'string',
     },
+    default: ['test'],
 } as const;
 
 export const $ArrayWithReferences = {
@@ -151,6 +153,7 @@ export const $ArrayWithAnyOfProperties = {
                 properties: {
                     foo: {
                         type: 'string',
+                        default: 'test',
                     },
                 },
             },
@@ -336,6 +339,7 @@ export const $ModelWithEnumWithHyphen = {
     properties: {
         'foo-bar-baz-qux': {
             type: 'Enum',
+            default: '3.0',
         },
     },
 } as const;
@@ -1126,6 +1130,7 @@ export const $Pageable = {
     properties: {
         page: {
             type: 'number',
+            default: 0,
             format: 'int32',
             minimum: 0,
         },

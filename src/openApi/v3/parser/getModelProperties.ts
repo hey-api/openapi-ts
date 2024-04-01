@@ -78,6 +78,7 @@ export const getModelProperties = (
             > = {
                 deprecated: property.deprecated === true,
                 description: property.description || null,
+                default: property.default,
                 exclusiveMaximum: property.exclusiveMaximum,
                 exclusiveMinimum: property.exclusiveMinimum,
                 format: property.format,
@@ -138,6 +139,7 @@ export const getModelProperties = (
                     enum: model.enum,
                     enums: model.enums,
                     export: model.export,
+                    default: model.default,
                     imports: model.imports,
                     isNullable: model.isNullable || property.nullable === true,
                     link: model.link,

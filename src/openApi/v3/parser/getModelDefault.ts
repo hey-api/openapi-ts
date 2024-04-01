@@ -21,13 +21,10 @@ export const getModelDefault = (definition: OpenApiSchema, model?: Model): strin
                 return typeof value === 'string' ? `'${value}'` : String(value);
             }
             return String(definition.default);
-
-        case 'boolean':
-            return JSON.stringify(definition.default);
-
         case 'string':
             return `'${definition.default}'`;
-
+        case 'array':
+        case 'boolean':
         case 'object':
             try {
                 return JSON.stringify(definition.default, null, 4);
