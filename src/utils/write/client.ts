@@ -50,7 +50,7 @@ export const writeClient = async (client: Client, templates: Templates, config: 
             fn: writeClientModels,
         },
         {
-            dir: 'services',
+            dir: '',
             enabled: config.exportServices,
             fn: writeClientServices,
         },
