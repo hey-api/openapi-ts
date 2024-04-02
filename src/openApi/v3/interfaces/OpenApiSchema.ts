@@ -52,7 +52,7 @@ export interface OpenApiSchema extends OpenApiReference, WithEnumExtension {
     readOnly?: boolean;
     required?: string[];
     title?: string;
-    type?: string;
+    type?: string | string[];
     uniqueItems?: boolean;
     writeOnly?: boolean;
     xml?: OpenApiXml;
