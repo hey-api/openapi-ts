@@ -32,6 +32,9 @@ import type { OpenAPIConfig } from './OpenAPI';
 {{>functions/getUrl}}
 
 
+{{>functions/getFormData}}
+
+
 {{>functions/resolve}}
 
 
@@ -65,7 +68,7 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions, ax
 	return new CancelablePromise(async (resolve, reject, onCancel) => {
 		try {
 			const url = getUrl(config, options);
-			const formData = options.formData;
+			const formData = getFormData(options);
 			const body = getRequestBody(options);
 			const headers = await getHeaders(config, options);
 
