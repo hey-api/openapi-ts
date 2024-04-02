@@ -53,6 +53,12 @@ or
 yarn add @hey-api/openapi-ts -D
 ```
 
+or
+
+```sh
+pnpm add @hey-api/openapi-ts -D
+```
+
 If you want to use `openapi-ts` with CLI, add a script to your `package.json` file
 
 ```json
