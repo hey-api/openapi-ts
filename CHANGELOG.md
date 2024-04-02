@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.33.2
+
+### Patch Changes
+
+- fix(axios): properly type content-type headers assignment ([#206](https://github.com/hey-api/openapi-ts/pull/206))
+
 ## 0.33.1
 
 ### Patch Changes
