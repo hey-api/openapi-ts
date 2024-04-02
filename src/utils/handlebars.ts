@@ -94,13 +94,6 @@ const escapeComment = (value: string) =>
         .replace(/\/\*/g, '*')
         .replace(/\r?\n(.*)/g, (_, w) => `${EOL} * ${w.trim()}`);
 
-const modelImports = (model: Service, path: string) => {
-    if (model.imports.length === 0) {
-        return '';
-    }
-    return `import type { ${model.imports.join(',')} } from '${path}';`;
-};
-
 const dataParameters = (config: Config, parameters: OperationParameter[]) => {
     if (config.experimental) {
         let output = parameters
@@ -266,8 +259,6 @@ export const registerHandlebarHelpers = (config: Config, client: Client): void =
             return options.fn(uniqueTypesString);
         }
     );
-
-    Handlebars.registerHelper('modelImports', modelImports);
 
     Handlebars.registerHelper(
         'modelUnionType',
