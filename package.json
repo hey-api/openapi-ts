@@ -91,7 +91,6 @@
         "@typescript-eslint/eslint-plugin": "7.5.0",
         "@typescript-eslint/parser": "7.5.0",
         "@vitest/coverage-v8": "1.4.0",
-        "abort-controller": "3.0.0",
         "axios": "1.6.8",
         "cross-spawn": "7.0.3",
         "eslint": "8.57.0",
