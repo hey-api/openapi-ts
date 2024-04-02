@@ -1,0 +1,1243 @@
+import type { CancelablePromise } from './core/CancelablePromise';
+import type { BaseHttpRequest } from './core/BaseHttpRequest';
+
+import type {
+    ModelWithArrayReadOnlyAndWriteOnly,
+    ModelWithReadOnlyAndWriteOnly,
+    ModelWithNestedArrayEnumsDataFoo,
+    ModelWithOneOfEnum,
+    ModelWithString,
+    Pageable,
+    DeprecatedModel,
+    ModelThatExtends,
+    ModelThatExtendsExtends,
+    ModelWithArray,
+    ModelWithDictionary,
+    ModelWithEnum,
+    NonAsciiStringæøåÆØÅöôêÊ字符串,
+} from './models';
+
+export type TDataPostServiceWithEmptyTag = {
+    requestBody: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
+};
+
+export class DefaultService {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @throws ApiError
+     */
+    public serviceWithEmptyTag(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/no-tag',
+        });
+    }
+
+    /**
+     * @returns ModelWithReadOnlyAndWriteOnly
+     * @throws ApiError
+     */
+    public postServiceWithEmptyTag(
+        data: TDataPostServiceWithEmptyTag
+    ): CancelablePromise<ModelWithReadOnlyAndWriteOnly> {
+        const { requestBody } = data;
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/v{api-version}/no-tag',
+            body: requestBody,
+            mediaType: 'application/json',
+        });
+    }
+}
+
+export class SimpleService {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @throws ApiError
+     */
+    public getCallWithoutParametersAndResponse(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/simple',
+        });
+    }
+
+    /**
+     * @throws ApiError
+     */
+    public putCallWithoutParametersAndResponse(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'PUT',
+            url: '/api/v{api-version}/simple',
+        });
+    }
+
+    /**
+     * @throws ApiError
+     */
+    public postCallWithoutParametersAndResponse(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/v{api-version}/simple',
+        });
+    }
+
+    /**
+     * @throws ApiError
+     */
+    public deleteCallWithoutParametersAndResponse(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'DELETE',
+            url: '/api/v{api-version}/simple',
+        });
+    }
+
+    /**
+     * @throws ApiError
+     */
+    public optionsCallWithoutParametersAndResponse(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'OPTIONS',
+            url: '/api/v{api-version}/simple',
+        });
+    }
+
+    /**
+     * @throws ApiError
+     */
+    public headCallWithoutParametersAndResponse(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'HEAD',
+            url: '/api/v{api-version}/simple',
+        });
+    }
+
+    /**
+     * @throws ApiError
+     */
+    public patchCallWithoutParametersAndResponse(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'PATCH',
+            url: '/api/v{api-version}/simple',
+        });
+    }
+}
+
+export type TDataDeleteFoo = {
+    /**
+     * bar in method
+     */
+    bar: string;
+    /**
+     * foo in method
+     */
+    foo: string;
+};
+export type TDataCallWithParameters = {
+    fooAllOfEnum: ModelWithNestedArrayEnumsDataFoo;
+    fooRefEnum?: ModelWithNestedArrayEnumsDataFoo;
+    /**
+     * This is the parameter that goes into the cookie
+     */
+    parameterCookie: string | null;
+    /**
+     * This is the parameter that goes into the form data
+     */
+    parameterForm: string | null;
+    /**
+     * This is the parameter that goes into the header
+     */
+    parameterHeader: string | null;
+    /**
+     * This is the parameter that goes into the path
+     */
+    parameterPath: string | null;
+    /**
+     * This is the parameter that goes into the query params
+     */
+    parameterQuery: string | null;
+    /**
+     * This is the parameter that goes into the body
+     */
+    requestBody: ModelWithString | null;
+};
+export type TDataCallWithWeirdParameterNames = {
+    /**
+     * This is the parameter with a reserved keyword
+     */
+    _default?: string;
+    /**
+     * This is the parameter that goes into the cookie
+     */
+    parameterCookie: string | null;
+    /**
+     * This is the parameter that goes into the request form data
+     */
+    parameterForm: string | null;
+    /**
+     * This is the parameter that goes into the request header
+     */
+    parameterHeader: string | null;
+    /**
+     * This is the parameter that goes into the path
+     */
+    parameterPath1?: string;
+    /**
+     * This is the parameter that goes into the path
+     */
+    parameterPath2?: string;
+    /**
+     * This is the parameter that goes into the path
+     */
+    parameterPath3?: string;
+    /**
+     * This is the parameter that goes into the request query params
+     */
+    parameterQuery: string | null;
+    /**
+     * This is the parameter that goes into the body
+     */
+    requestBody: ModelWithString | null;
+};
+export type TDataGetCallWithOptionalParam = {
+    /**
+     * This is an optional parameter
+     */
+    parameter?: string;
+    /**
+     * This is a required parameter
+     */
+    requestBody: ModelWithOneOfEnum;
+};
+export type TDataPostCallWithOptionalParam = {
+    /**
+     * This is a required parameter
+     */
+    parameter: Pageable;
+    /**
+     * This is an optional parameter
+     */
+    requestBody?: ModelWithString;
+};
+
+export class ParametersService {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @throws ApiError
+     */
+    public deleteFoo(data: TDataDeleteFoo): CancelablePromise<void> {
+        const { bar, foo } = data;
+        return this.httpRequest.request({
+            method: 'DELETE',
+            url: '/api/v{api-version}/foo/{foo}/bar/{bar}',
+            path: {
+                foo,
+                bar,
+            },
+        });
+    }
+
+    /**
+     * @throws ApiError
+     */
+    public callWithParameters(data: TDataCallWithParameters): CancelablePromise<void> {
+        const {
+            fooAllOfEnum,
+            fooRefEnum,
+            parameterCookie,
+            parameterForm,
+            parameterHeader,
+            parameterPath,
+            parameterQuery,
+            requestBody,
+        } = data;
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/v{api-version}/parameters/{parameterPath}',
+            path: {
+                parameterPath,
+            },
+            cookies: {
+                parameterCookie,
+            },
+            headers: {
+                parameterHeader,
+            },
+            query: {
+                foo_ref_enum: fooRefEnum,
+                foo_all_of_enum: fooAllOfEnum,
+                parameterQuery,
+            },
+            formData: {
+                parameterForm,
+            },
+            body: requestBody,
+            mediaType: 'application/json',
+        });
+    }
+
+    /**
+     * @throws ApiError
+     */
+    public callWithWeirdParameterNames(data: TDataCallWithWeirdParameterNames): CancelablePromise<void> {
+        const {
+            _default,
+            parameterCookie,
+            parameterForm,
+            parameterHeader,
+            parameterPath1,
+            parameterPath2,
+            parameterPath3,
+            parameterQuery,
+            requestBody,
+        } = data;
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}',
+            path: {
+                'parameter.path.1': parameterPath1,
+                'parameter-path-2': parameterPath2,
+                'PARAMETER-PATH-3': parameterPath3,
+            },
+            cookies: {
+                'PARAMETER-COOKIE': parameterCookie,
+            },
+            headers: {
+                'parameter.header': parameterHeader,
+            },
+            query: {
+                default: _default,
+                'parameter-query': parameterQuery,
+            },
+            formData: {
+                parameter_form: parameterForm,
+            },
+            body: requestBody,
+            mediaType: 'application/json',
+        });
+    }
+
+    /**
+     * @throws ApiError
+     */
+    public getCallWithOptionalParam(data: TDataGetCallWithOptionalParam): CancelablePromise<void> {
+        const { parameter, requestBody } = data;
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/parameters/',
+            query: {
+                parameter,
+            },
+            body: requestBody,
+            mediaType: 'application/json',
+        });
+    }
+
+    /**
+     * @throws ApiError
+     */
+    public postCallWithOptionalParam(data: TDataPostCallWithOptionalParam): CancelablePromise<void> {
+        const { parameter, requestBody } = data;
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/v{api-version}/parameters/',
+            query: {
+                parameter,
+            },
+            body: requestBody,
+            mediaType: 'application/json',
+        });
+    }
+}
+
+export type TDataCallWithDescriptions = {
+    /**
+     * Testing backticks in string: `backticks` and ```multiple backticks``` should work
+     */
+    parameterWithBackticks?: unknown;
+    /**
+     * Testing multiline comments in string: First line
+     * Second line
+     *
+     * Fourth line
+     */
+    parameterWithBreaks?: unknown;
+    /**
+     * Testing expression placeholders in string: ${expression} should work
+     */
+    parameterWithExpressionPlaceholders?: unknown;
+    /**
+     * Testing quotes in string: 'single quote''' and "double quotes""" should work
+     */
+    parameterWithQuotes?: unknown;
+    /**
+     * Testing reserved characters in string: * inline * and ** inline ** should work
+     */
+    parameterWithReservedCharacters?: unknown;
+    /**
+     * Testing slashes in string: \backwards\\\ and /forwards/// should work
+     */
+    parameterWithSlashes?: unknown;
+};
+
+export class DescriptionsService {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @throws ApiError
+     */
+    public callWithDescriptions(data: TDataCallWithDescriptions = {}): CancelablePromise<void> {
+        const {
+            parameterWithBackticks,
+            parameterWithBreaks,
+            parameterWithExpressionPlaceholders,
+            parameterWithQuotes,
+            parameterWithReservedCharacters,
+            parameterWithSlashes,
+        } = data;
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/v{api-version}/descriptions/',
+            query: {
+                parameterWithBreaks,
+                parameterWithBackticks,
+                parameterWithSlashes,
+                parameterWithExpressionPlaceholders,
+                parameterWithQuotes,
+                parameterWithReservedCharacters,
+            },
+        });
+    }
+}
+
+export type TDataDeprecatedCall = {
+    /**
+     * This parameter is deprecated
+     */
+    parameter: DeprecatedModel | null;
+};
+
+export class DeprecatedService {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @deprecated
+     * @throws ApiError
+     */
+    public deprecatedCall(data: TDataDeprecatedCall): CancelablePromise<void> {
+        const { parameter } = data;
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/v{api-version}/parameters/deprecated',
+            headers: {
+                parameter,
+            },
+        });
+    }
+}
+
+export type TDataPostApiRequestBody = {
+    /**
+     * A reusable request body
+     */
+    foo?: ModelWithString;
+    /**
+     * This is a reusable parameter
+     */
+    parameter?: string;
+};
+
+export class RequestBodyService {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @throws ApiError
+     */
+    public postApiRequestBody(data: TDataPostApiRequestBody = {}): CancelablePromise<void> {
+        const { foo, parameter } = data;
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/v{api-version}/requestBody/',
+            query: {
+                parameter,
+            },
+            body: foo,
+            mediaType: 'application/json',
+        });
+    }
+}
+
+export type TDataPostApiFormData = {
+    /**
+     * A reusable request body
+     */
+    formData?: ModelWithString;
+    /**
+     * This is a reusable parameter
+     */
+    parameter?: string;
+};
+
+export class FormDataService {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @throws ApiError
+     */
+    public postApiFormData(data: TDataPostApiFormData = {}): CancelablePromise<void> {
+        const { formData, parameter } = data;
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/v{api-version}/formData/',
+            query: {
+                parameter,
+            },
+            formData: formData,
+            mediaType: 'multipart/form-data',
+        });
+    }
+}
+
+export type TDataCallWithDefaultParameters = {
+    /**
+     * This is a simple boolean with default value
+     */
+    parameterBoolean?: boolean | null;
+    /**
+     * This is a simple enum with default value
+     */
+    parameterEnum?: 'Success' | 'Warning' | 'Error';
+    /**
+     * This is a simple model with default value
+     */
+    parameterModel?: ModelWithString | null;
+    /**
+     * This is a simple number with default value
+     */
+    parameterNumber?: number | null;
+    /**
+     * This is a simple string with default value
+     */
+    parameterString?: string | null;
+};
+export type TDataCallWithDefaultOptionalParameters = {
+    /**
+     * This is a simple boolean that is optional with default value
+     */
+    parameterBoolean?: boolean;
+    /**
+     * This is a simple enum that is optional with default value
+     */
+    parameterEnum?: 'Success' | 'Warning' | 'Error';
+    /**
+     * This is a simple model that is optional with default value
+     */
+    parameterModel?: ModelWithString;
+    /**
+     * This is a simple number that is optional with default value
+     */
+    parameterNumber?: number;
+    /**
+     * This is a simple string that is optional with default value
+     */
+    parameterString?: string;
+};
+export type TDataCallToTestOrderOfParams = {
+    /**
+     * This is a optional string with default
+     */
+    parameterOptionalStringWithDefault?: string;
+    /**
+     * This is a optional string with empty default
+     */
+    parameterOptionalStringWithEmptyDefault?: string;
+    /**
+     * This is a optional string with no default
+     */
+    parameterOptionalStringWithNoDefault?: string;
+    /**
+     * This is a string that can be null with default
+     */
+    parameterStringNullableWithDefault?: string | null;
+    /**
+     * This is a string that can be null with no default
+     */
+    parameterStringNullableWithNoDefault?: string | null;
+    /**
+     * This is a string with default
+     */
+    parameterStringWithDefault?: string;
+    /**
+     * This is a string with empty default
+     */
+    parameterStringWithEmptyDefault?: string;
+    /**
+     * This is a string with no default
+     */
+    parameterStringWithNoDefault: string;
+};
+
+export class DefaultsService {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @throws ApiError
+     */
+    public callWithDefaultParameters(data: TDataCallWithDefaultParameters = {}): CancelablePromise<void> {
+        const {
+            parameterBoolean = true,
+            parameterEnum = 'Success',
+            parameterModel = {
+                prop: 'Hello World!',
+            },
+            parameterNumber = 123,
+            parameterString = 'Hello World!',
+        } = data;
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/defaults',
+            query: {
+                parameterString,
+                parameterNumber,
+                parameterBoolean,
+                parameterEnum,
+                parameterModel,
+            },
+        });
+    }
+
+    /**
+     * @throws ApiError
+     */
+    public callWithDefaultOptionalParameters(
+        data: TDataCallWithDefaultOptionalParameters = {}
+    ): CancelablePromise<void> {
+        const {
+            parameterBoolean = true,
+            parameterEnum = 'Success',
+            parameterModel = {
+                prop: 'Hello World!',
+            },
+            parameterNumber = 123,
+            parameterString = 'Hello World!',
+        } = data;
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/v{api-version}/defaults',
+            query: {
+                parameterString,
+                parameterNumber,
+                parameterBoolean,
+                parameterEnum,
+                parameterModel,
+            },
+        });
+    }
+
+    /**
+     * @throws ApiError
+     */
+    public callToTestOrderOfParams(data: TDataCallToTestOrderOfParams): CancelablePromise<void> {
+        const {
+            parameterOptionalStringWithDefault = 'Hello World!',
+            parameterOptionalStringWithEmptyDefault = '',
+            parameterOptionalStringWithNoDefault,
+            parameterStringNullableWithDefault = null,
+            parameterStringNullableWithNoDefault,
+            parameterStringWithDefault = 'Hello World!',
+            parameterStringWithEmptyDefault = '',
+            parameterStringWithNoDefault,
+        } = data;
+        return this.httpRequest.request({
+            method: 'PUT',
+            url: '/api/v{api-version}/defaults',
+            query: {
+                parameterOptionalStringWithDefault,
+                parameterOptionalStringWithEmptyDefault,
+                parameterOptionalStringWithNoDefault,
+                parameterStringWithDefault,
+                parameterStringWithEmptyDefault,
+                parameterStringWithNoDefault,
+                parameterStringNullableWithNoDefault,
+                parameterStringNullableWithDefault,
+            },
+        });
+    }
+}
+
+export class DuplicateService {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @throws ApiError
+     */
+    public duplicateName(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/duplicate',
+        });
+    }
+
+    /**
+     * @throws ApiError
+     */
+    public duplicateName1(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/v{api-version}/duplicate',
+        });
+    }
+
+    /**
+     * @throws ApiError
+     */
+    public duplicateName2(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'PUT',
+            url: '/api/v{api-version}/duplicate',
+        });
+    }
+
+    /**
+     * @throws ApiError
+     */
+    public duplicateName3(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'DELETE',
+            url: '/api/v{api-version}/duplicate',
+        });
+    }
+}
+
+export class NoContentService {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @returns void Success
+     * @throws ApiError
+     */
+    public callWithNoContentResponse(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/no-content',
+        });
+    }
+
+    /**
+     * @returns number Response is a simple number
+     * @returns void Success
+     * @throws ApiError
+     */
+    public callWithResponseAndNoContentResponse(): CancelablePromise<number | void> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/multiple-tags/response-and-no-content',
+        });
+    }
+}
+
+export class ResponseService {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @returns number Response is a simple number
+     * @returns void Success
+     * @throws ApiError
+     */
+    public callWithResponseAndNoContentResponse(): CancelablePromise<number | void> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/multiple-tags/response-and-no-content',
+        });
+    }
+
+    /**
+     * @returns ModelWithString
+     * @throws ApiError
+     */
+    public callWithResponse(): CancelablePromise<ModelWithString> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/response',
+        });
+    }
+
+    /**
+     * @returns ModelWithString Message for default response
+     * @throws ApiError
+     */
+    public callWithDuplicateResponses(): CancelablePromise<ModelWithString> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/v{api-version}/response',
+            errors: {
+                500: `Message for 500 error`,
+                501: `Message for 501 error`,
+                502: `Message for 502 error`,
+            },
+        });
+    }
+
+    /**
+     * @returns any Message for 200 response
+     * @returns ModelWithString Message for default response
+     * @returns ModelThatExtends Message for 201 response
+     * @returns ModelThatExtendsExtends Message for 202 response
+     * @throws ApiError
+     */
+    public callWithResponses(): CancelablePromise<
+        | {
+              readonly '@namespace.string'?: string;
+              readonly '@namespace.integer'?: number;
+              readonly value?: Array<ModelWithString>;
+          }
+        | ModelWithString
+        | ModelThatExtends
+        | ModelThatExtendsExtends
+    > {
+        return this.httpRequest.request({
+            method: 'PUT',
+            url: '/api/v{api-version}/response',
+            errors: {
+                500: `Message for 500 error`,
+                501: `Message for 501 error`,
+                502: `Message for 502 error`,
+            },
+        });
+    }
+}
+
+export class MultipleTags1Service {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @returns void Success
+     * @throws ApiError
+     */
+    public dummyA(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/multiple-tags/a',
+        });
+    }
+
+    /**
+     * @returns void Success
+     * @throws ApiError
+     */
+    public dummyB(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/multiple-tags/b',
+        });
+    }
+}
+
+export class MultipleTags2Service {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @returns void Success
+     * @throws ApiError
+     */
+    public dummyA(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/multiple-tags/a',
+        });
+    }
+
+    /**
+     * @returns void Success
+     * @throws ApiError
+     */
+    public dummyB(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/multiple-tags/b',
+        });
+    }
+}
+
+export class MultipleTags3Service {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @returns void Success
+     * @throws ApiError
+     */
+    public dummyB(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/multiple-tags/b',
+        });
+    }
+}
+
+export type TDataCollectionFormat = {
+    /**
+     * This is an array parameter that is sent as csv format (comma-separated values)
+     */
+    parameterArrayCsv: Array<string> | null;
+    /**
+     * This is an array parameter that is sent as multi format (multiple parameter instances)
+     */
+    parameterArrayMulti: Array<string> | null;
+    /**
+     * This is an array parameter that is sent as pipes format (pipe-separated values)
+     */
+    parameterArrayPipes: Array<string> | null;
+    /**
+     * This is an array parameter that is sent as ssv format (space-separated values)
+     */
+    parameterArraySsv: Array<string> | null;
+    /**
+     * This is an array parameter that is sent as tsv format (tab-separated values)
+     */
+    parameterArrayTsv: Array<string> | null;
+};
+
+export class CollectionFormatService {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @throws ApiError
+     */
+    public collectionFormat(data: TDataCollectionFormat): CancelablePromise<void> {
+        const { parameterArrayCsv, parameterArrayMulti, parameterArrayPipes, parameterArraySsv, parameterArrayTsv } =
+            data;
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/collectionFormat',
+            query: {
+                parameterArrayCSV: parameterArrayCsv,
+                parameterArraySSV: parameterArraySsv,
+                parameterArrayTSV: parameterArrayTsv,
+                parameterArrayPipes,
+                parameterArrayMulti,
+            },
+        });
+    }
+}
+
+export type TDataTypes = {
+    /**
+     * This is a number parameter
+     */
+    id?: number;
+    /**
+     * This is an array parameter
+     */
+    parameterArray: Array<string> | null;
+    /**
+     * This is a boolean parameter
+     */
+    parameterBoolean?: boolean | null;
+    /**
+     * This is a dictionary parameter
+     */
+    parameterDictionary: Record<string, unknown> | null;
+    /**
+     * This is an enum parameter
+     */
+    parameterEnum: 'Success' | 'Warning' | 'Error' | null;
+    /**
+     * This is a number parameter
+     */
+    parameterNumber?: number;
+    /**
+     * This is an object parameter
+     */
+    parameterObject?: Record<string, unknown> | null;
+    /**
+     * This is a string parameter
+     */
+    parameterString?: string | null;
+};
+
+export class TypesService {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @returns number Response is a simple number
+     * @returns string Response is a simple string
+     * @returns boolean Response is a simple boolean
+     * @returns unknown Response is a simple object
+     * @throws ApiError
+     */
+    public types(data: TDataTypes): CancelablePromise<number | string | boolean | Record<string, unknown>> {
+        const {
+            id,
+            parameterArray,
+            parameterBoolean = true,
+            parameterDictionary,
+            parameterEnum,
+            parameterNumber = 123,
+            parameterObject = null,
+            parameterString = 'default',
+        } = data;
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/types',
+            path: {
+                id,
+            },
+            query: {
+                parameterNumber,
+                parameterString,
+                parameterBoolean,
+                parameterObject,
+                parameterArray,
+                parameterDictionary,
+                parameterEnum,
+            },
+        });
+    }
+}
+
+export type TDataUploadFile = {
+    /**
+     * Supply a file reference for upload
+     */
+    file: Blob | File;
+};
+
+export class UploadService {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @returns boolean
+     * @throws ApiError
+     */
+    public uploadFile(data: TDataUploadFile): CancelablePromise<boolean> {
+        const { file } = data;
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/v{api-version}/upload',
+            formData: {
+                file,
+            },
+        });
+    }
+}
+
+export type TDataFileResponse = {
+    id: string;
+};
+
+export class FileResponseService {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @returns binary Success
+     * @throws ApiError
+     */
+    public fileResponse(data: TDataFileResponse): CancelablePromise<Blob | File> {
+        const { id } = data;
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/file/{id}',
+            path: {
+                id,
+            },
+        });
+    }
+}
+
+export type TDataComplexTypes = {
+    /**
+     * Parameter containing object
+     */
+    parameterObject: {
+        first?: {
+            second?: {
+                third?: string;
+            };
+        };
+    };
+    /**
+     * Parameter containing reference
+     */
+    parameterReference: ModelWithString;
+};
+export type TDataComplexParams = {
+    id: number;
+    requestBody?: {
+        readonly key: string | null;
+        name: string | null;
+        enabled?: boolean;
+        readonly type: 'Monkey' | 'Horse' | 'Bird';
+        listOfModels?: Array<ModelWithString> | null;
+        listOfStrings?: Array<string> | null;
+        parameters: ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary;
+        readonly user?: {
+            readonly id?: number;
+            readonly name?: string | null;
+        };
+    };
+};
+
+export class ComplexService {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @returns ModelWithString Successful response
+     * @throws ApiError
+     */
+    public complexTypes(data: TDataComplexTypes): CancelablePromise<Array<ModelWithString>> {
+        const { parameterObject, parameterReference } = data;
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/complex',
+            query: {
+                parameterObject,
+                parameterReference,
+            },
+            errors: {
+                400: `400 server error`,
+                500: `500 server error`,
+            },
+        });
+    }
+
+    /**
+     * @returns ModelWithString Success
+     * @throws ApiError
+     */
+    public complexParams(data: TDataComplexParams): CancelablePromise<ModelWithString> {
+        const { id, requestBody } = data;
+        return this.httpRequest.request({
+            method: 'PUT',
+            url: '/api/v{api-version}/complex/{id}',
+            path: {
+                id,
+            },
+            body: requestBody,
+            mediaType: 'application/json-patch+json',
+        });
+    }
+}
+
+export type TDataMultipartRequest = {
+    formData?: {
+        content?: Blob | File;
+        data?: ModelWithString | null;
+    };
+};
+
+export class MultipartService {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @throws ApiError
+     */
+    public multipartRequest(data: TDataMultipartRequest = {}): CancelablePromise<void> {
+        const { formData } = data;
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/v{api-version}/multipart',
+            formData: formData,
+            mediaType: 'multipart/form-data',
+        });
+    }
+
+    /**
+     * @returns any OK
+     * @throws ApiError
+     */
+    public multipartResponse(): CancelablePromise<{
+        file?: Blob | File;
+        metadata?: {
+            foo?: string;
+            bar?: string;
+        };
+    }> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/multipart',
+        });
+    }
+}
+
+export class HeaderService {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @returns string Successful response
+     * @throws ApiError
+     */
+    public callWithResultFromHeader(): CancelablePromise<string> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/v{api-version}/header',
+            responseHeader: 'operation-location',
+            errors: {
+                400: `400 server error`,
+                500: `500 server error`,
+            },
+        });
+    }
+}
+
+export type TDataTestErrorCode = {
+    /**
+     * Status code to return
+     */
+    status: number;
+};
+
+export class ErrorService {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @returns any Custom message: Successful response
+     * @throws ApiError
+     */
+    public testErrorCode(data: TDataTestErrorCode): CancelablePromise<any> {
+        const { status } = data;
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/v{api-version}/error',
+            query: {
+                status,
+            },
+            errors: {
+                500: `Custom message: Internal Server Error`,
+                501: `Custom message: Not Implemented`,
+                502: `Custom message: Bad Gateway`,
+                503: `Custom message: Service Unavailable`,
+            },
+        });
+    }
+}
+
+export type TDataNonAsciiæøåÆøÅöôêÊ字符串 = {
+    /**
+     * Dummy input param
+     */
+    nonAsciiParamæøåÆøÅöôêÊ: number;
+};
+
+export class NonAsciiÆøåÆøÅöôêÊService {
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * @returns NonAsciiStringæøåÆØÅöôêÊ字符串 Successful response
+     * @throws ApiError
+     */
+    public nonAsciiæøåÆøÅöôêÊ字符串(
+        data: TDataNonAsciiæøåÆøÅöôêÊ字符串
+    ): CancelablePromise<Array<NonAsciiStringæøåÆØÅöôêÊ字符串>> {
+        const { nonAsciiParamæøåÆøÅöôêÊ } = data;
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
+            query: {
+                nonAsciiParamæøåÆØÅöôêÊ: nonAsciiParamæøåÆøÅöôêÊ,
+            },
+        });
+    }
+}

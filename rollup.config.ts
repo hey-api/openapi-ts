@@ -45,7 +45,6 @@ export function handlebarsPlugin(): Plugin {
                         ifNotNullNotUndefined: true,
                         ifOperationDataOptional: true,
                         intersection: true,
-                        modelImports: true,
                         modelUnionType: true,
                         nameOperationDataType: true,
                         notEquals: true,
