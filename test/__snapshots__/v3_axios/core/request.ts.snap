@@ -79,6 +79,33 @@ const getUrl = (config: OpenAPIConfig, options: ApiRequestOptions): string => {
     return options.query ? url + getQueryString(options.query) : url;
 };
 
+export const getFormData = (options: ApiRequestOptions): FormData | undefined => {
+    if (options.formData) {
+        const formData = new FormData();
+
+        const process = (key: string, value: unknown) => {
+            if (isString(value) || isBlob(value)) {
+                formData.append(key, value);
+            } else {
+                formData.append(key, JSON.stringify(value));
+            }
+        };
+
+        Object.entries(options.formData)
+            .filter(([, value]) => value !== undefined && value !== null)
+            .forEach(([key, value]) => {
+                if (Array.isArray(value)) {
+                    value.forEach(v => process(key, v));
+                } else {
+                    process(key, value);
+                }
+            });
+
+        return formData;
+    }
+    return undefined;
+};
+
 type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
 
 export const resolve = async <T>(options: ApiRequestOptions, resolver?: T | Resolver<T>): Promise<T | undefined> => {
@@ -153,7 +180,7 @@ export const sendRequest = async <T>(
     options: ApiRequestOptions,
     url: string,
     body: unknown,
-    formData: Record<string, unknown> | undefined,
+    formData: FormData | undefined,
     headers: Record<string, string>,
     onCancel: OnCancel,
     axiosClient: AxiosInstance
@@ -288,7 +315,7 @@ export const request = <T>(
     return new CancelablePromise(async (resolve, reject, onCancel) => {
         try {
             const url = getUrl(config, options);
-            const formData = options.formData;
+            const formData = getFormData(options);
             const body = getRequestBody(options);
             const headers = await getHeaders(config, options);
 
