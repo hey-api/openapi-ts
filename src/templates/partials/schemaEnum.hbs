@@ -1,5 +1,11 @@
 {
 	type: 'Enum',
+{{#if enum}}
+	enum: [{{#each enum}}{{{enumValue value}}},{{/each}}],
+{{/if}}
+{{#notEquals default undefined}}
+	default: {{{default}}},
+{{/notEquals}}
 {{#if isReadOnly}}
 	isReadOnly: {{{isReadOnly}}},
 {{/if}}

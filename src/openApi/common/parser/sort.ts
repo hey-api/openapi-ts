@@ -2,7 +2,7 @@
  * Sort list of values and ensure that required parameters are first so that we do not generate
  * invalid types. Optional parameters cannot be positioned after required ones.
  */
-export function toSortedByRequired<T extends { isRequired: boolean; default?: string }>(values: T[]): T[] {
+export function toSortedByRequired<T extends { isRequired: boolean; default?: unknown }>(values: T[]): T[] {
     return values.sort((a, b) => {
         const aNeedsValue = a.isRequired && a.default === undefined;
         const bNeedsValue = b.isRequired && b.default === undefined;

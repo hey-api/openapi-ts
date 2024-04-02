@@ -1,4 +1,5 @@
 import type { OperationParameter } from '../../common/interfaces/client';
+import { getDefault } from '../../common/parser/getDefault';
 import { getEnums } from '../../common/parser/getEnums';
 import { getPattern } from '../../common/parser/getPattern';
 import { getRef } from '../../common/parser/getRef';
@@ -8,7 +9,6 @@ import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiParameter } from '../interfaces/OpenApiParameter';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 import { getModel } from './getModel';
-import { getOperationParameterDefault } from './getOperationParameterDefault';
 
 export const getOperationParameter = (openApi: OpenApi, parameter: OpenApiParameter): OperationParameter => {
     const operationParameter: OperationParameter = {
@@ -52,7 +52,7 @@ export const getOperationParameter = (openApi: OpenApi, parameter: OpenApiParame
         operationParameter.base = definitionRef.base;
         operationParameter.template = definitionRef.template;
         operationParameter.imports.push(...definitionRef.imports);
-        operationParameter.default = getOperationParameterDefault(parameter, operationParameter);
+        operationParameter.default = getDefault(parameter, operationParameter);
         return operationParameter;
     }
 
@@ -63,7 +63,7 @@ export const getOperationParameter = (openApi: OpenApi, parameter: OpenApiParame
             operationParameter.enum.push(...enums);
             operationParameter.export = 'enum';
             operationParameter.type = 'string';
-            operationParameter.default = getOperationParameterDefault(parameter, operationParameter);
+            operationParameter.default = getDefault(parameter, operationParameter);
             return operationParameter;
         }
     }
@@ -75,7 +75,7 @@ export const getOperationParameter = (openApi: OpenApi, parameter: OpenApiParame
         operationParameter.base = items.base;
         operationParameter.template = items.template;
         operationParameter.imports.push(...items.imports);
-        operationParameter.default = getOperationParameterDefault(parameter, operationParameter);
+        operationParameter.default = getDefault(parameter, operationParameter);
         return operationParameter;
     }
 
@@ -86,7 +86,7 @@ export const getOperationParameter = (openApi: OpenApi, parameter: OpenApiParame
         operationParameter.base = items.base;
         operationParameter.template = items.template;
         operationParameter.imports.push(...items.imports);
-        operationParameter.default = getOperationParameterDefault(parameter, operationParameter);
+        operationParameter.default = getDefault(parameter, operationParameter);
         return operationParameter;
     }
 
@@ -102,7 +102,7 @@ export const getOperationParameter = (openApi: OpenApi, parameter: OpenApiParame
             operationParameter.base = model.base;
             operationParameter.template = model.template;
             operationParameter.imports.push(...model.imports);
-            operationParameter.default = getOperationParameterDefault(parameter, operationParameter);
+            operationParameter.default = getDefault(parameter, operationParameter);
             return operationParameter;
         } else {
             const model = getModel(openApi, schema);
@@ -115,7 +115,7 @@ export const getOperationParameter = (openApi: OpenApi, parameter: OpenApiParame
             operationParameter.enum.push(...model.enum);
             operationParameter.enums.push(...model.enums);
             operationParameter.properties.push(...model.properties);
-            operationParameter.default = getOperationParameterDefault(parameter, operationParameter);
+            operationParameter.default = getDefault(parameter, operationParameter);
             return operationParameter;
         }
     }
@@ -128,7 +128,7 @@ export const getOperationParameter = (openApi: OpenApi, parameter: OpenApiParame
         operationParameter.base = definitionType.base;
         operationParameter.template = definitionType.template;
         operationParameter.imports.push(...definitionType.imports);
-        operationParameter.default = getOperationParameterDefault(parameter, operationParameter);
+        operationParameter.default = getDefault(parameter, operationParameter);
         return operationParameter;
     }
 
