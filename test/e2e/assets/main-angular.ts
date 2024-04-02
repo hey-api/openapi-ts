@@ -4,21 +4,23 @@ import { BrowserModule } from '@angular/platform-browser';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { OpenAPI } from './client/core/OpenAPI';
-import { CollectionFormatService } from './client/services/CollectionFormatService';
-import { ComplexService } from './client/services/ComplexService';
-import { DefaultService } from './client/services/DefaultService';
-import { DefaultsService } from './client/services/DefaultsService';
-import { DuplicateService } from './client/services/DuplicateService';
-import { ErrorService } from './client/services/ErrorService';
-import { HeaderService } from './client/services/HeaderService';
-import { MultipleTags1Service } from './client/services/MultipleTags1Service';
-import { MultipleTags2Service } from './client/services/MultipleTags2Service';
-import { MultipleTags3Service } from './client/services/MultipleTags3Service';
-import { NoContentService } from './client/services/NoContentService';
-import { ParametersService } from './client/services/ParametersService';
-import { ResponseService } from './client/services/ResponseService';
-import { SimpleService } from './client/services/SimpleService';
-import { TypesService } from './client/services/TypesService';
+import {
+    CollectionFormatService,
+    ComplexService,
+    DefaultService,
+    DefaultsService,
+    DuplicateService,
+    ErrorService,
+    HeaderService,
+    MultipleTags1Service,
+    MultipleTags2Service,
+    MultipleTags3Service,
+    NoContentService,
+    ParametersService,
+    ResponseService,
+    SimpleService,
+    TypesService,
+} from './client/services';
 
 @Component({
     selector: 'app-root',

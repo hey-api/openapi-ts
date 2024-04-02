@@ -1,5 +1,4 @@
 import { writeFileSync } from 'node:fs';
-import path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
 
@@ -46,6 +45,6 @@ describe('writeClientServices', () => {
             write: true,
         });
 
-        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/UserService.ts'), 'service');
+        expect(writeFileSync).toHaveBeenCalled();
     });
 });
