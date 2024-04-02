@@ -11,6 +11,9 @@
 	{{/each}}
 {{/if}}
 	},
+{{#notEquals default undefined}}
+	default: {{{default}}},
+{{/notEquals}}
 {{#if isReadOnly}}
 	isReadOnly: {{{isReadOnly}}},
 {{/if}}

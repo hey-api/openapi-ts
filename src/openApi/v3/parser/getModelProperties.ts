@@ -1,12 +1,12 @@
 import { escapeName } from '../../../utils/escapeName';
 import type { Model } from '../../common/interfaces/client';
+import { getDefault } from '../../common/parser/getDefault';
 import { getPattern } from '../../common/parser/getPattern';
 import { getType } from '../../common/parser/type';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 import { findOneOfParentDiscriminator, mapPropertyValue } from './discriminator';
 import type { getModel } from './getModel';
-import { getModelDefault } from './getModelDefault';
 
 // Fix for circular dependency
 export type GetModelFn = typeof getModel;
@@ -21,7 +21,7 @@ export const getAdditionalPropertiesModel = (
     const apModel = getModel(openApi, ap);
 
     if (definition.additionalProperties === true && definition.properties) {
-        apModel.default = getModelDefault(definition, model);
+        apModel.default = getDefault(definition, model);
         apModel.export = 'generic';
         apModel.isRequired = true;
         apModel.name = '[key: string]';
@@ -31,7 +31,7 @@ export const getAdditionalPropertiesModel = (
     if (ap.$ref) {
         const apType = getType(ap.$ref);
         model.base = apType.base;
-        model.default = getModelDefault(definition, model);
+        model.default = getDefault(definition, model);
         model.export = 'dictionary';
         model.imports.push(...apType.imports);
         model.template = apType.template;
@@ -40,7 +40,7 @@ export const getAdditionalPropertiesModel = (
     }
 
     model.base = apModel.base;
-    model.default = getModelDefault(definition, model);
+    model.default = getDefault(definition, model);
     model.export = 'dictionary';
     model.imports.push(...apModel.imports);
     model.link = apModel;
@@ -78,6 +78,7 @@ export const getModelProperties = (
             > = {
                 deprecated: property.deprecated === true,
                 description: property.description || null,
+                default: property.default,
                 exclusiveMaximum: property.exclusiveMaximum,
                 exclusiveMinimum: property.exclusiveMinimum,
                 format: property.format,
@@ -138,6 +139,7 @@ export const getModelProperties = (
                     enum: model.enum,
                     enums: model.enums,
                     export: model.export,
+                    default: model.default,
                     imports: model.imports,
                     isNullable: model.isNullable || property.nullable === true,
                     link: model.link,

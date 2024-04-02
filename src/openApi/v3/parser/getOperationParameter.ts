@@ -1,4 +1,5 @@
 import type { OperationParameter } from '../../common/interfaces/client';
+import { getDefault } from '../../common/parser/getDefault';
 import { getPattern } from '../../common/parser/getPattern';
 import { getRef } from '../../common/parser/getRef';
 import { getOperationParameterName } from '../../common/parser/operation';
@@ -7,7 +8,6 @@ import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiParameter } from '../interfaces/OpenApiParameter';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 import { getModel } from './getModel';
-import { getModelDefault } from './getModelDefault';
 
 export const getOperationParameter = (openApi: OpenApi, parameter: OpenApiParameter): OperationParameter => {
     const operationParameter: OperationParameter = {
@@ -57,7 +57,7 @@ export const getOperationParameter = (openApi: OpenApi, parameter: OpenApiParame
             operationParameter.template = model.template;
             operationParameter.$refs = [...operationParameter.$refs, ...model.$refs];
             operationParameter.imports = [...operationParameter.imports, ...model.imports];
-            operationParameter.default = getModelDefault(schema);
+            operationParameter.default = getDefault(schema);
             return operationParameter;
         } else {
             const model = getModel(openApi, schema);
