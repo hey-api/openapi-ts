@@ -13,6 +13,9 @@ dist
 coverage
 .env
 
+# README is copied from root on build
+README.md
+
 # test files
 test/generated
 test/e2e/generated

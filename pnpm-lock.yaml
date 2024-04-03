@@ -6878,6 +6878,8 @@ packages:
     peerDependenciesMeta:
       webpack:
         optional: true
+      webpack-sources:
+        optional: true
     dependencies:
       webpack: 5.90.3(esbuild@0.20.1)
       webpack-sources: 3.2.3

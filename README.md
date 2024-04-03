@@ -3,7 +3,6 @@
 > ✨ Turn your OpenAPI specification into a beautiful TypeScript client
 
 ## Table of Contents
-- [Table of Contents](#table-of-contents)
 - [About](#about)
 - [Features](#features)
 - [Quick Start](#quick-start)
@@ -241,4 +240,4 @@ This way, you can gradually switch over to the new syntax as you update parts of
 
 ## Contributing
 
-Please refer to the [contributing guide](CONTRIBUTING.md) for how to install the project for development purposes.
+Please refer to the [contributing guide](./docs/CONTRIBUTING.md) for how to install the project for development purposes.

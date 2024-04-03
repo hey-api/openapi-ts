@@ -15,15 +15,15 @@
     },
     "scripts": {
         "build": "pnpm --recursive build",
+        "changeset": "changeset",
         "lint:fix": "pnpm --recursive lint:fix",
         "lint": "pnpm --recursive lint",
+        "openapi-ts": "pnpm --recursive --workspace packages/openapi-ts --",
         "test:coverage": "pnpm --recursive test:coverage",
         "test:e2e": "pnpm --recursive test:e2e",
         "test:update": "pnpm --recursive test:update",
         "test": "pnpm --recursive test",
-        "typecheck": "pnpm --recursive typecheck",
-        "openapi-ts": "pnpm --recursive --workspace packages/openapi-ts --",
-        "changeset": "changeset"
+        "typecheck": "pnpm --recursive typecheck"
     },
     "engines": {
         "node": "^18.0.0 || >=20.0.0"
@@ -31,6 +31,5 @@
     "devDependencies": {
         "@changesets/cli": "2.27.1",
         "@svitejs/changesets-changelog-github-compact": "1.1.0"
-    },
-    "packageManager": "pnpm@8.15.6+sha256.01c01eeb990e379b31ef19c03e9d06a14afa5250b82e81303f88721c99ff2e6f"
+    }
 }
