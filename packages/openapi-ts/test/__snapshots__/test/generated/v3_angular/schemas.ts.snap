@@ -319,13 +319,17 @@ export const $ModelWithNullableString = {
             isRequired: true,
             isNullable: true,
         },
+        'foo_bar-enum': {
+            type: 'Enum',
+            enum: ['Success', 'Warning', 'Error', 'ØÆÅ字符串'],
+        },
     },
 } as const;
 
 export const $ModelWithEnum = {
     description: `This is a model with one enum`,
     properties: {
-        test: {
+        'foo_bar-enum': {
             type: 'Enum',
             enum: ['Success', 'Warning', 'Error', 'ØÆÅ字符串'],
         },
@@ -391,6 +395,10 @@ export const $ModelWithNestedEnums = {
                 type: 'number',
                 description: `Success=1,Warning=2,Error=3`,
             },
+        },
+        'foo_bar-enum': {
+            type: 'Enum',
+            enum: ['Success', 'Warning', 'Error', 'ØÆÅ字符串'],
         },
     },
 } as const;

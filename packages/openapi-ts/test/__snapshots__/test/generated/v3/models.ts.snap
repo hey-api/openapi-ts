@@ -288,7 +288,18 @@ export type ModelWithNullableString = {
      * This is a simple string property
      */
     nullableRequiredProp2: string | null;
+    /**
+     * This is a simple enum with strings
+     */
+    'foo_bar-enum'?: 'Success' | 'Warning' | 'Error' | 'ØÆÅ字符串';
 };
+
+export const FooBarEnumEnum = {
+    SUCCESS: 'Success',
+    WARNING: 'Warning',
+    ERROR: 'Error',
+    ØÆÅ字符串: 'ØÆÅ字符串',
+} as const;
 
 /**
  * This is a model with one enum
@@ -297,7 +308,7 @@ export type ModelWithEnum = {
     /**
      * This is a simple enum with strings
      */
-    test?: 'Success' | 'Warning' | 'Error' | 'ØÆÅ字符串';
+    'foo_bar-enum'?: 'Success' | 'Warning' | 'Error' | 'ØÆÅ字符串';
     /**
      * These are the HTTP error code enums
      */
@@ -308,7 +319,7 @@ export type ModelWithEnum = {
     bool?: boolean;
 };
 
-export const TestEnum = {
+export const FooBarEnumEnum2 = {
     SUCCESS: 'Success',
     WARNING: 'Warning',
     ERROR: 'Error',
@@ -353,7 +364,18 @@ export type ModelWithNestedEnums = {
     dictionaryWithEnumFromDescription?: Record<string, number>;
     arrayWithEnum?: Array<'Success' | 'Warning' | 'Error'>;
     arrayWithDescription?: Array<number>;
+    /**
+     * This is a simple enum with strings
+     */
+    'foo_bar-enum'?: 'Success' | 'Warning' | 'Error' | 'ØÆÅ字符串';
 };
+
+export const FooBarEnumEnum3 = {
+    SUCCESS: 'Success',
+    WARNING: 'Warning',
+    ERROR: 'Error',
+    ØÆÅ字符串: 'ØÆÅ字符串',
+} as const;
 
 /**
  * This is a model with one property containing a reference

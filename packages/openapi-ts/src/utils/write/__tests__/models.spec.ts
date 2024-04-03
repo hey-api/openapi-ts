@@ -11,6 +11,7 @@ vi.mock('node:fs');
 describe('writeClientModels', () => {
     it('should write to filesystem', async () => {
         const client: Parameters<typeof writeClientModels>[0] = {
+            enumNames: [],
             models: [
                 {
                     $refs: [],
