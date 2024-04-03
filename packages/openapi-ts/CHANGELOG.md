@@ -405,3 +405,150 @@
 - Fix nested any-of
 
 - Add const support
+
+## 0.27.0
+
+### Minor Changes
+
+- Reverted `@apidevtools/json-schema-ref-parser` to version 10.1.0
+
+## 0.26.0
+
+### Minor Changes
+
+- Upgraded dependencies
+
+## 0.25.0
+
+### Minor Changes
+
+- Upgraded dependencies
+- Allow usage of a custom axios instance
+- Added message in generated files
+
+## 0.24.0
+
+### Minor Changes
+
+- Upgraded dependencies
+- Fixed issue with Cancelable promise
+- Fixed issue with escaping reserved keywords in schema names
+- Added `--postfixModels` option
+
+## 0.23.0
+
+### Minor Changes
+
+- Upgraded dependencies
+- Added blank line at the end of generated files
+- Added support for Node.js v12
+- Added `request` property inside `ApiError`
+- Added support for `@depricated` inside models and operations
+
+## 0.22.0
+
+### Minor Changes
+
+- Upgraded dependencies
+- Fixed issue with `null` value inside comments for OpenAPI v2 enums
+- Fixed issue with compatibility for latest version of Axios (0.27.x)
+- Removed deprecated enum model generation
+
+## 0.21.0
+
+### Minor Changes
+
+- Return `undefined` to match `noImplicitReturns` rule
+- Made `BaseHttpRequest` class abstract
+- Removed private fields using `#` inside `CancelablePromise`
+- Removed unneeded import `AbortController` from `node-fetch` client
+- Filter out wrong enum values
+
+## 0.20.1
+
+### Patch Changes
+
+- Support enums with single quotes in names for V2
+
+## 0.20.0
+
+### Minor Changes
+
+- Updated dependencies
+- Support enums with single quotes in names for V3
+- Generating better names when `operationId` is not given (breaking change)
+- Fixed issue where `x-enum` flags where breaking due to non-string values
+
+## 0.19.0
+
+### Minor Changes
+
+- Support for Angular client with `--name` option
+- Added test cases for Angular client
+
+## 0.18.2
+
+### Patch Changes
+
+- Updated dependencies
+- Fixed type definition
+- Added test cases for CLI commands
+- Added test cases for query parsing
+
+## 0.18.1
+
+### Patch Changes
+
+- Escaping error description
+- Made `Client.request` and `BaseHttpRequest.config` props public
+
+## 0.18.0
+
+### Minor Changes
+
+- Angular client generation!
+- Updated documentation with more examples and better descriptions
+
+## 0.17.0
+
+### Minor Changes
+
+- Shorthand notation for properties passed through constructor
+- Simplified creation of headers
+- Prepare codebase for Angular client
+
+## 0.16.2
+
+### Patch Changes
+
+- Removed dependency on `URLSearchParams` to support browser and node without any additional imports
+
+## 0.16.1
+
+### Patch Changes
+
+- Correct export inside `index.ts` when giving a custom name
+
+## 0.16.0
+
+### Minor Changes
+
+- Added option to set the indentation (spaces and tabs)
+- Added option to export separate client file that allows usage for multiple backends
+- Decoupled OpenAPI object from requests
+- Updated dependencies
+
+## 0.15.0
+
+### Minor Changes
+
+- Added change log and releases on GitHub
+
+## 0.14.0
+
+### Minor Changes
+
+- Added missing `postfix` options to typedef
+- Updated escaping of comments and descriptions
+- Better handling of services without tags
+- Updated dependencies

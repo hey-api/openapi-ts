@@ -1,64 +1,41 @@
 name: Bug report
 description: Report an issue with the project.
-labels: ["bug"]
+
+labels:
+  - bug
+
 body:
   - type: markdown
     attributes:
       value: |
         Thanks for taking the time to fill out this bug report! Please do your best to fill out as much information as possible.
+
   - type: textarea
-    id: bug-description
+    id: description
     attributes:
-      label: Describe the bug
+      label: Description
       description: Please check if there is an existing bug report before creating a new issue. If you intend to submit a PR to fix this issue, let us know in the description.
       placeholder: Bug description
     validations:
       required: true
+
   - type: textarea
     id: openapi-spec
     attributes:
-      label: OpenAPI specification
-      description: Please provide (if possible) the OpenAPI specification that you used to generate the client.
+      label: OpenAPI specification (optional)
+      description: Please provide relevant part of your OpenAPI specification to recreate the issue.
       placeholder: OpenAPI Specification
-  - type: dropdown
-    id: client-type
-    attributes:
-      label: Client
-      options:
-        - Angular
-        - Axios
-        - Fetch
-        - Node
-        - XHR
-    validations:
-      required: true
+
   - type: textarea
-    id: client
+    id: config
     attributes:
-      label: Generated client
-      description: Please provide (if possible) the code of the generated client causing the bug.
-      placeholder: Generated client
+      label: Configuration
+      description: Please provide your configuration file or CLI command used to recreate the issue.
+      placeholder: openapi-ts -i path/to/openapi.json -o src/client
+
   - type: textarea
     id: system-info
     attributes:
-      label: System information
-      description: Please provide as much system information as possible. This may include OS, browser, NPM version, Node version, etc.
-      render: Shell
+      label: System information (optional)
+      description: Please provide any relevant system information. This may include OS, browser, NPM version, Node.js version, etc.
       placeholder: System information
-  - type: dropdown
-    id: severity
-    attributes:
-      label: Severity
-      options:
-        - annoyance
-        - serious, but I can work around it
-        - breaking
-        - other
-    validations:
-      required: true
-  - type: textarea
-    id: additional-context
-    attributes:
-      label: Additional information
-      description: Any additional information, context, or screenshots important to fixing this bug.
-      placeholder: Additional information
