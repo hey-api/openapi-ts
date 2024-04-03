@@ -30,7 +30,7 @@ export type {{{name}}} = {{{enumUnionType enum}}};
 {{/if}}
 
 {{#equals @root.$config.enums 'javascript'}}
-export const {{{enumName name }}} = {
+export const {{{enumName name}}} = {
 	{{#each enum}}
 	{{#if x-enum-description}}
 	/**

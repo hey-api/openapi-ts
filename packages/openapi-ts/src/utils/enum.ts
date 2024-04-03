@@ -1,4 +1,6 @@
 import type { Enum } from '../openApi';
+import type { Client } from '../types/client';
+import type { Config } from '../types/config';
 import { unescapeName } from './escapeName';
 import { unique } from './unique';
 
@@ -41,12 +43,22 @@ export const enumKey = (value?: string | number, key?: string) => {
  * already escaped, so we need to remove quotes around it.
  * {@link https://github.com/ferdikoomen/openapi-typescript-codegen/issues/1969}
  */
-export const enumName = (name?: string) => {
+export const enumName = (config: Config, client: Client, name?: string) => {
     if (!name) {
         return name;
     }
-    const escapedName = unescapeName(name).replace(/-([a-z])/gi, ($0, $1: string) => $1.toLocaleUpperCase());
-    return `${escapedName.charAt(0).toLocaleUpperCase()}${escapedName.slice(1)}Enum`;
+    const escapedName = unescapeName(name).replace(/[-_]([a-z])/gi, ($0, $1: string) => $1.toLocaleUpperCase());
+    let result = `${escapedName.charAt(0).toLocaleUpperCase() + escapedName.slice(1)}Enum`;
+    let index = 1;
+    while (client.enumNames.includes(result)) {
+        if (result.endsWith(index.toString())) {
+            result = result.slice(0, result.length - index.toString().length);
+        }
+        index += 1;
+        result = result + index.toString();
+    }
+    client.enumNames = [...client.enumNames, result];
+    return result;
 };
 
 export const enumUnionType = (enums: Enum[]) =>
