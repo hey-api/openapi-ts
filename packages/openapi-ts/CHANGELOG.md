@@ -1,5 +1,21 @@
 # @hey-api/openapi-ts
 
+## 0.34.0
+
+### Minor Changes
+
+- feat(client): generate all services in single `services.ts` file ([#215](https://github.com/hey-api/openapi-ts/pull/215))
+
+- feat(schema): add support for default values ([#197](https://github.com/hey-api/openapi-ts/pull/197))
+
+- feat(schema): add array of enum values for enums ([#197](https://github.com/hey-api/openapi-ts/pull/197))
+
+### Patch Changes
+
+- fix(axios): use builtin form data to ensure blob form data works in node environment ([#211](https://github.com/hey-api/openapi-ts/pull/211))
+
+- fix(enum): append index number on duplicate name ([#220](https://github.com/hey-api/openapi-ts/pull/220))
+
 ## 0.33.2
 
 ### Patch Changes
