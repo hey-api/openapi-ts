@@ -195,7 +195,7 @@ export default {
 
 ### Config API
 
-You can view the complete list of options in the [UserConfig](./src/types/config.ts) interface.
+You can view the complete list of options in the [UserConfig](./packages/openapi-ts/src/types/config.ts) interface.
 
 ## Interceptors
 
