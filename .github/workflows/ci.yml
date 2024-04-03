@@ -18,25 +18,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm install
+        run: pnpm install
 
       - name: Build library
-        run: npm run build
+        run: pnpm build
 
       - name: Run linter
-        run: npm run lint
+        run: pnpm lint
 
       - name: Run type check
-        run: npm run typecheck
+        run: pnpm typecheck
 
       - name: Run unit tests
-        run: npm run test
+        run: pnpm test
 
       - name: Run e2e tests
-        run: npm run test:e2e
+        run: pnpm test:e2e
