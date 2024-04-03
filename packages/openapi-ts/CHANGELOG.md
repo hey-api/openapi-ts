@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.34.1
+
+### Patch Changes
+
+- fix(docs): ensure README is shown on NPMJS ([#229](https://github.com/hey-api/openapi-ts/pull/229))
+
 ## 0.34.0
 
 ### Minor Changes
