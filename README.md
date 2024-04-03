@@ -240,4 +240,4 @@ This way, you can gradually switch over to the new syntax as you update parts of
 
 ## Contributing
 
-Please refer to the [contributing guide](./docs/CONTRIBUTING.md) for how to install the project for development purposes.
+Please refer to the [contributing guide](./CONTRIBUTING.md) for how to install the project for development purposes.
