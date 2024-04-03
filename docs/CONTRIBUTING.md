@@ -1,11 +1,13 @@
 # Contributing to OpenAPI TypeScript 👋
 
-Thanks for your interest in contributing to this project.
+Thank you for considering contributing to this project!
+
+> ⚠️ We are currently looking for core maintainers to expand our team. If you're interested in contributing regularly, please reach out to us.
 
 ## Development Requirements
 
--   [git](https://git-scm.com/)
--   [node](https://nodejs.org/en) (version `18.0` or higher)
+- [git](https://git-scm.com/)
+- [node](https://nodejs.org/en) (version `18.0` or higher)
 
 ## Setting up for Development
 
