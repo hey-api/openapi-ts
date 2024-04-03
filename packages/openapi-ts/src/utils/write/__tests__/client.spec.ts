@@ -10,10 +10,10 @@ vi.mock('node:fs');
 describe('writeClient', () => {
     it('should write to filesystem', async () => {
         const client: Parameters<typeof writeClient>[0] = {
-            server: 'http://localhost:8080',
-            version: 'v1',
             models: [],
+            server: 'http://localhost:8080',
             services: [],
+            version: 'v1',
         };
 
         await writeClient(client, mockTemplates, {

@@ -23,9 +23,9 @@ export function postProcessClient(client: Client): Client {
 export function postProcessModel(model: Model): Model {
     return {
         ...model,
-        imports: postProcessModelImports(model),
-        enums: postProcessModelEnums(model),
         enum: postProcessModelEnum(model),
+        enums: postProcessModelEnums(model),
+        imports: postProcessModelImports(model),
     };
 }
 

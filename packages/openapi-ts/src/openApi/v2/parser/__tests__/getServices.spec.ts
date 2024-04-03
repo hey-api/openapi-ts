@@ -27,7 +27,6 @@ describe('getServices', () => {
         };
         const services = getServices(
             {
-                swagger: '2.0',
                 info: {
                     title: 'x',
                     version: '1',
@@ -35,7 +34,6 @@ describe('getServices', () => {
                 paths: {
                     '/api/trips': {
                         get: {
-                            tags: [],
                             responses: {
                                 200: {
                                     description: 'x',
@@ -44,9 +42,11 @@ describe('getServices', () => {
                                     description: 'default',
                                 },
                             },
+                            tags: [],
                         },
                     },
                 },
+                swagger: '2.0',
             },
             options
         );

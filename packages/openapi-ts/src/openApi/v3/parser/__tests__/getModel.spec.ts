@@ -5,31 +5,31 @@ import { getType } from '../../../common/parser/type';
 import { getModel } from '../getModel';
 
 const openApi = {
-    openapi: '3.0',
-    info: {
-        title: 'dummy',
-        version: '1.0',
-    },
-    paths: {},
-    servers: [
-        {
-            url: 'https://localhost:8080/api',
-        },
-    ],
     components: {
         schemas: {
-            Enum1: {
-                enum: ['Bird', 'Dog'],
-                type: 'string',
-            },
-            ConstValue: {
-                type: 'string',
-                const: 'ConstValue',
+            CompositionWithAny: {
+                description:
+                    "This is a model with one property with a 'any of' relationship where the options are not $ref",
+                properties: {
+                    propA: {
+                        anyOf: [
+                            {
+                                $ref: '#/components/schemas/Enum1',
+                            },
+                            {
+                                $ref: '#/components/schemas/ConstValue',
+                            },
+                            {
+                                type: 'null',
+                            },
+                        ],
+                    },
+                },
+                type: 'object',
             },
             CompositionWithAnyOfAndNull: {
                 description:
                     "This is a model with one property with a 'any of' relationship where the options are not $ref",
-                type: 'object',
                 properties: {
                     propA: {
                         anyOf: [
@@ -52,29 +52,29 @@ const openApi = {
                         ],
                     },
                 },
-            },
-            CompositionWithAny: {
-                description:
-                    "This is a model with one property with a 'any of' relationship where the options are not $ref",
                 type: 'object',
-                properties: {
-                    propA: {
-                        anyOf: [
-                            {
-                                $ref: '#/components/schemas/Enum1',
-                            },
-                            {
-                                $ref: '#/components/schemas/ConstValue',
-                            },
-                            {
-                                type: 'null',
-                            },
-                        ],
-                    },
-                },
+            },
+            ConstValue: {
+                const: 'ConstValue',
+                type: 'string',
+            },
+            Enum1: {
+                enum: ['Bird', 'Dog'],
+                type: 'string',
             },
         },
     },
+    info: {
+        title: 'dummy',
+        version: '1.0',
+    },
+    openapi: '3.0',
+    paths: {},
+    servers: [
+        {
+            url: 'https://localhost:8080/api',
+        },
+    ],
 };
 
 describe('getModel', () => {

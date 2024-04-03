@@ -29,10 +29,10 @@ describe('client.fetch', () => {
             // @ts-ignore
             const { ApiClient } = window.api;
             const client = new ApiClient({
+                PASSWORD: undefined,
                 // @ts-ignore
                 TOKEN: window.tokenRequest,
                 USERNAME: undefined,
-                PASSWORD: undefined,
             });
             return await client.simple.getCallWithoutParametersAndResponse();
         });
@@ -45,9 +45,9 @@ describe('client.fetch', () => {
             // @ts-ignore
             const { ApiClient } = window.api;
             const client = new ApiClient({
+                PASSWORD: 'password',
                 TOKEN: undefined,
                 USERNAME: 'username',
-                PASSWORD: 'password',
             });
             return await client.simple.getCallWithoutParametersAndResponse();
         });
@@ -118,12 +118,12 @@ describe('client.fetch', () => {
                 await client.error.testErrorCode(500);
             } catch (error) {
                 return JSON.stringify({
-                    name: error.name,
+                    body: error.body,
                     message: error.message,
-                    url: error.url,
+                    name: error.name,
                     status: error.status,
                     statusText: error.statusText,
-                    body: error.body,
+                    url: error.url,
                 });
             }
             return;
@@ -131,15 +131,15 @@ describe('client.fetch', () => {
 
         expect(error).toBe(
             JSON.stringify({
-                name: 'ApiError',
+                body: {
+                    message: 'hello world',
+                    status: 500,
+                },
                 message: 'Custom message: Internal Server Error',
-                url: 'http://localhost:3000/base/api/v1.0/error?status=500',
+                name: 'ApiError',
                 status: 500,
                 statusText: 'Internal Server Error',
-                body: {
-                    status: 500,
-                    message: 'hello world',
-                },
+                url: 'http://localhost:3000/base/api/v1.0/error?status=500',
             })
         );
     });
@@ -153,28 +153,28 @@ describe('client.fetch', () => {
                 await client.error.testErrorCode(599);
             } catch (error) {
                 return JSON.stringify({
-                    name: error.name,
+                    body: error.body,
                     message: error.message,
-                    url: error.url,
+                    name: error.name,
                     status: error.status,
                     statusText: error.statusText,
-                    body: error.body,
+                    url: error.url,
                 });
             }
             return;
         });
         expect(error).toBe(
             JSON.stringify({
-                name: 'ApiError',
+                body: {
+                    message: 'hello world',
+                    status: 599,
+                },
                 message:
-                    'Generic Error: status: 599; status text: unknown; body: {\n  "status": 599,\n  "message": "hello world"\n}',
-                url: 'http://localhost:3000/base/api/v1.0/error?status=599',
+                    'Generic Error: status: 599; status text: unknown; body: {\n  "message": "hello world",\n  "status": 599\n}',
+                name: 'ApiError',
                 status: 599,
                 statusText: 'unknown',
-                body: {
-                    status: 599,
-                    message: 'hello world',
-                },
+                url: 'http://localhost:3000/base/api/v1.0/error?status=599',
             })
         );
     });
