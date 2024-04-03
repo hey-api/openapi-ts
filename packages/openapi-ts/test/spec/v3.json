@@ -2055,6 +2055,15 @@
                             "string",
                             "null"
                         ]
+                    },
+                    "foo_bar-enum": {
+                        "description": "This is a simple enum with strings",
+                        "enum": [
+                            "Success",
+                            "Warning",
+                            "Error",
+                            "ØÆÅ字符串"
+                        ]
                     }
                 }
             },
@@ -2062,7 +2071,7 @@
                 "description": "This is a model with one enum",
                 "type": "object",
                 "properties": {
-                    "test": {
+                    "foo_bar-enum": {
                         "description": "This is a simple enum with strings",
                         "enum": [
                             "Success",
@@ -2152,6 +2161,15 @@
                             "type": "integer",
                             "description": "Success=1,Warning=2,Error=3"
                         }
+                    },
+                    "foo_bar-enum": {
+                        "description": "This is a simple enum with strings",
+                        "enum": [
+                            "Success",
+                            "Warning",
+                            "Error",
+                            "ØÆÅ字符串"
+                        ]
                     }
                 }
             },

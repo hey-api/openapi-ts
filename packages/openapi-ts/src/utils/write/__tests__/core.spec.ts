@@ -16,6 +16,7 @@ describe('writeClientCore', () => {
 
     it('should write to filesystem', async () => {
         const client: Parameters<typeof writeClientCore>[0] = {
+            enumNames: [],
             models: [],
             server: 'http://localhost:8080',
             services: [],
@@ -58,6 +59,7 @@ describe('writeClientCore', () => {
 
     it('uses client server value for base', async () => {
         const client: Parameters<typeof writeClientCore>[0] = {
+            enumNames: [],
             models: [],
             server: 'http://localhost:8080',
             services: [],
@@ -99,6 +101,7 @@ describe('writeClientCore', () => {
 
     it('uses custom value for base', async () => {
         const client: Parameters<typeof writeClientCore>[0] = {
+            enumNames: [],
             models: [],
             server: 'http://localhost:8080',
             services: [],
