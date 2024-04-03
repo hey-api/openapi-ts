@@ -9,7 +9,7 @@ Thanks for your interest in contributing to this project.
 
 ## Setting up for Development
 
-For this project we use NPM as our package manager. You can setup and install all dependencies running the following commands:
+For this project we use PNPM as our package manager. You can setup and install all dependencies running the following commands:
 
 ```sh
 # Enable corepack, it is disabled by default in the supported versions of NodeJS
@@ -17,7 +17,7 @@ corepack enable
 # Prepare corepack based on the packageManager specified in the projects package.json
 corepack prepare
 # Install all dependencies
-npm install
+pnpm install
 ```
 
 ## Pull Request Guidelines
@@ -36,10 +36,10 @@ https://help.github.com/articles/using-pull-requests
 
 1. Make your changes in a new git branch: `git checkout -b my-fix-branch main`
 2. Create your patch or feature
-3. Ensure the builds work by running: `npm run build`
-4. Ensure the tests will pass by running: `npm run test`
-5. Ensure the code is formatted by running: `npm run lint:fix`
-6. Ensure that you create a changeset if required by running: `npm run changeset`
+3. Ensure the builds work by running: `pnpm build`
+4. Ensure the tests will pass by running: `pnpm test`
+5. Ensure the code is formatted by running: `pnpm lint:fix`
+6. Ensure that you create a changeset if required by running: `pnpm changeset`
 7. Commit your changes using a descriptive commit message
 
 After your Pull Request is created, it will automatically be build and tested in GitHub actions. Once successful it will be ready for review.

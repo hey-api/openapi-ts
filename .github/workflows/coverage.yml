@@ -13,19 +13,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20.x
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm install
+        run: pnpm install
 
       - name: Build library
-        run: npm run build
+        run: pnpm build
 
       - name: Run test coverage
-        run: npm run test:coverage
+        run: pnpm test:coverage
 
       - name: Upload code coverage to codecov.io
         uses: codecov/codecov-action@v4
