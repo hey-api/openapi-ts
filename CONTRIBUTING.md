@@ -8,16 +8,13 @@ Thank you for considering contributing to this project!
 
 - [git](https://git-scm.com/)
 - [node](https://nodejs.org/en) (version `18.0` or higher)
+- [pnpm](https://pnpm.io/) (version `8` or higher)
 
 ## Setting up for Development
 
 For this project we use PNPM as our package manager. You can setup and install all dependencies running the following commands:
 
 ```sh
-# Enable corepack, it is disabled by default in the supported versions of NodeJS
-corepack enable
-# Prepare corepack based on the packageManager specified in the projects package.json
-corepack prepare
 # Install all dependencies
 pnpm install
 ```

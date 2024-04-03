@@ -13,9 +13,6 @@ dist
 coverage
 .env
 
-# README is copied from root on build
-packages/openapi-ts/README.md
-
 # test files
 test/generated
 test/e2e/generated
