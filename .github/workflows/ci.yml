@@ -7,6 +7,10 @@ on:
   pull_request:
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}=${{ github.head_ref }}
+  cancel-in-progress: true
+
 jobs:
   ci:
     name: Build, Lint, Test
