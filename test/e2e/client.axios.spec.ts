@@ -21,9 +21,9 @@ describe('client.axios', () => {
         const { ApiClient } = await import('./generated/client/axios/index.js');
         const tokenRequest = vi.fn().mockResolvedValue('MY_TOKEN');
         const client = new ApiClient({
+            PASSWORD: undefined,
             TOKEN: tokenRequest,
             USERNAME: undefined,
-            PASSWORD: undefined,
         });
         const result = await client.simple.getCallWithoutParametersAndResponse();
         expect(tokenRequest.mock.calls.length).toBe(1);
@@ -34,9 +34,9 @@ describe('client.axios', () => {
     it('uses credentials', async () => {
         const { ApiClient } = await import('./generated/client/axios/index.js');
         const client = new ApiClient({
+            PASSWORD: 'password',
             TOKEN: undefined,
             USERNAME: 'username',
-            PASSWORD: 'password',
         });
         const result = await client.simple.getCallWithoutParametersAndResponse();
         // @ts-ignore
@@ -98,25 +98,25 @@ describe('client.axios', () => {
             await client.error.testErrorCode(500);
         } catch (err) {
             error = JSON.stringify({
-                name: err.name,
+                body: err.body,
                 message: err.message,
-                url: err.url,
+                name: err.name,
                 status: err.status,
                 statusText: err.statusText,
-                body: err.body,
+                url: err.url,
             });
         }
         expect(error).toBe(
             JSON.stringify({
-                name: 'ApiError',
+                body: {
+                    message: 'hello world',
+                    status: 500,
+                },
                 message: 'Custom message: Internal Server Error',
-                url: 'http://localhost:3000/base/api/v1.0/error?status=500',
+                name: 'ApiError',
                 status: 500,
                 statusText: 'Internal Server Error',
-                body: {
-                    status: 500,
-                    message: 'hello world',
-                },
+                url: 'http://localhost:3000/base/api/v1.0/error?status=500',
             })
         );
     });
@@ -129,26 +129,26 @@ describe('client.axios', () => {
             await client.error.testErrorCode(599);
         } catch (err) {
             error = JSON.stringify({
-                name: err.name,
+                body: err.body,
                 message: err.message,
-                url: err.url,
+                name: err.name,
                 status: err.status,
                 statusText: err.statusText,
-                body: err.body,
+                url: err.url,
             });
         }
         expect(error).toBe(
             JSON.stringify({
-                name: 'ApiError',
+                body: {
+                    message: 'hello world',
+                    status: 599,
+                },
                 message:
                     'Generic Error: status: 599; status text: unknown; body: {\n  "status": 599,\n  "message": "hello world"\n}',
-                url: 'http://localhost:3000/base/api/v1.0/error?status=599',
+                name: 'ApiError',
                 status: 599,
                 statusText: 'unknown',
-                body: {
-                    status: 599,
-                    message: 'hello world',
-                },
+                url: 'http://localhost:3000/base/api/v1.0/error?status=599',
             })
         );
     });

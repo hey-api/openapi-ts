@@ -10,10 +10,11 @@ vi.mock('node:fs');
 describe('writeClientClass', () => {
     it('should write to filesystem', async () => {
         const client: Parameters<typeof writeClientClass>[0] = {
-            server: 'http://localhost:8080',
-            version: 'v1',
+            enumNames: [],
             models: [],
+            server: 'http://localhost:8080',
             services: [],
+            version: 'v1',
         };
 
         await writeClientClass(client, mockTemplates, './dist', {

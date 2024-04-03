@@ -10,6 +10,7 @@ import { unique } from './unique';
 export function postProcessClient(client: Client): Client {
     return {
         ...client,
+        enumNames: [],
         models: client.models.map(model => postProcessModel(model)),
         services: client.services.map(service => postProcessService(service)),
     };
@@ -23,9 +24,9 @@ export function postProcessClient(client: Client): Client {
 export function postProcessModel(model: Model): Model {
     return {
         ...model,
-        imports: postProcessModelImports(model),
-        enums: postProcessModelEnums(model),
         enum: postProcessModelEnum(model),
+        enums: postProcessModelEnums(model),
+        imports: postProcessModelImports(model),
     };
 }
 

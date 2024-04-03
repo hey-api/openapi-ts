@@ -47,7 +47,6 @@ export class AppComponent {
     ) {
         // @ts-ignore
         window.api = {
-            OpenAPI,
             ApiModule,
             CollectionFormatService: this.collectionFormatService,
             ComplexService: this.complexService,
@@ -60,6 +59,7 @@ export class AppComponent {
             MultipleTags2Service: this.multipleTags2Service,
             MultipleTags3Service: this.multipleTags3Service,
             NoContentService: this.noContentService,
+            OpenAPI,
             ParametersService: this.parametersService,
             ResponseService: this.responseService,
             SimpleService: this.simpleService,
@@ -69,8 +69,8 @@ export class AppComponent {
 }
 
 @NgModule({
-    imports: [BrowserModule, HttpClientModule, ApiModule],
     bootstrap: [AppComponent],
+    imports: [BrowserModule, HttpClientModule, ApiModule],
 })
 export class AppModule {}
 

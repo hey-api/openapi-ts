@@ -9,12 +9,12 @@ export const getOperationParameters = (openApi: OpenApi, parameters: OpenApiPara
         $refs: [],
         imports: [],
         parameters: [],
+        parametersBody: null,
+        parametersCookie: [],
+        parametersForm: [],
+        parametersHeader: [],
         parametersPath: [],
         parametersQuery: [],
-        parametersForm: [],
-        parametersCookie: [],
-        parametersHeader: [],
-        parametersBody: null,
     };
 
     // Iterate over the parameters

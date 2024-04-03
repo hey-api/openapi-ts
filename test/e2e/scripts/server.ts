@@ -58,8 +58,8 @@ const start = async (dir: string) =>
         _app.all('/base/api/v1.0/error', (req, res) => {
             const status = parseInt(String(req.query.status));
             res.status(status).json({
-                status,
                 message: 'hello world',
+                status,
             });
         });
 
@@ -69,14 +69,14 @@ const start = async (dir: string) =>
         _app.all('/base/api/v1.0/*', (req, res) => {
             setTimeout(() => {
                 res.json({
-                    method: req.method,
-                    protocol: req.protocol,
-                    hostname: req.hostname,
-                    path: req.path,
-                    url: req.url,
-                    query: req.query,
                     body: req.body,
                     headers: req.headers,
+                    hostname: req.hostname,
+                    method: req.method,
+                    path: req.path,
+                    protocol: req.protocol,
+                    query: req.query,
+                    url: req.url,
                 });
             }, 100);
         });
