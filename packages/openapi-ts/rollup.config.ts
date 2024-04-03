@@ -18,13 +18,6 @@ import { defineConfig } from 'rollup';
  */
 export function handlebarsPlugin(): Plugin {
     return {
-        name: 'handlebars',
-        resolveId: (file: any, importer: any) => {
-            if (path.extname(file) === '.hbs') {
-                return path.resolve(path.dirname(importer), file);
-            }
-            return null;
-        },
         load: (file: any) => {
             if (path.extname(file) === '.hbs') {
                 const template = readFileSync(file, 'utf8').toString().trim();
@@ -41,9 +34,9 @@ export function handlebarsPlugin(): Plugin {
                         escapeDescription: true,
                         escapeNewline: true,
                         exactArray: true,
-                        ifdef: true,
                         ifNotNullNotUndefined: true,
                         ifOperationDataOptional: true,
+                        ifdef: true,
                         intersection: true,
                         modelUnionType: true,
                         nameOperationDataType: true,
@@ -57,6 +50,13 @@ export function handlebarsPlugin(): Plugin {
                     strict: true,
                 });
                 return `export default ${templateSpec};`;
+            }
+            return null;
+        },
+        name: 'handlebars',
+        resolveId: (file: any, importer: any) => {
+            if (path.extname(file) === '.hbs') {
+                return path.resolve(path.dirname(importer), file);
             }
             return null;
         },

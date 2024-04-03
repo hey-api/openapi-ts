@@ -10,13 +10,13 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): C
             // Do your request...
             const timeout = setTimeout(() => {
                 resolve({
-                    url,
-                    ok: true,
-                    status: 200,
-                    statusText: 'dummy',
                     body: {
                         ...options,
                     },
+                    ok: true,
+                    status: 200,
+                    statusText: 'dummy',
+                    url,
                 });
             }, 500);
 

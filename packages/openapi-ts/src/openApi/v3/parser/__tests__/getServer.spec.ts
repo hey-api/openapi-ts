@@ -6,11 +6,11 @@ describe('getServer', () => {
     it('should produce correct result', () => {
         expect(
             getServer({
-                openapi: '3.0',
                 info: {
                     title: 'dummy',
                     version: '1.0',
                 },
+                openapi: '3.0',
                 paths: {},
                 servers: [
                     {
@@ -24,21 +24,21 @@ describe('getServer', () => {
     it('should produce correct result with variables', () => {
         expect(
             getServer({
-                openapi: '3.0',
                 info: {
                     title: 'dummy',
                     version: '1.0',
                 },
+                openapi: '3.0',
                 paths: {},
                 servers: [
                     {
                         url: '{scheme}://localhost:{port}/api',
                         variables: {
-                            scheme: {
-                                default: 'https',
-                            },
                             port: {
                                 default: '8080',
+                            },
+                            scheme: {
+                                default: 'https',
                             },
                         },
                     },

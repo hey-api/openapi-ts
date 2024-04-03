@@ -16,8 +16,6 @@ const toSnapshotPath = (file: string) => `./__snapshots__/${file.replace(OUTPUT_
 describe('OpenAPI v2', () => {
     it.each([
         {
-            description: 'generate fetch client',
-            name: 'v2',
             config: {
                 client: 'fetch',
                 enums: 'javascript',
@@ -27,6 +25,8 @@ describe('OpenAPI v2', () => {
                 exportServices: true,
                 useOptions: true,
             } as UserConfig,
+            description: 'generate fetch client',
+            name: 'v2',
         },
     ])('$description', async ({ name, config }) => {
         const output = toOutputPath(name);
@@ -45,8 +45,6 @@ describe('OpenAPI v2', () => {
 describe('OpenAPI v3', () => {
     it.each([
         {
-            description: 'generate fetch client',
-            name: 'v3',
             config: {
                 client: 'fetch',
                 enums: 'javascript',
@@ -56,10 +54,10 @@ describe('OpenAPI v3', () => {
                 exportServices: true,
                 useOptions: true,
             } as UserConfig,
+            description: 'generate fetch client',
+            name: 'v3',
         },
         {
-            description: 'generate angular client',
-            name: 'v3_angular',
             config: {
                 client: 'angular',
                 enums: false,
@@ -69,10 +67,10 @@ describe('OpenAPI v3', () => {
                 exportServices: true,
                 useOptions: true,
             } as UserConfig,
+            description: 'generate angular client',
+            name: 'v3_angular',
         },
         {
-            description: 'generate node client',
-            name: 'v3_node',
             config: {
                 client: 'node',
                 enums: false,
@@ -82,10 +80,10 @@ describe('OpenAPI v3', () => {
                 exportServices: false,
                 useOptions: true,
             } as UserConfig,
+            description: 'generate node client',
+            name: 'v3_node',
         },
         {
-            description: 'generate axios client',
-            name: 'v3_axios',
             config: {
                 client: 'axios',
                 enums: false,
@@ -95,10 +93,10 @@ describe('OpenAPI v3', () => {
                 exportServices: false,
                 useOptions: true,
             } as UserConfig,
+            description: 'generate axios client',
+            name: 'v3_axios',
         },
         {
-            description: 'generate xhr client',
-            name: 'v3_xhr',
             config: {
                 client: 'xhr',
                 enums: false,
@@ -108,10 +106,10 @@ describe('OpenAPI v3', () => {
                 exportServices: false,
                 useOptions: true,
             } as UserConfig,
+            description: 'generate xhr client',
+            name: 'v3_xhr',
         },
         {
-            description: 'generate Date types',
-            name: 'v3_date',
             config: {
                 client: 'fetch',
                 enums: 'javascript',
@@ -119,13 +117,13 @@ describe('OpenAPI v3', () => {
                 exportModels: '^ModelWithPattern',
                 exportSchemas: true,
                 exportServices: false,
-                useOptions: true,
                 useDateType: true,
+                useOptions: true,
             } as UserConfig,
+            description: 'generate Date types',
+            name: 'v3_date',
         },
         {
-            description: 'generate optional arguments',
-            name: 'v3_options',
             config: {
                 client: 'fetch',
                 enums: 'javascript',
@@ -133,13 +131,13 @@ describe('OpenAPI v3', () => {
                 exportModels: '^ModelWithString',
                 exportSchemas: false,
                 exportServices: '^Defaults',
-                useOptions: true,
                 useDateType: true,
+                useOptions: true,
             } as UserConfig,
+            description: 'generate optional arguments',
+            name: 'v3_options',
         },
         {
-            description: 'generate client',
-            name: 'v3_client',
             config: {
                 client: 'fetch',
                 enums: 'javascript',
@@ -147,14 +145,14 @@ describe('OpenAPI v3', () => {
                 exportModels: true,
                 exportSchemas: false,
                 exportServices: true,
-                useOptions: true,
-                useDateType: true,
                 name: 'ApiClient',
+                useDateType: true,
+                useOptions: true,
             } as UserConfig,
+            description: 'generate client',
+            name: 'v3_client',
         },
         {
-            description: 'generate TypeScript enums',
-            name: 'v3_enums_typescript',
             config: {
                 client: 'fetch',
                 enums: 'typescript',
@@ -164,10 +162,10 @@ describe('OpenAPI v3', () => {
                 exportServices: true,
                 useOptions: true,
             } as UserConfig,
+            description: 'generate TypeScript enums',
+            name: 'v3_enums_typescript',
         },
         {
-            description: 'generate models',
-            name: 'v3_models',
             config: {
                 client: 'fetch',
                 exportCore: false,
@@ -175,14 +173,16 @@ describe('OpenAPI v3', () => {
                 exportSchemas: false,
                 exportServices: false,
             } as UserConfig,
+            description: 'generate models',
+            name: 'v3_models',
         },
         {
-            description: 'generate experimental build',
-            name: 'v3_experimental',
             config: {
                 client: 'fetch',
                 experimental: true,
             } as UserConfig,
+            description: 'generate experimental build',
+            name: 'v3_experimental',
         },
     ])('$description', async ({ name, config }) => {
         const output = toOutputPath(name);

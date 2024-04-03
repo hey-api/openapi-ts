@@ -8,6 +8,7 @@ const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url)).
 const external = [/^node:*/, ...Object.keys(pkg.dependencies), ...Object.keys(pkg.devDependencies)];
 
 export default defineConfig({
+    external,
     input: {
         index: './temp/node/index.d.ts',
     },
@@ -15,6 +16,5 @@ export default defineConfig({
         dir: './dist/node',
         format: 'esm',
     },
-    external,
     plugins: [dts({ respectExternal: true })],
 });

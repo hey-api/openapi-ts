@@ -9,10 +9,10 @@ import {
 
 describe('sanitizeOperationName', () => {
     it.each([
-        { input: 'abc', expected: 'abc' },
-        { input: 'æbc', expected: 'æbc' },
-        { input: 'æb.c', expected: 'æb-c' },
-        { input: '1æb.c', expected: 'æb-c' },
+        { expected: 'abc', input: 'abc' },
+        { expected: 'æbc', input: 'æbc' },
+        { expected: 'æb-c', input: 'æb.c' },
+        { expected: 'æb-c', input: '1æb.c' },
     ])('sanitizeOperationName($input) -> $expected', ({ input, expected }) => {
         expect(sanitizeOperationName(input)).toEqual(expected);
     });
@@ -20,11 +20,11 @@ describe('sanitizeOperationName', () => {
 
 describe('sanitizeOperationParameterName', () => {
     it.each([
-        { input: 'abc', expected: 'abc' },
-        { input: 'æbc', expected: 'æbc' },
-        { input: 'æb.c', expected: 'æb-c' },
-        { input: '1æb.c', expected: 'æb-c' },
-        { input: 'unknown[]', expected: 'unknownArray' },
+        { expected: 'abc', input: 'abc' },
+        { expected: 'æbc', input: 'æbc' },
+        { expected: 'æb-c', input: 'æb.c' },
+        { expected: 'æb-c', input: '1æb.c' },
+        { expected: 'unknownArray', input: 'unknown[]' },
     ])('sanitizeOperationParameterName($input) -> $expected', ({ input, expected }) => {
         expect(sanitizeOperationParameterName(input)).toEqual(expected);
     });
@@ -32,10 +32,10 @@ describe('sanitizeOperationParameterName', () => {
 
 describe('sanitizeServiceName', () => {
     it.each([
-        { input: 'abc', expected: 'abc' },
-        { input: 'æbc', expected: 'æbc' },
-        { input: 'æb.c', expected: 'æb-c' },
-        { input: '1æb.c', expected: 'æb-c' },
+        { expected: 'abc', input: 'abc' },
+        { expected: 'æbc', input: 'æbc' },
+        { expected: 'æb-c', input: 'æb.c' },
+        { expected: 'æb-c', input: '1æb.c' },
     ])('sanitizeServiceName($input) -> $expected', ({ input, expected }) => {
         expect(sanitizeServiceName(input)).toEqual(expected);
     });
@@ -43,10 +43,10 @@ describe('sanitizeServiceName', () => {
 
 describe('sanitizeTypeName', () => {
     it.each([
-        { input: 'abc', expected: 'abc' },
-        { input: 'æbc', expected: 'æbc' },
-        { input: 'æb.c', expected: 'æb_c' },
-        { input: '1æb.c', expected: 'æb_c' },
+        { expected: 'abc', input: 'abc' },
+        { expected: 'æbc', input: 'æbc' },
+        { expected: 'æb_c', input: 'æb.c' },
+        { expected: 'æb_c', input: '1æb.c' },
     ])('sanitizeTypeName($input) -> $expected', ({ input, expected }) => {
         expect(sanitizeTypeName(input)).toEqual(expected);
     });
