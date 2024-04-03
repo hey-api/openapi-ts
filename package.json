@@ -16,9 +16,10 @@
     "scripts": {
         "build": "pnpm --recursive build",
         "changeset": "changeset",
+        "docs": "pnpm --filter openapi-ts-docs --",
         "lint:fix": "pnpm --recursive lint:fix",
         "lint": "pnpm --recursive lint",
-        "openapi-ts": "pnpm --recursive --workspace packages/openapi-ts --",
+        "openapi-ts": "pnpm --filter @hey-api/openapi-ts --",
         "test:coverage": "pnpm --recursive test:coverage",
         "test:e2e": "pnpm --recursive test:e2e",
         "test:update": "pnpm --recursive test:update",
