@@ -29,8 +29,8 @@ const evaluate = async (fn: EvaluateFunc<unknown[]>) => await _page.evaluate(fn)
 const exposeFunction = async (name: string, fn: Function) => await _page.exposeFunction(name, fn);
 
 export default {
-    start,
-    stop,
     evaluate,
     exposeFunction,
+    start,
+    stop,
 };

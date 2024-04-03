@@ -9,22 +9,23 @@
         "es6": true,
         "node": true
     },
-    "plugins": ["simple-import-sort"],
+    "plugins": ["simple-import-sort", "sort-keys-fix"],
     "rules": {
-        "@typescript-eslint/ban-ts-comment": 0,
-        "@typescript-eslint/ban-ts-ignore": 0,
-        "@typescript-eslint/explicit-function-return-type": 0,
-        "@typescript-eslint/explicit-module-boundary-types": 0,
+        "@typescript-eslint/ban-ts-comment": "off",
+        "@typescript-eslint/ban-ts-ignore": "off",
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/no-explicit-any": "off",
-        "@typescript-eslint/no-inferrable-types": 0,
-        "@typescript-eslint/no-non-null-assertion": 0,
-        "@typescript-eslint/no-var-requires": 0,
+        "@typescript-eslint/no-inferrable-types": "off",
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/no-var-requires": "off",
         "arrow-body-style": "error",
         "import/order": "off",
         "object-shorthand": "error",
         "prettier/prettier": ["error"],
         "simple-import-sort/exports": "error",
         "simple-import-sort/imports": "error",
-        "sort-imports": "off"
+        "sort-imports": "off",
+        "sort-keys-fix/sort-keys-fix": "warn"
     }
 }

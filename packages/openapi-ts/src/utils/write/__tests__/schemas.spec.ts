@@ -11,8 +11,6 @@ vi.mock('node:fs');
 describe('writeClientSchemas', () => {
     it('should write to filesystem', async () => {
         const client: Parameters<typeof writeClientSchemas>[0] = {
-            server: 'http://localhost:8080',
-            version: 'v1',
             models: [
                 {
                     $refs: [],
@@ -33,7 +31,9 @@ describe('writeClientSchemas', () => {
                     type: 'User',
                 },
             ],
+            server: 'http://localhost:8080',
             services: [],
+            version: 'v1',
         };
 
         await writeClientSchemas(client, mockTemplates, '/', {

@@ -37,9 +37,9 @@ export const getServices = (openApi: OpenApi, options: Config): Service[] => {
                                 // append the new method to it. Otherwise we should create a new service object.
                                 const service: Service = services.get(operation.service) || {
                                     $refs: [],
+                                    imports: [],
                                     name: operation.service,
                                     operations: [],
-                                    imports: [],
                                 };
 
                                 // Push the operation in the service

@@ -11,10 +11,10 @@ vi.mock('node:fs');
 describe('writeClientIndex', () => {
     it('should write to filesystem', async () => {
         const client: Parameters<typeof writeClientIndex>[0] = {
-            server: 'http://localhost:8080',
-            version: '1.0',
             models: [],
+            server: 'http://localhost:8080',
             services: [],
+            version: '1.0',
         };
 
         await writeClientIndex(client, mockTemplates, '/', {

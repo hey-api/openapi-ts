@@ -27,15 +27,14 @@ describe('getServices', () => {
         };
         const services = getServices(
             {
-                openapi: '3.0.0',
                 info: {
                     title: 'x',
                     version: '1',
                 },
+                openapi: '3.0.0',
                 paths: {
                     '/api/trips': {
                         get: {
-                            tags: [],
                             responses: {
                                 200: {
                                     description: 'x',
@@ -44,6 +43,7 @@ describe('getServices', () => {
                                     description: 'default',
                                 },
                             },
+                            tags: [],
                         },
                     },
                 },

@@ -4,15 +4,15 @@ import { getPattern } from '../getPattern';
 
 describe('getPattern', () => {
     it.each([
-        { pattern: undefined, expected: undefined },
-        { pattern: '', expected: '' },
-        { pattern: '^[a-zA-Z]', expected: '^[a-zA-Z]' },
-        { pattern: '^\\w+$', expected: '^\\\\w+$' },
-        { pattern: '^\\d{3}-\\d{2}-\\d{4}$', expected: '^\\\\d{3}-\\\\d{2}-\\\\d{4}$' },
-        { pattern: '\\', expected: '\\\\' },
-        { pattern: '\\/', expected: '\\\\/' },
-        { pattern: '\\/\\/', expected: '\\\\/\\\\/' },
-        { pattern: "'", expected: "\\'" },
+        { expected: undefined, pattern: undefined },
+        { expected: '', pattern: '' },
+        { expected: '^[a-zA-Z]', pattern: '^[a-zA-Z]' },
+        { expected: '^\\\\w+$', pattern: '^\\w+$' },
+        { expected: '^\\\\d{3}-\\\\d{2}-\\\\d{4}$', pattern: '^\\d{3}-\\d{2}-\\d{4}$' },
+        { expected: '\\\\', pattern: '\\' },
+        { expected: '\\\\/', pattern: '\\/' },
+        { expected: '\\\\/\\\\/', pattern: '\\/\\/' },
+        { expected: "\\'", pattern: "'" },
     ])('getPattern($pattern) -> $expected', ({ pattern, expected }) => {
         expect(getPattern(pattern)).toEqual(expected);
     });

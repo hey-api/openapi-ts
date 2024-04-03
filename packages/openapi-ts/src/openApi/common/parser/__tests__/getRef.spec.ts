@@ -7,21 +7,21 @@ describe('getRef (v2)', () => {
         expect(
             getRef(
                 {
-                    swagger: '2.0',
-                    info: {
-                        title: 'dummy',
-                        version: '1.0',
-                    },
-                    host: 'localhost:8080',
                     basePath: '/api',
-                    schemes: ['http', 'https'],
-                    paths: {},
                     definitions: {
                         Example: {
                             description: 'This is an Example model ',
                             type: 'integer',
                         },
                     },
+                    host: 'localhost:8080',
+                    info: {
+                        title: 'dummy',
+                        version: '1.0',
+                    },
+                    paths: {},
+                    schemes: ['http', 'https'],
+                    swagger: '2.0',
                 },
                 {
                     $ref: '#/definitions/Example',
@@ -39,17 +39,6 @@ describe('getRef (v3)', () => {
         expect(
             getRef(
                 {
-                    openapi: '3.0',
-                    info: {
-                        title: 'dummy',
-                        version: '1.0',
-                    },
-                    paths: {},
-                    servers: [
-                        {
-                            url: 'https://localhost:8080/api',
-                        },
-                    ],
                     components: {
                         schemas: {
                             Example: {
@@ -58,6 +47,17 @@ describe('getRef (v3)', () => {
                             },
                         },
                     },
+                    info: {
+                        title: 'dummy',
+                        version: '1.0',
+                    },
+                    openapi: '3.0',
+                    paths: {},
+                    servers: [
+                        {
+                            url: 'https://localhost:8080/api',
+                        },
+                    ],
                 },
                 {
                     $ref: '#/components/schemas/Example',
@@ -73,11 +73,11 @@ describe('getRef (v3)', () => {
         expect(
             getRef(
                 {
-                    openapi: '3.0',
                     info: {
                         title: 'dummy',
                         version: '1.0',
                     },
+                    openapi: '3.0',
                     paths: {
                         '/api/user/{id}': {
                             description: 'This is an Example path',
