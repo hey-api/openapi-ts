@@ -11,12 +11,12 @@ export const getOperationParameters = (openApi: OpenApi, parameters: OpenApiPara
         $refs: [],
         imports: [],
         parameters: [],
-        parametersPath: [],
-        parametersQuery: [],
-        parametersForm: [],
+        parametersBody: null,
         parametersCookie: [],
+        parametersForm: [],
         parametersHeader: [],
-        parametersBody: null, // Not used in v3 -> @see requestBody
+        parametersPath: [],
+        parametersQuery: [], // Not used in v3 -> @see requestBody
     };
 
     parameters.forEach(parameterOrReference => {

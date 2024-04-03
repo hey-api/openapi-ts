@@ -3,21 +3,21 @@ import { describe, expect, it } from 'vitest';
 import { escapeName, unescapeName } from '../escapeName';
 
 const toCheck: { unescaped: string; escaped: string }[] = [
-    { unescaped: '', escaped: "''" },
-    { unescaped: 'fooBar', escaped: 'fooBar' },
-    { unescaped: 'Foo Bar', escaped: `'Foo Bar'` },
-    { unescaped: 'foo bar', escaped: `'foo bar'` },
-    { unescaped: 'foo-bar', escaped: `'foo-bar'` },
-    { unescaped: 'foo.bar', escaped: `'foo.bar'` },
-    { unescaped: 'foo_bar', escaped: 'foo_bar' },
-    { unescaped: '123foo.bar', escaped: `'123foo.bar'` },
-    { unescaped: '@foo.bar', escaped: `'@foo.bar'` },
-    { unescaped: '$foo.bar', escaped: `'$foo.bar'` },
-    { unescaped: '_foo.bar', escaped: `'_foo.bar'` },
-    { unescaped: '123foobar', escaped: `'123foobar'` },
-    { unescaped: '@foobar', escaped: `'@foobar'` },
-    { unescaped: '$foobar', escaped: '$foobar' },
-    { unescaped: '_foobar', escaped: '_foobar' },
+    { escaped: "''", unescaped: '' },
+    { escaped: 'fooBar', unescaped: 'fooBar' },
+    { escaped: `'Foo Bar'`, unescaped: 'Foo Bar' },
+    { escaped: `'foo bar'`, unescaped: 'foo bar' },
+    { escaped: `'foo-bar'`, unescaped: 'foo-bar' },
+    { escaped: `'foo.bar'`, unescaped: 'foo.bar' },
+    { escaped: 'foo_bar', unescaped: 'foo_bar' },
+    { escaped: `'123foo.bar'`, unescaped: '123foo.bar' },
+    { escaped: `'@foo.bar'`, unescaped: '@foo.bar' },
+    { escaped: `'$foo.bar'`, unescaped: '$foo.bar' },
+    { escaped: `'_foo.bar'`, unescaped: '_foo.bar' },
+    { escaped: `'123foobar'`, unescaped: '123foobar' },
+    { escaped: `'@foobar'`, unescaped: '@foobar' },
+    { escaped: '$foobar', unescaped: '$foobar' },
+    { escaped: '_foobar', unescaped: '_foobar' },
 ];
 
 describe('escapeName', () => {

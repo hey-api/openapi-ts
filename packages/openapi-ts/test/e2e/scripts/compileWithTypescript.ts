@@ -15,20 +15,20 @@ export const compileWithTypescript = (dir: string) => {
     const cwd = `./test/e2e/generated/${dir}/`;
     const tsconfig = {
         compilerOptions: {
-            target: 'es2020',
-            module: 'es2020',
-            moduleResolution: 'node',
-            lib: ['es2020', 'dom'],
+            allowSyntheticDefaultImports: true,
             declaration: false,
             declarationMap: false,
-            sourceMap: false,
+            experimentalDecorators: true,
+            lib: ['es2020', 'dom'],
+            module: 'es2020',
+            moduleResolution: 'node',
+            noImplicitAny: true,
             noImplicitReturns: true,
             noImplicitThis: true,
-            noImplicitAny: true,
-            strict: true,
             skipLibCheck: true,
-            allowSyntheticDefaultImports: true,
-            experimentalDecorators: true,
+            sourceMap: false,
+            strict: true,
+            target: 'es2020',
         },
         include: ['**/*.ts'],
     };
@@ -50,8 +50,8 @@ export const compileWithTypescript = (dir: string) => {
     const diagnostics = getPreEmitDiagnostics(compiler).concat(result.diagnostics);
     if (diagnostics.length) {
         const message = formatDiagnosticsWithColorAndContext(diagnostics, {
-            getCurrentDirectory: () => sys.getCurrentDirectory(),
             getCanonicalFileName: f => f,
+            getCurrentDirectory: () => sys.getCurrentDirectory(),
             getNewLine: () => EOL,
         });
         console.log(message);
