@@ -27,8 +27,6 @@ export const createAngularProject = (dir: string, name: string) => {
             'false',
             '--skip-tests',
             'true',
-            '--skip-install',
-            'true',
             '--skip-git',
             'true',
             '--commit',
