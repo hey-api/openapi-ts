@@ -274,6 +274,10 @@ export type ModelWithNullableString = {
      * This is a simple string property
      */
     nullableRequiredProp2: string | null;
+    /**
+     * This is a simple enum with strings
+     */
+    'foo_bar-enum'?: 'Success' | 'Warning' | 'Error' | 'ØÆÅ字符串';
 };
 
 /**
@@ -283,7 +287,7 @@ export type ModelWithEnum = {
     /**
      * This is a simple enum with strings
      */
-    test?: 'Success' | 'Warning' | 'Error' | 'ØÆÅ字符串';
+    'foo_bar-enum'?: 'Success' | 'Warning' | 'Error' | 'ØÆÅ字符串';
     /**
      * These are the HTTP error code enums
      */
@@ -319,6 +323,10 @@ export type ModelWithNestedEnums = {
     dictionaryWithEnumFromDescription?: Record<string, number>;
     arrayWithEnum?: Array<'Success' | 'Warning' | 'Error'>;
     arrayWithDescription?: Array<number>;
+    /**
+     * This is a simple enum with strings
+     */
+    'foo_bar-enum'?: 'Success' | 'Warning' | 'Error' | 'ØÆÅ字符串';
 };
 
 /**

@@ -184,7 +184,6 @@ const operationDataType = (config: Config, service: Service) => {
     return output.join('\n');
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const registerHandlebarHelpers = (config: Config, client: Client): void => {
     Handlebars.registerHelper('camelCase', camelCase);
 
@@ -193,7 +192,11 @@ export const registerHandlebarHelpers = (config: Config, client: Client): void =
     });
 
     Handlebars.registerHelper('enumKey', enumKey);
-    Handlebars.registerHelper('enumName', enumName);
+
+    Handlebars.registerHelper('enumName', function (name: string | undefined) {
+        return enumName(config, client, name);
+    });
+
     Handlebars.registerHelper('enumUnionType', enumUnionType);
     Handlebars.registerHelper('enumValue', enumValue);
 

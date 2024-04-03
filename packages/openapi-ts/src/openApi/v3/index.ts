@@ -19,6 +19,7 @@ export const parse = (openApi: OpenApi, options: Config): Client => {
     const services = getServices(openApi, options);
 
     return {
+        enumNames: [],
         models,
         server,
         services,

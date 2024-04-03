@@ -28,6 +28,7 @@ describe('registerHandlebarHelpers', () => {
                 write: true,
             },
             {
+                enumNames: [],
                 models: [],
                 server: '',
                 services: [],
@@ -82,6 +83,7 @@ describe('registerHandlebarTemplates', () => {
                 write: true,
             },
             {
+                enumNames: [],
                 models: [],
                 server: '',
                 services: [],

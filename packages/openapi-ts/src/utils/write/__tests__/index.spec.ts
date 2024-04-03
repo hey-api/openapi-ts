@@ -11,6 +11,7 @@ vi.mock('node:fs');
 describe('writeClientIndex', () => {
     it('should write to filesystem', async () => {
         const client: Parameters<typeof writeClientIndex>[0] = {
+            enumNames: [],
             models: [],
             server: 'http://localhost:8080',
             services: [],
