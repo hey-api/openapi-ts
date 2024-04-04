@@ -12,7 +12,7 @@ data: {{#if parameters}}{{{nameOperationDataType @root this}}} & {{/if}}TConfig<
 {{#if parameters}}
 
 {{#each parameters}}
-{{{name}}}{{>isRequired}}: {{>type}}{{#if default}} = {{{default}}}{{/if}},
+{{{name}}}{{{modelIsRequired this}}}: {{>type}}{{#if default}} = {{{default}}}{{/if}},
 {{/each}}
 {{/if}}
 {{/if}}

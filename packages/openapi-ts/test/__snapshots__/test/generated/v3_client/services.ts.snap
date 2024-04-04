@@ -23,8 +23,6 @@ export type DefaultData = {
     };
 };
 
-export type SimpleData = {};
-
 export type ParametersData = {
     DeleteFoo: {
         /**
@@ -260,29 +258,17 @@ export type DefaultsData = {
         /**
          * This is a string with default
          */
-        parameterStringWithDefault?: string;
+        parameterStringWithDefault: string;
         /**
          * This is a string with empty default
          */
-        parameterStringWithEmptyDefault?: string;
+        parameterStringWithEmptyDefault: string;
         /**
          * This is a string with no default
          */
         parameterStringWithNoDefault: string;
     };
 };
-
-export type DuplicateData = {};
-
-export type NoContentData = {};
-
-export type ResponseData = {};
-
-export type MultipleTags1Data = {};
-
-export type MultipleTags2Data = {};
-
-export type MultipleTags3Data = {};
 
 export type CollectionFormatData = {
     CollectionFormat: {
@@ -322,7 +308,7 @@ export type TypesData = {
         /**
          * This is a boolean parameter
          */
-        parameterBoolean?: boolean | null;
+        parameterBoolean: boolean | null;
         /**
          * This is a dictionary parameter
          */
@@ -334,15 +320,15 @@ export type TypesData = {
         /**
          * This is a number parameter
          */
-        parameterNumber?: number;
+        parameterNumber: number;
         /**
          * This is an object parameter
          */
-        parameterObject?: Record<string, unknown> | null;
+        parameterObject: Record<string, unknown> | null;
         /**
          * This is a string parameter
          */
-        parameterString?: string | null;
+        parameterString: string | null;
     };
 };
 
@@ -404,8 +390,6 @@ export type MultipartData = {
         };
     };
 };
-
-export type HeaderData = {};
 
 export type ErrorData = {
     TestErrorCode: {
