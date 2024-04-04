@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.34.5
+
+### Patch Changes
+
+- fix(client): access service data type in namespace properly ([#258](https://github.com/hey-api/openapi-ts/pull/258))
+
 ## 0.34.4
 
 ### Patch Changes
