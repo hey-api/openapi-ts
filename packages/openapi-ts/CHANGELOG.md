@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.34.4
+
+### Patch Changes
+
+- fix(openapi-ts): namespace service data types ([#246](https://github.com/hey-api/openapi-ts/pull/246))
+
 ## 0.34.3
 
 ### Patch Changes
