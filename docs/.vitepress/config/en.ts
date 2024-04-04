@@ -1,8 +1,8 @@
-import { defineConfig } from "vitepress";
+import { defineConfig } from 'vitepress';
 
 export default defineConfig({
     lang: 'en-US',
-    description: "Turn your OpenAPI specification into a beautiful TypeScript client",
+    description: 'Turn your OpenAPI specification into a beautiful TypeScript client',
     themeConfig: {
         nav: [
             { text: 'Guide', link: '/introduction' },
