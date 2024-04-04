@@ -17,7 +17,7 @@
 
 ## Getting Started
 
-Please follow the documentation [here](https://hey-api.github.io/openapi-ts/).
+Please follow the documentation [here](https://heyapi.vercel.app/).
 
 ## Contributing
 
