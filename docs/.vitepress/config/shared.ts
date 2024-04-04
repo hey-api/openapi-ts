@@ -15,5 +15,8 @@ export default defineConfig({
             { icon: 'npm', link: 'https://www.npmjs.com/package/@hey-api/openapi-ts' },
             { icon: 'github', link: 'https://github.com/hey-api/openapi-ts' },
         ],
+        search: {
+            provider: 'local',
+        }
     }
 });
