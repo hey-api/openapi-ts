@@ -1,15 +1,9 @@
-import { defineConfig } from 'vitepress'
+import { defineConfig } from 'vitepress';
 
-// https://vitepress.dev/reference/site-config
 export default defineConfig({
-    title: "OpenAPI TypeScript",
-    description: "Turn your OpenAPI specification into a beautiful TypeScript client",
-    head: [
-        ['link', { rel: 'icon', type: 'image/png', href: '/logo.png' }],
-    ],
+    lang: 'en-US',
+    description: 'Turn your OpenAPI specification into a beautiful TypeScript client',
     themeConfig: {
-        // https://vitepress.dev/reference/default-theme-config
-        logo: '/logo.png',
         nav: [
             { text: 'Guide', link: '/introduction' },
         ],
@@ -23,11 +17,8 @@ export default defineConfig({
                     { text: 'Configuration', link: '/configuration' },
                     { text: 'Interceptors', link: '/interceptors' },
                     { text: 'Migrating', link: '/migrating' },
-                ]
-            }
+                ],
+            },
         ],
-        socialLinks: [
-            { icon: 'github', link: 'https://github.com/hey-api/openapi-ts' }
-        ]
-    }
-})
+    },
+});
