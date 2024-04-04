@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.34.3
+
+### Patch Changes
+
+- fix(docs): link to docs hosted on vercel ([#244](https://github.com/hey-api/openapi-ts/pull/244))
+
 ## 0.34.2
 
 ### Patch Changes
