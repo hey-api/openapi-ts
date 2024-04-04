@@ -7,7 +7,7 @@ description: Migrating to @hey-api/openapi-ts.
 
 While we try to avoid breaking changes, sometimes it's unavoidable in order to offer you the latest features.
 
-### v0.27.38
+## v0.27.38
 
 ### `useOptions: true`
 
