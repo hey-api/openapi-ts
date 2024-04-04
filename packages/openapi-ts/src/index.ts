@@ -1,7 +1,7 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
 
+import { loadConfig } from 'c12';
 import { sync } from 'cross-spawn';
 
 import { parse } from './openApi';
@@ -14,9 +14,6 @@ import { postProcessClient } from './utils/postprocess';
 import { writeClient } from './utils/write/client';
 
 type Dependencies = Record<string, unknown>;
-
-// TODO: add support for `openapi-ts.config.ts`
-const configFiles = ['openapi-ts.config.js', 'openapi-ts.config.cjs', 'openapi-ts.config.mjs'];
 
 // Mapping of all dependencies used in each client. These should be installed in the generated client package
 const clientDependencies: Record<Config['client'], string[]> = {
@@ -78,20 +75,15 @@ const logMissingDependenciesWarning = (client: Config['client'], dependencies: D
     }
 };
 
-const getConfigFromFile = async (): Promise<UserConfig | undefined> => {
-    const configPath = configFiles
-        .map(file => pathToFileURL(path.resolve(process.cwd(), file)))
-        .find(filePath => existsSync(filePath));
-    if (!configPath) {
-        return;
-    }
-    // @ts-ignore
-    const exported = await import(configPath);
-    return exported.default as UserConfig;
-};
-
 const getConfig = async (userConfig: UserConfig, dependencies: Dependencies) => {
-    const userConfigFromFile = await getConfigFromFile();
+    const { config: userConfigFromFile } = await loadConfig<UserConfig>({
+        jitiOptions: {
+            esmResolve: true,
+        },
+        name: 'openapi-ts',
+        overrides: userConfig,
+    });
+
     if (userConfigFromFile) {
         userConfig = { ...userConfigFromFile, ...userConfig };
     }
