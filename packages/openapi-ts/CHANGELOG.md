@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.34.2
+
+### Patch Changes
+
+- docs(readme): update broken contributing link ([#236](https://github.com/hey-api/openapi-ts/pull/236))
+
+- fix(config): support ts config files and `defineConfig` syntax ([`0c92222ab74bb7d2391d49587760db9ea9228d5a`](https://github.com/hey-api/openapi-ts/commit/0c92222ab74bb7d2391d49587760db9ea9228d5a))
+
 ## 0.34.1
 
 ### Patch Changes
