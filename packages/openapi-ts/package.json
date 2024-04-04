@@ -44,7 +44,7 @@
         "build-types": "pnpm build-types-temp && pnpm build-types-roll && pnpm build-types-check",
         "build": "pnpm clean && pnpm build-bundle && pnpm build-types",
         "clean": "rimraf dist test/generated test/e2e/generated coverage node_modules/.cache",
-        "dev": "rimraf dist && pnpm build-bundle -- --watch",
+        "dev": "rimraf dist && pnpm build-bundle --watch",
         "lint:fix": "eslint . --fix",
         "lint": "eslint .",
         "prepublishOnly": "pnpm build",
