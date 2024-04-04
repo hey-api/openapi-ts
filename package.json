@@ -5,7 +5,7 @@
     "private": true,
     "type": "module",
     "license": "MIT",
-    "homepage": "https://github.com/hey-api/openapi-ts/",
+    "homepage": "https://hey-api.github.io/openapi-ts/",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/hey-api/openapi-ts.git"

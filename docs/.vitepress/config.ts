@@ -14,7 +14,12 @@ export default defineConfig({
             {
                 text: 'Guide',
                 items: [
-                { text: 'Introduction', link: '/introduction' },
+                    { text: 'Introduction', link: '/introduction' },
+                    { text: 'Quick Start', link: '/quick-start' },
+                    { text: 'Installation', link: '/installation' },
+                    { text: 'Configuration', link: '/configuration' },
+                    { text: 'Interceptors', link: '/interceptors' },
+                    { text: 'Migrating', link: '/migrating' },
                 ]
             }
         ],
