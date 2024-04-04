@@ -5,21 +5,20 @@ description: Installing @hey-api/openapi-ts.
 
 # Installation
 
-```sh
+::: code-group
+```sh [npm]
 npm install @hey-api/openapi-ts --save-dev
 ```
-
-or
-
-```sh
-yarn add @hey-api/openapi-ts -D
-```
-
-or
-
-```sh
+```sh [pnpm]
 pnpm add @hey-api/openapi-ts -D
 ```
+```sh [yarn]
+yarn add @hey-api/openapi-ts -D
+```
+```sh [bun]
+bun add @hey-api/openapi-ts -D
+```
+:::
 
 If you want to use `openapi-ts` with CLI, add a script to your `package.json` file
 
