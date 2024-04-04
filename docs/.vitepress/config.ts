@@ -4,8 +4,12 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
     title: "OpenAPI TypeScript",
     description: "Turn your OpenAPI specification into a beautiful TypeScript client",
+    head: [
+        ['link', { rel: 'icon', type: 'image/png', href: '/wave.png' }],
+    ],
     themeConfig: {
         // https://vitepress.dev/reference/default-theme-config
+        logo: '/wave.png',
         nav: [
             { text: 'Guide', link: '/introduction' },
         ],
