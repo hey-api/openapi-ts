@@ -18,10 +18,10 @@ export const writeClientSchemas = async (
     outputPath: string,
     config: Config
 ): Promise<void> => {
-    // Dont create empty file
-    if (client.models.length === 0) {
+    if (!client.models.length) {
         return;
     }
+
     // Generate file with all schemas
     const results: string[] = [];
     for (const model of client.models) {

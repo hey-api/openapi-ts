@@ -53,7 +53,6 @@ describe('registerHandlebarHelpers', () => {
         expect(helpers).toContain('modelUnionType');
         expect(helpers).toContain('nameOperationDataType');
         expect(helpers).toContain('notEquals');
-        expect(helpers).toContain('operationDataType');
         expect(helpers).toContain('useDateType');
     });
 });

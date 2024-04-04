@@ -129,41 +129,30 @@ const dataParameters = (config: Config, parameters: OperationParameter[]) => {
 // same as `>isRequired` partial
 const isRequired = (model: Pick<Model, 'default' | 'isRequired'>) => (model.isRequired && !model.default ? '' : '?');
 
-const nameOperationDataType = (value: string) => camelCase(['T', 'Data', value].join('-'), { pascalCase: true });
+const nameOperationDataType = (service: Service, operation: Service['operations'][number]) => {
+    const namespace = `${camelCase(service.name, { pascalCase: true })}Data`;
+    const key = camelCase(operation.name, { pascalCase: true });
+    return `${namespace}.${key}`;
+};
 
-const operationDataType = (config: Config, service: Service) => {
+export const operationDataType = (config: Config, service: Service) => {
     if (!config.useOptions) {
         return '';
     }
     const partialType = Handlebars.partials['type'];
-    const output = service.operations
-        .filter(operation => operation.parameters.length)
-        .map(operation => {
-            const name = nameOperationDataType(operation.name);
-            return `export type ${name} = {
-                ${sortByName(operation.parameters)
-                    .filter(parameter => {
-                        if (!config.experimental) {
-                            return true;
-                        }
-                        return parameter.in !== 'query';
-                    })
-                    .map(parameter => {
-                        let comment: string[] = [];
-                        if (parameter.description) {
-                            comment = ['/**', ` * ${escapeComment(parameter.description)}`, ' */'];
-                        }
-                        return [
-                            ...comment,
-                            `${parameter.name + isRequired(parameter)}: ${partialType({ $config: config, ...parameter })}`,
-                        ].join('\n');
-                    })
-                    .join('\n')}
-                ${
-                    config.experimental
-                        ? `
-                query${operation.parametersQuery.every(parameter => !parameter.isRequired) ? '?' : ''}: {
-                    ${sortByName(operation.parametersQuery)
+    const namespace = `${camelCase(service.name, { pascalCase: true })}Data`;
+    const output = `export type ${namespace} = {
+        ${service.operations
+            .filter(operation => operation.parameters.length)
+            .map(
+                operation => `${camelCase(operation.name, { pascalCase: true })}: {
+                    ${sortByName(operation.parameters)
+                        .filter(parameter => {
+                            if (!config.experimental) {
+                                return true;
+                            }
+                            return parameter.in !== 'query';
+                        })
                         .map(parameter => {
                             let comment: string[] = [];
                             if (parameter.description) {
@@ -175,13 +164,31 @@ const operationDataType = (config: Config, service: Service) => {
                             ].join('\n');
                         })
                         .join('\n')}
-                }
-                `
-                        : ''
-                }
-            }`;
-        });
-    return output.join('\n');
+                    ${
+                        config.experimental
+                            ? `
+                    query${operation.parametersQuery.every(parameter => !parameter.isRequired) ? '?' : ''}: {
+                        ${sortByName(operation.parametersQuery)
+                            .map(parameter => {
+                                let comment: string[] = [];
+                                if (parameter.description) {
+                                    comment = ['/**', ` * ${escapeComment(parameter.description)}`, ' */'];
+                                }
+                                return [
+                                    ...comment,
+                                    `${parameter.name + isRequired(parameter)}: ${partialType({ $config: config, ...parameter })}`,
+                                ].join('\n');
+                            })
+                            .join('\n')}
+                    }
+                    `
+                            : ''
+                    }
+                };`
+            )
+            .join('\n')}
+    }`;
+    return output;
 };
 
 export const registerHandlebarHelpers = (config: Config, client: Client): void => {
@@ -275,7 +282,12 @@ export const registerHandlebarHelpers = (config: Config, client: Client): void =
         }
     );
 
-    Handlebars.registerHelper('nameOperationDataType', nameOperationDataType);
+    Handlebars.registerHelper(
+        'nameOperationDataType',
+        function (service: Service, operation: Service['operations'][number]) {
+            return nameOperationDataType(service, operation);
+        }
+    );
 
     Handlebars.registerHelper(
         'notEquals',
@@ -283,10 +295,6 @@ export const registerHandlebarHelpers = (config: Config, client: Client): void =
             return a !== b ? options.fn(this) : options.inverse(this);
         }
     );
-
-    Handlebars.registerHelper('operationDataType', function (service: Service) {
-        return operationDataType(config, service);
-    });
 
     Handlebars.registerHelper(
         'useDateType',
