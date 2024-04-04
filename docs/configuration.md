@@ -40,7 +40,7 @@ export default {
 
 Alternatively, you can use `openapi-ts.config.js` and configure the export statement depending on your project setup.
 
-### Clients
+## Clients
 
 By default, `openapi-ts` will try to guess your client based on your project dependencies. If we don't get it right, you can specify the desired client
 
@@ -68,7 +68,7 @@ We also support the legacy Node.js and XHR clients:
 You might not need a `node` client. Fetch API is [experimental](https://nodejs.org/docs/latest-v18.x/api/globals.html#fetch) in Node.js v18 and [stable](https://nodejs.org/docs/latest-v21.x/api/globals.html#fetch) in Node.js v21. We recommend upgrading to the latest Node.js version.
 :::
 
-### Formatting
+## Formatting
 
 By default, `openapi-ts` will automatically format your client according to your project configuration. To disable automatic formatting, set `format` to false
 
@@ -83,7 +83,7 @@ export default {
 
 You can also prevent your client from being processed by formatters by adding your output path to the tool's ignore file (e.g. `.prettierignore`).
 
-### Linting
+## Linting
 
 For performance reasons, `openapi-ts` does not automatically lint your client. To enable this feature, set `lint` to true
 
@@ -98,7 +98,7 @@ export default {
 
 You can also prevent your client from being processed by linters by adding your output path to the tool's ignore file (e.g. `.eslintignore`).
 
-### Enums
+## Enums
 
 If you need to iterate through possible field values without manually typing arrays, you can export enums with
 
@@ -131,6 +131,6 @@ export default {
 }
 ```
 
-### Config API
+## Config API
 
 You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/types/config.ts) interface.
