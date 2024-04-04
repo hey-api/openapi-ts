@@ -20,8 +20,412 @@ import type {
     NonAsciiStringæøåÆØÅöôêÊ字符串,
 } from './models';
 
-export type TDataPostServiceWithEmptyTag = {
-    requestBody: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
+export type DefaultData = {
+    PostServiceWithEmptyTag: {
+        requestBody: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
+    };
+};
+
+export type SimpleData = {};
+
+export type ParametersData = {
+    DeleteFoo: {
+        /**
+         * bar in method
+         */
+        bar: string;
+        /**
+         * foo in method
+         */
+        foo: string;
+    };
+    CallWithParameters: {
+        fooAllOfEnum: ModelWithNestedArrayEnumsDataFoo;
+        fooRefEnum?: ModelWithNestedArrayEnumsDataFoo;
+        /**
+         * This is the parameter that goes into the cookie
+         */
+        parameterCookie: string | null;
+        /**
+         * This is the parameter that goes into the form data
+         */
+        parameterForm: string | null;
+        /**
+         * This is the parameter that goes into the header
+         */
+        parameterHeader: string | null;
+        /**
+         * This is the parameter that goes into the path
+         */
+        parameterPath: string | null;
+        /**
+         * This is the parameter that goes into the query params
+         */
+        parameterQuery: string | null;
+        /**
+         * This is the parameter that goes into the body
+         */
+        requestBody: ModelWithString | null;
+    };
+    CallWithWeirdParameterNames: {
+        /**
+         * This is the parameter with a reserved keyword
+         */
+        _default?: string;
+        /**
+         * This is the parameter that goes into the cookie
+         */
+        parameterCookie: string | null;
+        /**
+         * This is the parameter that goes into the request form data
+         */
+        parameterForm: string | null;
+        /**
+         * This is the parameter that goes into the request header
+         */
+        parameterHeader: string | null;
+        /**
+         * This is the parameter that goes into the path
+         */
+        parameterPath1?: string;
+        /**
+         * This is the parameter that goes into the path
+         */
+        parameterPath2?: string;
+        /**
+         * This is the parameter that goes into the path
+         */
+        parameterPath3?: string;
+        /**
+         * This is the parameter that goes into the request query params
+         */
+        parameterQuery: string | null;
+        /**
+         * This is the parameter that goes into the body
+         */
+        requestBody: ModelWithString | null;
+    };
+    GetCallWithOptionalParam: {
+        /**
+         * This is an optional parameter
+         */
+        parameter?: string;
+        /**
+         * This is a required parameter
+         */
+        requestBody: ModelWithOneOfEnum;
+    };
+    PostCallWithOptionalParam: {
+        /**
+         * This is a required parameter
+         */
+        parameter: Pageable;
+        /**
+         * This is an optional parameter
+         */
+        requestBody?: ModelWithString;
+    };
+};
+
+export type DescriptionsData = {
+    CallWithDescriptions: {
+        /**
+         * Testing backticks in string: `backticks` and ```multiple backticks``` should work
+         */
+        parameterWithBackticks?: unknown;
+        /**
+         * Testing multiline comments in string: First line
+         * Second line
+         *
+         * Fourth line
+         */
+        parameterWithBreaks?: unknown;
+        /**
+         * Testing expression placeholders in string: ${expression} should work
+         */
+        parameterWithExpressionPlaceholders?: unknown;
+        /**
+         * Testing quotes in string: 'single quote''' and "double quotes""" should work
+         */
+        parameterWithQuotes?: unknown;
+        /**
+         * Testing reserved characters in string: * inline * and ** inline ** should work
+         */
+        parameterWithReservedCharacters?: unknown;
+        /**
+         * Testing slashes in string: \backwards\\\ and /forwards/// should work
+         */
+        parameterWithSlashes?: unknown;
+    };
+};
+
+export type DeprecatedData = {
+    DeprecatedCall: {
+        /**
+         * This parameter is deprecated
+         */
+        parameter: DeprecatedModel | null;
+    };
+};
+
+export type RequestBodyData = {
+    PostApiRequestBody: {
+        /**
+         * A reusable request body
+         */
+        foo?: ModelWithString;
+        /**
+         * This is a reusable parameter
+         */
+        parameter?: string;
+    };
+};
+
+export type FormDataData = {
+    PostApiFormData: {
+        /**
+         * A reusable request body
+         */
+        formData?: ModelWithString;
+        /**
+         * This is a reusable parameter
+         */
+        parameter?: string;
+    };
+};
+
+export type DefaultsData = {
+    CallWithDefaultParameters: {
+        /**
+         * This is a simple boolean with default value
+         */
+        parameterBoolean?: boolean | null;
+        /**
+         * This is a simple enum with default value
+         */
+        parameterEnum?: 'Success' | 'Warning' | 'Error';
+        /**
+         * This is a simple model with default value
+         */
+        parameterModel?: ModelWithString | null;
+        /**
+         * This is a simple number with default value
+         */
+        parameterNumber?: number | null;
+        /**
+         * This is a simple string with default value
+         */
+        parameterString?: string | null;
+    };
+    CallWithDefaultOptionalParameters: {
+        /**
+         * This is a simple boolean that is optional with default value
+         */
+        parameterBoolean?: boolean;
+        /**
+         * This is a simple enum that is optional with default value
+         */
+        parameterEnum?: 'Success' | 'Warning' | 'Error';
+        /**
+         * This is a simple model that is optional with default value
+         */
+        parameterModel?: ModelWithString;
+        /**
+         * This is a simple number that is optional with default value
+         */
+        parameterNumber?: number;
+        /**
+         * This is a simple string that is optional with default value
+         */
+        parameterString?: string;
+    };
+    CallToTestOrderOfParams: {
+        /**
+         * This is a optional string with default
+         */
+        parameterOptionalStringWithDefault?: string;
+        /**
+         * This is a optional string with empty default
+         */
+        parameterOptionalStringWithEmptyDefault?: string;
+        /**
+         * This is a optional string with no default
+         */
+        parameterOptionalStringWithNoDefault?: string;
+        /**
+         * This is a string that can be null with default
+         */
+        parameterStringNullableWithDefault?: string | null;
+        /**
+         * This is a string that can be null with no default
+         */
+        parameterStringNullableWithNoDefault?: string | null;
+        /**
+         * This is a string with default
+         */
+        parameterStringWithDefault?: string;
+        /**
+         * This is a string with empty default
+         */
+        parameterStringWithEmptyDefault?: string;
+        /**
+         * This is a string with no default
+         */
+        parameterStringWithNoDefault: string;
+    };
+};
+
+export type DuplicateData = {};
+
+export type NoContentData = {};
+
+export type ResponseData = {};
+
+export type MultipleTags1Data = {};
+
+export type MultipleTags2Data = {};
+
+export type MultipleTags3Data = {};
+
+export type CollectionFormatData = {
+    CollectionFormat: {
+        /**
+         * This is an array parameter that is sent as csv format (comma-separated values)
+         */
+        parameterArrayCsv: Array<string> | null;
+        /**
+         * This is an array parameter that is sent as multi format (multiple parameter instances)
+         */
+        parameterArrayMulti: Array<string> | null;
+        /**
+         * This is an array parameter that is sent as pipes format (pipe-separated values)
+         */
+        parameterArrayPipes: Array<string> | null;
+        /**
+         * This is an array parameter that is sent as ssv format (space-separated values)
+         */
+        parameterArraySsv: Array<string> | null;
+        /**
+         * This is an array parameter that is sent as tsv format (tab-separated values)
+         */
+        parameterArrayTsv: Array<string> | null;
+    };
+};
+
+export type TypesData = {
+    Types: {
+        /**
+         * This is a number parameter
+         */
+        id?: number;
+        /**
+         * This is an array parameter
+         */
+        parameterArray: Array<string> | null;
+        /**
+         * This is a boolean parameter
+         */
+        parameterBoolean?: boolean | null;
+        /**
+         * This is a dictionary parameter
+         */
+        parameterDictionary: Record<string, unknown> | null;
+        /**
+         * This is an enum parameter
+         */
+        parameterEnum: 'Success' | 'Warning' | 'Error' | null;
+        /**
+         * This is a number parameter
+         */
+        parameterNumber?: number;
+        /**
+         * This is an object parameter
+         */
+        parameterObject?: Record<string, unknown> | null;
+        /**
+         * This is a string parameter
+         */
+        parameterString?: string | null;
+    };
+};
+
+export type UploadData = {
+    UploadFile: {
+        /**
+         * Supply a file reference for upload
+         */
+        file: Blob | File;
+    };
+};
+
+export type FileResponseData = {
+    FileResponse: {
+        id: string;
+    };
+};
+
+export type ComplexData = {
+    ComplexTypes: {
+        /**
+         * Parameter containing object
+         */
+        parameterObject: {
+            first?: {
+                second?: {
+                    third?: string;
+                };
+            };
+        };
+        /**
+         * Parameter containing reference
+         */
+        parameterReference: ModelWithString;
+    };
+    ComplexParams: {
+        id: number;
+        requestBody?: {
+            readonly key: string | null;
+            name: string | null;
+            enabled?: boolean;
+            readonly type: 'Monkey' | 'Horse' | 'Bird';
+            listOfModels?: Array<ModelWithString> | null;
+            listOfStrings?: Array<string> | null;
+            parameters: ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary;
+            readonly user?: {
+                readonly id?: number;
+                readonly name?: string | null;
+            };
+        };
+    };
+};
+
+export type MultipartData = {
+    MultipartRequest: {
+        formData?: {
+            content?: Blob | File;
+            data?: ModelWithString | null;
+        };
+    };
+};
+
+export type HeaderData = {};
+
+export type ErrorData = {
+    TestErrorCode: {
+        /**
+         * Status code to return
+         */
+        status: number;
+    };
+};
+
+export type NonAsciiÆøåÆøÅöôêÊData = {
+    NonAsciiæøåÆøÅöôêÊ字符串: {
+        /**
+         * Dummy input param
+         */
+        nonAsciiParamæøåÆøÅöôêÊ: number;
+    };
 };
 
 @Injectable({
@@ -44,7 +448,9 @@ export class DefaultService {
      * @returns ModelWithReadOnlyAndWriteOnly
      * @throws ApiError
      */
-    public postServiceWithEmptyTag(data: TDataPostServiceWithEmptyTag): Observable<ModelWithReadOnlyAndWriteOnly> {
+    public postServiceWithEmptyTag(
+        data: DefaultData.PostServiceWithEmptyTag
+    ): Observable<ModelWithReadOnlyAndWriteOnly> {
         const { requestBody } = data;
         return __request(OpenAPI, this.http, {
             method: 'POST',
@@ -132,103 +538,6 @@ export class SimpleService {
     }
 }
 
-export type TDataDeleteFoo = {
-    /**
-     * bar in method
-     */
-    bar: string;
-    /**
-     * foo in method
-     */
-    foo: string;
-};
-export type TDataCallWithParameters = {
-    fooAllOfEnum: ModelWithNestedArrayEnumsDataFoo;
-    fooRefEnum?: ModelWithNestedArrayEnumsDataFoo;
-    /**
-     * This is the parameter that goes into the cookie
-     */
-    parameterCookie: string | null;
-    /**
-     * This is the parameter that goes into the form data
-     */
-    parameterForm: string | null;
-    /**
-     * This is the parameter that goes into the header
-     */
-    parameterHeader: string | null;
-    /**
-     * This is the parameter that goes into the path
-     */
-    parameterPath: string | null;
-    /**
-     * This is the parameter that goes into the query params
-     */
-    parameterQuery: string | null;
-    /**
-     * This is the parameter that goes into the body
-     */
-    requestBody: ModelWithString | null;
-};
-export type TDataCallWithWeirdParameterNames = {
-    /**
-     * This is the parameter with a reserved keyword
-     */
-    _default?: string;
-    /**
-     * This is the parameter that goes into the cookie
-     */
-    parameterCookie: string | null;
-    /**
-     * This is the parameter that goes into the request form data
-     */
-    parameterForm: string | null;
-    /**
-     * This is the parameter that goes into the request header
-     */
-    parameterHeader: string | null;
-    /**
-     * This is the parameter that goes into the path
-     */
-    parameterPath1?: string;
-    /**
-     * This is the parameter that goes into the path
-     */
-    parameterPath2?: string;
-    /**
-     * This is the parameter that goes into the path
-     */
-    parameterPath3?: string;
-    /**
-     * This is the parameter that goes into the request query params
-     */
-    parameterQuery: string | null;
-    /**
-     * This is the parameter that goes into the body
-     */
-    requestBody: ModelWithString | null;
-};
-export type TDataGetCallWithOptionalParam = {
-    /**
-     * This is an optional parameter
-     */
-    parameter?: string;
-    /**
-     * This is a required parameter
-     */
-    requestBody: ModelWithOneOfEnum;
-};
-export type TDataPostCallWithOptionalParam = {
-    /**
-     * This is a required parameter
-     */
-    parameter: Pageable;
-    /**
-     * This is an optional parameter
-     */
-    requestBody?: ModelWithString;
-};
-
 @Injectable({
     providedIn: 'root',
 })
@@ -238,8 +547,8 @@ export class ParametersService {
     /**
      * @throws ApiError
      */
-    public deleteFoo(data: TDataDeleteFoo): Observable<void> {
-        const { bar, foo } = data;
+    public deleteFoo(data: ParametersData.DeleteFoo): Observable<void> {
+        const { foo, bar } = data;
         return __request(OpenAPI, this.http, {
             method: 'DELETE',
             url: '/api/v{api-version}/foo/{foo}/bar/{bar}',
@@ -253,16 +562,16 @@ export class ParametersService {
     /**
      * @throws ApiError
      */
-    public callWithParameters(data: TDataCallWithParameters): Observable<void> {
+    public callWithParameters(data: ParametersData.CallWithParameters): Observable<void> {
         const {
-            fooAllOfEnum,
-            fooRefEnum,
-            parameterCookie,
-            parameterForm,
             parameterHeader,
-            parameterPath,
+            fooAllOfEnum,
             parameterQuery,
+            parameterForm,
+            parameterCookie,
+            parameterPath,
             requestBody,
+            fooRefEnum,
         } = data;
         return __request(OpenAPI, this.http, {
             method: 'POST',
@@ -292,17 +601,17 @@ export class ParametersService {
     /**
      * @throws ApiError
      */
-    public callWithWeirdParameterNames(data: TDataCallWithWeirdParameterNames): Observable<void> {
+    public callWithWeirdParameterNames(data: ParametersData.CallWithWeirdParameterNames): Observable<void> {
         const {
-            _default,
-            parameterCookie,
-            parameterForm,
             parameterHeader,
+            parameterQuery,
+            parameterForm,
+            parameterCookie,
+            requestBody,
             parameterPath1,
             parameterPath2,
             parameterPath3,
-            parameterQuery,
-            requestBody,
+            _default,
         } = data;
         return __request(OpenAPI, this.http, {
             method: 'POST',
@@ -333,8 +642,8 @@ export class ParametersService {
     /**
      * @throws ApiError
      */
-    public getCallWithOptionalParam(data: TDataGetCallWithOptionalParam): Observable<void> {
-        const { parameter, requestBody } = data;
+    public getCallWithOptionalParam(data: ParametersData.GetCallWithOptionalParam): Observable<void> {
+        const { requestBody, parameter } = data;
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/parameters/',
@@ -349,7 +658,7 @@ export class ParametersService {
     /**
      * @throws ApiError
      */
-    public postCallWithOptionalParam(data: TDataPostCallWithOptionalParam): Observable<void> {
+    public postCallWithOptionalParam(data: ParametersData.PostCallWithOptionalParam): Observable<void> {
         const { parameter, requestBody } = data;
         return __request(OpenAPI, this.http, {
             method: 'POST',
@@ -363,36 +672,6 @@ export class ParametersService {
     }
 }
 
-export type TDataCallWithDescriptions = {
-    /**
-     * Testing backticks in string: `backticks` and ```multiple backticks``` should work
-     */
-    parameterWithBackticks?: unknown;
-    /**
-     * Testing multiline comments in string: First line
-     * Second line
-     *
-     * Fourth line
-     */
-    parameterWithBreaks?: unknown;
-    /**
-     * Testing expression placeholders in string: ${expression} should work
-     */
-    parameterWithExpressionPlaceholders?: unknown;
-    /**
-     * Testing quotes in string: 'single quote''' and "double quotes""" should work
-     */
-    parameterWithQuotes?: unknown;
-    /**
-     * Testing reserved characters in string: * inline * and ** inline ** should work
-     */
-    parameterWithReservedCharacters?: unknown;
-    /**
-     * Testing slashes in string: \backwards\\\ and /forwards/// should work
-     */
-    parameterWithSlashes?: unknown;
-};
-
 @Injectable({
     providedIn: 'root',
 })
@@ -402,14 +681,14 @@ export class DescriptionsService {
     /**
      * @throws ApiError
      */
-    public callWithDescriptions(data: TDataCallWithDescriptions = {}): Observable<void> {
+    public callWithDescriptions(data: DescriptionsData.CallWithDescriptions = {}): Observable<void> {
         const {
-            parameterWithBackticks,
             parameterWithBreaks,
+            parameterWithBackticks,
+            parameterWithSlashes,
             parameterWithExpressionPlaceholders,
             parameterWithQuotes,
             parameterWithReservedCharacters,
-            parameterWithSlashes,
         } = data;
         return __request(OpenAPI, this.http, {
             method: 'POST',
@@ -426,13 +705,6 @@ export class DescriptionsService {
     }
 }
 
-export type TDataDeprecatedCall = {
-    /**
-     * This parameter is deprecated
-     */
-    parameter: DeprecatedModel | null;
-};
-
 @Injectable({
     providedIn: 'root',
 })
@@ -443,7 +715,7 @@ export class DeprecatedService {
      * @deprecated
      * @throws ApiError
      */
-    public deprecatedCall(data: TDataDeprecatedCall): Observable<void> {
+    public deprecatedCall(data: DeprecatedData.DeprecatedCall): Observable<void> {
         const { parameter } = data;
         return __request(OpenAPI, this.http, {
             method: 'POST',
@@ -455,17 +727,6 @@ export class DeprecatedService {
     }
 }
 
-export type TDataPostApiRequestBody = {
-    /**
-     * A reusable request body
-     */
-    foo?: ModelWithString;
-    /**
-     * This is a reusable parameter
-     */
-    parameter?: string;
-};
-
 @Injectable({
     providedIn: 'root',
 })
@@ -475,8 +736,8 @@ export class RequestBodyService {
     /**
      * @throws ApiError
      */
-    public postApiRequestBody(data: TDataPostApiRequestBody = {}): Observable<void> {
-        const { foo, parameter } = data;
+    public postApiRequestBody(data: RequestBodyData.PostApiRequestBody = {}): Observable<void> {
+        const { parameter, foo } = data;
         return __request(OpenAPI, this.http, {
             method: 'POST',
             url: '/api/v{api-version}/requestBody/',
@@ -489,17 +750,6 @@ export class RequestBodyService {
     }
 }
 
-export type TDataPostApiFormData = {
-    /**
-     * A reusable request body
-     */
-    formData?: ModelWithString;
-    /**
-     * This is a reusable parameter
-     */
-    parameter?: string;
-};
-
 @Injectable({
     providedIn: 'root',
 })
@@ -509,8 +759,8 @@ export class FormDataService {
     /**
      * @throws ApiError
      */
-    public postApiFormData(data: TDataPostApiFormData = {}): Observable<void> {
-        const { formData, parameter } = data;
+    public postApiFormData(data: FormDataData.PostApiFormData = {}): Observable<void> {
+        const { parameter, formData } = data;
         return __request(OpenAPI, this.http, {
             method: 'POST',
             url: '/api/v{api-version}/formData/',
@@ -523,85 +773,6 @@ export class FormDataService {
     }
 }
 
-export type TDataCallWithDefaultParameters = {
-    /**
-     * This is a simple boolean with default value
-     */
-    parameterBoolean?: boolean | null;
-    /**
-     * This is a simple enum with default value
-     */
-    parameterEnum?: 'Success' | 'Warning' | 'Error';
-    /**
-     * This is a simple model with default value
-     */
-    parameterModel?: ModelWithString | null;
-    /**
-     * This is a simple number with default value
-     */
-    parameterNumber?: number | null;
-    /**
-     * This is a simple string with default value
-     */
-    parameterString?: string | null;
-};
-export type TDataCallWithDefaultOptionalParameters = {
-    /**
-     * This is a simple boolean that is optional with default value
-     */
-    parameterBoolean?: boolean;
-    /**
-     * This is a simple enum that is optional with default value
-     */
-    parameterEnum?: 'Success' | 'Warning' | 'Error';
-    /**
-     * This is a simple model that is optional with default value
-     */
-    parameterModel?: ModelWithString;
-    /**
-     * This is a simple number that is optional with default value
-     */
-    parameterNumber?: number;
-    /**
-     * This is a simple string that is optional with default value
-     */
-    parameterString?: string;
-};
-export type TDataCallToTestOrderOfParams = {
-    /**
-     * This is a optional string with default
-     */
-    parameterOptionalStringWithDefault?: string;
-    /**
-     * This is a optional string with empty default
-     */
-    parameterOptionalStringWithEmptyDefault?: string;
-    /**
-     * This is a optional string with no default
-     */
-    parameterOptionalStringWithNoDefault?: string;
-    /**
-     * This is a string that can be null with default
-     */
-    parameterStringNullableWithDefault?: string | null;
-    /**
-     * This is a string that can be null with no default
-     */
-    parameterStringNullableWithNoDefault?: string | null;
-    /**
-     * This is a string with default
-     */
-    parameterStringWithDefault?: string;
-    /**
-     * This is a string with empty default
-     */
-    parameterStringWithEmptyDefault?: string;
-    /**
-     * This is a string with no default
-     */
-    parameterStringWithNoDefault: string;
-};
-
 @Injectable({
     providedIn: 'root',
 })
@@ -611,15 +782,15 @@ export class DefaultsService {
     /**
      * @throws ApiError
      */
-    public callWithDefaultParameters(data: TDataCallWithDefaultParameters = {}): Observable<void> {
+    public callWithDefaultParameters(data: DefaultsData.CallWithDefaultParameters = {}): Observable<void> {
         const {
+            parameterString = 'Hello World!',
+            parameterNumber = 123,
             parameterBoolean = true,
             parameterEnum = 'Success',
             parameterModel = {
                 prop: 'Hello World!',
             },
-            parameterNumber = 123,
-            parameterString = 'Hello World!',
         } = data;
         return __request(OpenAPI, this.http, {
             method: 'GET',
@@ -637,15 +808,17 @@ export class DefaultsService {
     /**
      * @throws ApiError
      */
-    public callWithDefaultOptionalParameters(data: TDataCallWithDefaultOptionalParameters = {}): Observable<void> {
+    public callWithDefaultOptionalParameters(
+        data: DefaultsData.CallWithDefaultOptionalParameters = {}
+    ): Observable<void> {
         const {
+            parameterString = 'Hello World!',
+            parameterNumber = 123,
             parameterBoolean = true,
             parameterEnum = 'Success',
             parameterModel = {
                 prop: 'Hello World!',
             },
-            parameterNumber = 123,
-            parameterString = 'Hello World!',
         } = data;
         return __request(OpenAPI, this.http, {
             method: 'POST',
@@ -663,16 +836,16 @@ export class DefaultsService {
     /**
      * @throws ApiError
      */
-    public callToTestOrderOfParams(data: TDataCallToTestOrderOfParams): Observable<void> {
+    public callToTestOrderOfParams(data: DefaultsData.CallToTestOrderOfParams): Observable<void> {
         const {
+            parameterStringWithNoDefault,
             parameterOptionalStringWithDefault = 'Hello World!',
             parameterOptionalStringWithEmptyDefault = '',
             parameterOptionalStringWithNoDefault,
-            parameterStringNullableWithDefault = null,
-            parameterStringNullableWithNoDefault,
             parameterStringWithDefault = 'Hello World!',
             parameterStringWithEmptyDefault = '',
-            parameterStringWithNoDefault,
+            parameterStringNullableWithNoDefault,
+            parameterStringNullableWithDefault = null,
         } = data;
         return __request(OpenAPI, this.http, {
             method: 'PUT',
@@ -918,29 +1091,6 @@ export class MultipleTags3Service {
     }
 }
 
-export type TDataCollectionFormat = {
-    /**
-     * This is an array parameter that is sent as csv format (comma-separated values)
-     */
-    parameterArrayCsv: Array<string> | null;
-    /**
-     * This is an array parameter that is sent as multi format (multiple parameter instances)
-     */
-    parameterArrayMulti: Array<string> | null;
-    /**
-     * This is an array parameter that is sent as pipes format (pipe-separated values)
-     */
-    parameterArrayPipes: Array<string> | null;
-    /**
-     * This is an array parameter that is sent as ssv format (space-separated values)
-     */
-    parameterArraySsv: Array<string> | null;
-    /**
-     * This is an array parameter that is sent as tsv format (tab-separated values)
-     */
-    parameterArrayTsv: Array<string> | null;
-};
-
 @Injectable({
     providedIn: 'root',
 })
@@ -950,8 +1100,8 @@ export class CollectionFormatService {
     /**
      * @throws ApiError
      */
-    public collectionFormat(data: TDataCollectionFormat): Observable<void> {
-        const { parameterArrayCsv, parameterArrayMulti, parameterArrayPipes, parameterArraySsv, parameterArrayTsv } =
+    public collectionFormat(data: CollectionFormatData.CollectionFormat): Observable<void> {
+        const { parameterArrayCsv, parameterArraySsv, parameterArrayTsv, parameterArrayPipes, parameterArrayMulti } =
             data;
         return __request(OpenAPI, this.http, {
             method: 'GET',
@@ -967,41 +1117,6 @@ export class CollectionFormatService {
     }
 }
 
-export type TDataTypes = {
-    /**
-     * This is a number parameter
-     */
-    id?: number;
-    /**
-     * This is an array parameter
-     */
-    parameterArray: Array<string> | null;
-    /**
-     * This is a boolean parameter
-     */
-    parameterBoolean?: boolean | null;
-    /**
-     * This is a dictionary parameter
-     */
-    parameterDictionary: Record<string, unknown> | null;
-    /**
-     * This is an enum parameter
-     */
-    parameterEnum: 'Success' | 'Warning' | 'Error' | null;
-    /**
-     * This is a number parameter
-     */
-    parameterNumber?: number;
-    /**
-     * This is an object parameter
-     */
-    parameterObject?: Record<string, unknown> | null;
-    /**
-     * This is a string parameter
-     */
-    parameterString?: string | null;
-};
-
 @Injectable({
     providedIn: 'root',
 })
@@ -1015,16 +1130,16 @@ export class TypesService {
      * @returns unknown Response is a simple object
      * @throws ApiError
      */
-    public types(data: TDataTypes): Observable<number | string | boolean | Record<string, unknown>> {
+    public types(data: TypesData.Types): Observable<number | string | boolean | Record<string, unknown>> {
         const {
-            id,
             parameterArray,
-            parameterBoolean = true,
             parameterDictionary,
             parameterEnum,
             parameterNumber = 123,
-            parameterObject = null,
             parameterString = 'default',
+            parameterBoolean = true,
+            parameterObject = null,
+            id,
         } = data;
         return __request(OpenAPI, this.http, {
             method: 'GET',
@@ -1045,13 +1160,6 @@ export class TypesService {
     }
 }
 
-export type TDataUploadFile = {
-    /**
-     * Supply a file reference for upload
-     */
-    file: Blob | File;
-};
-
 @Injectable({
     providedIn: 'root',
 })
@@ -1062,7 +1170,7 @@ export class UploadService {
      * @returns boolean
      * @throws ApiError
      */
-    public uploadFile(data: TDataUploadFile): Observable<boolean> {
+    public uploadFile(data: UploadData.UploadFile): Observable<boolean> {
         const { file } = data;
         return __request(OpenAPI, this.http, {
             method: 'POST',
@@ -1074,10 +1182,6 @@ export class UploadService {
     }
 }
 
-export type TDataFileResponse = {
-    id: string;
-};
-
 @Injectable({
     providedIn: 'root',
 })
@@ -1088,7 +1192,7 @@ export class FileResponseService {
      * @returns binary Success
      * @throws ApiError
      */
-    public fileResponse(data: TDataFileResponse): Observable<Blob | File> {
+    public fileResponse(data: FileResponseData.FileResponse): Observable<Blob | File> {
         const { id } = data;
         return __request(OpenAPI, this.http, {
             method: 'GET',
@@ -1100,39 +1204,6 @@ export class FileResponseService {
     }
 }
 
-export type TDataComplexTypes = {
-    /**
-     * Parameter containing object
-     */
-    parameterObject: {
-        first?: {
-            second?: {
-                third?: string;
-            };
-        };
-    };
-    /**
-     * Parameter containing reference
-     */
-    parameterReference: ModelWithString;
-};
-export type TDataComplexParams = {
-    id: number;
-    requestBody?: {
-        readonly key: string | null;
-        name: string | null;
-        enabled?: boolean;
-        readonly type: 'Monkey' | 'Horse' | 'Bird';
-        listOfModels?: Array<ModelWithString> | null;
-        listOfStrings?: Array<string> | null;
-        parameters: ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary;
-        readonly user?: {
-            readonly id?: number;
-            readonly name?: string | null;
-        };
-    };
-};
-
 @Injectable({
     providedIn: 'root',
 })
@@ -1143,7 +1214,7 @@ export class ComplexService {
      * @returns ModelWithString Successful response
      * @throws ApiError
      */
-    public complexTypes(data: TDataComplexTypes): Observable<Array<ModelWithString>> {
+    public complexTypes(data: ComplexData.ComplexTypes): Observable<Array<ModelWithString>> {
         const { parameterObject, parameterReference } = data;
         return __request(OpenAPI, this.http, {
             method: 'GET',
@@ -1163,7 +1234,7 @@ export class ComplexService {
      * @returns ModelWithString Success
      * @throws ApiError
      */
-    public complexParams(data: TDataComplexParams): Observable<ModelWithString> {
+    public complexParams(data: ComplexData.ComplexParams): Observable<ModelWithString> {
         const { id, requestBody } = data;
         return __request(OpenAPI, this.http, {
             method: 'PUT',
@@ -1177,13 +1248,6 @@ export class ComplexService {
     }
 }
 
-export type TDataMultipartRequest = {
-    formData?: {
-        content?: Blob | File;
-        data?: ModelWithString | null;
-    };
-};
-
 @Injectable({
     providedIn: 'root',
 })
@@ -1193,7 +1257,7 @@ export class MultipartService {
     /**
      * @throws ApiError
      */
-    public multipartRequest(data: TDataMultipartRequest = {}): Observable<void> {
+    public multipartRequest(data: MultipartData.MultipartRequest = {}): Observable<void> {
         const { formData } = data;
         return __request(OpenAPI, this.http, {
             method: 'POST',
@@ -1244,13 +1308,6 @@ export class HeaderService {
     }
 }
 
-export type TDataTestErrorCode = {
-    /**
-     * Status code to return
-     */
-    status: number;
-};
-
 @Injectable({
     providedIn: 'root',
 })
@@ -1261,7 +1318,7 @@ export class ErrorService {
      * @returns any Custom message: Successful response
      * @throws ApiError
      */
-    public testErrorCode(data: TDataTestErrorCode): Observable<any> {
+    public testErrorCode(data: ErrorData.TestErrorCode): Observable<any> {
         const { status } = data;
         return __request(OpenAPI, this.http, {
             method: 'POST',
@@ -1279,13 +1336,6 @@ export class ErrorService {
     }
 }
 
-export type TDataNonAsciiæøåÆøÅöôêÊ字符串 = {
-    /**
-     * Dummy input param
-     */
-    nonAsciiParamæøåÆøÅöôêÊ: number;
-};
-
 @Injectable({
     providedIn: 'root',
 })
@@ -1297,7 +1347,7 @@ export class NonAsciiÆøåÆøÅöôêÊService {
      * @throws ApiError
      */
     public nonAsciiæøåÆøÅöôêÊ字符串(
-        data: TDataNonAsciiæøåÆøÅöôêÊ字符串
+        data: NonAsciiÆøåÆøÅöôêÊData.NonAsciiæøåÆøÅöôêÊ字符串
     ): Observable<Array<NonAsciiStringæøåÆØÅöôêÊ字符串>> {
         const { nonAsciiParamæøåÆøÅöôêÊ } = data;
         return __request(OpenAPI, this.http, {

@@ -4,98 +4,102 @@ import { request as __request } from './core/request';
 
 import type { ModelWithString } from './models';
 
-export type TDataCallWithDefaultParameters = {
-    /**
-     * This is a simple boolean with default value
-     */
-    parameterBoolean?: boolean | null;
-    /**
-     * This is a simple enum with default value
-     */
-    parameterEnum?: 'Success' | 'Warning' | 'Error';
-    /**
-     * This is a simple model with default value
-     */
-    parameterModel?: ModelWithString | null;
-    /**
-     * This is a simple number with default value
-     */
-    parameterNumber?: number | null;
-    /**
-     * This is a simple string with default value
-     */
-    parameterString?: string | null;
-};
-export type TDataCallWithDefaultOptionalParameters = {
-    /**
-     * This is a simple boolean that is optional with default value
-     */
-    parameterBoolean?: boolean;
-    /**
-     * This is a simple enum that is optional with default value
-     */
-    parameterEnum?: 'Success' | 'Warning' | 'Error';
-    /**
-     * This is a simple model that is optional with default value
-     */
-    parameterModel?: ModelWithString;
-    /**
-     * This is a simple number that is optional with default value
-     */
-    parameterNumber?: number;
-    /**
-     * This is a simple string that is optional with default value
-     */
-    parameterString?: string;
-};
-export type TDataCallToTestOrderOfParams = {
-    /**
-     * This is a optional string with default
-     */
-    parameterOptionalStringWithDefault?: string;
-    /**
-     * This is a optional string with empty default
-     */
-    parameterOptionalStringWithEmptyDefault?: string;
-    /**
-     * This is a optional string with no default
-     */
-    parameterOptionalStringWithNoDefault?: string;
-    /**
-     * This is a string that can be null with default
-     */
-    parameterStringNullableWithDefault?: string | null;
-    /**
-     * This is a string that can be null with no default
-     */
-    parameterStringNullableWithNoDefault?: string | null;
-    /**
-     * This is a string with default
-     */
-    parameterStringWithDefault?: string;
-    /**
-     * This is a string with empty default
-     */
-    parameterStringWithEmptyDefault?: string;
-    /**
-     * This is a string with no default
-     */
-    parameterStringWithNoDefault: string;
+export type DefaultsData = {
+    CallWithDefaultParameters: {
+        /**
+         * This is a simple boolean with default value
+         */
+        parameterBoolean?: boolean | null;
+        /**
+         * This is a simple enum with default value
+         */
+        parameterEnum?: 'Success' | 'Warning' | 'Error';
+        /**
+         * This is a simple model with default value
+         */
+        parameterModel?: ModelWithString | null;
+        /**
+         * This is a simple number with default value
+         */
+        parameterNumber?: number | null;
+        /**
+         * This is a simple string with default value
+         */
+        parameterString?: string | null;
+    };
+    CallWithDefaultOptionalParameters: {
+        /**
+         * This is a simple boolean that is optional with default value
+         */
+        parameterBoolean?: boolean;
+        /**
+         * This is a simple enum that is optional with default value
+         */
+        parameterEnum?: 'Success' | 'Warning' | 'Error';
+        /**
+         * This is a simple model that is optional with default value
+         */
+        parameterModel?: ModelWithString;
+        /**
+         * This is a simple number that is optional with default value
+         */
+        parameterNumber?: number;
+        /**
+         * This is a simple string that is optional with default value
+         */
+        parameterString?: string;
+    };
+    CallToTestOrderOfParams: {
+        /**
+         * This is a optional string with default
+         */
+        parameterOptionalStringWithDefault?: string;
+        /**
+         * This is a optional string with empty default
+         */
+        parameterOptionalStringWithEmptyDefault?: string;
+        /**
+         * This is a optional string with no default
+         */
+        parameterOptionalStringWithNoDefault?: string;
+        /**
+         * This is a string that can be null with default
+         */
+        parameterStringNullableWithDefault?: string | null;
+        /**
+         * This is a string that can be null with no default
+         */
+        parameterStringNullableWithNoDefault?: string | null;
+        /**
+         * This is a string with default
+         */
+        parameterStringWithDefault?: string;
+        /**
+         * This is a string with empty default
+         */
+        parameterStringWithEmptyDefault?: string;
+        /**
+         * This is a string with no default
+         */
+        parameterStringWithNoDefault: string;
+    };
 };
 
 export class DefaultsService {
     /**
      * @throws ApiError
      */
-    public static callWithDefaultParameters(data: TDataCallWithDefaultParameters = {}): CancelablePromise<void> {
+    public static callWithDefaultParameters(
+        data: DefaultsData.CallWithDefaultParameters = {}
+    ): CancelablePromise<void> {
         const {
+            parameterString = 'Hello World!',
+            parameterNumber = 123,
             parameterBoolean = true,
             parameterEnum = 'Success',
             parameterModel = {
                 prop: 'Hello World!',
             },
-            parameterNumber = 123,
-            parameterString = 'Hello World!',
         } = data;
         return __request(OpenAPI, {
             method: 'GET',
@@ -114,16 +118,16 @@ export class DefaultsService {
      * @throws ApiError
      */
     public static callWithDefaultOptionalParameters(
-        data: TDataCallWithDefaultOptionalParameters = {}
+        data: DefaultsData.CallWithDefaultOptionalParameters = {}
     ): CancelablePromise<void> {
         const {
+            parameterString = 'Hello World!',
+            parameterNumber = 123,
             parameterBoolean = true,
             parameterEnum = 'Success',
             parameterModel = {
                 prop: 'Hello World!',
             },
-            parameterNumber = 123,
-            parameterString = 'Hello World!',
         } = data;
         return __request(OpenAPI, {
             method: 'POST',
@@ -141,16 +145,16 @@ export class DefaultsService {
     /**
      * @throws ApiError
      */
-    public static callToTestOrderOfParams(data: TDataCallToTestOrderOfParams): CancelablePromise<void> {
+    public static callToTestOrderOfParams(data: DefaultsData.CallToTestOrderOfParams): CancelablePromise<void> {
         const {
+            parameterStringWithNoDefault,
             parameterOptionalStringWithDefault = 'Hello World!',
             parameterOptionalStringWithEmptyDefault = '',
             parameterOptionalStringWithNoDefault,
-            parameterStringNullableWithDefault = null,
-            parameterStringNullableWithNoDefault,
             parameterStringWithDefault = 'Hello World!',
             parameterStringWithEmptyDefault = '',
-            parameterStringWithNoDefault,
+            parameterStringNullableWithNoDefault,
+            parameterStringNullableWithDefault = null,
         } = data;
         return __request(OpenAPI, {
             method: 'PUT',

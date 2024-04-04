@@ -15,7 +15,7 @@ import { writeClient } from './utils/write/client';
 
 type Dependencies = Record<string, unknown>;
 
-// Mapping of all dependencies used in each client. These should be installed in the generated client package
+// Dependencies used in each client. User must have installed these to use the generated client
 const clientDependencies: Record<Config['client'], string[]> = {
     angular: ['@angular/common', '@angular/core', 'rxjs'],
     axios: ['axios'],
@@ -125,6 +125,18 @@ const getConfig = async (userConfig: UserConfig, dependencies: Dependencies) => 
 
     if (!isSubDirectory(process.cwd(), userConfig.output)) {
         throw new Error('🚫 output must be within the current working directory');
+    }
+
+    if (postfixModels) {
+        console.warn(
+            '⚠️ Deprecation warning: postfixModels. This setting will be removed in future versions. Please create an issue wih your use case if you need this option https://github.com/hey-api/openapi-ts/issues'
+        );
+    }
+
+    if (postfixServices && postfixServices !== 'Service') {
+        console.warn(
+            '⚠️ Deprecation warning: postfixServices. This setting will be removed in future versions. Please create an issue wih your use case if you need this option https://github.com/hey-api/openapi-ts/issues'
+        );
     }
 
     if (!useOptions) {
