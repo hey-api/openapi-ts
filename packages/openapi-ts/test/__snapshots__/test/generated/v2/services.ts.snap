@@ -386,7 +386,7 @@ export class DescriptionsService {
     /**
      * @throws ApiError
      */
-    public static callWithDescriptions(data: DescriptionsData.CallWithDescriptions = {}): CancelablePromise<void> {
+    public static callWithDescriptions(data: DescriptionsData['CallWithDescriptions'] = {}): CancelablePromise<void> {
         const {
             parameterWithBreaks,
             parameterWithBackticks,
@@ -414,7 +414,7 @@ export class ParametersService {
     /**
      * @throws ApiError
      */
-    public static callWithParameters(data: ParametersData.CallWithParameters): CancelablePromise<void> {
+    public static callWithParameters(data: ParametersData['CallWithParameters']): CancelablePromise<void> {
         const { parameterHeader, parameterQuery, parameterForm, parameterBody, parameterPath } = data;
         return __request(OpenAPI, {
             method: 'POST',
@@ -439,7 +439,7 @@ export class ParametersService {
      * @throws ApiError
      */
     public static callWithWeirdParameterNames(
-        data: ParametersData.CallWithWeirdParameterNames
+        data: ParametersData['CallWithWeirdParameterNames']
     ): CancelablePromise<void> {
         const {
             parameterHeader,
@@ -478,7 +478,7 @@ export class DefaultsService {
     /**
      * @throws ApiError
      */
-    public static callWithDefaultParameters(data: DefaultsData.CallWithDefaultParameters): CancelablePromise<void> {
+    public static callWithDefaultParameters(data: DefaultsData['CallWithDefaultParameters']): CancelablePromise<void> {
         const {
             parameterString = 'Hello World!',
             parameterNumber = 123,
@@ -505,7 +505,7 @@ export class DefaultsService {
      * @throws ApiError
      */
     public static callWithDefaultOptionalParameters(
-        data: DefaultsData.CallWithDefaultOptionalParameters = {}
+        data: DefaultsData['CallWithDefaultOptionalParameters'] = {}
     ): CancelablePromise<void> {
         const {
             parameterString = 'Hello World!',
@@ -532,7 +532,7 @@ export class DefaultsService {
     /**
      * @throws ApiError
      */
-    public static callToTestOrderOfParams(data: DefaultsData.CallToTestOrderOfParams): CancelablePromise<void> {
+    public static callToTestOrderOfParams(data: DefaultsData['CallToTestOrderOfParams']): CancelablePromise<void> {
         const {
             parameterStringWithNoDefault,
             parameterOptionalStringWithDefault = 'Hello World!',
@@ -761,7 +761,7 @@ export class CollectionFormatService {
     /**
      * @throws ApiError
      */
-    public static collectionFormat(data: CollectionFormatData.CollectionFormat): CancelablePromise<void> {
+    public static collectionFormat(data: CollectionFormatData['CollectionFormat']): CancelablePromise<void> {
         const { parameterArrayCsv, parameterArraySsv, parameterArrayTsv, parameterArrayPipes, parameterArrayMulti } =
             data;
         return __request(OpenAPI, {
@@ -786,7 +786,7 @@ export class TypesService {
      * @returns any Response is a simple object
      * @throws ApiError
      */
-    public static types(data: TypesData.Types): CancelablePromise<number | string | boolean | unknown> {
+    public static types(data: TypesData['Types']): CancelablePromise<number | string | boolean | unknown> {
         const {
             parameterArray,
             parameterDictionary,
@@ -821,7 +821,7 @@ export class ComplexService {
      * @returns ModelWithString Successful response
      * @throws ApiError
      */
-    public static complexTypes(data: ComplexData.ComplexTypes): CancelablePromise<Array<ModelWithString>> {
+    public static complexTypes(data: ComplexData['ComplexTypes']): CancelablePromise<Array<ModelWithString>> {
         const { parameterObject, parameterReference } = data;
         return __request(OpenAPI, {
             method: 'GET',
@@ -861,7 +861,7 @@ export class ErrorService {
      * @returns any Custom message: Successful response
      * @throws ApiError
      */
-    public static testErrorCode(data: ErrorData.TestErrorCode): CancelablePromise<any> {
+    public static testErrorCode(data: ErrorData['TestErrorCode']): CancelablePromise<any> {
         const { status } = data;
         return __request(OpenAPI, {
             method: 'POST',
@@ -885,7 +885,7 @@ export class NonAsciiÆøåÆøÅöôêÊService {
      * @throws ApiError
      */
     public static nonAsciiæøåÆøÅöôêÊ字符串(
-        data: NonAsciiÆøåÆøÅöôêÊData.NonAsciiæøåÆøÅöôêÊ字符串
+        data: NonAsciiÆøåÆøÅöôêÊData['NonAsciiæøåÆøÅöôêÊ字符串']
     ): CancelablePromise<NonAsciiStringæøåÆØÅöôêÊ字符串> {
         const { nonAsciiParamæøåÆøÅöôêÊ } = data;
         return __request(OpenAPI, {

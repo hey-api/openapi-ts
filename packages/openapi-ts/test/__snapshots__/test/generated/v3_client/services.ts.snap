@@ -443,7 +443,7 @@ export class DefaultService {
      * @throws ApiError
      */
     public postServiceWithEmptyTag(
-        data: DefaultData.PostServiceWithEmptyTag
+        data: DefaultData['PostServiceWithEmptyTag']
     ): CancelablePromise<ModelWithReadOnlyAndWriteOnly> {
         const { requestBody } = data;
         return this.httpRequest.request({
@@ -535,7 +535,7 @@ export class ParametersService {
     /**
      * @throws ApiError
      */
-    public deleteFoo(data: ParametersData.DeleteFoo): CancelablePromise<void> {
+    public deleteFoo(data: ParametersData['DeleteFoo']): CancelablePromise<void> {
         const { foo, bar } = data;
         return this.httpRequest.request({
             method: 'DELETE',
@@ -550,7 +550,7 @@ export class ParametersService {
     /**
      * @throws ApiError
      */
-    public callWithParameters(data: ParametersData.CallWithParameters): CancelablePromise<void> {
+    public callWithParameters(data: ParametersData['CallWithParameters']): CancelablePromise<void> {
         const {
             parameterHeader,
             fooAllOfEnum,
@@ -589,7 +589,7 @@ export class ParametersService {
     /**
      * @throws ApiError
      */
-    public callWithWeirdParameterNames(data: ParametersData.CallWithWeirdParameterNames): CancelablePromise<void> {
+    public callWithWeirdParameterNames(data: ParametersData['CallWithWeirdParameterNames']): CancelablePromise<void> {
         const {
             parameterHeader,
             parameterQuery,
@@ -630,7 +630,7 @@ export class ParametersService {
     /**
      * @throws ApiError
      */
-    public getCallWithOptionalParam(data: ParametersData.GetCallWithOptionalParam): CancelablePromise<void> {
+    public getCallWithOptionalParam(data: ParametersData['GetCallWithOptionalParam']): CancelablePromise<void> {
         const { requestBody, parameter } = data;
         return this.httpRequest.request({
             method: 'GET',
@@ -646,7 +646,7 @@ export class ParametersService {
     /**
      * @throws ApiError
      */
-    public postCallWithOptionalParam(data: ParametersData.PostCallWithOptionalParam): CancelablePromise<void> {
+    public postCallWithOptionalParam(data: ParametersData['PostCallWithOptionalParam']): CancelablePromise<void> {
         const { parameter, requestBody } = data;
         return this.httpRequest.request({
             method: 'POST',
@@ -666,7 +666,7 @@ export class DescriptionsService {
     /**
      * @throws ApiError
      */
-    public callWithDescriptions(data: DescriptionsData.CallWithDescriptions = {}): CancelablePromise<void> {
+    public callWithDescriptions(data: DescriptionsData['CallWithDescriptions'] = {}): CancelablePromise<void> {
         const {
             parameterWithBreaks,
             parameterWithBackticks,
@@ -697,7 +697,7 @@ export class DeprecatedService {
      * @deprecated
      * @throws ApiError
      */
-    public deprecatedCall(data: DeprecatedData.DeprecatedCall): CancelablePromise<void> {
+    public deprecatedCall(data: DeprecatedData['DeprecatedCall']): CancelablePromise<void> {
         const { parameter } = data;
         return this.httpRequest.request({
             method: 'POST',
@@ -715,7 +715,7 @@ export class RequestBodyService {
     /**
      * @throws ApiError
      */
-    public postApiRequestBody(data: RequestBodyData.PostApiRequestBody = {}): CancelablePromise<void> {
+    public postApiRequestBody(data: RequestBodyData['PostApiRequestBody'] = {}): CancelablePromise<void> {
         const { parameter, foo } = data;
         return this.httpRequest.request({
             method: 'POST',
@@ -735,7 +735,7 @@ export class FormDataService {
     /**
      * @throws ApiError
      */
-    public postApiFormData(data: FormDataData.PostApiFormData = {}): CancelablePromise<void> {
+    public postApiFormData(data: FormDataData['PostApiFormData'] = {}): CancelablePromise<void> {
         const { parameter, formData } = data;
         return this.httpRequest.request({
             method: 'POST',
@@ -755,7 +755,7 @@ export class DefaultsService {
     /**
      * @throws ApiError
      */
-    public callWithDefaultParameters(data: DefaultsData.CallWithDefaultParameters = {}): CancelablePromise<void> {
+    public callWithDefaultParameters(data: DefaultsData['CallWithDefaultParameters'] = {}): CancelablePromise<void> {
         const {
             parameterString = 'Hello World!',
             parameterNumber = 123,
@@ -782,7 +782,7 @@ export class DefaultsService {
      * @throws ApiError
      */
     public callWithDefaultOptionalParameters(
-        data: DefaultsData.CallWithDefaultOptionalParameters = {}
+        data: DefaultsData['CallWithDefaultOptionalParameters'] = {}
     ): CancelablePromise<void> {
         const {
             parameterString = 'Hello World!',
@@ -809,7 +809,7 @@ export class DefaultsService {
     /**
      * @throws ApiError
      */
-    public callToTestOrderOfParams(data: DefaultsData.CallToTestOrderOfParams): CancelablePromise<void> {
+    public callToTestOrderOfParams(data: DefaultsData['CallToTestOrderOfParams']): CancelablePromise<void> {
         const {
             parameterStringWithNoDefault,
             parameterOptionalStringWithDefault = 'Hello World!',
@@ -1052,7 +1052,7 @@ export class CollectionFormatService {
     /**
      * @throws ApiError
      */
-    public collectionFormat(data: CollectionFormatData.CollectionFormat): CancelablePromise<void> {
+    public collectionFormat(data: CollectionFormatData['CollectionFormat']): CancelablePromise<void> {
         const { parameterArrayCsv, parameterArraySsv, parameterArrayTsv, parameterArrayPipes, parameterArrayMulti } =
             data;
         return this.httpRequest.request({
@@ -1079,7 +1079,7 @@ export class TypesService {
      * @returns unknown Response is a simple object
      * @throws ApiError
      */
-    public types(data: TypesData.Types): CancelablePromise<number | string | boolean | Record<string, unknown>> {
+    public types(data: TypesData['Types']): CancelablePromise<number | string | boolean | Record<string, unknown>> {
         const {
             parameterArray,
             parameterDictionary,
@@ -1116,7 +1116,7 @@ export class UploadService {
      * @returns boolean
      * @throws ApiError
      */
-    public uploadFile(data: UploadData.UploadFile): CancelablePromise<boolean> {
+    public uploadFile(data: UploadData['UploadFile']): CancelablePromise<boolean> {
         const { file } = data;
         return this.httpRequest.request({
             method: 'POST',
@@ -1135,7 +1135,7 @@ export class FileResponseService {
      * @returns binary Success
      * @throws ApiError
      */
-    public fileResponse(data: FileResponseData.FileResponse): CancelablePromise<Blob | File> {
+    public fileResponse(data: FileResponseData['FileResponse']): CancelablePromise<Blob | File> {
         const { id } = data;
         return this.httpRequest.request({
             method: 'GET',
@@ -1154,7 +1154,7 @@ export class ComplexService {
      * @returns ModelWithString Successful response
      * @throws ApiError
      */
-    public complexTypes(data: ComplexData.ComplexTypes): CancelablePromise<Array<ModelWithString>> {
+    public complexTypes(data: ComplexData['ComplexTypes']): CancelablePromise<Array<ModelWithString>> {
         const { parameterObject, parameterReference } = data;
         return this.httpRequest.request({
             method: 'GET',
@@ -1174,7 +1174,7 @@ export class ComplexService {
      * @returns ModelWithString Success
      * @throws ApiError
      */
-    public complexParams(data: ComplexData.ComplexParams): CancelablePromise<ModelWithString> {
+    public complexParams(data: ComplexData['ComplexParams']): CancelablePromise<ModelWithString> {
         const { id, requestBody } = data;
         return this.httpRequest.request({
             method: 'PUT',
@@ -1194,7 +1194,7 @@ export class MultipartService {
     /**
      * @throws ApiError
      */
-    public multipartRequest(data: MultipartData.MultipartRequest = {}): CancelablePromise<void> {
+    public multipartRequest(data: MultipartData['MultipartRequest'] = {}): CancelablePromise<void> {
         const { formData } = data;
         return this.httpRequest.request({
             method: 'POST',
@@ -1249,7 +1249,7 @@ export class ErrorService {
      * @returns any Custom message: Successful response
      * @throws ApiError
      */
-    public testErrorCode(data: ErrorData.TestErrorCode): CancelablePromise<any> {
+    public testErrorCode(data: ErrorData['TestErrorCode']): CancelablePromise<any> {
         const { status } = data;
         return this.httpRequest.request({
             method: 'POST',
@@ -1275,7 +1275,7 @@ export class NonAsciiÆøåÆøÅöôêÊService {
      * @throws ApiError
      */
     public nonAsciiæøåÆøÅöôêÊ字符串(
-        data: NonAsciiÆøåÆøÅöôêÊData.NonAsciiæøåÆøÅöôêÊ字符串
+        data: NonAsciiÆøåÆøÅöôêÊData['NonAsciiæøåÆøÅöôêÊ字符串']
     ): CancelablePromise<Array<NonAsciiStringæøåÆØÅöôêÊ字符串>> {
         const { nonAsciiParamæøåÆøÅöôêÊ } = data;
         return this.httpRequest.request({

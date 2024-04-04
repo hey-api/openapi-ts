@@ -132,7 +132,7 @@ const isRequired = (model: Pick<Model, 'default' | 'isRequired'>) => (model.isRe
 const nameOperationDataType = (service: Service, operation: Service['operations'][number]) => {
     const namespace = `${camelCase(service.name, { pascalCase: true })}Data`;
     const key = camelCase(operation.name, { pascalCase: true });
-    return `${namespace}.${key}`;
+    return `${namespace}['${key}']`;
 };
 
 export const operationDataType = (config: Config, service: Service) => {
