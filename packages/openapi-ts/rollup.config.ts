@@ -38,6 +38,7 @@ export function handlebarsPlugin(): Plugin {
                         ifOperationDataOptional: true,
                         ifdef: true,
                         intersection: true,
+                        modelIsRequired: true,
                         modelUnionType: true,
                         nameOperationDataType: true,
                         notEquals: true,

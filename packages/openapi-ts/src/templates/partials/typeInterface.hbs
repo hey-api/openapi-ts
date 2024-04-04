@@ -12,9 +12,9 @@
  */
 {{/ifdef}}
 {{#if ../parent}}
-{{>isReadOnly}}{{{name}}}{{>isRequired}}: {{>type parent=../parent}};
+{{>isReadOnly}}{{{name}}}{{{modelIsRequired this}}}: {{>type parent=../parent}};
 {{else}}
-{{>isReadOnly}}{{{name}}}{{>isRequired}}: {{>type}};
+{{>isReadOnly}}{{{name}}}{{{modelIsRequired this}}}: {{>type}};
 {{/if}}
 {{/each}}
 }{{>isNullable}}

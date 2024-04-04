@@ -50,6 +50,7 @@ describe('registerHandlebarHelpers', () => {
         expect(helpers).toContain('ifdef');
         expect(helpers).toContain('ifOperationDataOptional');
         expect(helpers).toContain('intersection');
+        expect(helpers).toContain('modelIsRequired');
         expect(helpers).toContain('modelUnionType');
         expect(helpers).toContain('nameOperationDataType');
         expect(helpers).toContain('notEquals');
