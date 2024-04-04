@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress';
 
 export default defineConfig({
-    title: "OpenAPI TypeScript",
+    title: 'OpenAPI TypeScript',
     lastUpdated: true,
     sitemap: {
         hostname: 'https://heyapi.vercel.app',
