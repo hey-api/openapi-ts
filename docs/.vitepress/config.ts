@@ -2,7 +2,6 @@ import { defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-    base: '/openapi-ts/',
     title: "OpenAPI TypeScript",
     description: "Turn your OpenAPI specification into a beautiful TypeScript client",
     themeConfig: {
