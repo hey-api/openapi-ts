@@ -493,7 +493,7 @@ export class DefaultService {
      * @throws ApiError
      */
     public static postServiceWithEmptyTag(
-        data: DefaultData.PostServiceWithEmptyTag
+        data: DefaultData['PostServiceWithEmptyTag']
     ): CancelablePromise<ModelWithReadOnlyAndWriteOnly> {
         const { query, requestBody } = data;
         return __request(OpenAPI, {
@@ -581,7 +581,7 @@ export class ParametersService {
     /**
      * @throws ApiError
      */
-    public static deleteFoo(data: ParametersData.DeleteFoo): CancelablePromise<void> {
+    public static deleteFoo(data: ParametersData['DeleteFoo']): CancelablePromise<void> {
         const { query, foo, bar } = data;
         return __request(OpenAPI, {
             method: 'DELETE',
@@ -593,7 +593,7 @@ export class ParametersService {
     /**
      * @throws ApiError
      */
-    public static callWithParameters(data: ParametersData.CallWithParameters): CancelablePromise<void> {
+    public static callWithParameters(data: ParametersData['CallWithParameters']): CancelablePromise<void> {
         const { query, parameterHeader, parameterForm, parameterCookie, parameterPath, requestBody } = data;
         return __request(OpenAPI, {
             method: 'POST',
@@ -614,7 +614,7 @@ export class ParametersService {
      * @throws ApiError
      */
     public static callWithWeirdParameterNames(
-        data: ParametersData.CallWithWeirdParameterNames
+        data: ParametersData['CallWithWeirdParameterNames']
     ): CancelablePromise<void> {
         const {
             query,
@@ -644,7 +644,7 @@ export class ParametersService {
     /**
      * @throws ApiError
      */
-    public static getCallWithOptionalParam(data: ParametersData.GetCallWithOptionalParam): CancelablePromise<void> {
+    public static getCallWithOptionalParam(data: ParametersData['GetCallWithOptionalParam']): CancelablePromise<void> {
         const { query, requestBody } = data;
         return __request(OpenAPI, {
             method: 'GET',
@@ -660,7 +660,9 @@ export class ParametersService {
     /**
      * @throws ApiError
      */
-    public static postCallWithOptionalParam(data: ParametersData.PostCallWithOptionalParam): CancelablePromise<void> {
+    public static postCallWithOptionalParam(
+        data: ParametersData['PostCallWithOptionalParam']
+    ): CancelablePromise<void> {
         const { query, requestBody } = data;
         return __request(OpenAPI, {
             method: 'POST',
@@ -678,7 +680,7 @@ export class DescriptionsService {
     /**
      * @throws ApiError
      */
-    public static callWithDescriptions(data: DescriptionsData.CallWithDescriptions = {}): CancelablePromise<void> {
+    public static callWithDescriptions(data: DescriptionsData['CallWithDescriptions'] = {}): CancelablePromise<void> {
         const { query } = data;
         return __request(OpenAPI, {
             method: 'POST',
@@ -695,7 +697,7 @@ export class DeprecatedService {
      * @deprecated
      * @throws ApiError
      */
-    public static deprecatedCall(data: DeprecatedData.DeprecatedCall): CancelablePromise<void> {
+    public static deprecatedCall(data: DeprecatedData['DeprecatedCall']): CancelablePromise<void> {
         const { query, parameter } = data;
         return __request(OpenAPI, {
             method: 'POST',
@@ -709,7 +711,7 @@ export class RequestBodyService {
     /**
      * @throws ApiError
      */
-    public static postApiRequestBody(data: RequestBodyData.PostApiRequestBody = {}): CancelablePromise<void> {
+    public static postApiRequestBody(data: RequestBodyData['PostApiRequestBody'] = {}): CancelablePromise<void> {
         const { query, foo } = data;
         return __request(OpenAPI, {
             method: 'POST',
@@ -727,7 +729,7 @@ export class FormDataService {
     /**
      * @throws ApiError
      */
-    public static postApiFormData(data: FormDataData.PostApiFormData = {}): CancelablePromise<void> {
+    public static postApiFormData(data: FormDataData['PostApiFormData'] = {}): CancelablePromise<void> {
         const { query, formData } = data;
         return __request(OpenAPI, {
             method: 'POST',
@@ -746,7 +748,7 @@ export class DefaultsService {
      * @throws ApiError
      */
     public static callWithDefaultParameters(
-        data: DefaultsData.CallWithDefaultParameters = {}
+        data: DefaultsData['CallWithDefaultParameters'] = {}
     ): CancelablePromise<void> {
         const { query } = data;
         return __request(OpenAPI, {
@@ -769,7 +771,7 @@ export class DefaultsService {
      * @throws ApiError
      */
     public static callWithDefaultOptionalParameters(
-        data: DefaultsData.CallWithDefaultOptionalParameters = {}
+        data: DefaultsData['CallWithDefaultOptionalParameters'] = {}
     ): CancelablePromise<void> {
         const { query } = data;
         return __request(OpenAPI, {
@@ -791,7 +793,7 @@ export class DefaultsService {
     /**
      * @throws ApiError
      */
-    public static callToTestOrderOfParams(data: DefaultsData.CallToTestOrderOfParams): CancelablePromise<void> {
+    public static callToTestOrderOfParams(data: DefaultsData['CallToTestOrderOfParams']): CancelablePromise<void> {
         const { query } = data;
         return __request(OpenAPI, {
             method: 'PUT',
@@ -1009,7 +1011,7 @@ export class CollectionFormatService {
     /**
      * @throws ApiError
      */
-    public static collectionFormat(data: CollectionFormatData.CollectionFormat): CancelablePromise<void> {
+    public static collectionFormat(data: CollectionFormatData['CollectionFormat']): CancelablePromise<void> {
         const { query } = data;
         return __request(OpenAPI, {
             method: 'GET',
@@ -1029,7 +1031,9 @@ export class TypesService {
      * @returns unknown Response is a simple object
      * @throws ApiError
      */
-    public static types(data: TypesData.Types): CancelablePromise<number | string | boolean | Record<string, unknown>> {
+    public static types(
+        data: TypesData['Types']
+    ): CancelablePromise<number | string | boolean | Record<string, unknown>> {
         const { query, id } = data;
         return __request(OpenAPI, {
             method: 'GET',
@@ -1051,7 +1055,7 @@ export class UploadService {
      * @returns boolean
      * @throws ApiError
      */
-    public static uploadFile(data: UploadData.UploadFile): CancelablePromise<boolean> {
+    public static uploadFile(data: UploadData['UploadFile']): CancelablePromise<boolean> {
         const { query, file } = data;
         return __request(OpenAPI, {
             method: 'POST',
@@ -1066,7 +1070,7 @@ export class FileResponseService {
      * @returns binary Success
      * @throws ApiError
      */
-    public static fileResponse(data: FileResponseData.FileResponse): CancelablePromise<Blob | File> {
+    public static fileResponse(data: FileResponseData['FileResponse']): CancelablePromise<Blob | File> {
         const { query, id } = data;
         return __request(OpenAPI, {
             method: 'GET',
@@ -1081,7 +1085,7 @@ export class ComplexService {
      * @returns ModelWithString Successful response
      * @throws ApiError
      */
-    public static complexTypes(data: ComplexData.ComplexTypes): CancelablePromise<Array<ModelWithString>> {
+    public static complexTypes(data: ComplexData['ComplexTypes']): CancelablePromise<Array<ModelWithString>> {
         const { query } = data;
         return __request(OpenAPI, {
             method: 'GET',
@@ -1100,7 +1104,7 @@ export class ComplexService {
      * @returns ModelWithString Success
      * @throws ApiError
      */
-    public static complexParams(data: ComplexData.ComplexParams): CancelablePromise<ModelWithString> {
+    public static complexParams(data: ComplexData['ComplexParams']): CancelablePromise<ModelWithString> {
         const { query, id, requestBody } = data;
         return __request(OpenAPI, {
             method: 'PUT',
@@ -1116,7 +1120,7 @@ export class MultipartService {
     /**
      * @throws ApiError
      */
-    public static multipartRequest(data: MultipartData.MultipartRequest = {}): CancelablePromise<void> {
+    public static multipartRequest(data: MultipartData['MultipartRequest'] = {}): CancelablePromise<void> {
         const { query, formData } = data;
         return __request(OpenAPI, {
             method: 'POST',
@@ -1167,7 +1171,7 @@ export class ErrorService {
      * @returns any Custom message: Successful response
      * @throws ApiError
      */
-    public static testErrorCode(data: ErrorData.TestErrorCode): CancelablePromise<any> {
+    public static testErrorCode(data: ErrorData['TestErrorCode']): CancelablePromise<any> {
         const { query } = data;
         return __request(OpenAPI, {
             method: 'POST',
@@ -1191,7 +1195,7 @@ export class NonAsciiÆøåÆøÅöôêÊService {
      * @throws ApiError
      */
     public static nonAsciiæøåÆøÅöôêÊ字符串(
-        data: NonAsciiÆøåÆøÅöôêÊData.NonAsciiæøåÆøÅöôêÊ字符串
+        data: NonAsciiÆøåÆøÅöôêÊData['NonAsciiæøåÆøÅöôêÊ字符串']
     ): CancelablePromise<Array<NonAsciiStringæøåÆØÅöôêÊ字符串>> {
         const { query } = data;
         return __request(OpenAPI, {
