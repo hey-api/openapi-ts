@@ -3,7 +3,7 @@
     "version": "0.34.1",
     "type": "module",
     "description": "Turn your OpenAPI specification into a beautiful TypeScript client",
-    "homepage": "https://github.com/hey-api/openapi-ts/",
+    "homepage": "https://hey-api.github.io/openapi-ts/",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/hey-api/openapi-ts.git"
