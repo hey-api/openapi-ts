@@ -9,6 +9,295 @@ import type {
     NonAsciiStringæøåÆØÅöôêÊ字符串,
 } from './models';
 
+export type DefaultData = {};
+
+export type SimpleData = {};
+
+export type DescriptionsData = {
+    CallWithDescriptions: {
+        /**
+         * Testing backticks in string: `backticks` and ```multiple backticks``` should work
+         */
+        parameterWithBackticks?: string;
+        /**
+         * Testing multiline comments in string: First line
+         * Second line
+         *
+         * Fourth line
+         */
+        parameterWithBreaks?: string;
+        /**
+         * Testing expression placeholders in string: ${expression} should work
+         */
+        parameterWithExpressionPlaceholders?: string;
+        /**
+         * Testing quotes in string: 'single quote''' and "double quotes""" should work
+         */
+        parameterWithQuotes?: string;
+        /**
+         * Testing reserved characters in string: * inline * and ** inline ** should work
+         */
+        parameterWithReservedCharacters?: string;
+        /**
+         * Testing slashes in string: \backwards\\\ and /forwards/// should work
+         */
+        parameterWithSlashes?: string;
+    };
+};
+
+export type ParametersData = {
+    CallWithParameters: {
+        /**
+         * This is the parameter that is sent as request body
+         */
+        parameterBody: string;
+        /**
+         * This is the parameter that goes into the form data
+         */
+        parameterForm: string;
+        /**
+         * This is the parameter that goes into the header
+         */
+        parameterHeader: string;
+        /**
+         * This is the parameter that goes into the path
+         */
+        parameterPath: string;
+        /**
+         * This is the parameter that goes into the query params
+         */
+        parameterQuery: string;
+    };
+    CallWithWeirdParameterNames: {
+        /**
+         * This is the parameter with a reserved keyword
+         */
+        _default?: string;
+        /**
+         * This is the parameter that is sent as request body
+         */
+        parameterBody: string;
+        /**
+         * This is the parameter that goes into the request form data
+         */
+        parameterForm: string;
+        /**
+         * This is the parameter that goes into the request header
+         */
+        parameterHeader: string;
+        /**
+         * This is the parameter that goes into the path
+         */
+        parameterPath1?: string;
+        /**
+         * This is the parameter that goes into the path
+         */
+        parameterPath2?: string;
+        /**
+         * This is the parameter that goes into the path
+         */
+        parameterPath3?: string;
+        /**
+         * This is the parameter that goes into the request query params
+         */
+        parameterQuery: string;
+    };
+};
+
+export type DefaultsData = {
+    CallWithDefaultParameters: {
+        /**
+         * This is a simple boolean with default value
+         */
+        parameterBoolean?: boolean;
+        /**
+         * This is a simple enum with default value
+         */
+        parameterEnum?: 'Success' | 'Warning' | 'Error';
+        /**
+         * This is a simple model with default value
+         */
+        parameterModel?: ModelWithString;
+        /**
+         * This is a simple number with default value
+         */
+        parameterNumber?: number;
+        /**
+         * This is a simple string with default value
+         */
+        parameterString?: string;
+    };
+    CallWithDefaultOptionalParameters: {
+        /**
+         * This is a simple boolean that is optional with default value
+         */
+        parameterBoolean?: boolean;
+        /**
+         * This is a simple enum that is optional with default value
+         */
+        parameterEnum?: 'Success' | 'Warning' | 'Error';
+        /**
+         * This is a simple model that is optional with default value
+         */
+        parameterModel?: ModelWithString;
+        /**
+         * This is a simple number that is optional with default value
+         */
+        parameterNumber?: number;
+        /**
+         * This is a simple string that is optional with default value
+         */
+        parameterString?: string;
+    };
+    CallToTestOrderOfParams: {
+        /**
+         * This is a optional string with default
+         */
+        parameterOptionalStringWithDefault?: string;
+        /**
+         * This is a optional string with empty default
+         */
+        parameterOptionalStringWithEmptyDefault?: string;
+        /**
+         * This is a optional string with no default
+         */
+        parameterOptionalStringWithNoDefault?: string;
+        /**
+         * This is a string that can be null with default
+         */
+        parameterStringNullableWithDefault?: string | null;
+        /**
+         * This is a string that can be null with no default
+         */
+        parameterStringNullableWithNoDefault?: string | null;
+        /**
+         * This is a string with default
+         */
+        parameterStringWithDefault?: string;
+        /**
+         * This is a string with empty default
+         */
+        parameterStringWithEmptyDefault?: string;
+        /**
+         * This is a string with no default
+         */
+        parameterStringWithNoDefault: string;
+    };
+};
+
+export type DuplicateData = {};
+
+export type NoContentData = {};
+
+export type ResponseData = {};
+
+export type MultipleTags1Data = {};
+
+export type MultipleTags2Data = {};
+
+export type MultipleTags3Data = {};
+
+export type CollectionFormatData = {
+    CollectionFormat: {
+        /**
+         * This is an array parameter that is sent as csv format (comma-separated values)
+         */
+        parameterArrayCsv: Array<string>;
+        /**
+         * This is an array parameter that is sent as multi format (multiple parameter instances)
+         */
+        parameterArrayMulti: Array<string>;
+        /**
+         * This is an array parameter that is sent as pipes format (pipe-separated values)
+         */
+        parameterArrayPipes: Array<string>;
+        /**
+         * This is an array parameter that is sent as ssv format (space-separated values)
+         */
+        parameterArraySsv: Array<string>;
+        /**
+         * This is an array parameter that is sent as tsv format (tab-separated values)
+         */
+        parameterArrayTsv: Array<string>;
+    };
+};
+
+export type TypesData = {
+    Types: {
+        /**
+         * This is a number parameter
+         */
+        id?: number;
+        /**
+         * This is an array parameter
+         */
+        parameterArray: Array<string>;
+        /**
+         * This is a boolean parameter
+         */
+        parameterBoolean?: boolean;
+        /**
+         * This is a dictionary parameter
+         */
+        parameterDictionary: Record<string, string>;
+        /**
+         * This is an enum parameter
+         */
+        parameterEnum: 'Success' | 'Warning' | 'Error';
+        /**
+         * This is a number parameter
+         */
+        parameterNumber?: number;
+        /**
+         * This is an object parameter
+         */
+        parameterObject?: unknown;
+        /**
+         * This is a string parameter
+         */
+        parameterString?: string;
+    };
+};
+
+export type ComplexData = {
+    ComplexTypes: {
+        /**
+         * Parameter containing object
+         */
+        parameterObject: {
+            first?: {
+                second?: {
+                    third?: string;
+                };
+            };
+        };
+        /**
+         * Parameter containing reference
+         */
+        parameterReference: ModelWithString;
+    };
+};
+
+export type HeaderData = {};
+
+export type ErrorData = {
+    TestErrorCode: {
+        /**
+         * Status code to return
+         */
+        status: string;
+    };
+};
+
+export type NonAsciiÆøåÆøÅöôêÊData = {
+    NonAsciiæøåÆøÅöôêÊ字符串: {
+        /**
+         * Dummy input param
+         */
+        nonAsciiParamæøåÆøÅöôêÊ: number;
+    };
+};
+
 export class DefaultService {
     /**
      * @throws ApiError
@@ -93,48 +382,18 @@ export class SimpleService {
     }
 }
 
-export type TDataCallWithDescriptions = {
-    /**
-     * Testing backticks in string: `backticks` and ```multiple backticks``` should work
-     */
-    parameterWithBackticks?: string;
-    /**
-     * Testing multiline comments in string: First line
-     * Second line
-     *
-     * Fourth line
-     */
-    parameterWithBreaks?: string;
-    /**
-     * Testing expression placeholders in string: ${expression} should work
-     */
-    parameterWithExpressionPlaceholders?: string;
-    /**
-     * Testing quotes in string: 'single quote''' and "double quotes""" should work
-     */
-    parameterWithQuotes?: string;
-    /**
-     * Testing reserved characters in string: * inline * and ** inline ** should work
-     */
-    parameterWithReservedCharacters?: string;
-    /**
-     * Testing slashes in string: \backwards\\\ and /forwards/// should work
-     */
-    parameterWithSlashes?: string;
-};
-
 export class DescriptionsService {
     /**
      * @throws ApiError
      */
-    public static callWithDescriptions(data: TDataCallWithDescriptions = {}): CancelablePromise<void> {
+    public static callWithDescriptions(data: DescriptionsData.CallWithDescriptions = {}): CancelablePromise<void> {
         const {
-            parameterWithBackticks,
             parameterWithBreaks,
+            parameterWithBackticks,
+            parameterWithSlashes,
             parameterWithExpressionPlaceholders,
             parameterWithQuotes,
             parameterWithReservedCharacters,
-            parameterWithSlashes,
         } = data;
         return __request(OpenAPI, {
             method: 'POST',
@@ -151,69 +410,12 @@ export class DescriptionsService {
     }
 }
 
-export type TDataCallWithParameters = {
-    /**
-     * This is the parameter that is sent as request body
-     */
-    parameterBody: string;
-    /**
-     * This is the parameter that goes into the form data
-     */
-    parameterForm: string;
-    /**
-     * This is the parameter that goes into the header
-     */
-    parameterHeader: string;
-    /**
-     * This is the parameter that goes into the path
-     */
-    parameterPath: string;
-    /**
-     * This is the parameter that goes into the query params
-     */
-    parameterQuery: string;
-};
-export type TDataCallWithWeirdParameterNames = {
-    /**
-     * This is the parameter with a reserved keyword
-     */
-    _default?: string;
-    /**
-     * This is the parameter that is sent as request body
-     */
-    parameterBody: string;
-    /**
-     * This is the parameter that goes into the request form data
-     */
-    parameterForm: string;
-    /**
-     * This is the parameter that goes into the request header
-     */
-    parameterHeader: string;
-    /**
-     * This is the parameter that goes into the path
-     */
-    parameterPath1?: string;
-    /**
-     * This is the parameter that goes into the path
-     */
-    parameterPath2?: string;
-    /**
-     * This is the parameter that goes into the path
-     */
-    parameterPath3?: string;
-    /**
-     * This is the parameter that goes into the request query params
-     */
-    parameterQuery: string;
-};
-
 export class ParametersService {
     /**
      * @throws ApiError
      */
-    public static callWithParameters(data: TDataCallWithParameters): CancelablePromise<void> {
-        const { parameterBody, parameterForm, parameterHeader, parameterPath, parameterQuery } = data;
+    public static callWithParameters(data: ParametersData.CallWithParameters): CancelablePromise<void> {
+        const { parameterHeader, parameterQuery, parameterForm, parameterBody, parameterPath } = data;
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v{api-version}/parameters/{parameterPath}',
@@ -236,16 +438,18 @@ export class ParametersService {
     /**
      * @throws ApiError
      */
-    public static callWithWeirdParameterNames(data: TDataCallWithWeirdParameterNames): CancelablePromise<void> {
+    public static callWithWeirdParameterNames(
+        data: ParametersData.CallWithWeirdParameterNames
+    ): CancelablePromise<void> {
         const {
-            _default,
-            parameterBody,
-            parameterForm,
             parameterHeader,
+            parameterQuery,
+            parameterForm,
+            parameterBody,
             parameterPath1,
             parameterPath2,
             parameterPath3,
-            parameterQuery,
+            _default,
         } = data;
         return __request(OpenAPI, {
             method: 'POST',
@@ -270,98 +474,19 @@ export class ParametersService {
     }
 }
 
-export type TDataCallWithDefaultParameters = {
-    /**
-     * This is a simple boolean with default value
-     */
-    parameterBoolean?: boolean;
-    /**
-     * This is a simple enum with default value
-     */
-    parameterEnum?: 'Success' | 'Warning' | 'Error';
-    /**
-     * This is a simple model with default value
-     */
-    parameterModel?: ModelWithString;
-    /**
-     * This is a simple number with default value
-     */
-    parameterNumber?: number;
-    /**
-     * This is a simple string with default value
-     */
-    parameterString?: string;
-};
-export type TDataCallWithDefaultOptionalParameters = {
-    /**
-     * This is a simple boolean that is optional with default value
-     */
-    parameterBoolean?: boolean;
-    /**
-     * This is a simple enum that is optional with default value
-     */
-    parameterEnum?: 'Success' | 'Warning' | 'Error';
-    /**
-     * This is a simple model that is optional with default value
-     */
-    parameterModel?: ModelWithString;
-    /**
-     * This is a simple number that is optional with default value
-     */
-    parameterNumber?: number;
-    /**
-     * This is a simple string that is optional with default value
-     */
-    parameterString?: string;
-};
-export type TDataCallToTestOrderOfParams = {
-    /**
-     * This is a optional string with default
-     */
-    parameterOptionalStringWithDefault?: string;
-    /**
-     * This is a optional string with empty default
-     */
-    parameterOptionalStringWithEmptyDefault?: string;
-    /**
-     * This is a optional string with no default
-     */
-    parameterOptionalStringWithNoDefault?: string;
-    /**
-     * This is a string that can be null with default
-     */
-    parameterStringNullableWithDefault?: string | null;
-    /**
-     * This is a string that can be null with no default
-     */
-    parameterStringNullableWithNoDefault?: string | null;
-    /**
-     * This is a string with default
-     */
-    parameterStringWithDefault?: string;
-    /**
-     * This is a string with empty default
-     */
-    parameterStringWithEmptyDefault?: string;
-    /**
-     * This is a string with no default
-     */
-    parameterStringWithNoDefault: string;
-};
-
 export class DefaultsService {
     /**
      * @throws ApiError
      */
-    public static callWithDefaultParameters(data: TDataCallWithDefaultParameters): CancelablePromise<void> {
+    public static callWithDefaultParameters(data: DefaultsData.CallWithDefaultParameters): CancelablePromise<void> {
         const {
+            parameterString = 'Hello World!',
+            parameterNumber = 123,
             parameterBoolean = true,
             parameterEnum = 'Success',
             parameterModel = {
                 prop: 'Hello World!',
             },
-            parameterNumber = 123,
-            parameterString = 'Hello World!',
         } = data;
         return __request(OpenAPI, {
             method: 'GET',
@@ -380,16 +505,16 @@ export class DefaultsService {
      * @throws ApiError
      */
     public static callWithDefaultOptionalParameters(
-        data: TDataCallWithDefaultOptionalParameters = {}
+        data: DefaultsData.CallWithDefaultOptionalParameters = {}
     ): CancelablePromise<void> {
         const {
+            parameterString = 'Hello World!',
+            parameterNumber = 123,
             parameterBoolean = true,
             parameterEnum = 'Success',
             parameterModel = {
                 prop: 'Hello World!',
             },
-            parameterNumber = 123,
-            parameterString = 'Hello World!',
         } = data;
         return __request(OpenAPI, {
             method: 'POST',
@@ -407,16 +532,16 @@ export class DefaultsService {
     /**
      * @throws ApiError
      */
-    public static callToTestOrderOfParams(data: TDataCallToTestOrderOfParams): CancelablePromise<void> {
+    public static callToTestOrderOfParams(data: DefaultsData.CallToTestOrderOfParams): CancelablePromise<void> {
         const {
+            parameterStringWithNoDefault,
             parameterOptionalStringWithDefault = 'Hello World!',
             parameterOptionalStringWithEmptyDefault = '',
             parameterOptionalStringWithNoDefault,
-            parameterStringNullableWithDefault = null,
-            parameterStringNullableWithNoDefault,
             parameterStringWithDefault = 'Hello World!',
             parameterStringWithEmptyDefault = '',
-            parameterStringWithNoDefault,
+            parameterStringNullableWithNoDefault,
+            parameterStringNullableWithDefault = null,
         } = data;
         return __request(OpenAPI, {
             method: 'PUT',
@@ -632,35 +757,12 @@ export class MultipleTags3Service {
     }
 }
 
-export type TDataCollectionFormat = {
-    /**
-     * This is an array parameter that is sent as csv format (comma-separated values)
-     */
-    parameterArrayCsv: Array<string>;
-    /**
-     * This is an array parameter that is sent as multi format (multiple parameter instances)
-     */
-    parameterArrayMulti: Array<string>;
-    /**
-     * This is an array parameter that is sent as pipes format (pipe-separated values)
-     */
-    parameterArrayPipes: Array<string>;
-    /**
-     * This is an array parameter that is sent as ssv format (space-separated values)
-     */
-    parameterArraySsv: Array<string>;
-    /**
-     * This is an array parameter that is sent as tsv format (tab-separated values)
-     */
-    parameterArrayTsv: Array<string>;
-};
-
 export class CollectionFormatService {
     /**
      * @throws ApiError
      */
-    public static collectionFormat(data: TDataCollectionFormat): CancelablePromise<void> {
-        const { parameterArrayCsv, parameterArrayMulti, parameterArrayPipes, parameterArraySsv, parameterArrayTsv } =
+    public static collectionFormat(data: CollectionFormatData.CollectionFormat): CancelablePromise<void> {
+        const { parameterArrayCsv, parameterArraySsv, parameterArrayTsv, parameterArrayPipes, parameterArrayMulti } =
             data;
         return __request(OpenAPI, {
             method: 'GET',
@@ -676,41 +778,6 @@ export class CollectionFormatService {
     }
 }
 
-export type TDataTypes = {
-    /**
-     * This is a number parameter
-     */
-    id?: number;
-    /**
-     * This is an array parameter
-     */
-    parameterArray: Array<string>;
-    /**
-     * This is a boolean parameter
-     */
-    parameterBoolean?: boolean;
-    /**
-     * This is a dictionary parameter
-     */
-    parameterDictionary: Record<string, string>;
-    /**
-     * This is an enum parameter
-     */
-    parameterEnum: 'Success' | 'Warning' | 'Error';
-    /**
-     * This is a number parameter
-     */
-    parameterNumber?: number;
-    /**
-     * This is an object parameter
-     */
-    parameterObject?: unknown;
-    /**
-     * This is a string parameter
-     */
-    parameterString?: string;
-};
-
 export class TypesService {
     /**
      * @returns number Response is a simple number
@@ -719,16 +786,16 @@ export class TypesService {
      * @returns any Response is a simple object
      * @throws ApiError
      */
-    public static types(data: TDataTypes): CancelablePromise<number | string | boolean | unknown> {
+    public static types(data: TypesData.Types): CancelablePromise<number | string | boolean | unknown> {
         const {
-            id,
             parameterArray,
-            parameterBoolean = true,
             parameterDictionary,
             parameterEnum,
             parameterNumber = 123,
-            parameterObject = null,
             parameterString = 'default',
+            parameterBoolean = true,
+            parameterObject = null,
+            id,
         } = data;
         return __request(OpenAPI, {
             method: 'GET',
@@ -749,29 +816,12 @@ export class TypesService {
     }
 }
 
-export type TDataComplexTypes = {
-    /**
-     * Parameter containing object
-     */
-    parameterObject: {
-        first?: {
-            second?: {
-                third?: string;
-            };
-        };
-    };
-    /**
-     * Parameter containing reference
-     */
-    parameterReference: ModelWithString;
-};
-
 export class ComplexService {
     /**
      * @returns ModelWithString Successful response
      * @throws ApiError
      */
-    public static complexTypes(data: TDataComplexTypes): CancelablePromise<Array<ModelWithString>> {
+    public static complexTypes(data: ComplexData.ComplexTypes): CancelablePromise<Array<ModelWithString>> {
         const { parameterObject, parameterReference } = data;
         return __request(OpenAPI, {
             method: 'GET',
@@ -806,19 +856,12 @@ export class HeaderService {
     }
 }
 
-export type TDataTestErrorCode = {
-    /**
-     * Status code to return
-     */
-    status: string;
-};
-
 export class ErrorService {
     /**
      * @returns any Custom message: Successful response
      * @throws ApiError
      */
-    public static testErrorCode(data: TDataTestErrorCode): CancelablePromise<any> {
+    public static testErrorCode(data: ErrorData.TestErrorCode): CancelablePromise<any> {
         const { status } = data;
         return __request(OpenAPI, {
             method: 'POST',
@@ -836,20 +879,13 @@ export class ErrorService {
     }
 }
 
-export type TDataNonAsciiæøåÆøÅöôêÊ字符串 = {
-    /**
-     * Dummy input param
-     */
-    nonAsciiParamæøåÆøÅöôêÊ: number;
-};
-
 export class NonAsciiÆøåÆøÅöôêÊService {
     /**
      * @returns NonAsciiStringæøåÆØÅöôêÊ字符串 Successful response
      * @throws ApiError
      */
     public static nonAsciiæøåÆøÅöôêÊ字符串(
-        data: TDataNonAsciiæøåÆøÅöôêÊ字符串
+        data: NonAsciiÆøåÆøÅöôêÊData.NonAsciiæøåÆøÅöôêÊ字符串
     ): CancelablePromise<NonAsciiStringæøåÆØÅöôêÊ字符串> {
         const { nonAsciiParamæøåÆøÅöôêÊ } = data;
         return __request(OpenAPI, {

@@ -115,10 +115,6 @@ describe('bin', () => {
             'true',
             '--exportSchemas',
             'true',
-            '--postfixServices',
-            'Service',
-            '--postfixModels',
-            'Dto',
             '--write',
             'false',
         ]);

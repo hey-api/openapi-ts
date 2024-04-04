@@ -18,10 +18,10 @@ export const writeClientModels = async (
     outputPath: string,
     config: Config
 ): Promise<void> => {
-    // Dont create empty file
-    if (client.models.length === 0) {
+    if (!client.models.length) {
         return;
     }
+
     // Generate a file with all models
     const results: string[] = [];
     for (const model of client.models) {
