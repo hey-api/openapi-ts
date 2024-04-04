@@ -13,8 +13,8 @@ hero:
       text: View on GitHub
       link: https://github.com/hey-api/openapi-ts
   image:
-    src: /wave.png
-    alt: wave
+    src: /logo.png
+    alt: logo
 
 features:
   - title: Full Support
