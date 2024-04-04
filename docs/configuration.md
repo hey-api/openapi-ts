@@ -5,7 +5,20 @@ description: Configure openapi-ts.
 
 # Configuration
 
-`openapi-ts` supports loading configuration from a file inside your project root directory. You can either create a `openapi-ts.config.cjs` file
+`openapi-ts` supports loading configuration from a file inside your project root directory. Your configuration can be in many formats (as supported by [c12](https://github.com/unjs/c12)). Here are some example configs:
+
+`openapi-ts.config.ts`
+
+```ts
+import { defineConfig } from '@hey-api/openapi-ts'
+
+export default defineConfig({
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+})
+```
+
+`openapi-ts.config.cjs`
 
 ```js
 /** @type {import('@hey-api/openapi-ts').UserConfig} */
@@ -15,7 +28,7 @@ module.exports = {
 }
 ```
 
-or `openapi-ts.config.mjs`
+`openapi-ts.config.mjs`
 
 ```js
 /** @type {import('@hey-api/openapi-ts').UserConfig} */
