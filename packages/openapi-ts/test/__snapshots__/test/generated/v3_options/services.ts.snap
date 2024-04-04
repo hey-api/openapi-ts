@@ -90,7 +90,7 @@ export class DefaultsService {
      * @throws ApiError
      */
     public static callWithDefaultParameters(
-        data: DefaultsData.CallWithDefaultParameters = {}
+        data: DefaultsData['CallWithDefaultParameters'] = {}
     ): CancelablePromise<void> {
         const {
             parameterString = 'Hello World!',
@@ -118,7 +118,7 @@ export class DefaultsService {
      * @throws ApiError
      */
     public static callWithDefaultOptionalParameters(
-        data: DefaultsData.CallWithDefaultOptionalParameters = {}
+        data: DefaultsData['CallWithDefaultOptionalParameters'] = {}
     ): CancelablePromise<void> {
         const {
             parameterString = 'Hello World!',
@@ -145,7 +145,7 @@ export class DefaultsService {
     /**
      * @throws ApiError
      */
-    public static callToTestOrderOfParams(data: DefaultsData.CallToTestOrderOfParams): CancelablePromise<void> {
+    public static callToTestOrderOfParams(data: DefaultsData['CallToTestOrderOfParams']): CancelablePromise<void> {
         const {
             parameterStringWithNoDefault,
             parameterOptionalStringWithDefault = 'Hello World!',
