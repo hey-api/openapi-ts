@@ -73,11 +73,11 @@ export type DefaultsData = {
         /**
          * This is a string with default
          */
-        parameterStringWithDefault?: string;
+        parameterStringWithDefault: string;
         /**
          * This is a string with empty default
          */
-        parameterStringWithEmptyDefault?: string;
+        parameterStringWithEmptyDefault: string;
         /**
          * This is a string with no default
          */

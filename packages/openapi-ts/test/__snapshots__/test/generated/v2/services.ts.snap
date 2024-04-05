@@ -9,10 +9,6 @@ import type {
     NonAsciiStringæøåÆØÅöôêÊ字符串,
 } from './models';
 
-export type DefaultData = {};
-
-export type SimpleData = {};
-
 export type DescriptionsData = {
     CallWithDescriptions: {
         /**
@@ -109,23 +105,23 @@ export type DefaultsData = {
         /**
          * This is a simple boolean with default value
          */
-        parameterBoolean?: boolean;
+        parameterBoolean: boolean;
         /**
          * This is a simple enum with default value
          */
-        parameterEnum?: 'Success' | 'Warning' | 'Error';
+        parameterEnum: 'Success' | 'Warning' | 'Error';
         /**
          * This is a simple model with default value
          */
-        parameterModel?: ModelWithString;
+        parameterModel: ModelWithString;
         /**
          * This is a simple number with default value
          */
-        parameterNumber?: number;
+        parameterNumber: number;
         /**
          * This is a simple string with default value
          */
-        parameterString?: string;
+        parameterString: string;
     };
     CallWithDefaultOptionalParameters: {
         /**
@@ -173,29 +169,17 @@ export type DefaultsData = {
         /**
          * This is a string with default
          */
-        parameterStringWithDefault?: string;
+        parameterStringWithDefault: string;
         /**
          * This is a string with empty default
          */
-        parameterStringWithEmptyDefault?: string;
+        parameterStringWithEmptyDefault: string;
         /**
          * This is a string with no default
          */
         parameterStringWithNoDefault: string;
     };
 };
-
-export type DuplicateData = {};
-
-export type NoContentData = {};
-
-export type ResponseData = {};
-
-export type MultipleTags1Data = {};
-
-export type MultipleTags2Data = {};
-
-export type MultipleTags3Data = {};
 
 export type CollectionFormatData = {
     CollectionFormat: {
@@ -235,7 +219,7 @@ export type TypesData = {
         /**
          * This is a boolean parameter
          */
-        parameterBoolean?: boolean;
+        parameterBoolean: boolean;
         /**
          * This is a dictionary parameter
          */
@@ -247,15 +231,15 @@ export type TypesData = {
         /**
          * This is a number parameter
          */
-        parameterNumber?: number;
+        parameterNumber: number;
         /**
          * This is an object parameter
          */
-        parameterObject?: unknown;
+        parameterObject: unknown;
         /**
          * This is a string parameter
          */
-        parameterString?: string;
+        parameterString: string;
     };
 };
 
@@ -277,8 +261,6 @@ export type ComplexData = {
         parameterReference: ModelWithString;
     };
 };
-
-export type HeaderData = {};
 
 export type ErrorData = {
     TestErrorCode: {
