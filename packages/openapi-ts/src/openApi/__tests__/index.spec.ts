@@ -23,7 +23,6 @@ describe('parse', () => {
         lint: false,
         operationId: true,
         output: '',
-        postfixModels: '',
         postfixServices: '',
         serviceResponse: 'body',
         useDateType: false,
