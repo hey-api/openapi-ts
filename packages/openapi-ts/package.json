@@ -59,9 +59,6 @@
     "engines": {
         "node": "^18.0.0 || >=20.0.0"
     },
-    "peerDependencies": {
-        "typescript": "^5.x"
-    },
     "dependencies": {
         "@apidevtools/json-schema-ref-parser": "11.5.4",
         "c12": "1.10.0",
