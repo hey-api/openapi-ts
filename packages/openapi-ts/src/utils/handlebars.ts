@@ -91,6 +91,9 @@ const escapeComment = (value: string) =>
         .replace(/\/\*/g, '*')
         .replace(/\r?\n(.*)/g, (_, w) => `${EOL} * ${w.trim()}`);
 
+export const escapeDescription = (value: string) =>
+    value.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\${/g, '\\${');
+
 const dataDestructure = (config: Config, operation: Operation) => {
     if (config.name) {
         if (config.useOptions) {
@@ -260,10 +263,7 @@ export const registerHandlebarHelpers = (config: Config, client: Client): void =
     );
 
     Handlebars.registerHelper('escapeComment', escapeComment);
-
-    Handlebars.registerHelper('escapeDescription', function (value: string) {
-        return value.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\${/g, '\\${');
-    });
+    Handlebars.registerHelper('escapeDescription', escapeDescription);
 
     Handlebars.registerHelper('escapeNewline', function (value: string) {
         return value.replace(/\n/g, '\\n');
