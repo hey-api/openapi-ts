@@ -8,7 +8,11 @@ export const CONFIG = {
 };
 
 const printer = ts.createPrinter({ newLine: CONFIG.newLine });
-const blankSourceFile = ts.createSourceFile('', '', CONFIG.scriptTarget, undefined, CONFIG.scriptKind);
+
+export const createSourceFile = (sourceText: string) =>
+    ts.createSourceFile('', sourceText, CONFIG.scriptTarget, undefined, CONFIG.scriptKind);
+
+const blankSourceFile = createSourceFile('');
 
 /**
  * Print a typescript node to a string.
