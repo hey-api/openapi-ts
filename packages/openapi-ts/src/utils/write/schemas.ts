@@ -8,7 +8,7 @@ import type { Model } from '../../openApi';
 import type { Client } from '../../types/client';
 import type { Config } from '../../types/config';
 import { enumValue } from '../enum';
-import { escapeDescription, type Templates } from '../handlebars';
+import { escapeDescription, escapeNewline, type Templates } from '../handlebars';
 
 const valueToIdentifier = (value: string | ts.ObjectLiteralExpression) => {
     if (typeof value !== 'string') {
@@ -35,21 +35,14 @@ const arraySchema = (config: Config, model: Model) => {
     if (model.link) {
         properties = addObjectProperty(properties, 'contains', modelToJsonSchema(config, model.link));
     } else {
-        properties = addObjectProperty(
-            properties,
-            'contains',
-            `{
-                type: '${model.base}',
-            }`
-        );
+        let props: ts.PropertyAssignment[] = [];
+        props = addObjectProperty(props, 'type', `'${model.base}'`);
+        const obj = ts.factory.createObjectLiteralExpression(props, true);
+        properties = addObjectProperty(properties, 'contains', obj);
     }
 
     if (model.default !== undefined) {
         properties = addObjectProperty(properties, 'default', String(model.default));
-    }
-
-    if (model.isNullable) {
-        properties = addObjectProperty(properties, 'isNullable', 'true');
     }
 
     if (model.isReadOnly) {
@@ -60,7 +53,11 @@ const arraySchema = (config: Config, model: Model) => {
         properties = addObjectProperty(properties, 'isRequired', 'true');
     }
 
-    return ts.factory.createObjectLiteralExpression(properties);
+    if (model.isNullable) {
+        properties = addObjectProperty(properties, 'isNullable', 'true');
+    }
+
+    return ts.factory.createObjectLiteralExpression(properties, true);
 };
 
 const compositionSchema = (config: Config, model: Model) => {
@@ -70,20 +67,14 @@ const compositionSchema = (config: Config, model: Model) => {
         properties = addObjectProperty(properties, 'description', `\`${escapeDescription(model.description)}\``);
     }
 
-    if (model.properties.length) {
-        properties = addObjectProperty(
-            properties,
-            'contains',
-            model.properties.map(property => modelToJsonSchema(config, property))
-        );
-    }
+    properties = addObjectProperty(
+        properties,
+        'contains',
+        model.properties.map(property => modelToJsonSchema(config, property))
+    );
 
     if (model.default !== undefined) {
         properties = addObjectProperty(properties, 'default', String(model.default));
-    }
-
-    if (model.isNullable) {
-        properties = addObjectProperty(properties, 'isNullable', 'true');
     }
 
     if (model.isReadOnly) {
@@ -94,7 +85,11 @@ const compositionSchema = (config: Config, model: Model) => {
         properties = addObjectProperty(properties, 'isRequired', 'true');
     }
 
-    return ts.factory.createObjectLiteralExpression(properties);
+    if (model.isNullable) {
+        properties = addObjectProperty(properties, 'isNullable', 'true');
+    }
+
+    return ts.factory.createObjectLiteralExpression(properties, true);
 };
 
 const dictSchema = (config: Config, model: Model) => {
@@ -103,21 +98,14 @@ const dictSchema = (config: Config, model: Model) => {
     if (model.link) {
         properties = addObjectProperty(properties, 'contains', modelToJsonSchema(config, model.link));
     } else {
-        properties = addObjectProperty(
-            properties,
-            'contains',
-            `{
-                type: '${model.base}',
-            }`
-        );
+        let props: ts.PropertyAssignment[] = [];
+        props = addObjectProperty(props, 'type', `'${model.base}'`);
+        const obj = ts.factory.createObjectLiteralExpression(props, true);
+        properties = addObjectProperty(properties, 'contains', obj);
     }
 
     if (model.default !== undefined) {
         properties = addObjectProperty(properties, 'default', String(model.default));
-    }
-
-    if (model.isNullable) {
-        properties = addObjectProperty(properties, 'isNullable', 'true');
     }
 
     if (model.isReadOnly) {
@@ -128,7 +116,11 @@ const dictSchema = (config: Config, model: Model) => {
         properties = addObjectProperty(properties, 'isRequired', 'true');
     }
 
-    return ts.factory.createObjectLiteralExpression(properties);
+    if (model.isNullable) {
+        properties = addObjectProperty(properties, 'isNullable', 'true');
+    }
+
+    return ts.factory.createObjectLiteralExpression(properties, true);
 };
 
 const enumSchema = (config: Config, model: Model) => {
@@ -146,8 +138,34 @@ const enumSchema = (config: Config, model: Model) => {
         properties = addObjectProperty(properties, 'default', String(model.default));
     }
 
+    if (model.isReadOnly) {
+        properties = addObjectProperty(properties, 'isReadOnly', 'true');
+    }
+
+    if (model.isRequired) {
+        properties = addObjectProperty(properties, 'isRequired', 'true');
+    }
+
     if (model.isNullable) {
         properties = addObjectProperty(properties, 'isNullable', 'true');
+    }
+
+    return ts.factory.createObjectLiteralExpression(properties, true);
+};
+
+const genericSchema = (config: Config, model: Model) => {
+    let properties: ts.PropertyAssignment[] = [];
+
+    if (model.type) {
+        properties = addObjectProperty(properties, 'type', `'${model.type}'`);
+    }
+
+    if (model.description) {
+        properties = addObjectProperty(properties, 'description', `\`${escapeDescription(model.description)}\``);
+    }
+
+    if (model.default !== undefined) {
+        properties = addObjectProperty(properties, 'default', String(model.default));
     }
 
     if (model.isReadOnly) {
@@ -158,7 +176,67 @@ const enumSchema = (config: Config, model: Model) => {
         properties = addObjectProperty(properties, 'isRequired', 'true');
     }
 
-    return ts.factory.createObjectLiteralExpression(properties);
+    if (model.isNullable) {
+        properties = addObjectProperty(properties, 'isNullable', 'true');
+    }
+
+    if (model.format) {
+        properties = addObjectProperty(properties, 'format', `'${model.format}'`);
+    }
+
+    if (model.maximum !== undefined && model.maximum !== null) {
+        properties = addObjectProperty(properties, 'maximum', String(model.maximum));
+    }
+
+    if (model.exclusiveMaximum !== undefined && model.exclusiveMaximum !== null) {
+        properties = addObjectProperty(properties, 'exclusiveMaximum', String(model.exclusiveMaximum));
+    }
+
+    if (model.minimum !== undefined && model.minimum !== null) {
+        properties = addObjectProperty(properties, 'minimum', String(model.minimum));
+    }
+
+    if (model.exclusiveMinimum !== undefined && model.exclusiveMinimum !== null) {
+        properties = addObjectProperty(properties, 'exclusiveMinimum', String(model.exclusiveMinimum));
+    }
+
+    if (model.multipleOf !== undefined && model.multipleOf !== null) {
+        properties = addObjectProperty(properties, 'multipleOf', String(model.multipleOf));
+    }
+
+    if (model.maxLength !== undefined && model.maxLength !== null) {
+        properties = addObjectProperty(properties, 'maxLength', String(model.maxLength));
+    }
+
+    if (model.minLength !== undefined && model.minLength !== null) {
+        properties = addObjectProperty(properties, 'minLength', String(model.minLength));
+    }
+
+    if (model.pattern) {
+        properties = addObjectProperty(properties, 'pattern', `'${escapeNewline(model.pattern)}'`);
+    }
+
+    if (model.maxItems !== undefined && model.maxItems !== null) {
+        properties = addObjectProperty(properties, 'maxItems', String(model.maxItems));
+    }
+
+    if (model.minItems !== undefined && model.minItems !== null) {
+        properties = addObjectProperty(properties, 'minItems', String(model.minItems));
+    }
+
+    if (model.uniqueItems !== undefined && model.uniqueItems !== null) {
+        properties = addObjectProperty(properties, 'uniqueItems', String(model.uniqueItems));
+    }
+
+    if (model.maxProperties !== undefined && model.maxProperties !== null) {
+        properties = addObjectProperty(properties, 'maxProperties', String(model.maxProperties));
+    }
+
+    if (model.minProperties !== undefined && model.minProperties !== null) {
+        properties = addObjectProperty(properties, 'minProperties', String(model.minProperties));
+    }
+
+    return ts.factory.createObjectLiteralExpression(properties, true);
 };
 
 const interfaceSchema = (config: Config, model: Model) => {
@@ -174,15 +252,11 @@ const interfaceSchema = (config: Config, model: Model) => {
         .forEach(property => {
             props = addObjectProperty(props, property.name, modelToJsonSchema(config, property));
         });
-    const obj = ts.factory.createObjectLiteralExpression(props);
+    const obj = ts.factory.createObjectLiteralExpression(props, true);
     properties = addObjectProperty(properties, 'properties', obj);
 
     if (model.default !== undefined) {
         properties = addObjectProperty(properties, 'default', String(model.default));
-    }
-
-    if (model.isNullable) {
-        properties = addObjectProperty(properties, 'isNullable', 'true');
     }
 
     if (model.isReadOnly) {
@@ -193,41 +267,30 @@ const interfaceSchema = (config: Config, model: Model) => {
         properties = addObjectProperty(properties, 'isRequired', 'true');
     }
 
-    return ts.factory.createObjectLiteralExpression(properties);
+    if (model.isNullable) {
+        properties = addObjectProperty(properties, 'isNullable', 'true');
+    }
+
+    return ts.factory.createObjectLiteralExpression(properties, true);
 };
 
 const modelToJsonSchema = (config: Config, model: Model) => {
-    let jsonSchema = ts.factory.createObjectLiteralExpression([
-        ts.factory.createPropertyAssignment('firstKey', ts.factory.createStringLiteral('string expression')),
-        ts.factory.createPropertyAssignment('secondKey', ts.factory.createNumericLiteral(0)),
-    ]);
-
-    let schema = '';
     switch (model.export) {
         case 'all-of':
         case 'any-of':
         case 'one-of':
-            jsonSchema = compositionSchema(config, model);
-            break;
+            return compositionSchema(config, model);
         case 'array':
-            jsonSchema = arraySchema(config, model);
-            break;
+            return arraySchema(config, model);
         case 'dictionary':
-            jsonSchema = dictSchema(config, model);
-            break;
+            return dictSchema(config, model);
         case 'enum':
-            jsonSchema = enumSchema(config, model);
-            break;
+            return enumSchema(config, model);
         case 'interface':
-            jsonSchema = interfaceSchema(config, model);
-            break;
+            return interfaceSchema(config, model);
         default:
-            // {{>schemaGeneric}}
-            schema = 'GENERIC';
-            break;
+            return genericSchema(config, model);
     }
-
-    return jsonSchema;
 };
 
 const exportSchema = (config: Config, model: Model) => {
@@ -237,7 +300,7 @@ const exportSchema = (config: Config, model: Model) => {
         ts.factory.createVariableDeclarationList(
             [
                 ts.factory.createVariableDeclaration(
-                    ts.factory.createIdentifier(`$${model.name}_WIP`),
+                    ts.factory.createIdentifier(`$${model.name}`),
                     undefined,
                     undefined,
                     ts.factory.createAsExpression(jsonSchema, ts.factory.createTypeReferenceNode('const'))
@@ -269,12 +332,8 @@ export const writeClientSchemas = async (
     let results: string[] = [];
 
     for (const model of client.models) {
-        const resultNew = exportSchema(config, model);
-        const result = templates.exports.schema({
-            $config: config,
-            ...model,
-        });
-        results = [...results, resultNew, result];
+        const result = exportSchema(config, model);
+        results = [...results, result];
     }
 
     await writeFileSync(path.resolve(outputPath, 'schemas.ts'), results.join('\n\n'));

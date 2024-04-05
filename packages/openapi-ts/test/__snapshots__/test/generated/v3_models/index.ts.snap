@@ -1,1 +1,1 @@
-export const $CompositionWithOneOfDiscriminator_WIP = { type: "one-of", description: This is a model with one property with a 'one of' relationship where the options are not $ref, contains: (export * from './models';
+export * from './models';
