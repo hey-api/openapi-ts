@@ -17,7 +17,6 @@ export const mockTemplates: Templates = {
     },
     exports: {
         model: vi.fn().mockReturnValue('model'),
-        schema: vi.fn().mockReturnValue('schema'),
         service: vi.fn().mockReturnValue('service'),
     },
 };
