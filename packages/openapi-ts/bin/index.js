@@ -26,7 +26,6 @@ const params = program
     .option('--lint [value]', 'Process output folder with linter?')
     .option('--name <value>', 'Custom client class name')
     .option('--operationId [value]', 'Use operationd ID?')
-    .option('--postfixModels <value>', 'Model name postfix')
     .option('--postfixServices <value>', 'Service name postfix')
     .option('--request <value>', 'Path to custom request file')
     .option('--serviceResponse [value]', 'Define shape of returned value from service calls')
