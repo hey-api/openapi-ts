@@ -767,15 +767,7 @@ export class DefaultsService {
      * @throws ApiError
      */
     public callWithDefaultParameters(data: DefaultsData['CallWithDefaultParameters'] = {}): Observable<void> {
-        const {
-            parameterString = 'Hello World!',
-            parameterNumber = 123,
-            parameterBoolean = true,
-            parameterEnum = 'Success',
-            parameterModel = {
-                prop: 'Hello World!',
-            },
-        } = data;
+        const { parameterString, parameterNumber, parameterBoolean, parameterEnum, parameterModel } = data;
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/defaults',
@@ -795,15 +787,7 @@ export class DefaultsService {
     public callWithDefaultOptionalParameters(
         data: DefaultsData['CallWithDefaultOptionalParameters'] = {}
     ): Observable<void> {
-        const {
-            parameterString = 'Hello World!',
-            parameterNumber = 123,
-            parameterBoolean = true,
-            parameterEnum = 'Success',
-            parameterModel = {
-                prop: 'Hello World!',
-            },
-        } = data;
+        const { parameterString, parameterNumber, parameterBoolean, parameterEnum, parameterModel } = data;
         return __request(OpenAPI, this.http, {
             method: 'POST',
             url: '/api/v{api-version}/defaults',
@@ -823,13 +807,13 @@ export class DefaultsService {
     public callToTestOrderOfParams(data: DefaultsData['CallToTestOrderOfParams']): Observable<void> {
         const {
             parameterStringWithNoDefault,
-            parameterOptionalStringWithDefault = 'Hello World!',
-            parameterOptionalStringWithEmptyDefault = '',
+            parameterOptionalStringWithDefault,
+            parameterOptionalStringWithEmptyDefault,
             parameterOptionalStringWithNoDefault,
-            parameterStringWithDefault = 'Hello World!',
-            parameterStringWithEmptyDefault = '',
+            parameterStringWithDefault,
+            parameterStringWithEmptyDefault,
             parameterStringNullableWithNoDefault,
-            parameterStringNullableWithDefault = null,
+            parameterStringNullableWithDefault,
         } = data;
         return __request(OpenAPI, this.http, {
             method: 'PUT',
@@ -1119,10 +1103,10 @@ export class TypesService {
             parameterArray,
             parameterDictionary,
             parameterEnum,
-            parameterNumber = 123,
-            parameterString = 'default',
-            parameterBoolean = true,
-            parameterObject = null,
+            parameterNumber,
+            parameterString,
+            parameterBoolean,
+            parameterObject,
             id,
         } = data;
         return __request(OpenAPI, this.http, {
