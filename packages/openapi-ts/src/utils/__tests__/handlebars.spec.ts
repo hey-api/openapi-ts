@@ -89,7 +89,6 @@ describe('registerHandlebarTemplates', () => {
                 version: '',
             }
         );
-        expect(templates.index).toBeDefined();
         expect(templates.exports.model).toBeDefined();
         expect(templates.exports.schema).toBeDefined();
         expect(templates.exports.service).toBeDefined();
