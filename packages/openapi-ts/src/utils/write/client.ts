@@ -81,6 +81,6 @@ export const writeClient = async (client: Client, templates: Templates, config: 
     }
 
     if (sections.some(section => section.enabled)) {
-        await writeClientIndex(client, templates, config.output, config);
+        await writeClientIndex(client, config.output, config);
     }
 };
