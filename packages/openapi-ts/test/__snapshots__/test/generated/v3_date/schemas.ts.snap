@@ -1,3 +1,5 @@
+export const $ModelWithPattern_WIP = INTERFACE as const;
+
 export const $ModelWithPattern = {
     description: `This is a model that contains a some patterns`,
     properties: {
