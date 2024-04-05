@@ -49,7 +49,6 @@ import xhrGetResponseHeader from '../templates/core/xhr/getResponseHeader.hbs';
 import xhrRequest from '../templates/core/xhr/request.hbs';
 import xhrSendRequest from '../templates/core/xhr/sendRequest.hbs';
 import templateExportModel from '../templates/exportModel.hbs';
-import templateExportSchema from '../templates/exportSchema.hbs';
 import templateExportService from '../templates/exportService.hbs';
 import partialBase from '../templates/partials/base.hbs';
 import partialExportComposition from '../templates/partials/exportComposition.hbs';
@@ -62,13 +61,6 @@ import partialOperationParameters from '../templates/partials/operationParameter
 import partialOperationResult from '../templates/partials/operationResult.hbs';
 import partialOperationTypes from '../templates/partials/operationTypes.hbs';
 import partialRequestConfig from '../templates/partials/requestConfig.hbs';
-import partialSchema from '../templates/partials/schema.hbs';
-import partialSchemaArray from '../templates/partials/schemaArray.hbs';
-import partialSchemaComposition from '../templates/partials/schemaComposition.hbs';
-import partialSchemaDictionary from '../templates/partials/schemaDictionary.hbs';
-import partialSchemaEnum from '../templates/partials/schemaEnum.hbs';
-import partialSchemaGeneric from '../templates/partials/schemaGeneric.hbs';
-import partialSchemaInterface from '../templates/partials/schemaInterface.hbs';
 import partialType from '../templates/partials/type.hbs';
 import partialTypeArray from '../templates/partials/typeArray.hbs';
 import partialTypeDictionary from '../templates/partials/typeDictionary.hbs';
@@ -90,6 +82,11 @@ const escapeComment = (value: string) =>
         .replace(/\*\//g, '*')
         .replace(/\/\*/g, '*')
         .replace(/\r?\n(.*)/g, (_, w) => `${EOL} * ${w.trim()}`);
+
+export const escapeDescription = (value: string) =>
+    value.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\${/g, '\\${');
+
+export const escapeNewline = (value: string) => value.replace(/\n/g, '\\n');
 
 const dataDestructure = (config: Config, operation: Operation) => {
     if (config.name) {
@@ -163,7 +160,7 @@ const dataParameters = (config: Config, parameters: OperationParameter[]) => {
     return output.join(', ');
 };
 
-const modelIsRequired = (config: Config, model: Model) => {
+export const modelIsRequired = (config: Config, model: Model) => {
     if (config.useOptions) {
         return model.isRequired ? '' : '?';
     }
@@ -260,14 +257,8 @@ export const registerHandlebarHelpers = (config: Config, client: Client): void =
     );
 
     Handlebars.registerHelper('escapeComment', escapeComment);
-
-    Handlebars.registerHelper('escapeDescription', function (value: string) {
-        return value.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\${/g, '\\${');
-    });
-
-    Handlebars.registerHelper('escapeNewline', function (value: string) {
-        return value.replace(/\n/g, '\\n');
-    });
+    Handlebars.registerHelper('escapeDescription', escapeDescription);
+    Handlebars.registerHelper('escapeNewline', escapeNewline);
 
     Handlebars.registerHelper('exactArray', function (this: unknown, model: Model, options: Handlebars.HelperOptions) {
         if (model.export === 'array' && model.maxItems && model.minItems && model.maxItems === model.minItems) {
@@ -368,7 +359,6 @@ export interface Templates {
     };
     exports: {
         model: Handlebars.TemplateDelegate;
-        schema: Handlebars.TemplateDelegate;
         service: Handlebars.TemplateDelegate;
     };
 }
@@ -396,7 +386,6 @@ export const registerHandlebarTemplates = (config: Config, client: Client): Temp
         },
         exports: {
             model: Handlebars.template(templateExportModel),
-            schema: Handlebars.template(templateExportSchema),
             service: Handlebars.template(templateExportService),
         },
     };
@@ -413,13 +402,6 @@ export const registerHandlebarTemplates = (config: Config, client: Client): Temp
     Handlebars.registerPartial('operationResult', Handlebars.template(partialOperationResult));
     Handlebars.registerPartial('operationTypes', Handlebars.template(partialOperationTypes));
     Handlebars.registerPartial('requestConfig', Handlebars.template(partialRequestConfig));
-    Handlebars.registerPartial('schema', Handlebars.template(partialSchema));
-    Handlebars.registerPartial('schemaArray', Handlebars.template(partialSchemaArray));
-    Handlebars.registerPartial('schemaComposition', Handlebars.template(partialSchemaComposition));
-    Handlebars.registerPartial('schemaDictionary', Handlebars.template(partialSchemaDictionary));
-    Handlebars.registerPartial('schemaEnum', Handlebars.template(partialSchemaEnum));
-    Handlebars.registerPartial('schemaGeneric', Handlebars.template(partialSchemaGeneric));
-    Handlebars.registerPartial('schemaInterface', Handlebars.template(partialSchemaInterface));
     Handlebars.registerPartial('type', Handlebars.template(partialType));
     Handlebars.registerPartial('typeArray', Handlebars.template(partialTypeArray));
     Handlebars.registerPartial('typeDictionary', Handlebars.template(partialTypeDictionary));

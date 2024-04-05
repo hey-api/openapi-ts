@@ -3,11 +3,11 @@ import { type PathOrFileDescriptor, writeFileSync } from 'node:fs';
 import ts from 'typescript';
 
 import * as module from './module';
-import { toString } from './utils';
+import { tsNodeToString } from './utils';
 
 export class TypeScriptFile extends Array<ts.Node> {
     public write(file: PathOrFileDescriptor) {
-        const items = this.map(i => toString(i));
+        const items = this.map(i => tsNodeToString(i));
         writeFileSync(file, items.join('\n'));
     }
 }

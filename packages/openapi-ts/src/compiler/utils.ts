@@ -15,9 +15,9 @@ const blankSourceFile = ts.createSourceFile('', '', CONFIG.scriptTarget, undefin
  * @param node - the node to print.
  * @returns string
  */
-export function toString(node: ts.Node): string {
-    const r = printer.printNode(ts.EmitHint.Unspecified, node, blankSourceFile);
-    return decodeURIComponent(r);
+export function tsNodeToString(node: ts.Node): string {
+    const result = printer.printNode(ts.EmitHint.Unspecified, node, blankSourceFile);
+    return decodeURIComponent(result);
 }
 
 // ots for openapi-ts is helpers to reduce repetition of basic ts factory functions.
