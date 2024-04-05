@@ -12,7 +12,7 @@ const arraySchema = (config: Config, model: Model) => {
     };
 
     if (model.link) {
-        properties.contains = modelToJsonSchema(config, model.link);
+        properties.contains = modelToExpression(config, model.link);
     } else {
         properties.contains = {
             type: model.base,
@@ -46,7 +46,7 @@ const compositionSchema = (config: Config, model: Model) => {
         properties.description = `\`${escapeDescription(model.description)}\``;
     }
 
-    properties.contains = model.properties.map(property => modelToJsonSchema(config, property));
+    properties.contains = model.properties.map(property => modelToExpression(config, property));
 
     if (model.default !== undefined) {
         properties.default = model.default;
@@ -73,7 +73,7 @@ const dictSchema = (config: Config, model: Model) => {
     };
 
     if (model.link) {
-        properties.contains = modelToJsonSchema(config, model.link);
+        properties.contains = modelToExpression(config, model.link);
     } else {
         properties.contains = {
             type: model.base,
@@ -222,7 +222,7 @@ const interfaceSchema = (config: Config, model: Model) => {
     model.properties
         .filter(property => property.name !== '[key: string]')
         .forEach(property => {
-            props[property.name] = modelToJsonSchema(config, property);
+            props[property.name] = modelToExpression(config, property);
         });
     properties.properties = props;
 
@@ -245,7 +245,7 @@ const interfaceSchema = (config: Config, model: Model) => {
     return properties;
 };
 
-const modelToJsonSchema = (config: Config, model: Model) => {
+const modelToExpression = (config: Config, model: Model) => {
     switch (model.export) {
         case 'all-of':
         case 'any-of':
@@ -265,7 +265,7 @@ const modelToJsonSchema = (config: Config, model: Model) => {
 };
 
 const exportSchema = (config: Config, model: Model) => {
-    const jsonSchema = modelToJsonSchema(config, model);
+    const jsonSchema = modelToExpression(config, model);
     const obj = compiler.types.object(jsonSchema);
     return compiler.export.asConst(`$${model.name}`, obj);
 };
