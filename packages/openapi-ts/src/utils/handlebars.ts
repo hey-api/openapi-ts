@@ -51,7 +51,6 @@ import xhrSendRequest from '../templates/core/xhr/sendRequest.hbs';
 import templateExportModel from '../templates/exportModel.hbs';
 import templateExportSchema from '../templates/exportSchema.hbs';
 import templateExportService from '../templates/exportService.hbs';
-import templateIndex from '../templates/index.hbs';
 import partialBase from '../templates/partials/base.hbs';
 import partialExportComposition from '../templates/partials/exportComposition.hbs';
 import partialExportEnum from '../templates/partials/exportEnum.hbs';
@@ -372,7 +371,6 @@ export interface Templates {
         schema: Handlebars.TemplateDelegate;
         service: Handlebars.TemplateDelegate;
     };
-    index: Handlebars.TemplateDelegate;
 }
 
 /**
@@ -401,7 +399,6 @@ export const registerHandlebarTemplates = (config: Config, client: Client): Temp
             schema: Handlebars.template(templateExportSchema),
             service: Handlebars.template(templateExportService),
         },
-        index: Handlebars.template(templateIndex),
     };
 
     // Partials for the generations of the models, services, etc.
