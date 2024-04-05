@@ -15,7 +15,7 @@ const blankSourceFile = ts.createSourceFile('', '', CONFIG.scriptTarget, undefin
  * @param node - the node to print.
  * @returns string
  */
-export function toString(node: ts.Node): string {
+export function tsNodeToString(node: ts.Node): string {
     const r = printer.printNode(ts.EmitHint.Unspecified, node, blankSourceFile);
     return decodeURIComponent(r);
 }

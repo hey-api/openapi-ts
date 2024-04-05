@@ -3,52 +3,102 @@ import path from 'node:path';
 
 import ts from 'typescript';
 
+import { tsNodeToString } from '../../compiler/utils';
 import type { Model } from '../../openApi';
 import type { Client } from '../../types/client';
 import type { Config } from '../../types/config';
 import { enumValue } from '../enum';
 import type { Templates } from '../handlebars';
 
-const enumSchema = (config: Config, model: Model) => {
-    let properties = [ts.factory.createPropertyAssignment('type', ts.factory.createStringLiteral('Enum'))];
+const stringToInitializer = (value: string | string[]) => {
+    const initializer = Array.isArray(value)
+        ? ts.factory.createArrayLiteralExpression(value.map(v => ts.factory.createIdentifier(v)))
+        : ts.factory.createIdentifier(value);
+    return initializer;
+};
 
-    if (model.enum.length) {
-        const property = ts.factory.createPropertyAssignment(
-            'enum',
-            ts.factory.createArrayLiteralExpression(
-                model.enum.map(enumerator => ts.factory.createIdentifier(enumValue(enumerator.value)!))
-            )
+const addObjectProperty = (
+    properties: ts.PropertyAssignment[],
+    name: string,
+    value: string | string[] | ts.ObjectLiteralExpression
+) => {
+    const initializer = !Array.isArray(value) && typeof value === 'object' ? value : stringToInitializer(value);
+    const property = ts.factory.createPropertyAssignment(name, initializer);
+    return [...properties, property];
+};
+
+const addPropDefault = (model: Model, properties: ts.PropertyAssignment[]) => {
+    if (model.default === undefined) {
+        return properties;
+    }
+    return addObjectProperty(properties, 'default', String(model.default));
+};
+
+const addPropIsNullable = (model: Model, properties: ts.PropertyAssignment[]) => {
+    if (!model.isNullable) {
+        return properties;
+    }
+    return addObjectProperty(properties, 'isNullable', 'true');
+};
+
+const addPropIsReadOnly = (model: Model, properties: ts.PropertyAssignment[]) => {
+    if (!model.isReadOnly) {
+        return properties;
+    }
+    return addObjectProperty(properties, 'isReadOnly', 'true');
+};
+
+const addPropIsRequired = (model: Model, properties: ts.PropertyAssignment[]) => {
+    if (!model.isRequired) {
+        return properties;
+    }
+    return addObjectProperty(properties, 'isRequired', 'true');
+};
+
+const dictSchema = (config: Config, model: Model) => {
+    let properties = [ts.factory.createPropertyAssignment('type', ts.factory.createStringLiteral('dictionary'))];
+
+    if (model.link) {
+        // properties = addObjectProperty(properties, 'contains', exportSchema(config, model.link));
+        properties = addObjectProperty(properties, 'contains', modelToJsonSchema(config, model.link));
+    } else {
+        properties = addObjectProperty(
+            properties,
+            'contains',
+            `{
+                type: '${model.base}',
+            }`
         );
-        properties = [...properties, property];
     }
 
-    if (model.default !== undefined) {
-        const value = ts.factory.createIdentifier(String(model.default));
-        const property = ts.factory.createPropertyAssignment('default', value);
-        properties = [...properties, property];
-    }
-
-    if (model.isReadOnly) {
-        const property = ts.factory.createPropertyAssignment('isReadOnly', ts.factory.createStringLiteral('true'));
-        properties = [...properties, property];
-    }
-    if (model.isRequired) {
-        const property = ts.factory.createPropertyAssignment('isRequired', ts.factory.createStringLiteral('true'));
-        properties = [...properties, property];
-    }
-    if (model.isNullable) {
-        const property = ts.factory.createPropertyAssignment('isNullable', ts.factory.createStringLiteral('true'));
-        properties = [...properties, property];
-    }
+    properties = addPropDefault(model, properties);
+    properties = addPropIsNullable(model, properties);
+    properties = addPropIsReadOnly(model, properties);
+    properties = addPropIsRequired(model, properties);
 
     return ts.factory.createObjectLiteralExpression(properties);
 };
 
-const exportSchema = (config: Config, model: Model) => {
-    const file = ts.createSourceFile('', '', ts.ScriptTarget.ESNext, false, ts.ScriptKind.TS);
-    const printer = ts.createPrinter({
-        newLine: ts.NewLineKind.LineFeed,
-    });
+const enumSchema = (config: Config, model: Model) => {
+    let properties = [ts.factory.createPropertyAssignment('type', ts.factory.createStringLiteral('Enum'))];
+
+    if (model.enum.length) {
+        properties = addObjectProperty(
+            properties,
+            'enum',
+            model.enum.map(enumerator => enumValue(enumerator.value)!)
+        );
+    }
+
+    properties = addPropDefault(model, properties);
+    properties = addPropIsNullable(model, properties);
+    properties = addPropIsReadOnly(model, properties);
+    properties = addPropIsRequired(model, properties);
+
+    return ts.factory.createObjectLiteralExpression(properties);
+};
+
+const modelToJsonSchema = (config: Config, model: Model) => {
     let jsonSchema = ts.factory.createObjectLiteralExpression([
         ts.factory.createPropertyAssignment('firstKey', ts.factory.createStringLiteral('string expression')),
         ts.factory.createPropertyAssignment('secondKey', ts.factory.createNumericLiteral(0)),
@@ -67,8 +117,7 @@ const exportSchema = (config: Config, model: Model) => {
             schema = 'ARR';
             break;
         case 'dictionary':
-            // {{>schemaDictionary}}
-            schema = 'DICT';
+            jsonSchema = dictSchema(config, model);
             break;
         case 'enum':
             jsonSchema = enumSchema(config, model);
@@ -83,6 +132,11 @@ const exportSchema = (config: Config, model: Model) => {
             break;
     }
 
+    return jsonSchema;
+};
+
+const exportSchema = (config: Config, model: Model) => {
+    const jsonSchema = modelToJsonSchema(config, model);
     const statement = ts.factory.createVariableStatement(
         [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
         ts.factory.createVariableDeclarationList(
@@ -97,8 +151,7 @@ const exportSchema = (config: Config, model: Model) => {
             ts.NodeFlags.Const
         )
     );
-
-    return printer.printNode(ts.EmitHint.Unspecified, statement, file);
+    return tsNodeToString(statement);
 };
 
 /**
