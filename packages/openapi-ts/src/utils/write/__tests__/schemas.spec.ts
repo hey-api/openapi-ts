@@ -59,6 +59,6 @@ describe('writeClientSchemas', () => {
             write: true,
         });
 
-        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/schemas.ts'), 'schema');
+        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/schemas.ts'), expect.stringContaining('schema'));
     });
 });

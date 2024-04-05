@@ -164,7 +164,7 @@ const dataParameters = (config: Config, parameters: OperationParameter[]) => {
     return output.join(', ');
 };
 
-const modelIsRequired = (config: Config, model: Model) => {
+export const modelIsRequired = (config: Config, model: Model) => {
     if (config.useOptions) {
         return model.isRequired ? '' : '?';
     }

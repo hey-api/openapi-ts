@@ -1,3 +1,5 @@
+export const $CommentWithBreaks_WIP = GENERIC as const;
+
 export const $CommentWithBreaks = {
     type: 'number',
     description: `Testing multiline comments in string: First line
@@ -6,60 +8,84 @@ Second line
 Fourth line`,
 } as const;
 
+export const $CommentWithBackticks_WIP = GENERIC as const;
+
 export const $CommentWithBackticks = {
     type: 'number',
     description: `Testing backticks in string: \`backticks\` and \`\`\`multiple backticks\`\`\` should work`,
 } as const;
+
+export const $CommentWithSlashes_WIP = GENERIC as const;
 
 export const $CommentWithSlashes = {
     type: 'number',
     description: `Testing slashes in string: \\backwards\\\\\\ and /forwards/// should work`,
 } as const;
 
+export const $CommentWithExpressionPlaceholders_WIP = GENERIC as const;
+
 export const $CommentWithExpressionPlaceholders = {
     type: 'number',
     description: `Testing expression placeholders in string: \${expression} should work`,
 } as const;
+
+export const $CommentWithQuotes_WIP = GENERIC as const;
 
 export const $CommentWithQuotes = {
     type: 'number',
     description: `Testing quotes in string: 'single quote''' and "double quotes""" should work`,
 } as const;
 
+export const $CommentWithReservedCharacters_WIP = GENERIC as const;
+
 export const $CommentWithReservedCharacters = {
     type: 'number',
     description: `Testing reserved characters in string: /* inline */ and /** inline **/ should work`,
 } as const;
+
+export const $SimpleInteger_WIP = GENERIC as const;
 
 export const $SimpleInteger = {
     type: 'number',
     description: `This is a simple number`,
 } as const;
 
+export const $SimpleBoolean_WIP = GENERIC as const;
+
 export const $SimpleBoolean = {
     type: 'boolean',
     description: `This is a simple boolean`,
 } as const;
+
+export const $SimpleString_WIP = GENERIC as const;
 
 export const $SimpleString = {
     type: 'string',
     description: `This is a simple string`,
 } as const;
 
+export const $NonAsciiStringæøåÆØÅöôêÊ字符串_WIP = GENERIC as const;
+
 export const $NonAsciiStringæøåÆØÅöôêÊ字符串 = {
     type: 'string',
     description: `A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)`,
 } as const;
+
+export const $SimpleFile_WIP = GENERIC as const;
 
 export const $SimpleFile = {
     type: 'binary',
     description: `This is a simple file`,
 } as const;
 
+export const $SimpleReference_WIP = GENERIC as const;
+
 export const $SimpleReference = {
     type: 'ModelWithString',
     description: `This is a simple reference`,
 } as const;
+
+export const $SimpleStringWithPattern_WIP = GENERIC as const;
 
 export const $SimpleStringWithPattern = {
     type: 'string',
@@ -68,9 +94,19 @@ export const $SimpleStringWithPattern = {
     pattern: '^[a-zA-Z0-9_]*$',
 } as const;
 
+export const $EnumWithStrings_WIP = {
+    type: 'Enum',
+    enum: ['Success', 'Warning', 'Error', "'Single Quote'", '"Double Quotes"', 'Non-ascii: øæåôöØÆÅÔÖ字符串'],
+} as const;
+
 export const $EnumWithStrings = {
     type: 'Enum',
     enum: ['Success', 'Warning', 'Error', "'Single Quote'", '"Double Quotes"', 'Non-ascii: øæåôöØÆÅÔÖ字符串'],
+} as const;
+
+export const $EnumWithNumbers_WIP = {
+    type: 'Enum',
+    enum: [1, 2, 3, 1.1, 1.2, 1.3, 100, 200, 300, -100, -200, -300, -1.1, -1.2, -1.3],
 } as const;
 
 export const $EnumWithNumbers = {
@@ -78,15 +114,24 @@ export const $EnumWithNumbers = {
     enum: [1, 2, 3, 1.1, 1.2, 1.3, 100, 200, 300, -100, -200, -300, -1.1, -1.2, -1.3],
 } as const;
 
+export const $EnumFromDescription_WIP = GENERIC as const;
+
 export const $EnumFromDescription = {
     type: 'number',
     description: `Success=1,Warning=2,Error=3`,
+} as const;
+
+export const $EnumWithExtensions_WIP = {
+    type: 'Enum',
+    enum: [200, 400, 500],
 } as const;
 
 export const $EnumWithExtensions = {
     type: 'Enum',
     enum: [200, 400, 500],
 } as const;
+
+export const $ArrayWithNumbers_WIP = ARR as const;
 
 export const $ArrayWithNumbers = {
     type: 'array',
@@ -95,12 +140,16 @@ export const $ArrayWithNumbers = {
     },
 } as const;
 
+export const $ArrayWithBooleans_WIP = ARR as const;
+
 export const $ArrayWithBooleans = {
     type: 'array',
     contains: {
         type: 'boolean',
     },
 } as const;
+
+export const $ArrayWithStrings_WIP = ARR as const;
 
 export const $ArrayWithStrings = {
     type: 'array',
@@ -109,12 +158,16 @@ export const $ArrayWithStrings = {
     },
 } as const;
 
+export const $ArrayWithReferences_WIP = ARR as const;
+
 export const $ArrayWithReferences = {
     type: 'array',
     contains: {
         type: 'ModelWithString',
     },
 } as const;
+
+export const $ArrayWithArray_WIP = ARR as const;
 
 export const $ArrayWithArray = {
     type: 'array',
@@ -125,6 +178,8 @@ export const $ArrayWithArray = {
         },
     },
 } as const;
+
+export const $ArrayWithProperties_WIP = ARR as const;
 
 export const $ArrayWithProperties = {
     type: 'array',
@@ -140,6 +195,8 @@ export const $ArrayWithProperties = {
     },
 } as const;
 
+export const $DictionaryWithString_WIP = DICT as const;
+
 export const $DictionaryWithString = {
     type: 'dictionary',
     contains: {
@@ -147,12 +204,16 @@ export const $DictionaryWithString = {
     },
 } as const;
 
+export const $DictionaryWithReference_WIP = DICT as const;
+
 export const $DictionaryWithReference = {
     type: 'dictionary',
     contains: {
         type: 'ModelWithString',
     },
 } as const;
+
+export const $DictionaryWithArray_WIP = DICT as const;
 
 export const $DictionaryWithArray = {
     type: 'dictionary',
@@ -164,6 +225,8 @@ export const $DictionaryWithArray = {
     },
 } as const;
 
+export const $DictionaryWithDictionary_WIP = DICT as const;
+
 export const $DictionaryWithDictionary = {
     type: 'dictionary',
     contains: {
@@ -173,6 +236,8 @@ export const $DictionaryWithDictionary = {
         },
     },
 } as const;
+
+export const $DictionaryWithProperties_WIP = DICT as const;
 
 export const $DictionaryWithProperties = {
     type: 'dictionary',
@@ -188,10 +253,14 @@ export const $DictionaryWithProperties = {
     },
 } as const;
 
+export const $Date_WIP = GENERIC as const;
+
 export const $Date = {
     type: 'string',
     description: `This is a type-only model that defines Date as a string`,
 } as const;
+
+export const $ModelWithInteger_WIP = INTERFACE as const;
 
 export const $ModelWithInteger = {
     description: `This is a model with one number property`,
@@ -203,6 +272,8 @@ export const $ModelWithInteger = {
     },
 } as const;
 
+export const $ModelWithBoolean_WIP = INTERFACE as const;
+
 export const $ModelWithBoolean = {
     description: `This is a model with one boolean property`,
     properties: {
@@ -213,6 +284,8 @@ export const $ModelWithBoolean = {
     },
 } as const;
 
+export const $ModelWithString_WIP = INTERFACE as const;
+
 export const $ModelWithString = {
     description: `This is a model with one string property`,
     properties: {
@@ -222,6 +295,8 @@ export const $ModelWithString = {
         },
     },
 } as const;
+
+export const $ModelWithNullableString_WIP = INTERFACE as const;
 
 export const $ModelWithNullableString = {
     description: `This is a model with one string property`,
@@ -239,6 +314,8 @@ export const $ModelWithNullableString = {
         },
     },
 } as const;
+
+export const $ModelWithEnum_WIP = INTERFACE as const;
 
 export const $ModelWithEnum = {
     description: `This is a model with one enum`,
@@ -258,6 +335,8 @@ export const $ModelWithEnum = {
     },
 } as const;
 
+export const $ModelWithEnumFromDescription_WIP = INTERFACE as const;
+
 export const $ModelWithEnumFromDescription = {
     description: `This is a model with one enum`,
     properties: {
@@ -267,6 +346,8 @@ export const $ModelWithEnumFromDescription = {
         },
     },
 } as const;
+
+export const $ModelWithNestedEnums_WIP = INTERFACE as const;
 
 export const $ModelWithNestedEnums = {
     description: `This is a model with nested enums`,
@@ -302,6 +383,8 @@ export const $ModelWithNestedEnums = {
     },
 } as const;
 
+export const $ModelWithReference_WIP = INTERFACE as const;
+
 export const $ModelWithReference = {
     description: `This is a model with one property containing a reference`,
     properties: {
@@ -310,6 +393,8 @@ export const $ModelWithReference = {
         },
     },
 } as const;
+
+export const $ModelWithArray_WIP = INTERFACE as const;
 
 export const $ModelWithArray = {
     description: `This is a model with one property containing an array`,
@@ -335,6 +420,8 @@ export const $ModelWithArray = {
     },
 } as const;
 
+export const $ModelWithDictionary_WIP = INTERFACE as const;
+
 export const $ModelWithDictionary = {
     description: `This is a model with one property containing a dictionary`,
     properties: {
@@ -347,6 +434,8 @@ export const $ModelWithDictionary = {
     },
 } as const;
 
+export const $ModelWithCircularReference_WIP = INTERFACE as const;
+
 export const $ModelWithCircularReference = {
     description: `This is a model with one property containing a circular reference`,
     properties: {
@@ -355,6 +444,8 @@ export const $ModelWithCircularReference = {
         },
     },
 } as const;
+
+export const $ModelWithProperties_WIP = INTERFACE as const;
 
 export const $ModelWithProperties = {
     description: `This is a model with one nested property`,
@@ -400,6 +491,8 @@ export const $ModelWithProperties = {
     },
 } as const;
 
+export const $ModelWithNestedProperties_WIP = INTERFACE as const;
+
 export const $ModelWithNestedProperties = {
     description: `This is a model with one nested property`,
     properties: {
@@ -423,6 +516,8 @@ export const $ModelWithNestedProperties = {
     },
 } as const;
 
+export const $ModelWithDuplicateProperties_WIP = INTERFACE as const;
+
 export const $ModelWithDuplicateProperties = {
     description: `This is a model with duplicated properties`,
     properties: {
@@ -431,6 +526,8 @@ export const $ModelWithDuplicateProperties = {
         },
     },
 } as const;
+
+export const $ModelWithOrderedProperties_WIP = INTERFACE as const;
 
 export const $ModelWithOrderedProperties = {
     description: `This is a model with ordered properties`,
@@ -447,6 +544,8 @@ export const $ModelWithOrderedProperties = {
     },
 } as const;
 
+export const $ModelWithDuplicateImports_WIP = INTERFACE as const;
+
 export const $ModelWithDuplicateImports = {
     description: `This is a model with duplicated imports`,
     properties: {
@@ -461,6 +560,8 @@ export const $ModelWithDuplicateImports = {
         },
     },
 } as const;
+
+export const $ModelThatExtends_WIP = COMP as const;
 
 export const $ModelThatExtends = {
     type: 'all-of',
@@ -481,6 +582,8 @@ export const $ModelThatExtends = {
         },
     ],
 } as const;
+
+export const $ModelThatExtendsExtends_WIP = COMP as const;
 
 export const $ModelThatExtendsExtends = {
     type: 'all-of',
@@ -505,6 +608,8 @@ export const $ModelThatExtendsExtends = {
     ],
 } as const;
 
+export const $_default_WIP = INTERFACE as const;
+
 export const $_default = {
     properties: {
         name: {
@@ -512,6 +617,8 @@ export const $_default = {
         },
     },
 } as const;
+
+export const $ModelWithPattern_WIP = INTERFACE as const;
 
 export const $ModelWithPattern = {
     description: `This is a model that contains a some patterns`,

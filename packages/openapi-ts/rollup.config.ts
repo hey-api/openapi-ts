@@ -70,7 +70,7 @@ const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url)).
 
 function createConfig(isProduction: boolean) {
     return defineConfig({
-        external: [...Object.keys(pkg.dependencies)],
+        external: [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies)],
         input: path.resolve(__dirname, 'src/node/index.ts'),
         output: {
             file: path.resolve(__dirname, 'dist/node/index.js'),
