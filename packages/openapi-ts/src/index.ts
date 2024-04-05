@@ -102,7 +102,6 @@ const getConfig = async (userConfig: UserConfig, dependencies: Dependencies) => 
         lint = false,
         name,
         operationId = true,
-        postfixModels = '',
         postfixServices = 'Service',
         request,
         serviceResponse = 'body',
@@ -125,12 +124,6 @@ const getConfig = async (userConfig: UserConfig, dependencies: Dependencies) => 
 
     if (!isSubDirectory(process.cwd(), userConfig.output)) {
         throw new Error('🚫 output must be within the current working directory');
-    }
-
-    if (postfixModels) {
-        console.warn(
-            '⚠️ Deprecation warning: postfixModels. This setting will be removed in future versions. Please create an issue wih your use case if you need this option https://github.com/hey-api/openapi-ts/issues'
-        );
     }
 
     if (postfixServices && postfixServices !== 'Service') {
@@ -164,7 +157,6 @@ const getConfig = async (userConfig: UserConfig, dependencies: Dependencies) => 
         name,
         operationId,
         output,
-        postfixModels,
         postfixServices,
         request,
         serviceResponse,

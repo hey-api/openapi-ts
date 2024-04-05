@@ -18,7 +18,6 @@ describe('getServices', () => {
             lint: false,
             operationId: false,
             output: '',
-            postfixModels: '',
             postfixServices: 'Service',
             serviceResponse: 'body',
             useDateType: false,

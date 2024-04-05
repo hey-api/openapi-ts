@@ -32,7 +32,6 @@ describe('writeClientClass', () => {
             name: 'AppClient',
             operationId: true,
             output: '',
-            postfixModels: '',
             postfixServices: '',
             serviceResponse: 'body',
             useDateType: false,

@@ -71,11 +71,6 @@ export interface UserConfig {
      */
     output: string;
     /**
-     * Model name postfix
-     * @default '''
-     */
-    postfixModels?: string;
-    /**
      * Service name postfix
      * @default 'Service'
      */
