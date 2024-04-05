@@ -2,6 +2,7 @@ import { writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import compiler from '../../compiler';
+import { toString } from '../../compiler/utils';
 import type { Client } from '../../types/client';
 import type { Config } from '../../types/config';
 import { operationDataType, type Templates } from '../handlebars';
@@ -42,24 +43,26 @@ export const writeClientServices = async (
     // Import required packages and core files.
     const coreImports: string[] = [];
     if (config.client === 'angular') {
-        coreImports.push(compiler.import.named('Injectable', '@angular/core'));
+        coreImports.push(toString(compiler.import.named('Injectable', '@angular/core')));
         if (config.name === undefined) {
-            coreImports.push(compiler.import.named('HttpClient', '@angular/common/http'));
+            coreImports.push(toString(compiler.import.named('HttpClient', '@angular/common/http')));
         }
-        coreImports.push(compiler.import.named({ isTypeOnly: true, name: 'Observable' }, 'rxjs'));
+        coreImports.push(toString(compiler.import.named({ isTypeOnly: true, name: 'Observable' }, 'rxjs')));
     } else {
         coreImports.push(
-            compiler.import.named({ isTypeOnly: true, name: 'CancelablePromise' }, './core/CancelablePromise')
+            toString(compiler.import.named({ isTypeOnly: true, name: 'CancelablePromise' }, './core/CancelablePromise'))
         );
     }
     if (config.serviceResponse === 'response') {
-        coreImports.push(compiler.import.named({ isTypeOnly: true, name: 'ApiResult' }, './core/ApiResult'));
+        coreImports.push(toString(compiler.import.named({ isTypeOnly: true, name: 'ApiResult' }, './core/ApiResult')));
     }
     if (config.name) {
         coreImports.push(
-            compiler.import.named(
-                { isTypeOnly: config.client !== 'angular', name: 'BaseHttpRequest' },
-                './core/BaseHttpRequest'
+            toString(
+                compiler.import.named(
+                    { isTypeOnly: config.client !== 'angular', name: 'BaseHttpRequest' },
+                    './core/BaseHttpRequest'
+                )
             )
         );
     } else {
