@@ -69,6 +69,9 @@
         "commander": "12.0.0",
         "handlebars": "4.7.8"
     },
+    "peerDependencies": {
+        "typescript": "^5.x"
+    },
     "devDependencies": {
         "@angular-devkit/build-angular": "17.3.3",
         "@angular/animations": "17.3.3",
