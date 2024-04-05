@@ -38,7 +38,6 @@ describe('writeClientServices', () => {
             lint: false,
             operationId: true,
             output: '',
-            postfixModels: '',
             postfixServices: 'Service',
             serviceResponse: 'body',
             useDateType: false,

@@ -31,7 +31,6 @@ describe('writeClient', () => {
             lint: false,
             operationId: true,
             output: './dist',
-            postfixModels: 'AppClient',
             postfixServices: 'Service',
             serviceResponse: 'body',
             useDateType: false,
