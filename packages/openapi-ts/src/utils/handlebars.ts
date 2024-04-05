@@ -2,7 +2,7 @@ import camelCase from 'camelcase';
 import Handlebars from 'handlebars/runtime';
 import { EOL } from 'os';
 
-import type { Model, OperationParameter, Service } from '../openApi';
+import type { Model, Operation, OperationParameter, Service } from '../openApi';
 import templateClient from '../templates/client.hbs';
 import angularGetHeaders from '../templates/core/angular/getHeaders.hbs';
 import angularGetRequestBody from '../templates/core/angular/getRequestBody.hbs';
@@ -53,7 +53,6 @@ import templateExportSchema from '../templates/exportSchema.hbs';
 import templateExportService from '../templates/exportService.hbs';
 import templateIndex from '../templates/index.hbs';
 import partialBase from '../templates/partials/base.hbs';
-import partialDataDestructure from '../templates/partials/dataDestructure.hbs';
 import partialExportComposition from '../templates/partials/exportComposition.hbs';
 import partialExportEnum from '../templates/partials/exportEnum.hbs';
 import partialExportInterface from '../templates/partials/exportInterface.hbs';
@@ -92,6 +91,46 @@ const escapeComment = (value: string) =>
         .replace(/\*\//g, '*')
         .replace(/\/\*/g, '*')
         .replace(/\r?\n(.*)/g, (_, w) => `${EOL} * ${w.trim()}`);
+
+const dataDestructure = (config: Config, operation: Operation) => {
+    if (config.name) {
+        if (config.useOptions) {
+            if (operation.parameters.length) {
+                return `const {
+                    ${operation.parameters.map(parameter => parameter.name).join(',\n')}
+                } = data;`;
+            }
+        }
+    } else {
+        if (config.useOptions) {
+            if (config.serviceResponse !== 'generics') {
+                if (operation.parameters.length) {
+                    return `const {
+                        ${config.experimental ? 'query,' : ''}
+                        ${operation.parameters
+                            .map(parameter => {
+                                if (config.experimental) {
+                                    if (parameter.in !== 'query') {
+                                        return parameter.name;
+                                    }
+                                } else {
+                                    return parameter.name;
+                                }
+                            })
+                            .filter(Boolean)
+                            .join(',\n')}
+                    } = data;`;
+                }
+            } else {
+                return `const {
+                    ${operation.parameters.map(parameter => parameter.name).join(',\n')}
+                    ...overrides
+                } = data;`;
+            }
+        }
+    }
+    return '';
+};
 
 const dataParameters = (config: Config, parameters: OperationParameter[]) => {
     if (config.experimental) {
@@ -196,6 +235,10 @@ export const operationDataType = (config: Config, service: Service) => {
 
 export const registerHandlebarHelpers = (config: Config, client: Client): void => {
     Handlebars.registerHelper('camelCase', camelCase);
+
+    Handlebars.registerHelper('dataDestructure', function (operation: Operation) {
+        return dataDestructure(config, operation);
+    });
 
     Handlebars.registerHelper('dataParameters', function (parameters: OperationParameter[]) {
         return dataParameters(config, parameters);
@@ -363,7 +406,6 @@ export const registerHandlebarTemplates = (config: Config, client: Client): Temp
 
     // Partials for the generations of the models, services, etc.
     Handlebars.registerPartial('base', Handlebars.template(partialBase));
-    Handlebars.registerPartial('dataDestructure', Handlebars.template(partialDataDestructure));
     Handlebars.registerPartial('exportComposition', Handlebars.template(partialExportComposition));
     Handlebars.registerPartial('exportEnum', Handlebars.template(partialExportEnum));
     Handlebars.registerPartial('exportInterface', Handlebars.template(partialExportInterface));

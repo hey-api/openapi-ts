@@ -740,15 +740,7 @@ export class DefaultsService {
      * @throws ApiError
      */
     public callWithDefaultParameters(data: DefaultsData['CallWithDefaultParameters'] = {}): CancelablePromise<void> {
-        const {
-            parameterString = 'Hello World!',
-            parameterNumber = 123,
-            parameterBoolean = true,
-            parameterEnum = 'Success',
-            parameterModel = {
-                prop: 'Hello World!',
-            },
-        } = data;
+        const { parameterString, parameterNumber, parameterBoolean, parameterEnum, parameterModel } = data;
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/defaults',
@@ -768,15 +760,7 @@ export class DefaultsService {
     public callWithDefaultOptionalParameters(
         data: DefaultsData['CallWithDefaultOptionalParameters'] = {}
     ): CancelablePromise<void> {
-        const {
-            parameterString = 'Hello World!',
-            parameterNumber = 123,
-            parameterBoolean = true,
-            parameterEnum = 'Success',
-            parameterModel = {
-                prop: 'Hello World!',
-            },
-        } = data;
+        const { parameterString, parameterNumber, parameterBoolean, parameterEnum, parameterModel } = data;
         return this.httpRequest.request({
             method: 'POST',
             url: '/api/v{api-version}/defaults',
@@ -796,13 +780,13 @@ export class DefaultsService {
     public callToTestOrderOfParams(data: DefaultsData['CallToTestOrderOfParams']): CancelablePromise<void> {
         const {
             parameterStringWithNoDefault,
-            parameterOptionalStringWithDefault = 'Hello World!',
-            parameterOptionalStringWithEmptyDefault = '',
+            parameterOptionalStringWithDefault,
+            parameterOptionalStringWithEmptyDefault,
             parameterOptionalStringWithNoDefault,
-            parameterStringWithDefault = 'Hello World!',
-            parameterStringWithEmptyDefault = '',
+            parameterStringWithDefault,
+            parameterStringWithEmptyDefault,
             parameterStringNullableWithNoDefault,
-            parameterStringNullableWithDefault = null,
+            parameterStringNullableWithDefault,
         } = data;
         return this.httpRequest.request({
             method: 'PUT',
@@ -1068,10 +1052,10 @@ export class TypesService {
             parameterArray,
             parameterDictionary,
             parameterEnum,
-            parameterNumber = 123,
-            parameterString = 'default',
-            parameterBoolean = true,
-            parameterObject = null,
+            parameterNumber,
+            parameterString,
+            parameterBoolean,
+            parameterObject,
             id,
         } = data;
         return this.httpRequest.request({

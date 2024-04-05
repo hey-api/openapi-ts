@@ -92,15 +92,7 @@ export class DefaultsService {
     public static callWithDefaultParameters(
         data: DefaultsData['CallWithDefaultParameters'] = {}
     ): CancelablePromise<void> {
-        const {
-            parameterString = 'Hello World!',
-            parameterNumber = 123,
-            parameterBoolean = true,
-            parameterEnum = 'Success',
-            parameterModel = {
-                prop: 'Hello World!',
-            },
-        } = data;
+        const { parameterString, parameterNumber, parameterBoolean, parameterEnum, parameterModel } = data;
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/defaults',
@@ -120,15 +112,7 @@ export class DefaultsService {
     public static callWithDefaultOptionalParameters(
         data: DefaultsData['CallWithDefaultOptionalParameters'] = {}
     ): CancelablePromise<void> {
-        const {
-            parameterString = 'Hello World!',
-            parameterNumber = 123,
-            parameterBoolean = true,
-            parameterEnum = 'Success',
-            parameterModel = {
-                prop: 'Hello World!',
-            },
-        } = data;
+        const { parameterString, parameterNumber, parameterBoolean, parameterEnum, parameterModel } = data;
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v{api-version}/defaults',
@@ -148,13 +132,13 @@ export class DefaultsService {
     public static callToTestOrderOfParams(data: DefaultsData['CallToTestOrderOfParams']): CancelablePromise<void> {
         const {
             parameterStringWithNoDefault,
-            parameterOptionalStringWithDefault = 'Hello World!',
-            parameterOptionalStringWithEmptyDefault = '',
+            parameterOptionalStringWithDefault,
+            parameterOptionalStringWithEmptyDefault,
             parameterOptionalStringWithNoDefault,
-            parameterStringWithDefault = 'Hello World!',
-            parameterStringWithEmptyDefault = '',
+            parameterStringWithDefault,
+            parameterStringWithEmptyDefault,
             parameterStringNullableWithNoDefault,
-            parameterStringNullableWithDefault = null,
+            parameterStringNullableWithDefault,
         } = data;
         return __request(OpenAPI, {
             method: 'PUT',

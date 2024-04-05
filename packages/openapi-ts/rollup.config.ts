@@ -24,6 +24,7 @@ export function handlebarsPlugin(): Plugin {
                 const templateSpec = handlebars.precompile(template, {
                     knownHelpers: {
                         camelCase: true,
+                        dataDestructure: true,
                         dataParameters: true,
                         enumKey: true,
                         enumName: true,
