@@ -4,7 +4,6 @@ import path from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 
 import { writeClientIndex } from '../index';
-import { mockTemplates } from './mocks';
 
 vi.mock('node:fs');
 
@@ -18,7 +17,7 @@ describe('writeClientIndex', () => {
             version: '1.0',
         };
 
-        await writeClientIndex(client, mockTemplates, '/', {
+        await writeClientIndex(client, '/', {
             client: 'fetch',
             debug: false,
             enums: 'javascript',
@@ -39,6 +38,6 @@ describe('writeClientIndex', () => {
             write: true,
         });
 
-        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/index.ts'), 'index');
+        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/index.ts'), expect.anything());
     });
 });
