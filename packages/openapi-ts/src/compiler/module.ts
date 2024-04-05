@@ -1,6 +1,6 @@
 import ts from 'typescript';
 
-import { CONFIG } from './utils';
+import { ots } from './utils';
 
 /**
  * Create export all declaration. Example: `export * from './y'`
@@ -8,12 +8,7 @@ import { CONFIG } from './utils';
  * @returns ts.ExportDeclaration
  */
 export const createExportAllDeclaration = (module: string) =>
-    ts.factory.createExportDeclaration(
-        undefined,
-        false,
-        undefined,
-        ts.factory.createStringLiteral(encodeURIComponent(module))
-    );
+    ts.factory.createExportDeclaration(undefined, false, undefined, ots.string(module));
 
 type ImportItem = { name: string; isTypeOnly?: boolean } | string;
 
@@ -35,14 +30,10 @@ export const createNamedExportDeclarations = (
         ts.factory.createNamedExports(
             items.map(item => {
                 const { name, isTypeOnly = undefined } = typeof item === 'string' ? { name: item } : item;
-                return ts.factory.createExportSpecifier(
-                    isAllTypes ? false : Boolean(isTypeOnly),
-                    undefined,
-                    encodeURIComponent(name)
-                );
+                return ots.export(name, isAllTypes ? false : Boolean(isTypeOnly));
             })
         ),
-        ts.factory.createStringLiteral(encodeURIComponent(module), CONFIG.useSingleQuotes)
+        ots.string(module)
     );
 };
 
@@ -66,14 +57,10 @@ export const createNamedImportDeclarations = (
             ts.factory.createNamedImports(
                 items.map(item => {
                     const { name, isTypeOnly = undefined } = typeof item === 'string' ? { name: item } : item;
-                    return ts.factory.createImportSpecifier(
-                        isAllTypes ? false : Boolean(isTypeOnly),
-                        undefined,
-                        ts.factory.createIdentifier(encodeURIComponent(name))
-                    );
+                    return ots.import(name, isAllTypes ? false : Boolean(isTypeOnly));
                 })
             )
         ),
-        ts.factory.createStringLiteral(encodeURIComponent(module), CONFIG.useSingleQuotes)
+        ots.string(module)
     );
 };
