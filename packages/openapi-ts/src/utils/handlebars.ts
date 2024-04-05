@@ -60,7 +60,6 @@ import partialExportInterface from '../templates/partials/exportInterface.hbs';
 import partialExportType from '../templates/partials/exportType.hbs';
 import partialIsNullable from '../templates/partials/isNullable.hbs';
 import partialIsReadOnly from '../templates/partials/isReadOnly.hbs';
-import partialIsRequired from '../templates/partials/isRequired.hbs';
 import partialOperationParameters from '../templates/partials/operationParameters.hbs';
 import partialOperationResult from '../templates/partials/operationResult.hbs';
 import partialOperationTypes from '../templates/partials/operationTypes.hbs';
@@ -126,8 +125,12 @@ const dataParameters = (config: Config, parameters: OperationParameter[]) => {
     return output.join(', ');
 };
 
-// same as `>isRequired` partial
-const isRequired = (model: Pick<Model, 'default' | 'isRequired'>) => (model.isRequired && !model.default ? '' : '?');
+const modelIsRequired = (config: Config, model: Model) => {
+    if (config.useOptions) {
+        return model.isRequired ? '' : '?';
+    }
+    return !model.isRequired && !model.default ? '?' : '';
+};
 
 const nameOperationDataType = (service: Service, operation: Service['operations'][number]) => {
     const namespace = `${camelCase(service.name, { pascalCase: true })}Data`;
@@ -136,14 +139,14 @@ const nameOperationDataType = (service: Service, operation: Service['operations'
 };
 
 export const operationDataType = (config: Config, service: Service) => {
-    if (!config.useOptions) {
+    const operationsWithParameters = service.operations.filter(operation => operation.parameters.length);
+    if (!config.useOptions || !operationsWithParameters.length) {
         return '';
     }
     const partialType = Handlebars.partials['type'];
     const namespace = `${camelCase(service.name, { pascalCase: true })}Data`;
     const output = `export type ${namespace} = {
-        ${service.operations
-            .filter(operation => operation.parameters.length)
+        ${operationsWithParameters
             .map(
                 operation => `${camelCase(operation.name, { pascalCase: true })}: {
                     ${sortByName(operation.parameters)
@@ -160,7 +163,7 @@ export const operationDataType = (config: Config, service: Service) => {
                             }
                             return [
                                 ...comment,
-                                `${parameter.name + isRequired(parameter)}: ${partialType({ $config: config, ...parameter })}`,
+                                `${parameter.name + modelIsRequired(config, parameter)}: ${partialType({ $config: config, ...parameter })}`,
                             ].join('\n');
                         })
                         .join('\n')}
@@ -176,7 +179,7 @@ export const operationDataType = (config: Config, service: Service) => {
                                 }
                                 return [
                                     ...comment,
-                                    `${parameter.name + isRequired(parameter)}: ${partialType({ $config: config, ...parameter })}`,
+                                    `${parameter.name + modelIsRequired(config, parameter)}: ${partialType({ $config: config, ...parameter })}`,
                                 ].join('\n');
                             })
                             .join('\n')}
@@ -269,6 +272,10 @@ export const registerHandlebarHelpers = (config: Config, client: Client): void =
             return options.fn(uniqueTypesString);
         }
     );
+
+    Handlebars.registerHelper('modelIsRequired', function (model: Model) {
+        return modelIsRequired(config, model);
+    });
 
     Handlebars.registerHelper(
         'modelUnionType',
@@ -363,7 +370,6 @@ export const registerHandlebarTemplates = (config: Config, client: Client): Temp
     Handlebars.registerPartial('exportType', Handlebars.template(partialExportType));
     Handlebars.registerPartial('isNullable', Handlebars.template(partialIsNullable));
     Handlebars.registerPartial('isReadOnly', Handlebars.template(partialIsReadOnly));
-    Handlebars.registerPartial('isRequired', Handlebars.template(partialIsRequired));
     Handlebars.registerPartial('operationParameters', Handlebars.template(partialOperationParameters));
     Handlebars.registerPartial('operationResult', Handlebars.template(partialOperationResult));
     Handlebars.registerPartial('operationTypes', Handlebars.template(partialOperationTypes));

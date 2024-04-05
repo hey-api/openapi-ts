@@ -20,7 +20,7 @@ export type {{{name}}} = {
 	{{/if}}
 	 */
 	{{/ifdef}}
-	{{>isReadOnly}}{{{name}}}{{>isRequired}}: {{>type parent=../name}};
+	{{>isReadOnly}}{{{name}}}{{{modelIsRequired this}}}: {{>type parent=../name}};
 	{{/each}}
 }{{>isNullable}};
 
