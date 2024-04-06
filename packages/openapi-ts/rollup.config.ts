@@ -35,6 +35,8 @@ export function handlebarsPlugin(): Plugin {
                         escapeDescription: true,
                         escapeNewline: true,
                         exactArray: true,
+                        getDefaultPrintable: true,
+                        hasDefault: true,
                         ifNotNullNotUndefined: true,
                         ifOperationDataOptional: true,
                         ifdef: true,
