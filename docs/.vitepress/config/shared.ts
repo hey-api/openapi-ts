@@ -14,6 +14,8 @@ export default defineConfig({
         ['meta', { property: 'og:site_name', content: 'OpenAPI TypeScript' }],
         ['meta', { property: 'og:image', content: '/logo.png' }],
         ['meta', { property: 'og:url', content: 'https://heyapi.vercel.app' }],
+        ['script', {}, 'window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };'],
+        ['script', { defer: '', src: '/_vercel/insights/script.js' }],
     ],
     themeConfig: {
         logo: '/logo.png',
