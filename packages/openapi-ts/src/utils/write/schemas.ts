@@ -1,277 +1,248 @@
-import { writeFileSync } from 'node:fs';
 import path from 'node:path';
 
-import ts from 'typescript';
-
-import { tsNodeToString } from '../../compiler/utils';
+import compiler, { TypeScriptFile } from '../../compiler';
 import type { Model } from '../../openApi';
 import type { Client } from '../../types/client';
 import type { Config } from '../../types/config';
-import { enumValue } from '../enum';
 import { escapeDescription, escapeNewline, type Templates } from '../handlebars';
 
-const valueToIdentifier = (value: string | ts.ObjectLiteralExpression) => {
-    if (typeof value !== 'string') {
-        return value;
-    }
-    return ts.factory.createIdentifier(value);
-};
-
-const addObjectProperty = (
-    properties: ts.PropertyAssignment[],
-    name: string,
-    value: string | string[] | ts.ObjectLiteralExpression | ts.ObjectLiteralExpression[]
-) => {
-    const initializer = Array.isArray(value)
-        ? ts.factory.createArrayLiteralExpression(value.map(v => valueToIdentifier(v)))
-        : valueToIdentifier(value);
-    const property = ts.factory.createPropertyAssignment(name, initializer);
-    return [...properties, property];
-};
-
 const arraySchema = (config: Config, model: Model) => {
-    let properties = [ts.factory.createPropertyAssignment('type', ts.factory.createStringLiteral('array'))];
+    const properties: Record<string, unknown> = {
+        type: 'array',
+    };
 
     if (model.link) {
-        properties = addObjectProperty(properties, 'contains', modelToJsonSchema(config, model.link));
+        properties.contains = modelToJsonSchema(config, model.link);
     } else {
-        let props: ts.PropertyAssignment[] = [];
-        props = addObjectProperty(props, 'type', `'${model.base}'`);
-        const obj = ts.factory.createObjectLiteralExpression(props, true);
-        properties = addObjectProperty(properties, 'contains', obj);
+        properties.contains = {
+            type: model.base,
+        };
     }
 
     if (model.default !== undefined) {
-        properties = addObjectProperty(properties, 'default', String(model.default));
+        properties.default = model.default;
     }
 
     if (model.isReadOnly) {
-        properties = addObjectProperty(properties, 'isReadOnly', 'true');
+        properties.isReadOnly = true;
     }
 
     if (model.isRequired) {
-        properties = addObjectProperty(properties, 'isRequired', 'true');
+        properties.isRequired = true;
     }
 
     if (model.isNullable) {
-        properties = addObjectProperty(properties, 'isNullable', 'true');
+        properties.isNullable = true;
     }
 
-    return ts.factory.createObjectLiteralExpression(properties, true);
+    return properties;
 };
 
 const compositionSchema = (config: Config, model: Model) => {
-    let properties = [ts.factory.createPropertyAssignment('type', ts.factory.createStringLiteral(model.export))];
-
+    const properties: Record<string, unknown> = {
+        type: model.export,
+    };
     if (model.description) {
-        properties = addObjectProperty(properties, 'description', `\`${escapeDescription(model.description)}\``);
+        properties.description = `\`${escapeDescription(model.description)}\``;
     }
 
-    properties = addObjectProperty(
-        properties,
-        'contains',
-        model.properties.map(property => modelToJsonSchema(config, property))
-    );
+    properties.contains = model.properties.map(property => modelToJsonSchema(config, property));
 
     if (model.default !== undefined) {
-        properties = addObjectProperty(properties, 'default', String(model.default));
+        properties.default = model.default;
     }
 
     if (model.isReadOnly) {
-        properties = addObjectProperty(properties, 'isReadOnly', 'true');
+        properties.isReadOnly = true;
     }
 
     if (model.isRequired) {
-        properties = addObjectProperty(properties, 'isRequired', 'true');
+        properties.isRequired = true;
     }
 
     if (model.isNullable) {
-        properties = addObjectProperty(properties, 'isNullable', 'true');
+        properties.isNullable = true;
     }
 
-    return ts.factory.createObjectLiteralExpression(properties, true);
+    return properties;
 };
 
 const dictSchema = (config: Config, model: Model) => {
-    let properties = [ts.factory.createPropertyAssignment('type', ts.factory.createStringLiteral('dictionary'))];
+    const properties: Record<string, unknown> = {
+        type: 'dictionary',
+    };
 
     if (model.link) {
-        properties = addObjectProperty(properties, 'contains', modelToJsonSchema(config, model.link));
+        properties.contains = modelToJsonSchema(config, model.link);
     } else {
-        let props: ts.PropertyAssignment[] = [];
-        props = addObjectProperty(props, 'type', `'${model.base}'`);
-        const obj = ts.factory.createObjectLiteralExpression(props, true);
-        properties = addObjectProperty(properties, 'contains', obj);
+        properties.contains = {
+            type: model.base,
+        };
     }
 
     if (model.default !== undefined) {
-        properties = addObjectProperty(properties, 'default', String(model.default));
+        properties.default = model.default;
     }
 
     if (model.isReadOnly) {
-        properties = addObjectProperty(properties, 'isReadOnly', 'true');
+        properties.isReadOnly = true;
     }
 
     if (model.isRequired) {
-        properties = addObjectProperty(properties, 'isRequired', 'true');
+        properties.isRequired = true;
     }
 
     if (model.isNullable) {
-        properties = addObjectProperty(properties, 'isNullable', 'true');
+        properties.isNullable = true;
     }
 
-    return ts.factory.createObjectLiteralExpression(properties, true);
+    return properties;
 };
 
 const enumSchema = (config: Config, model: Model) => {
-    let properties = [ts.factory.createPropertyAssignment('type', ts.factory.createStringLiteral('Enum'))];
-
+    const properties: Record<string, unknown> = {
+        type: 'Enum',
+    };
     if (model.enum.length) {
-        properties = addObjectProperty(
-            properties,
-            'enum',
-            model.enum.map(enumerator => enumValue(enumerator.value)!)
-        );
+        properties.enum = model.enum.map(enumerator => enumerator.value);
     }
 
     if (model.default !== undefined) {
-        properties = addObjectProperty(properties, 'default', String(model.default));
+        properties.default = model.default;
     }
 
     if (model.isReadOnly) {
-        properties = addObjectProperty(properties, 'isReadOnly', 'true');
+        properties.isReadOnly = true;
     }
 
     if (model.isRequired) {
-        properties = addObjectProperty(properties, 'isRequired', 'true');
+        properties.isRequired = true;
     }
 
     if (model.isNullable) {
-        properties = addObjectProperty(properties, 'isNullable', 'true');
+        properties.isNullable = true;
     }
 
-    return ts.factory.createObjectLiteralExpression(properties, true);
+    return properties;
 };
 
 const genericSchema = (config: Config, model: Model) => {
-    let properties: ts.PropertyAssignment[] = [];
-
+    const properties: Record<string, unknown> = {};
     if (model.type) {
-        properties = addObjectProperty(properties, 'type', `'${model.type}'`);
+        properties.type = model.type;
     }
 
     if (model.description) {
-        properties = addObjectProperty(properties, 'description', `\`${escapeDescription(model.description)}\``);
+        properties.description = `\`${escapeDescription(model.description)}\``;
     }
 
     if (model.default !== undefined) {
-        properties = addObjectProperty(properties, 'default', String(model.default));
+        properties.default = model.default;
     }
 
     if (model.isReadOnly) {
-        properties = addObjectProperty(properties, 'isReadOnly', 'true');
+        properties.isReadOnly = true;
     }
 
     if (model.isRequired) {
-        properties = addObjectProperty(properties, 'isRequired', 'true');
+        properties.isRequired = true;
     }
 
     if (model.isNullable) {
-        properties = addObjectProperty(properties, 'isNullable', 'true');
+        properties.isNullable = true;
     }
 
     if (model.format) {
-        properties = addObjectProperty(properties, 'format', `'${model.format}'`);
+        properties.format = model.format;
     }
 
     if (model.maximum !== undefined && model.maximum !== null) {
-        properties = addObjectProperty(properties, 'maximum', String(model.maximum));
+        properties.maximum = model.maximum;
     }
 
     if (model.exclusiveMaximum !== undefined && model.exclusiveMaximum !== null) {
-        properties = addObjectProperty(properties, 'exclusiveMaximum', String(model.exclusiveMaximum));
+        properties.exclusiveMaximum = model.exclusiveMaximum;
     }
 
     if (model.minimum !== undefined && model.minimum !== null) {
-        properties = addObjectProperty(properties, 'minimum', String(model.minimum));
+        properties.minimum = model.minimum;
     }
 
     if (model.exclusiveMinimum !== undefined && model.exclusiveMinimum !== null) {
-        properties = addObjectProperty(properties, 'exclusiveMinimum', String(model.exclusiveMinimum));
+        properties.exclusiveMinimum = model.exclusiveMinimum;
     }
 
     if (model.multipleOf !== undefined && model.multipleOf !== null) {
-        properties = addObjectProperty(properties, 'multipleOf', String(model.multipleOf));
+        properties.multipleOf = model.multipleOf;
     }
 
     if (model.maxLength !== undefined && model.maxLength !== null) {
-        properties = addObjectProperty(properties, 'maxLength', String(model.maxLength));
+        properties.maxLength = model.maxLength;
     }
 
     if (model.minLength !== undefined && model.minLength !== null) {
-        properties = addObjectProperty(properties, 'minLength', String(model.minLength));
+        properties.minLength = model.minLength;
     }
 
     if (model.pattern) {
-        properties = addObjectProperty(properties, 'pattern', `'${escapeNewline(model.pattern)}'`);
+        properties.pattern = escapeNewline(model.pattern);
     }
 
     if (model.maxItems !== undefined && model.maxItems !== null) {
-        properties = addObjectProperty(properties, 'maxItems', String(model.maxItems));
+        properties.maxItems = model.maxItems;
     }
 
     if (model.minItems !== undefined && model.minItems !== null) {
-        properties = addObjectProperty(properties, 'minItems', String(model.minItems));
+        properties.minItems = model.minItems;
     }
 
     if (model.uniqueItems !== undefined && model.uniqueItems !== null) {
-        properties = addObjectProperty(properties, 'uniqueItems', String(model.uniqueItems));
+        properties.uniqueItems = model.uniqueItems;
     }
 
     if (model.maxProperties !== undefined && model.maxProperties !== null) {
-        properties = addObjectProperty(properties, 'maxProperties', String(model.maxProperties));
+        properties.maxProperties = model.maxProperties;
     }
 
     if (model.minProperties !== undefined && model.minProperties !== null) {
-        properties = addObjectProperty(properties, 'minProperties', String(model.minProperties));
+        properties.minProperties = model.minProperties;
     }
 
-    return ts.factory.createObjectLiteralExpression(properties, true);
+    return properties;
 };
 
 const interfaceSchema = (config: Config, model: Model) => {
-    let properties: ts.PropertyAssignment[] = [];
+    const properties: Record<string, unknown> = {};
 
     if (model.description) {
-        properties = addObjectProperty(properties, 'description', `\`${escapeDescription(model.description)}\``);
+        properties.description = `\`${escapeDescription(model.description)}\``;
     }
 
-    let props: ts.PropertyAssignment[] = [];
+    const props: Record<string, unknown> = {};
     model.properties
         .filter(property => property.name !== '[key: string]')
         .forEach(property => {
-            props = addObjectProperty(props, property.name, modelToJsonSchema(config, property));
+            props[property.name] = modelToJsonSchema(config, property);
         });
-    const obj = ts.factory.createObjectLiteralExpression(props, true);
-    properties = addObjectProperty(properties, 'properties', obj);
+    properties.properties = props;
 
     if (model.default !== undefined) {
-        properties = addObjectProperty(properties, 'default', String(model.default));
+        properties.default = model.default;
     }
 
     if (model.isReadOnly) {
-        properties = addObjectProperty(properties, 'isReadOnly', 'true');
+        properties.isReadOnly = true;
     }
 
     if (model.isRequired) {
-        properties = addObjectProperty(properties, 'isRequired', 'true');
+        properties.isRequired = true;
     }
 
     if (model.isNullable) {
-        properties = addObjectProperty(properties, 'isNullable', 'true');
+        properties.isNullable = true;
     }
 
-    return ts.factory.createObjectLiteralExpression(properties, true);
+    return properties;
 };
 
 const modelToJsonSchema = (config: Config, model: Model) => {
@@ -295,21 +266,8 @@ const modelToJsonSchema = (config: Config, model: Model) => {
 
 const exportSchema = (config: Config, model: Model) => {
     const jsonSchema = modelToJsonSchema(config, model);
-    const statement = ts.factory.createVariableStatement(
-        [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
-        ts.factory.createVariableDeclarationList(
-            [
-                ts.factory.createVariableDeclaration(
-                    ts.factory.createIdentifier(`$${model.name}`),
-                    undefined,
-                    undefined,
-                    ts.factory.createAsExpression(jsonSchema, ts.factory.createTypeReferenceNode('const'))
-                ),
-            ],
-            ts.NodeFlags.Const
-        )
-    );
-    return tsNodeToString(statement);
+    const obj = compiler.types.object(jsonSchema);
+    return compiler.export.asConst(`$${model.name}`, obj);
 };
 
 /**
@@ -329,12 +287,10 @@ export const writeClientSchemas = async (
         return;
     }
 
-    let results: string[] = [];
-
+    const file = new TypeScriptFile();
     for (const model of client.models) {
         const result = exportSchema(config, model);
-        results = [...results, result];
+        file.push(result);
     }
-
-    await writeFileSync(path.resolve(outputPath, 'schemas.ts'), results.join('\n\n'));
+    file.write(path.resolve(outputPath, 'schemas.ts'), '\n\n');
 };

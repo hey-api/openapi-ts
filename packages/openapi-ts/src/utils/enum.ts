@@ -68,9 +68,6 @@ export const enumUnionType = (enums: Enum[]) =>
         .join(' | ');
 
 export const enumValue = (value?: string | number) => {
-    if (typeof value === 'number') {
-        return String(value);
-    }
     if (typeof value === 'string') {
         return `'${value.replace(/'/g, "\\'")}'`;
     }
