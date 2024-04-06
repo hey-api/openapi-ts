@@ -1,6 +1,5 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import type { BaseHttpRequest } from './core/BaseHttpRequest';
-
 import type {
     ModelWithArrayReadOnlyAndWriteOnly,
     ModelWithReadOnlyAndWriteOnly,
