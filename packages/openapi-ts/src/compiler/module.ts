@@ -3,7 +3,7 @@ import ts from 'typescript';
 import { ots } from './utils';
 
 /**
- * Create export all declaration. Example: `export * from './y'`
+ * Create export all declaration. Example: `export * from './y'`.
  * @param module - module to export from.
  * @returns ts.ExportDeclaration
  */
@@ -36,6 +36,28 @@ export const createNamedExportDeclarations = (
         ots.string(module)
     );
 };
+
+/**
+ * Create an export variable as const statement. Example: `export x = {} as const`.
+ * @param name - name of the variable.
+ * @param expr - expression for the variable.
+ * @returns ts.VariableStatement
+ */
+export const createExportVariableAsConst = (name: string, expr: ts.Expression): ts.VariableStatement =>
+    ts.factory.createVariableStatement(
+        [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
+        ts.factory.createVariableDeclarationList(
+            [
+                ts.factory.createVariableDeclaration(
+                    ts.factory.createIdentifier(name),
+                    undefined,
+                    undefined,
+                    ts.factory.createAsExpression(expr, ts.factory.createTypeReferenceNode('const'))
+                ),
+            ],
+            ts.NodeFlags.Const
+        )
+    );
 
 /**
  * Create a named import declaration. Example: `import { X } from './y'`.

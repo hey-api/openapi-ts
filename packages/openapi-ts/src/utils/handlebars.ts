@@ -128,17 +128,24 @@ const dataDestructure = (config: Config, operation: Operation) => {
     return '';
 };
 
+export const getDefaultPrintable = (p: OperationParameter | Model): string | undefined => {
+    if (p.default === undefined) {
+        return undefined;
+    }
+    return JSON.stringify(p.default, null, 4);
+};
+
 const dataParameters = (config: Config, parameters: OperationParameter[]) => {
     if (config.experimental) {
         let output = parameters
-            .filter(parameter => parameter.default !== undefined)
+            .filter(parameter => getDefaultPrintable(parameter) !== undefined)
             .map(parameter => {
                 const key = parameter.prop;
                 const value = parameter.name;
                 if (key === value || escapeName(key) === key) {
-                    return `${key}: ${parameter.default}`;
+                    return `${key}: ${getDefaultPrintable(parameter)}`;
                 }
-                return `'${key}': ${parameter.default}`;
+                return `'${key}': ${getDefaultPrintable(parameter)}`;
             });
         if (parameters.every(parameter => parameter.in === 'query')) {
             output = [...output, '...query'];
@@ -164,7 +171,7 @@ export const modelIsRequired = (config: Config, model: Model) => {
     if (config.useOptions) {
         return model.isRequired ? '' : '?';
     }
-    return !model.isRequired && !model.default ? '?' : '';
+    return !model.isRequired && !getDefaultPrintable(model) ? '?' : '';
 };
 
 const nameOperationDataType = (service: Service, operation: Service['operations'][number]) => {
@@ -266,6 +273,18 @@ export const registerHandlebarHelpers = (config: Config, client: Client): void =
         }
         return options.inverse(this);
     });
+
+    Handlebars.registerHelper(
+        'hasDefault',
+        function (this: unknown, p: OperationParameter, options: Handlebars.HelperOptions) {
+            if (getDefaultPrintable(p) !== undefined) {
+                return options.fn(this);
+            }
+            return options.inverse(this);
+        }
+    );
+
+    Handlebars.registerHelper('getDefaultPrintable', getDefaultPrintable);
 
     Handlebars.registerHelper('ifdef', function (this: unknown, ...args): string {
         const options = args.pop();
