@@ -10,7 +10,7 @@ import { ots } from './utils';
 export const createExportAllDeclaration = (module: string) =>
     ts.factory.createExportDeclaration(undefined, false, undefined, ots.string(module));
 
-type ImportItem = { name: string; isTypeOnly?: boolean } | string;
+type ImportItem = { name: string; isTypeOnly?: boolean; alias?: string } | string;
 
 /**
  * Create a named export declaration. Example: `export { X } from './y'`.
@@ -29,8 +29,12 @@ export const createNamedExportDeclarations = (
         isAllTypes,
         ts.factory.createNamedExports(
             items.map(item => {
-                const { name, isTypeOnly = undefined } = typeof item === 'string' ? { name: item } : item;
-                return ots.export(name, isAllTypes ? false : Boolean(isTypeOnly));
+                const {
+                    name,
+                    isTypeOnly = undefined,
+                    alias = undefined,
+                } = typeof item === 'string' ? { name: item } : item;
+                return ots.export(name, isAllTypes ? false : Boolean(isTypeOnly), alias);
             })
         ),
         ots.string(module)
@@ -78,8 +82,12 @@ export const createNamedImportDeclarations = (
             undefined,
             ts.factory.createNamedImports(
                 items.map(item => {
-                    const { name, isTypeOnly = undefined } = typeof item === 'string' ? { name: item } : item;
-                    return ots.import(name, isAllTypes ? false : Boolean(isTypeOnly));
+                    const {
+                        name,
+                        isTypeOnly = undefined,
+                        alias = undefined,
+                    } = typeof item === 'string' ? { name: item } : item;
+                    return ots.import(name, isAllTypes ? false : Boolean(isTypeOnly), alias);
                 })
             )
         ),

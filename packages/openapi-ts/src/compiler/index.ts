@@ -7,9 +7,12 @@ import * as types from './types';
 import { tsNodeToString } from './utils';
 
 export class TypeScriptFile extends Array<ts.Node> {
+    public override toString(seperator: string = '\n') {
+        return this.map(v => tsNodeToString(v)).join(seperator);
+    }
+
     public write(file: PathOrFileDescriptor, seperator: string = '\n') {
-        const items = this.map(i => tsNodeToString(i));
-        writeFileSync(file, items.join(seperator));
+        writeFileSync(file, this.toString(seperator));
     }
 }
 
