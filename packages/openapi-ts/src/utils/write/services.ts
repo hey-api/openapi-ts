@@ -1,8 +1,7 @@
 import { writeFileSync } from 'node:fs';
 import path from 'node:path';
 
-import compiler from '../../compiler';
-import { tsNodeToString } from '../../compiler/utils';
+import compiler, { TypeScriptFile } from '../../compiler';
 import type { Client } from '../../types/client';
 import type { Config } from '../../types/config';
 import { operationDataType, type Templates } from '../handlebars';
@@ -24,6 +23,7 @@ export const writeClientServices = async (
     if (!client.services.length) {
         return;
     }
+    const file = new TypeScriptFile();
 
     let imports: string[] = [];
     let operationTypes: string[] = [];
@@ -41,58 +41,55 @@ export const writeClientServices = async (
     }
 
     // Import required packages and core files.
-    const coreImports: string[] = [];
     if (config.client === 'angular') {
-        coreImports.push(tsNodeToString(compiler.import.named('Injectable', '@angular/core')));
+        file.push(compiler.import.named('Injectable', '@angular/core'));
         if (config.name === undefined) {
-            coreImports.push(tsNodeToString(compiler.import.named('HttpClient', '@angular/common/http')));
+            file.push(compiler.import.named('HttpClient', '@angular/common/http'));
         }
-        coreImports.push(tsNodeToString(compiler.import.named({ isTypeOnly: true, name: 'Observable' }, 'rxjs')));
+        file.push(compiler.import.named({ isTypeOnly: true, name: 'Observable' }, 'rxjs'));
     } else {
-        coreImports.push(
-            tsNodeToString(
-                compiler.import.named({ isTypeOnly: true, name: 'CancelablePromise' }, './core/CancelablePromise')
-            )
-        );
+        file.push(compiler.import.named({ isTypeOnly: true, name: 'CancelablePromise' }, './core/CancelablePromise'));
     }
     if (config.serviceResponse === 'response') {
-        coreImports.push(
-            tsNodeToString(compiler.import.named({ isTypeOnly: true, name: 'ApiResult' }, './core/ApiResult'))
-        );
+        file.push(compiler.import.named({ isTypeOnly: true, name: 'ApiResult' }, './core/ApiResult'));
     }
     if (config.name) {
-        coreImports.push(
-            tsNodeToString(
-                compiler.import.named(
-                    { isTypeOnly: config.client !== 'angular', name: 'BaseHttpRequest' },
-                    './core/BaseHttpRequest'
-                )
+        file.push(
+            compiler.import.named(
+                { isTypeOnly: config.client !== 'angular', name: 'BaseHttpRequest' },
+                './core/BaseHttpRequest'
             )
         );
     } else {
         if (config.useOptions) {
             if (config.serviceResponse === 'generics') {
-                coreImports.push(`import { mergeOpenApiConfig, OpenAPI } from './core/OpenAPI';`);
-                coreImports.push(`import { request as __request } from './core/request';`);
-                coreImports.push(`import type { TApiResponse, TConfig, TResult } from './core/types';`);
+                file.push(compiler.import.named(['mergeOpenApiConfig', 'OpenAPI'], './core/OpenAPI'));
+                file.push(compiler.import.named({ alias: '__request', name: 'request' }, './core/request'));
+                file.push(
+                    compiler.import.named(
+                        [
+                            { isTypeOnly: true, name: 'TApiResponse' },
+                            { isTypeOnly: true, name: 'TConfig' },
+                            { isTypeOnly: true, name: 'TResult' },
+                        ],
+                        './core/types'
+                    )
+                );
             } else {
-                coreImports.push(`import { OpenAPI } from './core/OpenAPI';`);
-                coreImports.push(`import { request as __request } from './core/request';`);
+                file.push(compiler.import.named('OpenAPI', './core/OpenAPI'));
+                file.push(compiler.import.named({ alias: '__request', name: 'request' }, './core/request'));
             }
         } else {
-            coreImports.push(`import { OpenAPI } from './core/OpenAPI';`);
-            coreImports.push(`import { request as __request } from './core/request';`);
+            file.push(compiler.import.named('OpenAPI', './core/OpenAPI'));
+            file.push(compiler.import.named({ alias: '__request', name: 'request' }, './core/request'));
         }
     }
 
     // Import all models required by the services.
-    let modelImportsString = '';
-    const uniqueImports = imports.filter(unique);
-    if (uniqueImports.length) {
-        modelImportsString = `import type { ${uniqueImports.join(',')} } from './models';`;
-    }
+    const models = imports.filter(unique).map(imp => ({ isTypeOnly: true, name: imp }));
+    file.push(compiler.import.named(models, './models'));
 
-    const data = [coreImports.join('\n'), modelImportsString, ...operationTypes, ...results].join('\n\n');
+    const data = [file.toString(), ...operationTypes, ...results].join('\n\n');
 
     await writeFileSync(path.resolve(outputPath, 'services.ts'), data);
 };
