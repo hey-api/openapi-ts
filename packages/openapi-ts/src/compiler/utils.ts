@@ -28,18 +28,22 @@ export function tsNodeToString(node: ts.Node): string {
 export const ots = {
     // Create a boolean expression based on value.
     boolean: (value: boolean) => (value ? ts.factory.createTrue() : ts.factory.createFalse()),
-    export: (name: string, isTypeOnly?: boolean) =>
-        ts.factory.createExportSpecifier(
+    export: (name: string, isTypeOnly?: boolean, alias?: string) => {
+        const n = ts.factory.createIdentifier(encodeURIComponent(name));
+        return ts.factory.createExportSpecifier(
             isTypeOnly ?? false,
-            undefined,
-            ts.factory.createIdentifier(encodeURIComponent(name))
-        ),
-    import: (name: string, isTypeOnly?: boolean) =>
-        ts.factory.createImportSpecifier(
+            alias ? n : undefined,
+            alias ? ts.factory.createIdentifier(encodeURIComponent(alias)) : n
+        );
+    },
+    import: (name: string, isTypeOnly?: boolean, alias?: string) => {
+        const n = ts.factory.createIdentifier(encodeURIComponent(name));
+        return ts.factory.createImportSpecifier(
             isTypeOnly ?? false,
-            undefined,
-            ts.factory.createIdentifier(encodeURIComponent(name))
-        ),
+            alias ? n : undefined,
+            alias ? ts.factory.createIdentifier(encodeURIComponent(alias)) : n
+        );
+    },
     // Create a numeric expression, handling negative numbers.
     number: (value: number) => {
         if (value < 0) {

@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import type { Observable } from 'rxjs';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-
 import type {
     ModelWithArrayReadOnlyAndWriteOnly,
     ModelWithReadOnlyAndWriteOnly,
