@@ -1,4 +1,4 @@
-import { escapeName } from '../../../utils/escapeName';
+import { escapeName } from '../../../utils/escape';
 import type { Model } from '../../common/interfaces/client';
 import { getPattern } from '../../common/parser/getPattern';
 import { getType } from '../../common/parser/type';

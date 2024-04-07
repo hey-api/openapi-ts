@@ -1,3 +1,5 @@
+import { EOL } from 'os';
+
 /**
  * Javascript identifier regexp pattern retrieved from
  * {@link} https://developer.mozilla.org/docs/Web/JavaScript/Reference/Lexical_grammar#identifiers
@@ -20,3 +22,12 @@ export const unescapeName = (value: string): string => {
     }
     return value;
 };
+
+export const escapeComment = (value: string) =>
+    value
+        .replace(/\*\//g, '*')
+        .replace(/\/\*/g, '*')
+        .replace(/\r?\n(.*)/g, (_, w) => `${EOL} * ${w.trim()}`);
+
+export const escapeDescription = (value: string) =>
+    value.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\${/g, '\\${');

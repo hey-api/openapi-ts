@@ -4,7 +4,10 @@ import compiler, { TypeScriptFile } from '../../compiler';
 import type { Model } from '../../openApi';
 import type { Client } from '../../types/client';
 import type { Config } from '../../types/config';
-import { escapeDescription, escapeNewline, type Templates } from '../handlebars';
+import { escapeDescription } from '../escape';
+import type { Templates } from '../handlebars';
+
+const escapeNewline = (value: string) => value.replace(/\n/g, '\\n');
 
 const arrayObj = (config: Config, model: Model) => {
     const properties: Record<string, unknown> = {
