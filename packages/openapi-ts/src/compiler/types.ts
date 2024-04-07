@@ -7,18 +7,28 @@ import { isType, ots } from './utils';
  * @param value - the unknown value.
  * @returns ts.Expression
  */
-export const toExpression = (value: unknown): ts.Expression | undefined => {
+export const toExpression = (value: unknown, unescape = false): ts.Expression | undefined => {
     if (Array.isArray(value)) {
         return createArrayType(value);
-    } else if (typeof value === 'object' && value !== null) {
+    }
+
+    if (typeof value === 'object' && value !== null) {
         return createObjectType(value);
-    } else if (typeof value === 'number') {
+    }
+
+    if (typeof value === 'number') {
         return ots.number(value);
-    } else if (typeof value === 'boolean') {
+    }
+
+    if (typeof value === 'boolean') {
         return ots.boolean(value);
-    } else if (typeof value === 'string') {
-        return ots.string(value);
-    } else if (value === null) {
+    }
+
+    if (typeof value === 'string') {
+        return ots.string(value, unescape);
+    }
+
+    if (value === null) {
         return ts.factory.createNull();
     }
 };

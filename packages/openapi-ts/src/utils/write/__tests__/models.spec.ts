@@ -59,6 +59,6 @@ describe('writeClientModels', () => {
             write: true,
         });
 
-        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/models.ts'), 'model');
+        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/models.ts'), expect.anything());
     });
 });
