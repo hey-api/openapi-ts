@@ -7,7 +7,7 @@ import { isType, ots } from './utils';
  * @param value - the unknown value.
  * @returns ts.Expression
  */
-const toExpression = (value: unknown): ts.Expression | undefined => {
+export const toExpression = (value: unknown): ts.Expression | undefined => {
     if (Array.isArray(value)) {
         return createArrayType(value);
     } else if (typeof value === 'object' && value !== null) {

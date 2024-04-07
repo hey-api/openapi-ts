@@ -9,13 +9,13 @@ import type { Templates } from '../handlebars';
 
 const escapeNewline = (value: string) => value.replace(/\n/g, '\\n');
 
-const arrayObj = (config: Config, model: Model) => {
+const processArray = (config: Config, model: Model) => {
     const properties: Record<string, unknown> = {
         type: 'array',
     };
 
     if (model.link) {
-        properties.contains = modelToObj(config, model.link);
+        properties.contains = processModel(config, model.link);
     } else {
         properties.contains = {
             type: model.base,
@@ -41,7 +41,7 @@ const arrayObj = (config: Config, model: Model) => {
     return properties;
 };
 
-const compositionObj = (config: Config, model: Model) => {
+const processComposition = (config: Config, model: Model) => {
     const properties: Record<string, unknown> = {
         type: model.export,
     };
@@ -49,7 +49,7 @@ const compositionObj = (config: Config, model: Model) => {
         properties.description = `\`${escapeDescription(model.description)}\``;
     }
 
-    properties.contains = model.properties.map(property => modelToObj(config, property));
+    properties.contains = model.properties.map(property => processModel(config, property));
 
     if (model.default !== undefined) {
         properties.default = model.default;
@@ -70,13 +70,13 @@ const compositionObj = (config: Config, model: Model) => {
     return properties;
 };
 
-const dictObj = (config: Config, model: Model) => {
+const processDict = (config: Config, model: Model) => {
     const properties: Record<string, unknown> = {
         type: 'dictionary',
     };
 
     if (model.link) {
-        properties.contains = modelToObj(config, model.link);
+        properties.contains = processModel(config, model.link);
     } else {
         properties.contains = {
             type: model.base,
@@ -102,7 +102,7 @@ const dictObj = (config: Config, model: Model) => {
     return properties;
 };
 
-const enumObj = (config: Config, model: Model) => {
+const processEnum = (config: Config, model: Model) => {
     const properties: Record<string, unknown> = {
         type: 'Enum',
     };
@@ -129,7 +129,7 @@ const enumObj = (config: Config, model: Model) => {
     return properties;
 };
 
-const genericObj = (config: Config, model: Model) => {
+const processGeneric = (config: Config, model: Model) => {
     const properties: Record<string, unknown> = {};
     if (model.type) {
         properties.type = model.type;
@@ -214,7 +214,7 @@ const genericObj = (config: Config, model: Model) => {
     return properties;
 };
 
-const interfaceObj = (config: Config, model: Model) => {
+const processInterface = (config: Config, model: Model) => {
     const properties: Record<string, unknown> = {};
 
     if (model.description) {
@@ -225,7 +225,7 @@ const interfaceObj = (config: Config, model: Model) => {
     model.properties
         .filter(property => property.name !== '[key: string]')
         .forEach(property => {
-            props[property.name] = modelToObj(config, property);
+            props[property.name] = processModel(config, property);
         });
     properties.properties = props;
 
@@ -248,27 +248,27 @@ const interfaceObj = (config: Config, model: Model) => {
     return properties;
 };
 
-const modelToObj = (config: Config, model: Model) => {
+const processModel = (config: Config, model: Model) => {
     switch (model.export) {
         case 'all-of':
         case 'any-of':
         case 'one-of':
-            return compositionObj(config, model);
+            return processComposition(config, model);
         case 'array':
-            return arrayObj(config, model);
+            return processArray(config, model);
         case 'dictionary':
-            return dictObj(config, model);
+            return processDict(config, model);
         case 'enum':
-            return enumObj(config, model);
+            return processEnum(config, model);
         case 'interface':
-            return interfaceObj(config, model);
+            return processInterface(config, model);
         default:
-            return genericObj(config, model);
+            return processGeneric(config, model);
     }
 };
 
 const exportSchema = (config: Config, model: Model) => {
-    const obj = modelToObj(config, model);
+    const obj = processModel(config, model);
     const expression = compiler.types.object(obj);
     return compiler.export.asConst(`$${model.name}`, expression);
 };
