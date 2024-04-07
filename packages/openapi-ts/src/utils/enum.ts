@@ -1,7 +1,7 @@
 import type { Enum } from '../openApi';
 import type { Client } from '../types/client';
 import type { Config } from '../types/config';
-import { unescapeName } from './escapeName';
+import { unescapeName } from './escape';
 import { unique } from './unique';
 
 /**
