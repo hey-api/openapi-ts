@@ -1,0 +1,16 @@
+:root {
+    --c-gradient-start: #d486b8;
+    --vp-c-brand-1: #a37ab4;
+    --vp-c-brand-2: #d486b8;
+    --vp-c-brand-3: #a37ab4;
+}
+
+html.dark {
+    --c-gradient-start: #86b9b0;
+    --vp-c-bg: #001b2e;
+    --vp-c-bg-alt: #041421;
+    --vp-c-bg-soft: #041421;
+    --vp-c-brand-1: #b3cde4;
+    --vp-c-brand-2: #b3cde4;
+    --vp-c-brand-3: #537692;
+}
