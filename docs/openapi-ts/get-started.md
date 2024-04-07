@@ -5,16 +5,16 @@ description: Get started with @hey-api/openapi-ts.
 
 # Get Started
 
-`openapi-ts` started as a fork of [openapi-typescript-codegen](https://github.com/ferdikoomen/openapi-typescript-codegen). We created it after the original project became [unmaintained](https://github.com/ferdikoomen/openapi-typescript-codegen/issues/1276#issuecomment-1302392146) to add support for OpenAPI v3.1. We plan to resolve the most pressing issues in the original project – open an issue if you'd like to prioritise your use case!
+`openapi-ts` allows you to create TypeScript interfaces, REST clients, and schemas from an OpenAPI specification.
 
 ## Features
 
-- Generate TypeScript clients from OpenAPI v2.0, v3.0, and v3.1 specifications
-- Support JSON or YAML input files
-- Handle external references using [JSON Schema $Ref Parser](https://github.com/APIDevTools/json-schema-ref-parser/)
-- Generate Fetch, Node-Fetch, Axios, Angular, or XHR HTTP clients
-- Can be used with CLI, Node.js, or npx
-- Abortable requests through cancellable promise pattern
+- generate TypeScript interfaces from OpenAPI v2.0, v3.0, and v3.1 specifications
+- support JSON or YAML input files
+- handle external references using [JSON Schema $Ref Parser](https://github.com/APIDevTools/json-schema-ref-parser/)
+- generate fetch, axios, angular, node.js, or xhr REST clients
+- usable with CLI, Node.js, or npx
+- abortable requests through cancellable promise pattern
 
 ## Quick Start
 
