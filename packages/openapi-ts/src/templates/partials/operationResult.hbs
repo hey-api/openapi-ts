@@ -6,7 +6,7 @@
 {{~/notEquals~}}
 {{~/if~}}
 {{~#if results~}}
-{{#each results}}{{>type}}{{#unless @last}} | {{/unless}}{{/each}}
+{{#each results}}{{toType this @root.$config}}{{#unless @last}} | {{/unless}}{{/each}}
 {{~else~}}
 void
 {{~/if~}}
