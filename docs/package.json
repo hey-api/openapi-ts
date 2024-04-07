@@ -5,11 +5,13 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "dev": "vitepress dev",
         "build": "vitepress build",
+        "dev": "vitepress dev",
         "preview": "vitepress preview"
     },
     "devDependencies": {
-        "vitepress": "1.0.2"
+        "mermaid": "10.9.0",
+        "vitepress": "1.0.2",
+        "vitepress-plugin-mermaid": "2.0.16"
     }
 }
