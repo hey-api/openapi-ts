@@ -6,13 +6,13 @@ import type { Client } from '../../types/client';
 import type { Config } from '../../types/config';
 import { escapeDescription, escapeNewline, type Templates } from '../handlebars';
 
-const arraySchema = (config: Config, model: Model) => {
+const arrayObj = (config: Config, model: Model) => {
     const properties: Record<string, unknown> = {
         type: 'array',
     };
 
     if (model.link) {
-        properties.contains = modelToExpression(config, model.link);
+        properties.contains = modelToObj(config, model.link);
     } else {
         properties.contains = {
             type: model.base,
@@ -38,7 +38,7 @@ const arraySchema = (config: Config, model: Model) => {
     return properties;
 };
 
-const compositionSchema = (config: Config, model: Model) => {
+const compositionObj = (config: Config, model: Model) => {
     const properties: Record<string, unknown> = {
         type: model.export,
     };
@@ -46,7 +46,7 @@ const compositionSchema = (config: Config, model: Model) => {
         properties.description = `\`${escapeDescription(model.description)}\``;
     }
 
-    properties.contains = model.properties.map(property => modelToExpression(config, property));
+    properties.contains = model.properties.map(property => modelToObj(config, property));
 
     if (model.default !== undefined) {
         properties.default = model.default;
@@ -67,13 +67,13 @@ const compositionSchema = (config: Config, model: Model) => {
     return properties;
 };
 
-const dictSchema = (config: Config, model: Model) => {
+const dictObj = (config: Config, model: Model) => {
     const properties: Record<string, unknown> = {
         type: 'dictionary',
     };
 
     if (model.link) {
-        properties.contains = modelToExpression(config, model.link);
+        properties.contains = modelToObj(config, model.link);
     } else {
         properties.contains = {
             type: model.base,
@@ -99,7 +99,7 @@ const dictSchema = (config: Config, model: Model) => {
     return properties;
 };
 
-const enumSchema = (config: Config, model: Model) => {
+const enumObj = (config: Config, model: Model) => {
     const properties: Record<string, unknown> = {
         type: 'Enum',
     };
@@ -126,7 +126,7 @@ const enumSchema = (config: Config, model: Model) => {
     return properties;
 };
 
-const genericSchema = (config: Config, model: Model) => {
+const genericObj = (config: Config, model: Model) => {
     const properties: Record<string, unknown> = {};
     if (model.type) {
         properties.type = model.type;
@@ -211,7 +211,7 @@ const genericSchema = (config: Config, model: Model) => {
     return properties;
 };
 
-const interfaceSchema = (config: Config, model: Model) => {
+const interfaceObj = (config: Config, model: Model) => {
     const properties: Record<string, unknown> = {};
 
     if (model.description) {
@@ -222,7 +222,7 @@ const interfaceSchema = (config: Config, model: Model) => {
     model.properties
         .filter(property => property.name !== '[key: string]')
         .forEach(property => {
-            props[property.name] = modelToExpression(config, property);
+            props[property.name] = modelToObj(config, property);
         });
     properties.properties = props;
 
@@ -245,29 +245,29 @@ const interfaceSchema = (config: Config, model: Model) => {
     return properties;
 };
 
-const modelToExpression = (config: Config, model: Model) => {
+const modelToObj = (config: Config, model: Model) => {
     switch (model.export) {
         case 'all-of':
         case 'any-of':
         case 'one-of':
-            return compositionSchema(config, model);
+            return compositionObj(config, model);
         case 'array':
-            return arraySchema(config, model);
+            return arrayObj(config, model);
         case 'dictionary':
-            return dictSchema(config, model);
+            return dictObj(config, model);
         case 'enum':
-            return enumSchema(config, model);
+            return enumObj(config, model);
         case 'interface':
-            return interfaceSchema(config, model);
+            return interfaceObj(config, model);
         default:
-            return genericSchema(config, model);
+            return genericObj(config, model);
     }
 };
 
 const exportSchema = (config: Config, model: Model) => {
-    const jsonSchema = modelToExpression(config, model);
-    const obj = compiler.types.object(jsonSchema);
-    return compiler.export.asConst(`$${model.name}`, obj);
+    const obj = modelToObj(config, model);
+    const expression = compiler.types.object(obj);
+    return compiler.export.asConst(`$${model.name}`, expression);
 };
 
 /**
