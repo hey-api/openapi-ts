@@ -8,7 +8,7 @@
 {{/if}}
  */
 {{/ifdef}}
-export type {{{name}}} = {{>type parent=name}};
+export type {{{name}}} = {{toType this @root.$config}};
 
 {{#if enums}}
 {{#each enums}}

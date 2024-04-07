@@ -1,9 +1,0 @@
-{{~#exactArray this}}
-[{{>type link filterProperties="exact"}}]{{>isNullable}}
-{{~else~}}
-{{~#if link~}}
-Array<{{>type link}}>{{>isNullable}}
-{{~else~}}
-Array<{{>base}}>{{>isNullable}}
-{{~/if~}}
-{{~/exactArray~}}
