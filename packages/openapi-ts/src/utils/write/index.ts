@@ -18,6 +18,9 @@ export const writeClientIndex = async (client: Client, outputPath: string, confi
     }
     if (config.exportCore) {
         file.push(compiler.export.named('ApiError', './core/ApiError'));
+        if (config.serviceResponse === 'response') {
+            file.push(compiler.export.named({ isTypeOnly: true, name: 'ApiResult' }, './core/ApiResult'));
+        }
         if (config.name) {
             file.push(compiler.export.named('BaseHttpRequest', './core/BaseHttpRequest'));
         }
