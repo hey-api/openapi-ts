@@ -1,5 +1,5 @@
 <div align="center">
-    <img width="150" height="150" src="./docs/public/logo.png" alt="Logo">
+    <img width="150" height="150" src="https://heyapi.vercel.app/logo.png" alt="Logo">
     <h1 align="center"><b>OpenAPI Typescript</b></h1>
     <p align="center">✨ Turn your OpenAPI specification into a beautiful TypeScript client.</p>
 </div>
