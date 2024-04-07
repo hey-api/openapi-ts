@@ -1,6 +1,5 @@
 import camelCase from 'camelcase';
 import Handlebars from 'handlebars/runtime';
-import { EOL } from 'os';
 
 import type { Model, Operation, OperationParameter, Service } from '../openApi';
 import templateClient from '../templates/client.hbs';
@@ -50,7 +49,6 @@ import xhrRequest from '../templates/core/xhr/request.hbs';
 import xhrSendRequest from '../templates/core/xhr/sendRequest.hbs';
 import templateExportModel from '../templates/exportModel.hbs';
 import templateExportService from '../templates/exportService.hbs';
-import partialBase from '../templates/partials/base.hbs';
 import partialExportComposition from '../templates/partials/exportComposition.hbs';
 import partialExportEnum from '../templates/partials/exportEnum.hbs';
 import partialExportInterface from '../templates/partials/exportInterface.hbs';
@@ -61,32 +59,13 @@ import partialOperationParameters from '../templates/partials/operationParameter
 import partialOperationResult from '../templates/partials/operationResult.hbs';
 import partialOperationTypes from '../templates/partials/operationTypes.hbs';
 import partialRequestConfig from '../templates/partials/requestConfig.hbs';
-import partialType from '../templates/partials/type.hbs';
-import partialTypeArray from '../templates/partials/typeArray.hbs';
-import partialTypeDictionary from '../templates/partials/typeDictionary.hbs';
-import partialTypeEnum from '../templates/partials/typeEnum.hbs';
-import partialTypeGeneric from '../templates/partials/typeGeneric.hbs';
-import partialTypeInterface from '../templates/partials/typeInterface.hbs';
-import partialTypeIntersection from '../templates/partials/typeIntersection.hbs';
-import partialTypeReference from '../templates/partials/typeReference.hbs';
-import partialTypeUnion from '../templates/partials/typeUnion.hbs';
 import type { Client } from '../types/client';
 import type { Config } from '../types/config';
 import { enumKey, enumName, enumUnionType, enumValue } from './enum';
-import { escapeName } from './escapeName';
+import { escapeComment, escapeDescription, escapeName } from './escape';
+import { getDefaultPrintable, modelIsRequired } from './required';
 import { sortByName } from './sort';
-import { unique } from './unique';
-
-const escapeComment = (value: string) =>
-    value
-        .replace(/\*\//g, '*')
-        .replace(/\/\*/g, '*')
-        .replace(/\r?\n(.*)/g, (_, w) => `${EOL} * ${w.trim()}`);
-
-export const escapeDescription = (value: string) =>
-    value.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\${/g, '\\${');
-
-export const escapeNewline = (value: string) => value.replace(/\n/g, '\\n');
+import { toType } from './write/type';
 
 const dataDestructure = (config: Config, operation: Operation) => {
     if (config.name) {
@@ -128,13 +107,6 @@ const dataDestructure = (config: Config, operation: Operation) => {
     return '';
 };
 
-export const getDefaultPrintable = (p: OperationParameter | Model): string | undefined => {
-    if (p.default === undefined) {
-        return undefined;
-    }
-    return JSON.stringify(p.default, null, 4);
-};
-
 const dataParameters = (config: Config, parameters: OperationParameter[]) => {
     if (config.experimental) {
         let output = parameters
@@ -167,13 +139,6 @@ const dataParameters = (config: Config, parameters: OperationParameter[]) => {
     return output.join(', ');
 };
 
-export const modelIsRequired = (config: Config, model: Model) => {
-    if (config.useOptions) {
-        return model.isRequired ? '' : '?';
-    }
-    return !model.isRequired && !getDefaultPrintable(model) ? '?' : '';
-};
-
 const nameOperationDataType = (service: Service, operation: Service['operations'][number]) => {
     const namespace = `${camelCase(service.name, { pascalCase: true })}Data`;
     const key = camelCase(operation.name, { pascalCase: true });
@@ -185,7 +150,6 @@ export const operationDataType = (config: Config, service: Service) => {
     if (!config.useOptions || !operationsWithParameters.length) {
         return '';
     }
-    const partialType = Handlebars.partials['type'];
     const namespace = `${camelCase(service.name, { pascalCase: true })}Data`;
     const output = `export type ${namespace} = {
         ${operationsWithParameters
@@ -205,7 +169,7 @@ export const operationDataType = (config: Config, service: Service) => {
                             }
                             return [
                                 ...comment,
-                                `${parameter.name + modelIsRequired(config, parameter)}: ${partialType({ $config: config, ...parameter })}`,
+                                `${parameter.name + modelIsRequired(config, parameter)}: ${toType(parameter, config)}`,
                             ].join('\n');
                         })
                         .join('\n')}
@@ -221,7 +185,7 @@ export const operationDataType = (config: Config, service: Service) => {
                                 }
                                 return [
                                     ...comment,
-                                    `${parameter.name + modelIsRequired(config, parameter)}: ${partialType({ $config: config, ...parameter })}`,
+                                    `${parameter.name + modelIsRequired(config, parameter)}: ${toType(parameter, config)}`,
                                 ].join('\n');
                             })
                             .join('\n')}
@@ -265,14 +229,6 @@ export const registerHandlebarHelpers = (config: Config, client: Client): void =
 
     Handlebars.registerHelper('escapeComment', escapeComment);
     Handlebars.registerHelper('escapeDescription', escapeDescription);
-    Handlebars.registerHelper('escapeNewline', escapeNewline);
-
-    Handlebars.registerHelper('exactArray', function (this: unknown, model: Model, options: Handlebars.HelperOptions) {
-        if (model.export === 'array' && model.maxItems && model.minItems && model.maxItems === model.minItems) {
-            return options.fn(this);
-        }
-        return options.inverse(this);
-    });
 
     Handlebars.registerHelper(
         'hasDefault',
@@ -283,6 +239,8 @@ export const registerHandlebarHelpers = (config: Config, client: Client): void =
             return options.inverse(this);
         }
     );
+
+    Handlebars.registerHelper('toType', toType);
 
     Handlebars.registerHelper('getDefaultPrintable', getDefaultPrintable);
 
@@ -295,51 +253,15 @@ export const registerHandlebarHelpers = (config: Config, client: Client): void =
     });
 
     Handlebars.registerHelper(
-        'ifNotNullNotUndefined',
-        function (this: unknown, value: unknown, options: Handlebars.HelperOptions): string {
-            if (value !== undefined && value !== null) {
-                return options.fn(this);
-            }
-            return options.inverse(this);
-        }
-    );
-
-    Handlebars.registerHelper(
         'ifOperationDataOptional',
         function (this: unknown, parameters: OperationParameter[], options: Handlebars.HelperOptions) {
             return parameters.every(parameter => !parameter.isRequired) ? options.fn(this) : options.inverse(this);
         }
     );
 
-    Handlebars.registerHelper(
-        'intersection',
-        function (this: unknown, models: Model[], parent: string | undefined, options: Handlebars.HelperOptions) {
-            const partialType = Handlebars.partials['type'];
-            const types = models.map(model => partialType({ $config: config, ...model, parent }));
-            const uniqueTypes = types.filter(unique);
-            let uniqueTypesString = uniqueTypes.join(' & ');
-            if (uniqueTypes.length > 1) {
-                uniqueTypesString = `(${uniqueTypesString})`;
-            }
-            return options.fn(uniqueTypesString);
-        }
-    );
-
     Handlebars.registerHelper('modelIsRequired', function (model: Model) {
         return modelIsRequired(config, model);
     });
-
-    Handlebars.registerHelper(
-        'modelUnionType',
-        function (models: Model[], parent: string | undefined, filterProperties: 'exact' | undefined) {
-            const partialType = Handlebars.partials['type'];
-            const types = models
-                .map(model => partialType({ $config: config, ...model, parent }))
-                .filter((...args) => filterProperties === 'exact' || unique(...args));
-            const union = types.join(filterProperties === 'exact' ? ', ' : ' | ');
-            return types.length > 1 && types.length !== models.length ? `(${union})` : union;
-        }
-    );
 
     Handlebars.registerHelper(
         'nameOperationDataType',
@@ -352,13 +274,6 @@ export const registerHandlebarHelpers = (config: Config, client: Client): void =
         'notEquals',
         function (this: unknown, a: string, b: string, options: Handlebars.HelperOptions) {
             return a !== b ? options.fn(this) : options.inverse(this);
-        }
-    );
-
-    Handlebars.registerHelper(
-        'useDateType',
-        function (this: unknown, config: Config, format: string | undefined, options: Handlebars.HelperOptions) {
-            return config.useDateType && format === 'date-time' ? options.fn(this) : options.inverse(this);
         }
     );
 };
@@ -410,7 +325,6 @@ export const registerHandlebarTemplates = (config: Config, client: Client): Temp
     };
 
     // Partials for the generations of the models, services, etc.
-    Handlebars.registerPartial('base', Handlebars.template(partialBase));
     Handlebars.registerPartial('exportComposition', Handlebars.template(partialExportComposition));
     Handlebars.registerPartial('exportEnum', Handlebars.template(partialExportEnum));
     Handlebars.registerPartial('exportInterface', Handlebars.template(partialExportInterface));
@@ -421,15 +335,6 @@ export const registerHandlebarTemplates = (config: Config, client: Client): Temp
     Handlebars.registerPartial('operationResult', Handlebars.template(partialOperationResult));
     Handlebars.registerPartial('operationTypes', Handlebars.template(partialOperationTypes));
     Handlebars.registerPartial('requestConfig', Handlebars.template(partialRequestConfig));
-    Handlebars.registerPartial('type', Handlebars.template(partialType));
-    Handlebars.registerPartial('typeArray', Handlebars.template(partialTypeArray));
-    Handlebars.registerPartial('typeDictionary', Handlebars.template(partialTypeDictionary));
-    Handlebars.registerPartial('typeEnum', Handlebars.template(partialTypeEnum));
-    Handlebars.registerPartial('typeGeneric', Handlebars.template(partialTypeGeneric));
-    Handlebars.registerPartial('typeInterface', Handlebars.template(partialTypeInterface));
-    Handlebars.registerPartial('typeIntersection', Handlebars.template(partialTypeIntersection));
-    Handlebars.registerPartial('typeReference', Handlebars.template(partialTypeReference));
-    Handlebars.registerPartial('typeUnion', Handlebars.template(partialTypeUnion));
 
     // Generic functions used in 'request' file @see src/templates/core/request.hbs for more info
     Handlebars.registerPartial('functions/base64', Handlebars.template(functionBase64));

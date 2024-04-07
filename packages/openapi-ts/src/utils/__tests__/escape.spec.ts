@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { escapeName, unescapeName } from '../escapeName';
+import { escapeName, unescapeName } from '../escape';
 
 const toCheck: { unescaped: string; escaped: string }[] = [
     { escaped: "''", unescaped: '' },
