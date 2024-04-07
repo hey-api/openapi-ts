@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress';
 
 export default defineConfig({
-    title: 'OpenAPI TypeScript',
+    title: 'Hey API',
     lastUpdated: false,
     sitemap: {
         hostname: 'https://heyapi.vercel.app',
@@ -18,6 +18,7 @@ export default defineConfig({
         ['script', { defer: '', src: '/_vercel/insights/script.js' }],
     ],
     themeConfig: {
+        externalLinkIcon: true,
         logo: '/logo.png',
         socialLinks: [
             { icon: 'npm', link: 'https://npmjs.com/package/@hey-api/openapi-ts' },
