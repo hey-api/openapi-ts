@@ -9,10 +9,22 @@ import type { Client } from '../../types/client';
 import type { Config } from '../../types/config';
 import type { Templates } from '../handlebars';
 
+// {{#ifdef description deprecated}}
+// /**
+// {{#if description}}
+//  * {{{escapeComment description}}}
+// {{/if}}
+// {{#if deprecated}}
+//  * @deprecated
+// {{/if}}
+//  */
+// {{/ifdef}}
+// export type {{{name}}} = {{>type}};
+
 const modelToTypeScriptInterface = (config: Config, model: Model) => {
     const typeDeclaration = ts.factory.createTypeAliasDeclaration(
         [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
-        ts.factory.createIdentifier('StringType_WIP'),
+        ts.factory.createIdentifier(`${model.name}_WIP`),
         undefined,
         ts.factory.createTypeReferenceNode('string')
     );
