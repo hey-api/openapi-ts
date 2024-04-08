@@ -48,7 +48,7 @@ export const writeClient = async (
         },
         {
             dir: '',
-            enabled: config.exportSchemas,
+            enabled: config.schemas,
             fn: writeClientSchemas,
         },
         {

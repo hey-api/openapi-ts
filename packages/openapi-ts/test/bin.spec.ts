@@ -113,7 +113,7 @@ describe('bin', () => {
             'true',
             '--exportModels',
             'true',
-            '--exportSchemas',
+            '--schemas',
             'true',
             '--write',
             'false',
@@ -208,7 +208,7 @@ describe('cli', () => {
             'false',
             '--exportModels',
             'false',
-            '--exportSchemas',
+            '--schemas',
             'false',
             '--exportServices',
             'false',
@@ -228,7 +228,7 @@ describe('cli', () => {
         expect(result.stdout.toString()).toContain('debug: true');
         expect(result.stdout.toString()).toContain('exportCore: false');
         expect(result.stdout.toString()).toContain('exportModels: false');
-        expect(result.stdout.toString()).toContain('exportSchemas: false');
+        expect(result.stdout.toString()).toContain('schemas: false');
         expect(result.stdout.toString()).toContain('exportServices: false');
         expect(result.stdout.toString()).toContain('format: false');
         expect(result.stdout.toString()).toContain('lint: false');
@@ -250,7 +250,7 @@ describe('cli', () => {
             'true',
             '--exportModels',
             'true',
-            '--exportSchemas',
+            '--schemas',
             'true',
             '--exportServices',
             'true',
@@ -270,7 +270,7 @@ describe('cli', () => {
         expect(result.stdout.toString()).toContain('debug: true');
         expect(result.stdout.toString()).toContain('exportCore: true');
         expect(result.stdout.toString()).toContain('exportModels: true');
-        expect(result.stdout.toString()).toContain('exportSchemas: true');
+        expect(result.stdout.toString()).toContain('schemas: true');
         expect(result.stdout.toString()).toContain('exportServices: true');
         expect(result.stdout.toString()).toContain('format: true');
         expect(result.stdout.toString()).toContain('lint: true');
@@ -291,7 +291,7 @@ describe('cli', () => {
             '--exportCore',
             '--exportModels',
             'foo',
-            '--exportSchemas',
+            '--schemas',
             '--exportServices',
             'bar',
             '--format',
@@ -305,7 +305,7 @@ describe('cli', () => {
         expect(result.stdout.toString()).toContain('debug: true');
         expect(result.stdout.toString()).toContain('exportCore: true');
         expect(result.stdout.toString()).toContain("exportModels: 'foo");
-        expect(result.stdout.toString()).toContain('exportSchemas: true');
+        expect(result.stdout.toString()).toContain('schemas: true');
         expect(result.stdout.toString()).toContain("exportServices: 'bar'");
         expect(result.stdout.toString()).toContain('format: true');
         expect(result.stdout.toString()).toContain('lint: true');

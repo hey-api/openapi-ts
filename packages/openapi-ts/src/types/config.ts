@@ -34,11 +34,6 @@ export interface UserConfig {
      */
     exportModels?: boolean | string;
     /**
-     * Generate schemas?
-     * @default true
-     */
-    exportSchemas?: boolean;
-    /**
      * Generate services?
      * @default true
      */
@@ -79,6 +74,11 @@ export interface UserConfig {
      * Path to custom request file
      */
     request?: string;
+    /**
+     * Export JSON schemas?
+     * @default true
+     */
+    schemas?: boolean;
     /**
      * Define shape of returned value from service calls
      * @default 'body'
