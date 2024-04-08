@@ -23,11 +23,16 @@ export const unescapeName = (value: string): string => {
     return value;
 };
 
-export const escapeComment = (value: string) =>
+export const escapeComment = (value: string, insertAsterisk = true) =>
     value
         .replace(/\*\//g, '*')
         .replace(/\/\*/g, '*')
-        .replace(/\r?\n(.*)/g, (_, w) => `${EOL} * ${w.trim()}`);
+        .replace(/\r?\n(.*)/g, (_, w) => {
+            if (insertAsterisk) {
+                return `${EOL} * ${w.trim()}`;
+            }
+            return EOL + w.trim();
+        });
 
 export const escapeDescription = (value: string) =>
     value.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\${/g, '\\${');
