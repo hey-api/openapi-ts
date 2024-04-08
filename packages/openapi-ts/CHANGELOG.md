@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.36.1
+
+### Patch Changes
+
+- fix: do not throw when failing to decode URI ([#296](https://github.com/hey-api/openapi-ts/pull/296))
+
 ## 0.36.0
 
 ### Minor Changes
