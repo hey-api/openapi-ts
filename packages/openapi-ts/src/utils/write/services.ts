@@ -1,11 +1,73 @@
 import { writeFileSync } from 'node:fs';
 import path from 'node:path';
 
+import camelCase from 'camelcase';
+
 import { TypeScriptFile } from '../../compiler';
+import { Service } from '../../openApi';
 import type { Client } from '../../types/client';
 import type { Config } from '../../types/config';
-import { operationDataType, type Templates } from '../handlebars';
+import { escapeComment } from '../escape';
+import type { Templates } from '../handlebars';
+import { modelIsRequired } from '../required';
+import { sortByName } from '../sort';
 import { unique } from '../unique';
+import { toType } from './type';
+
+export const operationDataType = (config: Config, service: Service) => {
+    const operationsWithParameters = service.operations.filter(operation => operation.parameters.length);
+    if (!config.useOptions || !operationsWithParameters.length) {
+        return '';
+    }
+    const namespace = `${camelCase(service.name, { pascalCase: true })}Data`;
+    const output = `export type ${namespace} = {
+        ${operationsWithParameters
+            .map(
+                operation => `${camelCase(operation.name, { pascalCase: true })}: {
+                    ${sortByName(operation.parameters)
+                        .filter(parameter => {
+                            if (!config.experimental) {
+                                return true;
+                            }
+                            return parameter.in !== 'query';
+                        })
+                        .map(parameter => {
+                            let comment: string[] = [];
+                            if (parameter.description) {
+                                comment = ['/**', ` * ${escapeComment(parameter.description)}`, ' */'];
+                            }
+                            return [
+                                ...comment,
+                                `${parameter.name + modelIsRequired(config, parameter)}: ${toType(parameter, config)}`,
+                            ].join('\n');
+                        })
+                        .join('\n')}
+                    ${
+                        config.experimental
+                            ? `
+                    query${operation.parametersQuery.every(parameter => !parameter.isRequired) ? '?' : ''}: {
+                        ${sortByName(operation.parametersQuery)
+                            .map(parameter => {
+                                let comment: string[] = [];
+                                if (parameter.description) {
+                                    comment = ['/**', ` * ${escapeComment(parameter.description)}`, ' */'];
+                                }
+                                return [
+                                    ...comment,
+                                    `${parameter.name + modelIsRequired(config, parameter)}: ${toType(parameter, config)}`,
+                                ].join('\n');
+                            })
+                            .join('\n')}
+                    }
+                    `
+                            : ''
+                    }
+                };`
+            )
+            .join('\n')}
+    }`;
+    return output;
+};
 
 /**
  * Generate Services using the Handlebar template and write to disk.
