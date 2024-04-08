@@ -49,22 +49,43 @@ export const createArrayType = <T>(arr: T[], multiLine: boolean = false): ts.Arr
 /**
  * Create Object type expression.
  * @param obj - the object to create.
- * @param multiLine - if the object should be multiline.
+ * @param options - options to use when creating type.
  * @returns ts.ObjectLiteralExpression
  */
-export const createObjectType = <T extends object>(obj: T, multiLine: boolean = true): ts.ObjectLiteralExpression =>
-    ts.factory.createObjectLiteralExpression(
+export const createObjectType = <T extends object>(
+    obj: T,
+    options: {
+        multiLine?: boolean;
+        unescape?: boolean;
+        comments?: Record<string | number, Comments>;
+    } = {
+        comments: {},
+        multiLine: true,
+        unescape: false,
+    }
+): ts.ObjectLiteralExpression => {
+    const expression = ts.factory.createObjectLiteralExpression(
         Object.entries(obj)
             .map(([key, value]) => {
-                const initializer = toExpression(value);
+                const initializer = toExpression(value, options.unescape);
+                if (!initializer) {
+                    return undefined;
+                }
+                const c = options.comments?.[key];
                 if (key.match(/\W/g) && !key.startsWith("'") && !key.endsWith("'")) {
                     key = `'${key}'`;
                 }
-                return initializer ? ts.factory.createPropertyAssignment(key, initializer) : undefined;
+                const assignment = ts.factory.createPropertyAssignment(key, initializer);
+                if (c?.length) {
+                    addLeadingJSDocComment(assignment, c);
+                }
+                return assignment;
             })
             .filter(isType<ts.PropertyAssignment>),
-        multiLine
+        options.multiLine
     );
+    return expression;
+};
 
 /**
  * Create a type alias declaration. Example `export type X = Y;`.
