@@ -48,8 +48,6 @@ import xhrGetResponseHeader from '../templates/core/xhr/getResponseHeader.hbs';
 import xhrRequest from '../templates/core/xhr/request.hbs';
 import xhrSendRequest from '../templates/core/xhr/sendRequest.hbs';
 import templateExportService from '../templates/exportService.hbs';
-import partialIsNullable from '../templates/partials/isNullable.hbs';
-import partialIsReadOnly from '../templates/partials/isReadOnly.hbs';
 import partialOperationParameters from '../templates/partials/operationParameters.hbs';
 import partialOperationResult from '../templates/partials/operationResult.hbs';
 import partialOperationTypes from '../templates/partials/operationTypes.hbs';
@@ -262,8 +260,6 @@ export const registerHandlebarTemplates = (config: Config, client: Client): Temp
     };
 
     // Partials for the generations of the models, services, etc.
-    Handlebars.registerPartial('isNullable', Handlebars.template(partialIsNullable));
-    Handlebars.registerPartial('isReadOnly', Handlebars.template(partialIsReadOnly));
     Handlebars.registerPartial('operationParameters', Handlebars.template(partialOperationParameters));
     Handlebars.registerPartial('operationResult', Handlebars.template(partialOperationResult));
     Handlebars.registerPartial('operationTypes', Handlebars.template(partialOperationTypes));
