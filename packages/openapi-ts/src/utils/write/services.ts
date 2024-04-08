@@ -1,7 +1,7 @@
 import { writeFileSync } from 'node:fs';
 import path from 'node:path';
 
-import compiler, { TypeScriptFile } from '../../compiler';
+import { TypeScriptFile } from '../../compiler';
 import type { Client } from '../../types/client';
 import type { Config } from '../../types/config';
 import { operationDataType, type Templates } from '../handlebars';
@@ -42,52 +42,48 @@ export const writeClientServices = async (
 
     // Import required packages and core files.
     if (config.client === 'angular') {
-        file.push(compiler.import.named('Injectable', '@angular/core'));
+        file.addNamedImport('Injectable', '@angular/core');
         if (config.name === undefined) {
-            file.push(compiler.import.named('HttpClient', '@angular/common/http'));
+            file.addNamedImport('HttpClient', '@angular/common/http');
         }
-        file.push(compiler.import.named({ isTypeOnly: true, name: 'Observable' }, 'rxjs'));
+        file.addNamedImport({ isTypeOnly: true, name: 'Observable' }, 'rxjs');
     } else {
-        file.push(compiler.import.named({ isTypeOnly: true, name: 'CancelablePromise' }, './core/CancelablePromise'));
+        file.addNamedImport({ isTypeOnly: true, name: 'CancelablePromise' }, './core/CancelablePromise');
     }
     if (config.serviceResponse === 'response') {
-        file.push(compiler.import.named({ isTypeOnly: true, name: 'ApiResult' }, './core/ApiResult'));
+        file.addNamedImport({ isTypeOnly: true, name: 'ApiResult' }, './core/ApiResult');
     }
     if (config.name) {
-        file.push(
-            compiler.import.named(
-                { isTypeOnly: config.client !== 'angular', name: 'BaseHttpRequest' },
-                './core/BaseHttpRequest'
-            )
+        file.addNamedImport(
+            { isTypeOnly: config.client !== 'angular', name: 'BaseHttpRequest' },
+            './core/BaseHttpRequest'
         );
     } else {
         if (config.useOptions) {
             if (config.serviceResponse === 'generics') {
-                file.push(compiler.import.named(['mergeOpenApiConfig', 'OpenAPI'], './core/OpenAPI'));
-                file.push(compiler.import.named({ alias: '__request', name: 'request' }, './core/request'));
-                file.push(
-                    compiler.import.named(
-                        [
-                            { isTypeOnly: true, name: 'TApiResponse' },
-                            { isTypeOnly: true, name: 'TConfig' },
-                            { isTypeOnly: true, name: 'TResult' },
-                        ],
-                        './core/types'
-                    )
+                file.addNamedImport(['mergeOpenApiConfig', 'OpenAPI'], './core/OpenAPI');
+                file.addNamedImport({ alias: '__request', name: 'request' }, './core/request');
+                file.addNamedImport(
+                    [
+                        { isTypeOnly: true, name: 'TApiResponse' },
+                        { isTypeOnly: true, name: 'TConfig' },
+                        { isTypeOnly: true, name: 'TResult' },
+                    ],
+                    './core/types'
                 );
             } else {
-                file.push(compiler.import.named('OpenAPI', './core/OpenAPI'));
-                file.push(compiler.import.named({ alias: '__request', name: 'request' }, './core/request'));
+                file.addNamedImport('OpenAPI', './core/OpenAPI');
+                file.addNamedImport({ alias: '__request', name: 'request' }, './core/request');
             }
         } else {
-            file.push(compiler.import.named('OpenAPI', './core/OpenAPI'));
-            file.push(compiler.import.named({ alias: '__request', name: 'request' }, './core/request'));
+            file.addNamedImport('OpenAPI', './core/OpenAPI');
+            file.addNamedImport({ alias: '__request', name: 'request' }, './core/request');
         }
     }
 
     // Import all models required by the services.
     const models = imports.filter(unique).map(imp => ({ isTypeOnly: true, name: imp }));
-    file.push(compiler.import.named(models, './models'));
+    file.addNamedImport(models, './models');
 
     const data = [file.toString(), ...operationTypes, ...results].join('\n\n');
 
