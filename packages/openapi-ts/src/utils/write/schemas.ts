@@ -293,7 +293,7 @@ export const writeClientSchemas = async (
     const file = new TypeScriptFile();
     for (const model of client.models) {
         const result = exportSchema(config, model);
-        file.push(result);
+        file.add(result);
     }
     file.write(path.resolve(outputPath, 'schemas.ts'), '\n\n');
 };
