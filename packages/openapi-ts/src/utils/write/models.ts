@@ -2,16 +2,15 @@ import path from 'node:path';
 
 import ts from 'typescript';
 
-import compiler, { TypeScriptFile } from '../../compiler';
+import { compiler, TypeScriptFile } from '../../compiler';
 import { toExpression } from '../../compiler/types';
 import { addLeadingJSDocComment } from '../../compiler/utils';
 import { isType } from '../../compiler/utils';
-import type { Model } from '../../openApi';
+import type { Model, OpenApi } from '../../openApi';
 import type { Client } from '../../types/client';
 import type { Config } from '../../types/config';
 import { enumKey, enumName, enumUnionType, enumValue } from '../enum';
 import { escapeComment } from '../escape';
-import type { Templates } from '../handlebars';
 import { toType } from './type';
 
 const processComposition = (config: Config, client: Client, model: Model) => [
@@ -112,15 +111,15 @@ const processModel = (config: Config, client: Client, model: Model) => {
 
 /**
  * Generate Models using the Handlebar template and write to disk.
- * @param client Client containing models, schemas, and services
- * @param templates The loaded handlebar templates
+ * @param openApi {@link OpenApi} Dereferenced OpenAPI specification
  * @param outputPath Directory to write the generated files to
+ * @param client Client containing models, schemas, and services
  * @param config {@link Config} passed to the `createClient()` method
  */
 export const writeClientModels = async (
-    client: Client,
-    templates: Templates,
+    openApi: OpenApi,
     outputPath: string,
+    client: Client,
     config: Config
 ): Promise<void> => {
     if (!client.models.length) {

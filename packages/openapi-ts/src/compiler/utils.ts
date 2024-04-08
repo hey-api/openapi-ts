@@ -61,6 +61,13 @@ export const ots = {
         if (unescape) {
             value = unescapeName(value);
         }
+        if (
+            (value.includes('\n') || (value.includes("'") && value.includes('"'))) &&
+            !value.startsWith('`') &&
+            !value.endsWith('`')
+        ) {
+            value = `\`${value}\``;
+        }
         const text = encodeURIComponent(value);
         if (value.startsWith('`')) {
             return ts.factory.createIdentifier(text);

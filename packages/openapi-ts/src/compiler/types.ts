@@ -57,6 +57,9 @@ export const createObjectType = <T extends object>(obj: T, multiLine: boolean = 
         Object.entries(obj)
             .map(([key, value]) => {
                 const initializer = toExpression(value);
+                if (key.match(/\W/g) && !key.startsWith("'") && !key.endsWith("'")) {
+                    key = `'${key}'`;
+                }
                 return initializer ? ts.factory.createPropertyAssignment(key, initializer) : undefined;
             })
             .filter(isType<ts.PropertyAssignment>),

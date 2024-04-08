@@ -4,13 +4,13 @@ import path from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 
 import { writeClientModels } from '../models';
-import { mockTemplates } from './mocks';
+import { openApi } from './models';
 
 vi.mock('node:fs');
 
 describe('writeClientModels', () => {
     it('should write to filesystem', async () => {
-        const client: Parameters<typeof writeClientModels>[0] = {
+        const client: Parameters<typeof writeClientModels>[2] = {
             enumNames: [],
             models: [
                 {
@@ -37,7 +37,7 @@ describe('writeClientModels', () => {
             version: 'v1',
         };
 
-        await writeClientModels(client, mockTemplates, '/', {
+        await writeClientModels(openApi, '/', client, {
             client: 'fetch',
             debug: false,
             enums: 'javascript',
