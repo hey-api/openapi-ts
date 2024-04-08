@@ -1,5 +1,15 @@
 # @hey-api/openapi-ts
 
+## 0.36.0
+
+### Minor Changes
+
+- feat: export schemas directly from OpenAPI specification (ie. support exporting JSON schemas draft 2020-12 ([#285](https://github.com/hey-api/openapi-ts/pull/285))
+
+### Patch Changes
+
+- fix(config): rename exportSchemas to schemas ([#288](https://github.com/hey-api/openapi-ts/pull/288))
+
 ## 0.35.0
 
 ### Minor Changes

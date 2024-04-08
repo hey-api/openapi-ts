@@ -1,5 +1,11 @@
 # openapi-ts-docs
 
+## 0.2.1
+
+### Patch Changes
+
+- fix(config): rename exportSchemas to schemas ([#288](https://github.com/hey-api/openapi-ts/pull/288))
+
 ## 0.2.0
 
 ### Minor Changes
