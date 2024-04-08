@@ -59,7 +59,6 @@ import type { Config } from '../types/config';
 import { enumKey, enumName, enumUnionType, enumValue } from './enum';
 import { escapeComment, escapeDescription, escapeName } from './escape';
 import { getDefaultPrintable, modelIsRequired } from './required';
-import { sortByName } from './sort';
 import { toType } from './write/type';
 
 const dataDestructure = (config: Config, operation: Operation) => {
@@ -138,61 +137,6 @@ const nameOperationDataType = (service: Service, operation: Service['operations'
     const namespace = `${camelCase(service.name, { pascalCase: true })}Data`;
     const key = camelCase(operation.name, { pascalCase: true });
     return `${namespace}['${key}']`;
-};
-
-export const operationDataType = (config: Config, service: Service) => {
-    const operationsWithParameters = service.operations.filter(operation => operation.parameters.length);
-    if (!config.useOptions || !operationsWithParameters.length) {
-        return '';
-    }
-    const namespace = `${camelCase(service.name, { pascalCase: true })}Data`;
-    const output = `export type ${namespace} = {
-        ${operationsWithParameters
-            .map(
-                operation => `${camelCase(operation.name, { pascalCase: true })}: {
-                    ${sortByName(operation.parameters)
-                        .filter(parameter => {
-                            if (!config.experimental) {
-                                return true;
-                            }
-                            return parameter.in !== 'query';
-                        })
-                        .map(parameter => {
-                            let comment: string[] = [];
-                            if (parameter.description) {
-                                comment = ['/**', ` * ${escapeComment(parameter.description)}`, ' */'];
-                            }
-                            return [
-                                ...comment,
-                                `${parameter.name + modelIsRequired(config, parameter)}: ${toType(parameter, config)}`,
-                            ].join('\n');
-                        })
-                        .join('\n')}
-                    ${
-                        config.experimental
-                            ? `
-                    query${operation.parametersQuery.every(parameter => !parameter.isRequired) ? '?' : ''}: {
-                        ${sortByName(operation.parametersQuery)
-                            .map(parameter => {
-                                let comment: string[] = [];
-                                if (parameter.description) {
-                                    comment = ['/**', ` * ${escapeComment(parameter.description)}`, ' */'];
-                                }
-                                return [
-                                    ...comment,
-                                    `${parameter.name + modelIsRequired(config, parameter)}: ${toType(parameter, config)}`,
-                                ].join('\n');
-                            })
-                            .join('\n')}
-                    }
-                    `
-                            : ''
-                    }
-                };`
-            )
-            .join('\n')}
-    }`;
-    return output;
 };
 
 export const registerHandlebarHelpers = (config: Config, client: Client): void => {
