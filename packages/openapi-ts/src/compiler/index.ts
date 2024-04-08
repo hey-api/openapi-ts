@@ -6,9 +6,21 @@ import * as module from './module';
 import * as types from './types';
 import { tsNodeToString } from './utils';
 
-export class TypeScriptFile extends Array<ts.Node> {
-    public override toString(seperator: string = '\n') {
-        return this.map(v => tsNodeToString(v)).join(seperator);
+export class TypeScriptFile {
+    private _imports: Array<ts.Node> = [];
+    private _items: Array<ts.Node> = [];
+
+    public addImport(...params: Parameters<typeof module.createNamedImportDeclarations>): void {
+        this._imports.push(compiler.import.named(...params));
+    }
+
+    public add(...nodes: Array<ts.Node>): void {
+        this._items.push(...nodes);
+    }
+
+    public toString(seperator: string = '\n') {
+        const importsString = this._imports.map(v => tsNodeToString(v)).join('\n');
+        return [importsString, ...this._items.map(v => tsNodeToString(v))].join(seperator);
     }
 
     public write(file: PathOrFileDescriptor, seperator: string = '\n') {
@@ -16,7 +28,7 @@ export class TypeScriptFile extends Array<ts.Node> {
     }
 }
 
-export default {
+const compiler = {
     export: {
         all: module.createExportAllDeclaration,
         asConst: module.createExportVariableAsConst,
@@ -30,3 +42,5 @@ export default {
         object: types.createObjectType,
     },
 };
+
+export default compiler;
