@@ -10,15 +10,15 @@ import type { Templates } from '../handlebars';
 /**
  * Generate OpenAPI core files, this includes the basic boilerplate code to handle requests.
  * @param openApi {@link OpenApi} Dereferenced OpenAPI specification
- * @param client Client containing models, schemas, and services
  * @param outputPath Directory to write the generated files to
+ * @param client Client containing models, schemas, and services
  * @param config {@link Config} passed to the `createClient()` method
  * @param templates The loaded handlebar templates
  */
 export const writeClientCore = async (
     openApi: OpenApi,
-    client: Client,
     outputPath: string,
+    client: Client,
     config: Config,
     templates: Templates
 ): Promise<void> => {

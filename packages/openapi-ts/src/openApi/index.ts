@@ -16,8 +16,11 @@ export { OpenApi } from './common/interfaces/OpenApi';
 export function parse(openApi: OpenApi, config: Config): Client {
     if ('openapi' in openApi) {
         return parseV3(openApi, config);
-    } else if ('swagger' in openApi) {
+    }
+
+    if ('swagger' in openApi) {
         return parseV2(openApi, config);
     }
+
     throw new Error(`Unsupported Open API specification: ${JSON.stringify(openApi, null, 2)}`);
 }

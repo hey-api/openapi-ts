@@ -165,14 +165,14 @@ const processModel = (config: Config, client: Client, model: Model) => {
 /**
  * Generate Models using the Handlebar template and write to disk.
  * @param openApi {@link OpenApi} Dereferenced OpenAPI specification
- * @param client Client containing models, schemas, and services
  * @param outputPath Directory to write the generated files to
+ * @param client Client containing models, schemas, and services
  * @param config {@link Config} passed to the `createClient()` method
  */
 export const writeClientModels = async (
     openApi: OpenApi,
-    client: Client,
     outputPath: string,
+    client: Client,
     config: Config
 ): Promise<void> => {
     if (!client.models.length) {

@@ -16,7 +16,7 @@ describe('writeClientCore', () => {
     });
 
     it('should write to filesystem', async () => {
-        const client: Parameters<typeof writeClientCore>[1] = {
+        const client: Parameters<typeof writeClientCore>[2] = {
             enumNames: [],
             models: [],
             server: 'http://localhost:8080',
@@ -46,7 +46,7 @@ describe('writeClientCore', () => {
             write: true,
         };
 
-        await writeClientCore(openApi, client, '/', config, templates);
+        await writeClientCore(openApi, '/', client, config, templates);
 
         expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/OpenAPI.ts'), 'settings');
         expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/ApiError.ts'), 'apiError');
@@ -58,7 +58,7 @@ describe('writeClientCore', () => {
     });
 
     it('uses client server value for base', async () => {
-        const client: Parameters<typeof writeClientCore>[1] = {
+        const client: Parameters<typeof writeClientCore>[2] = {
             enumNames: [],
             models: [],
             server: 'http://localhost:8080',
@@ -88,7 +88,7 @@ describe('writeClientCore', () => {
             write: true,
         };
 
-        await writeClientCore(openApi, client, '/', config, templates);
+        await writeClientCore(openApi, '/', client, config, templates);
 
         expect(templates.core.settings).toHaveBeenCalledWith({
             $config: config,
@@ -99,7 +99,7 @@ describe('writeClientCore', () => {
     });
 
     it('uses custom value for base', async () => {
-        const client: Parameters<typeof writeClientCore>[1] = {
+        const client: Parameters<typeof writeClientCore>[2] = {
             enumNames: [],
             models: [],
             server: 'http://localhost:8080',
@@ -130,7 +130,7 @@ describe('writeClientCore', () => {
             write: true,
         };
 
-        await writeClientCore(openApi, client, '/', config, templates);
+        await writeClientCore(openApi, '/', client, config, templates);
 
         expect(templates.core.settings).toHaveBeenCalledWith({
             $config: config,

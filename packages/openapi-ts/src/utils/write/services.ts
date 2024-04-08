@@ -11,15 +11,15 @@ import { unique } from '../unique';
 /**
  * Generate Services using the Handlebar template and write to disk.
  * @param openApi {@link OpenApi} Dereferenced OpenAPI specification
- * @param client Client containing models, schemas, and services
  * @param outputPath Directory to write the generated files to
+ * @param client Client containing models, schemas, and services
  * @param config {@link Config} passed to the `createClient()` method
  * @param templates The loaded handlebar templates
  */
 export const writeClientServices = async (
     openApi: OpenApi,
-    client: Client,
     outputPath: string,
+    client: Client,
     config: Config,
     templates: Templates
 ): Promise<void> => {
