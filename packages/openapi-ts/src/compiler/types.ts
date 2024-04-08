@@ -1,6 +1,6 @@
 import ts from 'typescript';
 
-import { isType, ots } from './utils';
+import { addLeadingJSDocComment, isType, ots } from './utils';
 
 /**
  * Convert an unknown value to an expression.
@@ -62,3 +62,21 @@ export const createObjectType = <T extends object>(obj: T, multiLine: boolean = 
             .filter(isType<ts.PropertyAssignment>),
         multiLine
     );
+
+export const createTypeAliasDeclaration = (
+    name: string,
+    type: string,
+    typeParameters: string[] = [],
+    comments?: Parameters<typeof addLeadingJSDocComment>[1]
+) => {
+    const node = ts.factory.createTypeAliasDeclaration(
+        [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
+        ts.factory.createIdentifier(name),
+        typeParameters.map(p => ts.factory.createTypeParameterDeclaration(undefined, p, undefined, undefined)),
+        ts.factory.createTypeReferenceNode(type)
+    );
+    if (comments?.length) {
+        addLeadingJSDocComment(node, comments);
+    }
+    return node;
+};

@@ -48,18 +48,13 @@ import xhrGetResponseHeader from '../templates/core/xhr/getResponseHeader.hbs';
 import xhrRequest from '../templates/core/xhr/request.hbs';
 import xhrSendRequest from '../templates/core/xhr/sendRequest.hbs';
 import templateExportService from '../templates/exportService.hbs';
-import partialIsNullable from '../templates/partials/isNullable.hbs';
-import partialIsReadOnly from '../templates/partials/isReadOnly.hbs';
 import partialOperationParameters from '../templates/partials/operationParameters.hbs';
 import partialOperationResult from '../templates/partials/operationResult.hbs';
 import partialOperationTypes from '../templates/partials/operationTypes.hbs';
 import partialRequestConfig from '../templates/partials/requestConfig.hbs';
-import type { Client } from '../types/client';
 import type { Config } from '../types/config';
-import { enumKey, enumName, enumUnionType, enumValue } from './enum';
 import { escapeComment, escapeDescription, escapeName } from './escape';
 import { getDefaultPrintable, modelIsRequired } from './required';
-import { sortByName } from './sort';
 import { toType } from './write/type';
 
 const dataDestructure = (config: Config, operation: Operation) => {
@@ -140,62 +135,7 @@ const nameOperationDataType = (service: Service, operation: Service['operations'
     return `${namespace}['${key}']`;
 };
 
-export const operationDataType = (config: Config, service: Service) => {
-    const operationsWithParameters = service.operations.filter(operation => operation.parameters.length);
-    if (!config.useOptions || !operationsWithParameters.length) {
-        return '';
-    }
-    const namespace = `${camelCase(service.name, { pascalCase: true })}Data`;
-    const output = `export type ${namespace} = {
-        ${operationsWithParameters
-            .map(
-                operation => `${camelCase(operation.name, { pascalCase: true })}: {
-                    ${sortByName(operation.parameters)
-                        .filter(parameter => {
-                            if (!config.experimental) {
-                                return true;
-                            }
-                            return parameter.in !== 'query';
-                        })
-                        .map(parameter => {
-                            let comment: string[] = [];
-                            if (parameter.description) {
-                                comment = ['/**', ` * ${escapeComment(parameter.description)}`, ' */'];
-                            }
-                            return [
-                                ...comment,
-                                `${parameter.name + modelIsRequired(config, parameter)}: ${toType(parameter, config)}`,
-                            ].join('\n');
-                        })
-                        .join('\n')}
-                    ${
-                        config.experimental
-                            ? `
-                    query${operation.parametersQuery.every(parameter => !parameter.isRequired) ? '?' : ''}: {
-                        ${sortByName(operation.parametersQuery)
-                            .map(parameter => {
-                                let comment: string[] = [];
-                                if (parameter.description) {
-                                    comment = ['/**', ` * ${escapeComment(parameter.description)}`, ' */'];
-                                }
-                                return [
-                                    ...comment,
-                                    `${parameter.name + modelIsRequired(config, parameter)}: ${toType(parameter, config)}`,
-                                ].join('\n');
-                            })
-                            .join('\n')}
-                    }
-                    `
-                            : ''
-                    }
-                };`
-            )
-            .join('\n')}
-    }`;
-    return output;
-};
-
-export const registerHandlebarHelpers = (config: Config, client: Client): void => {
+export const registerHandlebarHelpers = (config: Config): void => {
     Handlebars.registerHelper('camelCase', camelCase);
 
     Handlebars.registerHelper('dataDestructure', function (operation: Operation) {
@@ -205,15 +145,6 @@ export const registerHandlebarHelpers = (config: Config, client: Client): void =
     Handlebars.registerHelper('dataParameters', function (parameters: OperationParameter[]) {
         return dataParameters(config, parameters);
     });
-
-    Handlebars.registerHelper('enumKey', enumKey);
-
-    Handlebars.registerHelper('enumName', function (name: string | undefined) {
-        return enumName(config, client, name);
-    });
-
-    Handlebars.registerHelper('enumUnionType', enumUnionType);
-    Handlebars.registerHelper('enumValue', enumValue);
 
     Handlebars.registerHelper(
         'equals',
@@ -295,8 +226,8 @@ export interface Templates {
  * Read all the Handlebar templates that we need and return a wrapper object
  * so we can easily access the templates in our generator/write functions.
  */
-export const registerHandlebarTemplates = (config: Config, client: Client): Templates => {
-    registerHandlebarHelpers(config, client);
+export const registerHandlebarTemplates = (config: Config): Templates => {
+    registerHandlebarHelpers(config);
 
     // Main templates (entry points for the files we write to disk)
     const templates: Templates = {
@@ -318,8 +249,6 @@ export const registerHandlebarTemplates = (config: Config, client: Client): Temp
     };
 
     // Partials for the generations of the models, services, etc.
-    Handlebars.registerPartial('isNullable', Handlebars.template(partialIsNullable));
-    Handlebars.registerPartial('isReadOnly', Handlebars.template(partialIsReadOnly));
     Handlebars.registerPartial('operationParameters', Handlebars.template(partialOperationParameters));
     Handlebars.registerPartial('operationResult', Handlebars.template(partialOperationResult));
     Handlebars.registerPartial('operationTypes', Handlebars.template(partialOperationTypes));
