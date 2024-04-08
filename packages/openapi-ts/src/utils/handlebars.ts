@@ -52,9 +52,7 @@ import partialOperationParameters from '../templates/partials/operationParameter
 import partialOperationResult from '../templates/partials/operationResult.hbs';
 import partialOperationTypes from '../templates/partials/operationTypes.hbs';
 import partialRequestConfig from '../templates/partials/requestConfig.hbs';
-import type { Client } from '../types/client';
 import type { Config } from '../types/config';
-import { enumKey, enumName, enumUnionType, enumValue } from './enum';
 import { escapeComment, escapeDescription, escapeName } from './escape';
 import { getDefaultPrintable, modelIsRequired } from './required';
 import { toType } from './write/type';
@@ -137,7 +135,7 @@ const nameOperationDataType = (service: Service, operation: Service['operations'
     return `${namespace}['${key}']`;
 };
 
-export const registerHandlebarHelpers = (config: Config, client: Client): void => {
+export const registerHandlebarHelpers = (config: Config): void => {
     Handlebars.registerHelper('camelCase', camelCase);
 
     Handlebars.registerHelper('dataDestructure', function (operation: Operation) {
@@ -147,15 +145,6 @@ export const registerHandlebarHelpers = (config: Config, client: Client): void =
     Handlebars.registerHelper('dataParameters', function (parameters: OperationParameter[]) {
         return dataParameters(config, parameters);
     });
-
-    Handlebars.registerHelper('enumKey', enumKey);
-
-    Handlebars.registerHelper('enumName', function (name: string | undefined) {
-        return enumName(config, client, name);
-    });
-
-    Handlebars.registerHelper('enumUnionType', enumUnionType);
-    Handlebars.registerHelper('enumValue', enumValue);
 
     Handlebars.registerHelper(
         'equals',
@@ -237,8 +226,8 @@ export interface Templates {
  * Read all the Handlebar templates that we need and return a wrapper object
  * so we can easily access the templates in our generator/write functions.
  */
-export const registerHandlebarTemplates = (config: Config, client: Client): Templates => {
-    registerHandlebarHelpers(config, client);
+export const registerHandlebarTemplates = (config: Config): Templates => {
+    registerHandlebarHelpers(config);
 
     // Main templates (entry points for the files we write to disk)
     const templates: Templates = {
