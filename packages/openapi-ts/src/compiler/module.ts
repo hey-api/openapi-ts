@@ -44,10 +44,10 @@ export const createNamedExportDeclarations = (
 /**
  * Create an export variable as const statement. Example: `export x = {} as const`.
  * @param name - name of the variable.
- * @param expr - expression for the variable.
+ * @param expression - expression for the variable.
  * @returns ts.VariableStatement
  */
-export const createExportVariableAsConst = (name: string, expr: ts.Expression): ts.VariableStatement =>
+export const createExportVariableAsConst = (name: string, expression: ts.Expression): ts.VariableStatement =>
     ts.factory.createVariableStatement(
         [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
         ts.factory.createVariableDeclarationList(
@@ -56,7 +56,7 @@ export const createExportVariableAsConst = (name: string, expr: ts.Expression): 
                     ts.factory.createIdentifier(name),
                     undefined,
                     undefined,
-                    ts.factory.createAsExpression(expr, ts.factory.createTypeReferenceNode('const'))
+                    ts.factory.createAsExpression(expression, ts.factory.createTypeReferenceNode('const'))
                 ),
             ],
             ts.NodeFlags.Const

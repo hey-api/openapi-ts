@@ -1,5 +1,7 @@
 import ts from 'typescript';
 
+import { unescapeName } from '../utils/escape';
+
 export const CONFIG = {
     newLine: ts.NewLineKind.LineFeed,
     scriptKind: ts.ScriptKind.TS,
@@ -8,7 +10,11 @@ export const CONFIG = {
 };
 
 const printer = ts.createPrinter({ newLine: CONFIG.newLine });
-const blankSourceFile = ts.createSourceFile('', '', CONFIG.scriptTarget, undefined, CONFIG.scriptKind);
+
+export const createSourceFile = (sourceText: string) =>
+    ts.createSourceFile('', sourceText, CONFIG.scriptTarget, undefined, CONFIG.scriptKind);
+
+const blankSourceFile = createSourceFile('');
 
 /**
  * Print a typescript node to a string.
@@ -47,20 +53,19 @@ export const ots = {
                 ts.SyntaxKind.MinusToken,
                 ts.factory.createNumericLiteral(Math.abs(value))
             );
-        } else {
-            return ts.factory.createNumericLiteral(value);
         }
+        return ts.factory.createNumericLiteral(value);
     },
     // Create a string literal. This handles strings that start with '`' or "'".
-    string: (value: string) => {
-        if (value.startsWith('`')) {
-            return ts.factory.createIdentifier(encodeURIComponent(value));
-        } else {
-            return ts.factory.createStringLiteral(
-                encodeURIComponent(value),
-                value.includes("'") ? false : CONFIG.useSingleQuotes
-            );
+    string: (value: string, unescape = false) => {
+        if (unescape) {
+            value = unescapeName(value);
         }
+        const text = encodeURIComponent(value);
+        if (value.startsWith('`')) {
+            return ts.factory.createIdentifier(text);
+        }
+        return ts.factory.createStringLiteral(text, value.includes("'") ? false : CONFIG.useSingleQuotes);
     },
 };
 
