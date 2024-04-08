@@ -14,10 +14,8 @@ import { escapeComment } from '../escape';
 import type { Templates } from '../handlebars';
 import { toType } from './type';
 
-type Nodes = Array<ts.JSDoc | ts.TypeAliasDeclaration | ts.Identifier | ts.VariableStatement | ts.EnumDeclaration>;
-
 const processComposition = (config: Config, client: Client, model: Model) => {
-    let nodes: Nodes = [
+    let nodes: Array<ts.Node> = [
         ts.factory.createTypeAliasDeclaration(
             [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
             ts.factory.createIdentifier(model.name),
@@ -42,7 +40,7 @@ const processComposition = (config: Config, client: Client, model: Model) => {
 };
 
 const processEnum = (config: Config, client: Client, model: Model, exportType: boolean) => {
-    let nodes: Nodes = [];
+    let nodes: Array<ts.Node> = [];
 
     if (exportType) {
         if (config.enums === 'typescript') {
@@ -105,7 +103,7 @@ const processEnum = (config: Config, client: Client, model: Model, exportType: b
 };
 
 const processInterface = (config: Config, client: Client, model: Model) => {
-    let nodes: Nodes = [
+    let nodes: Array<ts.Node> = [
         ts.factory.createTypeAliasDeclaration(
             [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
             ts.factory.createIdentifier(model.name),
@@ -130,7 +128,7 @@ const processInterface = (config: Config, client: Client, model: Model) => {
 };
 
 const processType = (config: Config, client: Client, model: Model) => {
-    const nodes: Nodes = [
+    const nodes: Array<ts.Node> = [
         ts.factory.createTypeAliasDeclaration(
             [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
             ts.factory.createIdentifier(model.name),
