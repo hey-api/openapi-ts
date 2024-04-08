@@ -193,7 +193,7 @@ export async function createClient(userConfig: UserConfig): Promise<Client> {
             : (config.input as unknown as Awaited<ReturnType<typeof getOpenApiSpec>>);
 
     const client = postProcessClient(parse(openApi, config));
-    const templates = registerHandlebarTemplates(config, client);
+    const templates = registerHandlebarTemplates(config);
 
     if (config.write) {
         logClientMessage(config.client);

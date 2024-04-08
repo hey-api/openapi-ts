@@ -77,3 +77,23 @@ export const ots = {
 };
 
 export const isType = <T>(value: T | undefined): value is T => value !== undefined;
+
+export const addLeadingJSDocComment = (
+    node: ts.Node | undefined,
+    text: Array<string | null | false | undefined>,
+    hasTrailingNewLine: boolean = true
+): string => {
+    // if node is falsy, assume string mode
+    if (node) {
+        ts.addSyntheticLeadingComment(
+            node,
+            ts.SyntaxKind.MultiLineCommentTrivia,
+            ['*', ...text, ' '].filter(Boolean).join('\n'),
+            hasTrailingNewLine
+        );
+        return '';
+    }
+
+    const result = ['/**', ...text, ' */'].filter(Boolean).join('\n');
+    return hasTrailingNewLine ? `${result}\n` : result;
+};

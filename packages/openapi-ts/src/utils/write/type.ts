@@ -1,31 +1,10 @@
-import ts from 'typescript';
-
+import { addLeadingJSDocComment } from '../../compiler/utils';
 import { Model } from '../../openApi';
 import { Config } from '../../types/config';
 import { enumUnionType } from '../enum';
 import { escapeComment } from '../escape';
 import { modelIsRequired } from '../required';
 import { unique } from '../unique';
-
-export const addLeadingJSDocComment = (
-    node: any | undefined,
-    text: Array<string | null | false | undefined>,
-    hasTrailingNewLine: boolean = true
-): string => {
-    // if node is falsy, assume string mode
-    if (node) {
-        ts.addSyntheticLeadingComment(
-            node,
-            ts.SyntaxKind.MultiLineCommentTrivia,
-            ['*', ...text, ' '].filter(Boolean).join('\n'),
-            hasTrailingNewLine
-        );
-        return '';
-    }
-
-    const result = ['/**', ...text, ' */'].filter(Boolean).join('\n');
-    return hasTrailingNewLine ? `${result}\n` : result;
-};
 
 const base = (model: Model, config: Config) => {
     if (model.base === 'binary') {

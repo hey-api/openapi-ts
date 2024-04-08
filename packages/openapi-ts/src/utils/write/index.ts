@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import compiler, { TypeScriptFile } from '../../compiler';
+import { compiler, TypeScriptFile } from '../../compiler';
 import type { Client } from '../../types/client';
 import type { Config } from '../../types/config';
 

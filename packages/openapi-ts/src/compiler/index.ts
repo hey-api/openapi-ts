@@ -40,10 +40,11 @@ export const compiler = {
     import: {
         named: module.createNamedImportDeclarations,
     },
+    typedef: {
+        alias: types.createTypeAliasDeclaration,
+    },
     types: {
         array: types.createArrayType,
         object: types.createObjectType,
     },
 };
-
-export default compiler;

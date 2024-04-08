@@ -5,43 +5,30 @@ import { registerHandlebarHelpers, registerHandlebarTemplates } from '../handleb
 
 describe('registerHandlebarHelpers', () => {
     it('should register the helpers', () => {
-        registerHandlebarHelpers(
-            {
-                client: 'fetch',
-                debug: false,
-                enums: 'javascript',
-                experimental: false,
-                exportCore: true,
-                exportModels: true,
-                exportSchemas: true,
-                exportServices: true,
-                format: true,
-                input: '',
-                lint: false,
-                operationId: true,
-                output: '',
-                postfixServices: '',
-                serviceResponse: 'body',
-                useDateType: false,
-                useOptions: false,
-                write: true,
-            },
-            {
-                enumNames: [],
-                models: [],
-                server: '',
-                services: [],
-                version: '',
-            }
-        );
+        registerHandlebarHelpers({
+            client: 'fetch',
+            debug: false,
+            enums: 'javascript',
+            experimental: false,
+            exportCore: true,
+            exportModels: true,
+            exportSchemas: true,
+            exportServices: true,
+            format: true,
+            input: '',
+            lint: false,
+            operationId: true,
+            output: '',
+            postfixServices: '',
+            serviceResponse: 'body',
+            useDateType: false,
+            useOptions: false,
+            write: true,
+        });
         const helpers = Object.keys(Handlebars.helpers);
         expect(helpers).toContain('camelCase');
         expect(helpers).toContain('dataDestructure');
         expect(helpers).toContain('dataParameters');
-        expect(helpers).toContain('enumKey');
-        expect(helpers).toContain('enumName');
-        expect(helpers).toContain('enumUnionType');
-        expect(helpers).toContain('enumValue');
         expect(helpers).toContain('equals');
         expect(helpers).toContain('escapeComment');
         expect(helpers).toContain('escapeDescription');
@@ -55,35 +42,26 @@ describe('registerHandlebarHelpers', () => {
 
 describe('registerHandlebarTemplates', () => {
     it('should return correct templates', () => {
-        const templates = registerHandlebarTemplates(
-            {
-                client: 'fetch',
-                debug: false,
-                enums: 'javascript',
-                experimental: false,
-                exportCore: true,
-                exportModels: true,
-                exportSchemas: true,
-                exportServices: true,
-                format: true,
-                input: '',
-                lint: false,
-                operationId: true,
-                output: '',
-                postfixServices: '',
-                serviceResponse: 'body',
-                useDateType: false,
-                useOptions: false,
-                write: true,
-            },
-            {
-                enumNames: [],
-                models: [],
-                server: '',
-                services: [],
-                version: '',
-            }
-        );
+        const templates = registerHandlebarTemplates({
+            client: 'fetch',
+            debug: false,
+            enums: 'javascript',
+            experimental: false,
+            exportCore: true,
+            exportModels: true,
+            exportSchemas: true,
+            exportServices: true,
+            format: true,
+            input: '',
+            lint: false,
+            operationId: true,
+            output: '',
+            postfixServices: '',
+            serviceResponse: 'body',
+            useDateType: false,
+            useOptions: false,
+            write: true,
+        });
         expect(templates.exports.service).toBeDefined();
         expect(templates.core.settings).toBeDefined();
         expect(templates.core.apiError).toBeDefined();

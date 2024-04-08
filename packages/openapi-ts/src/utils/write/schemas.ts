@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import compiler, { TypeScriptFile } from '../../compiler';
+import { compiler, TypeScriptFile } from '../../compiler';
 import type { OpenApi } from '../../openApi';
 
 /**
