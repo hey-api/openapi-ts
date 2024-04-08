@@ -153,7 +153,7 @@ export class ParametersService {
     public deleteFoo(
         data: ParametersData['payloads']['DeleteFoo']
     ): CancelablePromise<ParametersData['responses']['DeleteFoo']> {
-        const { bar, foo } = data;
+        const { foo, bar } = data;
         return this.httpRequest.request({
             method: 'DELETE',
             url: '/api/v{api-version}/foo/{foo}/bar/{bar}',
@@ -171,14 +171,14 @@ export class ParametersService {
         data: ParametersData['payloads']['CallWithParameters']
     ): CancelablePromise<ParametersData['responses']['CallWithParameters']> {
         const {
-            fooAllOfEnum,
-            fooRefEnum,
-            parameterCookie,
-            parameterForm,
             parameterHeader,
-            parameterPath,
+            fooAllOfEnum,
             parameterQuery,
+            parameterForm,
+            parameterCookie,
+            parameterPath,
             requestBody,
+            fooRefEnum,
         } = data;
         return this.httpRequest.request({
             method: 'POST',
@@ -212,15 +212,15 @@ export class ParametersService {
         data: ParametersData['payloads']['CallWithWeirdParameterNames']
     ): CancelablePromise<ParametersData['responses']['CallWithWeirdParameterNames']> {
         const {
-            _default,
-            parameterCookie,
-            parameterForm,
             parameterHeader,
+            parameterQuery,
+            parameterForm,
+            parameterCookie,
+            requestBody,
             parameterPath1,
             parameterPath2,
             parameterPath3,
-            parameterQuery,
-            requestBody,
+            _default,
         } = data;
         return this.httpRequest.request({
             method: 'POST',
@@ -254,7 +254,7 @@ export class ParametersService {
     public getCallWithOptionalParam(
         data: ParametersData['payloads']['GetCallWithOptionalParam']
     ): CancelablePromise<ParametersData['responses']['GetCallWithOptionalParam']> {
-        const { parameter, requestBody } = data;
+        const { requestBody, parameter } = data;
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/parameters/',
@@ -295,12 +295,12 @@ export class DescriptionsService {
         data: DescriptionsData['payloads']['CallWithDescriptions'] = {}
     ): CancelablePromise<DescriptionsData['responses']['CallWithDescriptions']> {
         const {
-            parameterWithBackticks,
             parameterWithBreaks,
+            parameterWithBackticks,
+            parameterWithSlashes,
             parameterWithExpressionPlaceholders,
             parameterWithQuotes,
             parameterWithReservedCharacters,
-            parameterWithSlashes,
         } = data;
         return this.httpRequest.request({
             method: 'POST',
@@ -347,7 +347,7 @@ export class RequestBodyService {
     public postApiRequestBody(
         data: RequestBodyData['payloads']['PostApiRequestBody'] = {}
     ): CancelablePromise<RequestBodyData['responses']['PostApiRequestBody']> {
-        const { foo, parameter } = data;
+        const { parameter, foo } = data;
         return this.httpRequest.request({
             method: 'POST',
             url: '/api/v{api-version}/requestBody/',
@@ -369,7 +369,7 @@ export class FormDataService {
     public postApiFormData(
         data: FormDataData['payloads']['PostApiFormData'] = {}
     ): CancelablePromise<FormDataData['responses']['PostApiFormData']> {
-        const { formData, parameter } = data;
+        const { parameter, formData } = data;
         return this.httpRequest.request({
             method: 'POST',
             url: '/api/v{api-version}/formData/',
@@ -391,7 +391,7 @@ export class DefaultsService {
     public callWithDefaultParameters(
         data: DefaultsData['payloads']['CallWithDefaultParameters'] = {}
     ): CancelablePromise<DefaultsData['responses']['CallWithDefaultParameters']> {
-        const { parameterBoolean, parameterEnum, parameterModel, parameterNumber, parameterString } = data;
+        const { parameterString, parameterNumber, parameterBoolean, parameterEnum, parameterModel } = data;
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/defaults',
@@ -411,7 +411,7 @@ export class DefaultsService {
     public callWithDefaultOptionalParameters(
         data: DefaultsData['payloads']['CallWithDefaultOptionalParameters'] = {}
     ): CancelablePromise<DefaultsData['responses']['CallWithDefaultOptionalParameters']> {
-        const { parameterBoolean, parameterEnum, parameterModel, parameterNumber, parameterString } = data;
+        const { parameterString, parameterNumber, parameterBoolean, parameterEnum, parameterModel } = data;
         return this.httpRequest.request({
             method: 'POST',
             url: '/api/v{api-version}/defaults',
@@ -432,14 +432,14 @@ export class DefaultsService {
         data: DefaultsData['payloads']['CallToTestOrderOfParams']
     ): CancelablePromise<DefaultsData['responses']['CallToTestOrderOfParams']> {
         const {
+            parameterStringWithNoDefault,
             parameterOptionalStringWithDefault,
             parameterOptionalStringWithEmptyDefault,
             parameterOptionalStringWithNoDefault,
-            parameterStringNullableWithDefault,
-            parameterStringNullableWithNoDefault,
             parameterStringWithDefault,
             parameterStringWithEmptyDefault,
-            parameterStringWithNoDefault,
+            parameterStringNullableWithNoDefault,
+            parameterStringNullableWithDefault,
         } = data;
         return this.httpRequest.request({
             method: 'PUT',
@@ -671,7 +671,7 @@ export class CollectionFormatService {
     public collectionFormat(
         data: CollectionFormatData['payloads']['CollectionFormat']
     ): CancelablePromise<CollectionFormatData['responses']['CollectionFormat']> {
-        const { parameterArrayCsv, parameterArrayMulti, parameterArrayPipes, parameterArraySsv, parameterArrayTsv } =
+        const { parameterArrayCsv, parameterArraySsv, parameterArrayTsv, parameterArrayPipes, parameterArrayMulti } =
             data;
         return this.httpRequest.request({
             method: 'GET',
@@ -699,14 +699,14 @@ export class TypesService {
      */
     public types(data: TypesData['payloads']['Types']): CancelablePromise<TypesData['responses']['Types']> {
         const {
-            id,
             parameterArray,
-            parameterBoolean,
             parameterDictionary,
             parameterEnum,
             parameterNumber,
-            parameterObject,
             parameterString,
+            parameterBoolean,
+            parameterObject,
+            id,
         } = data;
         return this.httpRequest.request({
             method: 'GET',

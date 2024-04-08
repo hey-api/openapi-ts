@@ -124,7 +124,7 @@ const operationDataType = (config: Config, service: Service) => {
             ${operationsWithParameters
                 .map(
                     operation => `${operationKey(operation)}: {
-                        ${sortByName(operation.parameters)
+                        ${sortByName([...operation.parameters])
                             .filter(parameter => {
                                 if (!config.experimental) {
                                     return true;
@@ -146,7 +146,7 @@ const operationDataType = (config: Config, service: Service) => {
                             config.experimental
                                 ? `
                         query${operation.parametersQuery.every(parameter => !parameter.isRequired) ? '?' : ''}: {
-                            ${sortByName(operation.parametersQuery)
+                            ${sortByName([...operation.parametersQuery])
                                 .map(parameter => {
                                     let comment: string[] = [];
                                     if (parameter.description) {

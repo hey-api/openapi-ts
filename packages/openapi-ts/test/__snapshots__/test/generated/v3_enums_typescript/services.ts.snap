@@ -148,7 +148,7 @@ export class ParametersService {
     public static deleteFoo(
         data: ParametersData['payloads']['DeleteFoo']
     ): CancelablePromise<ParametersData['responses']['DeleteFoo']> {
-        const { bar, foo } = data;
+        const { foo, bar } = data;
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/v{api-version}/foo/{foo}/bar/{bar}',
@@ -166,14 +166,14 @@ export class ParametersService {
         data: ParametersData['payloads']['CallWithParameters']
     ): CancelablePromise<ParametersData['responses']['CallWithParameters']> {
         const {
-            fooAllOfEnum,
-            fooRefEnum,
-            parameterCookie,
-            parameterForm,
             parameterHeader,
-            parameterPath,
+            fooAllOfEnum,
             parameterQuery,
+            parameterForm,
+            parameterCookie,
+            parameterPath,
             requestBody,
+            fooRefEnum,
         } = data;
         return __request(OpenAPI, {
             method: 'POST',
@@ -207,15 +207,15 @@ export class ParametersService {
         data: ParametersData['payloads']['CallWithWeirdParameterNames']
     ): CancelablePromise<ParametersData['responses']['CallWithWeirdParameterNames']> {
         const {
-            _default,
-            parameterCookie,
-            parameterForm,
             parameterHeader,
+            parameterQuery,
+            parameterForm,
+            parameterCookie,
+            requestBody,
             parameterPath1,
             parameterPath2,
             parameterPath3,
-            parameterQuery,
-            requestBody,
+            _default,
         } = data;
         return __request(OpenAPI, {
             method: 'POST',
@@ -249,7 +249,7 @@ export class ParametersService {
     public static getCallWithOptionalParam(
         data: ParametersData['payloads']['GetCallWithOptionalParam']
     ): CancelablePromise<ParametersData['responses']['GetCallWithOptionalParam']> {
-        const { parameter, requestBody } = data;
+        const { requestBody, parameter } = data;
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/parameters/',
@@ -288,12 +288,12 @@ export class DescriptionsService {
         data: DescriptionsData['payloads']['CallWithDescriptions'] = {}
     ): CancelablePromise<DescriptionsData['responses']['CallWithDescriptions']> {
         const {
-            parameterWithBackticks,
             parameterWithBreaks,
+            parameterWithBackticks,
+            parameterWithSlashes,
             parameterWithExpressionPlaceholders,
             parameterWithQuotes,
             parameterWithReservedCharacters,
-            parameterWithSlashes,
         } = data;
         return __request(OpenAPI, {
             method: 'POST',
@@ -336,7 +336,7 @@ export class RequestBodyService {
     public static postApiRequestBody(
         data: RequestBodyData['payloads']['PostApiRequestBody'] = {}
     ): CancelablePromise<RequestBodyData['responses']['PostApiRequestBody']> {
-        const { foo, parameter } = data;
+        const { parameter, foo } = data;
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v{api-version}/requestBody/',
@@ -356,7 +356,7 @@ export class FormDataService {
     public static postApiFormData(
         data: FormDataData['payloads']['PostApiFormData'] = {}
     ): CancelablePromise<FormDataData['responses']['PostApiFormData']> {
-        const { formData, parameter } = data;
+        const { parameter, formData } = data;
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v{api-version}/formData/',
@@ -376,7 +376,7 @@ export class DefaultsService {
     public static callWithDefaultParameters(
         data: DefaultsData['payloads']['CallWithDefaultParameters'] = {}
     ): CancelablePromise<DefaultsData['responses']['CallWithDefaultParameters']> {
-        const { parameterBoolean, parameterEnum, parameterModel, parameterNumber, parameterString } = data;
+        const { parameterString, parameterNumber, parameterBoolean, parameterEnum, parameterModel } = data;
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/defaults',
@@ -396,7 +396,7 @@ export class DefaultsService {
     public static callWithDefaultOptionalParameters(
         data: DefaultsData['payloads']['CallWithDefaultOptionalParameters'] = {}
     ): CancelablePromise<DefaultsData['responses']['CallWithDefaultOptionalParameters']> {
-        const { parameterBoolean, parameterEnum, parameterModel, parameterNumber, parameterString } = data;
+        const { parameterString, parameterNumber, parameterBoolean, parameterEnum, parameterModel } = data;
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v{api-version}/defaults',
@@ -417,14 +417,14 @@ export class DefaultsService {
         data: DefaultsData['payloads']['CallToTestOrderOfParams']
     ): CancelablePromise<DefaultsData['responses']['CallToTestOrderOfParams']> {
         const {
+            parameterStringWithNoDefault,
             parameterOptionalStringWithDefault,
             parameterOptionalStringWithEmptyDefault,
             parameterOptionalStringWithNoDefault,
-            parameterStringNullableWithDefault,
-            parameterStringNullableWithNoDefault,
             parameterStringWithDefault,
             parameterStringWithEmptyDefault,
-            parameterStringWithNoDefault,
+            parameterStringNullableWithNoDefault,
+            parameterStringNullableWithDefault,
         } = data;
         return __request(OpenAPI, {
             method: 'PUT',
@@ -646,7 +646,7 @@ export class CollectionFormatService {
     public static collectionFormat(
         data: CollectionFormatData['payloads']['CollectionFormat']
     ): CancelablePromise<CollectionFormatData['responses']['CollectionFormat']> {
-        const { parameterArrayCsv, parameterArrayMulti, parameterArrayPipes, parameterArraySsv, parameterArrayTsv } =
+        const { parameterArrayCsv, parameterArraySsv, parameterArrayTsv, parameterArrayPipes, parameterArrayMulti } =
             data;
         return __request(OpenAPI, {
             method: 'GET',
@@ -672,14 +672,14 @@ export class TypesService {
      */
     public static types(data: TypesData['payloads']['Types']): CancelablePromise<TypesData['responses']['Types']> {
         const {
-            id,
             parameterArray,
-            parameterBoolean,
             parameterDictionary,
             parameterEnum,
             parameterNumber,
-            parameterObject,
             parameterString,
+            parameterBoolean,
+            parameterObject,
+            id,
         } = data;
         return __request(OpenAPI, {
             method: 'GET',
