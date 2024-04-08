@@ -50,8 +50,6 @@ import xhrSendRequest from '../templates/core/xhr/sendRequest.hbs';
 import templateExportService from '../templates/exportService.hbs';
 import partialOperationParameters from '../templates/partials/operationParameters.hbs';
 import partialOperationResult from '../templates/partials/operationResult.hbs';
-import partialOperationTypes from '../templates/partials/operationTypes.hbs';
-import partialRequestConfig from '../templates/partials/requestConfig.hbs';
 import type { Config } from '../types/config';
 import { escapeComment, escapeDescription, escapeName } from './escape';
 import { getDefaultPrintable, modelIsRequired } from './required';
@@ -67,28 +65,21 @@ const dataDestructure = (config: Config, operation: Operation) => {
         }
     } else {
         if (config.useOptions) {
-            if (config.serviceResponse !== 'generics') {
-                if (operation.parameters.length) {
-                    return `const {
-                        ${config.experimental ? 'query,' : ''}
-                        ${operation.parameters
-                            .map(parameter => {
-                                if (config.experimental) {
-                                    if (parameter.in !== 'query') {
-                                        return parameter.name;
-                                    }
-                                } else {
+            if (operation.parameters.length) {
+                return `const {
+                    ${config.experimental ? 'query,' : ''}
+                    ${operation.parameters
+                        .map(parameter => {
+                            if (config.experimental) {
+                                if (parameter.in !== 'query') {
                                     return parameter.name;
                                 }
-                            })
-                            .filter(Boolean)
-                            .join(',\n')}
-                    } = data;`;
-                }
-            } else {
-                return `const {
-                    ${operation.parameters.map(parameter => parameter.name).join(',\n')}
-                    ...overrides
+                            } else {
+                                return parameter.name;
+                            }
+                        })
+                        .filter(Boolean)
+                        .join(',\n')}
                 } = data;`;
             }
         }
@@ -269,8 +260,6 @@ export const registerHandlebarTemplates = (config: Config): Templates => {
     // Partials for the generations of the models, services, etc.
     Handlebars.registerPartial('operationParameters', Handlebars.template(partialOperationParameters));
     Handlebars.registerPartial('operationResult', Handlebars.template(partialOperationResult));
-    Handlebars.registerPartial('operationTypes', Handlebars.template(partialOperationTypes));
-    Handlebars.registerPartial('requestConfig', Handlebars.template(partialRequestConfig));
 
     // Generic functions used in 'request' file @see src/templates/core/request.hbs for more info
     Handlebars.registerPartial('functions/base64', Handlebars.template(functionBase64));

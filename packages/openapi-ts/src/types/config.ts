@@ -83,7 +83,7 @@ export interface UserConfig {
      * Define shape of returned value from service calls
      * @default 'body'
      */
-    serviceResponse?: 'body' | 'generics' | 'response';
+    serviceResponse?: 'body' | 'response';
     /**
      * Output Date instead of string for the format "date-time" in the models
      * @default false
