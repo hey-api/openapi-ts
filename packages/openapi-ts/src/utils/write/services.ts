@@ -2,6 +2,7 @@ import { writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { TypeScriptFile } from '../../compiler';
+import type { OpenApi } from '../../openApi';
 import type { Client } from '../../types/client';
 import type { Config } from '../../types/config';
 import { operationDataType, type Templates } from '../handlebars';
@@ -9,16 +10,18 @@ import { unique } from '../unique';
 
 /**
  * Generate Services using the Handlebar template and write to disk.
+ * @param openApi {@link OpenApi} Dereferenced OpenAPI specification
  * @param client Client containing models, schemas, and services
- * @param templates The loaded handlebar templates
  * @param outputPath Directory to write the generated files to
  * @param config {@link Config} passed to the `createClient()` method
+ * @param templates The loaded handlebar templates
  */
 export const writeClientServices = async (
+    openApi: OpenApi,
     client: Client,
-    templates: Templates,
     outputPath: string,
-    config: Config
+    config: Config,
+    templates: Templates
 ): Promise<void> => {
     if (!client.services.length) {
         return;

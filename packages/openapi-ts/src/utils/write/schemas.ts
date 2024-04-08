@@ -1,11 +1,10 @@
 import path from 'node:path';
 
 import compiler, { TypeScriptFile } from '../../compiler';
-import type { Model } from '../../openApi';
+import type { Model, OpenApi } from '../../openApi';
 import type { Client } from '../../types/client';
 import type { Config } from '../../types/config';
 import { escapeDescription } from '../escape';
-import type { Templates } from '../handlebars';
 
 const escapeNewline = (value: string) => value.replace(/\n/g, '\\n');
 
@@ -275,14 +274,14 @@ const exportSchema = (config: Config, model: Model) => {
 
 /**
  * Generate Schemas using the Handlebar template and write to disk.
+ * @param openApi {@link OpenApi} Dereferenced OpenAPI specification
  * @param client Client containing models, schemas, and services
- * @param templates The loaded handlebar templates
  * @param outputPath Directory to write the generated files to
  * @param config {@link Config} passed to the `createClient()` method
  */
 export const writeClientSchemas = async (
+    openApi: OpenApi,
     client: Client,
-    templates: Templates,
     outputPath: string,
     config: Config
 ): Promise<void> => {
@@ -295,5 +294,9 @@ export const writeClientSchemas = async (
         const result = exportSchema(config, model);
         file.add(result);
     }
+
+    const expression = compiler.types.object(openApi);
+    file.add(compiler.export.asConst(`$OpenApi`, expression));
+
     file.write(path.resolve(outputPath, 'schemas.ts'), '\n\n');
 };

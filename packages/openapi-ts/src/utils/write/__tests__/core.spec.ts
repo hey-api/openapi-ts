@@ -5,17 +5,18 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { writeClientCore } from '../core';
 import { mockTemplates } from './mocks';
+import { openApi } from './models';
 
 vi.mock('node:fs');
 
 describe('writeClientCore', () => {
-    let templates: Parameters<typeof writeClientCore>[1];
+    let templates: Parameters<typeof writeClientCore>[4];
     beforeEach(() => {
         templates = mockTemplates;
     });
 
     it('should write to filesystem', async () => {
-        const client: Parameters<typeof writeClientCore>[0] = {
+        const client: Parameters<typeof writeClientCore>[1] = {
             enumNames: [],
             models: [],
             server: 'http://localhost:8080',
@@ -45,7 +46,7 @@ describe('writeClientCore', () => {
             write: true,
         };
 
-        await writeClientCore(client, templates, '/', config);
+        await writeClientCore(openApi, client, '/', config, templates);
 
         expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/OpenAPI.ts'), 'settings');
         expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/ApiError.ts'), 'apiError');
@@ -57,7 +58,7 @@ describe('writeClientCore', () => {
     });
 
     it('uses client server value for base', async () => {
-        const client: Parameters<typeof writeClientCore>[0] = {
+        const client: Parameters<typeof writeClientCore>[1] = {
             enumNames: [],
             models: [],
             server: 'http://localhost:8080',
@@ -87,7 +88,7 @@ describe('writeClientCore', () => {
             write: true,
         };
 
-        await writeClientCore(client, templates, '/', config);
+        await writeClientCore(openApi, client, '/', config, templates);
 
         expect(templates.core.settings).toHaveBeenCalledWith({
             $config: config,
@@ -98,7 +99,7 @@ describe('writeClientCore', () => {
     });
 
     it('uses custom value for base', async () => {
-        const client: Parameters<typeof writeClientCore>[0] = {
+        const client: Parameters<typeof writeClientCore>[1] = {
             enumNames: [],
             models: [],
             server: 'http://localhost:8080',
@@ -129,7 +130,7 @@ describe('writeClientCore', () => {
             write: true,
         };
 
-        await writeClientCore(client, templates, '/', config);
+        await writeClientCore(openApi, client, '/', config, templates);
 
         expect(templates.core.settings).toHaveBeenCalledWith({
             $config: config,
