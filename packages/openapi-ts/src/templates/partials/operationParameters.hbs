@@ -12,7 +12,7 @@ data: {{#if parameters}}{{{nameOperationDataType @root 'payloads' this}}} & {{/i
 {{#if parameters}}
 
 {{#each parameters}}
-{{{name}}}{{{modelIsRequired this}}}: {{toType this @root.$config}}{{#hasDefault this}} = {{{getDefaultPrintable this}}}{{/hasDefault}},
+{{{name}}}{{{modelIsRequired this}}}: {{{nameOperationDataType @root 'payloads' ../this name}}}{{#hasDefault this}} = {{{getDefaultPrintable this}}}{{/hasDefault}},
 {{/each}}
 {{/if}}
 {{/if}}

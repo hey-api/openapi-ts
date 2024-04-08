@@ -148,7 +148,7 @@ export class ParametersService {
     public static deleteFoo(
         data: ParametersData['payloads']['DeleteFoo']
     ): CancelablePromise<ParametersData['responses']['DeleteFoo']> {
-        const { query, bar, foo } = data;
+        const { query, foo, bar } = data;
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/v{api-version}/foo/{foo}/bar/{bar}',
@@ -162,7 +162,7 @@ export class ParametersService {
     public static callWithParameters(
         data: ParametersData['payloads']['CallWithParameters']
     ): CancelablePromise<ParametersData['responses']['CallWithParameters']> {
-        const { query, parameterCookie, parameterForm, parameterHeader, parameterPath, requestBody } = data;
+        const { query, parameterHeader, parameterForm, parameterCookie, parameterPath, requestBody } = data;
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v{api-version}/parameters/{parameterPath}',
@@ -186,13 +186,13 @@ export class ParametersService {
     ): CancelablePromise<ParametersData['responses']['CallWithWeirdParameterNames']> {
         const {
             query,
-            parameterCookie,
-            parameterForm,
             parameterHeader,
+            parameterForm,
+            parameterCookie,
+            requestBody,
             parameterPath1,
             parameterPath2,
             parameterPath3,
-            requestBody,
         } = data;
         return __request(OpenAPI, {
             method: 'POST',
@@ -333,13 +333,13 @@ export class DefaultsService {
             method: 'GET',
             url: '/api/v{api-version}/defaults',
             query: {
+                parameterString: 'Hello World!',
+                parameterNumber: 123,
                 parameterBoolean: true,
                 parameterEnum: 'Success',
                 parameterModel: {
                     prop: 'Hello World!',
                 },
-                parameterNumber: 123,
-                parameterString: 'Hello World!',
                 ...query,
             },
         });
@@ -356,13 +356,13 @@ export class DefaultsService {
             method: 'POST',
             url: '/api/v{api-version}/defaults',
             query: {
+                parameterString: 'Hello World!',
+                parameterNumber: 123,
                 parameterBoolean: true,
                 parameterEnum: 'Success',
                 parameterModel: {
                     prop: 'Hello World!',
                 },
-                parameterNumber: 123,
-                parameterString: 'Hello World!',
                 ...query,
             },
         });
@@ -381,9 +381,9 @@ export class DefaultsService {
             query: {
                 parameterOptionalStringWithDefault: 'Hello World!',
                 parameterOptionalStringWithEmptyDefault: '',
-                parameterStringNullableWithDefault: null,
                 parameterStringWithDefault: 'Hello World!',
                 parameterStringWithEmptyDefault: '',
+                parameterStringNullableWithDefault: null,
                 ...query,
             },
         });
@@ -619,10 +619,10 @@ export class TypesService {
             url: '/api/v{api-version}/types',
             path: {},
             query: {
-                parameterBoolean: true,
                 parameterNumber: 123,
-                parameterObject: null,
                 parameterString: 'default',
+                parameterBoolean: true,
+                parameterObject: null,
                 ...query,
             },
         });

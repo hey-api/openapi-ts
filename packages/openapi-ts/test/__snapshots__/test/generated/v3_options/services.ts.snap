@@ -10,7 +10,7 @@ export class DefaultsService {
     public static callWithDefaultParameters(
         data: DefaultsData['payloads']['CallWithDefaultParameters'] = {}
     ): CancelablePromise<DefaultsData['responses']['CallWithDefaultParameters']> {
-        const { parameterBoolean, parameterEnum, parameterModel, parameterNumber, parameterString } = data;
+        const { parameterString, parameterNumber, parameterBoolean, parameterEnum, parameterModel } = data;
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/defaults',
@@ -30,7 +30,7 @@ export class DefaultsService {
     public static callWithDefaultOptionalParameters(
         data: DefaultsData['payloads']['CallWithDefaultOptionalParameters'] = {}
     ): CancelablePromise<DefaultsData['responses']['CallWithDefaultOptionalParameters']> {
-        const { parameterBoolean, parameterEnum, parameterModel, parameterNumber, parameterString } = data;
+        const { parameterString, parameterNumber, parameterBoolean, parameterEnum, parameterModel } = data;
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v{api-version}/defaults',
@@ -51,14 +51,14 @@ export class DefaultsService {
         data: DefaultsData['payloads']['CallToTestOrderOfParams']
     ): CancelablePromise<DefaultsData['responses']['CallToTestOrderOfParams']> {
         const {
+            parameterStringWithNoDefault,
             parameterOptionalStringWithDefault,
             parameterOptionalStringWithEmptyDefault,
             parameterOptionalStringWithNoDefault,
-            parameterStringNullableWithDefault,
-            parameterStringNullableWithNoDefault,
             parameterStringWithDefault,
             parameterStringWithEmptyDefault,
-            parameterStringWithNoDefault,
+            parameterStringNullableWithNoDefault,
+            parameterStringNullableWithDefault,
         } = data;
         return __request(OpenAPI, {
             method: 'PUT',

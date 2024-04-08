@@ -55,7 +55,6 @@ import partialRequestConfig from '../templates/partials/requestConfig.hbs';
 import type { Config } from '../types/config';
 import { escapeComment, escapeDescription, escapeName } from './escape';
 import { getDefaultPrintable, modelIsRequired } from './required';
-import { toType } from './write/type';
 
 const dataDestructure = (config: Config, operation: Operation) => {
     if (config.name) {
@@ -141,12 +140,14 @@ export const operationKey = (operation: Service['operations'][number]) => {
 
 export const nameOperationDataType = (
     service: Service,
-    namespace: string,
-    operation: Service['operations'][number]
+    namespace: 'payloads' | 'responses',
+    operation: Service['operations'][number],
+    name?: string | object
 ) => {
     const exported = serviceExportedNamespace(service);
     const key = operationKey(operation);
-    return `${exported}['${namespace}']['${key}']`;
+    const path = `${exported}['${namespace}']['${key}']`;
+    return name && typeof name === 'string' ? `${path}['${name}']` : path;
 };
 
 export const registerHandlebarHelpers = (config: Config): void => {
@@ -180,8 +181,6 @@ export const registerHandlebarHelpers = (config: Config): void => {
         }
     );
 
-    Handlebars.registerHelper('toType', toType);
-
     Handlebars.registerHelper('getDefaultPrintable', getDefaultPrintable);
 
     Handlebars.registerHelper('ifdef', function (this: unknown, ...args): string {
@@ -205,8 +204,13 @@ export const registerHandlebarHelpers = (config: Config): void => {
 
     Handlebars.registerHelper(
         'nameOperationDataType',
-        function (service: Service, namespace: string, operation: Service['operations'][number]) {
-            return nameOperationDataType(service, namespace, operation);
+        function (
+            service: Service,
+            namespace: 'payloads' | 'responses',
+            operation: Service['operations'][number],
+            name: string | undefined
+        ) {
+            return nameOperationDataType(service, namespace, operation, name);
         }
     );
 
