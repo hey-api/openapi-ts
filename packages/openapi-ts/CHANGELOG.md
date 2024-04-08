@@ -1,5 +1,21 @@
 # @hey-api/openapi-ts
 
+## 0.35.0
+
+### Minor Changes
+
+- fix(config): remove postfixModels option ([#266](https://github.com/hey-api/openapi-ts/pull/266))
+
+- fix(client): do not send default params ([#267](https://github.com/hey-api/openapi-ts/pull/267))
+
+### Patch Changes
+
+- fix(api): use TypeScript Compiler API to create schemas ([#271](https://github.com/hey-api/openapi-ts/pull/271))
+
+- fix(client): export APIResult when using serviceResponse as 'response' ([#283](https://github.com/hey-api/openapi-ts/pull/283))
+
+- fix(parser): use only isRequired to determine if field is required ([#264](https://github.com/hey-api/openapi-ts/pull/264))
+
 ## 0.34.5
 
 ### Patch Changes
