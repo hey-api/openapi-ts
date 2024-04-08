@@ -1,6 +1,6 @@
 import ts from 'typescript';
 
-import { addLeadingJSDocComment, isType, ots } from './utils';
+import { addLeadingJSDocComment, type Comments, isType, ots } from './utils';
 
 /**
  * Convert an unknown value to an expression.
@@ -66,20 +66,59 @@ export const createObjectType = <T extends object>(obj: T, multiLine: boolean = 
         multiLine
     );
 
+/**
+ * Create a type alias declaration. Example `export type X = Y;`.
+ * @param name - the name of the type.
+ * @param type - the type.
+ * @param comments - comments to add if any.
+ * @returns ts.TypeAliasDeclaration
+ */
 export const createTypeAliasDeclaration = (
     name: string,
     type: string,
-    typeParameters: string[] = [],
-    comments?: Parameters<typeof addLeadingJSDocComment>[1]
-) => {
+    comments?: Comments
+): ts.TypeAliasDeclaration => {
     const node = ts.factory.createTypeAliasDeclaration(
         [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
         ts.factory.createIdentifier(name),
-        typeParameters.map(p => ts.factory.createTypeParameterDeclaration(undefined, p, undefined, undefined)),
+        [],
         ts.factory.createTypeReferenceNode(type)
     );
     if (comments?.length) {
         addLeadingJSDocComment(node, comments);
     }
     return node;
+};
+
+/**
+ * Create enum declaration. Example `export enum T = { X, Y };`
+ * @param name - the name of the enum.
+ * @param obj - the object representing the enum.
+ * @param comment - comment to add to enum.
+ * @param comments - comments to add to each property of enum.
+ * @returns
+ */
+export const createEnumDeclaration = <T extends object>(
+    name: string,
+    obj: T,
+    comment: Comments = [],
+    comments: Record<string | number, Comments> = {}
+): ts.EnumDeclaration => {
+    const declaration = ts.factory.createEnumDeclaration(
+        [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
+        ts.factory.createIdentifier(name),
+        Object.entries(obj).map(([key, value]) => {
+            const initializer = toExpression(value, true);
+            const assignment = ts.factory.createEnumMember(key, initializer);
+            const c = comments?.[key];
+            if (c) {
+                addLeadingJSDocComment(assignment, c);
+            }
+            return assignment;
+        })
+    );
+    if (comment.length) {
+        addLeadingJSDocComment(declaration, comment);
+    }
+    return declaration;
 };

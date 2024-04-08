@@ -82,11 +82,16 @@ export const ots = {
 
 export const isType = <T>(value: T | undefined): value is T => value !== undefined;
 
+export type Comments = Array<string | null | false | undefined>;
+
 export const addLeadingJSDocComment = (
     node: ts.Node | undefined,
-    text: Array<string | null | false | undefined>,
+    text: Comments,
     hasTrailingNewLine: boolean = true
 ): string => {
+    if (!text.filter(Boolean).length) {
+        return '';
+    }
     // if node is falsy, assume string mode
     if (node) {
         ts.addSyntheticLeadingComment(

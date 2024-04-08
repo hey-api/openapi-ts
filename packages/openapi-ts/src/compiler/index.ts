@@ -6,6 +6,8 @@ import * as module from './module';
 import * as types from './types';
 import { tsNodeToString } from './utils';
 
+export type { Comments } from './utils';
+
 export class TypeScriptFile {
     private _imports: Array<ts.Node> = [];
     private _items: Array<ts.Node | string> = [];
@@ -47,6 +49,7 @@ export const compiler = {
     },
     types: {
         array: types.createArrayType,
+        enum: types.createEnumDeclaration,
         object: types.createObjectType,
     },
 };
