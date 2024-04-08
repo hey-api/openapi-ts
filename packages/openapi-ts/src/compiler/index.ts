@@ -10,7 +10,7 @@ export class TypeScriptFile {
     private _imports: Array<ts.Node> = [];
     private _items: Array<ts.Node> = [];
 
-    public addImport(...params: Parameters<typeof module.createNamedImportDeclarations>): void {
+    public addNamedImport(...params: Parameters<typeof module.createNamedImportDeclarations>): void {
         this._imports.push(compiler.import.named(...params));
     }
 
@@ -28,7 +28,7 @@ export class TypeScriptFile {
     }
 }
 
-const compiler = {
+export const compiler = {
     export: {
         all: module.createExportAllDeclaration,
         asConst: module.createExportVariableAsConst,
