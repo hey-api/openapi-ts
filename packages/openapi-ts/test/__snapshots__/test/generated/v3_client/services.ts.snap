@@ -1,412 +1,30 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import type { BaseHttpRequest } from './core/BaseHttpRequest';
 import type {
-    ModelWithArrayReadOnlyAndWriteOnly,
-    ModelWithReadOnlyAndWriteOnly,
-    ModelWithNestedArrayEnumsDataFoo,
-    ModelWithOneOfEnum,
-    ModelWithString,
-    Pageable,
-    DeprecatedModel,
-    ModelThatExtends,
-    ModelThatExtendsExtends,
-    ModelWithArray,
-    ModelWithDictionary,
-    ModelWithEnum,
-    NonAsciiStringæøåÆØÅöôêÊ字符串,
+    DefaultData,
+    SimpleData,
+    ParametersData,
+    DescriptionsData,
+    DeprecatedData,
+    RequestBodyData,
+    FormDataData,
+    DefaultsData,
+    DuplicateData,
+    NoContentData,
+    ResponseData,
+    MultipleTags1Data,
+    MultipleTags2Data,
+    MultipleTags3Data,
+    CollectionFormatData,
+    TypesData,
+    UploadData,
+    FileResponseData,
+    ComplexData,
+    MultipartData,
+    HeaderData,
+    ErrorData,
+    NonAsciiÆøåÆøÅöôêÊData,
 } from './models';
-
-export type DefaultData = {
-    PostServiceWithEmptyTag: {
-        requestBody: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
-    };
-};
-
-export type ParametersData = {
-    DeleteFoo: {
-        /**
-         * bar in method
-         */
-        bar: string;
-        /**
-         * foo in method
-         */
-        foo: string;
-    };
-    CallWithParameters: {
-        fooAllOfEnum: ModelWithNestedArrayEnumsDataFoo;
-        fooRefEnum?: ModelWithNestedArrayEnumsDataFoo;
-        /**
-         * This is the parameter that goes into the cookie
-         */
-        parameterCookie: string | null;
-        /**
-         * This is the parameter that goes into the form data
-         */
-        parameterForm: string | null;
-        /**
-         * This is the parameter that goes into the header
-         */
-        parameterHeader: string | null;
-        /**
-         * This is the parameter that goes into the path
-         */
-        parameterPath: string | null;
-        /**
-         * This is the parameter that goes into the query params
-         */
-        parameterQuery: string | null;
-        /**
-         * This is the parameter that goes into the body
-         */
-        requestBody: ModelWithString | null;
-    };
-    CallWithWeirdParameterNames: {
-        /**
-         * This is the parameter with a reserved keyword
-         */
-        _default?: string;
-        /**
-         * This is the parameter that goes into the cookie
-         */
-        parameterCookie: string | null;
-        /**
-         * This is the parameter that goes into the request form data
-         */
-        parameterForm: string | null;
-        /**
-         * This is the parameter that goes into the request header
-         */
-        parameterHeader: string | null;
-        /**
-         * This is the parameter that goes into the path
-         */
-        parameterPath1?: string;
-        /**
-         * This is the parameter that goes into the path
-         */
-        parameterPath2?: string;
-        /**
-         * This is the parameter that goes into the path
-         */
-        parameterPath3?: string;
-        /**
-         * This is the parameter that goes into the request query params
-         */
-        parameterQuery: string | null;
-        /**
-         * This is the parameter that goes into the body
-         */
-        requestBody: ModelWithString | null;
-    };
-    GetCallWithOptionalParam: {
-        /**
-         * This is an optional parameter
-         */
-        parameter?: string;
-        /**
-         * This is a required parameter
-         */
-        requestBody: ModelWithOneOfEnum;
-    };
-    PostCallWithOptionalParam: {
-        /**
-         * This is a required parameter
-         */
-        parameter: Pageable;
-        /**
-         * This is an optional parameter
-         */
-        requestBody?: ModelWithString;
-    };
-};
-
-export type DescriptionsData = {
-    CallWithDescriptions: {
-        /**
-         * Testing backticks in string: `backticks` and ```multiple backticks``` should work
-         */
-        parameterWithBackticks?: unknown;
-        /**
-         * Testing multiline comments in string: First line
-         * Second line
-         *
-         * Fourth line
-         */
-        parameterWithBreaks?: unknown;
-        /**
-         * Testing expression placeholders in string: ${expression} should work
-         */
-        parameterWithExpressionPlaceholders?: unknown;
-        /**
-         * Testing quotes in string: 'single quote''' and "double quotes""" should work
-         */
-        parameterWithQuotes?: unknown;
-        /**
-         * Testing reserved characters in string: * inline * and ** inline ** should work
-         */
-        parameterWithReservedCharacters?: unknown;
-        /**
-         * Testing slashes in string: \backwards\\\ and /forwards/// should work
-         */
-        parameterWithSlashes?: unknown;
-    };
-};
-
-export type DeprecatedData = {
-    DeprecatedCall: {
-        /**
-         * This parameter is deprecated
-         */
-        parameter: DeprecatedModel | null;
-    };
-};
-
-export type RequestBodyData = {
-    PostApiRequestBody: {
-        /**
-         * A reusable request body
-         */
-        foo?: ModelWithString;
-        /**
-         * This is a reusable parameter
-         */
-        parameter?: string;
-    };
-};
-
-export type FormDataData = {
-    PostApiFormData: {
-        /**
-         * A reusable request body
-         */
-        formData?: ModelWithString;
-        /**
-         * This is a reusable parameter
-         */
-        parameter?: string;
-    };
-};
-
-export type DefaultsData = {
-    CallWithDefaultParameters: {
-        /**
-         * This is a simple boolean with default value
-         */
-        parameterBoolean?: boolean | null;
-        /**
-         * This is a simple enum with default value
-         */
-        parameterEnum?: 'Success' | 'Warning' | 'Error';
-        /**
-         * This is a simple model with default value
-         */
-        parameterModel?: ModelWithString | null;
-        /**
-         * This is a simple number with default value
-         */
-        parameterNumber?: number | null;
-        /**
-         * This is a simple string with default value
-         */
-        parameterString?: string | null;
-    };
-    CallWithDefaultOptionalParameters: {
-        /**
-         * This is a simple boolean that is optional with default value
-         */
-        parameterBoolean?: boolean;
-        /**
-         * This is a simple enum that is optional with default value
-         */
-        parameterEnum?: 'Success' | 'Warning' | 'Error';
-        /**
-         * This is a simple model that is optional with default value
-         */
-        parameterModel?: ModelWithString;
-        /**
-         * This is a simple number that is optional with default value
-         */
-        parameterNumber?: number;
-        /**
-         * This is a simple string that is optional with default value
-         */
-        parameterString?: string;
-    };
-    CallToTestOrderOfParams: {
-        /**
-         * This is a optional string with default
-         */
-        parameterOptionalStringWithDefault?: string;
-        /**
-         * This is a optional string with empty default
-         */
-        parameterOptionalStringWithEmptyDefault?: string;
-        /**
-         * This is a optional string with no default
-         */
-        parameterOptionalStringWithNoDefault?: string;
-        /**
-         * This is a string that can be null with default
-         */
-        parameterStringNullableWithDefault?: string | null;
-        /**
-         * This is a string that can be null with no default
-         */
-        parameterStringNullableWithNoDefault?: string | null;
-        /**
-         * This is a string with default
-         */
-        parameterStringWithDefault: string;
-        /**
-         * This is a string with empty default
-         */
-        parameterStringWithEmptyDefault: string;
-        /**
-         * This is a string with no default
-         */
-        parameterStringWithNoDefault: string;
-    };
-};
-
-export type CollectionFormatData = {
-    CollectionFormat: {
-        /**
-         * This is an array parameter that is sent as csv format (comma-separated values)
-         */
-        parameterArrayCsv: Array<string> | null;
-        /**
-         * This is an array parameter that is sent as multi format (multiple parameter instances)
-         */
-        parameterArrayMulti: Array<string> | null;
-        /**
-         * This is an array parameter that is sent as pipes format (pipe-separated values)
-         */
-        parameterArrayPipes: Array<string> | null;
-        /**
-         * This is an array parameter that is sent as ssv format (space-separated values)
-         */
-        parameterArraySsv: Array<string> | null;
-        /**
-         * This is an array parameter that is sent as tsv format (tab-separated values)
-         */
-        parameterArrayTsv: Array<string> | null;
-    };
-};
-
-export type TypesData = {
-    Types: {
-        /**
-         * This is a number parameter
-         */
-        id?: number;
-        /**
-         * This is an array parameter
-         */
-        parameterArray: Array<string> | null;
-        /**
-         * This is a boolean parameter
-         */
-        parameterBoolean: boolean | null;
-        /**
-         * This is a dictionary parameter
-         */
-        parameterDictionary: Record<string, unknown> | null;
-        /**
-         * This is an enum parameter
-         */
-        parameterEnum: 'Success' | 'Warning' | 'Error' | null;
-        /**
-         * This is a number parameter
-         */
-        parameterNumber: number;
-        /**
-         * This is an object parameter
-         */
-        parameterObject: Record<string, unknown> | null;
-        /**
-         * This is a string parameter
-         */
-        parameterString: string | null;
-    };
-};
-
-export type UploadData = {
-    UploadFile: {
-        /**
-         * Supply a file reference for upload
-         */
-        file: Blob | File;
-    };
-};
-
-export type FileResponseData = {
-    FileResponse: {
-        id: string;
-    };
-};
-
-export type ComplexData = {
-    ComplexTypes: {
-        /**
-         * Parameter containing object
-         */
-        parameterObject: {
-            first?: {
-                second?: {
-                    third?: string;
-                };
-            };
-        };
-        /**
-         * Parameter containing reference
-         */
-        parameterReference: ModelWithString;
-    };
-    ComplexParams: {
-        id: number;
-        requestBody?: {
-            readonly key: string | null;
-            name: string | null;
-            enabled?: boolean;
-            readonly type: 'Monkey' | 'Horse' | 'Bird';
-            listOfModels?: Array<ModelWithString> | null;
-            listOfStrings?: Array<string> | null;
-            parameters: ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary;
-            readonly user?: {
-                readonly id?: number;
-                readonly name?: string | null;
-            };
-        };
-    };
-};
-
-export type MultipartData = {
-    MultipartRequest: {
-        formData?: {
-            content?: Blob | File;
-            data?: ModelWithString | null;
-        };
-    };
-};
-
-export type ErrorData = {
-    TestErrorCode: {
-        /**
-         * Status code to return
-         */
-        status: number;
-    };
-};
-
-export type NonAsciiÆøåÆøÅöôêÊData = {
-    NonAsciiæøåÆøÅöôêÊ字符串: {
-        /**
-         * Dummy input param
-         */
-        nonAsciiParamæøåÆøÅöôêÊ: number;
-    };
-};
 
 export class DefaultService {
     constructor(public readonly httpRequest: BaseHttpRequest) {}
@@ -414,7 +32,7 @@ export class DefaultService {
     /**
      * @throws ApiError
      */
-    public serviceWithEmptyTag(): CancelablePromise<void> {
+    public serviceWithEmptyTag(): CancelablePromise<DefaultData['responses']['ServiceWithEmptyTag']> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/no-tag',
@@ -426,8 +44,8 @@ export class DefaultService {
      * @throws ApiError
      */
     public postServiceWithEmptyTag(
-        data: DefaultData['PostServiceWithEmptyTag']
-    ): CancelablePromise<ModelWithReadOnlyAndWriteOnly> {
+        data: DefaultData['payloads']['PostServiceWithEmptyTag']
+    ): CancelablePromise<DefaultData['responses']['PostServiceWithEmptyTag']> {
         const { requestBody } = data;
         return this.httpRequest.request({
             method: 'POST',
@@ -444,7 +62,9 @@ export class SimpleService {
     /**
      * @throws ApiError
      */
-    public getCallWithoutParametersAndResponse(): CancelablePromise<void> {
+    public getCallWithoutParametersAndResponse(): CancelablePromise<
+        SimpleData['responses']['GetCallWithoutParametersAndResponse']
+    > {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/simple',
@@ -454,7 +74,9 @@ export class SimpleService {
     /**
      * @throws ApiError
      */
-    public putCallWithoutParametersAndResponse(): CancelablePromise<void> {
+    public putCallWithoutParametersAndResponse(): CancelablePromise<
+        SimpleData['responses']['PutCallWithoutParametersAndResponse']
+    > {
         return this.httpRequest.request({
             method: 'PUT',
             url: '/api/v{api-version}/simple',
@@ -464,7 +86,9 @@ export class SimpleService {
     /**
      * @throws ApiError
      */
-    public postCallWithoutParametersAndResponse(): CancelablePromise<void> {
+    public postCallWithoutParametersAndResponse(): CancelablePromise<
+        SimpleData['responses']['PostCallWithoutParametersAndResponse']
+    > {
         return this.httpRequest.request({
             method: 'POST',
             url: '/api/v{api-version}/simple',
@@ -474,7 +98,9 @@ export class SimpleService {
     /**
      * @throws ApiError
      */
-    public deleteCallWithoutParametersAndResponse(): CancelablePromise<void> {
+    public deleteCallWithoutParametersAndResponse(): CancelablePromise<
+        SimpleData['responses']['DeleteCallWithoutParametersAndResponse']
+    > {
         return this.httpRequest.request({
             method: 'DELETE',
             url: '/api/v{api-version}/simple',
@@ -484,7 +110,9 @@ export class SimpleService {
     /**
      * @throws ApiError
      */
-    public optionsCallWithoutParametersAndResponse(): CancelablePromise<void> {
+    public optionsCallWithoutParametersAndResponse(): CancelablePromise<
+        SimpleData['responses']['OptionsCallWithoutParametersAndResponse']
+    > {
         return this.httpRequest.request({
             method: 'OPTIONS',
             url: '/api/v{api-version}/simple',
@@ -494,7 +122,9 @@ export class SimpleService {
     /**
      * @throws ApiError
      */
-    public headCallWithoutParametersAndResponse(): CancelablePromise<void> {
+    public headCallWithoutParametersAndResponse(): CancelablePromise<
+        SimpleData['responses']['HeadCallWithoutParametersAndResponse']
+    > {
         return this.httpRequest.request({
             method: 'HEAD',
             url: '/api/v{api-version}/simple',
@@ -504,7 +134,9 @@ export class SimpleService {
     /**
      * @throws ApiError
      */
-    public patchCallWithoutParametersAndResponse(): CancelablePromise<void> {
+    public patchCallWithoutParametersAndResponse(): CancelablePromise<
+        SimpleData['responses']['PatchCallWithoutParametersAndResponse']
+    > {
         return this.httpRequest.request({
             method: 'PATCH',
             url: '/api/v{api-version}/simple',
@@ -518,8 +150,10 @@ export class ParametersService {
     /**
      * @throws ApiError
      */
-    public deleteFoo(data: ParametersData['DeleteFoo']): CancelablePromise<void> {
-        const { foo, bar } = data;
+    public deleteFoo(
+        data: ParametersData['payloads']['DeleteFoo']
+    ): CancelablePromise<ParametersData['responses']['DeleteFoo']> {
+        const { bar, foo } = data;
         return this.httpRequest.request({
             method: 'DELETE',
             url: '/api/v{api-version}/foo/{foo}/bar/{bar}',
@@ -533,16 +167,18 @@ export class ParametersService {
     /**
      * @throws ApiError
      */
-    public callWithParameters(data: ParametersData['CallWithParameters']): CancelablePromise<void> {
+    public callWithParameters(
+        data: ParametersData['payloads']['CallWithParameters']
+    ): CancelablePromise<ParametersData['responses']['CallWithParameters']> {
         const {
-            parameterHeader,
             fooAllOfEnum,
-            parameterQuery,
-            parameterForm,
-            parameterCookie,
-            parameterPath,
-            requestBody,
             fooRefEnum,
+            parameterCookie,
+            parameterForm,
+            parameterHeader,
+            parameterPath,
+            parameterQuery,
+            requestBody,
         } = data;
         return this.httpRequest.request({
             method: 'POST',
@@ -572,17 +208,19 @@ export class ParametersService {
     /**
      * @throws ApiError
      */
-    public callWithWeirdParameterNames(data: ParametersData['CallWithWeirdParameterNames']): CancelablePromise<void> {
+    public callWithWeirdParameterNames(
+        data: ParametersData['payloads']['CallWithWeirdParameterNames']
+    ): CancelablePromise<ParametersData['responses']['CallWithWeirdParameterNames']> {
         const {
-            parameterHeader,
-            parameterQuery,
-            parameterForm,
+            _default,
             parameterCookie,
-            requestBody,
+            parameterForm,
+            parameterHeader,
             parameterPath1,
             parameterPath2,
             parameterPath3,
-            _default,
+            parameterQuery,
+            requestBody,
         } = data;
         return this.httpRequest.request({
             method: 'POST',
@@ -613,8 +251,10 @@ export class ParametersService {
     /**
      * @throws ApiError
      */
-    public getCallWithOptionalParam(data: ParametersData['GetCallWithOptionalParam']): CancelablePromise<void> {
-        const { requestBody, parameter } = data;
+    public getCallWithOptionalParam(
+        data: ParametersData['payloads']['GetCallWithOptionalParam']
+    ): CancelablePromise<ParametersData['responses']['GetCallWithOptionalParam']> {
+        const { parameter, requestBody } = data;
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/parameters/',
@@ -629,7 +269,9 @@ export class ParametersService {
     /**
      * @throws ApiError
      */
-    public postCallWithOptionalParam(data: ParametersData['PostCallWithOptionalParam']): CancelablePromise<void> {
+    public postCallWithOptionalParam(
+        data: ParametersData['payloads']['PostCallWithOptionalParam']
+    ): CancelablePromise<ParametersData['responses']['PostCallWithOptionalParam']> {
         const { parameter, requestBody } = data;
         return this.httpRequest.request({
             method: 'POST',
@@ -649,14 +291,16 @@ export class DescriptionsService {
     /**
      * @throws ApiError
      */
-    public callWithDescriptions(data: DescriptionsData['CallWithDescriptions'] = {}): CancelablePromise<void> {
+    public callWithDescriptions(
+        data: DescriptionsData['payloads']['CallWithDescriptions'] = {}
+    ): CancelablePromise<DescriptionsData['responses']['CallWithDescriptions']> {
         const {
-            parameterWithBreaks,
             parameterWithBackticks,
-            parameterWithSlashes,
+            parameterWithBreaks,
             parameterWithExpressionPlaceholders,
             parameterWithQuotes,
             parameterWithReservedCharacters,
+            parameterWithSlashes,
         } = data;
         return this.httpRequest.request({
             method: 'POST',
@@ -680,7 +324,9 @@ export class DeprecatedService {
      * @deprecated
      * @throws ApiError
      */
-    public deprecatedCall(data: DeprecatedData['DeprecatedCall']): CancelablePromise<void> {
+    public deprecatedCall(
+        data: DeprecatedData['payloads']['DeprecatedCall']
+    ): CancelablePromise<DeprecatedData['responses']['DeprecatedCall']> {
         const { parameter } = data;
         return this.httpRequest.request({
             method: 'POST',
@@ -698,8 +344,10 @@ export class RequestBodyService {
     /**
      * @throws ApiError
      */
-    public postApiRequestBody(data: RequestBodyData['PostApiRequestBody'] = {}): CancelablePromise<void> {
-        const { parameter, foo } = data;
+    public postApiRequestBody(
+        data: RequestBodyData['payloads']['PostApiRequestBody'] = {}
+    ): CancelablePromise<RequestBodyData['responses']['PostApiRequestBody']> {
+        const { foo, parameter } = data;
         return this.httpRequest.request({
             method: 'POST',
             url: '/api/v{api-version}/requestBody/',
@@ -718,8 +366,10 @@ export class FormDataService {
     /**
      * @throws ApiError
      */
-    public postApiFormData(data: FormDataData['PostApiFormData'] = {}): CancelablePromise<void> {
-        const { parameter, formData } = data;
+    public postApiFormData(
+        data: FormDataData['payloads']['PostApiFormData'] = {}
+    ): CancelablePromise<FormDataData['responses']['PostApiFormData']> {
+        const { formData, parameter } = data;
         return this.httpRequest.request({
             method: 'POST',
             url: '/api/v{api-version}/formData/',
@@ -738,8 +388,10 @@ export class DefaultsService {
     /**
      * @throws ApiError
      */
-    public callWithDefaultParameters(data: DefaultsData['CallWithDefaultParameters'] = {}): CancelablePromise<void> {
-        const { parameterString, parameterNumber, parameterBoolean, parameterEnum, parameterModel } = data;
+    public callWithDefaultParameters(
+        data: DefaultsData['payloads']['CallWithDefaultParameters'] = {}
+    ): CancelablePromise<DefaultsData['responses']['CallWithDefaultParameters']> {
+        const { parameterBoolean, parameterEnum, parameterModel, parameterNumber, parameterString } = data;
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/defaults',
@@ -757,9 +409,9 @@ export class DefaultsService {
      * @throws ApiError
      */
     public callWithDefaultOptionalParameters(
-        data: DefaultsData['CallWithDefaultOptionalParameters'] = {}
-    ): CancelablePromise<void> {
-        const { parameterString, parameterNumber, parameterBoolean, parameterEnum, parameterModel } = data;
+        data: DefaultsData['payloads']['CallWithDefaultOptionalParameters'] = {}
+    ): CancelablePromise<DefaultsData['responses']['CallWithDefaultOptionalParameters']> {
+        const { parameterBoolean, parameterEnum, parameterModel, parameterNumber, parameterString } = data;
         return this.httpRequest.request({
             method: 'POST',
             url: '/api/v{api-version}/defaults',
@@ -776,16 +428,18 @@ export class DefaultsService {
     /**
      * @throws ApiError
      */
-    public callToTestOrderOfParams(data: DefaultsData['CallToTestOrderOfParams']): CancelablePromise<void> {
+    public callToTestOrderOfParams(
+        data: DefaultsData['payloads']['CallToTestOrderOfParams']
+    ): CancelablePromise<DefaultsData['responses']['CallToTestOrderOfParams']> {
         const {
-            parameterStringWithNoDefault,
             parameterOptionalStringWithDefault,
             parameterOptionalStringWithEmptyDefault,
             parameterOptionalStringWithNoDefault,
+            parameterStringNullableWithDefault,
+            parameterStringNullableWithNoDefault,
             parameterStringWithDefault,
             parameterStringWithEmptyDefault,
-            parameterStringNullableWithNoDefault,
-            parameterStringNullableWithDefault,
+            parameterStringWithNoDefault,
         } = data;
         return this.httpRequest.request({
             method: 'PUT',
@@ -810,7 +464,7 @@ export class DuplicateService {
     /**
      * @throws ApiError
      */
-    public duplicateName(): CancelablePromise<void> {
+    public duplicateName(): CancelablePromise<DuplicateData['responses']['DuplicateName']> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/duplicate',
@@ -820,7 +474,7 @@ export class DuplicateService {
     /**
      * @throws ApiError
      */
-    public duplicateName1(): CancelablePromise<void> {
+    public duplicateName1(): CancelablePromise<DuplicateData['responses']['DuplicateName1']> {
         return this.httpRequest.request({
             method: 'POST',
             url: '/api/v{api-version}/duplicate',
@@ -830,7 +484,7 @@ export class DuplicateService {
     /**
      * @throws ApiError
      */
-    public duplicateName2(): CancelablePromise<void> {
+    public duplicateName2(): CancelablePromise<DuplicateData['responses']['DuplicateName2']> {
         return this.httpRequest.request({
             method: 'PUT',
             url: '/api/v{api-version}/duplicate',
@@ -840,7 +494,7 @@ export class DuplicateService {
     /**
      * @throws ApiError
      */
-    public duplicateName3(): CancelablePromise<void> {
+    public duplicateName3(): CancelablePromise<DuplicateData['responses']['DuplicateName3']> {
         return this.httpRequest.request({
             method: 'DELETE',
             url: '/api/v{api-version}/duplicate',
@@ -855,7 +509,7 @@ export class NoContentService {
      * @returns void Success
      * @throws ApiError
      */
-    public callWithNoContentResponse(): CancelablePromise<void> {
+    public callWithNoContentResponse(): CancelablePromise<NoContentData['responses']['CallWithNoContentResponse']> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/no-content',
@@ -867,7 +521,9 @@ export class NoContentService {
      * @returns void Success
      * @throws ApiError
      */
-    public callWithResponseAndNoContentResponse(): CancelablePromise<number | void> {
+    public callWithResponseAndNoContentResponse(): CancelablePromise<
+        NoContentData['responses']['CallWithResponseAndNoContentResponse']
+    > {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/response-and-no-content',
@@ -883,7 +539,9 @@ export class ResponseService {
      * @returns void Success
      * @throws ApiError
      */
-    public callWithResponseAndNoContentResponse(): CancelablePromise<number | void> {
+    public callWithResponseAndNoContentResponse(): CancelablePromise<
+        ResponseData['responses']['CallWithResponseAndNoContentResponse']
+    > {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/response-and-no-content',
@@ -894,7 +552,7 @@ export class ResponseService {
      * @returns ModelWithString
      * @throws ApiError
      */
-    public callWithResponse(): CancelablePromise<ModelWithString> {
+    public callWithResponse(): CancelablePromise<ResponseData['responses']['CallWithResponse']> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/response',
@@ -905,7 +563,7 @@ export class ResponseService {
      * @returns ModelWithString Message for default response
      * @throws ApiError
      */
-    public callWithDuplicateResponses(): CancelablePromise<ModelWithString> {
+    public callWithDuplicateResponses(): CancelablePromise<ResponseData['responses']['CallWithDuplicateResponses']> {
         return this.httpRequest.request({
             method: 'POST',
             url: '/api/v{api-version}/response',
@@ -924,16 +582,7 @@ export class ResponseService {
      * @returns ModelThatExtendsExtends Message for 202 response
      * @throws ApiError
      */
-    public callWithResponses(): CancelablePromise<
-        | {
-              readonly '@namespace.string'?: string;
-              readonly '@namespace.integer'?: number;
-              readonly value?: Array<ModelWithString>;
-          }
-        | ModelWithString
-        | ModelThatExtends
-        | ModelThatExtendsExtends
-    > {
+    public callWithResponses(): CancelablePromise<ResponseData['responses']['CallWithResponses']> {
         return this.httpRequest.request({
             method: 'PUT',
             url: '/api/v{api-version}/response',
@@ -953,7 +602,7 @@ export class MultipleTags1Service {
      * @returns void Success
      * @throws ApiError
      */
-    public dummyA(): CancelablePromise<void> {
+    public dummyA(): CancelablePromise<MultipleTags1Data['responses']['DummyA']> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/a',
@@ -964,7 +613,7 @@ export class MultipleTags1Service {
      * @returns void Success
      * @throws ApiError
      */
-    public dummyB(): CancelablePromise<void> {
+    public dummyB(): CancelablePromise<MultipleTags1Data['responses']['DummyB']> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/b',
@@ -979,7 +628,7 @@ export class MultipleTags2Service {
      * @returns void Success
      * @throws ApiError
      */
-    public dummyA(): CancelablePromise<void> {
+    public dummyA(): CancelablePromise<MultipleTags2Data['responses']['DummyA']> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/a',
@@ -990,7 +639,7 @@ export class MultipleTags2Service {
      * @returns void Success
      * @throws ApiError
      */
-    public dummyB(): CancelablePromise<void> {
+    public dummyB(): CancelablePromise<MultipleTags2Data['responses']['DummyB']> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/b',
@@ -1005,7 +654,7 @@ export class MultipleTags3Service {
      * @returns void Success
      * @throws ApiError
      */
-    public dummyB(): CancelablePromise<void> {
+    public dummyB(): CancelablePromise<MultipleTags3Data['responses']['DummyB']> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/b',
@@ -1019,8 +668,10 @@ export class CollectionFormatService {
     /**
      * @throws ApiError
      */
-    public collectionFormat(data: CollectionFormatData['CollectionFormat']): CancelablePromise<void> {
-        const { parameterArrayCsv, parameterArraySsv, parameterArrayTsv, parameterArrayPipes, parameterArrayMulti } =
+    public collectionFormat(
+        data: CollectionFormatData['payloads']['CollectionFormat']
+    ): CancelablePromise<CollectionFormatData['responses']['CollectionFormat']> {
+        const { parameterArrayCsv, parameterArrayMulti, parameterArrayPipes, parameterArraySsv, parameterArrayTsv } =
             data;
         return this.httpRequest.request({
             method: 'GET',
@@ -1046,16 +697,16 @@ export class TypesService {
      * @returns unknown Response is a simple object
      * @throws ApiError
      */
-    public types(data: TypesData['Types']): CancelablePromise<number | string | boolean | Record<string, unknown>> {
+    public types(data: TypesData['payloads']['Types']): CancelablePromise<TypesData['responses']['Types']> {
         const {
+            id,
             parameterArray,
+            parameterBoolean,
             parameterDictionary,
             parameterEnum,
             parameterNumber,
-            parameterString,
-            parameterBoolean,
             parameterObject,
-            id,
+            parameterString,
         } = data;
         return this.httpRequest.request({
             method: 'GET',
@@ -1083,7 +734,9 @@ export class UploadService {
      * @returns boolean
      * @throws ApiError
      */
-    public uploadFile(data: UploadData['UploadFile']): CancelablePromise<boolean> {
+    public uploadFile(
+        data: UploadData['payloads']['UploadFile']
+    ): CancelablePromise<UploadData['responses']['UploadFile']> {
         const { file } = data;
         return this.httpRequest.request({
             method: 'POST',
@@ -1102,7 +755,9 @@ export class FileResponseService {
      * @returns binary Success
      * @throws ApiError
      */
-    public fileResponse(data: FileResponseData['FileResponse']): CancelablePromise<Blob | File> {
+    public fileResponse(
+        data: FileResponseData['payloads']['FileResponse']
+    ): CancelablePromise<FileResponseData['responses']['FileResponse']> {
         const { id } = data;
         return this.httpRequest.request({
             method: 'GET',
@@ -1121,7 +776,9 @@ export class ComplexService {
      * @returns ModelWithString Successful response
      * @throws ApiError
      */
-    public complexTypes(data: ComplexData['ComplexTypes']): CancelablePromise<Array<ModelWithString>> {
+    public complexTypes(
+        data: ComplexData['payloads']['ComplexTypes']
+    ): CancelablePromise<ComplexData['responses']['ComplexTypes']> {
         const { parameterObject, parameterReference } = data;
         return this.httpRequest.request({
             method: 'GET',
@@ -1141,7 +798,9 @@ export class ComplexService {
      * @returns ModelWithString Success
      * @throws ApiError
      */
-    public complexParams(data: ComplexData['ComplexParams']): CancelablePromise<ModelWithString> {
+    public complexParams(
+        data: ComplexData['payloads']['ComplexParams']
+    ): CancelablePromise<ComplexData['responses']['ComplexParams']> {
         const { id, requestBody } = data;
         return this.httpRequest.request({
             method: 'PUT',
@@ -1161,7 +820,9 @@ export class MultipartService {
     /**
      * @throws ApiError
      */
-    public multipartRequest(data: MultipartData['MultipartRequest'] = {}): CancelablePromise<void> {
+    public multipartRequest(
+        data: MultipartData['payloads']['MultipartRequest'] = {}
+    ): CancelablePromise<MultipartData['responses']['MultipartRequest']> {
         const { formData } = data;
         return this.httpRequest.request({
             method: 'POST',
@@ -1175,13 +836,7 @@ export class MultipartService {
      * @returns any OK
      * @throws ApiError
      */
-    public multipartResponse(): CancelablePromise<{
-        file?: Blob | File;
-        metadata?: {
-            foo?: string;
-            bar?: string;
-        };
-    }> {
+    public multipartResponse(): CancelablePromise<MultipartData['responses']['MultipartResponse']> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/multipart',
@@ -1196,7 +851,7 @@ export class HeaderService {
      * @returns string Successful response
      * @throws ApiError
      */
-    public callWithResultFromHeader(): CancelablePromise<string> {
+    public callWithResultFromHeader(): CancelablePromise<HeaderData['responses']['CallWithResultFromHeader']> {
         return this.httpRequest.request({
             method: 'POST',
             url: '/api/v{api-version}/header',
@@ -1216,7 +871,9 @@ export class ErrorService {
      * @returns any Custom message: Successful response
      * @throws ApiError
      */
-    public testErrorCode(data: ErrorData['TestErrorCode']): CancelablePromise<any> {
+    public testErrorCode(
+        data: ErrorData['payloads']['TestErrorCode']
+    ): CancelablePromise<ErrorData['responses']['TestErrorCode']> {
         const { status } = data;
         return this.httpRequest.request({
             method: 'POST',
@@ -1242,8 +899,8 @@ export class NonAsciiÆøåÆøÅöôêÊService {
      * @throws ApiError
      */
     public nonAsciiæøåÆøÅöôêÊ字符串(
-        data: NonAsciiÆøåÆøÅöôêÊData['NonAsciiæøåÆøÅöôêÊ字符串']
-    ): CancelablePromise<Array<NonAsciiStringæøåÆØÅöôêÊ字符串>> {
+        data: NonAsciiÆøåÆøÅöôêÊData['payloads']['NonAsciiæøåÆøÅöôêÊ字符串']
+    ): CancelablePromise<NonAsciiÆøåÆøÅöôêÊData['responses']['NonAsciiæøåÆøÅöôêÊ字符串']> {
         const { nonAsciiParamæøåÆøÅöôêÊ } = data;
         return this.httpRequest.request({
             method: 'POST',

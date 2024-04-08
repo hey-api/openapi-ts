@@ -1,26 +1,26 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { ModelWithString } from './models';
+import type { DefaultsData } from './models';
 
 export class DefaultsService {
     /**
-     * @param parameterString This is a simple string with default value
-     * @param parameterNumber This is a simple number with default value
      * @param parameterBoolean This is a simple boolean with default value
      * @param parameterEnum This is a simple enum with default value
      * @param parameterModel This is a simple model with default value
+     * @param parameterNumber This is a simple number with default value
+     * @param parameterString This is a simple string with default value
      * @throws ApiError
      */
     public static callWithDefaultParameters(
-        parameterString: string | null = 'Hello World!',
-        parameterNumber: number | null = 123,
         parameterBoolean: boolean | null = true,
         parameterEnum: 'Success' | 'Warning' | 'Error' = 'Success',
         parameterModel: ModelWithString | null = {
             prop: 'Hello World!',
-        }
-    ): CancelablePromise<void> {
+        },
+        parameterNumber: number | null = 123,
+        parameterString: string | null = 'Hello World!'
+    ): CancelablePromise<DefaultsData['responses']['CallWithDefaultParameters']> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/defaults',
@@ -35,22 +35,22 @@ export class DefaultsService {
     }
 
     /**
-     * @param parameterString This is a simple string that is optional with default value
-     * @param parameterNumber This is a simple number that is optional with default value
      * @param parameterBoolean This is a simple boolean that is optional with default value
      * @param parameterEnum This is a simple enum that is optional with default value
      * @param parameterModel This is a simple model that is optional with default value
+     * @param parameterNumber This is a simple number that is optional with default value
+     * @param parameterString This is a simple string that is optional with default value
      * @throws ApiError
      */
     public static callWithDefaultOptionalParameters(
-        parameterString: string = 'Hello World!',
-        parameterNumber: number = 123,
         parameterBoolean: boolean = true,
         parameterEnum: 'Success' | 'Warning' | 'Error' = 'Success',
         parameterModel: ModelWithString = {
             prop: 'Hello World!',
-        }
-    ): CancelablePromise<void> {
+        },
+        parameterNumber: number = 123,
+        parameterString: string = 'Hello World!'
+    ): CancelablePromise<DefaultsData['responses']['CallWithDefaultOptionalParameters']> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v{api-version}/defaults',
@@ -65,26 +65,26 @@ export class DefaultsService {
     }
 
     /**
-     * @param parameterStringWithNoDefault This is a string with no default
      * @param parameterOptionalStringWithDefault This is a optional string with default
      * @param parameterOptionalStringWithEmptyDefault This is a optional string with empty default
      * @param parameterOptionalStringWithNoDefault This is a optional string with no default
+     * @param parameterStringNullableWithDefault This is a string that can be null with default
+     * @param parameterStringNullableWithNoDefault This is a string that can be null with no default
      * @param parameterStringWithDefault This is a string with default
      * @param parameterStringWithEmptyDefault This is a string with empty default
-     * @param parameterStringNullableWithNoDefault This is a string that can be null with no default
-     * @param parameterStringNullableWithDefault This is a string that can be null with default
+     * @param parameterStringWithNoDefault This is a string with no default
      * @throws ApiError
      */
     public static callToTestOrderOfParams(
-        parameterStringWithNoDefault: string,
         parameterOptionalStringWithDefault: string = 'Hello World!',
         parameterOptionalStringWithEmptyDefault: string = '',
         parameterOptionalStringWithNoDefault?: string,
+        parameterStringNullableWithDefault: string | null = null,
+        parameterStringNullableWithNoDefault?: string | null,
         parameterStringWithDefault: string = 'Hello World!',
         parameterStringWithEmptyDefault: string = '',
-        parameterStringNullableWithNoDefault?: string | null,
-        parameterStringNullableWithDefault: string | null = null
-    ): CancelablePromise<void> {
+        parameterStringWithNoDefault: string
+    ): CancelablePromise<DefaultsData['responses']['CallToTestOrderOfParams']> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/v{api-version}/defaults',
