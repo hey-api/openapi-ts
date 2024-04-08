@@ -421,14 +421,12 @@ export type ModelWithPattern = {
 };
 
 export type DefaultData = {
-    payloads: {};
     responses: {
         ServiceWithEmptyTag: void;
     };
 };
 
 export type SimpleData = {
-    payloads: {};
     responses: {
         GetCallWithoutParametersAndResponse: void;
         PutCallWithoutParametersAndResponse: void;
@@ -472,6 +470,7 @@ export type DescriptionsData = {
             parameterWithSlashes?: string;
         };
     };
+
     responses: {
         CallWithDescriptions: void;
     };
@@ -536,6 +535,7 @@ export type ParametersData = {
             parameterQuery: string;
         };
     };
+
     responses: {
         CallWithParameters: void;
         CallWithWeirdParameterNames: void;
@@ -623,6 +623,7 @@ export type DefaultsData = {
             parameterStringWithNoDefault: string;
         };
     };
+
     responses: {
         CallWithDefaultParameters: void;
         CallWithDefaultOptionalParameters: void;
@@ -631,7 +632,6 @@ export type DefaultsData = {
 };
 
 export type DuplicateData = {
-    payloads: {};
     responses: {
         DuplicateName: void;
         DuplicateName1: void;
@@ -641,7 +641,6 @@ export type DuplicateData = {
 };
 
 export type NoContentData = {
-    payloads: {};
     responses: {
         CallWithNoContentResponse: void;
         CallWithResponseAndNoContentResponse: any | void;
@@ -649,7 +648,6 @@ export type NoContentData = {
 };
 
 export type ResponseData = {
-    payloads: {};
     responses: {
         CallWithResponseAndNoContentResponse: any | void;
         CallWithResponse: ModelWithString;
@@ -667,7 +665,6 @@ export type ResponseData = {
 };
 
 export type MultipleTags1Data = {
-    payloads: {};
     responses: {
         DummyA: void;
         DummyB: void;
@@ -675,7 +672,6 @@ export type MultipleTags1Data = {
 };
 
 export type MultipleTags2Data = {
-    payloads: {};
     responses: {
         DummyA: void;
         DummyB: void;
@@ -683,7 +679,6 @@ export type MultipleTags2Data = {
 };
 
 export type MultipleTags3Data = {
-    payloads: {};
     responses: {
         DummyB: void;
     };
@@ -714,6 +709,7 @@ export type CollectionFormatData = {
             parameterArrayTsv: Array<string>;
         };
     };
+
     responses: {
         CollectionFormat: void;
     };
@@ -756,6 +752,7 @@ export type TypesData = {
             parameterString: string;
         };
     };
+
     responses: {
         Types: number | string | boolean | unknown;
     };
@@ -780,13 +777,13 @@ export type ComplexData = {
             parameterReference: ModelWithString;
         };
     };
+
     responses: {
         ComplexTypes: Array<ModelWithString>;
     };
 };
 
 export type HeaderData = {
-    payloads: {};
     responses: {
         CallWithResultFromHeader: string;
     };
@@ -801,6 +798,7 @@ export type ErrorData = {
             status: string;
         };
     };
+
     responses: {
         TestErrorCode: any;
     };
@@ -815,6 +813,7 @@ export type NonAsciiÆøåÆøÅöôêÊData = {
             nonAsciiParamæøåÆøÅöôêÊ: number;
         };
     };
+
     responses: {
         NonAsciiæøåÆøÅöôêÊ字符串: NonAsciiStringæøåÆØÅöôêÊ字符串;
     };
