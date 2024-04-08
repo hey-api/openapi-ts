@@ -30,12 +30,22 @@ export default tseslint.config(
             '@typescript-eslint/no-var-requires': 'off',
             'arrow-body-style': 'error',
             'import/order': 'off',
+            'no-prototype-builtins': 'off',
             'object-shorthand': 'error',
             'simple-import-sort/exports': 'error',
             'simple-import-sort/imports': 'error',
             'sort-imports': 'off',
             'sort-keys-fix/sort-keys-fix': 'warn',
-        },
+        }
     },
     eslintConfigPrettier,
+    {
+        ignores: [
+            '**/dist/',
+            '**/node_modules/',
+            'temp/',
+            '**/test/e2e/generated/',
+            '**/test/generated/'
+        ],
+    }
 );
