@@ -27,7 +27,7 @@ This way, you can gradually switch over to the new syntax as you update parts of
 
 ### Changes
 
-- `exportSchemas` is `true` by default (set `exportSchemas` to `false` to preserve the old behavior)
+- `exportSchemas` is `true` by default (set `exportSchemas` to `false` to preserve the old behavior, in v0.36.0 this has been renamed to `schemas`)
 - `client` is optional (old behavior preserved, but can be most likely removed)
 
 ### Removed

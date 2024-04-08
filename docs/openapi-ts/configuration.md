@@ -150,6 +150,30 @@ export default {
 }
 ```
 
+## JSON Schemas
+
+By default, `openapi-ts` exports schemas from your OpenAPI specification as plain JavaScript objects. A great use case for schemas is client-side form input validation.
+
+```ts
+import { $Schema } from 'src/client'
+
+const maxInputLength = $Schema.properties.text.maxLength
+
+if (userInput.length > maxInputLength) {
+  throw new Error(`String length cannot exceed ${maxInputLength} characters!`)
+}
+```
+
+If you're using OpenAPI v3.1, your schemas are JSON Schema compliant and can be used with any other tools supporting JSON Schema. However, if you don't need schemas at all, you can disable them with
+
+```js{4}
+export default {
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  schemas: false,
+}
+```
+
 ## Config API
 
 You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/types/config.ts) interface.
