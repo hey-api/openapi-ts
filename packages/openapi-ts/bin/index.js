@@ -20,7 +20,6 @@ const params = program
     .option('--enums <value>', 'Export enum definitions (javascript, typescript)')
     .option('--exportCore [value]', 'Write core files to disk')
     .option('--exportModels [value]', 'Write models to disk')
-    .option('--exportSchemas [value]', 'Write schemas to disk')
     .option('--exportServices [value]', 'Write services to disk')
     .option('--format [value]', 'Process output folder with formatter?')
     .option('--lint [value]', 'Process output folder with linter?')
@@ -28,6 +27,7 @@ const params = program
     .option('--operationId [value]', 'Use operationd ID?')
     .option('--postfixServices <value>', 'Service name postfix')
     .option('--request <value>', 'Path to custom request file')
+    .option('--schemas [value]', 'Write schemas to disk')
     .option('--serviceResponse [value]', 'Define shape of returned value from service calls')
     .option('--useDateType [value]', 'Output Date instead of string for the format "date-time" in the models')
     .option('--useOptions [value]', 'Use options instead of arguments')
@@ -64,11 +64,11 @@ async function start() {
             ...processParams(params, [
                 'exportCore',
                 'exportModels',
-                'exportSchemas',
                 'exportServices',
                 'format',
                 'lint',
                 'operationId',
+                'schemas',
                 'useDateType',
                 'useOptions',
                 'write',

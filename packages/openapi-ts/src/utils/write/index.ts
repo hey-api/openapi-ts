@@ -33,7 +33,7 @@ export const writeClientIndex = async (client: Client, outputPath: string, confi
         if (config.exportModels) {
             file.add(compiler.export.all('./models'));
         }
-        if (config.exportSchemas) {
+        if (config.schemas) {
             file.add(compiler.export.all('./schemas'));
         }
     }
