@@ -763,6 +763,7 @@ export type DefaultData = {
             requestBody: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
         };
     };
+
     responses: {
         ServiceWithEmptyTag: void;
         PostServiceWithEmptyTag: ModelWithReadOnlyAndWriteOnly;
@@ -770,7 +771,6 @@ export type DefaultData = {
 };
 
 export type SimpleData = {
-    payloads: {};
     responses: {
         GetCallWithoutParametersAndResponse: void;
         PutCallWithoutParametersAndResponse: void;
@@ -881,6 +881,7 @@ export type ParametersData = {
             requestBody?: ModelWithString;
         };
     };
+
     responses: {
         DeleteFoo: void;
         CallWithParameters: void;
@@ -922,6 +923,7 @@ export type DescriptionsData = {
             parameterWithSlashes?: unknown;
         };
     };
+
     responses: {
         CallWithDescriptions: void;
     };
@@ -936,6 +938,7 @@ export type DeprecatedData = {
             parameter: DeprecatedModel | null;
         };
     };
+
     responses: {
         DeprecatedCall: void;
     };
@@ -954,6 +957,7 @@ export type RequestBodyData = {
             parameter?: string;
         };
     };
+
     responses: {
         PostApiRequestBody: void;
     };
@@ -972,6 +976,7 @@ export type FormDataData = {
             parameter?: string;
         };
     };
+
     responses: {
         PostApiFormData: void;
     };
@@ -1058,6 +1063,7 @@ export type DefaultsData = {
             parameterStringWithNoDefault: string;
         };
     };
+
     responses: {
         CallWithDefaultParameters: void;
         CallWithDefaultOptionalParameters: void;
@@ -1066,7 +1072,6 @@ export type DefaultsData = {
 };
 
 export type DuplicateData = {
-    payloads: {};
     responses: {
         DuplicateName: void;
         DuplicateName1: void;
@@ -1076,7 +1081,6 @@ export type DuplicateData = {
 };
 
 export type NoContentData = {
-    payloads: {};
     responses: {
         CallWithNoContentResponse: void;
         CallWithResponseAndNoContentResponse: number | void;
@@ -1084,7 +1088,6 @@ export type NoContentData = {
 };
 
 export type ResponseData = {
-    payloads: {};
     responses: {
         CallWithResponseAndNoContentResponse: number | void;
         CallWithResponse: ModelWithString;
@@ -1102,7 +1105,6 @@ export type ResponseData = {
 };
 
 export type MultipleTags1Data = {
-    payloads: {};
     responses: {
         DummyA: void;
         DummyB: void;
@@ -1110,7 +1112,6 @@ export type MultipleTags1Data = {
 };
 
 export type MultipleTags2Data = {
-    payloads: {};
     responses: {
         DummyA: void;
         DummyB: void;
@@ -1118,7 +1119,6 @@ export type MultipleTags2Data = {
 };
 
 export type MultipleTags3Data = {
-    payloads: {};
     responses: {
         DummyB: void;
     };
@@ -1149,6 +1149,7 @@ export type CollectionFormatData = {
             parameterArrayTsv: Array<string> | null;
         };
     };
+
     responses: {
         CollectionFormat: void;
     };
@@ -1191,6 +1192,7 @@ export type TypesData = {
             parameterString: string | null;
         };
     };
+
     responses: {
         Types: number | string | boolean | Record<string, unknown>;
     };
@@ -1205,6 +1207,7 @@ export type UploadData = {
             file: Blob | File;
         };
     };
+
     responses: {
         UploadFile: boolean;
     };
@@ -1216,6 +1219,7 @@ export type FileResponseData = {
             id: string;
         };
     };
+
     responses: {
         FileResponse: Blob | File;
     };
@@ -1256,6 +1260,7 @@ export type ComplexData = {
             };
         };
     };
+
     responses: {
         ComplexTypes: Array<ModelWithString>;
         ComplexParams: ModelWithString;
@@ -1271,6 +1276,7 @@ export type MultipartData = {
             };
         };
     };
+
     responses: {
         MultipartRequest: void;
         MultipartResponse: {
@@ -1284,7 +1290,6 @@ export type MultipartData = {
 };
 
 export type HeaderData = {
-    payloads: {};
     responses: {
         CallWithResultFromHeader: string;
     };
@@ -1299,6 +1304,7 @@ export type ErrorData = {
             status: number;
         };
     };
+
     responses: {
         TestErrorCode: any;
     };
@@ -1313,6 +1319,7 @@ export type NonAsciiÆøåÆøÅöôêÊData = {
             nonAsciiParamæøåÆøÅöôêÊ: number;
         };
     };
+
     responses: {
         NonAsciiæøåÆøÅöôêÊ字符串: Array<NonAsciiStringæøåÆØÅöôêÊ字符串>;
     };

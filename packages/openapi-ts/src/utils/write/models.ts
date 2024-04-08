@@ -117,6 +117,9 @@ const operationDataType = (config: Config, service: Service) => {
     const operationsWithParameters = service.operations.filter(operation => operation.parameters.length);
     const namespace = `${camelCase(service.name, { pascalCase: true })}Data`;
     const output = `export type ${namespace} = {
+        ${
+            operationsWithParameters.length
+                ? `
         payloads: {
             ${operationsWithParameters
                 .map(
@@ -163,6 +166,12 @@ const operationDataType = (config: Config, service: Service) => {
                 )
                 .join('\n')}
         }
+        `
+                : ''
+        }
+        ${
+            service.operations.length
+                ? `
         responses: {
             ${service.operations.map(
                 operation =>
@@ -173,6 +182,9 @@ const operationDataType = (config: Config, service: Service) => {
                     }
                 `
             )}
+        }
+        `
+                : ''
         }
     }`;
     return output;

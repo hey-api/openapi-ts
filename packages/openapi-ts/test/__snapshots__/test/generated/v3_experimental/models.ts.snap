@@ -720,6 +720,7 @@ export type DefaultData = {
             query?: {};
         };
     };
+
     responses: {
         ServiceWithEmptyTag: void;
         PostServiceWithEmptyTag: ModelWithReadOnlyAndWriteOnly;
@@ -727,7 +728,6 @@ export type DefaultData = {
 };
 
 export type SimpleData = {
-    payloads: {};
     responses: {
         GetCallWithoutParametersAndResponse: void;
         PutCallWithoutParametersAndResponse: void;
@@ -852,6 +852,7 @@ export type ParametersData = {
             };
         };
     };
+
     responses: {
         DeleteFoo: void;
         CallWithParameters: void;
@@ -895,6 +896,7 @@ export type DescriptionsData = {
             };
         };
     };
+
     responses: {
         CallWithDescriptions: void;
     };
@@ -911,6 +913,7 @@ export type DeprecatedData = {
             query?: {};
         };
     };
+
     responses: {
         DeprecatedCall: void;
     };
@@ -932,6 +935,7 @@ export type RequestBodyData = {
             };
         };
     };
+
     responses: {
         PostApiRequestBody: void;
     };
@@ -953,6 +957,7 @@ export type FormDataData = {
             };
         };
     };
+
     responses: {
         PostApiFormData: void;
     };
@@ -1045,6 +1050,7 @@ export type DefaultsData = {
             };
         };
     };
+
     responses: {
         CallWithDefaultParameters: void;
         CallWithDefaultOptionalParameters: void;
@@ -1053,7 +1059,6 @@ export type DefaultsData = {
 };
 
 export type DuplicateData = {
-    payloads: {};
     responses: {
         DuplicateName: void;
         DuplicateName1: void;
@@ -1063,7 +1068,6 @@ export type DuplicateData = {
 };
 
 export type NoContentData = {
-    payloads: {};
     responses: {
         CallWithNoContentResponse: void;
         CallWithResponseAndNoContentResponse: number | void;
@@ -1071,7 +1075,6 @@ export type NoContentData = {
 };
 
 export type ResponseData = {
-    payloads: {};
     responses: {
         CallWithResponseAndNoContentResponse: number | void;
         CallWithResponse: ModelWithString;
@@ -1089,7 +1092,6 @@ export type ResponseData = {
 };
 
 export type MultipleTags1Data = {
-    payloads: {};
     responses: {
         DummyA: void;
         DummyB: void;
@@ -1097,7 +1099,6 @@ export type MultipleTags1Data = {
 };
 
 export type MultipleTags2Data = {
-    payloads: {};
     responses: {
         DummyA: void;
         DummyB: void;
@@ -1105,7 +1106,6 @@ export type MultipleTags2Data = {
 };
 
 export type MultipleTags3Data = {
-    payloads: {};
     responses: {
         DummyB: void;
     };
@@ -1138,6 +1138,7 @@ export type CollectionFormatData = {
             };
         };
     };
+
     responses: {
         CollectionFormat: void;
     };
@@ -1183,6 +1184,7 @@ export type TypesData = {
             };
         };
     };
+
     responses: {
         Types: number | string | boolean | Record<string, unknown>;
     };
@@ -1199,6 +1201,7 @@ export type UploadData = {
             query?: {};
         };
     };
+
     responses: {
         UploadFile: boolean;
     };
@@ -1212,6 +1215,7 @@ export type FileResponseData = {
             query?: {};
         };
     };
+
     responses: {
         FileResponse: Blob | File;
     };
@@ -1256,6 +1260,7 @@ export type ComplexData = {
             query?: {};
         };
     };
+
     responses: {
         ComplexTypes: Array<ModelWithString>;
         ComplexParams: ModelWithString;
@@ -1273,6 +1278,7 @@ export type MultipartData = {
             query?: {};
         };
     };
+
     responses: {
         MultipartRequest: void;
         MultipartResponse: {
@@ -1286,7 +1292,6 @@ export type MultipartData = {
 };
 
 export type HeaderData = {
-    payloads: {};
     responses: {
         CallWithResultFromHeader: string;
     };
@@ -1303,6 +1308,7 @@ export type ErrorData = {
             };
         };
     };
+
     responses: {
         TestErrorCode: any;
     };
@@ -1319,6 +1325,7 @@ export type NonAsciiÆøåÆøÅöôêÊData = {
             };
         };
     };
+
     responses: {
         NonAsciiæøåÆøÅöôêÊ字符串: Array<NonAsciiStringæøåÆØÅöôêÊ字符串>;
     };

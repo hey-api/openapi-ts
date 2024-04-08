@@ -89,6 +89,7 @@ export type DefaultsData = {
             parameterStringWithNoDefault: string;
         };
     };
+
     responses: {
         CallWithDefaultParameters: void;
         CallWithDefaultOptionalParameters: void;
