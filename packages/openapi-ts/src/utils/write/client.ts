@@ -82,8 +82,8 @@ export const writeClient = async (
             });
             await section.fn(
                 openApi,
-                client,
                 sectionPath,
+                client,
                 {
                     ...config,
                     name: config.name!,

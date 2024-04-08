@@ -10,7 +10,7 @@ vi.mock('node:fs');
 
 describe('writeClientClass', () => {
     it('should write to filesystem', async () => {
-        const client: Parameters<typeof writeClientClass>[1] = {
+        const client: Parameters<typeof writeClientClass>[2] = {
             enumNames: [],
             models: [],
             server: 'http://localhost:8080',
@@ -20,8 +20,8 @@ describe('writeClientClass', () => {
 
         await writeClientClass(
             openApi,
-            client,
             './dist',
+            client,
             {
                 client: 'fetch',
                 debug: false,

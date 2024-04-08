@@ -10,7 +10,7 @@ vi.mock('node:fs');
 
 describe('writeClientModels', () => {
     it('should write to filesystem', async () => {
-        const client: Parameters<typeof writeClientModels>[1] = {
+        const client: Parameters<typeof writeClientModels>[2] = {
             enumNames: [],
             models: [
                 {
@@ -37,7 +37,7 @@ describe('writeClientModels', () => {
             version: 'v1',
         };
 
-        await writeClientModels(openApi, client, '/', {
+        await writeClientModels(openApi, '/', client, {
             client: 'fetch',
             debug: false,
             enums: 'javascript',

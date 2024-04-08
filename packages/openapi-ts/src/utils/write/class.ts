@@ -13,15 +13,15 @@ import { sortByName } from '../sort';
  * The index file just contains all the exports you need to use the client as a standalone
  * library. But yuo can also import individual models and services directly.
  * @param openApi {@link OpenApi} Dereferenced OpenAPI specification
- * @param client Client containing models, schemas, and services
  * @param outputPath Directory to write the generated files to
+ * @param client Client containing models, schemas, and services
  * @param config {@link Config} passed to the `createClient()` method
  * @param templates The loaded handlebar templates
  */
 export const writeClientClass = async (
     openApi: OpenApi,
-    client: Client,
     outputPath: string,
+    client: Client,
     config: Config,
     templates: Templates
 ): Promise<void> => {
