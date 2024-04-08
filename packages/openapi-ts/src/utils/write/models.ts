@@ -2,45 +2,24 @@ import path from 'node:path';
 
 import ts from 'typescript';
 
-import compiler, { TypeScriptFile } from '../../compiler';
+import { compiler, TypeScriptFile } from '../../compiler';
 import { toExpression } from '../../compiler/types';
+import { addLeadingJSDocComment } from '../../compiler/utils';
 import { isType } from '../../compiler/utils';
 import type { Model, OpenApi } from '../../openApi';
 import type { Client } from '../../types/client';
 import type { Config } from '../../types/config';
 import { enumKey, enumName, enumUnionType, enumValue } from '../enum';
 import { escapeComment } from '../escape';
-import { addLeadingJSDocComment, toType } from './type';
+import { toType } from './type';
 
-type Nodes = Array<ts.JSDoc | ts.TypeAliasDeclaration | ts.Identifier | ts.VariableStatement | ts.EnumDeclaration>;
-
-const processComposition = (config: Config, client: Client, model: Model) => {
-    let nodes: Nodes = [
-        ts.factory.createTypeAliasDeclaration(
-            [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
-            ts.factory.createIdentifier(model.name),
-            undefined,
-            ts.factory.createTypeReferenceNode(toType(model, config)!)
-        ),
-    ];
-
-    if (model.description || model.deprecated) {
-        addLeadingJSDocComment(nodes[0], [
-            model.description && ` * ${escapeComment(model.description)}`,
-            model.deprecated && ' * @deprecated',
-        ]);
-    }
-
-    model.enums.forEach(enumerator => {
-        const result = processEnum(config, client, enumerator, false);
-        nodes = [...nodes, ...result];
-    });
-
-    return nodes;
-};
+const processComposition = (config: Config, client: Client, model: Model) => [
+    processType(config, client, model),
+    ...model.enums.flatMap(enumerator => processEnum(config, client, enumerator, false)),
+];
 
 const processEnum = (config: Config, client: Client, model: Model, exportType: boolean) => {
-    let nodes: Nodes = [];
+    let nodes: Array<ts.Node> = [];
 
     if (exportType) {
         if (config.enums === 'typescript') {
@@ -102,49 +81,17 @@ const processEnum = (config: Config, client: Client, model: Model, exportType: b
     return nodes;
 };
 
-const processInterface = (config: Config, client: Client, model: Model) => {
-    let nodes: Nodes = [
-        ts.factory.createTypeAliasDeclaration(
-            [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
-            ts.factory.createIdentifier(model.name),
-            undefined,
-            ts.factory.createTypeReferenceNode(toType(model, config)!)
-        ),
-    ];
-
-    if (model.description || model.deprecated) {
-        addLeadingJSDocComment(nodes[0], [
-            model.description && ` * ${escapeComment(model.description)}`,
-            model.deprecated && ' * @deprecated',
-        ]);
-    }
-
-    model.enums.forEach(enumerator => {
-        const result = processEnum(config, client, enumerator, false);
-        nodes = [...nodes, ...result];
-    });
-
-    return nodes;
-};
+const processInterface = processComposition;
 
 const processType = (config: Config, client: Client, model: Model) => {
-    const nodes: Nodes = [
-        ts.factory.createTypeAliasDeclaration(
-            [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
-            ts.factory.createIdentifier(model.name),
-            undefined,
-            ts.factory.createTypeReferenceNode(toType(model, config)!)
-        ),
-    ];
-
+    let comments: Parameters<typeof compiler.typedef.alias>[3] = [];
     if (model.description || model.deprecated) {
-        addLeadingJSDocComment(nodes[0], [
+        comments = [
             model.description && ` * ${escapeComment(model.description)}`,
             model.deprecated && ' * @deprecated',
-        ]);
+        ];
     }
-
-    return nodes;
+    return compiler.typedef.alias(model.name, toType(model, config)!, [], comments);
 };
 
 const processModel = (config: Config, client: Client, model: Model) => {
@@ -182,7 +129,8 @@ export const writeClientModels = async (
     const file = new TypeScriptFile();
     for (const model of client.models) {
         const nodes = processModel(config, client, model);
-        file.add(...nodes);
+        const n = Array.isArray(nodes) ? nodes : [nodes];
+        file.add(...n);
     }
     file.write(path.resolve(outputPath, 'models.ts'), '\n\n');
 };
