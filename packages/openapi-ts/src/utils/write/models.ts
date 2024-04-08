@@ -4,6 +4,7 @@ import ts from 'typescript';
 
 import compiler, { TypeScriptFile } from '../../compiler';
 import { toExpression } from '../../compiler/types';
+import { addLeadingJSDocComment } from '../../compiler/utils';
 import { isType } from '../../compiler/utils';
 import type { Model } from '../../openApi';
 import type { Client } from '../../types/client';
@@ -11,7 +12,7 @@ import type { Config } from '../../types/config';
 import { enumKey, enumName, enumUnionType, enumValue } from '../enum';
 import { escapeComment } from '../escape';
 import type { Templates } from '../handlebars';
-import { addLeadingJSDocComment, toType } from './type';
+import { toType } from './type';
 
 type Nodes = Array<ts.JSDoc | ts.TypeAliasDeclaration | ts.Identifier | ts.VariableStatement | ts.EnumDeclaration>;
 
