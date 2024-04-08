@@ -42,25 +42,28 @@ export const writeClientServices = async (
 
     // Import required packages and core files.
     if (config.client === 'angular') {
-        file.addImport('Injectable', '@angular/core');
+        file.addNamedImport('Injectable', '@angular/core');
         if (config.name === undefined) {
-            file.addImport('HttpClient', '@angular/common/http');
+            file.addNamedImport('HttpClient', '@angular/common/http');
         }
-        file.addImport({ isTypeOnly: true, name: 'Observable' }, 'rxjs');
+        file.addNamedImport({ isTypeOnly: true, name: 'Observable' }, 'rxjs');
     } else {
-        file.addImport({ isTypeOnly: true, name: 'CancelablePromise' }, './core/CancelablePromise');
+        file.addNamedImport({ isTypeOnly: true, name: 'CancelablePromise' }, './core/CancelablePromise');
     }
     if (config.serviceResponse === 'response') {
-        file.addImport({ isTypeOnly: true, name: 'ApiResult' }, './core/ApiResult');
+        file.addNamedImport({ isTypeOnly: true, name: 'ApiResult' }, './core/ApiResult');
     }
     if (config.name) {
-        file.addImport({ isTypeOnly: config.client !== 'angular', name: 'BaseHttpRequest' }, './core/BaseHttpRequest');
+        file.addNamedImport(
+            { isTypeOnly: config.client !== 'angular', name: 'BaseHttpRequest' },
+            './core/BaseHttpRequest'
+        );
     } else {
         if (config.useOptions) {
             if (config.serviceResponse === 'generics') {
-                file.addImport(['mergeOpenApiConfig', 'OpenAPI'], './core/OpenAPI');
-                file.addImport({ alias: '__request', name: 'request' }, './core/request');
-                file.addImport(
+                file.addNamedImport(['mergeOpenApiConfig', 'OpenAPI'], './core/OpenAPI');
+                file.addNamedImport({ alias: '__request', name: 'request' }, './core/request');
+                file.addNamedImport(
                     [
                         { isTypeOnly: true, name: 'TApiResponse' },
                         { isTypeOnly: true, name: 'TConfig' },
@@ -69,18 +72,18 @@ export const writeClientServices = async (
                     './core/types'
                 );
             } else {
-                file.addImport('OpenAPI', './core/OpenAPI');
-                file.addImport({ alias: '__request', name: 'request' }, './core/request');
+                file.addNamedImport('OpenAPI', './core/OpenAPI');
+                file.addNamedImport({ alias: '__request', name: 'request' }, './core/request');
             }
         } else {
-            file.addImport('OpenAPI', './core/OpenAPI');
-            file.addImport({ alias: '__request', name: 'request' }, './core/request');
+            file.addNamedImport('OpenAPI', './core/OpenAPI');
+            file.addNamedImport({ alias: '__request', name: 'request' }, './core/request');
         }
     }
 
     // Import all models required by the services.
     const models = imports.filter(unique).map(imp => ({ isTypeOnly: true, name: imp }));
-    file.addImport(models, './models');
+    file.addNamedImport(models, './models');
 
     const data = [file.toString(), ...operationTypes, ...results].join('\n\n');
 
