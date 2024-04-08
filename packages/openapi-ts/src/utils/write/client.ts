@@ -1,6 +1,7 @@
 import { mkdirSync, rmSync } from 'node:fs';
 import path from 'node:path';
 
+import type { OpenApi } from '../../openApi';
 import type { Client } from '../../types/client';
 import type { Config } from '../../types/config';
 import type { Templates } from '../handlebars';
@@ -13,11 +14,17 @@ import { writeClientServices } from './services';
 
 /**
  * Write our OpenAPI client, using the given templates at the given output
+ * @param openApi {@link OpenApi} Dereferenced OpenAPI specification
  * @param client Client containing models, schemas, and services
  * @param templates Templates wrapper with all loaded Handlebars templates
  * @param config {@link Config} passed to the `createClient()` method
  */
-export const writeClient = async (client: Client, templates: Templates, config: Config): Promise<void> => {
+export const writeClient = async (
+    openApi: OpenApi,
+    client: Client,
+    templates: Templates,
+    config: Config
+): Promise<void> => {
     await rmSync(config.output, {
         force: true,
         recursive: true,
@@ -73,10 +80,16 @@ export const writeClient = async (client: Client, templates: Templates, config: 
             await mkdirSync(sectionPath, {
                 recursive: true,
             });
-            await section.fn(client, templates, sectionPath, {
-                ...config,
-                name: config.name!,
-            });
+            await section.fn(
+                openApi,
+                client,
+                sectionPath,
+                {
+                    ...config,
+                    name: config.name!,
+                },
+                templates
+            );
         }
     }
 

@@ -1,6 +1,7 @@
 import { copyFileSync, existsSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
+import type { OpenApi } from '../../openApi';
 import type { Client } from '../../types/client';
 import type { Config } from '../../types/config';
 import { getHttpRequestName } from '../getHttpRequestName';
@@ -8,16 +9,18 @@ import type { Templates } from '../handlebars';
 
 /**
  * Generate OpenAPI core files, this includes the basic boilerplate code to handle requests.
+ * @param openApi {@link OpenApi} Dereferenced OpenAPI specification
  * @param client Client containing models, schemas, and services
- * @param templates The loaded handlebar templates
  * @param outputPath Directory to write the generated files to
  * @param config {@link Config} passed to the `createClient()` method
+ * @param templates The loaded handlebar templates
  */
 export const writeClientCore = async (
+    openApi: OpenApi,
     client: Client,
-    templates: Templates,
     outputPath: string,
-    config: Config
+    config: Config,
+    templates: Templates
 ): Promise<void> => {
     const context = {
         httpRequest: getHttpRequestName(config.client),
