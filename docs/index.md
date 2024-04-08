@@ -25,6 +25,9 @@ features:
   - icon: 🦴
     title: Data Fetching
     details: Typesafe data with our REST clients. Fetch, axios, angular, node, and xhr are available.
+  - icon: "{✓}"
+    title: JSON Schemas
+    details: Export OpenAPI schemas as JavaScript objects. JSON Schema 2020-12 supported.
 ---
 
 ### Migrating from OpenAPI Typescript Codegen?
