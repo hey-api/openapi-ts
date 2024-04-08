@@ -183,7 +183,7 @@ export const writeClientModels = async (
     const file = new TypeScriptFile();
     for (const model of client.models) {
         const nodes = processModel(config, client, model);
-        file.push(...nodes);
+        file.add(...nodes);
     }
     file.write(path.resolve(outputPath, 'models.ts'), '\n\n');
 };
