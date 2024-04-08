@@ -129,10 +129,24 @@ const dataParameters = (config: Config, parameters: OperationParameter[]) => {
     return output.join(', ');
 };
 
-const nameOperationDataType = (service: Service, operation: Service['operations'][number]) => {
-    const namespace = `${camelCase(service.name, { pascalCase: true })}Data`;
+export const serviceExportedNamespace = (service: Service) => {
+    const exported = `${camelCase(service.name, { pascalCase: true })}Data`;
+    return exported;
+};
+
+export const operationKey = (operation: Service['operations'][number]) => {
     const key = camelCase(operation.name, { pascalCase: true });
-    return `${namespace}['${key}']`;
+    return key;
+};
+
+export const nameOperationDataType = (
+    service: Service,
+    namespace: string,
+    operation: Service['operations'][number]
+) => {
+    const exported = serviceExportedNamespace(service);
+    const key = operationKey(operation);
+    return `${exported}['${namespace}']['${key}']`;
 };
 
 export const registerHandlebarHelpers = (config: Config): void => {
@@ -191,8 +205,8 @@ export const registerHandlebarHelpers = (config: Config): void => {
 
     Handlebars.registerHelper(
         'nameOperationDataType',
-        function (service: Service, operation: Service['operations'][number]) {
-            return nameOperationDataType(service, operation);
+        function (service: Service, namespace: string, operation: Service['operations'][number]) {
+            return nameOperationDataType(service, namespace, operation);
         }
     );
 

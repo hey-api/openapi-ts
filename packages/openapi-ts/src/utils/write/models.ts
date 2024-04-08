@@ -1,16 +1,20 @@
 import path from 'node:path';
 
+import camelCase from 'camelcase';
 import ts from 'typescript';
 
 import { compiler, TypeScriptFile } from '../../compiler';
 import { toExpression } from '../../compiler/types';
 import { addLeadingJSDocComment } from '../../compiler/utils';
 import { isType } from '../../compiler/utils';
-import type { Model, OpenApi } from '../../openApi';
+import type { Model, OpenApi, Service } from '../../openApi';
 import type { Client } from '../../types/client';
 import type { Config } from '../../types/config';
 import { enumKey, enumName, enumUnionType, enumValue } from '../enum';
 import { escapeComment } from '../escape';
+import { operationKey } from '../handlebars';
+import { modelIsRequired } from '../required';
+import { sortByName } from '../sort';
 import { toType } from './type';
 
 const processComposition = (config: Config, client: Client, model: Model) => [
@@ -109,6 +113,71 @@ const processModel = (config: Config, client: Client, model: Model) => {
     }
 };
 
+const operationDataType = (config: Config, service: Service) => {
+    const operationsWithParameters = service.operations.filter(operation => operation.parameters.length);
+    const namespace = `${camelCase(service.name, { pascalCase: true })}Data`;
+    const output = `export type ${namespace} = {
+        payloads: {
+            ${operationsWithParameters
+                .map(
+                    operation => `${operationKey(operation)}: {
+                        ${sortByName(operation.parameters)
+                            .filter(parameter => {
+                                if (!config.experimental) {
+                                    return true;
+                                }
+                                return parameter.in !== 'query';
+                            })
+                            .map(parameter => {
+                                let comment: string[] = [];
+                                if (parameter.description) {
+                                    comment = ['/**', ` * ${escapeComment(parameter.description)}`, ' */'];
+                                }
+                                return [
+                                    ...comment,
+                                    `${parameter.name + modelIsRequired(config, parameter)}: ${toType(parameter, config)}`,
+                                ].join('\n');
+                            })
+                            .join('\n')}
+                        ${
+                            config.experimental
+                                ? `
+                        query${operation.parametersQuery.every(parameter => !parameter.isRequired) ? '?' : ''}: {
+                            ${sortByName(operation.parametersQuery)
+                                .map(parameter => {
+                                    let comment: string[] = [];
+                                    if (parameter.description) {
+                                        comment = ['/**', ` * ${escapeComment(parameter.description)}`, ' */'];
+                                    }
+                                    return [
+                                        ...comment,
+                                        `${parameter.name + modelIsRequired(config, parameter)}: ${toType(parameter, config)}`,
+                                    ].join('\n');
+                                })
+                                .join('\n')}
+                        }
+                        `
+                                : ''
+                        }
+                    };`
+                )
+                .join('\n')}
+        }
+        responses: {
+            ${service.operations.map(
+                operation =>
+                    `${operationKey(operation)}: ${
+                        !operation.results.length
+                            ? 'void'
+                            : operation.results.map(result => toType(result, config)).join(' | ')
+                    }
+                `
+            )}
+        }
+    }`;
+    return output;
+};
+
 /**
  * Generate Models using the Handlebar template and write to disk.
  * @param openApi {@link OpenApi} Dereferenced OpenAPI specification
@@ -122,15 +191,18 @@ export const writeClientModels = async (
     client: Client,
     config: Config
 ): Promise<void> => {
-    if (!client.models.length) {
-        return;
-    }
-
     const file = new TypeScriptFile();
+
     for (const model of client.models) {
         const nodes = processModel(config, client, model);
         const n = Array.isArray(nodes) ? nodes : [nodes];
         file.add(...n);
     }
+
+    for (const service of client.services) {
+        const operationDataTypes = operationDataType(config, service);
+        file.add(operationDataTypes);
+    }
+
     file.write(path.resolve(outputPath, 'models.ts'), '\n\n');
 };
