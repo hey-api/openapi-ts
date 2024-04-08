@@ -7,6 +7,7 @@ import * as types from './types';
 import { tsNodeToString } from './utils';
 
 export type { Comments } from './utils';
+export type { Node } from 'typescript';
 
 export class TypeScriptFile {
     private _imports: Array<ts.Node> = [];
