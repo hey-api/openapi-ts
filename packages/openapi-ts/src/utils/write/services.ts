@@ -4,8 +4,7 @@ import path from 'node:path';
 import camelCase from 'camelcase';
 
 import { TypeScriptFile } from '../../compiler';
-import type { OpenApi } from '../../openApi';
-import type { Service } from '../../openApi';
+import type { OpenApi, Service } from '../../openApi';
 import type { Client } from '../../types/client';
 import type { Config } from '../../types/config';
 import { escapeComment } from '../escape';
