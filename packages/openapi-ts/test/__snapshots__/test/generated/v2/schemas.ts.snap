@@ -1,134 +1,147 @@
 export const $CommentWithBreaks = {
-    type: 'number',
     description: `Testing multiline comments in string: First line
 Second line
 
 Fourth line`,
+    type: 'integer',
 } as const;
 
 export const $CommentWithBackticks = {
-    type: 'number',
-    description: `Testing backticks in string: \`backticks\` and \`\`\`multiple backticks\`\`\` should work`,
+    description: 'Testing backticks in string: `backticks` and ```multiple backticks``` should work',
+    type: 'integer',
 } as const;
 
 export const $CommentWithSlashes = {
-    type: 'number',
-    description: `Testing slashes in string: \\backwards\\\\\\ and /forwards/// should work`,
+    description: 'Testing slashes in string: \backwards\\ and /forwards/// should work',
+    type: 'integer',
 } as const;
 
 export const $CommentWithExpressionPlaceholders = {
-    type: 'number',
-    description: `Testing expression placeholders in string: \${expression} should work`,
+    description: 'Testing expression placeholders in string: ${expression} should work',
+    type: 'integer',
 } as const;
 
 export const $CommentWithQuotes = {
-    type: 'number',
     description: `Testing quotes in string: 'single quote''' and "double quotes""" should work`,
+    type: 'integer',
 } as const;
 
 export const $CommentWithReservedCharacters = {
-    type: 'number',
-    description: `Testing reserved characters in string: /* inline */ and /** inline **/ should work`,
+    description: 'Testing reserved characters in string: /* inline */ and /** inline **/ should work',
+    type: 'integer',
 } as const;
 
 export const $SimpleInteger = {
-    type: 'number',
-    description: `This is a simple number`,
+    description: 'This is a simple number',
+    type: 'integer',
 } as const;
 
 export const $SimpleBoolean = {
+    description: 'This is a simple boolean',
     type: 'boolean',
-    description: `This is a simple boolean`,
 } as const;
 
 export const $SimpleString = {
+    description: 'This is a simple string',
     type: 'string',
-    description: `This is a simple string`,
 } as const;
 
 export const $NonAsciiStringæøåÆØÅöôêÊ字符串 = {
+    description: 'A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)',
     type: 'string',
-    description: `A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)`,
 } as const;
 
 export const $SimpleFile = {
-    type: 'binary',
-    description: `This is a simple file`,
+    description: 'This is a simple file',
+    type: 'file',
 } as const;
 
 export const $SimpleReference = {
-    type: 'ModelWithString',
-    description: `This is a simple reference`,
+    description: 'This is a simple reference',
+    $ref: '#/definitions/ModelWithString',
 } as const;
 
 export const $SimpleStringWithPattern = {
+    description: 'This is a simple string',
     type: 'string',
-    description: `This is a simple string`,
     maxLength: 64,
     pattern: '^[a-zA-Z0-9_]*$',
 } as const;
 
 export const $EnumWithStrings = {
-    type: 'Enum',
+    description: 'This is a simple enum with strings',
     enum: ['Success', 'Warning', 'Error', "'Single Quote'", '"Double Quotes"', 'Non-ascii: øæåôöØÆÅÔÖ字符串'],
 } as const;
 
 export const $EnumWithNumbers = {
-    type: 'Enum',
+    description: 'This is a simple enum with numbers',
     enum: [1, 2, 3, 1.1, 1.2, 1.3, 100, 200, 300, -100, -200, -300, -1.1, -1.2, -1.3],
 } as const;
 
 export const $EnumFromDescription = {
+    description: 'Success=1,Warning=2,Error=3',
     type: 'number',
-    description: `Success=1,Warning=2,Error=3`,
 } as const;
 
 export const $EnumWithExtensions = {
-    type: 'Enum',
+    description: 'This is a simple enum with numbers',
     enum: [200, 400, 500],
+    'x-enum-varnames': ['CUSTOM_SUCCESS', 'CUSTOM_WARNING', 'CUSTOM_ERROR'],
+    'x-enum-descriptions': [
+        'Used when the status of something is successful',
+        'Used when the status of something has a warning',
+        'Used when the status of something has an error',
+    ],
 } as const;
 
 export const $ArrayWithNumbers = {
+    description: 'This is a simple array with numbers',
     type: 'array',
-    contains: {
-        type: 'number',
+    items: {
+        type: 'integer',
     },
 } as const;
 
 export const $ArrayWithBooleans = {
+    description: 'This is a simple array with booleans',
     type: 'array',
-    contains: {
+    items: {
         type: 'boolean',
     },
 } as const;
 
 export const $ArrayWithStrings = {
+    description: 'This is a simple array with strings',
     type: 'array',
-    contains: {
+    items: {
         type: 'string',
     },
 } as const;
 
 export const $ArrayWithReferences = {
+    description: 'This is a simple array with references',
     type: 'array',
-    contains: {
-        type: 'ModelWithString',
+    items: {
+        $ref: '#/definitions/ModelWithString',
     },
 } as const;
 
 export const $ArrayWithArray = {
+    description: 'This is a simple array containing an array',
     type: 'array',
-    contains: {
+    items: {
         type: 'array',
-        contains: {
-            type: 'ModelWithString',
+        items: {
+            $ref: '#/definitions/ModelWithString',
         },
     },
 } as const;
 
 export const $ArrayWithProperties = {
+    description: 'This is a simple array with properties',
     type: 'array',
-    contains: {
+    items: {
+        type: 'object',
         properties: {
             foo: {
                 type: 'string',
@@ -141,42 +154,48 @@ export const $ArrayWithProperties = {
 } as const;
 
 export const $DictionaryWithString = {
-    type: 'dictionary',
-    contains: {
+    description: 'This is a string dictionary',
+    type: 'object',
+    additionalProperties: {
         type: 'string',
     },
 } as const;
 
 export const $DictionaryWithReference = {
-    type: 'dictionary',
-    contains: {
-        type: 'ModelWithString',
+    description: 'This is a string reference',
+    type: 'object',
+    additionalProperties: {
+        $ref: '#/definitions/ModelWithString',
     },
 } as const;
 
 export const $DictionaryWithArray = {
-    type: 'dictionary',
-    contains: {
+    description: 'This is a complex dictionary',
+    type: 'object',
+    additionalProperties: {
         type: 'array',
-        contains: {
-            type: 'ModelWithString',
+        items: {
+            $ref: '#/definitions/ModelWithString',
         },
     },
 } as const;
 
 export const $DictionaryWithDictionary = {
-    type: 'dictionary',
-    contains: {
-        type: 'dictionary',
-        contains: {
+    description: 'This is a string dictionary',
+    type: 'object',
+    additionalProperties: {
+        type: 'object',
+        additionalProperties: {
             type: 'string',
         },
     },
 } as const;
 
 export const $DictionaryWithProperties = {
-    type: 'dictionary',
-    contains: {
+    description: 'This is a complex dictionary',
+    type: 'object',
+    additionalProperties: {
+        type: 'object',
         properties: {
             foo: {
                 type: 'string',
@@ -189,146 +208,154 @@ export const $DictionaryWithProperties = {
 } as const;
 
 export const $Date = {
+    description: 'This is a type-only model that defines Date as a string',
     type: 'string',
-    description: `This is a type-only model that defines Date as a string`,
 } as const;
 
 export const $ModelWithInteger = {
-    description: `This is a model with one number property`,
+    description: 'This is a model with one number property',
+    type: 'object',
     properties: {
         prop: {
-            type: 'number',
-            description: `This is a simple number property`,
+            description: 'This is a simple number property',
+            type: 'integer',
         },
     },
 } as const;
 
 export const $ModelWithBoolean = {
-    description: `This is a model with one boolean property`,
+    description: 'This is a model with one boolean property',
+    type: 'object',
     properties: {
         prop: {
+            description: 'This is a simple boolean property',
             type: 'boolean',
-            description: `This is a simple boolean property`,
         },
     },
 } as const;
 
 export const $ModelWithString = {
-    description: `This is a model with one string property`,
+    description: 'This is a model with one string property',
+    type: 'object',
     properties: {
         prop: {
+            description: 'This is a simple string property',
             type: 'string',
-            description: `This is a simple string property`,
         },
     },
 } as const;
 
 export const $ModelWithNullableString = {
-    description: `This is a model with one string property`,
+    description: 'This is a model with one string property',
+    type: 'object',
+    required: ['nullableRequiredProp'],
     properties: {
         nullableProp: {
+            description: 'This is a simple string property',
             type: 'string',
-            description: `This is a simple string property`,
-            isNullable: true,
+            'x-nullable': true,
         },
         nullableRequiredProp: {
+            description: 'This is a simple string property',
             type: 'string',
-            description: `This is a simple string property`,
-            isRequired: true,
-            isNullable: true,
+            'x-nullable': true,
         },
     },
 } as const;
 
 export const $ModelWithEnum = {
-    description: `This is a model with one enum`,
+    description: 'This is a model with one enum',
+    type: 'object',
     properties: {
         test: {
-            type: 'Enum',
+            description: 'This is a simple enum with strings',
             enum: ['Success', 'Warning', 'Error', 'ØÆÅ字符串'],
         },
         statusCode: {
-            type: 'Enum',
+            description: 'These are the HTTP error code enums',
             enum: ['100', '200 FOO', '300 FOO_BAR', '400 foo-bar', '500 foo.bar', '600 foo&bar'],
         },
         bool: {
+            description: 'Simple boolean enum',
             type: 'boolean',
-            description: `Simple boolean enum`,
+            enum: [true],
         },
     },
 } as const;
 
 export const $ModelWithEnumFromDescription = {
-    description: `This is a model with one enum`,
+    description: 'This is a model with one enum',
+    type: 'object',
     properties: {
         test: {
-            type: 'number',
-            description: `Success=1,Warning=2,Error=3`,
+            type: 'integer',
+            description: 'Success=1,Warning=2,Error=3',
         },
     },
 } as const;
 
 export const $ModelWithNestedEnums = {
-    description: `This is a model with nested enums`,
+    description: 'This is a model with nested enums',
+    type: 'object',
     properties: {
         dictionaryWithEnum: {
-            type: 'dictionary',
-            contains: {
-                type: 'Enum',
+            type: 'object',
+            additionalProperties: {
                 enum: ['Success', 'Warning', 'Error'],
             },
         },
         dictionaryWithEnumFromDescription: {
-            type: 'dictionary',
-            contains: {
-                type: 'number',
-                description: `Success=1,Warning=2,Error=3`,
+            type: 'object',
+            additionalProperties: {
+                type: 'integer',
+                description: 'Success=1,Warning=2,Error=3',
             },
         },
         arrayWithEnum: {
             type: 'array',
-            contains: {
-                type: 'Enum',
+            items: {
                 enum: ['Success', 'Warning', 'Error'],
             },
         },
         arrayWithDescription: {
             type: 'array',
-            contains: {
-                type: 'number',
-                description: `Success=1,Warning=2,Error=3`,
+            items: {
+                type: 'integer',
+                description: 'Success=1,Warning=2,Error=3',
             },
         },
     },
 } as const;
 
 export const $ModelWithReference = {
-    description: `This is a model with one property containing a reference`,
+    description: 'This is a model with one property containing a reference',
+    type: 'object',
     properties: {
         prop: {
-            type: 'ModelWithProperties',
+            $ref: '#/definitions/ModelWithProperties',
         },
     },
 } as const;
 
 export const $ModelWithArray = {
-    description: `This is a model with one property containing an array`,
+    description: 'This is a model with one property containing an array',
+    type: 'object',
     properties: {
         prop: {
             type: 'array',
-            contains: {
-                type: 'ModelWithString',
+            items: {
+                $ref: '#/definitions/ModelWithString',
             },
         },
         propWithFile: {
             type: 'array',
-            contains: {
-                type: 'binary',
+            items: {
+                type: 'file',
             },
         },
         propWithNumber: {
             type: 'array',
-            contains: {
+            items: {
                 type: 'number',
             },
         },
@@ -336,11 +363,12 @@ export const $ModelWithArray = {
 } as const;
 
 export const $ModelWithDictionary = {
-    description: `This is a model with one property containing a dictionary`,
+    description: 'This is a model with one property containing a dictionary',
+    type: 'object',
     properties: {
         prop: {
-            type: 'dictionary',
-            contains: {
+            type: 'object',
+            additionalProperties: {
                 type: 'string',
             },
         },
@@ -348,25 +376,26 @@ export const $ModelWithDictionary = {
 } as const;
 
 export const $ModelWithCircularReference = {
-    description: `This is a model with one property containing a circular reference`,
+    description: 'This is a model with one property containing a circular reference',
+    type: 'object',
     properties: {
         prop: {
-            type: 'ModelWithCircularReference',
+            $ref: '#/definitions/ModelWithCircularReference',
         },
     },
 } as const;
 
 export const $ModelWithProperties = {
-    description: `This is a model with one nested property`,
+    description: 'This is a model with one nested property',
+    type: 'object',
+    required: ['required', 'requiredAndReadOnly'],
     properties: {
         required: {
             type: 'string',
-            isRequired: true,
         },
         requiredAndReadOnly: {
             type: 'string',
-            isReadOnly: true,
-            isRequired: true,
+            readOnly: true,
         },
         string: {
             type: 'string',
@@ -378,7 +407,7 @@ export const $ModelWithProperties = {
             type: 'boolean',
         },
         reference: {
-            type: 'ModelWithString',
+            $ref: '#/definitions/ModelWithString',
         },
         'property with space': {
             type: 'string',
@@ -391,49 +420,54 @@ export const $ModelWithProperties = {
         },
         '@namespace.string': {
             type: 'string',
-            isReadOnly: true,
+            readOnly: true,
         },
         '@namespace.integer': {
-            type: 'number',
-            isReadOnly: true,
+            type: 'integer',
+            readOnly: true,
         },
     },
 } as const;
 
 export const $ModelWithNestedProperties = {
-    description: `This is a model with one nested property`,
+    description: 'This is a model with one nested property',
+    type: 'object',
+    required: ['first'],
     properties: {
         first: {
+            type: 'object',
+            required: ['second'],
+            readOnly: true,
             properties: {
                 second: {
+                    type: 'object',
+                    required: ['third'],
+                    readOnly: true,
                     properties: {
                         third: {
                             type: 'string',
-                            isReadOnly: true,
-                            isRequired: true,
+                            readOnly: true,
                         },
                     },
-                    isReadOnly: true,
-                    isRequired: true,
                 },
             },
-            isReadOnly: true,
-            isRequired: true,
         },
     },
 } as const;
 
 export const $ModelWithDuplicateProperties = {
-    description: `This is a model with duplicated properties`,
+    description: 'This is a model with duplicated properties',
+    type: 'object',
     properties: {
         prop: {
-            type: 'ModelWithString',
+            $ref: '#/definitions/ModelWithString',
         },
     },
 } as const;
 
 export const $ModelWithOrderedProperties = {
-    description: `This is a model with ordered properties`,
+    description: 'This is a model with ordered properties',
+    type: 'object',
     properties: {
         zebra: {
             type: 'string',
@@ -448,34 +482,36 @@ export const $ModelWithOrderedProperties = {
 } as const;
 
 export const $ModelWithDuplicateImports = {
-    description: `This is a model with duplicated imports`,
+    description: 'This is a model with duplicated imports',
+    type: 'object',
     properties: {
         propA: {
-            type: 'ModelWithString',
+            $ref: '#/definitions/ModelWithString',
         },
         propB: {
-            type: 'ModelWithString',
+            $ref: '#/definitions/ModelWithString',
         },
         propC: {
-            type: 'ModelWithString',
+            $ref: '#/definitions/ModelWithString',
         },
     },
 } as const;
 
 export const $ModelThatExtends = {
-    type: 'all-of',
-    description: `This is a model that extends another model`,
-    contains: [
+    description: 'This is a model that extends another model',
+    type: 'object',
+    allOf: [
         {
-            type: 'ModelWithString',
+            $ref: '#/definitions/ModelWithString',
         },
         {
+            type: 'object',
             properties: {
                 propExtendsA: {
                     type: 'string',
                 },
                 propExtendsB: {
-                    type: 'ModelWithString',
+                    $ref: '#/definitions/ModelWithString',
                 },
             },
         },
@@ -483,29 +519,31 @@ export const $ModelThatExtends = {
 } as const;
 
 export const $ModelThatExtendsExtends = {
-    type: 'all-of',
-    description: `This is a model that extends another model`,
-    contains: [
+    description: 'This is a model that extends another model',
+    type: 'object',
+    allOf: [
         {
-            type: 'ModelWithString',
+            $ref: '#/definitions/ModelWithString',
         },
         {
-            type: 'ModelThatExtends',
+            $ref: '#/definitions/ModelThatExtends',
         },
         {
+            type: 'object',
             properties: {
                 propExtendsC: {
                     type: 'string',
                 },
                 propExtendsD: {
-                    type: 'ModelWithString',
+                    $ref: '#/definitions/ModelWithString',
                 },
             },
         },
     ],
 } as const;
 
-export const $_default = {
+export const $default = {
+    type: 'object',
     properties: {
         name: {
             type: 'string',
@@ -514,35 +552,35 @@ export const $_default = {
 } as const;
 
 export const $ModelWithPattern = {
-    description: `This is a model that contains a some patterns`,
+    description: 'This is a model that contains a some patterns',
+    type: 'object',
+    required: ['key', 'name'],
     properties: {
         key: {
-            type: 'string',
-            isRequired: true,
             maxLength: 64,
             pattern: '^[a-zA-Z0-9_]*$',
+            type: 'string',
         },
         name: {
-            type: 'string',
-            isRequired: true,
             maxLength: 255,
+            type: 'string',
         },
         enabled: {
             type: 'boolean',
-            isReadOnly: true,
+            readOnly: true,
         },
         modified: {
             type: 'string',
-            isReadOnly: true,
             format: 'date-time',
+            readOnly: true,
         },
         id: {
             type: 'string',
-            pattern: '^\\d{2}-\\d{3}-\\d{4}$',
+            pattern: '^d{2}-d{3}-d{4}$',
         },
         text: {
             type: 'string',
-            pattern: '^\\w+$',
+            pattern: '^w+$',
         },
         patternWithSingleQuotes: {
             type: 'string',
@@ -550,7 +588,8 @@ export const $ModelWithPattern = {
         },
         patternWithNewline: {
             type: 'string',
-            pattern: 'aaa\nbbb',
+            pattern: `aaa
+bbb`,
         },
         patternWithBacktick: {
             type: 'string',

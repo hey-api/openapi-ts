@@ -198,7 +198,7 @@ export async function createClient(userConfig: UserConfig): Promise<Client> {
     if (config.write) {
         logClientMessage(config.client);
         logMissingDependenciesWarning(config.client, dependencies);
-        await writeClient(client, templates, config);
+        await writeClient(openApi, client, templates, config);
         processOutput(config, dependencies);
     }
 

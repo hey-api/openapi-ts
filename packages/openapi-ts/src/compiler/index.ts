@@ -24,6 +24,9 @@ export class TypeScriptFile {
     }
 
     public write(file: PathOrFileDescriptor, seperator: string = '\n') {
+        if (!this._items.length) {
+            return;
+        }
         writeFileSync(file, this.toString(seperator));
     }
 }
@@ -45,5 +48,3 @@ export const compiler = {
         object: types.createObjectType,
     },
 };
-
-export default compiler;

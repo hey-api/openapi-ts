@@ -4,7 +4,7 @@ import path from 'node:path';
 import camelCase from 'camelcase';
 
 import { TypeScriptFile } from '../../compiler';
-import { Service } from '../../openApi';
+import type { OpenApi, Service } from '../../openApi';
 import type { Client } from '../../types/client';
 import type { Config } from '../../types/config';
 import { escapeComment } from '../escape';
@@ -71,16 +71,18 @@ export const operationDataType = (config: Config, service: Service) => {
 
 /**
  * Generate Services using the Handlebar template and write to disk.
- * @param client Client containing models, schemas, and services
- * @param templates The loaded handlebar templates
+ * @param openApi {@link OpenApi} Dereferenced OpenAPI specification
  * @param outputPath Directory to write the generated files to
+ * @param client Client containing models, schemas, and services
  * @param config {@link Config} passed to the `createClient()` method
+ * @param templates The loaded handlebar templates
  */
 export const writeClientServices = async (
-    client: Client,
-    templates: Templates,
+    openApi: OpenApi,
     outputPath: string,
-    config: Config
+    client: Client,
+    config: Config,
+    templates: Templates
 ): Promise<void> => {
     if (!client.services.length) {
         return;
