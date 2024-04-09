@@ -91,6 +91,7 @@ const getConfig = async (userConfig: UserConfig, dependencies: Dependencies) => 
     const {
         base,
         debug = false,
+        dryRun = false,
         enums = false,
         experimental = false,
         exportCore = true,
@@ -107,11 +108,10 @@ const getConfig = async (userConfig: UserConfig, dependencies: Dependencies) => 
         serviceResponse = 'body',
         useDateType = false,
         useOptions = true,
-        write = true,
     } = userConfig;
 
     if (debug) {
-        console.log('userConfig:', userConfig);
+        console.warn('userConfig:', userConfig);
     }
 
     if (!input) {
@@ -145,6 +145,7 @@ const getConfig = async (userConfig: UserConfig, dependencies: Dependencies) => 
         base,
         client,
         debug,
+        dryRun,
         enums,
         experimental,
         exportCore,
@@ -162,7 +163,6 @@ const getConfig = async (userConfig: UserConfig, dependencies: Dependencies) => 
         serviceResponse,
         useDateType,
         useOptions,
-        write,
     };
 
     return config;
@@ -195,7 +195,7 @@ export async function createClient(userConfig: UserConfig): Promise<Client> {
     const client = postProcessClient(parse(openApi, config));
     const templates = registerHandlebarTemplates(config);
 
-    if (config.write) {
+    if (!config.dryRun) {
         logClientMessage(config.client);
         logMissingDependenciesWarning(config.client, dependencies);
         await writeClient(openApi, client, templates, config);

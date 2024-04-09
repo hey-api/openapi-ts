@@ -9,8 +9,8 @@ describe('bin', () => {
             './test/spec/v3.json',
             '--output',
             './test/generated/bin',
-            '--write',
-            'false',
+            '--dry-run',
+            'true',
         ]);
         expect(result.stdout.toString()).not.toContain('Prettier');
         expect(result.stdout.toString()).toContain('Done!');
@@ -26,8 +26,8 @@ describe('bin', () => {
             './test/generated/bin',
             '--client',
             'angular',
-            '--write',
-            'false',
+            '--dry-run',
+            'true',
         ]);
         expect(result.stdout.toString()).toContain('');
         expect(result.stderr.toString()).toBe('');
@@ -42,8 +42,8 @@ describe('bin', () => {
             './test/generated/bin',
             '--client',
             'axios',
-            '--write',
-            'false',
+            '--dry-run',
+            'true',
         ]);
         expect(result.stdout.toString()).toContain('');
         expect(result.stderr.toString()).toBe('');
@@ -58,8 +58,8 @@ describe('bin', () => {
             './test/generated/bin',
             '--client',
             'fetch',
-            '--write',
-            'false',
+            '--dry-run',
+            'true',
         ]);
         expect(result.stdout.toString()).toContain('');
         expect(result.stderr.toString()).toBe('');
@@ -74,8 +74,8 @@ describe('bin', () => {
             './test/generated/bin',
             '--client',
             'node',
-            '--write',
-            'false',
+            '--dry-run',
+            'true',
         ]);
         expect(result.stdout.toString()).toContain('');
         expect(result.stderr.toString()).toBe('');
@@ -90,8 +90,8 @@ describe('bin', () => {
             './test/generated/bin',
             '--client',
             'xhr',
-            '--write',
-            'false',
+            '--dry-run',
+            'true',
         ]);
         expect(result.stdout.toString()).toContain('');
         expect(result.stderr.toString()).toBe('');
@@ -115,8 +115,8 @@ describe('bin', () => {
             'true',
             '--schemas',
             'true',
-            '--write',
-            'false',
+            '--dry-run',
+            'true',
         ]);
         expect(result.stdout.toString()).toContain('Done!');
         expect(result.stderr.toString()).toBe('');
@@ -133,8 +133,8 @@ describe('bin', () => {
             '^(Simple|Types)',
             '--exportModels',
             '^(Simple|Types)',
-            '--write',
-            'false',
+            '--dry-run',
+            'true',
         ]);
         expect(result.stdout.toString()).toContain('Done!');
         expect(result.stderr.toString()).toBe('');
@@ -166,7 +166,7 @@ describe('bin', () => {
     });
 
     it('throws error without parameters', () => {
-        const result = sync('node', ['./bin/index.js', '--write', 'false']);
+        const result = sync('node', ['./bin/index.js', '--dry-run', 'true']);
         expect(result.stdout.toString()).toBe('');
         expect(result.stderr.toString()).toContain('input');
     });
@@ -179,15 +179,15 @@ describe('bin', () => {
             '--output',
             './test/generated/bin',
             '--unknown',
-            '--write',
-            'false',
+            '--dry-run',
+            'true',
         ]);
         expect(result.stdout.toString()).toBe('');
         expect(result.stderr.toString()).toContain(`error: unknown option '--unknown'`);
     });
 
     it('displays help', () => {
-        const result = sync('node', ['./bin/index.js', '--help', '--write', 'false']);
+        const result = sync('node', ['./bin/index.js', '--help', '--dry-run', 'true']);
         expect(result.stdout.toString()).toContain(`Usage: openapi-ts [options]`);
         expect(result.stdout.toString()).toContain(`-i, --input <value>`);
         expect(result.stdout.toString()).toContain(`-o, --output <value>`);
@@ -222,20 +222,20 @@ describe('cli', () => {
             'false',
             '--useOptions',
             'false',
-            '--write',
-            'false',
+            '--dry-run',
+            'true',
         ]);
-        expect(result.stdout.toString()).toContain('debug: true');
-        expect(result.stdout.toString()).toContain('exportCore: false');
-        expect(result.stdout.toString()).toContain('exportModels: false');
-        expect(result.stdout.toString()).toContain('schemas: false');
-        expect(result.stdout.toString()).toContain('exportServices: false');
-        expect(result.stdout.toString()).toContain('format: false');
-        expect(result.stdout.toString()).toContain('lint: false');
-        expect(result.stdout.toString()).toContain('operationId: false');
-        expect(result.stdout.toString()).toContain('useDateType: false');
-        expect(result.stdout.toString()).toContain('useOptions: false');
-        expect(result.stdout.toString()).toContain('write: false');
+        expect(result.stderr.toString()).toContain('debug: true');
+        expect(result.stderr.toString()).toContain('dryRun: true');
+        expect(result.stderr.toString()).toContain('exportCore: false');
+        expect(result.stderr.toString()).toContain('exportModels: false');
+        expect(result.stderr.toString()).toContain('exportServices: false');
+        expect(result.stderr.toString()).toContain('format: false');
+        expect(result.stderr.toString()).toContain('lint: false');
+        expect(result.stderr.toString()).toContain('operationId: false');
+        expect(result.stderr.toString()).toContain('schemas: false');
+        expect(result.stderr.toString()).toContain('useDateType: false');
+        expect(result.stderr.toString()).toContain('useOptions: false');
     });
 
     it('handles true booleans', () => {
@@ -264,20 +264,20 @@ describe('cli', () => {
             'true',
             '--useOptions',
             'true',
-            '--write',
-            'false',
+            '--dry-run',
+            'true',
         ]);
-        expect(result.stdout.toString()).toContain('debug: true');
-        expect(result.stdout.toString()).toContain('exportCore: true');
-        expect(result.stdout.toString()).toContain('exportModels: true');
-        expect(result.stdout.toString()).toContain('schemas: true');
-        expect(result.stdout.toString()).toContain('exportServices: true');
-        expect(result.stdout.toString()).toContain('format: true');
-        expect(result.stdout.toString()).toContain('lint: true');
-        expect(result.stdout.toString()).toContain('operationId: true');
-        expect(result.stdout.toString()).toContain('useDateType: true');
-        expect(result.stdout.toString()).toContain('useOptions: true');
-        expect(result.stdout.toString()).toContain('write: false');
+        expect(result.stderr.toString()).toContain('debug: true');
+        expect(result.stderr.toString()).toContain('dryRun: true');
+        expect(result.stderr.toString()).toContain('exportCore: true');
+        expect(result.stderr.toString()).toContain('exportModels: true');
+        expect(result.stderr.toString()).toContain('exportServices: true');
+        expect(result.stderr.toString()).toContain('format: true');
+        expect(result.stderr.toString()).toContain('lint: true');
+        expect(result.stderr.toString()).toContain('operationId: true');
+        expect(result.stderr.toString()).toContain('schemas: true');
+        expect(result.stderr.toString()).toContain('useDateType: true');
+        expect(result.stderr.toString()).toContain('useOptions: true');
     });
 
     it('handles optional booleans', () => {
@@ -299,19 +299,19 @@ describe('cli', () => {
             '--operationId',
             '--useDateType',
             '--useOptions',
-            '--write',
-            'false',
+            '--dry-run',
+            'true',
         ]);
-        expect(result.stdout.toString()).toContain('debug: true');
-        expect(result.stdout.toString()).toContain('exportCore: true');
-        expect(result.stdout.toString()).toContain("exportModels: 'foo");
-        expect(result.stdout.toString()).toContain('schemas: true');
-        expect(result.stdout.toString()).toContain("exportServices: 'bar'");
-        expect(result.stdout.toString()).toContain('format: true');
-        expect(result.stdout.toString()).toContain('lint: true');
-        expect(result.stdout.toString()).toContain('operationId: true');
-        expect(result.stdout.toString()).toContain('useDateType: true');
-        expect(result.stdout.toString()).toContain('useOptions: true');
-        expect(result.stdout.toString()).toContain('write: false');
+        expect(result.stderr.toString()).toContain('debug: true');
+        expect(result.stderr.toString()).toContain('dryRun: true');
+        expect(result.stderr.toString()).toContain('exportCore: true');
+        expect(result.stderr.toString()).toContain('format: true');
+        expect(result.stderr.toString()).toContain('lint: true');
+        expect(result.stderr.toString()).toContain('operationId: true');
+        expect(result.stderr.toString()).toContain('schemas: true');
+        expect(result.stderr.toString()).toContain('useDateType: true');
+        expect(result.stderr.toString()).toContain('useOptions: true');
+        expect(result.stderr.toString()).toContain("exportModels: 'foo");
+        expect(result.stderr.toString()).toContain("exportServices: 'bar'");
     });
 });

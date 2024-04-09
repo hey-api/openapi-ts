@@ -9,7 +9,7 @@ import { openApi } from './models';
 vi.mock('node:fs');
 
 describe('writeClientSchemas', () => {
-    it('should write to filesystem', async () => {
+    it('writes to filesystem', async () => {
         if ('openapi' in openApi) {
             openApi.components = {
                 schemas: {

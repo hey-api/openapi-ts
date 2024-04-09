@@ -5,33 +5,33 @@ import { createClient } from './index';
 describe('index', () => {
     it('parses v2 without issues', async () => {
         await createClient({
+            dryRun: true,
             input: './test/spec/v2.json',
             output: './generated/v2/',
-            write: false,
         });
     });
 
     it('parses v3 without issues', async () => {
         await createClient({
+            dryRun: true,
             input: './test/spec/v3.json',
             output: './generated/v3/',
-            write: false,
         });
     });
 
     it('downloads and parses v2 without issues', async () => {
         await createClient({
+            dryRun: true,
             input: 'https://raw.githubusercontent.com/hey-api/openapi-ts/main/packages/openapi-ts/test/spec/v2.json',
             output: './generated/v2-downloaded/',
-            write: false,
         });
     });
 
     it('downloads and parses v3 without issues', async () => {
         await createClient({
+            dryRun: true,
             input: 'https://raw.githubusercontent.com/hey-api/openapi-ts/main/packages/openapi-ts/test/spec/v3.json',
             output: './generated/v3-downloaded/',
-            write: false,
         });
     });
 });

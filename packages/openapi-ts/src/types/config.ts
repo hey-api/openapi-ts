@@ -14,6 +14,11 @@ export interface UserConfig {
      */
     debug?: boolean;
     /**
+     * Skip writing files to disk?
+     * @default false
+     */
+    dryRun?: boolean;
+    /**
      * Export enum definitions?
      * @default false
      */
@@ -94,11 +99,6 @@ export interface UserConfig {
      * @default true
      */
     useOptions?: boolean;
-    /**
-     * Write the files to disk (true or false)
-     * @default true
-     */
-    write?: boolean;
 }
 
 export type Config = Omit<Required<UserConfig>, 'base' | 'name' | 'request'> &
