@@ -34,6 +34,10 @@ features:
 
 Please read our [migration guide](/openapi-ts/migrating#openapi-typescript-codegen).
 
+### Sponsors and Partners
+
+Interested in partnership or sponsoring Hey API? [Send us an email](mailto:lmenus@lmen.us)
+
 <style>
 :root {
   --vp-home-hero-name-color: transparent;
