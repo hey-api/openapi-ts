@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.37.3
+
+### Patch Changes
+
+- fix: do not ignore additionalProperties when object with properties object ([#323](https://github.com/hey-api/openapi-ts/pull/323))
+
 ## 0.37.2
 
 ### Patch Changes
