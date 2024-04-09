@@ -20,14 +20,6 @@ export const getAdditionalPropertiesModel = (
     const ap = typeof definition.additionalProperties === 'object' ? definition.additionalProperties : {};
     const apModel = getModel(openApi, ap);
 
-    if (definition.additionalProperties === true && definition.properties) {
-        apModel.default = getDefault(definition, model);
-        apModel.export = 'generic';
-        apModel.isRequired = true;
-        apModel.name = '[key: string]';
-        return apModel;
-    }
-
     if (ap.$ref) {
         const apType = getType(ap.$ref);
         model.base = apType.base;
@@ -37,6 +29,14 @@ export const getAdditionalPropertiesModel = (
         model.template = apType.template;
         model.type = apType.type;
         return model;
+    }
+
+    if (definition.additionalProperties && definition.properties) {
+        apModel.default = getDefault(definition, model);
+        apModel.export = 'generic';
+        apModel.isRequired = definition.additionalProperties === true;
+        apModel.name = '[key: string]';
+        return apModel;
     }
 
     model.base = apModel.base;

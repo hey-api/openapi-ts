@@ -57,14 +57,13 @@ const processEnum = (config: Config, client: Client, model: Model, exportType: b
     return nodes;
 };
 
-const processInterface = processComposition;
-
 const processType = (config: Config, client: Client, model: Model) => {
     const comment: Comments = [
         model.description && ` * ${escapeComment(model.description)}`,
         model.deprecated && ' * @deprecated',
     ];
-    return compiler.typedef.alias(model.name, toType(model, config)!, comment);
+    const type = toType(model, config);
+    return compiler.typedef.alias(model.name, type!, comment);
 };
 
 const processModel = (config: Config, client: Client, model: Model) => {
@@ -72,11 +71,10 @@ const processModel = (config: Config, client: Client, model: Model) => {
         case 'all-of':
         case 'any-of':
         case 'one-of':
+        case 'interface':
             return processComposition(config, client, model);
         case 'enum':
             return processEnum(config, client, model, true);
-        case 'interface':
-            return processInterface(config, client, model);
         default:
             return processType(config, client, model);
     }
