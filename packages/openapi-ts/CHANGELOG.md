@@ -1,5 +1,15 @@
 # @hey-api/openapi-ts
 
+## 0.37.0
+
+### Minor Changes
+
+- remove: `generics` as valid option for serviceResponse ([#299](https://github.com/hey-api/openapi-ts/pull/299))
+
+### Patch Changes
+
+- fix: escape dollar sign in operation names ([#307](https://github.com/hey-api/openapi-ts/pull/307))
+
 ## 0.36.2
 
 ### Patch Changes
