@@ -23,7 +23,11 @@ const blankSourceFile = createSourceFile('');
  */
 export function tsNodeToString(node: ts.Node): string {
     const result = printer.printNode(ts.EmitHint.Unspecified, node, blankSourceFile);
-    return decodeURIComponent(result);
+    try {
+        return decodeURIComponent(result);
+    } catch {
+        return result;
+    }
 }
 
 // ots for openapi-ts is helpers to reduce repetition of basic ts factory functions.
