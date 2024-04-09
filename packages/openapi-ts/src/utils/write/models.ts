@@ -1,12 +1,8 @@
 import path from 'node:path';
 
 import camelCase from 'camelcase';
-import ts from 'typescript';
 
-import { compiler, TypeScriptFile } from '../../compiler';
-import { toExpression } from '../../compiler/types';
-import { addLeadingJSDocComment } from '../../compiler/utils';
-import { isType } from '../../compiler/utils';
+import { type Comments, compiler, type Node, TypeScriptFile } from '../../compiler';
 import type { Model, OpenApi, Service } from '../../openApi';
 import type { Client } from '../../types/client';
 import type { Config } from '../../types/config';
@@ -23,62 +19,38 @@ const processComposition = (config: Config, client: Client, model: Model) => [
 ];
 
 const processEnum = (config: Config, client: Client, model: Model, exportType: boolean) => {
-    let nodes: Array<ts.Node> = [];
+    let nodes: Array<Node> = [];
+
+    const properties: Record<string | number, unknown> = {};
+    const comments: Record<string | number, Comments> = {};
+    model.enum.forEach(enumerator => {
+        const key = enumKey(enumerator.value, enumerator['x-enum-varname']);
+        const value = enumValue(enumerator.value);
+        properties[key] = value;
+        const comment = enumerator['x-enum-description'] || enumerator.description;
+        if (comment) {
+            comments[key] = [` * ${escapeComment(comment)}`];
+        }
+    });
 
     if (exportType) {
+        const comment: Comments = [
+            model.description && ` * ${escapeComment(model.description)}`,
+            model.deprecated && ' * @deprecated',
+        ];
         if (config.enums === 'typescript') {
-            const typeDeclaration = ts.factory.createEnumDeclaration(
-                [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
-                ts.factory.createIdentifier(model.name),
-                model.enum.map(enumerator => {
-                    const key = enumKey(enumerator.value, enumerator['x-enum-varname']);
-                    const initializer = toExpression(enumValue(enumerator.value), true);
-                    const assignment = ts.factory.createEnumMember(key, initializer);
-                    const comment = enumerator['x-enum-description'] || enumerator.description;
-                    if (comment) {
-                        addLeadingJSDocComment(assignment, [` * ${escapeComment(comment)}`]);
-                    }
-                    return assignment;
-                })
-            );
-            nodes = [...nodes, typeDeclaration];
+            nodes = [...nodes, compiler.types.enum(model.name, properties, comment, comments)];
         } else {
-            const typeDeclaration = ts.factory.createTypeAliasDeclaration(
-                [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
-                ts.factory.createIdentifier(model.name),
-                undefined,
-                ts.factory.createTypeReferenceNode(enumUnionType(model.enum))
-            );
-            nodes = [...nodes, typeDeclaration];
-        }
-
-        if (model.description || model.deprecated) {
-            addLeadingJSDocComment(nodes[0], [
-                model.description && ` * ${escapeComment(model.description)}`,
-                model.deprecated && ' * @deprecated',
-            ]);
+            nodes = [...nodes, compiler.typedef.alias(model.name, enumUnionType(model.enum), comment)];
         }
     }
 
     if (config.enums === 'javascript') {
-        const expression = ts.factory.createObjectLiteralExpression(
-            model.enum
-                .map(enumerator => {
-                    const key = enumKey(enumerator.value, enumerator['x-enum-varname']);
-                    const initializer = toExpression(enumValue(enumerator.value), true);
-                    if (!initializer) {
-                        return undefined;
-                    }
-                    const assignment = ts.factory.createPropertyAssignment(key, initializer);
-                    const comment = enumerator['x-enum-description'] || enumerator.description;
-                    if (comment) {
-                        addLeadingJSDocComment(assignment, [` * ${escapeComment(comment)}`]);
-                    }
-                    return assignment;
-                })
-                .filter(isType<ts.PropertyAssignment>),
-            true
-        );
+        const expression = compiler.types.object(properties, {
+            comments,
+            multiLine: true,
+            unescape: true,
+        });
         nodes = [...nodes, compiler.export.asConst(enumName(config, client, model.name)!, expression)];
     }
 
@@ -88,14 +60,11 @@ const processEnum = (config: Config, client: Client, model: Model, exportType: b
 const processInterface = processComposition;
 
 const processType = (config: Config, client: Client, model: Model) => {
-    let comments: Parameters<typeof compiler.typedef.alias>[3] = [];
-    if (model.description || model.deprecated) {
-        comments = [
-            model.description && ` * ${escapeComment(model.description)}`,
-            model.deprecated && ' * @deprecated',
-        ];
-    }
-    return compiler.typedef.alias(model.name, toType(model, config)!, [], comments);
+    const comment: Comments = [
+        model.description && ` * ${escapeComment(model.description)}`,
+        model.deprecated && ' * @deprecated',
+    ];
+    return compiler.typedef.alias(model.name, toType(model, config)!, comment);
 };
 
 const processModel = (config: Config, client: Client, model: Model) => {
