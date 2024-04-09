@@ -54,7 +54,6 @@ describe('writeClientCore', () => {
         expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/ApiResult.ts'), 'apiResult');
         expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/CancelablePromise.ts'), 'cancelablePromise');
         expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/request.ts'), 'request');
-        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/types.ts'), 'types');
     });
 
     it('uses client server value for base', async () => {

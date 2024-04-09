@@ -40,7 +40,6 @@ import functionResolve from '../templates/core/functions/resolve.hbs';
 import templateCoreHttpRequest from '../templates/core/HttpRequest.hbs';
 import templateCoreSettings from '../templates/core/OpenAPI.hbs';
 import templateCoreRequest from '../templates/core/request.hbs';
-import templateCoreTypes from '../templates/core/types.hbs';
 import xhrGetHeaders from '../templates/core/xhr/getHeaders.hbs';
 import xhrGetRequestBody from '../templates/core/xhr/getRequestBody.hbs';
 import xhrGetResponseBody from '../templates/core/xhr/getResponseBody.hbs';
@@ -224,7 +223,6 @@ export interface Templates {
         httpRequest: Handlebars.TemplateDelegate;
         request: Handlebars.TemplateDelegate;
         settings: Handlebars.TemplateDelegate;
-        types: Handlebars.TemplateDelegate;
     };
     exports: {
         service: Handlebars.TemplateDelegate;
@@ -250,7 +248,6 @@ export const registerHandlebarTemplates = (config: Config): Templates => {
             httpRequest: Handlebars.template(templateCoreHttpRequest),
             request: Handlebars.template(templateCoreRequest),
             settings: Handlebars.template(templateCoreSettings),
-            types: Handlebars.template(templateCoreTypes),
         },
         exports: {
             service: Handlebars.template(templateExportService),
