@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.36.2
+
+### Patch Changes
+
+- fix: move service types into models file ([#292](https://github.com/hey-api/openapi-ts/pull/292))
+
 ## 0.36.1
 
 ### Patch Changes
