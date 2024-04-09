@@ -60,7 +60,7 @@ export class SimpleService {
     constructor(public readonly httpRequest: BaseHttpRequest) {}
 
     /**
-     * @returns ModelWithString Success
+     * @returns ModelFromZendesk Success
      * @throws ApiError
      */
     public apiVVersionOdataControllerCount(): CancelablePromise<
