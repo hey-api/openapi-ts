@@ -1,7 +1,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { ModelWithString } from './models';
+import type { DefaultsData } from './models';
 
 export class DefaultsService {
     /**
@@ -13,14 +13,14 @@ export class DefaultsService {
      * @throws ApiError
      */
     public static callWithDefaultParameters(
-        parameterString: string | null = 'Hello World!',
-        parameterNumber: number | null = 123,
-        parameterBoolean: boolean | null = true,
-        parameterEnum: 'Success' | 'Warning' | 'Error' = 'Success',
-        parameterModel: ModelWithString | null = {
+        parameterString: DefaultsData['payloads']['CallWithDefaultParameters']['parameterString'] = 'Hello World!',
+        parameterNumber: DefaultsData['payloads']['CallWithDefaultParameters']['parameterNumber'] = 123,
+        parameterBoolean: DefaultsData['payloads']['CallWithDefaultParameters']['parameterBoolean'] = true,
+        parameterEnum: DefaultsData['payloads']['CallWithDefaultParameters']['parameterEnum'] = 'Success',
+        parameterModel: DefaultsData['payloads']['CallWithDefaultParameters']['parameterModel'] = {
             prop: 'Hello World!',
         }
-    ): CancelablePromise<void> {
+    ): CancelablePromise<DefaultsData['responses']['CallWithDefaultParameters']> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/defaults',
@@ -43,14 +43,14 @@ export class DefaultsService {
      * @throws ApiError
      */
     public static callWithDefaultOptionalParameters(
-        parameterString: string = 'Hello World!',
-        parameterNumber: number = 123,
-        parameterBoolean: boolean = true,
-        parameterEnum: 'Success' | 'Warning' | 'Error' = 'Success',
-        parameterModel: ModelWithString = {
+        parameterString: DefaultsData['payloads']['CallWithDefaultOptionalParameters']['parameterString'] = 'Hello World!',
+        parameterNumber: DefaultsData['payloads']['CallWithDefaultOptionalParameters']['parameterNumber'] = 123,
+        parameterBoolean: DefaultsData['payloads']['CallWithDefaultOptionalParameters']['parameterBoolean'] = true,
+        parameterEnum: DefaultsData['payloads']['CallWithDefaultOptionalParameters']['parameterEnum'] = 'Success',
+        parameterModel: DefaultsData['payloads']['CallWithDefaultOptionalParameters']['parameterModel'] = {
             prop: 'Hello World!',
         }
-    ): CancelablePromise<void> {
+    ): CancelablePromise<DefaultsData['responses']['CallWithDefaultOptionalParameters']> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v{api-version}/defaults',
@@ -76,15 +76,15 @@ export class DefaultsService {
      * @throws ApiError
      */
     public static callToTestOrderOfParams(
-        parameterStringWithNoDefault: string,
-        parameterOptionalStringWithDefault: string = 'Hello World!',
-        parameterOptionalStringWithEmptyDefault: string = '',
-        parameterOptionalStringWithNoDefault?: string,
-        parameterStringWithDefault: string = 'Hello World!',
-        parameterStringWithEmptyDefault: string = '',
-        parameterStringNullableWithNoDefault?: string | null,
-        parameterStringNullableWithDefault: string | null = null
-    ): CancelablePromise<void> {
+        parameterStringWithNoDefault: DefaultsData['payloads']['CallToTestOrderOfParams']['parameterStringWithNoDefault'],
+        parameterOptionalStringWithDefault: DefaultsData['payloads']['CallToTestOrderOfParams']['parameterOptionalStringWithDefault'] = 'Hello World!',
+        parameterOptionalStringWithEmptyDefault: DefaultsData['payloads']['CallToTestOrderOfParams']['parameterOptionalStringWithEmptyDefault'] = '',
+        parameterOptionalStringWithNoDefault?: DefaultsData['payloads']['CallToTestOrderOfParams']['parameterOptionalStringWithNoDefault'],
+        parameterStringWithDefault: DefaultsData['payloads']['CallToTestOrderOfParams']['parameterStringWithDefault'] = 'Hello World!',
+        parameterStringWithEmptyDefault: DefaultsData['payloads']['CallToTestOrderOfParams']['parameterStringWithEmptyDefault'] = '',
+        parameterStringNullableWithNoDefault?: DefaultsData['payloads']['CallToTestOrderOfParams']['parameterStringNullableWithNoDefault'],
+        parameterStringNullableWithDefault: DefaultsData['payloads']['CallToTestOrderOfParams']['parameterStringNullableWithDefault'] = null
+    ): CancelablePromise<DefaultsData['responses']['CallToTestOrderOfParams']> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/v{api-version}/defaults',

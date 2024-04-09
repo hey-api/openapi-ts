@@ -55,7 +55,6 @@ import partialRequestConfig from '../templates/partials/requestConfig.hbs';
 import type { Config } from '../types/config';
 import { escapeComment, escapeDescription, escapeName } from './escape';
 import { getDefaultPrintable, modelIsRequired } from './required';
-import { toType } from './write/type';
 
 const dataDestructure = (config: Config, operation: Operation) => {
     if (config.name) {
@@ -129,10 +128,26 @@ const dataParameters = (config: Config, parameters: OperationParameter[]) => {
     return output.join(', ');
 };
 
-const nameOperationDataType = (service: Service, operation: Service['operations'][number]) => {
-    const namespace = `${camelCase(service.name, { pascalCase: true })}Data`;
+export const serviceExportedNamespace = (service: Service) => {
+    const exported = `${camelCase(service.name, { pascalCase: true })}Data`;
+    return exported;
+};
+
+export const operationKey = (operation: Service['operations'][number]) => {
     const key = camelCase(operation.name, { pascalCase: true });
-    return `${namespace}['${key}']`;
+    return key;
+};
+
+export const nameOperationDataType = (
+    service: Service,
+    namespace: 'payloads' | 'responses',
+    operation: Service['operations'][number],
+    name?: string | object
+) => {
+    const exported = serviceExportedNamespace(service);
+    const key = operationKey(operation);
+    const path = `${exported}['${namespace}']['${key}']`;
+    return name && typeof name === 'string' ? `${path}['${name}']` : path;
 };
 
 export const registerHandlebarHelpers = (config: Config): void => {
@@ -166,8 +181,6 @@ export const registerHandlebarHelpers = (config: Config): void => {
         }
     );
 
-    Handlebars.registerHelper('toType', toType);
-
     Handlebars.registerHelper('getDefaultPrintable', getDefaultPrintable);
 
     Handlebars.registerHelper('ifdef', function (this: unknown, ...args): string {
@@ -191,8 +204,13 @@ export const registerHandlebarHelpers = (config: Config): void => {
 
     Handlebars.registerHelper(
         'nameOperationDataType',
-        function (service: Service, operation: Service['operations'][number]) {
-            return nameOperationDataType(service, operation);
+        function (
+            service: Service,
+            namespace: 'payloads' | 'responses',
+            operation: Service['operations'][number],
+            name: string | undefined
+        ) {
+            return nameOperationDataType(service, namespace, operation, name);
         }
     );
 

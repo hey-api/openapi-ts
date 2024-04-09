@@ -8,19 +8,21 @@ import { tsNodeToString } from './utils';
 
 export class TypeScriptFile {
     private _imports: Array<ts.Node> = [];
-    private _items: Array<ts.Node> = [];
+    private _items: Array<ts.Node | string> = [];
 
     public addNamedImport(...params: Parameters<typeof module.createNamedImportDeclarations>): void {
         this._imports.push(compiler.import.named(...params));
     }
 
-    public add(...nodes: Array<ts.Node>): void {
+    public add(...nodes: Array<ts.Node | string>): void {
         this._items.push(...nodes);
     }
 
     public toString(seperator: string = '\n') {
         const importsString = this._imports.map(v => tsNodeToString(v)).join('\n');
-        return [importsString, ...this._items.map(v => tsNodeToString(v))].join(seperator);
+        return [importsString, ...this._items.map(v => (typeof v === 'string' ? v : tsNodeToString(v)))].join(
+            seperator
+        );
     }
 
     public write(file: PathOrFileDescriptor, seperator: string = '\n') {

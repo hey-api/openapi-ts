@@ -1,18 +1,18 @@
 {{#if @root.$config.useOptions~}}
 {{~#if @root.$config.name~}}
-{{#if parameters}}data: {{{nameOperationDataType @root this}}}{{#ifOperationDataOptional parameters}} = {}{{/ifOperationDataOptional}}{{/if}}
+{{#if parameters}}data: {{{nameOperationDataType @root 'payloads' this}}}{{#ifOperationDataOptional parameters}} = {}{{/ifOperationDataOptional}}{{/if}}
 {{~else~}}
 {{~#notEquals @root.$config.serviceResponse 'generics'~}}
-{{#if parameters}}data: {{{nameOperationDataType @root this}}}{{#ifOperationDataOptional parameters}} = {}{{/ifOperationDataOptional}}{{/if}}
+{{#if parameters}}data: {{{nameOperationDataType @root 'payloads' this}}}{{#ifOperationDataOptional parameters}} = {}{{/ifOperationDataOptional}}{{/if}}
 {{~else~}}
-data: {{#if parameters}}{{{nameOperationDataType @root this}}} & {{/if}}TConfig<T>{{#ifOperationDataOptional parameters}} = {}{{/ifOperationDataOptional}}
+data: {{#if parameters}}{{{nameOperationDataType @root 'payloads' this}}} & {{/if}}TConfig<T>{{#ifOperationDataOptional parameters}} = {}{{/ifOperationDataOptional}}
 {{~/notEquals~}}
 {{~/if~}}
 {{~else}}
 {{#if parameters}}
 
 {{#each parameters}}
-{{{name}}}{{{modelIsRequired this}}}: {{toType this @root.$config}}{{#hasDefault this}} = {{{getDefaultPrintable this}}}{{/hasDefault}},
+{{{name}}}{{{modelIsRequired this}}}: {{{nameOperationDataType @root 'payloads' ../this name}}}{{#hasDefault this}} = {{{getDefaultPrintable this}}}{{/hasDefault}},
 {{/each}}
 {{/if}}
 {{/if}}
