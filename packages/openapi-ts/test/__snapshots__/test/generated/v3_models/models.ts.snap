@@ -167,6 +167,11 @@ export type AnyOfArrays = {
  */
 export type DictionaryWithString = Record<string, string>;
 
+export type DictionaryWithPropertiesAndAdditionalProperties = {
+    foo?: string;
+    [key: string]: string | undefined;
+};
+
 /**
  * This is a string reference
  */

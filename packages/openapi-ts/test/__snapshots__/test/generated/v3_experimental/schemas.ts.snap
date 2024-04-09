@@ -244,6 +244,18 @@ export const $DictionaryWithString = {
     },
 } as const;
 
+export const $DictionaryWithPropertiesAndAdditionalProperties = {
+    type: 'object',
+    properties: {
+        foo: {
+            type: 'string',
+        },
+    },
+    additionalProperties: {
+        type: 'string',
+    },
+} as const;
+
 export const $DictionaryWithReference = {
     description: 'This is a string reference',
     type: 'object',

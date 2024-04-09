@@ -1976,6 +1976,17 @@
                     "type": "string"
                 }
             },
+            "DictionaryWithPropertiesAndAdditionalProperties": {
+                "type": "object",
+                "properties": {
+                    "foo": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": {
+                    "type": "string"
+                }
+            },
             "DictionaryWithReference": {
                 "description": "This is a string reference",
                 "type": "object",
