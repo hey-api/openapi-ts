@@ -69,6 +69,17 @@ export class SimpleService {
     constructor(public readonly http: HttpClient) {}
 
     /**
+     * @returns ModelWithString Success
+     * @throws ApiError
+     */
+    public apiVVersionOdataControllerCount(): Observable<SimpleData['responses']['ApiVversionOdataControllerCount']> {
+        return __request(OpenAPI, this.http, {
+            method: 'GET',
+            url: '/api/v{api-version}/simple/$count',
+        });
+    }
+
+    /**
      * @throws ApiError
      */
     public getCallWithoutParametersAndResponse(): Observable<
