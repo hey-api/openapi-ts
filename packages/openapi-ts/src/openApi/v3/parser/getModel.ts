@@ -146,7 +146,7 @@ export const getModel = (
                 }
             });
 
-            if (definition.additionalProperties === true) {
+            if (definition.additionalProperties) {
                 const modelProperty = getAdditionalPropertiesModel(openApi, definition, getModel, model);
                 model.properties.push(modelProperty);
             }

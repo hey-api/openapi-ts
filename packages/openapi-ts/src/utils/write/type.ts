@@ -9,13 +9,13 @@ import { unique } from '../unique';
 const base = (model: Model, config: Config) => {
     if (model.base === 'binary') {
         return 'Blob | File';
-    } else {
-        if (config.useDateType && model.format === 'date-time') {
-            return 'Date';
-        } else {
-            return model.base;
-        }
     }
+
+    if (config.useDateType && model.format === 'date-time') {
+        return 'Date';
+    }
+
+    return model.base;
 };
 
 const typeReference = (model: Model, config: Config) => `${base(model, config)}${model.isNullable ? ' | null' : ''}`;
@@ -73,15 +73,22 @@ const typeInterface = (model: Model, config: Config) => {
 
     return `{
         ${model.properties
-            .map(m => {
+            .map(property => {
                 let s = '';
-                if (m.description || m.deprecated) {
+                if (property.description || property.deprecated) {
                     s += addLeadingJSDocComment(undefined, [
-                        m.description && ` * ${escapeComment(m.description)}`,
-                        m.deprecated && ` * @deprecated`,
+                        property.description && ` * ${escapeComment(property.description)}`,
+                        property.deprecated && ` * @deprecated`,
                     ]);
                 }
-                s += `${m.isReadOnly ? 'readonly ' : ''}${m.name}${modelIsRequired(config, m)}: ${toType(m, config)}`;
+                let maybeRequired = modelIsRequired(config, property);
+                let value = toType(property, config);
+                // special case for additional properties type
+                if (property.name === '[key: string]' && maybeRequired) {
+                    maybeRequired = '';
+                    value = `${value} | undefined`;
+                }
+                s += `${property.isReadOnly ? 'readonly ' : ''}${property.name}${maybeRequired}: ${value}`;
                 return s;
             })
             .join('\n')}
