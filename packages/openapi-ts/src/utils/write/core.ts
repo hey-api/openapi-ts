@@ -72,13 +72,6 @@ export const writeClientCore = async (
             ...context,
         })
     );
-    await writeFileSync(
-        path.resolve(outputPath, 'types.ts'),
-        templates.core.types({
-            $config: config,
-            ...context,
-        })
-    );
 
     if (config.name) {
         await writeFileSync(
