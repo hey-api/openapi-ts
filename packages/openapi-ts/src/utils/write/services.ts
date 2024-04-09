@@ -57,26 +57,8 @@ export const writeClientServices = async (
             './core/BaseHttpRequest'
         );
     } else {
-        if (config.useOptions) {
-            if (config.serviceResponse === 'generics') {
-                file.addNamedImport(['mergeOpenApiConfig', 'OpenAPI'], './core/OpenAPI');
-                file.addNamedImport({ alias: '__request', name: 'request' }, './core/request');
-                file.addNamedImport(
-                    [
-                        { isTypeOnly: true, name: 'TApiResponse' },
-                        { isTypeOnly: true, name: 'TConfig' },
-                        { isTypeOnly: true, name: 'TResult' },
-                    ],
-                    './core/types'
-                );
-            } else {
-                file.addNamedImport('OpenAPI', './core/OpenAPI');
-                file.addNamedImport({ alias: '__request', name: 'request' }, './core/request');
-            }
-        } else {
-            file.addNamedImport('OpenAPI', './core/OpenAPI');
-            file.addNamedImport({ alias: '__request', name: 'request' }, './core/request');
-        }
+        file.addNamedImport('OpenAPI', './core/OpenAPI');
+        file.addNamedImport({ alias: '__request', name: 'request' }, './core/request');
     }
 
     // Import all models required by the services.

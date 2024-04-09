@@ -1,15 +1,7 @@
 {{~#if @root.$config.useOptions~}}
-{{~#notEquals @root.$config.serviceResponse 'generics'~}}
 {{~#equals @root.$config.serviceResponse 'response'}}ApiResult<{{/equals~}}
-{{~else~}}
-{{~#unless @root.$config.name}}TApiResponse<T, {{/unless~}}
-{{~/notEquals~}}
 {{~/if~}}
 {{{nameOperationDataType @root 'responses' this}}}
 {{~#if @root.$config.useOptions~}}
-{{~#notEquals @root.$config.serviceResponse 'generics'~}}
 {{~#equals @root.$config.serviceResponse 'response'}}>{{/equals~}}
-{{~else~}}
-{{~#unless @root.$config.name}}>{{/unless~}}
-{{~/notEquals~}}
 {{~/if~}}
