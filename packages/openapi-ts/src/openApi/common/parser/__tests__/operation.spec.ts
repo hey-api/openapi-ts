@@ -11,6 +11,7 @@ describe('getOperationName', () => {
         exportCore: false,
         exportModels: false,
         exportServices: false,
+        dryRun: true,
         format: false,
         input: '',
         lint: false,
@@ -21,7 +22,6 @@ describe('getOperationName', () => {
         serviceResponse: 'body',
         useDateType: false,
         useOptions: false,
-        write: false,
     };
 
     const options2: Parameters<typeof getOperationName>[2] = {
@@ -32,6 +32,7 @@ describe('getOperationName', () => {
         exportCore: false,
         exportModels: false,
         exportServices: false,
+        dryRun: true,
         format: false,
         input: '',
         lint: false,
@@ -42,7 +43,6 @@ describe('getOperationName', () => {
         serviceResponse: 'body',
         useDateType: false,
         useOptions: false,
-        write: false,
     };
 
     it.each([

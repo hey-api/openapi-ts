@@ -17,6 +17,7 @@ describe('parse', () => {
         exportCore: true,
         exportModels: true,
         exportServices: true,
+        dryRun: true,
         format: true,
         input: '',
         lint: false,
@@ -27,7 +28,6 @@ describe('parse', () => {
         serviceResponse: 'body',
         useDateType: false,
         useOptions: true,
-        write: false,
     };
 
     it('uses v2 parser', () => {

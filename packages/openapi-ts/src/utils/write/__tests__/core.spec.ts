@@ -15,7 +15,7 @@ describe('writeClientCore', () => {
         templates = mockTemplates;
     });
 
-    it('should write to filesystem', async () => {
+    it('writes to filesystem', async () => {
         const client: Parameters<typeof writeClientCore>[2] = {
             enumNames: [],
             models: [],
@@ -33,6 +33,7 @@ describe('writeClientCore', () => {
             exportModels: true,
             exportServices: true,
             format: false,
+            dryRun: false,
             input: '',
             lint: false,
             name: 'AppClient',
@@ -43,7 +44,6 @@ describe('writeClientCore', () => {
             serviceResponse: 'body',
             useDateType: false,
             useOptions: true,
-            write: true,
         };
 
         await writeClientCore(openApi, '/', client, config, templates);
@@ -74,6 +74,7 @@ describe('writeClientCore', () => {
             exportModels: true,
             exportServices: true,
             format: false,
+            dryRun: false,
             input: '',
             lint: false,
             name: 'AppClient',
@@ -84,7 +85,6 @@ describe('writeClientCore', () => {
             serviceResponse: 'body',
             useDateType: false,
             useOptions: true,
-            write: true,
         };
 
         await writeClientCore(openApi, '/', client, config, templates);
@@ -116,6 +116,7 @@ describe('writeClientCore', () => {
             exportModels: true,
             exportServices: true,
             format: false,
+            dryRun: false,
             input: '',
             lint: false,
             name: 'AppClient',
@@ -126,7 +127,6 @@ describe('writeClientCore', () => {
             serviceResponse: 'body',
             useDateType: false,
             useOptions: true,
-            write: true,
         };
 
         await writeClientCore(openApi, '/', client, config, templates);
