@@ -12,6 +12,8 @@ export const writeClientSchemas = async (openApi: OpenApi, outputPath: string): 
     const file = new TypeScriptFile();
 
     const addSchema = (name: string, obj: any) => {
+        // openapi might add dashes to schema names, which breaks the whole TS file
+        name = name.replace(/-/g, '_');
         const expression = compiler.types.object(obj);
         const statement = compiler.export.asConst(name, expression);
         file.add(statement);
