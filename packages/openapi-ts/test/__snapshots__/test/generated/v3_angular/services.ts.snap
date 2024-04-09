@@ -69,7 +69,7 @@ export class SimpleService {
     constructor(public readonly http: HttpClient) {}
 
     /**
-     * @returns ModelWithString Success
+     * @returns ModelFromZendesk Success
      * @throws ApiError
      */
     public apiVVersionOdataControllerCount(): Observable<SimpleData['responses']['ApiVversionOdataControllerCount']> {
