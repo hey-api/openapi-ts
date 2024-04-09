@@ -1,5 +1,5 @@
 import type { Type } from '../interfaces/Type';
-import { sanitizeTypeName } from './sanitize';
+import { ensureValidTypeScriptJavaScriptIdentifier } from './sanitize';
 import { stripNamespace } from './stripNamespace';
 
 /**
@@ -82,8 +82,8 @@ export const getType = (type: string | string[] = 'unknown', format?: string): T
     if (/\[.*\]$/g.test(typeWithoutNamespace)) {
         const matches = typeWithoutNamespace.match(/(.*?)\[(.*)\]$/);
         if (matches?.length) {
-            const match1 = getType(sanitizeTypeName(matches[1]));
-            const match2 = getType(sanitizeTypeName(matches[2]));
+            const match1 = getType(ensureValidTypeScriptJavaScriptIdentifier(matches[1]));
+            const match2 = getType(ensureValidTypeScriptJavaScriptIdentifier(matches[2]));
 
             if (match1.type === 'unknown[]') {
                 result.type = `${match2.type}[]`;
@@ -107,7 +107,7 @@ export const getType = (type: string | string[] = 'unknown', format?: string): T
     }
 
     if (typeWithoutNamespace) {
-        const encodedType = sanitizeTypeName(typeWithoutNamespace);
+        const encodedType = ensureValidTypeScriptJavaScriptIdentifier(typeWithoutNamespace);
         result.type = encodedType;
         result.base = encodedType;
         if (type.startsWith('#')) {
