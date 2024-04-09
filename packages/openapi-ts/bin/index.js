@@ -4,6 +4,7 @@
 
 import { readFileSync } from 'node:fs';
 
+import camelCase from 'camelcase';
 import { program } from 'commander';
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url)).toString());
@@ -17,6 +18,7 @@ const params = program
     .option('-c, --client <value>', 'HTTP client to generate [angular, axios, fetch, node, xhr]')
     .option('-d, --debug', 'Run in debug mode?')
     .option('--base [value]', 'Manually set base in OpenAPI config instead of inferring from server value')
+    .option('--dry-run [value]', 'Skip writing files to disk?')
     .option('--enums <value>', 'Export enum definitions (javascript, typescript)')
     .option('--exportCore [value]', 'Write core files to disk')
     .option('--exportModels [value]', 'Write models to disk')
@@ -31,7 +33,6 @@ const params = program
     .option('--serviceResponse [value]', 'Define shape of returned value from service calls')
     .option('--useDateType [value]', 'Output Date instead of string for the format "date-time" in the models')
     .option('--useOptions [value]', 'Use options instead of arguments')
-    .option('--write [value]', 'Write files to disk? (used for testing)')
     .parse(process.argv)
     .opts();
 
@@ -45,23 +46,24 @@ const stringToBoolean = value => {
     return value;
 };
 
-const processParams = (obj, keys) => {
-    const result = {};
-    for (const key of keys) {
+const processParams = (obj, booleanKeys) => {
+    for (const key of booleanKeys) {
         const value = obj[key];
         if (typeof value === 'string') {
-            result[key] = stringToBoolean(value);
+            const parsedValue = stringToBoolean(value);
+            delete obj[key];
+            obj[camelCase(key)] = parsedValue;
         }
     }
-    return result;
+    return obj;
 };
 
 async function start() {
     try {
         const { createClient } = await import(new URL('../dist/node/index.js', import.meta.url));
-        await createClient({
-            ...params,
-            ...processParams(params, [
+        await createClient(
+            processParams(params, [
+                'dryRun',
                 'exportCore',
                 'exportModels',
                 'exportServices',
@@ -71,9 +73,8 @@ async function start() {
                 'schemas',
                 'useDateType',
                 'useOptions',
-                'write',
-            ]),
-        });
+            ])
+        );
         process.exit(0);
     } catch (error) {
         console.error(error);

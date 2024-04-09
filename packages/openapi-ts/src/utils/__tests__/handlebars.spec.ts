@@ -13,6 +13,7 @@ describe('registerHandlebarHelpers', () => {
             exportCore: true,
             exportModels: true,
             exportServices: true,
+            dryRun: false,
             format: true,
             input: '',
             lint: false,
@@ -23,7 +24,6 @@ describe('registerHandlebarHelpers', () => {
             serviceResponse: 'body',
             useDateType: false,
             useOptions: false,
-            write: true,
         });
         const helpers = Object.keys(Handlebars.helpers);
         expect(helpers).toContain('camelCase');
@@ -50,6 +50,7 @@ describe('registerHandlebarTemplates', () => {
             exportCore: true,
             exportModels: true,
             exportServices: true,
+            dryRun: false,
             format: true,
             input: '',
             lint: false,
@@ -60,7 +61,6 @@ describe('registerHandlebarTemplates', () => {
             serviceResponse: 'body',
             useDateType: false,
             useOptions: false,
-            write: true,
         });
         expect(templates.exports.service).toBeDefined();
         expect(templates.core.settings).toBeDefined();

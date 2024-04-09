@@ -27,6 +27,12 @@ This config option is deprecated and will be removed.
 
 This config option is deprecated and will be removed.
 
+## v0.38.0
+
+### Renamed `write`
+
+This config option is now called `dryRun` (file) or `--dry-run` (CLI). To restore existing functionality, invert the value, ie. `write: true` is `dryRun: false` and `write: false` is `dryRun: true`.
+
 ## v0.36.0
 
 ### JSON Schema 2020-12
