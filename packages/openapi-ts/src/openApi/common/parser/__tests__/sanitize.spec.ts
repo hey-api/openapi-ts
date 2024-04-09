@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import { sanitizeNamespaceIdentifier, sanitizeOperationParameterName, sanitizeTypeName } from '../sanitize';
+import {
+    ensureValidTypeScriptJavaScriptIdentifier,
+    sanitizeNamespaceIdentifier,
+    sanitizeOperationParameterName,
+} from '../sanitize';
 
 describe('sanitizeOperationParameterName', () => {
     it.each([
@@ -26,13 +30,13 @@ describe('sanitizeNamespaceIdentifier', () => {
     });
 });
 
-describe('sanitizeTypeName', () => {
+describe('ensureValidTypeScriptJavaScriptIdentifier', () => {
     it.each([
         { expected: 'abc', input: 'abc' },
         { expected: 'æbc', input: 'æbc' },
         { expected: 'æb_c', input: 'æb.c' },
         { expected: 'æb_c', input: '1æb.c' },
-    ])('sanitizeTypeName($input) -> $expected', ({ input, expected }) => {
-        expect(sanitizeTypeName(input)).toEqual(expected);
+    ])('ensureValidTypeScriptJavaScriptIdentifier($input) -> $expected', ({ input, expected }) => {
+        expect(ensureValidTypeScriptJavaScriptIdentifier(input)).toEqual(expected);
     });
 });
