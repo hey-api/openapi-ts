@@ -48,6 +48,26 @@
                 }
             }
         },
+        "/api/v{api-version}/simple/$count": {
+            "get": {
+                "tags": [
+                    "Simple"
+                ],
+                "operationId": "api/v{version}/ODataController/$count",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json; type=collection": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ModelWithString"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v{api-version}/simple": {
             "get": {
                 "tags": [

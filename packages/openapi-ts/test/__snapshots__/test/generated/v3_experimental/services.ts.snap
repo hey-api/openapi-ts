@@ -57,6 +57,19 @@ export class DefaultService {
 
 export class SimpleService {
     /**
+     * @returns ModelWithString Success
+     * @throws ApiError
+     */
+    public static apiVVersionOdataControllerCount(): CancelablePromise<
+        SimpleData['responses']['ApiVversionOdataControllerCount']
+    > {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v{api-version}/simple/$count',
+        });
+    }
+
+    /**
      * @throws ApiError
      */
     public static getCallWithoutParametersAndResponse(): CancelablePromise<

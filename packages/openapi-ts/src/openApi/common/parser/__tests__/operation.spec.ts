@@ -4,11 +4,45 @@ import { getOperationName, getOperationParameterName, getOperationResponseCode }
 
 describe('getOperationName', () => {
     const options1: Parameters<typeof getOperationName>[2] = {
+        client: 'fetch',
+        debug: false,
+        enums: false,
+        experimental: false,
+        exportCore: false,
+        exportModels: false,
+        exportServices: false,
+        format: false,
+        input: '',
+        lint: false,
         operationId: true,
+        output: '',
+        postfixServices: '',
+        schemas: false,
+        serviceResponse: 'body',
+        useDateType: false,
+        useOptions: false,
+        write: false,
     };
 
     const options2: Parameters<typeof getOperationName>[2] = {
+        client: 'fetch',
+        debug: false,
+        enums: false,
+        experimental: false,
+        exportCore: false,
+        exportModels: false,
+        exportServices: false,
+        format: false,
+        input: '',
+        lint: false,
         operationId: false,
+        output: '',
+        postfixServices: '',
+        schemas: false,
+        serviceResponse: 'body',
+        useDateType: false,
+        useOptions: false,
+        write: false,
     };
 
     it.each([
@@ -158,7 +192,7 @@ describe('getOperationName', () => {
     ])(
         'getOperationName($url, $method, { operationId: $useOperationId }, $operationId) -> $expected',
         ({ url, method, options, operationId, expected }) => {
-            expect(getOperationName(url, method, options, operationId)).toEqual(expected);
+            expect(getOperationName(url, method, options, operationId)).toBe(expected);
         }
     );
 });
@@ -179,7 +213,7 @@ describe('getOperationParameterName', () => {
         { expected: 'fooBar', input: 'foo[bar]' },
         { expected: 'fooBarArray', input: 'foo.bar[]' },
     ])('getOperationParameterName($input) -> $expected', ({ input, expected }) => {
-        expect(getOperationParameterName(input)).toEqual(expected);
+        expect(getOperationParameterName(input)).toBe(expected);
     });
 });
 
@@ -193,6 +227,6 @@ describe('getOperationResponseCode', () => {
         { expected: null, input: 'abc' },
         { expected: 100, input: '-100' },
     ])('getOperationResponseCode($input) -> $expected', ({ input, expected }) => {
-        expect(getOperationResponseCode(input)).toEqual(expected);
+        expect(getOperationResponseCode(input)).toBe(expected);
     });
 });

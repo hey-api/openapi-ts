@@ -41,8 +41,6 @@ export const getMappedType = (type: string, format?: string): string | undefined
     }
 };
 
-const encode = (value: string): string => sanitizeTypeName(value);
-
 /**
  * Parse any string value into a type object.
  * @param type String or String[] value like "integer", "Link[Model]" or ["string", "null"].
@@ -84,8 +82,8 @@ export const getType = (type: string | string[] = 'unknown', format?: string): T
     if (/\[.*\]$/g.test(typeWithoutNamespace)) {
         const matches = typeWithoutNamespace.match(/(.*?)\[(.*)\]$/);
         if (matches?.length) {
-            const match1 = getType(encode(matches[1]));
-            const match2 = getType(encode(matches[2]));
+            const match1 = getType(sanitizeTypeName(matches[1]));
+            const match2 = getType(sanitizeTypeName(matches[2]));
 
             if (match1.type === 'unknown[]') {
                 result.type = `${match2.type}[]`;
@@ -109,7 +107,7 @@ export const getType = (type: string | string[] = 'unknown', format?: string): T
     }
 
     if (typeWithoutNamespace) {
-        const encodedType = encode(typeWithoutNamespace);
+        const encodedType = sanitizeTypeName(typeWithoutNamespace);
         result.type = encodedType;
         result.base = encodedType;
         if (type.startsWith('#')) {

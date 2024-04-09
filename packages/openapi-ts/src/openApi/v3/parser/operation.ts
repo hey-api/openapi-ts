@@ -31,7 +31,7 @@ const mergeParameters = (opParams: OperationParameter[], globalParams: Operation
 
 export const getOperation = (
     openApi: OpenApi,
-    options: Config,
+    config: Config,
     data: {
         method: Lowercase<Operation['method']>;
         op: OpenApiOperation;
@@ -42,7 +42,7 @@ export const getOperation = (
 ): Operation => {
     const { method, op, pathParams, tag, url } = data;
     const service = getServiceName(tag);
-    const name = getOperationName(url, method, options, op.operationId);
+    const name = getOperationName(url, method, config, op.operationId);
 
     const operation: Operation = {
         $refs: [],
