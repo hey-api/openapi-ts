@@ -1,22 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import {
-    sanitizeOperationName,
-    sanitizeOperationParameterName,
-    sanitizeServiceName,
-    sanitizeTypeName,
-} from '../sanitize';
-
-describe('sanitizeOperationName', () => {
-    it.each([
-        { expected: 'abc', input: 'abc' },
-        { expected: 'æbc', input: 'æbc' },
-        { expected: 'æb-c', input: 'æb.c' },
-        { expected: 'æb-c', input: '1æb.c' },
-    ])('sanitizeOperationName($input) -> $expected', ({ input, expected }) => {
-        expect(sanitizeOperationName(input)).toEqual(expected);
-    });
-});
+import { sanitizeNamespaceIdentifier, sanitizeOperationParameterName, sanitizeTypeName } from '../sanitize';
 
 describe('sanitizeOperationParameterName', () => {
     it.each([
@@ -30,14 +14,15 @@ describe('sanitizeOperationParameterName', () => {
     });
 });
 
-describe('sanitizeServiceName', () => {
+describe('sanitizeNamespaceIdentifier', () => {
     it.each([
         { expected: 'abc', input: 'abc' },
         { expected: 'æbc', input: 'æbc' },
         { expected: 'æb-c', input: 'æb.c' },
         { expected: 'æb-c', input: '1æb.c' },
-    ])('sanitizeServiceName($input) -> $expected', ({ input, expected }) => {
-        expect(sanitizeServiceName(input)).toEqual(expected);
+        { expected: 'a-b-c--d--e', input: 'a/b{c}/d/$e' },
+    ])('sanitizeNamespaceIdentifier($input) -> $expected', ({ input, expected }) => {
+        expect(sanitizeNamespaceIdentifier(input)).toEqual(expected);
     });
 });
 

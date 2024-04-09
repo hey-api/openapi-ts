@@ -60,6 +60,19 @@ export class SimpleService {
     constructor(public readonly httpRequest: BaseHttpRequest) {}
 
     /**
+     * @returns ModelWithString Success
+     * @throws ApiError
+     */
+    public apiVVersionOdataControllerCount(): CancelablePromise<
+        SimpleData['responses']['ApiVversionOdataControllerCount']
+    > {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/simple/$count',
+        });
+    }
+
+    /**
      * @throws ApiError
      */
     public getCallWithoutParametersAndResponse(): CancelablePromise<
