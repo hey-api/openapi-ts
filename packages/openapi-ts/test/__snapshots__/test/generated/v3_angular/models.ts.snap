@@ -226,7 +226,7 @@ export type ModelWithString = {
 /**
  * `Comment` or `VoiceComment`. The JSON object for adding voice comments to tickets is different. See [Adding voice comments to tickets](/documentation/ticketing/managing-tickets/adding-voice-comments-to-tickets)
  */
-export type ModelFromZendesk = string;
+export type Model_From_Zendesk = string;
 
 /**
  * This is a model with one string property
@@ -737,7 +737,7 @@ export type DefaultData = {
 
 export type SimpleData = {
     responses: {
-        ApiVversionOdataControllerCount: ModelFromZendesk;
+        ApiVversionOdataControllerCount: Model_From_Zendesk;
         GetCallWithoutParametersAndResponse: void;
         PutCallWithoutParametersAndResponse: void;
         PostCallWithoutParametersAndResponse: void;

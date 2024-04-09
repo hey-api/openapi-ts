@@ -2,6 +2,7 @@ import path from 'node:path';
 
 import { compiler, TypeScriptFile } from '../../compiler';
 import type { OpenApi } from '../../openApi';
+import { ensureValidTypeScriptJavaScriptIdentifier } from '../../openApi/common/parser/sanitize';
 
 /**
  * Generate Schemas using the Handlebar template and write to disk.
@@ -12,8 +13,9 @@ export const writeClientSchemas = async (openApi: OpenApi, outputPath: string): 
     const file = new TypeScriptFile();
 
     const addSchema = (name: string, obj: any) => {
+        const validName = `$${ensureValidTypeScriptJavaScriptIdentifier(name)}`;
         const expression = compiler.types.object(obj);
-        const statement = compiler.export.asConst(name, expression);
+        const statement = compiler.export.asConst(validName, expression);
         file.add(statement);
     };
 
@@ -22,7 +24,7 @@ export const writeClientSchemas = async (openApi: OpenApi, outputPath: string): 
         for (const name in openApi.definitions) {
             if (openApi.definitions.hasOwnProperty(name)) {
                 const definition = openApi.definitions[name];
-                addSchema(`$${name}`, definition);
+                addSchema(name, definition);
             }
         }
     }
@@ -33,13 +35,13 @@ export const writeClientSchemas = async (openApi: OpenApi, outputPath: string): 
             for (const name in openApi.components.schemas) {
                 if (openApi.components.schemas.hasOwnProperty(name)) {
                     const schema = openApi.components.schemas[name];
-                    addSchema(`$${name}`, schema);
+                    addSchema(name, schema);
                 }
             }
             for (const name in openApi.components.parameters) {
                 if (openApi.components.parameters.hasOwnProperty(name)) {
                     const parameter = openApi.components.parameters[name];
-                    addSchema(`$${name}`, parameter);
+                    addSchema(name, parameter);
                 }
             }
         }
