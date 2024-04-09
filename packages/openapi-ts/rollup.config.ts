@@ -36,7 +36,6 @@ export function handlebarsPlugin(): Plugin {
                         modelIsRequired: true,
                         nameOperationDataType: true,
                         notEquals: true,
-                        toType: true,
                         useDateType: true,
                     },
                     knownHelpersOnly: true,

@@ -5,11 +5,7 @@
 {{~#unless @root.$config.name}}TApiResponse<T, {{/unless~}}
 {{~/notEquals~}}
 {{~/if~}}
-{{~#if results~}}
-{{#each results}}{{toType this @root.$config}}{{#unless @last}} | {{/unless}}{{/each}}
-{{~else~}}
-void
-{{~/if~}}
+{{{nameOperationDataType @root 'responses' this}}}
 {{~#if @root.$config.useOptions~}}
 {{~#notEquals @root.$config.serviceResponse 'generics'~}}
 {{~#equals @root.$config.serviceResponse 'response'}}>{{/equals~}}
