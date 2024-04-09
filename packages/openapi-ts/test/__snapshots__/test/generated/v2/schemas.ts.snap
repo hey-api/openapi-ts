@@ -11,6 +11,11 @@ export const $CommentWithBackticks = {
     type: 'integer',
 } as const;
 
+export const $CommentWithBackticksAndQuotes = {
+    description: `Testing backticks and quotes in string: \`backticks\`, 'quotes', "double quotes" and \`\`\`multiple backticks\`\`\` should work`,
+    type: 'integer',
+} as const;
+
 export const $CommentWithSlashes = {
     description: 'Testing slashes in string: \backwards\\ and /forwards/// should work',
     type: 'integer',

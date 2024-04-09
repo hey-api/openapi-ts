@@ -70,7 +70,7 @@ export const ots = {
             !value.startsWith('`') &&
             !value.endsWith('`')
         ) {
-            value = `\`${value}\``;
+            value = `\`${value.replace(/`/g, '\\`')}\``;
         }
         const text = encodeURIComponent(value);
         if (value.startsWith('`')) {
