@@ -967,6 +967,10 @@
             "description": "Testing backticks in string: `backticks` and ```multiple backticks``` should work",
             "type": "integer"
         },
+        "CommentWithBackticksAndQuotes": {
+            "description": "Testing backticks and quotes in string: `backticks`, 'quotes', \"double quotes\" and ```multiple backticks``` should work",
+            "type": "integer"
+        },
         "CommentWithSlashes": {
             "description": "Testing slashes in string: \\backwards\\\\\\ and /forwards/// should work",
             "type": "integer"

@@ -12,6 +12,11 @@ export type CommentWithBreaks = number;
 export type CommentWithBackticks = number;
 
 /**
+ * Testing backticks and quotes in string: `backticks`, 'quotes', "double quotes" and ```multiple backticks``` should work
+ */
+export type CommentWithBackticksAndQuotes = number;
+
+/**
  * Testing slashes in string: \backwards\\\ and /forwards/// should work
  */
 export type CommentWithSlashes = number;
