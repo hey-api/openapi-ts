@@ -40,7 +40,6 @@ import functionResolve from '../templates/core/functions/resolve.hbs';
 import templateCoreHttpRequest from '../templates/core/HttpRequest.hbs';
 import templateCoreSettings from '../templates/core/OpenAPI.hbs';
 import templateCoreRequest from '../templates/core/request.hbs';
-import templateCoreTypes from '../templates/core/types.hbs';
 import xhrGetHeaders from '../templates/core/xhr/getHeaders.hbs';
 import xhrGetRequestBody from '../templates/core/xhr/getRequestBody.hbs';
 import xhrGetResponseBody from '../templates/core/xhr/getResponseBody.hbs';
@@ -50,8 +49,6 @@ import xhrSendRequest from '../templates/core/xhr/sendRequest.hbs';
 import templateExportService from '../templates/exportService.hbs';
 import partialOperationParameters from '../templates/partials/operationParameters.hbs';
 import partialOperationResult from '../templates/partials/operationResult.hbs';
-import partialOperationTypes from '../templates/partials/operationTypes.hbs';
-import partialRequestConfig from '../templates/partials/requestConfig.hbs';
 import type { Config } from '../types/config';
 import { escapeComment, escapeDescription, escapeName } from './escape';
 import { getDefaultPrintable, modelIsRequired } from './required';
@@ -67,28 +64,21 @@ const dataDestructure = (config: Config, operation: Operation) => {
         }
     } else {
         if (config.useOptions) {
-            if (config.serviceResponse !== 'generics') {
-                if (operation.parameters.length) {
-                    return `const {
-                        ${config.experimental ? 'query,' : ''}
-                        ${operation.parameters
-                            .map(parameter => {
-                                if (config.experimental) {
-                                    if (parameter.in !== 'query') {
-                                        return parameter.name;
-                                    }
-                                } else {
+            if (operation.parameters.length) {
+                return `const {
+                    ${config.experimental ? 'query,' : ''}
+                    ${operation.parameters
+                        .map(parameter => {
+                            if (config.experimental) {
+                                if (parameter.in !== 'query') {
                                     return parameter.name;
                                 }
-                            })
-                            .filter(Boolean)
-                            .join(',\n')}
-                    } = data;`;
-                }
-            } else {
-                return `const {
-                    ${operation.parameters.map(parameter => parameter.name).join(',\n')}
-                    ...overrides
+                            } else {
+                                return parameter.name;
+                            }
+                        })
+                        .filter(Boolean)
+                        .join(',\n')}
                 } = data;`;
             }
         }
@@ -233,7 +223,6 @@ export interface Templates {
         httpRequest: Handlebars.TemplateDelegate;
         request: Handlebars.TemplateDelegate;
         settings: Handlebars.TemplateDelegate;
-        types: Handlebars.TemplateDelegate;
     };
     exports: {
         service: Handlebars.TemplateDelegate;
@@ -259,7 +248,6 @@ export const registerHandlebarTemplates = (config: Config): Templates => {
             httpRequest: Handlebars.template(templateCoreHttpRequest),
             request: Handlebars.template(templateCoreRequest),
             settings: Handlebars.template(templateCoreSettings),
-            types: Handlebars.template(templateCoreTypes),
         },
         exports: {
             service: Handlebars.template(templateExportService),
@@ -269,8 +257,6 @@ export const registerHandlebarTemplates = (config: Config): Templates => {
     // Partials for the generations of the models, services, etc.
     Handlebars.registerPartial('operationParameters', Handlebars.template(partialOperationParameters));
     Handlebars.registerPartial('operationResult', Handlebars.template(partialOperationResult));
-    Handlebars.registerPartial('operationTypes', Handlebars.template(partialOperationTypes));
-    Handlebars.registerPartial('requestConfig', Handlebars.template(partialRequestConfig));
 
     // Generic functions used in 'request' file @see src/templates/core/request.hbs for more info
     Handlebars.registerPartial('functions/base64', Handlebars.template(functionBase64));

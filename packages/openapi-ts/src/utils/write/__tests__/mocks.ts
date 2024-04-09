@@ -13,7 +13,6 @@ export const mockTemplates: Templates = {
         httpRequest: vi.fn().mockReturnValue('httpRequest'),
         request: vi.fn().mockReturnValue('request'),
         settings: vi.fn().mockReturnValue('settings'),
-        types: vi.fn().mockReturnValue('types'),
     },
     exports: {
         service: vi.fn().mockReturnValue('service'),
