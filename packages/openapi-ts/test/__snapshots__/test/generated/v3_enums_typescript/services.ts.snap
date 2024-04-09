@@ -57,7 +57,7 @@ export class DefaultService {
 
 export class SimpleService {
     /**
-     * @returns ModelWithString Success
+     * @returns ModelFromZendesk Success
      * @throws ApiError
      */
     public static apiVVersionOdataControllerCount(): CancelablePromise<

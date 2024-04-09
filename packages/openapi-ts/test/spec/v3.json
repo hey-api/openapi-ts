@@ -60,7 +60,7 @@
                         "content": {
                             "application/json; type=collection": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ModelWithString"
+                                    "$ref": "#/components/schemas/ModelFromZendesk"
                                 }
                             }
                         }
@@ -2047,6 +2047,10 @@
                         "type": "string"
                     }
                 }
+            },
+            "ModelFromZendesk": {
+                "description": "`Comment` or `VoiceComment`. The JSON object for adding voice comments to tickets is different. See [Adding voice comments to tickets](/documentation/ticketing/managing-tickets/adding-voice-comments-to-tickets)",
+                "type": "string"
             },
             "ModelWithNullableString": {
                 "description": "This is a model with one string property",

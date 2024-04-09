@@ -65,11 +65,11 @@ export const ots = {
         if (unescape) {
             value = unescapeName(value);
         }
-        if (
-            (value.includes('\n') || (value.includes("'") && value.includes('"'))) &&
-            !value.startsWith('`') &&
-            !value.endsWith('`')
-        ) {
+        const hasBothQuotes = value.includes("'") && value.includes('"');
+        const hasNewlines = value.includes('\n');
+        const hasUnescapedBackticks = value.startsWith('`');
+        const isBacktickEscaped = value.startsWith('\\`') && value.endsWith('\\`');
+        if ((hasNewlines || hasBothQuotes || hasUnescapedBackticks) && !isBacktickEscaped) {
             value = `\`${value.replace(/`/g, '\\`')}\``;
         }
         const text = encodeURIComponent(value);

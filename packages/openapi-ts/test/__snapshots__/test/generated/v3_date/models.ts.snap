@@ -28,7 +28,7 @@ export type DefaultData = {
 
 export type SimpleData = {
     responses: {
-        ApiVversionOdataControllerCount: ModelWithString;
+        ApiVversionOdataControllerCount: ModelFromZendesk;
         GetCallWithoutParametersAndResponse: void;
         PutCallWithoutParametersAndResponse: void;
         PostCallWithoutParametersAndResponse: void;
