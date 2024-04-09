@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.37.1
+
+### Patch Changes
+
+- fix: ensure strings with both single/double quotes and backticks are escaped properly ([#310](https://github.com/hey-api/openapi-ts/pull/310)) ([#310](https://github.com/hey-api/openapi-ts/pull/310))
+
 ## 0.37.0
 
 ### Minor Changes
