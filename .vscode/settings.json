@@ -5,7 +5,11 @@
     "editor.quickSuggestions": {
       "strings": true
     },
+    "eslint.experimental.useFlatConfig": true,
     "eslint.format.enable": true,
+    "eslint.workingDirectories": [
+        { "pattern": "./packages/*/" }
+    ],
     "typescript.preferences.autoImportFileExcludePatterns": ["dist/**"],
     "typescript.tsdk": "node_modules/typescript/lib"
 }
