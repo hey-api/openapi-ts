@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.37.2
+
+### Patch Changes
+
+- fix: escape schema names ([#317](https://github.com/hey-api/openapi-ts/pull/317))
+
+- fix: escape backticks in strings starting with backtick ([#315](https://github.com/hey-api/openapi-ts/pull/315))
+
 ## 0.37.1
 
 ### Patch Changes
