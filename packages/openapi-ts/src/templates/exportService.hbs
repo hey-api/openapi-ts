@@ -39,23 +39,23 @@ export class {{{name}}}{{{@root.$config.postfixServices}}} {
 	 */
 	{{#if @root.$config.name}}
 	{{#equals @root.$config.client 'angular'}}
-	public {{{name}}}{{>operationTypes}}({{>operationParameters}}): Observable<{{>operationResult}}> {
+	public {{{name}}}({{>operationParameters}}): Observable<{{>operationResult}}> {
 		{{{dataDestructure this}}}
 		return this.httpRequest.request({
 	{{else}}
-	public {{{name}}}{{>operationTypes}}({{>operationParameters}}): CancelablePromise<{{>operationResult}}> {
+	public {{{name}}}({{>operationParameters}}): CancelablePromise<{{>operationResult}}> {
 		{{{dataDestructure this}}}
 		return this.httpRequest.request({
 	{{/equals}}
 	{{else}}
 	{{#equals @root.$config.client 'angular'}}
-	public {{{name}}}{{>operationTypes}}({{>operationParameters}}): Observable<{{>operationResult}}> {
+	public {{{name}}}({{>operationParameters}}): Observable<{{>operationResult}}> {
 		{{{dataDestructure this}}}
-		return __request({{>requestConfig}}, this.http, {
+		return __request(OpenAPI, this.http, {
 	{{else}}
-	public static {{{name}}}{{>operationTypes}}({{>operationParameters}}): CancelablePromise<{{>operationResult}}> {
+	public static {{{name}}}({{>operationParameters}}): CancelablePromise<{{>operationResult}}> {
 		{{{dataDestructure this}}}
-		return __request({{>requestConfig}}, {
+		return __request(OpenAPI, {
 	{{/equals}}
 	{{/if}}
 			method: '{{{method}}}',
