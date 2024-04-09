@@ -5,15 +5,16 @@ description: Get started with @hey-api/openapi-ts.
 
 # Get Started
 
-`openapi-ts` allows you to create TypeScript interfaces, REST clients, and schemas from an OpenAPI specification.
+`openapi-ts` allows you to create TypeScript interfaces, REST clients, and JSON Schemas from an OpenAPI specification.
 
 ## Features
 
-- generate TypeScript interfaces from OpenAPI v2.0, v3.0, and v3.1 specifications
+- use with CLI, Node.js, or npx
+- export TypeScript interfaces from OpenAPI v2.0, v3.0, and v3.1 specifications
 - support JSON or YAML input files
-- handle external references using [JSON Schema $Ref Parser](https://github.com/APIDevTools/json-schema-ref-parser/)
-- generate fetch, axios, angular, node.js, or xhr REST clients
-- usable with CLI, Node.js, or npx
+- support external references using [json-schema-ref-parser](https://github.com/APIDevTools/json-schema-ref-parser/)
+- create fetch, axios, angular, node.js, or xhr REST clients
+- export JSON Schemas from OpenAPI specifications
 - abortable requests through cancellable promise pattern
 
 ## Quick Start
