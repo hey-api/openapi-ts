@@ -12,6 +12,7 @@ describe('getServices', () => {
             exportCore: true,
             exportModels: true,
             exportServices: true,
+            dryRun: true,
             format: false,
             input: '',
             lint: false,
@@ -22,7 +23,6 @@ describe('getServices', () => {
             serviceResponse: 'body',
             useDateType: false,
             useOptions: true,
-            write: false,
         };
         const services = getServices(
             {

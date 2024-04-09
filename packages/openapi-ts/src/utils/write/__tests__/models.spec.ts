@@ -9,7 +9,7 @@ import { openApi } from './models';
 vi.mock('node:fs');
 
 describe('writeClientModels', () => {
-    it('should write to filesystem', async () => {
+    it('writes to filesystem', async () => {
         const client: Parameters<typeof writeClientModels>[2] = {
             enumNames: [],
             models: [
@@ -46,6 +46,7 @@ describe('writeClientModels', () => {
             exportModels: true,
             exportServices: true,
             format: false,
+            dryRun: false,
             input: '',
             lint: false,
             name: 'AppClient',
@@ -56,7 +57,6 @@ describe('writeClientModels', () => {
             serviceResponse: 'body',
             useDateType: false,
             useOptions: true,
-            write: true,
         });
 
         expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/models.ts'), expect.anything());

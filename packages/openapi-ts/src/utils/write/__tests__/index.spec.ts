@@ -8,7 +8,7 @@ import { writeClientIndex } from '../index';
 vi.mock('node:fs');
 
 describe('writeClientIndex', () => {
-    it('should write to filesystem', async () => {
+    it('writes to filesystem', async () => {
         const client: Parameters<typeof writeClientIndex>[0] = {
             enumNames: [],
             models: [],
@@ -25,6 +25,7 @@ describe('writeClientIndex', () => {
             exportCore: true,
             exportModels: true,
             exportServices: true,
+            dryRun: false,
             format: false,
             input: '',
             lint: false,
@@ -35,7 +36,6 @@ describe('writeClientIndex', () => {
             serviceResponse: 'body',
             useDateType: false,
             useOptions: true,
-            write: true,
         });
 
         expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/index.ts'), expect.anything());

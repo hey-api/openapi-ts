@@ -9,7 +9,7 @@ import { openApi } from './models';
 vi.mock('node:fs');
 
 describe('writeClientClass', () => {
-    it('should write to filesystem', async () => {
+    it('writes to filesystem', async () => {
         const client: Parameters<typeof writeClientClass>[2] = {
             enumNames: [],
             models: [],
@@ -31,6 +31,7 @@ describe('writeClientClass', () => {
                 exportModels: true,
                 exportServices: true,
                 format: false,
+                dryRun: false,
                 input: '',
                 lint: false,
                 name: 'AppClient',
@@ -41,7 +42,6 @@ describe('writeClientClass', () => {
                 serviceResponse: 'body',
                 useDateType: false,
                 useOptions: true,
-                write: true,
             },
             mockTemplates
         );
