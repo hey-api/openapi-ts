@@ -1,5 +1,11 @@
 # openapi-ts-docs
 
+## 0.2.2
+
+### Patch Changes
+
+- docs: add migration notes ([#306](https://github.com/hey-api/openapi-ts/pull/306))
+
 ## 0.2.1
 
 ### Patch Changes
