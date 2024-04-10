@@ -36,16 +36,10 @@ export default tseslint.config(
             'simple-import-sort/imports': 'error',
             'sort-imports': 'off',
             'sort-keys-fix/sort-keys-fix': 'warn',
-        }
+        },
     },
     eslintConfigPrettier,
     {
-        ignores: [
-            '**/dist/',
-            '**/node_modules/',
-            'temp/',
-            '**/test/e2e/generated/',
-            '**/test/generated/'
-        ],
+        ignores: ['**/dist/', '**/node_modules/', 'temp/', '**/test/e2e/generated/', '**/test/generated/'],
     }
 );
