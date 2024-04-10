@@ -1,5 +1,5 @@
 import { Model, OperationParameter } from '../openApi';
-import { Config } from '../types/config';
+import { getConfig } from './config';
 
 export const getDefaultPrintable = (p: OperationParameter | Model): string | undefined => {
     if (p.default === undefined) {
@@ -8,7 +8,8 @@ export const getDefaultPrintable = (p: OperationParameter | Model): string | und
     return JSON.stringify(p.default, null, 4);
 };
 
-export const modelIsRequired = (config: Config, model: Model) => {
+export const modelIsRequired = (model: Model) => {
+    const config = getConfig();
     if (config?.useOptions) {
         return model.isRequired ? '' : '?';
     }

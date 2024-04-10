@@ -1,6 +1,6 @@
 import camelCase from 'camelcase';
 
-import type { Config } from '../../../types/config';
+import { getConfig } from '../../../utils/config';
 import type { OperationError, OperationResponse } from '../interfaces/client';
 import { reservedWords } from './reservedWords';
 import { sanitizeNamespaceIdentifier, sanitizeOperationParameterName } from './sanitize';
@@ -10,7 +10,9 @@ import { sanitizeNamespaceIdentifier, sanitizeOperationParameterName } from './s
  * This will use the operation ID - if available - and otherwise fallback
  * on a generated name from the URL
  */
-export const getOperationName = (url: string, method: string, config: Config, operationId?: string): string => {
+export const getOperationName = (url: string, method: string, operationId?: string): string => {
+    const config = getConfig();
+
     if (config.operationId && operationId) {
         return camelCase(sanitizeNamespaceIdentifier(operationId).trim());
     }
