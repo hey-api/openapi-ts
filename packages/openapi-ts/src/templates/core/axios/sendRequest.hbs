@@ -22,7 +22,7 @@ export const sendRequest = async <T>(
 	onCancel(() => controller.abort());
 
 	for (const fn of config.interceptors.request._fns) {
-		requestConfig = await fn(requestConfig)
+		requestConfig = await fn(requestConfig);
 	}
 
 	try {
