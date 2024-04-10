@@ -7,6 +7,7 @@ import { sync } from 'cross-spawn';
 import { parse } from './openApi';
 import type { Client } from './types/client';
 import type { Config, UserConfig } from './types/config';
+import { getConfig, setConfig } from './utils/config';
 import { getOpenApiSpec } from './utils/getOpenApiSpec';
 import { registerHandlebarTemplates } from './utils/handlebars';
 import { isSubDirectory } from './utils/isSubdirectory';
@@ -24,7 +25,9 @@ const clientDependencies: Record<Config['client'], string[]> = {
     xhr: [],
 };
 
-const processOutput = (config: Config, dependencies: Dependencies) => {
+const processOutput = (dependencies: Dependencies) => {
+    const config = getConfig();
+
     if (config.format) {
         if (dependencies.prettier) {
             console.log('✨ Running Prettier');
@@ -53,7 +56,8 @@ const inferClient = (dependencies: Dependencies): Config['client'] => {
     return 'fetch';
 };
 
-const logClientMessage = (client: Config['client']) => {
+const logClientMessage = () => {
+    const { client } = getConfig();
     switch (client) {
         case 'angular':
             return console.log('✨ Creating Angular client');
@@ -68,14 +72,15 @@ const logClientMessage = (client: Config['client']) => {
     }
 };
 
-const logMissingDependenciesWarning = (client: Config['client'], dependencies: Dependencies) => {
+const logMissingDependenciesWarning = (dependencies: Dependencies) => {
+    const { client } = getConfig();
     const missing = clientDependencies[client].filter(d => dependencies[d] === undefined);
     if (missing.length > 0) {
         console.log('⚠️ Dependencies used in generated client are missing: ' + missing.join(' '));
     }
 };
 
-const getConfig = async (userConfig: UserConfig, dependencies: Dependencies) => {
+const initConfig = async (userConfig: UserConfig, dependencies: Dependencies) => {
     const { config: userConfigFromFile } = await loadConfig<UserConfig>({
         jitiOptions: {
             esmResolve: true,
@@ -141,7 +146,7 @@ const getConfig = async (userConfig: UserConfig, dependencies: Dependencies) => 
     const client = userConfig.client || inferClient(dependencies);
     const output = path.resolve(process.cwd(), userConfig.output);
 
-    const config: Config = {
+    return setConfig({
         base,
         client,
         debug,
@@ -163,9 +168,7 @@ const getConfig = async (userConfig: UserConfig, dependencies: Dependencies) => 
         serviceResponse,
         useDateType,
         useOptions,
-    };
-
-    return config;
+    });
 };
 
 /**
@@ -185,21 +188,21 @@ export async function createClient(userConfig: UserConfig): Promise<Client> {
         {}
     );
 
-    const config = await getConfig(userConfig, dependencies);
+    const config = await initConfig(userConfig, dependencies);
 
     const openApi =
         typeof config.input === 'string'
             ? await getOpenApiSpec(config.input)
             : (config.input as unknown as Awaited<ReturnType<typeof getOpenApiSpec>>);
 
-    const client = postProcessClient(parse(openApi, config));
-    const templates = registerHandlebarTemplates(config);
+    const client = postProcessClient(parse(openApi));
+    const templates = registerHandlebarTemplates();
 
     if (!config.dryRun) {
-        logClientMessage(config.client);
-        logMissingDependenciesWarning(config.client, dependencies);
-        await writeClient(openApi, client, templates, config);
-        processOutput(config, dependencies);
+        logClientMessage();
+        logMissingDependenciesWarning(dependencies);
+        await writeClient(openApi, client, templates);
+        processOutput(dependencies);
     }
 
     console.log('✨ Done! Your client is located in:', config.output);

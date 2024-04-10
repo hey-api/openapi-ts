@@ -1,7 +1,7 @@
 import camelCase from 'camelcase';
 import Handlebars from 'handlebars/runtime';
 
-import type { Model, Operation, OperationParameter, Service } from '../openApi';
+import type { Operation, OperationParameter, Service } from '../openApi';
 import templateClient from '../templates/client.hbs';
 import angularGetHeaders from '../templates/core/angular/getHeaders.hbs';
 import angularGetRequestBody from '../templates/core/angular/getRequestBody.hbs';
@@ -49,11 +49,13 @@ import xhrSendRequest from '../templates/core/xhr/sendRequest.hbs';
 import templateExportService from '../templates/exportService.hbs';
 import partialOperationParameters from '../templates/partials/operationParameters.hbs';
 import partialOperationResult from '../templates/partials/operationResult.hbs';
-import type { Config } from '../types/config';
+import { getConfig } from './config';
 import { escapeComment, escapeDescription, escapeName } from './escape';
 import { getDefaultPrintable, modelIsRequired } from './required';
 
-const dataDestructure = (config: Config, operation: Operation) => {
+const dataDestructure = (operation: Operation) => {
+    const config = getConfig();
+
     if (config.name) {
         if (config.useOptions) {
             if (operation.parameters.length) {
@@ -86,7 +88,9 @@ const dataDestructure = (config: Config, operation: Operation) => {
     return '';
 };
 
-const dataParameters = (config: Config, parameters: OperationParameter[]) => {
+const dataParameters = (parameters: OperationParameter[]) => {
+    const config = getConfig();
+
     if (config.experimental) {
         let output = parameters
             .filter(parameter => getDefaultPrintable(parameter) !== undefined)
@@ -140,16 +144,10 @@ export const nameOperationDataType = (
     return name && typeof name === 'string' ? `${path}['${name}']` : path;
 };
 
-export const registerHandlebarHelpers = (config: Config): void => {
+export const registerHandlebarHelpers = (): void => {
     Handlebars.registerHelper('camelCase', camelCase);
-
-    Handlebars.registerHelper('dataDestructure', function (operation: Operation) {
-        return dataDestructure(config, operation);
-    });
-
-    Handlebars.registerHelper('dataParameters', function (parameters: OperationParameter[]) {
-        return dataParameters(config, parameters);
-    });
+    Handlebars.registerHelper('dataDestructure', dataDestructure);
+    Handlebars.registerHelper('dataParameters', dataParameters);
 
     Handlebars.registerHelper(
         'equals',
@@ -188,9 +186,7 @@ export const registerHandlebarHelpers = (config: Config): void => {
         }
     );
 
-    Handlebars.registerHelper('modelIsRequired', function (model: Model) {
-        return modelIsRequired(config, model);
-    });
+    Handlebars.registerHelper('modelIsRequired', modelIsRequired);
 
     Handlebars.registerHelper(
         'nameOperationDataType',
@@ -233,8 +229,8 @@ export interface Templates {
  * Read all the Handlebar templates that we need and return a wrapper object
  * so we can easily access the templates in our generator/write functions.
  */
-export const registerHandlebarTemplates = (config: Config): Templates => {
-    registerHandlebarHelpers(config);
+export const registerHandlebarTemplates = (): Templates => {
+    registerHandlebarHelpers();
 
     // Main templates (entry points for the files we write to disk)
     const templates: Templates = {
