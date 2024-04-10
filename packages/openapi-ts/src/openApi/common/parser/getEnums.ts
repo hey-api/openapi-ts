@@ -8,15 +8,15 @@ export const getEnums = (definition: WithEnumExtension, values?: ReadonlyArray<s
     }
 
     const descriptions = (definition['x-enum-descriptions'] ?? []).filter(value => typeof value === 'string');
-    const names = (definition['x-enum-varnames'] ?? []).filter(value => typeof value === 'string');
+    const names = (definition['x-enum-varnames'] ?? definition['x-enumNames'] ?? []).filter(value => typeof value === 'string');
 
     return values
         .filter(unique)
         .filter(value => typeof value === 'number' || typeof value === 'string')
         .map((value, index) => ({
+            customDescription: descriptions[index],
+            customName: names[index],
             description: undefined,
             value,
-            'x-enum-description': descriptions[index],
-            'x-enum-varname': names[index],
         }));
 };
