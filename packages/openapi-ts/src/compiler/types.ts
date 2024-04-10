@@ -88,30 +88,6 @@ export const createObjectType = <T extends object>(
 };
 
 /**
- * Create a type alias declaration. Example `export type X = Y;`.
- * @param name - the name of the type.
- * @param type - the type.
- * @param comments - comments to add if any.
- * @returns ts.TypeAliasDeclaration
- */
-export const createTypeAliasDeclaration = (
-    name: string,
-    type: string,
-    comments?: Comments
-): ts.TypeAliasDeclaration => {
-    const node = ts.factory.createTypeAliasDeclaration(
-        [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
-        ts.factory.createIdentifier(name),
-        [],
-        ts.factory.createTypeReferenceNode(type)
-    );
-    if (comments?.length) {
-        addLeadingJSDocComment(node, comments);
-    }
-    return node;
-};
-
-/**
  * Create enum declaration. Example `export enum T = { X, Y };`
  * @param name - the name of the enum.
  * @param obj - the object representing the enum.

@@ -3,9 +3,11 @@ import { type PathOrFileDescriptor, writeFileSync } from 'node:fs';
 import ts from 'typescript';
 
 import * as module from './module';
+import * as typedef from './typedef';
 import * as types from './types';
 import { tsNodeToString } from './utils';
 
+export type { Property } from './typedef';
 export type { Comments } from './utils';
 export type { Node } from 'typescript';
 
@@ -26,7 +28,7 @@ export class TypeScriptFile {
         if (this._imports.length) {
             values.push(this._imports.map(v => tsNodeToString(v)).join('\n'));
         }
-        values.push(...this._items.map(v => (typeof v === 'string' ? v : tsNodeToString(v))))
+        values.push(...this._items.map(v => (typeof v === 'string' ? v : tsNodeToString(v))));
         return values.join(seperator);
     }
 
@@ -48,7 +50,13 @@ export const compiler = {
         named: module.createNamedImportDeclarations,
     },
     typedef: {
-        alias: types.createTypeAliasDeclaration,
+        alias: typedef.createTypeAliasDeclaration,
+        array: typedef.createTypeArrayNode,
+        basic: typedef.createTypeNode,
+        interface: typedef.createTypeInterfaceNode,
+        record: typedef.createTypeRecordNode,
+        tuple: typedef.createTypeTupleNode,
+        union: typedef.createTypeUnionNode,
     },
     types: {
         array: types.createArrayType,
