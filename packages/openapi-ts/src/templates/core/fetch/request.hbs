@@ -74,7 +74,7 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): C
 				let response = await sendRequest(config, options, url, body, formData, headers, onCancel);
 
 				for (const fn of config.interceptors.response._fns) {
-					response = await fn(response)
+					response = await fn(response);
 				}
 
 				const responseBody = await getResponseBody(response);

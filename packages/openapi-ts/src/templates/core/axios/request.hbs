@@ -76,7 +76,7 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions, ax
 				let response = await sendRequest<T>(config, options, url, body, formData, headers, onCancel, axiosClient);
 
 				for (const fn of config.interceptors.response._fns) {
-					response = await fn(response)
+					response = await fn(response);
 				}
 
 				const responseBody = getResponseBody(response);

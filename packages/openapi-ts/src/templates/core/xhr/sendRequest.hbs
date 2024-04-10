@@ -21,7 +21,7 @@ export const sendRequest = async (
 		xhr.onerror = () => reject(new Error('Network error'));
 
 		for (const fn of config.interceptors.request._fns) {
-			xhr = await fn(xhr)
+			xhr = await fn(xhr);
 		}
 
 		xhr.send(body ?? formData);
