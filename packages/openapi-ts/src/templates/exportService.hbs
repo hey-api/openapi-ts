@@ -5,15 +5,14 @@
 {{/equals}}
 export class {{{name}}}{{{@root.$config.postfixServices}}} {
 	{{#if @root.$config.name}}
-
 	constructor(public readonly httpRequest: BaseHttpRequest) {}
+
 	{{else}}
 	{{#equals @root.$config.client 'angular'}}
-
 	constructor(public readonly http: HttpClient) {}
+
 	{{/equals}}
 	{{/if}}
-
 	{{#each operations}}
 	/**
 	{{#if deprecated}}
