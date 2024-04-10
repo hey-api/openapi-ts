@@ -3,29 +3,22 @@ import path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
 
+import { setConfig } from '../../config';
 import { writeClientIndex } from '../index';
 
 vi.mock('node:fs');
 
 describe('writeClientIndex', () => {
     it('writes to filesystem', async () => {
-        const client: Parameters<typeof writeClientIndex>[0] = {
-            enumNames: [],
-            models: [],
-            server: 'http://localhost:8080',
-            services: [],
-            version: '1.0',
-        };
-
-        await writeClientIndex(client, '/', {
+        setConfig({
             client: 'fetch',
             debug: false,
+            dryRun: false,
             enums: 'javascript',
             experimental: false,
             exportCore: true,
             exportModels: true,
             exportServices: true,
-            dryRun: false,
             format: false,
             input: '',
             lint: false,
@@ -37,6 +30,16 @@ describe('writeClientIndex', () => {
             useDateType: false,
             useOptions: true,
         });
+
+        const client: Parameters<typeof writeClientIndex>[0] = {
+            enumNames: [],
+            models: [],
+            server: 'http://localhost:8080',
+            services: [],
+            version: '1.0',
+        };
+
+        await writeClientIndex(client, '/');
 
         expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/index.ts'), expect.anything());
     });

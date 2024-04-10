@@ -3,6 +3,7 @@ import path from 'node:path';
 
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { setConfig } from '../../config';
 import { writeClientCore } from '../core';
 import { mockTemplates } from './mocks';
 import { openApi } from './models';
@@ -10,7 +11,7 @@ import { openApi } from './models';
 vi.mock('node:fs');
 
 describe('writeClientCore', () => {
-    let templates: Parameters<typeof writeClientCore>[4];
+    let templates: Parameters<typeof writeClientCore>[3];
     beforeEach(() => {
         templates = mockTemplates;
     });
@@ -24,16 +25,16 @@ describe('writeClientCore', () => {
             version: '1.0',
         };
 
-        const config: Parameters<typeof writeClientCore>[3] = {
+        setConfig({
             client: 'fetch',
             debug: false,
+            dryRun: false,
             enums: 'javascript',
             experimental: false,
             exportCore: true,
             exportModels: true,
             exportServices: true,
             format: false,
-            dryRun: false,
             input: '',
             lint: false,
             name: 'AppClient',
@@ -44,9 +45,9 @@ describe('writeClientCore', () => {
             serviceResponse: 'body',
             useDateType: false,
             useOptions: true,
-        };
+        });
 
-        await writeClientCore(openApi, '/', client, config, templates);
+        await writeClientCore(openApi, '/', client, templates);
 
         expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/OpenAPI.ts'), 'settings');
         expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/ApiError.ts'), 'apiError');
@@ -65,16 +66,16 @@ describe('writeClientCore', () => {
             version: '1.0',
         };
 
-        const config: Parameters<typeof writeClientCore>[3] = {
+        const config = setConfig({
             client: 'fetch',
             debug: false,
+            dryRun: false,
             enums: 'javascript',
             experimental: false,
             exportCore: true,
             exportModels: true,
             exportServices: true,
             format: false,
-            dryRun: false,
             input: '',
             lint: false,
             name: 'AppClient',
@@ -85,9 +86,9 @@ describe('writeClientCore', () => {
             serviceResponse: 'body',
             useDateType: false,
             useOptions: true,
-        };
+        });
 
-        await writeClientCore(openApi, '/', client, config, templates);
+        await writeClientCore(openApi, '/', client, templates);
 
         expect(templates.core.settings).toHaveBeenCalledWith({
             $config: config,
@@ -106,17 +107,17 @@ describe('writeClientCore', () => {
             version: '1.0',
         };
 
-        const config: Parameters<typeof writeClientCore>[3] = {
+        const config = setConfig({
             base: 'foo',
             client: 'fetch',
             debug: false,
+            dryRun: false,
             enums: 'javascript',
             experimental: false,
             exportCore: true,
             exportModels: true,
             exportServices: true,
             format: false,
-            dryRun: false,
             input: '',
             lint: false,
             name: 'AppClient',
@@ -127,9 +128,9 @@ describe('writeClientCore', () => {
             serviceResponse: 'body',
             useDateType: false,
             useOptions: true,
-        };
+        });
 
-        await writeClientCore(openApi, '/', client, config, templates);
+        await writeClientCore(openApi, '/', client, templates);
 
         expect(templates.core.settings).toHaveBeenCalledWith({
             $config: config,

@@ -1,12 +1,14 @@
 import { addLeadingJSDocComment } from '../../compiler/utils';
 import { Model } from '../../openApi';
-import { Config } from '../../types/config';
+import { getConfig } from '../config';
 import { enumUnionType } from '../enum';
 import { escapeComment } from '../escape';
 import { modelIsRequired } from '../required';
 import { unique } from '../unique';
 
-const base = (model: Model, config: Config) => {
+const base = (model: Model) => {
+    const config = getConfig();
+
     if (model.base === 'binary') {
         return 'Blob | File';
     }
@@ -18,9 +20,9 @@ const base = (model: Model, config: Config) => {
     return model.base;
 };
 
-const typeReference = (model: Model, config: Config) => `${base(model, config)}${model.isNullable ? ' | null' : ''}`;
+const typeReference = (model: Model) => `${base(model)}${model.isNullable ? ' | null' : ''}`;
 
-const typeArray = (model: Model, config: Config): string | undefined => {
+const typeArray = (model: Model): string | undefined => {
     if (
         model.export === 'array' &&
         model.link &&
@@ -28,37 +30,35 @@ const typeArray = (model: Model, config: Config): string | undefined => {
         model.minItems &&
         model.maxItems === model.minItems
     ) {
-        return `[${toType(model.link, config, 'exact')}]${model.isNullable ? ' | null' : ''}`;
+        return `[${toType(model.link, 'exact')}]${model.isNullable ? ' | null' : ''}`;
     }
 
     if (model.link) {
-        return `Array<${toType(model.link, config)}>${model.isNullable ? ' | null' : ''}`;
+        return `Array<${toType(model.link)}>${model.isNullable ? ' | null' : ''}`;
     }
 
-    return `Array<${base(model, config)}>${model.isNullable ? ' | null' : ''}`;
+    return `Array<${base(model)}>${model.isNullable ? ' | null' : ''}`;
 };
 
 const typeEnum = (model: Model) => `${enumUnionType(model.enum)}${model.isNullable ? ' | null' : ''}`;
 
-const typeDict = (model: Model, config: Config): string => {
+const typeDict = (model: Model): string => {
     if (model.link) {
-        return `Record<string, ${toType(model.link, config)}>${model.isNullable ? ' | null' : ''}`;
+        return `Record<string, ${toType(model.link)}>${model.isNullable ? ' | null' : ''}`;
     }
-    return `Record<string, ${base(model, config)}>${model.isNullable ? ' | null' : ''}`;
+    return `Record<string, ${base(model)}>${model.isNullable ? ' | null' : ''}`;
 };
 
-const typeUnion = (model: Model, config: Config, filterProperties: 'exact' | undefined = undefined) => {
+const typeUnion = (model: Model, filterProperties: 'exact' | undefined = undefined) => {
     const models = model.properties;
-    const types = models
-        .map(m => toType(m, config))
-        .filter((...args) => filterProperties === 'exact' || unique(...args));
+    const types = models.map(m => toType(m)).filter((...args) => filterProperties === 'exact' || unique(...args));
     const union = types.join(filterProperties === 'exact' ? ', ' : ' | ');
     const unionString = types.length > 1 && types.length !== models.length ? `(${union})` : union;
     return `${unionString}${model.isNullable ? ' | null' : ''}`;
 };
 
-const typeIntersect = (model: Model, config: Config) => {
-    const types = model.properties.map(m => toType(m, config)).filter(unique);
+const typeIntersect = (model: Model) => {
+    const types = model.properties.map(m => toType(m)).filter(unique);
     let typesString = types.join(' & ');
     if (types.length > 1) {
         typesString = `(${typesString})`;
@@ -66,7 +66,7 @@ const typeIntersect = (model: Model, config: Config) => {
     return `${typesString}${model.isNullable ? ' | null' : ''}`;
 };
 
-const typeInterface = (model: Model, config: Config) => {
+const typeInterface = (model: Model) => {
     if (!model.properties.length) {
         return 'unknown';
     }
@@ -81,8 +81,8 @@ const typeInterface = (model: Model, config: Config) => {
                         property.deprecated && ` * @deprecated`,
                     ]);
                 }
-                let maybeRequired = modelIsRequired(config, property);
-                let value = toType(property, config);
+                let maybeRequired = modelIsRequired(property);
+                let value = toType(property);
                 // special case for additional properties type
                 if (property.name === '[key: string]' && maybeRequired) {
                     maybeRequired = '';
@@ -95,27 +95,23 @@ const typeInterface = (model: Model, config: Config) => {
     }${model.isNullable ? ' | null' : ''}`;
 };
 
-export const toType = (
-    model: Model,
-    config: Config,
-    filterProperties: 'exact' | undefined = undefined
-): string | undefined => {
+export const toType = (model: Model, filterProperties: 'exact' | undefined = undefined): string | undefined => {
     switch (model.export) {
         case 'all-of':
-            return typeIntersect(model, config);
+            return typeIntersect(model);
         case 'any-of':
         case 'one-of':
-            return typeUnion(model, config, filterProperties);
+            return typeUnion(model, filterProperties);
         case 'array':
-            return typeArray(model, config);
+            return typeArray(model);
         case 'dictionary':
-            return typeDict(model, config);
+            return typeDict(model);
         case 'enum':
             return typeEnum(model);
         case 'interface':
-            return typeInterface(model, config);
+            return typeInterface(model);
         case 'reference':
         default:
-            return typeReference(model, config);
+            return typeReference(model);
     }
 };

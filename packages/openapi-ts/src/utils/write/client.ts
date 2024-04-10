@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import type { OpenApi } from '../../openApi';
 import type { Client } from '../../types/client';
-import type { Config } from '../../types/config';
+import { getConfig } from '../config';
 import type { Templates } from '../handlebars';
 import { writeClientClass } from './class';
 import { writeClientCore } from './core';
@@ -17,14 +17,9 @@ import { writeClientServices } from './services';
  * @param openApi {@link OpenApi} Dereferenced OpenAPI specification
  * @param client Client containing models, schemas, and services
  * @param templates Templates wrapper with all loaded Handlebars templates
- * @param config {@link Config} passed to the `createClient()` method
  */
-export const writeClient = async (
-    openApi: OpenApi,
-    client: Client,
-    templates: Templates,
-    config: Config
-): Promise<void> => {
+export const writeClient = async (openApi: OpenApi, client: Client, templates: Templates): Promise<void> => {
+    const config = getConfig();
     await rmSync(config.output, {
         force: true,
         recursive: true,
@@ -80,20 +75,11 @@ export const writeClient = async (
             await mkdirSync(sectionPath, {
                 recursive: true,
             });
-            await section.fn(
-                openApi,
-                sectionPath,
-                client,
-                {
-                    ...config,
-                    name: config.name!,
-                },
-                templates
-            );
+            await section.fn(openApi, sectionPath, client, templates);
         }
     }
 
     if (sections.some(section => section.enabled)) {
-        await writeClientIndex(client, config.output, config);
+        await writeClientIndex(client, config.output);
     }
 };

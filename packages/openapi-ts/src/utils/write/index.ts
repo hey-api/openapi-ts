@@ -2,16 +2,16 @@ import path from 'node:path';
 
 import { compiler, TypeScriptFile } from '../../compiler';
 import type { Client } from '../../types/client';
-import type { Config } from '../../types/config';
+import { getConfig } from '../config';
 
 /**
  * Generate the OpenAPI client index file and write it to disk.
  * The index file just contains all the exports you need to use the client as a standalone.
  * @param client Client containing models, schemas, and services
  * @param outputPath Directory to write the generated files to
- * @param config {@link Config} passed to the `createClient()` method
  */
-export const writeClientIndex = async (client: Client, outputPath: string, config: Config): Promise<void> => {
+export const writeClientIndex = async (client: Client, outputPath: string): Promise<void> => {
+    const config = getConfig();
     const file = new TypeScriptFile();
     if (config.name) {
         file.add(compiler.export.named([config.name], `./${config.name}`));
