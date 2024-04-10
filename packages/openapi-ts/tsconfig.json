@@ -5,16 +5,7 @@
         "esModuleInterop": true,
         "resolveJsonModule": true
     },
-    "exclude": [
-        "node_modules",
-        "**/__mocks__"
-    ],
-    "files": [
-        "./src/types/hbs.d.ts"
-    ],
-    "include": [
-        "./src/**/*.ts",
-        "rollup.config.ts",
-        "rollup.dts.config.ts"
-    ]
+    "exclude": ["node_modules", "**/__mocks__"],
+    "files": ["./src/types/hbs.d.ts"],
+    "include": ["./src/**/*.ts", "rollup.config.ts", "rollup.dts.config.ts"]
 }
