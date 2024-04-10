@@ -3314,6 +3314,29 @@
                         "writeOnly": true
                     }
                 }
+            },
+            "ModelWithConstantSizeArray": {
+                "type": "array",
+                "items": {
+                    "type": "number"
+                },
+                "minItems": 2,
+                "maxItems": 2
+            },
+            "ModelWithAnyOfConstantSizeArray": {
+                "type": "array",
+                "items": {
+                    "oneOf": [
+                        {
+                            "type": "number"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "minItems": 3,
+                "maxItems": 3
             }
         }
     }
