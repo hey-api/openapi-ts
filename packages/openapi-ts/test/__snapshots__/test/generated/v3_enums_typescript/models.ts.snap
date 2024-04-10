@@ -135,6 +135,12 @@ export enum EnumWithExtensions {
     CUSTOM_ERROR = 500,
 }
 
+export enum EnumWithXEnumNames {
+    zero = 0,
+    one = 1,
+    two = 2,
+}
+
 /**
  * This is a simple array with numbers
  */

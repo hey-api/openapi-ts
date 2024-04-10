@@ -149,6 +149,14 @@ export const EnumWithExtensionsEnum = {
     CUSTOM_ERROR: 500,
 } as const;
 
+export type EnumWithXEnumNames = 0 | 1 | 2;
+
+export const EnumWithXEnumNamesEnum = {
+    zero: 0,
+    one: 1,
+    two: 2,
+} as const;
+
 /**
  * This is a simple array with numbers
  */

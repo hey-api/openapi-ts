@@ -1848,6 +1848,18 @@
                     "Used when the status of something has an error"
                 ]
             },
+            "EnumWithXEnumNames": {
+                "enum": [
+                    0,
+                    1,
+                    2
+                ],
+                "x-enumNames": [
+                    "zero",
+                    "one",
+                    "two"
+                ]
+            },
             "ArrayWithNumbers": {
                 "description": "This is a simple array with numbers",
                 "type": "array",

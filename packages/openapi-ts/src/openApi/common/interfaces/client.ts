@@ -3,8 +3,8 @@ export interface ModelComposition extends Pick<Model, '$refs' | 'enums' | 'impor
 }
 
 export interface Enum {
-    'x-enum-description'?: string;
-    'x-enum-varname'?: string;
+    customDescription?: string;
+    customName?: string;
     description?: string;
     value: string | number;
 }

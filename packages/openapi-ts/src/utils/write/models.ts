@@ -25,10 +25,10 @@ const processEnum = (client: Client, model: Model, exportType: boolean) => {
     const properties: Record<string | number, unknown> = {};
     const comments: Record<string | number, Comments> = {};
     model.enum.forEach(enumerator => {
-        const key = enumKey(enumerator.value, enumerator['x-enum-varname']);
+        const key = enumKey(enumerator.value, enumerator.customName);
         const value = enumValue(enumerator.value);
         properties[key] = value;
-        const comment = enumerator['x-enum-description'] || enumerator.description;
+        const comment = enumerator.customDescription || enumerator.description;
         if (comment) {
             comments[key] = [` * ${escapeComment(comment)}`];
         }
