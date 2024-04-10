@@ -22,10 +22,12 @@ export class TypeScriptFile {
     }
 
     public toString(seperator: string = '\n') {
-        const importsString = this._imports.map(v => tsNodeToString(v)).join('\n');
-        return [importsString, ...this._items.map(v => (typeof v === 'string' ? v : tsNodeToString(v)))].join(
-            seperator
-        );
+        const values: string[] = [];
+        if (this._imports.length) {
+            values.push(this._imports.map(v => tsNodeToString(v)).join('\n'));
+        }
+        values.push(...this._items.map(v => (typeof v === 'string' ? v : tsNodeToString(v))))
+        return values.join(seperator);
     }
 
     public write(file: PathOrFileDescriptor, seperator: string = '\n') {

@@ -73,7 +73,7 @@ export const request = <T>(config: OpenAPIConfig, http: HttpClient, options: Api
 		}),
 		switchMap(async response => {
 			for (const fn of config.interceptors.response._fns) {
-				response = await fn(response)
+				response = await fn(response);
 			}
 			const responseBody = getResponseBody(response);
 			const responseHeader = getResponseHeader(response, options.responseHeader);
