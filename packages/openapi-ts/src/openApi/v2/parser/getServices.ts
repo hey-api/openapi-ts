@@ -25,7 +25,7 @@ export const getServices = (openApi: OpenApi): Service[] => {
                         case 'delete':
                         case 'options':
                         case 'head':
-                        case 'patch':
+                        case 'patch': {
                             // Each method contains an OpenAPI operation, we parse the operation
                             const op = path[method]!;
                             const tags = op.tags?.length ? op.tags.filter(unique) : ['Default'];
@@ -47,6 +47,7 @@ export const getServices = (openApi: OpenApi): Service[] => {
                                 services.set(operation.service, service);
                             });
                             break;
+                        }
                     }
                 }
             }
