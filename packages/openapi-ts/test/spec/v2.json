@@ -6,9 +6,7 @@
     },
     "host": "localhost:3000",
     "basePath": "/base",
-    "schemes": [
-        "http"
-    ],
+    "schemes": ["http"],
     "paths": {
         "/api/v{api-version}/no-tag": {
             "tags": [],
@@ -18,53 +16,37 @@
         },
         "/api/v{api-version}/simple": {
             "get": {
-                "tags": [
-                    "Simple"
-                ],
+                "tags": ["Simple"],
                 "operationId": "GetCallWithoutParametersAndResponse"
             },
             "put": {
-                "tags": [
-                    "Simple"
-                ],
+                "tags": ["Simple"],
                 "operationId": "PutCallWithoutParametersAndResponse"
             },
             "post": {
-                "tags": [
-                    "Simple"
-                ],
+                "tags": ["Simple"],
                 "operationId": "PostCallWithoutParametersAndResponse"
             },
             "delete": {
-                "tags": [
-                    "Simple"
-                ],
+                "tags": ["Simple"],
                 "operationId": "DeleteCallWithoutParametersAndResponse"
             },
             "options": {
-                "tags": [
-                    "Simple"
-                ],
+                "tags": ["Simple"],
                 "operationId": "OptionsCallWithoutParametersAndResponse"
             },
             "head": {
-                "tags": [
-                    "Simple"
-                ],
+                "tags": ["Simple"],
                 "operationId": "HeadCallWithoutParametersAndResponse"
             },
             "patch": {
-                "tags": [
-                    "Simple"
-                ],
+                "tags": ["Simple"],
                 "operationId": "PatchCallWithoutParametersAndResponse"
             }
         },
         "/api/v{api-version}/descriptions/": {
             "post": {
-                "tags": [
-                    "Descriptions"
-                ],
+                "tags": ["Descriptions"],
                 "operationId": "CallWithDescriptions",
                 "parameters": [
                     {
@@ -108,9 +90,7 @@
         },
         "/api/v{api-version}/parameters/{parameterPath}": {
             "post": {
-                "tags": [
-                    "Parameters"
-                ],
+                "tags": ["Parameters"],
                 "operationId": "CallWithParameters",
                 "parameters": [
                     {
@@ -159,9 +139,7 @@
         },
         "/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}": {
             "post": {
-                "tags": [
-                    "Parameters"
-                ],
+                "tags": ["Parameters"],
                 "operationId": "CallWithWeirdParameterNames",
                 "parameters": [
                     {
@@ -231,9 +209,7 @@
         },
         "/api/v{api-version}/defaults": {
             "get": {
-                "tags": [
-                    "Defaults"
-                ],
+                "tags": ["Defaults"],
                 "operationId": "CallWithDefaultParameters",
                 "parameters": [
                     {
@@ -267,11 +243,7 @@
                         "required": true,
                         "default": 0,
                         "schema": {
-                            "enum": [
-                                "Success",
-                                "Warning",
-                                "Error"
-                            ]
+                            "enum": ["Success", "Warning", "Error"]
                         }
                     },
                     {
@@ -289,9 +261,7 @@
                 ]
             },
             "post": {
-                "tags": [
-                    "Defaults"
-                ],
+                "tags": ["Defaults"],
                 "operationId": "CallWithDefaultOptionalParameters",
                 "parameters": [
                     {
@@ -321,11 +291,7 @@
                         "in": "query",
                         "default": 0,
                         "schema": {
-                            "enum": [
-                                "Success",
-                                "Warning",
-                                "Error"
-                            ]
+                            "enum": ["Success", "Warning", "Error"]
                         }
                     },
                     {
@@ -342,9 +308,7 @@
                 ]
             },
             "put": {
-                "tags": [
-                    "Defaults"
-                ],
+                "tags": ["Defaults"],
                 "operationId": "CallToTestOrderOfParams",
                 "parameters": [
                     {
@@ -415,39 +379,25 @@
         },
         "/api/v{api-version}/duplicate": {
             "get": {
-                "tags": [
-                    "Duplicate",
-                    "Duplicate"
-                ],
+                "tags": ["Duplicate", "Duplicate"],
                 "operationId": "DuplicateName"
             },
             "post": {
-                "tags": [
-                    "Duplicate",
-                    "Duplicate"
-                ],
+                "tags": ["Duplicate", "Duplicate"],
                 "operationId": "DuplicateName"
             },
             "put": {
-                "tags": [
-                    "Duplicate",
-                    "Duplicate"
-                ],
+                "tags": ["Duplicate", "Duplicate"],
                 "operationId": "DuplicateName"
             },
             "delete": {
-                "tags": [
-                    "Duplicate",
-                    "Duplicate"
-                ],
+                "tags": ["Duplicate", "Duplicate"],
                 "operationId": "DuplicateName"
             }
         },
         "/api/v{api-version}/no-content": {
             "get": {
-                "tags": [
-                    "NoContent"
-                ],
+                "tags": ["NoContent"],
                 "operationId": "CallWithNoContentResponse",
                 "responses": {
                     "204": {
@@ -458,10 +408,7 @@
         },
         "/api/v{api-version}/multiple-tags/response-and-no-content": {
             "get": {
-                "tags": [
-                    "Response",
-                    "NoContent"
-                ],
+                "tags": ["Response", "NoContent"],
                 "operationId": "CallWithResponseAndNoContentResponse",
                 "responses": {
                     "200": {
@@ -482,10 +429,7 @@
         },
         "/api/v{api-version}/multiple-tags/a": {
             "get": {
-                "tags": [
-                    "MultipleTags1",
-                    "MultipleTags2"
-                ],
+                "tags": ["MultipleTags1", "MultipleTags2"],
                 "operationId": "DummyA",
                 "responses": {
                     "204": {
@@ -496,11 +440,7 @@
         },
         "/api/v{api-version}/multiple-tags/b": {
             "get": {
-                "tags": [
-                    "MultipleTags1",
-                    "MultipleTags2",
-                    "MultipleTags3"
-                ],
+                "tags": ["MultipleTags1", "MultipleTags2", "MultipleTags3"],
                 "operationId": "DummyB",
                 "responses": {
                     "204": {
@@ -511,9 +451,7 @@
         },
         "/api/v{api-version}/response": {
             "get": {
-                "tags": [
-                    "Response"
-                ],
+                "tags": ["Response"],
                 "operationId": "CallWithResponse",
                 "responses": {
                     "default": {
@@ -525,9 +463,7 @@
                 }
             },
             "post": {
-                "tags": [
-                    "Response"
-                ],
+                "tags": ["Response"],
                 "operationId": "CallWithDuplicateResponses",
                 "responses": {
                     "default": {
@@ -569,9 +505,7 @@
                 }
             },
             "put": {
-                "tags": [
-                    "Response"
-                ],
+                "tags": ["Response"],
                 "operationId": "CallWithResponses",
                 "responses": {
                     "default": {
@@ -638,9 +572,7 @@
         },
         "/api/v{api-version}/collectionFormat": {
             "get": {
-                "tags": [
-                    "CollectionFormat"
-                ],
+                "tags": ["CollectionFormat"],
                 "operationId": "CollectionFormat",
                 "parameters": [
                     {
@@ -703,9 +635,7 @@
         },
         "/api/v{api-version}/types": {
             "get": {
-                "tags": [
-                    "Types"
-                ],
+                "tags": ["Types"],
                 "operationId": "Types",
                 "parameters": [
                     {
@@ -766,11 +696,7 @@
                         "in": "query",
                         "required": true,
                         "schema": {
-                            "enum": [
-                                "Success",
-                                "Warning",
-                                "Error"
-                            ]
+                            "enum": ["Success", "Warning", "Error"]
                         }
                     },
                     {
@@ -814,9 +740,7 @@
         },
         "/api/v{api-version}/complex": {
             "get": {
-                "tags": [
-                    "Complex"
-                ],
+                "tags": ["Complex"],
                 "operationId": "ComplexTypes",
                 "parameters": [
                     {
@@ -874,9 +798,7 @@
         },
         "/api/v{api-version}/header": {
             "post": {
-                "tags": [
-                    "Header"
-                ],
+                "tags": ["Header"],
                 "operationId": "CallWithResultFromHeader",
                 "responses": {
                     "200": {
@@ -898,9 +820,7 @@
         },
         "/api/v{api-version}/error": {
             "post": {
-                "tags": [
-                    "Error"
-                ],
+                "tags": ["Error"],
                 "operationId": "testErrorCode",
                 "parameters": [
                     {
@@ -932,9 +852,7 @@
         },
         "/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串": {
             "post": {
-                "tags": [
-                    "Non-Ascii-æøåÆØÅöôêÊ"
-                ],
+                "tags": ["Non-Ascii-æøåÆØÅöôêÊ"],
                 "operationId": "nonAsciiæøåÆØÅöôêÊ字符串",
                 "parameters": [
                     {
@@ -1030,23 +948,7 @@
         },
         "EnumWithNumbers": {
             "description": "This is a simple enum with numbers",
-            "enum": [
-                1,
-                2,
-                3,
-                1.1,
-                1.20,
-                1.300,
-                100,
-                200,
-                300,
-                -100,
-                -200,
-                -300,
-                -1.1,
-                -1.20,
-                -1.300
-            ]
+            "enum": [1, 2, 3, 1.1, 1.2, 1.3, 100, 200, 300, -100, -200, -300, -1.1, -1.2, -1.3]
         },
         "EnumFromDescription": {
             "description": "Success=1,Warning=2,Error=3",
@@ -1054,16 +956,8 @@
         },
         "EnumWithExtensions": {
             "description": "This is a simple enum with numbers",
-            "enum": [
-                200,
-                400,
-                500
-            ],
-            "x-enum-varnames": [
-                "CUSTOM_SUCCESS",
-                "CUSTOM_WARNING",
-                "CUSTOM_ERROR"
-            ],
+            "enum": [200, 400, 500],
+            "x-enum-varnames": ["CUSTOM_SUCCESS", "CUSTOM_WARNING", "CUSTOM_ERROR"],
             "x-enum-descriptions": [
                 "Used when the status of something is successful",
                 "Used when the status of something has a warning",
@@ -1209,9 +1103,7 @@
         "ModelWithNullableString": {
             "description": "This is a model with one string property",
             "type": "object",
-            "required": [
-                "nullableRequiredProp"
-            ],
+            "required": ["nullableRequiredProp"],
             "properties": {
                 "nullableProp": {
                     "description": "This is a simple string property",
@@ -1231,30 +1123,16 @@
             "properties": {
                 "test": {
                     "description": "This is a simple enum with strings",
-                    "enum": [
-                        "Success",
-                        "Warning",
-                        "Error",
-                        "ØÆÅ字符串"
-                    ]
+                    "enum": ["Success", "Warning", "Error", "ØÆÅ字符串"]
                 },
                 "statusCode": {
                     "description": "These are the HTTP error code enums",
-                    "enum": [
-                        "100",
-                        "200 FOO",
-                        "300 FOO_BAR",
-                        "400 foo-bar",
-                        "500 foo.bar",
-                        "600 foo&bar"
-                    ]
+                    "enum": ["100", "200 FOO", "300 FOO_BAR", "400 foo-bar", "500 foo.bar", "600 foo&bar"]
                 },
                 "bool": {
                     "description": "Simple boolean enum",
                     "type": "boolean",
-                    "enum": [
-                        true
-                    ]
+                    "enum": [true]
                 }
             }
         },
@@ -1275,11 +1153,7 @@
                 "dictionaryWithEnum": {
                     "type": "object",
                     "additionalProperties": {
-                        "enum": [
-                            "Success",
-                            "Warning",
-                            "Error"
-                        ]
+                        "enum": ["Success", "Warning", "Error"]
                     }
                 },
                 "dictionaryWithEnumFromDescription": {
@@ -1292,11 +1166,7 @@
                 "arrayWithEnum": {
                     "type": "array",
                     "items": {
-                        "enum": [
-                            "Success",
-                            "Warning",
-                            "Error"
-                        ]
+                        "enum": ["Success", "Warning", "Error"]
                     }
                 },
                 "arrayWithDescription": {
@@ -1365,10 +1235,7 @@
         "ModelWithProperties": {
             "description": "This is a model with one nested property",
             "type": "object",
-            "required": [
-                "required",
-                "requiredAndReadOnly"
-            ],
+            "required": ["required", "requiredAndReadOnly"],
             "properties": {
                 "required": {
                     "type": "string"
@@ -1411,22 +1278,16 @@
         "ModelWithNestedProperties": {
             "description": "This is a model with one nested property",
             "type": "object",
-            "required": [
-                "first"
-            ],
+            "required": ["first"],
             "properties": {
                 "first": {
                     "type": "object",
-                    "required": [
-                        "second"
-                    ],
+                    "required": ["second"],
                     "readOnly": true,
                     "properties": {
                         "second": {
                             "type": "object",
-                            "required": [
-                                "third"
-                            ],
+                            "required": ["third"],
                             "readOnly": true,
                             "properties": {
                                 "third": {
@@ -1538,10 +1399,7 @@
         "ModelWithPattern": {
             "description": "This is a model that contains a some patterns",
             "type": "object",
-            "required": [
-                "key",
-                "name"
-            ],
+            "required": ["key", "name"],
             "properties": {
                 "key": {
                     "maxLength": 64,

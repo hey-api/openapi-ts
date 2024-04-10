@@ -17,6 +17,7 @@
         "build": "pnpm --recursive build",
         "changeset": "changeset",
         "docs": "pnpm --filter openapi-ts-docs --",
+        "format": "pnpm --recursive format",
         "lint:fix": "pnpm --recursive lint:fix",
         "lint": "pnpm --recursive lint",
         "openapi-ts": "pnpm --filter @hey-api/openapi-ts --",

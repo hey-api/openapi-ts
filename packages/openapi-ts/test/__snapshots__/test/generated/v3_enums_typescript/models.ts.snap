@@ -773,6 +773,10 @@ export type ModelWithReadOnlyAndWriteOnly = {
     baz: string;
 };
 
+export type ModelWithConstantSizeArray = [number];
+
+export type ModelWithAnyOfConstantSizeArray = [number, string];
+
 /**
  * This is a reusable parameter
  */

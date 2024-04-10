@@ -1541,6 +1541,31 @@ export const $ModelWithReadOnlyAndWriteOnly = {
     },
 } as const;
 
+export const $ModelWithConstantSizeArray = {
+    type: 'array',
+    items: {
+        type: 'number',
+    },
+    minItems: 2,
+    maxItems: 2,
+} as const;
+
+export const $ModelWithAnyOfConstantSizeArray = {
+    type: 'array',
+    items: {
+        oneOf: [
+            {
+                type: 'number',
+            },
+            {
+                type: 'string',
+            },
+        ],
+    },
+    minItems: 3,
+    maxItems: 3,
+} as const;
+
 export const $SimpleParameter = {
     description: 'This is a reusable parameter',
     name: 'parameter',
