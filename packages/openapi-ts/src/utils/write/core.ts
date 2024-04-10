@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import type { OpenApi } from '../../openApi';
 import type { Client } from '../../types/client';
-import type { Config } from '../../types/config';
+import { getConfig } from '../config';
 import { getHttpRequestName } from '../getHttpRequestName';
 import type { Templates } from '../handlebars';
 
@@ -12,16 +12,15 @@ import type { Templates } from '../handlebars';
  * @param openApi {@link OpenApi} Dereferenced OpenAPI specification
  * @param outputPath Directory to write the generated files to
  * @param client Client containing models, schemas, and services
- * @param config {@link Config} passed to the `createClient()` method
  * @param templates The loaded handlebar templates
  */
 export const writeClientCore = async (
     openApi: OpenApi,
     outputPath: string,
     client: Client,
-    config: Config,
     templates: Templates
 ): Promise<void> => {
+    const config = getConfig();
     const context = {
         httpRequest: getHttpRequestName(config.client),
         server: config.base !== undefined ? config.base : client.server,

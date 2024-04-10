@@ -1,5 +1,6 @@
 import ts from 'typescript';
 
+import { getConfig } from '../utils/config';
 import { unescapeName } from '../utils/escape';
 
 export const CONFIG = {
@@ -26,6 +27,9 @@ export function tsNodeToString(node: ts.Node): string {
     try {
         return decodeURIComponent(result);
     } catch {
+        if (getConfig().debug) {
+            console.warn('Could not decode value:', result);
+        }
         return result;
     }
 }

@@ -1,4 +1,3 @@
-import type { Config } from '../../../types/config';
 import type { Operation, OperationParameter, OperationParameters } from '../../common/interfaces/client';
 import { getRef } from '../../common/parser/getRef';
 import { getOperationErrors, getOperationName, getOperationResponseHeader } from '../../common/parser/operation';
@@ -31,7 +30,6 @@ const mergeParameters = (opParams: OperationParameter[], globalParams: Operation
 
 export const getOperation = (
     openApi: OpenApi,
-    config: Config,
     data: {
         method: Lowercase<Operation['method']>;
         op: OpenApiOperation;
@@ -42,7 +40,7 @@ export const getOperation = (
 ): Operation => {
     const { method, op, pathParams, tag, url } = data;
     const service = getServiceName(tag);
-    const name = getOperationName(url, method, config, op.operationId);
+    const name = getOperationName(url, method, op.operationId);
 
     const operation: Operation = {
         $refs: [],

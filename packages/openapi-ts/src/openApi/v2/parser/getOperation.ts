@@ -1,4 +1,3 @@
-import type { Config } from '../../../types/config';
 import type { Operation, OperationParameters } from '../../common/interfaces/client';
 import { getOperationErrors, getOperationName, getOperationResponseHeader } from '../../common/parser/operation';
 import { getServiceName } from '../../common/parser/service';
@@ -15,11 +14,10 @@ export const getOperation = (
     method: Lowercase<Operation['method']>,
     tag: string,
     op: OpenApiOperation,
-    pathParams: OperationParameters,
-    config: Config
+    pathParams: OperationParameters
 ): Operation => {
     const serviceName = getServiceName(tag);
-    const name = getOperationName(url, method, config, op.operationId);
+    const name = getOperationName(url, method, op.operationId);
 
     // Create a new operation object for this method.
     const operation: Operation = {
