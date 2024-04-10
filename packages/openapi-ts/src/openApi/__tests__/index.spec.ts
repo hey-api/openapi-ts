@@ -9,27 +9,6 @@ describe('parse', () => {
         vi.restoreAllMocks();
     });
 
-    const options: Parameters<typeof parse>[1] = {
-        client: 'fetch',
-        debug: false,
-        enums: 'javascript',
-        experimental: false,
-        exportCore: true,
-        exportModels: true,
-        exportServices: true,
-        dryRun: true,
-        format: true,
-        input: '',
-        lint: false,
-        operationId: true,
-        output: '',
-        postfixServices: '',
-        schemas: true,
-        serviceResponse: 'body',
-        useDateType: false,
-        useOptions: true,
-    };
-
     it('uses v2 parser', () => {
         const spy = vi.spyOn(parseV2, 'parse');
 
@@ -41,8 +20,8 @@ describe('parse', () => {
             paths: {},
             swagger: '2',
         };
-        parse(spec, options);
-        expect(spy).toHaveBeenCalledWith(spec, options);
+        parse(spec);
+        expect(spy).toHaveBeenCalledWith(spec);
 
         const spec2: Parameters<typeof parse>[0] = {
             info: {
@@ -52,8 +31,8 @@ describe('parse', () => {
             paths: {},
             swagger: '2.0',
         };
-        parse(spec2, options);
-        expect(spy).toHaveBeenCalledWith(spec2, options);
+        parse(spec2);
+        expect(spy).toHaveBeenCalledWith(spec2);
     });
 
     it('uses v3 parser', () => {
@@ -67,8 +46,8 @@ describe('parse', () => {
             openapi: '3',
             paths: {},
         };
-        parse(spec, options);
-        expect(spy).toHaveBeenCalledWith(spec, options);
+        parse(spec);
+        expect(spy).toHaveBeenCalledWith(spec);
 
         const spec2: Parameters<typeof parse>[0] = {
             info: {
@@ -78,8 +57,8 @@ describe('parse', () => {
             openapi: '3.0',
             paths: {},
         };
-        parse(spec2, options);
-        expect(spy).toHaveBeenCalledWith(spec2, options);
+        parse(spec2);
+        expect(spy).toHaveBeenCalledWith(spec2);
 
         const spec3: Parameters<typeof parse>[0] = {
             info: {
@@ -89,13 +68,13 @@ describe('parse', () => {
             openapi: '3.1.0',
             paths: {},
         };
-        parse(spec3, options);
-        expect(spy).toHaveBeenCalledWith(spec3, options);
+        parse(spec3);
+        expect(spy).toHaveBeenCalledWith(spec3);
     });
 
     it('throws on unknown version', () => {
         // @ts-ignore
-        expect(() => parse({ foo: 'bar' }, options)).toThrow(
+        expect(() => parse({ foo: 'bar' })).toThrow(
             `Unsupported Open API specification: ${JSON.stringify({ foo: 'bar' }, null, 2)}`
         );
     });

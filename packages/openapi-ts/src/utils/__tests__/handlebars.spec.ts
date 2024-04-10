@@ -1,19 +1,20 @@
 import Handlebars from 'handlebars/runtime';
 import { describe, expect, it } from 'vitest';
 
+import { setConfig } from '../config';
 import { registerHandlebarHelpers, registerHandlebarTemplates } from '../handlebars';
 
 describe('registerHandlebarHelpers', () => {
     it('should register the helpers', () => {
-        registerHandlebarHelpers({
+        setConfig({
             client: 'fetch',
             debug: false,
+            dryRun: false,
             enums: 'javascript',
             experimental: false,
             exportCore: true,
             exportModels: true,
             exportServices: true,
-            dryRun: false,
             format: true,
             input: '',
             lint: false,
@@ -25,6 +26,7 @@ describe('registerHandlebarHelpers', () => {
             useDateType: false,
             useOptions: false,
         });
+        registerHandlebarHelpers();
         const helpers = Object.keys(Handlebars.helpers);
         expect(helpers).toContain('camelCase');
         expect(helpers).toContain('dataDestructure');
@@ -42,15 +44,15 @@ describe('registerHandlebarHelpers', () => {
 
 describe('registerHandlebarTemplates', () => {
     it('should return correct templates', () => {
-        const templates = registerHandlebarTemplates({
+        setConfig({
             client: 'fetch',
             debug: false,
+            dryRun: false,
             enums: 'javascript',
             experimental: false,
             exportCore: true,
             exportModels: true,
             exportServices: true,
-            dryRun: false,
             format: true,
             input: '',
             lint: false,
@@ -62,6 +64,7 @@ describe('registerHandlebarTemplates', () => {
             useDateType: false,
             useOptions: false,
         });
+        const templates = registerHandlebarTemplates();
         expect(templates.exports.service).toBeDefined();
         expect(templates.core.settings).toBeDefined();
         expect(templates.core.apiError).toBeDefined();

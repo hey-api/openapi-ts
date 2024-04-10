@@ -1,6 +1,5 @@
 import type { Enum } from '../openApi';
 import type { Client } from '../types/client';
-import type { Config } from '../types/config';
 import { unescapeName } from './escape';
 import { unique } from './unique';
 
@@ -43,7 +42,7 @@ export const enumKey = (value?: string | number, key?: string) => {
  * already escaped, so we need to remove quotes around it.
  * {@link https://github.com/ferdikoomen/openapi-typescript-codegen/issues/1969}
  */
-export const enumName = (config: Config, client: Client, name?: string) => {
+export const enumName = (client: Client, name?: string) => {
     if (!name) {
         return name;
     }

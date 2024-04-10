@@ -2,7 +2,8 @@
 
 'use strict';
 
-import { readFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
+import path from 'node:path';
 
 import camelCase from 'camelcase';
 import { program } from 'commander';
@@ -59,25 +60,31 @@ const processParams = (obj, booleanKeys) => {
 };
 
 async function start() {
+    let userConfig;
     try {
         const { createClient } = await import(new URL('../dist/node/index.js', import.meta.url));
-        await createClient(
-            processParams(params, [
-                'dryRun',
-                'exportCore',
-                'exportModels',
-                'exportServices',
-                'format',
-                'lint',
-                'operationId',
-                'schemas',
-                'useDateType',
-                'useOptions',
-            ])
-        );
+        userConfig = processParams(params, [
+            'dryRun',
+            'exportCore',
+            'exportModels',
+            'exportServices',
+            'format',
+            'lint',
+            'operationId',
+            'schemas',
+            'useDateType',
+            'useOptions',
+        ]);
+        await createClient(userConfig);
         process.exit(0);
     } catch (error) {
-        console.error(error);
+        if (!userConfig.dryRun) {
+            const logName = `openapi-ts-error-${Date.now()}.log`;
+            const logPath = path.resolve(process.cwd(), logName);
+            writeFileSync(logPath, `${error.message}\n${error.stack}`);
+            console.error(`🔥 Unexpected error occurred. Log saved to ${logPath}`);
+        }
+        console.error(`🔥 Unexpected error occurred. ${error.message}`);
         process.exit(1);
     }
 }

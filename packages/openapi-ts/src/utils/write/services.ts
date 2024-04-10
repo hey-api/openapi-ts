@@ -4,7 +4,7 @@ import path from 'node:path';
 import { TypeScriptFile } from '../../compiler';
 import type { OpenApi } from '../../openApi';
 import type { Client } from '../../types/client';
-import type { Config } from '../../types/config';
+import { getConfig } from '../config';
 import { serviceExportedNamespace, type Templates } from '../handlebars';
 import { unique } from '../unique';
 
@@ -13,16 +13,15 @@ import { unique } from '../unique';
  * @param openApi {@link OpenApi} Dereferenced OpenAPI specification
  * @param outputPath Directory to write the generated files to
  * @param client Client containing models, schemas, and services
- * @param config {@link Config} passed to the `createClient()` method
  * @param templates The loaded handlebar templates
  */
 export const writeClientServices = async (
     openApi: OpenApi,
     outputPath: string,
     client: Client,
-    config: Config,
     templates: Templates
 ): Promise<void> => {
+    const config = getConfig();
     const file = new TypeScriptFile();
 
     let imports: string[] = [];

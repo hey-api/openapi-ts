@@ -1,17 +1,18 @@
 import { describe, expect, it } from 'vitest';
 
+import { setConfig } from '../../../../utils/config';
 import { getOperationName, getOperationParameterName, getOperationResponseCode } from '../operation';
 
 describe('getOperationName', () => {
-    const options1: Parameters<typeof getOperationName>[2] = {
+    const options1: Parameters<typeof setConfig>[0] = {
         client: 'fetch',
         debug: false,
+        dryRun: true,
         enums: false,
         experimental: false,
         exportCore: false,
         exportModels: false,
         exportServices: false,
-        dryRun: true,
         format: false,
         input: '',
         lint: false,
@@ -24,15 +25,15 @@ describe('getOperationName', () => {
         useOptions: false,
     };
 
-    const options2: Parameters<typeof getOperationName>[2] = {
+    const options2: Parameters<typeof setConfig>[0] = {
         client: 'fetch',
         debug: false,
+        dryRun: true,
         enums: false,
         experimental: false,
         exportCore: false,
         exportModels: false,
         exportServices: false,
-        dryRun: true,
         format: false,
         input: '',
         lint: false,
@@ -192,7 +193,8 @@ describe('getOperationName', () => {
     ])(
         'getOperationName($url, $method, { operationId: $useOperationId }, $operationId) -> $expected',
         ({ url, method, options, operationId, expected }) => {
-            expect(getOperationName(url, method, options, operationId)).toBe(expected);
+            setConfig(options);
+            expect(getOperationName(url, method, operationId)).toBe(expected);
         }
     );
 });
