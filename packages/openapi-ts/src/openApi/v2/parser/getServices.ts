@@ -1,4 +1,3 @@
-import type { Config } from '../../../types/config';
 import { unique } from '../../../utils/unique';
 import type { Service } from '../../common/interfaces/client';
 import type { OpenApi } from '../interfaces/OpenApi';
@@ -8,7 +7,7 @@ import { getOperationParameters } from './getOperationParameters';
 /**
  * Get the OpenAPI services
  */
-export const getServices = (openApi: OpenApi, options: Config): Service[] => {
+export const getServices = (openApi: OpenApi): Service[] => {
     const services = new Map<string, Service>();
     for (const url in openApi.paths) {
         if (openApi.paths.hasOwnProperty(url)) {
@@ -31,7 +30,7 @@ export const getServices = (openApi: OpenApi, options: Config): Service[] => {
                             const op = path[method]!;
                             const tags = op.tags?.length ? op.tags.filter(unique) : ['Default'];
                             tags.forEach(tag => {
-                                const operation = getOperation(openApi, url, method, tag, op, pathParams, options);
+                                const operation = getOperation(openApi, url, method, tag, op, pathParams);
 
                                 // If we have already declared a service, then we should fetch that and
                                 // append the new method to it. Otherwise we should create a new service object.

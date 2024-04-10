@@ -168,7 +168,7 @@ describe('bin', () => {
     it('throws error without parameters', () => {
         const result = sync('node', ['./bin/index.js', '--dry-run', 'true']);
         expect(result.stdout.toString()).toBe('');
-        expect(result.stderr.toString()).toContain('input');
+        expect(result.stderr.toString()).toContain('Unexpected error occurred');
     });
 
     it('throws error with wrong parameters', () => {

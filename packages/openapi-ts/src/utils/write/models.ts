@@ -5,7 +5,7 @@ import camelCase from 'camelcase';
 import { type Comments, compiler, type Node, TypeScriptFile } from '../../compiler';
 import type { Model, OpenApi, Service } from '../../openApi';
 import type { Client } from '../../types/client';
-import type { Config } from '../../types/config';
+import { getConfig } from '../config';
 import { enumKey, enumName, enumUnionType, enumValue } from '../enum';
 import { escapeComment } from '../escape';
 import { operationKey } from '../handlebars';
@@ -13,12 +13,13 @@ import { modelIsRequired } from '../required';
 import { sortByName } from '../sort';
 import { toType } from './type';
 
-const processComposition = (config: Config, client: Client, model: Model) => [
-    processType(config, client, model),
-    ...model.enums.flatMap(enumerator => processEnum(config, client, enumerator, false)),
+const processComposition = (client: Client, model: Model) => [
+    processType(client, model),
+    ...model.enums.flatMap(enumerator => processEnum(client, enumerator, false)),
 ];
 
-const processEnum = (config: Config, client: Client, model: Model, exportType: boolean) => {
+const processEnum = (client: Client, model: Model, exportType: boolean) => {
+    const config = getConfig();
     let nodes: Array<Node> = [];
 
     const properties: Record<string | number, unknown> = {};
@@ -51,36 +52,37 @@ const processEnum = (config: Config, client: Client, model: Model, exportType: b
             multiLine: true,
             unescape: true,
         });
-        nodes = [...nodes, compiler.export.asConst(enumName(config, client, model.name)!, expression)];
+        nodes = [...nodes, compiler.export.asConst(enumName(client, model.name)!, expression)];
     }
 
     return nodes;
 };
 
-const processType = (config: Config, client: Client, model: Model) => {
+const processType = (client: Client, model: Model) => {
     const comment: Comments = [
         model.description && ` * ${escapeComment(model.description)}`,
         model.deprecated && ' * @deprecated',
     ];
-    const type = toType(model, config);
+    const type = toType(model);
     return compiler.typedef.alias(model.name, type!, comment);
 };
 
-const processModel = (config: Config, client: Client, model: Model) => {
+const processModel = (client: Client, model: Model) => {
     switch (model.export) {
         case 'all-of':
         case 'any-of':
         case 'one-of':
         case 'interface':
-            return processComposition(config, client, model);
+            return processComposition(client, model);
         case 'enum':
-            return processEnum(config, client, model, true);
+            return processEnum(client, model, true);
         default:
-            return processType(config, client, model);
+            return processType(client, model);
     }
 };
 
-const operationDataType = (config: Config, service: Service) => {
+const operationDataType = (service: Service) => {
+    const config = getConfig();
     const operationsWithParameters = service.operations.filter(operation => operation.parameters.length);
     const namespace = `${camelCase(service.name, { pascalCase: true })}Data`;
     const output = `export type ${namespace} = {
@@ -105,7 +107,7 @@ const operationDataType = (config: Config, service: Service) => {
                                 }
                                 return [
                                     ...comment,
-                                    `${parameter.name + modelIsRequired(config, parameter)}: ${toType(parameter, config)}`,
+                                    `${parameter.name + modelIsRequired(parameter)}: ${toType(parameter)}`,
                                 ].join('\n');
                             })
                             .join('\n')}
@@ -121,7 +123,7 @@ const operationDataType = (config: Config, service: Service) => {
                                     }
                                     return [
                                         ...comment,
-                                        `${parameter.name + modelIsRequired(config, parameter)}: ${toType(parameter, config)}`,
+                                        `${parameter.name + modelIsRequired(parameter)}: ${toType(parameter)}`,
                                     ].join('\n');
                                 })
                                 .join('\n')}
@@ -143,9 +145,7 @@ const operationDataType = (config: Config, service: Service) => {
             ${service.operations.map(
                 operation =>
                     `${operationKey(operation)}: ${
-                        !operation.results.length
-                            ? 'void'
-                            : operation.results.map(result => toType(result, config)).join(' | ')
+                        !operation.results.length ? 'void' : operation.results.map(result => toType(result)).join(' | ')
                     }
                 `
             )}
@@ -162,24 +162,18 @@ const operationDataType = (config: Config, service: Service) => {
  * @param openApi {@link OpenApi} Dereferenced OpenAPI specification
  * @param outputPath Directory to write the generated files to
  * @param client Client containing models, schemas, and services
- * @param config {@link Config} passed to the `createClient()` method
  */
-export const writeClientModels = async (
-    openApi: OpenApi,
-    outputPath: string,
-    client: Client,
-    config: Config
-): Promise<void> => {
+export const writeClientModels = async (openApi: OpenApi, outputPath: string, client: Client): Promise<void> => {
     const file = new TypeScriptFile();
 
     for (const model of client.models) {
-        const nodes = processModel(config, client, model);
+        const nodes = processModel(client, model);
         const n = Array.isArray(nodes) ? nodes : [nodes];
         file.add(...n);
     }
 
     for (const service of client.services) {
-        const operationDataTypes = operationDataType(config, service);
+        const operationDataTypes = operationDataType(service);
         file.add(operationDataTypes);
     }
 
