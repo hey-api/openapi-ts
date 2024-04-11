@@ -784,115 +784,87 @@ export type SimpleParameter = string;
 
 export type $OpenApiTs = {
     '/api/v{api-version}/no-tag': {
-        get: {
-            res: void;
-        };
         post: {
             req: {
                 requestBody: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
             };
-            res: ModelWithReadOnlyAndWriteOnly;
+            res: {
+                200: ModelWithReadOnlyAndWriteOnly;
+            };
         };
     };
     '/api/v{api-version}/simple/$count': {
         get: {
-            res: Model_From_Zendesk;
-        };
-    };
-    '/api/v{api-version}/simple': {
-        get: {
-            res: void;
-        };
-        put: {
-            res: void;
-        };
-        post: {
-            res: void;
-        };
-        delete: {
-            res: void;
-        };
-        options: {
-            res: void;
-        };
-        head: {
-            res: void;
-        };
-        patch: {
-            res: void;
+            res: {
+                200: Model_From_Zendesk;
+            };
         };
     };
     '/api/v{api-version}/foo/{foo}/bar/{bar}': {
         delete: {
             req: {
                 /**
-                 * foo in method
-                 */
-                foo: string;
-                /**
                  * bar in method
                  */
                 bar: string;
+                /**
+                 * foo in method
+                 */
+                foo: string;
             };
-            res: void;
         };
     };
     '/api/v{api-version}/parameters/{parameterPath}': {
         post: {
             req: {
-                /**
-                 * This is the parameter that goes into the header
-                 */
-                parameterHeader: string | null;
                 fooAllOfEnum: ModelWithNestedArrayEnumsDataFoo;
-                /**
-                 * This is the parameter that goes into the query params
-                 */
-                parameterQuery: string | null;
-                /**
-                 * This is the parameter that goes into the form data
-                 */
-                parameterForm: string | null;
+                fooRefEnum?: ModelWithNestedArrayEnumsDataFoo;
                 /**
                  * This is the parameter that goes into the cookie
                  */
                 parameterCookie: string | null;
                 /**
+                 * This is the parameter that goes into the form data
+                 */
+                parameterForm: string | null;
+                /**
+                 * This is the parameter that goes into the header
+                 */
+                parameterHeader: string | null;
+                /**
                  * This is the parameter that goes into the path
                  */
                 parameterPath: string | null;
                 /**
+                 * This is the parameter that goes into the query params
+                 */
+                parameterQuery: string | null;
+                /**
                  * This is the parameter that goes into the body
                  */
                 requestBody: ModelWithString | null;
-                fooRefEnum?: ModelWithNestedArrayEnumsDataFoo;
             };
-            res: void;
         };
     };
     '/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}': {
         post: {
             req: {
                 /**
-                 * This is the parameter that goes into the request header
+                 * This is the parameter with a reserved keyword
                  */
-                parameterHeader: string | null;
-                /**
-                 * This is the parameter that goes into the request query params
-                 */
-                parameterQuery: string | null;
-                /**
-                 * This is the parameter that goes into the request form data
-                 */
-                parameterForm: string | null;
+                _default?: string;
                 /**
                  * This is the parameter that goes into the cookie
                  */
                 parameterCookie: string | null;
                 /**
-                 * This is the parameter that goes into the body
+                 * This is the parameter that goes into the request form data
                  */
-                requestBody: ModelWithString | null;
+                parameterForm: string | null;
+                /**
+                 * This is the parameter that goes into the request header
+                 */
+                parameterHeader: string | null;
                 /**
                  * This is the parameter that goes into the path
                  */
@@ -906,26 +878,28 @@ export type $OpenApiTs = {
                  */
                 parameterPath3?: string;
                 /**
-                 * This is the parameter with a reserved keyword
+                 * This is the parameter that goes into the request query params
                  */
-                _default?: string;
+                parameterQuery: string | null;
+                /**
+                 * This is the parameter that goes into the body
+                 */
+                requestBody: ModelWithString | null;
             };
-            res: void;
         };
     };
     '/api/v{api-version}/parameters/': {
         get: {
             req: {
                 /**
-                 * This is a required parameter
-                 */
-                requestBody: ModelWithOneOfEnum;
-                /**
                  * This is an optional parameter
                  */
                 parameter?: string;
+                /**
+                 * This is a required parameter
+                 */
+                requestBody: ModelWithOneOfEnum;
             };
-            res: void;
         };
         post: {
             req: {
@@ -938,12 +912,15 @@ export type $OpenApiTs = {
                  */
                 requestBody?: ModelWithString;
             };
-            res: void;
         };
     };
     '/api/v{api-version}/descriptions/': {
         post: {
             req: {
+                /**
+                 * Testing backticks in string: `backticks` and ```multiple backticks``` should work
+                 */
+                parameterWithBackticks?: unknown;
                 /**
                  * Testing multiline comments in string: First line
                  * Second line
@@ -951,14 +928,6 @@ export type $OpenApiTs = {
                  * Fourth line
                  */
                 parameterWithBreaks?: unknown;
-                /**
-                 * Testing backticks in string: `backticks` and ```multiple backticks``` should work
-                 */
-                parameterWithBackticks?: unknown;
-                /**
-                 * Testing slashes in string: \backwards\\\ and /forwards/// should work
-                 */
-                parameterWithSlashes?: unknown;
                 /**
                  * Testing expression placeholders in string: ${expression} should work
                  */
@@ -971,8 +940,11 @@ export type $OpenApiTs = {
                  * Testing reserved characters in string: * inline * and ** inline ** should work
                  */
                 parameterWithReservedCharacters?: unknown;
+                /**
+                 * Testing slashes in string: \backwards\\\ and /forwards/// should work
+                 */
+                parameterWithSlashes?: unknown;
             };
-            res: void;
         };
     };
     '/api/v{api-version}/parameters/deprecated': {
@@ -984,50 +956,39 @@ export type $OpenApiTs = {
                  */
                 parameter: DeprecatedModel | null;
             };
-            res: void;
         };
     };
     '/api/v{api-version}/requestBody/': {
         post: {
             req: {
                 /**
-                 * This is a reusable parameter
-                 */
-                parameter?: string;
-                /**
                  * A reusable request body
                  */
                 foo?: ModelWithString;
+                /**
+                 * This is a reusable parameter
+                 */
+                parameter?: string;
             };
-            res: void;
         };
     };
     '/api/v{api-version}/formData/': {
         post: {
             req: {
                 /**
-                 * This is a reusable parameter
-                 */
-                parameter?: string;
-                /**
                  * A reusable request body
                  */
                 formData?: ModelWithString;
+                /**
+                 * This is a reusable parameter
+                 */
+                parameter?: string;
             };
-            res: void;
         };
     };
     '/api/v{api-version}/defaults': {
         get: {
             req: {
-                /**
-                 * This is a simple string with default value
-                 */
-                parameterString?: string | null;
-                /**
-                 * This is a simple number with default value
-                 */
-                parameterNumber?: number | null;
                 /**
                  * This is a simple boolean with default value
                  */
@@ -1040,19 +1001,18 @@ export type $OpenApiTs = {
                  * This is a simple model with default value
                  */
                 parameterModel?: ModelWithString | null;
+                /**
+                 * This is a simple number with default value
+                 */
+                parameterNumber?: number | null;
+                /**
+                 * This is a simple string with default value
+                 */
+                parameterString?: string | null;
             };
-            res: void;
         };
         post: {
             req: {
-                /**
-                 * This is a simple string that is optional with default value
-                 */
-                parameterString?: string;
-                /**
-                 * This is a simple number that is optional with default value
-                 */
-                parameterNumber?: number;
                 /**
                  * This is a simple boolean that is optional with default value
                  */
@@ -1065,15 +1025,18 @@ export type $OpenApiTs = {
                  * This is a simple model that is optional with default value
                  */
                 parameterModel?: ModelWithString;
+                /**
+                 * This is a simple number that is optional with default value
+                 */
+                parameterNumber?: number;
+                /**
+                 * This is a simple string that is optional with default value
+                 */
+                parameterString?: string;
             };
-            res: void;
         };
         put: {
             req: {
-                /**
-                 * This is a string with no default
-                 */
-                parameterStringWithNoDefault: string;
                 /**
                  * This is a optional string with default
                  */
@@ -1087,6 +1050,14 @@ export type $OpenApiTs = {
                  */
                 parameterOptionalStringWithNoDefault?: string;
                 /**
+                 * This is a string that can be null with default
+                 */
+                parameterStringNullableWithDefault?: string | null;
+                /**
+                 * This is a string that can be null with no default
+                 */
+                parameterStringNullableWithNoDefault?: string | null;
+                /**
                  * This is a string with default
                  */
                 parameterStringWithDefault: string;
@@ -1095,68 +1066,58 @@ export type $OpenApiTs = {
                  */
                 parameterStringWithEmptyDefault: string;
                 /**
-                 * This is a string that can be null with no default
+                 * This is a string with no default
                  */
-                parameterStringNullableWithNoDefault?: string | null;
-                /**
-                 * This is a string that can be null with default
-                 */
-                parameterStringNullableWithDefault?: string | null;
+                parameterStringWithNoDefault: string;
             };
-            res: void;
-        };
-    };
-    '/api/v{api-version}/duplicate': {
-        get: {
-            res: void;
-        };
-        post: {
-            res: void;
-        };
-        put: {
-            res: void;
-        };
-        delete: {
-            res: void;
         };
     };
     '/api/v{api-version}/no-content': {
         get: {
-            res: void;
+            res: {
+                204: void;
+            };
         };
     };
     '/api/v{api-version}/multiple-tags/response-and-no-content': {
         get: {
-            res: number | void;
+            res: {
+                200: number;
+                204: void;
+            };
         };
     };
     '/api/v{api-version}/response': {
         get: {
-            res: ModelWithString;
+            res: {
+                200: ModelWithString;
+            };
         };
         post: {
-            res: ModelWithString;
+            res: {
+                200: ModelWithString;
+            };
         };
         put: {
-            res:
-                | {
-                      readonly '@namespace.string'?: string;
-                      readonly '@namespace.integer'?: number;
-                      readonly value?: Array<ModelWithString>;
-                  }
-                | ModelWithString
-                | ModelThatExtends
-                | ModelThatExtendsExtends;
+            res: {
+                200: ModelWithString;
+                201: ModelThatExtends;
+                202: ModelThatExtendsExtends;
+            };
         };
     };
     '/api/v{api-version}/multiple-tags/a': {
         get: {
-            res: void;
+            res: {
+                204: void;
+            };
         };
     };
     '/api/v{api-version}/multiple-tags/b': {
         get: {
-            res: void;
+            res: {
+                204: void;
+            };
         };
     };
     '/api/v{api-version}/collectionFormat': {
@@ -1167,6 +1128,14 @@ export type $OpenApiTs = {
                  */
                 parameterArrayCsv: Array<string> | null;
                 /**
+                 * This is an array parameter that is sent as multi format (multiple parameter instances)
+                 */
+                parameterArrayMulti: Array<string> | null;
+                /**
+                 * This is an array parameter that is sent as pipes format (pipe-separated values)
+                 */
+                parameterArrayPipes: Array<string> | null;
+                /**
                  * This is an array parameter that is sent as ssv format (space-separated values)
                  */
                 parameterArraySsv: Array<string> | null;
@@ -1174,25 +1143,24 @@ export type $OpenApiTs = {
                  * This is an array parameter that is sent as tsv format (tab-separated values)
                  */
                 parameterArrayTsv: Array<string> | null;
-                /**
-                 * This is an array parameter that is sent as pipes format (pipe-separated values)
-                 */
-                parameterArrayPipes: Array<string> | null;
-                /**
-                 * This is an array parameter that is sent as multi format (multiple parameter instances)
-                 */
-                parameterArrayMulti: Array<string> | null;
             };
-            res: void;
         };
     };
     '/api/v{api-version}/types': {
         get: {
             req: {
                 /**
+                 * This is a number parameter
+                 */
+                id?: number;
+                /**
                  * This is an array parameter
                  */
                 parameterArray: Array<string> | null;
+                /**
+                 * This is a boolean parameter
+                 */
+                parameterBoolean: boolean | null;
                 /**
                  * This is a dictionary parameter
                  */
@@ -1206,23 +1174,20 @@ export type $OpenApiTs = {
                  */
                 parameterNumber: number;
                 /**
-                 * This is a string parameter
-                 */
-                parameterString: string | null;
-                /**
-                 * This is a boolean parameter
-                 */
-                parameterBoolean: boolean | null;
-                /**
                  * This is an object parameter
                  */
                 parameterObject: Record<string, unknown> | null;
                 /**
-                 * This is a number parameter
+                 * This is a string parameter
                  */
-                id?: number;
+                parameterString: string | null;
             };
-            res: number | string | boolean | Record<string, unknown>;
+            res: {
+                200: number;
+                201: string;
+                202: boolean;
+                203: Record<string, unknown>;
+            };
         };
     };
     '/api/v{api-version}/upload': {
@@ -1233,7 +1198,9 @@ export type $OpenApiTs = {
                  */
                 file: Blob | File;
             };
-            res: boolean;
+            res: {
+                200: boolean;
+            };
         };
     };
     '/api/v{api-version}/file/{id}': {
@@ -1241,7 +1208,9 @@ export type $OpenApiTs = {
             req: {
                 id: string;
             };
-            res: Blob | File;
+            res: {
+                200: Blob | File;
+            };
         };
     };
     '/api/v{api-version}/complex': {
@@ -1262,7 +1231,9 @@ export type $OpenApiTs = {
                  */
                 parameterReference: ModelWithString;
             };
-            res: Array<ModelWithString>;
+            res: {
+                200: Array<ModelWithString>;
+            };
         };
     };
     '/api/v{api-version}/complex/{id}': {
@@ -1283,7 +1254,9 @@ export type $OpenApiTs = {
                     };
                 };
             };
-            res: ModelWithString;
+            res: {
+                200: ModelWithString;
+            };
         };
     };
     '/api/v{api-version}/multipart': {
@@ -1294,21 +1267,24 @@ export type $OpenApiTs = {
                     data?: ModelWithString | null;
                 };
             };
-            res: void;
         };
         get: {
             res: {
-                file?: Blob | File;
-                metadata?: {
-                    foo?: string;
-                    bar?: string;
+                200: {
+                    file?: Blob | File;
+                    metadata?: {
+                        foo?: string;
+                        bar?: string;
+                    };
                 };
             };
         };
     };
     '/api/v{api-version}/header': {
         post: {
-            res: string;
+            res: {
+                200: string;
+            };
         };
     };
     '/api/v{api-version}/error': {
@@ -1319,7 +1295,9 @@ export type $OpenApiTs = {
                  */
                 status: number;
             };
-            res: any;
+            res: {
+                200: any;
+            };
         };
     };
     '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串': {
@@ -1330,7 +1308,9 @@ export type $OpenApiTs = {
                  */
                 nonAsciiParamæøåÆøÅöôêÊ: number;
             };
-            res: Array<NonAsciiStringæøåÆØÅöôêÊ字符串>;
+            res: {
+                200: Array<NonAsciiStringæøåÆØÅöôêÊ字符串>;
+            };
         };
     };
 };

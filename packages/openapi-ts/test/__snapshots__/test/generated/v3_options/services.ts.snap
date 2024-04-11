@@ -9,7 +9,7 @@ export class DefaultsService {
      */
     public static callWithDefaultParameters(
         data: $OpenApiTs['/api/v{api-version}/defaults']['get']['req'] = {}
-    ): CancelablePromise<$OpenApiTs['/api/v{api-version}/defaults']['get']['res']> {
+    ): CancelablePromise<void> {
         const { parameterString, parameterNumber, parameterBoolean, parameterEnum, parameterModel } = data;
         return __request(OpenAPI, {
             method: 'GET',
@@ -29,7 +29,7 @@ export class DefaultsService {
      */
     public static callWithDefaultOptionalParameters(
         data: $OpenApiTs['/api/v{api-version}/defaults']['post']['req'] = {}
-    ): CancelablePromise<$OpenApiTs['/api/v{api-version}/defaults']['post']['res']> {
+    ): CancelablePromise<void> {
         const { parameterString, parameterNumber, parameterBoolean, parameterEnum, parameterModel } = data;
         return __request(OpenAPI, {
             method: 'POST',
@@ -49,7 +49,7 @@ export class DefaultsService {
      */
     public static callToTestOrderOfParams(
         data: $OpenApiTs['/api/v{api-version}/defaults']['put']['req']
-    ): CancelablePromise<$OpenApiTs['/api/v{api-version}/defaults']['put']['res']> {
+    ): CancelablePromise<void> {
         const {
             parameterStringWithNoDefault,
             parameterOptionalStringWithDefault,

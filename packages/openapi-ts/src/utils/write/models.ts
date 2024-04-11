@@ -79,9 +79,8 @@ const processModel = (client: Client, model: Model) => {
 };
 
 const processServiceTypes = (services: Service[]) => {
-    type ReqMap = Map<number, OperationParameter[]>;
-    type Base = string;
-    type MethodMap = Map<'req' | 'res', Base | ReqMap | OperationParameter[]>;
+    type ResMap = Map<number, string>;
+    type MethodMap = Map<'req' | 'res', ResMap | OperationParameter[]>;
     type MethodKey = Service['operations'][number]['method'];
     type PathMap = Map<MethodKey, MethodMap>;
 
@@ -89,104 +88,80 @@ const processServiceTypes = (services: Service[]) => {
 
     services.forEach(service => {
         service.operations.forEach(operation => {
-            let pathMap = pathsMap.get(operation.path);
-            if (!pathMap) {
-                pathsMap.set(operation.path, new Map());
-                pathMap = pathsMap.get(operation.path)!;
+            const hasReq = operation.parameters.length;
+            const hasRes = operation.results.length;
+
+            if (hasReq || hasRes) {
+                let pathMap = pathsMap.get(operation.path);
+                if (!pathMap) {
+                    pathsMap.set(operation.path, new Map());
+                    pathMap = pathsMap.get(operation.path)!;
+                }
+
+                let methodMap = pathMap.get(operation.method);
+                if (!methodMap) {
+                    pathMap.set(operation.method, new Map());
+                    methodMap = pathMap.get(operation.method)!;
+                }
+
+                if (hasReq) {
+                    methodMap.set('req', sortByName([...operation.parameters]));
+                }
+
+                if (hasRes) {
+                    let resMap = methodMap.get('res');
+                    if (!resMap) {
+                        methodMap.set('res', new Map());
+                        resMap = methodMap.get('res')!;
+                    }
+
+                    if (Array.isArray(resMap)) {
+                        return;
+                    }
+
+                    operation.results.forEach(result => {
+                        resMap.set(result.code, toType(result)!);
+                    });
+                }
             }
-
-            let methodMap = pathMap.get(operation.method);
-            if (!methodMap) {
-                pathMap.set(operation.method, new Map());
-                methodMap = pathMap.get(operation.method)!;
-            }
-
-            if (operation.parameters.length) {
-                methodMap.set('req', operation.parameters);
-            }
-
-            // operation.results.forEach(result => {
-            //     let reqMap = methodMap.get('req');
-            //     if (!reqMap) {
-            //         methodMap.set('req', new Map());
-            //         reqMap = methodMap.get('req')!;
-            //     }
-
-            //     if (typeof reqMap === 'string') {
-            //         return;
-            //     }
-
-            //     reqMap.set(
-            //         // result.code,
-            //         200,
-            //         operation.parameters,
-            //     );
-            // })
-
-            methodMap.set(
-                'res',
-                !operation.results.length ? 'void' : operation.results.map(result => toType(result)).join(' | ')
-            );
         });
     });
 
     const properties = Array.from(pathsMap).map(([path, pathMap]) => {
         const pathParameters = Array.from(pathMap).map(([method, methodMap]) => {
-            const methodParameters = Array.from(methodMap).map(([name, baseOrReqMap]) => {
-                if (typeof baseOrReqMap !== 'string') {
-                    const reqParameters = Array.isArray(baseOrReqMap)
-                        ? baseOrReqMap
-                        : Array.from(baseOrReqMap).map(([code, operationParameters]) => {
-                              const value: Model = {
-                                  $refs: [],
-                                  base: '',
-                                  description: null,
-                                  enum: [],
-                                  enums: [],
-                                  export: 'interface',
-                                  imports: [],
-                                  isDefinition: false,
-                                  isNullable: false,
-                                  isReadOnly: false,
-                                  isRequired: true,
-                                  link: null,
-                                  name: String(code),
-                                  // TODO: move query params into separate query key
-                                  properties: sortByName([...operationParameters]),
-                                  template: null,
-                                  type: '',
-                              };
-                              return value;
-                          });
+            const methodParameters = Array.from(methodMap).map(([name, baseOrResMap]) => {
+                const reqResParameters = Array.isArray(baseOrResMap)
+                    ? baseOrResMap
+                    : Array.from(baseOrResMap).map(([code, base]) => {
+                          const value: Model = {
+                              $refs: [],
+                              base,
+                              description: null,
+                              enum: [],
+                              enums: [],
+                              export: 'generic',
+                              imports: [],
+                              isDefinition: false,
+                              isNullable: false,
+                              isReadOnly: false,
+                              isRequired: true,
+                              link: null,
+                              name: String(code),
+                              // TODO: move query params into separate query key
+                              properties: [],
+                              template: null,
+                              type: '',
+                          };
+                          return value;
+                      });
 
-                    const reqKey: Model = {
-                        $refs: [],
-                        base: '',
-                        description: null,
-                        enum: [],
-                        enums: [],
-                        export: 'interface',
-                        imports: [],
-                        isDefinition: false,
-                        isNullable: false,
-                        isReadOnly: false,
-                        isRequired: true,
-                        link: null,
-                        name,
-                        properties: reqParameters,
-                        template: null,
-                        type: '',
-                    };
-                    return reqKey;
-                }
-
-                const value: Model = {
+                const reqResKey: Model = {
                     $refs: [],
-                    base: baseOrReqMap,
+                    base: '',
                     description: null,
                     enum: [],
                     enums: [],
-                    export: 'generic',
+                    export: 'interface',
                     imports: [],
                     isDefinition: false,
                     isNullable: false,
@@ -194,11 +169,11 @@ const processServiceTypes = (services: Service[]) => {
                     isRequired: true,
                     link: null,
                     name,
-                    properties: [],
+                    properties: reqResParameters,
                     template: null,
                     type: '',
                 };
-                return value;
+                return reqResKey;
             });
             const methodKey: Model = {
                 $refs: [],
