@@ -1,29 +1,29 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import type { BaseHttpRequest } from './core/BaseHttpRequest';
 import type {
-    DefaultData,
-    SimpleData,
-    ParametersData,
-    DescriptionsData,
-    DeprecatedData,
-    RequestBodyData,
-    FormDataData,
-    DefaultsData,
-    DuplicateData,
-    NoContentData,
-    ResponseData,
-    MultipleTags1Data,
-    MultipleTags2Data,
-    MultipleTags3Data,
-    CollectionFormatData,
-    TypesData,
-    UploadData,
-    FileResponseData,
-    ComplexData,
-    MultipartData,
-    HeaderData,
-    ErrorData,
-    NonAsciiÆøåÆøÅöôêÊData,
+    $OpenApiTsDefault,
+    $OpenApiTsSimple,
+    $OpenApiTsParameters,
+    $OpenApiTsDescriptions,
+    $OpenApiTsDeprecated,
+    $OpenApiTsRequestBody,
+    $OpenApiTsFormData,
+    $OpenApiTsDefaults,
+    $OpenApiTsDuplicate,
+    $OpenApiTsNoContent,
+    $OpenApiTsResponse,
+    $OpenApiTsMultipleTags1,
+    $OpenApiTsMultipleTags2,
+    $OpenApiTsMultipleTags3,
+    $OpenApiTsCollectionFormat,
+    $OpenApiTsTypes,
+    $OpenApiTsUpload,
+    $OpenApiTsFileResponse,
+    $OpenApiTsComplex,
+    $OpenApiTsMultipart,
+    $OpenApiTsHeader,
+    $OpenApiTsError,
+    $OpenApiTsNonAsciiÆøåÆøÅöôêÊ,
 } from './models';
 
 export class DefaultService {
@@ -32,7 +32,7 @@ export class DefaultService {
     /**
      * @throws ApiError
      */
-    public serviceWithEmptyTag(): CancelablePromise<DefaultData['responses']['ServiceWithEmptyTag']> {
+    public serviceWithEmptyTag(): CancelablePromise<$OpenApiTsDefault['res']['ServiceWithEmptyTag']> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/no-tag',
@@ -44,8 +44,8 @@ export class DefaultService {
      * @throws ApiError
      */
     public postServiceWithEmptyTag(
-        data: DefaultData['payloads']['PostServiceWithEmptyTag']
-    ): CancelablePromise<DefaultData['responses']['PostServiceWithEmptyTag']> {
+        data: $OpenApiTsDefault['req']['PostServiceWithEmptyTag']
+    ): CancelablePromise<$OpenApiTsDefault['res']['PostServiceWithEmptyTag']> {
         const { requestBody } = data;
         return this.httpRequest.request({
             method: 'POST',
@@ -64,7 +64,7 @@ export class SimpleService {
      * @throws ApiError
      */
     public apiVVersionOdataControllerCount(): CancelablePromise<
-        SimpleData['responses']['ApiVversionOdataControllerCount']
+        $OpenApiTsSimple['res']['ApiVversionOdataControllerCount']
     > {
         return this.httpRequest.request({
             method: 'GET',
@@ -76,7 +76,7 @@ export class SimpleService {
      * @throws ApiError
      */
     public getCallWithoutParametersAndResponse(): CancelablePromise<
-        SimpleData['responses']['GetCallWithoutParametersAndResponse']
+        $OpenApiTsSimple['res']['GetCallWithoutParametersAndResponse']
     > {
         return this.httpRequest.request({
             method: 'GET',
@@ -88,7 +88,7 @@ export class SimpleService {
      * @throws ApiError
      */
     public putCallWithoutParametersAndResponse(): CancelablePromise<
-        SimpleData['responses']['PutCallWithoutParametersAndResponse']
+        $OpenApiTsSimple['res']['PutCallWithoutParametersAndResponse']
     > {
         return this.httpRequest.request({
             method: 'PUT',
@@ -100,7 +100,7 @@ export class SimpleService {
      * @throws ApiError
      */
     public postCallWithoutParametersAndResponse(): CancelablePromise<
-        SimpleData['responses']['PostCallWithoutParametersAndResponse']
+        $OpenApiTsSimple['res']['PostCallWithoutParametersAndResponse']
     > {
         return this.httpRequest.request({
             method: 'POST',
@@ -112,7 +112,7 @@ export class SimpleService {
      * @throws ApiError
      */
     public deleteCallWithoutParametersAndResponse(): CancelablePromise<
-        SimpleData['responses']['DeleteCallWithoutParametersAndResponse']
+        $OpenApiTsSimple['res']['DeleteCallWithoutParametersAndResponse']
     > {
         return this.httpRequest.request({
             method: 'DELETE',
@@ -124,7 +124,7 @@ export class SimpleService {
      * @throws ApiError
      */
     public optionsCallWithoutParametersAndResponse(): CancelablePromise<
-        SimpleData['responses']['OptionsCallWithoutParametersAndResponse']
+        $OpenApiTsSimple['res']['OptionsCallWithoutParametersAndResponse']
     > {
         return this.httpRequest.request({
             method: 'OPTIONS',
@@ -136,7 +136,7 @@ export class SimpleService {
      * @throws ApiError
      */
     public headCallWithoutParametersAndResponse(): CancelablePromise<
-        SimpleData['responses']['HeadCallWithoutParametersAndResponse']
+        $OpenApiTsSimple['res']['HeadCallWithoutParametersAndResponse']
     > {
         return this.httpRequest.request({
             method: 'HEAD',
@@ -148,7 +148,7 @@ export class SimpleService {
      * @throws ApiError
      */
     public patchCallWithoutParametersAndResponse(): CancelablePromise<
-        SimpleData['responses']['PatchCallWithoutParametersAndResponse']
+        $OpenApiTsSimple['res']['PatchCallWithoutParametersAndResponse']
     > {
         return this.httpRequest.request({
             method: 'PATCH',
@@ -164,8 +164,8 @@ export class ParametersService {
      * @throws ApiError
      */
     public deleteFoo(
-        data: ParametersData['payloads']['DeleteFoo']
-    ): CancelablePromise<ParametersData['responses']['DeleteFoo']> {
+        data: $OpenApiTsParameters['req']['DeleteFoo']
+    ): CancelablePromise<$OpenApiTsParameters['res']['DeleteFoo']> {
         const { foo, bar } = data;
         return this.httpRequest.request({
             method: 'DELETE',
@@ -181,8 +181,8 @@ export class ParametersService {
      * @throws ApiError
      */
     public callWithParameters(
-        data: ParametersData['payloads']['CallWithParameters']
-    ): CancelablePromise<ParametersData['responses']['CallWithParameters']> {
+        data: $OpenApiTsParameters['req']['CallWithParameters']
+    ): CancelablePromise<$OpenApiTsParameters['res']['CallWithParameters']> {
         const {
             parameterHeader,
             fooAllOfEnum,
@@ -222,8 +222,8 @@ export class ParametersService {
      * @throws ApiError
      */
     public callWithWeirdParameterNames(
-        data: ParametersData['payloads']['CallWithWeirdParameterNames']
-    ): CancelablePromise<ParametersData['responses']['CallWithWeirdParameterNames']> {
+        data: $OpenApiTsParameters['req']['CallWithWeirdParameterNames']
+    ): CancelablePromise<$OpenApiTsParameters['res']['CallWithWeirdParameterNames']> {
         const {
             parameterHeader,
             parameterQuery,
@@ -265,8 +265,8 @@ export class ParametersService {
      * @throws ApiError
      */
     public getCallWithOptionalParam(
-        data: ParametersData['payloads']['GetCallWithOptionalParam']
-    ): CancelablePromise<ParametersData['responses']['GetCallWithOptionalParam']> {
+        data: $OpenApiTsParameters['req']['GetCallWithOptionalParam']
+    ): CancelablePromise<$OpenApiTsParameters['res']['GetCallWithOptionalParam']> {
         const { requestBody, parameter } = data;
         return this.httpRequest.request({
             method: 'GET',
@@ -283,8 +283,8 @@ export class ParametersService {
      * @throws ApiError
      */
     public postCallWithOptionalParam(
-        data: ParametersData['payloads']['PostCallWithOptionalParam']
-    ): CancelablePromise<ParametersData['responses']['PostCallWithOptionalParam']> {
+        data: $OpenApiTsParameters['req']['PostCallWithOptionalParam']
+    ): CancelablePromise<$OpenApiTsParameters['res']['PostCallWithOptionalParam']> {
         const { parameter, requestBody } = data;
         return this.httpRequest.request({
             method: 'POST',
@@ -305,8 +305,8 @@ export class DescriptionsService {
      * @throws ApiError
      */
     public callWithDescriptions(
-        data: DescriptionsData['payloads']['CallWithDescriptions'] = {}
-    ): CancelablePromise<DescriptionsData['responses']['CallWithDescriptions']> {
+        data: $OpenApiTsDescriptions['req']['CallWithDescriptions'] = {}
+    ): CancelablePromise<$OpenApiTsDescriptions['res']['CallWithDescriptions']> {
         const {
             parameterWithBreaks,
             parameterWithBackticks,
@@ -338,8 +338,8 @@ export class DeprecatedService {
      * @throws ApiError
      */
     public deprecatedCall(
-        data: DeprecatedData['payloads']['DeprecatedCall']
-    ): CancelablePromise<DeprecatedData['responses']['DeprecatedCall']> {
+        data: $OpenApiTsDeprecated['req']['DeprecatedCall']
+    ): CancelablePromise<$OpenApiTsDeprecated['res']['DeprecatedCall']> {
         const { parameter } = data;
         return this.httpRequest.request({
             method: 'POST',
@@ -358,8 +358,8 @@ export class RequestBodyService {
      * @throws ApiError
      */
     public postApiRequestBody(
-        data: RequestBodyData['payloads']['PostApiRequestBody'] = {}
-    ): CancelablePromise<RequestBodyData['responses']['PostApiRequestBody']> {
+        data: $OpenApiTsRequestBody['req']['PostApiRequestBody'] = {}
+    ): CancelablePromise<$OpenApiTsRequestBody['res']['PostApiRequestBody']> {
         const { parameter, foo } = data;
         return this.httpRequest.request({
             method: 'POST',
@@ -380,8 +380,8 @@ export class FormDataService {
      * @throws ApiError
      */
     public postApiFormData(
-        data: FormDataData['payloads']['PostApiFormData'] = {}
-    ): CancelablePromise<FormDataData['responses']['PostApiFormData']> {
+        data: $OpenApiTsFormData['req']['PostApiFormData'] = {}
+    ): CancelablePromise<$OpenApiTsFormData['res']['PostApiFormData']> {
         const { parameter, formData } = data;
         return this.httpRequest.request({
             method: 'POST',
@@ -402,8 +402,8 @@ export class DefaultsService {
      * @throws ApiError
      */
     public callWithDefaultParameters(
-        data: DefaultsData['payloads']['CallWithDefaultParameters'] = {}
-    ): CancelablePromise<DefaultsData['responses']['CallWithDefaultParameters']> {
+        data: $OpenApiTsDefaults['req']['CallWithDefaultParameters'] = {}
+    ): CancelablePromise<$OpenApiTsDefaults['res']['CallWithDefaultParameters']> {
         const { parameterString, parameterNumber, parameterBoolean, parameterEnum, parameterModel } = data;
         return this.httpRequest.request({
             method: 'GET',
@@ -422,8 +422,8 @@ export class DefaultsService {
      * @throws ApiError
      */
     public callWithDefaultOptionalParameters(
-        data: DefaultsData['payloads']['CallWithDefaultOptionalParameters'] = {}
-    ): CancelablePromise<DefaultsData['responses']['CallWithDefaultOptionalParameters']> {
+        data: $OpenApiTsDefaults['req']['CallWithDefaultOptionalParameters'] = {}
+    ): CancelablePromise<$OpenApiTsDefaults['res']['CallWithDefaultOptionalParameters']> {
         const { parameterString, parameterNumber, parameterBoolean, parameterEnum, parameterModel } = data;
         return this.httpRequest.request({
             method: 'POST',
@@ -442,8 +442,8 @@ export class DefaultsService {
      * @throws ApiError
      */
     public callToTestOrderOfParams(
-        data: DefaultsData['payloads']['CallToTestOrderOfParams']
-    ): CancelablePromise<DefaultsData['responses']['CallToTestOrderOfParams']> {
+        data: $OpenApiTsDefaults['req']['CallToTestOrderOfParams']
+    ): CancelablePromise<$OpenApiTsDefaults['res']['CallToTestOrderOfParams']> {
         const {
             parameterStringWithNoDefault,
             parameterOptionalStringWithDefault,
@@ -477,7 +477,7 @@ export class DuplicateService {
     /**
      * @throws ApiError
      */
-    public duplicateName(): CancelablePromise<DuplicateData['responses']['DuplicateName']> {
+    public duplicateName(): CancelablePromise<$OpenApiTsDuplicate['res']['DuplicateName']> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/duplicate',
@@ -487,7 +487,7 @@ export class DuplicateService {
     /**
      * @throws ApiError
      */
-    public duplicateName1(): CancelablePromise<DuplicateData['responses']['DuplicateName1']> {
+    public duplicateName1(): CancelablePromise<$OpenApiTsDuplicate['res']['DuplicateName1']> {
         return this.httpRequest.request({
             method: 'POST',
             url: '/api/v{api-version}/duplicate',
@@ -497,7 +497,7 @@ export class DuplicateService {
     /**
      * @throws ApiError
      */
-    public duplicateName2(): CancelablePromise<DuplicateData['responses']['DuplicateName2']> {
+    public duplicateName2(): CancelablePromise<$OpenApiTsDuplicate['res']['DuplicateName2']> {
         return this.httpRequest.request({
             method: 'PUT',
             url: '/api/v{api-version}/duplicate',
@@ -507,7 +507,7 @@ export class DuplicateService {
     /**
      * @throws ApiError
      */
-    public duplicateName3(): CancelablePromise<DuplicateData['responses']['DuplicateName3']> {
+    public duplicateName3(): CancelablePromise<$OpenApiTsDuplicate['res']['DuplicateName3']> {
         return this.httpRequest.request({
             method: 'DELETE',
             url: '/api/v{api-version}/duplicate',
@@ -522,7 +522,7 @@ export class NoContentService {
      * @returns void Success
      * @throws ApiError
      */
-    public callWithNoContentResponse(): CancelablePromise<NoContentData['responses']['CallWithNoContentResponse']> {
+    public callWithNoContentResponse(): CancelablePromise<$OpenApiTsNoContent['res']['CallWithNoContentResponse']> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/no-content',
@@ -535,7 +535,7 @@ export class NoContentService {
      * @throws ApiError
      */
     public callWithResponseAndNoContentResponse(): CancelablePromise<
-        NoContentData['responses']['CallWithResponseAndNoContentResponse']
+        $OpenApiTsNoContent['res']['CallWithResponseAndNoContentResponse']
     > {
         return this.httpRequest.request({
             method: 'GET',
@@ -553,7 +553,7 @@ export class ResponseService {
      * @throws ApiError
      */
     public callWithResponseAndNoContentResponse(): CancelablePromise<
-        ResponseData['responses']['CallWithResponseAndNoContentResponse']
+        $OpenApiTsResponse['res']['CallWithResponseAndNoContentResponse']
     > {
         return this.httpRequest.request({
             method: 'GET',
@@ -565,7 +565,7 @@ export class ResponseService {
      * @returns ModelWithString
      * @throws ApiError
      */
-    public callWithResponse(): CancelablePromise<ResponseData['responses']['CallWithResponse']> {
+    public callWithResponse(): CancelablePromise<$OpenApiTsResponse['res']['CallWithResponse']> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/response',
@@ -576,7 +576,7 @@ export class ResponseService {
      * @returns ModelWithString Message for default response
      * @throws ApiError
      */
-    public callWithDuplicateResponses(): CancelablePromise<ResponseData['responses']['CallWithDuplicateResponses']> {
+    public callWithDuplicateResponses(): CancelablePromise<$OpenApiTsResponse['res']['CallWithDuplicateResponses']> {
         return this.httpRequest.request({
             method: 'POST',
             url: '/api/v{api-version}/response',
@@ -595,7 +595,7 @@ export class ResponseService {
      * @returns ModelThatExtendsExtends Message for 202 response
      * @throws ApiError
      */
-    public callWithResponses(): CancelablePromise<ResponseData['responses']['CallWithResponses']> {
+    public callWithResponses(): CancelablePromise<$OpenApiTsResponse['res']['CallWithResponses']> {
         return this.httpRequest.request({
             method: 'PUT',
             url: '/api/v{api-version}/response',
@@ -615,7 +615,7 @@ export class MultipleTags1Service {
      * @returns void Success
      * @throws ApiError
      */
-    public dummyA(): CancelablePromise<MultipleTags1Data['responses']['DummyA']> {
+    public dummyA(): CancelablePromise<$OpenApiTsMultipleTags1['res']['DummyA']> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/a',
@@ -626,7 +626,7 @@ export class MultipleTags1Service {
      * @returns void Success
      * @throws ApiError
      */
-    public dummyB(): CancelablePromise<MultipleTags1Data['responses']['DummyB']> {
+    public dummyB(): CancelablePromise<$OpenApiTsMultipleTags1['res']['DummyB']> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/b',
@@ -641,7 +641,7 @@ export class MultipleTags2Service {
      * @returns void Success
      * @throws ApiError
      */
-    public dummyA(): CancelablePromise<MultipleTags2Data['responses']['DummyA']> {
+    public dummyA(): CancelablePromise<$OpenApiTsMultipleTags2['res']['DummyA']> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/a',
@@ -652,7 +652,7 @@ export class MultipleTags2Service {
      * @returns void Success
      * @throws ApiError
      */
-    public dummyB(): CancelablePromise<MultipleTags2Data['responses']['DummyB']> {
+    public dummyB(): CancelablePromise<$OpenApiTsMultipleTags2['res']['DummyB']> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/b',
@@ -667,7 +667,7 @@ export class MultipleTags3Service {
      * @returns void Success
      * @throws ApiError
      */
-    public dummyB(): CancelablePromise<MultipleTags3Data['responses']['DummyB']> {
+    public dummyB(): CancelablePromise<$OpenApiTsMultipleTags3['res']['DummyB']> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/b',
@@ -682,8 +682,8 @@ export class CollectionFormatService {
      * @throws ApiError
      */
     public collectionFormat(
-        data: CollectionFormatData['payloads']['CollectionFormat']
-    ): CancelablePromise<CollectionFormatData['responses']['CollectionFormat']> {
+        data: $OpenApiTsCollectionFormat['req']['CollectionFormat']
+    ): CancelablePromise<$OpenApiTsCollectionFormat['res']['CollectionFormat']> {
         const { parameterArrayCsv, parameterArraySsv, parameterArrayTsv, parameterArrayPipes, parameterArrayMulti } =
             data;
         return this.httpRequest.request({
@@ -710,7 +710,7 @@ export class TypesService {
      * @returns unknown Response is a simple object
      * @throws ApiError
      */
-    public types(data: TypesData['payloads']['Types']): CancelablePromise<TypesData['responses']['Types']> {
+    public types(data: $OpenApiTsTypes['req']['Types']): CancelablePromise<$OpenApiTsTypes['res']['Types']> {
         const {
             parameterArray,
             parameterDictionary,
@@ -748,8 +748,8 @@ export class UploadService {
      * @throws ApiError
      */
     public uploadFile(
-        data: UploadData['payloads']['UploadFile']
-    ): CancelablePromise<UploadData['responses']['UploadFile']> {
+        data: $OpenApiTsUpload['req']['UploadFile']
+    ): CancelablePromise<$OpenApiTsUpload['res']['UploadFile']> {
         const { file } = data;
         return this.httpRequest.request({
             method: 'POST',
@@ -769,8 +769,8 @@ export class FileResponseService {
      * @throws ApiError
      */
     public fileResponse(
-        data: FileResponseData['payloads']['FileResponse']
-    ): CancelablePromise<FileResponseData['responses']['FileResponse']> {
+        data: $OpenApiTsFileResponse['req']['FileResponse']
+    ): CancelablePromise<$OpenApiTsFileResponse['res']['FileResponse']> {
         const { id } = data;
         return this.httpRequest.request({
             method: 'GET',
@@ -790,8 +790,8 @@ export class ComplexService {
      * @throws ApiError
      */
     public complexTypes(
-        data: ComplexData['payloads']['ComplexTypes']
-    ): CancelablePromise<ComplexData['responses']['ComplexTypes']> {
+        data: $OpenApiTsComplex['req']['ComplexTypes']
+    ): CancelablePromise<$OpenApiTsComplex['res']['ComplexTypes']> {
         const { parameterObject, parameterReference } = data;
         return this.httpRequest.request({
             method: 'GET',
@@ -812,8 +812,8 @@ export class ComplexService {
      * @throws ApiError
      */
     public complexParams(
-        data: ComplexData['payloads']['ComplexParams']
-    ): CancelablePromise<ComplexData['responses']['ComplexParams']> {
+        data: $OpenApiTsComplex['req']['ComplexParams']
+    ): CancelablePromise<$OpenApiTsComplex['res']['ComplexParams']> {
         const { id, requestBody } = data;
         return this.httpRequest.request({
             method: 'PUT',
@@ -834,8 +834,8 @@ export class MultipartService {
      * @throws ApiError
      */
     public multipartRequest(
-        data: MultipartData['payloads']['MultipartRequest'] = {}
-    ): CancelablePromise<MultipartData['responses']['MultipartRequest']> {
+        data: $OpenApiTsMultipart['req']['MultipartRequest'] = {}
+    ): CancelablePromise<$OpenApiTsMultipart['res']['MultipartRequest']> {
         const { formData } = data;
         return this.httpRequest.request({
             method: 'POST',
@@ -849,7 +849,7 @@ export class MultipartService {
      * @returns any OK
      * @throws ApiError
      */
-    public multipartResponse(): CancelablePromise<MultipartData['responses']['MultipartResponse']> {
+    public multipartResponse(): CancelablePromise<$OpenApiTsMultipart['res']['MultipartResponse']> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/multipart',
@@ -864,7 +864,7 @@ export class HeaderService {
      * @returns string Successful response
      * @throws ApiError
      */
-    public callWithResultFromHeader(): CancelablePromise<HeaderData['responses']['CallWithResultFromHeader']> {
+    public callWithResultFromHeader(): CancelablePromise<$OpenApiTsHeader['res']['CallWithResultFromHeader']> {
         return this.httpRequest.request({
             method: 'POST',
             url: '/api/v{api-version}/header',
@@ -885,8 +885,8 @@ export class ErrorService {
      * @throws ApiError
      */
     public testErrorCode(
-        data: ErrorData['payloads']['TestErrorCode']
-    ): CancelablePromise<ErrorData['responses']['TestErrorCode']> {
+        data: $OpenApiTsError['req']['TestErrorCode']
+    ): CancelablePromise<$OpenApiTsError['res']['TestErrorCode']> {
         const { status } = data;
         return this.httpRequest.request({
             method: 'POST',
@@ -912,8 +912,8 @@ export class NonAsciiÆøåÆøÅöôêÊService {
      * @throws ApiError
      */
     public nonAsciiæøåÆøÅöôêÊ字符串(
-        data: NonAsciiÆøåÆøÅöôêÊData['payloads']['NonAsciiæøåÆøÅöôêÊ字符串']
-    ): CancelablePromise<NonAsciiÆøåÆøÅöôêÊData['responses']['NonAsciiæøåÆøÅöôêÊ字符串']> {
+        data: $OpenApiTsNonAsciiÆøåÆøÅöôêÊ['req']['NonAsciiæøåÆøÅöôêÊ字符串']
+    ): CancelablePromise<$OpenApiTsNonAsciiÆøåÆøÅöôêÊ['res']['NonAsciiæøåÆøÅöôêÊ字符串']> {
         const { nonAsciiParamæøåÆøÅöôêÊ } = data;
         return this.httpRequest.request({
             method: 'POST',

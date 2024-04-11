@@ -425,13 +425,13 @@ export type ModelWithPattern = {
     patternWithBacktick?: string;
 };
 
-export type DefaultData = {
+export type $OpenApiTsDefault = {
     res: {
         ServiceWithEmptyTag: void;
     };
 };
 
-export type SimpleData = {
+export type $OpenApiTsSimple = {
     res: {
         GetCallWithoutParametersAndResponse: void;
         PutCallWithoutParametersAndResponse: void;
@@ -443,7 +443,7 @@ export type SimpleData = {
     };
 };
 
-export type DescriptionsData = {
+export type $OpenApiTsDescriptions = {
     req: {
         CallWithDescriptions: {
             /**
@@ -480,7 +480,7 @@ export type DescriptionsData = {
     };
 };
 
-export type ParametersData = {
+export type $OpenApiTsParameters = {
     req: {
         CallWithParameters: {
             /**
@@ -545,7 +545,7 @@ export type ParametersData = {
     };
 };
 
-export type DefaultsData = {
+export type $OpenApiTsDefaults = {
     req: {
         CallWithDefaultParameters: {
             /**
@@ -633,7 +633,7 @@ export type DefaultsData = {
     };
 };
 
-export type DuplicateData = {
+export type $OpenApiTsDuplicate = {
     res: {
         DuplicateName: void;
         DuplicateName1: void;
@@ -642,14 +642,14 @@ export type DuplicateData = {
     };
 };
 
-export type NoContentData = {
+export type $OpenApiTsNoContent = {
     res: {
         CallWithNoContentResponse: void;
         CallWithResponseAndNoContentResponse: any | void;
     };
 };
 
-export type ResponseData = {
+export type $OpenApiTsResponse = {
     res: {
         CallWithResponseAndNoContentResponse: any | void;
         CallWithResponse: ModelWithString;
@@ -666,27 +666,27 @@ export type ResponseData = {
     };
 };
 
-export type MultipleTags1Data = {
+export type $OpenApiTsMultipleTags1 = {
     res: {
         DummyA: void;
         DummyB: void;
     };
 };
 
-export type MultipleTags2Data = {
+export type $OpenApiTsMultipleTags2 = {
     res: {
         DummyA: void;
         DummyB: void;
     };
 };
 
-export type MultipleTags3Data = {
+export type $OpenApiTsMultipleTags3 = {
     res: {
         DummyB: void;
     };
 };
 
-export type CollectionFormatData = {
+export type $OpenApiTsCollectionFormat = {
     req: {
         CollectionFormat: {
             /**
@@ -716,7 +716,7 @@ export type CollectionFormatData = {
     };
 };
 
-export type TypesData = {
+export type $OpenApiTsTypes = {
     req: {
         Types: {
             /**
@@ -758,7 +758,7 @@ export type TypesData = {
     };
 };
 
-export type ComplexData = {
+export type $OpenApiTsComplex = {
     req: {
         ComplexTypes: {
             /**
@@ -782,13 +782,13 @@ export type ComplexData = {
     };
 };
 
-export type HeaderData = {
+export type $OpenApiTsHeader = {
     res: {
         CallWithResultFromHeader: string;
     };
 };
 
-export type ErrorData = {
+export type $OpenApiTsError = {
     req: {
         TestErrorCode: {
             /**
@@ -802,7 +802,7 @@ export type ErrorData = {
     };
 };
 
-export type NonAsciiÆøåÆøÅöôêÊData = {
+export type $OpenApiTsNonAsciiÆøåÆøÅöôêÊ = {
     req: {
         NonAsciiæøåÆøÅöôêÊ字符串: {
             /**

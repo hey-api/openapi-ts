@@ -1,7 +1,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { DefaultsData } from './models';
+import type { $OpenApiTsDefaults } from './models';
 
 export class DefaultsService {
     /**
@@ -13,14 +13,14 @@ export class DefaultsService {
      * @throws ApiError
      */
     public static callWithDefaultParameters(
-        parameterString: DefaultsData['payloads']['CallWithDefaultParameters']['parameterString'] = 'Hello World!',
-        parameterNumber: DefaultsData['payloads']['CallWithDefaultParameters']['parameterNumber'] = 123,
-        parameterBoolean: DefaultsData['payloads']['CallWithDefaultParameters']['parameterBoolean'] = true,
-        parameterEnum: DefaultsData['payloads']['CallWithDefaultParameters']['parameterEnum'] = 'Success',
-        parameterModel: DefaultsData['payloads']['CallWithDefaultParameters']['parameterModel'] = {
+        parameterString: $OpenApiTsDefaults['req']['CallWithDefaultParameters']['parameterString'] = 'Hello World!',
+        parameterNumber: $OpenApiTsDefaults['req']['CallWithDefaultParameters']['parameterNumber'] = 123,
+        parameterBoolean: $OpenApiTsDefaults['req']['CallWithDefaultParameters']['parameterBoolean'] = true,
+        parameterEnum: $OpenApiTsDefaults['req']['CallWithDefaultParameters']['parameterEnum'] = 'Success',
+        parameterModel: $OpenApiTsDefaults['req']['CallWithDefaultParameters']['parameterModel'] = {
             prop: 'Hello World!',
         }
-    ): CancelablePromise<DefaultsData['responses']['CallWithDefaultParameters']> {
+    ): CancelablePromise<$OpenApiTsDefaults['res']['CallWithDefaultParameters']> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/defaults',
@@ -43,14 +43,14 @@ export class DefaultsService {
      * @throws ApiError
      */
     public static callWithDefaultOptionalParameters(
-        parameterString: DefaultsData['payloads']['CallWithDefaultOptionalParameters']['parameterString'] = 'Hello World!',
-        parameterNumber: DefaultsData['payloads']['CallWithDefaultOptionalParameters']['parameterNumber'] = 123,
-        parameterBoolean: DefaultsData['payloads']['CallWithDefaultOptionalParameters']['parameterBoolean'] = true,
-        parameterEnum: DefaultsData['payloads']['CallWithDefaultOptionalParameters']['parameterEnum'] = 'Success',
-        parameterModel: DefaultsData['payloads']['CallWithDefaultOptionalParameters']['parameterModel'] = {
+        parameterString: $OpenApiTsDefaults['req']['CallWithDefaultOptionalParameters']['parameterString'] = 'Hello World!',
+        parameterNumber: $OpenApiTsDefaults['req']['CallWithDefaultOptionalParameters']['parameterNumber'] = 123,
+        parameterBoolean: $OpenApiTsDefaults['req']['CallWithDefaultOptionalParameters']['parameterBoolean'] = true,
+        parameterEnum: $OpenApiTsDefaults['req']['CallWithDefaultOptionalParameters']['parameterEnum'] = 'Success',
+        parameterModel: $OpenApiTsDefaults['req']['CallWithDefaultOptionalParameters']['parameterModel'] = {
             prop: 'Hello World!',
         }
-    ): CancelablePromise<DefaultsData['responses']['CallWithDefaultOptionalParameters']> {
+    ): CancelablePromise<$OpenApiTsDefaults['res']['CallWithDefaultOptionalParameters']> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v{api-version}/defaults',
@@ -76,15 +76,15 @@ export class DefaultsService {
      * @throws ApiError
      */
     public static callToTestOrderOfParams(
-        parameterStringWithNoDefault: DefaultsData['payloads']['CallToTestOrderOfParams']['parameterStringWithNoDefault'],
-        parameterOptionalStringWithDefault: DefaultsData['payloads']['CallToTestOrderOfParams']['parameterOptionalStringWithDefault'] = 'Hello World!',
-        parameterOptionalStringWithEmptyDefault: DefaultsData['payloads']['CallToTestOrderOfParams']['parameterOptionalStringWithEmptyDefault'] = '',
-        parameterOptionalStringWithNoDefault?: DefaultsData['payloads']['CallToTestOrderOfParams']['parameterOptionalStringWithNoDefault'],
-        parameterStringWithDefault: DefaultsData['payloads']['CallToTestOrderOfParams']['parameterStringWithDefault'] = 'Hello World!',
-        parameterStringWithEmptyDefault: DefaultsData['payloads']['CallToTestOrderOfParams']['parameterStringWithEmptyDefault'] = '',
-        parameterStringNullableWithNoDefault?: DefaultsData['payloads']['CallToTestOrderOfParams']['parameterStringNullableWithNoDefault'],
-        parameterStringNullableWithDefault: DefaultsData['payloads']['CallToTestOrderOfParams']['parameterStringNullableWithDefault'] = null
-    ): CancelablePromise<DefaultsData['responses']['CallToTestOrderOfParams']> {
+        parameterStringWithNoDefault: $OpenApiTsDefaults['req']['CallToTestOrderOfParams']['parameterStringWithNoDefault'],
+        parameterOptionalStringWithDefault: $OpenApiTsDefaults['req']['CallToTestOrderOfParams']['parameterOptionalStringWithDefault'] = 'Hello World!',
+        parameterOptionalStringWithEmptyDefault: $OpenApiTsDefaults['req']['CallToTestOrderOfParams']['parameterOptionalStringWithEmptyDefault'] = '',
+        parameterOptionalStringWithNoDefault?: $OpenApiTsDefaults['req']['CallToTestOrderOfParams']['parameterOptionalStringWithNoDefault'],
+        parameterStringWithDefault: $OpenApiTsDefaults['req']['CallToTestOrderOfParams']['parameterStringWithDefault'] = 'Hello World!',
+        parameterStringWithEmptyDefault: $OpenApiTsDefaults['req']['CallToTestOrderOfParams']['parameterStringWithEmptyDefault'] = '',
+        parameterStringNullableWithNoDefault?: $OpenApiTsDefaults['req']['CallToTestOrderOfParams']['parameterStringNullableWithNoDefault'],
+        parameterStringNullableWithDefault: $OpenApiTsDefaults['req']['CallToTestOrderOfParams']['parameterStringNullableWithDefault'] = null
+    ): CancelablePromise<$OpenApiTsDefaults['res']['CallToTestOrderOfParams']> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/v{api-version}/defaults',
