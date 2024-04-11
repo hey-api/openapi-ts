@@ -2,7 +2,8 @@ import ts from 'typescript';
 
 import { addLeadingComment, type Comments } from './utils';
 
-export const createTypeNode = (base: any) => ts.factory.createTypeReferenceNode(base as string);
+export const createTypeNode = (base: any | ts.TypeNode) =>
+    ts.isTypeNode(base) ? base : ts.factory.createTypeReferenceNode(base);
 
 /**
  * Create a type alias declaration. Example `export type X = Y;`.
@@ -13,14 +14,14 @@ export const createTypeNode = (base: any) => ts.factory.createTypeReferenceNode(
  */
 export const createTypeAliasDeclaration = (
     name: string,
-    type: string,
+    type: string | ts.TypeNode,
     comments?: Comments
 ): ts.TypeAliasDeclaration => {
     const node = ts.factory.createTypeAliasDeclaration(
         [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
         ts.factory.createIdentifier(name),
         [],
-        ts.factory.createTypeReferenceNode(type)
+        createTypeNode(type)
     );
     if (comments?.length) {
         addLeadingComment(node, comments);
@@ -31,7 +32,7 @@ export const createTypeAliasDeclaration = (
 // Property of a interface type node.
 export type Property = {
     name: string;
-    type: string | undefined;
+    type: any | ts.TypeNode;
     isRequired?: boolean;
     isReadOnly?: boolean;
     comment?: Comments;
@@ -50,7 +51,7 @@ export const createTypeInterfaceNode = (properties: Property[], isNullable: bool
                 property.isReadOnly ? [ts.factory.createModifier(ts.SyntaxKind.ReadonlyKeyword)] : undefined,
                 property.name,
                 property.isRequired ? undefined : ts.factory.createToken(ts.SyntaxKind.QuestionToken),
-                ts.factory.createTypeReferenceNode(property.type ?? 'undefined')
+                createTypeNode(property.type)
             );
             const comment = property.comment;
             if (comment) {
@@ -71,8 +72,8 @@ export const createTypeInterfaceNode = (properties: Property[], isNullable: bool
  * @param isNullable - if the whole type can be null
  * @returns ts.UnionTypeNode
  */
-export const createTypeUnionNode = (types: unknown[], isNullable: boolean = false) => {
-    const nodes = types.map(t => ts.factory.createTypeReferenceNode(t as string));
+export const createTypeUnionNode = (types: (any | ts.TypeNode)[], isNullable: boolean = false) => {
+    const nodes = types.map(t => createTypeNode(t));
     if (isNullable) {
         nodes.push(ts.factory.createTypeReferenceNode('null'));
     }
@@ -85,8 +86,8 @@ export const createTypeUnionNode = (types: unknown[], isNullable: boolean = fals
  * @param isNullable - if the whole type can be null
  * @returns ts.IntersectionTypeNode | ts.UnionTypeNode
  */
-export const createTypeIntersectNode = (types: unknown[], isNullable: boolean = false) => {
-    const nodes = types.map(t => ts.factory.createTypeReferenceNode(t as string));
+export const createTypeIntersectNode = (types: (any | ts.TypeNode)[], isNullable: boolean = false) => {
+    const nodes = types.map(t => createTypeNode(t));
     const intersect = ts.factory.createIntersectionTypeNode(nodes);
     if (isNullable) {
         return ts.factory.createUnionTypeNode([intersect, ts.factory.createTypeReferenceNode('null')]);
@@ -100,8 +101,8 @@ export const createTypeIntersectNode = (types: unknown[], isNullable: boolean = 
  * @param isNullable - if the whole type can be null
  * @returns ts.UnionTypeNode
  */
-export const createTypeTupleNode = (types: unknown[], isNullable: boolean = false) => {
-    const nodes = types.map(t => ts.factory.createTypeReferenceNode(t as string));
+export const createTypeTupleNode = (types: (any | ts.TypeNode)[], isNullable: boolean = false) => {
+    const nodes = types.map(t => createTypeNode(t));
     if (isNullable) {
         nodes.push(ts.factory.createTypeReferenceNode('null'));
     }
@@ -115,7 +116,11 @@ export const createTypeTupleNode = (types: unknown[], isNullable: boolean = fals
  * @param isNullable - if the whole type can be null
  * @returns ts.TypeReferenceNode | ts.UnionTypeNode
  */
-export const createTypeRecordNode = (keys: unknown[], values: unknown[], isNullable: boolean = false) => {
+export const createTypeRecordNode = (
+    keys: (any | ts.TypeNode)[],
+    values: (any | ts.TypeNode)[],
+    isNullable: boolean = false
+) => {
     const keyNode = createTypeUnionNode(keys);
     const valueNode = createTypeUnionNode(values);
     const node = ts.factory.createTypeReferenceNode('Record', [keyNode, valueNode]);
@@ -131,7 +136,7 @@ export const createTypeRecordNode = (keys: unknown[], values: unknown[], isNulla
  * @param isNullable - if the whole type can be null
  * @returns ts.TypeReferenceNode | ts.UnionTypeNode
  */
-export const createTypeArrayNode = (types: unknown[], isNullable: boolean = false) => {
+export const createTypeArrayNode = (types: (any | ts.TypeNode)[], isNullable: boolean = false) => {
     const node = ts.factory.createTypeReferenceNode('Array', [createTypeUnionNode(types)]);
     if (!isNullable) {
         return node;

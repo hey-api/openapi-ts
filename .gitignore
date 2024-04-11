@@ -16,3 +16,6 @@ coverage
 # test files
 test/generated
 test/e2e/generated
+
+# error files
+openapi-ts-error-*
