@@ -426,13 +426,13 @@ export type ModelWithPattern = {
 };
 
 export type DefaultData = {
-    responses: {
+    res: {
         ServiceWithEmptyTag: void;
     };
 };
 
 export type SimpleData = {
-    responses: {
+    res: {
         GetCallWithoutParametersAndResponse: void;
         PutCallWithoutParametersAndResponse: void;
         PostCallWithoutParametersAndResponse: void;
@@ -444,7 +444,7 @@ export type SimpleData = {
 };
 
 export type DescriptionsData = {
-    payloads: {
+    req: {
         CallWithDescriptions: {
             /**
              * Testing backticks in string: `backticks` and ```multiple backticks``` should work
@@ -475,14 +475,13 @@ export type DescriptionsData = {
             parameterWithSlashes?: string;
         };
     };
-
-    responses: {
+    res: {
         CallWithDescriptions: void;
     };
 };
 
 export type ParametersData = {
-    payloads: {
+    req: {
         CallWithParameters: {
             /**
              * This is the parameter that is sent as request body
@@ -540,15 +539,14 @@ export type ParametersData = {
             parameterQuery: string;
         };
     };
-
-    responses: {
+    res: {
         CallWithParameters: void;
         CallWithWeirdParameterNames: void;
     };
 };
 
 export type DefaultsData = {
-    payloads: {
+    req: {
         CallWithDefaultParameters: {
             /**
              * This is a simple boolean with default value
@@ -628,8 +626,7 @@ export type DefaultsData = {
             parameterStringWithNoDefault: string;
         };
     };
-
-    responses: {
+    res: {
         CallWithDefaultParameters: void;
         CallWithDefaultOptionalParameters: void;
         CallToTestOrderOfParams: void;
@@ -637,7 +634,7 @@ export type DefaultsData = {
 };
 
 export type DuplicateData = {
-    responses: {
+    res: {
         DuplicateName: void;
         DuplicateName1: void;
         DuplicateName2: void;
@@ -646,14 +643,14 @@ export type DuplicateData = {
 };
 
 export type NoContentData = {
-    responses: {
+    res: {
         CallWithNoContentResponse: void;
         CallWithResponseAndNoContentResponse: any | void;
     };
 };
 
 export type ResponseData = {
-    responses: {
+    res: {
         CallWithResponseAndNoContentResponse: any | void;
         CallWithResponse: ModelWithString;
         CallWithDuplicateResponses: ModelWithString;
@@ -670,27 +667,27 @@ export type ResponseData = {
 };
 
 export type MultipleTags1Data = {
-    responses: {
+    res: {
         DummyA: void;
         DummyB: void;
     };
 };
 
 export type MultipleTags2Data = {
-    responses: {
+    res: {
         DummyA: void;
         DummyB: void;
     };
 };
 
 export type MultipleTags3Data = {
-    responses: {
+    res: {
         DummyB: void;
     };
 };
 
 export type CollectionFormatData = {
-    payloads: {
+    req: {
         CollectionFormat: {
             /**
              * This is an array parameter that is sent as csv format (comma-separated values)
@@ -714,14 +711,13 @@ export type CollectionFormatData = {
             parameterArrayTsv: Array<string>;
         };
     };
-
-    responses: {
+    res: {
         CollectionFormat: void;
     };
 };
 
 export type TypesData = {
-    payloads: {
+    req: {
         Types: {
             /**
              * This is a number parameter
@@ -757,14 +753,13 @@ export type TypesData = {
             parameterString: string;
         };
     };
-
-    responses: {
+    res: {
         Types: number | string | boolean | unknown;
     };
 };
 
 export type ComplexData = {
-    payloads: {
+    req: {
         ComplexTypes: {
             /**
              * Parameter containing object
@@ -782,20 +777,19 @@ export type ComplexData = {
             parameterReference: ModelWithString;
         };
     };
-
-    responses: {
+    res: {
         ComplexTypes: Array<ModelWithString>;
     };
 };
 
 export type HeaderData = {
-    responses: {
+    res: {
         CallWithResultFromHeader: string;
     };
 };
 
 export type ErrorData = {
-    payloads: {
+    req: {
         TestErrorCode: {
             /**
              * Status code to return
@@ -803,14 +797,13 @@ export type ErrorData = {
             status: string;
         };
     };
-
-    responses: {
+    res: {
         TestErrorCode: any;
     };
 };
 
 export type NonAsciiÆøåÆøÅöôêÊData = {
-    payloads: {
+    req: {
         NonAsciiæøåÆøÅöôêÊ字符串: {
             /**
              * Dummy input param
@@ -818,8 +811,7 @@ export type NonAsciiÆøåÆøÅöôêÊData = {
             nonAsciiParamæøåÆøÅöôêÊ: number;
         };
     };
-
-    responses: {
+    res: {
         NonAsciiæøåÆøÅöôêÊ字符串: NonAsciiStringæøåÆØÅöôêÊ字符串;
     };
 };

@@ -9,7 +9,6 @@ import { getConfig } from '../config';
 import { enumKey, enumName, enumUnionType, enumValue } from '../enum';
 import { escapeComment } from '../escape';
 import { operationKey } from '../handlebars';
-import { modelIsRequired } from '../required';
 import { sortByName } from '../sort';
 import { toType } from './type';
 
@@ -81,80 +80,140 @@ const processModel = (client: Client, model: Model) => {
     }
 };
 
-const operationDataType = (service: Service) => {
+const processServiceTypes = (service: Service) => {
     const config = getConfig();
-    const operationsWithParameters = service.operations.filter(operation => operation.parameters.length);
     const namespace = `${camelCase(service.name, { pascalCase: true })}Data`;
-    const output = `export type ${namespace} = {
-        ${
-            operationsWithParameters.length
-                ? `
-        payloads: {
-            ${operationsWithParameters
-                .map(
-                    operation => `${operationKey(operation)}: {
-                        ${sortByName([...operation.parameters])
-                            .filter(parameter => {
-                                if (!config.experimental) {
-                                    return true;
-                                }
-                                return parameter.in !== 'query';
-                            })
-                            .map(parameter => {
-                                let comment: string[] = [];
-                                if (parameter.description) {
-                                    comment = ['/**', ` * ${escapeComment(parameter.description)}`, ' */'];
-                                }
-                                return [
-                                    ...comment,
-                                    `${parameter.name + modelIsRequired(parameter)}: ${toType(parameter)}`,
-                                ].join('\n');
-                            })
-                            .join('\n')}
-                        ${
-                            config.experimental
-                                ? `
-                        query${operation.parametersQuery.every(parameter => !parameter.isRequired) ? '?' : ''}: {
-                            ${sortByName([...operation.parametersQuery])
-                                .map(parameter => {
-                                    let comment: string[] = [];
-                                    if (parameter.description) {
-                                        comment = ['/**', ` * ${escapeComment(parameter.description)}`, ' */'];
-                                    }
-                                    return [
-                                        ...comment,
-                                        `${parameter.name + modelIsRequired(parameter)}: ${toType(parameter)}`,
-                                    ].join('\n');
-                                })
-                                .join('\n')}
-                        }
-                        `
-                                : ''
-                        }
-                    };`
-                )
-                .join('\n')}
-        }
-        `
-                : ''
-        }
-        ${
-            service.operations.length
-                ? `
-        responses: {
-            ${service.operations.map(
-                operation =>
-                    `${operationKey(operation)}: ${
-                        !operation.results.length ? 'void' : operation.results.map(result => toType(result)).join(' | ')
-                    }
-                `
-            )}
-        }
-        `
-                : ''
-        }
-    }`;
-    return output;
+    const operationsWithParameters = service.operations.filter(operation => operation.parameters.length);
+    let properties: Model[] = [];
+
+    if (operationsWithParameters.length) {
+        const requests: Model[] = operationsWithParameters.map(operation => {
+            let parameters: Model[] = sortByName([...operation.parameters]).filter(parameter => !config.experimental || parameter.in !== 'query')
+
+            if (config.experimental) {
+                const queryParameters: Model[] = sortByName([...operation.parametersQuery])
+                const query: Model = {
+                    $refs: [],
+                    base: '',
+                    description: null,
+                    enum: [],
+                    enums: [],
+                    export: 'interface',
+                    imports: [],
+                    isDefinition: false,
+                    isNullable: false,
+                    isReadOnly: false,
+                    isRequired: operation.parametersQuery.some(parameter => parameter.isRequired),
+                    link: null,
+                    name: '',
+                    properties: queryParameters,
+                    template: null,
+                    type: ''
+                }
+                parameters = [...parameters, query]
+            }
+
+            const op: Model = {
+                $refs: [],
+                base: '',
+                description: null,
+                enum: [],
+                enums: [],
+                export: 'interface',
+                imports: [],
+                isDefinition: false,
+                isNullable: false,
+                isReadOnly: false,
+                isRequired: true,
+                link: null,
+                name: operationKey(operation),
+                properties: parameters,
+                template: null,
+                type: ''
+            }
+            return op
+        })
+        properties = [...properties, {
+            $refs: [],
+            base: '',
+            description: null,
+            enum: [],
+            enums: [],
+            export: 'interface',
+            imports: [],
+            isDefinition: false,
+            isNullable: false,
+            isReadOnly: false,
+            isRequired: true,
+            link: null,
+            name: 'req',
+            properties: requests,
+            template: null,
+            type: ''
+        }]
+    }
+
+    if (service.operations.length) {
+        const responses: Model[] = service.operations.map(operation => {
+            const op: Model = {
+                $refs: [],
+                base: !operation.results.length ? 'void' : operation.results.map(result => toType(result)).join(' | '),
+                description: null,
+                enum: [],
+                enums: [],
+                export: 'generic',
+                imports: [],
+                isDefinition: false,
+                isNullable: false,
+                isReadOnly: false,
+                isRequired: true,
+                link: null,
+                name: operationKey(operation),
+                properties: [],
+                template: null,
+                type: ''
+            }
+            return op
+        })
+        properties = [...properties, {
+            $refs: [],
+            base: '',
+            description: null,
+            enum: [],
+            enums: [],
+            export: 'interface',
+            imports: [],
+            isDefinition: false,
+            isNullable: false,
+            isReadOnly: false,
+            isRequired: true,
+            link: null,
+            name: 'res',
+            properties: responses,
+            template: null,
+            type: ''
+        }]
+    }
+
+    const type = toType({
+        $refs: [],
+        base: '',
+        description: null,
+        enum: [],
+        enums: [],
+        export: 'interface',
+        imports: [],
+        isDefinition: false,
+        isNullable: false,
+        isReadOnly: false,
+        isRequired: false,
+        link: null,
+        name: '',
+        properties,
+        template: null,
+        type: ''
+    });
+    return compiler.typedef.alias(namespace, type!)
 };
 
 /**
@@ -173,8 +232,8 @@ export const writeClientModels = async (openApi: OpenApi, outputPath: string, cl
     }
 
     for (const service of client.services) {
-        const operationDataTypes = operationDataType(service);
-        file.add(operationDataTypes);
+        const serviceTypes = processServiceTypes(service);
+        file.add(serviceTypes);
     }
 
     file.write(path.resolve(outputPath, 'models.ts'), '\n\n');
