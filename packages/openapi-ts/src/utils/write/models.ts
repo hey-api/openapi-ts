@@ -60,8 +60,7 @@ const processType = (client: Client, model: Model) => {
         model.description && escapeComment(model.description),
         model.deprecated && '@deprecated',
     ];
-    const type = toType(model);
-    return compiler.typedef.alias(model.name, type!, comment);
+    return compiler.typedef.alias(model.name, toType(model), comment);
 };
 
 const processModel = (client: Client, model: Model) => {
@@ -120,7 +119,7 @@ const processServiceTypes = (services: Service[]) => {
                     }
 
                     operation.results.forEach(result => {
-                        resMap.set(result.code, toType(result)!);
+                        resMap.set(result.code, compiler.utils.toString(toType(result)));
                     });
                 }
             }
@@ -235,7 +234,7 @@ const processServiceTypes = (services: Service[]) => {
         type: '',
     });
     const namespace = serviceExportedNamespace();
-    return compiler.typedef.alias(namespace, type!);
+    return compiler.typedef.alias(namespace, type);
 };
 
 /**

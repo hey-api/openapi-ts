@@ -9,7 +9,7 @@ import { addLeadingComment, tsNodeToString } from './utils';
 
 export type { Property } from './typedef';
 export type { Comments } from './utils';
-export type { Node } from 'typescript';
+export type { Node, TypeNode } from 'typescript';
 
 export class TypeScriptFile {
     private _headers: Array<string> = [];
@@ -74,5 +74,8 @@ export const compiler = {
         array: types.createArrayType,
         enum: types.createEnumDeclaration,
         object: types.createObjectType,
+    },
+    utils: {
+        toString: tsNodeToString,
     },
 };
