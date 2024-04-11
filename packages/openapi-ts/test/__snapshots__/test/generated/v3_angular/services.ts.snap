@@ -3,31 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import type { Observable } from 'rxjs';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type {
-    DefaultData,
-    SimpleData,
-    ParametersData,
-    DescriptionsData,
-    DeprecatedData,
-    RequestBodyData,
-    FormDataData,
-    DefaultsData,
-    DuplicateData,
-    NoContentData,
-    ResponseData,
-    MultipleTags1Data,
-    MultipleTags2Data,
-    MultipleTags3Data,
-    CollectionFormatData,
-    TypesData,
-    UploadData,
-    FileResponseData,
-    ComplexData,
-    MultipartData,
-    HeaderData,
-    ErrorData,
-    NonAsciiÆøåÆøÅöôêÊData,
-} from './models';
+import type { $OpenApiTs } from './models';
 
 @Injectable({
     providedIn: 'root',
@@ -38,7 +14,7 @@ export class DefaultService {
     /**
      * @throws ApiError
      */
-    public serviceWithEmptyTag(): Observable<DefaultData['responses']['ServiceWithEmptyTag']> {
+    public serviceWithEmptyTag(): Observable<void> {
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/no-tag',
@@ -50,8 +26,8 @@ export class DefaultService {
      * @throws ApiError
      */
     public postServiceWithEmptyTag(
-        data: DefaultData['payloads']['PostServiceWithEmptyTag']
-    ): Observable<DefaultData['responses']['PostServiceWithEmptyTag']> {
+        data: $OpenApiTs['/api/v{api-version}/no-tag']['post']['req']
+    ): Observable<$OpenApiTs['/api/v{api-version}/no-tag']['post']['res'][200]> {
         const { requestBody } = data;
         return __request(OpenAPI, this.http, {
             method: 'POST',
@@ -72,7 +48,9 @@ export class SimpleService {
      * @returns Model_From_Zendesk Success
      * @throws ApiError
      */
-    public apiVVersionOdataControllerCount(): Observable<SimpleData['responses']['ApiVversionOdataControllerCount']> {
+    public apiVVersionOdataControllerCount(): Observable<
+        $OpenApiTs['/api/v{api-version}/simple/$count']['get']['res'][200]
+    > {
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/simple/$count',
@@ -82,9 +60,7 @@ export class SimpleService {
     /**
      * @throws ApiError
      */
-    public getCallWithoutParametersAndResponse(): Observable<
-        SimpleData['responses']['GetCallWithoutParametersAndResponse']
-    > {
+    public getCallWithoutParametersAndResponse(): Observable<void> {
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/simple',
@@ -94,9 +70,7 @@ export class SimpleService {
     /**
      * @throws ApiError
      */
-    public putCallWithoutParametersAndResponse(): Observable<
-        SimpleData['responses']['PutCallWithoutParametersAndResponse']
-    > {
+    public putCallWithoutParametersAndResponse(): Observable<void> {
         return __request(OpenAPI, this.http, {
             method: 'PUT',
             url: '/api/v{api-version}/simple',
@@ -106,9 +80,7 @@ export class SimpleService {
     /**
      * @throws ApiError
      */
-    public postCallWithoutParametersAndResponse(): Observable<
-        SimpleData['responses']['PostCallWithoutParametersAndResponse']
-    > {
+    public postCallWithoutParametersAndResponse(): Observable<void> {
         return __request(OpenAPI, this.http, {
             method: 'POST',
             url: '/api/v{api-version}/simple',
@@ -118,9 +90,7 @@ export class SimpleService {
     /**
      * @throws ApiError
      */
-    public deleteCallWithoutParametersAndResponse(): Observable<
-        SimpleData['responses']['DeleteCallWithoutParametersAndResponse']
-    > {
+    public deleteCallWithoutParametersAndResponse(): Observable<void> {
         return __request(OpenAPI, this.http, {
             method: 'DELETE',
             url: '/api/v{api-version}/simple',
@@ -130,9 +100,7 @@ export class SimpleService {
     /**
      * @throws ApiError
      */
-    public optionsCallWithoutParametersAndResponse(): Observable<
-        SimpleData['responses']['OptionsCallWithoutParametersAndResponse']
-    > {
+    public optionsCallWithoutParametersAndResponse(): Observable<void> {
         return __request(OpenAPI, this.http, {
             method: 'OPTIONS',
             url: '/api/v{api-version}/simple',
@@ -142,9 +110,7 @@ export class SimpleService {
     /**
      * @throws ApiError
      */
-    public headCallWithoutParametersAndResponse(): Observable<
-        SimpleData['responses']['HeadCallWithoutParametersAndResponse']
-    > {
+    public headCallWithoutParametersAndResponse(): Observable<void> {
         return __request(OpenAPI, this.http, {
             method: 'HEAD',
             url: '/api/v{api-version}/simple',
@@ -154,9 +120,7 @@ export class SimpleService {
     /**
      * @throws ApiError
      */
-    public patchCallWithoutParametersAndResponse(): Observable<
-        SimpleData['responses']['PatchCallWithoutParametersAndResponse']
-    > {
+    public patchCallWithoutParametersAndResponse(): Observable<void> {
         return __request(OpenAPI, this.http, {
             method: 'PATCH',
             url: '/api/v{api-version}/simple',
@@ -173,9 +137,7 @@ export class ParametersService {
     /**
      * @throws ApiError
      */
-    public deleteFoo(
-        data: ParametersData['payloads']['DeleteFoo']
-    ): Observable<ParametersData['responses']['DeleteFoo']> {
+    public deleteFoo(data: $OpenApiTs['/api/v{api-version}/foo/{foo}/bar/{bar}']['delete']['req']): Observable<void> {
         const { foo, bar } = data;
         return __request(OpenAPI, this.http, {
             method: 'DELETE',
@@ -191,8 +153,8 @@ export class ParametersService {
      * @throws ApiError
      */
     public callWithParameters(
-        data: ParametersData['payloads']['CallWithParameters']
-    ): Observable<ParametersData['responses']['CallWithParameters']> {
+        data: $OpenApiTs['/api/v{api-version}/parameters/{parameterPath}']['post']['req']
+    ): Observable<void> {
         const {
             parameterHeader,
             fooAllOfEnum,
@@ -232,8 +194,8 @@ export class ParametersService {
      * @throws ApiError
      */
     public callWithWeirdParameterNames(
-        data: ParametersData['payloads']['CallWithWeirdParameterNames']
-    ): Observable<ParametersData['responses']['CallWithWeirdParameterNames']> {
+        data: $OpenApiTs['/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}']['post']['req']
+    ): Observable<void> {
         const {
             parameterHeader,
             parameterQuery,
@@ -275,8 +237,8 @@ export class ParametersService {
      * @throws ApiError
      */
     public getCallWithOptionalParam(
-        data: ParametersData['payloads']['GetCallWithOptionalParam']
-    ): Observable<ParametersData['responses']['GetCallWithOptionalParam']> {
+        data: $OpenApiTs['/api/v{api-version}/parameters/']['get']['req']
+    ): Observable<void> {
         const { requestBody, parameter } = data;
         return __request(OpenAPI, this.http, {
             method: 'GET',
@@ -293,8 +255,8 @@ export class ParametersService {
      * @throws ApiError
      */
     public postCallWithOptionalParam(
-        data: ParametersData['payloads']['PostCallWithOptionalParam']
-    ): Observable<ParametersData['responses']['PostCallWithOptionalParam']> {
+        data: $OpenApiTs['/api/v{api-version}/parameters/']['post']['req']
+    ): Observable<void> {
         const { parameter, requestBody } = data;
         return __request(OpenAPI, this.http, {
             method: 'POST',
@@ -318,8 +280,8 @@ export class DescriptionsService {
      * @throws ApiError
      */
     public callWithDescriptions(
-        data: DescriptionsData['payloads']['CallWithDescriptions'] = {}
-    ): Observable<DescriptionsData['responses']['CallWithDescriptions']> {
+        data: $OpenApiTs['/api/v{api-version}/descriptions/']['post']['req'] = {}
+    ): Observable<void> {
         const {
             parameterWithBreaks,
             parameterWithBackticks,
@@ -354,8 +316,8 @@ export class DeprecatedService {
      * @throws ApiError
      */
     public deprecatedCall(
-        data: DeprecatedData['payloads']['DeprecatedCall']
-    ): Observable<DeprecatedData['responses']['DeprecatedCall']> {
+        data: $OpenApiTs['/api/v{api-version}/parameters/deprecated']['post']['req']
+    ): Observable<void> {
         const { parameter } = data;
         return __request(OpenAPI, this.http, {
             method: 'POST',
@@ -377,8 +339,8 @@ export class RequestBodyService {
      * @throws ApiError
      */
     public postApiRequestBody(
-        data: RequestBodyData['payloads']['PostApiRequestBody'] = {}
-    ): Observable<RequestBodyData['responses']['PostApiRequestBody']> {
+        data: $OpenApiTs['/api/v{api-version}/requestBody/']['post']['req'] = {}
+    ): Observable<void> {
         const { parameter, foo } = data;
         return __request(OpenAPI, this.http, {
             method: 'POST',
@@ -401,9 +363,7 @@ export class FormDataService {
     /**
      * @throws ApiError
      */
-    public postApiFormData(
-        data: FormDataData['payloads']['PostApiFormData'] = {}
-    ): Observable<FormDataData['responses']['PostApiFormData']> {
+    public postApiFormData(data: $OpenApiTs['/api/v{api-version}/formData/']['post']['req'] = {}): Observable<void> {
         const { parameter, formData } = data;
         return __request(OpenAPI, this.http, {
             method: 'POST',
@@ -427,8 +387,8 @@ export class DefaultsService {
      * @throws ApiError
      */
     public callWithDefaultParameters(
-        data: DefaultsData['payloads']['CallWithDefaultParameters'] = {}
-    ): Observable<DefaultsData['responses']['CallWithDefaultParameters']> {
+        data: $OpenApiTs['/api/v{api-version}/defaults']['get']['req'] = {}
+    ): Observable<void> {
         const { parameterString, parameterNumber, parameterBoolean, parameterEnum, parameterModel } = data;
         return __request(OpenAPI, this.http, {
             method: 'GET',
@@ -447,8 +407,8 @@ export class DefaultsService {
      * @throws ApiError
      */
     public callWithDefaultOptionalParameters(
-        data: DefaultsData['payloads']['CallWithDefaultOptionalParameters'] = {}
-    ): Observable<DefaultsData['responses']['CallWithDefaultOptionalParameters']> {
+        data: $OpenApiTs['/api/v{api-version}/defaults']['post']['req'] = {}
+    ): Observable<void> {
         const { parameterString, parameterNumber, parameterBoolean, parameterEnum, parameterModel } = data;
         return __request(OpenAPI, this.http, {
             method: 'POST',
@@ -466,9 +426,7 @@ export class DefaultsService {
     /**
      * @throws ApiError
      */
-    public callToTestOrderOfParams(
-        data: DefaultsData['payloads']['CallToTestOrderOfParams']
-    ): Observable<DefaultsData['responses']['CallToTestOrderOfParams']> {
+    public callToTestOrderOfParams(data: $OpenApiTs['/api/v{api-version}/defaults']['put']['req']): Observable<void> {
         const {
             parameterStringWithNoDefault,
             parameterOptionalStringWithDefault,
@@ -505,7 +463,7 @@ export class DuplicateService {
     /**
      * @throws ApiError
      */
-    public duplicateName(): Observable<DuplicateData['responses']['DuplicateName']> {
+    public duplicateName(): Observable<void> {
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/duplicate',
@@ -515,7 +473,7 @@ export class DuplicateService {
     /**
      * @throws ApiError
      */
-    public duplicateName1(): Observable<DuplicateData['responses']['DuplicateName1']> {
+    public duplicateName1(): Observable<void> {
         return __request(OpenAPI, this.http, {
             method: 'POST',
             url: '/api/v{api-version}/duplicate',
@@ -525,7 +483,7 @@ export class DuplicateService {
     /**
      * @throws ApiError
      */
-    public duplicateName2(): Observable<DuplicateData['responses']['DuplicateName2']> {
+    public duplicateName2(): Observable<void> {
         return __request(OpenAPI, this.http, {
             method: 'PUT',
             url: '/api/v{api-version}/duplicate',
@@ -535,7 +493,7 @@ export class DuplicateService {
     /**
      * @throws ApiError
      */
-    public duplicateName3(): Observable<DuplicateData['responses']['DuplicateName3']> {
+    public duplicateName3(): Observable<void> {
         return __request(OpenAPI, this.http, {
             method: 'DELETE',
             url: '/api/v{api-version}/duplicate',
@@ -553,7 +511,7 @@ export class NoContentService {
      * @returns void Success
      * @throws ApiError
      */
-    public callWithNoContentResponse(): Observable<NoContentData['responses']['CallWithNoContentResponse']> {
+    public callWithNoContentResponse(): Observable<$OpenApiTs['/api/v{api-version}/no-content']['get']['res'][204]> {
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/no-content',
@@ -566,7 +524,8 @@ export class NoContentService {
      * @throws ApiError
      */
     public callWithResponseAndNoContentResponse(): Observable<
-        NoContentData['responses']['CallWithResponseAndNoContentResponse']
+        | $OpenApiTs['/api/v{api-version}/multiple-tags/response-and-no-content']['get']['res'][200]
+        | $OpenApiTs['/api/v{api-version}/multiple-tags/response-and-no-content']['get']['res'][204]
     > {
         return __request(OpenAPI, this.http, {
             method: 'GET',
@@ -587,7 +546,8 @@ export class ResponseService {
      * @throws ApiError
      */
     public callWithResponseAndNoContentResponse(): Observable<
-        ResponseData['responses']['CallWithResponseAndNoContentResponse']
+        | $OpenApiTs['/api/v{api-version}/multiple-tags/response-and-no-content']['get']['res'][200]
+        | $OpenApiTs['/api/v{api-version}/multiple-tags/response-and-no-content']['get']['res'][204]
     > {
         return __request(OpenAPI, this.http, {
             method: 'GET',
@@ -599,7 +559,7 @@ export class ResponseService {
      * @returns ModelWithString
      * @throws ApiError
      */
-    public callWithResponse(): Observable<ResponseData['responses']['CallWithResponse']> {
+    public callWithResponse(): Observable<$OpenApiTs['/api/v{api-version}/response']['get']['res'][200]> {
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/response',
@@ -610,7 +570,7 @@ export class ResponseService {
      * @returns ModelWithString Message for default response
      * @throws ApiError
      */
-    public callWithDuplicateResponses(): Observable<ResponseData['responses']['CallWithDuplicateResponses']> {
+    public callWithDuplicateResponses(): Observable<$OpenApiTs['/api/v{api-version}/response']['post']['res'][200]> {
         return __request(OpenAPI, this.http, {
             method: 'POST',
             url: '/api/v{api-version}/response',
@@ -629,7 +589,12 @@ export class ResponseService {
      * @returns ModelThatExtendsExtends Message for 202 response
      * @throws ApiError
      */
-    public callWithResponses(): Observable<ResponseData['responses']['CallWithResponses']> {
+    public callWithResponses(): Observable<
+        | $OpenApiTs['/api/v{api-version}/response']['put']['res'][200]
+        | $OpenApiTs['/api/v{api-version}/response']['put']['res'][200]
+        | $OpenApiTs['/api/v{api-version}/response']['put']['res'][201]
+        | $OpenApiTs['/api/v{api-version}/response']['put']['res'][202]
+    > {
         return __request(OpenAPI, this.http, {
             method: 'PUT',
             url: '/api/v{api-version}/response',
@@ -652,7 +617,7 @@ export class MultipleTags1Service {
      * @returns void Success
      * @throws ApiError
      */
-    public dummyA(): Observable<MultipleTags1Data['responses']['DummyA']> {
+    public dummyA(): Observable<$OpenApiTs['/api/v{api-version}/multiple-tags/a']['get']['res'][204]> {
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/a',
@@ -663,7 +628,7 @@ export class MultipleTags1Service {
      * @returns void Success
      * @throws ApiError
      */
-    public dummyB(): Observable<MultipleTags1Data['responses']['DummyB']> {
+    public dummyB(): Observable<$OpenApiTs['/api/v{api-version}/multiple-tags/b']['get']['res'][204]> {
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/b',
@@ -681,7 +646,7 @@ export class MultipleTags2Service {
      * @returns void Success
      * @throws ApiError
      */
-    public dummyA(): Observable<MultipleTags2Data['responses']['DummyA']> {
+    public dummyA(): Observable<$OpenApiTs['/api/v{api-version}/multiple-tags/a']['get']['res'][204]> {
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/a',
@@ -692,7 +657,7 @@ export class MultipleTags2Service {
      * @returns void Success
      * @throws ApiError
      */
-    public dummyB(): Observable<MultipleTags2Data['responses']['DummyB']> {
+    public dummyB(): Observable<$OpenApiTs['/api/v{api-version}/multiple-tags/b']['get']['res'][204]> {
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/b',
@@ -710,7 +675,7 @@ export class MultipleTags3Service {
      * @returns void Success
      * @throws ApiError
      */
-    public dummyB(): Observable<MultipleTags3Data['responses']['DummyB']> {
+    public dummyB(): Observable<$OpenApiTs['/api/v{api-version}/multiple-tags/b']['get']['res'][204]> {
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/b',
@@ -727,9 +692,7 @@ export class CollectionFormatService {
     /**
      * @throws ApiError
      */
-    public collectionFormat(
-        data: CollectionFormatData['payloads']['CollectionFormat']
-    ): Observable<CollectionFormatData['responses']['CollectionFormat']> {
+    public collectionFormat(data: $OpenApiTs['/api/v{api-version}/collectionFormat']['get']['req']): Observable<void> {
         const { parameterArrayCsv, parameterArraySsv, parameterArrayTsv, parameterArrayPipes, parameterArrayMulti } =
             data;
         return __request(OpenAPI, this.http, {
@@ -759,7 +722,14 @@ export class TypesService {
      * @returns unknown Response is a simple object
      * @throws ApiError
      */
-    public types(data: TypesData['payloads']['Types']): Observable<TypesData['responses']['Types']> {
+    public types(
+        data: $OpenApiTs['/api/v{api-version}/types']['get']['req']
+    ): Observable<
+        | $OpenApiTs['/api/v{api-version}/types']['get']['res'][200]
+        | $OpenApiTs['/api/v{api-version}/types']['get']['res'][201]
+        | $OpenApiTs['/api/v{api-version}/types']['get']['res'][202]
+        | $OpenApiTs['/api/v{api-version}/types']['get']['res'][203]
+    > {
         const {
             parameterArray,
             parameterDictionary,
@@ -799,7 +769,9 @@ export class UploadService {
      * @returns boolean
      * @throws ApiError
      */
-    public uploadFile(data: UploadData['payloads']['UploadFile']): Observable<UploadData['responses']['UploadFile']> {
+    public uploadFile(
+        data: $OpenApiTs['/api/v{api-version}/upload']['post']['req']
+    ): Observable<$OpenApiTs['/api/v{api-version}/upload']['post']['res'][200]> {
         const { file } = data;
         return __request(OpenAPI, this.http, {
             method: 'POST',
@@ -822,8 +794,8 @@ export class FileResponseService {
      * @throws ApiError
      */
     public fileResponse(
-        data: FileResponseData['payloads']['FileResponse']
-    ): Observable<FileResponseData['responses']['FileResponse']> {
+        data: $OpenApiTs['/api/v{api-version}/file/{id}']['get']['req']
+    ): Observable<$OpenApiTs['/api/v{api-version}/file/{id}']['get']['res'][200]> {
         const { id } = data;
         return __request(OpenAPI, this.http, {
             method: 'GET',
@@ -846,8 +818,8 @@ export class ComplexService {
      * @throws ApiError
      */
     public complexTypes(
-        data: ComplexData['payloads']['ComplexTypes']
-    ): Observable<ComplexData['responses']['ComplexTypes']> {
+        data: $OpenApiTs['/api/v{api-version}/complex']['get']['req']
+    ): Observable<$OpenApiTs['/api/v{api-version}/complex']['get']['res'][200]> {
         const { parameterObject, parameterReference } = data;
         return __request(OpenAPI, this.http, {
             method: 'GET',
@@ -868,8 +840,8 @@ export class ComplexService {
      * @throws ApiError
      */
     public complexParams(
-        data: ComplexData['payloads']['ComplexParams']
-    ): Observable<ComplexData['responses']['ComplexParams']> {
+        data: $OpenApiTs['/api/v{api-version}/complex/{id}']['put']['req']
+    ): Observable<$OpenApiTs['/api/v{api-version}/complex/{id}']['put']['res'][200]> {
         const { id, requestBody } = data;
         return __request(OpenAPI, this.http, {
             method: 'PUT',
@@ -892,9 +864,7 @@ export class MultipartService {
     /**
      * @throws ApiError
      */
-    public multipartRequest(
-        data: MultipartData['payloads']['MultipartRequest'] = {}
-    ): Observable<MultipartData['responses']['MultipartRequest']> {
+    public multipartRequest(data: $OpenApiTs['/api/v{api-version}/multipart']['post']['req'] = {}): Observable<void> {
         const { formData } = data;
         return __request(OpenAPI, this.http, {
             method: 'POST',
@@ -908,7 +878,7 @@ export class MultipartService {
      * @returns any OK
      * @throws ApiError
      */
-    public multipartResponse(): Observable<MultipartData['responses']['MultipartResponse']> {
+    public multipartResponse(): Observable<$OpenApiTs['/api/v{api-version}/multipart']['get']['res'][200]> {
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/multipart',
@@ -926,7 +896,7 @@ export class HeaderService {
      * @returns string Successful response
      * @throws ApiError
      */
-    public callWithResultFromHeader(): Observable<HeaderData['responses']['CallWithResultFromHeader']> {
+    public callWithResultFromHeader(): Observable<$OpenApiTs['/api/v{api-version}/header']['post']['res'][200]> {
         return __request(OpenAPI, this.http, {
             method: 'POST',
             url: '/api/v{api-version}/header',
@@ -950,8 +920,8 @@ export class ErrorService {
      * @throws ApiError
      */
     public testErrorCode(
-        data: ErrorData['payloads']['TestErrorCode']
-    ): Observable<ErrorData['responses']['TestErrorCode']> {
+        data: $OpenApiTs['/api/v{api-version}/error']['post']['req']
+    ): Observable<$OpenApiTs['/api/v{api-version}/error']['post']['res'][200]> {
         const { status } = data;
         return __request(OpenAPI, this.http, {
             method: 'POST',
@@ -980,8 +950,8 @@ export class NonAsciiÆøåÆøÅöôêÊService {
      * @throws ApiError
      */
     public nonAsciiæøåÆøÅöôêÊ字符串(
-        data: NonAsciiÆøåÆøÅöôêÊData['payloads']['NonAsciiæøåÆøÅöôêÊ字符串']
-    ): Observable<NonAsciiÆøåÆøÅöôêÊData['responses']['NonAsciiæøåÆøÅöôêÊ字符串']> {
+        data: $OpenApiTs['/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串']['post']['req']
+    ): Observable<$OpenApiTs['/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串']['post']['res'][200]> {
         const { nonAsciiParamæøåÆøÅöôêÊ } = data;
         return __request(OpenAPI, this.http, {
             method: 'POST',

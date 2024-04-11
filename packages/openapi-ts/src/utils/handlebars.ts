@@ -67,20 +67,9 @@ const dataDestructure = (operation: Operation) => {
     } else {
         if (config.useOptions) {
             if (operation.parameters.length) {
+                // TODO: extract query parameters from query key
                 return `const {
-                    ${config.experimental ? 'query,' : ''}
-                    ${operation.parameters
-                        .map(parameter => {
-                            if (config.experimental) {
-                                if (parameter.in !== 'query') {
-                                    return parameter.name;
-                                }
-                            } else {
-                                return parameter.name;
-                            }
-                        })
-                        .filter(Boolean)
-                        .join(',\n')}
+                    ${operation.parameters.map(parameter => parameter.name).join(',\n')}
                 } = data;`;
             }
         }
@@ -89,24 +78,22 @@ const dataDestructure = (operation: Operation) => {
 };
 
 const dataParameters = (parameters: OperationParameter[]) => {
-    const config = getConfig();
-
-    if (config.experimental) {
-        let output = parameters
-            .filter(parameter => getDefaultPrintable(parameter) !== undefined)
-            .map(parameter => {
-                const key = parameter.prop;
-                const value = parameter.name;
-                if (key === value || escapeName(key) === key) {
-                    return `${key}: ${getDefaultPrintable(parameter)}`;
-                }
-                return `'${key}': ${getDefaultPrintable(parameter)}`;
-            });
-        if (parameters.every(parameter => parameter.in === 'query')) {
-            output = [...output, '...query'];
-        }
-        return output.join(', ');
-    }
+    // if (config.experimental) {
+    //     let output = parameters
+    //         .filter(parameter => getDefaultPrintable(parameter) !== undefined)
+    //         .map(parameter => {
+    //             const key = parameter.prop;
+    //             const value = parameter.name;
+    //             if (key === value || escapeName(key) === key) {
+    //                 return `${key}: ${getDefaultPrintable(parameter)}`;
+    //             }
+    //             return `'${key}': ${getDefaultPrintable(parameter)}`;
+    //         });
+    //     if (parameters.every(parameter => parameter.in === 'query')) {
+    //         output = [...output, '...query'];
+    //     }
+    //     return output.join(', ');
+    // }
 
     const output = parameters.map(parameter => {
         const key = parameter.prop;
@@ -122,26 +109,31 @@ const dataParameters = (parameters: OperationParameter[]) => {
     return output.join(', ');
 };
 
-export const serviceExportedNamespace = (service: Service) => {
-    const exported = `${camelCase(service.name, { pascalCase: true })}Data`;
-    return exported;
-};
-
-export const operationKey = (operation: Service['operations'][number]) => {
-    const key = camelCase(operation.name, { pascalCase: true });
-    return key;
-};
+export const serviceExportedNamespace = () => '$OpenApiTs';
 
 export const nameOperationDataType = (
-    service: Service,
-    namespace: 'payloads' | 'responses',
+    namespace: 'req' | 'res',
     operation: Service['operations'][number],
     name?: string | object
 ) => {
-    const exported = serviceExportedNamespace(service);
-    const key = operationKey(operation);
-    const path = `${exported}['${namespace}']['${key}']`;
-    return name && typeof name === 'string' ? `${path}['${name}']` : path;
+    const exported = serviceExportedNamespace();
+    if (namespace === 'req') {
+        const path = `${exported}['${operation.path}']['${operation.method.toLocaleLowerCase()}']['${namespace}']`;
+        return name && typeof name === 'string' ? `${path}['${name}']` : path;
+    }
+    const results = operation.results.filter(result => result.code >= 200 && result.code < 300);
+    // TODO: we should return nothing when results don't exist
+    // can't remove this logic without removing request/name config
+    // as it complicates things
+    if (!results.length) {
+        return 'void';
+    }
+    return results
+        .map(result => {
+            const path = `${exported}['${operation.path}']['${operation.method.toLocaleLowerCase()}']['${namespace}'][${String(result.code)}]`;
+            return path;
+        })
+        .join(' | ');
 };
 
 export const registerHandlebarHelpers = (): void => {
@@ -187,18 +179,7 @@ export const registerHandlebarHelpers = (): void => {
     );
 
     Handlebars.registerHelper('modelIsRequired', modelIsRequired);
-
-    Handlebars.registerHelper(
-        'nameOperationDataType',
-        function (
-            service: Service,
-            namespace: 'payloads' | 'responses',
-            operation: Service['operations'][number],
-            name: string | undefined
-        ) {
-            return nameOperationDataType(service, namespace, operation, name);
-        }
-    );
+    Handlebars.registerHelper('nameOperationDataType', nameOperationDataType);
 
     Handlebars.registerHelper(
         'notEquals',

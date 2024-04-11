@@ -15,7 +15,6 @@ describe('writeClientIndex', () => {
             debug: false,
             dryRun: false,
             enums: 'javascript',
-            experimental: false,
             exportCore: true,
             exportModels: true,
             exportServices: true,
