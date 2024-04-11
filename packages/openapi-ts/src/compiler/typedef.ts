@@ -1,6 +1,6 @@
 import ts from 'typescript';
 
-import { addLeadingJSDocComment, type Comments } from './utils';
+import { addLeadingComment, type Comments } from './utils';
 
 export const createTypeNode = (base: any) => ts.factory.createTypeReferenceNode(base as string);
 
@@ -23,7 +23,7 @@ export const createTypeAliasDeclaration = (
         ts.factory.createTypeReferenceNode(type)
     );
     if (comments?.length) {
-        addLeadingJSDocComment(node, comments);
+        addLeadingComment(node, comments);
     }
     return node;
 };
@@ -54,7 +54,7 @@ export const createTypeInterfaceNode = (properties: Property[], isNullable: bool
             );
             const comment = property.comment;
             if (comment) {
-                addLeadingJSDocComment(signature, comment);
+                addLeadingComment(signature, comment);
             }
             return signature;
         })

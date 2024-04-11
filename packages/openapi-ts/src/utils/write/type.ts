@@ -80,8 +80,8 @@ const typeInterface = (model: Model) => {
         }
         return {
             comment: [
-                property.description && ` * ${escapeComment(property.description)}`,
-                property.deprecated && ` * @deprecated`,
+                property.description && escapeComment(property.description),
+                property.deprecated && '@deprecated',
             ],
             isReadOnly: property.isReadOnly,
             isRequired: maybeRequired === '',
