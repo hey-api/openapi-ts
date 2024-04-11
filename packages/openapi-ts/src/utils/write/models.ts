@@ -1,14 +1,12 @@
 import path from 'node:path';
 
-import camelCase from 'camelcase';
-
 import { type Comments, compiler, type Node, TypeScriptFile } from '../../compiler';
 import type { Model, OpenApi, Service } from '../../openApi';
 import type { Client } from '../../types/client';
 import { getConfig } from '../config';
 import { enumKey, enumName, enumUnionType, enumValue } from '../enum';
 import { escapeComment } from '../escape';
-import { operationKey } from '../handlebars';
+import { operationKey, serviceExportedNamespace } from '../handlebars';
 import { sortByName } from '../sort';
 import { toType } from './type';
 
@@ -82,7 +80,6 @@ const processModel = (client: Client, model: Model) => {
 
 const processServiceTypes = (service: Service) => {
     const config = getConfig();
-    const namespace = `${camelCase(service.name, { pascalCase: true })}Data`;
     const operationsWithParameters = service.operations.filter(operation => operation.parameters.length);
     let properties: Model[] = [];
 
@@ -213,6 +210,7 @@ const processServiceTypes = (service: Service) => {
         template: null,
         type: ''
     });
+    const namespace = serviceExportedNamespace(service);
     return compiler.typedef.alias(namespace, type!)
 };
 

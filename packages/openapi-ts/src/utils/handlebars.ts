@@ -123,7 +123,7 @@ const dataParameters = (parameters: OperationParameter[]) => {
 };
 
 export const serviceExportedNamespace = (service: Service) => {
-    const exported = `${camelCase(service.name, { pascalCase: true })}Data`;
+    const exported = `$OpenApiTs${camelCase(service.name, { pascalCase: true })}`;
     return exported;
 };
 
@@ -134,7 +134,7 @@ export const operationKey = (operation: Service['operations'][number]) => {
 
 export const nameOperationDataType = (
     service: Service,
-    namespace: 'payloads' | 'responses',
+    namespace: 'req' | 'res',
     operation: Service['operations'][number],
     name?: string | object
 ) => {
@@ -192,7 +192,7 @@ export const registerHandlebarHelpers = (): void => {
         'nameOperationDataType',
         function (
             service: Service,
-            namespace: 'payloads' | 'responses',
+            namespace: 'req' | 'res',
             operation: Service['operations'][number],
             name: string | undefined
         ) {

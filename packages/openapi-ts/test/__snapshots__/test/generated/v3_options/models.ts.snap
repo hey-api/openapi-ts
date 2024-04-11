@@ -8,7 +8,7 @@ export type ModelWithString = {
     prop?: string;
 };
 
-export type DefaultsData = {
+export type $OpenApiTsDefaults = {
     req: {
         CallWithDefaultParameters: {
             /**

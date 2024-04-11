@@ -696,7 +696,7 @@ export type ModelWithAnyOfConstantSizeArray = [
  */
 export type SimpleParameter = string;
 
-export type DefaultData = {
+export type $OpenApiTsDefault = {
     req: {
     PostServiceWithEmptyTag: {
     requestBody: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
@@ -709,7 +709,7 @@ export type DefaultData = {
 };
 };
 
-export type SimpleData = {
+export type $OpenApiTsSimple = {
     res: {
     ApiVversionOdataControllerCount: Model_From_Zendesk;
     GetCallWithoutParametersAndResponse: void;
@@ -722,7 +722,7 @@ export type SimpleData = {
 };
 };
 
-export type ParametersData = {
+export type $OpenApiTsParameters = {
     req: {
     DeleteFoo: {
     /**
@@ -839,7 +839,7 @@ export type ParametersData = {
 };
 };
 
-export type DescriptionsData = {
+export type $OpenApiTsDescriptions = {
     req: {
     CallWithDescriptions: {
     ?: {
@@ -878,7 +878,7 @@ export type DescriptionsData = {
 };
 };
 
-export type DeprecatedData = {
+export type $OpenApiTsDeprecated = {
     req: {
     DeprecatedCall: {
     /**
@@ -894,7 +894,7 @@ export type DeprecatedData = {
 };
 };
 
-export type RequestBodyData = {
+export type $OpenApiTsRequestBody = {
     req: {
     PostApiRequestBody: {
     /**
@@ -914,7 +914,7 @@ export type RequestBodyData = {
 };
 };
 
-export type FormDataData = {
+export type $OpenApiTsFormData = {
     req: {
     PostApiFormData: {
     /**
@@ -934,7 +934,7 @@ export type FormDataData = {
 };
 };
 
-export type DefaultsData = {
+export type $OpenApiTsDefaults = {
     req: {
     CallWithDefaultParameters: {
     ?: {
@@ -1028,7 +1028,7 @@ export type DefaultsData = {
 };
 };
 
-export type DuplicateData = {
+export type $OpenApiTsDuplicate = {
     res: {
     DuplicateName: void;
     DuplicateName1: void;
@@ -1037,14 +1037,14 @@ export type DuplicateData = {
 };
 };
 
-export type NoContentData = {
+export type $OpenApiTsNoContent = {
     res: {
     CallWithNoContentResponse: void;
     CallWithResponseAndNoContentResponse: number | void;
 };
 };
 
-export type ResponseData = {
+export type $OpenApiTsResponse = {
     res: {
     CallWithResponseAndNoContentResponse: number | void;
     CallWithResponse: ModelWithString;
@@ -1057,27 +1057,27 @@ export type ResponseData = {
 };
 };
 
-export type MultipleTags1Data = {
+export type $OpenApiTsMultipleTags1 = {
     res: {
     DummyA: void;
     DummyB: void;
 };
 };
 
-export type MultipleTags2Data = {
+export type $OpenApiTsMultipleTags2 = {
     res: {
     DummyA: void;
     DummyB: void;
 };
 };
 
-export type MultipleTags3Data = {
+export type $OpenApiTsMultipleTags3 = {
     res: {
     DummyB: void;
 };
 };
 
-export type CollectionFormatData = {
+export type $OpenApiTsCollectionFormat = {
     req: {
     CollectionFormat: {
     : {
@@ -1109,7 +1109,7 @@ export type CollectionFormatData = {
 };
 };
 
-export type TypesData = {
+export type $OpenApiTsTypes = {
     req: {
     Types: {
     /**
@@ -1153,7 +1153,7 @@ export type TypesData = {
 };
 };
 
-export type UploadData = {
+export type $OpenApiTsUpload = {
     req: {
     UploadFile: {
     /**
@@ -1168,7 +1168,7 @@ export type UploadData = {
 };
 };
 
-export type FileResponseData = {
+export type $OpenApiTsFileResponse = {
     req: {
     FileResponse: {
     id: string;
@@ -1180,7 +1180,7 @@ export type FileResponseData = {
 };
 };
 
-export type ComplexData = {
+export type $OpenApiTsComplex = {
     req: {
     ComplexTypes: {
     : {
@@ -1224,7 +1224,7 @@ export type ComplexData = {
 };
 };
 
-export type MultipartData = {
+export type $OpenApiTsMultipart = {
     req: {
     MultipartRequest: {
     formData?: {
@@ -1246,13 +1246,13 @@ export type MultipartData = {
 };
 };
 
-export type HeaderData = {
+export type $OpenApiTsHeader = {
     res: {
     CallWithResultFromHeader: string;
 };
 };
 
-export type ErrorData = {
+export type $OpenApiTsError = {
     req: {
     TestErrorCode: {
     : {
@@ -1268,7 +1268,7 @@ export type ErrorData = {
 };
 };
 
-export type NonAsciiÆøåÆøÅöôêÊData = {
+export type $OpenApiTsNonAsciiÆøåÆøÅöôêÊ = {
     req: {
     NonAsciiæøåÆøÅöôêÊ字符串: {
     : {
