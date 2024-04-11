@@ -155,7 +155,7 @@ export default {
 By default, `openapi-ts` exports schemas from your OpenAPI specification as plain JavaScript objects. A great use case for schemas is client-side form input validation.
 
 ```ts
-import { $Schema } from 'src/client'
+import { $Schema } from 'client/schemas'
 
 const maxInputLength = $Schema.properties.text.maxLength
 
