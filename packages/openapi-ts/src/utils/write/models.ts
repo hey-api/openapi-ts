@@ -151,15 +151,12 @@ const processServiceTypes = (services: Service[]) => {
                 const reqResParameters = Array.isArray(baseOrResMap)
                     ? baseOrResMap
                     : Array.from(baseOrResMap).map(([code, base]) => {
+                          // TODO: move query params into separate query key
                           const value: Model = {
                               ...emptyModel,
                               ...base,
-                              base: compiler.utils.toString(toType(base)),
-                              export: 'reference',
                               isRequired: true,
                               name: String(code),
-                              // TODO: move query params into separate query key
-                              properties: [],
                           };
                           return value;
                       });
