@@ -614,6 +614,9 @@ export type $OpenApiTs = {
     '/api/v{api-version}/no-content': {
         get: {
             res: {
+                /**
+                 * Success
+                 */
                 204: void;
             };
         };
@@ -621,7 +624,13 @@ export type $OpenApiTs = {
     '/api/v{api-version}/multiple-tags/response-and-no-content': {
         get: {
             res: {
+                /**
+                 * Response is a simple number
+                 */
                 200: any;
+                /**
+                 * Success
+                 */
                 204: void;
             };
         };
@@ -629,18 +638,33 @@ export type $OpenApiTs = {
     '/api/v{api-version}/response': {
         get: {
             res: {
+                /**
+                 * Message for default response
+                 */
                 200: ModelWithString;
             };
         };
         post: {
             res: {
+                /**
+                 * Message for default response
+                 */
                 200: ModelWithString;
             };
         };
         put: {
             res: {
+                /**
+                 * Message for default response
+                 */
                 200: ModelWithString;
+                /**
+                 * Message for 201 response
+                 */
                 201: ModelThatExtends;
+                /**
+                 * Message for 202 response
+                 */
                 202: ModelThatExtendsExtends;
             };
         };
@@ -648,6 +672,9 @@ export type $OpenApiTs = {
     '/api/v{api-version}/multiple-tags/a': {
         get: {
             res: {
+                /**
+                 * Success
+                 */
                 204: void;
             };
         };
@@ -655,6 +682,9 @@ export type $OpenApiTs = {
     '/api/v{api-version}/multiple-tags/b': {
         get: {
             res: {
+                /**
+                 * Success
+                 */
                 204: void;
             };
         };
@@ -722,9 +752,21 @@ export type $OpenApiTs = {
                 parameterString: string;
             };
             res: {
+                /**
+                 * Response is a simple number
+                 */
                 200: number;
+                /**
+                 * Response is a simple string
+                 */
                 201: string;
+                /**
+                 * Response is a simple boolean
+                 */
                 202: boolean;
+                /**
+                 * Response is a simple object
+                 */
                 203: unknown;
             };
         };
@@ -748,6 +790,9 @@ export type $OpenApiTs = {
                 parameterReference: ModelWithString;
             };
             res: {
+                /**
+                 * Successful response
+                 */
                 200: Array<ModelWithString>;
             };
         };
@@ -755,6 +800,9 @@ export type $OpenApiTs = {
     '/api/v{api-version}/header': {
         post: {
             res: {
+                /**
+                 * Successful response
+                 */
                 200: string;
             };
         };
@@ -768,6 +816,9 @@ export type $OpenApiTs = {
                 status: string;
             };
             res: {
+                /**
+                 * Custom message: Successful response
+                 */
                 200: any;
             };
         };
@@ -781,6 +832,9 @@ export type $OpenApiTs = {
                 nonAsciiParamæøåÆøÅöôêÊ: number;
             };
             res: {
+                /**
+                 * Successful response
+                 */
                 200: NonAsciiStringæøåÆØÅöôêÊ字符串;
             };
         };
