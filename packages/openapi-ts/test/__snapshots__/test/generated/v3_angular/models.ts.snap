@@ -733,571 +733,535 @@ export type ModelWithAnyOfConstantSizeArray = [number, string];
  */
 export type SimpleParameter = string;
 
-export type DefaultData = {
-    payloads: {
-        PostServiceWithEmptyTag: {
-            requestBody: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
+export type $OpenApiTs = {
+    '/api/v{api-version}/no-tag': {
+        post: {
+            req: {
+                requestBody: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
+            };
+            res: {
+                200: ModelWithReadOnlyAndWriteOnly;
+            };
         };
     };
-
-    responses: {
-        ServiceWithEmptyTag: void;
-        PostServiceWithEmptyTag: ModelWithReadOnlyAndWriteOnly;
-    };
-};
-
-export type SimpleData = {
-    responses: {
-        ApiVversionOdataControllerCount: Model_From_Zendesk;
-        GetCallWithoutParametersAndResponse: void;
-        PutCallWithoutParametersAndResponse: void;
-        PostCallWithoutParametersAndResponse: void;
-        DeleteCallWithoutParametersAndResponse: void;
-        OptionsCallWithoutParametersAndResponse: void;
-        HeadCallWithoutParametersAndResponse: void;
-        PatchCallWithoutParametersAndResponse: void;
-    };
-};
-
-export type ParametersData = {
-    payloads: {
-        DeleteFoo: {
-            /**
-             * bar in method
-             */
-            bar: string;
-            /**
-             * foo in method
-             */
-            foo: string;
-        };
-        CallWithParameters: {
-            fooAllOfEnum: ModelWithNestedArrayEnumsDataFoo;
-            fooRefEnum?: ModelWithNestedArrayEnumsDataFoo;
-            /**
-             * This is the parameter that goes into the cookie
-             */
-            parameterCookie: string | null;
-            /**
-             * This is the parameter that goes into the form data
-             */
-            parameterForm: string | null;
-            /**
-             * This is the parameter that goes into the header
-             */
-            parameterHeader: string | null;
-            /**
-             * This is the parameter that goes into the path
-             */
-            parameterPath: string | null;
-            /**
-             * This is the parameter that goes into the query params
-             */
-            parameterQuery: string | null;
-            /**
-             * This is the parameter that goes into the body
-             */
-            requestBody: ModelWithString | null;
-        };
-        CallWithWeirdParameterNames: {
-            /**
-             * This is the parameter with a reserved keyword
-             */
-            _default?: string;
-            /**
-             * This is the parameter that goes into the cookie
-             */
-            parameterCookie: string | null;
-            /**
-             * This is the parameter that goes into the request form data
-             */
-            parameterForm: string | null;
-            /**
-             * This is the parameter that goes into the request header
-             */
-            parameterHeader: string | null;
-            /**
-             * This is the parameter that goes into the path
-             */
-            parameterPath1?: string;
-            /**
-             * This is the parameter that goes into the path
-             */
-            parameterPath2?: string;
-            /**
-             * This is the parameter that goes into the path
-             */
-            parameterPath3?: string;
-            /**
-             * This is the parameter that goes into the request query params
-             */
-            parameterQuery: string | null;
-            /**
-             * This is the parameter that goes into the body
-             */
-            requestBody: ModelWithString | null;
-        };
-        GetCallWithOptionalParam: {
-            /**
-             * This is an optional parameter
-             */
-            parameter?: string;
-            /**
-             * This is a required parameter
-             */
-            requestBody: ModelWithOneOfEnum;
-        };
-        PostCallWithOptionalParam: {
-            /**
-             * This is a required parameter
-             */
-            parameter: Pageable;
-            /**
-             * This is an optional parameter
-             */
-            requestBody?: ModelWithString;
+    '/api/v{api-version}/simple/$count': {
+        get: {
+            res: {
+                200: Model_From_Zendesk;
+            };
         };
     };
-
-    responses: {
-        DeleteFoo: void;
-        CallWithParameters: void;
-        CallWithWeirdParameterNames: void;
-        GetCallWithOptionalParam: void;
-        PostCallWithOptionalParam: void;
-    };
-};
-
-export type DescriptionsData = {
-    payloads: {
-        CallWithDescriptions: {
-            /**
-             * Testing backticks in string: `backticks` and ```multiple backticks``` should work
-             */
-            parameterWithBackticks?: unknown;
-            /**
-             * Testing multiline comments in string: First line
-             * Second line
-             *
-             * Fourth line
-             */
-            parameterWithBreaks?: unknown;
-            /**
-             * Testing expression placeholders in string: ${expression} should work
-             */
-            parameterWithExpressionPlaceholders?: unknown;
-            /**
-             * Testing quotes in string: 'single quote''' and "double quotes""" should work
-             */
-            parameterWithQuotes?: unknown;
-            /**
-             * Testing reserved characters in string: * inline * and ** inline ** should work
-             */
-            parameterWithReservedCharacters?: unknown;
-            /**
-             * Testing slashes in string: \backwards\\\ and /forwards/// should work
-             */
-            parameterWithSlashes?: unknown;
+    '/api/v{api-version}/foo/{foo}/bar/{bar}': {
+        delete: {
+            req: {
+                /**
+                 * bar in method
+                 */
+                bar: string;
+                /**
+                 * foo in method
+                 */
+                foo: string;
+            };
         };
     };
-
-    responses: {
-        CallWithDescriptions: void;
-    };
-};
-
-export type DeprecatedData = {
-    payloads: {
-        DeprecatedCall: {
-            /**
-             * This parameter is deprecated
-             */
-            parameter: DeprecatedModel | null;
+    '/api/v{api-version}/parameters/{parameterPath}': {
+        post: {
+            req: {
+                fooAllOfEnum: ModelWithNestedArrayEnumsDataFoo;
+                fooRefEnum?: ModelWithNestedArrayEnumsDataFoo;
+                /**
+                 * This is the parameter that goes into the cookie
+                 */
+                parameterCookie: string | null;
+                /**
+                 * This is the parameter that goes into the form data
+                 */
+                parameterForm: string | null;
+                /**
+                 * This is the parameter that goes into the header
+                 */
+                parameterHeader: string | null;
+                /**
+                 * This is the parameter that goes into the path
+                 */
+                parameterPath: string | null;
+                /**
+                 * This is the parameter that goes into the query params
+                 */
+                parameterQuery: string | null;
+                /**
+                 * This is the parameter that goes into the body
+                 */
+                requestBody: ModelWithString | null;
+            };
         };
     };
-
-    responses: {
-        DeprecatedCall: void;
-    };
-};
-
-export type RequestBodyData = {
-    payloads: {
-        PostApiRequestBody: {
-            /**
-             * A reusable request body
-             */
-            foo?: ModelWithString;
-            /**
-             * This is a reusable parameter
-             */
-            parameter?: string;
+    '/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}': {
+        post: {
+            req: {
+                /**
+                 * This is the parameter with a reserved keyword
+                 */
+                _default?: string;
+                /**
+                 * This is the parameter that goes into the cookie
+                 */
+                parameterCookie: string | null;
+                /**
+                 * This is the parameter that goes into the request form data
+                 */
+                parameterForm: string | null;
+                /**
+                 * This is the parameter that goes into the request header
+                 */
+                parameterHeader: string | null;
+                /**
+                 * This is the parameter that goes into the path
+                 */
+                parameterPath1?: string;
+                /**
+                 * This is the parameter that goes into the path
+                 */
+                parameterPath2?: string;
+                /**
+                 * This is the parameter that goes into the path
+                 */
+                parameterPath3?: string;
+                /**
+                 * This is the parameter that goes into the request query params
+                 */
+                parameterQuery: string | null;
+                /**
+                 * This is the parameter that goes into the body
+                 */
+                requestBody: ModelWithString | null;
+            };
         };
     };
-
-    responses: {
-        PostApiRequestBody: void;
-    };
-};
-
-export type FormDataData = {
-    payloads: {
-        PostApiFormData: {
-            /**
-             * A reusable request body
-             */
-            formData?: ModelWithString;
-            /**
-             * This is a reusable parameter
-             */
-            parameter?: string;
+    '/api/v{api-version}/parameters/': {
+        get: {
+            req: {
+                /**
+                 * This is an optional parameter
+                 */
+                parameter?: string;
+                /**
+                 * This is a required parameter
+                 */
+                requestBody: ModelWithOneOfEnum;
+            };
+        };
+        post: {
+            req: {
+                /**
+                 * This is a required parameter
+                 */
+                parameter: Pageable;
+                /**
+                 * This is an optional parameter
+                 */
+                requestBody?: ModelWithString;
+            };
         };
     };
-
-    responses: {
-        PostApiFormData: void;
-    };
-};
-
-export type DefaultsData = {
-    payloads: {
-        CallWithDefaultParameters: {
-            /**
-             * This is a simple boolean with default value
-             */
-            parameterBoolean?: boolean | null;
-            /**
-             * This is a simple enum with default value
-             */
-            parameterEnum?: 'Success' | 'Warning' | 'Error';
-            /**
-             * This is a simple model with default value
-             */
-            parameterModel?: ModelWithString | null;
-            /**
-             * This is a simple number with default value
-             */
-            parameterNumber?: number | null;
-            /**
-             * This is a simple string with default value
-             */
-            parameterString?: string | null;
-        };
-        CallWithDefaultOptionalParameters: {
-            /**
-             * This is a simple boolean that is optional with default value
-             */
-            parameterBoolean?: boolean;
-            /**
-             * This is a simple enum that is optional with default value
-             */
-            parameterEnum?: 'Success' | 'Warning' | 'Error';
-            /**
-             * This is a simple model that is optional with default value
-             */
-            parameterModel?: ModelWithString;
-            /**
-             * This is a simple number that is optional with default value
-             */
-            parameterNumber?: number;
-            /**
-             * This is a simple string that is optional with default value
-             */
-            parameterString?: string;
-        };
-        CallToTestOrderOfParams: {
-            /**
-             * This is a optional string with default
-             */
-            parameterOptionalStringWithDefault?: string;
-            /**
-             * This is a optional string with empty default
-             */
-            parameterOptionalStringWithEmptyDefault?: string;
-            /**
-             * This is a optional string with no default
-             */
-            parameterOptionalStringWithNoDefault?: string;
-            /**
-             * This is a string that can be null with default
-             */
-            parameterStringNullableWithDefault?: string | null;
-            /**
-             * This is a string that can be null with no default
-             */
-            parameterStringNullableWithNoDefault?: string | null;
-            /**
-             * This is a string with default
-             */
-            parameterStringWithDefault: string;
-            /**
-             * This is a string with empty default
-             */
-            parameterStringWithEmptyDefault: string;
-            /**
-             * This is a string with no default
-             */
-            parameterStringWithNoDefault: string;
+    '/api/v{api-version}/descriptions/': {
+        post: {
+            req: {
+                /**
+                 * Testing backticks in string: `backticks` and ```multiple backticks``` should work
+                 */
+                parameterWithBackticks?: unknown;
+                /**
+                 * Testing multiline comments in string: First line
+                 * Second line
+                 *
+                 * Fourth line
+                 */
+                parameterWithBreaks?: unknown;
+                /**
+                 * Testing expression placeholders in string: ${expression} should work
+                 */
+                parameterWithExpressionPlaceholders?: unknown;
+                /**
+                 * Testing quotes in string: 'single quote''' and "double quotes""" should work
+                 */
+                parameterWithQuotes?: unknown;
+                /**
+                 * Testing reserved characters in string: * inline * and ** inline ** should work
+                 */
+                parameterWithReservedCharacters?: unknown;
+                /**
+                 * Testing slashes in string: \backwards\\\ and /forwards/// should work
+                 */
+                parameterWithSlashes?: unknown;
+            };
         };
     };
-
-    responses: {
-        CallWithDefaultParameters: void;
-        CallWithDefaultOptionalParameters: void;
-        CallToTestOrderOfParams: void;
-    };
-};
-
-export type DuplicateData = {
-    responses: {
-        DuplicateName: void;
-        DuplicateName1: void;
-        DuplicateName2: void;
-        DuplicateName3: void;
-    };
-};
-
-export type NoContentData = {
-    responses: {
-        CallWithNoContentResponse: void;
-        CallWithResponseAndNoContentResponse: number | void;
-    };
-};
-
-export type ResponseData = {
-    responses: {
-        CallWithResponseAndNoContentResponse: number | void;
-        CallWithResponse: ModelWithString;
-        CallWithDuplicateResponses: ModelWithString;
-        CallWithResponses:
-            | {
-                  readonly '@namespace.string'?: string;
-                  readonly '@namespace.integer'?: number;
-                  readonly value?: Array<ModelWithString>;
-              }
-            | ModelWithString
-            | ModelThatExtends
-            | ModelThatExtendsExtends;
-    };
-};
-
-export type MultipleTags1Data = {
-    responses: {
-        DummyA: void;
-        DummyB: void;
-    };
-};
-
-export type MultipleTags2Data = {
-    responses: {
-        DummyA: void;
-        DummyB: void;
-    };
-};
-
-export type MultipleTags3Data = {
-    responses: {
-        DummyB: void;
-    };
-};
-
-export type CollectionFormatData = {
-    payloads: {
-        CollectionFormat: {
-            /**
-             * This is an array parameter that is sent as csv format (comma-separated values)
-             */
-            parameterArrayCsv: Array<string> | null;
-            /**
-             * This is an array parameter that is sent as multi format (multiple parameter instances)
-             */
-            parameterArrayMulti: Array<string> | null;
-            /**
-             * This is an array parameter that is sent as pipes format (pipe-separated values)
-             */
-            parameterArrayPipes: Array<string> | null;
-            /**
-             * This is an array parameter that is sent as ssv format (space-separated values)
-             */
-            parameterArraySsv: Array<string> | null;
-            /**
-             * This is an array parameter that is sent as tsv format (tab-separated values)
-             */
-            parameterArrayTsv: Array<string> | null;
+    '/api/v{api-version}/parameters/deprecated': {
+        post: {
+            req: {
+                /**
+                 * This parameter is deprecated
+                 * @deprecated
+                 */
+                parameter: DeprecatedModel | null;
+            };
         };
     };
-
-    responses: {
-        CollectionFormat: void;
-    };
-};
-
-export type TypesData = {
-    payloads: {
-        Types: {
-            /**
-             * This is a number parameter
-             */
-            id?: number;
-            /**
-             * This is an array parameter
-             */
-            parameterArray: Array<string> | null;
-            /**
-             * This is a boolean parameter
-             */
-            parameterBoolean: boolean | null;
-            /**
-             * This is a dictionary parameter
-             */
-            parameterDictionary: Record<string, unknown> | null;
-            /**
-             * This is an enum parameter
-             */
-            parameterEnum: 'Success' | 'Warning' | 'Error' | null;
-            /**
-             * This is a number parameter
-             */
-            parameterNumber: number;
-            /**
-             * This is an object parameter
-             */
-            parameterObject: Record<string, unknown> | null;
-            /**
-             * This is a string parameter
-             */
-            parameterString: string | null;
+    '/api/v{api-version}/requestBody/': {
+        post: {
+            req: {
+                /**
+                 * A reusable request body
+                 */
+                foo?: ModelWithString;
+                /**
+                 * This is a reusable parameter
+                 */
+                parameter?: string;
+            };
         };
     };
-
-    responses: {
-        Types: number | string | boolean | Record<string, unknown>;
-    };
-};
-
-export type UploadData = {
-    payloads: {
-        UploadFile: {
-            /**
-             * Supply a file reference for upload
-             */
-            file: Blob | File;
+    '/api/v{api-version}/formData/': {
+        post: {
+            req: {
+                /**
+                 * A reusable request body
+                 */
+                formData?: ModelWithString;
+                /**
+                 * This is a reusable parameter
+                 */
+                parameter?: string;
+            };
         };
     };
-
-    responses: {
-        UploadFile: boolean;
-    };
-};
-
-export type FileResponseData = {
-    payloads: {
-        FileResponse: {
-            id: string;
+    '/api/v{api-version}/defaults': {
+        get: {
+            req: {
+                /**
+                 * This is a simple boolean with default value
+                 */
+                parameterBoolean?: boolean | null;
+                /**
+                 * This is a simple enum with default value
+                 */
+                parameterEnum?: 'Success' | 'Warning' | 'Error';
+                /**
+                 * This is a simple model with default value
+                 */
+                parameterModel?: ModelWithString | null;
+                /**
+                 * This is a simple number with default value
+                 */
+                parameterNumber?: number | null;
+                /**
+                 * This is a simple string with default value
+                 */
+                parameterString?: string | null;
+            };
+        };
+        post: {
+            req: {
+                /**
+                 * This is a simple boolean that is optional with default value
+                 */
+                parameterBoolean?: boolean;
+                /**
+                 * This is a simple enum that is optional with default value
+                 */
+                parameterEnum?: 'Success' | 'Warning' | 'Error';
+                /**
+                 * This is a simple model that is optional with default value
+                 */
+                parameterModel?: ModelWithString;
+                /**
+                 * This is a simple number that is optional with default value
+                 */
+                parameterNumber?: number;
+                /**
+                 * This is a simple string that is optional with default value
+                 */
+                parameterString?: string;
+            };
+        };
+        put: {
+            req: {
+                /**
+                 * This is a optional string with default
+                 */
+                parameterOptionalStringWithDefault?: string;
+                /**
+                 * This is a optional string with empty default
+                 */
+                parameterOptionalStringWithEmptyDefault?: string;
+                /**
+                 * This is a optional string with no default
+                 */
+                parameterOptionalStringWithNoDefault?: string;
+                /**
+                 * This is a string that can be null with default
+                 */
+                parameterStringNullableWithDefault?: string | null;
+                /**
+                 * This is a string that can be null with no default
+                 */
+                parameterStringNullableWithNoDefault?: string | null;
+                /**
+                 * This is a string with default
+                 */
+                parameterStringWithDefault: string;
+                /**
+                 * This is a string with empty default
+                 */
+                parameterStringWithEmptyDefault: string;
+                /**
+                 * This is a string with no default
+                 */
+                parameterStringWithNoDefault: string;
+            };
         };
     };
-
-    responses: {
-        FileResponse: Blob | File;
+    '/api/v{api-version}/no-content': {
+        get: {
+            res: {
+                204: void;
+            };
+        };
     };
-};
-
-export type ComplexData = {
-    payloads: {
-        ComplexTypes: {
-            /**
-             * Parameter containing object
-             */
-            parameterObject: {
-                first?: {
-                    second?: {
-                        third?: string;
+    '/api/v{api-version}/multiple-tags/response-and-no-content': {
+        get: {
+            res: {
+                200: number;
+                204: void;
+            };
+        };
+    };
+    '/api/v{api-version}/response': {
+        get: {
+            res: {
+                200: ModelWithString;
+            };
+        };
+        post: {
+            res: {
+                200: ModelWithString;
+            };
+        };
+        put: {
+            res: {
+                200: ModelWithString;
+                201: ModelThatExtends;
+                202: ModelThatExtendsExtends;
+            };
+        };
+    };
+    '/api/v{api-version}/multiple-tags/a': {
+        get: {
+            res: {
+                204: void;
+            };
+        };
+    };
+    '/api/v{api-version}/multiple-tags/b': {
+        get: {
+            res: {
+                204: void;
+            };
+        };
+    };
+    '/api/v{api-version}/collectionFormat': {
+        get: {
+            req: {
+                /**
+                 * This is an array parameter that is sent as csv format (comma-separated values)
+                 */
+                parameterArrayCsv: Array<string> | null;
+                /**
+                 * This is an array parameter that is sent as multi format (multiple parameter instances)
+                 */
+                parameterArrayMulti: Array<string> | null;
+                /**
+                 * This is an array parameter that is sent as pipes format (pipe-separated values)
+                 */
+                parameterArrayPipes: Array<string> | null;
+                /**
+                 * This is an array parameter that is sent as ssv format (space-separated values)
+                 */
+                parameterArraySsv: Array<string> | null;
+                /**
+                 * This is an array parameter that is sent as tsv format (tab-separated values)
+                 */
+                parameterArrayTsv: Array<string> | null;
+            };
+        };
+    };
+    '/api/v{api-version}/types': {
+        get: {
+            req: {
+                /**
+                 * This is a number parameter
+                 */
+                id?: number;
+                /**
+                 * This is an array parameter
+                 */
+                parameterArray: Array<string> | null;
+                /**
+                 * This is a boolean parameter
+                 */
+                parameterBoolean: boolean | null;
+                /**
+                 * This is a dictionary parameter
+                 */
+                parameterDictionary: Record<string, unknown> | null;
+                /**
+                 * This is an enum parameter
+                 */
+                parameterEnum: 'Success' | 'Warning' | 'Error' | null;
+                /**
+                 * This is a number parameter
+                 */
+                parameterNumber: number;
+                /**
+                 * This is an object parameter
+                 */
+                parameterObject: Record<string, unknown> | null;
+                /**
+                 * This is a string parameter
+                 */
+                parameterString: string | null;
+            };
+            res: {
+                200: number;
+                201: string;
+                202: boolean;
+                203: Record<string, unknown>;
+            };
+        };
+    };
+    '/api/v{api-version}/upload': {
+        post: {
+            req: {
+                /**
+                 * Supply a file reference for upload
+                 */
+                file: Blob | File;
+            };
+            res: {
+                200: boolean;
+            };
+        };
+    };
+    '/api/v{api-version}/file/{id}': {
+        get: {
+            req: {
+                id: string;
+            };
+            res: {
+                200: Blob | File;
+            };
+        };
+    };
+    '/api/v{api-version}/complex': {
+        get: {
+            req: {
+                /**
+                 * Parameter containing object
+                 */
+                parameterObject: {
+                    first?: {
+                        second?: {
+                            third?: string;
+                        };
+                    };
+                };
+                /**
+                 * Parameter containing reference
+                 */
+                parameterReference: ModelWithString;
+            };
+            res: {
+                200: Array<ModelWithString>;
+            };
+        };
+    };
+    '/api/v{api-version}/complex/{id}': {
+        put: {
+            req: {
+                id: number;
+                requestBody?: {
+                    readonly key: string | null;
+                    name: string | null;
+                    enabled?: boolean;
+                    readonly type: 'Monkey' | 'Horse' | 'Bird';
+                    listOfModels?: Array<ModelWithString> | null;
+                    listOfStrings?: Array<string> | null;
+                    parameters: ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary;
+                    readonly user?: {
+                        readonly id?: number;
+                        readonly name?: string | null;
                     };
                 };
             };
-            /**
-             * Parameter containing reference
-             */
-            parameterReference: ModelWithString;
+            res: {
+                200: ModelWithString;
+            };
         };
-        ComplexParams: {
-            id: number;
-            requestBody?: {
-                readonly key: string | null;
-                name: string | null;
-                enabled?: boolean;
-                readonly type: 'Monkey' | 'Horse' | 'Bird';
-                listOfModels?: Array<ModelWithString> | null;
-                listOfStrings?: Array<string> | null;
-                parameters: ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary;
-                readonly user?: {
-                    readonly id?: number;
-                    readonly name?: string | null;
+    };
+    '/api/v{api-version}/multipart': {
+        post: {
+            req: {
+                formData?: {
+                    content?: Blob | File;
+                    data?: ModelWithString | null;
+                };
+            };
+        };
+        get: {
+            res: {
+                200: {
+                    file?: Blob | File;
+                    metadata?: {
+                        foo?: string;
+                        bar?: string;
+                    };
                 };
             };
         };
     };
-
-    responses: {
-        ComplexTypes: Array<ModelWithString>;
-        ComplexParams: ModelWithString;
-    };
-};
-
-export type MultipartData = {
-    payloads: {
-        MultipartRequest: {
-            formData?: {
-                content?: Blob | File;
-                data?: ModelWithString | null;
+    '/api/v{api-version}/header': {
+        post: {
+            res: {
+                200: string;
             };
         };
     };
-
-    responses: {
-        MultipartRequest: void;
-        MultipartResponse: {
-            file?: Blob | File;
-            metadata?: {
-                foo?: string;
-                bar?: string;
+    '/api/v{api-version}/error': {
+        post: {
+            req: {
+                /**
+                 * Status code to return
+                 */
+                status: number;
+            };
+            res: {
+                200: any;
             };
         };
     };
-};
-
-export type HeaderData = {
-    responses: {
-        CallWithResultFromHeader: string;
-    };
-};
-
-export type ErrorData = {
-    payloads: {
-        TestErrorCode: {
-            /**
-             * Status code to return
-             */
-            status: number;
+    '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串': {
+        post: {
+            req: {
+                /**
+                 * Dummy input param
+                 */
+                nonAsciiParamæøåÆøÅöôêÊ: number;
+            };
+            res: {
+                200: Array<NonAsciiStringæøåÆØÅöôêÊ字符串>;
+            };
         };
-    };
-
-    responses: {
-        TestErrorCode: any;
-    };
-};
-
-export type NonAsciiÆøåÆøÅöôêÊData = {
-    payloads: {
-        NonAsciiæøåÆøÅöôêÊ字符串: {
-            /**
-             * Dummy input param
-             */
-            nonAsciiParamæøåÆøÅöôêÊ: number;
-        };
-    };
-
-    responses: {
-        NonAsciiæøåÆøÅöôêÊ字符串: Array<NonAsciiStringæøåÆØÅöôêÊ字符串>;
     };
 };

@@ -1,15 +1,12 @@
 import path from 'node:path';
 
-import camelCase from 'camelcase';
-
 import { type Comments, compiler, type Node, TypeScriptFile } from '../../compiler';
-import type { Model, OpenApi, Service } from '../../openApi';
+import type { Model, OpenApi, OperationParameter, Service } from '../../openApi';
 import type { Client } from '../../types/client';
 import { getConfig } from '../config';
 import { enumKey, enumName, enumUnionType, enumValue } from '../enum';
 import { escapeComment } from '../escape';
-import { operationKey } from '../handlebars';
-import { modelIsRequired } from '../required';
+import { serviceExportedNamespace } from '../handlebars';
 import { sortByName } from '../sort';
 import { toType } from './type';
 
@@ -81,80 +78,164 @@ const processModel = (client: Client, model: Model) => {
     }
 };
 
-const operationDataType = (service: Service) => {
-    const config = getConfig();
-    const operationsWithParameters = service.operations.filter(operation => operation.parameters.length);
-    const namespace = `${camelCase(service.name, { pascalCase: true })}Data`;
-    const output = `export type ${namespace} = {
-        ${
-            operationsWithParameters.length
-                ? `
-        payloads: {
-            ${operationsWithParameters
-                .map(
-                    operation => `${operationKey(operation)}: {
-                        ${sortByName([...operation.parameters])
-                            .filter(parameter => {
-                                if (!config.experimental) {
-                                    return true;
-                                }
-                                return parameter.in !== 'query';
-                            })
-                            .map(parameter => {
-                                let comment: string[] = [];
-                                if (parameter.description) {
-                                    comment = ['/**', ` * ${escapeComment(parameter.description)}`, ' */'];
-                                }
-                                return [
-                                    ...comment,
-                                    `${parameter.name + modelIsRequired(parameter)}: ${toType(parameter)}`,
-                                ].join('\n');
-                            })
-                            .join('\n')}
-                        ${
-                            config.experimental
-                                ? `
-                        query${operation.parametersQuery.every(parameter => !parameter.isRequired) ? '?' : ''}: {
-                            ${sortByName([...operation.parametersQuery])
-                                .map(parameter => {
-                                    let comment: string[] = [];
-                                    if (parameter.description) {
-                                        comment = ['/**', ` * ${escapeComment(parameter.description)}`, ' */'];
-                                    }
-                                    return [
-                                        ...comment,
-                                        `${parameter.name + modelIsRequired(parameter)}: ${toType(parameter)}`,
-                                    ].join('\n');
-                                })
-                                .join('\n')}
-                        }
-                        `
-                                : ''
-                        }
-                    };`
-                )
-                .join('\n')}
-        }
-        `
-                : ''
-        }
-        ${
-            service.operations.length
-                ? `
-        responses: {
-            ${service.operations.map(
-                operation =>
-                    `${operationKey(operation)}: ${
-                        !operation.results.length ? 'void' : operation.results.map(result => toType(result)).join(' | ')
+const processServiceTypes = (services: Service[]) => {
+    type ResMap = Map<number, string>;
+    type MethodMap = Map<'req' | 'res', ResMap | OperationParameter[]>;
+    type MethodKey = Service['operations'][number]['method'];
+    type PathMap = Map<MethodKey, MethodMap>;
+
+    const pathsMap = new Map<string, PathMap>();
+
+    services.forEach(service => {
+        service.operations.forEach(operation => {
+            const hasReq = operation.parameters.length;
+            const hasRes = operation.results.length;
+
+            if (hasReq || hasRes) {
+                let pathMap = pathsMap.get(operation.path);
+                if (!pathMap) {
+                    pathsMap.set(operation.path, new Map());
+                    pathMap = pathsMap.get(operation.path)!;
+                }
+
+                let methodMap = pathMap.get(operation.method);
+                if (!methodMap) {
+                    pathMap.set(operation.method, new Map());
+                    methodMap = pathMap.get(operation.method)!;
+                }
+
+                if (hasReq) {
+                    methodMap.set('req', sortByName([...operation.parameters]));
+                }
+
+                if (hasRes) {
+                    let resMap = methodMap.get('res');
+                    if (!resMap) {
+                        methodMap.set('res', new Map());
+                        resMap = methodMap.get('res')!;
                     }
-                `
-            )}
-        }
-        `
-                : ''
-        }
-    }`;
-    return output;
+
+                    if (Array.isArray(resMap)) {
+                        return;
+                    }
+
+                    operation.results.forEach(result => {
+                        resMap.set(result.code, toType(result)!);
+                    });
+                }
+            }
+        });
+    });
+
+    const properties = Array.from(pathsMap).map(([path, pathMap]) => {
+        const pathParameters = Array.from(pathMap).map(([method, methodMap]) => {
+            const methodParameters = Array.from(methodMap).map(([name, baseOrResMap]) => {
+                const reqResParameters = Array.isArray(baseOrResMap)
+                    ? baseOrResMap
+                    : Array.from(baseOrResMap).map(([code, base]) => {
+                          const value: Model = {
+                              $refs: [],
+                              base,
+                              description: null,
+                              enum: [],
+                              enums: [],
+                              export: 'generic',
+                              imports: [],
+                              isDefinition: false,
+                              isNullable: false,
+                              isReadOnly: false,
+                              isRequired: true,
+                              link: null,
+                              name: String(code),
+                              // TODO: move query params into separate query key
+                              properties: [],
+                              template: null,
+                              type: '',
+                          };
+                          return value;
+                      });
+
+                const reqResKey: Model = {
+                    $refs: [],
+                    base: '',
+                    description: null,
+                    enum: [],
+                    enums: [],
+                    export: 'interface',
+                    imports: [],
+                    isDefinition: false,
+                    isNullable: false,
+                    isReadOnly: false,
+                    isRequired: true,
+                    link: null,
+                    name,
+                    properties: reqResParameters,
+                    template: null,
+                    type: '',
+                };
+                return reqResKey;
+            });
+            const methodKey: Model = {
+                $refs: [],
+                base: '',
+                description: null,
+                enum: [],
+                enums: [],
+                export: 'interface',
+                imports: [],
+                isDefinition: false,
+                isNullable: false,
+                isReadOnly: false,
+                isRequired: true,
+                link: null,
+                name: method.toLocaleLowerCase(),
+                properties: methodParameters,
+                template: null,
+                type: '',
+            };
+            return methodKey;
+        });
+        const pathKey: Model = {
+            $refs: [],
+            base: '',
+            description: null,
+            enum: [],
+            enums: [],
+            export: 'interface',
+            imports: [],
+            isDefinition: false,
+            isNullable: false,
+            isReadOnly: false,
+            isRequired: true,
+            link: null,
+            name: `'${path}'`,
+            properties: pathParameters,
+            template: null,
+            type: '',
+        };
+        return pathKey;
+    });
+
+    const type = toType({
+        $refs: [],
+        base: '',
+        description: null,
+        enum: [],
+        enums: [],
+        export: 'interface',
+        imports: [],
+        isDefinition: false,
+        isNullable: false,
+        isReadOnly: false,
+        isRequired: false,
+        link: null,
+        name: '',
+        properties,
+        template: null,
+        type: '',
+    });
+    const namespace = serviceExportedNamespace();
+    return compiler.typedef.alias(namespace, type!);
 };
 
 /**
@@ -172,9 +253,9 @@ export const writeClientModels = async (openApi: OpenApi, outputPath: string, cl
         file.add(...n);
     }
 
-    for (const service of client.services) {
-        const operationDataTypes = operationDataType(service);
-        file.add(operationDataTypes);
+    if (client.services.length) {
+        const serviceTypes = processServiceTypes(client.services);
+        file.add(serviceTypes);
     }
 
     file.write(path.resolve(outputPath, 'models.ts'), '\n\n');
