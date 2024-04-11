@@ -133,7 +133,7 @@ const initConfig = async (userConfig: UserConfig, dependencies: Dependencies) =>
 
     if (!useOptions) {
         console.warn(
-            '⚠️ Deprecation warning: useOptions set to false. This setting will be removed in future versions. Please migrate useOptions to true https://github.com/hey-api/openapi-ts#v0.27.38'
+            '⚠️ Deprecation warning: useOptions set to false. This setting will be removed in future versions. Please migrate useOptions to true https://heyapi.vercel.app/openapi-ts/migrating.html#v0-27-38'
         );
     }
 
