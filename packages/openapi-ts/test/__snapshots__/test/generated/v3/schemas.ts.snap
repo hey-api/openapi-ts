@@ -1568,6 +1568,55 @@ export const $ModelWithAnyOfConstantSizeArray = {
     maxItems: 3,
 } as const;
 
+export const $ModelWithAnyOfConstantSizeArrayNullable = {
+    type: 'array',
+    items: {
+        oneOf: [
+            {
+                type: 'number',
+                nullable: true,
+            },
+            {
+                type: 'string',
+            },
+        ],
+    },
+    minItems: 3,
+    maxItems: 3,
+} as const;
+
+export const $ModelWithAnyOfConstantSizeArrayWithNSizeAndOptions = {
+    type: 'array',
+    items: {
+        oneOf: [
+            {
+                type: 'number',
+            },
+            {
+                type: 'string',
+            },
+        ],
+    },
+    minItems: 2,
+    maxItems: 2,
+} as const;
+
+export const $ModelWithAnyOfConstantSizeArrayAndIntersect = {
+    type: 'array',
+    items: {
+        allOf: [
+            {
+                type: 'number',
+            },
+            {
+                type: 'string',
+            },
+        ],
+    },
+    minItems: 2,
+    maxItems: 2,
+} as const;
+
 export const $SimpleParameter = {
     description: 'This is a reusable parameter',
     name: 'parameter',
