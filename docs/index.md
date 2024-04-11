@@ -7,7 +7,7 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: /welcome
+      link: /openapi-ts/get-started
     - theme: alt
       text: View on GitHub
       link: https://github.com/hey-api/openapi-ts
