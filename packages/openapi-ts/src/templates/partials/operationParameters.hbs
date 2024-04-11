@@ -1,10 +1,10 @@
 {{#if @root.$config.useOptions~}}
-{{#if parameters}}data: {{{nameOperationDataType @root 'req' this}}}{{#ifOperationDataOptional parameters}} = {}{{/ifOperationDataOptional}}{{/if}}
+{{#if parameters}}data: {{{nameOperationDataType 'req' this}}}{{#ifOperationDataOptional parameters}} = {}{{/ifOperationDataOptional}}{{/if}}
 {{~else}}
 {{#if parameters}}
 
 {{#each parameters}}
-{{{name}}}{{{modelIsRequired this}}}: {{{nameOperationDataType @root 'req' ../this name}}}{{#hasDefault this}} = {{{getDefaultPrintable this}}}{{/hasDefault}},
+{{{name}}}{{{modelIsRequired this}}}: {{{nameOperationDataType 'req' ../this name}}}{{#hasDefault this}} = {{{getDefaultPrintable this}}}{{/hasDefault}},
 {{/each}}
 {{/if}}
 {{/if}}

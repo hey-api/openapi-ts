@@ -1710,16 +1710,8 @@
                 ]
             },
             "EnumWithXEnumNames": {
-                "enum": [
-                    0,
-                    1,
-                    2
-                ],
-                "x-enumNames": [
-                    "zero",
-                    "one",
-                    "two"
-                ]
+                "enum": [0, 1, 2],
+                "x-enumNames": ["zero", "one", "two"]
             },
             "ArrayWithNumbers": {
                 "description": "This is a simple array with numbers",

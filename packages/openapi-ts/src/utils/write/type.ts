@@ -18,7 +18,7 @@ const base = (model: Model) => {
     return compiler.typedef.basic(model.base);
 };
 
-const typeReference = (model: Model) => compiler.typedef.union([base(model)], model.isNullable)
+const typeReference = (model: Model) => compiler.typedef.union([base(model)], model.isNullable);
 
 const typeArray = (model: Model) => {
     if (
@@ -48,7 +48,9 @@ const typeDict = (model: Model) => {
 
 const typeUnion = (model: Model, filterProperties: 'exact' | undefined = undefined) => {
     const models = model.properties;
-    const types = models.map(m => toType(m, filterProperties)).filter((...args) => filterProperties === 'exact' || unique(...args));
+    const types = models
+        .map(m => toType(m, filterProperties))
+        .filter((...args) => filterProperties === 'exact' || unique(...args));
     const union = types.join(filterProperties === 'exact' ? ', ' : ' | ');
     const unionString = types.length > 1 && types.length !== models.length ? `(${union})` : union;
     return `${unionString}${model.isNullable ? ' | null' : ''}`;

@@ -74,9 +74,15 @@ export type SimpleStringWithPattern = string | null;
 /**
  * This is a simple enum with strings
  */
-export type EnumWithStrings = 'Success' | 'Warning' | 'Error' | '\'Single Quote\'' | '"Double Quotes"' | 'Non-ascii: øæåôöØÆÅÔÖ字符串';
+export type EnumWithStrings =
+    | 'Success'
+    | 'Warning'
+    | 'Error'
+    | "'Single Quote'"
+    | '"Double Quotes"'
+    | 'Non-ascii: øæåôöØÆÅÔÖ字符串';
 
-export type EnumWithReplacedCharacters = '\'Single Quote\'' | '"Double Quotes"' | 'øæåôöØÆÅÔÖ字符串' | 3.1 | '';
+export type EnumWithReplacedCharacters = "'Single Quote'" | '"Double Quotes"' | 'øæåôöØÆÅÔÖ字符串' | 3.1 | '';
 
 /**
  * This is a simple enum with numbers
@@ -131,11 +137,14 @@ export type ArrayWithProperties = Array<{
 /**
  * This is a simple array with any of properties
  */
-export type ArrayWithAnyOfProperties = Array<{
-    foo?: string;
-} | {
-    bar?: string;
-}>;
+export type ArrayWithAnyOfProperties = Array<
+    | {
+          foo?: string;
+      }
+    | {
+          bar?: string;
+      }
+>;
 
 export type AnyOfAnyAndNull = {
     data?: unknown | null;
@@ -145,11 +154,14 @@ export type AnyOfAnyAndNull = {
  * This is a simple array with any of properties
  */
 export type AnyOfArrays = {
-    results?: Array<{
-    foo?: string;
-} | {
-    bar?: string;
-}>;
+    results?: Array<
+        | {
+              foo?: string;
+          }
+        | {
+              bar?: string;
+          }
+    >;
 };
 
 /**
@@ -180,10 +192,13 @@ export type DictionaryWithDictionary = Record<string, Record<string, string>>;
 /**
  * This is a complex dictionary
  */
-export type DictionaryWithProperties = Record<string, {
-    foo?: string;
-    bar?: string;
-}>;
+export type DictionaryWithProperties = Record<
+    string,
+    {
+        foo?: string;
+        bar?: string;
+    }
+>;
 
 /**
  * This is a model with one number property
@@ -357,9 +372,12 @@ export type CompositionWithOneOf = {
  * This is a model with one property with a 'one of' relationship where the options are not $ref
  */
 export type CompositionWithOneOfAnonymous = {
-    propA?: {
-    propA?: string;
-} | string | number;
+    propA?:
+        | {
+              propA?: string;
+          }
+        | string
+        | number;
 };
 
 /**
@@ -394,9 +412,12 @@ export type CompositionWithAnyOf = {
  * This is a model with one property with a 'any of' relationship where the options are not $ref
  */
 export type CompositionWithAnyOfAnonymous = {
-    propA?: {
-    propA?: string;
-} | string | number;
+    propA?:
+        | {
+              propA?: string;
+          }
+        | string
+        | number;
 };
 
 /**
@@ -408,7 +429,7 @@ export type CompositionWithNestedAnyAndTypeNull = {
 
 export type Enum1 = 'Bird' | 'Dog';
 
-export type ConstValue = "ConstValue";
+export type ConstValue = 'ConstValue';
 
 /**
  * This is a model with one property with a 'any of' relationship where the options are not $ref
@@ -421,9 +442,14 @@ export type CompositionWithNestedAnyOfAndNull = {
  * This is a model with one property with a 'one of' relationship
  */
 export type CompositionWithOneOfAndNullable = {
-    propA?: {
-    boolean?: boolean;
-} | ModelWithEnum | ModelWithArray | ModelWithDictionary | null;
+    propA?:
+        | {
+              boolean?: boolean;
+          }
+        | ModelWithEnum
+        | ModelWithArray
+        | ModelWithDictionary
+        | null;
 };
 
 /**
@@ -451,18 +477,27 @@ export type CompositionWithOneOfAndComplexArrayDictionary = {
  * This is a model with one property with a 'all of' relationship
  */
 export type CompositionWithAllOfAndNullable = {
-    propA?: ({
-    boolean?: boolean;
-} & ModelWithEnum & ModelWithArray & ModelWithDictionary) | null;
+    propA?:
+        | ({
+              boolean?: boolean;
+          } & ModelWithEnum &
+              ModelWithArray &
+              ModelWithDictionary)
+        | null;
 };
 
 /**
  * This is a model with one property with a 'any of' relationship
  */
 export type CompositionWithAnyOfAndNullable = {
-    propA?: {
-    boolean?: boolean;
-} | ModelWithEnum | ModelWithArray | ModelWithDictionary | null;
+    propA?:
+        | {
+              boolean?: boolean;
+          }
+        | ModelWithEnum
+        | ModelWithArray
+        | ModelWithDictionary
+        | null;
 };
 
 /**
@@ -476,11 +511,11 @@ export type CompositionBaseModel = {
 /**
  * This is a model that extends the base model
  */
-export type CompositionExtendedModel = (CompositionBaseModel & {
+export type CompositionExtendedModel = CompositionBaseModel & {
     firstName: string;
     lastname: string;
     age: number;
-});
+};
 
 /**
  * This is a model with one nested property
@@ -505,10 +540,10 @@ export type ModelWithProperties = {
  */
 export type ModelWithNestedProperties = {
     readonly first: {
-    readonly second: {
-    readonly third: string | null;
-} | null;
-} | null;
+        readonly second: {
+            readonly third: string | null;
+        } | null;
+    } | null;
 };
 
 /**
@@ -539,18 +574,19 @@ export type ModelWithDuplicateImports = {
 /**
  * This is a model that extends another model
  */
-export type ModelThatExtends = (ModelWithString & {
+export type ModelThatExtends = ModelWithString & {
     propExtendsA?: string;
     propExtendsB?: ModelWithString;
-});
+};
 
 /**
  * This is a model that extends another model
  */
-export type ModelThatExtendsExtends = (ModelWithString & ModelThatExtends & {
-    propExtendsC?: string;
-    propExtendsD?: ModelWithString;
-});
+export type ModelThatExtendsExtends = ModelWithString &
+    ModelThatExtends & {
+        propExtendsC?: string;
+        propExtendsD?: ModelWithString;
+    };
 
 /**
  * This is a model that contains a some patterns
@@ -601,10 +637,10 @@ export type FreeFormObjectWithAdditionalPropertiesEqTrue = Record<string, unknow
 export type FreeFormObjectWithAdditionalPropertiesEqEmptyObject = Record<string, unknown>;
 
 export type ModelWithConst = {
-    String?: "String";
+    String?: 'String';
     number?: 0;
     null?: null;
-    withType?: "Some string";
+    withType?: 'Some string';
 };
 
 /**
@@ -622,15 +658,17 @@ export type NestedAnyOfArraysNullable = {
     nullableArray?: Array<string | boolean> | null;
 };
 
-export type CompositionWithOneOfAndProperties = {
-    foo: SimpleParameter;
-    baz: number | null;
-    qux: number;
-} | {
-    bar: NonAsciiStringæøåÆØÅöôêÊ字符串;
-    baz: number | null;
-    qux: number;
-};
+export type CompositionWithOneOfAndProperties =
+    | {
+          foo: SimpleParameter;
+          baz: number | null;
+          qux: number;
+      }
+    | {
+          bar: NonAsciiStringæøåÆØÅöôêÊ字符串;
+          baz: number | null;
+          qux: number;
+      };
 
 /**
  * An object that can be null
@@ -643,21 +681,24 @@ export type ModelWithNullableObject = {
     data?: NullableObject;
 };
 
-export type ModelWithOneOfEnum = {
-    foo: 'Bar';
-} | {
-    foo: 'Baz';
-} | {
-    foo: 'Qux';
-} | {
-    content: string;
-    foo: 'Quux';
-} | {
-    content: [
-    string, string
-];
-    foo: 'Corge';
-};
+export type ModelWithOneOfEnum =
+    | {
+          foo: 'Bar';
+      }
+    | {
+          foo: 'Baz';
+      }
+    | {
+          foo: 'Qux';
+      }
+    | {
+          content: string;
+          foo: 'Quux';
+      }
+    | {
+          content: [string, string];
+          foo: 'Corge';
+      };
 
 export type ModelWithNestedArrayEnumsDataFoo = 'foo' | 'bar';
 
@@ -683,13 +724,9 @@ export type ModelWithReadOnlyAndWriteOnly = {
     baz: string;
 };
 
-export type ModelWithConstantSizeArray = [
-    number
-];
+export type ModelWithConstantSizeArray = [number];
 
-export type ModelWithAnyOfConstantSizeArray = [
-    number, string
-];
+export type ModelWithAnyOfConstantSizeArray = [number, string];
 
 /**
  * This is a reusable parameter
@@ -697,589 +734,500 @@ export type ModelWithAnyOfConstantSizeArray = [
 export type SimpleParameter = string;
 
 export type $OpenApiTsDefault = {
-    req: {
-    PostServiceWithEmptyTag: {
-    requestBody: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
-    ?: unknown;
-};
-};
-    res: {
-    ServiceWithEmptyTag: void;
-    PostServiceWithEmptyTag: ModelWithReadOnlyAndWriteOnly;
-};
+    '/api/v{api-version}/no-tag': {
+        post: {
+            req: {
+                200: {
+                    requestBody: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
+                };
+            };
+            res: ModelWithReadOnlyAndWriteOnly;
+        };
+        get: {
+            res: void;
+        };
+    };
 };
 
 export type $OpenApiTsSimple = {
-    res: {
-    ApiVversionOdataControllerCount: Model_From_Zendesk;
-    GetCallWithoutParametersAndResponse: void;
-    PutCallWithoutParametersAndResponse: void;
-    PostCallWithoutParametersAndResponse: void;
-    DeleteCallWithoutParametersAndResponse: void;
-    OptionsCallWithoutParametersAndResponse: void;
-    HeadCallWithoutParametersAndResponse: void;
-    PatchCallWithoutParametersAndResponse: void;
-};
+    '/api/v{api-version}/simple/$count': {
+        get: {
+            res: Model_From_Zendesk;
+        };
+    };
+    '/api/v{api-version}/simple': {
+        get: {
+            res: void;
+        };
+        put: {
+            res: void;
+        };
+        post: {
+            res: void;
+        };
+        delete: {
+            res: void;
+        };
+        options: {
+            res: void;
+        };
+        head: {
+            res: void;
+        };
+        patch: {
+            res: void;
+        };
+    };
 };
 
 export type $OpenApiTsParameters = {
-    req: {
-    DeleteFoo: {
-    /**
-     * bar in method
-     */
-    bar: string;
-    /**
-     * foo in method
-     */
-    foo: string;
-    ?: unknown;
-};
-    CallWithParameters: {
-    /**
-     * This is the parameter that goes into the cookie
-     */
-    parameterCookie: string | null;
-    /**
-     * This is the parameter that goes into the form data
-     */
-    parameterForm: string | null;
-    /**
-     * This is the parameter that goes into the header
-     */
-    parameterHeader: string | null;
-    /**
-     * This is the parameter that goes into the path
-     */
-    parameterPath: string | null;
-    /**
-     * This is the parameter that goes into the body
-     */
-    requestBody: ModelWithString | null;
-    : {
-    fooAllOfEnum: ModelWithNestedArrayEnumsDataFoo;
-    fooRefEnum?: ModelWithNestedArrayEnumsDataFoo;
-    /**
-     * This is the parameter that goes into the query params
-     */
-    parameterQuery: string | null;
-};
-};
-    CallWithWeirdParameterNames: {
-    /**
-     * This is the parameter that goes into the cookie
-     */
-    parameterCookie: string | null;
-    /**
-     * This is the parameter that goes into the request form data
-     */
-    parameterForm: string | null;
-    /**
-     * This is the parameter that goes into the request header
-     */
-    parameterHeader: string | null;
-    /**
-     * This is the parameter that goes into the path
-     */
-    parameterPath1?: string;
-    /**
-     * This is the parameter that goes into the path
-     */
-    parameterPath2?: string;
-    /**
-     * This is the parameter that goes into the path
-     */
-    parameterPath3?: string;
-    /**
-     * This is the parameter that goes into the body
-     */
-    requestBody: ModelWithString | null;
-    : {
-    /**
-     * This is the parameter with a reserved keyword
-     */
-    _default?: string;
-    /**
-     * This is the parameter that goes into the request query params
-     */
-    parameterQuery: string | null;
-};
-};
-    GetCallWithOptionalParam: {
-    /**
-     * This is a required parameter
-     */
-    requestBody: ModelWithOneOfEnum;
-    ?: {
-    /**
-     * This is an optional parameter
-     */
-    parameter?: string;
-};
-};
-    PostCallWithOptionalParam: {
-    /**
-     * This is an optional parameter
-     */
-    requestBody?: ModelWithString;
-    : {
-    /**
-     * This is a required parameter
-     */
-    parameter: Pageable;
-};
-};
-};
-    res: {
-    DeleteFoo: void;
-    CallWithParameters: void;
-    CallWithWeirdParameterNames: void;
-    GetCallWithOptionalParam: void;
-    PostCallWithOptionalParam: void;
-};
+    '/api/v{api-version}/foo/{foo}/bar/{bar}': {
+        delete: {
+            res: void;
+        };
+    };
+    '/api/v{api-version}/parameters/{parameterPath}': {
+        post: {
+            res: void;
+        };
+    };
+    '/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}': {
+        post: {
+            res: void;
+        };
+    };
+    '/api/v{api-version}/parameters/': {
+        get: {
+            res: void;
+        };
+        post: {
+            res: void;
+        };
+    };
 };
 
 export type $OpenApiTsDescriptions = {
-    req: {
-    CallWithDescriptions: {
-    ?: {
-    /**
-     * Testing backticks in string: `backticks` and ```multiple backticks``` should work
-     */
-    parameterWithBackticks?: unknown;
-    /**
-     * Testing multiline comments in string: First line
-     * Second line
-     *
-     * Fourth line
-     */
-    parameterWithBreaks?: unknown;
-    /**
-     * Testing expression placeholders in string: ${expression} should work
-     */
-    parameterWithExpressionPlaceholders?: unknown;
-    /**
-     * Testing quotes in string: 'single quote''' and "double quotes""" should work
-     */
-    parameterWithQuotes?: unknown;
-    /**
-     * Testing reserved characters in string: * inline * and ** inline ** should work
-     */
-    parameterWithReservedCharacters?: unknown;
-    /**
-     * Testing slashes in string: \backwards\\\ and /forwards/// should work
-     */
-    parameterWithSlashes?: unknown;
-};
-};
-};
-    res: {
-    CallWithDescriptions: void;
-};
+    '/api/v{api-version}/descriptions/': {
+        post: {
+            res: void;
+        };
+    };
 };
 
 export type $OpenApiTsDeprecated = {
-    req: {
-    DeprecatedCall: {
-    /**
-     * This parameter is deprecated
-     * @deprecated
-     */
-    parameter: DeprecatedModel | null;
-    ?: unknown;
-};
-};
-    res: {
-    DeprecatedCall: void;
-};
+    '/api/v{api-version}/parameters/deprecated': {
+        post: {
+            res: void;
+        };
+    };
 };
 
 export type $OpenApiTsRequestBody = {
-    req: {
-    PostApiRequestBody: {
-    /**
-     * A reusable request body
-     */
-    foo?: ModelWithString;
-    ?: {
-    /**
-     * This is a reusable parameter
-     */
-    parameter?: string;
-};
-};
-};
-    res: {
-    PostApiRequestBody: void;
-};
+    '/api/v{api-version}/requestBody/': {
+        post: {
+            res: void;
+        };
+    };
 };
 
 export type $OpenApiTsFormData = {
-    req: {
-    PostApiFormData: {
-    /**
-     * A reusable request body
-     */
-    formData?: ModelWithString;
-    ?: {
-    /**
-     * This is a reusable parameter
-     */
-    parameter?: string;
-};
-};
-};
-    res: {
-    PostApiFormData: void;
-};
+    '/api/v{api-version}/formData/': {
+        post: {
+            res: void;
+        };
+    };
 };
 
 export type $OpenApiTsDefaults = {
-    req: {
-    CallWithDefaultParameters: {
-    ?: {
-    /**
-     * This is a simple boolean with default value
-     */
-    parameterBoolean?: boolean | null;
-    /**
-     * This is a simple enum with default value
-     */
-    parameterEnum?: 'Success' | 'Warning' | 'Error';
-    /**
-     * This is a simple model with default value
-     */
-    parameterModel?: ModelWithString | null;
-    /**
-     * This is a simple number with default value
-     */
-    parameterNumber?: number | null;
-    /**
-     * This is a simple string with default value
-     */
-    parameterString?: string | null;
-};
-};
-    CallWithDefaultOptionalParameters: {
-    ?: {
-    /**
-     * This is a simple boolean that is optional with default value
-     */
-    parameterBoolean?: boolean;
-    /**
-     * This is a simple enum that is optional with default value
-     */
-    parameterEnum?: 'Success' | 'Warning' | 'Error';
-    /**
-     * This is a simple model that is optional with default value
-     */
-    parameterModel?: ModelWithString;
-    /**
-     * This is a simple number that is optional with default value
-     */
-    parameterNumber?: number;
-    /**
-     * This is a simple string that is optional with default value
-     */
-    parameterString?: string;
-};
-};
-    CallToTestOrderOfParams: {
-    : {
-    /**
-     * This is a optional string with default
-     */
-    parameterOptionalStringWithDefault?: string;
-    /**
-     * This is a optional string with empty default
-     */
-    parameterOptionalStringWithEmptyDefault?: string;
-    /**
-     * This is a optional string with no default
-     */
-    parameterOptionalStringWithNoDefault?: string;
-    /**
-     * This is a string that can be null with default
-     */
-    parameterStringNullableWithDefault?: string | null;
-    /**
-     * This is a string that can be null with no default
-     */
-    parameterStringNullableWithNoDefault?: string | null;
-    /**
-     * This is a string with default
-     */
-    parameterStringWithDefault: string;
-    /**
-     * This is a string with empty default
-     */
-    parameterStringWithEmptyDefault: string;
-    /**
-     * This is a string with no default
-     */
-    parameterStringWithNoDefault: string;
-};
-};
-};
-    res: {
-    CallWithDefaultParameters: void;
-    CallWithDefaultOptionalParameters: void;
-    CallToTestOrderOfParams: void;
-};
+    '/api/v{api-version}/defaults': {
+        get: {
+            res: void;
+        };
+        post: {
+            res: void;
+        };
+        put: {
+            res: void;
+        };
+    };
 };
 
 export type $OpenApiTsDuplicate = {
-    res: {
-    DuplicateName: void;
-    DuplicateName1: void;
-    DuplicateName2: void;
-    DuplicateName3: void;
-};
+    '/api/v{api-version}/duplicate': {
+        get: {
+            res: void;
+        };
+        post: {
+            res: void;
+        };
+        put: {
+            res: void;
+        };
+        delete: {
+            res: void;
+        };
+    };
 };
 
 export type $OpenApiTsNoContent = {
-    res: {
-    CallWithNoContentResponse: void;
-    CallWithResponseAndNoContentResponse: number | void;
-};
+    '/api/v{api-version}/no-content': {
+        get: {
+            res: void;
+        };
+    };
+    '/api/v{api-version}/multiple-tags/response-and-no-content': {
+        get: {
+            res: number | void;
+        };
+    };
 };
 
 export type $OpenApiTsResponse = {
-    res: {
-    CallWithResponseAndNoContentResponse: number | void;
-    CallWithResponse: ModelWithString;
-    CallWithDuplicateResponses: ModelWithString;
-    CallWithResponses: {
-    readonly '@namespace.string'?: string;
-    readonly '@namespace.integer'?: number;
-    readonly value?: Array<ModelWithString>;
-} | ModelWithString | ModelThatExtends | ModelThatExtendsExtends;
-};
+    '/api/v{api-version}/multiple-tags/response-and-no-content': {
+        get: {
+            res: number | void;
+        };
+    };
+    '/api/v{api-version}/response': {
+        get: {
+            res: ModelWithString;
+        };
+        post: {
+            res: ModelWithString;
+        };
+        put: {
+            res:
+                | {
+                      readonly '@namespace.string'?: string;
+                      readonly '@namespace.integer'?: number;
+                      readonly value?: Array<ModelWithString>;
+                  }
+                | ModelWithString
+                | ModelThatExtends
+                | ModelThatExtendsExtends;
+        };
+    };
 };
 
 export type $OpenApiTsMultipleTags1 = {
-    res: {
-    DummyA: void;
-    DummyB: void;
-};
+    '/api/v{api-version}/multiple-tags/a': {
+        get: {
+            res: void;
+        };
+    };
+    '/api/v{api-version}/multiple-tags/b': {
+        get: {
+            res: void;
+        };
+    };
 };
 
 export type $OpenApiTsMultipleTags2 = {
-    res: {
-    DummyA: void;
-    DummyB: void;
-};
+    '/api/v{api-version}/multiple-tags/a': {
+        get: {
+            res: void;
+        };
+    };
+    '/api/v{api-version}/multiple-tags/b': {
+        get: {
+            res: void;
+        };
+    };
 };
 
 export type $OpenApiTsMultipleTags3 = {
-    res: {
-    DummyB: void;
-};
+    '/api/v{api-version}/multiple-tags/b': {
+        get: {
+            res: void;
+        };
+    };
 };
 
 export type $OpenApiTsCollectionFormat = {
-    req: {
-    CollectionFormat: {
-    : {
-    /**
-     * This is an array parameter that is sent as csv format (comma-separated values)
-     */
-    parameterArrayCsv: Array<string> | null;
-    /**
-     * This is an array parameter that is sent as multi format (multiple parameter instances)
-     */
-    parameterArrayMulti: Array<string> | null;
-    /**
-     * This is an array parameter that is sent as pipes format (pipe-separated values)
-     */
-    parameterArrayPipes: Array<string> | null;
-    /**
-     * This is an array parameter that is sent as ssv format (space-separated values)
-     */
-    parameterArraySsv: Array<string> | null;
-    /**
-     * This is an array parameter that is sent as tsv format (tab-separated values)
-     */
-    parameterArrayTsv: Array<string> | null;
-};
-};
-};
-    res: {
-    CollectionFormat: void;
-};
+    '/api/v{api-version}/collectionFormat': {
+        get: {
+            res: void;
+        };
+    };
 };
 
 export type $OpenApiTsTypes = {
-    req: {
-    Types: {
-    /**
-     * This is a number parameter
-     */
-    id?: number;
-    : {
-    /**
-     * This is an array parameter
-     */
-    parameterArray: Array<string> | null;
-    /**
-     * This is a boolean parameter
-     */
-    parameterBoolean: boolean | null;
-    /**
-     * This is a dictionary parameter
-     */
-    parameterDictionary: Record<string, unknown> | null;
-    /**
-     * This is an enum parameter
-     */
-    parameterEnum: 'Success' | 'Warning' | 'Error' | null;
-    /**
-     * This is a number parameter
-     */
-    parameterNumber: number;
-    /**
-     * This is an object parameter
-     */
-    parameterObject: Record<string, unknown> | null;
-    /**
-     * This is a string parameter
-     */
-    parameterString: string | null;
-};
-};
-};
-    res: {
-    Types: number | string | boolean | Record<string, unknown>;
-};
+    '/api/v{api-version}/types': {
+        get: {
+            req: {
+                200: {
+                    /**
+                     * This is a number parameter
+                     */
+                    id?: number;
+                    /**
+                     * This is an array parameter
+                     */
+                    parameterArray: Array<string> | null;
+                    /**
+                     * This is a boolean parameter
+                     */
+                    parameterBoolean: boolean | null;
+                    /**
+                     * This is a dictionary parameter
+                     */
+                    parameterDictionary: Record<string, unknown> | null;
+                    /**
+                     * This is an enum parameter
+                     */
+                    parameterEnum: 'Success' | 'Warning' | 'Error' | null;
+                    /**
+                     * This is a number parameter
+                     */
+                    parameterNumber: number;
+                    /**
+                     * This is an object parameter
+                     */
+                    parameterObject: Record<string, unknown> | null;
+                    /**
+                     * This is a string parameter
+                     */
+                    parameterString: string | null;
+                };
+                201: {
+                    /**
+                     * This is a number parameter
+                     */
+                    id?: number;
+                    /**
+                     * This is an array parameter
+                     */
+                    parameterArray: Array<string> | null;
+                    /**
+                     * This is a boolean parameter
+                     */
+                    parameterBoolean: boolean | null;
+                    /**
+                     * This is a dictionary parameter
+                     */
+                    parameterDictionary: Record<string, unknown> | null;
+                    /**
+                     * This is an enum parameter
+                     */
+                    parameterEnum: 'Success' | 'Warning' | 'Error' | null;
+                    /**
+                     * This is a number parameter
+                     */
+                    parameterNumber: number;
+                    /**
+                     * This is an object parameter
+                     */
+                    parameterObject: Record<string, unknown> | null;
+                    /**
+                     * This is a string parameter
+                     */
+                    parameterString: string | null;
+                };
+                202: {
+                    /**
+                     * This is a number parameter
+                     */
+                    id?: number;
+                    /**
+                     * This is an array parameter
+                     */
+                    parameterArray: Array<string> | null;
+                    /**
+                     * This is a boolean parameter
+                     */
+                    parameterBoolean: boolean | null;
+                    /**
+                     * This is a dictionary parameter
+                     */
+                    parameterDictionary: Record<string, unknown> | null;
+                    /**
+                     * This is an enum parameter
+                     */
+                    parameterEnum: 'Success' | 'Warning' | 'Error' | null;
+                    /**
+                     * This is a number parameter
+                     */
+                    parameterNumber: number;
+                    /**
+                     * This is an object parameter
+                     */
+                    parameterObject: Record<string, unknown> | null;
+                    /**
+                     * This is a string parameter
+                     */
+                    parameterString: string | null;
+                };
+                203: {
+                    /**
+                     * This is a number parameter
+                     */
+                    id?: number;
+                    /**
+                     * This is an array parameter
+                     */
+                    parameterArray: Array<string> | null;
+                    /**
+                     * This is a boolean parameter
+                     */
+                    parameterBoolean: boolean | null;
+                    /**
+                     * This is a dictionary parameter
+                     */
+                    parameterDictionary: Record<string, unknown> | null;
+                    /**
+                     * This is an enum parameter
+                     */
+                    parameterEnum: 'Success' | 'Warning' | 'Error' | null;
+                    /**
+                     * This is a number parameter
+                     */
+                    parameterNumber: number;
+                    /**
+                     * This is an object parameter
+                     */
+                    parameterObject: Record<string, unknown> | null;
+                    /**
+                     * This is a string parameter
+                     */
+                    parameterString: string | null;
+                };
+            };
+            res: number | string | boolean | Record<string, unknown>;
+        };
+    };
 };
 
 export type $OpenApiTsUpload = {
-    req: {
-    UploadFile: {
-    /**
-     * Supply a file reference for upload
-     */
-    file: Blob | File;
-    ?: unknown;
-};
-};
-    res: {
-    UploadFile: boolean;
-};
+    '/api/v{api-version}/upload': {
+        post: {
+            req: {
+                200: {
+                    /**
+                     * Supply a file reference for upload
+                     */
+                    file: Blob | File;
+                };
+            };
+            res: boolean;
+        };
+    };
 };
 
 export type $OpenApiTsFileResponse = {
-    req: {
-    FileResponse: {
-    id: string;
-    ?: unknown;
-};
-};
-    res: {
-    FileResponse: Blob | File;
-};
+    '/api/v{api-version}/file/{id}': {
+        get: {
+            req: {
+                200: {
+                    id: string;
+                };
+            };
+            res: Blob | File;
+        };
+    };
 };
 
 export type $OpenApiTsComplex = {
-    req: {
-    ComplexTypes: {
-    : {
-    /**
-     * Parameter containing object
-     */
-    parameterObject: {
-    first?: {
-    second?: {
-    third?: string;
-};
-};
-};
-    /**
-     * Parameter containing reference
-     */
-    parameterReference: ModelWithString;
-};
-};
-    ComplexParams: {
-    id: number;
-    requestBody?: {
-    readonly key: string | null;
-    name: string | null;
-    enabled?: boolean;
-    readonly type: 'Monkey' | 'Horse' | 'Bird';
-    listOfModels?: Array<ModelWithString> | null;
-    listOfStrings?: Array<string> | null;
-    parameters: ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary;
-    readonly user?: {
-    readonly id?: number;
-    readonly name?: string | null;
-};
-};
-    ?: unknown;
-};
-};
-    res: {
-    ComplexTypes: Array<ModelWithString>;
-    ComplexParams: ModelWithString;
-};
+    '/api/v{api-version}/complex': {
+        get: {
+            req: {
+                200: {
+                    /**
+                     * Parameter containing object
+                     */
+                    parameterObject: {
+                        first?: {
+                            second?: {
+                                third?: string;
+                            };
+                        };
+                    };
+                    /**
+                     * Parameter containing reference
+                     */
+                    parameterReference: ModelWithString;
+                };
+            };
+            res: Array<ModelWithString>;
+        };
+    };
+    '/api/v{api-version}/complex/{id}': {
+        put: {
+            req: {
+                200: {
+                    id: number;
+                    requestBody?: {
+                        readonly key: string | null;
+                        name: string | null;
+                        enabled?: boolean;
+                        readonly type: 'Monkey' | 'Horse' | 'Bird';
+                        listOfModels?: Array<ModelWithString> | null;
+                        listOfStrings?: Array<string> | null;
+                        parameters: ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary;
+                        readonly user?: {
+                            readonly id?: number;
+                            readonly name?: string | null;
+                        };
+                    };
+                };
+            };
+            res: ModelWithString;
+        };
+    };
 };
 
 export type $OpenApiTsMultipart = {
-    req: {
-    MultipartRequest: {
-    formData?: {
-    content?: Blob | File;
-    data?: ModelWithString | null;
-};
-    ?: unknown;
-};
-};
-    res: {
-    MultipartRequest: void;
-    MultipartResponse: {
-    file?: Blob | File;
-    metadata?: {
-    foo?: string;
-    bar?: string;
-};
-};
-};
+    '/api/v{api-version}/multipart': {
+        post: {
+            res: void;
+        };
+        get: {
+            res: {
+                file?: Blob | File;
+                metadata?: {
+                    foo?: string;
+                    bar?: string;
+                };
+            };
+        };
+    };
 };
 
 export type $OpenApiTsHeader = {
-    res: {
-    CallWithResultFromHeader: string;
-};
+    '/api/v{api-version}/header': {
+        post: {
+            res: string;
+        };
+    };
 };
 
 export type $OpenApiTsError = {
-    req: {
-    TestErrorCode: {
-    : {
-    /**
-     * Status code to return
-     */
-    status: number;
-};
-};
-};
-    res: {
-    TestErrorCode: any;
-};
+    '/api/v{api-version}/error': {
+        post: {
+            req: {
+                200: {
+                    /**
+                     * Status code to return
+                     */
+                    status: number;
+                };
+            };
+            res: any;
+        };
+    };
 };
 
 export type $OpenApiTsNonAsciiÆøåÆøÅöôêÊ = {
-    req: {
-    NonAsciiæøåÆøÅöôêÊ字符串: {
-    : {
-    /**
-     * Dummy input param
-     */
-    nonAsciiParamæøåÆøÅöôêÊ: number;
-};
-};
-};
-    res: {
-    NonAsciiæøåÆøÅöôêÊ字符串: Array<NonAsciiStringæøåÆØÅöôêÊ字符串>;
-};
+    '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串': {
+        post: {
+            req: {
+                200: {
+                    /**
+                     * Dummy input param
+                     */
+                    nonAsciiParamæøåÆøÅöôêÊ: number;
+                };
+            };
+            res: Array<NonAsciiStringæøåÆØÅöôêÊ字符串>;
+        };
+    };
 };

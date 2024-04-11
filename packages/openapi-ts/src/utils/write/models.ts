@@ -1,12 +1,12 @@
 import path from 'node:path';
 
 import { type Comments, compiler, type Node, TypeScriptFile } from '../../compiler';
-import type { Model, OpenApi, Service } from '../../openApi';
+import type { Model, OpenApi, OperationParameter, Service } from '../../openApi';
 import type { Client } from '../../types/client';
 import { getConfig } from '../config';
 import { enumKey, enumName, enumUnionType, enumValue } from '../enum';
 import { escapeComment } from '../escape';
-import { operationKey, serviceExportedNamespace } from '../handlebars';
+import { serviceExportedNamespace } from '../handlebars';
 import { sortByName } from '../sort';
 import { toType } from './type';
 
@@ -78,39 +78,129 @@ const processModel = (client: Client, model: Model) => {
     }
 };
 
-const processServiceTypes = (service: Service) => {
-    const config = getConfig();
-    const operationsWithParameters = service.operations.filter(operation => operation.parameters.length);
-    let properties: Model[] = [];
+const processServiceTypes = (services: Service[]) => {
+    type ReqMap = Map<number, OperationParameter[]>;
+    type Base = string;
+    type MethodMap = Map<'req' | 'res', Base | ReqMap | OperationParameter[]>;
+    type MethodKey = Service['operations'][number]['method'];
+    type PathMap = Map<MethodKey, MethodMap>;
 
-    if (operationsWithParameters.length) {
-        const requests: Model[] = operationsWithParameters.map(operation => {
-            let parameters: Model[] = sortByName([...operation.parameters]).filter(parameter => !config.experimental || parameter.in !== 'query')
+    const pathsMap = new Map<string, PathMap>();
 
-            if (config.experimental) {
-                const queryParameters: Model[] = sortByName([...operation.parametersQuery])
-                const query: Model = {
+    services.forEach(service => {
+        service.operations.forEach(operation => {
+            let pathMap = pathsMap.get(operation.path);
+            if (!pathMap) {
+                pathsMap.set(operation.path, new Map());
+                pathMap = pathsMap.get(operation.path)!;
+            }
+
+            let methodMap = pathMap.get(operation.method);
+            if (!methodMap) {
+                pathMap.set(operation.method, new Map());
+                methodMap = pathMap.get(operation.method)!;
+            }
+
+            if (operation.parameters.length) {
+                methodMap.set('req', operation.parameters);
+            }
+
+            // operation.results.forEach(result => {
+            //     let reqMap = methodMap.get('req');
+            //     if (!reqMap) {
+            //         methodMap.set('req', new Map());
+            //         reqMap = methodMap.get('req')!;
+            //     }
+
+            //     if (typeof reqMap === 'string') {
+            //         return;
+            //     }
+
+            //     reqMap.set(
+            //         // result.code,
+            //         200,
+            //         operation.parameters,
+            //     );
+            // })
+
+            methodMap.set(
+                'res',
+                !operation.results.length ? 'void' : operation.results.map(result => toType(result)).join(' | ')
+            );
+        });
+    });
+
+    const properties = Array.from(pathsMap).map(([path, pathMap]) => {
+        const pathParameters = Array.from(pathMap).map(([method, methodMap]) => {
+            const methodParameters = Array.from(methodMap).map(([name, baseOrReqMap]) => {
+                if (typeof baseOrReqMap !== 'string') {
+                    const reqParameters = Array.isArray(baseOrReqMap)
+                        ? baseOrReqMap
+                        : Array.from(baseOrReqMap).map(([code, operationParameters]) => {
+                              const value: Model = {
+                                  $refs: [],
+                                  base: '',
+                                  description: null,
+                                  enum: [],
+                                  enums: [],
+                                  export: 'interface',
+                                  imports: [],
+                                  isDefinition: false,
+                                  isNullable: false,
+                                  isReadOnly: false,
+                                  isRequired: true,
+                                  link: null,
+                                  name: String(code),
+                                  // TODO: move query params into separate query key
+                                  properties: sortByName([...operationParameters]),
+                                  template: null,
+                                  type: '',
+                              };
+                              return value;
+                          });
+
+                    const reqKey: Model = {
+                        $refs: [],
+                        base: '',
+                        description: null,
+                        enum: [],
+                        enums: [],
+                        export: 'interface',
+                        imports: [],
+                        isDefinition: false,
+                        isNullable: false,
+                        isReadOnly: false,
+                        isRequired: true,
+                        link: null,
+                        name,
+                        properties: reqParameters,
+                        template: null,
+                        type: '',
+                    };
+                    return reqKey;
+                }
+
+                const value: Model = {
                     $refs: [],
-                    base: '',
+                    base: baseOrReqMap,
                     description: null,
                     enum: [],
                     enums: [],
-                    export: 'interface',
+                    export: 'generic',
                     imports: [],
                     isDefinition: false,
                     isNullable: false,
                     isReadOnly: false,
-                    isRequired: operation.parametersQuery.some(parameter => parameter.isRequired),
+                    isRequired: true,
                     link: null,
-                    name: '',
-                    properties: queryParameters,
+                    name,
+                    properties: [],
                     template: null,
-                    type: ''
-                }
-                parameters = [...parameters, query]
-            }
-
-            const op: Model = {
+                    type: '',
+                };
+                return value;
+            });
+            const methodKey: Model = {
                 $refs: [],
                 base: '',
                 description: null,
@@ -123,14 +213,14 @@ const processServiceTypes = (service: Service) => {
                 isReadOnly: false,
                 isRequired: true,
                 link: null,
-                name: operationKey(operation),
-                properties: parameters,
+                name: method.toLocaleLowerCase(),
+                properties: methodParameters,
                 template: null,
-                type: ''
-            }
-            return op
-        })
-        properties = [...properties, {
+                type: '',
+            };
+            return methodKey;
+        });
+        const pathKey: Model = {
             $refs: [],
             base: '',
             description: null,
@@ -143,54 +233,13 @@ const processServiceTypes = (service: Service) => {
             isReadOnly: false,
             isRequired: true,
             link: null,
-            name: 'req',
-            properties: requests,
+            name: `'${path}'`,
+            properties: pathParameters,
             template: null,
-            type: ''
-        }]
-    }
-
-    if (service.operations.length) {
-        const responses: Model[] = service.operations.map(operation => {
-            const op: Model = {
-                $refs: [],
-                base: !operation.results.length ? 'void' : operation.results.map(result => toType(result)).join(' | '),
-                description: null,
-                enum: [],
-                enums: [],
-                export: 'generic',
-                imports: [],
-                isDefinition: false,
-                isNullable: false,
-                isReadOnly: false,
-                isRequired: true,
-                link: null,
-                name: operationKey(operation),
-                properties: [],
-                template: null,
-                type: ''
-            }
-            return op
-        })
-        properties = [...properties, {
-            $refs: [],
-            base: '',
-            description: null,
-            enum: [],
-            enums: [],
-            export: 'interface',
-            imports: [],
-            isDefinition: false,
-            isNullable: false,
-            isReadOnly: false,
-            isRequired: true,
-            link: null,
-            name: 'res',
-            properties: responses,
-            template: null,
-            type: ''
-        }]
-    }
+            type: '',
+        };
+        return pathKey;
+    });
 
     const type = toType({
         $refs: [],
@@ -208,10 +257,10 @@ const processServiceTypes = (service: Service) => {
         name: '',
         properties,
         template: null,
-        type: ''
+        type: '',
     });
-    const namespace = serviceExportedNamespace(service);
-    return compiler.typedef.alias(namespace, type!)
+    const namespace = serviceExportedNamespace();
+    return compiler.typedef.alias(namespace, type!);
 };
 
 /**
@@ -229,8 +278,8 @@ export const writeClientModels = async (openApi: OpenApi, outputPath: string, cl
         file.add(...n);
     }
 
-    for (const service of client.services) {
-        const serviceTypes = processServiceTypes(service);
+    if (client.services.length) {
+        const serviceTypes = processServiceTypes(client.services);
         file.add(serviceTypes);
     }
 
