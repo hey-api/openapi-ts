@@ -1,11 +1,11 @@
 {
     "name": "openapi-ts-monorepo",
     "version": "0.1.0",
-    "description": "Monorepo for openapi-ts",
+    "description": "Public @hey-api monorepo",
     "private": true,
     "type": "module",
     "license": "MIT",
-    "homepage": "https://heyapi.vercel.app/",
+    "homepage": "https://heyapi.vercel.app",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/hey-api/openapi-ts.git"

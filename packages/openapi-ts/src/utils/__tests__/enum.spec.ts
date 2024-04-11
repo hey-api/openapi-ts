@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { enumKey } from '../enum';
 
 describe('enumKey', () => {
-    it('returns x-enum-varname', () => {
+    it('returns custom name', () => {
         expect(enumKey('foo', 'bar')).toBe('bar');
     });
 

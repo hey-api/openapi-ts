@@ -99,6 +99,8 @@ export type EnumFromDescription = number;
  */
 export type EnumWithExtensions = 200 | 400 | 500;
 
+export type EnumWithXEnumNames = 0 | 1 | 2;
+
 /**
  * This is a simple array with numbers
  */
