@@ -27,14 +27,14 @@ const processEnum = (client: Client, model: Model, exportType: boolean) => {
         properties[key] = value;
         const comment = enumerator.customDescription || enumerator.description;
         if (comment) {
-            comments[key] = [` * ${escapeComment(comment)}`];
+            comments[key] = [escapeComment(comment)];
         }
     });
 
     if (exportType) {
         const comment: Comments = [
-            model.description && ` * ${escapeComment(model.description)}`,
-            model.deprecated && ' * @deprecated',
+            model.description && escapeComment(model.description),
+            model.deprecated && '@deprecated',
         ];
         if (config.enums === 'typescript') {
             nodes = [...nodes, compiler.types.enum(model.name, properties, comment, comments)];
@@ -57,8 +57,8 @@ const processEnum = (client: Client, model: Model, exportType: boolean) => {
 
 const processType = (client: Client, model: Model) => {
     const comment: Comments = [
-        model.description && ` * ${escapeComment(model.description)}`,
-        model.deprecated && ' * @deprecated',
+        model.description && escapeComment(model.description),
+        model.deprecated && '@deprecated',
     ];
     const type = toType(model);
     return compiler.typedef.alias(model.name, type!, comment);
@@ -245,7 +245,7 @@ const processServiceTypes = (services: Service[]) => {
  * @param client Client containing models, schemas, and services
  */
 export const writeClientModels = async (openApi: OpenApi, outputPath: string, client: Client): Promise<void> => {
-    const file = new TypeScriptFile();
+    const file = new TypeScriptFile().addHeader();
 
     for (const model of client.models) {
         const nodes = processModel(client, model);
