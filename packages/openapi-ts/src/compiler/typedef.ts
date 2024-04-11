@@ -89,7 +89,7 @@ export const createTypeIntersectNode = (types: unknown[], isNullable: boolean = 
     const nodes = types.map(t => ts.factory.createTypeReferenceNode(t as string));
     const intersect = ts.factory.createIntersectionTypeNode(nodes);
     if (isNullable) {
-        return ts.factory.createUnionTypeNode([intersect, ts.factory.createTypeReferenceNode('null')])
+        return ts.factory.createUnionTypeNode([intersect, ts.factory.createTypeReferenceNode('null')]);
     }
     return intersect;
 };
