@@ -4,7 +4,7 @@ import { type Comments, compiler, type Node, TypeScriptFile } from '../../compil
 import type { Model, OpenApi, OperationParameter, Service } from '../../openApi';
 import type { Client } from '../../types/client';
 import { getConfig } from '../config';
-import { enumKey, enumName, enumUnionType, enumValue } from '../enum';
+import { enumKey, enumUnionType, enumValue, javascriptEnumName, javascriptPreservedEnumName } from '../enum';
 import { escapeComment } from '../escape';
 import { serviceExportedNamespace } from '../handlebars';
 import { sortByName } from '../sort';
@@ -70,8 +70,8 @@ const processEnum = (client: Client, model: Model, exportType: boolean) => {
         });
         const preserveName = config.enums === 'javascript-preserve-name';
         const outputEnumName = preserveName
-            ? model.name
-            : enumName(client, model.name)!;
+            ? javascriptPreservedEnumName(client, model.name)!
+            : javascriptEnumName(client, model.name)!;
         nodes = [...nodes, compiler.export.asConst(outputEnumName, expression)];
     }
 

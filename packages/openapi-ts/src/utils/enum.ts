@@ -36,18 +36,9 @@ export const enumKey = (value?: string | number, customName?: string) => {
     return key.toUpperCase();
 };
 
-/**
- * Enums can't contain hyphens in their name. Additionally, name might've been
- * already escaped, so we need to remove quotes around it.
- * {@link https://github.com/ferdikoomen/openapi-typescript-codegen/issues/1969}
- */
-export const enumName = (client: Client, name?: string) => {
-    if (!name) {
-        return name;
-    }
-    const escapedName = unescapeName(name).replace(/[-_]([a-z])/gi, ($0, $1: string) => $1.toLocaleUpperCase());
-    let result = `${escapedName.charAt(0).toLocaleUpperCase() + escapedName.slice(1)}Enum`;
+const updateClientEnums = (client: Client, currentEnum: string) => {
     let index = 1;
+    let result = currentEnum;
     while (client.enumNames.includes(result)) {
         if (result.endsWith(index.toString())) {
             result = result.slice(0, result.length - index.toString().length);
@@ -56,8 +47,33 @@ export const enumName = (client: Client, name?: string) => {
         result = result + index.toString();
     }
     client.enumNames = [...client.enumNames, result];
+}
+
+/**
+ * Enums can't contain hyphens in their name. Additionally, name might've been
+ * already escaped, so we need to remove quotes around it.
+ * {@link https://github.com/ferdikoomen/openapi-typescript-codegen/issues/1969}
+ */
+export const javascriptEnumName = (client: Client, name?: string) => {
+    if (!name) {
+        return name;
+    }
+    const escapedName = unescapeName(name).replace(/[-_]([a-z])/gi, ($0, $1: string) => $1.toLocaleUpperCase());
+    const result = `${escapedName.charAt(0).toLocaleUpperCase() + escapedName.slice(1)}Enum`;
+    updateClientEnums(client, result);
     return result;
 };
+
+export const javascriptPreservedEnumName = (client: Client, name?: string) => {
+    if (!name) {
+        return name;
+    }
+
+    // Remove all invalid characters
+    const cleanEnum = unescapeName(name).replace(/[^a-zA-Z0-9_$]/gi, '');
+    updateClientEnums(client, cleanEnum);
+    return cleanEnum;
+}
 
 export const enumUnionType = (enums: Enum[]) =>
     enums
