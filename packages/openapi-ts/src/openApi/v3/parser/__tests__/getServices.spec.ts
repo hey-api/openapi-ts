@@ -10,7 +10,6 @@ describe('getServices', () => {
             debug: false,
             dryRun: true,
             enums: false,
-            experimental: false,
             exportCore: true,
             exportModels: true,
             exportServices: true,

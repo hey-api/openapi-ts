@@ -32,7 +32,7 @@ export const writeClientServices = async (
             $config: config,
             ...service,
         });
-        const exported = serviceExportedNamespace(service);
+        const exported = serviceExportedNamespace();
         imports = [...imports, exported];
         results = [...results, result];
     }

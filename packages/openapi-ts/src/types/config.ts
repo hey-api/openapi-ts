@@ -24,11 +24,6 @@ export interface UserConfig {
      */
     enums?: 'javascript' | 'typescript' | false;
     /**
-     * Generate an experimental build?
-     * @default false
-     */
-    experimental?: boolean;
-    /**
      * Generate core client classes?
      * @default true
      */

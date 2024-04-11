@@ -214,16 +214,6 @@ describe('OpenAPI v3', () => {
             description: 'generate models',
             name: 'v3_models',
         },
-        {
-            config: {
-                client: 'fetch',
-                experimental: true,
-                input: '',
-                output: '',
-            } as UserConfig,
-            description: 'generate experimental build',
-            name: 'v3_experimental',
-        },
     ])('$description', async ({ name, config }) => {
         const output = toOutputPath(name);
         await createClient({

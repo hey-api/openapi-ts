@@ -16,7 +16,6 @@ describe('writeClientServices', () => {
             debug: false,
             dryRun: false,
             enums: false,
-            experimental: false,
             exportCore: true,
             exportModels: true,
             exportServices: true,

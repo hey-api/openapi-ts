@@ -1,15 +1,15 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { $OpenApiTsDefaults } from './models';
+import type { $OpenApiTs } from './models';
 
 export class DefaultsService {
     /**
      * @throws ApiError
      */
     public static callWithDefaultParameters(
-        data: $OpenApiTsDefaults['req']['CallWithDefaultParameters'] = {}
-    ): CancelablePromise<$OpenApiTsDefaults['res']['CallWithDefaultParameters']> {
+        data: $OpenApiTs['/api/v{api-version}/defaults']['get']['req'] = {}
+    ): CancelablePromise<$OpenApiTs['/api/v{api-version}/defaults']['get']['res']> {
         const { parameterString, parameterNumber, parameterBoolean, parameterEnum, parameterModel } = data;
         return __request(OpenAPI, {
             method: 'GET',
@@ -28,8 +28,8 @@ export class DefaultsService {
      * @throws ApiError
      */
     public static callWithDefaultOptionalParameters(
-        data: $OpenApiTsDefaults['req']['CallWithDefaultOptionalParameters'] = {}
-    ): CancelablePromise<$OpenApiTsDefaults['res']['CallWithDefaultOptionalParameters']> {
+        data: $OpenApiTs['/api/v{api-version}/defaults']['post']['req'] = {}
+    ): CancelablePromise<$OpenApiTs['/api/v{api-version}/defaults']['post']['res']> {
         const { parameterString, parameterNumber, parameterBoolean, parameterEnum, parameterModel } = data;
         return __request(OpenAPI, {
             method: 'POST',
@@ -48,8 +48,8 @@ export class DefaultsService {
      * @throws ApiError
      */
     public static callToTestOrderOfParams(
-        data: $OpenApiTsDefaults['req']['CallToTestOrderOfParams']
-    ): CancelablePromise<$OpenApiTsDefaults['res']['CallToTestOrderOfParams']> {
+        data: $OpenApiTs['/api/v{api-version}/defaults']['put']['req']
+    ): CancelablePromise<$OpenApiTs['/api/v{api-version}/defaults']['put']['res']> {
         const {
             parameterStringWithNoDefault,
             parameterOptionalStringWithDefault,
