@@ -65,6 +65,7 @@ export const compiler = {
         array: typedef.createTypeArrayNode,
         basic: typedef.createTypeNode,
         interface: typedef.createTypeInterfaceNode,
+        intersect: typedef.createTypeIntersectNode,
         record: typedef.createTypeRecordNode,
         tuple: typedef.createTypeTupleNode,
         union: typedef.createTypeUnionNode,
