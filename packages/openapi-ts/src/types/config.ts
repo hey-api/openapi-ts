@@ -22,7 +22,7 @@ export interface UserConfig {
      * Export enum definitions?
      * @default false
      */
-    enums?: 'javascript' | 'typescript' | false;
+    enums?: 'javascript' | 'javascript-preserve-name' | 'typescript' | false;
     /**
      * Generate core client classes?
      * @default true

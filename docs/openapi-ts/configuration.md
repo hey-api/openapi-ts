@@ -121,6 +121,8 @@ You can also prevent your client from being processed by linters by adding your 
 
 ## Enums
 
+> Omitting the `enums` configuration value will emit unions instead of enums.
+
 If you need to iterate through possible field values without manually typing arrays, you can export enums with
 
 ```js{2}
@@ -139,6 +141,25 @@ export const FooEnum = {
   BAR: 'bar',
 } as const;
 ```
+
+There is an additional JavaScript option for enums:
+
+```js{2}
+export default {
+  enums: 'javascript-preserve-name,
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+}
+```
+
+As the name indicates this will not rename the enums from your input and will preserve the original names while maintaing the type-safety of the JavaScript object as a constant.
+
+```js
+export const MY_FOO_ENUM = {
+  FOO: 'foo',
+  BAR: 'bar',
+} as const;
+``` 
 
 We discourage generating [TypeScript enums](https://www.typescriptlang.org/docs/handbook/enums.html) because they are not standard JavaScript and pose [typing challenges](https://dev.to/ivanzm123/dont-use-enums-in-typescript-they-are-very-dangerous-57bh). If you really need TypeScript enums, you can export them with
 

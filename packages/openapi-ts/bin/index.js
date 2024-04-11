@@ -20,7 +20,7 @@ const params = program
     .option('-d, --debug', 'Run in debug mode?')
     .option('--base [value]', 'Manually set base in OpenAPI config instead of inferring from server value')
     .option('--dry-run [value]', 'Skip writing files to disk?')
-    .option('--enums <value>', 'Export enum definitions (javascript, typescript)')
+    .option('--enums <value>', 'Export enum definitions (javascript, javascript-preserve-name, typescript)')
     .option('--exportCore [value]', 'Write core files to disk')
     .option('--exportModels [value]', 'Write models to disk')
     .option('--exportServices [value]', 'Write services to disk')

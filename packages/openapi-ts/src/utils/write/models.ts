@@ -62,13 +62,17 @@ const processEnum = (client: Client, model: Model, exportType: boolean) => {
         }
     }
 
-    if (config.enums === 'javascript') {
+    if (['javascript', 'javascript-preserve-name'].includes(config.enums as string)) {
         const expression = compiler.types.object(properties, {
             comments,
             multiLine: true,
             unescape: true,
         });
-        nodes = [...nodes, compiler.export.asConst(enumName(client, model.name)!, expression)];
+        const preserveName = config.enums === 'javascript-preserve-name';
+        const outputEnumName = preserveName
+            ? model.name
+            : enumName(client, model.name)!;
+        nodes = [...nodes, compiler.export.asConst(outputEnumName, expression)];
     }
 
     return nodes;
