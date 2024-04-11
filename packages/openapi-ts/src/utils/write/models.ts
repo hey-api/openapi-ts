@@ -10,6 +10,25 @@ import { serviceExportedNamespace } from '../handlebars';
 import { sortByName } from '../sort';
 import { toType } from './type';
 
+const emptyModel: Model = {
+    $refs: [],
+    base: '',
+    description: null,
+    enum: [],
+    enums: [],
+    export: 'interface',
+    imports: [],
+    isDefinition: false,
+    isNullable: false,
+    isReadOnly: false,
+    isRequired: false,
+    link: null,
+    name: '',
+    properties: [],
+    template: null,
+    type: '',
+};
+
 const processComposition = (client: Client, model: Model) => [
     processType(client, model),
     ...model.enums.flatMap(enumerator => processEnum(client, enumerator, false)),
@@ -78,7 +97,7 @@ const processModel = (client: Client, model: Model) => {
 };
 
 const processServiceTypes = (services: Service[]) => {
-    type ResMap = Map<number, string>;
+    type ResMap = Map<number, Model>;
     type MethodMap = Map<'req' | 'res', ResMap | OperationParameter[]>;
     type MethodKey = Service['operations'][number]['method'];
     type PathMap = Map<MethodKey, MethodMap>;
@@ -119,7 +138,7 @@ const processServiceTypes = (services: Service[]) => {
                     }
 
                     operation.results.forEach(result => {
-                        resMap.set(result.code, compiler.utils.toString(toType(result)));
+                        resMap.set(result.code, result);
                     });
                 }
             }
@@ -133,105 +152,50 @@ const processServiceTypes = (services: Service[]) => {
                     ? baseOrResMap
                     : Array.from(baseOrResMap).map(([code, base]) => {
                           const value: Model = {
-                              $refs: [],
-                              base,
-                              description: null,
-                              enum: [],
-                              enums: [],
-                              export: 'generic',
-                              imports: [],
-                              isDefinition: false,
-                              isNullable: false,
-                              isReadOnly: false,
+                              ...emptyModel,
+                              ...base,
+                              base: compiler.utils.toString(toType(base)),
+                              export: 'reference',
                               isRequired: true,
-                              link: null,
                               name: String(code),
                               // TODO: move query params into separate query key
                               properties: [],
-                              template: null,
-                              type: '',
                           };
                           return value;
                       });
 
                 const reqResKey: Model = {
-                    $refs: [],
-                    base: '',
-                    description: null,
-                    enum: [],
-                    enums: [],
+                    ...emptyModel,
                     export: 'interface',
-                    imports: [],
-                    isDefinition: false,
-                    isNullable: false,
-                    isReadOnly: false,
                     isRequired: true,
-                    link: null,
                     name,
                     properties: reqResParameters,
-                    template: null,
-                    type: '',
                 };
                 return reqResKey;
             });
             const methodKey: Model = {
-                $refs: [],
-                base: '',
-                description: null,
-                enum: [],
-                enums: [],
+                ...emptyModel,
                 export: 'interface',
-                imports: [],
-                isDefinition: false,
-                isNullable: false,
-                isReadOnly: false,
                 isRequired: true,
-                link: null,
                 name: method.toLocaleLowerCase(),
                 properties: methodParameters,
-                template: null,
-                type: '',
             };
             return methodKey;
         });
         const pathKey: Model = {
-            $refs: [],
-            base: '',
-            description: null,
-            enum: [],
-            enums: [],
+            ...emptyModel,
             export: 'interface',
-            imports: [],
-            isDefinition: false,
-            isNullable: false,
-            isReadOnly: false,
             isRequired: true,
-            link: null,
             name: `'${path}'`,
             properties: pathParameters,
-            template: null,
-            type: '',
         };
         return pathKey;
     });
 
     const type = toType({
-        $refs: [],
-        base: '',
-        description: null,
-        enum: [],
-        enums: [],
+        ...emptyModel,
         export: 'interface',
-        imports: [],
-        isDefinition: false,
-        isNullable: false,
-        isReadOnly: false,
-        isRequired: false,
-        link: null,
-        name: '',
         properties,
-        template: null,
-        type: '',
     });
     const namespace = serviceExportedNamespace();
     return compiler.typedef.alias(namespace, type);
