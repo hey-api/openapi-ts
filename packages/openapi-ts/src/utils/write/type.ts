@@ -1,8 +1,7 @@
-import { compiler, type Property } from '../../compiler';
-import { tsNodeToString } from '../../compiler/utils';
+import { compiler, type Property, type TypeNode } from '../../compiler';
 import { Model } from '../../openApi';
 import { getConfig } from '../config';
-import { enumUnionType } from '../enum';
+import { enumValue } from '../enum';
 import { escapeComment } from '../escape';
 import { modelIsRequired } from '../required';
 import { unique } from '../unique';
@@ -30,8 +29,8 @@ const typeArray = (model: Model) => {
         model.maxItems === model.minItems &&
         model.maxItems <= 100
     ) {
-        const types = toType(model.link);
-        const tuple = compiler.typedef.tuple(Array(model.maxItems).fill(types), model.isNullable);
+        const types = Array(model.maxItems).fill(toType(model.link));
+        const tuple = compiler.typedef.tuple(types, model.isNullable);
         return tuple;
     }
 
@@ -42,7 +41,10 @@ const typeArray = (model: Model) => {
     return compiler.typedef.array([base(model)], model.isNullable);
 };
 
-const typeEnum = (model: Model) => `${enumUnionType(model.enum)}${model.isNullable ? ' | null' : ''}`;
+const typeEnum = (model: Model) => {
+    const values = model.enum.map(enumerator => enumValue(enumerator.value));
+    return compiler.typedef.union(values, model.isNullable);
+};
 
 const typeDict = (model: Model) => {
     const type = model.link ? toType(model.link) : base(model);
@@ -51,12 +53,12 @@ const typeDict = (model: Model) => {
 
 const typeUnion = (model: Model) => {
     const models = model.properties;
-    const types = models.map(m => toType(m)).filter(unique);
+    const types = models.map(m => compiler.utils.toString(toType(m))).filter(unique);
     return compiler.typedef.union(types, model.isNullable);
 };
 
 const typeIntersect = (model: Model) => {
-    const types = model.properties.map(m => toType(m)).filter(unique);
+    const types = model.properties.map(m => compiler.utils.toString(toType(m))).filter(unique);
     return compiler.typedef.intersect(types, model.isNullable);
 };
 
@@ -71,7 +73,7 @@ const typeInterface = (model: Model) => {
         // special case for additional properties type
         if (property.name === '[key: string]' && maybeRequired) {
             maybeRequired = '';
-            value = tsNodeToString(compiler.typedef.union([value, 'undefined']));
+            value = compiler.typedef.union([value, 'undefined']);
         }
         return {
             comment: [
@@ -88,23 +90,23 @@ const typeInterface = (model: Model) => {
     return compiler.typedef.interface(properties, model.isNullable);
 };
 
-export const toType = (model: Model): string | undefined => {
+export const toType = (model: Model): TypeNode => {
     switch (model.export) {
         case 'all-of':
-            return tsNodeToString(typeIntersect(model));
+            return typeIntersect(model);
         case 'any-of':
         case 'one-of':
-            return tsNodeToString(typeUnion(model));
+            return typeUnion(model);
         case 'array':
-            return tsNodeToString(typeArray(model));
+            return typeArray(model);
         case 'dictionary':
-            return tsNodeToString(typeDict(model));
+            return typeDict(model);
         case 'enum':
             return typeEnum(model);
         case 'interface':
-            return tsNodeToString(typeInterface(model));
+            return typeInterface(model);
         case 'reference':
         default:
-            return tsNodeToString(typeReference(model));
+            return typeReference(model);
     }
 };
