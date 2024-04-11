@@ -1,5 +1,15 @@
 # openapi-ts-docs
 
+## 0.3.0
+
+### Minor Changes
+
+- fix: rename write to dryRun and invert value ([#326](https://github.com/hey-api/openapi-ts/pull/326))
+
+### Patch Changes
+
+- docs: update contributing guidelines ([#347](https://github.com/hey-api/openapi-ts/pull/347))
+
 ## 0.2.2
 
 ### Patch Changes
