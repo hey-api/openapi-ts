@@ -13,17 +13,16 @@ import { unique } from './unique';
  *
  * Javascript identifier regexp pattern retrieved from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#identifiers
  */
-export const enumKey = (value?: string | number, key?: string) => {
-    // key will be defined if x-enum-varname exists
-    if (key) {
-        return key;
+export const enumKey = (value?: string | number, customName?: string) => {
+    if (customName) {
+        return customName;
     }
     // prefix numbers with underscore
     if (typeof value === 'number') {
         return `'_${value}'`;
     }
 
-    key = '';
+    let key = '';
     if (typeof value === 'string') {
         key = value
             .replace(/[^$\u200c\u200d\p{ID_Continue}]/gu, '_')
