@@ -80,6 +80,21 @@ export const createTypeUnionNode = (types: unknown[], isNullable: boolean = fals
 };
 
 /**
+ * Create type intersect node. Example `string & number & boolean`
+ * @param types - the types in the union
+ * @param isNullable - if the whole type can be null
+ * @returns ts.IntersectionTypeNode | ts.UnionTypeNode
+ */
+export const createTypeIntersectNode = (types: unknown[], isNullable: boolean = false) => {
+    const nodes = types.map(t => ts.factory.createTypeReferenceNode(t as string));
+    const intersect = ts.factory.createIntersectionTypeNode(nodes);
+    if (isNullable) {
+        return ts.factory.createUnionTypeNode([intersect, ts.factory.createTypeReferenceNode('null')]);
+    }
+    return intersect;
+};
+
+/**
  * Create type tuple node. Example `string, number, boolean`
  * @param types - the types in the union
  * @param isNullable - if the whole type can be null

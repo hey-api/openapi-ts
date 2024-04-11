@@ -21,6 +21,7 @@ const base = (model: Model) => {
 const typeReference = (model: Model) => compiler.typedef.union([base(model)], model.isNullable);
 
 const typeArray = (model: Model) => {
+    // Special case where we use tuple to define constant size array.
     if (
         model.export === 'array' &&
         model.link &&
@@ -29,7 +30,9 @@ const typeArray = (model: Model) => {
         model.maxItems === model.minItems &&
         model.maxItems <= 100
     ) {
-        return compiler.typedef.tuple([toType(model.link, 'exact')], model.isNullable);
+        const types = toType(model.link)
+        const tuple = compiler.typedef.tuple(Array(model.maxItems).fill(types), model.isNullable);
+        return tuple;
     }
 
     if (model.link) {
@@ -46,23 +49,15 @@ const typeDict = (model: Model) => {
     return compiler.typedef.record(['string'], [type], model.isNullable);
 };
 
-const typeUnion = (model: Model, filterProperties: 'exact' | undefined = undefined) => {
+const typeUnion = (model: Model) => {
     const models = model.properties;
-    const types = models
-        .map(m => toType(m, filterProperties))
-        .filter((...args) => filterProperties === 'exact' || unique(...args));
-    const union = types.join(filterProperties === 'exact' ? ', ' : ' | ');
-    const unionString = types.length > 1 && types.length !== models.length ? `(${union})` : union;
-    return `${unionString}${model.isNullable ? ' | null' : ''}`;
+    const types = models.map(m => toType(m)).filter(unique);
+    return compiler.typedef.union(types, model.isNullable);
 };
 
 const typeIntersect = (model: Model) => {
     const types = model.properties.map(m => toType(m)).filter(unique);
-    let typesString = types.join(' & ');
-    if (types.length > 1) {
-        typesString = `(${typesString})`;
-    }
-    return `${typesString}${model.isNullable ? ' | null' : ''}`;
+    return compiler.typedef.intersect(types, model.isNullable);
 };
 
 const typeInterface = (model: Model) => {
@@ -93,13 +88,13 @@ const typeInterface = (model: Model) => {
     return compiler.typedef.interface(properties, model.isNullable);
 };
 
-export const toType = (model: Model, filterProperties: 'exact' | undefined = undefined): string | undefined => {
+export const toType = (model: Model): string | undefined => {
     switch (model.export) {
         case 'all-of':
-            return typeIntersect(model);
+            return tsNodeToString(typeIntersect(model));
         case 'any-of':
         case 'one-of':
-            return typeUnion(model, filterProperties);
+            return tsNodeToString(typeUnion(model));
         case 'array':
             return tsNodeToString(typeArray(model));
         case 'dictionary':

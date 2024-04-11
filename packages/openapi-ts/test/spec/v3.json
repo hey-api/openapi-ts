@@ -3094,6 +3094,52 @@
                 },
                 "minItems": 3,
                 "maxItems": 3
+            },
+            "ModelWithAnyOfConstantSizeArrayNullable": {
+                "type": "array",
+                "items": {
+                    "oneOf": [
+                        {
+                            "type": "number",
+                            "nullable": true
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "minItems": 3,
+                "maxItems": 3
+            },
+            "ModelWithAnyOfConstantSizeArrayWithNSizeAndOptions": {
+                "type": "array",
+                "items": {
+                    "oneOf": [
+                        {
+                            "type": "number"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "minItems": 2,
+                "maxItems": 2
+            },
+            "ModelWithAnyOfConstantSizeArrayAndIntersect": {
+                "type": "array",
+                "items": {
+                    "allOf": [
+                        {
+                            "type": "number"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "minItems": 2,
+                "maxItems": 2
             }
         }
     }

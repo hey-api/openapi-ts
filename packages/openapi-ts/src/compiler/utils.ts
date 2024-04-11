@@ -92,7 +92,7 @@ export const addLeadingComment = (
     node: ts.Node | undefined,
     text: Comments,
     hasTrailingNewLine: boolean = true,
-    useJSDocStyle = true,
+    useJSDocStyle = true
 ): string => {
     const comments = text.filter(Boolean);
 
