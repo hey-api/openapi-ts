@@ -47,7 +47,7 @@
         "dev": "rimraf dist && pnpm build-bundle --watch",
         "format": "prettier --write .",
         "lint:fix": "prettier --check . && eslint . --fix",
-        "lint": "eslint .",
+        "lint": "prettier --check . && eslint .",
         "prepublishOnly": "pnpm build",
         "test:coverage": "vitest run --config vitest.config.unit.ts --coverage",
         "test:e2e": "vitest run --config vitest.config.e2e.ts",
