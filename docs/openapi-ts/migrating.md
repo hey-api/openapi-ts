@@ -11,6 +11,29 @@ While we try to avoid breaking changes, sometimes it's unavoidable in order to o
 
 These changes haven't been released yet. However, you can migrate your code today to save time on migration once they're released.
 
+### Deprecated exports from `index.ts`
+
+Currently, `index.ts` file exports all generated artifacts.
+
+```ts
+export { ApiError } from './core/ApiError';
+export { CancelablePromise, CancelError } from './core/CancelablePromise';
+export { OpenAPI, type OpenAPIConfig } from './core/OpenAPI';
+export * from './models';
+export * from './schemas';
+export * from './services';
+```
+
+We will be slowly moving away from this practice. Any non-core related imports should be imported as
+
+```ts
+import type { Model } from 'client/models';
+import { $Schema } from 'client/schemas';
+import { DefaultService } from 'client/services';
+```
+
+You don't have to update imports from `core` directory. These will be addressed in later releases.
+
 ### Deprecated `useOptions`
 
 This config option is deprecated and will be removed.
@@ -78,9 +101,9 @@ Schemas are now exported from a single file. If you used imports from individual
 By default, generated clients will use a single object argument to pass values to API calls. This is a significant change from the previous default of unspecified array of arguments. If migrating your application in one go isn't feasible, we recommend deprecating your old client and generating a new client.
 
 ```ts
-import { DefaultService } from 'client' // <-- old client with array arguments
+import { DefaultService } from 'client/services' // <-- old client with array arguments
 
-import { DefaultService } from 'client_v2' // <-- new client with options argument
+import { DefaultService } from 'client_v2/services' // <-- new client with options argument
 ```
 
 This way, you can gradually switch over to the new syntax as you update parts of your code. Once you've removed all instances of `client` imports, you can safely delete the old `client` folder and find and replace all `client_v2` calls to `client`.
@@ -129,9 +152,3 @@ This config option has been removed. Generated types will behave the same as `us
 - `useUnionTypes` has been removed (see [v0.27.24](#v0-27-24))
 - `indent` has been removed (see [v0.27.26](#v0-27-26))
 - `postfixModels` has been removed (see [v0.35.0](#v0-35-0))
-
-### Deprecated
-
-- `postfixServices` is deprecated (see [@next](#next))
-- `request` is deprecated (see [@next](#next))
-- `name` is deprecated (see [@next](#next))

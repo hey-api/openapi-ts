@@ -5,7 +5,7 @@ description: Learn how to contribute to Hey API.
 
 # Contributing
 
-Thank you for considering contributing to Hey API.
+Thank you for considering contributing to Hey API. In order to increase the likelihood of your changes being merged, first open an issue if one does not already exist. Once an issue exists, let us know you'd like to work on it. We will confirm whether we're looking to resolve the issue and provide you with guidance if required. This is to ensure our codebase remains in good state and all features contribute to Hey API's [objectives](/about).
 
 ## Development Requirements
 
