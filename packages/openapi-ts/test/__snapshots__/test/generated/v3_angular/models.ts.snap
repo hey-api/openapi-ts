@@ -726,9 +726,19 @@ export type ModelWithReadOnlyAndWriteOnly = {
     baz: string;
 };
 
-export type ModelWithConstantSizeArray = [number];
+export type ModelWithConstantSizeArray = [number, number];
 
-export type ModelWithAnyOfConstantSizeArray = [number, string];
+export type ModelWithAnyOfConstantSizeArray = [number | string, number | string, number | string];
+
+export type ModelWithAnyOfConstantSizeArrayNullable = [
+    number | null | string,
+    number | null | string,
+    number | null | string,
+];
+
+export type ModelWithAnyOfConstantSizeArrayWithNSizeAndOptions = [number | string, number | string];
+
+export type ModelWithAnyOfConstantSizeArrayAndIntersect = [number & string, number & string];
 
 /**
  * This is a reusable parameter
