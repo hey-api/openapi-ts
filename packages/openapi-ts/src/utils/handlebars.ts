@@ -121,10 +121,19 @@ export const nameOperationDataType = (
         const path = `${exported}['${operation.path}']['${operation.method.toLocaleLowerCase()}']['${namespace}']`;
         return name && typeof name === 'string' ? `${path}['${name}']` : path;
     }
-    if (namespace === 'res') {
-        const path = `${exported}['${operation.path}']['${operation.method.toLocaleLowerCase()}']['${namespace}']`;
-        return name && typeof name === 'string' ? `${path}['${name}']` : path;
+    const results = operation.results.filter(result => result.code >= 200 && result.code < 300);
+    // TODO: we should return nothing when results don't exist
+    // can't remove this logic without removing request/name config
+    // as it complicates things
+    if (!results.length) {
+        return 'void';
     }
+    return results
+        .map(result => {
+            const path = `${exported}['${operation.path}']['${operation.method.toLocaleLowerCase()}']['${namespace}'][${String(result.code)}]`;
+            return path;
+        })
+        .join(' | ');
 };
 
 export const registerHandlebarHelpers = (): void => {
@@ -170,17 +179,7 @@ export const registerHandlebarHelpers = (): void => {
     );
 
     Handlebars.registerHelper('modelIsRequired', modelIsRequired);
-
-    Handlebars.registerHelper(
-        'nameOperationDataType',
-        function (
-            namespace: 'req' | 'res',
-            operation: Service['operations'][number],
-            name: string | undefined
-        ) {
-            return nameOperationDataType(namespace, operation, name);
-        }
-    );
+    Handlebars.registerHelper('nameOperationDataType', nameOperationDataType);
 
     Handlebars.registerHelper(
         'notEquals',
