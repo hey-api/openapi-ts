@@ -30,7 +30,7 @@ const typeArray = (model: Model) => {
         model.maxItems === model.minItems &&
         model.maxItems <= 100
     ) {
-        const types = toType(model.link)
+        const types = toType(model.link);
         const tuple = compiler.typedef.tuple(Array(model.maxItems).fill(types), model.isNullable);
         return tuple;
     }
