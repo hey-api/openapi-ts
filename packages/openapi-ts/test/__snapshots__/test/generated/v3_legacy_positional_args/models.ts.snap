@@ -9,7 +9,7 @@ export type ModelWithString = {
 };
 
 export type DefaultsData = {
-    payloads: {
+    req: {
         CallWithDefaultParameters: {
             /**
              * This is a simple boolean with default value
@@ -89,8 +89,7 @@ export type DefaultsData = {
             parameterStringWithNoDefault: string;
         };
     };
-
-    responses: {
+    res: {
         CallWithDefaultParameters: void;
         CallWithDefaultOptionalParameters: void;
         CallToTestOrderOfParams: void;

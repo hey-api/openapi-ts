@@ -734,20 +734,19 @@ export type ModelWithAnyOfConstantSizeArray = [number, string];
 export type SimpleParameter = string;
 
 export type DefaultData = {
-    payloads: {
+    req: {
         PostServiceWithEmptyTag: {
             requestBody: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
         };
     };
-
-    responses: {
+    res: {
         ServiceWithEmptyTag: void;
         PostServiceWithEmptyTag: ModelWithReadOnlyAndWriteOnly;
     };
 };
 
 export type SimpleData = {
-    responses: {
+    res: {
         ApiVversionOdataControllerCount: Model_From_Zendesk;
         GetCallWithoutParametersAndResponse: void;
         PutCallWithoutParametersAndResponse: void;
@@ -760,7 +759,7 @@ export type SimpleData = {
 };
 
 export type ParametersData = {
-    payloads: {
+    req: {
         DeleteFoo: {
             /**
              * bar in method
@@ -858,8 +857,7 @@ export type ParametersData = {
             requestBody?: ModelWithString;
         };
     };
-
-    responses: {
+    res: {
         DeleteFoo: void;
         CallWithParameters: void;
         CallWithWeirdParameterNames: void;
@@ -869,7 +867,7 @@ export type ParametersData = {
 };
 
 export type DescriptionsData = {
-    payloads: {
+    req: {
         CallWithDescriptions: {
             /**
              * Testing backticks in string: `backticks` and ```multiple backticks``` should work
@@ -900,29 +898,28 @@ export type DescriptionsData = {
             parameterWithSlashes?: unknown;
         };
     };
-
-    responses: {
+    res: {
         CallWithDescriptions: void;
     };
 };
 
 export type DeprecatedData = {
-    payloads: {
+    req: {
         DeprecatedCall: {
             /**
              * This parameter is deprecated
+             * @deprecated
              */
             parameter: DeprecatedModel | null;
         };
     };
-
-    responses: {
+    res: {
         DeprecatedCall: void;
     };
 };
 
 export type RequestBodyData = {
-    payloads: {
+    req: {
         PostApiRequestBody: {
             /**
              * A reusable request body
@@ -934,14 +931,13 @@ export type RequestBodyData = {
             parameter?: string;
         };
     };
-
-    responses: {
+    res: {
         PostApiRequestBody: void;
     };
 };
 
 export type FormDataData = {
-    payloads: {
+    req: {
         PostApiFormData: {
             /**
              * A reusable request body
@@ -953,14 +949,13 @@ export type FormDataData = {
             parameter?: string;
         };
     };
-
-    responses: {
+    res: {
         PostApiFormData: void;
     };
 };
 
 export type DefaultsData = {
-    payloads: {
+    req: {
         CallWithDefaultParameters: {
             /**
              * This is a simple boolean with default value
@@ -1040,8 +1035,7 @@ export type DefaultsData = {
             parameterStringWithNoDefault: string;
         };
     };
-
-    responses: {
+    res: {
         CallWithDefaultParameters: void;
         CallWithDefaultOptionalParameters: void;
         CallToTestOrderOfParams: void;
@@ -1049,7 +1043,7 @@ export type DefaultsData = {
 };
 
 export type DuplicateData = {
-    responses: {
+    res: {
         DuplicateName: void;
         DuplicateName1: void;
         DuplicateName2: void;
@@ -1058,14 +1052,14 @@ export type DuplicateData = {
 };
 
 export type NoContentData = {
-    responses: {
+    res: {
         CallWithNoContentResponse: void;
         CallWithResponseAndNoContentResponse: number | void;
     };
 };
 
 export type ResponseData = {
-    responses: {
+    res: {
         CallWithResponseAndNoContentResponse: number | void;
         CallWithResponse: ModelWithString;
         CallWithDuplicateResponses: ModelWithString;
@@ -1082,27 +1076,27 @@ export type ResponseData = {
 };
 
 export type MultipleTags1Data = {
-    responses: {
+    res: {
         DummyA: void;
         DummyB: void;
     };
 };
 
 export type MultipleTags2Data = {
-    responses: {
+    res: {
         DummyA: void;
         DummyB: void;
     };
 };
 
 export type MultipleTags3Data = {
-    responses: {
+    res: {
         DummyB: void;
     };
 };
 
 export type CollectionFormatData = {
-    payloads: {
+    req: {
         CollectionFormat: {
             /**
              * This is an array parameter that is sent as csv format (comma-separated values)
@@ -1126,14 +1120,13 @@ export type CollectionFormatData = {
             parameterArrayTsv: Array<string> | null;
         };
     };
-
-    responses: {
+    res: {
         CollectionFormat: void;
     };
 };
 
 export type TypesData = {
-    payloads: {
+    req: {
         Types: {
             /**
              * This is a number parameter
@@ -1169,14 +1162,13 @@ export type TypesData = {
             parameterString: string | null;
         };
     };
-
-    responses: {
+    res: {
         Types: number | string | boolean | Record<string, unknown>;
     };
 };
 
 export type UploadData = {
-    payloads: {
+    req: {
         UploadFile: {
             /**
              * Supply a file reference for upload
@@ -1184,26 +1176,24 @@ export type UploadData = {
             file: Blob | File;
         };
     };
-
-    responses: {
+    res: {
         UploadFile: boolean;
     };
 };
 
 export type FileResponseData = {
-    payloads: {
+    req: {
         FileResponse: {
             id: string;
         };
     };
-
-    responses: {
+    res: {
         FileResponse: Blob | File;
     };
 };
 
 export type ComplexData = {
-    payloads: {
+    req: {
         ComplexTypes: {
             /**
              * Parameter containing object
@@ -1237,15 +1227,14 @@ export type ComplexData = {
             };
         };
     };
-
-    responses: {
+    res: {
         ComplexTypes: Array<ModelWithString>;
         ComplexParams: ModelWithString;
     };
 };
 
 export type MultipartData = {
-    payloads: {
+    req: {
         MultipartRequest: {
             formData?: {
                 content?: Blob | File;
@@ -1253,8 +1242,7 @@ export type MultipartData = {
             };
         };
     };
-
-    responses: {
+    res: {
         MultipartRequest: void;
         MultipartResponse: {
             file?: Blob | File;
@@ -1267,13 +1255,13 @@ export type MultipartData = {
 };
 
 export type HeaderData = {
-    responses: {
+    res: {
         CallWithResultFromHeader: string;
     };
 };
 
 export type ErrorData = {
-    payloads: {
+    req: {
         TestErrorCode: {
             /**
              * Status code to return
@@ -1281,14 +1269,13 @@ export type ErrorData = {
             status: number;
         };
     };
-
-    responses: {
+    res: {
         TestErrorCode: any;
     };
 };
 
 export type NonAsciiÆøåÆøÅöôêÊData = {
-    payloads: {
+    req: {
         NonAsciiæøåÆøÅöôêÊ字符串: {
             /**
              * Dummy input param
@@ -1296,8 +1283,7 @@ export type NonAsciiÆøåÆøÅöôêÊData = {
             nonAsciiParamæøåÆøÅöôêÊ: number;
         };
     };
-
-    responses: {
+    res: {
         NonAsciiæøåÆøÅöôêÊ字符串: Array<NonAsciiStringæøåÆØÅöôêÊ字符串>;
     };
 };
