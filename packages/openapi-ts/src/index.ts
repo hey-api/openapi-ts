@@ -10,7 +10,6 @@ import type { Config, UserConfig } from './types/config';
 import { getConfig, setConfig } from './utils/config';
 import { getOpenApiSpec } from './utils/getOpenApiSpec';
 import { registerHandlebarTemplates } from './utils/handlebars';
-import { isSubDirectory } from './utils/isSubdirectory';
 import { postProcessClient } from './utils/postprocess';
 import { writeClient } from './utils/write/client';
 
@@ -124,10 +123,6 @@ const initConfig = async (userConfig: UserConfig, dependencies: Dependencies) =>
 
     if (!userConfig.output) {
         throw new Error('🚫 output not provided - provide path where we should generate your client');
-    }
-
-    if (!isSubDirectory(process.cwd(), userConfig.output)) {
-        throw new Error('🚫 output must be within the current working directory');
     }
 
     if (postfixServices && postfixServices !== 'Service') {
