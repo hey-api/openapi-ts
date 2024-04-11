@@ -47,7 +47,7 @@ const updateClientEnums = (client: Client, currentEnum: string) => {
         result = result + index.toString();
     }
     client.enumNames = [...client.enumNames, result];
-}
+};
 
 /**
  * Enums can't contain hyphens in their name. Additionally, name might've been
@@ -73,7 +73,7 @@ export const javascriptPreservedEnumName = (client: Client, name?: string) => {
     const cleanEnum = unescapeName(name).replace(/[^a-zA-Z0-9_$]/gi, '');
     updateClientEnums(client, cleanEnum);
     return cleanEnum;
-}
+};
 
 export const enumUnionType = (enums: Enum[]) =>
     enums
