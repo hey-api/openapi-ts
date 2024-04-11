@@ -10,7 +10,7 @@ import { ensureValidTypeScriptJavaScriptIdentifier } from '../../openApi/common/
  * @param outputPath Directory to write the generated files to
  */
 export const writeClientSchemas = async (openApi: OpenApi, outputPath: string): Promise<void> => {
-    const file = new TypeScriptFile();
+    const file = new TypeScriptFile().addHeader();
 
     const addSchema = (name: string, obj: any) => {
         const validName = `$${ensureValidTypeScriptJavaScriptIdentifier(name)}`;

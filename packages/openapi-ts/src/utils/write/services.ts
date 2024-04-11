@@ -22,7 +22,7 @@ export const writeClientServices = async (
     templates: Templates
 ): Promise<void> => {
     const config = getConfig();
-    const file = new TypeScriptFile();
+    const file = new TypeScriptFile().addHeader();
 
     let imports: string[] = [];
     let results: string[] = [];
