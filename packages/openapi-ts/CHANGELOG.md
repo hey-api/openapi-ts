@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.38.1
+
+### Patch Changes
+
+- fix: inconsistent indentation in models file when not using `format: true` ([#349](https://github.com/hey-api/openapi-ts/pull/349))
+
+- fix: output path no longer required to be within cwd ([#353](https://github.com/hey-api/openapi-ts/pull/353))
+
 ## 0.38.0
 
 ### Minor Changes
