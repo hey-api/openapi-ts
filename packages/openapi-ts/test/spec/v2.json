@@ -964,6 +964,12 @@
                 "Used when the status of something has an error"
             ]
         },
+        "UPPER_SNAKE_ENUM": {
+            "description": "This is a simple enum with a non-PascalCase name.",
+            "enum": ["UPPER_SNAKE_0", "UPPER_SNAKE_1", "UPPER_SNAKE_2"],
+            "x-enum-varnames": [0, 1, 2],
+            "x-enum-descriptions": ["UPPER_SNAKE_0", "UPPER_SNAKE_1", "UPPER_SNAKE_2"]
+        },
         "ArrayWithNumbers": {
             "description": "This is a simple array with numbers",
             "type": "array",

@@ -113,6 +113,13 @@ export const $EnumWithXEnumNames = {
     'x-enumNames': ['zero', 'one', 'two'],
 } as const;
 
+export const $UPPER_SNAKE_ENUM = {
+    description: 'This is a simple enum with a non-PascalCase name.',
+    enum: ['UPPER_SNAKE_0', 'UPPER_SNAKE_1', 'UPPER_SNAKE_2'],
+    'x-enum-varnames': [0, 1, 2],
+    'x-enum-descriptions': ['UPPER_SNAKE_0', 'UPPER_SNAKE_1', 'UPPER_SNAKE_2'],
+} as const;
+
 export const $ArrayWithNumbers = {
     description: 'This is a simple array with numbers',
     type: 'array',

@@ -204,6 +204,21 @@ describe('OpenAPI v3', () => {
         {
             config: {
                 client: 'fetch',
+                enums: 'javascript-preserve-name',
+                exportCore: true,
+                exportModels: true,
+                exportServices: true,
+                input: '',
+                output: '',
+                schemas: true,
+                useOptions: true,
+            } as UserConfig,
+            description: 'generate javascript enums with names preserved',
+            name: 'v3_enums_javascript_preserved_name',
+        },
+        {
+            config: {
+                client: 'fetch',
                 exportCore: false,
                 exportModels: true,
                 exportServices: false,

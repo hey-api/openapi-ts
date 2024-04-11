@@ -160,6 +160,26 @@ export const EnumWithXEnumNamesEnum = {
 } as const;
 
 /**
+ * This is a simple enum with a non-PascalCase name.
+ */
+export type UPPER_SNAKE_ENUM = 'UPPER_SNAKE_0' | 'UPPER_SNAKE_1' | 'UPPER_SNAKE_2';
+
+export const UPPERSNAKEENUMEnum = {
+    /**
+     * UPPER_SNAKE_0
+     */
+    UPPER_SNAKE_0: 'UPPER_SNAKE_0',
+    /**
+     * UPPER_SNAKE_1
+     */
+    UPPER_SNAKE_1: 'UPPER_SNAKE_1',
+    /**
+     * UPPER_SNAKE_2
+     */
+    UPPER_SNAKE_2: 'UPPER_SNAKE_2',
+} as const;
+
+/**
  * This is a simple array with numbers
  */
 export type ArrayWithNumbers = Array<number>;

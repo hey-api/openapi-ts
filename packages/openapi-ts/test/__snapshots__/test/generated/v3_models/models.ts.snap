@@ -104,6 +104,11 @@ export type EnumWithExtensions = 200 | 400 | 500;
 export type EnumWithXEnumNames = 0 | 1 | 2;
 
 /**
+ * This is a simple enum with a non-PascalCase name.
+ */
+export type UPPER_SNAKE_ENUM = 'UPPER_SNAKE_0' | 'UPPER_SNAKE_1' | 'UPPER_SNAKE_2';
+
+/**
  * This is a simple array with numbers
  */
 export type ArrayWithNumbers = Array<number>;
