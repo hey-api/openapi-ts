@@ -1,5 +1,25 @@
 # @hey-api/openapi-ts
 
+## 0.38.0
+
+### Minor Changes
+
+- fix: rename write to dryRun and invert value ([#326](https://github.com/hey-api/openapi-ts/pull/326))
+
+### Patch Changes
+
+- fix: generate constant size array types properly ([#345](https://github.com/hey-api/openapi-ts/pull/345))
+
+- fix: support x-enumNames for custom enum names ([#334](https://github.com/hey-api/openapi-ts/pull/334))
+
+- fix: export service types from single namespace ([#341](https://github.com/hey-api/openapi-ts/pull/341))
+
+- fix: generate models with proper indentation when formatting is false ([#340](https://github.com/hey-api/openapi-ts/pull/340))
+
+- fix: log errors to file ([#329](https://github.com/hey-api/openapi-ts/pull/329))
+
+- fix: cleanup some styling issues when generating client without formatting ([#330](https://github.com/hey-api/openapi-ts/pull/330))
+
 ## 0.37.3
 
 ### Patch Changes
