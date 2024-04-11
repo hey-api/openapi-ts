@@ -88,25 +88,34 @@ export const isType = <T>(value: T | undefined): value is T => value !== undefin
 
 export type Comments = Array<string | null | false | undefined>;
 
-export const addLeadingJSDocComment = (
+export const addLeadingComment = (
     node: ts.Node | undefined,
     text: Comments,
-    hasTrailingNewLine: boolean = true
+    hasTrailingNewLine: boolean = true,
+    useJSDocStyle = true,
 ): string => {
-    if (!text.filter(Boolean).length) {
-        return '';
-    }
-    // if node is falsy, assume string mode
-    if (node) {
-        ts.addSyntheticLeadingComment(
-            node,
-            ts.SyntaxKind.MultiLineCommentTrivia,
-            ['*', ...text, ' '].filter(Boolean).join('\n'),
-            hasTrailingNewLine
-        );
+    const comments = text.filter(Boolean);
+
+    if (!comments.length) {
         return '';
     }
 
-    const result = ['/**', ...text, ' */'].filter(Boolean).join('\n');
-    return hasTrailingNewLine ? `${result}\n` : result;
+    // if node is falsy, assume string mode
+    if (!node) {
+        if (useJSDocStyle) {
+            const result = ['/**', ...comments.map(row => ` * ${row}`), ' */'].join('\n');
+            return hasTrailingNewLine ? `${result}\n` : result;
+        }
+
+        const result = comments.map(row => `// ${row}`).join('\n');
+        return hasTrailingNewLine ? `${result}\n` : result;
+    }
+
+    ts.addSyntheticLeadingComment(
+        node,
+        ts.SyntaxKind.MultiLineCommentTrivia,
+        ['*', ...comments.map(row => ` * ${row}`), ' '].join('\n'),
+        hasTrailingNewLine
+    );
+    return '';
 };
