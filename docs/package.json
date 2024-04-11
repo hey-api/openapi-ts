@@ -1,6 +1,6 @@
 {
     "name": "openapi-ts-docs",
-    "version": "0.2.2",
+    "version": "0.3.0",
     "description": "Documentation for OpenaAPI TypeScript.",
     "private": true,
     "type": "module",
