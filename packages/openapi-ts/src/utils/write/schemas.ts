@@ -13,7 +13,7 @@ import { getConfig } from '../config';
 export const writeSchemas = async (openApi: OpenApi, outputPath: string): Promise<void> => {
     const config = getConfig();
 
-    const fileSchemas = new TypeScriptFile().setPath(path.resolve(outputPath, 'schemas.ts')).addHeader();
+    const fileSchemas = new TypeScriptFile(path.resolve(outputPath, 'schemas.ts'));
 
     const addSchema = (name: string, obj: any) => {
         const validName = `$${ensureValidTypeScriptJavaScriptIdentifier(name)}`;
