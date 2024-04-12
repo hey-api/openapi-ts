@@ -1,6 +1,8 @@
 import camelCase from 'camelcase';
 import Handlebars from 'handlebars/runtime';
 
+import { compiler } from '../compiler';
+import { addLeadingComment } from '../compiler/utils';
 import type { Operation, OperationParameter, Service } from '../openApi';
 import templateClient from '../templates/client.hbs';
 import angularGetHeaders from '../templates/core/angular/getHeaders.hbs';
@@ -47,8 +49,6 @@ import xhrGetResponseHeader from '../templates/core/xhr/getResponseHeader.hbs';
 import xhrRequest from '../templates/core/xhr/request.hbs';
 import xhrSendRequest from '../templates/core/xhr/sendRequest.hbs';
 import templateExportService from '../templates/exportService.hbs';
-import partialOperationParameters from '../templates/partials/operationParameters.hbs';
-import partialOperationResult from '../templates/partials/operationResult.hbs';
 import { getConfig } from './config';
 import { escapeComment, escapeDescription, escapeName } from './escape';
 import { getDefaultPrintable, modelIsRequired } from './required';
@@ -78,23 +78,6 @@ const dataDestructure = (operation: Operation) => {
 };
 
 const dataParameters = (parameters: OperationParameter[]) => {
-    // if (config.experimental) {
-    //     let output = parameters
-    //         .filter(parameter => getDefaultPrintable(parameter) !== undefined)
-    //         .map(parameter => {
-    //             const key = parameter.prop;
-    //             const value = parameter.name;
-    //             if (key === value || escapeName(key) === key) {
-    //                 return `${key}: ${getDefaultPrintable(parameter)}`;
-    //             }
-    //             return `'${key}': ${getDefaultPrintable(parameter)}`;
-    //         });
-    //     if (parameters.every(parameter => parameter.in === 'query')) {
-    //         output = [...output, '...query'];
-    //     }
-    //     return output.join(', ');
-    // }
-
     const output = parameters.map(parameter => {
         const key = parameter.prop;
         const value = parameter.name;
@@ -111,29 +94,42 @@ const dataParameters = (parameters: OperationParameter[]) => {
 
 export const serviceExportedNamespace = () => '$OpenApiTs';
 
-export const nameOperationDataType = (
-    namespace: 'req' | 'res',
-    operation: Service['operations'][number],
-    name?: string | object
-) => {
+export const nameOperationDataType = (namespace: 'req' | 'res', operation: Service['operations'][number]) => {
+    const config = getConfig();
     const exported = serviceExportedNamespace();
+    const baseTypePath = `${exported}['${operation.path}']['${operation.method.toLocaleLowerCase()}']['${namespace}']`;
     if (namespace === 'req') {
-        const path = `${exported}['${operation.path}']['${operation.method.toLocaleLowerCase()}']['${namespace}']`;
-        return name && typeof name === 'string' ? `${path}['${name}']` : path;
+        if (!operation.parameters.length) {
+            return '';
+        }
+
+        if (config.useOptions) {
+            const isOptional = operation.parameters.every(p => !p.isRequired);
+            return isOptional ? `data: ${baseTypePath} = {}` : `data: ${baseTypePath}`;
+        }
+
+        return operation.parameters
+            .map(p => {
+                const typePath = `${baseTypePath}['${p.name}']`;
+                const defaultValue = getDefaultPrintable(p);
+                const defaultString = defaultValue !== undefined ? ` = ${defaultValue}` : '';
+                return `${p.name}${modelIsRequired(p)}: ${typePath}${defaultString}`;
+            })
+            .join(', ');
     }
     const results = operation.results.filter(result => result.code >= 200 && result.code < 300);
     // TODO: we should return nothing when results don't exist
     // can't remove this logic without removing request/name config
     // as it complicates things
     if (!results.length) {
-        return 'void';
+        return compiler.utils.toString(compiler.typedef.basic('void'));
     }
-    return results
-        .map(result => {
-            const path = `${exported}['${operation.path}']['${operation.method.toLocaleLowerCase()}']['${namespace}'][${String(result.code)}]`;
-            return path;
-        })
-        .join(' | ');
+    const types = results.map(result => `${baseTypePath}[${String(result.code)}]`);
+    const union = compiler.utils.toString(compiler.typedef.union(types));
+    if (config.useOptions && config.serviceResponse === 'response') {
+        return `ApiResult<${union}>`;
+    }
+    return union;
 };
 
 export const registerHandlebarHelpers = (): void => {
@@ -148,20 +144,26 @@ export const registerHandlebarHelpers = (): void => {
         }
     );
 
-    Handlebars.registerHelper('escapeComment', escapeComment);
     Handlebars.registerHelper('escapeDescription', escapeDescription);
 
-    Handlebars.registerHelper(
-        'hasDefault',
-        function (this: unknown, p: OperationParameter, options: Handlebars.HelperOptions) {
-            if (getDefaultPrintable(p) !== undefined) {
-                return options.fn(this);
-            }
-            return options.inverse(this);
+    Handlebars.registerHelper('toOperationComment', (operation: Operation) => {
+        const config = getConfig();
+        let params: string[] = [];
+        if (!config.useOptions && operation.parameters.length) {
+            params = operation.parameters.map(
+                p => `@param ${p.name} ${p.description ? escapeComment(p.description) : ''}`
+            );
         }
-    );
-
-    Handlebars.registerHelper('getDefaultPrintable', getDefaultPrintable);
+        const comment = [
+            operation.deprecated && '@deprecated',
+            operation.summary && escapeComment(operation.summary),
+            operation.description && escapeComment(operation.description),
+            ...params,
+            ...operation.results.map(r => `@returns ${r.type} ${r.description ? escapeComment(r.description) : ''}`),
+            '@throws ApiError',
+        ];
+        return addLeadingComment(undefined, comment, false, true);
+    });
 
     Handlebars.registerHelper('ifdef', function (this: unknown, ...args): string {
         const options = args.pop();
@@ -171,14 +173,6 @@ export const registerHandlebarHelpers = (): void => {
         return options.inverse(this);
     });
 
-    Handlebars.registerHelper(
-        'ifOperationDataOptional',
-        function (this: unknown, parameters: OperationParameter[], options: Handlebars.HelperOptions) {
-            return parameters.every(parameter => !parameter.isRequired) ? options.fn(this) : options.inverse(this);
-        }
-    );
-
-    Handlebars.registerHelper('modelIsRequired', modelIsRequired);
     Handlebars.registerHelper('nameOperationDataType', nameOperationDataType);
 
     Handlebars.registerHelper(
@@ -230,10 +224,6 @@ export const registerHandlebarTemplates = (): Templates => {
             service: Handlebars.template(templateExportService),
         },
     };
-
-    // Partials for the generations of the models, services, etc.
-    Handlebars.registerPartial('operationParameters', Handlebars.template(partialOperationParameters));
-    Handlebars.registerPartial('operationResult', Handlebars.template(partialOperationResult));
 
     // Generic functions used in 'request' file @see src/templates/core/request.hbs for more info
     Handlebars.registerPartial('functions/base64', Handlebars.template(functionBase64));

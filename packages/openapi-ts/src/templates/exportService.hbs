@@ -14,45 +14,24 @@ export class {{{name}}}{{{@root.$config.postfixServices}}} {
 	{{/equals}}
 	{{/if}}
 	{{#each operations}}
-	/**
-	{{#if deprecated}}
-	 * @deprecated
-	{{/if}}
-	{{#if summary}}
-	 * {{{escapeComment summary}}}
-	{{/if}}
-	{{#if description}}
-	 * {{{escapeComment description}}}
-	{{/if}}
-	{{#unless @root.$config.useOptions}}
-	{{#if parameters}}
-	{{#each parameters}}
-	 * @param {{{name}}} {{#if description}}{{{escapeComment description}}}{{/if}}
-	{{/each}}
-	{{/if}}
-	{{/unless}}
-	{{#each results}}
-	 * @returns {{{type}}} {{#if description}}{{{escapeComment description}}}{{/if}}
-	{{/each}}
-	 * @throws ApiError
-	 */
+	{{{toOperationComment this}}}
 	{{#if @root.$config.name}}
 	{{#equals @root.$config.client 'angular'}}
-	public {{{name}}}({{>operationParameters}}): Observable<{{>operationResult}}> {
+	public {{{name}}}({{{nameOperationDataType 'req' this}}}): Observable<{{{nameOperationDataType 'res' this}}}> {
 		{{{dataDestructure this}}}
 		return this.httpRequest.request({
 	{{else}}
-	public {{{name}}}({{>operationParameters}}): CancelablePromise<{{>operationResult}}> {
+	public {{{name}}}({{{nameOperationDataType 'req' this}}}): CancelablePromise<{{{nameOperationDataType 'res' this}}}> {
 		{{{dataDestructure this}}}
 		return this.httpRequest.request({
 	{{/equals}}
 	{{else}}
 	{{#equals @root.$config.client 'angular'}}
-	public {{{name}}}({{>operationParameters}}): Observable<{{>operationResult}}> {
+	public {{{name}}}({{{nameOperationDataType 'req' this}}}): Observable<{{{nameOperationDataType 'res' this}}}> {
 		{{{dataDestructure this}}}
 		return __request(OpenAPI, this.http, {
 	{{else}}
-	public static {{{name}}}({{>operationParameters}}): CancelablePromise<{{>operationResult}}> {
+	public static {{{name}}}({{{nameOperationDataType 'req' this}}}): CancelablePromise<{{{nameOperationDataType 'res' this}}}> {
 		{{{dataDestructure this}}}
 		return __request(OpenAPI, {
 	{{/equals}}
