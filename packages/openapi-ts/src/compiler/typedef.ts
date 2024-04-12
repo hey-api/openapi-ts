@@ -1,6 +1,6 @@
 import ts from 'typescript';
 
-import { addLeadingComment, type Comments } from './utils';
+import { addLeadingComment, type Comments, tsNodeToString } from './utils';
 
 export const createTypeNode = (base: any | ts.TypeNode) =>
     ts.isTypeNode(base) ? base : ts.factory.createTypeReferenceNode(base);
@@ -110,7 +110,7 @@ export const createTypeTupleNode = (types: (any | ts.TypeNode)[], isNullable: bo
 };
 
 /**
- * Create type record node. Example `Record<string, X | Y>`
+ * Create type record node. Example `{ [key: string]: string }`
  * @param keys - key types.
  * @param values - value types.
  * @param isNullable - if the whole type can be null
@@ -123,7 +123,16 @@ export const createTypeRecordNode = (
 ) => {
     const keyNode = createTypeUnionNode(keys);
     const valueNode = createTypeUnionNode(values);
-    const node = ts.factory.createTypeReferenceNode('Record', [keyNode, valueNode]);
+    // NOTE: We use the syntax `{ [key: string]: string }` because using a Record causes
+    //       invalid types with circular dependencies. This is functionally the same.
+    // Ref: https://github.com/hey-api/openapi-ts/issues/370
+    const node = createTypeInterfaceNode([
+        {
+            isRequired: true,
+            name: `[key: ${tsNodeToString(keyNode)}]`,
+            type: valueNode,
+        },
+    ]);
     if (!isNullable) {
         return node;
     }
