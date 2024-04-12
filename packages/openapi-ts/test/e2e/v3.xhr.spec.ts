@@ -1,9 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import browser from './scripts/browser';
 import { cleanup } from './scripts/cleanup';
 import { compileWithTypescript } from './scripts/compileWithTypescript';
-import { copyAsset } from './scripts/copyAsset';
 import { generateClient } from './scripts/generateClient';
 import server from './scripts/server';
 
@@ -11,15 +9,11 @@ describe('v3.xhr', () => {
     beforeAll(async () => {
         cleanup('v3/xhr');
         await generateClient('v3/xhr', 'v3', 'xhr');
-        copyAsset('index.html', 'v3/xhr/index.html');
-        copyAsset('main.ts', 'v3/xhr/main.ts');
         compileWithTypescript('v3/xhr');
         await server.start('v3/xhr');
-        await browser.start();
     }, 40000);
 
     afterAll(async () => {
-        await browser.stop();
         await server.stop();
     });
 
@@ -188,35 +182,26 @@ describe('v3.xhr useOptions', () => {
     beforeAll(async () => {
         cleanup('v3/xhr');
         await generateClient('v3/xhr', 'v3', 'xhr', true);
-        copyAsset('index.html', 'v3/xhr/index.html');
-        copyAsset('main.ts', 'v3/xhr/main.ts');
         compileWithTypescript('v3/xhr');
         await server.start('v3/xhr');
-        await browser.start();
     }, 40000);
 
     afterAll(async () => {
-        await browser.stop();
         await server.stop();
     });
 
     it('returns result body by default', async () => {
-        const result = await browser.evaluate(async () => {
-            // @ts-ignore
-            const { SimpleService } = window.api;
-            return await SimpleService.getCallWithoutParametersAndResponse();
-        });
+        const { SimpleService } = await import('./generated/v3/xhr/index.js');
+        const result = await SimpleService.getCallWithoutParametersAndResponse();
         // @ts-ignore
         expect(result.body).toBeUndefined();
     });
 
     it('returns result body', async () => {
-        const result = await browser.evaluate(async () => {
-            // @ts-ignore
-            const { SimpleService } = window.api;
-            return await SimpleService.getCallWithoutParametersAndResponse({
-                _result: 'body',
-            });
+        const { SimpleService } = await import('./generated/v3/xhr/index.js');
+        // @ts-ignore
+        const result = await SimpleService.getCallWithoutParametersAndResponse({
+            _result: 'body',
         });
         // @ts-ignore
         expect(result.body).toBeUndefined();
@@ -224,12 +209,10 @@ describe('v3.xhr useOptions', () => {
 
     it('returns raw result', async ({ skip }) => {
         skip();
-        const result = await browser.evaluate(async () => {
-            // @ts-ignore
-            const { SimpleService } = window.api;
-            return await SimpleService.getCallWithoutParametersAndResponse({
-                _result: 'raw',
-            });
+        const { SimpleService } = await import('./generated/v3/xhr/index.js');
+        // @ts-ignore
+        const result = await SimpleService.getCallWithoutParametersAndResponse({
+            _result: 'raw',
         });
         // @ts-ignore
         expect(result.body).toBeDefined();
