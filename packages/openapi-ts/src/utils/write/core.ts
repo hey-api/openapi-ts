@@ -1,4 +1,4 @@
-import { copyFileSync, existsSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import type { OpenApi } from '../../openApi';
@@ -27,6 +27,14 @@ export const writeCore = async (
         server: config.base !== undefined ? config.base : client.server,
         version: client.version,
     };
+
+    rmSync(path.resolve(outputPath), {
+        force: true,
+        recursive: true,
+    });
+    mkdirSync(path.resolve(outputPath), {
+        recursive: true,
+    });
 
     if (config.exportCore) {
         await writeFileSync(
