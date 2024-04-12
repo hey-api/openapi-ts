@@ -2920,6 +2920,10 @@
                 },
                 "default": null
             },
+            "CharactersInDescription": {
+                "type": "string",
+                "description": "Some % character"
+            },
             "ModelWithNullableObject": {
                 "type": "object",
                 "properties": {

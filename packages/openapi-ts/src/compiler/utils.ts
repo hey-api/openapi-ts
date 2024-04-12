@@ -114,7 +114,7 @@ export const addLeadingComment = (
     ts.addSyntheticLeadingComment(
         node,
         ts.SyntaxKind.MultiLineCommentTrivia,
-        ['*', ...comments.map(row => ` * ${row}`), ' '].join('\n'),
+        encodeURIComponent(['*', ...comments.map(row => ` * ${row}`), ' '].join('\n')),
         hasTrailingNewLine
     );
     return '';
