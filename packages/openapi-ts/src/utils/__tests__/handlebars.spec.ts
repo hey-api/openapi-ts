@@ -31,11 +31,8 @@ describe('registerHandlebarHelpers', () => {
         expect(helpers).toContain('dataDestructure');
         expect(helpers).toContain('dataParameters');
         expect(helpers).toContain('equals');
-        expect(helpers).toContain('escapeComment');
         expect(helpers).toContain('escapeDescription');
         expect(helpers).toContain('ifdef');
-        expect(helpers).toContain('ifOperationDataOptional');
-        expect(helpers).toContain('modelIsRequired');
         expect(helpers).toContain('nameOperationDataType');
         expect(helpers).toContain('notEquals');
     });
