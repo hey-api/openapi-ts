@@ -169,7 +169,9 @@ export type AnyOfArrays = {
 /**
  * This is a string dictionary
  */
-export type DictionaryWithString = Record<string, string>;
+export type DictionaryWithString = {
+    [key: string]: string;
+};
 
 export type DictionaryWithPropertiesAndAdditionalProperties = {
     foo?: string;
@@ -179,28 +181,35 @@ export type DictionaryWithPropertiesAndAdditionalProperties = {
 /**
  * This is a string reference
  */
-export type DictionaryWithReference = Record<string, ModelWithString>;
+export type DictionaryWithReference = {
+    [key: string]: ModelWithString;
+};
 
 /**
  * This is a complex dictionary
  */
-export type DictionaryWithArray = Record<string, Array<ModelWithString>>;
+export type DictionaryWithArray = {
+    [key: string]: Array<ModelWithString>;
+};
 
 /**
  * This is a string dictionary
  */
-export type DictionaryWithDictionary = Record<string, Record<string, string>>;
+export type DictionaryWithDictionary = {
+    [key: string]: {
+        [key: string]: string;
+    };
+};
 
 /**
  * This is a complex dictionary
  */
-export type DictionaryWithProperties = Record<
-    string,
-    {
+export type DictionaryWithProperties = {
+    [key: string]: {
         foo?: string;
         bar?: string;
-    }
->;
+    };
+};
 
 /**
  * This is a model with one number property
@@ -302,8 +311,12 @@ export type ModelWithEnumFromDescription = {
  * This is a model with nested enums
  */
 export type ModelWithNestedEnums = {
-    dictionaryWithEnum?: Record<string, 'Success' | 'Warning' | 'Error'>;
-    dictionaryWithEnumFromDescription?: Record<string, number>;
+    dictionaryWithEnum?: {
+        [key: string]: 'Success' | 'Warning' | 'Error';
+    };
+    dictionaryWithEnumFromDescription?: {
+        [key: string]: number;
+    };
     arrayWithEnum?: Array<'Success' | 'Warning' | 'Error'>;
     arrayWithDescription?: Array<number>;
     /**
@@ -341,7 +354,9 @@ export type ModelWithArray = {
  * This is a model with one property containing a dictionary
  */
 export type ModelWithDictionary = {
-    prop?: Record<string, string>;
+    prop?: {
+        [key: string]: string;
+    };
 };
 
 /**
@@ -458,21 +473,33 @@ export type CompositionWithOneOfAndNullable = {
  * This is a model that contains a simple dictionary within composition
  */
 export type CompositionWithOneOfAndSimpleDictionary = {
-    propA?: boolean | Record<string, number>;
+    propA?:
+        | boolean
+        | {
+              [key: string]: number;
+          };
 };
 
 /**
  * This is a model that contains a dictionary of simple arrays within composition
  */
 export type CompositionWithOneOfAndSimpleArrayDictionary = {
-    propA?: boolean | Record<string, Array<boolean>>;
+    propA?:
+        | boolean
+        | {
+              [key: string]: Array<boolean>;
+          };
 };
 
 /**
  * This is a model that contains a dictionary of complex arrays (composited) within composition
  */
 export type CompositionWithOneOfAndComplexArrayDictionary = {
-    propA?: boolean | Record<string, Array<number | string>>;
+    propA?:
+        | boolean
+        | {
+              [key: string]: Array<number | string>;
+          };
 };
 
 /**
@@ -626,17 +653,23 @@ export type Pageable = {
 /**
  * This is a free-form object without additionalProperties.
  */
-export type FreeFormObjectWithoutAdditionalProperties = Record<string, unknown>;
+export type FreeFormObjectWithoutAdditionalProperties = {
+    [key: string]: unknown;
+};
 
 /**
  * This is a free-form object with additionalProperties: true.
  */
-export type FreeFormObjectWithAdditionalPropertiesEqTrue = Record<string, unknown>;
+export type FreeFormObjectWithAdditionalPropertiesEqTrue = {
+    [key: string]: unknown;
+};
 
 /**
  * This is a free-form object with additionalProperties: {}.
  */
-export type FreeFormObjectWithAdditionalPropertiesEqEmptyObject = Record<string, unknown>;
+export type FreeFormObjectWithAdditionalPropertiesEqEmptyObject = {
+    [key: string]: unknown;
+};
 
 export type ModelWithConst = {
     String?: 'String';
@@ -1162,7 +1195,9 @@ export type $OpenApiTs = {
                 /**
                  * This is a dictionary parameter
                  */
-                parameterDictionary: Record<string, unknown> | null;
+                parameterDictionary: {
+                    [key: string]: unknown;
+                } | null;
                 /**
                  * This is an enum parameter
                  */
@@ -1174,7 +1209,9 @@ export type $OpenApiTs = {
                 /**
                  * This is an object parameter
                  */
-                parameterObject: Record<string, unknown> | null;
+                parameterObject: {
+                    [key: string]: unknown;
+                } | null;
                 /**
                  * This is a string parameter
                  */
@@ -1196,7 +1233,9 @@ export type $OpenApiTs = {
                 /**
                  * Response is a simple object
                  */
-                203: Record<string, unknown>;
+                203: {
+                    [key: string]: unknown;
+                };
             };
         };
     };
