@@ -13,7 +13,7 @@ import { getConfig } from '../config';
 export const writeClientIndex = async (client: Client, outputPath: string): Promise<void> => {
     const config = getConfig();
 
-    const fileIndex = new TypeScriptFile().setPath(path.resolve(outputPath, 'index.ts')).addHeader();
+    const fileIndex = new TypeScriptFile(path.resolve(outputPath, 'index.ts'));
 
     if (config.name) {
         fileIndex.add(compiler.export.named([config.name], `./${config.name}`));
