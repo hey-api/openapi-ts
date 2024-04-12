@@ -18,85 +18,71 @@ describe('client.xhr', () => {
     });
 
     it('requests token', async () => {
-        await browser.exposeFunction('tokenRequest', vi.fn().mockResolvedValue('MY_TOKEN'));
-        const result = await browser.evaluate(async () => {
-            // @ts-ignore
-            const { ApiClient } = window.api;
-            const client = new ApiClient({
-                PASSWORD: undefined,
-                // @ts-ignore
-                TOKEN: window.tokenRequest,
-                USERNAME: undefined,
-            });
-            return await client.simple.getCallWithoutParametersAndResponse();
+        const { ApiClient } = await import('./generated/client/xhr/index.js');
+        const tokenRequest = vi.fn().mockResolvedValue('MY_TOKEN');
+        const client = new ApiClient({
+            PASSWORD: undefined,
+            TOKEN: tokenRequest,
+            USERNAME: undefined,
         });
+        const result = await client.simple.getCallWithoutParametersAndResponse();
         // @ts-ignore
         expect(result.headers.authorization).toBe('Bearer MY_TOKEN');
     });
 
     it('uses credentials', async () => {
-        const result = await browser.evaluate(async () => {
-            // @ts-ignore
-            const { ApiClient } = window.api;
-            const client = new ApiClient({
-                PASSWORD: 'password',
-                TOKEN: undefined,
-                USERNAME: 'username',
-            });
-            return await client.simple.getCallWithoutParametersAndResponse();
+        const { ApiClient } = await import('./generated/client/xhr/index.js');
+        const client = new ApiClient({
+            PASSWORD: 'password',
+            TOKEN: undefined,
+            USERNAME: 'username',
         });
+        const result = await client.simple.getCallWithoutParametersAndResponse();
         // @ts-ignore
         expect(result.headers.authorization).toBe('Basic dXNlcm5hbWU6cGFzc3dvcmQ=');
     });
 
     it('supports complex params', async () => {
-        const result = await browser.evaluate(async () => {
-            // @ts-ignore
-            const { ApiClient } = window.api;
-            const client = new ApiClient();
-            return await client.complex.complexTypes({
-                first: {
-                    second: {
-                        third: 'Hello World!',
-                    },
+        const { ApiClient } = await import('./generated/client/xhr/index.js');
+        const client = new ApiClient();
+        // @ts-ignore
+        const result = await client.complex.complexTypes({
+            first: {
+                second: {
+                    third: 'Hello World!',
                 },
-            });
+            },
         });
         expect(result).toBeDefined();
     });
 
     it('support form data', async () => {
-        const result = await browser.evaluate(async () => {
-            // @ts-ignore
-            const { ApiClient } = window.api;
-            const client = new ApiClient();
-            return await client.parameters.callWithParameters(
-                'valueHeader',
-                'valueQuery',
-                'valueForm',
-                'valueCookie',
-                'valuePath',
-                {
-                    prop: 'valueBody',
-                }
-            );
-        });
+        const { ApiClient } = await import('./generated/client/xhr/index.js');
+        const client = new ApiClient();
+        // @ts-ignore
+        const result = await client.parameters.callWithParameters(
+            'valueHeader',
+            'valueQuery',
+            'valueForm',
+            'valueCookie',
+            'valuePath',
+            {
+                prop: 'valueBody',
+            }
+        );
         expect(result).toBeDefined();
     });
 
     it('can abort the request', async () => {
         let error;
         try {
-            await browser.evaluate(async () => {
-                // @ts-ignore
-                const { ApiClient } = window.api;
-                const client = new ApiClient();
-                const promise = client.simple.getCallWithoutParametersAndResponse();
-                setTimeout(() => {
-                    promise.cancel();
-                }, 10);
-                await promise;
-            });
+            const { ApiClient } = await import('./generated/client/xhr/index.js');
+            const client = new ApiClient();
+            const promise = client.simple.getCallWithoutParametersAndResponse();
+            setTimeout(() => {
+                promise.cancel();
+            }, 10);
+            await promise;
         } catch (e) {
             error = (e as Error).message;
         }
@@ -104,24 +90,21 @@ describe('client.xhr', () => {
     });
 
     it('should throw known error (500)', async () => {
-        const error = await browser.evaluate(async () => {
-            try {
-                // @ts-ignore
-                const { ApiClient } = window.api;
-                const client = new ApiClient();
-                await client.error.testErrorCode(500);
-            } catch (error) {
-                return JSON.stringify({
-                    body: error.body,
-                    message: error.message,
-                    name: error.name,
-                    status: error.status,
-                    statusText: error.statusText,
-                    url: error.url,
-                });
-            }
-            return;
-        });
+        let error;
+        try {
+            const { ApiClient } = await import('./generated/client/xhr/index.js');
+            const client = new ApiClient();
+            await client.error.testErrorCode(500);
+        } catch (err) {
+            error = JSON.stringify({
+                body: err.body,
+                message: err.message,
+                name: err.name,
+                status: err.status,
+                statusText: err.statusText,
+                url: err.url,
+            });
+        }
         expect(error).toBe(
             JSON.stringify({
                 body: {
@@ -138,24 +121,21 @@ describe('client.xhr', () => {
     });
 
     it('should throw unknown error (599)', async () => {
-        const error = await browser.evaluate(async () => {
-            try {
-                // @ts-ignore
-                const { ApiClient } = window.api;
-                const client = new ApiClient();
-                await client.error.testErrorCode(599);
-            } catch (error) {
-                return JSON.stringify({
-                    body: error.body,
-                    message: error.message,
-                    name: error.name,
-                    status: error.status,
-                    statusText: error.statusText,
-                    url: error.url,
-                });
-            }
-            return;
-        });
+        let error;
+        try {
+            const { ApiClient } = await import('./generated/client/xhr/index.js');
+            const client = new ApiClient();
+            await client.error.testErrorCode(599);
+        } catch (err) {
+            error = JSON.stringify({
+                body: err.body,
+                message: err.message,
+                name: err.name,
+                status: err.status,
+                statusText: err.statusText,
+                url: err.url,
+            });
+        }
         expect(error).toBe(
             JSON.stringify({
                 body: {

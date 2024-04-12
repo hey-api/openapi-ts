@@ -18,78 +18,65 @@ describe('v3.xhr', () => {
     });
 
     it('requests token', async () => {
-        await browser.exposeFunction('tokenRequest', vi.fn().mockResolvedValue('MY_TOKEN'));
-        const result = await browser.evaluate(async () => {
-            // @ts-ignore
-            const { OpenAPI, SimpleService } = window.api;
-            // @ts-ignore
-            OpenAPI.TOKEN = window.tokenRequest;
-            OpenAPI.USERNAME = undefined;
-            OpenAPI.PASSWORD = undefined;
-            return await SimpleService.getCallWithoutParametersAndResponse();
-        });
+        const { OpenAPI, SimpleService } = await import('./generated/v3/xhr/index.js');
+        const tokenRequest = vi.fn().mockResolvedValue('MY_TOKEN');
+        OpenAPI.TOKEN = tokenRequest;
+        OpenAPI.USERNAME = undefined;
+        OpenAPI.PASSWORD = undefined;
+        const result = await SimpleService.getCallWithoutParametersAndResponse();
+        expect(tokenRequest.mock.calls.length).toBe(1);
         // @ts-ignore
         expect(result.headers.authorization).toBe('Bearer MY_TOKEN');
     });
 
     it('uses credentials', async () => {
-        const result = await browser.evaluate(async () => {
-            // @ts-ignore
-            const { OpenAPI, SimpleService } = window.api;
-            OpenAPI.TOKEN = undefined;
-            OpenAPI.USERNAME = 'username';
-            OpenAPI.PASSWORD = 'password';
-            return await SimpleService.getCallWithoutParametersAndResponse();
-        });
+        const { OpenAPI, SimpleService } = await import('./generated/v3/xhr/index.js');
+        OpenAPI.TOKEN = undefined;
+        OpenAPI.USERNAME = 'username';
+        OpenAPI.PASSWORD = 'password';
+        const result = await SimpleService.getCallWithoutParametersAndResponse();
         // @ts-ignore
         expect(result.headers.authorization).toBe('Basic dXNlcm5hbWU6cGFzc3dvcmQ=');
     });
 
     it('supports complex params', async () => {
-        const result = await browser.evaluate(async () => {
+        const { ComplexService } = await import('./generated/v3/xhr/index.js');
+        const result = await ComplexService.complexTypes({
             // @ts-ignore
-            const { ComplexService } = window.api;
-            return await ComplexService.complexTypes({
-                first: {
-                    second: {
-                        third: 'Hello World!',
-                    },
+            first: {
+                second: {
+                    third: 'Hello World!',
                 },
-            });
+            },
         });
         expect(result).toBeDefined();
     });
 
     it('support form data', async () => {
-        const result = await browser.evaluate(async () => {
+        const { ParametersService } = await import('./generated/v3/xhr/index.js');
+        const result = await ParametersService.callWithParameters(
+            'valueHeader',
             // @ts-ignore
-            const { ParametersService } = window.api;
-            return await ParametersService.callWithParameters(
-                'valueHeader',
-                'valueQuery',
-                'valueForm',
-                'valueCookie',
-                'valuePath',
-                {
-                    prop: 'valueBody',
-                }
-            );
-        });
+            'valueQuery',
+            'valueForm',
+            'valueCookie',
+            'valuePath',
+            {
+                prop: 'valueBody',
+            }
+        );
         expect(result).toBeDefined();
     });
 
     it('can abort the request', async () => {
         let error;
         try {
-            await browser.evaluate(async () => {
-                // @ts-ignore
-                const { SimpleService } = window.api;
-                const promise = SimpleService.getCallWithoutParametersAndResponse();
-                setTimeout(() => {
-                    promise.cancel();
-                }, 10);
-                await promise;
-            });
+            const { SimpleService } = await import('./generated/v3/xhr/index.js');
+            const promise = SimpleService.getCallWithoutParametersAndResponse();
+            setTimeout(() => {
+                promise.cancel();
+            }, 10);
+            await promise;
         } catch (e) {
             error = (e as Error).message;
         }
@@ -97,23 +84,21 @@ describe('v3.xhr', () => {
     });
 
     it('should throw known error (500)', async () => {
-        const error = await browser.evaluate(async () => {
-            try {
-                // @ts-ignore
-                const { ErrorService } = window.api;
-                await ErrorService.testErrorCode(500);
-            } catch (error) {
-                return JSON.stringify({
-                    body: error.body,
-                    message: error.message,
-                    name: error.name,
-                    status: error.status,
-                    statusText: error.statusText,
-                    url: error.url,
-                });
-            }
-            return;
-        });
+        let error;
+        try {
+            const { ErrorService } = await import('./generated/v3/xhr/index.js');
+            // @ts-ignore
+            await ErrorService.testErrorCode(500);
+        } catch (err) {
+            error = JSON.stringify({
+                body: err.body,
+                message: err.message,
+                name: err.name,
+                status: err.status,
+                statusText: err.statusText,
+                url: err.url,
+            });
+        }
         expect(error).toBe(
             JSON.stringify({
                 body: {
@@ -130,23 +115,21 @@ describe('v3.xhr', () => {
     });
 
     it('should throw unknown error (599)', async () => {
-        const error = await browser.evaluate(async () => {
-            try {
-                // @ts-ignore
-                const { ErrorService } = window.api;
-                await ErrorService.testErrorCode(599);
-            } catch (error) {
-                return JSON.stringify({
-                    body: error.body,
-                    message: error.message,
-                    name: error.name,
-                    status: error.status,
-                    statusText: error.statusText,
-                    url: error.url,
-                });
-            }
-            return;
-        });
+        let error;
+        try {
+            const { ErrorService } = await import('./generated/v3/xhr/index.js');
+            // @ts-ignore
+            await ErrorService.testErrorCode(599);
+        } catch (err) {
+            error = JSON.stringify({
+                body: err.body,
+                message: err.message,
+                name: err.name,
+                status: err.status,
+                statusText: err.statusText,
+                url: err.url,
+            });
+        }
         expect(error).toBe(
             JSON.stringify({
                 body: {
@@ -164,14 +147,12 @@ describe('v3.xhr', () => {
     });
 
     it('it should parse query params', async () => {
-        const result = await browser.evaluate(async () => {
+        const { ParametersService } = await import('./generated/v3/xhr/index.js');
+        const result = await ParametersService.postCallWithOptionalParam({
             // @ts-ignore
-            const { ParametersService } = window.api;
-            return await ParametersService.postCallWithOptionalParam({
-                page: 0,
-                size: 1,
-                sort: ['location'],
-            });
+            page: 0,
+            size: 1,
+            sort: ['location'],
         });
         // @ts-ignore
         expect(result.query).toStrictEqual({ parameter: { page: '0', size: '1', sort: 'location' } });
