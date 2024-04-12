@@ -427,7 +427,9 @@ export type $OpenApiTs = {
                 /**
                  * This is a dictionary parameter
                  */
-                parameterDictionary: Record<string, unknown> | null;
+                parameterDictionary: {
+                    [key: string]: unknown;
+                } | null;
                 /**
                  * This is an enum parameter
                  */
@@ -439,7 +441,9 @@ export type $OpenApiTs = {
                 /**
                  * This is an object parameter
                  */
-                parameterObject: Record<string, unknown> | null;
+                parameterObject: {
+                    [key: string]: unknown;
+                } | null;
                 /**
                  * This is a string parameter
                  */
@@ -461,7 +465,9 @@ export type $OpenApiTs = {
                 /**
                  * Response is a simple object
                  */
-                203: Record<string, unknown>;
+                203: {
+                    [key: string]: unknown;
+                };
             };
         };
     };
