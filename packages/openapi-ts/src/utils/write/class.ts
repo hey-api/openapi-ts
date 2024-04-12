@@ -24,6 +24,7 @@ export const writeClientClass = async (
     templates: Templates
 ): Promise<void> => {
     const config = getConfig();
+
     const templateResult = templates.client({
         $config: config,
         ...client,
@@ -32,5 +33,7 @@ export const writeClientClass = async (
         services: sortByName(client.services),
     });
 
-    await writeFileSync(path.resolve(outputPath, `${config.name}.ts`), templateResult);
+    if (config.name) {
+        await writeFileSync(path.resolve(outputPath, `${config.name}.ts`), templateResult);
+    }
 };

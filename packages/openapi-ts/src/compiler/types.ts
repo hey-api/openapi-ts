@@ -9,11 +9,11 @@ import { addLeadingComment, type Comments, isType, ots } from './utils';
  */
 export const toExpression = (value: unknown, unescape = false): ts.Expression | undefined => {
     if (Array.isArray(value)) {
-        return createArrayType(value);
+        return createArrayType({ arr: value });
     }
 
     if (typeof value === 'object' && value !== null) {
-        return createObjectType(value);
+        return createObjectType({ obj: value });
     }
 
     if (typeof value === 'number') {
@@ -39,7 +39,13 @@ export const toExpression = (value: unknown, unescape = false): ts.Expression | 
  * @param multiLine - if the array should be multiline.
  * @returns ts.ArrayLiteralExpression
  */
-export const createArrayType = <T>(arr: T[], multiLine: boolean = false): ts.ArrayLiteralExpression =>
+export const createArrayType = <T>({
+    arr,
+    multiLine = false,
+}: {
+    arr: T[];
+    multiLine?: boolean;
+}): ts.ArrayLiteralExpression =>
     ts.factory.createArrayLiteralExpression(
         arr.map(v => toExpression(v)).filter(isType<ts.Expression>),
         // Multiline if the array contains objects, or if specified by the user.
@@ -48,42 +54,38 @@ export const createArrayType = <T>(arr: T[], multiLine: boolean = false): ts.Arr
 
 /**
  * Create Object type expression.
- * @param obj - the object to create.
  * @param options - options to use when creating type.
  * @returns ts.ObjectLiteralExpression
  */
-export const createObjectType = <T extends object>(
-    obj: T,
-    options: {
-        multiLine?: boolean;
-        unescape?: boolean;
-        comments?: Record<string | number, Comments>;
-    } = {
-        comments: {},
-        multiLine: true,
-        unescape: false,
-    }
-): ts.ObjectLiteralExpression => {
-    const expression = ts.factory.createObjectLiteralExpression(
-        Object.entries(obj)
-            .map(([key, value]) => {
-                const initializer = toExpression(value, options.unescape);
-                if (!initializer) {
-                    return undefined;
-                }
-                const c = options.comments?.[key];
-                if (key.match(/\W/g) && !key.startsWith("'") && !key.endsWith("'")) {
-                    key = `'${key}'`;
-                }
-                const assignment = ts.factory.createPropertyAssignment(key, initializer);
-                if (c?.length) {
-                    addLeadingComment(assignment, c);
-                }
-                return assignment;
-            })
-            .filter(isType<ts.PropertyAssignment>),
-        options.multiLine
-    );
+export const createObjectType = <T extends object>({
+    comments = {},
+    multiLine = true,
+    obj,
+    unescape = false,
+}: {
+    obj: T;
+    multiLine?: boolean;
+    unescape?: boolean;
+    comments?: Record<string | number, Comments>;
+}): ts.ObjectLiteralExpression => {
+    const properties = Object.entries(obj)
+        .map(([key, value]) => {
+            const initializer = toExpression(value, unescape);
+            if (!initializer) {
+                return undefined;
+            }
+            if (key.match(/\W/g) && !key.startsWith("'") && !key.endsWith("'")) {
+                key = `'${key}'`;
+            }
+            const assignment = ts.factory.createPropertyAssignment(key, initializer);
+            const c = comments?.[key];
+            if (c?.length) {
+                addLeadingComment(assignment, c);
+            }
+            return assignment;
+        })
+        .filter(isType<ts.PropertyAssignment>);
+    const expression = ts.factory.createObjectLiteralExpression(properties, multiLine);
     return expression;
 };
 
@@ -91,16 +93,21 @@ export const createObjectType = <T extends object>(
  * Create enum declaration. Example `export enum T = { X, Y };`
  * @param name - the name of the enum.
  * @param obj - the object representing the enum.
- * @param comment - comment to add to enum.
+ * @param leadingComment - leading comment to add to enum.
  * @param comments - comments to add to each property of enum.
  * @returns
  */
-export const createEnumDeclaration = <T extends object>(
-    name: string,
-    obj: T,
-    comment: Comments = [],
-    comments: Record<string | number, Comments> = {}
-): ts.EnumDeclaration => {
+export const createEnumDeclaration = <T extends object>({
+    name,
+    obj,
+    leadingComment = [],
+    comments = {},
+}: {
+    name: string;
+    obj: T;
+    leadingComment: Comments;
+    comments: Record<string | number, Comments>;
+}): ts.EnumDeclaration => {
     const declaration = ts.factory.createEnumDeclaration(
         [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
         ts.factory.createIdentifier(name),
@@ -114,8 +121,8 @@ export const createEnumDeclaration = <T extends object>(
             return assignment;
         })
     );
-    if (comment.length) {
-        addLeadingComment(declaration, comment);
+    if (leadingComment.length) {
+        addLeadingComment(declaration, leadingComment);
     }
     return declaration;
 };

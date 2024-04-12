@@ -1,4 +1,3 @@
-import { writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { TypeScriptFile } from '../../compiler';
@@ -15,14 +14,15 @@ import { unique } from '../unique';
  * @param client Client containing models, schemas, and services
  * @param templates The loaded handlebar templates
  */
-export const writeClientServices = async (
+export const writeServices = async (
     openApi: OpenApi,
     outputPath: string,
     client: Client,
     templates: Templates
 ): Promise<void> => {
     const config = getConfig();
-    const file = new TypeScriptFile().addHeader();
+
+    const fileServices = new TypeScriptFile().setPath(path.resolve(outputPath, 'services.ts')).addHeader();
 
     let imports: string[] = [];
     let results: string[] = [];
@@ -39,32 +39,34 @@ export const writeClientServices = async (
 
     // Import required packages and core files.
     if (config.client === 'angular') {
-        file.addNamedImport('Injectable', '@angular/core');
+        fileServices.addNamedImport('Injectable', '@angular/core');
         if (config.name === undefined) {
-            file.addNamedImport('HttpClient', '@angular/common/http');
+            fileServices.addNamedImport('HttpClient', '@angular/common/http');
         }
-        file.addNamedImport({ isTypeOnly: true, name: 'Observable' }, 'rxjs');
+        fileServices.addNamedImport({ isTypeOnly: true, name: 'Observable' }, 'rxjs');
     } else {
-        file.addNamedImport({ isTypeOnly: true, name: 'CancelablePromise' }, './core/CancelablePromise');
+        fileServices.addNamedImport({ isTypeOnly: true, name: 'CancelablePromise' }, './core/CancelablePromise');
     }
     if (config.serviceResponse === 'response') {
-        file.addNamedImport({ isTypeOnly: true, name: 'ApiResult' }, './core/ApiResult');
+        fileServices.addNamedImport({ isTypeOnly: true, name: 'ApiResult' }, './core/ApiResult');
     }
     if (config.name) {
-        file.addNamedImport(
+        fileServices.addNamedImport(
             { isTypeOnly: config.client !== 'angular', name: 'BaseHttpRequest' },
             './core/BaseHttpRequest'
         );
     } else {
-        file.addNamedImport('OpenAPI', './core/OpenAPI');
-        file.addNamedImport({ alias: '__request', name: 'request' }, './core/request');
+        fileServices.addNamedImport('OpenAPI', './core/OpenAPI');
+        fileServices.addNamedImport({ alias: '__request', name: 'request' }, './core/request');
     }
 
     // Import all models required by the services.
     const models = imports.filter(unique).map(imp => ({ isTypeOnly: true, name: imp }));
-    file.addNamedImport(models, './models');
+    fileServices.addNamedImport(models, './models');
 
-    const data = [file.toString(), ...results].join('\n\n');
+    fileServices.add(...results);
 
-    await writeFileSync(path.resolve(outputPath, 'services.ts'), data);
+    if (config.exportServices) {
+        fileServices.write('\n\n');
+    }
 };
