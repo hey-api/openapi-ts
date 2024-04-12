@@ -225,8 +225,8 @@ const processServiceTypes = (services: Service[], onNode: OnNode) => {
 export const writeTypesAndEnums = async (openApi: OpenApi, outputPath: string, client: Client): Promise<void> => {
     const config = getConfig();
 
-    const fileEnums = new TypeScriptFile().setPath(path.resolve(outputPath, 'enums.gen.ts')).addHeader();
-    const fileModels = new TypeScriptFile().setPath(path.resolve(outputPath, 'models.ts')).addHeader();
+    const fileEnums = new TypeScriptFile(path.resolve(outputPath, 'enums.gen.ts'));
+    const fileModels = new TypeScriptFile(path.resolve(outputPath, 'models.ts'));
 
     for (const model of client.models) {
         processModel(client, model, (node, type) => {

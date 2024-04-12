@@ -22,7 +22,7 @@ export const writeServices = async (
 ): Promise<void> => {
     const config = getConfig();
 
-    const fileServices = new TypeScriptFile().setPath(path.resolve(outputPath, 'services.ts')).addHeader();
+    const fileServices = new TypeScriptFile(path.resolve(outputPath, 'services.ts'));
 
     let imports: string[] = [];
     let results: string[] = [];
