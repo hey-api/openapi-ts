@@ -1,6 +1,6 @@
 import ts from 'typescript';
 
-import { addLeadingComment, type Comments } from './utils';
+import { addLeadingComment, type Comments, tsNodeToString } from './utils';
 
 export const createTypeNode = (base: any | ts.TypeNode) =>
     ts.isTypeNode(base) ? base : ts.factory.createTypeReferenceNode(base);
@@ -123,7 +123,13 @@ export const createTypeRecordNode = (
 ) => {
     const keyNode = createTypeUnionNode(keys);
     const valueNode = createTypeUnionNode(values);
-    const node = ts.factory.createTypeReferenceNode('Record', [keyNode, valueNode]);
+    const node = createTypeInterfaceNode([
+        {
+            isRequired: true,
+            name: `[key: ${tsNodeToString(keyNode)}]`,
+            type: valueNode,
+        },
+    ]);
     if (!isNullable) {
         return node;
     }
