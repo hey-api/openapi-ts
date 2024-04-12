@@ -20,7 +20,7 @@ import {
     ResponseService,
     SimpleService,
     TypesService,
-} from './client/services.gen';
+} from './client/services';
 
 @Component({
     selector: 'app-root',
