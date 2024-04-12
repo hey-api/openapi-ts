@@ -1,4 +1,4 @@
-import { mkdirSync, rmSync } from 'node:fs';
+import { existsSync, mkdirSync } from 'node:fs';
 import path from 'node:path';
 
 import type { OpenApi } from '../../openApi';
@@ -20,10 +20,6 @@ import { writeServices } from './services';
  */
 export const writeClient = async (openApi: OpenApi, client: Client, templates: Templates): Promise<void> => {
     const config = getConfig();
-    await rmSync(config.output, {
-        force: true,
-        recursive: true,
-    });
 
     if (typeof config.exportServices === 'string') {
         const regexp = new RegExp(config.exportServices);
@@ -33,6 +29,10 @@ export const writeClient = async (openApi: OpenApi, client: Client, templates: T
     if (typeof config.exportModels === 'string') {
         const regexp = new RegExp(config.exportModels);
         client.models = client.models.filter(model => regexp.test(model.name));
+    }
+
+    if (!existsSync(path.resolve(config.output))) {
+        mkdirSync(path.resolve(config.output), { recursive: true });
     }
 
     const sections = [
@@ -60,15 +60,6 @@ export const writeClient = async (openApi: OpenApi, client: Client, templates: T
 
     for (const section of sections) {
         const sectionPath = path.resolve(config.output, section.dir);
-        if (section.dir) {
-            await rmSync(sectionPath, {
-                force: true,
-                recursive: true,
-            });
-        }
-        await mkdirSync(sectionPath, {
-            recursive: true,
-        });
         await section.fn(openApi, sectionPath, client, templates);
     }
 
