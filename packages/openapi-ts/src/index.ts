@@ -181,6 +181,10 @@ export async function createClient(userConfig: UserConfig): Promise<Client> {
         {}
     );
 
+    if (!dependencies.typescript) {
+        throw new Error('🚫 dependency missing - TypeScript must be installed');
+    }
+
     const config = await initConfig(userConfig, dependencies);
 
     const openApi =
