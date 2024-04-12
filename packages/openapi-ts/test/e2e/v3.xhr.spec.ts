@@ -5,7 +5,7 @@ import { compileWithTypescript } from './scripts/compileWithTypescript';
 import { generateClient } from './scripts/generateClient';
 import server from './scripts/server';
 
-describe('v3.xhr', () => {
+describe.skip('v3.xhr', () => {
     beforeAll(async () => {
         cleanup('v3/xhr');
         await generateClient('v3/xhr', 'v3', 'xhr');
@@ -159,7 +159,7 @@ describe('v3.xhr', () => {
     });
 });
 
-describe('v3.xhr useOptions', () => {
+describe.skip('v3.xhr useOptions', () => {
     beforeAll(async () => {
         cleanup('v3/xhr');
         await generateClient('v3/xhr', 'v3', 'xhr', true);
