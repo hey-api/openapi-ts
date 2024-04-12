@@ -18,29 +18,23 @@ describe('v2.xhr', () => {
     });
 
     it('requests token', async () => {
-        await browser.exposeFunction('tokenRequest', vi.fn().mockResolvedValue('MY_TOKEN'));
-        const result = await browser.evaluate(async () => {
-            // @ts-ignore
-            const { OpenAPI, SimpleService } = window.api;
-            // @ts-ignore
-            OpenAPI.TOKEN = window.tokenRequest;
-            return await SimpleService.getCallWithoutParametersAndResponse();
-        });
+        const { OpenAPI, SimpleService } = await import('./generated/v2/xhr/index.js');
+        const tokenRequest = vi.fn().mockResolvedValue('MY_TOKEN');
+        OpenAPI.TOKEN = tokenRequest;
+        const result = await SimpleService.getCallWithoutParametersAndResponse();
         // @ts-ignore
         expect(result.headers.authorization).toBe('Bearer MY_TOKEN');
     });
 
     it('supports complex params', async () => {
-        const result = await browser.evaluate(async () => {
+        const { ComplexService } = await import('./generated/v2/xhr/index.js');
+        const result = await ComplexService.complexTypes({
             // @ts-ignore
-            const { ComplexService } = window.api;
-            return await ComplexService.complexTypes({
-                first: {
-                    second: {
-                        third: 'Hello World!',
-                    },
+            first: {
+                second: {
+                    third: 'Hello World!',
                 },
-            });
+            },
         });
         expect(result).toBeDefined();
     });

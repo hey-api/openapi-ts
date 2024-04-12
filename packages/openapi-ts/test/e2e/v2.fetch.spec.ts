@@ -80,4 +80,3 @@ describe('v2.fetch useOptions', () => {
         expect(result.body).toBeDefined();
     });
 });
-
