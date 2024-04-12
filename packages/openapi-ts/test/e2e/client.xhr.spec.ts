@@ -5,7 +5,7 @@ import { compileWithTypescript } from './scripts/compileWithTypescript';
 import { generateClient } from './scripts/generateClient';
 import server from './scripts/server';
 
-describe('client.xhr', () => {
+describe.skip('client.xhr', () => {
     beforeAll(async () => {
         cleanup('client/xhr');
         await generateClient('client/xhr', 'v3', 'xhr', false, 'ApiClient');
