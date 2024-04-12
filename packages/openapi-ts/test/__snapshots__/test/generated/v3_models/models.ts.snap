@@ -264,6 +264,11 @@ export type ModelWithNullableString = {
 };
 
 /**
+ * This is a simple enum with strings
+ */
+export type foo_bar_enum_ = 'Success' | 'Warning' | 'Error' | 'ØÆÅ字符串';
+
+/**
  * This is a model with one enum
  */
 export type ModelWithEnum = {
@@ -282,11 +287,18 @@ export type ModelWithEnum = {
 };
 
 /**
+ * These are the HTTP error code enums
+ */
+export type statusCode = '100' | '200 FOO' | '300 FOO_BAR' | '400 foo-bar' | '500 foo.bar' | '600 foo&bar';
+
+/**
  * This is a model with one enum with escaped name
  */
 export type ModelWithEnumWithHyphen = {
     'foo-bar-baz-qux'?: '3.0';
 };
+
+export type foo_bar_baz_qux_ = '3.0';
 
 /**
  * This is a model with one enum
@@ -701,6 +713,8 @@ export type ModelWithOneOfEnum =
           content: [string, string];
           foo: 'Corge';
       };
+
+export type foo = 'Bar';
 
 export type ModelWithNestedArrayEnumsDataFoo = 'foo' | 'bar';
 
