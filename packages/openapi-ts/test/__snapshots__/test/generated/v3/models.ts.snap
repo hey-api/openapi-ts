@@ -84,47 +84,12 @@ export type EnumWithStrings =
     | '"Double Quotes"'
     | 'Non-ascii: øæåôöØÆÅÔÖ字符串';
 
-export const EnumWithStringsEnum = {
-    SUCCESS: 'Success',
-    WARNING: 'Warning',
-    ERROR: 'Error',
-    _SINGLE_QUOTE_: "'Single Quote'",
-    _DOUBLE_QUOTES_: '"Double Quotes"',
-    NON_ASCII__ØÆÅÔÖ_ØÆÅÔÖ字符串: 'Non-ascii: øæåôöØÆÅÔÖ字符串',
-} as const;
-
 export type EnumWithReplacedCharacters = "'Single Quote'" | '"Double Quotes"' | 'øæåôöØÆÅÔÖ字符串' | 3.1 | '';
-
-export const EnumWithReplacedCharactersEnum = {
-    _SINGLE_QUOTE_: "'Single Quote'",
-    _DOUBLE_QUOTES_: '"Double Quotes"',
-    ØÆÅÔÖ_ØÆÅÔÖ字符串: 'øæåôöØÆÅÔÖ字符串',
-    '_3.1': 3.1,
-    EMPTY_STRING: '',
-} as const;
 
 /**
  * This is a simple enum with numbers
  */
 export type EnumWithNumbers = 1 | 2 | 3 | 1.1 | 1.2 | 1.3 | 100 | 200 | 300 | -100 | -200 | -300 | -1.1 | -1.2 | -1.3;
-
-export const EnumWithNumbersEnum = {
-    _1: 1,
-    _2: 2,
-    _3: 3,
-    '_1.1': 1.1,
-    '_1.2': 1.2,
-    '_1.3': 1.3,
-    _100: 100,
-    _200: 200,
-    _300: 300,
-    '_-100': -100,
-    '_-200': -200,
-    '_-300': -300,
-    '_-1.1': -1.1,
-    '_-1.2': -1.2,
-    '_-1.3': -1.3,
-} as const;
 
 /**
  * Success=1,Warning=2,Error=3
@@ -136,28 +101,7 @@ export type EnumFromDescription = number;
  */
 export type EnumWithExtensions = 200 | 400 | 500;
 
-export const EnumWithExtensionsEnum = {
-    /**
-     * Used when the status of something is successful
-     */
-    CUSTOM_SUCCESS: 200,
-    /**
-     * Used when the status of something has a warning
-     */
-    CUSTOM_WARNING: 400,
-    /**
-     * Used when the status of something has an error
-     */
-    CUSTOM_ERROR: 500,
-} as const;
-
 export type EnumWithXEnumNames = 0 | 1 | 2;
-
-export const EnumWithXEnumNamesEnum = {
-    zero: 0,
-    one: 1,
-    two: 2,
-} as const;
 
 /**
  * This is a simple array with numbers
@@ -319,13 +263,6 @@ export type ModelWithNullableString = {
     'foo_bar-enum'?: 'Success' | 'Warning' | 'Error' | 'ØÆÅ字符串';
 };
 
-export const FooBarEnumEnum = {
-    SUCCESS: 'Success',
-    WARNING: 'Warning',
-    ERROR: 'Error',
-    ØÆÅ字符串: 'ØÆÅ字符串',
-} as const;
-
 /**
  * This is a model with one enum
  */
@@ -344,32 +281,12 @@ export type ModelWithEnum = {
     bool?: boolean;
 };
 
-export const FooBarEnumEnum2 = {
-    SUCCESS: 'Success',
-    WARNING: 'Warning',
-    ERROR: 'Error',
-    ØÆÅ字符串: 'ØÆÅ字符串',
-} as const;
-
-export const StatusCodeEnum = {
-    _100: '100',
-    _200_FOO: '200 FOO',
-    _300_FOO_BAR: '300 FOO_BAR',
-    _400_FOO_BAR: '400 foo-bar',
-    _500_FOO_BAR: '500 foo.bar',
-    _600_FOO_BAR: '600 foo&bar',
-} as const;
-
 /**
  * This is a model with one enum with escaped name
  */
 export type ModelWithEnumWithHyphen = {
     'foo-bar-baz-qux'?: '3.0';
 };
-
-export const FooBarBazQuxEnum = {
-    _3_0: '3.0',
-} as const;
 
 /**
  * This is a model with one enum
@@ -394,13 +311,6 @@ export type ModelWithNestedEnums = {
      */
     'foo_bar-enum'?: 'Success' | 'Warning' | 'Error' | 'ØÆÅ字符串';
 };
-
-export const FooBarEnumEnum3 = {
-    SUCCESS: 'Success',
-    WARNING: 'Warning',
-    ERROR: 'Error',
-    ØÆÅ字符串: 'ØÆÅ字符串',
-} as const;
 
 /**
  * This is a model with one property containing a reference
@@ -520,11 +430,6 @@ export type CompositionWithNestedAnyAndTypeNull = {
 };
 
 export type Enum1 = 'Bird' | 'Dog';
-
-export const Enum1Enum = {
-    BIRD: 'Bird',
-    DOG: 'Dog',
-} as const;
 
 export type ConstValue = 'ConstValue';
 
@@ -797,23 +702,9 @@ export type ModelWithOneOfEnum =
           foo: 'Corge';
       };
 
-export const FooEnum = {
-    BAR: 'Bar',
-} as const;
-
 export type ModelWithNestedArrayEnumsDataFoo = 'foo' | 'bar';
 
-export const ModelWithNestedArrayEnumsDataFooEnum = {
-    FOO: 'foo',
-    BAR: 'bar',
-} as const;
-
 export type ModelWithNestedArrayEnumsDataBar = 'baz' | 'qux';
-
-export const ModelWithNestedArrayEnumsDataBarEnum = {
-    BAZ: 'baz',
-    QUX: 'qux',
-} as const;
 
 export type ModelWithNestedArrayEnumsData = {
     foo?: Array<ModelWithNestedArrayEnumsDataFoo>;

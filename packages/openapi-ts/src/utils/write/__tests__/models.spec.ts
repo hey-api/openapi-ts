@@ -4,12 +4,12 @@ import path from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 
 import { setConfig } from '../../config';
-import { writeClientModels } from '../models';
+import { writeTypesAndEnums } from '../models';
 import { openApi } from './models';
 
 vi.mock('node:fs');
 
-describe('writeClientModels', () => {
+describe('writeTypesAndEnums', () => {
     it('writes to filesystem', async () => {
         setConfig({
             client: 'fetch',
@@ -32,7 +32,7 @@ describe('writeClientModels', () => {
             useOptions: true,
         });
 
-        const client: Parameters<typeof writeClientModels>[2] = {
+        const client: Parameters<typeof writeTypesAndEnums>[2] = {
             enumNames: [],
             models: [
                 {
@@ -59,7 +59,7 @@ describe('writeClientModels', () => {
             version: 'v1',
         };
 
-        await writeClientModels(openApi, '/', client);
+        await writeTypesAndEnums(openApi, '/', client);
 
         expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/models.ts'), expect.anything());
     });

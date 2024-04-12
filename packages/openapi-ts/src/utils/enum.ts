@@ -43,17 +43,12 @@ export const enumKey = (value?: string | number, customName?: string) => {
  */
 export const enumName = (client: Client, name?: string) => {
     if (!name) {
-        return name;
+        return null;
     }
     const escapedName = unescapeName(name).replace(/[-_]([a-z])/gi, ($0, $1: string) => $1.toLocaleUpperCase());
-    let result = `${escapedName.charAt(0).toLocaleUpperCase() + escapedName.slice(1)}Enum`;
-    let index = 1;
-    while (client.enumNames.includes(result)) {
-        if (result.endsWith(index.toString())) {
-            result = result.slice(0, result.length - index.toString().length);
-        }
-        index += 1;
-        result = result + index.toString();
+    const result = `${escapedName.charAt(0).toLocaleUpperCase() + escapedName.slice(1)}Enum`;
+    if (client.enumNames.includes(result)) {
+        return null;
     }
     client.enumNames = [...client.enumNames, result];
     return result;

@@ -5,7 +5,7 @@ description: Migrating to @hey-api/openapi-ts.
 
 # Migrating
 
-While we try to avoid breaking changes, sometimes it's unavoidable in order to offer you the latest features. This page lists changes that require updates to your code.
+While we try to avoid breaking changes, sometimes it's unavoidable in order to offer you the latest features. This page lists changes that require updates to your code. If you run into an issue with migration, please [open an issue](https://github.com/hey-api/openapi-ts/issues).
 
 ## @next
 
@@ -49,6 +49,25 @@ This config option is deprecated and will be removed.
 ### Deprecated `name`
 
 This config option is deprecated and will be removed.
+
+## v0.39.0
+
+### Single `enums.gen.ts` file
+
+Enums are now exported from a single file. If you used imports from `model.ts`, you can change it to `enums.gen.ts`.
+
+```js
+import { Enum } from 'client/models' // [!code --]
+import { Enum } from 'client/enums.gen.ts' // [!code ++]
+```
+
+Enums are no longer exported from `index.ts`. If you used imports from index file, you will need to move enums into their own import statement.
+
+```js
+import { Enum, DefaultService } from 'client' // [!code --]
+import { Enum } from 'client/enums.gen.ts' // [!code ++]
+import { DefaultService } from 'client/services' // [!code ++]
+```
 
 ## v0.38.0
 
@@ -140,15 +159,4 @@ This config option has been removed. Generated types will behave the same as `us
 
 ## OpenAPI TypeScript Codegen
 
-`openapi-ts` was originally forked from Ferdi Koomen's [openapi-typescript-codegen](https://github.com/ferdikoomen/openapi-typescript-codegen). Therefore, we want you to be able to migrate your openapi-typescript-codegen projects. Migration should be relatively straightforward if you follow the release notes on this page. If you run into an issue with migration, please [open an issue](https://github.com/hey-api/openapi-ts/issues).
-
-### Changed
-
-- `exportSchemas` is `true` by default (see [v0.27.36](#v0-27-36))
-- `useOptions` is `true` by default (see [v0.27.38](#v0-27-38))
-
-### Removed
-
-- `useUnionTypes` has been removed (see [v0.27.24](#v0-27-24))
-- `indent` has been removed (see [v0.27.26](#v0-27-26))
-- `postfixModels` has been removed (see [v0.35.0](#v0-35-0))
+`openapi-ts` was originally forked from Ferdi Koomen's [openapi-typescript-codegen](https://github.com/ferdikoomen/openapi-typescript-codegen). Therefore, we want you to be able to migrate your projects. Migration should be relatively straightforward if you follow the release notes on this page. Start here and scroll up to the release you're migrating to.
