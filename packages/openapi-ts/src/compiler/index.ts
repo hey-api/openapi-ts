@@ -12,11 +12,13 @@ export type { Property } from './typedef';
 export type { Comments } from './utils';
 export type { Node, TypeNode } from 'typescript';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const generatedFileName = (fileName: string, insertGen = true) => {
     const match = fileName.match(/\.[0-9a-z]+$/i);
     const extension = match ? match[0].slice(1) : '';
     const filePath = fileName.slice(0, fileName.length - (extension ? extension.length + 1 : 0));
-    return [filePath, insertGen && 'gen', extension].filter(Boolean).join('.');
+    // insertGen && 'gen'
+    return [filePath, extension].filter(Boolean).join('.');
 };
 
 export const filePath = (folderPath: string, fileName: string, insertGen = true) => {
