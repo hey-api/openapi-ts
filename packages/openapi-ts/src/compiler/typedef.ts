@@ -110,7 +110,7 @@ export const createTypeTupleNode = (types: (any | ts.TypeNode)[], isNullable: bo
 };
 
 /**
- * Create type record node. Example `Record<string, X | Y>`
+ * Create type record node. Example `{ [key: string]: string }`
  * @param keys - key types.
  * @param values - value types.
  * @param isNullable - if the whole type can be null
@@ -123,6 +123,8 @@ export const createTypeRecordNode = (
 ) => {
     const keyNode = createTypeUnionNode(keys);
     const valueNode = createTypeUnionNode(values);
+    // NOTE: We use the syntax `{ [key: string]: string }` because using a Record causes
+    //       invalid types with circular dependencies. This is functionally the same.
     const node = createTypeInterfaceNode([
         {
             isRequired: true,
