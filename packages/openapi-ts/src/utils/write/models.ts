@@ -38,7 +38,7 @@ const processComposition = (client: Client, model: Model, onNode: OnNode) => {
     model.enums.forEach(enumerator => processEnum(client, enumerator, onNode));
 };
 
-const processEnum = (client: Client, model: Model, onNode: OnNode) => {
+const processEnum = (client: Client, model: Model, onNode: OnNode, exportType = false) => {
     const config = getConfig();
 
     const properties: Record<string | number, unknown> = {};
@@ -61,12 +61,14 @@ const processEnum = (client: Client, model: Model, onNode: OnNode) => {
 
     const comment = [model.description && escapeComment(model.description), model.deprecated && '@deprecated'];
 
-    const node = compiler.typedef.alias(
-        ensureValidTypeScriptJavaScriptIdentifier(model.name),
-        enumUnionType(model.enum),
-        comment
-    );
-    onNode(node);
+    if (exportType) {
+        const node = compiler.typedef.alias(
+            ensureValidTypeScriptJavaScriptIdentifier(model.name),
+            enumUnionType(model.enum),
+            comment
+        );
+        onNode(node);
+    }
 
     if (config.enums === 'typescript') {
         const node = compiler.types.enum({
@@ -105,7 +107,7 @@ const processModel = (client: Client, model: Model, onNode: OnNode) => {
         case 'interface':
             return processComposition(client, model, onNode);
         case 'enum':
-            return processEnum(client, model, onNode);
+            return processEnum(client, model, onNode, true);
         default:
             return processType(client, model, onNode);
     }
