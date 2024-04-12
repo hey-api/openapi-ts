@@ -1,4 +1,4 @@
-import { PathLike, writeFileSync } from 'node:fs';
+import { PathLike, rmSync, writeFileSync } from 'node:fs';
 
 import ts from 'typescript';
 
@@ -49,9 +49,14 @@ export class TypeScriptFile {
     public write(seperator = '\n') {
         // TODO: throw if path is not set. do not throw if items are empty
         if (!this._items.length || !this._path) {
+            this.remove({ force: true });
             return;
         }
         writeFileSync(this._path, this.toString(seperator));
+    }
+
+    public remove(options?: Parameters<typeof rmSync>[1]) {
+        rmSync(this._path, options);
     }
 }
 
