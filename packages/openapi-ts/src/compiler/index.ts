@@ -1,4 +1,4 @@
-import { type PathOrFileDescriptor, writeFileSync } from 'node:fs';
+import { writeFileSync } from 'node:fs';
 
 import ts from 'typescript';
 
@@ -15,6 +15,7 @@ export class TypeScriptFile {
     private _headers: Array<string> = [];
     private _imports: Array<ts.Node> = [];
     private _items: Array<ts.Node | string> = [];
+    private _path: string = '';
 
     public add(...nodes: Array<ts.Node | string>): void {
         this._items = [...this._items, ...nodes];
@@ -31,6 +32,11 @@ export class TypeScriptFile {
         this._imports = [...this._imports, compiler.import.named(...params)];
     }
 
+    public setPath(path: string) {
+        this._path = path;
+        return this;
+    }
+
     public toString(seperator: string = '\n') {
         let output: string[] = [];
         if (this._headers.length) {
@@ -43,11 +49,12 @@ export class TypeScriptFile {
         return output.join(seperator);
     }
 
-    public write(file: PathOrFileDescriptor, seperator: string = '\n') {
-        if (!this._items.length) {
+    public write(seperator = '\n') {
+        // TODO: throw if path is not set. do not throw if items are empty
+        if (!this._items.length || !this._path) {
             return;
         }
-        writeFileSync(file, this.toString(seperator));
+        writeFileSync(this._path, this.toString(seperator));
     }
 }
 

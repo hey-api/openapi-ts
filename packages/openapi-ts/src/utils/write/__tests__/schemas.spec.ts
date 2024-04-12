@@ -3,13 +3,35 @@ import path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
 
-import { writeClientSchemas } from '../schemas';
+import { setConfig } from '../../config';
+import { writeSchemas } from '../schemas';
 import { openApi } from './models';
 
 vi.mock('node:fs');
 
-describe('writeClientSchemas', () => {
+describe('writeSchemas', () => {
     it('writes to filesystem', async () => {
+        setConfig({
+            client: 'fetch',
+            debug: false,
+            dryRun: false,
+            enums: 'javascript',
+            exportCore: true,
+            exportModels: true,
+            exportServices: true,
+            format: false,
+            input: '',
+            lint: false,
+            name: 'AppClient',
+            operationId: true,
+            output: '',
+            postfixServices: '',
+            schemas: true,
+            serviceResponse: 'body',
+            useDateType: false,
+            useOptions: true,
+        });
+
         if ('openapi' in openApi) {
             openApi.components = {
                 schemas: {
@@ -20,7 +42,7 @@ describe('writeClientSchemas', () => {
             };
         }
 
-        await writeClientSchemas(openApi, '/');
+        await writeSchemas(openApi, '/');
 
         expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/schemas.ts'), expect.anything());
     });

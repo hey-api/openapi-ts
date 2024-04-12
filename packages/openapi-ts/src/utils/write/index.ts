@@ -13,34 +13,40 @@ import { getConfig } from '../config';
 export const writeClientIndex = async (client: Client, outputPath: string): Promise<void> => {
     const config = getConfig();
 
-    const file = new TypeScriptFile().addHeader();
+    const fileIndex = new TypeScriptFile().setPath(path.resolve(outputPath, 'index.ts')).addHeader();
 
     if (config.name) {
-        file.add(compiler.export.named([config.name], `./${config.name}`));
+        fileIndex.add(compiler.export.named([config.name], `./${config.name}`));
     }
+
     if (config.exportCore) {
-        file.add(compiler.export.named('ApiError', './core/ApiError'));
+        fileIndex.add(compiler.export.named('ApiError', './core/ApiError'));
         if (config.serviceResponse === 'response') {
-            file.add(compiler.export.named({ isTypeOnly: true, name: 'ApiResult' }, './core/ApiResult'));
+            fileIndex.add(compiler.export.named({ isTypeOnly: true, name: 'ApiResult' }, './core/ApiResult'));
         }
         if (config.name) {
-            file.add(compiler.export.named('BaseHttpRequest', './core/BaseHttpRequest'));
+            fileIndex.add(compiler.export.named('BaseHttpRequest', './core/BaseHttpRequest'));
         }
         if (config.client !== 'angular') {
-            file.add(compiler.export.named(['CancelablePromise', 'CancelError'], './core/CancelablePromise'));
+            fileIndex.add(compiler.export.named(['CancelablePromise', 'CancelError'], './core/CancelablePromise'));
         }
-        file.add(compiler.export.named(['OpenAPI', { isTypeOnly: true, name: 'OpenAPIConfig' }], './core/OpenAPI'));
+        fileIndex.add(
+            compiler.export.named(['OpenAPI', { isTypeOnly: true, name: 'OpenAPIConfig' }], './core/OpenAPI')
+        );
     }
+
     if (client.models.length) {
         if (config.exportModels) {
-            file.add(compiler.export.all('./models'));
+            fileIndex.add(compiler.export.all('./models'));
         }
         if (config.schemas) {
-            file.add(compiler.export.all('./schemas'));
+            fileIndex.add(compiler.export.all('./schemas'));
         }
     }
+
     if (client.services.length && config.exportServices) {
-        file.add(compiler.export.all('./services'));
+        fileIndex.add(compiler.export.all('./services'));
     }
-    file.write(path.resolve(outputPath, 'index.ts'));
+
+    fileIndex.write();
 };

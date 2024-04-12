@@ -1,7 +1,9 @@
 import path from 'node:path';
 
 import { type Comments, compiler, type Node, TypeScriptFile } from '../../compiler';
+import { addLeadingComment } from '../../compiler/utils';
 import type { Model, OpenApi, OperationParameter, Service } from '../../openApi';
+import { ensureValidTypeScriptJavaScriptIdentifier } from '../../openApi/common/parser/sanitize';
 import type { Client } from '../../types/client';
 import { getConfig } from '../config';
 import { enumKey, enumName, enumUnionType, enumValue } from '../enum';
@@ -9,6 +11,8 @@ import { escapeComment } from '../escape';
 import { serviceExportedNamespace } from '../handlebars';
 import { sortByName } from '../sort';
 import { toType } from './type';
+
+type OnNode = (node: Node, type?: 'enum') => void;
 
 const emptyModel: Model = {
     $refs: [],
@@ -29,14 +33,13 @@ const emptyModel: Model = {
     type: '',
 };
 
-const processComposition = (client: Client, model: Model) => [
-    processType(client, model),
-    ...model.enums.flatMap(enumerator => processEnum(client, enumerator, false)),
-];
+const processComposition = (client: Client, model: Model, onNode: OnNode) => {
+    processType(client, model, onNode);
+    model.enums.forEach(enumerator => processEnum(client, enumerator, onNode));
+};
 
-const processEnum = (client: Client, model: Model, exportType: boolean) => {
+const processEnum = (client: Client, model: Model, onNode: OnNode) => {
     const config = getConfig();
-    let nodes: Array<Node> = [];
 
     const properties: Record<string | number, unknown> = {};
     const comments: Record<string | number, Comments> = {};
@@ -50,53 +53,65 @@ const processEnum = (client: Client, model: Model, exportType: boolean) => {
         }
     });
 
-    if (exportType) {
-        const comment: Comments = [
-            model.description && escapeComment(model.description),
-            model.deprecated && '@deprecated',
-        ];
-        if (config.enums === 'typescript') {
-            nodes = [...nodes, compiler.types.enum(model.name, properties, comment, comments)];
-        } else {
-            nodes = [...nodes, compiler.typedef.alias(model.name, enumUnionType(model.enum), comment)];
-        }
+    // ignore duplicate enum names
+    const name = enumName(client, model.name)!;
+    if (name === null) {
+        return;
+    }
+
+    const comment = [model.description && escapeComment(model.description), model.deprecated && '@deprecated'];
+
+    const node = compiler.typedef.alias(
+        ensureValidTypeScriptJavaScriptIdentifier(model.name),
+        enumUnionType(model.enum),
+        comment
+    );
+    onNode(node);
+
+    if (config.enums === 'typescript') {
+        const node = compiler.types.enum({
+            comments,
+            leadingComment: comment,
+            name,
+            obj: properties,
+        });
+        onNode(node, 'enum');
     }
 
     if (config.enums === 'javascript') {
-        const expression = compiler.types.object(properties, {
+        const expression = compiler.types.object({
             comments,
             multiLine: true,
+            obj: properties,
             unescape: true,
         });
-        nodes = [...nodes, compiler.export.asConst(enumName(client, model.name)!, expression)];
+        const node = compiler.export.asConst(name, expression);
+        addLeadingComment(node, comment);
+        onNode(node, 'enum');
     }
-
-    return nodes;
 };
 
-const processType = (client: Client, model: Model) => {
-    const comment: Comments = [
-        model.description && escapeComment(model.description),
-        model.deprecated && '@deprecated',
-    ];
-    return compiler.typedef.alias(model.name, toType(model), comment);
+const processType = (client: Client, model: Model, onNode: OnNode) => {
+    const comment = [model.description && escapeComment(model.description), model.deprecated && '@deprecated'];
+    const node = compiler.typedef.alias(model.name, toType(model), comment);
+    onNode(node);
 };
 
-const processModel = (client: Client, model: Model) => {
+const processModel = (client: Client, model: Model, onNode: OnNode) => {
     switch (model.export) {
         case 'all-of':
         case 'any-of':
         case 'one-of':
         case 'interface':
-            return processComposition(client, model);
+            return processComposition(client, model, onNode);
         case 'enum':
-            return processEnum(client, model, true);
+            return processEnum(client, model, onNode);
         default:
-            return processType(client, model);
+            return processType(client, model, onNode);
     }
 };
 
-const processServiceTypes = (services: Service[]) => {
+const processServiceTypes = (services: Service[], onNode: OnNode) => {
     type ResMap = Map<number, Model>;
     type MethodMap = Map<'req' | 'res', ResMap | OperationParameter[]>;
     type MethodKey = Service['operations'][number]['method'];
@@ -195,7 +210,8 @@ const processServiceTypes = (services: Service[]) => {
         properties,
     });
     const namespace = serviceExportedNamespace();
-    return compiler.typedef.alias(namespace, type);
+    const node = compiler.typedef.alias(namespace, type);
+    onNode(node);
 };
 
 /**
@@ -204,19 +220,30 @@ const processServiceTypes = (services: Service[]) => {
  * @param outputPath Directory to write the generated files to
  * @param client Client containing models, schemas, and services
  */
-export const writeClientModels = async (openApi: OpenApi, outputPath: string, client: Client): Promise<void> => {
-    const file = new TypeScriptFile().addHeader();
+export const writeTypesAndEnums = async (openApi: OpenApi, outputPath: string, client: Client): Promise<void> => {
+    const config = getConfig();
+
+    const fileEnums = new TypeScriptFile().setPath(path.resolve(outputPath, 'enums.gen.ts')).addHeader();
+    const fileModels = new TypeScriptFile().setPath(path.resolve(outputPath, 'models.ts')).addHeader();
 
     for (const model of client.models) {
-        const nodes = processModel(client, model);
-        const n = Array.isArray(nodes) ? nodes : [nodes];
-        file.add(...n);
+        processModel(client, model, (node, type) => {
+            if (type === 'enum') {
+                fileEnums.add(node);
+            } else {
+                fileModels.add(node);
+            }
+        });
     }
 
     if (client.services.length) {
-        const serviceTypes = processServiceTypes(client.services);
-        file.add(serviceTypes);
+        processServiceTypes(client.services, node => {
+            fileModels.add(node);
+        });
     }
 
-    file.write(path.resolve(outputPath, 'models.ts'), '\n\n');
+    if (config.exportModels) {
+        fileEnums.write('\n\n');
+        fileModels.write('\n\n');
+    }
 };

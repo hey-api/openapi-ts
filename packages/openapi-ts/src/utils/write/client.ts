@@ -6,11 +6,11 @@ import type { Client } from '../../types/client';
 import { getConfig } from '../config';
 import type { Templates } from '../handlebars';
 import { writeClientClass } from './class';
-import { writeClientCore } from './core';
+import { writeCore } from './core';
 import { writeClientIndex } from './index';
-import { writeClientModels } from './models';
-import { writeClientSchemas } from './schemas';
-import { writeClientServices } from './services';
+import { writeTypesAndEnums } from './models';
+import { writeSchemas } from './schemas';
+import { writeServices } from './services';
 
 /**
  * Write our OpenAPI client, using the given templates at the given output
@@ -38,48 +38,39 @@ export const writeClient = async (openApi: OpenApi, client: Client, templates: T
     const sections = [
         {
             dir: 'core',
-            enabled: config.exportCore,
-            fn: writeClientCore,
+            fn: writeCore,
         },
         {
             dir: '',
-            enabled: config.schemas,
-            fn: writeClientSchemas,
+            fn: writeSchemas,
         },
         {
             dir: '',
-            enabled: config.exportModels,
-            fn: writeClientModels,
+            fn: writeTypesAndEnums,
         },
         {
             dir: '',
-            enabled: config.exportServices,
-            fn: writeClientServices,
+            fn: writeServices,
         },
         {
             dir: '',
-            enabled: config.name,
             fn: writeClientClass,
         },
     ] as const;
 
     for (const section of sections) {
-        if (section.enabled) {
-            const sectionPath = path.resolve(config.output, section.dir);
-            if (section.dir) {
-                await rmSync(sectionPath, {
-                    force: true,
-                    recursive: true,
-                });
-            }
-            await mkdirSync(sectionPath, {
+        const sectionPath = path.resolve(config.output, section.dir);
+        if (section.dir) {
+            await rmSync(sectionPath, {
+                force: true,
                 recursive: true,
             });
-            await section.fn(openApi, sectionPath, client, templates);
         }
+        await mkdirSync(sectionPath, {
+            recursive: true,
+        });
+        await section.fn(openApi, sectionPath, client, templates);
     }
 
-    if (sections.some(section => section.enabled)) {
-        await writeClientIndex(client, config.output);
-    }
+    await writeClientIndex(client, config.output);
 };
