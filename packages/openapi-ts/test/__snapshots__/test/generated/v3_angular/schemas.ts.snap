@@ -1383,6 +1383,11 @@ export const $NullableObject = {
     default: null,
 } as const;
 
+export const $CharactersInDescription = {
+    type: 'string',
+    description: 'Some % character',
+} as const;
+
 export const $ModelWithNullableObject = {
     type: 'object',
     properties: {
