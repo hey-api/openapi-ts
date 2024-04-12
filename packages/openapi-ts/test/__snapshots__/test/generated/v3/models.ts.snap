@@ -679,6 +679,11 @@ export type NullableObject = {
     foo?: string;
 } | null;
 
+/**
+ * Some % character
+ */
+export type CharactersInDescription = string;
+
 export type ModelWithNullableObject = {
     data?: NullableObject;
 };
