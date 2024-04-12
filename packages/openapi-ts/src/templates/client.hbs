@@ -16,7 +16,7 @@ import { {{{httpRequest}}} } from './core/{{{httpRequest}}}';
 
 {{#if services}}
 {{#each services}}
-import { {{{name}}}{{{@root.$config.postfixServices}}} } from './services';
+import { {{{name}}}{{{@root.$config.postfixServices}}} } from './services-gen';
 {{/each}}
 {{/if}}
 

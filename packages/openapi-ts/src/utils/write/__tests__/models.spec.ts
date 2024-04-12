@@ -61,6 +61,6 @@ describe('writeTypesAndEnums', () => {
 
         await writeTypesAndEnums(openApi, '/', client);
 
-        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/models.ts'), expect.anything());
+        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/models-gen.ts'), expect.anything());
     });
 });

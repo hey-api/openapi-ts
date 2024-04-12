@@ -44,6 +44,6 @@ describe('writeSchemas', () => {
 
         await writeSchemas(openApi, '/');
 
-        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/schemas.ts'), expect.anything());
+        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/schemas-gen.ts'), expect.anything());
     });
 });
