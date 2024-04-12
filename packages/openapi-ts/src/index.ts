@@ -34,11 +34,9 @@ const processOutput = (dependencies: Dependencies) => {
         }
     }
 
-    if (config.lint) {
-        if (dependencies.eslint) {
-            console.log('✨ Running ESLint');
-            sync('eslint', [config.output, '--fix', '--quiet', '--ignore-path', './.eslintignore']);
-        }
+    if (config.lint && dependencies.eslint) {
+        console.log('✨ Running ESLint');
+        sync('eslint', [config.output, '--fix']);
     }
 };
 
