@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { $OpenApiTs } from './models';
+import type { $OpenApiTs } from './models.gen';
 
 export class DefaultService {
     /**
@@ -15,38 +15,9 @@ export class DefaultService {
             url: '/api/v{api-version}/no-tag',
         });
     }
-
-    /**
-     * @returns ModelWithReadOnlyAndWriteOnly
-     * @throws ApiError
-     */
-    public static postServiceWithEmptyTag(
-        data: $OpenApiTs['/api/v{api-version}/no-tag']['post']['req']
-    ): CancelablePromise<$OpenApiTs['/api/v{api-version}/no-tag']['post']['res'][200]> {
-        const { requestBody } = data;
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v{api-version}/no-tag',
-            body: requestBody,
-            mediaType: 'application/json',
-        });
-    }
 }
 
 export class SimpleService {
-    /**
-     * @returns Model_From_Zendesk Success
-     * @throws ApiError
-     */
-    public static apiVVersionOdataControllerCount(): CancelablePromise<
-        $OpenApiTs['/api/v{api-version}/simple/$count']['get']['res'][200]
-    > {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/v{api-version}/simple/$count',
-        });
-    }
-
     /**
      * @throws ApiError
      */
@@ -118,145 +89,6 @@ export class SimpleService {
     }
 }
 
-export class ParametersService {
-    /**
-     * @throws ApiError
-     */
-    public static deleteFoo(
-        data: $OpenApiTs['/api/v{api-version}/foo/{foo}/bar/{bar}']['delete']['req']
-    ): CancelablePromise<void> {
-        const { foo, bar } = data;
-        return __request(OpenAPI, {
-            method: 'DELETE',
-            url: '/api/v{api-version}/foo/{foo}/bar/{bar}',
-            path: {
-                foo,
-                bar,
-            },
-        });
-    }
-
-    /**
-     * @throws ApiError
-     */
-    public static callWithParameters(
-        data: $OpenApiTs['/api/v{api-version}/parameters/{parameterPath}']['post']['req']
-    ): CancelablePromise<void> {
-        const {
-            parameterHeader,
-            fooAllOfEnum,
-            parameterQuery,
-            parameterForm,
-            parameterCookie,
-            parameterPath,
-            requestBody,
-            fooRefEnum,
-        } = data;
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v{api-version}/parameters/{parameterPath}',
-            path: {
-                parameterPath,
-            },
-            cookies: {
-                parameterCookie,
-            },
-            headers: {
-                parameterHeader,
-            },
-            query: {
-                foo_ref_enum: fooRefEnum,
-                foo_all_of_enum: fooAllOfEnum,
-                parameterQuery,
-            },
-            formData: {
-                parameterForm,
-            },
-            body: requestBody,
-            mediaType: 'application/json',
-        });
-    }
-
-    /**
-     * @throws ApiError
-     */
-    public static callWithWeirdParameterNames(
-        data: $OpenApiTs['/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}']['post']['req']
-    ): CancelablePromise<void> {
-        const {
-            parameterHeader,
-            parameterQuery,
-            parameterForm,
-            parameterCookie,
-            requestBody,
-            parameterPath1,
-            parameterPath2,
-            parameterPath3,
-            _default,
-        } = data;
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}',
-            path: {
-                'parameter.path.1': parameterPath1,
-                'parameter-path-2': parameterPath2,
-                'PARAMETER-PATH-3': parameterPath3,
-            },
-            cookies: {
-                'PARAMETER-COOKIE': parameterCookie,
-            },
-            headers: {
-                'parameter.header': parameterHeader,
-            },
-            query: {
-                default: _default,
-                'parameter-query': parameterQuery,
-            },
-            formData: {
-                parameter_form: parameterForm,
-            },
-            body: requestBody,
-            mediaType: 'application/json',
-        });
-    }
-
-    /**
-     * @throws ApiError
-     */
-    public static getCallWithOptionalParam(
-        data: $OpenApiTs['/api/v{api-version}/parameters/']['get']['req']
-    ): CancelablePromise<void> {
-        const { requestBody, parameter } = data;
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/v{api-version}/parameters/',
-            query: {
-                parameter,
-            },
-            body: requestBody,
-            mediaType: 'application/json',
-        });
-    }
-
-    /**
-     * @throws ApiError
-     */
-    public static postCallWithOptionalParam(
-        data: $OpenApiTs['/api/v{api-version}/parameters/']['post']['req']
-    ): CancelablePromise<void> {
-        const { parameter, requestBody } = data;
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v{api-version}/parameters/',
-            query: {
-                parameter,
-            },
-            body: requestBody,
-            mediaType: 'application/json',
-        });
-    }
-}
-
 export class DescriptionsService {
     /**
      * @throws ApiError
@@ -287,61 +119,68 @@ export class DescriptionsService {
     }
 }
 
-export class DeprecatedService {
+export class ParametersService {
     /**
-     * @deprecated
      * @throws ApiError
      */
-    public static deprecatedCall(
-        data: $OpenApiTs['/api/v{api-version}/parameters/deprecated']['post']['req']
+    public static callWithParameters(
+        data: $OpenApiTs['/api/v{api-version}/parameters/{parameterPath}']['post']['req']
     ): CancelablePromise<void> {
-        const { parameter } = data;
+        const { parameterHeader, parameterQuery, parameterForm, parameterBody, parameterPath } = data;
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/v{api-version}/parameters/deprecated',
+            url: '/api/v{api-version}/parameters/{parameterPath}',
+            path: {
+                parameterPath,
+            },
             headers: {
-                parameter,
+                parameterHeader,
             },
+            query: {
+                parameterQuery,
+            },
+            formData: {
+                parameterForm,
+            },
+            body: parameterBody,
         });
     }
-}
 
-export class RequestBodyService {
     /**
      * @throws ApiError
      */
-    public static postApiRequestBody(
-        data: $OpenApiTs['/api/v{api-version}/requestBody/']['post']['req'] = {}
+    public static callWithWeirdParameterNames(
+        data: $OpenApiTs['/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}']['post']['req']
     ): CancelablePromise<void> {
-        const { parameter, foo } = data;
+        const {
+            parameterHeader,
+            parameterQuery,
+            parameterForm,
+            parameterBody,
+            parameterPath1,
+            parameterPath2,
+            parameterPath3,
+            _default,
+        } = data;
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/v{api-version}/requestBody/',
-            query: {
-                parameter,
+            url: '/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}',
+            path: {
+                'parameter.path.1': parameterPath1,
+                'parameter-path-2': parameterPath2,
+                'PARAMETER-PATH-3': parameterPath3,
             },
-            body: foo,
-            mediaType: 'application/json',
-        });
-    }
-}
-
-export class FormDataService {
-    /**
-     * @throws ApiError
-     */
-    public static postApiFormData(
-        data: $OpenApiTs['/api/v{api-version}/formData/']['post']['req'] = {}
-    ): CancelablePromise<void> {
-        const { parameter, formData } = data;
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v{api-version}/formData/',
-            query: {
-                parameter,
+            headers: {
+                'parameter.header': parameterHeader,
             },
-            formData: formData,
-            mediaType: 'multipart/form-data',
+            query: {
+                default: _default,
+                'parameter-query': parameterQuery,
+            },
+            formData: {
+                parameter_form: parameterForm,
+            },
+            body: parameterBody,
         });
     }
 }
@@ -351,7 +190,7 @@ export class DefaultsService {
      * @throws ApiError
      */
     public static callWithDefaultParameters(
-        data: $OpenApiTs['/api/v{api-version}/defaults']['get']['req'] = {}
+        data: $OpenApiTs['/api/v{api-version}/defaults']['get']['req']
     ): CancelablePromise<void> {
         const { parameterString, parameterNumber, parameterBoolean, parameterEnum, parameterModel } = data;
         return __request(OpenAPI, {
@@ -477,7 +316,7 @@ export class NoContentService {
     }
 
     /**
-     * @returns number Response is a simple number
+     * @returns any Response is a simple number
      * @returns void Success
      * @throws ApiError
      */
@@ -494,7 +333,7 @@ export class NoContentService {
 
 export class ResponseService {
     /**
-     * @returns number Response is a simple number
+     * @returns any Response is a simple number
      * @returns void Success
      * @throws ApiError
      */
@@ -509,7 +348,7 @@ export class ResponseService {
     }
 
     /**
-     * @returns ModelWithString
+     * @returns ModelWithString Message for default response
      * @throws ApiError
      */
     public static callWithResponse(): CancelablePromise<$OpenApiTs['/api/v{api-version}/response']['get']['res'][200]> {
@@ -651,7 +490,7 @@ export class TypesService {
      * @returns number Response is a simple number
      * @returns string Response is a simple string
      * @returns boolean Response is a simple boolean
-     * @returns unknown Response is a simple object
+     * @returns any Response is a simple object
      * @throws ApiError
      */
     public static types(
@@ -691,44 +530,6 @@ export class TypesService {
     }
 }
 
-export class UploadService {
-    /**
-     * @returns boolean
-     * @throws ApiError
-     */
-    public static uploadFile(
-        data: $OpenApiTs['/api/v{api-version}/upload']['post']['req']
-    ): CancelablePromise<$OpenApiTs['/api/v{api-version}/upload']['post']['res'][200]> {
-        const { file } = data;
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v{api-version}/upload',
-            formData: {
-                file,
-            },
-        });
-    }
-}
-
-export class FileResponseService {
-    /**
-     * @returns binary Success
-     * @throws ApiError
-     */
-    public static fileResponse(
-        data: $OpenApiTs['/api/v{api-version}/file/{id}']['get']['req']
-    ): CancelablePromise<$OpenApiTs['/api/v{api-version}/file/{id}']['get']['res'][200]> {
-        const { id } = data;
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/v{api-version}/file/{id}',
-            path: {
-                id,
-            },
-        });
-    }
-}
-
 export class ComplexService {
     /**
      * @returns ModelWithString Successful response
@@ -749,55 +550,6 @@ export class ComplexService {
                 400: `400 server error`,
                 500: `500 server error`,
             },
-        });
-    }
-
-    /**
-     * @returns ModelWithString Success
-     * @throws ApiError
-     */
-    public static complexParams(
-        data: $OpenApiTs['/api/v{api-version}/complex/{id}']['put']['req']
-    ): CancelablePromise<$OpenApiTs['/api/v{api-version}/complex/{id}']['put']['res'][200]> {
-        const { id, requestBody } = data;
-        return __request(OpenAPI, {
-            method: 'PUT',
-            url: '/api/v{api-version}/complex/{id}',
-            path: {
-                id,
-            },
-            body: requestBody,
-            mediaType: 'application/json-patch+json',
-        });
-    }
-}
-
-export class MultipartService {
-    /**
-     * @throws ApiError
-     */
-    public static multipartRequest(
-        data: $OpenApiTs['/api/v{api-version}/multipart']['post']['req'] = {}
-    ): CancelablePromise<void> {
-        const { formData } = data;
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v{api-version}/multipart',
-            formData: formData,
-            mediaType: 'multipart/form-data',
-        });
-    }
-
-    /**
-     * @returns any OK
-     * @throws ApiError
-     */
-    public static multipartResponse(): CancelablePromise<
-        $OpenApiTs['/api/v{api-version}/multipart']['get']['res'][200]
-    > {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/v{api-version}/multipart',
         });
     }
 }

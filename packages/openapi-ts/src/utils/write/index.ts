@@ -1,6 +1,4 @@
-import path from 'node:path';
-
-import { compiler, TypeScriptFile } from '../../compiler';
+import { compiler, filePath, generatedFileName, TypeScriptFile } from '../../compiler';
 import type { Client } from '../../types/client';
 import { getConfig } from '../config';
 
@@ -13,7 +11,7 @@ import { getConfig } from '../config';
 export const writeClientIndex = async (client: Client, outputPath: string): Promise<void> => {
     const config = getConfig();
 
-    const fileIndex = new TypeScriptFile(path.resolve(outputPath, 'index.ts'));
+    const fileIndex = new TypeScriptFile({ path: filePath(outputPath, 'index.ts', false) });
 
     if (config.name) {
         fileIndex.add(compiler.export.named([config.name], `./${config.name}`));
@@ -37,15 +35,15 @@ export const writeClientIndex = async (client: Client, outputPath: string): Prom
 
     if (client.models.length) {
         if (config.exportModels) {
-            fileIndex.add(compiler.export.all('./models'));
+            fileIndex.add(compiler.export.all(generatedFileName('./models')));
         }
         if (config.schemas) {
-            fileIndex.add(compiler.export.all('./schemas'));
+            fileIndex.add(compiler.export.all(generatedFileName('./schemas')));
         }
     }
 
     if (client.services.length && config.exportServices) {
-        fileIndex.add(compiler.export.all('./services'));
+        fileIndex.add(compiler.export.all(generatedFileName('./services')));
     }
 
     fileIndex.write();
