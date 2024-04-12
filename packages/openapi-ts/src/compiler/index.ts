@@ -18,7 +18,7 @@ export const generatedFileName = (fileName: string, insertGen = true) => {
     const extension = match ? match[0].slice(1) : '';
     const filePath = fileName.slice(0, fileName.length - (extension ? extension.length + 1 : 0));
     // insertGen && 'gen'
-    return [insertGen ? `${filePath}-gen` : filePath, extension].filter(Boolean).join('.');
+    return [insertGen ? `${filePath}.gen` : filePath, extension].filter(Boolean).join('.');
 };
 
 export const filePath = (folderPath: string, fileName: string, insertGen = true) => {
