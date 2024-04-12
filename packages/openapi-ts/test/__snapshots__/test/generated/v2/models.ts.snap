@@ -135,33 +135,42 @@ export type ArrayWithProperties = Array<{
 /**
  * This is a string dictionary
  */
-export type DictionaryWithString = Record<string, string>;
+export type DictionaryWithString = {
+    [key: string]: string;
+};
 
 /**
  * This is a string reference
  */
-export type DictionaryWithReference = Record<string, ModelWithString>;
+export type DictionaryWithReference = {
+    [key: string]: ModelWithString;
+};
 
 /**
  * This is a complex dictionary
  */
-export type DictionaryWithArray = Record<string, Array<ModelWithString>>;
+export type DictionaryWithArray = {
+    [key: string]: Array<ModelWithString>;
+};
 
 /**
  * This is a string dictionary
  */
-export type DictionaryWithDictionary = Record<string, Record<string, string>>;
+export type DictionaryWithDictionary = {
+    [key: string]: {
+        [key: string]: string;
+    };
+};
 
 /**
  * This is a complex dictionary
  */
-export type DictionaryWithProperties = Record<
-    string,
-    {
+export type DictionaryWithProperties = {
+    [key: string]: {
         foo?: string;
         bar?: string;
-    }
->;
+    };
+};
 
 /**
  * This is a type-only model that defines Date as a string
@@ -244,8 +253,12 @@ export type ModelWithEnumFromDescription = {
  * This is a model with nested enums
  */
 export type ModelWithNestedEnums = {
-    dictionaryWithEnum?: Record<string, 'Success' | 'Warning' | 'Error'>;
-    dictionaryWithEnumFromDescription?: Record<string, number>;
+    dictionaryWithEnum?: {
+        [key: string]: 'Success' | 'Warning' | 'Error';
+    };
+    dictionaryWithEnumFromDescription?: {
+        [key: string]: number;
+    };
     arrayWithEnum?: Array<'Success' | 'Warning' | 'Error'>;
     arrayWithDescription?: Array<number>;
 };
@@ -270,7 +283,9 @@ export type ModelWithArray = {
  * This is a model with one property containing a dictionary
  */
 export type ModelWithDictionary = {
-    prop?: Record<string, string>;
+    prop?: {
+        [key: string]: string;
+    };
 };
 
 /**
@@ -675,7 +690,9 @@ export type $OpenApiTs = {
                 /**
                  * This is a dictionary parameter
                  */
-                parameterDictionary: Record<string, string>;
+                parameterDictionary: {
+                    [key: string]: string;
+                };
                 /**
                  * This is an enum parameter
                  */
