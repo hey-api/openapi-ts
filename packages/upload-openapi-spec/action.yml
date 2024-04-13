@@ -1,0 +1,20 @@
+name: Upload OpenAPI spec
+description: Upload your OpenAPI specification to Hey API
+author: Hey API
+
+branding:
+  icon: heart
+  color: red
+
+inputs:
+  # TOOD: add token support
+  # hey-api-token:
+  #     description: Hey API service token
+  #     required: true
+  path-to-openapi:
+    description: Input path to your OpenAPI specification file
+    required: true
+
+runs:
+  using: node20
+  main: dist/index.js
