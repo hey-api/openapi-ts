@@ -3,7 +3,7 @@ name: Feature Request
 description: Suggest a new feature for the project.
 
 labels:
-  - feature
+  - feature 🚀
 
 body:
   - type: markdown
