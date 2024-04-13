@@ -5,15 +5,28 @@ import { addLeadingComment, type Comments, isType, ots } from './utils';
 /**
  * Convert an unknown value to an expression.
  * @param value - the unknown value.
+ * @param unescape - if string should be unescaped.
+ * @param shorthand - if shorthand syntax is allowed.
+ * @param indentifier - list of keys that are treated as indentifiers.
  * @returns ts.Expression
  */
-export const toExpression = (value: unknown, unescape = false): ts.Expression | undefined => {
+const toExpression = <T = unknown>({
+    value,
+    unescape = false,
+    shorthand = false,
+    identifiers = [],
+}: {
+    value: T;
+    unescape?: boolean;
+    shorthand?: boolean;
+    identifiers?: string[];
+}): ts.Expression | undefined => {
     if (Array.isArray(value)) {
         return createArrayType({ arr: value });
     }
 
     if (typeof value === 'object' && value !== null) {
-        return createObjectType({ obj: value });
+        return createObjectType({ identifiers, obj: value, shorthand });
     }
 
     if (typeof value === 'number') {
@@ -47,46 +60,67 @@ export const createArrayType = <T>({
     multiLine?: boolean;
 }): ts.ArrayLiteralExpression =>
     ts.factory.createArrayLiteralExpression(
-        arr.map(v => toExpression(v)).filter(isType<ts.Expression>),
+        arr.map(value => toExpression({ value })).filter(isType<ts.Expression>),
         // Multiline if the array contains objects, or if specified by the user.
         (!Array.isArray(arr[0]) && typeof arr[0] === 'object') || multiLine
     );
 
 /**
  * Create Object type expression.
- * @param options - options to use when creating type.
+ * @param comments - comments to add to each property.
+ * @param identifier - keys that should be treated as identifiers.
+ * @param multiLine - if the object should be multiline.
+ * @param obj - the object to create expression with.
+ * @param shorthand - if shorthand syntax should be used.
+ * @param unescape - if properties strings should be unescaped.
  * @returns ts.ObjectLiteralExpression
  */
 export const createObjectType = <T extends object>({
     comments = {},
+    identifiers = [],
     multiLine = true,
     obj,
+    shorthand = false,
     unescape = false,
 }: {
     obj: T;
-    multiLine?: boolean;
-    unescape?: boolean;
     comments?: Record<string | number, Comments>;
+    identifiers?: string[];
+    multiLine?: boolean;
+    shorthand?: boolean;
+    unescape?: boolean;
 }): ts.ObjectLiteralExpression => {
     const properties = Object.entries(obj)
         .map(([key, value]) => {
-            const initializer = toExpression(value, unescape);
+            // Pass all object properties as identifiers if the whole object is a indentifier
+            let initializer: ts.Expression | undefined = toExpression({
+                identifiers: identifiers.includes(key) ? Object.keys(value) : [],
+                shorthand,
+                unescape,
+                value,
+            });
             if (!initializer) {
                 return undefined;
+            }
+            // Create a identifier if the current key is one and it is not an object
+            if (identifiers.includes(key) && !ts.isObjectLiteralExpression(initializer)) {
+                initializer = ts.factory.createIdentifier(value as string);
             }
             if (key.match(/\W/g) && !key.startsWith("'") && !key.endsWith("'")) {
                 key = `'${key}'`;
             }
-            const assignment = ts.factory.createPropertyAssignment(key, initializer);
+            const assignment =
+                shorthand && key === value
+                    ? ts.factory.createShorthandPropertyAssignment(key)
+                    : ts.factory.createPropertyAssignment(key, initializer);
             const c = comments?.[key];
             if (c?.length) {
                 addLeadingComment(assignment, c);
             }
             return assignment;
         })
-        .filter(isType<ts.PropertyAssignment>);
-    const expression = ts.factory.createObjectLiteralExpression(properties, multiLine);
-    return expression;
+        .filter(isType<ts.ShorthandPropertyAssignment | ts.PropertyAssignment>);
+    return ts.factory.createObjectLiteralExpression(properties as any[], multiLine);
 };
 
 /**
@@ -112,7 +146,7 @@ export const createEnumDeclaration = <T extends object>({
         [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
         ts.factory.createIdentifier(name),
         Object.entries(obj).map(([key, value]) => {
-            const initializer = toExpression(value, true);
+            const initializer = toExpression({ unescape: true, value });
             const assignment = ts.factory.createEnumMember(key, initializer);
             const c = comments?.[key];
             if (c) {
