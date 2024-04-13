@@ -2,7 +2,7 @@ name: Bug report
 description: Report an issue with the project.
 
 labels:
-  - bug
+  - bug 🔥
 
 body:
   - type: markdown
