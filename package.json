@@ -25,8 +25,7 @@
         "test:e2e": "pnpm --recursive test:e2e",
         "test:update": "pnpm --recursive test:update",
         "test": "pnpm --recursive test",
-        "typecheck": "pnpm --recursive typecheck",
-        "upload-openapi-spec": "pnpm --filter @hey-api/upload-openapi-spec --"
+        "typecheck": "pnpm --recursive typecheck"
     },
     "engines": {
         "node": "^18.0.0 || >=20.0.0"
