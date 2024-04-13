@@ -120,7 +120,7 @@ export const createObjectType = <T extends object>({
             return assignment;
         })
         .filter(isType<ts.ShorthandPropertyAssignment | ts.PropertyAssignment>);
-    return ts.factory.createObjectLiteralExpression(properties as any, multiLine);
+    return ts.factory.createObjectLiteralExpression(properties as any[], multiLine);
 };
 
 /**
