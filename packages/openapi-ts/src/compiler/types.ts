@@ -73,6 +73,7 @@ export const createArrayType = <T>({
  * @param obj - the object to create expression with.
  * @param shorthand - if shorthand syntax should be used.
  * @param unescape - if properties strings should be unescaped.
+ * @param spreads - variable names to be spread for overriding
  * @returns ts.ObjectLiteralExpression
  */
 export const createObjectType = <T extends object>({
@@ -82,6 +83,7 @@ export const createObjectType = <T extends object>({
     obj,
     shorthand = false,
     unescape = false,
+    spreads = [],
 }: {
     obj: T;
     comments?: Record<string | number, Comments>;
@@ -89,6 +91,7 @@ export const createObjectType = <T extends object>({
     multiLine?: boolean;
     shorthand?: boolean;
     unescape?: boolean;
+    spreads?: string[];
 }): ts.ObjectLiteralExpression => {
     const properties = Object.entries(obj)
         .map(([key, value]) => {
@@ -120,7 +123,12 @@ export const createObjectType = <T extends object>({
             return assignment;
         })
         .filter(isType<ts.ShorthandPropertyAssignment | ts.PropertyAssignment>);
-    return ts.factory.createObjectLiteralExpression(properties as any[], multiLine);
+
+    const spreadAssignments = spreads.map(name => {
+        return ts.factory.createSpreadAssignment(ts.factory.createIdentifier(name));
+    });
+
+    return ts.factory.createObjectLiteralExpression([...(properties as any), ...spreadAssignments], multiLine);
 };
 
 /**

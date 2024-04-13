@@ -2,6 +2,7 @@
 
 import type { CancelablePromise } from './core/CancelablePromise';
 import type { BaseHttpRequest } from './core/BaseHttpRequest';
+import type { ApiRequestOptions } from './core/ApiRequestOptions';
 import type { $OpenApiTs } from './models.gen';
 
 export class DefaultService {
@@ -10,10 +11,11 @@ export class DefaultService {
     /**
      * @throws ApiError
      */
-    public serviceWithEmptyTag(): CancelablePromise<void> {
+    public serviceWithEmptyTag(options: Partial<ApiRequestOptions> = {}): CancelablePromise<void> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/no-tag',
+            ...options,
         });
     }
 
@@ -22,7 +24,8 @@ export class DefaultService {
      * @throws ApiError
      */
     public postServiceWithEmptyTag(
-        data: $OpenApiTs['/api/v{api-version}/no-tag']['post']['req']
+        data: $OpenApiTs['/api/v{api-version}/no-tag']['post']['req'],
+        options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<$OpenApiTs['/api/v{api-version}/no-tag']['post']['res'][200]> {
         const { requestBody } = data;
         return this.httpRequest.request({
@@ -30,6 +33,7 @@ export class DefaultService {
             url: '/api/v{api-version}/no-tag',
             body: requestBody,
             mediaType: 'application/json',
+            ...options,
         });
     }
 }
@@ -41,82 +45,90 @@ export class SimpleService {
      * @returns Model_From_Zendesk Success
      * @throws ApiError
      */
-    public apiVVersionOdataControllerCount(): CancelablePromise<
-        $OpenApiTs['/api/v{api-version}/simple/$count']['get']['res'][200]
-    > {
+    public apiVVersionOdataControllerCount(
+        options: Partial<ApiRequestOptions> = {}
+    ): CancelablePromise<$OpenApiTs['/api/v{api-version}/simple/$count']['get']['res'][200]> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/simple/$count',
+            ...options,
         });
     }
 
     /**
      * @throws ApiError
      */
-    public getCallWithoutParametersAndResponse(): CancelablePromise<void> {
+    public getCallWithoutParametersAndResponse(options: Partial<ApiRequestOptions> = {}): CancelablePromise<void> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/simple',
+            ...options,
         });
     }
 
     /**
      * @throws ApiError
      */
-    public putCallWithoutParametersAndResponse(): CancelablePromise<void> {
+    public putCallWithoutParametersAndResponse(options: Partial<ApiRequestOptions> = {}): CancelablePromise<void> {
         return this.httpRequest.request({
             method: 'PUT',
             url: '/api/v{api-version}/simple',
+            ...options,
         });
     }
 
     /**
      * @throws ApiError
      */
-    public postCallWithoutParametersAndResponse(): CancelablePromise<void> {
+    public postCallWithoutParametersAndResponse(options: Partial<ApiRequestOptions> = {}): CancelablePromise<void> {
         return this.httpRequest.request({
             method: 'POST',
             url: '/api/v{api-version}/simple',
+            ...options,
         });
     }
 
     /**
      * @throws ApiError
      */
-    public deleteCallWithoutParametersAndResponse(): CancelablePromise<void> {
+    public deleteCallWithoutParametersAndResponse(options: Partial<ApiRequestOptions> = {}): CancelablePromise<void> {
         return this.httpRequest.request({
             method: 'DELETE',
             url: '/api/v{api-version}/simple',
+            ...options,
         });
     }
 
     /**
      * @throws ApiError
      */
-    public optionsCallWithoutParametersAndResponse(): CancelablePromise<void> {
+    public optionsCallWithoutParametersAndResponse(options: Partial<ApiRequestOptions> = {}): CancelablePromise<void> {
         return this.httpRequest.request({
             method: 'OPTIONS',
             url: '/api/v{api-version}/simple',
+            ...options,
         });
     }
 
     /**
      * @throws ApiError
      */
-    public headCallWithoutParametersAndResponse(): CancelablePromise<void> {
+    public headCallWithoutParametersAndResponse(options: Partial<ApiRequestOptions> = {}): CancelablePromise<void> {
         return this.httpRequest.request({
             method: 'HEAD',
             url: '/api/v{api-version}/simple',
+            ...options,
         });
     }
 
     /**
      * @throws ApiError
      */
-    public patchCallWithoutParametersAndResponse(): CancelablePromise<void> {
+    public patchCallWithoutParametersAndResponse(options: Partial<ApiRequestOptions> = {}): CancelablePromise<void> {
         return this.httpRequest.request({
             method: 'PATCH',
             url: '/api/v{api-version}/simple',
+            ...options,
         });
     }
 }
@@ -128,7 +140,8 @@ export class ParametersService {
      * @throws ApiError
      */
     public deleteFoo(
-        data: $OpenApiTs['/api/v{api-version}/foo/{foo}/bar/{bar}']['delete']['req']
+        data: $OpenApiTs['/api/v{api-version}/foo/{foo}/bar/{bar}']['delete']['req'],
+        options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
         const { foo, bar } = data;
         return this.httpRequest.request({
@@ -138,6 +151,7 @@ export class ParametersService {
                 foo,
                 bar,
             },
+            ...options,
         });
     }
 
@@ -145,7 +159,8 @@ export class ParametersService {
      * @throws ApiError
      */
     public callWithParameters(
-        data: $OpenApiTs['/api/v{api-version}/parameters/{parameterPath}']['post']['req']
+        data: $OpenApiTs['/api/v{api-version}/parameters/{parameterPath}']['post']['req'],
+        options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
         const {
             parameterHeader,
@@ -179,6 +194,7 @@ export class ParametersService {
             },
             body: requestBody,
             mediaType: 'application/json',
+            ...options,
         });
     }
 
@@ -186,7 +202,8 @@ export class ParametersService {
      * @throws ApiError
      */
     public callWithWeirdParameterNames(
-        data: $OpenApiTs['/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}']['post']['req']
+        data: $OpenApiTs['/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}']['post']['req'],
+        options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
         const {
             parameterHeader,
@@ -222,6 +239,7 @@ export class ParametersService {
             },
             body: requestBody,
             mediaType: 'application/json',
+            ...options,
         });
     }
 
@@ -229,7 +247,8 @@ export class ParametersService {
      * @throws ApiError
      */
     public getCallWithOptionalParam(
-        data: $OpenApiTs['/api/v{api-version}/parameters/']['get']['req']
+        data: $OpenApiTs['/api/v{api-version}/parameters/']['get']['req'],
+        options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
         const { requestBody, parameter } = data;
         return this.httpRequest.request({
@@ -240,6 +259,7 @@ export class ParametersService {
             },
             body: requestBody,
             mediaType: 'application/json',
+            ...options,
         });
     }
 
@@ -247,7 +267,8 @@ export class ParametersService {
      * @throws ApiError
      */
     public postCallWithOptionalParam(
-        data: $OpenApiTs['/api/v{api-version}/parameters/']['post']['req']
+        data: $OpenApiTs['/api/v{api-version}/parameters/']['post']['req'],
+        options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
         const { parameter, requestBody } = data;
         return this.httpRequest.request({
@@ -258,6 +279,7 @@ export class ParametersService {
             },
             body: requestBody,
             mediaType: 'application/json',
+            ...options,
         });
     }
 }
@@ -269,7 +291,8 @@ export class DescriptionsService {
      * @throws ApiError
      */
     public callWithDescriptions(
-        data: $OpenApiTs['/api/v{api-version}/descriptions/']['post']['req'] = {}
+        data: $OpenApiTs['/api/v{api-version}/descriptions/']['post']['req'] = {},
+        options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
         const {
             parameterWithBreaks,
@@ -290,6 +313,7 @@ export class DescriptionsService {
                 parameterWithQuotes,
                 parameterWithReservedCharacters,
             },
+            ...options,
         });
     }
 }
@@ -302,7 +326,8 @@ export class DeprecatedService {
      * @throws ApiError
      */
     public deprecatedCall(
-        data: $OpenApiTs['/api/v{api-version}/parameters/deprecated']['post']['req']
+        data: $OpenApiTs['/api/v{api-version}/parameters/deprecated']['post']['req'],
+        options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
         const { parameter } = data;
         return this.httpRequest.request({
@@ -311,6 +336,7 @@ export class DeprecatedService {
             headers: {
                 parameter,
             },
+            ...options,
         });
     }
 }
@@ -322,7 +348,8 @@ export class RequestBodyService {
      * @throws ApiError
      */
     public postApiRequestBody(
-        data: $OpenApiTs['/api/v{api-version}/requestBody/']['post']['req'] = {}
+        data: $OpenApiTs['/api/v{api-version}/requestBody/']['post']['req'] = {},
+        options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
         const { parameter, foo } = data;
         return this.httpRequest.request({
@@ -333,6 +360,7 @@ export class RequestBodyService {
             },
             body: foo,
             mediaType: 'application/json',
+            ...options,
         });
     }
 }
@@ -344,7 +372,8 @@ export class FormDataService {
      * @throws ApiError
      */
     public postApiFormData(
-        data: $OpenApiTs['/api/v{api-version}/formData/']['post']['req'] = {}
+        data: $OpenApiTs['/api/v{api-version}/formData/']['post']['req'] = {},
+        options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
         const { parameter, formData } = data;
         return this.httpRequest.request({
@@ -355,6 +384,7 @@ export class FormDataService {
             },
             formData,
             mediaType: 'multipart/form-data',
+            ...options,
         });
     }
 }
@@ -366,7 +396,8 @@ export class DefaultsService {
      * @throws ApiError
      */
     public callWithDefaultParameters(
-        data: $OpenApiTs['/api/v{api-version}/defaults']['get']['req'] = {}
+        data: $OpenApiTs['/api/v{api-version}/defaults']['get']['req'] = {},
+        options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
         const { parameterString, parameterNumber, parameterBoolean, parameterEnum, parameterModel } = data;
         return this.httpRequest.request({
@@ -379,6 +410,7 @@ export class DefaultsService {
                 parameterEnum,
                 parameterModel,
             },
+            ...options,
         });
     }
 
@@ -386,7 +418,8 @@ export class DefaultsService {
      * @throws ApiError
      */
     public callWithDefaultOptionalParameters(
-        data: $OpenApiTs['/api/v{api-version}/defaults']['post']['req'] = {}
+        data: $OpenApiTs['/api/v{api-version}/defaults']['post']['req'] = {},
+        options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
         const { parameterString, parameterNumber, parameterBoolean, parameterEnum, parameterModel } = data;
         return this.httpRequest.request({
@@ -399,6 +432,7 @@ export class DefaultsService {
                 parameterEnum,
                 parameterModel,
             },
+            ...options,
         });
     }
 
@@ -406,7 +440,8 @@ export class DefaultsService {
      * @throws ApiError
      */
     public callToTestOrderOfParams(
-        data: $OpenApiTs['/api/v{api-version}/defaults']['put']['req']
+        data: $OpenApiTs['/api/v{api-version}/defaults']['put']['req'],
+        options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
         const {
             parameterStringWithNoDefault,
@@ -431,6 +466,7 @@ export class DefaultsService {
                 parameterStringNullableWithNoDefault,
                 parameterStringNullableWithDefault,
             },
+            ...options,
         });
     }
 }
@@ -441,40 +477,44 @@ export class DuplicateService {
     /**
      * @throws ApiError
      */
-    public duplicateName(): CancelablePromise<void> {
+    public duplicateName(options: Partial<ApiRequestOptions> = {}): CancelablePromise<void> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/duplicate',
+            ...options,
         });
     }
 
     /**
      * @throws ApiError
      */
-    public duplicateName1(): CancelablePromise<void> {
+    public duplicateName1(options: Partial<ApiRequestOptions> = {}): CancelablePromise<void> {
         return this.httpRequest.request({
             method: 'POST',
             url: '/api/v{api-version}/duplicate',
+            ...options,
         });
     }
 
     /**
      * @throws ApiError
      */
-    public duplicateName2(): CancelablePromise<void> {
+    public duplicateName2(options: Partial<ApiRequestOptions> = {}): CancelablePromise<void> {
         return this.httpRequest.request({
             method: 'PUT',
             url: '/api/v{api-version}/duplicate',
+            ...options,
         });
     }
 
     /**
      * @throws ApiError
      */
-    public duplicateName3(): CancelablePromise<void> {
+    public duplicateName3(options: Partial<ApiRequestOptions> = {}): CancelablePromise<void> {
         return this.httpRequest.request({
             method: 'DELETE',
             url: '/api/v{api-version}/duplicate',
+            ...options,
         });
     }
 }
@@ -486,12 +526,13 @@ export class NoContentService {
      * @returns void Success
      * @throws ApiError
      */
-    public callWithNoContentResponse(): CancelablePromise<
-        $OpenApiTs['/api/v{api-version}/no-content']['get']['res'][204]
-    > {
+    public callWithNoContentResponse(
+        options: Partial<ApiRequestOptions> = {}
+    ): CancelablePromise<$OpenApiTs['/api/v{api-version}/no-content']['get']['res'][204]> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/no-content',
+            ...options,
         });
     }
 
@@ -500,13 +541,16 @@ export class NoContentService {
      * @returns void Success
      * @throws ApiError
      */
-    public callWithResponseAndNoContentResponse(): CancelablePromise<
+    public callWithResponseAndNoContentResponse(
+        options: Partial<ApiRequestOptions> = {}
+    ): CancelablePromise<
         | $OpenApiTs['/api/v{api-version}/multiple-tags/response-and-no-content']['get']['res'][200]
         | $OpenApiTs['/api/v{api-version}/multiple-tags/response-and-no-content']['get']['res'][204]
     > {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/response-and-no-content',
+            ...options,
         });
     }
 }
@@ -519,13 +563,16 @@ export class ResponseService {
      * @returns void Success
      * @throws ApiError
      */
-    public callWithResponseAndNoContentResponse(): CancelablePromise<
+    public callWithResponseAndNoContentResponse(
+        options: Partial<ApiRequestOptions> = {}
+    ): CancelablePromise<
         | $OpenApiTs['/api/v{api-version}/multiple-tags/response-and-no-content']['get']['res'][200]
         | $OpenApiTs['/api/v{api-version}/multiple-tags/response-and-no-content']['get']['res'][204]
     > {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/response-and-no-content',
+            ...options,
         });
     }
 
@@ -533,10 +580,13 @@ export class ResponseService {
      * @returns ModelWithString
      * @throws ApiError
      */
-    public callWithResponse(): CancelablePromise<$OpenApiTs['/api/v{api-version}/response']['get']['res'][200]> {
+    public callWithResponse(
+        options: Partial<ApiRequestOptions> = {}
+    ): CancelablePromise<$OpenApiTs['/api/v{api-version}/response']['get']['res'][200]> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/response',
+            ...options,
         });
     }
 
@@ -544,9 +594,9 @@ export class ResponseService {
      * @returns ModelWithString Message for default response
      * @throws ApiError
      */
-    public callWithDuplicateResponses(): CancelablePromise<
-        $OpenApiTs['/api/v{api-version}/response']['post']['res'][200]
-    > {
+    public callWithDuplicateResponses(
+        options: Partial<ApiRequestOptions> = {}
+    ): CancelablePromise<$OpenApiTs['/api/v{api-version}/response']['post']['res'][200]> {
         return this.httpRequest.request({
             method: 'POST',
             url: '/api/v{api-version}/response',
@@ -555,6 +605,7 @@ export class ResponseService {
                 501: 'Message for 501 error',
                 502: 'Message for 502 error',
             },
+            ...options,
         });
     }
 
@@ -565,7 +616,9 @@ export class ResponseService {
      * @returns ModelThatExtendsExtends Message for 202 response
      * @throws ApiError
      */
-    public callWithResponses(): CancelablePromise<
+    public callWithResponses(
+        options: Partial<ApiRequestOptions> = {}
+    ): CancelablePromise<
         | $OpenApiTs['/api/v{api-version}/response']['put']['res'][200]
         | $OpenApiTs['/api/v{api-version}/response']['put']['res'][200]
         | $OpenApiTs['/api/v{api-version}/response']['put']['res'][201]
@@ -579,6 +632,7 @@ export class ResponseService {
                 501: 'Message for 501 error',
                 502: 'Message for 502 error',
             },
+            ...options,
         });
     }
 }
@@ -590,10 +644,13 @@ export class MultipleTags1Service {
      * @returns void Success
      * @throws ApiError
      */
-    public dummyA(): CancelablePromise<$OpenApiTs['/api/v{api-version}/multiple-tags/a']['get']['res'][204]> {
+    public dummyA(
+        options: Partial<ApiRequestOptions> = {}
+    ): CancelablePromise<$OpenApiTs['/api/v{api-version}/multiple-tags/a']['get']['res'][204]> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/a',
+            ...options,
         });
     }
 
@@ -601,10 +658,13 @@ export class MultipleTags1Service {
      * @returns void Success
      * @throws ApiError
      */
-    public dummyB(): CancelablePromise<$OpenApiTs['/api/v{api-version}/multiple-tags/b']['get']['res'][204]> {
+    public dummyB(
+        options: Partial<ApiRequestOptions> = {}
+    ): CancelablePromise<$OpenApiTs['/api/v{api-version}/multiple-tags/b']['get']['res'][204]> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/b',
+            ...options,
         });
     }
 }
@@ -616,10 +676,13 @@ export class MultipleTags2Service {
      * @returns void Success
      * @throws ApiError
      */
-    public dummyA(): CancelablePromise<$OpenApiTs['/api/v{api-version}/multiple-tags/a']['get']['res'][204]> {
+    public dummyA(
+        options: Partial<ApiRequestOptions> = {}
+    ): CancelablePromise<$OpenApiTs['/api/v{api-version}/multiple-tags/a']['get']['res'][204]> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/a',
+            ...options,
         });
     }
 
@@ -627,10 +690,13 @@ export class MultipleTags2Service {
      * @returns void Success
      * @throws ApiError
      */
-    public dummyB(): CancelablePromise<$OpenApiTs['/api/v{api-version}/multiple-tags/b']['get']['res'][204]> {
+    public dummyB(
+        options: Partial<ApiRequestOptions> = {}
+    ): CancelablePromise<$OpenApiTs['/api/v{api-version}/multiple-tags/b']['get']['res'][204]> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/b',
+            ...options,
         });
     }
 }
@@ -642,10 +708,13 @@ export class MultipleTags3Service {
      * @returns void Success
      * @throws ApiError
      */
-    public dummyB(): CancelablePromise<$OpenApiTs['/api/v{api-version}/multiple-tags/b']['get']['res'][204]> {
+    public dummyB(
+        options: Partial<ApiRequestOptions> = {}
+    ): CancelablePromise<$OpenApiTs['/api/v{api-version}/multiple-tags/b']['get']['res'][204]> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/b',
+            ...options,
         });
     }
 }
@@ -657,7 +726,8 @@ export class CollectionFormatService {
      * @throws ApiError
      */
     public collectionFormat(
-        data: $OpenApiTs['/api/v{api-version}/collectionFormat']['get']['req']
+        data: $OpenApiTs['/api/v{api-version}/collectionFormat']['get']['req'],
+        options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
         const { parameterArrayCsv, parameterArraySsv, parameterArrayTsv, parameterArrayPipes, parameterArrayMulti } =
             data;
@@ -671,6 +741,7 @@ export class CollectionFormatService {
                 parameterArrayPipes,
                 parameterArrayMulti,
             },
+            ...options,
         });
     }
 }
@@ -686,7 +757,8 @@ export class TypesService {
      * @throws ApiError
      */
     public types(
-        data: $OpenApiTs['/api/v{api-version}/types']['get']['req']
+        data: $OpenApiTs['/api/v{api-version}/types']['get']['req'],
+        options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<
         | $OpenApiTs['/api/v{api-version}/types']['get']['res'][200]
         | $OpenApiTs['/api/v{api-version}/types']['get']['res'][201]
@@ -718,6 +790,7 @@ export class TypesService {
                 parameterDictionary,
                 parameterEnum,
             },
+            ...options,
         });
     }
 }
@@ -730,7 +803,8 @@ export class UploadService {
      * @throws ApiError
      */
     public uploadFile(
-        data: $OpenApiTs['/api/v{api-version}/upload']['post']['req']
+        data: $OpenApiTs['/api/v{api-version}/upload']['post']['req'],
+        options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<$OpenApiTs['/api/v{api-version}/upload']['post']['res'][200]> {
         const { file } = data;
         return this.httpRequest.request({
@@ -739,6 +813,7 @@ export class UploadService {
             formData: {
                 file,
             },
+            ...options,
         });
     }
 }
@@ -751,7 +826,8 @@ export class FileResponseService {
      * @throws ApiError
      */
     public fileResponse(
-        data: $OpenApiTs['/api/v{api-version}/file/{id}']['get']['req']
+        data: $OpenApiTs['/api/v{api-version}/file/{id}']['get']['req'],
+        options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<$OpenApiTs['/api/v{api-version}/file/{id}']['get']['res'][200]> {
         const { id } = data;
         return this.httpRequest.request({
@@ -760,6 +836,7 @@ export class FileResponseService {
             path: {
                 id,
             },
+            ...options,
         });
     }
 }
@@ -772,7 +849,8 @@ export class ComplexService {
      * @throws ApiError
      */
     public complexTypes(
-        data: $OpenApiTs['/api/v{api-version}/complex']['get']['req']
+        data: $OpenApiTs['/api/v{api-version}/complex']['get']['req'],
+        options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<$OpenApiTs['/api/v{api-version}/complex']['get']['res'][200]> {
         const { parameterObject, parameterReference } = data;
         return this.httpRequest.request({
@@ -786,6 +864,7 @@ export class ComplexService {
                 400: '400 server error',
                 500: '500 server error',
             },
+            ...options,
         });
     }
 
@@ -794,7 +873,8 @@ export class ComplexService {
      * @throws ApiError
      */
     public complexParams(
-        data: $OpenApiTs['/api/v{api-version}/complex/{id}']['put']['req']
+        data: $OpenApiTs['/api/v{api-version}/complex/{id}']['put']['req'],
+        options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<$OpenApiTs['/api/v{api-version}/complex/{id}']['put']['res'][200]> {
         const { id, requestBody } = data;
         return this.httpRequest.request({
@@ -805,6 +885,7 @@ export class ComplexService {
             },
             body: requestBody,
             mediaType: 'application/json-patch+json',
+            ...options,
         });
     }
 }
@@ -816,7 +897,8 @@ export class MultipartService {
      * @throws ApiError
      */
     public multipartRequest(
-        data: $OpenApiTs['/api/v{api-version}/multipart']['post']['req'] = {}
+        data: $OpenApiTs['/api/v{api-version}/multipart']['post']['req'] = {},
+        options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
         const { formData } = data;
         return this.httpRequest.request({
@@ -824,6 +906,7 @@ export class MultipartService {
             url: '/api/v{api-version}/multipart',
             formData,
             mediaType: 'multipart/form-data',
+            ...options,
         });
     }
 
@@ -831,10 +914,13 @@ export class MultipartService {
      * @returns any OK
      * @throws ApiError
      */
-    public multipartResponse(): CancelablePromise<$OpenApiTs['/api/v{api-version}/multipart']['get']['res'][200]> {
+    public multipartResponse(
+        options: Partial<ApiRequestOptions> = {}
+    ): CancelablePromise<$OpenApiTs['/api/v{api-version}/multipart']['get']['res'][200]> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v{api-version}/multipart',
+            ...options,
         });
     }
 }
@@ -846,7 +932,9 @@ export class HeaderService {
      * @returns string Successful response
      * @throws ApiError
      */
-    public callWithResultFromHeader(): CancelablePromise<$OpenApiTs['/api/v{api-version}/header']['post']['res'][200]> {
+    public callWithResultFromHeader(
+        options: Partial<ApiRequestOptions> = {}
+    ): CancelablePromise<$OpenApiTs['/api/v{api-version}/header']['post']['res'][200]> {
         return this.httpRequest.request({
             method: 'POST',
             url: '/api/v{api-version}/header',
@@ -855,6 +943,7 @@ export class HeaderService {
                 400: '400 server error',
                 500: '500 server error',
             },
+            ...options,
         });
     }
 }
@@ -867,7 +956,8 @@ export class ErrorService {
      * @throws ApiError
      */
     public testErrorCode(
-        data: $OpenApiTs['/api/v{api-version}/error']['post']['req']
+        data: $OpenApiTs['/api/v{api-version}/error']['post']['req'],
+        options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<$OpenApiTs['/api/v{api-version}/error']['post']['res'][200]> {
         const { status } = data;
         return this.httpRequest.request({
@@ -882,6 +972,7 @@ export class ErrorService {
                 502: 'Custom message: Bad Gateway',
                 503: 'Custom message: Service Unavailable',
             },
+            ...options,
         });
     }
 }
@@ -894,7 +985,8 @@ export class NonAsciiÆøåÆøÅöôêÊService {
      * @throws ApiError
      */
     public nonAsciiæøåÆøÅöôêÊ字符串(
-        data: $OpenApiTs['/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串']['post']['req']
+        data: $OpenApiTs['/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串']['post']['req'],
+        options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<$OpenApiTs['/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串']['post']['res'][200]> {
         const { nonAsciiParamæøåÆøÅöôêÊ } = data;
         return this.httpRequest.request({
@@ -903,6 +995,7 @@ export class NonAsciiÆøåÆøÅöôêÊService {
             query: {
                 nonAsciiParamæøåÆØÅöôêÊ: nonAsciiParamæøåÆøÅöôêÊ,
             },
+            ...options,
         });
     }
 }

@@ -3,6 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
+import type { ApiRequestOptions } from './core/ApiRequestOptions';
 import type { $OpenApiTs } from './models.gen';
 
 export class DefaultsService {
@@ -10,7 +11,8 @@ export class DefaultsService {
      * @throws ApiError
      */
     public static callWithDefaultParameters(
-        data: $OpenApiTs['/api/v{api-version}/defaults']['get']['req'] = {}
+        data: $OpenApiTs['/api/v{api-version}/defaults']['get']['req'] = {},
+        options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
         const { parameterString, parameterNumber, parameterBoolean, parameterEnum, parameterModel } = data;
         return __request(OpenAPI, {
@@ -23,6 +25,7 @@ export class DefaultsService {
                 parameterEnum,
                 parameterModel,
             },
+            ...options,
         });
     }
 
@@ -30,7 +33,8 @@ export class DefaultsService {
      * @throws ApiError
      */
     public static callWithDefaultOptionalParameters(
-        data: $OpenApiTs['/api/v{api-version}/defaults']['post']['req'] = {}
+        data: $OpenApiTs['/api/v{api-version}/defaults']['post']['req'] = {},
+        options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
         const { parameterString, parameterNumber, parameterBoolean, parameterEnum, parameterModel } = data;
         return __request(OpenAPI, {
@@ -43,6 +47,7 @@ export class DefaultsService {
                 parameterEnum,
                 parameterModel,
             },
+            ...options,
         });
     }
 
@@ -50,7 +55,8 @@ export class DefaultsService {
      * @throws ApiError
      */
     public static callToTestOrderOfParams(
-        data: $OpenApiTs['/api/v{api-version}/defaults']['put']['req']
+        data: $OpenApiTs['/api/v{api-version}/defaults']['put']['req'],
+        options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
         const {
             parameterStringWithNoDefault,
@@ -75,6 +81,7 @@ export class DefaultsService {
                 parameterStringNullableWithNoDefault,
                 parameterStringNullableWithDefault,
             },
+            ...options,
         });
     }
 }

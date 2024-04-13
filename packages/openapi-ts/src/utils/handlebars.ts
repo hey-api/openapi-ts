@@ -85,22 +85,25 @@ export const nameOperationDataType = (namespace: 'req' | 'res', operation: Servi
     const baseTypePath = `${exported}['${operation.path}']['${operation.method.toLocaleLowerCase()}']['${namespace}']`;
     if (namespace === 'req') {
         if (!operation.parameters.length) {
-            return '';
+            return `options: Partial<ApiRequestOptions> = {}`;
         }
 
+        let result = '';
         if (config.useOptions) {
             const isOptional = operation.parameters.every(p => !p.isRequired);
-            return isOptional ? `data: ${baseTypePath} = {}` : `data: ${baseTypePath}`;
+            result = isOptional ? `data: ${baseTypePath} = {}` : `data: ${baseTypePath}`;
+        } else {
+            result = operation.parameters
+                .map(p => {
+                    const typePath = `${baseTypePath}['${p.name}']`;
+                    const defaultValue = getDefaultPrintable(p);
+                    const defaultString = defaultValue !== undefined ? ` = ${defaultValue}` : '';
+                    return `${p.name}${modelIsRequired(p)}: ${typePath}${defaultString}`;
+                })
+                .join(', ');
         }
 
-        return operation.parameters
-            .map(p => {
-                const typePath = `${baseTypePath}['${p.name}']`;
-                const defaultValue = getDefaultPrintable(p);
-                const defaultString = defaultValue !== undefined ? ` = ${defaultValue}` : '';
-                return `${p.name}${modelIsRequired(p)}: ${typePath}${defaultString}`;
-            })
-            .join(', ');
+        return `${result}, options: Partial<ApiRequestOptions> = {}`;
     }
     const results = operation.results.filter(result => result.code >= 200 && result.code < 300);
     // TODO: we should return nothing when results don't exist
@@ -191,6 +194,7 @@ export const registerHandlebarHelpers = (): void => {
                 identifiers: ['body', 'headers', 'formData', 'cookies', 'path', 'query'],
                 obj,
                 shorthand: true,
+                spreads: ['options'],
             })
         );
     });

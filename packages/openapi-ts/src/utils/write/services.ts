@@ -58,6 +58,8 @@ export const writeServices = async (
         fileServices.addNamedImport({ alias: '__request', name: 'request' }, './core/request');
     }
 
+    fileServices.addNamedImport({ isTypeOnly: true, name: 'ApiRequestOptions' }, './core/ApiRequestOptions');
+
     // Import all models required by the services.
     const models = imports.filter(unique).map(imp => ({ isTypeOnly: true, name: imp }));
     fileServices.addNamedImport(models, generatedFileName('./models'));
