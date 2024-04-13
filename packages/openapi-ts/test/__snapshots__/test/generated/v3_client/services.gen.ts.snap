@@ -353,7 +353,7 @@ export class FormDataService {
             query: {
                 parameter,
             },
-            formData: formData,
+            formData,
             mediaType: 'multipart/form-data',
         });
     }
@@ -551,9 +551,9 @@ export class ResponseService {
             method: 'POST',
             url: '/api/v{api-version}/response',
             errors: {
-                500: `Message for 500 error`,
-                501: `Message for 501 error`,
-                502: `Message for 502 error`,
+                500: 'Message for 500 error',
+                501: 'Message for 501 error',
+                502: 'Message for 502 error',
             },
         });
     }
@@ -575,9 +575,9 @@ export class ResponseService {
             method: 'PUT',
             url: '/api/v{api-version}/response',
             errors: {
-                500: `Message for 500 error`,
-                501: `Message for 501 error`,
-                502: `Message for 502 error`,
+                500: 'Message for 500 error',
+                501: 'Message for 501 error',
+                502: 'Message for 502 error',
             },
         });
     }
@@ -783,8 +783,8 @@ export class ComplexService {
                 parameterReference,
             },
             errors: {
-                400: `400 server error`,
-                500: `500 server error`,
+                400: '400 server error',
+                500: '500 server error',
             },
         });
     }
@@ -822,7 +822,7 @@ export class MultipartService {
         return this.httpRequest.request({
             method: 'POST',
             url: '/api/v{api-version}/multipart',
-            formData: formData,
+            formData,
             mediaType: 'multipart/form-data',
         });
     }
@@ -852,8 +852,8 @@ export class HeaderService {
             url: '/api/v{api-version}/header',
             responseHeader: 'operation-location',
             errors: {
-                400: `400 server error`,
-                500: `500 server error`,
+                400: '400 server error',
+                500: '500 server error',
             },
         });
     }
@@ -877,10 +877,10 @@ export class ErrorService {
                 status,
             },
             errors: {
-                500: `Custom message: Internal Server Error`,
-                501: `Custom message: Not Implemented`,
-                502: `Custom message: Bad Gateway`,
-                503: `Custom message: Service Unavailable`,
+                500: 'Custom message: Internal Server Error',
+                501: 'Custom message: Not Implemented',
+                502: 'Custom message: Bad Gateway',
+                503: 'Custom message: Service Unavailable',
             },
         });
     }
