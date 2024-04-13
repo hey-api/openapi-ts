@@ -1,6 +1,4 @@
-import path from 'node:path';
-
-import { TypeScriptFile } from '../../compiler';
+import { filePath, generatedFileName, TypeScriptFile } from '../../compiler';
 import type { OpenApi } from '../../openApi';
 import type { Client } from '../../types/client';
 import { getConfig } from '../config';
@@ -22,7 +20,7 @@ export const writeServices = async (
 ): Promise<void> => {
     const config = getConfig();
 
-    const fileServices = new TypeScriptFile({ path: path.resolve(outputPath, 'services.ts') });
+    const fileServices = new TypeScriptFile({ path: filePath(outputPath, 'services.ts') });
 
     let imports: string[] = [];
     let results: string[] = [];
@@ -62,7 +60,7 @@ export const writeServices = async (
 
     // Import all models required by the services.
     const models = imports.filter(unique).map(imp => ({ isTypeOnly: true, name: imp }));
-    fileServices.addNamedImport(models, './models');
+    fileServices.addNamedImport(models, generatedFileName('./models'));
 
     fileServices.add(...results);
 

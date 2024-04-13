@@ -13,20 +13,20 @@ These changes haven't been released yet. However, you can migrate your code toda
 
 ### Deprecated exports from `index.ts`
 
-Currently, `index.ts` file exports all generated artifacts.
+Currently, `index.ts` file exports all generated artifacts. We will be slowly moving away from this practice.
 
-```ts
+```js
 export { ApiError } from './core/ApiError';
 export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI, type OpenAPIConfig } from './core/OpenAPI';
-export * from './models';
-export * from './schemas';
-export * from './services';
+export * from './models'; // [!code --]
+export * from './schemas'; // [!code --]
+export * from './services'; // [!code --]
 ```
 
-We will be slowly moving away from this practice. Any non-core related imports should be imported as
+Any non-core related imports should be imported as
 
-```ts
+```js
 import type { Model } from 'client/models';
 import { $Schema } from 'client/schemas';
 import { DefaultService } from 'client/services';
@@ -54,19 +54,50 @@ This config option is deprecated and will be removed.
 
 ### Single `enums.gen.ts` file
 
-Enums are now exported from a single file. If you used imports from `model.ts`, you can change it to `enums.gen.ts`.
+Enums are now exported from a separate file. If you use imports from `models.ts`, you can change them to `enums.gen.ts`.
 
 ```js
 import { Enum } from 'client/models' // [!code --]
-import { Enum } from 'client/enums.gen.ts' // [!code ++]
+import { Enum } from 'client/enums.gen' // [!code ++]
 ```
 
-Enums are no longer exported from `index.ts`. If you used imports from index file, you will need to move enums into their own import statement.
+### Renamed `models.ts` file
+
+`models.ts` is now called `models.gen.ts`. If you use imports from `models.ts`, you should be able to easily find and replace all instances.
 
 ```js
-import { Enum, DefaultService } from 'client' // [!code --]
-import { Enum } from 'client/enums.gen.ts' // [!code ++]
-import { DefaultService } from 'client/services' // [!code ++]
+import type { Model } from 'client/models' // [!code --]
+import type { Model } from 'client/models.gen' // [!code ++]
+```
+
+### Renamed `schemas.ts` file
+
+`schemas.ts` is now called `schemas.gen.ts`. If you use imports from `schemas.ts`, you should be able to easily find and replace all instances.
+
+```js
+import { $Schema } from 'client/schemas' // [!code --]
+import { $Schema } from 'client/schemas.gen' // [!code ++]
+```
+
+### Renamed `services.ts` file
+
+`services.ts` is now called `services.gen.ts`. If you use imports from `services.ts`, you should be able to easily find and replace all instances.
+
+```js
+import { DefaultService } from 'client/services' // [!code --]
+import { DefaultService } from 'client/services.gen' // [!code ++]
+```
+
+### Deprecated exports from `index.ts`
+
+Until this release, `index.ts` file exported all generated artifacts. Starting from this release, enums are no longer exported from `index.ts`. Models, schemas, and services will continue to be exported from `index.ts` to avoid a huge migration lift, but we recommend migrating to import groups per artifact type.
+
+```js
+import { Enum, type Model, $Schema, DefaultService } from 'client' // [!code --]
+import { Enum } from 'client/enums.gen' // [!code ++]
+import type { Model } from 'client/models.gen' // [!code ++]
+import { $Schema } from 'client/schemas.gen' // [!code ++]
+import { DefaultService } from 'client/services.gen' // [!code ++]
 ```
 
 ## v0.38.0
