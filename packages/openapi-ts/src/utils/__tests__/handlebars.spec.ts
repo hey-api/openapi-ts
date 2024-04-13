@@ -29,9 +29,7 @@ describe('registerHandlebarHelpers', () => {
         const helpers = Object.keys(Handlebars.helpers);
         expect(helpers).toContain('camelCase');
         expect(helpers).toContain('dataDestructure');
-        expect(helpers).toContain('dataParameters');
         expect(helpers).toContain('equals');
-        expect(helpers).toContain('escapeDescription');
         expect(helpers).toContain('ifdef');
         expect(helpers).toContain('nameOperationDataType');
         expect(helpers).toContain('notEquals');

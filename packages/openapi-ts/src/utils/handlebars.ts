@@ -77,21 +77,6 @@ const dataDestructure = (operation: Operation) => {
     return '';
 };
 
-const dataParameters = (parameters: OperationParameter[]) => {
-    const output = parameters.map(parameter => {
-        const key = parameter.prop;
-        const value = parameter.name;
-        if (key === value) {
-            return key;
-        }
-        if (escapeName(key) === key) {
-            return `${key}: ${value}`;
-        }
-        return `'${key}': ${value}`;
-    });
-    return output.join(', ');
-};
-
 export const serviceExportedNamespace = () => '$OpenApiTs';
 
 export const nameOperationDataType = (namespace: 'req' | 'res', operation: Service['operations'][number]) => {
@@ -135,7 +120,6 @@ export const nameOperationDataType = (namespace: 'req' | 'res', operation: Servi
 export const registerHandlebarHelpers = (): void => {
     Handlebars.registerHelper('camelCase', camelCase);
     Handlebars.registerHelper('dataDestructure', dataDestructure);
-    Handlebars.registerHelper('dataParameters', dataParameters);
 
     Handlebars.registerHelper(
         'equals',
@@ -144,7 +128,72 @@ export const registerHandlebarHelpers = (): void => {
         }
     );
 
-    Handlebars.registerHelper('escapeDescription', escapeDescription);
+    Handlebars.registerHelper('toRequestOptions', (operation: Operation) => {
+        const toObj = (parameters: OperationParameter[]) =>
+            parameters.reduce(
+                (prev, curr) => {
+                    const key = curr.prop;
+                    const value = curr.name;
+                    if (key === value) {
+                        prev[key] = key;
+                    } else if (escapeName(key) === key) {
+                        prev[key] = value;
+                    } else {
+                        prev[`'${key}'`] = value;
+                    }
+                    return prev;
+                },
+                {} as Record<string, unknown>
+            );
+
+        const obj: Record<string, any> = {
+            method: operation.method,
+            url: operation.path,
+        };
+        if (operation.parametersPath.length) {
+            obj.path = toObj(operation.parametersPath);
+        }
+        if (operation.parametersCookie.length) {
+            obj.cookies = toObj(operation.parametersCookie);
+        }
+        if (operation.parametersHeader.length) {
+            obj.headers = toObj(operation.parametersHeader);
+        }
+        if (operation.parametersQuery.length) {
+            obj.query = toObj(operation.parametersQuery);
+        }
+        if (operation.parametersForm.length) {
+            obj.formData = toObj(operation.parametersForm);
+        }
+        if (operation.parametersBody) {
+            if (operation.parametersBody.in === 'formData') {
+                obj.formData = operation.parametersBody.name;
+            }
+            if (operation.parametersBody.in === 'body') {
+                obj.body = operation.parametersBody.name;
+            }
+        }
+        if (operation.parametersBody?.mediaType) {
+            obj.mediaType = operation.parametersBody?.mediaType;
+        }
+        if (operation.responseHeader) {
+            obj.responseHeader = operation.responseHeader;
+        }
+        if (operation.errors.length) {
+            const errors: Record<number, string> = {};
+            operation.errors.forEach(err => {
+                errors[err.code] = escapeDescription(err.description);
+            });
+            obj.errors = errors;
+        }
+        return compiler.utils.toString(
+            compiler.types.object({
+                identifiers: ['body', 'headers', 'formData', 'cookies', 'path', 'query'],
+                obj,
+                shorthand: true,
+            })
+        );
+    });
 
     Handlebars.registerHelper('toOperationComment', (operation: Operation) => {
         const config = getConfig();
