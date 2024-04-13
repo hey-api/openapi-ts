@@ -19,73 +19,27 @@ export class {{{name}}}{{{@root.$config.postfixServices}}} {
 	{{#equals @root.$config.client 'angular'}}
 	public {{{name}}}({{{nameOperationDataType 'req' this}}}): Observable<{{{nameOperationDataType 'res' this}}}> {
 		{{{dataDestructure this}}}
-		return this.httpRequest.request({
+		return this.httpRequest.request({{{toRequestOptions this}}});
+	}
 	{{else}}
 	public {{{name}}}({{{nameOperationDataType 'req' this}}}): CancelablePromise<{{{nameOperationDataType 'res' this}}}> {
 		{{{dataDestructure this}}}
-		return this.httpRequest.request({
+		return this.httpRequest.request({{{toRequestOptions this}}});
+	}
 	{{/equals}}
 	{{else}}
 	{{#equals @root.$config.client 'angular'}}
 	public {{{name}}}({{{nameOperationDataType 'req' this}}}): Observable<{{{nameOperationDataType 'res' this}}}> {
 		{{{dataDestructure this}}}
-		return __request(OpenAPI, this.http, {
+		return __request(OpenAPI, this.http, {{{toRequestOptions this}}});
+	}
 	{{else}}
 	public static {{{name}}}({{{nameOperationDataType 'req' this}}}): CancelablePromise<{{{nameOperationDataType 'res' this}}}> {
 		{{{dataDestructure this}}}
-		return __request(OpenAPI, {
+		return __request(OpenAPI, {{{toRequestOptions this}}});
+	}
 	{{/equals}}
 	{{/if}}
-			method: '{{{method}}}',
-			url: '{{{path}}}',
-			{{#if parametersPath}}
-			path: {
-				{{{dataParameters parametersPath}}}
-			},
-			{{/if}}
-			{{#if parametersCookie}}
-			cookies: {
-				{{{dataParameters parametersCookie}}}
-			},
-			{{/if}}
-			{{#if parametersHeader}}
-			headers: {
-				{{{dataParameters parametersHeader}}}
-			},
-			{{/if}}
-			{{#if parametersQuery}}
-			query: {
-				{{{dataParameters parametersQuery}}}
-			},
-			{{/if}}
-			{{#if parametersForm}}
-			formData: {
-				{{{dataParameters parametersForm}}}
-			},
-			{{/if}}
-			{{#if parametersBody}}
-			{{#equals parametersBody.in 'formData'}}
-			formData: {{{parametersBody.name}}},
-			{{/equals}}
-			{{#equals parametersBody.in 'body'}}
-			body: {{{parametersBody.name}}},
-			{{/equals}}
-			{{#if parametersBody.mediaType}}
-			mediaType: '{{{parametersBody.mediaType}}}',
-			{{/if}}
-			{{/if}}
-			{{#if responseHeader}}
-			responseHeader: '{{{responseHeader}}}',
-			{{/if}}
-			{{#if errors}}
-			errors: {
-				{{#each errors}}
-				{{{code}}}: `{{{escapeDescription description}}}`,
-				{{/each}}
-			},
-			{{/if}}
-		});
-	}
 
 	{{/each}}
 }
