@@ -1,6 +1,4 @@
-import path from 'node:path';
-
-import { compiler, TypeScriptFile } from '../../compiler';
+import { compiler, filePath, TypeScriptFile } from '../../compiler';
 import type { OpenApi } from '../../openApi';
 import { ensureValidTypeScriptJavaScriptIdentifier } from '../../openApi/common/parser/sanitize';
 import { getConfig } from '../config';
@@ -13,7 +11,7 @@ import { getConfig } from '../config';
 export const writeSchemas = async (openApi: OpenApi, outputPath: string): Promise<void> => {
     const config = getConfig();
 
-    const fileSchemas = new TypeScriptFile({ path: path.resolve(outputPath, 'schemas.ts') });
+    const fileSchemas = new TypeScriptFile({ path: filePath(outputPath, 'schemas.ts') });
 
     const addSchema = (name: string, obj: any) => {
         const validName = `$${ensureValidTypeScriptJavaScriptIdentifier(name)}`;

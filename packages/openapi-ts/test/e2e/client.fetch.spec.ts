@@ -1,9 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import browser from './scripts/browser';
 import { cleanup } from './scripts/cleanup';
 import { compileWithTypescript } from './scripts/compileWithTypescript';
-import { copyAsset } from './scripts/copyAsset';
 import { generateClient } from './scripts/generateClient';
 import server from './scripts/server';
 
@@ -11,98 +9,87 @@ describe('client.fetch', () => {
     beforeAll(async () => {
         cleanup('client/fetch');
         await generateClient('client/fetch', 'v3', 'fetch', false, 'ApiClient');
-        copyAsset('index.html', 'client/fetch/index.html');
-        copyAsset('main.ts', 'client/fetch/main.ts');
         compileWithTypescript('client/fetch');
         await server.start('client/fetch');
-        await browser.start();
     }, 40000);
 
     afterAll(async () => {
-        await browser.stop();
         await server.stop();
     });
 
     it('requests token', async () => {
-        await browser.exposeFunction('tokenRequest', vi.fn().mockResolvedValue('MY_TOKEN'));
-        const result = await browser.evaluate(async () => {
-            // @ts-ignore
-            const { ApiClient } = window.api;
-            const client = new ApiClient({
-                PASSWORD: undefined,
-                // @ts-ignore
-                TOKEN: window.tokenRequest,
-                USERNAME: undefined,
-            });
-            return await client.simple.getCallWithoutParametersAndResponse();
+        const { ApiClient } = await import('./generated/client/fetch/index.js');
+        const tokenRequest = vi.fn().mockResolvedValue('MY_TOKEN');
+        const client = new ApiClient({
+            PASSWORD: undefined,
+            TOKEN: tokenRequest,
+            USERNAME: undefined,
         });
+        const result = await client.simple.getCallWithoutParametersAndResponse();
         // @ts-ignore
         expect(result.headers.authorization).toBe('Bearer MY_TOKEN');
     });
 
     it('uses credentials', async () => {
-        const result = await browser.evaluate(async () => {
-            // @ts-ignore
-            const { ApiClient } = window.api;
-            const client = new ApiClient({
-                PASSWORD: 'password',
-                TOKEN: undefined,
-                USERNAME: 'username',
-            });
-            return await client.simple.getCallWithoutParametersAndResponse();
+        const { ApiClient } = await import('./generated/client/fetch/index.js');
+        const client = new ApiClient({
+            PASSWORD: 'password',
+            TOKEN: undefined,
+            USERNAME: 'username',
         });
+        const result = await client.simple.getCallWithoutParametersAndResponse();
         // @ts-ignore
         expect(result.headers.authorization).toBe('Basic dXNlcm5hbWU6cGFzc3dvcmQ=');
     });
 
     it('supports complex params', async () => {
-        const result = await browser.evaluate(async () => {
-            // @ts-ignore
-            const { ApiClient } = window.api;
-            const client = new ApiClient();
-            return await client.complex.complexTypes({
-                first: {
-                    second: {
-                        third: 'Hello World!',
-                    },
+        const { ApiClient } = await import('./generated/client/fetch/index.js');
+        const client = new ApiClient();
+        // @ts-ignore
+        const result = await client.complex.complexTypes({
+            first: {
+                second: {
+                    third: 'Hello World!',
                 },
-            });
+            },
         });
         expect(result).toBeDefined();
     });
 
     it('support form data', async () => {
-        const result = await browser.evaluate(async () => {
-            // @ts-ignore
-            const { ApiClient } = window.api;
-            const client = new ApiClient();
-            return await client.parameters.callWithParameters(
-                'valueHeader',
-                'valueQuery',
-                'valueForm',
-                'valueCookie',
-                'valuePath',
-                {
-                    prop: 'valueBody',
-                }
-            );
-        });
+        const { ApiClient } = await import('./generated/client/fetch/index.js');
+        const client = new ApiClient();
+        // @ts-ignore
+        const result = await client.parameters.callWithParameters(
+            'valueHeader',
+            'valueQuery',
+            'valueForm',
+            'valueCookie',
+            'valuePath',
+            {
+                prop: 'valueBody',
+            }
+        );
+        expect(result).toBeDefined();
+    });
+
+    it('support blob response data', async () => {
+        const { ApiClient } = await import('./generated/client/fetch/index.js');
+        const client = new ApiClient();
+        const result = await client.fileResponse.fileResponse('test');
         expect(result).toBeDefined();
     });
 
     it('can abort the request', async () => {
         let error;
         try {
-            await browser.evaluate(async () => {
-                // @ts-ignore
-                const { ApiClient } = window.api;
-                const client = new ApiClient();
-                const promise = client.simple.getCallWithoutParametersAndResponse();
-                setTimeout(() => {
-                    promise.cancel();
-                }, 10);
-                await promise;
-            });
+            const { ApiClient } = await import('./generated/client/fetch/index.js');
+            const client = new ApiClient();
+            const promise = client.simple.getCallWithoutParametersAndResponse();
+            setTimeout(() => {
+                promise.cancel();
+            }, 10);
+            await promise;
         } catch (e) {
             error = (e as Error).message;
         }
@@ -110,25 +97,21 @@ describe('client.fetch', () => {
     });
 
     it('should throw known error (500)', async () => {
-        const error = await browser.evaluate(async () => {
-            try {
-                // @ts-ignore
-                const { ApiClient } = window.api;
-                const client = new ApiClient();
-                await client.error.testErrorCode(500);
-            } catch (error) {
-                return JSON.stringify({
-                    body: error.body,
-                    message: error.message,
-                    name: error.name,
-                    status: error.status,
-                    statusText: error.statusText,
-                    url: error.url,
-                });
-            }
-            return;
-        });
-
+        let error;
+        try {
+            const { ApiClient } = await import('./generated/client/fetch/index.js');
+            const client = new ApiClient();
+            await client.error.testErrorCode(500);
+        } catch (err) {
+            error = JSON.stringify({
+                body: err.body,
+                message: err.message,
+                name: err.name,
+                status: err.status,
+                statusText: err.statusText,
+                url: err.url,
+            });
+        }
         expect(error).toBe(
             JSON.stringify({
                 body: {
@@ -145,24 +128,21 @@ describe('client.fetch', () => {
     });
 
     it('should throw unknown error (599)', async () => {
-        const error = await browser.evaluate(async () => {
-            try {
-                // @ts-ignore
-                const { ApiClient } = window.api;
-                const client = new ApiClient();
-                await client.error.testErrorCode(599);
-            } catch (error) {
-                return JSON.stringify({
-                    body: error.body,
-                    message: error.message,
-                    name: error.name,
-                    status: error.status,
-                    statusText: error.statusText,
-                    url: error.url,
-                });
-            }
-            return;
-        });
+        let error;
+        try {
+            const { ApiClient } = await import('./generated/client/fetch/index.js');
+            const client = new ApiClient();
+            await client.error.testErrorCode(599);
+        } catch (err) {
+            error = JSON.stringify({
+                body: err.body,
+                message: err.message,
+                name: err.name,
+                status: err.status,
+                statusText: err.statusText,
+                url: err.url,
+            });
+        }
         expect(error).toBe(
             JSON.stringify({
                 body: {
@@ -177,5 +157,17 @@ describe('client.fetch', () => {
                 url: 'http://localhost:3000/base/api/v1.0/error?status=599',
             })
         );
+    });
+
+    it('it should parse query params', async () => {
+        const { ApiClient } = await import('./generated/client/fetch/index.js');
+        const client = new ApiClient();
+        const result = await client.parameters.postCallWithOptionalParam({
+            page: 0,
+            size: 1,
+            sort: ['location'],
+        });
+        // @ts-ignore
+        expect(result.query).toStrictEqual({ parameter: { page: '0', size: '1', sort: 'location' } });
     });
 });

@@ -1,6 +1,4 @@
-import path from 'node:path';
-
-import { type Comments, compiler, type Node, TypeScriptFile } from '../../compiler';
+import { type Comments, compiler, filePath, type Node, TypeScriptFile } from '../../compiler';
 import { addLeadingComment } from '../../compiler/utils';
 import type { Model, OpenApi, OperationParameter, Service } from '../../openApi';
 import { ensureValidTypeScriptJavaScriptIdentifier } from '../../openApi/common/parser/sanitize';
@@ -225,8 +223,8 @@ const processServiceTypes = (services: Service[], onNode: OnNode) => {
 export const writeTypesAndEnums = async (openApi: OpenApi, outputPath: string, client: Client): Promise<void> => {
     const config = getConfig();
 
-    const fileEnums = new TypeScriptFile({ path: path.resolve(outputPath, 'enums.gen.ts') });
-    const fileModels = new TypeScriptFile({ path: path.resolve(outputPath, 'models.ts') });
+    const fileEnums = new TypeScriptFile({ path: filePath(outputPath, 'enums.ts') });
+    const fileModels = new TypeScriptFile({ path: filePath(outputPath, 'models.ts') });
 
     for (const model of client.models) {
         processModel(client, model, (node, type) => {
