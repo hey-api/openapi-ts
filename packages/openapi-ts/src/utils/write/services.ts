@@ -59,6 +59,7 @@ export const writeServices = async (
     }
 
     fileServices.addNamedImport({ isTypeOnly: true, name: 'ApiRequestOptions' }, './core/ApiRequestOptions');
+    fileServices.addNamedImport('mergeDeep', './core/request');
 
     // Import all models required by the services.
     const models = imports.filter(unique).map(imp => ({ isTypeOnly: true, name: imp }));

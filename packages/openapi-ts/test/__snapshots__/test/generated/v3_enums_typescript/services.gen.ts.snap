@@ -4,6 +4,7 @@ import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
 import type { ApiRequestOptions } from './core/ApiRequestOptions';
+import { mergeDeep } from './core/request';
 import type { $OpenApiTs } from './models.gen';
 
 export class DefaultService {
@@ -11,11 +12,16 @@ export class DefaultService {
      * @throws ApiError
      */
     public static serviceWithEmptyTag(options: Partial<ApiRequestOptions> = {}): CancelablePromise<void> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/v{api-version}/no-tag',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'GET',
+                    url: '/api/v{api-version}/no-tag',
+                },
+                options
+            )
+        );
     }
 
     /**
@@ -27,13 +33,18 @@ export class DefaultService {
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<$OpenApiTs['/api/v{api-version}/no-tag']['post']['res'][200]> {
         const { requestBody } = data;
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v{api-version}/no-tag',
-            body: requestBody,
-            mediaType: 'application/json',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'POST',
+                    url: '/api/v{api-version}/no-tag',
+                    body: requestBody,
+                    mediaType: 'application/json',
+                },
+                options
+            )
+        );
     }
 }
 
@@ -45,11 +56,16 @@ export class SimpleService {
     public static apiVVersionOdataControllerCount(
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<$OpenApiTs['/api/v{api-version}/simple/$count']['get']['res'][200]> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/v{api-version}/simple/$count',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'GET',
+                    url: '/api/v{api-version}/simple/$count',
+                },
+                options
+            )
+        );
     }
 
     /**
@@ -58,11 +74,16 @@ export class SimpleService {
     public static getCallWithoutParametersAndResponse(
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/v{api-version}/simple',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'GET',
+                    url: '/api/v{api-version}/simple',
+                },
+                options
+            )
+        );
     }
 
     /**
@@ -71,11 +92,16 @@ export class SimpleService {
     public static putCallWithoutParametersAndResponse(
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
-        return __request(OpenAPI, {
-            method: 'PUT',
-            url: '/api/v{api-version}/simple',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'PUT',
+                    url: '/api/v{api-version}/simple',
+                },
+                options
+            )
+        );
     }
 
     /**
@@ -84,11 +110,16 @@ export class SimpleService {
     public static postCallWithoutParametersAndResponse(
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v{api-version}/simple',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'POST',
+                    url: '/api/v{api-version}/simple',
+                },
+                options
+            )
+        );
     }
 
     /**
@@ -97,11 +128,16 @@ export class SimpleService {
     public static deleteCallWithoutParametersAndResponse(
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
-        return __request(OpenAPI, {
-            method: 'DELETE',
-            url: '/api/v{api-version}/simple',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'DELETE',
+                    url: '/api/v{api-version}/simple',
+                },
+                options
+            )
+        );
     }
 
     /**
@@ -110,11 +146,16 @@ export class SimpleService {
     public static optionsCallWithoutParametersAndResponse(
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
-        return __request(OpenAPI, {
-            method: 'OPTIONS',
-            url: '/api/v{api-version}/simple',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'OPTIONS',
+                    url: '/api/v{api-version}/simple',
+                },
+                options
+            )
+        );
     }
 
     /**
@@ -123,11 +164,16 @@ export class SimpleService {
     public static headCallWithoutParametersAndResponse(
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
-        return __request(OpenAPI, {
-            method: 'HEAD',
-            url: '/api/v{api-version}/simple',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'HEAD',
+                    url: '/api/v{api-version}/simple',
+                },
+                options
+            )
+        );
     }
 
     /**
@@ -136,11 +182,16 @@ export class SimpleService {
     public static patchCallWithoutParametersAndResponse(
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
-        return __request(OpenAPI, {
-            method: 'PATCH',
-            url: '/api/v{api-version}/simple',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'PATCH',
+                    url: '/api/v{api-version}/simple',
+                },
+                options
+            )
+        );
     }
 }
 
@@ -153,15 +204,20 @@ export class ParametersService {
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
         const { foo, bar } = data;
-        return __request(OpenAPI, {
-            method: 'DELETE',
-            url: '/api/v{api-version}/foo/{foo}/bar/{bar}',
-            path: {
-                foo,
-                bar,
-            },
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'DELETE',
+                    url: '/api/v{api-version}/foo/{foo}/bar/{bar}',
+                    path: {
+                        foo,
+                        bar,
+                    },
+                },
+                options
+            )
+        );
     }
 
     /**
@@ -181,30 +237,35 @@ export class ParametersService {
             requestBody,
             fooRefEnum,
         } = data;
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v{api-version}/parameters/{parameterPath}',
-            path: {
-                parameterPath,
-            },
-            cookies: {
-                parameterCookie,
-            },
-            headers: {
-                parameterHeader,
-            },
-            query: {
-                foo_ref_enum: fooRefEnum,
-                foo_all_of_enum: fooAllOfEnum,
-                parameterQuery,
-            },
-            formData: {
-                parameterForm,
-            },
-            body: requestBody,
-            mediaType: 'application/json',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'POST',
+                    url: '/api/v{api-version}/parameters/{parameterPath}',
+                    path: {
+                        parameterPath,
+                    },
+                    cookies: {
+                        parameterCookie,
+                    },
+                    headers: {
+                        parameterHeader,
+                    },
+                    query: {
+                        foo_ref_enum: fooRefEnum,
+                        foo_all_of_enum: fooAllOfEnum,
+                        parameterQuery,
+                    },
+                    formData: {
+                        parameterForm,
+                    },
+                    body: requestBody,
+                    mediaType: 'application/json',
+                },
+                options
+            )
+        );
     }
 
     /**
@@ -225,31 +286,36 @@ export class ParametersService {
             parameterPath3,
             _default,
         } = data;
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}',
-            path: {
-                'parameter.path.1': parameterPath1,
-                'parameter-path-2': parameterPath2,
-                'PARAMETER-PATH-3': parameterPath3,
-            },
-            cookies: {
-                'PARAMETER-COOKIE': parameterCookie,
-            },
-            headers: {
-                'parameter.header': parameterHeader,
-            },
-            query: {
-                default: _default,
-                'parameter-query': parameterQuery,
-            },
-            formData: {
-                parameter_form: parameterForm,
-            },
-            body: requestBody,
-            mediaType: 'application/json',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'POST',
+                    url: '/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}',
+                    path: {
+                        'parameter.path.1': parameterPath1,
+                        'parameter-path-2': parameterPath2,
+                        'PARAMETER-PATH-3': parameterPath3,
+                    },
+                    cookies: {
+                        'PARAMETER-COOKIE': parameterCookie,
+                    },
+                    headers: {
+                        'parameter.header': parameterHeader,
+                    },
+                    query: {
+                        default: _default,
+                        'parameter-query': parameterQuery,
+                    },
+                    formData: {
+                        parameter_form: parameterForm,
+                    },
+                    body: requestBody,
+                    mediaType: 'application/json',
+                },
+                options
+            )
+        );
     }
 
     /**
@@ -260,16 +326,21 @@ export class ParametersService {
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
         const { requestBody, parameter } = data;
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/v{api-version}/parameters/',
-            query: {
-                parameter,
-            },
-            body: requestBody,
-            mediaType: 'application/json',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'GET',
+                    url: '/api/v{api-version}/parameters/',
+                    query: {
+                        parameter,
+                    },
+                    body: requestBody,
+                    mediaType: 'application/json',
+                },
+                options
+            )
+        );
     }
 
     /**
@@ -280,16 +351,21 @@ export class ParametersService {
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
         const { parameter, requestBody } = data;
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v{api-version}/parameters/',
-            query: {
-                parameter,
-            },
-            body: requestBody,
-            mediaType: 'application/json',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'POST',
+                    url: '/api/v{api-version}/parameters/',
+                    query: {
+                        parameter,
+                    },
+                    body: requestBody,
+                    mediaType: 'application/json',
+                },
+                options
+            )
+        );
     }
 }
 
@@ -309,19 +385,24 @@ export class DescriptionsService {
             parameterWithQuotes,
             parameterWithReservedCharacters,
         } = data;
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v{api-version}/descriptions/',
-            query: {
-                parameterWithBreaks,
-                parameterWithBackticks,
-                parameterWithSlashes,
-                parameterWithExpressionPlaceholders,
-                parameterWithQuotes,
-                parameterWithReservedCharacters,
-            },
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'POST',
+                    url: '/api/v{api-version}/descriptions/',
+                    query: {
+                        parameterWithBreaks,
+                        parameterWithBackticks,
+                        parameterWithSlashes,
+                        parameterWithExpressionPlaceholders,
+                        parameterWithQuotes,
+                        parameterWithReservedCharacters,
+                    },
+                },
+                options
+            )
+        );
     }
 }
 
@@ -335,14 +416,19 @@ export class DeprecatedService {
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
         const { parameter } = data;
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v{api-version}/parameters/deprecated',
-            headers: {
-                parameter,
-            },
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'POST',
+                    url: '/api/v{api-version}/parameters/deprecated',
+                    headers: {
+                        parameter,
+                    },
+                },
+                options
+            )
+        );
     }
 }
 
@@ -355,16 +441,21 @@ export class RequestBodyService {
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
         const { parameter, foo } = data;
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v{api-version}/requestBody/',
-            query: {
-                parameter,
-            },
-            body: foo,
-            mediaType: 'application/json',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'POST',
+                    url: '/api/v{api-version}/requestBody/',
+                    query: {
+                        parameter,
+                    },
+                    body: foo,
+                    mediaType: 'application/json',
+                },
+                options
+            )
+        );
     }
 }
 
@@ -377,16 +468,21 @@ export class FormDataService {
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
         const { parameter, formData } = data;
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v{api-version}/formData/',
-            query: {
-                parameter,
-            },
-            formData,
-            mediaType: 'multipart/form-data',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'POST',
+                    url: '/api/v{api-version}/formData/',
+                    query: {
+                        parameter,
+                    },
+                    formData,
+                    mediaType: 'multipart/form-data',
+                },
+                options
+            )
+        );
     }
 }
 
@@ -399,18 +495,23 @@ export class DefaultsService {
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
         const { parameterString, parameterNumber, parameterBoolean, parameterEnum, parameterModel } = data;
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/v{api-version}/defaults',
-            query: {
-                parameterString,
-                parameterNumber,
-                parameterBoolean,
-                parameterEnum,
-                parameterModel,
-            },
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'GET',
+                    url: '/api/v{api-version}/defaults',
+                    query: {
+                        parameterString,
+                        parameterNumber,
+                        parameterBoolean,
+                        parameterEnum,
+                        parameterModel,
+                    },
+                },
+                options
+            )
+        );
     }
 
     /**
@@ -421,18 +522,23 @@ export class DefaultsService {
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
         const { parameterString, parameterNumber, parameterBoolean, parameterEnum, parameterModel } = data;
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v{api-version}/defaults',
-            query: {
-                parameterString,
-                parameterNumber,
-                parameterBoolean,
-                parameterEnum,
-                parameterModel,
-            },
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'POST',
+                    url: '/api/v{api-version}/defaults',
+                    query: {
+                        parameterString,
+                        parameterNumber,
+                        parameterBoolean,
+                        parameterEnum,
+                        parameterModel,
+                    },
+                },
+                options
+            )
+        );
     }
 
     /**
@@ -452,21 +558,26 @@ export class DefaultsService {
             parameterStringNullableWithNoDefault,
             parameterStringNullableWithDefault,
         } = data;
-        return __request(OpenAPI, {
-            method: 'PUT',
-            url: '/api/v{api-version}/defaults',
-            query: {
-                parameterOptionalStringWithDefault,
-                parameterOptionalStringWithEmptyDefault,
-                parameterOptionalStringWithNoDefault,
-                parameterStringWithDefault,
-                parameterStringWithEmptyDefault,
-                parameterStringWithNoDefault,
-                parameterStringNullableWithNoDefault,
-                parameterStringNullableWithDefault,
-            },
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'PUT',
+                    url: '/api/v{api-version}/defaults',
+                    query: {
+                        parameterOptionalStringWithDefault,
+                        parameterOptionalStringWithEmptyDefault,
+                        parameterOptionalStringWithNoDefault,
+                        parameterStringWithDefault,
+                        parameterStringWithEmptyDefault,
+                        parameterStringWithNoDefault,
+                        parameterStringNullableWithNoDefault,
+                        parameterStringNullableWithDefault,
+                    },
+                },
+                options
+            )
+        );
     }
 }
 
@@ -475,44 +586,64 @@ export class DuplicateService {
      * @throws ApiError
      */
     public static duplicateName(options: Partial<ApiRequestOptions> = {}): CancelablePromise<void> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/v{api-version}/duplicate',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'GET',
+                    url: '/api/v{api-version}/duplicate',
+                },
+                options
+            )
+        );
     }
 
     /**
      * @throws ApiError
      */
     public static duplicateName1(options: Partial<ApiRequestOptions> = {}): CancelablePromise<void> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v{api-version}/duplicate',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'POST',
+                    url: '/api/v{api-version}/duplicate',
+                },
+                options
+            )
+        );
     }
 
     /**
      * @throws ApiError
      */
     public static duplicateName2(options: Partial<ApiRequestOptions> = {}): CancelablePromise<void> {
-        return __request(OpenAPI, {
-            method: 'PUT',
-            url: '/api/v{api-version}/duplicate',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'PUT',
+                    url: '/api/v{api-version}/duplicate',
+                },
+                options
+            )
+        );
     }
 
     /**
      * @throws ApiError
      */
     public static duplicateName3(options: Partial<ApiRequestOptions> = {}): CancelablePromise<void> {
-        return __request(OpenAPI, {
-            method: 'DELETE',
-            url: '/api/v{api-version}/duplicate',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'DELETE',
+                    url: '/api/v{api-version}/duplicate',
+                },
+                options
+            )
+        );
     }
 }
 
@@ -524,11 +655,16 @@ export class NoContentService {
     public static callWithNoContentResponse(
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<$OpenApiTs['/api/v{api-version}/no-content']['get']['res'][204]> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/v{api-version}/no-content',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'GET',
+                    url: '/api/v{api-version}/no-content',
+                },
+                options
+            )
+        );
     }
 
     /**
@@ -542,11 +678,16 @@ export class NoContentService {
         | $OpenApiTs['/api/v{api-version}/multiple-tags/response-and-no-content']['get']['res'][200]
         | $OpenApiTs['/api/v{api-version}/multiple-tags/response-and-no-content']['get']['res'][204]
     > {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/v{api-version}/multiple-tags/response-and-no-content',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'GET',
+                    url: '/api/v{api-version}/multiple-tags/response-and-no-content',
+                },
+                options
+            )
+        );
     }
 }
 
@@ -562,11 +703,16 @@ export class ResponseService {
         | $OpenApiTs['/api/v{api-version}/multiple-tags/response-and-no-content']['get']['res'][200]
         | $OpenApiTs['/api/v{api-version}/multiple-tags/response-and-no-content']['get']['res'][204]
     > {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/v{api-version}/multiple-tags/response-and-no-content',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'GET',
+                    url: '/api/v{api-version}/multiple-tags/response-and-no-content',
+                },
+                options
+            )
+        );
     }
 
     /**
@@ -576,11 +722,16 @@ export class ResponseService {
     public static callWithResponse(
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<$OpenApiTs['/api/v{api-version}/response']['get']['res'][200]> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/v{api-version}/response',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'GET',
+                    url: '/api/v{api-version}/response',
+                },
+                options
+            )
+        );
     }
 
     /**
@@ -590,16 +741,21 @@ export class ResponseService {
     public static callWithDuplicateResponses(
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<$OpenApiTs['/api/v{api-version}/response']['post']['res'][200]> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v{api-version}/response',
-            errors: {
-                500: 'Message for 500 error',
-                501: 'Message for 501 error',
-                502: 'Message for 502 error',
-            },
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'POST',
+                    url: '/api/v{api-version}/response',
+                    errors: {
+                        500: 'Message for 500 error',
+                        501: 'Message for 501 error',
+                        502: 'Message for 502 error',
+                    },
+                },
+                options
+            )
+        );
     }
 
     /**
@@ -617,16 +773,21 @@ export class ResponseService {
         | $OpenApiTs['/api/v{api-version}/response']['put']['res'][201]
         | $OpenApiTs['/api/v{api-version}/response']['put']['res'][202]
     > {
-        return __request(OpenAPI, {
-            method: 'PUT',
-            url: '/api/v{api-version}/response',
-            errors: {
-                500: 'Message for 500 error',
-                501: 'Message for 501 error',
-                502: 'Message for 502 error',
-            },
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'PUT',
+                    url: '/api/v{api-version}/response',
+                    errors: {
+                        500: 'Message for 500 error',
+                        501: 'Message for 501 error',
+                        502: 'Message for 502 error',
+                    },
+                },
+                options
+            )
+        );
     }
 }
 
@@ -638,11 +799,16 @@ export class MultipleTags1Service {
     public static dummyA(
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<$OpenApiTs['/api/v{api-version}/multiple-tags/a']['get']['res'][204]> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/v{api-version}/multiple-tags/a',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'GET',
+                    url: '/api/v{api-version}/multiple-tags/a',
+                },
+                options
+            )
+        );
     }
 
     /**
@@ -652,11 +818,16 @@ export class MultipleTags1Service {
     public static dummyB(
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<$OpenApiTs['/api/v{api-version}/multiple-tags/b']['get']['res'][204]> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/v{api-version}/multiple-tags/b',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'GET',
+                    url: '/api/v{api-version}/multiple-tags/b',
+                },
+                options
+            )
+        );
     }
 }
 
@@ -668,11 +839,16 @@ export class MultipleTags2Service {
     public static dummyA(
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<$OpenApiTs['/api/v{api-version}/multiple-tags/a']['get']['res'][204]> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/v{api-version}/multiple-tags/a',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'GET',
+                    url: '/api/v{api-version}/multiple-tags/a',
+                },
+                options
+            )
+        );
     }
 
     /**
@@ -682,11 +858,16 @@ export class MultipleTags2Service {
     public static dummyB(
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<$OpenApiTs['/api/v{api-version}/multiple-tags/b']['get']['res'][204]> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/v{api-version}/multiple-tags/b',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'GET',
+                    url: '/api/v{api-version}/multiple-tags/b',
+                },
+                options
+            )
+        );
     }
 }
 
@@ -698,11 +879,16 @@ export class MultipleTags3Service {
     public static dummyB(
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<$OpenApiTs['/api/v{api-version}/multiple-tags/b']['get']['res'][204]> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/v{api-version}/multiple-tags/b',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'GET',
+                    url: '/api/v{api-version}/multiple-tags/b',
+                },
+                options
+            )
+        );
     }
 }
 
@@ -716,18 +902,23 @@ export class CollectionFormatService {
     ): CancelablePromise<void> {
         const { parameterArrayCsv, parameterArraySsv, parameterArrayTsv, parameterArrayPipes, parameterArrayMulti } =
             data;
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/v{api-version}/collectionFormat',
-            query: {
-                parameterArrayCSV: parameterArrayCsv,
-                parameterArraySSV: parameterArraySsv,
-                parameterArrayTSV: parameterArrayTsv,
-                parameterArrayPipes,
-                parameterArrayMulti,
-            },
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'GET',
+                    url: '/api/v{api-version}/collectionFormat',
+                    query: {
+                        parameterArrayCSV: parameterArrayCsv,
+                        parameterArraySSV: parameterArraySsv,
+                        parameterArrayTSV: parameterArrayTsv,
+                        parameterArrayPipes,
+                        parameterArrayMulti,
+                    },
+                },
+                options
+            )
+        );
     }
 }
 
@@ -758,23 +949,28 @@ export class TypesService {
             parameterObject,
             id,
         } = data;
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/v{api-version}/types',
-            path: {
-                id,
-            },
-            query: {
-                parameterNumber,
-                parameterString,
-                parameterBoolean,
-                parameterObject,
-                parameterArray,
-                parameterDictionary,
-                parameterEnum,
-            },
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'GET',
+                    url: '/api/v{api-version}/types',
+                    path: {
+                        id,
+                    },
+                    query: {
+                        parameterNumber,
+                        parameterString,
+                        parameterBoolean,
+                        parameterObject,
+                        parameterArray,
+                        parameterDictionary,
+                        parameterEnum,
+                    },
+                },
+                options
+            )
+        );
     }
 }
 
@@ -788,14 +984,19 @@ export class UploadService {
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<$OpenApiTs['/api/v{api-version}/upload']['post']['res'][200]> {
         const { file } = data;
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v{api-version}/upload',
-            formData: {
-                file,
-            },
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'POST',
+                    url: '/api/v{api-version}/upload',
+                    formData: {
+                        file,
+                    },
+                },
+                options
+            )
+        );
     }
 }
 
@@ -809,14 +1010,19 @@ export class FileResponseService {
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<$OpenApiTs['/api/v{api-version}/file/{id}']['get']['res'][200]> {
         const { id } = data;
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/v{api-version}/file/{id}',
-            path: {
-                id,
-            },
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'GET',
+                    url: '/api/v{api-version}/file/{id}',
+                    path: {
+                        id,
+                    },
+                },
+                options
+            )
+        );
     }
 }
 
@@ -830,19 +1036,24 @@ export class ComplexService {
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<$OpenApiTs['/api/v{api-version}/complex']['get']['res'][200]> {
         const { parameterObject, parameterReference } = data;
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/v{api-version}/complex',
-            query: {
-                parameterObject,
-                parameterReference,
-            },
-            errors: {
-                400: '400 server error',
-                500: '500 server error',
-            },
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'GET',
+                    url: '/api/v{api-version}/complex',
+                    query: {
+                        parameterObject,
+                        parameterReference,
+                    },
+                    errors: {
+                        400: '400 server error',
+                        500: '500 server error',
+                    },
+                },
+                options
+            )
+        );
     }
 
     /**
@@ -854,16 +1065,21 @@ export class ComplexService {
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<$OpenApiTs['/api/v{api-version}/complex/{id}']['put']['res'][200]> {
         const { id, requestBody } = data;
-        return __request(OpenAPI, {
-            method: 'PUT',
-            url: '/api/v{api-version}/complex/{id}',
-            path: {
-                id,
-            },
-            body: requestBody,
-            mediaType: 'application/json-patch+json',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'PUT',
+                    url: '/api/v{api-version}/complex/{id}',
+                    path: {
+                        id,
+                    },
+                    body: requestBody,
+                    mediaType: 'application/json-patch+json',
+                },
+                options
+            )
+        );
     }
 }
 
@@ -876,13 +1092,18 @@ export class MultipartService {
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<void> {
         const { formData } = data;
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v{api-version}/multipart',
-            formData,
-            mediaType: 'multipart/form-data',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'POST',
+                    url: '/api/v{api-version}/multipart',
+                    formData,
+                    mediaType: 'multipart/form-data',
+                },
+                options
+            )
+        );
     }
 
     /**
@@ -892,11 +1113,16 @@ export class MultipartService {
     public static multipartResponse(
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<$OpenApiTs['/api/v{api-version}/multipart']['get']['res'][200]> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/v{api-version}/multipart',
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'GET',
+                    url: '/api/v{api-version}/multipart',
+                },
+                options
+            )
+        );
     }
 }
 
@@ -908,16 +1134,21 @@ export class HeaderService {
     public static callWithResultFromHeader(
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<$OpenApiTs['/api/v{api-version}/header']['post']['res'][200]> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v{api-version}/header',
-            responseHeader: 'operation-location',
-            errors: {
-                400: '400 server error',
-                500: '500 server error',
-            },
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'POST',
+                    url: '/api/v{api-version}/header',
+                    responseHeader: 'operation-location',
+                    errors: {
+                        400: '400 server error',
+                        500: '500 server error',
+                    },
+                },
+                options
+            )
+        );
     }
 }
 
@@ -931,20 +1162,25 @@ export class ErrorService {
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<$OpenApiTs['/api/v{api-version}/error']['post']['res'][200]> {
         const { status } = data;
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v{api-version}/error',
-            query: {
-                status,
-            },
-            errors: {
-                500: 'Custom message: Internal Server Error',
-                501: 'Custom message: Not Implemented',
-                502: 'Custom message: Bad Gateway',
-                503: 'Custom message: Service Unavailable',
-            },
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'POST',
+                    url: '/api/v{api-version}/error',
+                    query: {
+                        status,
+                    },
+                    errors: {
+                        500: 'Custom message: Internal Server Error',
+                        501: 'Custom message: Not Implemented',
+                        502: 'Custom message: Bad Gateway',
+                        503: 'Custom message: Service Unavailable',
+                    },
+                },
+                options
+            )
+        );
     }
 }
 
@@ -958,13 +1194,18 @@ export class NonAsciiÆøåÆøÅöôêÊService {
         options: Partial<ApiRequestOptions> = {}
     ): CancelablePromise<$OpenApiTs['/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串']['post']['res'][200]> {
         const { nonAsciiParamæøåÆøÅöôêÊ } = data;
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
-            query: {
-                nonAsciiParamæøåÆØÅöôêÊ: nonAsciiParamæøåÆøÅöôêÊ,
-            },
-            ...options,
-        });
+        return __request(
+            OpenAPI,
+            mergeDeep(
+                {
+                    method: 'POST',
+                    url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
+                    query: {
+                        nonAsciiParamæøåÆØÅöôêÊ: nonAsciiParamæøåÆøÅöôêÊ,
+                    },
+                },
+                options
+            )
+        );
     }
 }

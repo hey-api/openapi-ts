@@ -37,6 +37,7 @@ import functionIsBlob from '../templates/core/functions/isBlob.hbs';
 import functionIsFormData from '../templates/core/functions/isFormData.hbs';
 import functionIsString from '../templates/core/functions/isString.hbs';
 import functionIsStringWithValue from '../templates/core/functions/isStringWithValue.hbs';
+import functionMergeDeep from '../templates/core/functions/mergeDeep.hbs';
 import functionIsSuccess from '../templates/core/functions/isSuccess.hbs';
 import functionResolve from '../templates/core/functions/resolve.hbs';
 import templateCoreHttpRequest from '../templates/core/HttpRequest.hbs';
@@ -194,7 +195,6 @@ export const registerHandlebarHelpers = (): void => {
                 identifiers: ['body', 'headers', 'formData', 'cookies', 'path', 'query'],
                 obj,
                 shorthand: true,
-                spreads: ['options'],
             })
         );
     });
@@ -289,6 +289,7 @@ export const registerHandlebarTemplates = (): Templates => {
     Handlebars.registerPartial('functions/isString', Handlebars.template(functionIsString));
     Handlebars.registerPartial('functions/isStringWithValue', Handlebars.template(functionIsStringWithValue));
     Handlebars.registerPartial('functions/isSuccess', Handlebars.template(functionIsSuccess));
+    Handlebars.registerPartial('functions/mergeDeep', Handlebars.template(functionMergeDeep));
     Handlebars.registerPartial('functions/resolve', Handlebars.template(functionResolve));
 
     // Specific files for the fetch client implementation
