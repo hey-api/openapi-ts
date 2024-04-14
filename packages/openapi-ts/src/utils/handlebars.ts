@@ -1,9 +1,6 @@
 import camelCase from 'camelcase';
 import Handlebars from 'handlebars/runtime';
 
-import { compiler } from '../compiler';
-import { addLeadingComment } from '../compiler/utils';
-import type { Operation, OperationParameter, Service } from '../openApi';
 import templateClient from '../templates/client.hbs';
 import angularGetHeaders from '../templates/core/angular/getHeaders.hbs';
 import angularGetRequestBody from '../templates/core/angular/getRequestBody.hbs';
@@ -48,78 +45,9 @@ import xhrGetResponseBody from '../templates/core/xhr/getResponseBody.hbs';
 import xhrGetResponseHeader from '../templates/core/xhr/getResponseHeader.hbs';
 import xhrRequest from '../templates/core/xhr/request.hbs';
 import xhrSendRequest from '../templates/core/xhr/sendRequest.hbs';
-import templateExportService from '../templates/exportService.hbs';
-import { getConfig } from './config';
-import { escapeComment, escapeDescription, escapeName } from './escape';
-import { getDefaultPrintable, modelIsRequired } from './required';
-
-const dataDestructure = (operation: Operation) => {
-    const config = getConfig();
-
-    if (config.name) {
-        if (config.useOptions) {
-            if (operation.parameters.length) {
-                return `const {
-                    ${operation.parameters.map(parameter => parameter.name).join(',\n')}
-                } = data;`;
-            }
-        }
-    } else {
-        if (config.useOptions) {
-            if (operation.parameters.length) {
-                // TODO: extract query parameters from query key
-                return `const {
-                    ${operation.parameters.map(parameter => parameter.name).join(',\n')}
-                } = data;`;
-            }
-        }
-    }
-    return '';
-};
-
-export const serviceExportedNamespace = () => '$OpenApiTs';
-
-export const nameOperationDataType = (namespace: 'req' | 'res', operation: Service['operations'][number]) => {
-    const config = getConfig();
-    const exported = serviceExportedNamespace();
-    const baseTypePath = `${exported}['${operation.path}']['${operation.method.toLocaleLowerCase()}']['${namespace}']`;
-    if (namespace === 'req') {
-        if (!operation.parameters.length) {
-            return '';
-        }
-
-        if (config.useOptions) {
-            const isOptional = operation.parameters.every(p => !p.isRequired);
-            return isOptional ? `data: ${baseTypePath} = {}` : `data: ${baseTypePath}`;
-        }
-
-        return operation.parameters
-            .map(p => {
-                const typePath = `${baseTypePath}['${p.name}']`;
-                const defaultValue = getDefaultPrintable(p);
-                const defaultString = defaultValue !== undefined ? ` = ${defaultValue}` : '';
-                return `${p.name}${modelIsRequired(p)}: ${typePath}${defaultString}`;
-            })
-            .join(', ');
-    }
-    const results = operation.results.filter(result => result.code >= 200 && result.code < 300);
-    // TODO: we should return nothing when results don't exist
-    // can't remove this logic without removing request/name config
-    // as it complicates things
-    if (!results.length) {
-        return compiler.utils.toString(compiler.typedef.basic('void'));
-    }
-    const types = results.map(result => `${baseTypePath}[${String(result.code)}]`);
-    const union = compiler.utils.toString(compiler.typedef.union(types));
-    if (config.useOptions && config.serviceResponse === 'response') {
-        return `ApiResult<${union}>`;
-    }
-    return union;
-};
 
 export const registerHandlebarHelpers = (): void => {
     Handlebars.registerHelper('camelCase', camelCase);
-    Handlebars.registerHelper('dataDestructure', dataDestructure);
 
     Handlebars.registerHelper(
         'equals',
@@ -128,92 +56,6 @@ export const registerHandlebarHelpers = (): void => {
         }
     );
 
-    Handlebars.registerHelper('toRequestOptions', (operation: Operation) => {
-        const toObj = (parameters: OperationParameter[]) =>
-            parameters.reduce(
-                (prev, curr) => {
-                    const key = curr.prop;
-                    const value = curr.name;
-                    if (key === value) {
-                        prev[key] = key;
-                    } else if (escapeName(key) === key) {
-                        prev[key] = value;
-                    } else {
-                        prev[`'${key}'`] = value;
-                    }
-                    return prev;
-                },
-                {} as Record<string, unknown>
-            );
-
-        const obj: Record<string, any> = {
-            method: operation.method,
-            url: operation.path,
-        };
-        if (operation.parametersPath.length) {
-            obj.path = toObj(operation.parametersPath);
-        }
-        if (operation.parametersCookie.length) {
-            obj.cookies = toObj(operation.parametersCookie);
-        }
-        if (operation.parametersHeader.length) {
-            obj.headers = toObj(operation.parametersHeader);
-        }
-        if (operation.parametersQuery.length) {
-            obj.query = toObj(operation.parametersQuery);
-        }
-        if (operation.parametersForm.length) {
-            obj.formData = toObj(operation.parametersForm);
-        }
-        if (operation.parametersBody) {
-            if (operation.parametersBody.in === 'formData') {
-                obj.formData = operation.parametersBody.name;
-            }
-            if (operation.parametersBody.in === 'body') {
-                obj.body = operation.parametersBody.name;
-            }
-        }
-        if (operation.parametersBody?.mediaType) {
-            obj.mediaType = operation.parametersBody?.mediaType;
-        }
-        if (operation.responseHeader) {
-            obj.responseHeader = operation.responseHeader;
-        }
-        if (operation.errors.length) {
-            const errors: Record<number, string> = {};
-            operation.errors.forEach(err => {
-                errors[err.code] = escapeDescription(err.description);
-            });
-            obj.errors = errors;
-        }
-        return compiler.utils.toString(
-            compiler.types.object({
-                identifiers: ['body', 'headers', 'formData', 'cookies', 'path', 'query'],
-                obj,
-                shorthand: true,
-            })
-        );
-    });
-
-    Handlebars.registerHelper('toOperationComment', (operation: Operation) => {
-        const config = getConfig();
-        let params: string[] = [];
-        if (!config.useOptions && operation.parameters.length) {
-            params = operation.parameters.map(
-                p => `@param ${p.name} ${p.description ? escapeComment(p.description) : ''}`
-            );
-        }
-        const comment = [
-            operation.deprecated && '@deprecated',
-            operation.summary && escapeComment(operation.summary),
-            operation.description && escapeComment(operation.description),
-            ...params,
-            ...operation.results.map(r => `@returns ${r.type} ${r.description ? escapeComment(r.description) : ''}`),
-            '@throws ApiError',
-        ];
-        return addLeadingComment(undefined, comment, false, true);
-    });
-
     Handlebars.registerHelper('ifdef', function (this: unknown, ...args): string {
         const options = args.pop();
         if (!args.every(value => !value)) {
@@ -221,8 +63,6 @@ export const registerHandlebarHelpers = (): void => {
         }
         return options.inverse(this);
     });
-
-    Handlebars.registerHelper('nameOperationDataType', nameOperationDataType);
 
     Handlebars.registerHelper(
         'notEquals',
@@ -243,9 +83,6 @@ export interface Templates {
         httpRequest: Handlebars.TemplateDelegate;
         request: Handlebars.TemplateDelegate;
         settings: Handlebars.TemplateDelegate;
-    };
-    exports: {
-        service: Handlebars.TemplateDelegate;
     };
 }
 
@@ -268,9 +105,6 @@ export const registerHandlebarTemplates = (): Templates => {
             httpRequest: Handlebars.template(templateCoreHttpRequest),
             request: Handlebars.template(templateCoreRequest),
             settings: Handlebars.template(templateCoreSettings),
-        },
-        exports: {
-            service: Handlebars.template(templateExportService),
         },
     };
 

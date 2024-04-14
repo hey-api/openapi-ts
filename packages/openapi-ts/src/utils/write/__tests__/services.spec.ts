@@ -4,7 +4,6 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { setConfig } from '../../config';
 import { writeServices } from '../services';
-import { mockTemplates } from './mocks';
 import { openApi } from './models';
 
 vi.mock('node:fs');
@@ -46,7 +45,7 @@ describe('writeServices', () => {
             version: 'v1',
         };
 
-        await writeServices(openApi, '/', client, mockTemplates);
+        await writeServices(openApi, '/', client);
 
         expect(writeFileSync).toHaveBeenCalled();
     });

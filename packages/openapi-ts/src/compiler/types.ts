@@ -10,7 +10,7 @@ import { addLeadingComment, type Comments, isType, ots } from './utils';
  * @param indentifier - list of keys that are treated as indentifiers.
  * @returns ts.Expression
  */
-const toExpression = <T = unknown>({
+export const toExpression = <T = unknown>({
     value,
     unescape = false,
     shorthand = false,
@@ -21,11 +21,15 @@ const toExpression = <T = unknown>({
     shorthand?: boolean;
     identifiers?: string[];
 }): ts.Expression | undefined => {
+    if (value === null) {
+        return ts.factory.createNull();
+    }
+
     if (Array.isArray(value)) {
         return createArrayType({ arr: value });
     }
 
-    if (typeof value === 'object' && value !== null) {
+    if (typeof value === 'object') {
         return createObjectType({ identifiers, obj: value, shorthand });
     }
 
@@ -39,10 +43,6 @@ const toExpression = <T = unknown>({
 
     if (typeof value === 'string') {
         return ots.string(value, unescape);
-    }
-
-    if (value === null) {
-        return ts.factory.createNull();
     }
 };
 
@@ -106,12 +106,14 @@ export const createObjectType = <T extends object>({
             if (identifiers.includes(key) && !ts.isObjectLiteralExpression(initializer)) {
                 initializer = ts.factory.createIdentifier(value as string);
             }
+            // Check key value equality before possibly modifying it
+            const hasShorthandSupport = key === value;
             if (key.match(/\W/g) && !key.startsWith("'") && !key.endsWith("'")) {
                 key = `'${key}'`;
             }
             const assignment =
-                shorthand && key === value
-                    ? ts.factory.createShorthandPropertyAssignment(key)
+                shorthand && hasShorthandSupport
+                    ? ts.factory.createShorthandPropertyAssignment(value)
                     : ts.factory.createPropertyAssignment(key, initializer);
             const c = comments?.[key];
             if (c?.length) {
