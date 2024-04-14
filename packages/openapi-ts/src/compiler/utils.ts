@@ -34,6 +34,16 @@ export function tsNodeToString(node: ts.Node): string {
     }
 }
 
+/**
+ * Convert a string to a TypeScript Node
+ * @param s - the string to convert.
+ * @returns ts.Node
+ */
+export function stringToTsNodes(s: string): ts.Node {
+    const file = createSourceFile(s);
+    return file.statements[0];
+}
+
 // ots for openapi-ts is helpers to reduce repetition of basic ts factory functions.
 export const ots = {
     // Create a boolean expression based on value.

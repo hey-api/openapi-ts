@@ -3,14 +3,16 @@ import path from 'node:path';
 
 import ts from 'typescript';
 
+import * as classes from './classes';
 import * as module from './module';
 import * as typedef from './typedef';
 import * as types from './types';
-import { addLeadingComment, tsNodeToString } from './utils';
+import { addLeadingComment, stringToTsNodes, tsNodeToString } from './utils';
 
+export type { FunctionParameter } from './classes';
 export type { Property } from './typedef';
 export type { Comments } from './utils';
-export type { Node, TypeNode } from 'typescript';
+export type { ClassElement, Node, TypeNode } from 'typescript';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const generatedFileName = (fileName: string, insertGen = true) => {
@@ -75,6 +77,12 @@ export class TypeScriptFile {
 }
 
 export const compiler = {
+    class: {
+        constructor: classes.createConstructorDeclaration,
+        create: classes.createClassDeclaration,
+        method: classes.createMethodDeclaration,
+        return: classes.createReturnFunctionCall,
+    },
     export: {
         all: module.createExportAllDeclaration,
         asConst: module.createExportVariableAsConst,
@@ -99,6 +107,7 @@ export const compiler = {
         object: types.createObjectType,
     },
     utils: {
+        toNode: stringToTsNodes,
         toString: tsNodeToString,
     },
 };

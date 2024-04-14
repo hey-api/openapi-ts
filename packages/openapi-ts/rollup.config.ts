@@ -24,13 +24,9 @@ export function handlebarsPlugin(): Plugin {
                 const templateSpec = handlebars.precompile(template, {
                     knownHelpers: {
                         camelCase: true,
-                        dataDestructure: true,
                         equals: true,
                         ifdef: true,
-                        nameOperationDataType: true,
                         notEquals: true,
-                        toOperationComment: true,
-                        toRequestOptions: true,
                         useDateType: true,
                     },
                     knownHelpersOnly: true,

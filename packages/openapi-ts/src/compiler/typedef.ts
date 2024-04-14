@@ -2,8 +2,13 @@ import ts from 'typescript';
 
 import { addLeadingComment, type Comments, tsNodeToString } from './utils';
 
-export const createTypeNode = (base: any | ts.TypeNode) =>
-    ts.isTypeNode(base) ? base : ts.factory.createTypeReferenceNode(base);
+export const createTypeNode = (base: any | ts.TypeNode, args?: (any | ts.TypeNode)[]): ts.TypeNode =>
+    ts.isTypeNode(base)
+        ? base
+        : ts.factory.createTypeReferenceNode(
+              base,
+              args?.map(arg => createTypeNode(arg))
+          );
 
 /**
  * Create a type alias declaration. Example `export type X = Y;`.
