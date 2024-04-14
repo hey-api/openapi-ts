@@ -6,8 +6,8 @@ import type { Client } from '../../types/client';
 import { getConfig } from '../config';
 import { enumKey, enumName, enumUnionType, enumValue } from '../enum';
 import { escapeComment } from '../escape';
-import { serviceExportedNamespace } from '../handlebars';
 import { sortByName } from '../sort';
+import { serviceExportedNamespace } from './services';
 import { toType } from './type';
 
 type OnNode = (node: Node, type?: 'enum') => void;

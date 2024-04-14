@@ -28,10 +28,8 @@ describe('registerHandlebarHelpers', () => {
         registerHandlebarHelpers();
         const helpers = Object.keys(Handlebars.helpers);
         expect(helpers).toContain('camelCase');
-        expect(helpers).toContain('dataDestructure');
         expect(helpers).toContain('equals');
         expect(helpers).toContain('ifdef');
-        expect(helpers).toContain('nameOperationDataType');
         expect(helpers).toContain('notEquals');
     });
 });
@@ -58,7 +56,6 @@ describe('registerHandlebarTemplates', () => {
             useOptions: false,
         });
         const templates = registerHandlebarTemplates();
-        expect(templates.exports.service).toBeDefined();
         expect(templates.core.settings).toBeDefined();
         expect(templates.core.apiError).toBeDefined();
         expect(templates.core.apiRequestOptions).toBeDefined();
