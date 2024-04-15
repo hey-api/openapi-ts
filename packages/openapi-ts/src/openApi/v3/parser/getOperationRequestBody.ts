@@ -9,7 +9,7 @@ import { getModel } from './getModel';
 export const getOperationRequestBody = (openApi: OpenApi, body: OpenApiRequestBody): OperationParameter => {
     const requestBody: OperationParameter = {
         $refs: [],
-        base: 'any',
+        base: 'unknown',
         default: undefined,
         description: body.description || null,
         enum: [],
@@ -27,7 +27,7 @@ export const getOperationRequestBody = (openApi: OpenApi, body: OpenApiRequestBo
         prop: body['x-body-name'] ?? 'requestBody',
         properties: [],
         template: null,
-        type: 'any',
+        type: 'unknown',
     };
 
     if (body.content) {
