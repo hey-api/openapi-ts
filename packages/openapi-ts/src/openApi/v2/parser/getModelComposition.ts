@@ -30,7 +30,7 @@ export const getModelComposition = (
         .filter(model => {
             const hasProperties = model.properties.length;
             const hasEnums = model.enums.length;
-            const isObject = model.type === 'any';
+            const isObject = model.type === 'unknown';
             const isEmpty = isObject && !hasProperties && !hasEnums;
             return !isEmpty;
         })
@@ -69,7 +69,7 @@ export const getModelComposition = (
     if (properties.length) {
         composition.properties.push({
             $refs: [],
-            base: 'any',
+            base: 'unknown',
             description: '',
             enum: [],
             enums: [],
@@ -83,7 +83,7 @@ export const getModelComposition = (
             name: 'properties',
             properties,
             template: null,
-            type: 'any',
+            type: 'unknown',
         });
     }
 

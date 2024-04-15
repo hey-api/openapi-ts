@@ -538,7 +538,7 @@ export class ResponseService {
     }
 
     /**
-     * @returns any Message for 200 response
+     * @returns unknown Message for 200 response
      * @returns ModelWithString Message for default response
      * @returns ModelThatExtends Message for 201 response
      * @returns ModelThatExtendsExtends Message for 202 response
@@ -789,7 +789,7 @@ export class MultipartService {
     }
 
     /**
-     * @returns any OK
+     * @returns unknown OK
      * @throws ApiError
      */
     public static multipartResponse(): CancelablePromise<
@@ -824,7 +824,7 @@ export class HeaderService {
 
 export class ErrorService {
     /**
-     * @returns any Custom message: Successful response
+     * @returns unknown Custom message: Successful response
      * @throws ApiError
      */
     public static testErrorCode(

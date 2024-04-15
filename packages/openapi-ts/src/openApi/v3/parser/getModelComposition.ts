@@ -103,7 +103,7 @@ export const getModelComposition = ({
         } else {
             composition.properties.push({
                 $refs: [],
-                base: 'any',
+                base: 'unknown',
                 description: '',
                 enum: [],
                 enums: [],
@@ -117,7 +117,7 @@ export const getModelComposition = ({
                 name: 'properties',
                 properties,
                 template: null,
-                type: 'any',
+                type: 'unknown',
             });
         }
     }
