@@ -1613,6 +1613,15 @@
                 "schema": {
                     "type": "string"
                 }
+            },
+            "x-Foo-Bar": {
+                "description": "Parameter with illegal characters",
+                "name": "x-Foo-Bar",
+                "in": "header",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                }
             }
         },
         "schemas": {
