@@ -1,5 +1,5 @@
-import { ClassElement, compiler, filePath, FunctionParameter, generatedFileName, TypeScriptFile } from '../../compiler';
-import type { OpenApi, Operation, OperationParameter, Service } from '../../openApi';
+import { ClassElement, compiler, FunctionParameter, TypeScriptFile } from '../../compiler';
+import type { Operation, OperationParameter, Service } from '../../openApi';
 import type { Client } from '../../types/client';
 import { getConfig } from '../config';
 import { escapeComment, escapeDescription, escapeName } from '../escape';
@@ -209,53 +209,55 @@ export const processService = (service: Service) => {
     });
 };
 
-/**
- * Generate Services using the Handlebar template and write to disk.
- * @param openApi {@link OpenApi} Dereferenced OpenAPI specification
- * @param outputPath Directory to write the generated files to
- * @param client Client containing models, schemas, and services
- */
-export const writeServices = async (openApi: OpenApi, outputPath: string, client: Client): Promise<void> => {
-    const config = getConfig();
+export const processServices = async ({
+    client,
+    files,
+}: {
+    client: Client;
+    files: Record<string, TypeScriptFile>;
+}): Promise<void> => {
+    const file = files.services;
 
-    const fileServices = new TypeScriptFile({ path: filePath(outputPath, 'services.ts') });
+    if (!file) {
+        return;
+    }
+
+    const config = getConfig();
 
     let imports: string[] = [];
 
     for (const service of client.services) {
-        fileServices.add(processService(service));
+        file.add(processService(service));
         const exported = serviceExportedNamespace();
         imports = [...imports, exported];
     }
 
     // Import required packages and core files.
     if (config.client === 'angular') {
-        fileServices.addNamedImport('Injectable', '@angular/core');
+        file.addNamedImport('Injectable', '@angular/core');
         if (config.name === undefined) {
-            fileServices.addNamedImport('HttpClient', '@angular/common/http');
+            file.addNamedImport('HttpClient', '@angular/common/http');
         }
-        fileServices.addNamedImport({ isTypeOnly: true, name: 'Observable' }, 'rxjs');
+        file.addNamedImport({ isTypeOnly: true, name: 'Observable' }, 'rxjs');
     } else {
-        fileServices.addNamedImport({ isTypeOnly: true, name: 'CancelablePromise' }, './core/CancelablePromise');
+        file.addNamedImport({ isTypeOnly: true, name: 'CancelablePromise' }, './core/CancelablePromise');
     }
     if (config.serviceResponse === 'response') {
-        fileServices.addNamedImport({ isTypeOnly: true, name: 'ApiResult' }, './core/ApiResult');
+        file.addNamedImport({ isTypeOnly: true, name: 'ApiResult' }, './core/ApiResult');
     }
     if (config.name) {
-        fileServices.addNamedImport(
+        file.addNamedImport(
             { isTypeOnly: config.client !== 'angular', name: 'BaseHttpRequest' },
             './core/BaseHttpRequest'
         );
     } else {
-        fileServices.addNamedImport('OpenAPI', './core/OpenAPI');
-        fileServices.addNamedImport({ alias: '__request', name: 'request' }, './core/request');
+        file.addNamedImport('OpenAPI', './core/OpenAPI');
+        file.addNamedImport({ alias: '__request', name: 'request' }, './core/request');
     }
 
     // Import all models required by the services.
-    const models = imports.filter(unique).map(imp => ({ isTypeOnly: true, name: imp }));
-    fileServices.addNamedImport(models, generatedFileName('./models'));
-
-    if (config.exportServices) {
-        fileServices.write('\n\n');
+    if (files.types && !files.types.isEmpty()) {
+        const models = imports.filter(unique).map(name => ({ isTypeOnly: true, name }));
+        file.addNamedImport(models, `./${files.types.getName(false)}`);
     }
 };

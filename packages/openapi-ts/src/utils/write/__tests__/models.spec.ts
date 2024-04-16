@@ -3,13 +3,13 @@ import path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
 
+import { TypeScriptFile } from '../../../compiler';
 import { setConfig } from '../../config';
-import { writeTypesAndEnums } from '../models';
-import { openApi } from './models';
+import { processTypesAndEnums } from '../models';
 
 vi.mock('node:fs');
 
-describe('writeTypesAndEnums', () => {
+describe('processTypesAndEnums', () => {
     it('writes to filesystem', async () => {
         setConfig({
             client: 'fetch',
@@ -32,7 +32,7 @@ describe('writeTypesAndEnums', () => {
             useOptions: true,
         });
 
-        const client: Parameters<typeof writeTypesAndEnums>[2] = {
+        const client: Parameters<typeof processTypesAndEnums>[0]['client'] = {
             enumNames: [],
             models: [
                 {
@@ -59,8 +59,24 @@ describe('writeTypesAndEnums', () => {
             version: 'v1',
         };
 
-        await writeTypesAndEnums(openApi, '/', client);
+        const fileEnums = new TypeScriptFile({
+            dir: '/',
+            name: 'enums.ts',
+        });
+        const fileModels = new TypeScriptFile({
+            dir: '/',
+            name: 'models.ts',
+        });
 
-        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/models.gen.ts'), expect.anything());
+        await processTypesAndEnums({
+            client,
+            fileEnums,
+            fileModels,
+        });
+
+        fileEnums.write();
+        fileModels.write();
+
+        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/models.gen.ts'), expect.anything());
     });
 });

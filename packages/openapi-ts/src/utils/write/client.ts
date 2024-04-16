@@ -1,16 +1,17 @@
 import { existsSync, mkdirSync } from 'node:fs';
 import path from 'node:path';
 
+import { TypeScriptFile } from '../../compiler';
 import type { OpenApi } from '../../openApi';
 import type { Client } from '../../types/client';
 import { getConfig } from '../config';
 import type { Templates } from '../handlebars';
 import { writeClientClass } from './class';
 import { writeCore } from './core';
-import { writeClientIndex } from './index';
-import { writeTypesAndEnums } from './models';
-import { writeSchemas } from './schemas';
-import { writeServices } from './services';
+import { processIndex } from './index';
+import { processTypesAndEnums } from './models';
+import { processSchemas } from './schemas';
+import { processServices } from './services';
 
 /**
  * Write our OpenAPI client, using the given templates at the given output
@@ -31,37 +32,56 @@ export const writeClient = async (openApi: OpenApi, client: Client, templates: T
         client.models = client.models.filter(model => regexp.test(model.name));
     }
 
-    if (!existsSync(path.resolve(config.output))) {
-        mkdirSync(path.resolve(config.output), { recursive: true });
+    const outputPath = path.resolve(config.output);
+
+    if (!existsSync(outputPath)) {
+        mkdirSync(outputPath, { recursive: true });
     }
 
-    const sections = [
-        {
-            dir: 'core',
-            fn: writeCore,
-        },
-        {
-            dir: '',
-            fn: writeSchemas,
-        },
-        {
-            dir: '',
-            fn: writeTypesAndEnums,
-        },
-        {
-            dir: '',
-            fn: writeServices,
-        },
-        {
-            dir: '',
-            fn: writeClientClass,
-        },
-    ] as const;
-
-    for (const section of sections) {
-        const sectionPath = path.resolve(config.output, section.dir);
-        await section.fn(openApi, sectionPath, client, templates);
+    const files: Record<string, TypeScriptFile> = {
+        index: new TypeScriptFile({
+            dir: config.output,
+            name: 'index.ts',
+        }),
+    };
+    if (config.enums) {
+        files.enums = new TypeScriptFile({
+            dir: config.output,
+            name: 'enums.ts',
+        });
+    }
+    if (config.schemas) {
+        files.schemas = new TypeScriptFile({
+            dir: config.output,
+            name: 'schemas.ts',
+        });
+    }
+    if (config.exportServices) {
+        files.services = new TypeScriptFile({
+            dir: config.output,
+            name: 'services.ts',
+        });
+    }
+    if (config.exportModels) {
+        files.types = new TypeScriptFile({
+            dir: config.output,
+            name: 'types.ts',
+        });
     }
 
-    await writeClientIndex(client, config.output);
+    await processSchemas({ file: files.schemas, openApi });
+    await processTypesAndEnums({ client, fileEnums: files.enums, fileModels: files.types });
+    await processServices({ client, files });
+
+    // deprecated files
+    await writeClientClass(openApi, outputPath, client, templates);
+    await writeCore(openApi, path.resolve(config.output, 'core'), client, templates);
+
+    await processIndex({ files });
+
+    files.enums?.write('\n\n');
+    files.schemas?.write('\n\n');
+    files.services?.write('\n\n');
+    files.types?.write('\n\n');
+    files.index.write();
 };
