@@ -14,3 +14,14 @@ html.dark {
     --vp-c-brand-2: #b3cde4;
     --vp-c-brand-3: #537692;
 }
+
+.soon {
+    background-color: var(--vp-button-brand-bg);
+    border-radius: 1em;
+    color: var(--vp-button-brand-text);
+    font-size: .6em;
+    padding: .2em .4em;
+    position: relative;
+    text-transform: lowercase;
+    top: -1em;
+}
