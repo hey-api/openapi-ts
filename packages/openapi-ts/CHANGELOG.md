@@ -1,5 +1,31 @@
 # @hey-api/openapi-ts
 
+## 0.39.0
+
+### Minor Changes
+
+- feat: rename generated files ([#363](https://github.com/hey-api/openapi-ts/pull/363))
+
+- feat: add JSON-LD to content parsing ([#390](https://github.com/hey-api/openapi-ts/pull/390))
+
+- fix: generate enums into their own file ([#358](https://github.com/hey-api/openapi-ts/pull/358))
+
+### Patch Changes
+
+- fix: remove file if no contents to write to it ([#373](https://github.com/hey-api/openapi-ts/pull/373))
+
+- fix: eslint properly fixes output ([#375](https://github.com/hey-api/openapi-ts/pull/375))
+
+- fix: invalid typescript Record generated with circular dependencies ([#374](https://github.com/hey-api/openapi-ts/pull/374))
+
+- fix: prefer unknown type over any ([#392](https://github.com/hey-api/openapi-ts/pull/392))
+
+- fix: only delete generated files instead of whole output directory ([#362](https://github.com/hey-api/openapi-ts/pull/362))
+
+- fix: handle decoding models with `%` in description ([#360](https://github.com/hey-api/openapi-ts/pull/360))
+
+- fix: throw error when typescript is missing ([#366](https://github.com/hey-api/openapi-ts/pull/366))
+
 ## 0.38.1
 
 ### Patch Changes
