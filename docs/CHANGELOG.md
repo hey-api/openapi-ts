@@ -1,5 +1,17 @@
 # openapi-ts-docs
 
+## 0.4.0
+
+### Minor Changes
+
+- docs: add integrations ([#394](https://github.com/hey-api/openapi-ts/pull/394))
+
+- feat: rename generated files ([#363](https://github.com/hey-api/openapi-ts/pull/363))
+
+### Patch Changes
+
+- docs: add enums migration ([#358](https://github.com/hey-api/openapi-ts/pull/358))
+
 ## 0.3.0
 
 ### Minor Changes
