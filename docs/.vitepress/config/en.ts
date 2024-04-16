@@ -11,13 +11,14 @@ export default defineConfig({
                     { text: 'Get Started', link: '/openapi-ts/get-started' },
                     { text: 'Configuration', link: '/openapi-ts/configuration' },
                     { text: 'Interceptors', link: '/openapi-ts/interceptors' },
+                    { text: 'Integrations <span class="soon">soon</span>', link: '/openapi-ts/integrations' },
                     { text: 'Migrating', link: '/openapi-ts/migrating' },
                 ],
             },
             {
                 text: '@hey-api',
                 items: [
-                    { text: 'About', link: '/about' },
+                    { text: 'Philosophy', link: '/about' },
                     { text: 'Contributing', link: '/contributing' },
                 ],
             },

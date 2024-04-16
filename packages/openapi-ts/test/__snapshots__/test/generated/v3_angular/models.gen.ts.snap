@@ -783,6 +783,11 @@ export type ModelWithAnyOfConstantSizeArrayAndIntersect = [number & string, numb
  */
 export type SimpleParameter = string;
 
+/**
+ * Parameter with illegal characters
+ */
+export type x_Foo_Bar = string;
+
 export type $OpenApiTs = {
     '/api/v{api-version}/no-tag': {
         post: {

@@ -52,15 +52,6 @@ This config option is deprecated and will be removed.
 
 ## v0.39.0
 
-### Prefer `unknown` over `any`
-
-Types that cannot be determined will now be generated as `unknown` instead of `any`.
-
-```js
-200: any // [!code --]
-200: unknown // [!code ++]
-```
-
 ### Single `enums.gen.ts` file
 
 Enums are now exported from a separate file. If you use imports from `models.ts`, you can change them to `enums.gen.ts`.
@@ -107,6 +98,14 @@ import { Enum } from 'client/enums.gen' // [!code ++]
 import type { Model } from 'client/models.gen' // [!code ++]
 import { $Schema } from 'client/schemas.gen' // [!code ++]
 import { DefaultService } from 'client/services.gen' // [!code ++]
+```
+
+### Prefer `unknown`
+
+Types that cannot be determined will now be generated as `unknown` instead of `any`. To dismiss any errors, you can cast your variables back to `any`, but we recommend updating your code to work with `unknown` types.
+
+```js
+const foo = bar as any
 ```
 
 ## v0.38.0
