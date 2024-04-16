@@ -3,12 +3,13 @@ import path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
 
+import { TypeScriptFile } from '../../../compiler';
 import { setConfig } from '../../config';
-import { writeClientIndex } from '../index';
+import { processIndex } from '../index';
 
 vi.mock('node:fs');
 
-describe('writeClientIndex', () => {
+describe('processIndex', () => {
     it('writes to filesystem', async () => {
         setConfig({
             client: 'fetch',
@@ -30,15 +31,32 @@ describe('writeClientIndex', () => {
             useOptions: true,
         });
 
-        const client: Parameters<typeof writeClientIndex>[0] = {
-            enumNames: [],
-            models: [],
-            server: 'http://localhost:8080',
-            services: [],
-            version: '1.0',
+        const files: Parameters<typeof processIndex>[0]['files'] = {
+            enums: new TypeScriptFile({
+                dir: '/',
+                name: 'enums.ts',
+            }),
+            index: new TypeScriptFile({
+                dir: '/',
+                name: 'index.ts',
+            }),
+            schemas: new TypeScriptFile({
+                dir: '/',
+                name: 'schemas.ts',
+            }),
+            services: new TypeScriptFile({
+                dir: '/',
+                name: 'services.ts',
+            }),
+            types: new TypeScriptFile({
+                dir: '/',
+                name: 'models.ts',
+            }),
         };
 
-        await writeClientIndex(client, '/');
+        await processIndex({ files });
+
+        files.index.write();
 
         expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/index.ts'), expect.anything());
     });

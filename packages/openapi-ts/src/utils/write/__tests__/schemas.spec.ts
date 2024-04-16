@@ -3,13 +3,14 @@ import path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
 
+import { TypeScriptFile } from '../../../compiler';
 import { setConfig } from '../../config';
-import { writeSchemas } from '../schemas';
+import { processSchemas } from '../schemas';
 import { openApi } from './models';
 
 vi.mock('node:fs');
 
-describe('writeSchemas', () => {
+describe('processSchemas', () => {
     it('writes to filesystem', async () => {
         setConfig({
             client: 'fetch',
@@ -42,8 +43,15 @@ describe('writeSchemas', () => {
             };
         }
 
-        await writeSchemas(openApi, '/');
+        const file = new TypeScriptFile({
+            dir: '/',
+            name: 'schemas.ts',
+        });
 
-        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/schemas.gen.ts'), expect.anything());
+        await processSchemas({ file, openApi });
+
+        file.write();
+
+        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/schemas.gen.ts'), expect.anything());
     });
 });

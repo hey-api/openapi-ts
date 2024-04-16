@@ -1,6 +1,6 @@
-import { type Comments, compiler, filePath, type Node, TypeScriptFile } from '../../compiler';
+import { type Comments, compiler, type Node, TypeScriptFile } from '../../compiler';
 import { addLeadingComment } from '../../compiler/utils';
-import type { Model, OpenApi, OperationParameter, Service } from '../../openApi';
+import type { Model, OperationParameter, Service } from '../../openApi';
 import { ensureValidTypeScriptJavaScriptIdentifier } from '../../openApi/common/parser/sanitize';
 import type { Client } from '../../types/client';
 import { getConfig } from '../config';
@@ -214,36 +214,28 @@ const processServiceTypes = (services: Service[], onNode: OnNode) => {
     onNode(node);
 };
 
-/**
- * Generate Models using the Handlebar template and write to disk.
- * @param openApi {@link OpenApi} Dereferenced OpenAPI specification
- * @param outputPath Directory to write the generated files to
- * @param client Client containing models, schemas, and services
- */
-export const writeTypesAndEnums = async (openApi: OpenApi, outputPath: string, client: Client): Promise<void> => {
-    const config = getConfig();
-
-    const fileEnums = new TypeScriptFile({ path: filePath(outputPath, 'enums.ts') });
-    const fileModels = new TypeScriptFile({ path: filePath(outputPath, 'models.ts') });
-
+export const processTypesAndEnums = async ({
+    client,
+    fileEnums,
+    fileModels,
+}: {
+    client: Client;
+    fileEnums?: TypeScriptFile;
+    fileModels?: TypeScriptFile;
+}): Promise<void> => {
     for (const model of client.models) {
         processModel(client, model, (node, type) => {
             if (type === 'enum') {
-                fileEnums.add(node);
+                fileEnums?.add(node);
             } else {
-                fileModels.add(node);
+                fileModels?.add(node);
             }
         });
     }
 
     if (client.services.length) {
         processServiceTypes(client.services, node => {
-            fileModels.add(node);
+            fileModels?.add(node);
         });
-    }
-
-    if (config.exportModels) {
-        fileEnums.write('\n\n');
-        fileModels.write('\n\n');
     }
 };
