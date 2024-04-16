@@ -559,7 +559,7 @@ export class ResponseService {
     }
 
     /**
-     * @returns any Message for 200 response
+     * @returns unknown Message for 200 response
      * @returns ModelWithString Message for default response
      * @returns ModelThatExtends Message for 201 response
      * @returns ModelThatExtendsExtends Message for 202 response
@@ -828,7 +828,7 @@ export class MultipartService {
     }
 
     /**
-     * @returns any OK
+     * @returns unknown OK
      * @throws ApiError
      */
     public multipartResponse(): CancelablePromise<$OpenApiTs['/api/v{api-version}/multipart']['get']['res'][200]> {
@@ -863,7 +863,7 @@ export class ErrorService {
     constructor(public readonly httpRequest: BaseHttpRequest) {}
 
     /**
-     * @returns any Custom message: Successful response
+     * @returns unknown Custom message: Successful response
      * @throws ApiError
      */
     public testErrorCode(

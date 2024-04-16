@@ -15,7 +15,7 @@ export const getModel = (
 ): Model => {
     const model: Model = {
         $refs: [],
-        base: 'any',
+        base: 'unknown',
         description: definition.description || null,
         enum: [],
         enums: [],
@@ -42,7 +42,7 @@ export const getModel = (
         pattern: getPattern(definition.pattern),
         properties: [],
         template: null,
-        type: 'any',
+        type: 'unknown',
         uniqueItems: definition.uniqueItems,
     };
 
@@ -120,8 +120,8 @@ export const getModel = (
 
     if (definition.type === 'object') {
         model.export = 'interface';
-        model.type = 'any';
-        model.base = 'any';
+        model.type = 'unknown';
+        model.base = 'unknown';
 
         if (definition.properties) {
             const modelProperties = getModelProperties(openApi, definition, getModel);

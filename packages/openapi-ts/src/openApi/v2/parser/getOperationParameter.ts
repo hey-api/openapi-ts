@@ -13,7 +13,7 @@ import { getModel } from './getModel';
 export const getOperationParameter = (openApi: OpenApi, parameter: OpenApiParameter): OperationParameter => {
     const operationParameter: OperationParameter = {
         $refs: [],
-        base: 'any',
+        base: 'unknown',
         description: parameter.description || null,
         enum: [],
         enums: [],
@@ -41,7 +41,7 @@ export const getOperationParameter = (openApi: OpenApi, parameter: OpenApiParame
         prop: parameter.name,
         properties: [],
         template: null,
-        type: 'any',
+        type: 'unknown',
         uniqueItems: parameter.uniqueItems,
     };
 

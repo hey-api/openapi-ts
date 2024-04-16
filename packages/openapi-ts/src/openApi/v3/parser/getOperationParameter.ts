@@ -12,7 +12,7 @@ import { getModel } from './getModel';
 export const getOperationParameter = (openApi: OpenApi, parameter: OpenApiParameter): OperationParameter => {
     const operationParameter: OperationParameter = {
         $refs: [],
-        base: 'any',
+        base: 'unknown',
         deprecated: parameter.deprecated === true,
         description: parameter.description || null,
         enum: [],
@@ -30,7 +30,7 @@ export const getOperationParameter = (openApi: OpenApi, parameter: OpenApiParame
         prop: parameter.name,
         properties: [],
         template: null,
-        type: 'any',
+        type: 'unknown',
     };
 
     if (parameter.$ref) {

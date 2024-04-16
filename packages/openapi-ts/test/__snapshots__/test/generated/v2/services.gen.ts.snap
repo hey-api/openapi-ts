@@ -316,7 +316,7 @@ export class NoContentService {
     }
 
     /**
-     * @returns any Response is a simple number
+     * @returns unknown Response is a simple number
      * @returns void Success
      * @throws ApiError
      */
@@ -333,7 +333,7 @@ export class NoContentService {
 
 export class ResponseService {
     /**
-     * @returns any Response is a simple number
+     * @returns unknown Response is a simple number
      * @returns void Success
      * @throws ApiError
      */
@@ -377,7 +377,7 @@ export class ResponseService {
     }
 
     /**
-     * @returns any Message for 200 response
+     * @returns unknown Message for 200 response
      * @returns ModelWithString Message for default response
      * @returns ModelThatExtends Message for 201 response
      * @returns ModelThatExtendsExtends Message for 202 response
@@ -490,7 +490,7 @@ export class TypesService {
      * @returns number Response is a simple number
      * @returns string Response is a simple string
      * @returns boolean Response is a simple boolean
-     * @returns any Response is a simple object
+     * @returns unknown Response is a simple object
      * @throws ApiError
      */
     public static types(
@@ -576,7 +576,7 @@ export class HeaderService {
 
 export class ErrorService {
     /**
-     * @returns any Custom message: Successful response
+     * @returns unknown Custom message: Successful response
      * @throws ApiError
      */
     public static testErrorCode(
