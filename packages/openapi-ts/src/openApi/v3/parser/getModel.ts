@@ -130,9 +130,9 @@ export const getModel = (
 
     if (definition.type === 'object' || definition.properties) {
         if (definition.properties) {
-            model.base = 'any';
+            model.base = 'unknown';
             model.export = 'interface';
-            model.type = 'any';
+            model.type = 'unknown';
             model.default = getDefault(definition, model);
 
             const modelProperties = getModelProperties(openApi, definition, getModel, model);

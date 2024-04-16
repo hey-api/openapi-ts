@@ -595,7 +595,7 @@ export type $OpenApiTs = {
                 /**
                  * Custom message: Successful response
                  */
-                200: any;
+                200: unknown;
             };
         };
     };

@@ -15,7 +15,7 @@ export const getOperationResponse = (
 ): OperationResponse => {
     const operationResponse: OperationResponse = {
         $refs: [],
-        base: responseCode !== 204 ? 'any' : 'void',
+        base: responseCode !== 204 ? 'unknown' : 'void',
         code: responseCode,
         description: response.description || null,
         enum: [],
@@ -31,7 +31,7 @@ export const getOperationResponse = (
         name: '',
         properties: [],
         template: null,
-        type: responseCode !== 204 ? 'any' : 'void',
+        type: responseCode !== 204 ? 'unknown' : 'void',
     };
 
     if (response.content) {

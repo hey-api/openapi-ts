@@ -52,6 +52,15 @@ This config option is deprecated and will be removed.
 
 ## v0.39.0
 
+### Prefer `unknown` over `any`
+
+Types that cannot be determined will now be generated as `unknown` instead of `any`.
+
+```js
+200: any // [!code --]
+200: unknown // [!code ++]
+```
+
 ### Single `enums.gen.ts` file
 
 Enums are now exported from a separate file. If you use imports from `models.ts`, you can change them to `enums.gen.ts`.
