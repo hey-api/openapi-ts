@@ -1631,3 +1631,13 @@ export const $SimpleParameter = {
         type: 'string',
     },
 } as const;
+
+export const $x_Foo_Bar = {
+    description: 'Parameter with illegal characters',
+    name: 'x-Foo-Bar',
+    in: 'header',
+    required: true,
+    schema: {
+        type: 'string',
+    },
+} as const;

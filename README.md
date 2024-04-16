@@ -4,6 +4,10 @@
     <p align="center">✨ Turn your OpenAPI specification into a beautiful TypeScript client.</p>
 </div>
 
+## GitHub Integration (coming soon)
+
+Automatically update your code when the APIs it depends on change. [Find out more](https://heyapi.vercel.app/openapi-ts/integrations.html).
+
 ## Migrating from OpenAPI Typescript Codegen?
 
 Please read our [migration guide](https://heyapi.vercel.app/openapi-ts/migrating.html#openapi-typescript-codegen).
