@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 describe('bin', () => {
     it('supports required parameters', () => {
         const result = sync('node', [
-            './bin/index.js',
+            './bin/index.cjs',
             '--input',
             './test/spec/v3.json',
             '--output',
@@ -19,7 +19,7 @@ describe('bin', () => {
 
     it('generates angular client', () => {
         const result = sync('node', [
-            './bin/index.js',
+            './bin/index.cjs',
             '--input',
             './test/spec/v3.json',
             '--output',
@@ -35,7 +35,7 @@ describe('bin', () => {
 
     it('generates axios client', () => {
         const result = sync('node', [
-            './bin/index.js',
+            './bin/index.cjs',
             '--input',
             './test/spec/v3.json',
             '--output',
@@ -51,7 +51,7 @@ describe('bin', () => {
 
     it('generates fetch client', () => {
         const result = sync('node', [
-            './bin/index.js',
+            './bin/index.cjs',
             '--input',
             './test/spec/v3.json',
             '--output',
@@ -67,7 +67,7 @@ describe('bin', () => {
 
     it('generates node client', () => {
         const result = sync('node', [
-            './bin/index.js',
+            './bin/index.cjs',
             '--input',
             './test/spec/v3.json',
             '--output',
@@ -83,7 +83,7 @@ describe('bin', () => {
 
     it('generates xhr client', () => {
         const result = sync('node', [
-            './bin/index.js',
+            './bin/index.cjs',
             '--input',
             './test/spec/v3.json',
             '--output',
@@ -99,7 +99,7 @@ describe('bin', () => {
 
     it('supports all parameters', () => {
         const result = sync('node', [
-            './bin/index.js',
+            './bin/index.cjs',
             '--input',
             './test/spec/v3.json',
             '--output',
@@ -124,7 +124,7 @@ describe('bin', () => {
 
     it('supports regexp parameters', () => {
         const result = sync('node', [
-            './bin/index.js',
+            './bin/index.cjs',
             '--input',
             './test/spec/v3.json',
             '--output',
@@ -142,7 +142,7 @@ describe('bin', () => {
 
     it('formats output with Prettier', () => {
         const result = sync('node', [
-            './bin/index.js',
+            './bin/index.cjs',
             '--input',
             './test/spec/v3.json',
             '--output',
@@ -154,7 +154,7 @@ describe('bin', () => {
 
     it('lints output with ESLint', () => {
         const result = sync('node', [
-            './bin/index.js',
+            './bin/index.cjs',
             '--input',
             './test/spec/v3.json',
             '--output',
@@ -166,14 +166,14 @@ describe('bin', () => {
     });
 
     it('throws error without parameters', () => {
-        const result = sync('node', ['./bin/index.js', '--dry-run', 'true']);
+        const result = sync('node', ['./bin/index.cjs', '--dry-run', 'true']);
         expect(result.stdout.toString()).toBe('');
         expect(result.stderr.toString()).toContain('Unexpected error occurred');
     });
 
     it('throws error with wrong parameters', () => {
         const result = sync('node', [
-            './bin/index.js',
+            './bin/index.cjs',
             '--input',
             './test/spec/v3.json',
             '--output',
@@ -187,7 +187,7 @@ describe('bin', () => {
     });
 
     it('displays help', () => {
-        const result = sync('node', ['./bin/index.js', '--help', '--dry-run', 'true']);
+        const result = sync('node', ['./bin/index.cjs', '--help', '--dry-run', 'true']);
         expect(result.stdout.toString()).toContain(`Usage: openapi-ts [options]`);
         expect(result.stdout.toString()).toContain(`-i, --input <value>`);
         expect(result.stdout.toString()).toContain(`-o, --output <value>`);
@@ -198,7 +198,7 @@ describe('bin', () => {
 describe('cli', () => {
     it('handles false booleans', () => {
         const result = sync('node', [
-            './bin/index.js',
+            './bin/index.cjs',
             '--input',
             './test/spec/v3.json',
             '--output',
@@ -240,7 +240,7 @@ describe('cli', () => {
 
     it('handles true booleans', () => {
         const result = sync('node', [
-            './bin/index.js',
+            './bin/index.cjs',
             '--input',
             './test/spec/v3.json',
             '--output',
@@ -282,7 +282,7 @@ describe('cli', () => {
 
     it('handles optional booleans', () => {
         const result = sync('node', [
-            './bin/index.js',
+            './bin/index.cjs',
             '--input',
             './test/spec/v3.json',
             '--output',

@@ -2,13 +2,11 @@
 
 'use strict';
 
-import { readFileSync, writeFileSync } from 'node:fs';
-import path from 'node:path';
+const { writeFileSync } = require('fs');
+const { resolve } = require('path');
 
-import camelCase from 'camelcase';
-import { program } from 'commander';
-
-const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url)).toString());
+const { program } = require('commander');
+const pkg = require('../package.json');
 
 const params = program
     .name(Object.keys(pkg.bin)[0])
@@ -53,7 +51,7 @@ const processParams = (obj, booleanKeys) => {
         if (typeof value === 'string') {
             const parsedValue = stringToBoolean(value);
             delete obj[key];
-            obj[camelCase(key)] = parsedValue;
+            obj[key] = parsedValue;
         }
     }
     return obj;
@@ -62,7 +60,7 @@ const processParams = (obj, booleanKeys) => {
 async function start() {
     let userConfig;
     try {
-        const { createClient } = await import(new URL('../dist/node/index.js', import.meta.url));
+        const { createClient } = require(resolve(__dirname, '../dist/node/index.cjs'));
         userConfig = processParams(params, [
             'dryRun',
             'exportCore',
@@ -80,7 +78,7 @@ async function start() {
     } catch (error) {
         if (!userConfig.dryRun) {
             const logName = `openapi-ts-error-${Date.now()}.log`;
-            const logPath = path.resolve(process.cwd(), logName);
+            const logPath = resolve(process.cwd(), logName);
             writeFileSync(logPath, `${error.message}\n${error.stack}`);
             console.error(`🔥 Unexpected error occurred. Log saved to ${logPath}`);
         }
