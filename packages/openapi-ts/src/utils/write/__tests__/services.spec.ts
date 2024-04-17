@@ -17,7 +17,6 @@ describe('processServices', () => {
             dryRun: false,
             enums: false,
             exportCore: true,
-            exportModels: true,
             exportServices: true,
             format: false,
             input: '',
@@ -27,6 +26,7 @@ describe('processServices', () => {
             postfixServices: 'Service',
             schemas: true,
             serviceResponse: 'body',
+            types: {},
             useDateType: false,
             useOptions: false,
         });

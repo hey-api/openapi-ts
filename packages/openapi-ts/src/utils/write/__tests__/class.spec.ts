@@ -17,7 +17,6 @@ describe('writeClientClass', () => {
             dryRun: false,
             enums: 'javascript',
             exportCore: true,
-            exportModels: true,
             exportServices: true,
             format: false,
             input: '',
@@ -28,6 +27,7 @@ describe('writeClientClass', () => {
             postfixServices: '',
             schemas: true,
             serviceResponse: 'body',
+            types: {},
             useDateType: false,
             useOptions: true,
         });

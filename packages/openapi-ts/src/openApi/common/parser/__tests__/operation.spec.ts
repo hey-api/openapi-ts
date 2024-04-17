@@ -10,7 +10,6 @@ describe('getOperationName', () => {
         dryRun: true,
         enums: false,
         exportCore: false,
-        exportModels: false,
         exportServices: false,
         format: false,
         input: '',
@@ -20,6 +19,9 @@ describe('getOperationName', () => {
         postfixServices: '',
         schemas: false,
         serviceResponse: 'body',
+        types: {
+            export: false,
+        },
         useDateType: false,
         useOptions: false,
     };
@@ -30,7 +32,6 @@ describe('getOperationName', () => {
         dryRun: true,
         enums: false,
         exportCore: false,
-        exportModels: false,
         exportServices: false,
         format: false,
         input: '',
@@ -40,6 +41,9 @@ describe('getOperationName', () => {
         postfixServices: '',
         schemas: false,
         serviceResponse: 'body',
+        types: {
+            export: false,
+        },
         useDateType: false,
         useOptions: false,
     };

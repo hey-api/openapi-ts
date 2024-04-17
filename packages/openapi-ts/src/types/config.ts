@@ -29,11 +29,6 @@ export interface UserConfig {
      */
     exportCore?: boolean;
     /**
-     * Generate models?
-     * @default true
-     */
-    exportModels?: boolean | string;
-    /**
      * Generate services?
      * @default true
      */
@@ -85,6 +80,29 @@ export interface UserConfig {
      */
     serviceResponse?: 'body' | 'response';
     /**
+     * Generate types?
+     * @default true
+     */
+    types?:
+        | boolean
+        | string
+        | {
+              /**
+               * Generate types?
+               * @default true
+               */
+              export?: boolean;
+              /**
+               * Include only types matching regular expression
+               */
+              include?: string;
+              /**
+               * Use your preferred naming pattern
+               * @default 'preserve'
+               */
+              name?: 'PascalCase' | 'preserve';
+          };
+    /**
      * Output Date instead of string for the format "date-time" in the models
      * @default false
      */
@@ -96,5 +114,7 @@ export interface UserConfig {
     useOptions?: boolean;
 }
 
-export type Config = Omit<Required<UserConfig>, 'base' | 'name' | 'request'> &
-    Pick<UserConfig, 'base' | 'name' | 'request'>;
+export type Config = Omit<Required<UserConfig>, 'base' | 'name' | 'request' | 'types'> &
+    Pick<UserConfig, 'base' | 'name' | 'request'> & {
+        types: Extract<Required<UserConfig>['types'], object>;
+    };
