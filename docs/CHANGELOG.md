@@ -1,5 +1,11 @@
 # openapi-ts-docs
 
+## 0.5.0
+
+### Minor Changes
+
+- feat: allow choosing naming convention for types ([#402](https://github.com/hey-api/openapi-ts/pull/402))
+
 ## 0.4.0
 
 ### Minor Changes
