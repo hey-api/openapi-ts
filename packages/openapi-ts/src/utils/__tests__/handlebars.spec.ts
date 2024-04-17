@@ -12,7 +12,6 @@ describe('registerHandlebarHelpers', () => {
             dryRun: false,
             enums: 'javascript',
             exportCore: true,
-            exportModels: true,
             exportServices: true,
             format: true,
             input: '',
@@ -22,6 +21,7 @@ describe('registerHandlebarHelpers', () => {
             postfixServices: '',
             schemas: true,
             serviceResponse: 'body',
+            types: {},
             useDateType: false,
             useOptions: false,
         });
@@ -42,7 +42,6 @@ describe('registerHandlebarTemplates', () => {
             dryRun: false,
             enums: 'javascript',
             exportCore: true,
-            exportModels: true,
             exportServices: true,
             format: true,
             input: '',
@@ -52,6 +51,7 @@ describe('registerHandlebarTemplates', () => {
             postfixServices: '',
             schemas: true,
             serviceResponse: 'body',
+            types: {},
             useDateType: false,
             useOptions: false,
         });
