@@ -31,7 +31,6 @@ describe('writeCore', () => {
             dryRun: false,
             enums: 'javascript',
             exportCore: true,
-            exportModels: true,
             exportServices: true,
             format: false,
             input: '',
@@ -42,6 +41,7 @@ describe('writeCore', () => {
             postfixServices: '',
             schemas: true,
             serviceResponse: 'body',
+            types: {},
             useDateType: false,
             useOptions: true,
         });
@@ -71,7 +71,6 @@ describe('writeCore', () => {
             dryRun: false,
             enums: 'javascript',
             exportCore: true,
-            exportModels: true,
             exportServices: true,
             format: false,
             input: '',
@@ -82,6 +81,7 @@ describe('writeCore', () => {
             postfixServices: '',
             schemas: true,
             serviceResponse: 'body',
+            types: {},
             useDateType: false,
             useOptions: true,
         });
@@ -112,7 +112,6 @@ describe('writeCore', () => {
             dryRun: false,
             enums: 'javascript',
             exportCore: true,
-            exportModels: true,
             exportServices: true,
             format: false,
             input: '',
@@ -123,6 +122,7 @@ describe('writeCore', () => {
             postfixServices: '',
             schemas: true,
             serviceResponse: 'body',
+            types: {},
             useDateType: false,
             useOptions: true,
         });
