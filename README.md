@@ -4,18 +4,19 @@
     <p align="center">✨ Turn your OpenAPI specification into a beautiful TypeScript client.</p>
 </div>
 
-## GitHub Integration (coming soon)
-
-Automatically update your code when the APIs it depends on change. [Find out more](https://heyapi.vercel.app/openapi-ts/integrations.html).
-
-## Migrating from OpenAPI Typescript Codegen?
-
-Please read our [migration guide](https://heyapi.vercel.app/openapi-ts/migrating.html#openapi-typescript-codegen).
+> [!IMPORTANT]
+> Migrating from [openapi-typescript-codegen](https://github.com/ferdikoomen/openapi-typescript-codegen)?
+>
+> Please read our [migration guide](https://heyapi.vercel.app/openapi-ts/migrating.html#openapi-typescript-codegen).
 
 ## Documentation
 
 Please visit our [website](https://heyapi.vercel.app/) for documentation, guides, migrating, and more.
 
+## GitHub Integration (coming soon)
+
+Automatically update your code when the APIs it depends on change. [Find out more](https://heyapi.vercel.app/openapi-ts/integrations.html).
+
 ## Contributing
 
-Want to get involved? Please refer to the [contributing guide](https://heyapi.vercel.app/contributing.html).
+Want to get involved? Please refer to [`docs/contributing.md`](./docs/contributing.md).

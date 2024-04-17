@@ -4,7 +4,7 @@
   <p align="center">✨ Turn your OpenAPI specification into a beautiful TypeScript client.</p>
 </div>
 
-`openapi-ts` allows you to create TypeScript interfaces, REST clients, and JSON Schemas from an OpenAPI specification.
+`openapi-ts` allows you to generate TypeScript interfaces, REST clients, and JSON Schemas from an OpenAPI specification.
 
 ## Features
 
@@ -16,17 +16,17 @@
 -   export JSON Schemas from OpenAPI specifications
 -   abortable requests through cancellable promise pattern
 
+## Documentation
+
+Please visit our [website](https://heyapi.vercel.app/) for documentation, guides, migrating, and more.
+
 ## GitHub Integration (coming soon)
 
 Automatically update your code when the APIs it depends on change. [Find out more](https://heyapi.vercel.app/openapi-ts/integrations.html).
 
-## Migrating from OpenAPI Typescript Codegen?
+## Migrating from [openapi-typescript-codegen](https://github.com/ferdikoomen/openapi-typescript-codegen)?
 
 Please read our [migration guide](https://heyapi.vercel.app/openapi-ts/migrating.html#openapi-typescript-codegen).
-
-## Documentation
-
-Please visit our [website](https://heyapi.vercel.app/) for documentation, guides, migrating, and more.
 
 ## Contributing
 
