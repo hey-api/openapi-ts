@@ -17,7 +17,6 @@ describe('processIndex', () => {
             dryRun: false,
             enums: 'javascript',
             exportCore: true,
-            exportModels: true,
             exportServices: true,
             format: false,
             input: '',
@@ -27,6 +26,7 @@ describe('processIndex', () => {
             postfixServices: 'Service',
             schemas: true,
             serviceResponse: 'body',
+            types: {},
             useDateType: false,
             useOptions: true,
         });

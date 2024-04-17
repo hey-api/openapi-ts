@@ -17,7 +17,6 @@ describe('processTypesAndEnums', () => {
             dryRun: false,
             enums: 'javascript',
             exportCore: true,
-            exportModels: true,
             exportServices: true,
             format: false,
             input: '',
@@ -28,6 +27,7 @@ describe('processTypesAndEnums', () => {
             postfixServices: '',
             schemas: true,
             serviceResponse: 'body',
+            types: {},
             useDateType: false,
             useOptions: true,
         });
@@ -59,23 +59,24 @@ describe('processTypesAndEnums', () => {
             version: 'v1',
         };
 
-        const fileEnums = new TypeScriptFile({
-            dir: '/',
-            name: 'enums.ts',
-        });
-        const fileModels = new TypeScriptFile({
-            dir: '/',
-            name: 'models.ts',
-        });
+        const files = {
+            enums: new TypeScriptFile({
+                dir: '/',
+                name: 'enums.ts',
+            }),
+            types: new TypeScriptFile({
+                dir: '/',
+                name: 'models.ts',
+            }),
+        };
 
         await processTypesAndEnums({
             client,
-            fileEnums,
-            fileModels,
+            files,
         });
 
-        fileEnums.write();
-        fileModels.write();
+        files.enums.write();
+        files.types.write();
 
         expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/models.gen.ts'), expect.anything());
     });

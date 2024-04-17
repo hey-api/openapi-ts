@@ -27,8 +27,8 @@ export const writeClient = async (openApi: OpenApi, client: Client, templates: T
         client.services = client.services.filter(service => regexp.test(service.name));
     }
 
-    if (typeof config.exportModels === 'string') {
-        const regexp = new RegExp(config.exportModels);
+    if (config.types.include) {
+        const regexp = new RegExp(config.types.include);
         client.models = client.models.filter(model => regexp.test(model.name));
     }
 
@@ -62,7 +62,7 @@ export const writeClient = async (openApi: OpenApi, client: Client, templates: T
             name: 'services.ts',
         });
     }
-    if (config.exportModels) {
+    if (config.types.export) {
         files.types = new TypeScriptFile({
             dir: config.output,
             name: 'types.ts',
@@ -70,7 +70,7 @@ export const writeClient = async (openApi: OpenApi, client: Client, templates: T
     }
 
     await processSchemas({ file: files.schemas, openApi });
-    await processTypesAndEnums({ client, fileEnums: files.enums, fileModels: files.types });
+    await processTypesAndEnums({ client, files });
     await processServices({ client, files });
 
     // deprecated files

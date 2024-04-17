@@ -54,10 +54,6 @@ This config option is deprecated and will be removed.
 
 ## v0.40.0
 
-### Exported `enums.gen.ts` file
-
-Enums are now re-exported from the main `index.ts` file. This enables a cleaner migration to v0.39.0.
-
 ### Renamed `models.gen.ts` file
 
 `models.gen.ts` is now called `types.gen.ts`. If you use imports from `models.gen.ts`, you should be able to easily find and replace all instances.
@@ -66,6 +62,28 @@ Enums are now re-exported from the main `index.ts` file. This enables a cleaner 
 import type { Model } from 'client/models.gen' // [!code --]
 import type { Model } from 'client/types.gen' // [!code ++]
 ```
+
+### Renamed `exportModels`
+
+This config option is now called `types`.
+
+### PascalCase for types
+
+You can now choose to export types using the PascalCase naming convention.
+
+```js{5}
+export default {
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  types: {
+    name: 'PascalCase',
+  },
+}
+```
+
+### Exported `enums.gen.ts` file
+
+Enums are now re-exported from the main `index.ts` file.
 
 ## v0.39.0
 

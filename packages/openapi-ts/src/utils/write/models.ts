@@ -1,3 +1,5 @@
+import camelcase from 'camelcase';
+
 import { type Comments, compiler, type Node, TypeScriptFile } from '../../compiler';
 import { addLeadingComment } from '../../compiler/utils';
 import type { Model, OperationParameter, Service } from '../../openApi';
@@ -91,9 +93,17 @@ const processEnum = (client: Client, model: Model, onNode: OnNode, exportType = 
     }
 };
 
+const transformName = (name: string) => {
+    const config = getConfig();
+    if (config.types.name === 'PascalCase') {
+        return camelcase(name, { pascalCase: true });
+    }
+    return name;
+};
+
 const processType = (client: Client, model: Model, onNode: OnNode) => {
     const comment = [model.description && escapeComment(model.description), model.deprecated && '@deprecated'];
-    const node = compiler.typedef.alias(model.name, toType(model), comment);
+    const node = compiler.typedef.alias(transformName(model.name), toType(model), comment);
     onNode(node);
 };
 
@@ -216,26 +226,24 @@ const processServiceTypes = (services: Service[], onNode: OnNode) => {
 
 export const processTypesAndEnums = async ({
     client,
-    fileEnums,
-    fileModels,
+    files,
 }: {
     client: Client;
-    fileEnums?: TypeScriptFile;
-    fileModels?: TypeScriptFile;
+    files: Record<string, TypeScriptFile>;
 }): Promise<void> => {
     for (const model of client.models) {
         processModel(client, model, (node, type) => {
             if (type === 'enum') {
-                fileEnums?.add(node);
+                files.enums?.add(node);
             } else {
-                fileModels?.add(node);
+                files.types?.add(node);
             }
         });
     }
 
-    if (client.services.length) {
+    if (files.services && client.services.length) {
         processServiceTypes(client.services, node => {
-            fileModels?.add(node);
+            files.types?.add(node);
         });
     }
 };

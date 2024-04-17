@@ -77,6 +77,24 @@ const logMissingDependenciesWarning = (dependencies: Dependencies) => {
     }
 };
 
+const getTypes = (userConfig: UserConfig): Config['types'] => {
+    let types: Config['types'] = {
+        export: true,
+        name: 'preserve',
+    };
+    if (typeof userConfig.types === 'boolean') {
+        types.export = userConfig.types;
+    } else if (typeof userConfig.types === 'string') {
+        types.include = userConfig.types;
+    } else {
+        types = {
+            ...types,
+            ...userConfig.types,
+        };
+    }
+    return types;
+};
+
 const initConfig = async (userConfig: UserConfig, dependencies: Dependencies) => {
     const { config: userConfigFromFile } = await loadConfig<UserConfig>({
         jitiOptions: {
@@ -96,7 +114,6 @@ const initConfig = async (userConfig: UserConfig, dependencies: Dependencies) =>
         dryRun = false,
         enums = false,
         exportCore = true,
-        exportModels = true,
         exportServices = true,
         format = true,
         input,
@@ -137,6 +154,7 @@ const initConfig = async (userConfig: UserConfig, dependencies: Dependencies) =>
 
     const client = userConfig.client || inferClient(dependencies);
     const output = path.resolve(process.cwd(), userConfig.output);
+    const types = getTypes(userConfig);
 
     return setConfig({
         base,
@@ -145,7 +163,6 @@ const initConfig = async (userConfig: UserConfig, dependencies: Dependencies) =>
         dryRun,
         enums,
         exportCore,
-        exportModels,
         exportServices,
         format,
         input,
@@ -157,6 +174,7 @@ const initConfig = async (userConfig: UserConfig, dependencies: Dependencies) =>
         request,
         schemas,
         serviceResponse,
+        types,
         useDateType,
         useOptions,
     });

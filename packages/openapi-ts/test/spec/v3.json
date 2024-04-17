@@ -1625,6 +1625,10 @@
             }
         },
         "schemas": {
+            "camelCaseCommentWithBreaks": {
+                "description": "Testing multiline comments in string: First line\nSecond line\n\nFourth line",
+                "type": "integer"
+            },
             "CommentWithBreaks": {
                 "description": "Testing multiline comments in string: First line\nSecond line\n\nFourth line",
                 "type": "integer"
