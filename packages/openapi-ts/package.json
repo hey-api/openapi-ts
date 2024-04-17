@@ -27,10 +27,10 @@
         "angular",
         "node"
     ],
-    "main": "./dist/node/index.js",
+    "main": "./dist/node/index.cjs",
     "types": "./dist/node/index.d.ts",
     "bin": {
-        "openapi-ts": "bin/index.js"
+        "openapi-ts": "bin/index.cjs"
     },
     "files": [
         "bin",
