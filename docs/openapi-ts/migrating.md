@@ -19,17 +19,19 @@ Currently, `index.ts` file exports all generated artifacts. We will be slowly mo
 export { ApiError } from './core/ApiError';
 export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI, type OpenAPIConfig } from './core/OpenAPI';
-export * from './models'; // [!code --]
-export * from './schemas'; // [!code --]
-export * from './services'; // [!code --]
+export * from './enums.gen'; // [!code --]
+export * from './schemas.gen'; // [!code --]
+export * from './services.gen'; // [!code --]
+export * from './types.gen'; // [!code --]
 ```
 
 Any non-core related imports should be imported as
 
 ```js
-import type { Model } from 'client/models';
-import { $Schema } from 'client/schemas';
-import { DefaultService } from 'client/services';
+import { Enum } from 'client/enums.gen'
+import { $Schema } from 'client/schemas.gen';
+import { DefaultService } from 'client/services.gen';
+import type { Model } from 'client/types.gen';
 ```
 
 You don't have to update imports from `core` directory. These will be addressed in later releases.
@@ -49,6 +51,21 @@ This config option is deprecated and will be removed.
 ### Deprecated `name`
 
 This config option is deprecated and will be removed.
+
+## v0.40.0
+
+### Exported `enums.gen.ts` file
+
+Enums are now re-exported from the main `index.ts` file. This enables a cleaner migration to v0.39.0.
+
+### Renamed `models.gen.ts` file
+
+`models.gen.ts` is now called `types.gen.ts`. If you use imports from `models.gen.ts`, you should be able to easily find and replace all instances.
+
+```js
+import type { Model } from 'client/models.gen' // [!code --]
+import type { Model } from 'client/types.gen' // [!code ++]
+```
 
 ## v0.39.0
 

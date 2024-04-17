@@ -2,7 +2,7 @@
 
 import type { CancelablePromise } from './core/CancelablePromise';
 import type { BaseHttpRequest } from './core/BaseHttpRequest';
-import type { $OpenApiTs } from './models.gen';
+import type { $OpenApiTs } from './types.gen';
 
 export class DefaultService {
     constructor(public readonly httpRequest: BaseHttpRequest) {}
