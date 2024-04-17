@@ -1,5 +1,19 @@
 # @hey-api/openapi-ts
 
+## 0.40.0
+
+### Minor Changes
+
+- feat: allow choosing naming convention for types ([#402](https://github.com/hey-api/openapi-ts/pull/402))
+
+### Patch Changes
+
+- fix: rename exportModels to types ([#402](https://github.com/hey-api/openapi-ts/pull/402))
+
+- fix: rename models.gen.ts to types.gen.ts ([#399](https://github.com/hey-api/openapi-ts/pull/399))
+
+- fix: export enums from index.ts ([#399](https://github.com/hey-api/openapi-ts/pull/399))
+
 ## 0.39.0
 
 ### Minor Changes
