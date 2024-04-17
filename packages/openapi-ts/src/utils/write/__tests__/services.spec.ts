@@ -1,14 +1,15 @@
 import { writeFileSync } from 'node:fs';
+import path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
 
+import { TypeScriptFile } from '../../../compiler';
 import { setConfig } from '../../config';
-import { writeServices } from '../services';
-import { openApi } from './models';
+import { processServices } from '../services';
 
 vi.mock('node:fs');
 
-describe('writeServices', () => {
+describe('processServices', () => {
     it('writes to filesystem', async () => {
         setConfig({
             client: 'fetch',
@@ -30,7 +31,7 @@ describe('writeServices', () => {
             useOptions: false,
         });
 
-        const client: Parameters<typeof writeServices>[2] = {
+        const client: Parameters<typeof processServices>[0]['client'] = {
             enumNames: [],
             models: [],
             server: 'http://localhost:8080',
@@ -45,8 +46,18 @@ describe('writeServices', () => {
             version: 'v1',
         };
 
-        await writeServices(openApi, '/', client);
+        const file = new TypeScriptFile({
+            dir: '/',
+            name: 'services.ts',
+        });
+        const files = {
+            services: file,
+        };
 
-        expect(writeFileSync).toHaveBeenCalled();
+        await processServices({ client, files });
+
+        file.write();
+
+        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/services.gen.ts'), expect.anything());
     });
 });
