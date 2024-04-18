@@ -786,6 +786,13 @@ export type ModelWithAnyOfConstantSizeArrayWithNSizeAndOptions = [number | strin
 
 export type ModelWithAnyOfConstantSizeArrayAndIntersect = [number & string, number & string];
 
+export type ModelWithNumericEnumUnion = {
+    /**
+     * Период
+     */
+    value?: 1 | 3 | 6 | 12;
+};
+
 /**
  * This is a reusable parameter
  */
