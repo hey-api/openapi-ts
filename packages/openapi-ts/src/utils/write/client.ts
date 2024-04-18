@@ -26,8 +26,8 @@ export const writeClient = async (
 ): Promise<void> => {
   const config = getConfig();
 
-  if (typeof config.exportServices === 'string') {
-    const regexp = new RegExp(config.exportServices);
+  if (config.services.include) {
+    const regexp = new RegExp(config.services.include);
     client.services = client.services.filter((service) =>
       regexp.test(service.name),
     );
@@ -62,7 +62,7 @@ export const writeClient = async (
       name: 'schemas.ts',
     });
   }
-  if (config.exportServices) {
+  if (config.services.export) {
     files.services = new TypeScriptFile({
       dir: config.output,
       name: 'services.ts',
