@@ -1,7 +1,7 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vitest';
 
-import { setConfig } from '../../../../utils/config'
-import { getServices } from '../getServices'
+import { setConfig } from '../../../../utils/config';
+import { getServices } from '../getServices';
 
 describe('getServices', () => {
   it('should create a unnamed service if tags are empty', () => {
@@ -22,33 +22,33 @@ describe('getServices', () => {
       serviceResponse: 'body',
       types: {},
       useDateType: false,
-      useOptions: true
-    })
+      useOptions: true,
+    });
 
     const services = getServices({
       info: {
         title: 'x',
-        version: '1'
+        version: '1',
       },
       paths: {
         '/api/trips': {
           get: {
             responses: {
               200: {
-                description: 'x'
+                description: 'x',
               },
               default: {
-                description: 'default'
-              }
+                description: 'default',
+              },
             },
-            tags: []
-          }
-        }
+            tags: [],
+          },
+        },
       },
-      swagger: '2.0'
-    })
+      swagger: '2.0',
+    });
 
-    expect(services).toHaveLength(1)
-    expect(services[0].name).toEqual('Default')
-  })
-})
+    expect(services).toHaveLength(1);
+    expect(services[0].name).toEqual('Default');
+  });
+});

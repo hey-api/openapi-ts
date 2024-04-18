@@ -1,20 +1,20 @@
-import { writeFileSync } from 'node:fs'
-import path from 'node:path'
+import { writeFileSync } from 'node:fs';
+import path from 'node:path';
 
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { setConfig } from '../../config'
-import { writeCore } from '../core'
-import { mockTemplates } from './mocks'
-import { openApi } from './models'
+import { setConfig } from '../../config';
+import { writeCore } from '../core';
+import { mockTemplates } from './mocks';
+import { openApi } from './models';
 
-vi.mock('node:fs')
+vi.mock('node:fs');
 
 describe('writeCore', () => {
-  let templates: Parameters<typeof writeCore>[3]
+  let templates: Parameters<typeof writeCore>[3];
   beforeEach(() => {
-    templates = mockTemplates
-  })
+    templates = mockTemplates;
+  });
 
   it('writes to filesystem', async () => {
     const client: Parameters<typeof writeCore>[2] = {
@@ -22,8 +22,8 @@ describe('writeCore', () => {
       models: [],
       server: 'http://localhost:8080',
       services: [],
-      version: '1.0'
-    }
+      version: '1.0',
+    };
 
     setConfig({
       client: 'fetch',
@@ -43,36 +43,36 @@ describe('writeCore', () => {
       serviceResponse: 'body',
       types: {},
       useDateType: false,
-      useOptions: true
-    })
+      useOptions: true,
+    });
 
-    await writeCore(openApi, '/', client, templates)
+    await writeCore(openApi, '/', client, templates);
 
     expect(writeFileSync).toHaveBeenCalledWith(
       path.resolve('/', '/OpenAPI.ts'),
-      'settings'
-    )
+      'settings',
+    );
     expect(writeFileSync).toHaveBeenCalledWith(
       path.resolve('/', '/ApiError.ts'),
-      'apiError'
-    )
+      'apiError',
+    );
     expect(writeFileSync).toHaveBeenCalledWith(
       path.resolve('/', '/ApiRequestOptions.ts'),
-      'apiRequestOptions'
-    )
+      'apiRequestOptions',
+    );
     expect(writeFileSync).toHaveBeenCalledWith(
       path.resolve('/', '/ApiResult.ts'),
-      'apiResult'
-    )
+      'apiResult',
+    );
     expect(writeFileSync).toHaveBeenCalledWith(
       path.resolve('/', '/CancelablePromise.ts'),
-      'cancelablePromise'
-    )
+      'cancelablePromise',
+    );
     expect(writeFileSync).toHaveBeenCalledWith(
       path.resolve('/', '/request.ts'),
-      'request'
-    )
-  })
+      'request',
+    );
+  });
 
   it('uses client server value for base', async () => {
     const client: Parameters<typeof writeCore>[2] = {
@@ -80,8 +80,8 @@ describe('writeCore', () => {
       models: [],
       server: 'http://localhost:8080',
       services: [],
-      version: '1.0'
-    }
+      version: '1.0',
+    };
 
     const config = setConfig({
       client: 'fetch',
@@ -101,18 +101,18 @@ describe('writeCore', () => {
       serviceResponse: 'body',
       types: {},
       useDateType: false,
-      useOptions: true
-    })
+      useOptions: true,
+    });
 
-    await writeCore(openApi, '/', client, templates)
+    await writeCore(openApi, '/', client, templates);
 
     expect(templates.core.settings).toHaveBeenCalledWith({
       $config: config,
       httpRequest: 'FetchHttpRequest',
       server: 'http://localhost:8080',
-      version: '1.0'
-    })
-  })
+      version: '1.0',
+    });
+  });
 
   it('uses custom value for base', async () => {
     const client: Parameters<typeof writeCore>[2] = {
@@ -120,8 +120,8 @@ describe('writeCore', () => {
       models: [],
       server: 'http://localhost:8080',
       services: [],
-      version: '1.0'
-    }
+      version: '1.0',
+    };
 
     const config = setConfig({
       base: 'foo',
@@ -142,16 +142,16 @@ describe('writeCore', () => {
       serviceResponse: 'body',
       types: {},
       useDateType: false,
-      useOptions: true
-    })
+      useOptions: true,
+    });
 
-    await writeCore(openApi, '/', client, templates)
+    await writeCore(openApi, '/', client, templates);
 
     expect(templates.core.settings).toHaveBeenCalledWith({
       $config: config,
       httpRequest: 'FetchHttpRequest',
       server: 'foo',
-      version: '1.0'
-    })
-  })
-})
+      version: '1.0',
+    });
+  });
+});

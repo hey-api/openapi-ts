@@ -1,26 +1,26 @@
-import { escapeName } from '../../../utils/escape'
-import type { Model } from '../../common/interfaces/client'
-import { getPattern } from '../../common/parser/getPattern'
-import { getType } from '../../common/parser/type'
-import type { OpenApi } from '../interfaces/OpenApi'
-import type { OpenApiSchema } from '../interfaces/OpenApiSchema'
-import type { getModel } from './getModel'
+import { escapeName } from '../../../utils/escape';
+import type { Model } from '../../common/interfaces/client';
+import { getPattern } from '../../common/parser/getPattern';
+import { getType } from '../../common/parser/type';
+import type { OpenApi } from '../interfaces/OpenApi';
+import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
+import type { getModel } from './getModel';
 
 // Fix for circular dependency
-export type GetModelFn = typeof getModel
+export type GetModelFn = typeof getModel;
 
 export const getModelProperties = (
   openApi: OpenApi,
   definition: OpenApiSchema,
-  getModel: GetModelFn
+  getModel: GetModelFn,
 ): Model[] => {
-  const models: Model[] = []
+  const models: Model[] = [];
   for (const propertyName in definition.properties) {
     if (definition.properties.hasOwnProperty(propertyName)) {
-      const property = definition.properties[propertyName]
-      const propertyRequired = !!definition.required?.includes(propertyName)
+      const property = definition.properties[propertyName];
+      const propertyRequired = !!definition.required?.includes(propertyName);
       if (property.$ref) {
-        const model = getType(property.$ref)
+        const model = getType(property.$ref);
         models.push({
           $refs: [],
           base: model.base,
@@ -51,10 +51,10 @@ export const getModelProperties = (
           properties: [],
           template: model.template,
           type: model.type,
-          uniqueItems: property.uniqueItems
-        })
+          uniqueItems: property.uniqueItems,
+        });
       } else {
-        const model = getModel(openApi, property)
+        const model = getModel(openApi, property);
         models.push({
           $refs: [],
           base: model.base,
@@ -85,10 +85,10 @@ export const getModelProperties = (
           properties: model.properties,
           template: model.template,
           type: model.type,
-          uniqueItems: property.uniqueItems
-        })
+          uniqueItems: property.uniqueItems,
+        });
       }
     }
   }
-  return models
-}
+  return models;
+};

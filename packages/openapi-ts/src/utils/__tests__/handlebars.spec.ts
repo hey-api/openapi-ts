@@ -1,11 +1,11 @@
-import Handlebars from 'handlebars/runtime'
-import { describe, expect, it } from 'vitest'
+import Handlebars from 'handlebars/runtime';
+import { describe, expect, it } from 'vitest';
 
-import { setConfig } from '../config'
+import { setConfig } from '../config';
 import {
   registerHandlebarHelpers,
-  registerHandlebarTemplates
-} from '../handlebars'
+  registerHandlebarTemplates,
+} from '../handlebars';
 
 describe('registerHandlebarHelpers', () => {
   it('should register the helpers', () => {
@@ -26,16 +26,16 @@ describe('registerHandlebarHelpers', () => {
       serviceResponse: 'body',
       types: {},
       useDateType: false,
-      useOptions: false
-    })
-    registerHandlebarHelpers()
-    const helpers = Object.keys(Handlebars.helpers)
-    expect(helpers).toContain('camelCase')
-    expect(helpers).toContain('equals')
-    expect(helpers).toContain('ifdef')
-    expect(helpers).toContain('notEquals')
-  })
-})
+      useOptions: false,
+    });
+    registerHandlebarHelpers();
+    const helpers = Object.keys(Handlebars.helpers);
+    expect(helpers).toContain('camelCase');
+    expect(helpers).toContain('equals');
+    expect(helpers).toContain('ifdef');
+    expect(helpers).toContain('notEquals');
+  });
+});
 
 describe('registerHandlebarTemplates', () => {
   it('should return correct templates', () => {
@@ -56,13 +56,13 @@ describe('registerHandlebarTemplates', () => {
       serviceResponse: 'body',
       types: {},
       useDateType: false,
-      useOptions: false
-    })
-    const templates = registerHandlebarTemplates()
-    expect(templates.core.settings).toBeDefined()
-    expect(templates.core.apiError).toBeDefined()
-    expect(templates.core.apiRequestOptions).toBeDefined()
-    expect(templates.core.apiResult).toBeDefined()
-    expect(templates.core.request).toBeDefined()
-  })
-})
+      useOptions: false,
+    });
+    const templates = registerHandlebarTemplates();
+    expect(templates.core.settings).toBeDefined();
+    expect(templates.core.apiError).toBeDefined();
+    expect(templates.core.apiRequestOptions).toBeDefined();
+    expect(templates.core.apiResult).toBeDefined();
+    expect(templates.core.request).toBeDefined();
+  });
+});

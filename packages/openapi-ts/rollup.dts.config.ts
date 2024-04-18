@@ -1,16 +1,16 @@
-import { defineConfig } from 'rollup'
-import dts from 'rollup-plugin-dts'
+import { defineConfig } from 'rollup';
+import dts from 'rollup-plugin-dts';
 
-import { externalDependencies } from './rollup.config'
+import { externalDependencies } from './rollup.config';
 
 export default defineConfig({
   external: externalDependencies,
   input: {
-    index: './temp/node/index.d.ts'
+    index: './temp/node/index.d.ts',
   },
   output: {
     dir: './dist/node',
-    format: 'cjs'
+    format: 'cjs',
   },
-  plugins: [dts({ respectExternal: true })]
-})
+  plugins: [dts({ respectExternal: true })],
+});

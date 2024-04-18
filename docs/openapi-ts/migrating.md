@@ -92,8 +92,8 @@ Enums are now re-exported from the main `index.ts` file.
 Enums are now exported from a separate file. If you use imports from `models.ts`, you can change them to `enums.gen.ts`.
 
 ```js
-import { Enum } from 'client/models' // [!code --]
-import { Enum } from 'client/enums.gen' // [!code ++]
+import { Enum } from 'client/models'; // [!code --]
+import { Enum } from 'client/enums.gen'; // [!code ++]
 ```
 
 ### Renamed `models.ts` file
@@ -110,8 +110,8 @@ import type { Model } from 'client/models.gen' // [!code ++]
 `schemas.ts` is now called `schemas.gen.ts`. If you use imports from `schemas.ts`, you should be able to easily find and replace all instances.
 
 ```js
-import { $Schema } from 'client/schemas' // [!code --]
-import { $Schema } from 'client/schemas.gen' // [!code ++]
+import { $Schema } from 'client/schemas'; // [!code --]
+import { $Schema } from 'client/schemas.gen'; // [!code ++]
 ```
 
 ### Renamed `services.ts` file
@@ -119,8 +119,8 @@ import { $Schema } from 'client/schemas.gen' // [!code ++]
 `services.ts` is now called `services.gen.ts`. If you use imports from `services.ts`, you should be able to easily find and replace all instances.
 
 ```js
-import { DefaultService } from 'client/services' // [!code --]
-import { DefaultService } from 'client/services.gen' // [!code ++]
+import { DefaultService } from 'client/services'; // [!code --]
+import { DefaultService } from 'client/services.gen'; // [!code ++]
 ```
 
 ### Deprecated exports from `index.ts`
@@ -194,9 +194,9 @@ Schemas are now exported from a single file. If you used imports from individual
 By default, generated clients will use a single object argument to pass values to API calls. This is a significant change from the previous default of unspecified array of arguments. If migrating your application in one go isn't feasible, we recommend deprecating your old client and generating a new client.
 
 ```ts
-import { DefaultService } from 'client/services' // <-- old client with array arguments
+import { DefaultService } from 'client/services'; // <-- old client with array arguments
 
-import { DefaultService } from 'client_v2/services' // <-- new client with options argument
+import { DefaultService } from 'client_v2/services'; // <-- new client with options argument
 ```
 
 This way, you can gradually switch over to the new syntax as you update parts of your code. Once you've removed all instances of `client` imports, you can safely delete the old `client` folder and find and replace all `client_v2` calls to `client`.

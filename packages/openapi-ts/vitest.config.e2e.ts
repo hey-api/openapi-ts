@@ -1,8 +1,8 @@
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath } from 'node:url';
 
-import { defineConfig } from 'vitest/config'
+import { defineConfig } from 'vitest/config';
 
-import { handlebarsPlugin } from './rollup.config'
+import { handlebarsPlugin } from './rollup.config';
 
 export default defineConfig({
   plugins: [handlebarsPlugin()],
@@ -11,6 +11,6 @@ export default defineConfig({
     // And that the port was not previously taken.
     fileParallelism: false,
     include: ['test/e2e/**/*.spec.ts'],
-    root: fileURLToPath(new URL('./', import.meta.url))
-  }
-})
+    root: fileURLToPath(new URL('./', import.meta.url)),
+  },
+});

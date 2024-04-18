@@ -1,11 +1,11 @@
-import type { OpenApi } from '../../../openApi'
+import type { OpenApi } from '../../../openApi';
 
 export const openApi: OpenApi = {
   info: {
     title: '',
-    version: ''
+    version: '',
   },
   openapi: '',
   paths: {},
-  swagger: ''
-}
+  swagger: '',
+};

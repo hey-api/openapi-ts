@@ -1,115 +1,115 @@
 {
-    "name": "@hey-api/openapi-ts",
-    "version": "0.40.2",
-    "type": "module",
-    "description": "Turn your OpenAPI specification into a beautiful TypeScript client",
-    "homepage": "https://heyapi.vercel.app/",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/hey-api/openapi-ts.git"
-    },
-    "bugs": {
-        "url": "https://github.com/hey-api/openapi-ts/issues"
-    },
-    "license": "MIT",
-    "keywords": [
-        "openapi",
-        "swagger",
-        "generator",
-        "typescript",
-        "javascript",
-        "codegen",
-        "yaml",
-        "json",
-        "fetch",
-        "xhr",
-        "axios",
-        "angular",
-        "node"
-    ],
-    "main": "./dist/node/index.cjs",
-    "types": "./dist/node/index.d.ts",
-    "bin": {
-        "openapi-ts": "bin/index.cjs"
-    },
-    "files": [
-        "bin",
-        "dist"
-    ],
-    "scripts": {
-        "build-bundle": "rollup --config rollup.config.ts --configPlugin typescript",
-        "build-types-check": "tsc --project tsconfig.check.json",
-        "build-types-roll": "rollup --config rollup.dts.config.ts --configPlugin typescript && rimraf temp",
-        "build-types-temp": "tsc --emitDeclarationOnly --outDir temp -p src/node",
-        "build-types": "pnpm build-types-temp && pnpm build-types-roll && pnpm build-types-check",
-        "build": "pnpm clean && pnpm build-bundle && pnpm build-types",
-        "clean": "rimraf dist test/generated test/e2e/generated coverage node_modules/.cache",
-        "dev": "rimraf dist && pnpm build-bundle --watch",
-        "lint:fix": "eslint . --fix",
-        "lint": "eslint .",
-        "prepublishOnly": "pnpm build",
-        "test:coverage": "vitest run --config vitest.config.unit.ts --coverage",
-        "test:e2e": "vitest run --config vitest.config.e2e.ts",
-        "test:sample": "node test/sample.cjs",
-        "test:update": "vitest watch --config vitest.config.unit.ts --update",
-        "test:watch": "vitest watch --config vitest.config.unit.ts",
-        "test": "vitest run --config vitest.config.unit.ts",
-        "typecheck": "tsc --noEmit"
-    },
-    "engines": {
-        "node": "^18.0.0 || >=20.0.0"
-    },
-    "dependencies": {
-        "@apidevtools/json-schema-ref-parser": "11.5.4",
-        "c12": "1.10.0",
-        "camelcase": "8.0.0",
-        "commander": "12.0.0",
-        "handlebars": "4.7.8"
-    },
-    "peerDependencies": {
-        "typescript": "^5.x"
-    },
-    "devDependencies": {
-        "@angular-devkit/build-angular": "17.3.4",
-        "@angular/animations": "17.3.4",
-        "@angular/cli": "17.3.4",
-        "@angular/common": "17.3.4",
-        "@angular/compiler": "17.3.4",
-        "@angular/compiler-cli": "17.3.4",
-        "@angular/core": "17.3.4",
-        "@angular/forms": "17.3.4",
-        "@angular/platform-browser": "17.3.4",
-        "@angular/platform-browser-dynamic": "17.3.4",
-        "@angular/router": "17.3.4",
-        "@rollup/plugin-commonjs": "25.0.7",
-        "@rollup/plugin-json": "6.1.0",
-        "@rollup/plugin-node-resolve": "15.2.3",
-        "@rollup/plugin-terser": "0.4.4",
-        "@rollup/plugin-typescript": "11.1.6",
-        "@types/cross-spawn": "6.0.6",
-        "@types/express": "4.17.21",
-        "@types/node": "20.12.7",
-        "@vitest/coverage-v8": "1.5.0",
-        "axios": "1.6.8",
-        "cross-spawn": "7.0.3",
-        "eslint": "9.0.0",
-        "eslint-config-prettier": "9.1.0",
-        "eslint-plugin-simple-import-sort": "12.1.0",
-        "eslint-plugin-sort-keys-fix": "1.1.2",
-        "express": "4.19.2",
-        "glob": "10.3.12",
-        "globals": "15.0.0",
-        "node-fetch": "3.3.2",
-        "prettier": "3.2.5",
-        "puppeteer": "22.6.4",
-        "rimraf": "5.0.5",
-        "rollup": "4.14.2",
-        "rollup-plugin-dts": "6.1.0",
-        "rxjs": "7.8.1",
-        "ts-node": "10.9.2",
-        "tslib": "2.6.2",
-        "typescript": "5.4.5",
-        "typescript-eslint": "7.6.0",
-        "vitest": "1.5.0"
-    }
+  "name": "@hey-api/openapi-ts",
+  "version": "0.40.2",
+  "type": "module",
+  "description": "Turn your OpenAPI specification into a beautiful TypeScript client",
+  "homepage": "https://heyapi.vercel.app/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hey-api/openapi-ts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hey-api/openapi-ts/issues"
+  },
+  "license": "MIT",
+  "keywords": [
+    "openapi",
+    "swagger",
+    "generator",
+    "typescript",
+    "javascript",
+    "codegen",
+    "yaml",
+    "json",
+    "fetch",
+    "xhr",
+    "axios",
+    "angular",
+    "node"
+  ],
+  "main": "./dist/node/index.cjs",
+  "types": "./dist/node/index.d.ts",
+  "bin": {
+    "openapi-ts": "bin/index.cjs"
+  },
+  "files": [
+    "bin",
+    "dist"
+  ],
+  "scripts": {
+    "build-bundle": "rollup --config rollup.config.ts --configPlugin typescript",
+    "build-types-check": "tsc --project tsconfig.check.json",
+    "build-types-roll": "rollup --config rollup.dts.config.ts --configPlugin typescript && rimraf temp",
+    "build-types-temp": "tsc --emitDeclarationOnly --outDir temp -p src/node",
+    "build-types": "pnpm build-types-temp && pnpm build-types-roll && pnpm build-types-check",
+    "build": "pnpm clean && pnpm build-bundle && pnpm build-types",
+    "clean": "rimraf dist test/generated test/e2e/generated coverage node_modules/.cache",
+    "dev": "rimraf dist && pnpm build-bundle --watch",
+    "lint:fix": "eslint . --fix",
+    "lint": "eslint .",
+    "prepublishOnly": "pnpm build",
+    "test:coverage": "vitest run --config vitest.config.unit.ts --coverage",
+    "test:e2e": "vitest run --config vitest.config.e2e.ts",
+    "test:sample": "node test/sample.cjs",
+    "test:update": "vitest watch --config vitest.config.unit.ts --update",
+    "test:watch": "vitest watch --config vitest.config.unit.ts",
+    "test": "vitest run --config vitest.config.unit.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": "^18.0.0 || >=20.0.0"
+  },
+  "dependencies": {
+    "@apidevtools/json-schema-ref-parser": "11.5.4",
+    "c12": "1.10.0",
+    "camelcase": "8.0.0",
+    "commander": "12.0.0",
+    "handlebars": "4.7.8"
+  },
+  "peerDependencies": {
+    "typescript": "^5.x"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "17.3.4",
+    "@angular/animations": "17.3.4",
+    "@angular/cli": "17.3.4",
+    "@angular/common": "17.3.4",
+    "@angular/compiler": "17.3.4",
+    "@angular/compiler-cli": "17.3.4",
+    "@angular/core": "17.3.4",
+    "@angular/forms": "17.3.4",
+    "@angular/platform-browser": "17.3.4",
+    "@angular/platform-browser-dynamic": "17.3.4",
+    "@angular/router": "17.3.4",
+    "@rollup/plugin-commonjs": "25.0.7",
+    "@rollup/plugin-json": "6.1.0",
+    "@rollup/plugin-node-resolve": "15.2.3",
+    "@rollup/plugin-terser": "0.4.4",
+    "@rollup/plugin-typescript": "11.1.6",
+    "@types/cross-spawn": "6.0.6",
+    "@types/express": "4.17.21",
+    "@types/node": "20.12.7",
+    "@vitest/coverage-v8": "1.5.0",
+    "axios": "1.6.8",
+    "cross-spawn": "7.0.3",
+    "eslint": "9.0.0",
+    "eslint-config-prettier": "9.1.0",
+    "eslint-plugin-simple-import-sort": "12.1.0",
+    "eslint-plugin-sort-keys-fix": "1.1.2",
+    "express": "4.19.2",
+    "glob": "10.3.12",
+    "globals": "15.0.0",
+    "node-fetch": "3.3.2",
+    "prettier": "3.2.5",
+    "puppeteer": "22.6.4",
+    "rimraf": "5.0.5",
+    "rollup": "4.14.2",
+    "rollup-plugin-dts": "6.1.0",
+    "rxjs": "7.8.1",
+    "ts-node": "10.9.2",
+    "tslib": "2.6.2",
+    "typescript": "5.4.5",
+    "typescript-eslint": "7.6.0",
+    "vitest": "1.5.0"
+  }
 }

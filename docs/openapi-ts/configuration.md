@@ -10,28 +10,28 @@ description: Configure openapi-ts.
 ::: code-group
 
 ```js [openapi-ts.config.ts]
-import { defineConfig } from '@hey-api/openapi-ts'
+import { defineConfig } from '@hey-api/openapi-ts';
 
 export default defineConfig({
   input: 'path/to/openapi.json',
-  output: 'src/client'
-})
+  output: 'src/client',
+});
 ```
 
 ```js [openapi-ts.config.cjs]
 /** @type {import('@hey-api/openapi-ts').UserConfig} */
 module.exports = {
   input: 'path/to/openapi.json',
-  output: 'src/client'
-}
+  output: 'src/client',
+};
 ```
 
 ```js [openapi-ts.config.mjs]
 /** @type {import('@hey-api/openapi-ts').UserConfig} */
 export default {
   input: 'path/to/openapi.json',
-  output: 'src/client'
-}
+  output: 'src/client',
+};
 ```
 
 :::
@@ -165,12 +165,12 @@ export default {
 By default, `openapi-ts` exports schemas from your OpenAPI specification as plain JavaScript objects. A great use case for schemas is client-side form input validation.
 
 ```ts
-import { $Schema } from 'client/schemas'
+import { $Schema } from 'client/schemas';
 
-const maxInputLength = $Schema.properties.text.maxLength
+const maxInputLength = $Schema.properties.text.maxLength;
 
 if (userInput.length > maxInputLength) {
-  throw new Error(`String length cannot exceed ${maxInputLength} characters!`)
+  throw new Error(`String length cannot exceed ${maxInputLength} characters!`);
 }
 ```
 

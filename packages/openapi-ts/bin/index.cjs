@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
-'use strict'
+'use strict';
 
-const { writeFileSync } = require('fs')
-const { resolve } = require('path')
+const { writeFileSync } = require('fs');
+const { resolve } = require('path');
 
-const { program } = require('commander')
-const pkg = require('../package.json')
+const { program } = require('commander');
+const pkg = require('../package.json');
 
 const params = program
   .name(Object.keys(pkg.bin)[0])
@@ -14,17 +14,17 @@ const params = program
   .version(pkg.version)
   .option(
     '-i, --input <value>',
-    'OpenAPI specification (path, url, or string content)'
+    'OpenAPI specification (path, url, or string content)',
   )
   .option('-o, --output <value>', 'Output directory')
   .option(
     '-c, --client <value>',
-    'HTTP client to generate [angular, axios, fetch, node, xhr]'
+    'HTTP client to generate [angular, axios, fetch, node, xhr]',
   )
   .option('-d, --debug', 'Run in debug mode?')
   .option(
     '--base [value]',
-    'Manually set base in OpenAPI config instead of inferring from server value'
+    'Manually set base in OpenAPI config instead of inferring from server value',
   )
   .option('--dry-run [value]', 'Skip writing files to disk?')
   .option('--enums <value>', 'Export enum definitions (javascript, typescript)')
@@ -39,45 +39,45 @@ const params = program
   .option('--schemas [value]', 'Write schemas to disk')
   .option(
     '--serviceResponse [value]',
-    'Define shape of returned value from service calls'
+    'Define shape of returned value from service calls',
   )
   .option('--types [value]', 'Write types to disk')
   .option(
     '--useDateType [value]',
-    'Output Date instead of string for the format "date-time" in the models'
+    'Output Date instead of string for the format "date-time" in the models',
   )
   .option('--useOptions [value]', 'Use options instead of arguments')
   .parse(process.argv)
-  .opts()
+  .opts();
 
-const stringToBoolean = value => {
+const stringToBoolean = (value) => {
   if (value === 'true') {
-    return true
+    return true;
   }
   if (value === 'false') {
-    return false
+    return false;
   }
-  return value
-}
+  return value;
+};
 
 const processParams = (obj, booleanKeys) => {
   for (const key of booleanKeys) {
-    const value = obj[key]
+    const value = obj[key];
     if (typeof value === 'string') {
-      const parsedValue = stringToBoolean(value)
-      delete obj[key]
-      obj[key] = parsedValue
+      const parsedValue = stringToBoolean(value);
+      delete obj[key];
+      obj[key] = parsedValue;
     }
   }
-  return obj
-}
+  return obj;
+};
 
 async function start() {
-  let userConfig
+  let userConfig;
   try {
     const { createClient } = require(
-      resolve(__dirname, '../dist/node/index.cjs')
-    )
+      resolve(__dirname, '../dist/node/index.cjs'),
+    );
     userConfig = processParams(params, [
       'dryRun',
       'exportCore',
@@ -88,20 +88,20 @@ async function start() {
       'schemas',
       'types',
       'useDateType',
-      'useOptions'
-    ])
-    await createClient(userConfig)
-    process.exit(0)
+      'useOptions',
+    ]);
+    await createClient(userConfig);
+    process.exit(0);
   } catch (error) {
     if (!userConfig.dryRun) {
-      const logName = `openapi-ts-error-${Date.now()}.log`
-      const logPath = resolve(process.cwd(), logName)
-      writeFileSync(logPath, `${error.message}\n${error.stack}`)
-      console.error(`🔥 Unexpected error occurred. Log saved to ${logPath}`)
+      const logName = `openapi-ts-error-${Date.now()}.log`;
+      const logPath = resolve(process.cwd(), logName);
+      writeFileSync(logPath, `${error.message}\n${error.stack}`);
+      console.error(`🔥 Unexpected error occurred. Log saved to ${logPath}`);
     }
-    console.error(`🔥 Unexpected error occurred. ${error.message}`)
-    process.exit(1)
+    console.error(`🔥 Unexpected error occurred. ${error.message}`);
+    process.exit(1);
   }
 }
 
-start()
+start();

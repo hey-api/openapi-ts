@@ -13,7 +13,7 @@
 export const ensureValidTypeScriptJavaScriptIdentifier = (name: string) =>
   name
     .replace(/^[^$_\p{ID_Start}]+/u, '')
-    .replace(/[^$\u200c\u200d\p{ID_Continue}]/gu, '_')
+    .replace(/[^$\u200c\u200d\p{ID_Continue}]/gu, '_');
 
 /**
  * Sanitizes namespace identifiers so they are valid TypeScript identifiers of a certain form.
@@ -33,9 +33,9 @@ export const sanitizeNamespaceIdentifier = (name: string) =>
   name
     .replace(/^[^\p{ID_Start}]+/u, '')
     .replace(/[^$\u200c\u200d\p{ID_Continue}]/gu, '-')
-    .replace(/\$/g, '-')
+    .replace(/\$/g, '-');
 
 export const sanitizeOperationParameterName = (name: string) => {
-  const withoutBrackets = name.replace('[]', 'Array')
-  return sanitizeNamespaceIdentifier(withoutBrackets)
-}
+  const withoutBrackets = name.replace('[]', 'Array');
+  return sanitizeNamespaceIdentifier(withoutBrackets);
+};

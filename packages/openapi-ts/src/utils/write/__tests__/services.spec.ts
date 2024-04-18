@@ -1,13 +1,13 @@
-import { writeFileSync } from 'node:fs'
-import path from 'node:path'
+import { writeFileSync } from 'node:fs';
+import path from 'node:path';
 
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest';
 
-import { TypeScriptFile } from '../../../compiler'
-import { setConfig } from '../../config'
-import { processServices } from '../services'
+import { TypeScriptFile } from '../../../compiler';
+import { setConfig } from '../../config';
+import { processServices } from '../services';
 
-vi.mock('node:fs')
+vi.mock('node:fs');
 
 describe('processServices', () => {
   it('writes to filesystem', async () => {
@@ -28,8 +28,8 @@ describe('processServices', () => {
       serviceResponse: 'body',
       types: {},
       useDateType: false,
-      useOptions: false
-    })
+      useOptions: false,
+    });
 
     const client: Parameters<typeof processServices>[0]['client'] = {
       enumNames: [],
@@ -40,27 +40,27 @@ describe('processServices', () => {
           $refs: [],
           imports: [],
           name: 'User',
-          operations: []
-        }
+          operations: [],
+        },
       ],
-      version: 'v1'
-    }
+      version: 'v1',
+    };
 
     const file = new TypeScriptFile({
       dir: '/',
-      name: 'services.ts'
-    })
+      name: 'services.ts',
+    });
     const files = {
-      services: file
-    }
+      services: file,
+    };
 
-    await processServices({ client, files })
+    await processServices({ client, files });
 
-    file.write()
+    file.write();
 
     expect(writeFileSync).toHaveBeenCalledWith(
       path.resolve('/services.gen.ts'),
-      expect.anything()
-    )
-  })
-})
+      expect.anything(),
+    );
+  });
+});

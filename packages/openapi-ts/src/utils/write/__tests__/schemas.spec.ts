@@ -1,14 +1,14 @@
-import { writeFileSync } from 'node:fs'
-import path from 'node:path'
+import { writeFileSync } from 'node:fs';
+import path from 'node:path';
 
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest';
 
-import { TypeScriptFile } from '../../../compiler'
-import { setConfig } from '../../config'
-import { processSchemas } from '../schemas'
-import { openApi } from './models'
+import { TypeScriptFile } from '../../../compiler';
+import { setConfig } from '../../config';
+import { processSchemas } from '../schemas';
+import { openApi } from './models';
 
-vi.mock('node:fs')
+vi.mock('node:fs');
 
 describe('processSchemas', () => {
   it('writes to filesystem', async () => {
@@ -30,31 +30,31 @@ describe('processSchemas', () => {
       serviceResponse: 'body',
       types: {},
       useDateType: false,
-      useOptions: true
-    })
+      useOptions: true,
+    });
 
     if ('openapi' in openApi) {
       openApi.components = {
         schemas: {
           foo: {
-            type: 'object'
-          }
-        }
-      }
+            type: 'object',
+          },
+        },
+      };
     }
 
     const file = new TypeScriptFile({
       dir: '/',
-      name: 'schemas.ts'
-    })
+      name: 'schemas.ts',
+    });
 
-    await processSchemas({ file, openApi })
+    await processSchemas({ file, openApi });
 
-    file.write()
+    file.write();
 
     expect(writeFileSync).toHaveBeenCalledWith(
       path.resolve('/schemas.gen.ts'),
-      expect.anything()
-    )
-  })
-})
+      expect.anything(),
+    );
+  });
+});

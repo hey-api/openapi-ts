@@ -1,9 +1,9 @@
-import { existsSync } from 'node:fs'
-import path from 'node:path'
+import { existsSync } from 'node:fs';
+import path from 'node:path';
 
-import $RefParser from '@apidevtools/json-schema-ref-parser'
+import $RefParser from '@apidevtools/json-schema-ref-parser';
 
-import type { OpenApi } from '../openApi'
+import type { OpenApi } from '../openApi';
 
 /**
  * Load and parse te open api spec. If the file extension is ".yml" or ".yaml"
@@ -14,11 +14,11 @@ import type { OpenApi } from '../openApi'
 export const getOpenApiSpec = async (location: string) => {
   const absolutePathOrUrl = existsSync(location)
     ? path.resolve(location)
-    : location
+    : location;
   const schema = (await $RefParser.bundle(
     absolutePathOrUrl,
     absolutePathOrUrl,
-    {}
-  )) as OpenApi
-  return schema
-}
+    {},
+  )) as OpenApi;
+  return schema;
+};

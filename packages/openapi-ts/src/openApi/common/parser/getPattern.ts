@@ -9,4 +9,4 @@
  * @param pattern
  */
 export const getPattern = (pattern?: string): string | undefined =>
-  pattern?.replace(/\\/g, '\\\\').replace(/'/g, "\\'")
+  pattern?.replace(/\\/g, '\\\\').replace(/'/g, "\\'");

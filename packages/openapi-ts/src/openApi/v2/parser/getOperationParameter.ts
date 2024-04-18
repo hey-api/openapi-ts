@@ -1,18 +1,18 @@
-import type { OperationParameter } from '../../common/interfaces/client'
-import { getDefault } from '../../common/parser/getDefault'
-import { getEnums } from '../../common/parser/getEnums'
-import { getPattern } from '../../common/parser/getPattern'
-import { getRef } from '../../common/parser/getRef'
-import { getOperationParameterName } from '../../common/parser/operation'
-import { getType } from '../../common/parser/type'
-import type { OpenApi } from '../interfaces/OpenApi'
-import type { OpenApiParameter } from '../interfaces/OpenApiParameter'
-import type { OpenApiSchema } from '../interfaces/OpenApiSchema'
-import { getModel } from './getModel'
+import type { OperationParameter } from '../../common/interfaces/client';
+import { getDefault } from '../../common/parser/getDefault';
+import { getEnums } from '../../common/parser/getEnums';
+import { getPattern } from '../../common/parser/getPattern';
+import { getRef } from '../../common/parser/getRef';
+import { getOperationParameterName } from '../../common/parser/operation';
+import { getType } from '../../common/parser/type';
+import type { OpenApi } from '../interfaces/OpenApi';
+import type { OpenApiParameter } from '../interfaces/OpenApiParameter';
+import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
+import { getModel } from './getModel';
 
 export const getOperationParameter = (
   openApi: OpenApi,
-  parameter: OpenApiParameter
+  parameter: OpenApiParameter,
 ): OperationParameter => {
   const operationParameter: OperationParameter = {
     $refs: [],
@@ -45,95 +45,95 @@ export const getOperationParameter = (
     properties: [],
     template: null,
     type: 'unknown',
-    uniqueItems: parameter.uniqueItems
-  }
+    uniqueItems: parameter.uniqueItems,
+  };
 
   if (parameter.$ref) {
-    const definitionRef = getType(parameter.$ref)
-    operationParameter.export = 'reference'
-    operationParameter.type = definitionRef.type
-    operationParameter.base = definitionRef.base
-    operationParameter.template = definitionRef.template
-    operationParameter.imports.push(...definitionRef.imports)
-    operationParameter.default = getDefault(parameter, operationParameter)
-    return operationParameter
+    const definitionRef = getType(parameter.$ref);
+    operationParameter.export = 'reference';
+    operationParameter.type = definitionRef.type;
+    operationParameter.base = definitionRef.base;
+    operationParameter.template = definitionRef.template;
+    operationParameter.imports.push(...definitionRef.imports);
+    operationParameter.default = getDefault(parameter, operationParameter);
+    return operationParameter;
   }
 
   if (parameter.enum) {
-    const enums = getEnums(parameter, parameter.enum)
+    const enums = getEnums(parameter, parameter.enum);
     if (enums.length) {
-      operationParameter.base = 'string'
-      operationParameter.enum.push(...enums)
-      operationParameter.export = 'enum'
-      operationParameter.type = 'string'
-      operationParameter.default = getDefault(parameter, operationParameter)
-      return operationParameter
+      operationParameter.base = 'string';
+      operationParameter.enum.push(...enums);
+      operationParameter.export = 'enum';
+      operationParameter.type = 'string';
+      operationParameter.default = getDefault(parameter, operationParameter);
+      return operationParameter;
     }
   }
 
   if (parameter.type === 'array' && parameter.items) {
-    const items = getType(parameter.items.type, parameter.items.format)
-    operationParameter.export = 'array'
-    operationParameter.type = items.type
-    operationParameter.base = items.base
-    operationParameter.template = items.template
-    operationParameter.imports.push(...items.imports)
-    operationParameter.default = getDefault(parameter, operationParameter)
-    return operationParameter
+    const items = getType(parameter.items.type, parameter.items.format);
+    operationParameter.export = 'array';
+    operationParameter.type = items.type;
+    operationParameter.base = items.base;
+    operationParameter.template = items.template;
+    operationParameter.imports.push(...items.imports);
+    operationParameter.default = getDefault(parameter, operationParameter);
+    return operationParameter;
   }
 
   if (parameter.type === 'object' && parameter.items) {
-    const items = getType(parameter.items.type, parameter.items.format)
-    operationParameter.export = 'dictionary'
-    operationParameter.type = items.type
-    operationParameter.base = items.base
-    operationParameter.template = items.template
-    operationParameter.imports.push(...items.imports)
-    operationParameter.default = getDefault(parameter, operationParameter)
-    return operationParameter
+    const items = getType(parameter.items.type, parameter.items.format);
+    operationParameter.export = 'dictionary';
+    operationParameter.type = items.type;
+    operationParameter.base = items.base;
+    operationParameter.template = items.template;
+    operationParameter.imports.push(...items.imports);
+    operationParameter.default = getDefault(parameter, operationParameter);
+    return operationParameter;
   }
 
-  let schema = parameter.schema
+  let schema = parameter.schema;
   if (schema) {
     if (schema.$ref?.startsWith('#/parameters/')) {
-      schema = getRef<OpenApiSchema>(openApi, schema)
+      schema = getRef<OpenApiSchema>(openApi, schema);
     }
     if (schema.$ref) {
-      const model = getType(schema.$ref)
-      operationParameter.export = 'reference'
-      operationParameter.type = model.type
-      operationParameter.base = model.base
-      operationParameter.template = model.template
-      operationParameter.imports.push(...model.imports)
-      operationParameter.default = getDefault(parameter, operationParameter)
-      return operationParameter
+      const model = getType(schema.$ref);
+      operationParameter.export = 'reference';
+      operationParameter.type = model.type;
+      operationParameter.base = model.base;
+      operationParameter.template = model.template;
+      operationParameter.imports.push(...model.imports);
+      operationParameter.default = getDefault(parameter, operationParameter);
+      return operationParameter;
     } else {
-      const model = getModel(openApi, schema)
-      operationParameter.export = model.export
-      operationParameter.type = model.type
-      operationParameter.base = model.base
-      operationParameter.template = model.template
-      operationParameter.link = model.link
-      operationParameter.imports.push(...model.imports)
-      operationParameter.enum.push(...model.enum)
-      operationParameter.enums.push(...model.enums)
-      operationParameter.properties.push(...model.properties)
-      operationParameter.default = getDefault(parameter, operationParameter)
-      return operationParameter
+      const model = getModel(openApi, schema);
+      operationParameter.export = model.export;
+      operationParameter.type = model.type;
+      operationParameter.base = model.base;
+      operationParameter.template = model.template;
+      operationParameter.link = model.link;
+      operationParameter.imports.push(...model.imports);
+      operationParameter.enum.push(...model.enum);
+      operationParameter.enums.push(...model.enums);
+      operationParameter.properties.push(...model.properties);
+      operationParameter.default = getDefault(parameter, operationParameter);
+      return operationParameter;
     }
   }
 
   // If the parameter has a type than it can be a basic or generic type.
   if (parameter.type) {
-    const definitionType = getType(parameter.type, parameter.format)
-    operationParameter.export = 'generic'
-    operationParameter.type = definitionType.type
-    operationParameter.base = definitionType.base
-    operationParameter.template = definitionType.template
-    operationParameter.imports.push(...definitionType.imports)
-    operationParameter.default = getDefault(parameter, operationParameter)
-    return operationParameter
+    const definitionType = getType(parameter.type, parameter.format);
+    operationParameter.export = 'generic';
+    operationParameter.type = definitionType.type;
+    operationParameter.base = definitionType.base;
+    operationParameter.template = definitionType.template;
+    operationParameter.imports.push(...definitionType.imports);
+    operationParameter.default = getDefault(parameter, operationParameter);
+    return operationParameter;
   }
 
-  return operationParameter
-}
+  return operationParameter;
+};

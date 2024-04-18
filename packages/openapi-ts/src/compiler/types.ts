@@ -1,6 +1,6 @@
-import ts from 'typescript'
+import ts from 'typescript';
 
-import { addLeadingComment, type Comments, isType, ots } from './utils'
+import { addLeadingComment, type Comments, isType, ots } from './utils';
 
 /**
  * Convert an unknown value to an expression.
@@ -14,37 +14,37 @@ export const toExpression = <T = unknown>({
   value,
   unescape = false,
   shorthand = false,
-  identifiers = []
+  identifiers = [],
 }: {
-  value: T
-  unescape?: boolean
-  shorthand?: boolean
-  identifiers?: string[]
+  value: T;
+  unescape?: boolean;
+  shorthand?: boolean;
+  identifiers?: string[];
 }): ts.Expression | undefined => {
   if (value === null) {
-    return ts.factory.createNull()
+    return ts.factory.createNull();
   }
 
   if (Array.isArray(value)) {
-    return createArrayType({ arr: value })
+    return createArrayType({ arr: value });
   }
 
   if (typeof value === 'object') {
-    return createObjectType({ identifiers, obj: value, shorthand })
+    return createObjectType({ identifiers, obj: value, shorthand });
   }
 
   if (typeof value === 'number') {
-    return ots.number(value)
+    return ots.number(value);
   }
 
   if (typeof value === 'boolean') {
-    return ots.boolean(value)
+    return ots.boolean(value);
   }
 
   if (typeof value === 'string') {
-    return ots.string(value, unescape)
+    return ots.string(value, unescape);
   }
-}
+};
 
 /**
  * Create Array type expression.
@@ -54,16 +54,16 @@ export const toExpression = <T = unknown>({
  */
 export const createArrayType = <T>({
   arr,
-  multiLine = false
+  multiLine = false,
 }: {
-  arr: T[]
-  multiLine?: boolean
+  arr: T[];
+  multiLine?: boolean;
 }): ts.ArrayLiteralExpression =>
   ts.factory.createArrayLiteralExpression(
-    arr.map(value => toExpression({ value })).filter(isType<ts.Expression>),
+    arr.map((value) => toExpression({ value })).filter(isType<ts.Expression>),
     // Multiline if the array contains objects, or if specified by the user.
-    (!Array.isArray(arr[0]) && typeof arr[0] === 'object') || multiLine
-  )
+    (!Array.isArray(arr[0]) && typeof arr[0] === 'object') || multiLine,
+  );
 
 /**
  * Create Object type expression.
@@ -81,14 +81,14 @@ export const createObjectType = <T extends object>({
   multiLine = true,
   obj,
   shorthand = false,
-  unescape = false
+  unescape = false,
 }: {
-  obj: T
-  comments?: Record<string | number, Comments>
-  identifiers?: string[]
-  multiLine?: boolean
-  shorthand?: boolean
-  unescape?: boolean
+  obj: T;
+  comments?: Record<string | number, Comments>;
+  identifiers?: string[];
+  multiLine?: boolean;
+  shorthand?: boolean;
+  unescape?: boolean;
 }): ts.ObjectLiteralExpression => {
   const properties = Object.entries(obj)
     .map(([key, value]) => {
@@ -97,39 +97,39 @@ export const createObjectType = <T extends object>({
         identifiers: identifiers.includes(key) ? Object.keys(value) : [],
         shorthand,
         unescape,
-        value
-      })
+        value,
+      });
       if (!initializer) {
-        return undefined
+        return undefined;
       }
       // Create a identifier if the current key is one and it is not an object
       if (
         identifiers.includes(key) &&
         !ts.isObjectLiteralExpression(initializer)
       ) {
-        initializer = ts.factory.createIdentifier(value as string)
+        initializer = ts.factory.createIdentifier(value as string);
       }
       // Check key value equality before possibly modifying it
-      const hasShorthandSupport = key === value
+      const hasShorthandSupport = key === value;
       if (key.match(/\W/g) && !key.startsWith("'") && !key.endsWith("'")) {
-        key = `'${key}'`
+        key = `'${key}'`;
       }
       const assignment =
         shorthand && hasShorthandSupport
           ? ts.factory.createShorthandPropertyAssignment(value)
-          : ts.factory.createPropertyAssignment(key, initializer)
-      const c = comments?.[key]
+          : ts.factory.createPropertyAssignment(key, initializer);
+      const c = comments?.[key];
       if (c?.length) {
-        addLeadingComment(assignment, c)
+        addLeadingComment(assignment, c);
       }
-      return assignment
+      return assignment;
     })
-    .filter(isType<ts.ShorthandPropertyAssignment | ts.PropertyAssignment>)
+    .filter(isType<ts.ShorthandPropertyAssignment | ts.PropertyAssignment>);
   return ts.factory.createObjectLiteralExpression(
     properties as any[],
-    multiLine
-  )
-}
+    multiLine,
+  );
+};
 
 /**
  * Create enum declaration. Example `export enum T = { X, Y };`
@@ -143,28 +143,28 @@ export const createEnumDeclaration = <T extends object>({
   name,
   obj,
   leadingComment = [],
-  comments = {}
+  comments = {},
 }: {
-  name: string
-  obj: T
-  leadingComment: Comments
-  comments: Record<string | number, Comments>
+  name: string;
+  obj: T;
+  leadingComment: Comments;
+  comments: Record<string | number, Comments>;
 }): ts.EnumDeclaration => {
   const declaration = ts.factory.createEnumDeclaration(
     [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
     ts.factory.createIdentifier(name),
     Object.entries(obj).map(([key, value]) => {
-      const initializer = toExpression({ unescape: true, value })
-      const assignment = ts.factory.createEnumMember(key, initializer)
-      const c = comments?.[key]
+      const initializer = toExpression({ unescape: true, value });
+      const assignment = ts.factory.createEnumMember(key, initializer);
+      const c = comments?.[key];
       if (c) {
-        addLeadingComment(assignment, c)
+        addLeadingComment(assignment, c);
       }
-      return assignment
-    })
-  )
+      return assignment;
+    }),
+  );
   if (leadingComment.length) {
-    addLeadingComment(declaration, leadingComment)
+    addLeadingComment(declaration, leadingComment);
   }
-  return declaration
-}
+  return declaration;
+};

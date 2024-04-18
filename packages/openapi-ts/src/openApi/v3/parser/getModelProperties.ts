@@ -1,70 +1,73 @@
-import { escapeName } from '../../../utils/escape'
-import type { Model } from '../../common/interfaces/client'
-import { getDefault } from '../../common/parser/getDefault'
-import { getPattern } from '../../common/parser/getPattern'
-import { getType } from '../../common/parser/type'
-import type { OpenApi } from '../interfaces/OpenApi'
-import type { OpenApiSchema } from '../interfaces/OpenApiSchema'
-import { findOneOfParentDiscriminator, mapPropertyValue } from './discriminator'
-import type { getModel } from './getModel'
+import { escapeName } from '../../../utils/escape';
+import type { Model } from '../../common/interfaces/client';
+import { getDefault } from '../../common/parser/getDefault';
+import { getPattern } from '../../common/parser/getPattern';
+import { getType } from '../../common/parser/type';
+import type { OpenApi } from '../interfaces/OpenApi';
+import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
+import {
+  findOneOfParentDiscriminator,
+  mapPropertyValue,
+} from './discriminator';
+import type { getModel } from './getModel';
 
 // Fix for circular dependency
-export type GetModelFn = typeof getModel
+export type GetModelFn = typeof getModel;
 
 export const getAdditionalPropertiesModel = (
   openApi: OpenApi,
   definition: OpenApiSchema,
   getModel: GetModelFn,
-  model: Model
+  model: Model,
 ): Model => {
   const ap =
     typeof definition.additionalProperties === 'object'
       ? definition.additionalProperties
-      : {}
-  const apModel = getModel(openApi, ap)
+      : {};
+  const apModel = getModel(openApi, ap);
 
   if (ap.$ref) {
-    const apType = getType(ap.$ref)
-    model.base = apType.base
-    model.default = getDefault(definition, model)
-    model.export = 'dictionary'
-    model.imports.push(...apType.imports)
-    model.template = apType.template
-    model.type = apType.type
-    return model
+    const apType = getType(ap.$ref);
+    model.base = apType.base;
+    model.default = getDefault(definition, model);
+    model.export = 'dictionary';
+    model.imports.push(...apType.imports);
+    model.template = apType.template;
+    model.type = apType.type;
+    return model;
   }
 
   if (definition.additionalProperties && definition.properties) {
-    apModel.default = getDefault(definition, model)
-    apModel.export = 'generic'
-    apModel.isRequired = definition.additionalProperties === true
-    apModel.name = '[key: string]'
-    return apModel
+    apModel.default = getDefault(definition, model);
+    apModel.export = 'generic';
+    apModel.isRequired = definition.additionalProperties === true;
+    apModel.name = '[key: string]';
+    return apModel;
   }
 
-  model.base = apModel.base
-  model.default = getDefault(definition, model)
-  model.export = 'dictionary'
-  model.imports.push(...apModel.imports)
-  model.link = apModel
-  model.template = apModel.template
-  model.type = apModel.type
-  return model
-}
+  model.base = apModel.base;
+  model.default = getDefault(definition, model);
+  model.export = 'dictionary';
+  model.imports.push(...apModel.imports);
+  model.link = apModel;
+  model.template = apModel.template;
+  model.type = apModel.type;
+  return model;
+};
 
 export const getModelProperties = (
   openApi: OpenApi,
   definition: OpenApiSchema,
   getModel: GetModelFn,
-  parent?: Model
+  parent?: Model,
 ): Model[] => {
-  const models: Model[] = []
-  const discriminator = findOneOfParentDiscriminator(openApi, parent)
+  const models: Model[] = [];
+  const discriminator = findOneOfParentDiscriminator(openApi, parent);
 
   for (const propertyName in definition.properties) {
     if (definition.properties.hasOwnProperty(propertyName)) {
-      const property = definition.properties[propertyName]
-      const propertyRequired = !!definition.required?.includes(propertyName)
+      const property = definition.properties[propertyName];
+      const propertyRequired = !!definition.required?.includes(propertyName);
       const propertyValues: Omit<
         Model,
         | '$refs'
@@ -99,8 +102,8 @@ export const getModelProperties = (
         multipleOf: property.multipleOf,
         name: escapeName(propertyName),
         pattern: getPattern(property.pattern),
-        uniqueItems: property.uniqueItems
-      }
+        uniqueItems: property.uniqueItems,
+      };
 
       if (parent && discriminator?.propertyName == propertyName) {
         models.push({
@@ -115,10 +118,10 @@ export const getModelProperties = (
           link: null,
           properties: [],
           template: null,
-          type: 'string'
-        })
+          type: 'string',
+        });
       } else if (property.$ref) {
-        const model = getType(property.$ref)
+        const model = getType(property.$ref);
         models.push({
           ...propertyValues,
           $refs: model.$refs,
@@ -131,10 +134,10 @@ export const getModelProperties = (
           link: null,
           properties: [],
           template: model.template,
-          type: model.type
-        })
+          type: model.type,
+        });
       } else {
-        const model = getModel(openApi, property)
+        const model = getModel(openApi, property);
         models.push({
           ...propertyValues,
           $refs: model.$refs,
@@ -148,11 +151,11 @@ export const getModelProperties = (
           link: model.link,
           properties: model.properties,
           template: model.template,
-          type: model.type
-        })
+          type: model.type,
+        });
       }
     }
   }
 
-  return models
-}
+  return models;
+};
