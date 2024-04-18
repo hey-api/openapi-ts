@@ -14,6 +14,9 @@ importers:
       '@svitejs/changesets-changelog-github-compact':
         specifier: 1.1.0
         version: 1.1.0
+      prettier:
+        specifier: 3.2.5
+        version: 3.2.5
 
   docs:
     devDependencies:
@@ -3834,7 +3837,7 @@ packages:
       vite: ^5.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 5.2.8
+      vite: 5.2.8(@types/node@20.12.7)(less@4.2.0)
       vue: 3.4.21
     dev: true
 
@@ -10220,41 +10223,6 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /vite@5.2.8:
-    resolution: {integrity: sha512-OyZR+c1CE8yeHw5V5t59aXsUPPVTHMDjEZz8MgguLL/Q7NblxhZUlTu9xSPqlsUO/y+X7dlU05jdhvyycD55DA==}
-    engines: {node: ^18.0.0 || >=20.0.0}
-    hasBin: true
-    peerDependencies:
-      '@types/node': ^18.0.0 || >=20.0.0
-      less: '*'
-      lightningcss: ^1.21.0
-      sass: '*'
-      stylus: '*'
-      sugarss: '*'
-      terser: ^5.4.0
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      less:
-        optional: true
-      lightningcss:
-        optional: true
-      sass:
-        optional: true
-      stylus:
-        optional: true
-      sugarss:
-        optional: true
-      terser:
-        optional: true
-    dependencies:
-      esbuild: 0.20.2
-      postcss: 8.4.38
-      rollup: 4.14.2
-    optionalDependencies:
-      fsevents: 2.3.3
-    dev: true
-
   /vite@5.2.8(@types/node@20.12.7)(less@4.2.0):
     resolution: {integrity: sha512-OyZR+c1CE8yeHw5V5t59aXsUPPVTHMDjEZz8MgguLL/Q7NblxhZUlTu9xSPqlsUO/y+X7dlU05jdhvyycD55DA==}
     engines: {node: ^18.0.0 || >=20.0.0}
@@ -10317,7 +10285,7 @@ packages:
       mark.js: 8.11.1
       minisearch: 6.3.0
       shiki: 1.2.4
-      vite: 5.2.8
+      vite: 5.2.8(@types/node@20.12.7)(less@4.2.0)
       vue: 3.4.21
     transitivePeerDependencies:
       - '@algolia/client-search'

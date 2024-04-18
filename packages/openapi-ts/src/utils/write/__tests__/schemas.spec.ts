@@ -11,47 +11,50 @@ import { openApi } from './models';
 vi.mock('node:fs');
 
 describe('processSchemas', () => {
-    it('writes to filesystem', async () => {
-        setConfig({
-            client: 'fetch',
-            debug: false,
-            dryRun: false,
-            enums: 'javascript',
-            exportCore: true,
-            exportServices: true,
-            format: false,
-            input: '',
-            lint: false,
-            name: 'AppClient',
-            operationId: true,
-            output: '',
-            postfixServices: '',
-            schemas: true,
-            serviceResponse: 'body',
-            types: {},
-            useDateType: false,
-            useOptions: true,
-        });
-
-        if ('openapi' in openApi) {
-            openApi.components = {
-                schemas: {
-                    foo: {
-                        type: 'object',
-                    },
-                },
-            };
-        }
-
-        const file = new TypeScriptFile({
-            dir: '/',
-            name: 'schemas.ts',
-        });
-
-        await processSchemas({ file, openApi });
-
-        file.write();
-
-        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/schemas.gen.ts'), expect.anything());
+  it('writes to filesystem', async () => {
+    setConfig({
+      client: 'fetch',
+      debug: false,
+      dryRun: false,
+      enums: 'javascript',
+      exportCore: true,
+      exportServices: true,
+      format: false,
+      input: '',
+      lint: false,
+      name: 'AppClient',
+      operationId: true,
+      output: '',
+      postfixServices: '',
+      schemas: true,
+      serviceResponse: 'body',
+      types: {},
+      useDateType: false,
+      useOptions: true,
     });
+
+    if ('openapi' in openApi) {
+      openApi.components = {
+        schemas: {
+          foo: {
+            type: 'object',
+          },
+        },
+      };
+    }
+
+    const file = new TypeScriptFile({
+      dir: '/',
+      name: 'schemas.ts',
+    });
+
+    await processSchemas({ file, openApi });
+
+    file.write();
+
+    expect(writeFileSync).toHaveBeenCalledWith(
+      path.resolve('/schemas.gen.ts'),
+      expect.anything(),
+    );
+  });
 });

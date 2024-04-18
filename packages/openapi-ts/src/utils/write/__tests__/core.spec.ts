@@ -11,129 +11,147 @@ import { openApi } from './models';
 vi.mock('node:fs');
 
 describe('writeCore', () => {
-    let templates: Parameters<typeof writeCore>[3];
-    beforeEach(() => {
-        templates = mockTemplates;
+  let templates: Parameters<typeof writeCore>[3];
+  beforeEach(() => {
+    templates = mockTemplates;
+  });
+
+  it('writes to filesystem', async () => {
+    const client: Parameters<typeof writeCore>[2] = {
+      enumNames: [],
+      models: [],
+      server: 'http://localhost:8080',
+      services: [],
+      version: '1.0',
+    };
+
+    setConfig({
+      client: 'fetch',
+      debug: false,
+      dryRun: false,
+      enums: 'javascript',
+      exportCore: true,
+      exportServices: true,
+      format: false,
+      input: '',
+      lint: false,
+      name: 'AppClient',
+      operationId: true,
+      output: '',
+      postfixServices: '',
+      schemas: true,
+      serviceResponse: 'body',
+      types: {},
+      useDateType: false,
+      useOptions: true,
     });
 
-    it('writes to filesystem', async () => {
-        const client: Parameters<typeof writeCore>[2] = {
-            enumNames: [],
-            models: [],
-            server: 'http://localhost:8080',
-            services: [],
-            version: '1.0',
-        };
+    await writeCore(openApi, '/', client, templates);
 
-        setConfig({
-            client: 'fetch',
-            debug: false,
-            dryRun: false,
-            enums: 'javascript',
-            exportCore: true,
-            exportServices: true,
-            format: false,
-            input: '',
-            lint: false,
-            name: 'AppClient',
-            operationId: true,
-            output: '',
-            postfixServices: '',
-            schemas: true,
-            serviceResponse: 'body',
-            types: {},
-            useDateType: false,
-            useOptions: true,
-        });
+    expect(writeFileSync).toHaveBeenCalledWith(
+      path.resolve('/', '/OpenAPI.ts'),
+      'settings',
+    );
+    expect(writeFileSync).toHaveBeenCalledWith(
+      path.resolve('/', '/ApiError.ts'),
+      'apiError',
+    );
+    expect(writeFileSync).toHaveBeenCalledWith(
+      path.resolve('/', '/ApiRequestOptions.ts'),
+      'apiRequestOptions',
+    );
+    expect(writeFileSync).toHaveBeenCalledWith(
+      path.resolve('/', '/ApiResult.ts'),
+      'apiResult',
+    );
+    expect(writeFileSync).toHaveBeenCalledWith(
+      path.resolve('/', '/CancelablePromise.ts'),
+      'cancelablePromise',
+    );
+    expect(writeFileSync).toHaveBeenCalledWith(
+      path.resolve('/', '/request.ts'),
+      'request',
+    );
+  });
 
-        await writeCore(openApi, '/', client, templates);
+  it('uses client server value for base', async () => {
+    const client: Parameters<typeof writeCore>[2] = {
+      enumNames: [],
+      models: [],
+      server: 'http://localhost:8080',
+      services: [],
+      version: '1.0',
+    };
 
-        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/OpenAPI.ts'), 'settings');
-        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/ApiError.ts'), 'apiError');
-        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/ApiRequestOptions.ts'), 'apiRequestOptions');
-        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/ApiResult.ts'), 'apiResult');
-        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/CancelablePromise.ts'), 'cancelablePromise');
-        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/request.ts'), 'request');
+    const config = setConfig({
+      client: 'fetch',
+      debug: false,
+      dryRun: false,
+      enums: 'javascript',
+      exportCore: true,
+      exportServices: true,
+      format: false,
+      input: '',
+      lint: false,
+      name: 'AppClient',
+      operationId: true,
+      output: '',
+      postfixServices: '',
+      schemas: true,
+      serviceResponse: 'body',
+      types: {},
+      useDateType: false,
+      useOptions: true,
     });
 
-    it('uses client server value for base', async () => {
-        const client: Parameters<typeof writeCore>[2] = {
-            enumNames: [],
-            models: [],
-            server: 'http://localhost:8080',
-            services: [],
-            version: '1.0',
-        };
+    await writeCore(openApi, '/', client, templates);
 
-        const config = setConfig({
-            client: 'fetch',
-            debug: false,
-            dryRun: false,
-            enums: 'javascript',
-            exportCore: true,
-            exportServices: true,
-            format: false,
-            input: '',
-            lint: false,
-            name: 'AppClient',
-            operationId: true,
-            output: '',
-            postfixServices: '',
-            schemas: true,
-            serviceResponse: 'body',
-            types: {},
-            useDateType: false,
-            useOptions: true,
-        });
+    expect(templates.core.settings).toHaveBeenCalledWith({
+      $config: config,
+      httpRequest: 'FetchHttpRequest',
+      server: 'http://localhost:8080',
+      version: '1.0',
+    });
+  });
 
-        await writeCore(openApi, '/', client, templates);
+  it('uses custom value for base', async () => {
+    const client: Parameters<typeof writeCore>[2] = {
+      enumNames: [],
+      models: [],
+      server: 'http://localhost:8080',
+      services: [],
+      version: '1.0',
+    };
 
-        expect(templates.core.settings).toHaveBeenCalledWith({
-            $config: config,
-            httpRequest: 'FetchHttpRequest',
-            server: 'http://localhost:8080',
-            version: '1.0',
-        });
+    const config = setConfig({
+      base: 'foo',
+      client: 'fetch',
+      debug: false,
+      dryRun: false,
+      enums: 'javascript',
+      exportCore: true,
+      exportServices: true,
+      format: false,
+      input: '',
+      lint: false,
+      name: 'AppClient',
+      operationId: true,
+      output: '',
+      postfixServices: '',
+      schemas: true,
+      serviceResponse: 'body',
+      types: {},
+      useDateType: false,
+      useOptions: true,
     });
 
-    it('uses custom value for base', async () => {
-        const client: Parameters<typeof writeCore>[2] = {
-            enumNames: [],
-            models: [],
-            server: 'http://localhost:8080',
-            services: [],
-            version: '1.0',
-        };
+    await writeCore(openApi, '/', client, templates);
 
-        const config = setConfig({
-            base: 'foo',
-            client: 'fetch',
-            debug: false,
-            dryRun: false,
-            enums: 'javascript',
-            exportCore: true,
-            exportServices: true,
-            format: false,
-            input: '',
-            lint: false,
-            name: 'AppClient',
-            operationId: true,
-            output: '',
-            postfixServices: '',
-            schemas: true,
-            serviceResponse: 'body',
-            types: {},
-            useDateType: false,
-            useOptions: true,
-        });
-
-        await writeCore(openApi, '/', client, templates);
-
-        expect(templates.core.settings).toHaveBeenCalledWith({
-            $config: config,
-            httpRequest: 'FetchHttpRequest',
-            server: 'foo',
-            version: '1.0',
-        });
+    expect(templates.core.settings).toHaveBeenCalledWith({
+      $config: config,
+      httpRequest: 'FetchHttpRequest',
+      server: 'foo',
+      version: '1.0',
     });
+  });
 });

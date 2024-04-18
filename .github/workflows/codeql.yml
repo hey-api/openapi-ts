@@ -6,7 +6,7 @@ on:
       - main
   pull_request:
   schedule:
-    - cron: "44 20 * * 3"
+    - cron: '44 20 * * 3'
 
 concurrency:
   group: ${{ github.workflow }}=${{ github.head_ref }}
@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ javascript ]
+        language: [javascript]
 
     steps:
       - uses: actions/checkout@v4
@@ -40,4 +40,4 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
-          category: "/language:${{ matrix.language }}"
+          category: '/language:${{ matrix.language }}'

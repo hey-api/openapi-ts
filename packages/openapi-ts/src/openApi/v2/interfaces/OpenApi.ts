@@ -13,19 +13,19 @@ import type { OpenApiTag } from './OpenApiTag';
  * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md
  */
 export interface OpenApi {
-    basePath?: string;
-    consumes?: string[];
-    definitions?: Dictionary<OpenApiSchema>;
-    externalDocs?: OpenApiExternalDocs;
-    host?: string;
-    info: OpenApiInfo;
-    parameters?: Dictionary<OpenApiParameter>;
-    paths: Dictionary<OpenApiPath>;
-    produces?: string[];
-    responses?: Dictionary<OpenApiResponse>;
-    schemes?: string[];
-    security?: OpenApiSecurityRequirement[];
-    securityDefinitions?: Dictionary<OpenApiSecurityScheme>;
-    swagger: string;
-    tags?: OpenApiTag[];
+  basePath?: string;
+  consumes?: string[];
+  definitions?: Dictionary<OpenApiSchema>;
+  externalDocs?: OpenApiExternalDocs;
+  host?: string;
+  info: OpenApiInfo;
+  parameters?: Dictionary<OpenApiParameter>;
+  paths: Dictionary<OpenApiPath>;
+  produces?: string[];
+  responses?: Dictionary<OpenApiResponse>;
+  schemes?: string[];
+  security?: OpenApiSecurityRequirement[];
+  securityDefinitions?: Dictionary<OpenApiSecurityScheme>;
+  swagger: string;
+  tags?: OpenApiTag[];
 }

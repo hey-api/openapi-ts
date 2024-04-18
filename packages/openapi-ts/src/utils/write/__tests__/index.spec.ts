@@ -10,54 +10,57 @@ import { processIndex } from '../index';
 vi.mock('node:fs');
 
 describe('processIndex', () => {
-    it('writes to filesystem', async () => {
-        setConfig({
-            client: 'fetch',
-            debug: false,
-            dryRun: false,
-            enums: 'javascript',
-            exportCore: true,
-            exportServices: true,
-            format: false,
-            input: '',
-            lint: false,
-            operationId: true,
-            output: '',
-            postfixServices: 'Service',
-            schemas: true,
-            serviceResponse: 'body',
-            types: {},
-            useDateType: false,
-            useOptions: true,
-        });
-
-        const files: Parameters<typeof processIndex>[0]['files'] = {
-            enums: new TypeScriptFile({
-                dir: '/',
-                name: 'enums.ts',
-            }),
-            index: new TypeScriptFile({
-                dir: '/',
-                name: 'index.ts',
-            }),
-            schemas: new TypeScriptFile({
-                dir: '/',
-                name: 'schemas.ts',
-            }),
-            services: new TypeScriptFile({
-                dir: '/',
-                name: 'services.ts',
-            }),
-            types: new TypeScriptFile({
-                dir: '/',
-                name: 'models.ts',
-            }),
-        };
-
-        await processIndex({ files });
-
-        files.index.write();
-
-        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/', '/index.ts'), expect.anything());
+  it('writes to filesystem', async () => {
+    setConfig({
+      client: 'fetch',
+      debug: false,
+      dryRun: false,
+      enums: 'javascript',
+      exportCore: true,
+      exportServices: true,
+      format: false,
+      input: '',
+      lint: false,
+      operationId: true,
+      output: '',
+      postfixServices: 'Service',
+      schemas: true,
+      serviceResponse: 'body',
+      types: {},
+      useDateType: false,
+      useOptions: true,
     });
+
+    const files: Parameters<typeof processIndex>[0]['files'] = {
+      enums: new TypeScriptFile({
+        dir: '/',
+        name: 'enums.ts',
+      }),
+      index: new TypeScriptFile({
+        dir: '/',
+        name: 'index.ts',
+      }),
+      schemas: new TypeScriptFile({
+        dir: '/',
+        name: 'schemas.ts',
+      }),
+      services: new TypeScriptFile({
+        dir: '/',
+        name: 'services.ts',
+      }),
+      types: new TypeScriptFile({
+        dir: '/',
+        name: 'models.ts',
+      }),
+    };
+
+    await processIndex({ files });
+
+    files.index.write();
+
+    expect(writeFileSync).toHaveBeenCalledWith(
+      path.resolve('/', '/index.ts'),
+      expect.anything(),
+    );
+  });
 });

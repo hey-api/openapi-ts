@@ -10,39 +10,39 @@ import { openApi } from './models';
 vi.mock('node:fs');
 
 describe('writeClient', () => {
-    it('writes to filesystem', async () => {
-        setConfig({
-            client: 'fetch',
-            debug: false,
-            dryRun: false,
-            enums: 'javascript',
-            exportCore: true,
-            exportServices: true,
-            format: true,
-            input: '',
-            lint: false,
-            operationId: true,
-            output: './dist',
-            postfixServices: 'Service',
-            schemas: true,
-            serviceResponse: 'body',
-            types: {},
-            useDateType: false,
-            useOptions: false,
-        });
-
-        const client: Parameters<typeof writeClient>[1] = {
-            enumNames: [],
-            models: [],
-            server: 'http://localhost:8080',
-            services: [],
-            version: 'v1',
-        };
-
-        await writeClient(openApi, client, mockTemplates);
-
-        expect(rmSync).toHaveBeenCalled();
-        expect(mkdirSync).toHaveBeenCalled();
-        expect(writeFileSync).toHaveBeenCalled();
+  it('writes to filesystem', async () => {
+    setConfig({
+      client: 'fetch',
+      debug: false,
+      dryRun: false,
+      enums: 'javascript',
+      exportCore: true,
+      exportServices: true,
+      format: true,
+      input: '',
+      lint: false,
+      operationId: true,
+      output: './dist',
+      postfixServices: 'Service',
+      schemas: true,
+      serviceResponse: 'body',
+      types: {},
+      useDateType: false,
+      useOptions: false,
     });
+
+    const client: Parameters<typeof writeClient>[1] = {
+      enumNames: [],
+      models: [],
+      server: 'http://localhost:8080',
+      services: [],
+      version: 'v1',
+    };
+
+    await writeClient(openApi, client, mockTemplates);
+
+    expect(rmSync).toHaveBeenCalled();
+    expect(mkdirSync).toHaveBeenCalled();
+    expect(writeFileSync).toHaveBeenCalled();
+  });
 });

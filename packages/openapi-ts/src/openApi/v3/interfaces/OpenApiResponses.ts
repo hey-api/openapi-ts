@@ -5,10 +5,10 @@ import type { OpenApiResponse } from './OpenApiResponse';
  * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.1.0.md#responses-object
  */
 interface Response {
-    [httpcode: string]: OpenApiResponse;
+  [httpcode: string]: OpenApiResponse;
 }
 
 export type OpenApiResponses = OpenApiReference &
-    Response & {
-        default: OpenApiResponse;
-    };
+  Response & {
+    default: OpenApiResponse;
+  };

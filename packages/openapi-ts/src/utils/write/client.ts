@@ -19,69 +19,80 @@ import { processServices } from './services';
  * @param client Client containing models, schemas, and services
  * @param templates Templates wrapper with all loaded Handlebars templates
  */
-export const writeClient = async (openApi: OpenApi, client: Client, templates: Templates): Promise<void> => {
-    const config = getConfig();
+export const writeClient = async (
+  openApi: OpenApi,
+  client: Client,
+  templates: Templates,
+): Promise<void> => {
+  const config = getConfig();
 
-    if (typeof config.exportServices === 'string') {
-        const regexp = new RegExp(config.exportServices);
-        client.services = client.services.filter(service => regexp.test(service.name));
-    }
+  if (typeof config.exportServices === 'string') {
+    const regexp = new RegExp(config.exportServices);
+    client.services = client.services.filter((service) =>
+      regexp.test(service.name),
+    );
+  }
 
-    if (config.types.include) {
-        const regexp = new RegExp(config.types.include);
-        client.models = client.models.filter(model => regexp.test(model.name));
-    }
+  if (config.types.include) {
+    const regexp = new RegExp(config.types.include);
+    client.models = client.models.filter((model) => regexp.test(model.name));
+  }
 
-    const outputPath = path.resolve(config.output);
+  const outputPath = path.resolve(config.output);
 
-    if (!existsSync(outputPath)) {
-        mkdirSync(outputPath, { recursive: true });
-    }
+  if (!existsSync(outputPath)) {
+    mkdirSync(outputPath, { recursive: true });
+  }
 
-    const files: Record<string, TypeScriptFile> = {
-        index: new TypeScriptFile({
-            dir: config.output,
-            name: 'index.ts',
-        }),
-    };
-    if (config.enums) {
-        files.enums = new TypeScriptFile({
-            dir: config.output,
-            name: 'enums.ts',
-        });
-    }
-    if (config.schemas) {
-        files.schemas = new TypeScriptFile({
-            dir: config.output,
-            name: 'schemas.ts',
-        });
-    }
-    if (config.exportServices) {
-        files.services = new TypeScriptFile({
-            dir: config.output,
-            name: 'services.ts',
-        });
-    }
-    if (config.types.export) {
-        files.types = new TypeScriptFile({
-            dir: config.output,
-            name: 'types.ts',
-        });
-    }
+  const files: Record<string, TypeScriptFile> = {
+    index: new TypeScriptFile({
+      dir: config.output,
+      name: 'index.ts',
+    }),
+  };
+  if (config.enums) {
+    files.enums = new TypeScriptFile({
+      dir: config.output,
+      name: 'enums.ts',
+    });
+  }
+  if (config.schemas) {
+    files.schemas = new TypeScriptFile({
+      dir: config.output,
+      name: 'schemas.ts',
+    });
+  }
+  if (config.exportServices) {
+    files.services = new TypeScriptFile({
+      dir: config.output,
+      name: 'services.ts',
+    });
+  }
+  if (config.types.export) {
+    files.types = new TypeScriptFile({
+      dir: config.output,
+      name: 'types.ts',
+    });
+  }
 
-    await processSchemas({ file: files.schemas, openApi });
-    await processTypesAndEnums({ client, files });
-    await processServices({ client, files });
+  await processSchemas({ file: files.schemas, openApi });
+  await processTypesAndEnums({ client, files });
+  await processServices({ client, files });
 
-    // deprecated files
-    await writeClientClass(openApi, outputPath, client, templates);
-    await writeCore(openApi, path.resolve(config.output, 'core'), client, templates);
+  // deprecated files
+  await writeClientClass(openApi, outputPath, client, templates);
+  await writeCore(
+    openApi,
+    path.resolve(config.output, 'core'),
+    client,
+    templates,
+  );
 
-    await processIndex({ files });
+  await processIndex({ files });
 
-    files.enums?.write('\n\n');
-    files.schemas?.write('\n\n');
-    files.services?.write('\n\n');
-    files.types?.write('\n\n');
-    files.index.write();
+  files.enums?.write('\n\n');
+  files.schemas?.write('\n\n');
+  files.services?.write('\n\n');
+  files.types?.write('\n\n');
+  files.index.write();
 };

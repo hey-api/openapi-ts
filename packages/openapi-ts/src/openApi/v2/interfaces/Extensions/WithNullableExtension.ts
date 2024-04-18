@@ -1,3 +1,3 @@
 export interface WithNullableExtension {
-    'x-nullable'?: boolean;
+  'x-nullable'?: boolean;
 }
