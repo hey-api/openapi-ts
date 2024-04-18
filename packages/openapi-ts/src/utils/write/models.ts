@@ -1,5 +1,3 @@
-import camelcase from 'camelcase';
-
 import { type Comments, compiler, type Node, TypeScriptFile } from '../../compiler';
 import { addLeadingComment } from '../../compiler/utils';
 import type { Model, OperationParameter, Service } from '../../openApi';
@@ -9,6 +7,7 @@ import { getConfig } from '../config';
 import { enumKey, enumName, enumUnionType, enumValue } from '../enum';
 import { escapeComment } from '../escape';
 import { sortByName } from '../sort';
+import { transformName } from '../transform';
 import { serviceExportedNamespace } from './services';
 import { toType } from './type';
 
@@ -91,14 +90,6 @@ const processEnum = (client: Client, model: Model, onNode: OnNode, exportType = 
         addLeadingComment(node, comment);
         onNode(node, 'enum');
     }
-};
-
-const transformName = (name: string) => {
-    const config = getConfig();
-    if (config.types.name === 'PascalCase') {
-        return camelcase(name, { pascalCase: true });
-    }
-    return name;
 };
 
 const processType = (client: Client, model: Model, onNode: OnNode) => {
