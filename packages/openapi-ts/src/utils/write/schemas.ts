@@ -33,12 +33,6 @@ export const processSchemas = async ({ file, openApi }: { file?: TypeScriptFile;
                     addSchema(name, schema);
                 }
             }
-            for (const name in openApi.components.parameters) {
-                if (openApi.components.parameters.hasOwnProperty(name)) {
-                    const parameter = openApi.components.parameters[name];
-                    addSchema(name, parameter);
-                }
-            }
         }
     }
 };
