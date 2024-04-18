@@ -45,6 +45,7 @@ import xhrGetResponseBody from '../templates/core/xhr/getResponseBody.hbs';
 import xhrGetResponseHeader from '../templates/core/xhr/getResponseHeader.hbs';
 import xhrRequest from '../templates/core/xhr/request.hbs';
 import xhrSendRequest from '../templates/core/xhr/sendRequest.hbs';
+import { transformServiceName } from './transform';
 
 export const registerHandlebarHelpers = (): void => {
   Handlebars.registerHelper('camelCase', camelCase);
@@ -80,6 +81,8 @@ export const registerHandlebarHelpers = (): void => {
       return a !== b ? options.fn(this) : options.inverse(this);
     },
   );
+
+  Handlebars.registerHelper('transformServiceName', transformServiceName);
 };
 
 export interface Templates {
