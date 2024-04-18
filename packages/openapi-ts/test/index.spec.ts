@@ -1,52 +1,24 @@
-import { readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs'
 
-import { sync } from 'glob';
-import { describe, expect, it } from 'vitest';
+import { sync } from 'glob'
+import { describe, expect, it } from 'vitest'
 
-import { createClient } from '../';
-import type { UserConfig } from '../src/types/config';
+import { createClient } from '../'
+import type { UserConfig } from '../src/types/config'
 
-const V2_SPEC_PATH = './test/spec/v2.json';
-const V3_SPEC_PATH = './test/spec/v3.json';
+const V2_SPEC_PATH = './test/spec/v2.json'
+const V3_SPEC_PATH = './test/spec/v3.json'
 
-const OUTPUT_PREFIX = './test/generated/';
+const OUTPUT_PREFIX = './test/generated/'
 
-const toOutputPath = (name: string) => `${OUTPUT_PREFIX}${name}/`;
-const toSnapshotPath = (file: string) => `./__snapshots__/${file.replace(OUTPUT_PREFIX, '')}.snap`;
+const toOutputPath = (name: string) => `${OUTPUT_PREFIX}${name}/`
+const toSnapshotPath = (file: string) =>
+  `./__snapshots__/${file.replace(OUTPUT_PREFIX, '')}.snap`
 
 describe('OpenAPI v2', () => {
-    it.each([
-        {
-            config: {
-                client: 'fetch',
-                enums: 'javascript',
-                exportCore: true,
-                exportServices: true,
-                input: '',
-                output: '',
-                schemas: true,
-                types: true,
-                useOptions: true,
-            } as UserConfig,
-            description: 'generate fetch client',
-            name: 'v2',
-        },
-    ])('$description', async ({ name, config }) => {
-        const output = toOutputPath(name);
-        await createClient({
-            ...config,
-            input: V2_SPEC_PATH,
-            output,
-        });
-        sync(`${output}**/*.ts`).forEach(file => {
-            const content = readFileSync(file, 'utf8').toString();
-            expect(content).toMatchFileSnapshot(toSnapshotPath(file));
-        });
-    });
-});
-
-describe('OpenAPI v3', () => {
-    const config: UserConfig = {
+  it.each([
+    {
+      config: {
         client: 'fetch',
         enums: 'javascript',
         exportCore: true,
@@ -55,8 +27,24 @@ describe('OpenAPI v3', () => {
         output: '',
         schemas: true,
         types: true,
-        useOptions: true,
-    };
+        useOptions: true
+      } as UserConfig,
+      description: 'generate fetch client',
+      name: 'v2'
+    }
+  ])('$description', async ({ name, config }) => {
+    const output = toOutputPath(name)
+    await createClient({
+      ...config,
+      input: V2_SPEC_PATH,
+      output
+    })
+    sync(`${output}**/*.ts`).forEach(file => {
+      const content = readFileSync(file, 'utf8').toString()
+      expect(content).toMatchFileSnapshot(toSnapshotPath(file))
+    })
+  })
+})
 
     it.each([
         {

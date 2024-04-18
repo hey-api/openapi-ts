@@ -1,0 +1,7 @@
+**/.changeset
+**/node_modules
+**/templates
+**/dist
+**/.vitepress
+
+**/CHANGELOG.md

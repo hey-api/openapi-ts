@@ -28,10 +28,10 @@ https://help.github.com/articles/using-pull-requests
 
 **Your Pull Request must:**
 
--   Address a single issue or add a single item of functionality.
--   Contain a clean history of small, incremental, logically separate commits, with no merge commits.
--   Use clear commit messages.
--   Be possible to merge automatically.
+- Address a single issue or add a single item of functionality.
+- Contain a clean history of small, incremental, logically separate commits, with no merge commits.
+- Use clear commit messages.
+- Be possible to merge automatically.
 
 ## Submitting a Pull Request
 

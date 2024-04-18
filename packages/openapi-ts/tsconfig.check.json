@@ -1,11 +1,11 @@
 {
-    "compilerOptions": {
-        "exactOptionalPropertyTypes": true,
-        "module": "NodeNext",
-        "moduleResolution": "NodeNext",
-        "noEmit": true,
-        "strict": true,
-        "target": "ES2020"
-    },
-    "include": ["dist/**/*", "types/**/*"]
+  "compilerOptions": {
+    "exactOptionalPropertyTypes": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "noEmit": true,
+    "strict": true,
+    "target": "ES2020"
+  },
+  "include": ["dist/**/*", "types/**/*"]
 }

@@ -8,13 +8,13 @@
 
 ## Features
 
--   use with CLI, Node.js, or npx
--   export TypeScript interfaces from OpenAPI v2.0, v3.0, and v3.1 specifications
--   support JSON or YAML input files
--   support external references using [json-schema-ref-parser](https://github.com/APIDevTools/json-schema-ref-parser/)
--   create fetch, axios, angular, node.js, or xhr REST clients
--   export JSON Schemas from OpenAPI specifications
--   abortable requests through cancellable promise pattern
+- use with CLI, Node.js, or npx
+- export TypeScript interfaces from OpenAPI v2.0, v3.0, and v3.1 specifications
+- support JSON or YAML input files
+- support external references using [json-schema-ref-parser](https://github.com/APIDevTools/json-schema-ref-parser/)
+- create fetch, axios, angular, node.js, or xhr REST clients
+- export JSON Schemas from OpenAPI specifications
+- abortable requests through cancellable promise pattern
 
 ## GitHub Integration (coming soon)
 

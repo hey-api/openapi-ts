@@ -1,63 +1,66 @@
-import { writeFileSync } from 'node:fs';
-import path from 'node:path';
+import { writeFileSync } from 'node:fs'
+import path from 'node:path'
 
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest'
 
-import { TypeScriptFile } from '../../../compiler';
-import { setConfig } from '../../config';
-import { processServices } from '../services';
+import { TypeScriptFile } from '../../../compiler'
+import { setConfig } from '../../config'
+import { processServices } from '../services'
 
-vi.mock('node:fs');
+vi.mock('node:fs')
 
 describe('processServices', () => {
-    it('writes to filesystem', async () => {
-        setConfig({
-            client: 'fetch',
-            debug: false,
-            dryRun: false,
-            enums: false,
-            exportCore: true,
-            exportServices: true,
-            format: false,
-            input: '',
-            lint: false,
-            operationId: true,
-            output: '',
-            postfixServices: 'Service',
-            schemas: true,
-            serviceResponse: 'body',
-            types: {},
-            useDateType: false,
-            useOptions: false,
-        });
+  it('writes to filesystem', async () => {
+    setConfig({
+      client: 'fetch',
+      debug: false,
+      dryRun: false,
+      enums: false,
+      exportCore: true,
+      exportServices: true,
+      format: false,
+      input: '',
+      lint: false,
+      operationId: true,
+      output: '',
+      postfixServices: 'Service',
+      schemas: true,
+      serviceResponse: 'body',
+      types: {},
+      useDateType: false,
+      useOptions: false
+    })
 
-        const client: Parameters<typeof processServices>[0]['client'] = {
-            enumNames: [],
-            models: [],
-            server: 'http://localhost:8080',
-            services: [
-                {
-                    $refs: [],
-                    imports: [],
-                    name: 'User',
-                    operations: [],
-                },
-            ],
-            version: 'v1',
-        };
+    const client: Parameters<typeof processServices>[0]['client'] = {
+      enumNames: [],
+      models: [],
+      server: 'http://localhost:8080',
+      services: [
+        {
+          $refs: [],
+          imports: [],
+          name: 'User',
+          operations: []
+        }
+      ],
+      version: 'v1'
+    }
 
-        const file = new TypeScriptFile({
-            dir: '/',
-            name: 'services.ts',
-        });
-        const files = {
-            services: file,
-        };
+    const file = new TypeScriptFile({
+      dir: '/',
+      name: 'services.ts'
+    })
+    const files = {
+      services: file
+    }
 
-        await processServices({ client, files });
+    await processServices({ client, files })
 
-        file.write();
+    file.write()
 
-        expect(writeFileSync).toHaveBeenCalledWith(path.resolve('/services.gen.ts'), expect.anything());
-    });
-});
+    expect(writeFileSync).toHaveBeenCalledWith(
+      path.resolve('/services.gen.ts'),
+      expect.anything()
+    )
+  })
+})

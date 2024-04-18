@@ -8,28 +8,32 @@ description: Configure openapi-ts.
 `openapi-ts` supports loading configuration from any file inside your project root directory supported by [jiti loader](https://github.com/unjs/c12?tab=readme-ov-file#-features). Below are the most common file formats.
 
 ::: code-group
+
 ```js [openapi-ts.config.ts]
 import { defineConfig } from '@hey-api/openapi-ts'
 
 export default defineConfig({
   input: 'path/to/openapi.json',
-  output: 'src/client',
+  output: 'src/client'
 })
 ```
+
 ```js [openapi-ts.config.cjs]
 /** @type {import('@hey-api/openapi-ts').UserConfig} */
 module.exports = {
   input: 'path/to/openapi.json',
-  output: 'src/client',
+  output: 'src/client'
 }
 ```
+
 ```js [openapi-ts.config.mjs]
 /** @type {import('@hey-api/openapi-ts').UserConfig} */
 export default {
   input: 'path/to/openapi.json',
-  output: 'src/client',
+  output: 'src/client'
 }
 ```
+
 :::
 
 Alternatively, you can use `openapi-ts.config.js` and configure the export statement depending on your project setup.
@@ -39,6 +43,7 @@ Alternatively, you can use `openapi-ts.config.js` and configure the export state
 By default, `openapi-ts` will try to guess your client based on your project dependencies. If we don't get it right, you can specify the desired client
 
 ::: code-group
+
 ```js{2} [fetch]
 export default {
   client: 'fetch',
@@ -46,6 +51,7 @@ export default {
   output: 'src/client',
 }
 ```
+
 ```js{2} [axios]
 export default {
   client: 'axios',
@@ -53,6 +59,7 @@ export default {
   output: 'src/client',
 }
 ```
+
 ```js{2} [angular]
 export default {
   client: 'angular',
@@ -60,6 +67,7 @@ export default {
   output: 'src/client',
 }
 ```
+
 ```js{2} [node]
 export default {
   client: 'node',
@@ -67,6 +75,7 @@ export default {
   output: 'src/client',
 }
 ```
+
 ```js{2} [xhr]
 export default {
   client: 'xhr',
@@ -74,6 +83,7 @@ export default {
   output: 'src/client',
 }
 ```
+
 :::
 
 We support these clients:

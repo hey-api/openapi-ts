@@ -3,28 +3,28 @@
 
 version: 2
 updates:
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: 'github-actions'
+    directory: '/'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
     groups:
       github-actions:
         patterns:
-          - "*"
+          - '*'
 
   - package-ecosystem: npm
-    directory: "/"
+    directory: '/'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
     groups:
       prod-deps:
-        dependency-type: "production"
+        dependency-type: 'production'
         exclude-patterns:
-          - "@angular*"
+          - '@angular*'
       dev-deps:
-        dependency-type: "development"
+        dependency-type: 'development'
         exclude-patterns:
-          - "@angular*"
+          - '@angular*'
       angular-deps:
         patterns:
-          - "@angular*"
+          - '@angular*'
