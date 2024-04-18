@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.40.2
+
+### Patch Changes
+
+- fix: unhandled SyntaxKind unknown when specification has numeric enums ([#417](https://github.com/hey-api/openapi-ts/pull/417))
+
 ## 0.40.1
 
 ### Patch Changes
