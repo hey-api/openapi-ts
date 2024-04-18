@@ -1,4 +1,4 @@
-import * as api from './index';
+import * as api from './index'
 
 // @ts-ignore
-window.api = api;
+window.api = api

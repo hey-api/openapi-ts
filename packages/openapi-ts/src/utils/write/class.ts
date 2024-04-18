@@ -1,12 +1,12 @@
-import { writeFileSync } from 'node:fs';
-import path from 'node:path';
+import { writeFileSync } from 'node:fs'
+import path from 'node:path'
 
-import type { OpenApi } from '../../openApi';
-import type { Client } from '../../types/client';
-import { getConfig } from '../config';
-import { getHttpRequestName } from '../getHttpRequestName';
-import type { Templates } from '../handlebars';
-import { sortByName } from '../sort';
+import type { OpenApi } from '../../openApi'
+import type { Client } from '../../types/client'
+import { getConfig } from '../config'
+import { getHttpRequestName } from '../getHttpRequestName'
+import type { Templates } from '../handlebars'
+import { sortByName } from '../sort'
 
 /**
  * Generate the OpenAPI client index file using the Handlebar template and write it to disk.
@@ -18,22 +18,25 @@ import { sortByName } from '../sort';
  * @param templates The loaded handlebar templates
  */
 export const writeClientClass = async (
-    openApi: OpenApi,
-    outputPath: string,
-    client: Client,
-    templates: Templates
+  openApi: OpenApi,
+  outputPath: string,
+  client: Client,
+  templates: Templates
 ): Promise<void> => {
-    const config = getConfig();
+  const config = getConfig()
 
-    const templateResult = templates.client({
-        $config: config,
-        ...client,
-        httpRequest: getHttpRequestName(config.client),
-        models: sortByName(client.models),
-        services: sortByName(client.services),
-    });
+  const templateResult = templates.client({
+    $config: config,
+    ...client,
+    httpRequest: getHttpRequestName(config.client),
+    models: sortByName(client.models),
+    services: sortByName(client.services)
+  })
 
-    if (config.name) {
-        await writeFileSync(path.resolve(outputPath, `${config.name}.ts`), templateResult);
-    }
-};
+  if (config.name) {
+    await writeFileSync(
+      path.resolve(outputPath, `${config.name}.ts`),
+      templateResult
+    )
+  }
+}
