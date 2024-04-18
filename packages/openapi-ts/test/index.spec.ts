@@ -71,6 +71,7 @@ describe('OpenAPI v3', () => {
                 ...config,
                 client: 'angular',
                 enums: false,
+                schemas: false,
             } as UserConfig,
             description: 'generate angular client',
             name: 'v3_angular',
@@ -116,6 +117,7 @@ describe('OpenAPI v3', () => {
                 ...config,
                 exportCore: false,
                 exportServices: false,
+                schemas: false,
                 types: '^ModelWithPattern',
                 useDateType: true,
             } as UserConfig,
@@ -159,6 +161,7 @@ describe('OpenAPI v3', () => {
             config: {
                 ...config,
                 enums: 'typescript',
+                schemas: false,
             } as UserConfig,
             description: 'generate TypeScript enums',
             name: 'v3_enums_typescript',
@@ -188,6 +191,18 @@ describe('OpenAPI v3', () => {
             } as UserConfig,
             description: 'generate pascalcase types',
             name: 'v3_pascalcase',
+        },
+        {
+            config: {
+                ...config,
+                enums: false,
+                exportCore: false,
+                exportServices: false,
+                schemas: true,
+                types: false,
+            } as UserConfig,
+            description: 'generate JSON Schemas',
+            name: 'v3_schemas_json',
         },
     ])('$description', async ({ name, config }) => {
         const output = toOutputPath(name);
