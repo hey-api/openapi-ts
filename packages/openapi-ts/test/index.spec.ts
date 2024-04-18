@@ -182,7 +182,7 @@ describe('OpenAPI v3', () => {
                 exportServices: false,
                 schemas: false,
                 types: {
-                    include: '^camelCaseCommentWithBreaks',
+                    include: '^(camelCaseCommentWithBreaks|ArrayWithProperties)',
                     name: 'PascalCase',
                 },
             } as UserConfig,

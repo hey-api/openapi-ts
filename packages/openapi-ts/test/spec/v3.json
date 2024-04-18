@@ -1772,7 +1772,7 @@
                     "type": "object",
                     "properties": {
                         "foo": {
-                            "type": "string"
+                            "$ref": "#/components/schemas/camelCaseCommentWithBreaks"
                         },
                         "bar": {
                             "type": "string"

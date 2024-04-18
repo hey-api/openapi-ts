@@ -7,3 +7,11 @@
  * Fourth line
  */
 export type CamelCaseCommentWithBreaks = number;
+
+/**
+ * This is a simple array with properties
+ */
+export type ArrayWithProperties = Array<{
+    foo?: CamelCaseCommentWithBreaks;
+    bar?: string;
+}>;
