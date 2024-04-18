@@ -101,15 +101,15 @@
     "globals": "15.0.0",
     "node-fetch": "3.3.2",
     "prettier": "3.2.5",
-    "puppeteer": "22.6.4",
+    "puppeteer": "22.6.5",
     "rimraf": "5.0.5",
-    "rollup": "4.14.2",
+    "rollup": "4.14.3",
     "rollup-plugin-dts": "6.1.0",
     "rxjs": "7.8.1",
     "ts-node": "10.9.2",
     "tslib": "2.6.2",
     "typescript": "5.4.5",
-    "typescript-eslint": "7.6.0",
+    "typescript-eslint": "7.7.0",
     "vitest": "1.5.0"
   }
 }
