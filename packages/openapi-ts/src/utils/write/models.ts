@@ -12,7 +12,7 @@ import { getConfig } from '../config';
 import { enumKey, enumName, enumUnionType, enumValue } from '../enum';
 import { escapeComment } from '../escape';
 import { sortByName } from '../sort';
-import { transformName } from '../transform';
+import { transformTypeName } from '../transform';
 import { serviceExportedNamespace } from './services';
 import { toType } from './type';
 
@@ -111,7 +111,7 @@ const processType = (client: Client, model: Model, onNode: OnNode) => {
     model.deprecated && '@deprecated',
   ];
   const node = compiler.typedef.alias(
-    transformName(model.name),
+    transformTypeName(model.name),
     toType(model),
     comment,
   );

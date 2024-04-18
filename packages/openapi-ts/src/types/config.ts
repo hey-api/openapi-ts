@@ -29,11 +29,6 @@ export interface UserConfig {
    */
   exportCore?: boolean;
   /**
-   * Generate services?
-   * @default true
-   */
-  exportServices?: boolean | string;
-  /**
    * Process output folder with formatter?
    * @default true
    */
@@ -61,11 +56,6 @@ export interface UserConfig {
    */
   output: string;
   /**
-   * Service name postfix
-   * @default 'Service'
-   */
-  postfixServices?: string;
-  /**
    * Path to custom request file
    */
   request?: string;
@@ -79,6 +69,29 @@ export interface UserConfig {
    * @default 'body'
    */
   serviceResponse?: 'body' | 'response';
+  /**
+   * Generate services?
+   * @default true
+   */
+  services?:
+    | boolean
+    | string
+    | {
+        /**
+         * Generate services?
+         * @default true
+         */
+        export?: boolean;
+        /**
+         * Include only services matching regular expression
+         */
+        include?: string;
+        /**
+         * Use your preferred naming pattern
+         * @default '{{name}}Service'
+         */
+        name?: string;
+      };
   /**
    * Generate types?
    * @default true
@@ -116,8 +129,9 @@ export interface UserConfig {
 
 export type Config = Omit<
   Required<UserConfig>,
-  'base' | 'name' | 'request' | 'types'
+  'base' | 'name' | 'request' | 'services' | 'types'
 > &
   Pick<UserConfig, 'base' | 'name' | 'request'> & {
+    services: Extract<Required<UserConfig>['services'], object>;
     types: Extract<Required<UserConfig>['types'], object>;
   };

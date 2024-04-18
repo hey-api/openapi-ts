@@ -88,6 +88,24 @@ const logMissingDependenciesWarning = (dependencies: Dependencies) => {
   }
 };
 
+const getServices = (userConfig: UserConfig): Config['services'] => {
+  let services: Config['services'] = {
+    export: true,
+    name: '{{name}}Service',
+  };
+  if (typeof userConfig.services === 'boolean') {
+    services.export = userConfig.services;
+  } else if (typeof userConfig.services === 'string') {
+    services.include = userConfig.services;
+  } else {
+    services = {
+      ...services,
+      ...userConfig.services,
+    };
+  }
+  return services;
+};
+
 const getTypes = (userConfig: UserConfig): Config['types'] => {
   let types: Config['types'] = {
     export: true,
@@ -128,13 +146,11 @@ const initConfig = async (
     dryRun = false,
     enums = false,
     exportCore = true,
-    exportServices = true,
     format = true,
     input,
     lint = false,
     name,
     operationId = true,
-    postfixServices = 'Service',
     request,
     schemas = true,
     serviceResponse = 'body',
@@ -158,12 +174,6 @@ const initConfig = async (
     );
   }
 
-  if (postfixServices && postfixServices !== 'Service') {
-    console.warn(
-      '⚠️ Deprecation warning: postfixServices. This setting will be removed in future versions. Please create an issue wih your use case if you need this option https://github.com/hey-api/openapi-ts/issues',
-    );
-  }
-
   if (!useOptions) {
     console.warn(
       '⚠️ Deprecation warning: useOptions set to false. This setting will be removed in future versions. Please migrate useOptions to true https://heyapi.vercel.app/openapi-ts/migrating.html#v0-27-38',
@@ -172,6 +182,7 @@ const initConfig = async (
 
   const client = userConfig.client || inferClient(dependencies);
   const output = path.resolve(process.cwd(), userConfig.output);
+  const services = getServices(userConfig);
   const types = getTypes(userConfig);
 
   return setConfig({
@@ -181,17 +192,16 @@ const initConfig = async (
     dryRun,
     enums,
     exportCore,
-    exportServices,
     format,
     input,
     lint,
     name,
     operationId,
     output,
-    postfixServices,
     request,
     schemas,
     serviceResponse,
+    services,
     types,
     useDateType,
     useOptions,

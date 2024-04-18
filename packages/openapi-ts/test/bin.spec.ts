@@ -109,7 +109,7 @@ describe('bin', () => {
       '--useOptions',
       '--exportCore',
       'true',
-      '--exportServices',
+      '--services',
       'true',
       '--types',
       'true',
@@ -129,7 +129,7 @@ describe('bin', () => {
       './test/spec/v3.json',
       '--output',
       './test/generated/bin',
-      '--exportServices',
+      '--services',
       '^(Simple|Types)',
       '--types',
       '^(Simple|Types)',
@@ -217,7 +217,7 @@ describe('cli', () => {
       'false',
       '--schemas',
       'false',
-      '--exportServices',
+      '--services',
       'false',
       '--format',
       'false',
@@ -236,7 +236,7 @@ describe('cli', () => {
     expect(result.stderr.toString()).toContain('dryRun: true');
     expect(result.stderr.toString()).toContain('exportCore: false');
     expect(result.stderr.toString()).toContain('types: false');
-    expect(result.stderr.toString()).toContain('exportServices: false');
+    expect(result.stderr.toString()).toContain('services: false');
     expect(result.stderr.toString()).toContain('format: false');
     expect(result.stderr.toString()).toContain('lint: false');
     expect(result.stderr.toString()).toContain('operationId: false');
@@ -259,7 +259,7 @@ describe('cli', () => {
       'true',
       '--schemas',
       'true',
-      '--exportServices',
+      '--services',
       'true',
       '--format',
       'true',
@@ -278,7 +278,7 @@ describe('cli', () => {
     expect(result.stderr.toString()).toContain('dryRun: true');
     expect(result.stderr.toString()).toContain('exportCore: true');
     expect(result.stderr.toString()).toContain('types: true');
-    expect(result.stderr.toString()).toContain('exportServices: true');
+    expect(result.stderr.toString()).toContain('services: true');
     expect(result.stderr.toString()).toContain('format: true');
     expect(result.stderr.toString()).toContain('lint: true');
     expect(result.stderr.toString()).toContain('operationId: true');
@@ -299,7 +299,7 @@ describe('cli', () => {
       '--types',
       'foo',
       '--schemas',
-      '--exportServices',
+      '--services',
       'bar',
       '--format',
       '--lint',
@@ -319,6 +319,6 @@ describe('cli', () => {
     expect(result.stderr.toString()).toContain('useDateType: true');
     expect(result.stderr.toString()).toContain('useOptions: true');
     expect(result.stderr.toString()).toContain("types: 'foo");
-    expect(result.stderr.toString()).toContain("exportServices: 'bar'");
+    expect(result.stderr.toString()).toContain("services: 'bar'");
   });
 });

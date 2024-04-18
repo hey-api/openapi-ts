@@ -16,7 +16,7 @@ import { {{{httpRequest}}} } from './core/{{{httpRequest}}}';
 
 {{#if services}}
 {{#each services}}
-import { {{{name}}}{{{@root.$config.postfixServices}}} } from './services.gen';
+import { {{{transformServiceName name}}} } from './services.gen';
 {{/each}}
 {{/if}}
 
@@ -46,7 +46,7 @@ import { {{{name}}}{{{@root.$config.postfixServices}}} } from './services.gen';
 			useClass: AngularHttpRequest,
 		},
 		{{#each services}}
-		{{{name}}}{{{@root.$config.postfixServices}}},
+		{{{transformServiceName name}}},
 		{{/each}}
 	]
 })
@@ -57,7 +57,7 @@ type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 export class {{{@root.$config.name}}} {
 
 	{{#each services}}
-	public readonly {{{camelCase name}}}: {{{name}}}{{{@root.$config.postfixServices}}};
+	public readonly {{{camelCase name}}}: {{{transformServiceName name}}};
 	{{/each}}
 
 	public readonly request: BaseHttpRequest;
@@ -80,7 +80,7 @@ export class {{{@root.$config.name}}} {
 		});
 
 		{{#each services}}
-		this.{{{camelCase name}}} = new {{{name}}}{{{@root.$config.postfixServices}}}(this.request);
+		this.{{{camelCase name}}} = new {{{transformServiceName name}}}(this.request);
 		{{/each}}
 	}
 }
