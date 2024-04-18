@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.40.1
+
+### Patch Changes
+
+- fix: revert to generating commonjs for esm and commonjs support ([#409](https://github.com/hey-api/openapi-ts/pull/409))
+
 ## 0.40.0
 
 ### Minor Changes
