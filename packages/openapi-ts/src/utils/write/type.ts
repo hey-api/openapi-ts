@@ -4,7 +4,7 @@ import { getConfig } from '../config';
 import { enumValue } from '../enum';
 import { escapeComment } from '../escape';
 import { modelIsRequired } from '../required';
-import { transformName } from '../transform';
+import { transformTypeName } from '../transform';
 import { unique } from '../unique';
 
 const base = (model: Model) => {
@@ -18,7 +18,7 @@ const base = (model: Model) => {
   // transform root level model names
   if (model.base === model.type && model.$refs.length) {
     if (model.$refs.some((ref) => ref.endsWith(model.base))) {
-      return compiler.typedef.basic(transformName(model.base));
+      return compiler.typedef.basic(transformTypeName(model.base));
     }
   }
   return compiler.typedef.basic(model.base);

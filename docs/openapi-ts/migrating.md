@@ -40,10 +40,6 @@ You don't have to update imports from `core` directory. These will be addressed 
 
 This config option is deprecated and will be removed.
 
-### Deprecated `postfixServices`
-
-This config option is deprecated and will be removed.
-
 ### Deprecated `request`
 
 This config option is deprecated and will be removed.
@@ -51,6 +47,22 @@ This config option is deprecated and will be removed.
 ### Deprecated `name`
 
 This config option is deprecated and will be removed.
+
+## v0.41.0
+
+### Removed `postfixServices`
+
+This config option has been removed. You can now transform service names using the string pattern parameter.
+
+```js{5}
+export default {
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  services: {
+    name: 'myAwesome{{name}}Api',
+  },
+}
+```
 
 ## v0.40.0
 

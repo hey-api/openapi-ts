@@ -15,15 +15,14 @@ describe('registerHandlebarHelpers', () => {
       dryRun: false,
       enums: 'javascript',
       exportCore: true,
-      exportServices: true,
       format: true,
       input: '',
       lint: false,
       operationId: true,
       output: '',
-      postfixServices: '',
       schemas: true,
       serviceResponse: 'body',
+      services: {},
       types: {},
       useDateType: false,
       useOptions: false,
@@ -34,6 +33,7 @@ describe('registerHandlebarHelpers', () => {
     expect(helpers).toContain('equals');
     expect(helpers).toContain('ifdef');
     expect(helpers).toContain('notEquals');
+    expect(helpers).toContain('transformServiceName');
   });
 });
 
@@ -45,15 +45,14 @@ describe('registerHandlebarTemplates', () => {
       dryRun: false,
       enums: 'javascript',
       exportCore: true,
-      exportServices: true,
       format: true,
       input: '',
       lint: false,
       operationId: true,
       output: '',
-      postfixServices: '',
       schemas: true,
       serviceResponse: 'body',
+      services: {},
       types: {},
       useDateType: false,
       useOptions: false,

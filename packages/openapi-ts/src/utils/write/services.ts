@@ -9,6 +9,7 @@ import type { Client } from '../../types/client';
 import { getConfig } from '../config';
 import { escapeComment, escapeDescription, escapeName } from '../escape';
 import { modelIsRequired } from '../required';
+import { transformServiceName } from '../transform';
 import { unique } from '../unique';
 
 export const serviceExportedNamespace = () => '$OpenApiTs';
@@ -260,7 +261,7 @@ export const processService = (service: Service) => {
         ? { args: [{ providedIn: 'root' }], name: 'Injectable' }
         : undefined,
     members,
-    name: `${service.name}${config.postfixServices}`,
+    name: transformServiceName(service.name),
   });
 };
 

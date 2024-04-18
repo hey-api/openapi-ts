@@ -29,18 +29,17 @@ const params = program
   .option('--dry-run [value]', 'Skip writing files to disk?')
   .option('--enums <value>', 'Export enum definitions (javascript, typescript)')
   .option('--exportCore [value]', 'Write core files to disk')
-  .option('--exportServices [value]', 'Write services to disk')
   .option('--format [value]', 'Process output folder with formatter?')
   .option('--lint [value]', 'Process output folder with linter?')
   .option('--name <value>', 'Custom client class name')
   .option('--operationId [value]', 'Use operationd ID?')
-  .option('--postfixServices <value>', 'Service name postfix')
   .option('--request <value>', 'Path to custom request file')
   .option('--schemas [value]', 'Write schemas to disk')
   .option(
     '--serviceResponse [value]',
     'Define shape of returned value from service calls',
   )
+  .option('--services [value]', 'Write services to disk')
   .option('--types [value]', 'Write types to disk')
   .option(
     '--useDateType [value]',
@@ -81,11 +80,11 @@ async function start() {
     userConfig = processParams(params, [
       'dryRun',
       'exportCore',
-      'exportServices',
       'format',
       'lint',
       'operationId',
       'schemas',
+      'services',
       'types',
       'useDateType',
       'useOptions',
