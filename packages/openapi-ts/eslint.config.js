@@ -1,9 +1,9 @@
-import eslint from '@eslint/js'
-import eslintConfigPrettier from 'eslint-config-prettier'
-import eslintPluginSimpleImportSort from 'eslint-plugin-simple-import-sort'
-import eslintPluginSortKeysFix from 'eslint-plugin-sort-keys-fix'
-import globals from 'globals'
-import tseslint from 'typescript-eslint'
+import eslint from '@eslint/js';
+import eslintConfigPrettier from 'eslint-config-prettier';
+import eslintPluginSimpleImportSort from 'eslint-plugin-simple-import-sort';
+import eslintPluginSortKeysFix from 'eslint-plugin-sort-keys-fix';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   eslint.configs.recommended,
@@ -12,12 +12,12 @@ export default tseslint.config(
     languageOptions: {
       ecmaVersion: 'latest',
       globals: {
-        ...globals.node
-      }
+        ...globals.node,
+      },
     },
     plugins: {
       'simple-import-sort': eslintPluginSimpleImportSort,
-      'sort-keys-fix': eslintPluginSortKeysFix
+      'sort-keys-fix': eslintPluginSortKeysFix,
     },
     rules: {
       '@typescript-eslint/ban-ts-comment': 'off',
@@ -35,8 +35,8 @@ export default tseslint.config(
       'simple-import-sort/exports': 'error',
       'simple-import-sort/imports': 'error',
       'sort-imports': 'off',
-      'sort-keys-fix/sort-keys-fix': 'warn'
-    }
+      'sort-keys-fix/sort-keys-fix': 'warn',
+    },
   },
   eslintConfigPrettier,
   {
@@ -45,7 +45,7 @@ export default tseslint.config(
       '**/node_modules/',
       'temp/',
       '**/test/e2e/generated/',
-      '**/test/generated/'
-    ]
-  }
-)
+      '**/test/generated/',
+    ],
+  },
+);

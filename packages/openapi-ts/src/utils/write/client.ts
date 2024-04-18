@@ -1,17 +1,17 @@
-import { existsSync, mkdirSync } from 'node:fs'
-import path from 'node:path'
+import { existsSync, mkdirSync } from 'node:fs';
+import path from 'node:path';
 
-import { TypeScriptFile } from '../../compiler'
-import type { OpenApi } from '../../openApi'
-import type { Client } from '../../types/client'
-import { getConfig } from '../config'
-import type { Templates } from '../handlebars'
-import { writeClientClass } from './class'
-import { writeCore } from './core'
-import { processIndex } from './index'
-import { processTypesAndEnums } from './models'
-import { processSchemas } from './schemas'
-import { processServices } from './services'
+import { TypeScriptFile } from '../../compiler';
+import type { OpenApi } from '../../openApi';
+import type { Client } from '../../types/client';
+import { getConfig } from '../config';
+import type { Templates } from '../handlebars';
+import { writeClientClass } from './class';
+import { writeCore } from './core';
+import { processIndex } from './index';
+import { processTypesAndEnums } from './models';
+import { processSchemas } from './schemas';
+import { processServices } from './services';
 
 /**
  * Write our OpenAPI client, using the given templates at the given output
@@ -22,77 +22,77 @@ import { processServices } from './services'
 export const writeClient = async (
   openApi: OpenApi,
   client: Client,
-  templates: Templates
+  templates: Templates,
 ): Promise<void> => {
-  const config = getConfig()
+  const config = getConfig();
 
   if (typeof config.exportServices === 'string') {
-    const regexp = new RegExp(config.exportServices)
-    client.services = client.services.filter(service =>
-      regexp.test(service.name)
-    )
+    const regexp = new RegExp(config.exportServices);
+    client.services = client.services.filter((service) =>
+      regexp.test(service.name),
+    );
   }
 
   if (config.types.include) {
-    const regexp = new RegExp(config.types.include)
-    client.models = client.models.filter(model => regexp.test(model.name))
+    const regexp = new RegExp(config.types.include);
+    client.models = client.models.filter((model) => regexp.test(model.name));
   }
 
-  const outputPath = path.resolve(config.output)
+  const outputPath = path.resolve(config.output);
 
   if (!existsSync(outputPath)) {
-    mkdirSync(outputPath, { recursive: true })
+    mkdirSync(outputPath, { recursive: true });
   }
 
   const files: Record<string, TypeScriptFile> = {
     index: new TypeScriptFile({
       dir: config.output,
-      name: 'index.ts'
-    })
-  }
+      name: 'index.ts',
+    }),
+  };
   if (config.enums) {
     files.enums = new TypeScriptFile({
       dir: config.output,
-      name: 'enums.ts'
-    })
+      name: 'enums.ts',
+    });
   }
   if (config.schemas) {
     files.schemas = new TypeScriptFile({
       dir: config.output,
-      name: 'schemas.ts'
-    })
+      name: 'schemas.ts',
+    });
   }
   if (config.exportServices) {
     files.services = new TypeScriptFile({
       dir: config.output,
-      name: 'services.ts'
-    })
+      name: 'services.ts',
+    });
   }
   if (config.types.export) {
     files.types = new TypeScriptFile({
       dir: config.output,
-      name: 'types.ts'
-    })
+      name: 'types.ts',
+    });
   }
 
-  await processSchemas({ file: files.schemas, openApi })
-  await processTypesAndEnums({ client, files })
-  await processServices({ client, files })
+  await processSchemas({ file: files.schemas, openApi });
+  await processTypesAndEnums({ client, files });
+  await processServices({ client, files });
 
   // deprecated files
-  await writeClientClass(openApi, outputPath, client, templates)
+  await writeClientClass(openApi, outputPath, client, templates);
   await writeCore(
     openApi,
     path.resolve(config.output, 'core'),
     client,
-    templates
-  )
+    templates,
+  );
 
-  await processIndex({ files })
+  await processIndex({ files });
 
-  files.enums?.write('\n\n')
-  files.schemas?.write('\n\n')
-  files.services?.write('\n\n')
-  files.types?.write('\n\n')
-  files.index.write()
-}
+  files.enums?.write('\n\n');
+  files.schemas?.write('\n\n');
+  files.services?.write('\n\n');
+  files.types?.write('\n\n');
+  files.index.write();
+};

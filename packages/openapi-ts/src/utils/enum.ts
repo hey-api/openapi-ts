@@ -1,7 +1,7 @@
-import type { Enum } from '../openApi'
-import type { Client } from '../types/client'
-import { unescapeName } from './escape'
-import { unique } from './unique'
+import type { Enum } from '../openApi';
+import type { Client } from '../types/client';
+import { unescapeName } from './escape';
+import { unique } from './unique';
 
 /**
  * Sanitizes names of enums, so they are valid typescript identifiers of a certain form.
@@ -15,26 +15,26 @@ import { unique } from './unique'
  */
 export const enumKey = (value?: string | number, customName?: string) => {
   if (customName) {
-    return customName
+    return customName;
   }
   // prefix numbers with underscore
   if (typeof value === 'number') {
-    return `'_${value}'`
+    return `'_${value}'`;
   }
 
-  let key = ''
+  let key = '';
   if (typeof value === 'string') {
     key = value
       .replace(/[^$\u200c\u200d\p{ID_Continue}]/gu, '_')
       .replace(/^([^$_\p{ID_Start}])/u, '_$1')
-      .replace(/(\p{Lowercase})(\p{Uppercase}+)/gu, '$1_$2')
+      .replace(/(\p{Lowercase})(\p{Uppercase}+)/gu, '$1_$2');
   }
-  key = key.trim()
+  key = key.trim();
   if (!key) {
-    key = 'empty_string'
+    key = 'empty_string';
   }
-  return key.toUpperCase()
-}
+  return key.toUpperCase();
+};
 
 /**
  * Enums can't contain hyphens in their name. Additionally, name might've been
@@ -43,29 +43,29 @@ export const enumKey = (value?: string | number, customName?: string) => {
  */
 export const enumName = (client: Client, name?: string) => {
   if (!name) {
-    return null
+    return null;
   }
   const escapedName = unescapeName(name).replace(
     /[-_]([a-z])/gi,
-    ($0, $1: string) => $1.toLocaleUpperCase()
-  )
-  const result = `${escapedName.charAt(0).toLocaleUpperCase() + escapedName.slice(1)}Enum`
+    ($0, $1: string) => $1.toLocaleUpperCase(),
+  );
+  const result = `${escapedName.charAt(0).toLocaleUpperCase() + escapedName.slice(1)}Enum`;
   if (client.enumNames.includes(result)) {
-    return null
+    return null;
   }
-  client.enumNames = [...client.enumNames, result]
-  return result
-}
+  client.enumNames = [...client.enumNames, result];
+  return result;
+};
 
 export const enumUnionType = (enums: Enum[]) =>
   enums
-    .map(enumerator => enumValue(enumerator.value))
+    .map((enumerator) => enumValue(enumerator.value))
     .filter(unique)
-    .join(' | ')
+    .join(' | ');
 
 export const enumValue = (value?: string | number) => {
   if (typeof value === 'string') {
-    return `'${value.replace(/'/g, "\\'")}'`
+    return `'${value.replace(/'/g, "\\'")}'`;
   }
-  return value
-}
+  return value;
+};

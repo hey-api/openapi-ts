@@ -1,11 +1,11 @@
-import type { Dictionary } from '../../common/interfaces/Dictionary'
-import type { OpenApi } from '../interfaces/OpenApi'
-import type { OpenApiMediaType } from '../interfaces/OpenApiMediaType'
-import type { OpenApiSchema } from '../interfaces/OpenApiSchema'
+import type { Dictionary } from '../../common/interfaces/Dictionary';
+import type { OpenApi } from '../interfaces/OpenApi';
+import type { OpenApiMediaType } from '../interfaces/OpenApiMediaType';
+import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 
 export interface Content {
-  mediaType: string
-  schema: OpenApiSchema
+  mediaType: string;
+  schema: OpenApiSchema;
 }
 
 const BASIC_MEDIA_TYPES = [
@@ -18,34 +18,34 @@ const BASIC_MEDIA_TYPES = [
   'multipart/form-data',
   'multipart/mixed',
   'multipart/related',
-  'multipart/batch'
-]
+  'multipart/batch',
+];
 
 export const getContent = (
   openApi: OpenApi,
-  content: Dictionary<OpenApiMediaType>
+  content: Dictionary<OpenApiMediaType>,
 ): Content | null => {
   const basicMediaTypeWithSchema = Object.keys(content)
-    .filter(mediaType => {
-      const cleanMediaType = mediaType.split(';')[0].trim()
-      return BASIC_MEDIA_TYPES.includes(cleanMediaType)
+    .filter((mediaType) => {
+      const cleanMediaType = mediaType.split(';')[0].trim();
+      return BASIC_MEDIA_TYPES.includes(cleanMediaType);
     })
-    .find(mediaType => Boolean(content[mediaType]?.schema))
+    .find((mediaType) => Boolean(content[mediaType]?.schema));
   if (basicMediaTypeWithSchema) {
     return {
       mediaType: basicMediaTypeWithSchema,
-      schema: content[basicMediaTypeWithSchema].schema as OpenApiSchema
-    }
+      schema: content[basicMediaTypeWithSchema].schema as OpenApiSchema,
+    };
   }
 
-  const firstMediaTypeWithSchema = Object.keys(content).find(mediaType =>
-    Boolean(content[mediaType]?.schema)
-  )
+  const firstMediaTypeWithSchema = Object.keys(content).find((mediaType) =>
+    Boolean(content[mediaType]?.schema),
+  );
   if (firstMediaTypeWithSchema) {
     return {
       mediaType: firstMediaTypeWithSchema,
-      schema: content[firstMediaTypeWithSchema].schema as OpenApiSchema
-    }
+      schema: content[firstMediaTypeWithSchema].schema as OpenApiSchema,
+    };
   }
-  return null
-}
+  return null;
+};

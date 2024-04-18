@@ -1,13 +1,13 @@
-import { writeFileSync } from 'node:fs'
-import path from 'node:path'
+import { writeFileSync } from 'node:fs';
+import path from 'node:path';
 
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest';
 
-import { TypeScriptFile } from '../../../compiler'
-import { setConfig } from '../../config'
-import { processTypesAndEnums } from '../models'
+import { TypeScriptFile } from '../../../compiler';
+import { setConfig } from '../../config';
+import { processTypesAndEnums } from '../models';
 
-vi.mock('node:fs')
+vi.mock('node:fs');
 
 describe('processTypesAndEnums', () => {
   it('writes to filesystem', async () => {
@@ -29,8 +29,8 @@ describe('processTypesAndEnums', () => {
       serviceResponse: 'body',
       types: {},
       useDateType: false,
-      useOptions: true
-    })
+      useOptions: true,
+    });
 
     const client: Parameters<typeof processTypesAndEnums>[0]['client'] = {
       enumNames: [],
@@ -51,36 +51,36 @@ describe('processTypesAndEnums', () => {
           name: 'User',
           properties: [],
           template: null,
-          type: 'User'
-        }
+          type: 'User',
+        },
       ],
       server: 'http://localhost:8080',
       services: [],
-      version: 'v1'
-    }
+      version: 'v1',
+    };
 
     const files = {
       enums: new TypeScriptFile({
         dir: '/',
-        name: 'enums.ts'
+        name: 'enums.ts',
       }),
       types: new TypeScriptFile({
         dir: '/',
-        name: 'models.ts'
-      })
-    }
+        name: 'models.ts',
+      }),
+    };
 
     await processTypesAndEnums({
       client,
-      files
-    })
+      files,
+    });
 
-    files.enums.write()
-    files.types.write()
+    files.enums.write();
+    files.types.write();
 
     expect(writeFileSync).toHaveBeenCalledWith(
       path.resolve('/models.gen.ts'),
-      expect.anything()
-    )
-  })
-})
+      expect.anything(),
+    );
+  });
+});

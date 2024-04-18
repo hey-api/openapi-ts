@@ -60,12 +60,12 @@ If you want to use `openapi-ts` with CLI, add a script to your `package.json` fi
 You can also generate your client programmatically by importing `openapi-ts` in a `.ts` file.
 
 ```ts
-import { createClient } from '@hey-api/openapi-ts'
+import { createClient } from '@hey-api/openapi-ts';
 
 createClient({
   input: 'path/to/openapi.json',
-  output: 'src/client'
-})
+  output: 'src/client',
+});
 ```
 
 ::: warning

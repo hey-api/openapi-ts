@@ -1,6 +1,6 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vitest';
 
-import { getRef } from '../getRef'
+import { getRef } from '../getRef';
 
 describe('getRef (v2)', () => {
   it('should produce correct result', () => {
@@ -11,28 +11,28 @@ describe('getRef (v2)', () => {
           definitions: {
             Example: {
               description: 'This is an Example model ',
-              type: 'integer'
-            }
+              type: 'integer',
+            },
           },
           host: 'localhost:8080',
           info: {
             title: 'dummy',
-            version: '1.0'
+            version: '1.0',
           },
           paths: {},
           schemes: ['http', 'https'],
-          swagger: '2.0'
+          swagger: '2.0',
         },
         {
-          $ref: '#/definitions/Example'
-        }
-      )
+          $ref: '#/definitions/Example',
+        },
+      ),
     ).toEqual({
       description: 'This is an Example model ',
-      type: 'integer'
-    })
-  })
-})
+      type: 'integer',
+    });
+  });
+});
 
 describe('getRef (v3)', () => {
   it('should produce correct result', () => {
@@ -43,31 +43,31 @@ describe('getRef (v3)', () => {
             schemas: {
               Example: {
                 description: 'This is an Example model ',
-                type: 'integer'
-              }
-            }
+                type: 'integer',
+              },
+            },
           },
           info: {
             title: 'dummy',
-            version: '1.0'
+            version: '1.0',
           },
           openapi: '3.0',
           paths: {},
           servers: [
             {
-              url: 'https://localhost:8080/api'
-            }
-          ]
+              url: 'https://localhost:8080/api',
+            },
+          ],
         },
         {
-          $ref: '#/components/schemas/Example'
-        }
-      )
+          $ref: '#/components/schemas/Example',
+        },
+      ),
     ).toEqual({
       description: 'This is an Example model ',
-      type: 'integer'
-    })
-  })
+      type: 'integer',
+    });
+  });
 
   it('should produce correct result for encoded ref path', () => {
     expect(
@@ -75,21 +75,21 @@ describe('getRef (v3)', () => {
         {
           info: {
             title: 'dummy',
-            version: '1.0'
+            version: '1.0',
           },
           openapi: '3.0',
           paths: {
             '/api/user/{id}': {
-              description: 'This is an Example path'
-            }
-          }
+              description: 'This is an Example path',
+            },
+          },
         },
         {
-          $ref: '#/paths/~1api~1user~1%7Bid%7D'
-        }
-      )
+          $ref: '#/paths/~1api~1user~1%7Bid%7D',
+        },
+      ),
     ).toEqual({
-      description: 'This is an Example path'
-    })
-  })
-})
+      description: 'This is an Example path',
+    });
+  });
+});

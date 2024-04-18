@@ -2,83 +2,83 @@ export interface UserConfig {
   /**
    * Manually set base in OpenAPI config instead of inferring from server value
    */
-  base?: string
+  base?: string;
   /**
    * The selected HTTP client (fetch, xhr, node or axios)
    * @default 'fetch'
    */
-  client?: 'angular' | 'axios' | 'fetch' | 'node' | 'xhr'
+  client?: 'angular' | 'axios' | 'fetch' | 'node' | 'xhr';
   /**
    * Run in debug mode?
    * @default false
    */
-  debug?: boolean
+  debug?: boolean;
   /**
    * Skip writing files to disk?
    * @default false
    */
-  dryRun?: boolean
+  dryRun?: boolean;
   /**
    * Export enum definitions?
    * @default false
    */
-  enums?: 'javascript' | 'typescript' | false
+  enums?: 'javascript' | 'typescript' | false;
   /**
    * Generate core client classes?
    * @default true
    */
-  exportCore?: boolean
+  exportCore?: boolean;
   /**
    * Generate services?
    * @default true
    */
-  exportServices?: boolean | string
+  exportServices?: boolean | string;
   /**
    * Process output folder with formatter?
    * @default true
    */
-  format?: boolean
+  format?: boolean;
   /**
    * The relative location of the OpenAPI spec
    */
-  input: string | Record<string, unknown>
+  input: string | Record<string, unknown>;
   /**
    * Process output folder with linter?
    * @default false
    */
-  lint?: boolean
+  lint?: boolean;
   /**
    * Custom client class name
    */
-  name?: string
+  name?: string;
   /**
    * Use operation ID to generate operation names?
    * @default true
    */
-  operationId?: boolean
+  operationId?: boolean;
   /**
    * The relative location of the output directory
    */
-  output: string
+  output: string;
   /**
    * Service name postfix
    * @default 'Service'
    */
-  postfixServices?: string
+  postfixServices?: string;
   /**
    * Path to custom request file
    */
-  request?: string
+  request?: string;
   /**
    * Export JSON schemas?
    * @default true
    */
-  schemas?: boolean
+  schemas?: boolean;
   /**
    * Define shape of returned value from service calls
    * @default 'body'
    */
-  serviceResponse?: 'body' | 'response'
+  serviceResponse?: 'body' | 'response';
   /**
    * Generate types?
    * @default true
@@ -91,27 +91,27 @@ export interface UserConfig {
          * Generate types?
          * @default true
          */
-        export?: boolean
+        export?: boolean;
         /**
          * Include only types matching regular expression
          */
-        include?: string
+        include?: string;
         /**
          * Use your preferred naming pattern
          * @default 'preserve'
          */
-        name?: 'PascalCase' | 'preserve'
-      }
+        name?: 'PascalCase' | 'preserve';
+      };
   /**
    * Output Date instead of string for the format "date-time" in the models
    * @default false
    */
-  useDateType?: boolean
+  useDateType?: boolean;
   /**
    * Use options or arguments functions
    * @default true
    */
-  useOptions?: boolean
+  useOptions?: boolean;
 }
 
 export type Config = Omit<
@@ -119,5 +119,5 @@ export type Config = Omit<
   'base' | 'name' | 'request' | 'types'
 > &
   Pick<UserConfig, 'base' | 'name' | 'request'> & {
-    types: Extract<Required<UserConfig>['types'], object>
-  }
+    types: Extract<Required<UserConfig>['types'], object>;
+  };

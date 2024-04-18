@@ -1,4 +1,4 @@
-import type { Config } from '../types/config'
+import type { Config } from '../types/config';
 
 /**
  * Generate the HttpRequest filename based on the selected client
@@ -7,14 +7,14 @@ import type { Config } from '../types/config'
 export const getHttpRequestName = (client: Config['client']): string => {
   switch (client) {
     case 'angular':
-      return 'AngularHttpRequest'
+      return 'AngularHttpRequest';
     case 'axios':
-      return 'AxiosHttpRequest'
+      return 'AxiosHttpRequest';
     case 'fetch':
-      return 'FetchHttpRequest'
+      return 'FetchHttpRequest';
     case 'node':
-      return 'NodeHttpRequest'
+      return 'NodeHttpRequest';
     case 'xhr':
-      return 'XHRHttpRequest'
+      return 'XHRHttpRequest';
   }
-}
+};

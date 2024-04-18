@@ -1,19 +1,19 @@
-import { Model, OperationParameter } from '../openApi'
-import { getConfig } from './config'
+import { Model, OperationParameter } from '../openApi';
+import { getConfig } from './config';
 
 export const getDefaultPrintable = (
-  p: OperationParameter | Model
+  p: OperationParameter | Model,
 ): string | undefined => {
   if (p.default === undefined) {
-    return undefined
+    return undefined;
   }
-  return JSON.stringify(p.default, null, 4)
-}
+  return JSON.stringify(p.default, null, 4);
+};
 
 export const modelIsRequired = (model: Model) => {
-  const config = getConfig()
+  const config = getConfig();
   if (config?.useOptions) {
-    return model.isRequired ? '' : '?'
+    return model.isRequired ? '' : '?';
   }
-  return !model.isRequired && !getDefaultPrintable(model) ? '?' : ''
-}
+  return !model.isRequired && !getDefaultPrintable(model) ? '?' : '';
+};

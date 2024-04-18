@@ -1,6 +1,6 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vitest';
 
-import { stripNamespace } from '../stripNamespace'
+import { stripNamespace } from '../stripNamespace';
 
 describe('stripNamespace', () => {
   it.each([
@@ -16,8 +16,8 @@ describe('stripNamespace', () => {
     { expected: 'Item', input: '#/components/headers/Item' },
     { expected: 'Item', input: '#/components/securitySchemes/Item' },
     { expected: 'Item', input: '#/components/links/Item' },
-    { expected: 'Item', input: '#/components/callbacks/Item' }
+    { expected: 'Item', input: '#/components/callbacks/Item' },
   ])('stripNamespace($input) -> $expected', ({ input, expected }) => {
-    expect(stripNamespace(input)).toEqual(expected)
-  })
-})
+    expect(stripNamespace(input)).toEqual(expected);
+  });
+});

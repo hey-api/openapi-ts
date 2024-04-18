@@ -3,5 +3,7 @@
 **/templates
 **/dist
 **/.vitepress
+**/test/e2e
 
 **/CHANGELOG.md
+pnpm-lock.yaml

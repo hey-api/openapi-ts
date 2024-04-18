@@ -1,19 +1,19 @@
-import { readFileSync } from 'node:fs'
-import path from 'node:path'
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 
-import { loadConfig } from 'c12'
-import { sync } from 'cross-spawn'
+import { loadConfig } from 'c12';
+import { sync } from 'cross-spawn';
 
-import { parse } from './openApi'
-import type { Client } from './types/client'
-import type { Config, UserConfig } from './types/config'
-import { getConfig, setConfig } from './utils/config'
-import { getOpenApiSpec } from './utils/getOpenApiSpec'
-import { registerHandlebarTemplates } from './utils/handlebars'
-import { postProcessClient } from './utils/postprocess'
-import { writeClient } from './utils/write/client'
+import { parse } from './openApi';
+import type { Client } from './types/client';
+import type { Config, UserConfig } from './types/config';
+import { getConfig, setConfig } from './utils/config';
+import { getOpenApiSpec } from './utils/getOpenApiSpec';
+import { registerHandlebarTemplates } from './utils/handlebars';
+import { postProcessClient } from './utils/postprocess';
+import { writeClient } from './utils/write/client';
 
-type Dependencies = Record<string, unknown>
+type Dependencies = Record<string, unknown>;
 
 // Dependencies used in each client. User must have installed these to use the generated client
 const clientDependencies: Record<Config['client'], string[]> = {
@@ -21,105 +21,105 @@ const clientDependencies: Record<Config['client'], string[]> = {
   axios: ['axios'],
   fetch: [],
   node: ['node-fetch'],
-  xhr: []
-}
+  xhr: [],
+};
 
 const processOutput = (dependencies: Dependencies) => {
-  const config = getConfig()
+  const config = getConfig();
 
   if (config.format) {
     if (dependencies.prettier) {
-      console.log('✨ Running Prettier')
+      console.log('✨ Running Prettier');
       sync('prettier', [
         '--ignore-unknown',
         config.output,
         '--write',
         '--ignore-path',
-        './.prettierignore'
-      ])
+        './.prettierignore',
+      ]);
     }
   }
 
   if (config.lint && dependencies.eslint) {
-    console.log('✨ Running ESLint')
-    sync('eslint', [config.output, '--fix'])
+    console.log('✨ Running ESLint');
+    sync('eslint', [config.output, '--fix']);
   }
-}
+};
 
 const inferClient = (dependencies: Dependencies): Config['client'] => {
-  if (Object.keys(dependencies).some(d => d.startsWith('@angular'))) {
-    return 'angular'
+  if (Object.keys(dependencies).some((d) => d.startsWith('@angular'))) {
+    return 'angular';
   }
   if (dependencies.axios) {
-    return 'axios'
+    return 'axios';
   }
   if (dependencies['node-fetch']) {
-    return 'node'
+    return 'node';
   }
-  return 'fetch'
-}
+  return 'fetch';
+};
 
 const logClientMessage = () => {
-  const { client } = getConfig()
+  const { client } = getConfig();
   switch (client) {
     case 'angular':
-      return console.log('✨ Creating Angular client')
+      return console.log('✨ Creating Angular client');
     case 'axios':
-      return console.log('✨ Creating Axios client')
+      return console.log('✨ Creating Axios client');
     case 'fetch':
-      return console.log('✨ Creating Fetch client')
+      return console.log('✨ Creating Fetch client');
     case 'node':
-      return console.log('✨ Creating Node.js client')
+      return console.log('✨ Creating Node.js client');
     case 'xhr':
-      return console.log('✨ Creating XHR client')
+      return console.log('✨ Creating XHR client');
   }
-}
+};
 
 const logMissingDependenciesWarning = (dependencies: Dependencies) => {
-  const { client } = getConfig()
+  const { client } = getConfig();
   const missing = clientDependencies[client].filter(
-    d => dependencies[d] === undefined
-  )
+    (d) => dependencies[d] === undefined,
+  );
   if (missing.length > 0) {
     console.log(
       '⚠️ Dependencies used in generated client are missing: ' +
-        missing.join(' ')
-    )
+        missing.join(' '),
+    );
   }
-}
+};
 
 const getTypes = (userConfig: UserConfig): Config['types'] => {
   let types: Config['types'] = {
     export: true,
-    name: 'preserve'
-  }
+    name: 'preserve',
+  };
   if (typeof userConfig.types === 'boolean') {
-    types.export = userConfig.types
+    types.export = userConfig.types;
   } else if (typeof userConfig.types === 'string') {
-    types.include = userConfig.types
+    types.include = userConfig.types;
   } else {
     types = {
       ...types,
-      ...userConfig.types
-    }
+      ...userConfig.types,
+    };
   }
-  return types
-}
+  return types;
+};
 
 const initConfig = async (
   userConfig: UserConfig,
-  dependencies: Dependencies
+  dependencies: Dependencies,
 ) => {
   const { config: userConfigFromFile } = await loadConfig<UserConfig>({
     jitiOptions: {
-      esmResolve: true
+      esmResolve: true,
     },
     name: 'openapi-ts',
-    overrides: userConfig
-  })
+    overrides: userConfig,
+  });
 
   if (userConfigFromFile) {
-    userConfig = { ...userConfigFromFile, ...userConfig }
+    userConfig = { ...userConfigFromFile, ...userConfig };
   }
 
   const {
@@ -139,40 +139,40 @@ const initConfig = async (
     schemas = true,
     serviceResponse = 'body',
     useDateType = false,
-    useOptions = true
-  } = userConfig
+    useOptions = true,
+  } = userConfig;
 
   if (debug) {
-    console.warn('userConfig:', userConfig)
+    console.warn('userConfig:', userConfig);
   }
 
   if (!input) {
     throw new Error(
-      '🚫 input not provided - provide path to OpenAPI specification'
-    )
+      '🚫 input not provided - provide path to OpenAPI specification',
+    );
   }
 
   if (!userConfig.output) {
     throw new Error(
-      '🚫 output not provided - provide path where we should generate your client'
-    )
+      '🚫 output not provided - provide path where we should generate your client',
+    );
   }
 
   if (postfixServices && postfixServices !== 'Service') {
     console.warn(
-      '⚠️ Deprecation warning: postfixServices. This setting will be removed in future versions. Please create an issue wih your use case if you need this option https://github.com/hey-api/openapi-ts/issues'
-    )
+      '⚠️ Deprecation warning: postfixServices. This setting will be removed in future versions. Please create an issue wih your use case if you need this option https://github.com/hey-api/openapi-ts/issues',
+    );
   }
 
   if (!useOptions) {
     console.warn(
-      '⚠️ Deprecation warning: useOptions set to false. This setting will be removed in future versions. Please migrate useOptions to true https://heyapi.vercel.app/openapi-ts/migrating.html#v0-27-38'
-    )
+      '⚠️ Deprecation warning: useOptions set to false. This setting will be removed in future versions. Please migrate useOptions to true https://heyapi.vercel.app/openapi-ts/migrating.html#v0-27-38',
+    );
   }
 
-  const client = userConfig.client || inferClient(dependencies)
-  const output = path.resolve(process.cwd(), userConfig.output)
-  const types = getTypes(userConfig)
+  const client = userConfig.client || inferClient(dependencies);
+  const output = path.resolve(process.cwd(), userConfig.output);
+  const types = getTypes(userConfig);
 
   return setConfig({
     base,
@@ -194,9 +194,9 @@ const initConfig = async (
     serviceResponse,
     types,
     useDateType,
-    useOptions
-  })
-}
+    useOptions,
+  });
+};
 
 /**
  * Generate the OpenAPI client. This method will read the OpenAPI specification and based on the
@@ -206,51 +206,51 @@ const initConfig = async (
  */
 export async function createClient(userConfig: UserConfig): Promise<Client> {
   const pkg = JSON.parse(
-    readFileSync(path.resolve(process.cwd(), 'package.json')).toString()
-  )
+    readFileSync(path.resolve(process.cwd(), 'package.json')).toString(),
+  );
 
   const dependencies = [pkg.dependencies, pkg.devDependencies].reduce(
     (res, deps) => ({
       ...res,
-      ...deps
+      ...deps,
     }),
-    {}
-  )
+    {},
+  );
 
   if (!dependencies.typescript) {
-    throw new Error('🚫 dependency missing - TypeScript must be installed')
+    throw new Error('🚫 dependency missing - TypeScript must be installed');
   }
 
-  const config = await initConfig(userConfig, dependencies)
+  const config = await initConfig(userConfig, dependencies);
 
   const openApi =
     typeof config.input === 'string'
       ? await getOpenApiSpec(config.input)
-      : (config.input as unknown as Awaited<ReturnType<typeof getOpenApiSpec>>)
+      : (config.input as unknown as Awaited<ReturnType<typeof getOpenApiSpec>>);
 
-  const client = postProcessClient(parse(openApi))
-  const templates = registerHandlebarTemplates()
+  const client = postProcessClient(parse(openApi));
+  const templates = registerHandlebarTemplates();
 
   if (!config.dryRun) {
-    logClientMessage()
-    logMissingDependenciesWarning(dependencies)
-    await writeClient(openApi, client, templates)
-    processOutput(dependencies)
+    logClientMessage();
+    logMissingDependenciesWarning(dependencies);
+    await writeClient(openApi, client, templates);
+    processOutput(dependencies);
   }
 
-  console.log('✨ Done! Your client is located in:', config.output)
+  console.log('✨ Done! Your client is located in:', config.output);
 
-  return client
+  return client;
 }
 
 /**
  * Type helper for openapi-ts.config.ts, returns {@link UserConfig} object
  */
 export function defineConfig(config: UserConfig): UserConfig {
-  return config
+  return config;
 }
 
 export default {
   createClient,
-  defineConfig
-}
+  defineConfig,
+};

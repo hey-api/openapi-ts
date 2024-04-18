@@ -10,17 +10,17 @@ Interceptors (middleware) can be used to modify requests before they're sent or 
 ::: code-group
 
 ```ts [use]
-OpenAPI.interceptors.request.use(request => {
-  doSomethingWithRequest(request)
-  return request // <-- must return request
-})
+OpenAPI.interceptors.request.use((request) => {
+  doSomethingWithRequest(request);
+  return request; // <-- must return request
+});
 ```
 
 ```ts [eject]
-OpenAPI.interceptors.request.eject(request => {
-  doSomethingWithRequest(request)
-  return request // <-- must return request
-})
+OpenAPI.interceptors.request.eject((request) => {
+  doSomethingWithRequest(request);
+  return request; // <-- must return request
+});
 ```
 
 :::
@@ -30,17 +30,17 @@ and an example response interceptor
 ::: code-group
 
 ```ts [use]
-OpenAPI.interceptors.response.use(async response => {
-  await doSomethingWithResponse(response) // async
-  return response // <-- must return response
-})
+OpenAPI.interceptors.response.use(async (response) => {
+  await doSomethingWithResponse(response); // async
+  return response; // <-- must return response
+});
 ```
 
 ```ts [eject]
-OpenAPI.interceptors.response.eject(async response => {
-  await doSomethingWithResponse(response) // async
-  return response // <-- must return response
-})
+OpenAPI.interceptors.response.eject(async (response) => {
+  await doSomethingWithResponse(response); // async
+  return response; // <-- must return response
+});
 ```
 
 :::

@@ -17,4 +17,4 @@ export const stripNamespace = (value: string): string =>
     .replace(/^#\/components\/headers\//, '')
     .replace(/^#\/components\/securitySchemes\//, '')
     .replace(/^#\/components\/links\//, '')
-    .replace(/^#\/components\/callbacks\//, '')
+    .replace(/^#\/components\/callbacks\//, '');

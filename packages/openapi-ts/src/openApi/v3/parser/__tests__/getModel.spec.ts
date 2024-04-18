@@ -1,8 +1,8 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vitest';
 
-import { reservedWords } from '../../../common/parser/reservedWords'
-import { getType } from '../../../common/parser/type'
-import { getModel } from '../getModel'
+import { reservedWords } from '../../../common/parser/reservedWords';
+import { getType } from '../../../common/parser/type';
+import { getModel } from '../getModel';
 
 const openApi = {
   components: {
@@ -14,18 +14,18 @@ const openApi = {
           propA: {
             anyOf: [
               {
-                $ref: '#/components/schemas/Enum1'
+                $ref: '#/components/schemas/Enum1',
               },
               {
-                $ref: '#/components/schemas/ConstValue'
+                $ref: '#/components/schemas/ConstValue',
               },
               {
-                type: 'null'
-              }
-            ]
-          }
+                type: 'null',
+              },
+            ],
+          },
         },
-        type: 'object'
+        type: 'object',
       },
       CompositionWithAnyOfAndNull: {
         description:
@@ -37,68 +37,68 @@ const openApi = {
                 items: {
                   anyOf: [
                     {
-                      $ref: '#/components/schemas/Enum1'
+                      $ref: '#/components/schemas/Enum1',
                     },
                     {
-                      $ref: '#/components/schemas/ConstValue'
-                    }
-                  ]
+                      $ref: '#/components/schemas/ConstValue',
+                    },
+                  ],
                 },
-                type: 'array'
+                type: 'array',
               },
               {
-                type: 'null'
-              }
-            ]
-          }
+                type: 'null',
+              },
+            ],
+          },
         },
-        type: 'object'
+        type: 'object',
       },
       ConstValue: {
         const: 'ConstValue',
-        type: 'string'
+        type: 'string',
       },
       Enum1: {
         enum: ['Bird', 'Dog'],
-        type: 'string'
-      }
-    }
+        type: 'string',
+      },
+    },
   },
   info: {
     title: 'dummy',
-    version: '1.0'
+    version: '1.0',
   },
   openapi: '3.0',
   paths: {},
   servers: [
     {
-      url: 'https://localhost:8080/api'
-    }
-  ]
-}
+      url: 'https://localhost:8080/api',
+    },
+  ],
+};
 
 describe('getModel', () => {
   it('Parses any of', () => {
-    const definition = openApi.components.schemas.CompositionWithAnyOfAndNull
-    const definitionType = getType('CompositionWithAnyOfAndNull')
+    const definition = openApi.components.schemas.CompositionWithAnyOfAndNull;
+    const definitionType = getType('CompositionWithAnyOfAndNull');
     const model = getModel(
       openApi,
       definition,
       true,
-      definitionType.base.replace(reservedWords, '_$1')
-    )
-    expect(model.properties[0].properties.length).toBe(2)
-  })
+      definitionType.base.replace(reservedWords, '_$1'),
+    );
+    expect(model.properties[0].properties.length).toBe(2);
+  });
 
   it('Parses any of 2', () => {
-    const definition = openApi.components.schemas.CompositionWithAny
-    const definitionType = getType('CompositionWithAny')
+    const definition = openApi.components.schemas.CompositionWithAny;
+    const definitionType = getType('CompositionWithAny');
     const model = getModel(
       openApi,
       definition,
       true,
-      definitionType.base.replace(reservedWords, '_$1')
-    )
-    expect(model.properties[0].properties.length).toBe(3)
-  })
-})
+      definitionType.base.replace(reservedWords, '_$1'),
+    );
+    expect(model.properties[0].properties.length).toBe(3);
+  });
+});

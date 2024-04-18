@@ -1,2 +1,2 @@
-export { createClient, defineConfig } from '../'
-export type { UserConfig } from '../types/config'
+export { createClient, defineConfig } from '../';
+export type { UserConfig } from '../types/config';

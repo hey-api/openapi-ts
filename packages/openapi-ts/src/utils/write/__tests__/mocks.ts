@@ -1,6 +1,6 @@
-import { vi } from 'vitest'
+import { vi } from 'vitest';
 
-import type { Templates } from '../../handlebars'
+import type { Templates } from '../../handlebars';
 
 export const mockTemplates: Templates = {
   client: vi.fn().mockReturnValue('client'),
@@ -12,6 +12,6 @@ export const mockTemplates: Templates = {
     cancelablePromise: vi.fn().mockReturnValue('cancelablePromise'),
     httpRequest: vi.fn().mockReturnValue('httpRequest'),
     request: vi.fn().mockReturnValue('request'),
-    settings: vi.fn().mockReturnValue('settings')
-  }
-}
+    settings: vi.fn().mockReturnValue('settings'),
+  },
+};
