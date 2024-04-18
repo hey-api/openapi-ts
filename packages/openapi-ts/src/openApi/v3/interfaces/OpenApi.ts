@@ -10,12 +10,12 @@ import type { OpenApiTag } from './OpenApiTag';
  * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.1.0.md
  */
 export interface OpenApi {
-    components?: OpenApiComponents;
-    externalDocs?: OpenApiExternalDocs;
-    info: OpenApiInfo;
-    openapi: string;
-    paths: OpenApiPaths;
-    security?: OpenApiSecurityRequirement[];
-    servers?: OpenApiServer[];
-    tags?: OpenApiTag[];
+  components?: OpenApiComponents;
+  externalDocs?: OpenApiExternalDocs;
+  info: OpenApiInfo;
+  openapi: string;
+  paths: OpenApiPaths;
+  security?: OpenApiSecurityRequirement[];
+  servers?: OpenApiServer[];
+  tags?: OpenApiTag[];
 }

@@ -18,22 +18,25 @@ import { sortByName } from '../sort';
  * @param templates The loaded handlebar templates
  */
 export const writeClientClass = async (
-    openApi: OpenApi,
-    outputPath: string,
-    client: Client,
-    templates: Templates
+  openApi: OpenApi,
+  outputPath: string,
+  client: Client,
+  templates: Templates,
 ): Promise<void> => {
-    const config = getConfig();
+  const config = getConfig();
 
-    const templateResult = templates.client({
-        $config: config,
-        ...client,
-        httpRequest: getHttpRequestName(config.client),
-        models: sortByName(client.models),
-        services: sortByName(client.services),
-    });
+  const templateResult = templates.client({
+    $config: config,
+    ...client,
+    httpRequest: getHttpRequestName(config.client),
+    models: sortByName(client.models),
+    services: sortByName(client.services),
+  });
 
-    if (config.name) {
-        await writeFileSync(path.resolve(outputPath, `${config.name}.ts`), templateResult);
-    }
+  if (config.name) {
+    await writeFileSync(
+      path.resolve(outputPath, `${config.name}.ts`),
+      templateResult,
+    );
+  }
 };

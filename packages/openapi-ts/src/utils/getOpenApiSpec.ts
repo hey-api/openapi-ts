@@ -12,7 +12,13 @@ import type { OpenApi } from '../openApi';
  * @param location: Path or url
  */
 export const getOpenApiSpec = async (location: string) => {
-    const absolutePathOrUrl = existsSync(location) ? path.resolve(location) : location;
-    const schema = (await $RefParser.bundle(absolutePathOrUrl, absolutePathOrUrl, {})) as OpenApi;
-    return schema;
+  const absolutePathOrUrl = existsSync(location)
+    ? path.resolve(location)
+    : location;
+  const schema = (await $RefParser.bundle(
+    absolutePathOrUrl,
+    absolutePathOrUrl,
+    {},
+  )) as OpenApi;
+  return schema;
 };

@@ -8,21 +8,23 @@ import type { getModel } from './getModel';
 export type GetModelFn = typeof getModel;
 
 export const getRequiredPropertiesFromComposition = (
-    openApi: OpenApi,
-    required: string[],
-    definitions: OpenApiSchema[],
-    getModel: GetModelFn
+  openApi: OpenApi,
+  required: string[],
+  definitions: OpenApiSchema[],
+  getModel: GetModelFn,
 ): Model[] =>
-    definitions
-        .reduce((properties, definition) => {
-            if (definition.$ref) {
-                const schema = getRef<OpenApiSchema>(openApi, definition);
-                return [...properties, ...getModel(openApi, schema).properties];
-            }
-            return [...properties, ...getModel(openApi, definition).properties];
-        }, [] as Model[])
-        .filter(property => !property.isRequired && required.includes(property.name))
-        .map(property => ({
-            ...property,
-            isRequired: true,
-        }));
+  definitions
+    .reduce((properties, definition) => {
+      if (definition.$ref) {
+        const schema = getRef<OpenApiSchema>(openApi, definition);
+        return [...properties, ...getModel(openApi, schema).properties];
+      }
+      return [...properties, ...getModel(openApi, definition).properties];
+    }, [] as Model[])
+    .filter(
+      (property) => !property.isRequired && required.includes(property.name),
+    )
+    .map((property) => ({
+      ...property,
+      isRequired: true,
+    }));

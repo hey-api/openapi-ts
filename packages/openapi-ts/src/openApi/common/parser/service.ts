@@ -8,7 +8,7 @@ import { sanitizeNamespaceIdentifier } from './sanitize';
  * @param version
  */
 export function getServiceVersion(version = '1.0'): string {
-    return String(version).replace(/^v/gi, '');
+  return String(version).replace(/^v/gi, '');
 }
 
 /**
@@ -16,6 +16,6 @@ export function getServiceVersion(version = '1.0'): string {
  * the input string to PascalCase.
  */
 export const getServiceName = (value: string): string => {
-    const clean = sanitizeNamespaceIdentifier(value).trim();
-    return camelCase(clean, { pascalCase: true });
+  const clean = sanitizeNamespaceIdentifier(value).trim();
+  return camelCase(clean, { pascalCase: true });
 };

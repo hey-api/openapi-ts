@@ -7,10 +7,10 @@
  * @see: build.js for more information
  */
 declare module '*.hbs' {
-    const template: {
-        compiler: [number, string];
-        useData: true;
-        main: () => void;
-    };
-    export default template;
+  const template: {
+    compiler: [number, string];
+    useData: true;
+    main: () => void;
+  };
+  export default template;
 }
