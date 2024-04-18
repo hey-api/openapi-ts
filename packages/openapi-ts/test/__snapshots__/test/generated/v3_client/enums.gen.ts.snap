@@ -109,3 +109,13 @@ export const ModelWithNestedArrayEnumsDataBarEnum = {
     BAZ: 'baz',
     QUX: 'qux',
 } as const;
+
+/**
+ * Период
+ */
+export const ValueEnum = {
+    _1: 1,
+    _3: 3,
+    _6: 6,
+    _12: 12,
+} as const;
