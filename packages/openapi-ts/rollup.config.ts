@@ -52,13 +52,20 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url)).toString());
 
+// ESM only dependencies are not treated as external so that we can fully support CommonJS and ESM
+const esmDependencies = ['camelcase'];
+
+export const externalDependencies = [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies)].filter(
+    dependency => !esmDependencies.includes(dependency)
+);
+
 function createConfig(isProduction: boolean) {
     return defineConfig({
-        external: [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies)],
+        external: externalDependencies,
         input: path.resolve(__dirname, 'src/node/index.ts'),
         output: {
-            file: path.resolve(__dirname, 'dist/node/index.js'),
-            format: 'esm',
+            file: path.resolve(__dirname, 'dist/node/index.cjs'),
+            format: 'cjs',
         },
         plugins: [
             nodeResolve({ preferBuiltins: true }),
@@ -67,7 +74,6 @@ function createConfig(isProduction: boolean) {
                 tsconfig: path.resolve(__dirname, 'src/node/tsconfig.json'),
             }),
             commonjs({
-                extensions: ['.js'],
                 sourceMap: false,
             }),
             json(),
