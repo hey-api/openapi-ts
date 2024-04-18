@@ -1640,23 +1640,3 @@ export const $ModelWithNumericEnumUnion = {
         },
     },
 } as const;
-
-export const $SimpleParameter = {
-    description: 'This is a reusable parameter',
-    name: 'parameter',
-    in: 'query',
-    required: false,
-    schema: {
-        type: 'string',
-    },
-} as const;
-
-export const $x_Foo_Bar = {
-    description: 'Parameter with illegal characters',
-    name: 'x-Foo-Bar',
-    in: 'header',
-    required: true,
-    schema: {
-        type: 'string',
-    },
-} as const;
