@@ -109,3 +109,13 @@ export enum ModelWithNestedArrayEnumsDataBarEnum {
     BAZ = 'baz',
     QUX = 'qux',
 }
+
+/**
+ * Период
+ */
+export enum ValueEnum {
+    '_1' = 1,
+    '_3' = 3,
+    '_6' = 6,
+    '_12' = 12,
+}
