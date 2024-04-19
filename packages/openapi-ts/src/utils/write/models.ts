@@ -144,8 +144,9 @@ const processServiceTypes = (services: Service[], onNode: OnNode) => {
     service.operations.forEach((operation) => {
       const hasReq = operation.parameters.length;
       const hasRes = operation.results.length;
+      const hasErr = operation.errors.length;
 
-      if (hasReq || hasRes) {
+      if (hasReq || hasRes || hasErr) {
         let pathMap = pathsMap.get(operation.path);
         if (!pathMap) {
           pathsMap.set(operation.path, new Map());
@@ -175,6 +176,22 @@ const processServiceTypes = (services: Service[], onNode: OnNode) => {
 
           operation.results.forEach((result) => {
             resMap.set(result.code, result);
+          });
+        }
+
+        if (hasErr) {
+          let resMap = methodMap.get('res');
+          if (!resMap) {
+            methodMap.set('res', new Map());
+            resMap = methodMap.get('res')!;
+          }
+
+          if (Array.isArray(resMap)) {
+            return;
+          }
+
+          operation.errors.forEach((error) => {
+            resMap.set(error.code, error);
           });
         }
       }

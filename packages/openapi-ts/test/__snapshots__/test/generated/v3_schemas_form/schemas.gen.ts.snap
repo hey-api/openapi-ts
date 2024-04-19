@@ -308,6 +308,15 @@ export const $ModelWithString = {
   },
 } as const;
 
+export const $ModelWithStringError = {
+  type: 'object',
+  properties: {
+    prop: {
+      type: 'string',
+    },
+  },
+} as const;
+
 export const $Model_From_Zendesk = {
   type: 'string',
 } as const;

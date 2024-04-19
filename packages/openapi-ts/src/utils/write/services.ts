@@ -46,9 +46,7 @@ const toOperationParamType = (operation: Operation): FunctionParameter[] => {
 const toOperationReturnType = (operation: Operation) => {
   const config = getConfig();
   const baseTypePath = `${serviceExportedNamespace()}['${operation.path}']['${operation.method.toLocaleLowerCase()}']['res']`;
-  const results = operation.results.filter(
-    (result) => result.code >= 200 && result.code < 300,
-  );
+  const results = operation.results;
   // TODO: we should return nothing when results don't exist
   // can't remove this logic without removing request/name config
   // as it complicates things
@@ -157,7 +155,7 @@ const toRequestOptions = (operation: Operation) => {
   if (operation.errors.length) {
     const errors: Record<number, string> = {};
     operation.errors.forEach((err) => {
-      errors[err.code] = escapeDescription(err.description);
+      errors[err.code] = escapeDescription(err.description ?? '');
     });
     obj.errors = errors;
   }

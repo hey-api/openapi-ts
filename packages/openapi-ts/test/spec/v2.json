@@ -487,19 +487,19 @@
           "500": {
             "description": "Message for 500 error",
             "schema": {
-              "$ref": "#/definitions/ModelWithString"
+              "$ref": "#/definitions/ModelWithStringError"
             }
           },
           "501": {
             "description": "Message for 501 error",
             "schema": {
-              "$ref": "#/definitions/ModelWithString"
+              "$ref": "#/definitions/ModelWithStringError"
             }
           },
           "502": {
             "description": "Message for 502 error",
             "schema": {
-              "$ref": "#/definitions/ModelWithString"
+              "$ref": "#/definitions/ModelWithStringError"
             }
           }
         }
@@ -552,19 +552,19 @@
           "500": {
             "description": "Message for 500 error",
             "schema": {
-              "$ref": "#/definitions/ModelWithString"
+              "$ref": "#/definitions/ModelWithStringError"
             }
           },
           "501": {
             "description": "Message for 501 error",
             "schema": {
-              "$ref": "#/definitions/ModelWithString"
+              "$ref": "#/definitions/ModelWithStringError"
             }
           },
           "502": {
             "description": "Message for 502 error",
             "schema": {
-              "$ref": "#/definitions/ModelWithString"
+              "$ref": "#/definitions/ModelWithStringError"
             }
           }
         }
@@ -1094,6 +1094,16 @@
       }
     },
     "ModelWithString": {
+      "description": "This is a model with one string property",
+      "type": "object",
+      "properties": {
+        "prop": {
+          "description": "This is a simple string property",
+          "type": "string"
+        }
+      }
+    },
+    "ModelWithStringError": {
       "description": "This is a model with one string property",
       "type": "object",
       "properties": {
