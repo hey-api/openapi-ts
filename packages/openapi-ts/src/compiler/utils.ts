@@ -98,7 +98,7 @@ export const ots = {
       (hasNewlines || hasBothQuotes || hasUnescapedBackticks) &&
       !isBacktickEscaped
     ) {
-      value = `\`${value.replace(/`/g, '\\`').replace(/\${/g, '\\${')}\``;
+      value = `\`${value.replace(/(?<!\\)`/g, '\\`').replace(/\${/g, '\\${')}\``;
     }
     const text = encodeURIComponent(value);
     if (value.startsWith('`')) {

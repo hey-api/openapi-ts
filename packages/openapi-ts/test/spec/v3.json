@@ -1292,7 +1292,7 @@
             }
           },
           "400": {
-            "description": "400 server error"
+            "description": "400 `server` error"
           },
           "500": {
             "description": "500 server error"
@@ -3190,7 +3190,7 @@
         "properties": {
           "template": {
             "type": "string",
-            "description": "The template that should be used for parsing and importing the contents of the CSV file.\n\n<br/><p>There is one placeholder currently supported:<ul>     <li><b>${x}</b> - refers to the n-th column in the CSV file, e.g. ${1}, ${2}, ...)</li></ul><p>Example of a correct JSON template:</p>\n<pre>\n[\n  {\n    \"resourceType\": \"Asset\",\n    \"identifier\": {\n      \"name\": \"${1}\",\n      \"domain\": {\n        \"name\": \"${2}\",\n        \"community\": {\n          \"name\": \"Some Community\"\n        }\n      }\n    },\n    \"attributes\" : {\n      \"00000000-0000-0000-0000-000000003115\" : [ {\n        \"value\" : \"${3}\" \n      } ],\n      \"00000000-0000-0000-0000-000000000222\" : [ {\n        \"value\" : \"${4}\"\n      } ]\n    }\n  }\n]\n</pre>"
+            "description": "The template `that` should be used for parsing and importing the contents of the CSV file.\n\n<br/><p>There is one placeholder currently supported:<ul>     <li><b>${x}</b> - refers to the n-th column in the CSV file, e.g. ${1}, ${2}, ...)</li></ul><p>Example of a correct JSON template:</p>\n<pre>\n[\n  {\n    \"resourceType\": \"Asset\",\n    \"identifier\": {\n      \"name\": \"${1}\",\n      \"domain\": {\n        \"name\": \"${2}\",\n        \"community\": {\n          \"name\": \"Some Community\"\n        }\n      }\n    },\n    \"attributes\" : {\n      \"00000000-0000-0000-0000-000000003115\" : [ {\n        \"value\" : \"${3}\" \n      } ],\n      \"00000000-0000-0000-0000-000000000222\" : [ {\n        \"value\" : \"${4}\"\n      } ]\n    }\n  }\n]\n</pre>"
           }
         }
       }

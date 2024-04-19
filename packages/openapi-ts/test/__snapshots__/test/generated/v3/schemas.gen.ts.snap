@@ -1677,7 +1677,7 @@ export const $ModelWithBackticksInDescription = {
   properties: {
     template: {
       type: 'string',
-      description: `The template that should be used for parsing and importing the contents of the CSV file.
+      description: `The template \`that\` should be used for parsing and importing the contents of the CSV file.
 
 <br/><p>There is one placeholder currently supported:<ul>     <li><b>\${x}</b> - refers to the n-th column in the CSV file, e.g. \${1}, \${2}, ...)</li></ul><p>Example of a correct JSON template:</p>
 <pre>
