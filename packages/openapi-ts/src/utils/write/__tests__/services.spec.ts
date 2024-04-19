@@ -25,7 +25,6 @@ describe('processServices', () => {
       schemas: {},
       services: {},
       types: {},
-      useDateType: false,
       useOptions: false,
     });
 

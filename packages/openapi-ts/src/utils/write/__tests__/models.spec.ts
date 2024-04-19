@@ -26,7 +26,6 @@ describe('processTypesAndEnums', () => {
       schemas: {},
       services: {},
       types: {},
-      useDateType: false,
       useOptions: true,
     });
 

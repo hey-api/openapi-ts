@@ -25,7 +25,6 @@ describe('processIndex', () => {
       schemas: {},
       services: {},
       types: {},
-      useDateType: false,
       useOptions: true,
     });
 

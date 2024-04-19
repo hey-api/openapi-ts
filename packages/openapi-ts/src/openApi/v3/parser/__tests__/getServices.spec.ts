@@ -19,7 +19,6 @@ describe('getServices', () => {
       schemas: {},
       services: {},
       types: {},
-      useDateType: false,
       useOptions: true,
     });
 

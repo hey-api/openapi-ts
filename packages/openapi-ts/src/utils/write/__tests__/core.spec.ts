@@ -40,7 +40,6 @@ describe('writeCore', () => {
       schemas: {},
       services: {},
       types: {},
-      useDateType: false,
       useOptions: true,
     });
 
@@ -96,7 +95,6 @@ describe('writeCore', () => {
       schemas: {},
       services: {},
       types: {},
-      useDateType: false,
       useOptions: true,
     });
 
@@ -135,7 +133,6 @@ describe('writeCore', () => {
       schemas: {},
       services: {},
       types: {},
-      useDateType: false,
       useOptions: true,
     });
 

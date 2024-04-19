@@ -23,7 +23,6 @@ describe('registerHandlebarHelpers', () => {
       schemas: {},
       services: {},
       types: {},
-      useDateType: false,
       useOptions: false,
     });
     registerHandlebarHelpers();
@@ -52,7 +51,6 @@ describe('registerHandlebarTemplates', () => {
       schemas: {},
       services: {},
       types: {},
-      useDateType: false,
       useOptions: false,
     });
     const templates = registerHandlebarTemplates();
