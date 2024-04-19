@@ -11,8 +11,8 @@ export const getQueryString = (params: Record<string, unknown>): string => {
 		}
 
 		if (value instanceof Date) {
-      append(key, value.toISOString());
-    } else if (Array.isArray(value)) {
+			append(key, value.toISOString());
+		} else if (Array.isArray(value)) {
 			value.forEach(v => encodePair(key, v));
 		} else if (typeof value === 'object') {
 			Object.entries(value).forEach(([k, v]) => encodePair(`${key}[${k}]`, v));
