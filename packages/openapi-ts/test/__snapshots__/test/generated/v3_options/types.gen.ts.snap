@@ -10,6 +10,16 @@ export type ModelWithString = {
   prop?: string;
 };
 
+/**
+ * This is a model with one string property
+ */
+export type ModelWithStringError = {
+  /**
+   * This is a simple string property
+   */
+  prop?: string;
+};
+
 export type $OpenApiTs = {
   '/api/v{api-version}/defaults': {
     get: {

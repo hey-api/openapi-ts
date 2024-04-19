@@ -823,7 +823,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ModelWithString"
+                  "$ref": "#/components/schemas/ModelWithStringError"
                 }
               }
             }
@@ -833,7 +833,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ModelWithString"
+                  "$ref": "#/components/schemas/ModelWithStringError"
                 }
               }
             }
@@ -843,7 +843,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ModelWithString"
+                  "$ref": "#/components/schemas/ModelWithStringError"
                 }
               }
             }
@@ -916,7 +916,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ModelWithString"
+                  "$ref": "#/components/schemas/ModelWithStringError"
                 }
               }
             }
@@ -926,7 +926,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ModelWithString"
+                  "$ref": "#/components/schemas/ModelWithStringError"
                 }
               }
             }
@@ -936,7 +936,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ModelWithString"
+                  "$ref": "#/components/schemas/ModelWithStringError"
                 }
               }
             }
@@ -1937,6 +1937,16 @@
         }
       },
       "ModelWithString": {
+        "description": "This is a model with one string property",
+        "type": "object",
+        "properties": {
+          "prop": {
+            "description": "This is a simple string property",
+            "type": "string"
+          }
+        }
+      },
+      "ModelWithStringError": {
         "description": "This is a model with one string property",
         "type": "object",
         "properties": {

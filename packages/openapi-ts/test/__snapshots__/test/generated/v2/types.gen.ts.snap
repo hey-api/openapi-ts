@@ -225,6 +225,16 @@ export type ModelWithString = {
 /**
  * This is a model with one string property
  */
+export type ModelWithStringError = {
+  /**
+   * This is a simple string property
+   */
+  prop?: string;
+};
+
+/**
+ * This is a model with one string property
+ */
 export type ModelWithNullableString = {
   /**
    * This is a simple string property
@@ -628,6 +638,18 @@ export type $OpenApiTs = {
          * Message for default response
          */
         200: ModelWithString;
+        /**
+         * Message for 500 error
+         */
+        500: ModelWithStringError;
+        /**
+         * Message for 501 error
+         */
+        501: ModelWithStringError;
+        /**
+         * Message for 502 error
+         */
+        502: ModelWithStringError;
       };
     };
     put: {
@@ -644,6 +666,18 @@ export type $OpenApiTs = {
          * Message for 202 response
          */
         202: ModelThatExtendsExtends;
+        /**
+         * Message for 500 error
+         */
+        500: ModelWithStringError;
+        /**
+         * Message for 501 error
+         */
+        501: ModelWithStringError;
+        /**
+         * Message for 502 error
+         */
+        502: ModelWithStringError;
       };
     };
   };
@@ -774,6 +808,14 @@ export type $OpenApiTs = {
          * Successful response
          */
         200: Array<ModelWithString>;
+        /**
+         * 400 server error
+         */
+        400: unknown;
+        /**
+         * 500 server error
+         */
+        500: unknown;
       };
     };
   };
@@ -784,6 +826,14 @@ export type $OpenApiTs = {
          * Successful response
          */
         200: string;
+        /**
+         * 400 server error
+         */
+        400: unknown;
+        /**
+         * 500 server error
+         */
+        500: unknown;
       };
     };
   };
@@ -800,6 +850,22 @@ export type $OpenApiTs = {
          * Custom message: Successful response
          */
         200: unknown;
+        /**
+         * Custom message: Internal Server Error
+         */
+        500: unknown;
+        /**
+         * Custom message: Not Implemented
+         */
+        501: unknown;
+        /**
+         * Custom message: Bad Gateway
+         */
+        502: unknown;
+        /**
+         * Custom message: Service Unavailable
+         */
+        503: unknown;
       };
     };
   };

@@ -364,6 +364,17 @@ export const $ModelWithString = {
   },
 } as const;
 
+export const $ModelWithStringError = {
+  description: 'This is a model with one string property',
+  type: 'object',
+  properties: {
+    prop: {
+      description: 'This is a simple string property',
+      type: 'string',
+    },
+  },
+} as const;
+
 export const $Model_From_Zendesk = {
   description: `\`Comment\` or \`VoiceComment\`. The JSON object for adding voice comments to tickets is different. See [Adding voice comments to tickets](/documentation/ticketing/managing-tickets/adding-voice-comments-to-tickets)`,
   type: 'string',
