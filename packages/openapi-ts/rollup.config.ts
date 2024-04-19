@@ -28,7 +28,6 @@ export function handlebarsPlugin(): Plugin {
             ifdef: true,
             notEquals: true,
             transformServiceName: true,
-            useDateType: true,
           },
           knownHelpersOnly: true,
           noEscape: true,

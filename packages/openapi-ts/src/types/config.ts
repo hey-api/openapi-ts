@@ -116,6 +116,11 @@ export interface UserConfig {
     | string
     | {
         /**
+         * Output Date instead of string for format "date-time"
+         * @default false
+         */
+        dates?: boolean;
+        /**
          * Generate types?
          * @default true
          */
@@ -130,11 +135,6 @@ export interface UserConfig {
          */
         name?: 'PascalCase' | 'preserve';
       };
-  /**
-   * Output Date instead of string for the format "date-time" in the models
-   * @default false
-   */
-  useDateType?: boolean;
   /**
    * Use options or arguments functions
    * @default true

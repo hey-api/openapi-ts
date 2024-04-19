@@ -125,6 +125,7 @@ const getServices = (userConfig: UserConfig): Config['services'] => {
 
 const getTypes = (userConfig: UserConfig): Config['types'] => {
   let types: Config['types'] = {
+    dates: false,
     export: true,
     name: 'preserve',
   };
@@ -169,7 +170,6 @@ const initConfig = async (
     name,
     operationId = true,
     request,
-    useDateType = false,
     useOptions = true,
   } = userConfig;
 
@@ -218,7 +218,6 @@ const initConfig = async (
     schemas,
     services,
     types,
-    useDateType,
     useOptions,
   });
 };

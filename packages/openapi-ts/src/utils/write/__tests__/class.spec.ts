@@ -26,7 +26,6 @@ describe('writeClientClass', () => {
       schemas: {},
       services: {},
       types: {},
-      useDateType: false,
       useOptions: true,
     });
 
