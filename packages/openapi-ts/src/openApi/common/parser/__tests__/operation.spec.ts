@@ -22,14 +22,13 @@ describe('getOperationName', () => {
     schemas: {
       export: false,
     },
-    serviceResponse: 'body',
     services: {
       export: false,
+      response: 'body',
     },
     types: {
       export: false,
     },
-    useDateType: false,
     useOptions: false,
   };
 
@@ -47,14 +46,13 @@ describe('getOperationName', () => {
     schemas: {
       export: false,
     },
-    serviceResponse: 'body',
     services: {
       export: false,
+      response: 'body',
     },
     types: {
       export: false,
     },
-    useDateType: false,
     useOptions: false,
   };
 

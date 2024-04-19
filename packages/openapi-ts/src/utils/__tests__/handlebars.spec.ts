@@ -21,10 +21,8 @@ describe('registerHandlebarHelpers', () => {
       operationId: true,
       output: '',
       schemas: {},
-      serviceResponse: 'body',
       services: {},
       types: {},
-      useDateType: false,
       useOptions: false,
     });
     registerHandlebarHelpers();
@@ -51,10 +49,8 @@ describe('registerHandlebarTemplates', () => {
       operationId: true,
       output: '',
       schemas: {},
-      serviceResponse: 'body',
       services: {},
       types: {},
-      useDateType: false,
       useOptions: false,
     });
     const templates = registerHandlebarTemplates();

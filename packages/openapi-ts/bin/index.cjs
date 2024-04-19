@@ -35,16 +35,8 @@ const params = program
   .option('--operationId [value]', 'Use operationd ID?')
   .option('--request <value>', 'Path to custom request file')
   .option('--schemas [value]', 'Write schemas to disk')
-  .option(
-    '--serviceResponse [value]',
-    'Define shape of returned value from service calls',
-  )
   .option('--services [value]', 'Write services to disk')
   .option('--types [value]', 'Write types to disk')
-  .option(
-    '--useDateType [value]',
-    'Output Date instead of string for the format "date-time" in the models',
-  )
   .option('--useOptions [value]', 'Use options instead of arguments')
   .parse(process.argv)
   .opts();
@@ -86,7 +78,6 @@ async function start() {
       'schemas',
       'services',
       'types',
-      'useDateType',
       'useOptions',
     ]);
     await createClient(userConfig);

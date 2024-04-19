@@ -17,10 +17,8 @@ describe('getServices', () => {
       operationId: false,
       output: '',
       schemas: {},
-      serviceResponse: 'body',
       services: {},
       types: {},
-      useDateType: false,
       useOptions: true,
     });
 
