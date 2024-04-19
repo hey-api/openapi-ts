@@ -1,5 +1,11 @@
 # openapi-ts-docs
 
+## 0.5.1
+
+### Patch Changes
+
+- docs: add tanstack-query and http clients sections ([#436](https://github.com/hey-api/openapi-ts/pull/436))
+
 ## 0.5.0
 
 ### Minor Changes
