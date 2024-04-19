@@ -1,5 +1,29 @@
 # @hey-api/openapi-ts
 
+## 0.41.0
+
+### Minor Changes
+
+- feat: add form type option for schemas ([#433](https://github.com/hey-api/openapi-ts/pull/433))
+
+- feat: replace useDateType with option in types object ([#435](https://github.com/hey-api/openapi-ts/pull/435))
+
+- feat: replace serviceResponse with option in services object ([#434](https://github.com/hey-api/openapi-ts/pull/434))
+
+- feat: replace postfixServices with configuration object ([#430](https://github.com/hey-api/openapi-ts/pull/430))
+
+### Patch Changes
+
+- fix: properly escape backticks in template literals ([#431](https://github.com/hey-api/openapi-ts/pull/431))
+
+- fix: transform names of referenced types ([#422](https://github.com/hey-api/openapi-ts/pull/422))
+
+- fix: use config interceptors passed to constructor when using named client ([#432](https://github.com/hey-api/openapi-ts/pull/432))
+
+- fix: properly escape expressions in template literals ([#431](https://github.com/hey-api/openapi-ts/pull/431))
+
+- fix: do not export common properties as schemas ([#424](https://github.com/hey-api/openapi-ts/pull/424))
+
 ## 0.40.2
 
 ### Patch Changes
