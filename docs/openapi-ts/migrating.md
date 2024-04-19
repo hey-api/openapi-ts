@@ -78,6 +78,20 @@ export default {
 }
 ```
 
+### Removed `useDateType`
+
+This config option has been removed. You can now configure date type using the `types.dates` option.
+
+```js{5}
+export default {
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  type: {
+    dates: true,
+  },
+}
+```
+
 ## v0.40.0
 
 ### Renamed `models.gen.ts` file
