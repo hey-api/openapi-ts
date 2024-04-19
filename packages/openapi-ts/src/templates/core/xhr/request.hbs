@@ -57,10 +57,10 @@ import type { OpenAPIConfig } from './OpenAPI';
  * Request method
  * @param config The OpenAPI configuration object
  * @param options The request options from the service
- * @returns CancelablePromise<{{#equals @root.$config.serviceResponse 'response'}}ApiResult<T>{{else}}T{{/equals}}>
+ * @returns CancelablePromise<{{#equals @root.$config.services.response 'response'}}ApiResult<T>{{else}}T{{/equals}}>
  * @throws ApiError
  */
-export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): CancelablePromise<{{#equals @root.$config.serviceResponse 'response'}}ApiResult<T>{{else}}T{{/equals}}> => {
+export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): CancelablePromise<{{#equals @root.$config.services.response 'response'}}ApiResult<T>{{else}}T{{/equals}}> => {
 	return new CancelablePromise(async (resolve, reject, onCancel) => {
 		try {
 			const url = getUrl(config, options);
@@ -88,7 +88,7 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): C
 
 				catchErrorCodes(options, result);
 
-				resolve({{#equals @root.$config.serviceResponse 'body'}}result.body{{else}}result{{/equals}});
+				resolve({{#equals @root.$config.services.response 'body'}}result.body{{else}}result{{/equals}});
 			}
 		} catch (error) {
 			reject(error);

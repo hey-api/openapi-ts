@@ -22,9 +22,9 @@ describe('getOperationName', () => {
     schemas: {
       export: false,
     },
-    serviceResponse: 'body',
     services: {
       export: false,
+      response: 'body',
     },
     types: {
       export: false,
@@ -47,9 +47,9 @@ describe('getOperationName', () => {
     schemas: {
       export: false,
     },
-    serviceResponse: 'body',
     services: {
       export: false,
+      response: 'body',
     },
     types: {
       export: false,
