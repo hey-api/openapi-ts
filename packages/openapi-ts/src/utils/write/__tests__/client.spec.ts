@@ -20,7 +20,6 @@ describe('writeClient', () => {
       format: true,
       input: '',
       lint: false,
-      operationId: true,
       output: './dist',
       schemas: {},
       services: {},
