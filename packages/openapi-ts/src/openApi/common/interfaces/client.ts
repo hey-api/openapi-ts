@@ -10,11 +10,6 @@ export interface Enum {
   value: string | number;
 }
 
-export interface OperationError {
-  code: number;
-  description: string;
-}
-
 export interface OperationParameter extends Model {
   in: 'path' | 'query' | 'header' | 'formData' | 'body' | 'cookie';
   prop: string;
@@ -39,7 +34,7 @@ export interface OperationResponse extends Model {
 export interface Operation extends OperationParameters {
   deprecated: boolean;
   description: string | null;
-  errors: OperationError[];
+  errors: OperationResponse[];
   method: 'DELETE' | 'GET' | 'HEAD' | 'OPTIONS' | 'PATCH' | 'POST' | 'PUT';
   /**
    * Method name. Methods contain the request logic.
