@@ -17,13 +17,13 @@ describe('getOperationName', () => {
     format: false,
     input: '',
     lint: false,
-    operationId: true,
     output: '',
     schemas: {
       export: false,
     },
     services: {
       export: false,
+      operationId: true,
       response: 'body',
     },
     types: {
@@ -41,13 +41,13 @@ describe('getOperationName', () => {
     format: false,
     input: '',
     lint: false,
-    operationId: false,
     output: '',
     schemas: {
       export: false,
     },
     services: {
       export: false,
+      operationId: false,
       response: 'body',
     },
     types: {

@@ -108,6 +108,7 @@ const getServices = (userConfig: UserConfig): Config['services'] => {
   let services: Config['services'] = {
     export: true,
     name: '{{name}}Service',
+    operationId: true,
     response: 'body',
   };
   if (typeof userConfig.services === 'boolean') {
@@ -168,7 +169,6 @@ const initConfig = async (
     input,
     lint = false,
     name,
-    operationId = true,
     request,
     useOptions = true,
   } = userConfig;
@@ -212,7 +212,6 @@ const initConfig = async (
     input,
     lint,
     name,
-    operationId,
     output,
     request,
     schemas,

@@ -20,7 +20,7 @@ export const getOperationName = (
 ): string => {
   const config = getConfig();
 
-  if (config.operationId && operationId) {
+  if (config.services.operationId && operationId) {
     return camelCase(sanitizeNamespaceIdentifier(operationId).trim());
   }
 
