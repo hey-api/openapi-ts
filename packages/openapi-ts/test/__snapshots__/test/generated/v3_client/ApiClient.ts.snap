@@ -71,8 +71,8 @@ export class ApiClient {
       HEADERS: config?.HEADERS,
       ENCODE_PATH: config?.ENCODE_PATH,
       interceptors: {
-        request: new Interceptors(),
-        response: new Interceptors(),
+        request: config?.interceptors?.request ?? new Interceptors(),
+        response: config?.interceptors?.response ?? new Interceptors(),
       },
     });
 
