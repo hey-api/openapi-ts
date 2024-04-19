@@ -4,7 +4,11 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - docs/**
   pull_request:
+    paths-ignore:
+      - docs/**
 
 concurrency:
   group: ${{ github.workflow }}=${{ github.head_ref }}
