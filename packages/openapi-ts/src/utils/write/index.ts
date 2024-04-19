@@ -14,7 +14,7 @@ export const processIndex = async ({
 
   if (config.exportCore) {
     files.index.add(compiler.export.named('ApiError', './core/ApiError'));
-    if (config.serviceResponse === 'response') {
+    if (config.services.response === 'response') {
       files.index.add(
         compiler.export.named(
           { isTypeOnly: true, name: 'ApiResult' },

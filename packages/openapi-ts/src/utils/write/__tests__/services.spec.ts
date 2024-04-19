@@ -23,7 +23,6 @@ describe('processServices', () => {
       operationId: true,
       output: '',
       schemas: {},
-      serviceResponse: 'body',
       services: {},
       types: {},
       useDateType: false,
