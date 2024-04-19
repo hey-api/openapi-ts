@@ -59,7 +59,7 @@ const toOperationReturnType = (operation: Operation) => {
     );
     returnType = compiler.typedef.union(types);
   }
-  if (config.useOptions && config.serviceResponse === 'response') {
+  if (config.useOptions && config.services.response === 'response') {
     returnType = compiler.typedef.basic('ApiResult', [returnType]);
   }
   if (config.client === 'angular') {
@@ -301,7 +301,7 @@ export const processServices = async ({
       './core/CancelablePromise',
     );
   }
-  if (config.serviceResponse === 'response') {
+  if (config.services.response === 'response') {
     file.addNamedImport(
       { isTypeOnly: true, name: 'ApiResult' },
       './core/ApiResult',
