@@ -22,7 +22,7 @@ describe('processIndex', () => {
       lint: false,
       operationId: true,
       output: '',
-      schemas: true,
+      schemas: {},
       serviceResponse: 'body',
       services: {},
       types: {},

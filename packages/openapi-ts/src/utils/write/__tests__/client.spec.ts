@@ -22,7 +22,7 @@ describe('writeClient', () => {
       lint: false,
       operationId: true,
       output: './dist',
-      schemas: true,
+      schemas: {},
       serviceResponse: 'body',
       services: {},
       types: {},
