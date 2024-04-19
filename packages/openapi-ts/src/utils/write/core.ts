@@ -7,7 +7,6 @@ import {
 } from 'node:fs';
 import path from 'node:path';
 
-import type { OpenApi } from '../../openApi';
 import type { Client } from '../../types/client';
 import { getConfig } from '../config';
 import { getHttpRequestName } from '../getHttpRequestName';
@@ -15,34 +14,32 @@ import type { Templates } from '../handlebars';
 
 /**
  * Generate OpenAPI core files, this includes the basic boilerplate code to handle requests.
- * @param openApi {@link OpenApi} Dereferenced OpenAPI specification
  * @param outputPath Directory to write the generated files to
  * @param client Client containing models, schemas, and services
  * @param templates The loaded handlebar templates
  */
 export const writeCore = async (
-  openApi: OpenApi,
   outputPath: string,
   client: Client,
   templates: Templates,
 ): Promise<void> => {
   const config = getConfig();
 
-  const context = {
-    httpRequest: getHttpRequestName(config.client),
-    server: config.base !== undefined ? config.base : client.server,
-    version: client.version,
-  };
-
-  rmSync(path.resolve(outputPath), {
-    force: true,
-    recursive: true,
-  });
-  mkdirSync(path.resolve(outputPath), {
-    recursive: true,
-  });
-
   if (config.exportCore) {
+    const context = {
+      httpRequest: getHttpRequestName(config.client),
+      server: config.base !== undefined ? config.base : client.server,
+      version: client.version,
+    };
+
+    rmSync(path.resolve(outputPath), {
+      force: true,
+      recursive: true,
+    });
+    mkdirSync(path.resolve(outputPath), {
+      recursive: true,
+    });
+
     await writeFileSync(
       path.resolve(outputPath, 'OpenAPI.ts'),
       templates.core.settings({
