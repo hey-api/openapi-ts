@@ -56,7 +56,7 @@ export const writeClient = async (
       name: 'enums.ts',
     });
   }
-  if (config.schemas) {
+  if (config.schemas.export) {
     files.schemas = new TypeScriptFile({
       dir: config.output,
       name: 'schemas.ts',

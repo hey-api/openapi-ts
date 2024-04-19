@@ -213,12 +213,28 @@ describe('OpenAPI v3', () => {
         ...config,
         enums: false,
         exportCore: false,
-        schemas: true,
+        schemas: {
+          type: 'json',
+        },
         services: false,
         types: false,
       } as UserConfig,
       description: 'generate JSON Schemas',
       name: 'v3_schemas_json',
+    },
+    {
+      config: {
+        ...config,
+        enums: false,
+        exportCore: false,
+        schemas: {
+          type: 'form',
+        },
+        services: false,
+        types: false,
+      } as UserConfig,
+      description: 'generate form validation schemas',
+      name: 'v3_schemas_form',
     },
   ])('$description', async ({ name, config }) => {
     const output = toOutputPath(name);

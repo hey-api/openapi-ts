@@ -19,7 +19,9 @@ describe('getOperationName', () => {
     lint: false,
     operationId: true,
     output: '',
-    schemas: false,
+    schemas: {
+      export: false,
+    },
     serviceResponse: 'body',
     services: {
       export: false,
@@ -42,7 +44,9 @@ describe('getOperationName', () => {
     lint: false,
     operationId: false,
     output: '',
-    schemas: false,
+    schemas: {
+      export: false,
+    },
     serviceResponse: 'body',
     services: {
       export: false,

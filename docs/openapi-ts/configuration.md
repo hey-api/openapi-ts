@@ -174,7 +174,19 @@ if (userInput.length > maxInputLength) {
 }
 ```
 
-If you're using OpenAPI v3.1, your schemas are JSON Schema compliant and can be used with any other tools supporting JSON Schema. However, if you don't need schemas at all, you can disable them with
+If you're using OpenAPI v3.1, your schemas are JSON Schema compliant and can be used with other tools supporting JSON Schema. However, if you only want to validate form input, you don't want to include string descriptions inside your bundle. Instead, use `form` type.
+
+```js{5}
+export default {
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  schemas: {
+    type: 'form'
+  },
+}
+```
+
+If you don't need schemas at all, you can disable them with
 
 ```js{4}
 export default {
