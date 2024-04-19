@@ -29,7 +29,6 @@ describe('getOperationName', () => {
     types: {
       export: false,
     },
-    useDateType: false,
     useOptions: false,
   };
 
@@ -54,7 +53,6 @@ describe('getOperationName', () => {
     types: {
       export: false,
     },
-    useDateType: false,
     useOptions: false,
   };
 

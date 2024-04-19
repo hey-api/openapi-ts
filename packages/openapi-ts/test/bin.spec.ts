@@ -225,8 +225,6 @@ describe('cli', () => {
       'false',
       '--operationId',
       'false',
-      '--useDateType',
-      'false',
       '--useOptions',
       'false',
       '--dry-run',
@@ -241,7 +239,6 @@ describe('cli', () => {
     expect(result.stderr.toString()).toContain('lint: false');
     expect(result.stderr.toString()).toContain('operationId: false');
     expect(result.stderr.toString()).toContain('schemas: false');
-    expect(result.stderr.toString()).toContain('useDateType: false');
     expect(result.stderr.toString()).toContain('useOptions: false');
   });
 
@@ -267,8 +264,6 @@ describe('cli', () => {
       'true',
       '--operationId',
       'true',
-      '--useDateType',
-      'true',
       '--useOptions',
       'true',
       '--dry-run',
@@ -283,7 +278,6 @@ describe('cli', () => {
     expect(result.stderr.toString()).toContain('lint: true');
     expect(result.stderr.toString()).toContain('operationId: true');
     expect(result.stderr.toString()).toContain('schemas: true');
-    expect(result.stderr.toString()).toContain('useDateType: true');
     expect(result.stderr.toString()).toContain('useOptions: true');
   });
 
@@ -304,7 +298,6 @@ describe('cli', () => {
       '--format',
       '--lint',
       '--operationId',
-      '--useDateType',
       '--useOptions',
       '--dry-run',
       'true',
@@ -316,7 +309,6 @@ describe('cli', () => {
     expect(result.stderr.toString()).toContain('lint: true');
     expect(result.stderr.toString()).toContain('operationId: true');
     expect(result.stderr.toString()).toContain('schemas: true');
-    expect(result.stderr.toString()).toContain('useDateType: true');
     expect(result.stderr.toString()).toContain('useOptions: true');
     expect(result.stderr.toString()).toContain("types: 'foo");
     expect(result.stderr.toString()).toContain("services: 'bar'");

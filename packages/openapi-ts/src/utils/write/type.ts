@@ -12,7 +12,7 @@ const base = (model: Model) => {
   if (model.base === 'binary') {
     return compiler.typedef.union(['Blob', 'File']);
   }
-  if (config.useDateType && model.format === 'date-time') {
+  if (config.types.dates && model.format === 'date-time') {
     return compiler.typedef.basic('Date');
   }
   // transform root level model names
