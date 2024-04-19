@@ -88,6 +88,22 @@ const logMissingDependenciesWarning = (dependencies: Dependencies) => {
   }
 };
 
+const getSchemas = (userConfig: UserConfig): Config['schemas'] => {
+  let schemas: Config['schemas'] = {
+    export: true,
+    type: 'json',
+  };
+  if (typeof userConfig.schemas === 'boolean') {
+    schemas.export = userConfig.schemas;
+  } else {
+    schemas = {
+      ...schemas,
+      ...userConfig.schemas,
+    };
+  }
+  return schemas;
+};
+
 const getServices = (userConfig: UserConfig): Config['services'] => {
   let services: Config['services'] = {
     export: true,
@@ -152,7 +168,6 @@ const initConfig = async (
     name,
     operationId = true,
     request,
-    schemas = true,
     serviceResponse = 'body',
     useDateType = false,
     useOptions = true,
@@ -182,6 +197,7 @@ const initConfig = async (
 
   const client = userConfig.client || inferClient(dependencies);
   const output = path.resolve(process.cwd(), userConfig.output);
+  const schemas = getSchemas(userConfig);
   const services = getServices(userConfig);
   const types = getTypes(userConfig);
 
