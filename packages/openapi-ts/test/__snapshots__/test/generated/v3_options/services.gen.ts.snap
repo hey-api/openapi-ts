@@ -7,6 +7,12 @@ import type { $OpenApiTs } from './types.gen';
 
 export class DefaultsService {
   /**
+   * @param data The data for the request.
+   * @param data.parameterString This is a simple string with default value
+   * @param data.parameterNumber This is a simple number with default value
+   * @param data.parameterBoolean This is a simple boolean with default value
+   * @param data.parameterEnum This is a simple enum with default value
+   * @param data.parameterModel This is a simple model with default value
    * @throws ApiError
    */
   public static callWithDefaultParameters(
@@ -33,6 +39,12 @@ export class DefaultsService {
   }
 
   /**
+   * @param data The data for the request.
+   * @param data.parameterString This is a simple string that is optional with default value
+   * @param data.parameterNumber This is a simple number that is optional with default value
+   * @param data.parameterBoolean This is a simple boolean that is optional with default value
+   * @param data.parameterEnum This is a simple enum that is optional with default value
+   * @param data.parameterModel This is a simple model that is optional with default value
    * @throws ApiError
    */
   public static callWithDefaultOptionalParameters(
@@ -59,6 +71,15 @@ export class DefaultsService {
   }
 
   /**
+   * @param data The data for the request.
+   * @param data.parameterStringWithNoDefault This is a string with no default
+   * @param data.parameterOptionalStringWithDefault This is a optional string with default
+   * @param data.parameterOptionalStringWithEmptyDefault This is a optional string with empty default
+   * @param data.parameterOptionalStringWithNoDefault This is a optional string with no default
+   * @param data.parameterStringWithDefault This is a string with default
+   * @param data.parameterStringWithEmptyDefault This is a string with empty default
+   * @param data.parameterStringNullableWithNoDefault This is a string that can be null with no default
+   * @param data.parameterStringNullableWithDefault This is a string that can be null with default
    * @throws ApiError
    */
   public static callToTestOrderOfParams(
