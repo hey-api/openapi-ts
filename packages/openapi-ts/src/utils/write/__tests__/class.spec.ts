@@ -24,9 +24,7 @@ describe('writeClientClass', () => {
       operationId: true,
       output: '',
       schemas: {},
-      services: {
-        response: 'body',
-      },
+      services: {},
       types: {},
       useDateType: false,
       useOptions: true,
