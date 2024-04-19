@@ -38,9 +38,7 @@ describe('writeCore', () => {
       operationId: true,
       output: '',
       schemas: {},
-      services: {
-        response: 'body',
-      },
+      services: {},
       types: {},
       useDateType: false,
       useOptions: true,
@@ -96,9 +94,7 @@ describe('writeCore', () => {
       operationId: true,
       output: '',
       schemas: {},
-      services: {
-        response: 'body',
-      },
+      services: {},
       types: {},
       useDateType: false,
       useOptions: true,
