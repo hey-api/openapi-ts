@@ -14,10 +14,11 @@ describe('getServices', () => {
       format: false,
       input: '',
       lint: false,
-      operationId: true,
       output: '',
       schemas: {},
-      services: {},
+      services: {
+        operationId: true,
+      },
       types: {},
       useOptions: true,
     });

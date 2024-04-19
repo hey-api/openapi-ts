@@ -48,6 +48,22 @@ This config option is deprecated and will be removed.
 
 This config option is deprecated and will be removed.
 
+## v0.42.0
+
+### Moved `operationId`
+
+This config option has been moved. You can now configure it using the `services.operationId` option.
+
+```js{5}
+export default {
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  services: {
+    operationId: true,
+  },
+}
+```
+
 ## v0.41.0
 
 ### Removed `postfixServices`

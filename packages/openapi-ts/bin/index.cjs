@@ -32,7 +32,6 @@ const params = program
   .option('--format [value]', 'Process output folder with formatter?')
   .option('--lint [value]', 'Process output folder with linter?')
   .option('--name <value>', 'Custom client class name')
-  .option('--operationId [value]', 'Use operationd ID?')
   .option('--request <value>', 'Path to custom request file')
   .option('--schemas [value]', 'Write schemas to disk')
   .option('--services [value]', 'Write services to disk')
@@ -74,7 +73,6 @@ async function start() {
       'exportCore',
       'format',
       'lint',
-      'operationId',
       'schemas',
       'services',
       'types',

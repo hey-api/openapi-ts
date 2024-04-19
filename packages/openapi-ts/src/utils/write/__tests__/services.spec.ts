@@ -20,7 +20,6 @@ describe('processServices', () => {
       format: false,
       input: '',
       lint: false,
-      operationId: true,
       output: '',
       schemas: {},
       services: {},
