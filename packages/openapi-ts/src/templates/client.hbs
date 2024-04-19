@@ -37,7 +37,7 @@ import { {{{transformServiceName name}}} } from './services.gen';
 				HEADERS: OpenAPI?.HEADERS,
 				ENCODE_PATH: OpenAPI?.ENCODE_PATH,
 				interceptors: {
-					response: new Interceptors(),
+					response: OpenAPI?.interceptors?.response ?? new Interceptors(),
 				},
 			} as OpenAPIConfig,
 		},
@@ -74,9 +74,9 @@ export class {{{@root.$config.name}}} {
 			HEADERS: config?.HEADERS,
 			ENCODE_PATH: config?.ENCODE_PATH,
 			interceptors: {
-                request: new Interceptors(),
-                response: new Interceptors(),
-            },
+				request: config?.interceptors?.request ?? new Interceptors(),
+				response: config?.interceptors?.response ?? new Interceptors(),
+      },
 		});
 
 		{{#each services}}
