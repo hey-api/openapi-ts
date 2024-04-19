@@ -28,7 +28,6 @@ export class DefaultService {
   ): CancelablePromise<
     $OpenApiTs['/api/v{api-version}/no-tag']['post']['res'][200]
   > {
-    const { requestBody } = data;
     return this.httpRequest.request({
       method: 'POST',
       url: '/api/v{api-version}/no-tag',
@@ -137,13 +136,12 @@ export class ParametersService {
   public deleteFoo(
     data: $OpenApiTs['/api/v{api-version}/foo/{foo}/bar/{bar}']['delete']['req'],
   ): CancelablePromise<void> {
-    const { foo, bar } = data;
     return this.httpRequest.request({
       method: 'DELETE',
       url: '/api/v{api-version}/foo/{foo}/bar/{bar}',
       path: {
-        foo,
-        bar,
+        foo: data.foo,
+        bar: data.bar,
       },
     });
   }
@@ -163,35 +161,25 @@ export class ParametersService {
   public callWithParameters(
     data: $OpenApiTs['/api/v{api-version}/parameters/{parameterPath}']['post']['req'],
   ): CancelablePromise<void> {
-    const {
-      parameterHeader,
-      fooAllOfEnum,
-      parameterQuery,
-      parameterForm,
-      parameterCookie,
-      parameterPath,
-      requestBody,
-      fooRefEnum,
-    } = data;
     return this.httpRequest.request({
       method: 'POST',
       url: '/api/v{api-version}/parameters/{parameterPath}',
       path: {
-        parameterPath,
+        parameterPath: data.parameterPath,
       },
       cookies: {
-        parameterCookie,
+        parameterCookie: data.parameterCookie,
       },
       headers: {
-        parameterHeader,
+        parameterHeader: data.parameterHeader,
       },
       query: {
-        foo_ref_enum: fooRefEnum,
-        foo_all_of_enum: fooAllOfEnum,
-        parameterQuery,
+        foo_ref_enum: data.fooRefEnum,
+        foo_all_of_enum: data.fooAllOfEnum,
+        parameterQuery: data.parameterQuery,
       },
       formData: {
-        parameterForm,
+        parameterForm: data.parameterForm,
       },
       body: requestBody,
       mediaType: 'application/json',
@@ -214,37 +202,26 @@ export class ParametersService {
   public callWithWeirdParameterNames(
     data: $OpenApiTs['/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}']['post']['req'],
   ): CancelablePromise<void> {
-    const {
-      parameterHeader,
-      parameterQuery,
-      parameterForm,
-      parameterCookie,
-      requestBody,
-      parameterPath1,
-      parameterPath2,
-      parameterPath3,
-      _default,
-    } = data;
     return this.httpRequest.request({
       method: 'POST',
       url: '/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}',
       path: {
-        'parameter.path.1': parameterPath1,
-        'parameter-path-2': parameterPath2,
-        'PARAMETER-PATH-3': parameterPath3,
+        'parameter.path.1': data.parameterPath1,
+        'parameter-path-2': data.parameterPath2,
+        'PARAMETER-PATH-3': data.parameterPath3,
       },
       cookies: {
-        'PARAMETER-COOKIE': parameterCookie,
+        'PARAMETER-COOKIE': data.parameterCookie,
       },
       headers: {
-        'parameter.header': parameterHeader,
+        'parameter.header': data.parameterHeader,
       },
       query: {
-        default: _default,
-        'parameter-query': parameterQuery,
+        default: data._default,
+        'parameter-query': data.parameterQuery,
       },
       formData: {
-        parameter_form: parameterForm,
+        parameter_form: data.parameterForm,
       },
       body: requestBody,
       mediaType: 'application/json',
@@ -260,12 +237,11 @@ export class ParametersService {
   public getCallWithOptionalParam(
     data: $OpenApiTs['/api/v{api-version}/parameters/']['get']['req'],
   ): CancelablePromise<void> {
-    const { requestBody, parameter } = data;
     return this.httpRequest.request({
       method: 'GET',
       url: '/api/v{api-version}/parameters/',
       query: {
-        parameter,
+        parameter: data.parameter,
       },
       body: requestBody,
       mediaType: 'application/json',
@@ -281,12 +257,11 @@ export class ParametersService {
   public postCallWithOptionalParam(
     data: $OpenApiTs['/api/v{api-version}/parameters/']['post']['req'],
   ): CancelablePromise<void> {
-    const { parameter, requestBody } = data;
     return this.httpRequest.request({
       method: 'POST',
       url: '/api/v{api-version}/parameters/',
       query: {
-        parameter,
+        parameter: data.parameter,
       },
       body: requestBody,
       mediaType: 'application/json',
@@ -313,24 +288,17 @@ export class DescriptionsService {
   public callWithDescriptions(
     data: $OpenApiTs['/api/v{api-version}/descriptions/']['post']['req'] = {},
   ): CancelablePromise<void> {
-    const {
-      parameterWithBreaks,
-      parameterWithBackticks,
-      parameterWithSlashes,
-      parameterWithExpressionPlaceholders,
-      parameterWithQuotes,
-      parameterWithReservedCharacters,
-    } = data;
     return this.httpRequest.request({
       method: 'POST',
       url: '/api/v{api-version}/descriptions/',
       query: {
-        parameterWithBreaks,
-        parameterWithBackticks,
-        parameterWithSlashes,
-        parameterWithExpressionPlaceholders,
-        parameterWithQuotes,
-        parameterWithReservedCharacters,
+        parameterWithBreaks: data.parameterWithBreaks,
+        parameterWithBackticks: data.parameterWithBackticks,
+        parameterWithSlashes: data.parameterWithSlashes,
+        parameterWithExpressionPlaceholders:
+          data.parameterWithExpressionPlaceholders,
+        parameterWithQuotes: data.parameterWithQuotes,
+        parameterWithReservedCharacters: data.parameterWithReservedCharacters,
       },
     });
   }
@@ -348,12 +316,11 @@ export class DeprecatedService {
   public deprecatedCall(
     data: $OpenApiTs['/api/v{api-version}/parameters/deprecated']['post']['req'],
   ): CancelablePromise<void> {
-    const { parameter } = data;
     return this.httpRequest.request({
       method: 'POST',
       url: '/api/v{api-version}/parameters/deprecated',
       headers: {
-        parameter,
+        parameter: data.parameter,
       },
     });
   }
@@ -371,12 +338,11 @@ export class RequestBodyService {
   public postApiRequestBody(
     data: $OpenApiTs['/api/v{api-version}/requestBody/']['post']['req'] = {},
   ): CancelablePromise<void> {
-    const { parameter, foo } = data;
     return this.httpRequest.request({
       method: 'POST',
       url: '/api/v{api-version}/requestBody/',
       query: {
-        parameter,
+        parameter: data.parameter,
       },
       body: foo,
       mediaType: 'application/json',
@@ -396,12 +362,11 @@ export class FormDataService {
   public postApiFormData(
     data: $OpenApiTs['/api/v{api-version}/formData/']['post']['req'] = {},
   ): CancelablePromise<void> {
-    const { parameter, formData } = data;
     return this.httpRequest.request({
       method: 'POST',
       url: '/api/v{api-version}/formData/',
       query: {
-        parameter,
+        parameter: data.parameter,
       },
       formData,
       mediaType: 'multipart/form-data',
@@ -424,22 +389,15 @@ export class DefaultsService {
   public callWithDefaultParameters(
     data: $OpenApiTs['/api/v{api-version}/defaults']['get']['req'] = {},
   ): CancelablePromise<void> {
-    const {
-      parameterString,
-      parameterNumber,
-      parameterBoolean,
-      parameterEnum,
-      parameterModel,
-    } = data;
     return this.httpRequest.request({
       method: 'GET',
       url: '/api/v{api-version}/defaults',
       query: {
-        parameterString,
-        parameterNumber,
-        parameterBoolean,
-        parameterEnum,
-        parameterModel,
+        parameterString: data.parameterString,
+        parameterNumber: data.parameterNumber,
+        parameterBoolean: data.parameterBoolean,
+        parameterEnum: data.parameterEnum,
+        parameterModel: data.parameterModel,
       },
     });
   }
@@ -456,22 +414,15 @@ export class DefaultsService {
   public callWithDefaultOptionalParameters(
     data: $OpenApiTs['/api/v{api-version}/defaults']['post']['req'] = {},
   ): CancelablePromise<void> {
-    const {
-      parameterString,
-      parameterNumber,
-      parameterBoolean,
-      parameterEnum,
-      parameterModel,
-    } = data;
     return this.httpRequest.request({
       method: 'POST',
       url: '/api/v{api-version}/defaults',
       query: {
-        parameterString,
-        parameterNumber,
-        parameterBoolean,
-        parameterEnum,
-        parameterModel,
+        parameterString: data.parameterString,
+        parameterNumber: data.parameterNumber,
+        parameterBoolean: data.parameterBoolean,
+        parameterEnum: data.parameterEnum,
+        parameterModel: data.parameterModel,
       },
     });
   }
@@ -491,28 +442,23 @@ export class DefaultsService {
   public callToTestOrderOfParams(
     data: $OpenApiTs['/api/v{api-version}/defaults']['put']['req'],
   ): CancelablePromise<void> {
-    const {
-      parameterStringWithNoDefault,
-      parameterOptionalStringWithDefault,
-      parameterOptionalStringWithEmptyDefault,
-      parameterOptionalStringWithNoDefault,
-      parameterStringWithDefault,
-      parameterStringWithEmptyDefault,
-      parameterStringNullableWithNoDefault,
-      parameterStringNullableWithDefault,
-    } = data;
     return this.httpRequest.request({
       method: 'PUT',
       url: '/api/v{api-version}/defaults',
       query: {
-        parameterOptionalStringWithDefault,
-        parameterOptionalStringWithEmptyDefault,
-        parameterOptionalStringWithNoDefault,
-        parameterStringWithDefault,
-        parameterStringWithEmptyDefault,
-        parameterStringWithNoDefault,
-        parameterStringNullableWithNoDefault,
-        parameterStringNullableWithDefault,
+        parameterOptionalStringWithDefault:
+          data.parameterOptionalStringWithDefault,
+        parameterOptionalStringWithEmptyDefault:
+          data.parameterOptionalStringWithEmptyDefault,
+        parameterOptionalStringWithNoDefault:
+          data.parameterOptionalStringWithNoDefault,
+        parameterStringWithDefault: data.parameterStringWithDefault,
+        parameterStringWithEmptyDefault: data.parameterStringWithEmptyDefault,
+        parameterStringWithNoDefault: data.parameterStringWithNoDefault,
+        parameterStringNullableWithNoDefault:
+          data.parameterStringNullableWithNoDefault,
+        parameterStringNullableWithDefault:
+          data.parameterStringNullableWithDefault,
       },
     });
   }
@@ -760,22 +706,15 @@ export class CollectionFormatService {
   public collectionFormat(
     data: $OpenApiTs['/api/v{api-version}/collectionFormat']['get']['req'],
   ): CancelablePromise<void> {
-    const {
-      parameterArrayCsv,
-      parameterArraySsv,
-      parameterArrayTsv,
-      parameterArrayPipes,
-      parameterArrayMulti,
-    } = data;
     return this.httpRequest.request({
       method: 'GET',
       url: '/api/v{api-version}/collectionFormat',
       query: {
-        parameterArrayCSV: parameterArrayCsv,
-        parameterArraySSV: parameterArraySsv,
-        parameterArrayTSV: parameterArrayTsv,
-        parameterArrayPipes,
-        parameterArrayMulti,
+        parameterArrayCSV: data.parameterArrayCsv,
+        parameterArraySSV: data.parameterArraySsv,
+        parameterArrayTSV: data.parameterArrayTsv,
+        parameterArrayPipes: data.parameterArrayPipes,
+        parameterArrayMulti: data.parameterArrayMulti,
       },
     });
   }
@@ -808,30 +747,20 @@ export class TypesService {
     | $OpenApiTs['/api/v{api-version}/types']['get']['res'][202]
     | $OpenApiTs['/api/v{api-version}/types']['get']['res'][203]
   > {
-    const {
-      parameterArray,
-      parameterDictionary,
-      parameterEnum,
-      parameterNumber,
-      parameterString,
-      parameterBoolean,
-      parameterObject,
-      id,
-    } = data;
     return this.httpRequest.request({
       method: 'GET',
       url: '/api/v{api-version}/types',
       path: {
-        id,
+        id: data.id,
       },
       query: {
-        parameterNumber,
-        parameterString,
-        parameterBoolean,
-        parameterObject,
-        parameterArray,
-        parameterDictionary,
-        parameterEnum,
+        parameterNumber: data.parameterNumber,
+        parameterString: data.parameterString,
+        parameterBoolean: data.parameterBoolean,
+        parameterObject: data.parameterObject,
+        parameterArray: data.parameterArray,
+        parameterDictionary: data.parameterDictionary,
+        parameterEnum: data.parameterEnum,
       },
     });
   }
@@ -851,12 +780,11 @@ export class UploadService {
   ): CancelablePromise<
     $OpenApiTs['/api/v{api-version}/upload']['post']['res'][200]
   > {
-    const { file } = data;
     return this.httpRequest.request({
       method: 'POST',
       url: '/api/v{api-version}/upload',
       formData: {
-        file,
+        file: data.file,
       },
     });
   }
@@ -876,12 +804,11 @@ export class FileResponseService {
   ): CancelablePromise<
     $OpenApiTs['/api/v{api-version}/file/{id}']['get']['res'][200]
   > {
-    const { id } = data;
     return this.httpRequest.request({
       method: 'GET',
       url: '/api/v{api-version}/file/{id}',
       path: {
-        id,
+        id: data.id,
       },
     });
   }
@@ -902,13 +829,12 @@ export class ComplexService {
   ): CancelablePromise<
     $OpenApiTs['/api/v{api-version}/complex']['get']['res'][200]
   > {
-    const { parameterObject, parameterReference } = data;
     return this.httpRequest.request({
       method: 'GET',
       url: '/api/v{api-version}/complex',
       query: {
-        parameterObject,
-        parameterReference,
+        parameterObject: data.parameterObject,
+        parameterReference: data.parameterReference,
       },
       errors: {
         400: '400 `server` error',
@@ -929,12 +855,11 @@ export class ComplexService {
   ): CancelablePromise<
     $OpenApiTs['/api/v{api-version}/complex/{id}']['put']['res'][200]
   > {
-    const { id, requestBody } = data;
     return this.httpRequest.request({
       method: 'PUT',
       url: '/api/v{api-version}/complex/{id}',
       path: {
-        id,
+        id: data.id,
       },
       body: requestBody,
       mediaType: 'application/json-patch+json',
@@ -953,7 +878,6 @@ export class MultipartService {
   public multipartRequest(
     data: $OpenApiTs['/api/v{api-version}/multipart']['post']['req'] = {},
   ): CancelablePromise<void> {
-    const { formData } = data;
     return this.httpRequest.request({
       method: 'POST',
       url: '/api/v{api-version}/multipart',
@@ -1012,12 +936,11 @@ export class ErrorService {
   ): CancelablePromise<
     $OpenApiTs['/api/v{api-version}/error']['post']['res'][200]
   > {
-    const { status } = data;
     return this.httpRequest.request({
       method: 'POST',
       url: '/api/v{api-version}/error',
       query: {
-        status,
+        status: data.status,
       },
       errors: {
         500: 'Custom message: Internal Server Error',
@@ -1043,12 +966,11 @@ export class NonAsciiÆøåÆøÅöôêÊService {
   ): CancelablePromise<
     $OpenApiTs['/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串']['post']['res'][200]
   > {
-    const { nonAsciiParamæøåÆøÅöôêÊ } = data;
     return this.httpRequest.request({
       method: 'POST',
       url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
       query: {
-        nonAsciiParamæøåÆØÅöôêÊ: nonAsciiParamæøåÆøÅöôêÊ,
+        nonAsciiParamæøåÆØÅöôêÊ: data.nonAsciiParamæøåÆøÅöôêÊ,
       },
     });
   }

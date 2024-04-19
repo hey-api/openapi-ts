@@ -18,22 +18,15 @@ export class DefaultsService {
   public static callWithDefaultParameters(
     data: $OpenApiTs['/api/v{api-version}/defaults']['get']['req'] = {},
   ): CancelablePromise<void> {
-    const {
-      parameterString,
-      parameterNumber,
-      parameterBoolean,
-      parameterEnum,
-      parameterModel,
-    } = data;
     return __request(OpenAPI, {
       method: 'GET',
       url: '/api/v{api-version}/defaults',
       query: {
-        parameterString,
-        parameterNumber,
-        parameterBoolean,
-        parameterEnum,
-        parameterModel,
+        parameterString: data.parameterString,
+        parameterNumber: data.parameterNumber,
+        parameterBoolean: data.parameterBoolean,
+        parameterEnum: data.parameterEnum,
+        parameterModel: data.parameterModel,
       },
     });
   }
@@ -50,22 +43,15 @@ export class DefaultsService {
   public static callWithDefaultOptionalParameters(
     data: $OpenApiTs['/api/v{api-version}/defaults']['post']['req'] = {},
   ): CancelablePromise<void> {
-    const {
-      parameterString,
-      parameterNumber,
-      parameterBoolean,
-      parameterEnum,
-      parameterModel,
-    } = data;
     return __request(OpenAPI, {
       method: 'POST',
       url: '/api/v{api-version}/defaults',
       query: {
-        parameterString,
-        parameterNumber,
-        parameterBoolean,
-        parameterEnum,
-        parameterModel,
+        parameterString: data.parameterString,
+        parameterNumber: data.parameterNumber,
+        parameterBoolean: data.parameterBoolean,
+        parameterEnum: data.parameterEnum,
+        parameterModel: data.parameterModel,
       },
     });
   }
@@ -85,28 +71,23 @@ export class DefaultsService {
   public static callToTestOrderOfParams(
     data: $OpenApiTs['/api/v{api-version}/defaults']['put']['req'],
   ): CancelablePromise<void> {
-    const {
-      parameterStringWithNoDefault,
-      parameterOptionalStringWithDefault,
-      parameterOptionalStringWithEmptyDefault,
-      parameterOptionalStringWithNoDefault,
-      parameterStringWithDefault,
-      parameterStringWithEmptyDefault,
-      parameterStringNullableWithNoDefault,
-      parameterStringNullableWithDefault,
-    } = data;
     return __request(OpenAPI, {
       method: 'PUT',
       url: '/api/v{api-version}/defaults',
       query: {
-        parameterOptionalStringWithDefault,
-        parameterOptionalStringWithEmptyDefault,
-        parameterOptionalStringWithNoDefault,
-        parameterStringWithDefault,
-        parameterStringWithEmptyDefault,
-        parameterStringWithNoDefault,
-        parameterStringNullableWithNoDefault,
-        parameterStringNullableWithDefault,
+        parameterOptionalStringWithDefault:
+          data.parameterOptionalStringWithDefault,
+        parameterOptionalStringWithEmptyDefault:
+          data.parameterOptionalStringWithEmptyDefault,
+        parameterOptionalStringWithNoDefault:
+          data.parameterOptionalStringWithNoDefault,
+        parameterStringWithDefault: data.parameterStringWithDefault,
+        parameterStringWithEmptyDefault: data.parameterStringWithEmptyDefault,
+        parameterStringWithNoDefault: data.parameterStringWithNoDefault,
+        parameterStringNullableWithNoDefault:
+          data.parameterStringNullableWithNoDefault,
+        parameterStringNullableWithDefault:
+          data.parameterStringNullableWithDefault,
       },
     });
   }
