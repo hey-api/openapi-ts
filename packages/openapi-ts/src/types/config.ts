@@ -60,10 +60,25 @@ export interface UserConfig {
    */
   request?: string;
   /**
-   * Export JSON schemas?
+   * Generate JSON schemas?
    * @default true
    */
-  schemas?: boolean;
+  schemas?:
+    | boolean
+    | {
+        /**
+         * Generate JSON schemas?
+         * @default true
+         */
+        export?: boolean;
+        /**
+         * Choose schema type to generate. Select 'form' if you don't want
+         * descriptions to reduce bundle size and you plan to use schemas
+         * for form validation
+         * @default 'json'
+         */
+        type?: 'form' | 'json';
+      };
   /**
    * Define shape of returned value from service calls
    * @default 'body'
@@ -129,9 +144,10 @@ export interface UserConfig {
 
 export type Config = Omit<
   Required<UserConfig>,
-  'base' | 'name' | 'request' | 'services' | 'types'
+  'base' | 'name' | 'request' | 'schemas' | 'services' | 'types'
 > &
   Pick<UserConfig, 'base' | 'name' | 'request'> & {
+    schemas: Extract<Required<UserConfig>['schemas'], object>;
     services: Extract<Required<UserConfig>['services'], object>;
     types: Extract<Required<UserConfig>['types'], object>;
   };

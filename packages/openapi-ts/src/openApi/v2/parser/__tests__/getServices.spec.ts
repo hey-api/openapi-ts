@@ -16,7 +16,7 @@ describe('getServices', () => {
       lint: false,
       operationId: false,
       output: '',
-      schemas: true,
+      schemas: {},
       serviceResponse: 'body',
       services: {},
       types: {},

@@ -24,7 +24,7 @@ describe('processSchemas', () => {
       name: 'AppClient',
       operationId: true,
       output: '',
-      schemas: true,
+      schemas: {},
       serviceResponse: 'body',
       services: {},
       types: {},
