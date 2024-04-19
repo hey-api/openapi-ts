@@ -81,12 +81,7 @@ export const writeClient = async (
 
   // deprecated files
   await writeClientClass(openApi, outputPath, client, templates);
-  await writeCore(
-    openApi,
-    path.resolve(config.output, 'core'),
-    client,
-    templates,
-  );
+  await writeCore(path.resolve(config.output, 'core'), client, templates);
 
   await processIndex({ files });
 
