@@ -80,11 +80,6 @@ export interface UserConfig {
         type?: 'form' | 'json';
       };
   /**
-   * Define shape of returned value from service calls
-   * @default 'body'
-   */
-  serviceResponse?: 'body' | 'response';
-  /**
    * Generate services?
    * @default true
    */
@@ -106,6 +101,11 @@ export interface UserConfig {
          * @default '{{name}}Service'
          */
         name?: string;
+        /**
+         * Define shape of returned value from service calls
+         * @default 'body'
+         */
+        response?: 'body' | 'response';
       };
   /**
    * Generate types?

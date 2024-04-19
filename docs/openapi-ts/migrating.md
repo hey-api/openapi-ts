@@ -64,6 +64,20 @@ export default {
 }
 ```
 
+### Removed `serviceResponse`
+
+This config option has been removed. You can now configure service responses using the `services.response` option.
+
+```js{5}
+export default {
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  services: {
+    response: 'body',
+  },
+}
+```
+
 ## v0.40.0
 
 ### Renamed `models.gen.ts` file

@@ -23,8 +23,9 @@ describe('writeClient', () => {
       operationId: true,
       output: './dist',
       schemas: {},
-      serviceResponse: 'body',
-      services: {},
+      services: {
+        response: 'body',
+      },
       types: {},
       useDateType: false,
       useOptions: false,
