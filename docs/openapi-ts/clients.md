@@ -1,6 +1,6 @@
 ---
 title: Clients
-description: Generate query keys and query functions. Use them with our REST clients or bring your own.
+description: REST clients for your stack. Compatible with all our features.
 ---
 
 # REST Clients <span class="soon">Soon</span>
