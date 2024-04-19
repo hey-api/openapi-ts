@@ -1,7 +1,7 @@
 import camelCase from 'camelcase';
 
 import { getConfig } from '../../../utils/config';
-import type { OperationError, OperationResponse } from '../interfaces/client';
+import type { OperationResponse } from '../interfaces/client';
 import { reservedWords } from './reservedWords';
 import {
   sanitizeNamespaceIdentifier,
@@ -74,13 +74,8 @@ export const getOperationResponseCode = (
 
 export const getOperationErrors = (
   operationResponses: OperationResponse[],
-): OperationError[] =>
-  operationResponses
-    .filter(
-      (operationResponse) =>
-        operationResponse.code >= 300 && operationResponse.description,
-    )
-    .map((response) => ({
-      code: response.code,
-      description: response.description!,
-    }));
+): OperationResponse[] =>
+  operationResponses.filter(
+    (operationResponse) =>
+      operationResponse.code >= 300 && operationResponse.description,
+  );

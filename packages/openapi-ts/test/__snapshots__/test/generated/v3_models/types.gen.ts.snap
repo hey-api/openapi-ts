@@ -270,6 +270,16 @@ export type ModelWithString = {
 };
 
 /**
+ * This is a model with one string property
+ */
+export type ModelWithStringError = {
+  /**
+   * This is a simple string property
+   */
+  prop?: string;
+};
+
+/**
  * `Comment` or `VoiceComment`. The JSON object for adding voice comments to tickets is different. See [Adding voice comments to tickets](/documentation/ticketing/managing-tickets/adding-voice-comments-to-tickets)
  */
 export type Model_From_Zendesk = string;
