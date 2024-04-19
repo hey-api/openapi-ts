@@ -91,6 +91,9 @@ export class myAwesomeSimpleApi {
 
 export class myAwesomeParametersApi {
   /**
+   * @param data The data for the request.
+   * @param data.foo foo in method
+   * @param data.bar bar in method
    * @throws ApiError
    */
   public static deleteFoo(
@@ -108,6 +111,15 @@ export class myAwesomeParametersApi {
   }
 
   /**
+   * @param data The data for the request.
+   * @param data.parameterHeader This is the parameter that goes into the header
+   * @param data.fooAllOfEnum
+   * @param data.parameterQuery This is the parameter that goes into the query params
+   * @param data.parameterForm This is the parameter that goes into the form data
+   * @param data.parameterCookie This is the parameter that goes into the cookie
+   * @param data.parameterPath This is the parameter that goes into the path
+   * @param data.requestBody This is the parameter that goes into the body
+   * @param data.fooRefEnum
    * @throws ApiError
    */
   public static callWithParameters(
@@ -149,6 +161,16 @@ export class myAwesomeParametersApi {
   }
 
   /**
+   * @param data The data for the request.
+   * @param data.parameterHeader This is the parameter that goes into the request header
+   * @param data.parameterQuery This is the parameter that goes into the request query params
+   * @param data.parameterForm This is the parameter that goes into the request form data
+   * @param data.parameterCookie This is the parameter that goes into the cookie
+   * @param data.requestBody This is the parameter that goes into the body
+   * @param data.parameterPath1 This is the parameter that goes into the path
+   * @param data.parameterPath2 This is the parameter that goes into the path
+   * @param data.parameterPath3 This is the parameter that goes into the path
+   * @param data._default This is the parameter with a reserved keyword
    * @throws ApiError
    */
   public static callWithWeirdParameterNames(
@@ -192,6 +214,9 @@ export class myAwesomeParametersApi {
   }
 
   /**
+   * @param data The data for the request.
+   * @param data.requestBody This is a required parameter
+   * @param data.parameter This is an optional parameter
    * @throws ApiError
    */
   public static getCallWithOptionalParam(
@@ -210,6 +235,9 @@ export class myAwesomeParametersApi {
   }
 
   /**
+   * @param data The data for the request.
+   * @param data.parameter This is a required parameter
+   * @param data.requestBody This is an optional parameter
    * @throws ApiError
    */
   public static postCallWithOptionalParam(
