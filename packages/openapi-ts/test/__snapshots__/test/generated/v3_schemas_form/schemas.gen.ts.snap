@@ -1541,3 +1541,12 @@ export const $ModelWithNumericEnumUnion = {
     },
   },
 } as const;
+
+export const $ModelWithBackticksInDescription = {
+  type: 'object',
+  properties: {
+    template: {
+      type: 'string',
+    },
+  },
+} as const;

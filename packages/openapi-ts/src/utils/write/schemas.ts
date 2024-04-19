@@ -1,14 +1,15 @@
 import { compiler, TypeScriptFile } from '../../compiler';
 import type { OpenApi } from '../../openApi';
 import { ensureValidTypeScriptJavaScriptIdentifier } from '../../openApi/common/parser/sanitize';
+import { getConfig } from '../config';
 
-const transformObject = (schema: unknown): unknown => {
+const schemaToFormSchema = (schema: unknown): object => {
   if (Array.isArray(schema)) {
-    return schema.map((item) => transformObject(item));
+    return schema.map((item) => schemaToFormSchema(item));
   }
 
   if (typeof schema !== 'object' || schema === null) {
-    return schema;
+    return schema as object;
   }
 
   const result = { ...schema };
@@ -28,7 +29,7 @@ const transformObject = (schema: unknown): unknown => {
 
     if (value && typeof value === 'object') {
       // @ts-ignore
-      result[key] = transformObject(value);
+      result[key] = schemaToFormSchema(value);
     }
   });
   return result;
@@ -45,9 +46,12 @@ export const processSchemas = async ({
     return;
   }
 
-  const addSchema = (name: string, schema: unknown) => {
+  const config = getConfig();
+
+  const addSchema = (name: string, schema: object) => {
     const validName = `$${ensureValidTypeScriptJavaScriptIdentifier(name)}`;
-    const obj = transformObject(schema) as object;
+    const obj =
+      config.schemas.type === 'form' ? schemaToFormSchema(schema) : schema;
     const expression = compiler.types.object({ obj });
     const statement = compiler.export.asConst(validName, expression);
     file.add(statement);
