@@ -19,7 +19,7 @@ export interface UserConfig {
    */
   dryRun?: boolean;
   /**
-   * Export enum definitions?
+   * Generate enum definitions?
    * @default false
    */
   enums?: 'javascript' | 'typescript' | false;
@@ -46,11 +46,6 @@ export interface UserConfig {
    * Custom client class name
    */
   name?: string;
-  /**
-   * Use operation ID to generate operation names?
-   * @default true
-   */
-  operationId?: boolean;
   /**
    * The relative location of the output directory
    */
@@ -101,6 +96,11 @@ export interface UserConfig {
          * @default '{{name}}Service'
          */
         name?: string;
+        /**
+         * Use operation ID to generate operation names?
+         * @default true
+         */
+        operationId?: boolean;
         /**
          * Define shape of returned value from service calls
          * @default 'body'

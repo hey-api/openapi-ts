@@ -22,7 +22,6 @@ describe('processSchemas', () => {
       input: '',
       lint: false,
       name: 'AppClient',
-      operationId: true,
       output: '',
       schemas: {},
       services: {},

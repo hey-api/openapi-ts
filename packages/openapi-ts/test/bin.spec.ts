@@ -223,8 +223,6 @@ describe('cli', () => {
       'false',
       '--lint',
       'false',
-      '--operationId',
-      'false',
       '--useOptions',
       'false',
       '--dry-run',
@@ -237,7 +235,6 @@ describe('cli', () => {
     expect(result.stderr.toString()).toContain('services: false');
     expect(result.stderr.toString()).toContain('format: false');
     expect(result.stderr.toString()).toContain('lint: false');
-    expect(result.stderr.toString()).toContain('operationId: false');
     expect(result.stderr.toString()).toContain('schemas: false');
     expect(result.stderr.toString()).toContain('useOptions: false');
   });
@@ -262,8 +259,6 @@ describe('cli', () => {
       'true',
       '--lint',
       'true',
-      '--operationId',
-      'true',
       '--useOptions',
       'true',
       '--dry-run',
@@ -276,7 +271,6 @@ describe('cli', () => {
     expect(result.stderr.toString()).toContain('services: true');
     expect(result.stderr.toString()).toContain('format: true');
     expect(result.stderr.toString()).toContain('lint: true');
-    expect(result.stderr.toString()).toContain('operationId: true');
     expect(result.stderr.toString()).toContain('schemas: true');
     expect(result.stderr.toString()).toContain('useOptions: true');
   });
@@ -297,7 +291,6 @@ describe('cli', () => {
       'bar',
       '--format',
       '--lint',
-      '--operationId',
       '--useOptions',
       '--dry-run',
       'true',
@@ -307,7 +300,6 @@ describe('cli', () => {
     expect(result.stderr.toString()).toContain('exportCore: true');
     expect(result.stderr.toString()).toContain('format: true');
     expect(result.stderr.toString()).toContain('lint: true');
-    expect(result.stderr.toString()).toContain('operationId: true');
     expect(result.stderr.toString()).toContain('schemas: true');
     expect(result.stderr.toString()).toContain('useOptions: true');
     expect(result.stderr.toString()).toContain("types: 'foo");

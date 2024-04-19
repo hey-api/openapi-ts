@@ -20,7 +20,6 @@ describe('processIndex', () => {
       format: false,
       input: '',
       lint: false,
-      operationId: true,
       output: '',
       schemas: {},
       services: {},
