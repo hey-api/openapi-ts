@@ -73,11 +73,21 @@ const toOperationReturnType = (operation: Operation) => {
 const toOperationComment = (operation: Operation) => {
   const config = getConfig();
   let params: string[] = [];
-  if (!config.useOptions && operation.parameters.length) {
-    params = operation.parameters.map(
-      (p) =>
-        `@param ${p.name} ${p.description ? escapeComment(p.description) : ''}`,
-    );
+  if (operation.parameters.length) {
+    if (config.useOptions) {
+      params = [
+        '@param data The data for the request.',
+        ...operation.parameters.map(
+          (p) =>
+            `@param data.${p.name} ${p.description ? escapeComment(p.description) : ''}`,
+        ),
+      ];
+    } else {
+      params = operation.parameters.map(
+        (p) =>
+          `@param ${p.name} ${p.description ? escapeComment(p.description) : ''}`,
+      );
+    }
   }
   const comment = [
     operation.deprecated && '@deprecated',
