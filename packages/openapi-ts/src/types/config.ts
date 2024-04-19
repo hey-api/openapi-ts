@@ -80,11 +80,6 @@ export interface UserConfig {
         type?: 'form' | 'json';
       };
   /**
-   * Define shape of returned value from service calls
-   * @default 'body'
-   */
-  serviceResponse?: 'body' | 'response';
-  /**
    * Generate services?
    * @default true
    */
@@ -106,6 +101,11 @@ export interface UserConfig {
          * @default '{{name}}Service'
          */
         name?: string;
+        /**
+         * Define shape of returned value from service calls
+         * @default 'body'
+         */
+        response?: 'body' | 'response';
       };
   /**
    * Generate types?
@@ -115,6 +115,11 @@ export interface UserConfig {
     | boolean
     | string
     | {
+        /**
+         * Output Date instead of string for format "date-time"
+         * @default false
+         */
+        dates?: boolean;
         /**
          * Generate types?
          * @default true
@@ -130,11 +135,6 @@ export interface UserConfig {
          */
         name?: 'PascalCase' | 'preserve';
       };
-  /**
-   * Output Date instead of string for the format "date-time" in the models
-   * @default false
-   */
-  useDateType?: boolean;
   /**
    * Use options or arguments functions
    * @default true

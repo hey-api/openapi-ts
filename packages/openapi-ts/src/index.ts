@@ -108,6 +108,7 @@ const getServices = (userConfig: UserConfig): Config['services'] => {
   let services: Config['services'] = {
     export: true,
     name: '{{name}}Service',
+    response: 'body',
   };
   if (typeof userConfig.services === 'boolean') {
     services.export = userConfig.services;
@@ -124,6 +125,7 @@ const getServices = (userConfig: UserConfig): Config['services'] => {
 
 const getTypes = (userConfig: UserConfig): Config['types'] => {
   let types: Config['types'] = {
+    dates: false,
     export: true,
     name: 'preserve',
   };
@@ -168,8 +170,6 @@ const initConfig = async (
     name,
     operationId = true,
     request,
-    serviceResponse = 'body',
-    useDateType = false,
     useOptions = true,
   } = userConfig;
 
@@ -216,10 +216,8 @@ const initConfig = async (
     output,
     request,
     schemas,
-    serviceResponse,
     services,
     types,
-    useDateType,
     useOptions,
   });
 };
