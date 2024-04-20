@@ -105,7 +105,25 @@ You might not need a `node` client. Fetch API is [experimental](https://nodejs.o
 
 By default, `openapi-ts` will automatically format your client according to your project configuration. To disable automatic formatting, set `format` to false
 
-```js{2}
+::: code-group
+
+```js{2} [prettier (default)]
+export default {
+  format: 'prettier',
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+}
+```
+
+```js{2} [biome]
+export default {
+  format: 'biome',
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+}
+```
+
+```js{2} [off]
 export default {
   format: false,
   input: 'path/to/openapi.json',
@@ -113,19 +131,41 @@ export default {
 }
 ```
 
+:::
+
 You can also prevent your client from being processed by formatters by adding your output path to the tool's ignore file (e.g. `.prettierignore`).
 
 ## Linting
 
 For performance reasons, `openapi-ts` does not automatically lint your client. To enable this feature, set `lint` to true
 
-```js{3}
+::: code-group
+
+```js{3} [eslint]
 export default {
   input: 'path/to/openapi.json',
-  lint: true,
+  lint: 'eslint',
   output: 'src/client',
 }
 ```
+
+```js{3} [biome]
+export default {
+  input: 'path/to/openapi.json',
+  lint: 'biome',
+  output: 'src/client',
+}
+```
+
+```js{3} [off (default)]
+export default {
+  input: 'path/to/openapi.json',
+  lint: false,
+  output: 'src/client',
+}
+```
+
+:::
 
 You can also prevent your client from being processed by linters by adding your output path to the tool's ignore file (e.g. `.eslintignore`).
 

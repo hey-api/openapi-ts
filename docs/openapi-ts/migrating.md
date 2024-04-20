@@ -50,6 +50,30 @@ This config option is deprecated and will be removed.
 
 ## v0.42.0
 
+### Changed `format`
+
+This config option has changed. You can now specify `'biome'`, `'prettier'`, or `false`. The default is `'prettier'`.
+
+```js{2}
+export default {
+  format: 'prettier',
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+}
+```
+
+### Changed `lint`
+
+This config option has changed. You can now specify `'biome'`, `'eslint'`, or `false`. This default is `false`.
+
+```js{3}
+export default {
+  input: 'path/to/openapi.json',
+  lint: 'eslint',
+  output: 'src/client',
+}
+```
+
 ### Moved `operationId`
 
 This config option has been moved. You can now configure it using the `services.operationId` option.

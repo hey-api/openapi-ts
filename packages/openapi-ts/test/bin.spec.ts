@@ -160,6 +160,7 @@ describe('bin', () => {
       '--output',
       './test/generated/bin',
       '--lint',
+      'eslint',
     ]);
     expect(result.stdout.toString()).toContain('ESLint');
     expect(result.stderr.toString()).toBe('');
@@ -255,10 +256,6 @@ describe('cli', () => {
       'true',
       '--services',
       'true',
-      '--format',
-      'true',
-      '--lint',
-      'true',
       '--useOptions',
       'true',
       '--dry-run',
@@ -269,8 +266,6 @@ describe('cli', () => {
     expect(result.stderr.toString()).toContain('exportCore: true');
     expect(result.stderr.toString()).toContain('types: true');
     expect(result.stderr.toString()).toContain('services: true');
-    expect(result.stderr.toString()).toContain('format: true');
-    expect(result.stderr.toString()).toContain('lint: true');
     expect(result.stderr.toString()).toContain('schemas: true');
     expect(result.stderr.toString()).toContain('useOptions: true');
   });
@@ -289,8 +284,6 @@ describe('cli', () => {
       '--schemas',
       '--services',
       'bar',
-      '--format',
-      '--lint',
       '--useOptions',
       '--dry-run',
       'true',
@@ -298,8 +291,6 @@ describe('cli', () => {
     expect(result.stderr.toString()).toContain('debug: true');
     expect(result.stderr.toString()).toContain('dryRun: true');
     expect(result.stderr.toString()).toContain('exportCore: true');
-    expect(result.stderr.toString()).toContain('format: true');
-    expect(result.stderr.toString()).toContain('lint: true');
     expect(result.stderr.toString()).toContain('schemas: true');
     expect(result.stderr.toString()).toContain('useOptions: true');
     expect(result.stderr.toString()).toContain("types: 'foo");
