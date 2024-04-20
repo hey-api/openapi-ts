@@ -102,11 +102,12 @@ const toOperationComment = (operation: Operation) => {
 };
 
 const toRequestOptions = (operation: Operation) => {
+  const config = getConfig();
   const toObj = (parameters: OperationParameter[]) =>
     parameters.reduce(
       (prev, curr) => {
         const key = curr.prop;
-        const value = curr.name;
+        const value = config.useOptions ? `data.${curr.name}` : curr.name;
         if (key === value) {
           prev[key] = key;
         } else if (escapeName(key) === key) {
@@ -166,31 +167,9 @@ const toRequestOptions = (operation: Operation) => {
   });
 };
 
-export const toDestructuredData = (operation: Operation) => {
-  const config = getConfig();
-  if (!config.useOptions || !operation.parameters.length) {
-    return '';
-  }
-  const obj: Record<string, unknown> = {};
-  operation.parameters.forEach((p) => {
-    obj[p.name] = p.name;
-  });
-  const node = compiler.types.object({
-    identifiers: Object.keys(obj),
-    obj,
-    shorthand: true,
-  });
-  return `const ${compiler.utils.toString(node)} = data;`;
-};
-
 const toOperationStatements = (operation: Operation) => {
   const config = getConfig();
   const statements: any[] = [];
-  // If using options we destructor the parameter
-  if (config.useOptions && operation.parameters.length) {
-    statements.push(compiler.utils.toNode(toDestructuredData(operation)));
-  }
-
   const requestOptions = compiler.utils.toString(toRequestOptions(operation));
   if (config.name) {
     statements.push(
