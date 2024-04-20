@@ -106,24 +106,17 @@ export class DescriptionsService {
   public static callWithDescriptions(
     data: $OpenApiTs['/api/v{api-version}/descriptions/']['post']['req'] = {},
   ): CancelablePromise<void> {
-    const {
-      parameterWithBreaks,
-      parameterWithBackticks,
-      parameterWithSlashes,
-      parameterWithExpressionPlaceholders,
-      parameterWithQuotes,
-      parameterWithReservedCharacters,
-    } = data;
     return __request(OpenAPI, {
       method: 'POST',
       url: '/api/v{api-version}/descriptions/',
       query: {
-        parameterWithBreaks,
-        parameterWithBackticks,
-        parameterWithSlashes,
-        parameterWithExpressionPlaceholders,
-        parameterWithQuotes,
-        parameterWithReservedCharacters,
+        parameterWithBreaks: data.parameterWithBreaks,
+        parameterWithBackticks: data.parameterWithBackticks,
+        parameterWithSlashes: data.parameterWithSlashes,
+        parameterWithExpressionPlaceholders:
+          data.parameterWithExpressionPlaceholders,
+        parameterWithQuotes: data.parameterWithQuotes,
+        parameterWithReservedCharacters: data.parameterWithReservedCharacters,
       },
     });
   }
@@ -142,27 +135,20 @@ export class ParametersService {
   public static callWithParameters(
     data: $OpenApiTs['/api/v{api-version}/parameters/{parameterPath}']['post']['req'],
   ): CancelablePromise<void> {
-    const {
-      parameterHeader,
-      parameterQuery,
-      parameterForm,
-      parameterBody,
-      parameterPath,
-    } = data;
     return __request(OpenAPI, {
       method: 'POST',
       url: '/api/v{api-version}/parameters/{parameterPath}',
       path: {
-        parameterPath,
+        parameterPath: data.parameterPath,
       },
       headers: {
-        parameterHeader,
+        parameterHeader: data.parameterHeader,
       },
       query: {
-        parameterQuery,
+        parameterQuery: data.parameterQuery,
       },
       formData: {
-        parameterForm,
+        parameterForm: data.parameterForm,
       },
       body: parameterBody,
     });
@@ -183,33 +169,23 @@ export class ParametersService {
   public static callWithWeirdParameterNames(
     data: $OpenApiTs['/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}']['post']['req'],
   ): CancelablePromise<void> {
-    const {
-      parameterHeader,
-      parameterQuery,
-      parameterForm,
-      parameterBody,
-      parameterPath1,
-      parameterPath2,
-      parameterPath3,
-      _default,
-    } = data;
     return __request(OpenAPI, {
       method: 'POST',
       url: '/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}',
       path: {
-        'parameter.path.1': parameterPath1,
-        'parameter-path-2': parameterPath2,
-        'PARAMETER-PATH-3': parameterPath3,
+        'parameter.path.1': data.parameterPath1,
+        'parameter-path-2': data.parameterPath2,
+        'PARAMETER-PATH-3': data.parameterPath3,
       },
       headers: {
-        'parameter.header': parameterHeader,
+        'parameter.header': data.parameterHeader,
       },
       query: {
-        default: _default,
-        'parameter-query': parameterQuery,
+        default: data._default,
+        'parameter-query': data.parameterQuery,
       },
       formData: {
-        parameter_form: parameterForm,
+        parameter_form: data.parameterForm,
       },
       body: parameterBody,
     });
@@ -229,22 +205,15 @@ export class DefaultsService {
   public static callWithDefaultParameters(
     data: $OpenApiTs['/api/v{api-version}/defaults']['get']['req'],
   ): CancelablePromise<void> {
-    const {
-      parameterString,
-      parameterNumber,
-      parameterBoolean,
-      parameterEnum,
-      parameterModel,
-    } = data;
     return __request(OpenAPI, {
       method: 'GET',
       url: '/api/v{api-version}/defaults',
       query: {
-        parameterString,
-        parameterNumber,
-        parameterBoolean,
-        parameterEnum,
-        parameterModel,
+        parameterString: data.parameterString,
+        parameterNumber: data.parameterNumber,
+        parameterBoolean: data.parameterBoolean,
+        parameterEnum: data.parameterEnum,
+        parameterModel: data.parameterModel,
       },
     });
   }
@@ -261,22 +230,15 @@ export class DefaultsService {
   public static callWithDefaultOptionalParameters(
     data: $OpenApiTs['/api/v{api-version}/defaults']['post']['req'] = {},
   ): CancelablePromise<void> {
-    const {
-      parameterString,
-      parameterNumber,
-      parameterBoolean,
-      parameterEnum,
-      parameterModel,
-    } = data;
     return __request(OpenAPI, {
       method: 'POST',
       url: '/api/v{api-version}/defaults',
       query: {
-        parameterString,
-        parameterNumber,
-        parameterBoolean,
-        parameterEnum,
-        parameterModel,
+        parameterString: data.parameterString,
+        parameterNumber: data.parameterNumber,
+        parameterBoolean: data.parameterBoolean,
+        parameterEnum: data.parameterEnum,
+        parameterModel: data.parameterModel,
       },
     });
   }
@@ -296,28 +258,23 @@ export class DefaultsService {
   public static callToTestOrderOfParams(
     data: $OpenApiTs['/api/v{api-version}/defaults']['put']['req'],
   ): CancelablePromise<void> {
-    const {
-      parameterStringWithNoDefault,
-      parameterOptionalStringWithDefault,
-      parameterOptionalStringWithEmptyDefault,
-      parameterOptionalStringWithNoDefault,
-      parameterStringWithDefault,
-      parameterStringWithEmptyDefault,
-      parameterStringNullableWithNoDefault,
-      parameterStringNullableWithDefault,
-    } = data;
     return __request(OpenAPI, {
       method: 'PUT',
       url: '/api/v{api-version}/defaults',
       query: {
-        parameterOptionalStringWithDefault,
-        parameterOptionalStringWithEmptyDefault,
-        parameterOptionalStringWithNoDefault,
-        parameterStringWithDefault,
-        parameterStringWithEmptyDefault,
-        parameterStringWithNoDefault,
-        parameterStringNullableWithNoDefault,
-        parameterStringNullableWithDefault,
+        parameterOptionalStringWithDefault:
+          data.parameterOptionalStringWithDefault,
+        parameterOptionalStringWithEmptyDefault:
+          data.parameterOptionalStringWithEmptyDefault,
+        parameterOptionalStringWithNoDefault:
+          data.parameterOptionalStringWithNoDefault,
+        parameterStringWithDefault: data.parameterStringWithDefault,
+        parameterStringWithEmptyDefault: data.parameterStringWithEmptyDefault,
+        parameterStringWithNoDefault: data.parameterStringWithNoDefault,
+        parameterStringNullableWithNoDefault:
+          data.parameterStringNullableWithNoDefault,
+        parameterStringNullableWithDefault:
+          data.parameterStringNullableWithDefault,
       },
     });
   }
@@ -551,22 +508,15 @@ export class CollectionFormatService {
   public static collectionFormat(
     data: $OpenApiTs['/api/v{api-version}/collectionFormat']['get']['req'],
   ): CancelablePromise<void> {
-    const {
-      parameterArrayCsv,
-      parameterArraySsv,
-      parameterArrayTsv,
-      parameterArrayPipes,
-      parameterArrayMulti,
-    } = data;
     return __request(OpenAPI, {
       method: 'GET',
       url: '/api/v{api-version}/collectionFormat',
       query: {
-        parameterArrayCSV: parameterArrayCsv,
-        parameterArraySSV: parameterArraySsv,
-        parameterArrayTSV: parameterArrayTsv,
-        parameterArrayPipes,
-        parameterArrayMulti,
+        parameterArrayCSV: data.parameterArrayCsv,
+        parameterArraySSV: data.parameterArraySsv,
+        parameterArrayTSV: data.parameterArrayTsv,
+        parameterArrayPipes: data.parameterArrayPipes,
+        parameterArrayMulti: data.parameterArrayMulti,
       },
     });
   }
@@ -597,30 +547,20 @@ export class TypesService {
     | $OpenApiTs['/api/v{api-version}/types']['get']['res'][202]
     | $OpenApiTs['/api/v{api-version}/types']['get']['res'][203]
   > {
-    const {
-      parameterArray,
-      parameterDictionary,
-      parameterEnum,
-      parameterNumber,
-      parameterString,
-      parameterBoolean,
-      parameterObject,
-      id,
-    } = data;
     return __request(OpenAPI, {
       method: 'GET',
       url: '/api/v{api-version}/types',
       path: {
-        id,
+        id: data.id,
       },
       query: {
-        parameterNumber,
-        parameterString,
-        parameterBoolean,
-        parameterObject,
-        parameterArray,
-        parameterDictionary,
-        parameterEnum,
+        parameterNumber: data.parameterNumber,
+        parameterString: data.parameterString,
+        parameterBoolean: data.parameterBoolean,
+        parameterObject: data.parameterObject,
+        parameterArray: data.parameterArray,
+        parameterDictionary: data.parameterDictionary,
+        parameterEnum: data.parameterEnum,
       },
     });
   }
@@ -639,13 +579,12 @@ export class ComplexService {
   ): CancelablePromise<
     $OpenApiTs['/api/v{api-version}/complex']['get']['res'][200]
   > {
-    const { parameterObject, parameterReference } = data;
     return __request(OpenAPI, {
       method: 'GET',
       url: '/api/v{api-version}/complex',
       query: {
-        parameterObject,
-        parameterReference,
+        parameterObject: data.parameterObject,
+        parameterReference: data.parameterReference,
       },
       errors: {
         400: '400 server error',
@@ -687,12 +626,11 @@ export class ErrorService {
   ): CancelablePromise<
     $OpenApiTs['/api/v{api-version}/error']['post']['res'][200]
   > {
-    const { status } = data;
     return __request(OpenAPI, {
       method: 'POST',
       url: '/api/v{api-version}/error',
       query: {
-        status,
+        status: data.status,
       },
       errors: {
         500: 'Custom message: Internal Server Error',
@@ -716,12 +654,11 @@ export class NonAsciiÆøåÆøÅöôêÊService {
   ): CancelablePromise<
     $OpenApiTs['/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串']['post']['res'][200]
   > {
-    const { nonAsciiParamæøåÆøÅöôêÊ } = data;
     return __request(OpenAPI, {
       method: 'POST',
       url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
       query: {
-        nonAsciiParamæøåÆØÅöôêÊ: nonAsciiParamæøåÆøÅöôêÊ,
+        nonAsciiParamæøåÆØÅöôêÊ: data.nonAsciiParamæøåÆøÅöôêÊ,
       },
     });
   }
