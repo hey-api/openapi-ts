@@ -59,13 +59,16 @@ export const enumName = (client: Client, name?: string) => {
 
 export const enumUnionType = (enums: Enum[]) =>
   enums
-    .map((enumerator) => enumValue(enumerator.value))
+    .map((enumerator) => enumValue(enumerator.value, true))
     .filter(unique)
     .join(' | ');
 
-export const enumValue = (value?: string | number) => {
+export const enumValue = (value?: string | number, union: boolean = false) => {
   if (typeof value === 'string') {
-    return `'${value.replace(/'/g, "\\'")}'`;
+    if (value.includes("'") && union) {
+      return `"${value}"`;
+    }
+    return `'${value}'`;
   }
   return value;
 };

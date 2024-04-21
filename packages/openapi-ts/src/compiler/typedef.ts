@@ -1,6 +1,6 @@
 import ts from 'typescript';
 
-import { addLeadingComment, type Comments, tsNodeToString } from './utils';
+import { addLeadingJSDocComment, type Comments, tsNodeToString } from './utils';
 
 export const createTypeNode = (
   base: any | ts.TypeNode,
@@ -41,7 +41,7 @@ export const createTypeAliasDeclaration = (
     createTypeNode(type),
   );
   if (comments?.length) {
-    addLeadingComment(node, comments);
+    addLeadingJSDocComment(node, comments);
   }
   return node;
 };
@@ -79,7 +79,7 @@ export const createTypeInterfaceNode = (
       );
       const comment = property.comment;
       if (comment) {
-        addLeadingComment(signature, comment);
+        addLeadingJSDocComment(signature, comment);
       }
       return signature;
     }),

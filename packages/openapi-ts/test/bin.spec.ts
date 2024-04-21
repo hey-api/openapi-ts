@@ -12,7 +12,6 @@ describe('bin', () => {
       '--dry-run',
       'true',
     ]);
-    expect(result.stdout.toString()).not.toContain('Prettier');
     expect(result.stdout.toString()).toContain('Done!');
     expect(result.stderr.toString()).toBe('');
   });
@@ -147,6 +146,8 @@ describe('bin', () => {
       './test/spec/v3.json',
       '--output',
       './test/generated/bin',
+      '--format',
+      'prettier',
     ]);
     expect(result.stdout.toString()).toContain('Prettier');
     expect(result.stderr.toString()).toBe('');

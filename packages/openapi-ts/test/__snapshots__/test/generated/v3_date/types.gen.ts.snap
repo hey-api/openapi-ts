@@ -4,13 +4,13 @@
  * This is a model that contains a some patterns
  */
 export type ModelWithPattern = {
-  key: string;
-  name: string;
-  readonly enabled?: boolean;
-  readonly modified?: Date;
-  id?: string;
-  text?: string;
-  patternWithSingleQuotes?: string;
-  patternWithNewline?: string;
-  patternWithBacktick?: string;
+    key: string;
+    name: string;
+    readonly enabled?: boolean;
+    readonly modified?: Date;
+    id?: string;
+    text?: string;
+    patternWithSingleQuotes?: string;
+    patternWithNewline?: string;
+    patternWithBacktick?: string;
 };

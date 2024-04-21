@@ -116,38 +116,26 @@ export const isType = <T>(value: T | undefined): value is T =>
 
 export type Comments = Array<string | null | false | undefined>;
 
-export const addLeadingComment = (
-  node: ts.Node | undefined,
-  text: Comments,
-  hasTrailingNewLine: boolean = true,
-  useJSDocStyle = true,
-): string => {
+export const addLeadingJSDocComment = (node: ts.Node, text: Comments) => {
   const comments = text.filter(Boolean);
-
   if (!comments.length) {
-    return '';
+    return;
   }
 
-  // if node is falsy, assume string mode
-  if (!node) {
-    if (useJSDocStyle) {
-      const result = ['/**', ...comments.map((row) => ` * ${row}`), ' */'].join(
-        '\n',
-      );
-      return hasTrailingNewLine ? `${result}\n` : result;
-    }
-
-    const result = comments.map((row) => `// ${row}`).join('\n');
-    return hasTrailingNewLine ? `${result}\n` : result;
-  }
+  const jsdocTexts = comments.map((c, l) =>
+    ts.factory.createJSDocText(`${c}${l !== comments.length ? '\n' : ''}`),
+  );
+  const jsdoc = ts.factory.createJSDocComment(
+    ts.factory.createNodeArray(jsdocTexts),
+  );
+  const cleanedJsdoc = tsNodeToString(jsdoc)
+    .replace('/*', '')
+    .replace('*  */', '');
 
   ts.addSyntheticLeadingComment(
     node,
     ts.SyntaxKind.MultiLineCommentTrivia,
-    encodeURIComponent(
-      ['*', ...comments.map((row) => ` * ${row}`), ' '].join('\n'),
-    ),
-    hasTrailingNewLine,
+    cleanedJsdoc,
+    true,
   );
-  return '';
 };
