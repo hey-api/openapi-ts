@@ -1,5 +1,11 @@
 # openapi-ts-docs
 
+## 0.5.2
+
+### Patch Changes
+
+- docs: add github action to integrations ([#451](https://github.com/hey-api/openapi-ts/pull/451))
+
 ## 0.5.1
 
 ### Patch Changes
