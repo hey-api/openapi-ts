@@ -206,7 +206,7 @@ const initConfig = async (
     dryRun = false,
     enums = false,
     exportCore = true,
-    format = 'prettier',
+    format = false,
     input,
     lint = false,
     name,
