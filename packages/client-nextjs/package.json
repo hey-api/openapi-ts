@@ -1,8 +1,8 @@
 {
-  "name": "@hey-api/client-axios",
+  "name": "@hey-api/client-nextjs",
   "version": "0.1.0",
   "type": "module",
-  "description": "Type-safe Axios client for your openapi-ts types",
+  "description": "Type-safe Next.js client for your openapi-ts types",
   "homepage": "https://heyapi.vercel.app/",
   "repository": {
     "type": "git",
@@ -13,11 +13,11 @@
   },
   "license": "MIT",
   "keywords": [
-    "axios",
     "client",
     "codegen",
     "generator",
     "javascript",
+    "nextjs",
     "openapi",
     "react",
     "svelte",

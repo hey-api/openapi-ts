@@ -1,8 +1,8 @@
 {
-  "name": "@hey-api/client-axios",
+  "name": "@hey-api/client-core",
   "version": "0.1.0",
   "type": "module",
-  "description": "Type-safe Axios client for your openapi-ts types",
+  "description": "Core utilities for type-safe openapi-ts clients",
   "homepage": "https://heyapi.vercel.app/",
   "repository": {
     "type": "git",
@@ -12,19 +12,6 @@
     "url": "https://github.com/hey-api/openapi-ts/issues"
   },
   "license": "MIT",
-  "keywords": [
-    "axios",
-    "client",
-    "codegen",
-    "generator",
-    "javascript",
-    "openapi",
-    "react",
-    "svelte",
-    "swagger",
-    "typescript",
-    "vue"
-  ],
   "main": "./dist/index.cjs",
   "scripts": {
     "build-bundle": "rollup --config rollup.config.ts --configPlugin typescript",
@@ -46,9 +33,6 @@
   },
   "engines": {
     "node": "^18.0.0 || >=20.0.0"
-  },
-  "dependencies": {
-    "@hey-api/client-core": "workspace:*"
   },
   "devDependencies": {
     "axios": "1.6.8"
