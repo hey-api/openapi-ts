@@ -2,7 +2,7 @@ import ts from 'typescript';
 
 import { createTypeNode } from './typedef';
 import { toExpression } from './types';
-import { addLeadingComment, Comments, isType } from './utils';
+import { addLeadingJSDocComment, Comments, isType } from './utils';
 
 type AccessLevel = 'public' | 'protected' | 'private';
 
@@ -87,7 +87,7 @@ export const createConstructorDeclaration = ({
     ts.factory.createBlock(statements, multiLine),
   );
   if (comment?.length) {
-    addLeadingComment(node, comment);
+    addLeadingJSDocComment(node, comment);
   }
   return node;
 };
@@ -138,7 +138,7 @@ export const createMethodDeclaration = ({
     ts.factory.createBlock(statements, multiLine),
   );
   if (comment?.length) {
-    addLeadingComment(node, comment);
+    addLeadingJSDocComment(node, comment);
   }
   return node;
 };
@@ -214,7 +214,9 @@ export const createReturnFunctionCall = ({
       ts.factory.createIdentifier(name),
       undefined,
       args
-        .map((arg) => ts.factory.createIdentifier(arg))
-        .filter(isType<ts.Identifier>),
+        .map((arg) =>
+          ts.isExpression(arg) ? arg : ts.factory.createIdentifier(arg),
+        )
+        .filter(isType<ts.Identifier | ts.Expression>),
     ),
   );

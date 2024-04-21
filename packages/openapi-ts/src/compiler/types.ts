@@ -1,6 +1,6 @@
 import ts from 'typescript';
 
-import { addLeadingComment, type Comments, isType, ots } from './utils';
+import { addLeadingJSDocComment, type Comments, isType, ots } from './utils';
 
 /**
  * Convert an unknown value to an expression.
@@ -120,7 +120,7 @@ export const createObjectType = <T extends object>({
           : ts.factory.createPropertyAssignment(key, initializer);
       const c = comments?.[key];
       if (c?.length) {
-        addLeadingComment(assignment, c);
+        addLeadingJSDocComment(assignment, c);
       }
       return assignment;
     })
@@ -158,13 +158,13 @@ export const createEnumDeclaration = <T extends object>({
       const assignment = ts.factory.createEnumMember(key, initializer);
       const c = comments?.[key];
       if (c) {
-        addLeadingComment(assignment, c);
+        addLeadingJSDocComment(assignment, c);
       }
       return assignment;
     }),
   );
   if (leadingComment.length) {
-    addLeadingComment(declaration, leadingComment);
+    addLeadingJSDocComment(declaration, leadingComment);
   }
   return declaration;
 };
