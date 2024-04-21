@@ -1,0 +1,69 @@
+{
+  "name": "@hey-api/client-axios",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Type-safe Axios client for your openapi-ts types",
+  "homepage": "https://heyapi.vercel.app/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hey-api/openapi-ts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hey-api/openapi-ts/issues"
+  },
+  "license": "MIT",
+  "keywords": [
+    "axios",
+    "client",
+    "codegen",
+    "generator",
+    "javascript",
+    "openapi",
+    "react",
+    "svelte",
+    "swagger",
+    "typescript",
+    "vue"
+  ],
+  "main": "./dist/index.cjs",
+  "scripts": {
+    "build-bundle": "rollup --config rollup.config.ts --configPlugin typescript",
+    "build-types-check": "tsc --project tsconfig.check.json",
+    "build-types-roll": "rollup --config rollup.dts.config.ts --configPlugin typescript && rimraf temp",
+    "build-types-temp": "tsc --emitDeclarationOnly --outDir temp -p src",
+    "build-types": "pnpm build-types-temp && pnpm build-types-roll && pnpm build-types-check",
+    "build": "pnpm clean && pnpm build-bundle && pnpm build-types",
+    "clean": "rimraf dist coverage node_modules/.cache",
+    "dev": "rimraf dist && pnpm build-bundle --watch",
+    "lint:fix": "eslint . --fix",
+    "lint": "eslint .",
+    "prepublishOnly": "pnpm build",
+    "test:coverage": "vitest run --coverage",
+    "test:update": "vitest watch --update",
+    "test:watch": "vitest watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": "^18.0.0 || >=20.0.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "25.0.7",
+    "@rollup/plugin-terser": "0.4.4",
+    "@rollup/plugin-typescript": "11.1.6",
+    "@types/node": "20.12.7",
+    "@vitest/coverage-v8": "1.5.0",
+    "axios": "1.6.8",
+    "eslint": "9.0.0",
+    "eslint-config-prettier": "9.1.0",
+    "eslint-plugin-simple-import-sort": "12.1.0",
+    "eslint-plugin-sort-keys-fix": "1.1.2",
+    "prettier": "3.2.5",
+    "rimraf": "5.0.5",
+    "rollup": "4.14.3",
+    "rollup-plugin-dts": "6.1.0",
+    "typescript": "5.4.5",
+    "typescript-eslint": "7.7.0",
+    "vitest": "1.5.0"
+  }
+}

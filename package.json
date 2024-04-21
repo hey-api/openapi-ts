@@ -16,6 +16,7 @@
   "scripts": {
     "build": "pnpm --recursive build",
     "changeset": "changeset",
+    "client-axios": "pnpm --filter @hey-api/client-axios --",
     "docs": "pnpm --filter openapi-ts-docs --",
     "format": "prettier --write .",
     "lint:fix": "prettier --check . && pnpm --recursive lint:fix",

@@ -58,8 +58,8 @@ const pkg = JSON.parse(
 const esmDependencies = ['camelcase'];
 
 export const externalDependencies = [
-  ...Object.keys(pkg.dependencies),
-  ...Object.keys(pkg.peerDependencies),
+  ...Object.keys(pkg.dependencies ?? {}),
+  ...Object.keys(pkg.peerDependencies ?? {}),
 ].filter((dependency) => !esmDependencies.includes(dependency));
 
 function createConfig(isProduction: boolean) {
