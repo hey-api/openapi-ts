@@ -50,8 +50,5 @@
   },
   "dependencies": {
     "@hey-api/client-core": "workspace:*"
-  },
-  "devDependencies": {
-    "axios": "1.6.8"
   }
 }

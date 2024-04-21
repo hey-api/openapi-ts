@@ -1,31 +1,12 @@
-export type ApiResult<TData = any> = {
-  readonly body: TData;
-  readonly ok: boolean;
-  readonly status: number;
-  readonly statusText: string;
-  readonly url: string;
-};
+import type {
+  ApiRequestOptions,
+  ApiResult,
+  Headers,
+  Middleware,
+  Resolver,
+} from './types';
 
-export type ApiRequestOptions = {
-  readonly method:
-    | 'GET'
-    | 'PUT'
-    | 'POST'
-    | 'DELETE'
-    | 'OPTIONS'
-    | 'HEAD'
-    | 'PATCH';
-  readonly url: string;
-  readonly path?: Record<string, unknown>;
-  readonly cookies?: Record<string, unknown>;
-  readonly headers?: Record<string, unknown>;
-  readonly query?: Record<string, unknown>;
-  readonly formData?: Record<string, unknown>;
-  readonly body?: any;
-  readonly mediaType?: string;
-  readonly responseHeader?: string;
-  readonly errors?: Record<number, string>;
-};
+export type { ApiRequestOptions, ApiResult } from './types';
 
 export class ApiError extends Error {
   public readonly url: string;
@@ -49,10 +30,6 @@ export class ApiError extends Error {
     this.request = request;
   }
 }
-
-type Headers = Record<string, string>;
-type Middleware<T> = (value: T) => T | Promise<T>;
-type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
 
 export class Interceptors<T> {
   _fns: Middleware<T>[];
