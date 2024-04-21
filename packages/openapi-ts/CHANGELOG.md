@@ -1,5 +1,33 @@
 # @hey-api/openapi-ts
 
+## 0.42.0
+
+### Minor Changes
+
+- change: config option `lint: true` has changed to `lint: 'eslint'` ([#455](https://github.com/hey-api/openapi-ts/pull/455))
+
+- change: disable formatting with prettier by default ([#457](https://github.com/hey-api/openapi-ts/pull/457))
+
+- feat: add support for biomejs as a formatter ([#455](https://github.com/hey-api/openapi-ts/pull/455))
+
+- feat: move operationId config option to services object ([#441](https://github.com/hey-api/openapi-ts/pull/441))
+
+- feat: add operation error type mappings ([#442](https://github.com/hey-api/openapi-ts/pull/442))
+
+- feat: add support for biomejs as a linter ([#455](https://github.com/hey-api/openapi-ts/pull/455))
+
+- change: config option `format: true` has changed to `format: 'prettier'` ([#455](https://github.com/hey-api/openapi-ts/pull/455))
+
+### Patch Changes
+
+- fix: do not destructure data when using use options ([#450](https://github.com/hey-api/openapi-ts/pull/450))
+
+- feat: automatically handle dates in query string ([#443](https://github.com/hey-api/openapi-ts/pull/443))
+
+- fix: only remove core directory when export core is true ([#449](https://github.com/hey-api/openapi-ts/pull/449))
+
+- fix: add jsdoc comments with use options ([#439](https://github.com/hey-api/openapi-ts/pull/439))
+
 ## 0.41.0
 
 ### Minor Changes
