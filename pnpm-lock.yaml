@@ -96,12 +96,6 @@ importers:
         specifier: workspace:*
         version: link:../client-core
 
-  packages/client-nextjs:
-    dependencies:
-      '@hey-api/client-core':
-        specifier: workspace:*
-        version: link:../client-core
-
   packages/openapi-ts:
     dependencies:
       '@apidevtools/json-schema-ref-parser':
