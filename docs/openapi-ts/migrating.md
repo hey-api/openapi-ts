@@ -52,7 +52,7 @@ This config option is deprecated and will be removed.
 
 ### Changed `format`
 
-This config option has changed. You can now specify `'biome'`, `'prettier'`, or `false`. The default is `'prettier'`.
+This config option has changed. You now need to specify a value (`biome` or `prettier`) to format the output (default: `prettier`).
 
 ```js{2}
 export default {
@@ -64,7 +64,7 @@ export default {
 
 ### Changed `lint`
 
-This config option has changed. You can now specify `'biome'`, `'eslint'`, or `false`. This default is `false`.
+This config option has changed. You now need to specify a value (`biome` or `eslint`) to lint the output (default: `false`).
 
 ```js{3}
 export default {

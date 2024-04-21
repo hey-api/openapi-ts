@@ -103,11 +103,11 @@ You might not need a `node` client. Fetch API is [experimental](https://nodejs.o
 
 ## Formatting
 
-By default, `openapi-ts` will automatically format your client according to your project configuration. To disable automatic formatting, set `format` to false
+By default, `openapi-ts` will automatically format your client according to your project configuration. To disable automatic formatting, set `format` to false.
 
 ::: code-group
 
-```js{2} [prettier (default)]
+```js{2} [prettier]
 export default {
   format: 'prettier',
   input: 'path/to/openapi.json',
@@ -123,7 +123,7 @@ export default {
 }
 ```
 
-```js{2} [off]
+```js{2} [disabled]
 export default {
   format: false,
   input: 'path/to/openapi.json',
@@ -137,9 +137,17 @@ You can also prevent your client from being processed by formatters by adding yo
 
 ## Linting
 
-For performance reasons, `openapi-ts` does not automatically lint your client. To enable this feature, set `lint` to true
+For performance reasons, `openapi-ts` does not automatically lint your client. To enable this feature, set `lint` to a valid linter.
 
 ::: code-group
+
+```js{3} [disabled]
+export default {
+  input: 'path/to/openapi.json',
+  lint: false,
+  output: 'src/client',
+}
+```
 
 ```js{3} [eslint]
 export default {
@@ -153,14 +161,6 @@ export default {
 export default {
   input: 'path/to/openapi.json',
   lint: 'biome',
-  output: 'src/client',
-}
-```
-
-```js{3} [off (default)]
-export default {
-  input: 'path/to/openapi.json',
-  lint: false,
   output: 'src/client',
 }
 ```
