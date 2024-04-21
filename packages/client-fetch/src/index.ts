@@ -1,15 +1,3 @@
-// @ts-ignore
-import type { ApiRequestOptions } from '@hey-api/client-core';
-// @ts-ignore
-import type { ApiResult } from '@hey-api/client-core';
-// @ts-ignore
-import type { OnCancel } from '@hey-api/client-core';
-// @ts-ignore
-import type { OpenAPIConfig } from '@hey-api/client-core';
-// @ts-ignore
-import { ApiError } from '@hey-api/client-core';
-// @ts-ignore
-import { CancelablePromise } from '@hey-api/client-core';
 import type {
   AxiosError,
   AxiosInstance,
@@ -17,6 +5,13 @@ import type {
   AxiosResponse,
 } from 'axios';
 import axios from 'axios';
+
+import { ApiError } from './apiError';
+import type { ApiRequestOptions } from './apiRequestOptions';
+import type { ApiResult } from './apiResult';
+import type { OnCancel } from './cancelablePromise';
+import { CancelablePromise } from './cancelablePromise';
+import type { OpenAPIConfig } from './openApi';
 
 export const isString = (value: unknown): value is string =>
   typeof value === 'string';

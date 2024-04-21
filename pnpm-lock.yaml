@@ -11,27 +11,6 @@ importers:
       '@changesets/cli':
         specifier: 2.27.1
         version: 2.27.1
-      '@svitejs/changesets-changelog-github-compact':
-        specifier: 1.1.0
-        version: 1.1.0
-      husky:
-        specifier: 9.0.11
-        version: 9.0.11
-      lint-staged:
-        specifier: 15.2.2
-        version: 15.2.2
-      prettier:
-        specifier: 3.2.5
-        version: 3.2.5
-
-  docs:
-    devDependencies:
-      vitepress:
-        specifier: 1.1.3
-        version: 1.1.3(@algolia/client-search@4.23.3)(search-insights@2.13.0)
-
-  packages/client-axios:
-    devDependencies:
       '@rollup/plugin-commonjs':
         specifier: 25.0.7
         version: 25.0.7(rollup@4.14.3)
@@ -41,15 +20,15 @@ importers:
       '@rollup/plugin-typescript':
         specifier: 11.1.6
         version: 11.1.6(rollup@4.14.3)(typescript@5.4.5)
+      '@svitejs/changesets-changelog-github-compact':
+        specifier: 1.1.0
+        version: 1.1.0
       '@types/node':
         specifier: 20.12.7
         version: 20.12.7
       '@vitest/coverage-v8':
         specifier: 1.5.0
         version: 1.5.0(vitest@1.5.0)
-      axios:
-        specifier: 1.6.8
-        version: 1.6.8
       eslint:
         specifier: 9.0.0
         version: 9.0.0
@@ -62,6 +41,15 @@ importers:
       eslint-plugin-sort-keys-fix:
         specifier: 1.1.2
         version: 1.1.2
+      globals:
+        specifier: 15.0.0
+        version: 15.0.0
+      husky:
+        specifier: 9.0.11
+        version: 9.0.11
+      lint-staged:
+        specifier: 15.2.2
+        version: 15.2.2
       prettier:
         specifier: 3.2.5
         version: 3.2.5
@@ -84,6 +72,48 @@ importers:
         specifier: 1.5.0
         version: 1.5.0(@types/node@20.12.7)
 
+  docs:
+    devDependencies:
+      vitepress:
+        specifier: 1.1.3
+        version: 1.1.3(@algolia/client-search@4.23.3)(@types/node@20.12.7)(search-insights@2.13.0)(typescript@5.4.5)
+
+  packages/client-axios:
+    dependencies:
+      '@hey-api/client-core':
+        specifier: workspace:*
+        version: link:../client-core
+    devDependencies:
+      axios:
+        specifier: 1.6.8
+        version: 1.6.8
+
+  packages/client-core:
+    devDependencies:
+      axios:
+        specifier: 1.6.8
+        version: 1.6.8
+
+  packages/client-fetch:
+    dependencies:
+      '@hey-api/client-core':
+        specifier: workspace:*
+        version: link:../client-core
+    devDependencies:
+      axios:
+        specifier: 1.6.8
+        version: 1.6.8
+
+  packages/client-nextjs:
+    dependencies:
+      '@hey-api/client-core':
+        specifier: workspace:*
+        version: link:../client-core
+    devDependencies:
+      axios:
+        specifier: 1.6.8
+        version: 1.6.8
+
   packages/openapi-ts:
     dependencies:
       '@apidevtools/json-schema-ref-parser':
@@ -101,6 +131,9 @@ importers:
       handlebars:
         specifier: 4.7.8
         version: 4.7.8
+      typescript:
+        specifier: ^5.x
+        version: 5.4.5
     devDependencies:
       '@angular-devkit/build-angular':
         specifier: 17.3.5
@@ -135,78 +168,36 @@ importers:
       '@angular/router':
         specifier: 17.3.5
         version: 17.3.5(@angular/common@17.3.5)(@angular/core@17.3.5)(@angular/platform-browser@17.3.5)(rxjs@7.8.1)
-      '@rollup/plugin-commonjs':
-        specifier: 25.0.7
-        version: 25.0.7(rollup@4.16.1)
       '@rollup/plugin-json':
         specifier: 6.1.0
         version: 6.1.0(rollup@4.16.1)
       '@rollup/plugin-node-resolve':
         specifier: 15.2.3
-        version: 15.2.3(rollup@4.16.1)
-      '@rollup/plugin-terser':
-        specifier: 0.4.4
-        version: 0.4.4(rollup@4.16.1)
-      '@rollup/plugin-typescript':
-        specifier: 11.1.6
-        version: 11.1.6(rollup@4.16.1)(tslib@2.6.2)(typescript@5.4.5)
+        version: 15.2.3(rollup@4.14.3)
       '@types/cross-spawn':
         specifier: 6.0.6
         version: 6.0.6
       '@types/express':
         specifier: 4.17.21
         version: 4.17.21
-      '@types/node':
-        specifier: 20.12.7
-        version: 20.12.7
-      '@vitest/coverage-v8':
-        specifier: 1.5.0
-        version: 1.5.0(vitest@1.5.0)
       axios:
         specifier: 1.6.8
         version: 1.6.8
       cross-spawn:
         specifier: 7.0.3
         version: 7.0.3
-      eslint:
-        specifier: 9.1.0
-        version: 9.1.0
-      eslint-config-prettier:
-        specifier: 9.1.0
-        version: 9.1.0(eslint@9.1.0)
-      eslint-plugin-simple-import-sort:
-        specifier: 12.1.0
-        version: 12.1.0(eslint@9.1.0)
-      eslint-plugin-sort-keys-fix:
-        specifier: 1.1.2
-        version: 1.1.2
       express:
         specifier: 4.19.2
         version: 4.19.2
       glob:
         specifier: 10.3.12
         version: 10.3.12
-      globals:
-        specifier: 15.0.0
-        version: 15.0.0
       node-fetch:
         specifier: 3.3.2
         version: 3.3.2
-      prettier:
-        specifier: 3.2.5
-        version: 3.2.5
       puppeteer:
         specifier: 22.6.5
         version: 22.6.5(typescript@5.4.5)
-      rimraf:
-        specifier: 5.0.5
-        version: 5.0.5
-      rollup:
-        specifier: 4.16.1
-        version: 4.16.1
-      rollup-plugin-dts:
-        specifier: 6.1.0
-        version: 6.1.0(rollup@4.16.1)(typescript@5.4.5)
       rxjs:
         specifier: 7.8.1
         version: 7.8.1
@@ -216,15 +207,6 @@ importers:
       tslib:
         specifier: 2.6.2
         version: 2.6.2
-      typescript:
-        specifier: 5.4.5
-        version: 5.4.5
-      typescript-eslint:
-        specifier: 7.7.0
-        version: 7.7.0(eslint@9.1.0)(typescript@5.4.5)
-      vitest:
-        specifier: 1.5.0
-        version: 1.5.0(@types/node@20.12.7)(less@4.2.0)
 
 packages:
 
@@ -3296,26 +3278,6 @@ packages:
       terser: 5.30.3
     dev: true
 
-  /@rollup/plugin-typescript@11.1.6(rollup@4.16.1)(tslib@2.6.2)(typescript@5.4.5):
-    resolution: {integrity: sha512-R92yOmIACgYdJ7dJ97p4K69I8gg6IEHt8M7dUBxN3W6nrO8uUxX5ixl0yU/N3aZTi8WhPuICvOHXQvF6FaykAA==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      rollup: ^2.14.0||^3.0.0||^4.0.0
-      tslib: '*'
-      typescript: '>=3.7.0'
-    peerDependenciesMeta:
-      rollup:
-        optional: true
-      tslib:
-        optional: true
-    dependencies:
-      '@rollup/pluginutils': 5.1.0(rollup@4.16.1)
-      resolve: 1.22.8
-      rollup: 4.16.1
-      tslib: 2.6.2
-      typescript: 5.4.5
-    dev: true
-
   /@rollup/plugin-typescript@11.1.6(rollup@4.14.3)(typescript@5.4.5):
     resolution: {integrity: sha512-R92yOmIACgYdJ7dJ97p4K69I8gg6IEHt8M7dUBxN3W6nrO8uUxX5ixl0yU/N3aZTi8WhPuICvOHXQvF6FaykAA==}
     engines: {node: '>=14.0.0'}
@@ -3931,8 +3893,8 @@ packages:
       vite: ^5.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 5.2.9(@types/node@20.12.7)(less@4.2.0)
-      vue: 3.4.23
+      vite: 5.2.9(@types/node@20.12.7)
+      vue: 3.4.23(typescript@5.4.5)
     dev: true
 
   /@vitest/coverage-v8@1.5.0(vitest@1.5.0):
@@ -4053,7 +4015,7 @@ packages:
       mitt: 3.0.1
       perfect-debounce: 1.0.0
       speakingurl: 14.0.1
-      vue: 3.4.23
+      vue: 3.4.23(typescript@5.4.5)
     dev: true
 
   /@vue/devtools-shared@7.0.27:
@@ -4090,7 +4052,7 @@ packages:
     dependencies:
       '@vue/compiler-ssr': 3.4.23
       '@vue/shared': 3.4.23
-      vue: 3.4.23
+      vue: 3.4.23(typescript@5.4.5)
     dev: true
 
   /@vue/shared@3.4.23:
@@ -10264,7 +10226,6 @@ packages:
     resolution: {integrity: sha512-vcI4UpRgg81oIRUFwR0WSIHKt11nJ7SAVlYNIu+QpqeyXP+gpQJy/Z4+F0aGxSE4MqwjyXvW/TzgkLAx2AGHwQ==}
     engines: {node: '>=14.17'}
     hasBin: true
-    dev: true
 
   /ufo@1.5.3:
     resolution: {integrity: sha512-Y7HYmWaFwPUmkoQCUIAYpKqkOf+SbVj/2fJJZ4RJMCfZp0rTGwRbzQD+HghfnhKOjL9E01okqz+ncJskGYfBNw==}
@@ -10433,27 +10394,6 @@ packages:
       - terser
     dev: true
 
-  /vite-node@1.5.0(@types/node@20.12.7)(less@4.2.0):
-    resolution: {integrity: sha512-tV8h6gMj6vPzVCa7l+VGq9lwoJjW8Y79vst8QZZGiuRAfijU+EEWuc0kFpmndQrWhMMhet1jdSF+40KSZUqIIw==}
-    engines: {node: ^18.0.0 || >=20.0.0}
-    hasBin: true
-    dependencies:
-      cac: 6.7.14
-      debug: 4.3.4
-      pathe: 1.1.2
-      picocolors: 1.0.0
-      vite: 5.2.9(@types/node@20.12.7)(less@4.2.0)
-    transitivePeerDependencies:
-      - '@types/node'
-      - less
-      - lightningcss
-      - sass
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-    dev: true
-
   /vite@5.1.7(@types/node@20.12.7)(less@4.2.0)(sass@1.71.1)(terser@5.29.1):
     resolution: {integrity: sha512-sgnEEFTZYMui/sTlH1/XEnVNHMujOahPLGMxn1+5sIT45Xjng1Ec1K78jRP15dSmVgg5WBin9yO81j3o9OxofA==}
     engines: {node: ^18.0.0 || >=20.0.0}
@@ -10529,44 +10469,7 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /vite@5.2.9(@types/node@20.12.7)(less@4.2.0):
-    resolution: {integrity: sha512-uOQWfuZBlc6Y3W/DTuQ1Sr+oIXWvqljLvS881SVmAj00d5RdgShLcuXWxseWPd4HXwiYBFW/vXHfKFeqj9uQnw==}
-    engines: {node: ^18.0.0 || >=20.0.0}
-    hasBin: true
-    peerDependencies:
-      '@types/node': ^18.0.0 || >=20.0.0
-      less: '*'
-      lightningcss: ^1.21.0
-      sass: '*'
-      stylus: '*'
-      sugarss: '*'
-      terser: ^5.4.0
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      less:
-        optional: true
-      lightningcss:
-        optional: true
-      sass:
-        optional: true
-      stylus:
-        optional: true
-      sugarss:
-        optional: true
-      terser:
-        optional: true
-    dependencies:
-      '@types/node': 20.12.7
-      esbuild: 0.20.2
-      less: 4.2.0
-      postcss: 8.4.38
-      rollup: 4.16.1
-    optionalDependencies:
-      fsevents: 2.3.3
-    dev: true
-
-  /vitepress@1.1.3(@algolia/client-search@4.23.3)(search-insights@2.13.0):
+  /vitepress@1.1.3(@algolia/client-search@4.23.3)(@types/node@20.12.7)(search-insights@2.13.0)(typescript@5.4.5):
     resolution: {integrity: sha512-hGrIYN0w9IHWs0NQSnlMjKV/v/HLfD+Ywv5QdvCSkiT32mpNOOwUrZjnqZv/JL/WBPpUc94eghTUvmipxw0xrA==}
     hasBin: true
     peerDependencies:
@@ -10591,8 +10494,8 @@ packages:
       mark.js: 8.11.1
       minisearch: 6.3.0
       shiki: 1.3.0
-      vite: 5.2.9(@types/node@20.12.7)(less@4.2.0)
-      vue: 3.4.23
+      vite: 5.2.9(@types/node@20.12.7)
+      vue: 3.4.23(typescript@5.4.5)
     transitivePeerDependencies:
       - '@algolia/client-search'
       - '@types/node'
@@ -10677,62 +10580,6 @@ packages:
       - terser
     dev: true
 
-  /vitest@1.5.0(@types/node@20.12.7)(less@4.2.0):
-    resolution: {integrity: sha512-d8UKgR0m2kjdxDWX6911uwxout6GHS0XaGH1cksSIVVG8kRlE7G7aBw7myKQCvDI5dT4j7ZMa+l706BIORMDLw==}
-    engines: {node: ^18.0.0 || >=20.0.0}
-    hasBin: true
-    peerDependencies:
-      '@edge-runtime/vm': '*'
-      '@types/node': ^18.0.0 || >=20.0.0
-      '@vitest/browser': 1.5.0
-      '@vitest/ui': 1.5.0
-      happy-dom: '*'
-      jsdom: '*'
-    peerDependenciesMeta:
-      '@edge-runtime/vm':
-        optional: true
-      '@types/node':
-        optional: true
-      '@vitest/browser':
-        optional: true
-      '@vitest/ui':
-        optional: true
-      happy-dom:
-        optional: true
-      jsdom:
-        optional: true
-    dependencies:
-      '@types/node': 20.12.7
-      '@vitest/expect': 1.5.0
-      '@vitest/runner': 1.5.0
-      '@vitest/snapshot': 1.5.0
-      '@vitest/spy': 1.5.0
-      '@vitest/utils': 1.5.0
-      acorn-walk: 8.3.2
-      chai: 4.4.1
-      debug: 4.3.4
-      execa: 8.0.1
-      local-pkg: 0.5.0
-      magic-string: 0.30.9
-      pathe: 1.1.2
-      picocolors: 1.0.0
-      std-env: 3.7.0
-      strip-literal: 2.1.0
-      tinybench: 2.6.0
-      tinypool: 0.8.3
-      vite: 5.2.9(@types/node@20.12.7)(less@4.2.0)
-      vite-node: 1.5.0(@types/node@20.12.7)(less@4.2.0)
-      why-is-node-running: 2.2.2
-    transitivePeerDependencies:
-      - less
-      - lightningcss
-      - sass
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-    dev: true
-
   /vue-demi@0.14.7(vue@3.4.23):
     resolution: {integrity: sha512-EOG8KXDQNwkJILkx/gPcoL/7vH+hORoBaKgGe+6W7VFMvCYJfmF2dGbvgDroVnI8LU7/kTu8mbjRZGBU1z9NTA==}
     engines: {node: '>=12'}
@@ -10745,10 +10592,10 @@ packages:
       '@vue/composition-api':
         optional: true
     dependencies:
-      vue: 3.4.23
+      vue: 3.4.23(typescript@5.4.5)
     dev: true
 
-  /vue@3.4.23:
+  /vue@3.4.23(typescript@5.4.5):
     resolution: {integrity: sha512-X1y6yyGJ28LMUBJ0k/qIeKHstGd+BlWQEOT40x3auJFTmpIhpbKLgN7EFsqalnJXq1Km5ybDEsp6BhuWKciUDg==}
     peerDependencies:
       typescript: '*'
@@ -10761,6 +10608,7 @@ packages:
       '@vue/runtime-dom': 3.4.23
       '@vue/server-renderer': 3.4.23(vue@3.4.23)
       '@vue/shared': 3.4.23
+      typescript: 5.4.5
     dev: true
 
   /watchpack@2.4.0:
