@@ -26,6 +26,7 @@
     "vue"
   ],
   "main": "./dist/index.cjs",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build-bundle": "rollup --config rollup.config.ts --configPlugin typescript",
     "build-types-check": "tsc --project tsconfig.check.json",
