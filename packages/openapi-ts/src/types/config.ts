@@ -7,7 +7,7 @@ export interface UserConfig {
    * The selected HTTP client (fetch, xhr, node or axios)
    * @default 'fetch'
    */
-  client?: 'angular' | 'axios' | 'fetch' | 'node' | 'xhr';
+  client?: '@hey-api' | 'angular' | 'axios' | 'fetch' | 'node' | 'xhr';
   /**
    * Run in debug mode?
    * @default false
