@@ -17,7 +17,7 @@ describe('writeClient', () => {
       dryRun: false,
       enums: 'javascript',
       exportCore: true,
-      format: true,
+      format: 'prettier',
       input: '',
       lint: false,
       output: './dist',

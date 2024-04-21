@@ -30,9 +30,9 @@ export interface UserConfig {
   exportCore?: boolean;
   /**
    * Process output folder with formatter?
-   * @default true
+   * @default 'prettier'
    */
-  format?: boolean;
+  format?: 'biome' | 'prettier' | false;
   /**
    * The relative location of the OpenAPI spec
    */
@@ -41,7 +41,7 @@ export interface UserConfig {
    * Process output folder with linter?
    * @default false
    */
-  lint?: boolean;
+  lint?: 'biome' | 'eslint' | false;
   /**
    * Custom client class name
    */

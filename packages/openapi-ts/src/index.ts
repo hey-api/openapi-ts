@@ -24,25 +24,66 @@ const clientDependencies: Record<Config['client'], string[]> = {
   xhr: [],
 };
 
+type OutputProcesser = {
+  args: (output: string) => string[];
+  command: string;
+  condition: (dependencies: Dependencies) => boolean;
+  name: string;
+};
+
+// Map of supported formatters
+const formatters: Record<Extract<Config['format'], string>, OutputProcesser> = {
+  biome: {
+    args: (output) => ['format', '--write', output],
+    command: 'biome',
+    condition: (dependencies) => Boolean(dependencies['@biomejs/biome']),
+    name: 'Biome (Format)',
+  },
+  prettier: {
+    args: (output) => [
+      '--ignore-unknown',
+      output,
+      '--write',
+      '--ignore-path',
+      './.prettierignore',
+    ],
+    command: 'prettier',
+    condition: (dependencies) => Boolean(dependencies.prettier),
+    name: 'Prettier',
+  },
+};
+
+// Map of supported linters
+const linters: Record<Extract<Config['lint'], string>, OutputProcesser> = {
+  biome: {
+    args: (output) => ['lint', '--apply', output],
+    command: 'biome',
+    condition: (dependencies) => Boolean(dependencies['@biomejs/biome']),
+    name: 'Biome (Lint)',
+  },
+  eslint: {
+    args: (output) => [output, '--fix'],
+    command: 'eslint',
+    condition: (dependencies) => Boolean(dependencies.eslint),
+    name: 'ESLint',
+  },
+};
+
 const processOutput = (dependencies: Dependencies) => {
   const config = getConfig();
-
   if (config.format) {
-    if (dependencies.prettier) {
-      console.log('✨ Running Prettier');
-      sync('prettier', [
-        '--ignore-unknown',
-        config.output,
-        '--write',
-        '--ignore-path',
-        './.prettierignore',
-      ]);
+    const formatter = formatters[config.format];
+    if (formatter.condition(dependencies)) {
+      console.log(`✨ Running ${formatter.name}`);
+      sync(formatter.command, formatter.args(config.output));
     }
   }
-
-  if (config.lint && dependencies.eslint) {
-    console.log('✨ Running ESLint');
-    sync('eslint', [config.output, '--fix']);
+  if (config.lint) {
+    const linter = linters[config.lint];
+    if (linter.condition(dependencies)) {
+      console.log(`✨ Running ${linter.name}`);
+      sync(linter.command, linter.args(config.output));
+    }
   }
 };
 
@@ -165,7 +206,7 @@ const initConfig = async (
     dryRun = false,
     enums = false,
     exportCore = true,
-    format = true,
+    format = 'prettier',
     input,
     lint = false,
     name,
