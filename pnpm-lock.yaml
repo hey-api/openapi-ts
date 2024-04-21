@@ -88,31 +88,19 @@ importers:
         specifier: 1.6.8
         version: 1.6.8
 
-  packages/client-core:
-    devDependencies:
-      axios:
-        specifier: 1.6.8
-        version: 1.6.8
+  packages/client-core: {}
 
   packages/client-fetch:
     dependencies:
       '@hey-api/client-core':
         specifier: workspace:*
         version: link:../client-core
-    devDependencies:
-      axios:
-        specifier: 1.6.8
-        version: 1.6.8
 
   packages/client-nextjs:
     dependencies:
       '@hey-api/client-core':
         specifier: workspace:*
         version: link:../client-core
-    devDependencies:
-      axios:
-        specifier: 1.6.8
-        version: 1.6.8
 
   packages/openapi-ts:
     dependencies:
