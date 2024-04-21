@@ -171,6 +171,9 @@ importers:
       cross-spawn:
         specifier: 7.0.3
         version: 7.0.3
+      eslint:
+        specifier: 9.0.0
+        version: 9.0.0
       express:
         specifier: 4.19.2
         version: 4.19.2
@@ -180,6 +183,9 @@ importers:
       node-fetch:
         specifier: 3.3.2
         version: 3.3.2
+      prettier:
+        specifier: 3.2.5
+        version: 3.2.5
       puppeteer:
         specifier: 22.6.5
         version: 22.6.5(typescript@5.4.5)
