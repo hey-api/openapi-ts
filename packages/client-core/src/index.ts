@@ -1,17 +1,109 @@
-import type {
-  AxiosError,
-  AxiosInstance,
-  AxiosRequestConfig,
-  AxiosResponse,
-} from 'axios';
-import axios from 'axios';
+export type ApiResult<TData = any> = {
+  readonly body: TData;
+  readonly ok: boolean;
+  readonly status: number;
+  readonly statusText: string;
+  readonly url: string;
+};
 
-import { ApiError } from './apiError';
-import type { ApiRequestOptions } from './apiRequestOptions';
-import type { ApiResult } from './apiResult';
-import type { OnCancel } from './cancelablePromise';
-import { CancelablePromise } from './cancelablePromise';
-import type { OpenAPIConfig } from './openApi';
+export type ApiRequestOptions = {
+  readonly method:
+    | 'GET'
+    | 'PUT'
+    | 'POST'
+    | 'DELETE'
+    | 'OPTIONS'
+    | 'HEAD'
+    | 'PATCH';
+  readonly url: string;
+  readonly path?: Record<string, unknown>;
+  readonly cookies?: Record<string, unknown>;
+  readonly headers?: Record<string, unknown>;
+  readonly query?: Record<string, unknown>;
+  readonly formData?: Record<string, unknown>;
+  readonly body?: any;
+  readonly mediaType?: string;
+  readonly responseHeader?: string;
+  readonly errors?: Record<number, string>;
+};
+
+export class ApiError extends Error {
+  public readonly url: string;
+  public readonly status: number;
+  public readonly statusText: string;
+  public readonly body: unknown;
+  public readonly request: ApiRequestOptions;
+
+  constructor(
+    request: ApiRequestOptions,
+    response: ApiResult,
+    message: string,
+  ) {
+    super(message);
+
+    this.name = 'ApiError';
+    this.url = response.url;
+    this.status = response.status;
+    this.statusText = response.statusText;
+    this.body = response.body;
+    this.request = request;
+  }
+}
+
+type Headers = Record<string, string>;
+type Middleware<T> = (value: T) => T | Promise<T>;
+type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
+
+export class Interceptors<T> {
+  _fns: Middleware<T>[];
+
+  constructor() {
+    this._fns = [];
+  }
+
+  eject(fn: Middleware<T>) {
+    const index = this._fns.indexOf(fn);
+    if (index !== -1) {
+      this._fns = [...this._fns.slice(0, index), ...this._fns.slice(index + 1)];
+    }
+  }
+
+  use(fn: Middleware<T>) {
+    this._fns = [...this._fns, fn];
+  }
+}
+
+export type OpenAPIConfig = {
+  BASE: string;
+  CREDENTIALS: 'include' | 'omit' | 'same-origin';
+  ENCODE_PATH?: ((path: string) => string) | undefined;
+  HEADERS?: Headers | Resolver<Headers> | undefined;
+  PASSWORD?: string | Resolver<string> | undefined;
+  TOKEN?: string | Resolver<string> | undefined;
+  USERNAME?: string | Resolver<string> | undefined;
+  VERSION: string;
+  WITH_CREDENTIALS: boolean;
+  interceptors: {
+    request: Interceptors<any>;
+    response: Interceptors<any>;
+  };
+};
+
+export const OpenAPI: OpenAPIConfig = {
+  BASE: '{{{server}}}',
+  CREDENTIALS: 'include',
+  ENCODE_PATH: undefined,
+  HEADERS: undefined,
+  PASSWORD: undefined,
+  TOKEN: undefined,
+  USERNAME: undefined,
+  VERSION: '{{{version}}}',
+  WITH_CREDENTIALS: false,
+  interceptors: {
+    request: new Interceptors(),
+    response: new Interceptors(),
+  },
+};
 
 export const isString = (value: unknown): value is string =>
   typeof value === 'string';
@@ -63,7 +155,10 @@ export const getQueryString = (params: Record<string, unknown>): string => {
   return qs.length ? `?${qs.join('&')}` : '';
 };
 
-const getUrl = (config: OpenAPIConfig, options: ApiRequestOptions): string => {
+export const getUrl = (
+  config: OpenAPIConfig,
+  options: ApiRequestOptions,
+): string => {
   const encoder = config.ENCODE_PATH || encodeURI;
 
   const path = options.url
@@ -108,8 +203,6 @@ export const getFormData = (
   return undefined;
 };
 
-type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
-
 export const resolve = async <T>(
   options: ApiRequestOptions,
   resolver?: T | Resolver<T>,
@@ -118,124 +211,6 @@ export const resolve = async <T>(
     return (resolver as Resolver<T>)(options);
   }
   return resolver;
-};
-
-export const getHeaders = async (
-  config: OpenAPIConfig,
-  options: ApiRequestOptions,
-): Promise<Record<string, string>> => {
-  const [token, username, password, additionalHeaders] = await Promise.all([
-    resolve(options, config.TOKEN),
-    resolve(options, config.USERNAME),
-    resolve(options, config.PASSWORD),
-    resolve(options, config.HEADERS),
-  ]);
-
-  const headers = Object.entries({
-    Accept: 'application/json',
-    ...additionalHeaders,
-    ...options.headers,
-  })
-    .filter(([, value]) => value !== undefined && value !== null)
-    .reduce(
-      (headers, [key, value]) => ({
-        ...headers,
-        [key]: String(value),
-      }),
-      {} as Record<string, string>,
-    );
-
-  if (isStringWithValue(token)) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-
-  if (isStringWithValue(username) && isStringWithValue(password)) {
-    const credentials = base64(`${username}:${password}`);
-    headers['Authorization'] = `Basic ${credentials}`;
-  }
-
-  if (options.body !== undefined) {
-    if (options.mediaType) {
-      headers['Content-Type'] = options.mediaType;
-    } else if (isBlob(options.body)) {
-      headers['Content-Type'] = options.body.type || 'application/octet-stream';
-    } else if (isString(options.body)) {
-      headers['Content-Type'] = 'text/plain';
-    } else if (!isFormData(options.body)) {
-      headers['Content-Type'] = 'application/json';
-    }
-  } else if (options.formData !== undefined) {
-    if (options.mediaType) {
-      headers['Content-Type'] = options.mediaType;
-    }
-  }
-
-  return headers;
-};
-
-export const getRequestBody = (options: ApiRequestOptions): unknown => {
-  if (options.body) {
-    return options.body;
-  }
-  return undefined;
-};
-
-export const sendRequest = async <T>(
-  config: OpenAPIConfig,
-  options: ApiRequestOptions,
-  url: string,
-  body: unknown,
-  formData: FormData | undefined,
-  headers: Record<string, string>,
-  onCancel: OnCancel,
-  axiosClient: AxiosInstance,
-): Promise<AxiosResponse<T>> => {
-  const controller = new AbortController();
-
-  let requestConfig: AxiosRequestConfig = {
-    data: body ?? formData,
-    headers,
-    method: options.method,
-    signal: controller.signal,
-    url,
-    withCredentials: config.WITH_CREDENTIALS,
-  };
-
-  onCancel(() => controller.abort());
-
-  for (const fn of config.interceptors.request._fns) {
-    requestConfig = await fn(requestConfig);
-  }
-
-  try {
-    return await axiosClient.request(requestConfig);
-  } catch (error) {
-    const axiosError = error as AxiosError<T>;
-    if (axiosError.response) {
-      return axiosError.response;
-    }
-    throw error;
-  }
-};
-
-export const getResponseHeader = (
-  response: AxiosResponse<unknown>,
-  responseHeader?: string,
-): string | undefined => {
-  if (responseHeader) {
-    const content = response.headers[responseHeader];
-    if (isString(content)) {
-      return content;
-    }
-  }
-  return undefined;
-};
-
-export const getResponseBody = (response: AxiosResponse<unknown>): unknown => {
-  if (response.status !== 204) {
-    return response.data;
-  }
-  return undefined;
 };
 
 export const catchErrorCodes = (
@@ -309,62 +284,3 @@ export const catchErrorCodes = (
     );
   }
 };
-
-/**
- * Request method
- * @param config The OpenAPI configuration object
- * @param options The request options from the service
- * @param axiosClient The axios client instance to use
- * @returns CancelablePromise<T>
- * @throws ApiError
- */
-export const request = <T>(
-  config: OpenAPIConfig,
-  options: ApiRequestOptions,
-  axiosClient: AxiosInstance = axios,
-): CancelablePromise<T> =>
-  new CancelablePromise(async (resolve, reject, onCancel) => {
-    try {
-      const url = getUrl(config, options);
-      const formData = getFormData(options);
-      const body = getRequestBody(options);
-      const headers = await getHeaders(config, options);
-
-      if (!onCancel.isCancelled) {
-        let response = await sendRequest<T>(
-          config,
-          options,
-          url,
-          body,
-          formData,
-          headers,
-          onCancel,
-          axiosClient,
-        );
-
-        for (const fn of config.interceptors.response._fns) {
-          response = await fn(response);
-        }
-
-        const responseBody = getResponseBody(response);
-        const responseHeader = getResponseHeader(
-          response,
-          options.responseHeader,
-        );
-
-        const result: ApiResult = {
-          body: responseHeader ?? responseBody,
-          ok: isSuccess(response.status),
-          status: response.status,
-          statusText: response.statusText,
-          url,
-        };
-
-        catchErrorCodes(options, result);
-
-        resolve(result.body);
-      }
-    } catch (error) {
-      reject(error);
-    }
-  });
