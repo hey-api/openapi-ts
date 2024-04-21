@@ -170,7 +170,7 @@ const toRequestOptions = (operation: Operation) => {
 const toOperationStatements = (operation: Operation) => {
   const config = getConfig();
   const statements: any[] = [];
-  const requestOptions = compiler.utils.toString(toRequestOptions(operation));
+  const requestOptions = toRequestOptions(operation);
   if (config.name) {
     statements.push(
       compiler.class.return({
@@ -217,6 +217,7 @@ export const processService = (service: Service) => {
   if (config.name) {
     members.unshift(
       compiler.class.constructor({
+        multiLine: false,
         parameters: [
           {
             accessLevel: 'public',
@@ -230,6 +231,7 @@ export const processService = (service: Service) => {
   } else if (config.client === 'angular') {
     members.unshift(
       compiler.class.constructor({
+        multiLine: false,
         parameters: [
           {
             accessLevel: 'public',

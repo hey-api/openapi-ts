@@ -30,7 +30,7 @@ export interface UserConfig {
   exportCore?: boolean;
   /**
    * Process output folder with formatter?
-   * @default 'prettier'
+   * @default false
    */
   format?: 'biome' | 'prettier' | false;
   /**

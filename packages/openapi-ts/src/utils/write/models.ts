@@ -4,7 +4,7 @@ import {
   type Node,
   TypeScriptFile,
 } from '../../compiler';
-import { addLeadingComment } from '../../compiler/utils';
+import { addLeadingJSDocComment } from '../../compiler/utils';
 import type { Model, OperationParameter, Service } from '../../openApi';
 import { ensureValidTypeScriptJavaScriptIdentifier } from '../../openApi/common/parser/sanitize';
 import type { Client } from '../../types/client';
@@ -100,7 +100,7 @@ const processEnum = (
       unescape: true,
     });
     const node = compiler.export.asConst(name, expression);
-    addLeadingComment(node, comment);
+    addLeadingJSDocComment(node, comment);
     onNode(node, 'enum');
   }
 };
