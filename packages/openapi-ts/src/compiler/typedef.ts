@@ -1,6 +1,11 @@
 import ts from 'typescript';
 
-import { addLeadingJSDocComment, type Comments, tsNodeToString } from './utils';
+import {
+  addLeadingJSDocComment,
+  type Comments,
+  ots,
+  tsNodeToString,
+} from './utils';
 
 export const createTypeNode = (
   base: any | ts.TypeNode,
@@ -11,9 +16,7 @@ export const createTypeNode = (
   }
 
   if (typeof base === 'number') {
-    return ts.factory.createLiteralTypeNode(
-      ts.factory.createNumericLiteral(base),
-    );
+    return ts.factory.createLiteralTypeNode(ots.number(base));
   }
 
   return ts.factory.createTypeReferenceNode(
