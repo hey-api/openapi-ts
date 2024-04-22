@@ -1,4 +1,4 @@
-# openapi-ts-docs
+# @hey-api/openapi-ts
 
 ## 0.5.2
 
