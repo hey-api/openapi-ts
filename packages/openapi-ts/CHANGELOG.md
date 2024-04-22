@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.42.1
+
+### Patch Changes
+
+- fix: properly set formData and body when using options ([#461](https://github.com/hey-api/openapi-ts/pull/461))
+
 ## 0.42.0
 
 ### Minor Changes
