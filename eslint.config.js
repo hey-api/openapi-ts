@@ -46,6 +46,8 @@ export default tseslint.config(
       'temp/',
       '**/test/e2e/generated/',
       '**/test/generated/',
+      '**/.vitepress/cache',
+      '**/.vitepress/dist',
     ],
   },
 );
