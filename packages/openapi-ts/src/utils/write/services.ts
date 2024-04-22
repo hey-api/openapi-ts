@@ -141,10 +141,18 @@ const toRequestOptions = (operation: Operation) => {
   }
   if (operation.parametersBody) {
     if (operation.parametersBody.in === 'formData') {
-      obj.formData = operation.parametersBody.name;
+      if (config.useOptions) {
+        obj.formData = `data.${operation.parametersBody.name}`;
+      } else {
+        obj.formData = operation.parametersBody.name;
+      }
     }
     if (operation.parametersBody.in === 'body') {
-      obj.body = operation.parametersBody.name;
+      if (config.useOptions) {
+        obj.body = `data.${operation.parametersBody.name}`;
+      } else {
+        obj.body = operation.parametersBody.name;
+      }
     }
   }
   if (operation.parametersBody?.mediaType) {
