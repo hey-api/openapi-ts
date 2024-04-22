@@ -139,7 +139,7 @@ export class myAwesomeParametersApi {
             formData: {
                 parameterForm: data.parameterForm
             },
-            body: requestBody,
+            body: data.requestBody,
             mediaType: 'application/json'
         });
     }
@@ -179,7 +179,7 @@ export class myAwesomeParametersApi {
             formData: {
                 parameter_form: data.parameterForm
             },
-            body: requestBody,
+            body: data.requestBody,
             mediaType: 'application/json'
         });
     }
@@ -197,7 +197,7 @@ export class myAwesomeParametersApi {
             query: {
                 parameter: data.parameter
             },
-            body: requestBody,
+            body: data.requestBody,
             mediaType: 'application/json'
         });
     }
@@ -215,7 +215,7 @@ export class myAwesomeParametersApi {
             query: {
                 parameter: data.parameter
             },
-            body: requestBody,
+            body: data.requestBody,
             mediaType: 'application/json'
         });
     }

@@ -33,7 +33,7 @@ export class DefaultService {
         return __request(OpenAPI, this.http, {
             method: 'POST',
             url: '/api/v{api-version}/no-tag',
-            body: requestBody,
+            body: data.requestBody,
             mediaType: 'application/json'
         });
     }
@@ -185,7 +185,7 @@ export class ParametersService {
             formData: {
                 parameterForm: data.parameterForm
             },
-            body: requestBody,
+            body: data.requestBody,
             mediaType: 'application/json'
         });
     }
@@ -225,7 +225,7 @@ export class ParametersService {
             formData: {
                 parameter_form: data.parameterForm
             },
-            body: requestBody,
+            body: data.requestBody,
             mediaType: 'application/json'
         });
     }
@@ -243,7 +243,7 @@ export class ParametersService {
             query: {
                 parameter: data.parameter
             },
-            body: requestBody,
+            body: data.requestBody,
             mediaType: 'application/json'
         });
     }
@@ -261,7 +261,7 @@ export class ParametersService {
             query: {
                 parameter: data.parameter
             },
-            body: requestBody,
+            body: data.requestBody,
             mediaType: 'application/json'
         });
     }
@@ -347,7 +347,7 @@ export class RequestBodyService {
             query: {
                 parameter: data.parameter
             },
-            body: foo,
+            body: data.foo,
             mediaType: 'application/json'
         });
     }
@@ -373,7 +373,7 @@ export class FormDataService {
             query: {
                 parameter: data.parameter
             },
-            formData,
+            formData: data.formData,
             mediaType: 'multipart/form-data'
         });
     }
@@ -851,7 +851,7 @@ export class ComplexService {
             path: {
                 id: data.id
             },
-            body: requestBody,
+            body: data.requestBody,
             mediaType: 'application/json-patch+json'
         });
     }
@@ -873,7 +873,7 @@ export class MultipartService {
         return __request(OpenAPI, this.http, {
             method: 'POST',
             url: '/api/v{api-version}/multipart',
-            formData,
+            formData: data.formData,
             mediaType: 'multipart/form-data'
         });
     }
