@@ -33,8 +33,8 @@ importers:
   packages/openapi-ts:
     dependencies:
       '@apidevtools/json-schema-ref-parser':
-        specifier: 11.5.5
-        version: 11.5.5
+        specifier: 11.6.0
+        version: 11.6.0
       c12:
         specifier: 1.10.0
         version: 1.10.0
@@ -718,8 +718,8 @@ packages:
       tslib: 2.6.2
     dev: true
 
-  /@apidevtools/json-schema-ref-parser@11.5.5:
-    resolution: {integrity: sha512-hv/aXDILyroHioVW27etFMV+IX6FyNn41YwbeGIAt5h/7fUTQvHI5w3ols8qYAT8aQt3kzexq5ZwxFDxNHIhdQ==}
+  /@apidevtools/json-schema-ref-parser@11.6.0:
+    resolution: {integrity: sha512-I+d5/XrazqY86/kGsmjVercjjJ+w6MVXJj7vnHfUgXzaoLJAl0/tPk2WXVpHUeRqHqyJ6AGkXBqx6Dc3wJkrCQ==}
     engines: {node: '>= 16'}
     dependencies:
       '@jsdevtools/ono': 7.1.3
