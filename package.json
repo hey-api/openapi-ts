@@ -20,7 +20,7 @@
     "client-core": "pnpm --filter @hey-api/client-core --",
     "client-fetch": "pnpm --filter @hey-api/client-fetch --",
     "client-nextjs": "pnpm --filter @hey-api/client-nextjs --",
-    "docs": "pnpm --filter openapi-ts-docs --",
+    "docs": "pnpm --filter @hey-api/docs --",
     "format": "prettier --write .",
     "lint:fix": "prettier --check . && pnpm --recursive lint:fix",
     "lint": "prettier --check . && pnpm --recursive lint",
@@ -43,7 +43,7 @@
     "@svitejs/changesets-changelog-github-compact": "1.1.0",
     "@types/node": "20.12.7",
     "@vitest/coverage-v8": "1.5.0",
-    "eslint": "9.0.0",
+    "eslint": "9.1.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-simple-import-sort": "12.1.0",
     "eslint-plugin-sort-keys-fix": "1.1.2",
@@ -52,10 +52,11 @@
     "lint-staged": "15.2.2",
     "prettier": "3.2.5",
     "rimraf": "5.0.5",
-    "rollup": "4.14.3",
+    "rollup": "4.16.1",
     "rollup-plugin-dts": "6.1.0",
     "typescript": "5.4.5",
     "typescript-eslint": "7.7.0",
     "vitest": "1.5.0"
-  }
+  },
+  "packageManager": "pnpm@8.15.7+sha256.50783dd0fa303852de2dd1557cd4b9f07cb5b018154a6e76d0f40635d6cee019"
 }

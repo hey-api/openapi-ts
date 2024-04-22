@@ -13,13 +13,13 @@ importers:
         version: 2.27.1
       '@rollup/plugin-commonjs':
         specifier: 25.0.7
-        version: 25.0.7(rollup@4.14.3)
+        version: 25.0.7(rollup@4.16.1)
       '@rollup/plugin-terser':
         specifier: 0.4.4
-        version: 0.4.4(rollup@4.14.3)
+        version: 0.4.4(rollup@4.16.1)
       '@rollup/plugin-typescript':
         specifier: 11.1.6
-        version: 11.1.6(rollup@4.14.3)(typescript@5.4.5)
+        version: 11.1.6(rollup@4.16.1)(typescript@5.4.5)
       '@svitejs/changesets-changelog-github-compact':
         specifier: 1.1.0
         version: 1.1.0
@@ -30,14 +30,14 @@ importers:
         specifier: 1.5.0
         version: 1.5.0(vitest@1.5.0)
       eslint:
-        specifier: 9.0.0
-        version: 9.0.0
+        specifier: 9.1.0
+        version: 9.1.0
       eslint-config-prettier:
         specifier: 9.1.0
-        version: 9.1.0(eslint@9.0.0)
+        version: 9.1.0(eslint@9.1.0)
       eslint-plugin-simple-import-sort:
         specifier: 12.1.0
-        version: 12.1.0(eslint@9.0.0)
+        version: 12.1.0(eslint@9.1.0)
       eslint-plugin-sort-keys-fix:
         specifier: 1.1.2
         version: 1.1.2
@@ -57,17 +57,17 @@ importers:
         specifier: 5.0.5
         version: 5.0.5
       rollup:
-        specifier: 4.14.3
-        version: 4.14.3
+        specifier: 4.16.1
+        version: 4.16.1
       rollup-plugin-dts:
         specifier: 6.1.0
-        version: 6.1.0(rollup@4.14.3)(typescript@5.4.5)
+        version: 6.1.0(rollup@4.16.1)(typescript@5.4.5)
       typescript:
         specifier: 5.4.5
         version: 5.4.5
       typescript-eslint:
         specifier: 7.7.0
-        version: 7.7.0(eslint@9.0.0)(typescript@5.4.5)
+        version: 7.7.0(eslint@9.1.0)(typescript@5.4.5)
       vitest:
         specifier: 1.5.0
         version: 1.5.0(@types/node@20.12.7)
@@ -152,7 +152,7 @@ importers:
         version: 6.1.0(rollup@4.16.1)
       '@rollup/plugin-node-resolve':
         specifier: 15.2.3
-        version: 15.2.3(rollup@4.14.3)
+        version: 15.2.3(rollup@4.16.1)
       '@types/cross-spawn':
         specifier: 6.0.6
         version: 6.0.6
@@ -166,8 +166,8 @@ importers:
         specifier: 7.0.3
         version: 7.0.3
       eslint:
-        specifier: 9.0.0
-        version: 9.0.0
+        specifier: 9.1.0
+        version: 9.1.0
       express:
         specifier: 4.19.2
         version: 4.19.2
@@ -3179,7 +3179,7 @@ packages:
       glob: 8.1.0
       is-reference: 1.2.1
       magic-string: 0.30.10
-      rollup: 4.14.3
+      rollup: 4.16.1
     dev: true
 
   /@rollup/plugin-json@6.1.0(rollup@4.16.1):
@@ -3228,7 +3228,7 @@ packages:
       terser: 5.30.3
     dev: true
 
-  /@rollup/plugin-typescript@11.1.6(rollup@4.14.3)(typescript@5.4.5):
+  /@rollup/plugin-typescript@11.1.6(rollup@4.16.1)(typescript@5.4.5):
     resolution: {integrity: sha512-R92yOmIACgYdJ7dJ97p4K69I8gg6IEHt8M7dUBxN3W6nrO8uUxX5ixl0yU/N3aZTi8WhPuICvOHXQvF6FaykAA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -3241,13 +3241,13 @@ packages:
       tslib:
         optional: true
     dependencies:
-      '@rollup/pluginutils': 5.1.0(rollup@4.14.3)
+      '@rollup/pluginutils': 5.1.0(rollup@4.16.1)
       resolve: 1.22.8
-      rollup: 4.14.3
+      rollup: 4.16.1
       typescript: 5.4.5
     dev: true
 
-  /@rollup/pluginutils@5.1.0(rollup@4.14.3):
+  /@rollup/pluginutils@5.1.0(rollup@4.16.1):
     resolution: {integrity: sha512-XTIWOPPcpvyKI6L1NHo0lFlCyznUEyPmPY1mc3KpPVDYulHSTvyeLNVW00QTLIAFNhR3kYnJTQHeGqU4M3n09g==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -4492,7 +4492,7 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.23.0
-      caniuse-lite: 1.0.30001611
+      caniuse-lite: 1.0.30001612
       fraction.js: 4.3.7
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -4714,7 +4714,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001611
+      caniuse-lite: 1.0.30001612
       electron-to-chromium: 1.4.745
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.23.0)
@@ -4831,8 +4831,8 @@ packages:
     engines: {node: '>=16'}
     dev: false
 
-  /caniuse-lite@1.0.30001611:
-    resolution: {integrity: sha512-19NuN1/3PjA3QI8Eki55N8my4LzfkMCRLgCVfrl/slbSAchQfV0+GwjPrK3rq37As4UCLlM/DHajbKkAqbv92Q==}
+  /caniuse-lite@1.0.30001612:
+    resolution: {integrity: sha512-lFgnZ07UhaCcsSZgWW0K5j4e69dK1u/ltrL9lTUiFOwNHs12S3UMIEYgBV0Z6C6hRDev7iRnMzzYmKabYdXF9g==}
     dev: true
 
   /chai@4.4.1:
@@ -9124,7 +9124,7 @@ packages:
       typescript: ^4.5 || ^5.0
     dependencies:
       magic-string: 0.30.10
-      rollup: 4.14.3
+      rollup: 4.16.1
       typescript: 5.4.5
     optionalDependencies:
       '@babel/code-frame': 7.24.2
@@ -10368,7 +10368,7 @@ packages:
       esbuild: 0.19.12
       less: 4.2.0
       postcss: 8.4.35
-      rollup: 4.14.3
+      rollup: 4.16.1
       sass: 1.71.1
       terser: 5.29.1
     optionalDependencies:

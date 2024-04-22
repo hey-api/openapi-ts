@@ -6,6 +6,7 @@ import type {
   Resolver,
 } from './types';
 
+export { CancelablePromise, CancelError, OnCancel } from './cancelablePromise';
 export type { ApiRequestOptions, ApiResult } from './types';
 
 export class ApiError extends Error {

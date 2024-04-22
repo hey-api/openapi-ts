@@ -1,10 +1,12 @@
 import type {
   ApiRequestOptions,
   ApiResult,
+  OnCancel,
   OpenAPIConfig,
 } from '@hey-api/client-core';
 import {
   base64,
+  CancelablePromise,
   catchErrorCodes,
   getFormData,
   getUrl,
@@ -14,9 +16,6 @@ import {
   isStringWithValue,
   resolve,
 } from '@hey-api/client-core';
-
-import type { OnCancel } from './cancelablePromise';
-import { CancelablePromise } from './cancelablePromise';
 
 export const getHeaders = async (
   config: OpenAPIConfig,
