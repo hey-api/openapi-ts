@@ -1,10 +1,12 @@
 import type {
   ApiRequestOptions,
   ApiResult,
+  OnCancel,
   OpenAPIConfig,
 } from '@hey-api/client-core';
 import {
   base64,
+  CancelablePromise,
   catchErrorCodes,
   getFormData,
   getUrl,
@@ -22,9 +24,6 @@ import type {
   AxiosResponse,
 } from 'axios';
 import axios from 'axios';
-
-import type { OnCancel } from './cancelablePromise';
-import { CancelablePromise } from './cancelablePromise';
 
 export const getHeaders = async (
   config: OpenAPIConfig,
