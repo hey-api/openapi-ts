@@ -52,6 +52,9 @@
   "dependencies": {
     "@hey-api/client-core": "workspace:*"
   },
+  "peerDependencies": {
+    "axios": ">= 1.0.0 < 2"
+  },
   "devDependencies": {
     "axios": "1.6.8"
   }
