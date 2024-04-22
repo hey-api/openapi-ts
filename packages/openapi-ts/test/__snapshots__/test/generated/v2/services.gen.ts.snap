@@ -148,7 +148,7 @@ export class ParametersService {
             formData: {
                 parameterForm: data.parameterForm
             },
-            body: parameterBody
+            body: data.parameterBody
         });
     }
     
@@ -183,7 +183,7 @@ export class ParametersService {
             formData: {
                 parameter_form: data.parameterForm
             },
-            body: parameterBody
+            body: data.parameterBody
         });
     }
     
