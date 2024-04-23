@@ -4,17 +4,23 @@
   <p align="center">✨ Turn your OpenAPI specification into a beautiful TypeScript client.</p>
 </div>
 
-`openapi-ts` allows you to create TypeScript interfaces, REST clients, and JSON Schemas from an OpenAPI specification.
+Generate TypeScript interfaces, REST clients, and JSON Schemas from OpenAPI specifications.
+
+[Live demo](https://stackblitz.com/edit/hey-api-example?file=openapi-ts.config.ts,src%2Fclient%2Fschemas.gen.ts,src%2Fclient%2Fservices.gen.ts,src%2Fclient%2Ftypes.gen.ts)
 
 ## Features
 
-- use with CLI, Node.js, or npx
-- export TypeScript interfaces from OpenAPI v2.0, v3.0, and v3.1 specifications
-- support JSON or YAML input files
-- support external references using [json-schema-ref-parser](https://github.com/APIDevTools/json-schema-ref-parser/)
-- create fetch, axios, angular, node.js, or xhr REST clients
-- export JSON Schemas from OpenAPI specifications
+- works with CLI, Node.js, or npx
+- supports OpenAPI 2.0, 3.0, and 3.1 specifications
+- supports both JSON and YAML input files
+- supports external references using [json-schema-ref-parser](https://github.com/APIDevTools/json-schema-ref-parser/)
+- generates TypeScript interfaces, REST clients, and JSON Schemas
+- Fetch API, Axios, Angular, Node.js, and XHR clients available
 - abortable requests through cancellable promise pattern
+
+## Documentation
+
+Please visit our [website](https://heyapi.vercel.app/) for documentation, guides, migrating, and more.
 
 ## GitHub Integration (coming soon)
 
@@ -23,10 +29,6 @@ Automatically update your code when the APIs it depends on change. [Find out mor
 ## Migrating from OpenAPI Typescript Codegen?
 
 Please read our [migration guide](https://heyapi.vercel.app/openapi-ts/migrating.html#openapi-typescript-codegen).
-
-## Documentation
-
-Please visit our [website](https://heyapi.vercel.app/) for documentation, guides, migrating, and more.
 
 ## Contributing
 

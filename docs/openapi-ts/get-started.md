@@ -3,18 +3,26 @@ title: Get Started
 description: Get started with @hey-api/openapi-ts.
 ---
 
+<script setup>
+import { embedProject } from '../embed'
+</script>
+
 # Get Started
 
-`openapi-ts` allows you to create TypeScript interfaces, REST clients, and JSON Schemas from an OpenAPI specification.
+Generate TypeScript interfaces, REST clients, and JSON Schemas from OpenAPI specifications.
+
+<button class="buttonLink" @click="(event) => embedProject('hey-api-example')(event)">
+Live demo
+</button>
 
 ## Features
 
-- use with CLI, Node.js, or npx
-- export TypeScript interfaces from OpenAPI v2.0, v3.0, and v3.1 specifications
-- support JSON or YAML input files
-- support external references using [json-schema-ref-parser](https://github.com/APIDevTools/json-schema-ref-parser/)
-- create fetch, axios, angular, node.js, or xhr REST clients
-- export JSON Schemas from OpenAPI specifications
+- works with CLI, Node.js, or npx
+- supports OpenAPI 2.0, 3.0, and 3.1 specifications
+- supports both JSON and YAML input files
+- supports external references using [json-schema-ref-parser](https://github.com/APIDevTools/json-schema-ref-parser/)
+- generates TypeScript interfaces, REST clients, and JSON Schemas
+- Fetch API, Axios, Angular, Node.js, and XHR clients available
 - abortable requests through cancellable promise pattern
 
 ## Quick Start
@@ -71,3 +79,7 @@ createClient({
 ::: warning
 You need to be running Node.js v18 or newer
 :::
+
+## Examples
+
+You can view live examples on [StackBlitz](https://stackblitz.com/orgs/github/hey-api/collections/openapi-ts-examples).

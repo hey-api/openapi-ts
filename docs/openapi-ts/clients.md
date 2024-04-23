@@ -8,3 +8,7 @@ description: REST clients for your stack. Compatible with all our features.
 We all send HTTP requests in a slightly different way. Hey API doesn't force you to use any specific technology. What we do, however, is support your choice with great clients. All seamlessly integrated with our other features.
 
 [Next.js](https://nextjs.org/), [Axios](https://axios-http.com/), and [Fetch API](https://developer.mozilla.org/docs/Web/API/Fetch_API) coming soon.
+
+## Examples
+
+You can view live examples on [StackBlitz](https://stackblitz.com/orgs/github/hey-api/collections/openapi-ts-examples).

@@ -25,3 +25,24 @@ html.dark {
   text-transform: lowercase;
   top: -1em;
 }
+
+iframe {
+  background-color: var(--vp-sidebar-bg-color);
+  border: none;
+  margin: 0;
+}
+
+.buttonLink {
+  color: var(--vp-c-brand-1);
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition:
+    color 0.25s,
+    opacity 0.25s;
+}
+
+.buttonLink:hover {
+  color: var(--vp-c-brand-2);
+}
