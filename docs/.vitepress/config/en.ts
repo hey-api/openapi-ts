@@ -1,28 +1,38 @@
 import { defineConfig } from 'vitepress';
 
 export default defineConfig({
-  description: 'Turn your OpenAPI specification into a beautiful TypeScript client',
+  description:
+    'Turn your OpenAPI specification into a beautiful TypeScript client',
   lang: 'en-US',
   themeConfig: {
     sidebar: [
       {
-        text: 'openapi-ts',
         items: [
-          { text: 'Get Started', link: '/openapi-ts/get-started' },
-          { text: 'Configuration', link: '/openapi-ts/configuration' },
-          { text: 'Clients <span class="soon">soon</span>', link: '/openapi-ts/clients' },
-          { text: 'Interceptors', link: '/openapi-ts/interceptors' },
-          { text: 'Integrations <span class="soon">soon</span>', link: '/openapi-ts/integrations' },
-          { text: 'TanStack Query <span class="soon">soon</span>', link: '/openapi-ts/tanstack-query' },
-          { text: 'Migrating', link: '/openapi-ts/migrating' },
+          { link: '/openapi-ts/get-started', text: 'Get Started' },
+          { link: '/openapi-ts/configuration', text: 'Configuration' },
+          {
+            link: '/openapi-ts/clients',
+            text: 'Clients <span class="soon">soon</span>',
+          },
+          { link: '/openapi-ts/interceptors', text: 'Interceptors' },
+          {
+            link: '/openapi-ts/integrations',
+            text: 'Integrations <span class="soon">soon</span>',
+          },
+          {
+            link: '/openapi-ts/tanstack-query',
+            text: 'TanStack Query <span class="soon">soon</span>',
+          },
+          { link: '/openapi-ts/migrating', text: 'Migrating' },
         ],
+        text: 'openapi-ts',
       },
       {
-        text: '@hey-api',
         items: [
-          { text: 'Philosophy', link: '/about' },
-          { text: 'Contributing', link: '/contributing' },
+          { link: '/about', text: 'Philosophy' },
+          { link: '/contributing', text: 'Contributing' },
         ],
+        text: '@hey-api',
       },
     ],
   },
