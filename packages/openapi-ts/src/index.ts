@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { loadConfig } from 'c12';
@@ -14,6 +14,10 @@ import { postProcessClient } from './utils/postprocess';
 import { writeClient } from './utils/write/client';
 
 type Dependencies = Record<string, unknown>;
+type PackageDependencies = {
+  dependencies?: Dependencies;
+  devDependencies?: Dependencies;
+};
 
 // Dependencies used in each client. User must have installed these to use the generated client
 const clientDependencies: Record<Config['client'], string[]> = {
@@ -192,6 +196,43 @@ const getTypes = (userConfig: UserConfig): Config['types'] => {
   return types;
 };
 
+const getInstalledDependencies = (): Dependencies => {
+  const toReducedDependencies = (p: PackageDependencies): Dependencies =>
+    [p.dependencies ?? {}, p.devDependencies ?? {}].reduce(
+      (deps, devDeps) => ({
+        ...deps,
+        ...devDeps,
+      }),
+      {},
+    );
+
+  let dependencies: Dependencies = {};
+
+  // Attempt to get all globally installed pacakges.
+  const result = sync('npm', ['list', '-g', '--json', '--depth=0']);
+  if (!result.error) {
+    const globally: PackageDependencies = JSON.parse(result.stdout.toString());
+    dependencies = {
+      ...dependencies,
+      ...toReducedDependencies(globally),
+    };
+  }
+
+  // Attempt to read any dependencies installed in a local projects package.json.
+  const pkgPath = path.resolve(process.cwd(), 'package.json');
+  if (existsSync(pkgPath)) {
+    const locally: PackageDependencies = JSON.parse(
+      readFileSync(pkgPath).toString(),
+    );
+    dependencies = {
+      ...dependencies,
+      ...toReducedDependencies(locally),
+    };
+  }
+
+  return dependencies;
+};
+
 const initConfig = async (
   userConfig: UserConfig,
   dependencies: Dependencies,
@@ -277,17 +318,7 @@ const initConfig = async (
  * @param userConfig {@link UserConfig} passed to the `createClient()` method
  */
 export async function createClient(userConfig: UserConfig): Promise<Client> {
-  const pkg = JSON.parse(
-    readFileSync(path.resolve(process.cwd(), 'package.json')).toString(),
-  );
-
-  const dependencies = [pkg.dependencies, pkg.devDependencies].reduce(
-    (res, deps) => ({
-      ...res,
-      ...deps,
-    }),
-    {},
-  );
+  const dependencies = getInstalledDependencies();
 
   if (!dependencies.typescript) {
     throw new Error('🚫 dependency missing - TypeScript must be installed');
