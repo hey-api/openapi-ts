@@ -1530,7 +1530,7 @@ export const $ModelWithNumericEnumUnion = {
     properties: {
         value: {
             type: 'number',
-            enum: [1, 3, 6, 12]
+            enum: [-10, -1, 0, 1, 3, 6, 12]
         }
     }
 } as const;

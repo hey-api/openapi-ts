@@ -114,6 +114,9 @@ export enum ModelWithNestedArrayEnumsDataBarEnum {
  * Период
  */
 export enum ValueEnum {
+    '_-10' = -10,
+    '_-1' = -1,
+    '_0' = 0,
     '_1' = 1,
     '_3' = 3,
     '_6' = 6,
