@@ -52,3 +52,7 @@ To eject, you must provide the same function that was passed to `use()`.
 ::: warning
 Angular client does not currently support request interceptors.
 :::
+
+## Examples
+
+You can view live examples on [StackBlitz](https://stackblitz.com/orgs/github/hey-api/collections/openapi-ts-examples).
