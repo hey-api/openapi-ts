@@ -9,8 +9,8 @@ hero:
       text: Get Started
       link: /openapi-ts/get-started
     - theme: alt
-      text: View on GitHub
-      link: https://github.com/hey-api/openapi-ts
+      text: View Demo
+      link: https://stackblitz.com/edit/hey-api-example?file=openapi-ts.config.ts,src%2Fclient%2Fschemas.gen.ts,src%2Fclient%2Fservices.gen.ts,src%2Fclient%2Ftypes.gen.ts
   image:
     src: /logo.png
     alt: logo
@@ -38,7 +38,7 @@ features:
 
 ### Migrating from OpenAPI Typescript Codegen?
 
-Please read our [migration guide](/openapi-ts/migrating#openapi-typescript-codegen).
+Read our [migration guide](/openapi-ts/migrating#openapi-typescript-codegen).
 
 <style>
 :root {
