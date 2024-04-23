@@ -2,7 +2,8 @@
 **/node_modules
 **/templates
 **/dist
-**/.vitepress
+**/.vitepress/cache
+**/.vitepress/dist
 **/test/e2e
 
 **/CHANGELOG.md

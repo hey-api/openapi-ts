@@ -21,6 +21,7 @@ type PackageDependencies = {
 
 // Dependencies used in each client. User must have installed these to use the generated client
 const clientDependencies: Record<Config['client'], string[]> = {
+  '@hey-api': [],
   angular: ['@angular/common', '@angular/core', 'rxjs'],
   axios: ['axios'],
   fetch: [],
@@ -92,14 +93,21 @@ const processOutput = (dependencies: Dependencies) => {
 };
 
 const inferClient = (dependencies: Dependencies): Config['client'] => {
-  if (Object.keys(dependencies).some((d) => d.startsWith('@angular'))) {
-    return 'angular';
+  if (
+    dependencies['@hey-api/client-axios'] ||
+    dependencies['@hey-api/client-fetch'] ||
+    dependencies['@hey-api/client-nextjs']
+  ) {
+    return '@hey-api';
   }
   if (dependencies.axios) {
     return 'axios';
   }
   if (dependencies['node-fetch']) {
     return 'node';
+  }
+  if (Object.keys(dependencies).some((d) => d.startsWith('@angular'))) {
+    return 'angular';
   }
   return 'fetch';
 };
@@ -289,7 +297,7 @@ const initConfig = async (
     debug,
     dryRun,
     enums,
-    exportCore,
+    exportCore: client === '@hey-api' ? false : exportCore,
     format,
     input,
     lint,

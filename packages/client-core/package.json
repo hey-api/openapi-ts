@@ -1,0 +1,37 @@
+{
+  "name": "@hey-api/client-core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Core utilities for type-safe openapi-ts clients",
+  "homepage": "https://heyapi.vercel.app/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hey-api/openapi-ts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hey-api/openapi-ts/issues"
+  },
+  "license": "MIT",
+  "main": "./dist/index.cjs",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build-bundle": "rollup --config rollup.config.ts --configPlugin typescript",
+    "build-types-check": "tsc --project tsconfig.check.json",
+    "build-types-roll": "rollup --config rollup.dts.config.ts --configPlugin typescript && rimraf temp",
+    "build-types-temp": "tsc --emitDeclarationOnly --outDir temp -p src",
+    "build-types": "pnpm build-types-temp && pnpm build-types-roll && pnpm build-types-check",
+    "build": "pnpm clean && pnpm build-bundle && pnpm build-types",
+    "clean": "rimraf dist coverage node_modules/.cache",
+    "dev": "rimraf dist && pnpm build-bundle --watch",
+    "prepublishOnly": "pnpm build",
+    "test:coverage": "vitest run --coverage",
+    "test:update": "vitest watch --update",
+    "test:watch": "vitest watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": "^18.0.0 || >=20.0.0"
+  }
+}
