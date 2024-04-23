@@ -9,6 +9,9 @@
     "dev": "vitepress dev",
     "preview": "vitepress preview"
   },
+  "dependencies": {
+    "@stackblitz/sdk": "1.9.0"
+  },
   "devDependencies": {
     "vitepress": "1.1.3"
   }

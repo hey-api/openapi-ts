@@ -21,8 +21,11 @@ export default defineConfig({
       {},
       'window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };',
     ],
-    ['script', { defer: '', src: '/_vercel/insights/script.js' }],
-  ],
+    process.env.NODE_ENV === 'production' && [
+      'script',
+      { defer: '', src: '/_vercel/insights/script.js' },
+    ],
+  ].filter(Boolean),
   lastUpdated: false,
   sitemap: {
     hostname: 'https://heyapi.vercel.app',
