@@ -770,7 +770,7 @@ export type ModelWithNumericEnumUnion = {
     /**
      * Период
      */
-    value?: 1 | 3 | 6 | 12;
+    value?: -10 | -1 | 0 | 1 | 3 | 6 | 12;
 };
 
 /**
