@@ -46,6 +46,7 @@ class Interceptors<T> {
   }
 }
 
+// TODO: remove this export
 export const OpenAPI: OpenAPIConfig<AxiosRequestConfig, AxiosResponse> = {
   BASE: '',
   CREDENTIALS: 'include',
@@ -235,3 +236,60 @@ export const request = <T>(
       reject(error);
     }
   });
+
+interface Config {
+  /**
+   * Base URL...
+   * @default ''
+   */
+  baseUrl?: string;
+  /**
+   * Global??
+   * @default true
+   */
+  global?: boolean;
+}
+
+let globalConfig: Config = {
+  baseUrl: '',
+  global: true,
+};
+
+export const createClient = (config: Config) => {
+  const isGlobal = config.global === undefined || config.global;
+
+  if (isGlobal) {
+    globalConfig = {
+      ...globalConfig,
+      ...config,
+    };
+  }
+
+  const getConfig = () => (isGlobal ? globalConfig : config);
+
+  const request = (options: ApiRequestOptions) => {
+    const config = getConfig();
+    console.log(
+      `send request with ${options.method} method to URL ${options.url} with base ${config.baseUrl}`,
+    );
+  };
+
+  const client = {
+    get: (url: string) =>
+      request({
+        method: 'GET',
+        url,
+      }),
+    getConfig,
+    post: (url: string) =>
+      request({
+        method: 'POST',
+        url,
+      }),
+    request,
+  };
+
+  return client;
+};
+
+export const client = createClient(globalConfig);

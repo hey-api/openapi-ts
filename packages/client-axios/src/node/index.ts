@@ -1,2 +1,2 @@
-export { OpenAPI, request } from '../';
+export { client, createClient, OpenAPI, request } from '../';
 export type { CancelablePromise } from '@hey-api/client-core';
