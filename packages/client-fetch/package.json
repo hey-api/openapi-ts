@@ -26,13 +26,16 @@
     "typescript",
     "vue"
   ],
-  "main": "./dist/index.cjs",
-  "types": "./dist/index.d.ts",
+  "exports": {
+    "import": "./dist/node/index.mjs",
+    "require": "./dist/node/index.cjs",
+    "types": "./dist/node/index.d.ts"
+  },
   "scripts": {
     "build-bundle": "rollup --config rollup.config.ts --configPlugin typescript",
     "build-types-check": "tsc --project tsconfig.check.json",
     "build-types-roll": "rollup --config rollup.dts.config.ts --configPlugin typescript && rimraf temp",
-    "build-types-temp": "tsc --emitDeclarationOnly --outDir temp -p src",
+    "build-types-temp": "tsc --emitDeclarationOnly --outDir temp -p src/node",
     "build-types": "pnpm build-types-temp && pnpm build-types-roll && pnpm build-types-check",
     "build": "pnpm clean && pnpm build-bundle && pnpm build-types",
     "clean": "rimraf dist coverage node_modules/.cache",

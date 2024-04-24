@@ -1,5 +1,5 @@
 {
-  "name": "@example/openapi-ts-axios",
+  "name": "@example/openapi-ts-fetch",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,8 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@hey-api/client-axios": "workspace:*",
-    "axios": "1.6.8",
+    "@hey-api/client-fetch": "workspace:*",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
