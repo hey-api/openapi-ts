@@ -1,6 +1,6 @@
 import './App.css';
 
-import { OpenAPI } from '@hey-api/client-axios';
+import { OpenAPI } from '@hey-api/client-fetch';
 import { useState } from 'react';
 
 import { $Pet } from './client/schemas.gen';
@@ -37,7 +37,7 @@ function App() {
             alt="Hey API logo"
           />
         </a>
-        <h1 className="h1">@hey-api/openapi-ts 🤝 Axios</h1>
+        <h1 className="h1">@hey-api/openapi-ts 🤝 Fetch API</h1>
       </div>
       <div className="flex">
         <button className="button" onClick={onFetchPet}>
