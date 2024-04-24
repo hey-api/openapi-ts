@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "lib": ["ES2020", "DOM"],
+    "stripInternal": true
+  },
+  "exclude": ["../**/__tests__"],
+  "extends": "../../tsconfig.base.json",
+  "include": ["../"]
+}
