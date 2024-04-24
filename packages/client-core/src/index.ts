@@ -7,7 +7,6 @@ import type {
 } from './types';
 
 export { CancelablePromise, CancelError, OnCancel } from './cancelablePromise';
-export type { ApiRequestOptions, ApiResult } from './types';
 
 export class ApiError extends Error {
   public readonly url: string;
@@ -51,7 +50,7 @@ export class Interceptors<T> {
   }
 }
 
-export type OpenAPIConfig = {
+export type OpenAPIConfig<TRequest = any, TResponse = any> = {
   BASE: string;
   CREDENTIALS: 'include' | 'omit' | 'same-origin';
   ENCODE_PATH?: ((path: string) => string) | undefined;
@@ -62,8 +61,8 @@ export type OpenAPIConfig = {
   VERSION: string;
   WITH_CREDENTIALS: boolean;
   interceptors: {
-    request: Interceptors<any>;
-    response: Interceptors<any>;
+    request: Interceptors<TRequest>;
+    response: Interceptors<TResponse>;
   };
 };
 

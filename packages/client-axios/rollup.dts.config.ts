@@ -6,10 +6,10 @@ import { externalDependencies } from './rollup.config';
 export default defineConfig({
   external: externalDependencies,
   input: {
-    index: './temp/index.d.ts',
+    index: './temp/node/index.d.ts',
   },
   output: {
-    dir: './dist',
+    dir: './dist/node',
     format: 'cjs',
   },
   plugins: [dts({ respectExternal: true })],

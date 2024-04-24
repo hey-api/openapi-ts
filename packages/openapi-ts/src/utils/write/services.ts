@@ -288,33 +288,52 @@ export const processServices = async ({
   // Import required packages and core files.
   if (config.client === 'angular') {
     file.addNamedImport('Injectable', '@angular/core');
-    if (config.name === undefined) {
+
+    if (!config.name) {
       file.addNamedImport('HttpClient', '@angular/common/http');
     }
+
     file.addNamedImport({ isTypeOnly: true, name: 'Observable' }, 'rxjs');
   } else {
-    file.addNamedImport(
-      { isTypeOnly: true, name: 'CancelablePromise' },
-      './core/CancelablePromise',
-    );
+    if (config.client.startsWith('@hey-api')) {
+      file.addNamedImport(
+        { isTypeOnly: true, name: 'CancelablePromise' },
+        config.client,
+      );
+    } else {
+      file.addNamedImport(
+        { isTypeOnly: true, name: 'CancelablePromise' },
+        './core/CancelablePromise',
+      );
+    }
   }
+
   if (config.services.response === 'response') {
     file.addNamedImport(
       { isTypeOnly: true, name: 'ApiResult' },
       './core/ApiResult',
     );
   }
+
   if (config.name) {
     file.addNamedImport(
       { isTypeOnly: config.client !== 'angular', name: 'BaseHttpRequest' },
       './core/BaseHttpRequest',
     );
   } else {
-    file.addNamedImport('OpenAPI', './core/OpenAPI');
-    file.addNamedImport(
-      { alias: '__request', name: 'request' },
-      './core/request',
-    );
+    if (config.client.startsWith('@hey-api')) {
+      file.addNamedImport('OpenAPI', config.client);
+      file.addNamedImport(
+        { alias: '__request', name: 'request' },
+        config.client,
+      );
+    } else {
+      file.addNamedImport('OpenAPI', './core/OpenAPI');
+      file.addNamedImport(
+        { alias: '__request', name: 'request' },
+        './core/request',
+      );
+    }
   }
 
   // Import all models required by the services.
