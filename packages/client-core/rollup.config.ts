@@ -20,28 +20,48 @@ export const externalDependencies = [
 ];
 
 function createConfig(isProduction: boolean) {
-  return defineConfig({
-    external: externalDependencies,
-    input: path.resolve(__dirname, 'src/index.ts'),
-    output: {
-      file: path.resolve(__dirname, 'dist/index.cjs'),
-      format: 'cjs',
-    },
-    plugins: [
-      typescript({
-        declaration: false,
-        tsconfig: path.resolve(__dirname, 'src/tsconfig.json'),
-      }),
-      commonjs({
-        sourceMap: false,
-      }),
-      isProduction && terser(),
-    ],
-  });
+  return [
+    defineConfig({
+      external: externalDependencies,
+      input: path.resolve(__dirname, 'src/node/index.ts'),
+      output: {
+        file: path.resolve(__dirname, 'dist/node/index.cjs'),
+        format: 'cjs',
+      },
+      plugins: [
+        typescript({
+          declaration: false,
+          tsconfig: path.resolve(__dirname, 'src/node/tsconfig.json'),
+        }),
+        commonjs({
+          sourceMap: false,
+        }),
+        isProduction && terser(),
+      ],
+    }),
+    defineConfig({
+      external: externalDependencies,
+      input: path.resolve(__dirname, 'src/node/index.ts'),
+      output: {
+        file: path.resolve(__dirname, 'dist/node/index.mjs'),
+        format: 'esm',
+      },
+      plugins: [
+        typescript({
+          declaration: false,
+          tsconfig: path.resolve(__dirname, 'src/node/tsconfig.json'),
+        }),
+        commonjs({
+          sourceMap: false,
+        }),
+        isProduction && terser(),
+      ],
+    }),
+  ];
 }
 
 export default (commandLineArgs: any): RollupOptions[] => {
   const isDev = commandLineArgs.watch;
   const isProduction = !isDev;
-  return defineConfig([createConfig(isProduction)]);
+  return defineConfig(createConfig(isProduction));
 };

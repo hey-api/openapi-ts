@@ -25,6 +25,40 @@ import type {
 } from 'axios';
 import axios from 'axios';
 
+type Middleware<T> = (value: T) => T | Promise<T>;
+
+class Interceptors<T> {
+  _fns: Middleware<T>[];
+
+  constructor() {
+    this._fns = [];
+  }
+
+  eject(fn: Middleware<T>) {
+    const index = this._fns.indexOf(fn);
+    if (index !== -1) {
+      this._fns = [...this._fns.slice(0, index), ...this._fns.slice(index + 1)];
+    }
+  }
+
+  use(fn: Middleware<T>) {
+    this._fns = [...this._fns, fn];
+  }
+}
+
+export const OpenAPI: OpenAPIConfig<AxiosRequestConfig, AxiosResponse> = {
+  BASE: '',
+  CREDENTIALS: 'include',
+  ENCODE_PATH: undefined,
+  HEADERS: undefined,
+  PASSWORD: undefined,
+  TOKEN: undefined,
+  USERNAME: undefined,
+  VERSION: '1.26.0',
+  WITH_CREDENTIALS: false,
+  interceptors: { request: new Interceptors(), response: new Interceptors() },
+};
+
 export const getHeaders = async (
   config: OpenAPIConfig,
   options: ApiRequestOptions,
