@@ -21,6 +21,7 @@
     "client-fetch": "pnpm --filter @hey-api/client-fetch --",
     "client-nextjs": "pnpm --filter @hey-api/client-nextjs --",
     "docs": "pnpm --filter @hey-api/docs --",
+    "example": "pnpm --filter @examples/openapi-ts-axios --",
     "format": "prettier --write .",
     "lint:fix": "prettier --check . && eslint . --fix",
     "lint": "prettier --check . && eslint .",

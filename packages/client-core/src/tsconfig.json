@@ -1,9 +1,0 @@
-{
-  "compilerOptions": {
-    "lib": ["ESNext"],
-    "stripInternal": true
-  },
-  "exclude": ["./**/__tests__"],
-  "extends": "../tsconfig.base.json",
-  "include": ["./"]
-}

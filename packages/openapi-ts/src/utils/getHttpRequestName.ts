@@ -6,8 +6,6 @@ import type { Config } from '../types/config';
  */
 export const getHttpRequestName = (client: Config['client']): string => {
   switch (client) {
-    case '@hey-api':
-      return '';
     case 'angular':
       return 'AngularHttpRequest';
     case 'axios':
@@ -18,5 +16,7 @@ export const getHttpRequestName = (client: Config['client']): string => {
       return 'NodeHttpRequest';
     case 'xhr':
       return 'XHRHttpRequest';
+    default:
+      return '';
   }
 };
