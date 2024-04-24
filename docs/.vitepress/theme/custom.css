@@ -20,7 +20,7 @@ html.dark {
   border-radius: 1em;
   color: var(--vp-button-brand-text);
   font-size: 0.6em;
-  padding: 0.2em 0.4em;
+  padding: 0.05em 0.4em 0.2em;
   position: relative;
   text-transform: lowercase;
   top: -1em;

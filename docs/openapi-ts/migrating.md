@@ -40,13 +40,17 @@ You don't have to update imports from `core` directory. These will be addressed 
 
 This config option is deprecated and will be removed.
 
+### Deprecated `base`
+
+This config option is deprecated and will be removed in favor of [clients](./clients).
+
 ### Deprecated `request`
 
-This config option is deprecated and will be removed.
+This config option is deprecated and will be removed in favor of [clients](./clients).
 
 ### Deprecated `name`
 
-This config option is deprecated and will be removed.
+This config option is deprecated and will be removed in favor of [clients](./clients).
 
 ## v0.42.0
 
