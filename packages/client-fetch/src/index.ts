@@ -9,13 +9,16 @@ import {
   CancelablePromise,
   catchErrorCodes,
   getFormData,
-  getUrl,
+  getUrl as _getUrl,
   isBlob,
   isFormData,
   isString,
   isStringWithValue,
   resolve,
 } from '@hey-api/client-core';
+
+import type { Config, Req } from './types';
+import { createQuerySerializer, getUrl, mergeHeaders } from './utils';
 
 type Middleware<T> = (value: T) => T | Promise<T>;
 
@@ -51,7 +54,7 @@ export const OpenAPI: OpenAPIConfig<RequestInit, Response> = {
   interceptors: { request: new Interceptors(), response: new Interceptors() },
 };
 
-export const getHeaders = async (
+const getHeaders = async (
   config: OpenAPIConfig,
   options: ApiRequestOptions,
 ): Promise<Headers> => {
@@ -100,7 +103,7 @@ export const getHeaders = async (
   return new Headers(headers);
 };
 
-export const getRequestBody = (options: ApiRequestOptions): unknown => {
+const getRequestBody = (options: ApiRequestOptions): unknown => {
   if (options.body !== undefined) {
     if (
       options.mediaType?.includes('application/json') ||
@@ -120,7 +123,7 @@ export const getRequestBody = (options: ApiRequestOptions): unknown => {
   return undefined;
 };
 
-export const sendRequest = async (
+const sendRequest = async (
   config: OpenAPIConfig,
   options: ApiRequestOptions,
   url: string,
@@ -151,7 +154,7 @@ export const sendRequest = async (
   return await fetch(url, request);
 };
 
-export const getResponseHeader = (
+const getResponseHeader = (
   response: Response,
   responseHeader?: string,
 ): string | undefined => {
@@ -164,7 +167,7 @@ export const getResponseHeader = (
   return undefined;
 };
 
-export const getResponseBody = async (response: Response): Promise<unknown> => {
+const getResponseBody = async (response: Response): Promise<unknown> => {
   if (response.status !== 204) {
     try {
       const contentType = response.headers.get('Content-Type');
@@ -210,7 +213,7 @@ export const request = <T>(
 ): CancelablePromise<T> =>
   new CancelablePromise(async (resolve, reject, onCancel) => {
     try {
-      const url = getUrl(config, options);
+      const url = _getUrl(config, options);
       const formData = getFormData(options);
       const body = getRequestBody(options);
       const headers = await getHeaders(config, options);
@@ -252,3 +255,111 @@ export const request = <T>(
       reject(error);
     }
   });
+
+const defaultBodySerializer = <T>(body: T) => JSON.stringify(body);
+
+const defaultQuerySerializer = createQuerySerializer({
+  allowReserved: false,
+  array: {
+    explode: true,
+    style: 'form',
+  },
+  object: {
+    explode: true,
+    style: 'deepObject',
+  },
+});
+
+const defaultHeaders = {
+  'Content-Type': 'application/json',
+};
+
+const defaultConfig: Config = {
+  baseUrl: '',
+  bodySerializer: defaultBodySerializer,
+  fetch: globalThis.fetch,
+  global: true,
+  headers: defaultHeaders,
+  querySerializer: defaultQuerySerializer,
+};
+
+let globalConfig: Config = { ...defaultConfig };
+
+type Method = Omit<Req, 'method'>;
+
+export const createClient = (config: Partial<Config>) => {
+  const _config = { ...defaultConfig, ...config };
+
+  if (_config.baseUrl.endsWith('/')) {
+    _config.baseUrl = _config.baseUrl.substring(0, _config.baseUrl.length - 1);
+  }
+  _config.headers = mergeHeaders(defaultHeaders, _config.headers);
+
+  if (_config.global) {
+    globalConfig = { ..._config };
+  }
+
+  const getConfig = () => (_config.global ? globalConfig : _config);
+
+  const interceptors = {
+    request: new Interceptors(),
+    response: new Interceptors(),
+  };
+
+  const request = async (options: Req) => {
+    const config = getConfig();
+
+    const qs = options.querySerializer ?? config.querySerializer;
+
+    const url = getUrl({
+      baseUrl: config.baseUrl,
+      path: options.path,
+      query: options.query,
+      querySerializer:
+        typeof qs === 'function' ? qs : createQuerySerializer(qs),
+      url: options.url,
+    });
+
+    const requestInit: Omit<RequestInit, 'headers'> & {
+      headers: ReturnType<typeof mergeHeaders>;
+    } = {
+      redirect: 'follow',
+      ...config,
+      ...options,
+      headers: mergeHeaders(config.headers, options.headers),
+    };
+    if (requestInit.body) {
+      requestInit.body = config.bodySerializer(requestInit.body);
+    }
+    // remove `Content-Type` if serialized body is FormData; browser will correctly set Content-Type & boundary expression
+    if (requestInit.body instanceof FormData) {
+      requestInit.headers.delete('Content-Type');
+    }
+
+    const request = new Request(url, requestInit);
+
+    // interceptors.request._fns
+
+    const response = await config.fetch(request);
+
+    console.log(response);
+  };
+
+  const client = {
+    connect: (options: Method) => request({ ...options, method: 'CONNECT' }),
+    delete: (options: Method) => request({ ...options, method: 'DELETE' }),
+    get: (options: Method) => request({ ...options, method: 'GET' }),
+    getConfig,
+    head: (options: Method) => request({ ...options, method: 'HEAD' }),
+    interceptors,
+    options: (options: Method) => request({ ...options, method: 'OPTIONS' }),
+    patch: (options: Method) => request({ ...options, method: 'PATCH' }),
+    post: (options: Method) => request({ ...options, method: 'POST' }),
+    put: (options: Method) => request({ ...options, method: 'PUT' }),
+    request,
+    trace: (options: Method) => request({ ...options, method: 'TRACE' }),
+  };
+  return client;
+};
+
+export const client = createClient(globalConfig);
