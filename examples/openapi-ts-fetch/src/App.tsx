@@ -1,12 +1,16 @@
 import './App.css';
 
-import { OpenAPI } from '@hey-api/client-fetch';
+import { client, createClient, OpenAPI } from '@hey-api/client-fetch';
 import { useState } from 'react';
 
 import { $Pet } from './client/schemas.gen';
 import { PetService } from './client/services.gen';
 
-OpenAPI.BASE = 'https://petstore3.swagger.io/api/v3';
+createClient({
+  baseUrl: 'https://petstore3.swagger.io/api/v3',
+});
+
+OpenAPI.BASE = client.getConfig().baseUrl;
 
 // OpenAPI.interceptors.response.use((response) => {
 //   if (response.status === 200) {
@@ -20,11 +24,21 @@ function App() {
     useState<Awaited<ReturnType<typeof PetService.getPetById>>>();
 
   const onFetchPet = async () => {
-    const pet = await PetService.getPetById({
-      // random id 1-10
-      petId: Math.floor(Math.random() * (10 - 1 + 1) + 1),
-    });
-    setPet(pet);
+    // random id 1-10
+    const petId = Math.floor(Math.random() * (10 - 1 + 1) + 1);
+    try {
+      const fetchPet = await client.get({
+        path: {
+          petId,
+        },
+        url: 'pet/{petId}',
+      });
+      const pet = await PetService.getPetById({ petId });
+      console.log(fetchPet, pet);
+      setPet(pet);
+    } catch (error) {
+      // ..
+    }
   };
 
   return (
