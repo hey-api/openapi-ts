@@ -13,7 +13,6 @@ describe('registerHandlebarHelpers', () => {
       client: 'fetch',
       debug: false,
       dryRun: false,
-      enums: 'javascript',
       exportCore: true,
       format: 'prettier',
       input: '',
@@ -21,7 +20,9 @@ describe('registerHandlebarHelpers', () => {
       output: '',
       schemas: {},
       services: {},
-      types: {},
+      types: {
+        enums: 'javascript',
+      },
       useOptions: false,
     });
     registerHandlebarHelpers();
@@ -40,7 +41,6 @@ describe('registerHandlebarTemplates', () => {
       client: 'fetch',
       debug: false,
       dryRun: false,
-      enums: 'javascript',
       exportCore: true,
       format: 'prettier',
       input: '',
@@ -48,7 +48,9 @@ describe('registerHandlebarTemplates', () => {
       output: '',
       schemas: {},
       services: {},
-      types: {},
+      types: {
+        enums: 'javascript',
+      },
       useOptions: false,
     });
     const templates = registerHandlebarTemplates();

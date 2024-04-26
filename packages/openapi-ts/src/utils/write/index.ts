@@ -43,9 +43,6 @@ export const processIndex = async ({
     );
   }
 
-  if (files.enums && !files.enums.isEmpty()) {
-    files.index.add(compiler.export.all(`./${files.enums.getName(false)}`));
-  }
   if (files.schemas && !files.schemas.isEmpty()) {
     files.index.add(compiler.export.all(`./${files.schemas.getName(false)}`));
   }

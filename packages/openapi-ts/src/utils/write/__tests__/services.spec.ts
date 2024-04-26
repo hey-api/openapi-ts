@@ -15,7 +15,6 @@ describe('processServices', () => {
       client: 'fetch',
       debug: false,
       dryRun: false,
-      enums: false,
       exportCore: true,
       format: false,
       input: '',

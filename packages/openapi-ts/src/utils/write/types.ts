@@ -16,7 +16,7 @@ import { transformTypeName } from '../transform';
 import { serviceExportedNamespace } from './services';
 import { toType } from './type';
 
-type OnNode = (node: Node, type?: 'enum') => void;
+type OnNode = (node: Node) => void;
 
 const emptyModel: Model = {
   $refs: [],
@@ -42,12 +42,7 @@ const processComposition = (client: Client, model: Model, onNode: OnNode) => {
   model.enums.forEach((enumerator) => processEnum(client, enumerator, onNode));
 };
 
-const processEnum = (
-  client: Client,
-  model: Model,
-  onNode: OnNode,
-  exportType = false,
-) => {
+const processEnum = (client: Client, model: Model, onNode: OnNode) => {
   const config = getConfig();
 
   const properties: Record<string | number, unknown> = {};
@@ -73,7 +68,7 @@ const processEnum = (
     model.deprecated && '@deprecated',
   ];
 
-  if (exportType) {
+  if (config.types.enums !== 'typescript') {
     const node = compiler.typedef.alias(
       ensureValidTypeScriptJavaScriptIdentifier(model.name),
       enumUnionType(model.enum),
@@ -82,17 +77,17 @@ const processEnum = (
     onNode(node);
   }
 
-  if (config.enums === 'typescript') {
+  if (config.types.enums === 'typescript') {
     const node = compiler.types.enum({
       comments,
       leadingComment: comment,
       name,
       obj: properties,
     });
-    onNode(node, 'enum');
+    onNode(node);
   }
 
-  if (config.enums === 'javascript') {
+  if (config.types.enums === 'javascript') {
     const expression = compiler.types.object({
       comments,
       multiLine: true,
@@ -101,7 +96,7 @@ const processEnum = (
     });
     const node = compiler.export.asConst(name, expression);
     addLeadingJSDocComment(node, comment);
-    onNode(node, 'enum');
+    onNode(node);
   }
 };
 
@@ -126,7 +121,7 @@ const processModel = (client: Client, model: Model, onNode: OnNode) => {
     case 'interface':
       return processComposition(client, model, onNode);
     case 'enum':
-      return processEnum(client, model, onNode, true);
+      return processEnum(client, model, onNode);
     default:
       return processType(client, model, onNode);
   }
@@ -254,7 +249,7 @@ const processServiceTypes = (services: Service[], onNode: OnNode) => {
   onNode(node);
 };
 
-export const processTypesAndEnums = async ({
+export const processTypes = async ({
   client,
   files,
 }: {
@@ -262,12 +257,8 @@ export const processTypesAndEnums = async ({
   files: Record<string, TypeScriptFile>;
 }): Promise<void> => {
   for (const model of client.models) {
-    processModel(client, model, (node, type) => {
-      if (type === 'enum') {
-        files.enums?.add(node);
-      } else {
-        files.types?.add(node);
-      }
+    processModel(client, model, (node) => {
+      files.types?.add(node);
     });
   }
 
