@@ -9,7 +9,6 @@ describe('getServices', () => {
       client: 'fetch',
       debug: false,
       dryRun: true,
-      enums: false,
       exportCore: true,
       format: false,
       input: '',

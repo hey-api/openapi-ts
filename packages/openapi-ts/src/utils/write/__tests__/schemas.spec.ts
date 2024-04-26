@@ -16,7 +16,6 @@ describe('processSchemas', () => {
       client: 'fetch',
       debug: false,
       dryRun: false,
-      enums: 'javascript',
       exportCore: true,
       format: false,
       input: '',
@@ -25,7 +24,9 @@ describe('processSchemas', () => {
       output: '',
       schemas: {},
       services: {},
-      types: {},
+      types: {
+        enums: 'javascript',
+      },
       useOptions: true,
     });
 

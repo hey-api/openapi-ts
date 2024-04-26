@@ -1,4 +1,3 @@
-
 import type { ApiRequestOptions } from './ApiRequestOptions';
 
 type Headers = Record<string, string>;
