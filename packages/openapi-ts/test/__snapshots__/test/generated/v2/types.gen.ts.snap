@@ -244,6 +244,16 @@ export type ModelWithEnum = {
 };
 
 /**
+ * This is a simple enum with strings
+ */
+export type test = 'Success' | 'Warning' | 'Error' | 'ØÆÅ字符串';
+
+/**
+ * These are the HTTP error code enums
+ */
+export type statusCode = '100' | '200 FOO' | '300 FOO_BAR' | '400 foo-bar' | '500 foo.bar' | '600 foo&bar';
+
+/**
  * This is a model with one enum
  */
 export type ModelWithEnumFromDescription = {

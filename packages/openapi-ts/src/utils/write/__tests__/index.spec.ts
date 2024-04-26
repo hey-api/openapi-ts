@@ -15,7 +15,6 @@ describe('processIndex', () => {
       client: 'fetch',
       debug: false,
       dryRun: false,
-      enums: 'javascript',
       exportCore: true,
       format: false,
       input: '',
@@ -23,15 +22,13 @@ describe('processIndex', () => {
       output: '',
       schemas: {},
       services: {},
-      types: {},
+      types: {
+        enums: 'javascript',
+      },
       useOptions: true,
     });
 
     const files: Parameters<typeof processIndex>[0]['files'] = {
-      enums: new TypeScriptFile({
-        dir: '/',
-        name: 'enums.ts',
-      }),
       index: new TypeScriptFile({
         dir: '/',
         name: 'index.ts',

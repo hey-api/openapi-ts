@@ -9,9 +9,9 @@ import type { Templates } from '../handlebars';
 import { writeClientClass } from './class';
 import { writeCore } from './core';
 import { processIndex } from './index';
-import { processTypesAndEnums } from './models';
 import { processSchemas } from './schemas';
 import { processServices } from './services';
+import { processTypes } from './types';
 
 /**
  * Write our OpenAPI client, using the given templates at the given output
@@ -50,12 +50,6 @@ export const writeClient = async (
       name: 'index.ts',
     }),
   };
-  if (config.enums) {
-    files.enums = new TypeScriptFile({
-      dir: config.output,
-      name: 'enums.ts',
-    });
-  }
   if (config.schemas.export) {
     files.schemas = new TypeScriptFile({
       dir: config.output,
@@ -76,7 +70,7 @@ export const writeClient = async (
   }
 
   await processSchemas({ file: files.schemas, openApi });
-  await processTypesAndEnums({ client, files });
+  await processTypes({ client, files });
   await processServices({ client, files });
 
   // deprecated files
@@ -85,7 +79,6 @@ export const writeClient = async (
 
   await processIndex({ files });
 
-  files.enums?.write('\n\n');
   files.schemas?.write('\n\n');
   files.services?.write('\n\n');
   files.types?.write('\n\n');

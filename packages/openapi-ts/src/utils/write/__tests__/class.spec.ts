@@ -15,7 +15,6 @@ describe('writeClientClass', () => {
       client: 'fetch',
       debug: false,
       dryRun: false,
-      enums: 'javascript',
       exportCore: true,
       format: false,
       input: '',
@@ -24,7 +23,9 @@ describe('writeClientClass', () => {
       output: '',
       schemas: {},
       services: {},
-      types: {},
+      types: {
+        enums: 'javascript',
+      },
       useOptions: true,
     });
 
