@@ -49,7 +49,8 @@ export const enumName = (client: Client, name?: string) => {
     /[-_]([a-z])/gi,
     ($0, $1: string) => $1.toLocaleUpperCase(),
   );
-  const result = `${escapedName.charAt(0).toLocaleUpperCase() + escapedName.slice(1)}Enum`;
+  const result =
+    escapedName.charAt(0).toLocaleUpperCase() + escapedName.slice(1);
   if (client.enumNames.includes(result)) {
     return null;
   }
