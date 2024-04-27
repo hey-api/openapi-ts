@@ -170,8 +170,9 @@ export type DictionaryWithString = {
 };
 
 export type DictionaryWithPropertiesAndAdditionalProperties = {
-    foo?: string;
-    [key: string]: (string) | undefined;
+    foo?: number;
+    bar?: boolean;
+    [key: string]: (string | number | boolean) | undefined;
 };
 
 /**
@@ -677,7 +678,7 @@ export type ModelWithAdditionalPropertiesEqTrue = {
      * This is a simple string property
      */
     prop?: string;
-    [key: string]: unknown;
+    [key: string]: unknown | string;
 };
 
 export type NestedAnyOfArraysNullable = {
