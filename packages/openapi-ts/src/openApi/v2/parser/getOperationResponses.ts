@@ -31,7 +31,7 @@ export const getOperationResponses = (
     }
   }
 
-  // Sort the responses to 2XX success codes come before 4XX and 5XX error codes.
+  // Sort the responses to 2xx success codes come before 4xx and 5xx error codes.
   return operationResponses.sort((a, b): number =>
     a.code < b.code ? -1 : a.code > b.code ? 1 : 0,
   );

@@ -11,10 +11,10 @@ const main = async () => {
       export: false,
     },
     services: {
-      export: false,
+      // export: false,
     },
     types: {
-      include: '^DictionaryWithPropertiesAndAdditionalProperties',
+      // include: '^DictionaryWithPropertiesAndAdditionalProperties',
     },
   };
 

@@ -839,6 +839,436 @@ export type SimpleParameter = string;
  */
 export type x_Foo_Bar = string;
 
+export type DefaultPostServiceWithEmptyTagData = {
+    requestBody: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
+};
+
+export type DefaultPostServiceWithEmptyTagResponse = ModelWithReadOnlyAndWriteOnly;
+
+export type SimpleApiVversionOdataControllerCountResponse = Model_From_Zendesk;
+
+export type ParametersDeleteFooData = {
+    /**
+     * bar in method
+     */
+    bar: string;
+    /**
+     * foo in method
+     */
+    foo: string;
+};
+
+export type ParametersCallWithParametersData = {
+    fooAllOfEnum: ModelWithNestedArrayEnumsDataFoo;
+    fooRefEnum?: ModelWithNestedArrayEnumsDataFoo;
+    /**
+     * This is the parameter that goes into the cookie
+     */
+    parameterCookie: string | null;
+    /**
+     * This is the parameter that goes into the form data
+     */
+    parameterForm: string | null;
+    /**
+     * This is the parameter that goes into the header
+     */
+    parameterHeader: string | null;
+    /**
+     * This is the parameter that goes into the path
+     */
+    parameterPath: string | null;
+    /**
+     * This is the parameter that goes into the query params
+     */
+    parameterQuery: string | null;
+    /**
+     * This is the parameter that goes into the body
+     */
+    requestBody: ModelWithString | null;
+};
+
+export type ParametersCallWithWeirdParameterNamesData = {
+    /**
+     * This is the parameter with a reserved keyword
+     */
+    _default?: string;
+    /**
+     * This is the parameter that goes into the cookie
+     */
+    parameterCookie: string | null;
+    /**
+     * This is the parameter that goes into the request form data
+     */
+    parameterForm: string | null;
+    /**
+     * This is the parameter that goes into the request header
+     */
+    parameterHeader: string | null;
+    /**
+     * This is the parameter that goes into the path
+     */
+    parameterPath1?: string;
+    /**
+     * This is the parameter that goes into the path
+     */
+    parameterPath2?: string;
+    /**
+     * This is the parameter that goes into the path
+     */
+    parameterPath3?: string;
+    /**
+     * This is the parameter that goes into the request query params
+     */
+    parameterQuery: string | null;
+    /**
+     * This is the parameter that goes into the body
+     */
+    requestBody: ModelWithString | null;
+};
+
+export type ParametersGetCallWithOptionalParamData = {
+    /**
+     * This is an optional parameter
+     */
+    parameter?: string;
+    /**
+     * This is a required parameter
+     */
+    requestBody: ModelWithOneOfEnum;
+};
+
+export type ParametersPostCallWithOptionalParamData = {
+    /**
+     * This is a required parameter
+     */
+    parameter: Pageable;
+    /**
+     * This is an optional parameter
+     */
+    requestBody?: ModelWithString;
+};
+
+export type DescriptionsCallWithDescriptionsData = {
+    /**
+     * Testing backticks in string: `backticks` and ```multiple backticks``` should work
+     */
+    parameterWithBackticks?: unknown;
+    /**
+     * Testing multiline comments in string: First line
+     * Second line
+     *
+     * Fourth line
+     */
+    parameterWithBreaks?: unknown;
+    /**
+     * Testing expression placeholders in string: ${expression} should work
+     */
+    parameterWithExpressionPlaceholders?: unknown;
+    /**
+     * Testing quotes in string: 'single quote''' and "double quotes""" should work
+     */
+    parameterWithQuotes?: unknown;
+    /**
+     * Testing reserved characters in string: * inline * and ** inline ** should work
+     */
+    parameterWithReservedCharacters?: unknown;
+    /**
+     * Testing slashes in string: \backwards\\\ and /forwards/// should work
+     */
+    parameterWithSlashes?: unknown;
+};
+
+export type DeprecatedDeprecatedCallData = {
+    /**
+     * This parameter is deprecated
+     * @deprecated
+     */
+    parameter: DeprecatedModel | null;
+};
+
+export type RequestBodyPostApiRequestBodyData = {
+    /**
+     * A reusable request body
+     */
+    foo?: ModelWithString;
+    /**
+     * This is a reusable parameter
+     */
+    parameter?: string;
+};
+
+export type FormDataPostApiFormDataData = {
+    /**
+     * A reusable request body
+     */
+    formData?: ModelWithString;
+    /**
+     * This is a reusable parameter
+     */
+    parameter?: string;
+};
+
+export type DefaultsCallWithDefaultParametersData = {
+    /**
+     * This is a simple boolean with default value
+     */
+    parameterBoolean?: boolean | null;
+    /**
+     * This is a simple enum with default value
+     */
+    parameterEnum?: 'Success' | 'Warning' | 'Error';
+    /**
+     * This is a simple model with default value
+     */
+    parameterModel?: ModelWithString | null;
+    /**
+     * This is a simple number with default value
+     */
+    parameterNumber?: number | null;
+    /**
+     * This is a simple string with default value
+     */
+    parameterString?: string | null;
+};
+
+export type DefaultsCallWithDefaultOptionalParametersData = {
+    /**
+     * This is a simple boolean that is optional with default value
+     */
+    parameterBoolean?: boolean;
+    /**
+     * This is a simple enum that is optional with default value
+     */
+    parameterEnum?: 'Success' | 'Warning' | 'Error';
+    /**
+     * This is a simple model that is optional with default value
+     */
+    parameterModel?: ModelWithString;
+    /**
+     * This is a simple number that is optional with default value
+     */
+    parameterNumber?: number;
+    /**
+     * This is a simple string that is optional with default value
+     */
+    parameterString?: string;
+};
+
+export type DefaultsCallToTestOrderOfParamsData = {
+    /**
+     * This is a optional string with default
+     */
+    parameterOptionalStringWithDefault?: string;
+    /**
+     * This is a optional string with empty default
+     */
+    parameterOptionalStringWithEmptyDefault?: string;
+    /**
+     * This is a optional string with no default
+     */
+    parameterOptionalStringWithNoDefault?: string;
+    /**
+     * This is a string that can be null with default
+     */
+    parameterStringNullableWithDefault?: string | null;
+    /**
+     * This is a string that can be null with no default
+     */
+    parameterStringNullableWithNoDefault?: string | null;
+    /**
+     * This is a string with default
+     */
+    parameterStringWithDefault: string;
+    /**
+     * This is a string with empty default
+     */
+    parameterStringWithEmptyDefault: string;
+    /**
+     * This is a string with no default
+     */
+    parameterStringWithNoDefault: string;
+};
+
+export type NoContentCallWithNoContentResponseResponse = void;
+
+export type NoContentCallWithResponseAndNoContentResponseResponse = number | void;
+
+export type ResponseCallWithResponseAndNoContentResponseResponse = number | void;
+
+export type ResponseCallWithResponseResponse = ModelWithString;
+
+export type ResponseCallWithDuplicateResponsesResponse = ModelWithString;
+
+export type ResponseCallWithResponsesResponse = {
+    readonly '@namespace.string'?: string;
+    readonly '@namespace.integer'?: number;
+    readonly value?: Array<ModelWithString>;
+} | ModelThatExtends | ModelThatExtendsExtends | ModelWithString;
+
+export type MultipleTags1DummyAResponse = void;
+
+export type MultipleTags1DummyBResponse = void;
+
+export type MultipleTags2DummyAResponse = void;
+
+export type MultipleTags2DummyBResponse = void;
+
+export type MultipleTags3DummyBResponse = void;
+
+export type CollectionFormatCollectionFormatData = {
+    /**
+     * This is an array parameter that is sent as csv format (comma-separated values)
+     */
+    parameterArrayCsv: Array<(string)> | null;
+    /**
+     * This is an array parameter that is sent as multi format (multiple parameter instances)
+     */
+    parameterArrayMulti: Array<(string)> | null;
+    /**
+     * This is an array parameter that is sent as pipes format (pipe-separated values)
+     */
+    parameterArrayPipes: Array<(string)> | null;
+    /**
+     * This is an array parameter that is sent as ssv format (space-separated values)
+     */
+    parameterArraySsv: Array<(string)> | null;
+    /**
+     * This is an array parameter that is sent as tsv format (tab-separated values)
+     */
+    parameterArrayTsv: Array<(string)> | null;
+};
+
+export type TypesTypesData = {
+    /**
+     * This is a number parameter
+     */
+    id?: number;
+    /**
+     * This is an array parameter
+     */
+    parameterArray: Array<(string)> | null;
+    /**
+     * This is a boolean parameter
+     */
+    parameterBoolean: boolean | null;
+    /**
+     * This is a dictionary parameter
+     */
+    parameterDictionary: {
+        [key: string]: unknown;
+    } | null;
+    /**
+     * This is an enum parameter
+     */
+    parameterEnum: 'Success' | 'Warning' | 'Error' | null;
+    /**
+     * This is a number parameter
+     */
+    parameterNumber: number;
+    /**
+     * This is an object parameter
+     */
+    parameterObject: {
+        [key: string]: unknown;
+    } | null;
+    /**
+     * This is a string parameter
+     */
+    parameterString: string | null;
+};
+
+export type TypesTypesResponse = number | string | boolean | {
+    [key: string]: unknown;
+};
+
+export type UploadUploadFileData = {
+    /**
+     * Supply a file reference for upload
+     */
+    file: (Blob | File);
+};
+
+export type UploadUploadFileResponse = boolean;
+
+export type FileResponseFileResponseData = {
+    id: string;
+};
+
+export type FileResponseFileResponseResponse = (Blob | File);
+
+export type ComplexComplexTypesData = {
+    /**
+     * Parameter containing object
+     */
+    parameterObject: {
+        first?: {
+            second?: {
+                third?: string;
+            };
+        };
+    };
+    /**
+     * Parameter containing reference
+     */
+    parameterReference: ModelWithString;
+};
+
+export type ComplexComplexTypesResponse = Array<ModelWithString>;
+
+export type ComplexComplexParamsData = {
+    id: number;
+    requestBody?: {
+        readonly key: string | null;
+        name: string | null;
+        enabled?: boolean;
+        readonly type: 'Monkey' | 'Horse' | 'Bird';
+        listOfModels?: Array<ModelWithString> | null;
+        listOfStrings?: Array<(string)> | null;
+        parameters: ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary;
+        readonly user?: {
+            readonly id?: number;
+            readonly name?: string | null;
+        };
+    };
+};
+
+export type ComplexComplexParamsResponse = ModelWithString;
+
+export type MultipartMultipartRequestData = {
+    formData?: {
+        content?: (Blob | File);
+        data?: ModelWithString | null;
+    };
+};
+
+export type MultipartMultipartResponseResponse = {
+    file?: (Blob | File);
+    metadata?: {
+        foo?: string;
+        bar?: string;
+    };
+};
+
+export type HeaderCallWithResultFromHeaderResponse = string;
+
+export type ErrorTestErrorCodeData = {
+    /**
+     * Status code to return
+     */
+    status: number;
+};
+
+export type ErrorTestErrorCodeResponse = unknown;
+
+export type NonAsciiÆøåÆøÅöôêÊNonAsciiæøåÆøÅöôêÊ字符串Data = {
+    /**
+     * Dummy input param
+     */
+    nonAsciiParamæøåÆøÅöôêÊ: number;
+};
+
+export type NonAsciiÆøåÆøÅöôêÊNonAsciiæøåÆøÅöôêÊ字符串Response = Array<NonAsciiStringæøåÆØÅöôêÊ字符串>;
+
 export type $OpenApiTs = {
     '/api/v{api-version}/no-tag': {
         post: {
@@ -846,7 +1276,7 @@ export type $OpenApiTs = {
                 requestBody: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
             };
             res: {
-                200: ModelWithReadOnlyAndWriteOnly;
+                default: ModelWithReadOnlyAndWriteOnly;
             };
         };
     };
@@ -1159,15 +1589,15 @@ export type $OpenApiTs = {
     '/api/v{api-version}/response': {
         get: {
             res: {
-                200: ModelWithString;
+                default: ModelWithString;
             };
         };
         post: {
             res: {
                 /**
-                 * Message for default response
+                 * Message for 201 response
                  */
-                200: ModelWithString;
+                201: ModelWithString;
                 /**
                  * Message for 500 error
                  */
@@ -1185,9 +1615,13 @@ export type $OpenApiTs = {
         put: {
             res: {
                 /**
-                 * Message for default response
+                 * Message for 200 response
                  */
-                200: ModelWithString;
+                200: {
+                    readonly '@namespace.string'?: string;
+                    readonly '@namespace.integer'?: number;
+                    readonly value?: Array<ModelWithString>;
+                };
                 /**
                  * Message for 201 response
                  */
@@ -1196,6 +1630,10 @@ export type $OpenApiTs = {
                  * Message for 202 response
                  */
                 202: ModelThatExtendsExtends;
+                /**
+                 * Message for default response
+                 */
+                default: ModelWithString;
                 /**
                  * Message for 500 error
                  */

@@ -10,12 +10,12 @@ import { getModel } from './getModel';
 export const getOperationResponse = (
   openApi: OpenApi,
   response: OpenApiResponse,
-  responseCode: number,
+  code: number | 'default',
 ): OperationResponse => {
   const operationResponse: OperationResponse = {
     $refs: [],
-    base: responseCode !== 204 ? 'unknown' : 'void',
-    code: responseCode,
+    base: code !== 204 ? 'unknown' : 'void',
+    code,
     description: response.description || null,
     enum: [],
     enums: [],
@@ -30,7 +30,7 @@ export const getOperationResponse = (
     name: '',
     properties: [],
     template: null,
-    type: responseCode !== 204 ? 'unknown' : 'void',
+    type: code !== 204 ? 'unknown' : 'void',
   };
 
   // If this response has a schema, then we need to check two things:

@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { $OpenApiTs } from './types.gen';
+import type { DefaultPostServiceWithEmptyTagData, DefaultPostServiceWithEmptyTagResponse, SimpleApiVversionOdataControllerCountResponse, ParametersDeleteFooData, ParametersCallWithParametersData, ParametersCallWithWeirdParameterNamesData, ParametersGetCallWithOptionalParamData, ParametersPostCallWithOptionalParamData, DescriptionsCallWithDescriptionsData, DeprecatedDeprecatedCallData, RequestBodyPostApiRequestBodyData, FormDataPostApiFormDataData, DefaultsCallWithDefaultParametersData, DefaultsCallWithDefaultOptionalParametersData, DefaultsCallToTestOrderOfParamsData, NoContentCallWithNoContentResponseResponse, NoContentCallWithResponseAndNoContentResponseResponse, ResponseCallWithResponseAndNoContentResponseResponse, ResponseCallWithResponseResponse, ResponseCallWithDuplicateResponsesResponse, ResponseCallWithResponsesResponse, MultipleTags1DummyAResponse, MultipleTags1DummyBResponse, MultipleTags2DummyAResponse, MultipleTags2DummyBResponse, MultipleTags3DummyBResponse, CollectionFormatCollectionFormatData, TypesTypesData, TypesTypesResponse, UploadUploadFileData, UploadUploadFileResponse, FileResponseFileResponseData, FileResponseFileResponseResponse, ComplexComplexTypesData, ComplexComplexTypesResponse, ComplexComplexParamsData, ComplexComplexParamsResponse, MultipartMultipartRequestData, MultipartMultipartResponseResponse, HeaderCallWithResultFromHeaderResponse, ErrorTestErrorCodeData, ErrorTestErrorCodeResponse, NonAsciiÆøåÆøÅöôêÊNonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiÆøåÆøÅöôêÊNonAsciiæøåÆøÅöôêÊ字符串Response } from './types.gen';
 
 export class DefaultService {
     /**
@@ -22,7 +22,7 @@ export class DefaultService {
      * @returns ModelWithReadOnlyAndWriteOnly
      * @throws ApiError
      */
-    public static postServiceWithEmptyTag(data: $OpenApiTs['/api/v{api-version}/no-tag']['post']['req']): CancelablePromise<$OpenApiTs['/api/v{api-version}/no-tag']['post']['res'][200]> {
+    public static postServiceWithEmptyTag(data: DefaultPostServiceWithEmptyTagData): CancelablePromise<DefaultPostServiceWithEmptyTagResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v{api-version}/no-tag',
@@ -38,7 +38,7 @@ export class SimpleService {
      * @returns Model_From_Zendesk Success
      * @throws ApiError
      */
-    public static apiVVersionOdataControllerCount(): CancelablePromise<$OpenApiTs['/api/v{api-version}/simple/$count']['get']['res'][200]> {
+    public static apiVVersionOdataControllerCount(): CancelablePromise<SimpleApiVversionOdataControllerCountResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/simple/$count'
@@ -124,7 +124,7 @@ export class ParametersService {
      * @param data.bar bar in method
      * @throws ApiError
      */
-    public static deleteFoo(data: $OpenApiTs['/api/v{api-version}/foo/{foo}/bar/{bar}']['delete']['req']): CancelablePromise<void> {
+    public static deleteFoo(data: ParametersDeleteFooData): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/v{api-version}/foo/{foo}/bar/{bar}',
@@ -147,7 +147,7 @@ export class ParametersService {
      * @param data.fooRefEnum
      * @throws ApiError
      */
-    public static callWithParameters(data: $OpenApiTs['/api/v{api-version}/parameters/{parameterPath}']['post']['req']): CancelablePromise<void> {
+    public static callWithParameters(data: ParametersCallWithParametersData): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v{api-version}/parameters/{parameterPath}',
@@ -186,7 +186,7 @@ export class ParametersService {
      * @param data._default This is the parameter with a reserved keyword
      * @throws ApiError
      */
-    public static callWithWeirdParameterNames(data: $OpenApiTs['/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}']['post']['req']): CancelablePromise<void> {
+    public static callWithWeirdParameterNames(data: ParametersCallWithWeirdParameterNamesData): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}',
@@ -219,7 +219,7 @@ export class ParametersService {
      * @param data.parameter This is an optional parameter
      * @throws ApiError
      */
-    public static getCallWithOptionalParam(data: $OpenApiTs['/api/v{api-version}/parameters/']['get']['req']): CancelablePromise<void> {
+    public static getCallWithOptionalParam(data: ParametersGetCallWithOptionalParamData): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/parameters/',
@@ -237,7 +237,7 @@ export class ParametersService {
      * @param data.requestBody This is an optional parameter
      * @throws ApiError
      */
-    public static postCallWithOptionalParam(data: $OpenApiTs['/api/v{api-version}/parameters/']['post']['req']): CancelablePromise<void> {
+    public static postCallWithOptionalParam(data: ParametersPostCallWithOptionalParamData): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v{api-version}/parameters/',
@@ -265,7 +265,7 @@ export class DescriptionsService {
      * @param data.parameterWithReservedCharacters Testing reserved characters in string: * inline * and ** inline ** should work
      * @throws ApiError
      */
-    public static callWithDescriptions(data: $OpenApiTs['/api/v{api-version}/descriptions/']['post']['req'] = {}): CancelablePromise<void> {
+    public static callWithDescriptions(data: DescriptionsCallWithDescriptionsData = {}): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v{api-version}/descriptions/',
@@ -289,7 +289,7 @@ export class DeprecatedService {
      * @param data.parameter This parameter is deprecated
      * @throws ApiError
      */
-    public static deprecatedCall(data: $OpenApiTs['/api/v{api-version}/parameters/deprecated']['post']['req']): CancelablePromise<void> {
+    public static deprecatedCall(data: DeprecatedDeprecatedCallData): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v{api-version}/parameters/deprecated',
@@ -308,7 +308,7 @@ export class RequestBodyService {
      * @param data.foo A reusable request body
      * @throws ApiError
      */
-    public static postApiRequestBody(data: $OpenApiTs['/api/v{api-version}/requestBody/']['post']['req'] = {}): CancelablePromise<void> {
+    public static postApiRequestBody(data: RequestBodyPostApiRequestBodyData = {}): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v{api-version}/requestBody/',
@@ -329,7 +329,7 @@ export class FormDataService {
      * @param data.formData A reusable request body
      * @throws ApiError
      */
-    public static postApiFormData(data: $OpenApiTs['/api/v{api-version}/formData/']['post']['req'] = {}): CancelablePromise<void> {
+    public static postApiFormData(data: FormDataPostApiFormDataData = {}): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v{api-version}/formData/',
@@ -353,7 +353,7 @@ export class DefaultsService {
      * @param data.parameterModel This is a simple model with default value
      * @throws ApiError
      */
-    public static callWithDefaultParameters(data: $OpenApiTs['/api/v{api-version}/defaults']['get']['req'] = {}): CancelablePromise<void> {
+    public static callWithDefaultParameters(data: DefaultsCallWithDefaultParametersData = {}): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/defaults',
@@ -376,7 +376,7 @@ export class DefaultsService {
      * @param data.parameterModel This is a simple model that is optional with default value
      * @throws ApiError
      */
-    public static callWithDefaultOptionalParameters(data: $OpenApiTs['/api/v{api-version}/defaults']['post']['req'] = {}): CancelablePromise<void> {
+    public static callWithDefaultOptionalParameters(data: DefaultsCallWithDefaultOptionalParametersData = {}): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v{api-version}/defaults',
@@ -402,7 +402,7 @@ export class DefaultsService {
      * @param data.parameterStringNullableWithDefault This is a string that can be null with default
      * @throws ApiError
      */
-    public static callToTestOrderOfParams(data: $OpenApiTs['/api/v{api-version}/defaults']['put']['req']): CancelablePromise<void> {
+    public static callToTestOrderOfParams(data: DefaultsCallToTestOrderOfParamsData): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/v{api-version}/defaults',
@@ -469,7 +469,7 @@ export class NoContentService {
      * @returns void Success
      * @throws ApiError
      */
-    public static callWithNoContentResponse(): CancelablePromise<$OpenApiTs['/api/v{api-version}/no-content']['get']['res'][204]> {
+    public static callWithNoContentResponse(): CancelablePromise<NoContentCallWithNoContentResponseResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/no-content'
@@ -481,7 +481,7 @@ export class NoContentService {
      * @returns void Success
      * @throws ApiError
      */
-    public static callWithResponseAndNoContentResponse(): CancelablePromise<$OpenApiTs['/api/v{api-version}/multiple-tags/response-and-no-content']['get']['res'][200] | $OpenApiTs['/api/v{api-version}/multiple-tags/response-and-no-content']['get']['res'][204]> {
+    public static callWithResponseAndNoContentResponse(): CancelablePromise<NoContentCallWithResponseAndNoContentResponseResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/response-and-no-content'
@@ -496,7 +496,7 @@ export class ResponseService {
      * @returns void Success
      * @throws ApiError
      */
-    public static callWithResponseAndNoContentResponse(): CancelablePromise<$OpenApiTs['/api/v{api-version}/multiple-tags/response-and-no-content']['get']['res'][200] | $OpenApiTs['/api/v{api-version}/multiple-tags/response-and-no-content']['get']['res'][204]> {
+    public static callWithResponseAndNoContentResponse(): CancelablePromise<ResponseCallWithResponseAndNoContentResponseResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/response-and-no-content'
@@ -507,7 +507,7 @@ export class ResponseService {
      * @returns ModelWithString
      * @throws ApiError
      */
-    public static callWithResponse(): CancelablePromise<$OpenApiTs['/api/v{api-version}/response']['get']['res'][200]> {
+    public static callWithResponse(): CancelablePromise<ResponseCallWithResponseResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/response'
@@ -515,10 +515,10 @@ export class ResponseService {
     }
     
     /**
-     * @returns ModelWithString Message for default response
+     * @returns ModelWithString Message for 201 response
      * @throws ApiError
      */
-    public static callWithDuplicateResponses(): CancelablePromise<$OpenApiTs['/api/v{api-version}/response']['post']['res'][200]> {
+    public static callWithDuplicateResponses(): CancelablePromise<ResponseCallWithDuplicateResponsesResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v{api-version}/response',
@@ -532,12 +532,12 @@ export class ResponseService {
     
     /**
      * @returns unknown Message for 200 response
-     * @returns ModelWithString Message for default response
      * @returns ModelThatExtends Message for 201 response
      * @returns ModelThatExtendsExtends Message for 202 response
+     * @returns ModelWithString Message for default response
      * @throws ApiError
      */
-    public static callWithResponses(): CancelablePromise<$OpenApiTs['/api/v{api-version}/response']['put']['res'][200] | $OpenApiTs['/api/v{api-version}/response']['put']['res'][200] | $OpenApiTs['/api/v{api-version}/response']['put']['res'][201] | $OpenApiTs['/api/v{api-version}/response']['put']['res'][202]> {
+    public static callWithResponses(): CancelablePromise<ResponseCallWithResponsesResponse> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/v{api-version}/response',
@@ -556,7 +556,7 @@ export class MultipleTags1Service {
      * @returns void Success
      * @throws ApiError
      */
-    public static dummyA(): CancelablePromise<$OpenApiTs['/api/v{api-version}/multiple-tags/a']['get']['res'][204]> {
+    public static dummyA(): CancelablePromise<MultipleTags1DummyAResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/a'
@@ -567,7 +567,7 @@ export class MultipleTags1Service {
      * @returns void Success
      * @throws ApiError
      */
-    public static dummyB(): CancelablePromise<$OpenApiTs['/api/v{api-version}/multiple-tags/b']['get']['res'][204]> {
+    public static dummyB(): CancelablePromise<MultipleTags1DummyBResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/b'
@@ -581,7 +581,7 @@ export class MultipleTags2Service {
      * @returns void Success
      * @throws ApiError
      */
-    public static dummyA(): CancelablePromise<$OpenApiTs['/api/v{api-version}/multiple-tags/a']['get']['res'][204]> {
+    public static dummyA(): CancelablePromise<MultipleTags2DummyAResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/a'
@@ -592,7 +592,7 @@ export class MultipleTags2Service {
      * @returns void Success
      * @throws ApiError
      */
-    public static dummyB(): CancelablePromise<$OpenApiTs['/api/v{api-version}/multiple-tags/b']['get']['res'][204]> {
+    public static dummyB(): CancelablePromise<MultipleTags2DummyBResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/b'
@@ -606,7 +606,7 @@ export class MultipleTags3Service {
      * @returns void Success
      * @throws ApiError
      */
-    public static dummyB(): CancelablePromise<$OpenApiTs['/api/v{api-version}/multiple-tags/b']['get']['res'][204]> {
+    public static dummyB(): CancelablePromise<MultipleTags3DummyBResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/b'
@@ -625,7 +625,7 @@ export class CollectionFormatService {
      * @param data.parameterArrayMulti This is an array parameter that is sent as multi format (multiple parameter instances)
      * @throws ApiError
      */
-    public static collectionFormat(data: $OpenApiTs['/api/v{api-version}/collectionFormat']['get']['req']): CancelablePromise<void> {
+    public static collectionFormat(data: CollectionFormatCollectionFormatData): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/collectionFormat',
@@ -658,7 +658,7 @@ export class TypesService {
      * @returns unknown Response is a simple object
      * @throws ApiError
      */
-    public static types(data: $OpenApiTs['/api/v{api-version}/types']['get']['req']): CancelablePromise<$OpenApiTs['/api/v{api-version}/types']['get']['res'][200] | $OpenApiTs['/api/v{api-version}/types']['get']['res'][201] | $OpenApiTs['/api/v{api-version}/types']['get']['res'][202] | $OpenApiTs['/api/v{api-version}/types']['get']['res'][203]> {
+    public static types(data: TypesTypesData): CancelablePromise<TypesTypesResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/types',
@@ -686,7 +686,7 @@ export class UploadService {
      * @returns boolean
      * @throws ApiError
      */
-    public static uploadFile(data: $OpenApiTs['/api/v{api-version}/upload']['post']['req']): CancelablePromise<$OpenApiTs['/api/v{api-version}/upload']['post']['res'][200]> {
+    public static uploadFile(data: UploadUploadFileData): CancelablePromise<UploadUploadFileResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v{api-version}/upload',
@@ -705,7 +705,7 @@ export class FileResponseService {
      * @returns binary Success
      * @throws ApiError
      */
-    public static fileResponse(data: $OpenApiTs['/api/v{api-version}/file/{id}']['get']['req']): CancelablePromise<$OpenApiTs['/api/v{api-version}/file/{id}']['get']['res'][200]> {
+    public static fileResponse(data: FileResponseFileResponseData): CancelablePromise<FileResponseFileResponseResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/file/{id}',
@@ -725,7 +725,7 @@ export class ComplexService {
      * @returns ModelWithString Successful response
      * @throws ApiError
      */
-    public static complexTypes(data: $OpenApiTs['/api/v{api-version}/complex']['get']['req']): CancelablePromise<$OpenApiTs['/api/v{api-version}/complex']['get']['res'][200]> {
+    public static complexTypes(data: ComplexComplexTypesData): CancelablePromise<ComplexComplexTypesResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/complex',
@@ -747,7 +747,7 @@ export class ComplexService {
      * @returns ModelWithString Success
      * @throws ApiError
      */
-    public static complexParams(data: $OpenApiTs['/api/v{api-version}/complex/{id}']['put']['req']): CancelablePromise<$OpenApiTs['/api/v{api-version}/complex/{id}']['put']['res'][200]> {
+    public static complexParams(data: ComplexComplexParamsData): CancelablePromise<ComplexComplexParamsResponse> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/v{api-version}/complex/{id}',
@@ -767,7 +767,7 @@ export class MultipartService {
      * @param data.formData
      * @throws ApiError
      */
-    public static multipartRequest(data: $OpenApiTs['/api/v{api-version}/multipart']['post']['req'] = {}): CancelablePromise<void> {
+    public static multipartRequest(data: MultipartMultipartRequestData = {}): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v{api-version}/multipart',
@@ -780,7 +780,7 @@ export class MultipartService {
      * @returns unknown OK
      * @throws ApiError
      */
-    public static multipartResponse(): CancelablePromise<$OpenApiTs['/api/v{api-version}/multipart']['get']['res'][200]> {
+    public static multipartResponse(): CancelablePromise<MultipartMultipartResponseResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/multipart'
@@ -794,7 +794,7 @@ export class HeaderService {
      * @returns string Successful response
      * @throws ApiError
      */
-    public static callWithResultFromHeader(): CancelablePromise<$OpenApiTs['/api/v{api-version}/header']['post']['res'][200]> {
+    public static callWithResultFromHeader(): CancelablePromise<HeaderCallWithResultFromHeaderResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v{api-version}/header',
@@ -815,7 +815,7 @@ export class ErrorService {
      * @returns unknown Custom message: Successful response
      * @throws ApiError
      */
-    public static testErrorCode(data: $OpenApiTs['/api/v{api-version}/error']['post']['req']): CancelablePromise<$OpenApiTs['/api/v{api-version}/error']['post']['res'][200]> {
+    public static testErrorCode(data: ErrorTestErrorCodeData): CancelablePromise<ErrorTestErrorCodeResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v{api-version}/error',
@@ -840,7 +840,7 @@ export class NonAsciiÆøåÆøÅöôêÊService {
      * @returns NonAsciiStringæøåÆØÅöôêÊ字符串 Successful response
      * @throws ApiError
      */
-    public static nonAsciiæøåÆøÅöôêÊ字符串(data: $OpenApiTs['/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串']['post']['req']): CancelablePromise<$OpenApiTs['/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串']['post']['res'][200]> {
+    public static nonAsciiæøåÆøÅöôêÊ字符串(data: NonAsciiÆøåÆøÅöôêÊNonAsciiæøåÆøÅöôêÊ字符串Data): CancelablePromise<NonAsciiÆøåÆøÅöôêÊNonAsciiæøåÆøÅöôêÊ字符串Response> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
