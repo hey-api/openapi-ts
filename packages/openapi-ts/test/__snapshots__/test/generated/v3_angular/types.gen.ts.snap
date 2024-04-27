@@ -134,7 +134,7 @@ export type ArrayWithArray = Array<Array<ModelWithString>>;
  * This is a simple array with properties
  */
 export type ArrayWithProperties = Array<{
-    foo?: camelCaseCommentWithBreaks;
+    '16x16'?: camelCaseCommentWithBreaks;
     bar?: string;
 }>;
 

@@ -3,9 +3,11 @@ import type { OpenApi } from '../../openApi';
 import { ensureValidTypeScriptJavaScriptIdentifier } from '../../openApi/common/parser/sanitize';
 import { getConfig } from '../config';
 
-const schemaToFormSchema = (schema: unknown): object => {
+const ensureValidSchemaOutput = (schema: unknown): object => {
+  const config = getConfig();
+
   if (Array.isArray(schema)) {
-    return schema.map((item) => schemaToFormSchema(item));
+    return schema.map((item) => ensureValidSchemaOutput(item));
   }
 
   if (typeof schema !== 'object' || schema === null) {
@@ -14,22 +16,24 @@ const schemaToFormSchema = (schema: unknown): object => {
 
   const result = { ...schema };
   Object.entries(result).forEach(([key, value]) => {
-    if (
-      [
-        'description',
-        'x-enum-descriptions',
-        'x-enum-varnames',
-        'x-enumNames',
-      ].includes(key)
-    ) {
-      // @ts-ignore
-      delete result[key];
-      return;
+    if (config.schemas.type === 'form') {
+      if (
+        [
+          'description',
+          'x-enum-descriptions',
+          'x-enum-varnames',
+          'x-enumNames',
+        ].includes(key)
+      ) {
+        // @ts-ignore
+        delete result[key];
+        return;
+      }
     }
 
     if (value && typeof value === 'object') {
       // @ts-ignore
-      result[key] = schemaToFormSchema(value);
+      result[key] = ensureValidSchemaOutput(value);
     }
   });
   return result;
@@ -46,12 +50,9 @@ export const processSchemas = async ({
     return;
   }
 
-  const config = getConfig();
-
   const addSchema = (name: string, schema: object) => {
     const validName = `$${ensureValidTypeScriptJavaScriptIdentifier(name)}`;
-    const obj =
-      config.schemas.type === 'form' ? schemaToFormSchema(schema) : schema;
+    const obj = ensureValidSchemaOutput(schema);
     const expression = compiler.types.object({ obj });
     const statement = compiler.export.asConst(validName, expression);
     file.add(statement);
