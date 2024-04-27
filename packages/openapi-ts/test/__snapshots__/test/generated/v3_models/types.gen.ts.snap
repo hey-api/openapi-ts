@@ -686,7 +686,7 @@ export type NestedAnyOfArraysNullable = {
 };
 
 export type CompositionWithOneOfAndProperties = {
-    foo: SimpleParameter;
+    foo: ParameterSimpleParameter;
     baz: number | null;
     qux: number;
 } | {
@@ -832,9 +832,9 @@ export type ModelWithBackticksInDescription = {
 /**
  * This is a reusable parameter
  */
-export type SimpleParameter = string;
+export type ParameterSimpleParameter = string;
 
 /**
  * Parameter with illegal characters
  */
-export type x_Foo_Bar = string;
+export type Parameterx_Foo_Bar = string;

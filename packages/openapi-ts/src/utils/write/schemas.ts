@@ -59,23 +59,17 @@ export const processSchemas = async ({
 
   // OpenAPI 2.0
   if ('swagger' in openApi) {
-    for (const name in openApi.definitions) {
-      if (openApi.definitions.hasOwnProperty(name)) {
-        const definition = openApi.definitions[name];
-        addSchema(name, definition);
-      }
-    }
+    Object.entries(openApi.definitions ?? {}).forEach(([name, definition]) => {
+      addSchema(name, definition);
+    });
   }
 
   // OpenAPI 3.x
   if ('openapi' in openApi) {
-    if (openApi.components) {
-      for (const name in openApi.components.schemas) {
-        if (openApi.components.schemas.hasOwnProperty(name)) {
-          const schema = openApi.components.schemas[name];
-          addSchema(name, schema);
-        }
-      }
-    }
+    Object.entries(openApi.components?.schemas ?? {}).forEach(
+      ([name, schema]) => {
+        addSchema(name, schema);
+      },
+    );
   }
 };
