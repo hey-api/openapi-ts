@@ -536,7 +536,9 @@ export class ResponseService {
     }
     
     /**
+     * @returns unknown Message for 200 response
      * @returns ModelWithString Message for 201 response
+     * @returns ModelWithBoolean Message for default response
      * @throws ApiError
      */
     public callWithDuplicateResponses(): CancelablePromise<ResponseCallWithDuplicateResponsesResponse> {
