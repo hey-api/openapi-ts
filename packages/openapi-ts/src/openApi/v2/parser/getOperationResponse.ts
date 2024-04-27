@@ -84,17 +84,13 @@ export const getOperationResponse = (
 
   // We support basic properties from response headers, since both
   // fetch and XHR client just support string types.
-  if (response.headers) {
-    for (const name in response.headers) {
-      if (response.headers.hasOwnProperty(name)) {
-        operationResponse.in = 'header';
-        operationResponse.name = name;
-        operationResponse.type = 'string';
-        operationResponse.base = 'string';
-        return operationResponse;
-      }
-    }
-  }
+  Object.keys(response.headers ?? {}).forEach((name) => {
+    operationResponse.in = 'header';
+    operationResponse.name = name;
+    operationResponse.type = 'string';
+    operationResponse.base = 'string';
+    return operationResponse;
+  });
 
   return operationResponse;
 };

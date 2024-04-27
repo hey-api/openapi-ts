@@ -793,7 +793,24 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ModelWithString"
+                  "$ref": "#/components/schemas/ModelWithBoolean"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Message for 200 response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ModelWithBoolean"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ModelWithInteger"
+                    }
+                  ]
                 }
               }
             }
