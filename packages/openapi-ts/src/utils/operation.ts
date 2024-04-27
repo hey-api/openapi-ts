@@ -1,4 +1,7 @@
-import type { Model, OperationResponse } from '../../common/interfaces/client';
+import type {
+  Model,
+  OperationResponse,
+} from '../openApi/common/interfaces/client';
 
 const areEqual = (a: Model, b: Model): boolean => {
   const equal =
@@ -17,7 +20,7 @@ export const getOperationResults = (
   // Filter out success response codes
   operationResponses.forEach((operationResponse) => {
     const { code } = operationResponse;
-    if (code && code >= 200 && code < 300) {
+    if (code && (code === 'default' || (code >= 200 && code < 300))) {
       operationResults.push(operationResponse);
     }
   });

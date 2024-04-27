@@ -9,7 +9,7 @@ export class myAwesomeSimpleApi {
      * @returns Model_From_Zendesk Success
      * @throws ApiError
      */
-    public static apiVVersionOdataControllerCount(): CancelablePromise<$OpenApiTs['/api/v{api-version}/simple/$count']['get']['res'][200]> {
+    public static apiVVersionOdataControllerCount(): CancelablePromise<SimpleApiVversionOdataControllerCountResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/simple/$count'
@@ -95,7 +95,7 @@ export class myAwesomeParametersApi {
      * @param data.bar bar in method
      * @throws ApiError
      */
-    public static deleteFoo(data: $OpenApiTs['/api/v{api-version}/foo/{foo}/bar/{bar}']['delete']['req']): CancelablePromise<void> {
+    public static deleteFoo(data: ParametersDeleteFooData): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/v{api-version}/foo/{foo}/bar/{bar}',
@@ -118,7 +118,7 @@ export class myAwesomeParametersApi {
      * @param data.fooRefEnum
      * @throws ApiError
      */
-    public static callWithParameters(data: $OpenApiTs['/api/v{api-version}/parameters/{parameterPath}']['post']['req']): CancelablePromise<void> {
+    public static callWithParameters(data: ParametersCallWithParametersData): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v{api-version}/parameters/{parameterPath}',
@@ -157,7 +157,7 @@ export class myAwesomeParametersApi {
      * @param data._default This is the parameter with a reserved keyword
      * @throws ApiError
      */
-    public static callWithWeirdParameterNames(data: $OpenApiTs['/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}']['post']['req']): CancelablePromise<void> {
+    public static callWithWeirdParameterNames(data: ParametersCallWithWeirdParameterNamesData): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}',
@@ -190,7 +190,7 @@ export class myAwesomeParametersApi {
      * @param data.parameter This is an optional parameter
      * @throws ApiError
      */
-    public static getCallWithOptionalParam(data: $OpenApiTs['/api/v{api-version}/parameters/']['get']['req']): CancelablePromise<void> {
+    public static getCallWithOptionalParam(data: ParametersGetCallWithOptionalParamData): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/parameters/',
@@ -208,7 +208,7 @@ export class myAwesomeParametersApi {
      * @param data.requestBody This is an optional parameter
      * @throws ApiError
      */
-    public static postCallWithOptionalParam(data: $OpenApiTs['/api/v{api-version}/parameters/']['post']['req']): CancelablePromise<void> {
+    public static postCallWithOptionalParam(data: ParametersPostCallWithOptionalParamData): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v{api-version}/parameters/',

@@ -28,7 +28,7 @@ export interface OperationParameters extends Pick<Model, '$refs' | 'imports'> {
 
 export interface OperationResponse extends Model {
   in: 'response' | 'header';
-  code: number;
+  code: number | 'default';
 }
 
 export interface Operation extends OperationParameters {

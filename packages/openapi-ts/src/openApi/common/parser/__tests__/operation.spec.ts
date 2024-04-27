@@ -251,7 +251,7 @@ describe('getOperationParameterName', () => {
 describe('getOperationResponseCode', () => {
   it.each([
     { expected: null, input: '' },
-    { expected: 200, input: 'default' },
+    { expected: 'default', input: 'default' },
     { expected: 200, input: '200' },
     { expected: 300, input: '300' },
     { expected: 400, input: '400' },
