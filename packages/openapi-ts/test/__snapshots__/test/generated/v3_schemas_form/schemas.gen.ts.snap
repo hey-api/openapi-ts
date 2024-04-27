@@ -133,7 +133,7 @@ export const $ArrayWithProperties = {
     items: {
         type: 'object',
         properties: {
-            foo: {
+            '16x16': {
                 '$ref': '#/components/schemas/camelCaseCommentWithBreaks'
             },
             bar: {

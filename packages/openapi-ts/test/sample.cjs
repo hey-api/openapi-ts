@@ -8,7 +8,7 @@ const main = async () => {
     input: './test/spec/v3.json',
     output: './test/generated/v3/',
     schemas: {
-      export: false,
+      // export: false,
     },
     services: {
       // export: false,
