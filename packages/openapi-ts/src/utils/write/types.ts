@@ -13,10 +13,12 @@ import { enumKey, enumName, enumUnionType, enumValue } from '../enum';
 import { escapeComment } from '../escape';
 import { sortByName } from '../sort';
 import { transformTypeName } from '../transform';
-import { serviceExportedNamespace } from './services';
+import { operationDataTypeName, operationResponseTypeName } from './services';
 import { toType } from './type';
 
 type OnNode = (node: Node) => void;
+
+const serviceExportedNamespace = () => '$OpenApiTs';
 
 const emptyModel: Model = {
   $refs: [],
@@ -128,7 +130,7 @@ const processModel = (client: Client, model: Model, onNode: OnNode) => {
 };
 
 const processServiceTypes = (services: Service[], onNode: OnNode) => {
-  type ResMap = Map<number, Model>;
+  type ResMap = Map<number | 'default', Model>;
   type MethodMap = Map<'req' | 'res', ResMap | OperationParameter[]>;
   type MethodKey = Service['operations'][number]['method'];
   type PathMap = Map<MethodKey, MethodMap>;
@@ -156,6 +158,19 @@ const processServiceTypes = (services: Service[], onNode: OnNode) => {
 
         if (hasReq) {
           methodMap.set('req', sortByName([...operation.parameters]));
+
+          // create type export for operation data
+          const type = toType({
+            ...emptyModel,
+            export: 'interface',
+            isRequired: true,
+            properties: sortByName([...operation.parameters]),
+          });
+          const node = compiler.typedef.alias(
+            operationDataTypeName(operation),
+            type,
+          );
+          onNode(node);
         }
 
         if (hasRes) {
@@ -172,6 +187,28 @@ const processServiceTypes = (services: Service[], onNode: OnNode) => {
           operation.results.forEach((result) => {
             resMap.set(result.code, result);
           });
+
+          // create type export for operation response
+          let responseProperties: Model[] = [];
+          operation.results.map((result) => {
+            if (
+              result.code === 'default' ||
+              (result.code >= 200 && result.code < 300)
+            ) {
+              responseProperties = [...responseProperties, result];
+            }
+          });
+          const type = toType({
+            ...emptyModel,
+            export: 'any-of',
+            isRequired: true,
+            properties: responseProperties,
+          });
+          const node = compiler.typedef.alias(
+            operationResponseTypeName(operation),
+            type,
+          );
+          onNode(node);
         }
 
         if (hasErr) {
