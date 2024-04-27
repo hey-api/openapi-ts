@@ -5,10 +5,10 @@ import type { OpenApi } from '../interfaces/OpenApi';
 import { getModel } from './getModel';
 
 export const getModels = (openApi: OpenApi): Model[] => {
-  const models: Model[] = [];
-  for (const definitionName in openApi.definitions) {
-    if (openApi.definitions.hasOwnProperty(definitionName)) {
-      const definition = openApi.definitions[definitionName];
+  let models: Model[] = [];
+
+  Object.entries(openApi.definitions ?? {}).forEach(
+    ([definitionName, definition]) => {
       const definitionType = getType(definitionName);
       const model = getModel(
         openApi,
@@ -16,8 +16,9 @@ export const getModels = (openApi: OpenApi): Model[] => {
         true,
         definitionType.base.replace(reservedWords, '_$1'),
       );
-      models.push(model);
-    }
-  }
+      models = [...models, model];
+    },
+  );
+
   return models;
 };

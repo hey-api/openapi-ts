@@ -76,9 +76,8 @@ export const getModelProperties = (
   const models: Model[] = [];
   const discriminator = findOneOfParentDiscriminator(openApi, parent);
 
-  for (const propertyName in definition.properties) {
-    if (definition.properties.hasOwnProperty(propertyName)) {
-      const property = definition.properties[propertyName];
+  Object.entries(definition.properties ?? {}).forEach(
+    ([propertyName, property]) => {
       const propertyRequired = !!definition.required?.includes(propertyName);
       const propertyValues: Omit<
         Model,
@@ -166,8 +165,8 @@ export const getModelProperties = (
           type: model.type,
         });
       }
-    }
-  }
+    },
+  );
 
   return models;
 };

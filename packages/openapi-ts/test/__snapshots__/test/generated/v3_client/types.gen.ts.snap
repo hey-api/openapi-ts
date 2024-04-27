@@ -686,7 +686,7 @@ export type NestedAnyOfArraysNullable = {
 };
 
 export type CompositionWithOneOfAndProperties = {
-    foo: SimpleParameter;
+    foo: ParameterSimpleParameter;
     baz: number | null;
     qux: number;
 } | {
@@ -832,12 +832,12 @@ export type ModelWithBackticksInDescription = {
 /**
  * This is a reusable parameter
  */
-export type SimpleParameter = string;
+export type ParameterSimpleParameter = string;
 
 /**
  * Parameter with illegal characters
  */
-export type x_Foo_Bar = string;
+export type Parameterx_Foo_Bar = string;
 
 export type DefaultPostServiceWithEmptyTagData = {
     requestBody: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
@@ -1097,7 +1097,7 @@ export type ResponseCallWithResponseAndNoContentResponseResponse = number | void
 
 export type ResponseCallWithResponseResponse = ModelWithString;
 
-export type ResponseCallWithDuplicateResponsesResponse = ModelWithString;
+export type ResponseCallWithDuplicateResponsesResponse = ModelWithBoolean & ModelWithInteger | ModelWithString | ModelWithBoolean;
 
 export type ResponseCallWithResponsesResponse = {
     readonly '@namespace.string'?: string;
@@ -1595,9 +1595,17 @@ export type $OpenApiTs = {
         post: {
             res: {
                 /**
+                 * Message for 200 response
+                 */
+                200: ModelWithBoolean & ModelWithInteger;
+                /**
                  * Message for 201 response
                  */
                 201: ModelWithString;
+                /**
+                 * Message for default response
+                 */
+                default: ModelWithBoolean;
                 /**
                  * Message for 500 error
                  */
