@@ -1,4 +1,5 @@
 import { escapeName } from '../../../utils/escape';
+import { unique } from '../../../utils/unique';
 import type { Model } from '../../common/interfaces/client';
 import { getDefault } from '../../common/parser/getDefault';
 import { getPattern } from '../../common/parser/getPattern';
@@ -38,6 +39,17 @@ export const getAdditionalPropertiesModel = (
   }
 
   if (definition.additionalProperties && definition.properties) {
+    const additionalPropertiesType =
+      typeof definition.additionalProperties === 'object' &&
+      definition.additionalProperties.type &&
+      !Array.isArray(definition.additionalProperties.type)
+        ? definition.additionalProperties.type
+        : apModel.base;
+    const additionalProperties = [
+      additionalPropertiesType,
+      ...model.properties.map((property) => property.base),
+    ];
+    apModel.base = additionalProperties.filter(unique).join(' | ');
     apModel.default = getDefault(definition, model);
     apModel.export = 'generic';
     apModel.isRequired = definition.additionalProperties === true;
