@@ -1867,7 +1867,10 @@
         "type": "object",
         "properties": {
           "foo": {
-            "type": "string"
+            "type": "number"
+          },
+          "bar": {
+            "type": "boolean"
           }
         },
         "additionalProperties": {
