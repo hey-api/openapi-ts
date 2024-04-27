@@ -7,10 +7,19 @@ const main = async () => {
     enums: 'javascript',
     input: './test/spec/v3.json',
     output: './test/generated/v3/',
+    schemas: {
+      export: false,
+    },
+    services: {
+      export: false,
+    },
+    types: {
+      include: '^DictionaryWithPropertiesAndAdditionalProperties',
+    },
   };
 
   const { createClient } = await import(
-    path.resolve(process.cwd(), 'dist/index.js')
+    path.resolve(process.cwd(), 'dist/node/index.cjs')
   );
   await createClient(config);
 };

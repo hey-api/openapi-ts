@@ -12,6 +12,11 @@ export type Order = {
   complete?: boolean;
 };
 
+/**
+ * Order Status
+ */
+export type status = 'placed' | 'approved' | 'delivered';
+
 export type Customer = {
   id?: number;
   username?: string;
