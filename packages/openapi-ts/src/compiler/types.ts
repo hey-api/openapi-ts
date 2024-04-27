@@ -111,6 +111,14 @@ export const createObjectType = <T extends object>({
       }
       // Check key value equality before possibly modifying it
       const hasShorthandSupport = key === value;
+      if (
+        key.match(/^[0-9]/) &&
+        key.match(/\D+/g) &&
+        !key.startsWith("'") &&
+        !key.endsWith("'")
+      ) {
+        key = `'${key}'`;
+      }
       if (key.match(/\W/g) && !key.startsWith("'") && !key.endsWith("'")) {
         key = `'${key}'`;
       }
