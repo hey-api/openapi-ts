@@ -35,7 +35,7 @@ export const createTypeNode = (
 export const createTypeAliasDeclaration = (
   name: string,
   type: string | ts.TypeNode,
-  comments?: Comments,
+  comments: Comments | undefined = undefined,
 ): ts.TypeAliasDeclaration => {
   const node = ts.factory.createTypeAliasDeclaration(
     [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
@@ -43,7 +43,7 @@ export const createTypeAliasDeclaration = (
     [],
     createTypeNode(type),
   );
-  if (comments?.length) {
+  if (comments) {
     addLeadingJSDocComment(node, comments);
   }
   return node;
@@ -80,9 +80,8 @@ export const createTypeInterfaceNode = (
           : ts.factory.createToken(ts.SyntaxKind.QuestionToken),
         createTypeNode(property.type),
       );
-      const comment = property.comment;
-      if (comment) {
-        addLeadingJSDocComment(signature, comment);
+      if (property.comment) {
+        addLeadingJSDocComment(signature, property.comment);
       }
       return signature;
     }),
