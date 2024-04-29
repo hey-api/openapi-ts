@@ -43,7 +43,7 @@ export const createTypeAliasDeclaration = (
     [],
     createTypeNode(type),
   );
-  if (comments?.length) {
+  if (comments) {
     addLeadingJSDocComment(node, comments);
   }
   return node;
@@ -80,9 +80,8 @@ export const createTypeInterfaceNode = (
           : ts.factory.createToken(ts.SyntaxKind.QuestionToken),
         createTypeNode(property.type),
       );
-      const comment = property.comment;
-      if (comment) {
-        addLeadingJSDocComment(signature, comment);
+      if (property.comment) {
+        addLeadingJSDocComment(signature, property.comment);
       }
       return signature;
     }),
