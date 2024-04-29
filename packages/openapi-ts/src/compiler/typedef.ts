@@ -35,7 +35,7 @@ export const createTypeNode = (
 export const createTypeAliasDeclaration = (
   name: string,
   type: string | ts.TypeNode,
-  comments: Comments | undefined = undefined,
+  comments?: Comments,
 ): ts.TypeAliasDeclaration => {
   const node = ts.factory.createTypeAliasDeclaration(
     [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],

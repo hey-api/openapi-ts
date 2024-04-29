@@ -76,9 +76,9 @@ export const createArrayType = <T>({
  * @returns ts.ObjectLiteralExpression
  */
 export const createObjectType = <T extends object>({
-  comments = undefined,
+  comments,
   identifiers = [],
-  leadingComment = undefined,
+  leadingComment,
   multiLine = true,
   obj,
   shorthand = false,
@@ -159,8 +159,8 @@ export const createObjectType = <T extends object>({
 export const createEnumDeclaration = <T extends object>({
   name,
   obj,
-  leadingComment = undefined,
-  comments = undefined,
+  leadingComment,
+  comments,
 }: {
   name: string;
   obj: T;
