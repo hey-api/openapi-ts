@@ -20,6 +20,7 @@ describe('writeCore', () => {
       enumNames: [],
       models: [],
       server: 'http://localhost:8080',
+      serviceTypes: [],
       services: [],
       version: '1.0',
     };
@@ -75,6 +76,7 @@ describe('writeCore', () => {
       enumNames: [],
       models: [],
       server: 'http://localhost:8080',
+      serviceTypes: [],
       services: [],
       version: '1.0',
     };
@@ -112,6 +114,7 @@ describe('writeCore', () => {
       enumNames: [],
       models: [],
       server: 'http://localhost:8080',
+      serviceTypes: [],
       services: [],
       version: '1.0',
     };

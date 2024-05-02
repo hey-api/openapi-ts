@@ -137,7 +137,7 @@ const processModel = (client: Client, model: Model, onNode: OnNode) => {
   }
 };
 
-const processServiceTypes = (services: Service[], onNode: OnNode) => {
+const processServiceTypes = (client: Client, onNode: OnNode) => {
   type ResMap = Map<number | 'default', Model>;
   type MethodMap = Map<'req' | 'res', ResMap | OperationParameter[]>;
   type MethodKey = Service['operations'][number]['method'];
@@ -145,7 +145,7 @@ const processServiceTypes = (services: Service[], onNode: OnNode) => {
 
   const pathsMap = new Map<string, PathMap>();
 
-  services.forEach((service) => {
+  client.services.forEach((service) => {
     service.operations.forEach((operation) => {
       const hasReq = operation.parameters.length;
       const hasRes = operation.results.length;
@@ -168,17 +168,18 @@ const processServiceTypes = (services: Service[], onNode: OnNode) => {
           methodMap.set('req', sortByName([...operation.parameters]));
 
           // create type export for operation data
-          const type = toType({
-            ...emptyModel,
-            export: 'interface',
-            isRequired: true,
-            properties: sortByName([...operation.parameters]),
-          });
-          const node = compiler.typedef.alias(
-            operationDataTypeName(operation),
-            type,
-          );
-          onNode(node);
+          const name = operationDataTypeName(operation);
+          if (!client.serviceTypes.includes(name)) {
+            client.serviceTypes = [...client.serviceTypes, name];
+            const type = toType({
+              ...emptyModel,
+              export: 'interface',
+              isRequired: true,
+              properties: sortByName([...operation.parameters]),
+            });
+            const node = compiler.typedef.alias(name, type);
+            onNode(node);
+          }
         }
 
         if (hasRes) {
@@ -197,26 +198,27 @@ const processServiceTypes = (services: Service[], onNode: OnNode) => {
           });
 
           // create type export for operation response
-          let responseProperties: Model[] = [];
-          operation.results.map((result) => {
-            if (
-              result.code === 'default' ||
-              (result.code >= 200 && result.code < 300)
-            ) {
-              responseProperties = [...responseProperties, result];
-            }
-          });
-          const type = toType({
-            ...emptyModel,
-            export: 'any-of',
-            isRequired: true,
-            properties: responseProperties,
-          });
-          const node = compiler.typedef.alias(
-            operationResponseTypeName(operation),
-            type,
-          );
-          onNode(node);
+          const name = operationResponseTypeName(operation);
+          if (!client.serviceTypes.includes(name)) {
+            client.serviceTypes = [...client.serviceTypes, name];
+            let responseProperties: Model[] = [];
+            operation.results.map((result) => {
+              if (
+                result.code === 'default' ||
+                (result.code >= 200 && result.code < 300)
+              ) {
+                responseProperties = [...responseProperties, result];
+              }
+            });
+            const type = toType({
+              ...emptyModel,
+              export: 'any-of',
+              isRequired: true,
+              properties: responseProperties,
+            });
+            const node = compiler.typedef.alias(name, type);
+            onNode(node);
+          }
         }
 
         if (hasErr) {
@@ -308,7 +310,7 @@ export const processTypes = async ({
   }
 
   if (files.services && client.services.length) {
-    processServiceTypes(client.services, (node) => {
+    processServiceTypes(client, (node) => {
       files.types?.add(node);
     });
   }

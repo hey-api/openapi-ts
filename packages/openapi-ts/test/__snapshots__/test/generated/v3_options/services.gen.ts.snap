@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { DefaultsCallWithDefaultParametersData, DefaultsCallWithDefaultOptionalParametersData, DefaultsCallToTestOrderOfParamsData } from './types.gen';
+import type { CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData } from './types.gen';
 
 export class DefaultsService {
     /**
@@ -15,7 +15,7 @@ export class DefaultsService {
      * @param data.parameterModel This is a simple model with default value
      * @throws ApiError
      */
-    public static callWithDefaultParameters(data: DefaultsCallWithDefaultParametersData = {}): CancelablePromise<void> {
+    public static callWithDefaultParameters(data: CallWithDefaultParametersData = {}): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/defaults',
@@ -38,7 +38,7 @@ export class DefaultsService {
      * @param data.parameterModel This is a simple model that is optional with default value
      * @throws ApiError
      */
-    public static callWithDefaultOptionalParameters(data: DefaultsCallWithDefaultOptionalParametersData = {}): CancelablePromise<void> {
+    public static callWithDefaultOptionalParameters(data: CallWithDefaultOptionalParametersData = {}): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v{api-version}/defaults',
@@ -64,7 +64,7 @@ export class DefaultsService {
      * @param data.parameterStringNullableWithDefault This is a string that can be null with default
      * @throws ApiError
      */
-    public static callToTestOrderOfParams(data: DefaultsCallToTestOrderOfParamsData): CancelablePromise<void> {
+    public static callToTestOrderOfParams(data: CallToTestOrderOfParamsData): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/v{api-version}/defaults',
