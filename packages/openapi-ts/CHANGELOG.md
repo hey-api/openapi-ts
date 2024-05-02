@@ -1,5 +1,31 @@
 # @hey-api/openapi-ts
 
+## 0.43.0
+
+### Minor Changes
+
+- feat: remove enum postfix, use typescript enums in types when generated, export enums from types.gen.ts ([#498](https://github.com/hey-api/openapi-ts/pull/498))
+
+### Patch Changes
+
+- fix: negative numbers in numeric enums ([#470](https://github.com/hey-api/openapi-ts/pull/470))
+
+- fix: escape keys in schemas starting with digit but containing non-digit characters ([#502](https://github.com/hey-api/openapi-ts/pull/502))
+
+- fix: issue causing code to not generate (t.filter is not a function) ([#507](https://github.com/hey-api/openapi-ts/pull/507))
+
+- fix: handle additional properties union ([#499](https://github.com/hey-api/openapi-ts/pull/499))
+
+- fix: do not export inline enums ([#508](https://github.com/hey-api/openapi-ts/pull/508))
+
+- fix: prefix parameter type exports to avoid conflicts ([#501](https://github.com/hey-api/openapi-ts/pull/501))
+
+- fix: export operation data and response types ([#500](https://github.com/hey-api/openapi-ts/pull/500))
+
+- fix: handle cases where packages are installed globally ([#471](https://github.com/hey-api/openapi-ts/pull/471))
+
+- fix: handle cases where package.json does not exist ([#471](https://github.com/hey-api/openapi-ts/pull/471))
+
 ## 0.42.1
 
 ### Patch Changes
