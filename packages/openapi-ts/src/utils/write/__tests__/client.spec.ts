@@ -32,6 +32,7 @@ describe('writeClient', () => {
       enumNames: [],
       models: [],
       server: 'http://localhost:8080',
+      serviceTypes: [],
       services: [],
       version: 'v1',
     };
