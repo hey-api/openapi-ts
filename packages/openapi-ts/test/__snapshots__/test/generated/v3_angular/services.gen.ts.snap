@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import type { Observable } from 'rxjs';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { DefaultPostServiceWithEmptyTagData, DefaultPostServiceWithEmptyTagResponse, SimpleApiVversionOdataControllerCountResponse, ParametersDeleteFooData, ParametersCallWithParametersData, ParametersCallWithWeirdParameterNamesData, ParametersGetCallWithOptionalParamData, ParametersPostCallWithOptionalParamData, DescriptionsCallWithDescriptionsData, DeprecatedDeprecatedCallData, RequestBodyPostApiRequestBodyData, FormDataPostApiFormDataData, DefaultsCallWithDefaultParametersData, DefaultsCallWithDefaultOptionalParametersData, DefaultsCallToTestOrderOfParamsData, NoContentCallWithNoContentResponseResponse, NoContentCallWithResponseAndNoContentResponseResponse, ResponseCallWithResponseAndNoContentResponseResponse, ResponseCallWithResponseResponse, ResponseCallWithDuplicateResponsesResponse, ResponseCallWithResponsesResponse, MultipleTags1DummyAResponse, MultipleTags1DummyBResponse, MultipleTags2DummyAResponse, MultipleTags2DummyBResponse, MultipleTags3DummyBResponse, CollectionFormatCollectionFormatData, TypesTypesData, TypesTypesResponse, UploadUploadFileData, UploadUploadFileResponse, FileResponseFileResponseData, FileResponseFileResponseResponse, ComplexComplexTypesData, ComplexComplexTypesResponse, ComplexComplexParamsData, ComplexComplexParamsResponse, MultipartMultipartRequestData, MultipartMultipartResponseResponse, HeaderCallWithResultFromHeaderResponse, ErrorTestErrorCodeData, ErrorTestErrorCodeResponse, NonAsciiÆøåÆøÅöôêÊNonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiÆøåÆøÅöôêÊNonAsciiæøåÆøÅöôêÊ字符串Response } from './types.gen';
+import type { PostServiceWithEmptyTagData, PostServiceWithEmptyTagResponse, ApiVversionOdataControllerCountResponse, DeleteFooData, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, CallWithDescriptionsData, DeprecatedCallData, PostApiRequestBodyData, PostApiFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, DummyAResponse, DummyBResponse, CollectionFormatData, TypesData, TypesResponse, UploadFileData, UploadFileResponse, FileResponseData, FileResponseResponse, ComplexTypesData, ComplexTypesResponse, ComplexParamsData, ComplexParamsResponse, MultipartRequestData, MultipartResponseResponse, CallWithResultFromHeaderResponse, TestErrorCodeData, TestErrorCodeResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response } from './types.gen';
 
 @Injectable({
     providedIn: 'root'
@@ -29,7 +29,7 @@ export class DefaultService {
      * @returns ModelWithReadOnlyAndWriteOnly
      * @throws ApiError
      */
-    public postServiceWithEmptyTag(data: DefaultPostServiceWithEmptyTagData): Observable<DefaultPostServiceWithEmptyTagResponse> {
+    public postServiceWithEmptyTag(data: PostServiceWithEmptyTagData): Observable<PostServiceWithEmptyTagResponse> {
         return __request(OpenAPI, this.http, {
             method: 'POST',
             url: '/api/v{api-version}/no-tag',
@@ -50,7 +50,7 @@ export class SimpleService {
      * @returns Model_From_Zendesk Success
      * @throws ApiError
      */
-    public apiVVersionOdataControllerCount(): Observable<SimpleApiVversionOdataControllerCountResponse> {
+    public apiVVersionOdataControllerCount(): Observable<ApiVversionOdataControllerCountResponse> {
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/simple/$count'
@@ -141,7 +141,7 @@ export class ParametersService {
      * @param data.bar bar in method
      * @throws ApiError
      */
-    public deleteFoo(data: ParametersDeleteFooData): Observable<void> {
+    public deleteFoo(data: DeleteFooData): Observable<void> {
         return __request(OpenAPI, this.http, {
             method: 'DELETE',
             url: '/api/v{api-version}/foo/{foo}/bar/{bar}',
@@ -164,7 +164,7 @@ export class ParametersService {
      * @param data.fooRefEnum
      * @throws ApiError
      */
-    public callWithParameters(data: ParametersCallWithParametersData): Observable<void> {
+    public callWithParameters(data: CallWithParametersData): Observable<void> {
         return __request(OpenAPI, this.http, {
             method: 'POST',
             url: '/api/v{api-version}/parameters/{parameterPath}',
@@ -203,7 +203,7 @@ export class ParametersService {
      * @param data._default This is the parameter with a reserved keyword
      * @throws ApiError
      */
-    public callWithWeirdParameterNames(data: ParametersCallWithWeirdParameterNamesData): Observable<void> {
+    public callWithWeirdParameterNames(data: CallWithWeirdParameterNamesData): Observable<void> {
         return __request(OpenAPI, this.http, {
             method: 'POST',
             url: '/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}',
@@ -236,7 +236,7 @@ export class ParametersService {
      * @param data.parameter This is an optional parameter
      * @throws ApiError
      */
-    public getCallWithOptionalParam(data: ParametersGetCallWithOptionalParamData): Observable<void> {
+    public getCallWithOptionalParam(data: GetCallWithOptionalParamData): Observable<void> {
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/parameters/',
@@ -254,7 +254,7 @@ export class ParametersService {
      * @param data.requestBody This is an optional parameter
      * @throws ApiError
      */
-    public postCallWithOptionalParam(data: ParametersPostCallWithOptionalParamData): Observable<void> {
+    public postCallWithOptionalParam(data: PostCallWithOptionalParamData): Observable<void> {
         return __request(OpenAPI, this.http, {
             method: 'POST',
             url: '/api/v{api-version}/parameters/',
@@ -287,7 +287,7 @@ export class DescriptionsService {
      * @param data.parameterWithReservedCharacters Testing reserved characters in string: * inline * and ** inline ** should work
      * @throws ApiError
      */
-    public callWithDescriptions(data: DescriptionsCallWithDescriptionsData = {}): Observable<void> {
+    public callWithDescriptions(data: CallWithDescriptionsData = {}): Observable<void> {
         return __request(OpenAPI, this.http, {
             method: 'POST',
             url: '/api/v{api-version}/descriptions/',
@@ -316,7 +316,7 @@ export class DeprecatedService {
      * @param data.parameter This parameter is deprecated
      * @throws ApiError
      */
-    public deprecatedCall(data: DeprecatedDeprecatedCallData): Observable<void> {
+    public deprecatedCall(data: DeprecatedCallData): Observable<void> {
         return __request(OpenAPI, this.http, {
             method: 'POST',
             url: '/api/v{api-version}/parameters/deprecated',
@@ -340,7 +340,7 @@ export class RequestBodyService {
      * @param data.foo A reusable request body
      * @throws ApiError
      */
-    public postApiRequestBody(data: RequestBodyPostApiRequestBodyData = {}): Observable<void> {
+    public postApiRequestBody(data: PostApiRequestBodyData = {}): Observable<void> {
         return __request(OpenAPI, this.http, {
             method: 'POST',
             url: '/api/v{api-version}/requestBody/',
@@ -366,7 +366,7 @@ export class FormDataService {
      * @param data.formData A reusable request body
      * @throws ApiError
      */
-    public postApiFormData(data: FormDataPostApiFormDataData = {}): Observable<void> {
+    public postApiFormData(data: PostApiFormDataData = {}): Observable<void> {
         return __request(OpenAPI, this.http, {
             method: 'POST',
             url: '/api/v{api-version}/formData/',
@@ -395,7 +395,7 @@ export class DefaultsService {
      * @param data.parameterModel This is a simple model with default value
      * @throws ApiError
      */
-    public callWithDefaultParameters(data: DefaultsCallWithDefaultParametersData = {}): Observable<void> {
+    public callWithDefaultParameters(data: CallWithDefaultParametersData = {}): Observable<void> {
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/defaults',
@@ -418,7 +418,7 @@ export class DefaultsService {
      * @param data.parameterModel This is a simple model that is optional with default value
      * @throws ApiError
      */
-    public callWithDefaultOptionalParameters(data: DefaultsCallWithDefaultOptionalParametersData = {}): Observable<void> {
+    public callWithDefaultOptionalParameters(data: CallWithDefaultOptionalParametersData = {}): Observable<void> {
         return __request(OpenAPI, this.http, {
             method: 'POST',
             url: '/api/v{api-version}/defaults',
@@ -444,7 +444,7 @@ export class DefaultsService {
      * @param data.parameterStringNullableWithDefault This is a string that can be null with default
      * @throws ApiError
      */
-    public callToTestOrderOfParams(data: DefaultsCallToTestOrderOfParamsData): Observable<void> {
+    public callToTestOrderOfParams(data: CallToTestOrderOfParamsData): Observable<void> {
         return __request(OpenAPI, this.http, {
             method: 'PUT',
             url: '/api/v{api-version}/defaults',
@@ -521,7 +521,7 @@ export class NoContentService {
      * @returns void Success
      * @throws ApiError
      */
-    public callWithNoContentResponse(): Observable<NoContentCallWithNoContentResponseResponse> {
+    public callWithNoContentResponse(): Observable<CallWithNoContentResponseResponse> {
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/no-content'
@@ -533,7 +533,7 @@ export class NoContentService {
      * @returns void Success
      * @throws ApiError
      */
-    public callWithResponseAndNoContentResponse(): Observable<NoContentCallWithResponseAndNoContentResponseResponse> {
+    public callWithResponseAndNoContentResponse(): Observable<CallWithResponseAndNoContentResponseResponse> {
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/response-and-no-content'
@@ -553,7 +553,7 @@ export class ResponseService {
      * @returns void Success
      * @throws ApiError
      */
-    public callWithResponseAndNoContentResponse(): Observable<ResponseCallWithResponseAndNoContentResponseResponse> {
+    public callWithResponseAndNoContentResponse(): Observable<CallWithResponseAndNoContentResponseResponse> {
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/response-and-no-content'
@@ -564,7 +564,7 @@ export class ResponseService {
      * @returns ModelWithString
      * @throws ApiError
      */
-    public callWithResponse(): Observable<ResponseCallWithResponseResponse> {
+    public callWithResponse(): Observable<CallWithResponseResponse> {
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/response'
@@ -577,7 +577,7 @@ export class ResponseService {
      * @returns ModelWithBoolean Message for default response
      * @throws ApiError
      */
-    public callWithDuplicateResponses(): Observable<ResponseCallWithDuplicateResponsesResponse> {
+    public callWithDuplicateResponses(): Observable<CallWithDuplicateResponsesResponse> {
         return __request(OpenAPI, this.http, {
             method: 'POST',
             url: '/api/v{api-version}/response',
@@ -596,7 +596,7 @@ export class ResponseService {
      * @returns ModelWithString Message for default response
      * @throws ApiError
      */
-    public callWithResponses(): Observable<ResponseCallWithResponsesResponse> {
+    public callWithResponses(): Observable<CallWithResponsesResponse> {
         return __request(OpenAPI, this.http, {
             method: 'PUT',
             url: '/api/v{api-version}/response',
@@ -620,7 +620,7 @@ export class MultipleTags1Service {
      * @returns void Success
      * @throws ApiError
      */
-    public dummyA(): Observable<MultipleTags1DummyAResponse> {
+    public dummyA(): Observable<DummyAResponse> {
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/a'
@@ -631,7 +631,7 @@ export class MultipleTags1Service {
      * @returns void Success
      * @throws ApiError
      */
-    public dummyB(): Observable<MultipleTags1DummyBResponse> {
+    public dummyB(): Observable<DummyBResponse> {
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/b'
@@ -650,7 +650,7 @@ export class MultipleTags2Service {
      * @returns void Success
      * @throws ApiError
      */
-    public dummyA(): Observable<MultipleTags2DummyAResponse> {
+    public dummyA(): Observable<DummyAResponse> {
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/a'
@@ -661,7 +661,7 @@ export class MultipleTags2Service {
      * @returns void Success
      * @throws ApiError
      */
-    public dummyB(): Observable<MultipleTags2DummyBResponse> {
+    public dummyB(): Observable<DummyBResponse> {
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/b'
@@ -680,7 +680,7 @@ export class MultipleTags3Service {
      * @returns void Success
      * @throws ApiError
      */
-    public dummyB(): Observable<MultipleTags3DummyBResponse> {
+    public dummyB(): Observable<DummyBResponse> {
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/b'
@@ -704,7 +704,7 @@ export class CollectionFormatService {
      * @param data.parameterArrayMulti This is an array parameter that is sent as multi format (multiple parameter instances)
      * @throws ApiError
      */
-    public collectionFormat(data: CollectionFormatCollectionFormatData): Observable<void> {
+    public collectionFormat(data: CollectionFormatData): Observable<void> {
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/collectionFormat',
@@ -742,7 +742,7 @@ export class TypesService {
      * @returns unknown Response is a simple object
      * @throws ApiError
      */
-    public types(data: TypesTypesData): Observable<TypesTypesResponse> {
+    public types(data: TypesData): Observable<TypesResponse> {
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/types',
@@ -775,7 +775,7 @@ export class UploadService {
      * @returns boolean
      * @throws ApiError
      */
-    public uploadFile(data: UploadUploadFileData): Observable<UploadUploadFileResponse> {
+    public uploadFile(data: UploadFileData): Observable<UploadFileResponse> {
         return __request(OpenAPI, this.http, {
             method: 'POST',
             url: '/api/v{api-version}/upload',
@@ -799,7 +799,7 @@ export class FileResponseService {
      * @returns binary Success
      * @throws ApiError
      */
-    public fileResponse(data: FileResponseFileResponseData): Observable<FileResponseFileResponseResponse> {
+    public fileResponse(data: FileResponseData): Observable<FileResponseResponse> {
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/file/{id}',
@@ -824,7 +824,7 @@ export class ComplexService {
      * @returns ModelWithString Successful response
      * @throws ApiError
      */
-    public complexTypes(data: ComplexComplexTypesData): Observable<ComplexComplexTypesResponse> {
+    public complexTypes(data: ComplexTypesData): Observable<ComplexTypesResponse> {
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/complex',
@@ -846,7 +846,7 @@ export class ComplexService {
      * @returns ModelWithString Success
      * @throws ApiError
      */
-    public complexParams(data: ComplexComplexParamsData): Observable<ComplexComplexParamsResponse> {
+    public complexParams(data: ComplexParamsData): Observable<ComplexParamsResponse> {
         return __request(OpenAPI, this.http, {
             method: 'PUT',
             url: '/api/v{api-version}/complex/{id}',
@@ -871,7 +871,7 @@ export class MultipartService {
      * @param data.formData
      * @throws ApiError
      */
-    public multipartRequest(data: MultipartMultipartRequestData = {}): Observable<void> {
+    public multipartRequest(data: MultipartRequestData = {}): Observable<void> {
         return __request(OpenAPI, this.http, {
             method: 'POST',
             url: '/api/v{api-version}/multipart',
@@ -884,7 +884,7 @@ export class MultipartService {
      * @returns unknown OK
      * @throws ApiError
      */
-    public multipartResponse(): Observable<MultipartMultipartResponseResponse> {
+    public multipartResponse(): Observable<MultipartResponseResponse> {
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/multipart'
@@ -903,7 +903,7 @@ export class HeaderService {
      * @returns string Successful response
      * @throws ApiError
      */
-    public callWithResultFromHeader(): Observable<HeaderCallWithResultFromHeaderResponse> {
+    public callWithResultFromHeader(): Observable<CallWithResultFromHeaderResponse> {
         return __request(OpenAPI, this.http, {
             method: 'POST',
             url: '/api/v{api-version}/header',
@@ -929,7 +929,7 @@ export class ErrorService {
      * @returns unknown Custom message: Successful response
      * @throws ApiError
      */
-    public testErrorCode(data: ErrorTestErrorCodeData): Observable<ErrorTestErrorCodeResponse> {
+    public testErrorCode(data: TestErrorCodeData): Observable<TestErrorCodeResponse> {
         return __request(OpenAPI, this.http, {
             method: 'POST',
             url: '/api/v{api-version}/error',
@@ -959,7 +959,7 @@ export class NonAsciiÆøåÆøÅöôêÊService {
      * @returns NonAsciiStringæøåÆØÅöôêÊ字符串 Successful response
      * @throws ApiError
      */
-    public nonAsciiæøåÆøÅöôêÊ字符串(data: NonAsciiÆøåÆøÅöôêÊNonAsciiæøåÆøÅöôêÊ字符串Data): Observable<NonAsciiÆøåÆøÅöôêÊNonAsciiæøåÆøÅöôêÊ字符串Response> {
+    public nonAsciiæøåÆøÅöôêÊ字符串(data: NonAsciiæøåÆøÅöôêÊ字符串Data): Observable<NonAsciiæøåÆøÅöôêÊ字符串Response> {
         return __request(OpenAPI, this.http, {
             method: 'POST',
             url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',

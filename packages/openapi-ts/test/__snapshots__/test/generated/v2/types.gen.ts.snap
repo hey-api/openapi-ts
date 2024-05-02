@@ -387,7 +387,7 @@ export type ModelWithPattern = {
     patternWithBacktick?: string;
 };
 
-export type DescriptionsCallWithDescriptionsData = {
+export type CallWithDescriptionsData = {
     /**
      * Testing backticks in string: `backticks` and ```multiple backticks``` should work
      */
@@ -417,7 +417,7 @@ export type DescriptionsCallWithDescriptionsData = {
     parameterWithSlashes?: string;
 };
 
-export type ParametersCallWithParametersData = {
+export type CallWithParametersData = {
     /**
      * This is the parameter that is sent as request body
      */
@@ -440,7 +440,7 @@ export type ParametersCallWithParametersData = {
     parameterQuery: string;
 };
 
-export type ParametersCallWithWeirdParameterNamesData = {
+export type CallWithWeirdParameterNamesData = {
     /**
      * This is the parameter with a reserved keyword
      */
@@ -475,7 +475,7 @@ export type ParametersCallWithWeirdParameterNamesData = {
     parameterQuery: string;
 };
 
-export type DefaultsCallWithDefaultParametersData = {
+export type CallWithDefaultParametersData = {
     /**
      * This is a simple boolean with default value
      */
@@ -498,7 +498,7 @@ export type DefaultsCallWithDefaultParametersData = {
     parameterString: string;
 };
 
-export type DefaultsCallWithDefaultOptionalParametersData = {
+export type CallWithDefaultOptionalParametersData = {
     /**
      * This is a simple boolean that is optional with default value
      */
@@ -521,7 +521,7 @@ export type DefaultsCallWithDefaultOptionalParametersData = {
     parameterString?: string;
 };
 
-export type DefaultsCallToTestOrderOfParamsData = {
+export type CallToTestOrderOfParamsData = {
     /**
      * This is a optional string with default
      */
@@ -556,33 +556,25 @@ export type DefaultsCallToTestOrderOfParamsData = {
     parameterStringWithNoDefault: string;
 };
 
-export type NoContentCallWithNoContentResponseResponse = void;
+export type CallWithNoContentResponseResponse = void;
 
-export type NoContentCallWithResponseAndNoContentResponseResponse = unknown | void;
+export type CallWithResponseAndNoContentResponseResponse = unknown | void;
 
-export type ResponseCallWithResponseAndNoContentResponseResponse = unknown | void;
+export type CallWithResponseResponse = ModelWithString;
 
-export type ResponseCallWithResponseResponse = ModelWithString;
+export type CallWithDuplicateResponsesResponse = ModelWithString;
 
-export type ResponseCallWithDuplicateResponsesResponse = ModelWithString;
-
-export type ResponseCallWithResponsesResponse = {
+export type CallWithResponsesResponse = {
     readonly '@namespace.string'?: string;
     readonly '@namespace.integer'?: number;
     readonly value?: Array<ModelWithString>;
 } | ModelThatExtends | ModelThatExtendsExtends | ModelWithString;
 
-export type MultipleTags1DummyAResponse = void;
+export type DummyAResponse = void;
 
-export type MultipleTags1DummyBResponse = void;
+export type DummyBResponse = void;
 
-export type MultipleTags2DummyAResponse = void;
-
-export type MultipleTags2DummyBResponse = void;
-
-export type MultipleTags3DummyBResponse = void;
-
-export type CollectionFormatCollectionFormatData = {
+export type CollectionFormatData = {
     /**
      * This is an array parameter that is sent as csv format (comma-separated values)
      */
@@ -605,7 +597,7 @@ export type CollectionFormatCollectionFormatData = {
     parameterArrayTsv: Array<string>;
 };
 
-export type TypesTypesData = {
+export type TypesData = {
     /**
      * This is a number parameter
      */
@@ -642,9 +634,9 @@ export type TypesTypesData = {
     parameterString: string;
 };
 
-export type TypesTypesResponse = number | string | boolean | unknown;
+export type TypesResponse = number | string | boolean | unknown;
 
-export type ComplexComplexTypesData = {
+export type ComplexTypesData = {
     /**
      * Parameter containing object
      */
@@ -661,27 +653,27 @@ export type ComplexComplexTypesData = {
     parameterReference: ModelWithString;
 };
 
-export type ComplexComplexTypesResponse = Array<ModelWithString>;
+export type ComplexTypesResponse = Array<ModelWithString>;
 
-export type HeaderCallWithResultFromHeaderResponse = string;
+export type CallWithResultFromHeaderResponse = string;
 
-export type ErrorTestErrorCodeData = {
+export type TestErrorCodeData = {
     /**
      * Status code to return
      */
     status: string;
 };
 
-export type ErrorTestErrorCodeResponse = unknown;
+export type TestErrorCodeResponse = unknown;
 
-export type NonAsciiÆøåÆøÅöôêÊNonAsciiæøåÆøÅöôêÊ字符串Data = {
+export type NonAsciiæøåÆøÅöôêÊ字符串Data = {
     /**
      * Dummy input param
      */
     nonAsciiParamæøåÆøÅöôêÊ: number;
 };
 
-export type NonAsciiÆøåÆøÅöôêÊNonAsciiæøåÆøÅöôêÊ字符串Response = NonAsciiStringæøåÆØÅöôêÊ字符串;
+export type NonAsciiæøåÆøÅöôêÊ字符串Response = NonAsciiStringæøåÆØÅöôêÊ字符串;
 
 export type $OpenApiTs = {
     '/api/v{api-version}/descriptions/': {

@@ -820,15 +820,15 @@ export type ParameterSimpleParameter = string;
  */
 export type Parameterx_Foo_Bar = string;
 
-export type DefaultPostServiceWithEmptyTagData = {
+export type PostServiceWithEmptyTagData = {
     requestBody: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
 };
 
-export type DefaultPostServiceWithEmptyTagResponse = ModelWithReadOnlyAndWriteOnly;
+export type PostServiceWithEmptyTagResponse = ModelWithReadOnlyAndWriteOnly;
 
-export type SimpleApiVversionOdataControllerCountResponse = Model_From_Zendesk;
+export type ApiVversionOdataControllerCountResponse = Model_From_Zendesk;
 
-export type ParametersDeleteFooData = {
+export type DeleteFooData = {
     /**
      * bar in method
      */
@@ -839,7 +839,7 @@ export type ParametersDeleteFooData = {
     foo: string;
 };
 
-export type ParametersCallWithParametersData = {
+export type CallWithParametersData = {
     fooAllOfEnum: ModelWithNestedArrayEnumsDataFoo;
     fooRefEnum?: ModelWithNestedArrayEnumsDataFoo;
     /**
@@ -868,7 +868,7 @@ export type ParametersCallWithParametersData = {
     requestBody: ModelWithString | null;
 };
 
-export type ParametersCallWithWeirdParameterNamesData = {
+export type CallWithWeirdParameterNamesData = {
     /**
      * This is the parameter with a reserved keyword
      */
@@ -907,7 +907,7 @@ export type ParametersCallWithWeirdParameterNamesData = {
     requestBody: ModelWithString | null;
 };
 
-export type ParametersGetCallWithOptionalParamData = {
+export type GetCallWithOptionalParamData = {
     /**
      * This is an optional parameter
      */
@@ -918,7 +918,7 @@ export type ParametersGetCallWithOptionalParamData = {
     requestBody: ModelWithOneOfEnum;
 };
 
-export type ParametersPostCallWithOptionalParamData = {
+export type PostCallWithOptionalParamData = {
     /**
      * This is a required parameter
      */
@@ -929,7 +929,7 @@ export type ParametersPostCallWithOptionalParamData = {
     requestBody?: ModelWithString;
 };
 
-export type DescriptionsCallWithDescriptionsData = {
+export type CallWithDescriptionsData = {
     /**
      * Testing backticks in string: `backticks` and ```multiple backticks``` should work
      */
@@ -959,7 +959,7 @@ export type DescriptionsCallWithDescriptionsData = {
     parameterWithSlashes?: unknown;
 };
 
-export type DeprecatedDeprecatedCallData = {
+export type DeprecatedCallData = {
     /**
      * This parameter is deprecated
      * @deprecated
@@ -967,7 +967,7 @@ export type DeprecatedDeprecatedCallData = {
     parameter: DeprecatedModel | null;
 };
 
-export type RequestBodyPostApiRequestBodyData = {
+export type PostApiRequestBodyData = {
     /**
      * A reusable request body
      */
@@ -978,7 +978,7 @@ export type RequestBodyPostApiRequestBodyData = {
     parameter?: string;
 };
 
-export type FormDataPostApiFormDataData = {
+export type PostApiFormDataData = {
     /**
      * A reusable request body
      */
@@ -989,7 +989,7 @@ export type FormDataPostApiFormDataData = {
     parameter?: string;
 };
 
-export type DefaultsCallWithDefaultParametersData = {
+export type CallWithDefaultParametersData = {
     /**
      * This is a simple boolean with default value
      */
@@ -1012,7 +1012,7 @@ export type DefaultsCallWithDefaultParametersData = {
     parameterString?: string | null;
 };
 
-export type DefaultsCallWithDefaultOptionalParametersData = {
+export type CallWithDefaultOptionalParametersData = {
     /**
      * This is a simple boolean that is optional with default value
      */
@@ -1035,7 +1035,7 @@ export type DefaultsCallWithDefaultOptionalParametersData = {
     parameterString?: string;
 };
 
-export type DefaultsCallToTestOrderOfParamsData = {
+export type CallToTestOrderOfParamsData = {
     /**
      * This is a optional string with default
      */
@@ -1070,33 +1070,25 @@ export type DefaultsCallToTestOrderOfParamsData = {
     parameterStringWithNoDefault: string;
 };
 
-export type NoContentCallWithNoContentResponseResponse = void;
+export type CallWithNoContentResponseResponse = void;
 
-export type NoContentCallWithResponseAndNoContentResponseResponse = number | void;
+export type CallWithResponseAndNoContentResponseResponse = number | void;
 
-export type ResponseCallWithResponseAndNoContentResponseResponse = number | void;
+export type CallWithResponseResponse = ModelWithString;
 
-export type ResponseCallWithResponseResponse = ModelWithString;
+export type CallWithDuplicateResponsesResponse = ModelWithBoolean & ModelWithInteger | ModelWithString | ModelWithBoolean;
 
-export type ResponseCallWithDuplicateResponsesResponse = ModelWithBoolean & ModelWithInteger | ModelWithString | ModelWithBoolean;
-
-export type ResponseCallWithResponsesResponse = {
+export type CallWithResponsesResponse = {
     readonly '@namespace.string'?: string;
     readonly '@namespace.integer'?: number;
     readonly value?: Array<ModelWithString>;
 } | ModelThatExtends | ModelThatExtendsExtends | ModelWithString;
 
-export type MultipleTags1DummyAResponse = void;
+export type DummyAResponse = void;
 
-export type MultipleTags1DummyBResponse = void;
+export type DummyBResponse = void;
 
-export type MultipleTags2DummyAResponse = void;
-
-export type MultipleTags2DummyBResponse = void;
-
-export type MultipleTags3DummyBResponse = void;
-
-export type CollectionFormatCollectionFormatData = {
+export type CollectionFormatData = {
     /**
      * This is an array parameter that is sent as csv format (comma-separated values)
      */
@@ -1119,7 +1111,7 @@ export type CollectionFormatCollectionFormatData = {
     parameterArrayTsv: Array<(string)> | null;
 };
 
-export type TypesTypesData = {
+export type TypesData = {
     /**
      * This is a number parameter
      */
@@ -1158,26 +1150,26 @@ export type TypesTypesData = {
     parameterString: string | null;
 };
 
-export type TypesTypesResponse = number | string | boolean | {
+export type TypesResponse = number | string | boolean | {
     [key: string]: unknown;
 };
 
-export type UploadUploadFileData = {
+export type UploadFileData = {
     /**
      * Supply a file reference for upload
      */
     file: (Blob | File);
 };
 
-export type UploadUploadFileResponse = boolean;
+export type UploadFileResponse = boolean;
 
-export type FileResponseFileResponseData = {
+export type FileResponseData = {
     id: string;
 };
 
-export type FileResponseFileResponseResponse = (Blob | File);
+export type FileResponseResponse = (Blob | File);
 
-export type ComplexComplexTypesData = {
+export type ComplexTypesData = {
     /**
      * Parameter containing object
      */
@@ -1194,9 +1186,9 @@ export type ComplexComplexTypesData = {
     parameterReference: ModelWithString;
 };
 
-export type ComplexComplexTypesResponse = Array<ModelWithString>;
+export type ComplexTypesResponse = Array<ModelWithString>;
 
-export type ComplexComplexParamsData = {
+export type ComplexParamsData = {
     id: number;
     requestBody?: {
         readonly key: string | null;
@@ -1213,16 +1205,16 @@ export type ComplexComplexParamsData = {
     };
 };
 
-export type ComplexComplexParamsResponse = ModelWithString;
+export type ComplexParamsResponse = ModelWithString;
 
-export type MultipartMultipartRequestData = {
+export type MultipartRequestData = {
     formData?: {
         content?: (Blob | File);
         data?: ModelWithString | null;
     };
 };
 
-export type MultipartMultipartResponseResponse = {
+export type MultipartResponseResponse = {
     file?: (Blob | File);
     metadata?: {
         foo?: string;
@@ -1230,25 +1222,25 @@ export type MultipartMultipartResponseResponse = {
     };
 };
 
-export type HeaderCallWithResultFromHeaderResponse = string;
+export type CallWithResultFromHeaderResponse = string;
 
-export type ErrorTestErrorCodeData = {
+export type TestErrorCodeData = {
     /**
      * Status code to return
      */
     status: number;
 };
 
-export type ErrorTestErrorCodeResponse = unknown;
+export type TestErrorCodeResponse = unknown;
 
-export type NonAsciiÆøåÆøÅöôêÊNonAsciiæøåÆøÅöôêÊ字符串Data = {
+export type NonAsciiæøåÆøÅöôêÊ字符串Data = {
     /**
      * Dummy input param
      */
     nonAsciiParamæøåÆøÅöôêÊ: number;
 };
 
-export type NonAsciiÆøåÆøÅöôêÊNonAsciiæøåÆøÅöôêÊ字符串Response = Array<NonAsciiStringæøåÆØÅöôêÊ字符串>;
+export type NonAsciiæøåÆøÅöôêÊ字符串Response = Array<NonAsciiStringæøåÆØÅöôêÊ字符串>;
 
 export type $OpenApiTs = {
     '/api/v{api-version}/no-tag': {

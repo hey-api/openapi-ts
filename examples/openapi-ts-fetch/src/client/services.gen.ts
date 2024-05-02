@@ -5,38 +5,38 @@ import { OpenAPI } from '@hey-api/client-fetch';
 import { request as __request } from '@hey-api/client-fetch';
 
 import type {
-  PetAddPetData,
-  PetAddPetResponse,
-  PetDeletePetData,
-  PetFindPetsByStatusData,
-  PetFindPetsByStatusResponse,
-  PetFindPetsByTagsData,
-  PetFindPetsByTagsResponse,
-  PetGetPetByIdData,
-  PetGetPetByIdResponse,
-  PetUpdatePetData,
-  PetUpdatePetResponse,
-  PetUpdatePetWithFormData,
-  PetUploadFileData,
-  PetUploadFileResponse,
-  StoreDeleteOrderData,
-  StoreGetInventoryResponse,
-  StoreGetOrderByIdData,
-  StoreGetOrderByIdResponse,
-  StorePlaceOrderData,
-  StorePlaceOrderResponse,
-  UserCreateUserData,
-  UserCreateUserResponse,
-  UserCreateUsersWithListInputData,
-  UserCreateUsersWithListInputResponse,
-  UserDeleteUserData,
-  UserGetUserByNameData,
-  UserGetUserByNameResponse,
-  UserLoginUserData,
-  UserLoginUserResponse,
-  UserLogoutUserResponse,
-  UserUpdateUserData,
-  UserUpdateUserResponse,
+  AddPetData,
+  AddPetResponse,
+  CreateUserData,
+  CreateUserResponse,
+  CreateUsersWithListInputData,
+  CreateUsersWithListInputResponse,
+  DeleteOrderData,
+  DeletePetData,
+  DeleteUserData,
+  FindPetsByStatusData,
+  FindPetsByStatusResponse,
+  FindPetsByTagsData,
+  FindPetsByTagsResponse,
+  GetInventoryResponse,
+  GetOrderByIdData,
+  GetOrderByIdResponse,
+  GetPetByIdData,
+  GetPetByIdResponse,
+  GetUserByNameData,
+  GetUserByNameResponse,
+  LoginUserData,
+  LoginUserResponse,
+  LogoutUserResponse,
+  PlaceOrderData,
+  PlaceOrderResponse,
+  UpdatePetData,
+  UpdatePetResponse,
+  UpdatePetWithFormData,
+  UpdateUserData,
+  UpdateUserResponse,
+  UploadFileData,
+  UploadFileResponse,
 } from './types.gen';
 
 export class PetService {
@@ -48,9 +48,7 @@ export class PetService {
    * @returns Pet Successful operation
    * @throws ApiError
    */
-  public static addPet(
-    data: PetAddPetData,
-  ): CancelablePromise<PetAddPetResponse> {
+  public static addPet(data: AddPetData): CancelablePromise<AddPetResponse> {
     return __request(OpenAPI, {
       body: data.requestBody,
       errors: {
@@ -71,8 +69,8 @@ export class PetService {
    * @throws ApiError
    */
   public static updatePet(
-    data: PetUpdatePetData,
-  ): CancelablePromise<PetUpdatePetResponse> {
+    data: UpdatePetData,
+  ): CancelablePromise<UpdatePetResponse> {
     return __request(OpenAPI, {
       body: data.requestBody,
       errors: {
@@ -95,8 +93,8 @@ export class PetService {
    * @throws ApiError
    */
   public static findPetsByStatus(
-    data: PetFindPetsByStatusData = {},
-  ): CancelablePromise<PetFindPetsByStatusResponse> {
+    data: FindPetsByStatusData = {},
+  ): CancelablePromise<FindPetsByStatusResponse> {
     return __request(OpenAPI, {
       errors: {
         400: 'Invalid status value',
@@ -118,8 +116,8 @@ export class PetService {
    * @throws ApiError
    */
   public static findPetsByTags(
-    data: PetFindPetsByTagsData = {},
-  ): CancelablePromise<PetFindPetsByTagsResponse> {
+    data: FindPetsByTagsData = {},
+  ): CancelablePromise<FindPetsByTagsResponse> {
     return __request(OpenAPI, {
       errors: {
         400: 'Invalid tag value',
@@ -141,8 +139,8 @@ export class PetService {
    * @throws ApiError
    */
   public static getPetById(
-    data: PetGetPetByIdData,
-  ): CancelablePromise<PetGetPetByIdResponse> {
+    data: GetPetByIdData,
+  ): CancelablePromise<GetPetByIdResponse> {
     return __request(OpenAPI, {
       errors: {
         400: 'Invalid ID supplied',
@@ -165,7 +163,7 @@ export class PetService {
    * @throws ApiError
    */
   public static updatePetWithForm(
-    data: PetUpdatePetWithFormData,
+    data: UpdatePetWithFormData,
   ): CancelablePromise<void> {
     return __request(OpenAPI, {
       errors: {
@@ -190,7 +188,7 @@ export class PetService {
    * @param data.apiKey
    * @throws ApiError
    */
-  public static deletePet(data: PetDeletePetData): CancelablePromise<void> {
+  public static deletePet(data: DeletePetData): CancelablePromise<void> {
     return __request(OpenAPI, {
       errors: {
         400: 'Invalid pet value',
@@ -216,8 +214,8 @@ export class PetService {
    * @throws ApiError
    */
   public static uploadFile(
-    data: PetUploadFileData,
-  ): CancelablePromise<PetUploadFileResponse> {
+    data: UploadFileData,
+  ): CancelablePromise<UploadFileResponse> {
     return __request(OpenAPI, {
       body: data.requestBody,
       mediaType: 'application/octet-stream',
@@ -240,7 +238,7 @@ export class StoreService {
    * @returns number successful operation
    * @throws ApiError
    */
-  public static getInventory(): CancelablePromise<StoreGetInventoryResponse> {
+  public static getInventory(): CancelablePromise<GetInventoryResponse> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/store/inventory',
@@ -256,8 +254,8 @@ export class StoreService {
    * @throws ApiError
    */
   public static placeOrder(
-    data: StorePlaceOrderData = {},
-  ): CancelablePromise<StorePlaceOrderResponse> {
+    data: PlaceOrderData = {},
+  ): CancelablePromise<PlaceOrderResponse> {
     return __request(OpenAPI, {
       body: data.requestBody,
       errors: {
@@ -278,8 +276,8 @@ export class StoreService {
    * @throws ApiError
    */
   public static getOrderById(
-    data: StoreGetOrderByIdData,
-  ): CancelablePromise<StoreGetOrderByIdResponse> {
+    data: GetOrderByIdData,
+  ): CancelablePromise<GetOrderByIdResponse> {
     return __request(OpenAPI, {
       errors: {
         400: 'Invalid ID supplied',
@@ -300,9 +298,7 @@ export class StoreService {
    * @param data.orderId ID of the order that needs to be deleted
    * @throws ApiError
    */
-  public static deleteOrder(
-    data: StoreDeleteOrderData,
-  ): CancelablePromise<void> {
+  public static deleteOrder(data: DeleteOrderData): CancelablePromise<void> {
     return __request(OpenAPI, {
       errors: {
         400: 'Invalid ID supplied',
@@ -327,8 +323,8 @@ export class UserService {
    * @throws ApiError
    */
   public static createUser(
-    data: UserCreateUserData = {},
-  ): CancelablePromise<UserCreateUserResponse> {
+    data: CreateUserData = {},
+  ): CancelablePromise<CreateUserResponse> {
     return __request(OpenAPI, {
       body: data.requestBody,
       mediaType: 'application/json',
@@ -347,8 +343,8 @@ export class UserService {
    * @throws ApiError
    */
   public static createUsersWithListInput(
-    data: UserCreateUsersWithListInputData = {},
-  ): CancelablePromise<UserCreateUsersWithListInputResponse> {
+    data: CreateUsersWithListInputData = {},
+  ): CancelablePromise<CreateUsersWithListInputResponse> {
     return __request(OpenAPI, {
       body: data.requestBody,
       mediaType: 'application/json',
@@ -366,8 +362,8 @@ export class UserService {
    * @throws ApiError
    */
   public static loginUser(
-    data: UserLoginUserData = {},
-  ): CancelablePromise<UserLoginUserResponse> {
+    data: LoginUserData = {},
+  ): CancelablePromise<LoginUserResponse> {
     return __request(OpenAPI, {
       errors: {
         400: 'Invalid username/password supplied',
@@ -386,7 +382,7 @@ export class UserService {
    * @returns unknown successful operation
    * @throws ApiError
    */
-  public static logoutUser(): CancelablePromise<UserLogoutUserResponse> {
+  public static logoutUser(): CancelablePromise<LogoutUserResponse> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/user/logout',
@@ -401,8 +397,8 @@ export class UserService {
    * @throws ApiError
    */
   public static getUserByName(
-    data: UserGetUserByNameData,
-  ): CancelablePromise<UserGetUserByNameResponse> {
+    data: GetUserByNameData,
+  ): CancelablePromise<GetUserByNameResponse> {
     return __request(OpenAPI, {
       errors: {
         400: 'Invalid username supplied',
@@ -426,8 +422,8 @@ export class UserService {
    * @throws ApiError
    */
   public static updateUser(
-    data: UserUpdateUserData,
-  ): CancelablePromise<UserUpdateUserResponse> {
+    data: UpdateUserData,
+  ): CancelablePromise<UpdateUserResponse> {
     return __request(OpenAPI, {
       body: data.requestBody,
       mediaType: 'application/json',
@@ -446,7 +442,7 @@ export class UserService {
    * @param data.username The name that needs to be deleted
    * @throws ApiError
    */
-  public static deleteUser(data: UserDeleteUserData): CancelablePromise<void> {
+  public static deleteUser(data: DeleteUserData): CancelablePromise<void> {
     return __request(OpenAPI, {
       errors: {
         400: 'Invalid username supplied',

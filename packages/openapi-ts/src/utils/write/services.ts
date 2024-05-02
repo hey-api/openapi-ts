@@ -17,18 +17,10 @@ import { unique } from '../unique';
 type OnImport = (importedType: string) => void;
 
 export const operationDataTypeName = (operation: Operation) =>
-  `${camelcase(operation.service, {
-    pascalCase: true,
-  })}${camelcase(operation.name, {
-    pascalCase: true,
-  })}Data`;
+  `${camelcase(operation.name, { pascalCase: true })}Data`;
 
 export const operationResponseTypeName = (operation: Operation) =>
-  `${camelcase(operation.service, {
-    pascalCase: true,
-  })}${camelcase(operation.name, {
-    pascalCase: true,
-  })}Response`;
+  `${camelcase(operation.name, { pascalCase: true })}Response`;
 
 const toOperationParamType = (
   operation: Operation,
