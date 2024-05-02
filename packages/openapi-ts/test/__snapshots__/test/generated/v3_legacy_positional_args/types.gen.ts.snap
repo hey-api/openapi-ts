@@ -20,7 +20,7 @@ export type ModelWithStringError = {
     prop?: string;
 };
 
-export type DefaultsCallWithDefaultParametersData = {
+export type CallWithDefaultParametersData = {
     /**
      * This is a simple boolean with default value
      */
@@ -43,7 +43,7 @@ export type DefaultsCallWithDefaultParametersData = {
     parameterString: string | null;
 };
 
-export type DefaultsCallWithDefaultOptionalParametersData = {
+export type CallWithDefaultOptionalParametersData = {
     /**
      * This is a simple boolean that is optional with default value
      */
@@ -66,7 +66,7 @@ export type DefaultsCallWithDefaultOptionalParametersData = {
     parameterString: string;
 };
 
-export type DefaultsCallToTestOrderOfParamsData = {
+export type CallToTestOrderOfParamsData = {
     /**
      * This is a optional string with default
      */

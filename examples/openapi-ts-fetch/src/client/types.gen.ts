@@ -12,11 +12,6 @@ export type Order = {
   complete?: boolean;
 };
 
-/**
- * Order Status
- */
-export type status = 'placed' | 'approved' | 'delivered';
-
 export type Customer = {
   id?: number;
   username?: string;
@@ -72,52 +67,52 @@ export type ApiResponse = {
   message?: string;
 };
 
-export type PetAddPetData = {
+export type AddPetData = {
   /**
    * Create a new pet in the store
    */
   requestBody: Pet;
 };
 
-export type PetAddPetResponse = Pet;
+export type AddPetResponse = Pet;
 
-export type PetUpdatePetData = {
+export type UpdatePetData = {
   /**
    * Update an existent pet in the store
    */
   requestBody: Pet;
 };
 
-export type PetUpdatePetResponse = Pet;
+export type UpdatePetResponse = Pet;
 
-export type PetFindPetsByStatusData = {
+export type FindPetsByStatusData = {
   /**
    * Status values that need to be considered for filter
    */
   status?: 'available' | 'pending' | 'sold';
 };
 
-export type PetFindPetsByStatusResponse = Array<Pet>;
+export type FindPetsByStatusResponse = Array<Pet>;
 
-export type PetFindPetsByTagsData = {
+export type FindPetsByTagsData = {
   /**
    * Tags to filter by
    */
   tags?: Array<string>;
 };
 
-export type PetFindPetsByTagsResponse = Array<Pet>;
+export type FindPetsByTagsResponse = Array<Pet>;
 
-export type PetGetPetByIdData = {
+export type GetPetByIdData = {
   /**
    * ID of pet to return
    */
   petId: number;
 };
 
-export type PetGetPetByIdResponse = Pet;
+export type GetPetByIdResponse = Pet;
 
-export type PetUpdatePetWithFormData = {
+export type UpdatePetWithFormData = {
   /**
    * Name of pet that needs to be updated
    */
@@ -132,7 +127,7 @@ export type PetUpdatePetWithFormData = {
   status?: string;
 };
 
-export type PetDeletePetData = {
+export type DeletePetData = {
   apiKey?: string;
   /**
    * Pet id to delete
@@ -140,7 +135,7 @@ export type PetDeletePetData = {
   petId: number;
 };
 
-export type PetUploadFileData = {
+export type UploadFileData = {
   /**
    * Additional Metadata
    */
@@ -152,50 +147,50 @@ export type PetUploadFileData = {
   requestBody?: Blob | File;
 };
 
-export type PetUploadFileResponse = ApiResponse;
+export type UploadFileResponse = ApiResponse;
 
-export type StoreGetInventoryResponse = {
+export type GetInventoryResponse = {
   [key: string]: number;
 };
 
-export type StorePlaceOrderData = {
+export type PlaceOrderData = {
   requestBody?: Order;
 };
 
-export type StorePlaceOrderResponse = Order;
+export type PlaceOrderResponse = Order;
 
-export type StoreGetOrderByIdData = {
+export type GetOrderByIdData = {
   /**
    * ID of order that needs to be fetched
    */
   orderId: number;
 };
 
-export type StoreGetOrderByIdResponse = Order;
+export type GetOrderByIdResponse = Order;
 
-export type StoreDeleteOrderData = {
+export type DeleteOrderData = {
   /**
    * ID of the order that needs to be deleted
    */
   orderId: number;
 };
 
-export type UserCreateUserData = {
+export type CreateUserData = {
   /**
    * Created user object
    */
   requestBody?: User;
 };
 
-export type UserCreateUserResponse = User;
+export type CreateUserResponse = User;
 
-export type UserCreateUsersWithListInputData = {
+export type CreateUsersWithListInputData = {
   requestBody?: Array<User>;
 };
 
-export type UserCreateUsersWithListInputResponse = User | unknown;
+export type CreateUsersWithListInputResponse = User | unknown;
 
-export type UserLoginUserData = {
+export type LoginUserData = {
   /**
    * The password for login in clear text
    */
@@ -206,20 +201,20 @@ export type UserLoginUserData = {
   username?: string;
 };
 
-export type UserLoginUserResponse = string;
+export type LoginUserResponse = string;
 
-export type UserLogoutUserResponse = unknown;
+export type LogoutUserResponse = unknown;
 
-export type UserGetUserByNameData = {
+export type GetUserByNameData = {
   /**
    * The name that needs to be fetched. Use user1 for testing.
    */
   username: string;
 };
 
-export type UserGetUserByNameResponse = User;
+export type GetUserByNameResponse = User;
 
-export type UserUpdateUserData = {
+export type UpdateUserData = {
   /**
    * Update an existent user in the store
    */
@@ -230,9 +225,9 @@ export type UserUpdateUserData = {
   username: string;
 };
 
-export type UserUpdateUserResponse = unknown;
+export type UpdateUserResponse = unknown;
 
-export type UserDeleteUserData = {
+export type DeleteUserData = {
   /**
    * The name that needs to be deleted
    */

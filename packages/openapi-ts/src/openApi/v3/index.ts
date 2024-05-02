@@ -20,6 +20,7 @@ export const parse = (openApi: OpenApi): Client => {
     enumNames: [],
     models,
     server,
+    serviceTypes: [],
     services,
     version,
   };
