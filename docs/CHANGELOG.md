@@ -1,5 +1,15 @@
 # @hey-api/docs
 
+## 0.5.3
+
+### Patch Changes
+
+- docs: add links to homepage ([#489](https://github.com/hey-api/openapi-ts/pull/489))
+
+- feat: remove enum postfix, use typescript enums in types when generated, export enums from types.gen.ts ([#498](https://github.com/hey-api/openapi-ts/pull/498))
+
+- docs: add examples ([#476](https://github.com/hey-api/openapi-ts/pull/476))
+
 ## 0.5.2
 
 ### Patch Changes
