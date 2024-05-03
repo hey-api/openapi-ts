@@ -15,9 +15,9 @@ export const getModelProperties = (
   getModel: GetModelFn,
 ): Model[] => {
   const models: Model[] = [];
-  for (const propertyName in definition.properties) {
-    if (definition.properties.hasOwnProperty(propertyName)) {
-      const property = definition.properties[propertyName];
+
+  Object.entries(definition.properties ?? {}).forEach(
+    ([propertyName, property]) => {
       const propertyRequired = !!definition.required?.includes(propertyName);
       if (property.$ref) {
         const model = getType(property.$ref);
@@ -88,7 +88,8 @@ export const getModelProperties = (
           uniqueItems: property.uniqueItems,
         });
       }
-    }
-  }
+    },
+  );
+
   return models;
 };

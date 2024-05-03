@@ -180,6 +180,7 @@ const getServices = (userConfig: UserConfig): Config['services'] => {
 const getTypes = (userConfig: UserConfig): Config['types'] => {
   let types: Config['types'] = {
     dates: false,
+    enums: false,
     export: true,
     name: 'preserve',
   };
@@ -253,7 +254,6 @@ const initConfig = async (
     base,
     debug = false,
     dryRun = false,
-    enums = false,
     exportCore = true,
     format = false,
     input,
@@ -296,7 +296,6 @@ const initConfig = async (
     client,
     debug,
     dryRun,
-    enums,
     exportCore: client.startsWith('@hey-api') ? false : exportCore,
     format,
     input,

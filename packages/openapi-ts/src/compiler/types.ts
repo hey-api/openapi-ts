@@ -76,8 +76,9 @@ export const createArrayType = <T>({
  * @returns ts.ObjectLiteralExpression
  */
 export const createObjectType = <T extends object>({
-  comments = {},
+  comments,
   identifiers = [],
+  leadingComment,
   multiLine = true,
   obj,
   shorthand = false,
@@ -86,6 +87,7 @@ export const createObjectType = <T extends object>({
   obj: T;
   comments?: Record<string | number, Comments>;
   identifiers?: string[];
+  leadingComment?: Comments;
   multiLine?: boolean;
   shorthand?: boolean;
   unescape?: boolean;
@@ -111,6 +113,14 @@ export const createObjectType = <T extends object>({
       }
       // Check key value equality before possibly modifying it
       const hasShorthandSupport = key === value;
+      if (
+        key.match(/^[0-9]/) &&
+        key.match(/\D+/g) &&
+        !key.startsWith("'") &&
+        !key.endsWith("'")
+      ) {
+        key = `'${key}'`;
+      }
       if (key.match(/\W/g) && !key.startsWith("'") && !key.endsWith("'")) {
         key = `'${key}'`;
       }
@@ -118,17 +128,24 @@ export const createObjectType = <T extends object>({
         shorthand && hasShorthandSupport
           ? ts.factory.createShorthandPropertyAssignment(value)
           : ts.factory.createPropertyAssignment(key, initializer);
-      const c = comments?.[key];
-      if (c?.length) {
-        addLeadingJSDocComment(assignment, c);
+      const comment = comments?.[key];
+      if (comment) {
+        addLeadingJSDocComment(assignment, comment);
       }
       return assignment;
     })
     .filter(isType<ts.ShorthandPropertyAssignment | ts.PropertyAssignment>);
-  return ts.factory.createObjectLiteralExpression(
+
+  const expression = ts.factory.createObjectLiteralExpression(
     properties as any[],
     multiLine,
   );
+
+  if (leadingComment) {
+    addLeadingJSDocComment(expression, leadingComment);
+  }
+
+  return expression;
 };
 
 /**
@@ -142,13 +159,13 @@ export const createObjectType = <T extends object>({
 export const createEnumDeclaration = <T extends object>({
   name,
   obj,
-  leadingComment = [],
-  comments = {},
+  leadingComment,
+  comments,
 }: {
   name: string;
   obj: T;
-  leadingComment: Comments;
-  comments: Record<string | number, Comments>;
+  leadingComment?: Comments;
+  comments?: Record<string | number, Comments>;
 }): ts.EnumDeclaration => {
   const declaration = ts.factory.createEnumDeclaration(
     [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
@@ -156,14 +173,14 @@ export const createEnumDeclaration = <T extends object>({
     Object.entries(obj).map(([key, value]) => {
       const initializer = toExpression({ unescape: true, value });
       const assignment = ts.factory.createEnumMember(key, initializer);
-      const c = comments?.[key];
-      if (c) {
-        addLeadingJSDocComment(assignment, c);
+      const comment = comments?.[key];
+      if (comment) {
+        addLeadingJSDocComment(assignment, comment);
       }
       return assignment;
     }),
   );
-  if (leadingComment.length) {
+  if (leadingComment) {
     addLeadingJSDocComment(declaration, leadingComment);
   }
   return declaration;

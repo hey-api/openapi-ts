@@ -173,18 +173,20 @@ You can also prevent your client from being processed by linters by adding your 
 
 If you need to iterate through possible field values without manually typing arrays, you can export enums with
 
-```js{2}
+```js{5}
 export default {
-  enums: 'javascript',
   input: 'path/to/openapi.json',
   output: 'src/client',
+  types: {
+    enums: 'javascript',
+  },
 }
 ```
 
 This will export enums as plain JavaScript objects. For example, `Foo` would become
 
 ```js
-export const FooEnum = {
+export const Foo = {
   FOO: 'foo',
   BAR: 'bar',
 } as const;
@@ -192,11 +194,13 @@ export const FooEnum = {
 
 We discourage generating [TypeScript enums](https://www.typescriptlang.org/docs/handbook/enums.html) because they are not standard JavaScript and pose [typing challenges](https://dev.to/ivanzm123/dont-use-enums-in-typescript-they-are-very-dangerous-57bh). If you really need TypeScript enums, you can export them with
 
-```js{2}
+```js{5}
 export default {
-  enums: 'typescript',
   input: 'path/to/openapi.json',
   output: 'src/client',
+  types: {
+    enums: 'typescript',
+  },
 }
 ```
 

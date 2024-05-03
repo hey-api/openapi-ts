@@ -4,7 +4,40 @@ import type { CancelablePromise } from '@hey-api/client-fetch';
 import { OpenAPI } from '@hey-api/client-fetch';
 import { request as __request } from '@hey-api/client-fetch';
 
-import type { $OpenApiTs } from './types.gen';
+import type {
+  AddPetData,
+  AddPetResponse,
+  CreateUserData,
+  CreateUserResponse,
+  CreateUsersWithListInputData,
+  CreateUsersWithListInputResponse,
+  DeleteOrderData,
+  DeletePetData,
+  DeleteUserData,
+  FindPetsByStatusData,
+  FindPetsByStatusResponse,
+  FindPetsByTagsData,
+  FindPetsByTagsResponse,
+  GetInventoryResponse,
+  GetOrderByIdData,
+  GetOrderByIdResponse,
+  GetPetByIdData,
+  GetPetByIdResponse,
+  GetUserByNameData,
+  GetUserByNameResponse,
+  LoginUserData,
+  LoginUserResponse,
+  LogoutUserResponse,
+  PlaceOrderData,
+  PlaceOrderResponse,
+  UpdatePetData,
+  UpdatePetResponse,
+  UpdatePetWithFormData,
+  UpdateUserData,
+  UpdateUserResponse,
+  UploadFileData,
+  UploadFileResponse,
+} from './types.gen';
 
 export class PetService {
   /**
@@ -15,9 +48,7 @@ export class PetService {
    * @returns Pet Successful operation
    * @throws ApiError
    */
-  public static addPet(
-    data: $OpenApiTs['/pet']['post']['req'],
-  ): CancelablePromise<$OpenApiTs['/pet']['post']['res'][200]> {
+  public static addPet(data: AddPetData): CancelablePromise<AddPetResponse> {
     return __request(OpenAPI, {
       body: data.requestBody,
       errors: {
@@ -38,8 +69,8 @@ export class PetService {
    * @throws ApiError
    */
   public static updatePet(
-    data: $OpenApiTs['/pet']['put']['req'],
-  ): CancelablePromise<$OpenApiTs['/pet']['put']['res'][200]> {
+    data: UpdatePetData,
+  ): CancelablePromise<UpdatePetResponse> {
     return __request(OpenAPI, {
       body: data.requestBody,
       errors: {
@@ -62,8 +93,8 @@ export class PetService {
    * @throws ApiError
    */
   public static findPetsByStatus(
-    data: $OpenApiTs['/pet/findByStatus']['get']['req'] = {},
-  ): CancelablePromise<$OpenApiTs['/pet/findByStatus']['get']['res'][200]> {
+    data: FindPetsByStatusData = {},
+  ): CancelablePromise<FindPetsByStatusResponse> {
     return __request(OpenAPI, {
       errors: {
         400: 'Invalid status value',
@@ -85,8 +116,8 @@ export class PetService {
    * @throws ApiError
    */
   public static findPetsByTags(
-    data: $OpenApiTs['/pet/findByTags']['get']['req'] = {},
-  ): CancelablePromise<$OpenApiTs['/pet/findByTags']['get']['res'][200]> {
+    data: FindPetsByTagsData = {},
+  ): CancelablePromise<FindPetsByTagsResponse> {
     return __request(OpenAPI, {
       errors: {
         400: 'Invalid tag value',
@@ -108,8 +139,8 @@ export class PetService {
    * @throws ApiError
    */
   public static getPetById(
-    data: $OpenApiTs['/pet/{petId}']['get']['req'],
-  ): CancelablePromise<$OpenApiTs['/pet/{petId}']['get']['res'][200]> {
+    data: GetPetByIdData,
+  ): CancelablePromise<GetPetByIdResponse> {
     return __request(OpenAPI, {
       errors: {
         400: 'Invalid ID supplied',
@@ -132,7 +163,7 @@ export class PetService {
    * @throws ApiError
    */
   public static updatePetWithForm(
-    data: $OpenApiTs['/pet/{petId}']['post']['req'],
+    data: UpdatePetWithFormData,
   ): CancelablePromise<void> {
     return __request(OpenAPI, {
       errors: {
@@ -157,9 +188,7 @@ export class PetService {
    * @param data.apiKey
    * @throws ApiError
    */
-  public static deletePet(
-    data: $OpenApiTs['/pet/{petId}']['delete']['req'],
-  ): CancelablePromise<void> {
+  public static deletePet(data: DeletePetData): CancelablePromise<void> {
     return __request(OpenAPI, {
       errors: {
         400: 'Invalid pet value',
@@ -185,10 +214,8 @@ export class PetService {
    * @throws ApiError
    */
   public static uploadFile(
-    data: $OpenApiTs['/pet/{petId}/uploadImage']['post']['req'],
-  ): CancelablePromise<
-    $OpenApiTs['/pet/{petId}/uploadImage']['post']['res'][200]
-  > {
+    data: UploadFileData,
+  ): CancelablePromise<UploadFileResponse> {
     return __request(OpenAPI, {
       body: data.requestBody,
       mediaType: 'application/octet-stream',
@@ -211,9 +238,7 @@ export class StoreService {
    * @returns number successful operation
    * @throws ApiError
    */
-  public static getInventory(): CancelablePromise<
-    $OpenApiTs['/store/inventory']['get']['res'][200]
-  > {
+  public static getInventory(): CancelablePromise<GetInventoryResponse> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/store/inventory',
@@ -229,8 +254,8 @@ export class StoreService {
    * @throws ApiError
    */
   public static placeOrder(
-    data: $OpenApiTs['/store/order']['post']['req'] = {},
-  ): CancelablePromise<$OpenApiTs['/store/order']['post']['res'][200]> {
+    data: PlaceOrderData = {},
+  ): CancelablePromise<PlaceOrderResponse> {
     return __request(OpenAPI, {
       body: data.requestBody,
       errors: {
@@ -251,10 +276,8 @@ export class StoreService {
    * @throws ApiError
    */
   public static getOrderById(
-    data: $OpenApiTs['/store/order/{orderId}']['get']['req'],
-  ): CancelablePromise<
-    $OpenApiTs['/store/order/{orderId}']['get']['res'][200]
-  > {
+    data: GetOrderByIdData,
+  ): CancelablePromise<GetOrderByIdResponse> {
     return __request(OpenAPI, {
       errors: {
         400: 'Invalid ID supplied',
@@ -275,9 +298,7 @@ export class StoreService {
    * @param data.orderId ID of the order that needs to be deleted
    * @throws ApiError
    */
-  public static deleteOrder(
-    data: $OpenApiTs['/store/order/{orderId}']['delete']['req'],
-  ): CancelablePromise<void> {
+  public static deleteOrder(data: DeleteOrderData): CancelablePromise<void> {
     return __request(OpenAPI, {
       errors: {
         400: 'Invalid ID supplied',
@@ -302,8 +323,8 @@ export class UserService {
    * @throws ApiError
    */
   public static createUser(
-    data: $OpenApiTs['/user']['post']['req'] = {},
-  ): CancelablePromise<$OpenApiTs['/user']['post']['res'][200]> {
+    data: CreateUserData = {},
+  ): CancelablePromise<CreateUserResponse> {
     return __request(OpenAPI, {
       body: data.requestBody,
       mediaType: 'application/json',
@@ -322,11 +343,8 @@ export class UserService {
    * @throws ApiError
    */
   public static createUsersWithListInput(
-    data: $OpenApiTs['/user/createWithList']['post']['req'] = {},
-  ): CancelablePromise<
-    | $OpenApiTs['/user/createWithList']['post']['res'][200]
-    | $OpenApiTs['/user/createWithList']['post']['res'][200]
-  > {
+    data: CreateUsersWithListInputData = {},
+  ): CancelablePromise<CreateUsersWithListInputResponse> {
     return __request(OpenAPI, {
       body: data.requestBody,
       mediaType: 'application/json',
@@ -344,8 +362,8 @@ export class UserService {
    * @throws ApiError
    */
   public static loginUser(
-    data: $OpenApiTs['/user/login']['get']['req'] = {},
-  ): CancelablePromise<$OpenApiTs['/user/login']['get']['res'][200]> {
+    data: LoginUserData = {},
+  ): CancelablePromise<LoginUserResponse> {
     return __request(OpenAPI, {
       errors: {
         400: 'Invalid username/password supplied',
@@ -364,9 +382,7 @@ export class UserService {
    * @returns unknown successful operation
    * @throws ApiError
    */
-  public static logoutUser(): CancelablePromise<
-    $OpenApiTs['/user/logout']['get']['res'][200]
-  > {
+  public static logoutUser(): CancelablePromise<LogoutUserResponse> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/user/logout',
@@ -381,8 +397,8 @@ export class UserService {
    * @throws ApiError
    */
   public static getUserByName(
-    data: $OpenApiTs['/user/{username}']['get']['req'],
-  ): CancelablePromise<$OpenApiTs['/user/{username}']['get']['res'][200]> {
+    data: GetUserByNameData,
+  ): CancelablePromise<GetUserByNameResponse> {
     return __request(OpenAPI, {
       errors: {
         400: 'Invalid username supplied',
@@ -406,8 +422,8 @@ export class UserService {
    * @throws ApiError
    */
   public static updateUser(
-    data: $OpenApiTs['/user/{username}']['put']['req'],
-  ): CancelablePromise<$OpenApiTs['/user/{username}']['put']['res'][200]> {
+    data: UpdateUserData,
+  ): CancelablePromise<UpdateUserResponse> {
     return __request(OpenAPI, {
       body: data.requestBody,
       mediaType: 'application/json',
@@ -426,9 +442,7 @@ export class UserService {
    * @param data.username The name that needs to be deleted
    * @throws ApiError
    */
-  public static deleteUser(
-    data: $OpenApiTs['/user/{username}']['delete']['req'],
-  ): CancelablePromise<void> {
+  public static deleteUser(data: DeleteUserData): CancelablePromise<void> {
     return __request(OpenAPI, {
       errors: {
         400: 'Invalid username supplied',

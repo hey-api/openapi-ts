@@ -134,7 +134,7 @@ export type ArrayWithArray = Array<Array<ModelWithString>>;
  * This is a simple array with properties
  */
 export type ArrayWithProperties = Array<{
-    foo?: camelCaseCommentWithBreaks;
+    '16x16'?: camelCaseCommentWithBreaks;
     bar?: string;
 }>;
 
@@ -170,8 +170,9 @@ export type DictionaryWithString = {
 };
 
 export type DictionaryWithPropertiesAndAdditionalProperties = {
-    foo?: string;
-    [key: string]: (string) | undefined;
+    foo?: number;
+    bar?: boolean;
+    [key: string]: (string | number | boolean) | undefined;
 };
 
 /**
@@ -665,7 +666,7 @@ export type ModelWithAdditionalPropertiesEqTrue = {
      * This is a simple string property
      */
     prop?: string;
-    [key: string]: unknown;
+    [key: string]: unknown | string;
 };
 
 export type NestedAnyOfArraysNullable = {
@@ -673,7 +674,7 @@ export type NestedAnyOfArraysNullable = {
 };
 
 export type CompositionWithOneOfAndProperties = {
-    foo: SimpleParameter;
+    foo: ParameterSimpleParameter;
     baz: number | null;
     qux: number;
 } | {
@@ -812,9 +813,9 @@ export type ModelWithBackticksInDescription = {
 /**
  * This is a reusable parameter
  */
-export type SimpleParameter = string;
+export type ParameterSimpleParameter = string;
 
 /**
  * Parameter with illegal characters
  */
-export type x_Foo_Bar = string;
+export type Parameterx_Foo_Bar = string;

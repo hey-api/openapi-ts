@@ -20,6 +20,7 @@ describe('writeCore', () => {
       enumNames: [],
       models: [],
       server: 'http://localhost:8080',
+      serviceTypes: [],
       services: [],
       version: '1.0',
     };
@@ -28,7 +29,6 @@ describe('writeCore', () => {
       client: 'fetch',
       debug: false,
       dryRun: false,
-      enums: 'javascript',
       exportCore: true,
       format: false,
       input: '',
@@ -37,7 +37,9 @@ describe('writeCore', () => {
       output: '',
       schemas: {},
       services: {},
-      types: {},
+      types: {
+        enums: 'javascript',
+      },
       useOptions: true,
     });
 
@@ -74,6 +76,7 @@ describe('writeCore', () => {
       enumNames: [],
       models: [],
       server: 'http://localhost:8080',
+      serviceTypes: [],
       services: [],
       version: '1.0',
     };
@@ -82,7 +85,6 @@ describe('writeCore', () => {
       client: 'fetch',
       debug: false,
       dryRun: false,
-      enums: 'javascript',
       exportCore: true,
       format: false,
       input: '',
@@ -91,7 +93,9 @@ describe('writeCore', () => {
       output: '',
       schemas: {},
       services: {},
-      types: {},
+      types: {
+        enums: 'javascript',
+      },
       useOptions: true,
     });
 
@@ -110,6 +114,7 @@ describe('writeCore', () => {
       enumNames: [],
       models: [],
       server: 'http://localhost:8080',
+      serviceTypes: [],
       services: [],
       version: '1.0',
     };
@@ -119,7 +124,6 @@ describe('writeCore', () => {
       client: 'fetch',
       debug: false,
       dryRun: false,
-      enums: 'javascript',
       exportCore: true,
       format: false,
       input: '',
@@ -128,7 +132,9 @@ describe('writeCore', () => {
       output: '',
       schemas: {},
       services: {},
-      types: {},
+      types: {
+        enums: 'javascript',
+      },
       useOptions: true,
     });
 

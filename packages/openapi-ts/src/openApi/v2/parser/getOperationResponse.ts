@@ -10,12 +10,12 @@ import { getModel } from './getModel';
 export const getOperationResponse = (
   openApi: OpenApi,
   response: OpenApiResponse,
-  responseCode: number,
+  code: number | 'default',
 ): OperationResponse => {
   const operationResponse: OperationResponse = {
     $refs: [],
-    base: responseCode !== 204 ? 'unknown' : 'void',
-    code: responseCode,
+    base: code !== 204 ? 'unknown' : 'void',
+    code,
     description: response.description || null,
     enum: [],
     enums: [],
@@ -30,7 +30,7 @@ export const getOperationResponse = (
     name: '',
     properties: [],
     template: null,
-    type: responseCode !== 204 ? 'unknown' : 'void',
+    type: code !== 204 ? 'unknown' : 'void',
   };
 
   // If this response has a schema, then we need to check two things:
@@ -84,17 +84,13 @@ export const getOperationResponse = (
 
   // We support basic properties from response headers, since both
   // fetch and XHR client just support string types.
-  if (response.headers) {
-    for (const name in response.headers) {
-      if (response.headers.hasOwnProperty(name)) {
-        operationResponse.in = 'header';
-        operationResponse.name = name;
-        operationResponse.type = 'string';
-        operationResponse.base = 'string';
-        return operationResponse;
-      }
-    }
-  }
+  Object.keys(response.headers ?? {}).forEach((name) => {
+    operationResponse.in = 'header';
+    operationResponse.name = name;
+    operationResponse.type = 'string';
+    operationResponse.base = 'string';
+    return operationResponse;
+  });
 
   return operationResponse;
 };

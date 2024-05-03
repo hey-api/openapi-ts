@@ -137,7 +137,7 @@ export const createMethodDeclaration = ({
     returnType ? createTypeNode(returnType) : undefined,
     ts.factory.createBlock(statements, multiLine),
   );
-  if (comment?.length) {
+  if (comment) {
     addLeadingJSDocComment(node, comment);
   }
   return node;

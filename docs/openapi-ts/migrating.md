@@ -19,7 +19,6 @@ Currently, `index.ts` file exports all generated artifacts. We will be slowly mo
 export { ApiError } from './core/ApiError';
 export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI, type OpenAPIConfig } from './core/OpenAPI';
-export * from './enums.gen'; // [!code --]
 export * from './schemas.gen'; // [!code --]
 export * from './services.gen'; // [!code --]
 export * from './types.gen'; // [!code --]
@@ -28,7 +27,6 @@ export * from './types.gen'; // [!code --]
 Any non-core related imports should be imported as
 
 ```js
-import { Enum } from 'client/enums.gen'
 import { $Schema } from 'client/schemas.gen';
 import { DefaultService } from 'client/services.gen';
 import type { Model } from 'client/types.gen';
@@ -51,6 +49,51 @@ This config option is deprecated and will be removed in favor of [clients](./cli
 ### Deprecated `name`
 
 This config option is deprecated and will be removed in favor of [clients](./clients).
+
+## v0.43.0
+
+### Removed `enums.gen.ts`
+
+This file has been removed. Instead, enums are exported from `types.gen.ts`. If you use imports from `enums.gen.ts`, you should be able to easily find and replace all instances.
+
+```js
+import { Foo } from 'client/enums.gen'; // [!code --]
+import { Foo } from 'client/types.gen'; // [!code ++]
+```
+
+### Removed `Enum` postfix
+
+Generated enum names are no longer postfixed with `Enum`. You can either alias your imports
+
+```js
+import { FooEnum } from 'client/types.gen'; // [!code --]
+import { Foo as FooEnum } from 'client/types.gen'; // [!code ++]
+
+console.log(FooEnum.value); // only import needs to be changed
+```
+
+or update all references to enums
+
+```js
+import { FooEnum } from 'client/types.gen'; // [!code --]
+import { Foo } from 'client/types.gen'; // [!code ++]
+
+console.log(Foo.value); // all references need to be changed
+```
+
+### Moved `enums`
+
+This config option has been moved. You can now configure enums using the `types.enums` option.
+
+```js{5}
+export default {
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  types: {
+    enums: 'javascript',
+  },
+}
+```
 
 ## v0.42.0
 

@@ -1,3 +1,4 @@
+import { getOperationResults } from '../../../utils/operation';
 import type {
   Operation,
   OperationParameter,
@@ -17,7 +18,6 @@ import type { OpenApiRequestBody } from '../interfaces/OpenApiRequestBody';
 import { getOperationParameters } from './getOperationParameters';
 import { getOperationRequestBody } from './getOperationRequestBody';
 import { getOperationResponses } from './getOperationResponses';
-import { getOperationResults } from './getOperationResults';
 
 // add global path parameters, skip duplicate names
 const mergeParameters = (

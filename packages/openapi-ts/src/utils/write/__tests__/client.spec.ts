@@ -15,7 +15,6 @@ describe('writeClient', () => {
       client: 'fetch',
       debug: false,
       dryRun: false,
-      enums: 'javascript',
       exportCore: true,
       format: 'prettier',
       input: '',
@@ -23,7 +22,9 @@ describe('writeClient', () => {
       output: './dist',
       schemas: {},
       services: {},
-      types: {},
+      types: {
+        enums: 'javascript',
+      },
       useOptions: false,
     });
 
@@ -31,6 +32,7 @@ describe('writeClient', () => {
       enumNames: [],
       models: [],
       server: 'http://localhost:8080',
+      serviceTypes: [],
       services: [],
       version: 'v1',
     };
