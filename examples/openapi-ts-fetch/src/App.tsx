@@ -6,18 +6,46 @@ import { useState } from 'react';
 import { $Pet } from './client/schemas.gen';
 import { PetService } from './client/services.gen';
 
-createClient({
+client.interceptors.request.use((request, options) => {
+  console.log('global request interceptor', request, options);
+  return request;
+});
+
+client.interceptors.response.use((response, request, options) => {
+  console.log('global response interceptor', response, request, options);
+  return response;
+});
+
+const globalClient = createClient({
   baseUrl: 'https://petstore3.swagger.io/api/v3',
 });
 
-OpenAPI.BASE = client.getConfig().baseUrl;
+globalClient.interceptors.request.use((request, options) => {
+  console.log('global request interceptor 2', request, options);
+  return request;
+});
 
-// OpenAPI.interceptors.response.use((response) => {
-//   if (response.status === 200) {
-//     console.log(`request to ${response.url} was successful`);
-//   }
-//   return response;
-// });
+globalClient.interceptors.response.use((response, request, options) => {
+  console.log('global response interceptor 2', response, request, options);
+  return response;
+});
+
+const localClient = createClient({
+  baseUrl: 'https://petstore3.swagger.io/api/v3',
+  global: false,
+});
+
+localClient.interceptors.request.use((request, options) => {
+  console.log('local request interceptor', request, options);
+  return request;
+});
+
+localClient.interceptors.response.use((response, request, options) => {
+  console.log('local response interceptor', response, request, options);
+  return response;
+});
+
+OpenAPI.BASE = client.getConfig().baseUrl;
 
 function App() {
   const [pet, setPet] =

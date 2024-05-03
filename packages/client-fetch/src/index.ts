@@ -18,30 +18,20 @@ import {
 } from '@hey-api/client-core';
 
 import type { Config, Req } from './types';
-import { createQuerySerializer, getUrl, mergeHeaders } from './utils';
+import {
+  createDefaultConfig,
+  createInterceptors,
+  createQuerySerializer,
+  getUrl,
+  mergeHeaders,
+} from './utils';
 
-type Middleware<T> = (value: T) => T | Promise<T>;
-
-class Interceptors<T> {
-  _fns: Middleware<T>[];
-
-  constructor() {
-    this._fns = [];
-  }
-
-  eject(fn: Middleware<T>) {
-    const index = this._fns.indexOf(fn);
-    if (index !== -1) {
-      this._fns = [...this._fns.slice(0, index), ...this._fns.slice(index + 1)];
-    }
-  }
-
-  use(fn: Middleware<T>) {
-    this._fns = [...this._fns, fn];
-  }
-}
-
-export const OpenAPI: OpenAPIConfig<RequestInit, Response> = {
+export const OpenAPI: Omit<
+  OpenAPIConfig<RequestInit, Response>,
+  'interceptors'
+> & {
+  interceptors: ReturnType<typeof createInterceptors>;
+} = {
   BASE: '',
   CREDENTIALS: 'include',
   ENCODE_PATH: undefined,
@@ -51,7 +41,7 @@ export const OpenAPI: OpenAPIConfig<RequestInit, Response> = {
   USERNAME: undefined,
   VERSION: '1.26.0',
   WITH_CREDENTIALS: false,
-  interceptors: { request: new Interceptors(), response: new Interceptors() },
+  interceptors: createInterceptors(),
 };
 
 const getHeaders = async (
@@ -256,44 +246,29 @@ export const request = <T>(
     }
   });
 
-const defaultBodySerializer = <T>(body: T) => JSON.stringify(body);
+type Options = Omit<Req, 'method'>;
 
-const defaultQuerySerializer = createQuerySerializer({
-  allowReserved: false,
-  array: {
-    explode: true,
-    style: 'form',
-  },
-  object: {
-    explode: true,
-    style: 'deepObject',
-  },
-});
-
-const defaultHeaders = {
-  'Content-Type': 'application/json',
+type ReqInit = Omit<RequestInit, 'headers'> & {
+  headers: ReturnType<typeof mergeHeaders>;
 };
 
-const defaultConfig: Config = {
-  baseUrl: '',
-  bodySerializer: defaultBodySerializer,
-  fetch: globalThis.fetch,
-  global: true,
-  headers: defaultHeaders,
-  querySerializer: defaultQuerySerializer,
-};
+type Opts = Req &
+  Config & {
+    headers: ReturnType<typeof mergeHeaders>;
+  };
 
-let globalConfig: Config = { ...defaultConfig };
+let globalConfig = createDefaultConfig();
 
-type Method = Omit<Req, 'method'>;
+const globalInterceptors = createInterceptors<Request, Response, Opts>();
 
 export const createClient = (config: Partial<Config>) => {
+  const defaultConfig = createDefaultConfig();
   const _config = { ...defaultConfig, ...config };
 
   if (_config.baseUrl.endsWith('/')) {
     _config.baseUrl = _config.baseUrl.substring(0, _config.baseUrl.length - 1);
   }
-  _config.headers = mergeHeaders(defaultHeaders, _config.headers);
+  _config.headers = mergeHeaders(defaultConfig.headers, _config.headers);
 
   if (_config.global) {
     globalConfig = { ..._config };
@@ -301,63 +276,78 @@ export const createClient = (config: Partial<Config>) => {
 
   const getConfig = () => (_config.global ? globalConfig : _config);
 
-  const interceptors = {
-    request: new Interceptors(),
-    response: new Interceptors(),
-  };
+  const interceptors = _config.global
+    ? globalInterceptors
+    : createInterceptors<Request, Response, Opts>();
 
   const request = async (options: Req) => {
     const config = getConfig();
 
-    const qs = options.querySerializer ?? config.querySerializer;
-
-    const url = getUrl({
-      baseUrl: config.baseUrl,
-      path: options.path,
-      query: options.query,
-      querySerializer:
-        typeof qs === 'function' ? qs : createQuerySerializer(qs),
-      url: options.url,
-    });
-
-    const requestInit: Omit<RequestInit, 'headers'> & {
-      headers: ReturnType<typeof mergeHeaders>;
-    } = {
-      redirect: 'follow',
+    const opts: Opts = {
       ...config,
       ...options,
       headers: mergeHeaders(config.headers, options.headers),
     };
+
+    const url = getUrl({
+      baseUrl: opts.baseUrl,
+      path: opts.path,
+      query: opts.query,
+      querySerializer:
+        typeof opts.querySerializer === 'function'
+          ? opts.querySerializer
+          : createQuerySerializer(opts.querySerializer),
+      url: opts.url,
+    });
+
+    const requestInit: ReqInit = {
+      redirect: 'follow',
+      ...opts,
+    };
     if (requestInit.body) {
-      requestInit.body = config.bodySerializer(requestInit.body);
+      requestInit.body = opts.bodySerializer(requestInit.body);
     }
-    // remove `Content-Type` if serialized body is FormData; browser will correctly set Content-Type & boundary expression
+    // remove Content-Type if serialized body is FormData; browser will correctly set Content-Type and boundary expression
     if (requestInit.body instanceof FormData) {
       requestInit.headers.delete('Content-Type');
     }
 
-    const request = new Request(url, requestInit);
+    let request = new Request(url, requestInit);
 
-    // interceptors.request._fns
+    for (const fn of interceptors.request._fns) {
+      request = await fn(request, opts);
+    }
 
-    const response = await config.fetch(request);
+    const _fetch = opts.fetch;
+    let response = await _fetch(request);
 
-    console.log(response);
+    for (const fn of interceptors.response._fns) {
+      response = await fn(response, request, opts);
+    }
+
+    // TODO: return response + add abort function
+  };
+
+  type Interceptors = {
+    [P in keyof typeof interceptors]: Pick<
+      (typeof interceptors)[P],
+      'eject' | 'use'
+    >;
   };
 
   const client = {
-    connect: (options: Method) => request({ ...options, method: 'CONNECT' }),
-    delete: (options: Method) => request({ ...options, method: 'DELETE' }),
-    get: (options: Method) => request({ ...options, method: 'GET' }),
+    connect: (options: Options) => request({ ...options, method: 'CONNECT' }),
+    delete: (options: Options) => request({ ...options, method: 'DELETE' }),
+    get: (options: Options) => request({ ...options, method: 'GET' }),
     getConfig,
-    head: (options: Method) => request({ ...options, method: 'HEAD' }),
-    interceptors,
-    options: (options: Method) => request({ ...options, method: 'OPTIONS' }),
-    patch: (options: Method) => request({ ...options, method: 'PATCH' }),
-    post: (options: Method) => request({ ...options, method: 'POST' }),
-    put: (options: Method) => request({ ...options, method: 'PUT' }),
+    head: (options: Options) => request({ ...options, method: 'HEAD' }),
+    interceptors: interceptors as Interceptors,
+    options: (options: Options) => request({ ...options, method: 'OPTIONS' }),
+    patch: (options: Options) => request({ ...options, method: 'PATCH' }),
+    post: (options: Options) => request({ ...options, method: 'POST' }),
+    put: (options: Options) => request({ ...options, method: 'PUT' }),
     request,
-    trace: (options: Method) => request({ ...options, method: 'TRACE' }),
+    trace: (options: Options) => request({ ...options, method: 'TRACE' }),
   };
   return client;
 };

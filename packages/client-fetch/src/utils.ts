@@ -1,3 +1,5 @@
+import type { Config } from './types';
+
 interface PathSerializer {
   path: Record<string, unknown>;
   url: string;
@@ -384,3 +386,65 @@ export const mergeHeaders = (...headers: Array<HeadersOptions | undefined>) => {
   }
   return finalHeaders;
 };
+
+type ReqInterceptor<Req, Options> = (
+  request: Req,
+  options: Options,
+) => Req | Promise<Req>;
+
+type ResInterceptor<Res, Req, Options> = (
+  response: Res,
+  request: Req,
+  options: Options,
+) => Res | Promise<Res>;
+
+class Interceptors<Interceptor> {
+  _fns: Interceptor[];
+
+  constructor() {
+    this._fns = [];
+  }
+
+  eject(fn: Interceptor) {
+    const index = this._fns.indexOf(fn);
+    if (index !== -1) {
+      this._fns = [...this._fns.slice(0, index), ...this._fns.slice(index + 1)];
+    }
+  }
+
+  use(fn: Interceptor) {
+    this._fns = [...this._fns, fn];
+  }
+}
+
+export const createInterceptors = <Req, Res, Options>() => ({
+  request: new Interceptors<ReqInterceptor<Req, Options>>(),
+  response: new Interceptors<ResInterceptor<Res, Req, Options>>(),
+});
+
+const defaultBodySerializer = <T>(body: T) => JSON.stringify(body);
+
+const defaultQuerySerializer = createQuerySerializer({
+  allowReserved: false,
+  array: {
+    explode: true,
+    style: 'form',
+  },
+  object: {
+    explode: true,
+    style: 'deepObject',
+  },
+});
+
+const defaultHeaders = {
+  'Content-Type': 'application/json',
+};
+
+export const createDefaultConfig = (): Config => ({
+  baseUrl: '',
+  bodySerializer: defaultBodySerializer,
+  fetch: globalThis.fetch,
+  global: true,
+  headers: defaultHeaders,
+  querySerializer: defaultQuerySerializer,
+});
