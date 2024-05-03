@@ -167,7 +167,7 @@ export const $ArrayWithProperties = {
     items: {
         type: 'object',
         properties: {
-            foo: {
+            '16x16': {
                 '$ref': '#/components/schemas/camelCaseCommentWithBreaks'
             },
             bar: {
@@ -259,7 +259,10 @@ export const $DictionaryWithPropertiesAndAdditionalProperties = {
     type: 'object',
     properties: {
         foo: {
-            type: 'string'
+            type: 'number'
+        },
+        bar: {
+            type: 'boolean'
         }
     },
     additionalProperties: {

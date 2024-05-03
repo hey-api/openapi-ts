@@ -1,3 +1,5 @@
+import camelcase from 'camelcase';
+
 import {
   ClassElement,
   compiler,
@@ -12,14 +14,27 @@ import { modelIsRequired } from '../required';
 import { transformServiceName } from '../transform';
 import { unique } from '../unique';
 
-export const serviceExportedNamespace = () => '$OpenApiTs';
+type OnImport = (importedType: string) => void;
 
-const toOperationParamType = (operation: Operation): FunctionParameter[] => {
+export const operationDataTypeName = (operation: Operation) =>
+  `${camelcase(operation.name, { pascalCase: true })}Data`;
+
+export const operationResponseTypeName = (operation: Operation) =>
+  `${camelcase(operation.name, { pascalCase: true })}Response`;
+
+const toOperationParamType = (
+  operation: Operation,
+  onImport: OnImport,
+): FunctionParameter[] => {
   const config = getConfig();
-  const baseTypePath = `${serviceExportedNamespace()}['${operation.path}']['${operation.method.toLocaleLowerCase()}']['req']`;
+
+  const importedType = operationDataTypeName(operation);
+
   if (!operation.parameters.length) {
     return [];
   }
+
+  onImport(importedType);
 
   if (config.useOptions) {
     const isOptional = operation.parameters.every((p) => !p.isRequired);
@@ -27,13 +42,13 @@ const toOperationParamType = (operation: Operation): FunctionParameter[] => {
       {
         default: isOptional ? {} : undefined,
         name: 'data',
-        type: baseTypePath,
+        type: importedType,
       },
     ];
   }
 
   return operation.parameters.map((p) => {
-    const typePath = `${baseTypePath}['${p.name}']`;
+    const typePath = `${importedType}['${p.name}']`;
     return {
       default: p?.default,
       isRequired: modelIsRequired(p) === '',
@@ -43,19 +58,17 @@ const toOperationParamType = (operation: Operation): FunctionParameter[] => {
   });
 };
 
-const toOperationReturnType = (operation: Operation) => {
+const toOperationReturnType = (operation: Operation, onImport: OnImport) => {
   const config = getConfig();
-  const baseTypePath = `${serviceExportedNamespace()}['${operation.path}']['${operation.method.toLocaleLowerCase()}']['res']`;
   const results = operation.results;
   // TODO: we should return nothing when results don't exist
   // can't remove this logic without removing request/name config
   // as it complicates things
   let returnType = compiler.typedef.basic('void');
   if (results.length) {
-    const types = results.map(
-      (result) => `${baseTypePath}[${String(result.code)}]`,
-    );
-    returnType = compiler.typedef.union(types);
+    const importedType = operationResponseTypeName(operation);
+    onImport(importedType);
+    returnType = compiler.typedef.union([importedType]);
   }
   if (config.useOptions && config.services.response === 'response') {
     returnType = compiler.typedef.basic('ApiResult', [returnType]);
@@ -162,7 +175,7 @@ const toRequestOptions = (operation: Operation) => {
     obj.responseHeader = operation.responseHeader;
   }
   if (operation.errors.length) {
-    const errors: Record<number, string> = {};
+    const errors: Record<number | string, string> = {};
     operation.errors.forEach((err) => {
       errors[err.code] = escapeDescription(err.description ?? '');
     });
@@ -206,7 +219,7 @@ const toOperationStatements = (operation: Operation) => {
   return statements;
 };
 
-export const processService = (service: Service) => {
+export const processService = (service: Service, onImport: OnImport) => {
   const config = getConfig();
   const members: ClassElement[] = service.operations.map((operation) => {
     const node = compiler.class.method({
@@ -214,8 +227,8 @@ export const processService = (service: Service) => {
       comment: toOperationComment(operation),
       isStatic: config.name === undefined && config.client !== 'angular',
       name: operation.name,
-      parameters: toOperationParamType(operation),
-      returnType: toOperationReturnType(operation),
+      parameters: toOperationParamType(operation, onImport),
+      returnType: toOperationReturnType(operation, onImport),
       statements: toOperationStatements(operation),
     });
     return node;
@@ -280,9 +293,10 @@ export const processServices = async ({
   let imports: string[] = [];
 
   for (const service of client.services) {
-    file.add(processService(service));
-    const exported = serviceExportedNamespace();
-    imports = [...imports, exported];
+    const serviceClass = processService(service, (importedType) => {
+      imports = [...imports, importedType];
+    });
+    file.add(serviceClass);
   }
 
   // Import required packages and core files.

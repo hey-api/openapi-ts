@@ -26,11 +26,6 @@ export interface UserConfig {
    */
   dryRun?: boolean;
   /**
-   * Generate enum definitions?
-   * @default false
-   */
-  enums?: 'javascript' | 'typescript' | false;
-  /**
    * Generate core client classes?
    * @default true
    */
@@ -127,6 +122,11 @@ export interface UserConfig {
          * @default false
          */
         dates?: boolean;
+        /**
+         * Generate enum definitions?
+         * @default false
+         */
+        enums?: 'javascript' | 'typescript' | false;
         /**
          * Generate types?
          * @default true

@@ -15,7 +15,6 @@ describe('processServices', () => {
       client: 'fetch',
       debug: false,
       dryRun: false,
-      enums: false,
       exportCore: true,
       format: false,
       input: '',
@@ -31,6 +30,7 @@ describe('processServices', () => {
       enumNames: [],
       models: [],
       server: 'http://localhost:8080',
+      serviceTypes: [],
       services: [
         {
           $refs: [],

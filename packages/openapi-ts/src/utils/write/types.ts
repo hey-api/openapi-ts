@@ -4,7 +4,6 @@ import {
   type Node,
   TypeScriptFile,
 } from '../../compiler';
-import { addLeadingJSDocComment } from '../../compiler/utils';
 import type { Model, OperationParameter, Service } from '../../openApi';
 import { ensureValidTypeScriptJavaScriptIdentifier } from '../../openApi/common/parser/sanitize';
 import type { Client } from '../../types/client';
@@ -13,10 +12,12 @@ import { enumKey, enumName, enumUnionType, enumValue } from '../enum';
 import { escapeComment } from '../escape';
 import { sortByName } from '../sort';
 import { transformTypeName } from '../transform';
-import { serviceExportedNamespace } from './services';
+import { operationDataTypeName, operationResponseTypeName } from './services';
 import { toType } from './type';
 
-type OnNode = (node: Node, type?: 'enum') => void;
+type OnNode = (node: Node) => void;
+
+const serviceExportedNamespace = () => '$OpenApiTs';
 
 const emptyModel: Model = {
   $refs: [],
@@ -46,8 +47,12 @@ const processEnum = (
   client: Client,
   model: Model,
   onNode: OnNode,
-  exportType = false,
+  isExported: boolean = false,
 ) => {
+  if (!isExported) {
+    return;
+  }
+
   const config = getConfig();
 
   const properties: Record<string | number, unknown> = {};
@@ -73,7 +78,7 @@ const processEnum = (
     model.deprecated && '@deprecated',
   ];
 
-  if (exportType) {
+  if (config.types.enums !== 'typescript') {
     const node = compiler.typedef.alias(
       ensureValidTypeScriptJavaScriptIdentifier(model.name),
       enumUnionType(model.enum),
@@ -82,26 +87,26 @@ const processEnum = (
     onNode(node);
   }
 
-  if (config.enums === 'typescript') {
+  if (config.types.enums === 'typescript') {
     const node = compiler.types.enum({
       comments,
       leadingComment: comment,
       name,
       obj: properties,
     });
-    onNode(node, 'enum');
+    onNode(node);
   }
 
-  if (config.enums === 'javascript') {
+  if (config.types.enums === 'javascript') {
     const expression = compiler.types.object({
       comments,
+      leadingComment: comment,
       multiLine: true,
       obj: properties,
       unescape: true,
     });
     const node = compiler.export.asConst(name, expression);
-    addLeadingJSDocComment(node, comment);
-    onNode(node, 'enum');
+    onNode(node);
   }
 };
 
@@ -132,15 +137,15 @@ const processModel = (client: Client, model: Model, onNode: OnNode) => {
   }
 };
 
-const processServiceTypes = (services: Service[], onNode: OnNode) => {
-  type ResMap = Map<number, Model>;
+const processServiceTypes = (client: Client, onNode: OnNode) => {
+  type ResMap = Map<number | 'default', Model>;
   type MethodMap = Map<'req' | 'res', ResMap | OperationParameter[]>;
   type MethodKey = Service['operations'][number]['method'];
   type PathMap = Map<MethodKey, MethodMap>;
 
   const pathsMap = new Map<string, PathMap>();
 
-  services.forEach((service) => {
+  client.services.forEach((service) => {
     service.operations.forEach((operation) => {
       const hasReq = operation.parameters.length;
       const hasRes = operation.results.length;
@@ -161,6 +166,20 @@ const processServiceTypes = (services: Service[], onNode: OnNode) => {
 
         if (hasReq) {
           methodMap.set('req', sortByName([...operation.parameters]));
+
+          // create type export for operation data
+          const name = operationDataTypeName(operation);
+          if (!client.serviceTypes.includes(name)) {
+            client.serviceTypes = [...client.serviceTypes, name];
+            const type = toType({
+              ...emptyModel,
+              export: 'interface',
+              isRequired: true,
+              properties: sortByName([...operation.parameters]),
+            });
+            const node = compiler.typedef.alias(name, type);
+            onNode(node);
+          }
         }
 
         if (hasRes) {
@@ -177,6 +196,29 @@ const processServiceTypes = (services: Service[], onNode: OnNode) => {
           operation.results.forEach((result) => {
             resMap.set(result.code, result);
           });
+
+          // create type export for operation response
+          const name = operationResponseTypeName(operation);
+          if (!client.serviceTypes.includes(name)) {
+            client.serviceTypes = [...client.serviceTypes, name];
+            let responseProperties: Model[] = [];
+            operation.results.map((result) => {
+              if (
+                result.code === 'default' ||
+                (result.code >= 200 && result.code < 300)
+              ) {
+                responseProperties = [...responseProperties, result];
+              }
+            });
+            const type = toType({
+              ...emptyModel,
+              export: 'any-of',
+              isRequired: true,
+              properties: responseProperties,
+            });
+            const node = compiler.typedef.alias(name, type);
+            onNode(node);
+          }
         }
 
         if (hasErr) {
@@ -254,7 +296,7 @@ const processServiceTypes = (services: Service[], onNode: OnNode) => {
   onNode(node);
 };
 
-export const processTypesAndEnums = async ({
+export const processTypes = async ({
   client,
   files,
 }: {
@@ -262,17 +304,13 @@ export const processTypesAndEnums = async ({
   files: Record<string, TypeScriptFile>;
 }): Promise<void> => {
   for (const model of client.models) {
-    processModel(client, model, (node, type) => {
-      if (type === 'enum') {
-        files.enums?.add(node);
-      } else {
-        files.types?.add(node);
-      }
+    processModel(client, model, (node) => {
+      files.types?.add(node);
     });
   }
 
   if (files.services && client.services.length) {
-    processServiceTypes(client.services, (node) => {
+    processServiceTypes(client, (node) => {
       files.types?.add(node);
     });
   }

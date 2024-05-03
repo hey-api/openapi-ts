@@ -5,17 +5,16 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { TypeScriptFile } from '../../../compiler';
 import { setConfig } from '../../config';
-import { processTypesAndEnums } from '../models';
+import { processTypes } from '../types';
 
 vi.mock('node:fs');
 
-describe('processTypesAndEnums', () => {
+describe('processTypes', () => {
   it('writes to filesystem', async () => {
     setConfig({
       client: 'fetch',
       debug: false,
       dryRun: false,
-      enums: 'javascript',
       exportCore: true,
       format: false,
       input: '',
@@ -24,11 +23,13 @@ describe('processTypesAndEnums', () => {
       output: '',
       schemas: {},
       services: {},
-      types: {},
+      types: {
+        enums: 'javascript',
+      },
       useOptions: true,
     });
 
-    const client: Parameters<typeof processTypesAndEnums>[0]['client'] = {
+    const client: Parameters<typeof processTypes>[0]['client'] = {
       enumNames: [],
       models: [
         {
@@ -51,27 +52,23 @@ describe('processTypesAndEnums', () => {
         },
       ],
       server: 'http://localhost:8080',
+      serviceTypes: [],
       services: [],
       version: 'v1',
     };
 
     const files = {
-      enums: new TypeScriptFile({
-        dir: '/',
-        name: 'enums.ts',
-      }),
       types: new TypeScriptFile({
         dir: '/',
         name: 'models.ts',
       }),
     };
 
-    await processTypesAndEnums({
+    await processTypes({
       client,
       files,
     });
 
-    files.enums.write();
     files.types.write();
 
     expect(writeFileSync).toHaveBeenCalledWith(

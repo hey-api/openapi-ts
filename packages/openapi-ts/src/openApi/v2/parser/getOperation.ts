@@ -1,3 +1,4 @@
+import { getOperationResults } from '../../../utils/operation';
 import type {
   Operation,
   OperationParameters,
@@ -13,7 +14,6 @@ import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiOperation } from '../interfaces/OpenApiOperation';
 import { getOperationParameters } from './getOperationParameters';
 import { getOperationResponses } from './getOperationResponses';
-import { getOperationResults } from './getOperationResults';
 
 export const getOperation = (
   openApi: OpenApi,

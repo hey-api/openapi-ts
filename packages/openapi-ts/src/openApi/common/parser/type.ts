@@ -121,8 +121,13 @@ export const getType = (
   }
 
   if (typeWithoutNamespace) {
-    const encodedType =
+    let encodedType =
       ensureValidTypeScriptJavaScriptIdentifier(typeWithoutNamespace);
+    if (type.startsWith('#/components/parameters/')) {
+      // prefix parameter names to avoid conflicts, assuming people are mostly
+      // interested in importing schema types and don't care about this naming
+      encodedType = `Parameter${encodedType}`;
+    }
     result.type = encodedType;
     result.base = encodedType;
     if (type.startsWith('#')) {
