@@ -1,10 +1,10 @@
 import './App.css';
 
-import { client, createClient } from '@hey-api/client-fetch';
+import { createClient } from '@hey-api/client-fetch';
 import { useState } from 'react';
 
 import { $Pet } from './client/schemas.gen';
-import { PetService } from './client/services.gen';
+import { getPetById } from './client/services.gen';
 
 createClient({
   baseUrl: 'https://petstore3.swagger.io/api/v3',
@@ -12,29 +12,17 @@ createClient({
 
 function App() {
   const [pet, setPet] =
-    useState<Awaited<ReturnType<typeof PetService.getPetById>>>();
+    useState<Awaited<ReturnType<typeof getPetById>>['data']>();
 
   const onFetchPet = async () => {
     // random id 1-10
     const petId = Math.floor(Math.random() * (10 - 1 + 1) + 1);
-    try {
-      const { data } = await client.get({
-        path: {
-          petId,
-        },
-        url: '/pet/{petId}',
-      });
-      // update types, this should be `{ data }` too
-      const pet = await PetService.getPetById({
-        path: {
-          petId,
-        },
-      });
-      console.log(data, pet);
-      setPet(pet);
-    } catch (error) {
-      // noop
-    }
+    const { data: pet } = await getPetById({
+      path: {
+        petId,
+      },
+    });
+    setPet(pet);
   };
 
   return (

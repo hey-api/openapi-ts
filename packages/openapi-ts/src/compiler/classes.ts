@@ -195,28 +195,3 @@ export const createClassDeclaration = ({
     m,
   );
 };
-
-/**
- * Create a return function call. Example `return call(param);`.
- * @param args - arguments to pass to the function.
- * @param name - name of the function to call.
- * @returns ts.ReturnStatement
- */
-export const createReturnFunctionCall = ({
-  args = [],
-  name,
-}: {
-  args: any[];
-  name: string;
-}) =>
-  ts.factory.createReturnStatement(
-    ts.factory.createCallExpression(
-      ts.factory.createIdentifier(name),
-      undefined,
-      args
-        .map((arg) =>
-          ts.isExpression(arg) ? arg : ts.factory.createIdentifier(arg),
-        )
-        .filter(isType<ts.Identifier | ts.Expression>),
-    ),
-  );
