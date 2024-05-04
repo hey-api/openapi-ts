@@ -41,7 +41,7 @@ const toAccessLevelModifiers = (access?: AccessLevel): ts.ModifierLike[] => {
  * @param parameters - the parameters to conver to declarations
  * @returns ts.ParameterDeclaration[]
  */
-const toParameterDeclarations = (parameters: FunctionParameter[]) =>
+export const toParameterDeclarations = (parameters: FunctionParameter[]) =>
   parameters.map((p) => {
     const modifiers = toAccessLevelModifiers(p.accessLevel);
     if (p.isReadOnly) {
@@ -69,8 +69,8 @@ const toParameterDeclarations = (parameters: FunctionParameter[]) =>
  * @returns ts.ConstructorDeclaration
  */
 export const createConstructorDeclaration = ({
-  accessLevel = undefined,
-  comment = undefined,
+  accessLevel,
+  comment,
   multiLine = true,
   parameters = [],
   statements = [],
@@ -105,13 +105,13 @@ export const createConstructorDeclaration = ({
  * @returns ts.MethodDeclaration
  */
 export const createMethodDeclaration = ({
-  accessLevel = undefined,
-  comment = undefined,
+  accessLevel,
+  comment,
   isStatic = false,
   multiLine = true,
   name,
   parameters = [],
-  returnType = undefined,
+  returnType,
   statements = [],
 }: {
   accessLevel?: AccessLevel;
@@ -156,7 +156,7 @@ type ClassDecorator = {
  * @returns ts.ClassDeclaration
  */
 export const createClassDeclaration = ({
-  decorator = undefined,
+  decorator,
   members = [],
   name,
 }: {

@@ -123,7 +123,7 @@ export const compiler = {
   },
   export: {
     all: module.createExportAllDeclaration,
-    asConst: module.createExportVariableAsConst,
+    const: module.createExportConstVariable,
     named: module.createNamedExportDeclarations,
   },
   import: {
@@ -142,6 +142,7 @@ export const compiler = {
   types: {
     array: types.createArrayType,
     enum: types.createEnumDeclaration,
+    function: types.createFunction,
     object: types.createObjectType,
   },
   utils: {
