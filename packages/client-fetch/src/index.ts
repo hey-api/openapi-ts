@@ -17,7 +17,7 @@ import {
   resolve,
 } from '@hey-api/client-core';
 
-import type { Config, Req } from './types';
+import type { Config, Req, RequestResponse } from './types';
 import {
   createDefaultConfig,
   createInterceptors,
@@ -262,7 +262,9 @@ export const createClient = (config: Partial<Config>) => {
     ? globalInterceptors
     : createInterceptors<Request, Response, Opts>();
 
-  const request = async (options: Req) => {
+  const request = async <Data = unknown, Error = unknown>(
+    options: Req,
+  ): Promise<RequestResponse<Data, Error>> => {
     const config = getConfig();
 
     const opts: Opts = {
@@ -286,8 +288,8 @@ export const createClient = (config: Partial<Config>) => {
       redirect: 'follow',
       ...opts,
     };
-    if (requestInit.body) {
-      requestInit.body = opts.bodySerializer(requestInit.body);
+    if (opts.body) {
+      requestInit.body = opts.bodySerializer(opts.body);
     }
     // remove Content-Type if serialized body is FormData; browser will correctly set Content-Type and boundary expression
     if (requestInit.body instanceof FormData) {
@@ -314,11 +316,13 @@ export const createClient = (config: Partial<Config>) => {
     ) {
       if (response.ok) {
         return {
+          // @ts-ignore
           data: {},
           response,
         };
       }
       return {
+        // @ts-ignore
         error: {},
         response,
       };
@@ -327,6 +331,7 @@ export const createClient = (config: Partial<Config>) => {
     if (response.ok) {
       if (opts.parseAs === 'stream') {
         return {
+          // @ts-ignore
           data: response.body,
           response,
         };
@@ -344,11 +349,13 @@ export const createClient = (config: Partial<Config>) => {
       // noop
     }
     return {
+      // @ts-ignore
       error,
       response,
     };
 
     // TODO: add abort function
+    // TODO: return original request as result.request
   };
 
   type Interceptors = {
@@ -359,18 +366,27 @@ export const createClient = (config: Partial<Config>) => {
   };
 
   const client = {
-    connect: (options: Options) => request({ ...options, method: 'CONNECT' }),
-    delete: (options: Options) => request({ ...options, method: 'DELETE' }),
-    get: (options: Options) => request({ ...options, method: 'GET' }),
+    connect: <Data = unknown, Error = unknown>(options: Options) =>
+      request<Data, Error>({ ...options, method: 'CONNECT' }),
+    delete: <Data = unknown, Error = unknown>(options: Options) =>
+      request<Data, Error>({ ...options, method: 'DELETE' }),
+    get: <Data = unknown, Error = unknown>(options: Options) =>
+      request<Data, Error>({ ...options, method: 'GET' }),
     getConfig,
-    head: (options: Options) => request({ ...options, method: 'HEAD' }),
+    head: <Data = unknown, Error = unknown>(options: Options) =>
+      request<Data, Error>({ ...options, method: 'HEAD' }),
     interceptors: interceptors as Interceptors,
-    options: (options: Options) => request({ ...options, method: 'OPTIONS' }),
-    patch: (options: Options) => request({ ...options, method: 'PATCH' }),
-    post: (options: Options) => request({ ...options, method: 'POST' }),
-    put: (options: Options) => request({ ...options, method: 'PUT' }),
+    options: <Data = unknown, Error = unknown>(options: Options) =>
+      request<Data, Error>({ ...options, method: 'OPTIONS' }),
+    patch: <Data = unknown, Error = unknown>(options: Options) =>
+      request<Data, Error>({ ...options, method: 'PATCH' }),
+    post: <Data = unknown, Error = unknown>(options: Options) =>
+      request<Data, Error>({ ...options, method: 'POST' }),
+    put: <Data = unknown, Error = unknown>(options: Options) =>
+      request<Data, Error>({ ...options, method: 'PUT' }),
     request,
-    trace: (options: Options) => request({ ...options, method: 'TRACE' }),
+    trace: <Data = unknown, Error = unknown>(options: Options) =>
+      request<Data, Error>({ ...options, method: 'TRACE' }),
   };
   return client;
 };

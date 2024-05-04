@@ -5,6 +5,7 @@ import ts from 'typescript';
 
 import * as classes from './classes';
 import * as module from './module';
+import * as _return from './return';
 import * as typedef from './typedef';
 import * as types from './types';
 import { stringToTsNodes, tsNodeToString } from './utils';
@@ -119,7 +120,6 @@ export const compiler = {
     constructor: classes.createConstructorDeclaration,
     create: classes.createClassDeclaration,
     method: classes.createMethodDeclaration,
-    return: classes.createReturnFunctionCall,
   },
   export: {
     all: module.createExportAllDeclaration,
@@ -128,6 +128,9 @@ export const compiler = {
   },
   import: {
     named: module.createNamedImportDeclarations,
+  },
+  return: {
+    functionCall: _return.createReturnFunctionCall,
   },
   typedef: {
     alias: typedef.createTypeAliasDeclaration,
