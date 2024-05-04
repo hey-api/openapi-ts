@@ -26,24 +26,6 @@ import {
   mergeHeaders,
 } from './utils';
 
-export const OpenAPI: Omit<
-  OpenAPIConfig<RequestInit, Response>,
-  'interceptors'
-> & {
-  interceptors: ReturnType<typeof createInterceptors>;
-} = {
-  BASE: '',
-  CREDENTIALS: 'include',
-  ENCODE_PATH: undefined,
-  HEADERS: undefined,
-  PASSWORD: undefined,
-  TOKEN: undefined,
-  USERNAME: undefined,
-  VERSION: '1.26.0',
-  WITH_CREDENTIALS: false,
-  interceptors: createInterceptors(),
-};
-
 const getHeaders = async (
   config: OpenAPIConfig,
   options: ApiRequestOptions,
@@ -325,7 +307,48 @@ export const createClient = (config: Partial<Config>) => {
       response = await fn(response, request, opts);
     }
 
-    // TODO: return response + add abort function
+    // return empty objects so truthy checks for data/error succeed
+    if (
+      response.status === 204 ||
+      response.headers.get('Content-Length') === '0'
+    ) {
+      if (response.ok) {
+        return {
+          data: {},
+          response,
+        };
+      }
+      return {
+        error: {},
+        response,
+      };
+    }
+
+    if (response.ok) {
+      if (opts.parseAs === 'stream') {
+        return {
+          data: response.body,
+          response,
+        };
+      }
+      return {
+        data: await response[opts.parseAs](),
+        response,
+      };
+    }
+
+    let error = await response.text();
+    try {
+      error = JSON.parse(error);
+    } catch {
+      // noop
+    }
+    return {
+      error,
+      response,
+    };
+
+    // TODO: add abort function
   };
 
   type Interceptors = {

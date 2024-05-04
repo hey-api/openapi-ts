@@ -15,6 +15,14 @@ interface FetchConfig extends FetchOptions {
   fetch: (request: Request) => ReturnType<typeof fetch>;
 }
 
+interface BodyType<T = unknown> {
+  arrayBuffer: Awaited<ReturnType<Response['arrayBuffer']>>;
+  blob: Awaited<ReturnType<Response['blob']>>;
+  json: T;
+  stream: Response['body'];
+  text: Awaited<ReturnType<Response['text']>>;
+}
+
 export interface Config extends FetchConfig {
   /**
    * Base URL...
@@ -30,6 +38,11 @@ export interface Config extends FetchConfig {
    * @default true
    */
   global: boolean;
+  /**
+   * Parse as...
+   * @default 'json'
+   */
+  parseAs: keyof BodyType;
   /**
    * Query serializer...
    */

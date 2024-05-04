@@ -4,6 +4,9 @@ export function sort(a: string, b: string): number {
   return nameA.localeCompare(nameB, 'en');
 }
 
+export const sorterByName = <T extends { name: string }>(a: T, b: T) =>
+  sort(a.name, b.name);
+
 export function sortByName<T extends { name: string }>(items: T[]): T[] {
-  return items.sort((a, b) => sort(a.name, b.name));
+  return items.sort(sorterByName);
 }

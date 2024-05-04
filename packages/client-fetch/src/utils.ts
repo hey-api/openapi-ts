@@ -422,7 +422,17 @@ export const createInterceptors = <Req, Res, Options>() => ({
   response: new Interceptors<ResInterceptor<Res, Req, Options>>(),
 });
 
-const defaultBodySerializer = <T>(body: T) => JSON.stringify(body);
+export const formDataBodySerializer = <T extends Record<string, any>>(
+  body: T,
+) => {
+  const formData = new FormData();
+  for (const key in body) {
+    formData.append(key, body[key]);
+  }
+  return formData;
+};
+
+export const jsonBodySerializer = <T>(body: T) => JSON.stringify(body);
 
 const defaultQuerySerializer = createQuerySerializer({
   allowReserved: false,
@@ -442,9 +452,10 @@ const defaultHeaders = {
 
 export const createDefaultConfig = (): Config => ({
   baseUrl: '',
-  bodySerializer: defaultBodySerializer,
+  bodySerializer: jsonBodySerializer,
   fetch: globalThis.fetch,
   global: true,
   headers: defaultHeaders,
+  parseAs: 'json',
   querySerializer: defaultQuerySerializer,
 });

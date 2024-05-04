@@ -71,7 +71,7 @@ export type AddPetData = {
   /**
    * Create a new pet in the store
    */
-  body: Pet;
+  requestBody: Pet;
 };
 
 export type AddPetResponse = Pet;
@@ -80,89 +80,71 @@ export type UpdatePetData = {
   /**
    * Update an existent pet in the store
    */
-  body: Pet;
+  requestBody: Pet;
 };
 
 export type UpdatePetResponse = Pet;
 
 export type FindPetsByStatusData = {
-  query?: {
-    /**
-     * Status values that need to be considered for filter
-     */
-    status?: 'available' | 'pending' | 'sold';
-  };
+  /**
+   * Status values that need to be considered for filter
+   */
+  status?: 'available' | 'pending' | 'sold';
 };
 
 export type FindPetsByStatusResponse = Array<Pet>;
 
 export type FindPetsByTagsData = {
-  query?: {
-    /**
-     * Tags to filter by
-     */
-    tags?: Array<string>;
-  };
+  /**
+   * Tags to filter by
+   */
+  tags?: Array<string>;
 };
 
 export type FindPetsByTagsResponse = Array<Pet>;
 
 export type GetPetByIdData = {
-  path: {
-    /**
-     * ID of pet to return
-     */
-    petId: number;
-  };
+  /**
+   * ID of pet to return
+   */
+  petId: number;
 };
 
 export type GetPetByIdResponse = Pet;
 
 export type UpdatePetWithFormData = {
-  path: {
-    /**
-     * ID of pet that needs to be updated
-     */
-    petId: number;
-  };
-  query?: {
-    /**
-     * Name of pet that needs to be updated
-     */
-    name?: string;
-    /**
-     * Status of pet that needs to be updated
-     */
-    status?: string;
-  };
+  /**
+   * Name of pet that needs to be updated
+   */
+  name?: string;
+  /**
+   * ID of pet that needs to be updated
+   */
+  petId: number;
+  /**
+   * Status of pet that needs to be updated
+   */
+  status?: string;
 };
 
 export type DeletePetData = {
-  header?: {
-    apiKey?: string;
-  };
-  path: {
-    /**
-     * Pet id to delete
-     */
-    petId: number;
-  };
+  apiKey?: string;
+  /**
+   * Pet id to delete
+   */
+  petId: number;
 };
 
 export type UploadFileData = {
-  body?: Blob | File;
-  path: {
-    /**
-     * ID of pet to update
-     */
-    petId: number;
-  };
-  query?: {
-    /**
-     * Additional Metadata
-     */
-    additionalMetadata?: string;
-  };
+  /**
+   * Additional Metadata
+   */
+  additionalMetadata?: string;
+  /**
+   * ID of pet to update
+   */
+  petId: number;
+  requestBody?: Blob | File;
 };
 
 export type UploadFileResponse = ApiResponse;
@@ -172,57 +154,51 @@ export type GetInventoryResponse = {
 };
 
 export type PlaceOrderData = {
-  body?: Order;
+  requestBody?: Order;
 };
 
 export type PlaceOrderResponse = Order;
 
 export type GetOrderByIdData = {
-  path: {
-    /**
-     * ID of order that needs to be fetched
-     */
-    orderId: number;
-  };
+  /**
+   * ID of order that needs to be fetched
+   */
+  orderId: number;
 };
 
 export type GetOrderByIdResponse = Order;
 
 export type DeleteOrderData = {
-  path: {
-    /**
-     * ID of the order that needs to be deleted
-     */
-    orderId: number;
-  };
+  /**
+   * ID of the order that needs to be deleted
+   */
+  orderId: number;
 };
 
 export type CreateUserData = {
   /**
    * Created user object
    */
-  body?: User;
+  requestBody?: User;
 };
 
 export type CreateUserResponse = User;
 
 export type CreateUsersWithListInputData = {
-  body?: Array<User>;
+  requestBody?: Array<User>;
 };
 
 export type CreateUsersWithListInputResponse = User | unknown;
 
 export type LoginUserData = {
-  query?: {
-    /**
-     * The password for login in clear text
-     */
-    password?: string;
-    /**
-     * The user name for login
-     */
-    username?: string;
-  };
+  /**
+   * The password for login in clear text
+   */
+  password?: string;
+  /**
+   * The user name for login
+   */
+  username?: string;
 };
 
 export type LoginUserResponse = string;
@@ -230,12 +206,10 @@ export type LoginUserResponse = string;
 export type LogoutUserResponse = unknown;
 
 export type GetUserByNameData = {
-  path: {
-    /**
-     * The name that needs to be fetched. Use user1 for testing.
-     */
-    username: string;
-  };
+  /**
+   * The name that needs to be fetched. Use user1 for testing.
+   */
+  username: string;
 };
 
 export type GetUserByNameResponse = User;
@@ -244,24 +218,20 @@ export type UpdateUserData = {
   /**
    * Update an existent user in the store
    */
-  body?: User;
-  path: {
-    /**
-     * name that needs to be updated
-     */
-    username: string;
-  };
+  requestBody?: User;
+  /**
+   * name that needs to be updated
+   */
+  username: string;
 };
 
 export type UpdateUserResponse = unknown;
 
 export type DeleteUserData = {
-  path: {
-    /**
-     * The name that needs to be deleted
-     */
-    username: string;
-  };
+  /**
+   * The name that needs to be deleted
+   */
+  username: string;
 };
 
 export type $OpenApiTs = {
@@ -271,7 +241,7 @@ export type $OpenApiTs = {
         /**
          * Create a new pet in the store
          */
-        body: Pet;
+        requestBody: Pet;
       };
       res: {
         /**
@@ -289,7 +259,7 @@ export type $OpenApiTs = {
         /**
          * Update an existent pet in the store
          */
-        body: Pet;
+        requestBody: Pet;
       };
       res: {
         /**
@@ -314,12 +284,10 @@ export type $OpenApiTs = {
   '/pet/findByStatus': {
     get: {
       req: {
-        query?: {
-          /**
-           * Status values that need to be considered for filter
-           */
-          status?: 'available' | 'pending' | 'sold';
-        };
+        /**
+         * Status values that need to be considered for filter
+         */
+        status?: 'available' | 'pending' | 'sold';
       };
       res: {
         /**
@@ -336,12 +304,10 @@ export type $OpenApiTs = {
   '/pet/findByTags': {
     get: {
       req: {
-        query?: {
-          /**
-           * Tags to filter by
-           */
-          tags?: Array<string>;
-        };
+        /**
+         * Tags to filter by
+         */
+        tags?: Array<string>;
       };
       res: {
         /**
@@ -358,12 +324,10 @@ export type $OpenApiTs = {
   '/pet/{petId}': {
     get: {
       req: {
-        path: {
-          /**
-           * ID of pet to return
-           */
-          petId: number;
-        };
+        /**
+         * ID of pet to return
+         */
+        petId: number;
       };
       res: {
         /**
@@ -382,22 +346,18 @@ export type $OpenApiTs = {
     };
     post: {
       req: {
-        path: {
-          /**
-           * ID of pet that needs to be updated
-           */
-          petId: number;
-        };
-        query?: {
-          /**
-           * Name of pet that needs to be updated
-           */
-          name?: string;
-          /**
-           * Status of pet that needs to be updated
-           */
-          status?: string;
-        };
+        /**
+         * Name of pet that needs to be updated
+         */
+        name?: string;
+        /**
+         * ID of pet that needs to be updated
+         */
+        petId: number;
+        /**
+         * Status of pet that needs to be updated
+         */
+        status?: string;
       };
       res: {
         /**
@@ -408,15 +368,11 @@ export type $OpenApiTs = {
     };
     delete: {
       req: {
-        header?: {
-          apiKey?: string;
-        };
-        path: {
-          /**
-           * Pet id to delete
-           */
-          petId: number;
-        };
+        apiKey?: string;
+        /**
+         * Pet id to delete
+         */
+        petId: number;
       };
       res: {
         /**
@@ -429,19 +385,15 @@ export type $OpenApiTs = {
   '/pet/{petId}/uploadImage': {
     post: {
       req: {
-        body?: Blob | File;
-        path: {
-          /**
-           * ID of pet to update
-           */
-          petId: number;
-        };
-        query?: {
-          /**
-           * Additional Metadata
-           */
-          additionalMetadata?: string;
-        };
+        /**
+         * Additional Metadata
+         */
+        additionalMetadata?: string;
+        /**
+         * ID of pet to update
+         */
+        petId: number;
+        requestBody?: Blob | File;
       };
       res: {
         /**
@@ -466,7 +418,7 @@ export type $OpenApiTs = {
   '/store/order': {
     post: {
       req: {
-        body?: Order;
+        requestBody?: Order;
       };
       res: {
         /**
@@ -483,12 +435,10 @@ export type $OpenApiTs = {
   '/store/order/{orderId}': {
     get: {
       req: {
-        path: {
-          /**
-           * ID of order that needs to be fetched
-           */
-          orderId: number;
-        };
+        /**
+         * ID of order that needs to be fetched
+         */
+        orderId: number;
       };
       res: {
         /**
@@ -507,12 +457,10 @@ export type $OpenApiTs = {
     };
     delete: {
       req: {
-        path: {
-          /**
-           * ID of the order that needs to be deleted
-           */
-          orderId: number;
-        };
+        /**
+         * ID of the order that needs to be deleted
+         */
+        orderId: number;
       };
       res: {
         /**
@@ -532,7 +480,7 @@ export type $OpenApiTs = {
         /**
          * Created user object
          */
-        body?: User;
+        requestBody?: User;
       };
       res: {
         /**
@@ -545,7 +493,7 @@ export type $OpenApiTs = {
   '/user/createWithList': {
     post: {
       req: {
-        body?: Array<User>;
+        requestBody?: Array<User>;
       };
       res: {
         /**
@@ -562,16 +510,14 @@ export type $OpenApiTs = {
   '/user/login': {
     get: {
       req: {
-        query?: {
-          /**
-           * The password for login in clear text
-           */
-          password?: string;
-          /**
-           * The user name for login
-           */
-          username?: string;
-        };
+        /**
+         * The password for login in clear text
+         */
+        password?: string;
+        /**
+         * The user name for login
+         */
+        username?: string;
       };
       res: {
         /**
@@ -598,12 +544,10 @@ export type $OpenApiTs = {
   '/user/{username}': {
     get: {
       req: {
-        path: {
-          /**
-           * The name that needs to be fetched. Use user1 for testing.
-           */
-          username: string;
-        };
+        /**
+         * The name that needs to be fetched. Use user1 for testing.
+         */
+        username: string;
       };
       res: {
         /**
@@ -625,13 +569,11 @@ export type $OpenApiTs = {
         /**
          * Update an existent user in the store
          */
-        body?: User;
-        path: {
-          /**
-           * name that needs to be updated
-           */
-          username: string;
-        };
+        requestBody?: User;
+        /**
+         * name that needs to be updated
+         */
+        username: string;
       };
       res: {
         /**
@@ -642,12 +584,10 @@ export type $OpenApiTs = {
     };
     delete: {
       req: {
-        path: {
-          /**
-           * The name that needs to be deleted
-           */
-          username: string;
-        };
+        /**
+         * The name that needs to be deleted
+         */
+        username: string;
       };
       res: {
         /**
