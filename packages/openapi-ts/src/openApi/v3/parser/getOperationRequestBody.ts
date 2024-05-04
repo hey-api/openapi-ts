@@ -10,6 +10,8 @@ export const getOperationRequestBody = (
   openApi: OpenApi,
   body: OpenApiRequestBody,
 ): OperationParameter => {
+  const name = body['x-body-name'] ?? 'requestBody';
+
   const requestBody: OperationParameter = {
     $refs: [],
     base: 'unknown',
@@ -26,8 +28,8 @@ export const getOperationRequestBody = (
     isRequired: body.required === true,
     link: null,
     mediaType: null,
-    name: body['x-body-name'] ?? 'requestBody',
-    prop: body['x-body-name'] ?? 'requestBody',
+    name,
+    prop: name,
     properties: [],
     template: null,
     type: 'unknown',

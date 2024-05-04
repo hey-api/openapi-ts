@@ -55,9 +55,7 @@ export class TypeScriptFile {
     this._items = [...this._items, ...nodes];
   }
 
-  public addNamedImport(
-    ...params: Parameters<typeof compiler.import.named>
-  ): void {
+  public addImport(...params: Parameters<typeof compiler.import.named>): void {
     this._imports = [...this._imports, compiler.import.named(...params)];
   }
 

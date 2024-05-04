@@ -6,6 +6,7 @@ import {
   FunctionParameter,
   TypeScriptFile,
 } from '../../compiler';
+import type { ObjectValue } from '../../compiler/types';
 import type { Operation, OperationParameter, Service } from '../../openApi';
 import type { Client } from '../../types/client';
 import { getConfig } from '../config';
@@ -116,6 +117,22 @@ const toOperationComment = (operation: Operation) => {
 
 const toRequestOptions = (operation: Operation) => {
   const config = getConfig();
+
+  if (config.client.startsWith('@hey-api')) {
+    const obj: ObjectValue[] = [
+      {
+        spread: 'data',
+      },
+      {
+        key: 'url',
+        value: operation.path,
+      },
+    ];
+    return compiler.types.object({
+      obj,
+    });
+  }
+
   const toObj = (parameters: OperationParameter[]) =>
     parameters.reduce(
       (prev, curr) => {
@@ -137,21 +154,27 @@ const toRequestOptions = (operation: Operation) => {
     method: operation.method,
     url: operation.path,
   };
+
   if (operation.parametersPath.length) {
     obj.path = toObj(operation.parametersPath);
   }
+
   if (operation.parametersCookie.length) {
     obj.cookies = toObj(operation.parametersCookie);
   }
+
   if (operation.parametersHeader.length) {
     obj.headers = toObj(operation.parametersHeader);
   }
+
   if (operation.parametersQuery.length) {
     obj.query = toObj(operation.parametersQuery);
   }
+
   if (operation.parametersForm.length) {
     obj.formData = toObj(operation.parametersForm);
   }
+
   if (operation.parametersBody) {
     if (operation.parametersBody.in === 'formData') {
       if (config.useOptions) {
@@ -168,12 +191,15 @@ const toRequestOptions = (operation: Operation) => {
       }
     }
   }
+
   if (operation.parametersBody?.mediaType) {
     obj.mediaType = operation.parametersBody?.mediaType;
   }
+
   if (operation.responseHeader) {
     obj.responseHeader = operation.responseHeader;
   }
+
   if (operation.errors.length) {
     const errors: Record<number | string, string> = {};
     operation.errors.forEach((err) => {
@@ -181,8 +207,9 @@ const toRequestOptions = (operation: Operation) => {
     });
     obj.errors = errors;
   }
+
   return compiler.types.object({
-    identifiers: ['body', 'headers', 'formData', 'cookies', 'path', 'query'],
+    identifiers: ['body', 'cookies', 'formData', 'headers', 'path', 'query'],
     obj,
     shorthand: true,
   });
@@ -190,32 +217,47 @@ const toRequestOptions = (operation: Operation) => {
 
 const toOperationStatements = (operation: Operation) => {
   const config = getConfig();
-  const statements: any[] = [];
-  const requestOptions = toRequestOptions(operation);
+
+  const options = toRequestOptions(operation);
+
+  let statements: any[] = [];
+
   if (config.name) {
-    statements.push(
+    statements = [
+      ...statements,
       compiler.class.return({
-        args: [requestOptions],
+        args: [options],
         name: 'this.httpRequest.request',
       }),
-    );
+    ];
   } else {
-    if (config.client === 'angular') {
-      statements.push(
+    if (config.client.startsWith('@hey-api')) {
+      statements = [
+        ...statements,
         compiler.class.return({
-          args: ['OpenAPI', 'this.http', requestOptions],
+          args: [options],
+          name: `client.${operation.method.toLocaleLowerCase()}`,
+        }),
+      ];
+    } else if (config.client === 'angular') {
+      statements = [
+        ...statements,
+        compiler.class.return({
+          args: ['OpenAPI', 'this.http', options],
           name: '__request',
         }),
-      );
+      ];
     } else {
-      statements.push(
+      statements = [
+        ...statements,
         compiler.class.return({
-          args: ['OpenAPI', requestOptions],
+          args: ['OpenAPI', options],
           name: '__request',
         }),
-      );
+      ];
     }
   }
+
   return statements;
 };
 
@@ -301,21 +343,21 @@ export const processServices = async ({
 
   // Import required packages and core files.
   if (config.client === 'angular') {
-    file.addNamedImport('Injectable', '@angular/core');
+    file.addImport('Injectable', '@angular/core');
 
     if (!config.name) {
-      file.addNamedImport('HttpClient', '@angular/common/http');
+      file.addImport('HttpClient', '@angular/common/http');
     }
 
-    file.addNamedImport({ isTypeOnly: true, name: 'Observable' }, 'rxjs');
+    file.addImport({ isTypeOnly: true, name: 'Observable' }, 'rxjs');
   } else {
     if (config.client.startsWith('@hey-api')) {
-      file.addNamedImport(
+      file.addImport(
         { isTypeOnly: true, name: 'CancelablePromise' },
         config.client,
       );
     } else {
-      file.addNamedImport(
+      file.addImport(
         { isTypeOnly: true, name: 'CancelablePromise' },
         './core/CancelablePromise',
       );
@@ -323,30 +365,20 @@ export const processServices = async ({
   }
 
   if (config.services.response === 'response') {
-    file.addNamedImport(
-      { isTypeOnly: true, name: 'ApiResult' },
-      './core/ApiResult',
-    );
+    file.addImport({ isTypeOnly: true, name: 'ApiResult' }, './core/ApiResult');
   }
 
   if (config.name) {
-    file.addNamedImport(
+    file.addImport(
       { isTypeOnly: config.client !== 'angular', name: 'BaseHttpRequest' },
       './core/BaseHttpRequest',
     );
   } else {
     if (config.client.startsWith('@hey-api')) {
-      file.addNamedImport('OpenAPI', config.client);
-      file.addNamedImport(
-        { alias: '__request', name: 'request' },
-        config.client,
-      );
+      file.addImport(['client'], config.client);
     } else {
-      file.addNamedImport('OpenAPI', './core/OpenAPI');
-      file.addNamedImport(
-        { alias: '__request', name: 'request' },
-        './core/request',
-      );
+      file.addImport('OpenAPI', './core/OpenAPI');
+      file.addImport({ alias: '__request', name: 'request' }, './core/request');
     }
   }
 
@@ -355,6 +387,6 @@ export const processServices = async ({
     const models = imports
       .filter(unique)
       .map((name) => ({ isTypeOnly: true, name }));
-    file.addNamedImport(models, `./${files.types.getName(false)}`);
+    file.addImport(models, `./${files.types.getName(false)}`);
   }
 };
