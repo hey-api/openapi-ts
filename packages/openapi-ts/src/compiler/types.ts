@@ -1,5 +1,7 @@
 import ts from 'typescript';
 
+import { type FunctionParameter, toParameterDeclarations } from './classes';
+import { createTypeNode } from './typedef';
 import { addLeadingJSDocComment, type Comments, isType, ots } from './utils';
 
 /**
@@ -44,6 +46,36 @@ export const toExpression = <T = unknown>({
   if (typeof value === 'string') {
     return ots.string(value, unescape);
   }
+};
+
+/**
+ * Create Function type expression.
+ */
+export const createFunction = ({
+  comment,
+  multiLine,
+  parameters = [],
+  returnType,
+  statements = [],
+}: {
+  comment?: Comments;
+  multiLine?: boolean;
+  parameters?: FunctionParameter[];
+  returnType?: string | ts.TypeNode;
+  statements?: ts.Statement[];
+}) => {
+  const expression = ts.factory.createArrowFunction(
+    undefined,
+    undefined,
+    toParameterDeclarations(parameters),
+    returnType ? createTypeNode(returnType) : undefined,
+    undefined,
+    ts.factory.createBlock(statements, multiLine),
+  );
+  if (comment) {
+    addLeadingJSDocComment(expression, comment);
+  }
+  return expression;
 };
 
 /**

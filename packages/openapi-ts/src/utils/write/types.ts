@@ -105,7 +105,11 @@ const processEnum = (
       obj: properties,
       unescape: true,
     });
-    const node = compiler.export.asConst(name, expression);
+    const node = compiler.export.const({
+      constAssertion: true,
+      expression,
+      name,
+    });
     onNode(node);
   }
 };

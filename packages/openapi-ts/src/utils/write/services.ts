@@ -4,6 +4,7 @@ import {
   ClassElement,
   compiler,
   FunctionParameter,
+  type Node,
   TypeScriptFile,
 } from '../../compiler';
 import type { ObjectValue } from '../../compiler/types';
@@ -15,6 +16,7 @@ import { modelIsRequired } from '../required';
 import { transformServiceName } from '../transform';
 import { unique } from '../unique';
 
+type OnNode = (node: Node) => void;
 type OnImport = (importedType: string) => void;
 
 export const operationDataTypeName = (operation: Operation) =>
@@ -261,8 +263,30 @@ const toOperationStatements = (operation: Operation) => {
   return statements;
 };
 
-export const processService = (service: Service, onImport: OnImport) => {
+export const processService = (
+  service: Service,
+  onNode: OnNode,
+  onImport: OnImport,
+) => {
   const config = getConfig();
+
+  if (config.client.startsWith('@hey-api')) {
+    service.operations.forEach((operation) => {
+      const expression = compiler.types.function({
+        parameters: toOperationParamType(operation, onImport),
+        returnType: toOperationReturnType(operation, onImport),
+        statements: toOperationStatements(operation),
+      });
+      const statement = compiler.export.const({
+        comment: toOperationComment(operation),
+        expression,
+        name: operation.name,
+      });
+      onNode(statement);
+    });
+    return;
+  }
+
   const members: ClassElement[] = service.operations.map((operation) => {
     const node = compiler.class.method({
       accessLevel: 'public',
@@ -307,7 +331,7 @@ export const processService = (service: Service, onImport: OnImport) => {
     );
   }
 
-  return compiler.class.create({
+  const statement = compiler.class.create({
     decorator:
       config.client === 'angular'
         ? { args: [{ providedIn: 'root' }], name: 'Injectable' }
@@ -315,6 +339,7 @@ export const processService = (service: Service, onImport: OnImport) => {
     members,
     name: transformServiceName(service.name),
   });
+  onNode(statement);
 };
 
 export const processServices = async ({
@@ -324,9 +349,7 @@ export const processServices = async ({
   client: Client;
   files: Record<string, TypeScriptFile>;
 }): Promise<void> => {
-  const file = files.services;
-
-  if (!file) {
+  if (!files.services) {
     return;
   }
 
@@ -335,29 +358,34 @@ export const processServices = async ({
   let imports: string[] = [];
 
   for (const service of client.services) {
-    const serviceClass = processService(service, (importedType) => {
-      imports = [...imports, importedType];
-    });
-    file.add(serviceClass);
+    processService(
+      service,
+      (node) => {
+        files.services?.add(node);
+      },
+      (importedType) => {
+        imports = [...imports, importedType];
+      },
+    );
   }
 
   // Import required packages and core files.
   if (config.client === 'angular') {
-    file.addImport('Injectable', '@angular/core');
+    files.services?.addImport('Injectable', '@angular/core');
 
     if (!config.name) {
-      file.addImport('HttpClient', '@angular/common/http');
+      files.services?.addImport('HttpClient', '@angular/common/http');
     }
 
-    file.addImport({ isTypeOnly: true, name: 'Observable' }, 'rxjs');
+    files.services?.addImport({ isTypeOnly: true, name: 'Observable' }, 'rxjs');
   } else {
     if (config.client.startsWith('@hey-api')) {
-      file.addImport(
+      files.services?.addImport(
         { isTypeOnly: true, name: 'CancelablePromise' },
         config.client,
       );
     } else {
-      file.addImport(
+      files.services?.addImport(
         { isTypeOnly: true, name: 'CancelablePromise' },
         './core/CancelablePromise',
       );
@@ -365,20 +393,26 @@ export const processServices = async ({
   }
 
   if (config.services.response === 'response') {
-    file.addImport({ isTypeOnly: true, name: 'ApiResult' }, './core/ApiResult');
+    files.services?.addImport(
+      { isTypeOnly: true, name: 'ApiResult' },
+      './core/ApiResult',
+    );
   }
 
   if (config.name) {
-    file.addImport(
+    files.services?.addImport(
       { isTypeOnly: config.client !== 'angular', name: 'BaseHttpRequest' },
       './core/BaseHttpRequest',
     );
   } else {
     if (config.client.startsWith('@hey-api')) {
-      file.addImport(['client'], config.client);
+      files.services?.addImport(['client'], config.client);
     } else {
-      file.addImport('OpenAPI', './core/OpenAPI');
-      file.addImport({ alias: '__request', name: 'request' }, './core/request');
+      files.services?.addImport('OpenAPI', './core/OpenAPI');
+      files.services?.addImport(
+        { alias: '__request', name: 'request' },
+        './core/request',
+      );
     }
   }
 
@@ -387,6 +421,6 @@ export const processServices = async ({
     const models = imports
       .filter(unique)
       .map((name) => ({ isTypeOnly: true, name }));
-    file.addImport(models, `./${files.types.getName(false)}`);
+    files.services?.addImport(models, `./${files.types.getName(false)}`);
   }
 };
