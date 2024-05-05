@@ -4,8 +4,10 @@ import {
   ClassElement,
   compiler,
   FunctionParameter,
+  type Node,
   TypeScriptFile,
 } from '../../compiler';
+import type { ObjectValue } from '../../compiler/types';
 import type { Operation, OperationParameter, Service } from '../../openApi';
 import type { Client } from '../../types/client';
 import { getConfig } from '../config';
@@ -14,6 +16,7 @@ import { modelIsRequired } from '../required';
 import { transformServiceName } from '../transform';
 import { unique } from '../unique';
 
+type OnNode = (node: Node) => void;
 type OnImport = (importedType: string) => void;
 
 export const operationDataTypeName = (operation: Operation) =>
@@ -22,25 +25,22 @@ export const operationDataTypeName = (operation: Operation) =>
 export const operationResponseTypeName = (operation: Operation) =>
   `${camelcase(operation.name, { pascalCase: true })}Response`;
 
-const toOperationParamType = (
-  operation: Operation,
-  onImport: OnImport,
-): FunctionParameter[] => {
-  const config = getConfig();
-
-  const importedType = operationDataTypeName(operation);
-
+const toOperationParamType = (operation: Operation): FunctionParameter[] => {
   if (!operation.parameters.length) {
     return [];
   }
 
-  onImport(importedType);
+  const config = getConfig();
+
+  const importedType = operationDataTypeName(operation);
 
   if (config.useOptions) {
-    const isOptional = operation.parameters.every((p) => !p.isRequired);
+    const isRequired = operation.parameters.some(
+      (parameter) => parameter.isRequired,
+    );
     return [
       {
-        default: isOptional ? {} : undefined,
+        default: isRequired ? undefined : {},
         name: 'data',
         type: importedType,
       },
@@ -58,26 +58,29 @@ const toOperationParamType = (
   });
 };
 
-const toOperationReturnType = (operation: Operation, onImport: OnImport) => {
+const toOperationReturnType = (operation: Operation) => {
   const config = getConfig();
-  const results = operation.results;
+
+  let returnType = compiler.typedef.basic('void');
+
   // TODO: we should return nothing when results don't exist
   // can't remove this logic without removing request/name config
   // as it complicates things
-  let returnType = compiler.typedef.basic('void');
-  if (results.length) {
+  if (operation.results.length) {
     const importedType = operationResponseTypeName(operation);
-    onImport(importedType);
     returnType = compiler.typedef.union([importedType]);
   }
+
   if (config.useOptions && config.services.response === 'response') {
     returnType = compiler.typedef.basic('ApiResult', [returnType]);
   }
+
   if (config.client === 'angular') {
     returnType = compiler.typedef.basic('Observable', [returnType]);
   } else {
     returnType = compiler.typedef.basic('CancelablePromise', [returnType]);
   }
+
   return returnType;
 };
 
@@ -116,6 +119,22 @@ const toOperationComment = (operation: Operation) => {
 
 const toRequestOptions = (operation: Operation) => {
   const config = getConfig();
+
+  if (config.client.startsWith('@hey-api')) {
+    const obj: ObjectValue[] = [
+      {
+        spread: 'data',
+      },
+      {
+        key: 'url',
+        value: operation.path,
+      },
+    ];
+    return compiler.types.object({
+      obj,
+    });
+  }
+
   const toObj = (parameters: OperationParameter[]) =>
     parameters.reduce(
       (prev, curr) => {
@@ -137,21 +156,27 @@ const toRequestOptions = (operation: Operation) => {
     method: operation.method,
     url: operation.path,
   };
+
   if (operation.parametersPath.length) {
     obj.path = toObj(operation.parametersPath);
   }
+
   if (operation.parametersCookie.length) {
     obj.cookies = toObj(operation.parametersCookie);
   }
+
   if (operation.parametersHeader.length) {
     obj.headers = toObj(operation.parametersHeader);
   }
+
   if (operation.parametersQuery.length) {
     obj.query = toObj(operation.parametersQuery);
   }
+
   if (operation.parametersForm.length) {
     obj.formData = toObj(operation.parametersForm);
   }
+
   if (operation.parametersBody) {
     if (operation.parametersBody.in === 'formData') {
       if (config.useOptions) {
@@ -168,12 +193,15 @@ const toRequestOptions = (operation: Operation) => {
       }
     }
   }
+
   if (operation.parametersBody?.mediaType) {
     obj.mediaType = operation.parametersBody?.mediaType;
   }
+
   if (operation.responseHeader) {
     obj.responseHeader = operation.responseHeader;
   }
+
   if (operation.errors.length) {
     const errors: Record<number | string, string> = {};
     operation.errors.forEach((err) => {
@@ -181,8 +209,9 @@ const toRequestOptions = (operation: Operation) => {
     });
     obj.errors = errors;
   }
+
   return compiler.types.object({
-    identifiers: ['body', 'headers', 'formData', 'cookies', 'path', 'query'],
+    identifiers: ['body', 'cookies', 'formData', 'headers', 'path', 'query'],
     obj,
     shorthand: true,
   });
@@ -190,45 +219,91 @@ const toRequestOptions = (operation: Operation) => {
 
 const toOperationStatements = (operation: Operation) => {
   const config = getConfig();
-  const statements: any[] = [];
-  const requestOptions = toRequestOptions(operation);
+
+  const options = toRequestOptions(operation);
+
+  if (config.client.startsWith('@hey-api')) {
+    const returnType = operation.results.length
+      ? operationResponseTypeName(operation)
+      : 'void';
+    return [
+      compiler.return.functionCall({
+        args: [options],
+        name: `client.${operation.method.toLocaleLowerCase()}`,
+        types: [returnType],
+      }),
+    ];
+  }
+
   if (config.name) {
-    statements.push(
-      compiler.class.return({
-        args: [requestOptions],
+    return [
+      compiler.return.functionCall({
+        args: [options],
         name: 'this.httpRequest.request',
       }),
-    );
-  } else {
-    if (config.client === 'angular') {
-      statements.push(
-        compiler.class.return({
-          args: ['OpenAPI', 'this.http', requestOptions],
-          name: '__request',
-        }),
-      );
-    } else {
-      statements.push(
-        compiler.class.return({
-          args: ['OpenAPI', requestOptions],
-          name: '__request',
-        }),
-      );
-    }
+    ];
   }
-  return statements;
+
+  if (config.client === 'angular') {
+    return [
+      compiler.return.functionCall({
+        args: ['OpenAPI', 'this.http', options],
+        name: '__request',
+      }),
+    ];
+  }
+
+  return [
+    compiler.return.functionCall({
+      args: ['OpenAPI', options],
+      name: '__request',
+    }),
+  ];
 };
 
-export const processService = (service: Service, onImport: OnImport) => {
+export const processService = (
+  service: Service,
+  onNode: OnNode,
+  onImport: OnImport,
+) => {
   const config = getConfig();
+
+  service.operations.forEach((operation) => {
+    if (operation.parameters.length) {
+      const importedType = operationDataTypeName(operation);
+      onImport(importedType);
+    }
+
+    if (operation.results.length) {
+      const importedType = operationResponseTypeName(operation);
+      onImport(importedType);
+    }
+  });
+
+  if (config.client.startsWith('@hey-api')) {
+    service.operations.forEach((operation) => {
+      const expression = compiler.types.function({
+        parameters: toOperationParamType(operation),
+        statements: toOperationStatements(operation),
+      });
+      const statement = compiler.export.const({
+        comment: toOperationComment(operation),
+        expression,
+        name: operation.name,
+      });
+      onNode(statement);
+    });
+    return;
+  }
+
   const members: ClassElement[] = service.operations.map((operation) => {
     const node = compiler.class.method({
       accessLevel: 'public',
       comment: toOperationComment(operation),
       isStatic: config.name === undefined && config.client !== 'angular',
       name: operation.name,
-      parameters: toOperationParamType(operation, onImport),
-      returnType: toOperationReturnType(operation, onImport),
+      parameters: toOperationParamType(operation),
+      returnType: toOperationReturnType(operation),
       statements: toOperationStatements(operation),
     });
     return node;
@@ -265,7 +340,7 @@ export const processService = (service: Service, onImport: OnImport) => {
     );
   }
 
-  return compiler.class.create({
+  const statement = compiler.class.create({
     decorator:
       config.client === 'angular'
         ? { args: [{ providedIn: 'root' }], name: 'Injectable' }
@@ -273,6 +348,7 @@ export const processService = (service: Service, onImport: OnImport) => {
     members,
     name: transformServiceName(service.name),
   });
+  onNode(statement);
 };
 
 export const processServices = async ({
@@ -282,9 +358,7 @@ export const processServices = async ({
   client: Client;
   files: Record<string, TypeScriptFile>;
 }): Promise<void> => {
-  const file = files.services;
-
-  if (!file) {
+  if (!files.services) {
     return;
   }
 
@@ -293,57 +367,54 @@ export const processServices = async ({
   let imports: string[] = [];
 
   for (const service of client.services) {
-    const serviceClass = processService(service, (importedType) => {
-      imports = [...imports, importedType];
-    });
-    file.add(serviceClass);
+    processService(
+      service,
+      (node) => {
+        files.services?.add(node);
+      },
+      (importedType) => {
+        imports = [...imports, importedType];
+      },
+    );
   }
 
   // Import required packages and core files.
-  if (config.client === 'angular') {
-    file.addNamedImport('Injectable', '@angular/core');
-
-    if (!config.name) {
-      file.addNamedImport('HttpClient', '@angular/common/http');
-    }
-
-    file.addNamedImport({ isTypeOnly: true, name: 'Observable' }, 'rxjs');
+  if (config.client.startsWith('@hey-api')) {
+    files.services?.addImport(['client'], config.client);
   } else {
-    if (config.client.startsWith('@hey-api')) {
-      file.addNamedImport(
-        { isTypeOnly: true, name: 'CancelablePromise' },
-        config.client,
+    if (config.client === 'angular') {
+      files.services?.addImport('Injectable', '@angular/core');
+
+      if (!config.name) {
+        files.services?.addImport('HttpClient', '@angular/common/http');
+      }
+
+      files.services?.addImport(
+        { isTypeOnly: true, name: 'Observable' },
+        'rxjs',
       );
     } else {
-      file.addNamedImport(
+      files.services?.addImport(
         { isTypeOnly: true, name: 'CancelablePromise' },
         './core/CancelablePromise',
       );
     }
-  }
 
-  if (config.services.response === 'response') {
-    file.addNamedImport(
-      { isTypeOnly: true, name: 'ApiResult' },
-      './core/ApiResult',
-    );
-  }
+    if (config.services.response === 'response') {
+      files.services?.addImport(
+        { isTypeOnly: true, name: 'ApiResult' },
+        './core/ApiResult',
+      );
+    }
 
-  if (config.name) {
-    file.addNamedImport(
-      { isTypeOnly: config.client !== 'angular', name: 'BaseHttpRequest' },
-      './core/BaseHttpRequest',
-    );
-  } else {
-    if (config.client.startsWith('@hey-api')) {
-      file.addNamedImport('OpenAPI', config.client);
-      file.addNamedImport(
-        { alias: '__request', name: 'request' },
-        config.client,
+    if (config.name) {
+      files.services?.addImport(
+        { isTypeOnly: config.client !== 'angular', name: 'BaseHttpRequest' },
+        './core/BaseHttpRequest',
       );
     } else {
-      file.addNamedImport('OpenAPI', './core/OpenAPI');
-      file.addNamedImport(
+      files.services?.addImport('OpenAPI', './core/OpenAPI');
+      files.services?.addImport(
         { alias: '__request', name: 'request' },
         './core/request',
       );
@@ -355,6 +426,6 @@ export const processServices = async ({
     const models = imports
       .filter(unique)
       .map((name) => ({ isTypeOnly: true, name }));
-    file.addNamedImport(models, `./${files.types.getName(false)}`);
+    files.services?.addImport(models, `./${files.types.getName(false)}`);
   }
 };
