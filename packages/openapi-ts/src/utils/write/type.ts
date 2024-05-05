@@ -62,14 +62,14 @@ const typeDict = (model: Model) => {
 const typeUnion = (model: Model) => {
   const models = model.properties;
   const types = models
-    .map((m) => compiler.utils.toString(toType(m)))
+    .map((m) => compiler.utils.toString({ node: toType(m), unescape: true }))
     .filter(unique);
   return compiler.typedef.union(types, model.isNullable);
 };
 
 const typeIntersect = (model: Model) => {
   const types = model.properties
-    .map((m) => compiler.utils.toString(toType(m)))
+    .map((m) => compiler.utils.toString({ node: toType(m), unescape: true }))
     .filter(unique);
   return compiler.typedef.intersect(types, model.isNullable);
 };

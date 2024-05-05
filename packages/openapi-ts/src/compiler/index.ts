@@ -10,8 +10,8 @@ import * as typedef from './typedef';
 import * as types from './types';
 import { stringToTsNodes, tsNodeToString } from './utils';
 
-export type { FunctionParameter } from './classes';
 export type { Property } from './typedef';
+export type { FunctionParameter } from './types';
 export type { Comments } from './utils';
 export type { ClassElement, Node, TypeNode } from 'typescript';
 
@@ -52,11 +52,11 @@ export class TypeScriptFile {
     }
   }
 
-  public add(...nodes: Array<ts.Node | string>): void {
+  public add(...nodes: Array<ts.Node | string>) {
     this._items = [...this._items, ...nodes];
   }
 
-  public addImport(...params: Parameters<typeof compiler.import.named>): void {
+  public addImport(...params: Parameters<typeof compiler.import.named>) {
     this._imports = [...this._imports, compiler.import.named(...params)];
   }
 
@@ -94,13 +94,15 @@ export class TypeScriptFile {
     if (this._imports.length) {
       output = [
         ...output,
-        this._imports.map((v) => tsNodeToString(v)).join('\n'),
+        this._imports.map((node) => tsNodeToString({ node })).join('\n'),
       ];
     }
     output = [
       ...output,
-      ...this._items.map((v) =>
-        typeof v === 'string' ? v : tsNodeToString(v),
+      ...this._items.map((node) =>
+        typeof node === 'string'
+          ? node
+          : tsNodeToString({ node, unescape: true }),
       ),
     ];
     return output.join(seperator);

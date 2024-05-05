@@ -170,7 +170,7 @@ export const createTypeRecordNode = (
   const node = createTypeInterfaceNode([
     {
       isRequired: true,
-      name: `[key: ${tsNodeToString(keyNode)}]`,
+      name: `[key: ${tsNodeToString({ node: keyNode, unescape: true })}]`,
       type: valueNode,
     },
   ]);
