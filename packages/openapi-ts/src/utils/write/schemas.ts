@@ -54,7 +54,11 @@ export const processSchemas = async ({
     const validName = `$${ensureValidTypeScriptJavaScriptIdentifier(name)}`;
     const obj = ensureValidSchemaOutput(schema);
     const expression = compiler.types.object({ obj });
-    const statement = compiler.export.asConst(validName, expression);
+    const statement = compiler.export.const({
+      constAssertion: true,
+      expression,
+      name: validName,
+    });
     file.add(statement);
   };
 
