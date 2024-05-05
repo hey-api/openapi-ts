@@ -1,3 +1,4 @@
+import { isDefinitionTypeNullable } from '../../v3/parser/inferType';
 import type { Type } from '../interfaces/Type';
 import { ensureValidTypeScriptJavaScriptIdentifier } from './sanitize';
 import { stripNamespace } from './stripNamespace';
@@ -72,7 +73,7 @@ export const getType = (
       .join(' | ');
     result.type = joinedType;
     result.base = joinedType;
-    result.isNullable = type.includes('null');
+    result.isNullable = isDefinitionTypeNullable({ type });
     return result;
   }
 

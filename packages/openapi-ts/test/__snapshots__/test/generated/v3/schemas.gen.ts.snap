@@ -27,7 +27,7 @@ export const $CommentWithBackticksAndQuotes = {
 } as const;
 
 export const $CommentWithSlashes = {
-    description: 'Testing slashes in string: \backwards\\\ and /forwards/// should work',
+    description: 'Testing slashes in string: \\backwards\\\\\\ and /forwards/// should work',
     type: 'integer'
 } as const;
 
@@ -1184,11 +1184,11 @@ export const $ModelWithPattern = {
         },
         id: {
             type: 'string',
-            pattern: '^\d{2}-\d{3}-\d{4}$'
+            pattern: '^\\d{2}-\\d{3}-\\d{4}$'
         },
         text: {
             type: 'string',
-            pattern: '^\w+$'
+            pattern: '^\\w+$'
         },
         patternWithSingleQuotes: {
             type: 'string',
@@ -1390,8 +1390,7 @@ export const $CompositionWithOneOfAndProperties = {
 } as const;
 
 export const $NullableObject = {
-    type: 'object',
-    nullable: true,
+    type: ['object', 'null'],
     description: 'An object that can be null',
     properties: {
         foo: {
@@ -1592,7 +1591,7 @@ export const $ModelWithAnyOfConstantSizeArray = {
 } as const;
 
 export const $ModelWithAnyOfConstantSizeArrayNullable = {
-    type: 'array',
+    type: ['array'],
     items: {
         oneOf: [
             {

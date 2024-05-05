@@ -1,63 +1,14 @@
 import ts from 'typescript';
 
 import { createTypeNode } from './typedef';
-import { toExpression } from './types';
+import {
+  type AccessLevel,
+  type FunctionParameter,
+  toAccessLevelModifiers,
+  toExpression,
+  toParameterDeclarations,
+} from './types';
 import { addLeadingJSDocComment, Comments, isType } from './utils';
-
-type AccessLevel = 'public' | 'protected' | 'private';
-
-export type FunctionParameter = {
-  accessLevel?: AccessLevel;
-  default?: any;
-  isReadOnly?: boolean;
-  isRequired?: boolean;
-  name: string;
-  type: any | ts.TypeNode;
-};
-
-/**
- * Convert AccessLevel to proper TypeScript compiler API modifier.
- * @param access - the access level.
- * @returns ts.ModifierLike[]
- */
-const toAccessLevelModifiers = (access?: AccessLevel): ts.ModifierLike[] => {
-  const keyword =
-    access === 'public'
-      ? ts.SyntaxKind.PublicKeyword
-      : access === 'protected'
-        ? ts.SyntaxKind.ProtectedKeyword
-        : access === 'private'
-          ? ts.SyntaxKind.PrivateKeyword
-          : undefined;
-  const modifiers: ts.ModifierLike[] = [];
-  if (keyword) {
-    modifiers.push(ts.factory.createModifier(keyword));
-  }
-  return modifiers;
-};
-
-/**
- * Convert parameters to the declaration array expected by compiler API.
- * @param parameters - the parameters to conver to declarations
- * @returns ts.ParameterDeclaration[]
- */
-export const toParameterDeclarations = (parameters: FunctionParameter[]) =>
-  parameters.map((p) => {
-    const modifiers = toAccessLevelModifiers(p.accessLevel);
-    if (p.isReadOnly) {
-      modifiers.push(ts.factory.createModifier(ts.SyntaxKind.ReadonlyKeyword));
-    }
-    return ts.factory.createParameterDeclaration(
-      modifiers,
-      undefined,
-      ts.factory.createIdentifier(p.name),
-      p.isRequired !== undefined && !p.isRequired
-        ? ts.factory.createToken(ts.SyntaxKind.QuestionToken)
-        : undefined,
-      p.type !== undefined ? createTypeNode(p.type) : undefined,
-      p.default !== undefined ? toExpression({ value: p.default }) : undefined,
-    );
-  });
 
 /**
  * Create a class constructor declaration.
