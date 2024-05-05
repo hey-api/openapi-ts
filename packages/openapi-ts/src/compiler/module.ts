@@ -1,6 +1,6 @@
 import ts from 'typescript';
 
-import { ots } from './utils';
+import { addLeadingJSDocComment, type Comments, ots } from './utils';
 
 /**
  * Create export all declaration. Example: `export * from './y'`.
@@ -53,32 +53,45 @@ export const createNamedExportDeclarations = (
 };
 
 /**
- * Create an export variable as const statement. Example: `export x = {} as const`.
- * @param name - name of the variable.
- * @param expression - expression for the variable.
+ * Create a const variable export. Optionally, it can use const assertion.
+ * Example: `export x = {} as const`.
+ * @param constAssertion use const assertion?
+ * @param expression expression for the variable.
+ * @param name name of the variable.
  * @returns ts.VariableStatement
  */
-export const createExportVariableAsConst = (
-  name: string,
-  expression: ts.Expression,
-): ts.VariableStatement =>
-  ts.factory.createVariableStatement(
-    [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
-    ts.factory.createVariableDeclarationList(
-      [
-        ts.factory.createVariableDeclaration(
-          ts.factory.createIdentifier(name),
-          undefined,
-          undefined,
-          ts.factory.createAsExpression(
-            expression,
-            ts.factory.createTypeReferenceNode('const'),
-          ),
-        ),
-      ],
-      ts.NodeFlags.Const,
-    ),
+export const createExportConstVariable = ({
+  comment,
+  constAssertion = false,
+  expression,
+  name,
+}: {
+  comment?: Comments;
+  constAssertion?: boolean;
+  expression: ts.Expression;
+  name: string;
+}): ts.VariableStatement => {
+  const initializer = constAssertion
+    ? ts.factory.createAsExpression(
+        expression,
+        ts.factory.createTypeReferenceNode('const'),
+      )
+    : expression;
+  const declaration = ts.factory.createVariableDeclaration(
+    ts.factory.createIdentifier(name),
+    undefined,
+    undefined,
+    initializer,
   );
+  const statement = ts.factory.createVariableStatement(
+    [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
+    ts.factory.createVariableDeclarationList([declaration], ts.NodeFlags.Const),
+  );
+  if (comment) {
+    addLeadingJSDocComment(statement, comment);
+  }
+  return statement;
+};
 
 /**
  * Create a named import declaration. Example: `import { X } from './y'`.
