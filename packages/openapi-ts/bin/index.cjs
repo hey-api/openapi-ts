@@ -81,7 +81,7 @@ async function start() {
     await createClient(userConfig);
     process.exit(0);
   } catch (error) {
-    if (!userConfig.dryRun) {
+    if (!userConfig?.dryRun) {
       const logName = `openapi-ts-error-${Date.now()}.log`;
       const logPath = resolve(process.cwd(), logName);
       writeFileSync(logPath, `${error.message}\n${error.stack}`);
