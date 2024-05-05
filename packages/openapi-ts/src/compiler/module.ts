@@ -1,6 +1,11 @@
 import ts from 'typescript';
 
-import { addLeadingJSDocComment, type Comments, ots } from './utils';
+import {
+  addLeadingJSDocComment,
+  type Comments,
+  type ImportItemObject,
+  ots,
+} from './utils';
 
 /**
  * Create export all declaration. Example: `export * from './y'`.
@@ -15,9 +20,7 @@ export const createExportAllDeclaration = (module: string) =>
     ots.string(module),
   );
 
-type ImportItem =
-  | { name: string; isTypeOnly?: boolean; alias?: string }
-  | string;
+type ImportItem = ImportItemObject | string;
 
 /**
  * Create a named export declaration. Example: `export { X } from './y'`.
@@ -103,28 +106,30 @@ export const createNamedImportDeclarations = (
   items: Array<ImportItem> | ImportItem,
   module: string,
 ): ts.ImportDeclaration => {
-  items = Array.isArray(items) ? items : [items];
-  const isAllTypes = items.every((i) => typeof i === 'object' && i.isTypeOnly);
-  return ts.factory.createImportDeclaration(
-    undefined,
-    ts.factory.createImportClause(
-      isAllTypes,
-      undefined,
-      ts.factory.createNamedImports(
-        items.map((item) => {
-          const {
-            name,
-            isTypeOnly = undefined,
-            alias = undefined,
-          } = typeof item === 'string' ? { name: item } : item;
-          return ots.import(
-            name,
-            isAllTypes ? false : Boolean(isTypeOnly),
-            alias,
-          );
-        }),
-      ),
-    ),
-    ots.string(module),
+  const importedTypes = Array.isArray(items) ? items : [items];
+  const isTypeOnly = !importedTypes.some(
+    (item) => typeof item !== 'object' || !item.isTypeOnly,
   );
+  const elements = importedTypes.map((item) => {
+    const importedType: ImportItemObject =
+      typeof item === 'string' ? { name: item } : item;
+    return ots.import({
+      alias: importedType.alias,
+      isTypeOnly: isTypeOnly ? false : Boolean(importedType.isTypeOnly),
+      name: importedType.name,
+    });
+  });
+  const namedBindings = ts.factory.createNamedImports(elements);
+  const importClause = ts.factory.createImportClause(
+    isTypeOnly,
+    undefined,
+    namedBindings,
+  );
+  const moduleSpecifier = ots.string(module);
+  const statement = ts.factory.createImportDeclaration(
+    undefined,
+    importClause,
+    moduleSpecifier,
+  );
+  return statement;
 };

@@ -11,7 +11,7 @@ import type { ObjectValue } from '../../compiler/types';
 import type { Operation, OperationParameter, Service } from '../../openApi';
 import type { Client } from '../../types/client';
 import { getConfig } from '../config';
-import { escapeComment, escapeDescription, escapeName } from '../escape';
+import { escapeComment, escapeName } from '../escape';
 import { modelIsRequired } from '../required';
 import { transformServiceName } from '../transform';
 import { unique } from '../unique';
@@ -205,7 +205,7 @@ const toRequestOptions = (operation: Operation) => {
   if (operation.errors.length) {
     const errors: Record<number | string, string> = {};
     operation.errors.forEach((err) => {
-      errors[err.code] = escapeDescription(err.description ?? '');
+      errors[err.code] = err.description ?? '';
     });
     obj.errors = errors;
   }
@@ -423,9 +423,9 @@ export const processServices = async ({
 
   // Import all models required by the services.
   if (files.types && !files.types.isEmpty()) {
-    const models = imports
+    const importedTypes = imports
       .filter(unique)
       .map((name) => ({ isTypeOnly: true, name }));
-    files.services?.addImport(models, `./${files.types.getName(false)}`);
+    files.services?.addImport(importedTypes, `./${files.types.getName(false)}`);
   }
 };

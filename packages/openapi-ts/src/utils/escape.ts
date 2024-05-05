@@ -29,6 +29,3 @@ export const escapeComment = (value: string) =>
     .replace(/\*\//g, '*')
     .replace(/\/\*/g, '*')
     .replace(/\r?\n(.*)/g, (_l, w) => EOL + w.trim());
-
-export const escapeDescription = (value: string) =>
-  value.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\${/g, '\\${');
