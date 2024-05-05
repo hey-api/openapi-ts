@@ -3,6 +3,12 @@ import ts from 'typescript';
 import { getConfig } from '../utils/config';
 import { unescapeName } from '../utils/escape';
 
+export interface ImportItemObject {
+  alias?: string;
+  isTypeOnly?: boolean;
+  name: string;
+}
+
 export const CONFIG = {
   newLine: ts.NewLineKind.LineFeed,
   scriptKind: ts.ScriptKind.TS,
@@ -23,19 +29,40 @@ export const createSourceFile = (sourceText: string) =>
 
 const blankSourceFile = createSourceFile('');
 
+const unescapeUnicode = (value: string) =>
+  value.replace(/\\u([0-9a-fA-F]{4})/g, (_, hex: string) =>
+    String.fromCharCode(Number.parseInt(hex, 16)),
+  );
+
 /**
- * Print a typescript node to a string.
- * @param node - the node to print.
+ * Print a TypeScript node to a string.
+ * @param node the node to print
  * @returns string
  */
-export function tsNodeToString(node: ts.Node): string {
+export function tsNodeToString({
+  node,
+  unescape = false,
+}: {
+  node: ts.Node;
+  unescape?: boolean;
+}): string {
   const result = printer.printNode(
     ts.EmitHint.Unspecified,
     node,
     blankSourceFile,
   );
+
+  if (!unescape) {
+    return result;
+  }
+
   try {
-    return decodeURIComponent(result);
+    /**
+     * TypeScript Compiler API escapes unicode characters by default and there
+     * is no way to disable this behavior
+     * {@link https://github.com/microsoft/TypeScript/issues/36174}
+     */
+    return unescapeUnicode(result);
   } catch {
     if (getConfig().debug) {
       console.warn('Could not decode value:', result);
@@ -46,11 +73,11 @@ export function tsNodeToString(node: ts.Node): string {
 
 /**
  * Convert a string to a TypeScript Node
- * @param s - the string to convert.
+ * @param value the string to convert.
  * @returns ts.Node
  */
-export function stringToTsNodes(s: string): ts.Node {
-  const file = createSourceFile(s);
+export function stringToTsNodes(value: string): ts.Node {
+  const file = createSourceFile(value);
   return file.statements[0];
 }
 
@@ -67,13 +94,13 @@ export const ots = {
       alias ? ts.factory.createIdentifier(encodeURIComponent(alias)) : n,
     );
   },
-  import: (name: string, isTypeOnly?: boolean, alias?: string) => {
-    const n = ts.factory.createIdentifier(encodeURIComponent(name));
-    return ts.factory.createImportSpecifier(
-      isTypeOnly ?? false,
-      alias ? n : undefined,
-      alias ? ts.factory.createIdentifier(encodeURIComponent(alias)) : n,
-    );
+  import: ({ alias, isTypeOnly = false, name }: ImportItemObject) => {
+    const nameNode = ts.factory.createIdentifier(name);
+    if (alias) {
+      const aliasNode = ts.factory.createIdentifier(alias);
+      return ts.factory.createImportSpecifier(isTypeOnly, nameNode, aliasNode);
+    }
+    return ts.factory.createImportSpecifier(isTypeOnly, undefined, nameNode);
   },
   // Create a numeric expression, handling negative numbers.
   number: (value: number) => {
@@ -87,26 +114,26 @@ export const ots = {
   },
   // Create a string literal. This handles strings that start with '`' or "'".
   string: (value: string, unescape = false) => {
+    let text = value;
     if (unescape) {
-      value = unescapeName(value);
+      text = unescapeName(text);
     }
-    const hasBothQuotes = value.includes("'") && value.includes('"');
-    const hasNewlines = value.includes('\n');
-    const hasUnescapedBackticks = value.startsWith('`');
-    const isBacktickEscaped = value.startsWith('\\`') && value.endsWith('\\`');
+    const hasBothQuotes = text.includes("'") && text.includes('"');
+    const hasNewlines = text.includes('\n');
+    const hasUnescapedBackticks = text.startsWith('`');
+    const isBacktickEscaped = text.startsWith('\\`') && text.endsWith('\\`');
     if (
       (hasNewlines || hasBothQuotes || hasUnescapedBackticks) &&
       !isBacktickEscaped
     ) {
-      value = `\`${value.replace(/(?<!\\)`/g, '\\`').replace(/\${/g, '\\${')}\``;
+      text = `\`${text.replace(/(?<!\\)`/g, '\\`').replace(/\${/g, '\\${')}\``;
     }
-    const text = encodeURIComponent(value);
-    if (value.startsWith('`')) {
+    if (text.startsWith('`')) {
       return ts.factory.createIdentifier(text);
     }
     return ts.factory.createStringLiteral(
       text,
-      value.includes("'") ? false : CONFIG.useSingleQuotes,
+      text.includes("'") ? false : CONFIG.useSingleQuotes,
     );
   },
 };
@@ -128,7 +155,7 @@ export const addLeadingJSDocComment = (node: ts.Node, text: Comments) => {
   const jsdoc = ts.factory.createJSDocComment(
     ts.factory.createNodeArray(jsdocTexts),
   );
-  const cleanedJsdoc = tsNodeToString(jsdoc)
+  const cleanedJsdoc = tsNodeToString({ node: jsdoc, unescape: true })
     .replace('/*', '')
     .replace('*  */', '');
 

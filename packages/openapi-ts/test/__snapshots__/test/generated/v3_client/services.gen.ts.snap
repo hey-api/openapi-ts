@@ -773,7 +773,7 @@ export class ComplexService {
                 parameterReference: data.parameterReference
             },
             errors: {
-                400: '400 \`server\` error',
+                400: '400 `server` error',
                 500: '500 server error'
             }
         });
