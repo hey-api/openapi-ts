@@ -9,23 +9,31 @@ import { unique } from '../unique';
 
 const base = (model: Model) => {
   const config = getConfig();
+
   if (model.base === 'binary') {
     return compiler.typedef.union(['Blob', 'File']);
   }
+
   if (config.types.dates && model.format === 'date-time') {
     return compiler.typedef.basic('Date');
   }
+
   // transform root level model names
   if (model.base === model.type && model.$refs.length) {
     if (model.$refs.some((ref) => ref.endsWith(model.base))) {
       return compiler.typedef.basic(transformTypeName(model.base));
     }
   }
+
   return compiler.typedef.basic(model.base);
 };
 
-const typeReference = (model: Model) =>
-  compiler.typedef.union([base(model)], model.isNullable);
+const typeReference = (model: Model) => {
+  // nullable is false when base is null to avoid duplicate null statements
+  const isNullable = model.base === 'null' ? false : model.isNullable;
+  const unionNode = compiler.typedef.union([base(model)], isNullable);
+  return unionNode;
+};
 
 const typeArray = (model: Model) => {
   // Special case where we use tuple to define constant size array.
@@ -38,7 +46,10 @@ const typeArray = (model: Model) => {
     model.maxItems <= 100
   ) {
     const types = Array(model.maxItems).fill(toType(model.link));
-    const tuple = compiler.typedef.tuple(types, model.isNullable);
+    const tuple = compiler.typedef.tuple({
+      isNullable: model.isNullable,
+      types,
+    });
     return tuple;
   }
 
@@ -62,7 +73,9 @@ const typeDict = (model: Model) => {
 const typeUnion = (model: Model) => {
   const models = model.properties;
   const types = models
-    .map((m) => compiler.utils.toString({ node: toType(m), unescape: true }))
+    .map((model) =>
+      compiler.utils.toString({ node: toType(model), unescape: true }),
+    )
     .filter(unique);
   return compiler.typedef.union(types, model.isNullable);
 };

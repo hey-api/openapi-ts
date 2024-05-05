@@ -14,7 +14,7 @@ const main = async () => {
       // export: false,
     },
     types: {
-      // include: '^DictionaryWithPropertiesAndAdditionalProperties',
+      // include: '^NestedAnyOfArraysNullable',
     },
   };
 

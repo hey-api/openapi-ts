@@ -11,6 +11,7 @@ import {
   mapPropertyValue,
 } from './discriminator';
 import type { getModel } from './getModel';
+import { isDefinitionNullable } from './inferType';
 
 // Fix for circular dependency
 export type GetModelFn = typeof getModel;
@@ -125,7 +126,7 @@ export const getModelProperties = (
           enums: [],
           export: 'reference',
           imports: [],
-          isNullable: property.nullable === true,
+          isNullable: isDefinitionNullable(property),
           link: null,
           properties: [],
           template: null,
@@ -141,7 +142,7 @@ export const getModelProperties = (
           enums: [],
           export: 'reference',
           imports: model.imports,
-          isNullable: model.isNullable || property.nullable === true,
+          isNullable: model.isNullable || isDefinitionNullable(property),
           link: null,
           properties: [],
           template: model.template,
@@ -158,7 +159,7 @@ export const getModelProperties = (
           enums: model.enums,
           export: model.export,
           imports: model.imports,
-          isNullable: model.isNullable || property.nullable === true,
+          isNullable: model.isNullable || isDefinitionNullable(property),
           link: model.link,
           properties: model.properties,
           template: model.template,
