@@ -1,5 +1,15 @@
 # @hey-api/openapi-ts
 
+## 0.43.1
+
+### Patch Changes
+
+- fix: use optional chaining in bin catch block ([#528](https://github.com/hey-api/openapi-ts/pull/528))
+
+- fix: broken encoding ([#532](https://github.com/hey-api/openapi-ts/pull/532))
+
+- fix(parser): handle type array ([#533](https://github.com/hey-api/openapi-ts/pull/533))
+
 ## 0.43.0
 
 ### Minor Changes

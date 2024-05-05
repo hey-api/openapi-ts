@@ -13,7 +13,11 @@ import {
   getAdditionalPropertiesModel,
   getModelProperties,
 } from './getModelProperties';
-import { inferType } from './inferType';
+import {
+  getDefinitionTypes,
+  inferType,
+  isDefinitionNullable,
+} from './inferType';
 
 export const getModel = (
   openApi: OpenApi,
@@ -22,7 +26,9 @@ export const getModel = (
   name: string = '',
   parentDefinition: OpenApiSchema | null = null,
 ): Model => {
-  const inferredType = inferType(definition);
+  const definitionTypes = getDefinitionTypes(definition);
+  const inferredType = inferType(definition, definitionTypes);
+
   const model: Model = {
     $refs: [],
     base: 'unknown',
@@ -36,7 +42,7 @@ export const getModel = (
     format: definition.format,
     imports: [],
     isDefinition,
-    isNullable: definition.nullable === true,
+    isNullable: isDefinitionNullable(definition),
     isReadOnly: definition.readOnly === true,
     isRequired: false,
     link: null,
@@ -81,7 +87,7 @@ export const getModel = (
     }
   }
 
-  if (definition.type === 'array' && definition.items) {
+  if (definitionTypes.includes('array') && definition.items) {
     if (definition.items.$ref) {
       const arrayItems = getType(definition.items.$ref);
       model.$refs = [...model.$refs, definition.items.$ref];
@@ -99,7 +105,7 @@ export const getModel = (
       if (
         foundComposition &&
         foundComposition.definitions.some(
-          (definition) => definition.type !== 'array',
+          (definition) => !getDefinitionTypes(definition).includes('array'),
         )
       ) {
         return getModel(openApi, definition.items);
@@ -139,7 +145,7 @@ export const getModel = (
     return { ...model, ...composition };
   }
 
-  if (definition.type === 'object' || definition.properties) {
+  if (definitionTypes.includes('object') || definition.properties) {
     if (definition.properties) {
       model.base = 'unknown';
       model.export = 'interface';
@@ -191,7 +197,7 @@ export const getModel = (
   }
 
   // If the schema has a type than it can be a basic or generic type.
-  if (definition.type) {
+  if (definitionTypes.length) {
     const definitionType = getType(definition.type, definition.format);
     model.base = definitionType.base;
     model.export = 'generic';

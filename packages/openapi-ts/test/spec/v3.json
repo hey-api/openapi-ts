@@ -2969,8 +2969,7 @@
         }
       },
       "NullableObject": {
-        "type": "object",
-        "nullable": true,
+        "type": ["object", "null"],
         "description": "An object that can be null",
         "properties": {
           "foo": {
@@ -3159,7 +3158,7 @@
         "maxItems": 3
       },
       "ModelWithAnyOfConstantSizeArrayNullable": {
-        "type": "array",
+        "type": ["array"],
         "items": {
           "oneOf": [
             {
