@@ -8,6 +8,7 @@ import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiParameter } from '../interfaces/OpenApiParameter';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 import { getModel } from './getModel';
+import { isDefinitionNullable } from './inferType';
 
 export const getOperationParameter = (
   openApi: OpenApi,
@@ -24,7 +25,7 @@ export const getOperationParameter = (
     imports: [],
     in: parameter.in,
     isDefinition: false,
-    isNullable: parameter.nullable === true,
+    isNullable: isDefinitionNullable(parameter),
     isReadOnly: false,
     isRequired: parameter.required === true,
     link: null,

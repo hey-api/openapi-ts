@@ -1280,8 +1280,7 @@ export const $CompositionWithOneOfAndProperties = {
 } as const;
 
 export const $NullableObject = {
-    type: 'object',
-    nullable: true,
+    type: ['object', 'null'],
     properties: {
         foo: {
             type: 'string'
@@ -1480,7 +1479,7 @@ export const $ModelWithAnyOfConstantSizeArray = {
 } as const;
 
 export const $ModelWithAnyOfConstantSizeArrayNullable = {
-    type: 'array',
+    type: ['array'],
     items: {
         oneOf: [
             {
