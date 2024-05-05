@@ -1,6 +1,7 @@
 import type { Model } from '../../common/interfaces/client';
 import type { OpenApiParameter } from '../../v2/interfaces/OpenApiParameter';
 import type { OpenApiSchema } from '../../v3/interfaces/OpenApiSchema';
+import { getDefinitionTypes } from '../../v3/parser/inferType';
 import type { OperationParameter } from '../interfaces/client';
 
 export const getDefault = (
@@ -11,7 +12,11 @@ export const getDefault = (
     return definition.default;
   }
 
-  const type = definition.type || typeof definition.default;
+  const definitionTypes = getDefinitionTypes(definition);
+
+  const type =
+    definitionTypes.find((type) => type !== 'null') ||
+    typeof definition.default;
 
   switch (type) {
     case 'int':
