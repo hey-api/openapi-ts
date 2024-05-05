@@ -10,7 +10,7 @@ import type { Client } from '../../types/client';
 import { getConfig } from '../config';
 import { enumKey, enumName, enumUnionType, enumValue } from '../enum';
 import { escapeComment } from '../escape';
-import { sortByName } from '../sort';
+import { sortByName, sorterByName } from '../sort';
 import { transformTypeName } from '../transform';
 import { operationDataTypeName, operationResponseTypeName } from './services';
 import { toType } from './type';
@@ -105,7 +105,11 @@ const processEnum = (
       obj: properties,
       unescape: true,
     });
-    const node = compiler.export.asConst(name, expression);
+    const node = compiler.export.const({
+      constAssertion: true,
+      expression,
+      name,
+    });
     onNode(node);
   }
 };
@@ -145,6 +149,8 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
 
   const pathsMap = new Map<string, PathMap>();
 
+  const config = getConfig();
+
   client.services.forEach((service) => {
     service.operations.forEach((operation) => {
       const hasReq = operation.parameters.length;
@@ -165,7 +171,72 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
         }
 
         if (hasReq) {
-          methodMap.set('req', sortByName([...operation.parameters]));
+          const bodyParameter = operation.parameters
+            .filter((parameter) => parameter.in === 'body')
+            .sort(sorterByName)[0];
+          const bodyParameters: OperationParameter = {
+            ...emptyModel,
+            ...bodyParameter,
+            in: 'body',
+            isRequired: bodyParameter ? bodyParameter.isRequired : false,
+            // mediaType: null,
+            name: 'body',
+            prop: 'body',
+          };
+          const headerParameters: OperationParameter = {
+            ...emptyModel,
+            in: 'header',
+            isRequired: operation.parameters
+              .filter((parameter) => parameter.in === 'header')
+              .some((parameter) => parameter.isRequired),
+            mediaType: null,
+            name: 'header',
+            prop: 'header',
+            properties: operation.parameters
+              .filter((parameter) => parameter.in === 'header')
+              .sort(sorterByName),
+          };
+          const pathParameters: OperationParameter = {
+            ...emptyModel,
+            in: 'path',
+            isRequired: operation.parameters
+              .filter((parameter) => parameter.in === 'path')
+              .some((parameter) => parameter.isRequired),
+            mediaType: null,
+            name: 'path',
+            prop: 'path',
+            properties: operation.parameters
+              .filter((parameter) => parameter.in === 'path')
+              .sort(sorterByName),
+          };
+          const queryParameters: OperationParameter = {
+            ...emptyModel,
+            in: 'query',
+            isRequired: operation.parameters
+              .filter((parameter) => parameter.in === 'query')
+              .some((parameter) => parameter.isRequired),
+            mediaType: null,
+            name: 'query',
+            prop: 'query',
+            properties: operation.parameters
+              .filter((parameter) => parameter.in === 'query')
+              .sort(sorterByName),
+          };
+          const operationProperties = config.client.startsWith('@hey-api')
+            ? [
+                bodyParameters,
+                headerParameters,
+                pathParameters,
+                queryParameters,
+              ].filter(
+                (param) =>
+                  param.properties.length ||
+                  param.$refs.length ||
+                  param.mediaType,
+              )
+            : sortByName([...operation.parameters]);
+
+          methodMap.set('req', operationProperties);
 
           // create type export for operation data
           const name = operationDataTypeName(operation);
@@ -173,9 +244,8 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
             client.serviceTypes = [...client.serviceTypes, name];
             const type = toType({
               ...emptyModel,
-              export: 'interface',
               isRequired: true,
-              properties: sortByName([...operation.parameters]),
+              properties: operationProperties,
             });
             const node = compiler.typedef.alias(name, type);
             onNode(node);
@@ -259,7 +329,6 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
 
           const reqResKey: Model = {
             ...emptyModel,
-            export: 'interface',
             isRequired: true,
             name,
             properties: reqResParameters,
@@ -269,7 +338,6 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
       );
       const methodKey: Model = {
         ...emptyModel,
-        export: 'interface',
         isRequired: true,
         name: method.toLocaleLowerCase(),
         properties: methodParameters,
@@ -278,7 +346,6 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
     });
     const pathKey: Model = {
       ...emptyModel,
-      export: 'interface',
       isRequired: true,
       name: `'${path}'`,
       properties: pathParameters,
@@ -288,7 +355,6 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
 
   const type = toType({
     ...emptyModel,
-    export: 'interface',
     properties,
   });
   const namespace = serviceExportedNamespace();

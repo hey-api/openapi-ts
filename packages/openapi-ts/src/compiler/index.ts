@@ -5,6 +5,7 @@ import ts from 'typescript';
 
 import * as classes from './classes';
 import * as module from './module';
+import * as _return from './return';
 import * as typedef from './typedef';
 import * as types from './types';
 import { stringToTsNodes, tsNodeToString } from './utils';
@@ -55,9 +56,7 @@ export class TypeScriptFile {
     this._items = [...this._items, ...nodes];
   }
 
-  public addNamedImport(
-    ...params: Parameters<typeof compiler.import.named>
-  ): void {
+  public addImport(...params: Parameters<typeof compiler.import.named>): void {
     this._imports = [...this._imports, compiler.import.named(...params)];
   }
 
@@ -121,15 +120,17 @@ export const compiler = {
     constructor: classes.createConstructorDeclaration,
     create: classes.createClassDeclaration,
     method: classes.createMethodDeclaration,
-    return: classes.createReturnFunctionCall,
   },
   export: {
     all: module.createExportAllDeclaration,
-    asConst: module.createExportVariableAsConst,
+    const: module.createExportConstVariable,
     named: module.createNamedExportDeclarations,
   },
   import: {
     named: module.createNamedImportDeclarations,
+  },
+  return: {
+    functionCall: _return.createReturnFunctionCall,
   },
   typedef: {
     alias: typedef.createTypeAliasDeclaration,
@@ -144,6 +145,7 @@ export const compiler = {
   types: {
     array: types.createArrayType,
     enum: types.createEnumDeclaration,
+    function: types.createFunction,
     object: types.createObjectType,
   },
   utils: {

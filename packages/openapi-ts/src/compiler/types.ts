@@ -1,25 +1,27 @@
 import ts from 'typescript';
 
+import { type FunctionParameter, toParameterDeclarations } from './classes';
+import { createTypeNode } from './typedef';
 import { addLeadingJSDocComment, type Comments, isType, ots } from './utils';
 
 /**
  * Convert an unknown value to an expression.
- * @param value - the unknown value.
- * @param unescape - if string should be unescaped.
+ * @param identifiers - list of keys that are treated as identifiers.
  * @param shorthand - if shorthand syntax is allowed.
- * @param indentifier - list of keys that are treated as indentifiers.
+ * @param unescape - if string should be unescaped.
+ * @param value - the unknown value.
  * @returns ts.Expression
  */
 export const toExpression = <T = unknown>({
-  value,
-  unescape = false,
-  shorthand = false,
   identifiers = [],
+  shorthand = false,
+  unescape = false,
+  value,
 }: {
-  value: T;
-  unescape?: boolean;
-  shorthand?: boolean;
   identifiers?: string[];
+  shorthand?: boolean;
+  unescape?: boolean;
+  value: T;
 }): ts.Expression | undefined => {
   if (value === null) {
     return ts.factory.createNull();
@@ -47,6 +49,36 @@ export const toExpression = <T = unknown>({
 };
 
 /**
+ * Create Function type expression.
+ */
+export const createFunction = ({
+  comment,
+  multiLine,
+  parameters = [],
+  returnType,
+  statements = [],
+}: {
+  comment?: Comments;
+  multiLine?: boolean;
+  parameters?: FunctionParameter[];
+  returnType?: string | ts.TypeNode;
+  statements?: ts.Statement[];
+}) => {
+  const expression = ts.factory.createArrowFunction(
+    undefined,
+    undefined,
+    toParameterDeclarations(parameters),
+    returnType ? createTypeNode(returnType) : undefined,
+    undefined,
+    ts.factory.createBlock(statements, multiLine),
+  );
+  if (comment) {
+    addLeadingJSDocComment(expression, comment);
+  }
+  return expression;
+};
+
+/**
  * Create Array type expression.
  * @param arr - The array to create.
  * @param multiLine - if the array should be multiline.
@@ -65,6 +97,18 @@ export const createArrayType = <T>({
     (!Array.isArray(arr[0]) && typeof arr[0] === 'object') || multiLine,
   );
 
+export type ObjectValue =
+  | { spread: string }
+  | {
+      key: string;
+      value: any;
+    };
+
+type ObjectAssignment =
+  | ts.PropertyAssignment
+  | ts.ShorthandPropertyAssignment
+  | ts.SpreadAssignment;
+
 /**
  * Create Object type expression.
  * @param comments - comments to add to each property.
@@ -75,7 +119,9 @@ export const createArrayType = <T>({
  * @param unescape - if properties strings should be unescaped.
  * @returns ts.ObjectLiteralExpression
  */
-export const createObjectType = <T extends object>({
+export const createObjectType = <
+  T extends Record<string, any> | Array<ObjectValue>,
+>({
   comments,
   identifiers = [],
   leadingComment,
@@ -92,49 +138,115 @@ export const createObjectType = <T extends object>({
   shorthand?: boolean;
   unescape?: boolean;
 }): ts.ObjectLiteralExpression => {
-  const properties = Object.entries(obj)
-    .map(([key, value]) => {
-      // Pass all object properties as identifiers if the whole object is a indentifier
-      let initializer: ts.Expression | undefined = toExpression({
-        identifiers: identifiers.includes(key) ? Object.keys(value) : [],
-        shorthand,
-        unescape,
-        value,
-      });
-      if (!initializer) {
-        return undefined;
-      }
-      // Create a identifier if the current key is one and it is not an object
-      if (
-        identifiers.includes(key) &&
-        !ts.isObjectLiteralExpression(initializer)
-      ) {
-        initializer = ts.factory.createIdentifier(value as string);
-      }
-      // Check key value equality before possibly modifying it
-      const hasShorthandSupport = key === value;
-      if (
-        key.match(/^[0-9]/) &&
-        key.match(/\D+/g) &&
-        !key.startsWith("'") &&
-        !key.endsWith("'")
-      ) {
-        key = `'${key}'`;
-      }
-      if (key.match(/\W/g) && !key.startsWith("'") && !key.endsWith("'")) {
-        key = `'${key}'`;
-      }
-      const assignment =
-        shorthand && hasShorthandSupport
-          ? ts.factory.createShorthandPropertyAssignment(value)
-          : ts.factory.createPropertyAssignment(key, initializer);
-      const comment = comments?.[key];
-      if (comment) {
-        addLeadingJSDocComment(assignment, comment);
-      }
-      return assignment;
-    })
-    .filter(isType<ts.ShorthandPropertyAssignment | ts.PropertyAssignment>);
+  const properties = Array.isArray(obj)
+    ? obj
+        .map((value: ObjectValue) => {
+          // Check key value equality before possibly modifying it
+          let canShorthand = false;
+          if ('key' in value) {
+            let { key } = value;
+            canShorthand = key === value.value;
+            if (
+              key.match(/^[0-9]/) &&
+              key.match(/\D+/g) &&
+              !key.startsWith("'") &&
+              !key.endsWith("'")
+            ) {
+              key = `'${key}'`;
+            }
+            if (
+              key.match(/\W/g) &&
+              !key.startsWith("'") &&
+              !key.endsWith("'")
+            ) {
+              key = `'${key}'`;
+            }
+          }
+          let assignment: ObjectAssignment;
+          if ('spread' in value) {
+            assignment = ts.factory.createSpreadAssignment(
+              ts.factory.createIdentifier(value.spread),
+            );
+          } else if (shorthand && canShorthand) {
+            assignment = ts.factory.createShorthandPropertyAssignment(
+              value.value,
+            );
+          } else {
+            let initializer: ts.Expression | undefined = toExpression({
+              identifiers: identifiers.includes(value.key)
+                ? Object.keys(value.value)
+                : [],
+              shorthand,
+              unescape,
+              value: value.value,
+            });
+            if (!initializer) {
+              return undefined;
+            }
+            // Create a identifier if the current key is one and it is not an object
+            if (
+              identifiers.includes(value.key) &&
+              !ts.isObjectLiteralExpression(initializer)
+            ) {
+              initializer = ts.factory.createIdentifier(value.value as string);
+            }
+            assignment = ts.factory.createPropertyAssignment(
+              value.key,
+              initializer,
+            );
+          }
+          if ('key' in value) {
+            const comment = comments?.[value.key];
+            if (comment) {
+              addLeadingJSDocComment(assignment, comment);
+            }
+          }
+          return assignment;
+        })
+        .filter(isType<ObjectAssignment>)
+    : Object.entries(obj)
+        .map(([key, value]) => {
+          // Pass all object properties as identifiers if the whole object is an identifier
+          let initializer: ts.Expression | undefined = toExpression({
+            identifiers: identifiers.includes(key) ? Object.keys(value) : [],
+            shorthand,
+            unescape,
+            value,
+          });
+          if (!initializer) {
+            return undefined;
+          }
+          // Create a identifier if the current key is one and it is not an object
+          if (
+            identifiers.includes(key) &&
+            !ts.isObjectLiteralExpression(initializer)
+          ) {
+            initializer = ts.factory.createIdentifier(value as string);
+          }
+          // Check key value equality before possibly modifying it
+          const canShorthand = key === value;
+          if (
+            key.match(/^[0-9]/) &&
+            key.match(/\D+/g) &&
+            !key.startsWith("'") &&
+            !key.endsWith("'")
+          ) {
+            key = `'${key}'`;
+          }
+          if (key.match(/\W/g) && !key.startsWith("'") && !key.endsWith("'")) {
+            key = `'${key}'`;
+          }
+          const assignment =
+            shorthand && canShorthand
+              ? ts.factory.createShorthandPropertyAssignment(value)
+              : ts.factory.createPropertyAssignment(key, initializer);
+          const comment = comments?.[key];
+          if (comment) {
+            addLeadingJSDocComment(assignment, comment);
+          }
+          return assignment;
+        })
+        .filter(isType<ObjectAssignment>);
 
   const expression = ts.factory.createObjectLiteralExpression(
     properties as any[],
@@ -150,22 +262,22 @@ export const createObjectType = <T extends object>({
 
 /**
  * Create enum declaration. Example `export enum T = { X, Y };`
+ * @param comments - comments to add to each property of enum.
+ * @param leadingComment - leading comment to add to enum.
  * @param name - the name of the enum.
  * @param obj - the object representing the enum.
- * @param leadingComment - leading comment to add to enum.
- * @param comments - comments to add to each property of enum.
  * @returns
  */
 export const createEnumDeclaration = <T extends object>({
+  comments,
+  leadingComment,
   name,
   obj,
-  leadingComment,
-  comments,
 }: {
+  comments?: Record<string | number, Comments>;
+  leadingComment?: Comments;
   name: string;
   obj: T;
-  leadingComment?: Comments;
-  comments?: Record<string | number, Comments>;
 }): ts.EnumDeclaration => {
   const declaration = ts.factory.createEnumDeclaration(
     [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
