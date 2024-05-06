@@ -1,4 +1,4 @@
-import type { Model } from '../../common/interfaces/client';
+import type { Model, ModelMeta } from '../../common/interfaces/client';
 import { getEnums } from '../../common/parser/getEnums';
 import { getPattern } from '../../common/parser/getPattern';
 import { getType } from '../../common/parser/type';
@@ -7,12 +7,17 @@ import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 import { getModelComposition } from './getModelComposition';
 import { getModelProperties } from './getModelProperties';
 
-export const getModel = (
-  openApi: OpenApi,
-  definition: OpenApiSchema,
-  isDefinition: boolean = false,
-  name: string = '',
-): Model => {
+export const getModel = ({
+  definition,
+  isDefinition = false,
+  meta,
+  openApi,
+}: {
+  definition: OpenApiSchema;
+  isDefinition?: boolean;
+  meta?: ModelMeta;
+  openApi: OpenApi;
+}): Model => {
   const model: Model = {
     $refs: [],
     base: 'unknown',
@@ -33,12 +38,13 @@ export const getModel = (
     maxLength: definition.maxLength,
     maxProperties: definition.maxProperties,
     maximum: definition.maximum,
+    meta,
     minItems: definition.minItems,
     minLength: definition.minLength,
     minProperties: definition.minProperties,
     minimum: definition.minimum,
     multipleOf: definition.multipleOf,
-    name,
+    name: meta?.name ?? '',
     pattern: getPattern(definition.pattern),
     properties: [],
     template: null,
@@ -47,7 +53,7 @@ export const getModel = (
   };
 
   if (definition.$ref) {
-    const definitionRef = getType(definition.$ref);
+    const definitionRef = getType({ type: definition.$ref });
     model.export = 'reference';
     model.type = definitionRef.type;
     model.base = definitionRef.base;
@@ -69,7 +75,7 @@ export const getModel = (
 
   if (definition.type === 'array' && definition.items) {
     if (definition.items.$ref) {
-      const arrayItems = getType(definition.items.$ref);
+      const arrayItems = getType({ type: definition.items.$ref });
       model.export = 'array';
       model.type = arrayItems.type;
       model.base = arrayItems.base;
@@ -77,7 +83,7 @@ export const getModel = (
       model.imports.push(...arrayItems.imports);
       return model;
     } else {
-      const arrayItems = getModel(openApi, definition.items);
+      const arrayItems = getModel({ definition: definition.items, openApi });
       model.export = 'array';
       model.type = arrayItems.type;
       model.base = arrayItems.base;
@@ -93,9 +99,9 @@ export const getModel = (
     typeof definition.additionalProperties === 'object'
   ) {
     if (definition.additionalProperties.$ref) {
-      const additionalProperties = getType(
-        definition.additionalProperties.$ref,
-      );
+      const additionalProperties = getType({
+        type: definition.additionalProperties.$ref,
+      });
       model.export = 'dictionary';
       model.type = additionalProperties.type;
       model.base = additionalProperties.base;
@@ -103,10 +109,10 @@ export const getModel = (
       model.imports.push(...additionalProperties.imports);
       return model;
     } else {
-      const additionalProperties = getModel(
+      const additionalProperties = getModel({
+        definition: definition.additionalProperties,
         openApi,
-        definition.additionalProperties,
-      );
+      });
       model.export = 'dictionary';
       model.type = additionalProperties.type;
       model.base = additionalProperties.base;
@@ -153,7 +159,10 @@ export const getModel = (
 
   // If the schema has a type than it can be a basic or generic type.
   if (definition.type) {
-    const definitionType = getType(definition.type, definition.format);
+    const definitionType = getType({
+      format: definition.format,
+      type: definition.type,
+    });
     model.export = 'generic';
     model.type = definitionType.type;
     model.base = definitionType.base;

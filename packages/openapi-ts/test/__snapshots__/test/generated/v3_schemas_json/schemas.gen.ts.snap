@@ -764,7 +764,7 @@ export const $CompositionWithNestedAnyAndTypeNull = {
     }
 } as const;
 
-export const $Enum1 = {
+export const $e_num_1Период = {
     enum: ['Bird', 'Dog'],
     type: 'string'
 } as const;
@@ -784,7 +784,7 @@ export const $CompositionWithNestedAnyOfAndNull = {
                     items: {
                         anyOf: [
                             {
-                                '$ref': '#/components/schemas/Enum1'
+                                '$ref': '#/components/schemas/3e-num_1Период'
                             },
                             {
                                 '$ref': '#/components/schemas/ConstValue'
@@ -1367,7 +1367,7 @@ export const $CompositionWithOneOfAndProperties = {
             required: ['bar'],
             properties: {
                 bar: {
-                    '$ref': '#/components/schemas/NonAsciiString%C3%A6%C3%B8%C3%A5%C3%86%C3%98%C3%85%C3%B6%C3%B4%C3%AA%C3%8A%E5%AD%97%E7%AC%A6%E4%B8%B2'
+                    '$ref': '#/components/schemas/NonAsciiStringæøåÆØÅöôêÊ字符串'
                 }
             },
             additionalProperties: false
@@ -1685,4 +1685,29 @@ export const $ModelWithBackticksInDescription = {
 </pre>`
         }
     }
+} as const;
+
+export const $ParameterSimpleParameterUnused = {
+    description: 'Model used to test deduplication strategy (unused)',
+    type: 'string'
+} as const;
+
+export const $PostServiceWithEmptyTagResponse = {
+    description: 'Model used to test deduplication strategy',
+    type: 'string'
+} as const;
+
+export const $PostServiceWithEmptyTagResponse2 = {
+    description: 'Model used to test deduplication strategy',
+    type: 'string'
+} as const;
+
+export const $DeleteFooData = {
+    description: 'Model used to test deduplication strategy',
+    type: 'string'
+} as const;
+
+export const $DeleteFooData2 = {
+    description: 'Model used to test deduplication strategy',
+    type: 'string'
 } as const;

@@ -49,7 +49,7 @@ export const getOperationParameter = (
   };
 
   if (parameter.$ref) {
-    const definitionRef = getType(parameter.$ref);
+    const definitionRef = getType({ type: parameter.$ref });
     operationParameter.export = 'reference';
     operationParameter.type = definitionRef.type;
     operationParameter.base = definitionRef.base;
@@ -72,7 +72,10 @@ export const getOperationParameter = (
   }
 
   if (parameter.type === 'array' && parameter.items) {
-    const items = getType(parameter.items.type, parameter.items.format);
+    const items = getType({
+      format: parameter.items.format,
+      type: parameter.items.type,
+    });
     operationParameter.export = 'array';
     operationParameter.type = items.type;
     operationParameter.base = items.base;
@@ -83,7 +86,10 @@ export const getOperationParameter = (
   }
 
   if (parameter.type === 'object' && parameter.items) {
-    const items = getType(parameter.items.type, parameter.items.format);
+    const items = getType({
+      format: parameter.items.format,
+      type: parameter.items.type,
+    });
     operationParameter.export = 'dictionary';
     operationParameter.type = items.type;
     operationParameter.base = items.base;
@@ -99,7 +105,7 @@ export const getOperationParameter = (
       schema = getRef<OpenApiSchema>(openApi, schema);
     }
     if (schema.$ref) {
-      const model = getType(schema.$ref);
+      const model = getType({ type: schema.$ref });
       operationParameter.export = 'reference';
       operationParameter.type = model.type;
       operationParameter.base = model.base;
@@ -108,7 +114,7 @@ export const getOperationParameter = (
       operationParameter.default = getDefault(parameter, operationParameter);
       return operationParameter;
     } else {
-      const model = getModel(openApi, schema);
+      const model = getModel({ definition: schema, openApi });
       operationParameter.export = model.export;
       operationParameter.type = model.type;
       operationParameter.base = model.base;
@@ -125,7 +131,10 @@ export const getOperationParameter = (
 
   // If the parameter has a type than it can be a basic or generic type.
   if (parameter.type) {
-    const definitionType = getType(parameter.type, parameter.format);
+    const definitionType = getType({
+      format: parameter.format,
+      type: parameter.type,
+    });
     operationParameter.export = 'generic';
     operationParameter.type = definitionType.type;
     operationParameter.base = definitionType.base;

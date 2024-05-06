@@ -27,24 +27,28 @@ export const createTypeNode = (
 
 /**
  * Create a type alias declaration. Example `export type X = Y;`.
- * @param name - the name of the type.
- * @param type - the type.
- * @param comments - comments to add if any.
+ * @param comment (optional) comments to add
+ * @param name the name of the type
+ * @param type the type
  * @returns ts.TypeAliasDeclaration
  */
-export const createTypeAliasDeclaration = (
-  name: string,
-  type: string | ts.TypeNode,
-  comments?: Comments,
-): ts.TypeAliasDeclaration => {
+export const createTypeAliasDeclaration = ({
+  comment,
+  name,
+  type,
+}: {
+  comment?: Comments;
+  name: string;
+  type: string | ts.TypeNode;
+}): ts.TypeAliasDeclaration => {
   const node = ts.factory.createTypeAliasDeclaration(
     [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
     ts.factory.createIdentifier(name),
     [],
     createTypeNode(type),
   );
-  if (comments) {
-    addLeadingJSDocComment(node, comments);
+  if (comment) {
+    addLeadingJSDocComment(node, comment);
   }
   return node;
 };

@@ -2367,7 +2367,7 @@
           }
         }
       },
-      "Enum1": {
+      "3e-num_1Период": {
         "enum": ["Bird", "Dog"],
         "type": "string"
       },
@@ -2385,7 +2385,7 @@
                 "items": {
                   "anyOf": [
                     {
-                      "$ref": "#/components/schemas/Enum1"
+                      "$ref": "#/components/schemas/3e-num_1Период"
                     },
                     {
                       "$ref": "#/components/schemas/ConstValue"
@@ -3222,6 +3222,26 @@
             "description": "The template `that` should be used for parsing and importing the contents of the CSV file.\n\n<br/><p>There is one placeholder currently supported:<ul>     <li><b>${x}</b> - refers to the n-th column in the CSV file, e.g. ${1}, ${2}, ...)</li></ul><p>Example of a correct JSON template:</p>\n<pre>\n[\n  {\n    \"resourceType\": \"Asset\",\n    \"identifier\": {\n      \"name\": \"${1}\",\n      \"domain\": {\n        \"name\": \"${2}\",\n        \"community\": {\n          \"name\": \"Some Community\"\n        }\n      }\n    },\n    \"attributes\" : {\n      \"00000000-0000-0000-0000-000000003115\" : [ {\n        \"value\" : \"${3}\" \n      } ],\n      \"00000000-0000-0000-0000-000000000222\" : [ {\n        \"value\" : \"${4}\"\n      } ]\n    }\n  }\n]\n</pre>"
           }
         }
+      },
+      "ParameterSimpleParameterUnused": {
+        "description": "Model used to test deduplication strategy (unused)",
+        "type": "string"
+      },
+      "PostServiceWithEmptyTagResponse": {
+        "description": "Model used to test deduplication strategy",
+        "type": "string"
+      },
+      "PostServiceWithEmptyTagResponse2": {
+        "description": "Model used to test deduplication strategy",
+        "type": "string"
+      },
+      "DeleteFooData": {
+        "description": "Model used to test deduplication strategy",
+        "type": "string"
+      },
+      "DeleteFooData2": {
+        "description": "Model used to test deduplication strategy",
+        "type": "string"
       }
     }
   }
