@@ -48,7 +48,7 @@ export const getOperationRequestBody = (
           break;
       }
       if (content.schema.$ref) {
-        const model = getType(content.schema.$ref);
+        const model = getType({ type: content.schema.$ref });
         requestBody.export = 'reference';
         requestBody.type = model.type;
         requestBody.base = model.base;
@@ -57,7 +57,7 @@ export const getOperationRequestBody = (
         requestBody.imports = [...requestBody.imports, ...model.imports];
         return requestBody;
       } else {
-        const model = getModel(openApi, content.schema);
+        const model = getModel({ definition: content.schema, openApi });
         requestBody.export = model.export;
         requestBody.type = model.type;
         requestBody.base = model.base;

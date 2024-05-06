@@ -5,15 +5,13 @@ import {
   TypeScriptFile,
 } from '../../compiler';
 import type { Model, OperationParameter, Service } from '../../openApi';
-import { ensureValidTypeScriptJavaScriptIdentifier } from '../../openApi/common/parser/sanitize';
 import type { Client } from '../../types/client';
 import { getConfig } from '../config';
-import { enumKey, enumName, enumUnionType, enumValue } from '../enum';
+import { enumKey, enumUnionType, enumValue } from '../enum';
 import { escapeComment } from '../escape';
 import { sortByName, sorterByName } from '../sort';
-import { transformTypeName } from '../transform';
 import { operationDataTypeName, operationResponseTypeName } from './services';
-import { toType } from './type';
+import { toType, uniqueTypeName } from './type';
 
 type OnNode = (node: Node) => void;
 
@@ -36,6 +34,62 @@ const emptyModel: Model = {
   properties: [],
   template: null,
   type: '',
+};
+
+const generateEnum = ({
+  leadingComment,
+  comments,
+  meta,
+  obj,
+  onNode,
+  ...uniqueTypeNameArgs
+}: Omit<Parameters<typeof compiler.types.enum>[0], 'name'> &
+  Pick<Parameters<typeof uniqueTypeName>[0], 'client' | 'nameTransformer'> &
+  Pick<Model, 'meta'> & {
+    onNode: OnNode;
+  }) => {
+  // generate types only for top-level models
+  if (!meta) {
+    return;
+  }
+
+  const { created, name } = uniqueTypeName({ meta, ...uniqueTypeNameArgs });
+  if (created) {
+    const node = compiler.types.enum({
+      comments,
+      leadingComment,
+      name,
+      obj,
+    });
+    onNode(node);
+  }
+};
+
+const generateType = ({
+  comment,
+  meta,
+  onCreated,
+  onNode,
+  type,
+  ...uniqueTypeNameArgs
+}: Omit<Parameters<typeof compiler.typedef.alias>[0], 'name'> &
+  Pick<Parameters<typeof uniqueTypeName>[0], 'client' | 'nameTransformer'> &
+  Pick<Model, 'meta'> & {
+    onCreated?: (name: string) => void;
+    onNode: OnNode;
+  }) => {
+  // generate types only for top-level models
+  if (!meta) {
+    return;
+  }
+
+  const { created, name } = uniqueTypeName({ meta, ...uniqueTypeNameArgs });
+  if (created) {
+    const node = compiler.typedef.alias({ comment, name, type });
+    onNode(node);
+
+    onCreated?.(name);
+  }
 };
 
 const processComposition = (client: Client, model: Model, onNode: OnNode) => {
@@ -67,64 +121,61 @@ const processEnum = (
     }
   });
 
-  // ignore duplicate enum names
-  const name = enumName(client, model.name)!;
-  if (name === null) {
+  const comment = [
+    model.description && escapeComment(model.description),
+    model.deprecated && '@deprecated',
+  ];
+
+  if (config.types.enums === 'typescript') {
+    generateEnum({
+      client,
+      comments,
+      leadingComment: comment,
+      meta: model.meta,
+      obj: properties,
+      onNode,
+    });
     return;
   }
 
-  const comment = [
-    model.description && escapeComment(model.description),
-    model.deprecated && '@deprecated',
-  ];
-
-  if (config.types.enums !== 'typescript') {
-    const node = compiler.typedef.alias(
-      ensureValidTypeScriptJavaScriptIdentifier(model.name),
-      enumUnionType(model.enum),
-      comment,
-    );
-    onNode(node);
-  }
-
-  if (config.types.enums === 'typescript') {
-    const node = compiler.types.enum({
-      comments,
-      leadingComment: comment,
-      name,
-      obj: properties,
-    });
-    onNode(node);
-  }
-
-  if (config.types.enums === 'javascript') {
-    const expression = compiler.types.object({
-      comments,
-      leadingComment: comment,
-      multiLine: true,
-      obj: properties,
-      unescape: true,
-    });
-    const node = compiler.export.const({
-      constAssertion: true,
-      expression,
-      name,
-    });
-    onNode(node);
-  }
+  generateType({
+    client,
+    comment,
+    meta: model.meta,
+    onCreated: (name) => {
+      // create a separate JavaScript object export
+      if (config.types.enums === 'javascript') {
+        const expression = compiler.types.object({
+          comments,
+          leadingComment: comment,
+          multiLine: true,
+          obj: properties,
+          unescape: true,
+        });
+        const node = compiler.export.const({
+          constAssertion: true,
+          expression,
+          name,
+        });
+        onNode(node);
+      }
+    },
+    onNode,
+    type: enumUnionType(model.enum),
+  });
 };
 
 const processType = (client: Client, model: Model, onNode: OnNode) => {
-  const comment = [
-    model.description && escapeComment(model.description),
-    model.deprecated && '@deprecated',
-  ];
-  const node = compiler.typedef.alias(
-    transformTypeName(model.name),
-    toType(model),
-    comment,
-  );
-  onNode(node);
+  generateType({
+    client,
+    comment: [
+      model.description && escapeComment(model.description),
+      model.deprecated && '@deprecated',
+    ],
+    meta: model.meta,
+    onNode,
+    type: toType(model),
+  });
 };
 
 const processModel = (client: Client, model: Model, onNode: OnNode) => {
@@ -239,17 +290,22 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
           methodMap.set('req', operationProperties);
 
           // create type export for operation data
-          const name = operationDataTypeName(operation);
-          if (!client.serviceTypes.includes(name)) {
-            client.serviceTypes = [...client.serviceTypes, name];
-            const type = toType({
+          generateType({
+            client,
+            meta: {
+              // TODO: this should be exact ref to operation for consistency,
+              // but name should work too as operation ID is unique
+              $ref: operation.name,
+              name: operation.name,
+            },
+            nameTransformer: operationDataTypeName,
+            onNode,
+            type: toType({
               ...emptyModel,
               isRequired: true,
               properties: operationProperties,
-            });
-            const node = compiler.typedef.alias(name, type);
-            onNode(node);
-          }
+            }),
+          });
         }
 
         if (hasRes) {
@@ -268,27 +324,27 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
           });
 
           // create type export for operation response
-          const name = operationResponseTypeName(operation);
-          if (!client.serviceTypes.includes(name)) {
-            client.serviceTypes = [...client.serviceTypes, name];
-            let responseProperties: Model[] = [];
-            operation.results.map((result) => {
-              if (
-                result.code === 'default' ||
-                (result.code >= 200 && result.code < 300)
-              ) {
-                responseProperties = [...responseProperties, result];
-              }
-            });
-            const type = toType({
+          generateType({
+            client,
+            meta: {
+              // TODO: this should be exact ref to operation for consistency,
+              // but name should work too as operation ID is unique
+              $ref: operation.name,
+              name: operation.name,
+            },
+            nameTransformer: operationResponseTypeName,
+            onNode,
+            type: toType({
               ...emptyModel,
               export: 'any-of',
               isRequired: true,
-              properties: responseProperties,
-            });
-            const node = compiler.typedef.alias(name, type);
-            onNode(node);
-          }
+              properties: operation.results.filter(
+                (result) =>
+                  result.code === 'default' ||
+                  (result.code >= 200 && result.code < 300),
+              ),
+            }),
+          });
         }
 
         if (hasErr) {
@@ -353,13 +409,18 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
     return pathKey;
   });
 
-  const type = toType({
-    ...emptyModel,
-    properties,
+  generateType({
+    client,
+    meta: {
+      $ref: '@hey-api/openapi-ts',
+      name: serviceExportedNamespace(),
+    },
+    onNode,
+    type: toType({
+      ...emptyModel,
+      properties,
+    }),
   });
-  const namespace = serviceExportedNamespace();
-  const node = compiler.typedef.alias(namespace, type);
-  onNode(node);
 };
 
 export const processTypes = async ({

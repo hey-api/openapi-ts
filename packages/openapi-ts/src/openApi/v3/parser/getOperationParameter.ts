@@ -38,7 +38,7 @@ export const getOperationParameter = (
   };
 
   if (parameter.$ref) {
-    const definitionRef = getType(parameter.$ref);
+    const definitionRef = getType({ type: parameter.$ref });
     operationParameter.export = 'reference';
     operationParameter.type = definitionRef.type;
     operationParameter.base = definitionRef.base;
@@ -60,7 +60,7 @@ export const getOperationParameter = (
       schema = getRef<OpenApiSchema>(openApi, schema);
     }
     if (schema.$ref) {
-      const model = getType(schema.$ref);
+      const model = getType({ type: schema.$ref });
       operationParameter.export = 'reference';
       operationParameter.type = model.type;
       operationParameter.base = model.base;
@@ -73,7 +73,7 @@ export const getOperationParameter = (
       operationParameter.default = getDefault(schema);
       return operationParameter;
     } else {
-      const model = getModel(openApi, schema);
+      const model = getModel({ definition: schema, openApi });
       operationParameter.export = model.export;
       operationParameter.type = model.type;
       operationParameter.base = model.base;

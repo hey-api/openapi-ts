@@ -20,7 +20,7 @@ export const getModelProperties = (
     ([propertyName, property]) => {
       const propertyRequired = !!definition.required?.includes(propertyName);
       if (property.$ref) {
-        const model = getType(property.$ref);
+        const model = getType({ type: property.$ref });
         models.push({
           $refs: [],
           base: model.base,
@@ -54,7 +54,7 @@ export const getModelProperties = (
           uniqueItems: property.uniqueItems,
         });
       } else {
-        const model = getModel(openApi, property);
+        const model = getModel({ definition: property, openApi });
         models.push({
           $refs: [],
           base: model.base,
