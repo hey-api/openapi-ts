@@ -39,9 +39,9 @@
     "@rollup/plugin-terser": "0.4.4",
     "@rollup/plugin-typescript": "11.1.6",
     "@svitejs/changesets-changelog-github-compact": "1.1.0",
-    "@types/node": "20.12.7",
-    "@vitest/coverage-v8": "1.5.2",
-    "eslint": "9.1.1",
+    "@types/node": "20.12.8",
+    "@vitest/coverage-v8": "1.6.0",
+    "eslint": "9.2.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-simple-import-sort": "12.1.0",
     "eslint-plugin-sort-keys-fix": "1.1.2",
@@ -50,11 +50,11 @@
     "lint-staged": "15.2.2",
     "prettier": "3.2.5",
     "rimraf": "5.0.5",
-    "rollup": "4.17.0",
+    "rollup": "4.17.2",
     "rollup-plugin-dts": "6.1.0",
     "typescript": "5.4.5",
-    "typescript-eslint": "7.7.1",
-    "vitest": "1.5.2"
+    "typescript-eslint": "7.8.0",
+    "vitest": "1.6.0"
   },
   "packageManager": "pnpm@8.15.7+sha256.50783dd0fa303852de2dd1557cd4b9f07cb5b018154a6e76d0f40635d6cee019"
 }
