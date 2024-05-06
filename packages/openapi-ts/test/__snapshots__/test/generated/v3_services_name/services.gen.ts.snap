@@ -95,7 +95,7 @@ export class myAwesomeParametersApi {
      * @param data.bar bar in method
      * @throws ApiError
      */
-    public static deleteFoo(data: DeleteFooData): CancelablePromise<void> {
+    public static deleteFoo(data: DeleteFooData3): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/v{api-version}/foo/{foo}/bar/{bar}',

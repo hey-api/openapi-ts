@@ -1,6 +1,4 @@
 import type { Enum } from '../openApi';
-import type { Client } from '../types/client';
-import { unescapeName } from './escape';
 import { unique } from './unique';
 
 /**
@@ -34,28 +32,6 @@ export const enumKey = (value?: string | number, customName?: string) => {
     key = 'empty_string';
   }
   return key.toUpperCase();
-};
-
-/**
- * Enums can't contain hyphens in their name. Additionally, name might've been
- * already escaped, so we need to remove quotes around it.
- * {@link https://github.com/ferdikoomen/openapi-typescript-codegen/issues/1969}
- */
-export const enumName = (client: Client, name?: string) => {
-  if (!name) {
-    return null;
-  }
-  const escapedName = unescapeName(name).replace(
-    /[-_]([a-z])/gi,
-    ($0, $1: string) => $1.toLocaleUpperCase(),
-  );
-  const result =
-    escapedName.charAt(0).toLocaleUpperCase() + escapedName.slice(1);
-  if (client.enumNames.includes(result)) {
-    return null;
-  }
-  client.enumNames = [...client.enumNames, result];
-  return result;
 };
 
 export const enumUnionType = (enums: Enum[]) =>

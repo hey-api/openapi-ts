@@ -27,10 +27,8 @@ describe('processServices', () => {
     });
 
     const client: Parameters<typeof processServices>[0]['client'] = {
-      enumNames: [],
       models: [],
       server: 'http://localhost:8080',
-      serviceTypes: [],
       services: [
         {
           $refs: [],
@@ -39,6 +37,7 @@ describe('processServices', () => {
           operations: [],
         },
       ],
+      types: {},
       version: 'v1',
     };
 

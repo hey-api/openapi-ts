@@ -17,9 +17,12 @@ export const getRequiredPropertiesFromComposition = (
     .reduce((properties, definition) => {
       if (definition.$ref) {
         const schema = getRef<OpenApiSchema>(openApi, definition);
-        return [...properties, ...getModel(openApi, schema).properties];
+        return [
+          ...properties,
+          ...getModel({ definition: schema, openApi }).properties,
+        ];
       }
-      return [...properties, ...getModel(openApi, definition).properties];
+      return [...properties, ...getModel({ definition, openApi }).properties];
     }, [] as Model[])
     .filter(
       (property) => !property.isRequired && required.includes(property.name),

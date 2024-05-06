@@ -17,11 +17,10 @@ export const parse = (openApi: OpenApi): Client => {
   const services = getServices(openApi);
 
   return {
-    enumNames: [],
     models,
     server,
-    serviceTypes: [],
     services,
+    types: {},
     version,
   };
 };

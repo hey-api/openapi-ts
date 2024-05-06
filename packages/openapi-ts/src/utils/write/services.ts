@@ -8,31 +8,66 @@ import {
   TypeScriptFile,
 } from '../../compiler';
 import type { ObjectValue } from '../../compiler/types';
-import type { Operation, OperationParameter, Service } from '../../openApi';
+import type {
+  Model,
+  Operation,
+  OperationParameter,
+  Service,
+} from '../../openApi';
 import type { Client } from '../../types/client';
 import { getConfig } from '../config';
 import { escapeComment, escapeName } from '../escape';
 import { modelIsRequired } from '../required';
 import { transformServiceName } from '../transform';
 import { unique } from '../unique';
+import { uniqueTypeName } from './type';
 
 type OnNode = (node: Node) => void;
 type OnImport = (importedType: string) => void;
 
-export const operationDataTypeName = (operation: Operation) =>
-  `${camelcase(operation.name, { pascalCase: true })}Data`;
+const generateImport = ({
+  meta,
+  onImport,
+  ...uniqueTypeNameArgs
+}: Pick<Parameters<typeof uniqueTypeName>[0], 'client' | 'nameTransformer'> &
+  Pick<Model, 'meta'> & {
+    onImport: OnImport;
+  }) => {
+  // generate imports only for top-level models
+  if (!meta) {
+    return;
+  }
 
-export const operationResponseTypeName = (operation: Operation) =>
-  `${camelcase(operation.name, { pascalCase: true })}Response`;
+  const { name } = uniqueTypeName({ meta, ...uniqueTypeNameArgs });
+  onImport(name);
+};
 
-const toOperationParamType = (operation: Operation): FunctionParameter[] => {
+export const operationDataTypeName = (name: string) =>
+  `${camelcase(name, { pascalCase: true })}Data`;
+
+export const operationResponseTypeName = (name: string) =>
+  `${camelcase(name, { pascalCase: true })}Response`;
+
+const toOperationParamType = (
+  client: Client,
+  operation: Operation,
+): FunctionParameter[] => {
   if (!operation.parameters.length) {
     return [];
   }
 
   const config = getConfig();
 
-  const importedType = operationDataTypeName(operation);
+  const { name: importedType } = uniqueTypeName({
+    client,
+    meta: {
+      // TODO: this should be exact ref to operation for consistency,
+      // but name should work too as operation ID is unique
+      $ref: operation.name,
+      name: operation.name,
+    },
+    nameTransformer: operationDataTypeName,
+  });
 
   if (config.useOptions) {
     const isRequired = operation.parameters.some(
@@ -58,7 +93,7 @@ const toOperationParamType = (operation: Operation): FunctionParameter[] => {
   });
 };
 
-const toOperationReturnType = (operation: Operation) => {
+const toOperationReturnType = (client: Client, operation: Operation) => {
   const config = getConfig();
 
   let returnType = compiler.typedef.basic('void');
@@ -67,7 +102,16 @@ const toOperationReturnType = (operation: Operation) => {
   // can't remove this logic without removing request/name config
   // as it complicates things
   if (operation.results.length) {
-    const importedType = operationResponseTypeName(operation);
+    const { name: importedType } = uniqueTypeName({
+      client,
+      meta: {
+        // TODO: this should be exact ref to operation for consistency,
+        // but name should work too as operation ID is unique
+        $ref: operation.name,
+        name: operation.name,
+      },
+      nameTransformer: operationResponseTypeName,
+    });
     returnType = compiler.typedef.union([importedType]);
   }
 
@@ -217,14 +261,23 @@ const toRequestOptions = (operation: Operation) => {
   });
 };
 
-const toOperationStatements = (operation: Operation) => {
+const toOperationStatements = (client: Client, operation: Operation) => {
   const config = getConfig();
 
   const options = toRequestOptions(operation);
 
   if (config.client.startsWith('@hey-api')) {
     const returnType = operation.results.length
-      ? operationResponseTypeName(operation)
+      ? uniqueTypeName({
+          client,
+          meta: {
+            // TODO: this should be exact ref to operation for consistency,
+            // but name should work too as operation ID is unique
+            $ref: operation.name,
+            name: operation.name,
+          },
+          nameTransformer: operationResponseTypeName,
+        }).name
       : 'void';
     return [
       compiler.return.functionCall({
@@ -262,6 +315,7 @@ const toOperationStatements = (operation: Operation) => {
 };
 
 export const processService = (
+  client: Client,
   service: Service,
   onNode: OnNode,
   onImport: OnImport,
@@ -270,21 +324,39 @@ export const processService = (
 
   service.operations.forEach((operation) => {
     if (operation.parameters.length) {
-      const importedType = operationDataTypeName(operation);
-      onImport(importedType);
+      generateImport({
+        client,
+        meta: {
+          // TODO: this should be exact ref to operation for consistency,
+          // but name should work too as operation ID is unique
+          $ref: operation.name,
+          name: operation.name,
+        },
+        nameTransformer: operationDataTypeName,
+        onImport,
+      });
     }
 
     if (operation.results.length) {
-      const importedType = operationResponseTypeName(operation);
-      onImport(importedType);
+      generateImport({
+        client,
+        meta: {
+          // TODO: this should be exact ref to operation for consistency,
+          // but name should work too as operation ID is unique
+          $ref: operation.name,
+          name: operation.name,
+        },
+        nameTransformer: operationResponseTypeName,
+        onImport,
+      });
     }
   });
 
   if (config.client.startsWith('@hey-api')) {
     service.operations.forEach((operation) => {
       const expression = compiler.types.function({
-        parameters: toOperationParamType(operation),
-        statements: toOperationStatements(operation),
+        parameters: toOperationParamType(client, operation),
+        statements: toOperationStatements(client, operation),
       });
       const statement = compiler.export.const({
         comment: toOperationComment(operation),
@@ -302,9 +374,9 @@ export const processService = (
       comment: toOperationComment(operation),
       isStatic: config.name === undefined && config.client !== 'angular',
       name: operation.name,
-      parameters: toOperationParamType(operation),
-      returnType: toOperationReturnType(operation),
-      statements: toOperationStatements(operation),
+      parameters: toOperationParamType(client, operation),
+      returnType: toOperationReturnType(client, operation),
+      statements: toOperationStatements(client, operation),
     });
     return node;
   });
@@ -368,6 +440,7 @@ export const processServices = async ({
 
   for (const service of client.services) {
     processService(
+      client,
       service,
       (node) => {
         files.services?.add(node);

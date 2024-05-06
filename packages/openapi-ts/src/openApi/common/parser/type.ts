@@ -1,3 +1,4 @@
+import { transformTypeName } from '../../../utils/transform';
 import { isDefinitionTypeNullable } from '../../v3/parser/inferType';
 import type { Type } from '../interfaces/Type';
 import { ensureValidTypeScriptJavaScriptIdentifier } from './sanitize';
@@ -50,10 +51,13 @@ export const getMappedType = (
  * @param type String or String[] value like "integer", "Link[Model]" or ["string", "null"].
  * @param format String value like "binary" or "date".
  */
-export const getType = (
-  type: string | string[] = 'unknown',
-  format?: string,
-): Type => {
+export const getType = ({
+  format,
+  type = 'unknown',
+}: {
+  format?: string;
+  type?: string | string[];
+}): Type => {
   const result: Type = {
     $refs: [],
     base: 'unknown',
@@ -89,12 +93,12 @@ export const getType = (
   if (/\[.*\]$/g.test(typeWithoutNamespace)) {
     const matches = typeWithoutNamespace.match(/(.*?)\[(.*)\]$/);
     if (matches?.length) {
-      const match1 = getType(
-        ensureValidTypeScriptJavaScriptIdentifier(matches[1]),
-      );
-      const match2 = getType(
-        ensureValidTypeScriptJavaScriptIdentifier(matches[2]),
-      );
+      const match1 = getType({
+        type: ensureValidTypeScriptJavaScriptIdentifier(matches[1]),
+      });
+      const match2 = getType({
+        type: ensureValidTypeScriptJavaScriptIdentifier(matches[2]),
+      });
 
       if (match1.type === 'unknown[]') {
         result.type = `${match2.type}[]`;
@@ -122,8 +126,9 @@ export const getType = (
   }
 
   if (typeWithoutNamespace) {
-    let encodedType =
-      ensureValidTypeScriptJavaScriptIdentifier(typeWithoutNamespace);
+    let encodedType = transformTypeName(
+      ensureValidTypeScriptJavaScriptIdentifier(typeWithoutNamespace),
+    );
     if (type.startsWith('#/components/parameters/')) {
       // prefix parameter names to avoid conflicts, assuming people are mostly
       // interested in importing schema types and don't care about this naming

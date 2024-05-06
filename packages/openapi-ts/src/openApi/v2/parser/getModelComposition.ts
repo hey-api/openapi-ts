@@ -26,7 +26,7 @@ export const getModelComposition = (
   const properties: Model[] = [];
 
   definitions
-    .map((definition) => getModel(openApi, definition))
+    .map((definition) => getModel({ definition, openApi }))
     .filter((model) => {
       const hasProperties = model.properties.length;
       const hasEnums = model.enums.length;
