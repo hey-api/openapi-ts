@@ -1,10 +1,10 @@
 import { compiler, type Property, type TypeNode } from '../../compiler';
-import { Model } from '../../openApi';
+import type { Model } from '../../openApi';
+import type { Client } from '../../types/client';
 import { getConfig } from '../config';
 import { enumValue } from '../enum';
 import { escapeComment } from '../escape';
 import { modelIsRequired } from '../required';
-import { transformTypeName } from '../transform';
 import { unique } from '../unique';
 
 const base = (model: Model) => {
@@ -16,13 +16,6 @@ const base = (model: Model) => {
 
   if (config.types.dates && model.format === 'date-time') {
     return compiler.typedef.basic('Date');
-  }
-
-  // transform root level model names
-  if (model.base === model.type && model.$refs.length) {
-    if (model.$refs.some((ref) => ref.endsWith(model.base))) {
-      return compiler.typedef.basic(transformTypeName(model.base));
-    }
   }
 
   return compiler.typedef.basic(model.base);
@@ -134,4 +127,61 @@ export const toType = (model: Model): TypeNode => {
     default:
       return typeReference(model);
   }
+};
+
+interface UniqueTypeNameResult {
+  /**
+   * Did this function add a new property to the `client.types` object?
+   */
+  created: boolean;
+  /**
+   * Unique name for the exported type.
+   */
+  name: string;
+}
+
+/**
+ * Generates a unique name for the exported type for given model meta.
+ * @param args.client Internal client instance
+ * @param args.count Unique key for deduplication
+ * @param args.meta Meta property from the model
+ * @param args.nameTransformer Function for transforming name into the final
+ * value. In different contexts, a different strategy might be used. For
+ * example, slashes `/` are invalid in TypeScript identifiers, but okay in
+ * a JavaScript object key name.
+ * @returns {UniqueTypeNameResult}
+ */
+export const uniqueTypeName = ({
+  client,
+  count = 1,
+  meta,
+  nameTransformer,
+}: Pick<Required<Model>, 'meta'> & {
+  client: Client;
+  count?: number;
+  nameTransformer?: (value: string) => string;
+}): UniqueTypeNameResult => {
+  let result: UniqueTypeNameResult = {
+    created: false,
+    name: meta.name,
+  };
+  if (nameTransformer) {
+    result.name = nameTransformer(result.name);
+  }
+  if (count > 1) {
+    result.name = `${result.name}${count}`;
+  }
+  const type = client.types[result.name];
+  if (!type) {
+    client.types[result.name] = meta;
+    result.created = true;
+  } else if (type.$ref !== meta.$ref) {
+    result = uniqueTypeName({
+      client,
+      count: count + 1,
+      meta,
+      nameTransformer,
+    });
+  }
+  return result;
 };

@@ -23,12 +23,20 @@ const ensureValidSchemaOutput = (schema: unknown): object => {
           'x-enum-descriptions',
           'x-enum-varnames',
           'x-enumNames',
+          'title',
         ].includes(key)
       ) {
         // @ts-ignore
         delete result[key];
         return;
       }
+    }
+
+    // refs are encoded probably by json-schema-ref-parser, didn't investigate
+    // further
+    if (key === '$ref' && typeof value === 'string') {
+      // @ts-ignore
+      result[key] = decodeURIComponent(value);
     }
 
     if (value && typeof value === 'object') {

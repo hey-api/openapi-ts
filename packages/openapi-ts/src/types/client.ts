@@ -1,12 +1,13 @@
 import { Model, Service } from '../openApi';
+import type { ModelMeta } from '../openApi/common/interfaces/client';
 
 export interface Client {
-  // holds unique enum names to avoid duplicate type exports
-  enumNames: string[];
   models: Model[];
   server: string;
   services: Service[];
-  // holds unique service type names to avoid duplicate type exports
-  serviceTypes: string[];
+  /**
+   * Map of generated types, keys are type names
+   */
+  types: Record<string, ModelMeta>;
   version: string;
 }

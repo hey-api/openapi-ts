@@ -84,6 +84,17 @@ export interface Schema {
   uniqueItems?: boolean;
 }
 
+export interface ModelMeta {
+  /**
+   * Ref to the type in OpenAPI specification.
+   */
+  $ref: string;
+  /**
+   * Name passed to the initial `getModel()` call.
+   */
+  name: string;
+}
+
 export interface Model extends Schema {
   /**
    * **Experimental.** Contains list of original refs so they can be used
@@ -109,6 +120,10 @@ export interface Model extends Schema {
     | 'reference';
   imports: string[];
   link: Model | null;
+  meta?: ModelMeta;
+  /**
+   * @deprecated use `meta.name` instead
+   */
   name: string;
   properties: Model[];
   template: string | null;

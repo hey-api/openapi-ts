@@ -1,6 +1,16 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
+import type { Config } from '../../../../types/config';
 import { getMappedType, getType } from '../type';
+
+vi.mock('../../../../utils/config', () => {
+  const config: Partial<Config> = {
+    types: {},
+  };
+  return {
+    getConfig: () => config,
+  };
+});
 
 describe('getMappedType', () => {
   it.each([
@@ -32,7 +42,7 @@ describe('getMappedType', () => {
 
 describe('getType', () => {
   it('should convert int', () => {
-    const type = getType('int');
+    const type = getType({ type: 'int' });
     expect(type.type).toEqual('number');
     expect(type.base).toEqual('number');
     expect(type.template).toEqual(null);
@@ -41,7 +51,7 @@ describe('getType', () => {
   });
 
   it('should convert string', () => {
-    const type = getType('string');
+    const type = getType({ type: 'string' });
     expect(type.type).toEqual('string');
     expect(type.base).toEqual('string');
     expect(type.template).toEqual(null);
@@ -50,7 +60,7 @@ describe('getType', () => {
   });
 
   it('should convert string array', () => {
-    const type = getType('array[string]');
+    const type = getType({ type: 'array[string]' });
     expect(type.type).toEqual('string[]');
     expect(type.base).toEqual('string');
     expect(type.template).toEqual(null);
@@ -59,7 +69,7 @@ describe('getType', () => {
   });
 
   it('should convert template with primary', () => {
-    const type = getType('#/components/schemas/Link[string]');
+    const type = getType({ type: '#/components/schemas/Link[string]' });
     expect(type.type).toEqual('Link<string>');
     expect(type.base).toEqual('Link');
     expect(type.template).toEqual('string');
@@ -68,7 +78,7 @@ describe('getType', () => {
   });
 
   it('should convert template with model', () => {
-    const type = getType('#/components/schemas/Link[Model]');
+    const type = getType({ type: '#/components/schemas/Link[Model]' });
     expect(type.type).toEqual('Link<Model>');
     expect(type.base).toEqual('Link');
     expect(type.template).toEqual('Model');
@@ -77,7 +87,7 @@ describe('getType', () => {
   });
 
   it('should have double imports', () => {
-    const type = getType('#/components/schemas/Link[Link]');
+    const type = getType({ type: '#/components/schemas/Link[Link]' });
     expect(type.type).toEqual('Link<Link>');
     expect(type.base).toEqual('Link');
     expect(type.template).toEqual('Link');
@@ -86,7 +96,7 @@ describe('getType', () => {
   });
 
   it('should support dot', () => {
-    const type = getType('#/components/schemas/model.000');
+    const type = getType({ type: '#/components/schemas/model.000' });
     expect(type.type).toEqual('model_000');
     expect(type.base).toEqual('model_000');
     expect(type.template).toEqual(null);
@@ -95,7 +105,7 @@ describe('getType', () => {
   });
 
   it('should support dashes', () => {
-    const type = getType('#/components/schemas/some_special-schema');
+    const type = getType({ type: '#/components/schemas/some_special-schema' });
     expect(type.type).toEqual('some_special_schema');
     expect(type.base).toEqual('some_special_schema');
     expect(type.template).toEqual(null);
@@ -104,7 +114,7 @@ describe('getType', () => {
   });
 
   it('should support dollar sign', () => {
-    const type = getType('#/components/schemas/$some+special+schema');
+    const type = getType({ type: '#/components/schemas/$some+special+schema' });
     expect(type.type).toEqual('$some_special_schema');
     expect(type.base).toEqual('$some_special_schema');
     expect(type.template).toEqual(null);
@@ -113,7 +123,7 @@ describe('getType', () => {
   });
 
   it('should support multiple base types', () => {
-    const type = getType(['string', 'int']);
+    const type = getType({ type: ['string', 'int'] });
     expect(type.type).toEqual('string | number');
     expect(type.base).toEqual('string | number');
     expect(type.template).toEqual(null);
@@ -122,7 +132,7 @@ describe('getType', () => {
   });
 
   it('should support multiple nullable types', () => {
-    const type = getType(['string', 'null']);
+    const type = getType({ type: ['string', 'null'] });
     expect(type.type).toEqual('string');
     expect(type.base).toEqual('string');
     expect(type.template).toEqual(null);

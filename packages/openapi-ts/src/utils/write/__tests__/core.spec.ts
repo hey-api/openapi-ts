@@ -17,11 +17,10 @@ describe('writeCore', () => {
 
   it('writes to filesystem', async () => {
     const client: Parameters<typeof writeCore>[1] = {
-      enumNames: [],
       models: [],
       server: 'http://localhost:8080',
-      serviceTypes: [],
       services: [],
+      types: {},
       version: '1.0',
     };
 
@@ -73,11 +72,10 @@ describe('writeCore', () => {
 
   it('uses client server value for base', async () => {
     const client: Parameters<typeof writeCore>[1] = {
-      enumNames: [],
       models: [],
       server: 'http://localhost:8080',
-      serviceTypes: [],
       services: [],
+      types: {},
       version: '1.0',
     };
 
@@ -111,11 +109,10 @@ describe('writeCore', () => {
 
   it('uses custom value for base', async () => {
     const client: Parameters<typeof writeCore>[1] = {
-      enumNames: [],
       models: [],
       server: 'http://localhost:8080',
-      serviceTypes: [],
       services: [],
+      types: {},
       version: '1.0',
     };
 

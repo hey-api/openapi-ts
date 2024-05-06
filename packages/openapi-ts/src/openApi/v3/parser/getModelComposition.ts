@@ -62,7 +62,9 @@ export const getModelComposition = ({
   const properties: Model[] = [];
 
   definitions
-    .map((def) => getModel(openApi, def, undefined, undefined, definition))
+    .map((def) =>
+      getModel({ definition: def, openApi, parentDefinition: definition }),
+    )
     .forEach((model) => {
       composition.$refs = [...composition.$refs, ...model.$refs];
       composition.imports = [...composition.imports, ...model.imports];

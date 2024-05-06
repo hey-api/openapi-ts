@@ -2,7 +2,7 @@
 
 import type { CancelablePromise } from './core/CancelablePromise';
 import type { BaseHttpRequest } from './core/BaseHttpRequest';
-import type { PostServiceWithEmptyTagData, PostServiceWithEmptyTagResponse, ApiVversionOdataControllerCountResponse, DeleteFooData, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, CallWithDescriptionsData, DeprecatedCallData, PostApiRequestBodyData, PostApiFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, DummyAResponse, DummyBResponse, CollectionFormatData, TypesData, TypesResponse, UploadFileData, UploadFileResponse, FileResponseData, FileResponseResponse, ComplexTypesData, ComplexTypesResponse, ComplexParamsData, ComplexParamsResponse, MultipartRequestData, MultipartResponseResponse, CallWithResultFromHeaderResponse, TestErrorCodeData, TestErrorCodeResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response } from './types.gen';
+import type { PostServiceWithEmptyTagData, PostServiceWithEmptyTagResponse3, ApiVversionOdataControllerCountResponse, DeleteFooData3, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, CallWithDescriptionsData, DeprecatedCallData, PostApiRequestBodyData, PostApiFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, DummyAResponse, DummyBResponse, CollectionFormatData, TypesData, TypesResponse, UploadFileData, UploadFileResponse, FileResponseData, FileResponseResponse, ComplexTypesData, ComplexTypesResponse, ComplexParamsData, ComplexParamsResponse, MultipartRequestData, MultipartResponseResponse, CallWithResultFromHeaderResponse, TestErrorCodeData, TestErrorCodeResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response } from './types.gen';
 
 export class DefaultService {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
@@ -23,7 +23,7 @@ export class DefaultService {
      * @returns ModelWithReadOnlyAndWriteOnly
      * @throws ApiError
      */
-    public postServiceWithEmptyTag(data: PostServiceWithEmptyTagData): CancelablePromise<PostServiceWithEmptyTagResponse> {
+    public postServiceWithEmptyTag(data: PostServiceWithEmptyTagData): CancelablePromise<PostServiceWithEmptyTagResponse3> {
         return this.httpRequest.request({
             method: 'POST',
             url: '/api/v{api-version}/no-tag',
@@ -129,7 +129,7 @@ export class ParametersService {
      * @param data.bar bar in method
      * @throws ApiError
      */
-    public deleteFoo(data: DeleteFooData): CancelablePromise<void> {
+    public deleteFoo(data: DeleteFooData3): CancelablePromise<void> {
         return this.httpRequest.request({
             method: 'DELETE',
             url: '/api/v{api-version}/foo/{foo}/bar/{bar}',

@@ -361,7 +361,6 @@ export const $ModelWithEnumWithHyphen = {
         'foo-bar-baz-qux': {
             type: 'string',
             enum: ['3.0'],
-            title: 'Foo-Bar-Baz-Qux',
             default: '3.0'
         }
     }
@@ -676,7 +675,7 @@ export const $CompositionWithNestedAnyAndTypeNull = {
     }
 } as const;
 
-export const $Enum1 = {
+export const $e_num_1Период = {
     enum: ['Bird', 'Dog'],
     type: 'string'
 } as const;
@@ -695,7 +694,7 @@ export const $CompositionWithNestedAnyOfAndNull = {
                     items: {
                         anyOf: [
                             {
-                                '$ref': '#/components/schemas/Enum1'
+                                '$ref': '#/components/schemas/3e-num_1Период'
                             },
                             {
                                 '$ref': '#/components/schemas/ConstValue'
@@ -707,8 +706,7 @@ export const $CompositionWithNestedAnyOfAndNull = {
                 {
                     type: 'null'
                 }
-            ],
-            title: 'Scopes'
+            ]
         }
     }
 } as const;
@@ -1106,31 +1104,26 @@ export const $File = {
     type: 'object',
     properties: {
         id: {
-            title: 'Id',
             type: 'string',
             readOnly: true,
             minLength: 1
         },
         updated_at: {
-            title: 'Updated at',
             type: 'string',
             format: 'date-time',
             readOnly: true
         },
         created_at: {
-            title: 'Created at',
             type: 'string',
             format: 'date-time',
             readOnly: true
         },
         mime: {
-            title: 'Mime',
             type: 'string',
             maxLength: 24,
             minLength: 1
         },
         file: {
-            title: 'File',
             type: 'string',
             readOnly: true,
             format: 'uri'
@@ -1257,7 +1250,7 @@ export const $CompositionWithOneOfAndProperties = {
             required: ['bar'],
             properties: {
                 bar: {
-                    '$ref': '#/components/schemas/NonAsciiString%C3%A6%C3%B8%C3%A5%C3%86%C3%98%C3%85%C3%B6%C3%B4%C3%AA%C3%8A%E5%AD%97%E7%AC%A6%E4%B8%B2'
+                    '$ref': '#/components/schemas/NonAsciiStringæøåÆØÅöôêÊ字符串'
                 }
             },
             additionalProperties: false
@@ -1544,4 +1537,24 @@ export const $ModelWithBackticksInDescription = {
             type: 'string'
         }
     }
+} as const;
+
+export const $ParameterSimpleParameterUnused = {
+    type: 'string'
+} as const;
+
+export const $PostServiceWithEmptyTagResponse = {
+    type: 'string'
+} as const;
+
+export const $PostServiceWithEmptyTagResponse2 = {
+    type: 'string'
+} as const;
+
+export const $DeleteFooData = {
+    type: 'string'
+} as const;
+
+export const $DeleteFooData2 = {
+    type: 'string'
 } as const;

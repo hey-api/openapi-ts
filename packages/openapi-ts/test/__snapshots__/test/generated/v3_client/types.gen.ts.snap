@@ -445,7 +445,7 @@ export type CompositionWithNestedAnyAndTypeNull = {
     propA?: Array<(ModelWithDictionary | null)> | Array<(ModelWithArray | null)>;
 };
 
-export type Enum1 = 'Bird' | 'Dog';
+export type e_num_1Период = 'Bird' | 'Dog';
 
 export type ConstValue = "ConstValue";
 
@@ -453,7 +453,7 @@ export type ConstValue = "ConstValue";
  * This is a model with one property with a 'any of' relationship where the options are not $ref
  */
 export type CompositionWithNestedAnyOfAndNull = {
-    propA?: Array<(Enum1 | ConstValue)> | null;
+    propA?: Array<(e_num_1Период | ConstValue)> | null;
 };
 
 /**
@@ -811,6 +811,31 @@ export type ModelWithBackticksInDescription = {
 };
 
 /**
+ * Model used to test deduplication strategy (unused)
+ */
+export type ParameterSimpleParameterUnused = string;
+
+/**
+ * Model used to test deduplication strategy
+ */
+export type PostServiceWithEmptyTagResponse = string;
+
+/**
+ * Model used to test deduplication strategy
+ */
+export type PostServiceWithEmptyTagResponse2 = string;
+
+/**
+ * Model used to test deduplication strategy
+ */
+export type DeleteFooData = string;
+
+/**
+ * Model used to test deduplication strategy
+ */
+export type DeleteFooData2 = string;
+
+/**
  * This is a reusable parameter
  */
 export type ParameterSimpleParameter = string;
@@ -824,11 +849,11 @@ export type PostServiceWithEmptyTagData = {
     requestBody: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
 };
 
-export type PostServiceWithEmptyTagResponse = ModelWithReadOnlyAndWriteOnly;
+export type PostServiceWithEmptyTagResponse3 = ModelWithReadOnlyAndWriteOnly;
 
 export type ApiVversionOdataControllerCountResponse = Model_From_Zendesk;
 
-export type DeleteFooData = {
+export type DeleteFooData3 = {
     /**
      * bar in method
      */
