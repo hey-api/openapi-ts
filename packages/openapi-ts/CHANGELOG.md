@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.43.2
+
+### Patch Changes
+
+- fix: deduplicate exported data and response types ([#538](https://github.com/hey-api/openapi-ts/pull/538))
+
 ## 0.43.1
 
 ### Patch Changes
