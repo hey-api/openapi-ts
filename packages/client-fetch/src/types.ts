@@ -23,11 +23,15 @@ interface BodyType<T = unknown> {
   text: Awaited<ReturnType<Response['text']>>;
 }
 
-export interface RequestResponse<Data = unknown, Error = unknown> {
+interface RequestResponse<Data = unknown, Error = unknown> {
   error?: Error;
   data?: Data;
   response: Response;
 }
+
+export type RequestResult<Data = unknown, Error = unknown> = Promise<
+  RequestResponse<Data, Error>
+>;
 
 export interface Config extends FetchConfig {
   /**
@@ -58,3 +62,5 @@ export interface Config extends FetchConfig {
 export interface Req
   extends Omit<ApiRequestOptions, 'headers'>,
     Omit<Partial<Config>, 'body' | 'method'> {}
+
+export type Options<T = unknown> = Omit<Req, 'method' | 'url'> & T;

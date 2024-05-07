@@ -39,7 +39,9 @@ const generateImport = ({
   }
 
   const { name } = uniqueTypeName({ meta, ...uniqueTypeNameArgs });
-  onImport(name);
+  if (name) {
+    onImport(name);
+  }
 };
 
 export const operationDataTypeName = (name: string) =>
@@ -52,10 +54,6 @@ const toOperationParamType = (
   client: Client,
   operation: Operation,
 ): FunctionParameter[] => {
-  if (!operation.parameters.length) {
-    return [];
-  }
-
   const config = getConfig();
 
   const { name: importedType } = uniqueTypeName({
@@ -69,28 +67,44 @@ const toOperationParamType = (
     nameTransformer: operationDataTypeName,
   });
 
-  if (config.useOptions) {
-    const isRequired = operation.parameters.some(
-      (parameter) => parameter.isRequired,
-    );
+  const isRequired = operation.parameters.some(
+    (parameter) => parameter.isRequired,
+  );
+
+  if (config.client.startsWith('@hey-api')) {
     return [
       {
-        default: isRequired ? undefined : {},
-        name: 'data',
-        type: importedType,
+        isRequired,
+        name: 'options',
+        type: importedType ? `Options<${importedType}>` : 'Options',
       },
     ];
   }
 
-  return operation.parameters.map((p) => {
-    const typePath = `${importedType}['${p.name}']`;
-    return {
-      default: p?.default,
-      isRequired: modelIsRequired(p) === '',
-      name: p.name,
-      type: typePath,
-    };
-  });
+  if (!operation.parameters.length) {
+    return [];
+  }
+
+  // legacy configuration
+  if (!config.useOptions) {
+    return operation.parameters.map((p) => {
+      const typePath = `${importedType}['${p.name}']`;
+      return {
+        default: p?.default,
+        isRequired: modelIsRequired(p) === '',
+        name: p.name,
+        type: typePath,
+      };
+    });
+  }
+
+  return [
+    {
+      default: isRequired ? undefined : {},
+      name: 'data',
+      type: importedType,
+    },
+  ];
 };
 
 const toOperationReturnType = (client: Client, operation: Operation) => {
@@ -167,7 +181,7 @@ const toRequestOptions = (operation: Operation) => {
   if (config.client.startsWith('@hey-api')) {
     const obj: ObjectValue[] = [
       {
-        spread: 'data',
+        spread: 'options',
       },
       {
         key: 'url',
@@ -283,7 +297,7 @@ const toOperationStatements = (client: Client, operation: Operation) => {
       compiler.return.functionCall({
         args: [options],
         name: `client.${operation.method.toLocaleLowerCase()}`,
-        types: [returnType],
+        types: returnType ? [returnType] : [],
       }),
     ];
   }
@@ -453,7 +467,16 @@ export const processServices = async ({
 
   // Import required packages and core files.
   if (config.client.startsWith('@hey-api')) {
-    files.services?.addImport(['client'], config.client);
+    files.services?.addImport(
+      [
+        'client',
+        {
+          asType: true,
+          name: 'Options',
+        },
+      ],
+      config.client,
+    );
   } else {
     if (config.client === 'angular') {
       files.services?.addImport('Injectable', '@angular/core');
@@ -462,27 +485,24 @@ export const processServices = async ({
         files.services?.addImport('HttpClient', '@angular/common/http');
       }
 
-      files.services?.addImport(
-        { isTypeOnly: true, name: 'Observable' },
-        'rxjs',
-      );
+      files.services?.addImport({ asType: true, name: 'Observable' }, 'rxjs');
     } else {
       files.services?.addImport(
-        { isTypeOnly: true, name: 'CancelablePromise' },
+        { asType: true, name: 'CancelablePromise' },
         './core/CancelablePromise',
       );
     }
 
     if (config.services.response === 'response') {
       files.services?.addImport(
-        { isTypeOnly: true, name: 'ApiResult' },
+        { asType: true, name: 'ApiResult' },
         './core/ApiResult',
       );
     }
 
     if (config.name) {
       files.services?.addImport(
-        { isTypeOnly: config.client !== 'angular', name: 'BaseHttpRequest' },
+        { asType: config.client !== 'angular', name: 'BaseHttpRequest' },
         './core/BaseHttpRequest',
       );
     } else {
@@ -498,7 +518,7 @@ export const processServices = async ({
   if (files.types && !files.types.isEmpty()) {
     const importedTypes = imports
       .filter(unique)
-      .map((name) => ({ isTypeOnly: true, name }));
+      .map((name) => ({ asType: true, name }));
     files.services?.addImport(importedTypes, `./${files.types.getName(false)}`);
   }
 };
