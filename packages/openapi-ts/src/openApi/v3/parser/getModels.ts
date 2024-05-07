@@ -13,13 +13,16 @@ export const getModels = (openApi: OpenApi): Model[] => {
 
   Object.entries(openApi.components.schemas ?? {}).forEach(
     ([definitionName, definition]) => {
-      const definitionType = getType(definitionName);
-      const model = getModel(
-        openApi,
+      const definitionType = getType({ type: definitionName });
+      const model = getModel({
         definition,
-        true,
-        definitionType.base.replace(reservedWords, '_$1'),
-      );
+        isDefinition: true,
+        meta: {
+          $ref: `#/components/schemas/${definitionName}`,
+          name: definitionType.base.replace(reservedWords, '_$1'),
+        },
+        openApi,
+      });
       models = [...models, model];
     },
   );
@@ -31,15 +34,30 @@ export const getModels = (openApi: OpenApi): Model[] => {
         return;
       }
 
-      const definitionType = getType(definitionName);
-      const model = getModel(
+      const definitionType = getType({ type: definitionName });
+      const model = getModel({
+        definition: schema,
+        isDefinition: true,
+        meta: {
+          $ref: `#/components/parameters/${definitionName}`,
+          /**
+           * Prefix parameter names to avoid name conflicts with schemas.
+           * Assuming people are mostly interested in importing schema types
+           * and don't care about this name as much. It should be resolved in
+           * a cleaner way, there just isn't a good deduplication strategy
+           * today. This is a workaround in the meantime, hopefully reducing
+           * the chance of conflicts.
+           *
+           * Example where this would break: schema named `ParameterFoo` and
+           * parameter named `Foo` (this would transform to `ParameterFoo`)
+           *
+           * Note: there's a related code to this workaround in `getType()`
+           * method that needs to be cleaned up when this is addressed.
+           */
+          name: `Parameter${definitionType.base.replace(reservedWords, '_$1')}`,
+        },
         openApi,
-        schema,
-        true,
-        // prefix parameter names to avoid conflicts, assuming people are mostly
-        // interested in importing schema types and don't care about this naming
-        `Parameter${definitionType.base.replace(reservedWords, '_$1')}`,
-      );
+      });
       model.deprecated = definition.deprecated;
       model.description = definition.description || null;
       models = [...models, model];

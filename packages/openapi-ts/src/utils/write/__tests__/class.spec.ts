@@ -30,11 +30,10 @@ describe('writeClientClass', () => {
     });
 
     const client: Parameters<typeof writeClientClass>[2] = {
-      enumNames: [],
       models: [],
       server: 'http://localhost:8080',
-      serviceTypes: [],
       services: [],
+      types: {},
       version: 'v1',
     };
 

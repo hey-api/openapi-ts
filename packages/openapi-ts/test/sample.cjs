@@ -4,7 +4,6 @@ const main = async () => {
   /** @type {import('../src/node/index').UserConfig} */
   const config = {
     client: 'fetch',
-    enums: 'javascript',
     input: './test/spec/v3.json',
     output: './test/generated/v3/',
     schemas: {
@@ -14,7 +13,9 @@ const main = async () => {
       // export: false,
     },
     types: {
+      // enums: 'javascript',
       // include: '^NestedAnyOfArraysNullable',
+      // name: 'PascalCase',
     },
   };
 

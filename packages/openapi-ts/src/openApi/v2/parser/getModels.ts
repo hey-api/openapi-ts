@@ -9,13 +9,16 @@ export const getModels = (openApi: OpenApi): Model[] => {
 
   Object.entries(openApi.definitions ?? {}).forEach(
     ([definitionName, definition]) => {
-      const definitionType = getType(definitionName);
-      const model = getModel(
-        openApi,
+      const definitionType = getType({ type: definitionName });
+      const model = getModel({
         definition,
-        true,
-        definitionType.base.replace(reservedWords, '_$1'),
-      );
+        isDefinition: true,
+        meta: {
+          $ref: `#/definitions/${definitionName}`,
+          name: definitionType.base.replace(reservedWords, '_$1'),
+        },
+        openApi,
+      });
       models = [...models, model];
     },
   );

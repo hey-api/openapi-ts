@@ -20,13 +20,14 @@ describe('OpenAPI v2', () => {
     {
       config: {
         client: 'fetch',
-        enums: 'javascript',
         exportCore: true,
         input: '',
         output: '',
         schemas: true,
         services: true,
-        types: true,
+        types: {
+          enums: 'javascript',
+        },
         useOptions: true,
       } as UserConfig,
       description: 'generate fetch client',
@@ -49,73 +50,69 @@ describe('OpenAPI v2', () => {
 describe('OpenAPI v3', () => {
   const config: UserConfig = {
     client: 'fetch',
-    enums: 'javascript',
     exportCore: true,
     input: '',
     output: '',
     schemas: true,
     services: true,
-    types: true,
+    types: {
+      enums: 'javascript',
+    },
     useOptions: true,
   };
 
+  const createConfig = (userConfig?: Partial<UserConfig>): UserConfig => ({
+    ...config,
+    ...userConfig,
+  });
+
   it.each([
     {
-      config: {
-        ...config,
-      },
+      config: createConfig(),
       description: 'generate fetch client',
       name: 'v3',
     },
     {
-      config: {
-        ...config,
+      config: createConfig({
         client: 'angular',
-        enums: false,
         schemas: false,
-      } as UserConfig,
+        types: {},
+      }),
       description: 'generate angular client',
       name: 'v3_angular',
     },
     {
-      config: {
-        ...config,
+      config: createConfig({
         client: 'node',
-        enums: false,
         schemas: false,
         services: false,
         types: false,
-      } as UserConfig,
+      }),
       description: 'generate node client',
       name: 'v3_node',
     },
     {
-      config: {
-        ...config,
+      config: createConfig({
         client: 'axios',
-        enums: false,
         schemas: false,
         services: false,
         types: false,
-      } as UserConfig,
+      }),
       description: 'generate axios client',
       name: 'v3_axios',
     },
     {
-      config: {
-        ...config,
+      config: createConfig({
         client: 'xhr',
-        enums: false,
         schemas: false,
         services: false,
         types: false,
-      } as UserConfig,
+      }),
       description: 'generate xhr client',
       name: 'v3_xhr',
     },
     {
-      config: {
-        ...config,
+      config: createConfig({
         exportCore: false,
         schemas: false,
         services: false,
@@ -123,13 +120,12 @@ describe('OpenAPI v3', () => {
           dates: true,
           include: '^ModelWithPattern',
         },
-      } as UserConfig,
+      }),
       description: 'generate Date types',
       name: 'v3_date',
     },
     {
-      config: {
-        ...config,
+      config: createConfig({
         schemas: false,
         services: '^Defaults',
         types: {
@@ -137,74 +133,68 @@ describe('OpenAPI v3', () => {
           include: '^ModelWithString',
         },
         useOptions: false,
-      } as UserConfig,
+      }),
       description: 'generate legacy positional arguments',
       name: 'v3_legacy_positional_args',
     },
     {
-      config: {
-        ...config,
+      config: createConfig({
         schemas: false,
         services: '^Defaults',
         types: {
           dates: true,
           include: '^ModelWithString',
         },
-      } as UserConfig,
+      }),
       description: 'generate optional arguments',
       name: 'v3_options',
     },
     {
-      config: {
-        ...config,
+      config: createConfig({
         name: 'ApiClient',
         schemas: false,
         types: {
           dates: true,
         },
-      } as UserConfig,
+      }),
       description: 'generate client',
       name: 'v3_client',
     },
     {
-      config: {
-        ...config,
-        enums: 'typescript',
+      config: createConfig({
         schemas: false,
-      } as UserConfig,
+        types: {
+          enums: 'typescript',
+        },
+      }),
       description: 'generate TypeScript enums',
       name: 'v3_enums_typescript',
     },
     {
-      config: {
-        ...config,
-        enums: false,
+      config: createConfig({
         exportCore: false,
         schemas: false,
         services: false,
-      } as UserConfig,
+        types: {},
+      }),
       description: 'generate models',
       name: 'v3_models',
     },
     {
-      config: {
-        ...config,
-        enums: false,
+      config: createConfig({
         exportCore: false,
         schemas: false,
         services: false,
         types: {
-          include: '^(camelCaseCommentWithBreaks|ArrayWithProperties)',
+          include: '^(CamelCaseCommentWithBreaks|ArrayWithProperties)',
           name: 'PascalCase',
         },
-      } as UserConfig,
+      }),
       description: 'generate pascalcase types',
       name: 'v3_pascalcase',
     },
     {
-      config: {
-        ...config,
-        enums: false,
+      config: createConfig({
         exportCore: false,
         schemas: false,
         services: {
@@ -212,35 +202,31 @@ describe('OpenAPI v3', () => {
           name: 'myAwesome{{name}}Api',
         },
         types: false,
-      } as UserConfig,
+      }),
       description: 'generate services with custom name',
       name: 'v3_services_name',
     },
     {
-      config: {
-        ...config,
-        enums: false,
+      config: createConfig({
         exportCore: false,
         schemas: {
           type: 'json',
         },
         services: false,
         types: false,
-      } as UserConfig,
+      }),
       description: 'generate JSON Schemas',
       name: 'v3_schemas_json',
     },
     {
-      config: {
-        ...config,
-        enums: false,
+      config: createConfig({
         exportCore: false,
         schemas: {
           type: 'form',
         },
         services: false,
         types: false,
-      } as UserConfig,
+      }),
       description: 'generate form validation schemas',
       name: 'v3_schemas_form',
     },

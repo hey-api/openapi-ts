@@ -41,7 +41,7 @@ export const getOperationResponse = (
         content.schema = getRef<OpenApiSchema>(openApi, content.schema);
       }
       if (content.schema.$ref) {
-        const model = getType(content.schema.$ref);
+        const model = getType({ type: content.schema.$ref });
         operationResponse.base = model.base;
         operationResponse.export = 'reference';
         operationResponse.$refs = [...operationResponse.$refs, ...model.$refs];
@@ -53,7 +53,7 @@ export const getOperationResponse = (
         operationResponse.type = model.type;
         return operationResponse;
       } else {
-        const model = getModel(openApi, content.schema);
+        const model = getModel({ definition: content.schema, openApi });
         operationResponse.export = model.export;
         operationResponse.type = model.type;
         operationResponse.base = model.base;
