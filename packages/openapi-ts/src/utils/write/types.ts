@@ -147,12 +147,12 @@ const processEnum = (
       if (config.types.enums === 'javascript') {
         const expression = compiler.types.object({
           comments,
-          leadingComment: comment,
           multiLine: true,
           obj: properties,
           unescape: true,
         });
         const node = compiler.export.const({
+          comment,
           constAssertion: true,
           expression,
           name,
