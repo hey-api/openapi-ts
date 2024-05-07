@@ -29,11 +29,10 @@ describe('writeClient', () => {
     });
 
     const client: Parameters<typeof writeClient>[1] = {
-      enumNames: [],
       models: [],
       server: 'http://localhost:8080',
-      serviceTypes: [],
       services: [],
+      types: {},
       version: 'v1',
     };
 

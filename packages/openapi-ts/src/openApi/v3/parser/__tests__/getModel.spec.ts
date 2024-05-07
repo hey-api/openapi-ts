@@ -1,8 +1,18 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
+import type { Config } from '../../../../types/config';
 import { reservedWords } from '../../../common/parser/reservedWords';
 import { getType } from '../../../common/parser/type';
 import { getModel } from '../getModel';
+
+vi.mock('../../../../utils/config', () => {
+  const config: Partial<Config> = {
+    types: {},
+  };
+  return {
+    getConfig: () => config,
+  };
+});
 
 const openApi = {
   components: {
@@ -80,25 +90,31 @@ const openApi = {
 describe('getModel', () => {
   it('Parses any of', () => {
     const definition = openApi.components.schemas.CompositionWithAnyOfAndNull;
-    const definitionType = getType('CompositionWithAnyOfAndNull');
-    const model = getModel(
-      openApi,
+    const definitionType = getType({ type: 'CompositionWithAnyOfAndNull' });
+    const model = getModel({
       definition,
-      true,
-      definitionType.base.replace(reservedWords, '_$1'),
-    );
+      isDefinition: true,
+      meta: {
+        $ref: '',
+        name: definitionType.base.replace(reservedWords, '_$1'),
+      },
+      openApi,
+    });
     expect(model.properties[0].properties.length).toBe(2);
   });
 
   it('Parses any of 2', () => {
     const definition = openApi.components.schemas.CompositionWithAny;
-    const definitionType = getType('CompositionWithAny');
-    const model = getModel(
-      openApi,
+    const definitionType = getType({ type: 'CompositionWithAny' });
+    const model = getModel({
       definition,
-      true,
-      definitionType.base.replace(reservedWords, '_$1'),
-    );
+      isDefinition: true,
+      meta: {
+        $ref: '',
+        name: definitionType.base.replace(reservedWords, '_$1'),
+      },
+      openApi,
+    });
     expect(model.properties[0].properties.length).toBe(3);
   });
 });

@@ -30,7 +30,6 @@ describe('processTypes', () => {
     });
 
     const client: Parameters<typeof processTypes>[0]['client'] = {
-      enumNames: [],
       models: [
         {
           $refs: [],
@@ -45,6 +44,10 @@ describe('processTypes', () => {
           isReadOnly: false,
           isRequired: false,
           link: null,
+          meta: {
+            $ref: '#/components/schemas/User',
+            name: 'User',
+          },
           name: 'User',
           properties: [],
           template: null,
@@ -52,8 +55,8 @@ describe('processTypes', () => {
         },
       ],
       server: 'http://localhost:8080',
-      serviceTypes: [],
       services: [],
+      types: {},
       version: 'v1',
     };
 

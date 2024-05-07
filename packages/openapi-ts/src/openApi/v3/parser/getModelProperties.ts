@@ -26,10 +26,10 @@ export const getAdditionalPropertiesModel = (
     typeof definition.additionalProperties === 'object'
       ? definition.additionalProperties
       : {};
-  const apModel = getModel(openApi, ap);
+  const apModel = getModel({ definition: ap, openApi });
 
   if (ap.$ref) {
-    const apType = getType(ap.$ref);
+    const apType = getType({ type: ap.$ref });
     model.base = apType.base;
     model.default = getDefault(definition, model);
     model.export = 'dictionary';
@@ -133,7 +133,7 @@ export const getModelProperties = (
           type: 'string',
         });
       } else if (property.$ref) {
-        const model = getType(property.$ref);
+        const model = getType({ type: property.$ref });
         models.push({
           ...propertyValues,
           $refs: model.$refs,
@@ -149,7 +149,7 @@ export const getModelProperties = (
           type: model.type,
         });
       } else {
-        const model = getModel(openApi, property);
+        const model = getModel({ definition: property, openApi });
         models.push({
           ...propertyValues,
           $refs: model.$refs,
