@@ -10,10 +10,10 @@ describe('getServices', () => {
       debug: false,
       dryRun: true,
       exportCore: true,
-      format: false,
       input: '',
-      lint: false,
-      output: '',
+      output: {
+        path: '',
+      },
       schemas: {},
       services: {
         operationId: true,

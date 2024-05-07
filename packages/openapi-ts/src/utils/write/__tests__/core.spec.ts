@@ -29,11 +29,11 @@ describe('writeCore', () => {
       debug: false,
       dryRun: false,
       exportCore: true,
-      format: false,
       input: '',
-      lint: false,
       name: 'AppClient',
-      output: '',
+      output: {
+        path: '',
+      },
       schemas: {},
       services: {},
       types: {
@@ -84,11 +84,11 @@ describe('writeCore', () => {
       debug: false,
       dryRun: false,
       exportCore: true,
-      format: false,
       input: '',
-      lint: false,
       name: 'AppClient',
-      output: '',
+      output: {
+        path: '',
+      },
       schemas: {},
       services: {},
       types: {
@@ -122,11 +122,11 @@ describe('writeCore', () => {
       debug: false,
       dryRun: false,
       exportCore: true,
-      format: false,
       input: '',
-      lint: false,
       name: 'AppClient',
-      output: '',
+      output: {
+        path: '',
+      },
       schemas: {},
       services: {},
       types: {

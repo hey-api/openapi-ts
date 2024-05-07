@@ -29,8 +29,6 @@ const params = program
   .option('--dry-run [value]', 'Skip writing files to disk?')
   .option('--enums <value>', 'Export enum definitions (javascript, typescript)')
   .option('--exportCore [value]', 'Write core files to disk')
-  .option('--format [value]', 'Process output folder with formatter?')
-  .option('--lint [value]', 'Process output folder with linter?')
   .option('--name <value>', 'Custom client class name')
   .option('--request <value>', 'Path to custom request file')
   .option('--schemas [value]', 'Write schemas to disk')
@@ -71,8 +69,6 @@ async function start() {
     userConfig = processParams(params, [
       'dryRun',
       'exportCore',
-      'format',
-      'lint',
       'schemas',
       'services',
       'types',

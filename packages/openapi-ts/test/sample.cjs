@@ -5,7 +5,9 @@ const main = async () => {
   const config = {
     client: 'fetch',
     input: './test/spec/v3.json',
-    output: './test/generated/v3/',
+    output: {
+      path: './test/generated/v3/',
+    },
     schemas: {
       // export: false,
     },

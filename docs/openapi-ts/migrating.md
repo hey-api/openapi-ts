@@ -50,6 +50,36 @@ This config option is deprecated and will be removed in favor of [clients](./cli
 
 This config option is deprecated and will be removed in favor of [clients](./clients).
 
+## v0.44.0
+
+### Moved `format`
+
+This config option has been moved. You can now configure formatter using the `output.format` option.
+
+```js{4}
+export default {
+  input: 'path/to/openapi.json',
+  output: {
+    format: 'prettier',
+    path: 'src/client',
+  },
+}
+```
+
+### Moved `lint`
+
+This config option has been moved. You can now configure linter using the `output.lint` option.
+
+```js{4}
+export default {
+  input: 'path/to/openapi.json',
+  output: {
+    lint: 'eslint',
+    path: 'src/client',
+  },
+}
+```
+
 ## v0.43.0
 
 ### Removed `enums.gen.ts`

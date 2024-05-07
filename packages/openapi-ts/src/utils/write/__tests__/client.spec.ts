@@ -16,10 +16,11 @@ describe('writeClient', () => {
       debug: false,
       dryRun: false,
       exportCore: true,
-      format: 'prettier',
       input: '',
-      lint: false,
-      output: './dist',
+      output: {
+        format: 'prettier',
+        path: './dist',
+      },
       schemas: {},
       services: {},
       types: {
