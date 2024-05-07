@@ -3,9 +3,9 @@ import ts from 'typescript';
 import { getConfig } from '../utils/config';
 import { unescapeName } from '../utils/escape';
 
-export interface ImportItemObject {
+export interface ImportExportItemObject {
   alias?: string;
-  isTypeOnly?: boolean;
+  asType?: boolean;
   name: string;
 }
 
@@ -81,28 +81,35 @@ export function stringToTsNodes(value: string): ts.Node {
   return file.statements[0];
 }
 
-// ots for openapi-ts is helpers to reduce repetition of basic ts factory functions.
+/**
+ * ots for openapi-ts are helpers to reduce repetition of basic TypeScript
+ * factory functions.
+ */
 export const ots = {
-  // Create a boolean expression based on value.
+  /**
+   * Create a boolean expression based on value.
+   */
   boolean: (value: boolean) =>
     value ? ts.factory.createTrue() : ts.factory.createFalse(),
-  export: (name: string, isTypeOnly?: boolean, alias?: string) => {
-    const n = ts.factory.createIdentifier(encodeURIComponent(name));
-    return ts.factory.createExportSpecifier(
-      isTypeOnly ?? false,
-      alias ? n : undefined,
-      alias ? ts.factory.createIdentifier(encodeURIComponent(alias)) : n,
-    );
-  },
-  import: ({ alias, isTypeOnly = false, name }: ImportItemObject) => {
+  export: ({ alias, asType = false, name }: ImportExportItemObject) => {
     const nameNode = ts.factory.createIdentifier(name);
     if (alias) {
       const aliasNode = ts.factory.createIdentifier(alias);
-      return ts.factory.createImportSpecifier(isTypeOnly, nameNode, aliasNode);
+      return ts.factory.createExportSpecifier(asType, nameNode, aliasNode);
     }
-    return ts.factory.createImportSpecifier(isTypeOnly, undefined, nameNode);
+    return ts.factory.createExportSpecifier(asType, undefined, nameNode);
   },
-  // Create a numeric expression, handling negative numbers.
+  import: ({ alias, asType = false, name }: ImportExportItemObject) => {
+    const nameNode = ts.factory.createIdentifier(name);
+    if (alias) {
+      const aliasNode = ts.factory.createIdentifier(alias);
+      return ts.factory.createImportSpecifier(asType, nameNode, aliasNode);
+    }
+    return ts.factory.createImportSpecifier(asType, undefined, nameNode);
+  },
+  /**
+   * Create a numeric expression, handling negative numbers.
+   */
   number: (value: number) => {
     if (value < 0) {
       return ts.factory.createPrefixUnaryExpression(
@@ -112,7 +119,9 @@ export const ots = {
     }
     return ts.factory.createNumericLiteral(value);
   },
-  // Create a string literal. This handles strings that start with '`' or "'".
+  /**
+   * Create a string literal. This handles strings that start with '`' or "'".
+   */
   string: (value: string, unescape = false) => {
     let text = value;
     if (unescape) {

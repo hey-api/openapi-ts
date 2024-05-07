@@ -17,7 +17,7 @@ import {
   resolve,
 } from '@hey-api/client-core';
 
-import type { Config, Req, RequestResponse } from './types';
+import type { Config, Req, RequestResult } from './types';
 import {
   createDefaultConfig,
   createInterceptors,
@@ -264,7 +264,7 @@ export const createClient = (config: Partial<Config>) => {
 
   const request = async <Data = unknown, Error = unknown>(
     options: Req,
-  ): Promise<RequestResponse<Data, Error>> => {
+  ): RequestResult<Data, Error> => {
     const config = getConfig();
 
     const opts: Opts = {

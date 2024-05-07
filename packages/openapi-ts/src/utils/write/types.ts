@@ -53,7 +53,11 @@ const generateEnum = ({
     return;
   }
 
-  const { created, name } = uniqueTypeName({ meta, ...uniqueTypeNameArgs });
+  const { created, name } = uniqueTypeName({
+    create: true,
+    meta,
+    ...uniqueTypeNameArgs,
+  });
   if (created) {
     const node = compiler.types.enum({
       comments,
@@ -83,7 +87,11 @@ const generateType = ({
     return;
   }
 
-  const { created, name } = uniqueTypeName({ meta, ...uniqueTypeNameArgs });
+  const { created, name } = uniqueTypeName({
+    create: true,
+    meta,
+    ...uniqueTypeNameArgs,
+  });
   if (created) {
     const node = compiler.typedef.alias({ comment, name, type });
     onNode(node);

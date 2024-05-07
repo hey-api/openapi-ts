@@ -4,7 +4,11 @@ import { createClient } from '@hey-api/client-fetch';
 import { useState } from 'react';
 
 import { $Pet } from './client/schemas.gen';
-import { getPetById } from './client/services.gen';
+import {
+  findPetsByStatus,
+  getInventory,
+  getPetById,
+} from './client/services.gen';
 
 createClient({
   baseUrl: 'https://petstore3.swagger.io/api/v3',
@@ -17,12 +21,29 @@ function App() {
   const onFetchPet = async () => {
     // random id 1-10
     const petId = Math.floor(Math.random() * (10 - 1 + 1) + 1);
-    const { data: pet } = await getPetById({
+    const { data: pet, error } = await getPetById({
       path: {
         petId,
       },
     });
+    if (error) {
+      // TODO: discriminate by error status
+    }
     setPet(pet);
+  };
+
+  const onFindPetsByStatus = () => {
+    // everything in this call is optional
+    findPetsByStatus({
+      query: {
+        status: 'pending',
+      },
+    });
+  };
+
+  const onGetInventory = () => {
+    // this call has no params but could be still customized
+    getInventory();
   };
 
   return (
@@ -42,6 +63,14 @@ function App() {
           Fetch random pet
         </button>
         <span className="pet-name">Fetched pet's name: {pet?.name}</span>
+      </div>
+      <div className="flex">
+        <button className="button" onClick={onFindPetsByStatus}>
+          Find pets by status
+        </button>
+        <button className="button" onClick={onGetInventory}>
+          Get inventory
+        </button>
       </div>
       <div className="openapi-ts">
         <code>{"import { $Pet } from './client/schemas.gen'"}</code>
