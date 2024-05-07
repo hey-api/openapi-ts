@@ -14,10 +14,11 @@ describe('registerHandlebarHelpers', () => {
       debug: false,
       dryRun: false,
       exportCore: true,
-      format: 'prettier',
       input: '',
-      lint: false,
-      output: '',
+      output: {
+        format: 'prettier',
+        path: '',
+      },
       schemas: {},
       services: {},
       types: {
@@ -42,10 +43,11 @@ describe('registerHandlebarTemplates', () => {
       debug: false,
       dryRun: false,
       exportCore: true,
-      format: 'prettier',
       input: '',
-      lint: false,
-      output: '',
+      output: {
+        format: 'prettier',
+        path: '',
+      },
       schemas: {},
       services: {},
       types: {
