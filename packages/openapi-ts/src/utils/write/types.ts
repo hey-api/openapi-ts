@@ -204,7 +204,7 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
   type ResMap = Map<number | 'default', Model>;
   type MethodMap = Map<'req' | 'res', ResMap | OperationParameter[]>;
   type MethodKey = Service['operations'][number]['method'];
-  type PathMap = Map<MethodKey, MethodMap>;
+  type PathMap = Map<MethodKey | '$ref', MethodMap | string>;
 
   const pathsMap = new Map<string, PathMap>();
 
@@ -222,11 +222,16 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
           pathsMap.set(operation.path, new Map());
           pathMap = pathsMap.get(operation.path)!;
         }
+        pathMap.set('$ref', operation.name);
 
         let methodMap = pathMap.get(operation.method);
         if (!methodMap) {
           pathMap.set(operation.method, new Map());
           methodMap = pathMap.get(operation.method)!;
+        }
+
+        if (typeof methodMap === 'string') {
+          return;
         }
 
         if (hasReq) {
@@ -375,44 +380,73 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
   });
 
   const properties = Array.from(pathsMap).map(([path, pathMap]) => {
-    const pathParameters = Array.from(pathMap).map(([method, methodMap]) => {
-      const methodParameters = Array.from(methodMap).map(
-        ([name, baseOrResMap]) => {
-          const reqResParameters = Array.isArray(baseOrResMap)
-            ? baseOrResMap
-            : Array.from(baseOrResMap).map(([code, base]) => {
-                // TODO: move query params into separate query key
-                const value: Model = {
-                  ...emptyModel,
-                  ...base,
-                  isRequired: true,
-                  name: String(code),
-                };
-                return value;
-              });
+    const pathParameters = Array.from(pathMap)
+      .map(([method, methodMap]) => {
+        if (method === '$ref' || typeof methodMap === 'string') {
+          return;
+        }
 
-          const reqResKey: Model = {
-            ...emptyModel,
-            isRequired: true,
-            name,
-            properties: reqResParameters,
-          };
-          return reqResKey;
-        },
-      );
-      const methodKey: Model = {
-        ...emptyModel,
-        isRequired: true,
-        name: method.toLocaleLowerCase(),
-        properties: methodParameters,
-      };
-      return methodKey;
-    });
+        const methodParameters = Array.from(methodMap).map(
+          ([name, baseOrResMap]) => {
+            if (name === 'req') {
+              const operationName = pathMap.get('$ref') as string;
+              const { name: base } = uniqueTypeName({
+                client,
+                meta: {
+                  // TODO: this should be exact ref to operation for consistency,
+                  // but name should work too as operation ID is unique
+                  $ref: operationName,
+                  name: operationName,
+                },
+                nameTransformer: operationDataTypeName,
+              });
+              const reqKey: Model = {
+                ...emptyModel,
+                base,
+                export: 'reference',
+                isRequired: true,
+                name,
+                properties: [],
+                type: base,
+              };
+              return reqKey;
+            }
+            const reqResParameters = Array.isArray(baseOrResMap)
+              ? baseOrResMap
+              : Array.from(baseOrResMap).map(([code, base]) => {
+                  // TODO: move query params into separate query key
+                  const value: Model = {
+                    ...emptyModel,
+                    ...base,
+                    isRequired: true,
+                    name: String(code),
+                  };
+                  return value;
+                });
+
+            const reqResKey: Model = {
+              ...emptyModel,
+              isRequired: true,
+              name,
+              properties: reqResParameters,
+            };
+            return reqResKey;
+          },
+        );
+        const methodKey: Model = {
+          ...emptyModel,
+          isRequired: true,
+          name: method.toLocaleLowerCase(),
+          properties: methodParameters,
+        };
+        return methodKey;
+      })
+      .filter(Boolean);
     const pathKey: Model = {
       ...emptyModel,
       isRequired: true,
       name: `'${path}'`,
-      properties: pathParameters,
+      properties: pathParameters as Model[],
     };
     return pathKey;
   });

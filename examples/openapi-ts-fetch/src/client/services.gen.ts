@@ -3,298 +3,138 @@
 import { client, type Options } from '@hey-api/client-fetch';
 
 import type {
-  AddPetData,
-  AddPetResponse,
-  CreateUserData,
-  CreateUserResponse,
-  CreateUsersWithListInputData,
-  CreateUsersWithListInputResponse,
-  DeleteOrderData,
-  DeletePetData,
-  DeleteUserData,
-  FindPetsByStatusData,
-  FindPetsByStatusResponse,
-  FindPetsByTagsData,
-  FindPetsByTagsResponse,
-  GetInventoryResponse,
-  GetOrderByIdData,
-  GetOrderByIdResponse,
-  GetPetByIdData,
-  GetPetByIdResponse,
-  GetUserByNameData,
-  GetUserByNameResponse,
-  LoginUserData,
-  LoginUserResponse,
-  LogoutUserResponse,
-  PlaceOrderData,
-  PlaceOrderResponse,
-  UpdatePetData,
-  UpdatePetResponse,
-  UpdatePetWithFormData,
-  UpdateUserData,
-  UpdateUserResponse,
-  UploadFileData,
-  UploadFileResponse,
+  BuyMuseumTicketsData,
+  BuyMuseumTicketsResponse2,
+  CreateSpecialEventData,
+  CreateSpecialEventResponse,
+  DeleteSpecialEventData,
+  DeleteSpecialEventResponse,
+  GetMuseumHoursData,
+  GetMuseumHoursResponse2,
+  GetSpecialEventData,
+  GetSpecialEventResponse,
+  GetTicketCodeData,
+  GetTicketCodeResponse2,
+  ListSpecialEventsData,
+  ListSpecialEventsResponse2,
+  UpdateSpecialEventData,
+  UpdateSpecialEventResponse,
 } from './types.gen';
 
 /**
- * Add a new pet to the store
- * Add a new pet to the store
+ * Get museum hours
+ * Get upcoming museum operating hours.
  * @param data The data for the request.
- * @param data.requestBody Create a new pet in the store
- * @returns Pet Successful operation
+ * @param data.startDate Starting date to retrieve future operating hours from. Defaults to today's date.
+ * @param data.page Page number to retrieve.
+ * @param data.limit Number of days per page.
+ * @returns GetMuseumHoursResponse Success.
  * @throws ApiError
  */
-export const addPet = (options: Options<AddPetData>) =>
-  client.post<AddPetResponse>({
+export const getMuseumHours = (options?: Options<GetMuseumHoursData>) =>
+  client.get<GetMuseumHoursResponse2>({
     ...options,
-    url: '/pet',
+    url: '/museum-hours',
   });
 
 /**
- * Update an existing pet
- * Update an existing pet by Id
- * @param data The data for the request.
- * @param data.requestBody Update an existent pet in the store
- * @returns Pet Successful operation
- * @throws ApiError
- */
-export const updatePet = (options: Options<UpdatePetData>) =>
-  client.put<UpdatePetResponse>({
-    ...options,
-    url: '/pet',
-  });
-
-/**
- * Finds Pets by status
- * Multiple status values can be provided with comma separated strings
- * @param data The data for the request.
- * @param data.status Status values that need to be considered for filter
- * @returns Pet successful operation
- * @throws ApiError
- */
-export const findPetsByStatus = (options?: Options<FindPetsByStatusData>) =>
-  client.get<FindPetsByStatusResponse>({
-    ...options,
-    url: '/pet/findByStatus',
-  });
-
-/**
- * Finds Pets by tags
- * Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
- * @param data The data for the request.
- * @param data.tags Tags to filter by
- * @returns Pet successful operation
- * @throws ApiError
- */
-export const findPetsByTags = (options?: Options<FindPetsByTagsData>) =>
-  client.get<FindPetsByTagsResponse>({
-    ...options,
-    url: '/pet/findByTags',
-  });
-
-/**
- * Find pet by ID
- * Returns a single pet
- * @param data The data for the request.
- * @param data.petId ID of pet to return
- * @returns Pet successful operation
- * @throws ApiError
- */
-export const getPetById = (options: Options<GetPetByIdData>) =>
-  client.get<GetPetByIdResponse>({
-    ...options,
-    url: '/pet/{petId}',
-  });
-
-/**
- * Updates a pet in the store with form data
- * @param data The data for the request.
- * @param data.petId ID of pet that needs to be updated
- * @param data.name Name of pet that needs to be updated
- * @param data.status Status of pet that needs to be updated
- * @throws ApiError
- */
-export const updatePetWithForm = (options: Options<UpdatePetWithFormData>) =>
-  client.post<void>({
-    ...options,
-    url: '/pet/{petId}',
-  });
-
-/**
- * Deletes a pet
- * @param data The data for the request.
- * @param data.petId Pet id to delete
- * @param data.apiKey
- * @throws ApiError
- */
-export const deletePet = (options: Options<DeletePetData>) =>
-  client.delete<void>({
-    ...options,
-    url: '/pet/{petId}',
-  });
-
-/**
- * uploads an image
- * @param data The data for the request.
- * @param data.petId ID of pet to update
- * @param data.additionalMetadata Additional Metadata
- * @param data.requestBody
- * @returns ApiResponse successful operation
- * @throws ApiError
- */
-export const uploadFile = (options: Options<UploadFileData>) =>
-  client.post<UploadFileResponse>({
-    ...options,
-    url: '/pet/{petId}/uploadImage',
-  });
-
-/**
- * Returns pet inventories by status
- * Returns a map of status codes to quantities
- * @returns number successful operation
- * @throws ApiError
- */
-export const getInventory = (options?: Options) =>
-  client.get<GetInventoryResponse>({
-    ...options,
-    url: '/store/inventory',
-  });
-
-/**
- * Place an order for a pet
- * Place a new order in the store
+ * Create special events
+ * Creates a new special event for the museum.
  * @param data The data for the request.
  * @param data.requestBody
- * @returns Order successful operation
+ * @returns SpecialEventResponse Success.
  * @throws ApiError
  */
-export const placeOrder = (options?: Options<PlaceOrderData>) =>
-  client.post<PlaceOrderResponse>({
+export const createSpecialEvent = (options: Options<CreateSpecialEventData>) =>
+  client.post<CreateSpecialEventResponse>({
     ...options,
-    url: '/store/order',
+    url: '/special-events',
   });
 
 /**
- * Find purchase order by ID
- * For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions.
+ * List special events
+ * Return a list of upcoming special events at the museum.
  * @param data The data for the request.
- * @param data.orderId ID of order that needs to be fetched
- * @returns Order successful operation
+ * @param data.startDate Starting date to retrieve future operating hours from. Defaults to today's date.
+ * @param data.endDate End of a date range to retrieve special events for. Defaults to 7 days after `startDate`.
+ * @param data.page Page number to retrieve.
+ * @param data.limit Number of days per page.
+ * @returns ListSpecialEventsResponse Success.
  * @throws ApiError
  */
-export const getOrderById = (options: Options<GetOrderByIdData>) =>
-  client.get<GetOrderByIdResponse>({
+export const listSpecialEvents = (options?: Options<ListSpecialEventsData>) =>
+  client.get<ListSpecialEventsResponse2>({
     ...options,
-    url: '/store/order/{orderId}',
+    url: '/special-events',
   });
 
 /**
- * Delete purchase order by ID
- * For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors
+ * Get special event
+ * Get details about a special event.
  * @param data The data for the request.
- * @param data.orderId ID of the order that needs to be deleted
+ * @param data.eventId Identifier for a special event.
+ * @returns SpecialEventResponse Success.
  * @throws ApiError
  */
-export const deleteOrder = (options: Options<DeleteOrderData>) =>
-  client.delete<void>({
+export const getSpecialEvent = (options: Options<GetSpecialEventData>) =>
+  client.get<GetSpecialEventResponse>({
     ...options,
-    url: '/store/order/{orderId}',
+    url: '/special-events/{eventId}',
   });
 
 /**
- * Create user
- * This can only be done by the logged in user.
+ * Update special event
+ * Update the details of a special event.
  * @param data The data for the request.
- * @param data.requestBody Created user object
- * @returns User successful operation
+ * @param data.eventId Identifier for a special event.
+ * @param data.requestBody
+ * @returns SpecialEventResponse Success.
  * @throws ApiError
  */
-export const createUser = (options?: Options<CreateUserData>) =>
-  client.post<CreateUserResponse>({
+export const updateSpecialEvent = (options: Options<UpdateSpecialEventData>) =>
+  client.patch<UpdateSpecialEventResponse>({
     ...options,
-    url: '/user',
+    url: '/special-events/{eventId}',
   });
 
 /**
- * Creates list of users with given input array
- * Creates list of users with given input array
+ * Delete special event
+ * Delete a special event from the collection. Allows museum to cancel planned events.
+ * @param data The data for the request.
+ * @param data.eventId Identifier for a special event.
+ * @returns void Success - no content.
+ * @throws ApiError
+ */
+export const deleteSpecialEvent = (options: Options<DeleteSpecialEventData>) =>
+  client.delete<DeleteSpecialEventResponse>({
+    ...options,
+    url: '/special-events/{eventId}',
+  });
+
+/**
+ * Buy museum tickets
+ * Purchase museum tickets for general entry or special events.
  * @param data The data for the request.
  * @param data.requestBody
- * @returns User Successful operation
- * @returns unknown successful operation
+ * @returns BuyMuseumTicketsResponse Success.
  * @throws ApiError
  */
-export const createUsersWithListInput = (
-  options?: Options<CreateUsersWithListInputData>,
-) =>
-  client.post<CreateUsersWithListInputResponse>({
+export const buyMuseumTickets = (options: Options<BuyMuseumTicketsData>) =>
+  client.post<BuyMuseumTicketsResponse2>({
     ...options,
-    url: '/user/createWithList',
+    url: '/tickets',
   });
 
 /**
- * Logs user into the system
+ * Get ticket QR code
+ * Return an image of your ticket with scannable QR code. Used for event entry.
  * @param data The data for the request.
- * @param data.username The user name for login
- * @param data.password The password for login in clear text
- * @returns string successful operation
+ * @param data.ticketId Identifier for a ticket to a museum event. Used to generate ticket image.
+ * @returns GetTicketCodeResponse Scannable event ticket in image format.
  * @throws ApiError
  */
-export const loginUser = (options?: Options<LoginUserData>) =>
-  client.get<LoginUserResponse>({
+export const getTicketCode = (options: Options<GetTicketCodeData>) =>
+  client.get<GetTicketCodeResponse2>({
     ...options,
-    url: '/user/login',
-  });
-
-/**
- * Logs out current logged in user session
- * @returns unknown successful operation
- * @throws ApiError
- */
-export const logoutUser = (options?: Options) =>
-  client.get<LogoutUserResponse>({
-    ...options,
-    url: '/user/logout',
-  });
-
-/**
- * Get user by user name
- * @param data The data for the request.
- * @param data.username The name that needs to be fetched. Use user1 for testing.
- * @returns User successful operation
- * @throws ApiError
- */
-export const getUserByName = (options: Options<GetUserByNameData>) =>
-  client.get<GetUserByNameResponse>({
-    ...options,
-    url: '/user/{username}',
-  });
-
-/**
- * Update user
- * This can only be done by the logged in user.
- * @param data The data for the request.
- * @param data.username name that needs to be updated
- * @param data.requestBody Update an existent user in the store
- * @returns unknown successful operation
- * @throws ApiError
- */
-export const updateUser = (options: Options<UpdateUserData>) =>
-  client.put<UpdateUserResponse>({
-    ...options,
-    url: '/user/{username}',
-  });
-
-/**
- * Delete user
- * This can only be done by the logged in user.
- * @param data The data for the request.
- * @param data.username The name that needs to be deleted
- * @throws ApiError
- */
-export const deleteUser = (options: Options<DeleteUserData>) =>
-  client.delete<void>({
-    ...options,
-    url: '/user/{username}',
+    url: '/tickets/{ticketId}/qr',
   });
