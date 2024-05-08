@@ -2,6 +2,7 @@ import camelcase from 'camelcase';
 
 import {
   ClassElement,
+  type Comments,
   compiler,
   FunctionParameter,
   type Node,
@@ -142,25 +143,37 @@ const toOperationReturnType = (client: Client, operation: Operation) => {
   return returnType;
 };
 
-const toOperationComment = (operation: Operation) => {
+const toOperationComment = (operation: Operation): Comments => {
   const config = getConfig();
+
+  if (config.client.startsWith('@hey-api')) {
+    const comment = [
+      operation.deprecated && '@deprecated',
+      operation.summary && escapeComment(operation.summary),
+      operation.description && escapeComment(operation.description),
+    ];
+    return comment;
+  }
+
   let params: string[] = [];
+
   if (operation.parameters.length) {
     if (config.useOptions) {
       params = [
         '@param data The data for the request.',
         ...operation.parameters.map(
-          (p) =>
-            `@param data.${p.name} ${p.description ? escapeComment(p.description) : ''}`,
+          (parameter) =>
+            `@param data.${parameter.name} ${parameter.description ? escapeComment(parameter.description) : ''}`,
         ),
       ];
     } else {
       params = operation.parameters.map(
-        (p) =>
-          `@param ${p.name} ${p.description ? escapeComment(p.description) : ''}`,
+        (parameter) =>
+          `@param ${parameter.name} ${parameter.description ? escapeComment(parameter.description) : ''}`,
       );
     }
   }
+
   const comment = [
     operation.deprecated && '@deprecated',
     operation.summary && escapeComment(operation.summary),

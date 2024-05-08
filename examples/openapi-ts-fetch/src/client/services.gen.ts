@@ -24,12 +24,6 @@ import type {
 /**
  * Get museum hours
  * Get upcoming museum operating hours.
- * @param data The data for the request.
- * @param data.startDate Starting date to retrieve future operating hours from. Defaults to today's date.
- * @param data.page Page number to retrieve.
- * @param data.limit Number of days per page.
- * @returns GetMuseumHoursResponse Success.
- * @throws ApiError
  */
 export const getMuseumHours = (options?: Options<GetMuseumHoursData>) =>
   client.get<GetMuseumHoursResponse2>({
@@ -40,10 +34,6 @@ export const getMuseumHours = (options?: Options<GetMuseumHoursData>) =>
 /**
  * Create special events
  * Creates a new special event for the museum.
- * @param data The data for the request.
- * @param data.requestBody
- * @returns SpecialEventResponse Success.
- * @throws ApiError
  */
 export const createSpecialEvent = (options: Options<CreateSpecialEventData>) =>
   client.post<CreateSpecialEventResponse>({
@@ -54,13 +44,6 @@ export const createSpecialEvent = (options: Options<CreateSpecialEventData>) =>
 /**
  * List special events
  * Return a list of upcoming special events at the museum.
- * @param data The data for the request.
- * @param data.startDate Starting date to retrieve future operating hours from. Defaults to today's date.
- * @param data.endDate End of a date range to retrieve special events for. Defaults to 7 days after `startDate`.
- * @param data.page Page number to retrieve.
- * @param data.limit Number of days per page.
- * @returns ListSpecialEventsResponse Success.
- * @throws ApiError
  */
 export const listSpecialEvents = (options?: Options<ListSpecialEventsData>) =>
   client.get<ListSpecialEventsResponse2>({
@@ -71,10 +54,6 @@ export const listSpecialEvents = (options?: Options<ListSpecialEventsData>) =>
 /**
  * Get special event
  * Get details about a special event.
- * @param data The data for the request.
- * @param data.eventId Identifier for a special event.
- * @returns SpecialEventResponse Success.
- * @throws ApiError
  */
 export const getSpecialEvent = (options: Options<GetSpecialEventData>) =>
   client.get<GetSpecialEventResponse>({
@@ -84,12 +63,8 @@ export const getSpecialEvent = (options: Options<GetSpecialEventData>) =>
 
 /**
  * Update special event
+ *
  * Update the details of a special event.
- * @param data The data for the request.
- * @param data.eventId Identifier for a special event.
- * @param data.requestBody
- * @returns SpecialEventResponse Success.
- * @throws ApiError
  */
 export const updateSpecialEvent = (options: Options<UpdateSpecialEventData>) =>
   client.patch<UpdateSpecialEventResponse>({
@@ -100,10 +75,6 @@ export const updateSpecialEvent = (options: Options<UpdateSpecialEventData>) =>
 /**
  * Delete special event
  * Delete a special event from the collection. Allows museum to cancel planned events.
- * @param data The data for the request.
- * @param data.eventId Identifier for a special event.
- * @returns void Success - no content.
- * @throws ApiError
  */
 export const deleteSpecialEvent = (options: Options<DeleteSpecialEventData>) =>
   client.delete<DeleteSpecialEventResponse>({
@@ -114,10 +85,6 @@ export const deleteSpecialEvent = (options: Options<DeleteSpecialEventData>) =>
 /**
  * Buy museum tickets
  * Purchase museum tickets for general entry or special events.
- * @param data The data for the request.
- * @param data.requestBody
- * @returns BuyMuseumTicketsResponse Success.
- * @throws ApiError
  */
 export const buyMuseumTickets = (options: Options<BuyMuseumTicketsData>) =>
   client.post<BuyMuseumTicketsResponse2>({
@@ -128,10 +95,6 @@ export const buyMuseumTickets = (options: Options<BuyMuseumTicketsData>) =>
 /**
  * Get ticket QR code
  * Return an image of your ticket with scannable QR code. Used for event entry.
- * @param data The data for the request.
- * @param data.ticketId Identifier for a ticket to a museum event. Used to generate ticket image.
- * @returns GetTicketCodeResponse Scannable event ticket in image format.
- * @throws ApiError
  */
 export const getTicketCode = (options: Options<GetTicketCodeData>) =>
   client.get<GetTicketCodeResponse2>({
