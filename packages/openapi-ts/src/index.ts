@@ -17,6 +17,7 @@ type Dependencies = Record<string, unknown>;
 type PackageDependencies = {
   dependencies?: Dependencies;
   devDependencies?: Dependencies;
+  peerDependencies?: Dependencies;
 };
 
 // Dependencies used in each client. User must have installed these to use the generated client
