@@ -199,10 +199,11 @@ const getTypes = (userConfig: UserConfig): Config['types'] => {
 
 const getInstalledDependencies = (): Dependencies => {
   const toReducedDependencies = (p: PackageDependencies): Dependencies =>
-    [p.dependencies ?? {}, p.devDependencies ?? {}].reduce(
-      (deps, devDeps) => ({
+    [p.dependencies ?? {}, p.devDependencies ?? {}, p.peerDependencies ?? {}].reduce(
+      (deps, devDeps, peerDeps) => ({
         ...deps,
         ...devDeps,
+        ...peerDeps
       }),
       {},
     );
