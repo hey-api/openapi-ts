@@ -10,7 +10,7 @@ import { getConfig } from '../config';
 import { enumKey, enumUnionType, enumValue } from '../enum';
 import { escapeComment } from '../escape';
 import { sortByName, sorterByName } from '../sort';
-import { operationDataTypeName, operationResponseTypeName } from './services';
+import { operationDataTypeName, operationErrorTypeName, operationResponseTypeName } from './services';
 import { toType, uniqueTypeName } from './type';
 
 type OnNode = (node: Node) => void;
@@ -351,6 +351,7 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
               ...emptyModel,
               export: 'any-of',
               isRequired: true,
+              // TODO: improve response type detection
               properties: operation.results.filter(
                 (result) =>
                   result.code === 'default' ||
@@ -358,6 +359,28 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
               ),
             }),
           });
+
+          if (config.client.startsWith('@hey-api')) {
+            // create type export for operation error
+            generateType({
+              client,
+              meta: {
+                // TODO: this should be exact ref to operation for consistency,
+                // but name should work too as operation ID is unique
+                $ref: operation.name,
+                name: operation.name,
+              },
+              nameTransformer: operationErrorTypeName,
+              onNode,
+              type: toType({
+                ...emptyModel,
+                export: 'all-of',
+                isRequired: true,
+                // TODO: improve error type detection
+                properties: operation.errors.filter((result) => result.code === 'default' || (result.code >= 400 && result.code < 600)),
+              }),
+            });
+          }
         }
 
         if (hasErr) {

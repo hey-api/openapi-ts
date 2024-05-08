@@ -215,11 +215,15 @@ export type GetMuseumHoursData = {
 
 export type GetMuseumHoursResponse2 = GetMuseumHoursResponse;
 
+export type GetMuseumHoursError = Error;
+
 export type CreateSpecialEventData = {
   body: CreateSpecialEventRequest;
 };
 
 export type CreateSpecialEventResponse = SpecialEventResponse;
+
+export type CreateSpecialEventError = Error;
 
 export type ListSpecialEventsData = {
   query?: {
@@ -244,6 +248,8 @@ export type ListSpecialEventsData = {
 
 export type ListSpecialEventsResponse2 = ListSpecialEventsResponse;
 
+export type ListSpecialEventsError = Error;
+
 export type GetSpecialEventData = {
   path: {
     /**
@@ -254,6 +260,8 @@ export type GetSpecialEventData = {
 };
 
 export type GetSpecialEventResponse = SpecialEventResponse;
+
+export type GetSpecialEventError = Error;
 
 export type UpdateSpecialEventData = {
   body: UpdateSpecialEventRequest;
@@ -267,6 +275,8 @@ export type UpdateSpecialEventData = {
 
 export type UpdateSpecialEventResponse = SpecialEventResponse;
 
+export type UpdateSpecialEventError = Error;
+
 export type DeleteSpecialEventData = {
   path: {
     /**
@@ -278,11 +288,15 @@ export type DeleteSpecialEventData = {
 
 export type DeleteSpecialEventResponse = void;
 
+export type DeleteSpecialEventError = Error;
+
 export type BuyMuseumTicketsData = {
   body: BuyMuseumTicketsRequest;
 };
 
 export type BuyMuseumTicketsResponse2 = BuyMuseumTicketsResponse;
+
+export type BuyMuseumTicketsError = Error;
 
 export type GetTicketCodeData = {
   path: {
@@ -294,6 +308,8 @@ export type GetTicketCodeData = {
 };
 
 export type GetTicketCodeResponse2 = GetTicketCodeResponse;
+
+export type GetTicketCodeError = Error;
 
 export type $OpenApiTs = {
   '/museum-hours': {

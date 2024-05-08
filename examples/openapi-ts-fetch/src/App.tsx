@@ -1,13 +1,13 @@
 import './App.css';
 
 import { createClient } from '@hey-api/client-fetch';
-import { useState } from 'react';
+// import { useState } from 'react';
 
-import { $Pet } from './client/schemas.gen';
+import { $Email } from './client/schemas.gen';
 import {
-  findPetsByStatus,
-  getInventory,
-  getPetById,
+  buyMuseumTickets,
+  getMuseumHours,
+  getSpecialEvent,
 } from './client/services.gen';
 
 createClient({
@@ -15,35 +15,33 @@ createClient({
 });
 
 function App() {
-  const [pet, setPet] =
-    useState<Awaited<ReturnType<typeof getPetById>>['data']>();
+  // const [pet, setPet] = useState<Awaited<ReturnType<typeof getPetById>>['data']>();
 
-  const onFetchPet = async () => {
-    // random id 1-10
-    const petId = Math.floor(Math.random() * (10 - 1 + 1) + 1);
-    const { data: pet, error } = await getPetById({
+  const onGetSpecialEvent = async () => {
+    const { data, error } = await getSpecialEvent({
       path: {
-        petId,
+        eventId: 'dad4bce8-f5cb-4078-a211-995864315e39',
       },
     });
     if (error) {
-      // TODO: discriminate by error status
+      console.log(error.title)
     }
-    setPet(pet);
+    console.log(data)
+    // setPet(data);
   };
 
-  const onFindPetsByStatus = () => {
-    // everything in this call is optional
-    findPetsByStatus({
-      query: {
-        status: 'pending',
-      },
+  const onBuyMuseumTickets = () => {
+    // @ts-ignore
+    buyMuseumTickets({
+      body: '',
     });
   };
 
-  const onGetInventory = () => {
+  const onGetMuseumHours = () => {
     // this call has no params but could be still customized
-    getInventory();
+    getMuseumHours({
+      // query: {}
+    });
   };
 
   return (
@@ -59,22 +57,22 @@ function App() {
         <h1 className="h1">@hey-api/openapi-ts 🤝 Fetch API</h1>
       </div>
       <div className="flex">
-        <button className="button" onClick={onFetchPet}>
-          Fetch random pet
+        <button className="button" onClick={onGetSpecialEvent}>
+          Get Special Event
         </button>
-        <span className="pet-name">Fetched pet's name: {pet?.name}</span>
+        {/* <span className="pet-name">Fetched pet's name: {pet?.name}</span> */}
       </div>
       <div className="flex">
-        <button className="button" onClick={onFindPetsByStatus}>
-          Find pets by status
+        <button className="button" onClick={onBuyMuseumTickets}>
+          Buy Museum Tickets
         </button>
-        <button className="button" onClick={onGetInventory}>
-          Get inventory
+        <button className="button" onClick={onGetMuseumHours}>
+          Get Museum Hours
         </button>
       </div>
       <div className="openapi-ts">
-        <code>{"import { $Pet } from './client/schemas.gen'"}</code>
-        <pre>{JSON.stringify($Pet, null, 2)}</pre>
+        <code>{"import { $Email } from './client/schemas.gen'"}</code>
+        <pre>{JSON.stringify($Email, null, 2)}</pre>
       </div>
     </>
   );
