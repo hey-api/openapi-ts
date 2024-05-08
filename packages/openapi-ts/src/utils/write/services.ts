@@ -48,6 +48,9 @@ const generateImport = ({
 export const operationDataTypeName = (name: string) =>
   `${camelcase(name, { pascalCase: true })}Data`;
 
+export const operationErrorTypeName = (name: string) =>
+  `${camelcase(name, { pascalCase: true })}Error`;
+
 export const operationResponseTypeName = (name: string) =>
   `${camelcase(name, { pascalCase: true })}Response`;
 
@@ -294,7 +297,17 @@ const toOperationStatements = (client: Client, operation: Operation) => {
   const options = toRequestOptions(operation);
 
   if (config.client.startsWith('@hey-api')) {
-    const returnType = operation.results.length
+    const errorType = uniqueTypeName({
+      client,
+      meta: {
+        // TODO: this should be exact ref to operation for consistency,
+        // but name should work too as operation ID is unique
+        $ref: operation.name,
+        name: operation.name,
+      },
+      nameTransformer: operationErrorTypeName,
+    }).name;
+    const responseType = operation.results.length
       ? uniqueTypeName({
           client,
           meta: {
@@ -310,7 +323,12 @@ const toOperationStatements = (client: Client, operation: Operation) => {
       compiler.return.functionCall({
         args: [options],
         name: `client.${operation.method.toLocaleLowerCase()}`,
-        types: returnType ? [returnType] : [],
+        types: errorType && responseType
+          ? [responseType, errorType]
+          : errorType
+            ? ['unknown', errorType]
+            : responseType
+              ? [responseType] : [],
       }),
     ];
   }
@@ -364,6 +382,24 @@ export const processService = (
       });
     }
 
+    if (config.client.startsWith('@hey-api')) {
+      // TODO: improve error type detection
+      if (operation.errors.length) {
+        generateImport({
+          client,
+          meta: {
+            // TODO: this should be exact ref to operation for consistency,
+            // but name should work too as operation ID is unique
+            $ref: operation.name,
+            name: operation.name,
+          },
+          nameTransformer: operationErrorTypeName,
+          onImport,
+        });
+      }
+    }
+
+    // TODO: improve response type detection
     if (operation.results.length) {
       generateImport({
         client,
