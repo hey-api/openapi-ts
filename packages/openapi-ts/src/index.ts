@@ -17,6 +17,7 @@ type Dependencies = Record<string, unknown>;
 interface PackageJson {
   dependencies?: Dependencies;
   devDependencies?: Dependencies;
+  peerDependencies?: Dependencies;
 }
 
 /**
@@ -229,7 +230,11 @@ const getTypes = (userConfig: UserConfig): Config['types'] => {
 
 const getInstalledDependencies = (): Dependencies => {
   const packageJsonToDependencies = (pkg: PackageJson): Dependencies =>
-    [pkg.dependencies ?? {}, pkg.devDependencies ?? {}].reduce(
+    [
+      pkg.dependencies ?? {},
+      pkg.devDependencies ?? {},
+      pkg.peerDependencies ?? {},
+    ].reduce(
       (result, dependencies) => ({
         ...result,
         ...dependencies,
