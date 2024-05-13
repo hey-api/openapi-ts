@@ -20,7 +20,7 @@
     "docs": "pnpm --filter @hey-api/docs --",
     "example": "sh ./scripts/example.sh",
     "format": "prettier --write .",
-    "lint:fix": "prettier --check . && eslint . --fix",
+    "lint:fix": "prettier --check --write . && eslint . --fix",
     "lint": "prettier --check . && eslint .",
     "openapi-ts": "pnpm --filter @hey-api/openapi-ts --",
     "prepare": "husky",
