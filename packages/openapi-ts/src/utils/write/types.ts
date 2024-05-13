@@ -97,16 +97,7 @@ const processComposition = (client: Client, model: Model, onNode: OnNode) => {
   model.enums.forEach((enumerator) => processEnum(client, enumerator, onNode));
 };
 
-const processEnum = (
-  client: Client,
-  model: Model,
-  onNode: OnNode,
-  isExported: boolean = false,
-) => {
-  if (!isExported) {
-    return;
-  }
-
+const processEnum = (client: Client, model: Model, onNode: OnNode) => {
   const config = getConfig();
 
   const properties: Record<string | number, unknown> = {};
@@ -186,7 +177,7 @@ const processModel = (client: Client, model: Model, onNode: OnNode) => {
     case 'interface':
       return processComposition(client, model, onNode);
     case 'enum':
-      return processEnum(client, model, onNode, true);
+      return processEnum(client, model, onNode);
     default:
       return processType(client, model, onNode);
   }

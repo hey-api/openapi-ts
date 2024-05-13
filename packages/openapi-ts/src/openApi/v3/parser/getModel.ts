@@ -1,7 +1,9 @@
+import { unescapeName } from '../../../utils/escape';
 import type { Model, ModelMeta } from '../../common/interfaces/client';
 import { getDefault } from '../../common/parser/getDefault';
 import { getEnums } from '../../common/parser/getEnums';
 import { getPattern } from '../../common/parser/getPattern';
+import { ensureValidTypeScriptJavaScriptIdentifier } from '../../common/parser/sanitize';
 import { getType } from '../../common/parser/type';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
@@ -21,12 +23,17 @@ import {
 
 export const getModel = ({
   definition,
+  initialValues = {},
   isDefinition = false,
   meta,
   openApi,
   parentDefinition = null,
 }: {
   definition: OpenApiSchema;
+  /**
+   * Pass through initial model values
+   */
+  initialValues?: Partial<Model>;
   isDefinition?: boolean;
   meta?: ModelMeta;
   openApi: OpenApi;
@@ -68,6 +75,7 @@ export const getModel = ({
     template: null,
     type: 'unknown',
     uniqueItems: definition.uniqueItems,
+    ...initialValues,
   };
 
   if (definition.$ref) {
@@ -90,6 +98,14 @@ export const getModel = ({
       model.export = 'enum';
       model.type = 'string';
       model.default = getDefault(definition, model);
+      if (!model.meta) {
+        model.meta = {
+          $ref: `enum/${model.name}`,
+          name: ensureValidTypeScriptJavaScriptIdentifier(
+            unescapeName(model.name),
+          ),
+        };
+      }
       return model;
     }
   }
@@ -115,7 +131,11 @@ export const getModel = ({
           (definition) => !getDefinitionTypes(definition).includes('array'),
         )
       ) {
-        return getModel({ definition: definition.items, openApi });
+        return getModel({
+          definition: definition.items,
+          openApi,
+          parentDefinition: definition,
+        });
       }
     }
 
@@ -128,7 +148,11 @@ export const getModel = ({
           anyOf: definition.items,
         }
       : definition.items;
-    const arrayItems = getModel({ definition: arrayItemsDefinition, openApi });
+    const arrayItems = getModel({
+      definition: arrayItemsDefinition,
+      openApi,
+      parentDefinition: definition,
+    });
     model.base = arrayItems.base;
     model.export = 'array';
     model.$refs = [...model.$refs, ...arrayItems.$refs];
