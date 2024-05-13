@@ -23,12 +23,10 @@ const params = program
   .option('-d, --debug', 'Run in debug mode?')
   .option('--dry-run [value]', 'Skip writing files to disk?')
   .option('--exportCore [value]', 'Write core files to disk')
-  .option('--format [value]', 'Process output folder with formatter?')
   .option(
     '-i, --input <value>',
     'OpenAPI specification (path, url, or string content)',
   )
-  .option('--lint [value]', 'Process output folder with linter?')
   .option('--name <value>', 'Custom client class name')
   .option('-o, --output <value>', 'Output directory')
   .option('--request <value>', 'Path to custom request file')
@@ -70,8 +68,6 @@ async function start() {
     userConfig = processParams(params, [
       'dryRun',
       'exportCore',
-      'format',
-      'lint',
       'schemas',
       'services',
       'types',

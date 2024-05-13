@@ -14,13 +14,16 @@ import { postProcessClient } from './utils/postprocess';
 import { writeClient } from './utils/write/client';
 
 type Dependencies = Record<string, unknown>;
-type PackageDependencies = {
+interface PackageJson {
   dependencies?: Dependencies;
   devDependencies?: Dependencies;
   peerDependencies?: Dependencies;
-};
+}
 
-// Dependencies used in each client. User must have installed these to use the generated client
+/**
+ * Dependencies used in each client. User must install these, without them
+ * the generated client won't work.
+ */
 const clientDependencies: Record<Config['client'], string[]> = {
   '@hey-api/client-axios': ['axios'],
   '@hey-api/client-fetch': [],
@@ -32,24 +35,29 @@ const clientDependencies: Record<Config['client'], string[]> = {
 };
 
 type OutputProcesser = {
-  args: (output: string) => string[];
+  args: (path: string) => string[];
   command: string;
   condition: (dependencies: Dependencies) => boolean;
   name: string;
 };
 
-// Map of supported formatters
-const formatters: Record<Extract<Config['format'], string>, OutputProcesser> = {
+/**
+ * Map of supported formatters
+ */
+const formatters: Record<
+  Extract<Config['output']['format'], string>,
+  OutputProcesser
+> = {
   biome: {
-    args: (output) => ['format', '--write', output],
+    args: (path) => ['format', '--write', path],
     command: 'biome',
     condition: (dependencies) => Boolean(dependencies['@biomejs/biome']),
     name: 'Biome (Format)',
   },
   prettier: {
-    args: (output) => [
+    args: (path) => [
       '--ignore-unknown',
-      output,
+      path,
       '--write',
       '--ignore-path',
       './.prettierignore',
@@ -60,16 +68,21 @@ const formatters: Record<Extract<Config['format'], string>, OutputProcesser> = {
   },
 };
 
-// Map of supported linters
-const linters: Record<Extract<Config['lint'], string>, OutputProcesser> = {
+/**
+ * Map of supported linters
+ */
+const linters: Record<
+  Extract<Config['output']['lint'], string>,
+  OutputProcesser
+> = {
   biome: {
-    args: (output) => ['lint', '--apply', output],
+    args: (path) => ['lint', '--apply', path],
     command: 'biome',
     condition: (dependencies) => Boolean(dependencies['@biomejs/biome']),
     name: 'Biome (Lint)',
   },
   eslint: {
-    args: (output) => [output, '--fix'],
+    args: (path) => [path, '--fix'],
     command: 'eslint',
     condition: (dependencies) => Boolean(dependencies.eslint),
     name: 'ESLint',
@@ -78,18 +91,18 @@ const linters: Record<Extract<Config['lint'], string>, OutputProcesser> = {
 
 const processOutput = (dependencies: Dependencies) => {
   const config = getConfig();
-  if (config.format) {
-    const formatter = formatters[config.format];
+  if (config.output.format) {
+    const formatter = formatters[config.output.format];
     if (formatter.condition(dependencies)) {
       console.log(`✨ Running ${formatter.name}`);
-      sync(formatter.command, formatter.args(config.output));
+      sync(formatter.command, formatter.args(config.output.path));
     }
   }
-  if (config.lint) {
-    const linter = linters[config.lint];
+  if (config.output.lint) {
+    const linter = linters[config.output.lint];
     if (linter.condition(dependencies)) {
       console.log(`✨ Running ${linter.name}`);
-      sync(linter.command, linter.args(config.output));
+      sync(linter.command, linter.args(config.output.path));
     }
   }
 };
@@ -140,6 +153,23 @@ const logMissingDependenciesWarning = (dependencies: Dependencies) => {
         missing.join(' '),
     );
   }
+};
+
+const getOutput = (userConfig: UserConfig): Config['output'] => {
+  let output: Config['output'] = {
+    format: false,
+    lint: false,
+    path: '',
+  };
+  if (typeof userConfig.output === 'string') {
+    output.path = userConfig.output;
+  } else {
+    output = {
+      ...output,
+      ...userConfig.output,
+    };
+  }
+  return output;
 };
 
 const getSchemas = (userConfig: UserConfig): Config['schemas'] => {
@@ -199,40 +229,42 @@ const getTypes = (userConfig: UserConfig): Config['types'] => {
 };
 
 const getInstalledDependencies = (): Dependencies => {
-  const toReducedDependencies = (p: PackageDependencies): Dependencies =>
+  const packageJsonToDependencies = (pkg: PackageJson): Dependencies =>
     [
-      p.dependencies ?? {},
-      p.devDependencies ?? {},
-      p.peerDependencies ?? {},
+      pkg.dependencies ?? {},
+      pkg.devDependencies ?? {},
+      pkg.peerDependencies ?? {},
     ].reduce(
-      (acc, deps) => ({
-        ...acc,
-        ...deps,
+      (result, dependencies) => ({
+        ...result,
+        ...dependencies,
       }),
       {},
     );
 
   let dependencies: Dependencies = {};
 
-  // Attempt to get all globally installed pacakges.
+  // Attempt to get all globally installed packages.
   const result = sync('npm', ['list', '-g', '--json', '--depth=0']);
   if (!result.error) {
-    const globally: PackageDependencies = JSON.parse(result.stdout.toString());
+    const globalDependencies: PackageJson = JSON.parse(
+      result.stdout.toString(),
+    );
     dependencies = {
       ...dependencies,
-      ...toReducedDependencies(globally),
+      ...packageJsonToDependencies(globalDependencies),
     };
   }
 
   // Attempt to read any dependencies installed in a local projects package.json.
   const pkgPath = path.resolve(process.cwd(), 'package.json');
   if (existsSync(pkgPath)) {
-    const locally: PackageDependencies = JSON.parse(
+    const localDependencies: PackageJson = JSON.parse(
       readFileSync(pkgPath).toString(),
     );
     dependencies = {
       ...dependencies,
-      ...toReducedDependencies(locally),
+      ...packageJsonToDependencies(localDependencies),
     };
   }
 
@@ -260,9 +292,7 @@ const initConfig = async (
     debug = false,
     dryRun = false,
     exportCore = true,
-    format = false,
     input,
-    lint = false,
     name,
     request,
     useOptions = true,
@@ -272,13 +302,15 @@ const initConfig = async (
     console.warn('userConfig:', userConfig);
   }
 
+  const output = getOutput(userConfig);
+
   if (!input) {
     throw new Error(
       '🚫 input not provided - provide path to OpenAPI specification',
     );
   }
 
-  if (!userConfig.output) {
+  if (!output.path) {
     throw new Error(
       '🚫 output not provided - provide path where we should generate your client',
     );
@@ -291,10 +323,11 @@ const initConfig = async (
   }
 
   const client = userConfig.client || inferClient(dependencies);
-  const output = path.resolve(process.cwd(), userConfig.output);
   const schemas = getSchemas(userConfig);
   const services = getServices(userConfig);
   const types = getTypes(userConfig);
+
+  output.path = path.resolve(process.cwd(), output.path);
 
   return setConfig({
     base,
@@ -302,9 +335,7 @@ const initConfig = async (
     debug,
     dryRun,
     exportCore: client.startsWith('@hey-api') ? false : exportCore,
-    format,
     input,
-    lint,
     name,
     output,
     request,
@@ -345,7 +376,7 @@ export async function createClient(userConfig: UserConfig): Promise<Client> {
     processOutput(dependencies);
   }
 
-  console.log('✨ Done! Your client is located in:', config.output);
+  console.log('✨ Done! Your client is located in:', config.output.path);
 
   return client;
 }
