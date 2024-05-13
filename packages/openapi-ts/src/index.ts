@@ -17,6 +17,7 @@ type Dependencies = Record<string, unknown>;
 type PackageDependencies = {
   dependencies?: Dependencies;
   devDependencies?: Dependencies;
+  peerDependencies?: Dependencies;
 };
 
 // Dependencies used in each client. User must have installed these to use the generated client
@@ -199,10 +200,14 @@ const getTypes = (userConfig: UserConfig): Config['types'] => {
 
 const getInstalledDependencies = (): Dependencies => {
   const toReducedDependencies = (p: PackageDependencies): Dependencies =>
-    [p.dependencies ?? {}, p.devDependencies ?? {}].reduce(
-      (deps, devDeps) => ({
+    [
+      p.dependencies ?? {},
+      p.devDependencies ?? {},
+      p.peerDependencies ?? {},
+    ].reduce(
+      (acc, deps) => ({
+        ...acc,
         ...deps,
-        ...devDeps,
       }),
       {},
     );
