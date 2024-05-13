@@ -1,6 +1,7 @@
 export interface UserConfig {
   /**
    * Manually set base in OpenAPI config instead of inferring from server value
+   * @deprecated
    */
   base?: string;
   /**
@@ -31,29 +32,38 @@ export interface UserConfig {
    */
   exportCore?: boolean;
   /**
-   * Process output folder with formatter?
-   * @default false
-   */
-  format?: 'biome' | 'prettier' | false;
-  /**
    * The relative location of the OpenAPI spec
    */
   input: string | Record<string, unknown>;
   /**
-   * Process output folder with linter?
-   * @default false
-   */
-  lint?: 'biome' | 'eslint' | false;
-  /**
    * Custom client class name
+   * @deprecated
    */
   name?: string;
   /**
    * The relative location of the output directory
    */
-  output: string;
+  output:
+    | string
+    | {
+        /**
+         * Process output folder with formatter?
+         * @default false
+         */
+        format?: 'biome' | 'prettier' | false;
+        /**
+         * Process output folder with linter?
+         * @default false
+         */
+        lint?: 'biome' | 'eslint' | false;
+        /**
+         * The relative location of the output directory
+         */
+        path: string;
+      };
   /**
    * Path to custom request file
+   * @deprecated
    */
   request?: string;
   /**
@@ -144,6 +154,7 @@ export interface UserConfig {
       };
   /**
    * Use options or arguments functions
+   * @deprecated
    * @default true
    */
   useOptions?: boolean;
@@ -151,9 +162,10 @@ export interface UserConfig {
 
 export type Config = Omit<
   Required<UserConfig>,
-  'base' | 'name' | 'request' | 'schemas' | 'services' | 'types'
+  'base' | 'name' | 'output' | 'request' | 'schemas' | 'services' | 'types'
 > &
   Pick<UserConfig, 'base' | 'name' | 'request'> & {
+    output: Extract<Required<UserConfig>['output'], object>;
     schemas: Extract<Required<UserConfig>['schemas'], object>;
     services: Extract<Required<UserConfig>['services'], object>;
     types: Extract<Required<UserConfig>['types'], object>;

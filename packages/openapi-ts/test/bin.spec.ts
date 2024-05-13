@@ -139,34 +139,6 @@ describe('bin', () => {
     expect(result.stderr.toString()).toBe('');
   });
 
-  it('formats output with Prettier', () => {
-    const result = sync('node', [
-      './bin/index.cjs',
-      '--input',
-      './test/spec/v3.json',
-      '--output',
-      './test/generated/bin',
-      '--format',
-      'prettier',
-    ]);
-    expect(result.stdout.toString()).toContain('Prettier');
-    expect(result.stderr.toString()).toBe('');
-  });
-
-  it('lints output with ESLint', () => {
-    const result = sync('node', [
-      './bin/index.cjs',
-      '--input',
-      './test/spec/v3.json',
-      '--output',
-      './test/generated/bin',
-      '--lint',
-      'eslint',
-    ]);
-    expect(result.stdout.toString()).toContain('ESLint');
-    expect(result.stderr.toString()).toBe('');
-  });
-
   it('throws error without parameters', () => {
     const result = sync('node', ['./bin/index.cjs', '--dry-run', 'true']);
     expect(result.stdout.toString()).toBe('');
@@ -221,10 +193,6 @@ describe('cli', () => {
       'false',
       '--services',
       'false',
-      '--format',
-      'false',
-      '--lint',
-      'false',
       '--useOptions',
       'false',
       '--dry-run',
@@ -235,8 +203,6 @@ describe('cli', () => {
     expect(result.stderr.toString()).toContain('exportCore: false');
     expect(result.stderr.toString()).toContain('types: false');
     expect(result.stderr.toString()).toContain('services: false');
-    expect(result.stderr.toString()).toContain('format: false');
-    expect(result.stderr.toString()).toContain('lint: false');
     expect(result.stderr.toString()).toContain('schemas: false');
     expect(result.stderr.toString()).toContain('useOptions: false');
   });

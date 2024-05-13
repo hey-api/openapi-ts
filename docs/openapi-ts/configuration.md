@@ -103,31 +103,37 @@ You might not need a `node` client. Fetch API is [experimental](https://nodejs.o
 
 ## Formatting
 
-By default, `openapi-ts` will not automatically format your client. To enable this feature, set `format` to a valid formatter.
+By default, `openapi-ts` will not automatically format your client. To enable this feature, set `output.format` to a valid formatter.
 
 ::: code-group
 
-```js{2} [disabled]
+```js{4} [disabled]
 export default {
-  format: false,
   input: 'path/to/openapi.json',
-  output: 'src/client',
+  output: {
+    format: false,
+    path: 'src/client',
+  },
 }
 ```
 
-```js{2} [prettier]
+```js{4} [prettier]
 export default {
-  format: 'prettier',
   input: 'path/to/openapi.json',
-  output: 'src/client',
+  output: {
+    format: 'prettier',
+    path: 'src/client',
+  },
 }
 ```
 
-```js{2} [biome]
+```js{4} [biome]
 export default {
-  format: 'biome',
   input: 'path/to/openapi.json',
-  output: 'src/client',
+  output: {
+    format: 'biome',
+    path: 'src/client',
+  },
 }
 ```
 
@@ -137,31 +143,37 @@ You can also prevent your client from being processed by formatters by adding yo
 
 ## Linting
 
-For performance reasons, `openapi-ts` does not automatically lint your client. To enable this feature, set `lint` to a valid linter.
+For performance reasons, `openapi-ts` does not automatically lint your client. To enable this feature, set `output.lint` to a valid linter.
 
 ::: code-group
 
-```js{3} [disabled]
+```js{4} [disabled]
 export default {
   input: 'path/to/openapi.json',
-  lint: false,
-  output: 'src/client',
+  output: {
+    lint: false,
+    path: 'src/client',
+  },
 }
 ```
 
-```js{3} [eslint]
+```js{4} [eslint]
 export default {
   input: 'path/to/openapi.json',
-  lint: 'eslint',
-  output: 'src/client',
+  output: {
+    lint: 'eslint',
+    path: 'src/client',
+  },
 }
 ```
 
-```js{3} [biome]
+```js{4} [biome]
 export default {
   input: 'path/to/openapi.json',
-  lint: 'biome',
-  output: 'src/client',
+  output: {
+    lint: 'biome',
+    path: 'src/client',
+  },
 }
 ```
 
