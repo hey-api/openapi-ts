@@ -1,11 +1,32 @@
-import type { ApiRequestOptions } from '@hey-api/client-core';
-
 import type {
   BodySerializer,
   FetchOptions,
   QuerySerializer,
   QuerySerializerOptions,
 } from './utils';
+
+type ApiRequestOptions = {
+  readonly body?: any;
+  readonly cookies?: Record<string, unknown>;
+  readonly errors?: Record<number, string>;
+  readonly formData?: Record<string, unknown>;
+  readonly headers?: Record<string, unknown>;
+  readonly mediaType?: string;
+  readonly method:
+    | 'CONNECT'
+    | 'DELETE'
+    | 'GET'
+    | 'HEAD'
+    | 'OPTIONS'
+    | 'PATCH'
+    | 'POST'
+    | 'PUT'
+    | 'TRACE';
+  readonly path?: Record<string, unknown>;
+  readonly query?: Record<string, unknown>;
+  readonly responseHeader?: string;
+  readonly url: string;
+};
 
 interface FetchConfig extends FetchOptions {
   /**
@@ -26,6 +47,7 @@ interface BodyType<T = unknown> {
 interface RequestResponse<Data = unknown, Error = unknown> {
   error?: Error;
   data?: Data;
+  request: Request;
   response: Response;
 }
 

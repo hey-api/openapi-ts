@@ -5,6 +5,7 @@ import { getOperationParameters } from './getOperationParameters';
 import { getOperation } from './operation';
 
 const allowedServiceMethods = [
+  'connect',
   'delete',
   'get',
   'head',
@@ -12,6 +13,7 @@ const allowedServiceMethods = [
   'patch',
   'post',
   'put',
+  'trace',
 ] as const;
 
 const getNewService = (operation: Operation): Service => ({
