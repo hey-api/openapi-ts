@@ -13,25 +13,24 @@ const params = program
   .usage('[options]')
   .version(pkg.version)
   .option(
-    '-i, --input <value>',
-    'OpenAPI specification (path, url, or string content)',
+    '--base [value]',
+    'Manually set base in OpenAPI config instead of inferring from server value',
   )
-  .option('-o, --output <value>', 'Output directory')
   .option(
     '-c, --client <value>',
     'HTTP client to generate [angular, axios, fetch, node, xhr]',
   )
   .option('-d, --debug', 'Run in debug mode?')
-  .option(
-    '--base [value]',
-    'Manually set base in OpenAPI config instead of inferring from server value',
-  )
   .option('--dry-run [value]', 'Skip writing files to disk?')
-  .option('--enums <value>', 'Export enum definitions (javascript, typescript)')
   .option('--exportCore [value]', 'Write core files to disk')
   .option('--format [value]', 'Process output folder with formatter?')
+  .option(
+    '-i, --input <value>',
+    'OpenAPI specification (path, url, or string content)',
+  )
   .option('--lint [value]', 'Process output folder with linter?')
   .option('--name <value>', 'Custom client class name')
+  .option('-o, --output <value>', 'Output directory')
   .option('--request <value>', 'Path to custom request file')
   .option('--schemas [value]', 'Write schemas to disk')
   .option('--services [value]', 'Write services to disk')
