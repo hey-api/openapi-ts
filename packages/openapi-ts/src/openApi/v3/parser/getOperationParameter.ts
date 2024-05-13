@@ -1,8 +1,10 @@
+import { unescapeName } from '../../../utils/escape';
 import type { OperationParameter } from '../../common/interfaces/client';
 import { getDefault } from '../../common/parser/getDefault';
 import { getPattern } from '../../common/parser/getPattern';
 import { getRef } from '../../common/parser/getRef';
 import { getOperationParameterName } from '../../common/parser/operation';
+import { ensureValidTypeScriptJavaScriptIdentifier } from '../../common/parser/sanitize';
 import { getType } from '../../common/parser/type';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiParameter } from '../interfaces/OpenApiParameter';
@@ -14,7 +16,7 @@ export const getOperationParameter = (
   openApi: OpenApi,
   parameter: OpenApiParameter,
 ): OperationParameter => {
-  const operationParameter: OperationParameter = {
+  let operationParameter: OperationParameter = {
     $refs: [],
     base: 'unknown',
     deprecated: parameter.deprecated === true,
@@ -74,39 +76,48 @@ export const getOperationParameter = (
       return operationParameter;
     } else {
       const model = getModel({ definition: schema, openApi });
-      operationParameter.export = model.export;
-      operationParameter.type = model.type;
-      operationParameter.base = model.base;
-      operationParameter.template = model.template;
-      operationParameter.link = model.link;
-      operationParameter.isReadOnly = model.isReadOnly;
-      operationParameter.isRequired =
-        operationParameter.isRequired || model.isRequired;
-      operationParameter.isNullable =
-        operationParameter.isNullable || model.isNullable;
-      operationParameter.format = model.format;
-      operationParameter.maximum = model.maximum;
-      operationParameter.exclusiveMaximum = model.exclusiveMaximum;
-      operationParameter.minimum = model.minimum;
-      operationParameter.exclusiveMinimum = model.exclusiveMinimum;
-      operationParameter.multipleOf = model.multipleOf;
-      operationParameter.maxLength = model.maxLength;
-      operationParameter.minLength = model.minLength;
-      operationParameter.maxItems = model.maxItems;
-      operationParameter.minItems = model.minItems;
-      operationParameter.uniqueItems = model.uniqueItems;
-      operationParameter.maxProperties = model.maxProperties;
-      operationParameter.minProperties = model.minProperties;
-      operationParameter.pattern = getPattern(model.pattern);
+      operationParameter = {
+        ...operationParameter,
+        $refs: [...operationParameter.$refs, ...model.$refs],
+        base: model.base,
+        enum: [...operationParameter.enum, ...model.enum],
+        enums: [...operationParameter.enums, ...model.enums],
+        exclusiveMaximum: model.exclusiveMaximum,
+        exclusiveMinimum: model.exclusiveMinimum,
+        export: model.export,
+        format: model.format,
+        imports: [...operationParameter.imports, ...model.imports],
+        isNullable: operationParameter.isNullable || model.isNullable,
+        isReadOnly: model.isReadOnly,
+        isRequired: operationParameter.isRequired || model.isRequired,
+        link: model.link,
+        maxItems: model.maxItems,
+        maxLength: model.maxLength,
+        maxProperties: model.maxProperties,
+        maximum: model.maximum,
+        minItems: model.minItems,
+        minLength: model.minLength,
+        minProperties: model.minProperties,
+        minimum: model.minimum,
+        multipleOf: model.multipleOf,
+        pattern: getPattern(model.pattern),
+        properties: [...operationParameter.properties, ...model.properties],
+        template: model.template,
+        type: model.type,
+        uniqueItems: model.uniqueItems,
+      };
+      if (
+        (operationParameter.enum.length || operationParameter.enums.length) &&
+        !operationParameter.meta
+      ) {
+        operationParameter.meta = {
+          $ref: `enum/${operationParameter.name}`,
+          name: ensureValidTypeScriptJavaScriptIdentifier(
+            unescapeName(operationParameter.name),
+          ),
+        };
+      }
       operationParameter.default = model.default;
-      operationParameter.$refs = [...operationParameter.$refs, ...model.$refs];
-      operationParameter.imports = [
-        ...operationParameter.imports,
-        ...model.imports,
-      ];
-      operationParameter.enum.push(...model.enum);
-      operationParameter.enums.push(...model.enums);
-      operationParameter.properties.push(...model.properties);
       return operationParameter;
     }
   }
