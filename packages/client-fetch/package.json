@@ -49,8 +49,5 @@
   },
   "engines": {
     "node": "^18.0.0 || >=20.0.0"
-  },
-  "dependencies": {
-    "@hey-api/client-core": "workspace:*"
   }
 }

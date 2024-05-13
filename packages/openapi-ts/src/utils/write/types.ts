@@ -4,13 +4,18 @@ import {
   type Node,
   TypeScriptFile,
 } from '../../compiler';
-import type { Model, OperationParameter, Service } from '../../openApi';
+import type { Model, OperationParameter } from '../../openApi';
+import type { Method } from '../../openApi/common/interfaces/client';
 import type { Client } from '../../types/client';
 import { getConfig } from '../config';
 import { enumKey, enumUnionType, enumValue } from '../enum';
 import { escapeComment } from '../escape';
 import { sortByName, sorterByName } from '../sort';
-import { operationDataTypeName, operationErrorTypeName, operationResponseTypeName } from './services';
+import {
+  operationDataTypeName,
+  operationErrorTypeName,
+  operationResponseTypeName,
+} from './services';
 import { toType, uniqueTypeName } from './type';
 
 type OnNode = (node: Node) => void;
@@ -200,13 +205,20 @@ const processModel = (client: Client, model: Model, onNode: OnNode) => {
   }
 };
 
-const processServiceTypes = (client: Client, onNode: OnNode) => {
-  type ResMap = Map<number | 'default', Model>;
-  type MethodMap = Map<'req' | 'res', ResMap | OperationParameter[]>;
-  type MethodKey = Service['operations'][number]['method'];
-  type PathMap = Map<MethodKey | '$ref', MethodMap | string>;
+interface MethodMap {
+  $ref?: string;
+  req?: OperationParameter[];
+  res?: Record<number | string, Model>;
+}
 
-  const pathsMap = new Map<string, PathMap>();
+type PathMap = {
+  [method in Method]?: MethodMap;
+};
+
+type PathsMap = Record<string, PathMap>;
+
+const processServiceTypes = (client: Client, onNode: OnNode) => {
+  const pathsMap: PathsMap = {};
 
   const config = getConfig();
 
@@ -217,22 +229,16 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
       const hasErr = operation.errors.length;
 
       if (hasReq || hasRes || hasErr) {
-        let pathMap = pathsMap.get(operation.path);
-        if (!pathMap) {
-          pathsMap.set(operation.path, new Map());
-          pathMap = pathsMap.get(operation.path)!;
+        if (!pathsMap[operation.path]) {
+          pathsMap[operation.path] = {};
         }
-        pathMap.set('$ref', operation.name);
+        const pathMap = pathsMap[operation.path]!;
 
-        let methodMap = pathMap.get(operation.method);
-        if (!methodMap) {
-          pathMap.set(operation.method, new Map());
-          methodMap = pathMap.get(operation.method)!;
+        if (!pathMap[operation.method]) {
+          pathMap[operation.method] = {};
         }
-
-        if (typeof methodMap === 'string') {
-          return;
-        }
+        const methodMap = pathMap[operation.method]!;
+        methodMap.$ref = operation.name;
 
         if (hasReq) {
           const bodyParameter = operation.parameters
@@ -300,7 +306,7 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
               )
             : sortByName([...operation.parameters]);
 
-          methodMap.set('req', operationProperties);
+          methodMap.req = operationProperties;
 
           // create type export for operation data
           generateType({
@@ -322,18 +328,16 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
         }
 
         if (hasRes) {
-          let resMap = methodMap.get('res');
-          if (!resMap) {
-            methodMap.set('res', new Map());
-            resMap = methodMap.get('res')!;
+          if (!methodMap.res) {
+            methodMap.res = {};
           }
 
-          if (Array.isArray(resMap)) {
+          if (Array.isArray(methodMap.res)) {
             return;
           }
 
           operation.results.forEach((result) => {
-            resMap.set(result.code, result);
+            methodMap.res![result.code] = result;
           });
 
           // create type export for operation response
@@ -377,85 +381,87 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
                 export: 'all-of',
                 isRequired: true,
                 // TODO: improve error type detection
-                properties: operation.errors.filter((result) => result.code === 'default' || (result.code >= 400 && result.code < 600)),
+                properties: operation.errors.filter(
+                  (result) =>
+                    result.code === 'default' ||
+                    (result.code >= 400 && result.code < 600),
+                ),
               }),
             });
           }
         }
 
         if (hasErr) {
-          let resMap = methodMap.get('res');
-          if (!resMap) {
-            methodMap.set('res', new Map());
-            resMap = methodMap.get('res')!;
+          if (!methodMap.res) {
+            methodMap.res = {};
           }
 
-          if (Array.isArray(resMap)) {
+          if (Array.isArray(methodMap.res)) {
             return;
           }
 
           operation.errors.forEach((error) => {
-            resMap.set(error.code, error);
+            methodMap.res![error.code] = error;
           });
         }
       }
     });
   });
 
-  const properties = Array.from(pathsMap).map(([path, pathMap]) => {
-    const pathParameters = Array.from(pathMap)
-      .map(([method, methodMap]) => {
-        if (method === '$ref' || typeof methodMap === 'string') {
-          return;
+  const properties = Object.entries(pathsMap).map(([path, pathMap]) => {
+    const pathParameters = Object.entries(pathMap)
+      .map(([_method, methodMap]) => {
+        const method = _method as Method;
+
+        let methodParameters: Model[] = [];
+
+        if (methodMap.req) {
+          const operationName = methodMap.$ref!;
+          const { name: base } = uniqueTypeName({
+            client,
+            meta: {
+              // TODO: this should be exact ref to operation for consistency,
+              // but name should work too as operation ID is unique
+              $ref: operationName,
+              name: operationName,
+            },
+            nameTransformer: operationDataTypeName,
+          });
+          const reqKey: Model = {
+            ...emptyModel,
+            base,
+            export: 'reference',
+            isRequired: true,
+            name: 'req',
+            properties: [],
+            type: base,
+          };
+          methodParameters = [...methodParameters, reqKey];
         }
 
-        const methodParameters = Array.from(methodMap).map(
-          ([name, baseOrResMap]) => {
-            if (name === 'req') {
-              const operationName = pathMap.get('$ref') as string;
-              const { name: base } = uniqueTypeName({
-                client,
-                meta: {
-                  // TODO: this should be exact ref to operation for consistency,
-                  // but name should work too as operation ID is unique
-                  $ref: operationName,
-                  name: operationName,
-                },
-                nameTransformer: operationDataTypeName,
-              });
-              const reqKey: Model = {
+        if (methodMap.res) {
+          const reqResParameters = Object.entries(methodMap.res).map(
+            ([code, base]) => {
+              // TODO: move query params into separate query key
+              const value: Model = {
                 ...emptyModel,
-                base,
-                export: 'reference',
+                ...base,
                 isRequired: true,
-                name,
-                properties: [],
-                type: base,
+                name: String(code),
               };
-              return reqKey;
-            }
-            const reqResParameters = Array.isArray(baseOrResMap)
-              ? baseOrResMap
-              : Array.from(baseOrResMap).map(([code, base]) => {
-                  // TODO: move query params into separate query key
-                  const value: Model = {
-                    ...emptyModel,
-                    ...base,
-                    isRequired: true,
-                    name: String(code),
-                  };
-                  return value;
-                });
+              return value;
+            },
+          );
 
-            const reqResKey: Model = {
-              ...emptyModel,
-              isRequired: true,
-              name,
-              properties: reqResParameters,
-            };
-            return reqResKey;
-          },
-        );
+          const resKey: Model = {
+            ...emptyModel,
+            isRequired: true,
+            name: 'res',
+            properties: reqResParameters,
+          };
+          methodParameters = [...methodParameters, resKey];
+        }
+
         const methodKey: Model = {
           ...emptyModel,
           isRequired: true,

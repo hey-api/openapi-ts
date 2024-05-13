@@ -323,12 +323,14 @@ const toOperationStatements = (client: Client, operation: Operation) => {
       compiler.return.functionCall({
         args: [options],
         name: `client.${operation.method.toLocaleLowerCase()}`,
-        types: errorType && responseType
-          ? [responseType, errorType]
-          : errorType
-            ? ['unknown', errorType]
-            : responseType
-              ? [responseType] : [],
+        types:
+          errorType && responseType
+            ? [responseType, errorType]
+            : errorType
+              ? ['unknown', errorType]
+              : responseType
+                ? [responseType]
+                : [],
       }),
     ];
   }

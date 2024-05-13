@@ -104,10 +104,10 @@ export type CallToTestOrderOfParamsData = {
 export type $OpenApiTs = {
     '/api/v{api-version}/defaults': {
         get: {
-            req: CallToTestOrderOfParamsData;
+            req: CallWithDefaultParametersData;
         };
         post: {
-            req: CallToTestOrderOfParamsData;
+            req: CallWithDefaultOptionalParametersData;
         };
         put: {
             req: CallToTestOrderOfParamsData;

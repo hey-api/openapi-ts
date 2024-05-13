@@ -1358,7 +1358,7 @@ export type $OpenApiTs = {
     };
     '/api/v{api-version}/parameters/': {
         get: {
-            req: PostCallWithOptionalParamData;
+            req: GetCallWithOptionalParamData;
         };
         post: {
             req: PostCallWithOptionalParamData;
@@ -1386,10 +1386,10 @@ export type $OpenApiTs = {
     };
     '/api/v{api-version}/defaults': {
         get: {
-            req: CallToTestOrderOfParamsData;
+            req: CallWithDefaultParametersData;
         };
         post: {
-            req: CallToTestOrderOfParamsData;
+            req: CallWithDefaultOptionalParametersData;
         };
         put: {
             req: CallToTestOrderOfParamsData;
@@ -1436,10 +1436,6 @@ export type $OpenApiTs = {
                  */
                 201: ModelWithString;
                 /**
-                 * Message for default response
-                 */
-                default: ModelWithBoolean;
-                /**
                  * Message for 500 error
                  */
                 500: ModelWithStringError;
@@ -1451,6 +1447,10 @@ export type $OpenApiTs = {
                  * Message for 502 error
                  */
                 502: ModelWithStringError;
+                /**
+                 * Message for default response
+                 */
+                default: ModelWithBoolean;
             };
         };
         put: {
@@ -1472,10 +1472,6 @@ export type $OpenApiTs = {
                  */
                 202: ModelThatExtendsExtends;
                 /**
-                 * Message for default response
-                 */
-                default: ModelWithString;
-                /**
                  * Message for 500 error
                  */
                 500: ModelWithStringError;
@@ -1487,6 +1483,10 @@ export type $OpenApiTs = {
                  * Message for 502 error
                  */
                 502: ModelWithStringError;
+                /**
+                 * Message for default response
+                 */
+                default: ModelWithString;
             };
         };
     };
@@ -1591,7 +1591,7 @@ export type $OpenApiTs = {
     };
     '/api/v{api-version}/multipart': {
         post: {
-            req: ;
+            req: MultipartRequestData;
         };
         get: {
             res: {

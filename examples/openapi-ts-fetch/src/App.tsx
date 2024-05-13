@@ -1,8 +1,8 @@
 import './App.css';
 
 import { createClient } from '@hey-api/client-fetch';
-// import { useState } from 'react';
 
+// import { useState } from 'react';
 import { $Email } from './client/schemas.gen';
 import {
   buyMuseumTickets,
@@ -24,9 +24,9 @@ function App() {
       },
     });
     if (error) {
-      console.log(error.title)
+      console.log(error.title);
     }
-    console.log(data)
+    console.log(data);
     // setPet(data);
   };
 
