@@ -22,7 +22,11 @@ export const getRequiredPropertiesFromComposition = (
           ...getModel({ definition: schema, openApi }).properties,
         ];
       }
-      return [...properties, ...getModel({ definition, openApi }).properties];
+      return [
+        ...properties,
+        ...getModel({ definition, openApi, parentDefinition: definition })
+          .properties,
+      ];
     }, [] as Model[])
     .filter(
       (property) => !property.isRequired && required.includes(property.name),
