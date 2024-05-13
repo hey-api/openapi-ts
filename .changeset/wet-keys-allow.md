@@ -1,5 +1,5 @@
 ---
-"@hey-api/openapi-ts": minor
+"@hey-api/openapi-ts": patch
 ---
 
 fix: Support typescript in peerDependencies
