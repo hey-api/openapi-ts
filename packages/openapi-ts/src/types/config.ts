@@ -5,7 +5,7 @@ export interface UserConfig {
    */
   base?: string;
   /**
-   * The selected HTTP client (fetch, xhr, node or axios)
+   * HTTP client to generate
    * @default 'fetch'
    */
   client?:
