@@ -1,4 +1,3 @@
-import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { loadConfig } from 'c12';
@@ -13,31 +12,9 @@ import { registerHandlebarTemplates } from './utils/handlebars';
 import { postProcessClient } from './utils/postprocess';
 import { writeClient } from './utils/write/client';
 
-type Dependencies = Record<string, unknown>;
-interface PackageJson {
-  dependencies?: Dependencies;
-  devDependencies?: Dependencies;
-  peerDependencies?: Dependencies;
-}
-
-/**
- * Dependencies used in each client. User must install these, without them
- * the generated client won't work.
- */
-const clientDependencies: Record<Config['client'], string[]> = {
-  '@hey-api/client-axios': ['axios'],
-  '@hey-api/client-fetch': [],
-  angular: ['@angular/common', '@angular/core', 'rxjs'],
-  axios: ['axios'],
-  fetch: [],
-  node: ['node-fetch'],
-  xhr: [],
-};
-
 type OutputProcesser = {
-  args: (path: string) => string[];
+  args: (path: string) => ReadonlyArray<string>;
   command: string;
-  condition: (dependencies: Dependencies) => boolean;
   name: string;
 };
 
@@ -51,7 +28,6 @@ const formatters: Record<
   biome: {
     args: (path) => ['format', '--write', path],
     command: 'biome',
-    condition: (dependencies) => Boolean(dependencies['@biomejs/biome']),
     name: 'Biome (Format)',
   },
   prettier: {
@@ -63,7 +39,6 @@ const formatters: Record<
       './.prettierignore',
     ],
     command: 'prettier',
-    condition: (dependencies) => Boolean(dependencies.prettier),
     name: 'Prettier',
   },
 };
@@ -78,52 +53,29 @@ const linters: Record<
   biome: {
     args: (path) => ['lint', '--apply', path],
     command: 'biome',
-    condition: (dependencies) => Boolean(dependencies['@biomejs/biome']),
     name: 'Biome (Lint)',
   },
   eslint: {
     args: (path) => [path, '--fix'],
     command: 'eslint',
-    condition: (dependencies) => Boolean(dependencies.eslint),
     name: 'ESLint',
   },
 };
 
-const processOutput = (dependencies: Dependencies) => {
+const processOutput = () => {
   const config = getConfig();
-  if (config.output.format) {
-    const formatter = formatters[config.output.format];
-    if (formatter.condition(dependencies)) {
-      console.log(`✨ Running ${formatter.name}`);
-      sync(formatter.command, formatter.args(config.output.path));
-    }
-  }
-  if (config.output.lint) {
-    const linter = linters[config.output.lint];
-    if (linter.condition(dependencies)) {
-      console.log(`✨ Running ${linter.name}`);
-      sync(linter.command, linter.args(config.output.path));
-    }
-  }
-};
 
-const inferClient = (dependencies: Dependencies): Config['client'] => {
-  if (dependencies['@hey-api/client-axios']) {
-    return '@hey-api/client-axios';
+  if (config.output.format) {
+    const module = formatters[config.output.format];
+    console.log(`✨ Running ${module.name}`);
+    sync(module.command, module.args(config.output.path));
   }
-  if (dependencies['@hey-api/client-fetch']) {
-    return '@hey-api/client-fetch';
+
+  if (config.output.lint) {
+    const module = linters[config.output.lint];
+    console.log(`✨ Running ${module.name}`);
+    sync(module.command, module.args(config.output.path));
   }
-  if (dependencies.axios) {
-    return 'axios';
-  }
-  if (dependencies['node-fetch']) {
-    return 'node';
-  }
-  if (Object.keys(dependencies).some((d) => d.startsWith('@angular'))) {
-    return 'angular';
-  }
-  return 'fetch';
 };
 
 const logClientMessage = () => {
@@ -131,27 +83,16 @@ const logClientMessage = () => {
   switch (client) {
     case 'angular':
       return console.log('✨ Creating Angular client');
+    case '@hey-api/client-axios':
     case 'axios':
       return console.log('✨ Creating Axios client');
+    case '@hey-api/client-fetch':
     case 'fetch':
       return console.log('✨ Creating Fetch client');
     case 'node':
       return console.log('✨ Creating Node.js client');
     case 'xhr':
       return console.log('✨ Creating XHR client');
-  }
-};
-
-const logMissingDependenciesWarning = (dependencies: Dependencies) => {
-  const { client } = getConfig();
-  const missing = clientDependencies[client].filter(
-    (d) => dependencies[d] === undefined,
-  );
-  if (missing.length > 0) {
-    console.log(
-      '⚠️ Dependencies used in generated client are missing: ' +
-        missing.join(' '),
-    );
   }
 };
 
@@ -228,53 +169,7 @@ const getTypes = (userConfig: UserConfig): Config['types'] => {
   return types;
 };
 
-const getInstalledDependencies = (): Dependencies => {
-  const packageJsonToDependencies = (pkg: PackageJson): Dependencies =>
-    [
-      pkg.dependencies ?? {},
-      pkg.devDependencies ?? {},
-      pkg.peerDependencies ?? {},
-    ].reduce(
-      (result, dependencies) => ({
-        ...result,
-        ...dependencies,
-      }),
-      {},
-    );
-
-  let dependencies: Dependencies = {};
-
-  // Attempt to get all globally installed packages.
-  const result = sync('npm', ['list', '-g', '--json', '--depth=0']);
-  if (!result.error) {
-    const globalDependencies: PackageJson = JSON.parse(
-      result.stdout.toString(),
-    );
-    dependencies = {
-      ...dependencies,
-      ...packageJsonToDependencies(globalDependencies),
-    };
-  }
-
-  // Attempt to read any dependencies installed in a local projects package.json.
-  const pkgPath = path.resolve(process.cwd(), 'package.json');
-  if (existsSync(pkgPath)) {
-    const localDependencies: PackageJson = JSON.parse(
-      readFileSync(pkgPath).toString(),
-    );
-    dependencies = {
-      ...dependencies,
-      ...packageJsonToDependencies(localDependencies),
-    };
-  }
-
-  return dependencies;
-};
-
-const initConfig = async (
-  userConfig: UserConfig,
-  dependencies: Dependencies,
-) => {
+const initConfig = async (userConfig: UserConfig) => {
   const { config: userConfigFromFile } = await loadConfig<UserConfig>({
     jitiOptions: {
       esmResolve: true,
@@ -289,6 +184,7 @@ const initConfig = async (
 
   const {
     base,
+    client = 'fetch',
     debug = false,
     dryRun = false,
     exportCore = true,
@@ -322,7 +218,6 @@ const initConfig = async (
     );
   }
 
-  const client = userConfig.client || inferClient(dependencies);
   const schemas = getSchemas(userConfig);
   const services = getServices(userConfig);
   const types = getTypes(userConfig);
@@ -353,13 +248,7 @@ const initConfig = async (
  * @param userConfig {@link UserConfig} passed to the `createClient()` method
  */
 export async function createClient(userConfig: UserConfig): Promise<Client> {
-  const dependencies = getInstalledDependencies();
-
-  if (!dependencies.typescript) {
-    throw new Error('🚫 dependency missing - TypeScript must be installed');
-  }
-
-  const config = await initConfig(userConfig, dependencies);
+  const config = await initConfig(userConfig);
 
   const openApi =
     typeof config.input === 'string'
@@ -371,9 +260,8 @@ export async function createClient(userConfig: UserConfig): Promise<Client> {
 
   if (!config.dryRun) {
     logClientMessage();
-    logMissingDependenciesWarning(dependencies);
     await writeClient(openApi, client, templates);
-    processOutput(dependencies);
+    processOutput();
   }
 
   console.log('✨ Done! Your client is located in:', config.output.path);
