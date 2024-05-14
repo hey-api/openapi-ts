@@ -11,7 +11,7 @@ We all send HTTP requests in a slightly different way. Hey API doesn't force you
 
 ## Legacy Clients
 
-Before standalone client packages, clients were generated using `openapi-ts`. If you want to use a client that isn't published as a standalone package, you can explicitly set the `client` config option to generate it.
+Before standalone client packages, clients were generated using `openapi-ts`. If you want to generate a legacy client that isn't published as a standalone package, you can use the `client` config option.
 
 ::: code-group
 
