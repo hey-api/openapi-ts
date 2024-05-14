@@ -40,7 +40,7 @@ Alternatively, you can use `openapi-ts.config.js` and configure the export state
 
 ## Clients
 
-By default, `openapi-ts` will try to guess your client based on your project dependencies. If we don't get it right, you can specify the desired client
+By default, `openapi-ts` will generate a Fetch API client. If you want a different client, you can specify it using the `client` option.
 
 ::: code-group
 
