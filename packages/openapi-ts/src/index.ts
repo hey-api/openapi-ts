@@ -5,7 +5,7 @@ import { sync } from 'cross-spawn';
 
 import { parse } from './openApi';
 import type { Client } from './types/client';
-import type { Config, UserConfig } from './types/config';
+import type { ClientConfig, Config, UserConfig } from './types/config';
 import { getConfig, setConfig } from './utils/config';
 import { getOpenApiSpec } from './utils/getOpenApiSpec';
 import { registerHandlebarTemplates } from './utils/handlebars';
@@ -96,7 +96,7 @@ const logClientMessage = () => {
   }
 };
 
-const getOutput = (userConfig: UserConfig): Config['output'] => {
+const getOutput = (userConfig: ClientConfig): Config['output'] => {
   let output: Config['output'] = {
     format: false,
     lint: false,
@@ -113,7 +113,7 @@ const getOutput = (userConfig: UserConfig): Config['output'] => {
   return output;
 };
 
-const getSchemas = (userConfig: UserConfig): Config['schemas'] => {
+const getSchemas = (userConfig: ClientConfig): Config['schemas'] => {
   let schemas: Config['schemas'] = {
     export: true,
     type: 'json',
@@ -129,7 +129,7 @@ const getSchemas = (userConfig: UserConfig): Config['schemas'] => {
   return schemas;
 };
 
-const getServices = (userConfig: UserConfig): Config['services'] => {
+const getServices = (userConfig: ClientConfig): Config['services'] => {
   let services: Config['services'] = {
     export: true,
     name: '{{name}}Service',
@@ -149,7 +149,7 @@ const getServices = (userConfig: UserConfig): Config['services'] => {
   return services;
 };
 
-const getTypes = (userConfig: UserConfig): Config['types'] => {
+const getTypes = (userConfig: ClientConfig): Config['types'] => {
   let types: Config['types'] = {
     dates: false,
     enums: false,
@@ -169,75 +169,81 @@ const getTypes = (userConfig: UserConfig): Config['types'] => {
   return types;
 };
 
-const initConfig = async (userConfig: UserConfig) => {
-  const { config: userConfigFromFile } = await loadConfig<UserConfig>({
+const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
+  const { config: configFromFile } = await loadConfig<UserConfig>({
     jitiOptions: {
       esmResolve: true,
     },
     name: 'openapi-ts',
-    overrides: userConfig,
   });
 
-  if (userConfigFromFile) {
-    userConfig = { ...userConfigFromFile, ...userConfig };
-  }
+  const userConfigs: ClientConfig[] = Array.isArray(userConfig)
+    ? userConfig
+    : Array.isArray(configFromFile)
+      ? configFromFile.map((config) => ({
+          ...config,
+          ...userConfig,
+        }))
+      : [{ ...(configFromFile ?? {}), ...userConfig }];
 
-  const {
-    base,
-    client = 'fetch',
-    debug = false,
-    dryRun = false,
-    exportCore = true,
-    input,
-    name,
-    request,
-    useOptions = true,
-  } = userConfig;
+  return userConfigs.map((userConfig) => {
+    const {
+      base,
+      client = 'fetch',
+      debug = false,
+      dryRun = false,
+      exportCore = true,
+      input,
+      name,
+      request,
+      useOptions = true,
+    } = userConfig;
 
-  if (debug) {
-    console.warn('userConfig:', userConfig);
-  }
+    if (debug) {
+      console.warn('userConfig:', userConfig);
+    }
 
-  const output = getOutput(userConfig);
+    const output = getOutput(userConfig);
 
-  if (!input) {
-    throw new Error(
-      '🚫 input not provided - provide path to OpenAPI specification',
-    );
-  }
+    if (!input) {
+      throw new Error(
+        '🚫 input not provided - provide path to OpenAPI specification',
+      );
+    }
 
-  if (!output.path) {
-    throw new Error(
-      '🚫 output not provided - provide path where we should generate your client',
-    );
-  }
+    if (!output.path) {
+      throw new Error(
+        '🚫 output not provided - provide path where we should generate your client',
+      );
+    }
 
-  if (!useOptions) {
-    console.warn(
-      '⚠️ Deprecation warning: useOptions set to false. This setting will be removed in future versions. Please migrate useOptions to true https://heyapi.vercel.app/openapi-ts/migrating.html#v0-27-38',
-    );
-  }
+    if (!useOptions) {
+      console.warn(
+        '⚠️ Deprecation warning: useOptions set to false. This setting will be removed in future versions. Please migrate useOptions to true https://heyapi.vercel.app/openapi-ts/migrating.html#v0-27-38',
+      );
+    }
 
-  const schemas = getSchemas(userConfig);
-  const services = getServices(userConfig);
-  const types = getTypes(userConfig);
+    const schemas = getSchemas(userConfig);
+    const services = getServices(userConfig);
+    const types = getTypes(userConfig);
 
-  output.path = path.resolve(process.cwd(), output.path);
+    output.path = path.resolve(process.cwd(), output.path);
 
-  return setConfig({
-    base,
-    client,
-    debug,
-    dryRun,
-    exportCore: client.startsWith('@hey-api') ? false : exportCore,
-    input,
-    name,
-    output,
-    request,
-    schemas,
-    services,
-    types,
-    useOptions,
+    return setConfig({
+      base,
+      client,
+      debug,
+      dryRun,
+      exportCore: client.startsWith('@hey-api') ? false : exportCore,
+      input,
+      name,
+      output,
+      request,
+      schemas,
+      services,
+      types,
+      useOptions,
+    });
   });
 };
 
@@ -247,26 +253,38 @@ const initConfig = async (userConfig: UserConfig) => {
  * service layer, etc.
  * @param userConfig {@link UserConfig} passed to the `createClient()` method
  */
-export async function createClient(userConfig: UserConfig): Promise<Client> {
-  const config = await initConfig(userConfig);
+export async function createClient(userConfig: UserConfig): Promise<Client[]> {
+  const configs = await initConfigs(userConfig);
 
-  const openApi =
-    typeof config.input === 'string'
-      ? await getOpenApiSpec(config.input)
-      : (config.input as unknown as Awaited<ReturnType<typeof getOpenApiSpec>>);
+  const createClientPromise = (config: Config) => async () => {
+    const openApi =
+      typeof config.input === 'string'
+        ? await getOpenApiSpec(config.input)
+        : (config.input as unknown as Awaited<
+            ReturnType<typeof getOpenApiSpec>
+          >);
 
-  const client = postProcessClient(parse(openApi));
-  const templates = registerHandlebarTemplates();
+    const client = postProcessClient(parse(openApi));
+    const templates = registerHandlebarTemplates();
 
-  if (!config.dryRun) {
-    logClientMessage();
-    await writeClient(openApi, client, templates);
-    processOutput();
+    if (!config.dryRun) {
+      logClientMessage();
+      await writeClient(openApi, client, templates);
+      processOutput();
+    }
+
+    console.log('✨ Done! Your client is located in:', config.output.path);
+
+    return client;
+  };
+
+  let clients: Client[] = [];
+  const clientPromises = configs.map((config) => createClientPromise(config));
+  for (const clientPromise of clientPromises) {
+    const client = await clientPromise();
+    clients = [...clients, client];
   }
-
-  console.log('✨ Done! Your client is located in:', config.output.path);
-
-  return client;
+  return clients;
 }
 
 /**
