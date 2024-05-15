@@ -1,5 +1,17 @@
 # @hey-api/openapi-ts
 
+## 0.45.0
+
+### Minor Changes
+
+- feat: remove client inference ([#569](https://github.com/hey-api/openapi-ts/pull/569))
+
+### Patch Changes
+
+- fix: deduplicate inlined enums ([#573](https://github.com/hey-api/openapi-ts/pull/573))
+
+- fix: generate correct optional key in types when using positional arguments (useOptions: false) ([#572](https://github.com/hey-api/openapi-ts/pull/572))
+
 ## 0.44.0
 
 ### Minor Changes
