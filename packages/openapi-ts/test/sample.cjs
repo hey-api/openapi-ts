@@ -15,7 +15,7 @@ const main = async () => {
       // export: false,
     },
     types: {
-      // enums: 'javascript',
+      enums: 'typescript',
       // include: '^NestedAnyOfArraysNullable',
       // name: 'PascalCase',
     },
