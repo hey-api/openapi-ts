@@ -12,10 +12,7 @@ export function getRef<T>(
   if (item.$ref) {
     // Fetch the paths to the definitions, this converts:
     // "#/components/schemas/Form" to ["components", "schemas", "Form"]
-    const paths = item.$ref
-      .replace(/^#/g, '')
-      .split('/')
-      .filter((item) => item);
+    const paths = item.$ref.replace(/^#/g, '').split('/').filter(Boolean);
 
     // Try to find the reference by walking down the path,
     // if we cannot find it, then we throw an error.
