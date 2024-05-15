@@ -13,14 +13,14 @@ import { getServices } from './parser/getServices';
 export const parse = (openApi: OpenApi): Client => {
   const version = getServiceVersion(openApi.info.version);
   const server = getServer(openApi);
-  const models = getModels(openApi);
-  const services = getServices(openApi);
+  const { models, types } = getModels(openApi);
+  const services = getServices({ openApi, types });
 
   return {
     models,
     server,
     services,
-    types: {},
+    types,
     version,
   };
 };

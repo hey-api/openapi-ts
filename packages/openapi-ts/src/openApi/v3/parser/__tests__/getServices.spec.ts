@@ -23,26 +23,29 @@ describe('getServices', () => {
     });
 
     const services = getServices({
-      info: {
-        title: 'x',
-        version: '1',
-      },
-      openapi: '3.0.0',
-      paths: {
-        '/api/trips': {
-          get: {
-            responses: {
-              200: {
-                description: 'x',
+      openApi: {
+        info: {
+          title: 'x',
+          version: '1',
+        },
+        openapi: '3.0.0',
+        paths: {
+          '/api/trips': {
+            get: {
+              responses: {
+                200: {
+                  description: 'x',
+                },
+                default: {
+                  description: 'default',
+                },
               },
-              default: {
-                description: 'default',
-              },
+              tags: [],
             },
-            tags: [],
           },
         },
       },
+      types: {},
     });
 
     expect(services).toHaveLength(1);
