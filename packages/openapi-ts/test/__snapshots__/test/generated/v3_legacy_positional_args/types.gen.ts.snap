@@ -24,57 +24,57 @@ export type CallWithDefaultParametersData = {
     /**
      * This is a simple boolean with default value
      */
-    parameterBoolean: boolean | null;
+    parameterBoolean?: boolean | null;
     /**
      * This is a simple enum with default value
      */
-    parameterEnum: 'Success' | 'Warning' | 'Error';
+    parameterEnum?: 'Success' | 'Warning' | 'Error';
     /**
      * This is a simple model with default value
      */
-    parameterModel: ModelWithString | null;
+    parameterModel?: ModelWithString | null;
     /**
      * This is a simple number with default value
      */
-    parameterNumber: number | null;
+    parameterNumber?: number | null;
     /**
      * This is a simple string with default value
      */
-    parameterString: string | null;
+    parameterString?: string | null;
 };
 
 export type CallWithDefaultOptionalParametersData = {
     /**
      * This is a simple boolean that is optional with default value
      */
-    parameterBoolean: boolean;
+    parameterBoolean?: boolean;
     /**
      * This is a simple enum that is optional with default value
      */
-    parameterEnum: 'Success' | 'Warning' | 'Error';
+    parameterEnum?: 'Success' | 'Warning' | 'Error';
     /**
      * This is a simple model that is optional with default value
      */
-    parameterModel: ModelWithString;
+    parameterModel?: ModelWithString;
     /**
      * This is a simple number that is optional with default value
      */
-    parameterNumber: number;
+    parameterNumber?: number;
     /**
      * This is a simple string that is optional with default value
      */
-    parameterString: string;
+    parameterString?: string;
 };
 
 export type CallToTestOrderOfParamsData = {
     /**
      * This is a optional string with default
      */
-    parameterOptionalStringWithDefault: string;
+    parameterOptionalStringWithDefault?: string;
     /**
      * This is a optional string with empty default
      */
-    parameterOptionalStringWithEmptyDefault: string;
+    parameterOptionalStringWithEmptyDefault?: string;
     /**
      * This is a optional string with no default
      */
@@ -82,7 +82,7 @@ export type CallToTestOrderOfParamsData = {
     /**
      * This is a string that can be null with default
      */
-    parameterStringNullableWithDefault: string | null;
+    parameterStringNullableWithDefault?: string | null;
     /**
      * This is a string that can be null with no default
      */
@@ -108,23 +108,23 @@ export type $OpenApiTs = {
                 /**
                  * This is a simple boolean with default value
                  */
-                parameterBoolean: boolean | null;
+                parameterBoolean?: boolean | null;
                 /**
                  * This is a simple enum with default value
                  */
-                parameterEnum: 'Success' | 'Warning' | 'Error';
+                parameterEnum?: 'Success' | 'Warning' | 'Error';
                 /**
                  * This is a simple model with default value
                  */
-                parameterModel: ModelWithString | null;
+                parameterModel?: ModelWithString | null;
                 /**
                  * This is a simple number with default value
                  */
-                parameterNumber: number | null;
+                parameterNumber?: number | null;
                 /**
                  * This is a simple string with default value
                  */
-                parameterString: string | null;
+                parameterString?: string | null;
             };
         };
         post: {
@@ -132,23 +132,23 @@ export type $OpenApiTs = {
                 /**
                  * This is a simple boolean that is optional with default value
                  */
-                parameterBoolean: boolean;
+                parameterBoolean?: boolean;
                 /**
                  * This is a simple enum that is optional with default value
                  */
-                parameterEnum: 'Success' | 'Warning' | 'Error';
+                parameterEnum?: 'Success' | 'Warning' | 'Error';
                 /**
                  * This is a simple model that is optional with default value
                  */
-                parameterModel: ModelWithString;
+                parameterModel?: ModelWithString;
                 /**
                  * This is a simple number that is optional with default value
                  */
-                parameterNumber: number;
+                parameterNumber?: number;
                 /**
                  * This is a simple string that is optional with default value
                  */
-                parameterString: string;
+                parameterString?: string;
             };
         };
         put: {
@@ -156,11 +156,11 @@ export type $OpenApiTs = {
                 /**
                  * This is a optional string with default
                  */
-                parameterOptionalStringWithDefault: string;
+                parameterOptionalStringWithDefault?: string;
                 /**
                  * This is a optional string with empty default
                  */
-                parameterOptionalStringWithEmptyDefault: string;
+                parameterOptionalStringWithEmptyDefault?: string;
                 /**
                  * This is a optional string with no default
                  */
@@ -168,7 +168,7 @@ export type $OpenApiTs = {
                 /**
                  * This is a string that can be null with default
                  */
-                parameterStringNullableWithDefault: string | null;
+                parameterStringNullableWithDefault?: string | null;
                 /**
                  * This is a string that can be null with no default
                  */

@@ -19,6 +19,7 @@ const main = async () => {
       // include: '^NestedAnyOfArraysNullable',
       // name: 'PascalCase',
     },
+    // useOptions: false,
   };
 
   const { createClient } = await import(
