@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { sync } from 'glob';
 import { describe, expect, it } from 'vitest';
 
-import { createClient } from '../src';
+import { createClient } from '../';
 import type { UserConfig } from '../src/types/config';
 
 const V2_SPEC_PATH = './test/spec/v2.json';
