@@ -1,9 +1,8 @@
-import { unescapeName } from '../../../utils/escape';
+import { enumMeta } from '../../../utils/enum';
 import type { Model, ModelMeta } from '../../common/interfaces/client';
 import { getDefault } from '../../common/parser/getDefault';
 import { getEnums } from '../../common/parser/getEnums';
 import { getPattern } from '../../common/parser/getPattern';
-import { ensureValidTypeScriptJavaScriptIdentifier } from '../../common/parser/sanitize';
 import { getType } from '../../common/parser/type';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
@@ -99,12 +98,7 @@ export const getModel = ({
       model.type = 'string';
       model.default = getDefault(definition, model);
       if (!model.meta) {
-        model.meta = {
-          $ref: `enum/${model.name}`,
-          name: ensureValidTypeScriptJavaScriptIdentifier(
-            unescapeName(model.name),
-          ),
-        };
+        model.meta = enumMeta(model);
       }
       return model;
     }
