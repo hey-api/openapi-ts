@@ -101,6 +101,31 @@ We also support the legacy Node.js and XHR clients:
 You might not need a `node` client. Fetch API is [experimental](https://nodejs.org/docs/latest-v18.x/api/globals.html#fetch) in Node.js v18 and [stable](https://nodejs.org/docs/latest-v21.x/api/globals.html#fetch) in Node.js v21. We recommend upgrading to the latest Node.js version.
 :::
 
+<!--
+TODO: uncomment after c12 supports multiple configs
+see https://github.com/unjs/c12/issues/92
+-->
+<!-- ### Multiple Clients
+
+If you want to generate multiple clients with a single `openapi-ts` command, you can provide an array of configuration objects.
+
+```js
+import { defineConfig } from '@hey-api/openapi-ts';
+
+export default defineConfig([
+  {
+    client: 'fetch',
+    input: 'path/to/openapi_one.json',
+    output: 'src/client_one',
+  },
+  {
+    client: 'axios',
+    input: 'path/to/openapi_two.json',
+    output: 'src/client_two',
+  },
+])
+``` -->
+
 ## Formatting
 
 By default, `openapi-ts` will not automatically format your client. To enable this feature, set `output.format` to a valid formatter.

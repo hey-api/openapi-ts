@@ -1,4 +1,4 @@
-export interface UserConfig {
+export interface ClientConfig {
   /**
    * Manually set base in OpenAPI config instead of inferring from server value
    * @deprecated
@@ -160,13 +160,16 @@ export interface UserConfig {
   useOptions?: boolean;
 }
 
+// export type UserConfig = ClientConfig | Array<ClientConfig>
+export type UserConfig = ClientConfig;
+
 export type Config = Omit<
-  Required<UserConfig>,
+  Required<ClientConfig>,
   'base' | 'name' | 'output' | 'request' | 'schemas' | 'services' | 'types'
 > &
-  Pick<UserConfig, 'base' | 'name' | 'request'> & {
-    output: Extract<Required<UserConfig>['output'], object>;
-    schemas: Extract<Required<UserConfig>['schemas'], object>;
-    services: Extract<Required<UserConfig>['services'], object>;
-    types: Extract<Required<UserConfig>['types'], object>;
+  Pick<ClientConfig, 'base' | 'name' | 'request'> & {
+    output: Extract<Required<ClientConfig>['output'], object>;
+    schemas: Extract<Required<ClientConfig>['schemas'], object>;
+    services: Extract<Required<ClientConfig>['services'], object>;
+    types: Extract<Required<ClientConfig>['types'], object>;
   };
