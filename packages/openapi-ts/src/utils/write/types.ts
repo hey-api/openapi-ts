@@ -7,7 +7,7 @@ import {
 import type { Model, OperationParameter, Service } from '../../openApi';
 import type { Client } from '../../types/client';
 import { getConfig } from '../config';
-import { enumKey, enumUnionType, enumValue } from '../enum';
+import { enumEntry, enumUnionType } from '../enum';
 import { escapeComment } from '../escape';
 import { sortByName, sorterByName } from '../sort';
 import { operationDataTypeName, operationResponseTypeName } from './services';
@@ -103,8 +103,7 @@ const processEnum = (client: Client, model: Model, onNode: OnNode) => {
   const properties: Record<string | number, unknown> = {};
   const comments: Record<string | number, Comments> = {};
   model.enum.forEach((enumerator) => {
-    const key = enumKey(enumerator.value, enumerator.customName);
-    const value = enumValue(enumerator.value);
+    const { key, value } = enumEntry(enumerator);
     properties[key] = value;
     const comment = enumerator.customDescription || enumerator.description;
     if (comment) {
