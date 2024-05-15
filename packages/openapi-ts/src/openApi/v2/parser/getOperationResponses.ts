@@ -1,3 +1,4 @@
+import type { Client } from '../../../types/client';
 import type { OperationResponse } from '../../common/interfaces/client';
 import { getRef } from '../../common/parser/getRef';
 import { getOperationResponseCode } from '../../common/parser/operation';
@@ -6,10 +7,15 @@ import type { OpenApiResponse } from '../interfaces/OpenApiResponse';
 import type { OpenApiResponses } from '../interfaces/OpenApiResponses';
 import { getOperationResponse } from './getOperationResponse';
 
-export const getOperationResponses = (
-  openApi: OpenApi,
-  responses: OpenApiResponses,
-): OperationResponse[] => {
+export const getOperationResponses = ({
+  openApi,
+  responses,
+  types,
+}: {
+  openApi: OpenApi;
+  responses: OpenApiResponses;
+  types: Client['types'];
+}): OperationResponse[] => {
   const operationResponses: OperationResponse[] = [];
 
   // Iterate over each response code and get the
@@ -19,11 +25,12 @@ export const getOperationResponses = (
     const responseCode = getOperationResponseCode(code);
 
     if (responseCode) {
-      const operationResponse = getOperationResponse(
+      const operationResponse = getOperationResponse({
+        code: responseCode,
         openApi,
         response,
-        responseCode,
-      );
+        types,
+      });
       operationResponses.push(operationResponse);
     }
   });

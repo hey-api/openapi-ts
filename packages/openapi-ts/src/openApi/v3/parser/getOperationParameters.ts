@@ -1,3 +1,4 @@
+import type { Client } from '../../../types/client';
 import type { OperationParameters } from '../../common/interfaces/client';
 import { getRef } from '../../common/parser/getRef';
 import type { OpenApi } from '../interfaces/OpenApi';
@@ -6,10 +7,15 @@ import { getOperationParameter } from './getOperationParameter';
 
 const allowedIn = ['cookie', 'formData', 'header', 'path', 'query'] as const;
 
-export const getOperationParameters = (
-  openApi: OpenApi,
-  parameters: OpenApiParameter[],
-): OperationParameters => {
+export const getOperationParameters = ({
+  openApi,
+  parameters,
+  types,
+}: {
+  openApi: OpenApi;
+  parameters: OpenApiParameter[];
+  types: Client['types'];
+}): OperationParameters => {
   const operationParameters: OperationParameters = {
     $refs: [],
     imports: [],
@@ -27,7 +33,11 @@ export const getOperationParameters = (
       openApi,
       parameterOrReference,
     );
-    const parameter = getOperationParameter(openApi, parameterDef);
+    const parameter = getOperationParameter({
+      openApi,
+      parameter: parameterDef,
+      types,
+    });
 
     const defIn = parameterDef.in as (typeof allowedIn)[number];
 

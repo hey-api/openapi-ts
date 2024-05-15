@@ -1,3 +1,4 @@
+import type { Client } from '../../../types/client';
 import type { OperationParameter } from '../../common/interfaces/client';
 import { getDefault } from '../../common/parser/getDefault';
 import { getEnums } from '../../common/parser/getEnums';
@@ -10,10 +11,15 @@ import type { OpenApiParameter } from '../interfaces/OpenApiParameter';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 import { getModel } from './getModel';
 
-export const getOperationParameter = (
-  openApi: OpenApi,
-  parameter: OpenApiParameter,
-): OperationParameter => {
+export const getOperationParameter = ({
+  openApi,
+  parameter,
+  types,
+}: {
+  openApi: OpenApi;
+  parameter: OpenApiParameter;
+  types: Client['types'];
+}): OperationParameter => {
   const operationParameter: OperationParameter = {
     $refs: [],
     base: 'unknown',
@@ -114,7 +120,7 @@ export const getOperationParameter = (
       operationParameter.default = getDefault(parameter, operationParameter);
       return operationParameter;
     } else {
-      const model = getModel({ definition: schema, openApi });
+      const model = getModel({ definition: schema, openApi, types });
       operationParameter.export = model.export;
       operationParameter.type = model.type;
       operationParameter.base = model.base;

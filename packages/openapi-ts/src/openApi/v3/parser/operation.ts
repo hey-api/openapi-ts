@@ -1,3 +1,4 @@
+import type { Client } from '../../../types/client';
 import { getOperationResults } from '../../../utils/operation';
 import type {
   Operation,
@@ -40,17 +41,23 @@ const mergeParameters = (
   return mergedParameters;
 };
 
-export const getOperation = (
-  openApi: OpenApi,
-  data: {
-    method: Lowercase<Operation['method']>;
-    op: OpenApiOperation;
-    pathParams: OperationParameters;
-    tag: string;
-    url: string;
-  },
-): Operation => {
-  const { method, op, pathParams, tag, url } = data;
+export const getOperation = ({
+  method,
+  op,
+  openApi,
+  pathParams,
+  tag,
+  types,
+  url,
+}: {
+  method: Lowercase<Operation['method']>;
+  op: OpenApiOperation;
+  openApi: OpenApi;
+  pathParams: OperationParameters;
+  tag: string;
+  types: Client['types'];
+  url: string;
+}): Operation => {
   const service = getServiceName(tag);
   const name = getOperationName(url, method, op.operationId);
 
@@ -77,7 +84,11 @@ export const getOperation = (
   };
 
   if (op.parameters) {
-    const parameters = getOperationParameters(openApi, op.parameters);
+    const parameters = getOperationParameters({
+      openApi,
+      parameters: op.parameters,
+      types,
+    });
     operation.$refs = [...operation.$refs, ...parameters.$refs];
     operation.imports = [...operation.imports, ...parameters.imports];
     operation.parameters = [...operation.parameters, ...parameters.parameters];
@@ -106,7 +117,11 @@ export const getOperation = (
 
   if (op.requestBody) {
     const requestBodyDef = getRef<OpenApiRequestBody>(openApi, op.requestBody);
-    const requestBody = getOperationRequestBody(openApi, requestBodyDef);
+    const requestBody = getOperationRequestBody({
+      body: requestBodyDef,
+      openApi,
+      types,
+    });
     operation.$refs = [...operation.$refs, ...requestBody.$refs];
     operation.imports = [...operation.imports, ...requestBody.imports];
     operation.parameters = [...operation.parameters, requestBody];
@@ -114,7 +129,11 @@ export const getOperation = (
   }
 
   if (op.responses) {
-    const operationResponses = getOperationResponses(openApi, op.responses);
+    const operationResponses = getOperationResponses({
+      openApi,
+      responses: op.responses,
+      types,
+    });
     const operationResults = getOperationResults(operationResponses);
     operation.errors = getOperationErrors(operationResponses);
     operation.responseHeader = getOperationResponseHeader(operationResults);

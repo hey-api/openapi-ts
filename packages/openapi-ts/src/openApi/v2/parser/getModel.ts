@@ -1,3 +1,4 @@
+import type { Client } from '../../../types/client';
 import type { Model, ModelMeta } from '../../common/interfaces/client';
 import { getEnums } from '../../common/parser/getEnums';
 import { getPattern } from '../../common/parser/getPattern';
@@ -12,7 +13,8 @@ export const getModel = ({
   isDefinition = false,
   meta,
   openApi,
-}: {
+  types,
+}: Pick<Client, 'types'> & {
   definition: OpenApiSchema;
   isDefinition?: boolean;
   meta?: ModelMeta;
@@ -83,7 +85,11 @@ export const getModel = ({
       model.imports.push(...arrayItems.imports);
       return model;
     } else {
-      const arrayItems = getModel({ definition: definition.items, openApi });
+      const arrayItems = getModel({
+        definition: definition.items,
+        openApi,
+        types,
+      });
       model.export = 'array';
       model.type = arrayItems.type;
       model.base = arrayItems.base;
@@ -112,6 +118,7 @@ export const getModel = ({
       const additionalProperties = getModel({
         definition: definition.additionalProperties,
         openApi,
+        types,
       });
       model.export = 'dictionary';
       model.type = additionalProperties.type;
@@ -124,13 +131,14 @@ export const getModel = ({
   }
 
   if (definition.allOf?.length) {
-    const composition = getModelComposition(
-      openApi,
+    const composition = getModelComposition({
       definition,
-      definition.allOf,
-      'all-of',
+      definitions: definition.allOf,
       getModel,
-    );
+      openApi,
+      type: 'all-of',
+      types,
+    });
     model.export = composition.export;
     model.imports.push(...composition.imports);
     model.properties.push(...composition.properties);
@@ -144,7 +152,12 @@ export const getModel = ({
     model.base = 'unknown';
 
     if (definition.properties) {
-      const modelProperties = getModelProperties(openApi, definition, getModel);
+      const modelProperties = getModelProperties({
+        definition,
+        getModel,
+        openApi,
+        types,
+      });
       modelProperties.forEach((modelProperty) => {
         model.imports.push(...modelProperty.imports);
         model.enums = [...model.enums, ...modelProperty.enums];
