@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/docs",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "Documentation for OpenaAPI TypeScript.",
   "private": true,
   "type": "module",
@@ -10,7 +10,7 @@
     "preview": "vitepress preview"
   },
   "dependencies": {
-    "@stackblitz/sdk": "1.9.0"
+    "@stackblitz/sdk": "1.10.0"
   },
   "devDependencies": {
     "vitepress": "1.1.4"

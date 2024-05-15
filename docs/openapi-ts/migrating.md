@@ -50,6 +50,50 @@ This config option is deprecated and will be removed in favor of [clients](./cli
 
 This config option is deprecated and will be removed in favor of [clients](./clients).
 
+## v0.45.0
+
+### Removed `client` inference
+
+`openapi-ts` will no longer infer which client you want to generate. By default, we will create a `fetch` client. If you want a different client, you can specify it using the `client` option.
+
+```js{2}
+export default {
+  client: 'axios',
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+}
+```
+
+## v0.44.0
+
+### Moved `format`
+
+This config option has been moved. You can now configure formatter using the `output.format` option.
+
+```js{4}
+export default {
+  input: 'path/to/openapi.json',
+  output: {
+    format: 'prettier',
+    path: 'src/client',
+  },
+}
+```
+
+### Moved `lint`
+
+This config option has been moved. You can now configure linter using the `output.lint` option.
+
+```js{4}
+export default {
+  input: 'path/to/openapi.json',
+  output: {
+    lint: 'eslint',
+    path: 'src/client',
+  },
+}
+```
+
 ## v0.43.0
 
 ### Removed `enums.gen.ts`
@@ -360,4 +404,4 @@ This config option has been removed. Generated types will behave the same as `us
 
 ## OpenAPI TypeScript Codegen
 
-`openapi-ts` was originally forked from Ferdi Koomen's [openapi-typescript-codegen](https://github.com/ferdikoomen/openapi-typescript-codegen). Therefore, we want you to be able to migrate your projects. Migration should be relatively straightforward if you follow the release notes on this page. Start here and scroll up to the release you're migrating to.
+`openapi-ts` was originally forked from Ferdi Koomen's [openapi-typescript-codegen](https://github.com/ferdikoomen/openapi-typescript-codegen). Therefore, we want you to be able to migrate your projects. Migration should be relatively straightforward if you follow the release notes on this page. Start on [v0.27.24](#v0-27-24) and scroll to the release you're migrating to.

@@ -7,7 +7,7 @@ import {
 import type { Model, OperationParameter, Service } from '../../openApi';
 import type { Client } from '../../types/client';
 import { getConfig } from '../config';
-import { enumKey, enumUnionType, enumValue } from '../enum';
+import { enumEntry, enumUnionType } from '../enum';
 import { escapeComment } from '../escape';
 import { sortByName, sorterByName } from '../sort';
 import { operationDataTypeName, operationResponseTypeName } from './services';
@@ -97,23 +97,13 @@ const processComposition = (client: Client, model: Model, onNode: OnNode) => {
   model.enums.forEach((enumerator) => processEnum(client, enumerator, onNode));
 };
 
-const processEnum = (
-  client: Client,
-  model: Model,
-  onNode: OnNode,
-  isExported: boolean = false,
-) => {
-  if (!isExported) {
-    return;
-  }
-
+const processEnum = (client: Client, model: Model, onNode: OnNode) => {
   const config = getConfig();
 
   const properties: Record<string | number, unknown> = {};
   const comments: Record<string | number, Comments> = {};
   model.enum.forEach((enumerator) => {
-    const key = enumKey(enumerator.value, enumerator.customName);
-    const value = enumValue(enumerator.value);
+    const { key, value } = enumEntry(enumerator);
     properties[key] = value;
     const comment = enumerator.customDescription || enumerator.description;
     if (comment) {
@@ -186,7 +176,7 @@ const processModel = (client: Client, model: Model, onNode: OnNode) => {
     case 'interface':
       return processComposition(client, model, onNode);
     case 'enum':
-      return processEnum(client, model, onNode, true);
+      return processEnum(client, model, onNode);
     default:
       return processType(client, model, onNode);
   }

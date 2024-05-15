@@ -1,10 +1,11 @@
-export interface UserConfig {
+export interface ClientConfig {
   /**
    * Manually set base in OpenAPI config instead of inferring from server value
+   * @deprecated
    */
   base?: string;
   /**
-   * The selected HTTP client (fetch, xhr, node or axios)
+   * HTTP client to generate
    * @default 'fetch'
    */
   client?:
@@ -31,29 +32,38 @@ export interface UserConfig {
    */
   exportCore?: boolean;
   /**
-   * Process output folder with formatter?
-   * @default false
-   */
-  format?: 'biome' | 'prettier' | false;
-  /**
    * The relative location of the OpenAPI spec
    */
   input: string | Record<string, unknown>;
   /**
-   * Process output folder with linter?
-   * @default false
-   */
-  lint?: 'biome' | 'eslint' | false;
-  /**
    * Custom client class name
+   * @deprecated
    */
   name?: string;
   /**
    * The relative location of the output directory
    */
-  output: string;
+  output:
+    | string
+    | {
+        /**
+         * Process output folder with formatter?
+         * @default false
+         */
+        format?: 'biome' | 'prettier' | false;
+        /**
+         * Process output folder with linter?
+         * @default false
+         */
+        lint?: 'biome' | 'eslint' | false;
+        /**
+         * The relative location of the output directory
+         */
+        path: string;
+      };
   /**
    * Path to custom request file
+   * @deprecated
    */
   request?: string;
   /**
@@ -144,17 +154,22 @@ export interface UserConfig {
       };
   /**
    * Use options or arguments functions
+   * @deprecated
    * @default true
    */
   useOptions?: boolean;
 }
 
+// export type UserConfig = ClientConfig | Array<ClientConfig>
+export type UserConfig = ClientConfig;
+
 export type Config = Omit<
-  Required<UserConfig>,
-  'base' | 'name' | 'request' | 'schemas' | 'services' | 'types'
+  Required<ClientConfig>,
+  'base' | 'name' | 'output' | 'request' | 'schemas' | 'services' | 'types'
 > &
-  Pick<UserConfig, 'base' | 'name' | 'request'> & {
-    schemas: Extract<Required<UserConfig>['schemas'], object>;
-    services: Extract<Required<UserConfig>['services'], object>;
-    types: Extract<Required<UserConfig>['types'], object>;
+  Pick<ClientConfig, 'base' | 'name' | 'request'> & {
+    output: Extract<Required<ClientConfig>['output'], object>;
+    schemas: Extract<Required<ClientConfig>['schemas'], object>;
+    services: Extract<Required<ClientConfig>['services'], object>;
+    types: Extract<Required<ClientConfig>['types'], object>;
   };

@@ -1,12 +1,10 @@
+import type { Client } from '../../../types/client';
 import type { Model, ModelComposition } from '../../common/interfaces/client';
+import type { GetModelFn } from '../interfaces/Model';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
-import type { getModel } from './getModel';
 import { getModelProperties } from './getModelProperties';
 import { getRequiredPropertiesFromComposition } from './getRequiredPropertiesFromComposition';
-
-// Fix for circular dependency
-export type GetModelFn = typeof getModel;
 
 type Composition = {
   definitions: OpenApiSchema[];
@@ -45,12 +43,14 @@ export const getModelComposition = ({
   model,
   openApi,
   type,
-}: Composition & {
-  definition: OpenApiSchema;
-  getModel: GetModelFn;
-  model: Model;
-  openApi: OpenApi;
-}): ModelComposition => {
+  types,
+}: Composition &
+  Pick<Client, 'types'> & {
+    definition: OpenApiSchema;
+    getModel: GetModelFn;
+    model: Model;
+    openApi: OpenApi;
+  }): ModelComposition => {
   const composition: ModelComposition = {
     $refs: model.$refs,
     enums: model.enums,
@@ -59,75 +59,89 @@ export const getModelComposition = ({
     properties: model.properties,
   };
 
-  const properties: Model[] = [];
+  let properties: Model[] = [];
 
   definitions
     .map((def) =>
-      getModel({ definition: def, openApi, parentDefinition: definition }),
+      getModel({
+        definition: def,
+        openApi,
+        parentDefinition: definition,
+        types,
+      }),
     )
     .forEach((model) => {
       composition.$refs = [...composition.$refs, ...model.$refs];
       composition.imports = [...composition.imports, ...model.imports];
-      composition.enums.push(...model.enums);
-      composition.properties.push(model);
+      composition.enums = [...composition.enums, ...model.enums];
+      composition.properties = [...composition.properties, model];
     });
 
   if (definition.required) {
-    const requiredProperties = getRequiredPropertiesFromComposition(
-      openApi,
-      definition.required,
+    const requiredProperties = getRequiredPropertiesFromComposition({
       definitions,
       getModel,
-    );
+      openApi,
+      required: definition.required,
+      types,
+    });
     requiredProperties.forEach((requiredProperty) => {
       composition.$refs = [...composition.$refs, ...requiredProperty.$refs];
       composition.imports = [
         ...composition.imports,
         ...requiredProperty.imports,
       ];
-      composition.enums.push(...requiredProperty.enums);
+      composition.enums = [...composition.enums, ...requiredProperty.enums];
     });
-    properties.push(...requiredProperties);
+    properties = [...properties, ...requiredProperties];
   }
 
   if (definition.properties) {
-    const modelProperties = getModelProperties(openApi, definition, getModel);
+    const modelProperties = getModelProperties({
+      definition,
+      getModel,
+      openApi,
+      types,
+    });
     modelProperties.forEach((modelProperty) => {
       composition.$refs = [...composition.$refs, ...modelProperty.$refs];
       composition.imports = [...composition.imports, ...modelProperty.imports];
-      composition.enums.push(...modelProperty.enums);
+      composition.enums = [...composition.enums, ...modelProperty.enums];
       if (modelProperty.export === 'enum') {
-        composition.enums.push(modelProperty);
+        composition.enums = [...composition.enums, modelProperty];
       }
     });
-    properties.push(...modelProperties);
+    properties = [...properties, ...modelProperties];
   }
 
   if (properties.length) {
     const foundComposition = findModelComposition(definition);
     if (foundComposition?.type === 'one-of') {
       composition.properties.forEach((property) => {
-        property.properties.push(...properties);
+        property.properties = [...property.properties, ...properties];
       });
     } else {
-      composition.properties.push({
-        $refs: [],
-        base: 'unknown',
-        description: '',
-        enum: [],
-        enums: [],
-        export: 'interface',
-        imports: [],
-        isDefinition: false,
-        isNullable: false,
-        isReadOnly: false,
-        isRequired: false,
-        link: null,
-        name: 'properties',
-        properties,
-        template: null,
-        type: 'unknown',
-      });
+      composition.properties = [
+        ...composition.properties,
+        {
+          $refs: [],
+          base: 'unknown',
+          description: '',
+          enum: [],
+          enums: [],
+          export: 'interface',
+          imports: [],
+          isDefinition: false,
+          isNullable: false,
+          isReadOnly: false,
+          isRequired: false,
+          link: null,
+          name: 'properties',
+          properties,
+          template: null,
+          type: 'unknown',
+        },
+      ];
     }
   }
 

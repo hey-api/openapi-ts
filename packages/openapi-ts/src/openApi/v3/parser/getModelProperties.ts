@@ -1,32 +1,42 @@
+import type { Client } from '../../../types/client';
 import { escapeName } from '../../../utils/escape';
 import { unique } from '../../../utils/unique';
 import type { Model } from '../../common/interfaces/client';
 import { getDefault } from '../../common/parser/getDefault';
 import { getPattern } from '../../common/parser/getPattern';
 import { getType } from '../../common/parser/type';
+import type { GetModelFn } from '../interfaces/Model';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 import {
   findOneOfParentDiscriminator,
   mapPropertyValue,
 } from './discriminator';
-import type { getModel } from './getModel';
 import { isDefinitionNullable } from './inferType';
 
-// Fix for circular dependency
-export type GetModelFn = typeof getModel;
-
-export const getAdditionalPropertiesModel = (
-  openApi: OpenApi,
-  definition: OpenApiSchema,
-  getModel: GetModelFn,
-  model: Model,
-): Model => {
+export const getAdditionalPropertiesModel = ({
+  definition,
+  getModel,
+  model,
+  openApi,
+  types,
+}: {
+  openApi: OpenApi;
+  definition: OpenApiSchema;
+  getModel: GetModelFn;
+  model: Model;
+  types: Client['types'];
+}): Model => {
   const ap =
     typeof definition.additionalProperties === 'object'
       ? definition.additionalProperties
       : {};
-  const apModel = getModel({ definition: ap, openApi });
+  const apModel = getModel({
+    definition: ap,
+    openApi,
+    parentDefinition: definition,
+    types,
+  });
 
   if (ap.$ref) {
     const apType = getType({ type: ap.$ref });
@@ -68,18 +78,27 @@ export const getAdditionalPropertiesModel = (
   return model;
 };
 
-export const getModelProperties = (
-  openApi: OpenApi,
-  definition: OpenApiSchema,
-  getModel: GetModelFn,
-  parent?: Model,
-): Model[] => {
-  const models: Model[] = [];
+export const getModelProperties = ({
+  definition,
+  getModel,
+  openApi,
+  parent,
+  types,
+}: {
+  definition: OpenApiSchema;
+  getModel: GetModelFn;
+  openApi: OpenApi;
+  parent?: Model;
+  types: Client['types'];
+}): Model[] => {
+  let models: Model[] = [];
   const discriminator = findOneOfParentDiscriminator(openApi, parent);
 
   Object.entries(definition.properties ?? {}).forEach(
     ([propertyName, property]) => {
-      const propertyRequired = !!definition.required?.includes(propertyName);
+      const propertyRequired = Boolean(
+        definition.required?.includes(propertyName),
+      );
       const propertyValues: Omit<
         Model,
         | '$refs'
@@ -118,53 +137,52 @@ export const getModelProperties = (
       };
 
       if (parent && discriminator?.propertyName == propertyName) {
-        models.push({
-          ...propertyValues,
-          $refs: [],
-          base: `'${mapPropertyValue(discriminator, parent)}'`,
-          enum: [],
-          enums: [],
-          export: 'reference',
-          imports: [],
-          isNullable: isDefinitionNullable(property),
-          link: null,
-          properties: [],
-          template: null,
-          type: 'string',
-        });
+        models = [
+          ...models,
+          {
+            ...propertyValues,
+            $refs: [],
+            base: `'${mapPropertyValue(discriminator, parent)}'`,
+            enum: [],
+            enums: [],
+            export: 'reference',
+            imports: [],
+            isNullable: isDefinitionNullable(property),
+            link: null,
+            properties: [],
+            template: null,
+            type: 'string',
+          },
+        ];
       } else if (property.$ref) {
         const model = getType({ type: property.$ref });
-        models.push({
-          ...propertyValues,
-          $refs: model.$refs,
-          base: model.base,
-          enum: [],
-          enums: [],
-          export: 'reference',
-          imports: model.imports,
-          isNullable: model.isNullable || isDefinitionNullable(property),
-          link: null,
-          properties: [],
-          template: model.template,
-          type: model.type,
-        });
+        models = [
+          ...models,
+          {
+            ...propertyValues,
+            $refs: model.$refs,
+            base: model.base,
+            enum: [],
+            enums: [],
+            export: 'reference',
+            imports: model.imports,
+            isNullable: model.isNullable || isDefinitionNullable(property),
+            link: null,
+            properties: [],
+            template: model.template,
+            type: model.type,
+          },
+        ];
       } else {
-        const model = getModel({ definition: property, openApi });
-        models.push({
-          ...propertyValues,
-          $refs: model.$refs,
-          base: model.base,
-          default: model.default,
-          enum: model.enum,
-          enums: model.enums,
-          export: model.export,
-          imports: model.imports,
-          isNullable: model.isNullable || isDefinitionNullable(property),
-          link: model.link,
-          properties: model.properties,
-          template: model.template,
-          type: model.type,
+        const model = getModel({
+          definition: property,
+          initialValues: propertyValues,
+          openApi,
+          parentDefinition: definition,
+          types,
         });
+        model.isNullable = model.isNullable || isDefinitionNullable(property);
+        models = [...models, model];
       }
     },
   );
