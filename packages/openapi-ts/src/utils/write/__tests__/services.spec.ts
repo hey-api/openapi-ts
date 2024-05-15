@@ -16,10 +16,10 @@ describe('processServices', () => {
       debug: false,
       dryRun: false,
       exportCore: true,
-      format: false,
       input: '',
-      lint: false,
-      output: '',
+      output: {
+        path: '',
+      },
       schemas: {},
       services: {},
       types: {},

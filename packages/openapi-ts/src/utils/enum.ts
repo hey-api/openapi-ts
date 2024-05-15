@@ -1,4 +1,7 @@
-import type { Enum } from '../openApi';
+import type { Enum, Model } from '../openApi';
+import { ensureValidTypeScriptJavaScriptIdentifier } from '../openApi/common/parser/sanitize';
+import { unescapeName } from './escape';
+import { sort } from './sort';
 import { unique } from './unique';
 
 /**
@@ -48,4 +51,26 @@ export const enumValue = (value?: string | number, union: boolean = false) => {
     return `'${value}'`;
   }
   return value;
+};
+
+export const enumEntry = (enumerator: Enum) => {
+  const key = enumKey(enumerator.value, enumerator.customName);
+  const value = enumValue(enumerator.value);
+  return { key, value };
+};
+
+/**
+ * Represent enum in `meta` object for deduplication
+ */
+export const enumMeta = (model: Model): Required<Model>['meta'] => {
+  // serialize enum values in namespace for quick lookup
+  const serialized = model.enum
+    .map((enumerator) => enumEntry(enumerator))
+    .sort((a, b) => sort(a.key, b.key))
+    .map((enumerator) => `${enumerator.key}=${enumerator.value}`)
+    .join('&');
+  return {
+    $ref: `enum/${model.name}/${serialized}`,
+    name: ensureValidTypeScriptJavaScriptIdentifier(unescapeName(model.name)),
+  };
 };

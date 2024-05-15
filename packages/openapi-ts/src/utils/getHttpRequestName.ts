@@ -2,7 +2,7 @@ import type { Config } from '../types/config';
 
 /**
  * Generate the HttpRequest filename based on the selected client
- * @param client The selected HTTP client (fetch, xhr, node or axios)
+ * @param client HTTP client to generate
  */
 export const getHttpRequestName = (client: Config['client']): string => {
   switch (client) {

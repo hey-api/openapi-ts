@@ -30,12 +30,12 @@ export const getDefault = (
         return value;
       }
       return definition.default;
-    case 'string':
-      return definition.default;
     case 'array':
     case 'boolean':
     case 'object':
+    case 'string':
       return definition.default;
+    default:
+      return undefined;
   }
-  return undefined;
 };

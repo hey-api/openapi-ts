@@ -40,7 +40,7 @@ Alternatively, you can use `openapi-ts.config.js` and configure the export state
 
 ## Clients
 
-By default, `openapi-ts` will try to guess your client based on your project dependencies. If we don't get it right, you can specify the desired client
+By default, `openapi-ts` will generate a Fetch API client. If you want a different client, you can specify it using the `client` option.
 
 ::: code-group
 
@@ -101,33 +101,64 @@ We also support the legacy Node.js and XHR clients:
 You might not need a `node` client. Fetch API is [experimental](https://nodejs.org/docs/latest-v18.x/api/globals.html#fetch) in Node.js v18 and [stable](https://nodejs.org/docs/latest-v21.x/api/globals.html#fetch) in Node.js v21. We recommend upgrading to the latest Node.js version.
 :::
 
+<!--
+TODO: uncomment after c12 supports multiple configs
+see https://github.com/unjs/c12/issues/92
+-->
+<!-- ### Multiple Clients
+
+If you want to generate multiple clients with a single `openapi-ts` command, you can provide an array of configuration objects.
+
+```js
+import { defineConfig } from '@hey-api/openapi-ts';
+
+export default defineConfig([
+  {
+    client: 'fetch',
+    input: 'path/to/openapi_one.json',
+    output: 'src/client_one',
+  },
+  {
+    client: 'axios',
+    input: 'path/to/openapi_two.json',
+    output: 'src/client_two',
+  },
+])
+``` -->
+
 ## Formatting
 
-By default, `openapi-ts` will not automatically format your client. To enable this feature, set `format` to a valid formatter.
+By default, `openapi-ts` will not automatically format your client. To enable this feature, set `output.format` to a valid formatter.
 
 ::: code-group
 
-```js{2} [disabled]
+```js{4} [disabled]
 export default {
-  format: false,
   input: 'path/to/openapi.json',
-  output: 'src/client',
+  output: {
+    format: false,
+    path: 'src/client',
+  },
 }
 ```
 
-```js{2} [prettier]
+```js{4} [prettier]
 export default {
-  format: 'prettier',
   input: 'path/to/openapi.json',
-  output: 'src/client',
+  output: {
+    format: 'prettier',
+    path: 'src/client',
+  },
 }
 ```
 
-```js{2} [biome]
+```js{4} [biome]
 export default {
-  format: 'biome',
   input: 'path/to/openapi.json',
-  output: 'src/client',
+  output: {
+    format: 'biome',
+    path: 'src/client',
+  },
 }
 ```
 
@@ -137,31 +168,37 @@ You can also prevent your client from being processed by formatters by adding yo
 
 ## Linting
 
-For performance reasons, `openapi-ts` does not automatically lint your client. To enable this feature, set `lint` to a valid linter.
+For performance reasons, `openapi-ts` does not automatically lint your client. To enable this feature, set `output.lint` to a valid linter.
 
 ::: code-group
 
-```js{3} [disabled]
+```js{4} [disabled]
 export default {
   input: 'path/to/openapi.json',
-  lint: false,
-  output: 'src/client',
+  output: {
+    lint: false,
+    path: 'src/client',
+  },
 }
 ```
 
-```js{3} [eslint]
+```js{4} [eslint]
 export default {
   input: 'path/to/openapi.json',
-  lint: 'eslint',
-  output: 'src/client',
+  output: {
+    lint: 'eslint',
+    path: 'src/client',
+  },
 }
 ```
 
-```js{3} [biome]
+```js{4} [biome]
 export default {
   input: 'path/to/openapi.json',
-  lint: 'biome',
-  output: 'src/client',
+  output: {
+    lint: 'biome',
+    path: 'src/client',
+  },
 }
 ```
 

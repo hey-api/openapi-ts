@@ -38,7 +38,7 @@ export const writeClient = async (
     client.models = client.models.filter((model) => regexp.test(model.name));
   }
 
-  const outputPath = path.resolve(config.output);
+  const outputPath = path.resolve(config.output.path);
 
   if (!existsSync(outputPath)) {
     mkdirSync(outputPath, { recursive: true });
@@ -46,25 +46,25 @@ export const writeClient = async (
 
   const files: Record<string, TypeScriptFile> = {
     index: new TypeScriptFile({
-      dir: config.output,
+      dir: config.output.path,
       name: 'index.ts',
     }),
   };
   if (config.schemas.export) {
     files.schemas = new TypeScriptFile({
-      dir: config.output,
+      dir: config.output.path,
       name: 'schemas.ts',
     });
   }
   if (config.services.export) {
     files.services = new TypeScriptFile({
-      dir: config.output,
+      dir: config.output.path,
       name: 'services.ts',
     });
   }
   if (config.types.export) {
     files.types = new TypeScriptFile({
-      dir: config.output,
+      dir: config.output.path,
       name: 'types.ts',
     });
   }
@@ -75,7 +75,7 @@ export const writeClient = async (
 
   // deprecated files
   await writeClientClass(openApi, outputPath, client, templates);
-  await writeCore(path.resolve(config.output, 'core'), client, templates);
+  await writeCore(path.resolve(config.output.path, 'core'), client, templates);
 
   await processIndex({ files });
 

@@ -1,3 +1,5 @@
+import type { Client } from '../../../types/client';
+import { enumMeta } from '../../../utils/enum';
 import type { Model, ModelMeta } from '../../common/interfaces/client';
 import { getDefault } from '../../common/parser/getDefault';
 import { getEnums } from '../../common/parser/getEnums';
@@ -21,12 +23,18 @@ import {
 
 export const getModel = ({
   definition,
+  initialValues = {},
   isDefinition = false,
   meta,
   openApi,
   parentDefinition = null,
-}: {
+  types,
+}: Pick<Client, 'types'> & {
   definition: OpenApiSchema;
+  /**
+   * Pass through initial model values
+   */
+  initialValues?: Partial<Model>;
   isDefinition?: boolean;
   meta?: ModelMeta;
   openApi: OpenApi;
@@ -68,6 +76,7 @@ export const getModel = ({
     template: null,
     type: 'unknown',
     uniqueItems: definition.uniqueItems,
+    ...initialValues,
   };
 
   if (definition.$ref) {
@@ -90,6 +99,9 @@ export const getModel = ({
       model.export = 'enum';
       model.type = 'string';
       model.default = getDefault(definition, model);
+      if (!model.meta) {
+        model.meta = enumMeta(model);
+      }
       return model;
     }
   }
@@ -115,7 +127,12 @@ export const getModel = ({
           (definition) => !getDefinitionTypes(definition).includes('array'),
         )
       ) {
-        return getModel({ definition: definition.items, openApi });
+        return getModel({
+          definition: definition.items,
+          openApi,
+          parentDefinition: definition,
+          types,
+        });
       }
     }
 
@@ -128,7 +145,12 @@ export const getModel = ({
           anyOf: definition.items,
         }
       : definition.items;
-    const arrayItems = getModel({ definition: arrayItemsDefinition, openApi });
+    const arrayItems = getModel({
+      definition: arrayItemsDefinition,
+      openApi,
+      parentDefinition: definition,
+      types,
+    });
     model.base = arrayItems.base;
     model.export = 'array';
     model.$refs = [...model.$refs, ...arrayItems.$refs];
@@ -148,6 +170,7 @@ export const getModel = ({
       getModel,
       model,
       openApi,
+      types,
     });
     return { ...model, ...composition };
   }
@@ -159,36 +182,44 @@ export const getModel = ({
       model.type = 'unknown';
       model.default = getDefault(definition, model);
 
-      const modelProperties = getModelProperties(
-        openApi,
+      const modelProperties = getModelProperties({
         definition,
         getModel,
-        model,
-      );
+        openApi,
+        parent: model,
+        types,
+      });
       modelProperties.forEach((modelProperty) => {
         model.$refs = [...model.$refs, ...modelProperty.$refs];
         model.enums = [...model.enums, ...modelProperty.enums];
         model.imports = [...model.imports, ...modelProperty.imports];
-        model.properties.push(modelProperty);
+        model.properties = [...model.properties, modelProperty];
         if (modelProperty.export === 'enum') {
           model.enums = [...model.enums, modelProperty];
         }
       });
 
       if (definition.additionalProperties) {
-        const modelProperty = getAdditionalPropertiesModel(
-          openApi,
+        const modelProperty = getAdditionalPropertiesModel({
           definition,
           getModel,
           model,
-        );
+          openApi,
+          types,
+        });
         model.properties.push(modelProperty);
       }
 
       return model;
     }
 
-    return getAdditionalPropertiesModel(openApi, definition, getModel, model);
+    return getAdditionalPropertiesModel({
+      definition,
+      getModel,
+      model,
+      openApi,
+      types,
+    });
   }
 
   if (definition.const !== undefined) {
