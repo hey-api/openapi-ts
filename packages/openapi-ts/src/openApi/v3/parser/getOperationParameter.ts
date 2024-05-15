@@ -1,10 +1,9 @@
-import { unescapeName } from '../../../utils/escape';
+import { enumMeta } from '../../../utils/enum';
 import type { OperationParameter } from '../../common/interfaces/client';
 import { getDefault } from '../../common/parser/getDefault';
 import { getPattern } from '../../common/parser/getPattern';
 import { getRef } from '../../common/parser/getRef';
 import { getOperationParameterName } from '../../common/parser/operation';
-import { ensureValidTypeScriptJavaScriptIdentifier } from '../../common/parser/sanitize';
 import { getType } from '../../common/parser/type';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiParameter } from '../interfaces/OpenApiParameter';
@@ -110,12 +109,7 @@ export const getOperationParameter = (
         (operationParameter.enum.length || operationParameter.enums.length) &&
         !operationParameter.meta
       ) {
-        operationParameter.meta = {
-          $ref: `enum/${operationParameter.name}`,
-          name: ensureValidTypeScriptJavaScriptIdentifier(
-            unescapeName(operationParameter.name),
-          ),
-        };
+        operationParameter.meta = enumMeta(operationParameter);
       }
       operationParameter.default = model.default;
       return operationParameter;
