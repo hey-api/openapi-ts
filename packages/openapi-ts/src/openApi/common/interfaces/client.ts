@@ -31,11 +31,22 @@ export interface OperationResponse extends Model {
   code: number | 'default';
 }
 
+export type Method =
+  | 'CONNECT'
+  | 'DELETE'
+  | 'GET'
+  | 'HEAD'
+  | 'OPTIONS'
+  | 'PATCH'
+  | 'POST'
+  | 'PUT'
+  | 'TRACE';
+
 export interface Operation extends OperationParameters {
   deprecated: boolean;
   description: string | null;
   errors: OperationResponse[];
-  method: 'DELETE' | 'GET' | 'HEAD' | 'OPTIONS' | 'PATCH' | 'POST' | 'PUT';
+  method: Method;
   /**
    * Method name. Methods contain the request logic.
    */

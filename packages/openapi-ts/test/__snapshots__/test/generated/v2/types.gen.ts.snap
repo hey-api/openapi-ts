@@ -729,185 +729,28 @@ export type NonAsciiæøåÆøÅöôêÊ字符串Response = NonAsciiStringæøå
 export type $OpenApiTs = {
     '/api/v{api-version}/descriptions/': {
         post: {
-            req: {
-                /**
-                 * Testing backticks in string: `backticks` and ```multiple backticks``` should work
-                 */
-                parameterWithBackticks?: string;
-                /**
-                 * Testing multiline comments in string: First line
-                 * Second line
-                 *
-                 * Fourth line
-                 */
-                parameterWithBreaks?: string;
-                /**
-                 * Testing expression placeholders in string: ${expression} should work
-                 */
-                parameterWithExpressionPlaceholders?: string;
-                /**
-                 * Testing quotes in string: 'single quote''' and "double quotes""" should work
-                 */
-                parameterWithQuotes?: string;
-                /**
-                 * Testing reserved characters in string: * inline * and ** inline ** should work
-                 */
-                parameterWithReservedCharacters?: string;
-                /**
-                 * Testing slashes in string: \backwards\\\ and /forwards/// should work
-                 */
-                parameterWithSlashes?: string;
-            };
+            req: CallWithDescriptionsData;
         };
     };
     '/api/v{api-version}/parameters/{parameterPath}': {
         post: {
-            req: {
-                /**
-                 * This is the parameter that is sent as request body
-                 */
-                parameterBody: string;
-                /**
-                 * This is the parameter that goes into the form data
-                 */
-                parameterForm: string;
-                /**
-                 * This is the parameter that goes into the header
-                 */
-                parameterHeader: string;
-                /**
-                 * This is the parameter that goes into the path
-                 */
-                parameterPath: string;
-                /**
-                 * This is the parameter that goes into the query params
-                 */
-                parameterQuery: string;
-            };
+            req: CallWithParametersData;
         };
     };
     '/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}': {
         post: {
-            req: {
-                /**
-                 * This is the parameter with a reserved keyword
-                 */
-                _default?: string;
-                /**
-                 * This is the parameter that is sent as request body
-                 */
-                parameterBody: string;
-                /**
-                 * This is the parameter that goes into the request form data
-                 */
-                parameterForm: string;
-                /**
-                 * This is the parameter that goes into the request header
-                 */
-                parameterHeader: string;
-                /**
-                 * This is the parameter that goes into the path
-                 */
-                parameterPath1?: string;
-                /**
-                 * This is the parameter that goes into the path
-                 */
-                parameterPath2?: string;
-                /**
-                 * This is the parameter that goes into the path
-                 */
-                parameterPath3?: string;
-                /**
-                 * This is the parameter that goes into the request query params
-                 */
-                parameterQuery: string;
-            };
+            req: CallWithWeirdParameterNamesData;
         };
     };
     '/api/v{api-version}/defaults': {
         get: {
-            req: {
-                /**
-                 * This is a simple boolean with default value
-                 */
-                parameterBoolean: boolean;
-                /**
-                 * This is a simple enum with default value
-                 */
-                parameterEnum: 'Success' | 'Warning' | 'Error';
-                /**
-                 * This is a simple model with default value
-                 */
-                parameterModel: ModelWithString;
-                /**
-                 * This is a simple number with default value
-                 */
-                parameterNumber: number;
-                /**
-                 * This is a simple string with default value
-                 */
-                parameterString: string;
-            };
+            req: CallWithDefaultParametersData;
         };
         post: {
-            req: {
-                /**
-                 * This is a simple boolean that is optional with default value
-                 */
-                parameterBoolean?: boolean;
-                /**
-                 * This is a simple enum that is optional with default value
-                 */
-                parameterEnum?: 'Success' | 'Warning' | 'Error';
-                /**
-                 * This is a simple model that is optional with default value
-                 */
-                parameterModel?: ModelWithString;
-                /**
-                 * This is a simple number that is optional with default value
-                 */
-                parameterNumber?: number;
-                /**
-                 * This is a simple string that is optional with default value
-                 */
-                parameterString?: string;
-            };
+            req: CallWithDefaultOptionalParametersData;
         };
         put: {
-            req: {
-                /**
-                 * This is a optional string with default
-                 */
-                parameterOptionalStringWithDefault?: string;
-                /**
-                 * This is a optional string with empty default
-                 */
-                parameterOptionalStringWithEmptyDefault?: string;
-                /**
-                 * This is a optional string with no default
-                 */
-                parameterOptionalStringWithNoDefault?: string;
-                /**
-                 * This is a string that can be null with default
-                 */
-                parameterStringNullableWithDefault?: string | null;
-                /**
-                 * This is a string that can be null with no default
-                 */
-                parameterStringNullableWithNoDefault?: string | null;
-                /**
-                 * This is a string with default
-                 */
-                parameterStringWithDefault: string;
-                /**
-                 * This is a string with empty default
-                 */
-                parameterStringWithEmptyDefault: string;
-                /**
-                 * This is a string with no default
-                 */
-                parameterStringWithNoDefault: string;
-            };
+            req: CallToTestOrderOfParamsData;
         };
     };
     '/api/v{api-version}/no-content': {
@@ -982,10 +825,6 @@ export type $OpenApiTs = {
                  */
                 202: ModelThatExtendsExtends;
                 /**
-                 * Message for default response
-                 */
-                default: ModelWithString;
-                /**
                  * Message for 500 error
                  */
                 500: ModelWithStringError;
@@ -997,6 +836,10 @@ export type $OpenApiTs = {
                  * Message for 502 error
                  */
                 502: ModelWithStringError;
+                /**
+                 * Message for default response
+                 */
+                default: ModelWithString;
             };
         };
     };
@@ -1022,68 +865,12 @@ export type $OpenApiTs = {
     };
     '/api/v{api-version}/collectionFormat': {
         get: {
-            req: {
-                /**
-                 * This is an array parameter that is sent as csv format (comma-separated values)
-                 */
-                parameterArrayCsv: Array<string>;
-                /**
-                 * This is an array parameter that is sent as multi format (multiple parameter instances)
-                 */
-                parameterArrayMulti: Array<string>;
-                /**
-                 * This is an array parameter that is sent as pipes format (pipe-separated values)
-                 */
-                parameterArrayPipes: Array<string>;
-                /**
-                 * This is an array parameter that is sent as ssv format (space-separated values)
-                 */
-                parameterArraySsv: Array<string>;
-                /**
-                 * This is an array parameter that is sent as tsv format (tab-separated values)
-                 */
-                parameterArrayTsv: Array<string>;
-            };
+            req: CollectionFormatData;
         };
     };
     '/api/v{api-version}/types': {
         get: {
-            req: {
-                /**
-                 * This is a number parameter
-                 */
-                id?: number;
-                /**
-                 * This is an array parameter
-                 */
-                parameterArray: Array<string>;
-                /**
-                 * This is a boolean parameter
-                 */
-                parameterBoolean: boolean;
-                /**
-                 * This is a dictionary parameter
-                 */
-                parameterDictionary: {
-                    [key: string]: string;
-                };
-                /**
-                 * This is an enum parameter
-                 */
-                parameterEnum: 'Success' | 'Warning' | 'Error';
-                /**
-                 * This is a number parameter
-                 */
-                parameterNumber: number;
-                /**
-                 * This is an object parameter
-                 */
-                parameterObject: unknown;
-                /**
-                 * This is a string parameter
-                 */
-                parameterString: string;
-            };
+            req: TypesData;
             res: {
                 /**
                  * Response is a simple number
@@ -1106,22 +893,7 @@ export type $OpenApiTs = {
     };
     '/api/v{api-version}/complex': {
         get: {
-            req: {
-                /**
-                 * Parameter containing object
-                 */
-                parameterObject: {
-                    first?: {
-                        second?: {
-                            third?: string;
-                        };
-                    };
-                };
-                /**
-                 * Parameter containing reference
-                 */
-                parameterReference: ModelWithString;
-            };
+            req: ComplexTypesData;
             res: {
                 /**
                  * Successful response
@@ -1158,12 +930,7 @@ export type $OpenApiTs = {
     };
     '/api/v{api-version}/error': {
         post: {
-            req: {
-                /**
-                 * Status code to return
-                 */
-                status: string;
-            };
+            req: TestErrorCodeData;
             res: {
                 /**
                  * Custom message: Successful response
@@ -1190,12 +957,7 @@ export type $OpenApiTs = {
     };
     '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串': {
         post: {
-            req: {
-                /**
-                 * Dummy input param
-                 */
-                nonAsciiParamæøåÆøÅöôêÊ: number;
-            };
+            req: NonAsciiæøåÆøÅöôêÊ字符串Data;
             res: {
                 /**
                  * Successful response

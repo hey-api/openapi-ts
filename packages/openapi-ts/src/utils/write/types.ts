@@ -4,13 +4,18 @@ import {
   type Node,
   TypeScriptFile,
 } from '../../compiler';
-import type { Model, OperationParameter, Service } from '../../openApi';
+import type { Model, OperationParameter } from '../../openApi';
+import type { Method } from '../../openApi/common/interfaces/client';
 import type { Client } from '../../types/client';
-import { getConfig } from '../config';
+import { getConfig, isStandaloneClient } from '../config';
 import { enumEntry, enumUnionType } from '../enum';
 import { escapeComment } from '../escape';
 import { sortByName, sorterByName } from '../sort';
-import { operationDataTypeName, operationResponseTypeName } from './services';
+import {
+  operationDataTypeName,
+  operationErrorTypeName,
+  operationResponseTypeName,
+} from './services';
 import { toType, uniqueTypeName } from './type';
 
 type OnNode = (node: Node) => void;
@@ -53,7 +58,11 @@ const generateEnum = ({
     return;
   }
 
-  const { created, name } = uniqueTypeName({ meta, ...uniqueTypeNameArgs });
+  const { created, name } = uniqueTypeName({
+    create: true,
+    meta,
+    ...uniqueTypeNameArgs,
+  });
   if (created) {
     const node = compiler.types.enum({
       comments,
@@ -83,7 +92,11 @@ const generateType = ({
     return;
   }
 
-  const { created, name } = uniqueTypeName({ meta, ...uniqueTypeNameArgs });
+  const { created, name } = uniqueTypeName({
+    create: true,
+    meta,
+    ...uniqueTypeNameArgs,
+  });
   if (created) {
     const node = compiler.typedef.alias({ comment, name, type });
     onNode(node);
@@ -182,13 +195,20 @@ const processModel = (client: Client, model: Model, onNode: OnNode) => {
   }
 };
 
-const processServiceTypes = (client: Client, onNode: OnNode) => {
-  type ResMap = Map<number | 'default', Model>;
-  type MethodMap = Map<'req' | 'res', ResMap | OperationParameter[]>;
-  type MethodKey = Service['operations'][number]['method'];
-  type PathMap = Map<MethodKey, MethodMap>;
+interface MethodMap {
+  $ref?: string;
+  req?: OperationParameter[];
+  res?: Record<number | string, Model>;
+}
 
-  const pathsMap = new Map<string, PathMap>();
+type PathMap = {
+  [method in Method]?: MethodMap;
+};
+
+type PathsMap = Record<string, PathMap>;
+
+const processServiceTypes = (client: Client, onNode: OnNode) => {
+  const pathsMap: PathsMap = {};
 
   const config = getConfig();
 
@@ -199,17 +219,16 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
       const hasErr = operation.errors.length;
 
       if (hasReq || hasRes || hasErr) {
-        let pathMap = pathsMap.get(operation.path);
-        if (!pathMap) {
-          pathsMap.set(operation.path, new Map());
-          pathMap = pathsMap.get(operation.path)!;
+        if (!pathsMap[operation.path]) {
+          pathsMap[operation.path] = {};
         }
+        const pathMap = pathsMap[operation.path]!;
 
-        let methodMap = pathMap.get(operation.method);
-        if (!methodMap) {
-          pathMap.set(operation.method, new Map());
-          methodMap = pathMap.get(operation.method)!;
+        if (!pathMap[operation.method]) {
+          pathMap[operation.method] = {};
         }
+        const methodMap = pathMap[operation.method]!;
+        methodMap.$ref = operation.name;
 
         if (hasReq) {
           const bodyParameter = operation.parameters
@@ -263,7 +282,7 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
               .filter((parameter) => parameter.in === 'query')
               .sort(sorterByName),
           };
-          const operationProperties = config.client.startsWith('@hey-api')
+          const operationProperties = isStandaloneClient(config)
             ? [
                 bodyParameters,
                 headerParameters,
@@ -277,7 +296,7 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
               )
             : sortByName([...operation.parameters]);
 
-          methodMap.set('req', operationProperties);
+          methodMap.req = operationProperties;
 
           // create type export for operation data
           generateType({
@@ -299,18 +318,16 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
         }
 
         if (hasRes) {
-          let resMap = methodMap.get('res');
-          if (!resMap) {
-            methodMap.set('res', new Map());
-            resMap = methodMap.get('res')!;
+          if (!methodMap.res) {
+            methodMap.res = {};
           }
 
-          if (Array.isArray(resMap)) {
+          if (Array.isArray(methodMap.res)) {
             return;
           }
 
           operation.results.forEach((result) => {
-            resMap.set(result.code, result);
+            methodMap.res![result.code] = result;
           });
 
           // create type export for operation response
@@ -328,6 +345,7 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
               ...emptyModel,
               export: 'any-of',
               isRequired: true,
+              // TODO: improve response type detection
               properties: operation.results.filter(
                 (result) =>
                   result.code === 'default' ||
@@ -335,66 +353,129 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
               ),
             }),
           });
+
+          if (isStandaloneClient(config)) {
+            // TODO: improve error type detection
+            const errorResults = operation.errors.filter(
+              (result) =>
+                result.code === 'default' ||
+                (result.code >= 400 && result.code < 600),
+            );
+            // create type export for operation error
+            generateType({
+              client,
+              meta: {
+                // TODO: this should be exact ref to operation for consistency,
+                // but name should work too as operation ID is unique
+                $ref: operation.name,
+                name: operation.name,
+              },
+              nameTransformer: operationErrorTypeName,
+              onNode,
+              type: toType(
+                errorResults.length
+                  ? {
+                      ...emptyModel,
+                      export: 'all-of',
+                      isRequired: true,
+                      properties: errorResults,
+                    }
+                  : {
+                      ...emptyModel,
+                      base: 'unknown',
+                      isRequired: true,
+                      type: 'unknown',
+                    },
+              ),
+            });
+          }
         }
 
         if (hasErr) {
-          let resMap = methodMap.get('res');
-          if (!resMap) {
-            methodMap.set('res', new Map());
-            resMap = methodMap.get('res')!;
+          if (!methodMap.res) {
+            methodMap.res = {};
           }
 
-          if (Array.isArray(resMap)) {
+          if (Array.isArray(methodMap.res)) {
             return;
           }
 
           operation.errors.forEach((error) => {
-            resMap.set(error.code, error);
+            methodMap.res![error.code] = error;
           });
         }
       }
     });
   });
 
-  const properties = Array.from(pathsMap).map(([path, pathMap]) => {
-    const pathParameters = Array.from(pathMap).map(([method, methodMap]) => {
-      const methodParameters = Array.from(methodMap).map(
-        ([name, baseOrResMap]) => {
-          const reqResParameters = Array.isArray(baseOrResMap)
-            ? baseOrResMap
-            : Array.from(baseOrResMap).map(([code, base]) => {
-                // TODO: move query params into separate query key
-                const value: Model = {
-                  ...emptyModel,
-                  ...base,
-                  isRequired: true,
-                  name: String(code),
-                };
-                return value;
-              });
+  const properties = Object.entries(pathsMap).map(([path, pathMap]) => {
+    const pathParameters = Object.entries(pathMap)
+      .map(([_method, methodMap]) => {
+        const method = _method as Method;
 
-          const reqResKey: Model = {
+        let methodParameters: Model[] = [];
+
+        if (methodMap.req) {
+          const operationName = methodMap.$ref!;
+          const { name: base } = uniqueTypeName({
+            client,
+            meta: {
+              // TODO: this should be exact ref to operation for consistency,
+              // but name should work too as operation ID is unique
+              $ref: operationName,
+              name: operationName,
+            },
+            nameTransformer: operationDataTypeName,
+          });
+          const reqKey: Model = {
+            ...emptyModel,
+            base,
+            export: 'reference',
+            isRequired: true,
+            name: 'req',
+            properties: [],
+            type: base,
+          };
+          methodParameters = [...methodParameters, reqKey];
+        }
+
+        if (methodMap.res) {
+          const reqResParameters = Object.entries(methodMap.res).map(
+            ([code, base]) => {
+              // TODO: move query params into separate query key
+              const value: Model = {
+                ...emptyModel,
+                ...base,
+                isRequired: true,
+                name: String(code),
+              };
+              return value;
+            },
+          );
+
+          const resKey: Model = {
             ...emptyModel,
             isRequired: true,
-            name,
+            name: 'res',
             properties: reqResParameters,
           };
-          return reqResKey;
-        },
-      );
-      const methodKey: Model = {
-        ...emptyModel,
-        isRequired: true,
-        name: method.toLocaleLowerCase(),
-        properties: methodParameters,
-      };
-      return methodKey;
-    });
+          methodParameters = [...methodParameters, resKey];
+        }
+
+        const methodKey: Model = {
+          ...emptyModel,
+          isRequired: true,
+          name: method.toLocaleLowerCase(),
+          properties: methodParameters,
+        };
+        return methodKey;
+      })
+      .filter(Boolean);
     const pathKey: Model = {
       ...emptyModel,
       isRequired: true,
       name: `'${path}'`,
-      properties: pathParameters,
+      properties: pathParameters as Model[],
     };
     return pathKey;
   });
