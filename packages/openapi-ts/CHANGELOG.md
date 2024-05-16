@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.45.1
+
+### Patch Changes
+
+- fix: use generated types in request object instead of inlined duplicated params ([#582](https://github.com/hey-api/openapi-ts/pull/582))
+
 ## 0.45.0
 
 ### Minor Changes
