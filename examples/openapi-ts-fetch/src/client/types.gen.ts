@@ -5,6 +5,14 @@
  */
 export type TicketType = 'event' | 'general';
 
+/**
+ * Type of ticket being purchased. Use `general` for regular museum entry and `event` for tickets to special events.
+ */
+export const TicketType = {
+  EVENT: 'event',
+  GENERAL: 'general',
+} as const;
+
 export type Date = string;
 
 /**
