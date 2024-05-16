@@ -1,3 +1,4 @@
+import type { Client } from '../../../types/client';
 import { unique } from '../../../utils/unique';
 import type { Operation, Service } from '../../common/interfaces/client';
 import type { OpenApi } from '../interfaces/OpenApi';
@@ -23,12 +24,22 @@ const getNewService = (operation: Operation): Service => ({
   operations: [],
 });
 
-export const getServices = (openApi: OpenApi): Service[] => {
+export const getServices = ({
+  openApi,
+  types,
+}: {
+  openApi: OpenApi;
+  types: Client['types'];
+}): Service[] => {
   const services = new Map<string, Service>();
 
   for (const url in openApi.paths) {
     const path = openApi.paths[url];
-    const pathParams = getOperationParameters(openApi, path.parameters ?? []);
+    const pathParams = getOperationParameters({
+      openApi,
+      parameters: path.parameters ?? [],
+      types,
+    });
 
     for (const key in path) {
       const method = key as Lowercase<Operation['method']>;
@@ -36,11 +47,13 @@ export const getServices = (openApi: OpenApi): Service[] => {
         const op = path[method]!;
         const tags = op.tags?.length ? op.tags.filter(unique) : ['Default'];
         tags.forEach((tag) => {
-          const operation = getOperation(openApi, {
+          const operation = getOperation({
             method,
             op,
+            openApi,
             pathParams,
             tag,
+            types,
             url,
           });
           const service =

@@ -1,3 +1,4 @@
+import type { Client } from '../../../types/client';
 import type { OperationResponse } from '../../common/interfaces/client';
 import { getPattern } from '../../common/parser/getPattern';
 import { getRef } from '../../common/parser/getRef';
@@ -7,11 +8,17 @@ import type { OpenApiResponse } from '../interfaces/OpenApiResponse';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 import { getModel } from './getModel';
 
-export const getOperationResponse = (
-  openApi: OpenApi,
-  response: OpenApiResponse,
-  code: number | 'default',
-): OperationResponse => {
+export const getOperationResponse = ({
+  code,
+  openApi,
+  response,
+  types,
+}: {
+  openApi: OpenApi;
+  response: OpenApiResponse;
+  code: number | 'default';
+  types: Client['types'];
+}): OperationResponse => {
   const operationResponse: OperationResponse = {
     $refs: [],
     base: code !== 204 ? 'unknown' : 'void',
@@ -51,7 +58,7 @@ export const getOperationResponse = (
       operationResponse.imports.push(...model.imports);
       return operationResponse;
     } else {
-      const model = getModel({ definition: schema, openApi });
+      const model = getModel({ definition: schema, openApi, types });
       operationResponse.export = model.export;
       operationResponse.type = model.type;
       operationResponse.base = model.base;

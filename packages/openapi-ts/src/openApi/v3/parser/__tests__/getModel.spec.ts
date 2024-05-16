@@ -99,6 +99,7 @@ describe('getModel', () => {
         name: definitionType.base.replace(reservedWords, '_$1'),
       },
       openApi,
+      types: {},
     });
     expect(model.properties[0].properties.length).toBe(2);
   });
@@ -114,6 +115,7 @@ describe('getModel', () => {
         name: definitionType.base.replace(reservedWords, '_$1'),
       },
       openApi,
+      types: {},
     });
     expect(model.properties[0].properties.length).toBe(3);
   });

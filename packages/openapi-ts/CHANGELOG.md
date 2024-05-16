@@ -1,5 +1,33 @@
 # @hey-api/openapi-ts
 
+## 0.45.0
+
+### Minor Changes
+
+- feat: remove client inference ([#569](https://github.com/hey-api/openapi-ts/pull/569))
+
+### Patch Changes
+
+- fix: deduplicate inlined enums ([#573](https://github.com/hey-api/openapi-ts/pull/573))
+
+- fix: generate correct optional key in types when using positional arguments (useOptions: false) ([#572](https://github.com/hey-api/openapi-ts/pull/572))
+
+## 0.44.0
+
+### Minor Changes
+
+- feat: move format and lint config options to output object ([#546](https://github.com/hey-api/openapi-ts/pull/546))
+
+### Patch Changes
+
+- fix: comment position in JavaScript enums ([#544](https://github.com/hey-api/openapi-ts/pull/544))
+
+- fix: export inlined enums from components ([#563](https://github.com/hey-api/openapi-ts/pull/563))
+
+- fix: remove unused enums option from CLI ([#565](https://github.com/hey-api/openapi-ts/pull/565))
+
+- fix: Support typescript in peerDependencies ([#551](https://github.com/hey-api/openapi-ts/pull/551))
+
 ## 0.43.2
 
 ### Patch Changes

@@ -4,7 +4,6 @@ import type { Client } from '../../types/client';
 import { getConfig } from '../config';
 import { enumValue } from '../enum';
 import { escapeComment } from '../escape';
-import { modelIsRequired } from '../required';
 import { unique } from '../unique';
 
 const base = (model: Model) => {
@@ -86,7 +85,7 @@ const typeInterface = (model: Model) => {
   }
 
   const properties: Property[] = model.properties.map((property) => {
-    let maybeRequired = modelIsRequired(property);
+    let maybeRequired = property.isRequired ? '' : '?';
     let value = toType(property);
     // special case for additional properties type
     if (property.name === '[key: string]' && maybeRequired) {

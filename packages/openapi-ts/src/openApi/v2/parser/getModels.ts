@@ -1,27 +1,37 @@
-import type { Model } from '../../common/interfaces/client';
+import type { Client } from '../../../types/client';
 import { reservedWords } from '../../common/parser/reservedWords';
 import { getType } from '../../common/parser/type';
 import type { OpenApi } from '../interfaces/OpenApi';
 import { getModel } from './getModel';
 
-export const getModels = (openApi: OpenApi): Model[] => {
-  let models: Model[] = [];
+export const getModels = (
+  openApi: OpenApi,
+): Pick<Client, 'models' | 'types'> => {
+  const types: Client['types'] = {};
+  let models: Client['models'] = [];
 
   Object.entries(openApi.definitions ?? {}).forEach(
     ([definitionName, definition]) => {
       const definitionType = getType({ type: definitionName });
+      const name = definitionType.base.replace(reservedWords, '_$1');
+      const meta = {
+        $ref: `#/definitions/${definitionName}`,
+        name,
+      };
+      types[name] = meta;
       const model = getModel({
         definition,
         isDefinition: true,
-        meta: {
-          $ref: `#/definitions/${definitionName}`,
-          name: definitionType.base.replace(reservedWords, '_$1'),
-        },
+        meta,
         openApi,
+        types,
       });
       models = [...models, model];
     },
   );
 
-  return models;
+  return {
+    models,
+    types,
+  };
 };

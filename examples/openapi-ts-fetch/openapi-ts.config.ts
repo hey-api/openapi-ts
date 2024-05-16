@@ -2,10 +2,13 @@ import { defineConfig } from '@hey-api/openapi-ts';
 
 export default defineConfig({
   base: 'https://petstore3.swagger.io/api/v3',
-  format: 'prettier',
+  client: '@hey-api/client-fetch',
   input:
     // 'https://raw.githubusercontent.com/swagger-api/swagger-petstore/master/src/main/resources/openapi.yaml',
     'https://raw.githubusercontent.com/Redocly/museum-openapi-example/main/openapi.yaml',
-  lint: 'eslint',
-  output: './src/client',
+  output: {
+    format: 'prettier',
+    lint: 'eslint',
+    path: './src/client',
+  },
 });

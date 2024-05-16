@@ -5,18 +5,22 @@ const main = async () => {
   const config = {
     client: 'fetch',
     input: './test/spec/v3.json',
-    output: './test/generated/v3/',
+    // input: 'https://mongodb-mms-prod-build-server.s3.amazonaws.com/openapi/2caffd88277a4e27c95dcefc7e3b6a63a3b03297-v2-2023-11-15.json',
+    output: {
+      path: './test/generated/v3/',
+    },
     schemas: {
-      // export: false,
+      export: false,
     },
     services: {
-      // export: false,
+      export: false,
     },
     types: {
-      // enums: 'javascript',
-      // include: '^NestedAnyOfArraysNullable',
+      enums: 'typescript',
+      // include: '^CloudProvider',
       // name: 'PascalCase',
     },
+    // useOptions: false,
   };
 
   const { createClient } = await import(

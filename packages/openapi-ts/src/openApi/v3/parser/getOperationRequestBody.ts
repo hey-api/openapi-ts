@@ -1,3 +1,4 @@
+import type { Client } from '../../../types/client';
 import type { OperationParameter } from '../../common/interfaces/client';
 import { getPattern } from '../../common/parser/getPattern';
 import { getType } from '../../common/parser/type';
@@ -6,10 +7,15 @@ import type { OpenApiRequestBody } from '../interfaces/OpenApiRequestBody';
 import { getContent } from './getContent';
 import { getModel } from './getModel';
 
-export const getOperationRequestBody = (
-  openApi: OpenApi,
-  body: OpenApiRequestBody,
-): OperationParameter => {
+export const getOperationRequestBody = ({
+  body,
+  openApi,
+  types,
+}: {
+  body: OpenApiRequestBody;
+  openApi: OpenApi;
+  types: Client['types'];
+}): OperationParameter => {
   const name = body['x-body-name'] ?? 'requestBody';
 
   const requestBody: OperationParameter = {
@@ -57,7 +63,7 @@ export const getOperationRequestBody = (
         requestBody.imports = [...requestBody.imports, ...model.imports];
         return requestBody;
       } else {
-        const model = getModel({ definition: content.schema, openApi });
+        const model = getModel({ definition: content.schema, openApi, types });
         requestBody.export = model.export;
         requestBody.type = model.type;
         requestBody.base = model.base;

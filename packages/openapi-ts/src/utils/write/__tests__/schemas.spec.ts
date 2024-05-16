@@ -17,11 +17,11 @@ describe('processSchemas', () => {
       debug: false,
       dryRun: false,
       exportCore: true,
-      format: false,
       input: '',
-      lint: false,
       name: 'AppClient',
-      output: '',
+      output: {
+        path: '',
+      },
       schemas: {},
       services: {},
       types: {

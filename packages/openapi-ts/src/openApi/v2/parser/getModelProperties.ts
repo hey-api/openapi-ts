@@ -1,24 +1,30 @@
+import type { Client } from '../../../types/client';
 import { escapeName } from '../../../utils/escape';
 import type { Model } from '../../common/interfaces/client';
 import { getPattern } from '../../common/parser/getPattern';
 import { getType } from '../../common/parser/type';
+import type { GetModelFn } from '../interfaces/Model';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
-import type { getModel } from './getModel';
 
-// Fix for circular dependency
-export type GetModelFn = typeof getModel;
-
-export const getModelProperties = (
-  openApi: OpenApi,
-  definition: OpenApiSchema,
-  getModel: GetModelFn,
-): Model[] => {
+export const getModelProperties = ({
+  definition,
+  getModel,
+  openApi,
+  types,
+}: {
+  definition: OpenApiSchema;
+  getModel: GetModelFn;
+  openApi: OpenApi;
+  types: Client['types'];
+}): Model[] => {
   const models: Model[] = [];
 
   Object.entries(definition.properties ?? {}).forEach(
     ([propertyName, property]) => {
-      const propertyRequired = !!definition.required?.includes(propertyName);
+      const propertyRequired = Boolean(
+        definition.required?.includes(propertyName),
+      );
       if (property.$ref) {
         const model = getType({ type: property.$ref });
         models.push({
@@ -54,7 +60,7 @@ export const getModelProperties = (
           uniqueItems: property.uniqueItems,
         });
       } else {
-        const model = getModel({ definition: property, openApi });
+        const model = getModel({ definition: property, openApi, types });
         models.push({
           $refs: [],
           base: model.base,
