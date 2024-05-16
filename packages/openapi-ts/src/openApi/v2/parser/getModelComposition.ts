@@ -1,20 +1,26 @@
+import type { Client } from '../../../types/client';
 import type { Model, ModelComposition } from '../../common/interfaces/client';
+import type { GetModelFn } from '../interfaces/Model';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
-import type { getModel } from './getModel';
 import { getModelProperties } from './getModelProperties';
 import { getRequiredPropertiesFromComposition } from './getRequiredPropertiesFromComposition';
 
-// Fix for circular dependency
-export type GetModelFn = typeof getModel;
-
-export const getModelComposition = (
-  openApi: OpenApi,
-  definition: OpenApiSchema,
-  definitions: OpenApiSchema[],
-  type: 'one-of' | 'any-of' | 'all-of',
-  getModel: GetModelFn,
-): ModelComposition => {
+export const getModelComposition = ({
+  definition,
+  definitions,
+  getModel,
+  openApi,
+  type,
+  types,
+}: {
+  openApi: OpenApi;
+  definition: OpenApiSchema;
+  definitions: OpenApiSchema[];
+  type: 'one-of' | 'any-of' | 'all-of';
+  getModel: GetModelFn;
+  types: Client['types'];
+}): ModelComposition => {
   const composition: ModelComposition = {
     $refs: [],
     enums: [],
@@ -26,7 +32,7 @@ export const getModelComposition = (
   const properties: Model[] = [];
 
   definitions
-    .map((definition) => getModel({ definition, openApi }))
+    .map((definition) => getModel({ definition, openApi, types }))
     .filter((model) => {
       const hasProperties = model.properties.length;
       const hasEnums = model.enums.length;
@@ -41,12 +47,13 @@ export const getModelComposition = (
     });
 
   if (definition.required) {
-    const requiredProperties = getRequiredPropertiesFromComposition(
-      openApi,
-      definition.required,
+    const requiredProperties = getRequiredPropertiesFromComposition({
       definitions,
       getModel,
-    );
+      openApi,
+      required: definition.required,
+      types,
+    });
     requiredProperties.forEach((requiredProperty) => {
       composition.imports.push(...requiredProperty.imports);
       composition.enums.push(...requiredProperty.enums);
@@ -55,7 +62,12 @@ export const getModelComposition = (
   }
 
   if (definition.properties) {
-    const modelProperties = getModelProperties(openApi, definition, getModel);
+    const modelProperties = getModelProperties({
+      definition,
+      getModel,
+      openApi,
+      types,
+    });
     modelProperties.forEach((modelProperty) => {
       composition.imports.push(...modelProperty.imports);
       composition.enums.push(...modelProperty.enums);

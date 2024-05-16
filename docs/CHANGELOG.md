@@ -1,5 +1,17 @@
 # @hey-api/docs
 
+## 0.5.5
+
+### Patch Changes
+
+- docs: add migration for v0.45.0 ([#569](https://github.com/hey-api/openapi-ts/pull/569))
+
+## 0.5.4
+
+### Patch Changes
+
+- docs: add format and lint migration for 0.44.0 ([#546](https://github.com/hey-api/openapi-ts/pull/546))
+
 ## 0.5.3
 
 ### Patch Changes

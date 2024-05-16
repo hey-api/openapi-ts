@@ -18,7 +18,6 @@ import type {
 import type { Client } from '../../types/client';
 import { getConfig } from '../config';
 import { escapeComment, escapeName } from '../escape';
-import { modelIsRequired } from '../required';
 import { transformServiceName } from '../transform';
 import { unique } from '../unique';
 import { uniqueTypeName } from './type';
@@ -89,13 +88,23 @@ const toOperationParamType = (
     return [];
   }
 
+  const getDefaultPrintable = (
+    p: OperationParameter | Model,
+  ): string | undefined => {
+    if (p.default === undefined) {
+      return undefined;
+    }
+    return JSON.stringify(p.default, null, 4);
+  };
+
   // legacy configuration
   if (!config.useOptions) {
     return operation.parameters.map((p) => {
       const typePath = `${importedType}['${p.name}']`;
       return {
         default: p?.default,
-        isRequired: modelIsRequired(p) === '',
+        isRequired:
+          (!p.isRequired && !getDefaultPrintable(p) ? '?' : '') === '',
         name: p.name,
         type: typePath,
       };

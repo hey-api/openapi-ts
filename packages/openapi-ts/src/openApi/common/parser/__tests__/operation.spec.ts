@@ -13,10 +13,10 @@ describe('getOperationName', () => {
     debug: false,
     dryRun: true,
     exportCore: false,
-    format: false,
     input: '',
-    lint: false,
-    output: '',
+    output: {
+      path: '',
+    },
     schemas: {
       export: false,
     },
@@ -36,10 +36,10 @@ describe('getOperationName', () => {
     debug: false,
     dryRun: true,
     exportCore: false,
-    format: false,
     input: '',
-    lint: false,
-    output: '',
+    output: {
+      path: '',
+    },
     schemas: {
       export: false,
     },

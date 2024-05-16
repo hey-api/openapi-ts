@@ -1,3 +1,4 @@
+import type { Client } from '../../../types/client';
 import { getOperationResults } from '../../../utils/operation';
 import type {
   Operation,
@@ -15,14 +16,23 @@ import type { OpenApiOperation } from '../interfaces/OpenApiOperation';
 import { getOperationParameters } from './getOperationParameters';
 import { getOperationResponses } from './getOperationResponses';
 
-export const getOperation = (
-  openApi: OpenApi,
-  url: string,
-  method: Lowercase<Operation['method']>,
-  tag: string,
-  op: OpenApiOperation,
-  pathParams: OperationParameters,
-): Operation => {
+export const getOperation = ({
+  method,
+  op,
+  openApi,
+  pathParams,
+  tag,
+  types,
+  url,
+}: {
+  openApi: OpenApi;
+  url: string;
+  method: Lowercase<Operation['method']>;
+  tag: string;
+  op: OpenApiOperation;
+  pathParams: OperationParameters;
+  types: Client['types'];
+}): Operation => {
   const serviceName = getServiceName(tag);
   const name = getOperationName(url, method, op.operationId);
 
@@ -51,7 +61,11 @@ export const getOperation = (
 
   // Parse the operation parameters (path, query, body, etc).
   if (op.parameters) {
-    const parameters = getOperationParameters(openApi, op.parameters);
+    const parameters = getOperationParameters({
+      openApi,
+      parameters: op.parameters,
+      types,
+    });
     operation.imports.push(...parameters.imports);
     operation.parameters.push(...parameters.parameters);
     operation.parametersPath.push(...parameters.parametersPath);
@@ -64,7 +78,11 @@ export const getOperation = (
 
   // Parse the operation responses.
   if (op.responses) {
-    const operationResponses = getOperationResponses(openApi, op.responses);
+    const operationResponses = getOperationResponses({
+      openApi,
+      responses: op.responses,
+      types,
+    });
     const operationResults = getOperationResults(operationResponses);
     operation.errors = getOperationErrors(operationResponses);
     operation.responseHeader = getOperationResponseHeader(operationResults);
