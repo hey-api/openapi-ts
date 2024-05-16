@@ -3,7 +3,7 @@ import ts from 'typescript';
 import {
   addLeadingJSDocComment,
   type Comments,
-  type ImportItemObject,
+  type ImportExportItemObject,
   ots,
 } from './utils';
 
@@ -20,7 +20,7 @@ export const createExportAllDeclaration = (module: string) =>
     ots.string(module),
   );
 
-type ImportItem = ImportItemObject | string;
+type ImportExportItem = ImportExportItemObject | string;
 
 /**
  * Create a named export declaration. Example: `export { X } from './y'`.
@@ -29,30 +29,31 @@ type ImportItem = ImportItemObject | string;
  * @returns ExportDeclaration
  */
 export const createNamedExportDeclarations = (
-  items: Array<ImportItem> | ImportItem,
+  items: Array<ImportExportItem> | ImportExportItem,
   module: string,
 ): ts.ExportDeclaration => {
   items = Array.isArray(items) ? items : [items];
-  const isAllTypes = items.every((i) => typeof i === 'object' && i.isTypeOnly);
-  return ts.factory.createExportDeclaration(
-    undefined,
-    isAllTypes,
-    ts.factory.createNamedExports(
-      items.map((item) => {
-        const {
-          name,
-          isTypeOnly = undefined,
-          alias = undefined,
-        } = typeof item === 'string' ? { name: item } : item;
-        return ots.export(
-          name,
-          isAllTypes ? false : Boolean(isTypeOnly),
-          alias,
-        );
-      }),
-    ),
-    ots.string(module),
+  const exportedTypes = Array.isArray(items) ? items : [items];
+  const hasNonTypeExport = exportedTypes.some(
+    (item) => typeof item !== 'object' || !item.asType,
   );
+  const elements = items.map((name) => {
+    const item = typeof name === 'string' ? { name } : name;
+    return ots.export({
+      alias: item.alias,
+      asType: hasNonTypeExport && item.asType,
+      name: item.name,
+    });
+  });
+  const exportClause = ts.factory.createNamedExports(elements);
+  const moduleSpecifier = ots.string(module);
+  const statement = ts.factory.createExportDeclaration(
+    undefined,
+    !hasNonTypeExport,
+    exportClause,
+    moduleSpecifier,
+  );
+  return statement;
 };
 
 /**
@@ -103,25 +104,24 @@ export const createExportConstVariable = ({
  * @returns ImportDeclaration
  */
 export const createNamedImportDeclarations = (
-  items: Array<ImportItem> | ImportItem,
+  items: Array<ImportExportItem> | ImportExportItem,
   module: string,
 ): ts.ImportDeclaration => {
   const importedTypes = Array.isArray(items) ? items : [items];
-  const isTypeOnly = !importedTypes.some(
-    (item) => typeof item !== 'object' || !item.isTypeOnly,
+  const hasNonTypeImport = importedTypes.some(
+    (item) => typeof item !== 'object' || !item.asType,
   );
-  const elements = importedTypes.map((item) => {
-    const importedType: ImportItemObject =
-      typeof item === 'string' ? { name: item } : item;
+  const elements = importedTypes.map((name) => {
+    const item = typeof name === 'string' ? { name } : name;
     return ots.import({
-      alias: importedType.alias,
-      isTypeOnly: isTypeOnly ? false : Boolean(importedType.isTypeOnly),
-      name: importedType.name,
+      alias: item.alias,
+      asType: hasNonTypeImport && item.asType,
+      name: item.name,
     });
   });
   const namedBindings = ts.factory.createNamedImports(elements);
   const importClause = ts.factory.createImportClause(
-    isTypeOnly,
+    !hasNonTypeImport,
     undefined,
     namedBindings,
   );

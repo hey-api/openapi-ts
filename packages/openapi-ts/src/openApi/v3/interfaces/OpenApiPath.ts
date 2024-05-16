@@ -6,6 +6,7 @@ import type { OpenApiServer } from './OpenApiServer';
  * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.1.0.md#path-item-object
  */
 export interface OpenApiPath {
+  connect?: OpenApiOperation;
   delete?: OpenApiOperation;
   description?: string;
   get?: OpenApiOperation;
