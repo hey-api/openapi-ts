@@ -333,7 +333,7 @@ export type $OpenApiTs = {
   };
   '/special-events': {
     post: {
-      req: ListSpecialEventsData;
+      req: CreateSpecialEventData;
       res: {
         /**
          * Success.
@@ -369,7 +369,7 @@ export type $OpenApiTs = {
   };
   '/special-events/{eventId}': {
     get: {
-      req: DeleteSpecialEventData;
+      req: GetSpecialEventData;
       res: {
         /**
          * Success.
@@ -386,7 +386,7 @@ export type $OpenApiTs = {
       };
     };
     patch: {
-      req: DeleteSpecialEventData;
+      req: UpdateSpecialEventData;
       res: {
         /**
          * Success.

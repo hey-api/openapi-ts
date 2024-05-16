@@ -7,7 +7,7 @@ import {
 import type { Model, OperationParameter } from '../../openApi';
 import type { Method } from '../../openApi/common/interfaces/client';
 import type { Client } from '../../types/client';
-import { getConfig } from '../config';
+import { getConfig, isStandaloneClient } from '../config';
 import { enumEntry, enumUnionType } from '../enum';
 import { escapeComment } from '../escape';
 import { sortByName, sorterByName } from '../sort';
@@ -282,7 +282,7 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
               .filter((parameter) => parameter.in === 'query')
               .sort(sorterByName),
           };
-          const operationProperties = config.client.startsWith('@hey-api')
+          const operationProperties = isStandaloneClient(config)
             ? [
                 bodyParameters,
                 headerParameters,
@@ -354,7 +354,13 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
             }),
           });
 
-          if (config.client.startsWith('@hey-api')) {
+          if (isStandaloneClient(config)) {
+            // TODO: improve error type detection
+            const errorResults = operation.errors.filter(
+              (result) =>
+                result.code === 'default' ||
+                (result.code >= 400 && result.code < 600),
+            );
             // create type export for operation error
             generateType({
               client,
@@ -366,17 +372,21 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
               },
               nameTransformer: operationErrorTypeName,
               onNode,
-              type: toType({
-                ...emptyModel,
-                export: 'all-of',
-                isRequired: true,
-                // TODO: improve error type detection
-                properties: operation.errors.filter(
-                  (result) =>
-                    result.code === 'default' ||
-                    (result.code >= 400 && result.code < 600),
-                ),
-              }),
+              type: toType(
+                errorResults.length
+                  ? {
+                      ...emptyModel,
+                      export: 'all-of',
+                      isRequired: true,
+                      properties: errorResults,
+                    }
+                  : {
+                      ...emptyModel,
+                      base: 'unknown',
+                      isRequired: true,
+                      type: 'unknown',
+                    },
+              ),
             });
           }
         }
