@@ -16,7 +16,7 @@ import type {
   Service,
 } from '../../openApi';
 import type { Client } from '../../types/client';
-import { getConfig } from '../config';
+import { getConfig, isStandaloneClient } from '../config';
 import { escapeComment, escapeName } from '../escape';
 import { transformServiceName } from '../transform';
 import { unique } from '../unique';
@@ -74,7 +74,7 @@ const toOperationParamType = (
     (parameter) => parameter.isRequired,
   );
 
-  if (config.client.startsWith('@hey-api')) {
+  if (isStandaloneClient(config)) {
     return [
       {
         isRequired,
@@ -158,7 +158,7 @@ const toOperationReturnType = (client: Client, operation: Operation) => {
 const toOperationComment = (operation: Operation): Comments => {
   const config = getConfig();
 
-  if (config.client.startsWith('@hey-api')) {
+  if (isStandaloneClient(config)) {
     const comment = [
       operation.deprecated && '@deprecated',
       operation.summary && escapeComment(operation.summary),
@@ -203,7 +203,7 @@ const toOperationComment = (operation: Operation): Comments => {
 const toRequestOptions = (operation: Operation) => {
   const config = getConfig();
 
-  if (config.client.startsWith('@hey-api')) {
+  if (isStandaloneClient(config)) {
     const obj: ObjectValue[] = [
       {
         spread: 'options',
@@ -305,7 +305,7 @@ const toOperationStatements = (client: Client, operation: Operation) => {
 
   const options = toRequestOptions(operation);
 
-  if (config.client.startsWith('@hey-api')) {
+  if (isStandaloneClient(config)) {
     const errorType = uniqueTypeName({
       client,
       meta: {
@@ -393,21 +393,18 @@ export const processService = (
       });
     }
 
-    if (config.client.startsWith('@hey-api')) {
-      // TODO: improve error type detection
-      if (operation.errors.length) {
-        generateImport({
-          client,
-          meta: {
-            // TODO: this should be exact ref to operation for consistency,
-            // but name should work too as operation ID is unique
-            $ref: operation.name,
-            name: operation.name,
-          },
-          nameTransformer: operationErrorTypeName,
-          onImport,
-        });
-      }
+    if (isStandaloneClient(config)) {
+      generateImport({
+        client,
+        meta: {
+          // TODO: this should be exact ref to operation for consistency,
+          // but name should work too as operation ID is unique
+          $ref: operation.name,
+          name: operation.name,
+        },
+        nameTransformer: operationErrorTypeName,
+        onImport,
+      });
     }
 
     // TODO: improve response type detection
@@ -426,7 +423,7 @@ export const processService = (
     }
   });
 
-  if (config.client.startsWith('@hey-api')) {
+  if (isStandaloneClient(config)) {
     service.operations.forEach((operation) => {
       const expression = compiler.types.function({
         parameters: toOperationParamType(client, operation),
@@ -526,7 +523,7 @@ export const processServices = async ({
   }
 
   // Import required packages and core files.
-  if (config.client.startsWith('@hey-api')) {
+  if (isStandaloneClient(config)) {
     files.services?.addImport(
       [
         'client',

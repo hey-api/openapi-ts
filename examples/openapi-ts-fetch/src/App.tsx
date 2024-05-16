@@ -11,7 +11,8 @@ import {
 } from './client/services.gen';
 
 createClient({
-  baseUrl: 'https://petstore3.swagger.io/api/v3',
+  // baseUrl: 'https://petstore3.swagger.io/api/v3',
+  baseUrl: 'https://api.fake-museum-example.com/v1.1',
 });
 
 function App() {
