@@ -11,4 +11,7 @@ export default defineConfig({
     lint: 'eslint',
     path: './src/client',
   },
+  types: {
+    enums: 'javascript',
+  },
 });
