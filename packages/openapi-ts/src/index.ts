@@ -6,7 +6,7 @@ import { sync } from 'cross-spawn';
 import { parse } from './openApi';
 import type { Client } from './types/client';
 import type { ClientConfig, Config, UserConfig } from './types/config';
-import { getConfig, setConfig } from './utils/config';
+import { getConfig, isStandaloneClient, setConfig } from './utils/config';
 import { getOpenApiSpec } from './utils/getOpenApiSpec';
 import { registerHandlebarTemplates } from './utils/handlebars';
 import { postProcessClient } from './utils/postprocess';
@@ -234,7 +234,7 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
       client,
       debug,
       dryRun,
-      exportCore: client.startsWith('@hey-api') ? false : exportCore,
+      exportCore: isStandaloneClient(client) ? false : exportCore,
       input,
       name,
       output,

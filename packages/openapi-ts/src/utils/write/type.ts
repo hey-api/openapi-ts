@@ -143,6 +143,7 @@ interface UniqueTypeNameResult {
  * Generates a unique name for the exported type for given model meta.
  * @param args.client Internal client instance
  * @param args.count Unique key for deduplication
+ * @param args.create If a name record does not exist, should it be created?
  * @param args.meta Meta property from the model
  * @param args.nameTransformer Function for transforming name into the final
  * value. In different contexts, a different strategy might be used. For
@@ -153,31 +154,45 @@ interface UniqueTypeNameResult {
 export const uniqueTypeName = ({
   client,
   count = 1,
+  create = false,
   meta,
   nameTransformer,
 }: Pick<Required<Model>, 'meta'> & {
   client: Client;
   count?: number;
+  create?: boolean;
   nameTransformer?: (value: string) => string;
 }): UniqueTypeNameResult => {
   let result: UniqueTypeNameResult = {
     created: false,
-    name: meta.name,
+    name: '',
   };
+  let name = meta.name;
   if (nameTransformer) {
-    result.name = nameTransformer(result.name);
+    name = nameTransformer(name);
   }
   if (count > 1) {
-    result.name = `${result.name}${count}`;
+    name = `${name}${count}`;
   }
-  const type = client.types[result.name];
+  const type = client.types[name];
   if (!type) {
-    client.types[result.name] = meta;
-    result.created = true;
-  } else if (type.$ref !== meta.$ref) {
+    if (create) {
+      client.types[name] = meta;
+      result = {
+        created: true,
+        name,
+      };
+    }
+  } else if (type.$ref === meta.$ref) {
+    result = {
+      created: false,
+      name,
+    };
+  } else {
     result = uniqueTypeName({
       client,
       count: count + 1,
+      create,
       meta,
       nameTransformer,
     });
