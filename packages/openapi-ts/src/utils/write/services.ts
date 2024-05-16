@@ -2,6 +2,7 @@ import camelcase from 'camelcase';
 
 import {
   ClassElement,
+  type Comments,
   compiler,
   FunctionParameter,
   type Node,
@@ -15,7 +16,7 @@ import type {
   Service,
 } from '../../openApi';
 import type { Client } from '../../types/client';
-import { getConfig } from '../config';
+import { getConfig, isStandaloneClient } from '../config';
 import { escapeComment, escapeName } from '../escape';
 import { transformServiceName } from '../transform';
 import { unique } from '../unique';
@@ -38,11 +39,16 @@ const generateImport = ({
   }
 
   const { name } = uniqueTypeName({ meta, ...uniqueTypeNameArgs });
-  onImport(name);
+  if (name) {
+    onImport(name);
+  }
 };
 
 export const operationDataTypeName = (name: string) =>
   `${camelcase(name, { pascalCase: true })}Data`;
+
+export const operationErrorTypeName = (name: string) =>
+  `${camelcase(name, { pascalCase: true })}Error`;
 
 export const operationResponseTypeName = (name: string) =>
   `${camelcase(name, { pascalCase: true })}Response`;
@@ -51,10 +57,6 @@ const toOperationParamType = (
   client: Client,
   operation: Operation,
 ): FunctionParameter[] => {
-  if (!operation.parameters.length) {
-    return [];
-  }
-
   const config = getConfig();
 
   const { name: importedType } = uniqueTypeName({
@@ -68,17 +70,22 @@ const toOperationParamType = (
     nameTransformer: operationDataTypeName,
   });
 
-  if (config.useOptions) {
-    const isRequired = operation.parameters.some(
-      (parameter) => parameter.isRequired,
-    );
+  const isRequired = operation.parameters.some(
+    (parameter) => parameter.isRequired,
+  );
+
+  if (isStandaloneClient(config)) {
     return [
       {
-        default: isRequired ? undefined : {},
-        name: 'data',
-        type: importedType,
+        isRequired,
+        name: 'options',
+        type: importedType ? `Options<${importedType}>` : 'Options',
       },
     ];
+  }
+
+  if (!operation.parameters.length) {
+    return [];
   }
 
   const getDefaultPrintable = (
@@ -90,15 +97,27 @@ const toOperationParamType = (
     return JSON.stringify(p.default, null, 4);
   };
 
-  return operation.parameters.map((p) => {
-    const typePath = `${importedType}['${p.name}']`;
-    return {
-      default: p?.default,
-      isRequired: (!p.isRequired && !getDefaultPrintable(p) ? '?' : '') === '',
-      name: p.name,
-      type: typePath,
-    };
-  });
+  // legacy configuration
+  if (!config.useOptions) {
+    return operation.parameters.map((p) => {
+      const typePath = `${importedType}['${p.name}']`;
+      return {
+        default: p?.default,
+        isRequired:
+          (!p.isRequired && !getDefaultPrintable(p) ? '?' : '') === '',
+        name: p.name,
+        type: typePath,
+      };
+    });
+  }
+
+  return [
+    {
+      default: isRequired ? undefined : {},
+      name: 'data',
+      type: importedType,
+    },
+  ];
 };
 
 const toOperationReturnType = (client: Client, operation: Operation) => {
@@ -136,25 +155,37 @@ const toOperationReturnType = (client: Client, operation: Operation) => {
   return returnType;
 };
 
-const toOperationComment = (operation: Operation) => {
+const toOperationComment = (operation: Operation): Comments => {
   const config = getConfig();
+
+  if (isStandaloneClient(config)) {
+    const comment = [
+      operation.deprecated && '@deprecated',
+      operation.summary && escapeComment(operation.summary),
+      operation.description && escapeComment(operation.description),
+    ];
+    return comment;
+  }
+
   let params: string[] = [];
+
   if (operation.parameters.length) {
     if (config.useOptions) {
       params = [
         '@param data The data for the request.',
         ...operation.parameters.map(
-          (p) =>
-            `@param data.${p.name} ${p.description ? escapeComment(p.description) : ''}`,
+          (parameter) =>
+            `@param data.${parameter.name} ${parameter.description ? escapeComment(parameter.description) : ''}`,
         ),
       ];
     } else {
       params = operation.parameters.map(
-        (p) =>
-          `@param ${p.name} ${p.description ? escapeComment(p.description) : ''}`,
+        (parameter) =>
+          `@param ${parameter.name} ${parameter.description ? escapeComment(parameter.description) : ''}`,
       );
     }
   }
+
   const comment = [
     operation.deprecated && '@deprecated',
     operation.summary && escapeComment(operation.summary),
@@ -172,10 +203,10 @@ const toOperationComment = (operation: Operation) => {
 const toRequestOptions = (operation: Operation) => {
   const config = getConfig();
 
-  if (config.client.startsWith('@hey-api')) {
+  if (isStandaloneClient(config)) {
     const obj: ObjectValue[] = [
       {
-        spread: 'data',
+        spread: 'options',
       },
       {
         key: 'url',
@@ -274,8 +305,18 @@ const toOperationStatements = (client: Client, operation: Operation) => {
 
   const options = toRequestOptions(operation);
 
-  if (config.client.startsWith('@hey-api')) {
-    const returnType = operation.results.length
+  if (isStandaloneClient(config)) {
+    const errorType = uniqueTypeName({
+      client,
+      meta: {
+        // TODO: this should be exact ref to operation for consistency,
+        // but name should work too as operation ID is unique
+        $ref: operation.name,
+        name: operation.name,
+      },
+      nameTransformer: operationErrorTypeName,
+    }).name;
+    const responseType = operation.results.length
       ? uniqueTypeName({
           client,
           meta: {
@@ -291,7 +332,14 @@ const toOperationStatements = (client: Client, operation: Operation) => {
       compiler.return.functionCall({
         args: [options],
         name: `client.${operation.method.toLocaleLowerCase()}`,
-        types: [returnType],
+        types:
+          errorType && responseType
+            ? [responseType, errorType]
+            : errorType
+              ? ['unknown', errorType]
+              : responseType
+                ? [responseType]
+                : [],
       }),
     ];
   }
@@ -345,6 +393,21 @@ export const processService = (
       });
     }
 
+    if (isStandaloneClient(config)) {
+      generateImport({
+        client,
+        meta: {
+          // TODO: this should be exact ref to operation for consistency,
+          // but name should work too as operation ID is unique
+          $ref: operation.name,
+          name: operation.name,
+        },
+        nameTransformer: operationErrorTypeName,
+        onImport,
+      });
+    }
+
+    // TODO: improve response type detection
     if (operation.results.length) {
       generateImport({
         client,
@@ -360,7 +423,7 @@ export const processService = (
     }
   });
 
-  if (config.client.startsWith('@hey-api')) {
+  if (isStandaloneClient(config)) {
     service.operations.forEach((operation) => {
       const expression = compiler.types.function({
         parameters: toOperationParamType(client, operation),
@@ -460,8 +523,17 @@ export const processServices = async ({
   }
 
   // Import required packages and core files.
-  if (config.client.startsWith('@hey-api')) {
-    files.services?.addImport(['client'], config.client);
+  if (isStandaloneClient(config)) {
+    files.services?.addImport(
+      [
+        'client',
+        {
+          asType: true,
+          name: 'Options',
+        },
+      ],
+      config.client,
+    );
   } else {
     if (config.client === 'angular') {
       files.services?.addImport('Injectable', '@angular/core');
@@ -470,27 +542,24 @@ export const processServices = async ({
         files.services?.addImport('HttpClient', '@angular/common/http');
       }
 
-      files.services?.addImport(
-        { isTypeOnly: true, name: 'Observable' },
-        'rxjs',
-      );
+      files.services?.addImport({ asType: true, name: 'Observable' }, 'rxjs');
     } else {
       files.services?.addImport(
-        { isTypeOnly: true, name: 'CancelablePromise' },
+        { asType: true, name: 'CancelablePromise' },
         './core/CancelablePromise',
       );
     }
 
     if (config.services.response === 'response') {
       files.services?.addImport(
-        { isTypeOnly: true, name: 'ApiResult' },
+        { asType: true, name: 'ApiResult' },
         './core/ApiResult',
       );
     }
 
     if (config.name) {
       files.services?.addImport(
-        { isTypeOnly: config.client !== 'angular', name: 'BaseHttpRequest' },
+        { asType: config.client !== 'angular', name: 'BaseHttpRequest' },
         './core/BaseHttpRequest',
       );
     } else {
@@ -506,7 +575,7 @@ export const processServices = async ({
   if (files.types && !files.types.isEmpty()) {
     const importedTypes = imports
       .filter(unique)
-      .map((name) => ({ isTypeOnly: true, name }));
+      .map((name) => ({ asType: true, name }));
     files.services?.addImport(importedTypes, `./${files.types.getName(false)}`);
   }
 };

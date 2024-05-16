@@ -1,4 +1,5 @@
 import type { Client } from '../../../types/client';
+import { getConfig, isStandaloneClient } from '../../../utils/config';
 import { unique } from '../../../utils/unique';
 import type { Operation, Service } from '../../common/interfaces/client';
 import type { OpenApi } from '../interfaces/OpenApi';
@@ -6,6 +7,7 @@ import { getOperationParameters } from './getOperationParameters';
 import { getOperation } from './operation';
 
 const allowedServiceMethods = [
+  'connect',
   'delete',
   'get',
   'head',
@@ -13,6 +15,7 @@ const allowedServiceMethods = [
   'patch',
   'post',
   'put',
+  'trace',
 ] as const;
 
 const getNewService = (operation: Operation): Service => ({
@@ -29,6 +32,8 @@ export const getServices = ({
   openApi: OpenApi;
   types: Client['types'];
 }): Service[] => {
+  const config = getConfig();
+
   const services = new Map<string, Service>();
 
   for (const url in openApi.paths) {
@@ -43,7 +48,10 @@ export const getServices = ({
       const method = key as Lowercase<Operation['method']>;
       if (allowedServiceMethods.includes(method)) {
         const op = path[method]!;
-        const tags = op.tags?.length ? op.tags.filter(unique) : ['Default'];
+        const tags =
+          op.tags?.length && !isStandaloneClient(config)
+            ? op.tags.filter(unique)
+            : ['Default'];
         tags.forEach((tag) => {
           const operation = getOperation({
             method,

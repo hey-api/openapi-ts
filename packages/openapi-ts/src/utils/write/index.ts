@@ -17,7 +17,7 @@ export const processIndex = async ({
     if (config.services.response === 'response') {
       files.index.add(
         compiler.export.named(
-          { isTypeOnly: true, name: 'ApiResult' },
+          { asType: true, name: 'ApiResult' },
           './core/ApiResult',
         ),
       );
@@ -37,7 +37,7 @@ export const processIndex = async ({
     }
     files.index.add(
       compiler.export.named(
-        ['OpenAPI', { isTypeOnly: true, name: 'OpenAPIConfig' }],
+        ['OpenAPI', { asType: true, name: 'OpenAPIConfig' }],
         './core/OpenAPI',
       ),
     );
