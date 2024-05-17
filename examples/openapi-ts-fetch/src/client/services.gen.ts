@@ -34,17 +34,22 @@ import type {
  * Get upcoming museum operating hours.
  */
 export const getMuseumHours = (options?: Options<GetMuseumHoursData>) =>
-  client.get<GetMuseumHoursResponse2, GetMuseumHoursError>({
-    ...options,
-    url: '/museum-hours',
-  });
+  (options?.client ?? client).get<GetMuseumHoursResponse2, GetMuseumHoursError>(
+    {
+      ...options,
+      url: '/museum-hours',
+    },
+  );
 
 /**
  * Create special events
  * Creates a new special event for the museum.
  */
 export const createSpecialEvent = (options: Options<CreateSpecialEventData>) =>
-  client.post<CreateSpecialEventResponse, CreateSpecialEventError>({
+  (options?.client ?? client).post<
+    CreateSpecialEventResponse,
+    CreateSpecialEventError
+  >({
     ...options,
     url: '/special-events',
   });
@@ -54,7 +59,10 @@ export const createSpecialEvent = (options: Options<CreateSpecialEventData>) =>
  * Return a list of upcoming special events at the museum.
  */
 export const listSpecialEvents = (options?: Options<ListSpecialEventsData>) =>
-  client.get<ListSpecialEventsResponse2, ListSpecialEventsError>({
+  (options?.client ?? client).get<
+    ListSpecialEventsResponse2,
+    ListSpecialEventsError
+  >({
     ...options,
     url: '/special-events',
   });
@@ -64,7 +72,10 @@ export const listSpecialEvents = (options?: Options<ListSpecialEventsData>) =>
  * Get details about a special event.
  */
 export const getSpecialEvent = (options: Options<GetSpecialEventData>) =>
-  client.get<GetSpecialEventResponse, GetSpecialEventError>({
+  (options?.client ?? client).get<
+    GetSpecialEventResponse,
+    GetSpecialEventError
+  >({
     ...options,
     url: '/special-events/{eventId}',
   });
@@ -74,7 +85,10 @@ export const getSpecialEvent = (options: Options<GetSpecialEventData>) =>
  * Update the details of a special event.
  */
 export const updateSpecialEvent = (options: Options<UpdateSpecialEventData>) =>
-  client.patch<UpdateSpecialEventResponse, UpdateSpecialEventError>({
+  (options?.client ?? client).patch<
+    UpdateSpecialEventResponse,
+    UpdateSpecialEventError
+  >({
     ...options,
     url: '/special-events/{eventId}',
   });
@@ -84,7 +98,10 @@ export const updateSpecialEvent = (options: Options<UpdateSpecialEventData>) =>
  * Delete a special event from the collection. Allows museum to cancel planned events.
  */
 export const deleteSpecialEvent = (options: Options<DeleteSpecialEventData>) =>
-  client.delete<DeleteSpecialEventResponse, DeleteSpecialEventError>({
+  (options?.client ?? client).delete<
+    DeleteSpecialEventResponse,
+    DeleteSpecialEventError
+  >({
     ...options,
     url: '/special-events/{eventId}',
   });
@@ -94,7 +111,10 @@ export const deleteSpecialEvent = (options: Options<DeleteSpecialEventData>) =>
  * Purchase museum tickets for general entry or special events.
  */
 export const buyMuseumTickets = (options: Options<BuyMuseumTicketsData>) =>
-  client.post<BuyMuseumTicketsResponse2, BuyMuseumTicketsError>({
+  (options?.client ?? client).post<
+    BuyMuseumTicketsResponse2,
+    BuyMuseumTicketsError
+  >({
     ...options,
     url: '/tickets',
   });
@@ -104,7 +124,7 @@ export const buyMuseumTickets = (options: Options<BuyMuseumTicketsData>) =>
  * Return an image of your ticket with scannable QR code. Used for event entry.
  */
 export const getTicketCode = (options: Options<GetTicketCodeData>) =>
-  client.get<GetTicketCodeResponse2, GetTicketCodeError>({
+  (options?.client ?? client).get<GetTicketCodeResponse2, GetTicketCodeError>({
     ...options,
     url: '/tickets/{ticketId}/qr',
   });

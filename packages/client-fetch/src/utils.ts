@@ -13,21 +13,9 @@ type ArraySeparatorStyle = ArrayStyle | MatrixStyle;
 type ObjectStyle = 'form' | 'deepObject';
 type ObjectSeparatorStyle = ObjectStyle | MatrixStyle;
 
-export interface FetchOptions extends Omit<RequestInit, 'headers'> {
-  /**
-   * Headers...
-   */
-  headers?: HeadersOptions;
-}
+export type QuerySerializer = (query: Record<string, unknown>) => string;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export type QuerySerializer<T = unknown> = (
-  query: Record<string, unknown>,
-) => string;
-
-// type BodySerializer<T> = (body: OperationRequestBodyContent<T>) => any;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export type BodySerializer<T> = (body: any) => any;
+export type BodySerializer = (body: any) => any;
 
 interface SerializerOptions<T> {
   /**
@@ -48,25 +36,13 @@ interface SerializePrimitiveParam extends SerializePrimitiveOptions {
   value: string;
 }
 
-export type HeadersOptions =
-  | HeadersInit
-  | Record<
-      string,
-      | string
-      | number
-      | boolean
-      | (string | number | boolean)[]
-      | null
-      | undefined
-    >;
-
 export interface QuerySerializerOptions {
   allowReserved?: boolean;
   array?: SerializerOptions<ArrayStyle>;
   object?: SerializerOptions<ObjectStyle>;
 }
 
-export function serializePrimitiveParam({
+function serializePrimitiveParam({
   allowReserved,
   name,
   value,
@@ -123,7 +99,7 @@ const separatorObjectExplode = (style: ObjectSeparatorStyle) => {
   }
 };
 
-export function serializeArrayParam({
+function serializeArrayParam({
   allowReserved,
   explode,
   name,
@@ -165,7 +141,7 @@ export function serializeArrayParam({
   return style === 'label' || style === 'matrix' ? separator + final : final;
 }
 
-export const serializeObjectParam = ({
+const serializeObjectParam = ({
   allowReserved,
   explode,
   name,
@@ -208,7 +184,7 @@ export const serializeObjectParam = ({
   return style === 'label' || style === 'matrix' ? separator + final : final;
 };
 
-export function defaultPathSerializer({ path, url: _url }: PathSerializer) {
+function defaultPathSerializer({ path, url: _url }: PathSerializer) {
   let url = _url;
   const matches = _url.match(PATH_PARAM_RE);
   if (matches) {
@@ -362,8 +338,10 @@ export function getUrl({
   return url;
 }
 
-export const mergeHeaders = (...headers: Array<HeadersOptions | undefined>) => {
-  const finalHeaders = new Headers();
+export const mergeHeaders = (
+  ...headers: Array<Required<Config>['headers'] | undefined>
+) => {
+  const mergedHeaders = new Headers();
   for (const header of headers) {
     if (!header || typeof header !== 'object') {
       continue;
@@ -374,17 +352,17 @@ export const mergeHeaders = (...headers: Array<HeadersOptions | undefined>) => {
 
     for (const [key, value] of iterator) {
       if (value === null) {
-        finalHeaders.delete(key);
+        mergedHeaders.delete(key);
       } else if (Array.isArray(value)) {
         for (const v of value) {
-          finalHeaders.append(key, v as string);
+          mergedHeaders.append(key, v as string);
         }
       } else if (value !== undefined) {
-        finalHeaders.set(key, value as string);
+        mergedHeaders.set(key, value as string);
       }
     }
   }
-  return finalHeaders;
+  return mergedHeaders;
 };
 
 type ReqInterceptor<Req, Options> = (
@@ -417,6 +395,17 @@ class Interceptors<Interceptor> {
   }
 }
 
+// `createInterceptors()` response, meant for external use as it does not
+// expose internals
+export interface Middleware<Req, Res, Options> {
+  request: Pick<Interceptors<ReqInterceptor<Req, Options>>, 'eject' | 'use'>;
+  response: Pick<
+    Interceptors<ResInterceptor<Res, Req, Options>>,
+    'eject' | 'use'
+  >;
+}
+
+// do not add `Middleware` as return type so we can use _fns internally
 export const createInterceptors = <Req, Res, Options>() => ({
   request: new Interceptors<ReqInterceptor<Req, Options>>(),
   response: new Interceptors<ResInterceptor<Res, Req, Options>>(),
