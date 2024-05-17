@@ -42,11 +42,11 @@ export interface QuerySerializerOptions {
   object?: SerializerOptions<ObjectStyle>;
 }
 
-function serializePrimitiveParam({
+const serializePrimitiveParam = ({
   allowReserved,
   name,
   value,
-}: SerializePrimitiveParam) {
+}: SerializePrimitiveParam) => {
   if (value === undefined || value === null) {
     return '';
   }
@@ -58,7 +58,7 @@ function serializePrimitiveParam({
   }
 
   return `${name}=${allowReserved ? value : encodeURIComponent(value)}`;
-}
+};
 
 const separatorArrayExplode = (style: ArraySeparatorStyle) => {
   switch (style) {
@@ -99,7 +99,7 @@ const separatorObjectExplode = (style: ObjectSeparatorStyle) => {
   }
 };
 
-function serializeArrayParam({
+const serializeArrayParam = ({
   allowReserved,
   explode,
   name,
@@ -107,7 +107,7 @@ function serializeArrayParam({
   value,
 }: SerializeOptions<ArraySeparatorStyle> & {
   value: unknown[];
-}) {
+}) => {
   if (!explode) {
     const final = (
       allowReserved ? value : value.map((v) => encodeURIComponent(v as string))
@@ -139,7 +139,7 @@ function serializeArrayParam({
     })
     .join(separator);
   return style === 'label' || style === 'matrix' ? separator + final : final;
-}
+};
 
 const serializeObjectParam = ({
   allowReserved,
@@ -184,7 +184,7 @@ const serializeObjectParam = ({
   return style === 'label' || style === 'matrix' ? separator + final : final;
 };
 
-function defaultPathSerializer({ path, url: _url }: PathSerializer) {
+const defaultPathSerializer = ({ path, url: _url }: PathSerializer) => {
   let url = _url;
   const matches = _url.match(PATH_PARAM_RE);
   if (matches) {
@@ -251,7 +251,7 @@ function defaultPathSerializer({ path, url: _url }: PathSerializer) {
     }
   }
   return url;
-}
+};
 
 export const createQuerySerializer = <T = unknown>({
   allowReserved,
@@ -310,7 +310,43 @@ export const createQuerySerializer = <T = unknown>({
   return querySerializer;
 };
 
-export function getUrl({
+/**
+ * Infers parseAs value from provided Content-Type header.
+ */
+export const getParseAs = (
+  content: string | null,
+): Exclude<Config['parseAs'], 'auto' | 'stream'> => {
+  if (!content) {
+    return;
+  }
+
+  if (content === 'application/json' || content.endsWith('+json')) {
+    return 'json';
+  }
+
+  if (content === 'multipart/form-data') {
+    return 'formData';
+  }
+
+  if (
+    [
+      'application/octet-stream',
+      'application/pdf',
+      'application/zip',
+      'audio/',
+      'image/',
+      'video/',
+    ].some((type) => content.includes(type))
+  ) {
+    return 'blob';
+  }
+
+  if (content.includes('text/')) {
+    return 'text';
+  }
+};
+
+export const getUrl = ({
   baseUrl,
   path,
   query,
@@ -322,7 +358,7 @@ export function getUrl({
   query?: Record<string, unknown>;
   querySerializer: QuerySerializer;
   url: string;
-}) {
+}) => {
   const pathUrl = _url.startsWith('/') ? _url : `/${_url}`;
   let url = baseUrl + pathUrl;
   if (path) {
@@ -336,7 +372,7 @@ export function getUrl({
     url += `?${search}`;
   }
   return url;
-}
+};
 
 export const mergeHeaders = (
   ...headers: Array<Required<Config>['headers'] | undefined>
@@ -411,17 +447,40 @@ export const createInterceptors = <Req, Res, Options>() => ({
   response: new Interceptors<ResInterceptor<Res, Req, Options>>(),
 });
 
-export const formDataBodySerializer = <T extends Record<string, any>>(
-  body: T,
+const serializeFormDataPair = (
+  formData: FormData,
+  key: string,
+  value: unknown,
 ) => {
-  const formData = new FormData();
-  for (const key in body) {
-    formData.append(key, body[key]);
+  if (typeof value === 'string' || value instanceof Blob) {
+    formData.append(key, value);
+  } else {
+    formData.append(key, JSON.stringify(value));
   }
-  return formData;
 };
 
-export const jsonBodySerializer = <T>(body: T) => JSON.stringify(body);
+export const formDataBodySerializer = {
+  bodySerializer: <T extends Record<string, any>>(body: T) => {
+    const formData = new FormData();
+
+    Object.entries(body).forEach(([key, value]) => {
+      if (value === undefined || value === null) {
+        return;
+      }
+      if (Array.isArray(value)) {
+        value.forEach((v) => serializeFormDataPair(formData, key, v));
+      } else {
+        serializeFormDataPair(formData, key, value);
+      }
+    });
+
+    return formData;
+  },
+};
+
+export const jsonBodySerializer = {
+  bodySerializer: <T>(body: T) => JSON.stringify(body),
+};
 
 const defaultQuerySerializer = createQuerySerializer({
   allowReserved: false,
@@ -440,11 +499,10 @@ const defaultHeaders = {
 };
 
 export const createDefaultConfig = (): Config => ({
+  ...jsonBodySerializer,
   baseUrl: '',
-  bodySerializer: jsonBodySerializer,
   fetch: globalThis.fetch,
   global: true,
   headers: defaultHeaders,
-  parseAs: 'json',
   querySerializer: defaultQuerySerializer,
 });

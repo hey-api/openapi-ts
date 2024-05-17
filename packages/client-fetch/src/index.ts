@@ -3,44 +3,12 @@ import {
   createDefaultConfig,
   createInterceptors,
   createQuerySerializer,
+  getParseAs,
   getUrl,
   mergeHeaders,
 } from './utils';
 
-// const getHeaders = async (
-//   config: OpenAPIConfig,
-//   options: ApiRequestOptions,
-// ): Promise<Headers> => {
-//   const [token, username, password, additionalHeaders] = await Promise.all([
-//     resolve(options, config.TOKEN),
-//     resolve(options, config.USERNAME),
-//     resolve(options, config.PASSWORD),
-//     resolve(options, config.HEADERS),
-//   ]);
-
-//   const headers = Object.entries({
-//     Accept: 'application/json',
-//     ...additionalHeaders,
-//     ...options.headers,
-//   })
-//     .filter(([, value]) => value !== undefined && value !== null)
-//     .reduce(
-//       (headers, [key, value]) => ({
-//         ...headers,
-//         [key]: String(value),
-//       }),
-//       {} as Record<string, string>,
-//     );
-
-//   if (isStringWithValue(token)) {
-//     headers['Authorization'] = `Bearer ${token}`;
-//   }
-
-//   if (isStringWithValue(username) && isStringWithValue(password)) {
-//     const credentials = base64(`${username}:${password}`);
-//     headers['Authorization'] = `Basic ${credentials}`;
-//   }
-
+// const getHeaders = async () => {
 //   if (options.body !== undefined) {
 //     if (options.mediaType) {
 //       headers['Content-Type'] = options.mediaType;
@@ -50,34 +18,6 @@ import {
 //       headers['Content-Type'] = 'text/plain';
 //     } else if (!isFormData(options.body)) {
 //       headers['Content-Type'] = 'application/json';
-//     }
-//   }
-
-//   return new Headers(headers);
-// };
-
-// const getResponseBody = async (response: Response): Promise<unknown> => {
-//   const contentType = response.headers.get('Content-Type');
-//   if (contentType) {
-//     const binaryTypes = [
-//       'application/octet-stream',
-//       'application/pdf',
-//       'application/zip',
-//       'audio/',
-//       'image/',
-//       'video/',
-//     ];
-//     if (
-//       contentType.includes('application/json') ||
-//       contentType.includes('+json')
-//     ) {
-//       return await response.json();
-//     } else if (binaryTypes.some((type) => contentType.includes(type))) {
-//       return await response.blob();
-//     } else if (contentType.includes('multipart/form-data')) {
-//       return await response.formData();
-//     } else if (contentType.includes('text/')) {
-//       return await response.text();
 //     }
 //   }
 // };
@@ -189,8 +129,12 @@ export const createClient = (config: Config): FetchClient => {
           ...result,
         };
       }
+      const parseAs =
+        opts.parseAs === 'auto'
+          ? getParseAs(response.headers.get('Content-Type'))
+          : opts.parseAs;
       return {
-        data: await response[opts.parseAs ?? 'json'](),
+        data: await response[parseAs ?? 'json'](),
         ...result,
       };
     }

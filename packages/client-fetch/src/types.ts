@@ -70,12 +70,13 @@ export interface Config
     | 'PUT'
     | 'TRACE';
   /**
-   * Return the response data parsed in a specified format. Any of the
-   * {@link Body} methods are allowed. By default, {@link Body.json()} will be
-   * used. Select `stream` if you don't want to parse response data.
-   * @default 'json'
+   * Return the response data parsed in a specified format. By default, `auto`
+   * will infer the appropriate method from the `Content-Type` response header.
+   * You can override this behavior with any of the {@link Body} methods.
+   * Select `stream` if you don't want to parse response data at all.
+   * @default 'auto'
    */
-  parseAs?: Exclude<keyof Body, 'body' | 'bodyUsed'> | 'stream';
+  parseAs?: Exclude<keyof Body, 'body' | 'bodyUsed'> | 'auto' | 'stream';
   /**
    * A function for serializing request query parameters. By default, arrays
    * will be exploded in form style, objects will be exploded in deepObject
