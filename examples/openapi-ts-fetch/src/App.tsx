@@ -15,11 +15,22 @@ createClient({
   baseUrl: 'https://api.fake-museum-example.com/v1.1',
 });
 
+const localClient = createClient({
+  baseUrl: 'https://api.fake-museum-example.com/v2',
+  global: false,
+});
+
+localClient.interceptors.request.use((request, options) => {
+  console.log(options);
+  return request;
+});
+
 function App() {
   // const [pet, setPet] = useState<Awaited<ReturnType<typeof getPetById>>['data']>();
 
   const onGetSpecialEvent = async () => {
     const { data, error } = await getSpecialEvent({
+      client: localClient,
       path: {
         eventId: 'dad4bce8-f5cb-4078-a211-995864315e39',
       },
@@ -32,9 +43,12 @@ function App() {
   };
 
   const onBuyMuseumTickets = () => {
-    // @ts-ignore
     buyMuseumTickets({
-      body: '',
+      body: {
+        email: '',
+        ticketDate: '',
+        ticketType: 'event',
+      },
     });
   };
 

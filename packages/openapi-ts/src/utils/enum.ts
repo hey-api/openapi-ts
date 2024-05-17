@@ -12,7 +12,7 @@ import { unique } from './unique';
  * 3: Add '_' where the string transitions from lowercase to uppercase
  * 4: Transform the whole string to uppercase
  *
- * Javascript identifier regexp pattern retrieved from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#identifiers
+ * Javascript identifier regexp pattern retrieved from https://developer.mozilla.org/docs/Web/JavaScript/Reference/Lexical_grammar#identifiers
  */
 export const enumKey = (value?: string | number, customName?: string) => {
   if (customName) {

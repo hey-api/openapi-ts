@@ -1,4 +1,4 @@
-import type { Config, Req, RequestResult } from './types';
+import type { Config, FetchClient, FinalRequestOptions } from './types';
 import {
   createDefaultConfig,
   createInterceptors,
@@ -82,26 +82,24 @@ import {
 //   }
 // };
 
-type Options = Omit<Req, 'method'>;
-
-type ReqInit = Omit<RequestInit, 'headers'> & {
+type ReqInit = Omit<RequestInit, 'body' | 'headers'> & {
+  body?: any;
   headers: ReturnType<typeof mergeHeaders>;
 };
 
-type Opts = Req &
-  Config & {
-    headers: ReturnType<typeof mergeHeaders>;
-  };
-
 let globalConfig = createDefaultConfig();
 
-const globalInterceptors = createInterceptors<Request, Response, Opts>();
+const globalInterceptors = createInterceptors<
+  Request,
+  Response,
+  FinalRequestOptions
+>();
 
-export const createClient = (config: Partial<Config>) => {
+export const createClient = (config: Config): FetchClient => {
   const defaultConfig = createDefaultConfig();
   const _config = { ...defaultConfig, ...config };
 
-  if (_config.baseUrl.endsWith('/')) {
+  if (_config.baseUrl?.endsWith('/')) {
     _config.baseUrl = _config.baseUrl.substring(0, _config.baseUrl.length - 1);
   }
   _config.headers = mergeHeaders(defaultConfig.headers, _config.headers);
@@ -114,21 +112,23 @@ export const createClient = (config: Partial<Config>) => {
 
   const interceptors = _config.global
     ? globalInterceptors
-    : createInterceptors<Request, Response, Opts>();
+    : createInterceptors<Request, Response, FinalRequestOptions>();
 
-  const request = async <Data = unknown, Error = unknown>(
-    options: Req,
-  ): RequestResult<Data, Error> => {
+  // @ts-ignore
+  const request: FetchClient['request'] = async (options) => {
     const config = getConfig();
 
-    const opts: Opts = {
+    const opts: FinalRequestOptions = {
       ...config,
       ...options,
       headers: mergeHeaders(config.headers, options.headers),
     };
+    if (opts.body && opts.bodySerializer) {
+      opts.body = opts.bodySerializer(opts.body);
+    }
 
     const url = getUrl({
-      baseUrl: opts.baseUrl,
+      baseUrl: opts.baseUrl ?? '',
       path: opts.path,
       query: opts.query,
       querySerializer:
@@ -142,9 +142,6 @@ export const createClient = (config: Partial<Config>) => {
       redirect: 'follow',
       ...opts,
     };
-    if (opts.body) {
-      requestInit.body = opts.bodySerializer(opts.body);
-    }
     // remove Content-Type if serialized body is FormData; browser will correctly set Content-Type and boundary expression
     if (requestInit.body instanceof FormData) {
       requestInit.headers.delete('Content-Type');
@@ -156,7 +153,7 @@ export const createClient = (config: Partial<Config>) => {
       request = await fn(request, opts);
     }
 
-    const _fetch = opts.fetch;
+    const _fetch = opts.fetch!;
     let response = await _fetch(request);
 
     for (const fn of interceptors.response._fns) {
@@ -175,13 +172,11 @@ export const createClient = (config: Partial<Config>) => {
     ) {
       if (response.ok) {
         return {
-          // @ts-ignore
           data: {},
           ...result,
         };
       }
       return {
-        // @ts-ignore
         error: {},
         ...result,
       };
@@ -190,13 +185,12 @@ export const createClient = (config: Partial<Config>) => {
     if (response.ok) {
       if (opts.parseAs === 'stream') {
         return {
-          // @ts-ignore
           data: response.body,
           ...result,
         };
       }
       return {
-        data: await response[opts.parseAs](),
+        data: await response[opts.parseAs ?? 'json'](),
         ...result,
       };
     }
@@ -208,43 +202,25 @@ export const createClient = (config: Partial<Config>) => {
       // noop
     }
     return {
-      // @ts-ignore
       error,
       ...result,
     };
   };
 
-  type Interceptors = {
-    [P in keyof typeof interceptors]: Pick<
-      (typeof interceptors)[P],
-      'eject' | 'use'
-    >;
-  };
-
-  const client = {
-    connect: <Data = unknown, Error = unknown>(options: Options) =>
-      request<Data, Error>({ ...options, method: 'CONNECT' }),
-    delete: <Data = unknown, Error = unknown>(options: Options) =>
-      request<Data, Error>({ ...options, method: 'DELETE' }),
-    get: <Data = unknown, Error = unknown>(options: Options) =>
-      request<Data, Error>({ ...options, method: 'GET' }),
+  return {
+    connect: (options) => request({ ...options, method: 'CONNECT' }),
+    delete: (options) => request({ ...options, method: 'DELETE' }),
+    get: (options) => request({ ...options, method: 'GET' }),
     getConfig,
-    head: <Data = unknown, Error = unknown>(options: Options) =>
-      request<Data, Error>({ ...options, method: 'HEAD' }),
-    interceptors: interceptors as Interceptors,
-    options: <Data = unknown, Error = unknown>(options: Options) =>
-      request<Data, Error>({ ...options, method: 'OPTIONS' }),
-    patch: <Data = unknown, Error = unknown>(options: Options) =>
-      request<Data, Error>({ ...options, method: 'PATCH' }),
-    post: <Data = unknown, Error = unknown>(options: Options) =>
-      request<Data, Error>({ ...options, method: 'POST' }),
-    put: <Data = unknown, Error = unknown>(options: Options) =>
-      request<Data, Error>({ ...options, method: 'PUT' }),
+    head: (options) => request({ ...options, method: 'HEAD' }),
+    interceptors,
+    options: (options) => request({ ...options, method: 'OPTIONS' }),
+    patch: (options) => request({ ...options, method: 'PATCH' }),
+    post: (options) => request({ ...options, method: 'POST' }),
+    put: (options) => request({ ...options, method: 'PUT' }),
     request,
-    trace: <Data = unknown, Error = unknown>(options: Options) =>
-      request<Data, Error>({ ...options, method: 'TRACE' }),
+    trace: (options) => request({ ...options, method: 'TRACE' }),
   };
-  return client;
 };
 
 export const client = createClient(globalConfig);
