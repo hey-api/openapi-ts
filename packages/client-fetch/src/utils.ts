@@ -460,7 +460,9 @@ const serializeFormDataPair = (
 };
 
 export const formDataBodySerializer = {
-  bodySerializer: <T extends Record<string, any>>(body: T) => {
+  bodySerializer: <T extends Record<string, any> | Array<Record<string, any>>>(
+    body: T,
+  ) => {
     const formData = new FormData();
 
     Object.entries(body).forEach(([key, value]) => {

@@ -19,7 +19,10 @@ export interface Config
    *
    * {@link https://developer.mozilla.org/docs/Web/API/fetch#body}
    */
-  body?: RequestInit['body'] | Record<string, unknown>;
+  body?:
+    | RequestInit['body']
+    | Record<string, unknown>
+    | Array<Record<string, unknown>>;
   /**
    * A function for serializing request body parameter. By default,
    * {@link JSON.stringify()} will be used.
