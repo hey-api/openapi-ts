@@ -26,11 +26,26 @@
     "typescript",
     "vue"
   ],
+  "types": "dist/node/index.d.ts",
+  "main": "dist/node/index.cjs",
+  "module": "dist/node/index.mjs",
   "exports": {
-    "import": "./dist/node/index.mjs",
-    "require": "./dist/node/index.cjs",
-    "types": "./dist/node/index.d.ts"
+    ".": {
+      "import": {
+        "types": "./dist/node/index.d.ts",
+        "default": "./dist/node/index.mjs"
+      },
+      "require": {
+        "types": "./dist/node/index.d.ts",
+        "default": "./dist/node/index.cjs"
+      }
+    },
+    "./package.json": "./package.json"
   },
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
     "build-bundle": "rollup --config rollup.config.ts --configPlugin typescript",
     "build-types-check": "tsc --project tsconfig.check.json",
