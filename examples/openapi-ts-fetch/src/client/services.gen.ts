@@ -3,128 +3,243 @@
 import { client, type Options } from '@hey-api/client-fetch';
 
 import type {
-  BuyMuseumTicketsData,
-  BuyMuseumTicketsError,
-  BuyMuseumTicketsResponse2,
-  CreateSpecialEventData,
-  CreateSpecialEventError,
-  CreateSpecialEventResponse,
-  DeleteSpecialEventData,
-  DeleteSpecialEventError,
-  DeleteSpecialEventResponse,
-  GetMuseumHoursData,
-  GetMuseumHoursError,
-  GetMuseumHoursResponse2,
-  GetSpecialEventData,
-  GetSpecialEventError,
-  GetSpecialEventResponse,
-  GetTicketCodeData,
-  GetTicketCodeError,
-  GetTicketCodeResponse2,
-  ListSpecialEventsData,
-  ListSpecialEventsError,
-  ListSpecialEventsResponse2,
-  UpdateSpecialEventData,
-  UpdateSpecialEventError,
-  UpdateSpecialEventResponse,
+  AddPetData,
+  AddPetError,
+  AddPetResponse,
+  CreateUserData,
+  CreateUserError,
+  CreateUserResponse,
+  CreateUsersWithListInputData,
+  CreateUsersWithListInputError,
+  CreateUsersWithListInputResponse,
+  DeleteOrderData,
+  DeletePetData,
+  DeleteUserData,
+  FindPetsByStatusData,
+  FindPetsByStatusError,
+  FindPetsByStatusResponse,
+  FindPetsByTagsData,
+  FindPetsByTagsError,
+  FindPetsByTagsResponse,
+  GetInventoryError,
+  GetInventoryResponse,
+  GetOrderByIdData,
+  GetOrderByIdError,
+  GetOrderByIdResponse,
+  GetPetByIdData,
+  GetPetByIdError,
+  GetPetByIdResponse,
+  GetUserByNameData,
+  GetUserByNameError,
+  GetUserByNameResponse,
+  LoginUserData,
+  LoginUserError,
+  LoginUserResponse,
+  LogoutUserError,
+  LogoutUserResponse,
+  PlaceOrderData,
+  PlaceOrderError,
+  PlaceOrderResponse,
+  UpdatePetData,
+  UpdatePetError,
+  UpdatePetResponse,
+  UpdatePetWithFormData,
+  UpdateUserData,
+  UpdateUserError,
+  UpdateUserResponse,
+  UploadFileData,
+  UploadFileError,
+  UploadFileResponse,
 } from './types.gen';
 
 /**
- * Get museum hours
- * Get upcoming museum operating hours.
+ * Add a new pet to the store
+ * Add a new pet to the store
  */
-export const getMuseumHours = (options?: Options<GetMuseumHoursData>) =>
-  (options?.client ?? client).get<GetMuseumHoursResponse2, GetMuseumHoursError>(
-    {
-      ...options,
-      url: '/museum-hours',
-    },
-  );
-
-/**
- * Create special events
- * Creates a new special event for the museum.
- */
-export const createSpecialEvent = (options: Options<CreateSpecialEventData>) =>
-  (options?.client ?? client).post<
-    CreateSpecialEventResponse,
-    CreateSpecialEventError
-  >({
+export const addPet = (options: Options<AddPetData>) =>
+  (options?.client ?? client).post<AddPetResponse, AddPetError>({
     ...options,
-    url: '/special-events',
+    url: '/pet',
   });
 
 /**
- * List special events
- * Return a list of upcoming special events at the museum.
+ * Update an existing pet
+ * Update an existing pet by Id
  */
-export const listSpecialEvents = (options?: Options<ListSpecialEventsData>) =>
+export const updatePet = (options: Options<UpdatePetData>) =>
+  (options?.client ?? client).put<UpdatePetResponse, UpdatePetError>({
+    ...options,
+    url: '/pet',
+  });
+
+/**
+ * Finds Pets by status
+ * Multiple status values can be provided with comma separated strings
+ */
+export const findPetsByStatus = (options?: Options<FindPetsByStatusData>) =>
   (options?.client ?? client).get<
-    ListSpecialEventsResponse2,
-    ListSpecialEventsError
+    FindPetsByStatusResponse,
+    FindPetsByStatusError
   >({
     ...options,
-    url: '/special-events',
+    url: '/pet/findByStatus',
   });
 
 /**
- * Get special event
- * Get details about a special event.
+ * Finds Pets by tags
+ * Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
  */
-export const getSpecialEvent = (options: Options<GetSpecialEventData>) =>
-  (options?.client ?? client).get<
-    GetSpecialEventResponse,
-    GetSpecialEventError
-  >({
+export const findPetsByTags = (options?: Options<FindPetsByTagsData>) =>
+  (options?.client ?? client).get<FindPetsByTagsResponse, FindPetsByTagsError>({
     ...options,
-    url: '/special-events/{eventId}',
+    url: '/pet/findByTags',
   });
 
 /**
- * Update special event
- * Update the details of a special event.
+ * Find pet by ID
+ * Returns a single pet
  */
-export const updateSpecialEvent = (options: Options<UpdateSpecialEventData>) =>
-  (options?.client ?? client).patch<
-    UpdateSpecialEventResponse,
-    UpdateSpecialEventError
-  >({
+export const getPetById = (options: Options<GetPetByIdData>) =>
+  (options?.client ?? client).get<GetPetByIdResponse, GetPetByIdError>({
     ...options,
-    url: '/special-events/{eventId}',
+    url: '/pet/{petId}',
   });
 
 /**
- * Delete special event
- * Delete a special event from the collection. Allows museum to cancel planned events.
+ * Updates a pet in the store with form data
  */
-export const deleteSpecialEvent = (options: Options<DeleteSpecialEventData>) =>
-  (options?.client ?? client).delete<
-    DeleteSpecialEventResponse,
-    DeleteSpecialEventError
-  >({
+export const updatePetWithForm = (options: Options<UpdatePetWithFormData>) =>
+  (options?.client ?? client).post<void>({
     ...options,
-    url: '/special-events/{eventId}',
+    url: '/pet/{petId}',
   });
 
 /**
- * Buy museum tickets
- * Purchase museum tickets for general entry or special events.
+ * Deletes a pet
  */
-export const buyMuseumTickets = (options: Options<BuyMuseumTicketsData>) =>
+export const deletePet = (options: Options<DeletePetData>) =>
+  (options?.client ?? client).delete<void>({
+    ...options,
+    url: '/pet/{petId}',
+  });
+
+/**
+ * uploads an image
+ */
+export const uploadFile = (options: Options<UploadFileData>) =>
+  (options?.client ?? client).post<UploadFileResponse, UploadFileError>({
+    ...options,
+    url: '/pet/{petId}/uploadImage',
+  });
+
+/**
+ * Returns pet inventories by status
+ * Returns a map of status codes to quantities
+ */
+export const getInventory = (options?: Options) =>
+  (options?.client ?? client).get<GetInventoryResponse, GetInventoryError>({
+    ...options,
+    url: '/store/inventory',
+  });
+
+/**
+ * Place an order for a pet
+ * Place a new order in the store
+ */
+export const placeOrder = (options?: Options<PlaceOrderData>) =>
+  (options?.client ?? client).post<PlaceOrderResponse, PlaceOrderError>({
+    ...options,
+    url: '/store/order',
+  });
+
+/**
+ * Find purchase order by ID
+ * For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions.
+ */
+export const getOrderById = (options: Options<GetOrderByIdData>) =>
+  (options?.client ?? client).get<GetOrderByIdResponse, GetOrderByIdError>({
+    ...options,
+    url: '/store/order/{orderId}',
+  });
+
+/**
+ * Delete purchase order by ID
+ * For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors
+ */
+export const deleteOrder = (options: Options<DeleteOrderData>) =>
+  (options?.client ?? client).delete<void>({
+    ...options,
+    url: '/store/order/{orderId}',
+  });
+
+/**
+ * Create user
+ * This can only be done by the logged in user.
+ */
+export const createUser = (options?: Options<CreateUserData>) =>
+  (options?.client ?? client).post<CreateUserResponse, CreateUserError>({
+    ...options,
+    url: '/user',
+  });
+
+/**
+ * Creates list of users with given input array
+ * Creates list of users with given input array
+ */
+export const createUsersWithListInput = (
+  options?: Options<CreateUsersWithListInputData>,
+) =>
   (options?.client ?? client).post<
-    BuyMuseumTicketsResponse2,
-    BuyMuseumTicketsError
+    CreateUsersWithListInputResponse,
+    CreateUsersWithListInputError
   >({
     ...options,
-    url: '/tickets',
+    url: '/user/createWithList',
   });
 
 /**
- * Get ticket QR code
- * Return an image of your ticket with scannable QR code. Used for event entry.
+ * Logs user into the system
  */
-export const getTicketCode = (options: Options<GetTicketCodeData>) =>
-  (options?.client ?? client).get<GetTicketCodeResponse2, GetTicketCodeError>({
+export const loginUser = (options?: Options<LoginUserData>) =>
+  (options?.client ?? client).get<LoginUserResponse, LoginUserError>({
     ...options,
-    url: '/tickets/{ticketId}/qr',
+    url: '/user/login',
+  });
+
+/**
+ * Logs out current logged in user session
+ */
+export const logoutUser = (options?: Options) =>
+  (options?.client ?? client).get<LogoutUserResponse, LogoutUserError>({
+    ...options,
+    url: '/user/logout',
+  });
+
+/**
+ * Get user by user name
+ */
+export const getUserByName = (options: Options<GetUserByNameData>) =>
+  (options?.client ?? client).get<GetUserByNameResponse, GetUserByNameError>({
+    ...options,
+    url: '/user/{username}',
+  });
+
+/**
+ * Update user
+ * This can only be done by the logged in user.
+ */
+export const updateUser = (options: Options<UpdateUserData>) =>
+  (options?.client ?? client).put<UpdateUserResponse, UpdateUserError>({
+    ...options,
+    url: '/user/{username}',
+  });
+
+/**
+ * Delete user
+ * This can only be done by the logged in user.
+ */
+export const deleteUser = (options: Options<DeleteUserData>) =>
+  (options?.client ?? client).delete<void>({
+    ...options,
+    url: '/user/{username}',
   });

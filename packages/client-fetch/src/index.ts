@@ -1,4 +1,4 @@
-import type { Config, FetchClient, FinalRequestOptions } from './types';
+import type { Config, FetchClient, RequestOptions } from './types';
 import {
   createDefaultConfig,
   createInterceptors,
@@ -32,7 +32,7 @@ let globalConfig = createDefaultConfig();
 const globalInterceptors = createInterceptors<
   Request,
   Response,
-  FinalRequestOptions
+  RequestOptions
 >();
 
 export const createClient = (config: Config): FetchClient => {
@@ -52,13 +52,13 @@ export const createClient = (config: Config): FetchClient => {
 
   const interceptors = _config.global
     ? globalInterceptors
-    : createInterceptors<Request, Response, FinalRequestOptions>();
+    : createInterceptors<Request, Response, RequestOptions>();
 
   // @ts-ignore
   const request: FetchClient['request'] = async (options) => {
     const config = getConfig();
 
-    const opts: FinalRequestOptions = {
+    const opts: RequestOptions = {
       ...config,
       ...options,
       headers: mergeHeaders(config.headers, options.headers),
