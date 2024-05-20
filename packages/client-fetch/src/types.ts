@@ -5,7 +5,7 @@ import type {
   QuerySerializerOptions,
 } from './utils';
 
-type OmitKey<T, K> = Pick<T, Exclude<keyof T, K>>;
+type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
 
 export interface Config
   extends Omit<RequestInit, 'body' | 'headers' | 'method'> {
@@ -90,7 +90,7 @@ export interface Config
   querySerializer?: QuerySerializer | QuerySerializerOptions;
 }
 
-interface RequestOptions extends Omit<Config, 'global'> {
+interface RequestOptionsBase extends Omit<Config, 'global'> {
   path?: Record<string, unknown>;
   query?: Record<string, unknown>;
   url: string;
@@ -104,10 +104,10 @@ type RequestResult<Data = unknown, Error = unknown> = Promise<{
 }>;
 
 type MethodFn = <Data = unknown, Error = unknown>(
-  options: RequestOptions,
+  options: RequestOptionsBase,
 ) => RequestResult<Data, Error>;
 type RequestFn = <Data = unknown, Error = unknown>(
-  options: RequestOptions & Pick<Required<RequestOptions>, 'method'>,
+  options: RequestOptionsBase & Pick<Required<RequestOptionsBase>, 'method'>,
 ) => RequestResult<Data, Error>;
 
 interface Client<Request = unknown, Response = unknown, Options = unknown> {
@@ -125,14 +125,14 @@ interface Client<Request = unknown, Response = unknown, Options = unknown> {
   trace: MethodFn;
 }
 
-export type FinalRequestOptions = RequestOptions &
+export type RequestOptions = RequestOptionsBase &
   Config & {
     headers: Headers;
   };
 
-export type FetchClient = Client<Request, Response, FinalRequestOptions>;
+export type FetchClient = Client<Request, Response, RequestOptions>;
 
-type OptionsBase = Omit<RequestOptions, 'url'> & {
+type OptionsBase = Omit<RequestOptionsBase, 'url'> & {
   /**
    * You can provide a client instance returned by `createClient()` instead of
    * individual options. This might be also useful if you want to implement a
@@ -141,6 +141,10 @@ type OptionsBase = Omit<RequestOptions, 'url'> & {
   client?: FetchClient;
 };
 
-export type Options<T = unknown> = T extends { body: any }
-  ? OmitKey<OptionsBase, 'body'> & T
-  : OptionsBase & T;
+export type Options<T = unknown> = T extends { body: any; headers: any }
+  ? OmitKeys<OptionsBase, 'body' | 'headers'> & T
+  : T extends { body: any }
+    ? OmitKeys<OptionsBase, 'body'> & T
+    : T extends { headers: any }
+      ? OmitKeys<OptionsBase, 'headers'> & T
+      : OptionsBase & T;
