@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Core utilities for type-safe openapi-ts clients",
+  "description": "Core utilities for typesafe @hey-api/openapi-ts clients",
   "homepage": "https://heyapi.vercel.app/",
   "repository": {
     "type": "git",
