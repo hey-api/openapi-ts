@@ -460,6 +460,9 @@ export const processService = (
     service.operations.forEach((operation) => {
       const expression = compiler.types.function({
         parameters: toOperationParamType(client, operation),
+        returnType: isStandalone
+          ? undefined
+          : toOperationReturnType(client, operation),
         statements: toOperationStatements(client, operation, onClientImport),
       });
       const statement = compiler.export.const({

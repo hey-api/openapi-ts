@@ -24,7 +24,9 @@ describe('OpenAPI v2', () => {
         input: '',
         output: '',
         schemas: true,
-        services: true,
+        services: {
+          asClass: true,
+        },
         types: {
           enums: 'javascript',
         },
@@ -54,7 +56,9 @@ describe('OpenAPI v3', () => {
     input: '',
     output: '',
     schemas: true,
-    services: true,
+    services: {
+      asClass: true,
+    },
     types: {
       enums: 'javascript',
     },
@@ -127,7 +131,10 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         schemas: false,
-        services: '^Defaults',
+        services: {
+          asClass: true,
+          include: '^Defaults',
+        },
         types: {
           dates: true,
           include: '^ModelWithString',
@@ -140,7 +147,10 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         schemas: false,
-        services: '^Defaults',
+        services: {
+          asClass: true,
+          include: '^Defaults',
+        },
         types: {
           dates: true,
           include: '^ModelWithString',
@@ -198,6 +208,7 @@ describe('OpenAPI v3', () => {
         exportCore: false,
         schemas: false,
         services: {
+          asClass: true,
           include: '^(Simple|Parameters)',
           name: 'myAwesome{{name}}Api',
         },
@@ -229,6 +240,15 @@ describe('OpenAPI v3', () => {
       }),
       description: 'generate form validation schemas',
       name: 'v3_schemas_form',
+    },
+    {
+      config: createConfig({
+        exportCore: false,
+        schemas: false,
+        services: true,
+      }),
+      description: 'generate tree-shakeable services',
+      name: 'v3_tree_shakeable',
     },
   ])('$description', async ({ name, config }) => {
     const output = toOutputPath(name);
