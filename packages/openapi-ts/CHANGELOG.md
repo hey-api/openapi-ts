@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.46.0
+
+### Minor Changes
+
+- feat: tree-shakeable services ([#602](https://github.com/hey-api/openapi-ts/pull/602))
+
 ## 0.45.1
 
 ### Patch Changes
