@@ -13,6 +13,6 @@
     "@stackblitz/sdk": "1.10.0"
   },
   "devDependencies": {
-    "vitepress": "1.1.4"
+    "vitepress": "1.2.2"
   }
 }
