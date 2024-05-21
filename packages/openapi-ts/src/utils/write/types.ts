@@ -212,6 +212,8 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
 
   const config = getConfig();
 
+  const isStandalone = isStandaloneClient(config);
+
   client.services.forEach((service) => {
     service.operations.forEach((operation) => {
       const hasReq = operation.parameters.length;
@@ -250,8 +252,8 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
               .filter((parameter) => parameter.in === 'header')
               .some((parameter) => parameter.isRequired),
             mediaType: null,
-            name: 'header',
-            prop: 'header',
+            name: isStandalone ? 'headers' : 'header',
+            prop: isStandalone ? 'headers' : 'header',
             properties: operation.parameters
               .filter((parameter) => parameter.in === 'header')
               .sort(sorterByName),
@@ -282,7 +284,7 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
               .filter((parameter) => parameter.in === 'query')
               .sort(sorterByName),
           };
-          const operationProperties = isStandaloneClient(config)
+          const operationProperties = isStandalone
             ? [
                 bodyParameters,
                 headerParameters,

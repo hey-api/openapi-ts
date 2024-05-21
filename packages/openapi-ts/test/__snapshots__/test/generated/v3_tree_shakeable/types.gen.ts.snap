@@ -1006,6 +1006,44 @@ export type DeleteFooData3 = {
     foo: string;
 };
 
+export type CallWithDescriptionsData = {
+    /**
+     * Testing backticks in string: `backticks` and ```multiple backticks``` should work
+     */
+    parameterWithBackticks?: unknown;
+    /**
+     * Testing multiline comments in string: First line
+     * Second line
+     *
+     * Fourth line
+     */
+    parameterWithBreaks?: unknown;
+    /**
+     * Testing expression placeholders in string: ${expression} should work
+     */
+    parameterWithExpressionPlaceholders?: unknown;
+    /**
+     * Testing quotes in string: 'single quote''' and "double quotes""" should work
+     */
+    parameterWithQuotes?: unknown;
+    /**
+     * Testing reserved characters in string: * inline * and ** inline ** should work
+     */
+    parameterWithReservedCharacters?: unknown;
+    /**
+     * Testing slashes in string: \backwards\\\ and /forwards/// should work
+     */
+    parameterWithSlashes?: unknown;
+};
+
+export type DeprecatedCallData = {
+    /**
+     * This parameter is deprecated
+     * @deprecated
+     */
+    parameter: DeprecatedModel | null;
+};
+
 export type CallWithParametersData = {
     fooAllOfEnum: ModelWithNestedArrayEnumsDataFoo;
     fooRefEnum?: ModelWithNestedArrayEnumsDataFoo;
@@ -1094,44 +1132,6 @@ export type PostCallWithOptionalParamData = {
      * This is an optional parameter
      */
     requestBody?: ModelWithString;
-};
-
-export type CallWithDescriptionsData = {
-    /**
-     * Testing backticks in string: `backticks` and ```multiple backticks``` should work
-     */
-    parameterWithBackticks?: unknown;
-    /**
-     * Testing multiline comments in string: First line
-     * Second line
-     *
-     * Fourth line
-     */
-    parameterWithBreaks?: unknown;
-    /**
-     * Testing expression placeholders in string: ${expression} should work
-     */
-    parameterWithExpressionPlaceholders?: unknown;
-    /**
-     * Testing quotes in string: 'single quote''' and "double quotes""" should work
-     */
-    parameterWithQuotes?: unknown;
-    /**
-     * Testing reserved characters in string: * inline * and ** inline ** should work
-     */
-    parameterWithReservedCharacters?: unknown;
-    /**
-     * Testing slashes in string: \backwards\\\ and /forwards/// should work
-     */
-    parameterWithSlashes?: unknown;
-};
-
-export type DeprecatedCallData = {
-    /**
-     * This parameter is deprecated
-     * @deprecated
-     */
-    parameter: DeprecatedModel | null;
 };
 
 export type PostApiRequestBodyData = {
@@ -1241,6 +1241,10 @@ export type CallWithNoContentResponseResponse = void;
 
 export type CallWithResponseAndNoContentResponseResponse = number | void;
 
+export type DummyAResponse = void;
+
+export type DummyBResponse = void;
+
 export type CallWithResponseResponse = ModelWithString;
 
 export type CallWithDuplicateResponsesResponse = ModelWithBoolean & ModelWithInteger | ModelWithString | ModelWithBoolean;
@@ -1250,10 +1254,6 @@ export type CallWithResponsesResponse = {
     readonly '@namespace.integer'?: number;
     readonly value?: Array<ModelWithString>;
 } | ModelThatExtends | ModelThatExtendsExtends | ModelWithString;
-
-export type DummyAResponse = void;
-
-export type DummyBResponse = void;
 
 export type CollectionFormatData = {
     /**
@@ -1355,6 +1355,21 @@ export type ComplexTypesData = {
 
 export type ComplexTypesResponse = Array<ModelWithString>;
 
+export type MultipartRequestData = {
+    formData?: {
+        content?: (Blob | File);
+        data?: ModelWithString | null;
+    };
+};
+
+export type MultipartResponseResponse = {
+    file?: (Blob | File);
+    metadata?: {
+        foo?: string;
+        bar?: string;
+    };
+};
+
 export type ComplexParamsData = {
     id: number;
     requestBody?: {
@@ -1373,21 +1388,6 @@ export type ComplexParamsData = {
 };
 
 export type ComplexParamsResponse = ModelWithString;
-
-export type MultipartRequestData = {
-    formData?: {
-        content?: (Blob | File);
-        data?: ModelWithString | null;
-    };
-};
-
-export type MultipartResponseResponse = {
-    file?: (Blob | File);
-    metadata?: {
-        foo?: string;
-        bar?: string;
-    };
-};
 
 export type CallWithResultFromHeaderResponse = string;
 
@@ -1433,6 +1433,16 @@ export type $OpenApiTs = {
             req: DeleteFooData3;
         };
     };
+    '/api/v{api-version}/descriptions/': {
+        post: {
+            req: CallWithDescriptionsData;
+        };
+    };
+    '/api/v{api-version}/parameters/deprecated': {
+        post: {
+            req: DeprecatedCallData;
+        };
+    };
     '/api/v{api-version}/parameters/{parameterPath}': {
         post: {
             req: CallWithParametersData;
@@ -1449,16 +1459,6 @@ export type $OpenApiTs = {
         };
         post: {
             req: PostCallWithOptionalParamData;
-        };
-    };
-    '/api/v{api-version}/descriptions/': {
-        post: {
-            req: CallWithDescriptionsData;
-        };
-    };
-    '/api/v{api-version}/parameters/deprecated': {
-        post: {
-            req: DeprecatedCallData;
         };
     };
     '/api/v{api-version}/requestBody/': {
@@ -1499,6 +1499,26 @@ export type $OpenApiTs = {
                  * Response is a simple number
                  */
                 200: number;
+                /**
+                 * Success
+                 */
+                204: void;
+            };
+        };
+    };
+    '/api/v{api-version}/multiple-tags/a': {
+        get: {
+            res: {
+                /**
+                 * Success
+                 */
+                204: void;
+            };
+        };
+    };
+    '/api/v{api-version}/multiple-tags/b': {
+        get: {
+            res: {
                 /**
                  * Success
                  */
@@ -1577,26 +1597,6 @@ export type $OpenApiTs = {
             };
         };
     };
-    '/api/v{api-version}/multiple-tags/a': {
-        get: {
-            res: {
-                /**
-                 * Success
-                 */
-                204: void;
-            };
-        };
-    };
-    '/api/v{api-version}/multiple-tags/b': {
-        get: {
-            res: {
-                /**
-                 * Success
-                 */
-                204: void;
-            };
-        };
-    };
     '/api/v{api-version}/collectionFormat': {
         get: {
             req: CollectionFormatData;
@@ -1665,17 +1665,6 @@ export type $OpenApiTs = {
             };
         };
     };
-    '/api/v{api-version}/complex/{id}': {
-        put: {
-            req: ComplexParamsData;
-            res: {
-                /**
-                 * Success
-                 */
-                200: ModelWithString;
-            };
-        };
-    };
     '/api/v{api-version}/multipart': {
         post: {
             req: MultipartRequestData;
@@ -1692,6 +1681,17 @@ export type $OpenApiTs = {
                         bar?: string;
                     };
                 };
+            };
+        };
+    };
+    '/api/v{api-version}/complex/{id}': {
+        put: {
+            req: ComplexParamsData;
+            res: {
+                /**
+                 * Success
+                 */
+                200: ModelWithString;
             };
         };
     };

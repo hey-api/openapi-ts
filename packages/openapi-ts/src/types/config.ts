@@ -95,16 +95,32 @@ export interface ClientConfig {
     | string
     | {
         /**
+         * Group operation methods into service classes? When enabled, you can
+         * select which classes to export with `services.include` and/or
+         * transform their names with `services.name`.
+         *
+         * Note that by enabling this option, your services will **NOT**
+         * support {@link https://developer.mozilla.org/docs/Glossary/Tree_shaking tree-shaking}.
+         * For this reason, it is disabled by default.
+         * @default false
+         */
+        asClass?: boolean;
+        /**
          * Generate services?
          * @default true
          */
         export?: boolean;
         /**
-         * Include only services matching regular expression
+         * Include only service classes with names matching regular expression
+         *
+         * This option has no effect if `services.asClass` is `false`.
          */
         include?: string;
         /**
-         * Use your preferred naming pattern
+         * Customize the generated service class names. The name variable is
+         * obtained from your OpenAPI specification tags.
+         *
+         * This option has no effect if `services.asClass` is `false`.
          * @default '{{name}}Service'
          */
         name?: string;
@@ -116,6 +132,7 @@ export interface ClientConfig {
         /**
          * Define shape of returned value from service calls
          * @default 'body'
+         * @deprecated
          */
         response?: 'body' | 'response';
       };

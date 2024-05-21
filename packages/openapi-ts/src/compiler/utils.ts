@@ -82,7 +82,7 @@ export function stringToTsNodes(value: string): ts.Node {
 }
 
 /**
- * ots for openapi-ts are helpers to reduce repetition of basic TypeScript
+ * ots for @hey-api/openapi-ts are helpers to reduce repetition of basic TypeScript
  * factory functions.
  */
 export const ots = {

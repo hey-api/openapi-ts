@@ -21,7 +21,9 @@ describe('processServices', () => {
         path: '',
       },
       schemas: {},
-      services: {},
+      services: {
+        asClass: true,
+      },
       types: {},
       useOptions: false,
     });
