@@ -8,20 +8,6 @@ import {
   mergeHeaders,
 } from './utils';
 
-// const getHeaders = async () => {
-//   if (options.body !== undefined) {
-//     if (options.mediaType) {
-//       headers['Content-Type'] = options.mediaType;
-//     } else if (isBlob(options.body)) {
-//       headers['Content-Type'] = options.body.type || 'application/octet-stream';
-//     } else if (isString(options.body)) {
-//       headers['Content-Type'] = 'text/plain';
-//     } else if (!isFormData(options.body)) {
-//       headers['Content-Type'] = 'application/json';
-//     }
-//   }
-// };
-
 type ReqInit = Omit<RequestInit, 'body' | 'headers'> & {
   body?: any;
   headers: ReturnType<typeof mergeHeaders>;

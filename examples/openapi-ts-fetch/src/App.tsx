@@ -2,7 +2,7 @@ import './App.css';
 
 import { createClient } from '@hey-api/client-fetch';
 import * as Form from '@radix-ui/react-form';
-import { DownloadIcon, PlusIcon } from '@radix-ui/react-icons';
+import { DownloadIcon, PlusIcon, ReloadIcon } from '@radix-ui/react-icons';
 import {
   Avatar,
   Box,
@@ -18,25 +18,42 @@ import {
 import { useState } from 'react';
 
 import { $Pet } from './client/schemas.gen';
-import { addPet, getPetById } from './client/services.gen';
+import { addPet, getPetById, updatePet } from './client/services.gen';
 import type { Pet } from './client/types.gen';
 
 createClient({
-  // set base url for every request
+  // set default base url for requests
   baseUrl: 'https://petstore3.swagger.io/api/v3',
+  // set default headers for requests
+  headers: {
+    Authorization: 'Bearer <token_from_global_client>',
+  },
 });
 
 const localClient = createClient({
-  // set base url only for requests made by this client (takes precedence over
-  // global configuration)
+  // set default base url for requests made by this client
   baseUrl: 'https://petstore3.swagger.io/api/v3',
   global: false,
+  /**
+   * Set default headers only for requests made by this client. This is to
+   * demonstrate local clients and their configuration taking precedence over
+   * global configuration.
+   */
+  headers: {
+    Authorization: 'Bearer <token_from_local_client>',
+  },
 });
 
 localClient.interceptors.request.use((request, options) => {
-  // add authorization token to requests to protected paths
-  if (options.url === '/protected') {
-    request.headers.set('Authorization', 'Bearer token');
+  // Middleware is great for adding authorization tokens to requests made to
+  // protected paths. Headers are set randomly here to allow surfacing the
+  // default headers, too.
+  if (
+    options.url === '/pet/{petId}' &&
+    options.method === 'GET' &&
+    Math.random() < 0.5
+  ) {
+    request.headers.set('Authorization', 'Bearer <token_from_interceptor>');
   }
   return request;
 });
@@ -93,7 +110,35 @@ function App() {
     setPet(data!);
   };
 
-  // TODO: add PUT request with different Accept and Content-Type headers
+  const onUpdatePet = async () => {
+    const { data, error } = await updatePet({
+      body: {
+        category: {
+          id: 0,
+          name: 'Cats',
+        },
+        id: 2,
+        name: 'Updated Kitty',
+        photoUrls: ['string'],
+        status: 'available',
+        tags: [
+          {
+            id: 0,
+            name: 'string',
+          },
+        ],
+      },
+      // setting headers per request
+      headers: {
+        Authorization: 'Bearer <token_from_method>',
+      },
+    });
+    if (error) {
+      console.log(error);
+      return;
+    }
+    setPet(data!);
+  };
 
   return (
     <Box
@@ -182,11 +227,16 @@ function App() {
                 />
               </Form.Control>
             </Form.Field>
-            <Form.Submit asChild>
-              <Button type="submit">
-                <PlusIcon /> Add Pet
+            <Flex gapX="2">
+              <Form.Submit asChild>
+                <Button type="submit">
+                  <PlusIcon /> Add Pet
+                </Button>
+              </Form.Submit>
+              <Button onClick={onUpdatePet} type="button">
+                <ReloadIcon /> Update Pet
               </Button>
-            </Form.Submit>
+            </Flex>
           </Form.Root>
         </Flex>
         <Section size="1" />

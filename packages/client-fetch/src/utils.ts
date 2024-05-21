@@ -109,23 +109,23 @@ const serializeArrayParam = ({
   value: unknown[];
 }) => {
   if (!explode) {
-    const final = (
+    const joinedValues = (
       allowReserved ? value : value.map((v) => encodeURIComponent(v as string))
     ).join(separatorArrayNoExplode(style));
     switch (style) {
       case 'label':
-        return `.${final}`;
+        return `.${joinedValues}`;
       case 'matrix':
-        return `;${name}=${final}`;
+        return `;${name}=${joinedValues}`;
       case 'simple':
-        return final;
+        return joinedValues;
       default:
-        return `${name}=${final}`;
+        return `${name}=${joinedValues}`;
     }
   }
 
   const separator = separatorArrayExplode(style);
-  const final = value
+  const joinedValues = value
     .map((v) => {
       if (style === 'label' || style === 'simple') {
         return allowReserved ? v : encodeURIComponent(v as string);
@@ -138,7 +138,9 @@ const serializeArrayParam = ({
       });
     })
     .join(separator);
-  return style === 'label' || style === 'matrix' ? separator + final : final;
+  return style === 'label' || style === 'matrix'
+    ? separator + joinedValues
+    : joinedValues;
 };
 
 const serializeObjectParam = ({
@@ -151,28 +153,29 @@ const serializeObjectParam = ({
   value: Record<string, unknown>;
 }) => {
   if (style !== 'deepObject' && !explode) {
-    const values: string[] = [];
+    let values: string[] = [];
     Object.entries(value).forEach(([key, v]) => {
-      values.push(
+      values = [
+        ...values,
         key,
         allowReserved ? (v as string) : encodeURIComponent(v as string),
-      );
+      ];
     });
-    const final = values.join(',');
+    const joinedValues = values.join(',');
     switch (style) {
       case 'form':
-        return `${name}=${final}`;
+        return `${name}=${joinedValues}`;
       case 'label':
-        return `.${final}`;
+        return `.${joinedValues}`;
       case 'matrix':
-        return `;${name}=${final}`;
+        return `;${name}=${joinedValues}`;
       default:
-        return final;
+        return joinedValues;
     }
   }
 
   const separator = separatorObjectExplode(style);
-  const final = Object.entries(value)
+  const joinedValues = Object.entries(value)
     .map(([key, v]) =>
       serializePrimitiveParam({
         allowReserved,
@@ -181,7 +184,9 @@ const serializeObjectParam = ({
       }),
     )
     .join(separator);
-  return style === 'label' || style === 'matrix' ? separator + final : final;
+  return style === 'label' || style === 'matrix'
+    ? separator + joinedValues
+    : joinedValues;
 };
 
 const defaultPathSerializer = ({ path, url: _url }: PathSerializer) => {
@@ -259,7 +264,7 @@ export const createQuerySerializer = <T = unknown>({
   object,
 }: QuerySerializerOptions = {}) => {
   const querySerializer = (queryParams: T) => {
-    const search = [];
+    let search: string[] = [];
     if (queryParams && typeof queryParams === 'object') {
       for (const name in queryParams) {
         const value = queryParams[name];
@@ -269,7 +274,8 @@ export const createQuerySerializer = <T = unknown>({
         }
 
         if (Array.isArray(value)) {
-          search.push(
+          search = [
+            ...search,
             serializeArrayParam({
               allowReserved,
               explode: true,
@@ -278,12 +284,13 @@ export const createQuerySerializer = <T = unknown>({
               value,
               ...array,
             }),
-          );
+          ];
           continue;
         }
 
         if (typeof value === 'object') {
-          search.push(
+          search = [
+            ...search,
             serializeObjectParam({
               allowReserved,
               explode: true,
@@ -292,17 +299,18 @@ export const createQuerySerializer = <T = unknown>({
               value: value as Record<string, unknown>,
               ...object,
             }),
-          );
+          ];
           continue;
         }
 
-        search.push(
+        search = [
+          ...search,
           serializePrimitiveParam({
             allowReserved,
             name,
             value: value as string,
           }),
-        );
+        ];
       }
     }
     return search.join('&');
