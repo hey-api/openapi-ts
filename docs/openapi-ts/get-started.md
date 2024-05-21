@@ -25,7 +25,7 @@ Live demo
 
 ## Quick Start
 
-The fastest way to use `openapi-ts` is via npx
+The fastest way to use `@hey-api/openapi-ts` is via npx
 
 ```sh
 npx @hey-api/openapi-ts -i path/to/openapi.json -o src/client
@@ -55,7 +55,7 @@ bun add @hey-api/openapi-ts -D
 
 :::
 
-If you want to use `openapi-ts` with CLI, add a script to your `package.json` file
+If you want to use `@hey-api/openapi-ts` with CLI, add a script to your `package.json` file
 
 ```json
 "scripts": {
@@ -63,7 +63,7 @@ If you want to use `openapi-ts` with CLI, add a script to your `package.json` fi
 }
 ```
 
-You can also generate your client programmatically by importing `openapi-ts` in a `.ts` file.
+You can also generate your client programmatically by importing `@hey-api/openapi-ts` in a TypeScript file.
 
 ```ts
 import { createClient } from '@hey-api/openapi-ts';

@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "lib": ["ES2020", "DOM"],
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "stripInternal": true
   },
   "exclude": ["../**/__tests__"],
