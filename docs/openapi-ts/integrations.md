@@ -5,7 +5,7 @@ description: Automate your client generation.
 
 # Integrations <span class="soon">Soon</span>
 
-Integrations allow you to automate your client generation workflow. Create dependency links between your clients and APIs, and watch the magic unfold. While we prefer to use `openapi-ts` for generating clients, you can use any codegen.
+Integrations allow you to automate your client generation workflow. Create dependency links between your clients and APIs, and watch the magic unfold. While we prefer to use `@hey-api/openapi-ts` for generating clients, you can use any codegen.
 
 ## Upload OpenAPI Spec
 

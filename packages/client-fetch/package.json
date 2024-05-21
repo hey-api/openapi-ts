@@ -1,9 +1,8 @@
 {
   "name": "@hey-api/client-fetch",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.0.1",
   "type": "module",
-  "description": "Type-safe Fetch API client for your openapi-ts types",
+  "description": "Typesafe Fetch API client for your @hey-api/openapi-ts types",
   "homepage": "https://heyapi.vercel.app/",
   "repository": {
     "type": "git",
@@ -15,12 +14,12 @@
   "license": "MIT",
   "keywords": [
     "client",
-    "codegen",
     "fetch",
-    "generator",
+    "http",
     "javascript",
     "openapi",
     "react",
+    "rest",
     "svelte",
     "swagger",
     "typescript",
@@ -42,6 +41,7 @@
     },
     "./package.json": "./package.json"
   },
+  "sideEffects": false,
   "files": [
     "dist",
     "src"
@@ -61,8 +61,5 @@
     "test:watch": "vitest watch",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
-  },
-  "engines": {
-    "node": "^18.0.0 || >=20.0.0"
   }
 }
