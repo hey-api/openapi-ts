@@ -4,7 +4,7 @@ import path from 'node:path';
 import { TypeScriptFile } from '../../compiler';
 import type { OpenApi } from '../../openApi';
 import type { Client } from '../../types/client';
-import { getConfig, isStandaloneClient } from '../config';
+import { getConfig } from '../config';
 import type { Templates } from '../handlebars';
 import { writeClientClass } from './class';
 import { writeCore } from './core';
@@ -26,8 +26,7 @@ export const writeClient = async (
 ): Promise<void> => {
   const config = getConfig();
 
-  // only legacy clients have class-based services
-  if (config.services.include && !isStandaloneClient(config)) {
+  if (config.services.include && config.services.asClass) {
     const regexp = new RegExp(config.services.include);
     client.services = client.services.filter((service) =>
       regexp.test(service.name),

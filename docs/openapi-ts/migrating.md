@@ -50,6 +50,40 @@ This config option is deprecated and will be removed in favor of [clients](./cli
 
 This config option is deprecated and will be removed in favor of [clients](./clients).
 
+## v0.46.0
+
+### Tree-shakeable services
+
+By default, your services will now support [tree-shaking](https://developer.mozilla.org/docs/Glossary/Tree_shaking). You can either use wildcard imports
+
+```js
+import { DefaultService } from 'client/services.gen'; // [!code --]
+import * as DefaultService from 'client/services.gen'; // [!code ++]
+
+DefaultService.foo(); // only import needs to be changed
+```
+
+or update all references to service classes
+
+```js
+import { DefaultService } from 'client/services.gen'; // [!code --]
+import { foo } from 'client/services.gen'; // [!code ++]
+
+foo(); // all references need to be changed
+```
+
+If you want to preserve the old behavior, you can set the newly exposed `services.asClass` option to `true.`
+
+```js{5}
+export default {
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  services: {
+    asClass: true,
+  },
+}
+```
+
 ## v0.45.0
 
 ### Removed `client` inference

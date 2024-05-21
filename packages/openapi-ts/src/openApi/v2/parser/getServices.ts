@@ -1,5 +1,5 @@
 import type { Client } from '../../../types/client';
-import { getConfig, isStandaloneClient } from '../../../utils/config';
+import { getConfig } from '../../../utils/config';
 import { unique } from '../../../utils/unique';
 import type { Service } from '../../common/interfaces/client';
 import type { OpenApi } from '../interfaces/OpenApi';
@@ -41,7 +41,7 @@ export const getServices = ({
           // Each method contains an OpenAPI operation, we parse the operation
           const op = path[method]!;
           const tags =
-            op.tags?.length && !isStandaloneClient(config)
+            op.tags?.length && config.services.asClass
               ? op.tags.filter(unique)
               : ['Default'];
           tags.forEach((tag) => {
