@@ -409,6 +409,8 @@ export const processService = (
 ) => {
   const config = getConfig();
 
+  const isStandalone = isStandaloneClient(config);
+
   service.operations.forEach((operation) => {
     if (operation.parameters.length) {
       generateImport({
@@ -424,7 +426,7 @@ export const processService = (
       });
     }
 
-    if (isStandaloneClient(config)) {
+    if (isStandalone) {
       generateImport({
         client,
         meta: {
@@ -454,7 +456,7 @@ export const processService = (
     }
   });
 
-  if (isStandaloneClient(config)) {
+  if (!config.services.asClass) {
     service.operations.forEach((operation) => {
       const expression = compiler.types.function({
         parameters: toOperationParamType(client, operation),
@@ -477,8 +479,10 @@ export const processService = (
       isStatic: config.name === undefined && config.client !== 'angular',
       name: operation.name,
       parameters: toOperationParamType(client, operation),
-      returnType: toOperationReturnType(client, operation),
-      statements: toOperationStatements(client, operation),
+      returnType: isStandalone
+        ? undefined
+        : toOperationReturnType(client, operation),
+      statements: toOperationStatements(client, operation, onClientImport),
     });
     return node;
   });

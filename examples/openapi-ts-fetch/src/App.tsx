@@ -93,6 +93,8 @@ function App() {
     setPet(data!);
   };
 
+  // TODO: add PUT request with different Accept and Content-Type headers
+
   return (
     <Box
       style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}
