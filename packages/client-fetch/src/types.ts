@@ -110,7 +110,7 @@ type RequestFn = <Data = unknown, Error = unknown>(
   options: RequestOptionsBase & Pick<Required<RequestOptionsBase>, 'method'>,
 ) => RequestResult<Data, Error>;
 
-interface Client<Request = unknown, Response = unknown, Options = unknown> {
+interface ClientBase<Request = unknown, Response = unknown, Options = unknown> {
   connect: MethodFn;
   delete: MethodFn;
   get: MethodFn;
@@ -130,7 +130,7 @@ export type RequestOptions = RequestOptionsBase &
     headers: Headers;
   };
 
-export type FetchClient = Client<Request, Response, RequestOptions>;
+export type Client = ClientBase<Request, Response, RequestOptions>;
 
 type OptionsBase = Omit<RequestOptionsBase, 'url'> & {
   /**
@@ -138,7 +138,7 @@ type OptionsBase = Omit<RequestOptionsBase, 'url'> & {
    * individual options. This might be also useful if you want to implement a
    * custom client.
    */
-  client?: FetchClient;
+  client?: Client;
 };
 
 export type Options<T = unknown> = T extends { body: any; headers: any }
