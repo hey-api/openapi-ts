@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.46.1
+
+### Patch Changes
+
+- fix: handle application/json content type in parameter definitions ([#614](https://github.com/hey-api/openapi-ts/pull/614))
+
 ## 0.46.0
 
 ### Minor Changes
