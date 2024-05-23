@@ -122,6 +122,7 @@ export class ParametersService {
      * @param data The data for the request.
      * @param data.foo foo in method
      * @param data.bar bar in method
+     * @param data.xFooBar Parameter with illegal characters
      * @throws ApiError
      */
     public static deleteFoo(data: DeleteFooData3): CancelablePromise<void> {
@@ -131,6 +132,9 @@ export class ParametersService {
             path: {
                 foo: data.foo,
                 bar: data.bar
+            },
+            headers: {
+                'x-Foo-Bar': data.xFooBar
             }
         });
     }

@@ -13,7 +13,9 @@ const main = async () => {
       export: false,
     },
     services: {
-      export: false,
+      asClass: true,
+      // export: false,
+      name: '^Parameters',
     },
     types: {
       enums: 'typescript',

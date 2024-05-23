@@ -118,6 +118,19 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "description": "Parameter with illegal characters",
+            "name": "x-Foo-Bar",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelWithString"
+                }
+              }
+            }
           }
         ]
       },
@@ -1636,8 +1649,12 @@
         "name": "x-Foo-Bar",
         "in": "header",
         "required": true,
-        "schema": {
-          "type": "string"
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ModelWithString"
+            }
+          }
         }
       }
     },

@@ -1,12 +1,16 @@
 import type { Client } from '../../../types/client';
+import { getConfig } from '../../../utils/config';
 import { reservedWords } from '../../common/parser/reservedWords';
 import { getType } from '../../common/parser/type';
 import type { OpenApi } from '../interfaces/OpenApi';
 import { getModel } from './getModel';
+import { getParameterSchema } from './parameter';
 
 export const getModels = (
   openApi: OpenApi,
 ): Pick<Client, 'models' | 'types'> => {
+  const config = getConfig();
+
   const types: Client['types'] = {};
   let models: Client['models'] = [];
 
@@ -39,8 +43,11 @@ export const getModels = (
 
   Object.entries(openApi.components.parameters ?? {}).forEach(
     ([definitionName, definition]) => {
-      const schema = definition.schema;
+      const schema = getParameterSchema(definition);
       if (!schema) {
+        if (config.debug) {
+          console.warn('Skipping generating parameter:', definitionName);
+        }
         return;
       }
 
