@@ -8,10 +8,12 @@ import { getOperationParameter } from './getOperationParameter';
 const allowedIn = ['cookie', 'formData', 'header', 'path', 'query'] as const;
 
 export const getOperationParameters = ({
+  debug,
   openApi,
   parameters,
   types,
 }: {
+  debug?: boolean;
   openApi: OpenApi;
   parameters: OpenApiParameter[];
   types: Client['types'];
@@ -34,20 +36,22 @@ export const getOperationParameters = ({
       parameterOrReference,
     );
     const parameter = getOperationParameter({
+      debug,
       openApi,
       parameter: parameterDef,
       types,
     });
 
-    const defIn = parameterDef.in as (typeof allowedIn)[number];
-
     // ignore the "api-version" param since we do not want to add it
     // as the first/default parameter for each of the service calls
-    if (parameter.prop === 'api-version' || !allowedIn.includes(defIn)) {
+    if (
+      parameter.prop === 'api-version' ||
+      !allowedIn.includes(parameterDef.in)
+    ) {
       return;
     }
 
-    switch (defIn) {
+    switch (parameterDef.in) {
       case 'cookie':
         operationParameters.parametersCookie = [
           ...operationParameters.parametersCookie,

@@ -985,7 +985,7 @@ export type ParameterSimpleParameter = string;
 /**
  * Parameter with illegal characters
  */
-export type Parameterx_Foo_Bar = string;
+export type Parameterx_Foo_Bar = ModelWithString;
 
 export type PostServiceWithEmptyTagData = {
     requestBody: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
@@ -1004,6 +1004,10 @@ export type DeleteFooData3 = {
      * foo in method
      */
     foo: string;
+    /**
+     * Parameter with illegal characters
+     */
+    xFooBar: ModelWithString;
 };
 
 export type CallWithDescriptionsData = {
