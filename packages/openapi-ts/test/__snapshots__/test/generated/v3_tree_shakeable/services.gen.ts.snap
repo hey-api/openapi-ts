@@ -95,6 +95,7 @@ export const patchCallWithoutParametersAndResponse = (): CancelablePromise<void>
  * @param data The data for the request.
  * @param data.foo foo in method
  * @param data.bar bar in method
+ * @param data.xFooBar Parameter with illegal characters
  * @throws ApiError
  */
 export const deleteFoo = (data: DeleteFooData3): CancelablePromise<void> => { return __request(OpenAPI, {
@@ -103,6 +104,9 @@ export const deleteFoo = (data: DeleteFooData3): CancelablePromise<void> => { re
     path: {
         foo: data.foo,
         bar: data.bar
+    },
+    headers: {
+        'x-Foo-Bar': data.xFooBar
     }
 }); };
 

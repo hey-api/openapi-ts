@@ -38,7 +38,7 @@ export const getServices = ({
 
   for (const url in openApi.paths) {
     const path = openApi.paths[url];
-    const pathParams = getOperationParameters({
+    const pathParameters = getOperationParameters({
       openApi,
       parameters: path.parameters ?? [],
       types,
@@ -57,7 +57,7 @@ export const getServices = ({
             method,
             op,
             openApi,
-            pathParams,
+            pathParams: pathParameters,
             tag,
             types,
             url,
