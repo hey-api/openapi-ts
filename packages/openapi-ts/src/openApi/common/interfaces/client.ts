@@ -1,3 +1,5 @@
+import type { OpenApiParameter } from '../../v3/interfaces/OpenApiParameter';
+
 export interface ModelComposition
   extends Pick<Model, '$refs' | 'enums' | 'imports' | 'properties'> {
   export: Extract<Model['export'], 'all-of' | 'any-of' | 'one-of'>;
@@ -11,7 +13,7 @@ export interface Enum {
 }
 
 export interface OperationParameter extends Model {
-  in: 'path' | 'query' | 'header' | 'formData' | 'body' | 'cookie';
+  in: 'body' | 'cookie' | 'formData' | 'header' | 'path' | 'query';
   prop: string;
   mediaType: string | null;
 }
@@ -27,7 +29,7 @@ export interface OperationParameters extends Pick<Model, '$refs' | 'imports'> {
 }
 
 export interface OperationResponse extends Model {
-  in: 'response' | 'header';
+  in: 'header' | 'response';
   code: number | 'default';
 }
 
@@ -130,6 +132,11 @@ export interface Model extends Schema {
     | 'one-of'
     | 'reference';
   imports: string[];
+  in:
+    | OperationParameter['in']
+    | OpenApiParameter['in']
+    | OperationResponse['in']
+    | '';
   link: Model | null;
   meta?: ModelMeta;
   /**
