@@ -1,11 +1,11 @@
 ---
 title: Configuration
-description: Configure openapi-ts.
+description: Configure @hey-api/openapi-ts.
 ---
 
 # Configuration
 
-`openapi-ts` supports loading configuration from any file inside your project root directory supported by [jiti loader](https://github.com/unjs/c12?tab=readme-ov-file#-features). Below are the most common file formats.
+`@hey-api/openapi-ts` supports loading configuration from any file inside your project root directory supported by [jiti loader](https://github.com/unjs/c12?tab=readme-ov-file#-features). Below are the most common file formats.
 
 ::: code-group
 
@@ -40,13 +40,21 @@ Alternatively, you can use `openapi-ts.config.js` and configure the export state
 
 ## Clients
 
-By default, `openapi-ts` will generate a Fetch API client. If you want a different client, you can specify it using the `client` option.
+By default, `@hey-api/openapi-ts` will generate a Fetch API client. If you want a different client, you can specify it using the `client` option.
 
 ::: code-group
 
 ```js{2} [fetch]
 export default {
   client: 'fetch',
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+}
+```
+
+```js{2} [fetch (beta)]
+export default {
+  client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
 }
@@ -97,6 +105,10 @@ We also support the legacy Node.js and XHR clients:
 - [node](https://nodejs.org/) (using [node-fetch](https://www.npmjs.com/package/node-fetch))
 - [xhr](https://developer.mozilla.org/docs/Web/API/XMLHttpRequest)
 
+Optionally, you can use client packages to avoid generating a new client on every run:
+
+- [fetch (beta)](https://developer.mozilla.org/docs/Web/API/Fetch_API)
+
 ::: tip
 You might not need a `node` client. Fetch API is [experimental](https://nodejs.org/docs/latest-v18.x/api/globals.html#fetch) in Node.js v18 and [stable](https://nodejs.org/docs/latest-v21.x/api/globals.html#fetch) in Node.js v21. We recommend upgrading to the latest Node.js version.
 :::
@@ -128,7 +140,7 @@ export default defineConfig([
 
 ## Formatting
 
-By default, `openapi-ts` will not automatically format your client. To enable this feature, set `output.format` to a valid formatter.
+By default, `@hey-api/openapi-ts` will not automatically format your client. To enable this feature, set `output.format` to a valid formatter.
 
 ::: code-group
 
@@ -168,7 +180,7 @@ You can also prevent your client from being processed by formatters by adding yo
 
 ## Linting
 
-For performance reasons, `openapi-ts` does not automatically lint your client. To enable this feature, set `output.lint` to a valid linter.
+For performance reasons, `@hey-api/openapi-ts` does not automatically lint your client. To enable this feature, set `output.lint` to a valid linter.
 
 ::: code-group
 
@@ -243,7 +255,7 @@ export default {
 
 ## JSON Schemas
 
-By default, `openapi-ts` exports schemas from your OpenAPI specification as plain JavaScript objects. A great use case for schemas is client-side form input validation.
+By default, `@hey-api/openapi-ts` exports schemas from your OpenAPI specification as plain JavaScript objects. A great use case for schemas is client-side form input validation.
 
 ```ts
 import { $Schema } from 'client/schemas';

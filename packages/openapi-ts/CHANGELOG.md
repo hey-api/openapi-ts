@@ -1,5 +1,23 @@
 # @hey-api/openapi-ts
 
+## 0.46.2
+
+### Patch Changes
+
+- fix: do not transform property names for standalone clients ([#616](https://github.com/hey-api/openapi-ts/pull/616))
+
+## 0.46.1
+
+### Patch Changes
+
+- fix: handle application/json content type in parameter definitions ([#614](https://github.com/hey-api/openapi-ts/pull/614))
+
+## 0.46.0
+
+### Minor Changes
+
+- feat: tree-shakeable services ([#602](https://github.com/hey-api/openapi-ts/pull/602))
+
 ## 0.45.1
 
 ### Patch Changes

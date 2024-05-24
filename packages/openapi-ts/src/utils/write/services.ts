@@ -23,7 +23,7 @@ import { unique } from '../unique';
 import { uniqueTypeName } from './type';
 
 type OnNode = (node: Node) => void;
-type OnImport = (importedType: string) => void;
+type OnImport = (name: string) => void;
 
 const generateImport = ({
   meta,
@@ -200,19 +200,45 @@ const toOperationComment = (operation: Operation): Comments => {
   return comment;
 };
 
-const toRequestOptions = (operation: Operation) => {
+const toRequestOptions = (operation: Operation, onClientImport?: OnImport) => {
   const config = getConfig();
 
   if (isStandaloneClient(config)) {
-    const obj: ObjectValue[] = [
+    let obj: ObjectValue[] = [
       {
         spread: 'options',
       },
+    ];
+
+    const bodyParameters = operation.parameters.filter(
+      (parameter) => parameter.in === 'body' || parameter.in === 'formData',
+    );
+    const contents = bodyParameters
+      .map((parameter) => parameter.mediaType)
+      .filter(Boolean)
+      .filter(unique);
+    if (contents.length === 1 && contents[0] === 'multipart/form-data') {
+      obj = [
+        ...obj,
+        {
+          spread: 'formDataBodySerializer',
+        },
+      ];
+      onClientImport?.('formDataBodySerializer');
+    }
+
+    // TODO: set parseAs to skip inference if every result has the same
+    // content type. currently impossible because results do not contain
+    // header information
+
+    obj = [
+      ...obj,
       {
         key: 'url',
         value: operation.path,
       },
     ];
+
     return compiler.types.object({
       obj,
     });
@@ -300,10 +326,14 @@ const toRequestOptions = (operation: Operation) => {
   });
 };
 
-const toOperationStatements = (client: Client, operation: Operation) => {
+const toOperationStatements = (
+  client: Client,
+  operation: Operation,
+  onClientImport?: OnImport,
+) => {
   const config = getConfig();
 
-  const options = toRequestOptions(operation);
+  const options = toRequestOptions(operation, onClientImport);
 
   if (isStandaloneClient(config)) {
     const errorType = uniqueTypeName({
@@ -331,7 +361,7 @@ const toOperationStatements = (client: Client, operation: Operation) => {
     return [
       compiler.return.functionCall({
         args: [options],
-        name: `client.${operation.method.toLocaleLowerCase()}`,
+        name: `(options?.client ?? client).${operation.method.toLocaleLowerCase()}`,
         types:
           errorType && responseType
             ? [responseType, errorType]
@@ -375,8 +405,11 @@ export const processService = (
   service: Service,
   onNode: OnNode,
   onImport: OnImport,
+  onClientImport: OnImport,
 ) => {
   const config = getConfig();
+
+  const isStandalone = isStandaloneClient(config);
 
   service.operations.forEach((operation) => {
     if (operation.parameters.length) {
@@ -393,7 +426,7 @@ export const processService = (
       });
     }
 
-    if (isStandaloneClient(config)) {
+    if (isStandalone) {
       generateImport({
         client,
         meta: {
@@ -423,11 +456,14 @@ export const processService = (
     }
   });
 
-  if (isStandaloneClient(config)) {
+  if (!config.services.asClass) {
     service.operations.forEach((operation) => {
       const expression = compiler.types.function({
         parameters: toOperationParamType(client, operation),
-        statements: toOperationStatements(client, operation),
+        returnType: isStandalone
+          ? undefined
+          : toOperationReturnType(client, operation),
+        statements: toOperationStatements(client, operation, onClientImport),
       });
       const statement = compiler.export.const({
         comment: toOperationComment(operation),
@@ -446,8 +482,10 @@ export const processService = (
       isStatic: config.name === undefined && config.client !== 'angular',
       name: operation.name,
       parameters: toOperationParamType(client, operation),
-      returnType: toOperationReturnType(client, operation),
-      statements: toOperationStatements(client, operation),
+      returnType: isStandalone
+        ? undefined
+        : toOperationReturnType(client, operation),
+      statements: toOperationStatements(client, operation, onClientImport),
     });
     return node;
   });
@@ -508,6 +546,7 @@ export const processServices = async ({
   const config = getConfig();
 
   let imports: string[] = [];
+  let clientImports: string[] = [];
 
   for (const service of client.services) {
     processService(
@@ -516,8 +555,11 @@ export const processServices = async ({
       (node) => {
         files.services?.add(node);
       },
-      (importedType) => {
-        imports = [...imports, importedType];
+      (imported) => {
+        imports = [...imports, imported];
+      },
+      (imported) => {
+        clientImports = [...clientImports, imported];
       },
     );
   }
@@ -531,6 +573,7 @@ export const processServices = async ({
           asType: true,
           name: 'Options',
         },
+        ...clientImports.filter(unique),
       ],
       config.client,
     );
