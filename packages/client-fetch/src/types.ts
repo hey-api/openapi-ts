@@ -56,6 +56,7 @@ export interface Config
         | (string | number | boolean)[]
         | null
         | undefined
+        | unknown
       >;
   /**
    * The request method.

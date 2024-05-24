@@ -39,6 +39,7 @@ describe('processTypes', () => {
           enums: [],
           export: 'interface',
           imports: [],
+          in: '',
           isDefinition: true,
           isNullable: false,
           isReadOnly: false,
