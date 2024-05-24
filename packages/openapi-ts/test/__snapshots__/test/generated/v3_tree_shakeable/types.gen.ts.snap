@@ -999,11 +999,11 @@ export type DeleteFooData3 = {
     /**
      * bar in method
      */
-    bar: string;
+    barParam: string;
     /**
      * foo in method
      */
-    foo: string;
+    fooParam: string;
     /**
      * Parameter with illegal characters
      */
@@ -1432,7 +1432,7 @@ export type $OpenApiTs = {
             };
         };
     };
-    '/api/v{api-version}/foo/{foo}/bar/{bar}': {
+    '/api/v{api-version}/foo/{foo_param}/bar/{BarParam}': {
         delete: {
             req: DeleteFooData3;
         };
