@@ -1,5 +1,13 @@
 # @hey-api/docs
 
+## 0.5.6
+
+### Patch Changes
+
+- docs: add fetch client documentation ([#602](https://github.com/hey-api/openapi-ts/pull/602))
+
+- docs: add migration notes for v0.46.0 ([#602](https://github.com/hey-api/openapi-ts/pull/602))
+
 ## 0.5.5
 
 ### Patch Changes

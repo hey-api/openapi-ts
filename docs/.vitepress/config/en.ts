@@ -10,10 +10,7 @@ export default defineConfig({
         items: [
           { link: '/openapi-ts/get-started', text: 'Get Started' },
           { link: '/openapi-ts/configuration', text: 'Configuration' },
-          {
-            link: '/openapi-ts/clients',
-            text: 'Clients <span class="soon">soon</span>',
-          },
+          { link: '/openapi-ts/clients', text: 'Clients' },
           { link: '/openapi-ts/interceptors', text: 'Interceptors' },
           {
             link: '/openapi-ts/integrations',

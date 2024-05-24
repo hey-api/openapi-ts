@@ -1,7 +1,14 @@
+import camelcase from 'camelcase';
+
+import { getConfig, isStandaloneClient } from '../../../utils/config';
 import { transformTypeName } from '../../../utils/transform';
 import { isDefinitionTypeNullable } from '../../v3/parser/inferType';
 import type { Type } from '../interfaces/Type';
-import { ensureValidTypeScriptJavaScriptIdentifier } from './sanitize';
+import { reservedWords } from './reservedWords';
+import {
+  ensureValidTypeScriptJavaScriptIdentifier,
+  sanitizeOperationParameterName,
+} from './sanitize';
 import { stripNamespace } from './stripNamespace';
 
 /**
@@ -144,4 +151,20 @@ export const getType = ({
   }
 
   return result;
+};
+
+/**
+ * Replaces any invalid characters from a parameter name.
+ * For example: 'filter.someProperty' becomes 'filterSomeProperty'.
+ */
+export const transformTypeKeyName = (value: string): string => {
+  const config = getConfig();
+
+  // do not transform anything for standalone clients
+  if (isStandaloneClient(config)) {
+    return value;
+  }
+
+  const clean = sanitizeOperationParameterName(value).trim();
+  return camelcase(clean).replace(reservedWords, '_$1');
 };

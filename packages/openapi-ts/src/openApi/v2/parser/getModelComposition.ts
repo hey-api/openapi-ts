@@ -87,6 +87,7 @@ export const getModelComposition = ({
       enums: [],
       export: 'interface',
       imports: [],
+      in: '',
       isDefinition: false,
       isNullable: false,
       isReadOnly: false,

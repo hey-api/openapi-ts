@@ -1,11 +1,11 @@
 import type { Client } from '../../../types/client';
+import { getConfig, isStandaloneClient } from '../../../utils/config';
 import type { OperationParameter } from '../../common/interfaces/client';
 import { getDefault } from '../../common/parser/getDefault';
 import { getEnums } from '../../common/parser/getEnums';
 import { getPattern } from '../../common/parser/getPattern';
 import { getRef } from '../../common/parser/getRef';
-import { getOperationParameterName } from '../../common/parser/operation';
-import { getType } from '../../common/parser/type';
+import { getType, transformTypeKeyName } from '../../common/parser/type';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiParameter } from '../interfaces/OpenApiParameter';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
@@ -20,6 +20,8 @@ export const getOperationParameter = ({
   parameter: OpenApiParameter;
   types: Client['types'];
 }): OperationParameter => {
+  const config = getConfig();
+
   const operationParameter: OperationParameter = {
     $refs: [],
     base: 'unknown',
@@ -45,7 +47,9 @@ export const getOperationParameter = ({
     minLength: parameter.minLength,
     minimum: parameter.minimum,
     multipleOf: parameter.multipleOf,
-    name: getOperationParameterName(parameter.name),
+    name: isStandaloneClient(config)
+      ? parameter.name
+      : transformTypeKeyName(parameter.name),
     pattern: getPattern(parameter.pattern),
     prop: parameter.name,
     properties: [],

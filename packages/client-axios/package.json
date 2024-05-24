@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Type-safe Axios client for your openapi-ts types",
+  "description": "Typesafe Axios client for your @hey-api/openapi-ts types",
   "homepage": "https://heyapi.vercel.app/",
   "repository": {
     "type": "git",
@@ -57,6 +57,6 @@
     "axios": ">= 1.0.0 < 2"
   },
   "devDependencies": {
-    "axios": "1.6.8"
+    "axios": "1.7.1"
   }
 }

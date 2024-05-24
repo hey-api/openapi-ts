@@ -120,17 +120,21 @@ export class SimpleService {
 export class ParametersService {
     /**
      * @param data The data for the request.
-     * @param data.foo foo in method
-     * @param data.bar bar in method
+     * @param data.fooParam foo in method
+     * @param data.barParam bar in method
+     * @param data.xFooBar Parameter with illegal characters
      * @throws ApiError
      */
     public static deleteFoo(data: DeleteFooData3): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'DELETE',
-            url: '/api/v{api-version}/foo/{foo}/bar/{bar}',
+            url: '/api/v{api-version}/foo/{foo_param}/bar/{BarParam}',
             path: {
-                foo: data.foo,
-                bar: data.bar
+                foo_param: data.fooParam,
+                BarParam: data.barParam
+            },
+            headers: {
+                'x-Foo-Bar': data.xFooBar
             }
         });
     }

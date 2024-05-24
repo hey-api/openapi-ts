@@ -13,6 +13,9 @@ export const generateClient = async (
     input: `./test/spec/${version}.json`,
     name,
     output: `./test/e2e/generated/${dir}/`,
+    services: {
+      asClass: true,
+    },
     useOptions
   })
 }

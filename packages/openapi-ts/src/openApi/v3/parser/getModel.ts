@@ -55,6 +55,7 @@ export const getModel = ({
     export: 'interface',
     format: definition.format,
     imports: [],
+    in: '',
     isDefinition,
     isNullable: isDefinitionNullable(definition),
     isReadOnly: definition.readOnly === true,

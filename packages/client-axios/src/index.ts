@@ -275,18 +275,77 @@ export const createClient = (config: Config) => {
   };
 
   const client = {
-    get: (url: string) =>
+    connect: async (url: string) =>
+      request({
+        method: 'CONNECT',
+        url,
+      }),
+    // async DELETE(url, init) {
+    //   return coreFetch(url, { ...init, method: "DELETE" });
+    // },
+    delete: async (url: string) =>
+      request({
+        method: 'DELETE',
+        url,
+      }),
+    // async GET(url, init) {
+    //   return coreFetch(url, { ...init, method: "GET" });
+    // },
+    get: async (url: string) =>
       request({
         method: 'GET',
         url,
       }),
     getConfig,
-    post: (url: string) =>
+    // async HEAD(url, init) {
+    //   return coreFetch(url, { ...init, method: "HEAD" });
+    // },
+    head: async (url: string) =>
+      request({
+        method: 'HEAD',
+        url,
+      }),
+    // async OPTIONS(url, init) {
+    //   return coreFetch(url, { ...init, method: "OPTIONS" });
+    // },
+    options: async (url: string) =>
+      request({
+        method: 'OPTIONS',
+        url,
+      }),
+    // async PATCH(url, init) {
+    //   return coreFetch(url, { ...init, method: "PATCH" });
+    // },
+    patch: async (url: string) =>
+      request({
+        method: 'PATCH',
+        url,
+      }),
+    // async POST(url, init) {
+    //   return coreFetch(url, { ...init, method: "POST" });
+    // },
+    post: async (url: string) =>
       request({
         method: 'POST',
         url,
       }),
+    // async PUT(url, init) {
+    //   return coreFetch(url, { ...init, method: "PUT" });
+    // },
+    put: async (url: string) =>
+      request({
+        method: 'PUT',
+        url,
+      }),
     request,
+    // async TRACE(url, init) {
+    //   return coreFetch(url, { ...init, method: "TRACE" });
+    // },
+    trace: async (url: string) =>
+      request({
+        method: 'TRACE',
+        url,
+      }),
   };
 
   return client;
