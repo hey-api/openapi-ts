@@ -1,11 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { setConfig } from '../../../../utils/config';
-import {
-  getOperationName,
-  getOperationParameterName,
-  getOperationResponseCode,
-} from '../operation';
+import { getOperationName, getOperationResponseCode } from '../operation';
 
 describe('getOperationName', () => {
   const options1: Parameters<typeof setConfig>[0] = {
@@ -221,29 +217,6 @@ describe('getOperationName', () => {
     ({ url, method, options, operationId, expected }) => {
       setConfig(options);
       expect(getOperationName(url, method, operationId)).toBe(expected);
-    },
-  );
-});
-
-describe('getOperationParameterName', () => {
-  it.each([
-    { expected: '', input: '' },
-    { expected: 'foobar', input: 'foobar' },
-    { expected: 'fooBar', input: 'fooBar' },
-    { expected: 'fooBar', input: 'foo_bar' },
-    { expected: 'fooBar', input: 'foo-bar' },
-    { expected: 'fooBar', input: 'foo.bar' },
-    { expected: 'fooBar', input: '@foo.bar' },
-    { expected: 'fooBar', input: '$foo.bar' },
-    { expected: 'fooBar', input: '123.foo.bar' },
-    { expected: 'fooBar', input: 'Foo-Bar' },
-    { expected: 'fooBar', input: 'FOO-BAR' },
-    { expected: 'fooBar', input: 'foo[bar]' },
-    { expected: 'fooBarArray', input: 'foo.bar[]' },
-  ])(
-    'getOperationParameterName($input) -> $expected',
-    ({ input, expected }) => {
-      expect(getOperationParameterName(input)).toBe(expected);
     },
   );
 });

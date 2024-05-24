@@ -2,11 +2,7 @@ import camelCase from 'camelcase';
 
 import { getConfig } from '../../../utils/config';
 import type { OperationResponse } from '../interfaces/client';
-import { reservedWords } from './reservedWords';
-import {
-  sanitizeNamespaceIdentifier,
-  sanitizeOperationParameterName,
-} from './sanitize';
+import { sanitizeNamespaceIdentifier } from './sanitize';
 
 /**
  * Convert the input value to a correct operation (method) class name.
@@ -30,15 +26,6 @@ export const getOperationName = (
     .replace(/\//g, '-');
 
   return camelCase(`${method}-${urlWithoutPlaceholders}`);
-};
-
-/**
- * Replaces any invalid characters from a parameter name.
- * For example: 'filter.someProperty' becomes 'filterSomeProperty'.
- */
-export const getOperationParameterName = (value: string): string => {
-  const clean = sanitizeOperationParameterName(value).trim();
-  return camelCase(clean).replace(reservedWords, '_$1');
 };
 
 export const getOperationResponseHeader = (
