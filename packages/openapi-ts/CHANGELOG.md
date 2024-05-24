@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.46.2
+
+### Patch Changes
+
+- fix: do not transform property names for standalone clients ([#616](https://github.com/hey-api/openapi-ts/pull/616))
+
 ## 0.46.1
 
 ### Patch Changes
