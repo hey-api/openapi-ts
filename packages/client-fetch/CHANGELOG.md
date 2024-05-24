@@ -1,5 +1,11 @@
 # @hey-api/client-fetch
 
+## 0.1.2
+
+### Patch Changes
+
+- fix: JSON stringify object headers ([#616](https://github.com/hey-api/openapi-ts/pull/616))
+
 ## 0.1.1
 
 ### Patch Changes
