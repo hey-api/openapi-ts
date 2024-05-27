@@ -1247,13 +1247,13 @@ export type CallWithResponseAndNoContentResponseResponse = number | void;
 
 export type CallWithResponseResponse = ModelWithString;
 
-export type CallWithDuplicateResponsesResponse = ModelWithBoolean & ModelWithInteger | ModelWithString | ModelWithBoolean;
+export type CallWithDuplicateResponsesResponse = ModelWithBoolean & ModelWithInteger | ModelWithString;
 
 export type CallWithResponsesResponse = {
     readonly '@namespace.string'?: string;
     readonly '@namespace.integer'?: number;
     readonly value?: Array<ModelWithString>;
-} | ModelThatExtends | ModelThatExtendsExtends | ModelWithString;
+} | ModelThatExtends | ModelThatExtendsExtends;
 
 export type DummyAResponse = void;
 
@@ -1539,13 +1539,13 @@ export type $OpenApiTs = {
                  */
                 502: ModelWithStringError;
                 /**
-                 * Message for default response
-                 */
-                default: ModelWithBoolean;
-                /**
                  * Message for 4XX errors
                  */
                 '4XX': DictionaryWithArray;
+                /**
+                 * Message for default response
+                 */
+                default: ModelWithBoolean;
             };
         };
         put: {

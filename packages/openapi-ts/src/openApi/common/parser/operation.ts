@@ -91,6 +91,15 @@ export const parseResponseStatusCode = (
   return null;
 };
 
+const isErrorStatusCode = (code: OperationResponse['code']) =>
+  code === '3XX' ||
+  code === '4XX' ||
+  code === '5XX' ||
+  (typeof code === 'number' && code >= 300);
+
+const isSuccessStatusCode = (code: OperationResponse['code']) =>
+  code === '2XX' || (typeof code === 'number' && code >= 200 && code < 300);
+
 /**
  * Returns only error status code responses.
  */
@@ -99,10 +108,8 @@ export const getErrorResponses = (
 ): OperationResponse[] => {
   const results = responses.filter(
     ({ code }) =>
-      code === '3XX' ||
-      code === '4XX' ||
-      code === '5XX' ||
-      (typeof code === 'number' && code >= 300),
+      (code === 'default' && inferDefaultResponse(responses) === 'error') ||
+      isErrorStatusCode(code),
   );
   return results;
 };
@@ -115,12 +122,34 @@ export const getSuccessResponses = (
 ): OperationResponse[] => {
   const results = responses.filter(
     ({ code }) =>
-      code === 'default' ||
-      code === '2XX' ||
-      (typeof code === 'number' && code >= 200 && code < 300),
+      (code === 'default' && inferDefaultResponse(responses) === 'success') ||
+      isSuccessStatusCode(code),
   );
   return results.filter(
     (result, index, arr) =>
       arr.findIndex((item) => areEqual(item, result)) === index,
   );
+};
+
+/**
+ * Detects whether default response is meant to be used for errors or
+ * successful responses. Returns an empty string if there's no default
+ * response.
+ */
+export const inferDefaultResponse = (
+  responses: OperationResponse[],
+): 'error' | 'success' | '' => {
+  const defaultResponse = responses.find(({ code }) => code === 'default');
+  if (!defaultResponse) {
+    return '';
+  }
+
+  const successResponses = responses.filter(({ code }) =>
+    isSuccessStatusCode(code),
+  );
+  if (!successResponses.length) {
+    return 'success';
+  }
+
+  return 'error';
 };
