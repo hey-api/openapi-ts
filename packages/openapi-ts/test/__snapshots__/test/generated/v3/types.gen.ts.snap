@@ -1542,6 +1542,10 @@ export type $OpenApiTs = {
                  * Message for default response
                  */
                 default: ModelWithBoolean;
+                /**
+                 * Message for 4XX errors
+                 */
+                '4XX': DictionaryWithArray;
             };
         };
         put: {
