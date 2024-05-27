@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitepress';
+import { defineConfig, type HeadConfig } from 'vitepress';
 
 export default defineConfig({
   head: [
@@ -25,7 +25,7 @@ export default defineConfig({
       'script',
       { defer: '', src: '/_vercel/insights/script.js' },
     ],
-  ].filter(Boolean),
+  ].filter(Boolean) as HeadConfig[],
   lastUpdated: false,
   sitemap: {
     hostname: 'https://heyapi.vercel.app',
