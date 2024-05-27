@@ -30,7 +30,7 @@ export interface OperationParameters extends Pick<Model, '$refs' | 'imports'> {
 
 export interface OperationResponse extends Model {
   in: 'header' | 'response';
-  code: number | 'default';
+  code: number | 'default' | '1XX' | '2XX' | '3XX' | '4XX' | '5XX';
 }
 
 export type Method =
@@ -55,6 +55,10 @@ export interface Operation extends OperationParameters {
   name: string;
   path: string;
   responseHeader: string | null;
+  /**
+   * All operation responses defined in OpenAPI specification.
+   * Sorted by status code.
+   */
   results: OperationResponse[];
   /**
    * Service name, might be without postfix. This will be used to name the

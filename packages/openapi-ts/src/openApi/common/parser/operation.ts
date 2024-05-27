@@ -1,8 +1,17 @@
 import camelCase from 'camelcase';
 
 import { getConfig } from '../../../utils/config';
-import type { OperationResponse } from '../interfaces/client';
+import type { Model, OperationResponse } from '../interfaces/client';
 import { sanitizeNamespaceIdentifier } from './sanitize';
+
+const areEqual = (a: Model, b: Model): boolean => {
+  const equal =
+    a.type === b.type && a.base === b.base && a.template === b.template;
+  if (equal && a.link && b.link) {
+    return areEqual(a.link, b.link);
+  }
+  return equal;
+};
 
 /**
  * Convert the input value to a correct operation (method) class name.
@@ -40,28 +49,78 @@ export const getOperationResponseHeader = (
   return null;
 };
 
-export const getOperationResponseCode = (
-  value: string | 'default',
-): number | 'default' | null => {
+/**
+ * Attempts to parse response status code from string into number.
+ * @param value string status code from OpenAPI definition
+ * @returns Parsed status code or null if invalid value
+ */
+export const parseResponseStatusCode = (
+  value: string,
+): OperationResponse['code'] | null => {
   if (value === 'default') {
     return 'default';
   }
 
-  // Check if we can parse the code and return of successful.
-  if (/[0-9]+/g.test(value)) {
-    const code = Number.parseInt(value);
-    if (Number.isInteger(code)) {
-      return Math.abs(code);
+  if (value === '1XX') {
+    return '1XX';
+  }
+
+  if (value === '2XX') {
+    return '2XX';
+  }
+
+  if (value === '3XX') {
+    return '3XX';
+  }
+
+  if (value === '4XX') {
+    return '4XX';
+  }
+
+  if (value === '5XX') {
+    return '5XX';
+  }
+
+  if (/\d{3}/g.test(value)) {
+    const code = Number.parseInt(value, 10);
+    if (code >= 100 && code < 600) {
+      return code;
     }
   }
 
   return null;
 };
 
-export const getOperationErrors = (
-  operationResponses: OperationResponse[],
-): OperationResponse[] =>
-  operationResponses.filter(
-    ({ code, description }) =>
-      typeof code === 'number' && code >= 300 && description,
+/**
+ * Returns only error status code responses.
+ */
+export const getErrorResponses = (
+  responses: OperationResponse[],
+): OperationResponse[] => {
+  const results = responses.filter(
+    ({ code }) =>
+      code === '3XX' ||
+      code === '4XX' ||
+      code === '5XX' ||
+      (typeof code === 'number' && code >= 300),
   );
+  return results;
+};
+
+/**
+ * Returns only successful status code responses.
+ */
+export const getSuccessResponses = (
+  responses: OperationResponse[],
+): OperationResponse[] => {
+  const results = responses.filter(
+    ({ code }) =>
+      code === 'default' ||
+      code === '2XX' ||
+      (typeof code === 'number' && code >= 200 && code < 300),
+  );
+  return results.filter(
+    (result, index, arr) =>
+      arr.findIndex((item) => areEqual(item, result)) === index,
+  );
+};
