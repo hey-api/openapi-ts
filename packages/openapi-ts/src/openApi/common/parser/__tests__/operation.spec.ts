@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { setConfig } from '../../../../utils/config';
-import { getOperationName, getOperationResponseCode } from '../operation';
+import { getOperationName, parseResponseStatusCode } from '../operation';
 
 describe('getOperationName', () => {
   const options1: Parameters<typeof setConfig>[0] = {
@@ -221,16 +221,17 @@ describe('getOperationName', () => {
   );
 });
 
-describe('getOperationResponseCode', () => {
+describe('parseResponseStatusCode', () => {
   it.each([
     { expected: null, input: '' },
     { expected: 'default', input: 'default' },
     { expected: 200, input: '200' },
     { expected: 300, input: '300' },
     { expected: 400, input: '400' },
+    { expected: '4XX', input: '4XX' },
     { expected: null, input: 'abc' },
-    { expected: 100, input: '-100' },
-  ])('getOperationResponseCode($input) -> $expected', ({ input, expected }) => {
-    expect(getOperationResponseCode(input)).toBe(expected);
+    { expected: null, input: '-100' },
+  ])('parseResponseStatusCode($input) -> $expected', ({ input, expected }) => {
+    expect(parseResponseStatusCode(input)).toBe(expected);
   });
 });

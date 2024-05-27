@@ -1,5 +1,4 @@
 import type { Client } from '../../../types/client';
-import { getOperationResults } from '../../../utils/operation';
 import type {
   Operation,
   OperationParameter,
@@ -7,9 +6,10 @@ import type {
 } from '../../common/interfaces/client';
 import { getRef } from '../../common/parser/getRef';
 import {
-  getOperationErrors,
+  getErrorResponses,
   getOperationName,
   getOperationResponseHeader,
+  getSuccessResponses,
 } from '../../common/parser/operation';
 import { getServiceName } from '../../common/parser/service';
 import { toSortedByRequired } from '../../common/parser/sort';
@@ -134,11 +134,12 @@ export const getOperation = ({
       responses: op.responses,
       types,
     });
-    const operationResults = getOperationResults(operationResponses);
-    operation.errors = getOperationErrors(operationResponses);
-    operation.responseHeader = getOperationResponseHeader(operationResults);
+    operation.errors = getErrorResponses(operationResponses);
 
-    operationResults.forEach((operationResult) => {
+    const successResponses = getSuccessResponses(operationResponses);
+    operation.responseHeader = getOperationResponseHeader(successResponses);
+
+    successResponses.forEach((operationResult) => {
       operation.$refs = [...operation.$refs, ...operationResult.$refs];
       operation.imports = [...operation.imports, ...operationResult.imports];
       operation.results = [...operation.results, operationResult];
