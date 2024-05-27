@@ -6,6 +6,10 @@ import {
 } from '../../compiler';
 import type { Model, OperationParameter } from '../../openApi';
 import type { Method } from '../../openApi/common/interfaces/client';
+import {
+  getErrorResponses,
+  getSuccessResponses,
+} from '../../openApi/common/parser/operation';
 import type { Client } from '../../types/client';
 import { getConfig, isStandaloneClient } from '../config';
 import { enumEntry, enumUnionType } from '../enum';
@@ -351,29 +355,12 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
             ...emptyModel,
             export: 'any-of',
             isRequired: true,
-            // TODO: improve response type detection
-            properties: operation.results.filter(
-              (result) =>
-                result.code === 'default' ||
-                result.code === '2XX' ||
-                (typeof result.code === 'number' &&
-                  result.code >= 200 &&
-                  result.code < 300),
-            ),
+            properties: getSuccessResponses(operation.results),
           }),
         });
 
         if (isStandaloneClient(config)) {
-          // TODO: improve error type detection
-          const errorResults = operation.errors.filter(
-            (result) =>
-              result.code === 'default' ||
-              result.code === '4XX' ||
-              result.code === '5XX' ||
-              (typeof result.code === 'number' &&
-                result.code >= 400 &&
-                result.code < 600),
-          );
+          const errorResults = getErrorResponses(operation.results);
           // create type export for operation error
           generateType({
             client,
