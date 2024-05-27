@@ -848,6 +848,16 @@
               }
             }
           },
+          "4XX": {
+            "description": "Message for 4XX errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DictionaryWithArray"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Message for 500 error",
             "content": {

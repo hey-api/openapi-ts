@@ -1281,7 +1281,7 @@ export type CallWithResponseError = unknown;
 
 export type CallWithDuplicateResponsesResponse = ModelWithBoolean & ModelWithInteger | ModelWithString | ModelWithBoolean;
 
-export type CallWithDuplicateResponsesError = ModelWithStringError;
+export type CallWithDuplicateResponsesError = ModelWithStringError & DictionaryWithArray;
 
 export type CallWithResponsesResponse = {
     readonly '@namespace.string'?: string;
@@ -1618,6 +1618,10 @@ export type $OpenApiTs = {
                  * Message for default response
                  */
                 default: ModelWithBoolean;
+                /**
+                 * Message for 4XX errors
+                 */
+                '4XX': DictionaryWithArray;
             };
         };
         put: {

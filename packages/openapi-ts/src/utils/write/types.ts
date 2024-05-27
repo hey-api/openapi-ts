@@ -355,7 +355,10 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
             properties: operation.results.filter(
               (result) =>
                 result.code === 'default' ||
-                (result.code >= 200 && result.code < 300),
+                result.code === '2XX' ||
+                (typeof result.code === 'number' &&
+                  result.code >= 200 &&
+                  result.code < 300),
             ),
           }),
         });
@@ -365,7 +368,11 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
           const errorResults = operation.errors.filter(
             (result) =>
               result.code === 'default' ||
-              (result.code >= 400 && result.code < 600),
+              result.code === '4XX' ||
+              result.code === '5XX' ||
+              (typeof result.code === 'number' &&
+                result.code >= 400 &&
+                result.code < 600),
           );
           // create type export for operation error
           generateType({

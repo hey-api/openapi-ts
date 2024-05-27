@@ -106,7 +106,12 @@ const typeInterface = (model: Model) => {
       isRequired: maybeRequired === '',
       name: isStandalone
         ? escapeName(unescapeName(transformTypeKeyName(property.name)))
-        : property.name,
+        : // special test for 1XX status codes. We need a more robust system
+          // for escaping values depending on context in which they're printed,
+          // but since this works for standalone client, it's not worth it right now
+          /^\dXX$/.test(property.name)
+          ? escapeName(property.name)
+          : property.name,
       type: value,
     };
   });
