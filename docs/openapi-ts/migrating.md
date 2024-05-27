@@ -34,11 +34,11 @@ import type { Model } from 'client/types.gen';
 
 You don't have to update imports from `core` directory. These will be addressed in later releases.
 
-### Deprecated `useOptions`
-
-This config option is deprecated and will be removed.
-
 ### Deprecated `base`
+
+This config option is deprecated and will be removed in favor of [clients](./clients).
+
+### Deprecated `name`
 
 This config option is deprecated and will be removed in favor of [clients](./clients).
 
@@ -46,9 +46,9 @@ This config option is deprecated and will be removed in favor of [clients](./cli
 
 This config option is deprecated and will be removed in favor of [clients](./clients).
 
-### Deprecated `name`
+### Deprecated `useOptions`
 
-This config option is deprecated and will be removed in favor of [clients](./clients).
+This config option is deprecated and will be removed.
 
 ## v0.46.0
 
