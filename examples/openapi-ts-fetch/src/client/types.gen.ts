@@ -12,6 +12,11 @@ export type Order = {
   complete?: boolean;
 };
 
+/**
+ * Order Status
+ */
+export type status = 'placed' | 'approved' | 'delivered';
+
 export type Customer = {
   id?: number;
   username?: string;
@@ -61,6 +66,11 @@ export type Pet = {
   status?: 'available' | 'pending' | 'sold';
 };
 
+/**
+ * pet status in the store
+ */
+export type status2 = 'available' | 'pending' | 'sold';
+
 export type ApiResponse = {
   code?: number;
   type?: string;
@@ -71,178 +81,233 @@ export type AddPetData = {
   /**
    * Create a new pet in the store
    */
-  requestBody: Pet;
+  body: Pet;
 };
 
 export type AddPetResponse = Pet;
+
+export type AddPetError = unknown;
 
 export type UpdatePetData = {
   /**
    * Update an existent pet in the store
    */
-  requestBody: Pet;
+  body: Pet;
 };
 
 export type UpdatePetResponse = Pet;
 
+export type UpdatePetError = unknown;
+
 export type FindPetsByStatusData = {
-  /**
-   * Status values that need to be considered for filter
-   */
-  status?: 'available' | 'pending' | 'sold';
+  query?: {
+    /**
+     * Status values that need to be considered for filter
+     */
+    status?: 'available' | 'pending' | 'sold';
+  };
 };
 
 export type FindPetsByStatusResponse = Array<Pet>;
 
+export type FindPetsByStatusError = unknown;
+
 export type FindPetsByTagsData = {
-  /**
-   * Tags to filter by
-   */
-  tags?: Array<string>;
+  query?: {
+    /**
+     * Tags to filter by
+     */
+    tags?: Array<string>;
+  };
 };
 
 export type FindPetsByTagsResponse = Array<Pet>;
 
+export type FindPetsByTagsError = unknown;
+
 export type GetPetByIdData = {
-  /**
-   * ID of pet to return
-   */
-  petId: number;
+  path: {
+    /**
+     * ID of pet to return
+     */
+    petId: number;
+  };
 };
 
 export type GetPetByIdResponse = Pet;
 
+export type GetPetByIdError = unknown;
+
 export type UpdatePetWithFormData = {
-  /**
-   * Name of pet that needs to be updated
-   */
-  name?: string;
-  /**
-   * ID of pet that needs to be updated
-   */
-  petId: number;
-  /**
-   * Status of pet that needs to be updated
-   */
-  status?: string;
+  path: {
+    /**
+     * ID of pet that needs to be updated
+     */
+    petId: number;
+  };
+  query?: {
+    /**
+     * Name of pet that needs to be updated
+     */
+    name?: string;
+    /**
+     * Status of pet that needs to be updated
+     */
+    status?: string;
+  };
 };
 
 export type DeletePetData = {
-  apiKey?: string;
-  /**
-   * Pet id to delete
-   */
-  petId: number;
+  header?: {
+    apiKey?: string;
+  };
+  path: {
+    /**
+     * Pet id to delete
+     */
+    petId: number;
+  };
 };
 
 export type UploadFileData = {
-  /**
-   * Additional Metadata
-   */
-  additionalMetadata?: string;
-  /**
-   * ID of pet to update
-   */
-  petId: number;
-  requestBody?: Blob | File;
+  body?: Blob | File;
+  path: {
+    /**
+     * ID of pet to update
+     */
+    petId: number;
+  };
+  query?: {
+    /**
+     * Additional Metadata
+     */
+    additionalMetadata?: string;
+  };
 };
 
 export type UploadFileResponse = ApiResponse;
+
+export type UploadFileError = unknown;
 
 export type GetInventoryResponse = {
   [key: string]: number;
 };
 
+export type GetInventoryError = unknown;
+
 export type PlaceOrderData = {
-  requestBody?: Order;
+  body?: Order;
 };
 
 export type PlaceOrderResponse = Order;
 
+export type PlaceOrderError = unknown;
+
 export type GetOrderByIdData = {
-  /**
-   * ID of order that needs to be fetched
-   */
-  orderId: number;
+  path: {
+    /**
+     * ID of order that needs to be fetched
+     */
+    orderId: number;
+  };
 };
 
 export type GetOrderByIdResponse = Order;
 
+export type GetOrderByIdError = unknown;
+
 export type DeleteOrderData = {
-  /**
-   * ID of the order that needs to be deleted
-   */
-  orderId: number;
+  path: {
+    /**
+     * ID of the order that needs to be deleted
+     */
+    orderId: number;
+  };
 };
 
 export type CreateUserData = {
   /**
    * Created user object
    */
-  requestBody?: User;
+  body?: User;
 };
 
 export type CreateUserResponse = User;
 
+export type CreateUserError = unknown;
+
 export type CreateUsersWithListInputData = {
-  requestBody?: Array<User>;
+  body?: Array<User>;
 };
 
 export type CreateUsersWithListInputResponse = User | unknown;
 
+export type CreateUsersWithListInputError = unknown;
+
 export type LoginUserData = {
-  /**
-   * The password for login in clear text
-   */
-  password?: string;
-  /**
-   * The user name for login
-   */
-  username?: string;
+  query?: {
+    /**
+     * The password for login in clear text
+     */
+    password?: string;
+    /**
+     * The user name for login
+     */
+    username?: string;
+  };
 };
 
 export type LoginUserResponse = string;
 
+export type LoginUserError = unknown;
+
 export type LogoutUserResponse = unknown;
 
+export type LogoutUserError = unknown;
+
 export type GetUserByNameData = {
-  /**
-   * The name that needs to be fetched. Use user1 for testing.
-   */
-  username: string;
+  path: {
+    /**
+     * The name that needs to be fetched. Use user1 for testing.
+     */
+    username: string;
+  };
 };
 
 export type GetUserByNameResponse = User;
+
+export type GetUserByNameError = unknown;
 
 export type UpdateUserData = {
   /**
    * Update an existent user in the store
    */
-  requestBody?: User;
-  /**
-   * name that needs to be updated
-   */
-  username: string;
+  body?: User;
+  path: {
+    /**
+     * name that needs to be updated
+     */
+    username: string;
+  };
 };
 
 export type UpdateUserResponse = unknown;
 
+export type UpdateUserError = unknown;
+
 export type DeleteUserData = {
-  /**
-   * The name that needs to be deleted
-   */
-  username: string;
+  path: {
+    /**
+     * The name that needs to be deleted
+     */
+    username: string;
+  };
 };
 
 export type $OpenApiTs = {
   '/pet': {
     post: {
-      req: {
-        /**
-         * Create a new pet in the store
-         */
-        requestBody: Pet;
-      };
+      req: AddPetData;
       res: {
         /**
          * Successful operation
@@ -255,12 +320,7 @@ export type $OpenApiTs = {
       };
     };
     put: {
-      req: {
-        /**
-         * Update an existent pet in the store
-         */
-        requestBody: Pet;
-      };
+      req: UpdatePetData;
       res: {
         /**
          * Successful operation
@@ -283,12 +343,7 @@ export type $OpenApiTs = {
   };
   '/pet/findByStatus': {
     get: {
-      req: {
-        /**
-         * Status values that need to be considered for filter
-         */
-        status?: 'available' | 'pending' | 'sold';
-      };
+      req: FindPetsByStatusData;
       res: {
         /**
          * successful operation
@@ -303,12 +358,7 @@ export type $OpenApiTs = {
   };
   '/pet/findByTags': {
     get: {
-      req: {
-        /**
-         * Tags to filter by
-         */
-        tags?: Array<string>;
-      };
+      req: FindPetsByTagsData;
       res: {
         /**
          * successful operation
@@ -323,12 +373,7 @@ export type $OpenApiTs = {
   };
   '/pet/{petId}': {
     get: {
-      req: {
-        /**
-         * ID of pet to return
-         */
-        petId: number;
-      };
+      req: GetPetByIdData;
       res: {
         /**
          * successful operation
@@ -345,20 +390,7 @@ export type $OpenApiTs = {
       };
     };
     post: {
-      req: {
-        /**
-         * Name of pet that needs to be updated
-         */
-        name?: string;
-        /**
-         * ID of pet that needs to be updated
-         */
-        petId: number;
-        /**
-         * Status of pet that needs to be updated
-         */
-        status?: string;
-      };
+      req: UpdatePetWithFormData;
       res: {
         /**
          * Invalid input
@@ -367,13 +399,7 @@ export type $OpenApiTs = {
       };
     };
     delete: {
-      req: {
-        apiKey?: string;
-        /**
-         * Pet id to delete
-         */
-        petId: number;
-      };
+      req: DeletePetData;
       res: {
         /**
          * Invalid pet value
@@ -384,17 +410,7 @@ export type $OpenApiTs = {
   };
   '/pet/{petId}/uploadImage': {
     post: {
-      req: {
-        /**
-         * Additional Metadata
-         */
-        additionalMetadata?: string;
-        /**
-         * ID of pet to update
-         */
-        petId: number;
-        requestBody?: Blob | File;
-      };
+      req: UploadFileData;
       res: {
         /**
          * successful operation
@@ -417,9 +433,7 @@ export type $OpenApiTs = {
   };
   '/store/order': {
     post: {
-      req: {
-        requestBody?: Order;
-      };
+      req: PlaceOrderData;
       res: {
         /**
          * successful operation
@@ -434,12 +448,7 @@ export type $OpenApiTs = {
   };
   '/store/order/{orderId}': {
     get: {
-      req: {
-        /**
-         * ID of order that needs to be fetched
-         */
-        orderId: number;
-      };
+      req: GetOrderByIdData;
       res: {
         /**
          * successful operation
@@ -456,12 +465,7 @@ export type $OpenApiTs = {
       };
     };
     delete: {
-      req: {
-        /**
-         * ID of the order that needs to be deleted
-         */
-        orderId: number;
-      };
+      req: DeleteOrderData;
       res: {
         /**
          * Invalid ID supplied
@@ -476,12 +480,7 @@ export type $OpenApiTs = {
   };
   '/user': {
     post: {
-      req: {
-        /**
-         * Created user object
-         */
-        requestBody?: User;
-      };
+      req: CreateUserData;
       res: {
         /**
          * successful operation
@@ -492,9 +491,7 @@ export type $OpenApiTs = {
   };
   '/user/createWithList': {
     post: {
-      req: {
-        requestBody?: Array<User>;
-      };
+      req: CreateUsersWithListInputData;
       res: {
         /**
          * Successful operation
@@ -509,16 +506,7 @@ export type $OpenApiTs = {
   };
   '/user/login': {
     get: {
-      req: {
-        /**
-         * The password for login in clear text
-         */
-        password?: string;
-        /**
-         * The user name for login
-         */
-        username?: string;
-      };
+      req: LoginUserData;
       res: {
         /**
          * successful operation
@@ -543,12 +531,7 @@ export type $OpenApiTs = {
   };
   '/user/{username}': {
     get: {
-      req: {
-        /**
-         * The name that needs to be fetched. Use user1 for testing.
-         */
-        username: string;
-      };
+      req: GetUserByNameData;
       res: {
         /**
          * successful operation
@@ -565,16 +548,7 @@ export type $OpenApiTs = {
       };
     };
     put: {
-      req: {
-        /**
-         * Update an existent user in the store
-         */
-        requestBody?: User;
-        /**
-         * name that needs to be updated
-         */
-        username: string;
-      };
+      req: UpdateUserData;
       res: {
         /**
          * successful operation
@@ -583,12 +557,7 @@ export type $OpenApiTs = {
       };
     };
     delete: {
-      req: {
-        /**
-         * The name that needs to be deleted
-         */
-        username: string;
-      };
+      req: DeleteUserData;
       res: {
         /**
          * Invalid username supplied

@@ -1,6 +1,6 @@
 import path from 'node:path'
 
-import { EOL } from 'os'
+import {EOL} from 'os'
 import {
   createCompilerHost,
   createProgram,
@@ -11,7 +11,7 @@ import {
   sys
 } from 'typescript'
 
-export const compileWithTypescript = (dir: string) => {
+export const compileWithTypescript = (dir: string, {overrides}: { overrides?: any } = {}) => {
   const cwd = `./test/e2e/generated/${dir}/`
   const tsconfig = {
     compilerOptions: {
@@ -25,17 +25,19 @@ export const compileWithTypescript = (dir: string) => {
       noImplicitAny: true,
       noImplicitReturns: true,
       noImplicitThis: true,
-      skipLibCheck: true,
+      skipLibCheck: false,
       sourceMap: false,
       strict: true,
-      target: 'es2020'
+      target: 'es2020',
+      ...(overrides?.compilerOptions || {})
     },
-    include: ['**/*.ts']
+    include: ['**/*.ts'],
+    ...overrides || {},
   }
 
   // Compile files to JavaScript (ES6 modules)
   const configFile = parseConfigFileTextToJson(
-    'tsconfig.json',
+    'tsconfig.jso2n',
     JSON.stringify(tsconfig)
   )
   const configFileResult = parseJsonConfigFileContent(
