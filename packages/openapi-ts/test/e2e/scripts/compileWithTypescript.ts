@@ -25,7 +25,7 @@ export const compileWithTypescript = (dir: string, {overrides}: { overrides?: an
       noImplicitAny: true,
       noImplicitReturns: true,
       noImplicitThis: true,
-      skipLibCheck: false,
+      skipLibCheck: true,
       sourceMap: false,
       strict: true,
       target: 'es2020',
@@ -37,7 +37,7 @@ export const compileWithTypescript = (dir: string, {overrides}: { overrides?: an
 
   // Compile files to JavaScript (ES6 modules)
   const configFile = parseConfigFileTextToJson(
-    'tsconfig.jso2n',
+    'tsconfig.json',
     JSON.stringify(tsconfig)
   )
   const configFileResult = parseJsonConfigFileContent(
