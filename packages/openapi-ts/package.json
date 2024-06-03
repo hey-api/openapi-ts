@@ -60,7 +60,7 @@
     "node": "^18.0.0 || >=20.0.0"
   },
   "dependencies": {
-    "@apidevtools/json-schema-ref-parser": "11.6.2",
+    "@apidevtools/json-schema-ref-parser": "11.6.3",
     "c12": "1.10.0",
     "camelcase": "8.0.0",
     "commander": "12.1.0",
