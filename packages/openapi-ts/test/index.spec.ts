@@ -107,6 +107,16 @@ describe('OpenAPI v3', () => {
     },
     {
       config: createConfig({
+        client: '@hey-api/client-fetch',
+        services: {
+          asClass: false,
+        },
+      }),
+      description: 'generate axios client',
+      name: 'v3_hey-api_client-fetch',
+    },
+    {
+      config: createConfig({
         client: 'xhr',
         schemas: false,
         services: false,

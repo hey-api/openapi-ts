@@ -93,16 +93,20 @@ export const patchCallWithoutParametersAndResponse = (): CancelablePromise<void>
 
 /**
  * @param data The data for the request.
- * @param data.foo foo in method
- * @param data.bar bar in method
+ * @param data.fooParam foo in method
+ * @param data.barParam bar in method
+ * @param data.xFooBar Parameter with illegal characters
  * @throws ApiError
  */
 export const deleteFoo = (data: DeleteFooData3): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'DELETE',
-    url: '/api/v{api-version}/foo/{foo}/bar/{bar}',
+    url: '/api/v{api-version}/foo/{foo_param}/bar/{BarParam}',
     path: {
-        foo: data.foo,
-        bar: data.bar
+        foo_param: data.fooParam,
+        BarParam: data.barParam
+    },
+    headers: {
+        'x-Foo-Bar': data.xFooBar
     }
 }); };
 
@@ -434,7 +438,6 @@ export const callWithResponse = (): CancelablePromise<CallWithResponseResponse> 
 /**
  * @returns unknown Message for 200 response
  * @returns ModelWithString Message for 201 response
- * @returns ModelWithBoolean Message for default response
  * @throws ApiError
  */
 export const callWithDuplicateResponses = (): CancelablePromise<CallWithDuplicateResponsesResponse> => { return __request(OpenAPI, {
@@ -443,7 +446,9 @@ export const callWithDuplicateResponses = (): CancelablePromise<CallWithDuplicat
     errors: {
         500: 'Message for 500 error',
         501: 'Message for 501 error',
-        502: 'Message for 502 error'
+        502: 'Message for 502 error',
+        '4XX': 'Message for 4XX errors',
+        default: 'Message for default response'
     }
 }); };
 
@@ -451,7 +456,6 @@ export const callWithDuplicateResponses = (): CancelablePromise<CallWithDuplicat
  * @returns unknown Message for 200 response
  * @returns ModelThatExtends Message for 201 response
  * @returns ModelThatExtendsExtends Message for 202 response
- * @returns ModelWithString Message for default response
  * @throws ApiError
  */
 export const callWithResponses = (): CancelablePromise<CallWithResponsesResponse> => { return __request(OpenAPI, {
@@ -460,7 +464,8 @@ export const callWithResponses = (): CancelablePromise<CallWithResponsesResponse
     errors: {
         500: 'Message for 500 error',
         501: 'Message for 501 error',
-        502: 'Message for 502 error'
+        502: 'Message for 502 error',
+        default: 'Message for default response'
     }
 }); };
 

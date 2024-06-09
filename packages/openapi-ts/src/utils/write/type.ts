@@ -1,9 +1,10 @@
 import { compiler, type Property, type TypeNode } from '../../compiler';
 import type { Model } from '../../openApi';
+import { transformTypeKeyName } from '../../openApi/common/parser/type';
 import type { Client } from '../../types/client';
-import { getConfig } from '../config';
+import { getConfig, isStandaloneClient } from '../config';
 import { enumValue } from '../enum';
-import { escapeComment } from '../escape';
+import { escapeComment, escapeName, unescapeName } from '../escape';
 import { unique } from '../unique';
 
 const base = (model: Model) => {
@@ -84,6 +85,10 @@ const typeInterface = (model: Model) => {
     return compiler.typedef.basic('unknown');
   }
 
+  const config = getConfig();
+
+  const isStandalone = isStandaloneClient(config);
+
   const properties: Property[] = model.properties.map((property) => {
     let maybeRequired = property.isRequired ? '' : '?';
     let value = toType(property);
@@ -99,7 +104,14 @@ const typeInterface = (model: Model) => {
       ],
       isReadOnly: property.isReadOnly,
       isRequired: maybeRequired === '',
-      name: property.name,
+      name: isStandalone
+        ? escapeName(unescapeName(transformTypeKeyName(property.name)))
+        : // special test for 1XX status codes. We need a more robust system
+          // for escaping values depending on context in which they're printed,
+          // but since this works for standalone client, it's not worth it right now
+          /^\dXX$/.test(property.name)
+          ? escapeName(property.name)
+          : property.name,
       type: value,
     };
   });

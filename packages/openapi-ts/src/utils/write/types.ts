@@ -6,6 +6,10 @@ import {
 } from '../../compiler';
 import type { Model, OperationParameter } from '../../openApi';
 import type { Method } from '../../openApi/common/interfaces/client';
+import {
+  getErrorResponses,
+  getSuccessResponses,
+} from '../../openApi/common/parser/operation';
 import type { Client } from '../../types/client';
 import { getConfig, isStandaloneClient } from '../config';
 import { enumEntry, enumUnionType } from '../enum';
@@ -30,6 +34,7 @@ const emptyModel: Model = {
   enums: [],
   export: 'interface',
   imports: [],
+  in: '',
   isDefinition: false,
   isNullable: false,
   isReadOnly: false,
@@ -220,87 +225,143 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
       const hasRes = operation.results.length;
       const hasErr = operation.errors.length;
 
-      if (hasReq || hasRes || hasErr) {
-        if (!pathsMap[operation.path]) {
-          pathsMap[operation.path] = {};
+      if (!hasReq && !hasRes && !hasErr) {
+        return;
+      }
+
+      if (!pathsMap[operation.path]) {
+        pathsMap[operation.path] = {};
+      }
+      const pathMap = pathsMap[operation.path]!;
+
+      if (!pathMap[operation.method]) {
+        pathMap[operation.method] = {};
+      }
+      const methodMap = pathMap[operation.method]!;
+      methodMap.$ref = operation.name;
+
+      if (hasReq) {
+        const bodyParameter = operation.parameters
+          .filter((parameter) => parameter.in === 'body')
+          .sort(sorterByName)[0];
+        const bodyParameters: OperationParameter = {
+          ...emptyModel,
+          ...bodyParameter,
+          in: 'body',
+          isRequired: bodyParameter ? bodyParameter.isRequired : false,
+          // mediaType: null,
+          name: 'body',
+          prop: 'body',
+        };
+        const headerParameters: OperationParameter = {
+          ...emptyModel,
+          in: 'header',
+          isRequired: operation.parameters
+            .filter((parameter) => parameter.in === 'header')
+            .some((parameter) => parameter.isRequired),
+          mediaType: null,
+          name: isStandalone ? 'headers' : 'header',
+          prop: isStandalone ? 'headers' : 'header',
+          properties: operation.parameters
+            .filter((parameter) => parameter.in === 'header')
+            .sort(sorterByName),
+        };
+        const pathParameters: OperationParameter = {
+          ...emptyModel,
+          in: 'path',
+          isRequired: operation.parameters
+            .filter((parameter) => parameter.in === 'path')
+            .some((parameter) => parameter.isRequired),
+          mediaType: null,
+          name: 'path',
+          prop: 'path',
+          properties: operation.parameters
+            .filter((parameter) => parameter.in === 'path')
+            .sort(sorterByName),
+        };
+        const queryParameters: OperationParameter = {
+          ...emptyModel,
+          in: 'query',
+          isRequired: operation.parameters
+            .filter((parameter) => parameter.in === 'query')
+            .some((parameter) => parameter.isRequired),
+          mediaType: null,
+          name: 'query',
+          prop: 'query',
+          properties: operation.parameters
+            .filter((parameter) => parameter.in === 'query')
+            .sort(sorterByName),
+        };
+        const operationProperties = isStandalone
+          ? [
+              bodyParameters,
+              headerParameters,
+              pathParameters,
+              queryParameters,
+            ].filter(
+              (param) =>
+                param.properties.length ||
+                param.$refs.length ||
+                param.mediaType,
+            )
+          : sortByName([...operation.parameters]);
+
+        methodMap.req = operationProperties;
+
+        // create type export for operation data
+        generateType({
+          client,
+          meta: {
+            // TODO: this should be exact ref to operation for consistency,
+            // but name should work too as operation ID is unique
+            $ref: operation.name,
+            name: operation.name,
+          },
+          nameTransformer: operationDataTypeName,
+          onNode,
+          type: toType({
+            ...emptyModel,
+            isRequired: true,
+            properties: operationProperties,
+          }),
+        });
+      }
+
+      if (hasRes) {
+        if (!methodMap.res) {
+          methodMap.res = {};
         }
-        const pathMap = pathsMap[operation.path]!;
 
-        if (!pathMap[operation.method]) {
-          pathMap[operation.method] = {};
+        if (Array.isArray(methodMap.res)) {
+          return;
         }
-        const methodMap = pathMap[operation.method]!;
-        methodMap.$ref = operation.name;
 
-        if (hasReq) {
-          const bodyParameter = operation.parameters
-            .filter((parameter) => parameter.in === 'body')
-            .sort(sorterByName)[0];
-          const bodyParameters: OperationParameter = {
-            ...emptyModel,
-            ...bodyParameter,
-            in: 'body',
-            isRequired: bodyParameter ? bodyParameter.isRequired : false,
-            // mediaType: null,
-            name: 'body',
-            prop: 'body',
-          };
-          const headerParameters: OperationParameter = {
-            ...emptyModel,
-            in: 'header',
-            isRequired: operation.parameters
-              .filter((parameter) => parameter.in === 'header')
-              .some((parameter) => parameter.isRequired),
-            mediaType: null,
-            name: isStandalone ? 'headers' : 'header',
-            prop: isStandalone ? 'headers' : 'header',
-            properties: operation.parameters
-              .filter((parameter) => parameter.in === 'header')
-              .sort(sorterByName),
-          };
-          const pathParameters: OperationParameter = {
-            ...emptyModel,
-            in: 'path',
-            isRequired: operation.parameters
-              .filter((parameter) => parameter.in === 'path')
-              .some((parameter) => parameter.isRequired),
-            mediaType: null,
-            name: 'path',
-            prop: 'path',
-            properties: operation.parameters
-              .filter((parameter) => parameter.in === 'path')
-              .sort(sorterByName),
-          };
-          const queryParameters: OperationParameter = {
-            ...emptyModel,
-            in: 'query',
-            isRequired: operation.parameters
-              .filter((parameter) => parameter.in === 'query')
-              .some((parameter) => parameter.isRequired),
-            mediaType: null,
-            name: 'query',
-            prop: 'query',
-            properties: operation.parameters
-              .filter((parameter) => parameter.in === 'query')
-              .sort(sorterByName),
-          };
-          const operationProperties = isStandalone
-            ? [
-                bodyParameters,
-                headerParameters,
-                pathParameters,
-                queryParameters,
-              ].filter(
-                (param) =>
-                  param.properties.length ||
-                  param.$refs.length ||
-                  param.mediaType,
-              )
-            : sortByName([...operation.parameters]);
+        operation.results.forEach((result) => {
+          methodMap.res![result.code] = result;
+        });
 
-          methodMap.req = operationProperties;
+        // create type export for operation response
+        generateType({
+          client,
+          meta: {
+            // TODO: this should be exact ref to operation for consistency,
+            // but name should work too as operation ID is unique
+            $ref: operation.name,
+            name: operation.name,
+          },
+          nameTransformer: operationResponseTypeName,
+          onNode,
+          type: toType({
+            ...emptyModel,
+            export: 'any-of',
+            isRequired: true,
+            properties: getSuccessResponses(operation.results),
+          }),
+        });
 
-          // create type export for operation data
+        if (isStandaloneClient(config)) {
+          const errorResults = getErrorResponses(operation.results);
+          // create type export for operation error
           generateType({
             client,
             meta: {
@@ -309,103 +370,39 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
               $ref: operation.name,
               name: operation.name,
             },
-            nameTransformer: operationDataTypeName,
+            nameTransformer: operationErrorTypeName,
             onNode,
-            type: toType({
-              ...emptyModel,
-              isRequired: true,
-              properties: operationProperties,
-            }),
+            type: toType(
+              errorResults.length
+                ? {
+                    ...emptyModel,
+                    export: 'all-of',
+                    isRequired: true,
+                    properties: errorResults,
+                  }
+                : {
+                    ...emptyModel,
+                    base: 'unknown',
+                    isRequired: true,
+                    type: 'unknown',
+                  },
+            ),
           });
         }
+      }
 
-        if (hasRes) {
-          if (!methodMap.res) {
-            methodMap.res = {};
-          }
-
-          if (Array.isArray(methodMap.res)) {
-            return;
-          }
-
-          operation.results.forEach((result) => {
-            methodMap.res![result.code] = result;
-          });
-
-          // create type export for operation response
-          generateType({
-            client,
-            meta: {
-              // TODO: this should be exact ref to operation for consistency,
-              // but name should work too as operation ID is unique
-              $ref: operation.name,
-              name: operation.name,
-            },
-            nameTransformer: operationResponseTypeName,
-            onNode,
-            type: toType({
-              ...emptyModel,
-              export: 'any-of',
-              isRequired: true,
-              // TODO: improve response type detection
-              properties: operation.results.filter(
-                (result) =>
-                  result.code === 'default' ||
-                  (result.code >= 200 && result.code < 300),
-              ),
-            }),
-          });
-
-          if (isStandaloneClient(config)) {
-            // TODO: improve error type detection
-            const errorResults = operation.errors.filter(
-              (result) =>
-                result.code === 'default' ||
-                (result.code >= 400 && result.code < 600),
-            );
-            // create type export for operation error
-            generateType({
-              client,
-              meta: {
-                // TODO: this should be exact ref to operation for consistency,
-                // but name should work too as operation ID is unique
-                $ref: operation.name,
-                name: operation.name,
-              },
-              nameTransformer: operationErrorTypeName,
-              onNode,
-              type: toType(
-                errorResults.length
-                  ? {
-                      ...emptyModel,
-                      export: 'all-of',
-                      isRequired: true,
-                      properties: errorResults,
-                    }
-                  : {
-                      ...emptyModel,
-                      base: 'unknown',
-                      isRequired: true,
-                      type: 'unknown',
-                    },
-              ),
-            });
-          }
+      if (hasErr) {
+        if (!methodMap.res) {
+          methodMap.res = {};
         }
 
-        if (hasErr) {
-          if (!methodMap.res) {
-            methodMap.res = {};
-          }
-
-          if (Array.isArray(methodMap.res)) {
-            return;
-          }
-
-          operation.errors.forEach((error) => {
-            methodMap.res![error.code] = error;
-          });
+        if (Array.isArray(methodMap.res)) {
+          return;
         }
+
+        operation.errors.forEach((error) => {
+          methodMap.res![error.code] = error;
+        });
       }
     });
   });

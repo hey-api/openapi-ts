@@ -402,7 +402,12 @@ export const mergeHeaders = (
           mergedHeaders.append(key, v as string);
         }
       } else if (value !== undefined) {
-        mergedHeaders.set(key, value as string);
+        // assume object headers are meant to be JSON stringified, i.e. their
+        // content value in OpenAPI specification is 'application/json'
+        mergedHeaders.set(
+          key,
+          typeof value === 'object' ? JSON.stringify(value) : (value as string),
+        );
       }
     }
   }

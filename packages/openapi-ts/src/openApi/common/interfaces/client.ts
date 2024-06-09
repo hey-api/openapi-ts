@@ -1,3 +1,5 @@
+import type { OpenApiParameter } from '../../v3/interfaces/OpenApiParameter';
+
 export interface ModelComposition
   extends Pick<Model, '$refs' | 'enums' | 'imports' | 'properties'> {
   export: Extract<Model['export'], 'all-of' | 'any-of' | 'one-of'>;
@@ -11,7 +13,7 @@ export interface Enum {
 }
 
 export interface OperationParameter extends Model {
-  in: 'path' | 'query' | 'header' | 'formData' | 'body' | 'cookie';
+  in: 'body' | 'cookie' | 'formData' | 'header' | 'path' | 'query';
   prop: string;
   mediaType: string | null;
 }
@@ -27,8 +29,8 @@ export interface OperationParameters extends Pick<Model, '$refs' | 'imports'> {
 }
 
 export interface OperationResponse extends Model {
-  in: 'response' | 'header';
-  code: number | 'default';
+  in: 'header' | 'response';
+  code: number | 'default' | '1XX' | '2XX' | '3XX' | '4XX' | '5XX';
 }
 
 export type Method =
@@ -53,6 +55,10 @@ export interface Operation extends OperationParameters {
   name: string;
   path: string;
   responseHeader: string | null;
+  /**
+   * All operation responses defined in OpenAPI specification.
+   * Sorted by status code.
+   */
   results: OperationResponse[];
   /**
    * Service name, might be without postfix. This will be used to name the
@@ -130,6 +136,11 @@ export interface Model extends Schema {
     | 'one-of'
     | 'reference';
   imports: string[];
+  in:
+    | OperationParameter['in']
+    | OpenApiParameter['in']
+    | OperationResponse['in']
+    | '';
   link: Model | null;
   meta?: ModelMeta;
   /**
