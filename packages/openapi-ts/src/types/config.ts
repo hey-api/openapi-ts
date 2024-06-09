@@ -125,6 +125,10 @@ export interface ClientConfig {
          */
         name?: string;
         /**
+         * Customise the method name of methods within the service
+         */
+        methodNameBuilder?: (service: string, operationId: string) => string;
+        /**
          * Use operation ID to generate operation names?
          * @default true
          */
