@@ -862,4 +862,4 @@ export type ParameterSimpleParameter = string;
 /**
  * Parameter with illegal characters
  */
-export type Parameterx_Foo_Bar = string;
+export type Parameterx_Foo_Bar = ModelWithString;

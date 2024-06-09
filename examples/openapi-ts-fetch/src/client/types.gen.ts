@@ -17,6 +17,15 @@ export type Order = {
  */
 export type status = 'placed' | 'approved' | 'delivered';
 
+/**
+ * Order Status
+ */
+export const status = {
+  APPROVED: 'approved',
+  DELIVERED: 'delivered',
+  PLACED: 'placed',
+} as const;
+
 export type Customer = {
   id?: number;
   username?: string;
@@ -70,6 +79,15 @@ export type Pet = {
  * pet status in the store
  */
 export type status2 = 'available' | 'pending' | 'sold';
+
+/**
+ * pet status in the store
+ */
+export const status2 = {
+  AVAILABLE: 'available',
+  PENDING: 'pending',
+  SOLD: 'sold',
+} as const;
 
 export type ApiResponse = {
   code?: number;
@@ -158,8 +176,8 @@ export type UpdatePetWithFormData = {
 };
 
 export type DeletePetData = {
-  header?: {
-    apiKey?: string;
+  headers?: {
+    api_key?: string;
   };
   path: {
     /**
@@ -240,7 +258,7 @@ export type CreateUsersWithListInputData = {
   body?: Array<User>;
 };
 
-export type CreateUsersWithListInputResponse = User | unknown;
+export type CreateUsersWithListInputResponse = User;
 
 export type CreateUsersWithListInputError = unknown;
 
@@ -312,11 +330,11 @@ export type $OpenApiTs = {
         /**
          * Successful operation
          */
-        200: Pet;
+        '200': Pet;
         /**
          * Invalid input
          */
-        405: unknown;
+        '405': unknown;
       };
     };
     put: {
@@ -325,19 +343,19 @@ export type $OpenApiTs = {
         /**
          * Successful operation
          */
-        200: Pet;
+        '200': Pet;
         /**
          * Invalid ID supplied
          */
-        400: unknown;
+        '400': unknown;
         /**
          * Pet not found
          */
-        404: unknown;
+        '404': unknown;
         /**
          * Validation exception
          */
-        405: unknown;
+        '405': unknown;
       };
     };
   };
@@ -348,11 +366,11 @@ export type $OpenApiTs = {
         /**
          * successful operation
          */
-        200: Array<Pet>;
+        '200': Array<Pet>;
         /**
          * Invalid status value
          */
-        400: unknown;
+        '400': unknown;
       };
     };
   };
@@ -363,11 +381,11 @@ export type $OpenApiTs = {
         /**
          * successful operation
          */
-        200: Array<Pet>;
+        '200': Array<Pet>;
         /**
          * Invalid tag value
          */
-        400: unknown;
+        '400': unknown;
       };
     };
   };
@@ -378,15 +396,15 @@ export type $OpenApiTs = {
         /**
          * successful operation
          */
-        200: Pet;
+        '200': Pet;
         /**
          * Invalid ID supplied
          */
-        400: unknown;
+        '400': unknown;
         /**
          * Pet not found
          */
-        404: unknown;
+        '404': unknown;
       };
     };
     post: {
@@ -395,7 +413,7 @@ export type $OpenApiTs = {
         /**
          * Invalid input
          */
-        405: unknown;
+        '405': unknown;
       };
     };
     delete: {
@@ -404,7 +422,7 @@ export type $OpenApiTs = {
         /**
          * Invalid pet value
          */
-        400: unknown;
+        '400': unknown;
       };
     };
   };
@@ -415,7 +433,7 @@ export type $OpenApiTs = {
         /**
          * successful operation
          */
-        200: ApiResponse;
+        '200': ApiResponse;
       };
     };
   };
@@ -425,7 +443,7 @@ export type $OpenApiTs = {
         /**
          * successful operation
          */
-        200: {
+        '200': {
           [key: string]: number;
         };
       };
@@ -438,11 +456,11 @@ export type $OpenApiTs = {
         /**
          * successful operation
          */
-        200: Order;
+        '200': Order;
         /**
          * Invalid input
          */
-        405: unknown;
+        '405': unknown;
       };
     };
   };
@@ -453,15 +471,15 @@ export type $OpenApiTs = {
         /**
          * successful operation
          */
-        200: Order;
+        '200': Order;
         /**
          * Invalid ID supplied
          */
-        400: unknown;
+        '400': unknown;
         /**
          * Order not found
          */
-        404: unknown;
+        '404': unknown;
       };
     };
     delete: {
@@ -470,11 +488,11 @@ export type $OpenApiTs = {
         /**
          * Invalid ID supplied
          */
-        400: unknown;
+        '400': unknown;
         /**
          * Order not found
          */
-        404: unknown;
+        '404': unknown;
       };
     };
   };
@@ -496,7 +514,7 @@ export type $OpenApiTs = {
         /**
          * Successful operation
          */
-        200: User;
+        '200': User;
         /**
          * successful operation
          */
@@ -511,11 +529,11 @@ export type $OpenApiTs = {
         /**
          * successful operation
          */
-        200: string;
+        '200': string;
         /**
          * Invalid username/password supplied
          */
-        400: unknown;
+        '400': unknown;
       };
     };
   };
@@ -536,15 +554,15 @@ export type $OpenApiTs = {
         /**
          * successful operation
          */
-        200: User;
+        '200': User;
         /**
          * Invalid username supplied
          */
-        400: unknown;
+        '400': unknown;
         /**
          * User not found
          */
-        404: unknown;
+        '404': unknown;
       };
     };
     put: {
@@ -562,11 +580,11 @@ export type $OpenApiTs = {
         /**
          * Invalid username supplied
          */
-        400: unknown;
+        '400': unknown;
         /**
          * User not found
          */
-        404: unknown;
+        '404': unknown;
       };
     };
   };

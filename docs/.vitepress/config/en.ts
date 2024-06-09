@@ -10,11 +10,20 @@ export default defineConfig({
         items: [
           { link: '/openapi-ts/get-started', text: 'Get Started' },
           { link: '/openapi-ts/configuration', text: 'Configuration' },
-          {
-            link: '/openapi-ts/clients',
-            text: 'Clients <span class="soon">soon</span>',
-          },
+        ],
+        text: '@hey-api/openapi-ts',
+      },
+      {
+        items: [
+          { link: '/openapi-ts/output', text: 'Output' },
+          { link: '/openapi-ts/clients', text: 'Clients' },
           { link: '/openapi-ts/interceptors', text: 'Interceptors' },
+          { link: '/openapi-ts/migrating', text: 'Migrating' },
+        ],
+        text: 'Guides and Concepts',
+      },
+      {
+        items: [
           {
             link: '/openapi-ts/integrations',
             text: 'Integrations <span class="soon">soon</span>',
@@ -23,9 +32,8 @@ export default defineConfig({
             link: '/openapi-ts/tanstack-query',
             text: 'TanStack Query <span class="soon">soon</span>',
           },
-          { link: '/openapi-ts/migrating', text: 'Migrating' },
         ],
-        text: 'openapi-ts',
+        text: 'Plugins',
       },
       {
         items: [

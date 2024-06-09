@@ -1,5 +1,19 @@
 # @hey-api/docs
 
+## 0.5.7
+
+### Patch Changes
+
+- [#632](https://github.com/hey-api/openapi-ts/pull/632) [`9c16bc7`](https://github.com/hey-api/openapi-ts/commit/9c16bc71cde48c0cb700b7e720a9e2ad56ec5f02) Thanks [@mrlubos](https://github.com/mrlubos)! - docs: add output page
+
+## 0.5.6
+
+### Patch Changes
+
+- docs: add fetch client documentation ([#602](https://github.com/hey-api/openapi-ts/pull/602))
+
+- docs: add migration notes for v0.46.0 ([#602](https://github.com/hey-api/openapi-ts/pull/602))
+
 ## 0.5.5
 
 ### Patch Changes

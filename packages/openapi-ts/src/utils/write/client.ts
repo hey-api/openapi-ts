@@ -26,7 +26,7 @@ export const writeClient = async (
 ): Promise<void> => {
   const config = getConfig();
 
-  if (config.services.include) {
+  if (config.services.include && config.services.asClass) {
     const regexp = new RegExp(config.services.include);
     client.services = client.services.filter((service) =>
       regexp.test(service.name),

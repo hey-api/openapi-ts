@@ -34,27 +34,26 @@
     "node": "^18.0.0 || >=20.0.0"
   },
   "devDependencies": {
-    "@changesets/cli": "2.27.1",
-    "@rollup/plugin-commonjs": "25.0.7",
+    "@changesets/changelog-github": "0.5.0",
+    "@changesets/cli": "2.27.3",
+    "@rollup/plugin-commonjs": "25.0.8",
     "@rollup/plugin-terser": "0.4.4",
     "@rollup/plugin-typescript": "11.1.6",
-    "@svitejs/changesets-changelog-github-compact": "1.1.0",
-    "@types/node": "20.12.11",
+    "@types/node": "20.12.12",
     "@vitest/coverage-v8": "1.6.0",
-    "eslint": "9.2.0",
+    "eslint": "9.3.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-simple-import-sort": "12.1.0",
     "eslint-plugin-sort-keys-fix": "1.1.2",
-    "globals": "15.2.0",
+    "globals": "15.3.0",
     "husky": "9.0.11",
-    "lint-staged": "15.2.2",
+    "lint-staged": "15.2.5",
     "prettier": "3.2.5",
     "rimraf": "5.0.7",
-    "rollup": "4.17.2",
-    "rollup-plugin-dts": "6.1.0",
+    "rollup": "4.18.0",
+    "rollup-plugin-dts": "6.1.1",
     "typescript": "5.4.5",
-    "typescript-eslint": "7.8.0",
+    "typescript-eslint": "7.10.0",
     "vitest": "1.6.0"
-  },
-  "packageManager": "pnpm@8.15.7"
+  }
 }

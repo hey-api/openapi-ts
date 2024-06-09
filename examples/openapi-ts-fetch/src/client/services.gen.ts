@@ -50,14 +50,14 @@ import type {
   UploadFileData,
   UploadFileError,
   UploadFileResponse,
-} from './types.gen.js';
+} from './types.gen';
 
 /**
  * Add a new pet to the store
  * Add a new pet to the store
  */
 export const addPet = (options: Options<AddPetData>) =>
-  client.post<AddPetResponse, AddPetError>({
+  (options?.client ?? client).post<AddPetResponse, AddPetError>({
     ...options,
     url: '/pet',
   });
@@ -67,7 +67,7 @@ export const addPet = (options: Options<AddPetData>) =>
  * Update an existing pet by Id
  */
 export const updatePet = (options: Options<UpdatePetData>) =>
-  client.put<UpdatePetResponse, UpdatePetError>({
+  (options?.client ?? client).put<UpdatePetResponse, UpdatePetError>({
     ...options,
     url: '/pet',
   });
@@ -77,7 +77,10 @@ export const updatePet = (options: Options<UpdatePetData>) =>
  * Multiple status values can be provided with comma separated strings
  */
 export const findPetsByStatus = (options?: Options<FindPetsByStatusData>) =>
-  client.get<FindPetsByStatusResponse, FindPetsByStatusError>({
+  (options?.client ?? client).get<
+    FindPetsByStatusResponse,
+    FindPetsByStatusError
+  >({
     ...options,
     url: '/pet/findByStatus',
   });
@@ -87,7 +90,7 @@ export const findPetsByStatus = (options?: Options<FindPetsByStatusData>) =>
  * Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
  */
 export const findPetsByTags = (options?: Options<FindPetsByTagsData>) =>
-  client.get<FindPetsByTagsResponse, FindPetsByTagsError>({
+  (options?.client ?? client).get<FindPetsByTagsResponse, FindPetsByTagsError>({
     ...options,
     url: '/pet/findByTags',
   });
@@ -97,7 +100,7 @@ export const findPetsByTags = (options?: Options<FindPetsByTagsData>) =>
  * Returns a single pet
  */
 export const getPetById = (options: Options<GetPetByIdData>) =>
-  client.get<GetPetByIdResponse, GetPetByIdError>({
+  (options?.client ?? client).get<GetPetByIdResponse, GetPetByIdError>({
     ...options,
     url: '/pet/{petId}',
   });
@@ -106,7 +109,7 @@ export const getPetById = (options: Options<GetPetByIdData>) =>
  * Updates a pet in the store with form data
  */
 export const updatePetWithForm = (options: Options<UpdatePetWithFormData>) =>
-  client.post<void>({
+  (options?.client ?? client).post<void>({
     ...options,
     url: '/pet/{petId}',
   });
@@ -115,7 +118,7 @@ export const updatePetWithForm = (options: Options<UpdatePetWithFormData>) =>
  * Deletes a pet
  */
 export const deletePet = (options: Options<DeletePetData>) =>
-  client.delete<void>({
+  (options?.client ?? client).delete<void>({
     ...options,
     url: '/pet/{petId}',
   });
@@ -124,7 +127,7 @@ export const deletePet = (options: Options<DeletePetData>) =>
  * uploads an image
  */
 export const uploadFile = (options: Options<UploadFileData>) =>
-  client.post<UploadFileResponse, UploadFileError>({
+  (options?.client ?? client).post<UploadFileResponse, UploadFileError>({
     ...options,
     url: '/pet/{petId}/uploadImage',
   });
@@ -134,7 +137,7 @@ export const uploadFile = (options: Options<UploadFileData>) =>
  * Returns a map of status codes to quantities
  */
 export const getInventory = (options?: Options) =>
-  client.get<GetInventoryResponse, GetInventoryError>({
+  (options?.client ?? client).get<GetInventoryResponse, GetInventoryError>({
     ...options,
     url: '/store/inventory',
   });
@@ -144,7 +147,7 @@ export const getInventory = (options?: Options) =>
  * Place a new order in the store
  */
 export const placeOrder = (options?: Options<PlaceOrderData>) =>
-  client.post<PlaceOrderResponse, PlaceOrderError>({
+  (options?.client ?? client).post<PlaceOrderResponse, PlaceOrderError>({
     ...options,
     url: '/store/order',
   });
@@ -154,7 +157,7 @@ export const placeOrder = (options?: Options<PlaceOrderData>) =>
  * For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions.
  */
 export const getOrderById = (options: Options<GetOrderByIdData>) =>
-  client.get<GetOrderByIdResponse, GetOrderByIdError>({
+  (options?.client ?? client).get<GetOrderByIdResponse, GetOrderByIdError>({
     ...options,
     url: '/store/order/{orderId}',
   });
@@ -164,7 +167,7 @@ export const getOrderById = (options: Options<GetOrderByIdData>) =>
  * For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors
  */
 export const deleteOrder = (options: Options<DeleteOrderData>) =>
-  client.delete<void>({
+  (options?.client ?? client).delete<void>({
     ...options,
     url: '/store/order/{orderId}',
   });
@@ -174,7 +177,7 @@ export const deleteOrder = (options: Options<DeleteOrderData>) =>
  * This can only be done by the logged in user.
  */
 export const createUser = (options?: Options<CreateUserData>) =>
-  client.post<CreateUserResponse, CreateUserError>({
+  (options?.client ?? client).post<CreateUserResponse, CreateUserError>({
     ...options,
     url: '/user',
   });
@@ -186,7 +189,10 @@ export const createUser = (options?: Options<CreateUserData>) =>
 export const createUsersWithListInput = (
   options?: Options<CreateUsersWithListInputData>,
 ) =>
-  client.post<CreateUsersWithListInputResponse, CreateUsersWithListInputError>({
+  (options?.client ?? client).post<
+    CreateUsersWithListInputResponse,
+    CreateUsersWithListInputError
+  >({
     ...options,
     url: '/user/createWithList',
   });
@@ -195,7 +201,7 @@ export const createUsersWithListInput = (
  * Logs user into the system
  */
 export const loginUser = (options?: Options<LoginUserData>) =>
-  client.get<LoginUserResponse, LoginUserError>({
+  (options?.client ?? client).get<LoginUserResponse, LoginUserError>({
     ...options,
     url: '/user/login',
   });
@@ -204,7 +210,7 @@ export const loginUser = (options?: Options<LoginUserData>) =>
  * Logs out current logged in user session
  */
 export const logoutUser = (options?: Options) =>
-  client.get<LogoutUserResponse, LogoutUserError>({
+  (options?.client ?? client).get<LogoutUserResponse, LogoutUserError>({
     ...options,
     url: '/user/logout',
   });
@@ -213,7 +219,7 @@ export const logoutUser = (options?: Options) =>
  * Get user by user name
  */
 export const getUserByName = (options: Options<GetUserByNameData>) =>
-  client.get<GetUserByNameResponse, GetUserByNameError>({
+  (options?.client ?? client).get<GetUserByNameResponse, GetUserByNameError>({
     ...options,
     url: '/user/{username}',
   });
@@ -223,7 +229,7 @@ export const getUserByName = (options: Options<GetUserByNameData>) =>
  * This can only be done by the logged in user.
  */
 export const updateUser = (options: Options<UpdateUserData>) =>
-  client.put<UpdateUserResponse, UpdateUserError>({
+  (options?.client ?? client).put<UpdateUserResponse, UpdateUserError>({
     ...options,
     url: '/user/{username}',
   });
@@ -233,7 +239,7 @@ export const updateUser = (options: Options<UpdateUserData>) =>
  * This can only be done by the logged in user.
  */
 export const deleteUser = (options: Options<DeleteUserData>) =>
-  client.delete<void>({
+  (options?.client ?? client).delete<void>({
     ...options,
     url: '/user/{username}',
   });

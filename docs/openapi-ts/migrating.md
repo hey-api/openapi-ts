@@ -34,15 +34,7 @@ import type { Model } from 'client/types.gen';
 
 You don't have to update imports from `core` directory. These will be addressed in later releases.
 
-### Deprecated `useOptions`
-
-This config option is deprecated and will be removed.
-
 ### Deprecated `base`
-
-This config option is deprecated and will be removed in favor of [clients](./clients).
-
-### Deprecated `request`
 
 This config option is deprecated and will be removed in favor of [clients](./clients).
 
@@ -50,11 +42,53 @@ This config option is deprecated and will be removed in favor of [clients](./cli
 
 This config option is deprecated and will be removed in favor of [clients](./clients).
 
+### Deprecated `request`
+
+This config option is deprecated and will be removed in favor of [clients](./clients).
+
+### Deprecated `useOptions`
+
+This config option is deprecated and will be removed.
+
+## v0.46.0
+
+### Tree-shakeable services
+
+By default, your services will now support [tree-shaking](https://developer.mozilla.org/docs/Glossary/Tree_shaking). You can either use wildcard imports
+
+```js
+import { DefaultService } from 'client/services.gen'; // [!code --]
+import * as DefaultService from 'client/services.gen'; // [!code ++]
+
+DefaultService.foo(); // only import needs to be changed
+```
+
+or update all references to service classes
+
+```js
+import { DefaultService } from 'client/services.gen'; // [!code --]
+import { foo } from 'client/services.gen'; // [!code ++]
+
+foo(); // all references need to be changed
+```
+
+If you want to preserve the old behavior, you can set the newly exposed `services.asClass` option to `true.`
+
+```js{5}
+export default {
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  services: {
+    asClass: true,
+  },
+}
+```
+
 ## v0.45.0
 
 ### Removed `client` inference
 
-`openapi-ts` will no longer infer which client you want to generate. By default, we will create a `fetch` client. If you want a different client, you can specify it using the `client` option.
+`@hey-api/openapi-ts` will no longer infer which client you want to generate. By default, we will create a `fetch` client. If you want a different client, you can specify it using the `client` option.
 
 ```js{2}
 export default {
@@ -404,4 +438,4 @@ This config option has been removed. Generated types will behave the same as `us
 
 ## OpenAPI TypeScript Codegen
 
-`openapi-ts` was originally forked from Ferdi Koomen's [openapi-typescript-codegen](https://github.com/ferdikoomen/openapi-typescript-codegen). Therefore, we want you to be able to migrate your projects. Migration should be relatively straightforward if you follow the release notes on this page. Start on [v0.27.24](#v0-27-24) and scroll to the release you're migrating to.
+`@hey-api/openapi-ts` was originally forked from Ferdi Koomen's [openapi-typescript-codegen](https://github.com/ferdikoomen/openapi-typescript-codegen). Therefore, we want you to be able to migrate your projects. Migration should be relatively straightforward if you follow the release notes on this page. Start on [v0.27.24](#v0-27-24) and scroll to the release you're migrating to.

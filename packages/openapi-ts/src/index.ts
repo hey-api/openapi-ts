@@ -131,6 +131,7 @@ const getSchemas = (userConfig: ClientConfig): Config['schemas'] => {
 
 const getServices = (userConfig: ClientConfig): Config['services'] => {
   let services: Config['services'] = {
+    asClass: false,
     export: true,
     name: '{{name}}Service',
     operationId: true,

@@ -1,5 +1,5 @@
-import {createClient} from '../../../'
-import type {Config} from '../../../src/types/config'
+import { createClient } from '../../../'
+import type { Config } from '../../../src/types/config'
 
 export const generateClient = async (
   dir: string,
@@ -16,6 +16,9 @@ export const generateClient = async (
     output: {
       addFileExtension,
       path: `./test/e2e/generated/${dir}/`,
+    },
+    services: {
+      asClass: true,
     },
     useOptions,
   })
