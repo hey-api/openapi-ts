@@ -40,78 +40,7 @@ Alternatively, you can use `openapi-ts.config.js` and configure the export state
 
 ## Clients
 
-By default, `@hey-api/openapi-ts` will generate a Fetch API client. If you want a different client, you can specify it using the `client` option.
-
-::: code-group
-
-```js{2} [fetch]
-export default {
-  client: 'fetch',
-  input: 'path/to/openapi.json',
-  output: 'src/client',
-}
-```
-
-```js{2} [fetch (beta)]
-export default {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
-  output: 'src/client',
-}
-```
-
-```js{2} [axios]
-export default {
-  client: 'axios',
-  input: 'path/to/openapi.json',
-  output: 'src/client',
-}
-```
-
-```js{2} [angular]
-export default {
-  client: 'angular',
-  input: 'path/to/openapi.json',
-  output: 'src/client',
-}
-```
-
-```js{2} [node]
-export default {
-  client: 'node',
-  input: 'path/to/openapi.json',
-  output: 'src/client',
-}
-```
-
-```js{2} [xhr]
-export default {
-  client: 'xhr',
-  input: 'path/to/openapi.json',
-  output: 'src/client',
-}
-```
-
-:::
-
-We support these clients:
-
-- [angular](https://angular.io/) (using [RxJS](https://rxjs.dev/))
-- [axios](https://axios-http.com/)
-- [fetch](https://developer.mozilla.org/docs/Web/API/Fetch_API)
-
-We also support the legacy Node.js and XHR clients:
-
-- [node](https://nodejs.org/) (using [node-fetch](https://www.npmjs.com/package/node-fetch))
-- [xhr](https://developer.mozilla.org/docs/Web/API/XMLHttpRequest)
-
-Optionally, you can use client packages to avoid generating a new client on every run:
-
-- [fetch (beta)](https://developer.mozilla.org/docs/Web/API/Fetch_API)
-
-::: tip
-You might not need a `node` client. Fetch API is [experimental](https://nodejs.org/docs/latest-v18.x/api/globals.html#fetch) in Node.js v18 and [stable](https://nodejs.org/docs/latest-v21.x/api/globals.html#fetch) in Node.js v21. We recommend upgrading to the latest Node.js version.
-:::
+Clients are responsible for sending the actual HTTP requests. By default, `@hey-api/openapi-ts` will generate a Fetch API client. We are moving away from generated clients toward standalone packages. This approach has many benefits over the current default. You can learn more on the [Clients](/openapi-ts/clients) page.
 
 <!--
 TODO: uncomment after c12 supports multiple configs
@@ -138,9 +67,89 @@ export default defineConfig([
 ])
 ``` -->
 
+## Services
+
+Services are abstractions on top of clients and serve the same purpose. By default, `@hey-api/openapi-ts` will generate a flat service layer. Your choice to use services comes down to personal preferences and bundle size considerations. You can learn more on the [Output](/openapi-ts/output#api-services) page.
+
+## Enums
+
+By default, `@hey-api/openapi-ts` will only emit enums as types. You may want to generate runtime artifacts. A good use case is iterating through possible field values without manually typing arrays. To emit runtime enums, set `types.enums` to a valid option.
+
+::: code-group
+
+```js{5} [disabled]
+export default {
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  types: {
+    enums: false,
+  },
+}
+```
+
+```js{5} [javascript]
+export default {
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  types: {
+    enums: 'javascript',
+  },
+}
+```
+
+```js{5} [typescript]
+export default {
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  types: {
+    enums: 'typescript',
+  },
+}
+```
+
+:::
+
+We recommend exporting enums as plain JavaScript objects. [TypeScript enums](https://www.typescriptlang.org/docs/handbook/enums.html) are not a type-level extension of JavaScript and pose [typing challenges](https://dev.to/ivanzm123/dont-use-enums-in-typescript-they-are-very-dangerous-57bh).
+
+## JSON Schemas
+
+By default, `@hey-api/openapi-ts` generates schemas from your OpenAPI specification. A great use case for schemas is client-side form input validation. If you're using OpenAPI 3.1, your [schemas](/openapi-ts/output#json-schemas) are JSON Schema compliant and can be used with other tools supporting JSON Schema. However, if you only want to validate form input, you probably don't want to include string descriptions inside your bundle. You can choose your preferred type using `schemas.type` option.
+
+::: code-group
+
+```js{5} [json]
+export default {
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  schemas: {
+    type: 'json'
+  },
+}
+```
+
+```js{5} [form]
+export default {
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  schemas: {
+    type: 'form'
+  },
+}
+```
+
+```js{4} [disabled]
+export default {
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  schemas: false,
+}
+```
+
+:::
+
 ## Formatting
 
-By default, `@hey-api/openapi-ts` will not automatically format your client. To enable this feature, set `output.format` to a valid formatter.
+By default, `@hey-api/openapi-ts` will not automatically format your output. To enable this feature, set `output.format` to a valid formatter.
 
 ::: code-group
 
@@ -176,11 +185,11 @@ export default {
 
 :::
 
-You can also prevent your client from being processed by formatters by adding your output path to the tool's ignore file (e.g. `.prettierignore`).
+You can also prevent your output from being formatted by adding your output path to the formatter's ignore file.
 
 ## Linting
 
-For performance reasons, `@hey-api/openapi-ts` does not automatically lint your client. To enable this feature, set `output.lint` to a valid linter.
+By default, `@hey-api/openapi-ts` will not automatically lint your output. To enable this feature, set `output.lint` to a valid linter.
 
 ::: code-group
 
@@ -216,83 +225,10 @@ export default {
 
 :::
 
-You can also prevent your client from being processed by linters by adding your output path to the tool's ignore file (e.g. `.eslintignore`).
-
-## Enums
-
-If you need to iterate through possible field values without manually typing arrays, you can export enums with
-
-```js{5}
-export default {
-  input: 'path/to/openapi.json',
-  output: 'src/client',
-  types: {
-    enums: 'javascript',
-  },
-}
-```
-
-This will export enums as plain JavaScript objects. For example, `Foo` would become
-
-```js
-export const Foo = {
-  FOO: 'foo',
-  BAR: 'bar',
-} as const;
-```
-
-We discourage generating [TypeScript enums](https://www.typescriptlang.org/docs/handbook/enums.html) because they are not standard JavaScript and pose [typing challenges](https://dev.to/ivanzm123/dont-use-enums-in-typescript-they-are-very-dangerous-57bh). If you really need TypeScript enums, you can export them with
-
-```js{5}
-export default {
-  input: 'path/to/openapi.json',
-  output: 'src/client',
-  types: {
-    enums: 'typescript',
-  },
-}
-```
-
-## JSON Schemas
-
-By default, `@hey-api/openapi-ts` exports schemas from your OpenAPI specification as plain JavaScript objects. A great use case for schemas is client-side form input validation.
-
-```ts
-import { $Schema } from 'client/schemas';
-
-const maxInputLength = $Schema.properties.text.maxLength;
-
-if (userInput.length > maxInputLength) {
-  throw new Error(`String length cannot exceed ${maxInputLength} characters!`);
-}
-```
-
-If you're using OpenAPI v3.1, your schemas are JSON Schema compliant and can be used with other tools supporting JSON Schema. However, if you only want to validate form input, you don't want to include string descriptions inside your bundle. Instead, use `form` type.
-
-```js{5}
-export default {
-  input: 'path/to/openapi.json',
-  output: 'src/client',
-  schemas: {
-    type: 'form'
-  },
-}
-```
-
-If you don't need schemas at all, you can disable them with
-
-```js{4}
-export default {
-  input: 'path/to/openapi.json',
-  output: 'src/client',
-  schemas: false,
-}
-```
+You can also prevent your output from being linted by adding your output path to the linter's ignore file.
 
 ## Config API
 
 You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/types/config.ts) interface.
 
-## Examples
-
-You can view live examples on [StackBlitz](https://stackblitz.com/orgs/github/hey-api/collections/openapi-ts-examples).
+<!--@include: ../examples.md-->

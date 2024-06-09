@@ -1,5 +1,29 @@
 # @hey-api/openapi-ts
 
+## 0.46.3
+
+### Patch Changes
+
+- [#594](https://github.com/hey-api/openapi-ts/pull/594) [`9878381`](https://github.com/hey-api/openapi-ts/commit/98783811e0c90705ddac2cc5e54c524aae634865) Thanks [@SimenB](https://github.com/SimenB)! - Add explicit type annotations to `Interceptors`
+
+  This allows the generated code to work with TypeScript 5.5's new `isolatedDeclarations` configuration.
+
+- [#635](https://github.com/hey-api/openapi-ts/pull/635) [`0b09940`](https://github.com/hey-api/openapi-ts/commit/0b0994050dbcb6c17e8b78ca1c77738fc8e0d498) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle 1XX response status codes
+
+- [#636](https://github.com/hey-api/openapi-ts/pull/636) [`498f459`](https://github.com/hey-api/openapi-ts/commit/498f45979b91bf93b319413c60492af94a08df48) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: improve default response status code classification
+
+## 0.46.2
+
+### Patch Changes
+
+- fix: do not transform property names for standalone clients ([#616](https://github.com/hey-api/openapi-ts/pull/616))
+
+## 0.46.1
+
+### Patch Changes
+
+- fix: handle application/json content type in parameter definitions ([#614](https://github.com/hey-api/openapi-ts/pull/614))
+
 ## 0.46.0
 
 ### Minor Changes

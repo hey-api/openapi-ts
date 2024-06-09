@@ -17,7 +17,7 @@ export const getOperationResponse = ({
 }: {
   openApi: OpenApi;
   response: OpenApiResponse;
-  code: number | 'default';
+  code: OperationResponse['code'];
   types: Client['types'];
 }): OperationResponse => {
   const operationResponse: OperationResponse = {
@@ -47,6 +47,7 @@ export const getOperationResponse = ({
       if (content.schema.$ref?.startsWith('#/components/responses/')) {
         content.schema = getRef<OpenApiSchema>(openApi, content.schema);
       }
+
       if (content.schema.$ref) {
         const model = getType({ type: content.schema.$ref });
         operationResponse.base = model.base;
@@ -59,52 +60,57 @@ export const getOperationResponse = ({
         operationResponse.template = model.template;
         operationResponse.type = model.type;
         return operationResponse;
-      } else {
-        const model = getModel({ definition: content.schema, openApi, types });
-        operationResponse.export = model.export;
-        operationResponse.type = model.type;
-        operationResponse.base = model.base;
-        operationResponse.template = model.template;
-        operationResponse.link = model.link;
-        operationResponse.isReadOnly = model.isReadOnly;
-        operationResponse.isRequired = model.isRequired;
-        operationResponse.isNullable = model.isNullable;
-        operationResponse.format = model.format;
-        operationResponse.maximum = model.maximum;
-        operationResponse.exclusiveMaximum = model.exclusiveMaximum;
-        operationResponse.minimum = model.minimum;
-        operationResponse.exclusiveMinimum = model.exclusiveMinimum;
-        operationResponse.multipleOf = model.multipleOf;
-        operationResponse.maxLength = model.maxLength;
-        operationResponse.minLength = model.minLength;
-        operationResponse.maxItems = model.maxItems;
-        operationResponse.minItems = model.minItems;
-        operationResponse.uniqueItems = model.uniqueItems;
-        operationResponse.maxProperties = model.maxProperties;
-        operationResponse.minProperties = model.minProperties;
-        operationResponse.pattern = getPattern(model.pattern);
-        operationResponse.$refs = [...operationResponse.$refs, ...model.$refs];
-        operationResponse.imports = [
-          ...operationResponse.imports,
-          ...model.imports,
-        ];
-        operationResponse.enum.push(...model.enum);
-        operationResponse.enums.push(...model.enums);
-        operationResponse.properties.push(...model.properties);
-        return operationResponse;
       }
+
+      const model = getModel({ definition: content.schema, openApi, types });
+      operationResponse.export = model.export;
+      operationResponse.type = model.type;
+      operationResponse.base = model.base;
+      operationResponse.template = model.template;
+      operationResponse.link = model.link;
+      operationResponse.isReadOnly = model.isReadOnly;
+      operationResponse.isRequired = model.isRequired;
+      operationResponse.isNullable = model.isNullable;
+      operationResponse.format = model.format;
+      operationResponse.maximum = model.maximum;
+      operationResponse.exclusiveMaximum = model.exclusiveMaximum;
+      operationResponse.minimum = model.minimum;
+      operationResponse.exclusiveMinimum = model.exclusiveMinimum;
+      operationResponse.multipleOf = model.multipleOf;
+      operationResponse.maxLength = model.maxLength;
+      operationResponse.minLength = model.minLength;
+      operationResponse.maxItems = model.maxItems;
+      operationResponse.minItems = model.minItems;
+      operationResponse.uniqueItems = model.uniqueItems;
+      operationResponse.maxProperties = model.maxProperties;
+      operationResponse.minProperties = model.minProperties;
+      operationResponse.pattern = getPattern(model.pattern);
+      operationResponse.$refs = [...operationResponse.$refs, ...model.$refs];
+      operationResponse.imports = [
+        ...operationResponse.imports,
+        ...model.imports,
+      ];
+      operationResponse.enum = [...operationResponse.enum, ...model.enum];
+      operationResponse.enums = [...operationResponse.enums, ...model.enums];
+      operationResponse.properties = [
+        ...operationResponse.properties,
+        ...model.properties,
+      ];
+      return operationResponse;
     }
   }
 
   // We support basic properties from response headers, since both
   // fetch and XHR client just support string types.
-  Object.keys(response.headers ?? {}).forEach((name) => {
-    operationResponse.in = 'header';
-    operationResponse.name = name;
-    operationResponse.type = 'string';
-    operationResponse.base = 'string';
-    return operationResponse;
-  });
+  if (response.headers) {
+    for (const name in response.headers) {
+      operationResponse.in = 'header';
+      operationResponse.name = name;
+      operationResponse.type = 'string';
+      operationResponse.base = 'string';
+      return operationResponse;
+    }
+  }
 
   return operationResponse;
 };

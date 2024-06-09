@@ -96,7 +96,7 @@
         "operationId": "PatchCallWithoutParametersAndResponse"
       }
     },
-    "/api/v{api-version}/foo/{foo}/bar/{bar}": {
+    "/api/v{api-version}/foo/{foo_param}/bar/{BarParam}": {
       "delete": {
         "tags": ["Parameters"],
         "operationId": "deleteFoo",
@@ -104,7 +104,7 @@
           {
             "description": "foo in method",
             "in": "path",
-            "name": "foo",
+            "name": "foo_param",
             "required": true,
             "schema": {
               "type": "string"
@@ -113,10 +113,23 @@
           {
             "description": "bar in method",
             "in": "path",
-            "name": "bar",
+            "name": "BarParam",
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "description": "Parameter with illegal characters",
+            "name": "x-Foo-Bar",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelWithString"
+                }
+              }
             }
           }
         ]
@@ -125,7 +138,7 @@
         {
           "description": "foo in global parameters",
           "in": "path",
-          "name": "foo",
+          "name": "foo_param",
           "required": true,
           "schema": {
             "type": "string"
@@ -134,7 +147,7 @@
         {
           "description": "bar in global parameters",
           "in": "path",
-          "name": "bar",
+          "name": "BarParam",
           "required": true,
           "schema": {
             "type": "string"
@@ -831,6 +844,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ModelWithString"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Message for 4XX errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DictionaryWithArray"
                 }
               }
             }
@@ -1636,8 +1659,12 @@
         "name": "x-Foo-Bar",
         "in": "header",
         "required": true,
-        "schema": {
-          "type": "string"
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ModelWithString"
+            }
+          }
         }
       }
     },

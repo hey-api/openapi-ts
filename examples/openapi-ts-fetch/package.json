@@ -1,7 +1,7 @@
 {
   "name": "@example/openapi-ts-fetch",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.0.4",
   "type": "module",
   "scripts": {
     "build": "tsc && vite build",
@@ -21,11 +21,11 @@
   },
   "devDependencies": {
     "@hey-api/openapi-ts": "workspace:*",
-    "@types/react": "18.3.2",
+    "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
     "@typescript-eslint/eslint-plugin": "7.10.0",
     "@typescript-eslint/parser": "7.10.0",
-    "@vitejs/plugin-react": "4.2.1",
+    "@vitejs/plugin-react": "4.3.0",
     "autoprefixer": "10.4.19",
     "eslint": "9.3.0",
     "eslint-plugin-react-hooks": "4.6.2",

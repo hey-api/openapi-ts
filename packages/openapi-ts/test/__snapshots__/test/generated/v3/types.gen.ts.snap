@@ -985,7 +985,7 @@ export type ParameterSimpleParameter = string;
 /**
  * Parameter with illegal characters
  */
-export type Parameterx_Foo_Bar = string;
+export type Parameterx_Foo_Bar = ModelWithString;
 
 export type PostServiceWithEmptyTagData = {
     requestBody: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
@@ -999,11 +999,15 @@ export type DeleteFooData3 = {
     /**
      * bar in method
      */
-    bar: string;
+    barParam: string;
     /**
      * foo in method
      */
-    foo: string;
+    fooParam: string;
+    /**
+     * Parameter with illegal characters
+     */
+    xFooBar: ModelWithString;
 };
 
 export type CallWithParametersData = {
@@ -1243,13 +1247,13 @@ export type CallWithResponseAndNoContentResponseResponse = number | void;
 
 export type CallWithResponseResponse = ModelWithString;
 
-export type CallWithDuplicateResponsesResponse = ModelWithBoolean & ModelWithInteger | ModelWithString | ModelWithBoolean;
+export type CallWithDuplicateResponsesResponse = ModelWithBoolean & ModelWithInteger | ModelWithString;
 
 export type CallWithResponsesResponse = {
     readonly '@namespace.string'?: string;
     readonly '@namespace.integer'?: number;
     readonly value?: Array<ModelWithString>;
-} | ModelThatExtends | ModelThatExtendsExtends | ModelWithString;
+} | ModelThatExtends | ModelThatExtendsExtends;
 
 export type DummyAResponse = void;
 
@@ -1428,7 +1432,7 @@ export type $OpenApiTs = {
             };
         };
     };
-    '/api/v{api-version}/foo/{foo}/bar/{bar}': {
+    '/api/v{api-version}/foo/{foo_param}/bar/{BarParam}': {
         delete: {
             req: DeleteFooData3;
         };
@@ -1534,6 +1538,10 @@ export type $OpenApiTs = {
                  * Message for 502 error
                  */
                 502: ModelWithStringError;
+                /**
+                 * Message for 4XX errors
+                 */
+                '4XX': DictionaryWithArray;
                 /**
                  * Message for default response
                  */

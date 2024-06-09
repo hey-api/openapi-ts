@@ -9,7 +9,7 @@ export type ApiResult<TData = any> = {
 export type ApiRequestOptions = {
   readonly body?: any;
   readonly cookies?: Record<string, unknown>;
-  readonly errors?: Record<number, string>;
+  readonly errors?: Record<number | string, string>;
   readonly formData?: Record<string, unknown>;
   readonly headers?: Record<string, unknown>;
   readonly mediaType?: string;

@@ -1,13 +1,13 @@
 import type { Client } from '../../../types/client';
-import { getOperationResults } from '../../../utils/operation';
 import type {
   Operation,
   OperationParameters,
 } from '../../common/interfaces/client';
 import {
-  getOperationErrors,
+  getErrorResponses,
   getOperationName,
   getOperationResponseHeader,
+  getSuccessResponses,
 } from '../../common/parser/operation';
 import { getServiceName } from '../../common/parser/service';
 import { toSortedByRequired } from '../../common/parser/sort';
@@ -66,13 +66,28 @@ export const getOperation = ({
       parameters: op.parameters,
       types,
     });
-    operation.imports.push(...parameters.imports);
-    operation.parameters.push(...parameters.parameters);
-    operation.parametersPath.push(...parameters.parametersPath);
-    operation.parametersQuery.push(...parameters.parametersQuery);
-    operation.parametersForm.push(...parameters.parametersForm);
-    operation.parametersHeader.push(...parameters.parametersHeader);
-    operation.parametersCookie.push(...parameters.parametersCookie);
+    operation.imports = [...operation.imports, ...parameters.imports];
+    operation.parameters = [...operation.parameters, ...parameters.parameters];
+    operation.parametersPath = [
+      ...operation.parametersPath,
+      ...parameters.parametersPath,
+    ];
+    operation.parametersQuery = [
+      ...operation.parametersQuery,
+      ...parameters.parametersQuery,
+    ];
+    operation.parametersForm = [
+      ...operation.parametersForm,
+      ...parameters.parametersForm,
+    ];
+    operation.parametersHeader = [
+      ...operation.parametersHeader,
+      ...parameters.parametersHeader,
+    ];
+    operation.parametersCookie = [
+      ...operation.parametersCookie,
+      ...parameters.parametersCookie,
+    ];
     operation.parametersBody = parameters.parametersBody;
   }
 
@@ -83,13 +98,14 @@ export const getOperation = ({
       responses: op.responses,
       types,
     });
-    const operationResults = getOperationResults(operationResponses);
-    operation.errors = getOperationErrors(operationResponses);
-    operation.responseHeader = getOperationResponseHeader(operationResults);
+    operation.errors = getErrorResponses(operationResponses);
 
-    operationResults.forEach((operationResult) => {
-      operation.results.push(operationResult);
-      operation.imports.push(...operationResult.imports);
+    const successResponses = getSuccessResponses(operationResponses);
+    operation.responseHeader = getOperationResponseHeader(successResponses);
+
+    successResponses.forEach((operationResult) => {
+      operation.results = [...operation.results, operationResult];
+      operation.imports = [...operation.imports, ...operationResult.imports];
     });
   }
 

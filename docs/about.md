@@ -3,9 +3,9 @@ title: Philosophy
 description: Hello from Hey API.
 ---
 
-# About Hey API
+# About
 
-Hey API's objective is to provide a set of TypeScript tools to manage API interactions. Whether you're building a front-end application, API-to-API service, or micro-frontends, we want Hey API to be your go-to resource.
+Hey API's objective is to provide a suite of TypeScript tools to manage API interactions. Whether you're building a front-end application, API-to-API service, or micro-frontends, we want Hey API to be your go-to resource.
 
 Typically, developers of such applications want to:
 

@@ -56,6 +56,7 @@ export interface Config
         | (string | number | boolean)[]
         | null
         | undefined
+        | unknown
       >;
   /**
    * The request method.
@@ -141,10 +142,10 @@ type OptionsBase = Omit<RequestOptionsBase, 'url'> & {
   client?: Client;
 };
 
-export type Options<T = unknown> = T extends { body: any; headers: any }
-  ? OmitKeys<OptionsBase, 'body' | 'headers'> & T
-  : T extends { body: any }
-    ? OmitKeys<OptionsBase, 'body'> & T
-    : T extends { headers: any }
-      ? OmitKeys<OptionsBase, 'headers'> & T
-      : OptionsBase & T;
+export type Options<T = unknown> = T extends { body?: any }
+  ? T extends { headers?: any }
+    ? OmitKeys<OptionsBase, 'body' | 'headers'> & T
+    : OmitKeys<OptionsBase, 'body'> & T & Pick<OptionsBase, 'headers'>
+  : T extends { headers?: any }
+    ? OmitKeys<OptionsBase, 'headers'> & T & Pick<OptionsBase, 'body'>
+    : OptionsBase & T;
