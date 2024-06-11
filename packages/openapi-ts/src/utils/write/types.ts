@@ -1,3 +1,5 @@
+import ts from 'typescript';
+
 import {
   type Comments,
   compiler,
@@ -184,6 +186,59 @@ const processType = (client: Client, model: Model, onNode: OnNode) => {
     onNode,
     type: toType(model),
   });
+
+  const config = getConfig();
+  if (config.transform.dates) {
+    if (model.name === 'ModelWithPattern') {
+      console.log();
+
+      function generateTransformStatements(
+        localPath: string[],
+        model: Model,
+      ): ts.Statement[] {
+        switch (model.export) {
+          case 'reference':
+          case 'interface':
+            return model.properties.flatMap((property) => {
+              const path = [...localPath, property.name];
+
+              if (
+                property.type === 'string' &&
+                (property.format === 'date-time' || property.format === 'date')
+              ) {
+                return [
+                  compiler.transform.dateTransformMutation({
+                    path,
+                  }),
+                ];
+              } else {
+                // otherwise we recurse in case it's an object/array, and if it's not that will just bail with []
+                return generateTransformStatements(path, property);
+              }
+            });
+          case 'array':
+            // TODO:
+            return [
+              compiler.transform.arrayTransformMutation({
+                path: localPath,
+                statements: [],
+              }),
+            ];
+
+          default:
+            // Unsupported
+            return [];
+        }
+      }
+
+      const transformFunction = compiler.transform.transformMutationFunction({
+        modelName: model.name,
+        statements: generateTransformStatements(['data'], model),
+      });
+
+      onNode(transformFunction);
+    }
+  }
 };
 
 const processModel = (client: Client, model: Model, onNode: OnNode) => {
