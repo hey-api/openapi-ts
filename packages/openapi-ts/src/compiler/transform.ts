@@ -7,18 +7,26 @@ export const createDateTransformMutation = ({
 }): ts.Statement => {
   const truthyExpression = path
     .slice(1)
-    .reduce<ts.Expression>((expression, element) => ts.factory.createPropertyAccessChain(
-        expression,
-        ts.factory.createToken(ts.SyntaxKind.QuestionDotToken),
-        ts.factory.createIdentifier(element),
-      ), ts.factory.createIdentifier(path[0]));
+    .reduce<ts.Expression>(
+      (expression, element) =>
+        ts.factory.createPropertyAccessChain(
+          expression,
+          ts.factory.createToken(ts.SyntaxKind.QuestionDotToken),
+          ts.factory.createIdentifier(element),
+        ),
+      ts.factory.createIdentifier(path[0]),
+    );
 
   const accessExpression = path
     .slice(1)
-    .reduce<ts.Expression>((expression, element) => ts.factory.createPropertyAccessExpression(
-        expression,
-        ts.factory.createIdentifier(element),
-      ), ts.factory.createIdentifier(path[0]));
+    .reduce<ts.Expression>(
+      (expression, element) =>
+        ts.factory.createPropertyAccessExpression(
+          expression,
+          ts.factory.createIdentifier(element),
+        ),
+      ts.factory.createIdentifier(path[0]),
+    );
 
   const statement = ts.factory.createIfStatement(
     truthyExpression,
@@ -49,11 +57,15 @@ export const createArrayTransformMutation = ({
 }): ts.Statement => {
   const safeAccessExpression = path
     .slice(1)
-    .reduce<ts.Expression>((expression, element) => ts.factory.createPropertyAccessChain(
-        expression,
-        ts.factory.createToken(ts.SyntaxKind.QuestionDotToken),
-        ts.factory.createIdentifier(element),
-      ), ts.factory.createIdentifier(path[0]));
+    .reduce<ts.Expression>(
+      (expression, element) =>
+        ts.factory.createPropertyAccessChain(
+          expression,
+          ts.factory.createToken(ts.SyntaxKind.QuestionDotToken),
+          ts.factory.createIdentifier(element),
+        ),
+      ts.factory.createIdentifier(path[0]),
+    );
 
   const statement = ts.factory.createIfStatement(
     ts.factory.createCallExpression(
