@@ -19,6 +19,17 @@ describe('index', () => {
     });
   });
 
+  it.only('parses v3-transforms without issues', async () => {
+    await createClient({
+      dryRun: false,
+      input: './test/spec/v3-transforms.json',
+      output: './generated/v3/',
+      transform: {
+        dates: true,
+      },
+    });
+  });
+
   it('downloads and parses v2 without issues', async () => {
     await createClient({
       dryRun: true,

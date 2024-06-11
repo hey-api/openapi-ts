@@ -151,7 +151,8 @@ export const createAlias = ({
 }: {
   existingName: string;
   name: string;
-}) => ts.factory.createVariableStatement(
+}) =>
+  ts.factory.createVariableStatement(
     [ts.factory.createToken(ts.SyntaxKind.ExportKeyword)],
     ts.factory.createVariableDeclarationList(
       [
