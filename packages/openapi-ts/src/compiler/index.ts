@@ -136,6 +136,7 @@ export const compiler = {
     functionCall: _return.createReturnFunctionCall,
   },
   transform: {
+    alias: transform.createAlias,
     arrayTransformMutation: transform.createArrayTransformMutation,
     dateTransformMutation: transform.createDateTransformMutation,
     transformMutationFunction: transform.createTransformMutationFunction,

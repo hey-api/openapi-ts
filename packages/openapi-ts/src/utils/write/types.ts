@@ -242,7 +242,6 @@ const generateTransform = (client: Client, model: Model, onNode: OnNode) => {
       localModel: Model,
     ): ts.Statement[] {
       switch (localModel.export) {
-        case 'reference':
         case 'interface':
           return localModel.properties.flatMap((property) =>
             mapTypeToTransformStatements(localPath, property),
@@ -262,6 +261,8 @@ const generateTransform = (client: Client, model: Model, onNode: OnNode) => {
         modelName: model.name,
         statements: generateTransformStatements(['data'], model),
       });
+
+      client.types[model.meta!.name].hasTransformer = true;
 
       onNode(transformFunction);
     }
@@ -422,6 +423,8 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
           methodMap.res![result.code] = result;
         });
 
+        const responses = getSuccessResponses(operation.results);
+
         // create type export for operation response
         generateType({
           client,
@@ -437,9 +440,20 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
             ...emptyModel,
             export: 'any-of',
             isRequired: true,
-            properties: getSuccessResponses(operation.results),
+            properties: responses,
           }),
         });
+
+        if (config.transform.dates && responses.length === 1) {
+          if (client.types[responses[0].type]?.hasTransformer) {
+            const transformAlias = compiler.transform.alias({
+              existingName: responses[0].type,
+              name: operationResponseTypeName(operation.name),
+            });
+
+            onNode(transformAlias);
+          }
+        }
 
         if (isStandaloneClient(config)) {
           const errorResults = getErrorResponses(operation.results);

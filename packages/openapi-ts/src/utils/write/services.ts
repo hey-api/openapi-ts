@@ -200,7 +200,11 @@ const toOperationComment = (operation: Operation): Comments => {
   return comment;
 };
 
-const toRequestOptions = (operation: Operation, onClientImport?: OnImport) => {
+const toRequestOptions = (
+  client: Client,
+  operation: Operation,
+  onClientImport?: OnImport,
+) => {
   const config = getConfig();
 
   if (isStandaloneClient(config)) {
@@ -314,11 +318,13 @@ const toRequestOptions = (operation: Operation, onClientImport?: OnImport) => {
   if (operation.results.length > 0 && operation.results[0].imports.length > 0) {
     if (
       operation.results[0].properties.length === 0 &&
-      (operation.results[0].export === 'interface' ||
-        operation.results[0].export === 'reference')
+      client.types[operation.results[0].type]?.['hasTransformer']
     ) {
       obj.responseTransformer = `${operation.results[0].type}`;
-    } else if (operation.results[0].export === 'array') {
+    } else if (
+      operation.results[0].export === 'array' &&
+      client.types[operation.results[0].type]?.['hasTransformer']
+    ) {
       obj.responseTransformer = `(data: unknown) => Array.isArray(data) ? data.forEach(${operation.results[0].type}) : data`;
     } else {
       console.log(
@@ -358,7 +364,7 @@ const toOperationStatements = (
 ) => {
   const config = getConfig();
 
-  const options = toRequestOptions(operation, onClientImport);
+  const options = toRequestOptions(client, operation, onClientImport);
 
   if (isStandaloneClient(config)) {
     const errorType = uniqueTypeName({

@@ -144,3 +144,24 @@ export const createTransformMutationFunction = ({
 
   return transformFunction;
 };
+
+export const createAlias = ({
+  existingName,
+  name,
+}: {
+  existingName: string;
+  name: string;
+}) => ts.factory.createVariableStatement(
+    [ts.factory.createToken(ts.SyntaxKind.ExportKeyword)],
+    ts.factory.createVariableDeclarationList(
+      [
+        ts.factory.createVariableDeclaration(
+          ts.factory.createIdentifier(name),
+          undefined,
+          undefined,
+          ts.factory.createIdentifier(existingName),
+        ),
+      ],
+      ts.NodeFlags.Const,
+    ),
+  );
