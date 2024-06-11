@@ -1,0 +1,81 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "swagger",
+    "version": "v1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/base"
+    }
+  ],
+  "paths": {
+    "/api/v{api-version}/model-with-date/{id}": {
+      "put": {
+        "tags": ["Complex"],
+        "operationId": "ComplexParams",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json; type=collection": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelWithPattern"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ModelWithPattern": {
+        "description": "This is a model that contains a some patterns",
+        "type": "object",
+        "required": ["key", "name"],
+        "properties": {
+          "key": {
+            "maxLength": 64,
+            "pattern": "^[a-zA-Z0-9_]*$",
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 255,
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "modified": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^\\d{2}-\\d{3}-\\d{4}$"
+          },
+          "text": {
+            "type": "string",
+            "pattern": "^\\w+$"
+          },
+          "patternWithSingleQuotes": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9']*$"
+          },
+          "patternWithNewline": {
+            "type": "string",
+            "pattern": "aaa\nbbb"
+          },
+          "patternWithBacktick": {
+            "type": "string",
+            "pattern": "aaa`bbb"
+          }
+        }
+      }
+    }
+  }
+}
