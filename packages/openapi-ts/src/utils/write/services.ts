@@ -311,6 +311,23 @@ const toRequestOptions = (operation: Operation, onClientImport?: OnImport) => {
     obj.responseHeader = operation.responseHeader;
   }
 
+  if (operation.results.length > 0 && operation.results[0].imports.length > 0) {
+    if (
+      operation.results[0].properties.length === 0 &&
+      (operation.results[0].export === 'interface' ||
+        operation.results[0].export === 'reference')
+    ) {
+      obj.responseTransformer = `${operation.results[0].type}`;
+    } else if (operation.results[0].export === 'array') {
+      obj.responseTransformer = `(data: unknown) => Array.isArray(data) ? data.forEach(${operation.results[0].type}) : data`;
+    } else {
+      console.log(
+        'Unsupported export type for transform',
+        operation.results[0].export,
+      );
+    }
+  }
+
   if (operation.errors.length) {
     const errors: Record<number | string, string> = {};
     operation.errors.forEach((err) => {
@@ -320,7 +337,15 @@ const toRequestOptions = (operation: Operation, onClientImport?: OnImport) => {
   }
 
   return compiler.types.object({
-    identifiers: ['body', 'cookies', 'formData', 'headers', 'path', 'query'],
+    identifiers: [
+      'body',
+      'cookies',
+      'formData',
+      'headers',
+      'path',
+      'query',
+      'responseTransformer',
+    ],
     obj,
     shorthand: true,
   });
