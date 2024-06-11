@@ -187,50 +187,77 @@ const processType = (client: Client, model: Model, onNode: OnNode) => {
     type: toType(model),
   });
 
+  generateTransform(client, model, onNode);
+};
+
+const generateTransform = (client: Client, model: Model, onNode: OnNode) => {
   const config = getConfig();
   if (config.transform.dates) {
-    if (model.name === 'ModelWithPattern') {
-      console.log();
+    const mapTypeToTransformStatements = (
+      localPath: string[],
+      property: Model,
+      isArrayElement?: boolean,
+    ) => {
+      const path = [...localPath, property.name];
 
-      function generateTransformStatements(
-        localPath: string[],
-        model: Model,
-      ): ts.Statement[] {
-        switch (model.export) {
-          case 'reference':
-          case 'interface':
-            return model.properties.flatMap((property) => {
-              const path = [...localPath, property.name];
+      if (
+        property.type === 'string' &&
+        (property.format === 'date-time' || property.format === 'date')
+      ) {
+        return [
+          compiler.transform.dateTransformMutation({
+            path,
+          }),
+        ];
+      } else if (isArrayElement) {
+        // Avoid infinite recursion on arrays
+        return [];
+      } else {
+        // otherwise we recurse in case it's an object/array, and if it's not that will just bail with []
+        return generateTransformStatements(path, property);
+      }
+    };
 
-              if (
-                property.type === 'string' &&
-                (property.format === 'date-time' || property.format === 'date')
-              ) {
-                return [
-                  compiler.transform.dateTransformMutation({
-                    path,
-                  }),
-                ];
-              } else {
-                // otherwise we recurse in case it's an object/array, and if it's not that will just bail with []
-                return generateTransformStatements(path, property);
-              }
-            });
-          case 'array':
-            // TODO:
-            return [
-              compiler.transform.arrayTransformMutation({
-                path: localPath,
-                statements: [],
-              }),
-            ];
+    function generateForArray(localPath: string[], localModel: Model) {
+      const statements = mapTypeToTransformStatements(
+        localPath,
+        localModel,
+        true,
+      );
 
-          default:
-            // Unsupported
-            return [];
-        }
+      if (statements.length === 0) {
+        return [];
       }
 
+      return [
+        compiler.transform.arrayTransformMutation({
+          path: localPath,
+          statements,
+        }),
+      ];
+    }
+
+    function generateTransformStatements(
+      localPath: string[],
+      localModel: Model,
+    ): ts.Statement[] {
+      switch (localModel.export) {
+        case 'reference':
+        case 'interface':
+          return localModel.properties.flatMap((property) =>
+            mapTypeToTransformStatements(localPath, property),
+          );
+        case 'array':
+          return generateForArray(localPath, localModel);
+
+        default:
+          // Unsupported
+          return [];
+      }
+    }
+
+    const transforms = generateTransformStatements(['data'], model);
+    if (transforms.length > 0) {
       const transformFunction = compiler.transform.transformMutationFunction({
         modelName: model.name,
         statements: generateTransformStatements(['data'], model),
