@@ -6,6 +6,7 @@ import ts from 'typescript';
 import * as classes from './classes';
 import * as module from './module';
 import * as _return from './return';
+import * as transform from './transform';
 import * as typedef from './typedef';
 import * as types from './types';
 import { stringToTsNodes, tsNodeToString } from './utils';
@@ -133,6 +134,11 @@ export const compiler = {
   },
   return: {
     functionCall: _return.createReturnFunctionCall,
+  },
+  transform: {
+    arrayTransformMutation: transform.createArrayTransformMutation,
+    dateTransformMutation: transform.createDateTransformMutation,
+    transformMutationFunction: transform.createTransformMutationFunction,
   },
   typedef: {
     alias: typedef.createTypeAliasDeclaration,

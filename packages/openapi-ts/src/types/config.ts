@@ -169,6 +169,16 @@ export interface ClientConfig {
          */
         name?: 'PascalCase' | 'preserve';
       };
+
+  /**
+   * Generate transforms for types?
+   */
+  transform?: {
+    /**
+     * Transform dates strings to dates
+     */
+    dates?: boolean;
+  };
   /**
    * Use options or arguments functions
    * @deprecated
