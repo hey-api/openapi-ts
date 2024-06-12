@@ -655,9 +655,10 @@ export const processServices = async ({
 
   // Import all models required by the services.
   if (files.types && !files.types.isEmpty()) {
-    const importedTypes = imports
-      .filter(unique)
-      .map((name) => ({ asType: false, name }));
+    const importedTypes = imports.filter(unique).map((name) => ({
+      asType: client.types[name]?.hasTransformer !== true,
+      name,
+    }));
     files.services?.addImport(importedTypes, `./${files.types.getName(false)}`);
   }
 };
