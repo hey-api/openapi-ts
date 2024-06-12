@@ -203,7 +203,8 @@ const toOperationComment = (operation: Operation): Comments => {
 const toRequestOptions = (
   client: Client,
   operation: Operation,
-  onClientImport?: OnImport,
+  onClientImport: OnImport | undefined,
+  responseType: string,
 ) => {
   const config = getConfig();
 
@@ -318,14 +319,14 @@ const toRequestOptions = (
   if (operation.results.length > 0 && operation.results[0].imports.length > 0) {
     if (
       operation.results[0].properties.length === 0 &&
-      client.types[operation.results[0].type]?.['hasTransformer']
+      client.types[responseType]?.['hasTransformer']
     ) {
-      obj.responseTransformer = `${operation.results[0].type}`;
+      obj.responseTransformer = `${responseType}`;
     } else if (
       operation.results[0].export === 'array' &&
-      client.types[operation.results[0].type]?.['hasTransformer']
+      client.types[responseType]?.['hasTransformer']
     ) {
-      obj.responseTransformer = `(data: unknown) => Array.isArray(data) ? data.forEach(${operation.results[0].type}) : data`;
+      obj.responseTransformer = `(data: unknown) => Array.isArray(data) ? data.forEach(${responseType}) : data`;
     } else {
       console.log(
         'Unsupported export type for transform',
@@ -364,7 +365,25 @@ const toOperationStatements = (
 ) => {
   const config = getConfig();
 
-  const options = toRequestOptions(client, operation, onClientImport);
+  const responseType = operation.results.length
+    ? uniqueTypeName({
+        client,
+        meta: {
+          // TODO: this should be exact ref to operation for consistency,
+          // but name should work too as operation ID is unique
+          $ref: operation.name,
+          name: operation.name,
+        },
+        nameTransformer: operationResponseTypeName,
+      }).name
+    : 'void';
+
+  const options = toRequestOptions(
+    client,
+    operation,
+    onClientImport,
+    responseType,
+  );
 
   if (isStandaloneClient(config)) {
     const errorType = uniqueTypeName({
@@ -377,18 +396,7 @@ const toOperationStatements = (
       },
       nameTransformer: operationErrorTypeName,
     }).name;
-    const responseType = operation.results.length
-      ? uniqueTypeName({
-          client,
-          meta: {
-            // TODO: this should be exact ref to operation for consistency,
-            // but name should work too as operation ID is unique
-            $ref: operation.name,
-            name: operation.name,
-          },
-          nameTransformer: operationResponseTypeName,
-        }).name
-      : 'void';
+
     return [
       compiler.return.functionCall({
         args: [options],
@@ -649,7 +657,7 @@ export const processServices = async ({
   if (files.types && !files.types.isEmpty()) {
     const importedTypes = imports
       .filter(unique)
-      .map((name) => ({ asType: true, name }));
+      .map((name) => ({ asType: false, name }));
     files.services?.addImport(importedTypes, `./${files.types.getName(false)}`);
   }
 };
