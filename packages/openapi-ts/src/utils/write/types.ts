@@ -446,10 +446,13 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
 
         if (config.transform.dates && responses.length === 1) {
           if (client.types[responses[0].type]?.hasTransformer) {
+            const name = operationResponseTypeName(operation.name);
             const transformAlias = compiler.transform.alias({
               existingName: responses[0].type,
-              name: operationResponseTypeName(operation.name),
+              name,
             });
+
+            client.types[name].hasTransformer = true;
 
             onNode(transformAlias);
           }
