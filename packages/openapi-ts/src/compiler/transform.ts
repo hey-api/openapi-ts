@@ -97,7 +97,8 @@ export const createDateTransformerExpression = ({
   parameterName,
 }: {
   parameterName: string;
-}) => ts.factory.createNewExpression(
+}) =>
+  ts.factory.createNewExpression(
     ts.factory.createIdentifier('Date'),
     undefined,
     [ts.factory.createIdentifier(parameterName)],

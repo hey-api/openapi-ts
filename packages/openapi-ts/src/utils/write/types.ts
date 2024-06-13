@@ -203,15 +203,16 @@ const generateTransform = (client: Client, model: Model, onNode: OnNode) => {
       property: Model,
       isArrayElement?: boolean,
     ) => {
-      const path = [...rootPath, property.name];
+      const localPath = [...rootPath, property.name];
 
       if (
         property.type === 'string' &&
+        property.export !== 'array' &&
         (property.format === 'date-time' || property.format === 'date')
       ) {
         return [
           compiler.transform.dateTransformMutation({
-            path,
+            path: localPath,
           }),
         ];
       } else if (isArrayElement) {
@@ -219,7 +220,7 @@ const generateTransform = (client: Client, model: Model, onNode: OnNode) => {
         return [];
       } else {
         // otherwise we recurse in case it's an object/array, and if it's not that will just bail with []
-        return generateForModel(path, property);
+        return generateForModel(localPath, property);
       }
     };
 
@@ -250,14 +251,19 @@ const generateTransform = (client: Client, model: Model, onNode: OnNode) => {
         ];
       }
 
-      return [
-        compiler.transform.mapArray({
-          path: localPath,
-          transformExpression: compiler.transform.newDate({
-            parameterName: 'item',
+      if (localModel.format === 'date' || localModel.format === 'date-time') {
+        return [
+          compiler.transform.mapArray({
+            path: localPath,
+            transformExpression: compiler.transform.newDate({
+              parameterName: 'item',
+            }),
           }),
-        }),
-      ];
+        ];
+      }
+
+      // Not transform for this type
+      return [];
     }
 
     function generateForModel(
@@ -278,11 +284,11 @@ const generateTransform = (client: Client, model: Model, onNode: OnNode) => {
       }
     }
 
-    const transforms = generateForModel(['data'], model);
-    if (transforms.length > 0) {
+    const transformStatements = generateForModel(['data'], model);
+    if (transformStatements.length > 0) {
       const transformFunction = compiler.transform.transformMutationFunction({
         modelName: model.name,
-        statements: generateForModel(['data'], model),
+        statements: transformStatements,
       });
 
       client.types[model.meta!.name].hasTransformer = true;
