@@ -170,15 +170,6 @@ const getTypes = (userConfig: ClientConfig): Config['types'] => {
   return types;
 };
 
-const getTransforms = (userConfig: ClientConfig): Config['types'] => {
-  const transforms: Config['transform'] = {
-    dates: false,
-    ...userConfig.transform,
-  };
-
-  return transforms;
-};
-
 const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
   const { config: configFromFile } = await loadConfig<UserConfig>({
     jitiOptions: {
@@ -237,12 +228,6 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
     const services = getServices(userConfig);
     const types = getTypes(userConfig);
 
-    const transform = getTransforms(userConfig);
-    if (transform.dates) {
-      // If transforming dates then also force the type on
-      types.dates = true;
-    }
-
     output.path = path.resolve(process.cwd(), output.path);
 
     return setConfig({
@@ -257,7 +242,6 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
       request,
       schemas,
       services,
-      transform,
       types,
       useOptions,
     });

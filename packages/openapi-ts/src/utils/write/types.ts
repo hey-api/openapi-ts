@@ -192,7 +192,7 @@ const processType = (client: Client, model: Model, onNode: OnNode) => {
 
 const generateTransform = (client: Client, model: Model, onNode: OnNode) => {
   const config = getConfig();
-  if (config.transform.dates) {
+  if (config.types.dates === 'types+transform') {
     const mapTypeToTransformStatements = (
       localPath: string[],
       property: Model,
@@ -444,7 +444,10 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
           }),
         });
 
-        if (config.transform.dates && responses.length === 1) {
+        if (
+          config.types.dates === 'types+transform' &&
+          responses.length === 1
+        ) {
           if (client.types[responses[0].type]?.hasTransformer) {
             const name = operationResponseTypeName(operation.name);
             const transformAlias = compiler.transform.alias({
