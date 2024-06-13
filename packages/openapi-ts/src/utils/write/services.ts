@@ -211,7 +211,8 @@ const toRequestOptions = (
   const hasResponseTransformer =
     operation.results.length > 0 &&
     operation.results[0].imports.length > 0 &&
-    operation.results[0].properties.length === 0;
+    operation.results[0].properties.length === 0 &&
+    client.types[responseType]?.['hasTransformer'];
   const responseTransformerName = responseType;
 
   if (isStandaloneClient(config)) {
@@ -654,10 +655,14 @@ export const processServices = async ({
 
   // Import all models required by the services.
   if (files.types && !files.types.isEmpty()) {
-    const importedTypes = imports.filter(unique).map((name) => ({
-      asType: client.types[name]?.hasTransformer !== true,
-      name,
-    }));
+    const importedTypes = imports.filter(unique).map((name) => {
+      const hasTransformer = client.types[name]?.hasTransformer === true;
+
+      return {
+        asType: !hasTransformer,
+        name,
+      };
+    });
     files.services?.addImport(importedTypes, `./${files.types.getName(false)}`);
   }
 };
