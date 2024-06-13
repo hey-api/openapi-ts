@@ -208,6 +208,12 @@ const toRequestOptions = (
 ) => {
   const config = getConfig();
 
+  const hasResponseTransformer =
+    operation.results.length > 0 &&
+    operation.results[0].imports.length > 0 &&
+    operation.results[0].properties.length === 0;
+  const responseTransformerName = responseType;
+
   if (isStandaloneClient(config)) {
     let obj: ObjectValue[] = [
       {
@@ -244,7 +250,15 @@ const toRequestOptions = (
       },
     ];
 
+    if (hasResponseTransformer) {
+      obj.push({
+        key: 'responseTransformer',
+        value: responseTransformerName,
+      });
+    }
+
     return compiler.types.object({
+      identifiers: ['responseTransformer'],
       obj,
     });
   }
@@ -316,23 +330,8 @@ const toRequestOptions = (
     obj.responseHeader = operation.responseHeader;
   }
 
-  if (operation.results.length > 0 && operation.results[0].imports.length > 0) {
-    if (
-      operation.results[0].properties.length === 0 &&
-      client.types[responseType]?.['hasTransformer']
-    ) {
-      obj.responseTransformer = `${responseType}`;
-    } else if (
-      operation.results[0].export === 'array' &&
-      client.types[responseType]?.['hasTransformer']
-    ) {
-      obj.responseTransformer = `(data: unknown) => Array.isArray(data) ? data.forEach(${responseType}) : data`;
-    } else {
-      console.log(
-        'Unsupported export type for transform',
-        operation.results[0].export,
-      );
-    }
+  if (hasResponseTransformer) {
+    obj.responseTransformer = `${responseType}`;
   }
 
   if (operation.errors.length) {
