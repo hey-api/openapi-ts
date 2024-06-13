@@ -92,7 +92,7 @@
       "ModelWithDates": {
         "description": "This is a model that contains a some dates",
         "type": "object",
-        "required": ["id", "name", "enabled"],
+        "required": ["id", "name", "enabled", "modified"],
         "properties": {
           "id": {
             "type": "number"
