@@ -78,12 +78,17 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): C
 				const responseBody = getResponseBody(response);
 				const responseHeader = getResponseHeader(response, options.responseHeader);
 
+				let transformedBody = responseBody;
+				if (options.responseTransformer && isSuccess(response.status)) {
+					transformedBody = options.responseTransformer(responseBody)
+				}
+
 				const result: ApiResult = {
 					url,
 					ok: isSuccess(response.status),
 					status: response.status,
 					statusText: response.statusText,
-					body: responseHeader ?? responseBody,
+					body: responseHeader ?? transformedBody,
 				};
 
 				catchErrorCodes(options, result);
