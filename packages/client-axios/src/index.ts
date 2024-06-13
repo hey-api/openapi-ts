@@ -220,8 +220,13 @@ export const request = <T>(
           options.responseHeader,
         );
 
+        let transformedBody = responseBody;
+        if (options.responseTransformer && isSuccess(response.status)) {
+          transformedBody = options.responseTransformer(responseBody);
+        }
+
         const result: ApiResult = {
-          body: responseHeader ?? responseBody,
+          body: responseHeader ?? transformedBody,
           ok: isSuccess(response.status),
           status: response.status,
           statusText: response.statusText,
