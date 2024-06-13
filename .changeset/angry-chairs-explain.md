@@ -1,5 +1,5 @@
 ---
-'@hey-api/client-fetch': minor
+'@hey-api/client-fetch': patch
 ---
 
-fixes #673 - allow non-object array in body
+fix: allow non-object array in body
