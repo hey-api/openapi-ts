@@ -50,10 +50,12 @@ export const createDateTransformMutation = ({
 
 export const createArrayTransformMutation = ({
   path,
-  statements,
+  transformer,
+  // statements,
 }: {
   path: string[];
-  statements: ts.Statement[];
+  transformer: string;
+  // statements: ts.Statement[];
 }): ts.Statement => {
   const safeAccessExpression = path
     .slice(1)
@@ -82,32 +84,47 @@ export const createArrayTransformMutation = ({
           ts.factory.createCallChain(
             ts.factory.createPropertyAccessChain(
               safeAccessExpression,
-              undefined,
+              ts.factory.createToken(ts.SyntaxKind.QuestionDotToken),
               ts.factory.createIdentifier('forEach'),
             ),
+            ts.factory.createToken(ts.SyntaxKind.QuestionDotToken),
             undefined,
-            undefined,
-            [
-              ts.factory.createArrowFunction(
-                undefined,
-                undefined,
-                [
-                  ts.factory.createParameterDeclaration(
-                    undefined,
-                    undefined,
-                    ts.factory.createIdentifier('item'),
-                    undefined,
-                    undefined,
-                    undefined,
-                  ),
-                ],
-                undefined,
-                ts.factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
-                ts.factory.createBlock(statements, true),
-              ),
-            ],
+            [ts.factory.createIdentifier(transformer)],
           ),
         ),
+
+        // TODO: might need this but clean up otherwise
+        // ts.factory.createExpressionStatement(
+        //   ts.factory.createCallChain(
+        //     ts.factory.createPropertyAccessChain(
+        //       safeAccessExpression,
+        //       undefined,
+        //       ts.factory.createIdentifier('forEach'),
+        //     ),
+        //     undefined,
+        //     [ts.factory.createIdentifier(transformer)]
+        //     // undefined,
+        //     // [
+        //     //   ts.factory.createArrowFunction(
+        //     //     undefined,
+        //     //     undefined,
+        //     //     [
+        //     //       ts.factory.createParameterDeclaration(
+        //     //         undefined,
+        //     //         undefined,
+        //     //         ts.factory.createIdentifier('item'),
+        //     //         undefined,
+        //     //         undefined,
+        //     //         undefined,
+        //     //       ),
+        //     //     ],
+        //     //     undefined,
+        //     //     ts.factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+        //     //     ts.factory.createBlock(statements, true),
+        //     //   ),
+        //     // ],
+        //   ),
+        // ),
       ],
       true,
     ),
