@@ -24,8 +24,8 @@ describe('index', () => {
       dryRun: false,
       input: './test/spec/v3-transforms.json',
       output: './generated/v3/',
-      transform: {
-        dates: true,
+      types: {
+        dates: 'types+transform',
       },
     });
   });
