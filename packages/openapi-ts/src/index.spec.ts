@@ -26,7 +26,7 @@ describe('index', () => {
       input: './test/spec/v3-transforms.json',
       output: './generated/v3/',
       types: {
-        dates: 'types+transform',
+        dates: false,
       },
     });
   });
