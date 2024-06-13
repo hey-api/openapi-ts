@@ -193,12 +193,17 @@ const processType = (client: Client, model: Model, onNode: OnNode) => {
 const generateTransform = (client: Client, model: Model, onNode: OnNode) => {
   const config = getConfig();
   if (config.types.dates === 'types+transform') {
-    const mapTypeToTransformStatements = (
-      localPath: string[],
+    if (model.meta?.hasTransformer) {
+      // Transform already created (maybe the model is used in other models) so we just bail here
+      return;
+    }
+
+    const generateForProperty = (
+      rootPath: string[],
       property: Model,
       isArrayElement?: boolean,
     ) => {
-      const path = [...localPath, property.name];
+      const path = [...rootPath, property.name];
 
       if (
         property.type === 'string' &&
@@ -214,7 +219,7 @@ const generateTransform = (client: Client, model: Model, onNode: OnNode) => {
         return [];
       } else {
         // otherwise we recurse in case it's an object/array, and if it's not that will just bail with []
-        return generateTransformStatements(path, property);
+        return generateForModel(path, property);
       }
     };
 
@@ -235,16 +240,12 @@ const generateTransform = (client: Client, model: Model, onNode: OnNode) => {
           );
         }
 
-        const statements = mapTypeToTransformStatements(['item'], nextModel);
-
-        if (statements.length === 0) {
-          return [];
-        }
+        generateTransform(client, nextModel, onNode);
 
         return [
           compiler.transform.arrayTransformMutation({
             path: localPath,
-            statements,
+            transformer: nextModel.meta!.name,
           }),
         ];
       }
@@ -252,14 +253,14 @@ const generateTransform = (client: Client, model: Model, onNode: OnNode) => {
       throw new Error('Unsupported array type');
     }
 
-    function generateTransformStatements(
+    function generateForModel(
       localPath: string[],
       localModel: Model,
     ): ts.Statement[] {
       switch (localModel.export) {
         case 'interface':
           return localModel.properties.flatMap((property) =>
-            mapTypeToTransformStatements(localPath, property),
+            generateForProperty(localPath, property),
           );
         case 'array':
           return generateForArray(localPath, localModel);
@@ -270,11 +271,11 @@ const generateTransform = (client: Client, model: Model, onNode: OnNode) => {
       }
     }
 
-    const transforms = generateTransformStatements(['data'], model);
+    const transforms = generateForModel(['data'], model);
     if (transforms.length > 0) {
       const transformFunction = compiler.transform.transformMutationFunction({
         modelName: model.name,
-        statements: generateTransformStatements(['data'], model),
+        statements: generateForModel(['data'], model),
       });
 
       client.types[model.meta!.name].hasTransformer = true;
