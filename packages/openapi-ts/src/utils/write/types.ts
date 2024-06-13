@@ -250,7 +250,14 @@ const generateTransform = (client: Client, model: Model, onNode: OnNode) => {
         ];
       }
 
-      throw new Error('Unsupported array type');
+      return [
+        compiler.transform.mapArray({
+          path: localPath,
+          transformExpression: compiler.transform.newDate({
+            parameterName: 'item',
+          }),
+        }),
+      ];
     }
 
     function generateForModel(
