@@ -91,7 +91,16 @@ export const createArrayTransformMutation = ({
               ts.factory.createArrowFunction(
                 undefined,
                 undefined,
-                [],
+                [
+                  ts.factory.createParameterDeclaration(
+                    undefined,
+                    undefined,
+                    ts.factory.createIdentifier('item'),
+                    undefined,
+                    undefined,
+                    undefined,
+                  ),
+                ],
                 undefined,
                 ts.factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
                 ts.factory.createBlock(statements, true),
