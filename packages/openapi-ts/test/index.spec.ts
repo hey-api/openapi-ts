@@ -282,7 +282,7 @@ describe('OpenAPI v3', () => {
     },
   );
 
-  it.only.each(clientScenarios)(
+  it.each(clientScenarios)(
     'transforms $description',
     async ({ name, config }) => {
       const output = toOutputPath(name + '_transform');

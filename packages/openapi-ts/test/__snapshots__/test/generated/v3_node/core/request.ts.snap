@@ -322,12 +322,17 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): C
 				const responseBody = await getResponseBody(response);
 				const responseHeader = getResponseHeader(response, options.responseHeader);
 
+				let transformedBody = responseBody;
+				if (options.responseTransformer && response.ok) {
+					transformedBody = options.responseTransformer(responseBody)
+				}
+
 				const result: ApiResult = {
 					url,
 					ok: response.ok,
 					status: response.status,
 					statusText: response.statusText,
-					body: responseHeader ?? responseBody,
+					body: responseHeader ?? transformedBody,
 				};
 
 				catchErrorCodes(options, result);
