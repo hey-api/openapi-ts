@@ -80,7 +80,6 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         client: 'angular',
-        schemas: false,
         types: {},
       }),
       description: 'generate angular client',
@@ -89,9 +88,6 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         client: 'node',
-        schemas: false,
-        services: false,
-        types: false,
       }),
       description: 'generate node client',
       name: 'v3_node',
@@ -99,9 +95,6 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         client: 'axios',
-        schemas: false,
-        services: false,
-        types: false,
       }),
       description: 'generate axios client',
       name: 'v3_axios',
@@ -119,9 +112,6 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         client: 'xhr',
-        schemas: false,
-        services: false,
-        types: false,
       }),
       description: 'generate xhr client',
       name: 'v3_xhr',
