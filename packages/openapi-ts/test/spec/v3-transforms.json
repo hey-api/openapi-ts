@@ -135,6 +135,13 @@
             "items": {
               "$ref": "#/components/schemas/ModelWithDates"
             }
+          },
+          "dates": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "date-time"
+            }
           }
         }
       }

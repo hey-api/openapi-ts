@@ -139,6 +139,8 @@ export const compiler = {
     alias: transform.createAlias,
     arrayTransformMutation: transform.createArrayTransformMutation,
     dateTransformMutation: transform.createDateTransformMutation,
+    mapArray: transform.createArrayMapTransform,
+    newDate: transform.createDateTransformerExpression,
     transformMutationFunction: transform.createTransformMutationFunction,
   },
   typedef: {
