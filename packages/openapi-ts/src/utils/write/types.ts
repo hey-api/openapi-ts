@@ -219,22 +219,37 @@ const generateTransform = (client: Client, model: Model, onNode: OnNode) => {
     };
 
     function generateForArray(localPath: string[], localModel: Model) {
-      const statements = mapTypeToTransformStatements(
-        localPath,
-        localModel,
-        true,
-      );
-
-      if (statements.length === 0) {
-        return [];
+      if (localModel.export !== 'array') {
+        throw new Error(
+          'generateForArray should only be called with array models',
+        );
       }
 
-      return [
-        compiler.transform.arrayTransformMutation({
-          path: localPath,
-          statements,
-        }),
-      ];
+      if (localModel.$refs.length === 1) {
+        const nextModel = client.models.find(
+          (m) => m.meta!.name === localModel.type,
+        );
+        if (!nextModel) {
+          throw new Error(
+            `Model ${localModel.type} could not be founded when building array transform`,
+          );
+        }
+
+        const statements = mapTypeToTransformStatements(['item'], nextModel);
+
+        if (statements.length === 0) {
+          return [];
+        }
+
+        return [
+          compiler.transform.arrayTransformMutation({
+            path: localPath,
+            statements,
+          }),
+        ];
+      }
+
+      throw new Error('Unsupported array type');
     }
 
     function generateTransformStatements(
