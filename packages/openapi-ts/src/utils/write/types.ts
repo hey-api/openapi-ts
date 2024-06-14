@@ -364,20 +364,26 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
           }),
         });
 
-        if (
-          config.types.dates === 'types+transform' &&
-          responses.length === 1
-        ) {
-          if (client.types[responses[0].type]?.hasTransformer) {
-            const name = operationResponseTypeName(operation.name);
-            const transformAlias = compiler.transform.alias({
-              existingName: responses[0].type,
-              name,
-            });
+        if (config.types.dates === 'types+transform') {
+          if (responses.length === 1) {
+            if (client.types[responses[0].type]?.hasTransformer) {
+              const name = operationResponseTypeName(operation.name);
+              const transformAlias = compiler.transform.alias({
+                existingName: responses[0].type,
+                name,
+              });
 
-            client.types[name].hasTransformer = true;
+              client.types[name].hasTransformer = true;
 
-            onNode(transformAlias);
+              onNode(transformAlias);
+            }
+          } else if (responses.length > 1) {
+            console.log(
+              '❗ Route',
+              operation.method,
+              operation.path,
+              'has more than 1 success response and will not currently have a transform generated. If you have a use case for this please open an issue https://github.com/hey-api/openapi-ts/issues',
+            );
           }
         }
 
