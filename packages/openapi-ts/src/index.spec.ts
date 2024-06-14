@@ -19,10 +19,10 @@ describe('index', () => {
     });
   });
 
-  it.only('parses v3-transforms without issues', async () => {
+  it('parses v3-transforms without issues', async () => {
     await createClient({
       client: 'fetch',
-      dryRun: false,
+      dryRun: true,
       input: './test/spec/v3-transforms.json',
       output: './generated/v3/',
       types: {
