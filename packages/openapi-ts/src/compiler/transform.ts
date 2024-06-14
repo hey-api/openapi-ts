@@ -53,6 +53,38 @@ export const createDateTransformMutation = ({
   return statement;
 };
 
+export const createFunctionTransformMutation = ({
+  path,
+  transformer,
+}: {
+  path: string[];
+  transformer: string;
+}) => {
+  const safeAccessExpression = getSafeAccessExpression(path);
+  const accessExpression = getAccessExpression(path);
+
+  const statement = [
+    ts.factory.createIfStatement(
+      safeAccessExpression,
+      ts.factory.createBlock(
+        [
+          ts.factory.createExpressionStatement(
+            ts.factory.createCallExpression(
+              ts.factory.createIdentifier(transformer),
+              undefined,
+              [accessExpression],
+            ),
+          ),
+        ],
+        true,
+      ),
+      undefined,
+    ),
+  ];
+
+  return statement;
+};
+
 export const createArrayTransformMutation = ({
   path,
   transformer,

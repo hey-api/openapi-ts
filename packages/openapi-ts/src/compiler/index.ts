@@ -141,6 +141,7 @@ export const compiler = {
     dateTransformMutation: transform.createDateTransformMutation,
     mapArray: transform.createArrayMapTransform,
     newDate: transform.createDateTransformerExpression,
+    transformItem: transform.createFunctionTransformMutation,
     transformMutationFunction: transform.createTransformMutationFunction,
   },
   typedef: {
