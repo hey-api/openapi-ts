@@ -21,12 +21,12 @@ describe('index', () => {
 
   it.only('parses v3-transforms without issues', async () => {
     await createClient({
-      client: '@hey-api/client-fetch',
+      client: 'fetch',
       dryRun: false,
       input: './test/spec/v3-transforms.json',
       output: './generated/v3/',
       types: {
-        dates: false,
+        dates: 'types+transform',
       },
     });
   });
