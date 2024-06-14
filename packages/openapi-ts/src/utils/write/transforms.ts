@@ -4,6 +4,7 @@ import { compiler } from '../../compiler';
 import type { Model } from '../../openApi';
 import type { Client } from '../../types/client';
 import { getConfig } from '../config';
+import { processModel } from './types';
 
 type OnNode = (node: ts.Node) => void;
 
@@ -107,7 +108,8 @@ export const generateTransform = (
           );
         }
 
-        generateTransform(client, refModel, onNode);
+        // We have to jump the gun a bit here and get this pre-processed so any transformers can be consumed
+        processModel(client, refModel, onNode);
 
         return refModel;
       });
@@ -131,7 +133,7 @@ export const generateTransform = (
     const transformStatements = generateForModel(['data'], model);
     if (transformStatements.length > 0) {
       const transformFunction = compiler.transform.transformMutationFunction({
-        modelName: model.name,
+        modelName: model.meta!.name,
         statements: transformStatements,
       });
 

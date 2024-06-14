@@ -189,7 +189,7 @@ const processType = (client: Client, model: Model, onNode: OnNode) => {
   generateTransform(client, model, onNode);
 };
 
-const processModel = (client: Client, model: Model, onNode: OnNode) => {
+export const processModel = (client: Client, model: Model, onNode: OnNode) => {
   switch (model.export) {
     case 'all-of':
     case 'any-of':
