@@ -208,11 +208,7 @@ const toRequestOptions = (
 ) => {
   const config = getConfig();
 
-  const hasResponseTransformer =
-    operation.results.length > 0 &&
-    operation.results[0].imports.length > 0 &&
-    operation.results[0].properties.length === 0 &&
-    client.types[responseType]?.['hasTransformer'];
+  const hasResponseTransformer = client.types[responseType]?.['hasTransformer'];
   const responseTransformerName = responseType;
 
   if (isStandaloneClient(config)) {
