@@ -224,33 +224,29 @@ const generateTransform = (client: Client, model: Model, onNode: OnNode) => {
       }
     };
 
-    function generateForArray(localPath: string[], localModel: Model) {
+    function generateForArray(
+      localPath: string[],
+      localModel: Model,
+      refModels: Model[],
+    ) {
       if (localModel.export !== 'array') {
         throw new Error(
           'generateForArray should only be called with array models',
         );
       }
 
-      if (localModel.$refs.length === 1) {
-        const nextModel = client.models.find(
-          (m) => m.meta!.name === localModel.type,
-        );
-        if (!nextModel) {
-          throw new Error(
-            `Model ${localModel.type} could not be founded when building array transform`,
-          );
-        }
+      if (refModels.length === 1) {
+        const refModel = refModels[0];
 
-        generateTransform(client, nextModel, onNode);
-
-        if (client.types[localModel.type].hasTransformer) {
+        if (client.types[refModel.meta!.name].hasTransformer) {
           return [
             compiler.transform.arrayTransformMutation({
               path: localPath,
-              transformer: nextModel.meta!.name,
+              transformer: refModel.meta!.name,
             }),
           ];
         } else {
+          // We do not currently support union types for transforms since discriminating them is a challenge
           return [];
         }
       }
@@ -270,17 +266,47 @@ const generateTransform = (client: Client, model: Model, onNode: OnNode) => {
       return [];
     }
 
+    function generateForReference(localPath: string[], refModels: Model[]) {
+      if (
+        refModels.length !== 1 ||
+        client.types[refModels[0].meta!.name].hasTransformer !== true
+      ) {
+        return [];
+      }
+
+      return compiler.transform.transformItem({
+        path: localPath,
+        transformer: refModels[0].meta!.name,
+      });
+    }
+
     function generateForModel(
       localPath: string[],
       localModel: Model,
     ): ts.Statement[] {
+      // We pre-transform refs (if any) so that they can be referenced in this transform
+      const refModels = localModel.$refs.map((ref) => {
+        const refModel = client.models.find((m) => m.meta!.$ref === ref);
+        if (!refModel) {
+          throw new Error(
+            `Model ${ref} could not be founded when building ref transform`,
+          );
+        }
+
+        generateTransform(client, refModel, onNode);
+
+        return refModel;
+      });
+
       switch (localModel.export) {
+        case 'reference':
+          return generateForReference(localPath, refModels);
         case 'interface':
           return localModel.properties.flatMap((property) =>
             generateForProperty(localPath, property),
           );
         case 'array':
-          return generateForArray(localPath, localModel);
+          return generateForArray(localPath, localModel, refModels);
 
         default:
           // Unsupported
