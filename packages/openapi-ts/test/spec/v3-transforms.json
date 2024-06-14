@@ -89,6 +89,24 @@
   },
   "components": {
     "schemas": {
+      "SimpleModel": {
+        "description": "This is a model that contains a some dates",
+        "type": "object",
+        "required": ["id", "name", "enabled", "modified"],
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "maxLength": 255,
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean",
+            "readOnly": true
+          }
+        }
+      },
       "ModelWithDates": {
         "description": "This is a model that contains a some dates",
         "type": "object",
@@ -135,6 +153,18 @@
             "items": {
               "$ref": "#/components/schemas/ModelWithDates"
             }
+          },
+          "item": {
+            "$ref": "#/components/schemas/ModelWithDates"
+          },
+          "simpleItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SimpleModel"
+            }
+          },
+          "simpleItem": {
+            "$ref": "#/components/schemas/SimpleModel"
           },
           "dates": {
             "type": "array",

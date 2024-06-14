@@ -243,12 +243,16 @@ const generateTransform = (client: Client, model: Model, onNode: OnNode) => {
 
         generateTransform(client, nextModel, onNode);
 
-        return [
-          compiler.transform.arrayTransformMutation({
-            path: localPath,
-            transformer: nextModel.meta!.name,
-          }),
-        ];
+        if (client.types[localModel.type].hasTransformer) {
+          return [
+            compiler.transform.arrayTransformMutation({
+              path: localPath,
+              transformer: nextModel.meta!.name,
+            }),
+          ];
+        } else {
+          return [];
+        }
       }
 
       if (localModel.format === 'date' || localModel.format === 'date-time') {
