@@ -2,7 +2,7 @@
 
 import type { CancelablePromise } from './core/CancelablePromise';
 import type { BaseHttpRequest } from './core/BaseHttpRequest';
-import { ModelWithDatesResponse, ModelWithDatesArrayResponse, type ArrayOfDatesResponse, type DateResponse } from './types.gen';
+import { ModelWithDatesResponse, ModelWithDatesArrayResponse, type ArrayOfDatesResponse, type DateResponse, type MultipleResponsesResponse } from './types.gen';
 
 export class DefaultService {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
@@ -50,6 +50,18 @@ export class DefaultService {
         return this.httpRequest.request({
             method: 'PUT',
             url: '/api/date'
+        });
+    }
+    
+    /**
+     * @returns ModelWithDates Updated
+     * @returns SimpleModel Created
+     * @throws ApiError
+     */
+    public multipleResponses(): CancelablePromise<MultipleResponsesResponse> {
+        return this.httpRequest.request({
+            method: 'PUT',
+            url: '/api/multiple-responses'
         });
     }
     
