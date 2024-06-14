@@ -85,6 +85,39 @@
           }
         }
       }
+    },
+    "/api/multiple-responses": {
+      "put": {
+        "operationId": "multiple-responses",
+        "responses": {
+          "200": {
+            "description": "Updated",
+            "content": {
+              "application/json; type=collection": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ModelWithDates"
+                  }
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json; type=collection": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SimpleModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
