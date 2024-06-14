@@ -51,6 +51,9 @@ export function ParentModelWithDates(data: any): ParentModelWithDates {
     if (Array.isArray(data?.items)) {
         data.items.forEach(ModelWithDates);
     }
+    if (data?.item) {
+        ModelWithDates(data.item);
+    }
     if (Array.isArray(data?.dates)) {
         data.dates = data.dates.map(item => new Date(item));
     }
@@ -76,6 +79,10 @@ export type ArrayOfDatesError = unknown;
 export type DateResponse = Date;
 
 export type DateError = unknown;
+
+export type MultipleResponsesResponse = Array<ModelWithDates> | Array<SimpleModel>;
+
+export type MultipleResponsesError = unknown;
 
 export type $OpenApiTs = {
     '/api/model-with-dates': {
@@ -115,6 +122,20 @@ export type $OpenApiTs = {
                  * Success
                  */
                 '200': Date;
+            };
+        };
+    };
+    '/api/multiple-responses': {
+        put: {
+            res: {
+                /**
+                 * Updated
+                 */
+                '200': Array<ModelWithDates>;
+                /**
+                 * Created
+                 */
+                '201': Array<SimpleModel>;
             };
         };
     };

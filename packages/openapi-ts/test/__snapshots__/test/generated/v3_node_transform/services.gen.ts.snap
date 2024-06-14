@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import { ModelWithDatesResponse, ModelWithDatesArrayResponse, type ArrayOfDatesResponse, type DateResponse } from './types.gen';
+import { ModelWithDatesResponse, ModelWithDatesArrayResponse, type ArrayOfDatesResponse, type DateResponse, type MultipleResponsesResponse } from './types.gen';
 
 export class DefaultService {
     /**
@@ -49,6 +49,18 @@ export class DefaultService {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/date'
+        });
+    }
+    
+    /**
+     * @returns ModelWithDates Updated
+     * @returns SimpleModel Created
+     * @throws ApiError
+     */
+    public static multipleResponses(): CancelablePromise<MultipleResponsesResponse> {
+        return __request(OpenAPI, {
+            method: 'PUT',
+            url: '/api/multiple-responses'
         });
     }
     

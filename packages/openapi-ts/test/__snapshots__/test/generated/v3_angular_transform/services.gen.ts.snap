@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import type { Observable } from 'rxjs';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import { ModelWithDatesResponse, ModelWithDatesArrayResponse, type ArrayOfDatesResponse, type DateResponse } from './types.gen';
+import { ModelWithDatesResponse, ModelWithDatesArrayResponse, type ArrayOfDatesResponse, type DateResponse, type MultipleResponsesResponse } from './types.gen';
 
 @Injectable({
     providedIn: 'root'
@@ -56,6 +56,18 @@ export class DefaultService {
         return __request(OpenAPI, this.http, {
             method: 'PUT',
             url: '/api/date'
+        });
+    }
+    
+    /**
+     * @returns ModelWithDates Updated
+     * @returns SimpleModel Created
+     * @throws ApiError
+     */
+    public multipleResponses(): Observable<MultipleResponsesResponse> {
+        return __request(OpenAPI, this.http, {
+            method: 'PUT',
+            url: '/api/multiple-responses'
         });
     }
     
