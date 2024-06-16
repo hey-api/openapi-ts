@@ -515,7 +515,9 @@ export const processService = (
       accessLevel: 'public',
       comment: toOperationComment(operation),
       isStatic: config.name === undefined && config.client !== 'angular',
-      name: operation.name,
+      name: config.services.methodNameBuilder
+        ? config.services.methodNameBuilder(operation.service, operation.name)
+        : operation.name,
       parameters: toOperationParamType(client, operation),
       returnType: isStandalone
         ? undefined
