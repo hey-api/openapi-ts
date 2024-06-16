@@ -1281,7 +1281,7 @@ export type CallWithResponseError = unknown;
 
 export type CallWithDuplicateResponsesResponse = ModelWithBoolean & ModelWithInteger | ModelWithString;
 
-export type CallWithDuplicateResponsesError = unknown;
+export type CallWithDuplicateResponsesError = ModelWithStringError & DictionaryWithArray;
 
 export type CallWithResponsesResponse = {
     readonly '@namespace.string'?: string;
@@ -1289,7 +1289,7 @@ export type CallWithResponsesResponse = {
     readonly value?: Array<ModelWithString>;
 } | ModelThatExtends | ModelThatExtendsExtends;
 
-export type CallWithResponsesError = unknown;
+export type CallWithResponsesError = ModelWithStringError;
 
 export type CollectionFormatData = {
     query: {

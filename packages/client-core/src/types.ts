@@ -6,7 +6,7 @@ export type ApiResult<TData = any> = {
   readonly url: string;
 };
 
-export type ApiRequestOptions = {
+export type ApiRequestOptions<T = unknown> = {
   readonly body?: any;
   readonly cookies?: Record<string, unknown>;
   readonly errors?: Record<number | string, string>;
@@ -26,7 +26,7 @@ export type ApiRequestOptions = {
   readonly path?: Record<string, unknown>;
   readonly query?: Record<string, unknown>;
   readonly responseHeader?: string;
-  readonly responseTransformer?: (data: unknown) => unknown;
+  readonly responseTransformer?: (data: unknown) => T;
   readonly url: string;
 };
 

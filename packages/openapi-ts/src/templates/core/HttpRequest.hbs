@@ -42,7 +42,7 @@ export class {{httpRequest}} extends BaseHttpRequest {
 	 * @returns Observable<T>
 	 * @throws ApiError
 	 */
-	public override request<T>(options: ApiRequestOptions): Observable<T> {
+	public override request<T>(options: ApiRequestOptions<T>): Observable<T> {
 		return __request(this.config, this.http, options);
 	}
 	{{else}}
@@ -52,7 +52,7 @@ export class {{httpRequest}} extends BaseHttpRequest {
 	 * @returns CancelablePromise<T>
 	 * @throws ApiError
 	 */
-	public override request<T>(options: ApiRequestOptions): CancelablePromise<T> {
+	public override request<T>(options: ApiRequestOptions<T>): CancelablePromise<T> {
 		return __request(this.config, options);
 	}
 	{{/equals}}
