@@ -1,6 +1,6 @@
 export const sendRequest = async <T>(
 	config: OpenAPIConfig,
-	options: ApiRequestOptions,
+	options: ApiRequestOptions<T>,
 	url: string,
 	body: unknown,
 	formData: FormData | undefined,
