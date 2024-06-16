@@ -100,12 +100,12 @@ interface RequestOptionsBase extends Omit<Config, 'global'> {
   url: string;
 }
 
-type RequestResult<Data = unknown, Error = unknown> = Promise<{
-  error?: Error;
-  data?: Data;
-  request: Request;
-  response: Response;
-}>;
+type RequestResult<Data = unknown, Error = unknown> = Promise<
+  ({ data: Data; error: undefined } | { data: undefined; error: Error }) & {
+    request: Request;
+    response: Response;
+  }
+>;
 
 type MethodFn = <Data = unknown, Error = unknown>(
   options: RequestOptionsBase,
