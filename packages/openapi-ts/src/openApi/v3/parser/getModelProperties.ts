@@ -118,7 +118,10 @@ export const getModelProperties = ({
         description: property.description || null,
         exclusiveMaximum: property.exclusiveMaximum,
         exclusiveMinimum: property.exclusiveMinimum,
-        format: property.format,
+        format:
+          property.type === 'array'
+            ? property.items?.format ?? property.format
+            : property.format,
         in: '',
         isDefinition: false,
         isReadOnly: property.readOnly === true,

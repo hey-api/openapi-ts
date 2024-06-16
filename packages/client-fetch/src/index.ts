@@ -116,11 +116,17 @@ export const createClient = (config: Config): Client => {
         };
       }
       const parseAs =
-        opts.parseAs === 'auto'
+        (opts.parseAs === 'auto'
           ? getParseAs(response.headers.get('Content-Type'))
-          : opts.parseAs;
+          : opts.parseAs) ?? 'json';
+
+      let data = await response[parseAs]();
+      if (parseAs === 'json' && options.responseTransformer) {
+        data = options.responseTransformer(data);
+      }
+
       return {
-        data: await response[parseAs ?? 'json'](),
+        data,
         ...result,
       };
     }

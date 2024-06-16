@@ -90,6 +90,8 @@ export interface Config
    * {@link https://swagger.io/docs/specification/serialization/#query View examples}
    */
   querySerializer?: QuerySerializer | QuerySerializerOptions;
+
+  responseTransformer?: (data: unknown) => unknown;
 }
 
 interface RequestOptionsBase extends Omit<Config, 'global'> {
@@ -145,8 +147,12 @@ type OptionsBase = Omit<RequestOptionsBase, 'url'> & {
 
 export type Options<T = unknown> = T extends { body?: any }
   ? T extends { headers?: any }
-    ? OmitKeys<OptionsBase, 'body' | 'headers'> & T
-    : OmitKeys<OptionsBase, 'body'> & T & Pick<OptionsBase, 'headers'>
+    ? OmitKeys<OptionsBase, 'body' | 'headers' | 'responseTransformer'> & T
+    : OmitKeys<OptionsBase, 'body' | 'responseTransformer'> &
+        T &
+        Pick<OptionsBase, 'headers'>
   : T extends { headers?: any }
-    ? OmitKeys<OptionsBase, 'headers'> & T & Pick<OptionsBase, 'body'>
+    ? OmitKeys<OptionsBase, 'headers' | 'responseTransformer'> &
+        T &
+        Pick<OptionsBase, 'body'>
     : OptionsBase & T;

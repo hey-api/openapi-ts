@@ -145,10 +145,10 @@ export interface ClientConfig {
     | string
     | {
         /**
-         * Output Date instead of string for format "date-time"
+         * Output Date type and possibly runtime transform instead of string for format "date-time"
          * @default false
          */
-        dates?: boolean;
+        dates?: boolean | 'types+transform' | 'types';
         /**
          * Generate enum definitions?
          * @default false
