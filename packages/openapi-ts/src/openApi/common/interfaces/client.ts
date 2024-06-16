@@ -110,6 +110,10 @@ export interface ModelMeta {
    * Name passed to the initial `getModel()` call.
    */
   name: string;
+  /**
+   * If transformers are enabled and this type is detected as needing one, this will be set
+   */
+  hasTransformer?: boolean;
 }
 
 export interface Model extends Schema {

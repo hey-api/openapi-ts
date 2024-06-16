@@ -9,5 +9,6 @@ export type ApiRequestOptions = {
 	readonly body?: any;
 	readonly mediaType?: string;
 	readonly responseHeader?: string;
+	readonly responseTransformer?: (data: unknown) => unknown;
 	readonly errors?: Record<number | string, string>;
 };

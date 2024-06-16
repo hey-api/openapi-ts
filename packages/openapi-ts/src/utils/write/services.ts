@@ -200,8 +200,16 @@ const toOperationComment = (operation: Operation): Comments => {
   return comment;
 };
 
-const toRequestOptions = (operation: Operation, onClientImport?: OnImport) => {
+const toRequestOptions = (
+  client: Client,
+  operation: Operation,
+  onClientImport: OnImport | undefined,
+  responseType: string,
+) => {
   const config = getConfig();
+
+  const hasResponseTransformer = client.types[responseType]?.['hasTransformer'];
+  const responseTransformerName = responseType;
 
   if (isStandaloneClient(config)) {
     let obj: ObjectValue[] = [
@@ -239,7 +247,15 @@ const toRequestOptions = (operation: Operation, onClientImport?: OnImport) => {
       },
     ];
 
+    if (hasResponseTransformer) {
+      obj.push({
+        key: 'responseTransformer',
+        value: responseTransformerName,
+      });
+    }
+
     return compiler.types.object({
+      identifiers: ['responseTransformer'],
       obj,
     });
   }
@@ -311,6 +327,10 @@ const toRequestOptions = (operation: Operation, onClientImport?: OnImport) => {
     obj.responseHeader = operation.responseHeader;
   }
 
+  if (hasResponseTransformer) {
+    obj.responseTransformer = `${responseType}`;
+  }
+
   if (operation.errors.length) {
     const errors: Record<number | string, string> = {};
     operation.errors.forEach((err) => {
@@ -320,7 +340,15 @@ const toRequestOptions = (operation: Operation, onClientImport?: OnImport) => {
   }
 
   return compiler.types.object({
-    identifiers: ['body', 'cookies', 'formData', 'headers', 'path', 'query'],
+    identifiers: [
+      'body',
+      'cookies',
+      'formData',
+      'headers',
+      'path',
+      'query',
+      'responseTransformer',
+    ],
     obj,
     shorthand: true,
   });
@@ -333,7 +361,25 @@ const toOperationStatements = (
 ) => {
   const config = getConfig();
 
-  const options = toRequestOptions(operation, onClientImport);
+  const responseType = operation.results.length
+    ? uniqueTypeName({
+        client,
+        meta: {
+          // TODO: this should be exact ref to operation for consistency,
+          // but name should work too as operation ID is unique
+          $ref: operation.name,
+          name: operation.name,
+        },
+        nameTransformer: operationResponseTypeName,
+      }).name
+    : 'void';
+
+  const options = toRequestOptions(
+    client,
+    operation,
+    onClientImport,
+    responseType,
+  );
 
   if (isStandaloneClient(config)) {
     const errorType = uniqueTypeName({
@@ -346,18 +392,7 @@ const toOperationStatements = (
       },
       nameTransformer: operationErrorTypeName,
     }).name;
-    const responseType = operation.results.length
-      ? uniqueTypeName({
-          client,
-          meta: {
-            // TODO: this should be exact ref to operation for consistency,
-            // but name should work too as operation ID is unique
-            $ref: operation.name,
-            name: operation.name,
-          },
-          nameTransformer: operationResponseTypeName,
-        }).name
-      : 'void';
+
     return [
       compiler.return.functionCall({
         args: [options],
@@ -616,9 +651,14 @@ export const processServices = async ({
 
   // Import all models required by the services.
   if (files.types && !files.types.isEmpty()) {
-    const importedTypes = imports
-      .filter(unique)
-      .map((name) => ({ asType: true, name }));
+    const importedTypes = imports.filter(unique).map((name) => {
+      const hasTransformer = client.types[name]?.hasTransformer === true;
+
+      return {
+        asType: !hasTransformer,
+        name,
+      };
+    });
     files.services?.addImport(importedTypes, `./${files.types.getName(false)}`);
   }
 };

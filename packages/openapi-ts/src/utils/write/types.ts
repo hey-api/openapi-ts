@@ -20,6 +20,7 @@ import {
   operationErrorTypeName,
   operationResponseTypeName,
 } from './services';
+import { generateTransform } from './transforms';
 import { toType, uniqueTypeName } from './type';
 
 type OnNode = (node: Node) => void;
@@ -184,9 +185,11 @@ const processType = (client: Client, model: Model, onNode: OnNode) => {
     onNode,
     type: toType(model),
   });
+
+  generateTransform(client, model, onNode);
 };
 
-const processModel = (client: Client, model: Model, onNode: OnNode) => {
+export const processModel = (client: Client, model: Model, onNode: OnNode) => {
   switch (model.export) {
     case 'all-of':
     case 'any-of':
@@ -340,6 +343,8 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
           methodMap.res![result.code] = result;
         });
 
+        const responses = getSuccessResponses(operation.results);
+
         // create type export for operation response
         generateType({
           client,
@@ -355,9 +360,32 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
             ...emptyModel,
             export: 'any-of',
             isRequired: true,
-            properties: getSuccessResponses(operation.results),
+            properties: responses,
           }),
         });
+
+        if (config.types.dates === 'types+transform') {
+          if (responses.length === 1) {
+            if (client.types[responses[0].type]?.hasTransformer) {
+              const name = operationResponseTypeName(operation.name);
+              const transformAlias = compiler.transform.alias({
+                existingName: responses[0].type,
+                name,
+              });
+
+              client.types[name].hasTransformer = true;
+
+              onNode(transformAlias);
+            }
+          } else if (responses.length > 1) {
+            console.log(
+              '❗ Route',
+              operation.method,
+              operation.path,
+              'has more than 1 success response and will not currently have a transform generated. If you have a use case for this please open an issue https://github.com/hey-api/openapi-ts/issues',
+            );
+          }
+        }
 
         if (isStandaloneClient(config)) {
           const errorResults = getErrorResponses(operation.errors);
