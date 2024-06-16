@@ -357,20 +357,20 @@ export const getParseAs = (
 };
 
 export const getUrl = ({
-  baseUrl,
+  baseURL,
   path,
   query,
   querySerializer,
   url: _url,
 }: {
-  baseUrl: string;
+  baseURL: string;
   path?: Record<string, unknown>;
   query?: Record<string, unknown>;
   querySerializer: QuerySerializer;
   url: string;
 }) => {
   const pathUrl = _url.startsWith('/') ? _url : `/${_url}`;
-  let url = baseUrl + pathUrl;
+  let url = baseURL + pathUrl;
   if (path) {
     url = defaultPathSerializer({ path, url });
   }
@@ -513,7 +513,7 @@ const defaultHeaders = {
 export const createDefaultConfig = (): Config => ({
   ...jsonBodySerializer,
   axios,
-  baseUrl: '',
+  baseURL: '',
   global: true,
   headers: defaultHeaders,
   querySerializer: defaultQuerySerializer,

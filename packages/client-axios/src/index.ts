@@ -42,6 +42,12 @@ export const createClient = (config: Config): Client => {
     globalConfig = { ..._config };
   }
 
+  const instance = axios.create({
+    // responseType: ''
+  })
+
+  const getAxiosInstance = () => instance
+
   const getConfig = () => (_config.global ? globalConfig : _config);
 
   const interceptors = _config.global
@@ -62,7 +68,7 @@ export const createClient = (config: Config): Client => {
     }
 
     const url = getUrl({
-      baseUrl: opts.baseURL ?? '',
+      baseURL: opts.baseURL ?? '',
       path: opts.path,
       query: opts.query,
       querySerializer:
@@ -152,6 +158,7 @@ export const createClient = (config: Config): Client => {
   return {
     delete: (options) => request({ ...options, method: 'DELETE' }),
     get: (options) => request({ ...options, method: 'GET' }),
+    getAxiosInstance,
     getConfig,
     head: (options) => request({ ...options, method: 'HEAD' }),
     interceptors,
@@ -164,10 +171,6 @@ export const createClient = (config: Config): Client => {
 };
 
 export const client = createClient(globalConfig);
-
-axios.create({
-// responseType: ''
-})
 
 createClient({
 // responseType: ''
