@@ -62,7 +62,7 @@ import type { OpenAPIConfig } from './OpenAPI';
  * @returns Observable<T>
  * @throws ApiError
  */
-export const request = <T>(config: OpenAPIConfig, http: HttpClient, options: ApiRequestOptions): Observable<T> => {
+export const request = <T>(config: OpenAPIConfig, http: HttpClient, options: ApiRequestOptions<T>): Observable<T> => {
 	const url = getUrl(config, options);
 	const formData = getFormData(options);
 	const body = getRequestBody(options);
