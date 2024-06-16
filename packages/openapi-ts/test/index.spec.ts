@@ -8,6 +8,7 @@ import type { UserConfig } from '../src/types/config';
 
 const V2_SPEC_PATH = './test/spec/v2.json';
 const V3_SPEC_PATH = './test/spec/v3.json';
+const V3_TRANSFORMS_SPEC_PATH = './test/spec/v3-transforms.json';
 
 const OUTPUT_PREFIX = './test/generated/';
 
@@ -70,7 +71,7 @@ describe('OpenAPI v3', () => {
     ...userConfig,
   });
 
-  it.each([
+  const clientScenarios = [
     {
       config: createConfig(),
       description: 'generate fetch client',
@@ -79,7 +80,6 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         client: 'angular',
-        schemas: false,
         types: {},
       }),
       description: 'generate angular client',
@@ -88,9 +88,6 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         client: 'node',
-        schemas: false,
-        services: false,
-        types: false,
       }),
       description: 'generate node client',
       name: 'v3_node',
@@ -98,9 +95,6 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         client: 'axios',
-        schemas: false,
-        services: false,
-        types: false,
       }),
       description: 'generate axios client',
       name: 'v3_axios',
@@ -117,14 +111,35 @@ describe('OpenAPI v3', () => {
     },
     {
       config: createConfig({
+        client: '@hey-api/client-axios',
+        services: {
+          asClass: false,
+        },
+      }),
+      description: 'generate axios client',
+      name: 'v3_hey-api_client-axios',
+    },
+    {
+      config: createConfig({
         client: 'xhr',
-        schemas: false,
-        services: false,
-        types: false,
       }),
       description: 'generate xhr client',
       name: 'v3_xhr',
     },
+    {
+      config: createConfig({
+        name: 'ApiClient',
+        schemas: false,
+        types: {
+          dates: true,
+        },
+      }),
+      description: 'generate client',
+      name: 'v3_client',
+    },
+  ];
+
+  const allScenarios = [
     {
       config: createConfig({
         exportCore: false,
@@ -168,17 +183,6 @@ describe('OpenAPI v3', () => {
       }),
       description: 'generate optional arguments',
       name: 'v3_options',
-    },
-    {
-      config: createConfig({
-        name: 'ApiClient',
-        schemas: false,
-        types: {
-          dates: true,
-        },
-      }),
-      description: 'generate client',
-      name: 'v3_client',
     },
     {
       config: createConfig({
@@ -260,16 +264,42 @@ describe('OpenAPI v3', () => {
       description: 'generate tree-shakeable services',
       name: 'v3_tree_shakeable',
     },
-  ])('$description', async ({ name, config }) => {
-    const output = toOutputPath(name);
-    await createClient({
-      ...config,
-      input: V3_SPEC_PATH,
-      output,
-    });
-    sync(`${output}**/*.ts`).forEach((file) => {
-      const content = readFileSync(file, 'utf8').toString();
-      expect(content).toMatchFileSnapshot(toSnapshotPath(file));
-    });
-  });
+  ];
+
+  it.each(clientScenarios.concat(allScenarios))(
+    '$description',
+    async ({ name, config }) => {
+      const output = toOutputPath(name);
+      await createClient({
+        ...config,
+        input: V3_SPEC_PATH,
+        output,
+      });
+      sync(`${output}**/*.ts`).forEach((file) => {
+        const content = readFileSync(file, 'utf8').toString();
+        expect(content).toMatchFileSnapshot(toSnapshotPath(file));
+      });
+    },
+  );
+
+  it.each(clientScenarios)(
+    'transforms $description',
+    async ({ name, config }) => {
+      const output = toOutputPath(name + '_transform');
+
+      await createClient({
+        ...config,
+        input: V3_TRANSFORMS_SPEC_PATH,
+        output,
+        types: {
+          dates: 'types+transform',
+        },
+      });
+
+      sync(`${output}**/*.ts`).forEach((file) => {
+        const content = readFileSync(file, 'utf8').toString();
+        expect(content).toMatchFileSnapshot(toSnapshotPath(file));
+      });
+    },
+  );
 });
