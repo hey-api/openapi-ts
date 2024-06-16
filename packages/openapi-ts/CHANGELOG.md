@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.47.0
+
+### Minor Changes
+
+- [#685](https://github.com/hey-api/openapi-ts/pull/685) [`8ca3e5e`](https://github.com/hey-api/openapi-ts/commit/8ca3e5e2990bc07ce0bac902245d08b67b6621e8) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add initial support for response transformers (string -> Date)
+
+- [#663](https://github.com/hey-api/openapi-ts/pull/663) [`e01c612`](https://github.com/hey-api/openapi-ts/commit/e01c61213e266afad5e3b159682b05957aac6534) Thanks [@Stono](https://github.com/Stono)! - Add support for customizing method names with `services.methodNameBuilder()`
+
 ## 0.46.3
 
 ### Patch Changes
