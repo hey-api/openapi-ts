@@ -1,6 +1,12 @@
 {
   "editor.codeActionsOnSave": {
+    "source.organizeImports": "never",
     "source.fixAll.eslint": "explicit"
+  },
+  "[typescript]": {
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "never"
+    }
   },
   "editor.quickSuggestions": {
     "strings": true
