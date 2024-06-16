@@ -73,6 +73,7 @@ export const getHeaders = async (
 
   const headers = Object.entries({
     Accept: 'application/json',
+    // @ts-ignore
     ...additionalHeaders,
     ...options.headers,
   })
@@ -188,7 +189,7 @@ export const getResponseBody = (response: AxiosResponse<unknown>): unknown => {
  */
 export const request = <T>(
   config: OpenAPIConfig,
-  options: ApiRequestOptions,
+  options: ApiRequestOptions<T>,
   axiosClient: AxiosInstance = axios,
 ): CancelablePromise<T> =>
   new CancelablePromise(async (resolve, reject, onCancel) => {
@@ -220,8 +221,13 @@ export const request = <T>(
           options.responseHeader,
         );
 
+        let transformedBody = responseBody;
+        if (options.responseTransformer && isSuccess(response.status)) {
+          transformedBody = options.responseTransformer(responseBody);
+        }
+
         const result: ApiResult = {
-          body: responseHeader ?? responseBody,
+          body: responseHeader ?? transformedBody,
           ok: isSuccess(response.status),
           status: response.status,
           statusText: response.statusText,

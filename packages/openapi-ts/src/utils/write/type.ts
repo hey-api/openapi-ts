@@ -14,7 +14,10 @@ const base = (model: Model) => {
     return compiler.typedef.union(['Blob', 'File']);
   }
 
-  if (config.types.dates && model.format === 'date-time') {
+  if (
+    config.types.dates &&
+    (model.format === 'date-time' || model.format === 'date')
+  ) {
     return compiler.typedef.basic('Date');
   }
 
