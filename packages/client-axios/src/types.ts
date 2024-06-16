@@ -1,4 +1,4 @@
-import type { AxiosRequestConfig, AxiosStatic } from 'axios';
+import type { AxiosInstance, AxiosRequestConfig, AxiosStatic } from 'axios';
 
 import type {
   BodySerializer,
@@ -54,6 +54,7 @@ export interface Config extends Omit<AxiosRequestConfig, 'headers' | 'method'> {
         | (string | number | boolean)[]
         | null
         | undefined
+        | unknown
       >;
   /**
    * The request method.
@@ -111,6 +112,7 @@ type RequestFn = <Data = unknown, Error = unknown>(
 interface ClientBase<Request = unknown, Response = unknown, Options = unknown> {
   delete: MethodFn;
   get: MethodFn;
+  getAxiosInstance: () => AxiosInstance;
   getConfig: () => Config;
   head: MethodFn;
   interceptors: Middleware<Request, Response, Options>;
@@ -137,10 +139,10 @@ type OptionsBase = Omit<RequestOptionsBase, 'url'> & {
   client?: Client;
 };
 
-export type Options<T = unknown> = T extends { body: any; headers: any }
-  ? OmitKeys<OptionsBase, 'body' | 'headers'> & T
-  : T extends { body: any }
-    ? OmitKeys<OptionsBase, 'body'> & T
-    : T extends { headers: any }
-      ? OmitKeys<OptionsBase, 'headers'> & T
-      : OptionsBase & T;
+export type Options<T = unknown> = T extends { body?: any }
+  ? T extends { headers?: any }
+    ? OmitKeys<OptionsBase, 'body' | 'headers'> & T
+    : OmitKeys<OptionsBase, 'body'> & T & Pick<OptionsBase, 'headers'>
+  : T extends { headers?: any }
+    ? OmitKeys<OptionsBase, 'headers'> & T & Pick<OptionsBase, 'body'>
+    : OptionsBase & T;
