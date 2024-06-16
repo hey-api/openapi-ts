@@ -360,7 +360,7 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
         });
 
         if (isStandaloneClient(config)) {
-          const errorResults = getErrorResponses(operation.results);
+          const errorResults = getErrorResponses(operation.errors);
           // create type export for operation error
           generateType({
             client,
