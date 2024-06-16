@@ -18,6 +18,7 @@ export default defineConfig({
           { link: '/openapi-ts/output', text: 'Output' },
           { link: '/openapi-ts/clients', text: 'Clients' },
           { link: '/openapi-ts/interceptors', text: 'Interceptors' },
+          { link: '/openapi-ts/transformers', text: 'Transformers' },
           { link: '/openapi-ts/migrating', text: 'Migrating' },
         ],
         text: 'Guides and Concepts',
