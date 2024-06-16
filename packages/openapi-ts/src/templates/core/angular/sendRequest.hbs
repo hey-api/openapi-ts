@@ -1,6 +1,6 @@
 export const sendRequest = <T>(
 	config: OpenAPIConfig,
-	options: ApiRequestOptions,
+	options: ApiRequestOptions<T>,
 	http: HttpClient,
 	url: string,
 	body: unknown,

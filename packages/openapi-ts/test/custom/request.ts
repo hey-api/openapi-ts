@@ -4,7 +4,7 @@ import type { OpenAPIConfig } from './OpenAPI';
 
 export const request = <T>(
   config: OpenAPIConfig,
-  options: ApiRequestOptions,
+  options: ApiRequestOptions<T>,
 ): CancelablePromise<T> =>
   new CancelablePromise((resolve, reject, onCancel) => {
     const url = `${config.BASE}${options.path}`.replace(

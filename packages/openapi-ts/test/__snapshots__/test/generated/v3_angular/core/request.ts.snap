@@ -105,9 +105,9 @@ export const getFormData = (options: ApiRequestOptions): FormData | undefined =>
 	return undefined;
 };
 
-type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
+type Resolver<T> = (options: ApiRequestOptions<T>) => Promise<T>;
 
-export const resolve = async <T>(options: ApiRequestOptions, resolver?: T | Resolver<T>): Promise<T | undefined> => {
+export const resolve = async <T>(options: ApiRequestOptions<T>, resolver?: T | Resolver<T>): Promise<T | undefined> => {
 	if (typeof resolver === 'function') {
 		return (resolver as Resolver<T>)(options);
 	}
@@ -116,9 +116,13 @@ export const resolve = async <T>(options: ApiRequestOptions, resolver?: T | Reso
 
 export const getHeaders = (config: OpenAPIConfig, options: ApiRequestOptions): Observable<HttpHeaders> => {
 	return forkJoin({
+		// @ts-ignore
 		token: resolve(options, config.TOKEN),
+		// @ts-ignore
 		username: resolve(options, config.USERNAME),
+		// @ts-ignore
 		password: resolve(options, config.PASSWORD),
+		// @ts-ignore
 		additionalHeaders: resolve(options, config.HEADERS),
 	}).pipe(
 		map(({ token, username, password, additionalHeaders }) => {
@@ -174,7 +178,7 @@ export const getRequestBody = (options: ApiRequestOptions): unknown => {
 
 export const sendRequest = <T>(
 	config: OpenAPIConfig,
-	options: ApiRequestOptions,
+	options: ApiRequestOptions<T>,
 	http: HttpClient,
 	url: string,
 	body: unknown,
@@ -281,7 +285,7 @@ export const catchErrorCodes = (options: ApiRequestOptions, result: ApiResult): 
  * @returns Observable<T>
  * @throws ApiError
  */
-export const request = <T>(config: OpenAPIConfig, http: HttpClient, options: ApiRequestOptions): Observable<T> => {
+export const request = <T>(config: OpenAPIConfig, http: HttpClient, options: ApiRequestOptions<T>): Observable<T> => {
 	const url = getUrl(config, options);
 	const formData = getFormData(options);
 	const body = getRequestBody(options);
