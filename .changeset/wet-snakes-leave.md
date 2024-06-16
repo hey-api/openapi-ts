@@ -2,4 +2,4 @@
 '@hey-api/openapi-ts': minor
 ---
 
-Add support for customising method names
+Add support for customizing method names with `services.methodNameBuilder()`
