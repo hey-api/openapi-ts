@@ -66,7 +66,12 @@ export const ModelWithDatesResponse = ModelWithDates;
 
 export type ModelWithDatesArrayResponse = Array<ModelWithDates>;
 
-export const ModelWithDatesArrayResponse = ModelWithDates;
+export const ModelWithDatesArrayResponse = (data: any) => {
+    if (Array.isArray(data)) {
+        data.forEach(ModelWithDates);
+    }
+    return data;
+};
 
 export type ArrayOfDatesResponse = Array<(Date)>;
 
