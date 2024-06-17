@@ -258,3 +258,77 @@ export const createAlias = ({
       ts.NodeFlags.Const,
     ),
   );
+
+export const createResponseArrayTransform = ({
+  transform,
+  name,
+}: {
+  transform: string;
+  name: string;
+}) => {
+  const transformFunction = ts.factory.createArrowFunction(
+    undefined,
+    undefined,
+    [
+      ts.factory.createParameterDeclaration(
+        undefined,
+        undefined,
+        ts.factory.createIdentifier('data'),
+        undefined,
+        ts.factory.createKeywordTypeNode(ts.SyntaxKind.AnyKeyword),
+        undefined,
+      ),
+    ],
+    undefined,
+    ts.factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+    ts.factory.createBlock(
+      [
+        ts.factory.createIfStatement(
+          ts.factory.createCallExpression(
+            ts.factory.createPropertyAccessExpression(
+              ts.factory.createIdentifier('Array'),
+              ts.factory.createIdentifier('isArray'),
+            ),
+            undefined,
+            [ts.factory.createIdentifier('data')],
+          ),
+          ts.factory.createBlock(
+            [
+              ts.factory.createExpressionStatement(
+                ts.factory.createCallExpression(
+                  ts.factory.createPropertyAccessExpression(
+                    ts.factory.createIdentifier('data'),
+                    ts.factory.createIdentifier('forEach'),
+                  ),
+                  undefined,
+                  [ts.factory.createIdentifier(transform)],
+                ),
+              ),
+            ],
+            true,
+          ),
+          undefined,
+        ),
+        ts.factory.createReturnStatement(ts.factory.createIdentifier('data')),
+      ],
+      true,
+    ),
+  );
+
+  const declaration = ts.factory.createVariableStatement(
+    [ts.factory.createToken(ts.SyntaxKind.ExportKeyword)],
+    ts.factory.createVariableDeclarationList(
+      [
+        ts.factory.createVariableDeclaration(
+          ts.factory.createIdentifier(name),
+          undefined,
+          undefined,
+          transformFunction,
+        ),
+      ],
+      ts.NodeFlags.Const,
+    ),
+  );
+
+  return declaration;
+};
