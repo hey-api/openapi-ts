@@ -1,5 +1,12 @@
 # @example/openapi-ts-fetch
 
+## 0.0.6
+
+### Patch Changes
+
+- Updated dependencies [[`fc2b166`](https://github.com/hey-api/openapi-ts/commit/fc2b166c8f683ece948284cf7a629fcd5b096b40)]:
+  - @hey-api/client-fetch@0.1.5
+
 ## 0.0.5
 
 ### Patch Changes
