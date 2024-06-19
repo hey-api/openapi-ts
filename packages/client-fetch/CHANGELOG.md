@@ -1,5 +1,11 @@
 # @hey-api/client-fetch
 
+## 0.1.5
+
+### Patch Changes
+
+- [#698](https://github.com/hey-api/openapi-ts/pull/698) [`fc2b166`](https://github.com/hey-api/openapi-ts/commit/fc2b166c8f683ece948284cf7a629fcd5b096b40) Thanks [@lsdch](https://github.com/lsdch)! - export RequestResult type
+
 ## 0.1.4
 
 ### Patch Changes
