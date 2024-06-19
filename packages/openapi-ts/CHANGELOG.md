@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.47.1
+
+### Patch Changes
+
+- [#690](https://github.com/hey-api/openapi-ts/pull/690) [`1017ace`](https://github.com/hey-api/openapi-ts/commit/1017acee80630d84a08bd8f0087c8fb0de270f1a) Thanks [@Nick-Lucas](https://github.com/Nick-Lucas)! - Fix an issue where transforms for endpoints with array returns were not generated correctly
+
 ## 0.47.0
 
 ### Minor Changes
