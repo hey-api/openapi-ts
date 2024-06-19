@@ -125,9 +125,19 @@ export interface ClientConfig {
          */
         name?: string;
         /**
-         * Customise the method name of methods within the service
+         * Customise the method name of methods within the service. By default, operationName is used.
          */
-        methodNameBuilder?: (service: string, operationId: string) => string;
+        methodNameBuilder?: (
+          service: string,
+          /**
+           * Method name used by default.
+           */
+          operationName: string,
+          /**
+           * The operationId from OpenAPI specification.
+           */
+          operationId: string | null,
+        ) => string;
         /**
          * Use operation ID to generate operation names?
          * @default true
