@@ -4,6 +4,7 @@ import path from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 
 import { TypeScriptFile } from '../../../compiler';
+import type { Operation } from '../../../openApi';
 import { setConfig } from '../../config';
 import { processServices } from '../services';
 
@@ -65,6 +66,29 @@ describe('processServices', () => {
 describe('methodNameBuilder', () => {
   // If the generated text has the expected method, tests are considered pass.
 
+  const operation: Operation = {
+    $refs: [],
+    deprecated: false,
+    description: null,
+    errors: [],
+    id: 'User_get',
+    imports: [],
+    method: 'GET',
+    name: 'userGet',
+    parameters: [],
+    parametersBody: null,
+    parametersCookie: [],
+    parametersForm: [],
+    parametersHeader: [],
+    parametersPath: [],
+    parametersQuery: [],
+    path: '/users',
+    responseHeader: null,
+    results: [],
+    service: 'User',
+    summary: null,
+  };
+
   const client: Parameters<typeof processServices>[0]['client'] = {
     models: [],
     server: 'http://localhost:8080',
@@ -73,30 +97,7 @@ describe('methodNameBuilder', () => {
         $refs: [],
         imports: [],
         name: 'User',
-        operations: [
-          {
-            $refs: [],
-            deprecated: false,
-            description: null,
-            errors: [],
-            id: 'User_get',
-            imports: [],
-            method: 'GET',
-            name: 'userGet',
-            parameters: [],
-            parametersBody: null,
-            parametersCookie: [],
-            parametersForm: [],
-            parametersHeader: [],
-            parametersPath: [],
-            parametersQuery: [],
-            path: '/users',
-            responseHeader: null,
-            results: [],
-            service: 'User',
-            summary: null,
-          },
-        ],
+        operations: [operation],
       },
     ],
     types: {},
@@ -177,10 +178,6 @@ describe('methodNameBuilder', () => {
       expect.stringContaining('public static customName()'),
     );
 
-    expect(methodNameBuilderMock).toHaveBeenCalledWith(
-      'User',
-      'userGet',
-      'User_get',
-    );
+    expect(methodNameBuilderMock).toHaveBeenCalledWith(operation);
   });
 });

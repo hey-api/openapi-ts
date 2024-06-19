@@ -1,3 +1,5 @@
+import type { Operation } from '../openApi';
+
 export interface ClientConfig {
   /**
    * Manually set base in OpenAPI config instead of inferring from server value
@@ -125,19 +127,9 @@ export interface ClientConfig {
          */
         name?: string;
         /**
-         * Customise the method name of methods within the service. By default, operationName is used.
+         * Customise the method name of methods within the service. By default, {@link Operation.name} is used.
          */
-        methodNameBuilder?: (
-          service: string,
-          /**
-           * Method name used by default.
-           */
-          operationName: string,
-          /**
-           * The operationId from OpenAPI specification.
-           */
-          operationId: string | null,
-        ) => string;
+        methodNameBuilder?: (operation: Operation) => string;
         /**
          * Use operation ID to generate operation names?
          * @default true
