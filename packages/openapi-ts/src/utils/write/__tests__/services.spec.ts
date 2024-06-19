@@ -63,6 +63,8 @@ describe('processServices', () => {
 });
 
 describe('methodNameBuilder', () => {
+  // If the generated text has the expected method, tests are considered pass.
+
   const client: Parameters<typeof processServices>[0]['client'] = {
     models: [],
     server: 'http://localhost:8080',
