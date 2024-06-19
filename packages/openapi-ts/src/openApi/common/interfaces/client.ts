@@ -48,6 +48,10 @@ export interface Operation extends OperationParameters {
   deprecated: boolean;
   description: string | null;
   errors: OperationResponse[];
+  /**
+   * The operationId from OpenAPI specification.
+   */
+  id: string | null;
   method: Method;
   /**
    * Method name. Methods contain the request logic.
