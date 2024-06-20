@@ -145,7 +145,7 @@ export interface Model extends Schema {
     | OpenApiParameter['in']
     | OperationResponse['in']
     | '';
-  link: Model | null;
+  link: Model | Model[] | null;
   meta?: ModelMeta;
   /**
    * @deprecated use `meta.name` instead

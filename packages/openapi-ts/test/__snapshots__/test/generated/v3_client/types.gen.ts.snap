@@ -765,6 +765,12 @@ export type ModelWithAnyOfConstantSizeArray = [
     number | string
 ];
 
+export type ModelWithPrefixItemsConstantSizeArray = [
+    ModelWithInteger,
+    number | string,
+    string
+];
+
 export type ModelWithAnyOfConstantSizeArrayNullable = [
     number | null | string,
     number | null | string,
