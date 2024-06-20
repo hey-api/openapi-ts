@@ -7,6 +7,8 @@ import {
   tsNodeToString,
 } from './utils';
 
+const nullNode = ts.factory.createTypeReferenceNode('null');
+
 export const createTypeNode = (
   base: any | ts.TypeNode,
   args?: (any | ts.TypeNode)[],
@@ -63,6 +65,23 @@ export type Property = {
 };
 
 /**
+ * Returns a union of provided node with null if marked as nullable,
+ * otherwise returns the provided node unmodified.
+ */
+const maybeNullable = ({
+  isNullable,
+  node,
+}: {
+  node: ts.TypeNode;
+  isNullable: boolean;
+}) => {
+  if (!isNullable) {
+    return node;
+  }
+  return ts.factory.createUnionTypeNode([node, nullNode]);
+};
+
+/**
  * Create a interface type node. Example `{ readonly x: string, y?: number }`
  * @param properties - the properties of the interface.
  * @param isNullable - if the whole interface can be nullable
@@ -90,13 +109,7 @@ export const createTypeInterfaceNode = (
       return signature;
     }),
   );
-  if (!isNullable) {
-    return node;
-  }
-  return ts.factory.createUnionTypeNode([
-    node,
-    ts.factory.createTypeReferenceNode('null'),
-  ]);
+  return maybeNullable({ isNullable, node });
 };
 
 /**
@@ -110,10 +123,10 @@ export const createTypeUnionNode = (
   isNullable: boolean = false,
 ) => {
   const nodes = types.map((type) => createTypeNode(type));
-  if (isNullable) {
-    nodes.push(ts.factory.createTypeReferenceNode('null'));
+  if (!isNullable) {
+    return ts.factory.createUnionTypeNode(nodes);
   }
-  return ts.factory.createUnionTypeNode(nodes);
+  return ts.factory.createUnionTypeNode([...nodes, nullNode]);
 };
 
 /**
@@ -126,15 +139,9 @@ export const createTypeIntersectNode = (
   types: (any | ts.TypeNode)[],
   isNullable: boolean = false,
 ) => {
-  const nodes = types.map((t) => createTypeNode(t));
-  const intersect = ts.factory.createIntersectionTypeNode(nodes);
-  if (isNullable) {
-    return ts.factory.createUnionTypeNode([
-      intersect,
-      ts.factory.createTypeReferenceNode('null'),
-    ]);
-  }
-  return intersect;
+  const nodes = types.map((type) => createTypeNode(type));
+  const node = ts.factory.createIntersectionTypeNode(nodes);
+  return maybeNullable({ isNullable, node });
 };
 
 /**
@@ -151,15 +158,8 @@ export const createTypeTupleNode = ({
   types: Array<any | ts.TypeNode>;
 }) => {
   const nodes = types.map((type) => createTypeNode(type));
-  const tupleNode = ts.factory.createTupleTypeNode(nodes);
-  if (isNullable) {
-    const unionNode = ts.factory.createUnionTypeNode([
-      tupleNode,
-      ts.factory.createTypeReferenceNode('null'),
-    ]);
-    return unionNode;
-  }
-  return tupleNode;
+  const node = ts.factory.createTupleTypeNode(nodes);
+  return maybeNullable({ isNullable, node });
 };
 
 /**
@@ -186,13 +186,7 @@ export const createTypeRecordNode = (
       type: valueNode,
     },
   ]);
-  if (!isNullable) {
-    return node;
-  }
-  return ts.factory.createUnionTypeNode([
-    node,
-    ts.factory.createTypeReferenceNode('null'),
-  ]);
+  return maybeNullable({ isNullable, node });
 };
 
 /**
@@ -208,11 +202,5 @@ export const createTypeArrayNode = (
   const node = ts.factory.createTypeReferenceNode('Array', [
     createTypeUnionNode(types),
   ]);
-  if (!isNullable) {
-    return node;
-  }
-  return ts.factory.createUnionTypeNode([
-    node,
-    ts.factory.createTypeReferenceNode('null'),
-  ]);
+  return maybeNullable({ isNullable, node });
 };
