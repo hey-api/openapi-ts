@@ -107,7 +107,44 @@ export const getModel = ({
     }
   }
 
-  if (definitionTypes.includes('array') && definition.items) {
+  if (
+    definitionTypes.includes('array') &&
+    (definition.items || definition.prefixItems)
+  ) {
+    if (definition.prefixItems) {
+      const arrayItems = definition.prefixItems.map((item) =>
+        getModel({
+          definition: item,
+          openApi,
+          parentDefinition: definition,
+          types,
+        }),
+      );
+
+      model.export = 'array';
+      model.$refs = [
+        ...model.$refs,
+        ...arrayItems.reduce(
+          (acc, m) => [...acc, ...m.$refs],
+          [] as Model['$refs'],
+        ),
+      ];
+      model.imports = [
+        ...model.imports,
+        ...arrayItems.reduce(
+          (acc, m) => [...acc, ...m.imports],
+          [] as Model['imports'],
+        ),
+      ];
+      model.link = arrayItems;
+      model.default = getDefault(definition, model);
+      return model;
+    }
+
+    if (!definition.items) {
+      return model;
+    }
+
     if (definition.items.$ref) {
       const arrayItems = getType({ type: definition.items.$ref });
       model.$refs = [...model.$refs, definition.items.$ref];

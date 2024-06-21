@@ -32,24 +32,33 @@ const typeReference = (model: Model) => {
 };
 
 const typeArray = (model: Model) => {
-  // Special case where we use tuple to define constant size array.
-  if (
-    model.export === 'array' &&
-    model.link &&
-    model.maxItems &&
-    model.minItems &&
-    model.maxItems === model.minItems &&
-    model.maxItems <= 100
-  ) {
-    const types = Array(model.maxItems).fill(toType(model.link));
-    const tuple = compiler.typedef.tuple({
-      isNullable: model.isNullable,
-      types,
-    });
-    return tuple;
-  }
-
   if (model.link) {
+    // We treat an array of `model.link` as constant size array definition.
+    if (Array.isArray(model.link)) {
+      const types = model.link.map((m) => toType(m));
+      const tuple = compiler.typedef.tuple({
+        isNullable: model.isNullable,
+        types,
+      });
+      return tuple;
+    }
+
+    // Special case where we use tuple to define constant size array.
+    if (
+      model.export === 'array' &&
+      model.maxItems &&
+      model.minItems &&
+      model.maxItems === model.minItems &&
+      model.maxItems <= 100
+    ) {
+      const types = Array(model.maxItems).fill(toType(model.link));
+      const tuple = compiler.typedef.tuple({
+        isNullable: model.isNullable,
+        types,
+      });
+      return tuple;
+    }
+
     return compiler.typedef.array([toType(model.link)], model.isNullable);
   }
 
@@ -62,7 +71,8 @@ const typeEnum = (model: Model) => {
 };
 
 const typeDict = (model: Model) => {
-  const type = model.link ? toType(model.link) : base(model);
+  const type =
+    model.link && !Array.isArray(model.link) ? toType(model.link) : base(model);
   return compiler.typedef.record(['string'], [type], model.isNullable);
 };
 
@@ -137,6 +147,8 @@ export const toType = (model: Model): TypeNode => {
       return typeEnum(model);
     case 'interface':
       return typeInterface(model);
+    case 'const':
+    case 'generic':
     case 'reference':
     default:
       return typeReference(model);
