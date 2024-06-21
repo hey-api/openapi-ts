@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.47.2
+
+### Patch Changes
+
+- [#701](https://github.com/hey-api/openapi-ts/pull/701) [`1081bbf`](https://github.com/hey-api/openapi-ts/commit/1081bbf5082450c18547dac4737ecc0e312cdd0e) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add initial implementation of prefixItems
+
 ## 0.47.1
 
 ### Patch Changes
