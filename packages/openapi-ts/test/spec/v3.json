@@ -3184,6 +3184,27 @@
         "minItems": 3,
         "maxItems": 3
       },
+      "ModelWithPrefixItemsConstantSizeArray": {
+        "type": "array",
+        "prefixItems": [
+          {
+            "$ref": "#/components/schemas/ModelWithInteger"
+          },
+          {
+            "oneOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          {
+            "type": "string"
+          }
+        ]
+      },
       "ModelWithAnyOfConstantSizeArrayNullable": {
         "type": ["array"],
         "items": {

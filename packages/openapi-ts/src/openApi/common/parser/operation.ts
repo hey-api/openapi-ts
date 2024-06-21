@@ -8,7 +8,20 @@ const areEqual = (a: Model, b: Model): boolean => {
   const equal =
     a.type === b.type && a.base === b.base && a.template === b.template;
   if (equal && a.link && b.link) {
-    return areEqual(a.link, b.link);
+    if (!Array.isArray(a.link) && !Array.isArray(b.link)) {
+      return areEqual(a.link, b.link);
+    }
+
+    if (
+      Array.isArray(a.link) &&
+      Array.isArray(b.link) &&
+      a.link.length === b.link.length
+    ) {
+      const bLinks = b.link;
+      return a.link.every((model, index) => areEqual(model, bLinks[index]!));
+    }
+
+    return false;
   }
   return equal;
 };

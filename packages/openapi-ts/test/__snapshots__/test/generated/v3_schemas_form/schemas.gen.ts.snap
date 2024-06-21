@@ -1471,6 +1471,28 @@ export const $ModelWithAnyOfConstantSizeArray = {
     maxItems: 3
 } as const;
 
+export const $ModelWithPrefixItemsConstantSizeArray = {
+    type: 'array',
+    prefixItems: [
+        {
+            '$ref': '#/components/schemas/ModelWithInteger'
+        },
+        {
+            oneOf: [
+                {
+                    type: 'number'
+                },
+                {
+                    type: 'string'
+                }
+            ]
+        },
+        {
+            type: 'string'
+        }
+    ]
+} as const;
+
 export const $ModelWithAnyOfConstantSizeArrayNullable = {
     type: ['array'],
     items: {

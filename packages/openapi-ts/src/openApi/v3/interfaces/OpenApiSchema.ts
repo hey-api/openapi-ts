@@ -48,6 +48,7 @@ export interface OpenApiSchema extends OpenApiReference, WithEnumExtension {
   nullable?: boolean;
   oneOf?: OpenApiSchema[];
   pattern?: string;
+  prefixItems?: OpenApiSchema[];
   properties?: Dictionary<OpenApiSchema>;
   readOnly?: boolean;
   required?: string[];
