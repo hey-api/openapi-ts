@@ -1,7 +1,7 @@
 {
   "name": "@example/openapi-ts-fetch",
   "private": true,
-  "version": "0.0.5",
+  "version": "0.0.6",
   "type": "module",
   "scripts": {
     "build": "tsc && vite build",

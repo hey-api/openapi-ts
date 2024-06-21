@@ -366,16 +366,28 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
 
         if (config.types.dates === 'types+transform') {
           if (responses.length === 1) {
-            if (client.types[responses[0].type]?.hasTransformer) {
+            const response = responses[0];
+
+            if (client.types[response.type]?.hasTransformer) {
               const name = operationResponseTypeName(operation.name);
-              const transformAlias = compiler.transform.alias({
-                existingName: responses[0].type,
-                name,
-              });
+
+              if (response.export === 'array') {
+                const arrayTransformer =
+                  compiler.transform.responseArrayTransform({
+                    name,
+                    transform: response.type,
+                  });
+                onNode(arrayTransformer);
+              } else {
+                const transformAlias = compiler.transform.alias({
+                  existingName: response.type,
+                  name,
+                });
+
+                onNode(transformAlias);
+              }
 
               client.types[name].hasTransformer = true;
-
-              onNode(transformAlias);
             }
           } else if (responses.length > 1) {
             console.log(
