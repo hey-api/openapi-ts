@@ -60,20 +60,23 @@ export const OpenAPI: OpenAPIConfig<AxiosRequestConfig, AxiosResponse> = {
   interceptors: { request: new Interceptors(), response: new Interceptors() },
 };
 
-export const getHeaders = async (
+export const getHeaders = async <T>(
   config: OpenAPIConfig,
-  options: ApiRequestOptions,
+  options: ApiRequestOptions<T>,
 ): Promise<Record<string, string>> => {
   const [token, username, password, additionalHeaders] = await Promise.all([
+    // @ts-ignore
     resolve(options, config.TOKEN),
+    // @ts-ignore
     resolve(options, config.USERNAME),
+    // @ts-ignore
     resolve(options, config.PASSWORD),
+    // @ts-ignore
     resolve(options, config.HEADERS),
   ]);
 
   const headers = Object.entries({
     Accept: 'application/json',
-    // @ts-ignore
     ...additionalHeaders,
     ...options.headers,
   })
