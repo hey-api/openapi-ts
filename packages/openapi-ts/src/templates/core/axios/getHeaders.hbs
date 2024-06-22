@@ -1,4 +1,4 @@
-export const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptions): Promise<Record<string, string>> => {
+export const getHeaders = async <T>(config: OpenAPIConfig, options: ApiRequestOptions<T>): Promise<Record<string, string>> => {
 	const [token, username, password, additionalHeaders] = await Promise.all([
 		// @ts-ignore
 		resolve(options, config.TOKEN),
