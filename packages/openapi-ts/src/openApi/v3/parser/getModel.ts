@@ -82,7 +82,7 @@ export const getModel = ({
 
   if (definition.$ref) {
     const definitionRef = getType({ type: definition.$ref });
-    model.$refs = [...model.$refs, definition.$ref];
+    model.$refs = [...model.$refs, decodeURIComponent(definition.$ref)];
     model.base = definitionRef.base;
     model.export = 'reference';
     model.imports = [...model.imports, ...definitionRef.imports];
@@ -147,7 +147,7 @@ export const getModel = ({
 
     if (definition.items.$ref) {
       const arrayItems = getType({ type: definition.items.$ref });
-      model.$refs = [...model.$refs, definition.items.$ref];
+      model.$refs = [...model.$refs, decodeURIComponent(definition.items.$ref)];
       model.base = arrayItems.base;
       model.export = 'array';
       model.imports = [...model.imports, ...arrayItems.imports];
