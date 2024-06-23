@@ -23,7 +23,11 @@ import {
 import { generateTransform } from './transforms';
 import { toType, uniqueTypeName } from './type';
 
-type OnNode = (node: Node) => void;
+interface TypesProps {
+  client: Client;
+  model: Model;
+  onNode: (node: Node) => void;
+}
 
 const serviceExportedNamespace = () => '$OpenApiTs';
 
@@ -56,9 +60,8 @@ const generateEnum = ({
   ...uniqueTypeNameArgs
 }: Omit<Parameters<typeof compiler.types.enum>[0], 'name'> &
   Pick<Parameters<typeof uniqueTypeName>[0], 'client' | 'nameTransformer'> &
-  Pick<Model, 'meta'> & {
-    onNode: OnNode;
-  }) => {
+  Pick<Model, 'meta'> &
+  Pick<TypesProps, 'onNode'>) => {
   // generate types only for top-level models
   if (!meta) {
     return;
@@ -89,9 +92,9 @@ const generateType = ({
   ...uniqueTypeNameArgs
 }: Omit<Parameters<typeof compiler.typedef.alias>[0], 'name'> &
   Pick<Parameters<typeof uniqueTypeName>[0], 'client' | 'nameTransformer'> &
-  Pick<Model, 'meta'> & {
+  Pick<Model, 'meta'> &
+  Pick<TypesProps, 'onNode'> & {
     onCreated?: (name: string) => void;
-    onNode: OnNode;
   }) => {
   // generate types only for top-level models
   if (!meta) {
@@ -111,12 +114,14 @@ const generateType = ({
   }
 };
 
-const processComposition = (client: Client, model: Model, onNode: OnNode) => {
-  processType(client, model, onNode);
-  model.enums.forEach((enumerator) => processEnum(client, enumerator, onNode));
+const processComposition = (props: TypesProps) => {
+  processType(props);
+  props.model.enums.forEach((enumerator) =>
+    processEnum({ ...props, model: enumerator }),
+  );
 };
 
-const processEnum = (client: Client, model: Model, onNode: OnNode) => {
+const processEnum = ({ client, model, onNode }: TypesProps) => {
   const config = getConfig();
 
   const properties: Record<string | number, unknown> = {};
@@ -174,7 +179,7 @@ const processEnum = (client: Client, model: Model, onNode: OnNode) => {
   });
 };
 
-const processType = (client: Client, model: Model, onNode: OnNode) => {
+const processType = ({ client, model, onNode }: TypesProps) => {
   generateType({
     client,
     comment: [
@@ -185,21 +190,19 @@ const processType = (client: Client, model: Model, onNode: OnNode) => {
     onNode,
     type: toType(model),
   });
-
-  generateTransform(client, model, onNode);
 };
 
-export const processModel = (client: Client, model: Model, onNode: OnNode) => {
-  switch (model.export) {
+const processModel = (props: TypesProps) => {
+  switch (props.model.export) {
     case 'all-of':
     case 'any-of':
     case 'one-of':
     case 'interface':
-      return processComposition(client, model, onNode);
+      return processComposition(props);
     case 'enum':
-      return processEnum(client, model, onNode);
+      return processEnum(props);
     default:
-      return processType(client, model, onNode);
+      return processType(props);
   }
 };
 
@@ -215,7 +218,10 @@ type PathMap = {
 
 type PathsMap = Record<string, PathMap>;
 
-const processServiceTypes = (client: Client, onNode: OnNode) => {
+const processServiceTypes = ({
+  client,
+  onNode,
+}: Pick<TypesProps, 'client' | 'onNode'>) => {
   const pathsMap: PathsMap = {};
 
   const config = getConfig();
@@ -540,15 +546,34 @@ export const processTypes = async ({
   client: Client;
   files: Record<string, TypeScriptFile>;
 }): Promise<void> => {
+  const config = getConfig();
+
   for (const model of client.models) {
-    processModel(client, model, (node) => {
-      files.types?.add(node);
+    processModel({
+      client,
+      model,
+      onNode: (node) => {
+        files.types?.add(node);
+      },
     });
   }
 
   if (files.services && client.services.length) {
-    processServiceTypes(client, (node) => {
-      files.types?.add(node);
+    processServiceTypes({
+      client,
+      onNode: (node) => {
+        files.types?.add(node);
+      },
     });
+  }
+
+  if (config.types.dates === 'types+transform') {
+    for (const model of client.models) {
+      if (model.export !== 'enum') {
+        generateTransform(client, model, (node) => {
+          files.types?.add(node);
+        });
+      }
+    }
   }
 };
