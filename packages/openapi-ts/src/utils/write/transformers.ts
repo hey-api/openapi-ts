@@ -1,7 +1,10 @@
 import ts from 'typescript';
 
 import { compiler } from '../../compiler';
-import type { ModelMeta } from '../../openApi/common/interfaces/client';
+import type {
+  ModelMeta,
+  OperationResponse,
+} from '../../openApi/common/interfaces/client';
 import { getSuccessResponses } from '../../openApi/common/parser/operation';
 import { getConfig } from '../config';
 import {
@@ -19,6 +22,11 @@ interface ModelProps extends TypesProps {
 
 const dataVariableName = 'data';
 
+const isVoidResponse = (response: OperationResponse) =>
+  response.base === 'unknown' &&
+  response.export === 'generic' &&
+  response.type === 'unknown';
+
 const getRefModels = ({
   client,
   model,
@@ -35,16 +43,13 @@ const getRefModels = ({
   return refModels;
 };
 
-const ensureModelResponseTransformerExists = ({
-  client,
-  model,
-  onNode,
-  onRemoveNode,
-}: Omit<ModelProps, 'path'>) => {
-  const modelName = model.meta!.name;
+const ensureModelResponseTransformerExists = (
+  props: Omit<ModelProps, 'path'>,
+) => {
+  const modelName = props.model.meta!.name;
 
   const { name } = generateType({
-    client,
+    ...props,
     meta: {
       $ref: `transformers/${modelName}`,
       name: modelName,
@@ -52,52 +57,36 @@ const ensureModelResponseTransformerExists = ({
     nameTransformer: modelResponseTransformerTypeName,
     onCreated: (name) => {
       const statements = processModel({
-        client,
+        ...props,
         meta: {
           $ref: `transformers/${modelName}`,
           name,
         },
-        model,
-        onNode,
-        onRemoveNode,
         path: [dataVariableName],
       });
       generateResponseTransformer({
-        client,
+        ...props,
         name,
-        onNode,
-        onRemoveNode,
         statements,
       });
     },
-    onNode,
     type: `(${dataVariableName}: any) => ${modelName}`,
   });
 
   const result = {
-    created: Boolean(client.types[name]),
+    created: Boolean(props.client.types[name]),
     name,
   };
   return result;
 };
 
-const processArray = ({
-  client,
-  model,
-  onNode,
-  onRemoveNode,
-  path,
-}: ModelProps) => {
-  const refModels = getRefModels({ client, model });
+const processArray = (props: ModelProps) => {
+  const { model } = props;
+  const refModels = getRefModels(props);
 
   if (refModels.length === 1) {
     const { created, name: nameModelResponseTransformer } =
-      ensureModelResponseTransformerExists({
-        client,
-        model: refModels[0],
-        onNode,
-        onRemoveNode,
-      });
+      ensureModelResponseTransformerExists({ ...props, model: refModels[0] });
 
     if (!created) {
       return [];
@@ -105,7 +94,7 @@ const processArray = ({
 
     return [
       compiler.transform.arrayTransformMutation({
-        path,
+        path: props.path,
         transformerName: nameModelResponseTransformer,
       }),
     ];
@@ -114,7 +103,7 @@ const processArray = ({
   if (model.format === 'date' || model.format === 'date-time') {
     return [
       compiler.transform.mapArray({
-        path,
+        path: props.path,
         transformExpression: compiler.transform.newDate({
           parameterName: 'item',
         }),
@@ -126,81 +115,44 @@ const processArray = ({
   return [];
 };
 
-const processProperty = ({
-  client,
-  model,
-  onNode,
-  onRemoveNode,
-  path,
-  meta,
-}: ModelProps) => {
-  const pathProperty = [...path, model.name];
+const processProperty = (props: ModelProps) => {
+  const { model } = props;
+  const path = [...props.path, model.name];
 
   if (
     model.type === 'string' &&
     model.export !== 'array' &&
     (model.format === 'date-time' || model.format === 'date')
   ) {
-    return [compiler.transform.dateTransformMutation({ path: pathProperty })];
+    return [compiler.transform.dateTransformMutation({ path })];
   }
 
   // otherwise we recurse in case it's an object/array, and if it's not that will just bail with []
   return processModel({
-    client,
-    meta,
+    ...props,
     model,
-    onNode,
-    onRemoveNode,
-    path: pathProperty,
+    path,
   });
 };
 
-const processModel = ({
-  client,
-  model,
-  meta,
-  onNode,
-  onRemoveNode,
-  path,
-}: ModelProps): ts.Statement[] => {
-  switch (model.export) {
-    case 'array': {
-      return processArray({
-        client,
-        meta,
-        model,
-        onNode,
-        onRemoveNode,
-        path,
-      });
-    }
-    case 'interface': {
-      const statements = model.properties.flatMap((property) =>
-        processProperty({
-          client,
-          meta,
-          model: property,
-          onNode,
-          onRemoveNode,
-          path,
-        }),
-      );
+const processModel = (props: ModelProps): ts.Statement[] => {
+  const { model } = props;
 
-      return statements;
-    }
+  switch (model.export) {
+    case 'array':
+      return processArray(props);
+    case 'interface':
+      return model.properties.flatMap((property) =>
+        processProperty({ ...props, model: property }),
+      );
     case 'reference': {
       if (model.$refs.length !== 1) {
         return [];
       }
-      const refModels = getRefModels({ client, model });
+      const refModels = getRefModels(props);
 
       const { created, name: nameModelResponseTransformer } =
-        ensureModelResponseTransformerExists({
-          client,
-          model: refModels[0],
-          onNode,
-          onRemoveNode,
-        });
+        ensureModelResponseTransformerExists({ ...props, model: refModels[0] });
 
       if (!created) {
         return [];
@@ -216,12 +168,12 @@ const processModel = ({
             }),
           ]
         : compiler.transform.transformItem({
-            path,
+            path: props.path,
             transformerName: nameModelResponseTransformer,
           });
     }
+    // unsupported
     default:
-      // Unsupported
       return [];
   }
 };
@@ -296,11 +248,15 @@ export const processResponseTransformers = async ({
 
       const responses = getSuccessResponses(operation.results);
 
-      if (!responses.length) {
+      const nonVoidResponses = responses.filter(
+        (response) => !isVoidResponse(response),
+      );
+
+      if (!nonVoidResponses.length) {
         continue;
       }
 
-      if (responses.length > 1) {
+      if (nonVoidResponses.length > 1) {
         if (config.debug) {
           console.warn(
             `⚠️ Transformers warning: route ${operation.method} ${operation.path} has ${responses.length} success responses. This is currently not handled and we will not generate a response transformer. Please open an issue if you'd like this feature https://github.com/hey-api/openapi-ts/issues`,
@@ -318,17 +274,44 @@ export const processResponseTransformers = async ({
         },
         nameTransformer: operationResponseTransformerTypeName,
         onCreated: (nameCreated) => {
-          const statements = processModel({
-            client,
-            meta: {
-              $ref: `transformers/${name}`,
-              name,
-            },
-            model: operation.results[0],
-            onNode,
-            onRemoveNode,
-            path: [dataVariableName],
-          });
+          const statements =
+            responses.length > 1
+              ? responses.flatMap((response) => {
+                  const statements = processModel({
+                    client,
+                    meta: {
+                      $ref: `transformers/${name}`,
+                      name,
+                    },
+                    model: response,
+                    onNode,
+                    onRemoveNode,
+                    path: [dataVariableName],
+                  });
+
+                  // assume unprocessed responses are void
+                  if (!statements.length) {
+                    return [];
+                  }
+
+                  return [
+                    compiler.logic.if({
+                      expression: compiler.logic.safeAccess(['data']),
+                      thenStatement: ts.factory.createBlock(statements),
+                    }),
+                  ];
+                })
+              : processModel({
+                  client,
+                  meta: {
+                    $ref: `transformers/${name}`,
+                    name,
+                  },
+                  model: operation.results[0],
+                  onNode,
+                  onRemoveNode,
+                  path: [dataVariableName],
+                });
           generateResponseTransformer({
             client,
             name: nameCreated,

@@ -34,7 +34,7 @@ export type ParentModelWithDates = {
     strings?: Array<(string)>;
 };
 
-export type ParentModelWithDatesResponse = ParentModelWithDates;
+export type ParentModelWithDatesResponse = ParentModelWithDates | unknown;
 
 export type ModelWithDatesResponse = ModelWithDates;
 
@@ -54,6 +54,10 @@ export type $OpenApiTs = {
                  * Success
                  */
                 200: ParentModelWithDates;
+                /**
+                 * Success
+                 */
+                201: unknown;
             };
         };
         put: {
@@ -144,7 +148,9 @@ export const ParentModelWithDatesModelResponseTransformer: ParentModelWithDatesM
 };
 
 export const ParentModelWithDatesResponseTransformer: ParentModelWithDatesResponseTransformer = data => {
-    ParentModelWithDatesModelResponseTransformer(data);
+    if (data) {
+        ParentModelWithDatesModelResponseTransformer(data);
+    }
     return data;
 };
 

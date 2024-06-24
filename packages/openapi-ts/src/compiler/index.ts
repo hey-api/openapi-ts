@@ -147,6 +147,11 @@ export const compiler = {
   import: {
     named: module.createNamedImportDeclarations,
   },
+  logic: {
+    access: transform.createAccessExpression,
+    if: transform.createIfStatement,
+    safeAccess: transform.createSafeAccessExpression,
+  },
   return: {
     functionCall: _return.createReturnFunctionCall,
     statement: _return.createReturnStatement,

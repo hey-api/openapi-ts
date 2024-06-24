@@ -8,6 +8,7 @@ import { type ParentModelWithDatesResponse, type ModelWithDatesResponse, type Mo
 export class DefaultService {
     /**
      * @returns ParentModelWithDates Success
+     * @returns unknown Success
      * @throws ApiError
      */
     public static parentModelWithDates(): CancelablePromise<ParentModelWithDatesResponse> {
