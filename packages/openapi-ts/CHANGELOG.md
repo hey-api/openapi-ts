@@ -1,5 +1,17 @@
 # @hey-api/openapi-ts
 
+## 0.48.0
+
+### Minor Changes
+
+- [#696](https://github.com/hey-api/openapi-ts/pull/696) [`917405f`](https://github.com/hey-api/openapi-ts/commit/917405fcdcb2e978df693eb51720afa6fcf914e2) Thanks [@anchan828](https://github.com/anchan828)! - feat: pass the Operation object to methodNameBuilder
+
+### Patch Changes
+
+- [#708](https://github.com/hey-api/openapi-ts/pull/708) [`36cf95d`](https://github.com/hey-api/openapi-ts/commit/36cf95d319b175149d3b3ecc382b8d739186e658) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: make getHeaders() accept generic
+
+- [#712](https://github.com/hey-api/openapi-ts/pull/712) [`6a5b96b`](https://github.com/hey-api/openapi-ts/commit/6a5b96b59e4248f2acaf5422be262edde97427dd) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle void responses in transformers
+
 ## 0.47.2
 
 ### Patch Changes
