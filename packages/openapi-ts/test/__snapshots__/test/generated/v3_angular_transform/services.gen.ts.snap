@@ -5,13 +5,26 @@ import { HttpClient } from '@angular/common/http';
 import type { Observable } from 'rxjs';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import { ModelWithDatesResponse, ModelWithDatesArrayResponse, type ArrayOfDatesResponse, type DateResponse, type MultipleResponsesResponse } from './types.gen';
+import { type ParentModelWithDatesResponse, type ModelWithDatesResponse, type ModelWithDatesArrayResponse, type ArrayOfDatesResponse, type DateResponse, type MultipleResponsesResponse, ParentModelWithDatesResponseTransformer, ModelWithDatesResponseTransformer, ModelWithDatesArrayResponseTransformer } from './types.gen';
 
 @Injectable({
     providedIn: 'root'
 })
 export class DefaultService {
     constructor(public readonly http: HttpClient) { }
+    
+    /**
+     * @returns ParentModelWithDates Success
+     * @returns unknown Success
+     * @throws ApiError
+     */
+    public parentModelWithDates(): Observable<ParentModelWithDatesResponse> {
+        return __request(OpenAPI, this.http, {
+            method: 'POST',
+            url: '/api/model-with-dates',
+            responseTransformer: ParentModelWithDatesResponseTransformer
+        });
+    }
     
     /**
      * @returns ModelWithDates Success
@@ -21,7 +34,7 @@ export class DefaultService {
         return __request(OpenAPI, this.http, {
             method: 'PUT',
             url: '/api/model-with-dates',
-            responseTransformer: ModelWithDatesResponse
+            responseTransformer: ModelWithDatesResponseTransformer
         });
     }
     
@@ -33,7 +46,7 @@ export class DefaultService {
         return __request(OpenAPI, this.http, {
             method: 'PUT',
             url: '/api/model-with-dates-array',
-            responseTransformer: ModelWithDatesArrayResponse
+            responseTransformer: ModelWithDatesArrayResponseTransformer
         });
     }
     

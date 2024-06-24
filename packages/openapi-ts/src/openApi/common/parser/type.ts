@@ -144,7 +144,7 @@ export const getType = ({
     result.type = encodedType;
     result.base = encodedType;
     if (type.startsWith('#')) {
-      result.$refs = [...result.$refs, type];
+      result.$refs = [...result.$refs, decodeURIComponent(type)];
     }
     result.imports = [...result.imports, encodedType];
     return result;

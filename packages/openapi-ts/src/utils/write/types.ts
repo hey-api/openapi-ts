@@ -20,14 +20,22 @@ import {
   operationErrorTypeName,
   operationResponseTypeName,
 } from './services';
-import { generateTransform } from './transforms';
-import { toType, uniqueTypeName } from './type';
+import {
+  setUniqueTypeName,
+  type SetUniqueTypeNameResult,
+  toType,
+} from './type';
 
-type OnNode = (node: Node) => void;
+export interface TypesProps {
+  client: Client;
+  model: Model;
+  onNode: (node: Node) => void;
+  onRemoveNode?: VoidFunction;
+}
 
 const serviceExportedNamespace = () => '$OpenApiTs';
 
-const emptyModel: Model = {
+export const emptyModel: Model = {
   $refs: [],
   base: '',
   description: null,
@@ -53,21 +61,20 @@ const generateEnum = ({
   meta,
   obj,
   onNode,
-  ...uniqueTypeNameArgs
+  ...setUniqueTypeNameArgs
 }: Omit<Parameters<typeof compiler.types.enum>[0], 'name'> &
-  Pick<Parameters<typeof uniqueTypeName>[0], 'client' | 'nameTransformer'> &
-  Pick<Model, 'meta'> & {
-    onNode: OnNode;
-  }) => {
+  Pick<Parameters<typeof setUniqueTypeName>[0], 'client' | 'nameTransformer'> &
+  Pick<Model, 'meta'> &
+  Pick<TypesProps, 'onNode'>) => {
   // generate types only for top-level models
   if (!meta) {
     return;
   }
 
-  const { created, name } = uniqueTypeName({
+  const { created, name } = setUniqueTypeName({
     create: true,
     meta,
-    ...uniqueTypeNameArgs,
+    ...setUniqueTypeNameArgs,
   });
   if (created) {
     const node = compiler.types.enum({
@@ -80,43 +87,50 @@ const generateEnum = ({
   }
 };
 
-const generateType = ({
+export const generateType = ({
   comment,
   meta,
   onCreated,
   onNode,
   type,
-  ...uniqueTypeNameArgs
+  ...setUniqueTypeNameArgs
 }: Omit<Parameters<typeof compiler.typedef.alias>[0], 'name'> &
-  Pick<Parameters<typeof uniqueTypeName>[0], 'client' | 'nameTransformer'> &
-  Pick<Model, 'meta'> & {
+  Pick<Parameters<typeof setUniqueTypeName>[0], 'client' | 'nameTransformer'> &
+  Pick<Model, 'meta'> &
+  Pick<TypesProps, 'onNode'> & {
     onCreated?: (name: string) => void;
-    onNode: OnNode;
-  }) => {
+  }): SetUniqueTypeNameResult => {
   // generate types only for top-level models
   if (!meta) {
-    return;
+    return {
+      created: false,
+      name: '',
+    };
   }
 
-  const { created, name } = uniqueTypeName({
+  const result = setUniqueTypeName({
     create: true,
     meta,
-    ...uniqueTypeNameArgs,
+    ...setUniqueTypeNameArgs,
   });
+  const { created, name } = result;
   if (created) {
     const node = compiler.typedef.alias({ comment, name, type });
     onNode(node);
 
     onCreated?.(name);
   }
+  return result;
 };
 
-const processComposition = (client: Client, model: Model, onNode: OnNode) => {
-  processType(client, model, onNode);
-  model.enums.forEach((enumerator) => processEnum(client, enumerator, onNode));
+const processComposition = (props: TypesProps) => {
+  processType(props);
+  props.model.enums.forEach((enumerator) =>
+    processEnum({ ...props, model: enumerator }),
+  );
 };
 
-const processEnum = (client: Client, model: Model, onNode: OnNode) => {
+const processEnum = ({ client, model, onNode }: TypesProps) => {
   const config = getConfig();
 
   const properties: Record<string | number, unknown> = {};
@@ -174,7 +188,7 @@ const processEnum = (client: Client, model: Model, onNode: OnNode) => {
   });
 };
 
-const processType = (client: Client, model: Model, onNode: OnNode) => {
+const processType = ({ client, model, onNode }: TypesProps) => {
   generateType({
     client,
     comment: [
@@ -185,21 +199,19 @@ const processType = (client: Client, model: Model, onNode: OnNode) => {
     onNode,
     type: toType(model),
   });
-
-  generateTransform(client, model, onNode);
 };
 
-export const processModel = (client: Client, model: Model, onNode: OnNode) => {
-  switch (model.export) {
+const processModel = (props: TypesProps) => {
+  switch (props.model.export) {
     case 'all-of':
     case 'any-of':
     case 'one-of':
     case 'interface':
-      return processComposition(client, model, onNode);
+      return processComposition(props);
     case 'enum':
-      return processEnum(client, model, onNode);
+      return processEnum(props);
     default:
-      return processType(client, model, onNode);
+      return processType(props);
   }
 };
 
@@ -215,21 +227,24 @@ type PathMap = {
 
 type PathsMap = Record<string, PathMap>;
 
-const processServiceTypes = (client: Client, onNode: OnNode) => {
+const processServiceTypes = ({
+  client,
+  onNode,
+}: Pick<TypesProps, 'client' | 'onNode'>) => {
   const pathsMap: PathsMap = {};
 
   const config = getConfig();
 
   const isStandalone = isStandaloneClient(config);
 
-  client.services.forEach((service) => {
-    service.operations.forEach((operation) => {
+  for (const service of client.services) {
+    for (const operation of service.operations) {
       const hasReq = operation.parameters.length;
       const hasRes = operation.results.length;
       const hasErr = operation.errors.length;
 
       if (!hasReq && !hasRes && !hasErr) {
-        return;
+        continue;
       }
 
       if (!pathsMap[operation.path]) {
@@ -336,7 +351,7 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
         }
 
         if (Array.isArray(methodMap.res)) {
-          return;
+          continue;
         }
 
         operation.results.forEach((result) => {
@@ -363,41 +378,6 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
             properties: responses,
           }),
         });
-
-        if (config.types.dates === 'types+transform') {
-          if (responses.length === 1) {
-            const response = responses[0];
-
-            if (client.types[response.type]?.hasTransformer) {
-              const name = operationResponseTypeName(operation.name);
-
-              if (response.export === 'array') {
-                const arrayTransformer =
-                  compiler.transform.responseArrayTransform({
-                    name,
-                    transform: response.type,
-                  });
-                onNode(arrayTransformer);
-              } else {
-                const transformAlias = compiler.transform.alias({
-                  existingName: response.type,
-                  name,
-                });
-
-                onNode(transformAlias);
-              }
-
-              client.types[name].hasTransformer = true;
-            }
-          } else if (responses.length > 1) {
-            console.log(
-              '❗ Route',
-              operation.method,
-              operation.path,
-              'has more than 1 success response and will not currently have a transform generated. If you have a use case for this please open an issue https://github.com/hey-api/openapi-ts/issues',
-            );
-          }
-        }
 
         if (isStandaloneClient(config)) {
           const errorResults = getErrorResponses(operation.errors);
@@ -437,15 +417,15 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
         }
 
         if (Array.isArray(methodMap.res)) {
-          return;
+          continue;
         }
 
         operation.errors.forEach((error) => {
           methodMap.res![error.code] = error;
         });
       }
-    });
-  });
+    }
+  }
 
   const properties = Object.entries(pathsMap).map(([path, pathMap]) => {
     const pathParameters = Object.entries(pathMap)
@@ -456,7 +436,7 @@ const processServiceTypes = (client: Client, onNode: OnNode) => {
 
         if (methodMap.req) {
           const operationName = methodMap.$ref!;
-          const { name: base } = uniqueTypeName({
+          const { name: base } = setUniqueTypeName({
             client,
             meta: {
               // TODO: this should be exact ref to operation for consistency,
@@ -540,15 +520,15 @@ export const processTypes = async ({
   client: Client;
   files: Record<string, TypeScriptFile>;
 }): Promise<void> => {
+  const onNode: TypesProps['onNode'] = (node) => {
+    files.types?.add(node);
+  };
+
   for (const model of client.models) {
-    processModel(client, model, (node) => {
-      files.types?.add(node);
-    });
+    processModel({ client, model, onNode });
   }
 
   if (files.services && client.services.length) {
-    processServiceTypes(client, (node) => {
-      files.types?.add(node);
-    });
+    processServiceTypes({ client, onNode });
   }
 };

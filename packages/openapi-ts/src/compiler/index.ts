@@ -4,6 +4,8 @@ import path from 'node:path';
 import ts from 'typescript';
 
 import * as classes from './classes';
+import * as convert from './convert';
+import * as functions from './function';
 import * as module from './module';
 import * as _return from './return';
 import * as transform from './transform';
@@ -78,6 +80,13 @@ export class TypeScriptFile {
     rmSync(this._path, options);
   }
 
+  /**
+   * Removes last node form the stack. Works as undo.
+   */
+  public removeNode() {
+    this._items = this._items.slice(0, this._items.length - 1);
+  }
+
   private _setName(fileName: string) {
     if (fileName.includes('index')) {
       return fileName;
@@ -124,16 +133,28 @@ export const compiler = {
     create: classes.createClassDeclaration,
     method: classes.createMethodDeclaration,
   },
+  convert: {
+    expressionToStatement: convert.convertExpressionToStatement,
+  },
   export: {
     all: module.createExportAllDeclaration,
     const: module.createExportConstVariable,
     named: module.createNamedExportDeclarations,
   },
+  function: {
+    call: functions.createCallExpression,
+  },
   import: {
     named: module.createNamedImportDeclarations,
   },
+  logic: {
+    access: transform.createAccessExpression,
+    if: transform.createIfStatement,
+    safeAccess: transform.createSafeAccessExpression,
+  },
   return: {
     functionCall: _return.createReturnFunctionCall,
+    statement: _return.createReturnStatement,
   },
   transform: {
     alias: transform.createAlias,
@@ -143,7 +164,6 @@ export const compiler = {
     newDate: transform.createDateTransformerExpression,
     responseArrayTransform: transform.createResponseArrayTransform,
     transformItem: transform.createFunctionTransformMutation,
-    transformMutationFunction: transform.createTransformMutationFunction,
   },
   typedef: {
     alias: typedef.createTypeAliasDeclaration,

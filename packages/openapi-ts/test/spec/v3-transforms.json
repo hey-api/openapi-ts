@@ -11,6 +11,24 @@
   ],
   "paths": {
     "/api/model-with-dates": {
+      "post": {
+        "operationId": "parentModelWithDates",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json; type=collection": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParentModelWithDates"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Success"
+          }
+        }
+      },
       "put": {
         "operationId": "modelWithDates",
         "responses": {

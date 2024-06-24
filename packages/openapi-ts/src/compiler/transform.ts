@@ -1,6 +1,9 @@
 import ts from 'typescript';
 
-const getSafeAccessExpression = (path: string[]) =>
+import { convertExpressionToStatement } from './convert';
+import { createReturnStatement } from './return';
+
+export const createSafeAccessExpression = (path: string[]) =>
   path
     .slice(1)
     .reduce<ts.Expression>(
@@ -13,7 +16,7 @@ const getSafeAccessExpression = (path: string[]) =>
       ts.factory.createIdentifier(path[0]),
     );
 
-const getAccessExpression = (path: string[]) =>
+export const createAccessExpression = (path: string[]) =>
   path
     .slice(1)
     .reduce<ts.Expression>(
@@ -25,61 +28,74 @@ const getAccessExpression = (path: string[]) =>
       ts.factory.createIdentifier(path[0]),
     );
 
+export const createIfStatement = ({
+  expression,
+  thenStatement,
+  elseStatement,
+}: {
+  expression: ts.Expression;
+  thenStatement: ts.Statement;
+  elseStatement?: ts.Statement;
+}) => ts.factory.createIfStatement(expression, thenStatement, elseStatement);
+
 export const createDateTransformMutation = ({
   path,
 }: {
   path: string[];
 }): ts.Statement => {
-  const safeAccessExpression = getSafeAccessExpression(path);
-  const accessExpression = getAccessExpression(path);
+  const safeAccessExpression = createSafeAccessExpression(path);
+  const accessExpression = createAccessExpression(path);
 
-  const statement = ts.factory.createIfStatement(
-    safeAccessExpression,
-    ts.factory.createBlock([
-      ts.factory.createExpressionStatement(
-        ts.factory.createBinaryExpression(
-          accessExpression,
-          ts.SyntaxKind.EqualsToken,
-          ts.factory.createNewExpression(
-            ts.factory.createIdentifier('Date'),
-            undefined,
-            [accessExpression],
-          ),
+  const thenStatement = ts.factory.createBlock([
+    convertExpressionToStatement({
+      expression: ts.factory.createBinaryExpression(
+        accessExpression,
+        ts.SyntaxKind.EqualsToken,
+        ts.factory.createNewExpression(
+          ts.factory.createIdentifier('Date'),
+          undefined,
+          [accessExpression],
         ),
       ),
-    ]),
-  );
+    }),
+  ]);
+
+  const statement = createIfStatement({
+    expression: safeAccessExpression,
+    thenStatement,
+  });
 
   return statement;
 };
 
 export const createFunctionTransformMutation = ({
   path,
-  transformer,
+  transformerName,
 }: {
   path: string[];
-  transformer: string;
+  transformerName: string;
 }) => {
-  const safeAccessExpression = getSafeAccessExpression(path);
-  const accessExpression = getAccessExpression(path);
+  const safeAccessExpression = createSafeAccessExpression(path);
+  const accessExpression = createAccessExpression(path);
+
+  const thenStatement = ts.factory.createBlock(
+    [
+      convertExpressionToStatement({
+        expression: ts.factory.createCallExpression(
+          ts.factory.createIdentifier(transformerName),
+          undefined,
+          [accessExpression],
+        ),
+      }),
+    ],
+    true,
+  );
 
   const statement = [
-    ts.factory.createIfStatement(
-      safeAccessExpression,
-      ts.factory.createBlock(
-        [
-          ts.factory.createExpressionStatement(
-            ts.factory.createCallExpression(
-              ts.factory.createIdentifier(transformer),
-              undefined,
-              [accessExpression],
-            ),
-          ),
-        ],
-        true,
-      ),
-      undefined,
-    ),
+    createIfStatement({
+      expression: safeAccessExpression,
+      thenStatement,
+    }),
   ];
 
   return statement;
@@ -87,16 +103,16 @@ export const createFunctionTransformMutation = ({
 
 export const createArrayTransformMutation = ({
   path,
-  transformer,
+  transformerName,
 }: {
   path: string[];
-  transformer: string;
+  transformerName: string;
 }): ts.Statement => {
-  const safeAccessExpression = getSafeAccessExpression(path);
-  const accessExpression = getAccessExpression(path);
+  const safeAccessExpression = createSafeAccessExpression(path);
+  const accessExpression = createAccessExpression(path);
 
-  const statement = ts.factory.createIfStatement(
-    ts.factory.createCallExpression(
+  const statement = createIfStatement({
+    expression: ts.factory.createCallExpression(
       ts.factory.createPropertyAccessExpression(
         ts.factory.createIdentifier('Array'),
         ts.factory.createIdentifier('isArray'),
@@ -104,23 +120,23 @@ export const createArrayTransformMutation = ({
       undefined,
       [safeAccessExpression],
     ),
-    ts.factory.createBlock(
+    thenStatement: ts.factory.createBlock(
       [
-        ts.factory.createExpressionStatement(
-          ts.factory.createCallChain(
+        convertExpressionToStatement({
+          expression: ts.factory.createCallChain(
             ts.factory.createPropertyAccessExpression(
               accessExpression,
               ts.factory.createIdentifier('forEach'),
             ),
             undefined,
             undefined,
-            [ts.factory.createIdentifier(transformer)],
+            [ts.factory.createIdentifier(transformerName)],
           ),
-        ),
+        }),
       ],
       true,
     ),
-  );
+  });
 
   return statement;
 };
@@ -143,11 +159,11 @@ export const createArrayMapTransform = ({
   path: string[];
   transformExpression: ts.Expression;
 }) => {
-  const safeAccessExpression = getSafeAccessExpression(path);
-  const accessExpression = getAccessExpression(path);
+  const safeAccessExpression = createSafeAccessExpression(path);
+  const accessExpression = createAccessExpression(path);
 
-  const statement = ts.factory.createIfStatement(
-    ts.factory.createCallExpression(
+  const statement = createIfStatement({
+    expression: ts.factory.createCallExpression(
       ts.factory.createPropertyAccessExpression(
         ts.factory.createIdentifier('Array'),
         ts.factory.createIdentifier('isArray'),
@@ -155,10 +171,10 @@ export const createArrayMapTransform = ({
       undefined,
       [safeAccessExpression],
     ),
-    ts.factory.createBlock(
+    thenStatement: ts.factory.createBlock(
       [
-        ts.factory.createExpressionStatement(
-          ts.factory.createBinaryExpression(
+        convertExpressionToStatement({
+          expression: ts.factory.createBinaryExpression(
             accessExpression,
             ts.factory.createToken(ts.SyntaxKind.EqualsToken),
             ts.factory.createCallChain(
@@ -189,52 +205,13 @@ export const createArrayMapTransform = ({
               ],
             ),
           ),
-        ),
+        }),
       ],
       true,
     ),
-    undefined,
-  );
+  });
 
   return statement;
-};
-
-export const createTransformMutationFunction = ({
-  modelName,
-  statements,
-}: {
-  modelName: string;
-  statements: ts.Statement[];
-}) => {
-  const transformFunction = ts.factory.createFunctionDeclaration(
-    [ts.factory.createToken(ts.SyntaxKind.ExportKeyword)],
-    undefined,
-    ts.factory.createIdentifier(modelName),
-    undefined,
-    [
-      ts.factory.createParameterDeclaration(
-        undefined,
-        undefined,
-        ts.factory.createIdentifier('data'),
-        undefined,
-        ts.factory.createKeywordTypeNode(ts.SyntaxKind.AnyKeyword),
-        undefined,
-      ),
-    ],
-    ts.factory.createTypeReferenceNode(
-      ts.factory.createIdentifier(modelName),
-      undefined,
-    ),
-    ts.factory.createBlock(
-      [
-        ...statements,
-        ts.factory.createReturnStatement(ts.factory.createIdentifier('data')),
-      ],
-      true,
-    ),
-  );
-
-  return transformFunction;
 };
 
 export const createAlias = ({
@@ -283,8 +260,8 @@ export const createResponseArrayTransform = ({
     ts.factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
     ts.factory.createBlock(
       [
-        ts.factory.createIfStatement(
-          ts.factory.createCallExpression(
+        createIfStatement({
+          expression: ts.factory.createCallExpression(
             ts.factory.createPropertyAccessExpression(
               ts.factory.createIdentifier('Array'),
               ts.factory.createIdentifier('isArray'),
@@ -292,10 +269,10 @@ export const createResponseArrayTransform = ({
             undefined,
             [ts.factory.createIdentifier('data')],
           ),
-          ts.factory.createBlock(
+          thenStatement: ts.factory.createBlock(
             [
-              ts.factory.createExpressionStatement(
-                ts.factory.createCallExpression(
+              convertExpressionToStatement({
+                expression: ts.factory.createCallExpression(
                   ts.factory.createPropertyAccessExpression(
                     ts.factory.createIdentifier('data'),
                     ts.factory.createIdentifier('forEach'),
@@ -303,13 +280,14 @@ export const createResponseArrayTransform = ({
                   undefined,
                   [ts.factory.createIdentifier(transform)],
                 ),
-              ),
+              }),
             ],
             true,
           ),
-          undefined,
-        ),
-        ts.factory.createReturnStatement(ts.factory.createIdentifier('data')),
+        }),
+        createReturnStatement({
+          expression: ts.factory.createIdentifier('data'),
+        }),
       ],
       true,
     ),

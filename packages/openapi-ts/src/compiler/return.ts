@@ -28,8 +28,12 @@ export const createReturnFunctionCall = ({
       )
       .filter(isType<ts.Identifier | ts.Expression>),
   );
-
-  const statement = ts.factory.createReturnStatement(expression);
-
+  const statement = createReturnStatement({ expression });
   return statement;
 };
+
+export const createReturnStatement = ({
+  expression,
+}: {
+  expression?: ts.Expression;
+}) => ts.factory.createReturnStatement(expression);
