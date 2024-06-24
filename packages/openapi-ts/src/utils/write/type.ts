@@ -155,7 +155,7 @@ export const toType = (model: Model): TypeNode => {
   }
 };
 
-interface SetUniqueTypeNameResult {
+export interface SetUniqueTypeNameResult {
   /**
    * Did this function add a new property to the `client.types` object?
    */
@@ -227,7 +227,7 @@ export const setUniqueTypeName = ({
   return result;
 };
 
-interface UnsetUniqueTypeNameResult {
+export interface UnsetUniqueTypeNameResult {
   /**
    * Did this function delete a property from the `client.types` object?
    */

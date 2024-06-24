@@ -20,7 +20,11 @@ import {
   operationErrorTypeName,
   operationResponseTypeName,
 } from './services';
-import { setUniqueTypeName, toType } from './type';
+import {
+  setUniqueTypeName,
+  type SetUniqueTypeNameResult,
+  toType,
+} from './type';
 
 export interface TypesProps {
   client: Client;
@@ -95,7 +99,7 @@ export const generateType = ({
   Pick<Model, 'meta'> &
   Pick<TypesProps, 'onNode'> & {
     onCreated?: (name: string) => void;
-  }) => {
+  }): SetUniqueTypeNameResult => {
   // generate types only for top-level models
   if (!meta) {
     return {
