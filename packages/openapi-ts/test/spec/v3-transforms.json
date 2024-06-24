@@ -23,6 +23,9 @@
                 }
               }
             }
+          },
+          "201": {
+            "description": "Success"
           }
         }
       },

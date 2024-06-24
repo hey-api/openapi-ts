@@ -31,7 +31,7 @@ export interface TypesProps {
 
 const serviceExportedNamespace = () => '$OpenApiTs';
 
-const emptyModel: Model = {
+export const emptyModel: Model = {
   $refs: [],
   base: '',
   description: null,
