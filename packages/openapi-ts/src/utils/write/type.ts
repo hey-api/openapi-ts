@@ -155,7 +155,7 @@ export const toType = (model: Model): TypeNode => {
   }
 };
 
-interface UniqueTypeNameResult {
+interface SetUniqueTypeNameResult {
   /**
    * Did this function add a new property to the `client.types` object?
    */
@@ -176,9 +176,9 @@ interface UniqueTypeNameResult {
  * value. In different contexts, a different strategy might be used. For
  * example, slashes `/` are invalid in TypeScript identifiers, but okay in
  * a JavaScript object key name.
- * @returns {UniqueTypeNameResult}
+ * @returns {SetUniqueTypeNameResult}
  */
-export const uniqueTypeName = ({
+export const setUniqueTypeName = ({
   client,
   count = 1,
   create = false,
@@ -189,8 +189,8 @@ export const uniqueTypeName = ({
   count?: number;
   create?: boolean;
   nameTransformer?: (value: string) => string;
-}): UniqueTypeNameResult => {
-  let result: UniqueTypeNameResult = {
+}): SetUniqueTypeNameResult => {
+  let result: SetUniqueTypeNameResult = {
     created: false,
     name: '',
   };
@@ -216,7 +216,7 @@ export const uniqueTypeName = ({
       name,
     };
   } else {
-    result = uniqueTypeName({
+    result = setUniqueTypeName({
       client,
       count: count + 1,
       create,
@@ -224,5 +224,38 @@ export const uniqueTypeName = ({
       nameTransformer,
     });
   }
+  return result;
+};
+
+interface UnsetUniqueTypeNameResult {
+  /**
+   * Did this function delete a property from the `client.types` object?
+   */
+  deleted: boolean;
+  /**
+   * Unique name removed from the `client.types` object.
+   */
+  name: string;
+}
+
+export const unsetUniqueTypeName = ({
+  client,
+  name,
+}: {
+  client: Client;
+  name: string;
+}): UnsetUniqueTypeNameResult => {
+  let result: UnsetUniqueTypeNameResult = {
+    deleted: false,
+    name: '',
+  };
+  if (!client.types[name]) {
+    return result;
+  }
+  delete client.types[name];
+  result = {
+    deleted: true,
+    name,
+  };
   return result;
 };

@@ -69,11 +69,13 @@ export const createExportConstVariable = ({
   constAssertion = false,
   expression,
   name,
+  typeName,
 }: {
   comment?: Comments;
   constAssertion?: boolean;
   expression: ts.Expression;
   name: string;
+  typeName?: string;
 }): ts.VariableStatement => {
   const initializer = constAssertion
     ? ts.factory.createAsExpression(
@@ -84,7 +86,7 @@ export const createExportConstVariable = ({
   const declaration = ts.factory.createVariableDeclaration(
     ts.factory.createIdentifier(name),
     undefined,
-    undefined,
+    typeName ? ts.factory.createTypeReferenceNode(typeName) : undefined,
     initializer,
   );
   const statement = ts.factory.createVariableStatement(

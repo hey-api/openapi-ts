@@ -20,16 +20,6 @@ export type ModelWithDates = {
     readonly expires?: Date;
 };
 
-export function ModelWithDates(data: any): ModelWithDates {
-    if (data?.modified) {
-        data.modified = new Date(data.modified);
-    }
-    if (data?.expires) {
-        data.expires = new Date(data.expires);
-    }
-    return data;
-}
-
 /**
  * This is a model that contains a some dates and arrays
  */
@@ -44,34 +34,11 @@ export type ParentModelWithDates = {
     strings?: Array<(string)>;
 };
 
-export function ParentModelWithDates(data: any): ParentModelWithDates {
-    if (data?.modified) {
-        data.modified = new Date(data.modified);
-    }
-    if (Array.isArray(data?.items)) {
-        data.items.forEach(ModelWithDates);
-    }
-    if (data?.item) {
-        ModelWithDates(data.item);
-    }
-    if (Array.isArray(data?.dates)) {
-        data.dates = data.dates.map(item => new Date(item));
-    }
-    return data;
-}
+export type ParentModelWithDatesResponse = ParentModelWithDates;
 
 export type ModelWithDatesResponse = ModelWithDates;
 
-export const ModelWithDatesResponse = ModelWithDates;
-
 export type ModelWithDatesArrayResponse = Array<ModelWithDates>;
-
-export const ModelWithDatesArrayResponse = (data: any) => {
-    if (Array.isArray(data)) {
-        data.forEach(ModelWithDates);
-    }
-    return data;
-};
 
 export type ArrayOfDatesResponse = Array<(Date)>;
 
@@ -81,6 +48,14 @@ export type MultipleResponsesResponse = Array<ModelWithDates> | Array<SimpleMode
 
 export type $OpenApiTs = {
     '/api/model-with-dates': {
+        post: {
+            res: {
+                /**
+                 * Success
+                 */
+                200: ParentModelWithDates;
+            };
+        };
         put: {
             res: {
                 /**
@@ -134,4 +109,57 @@ export type $OpenApiTs = {
             };
         };
     };
+};
+
+export type ParentModelWithDatesResponseTransformer = (data: any) => ParentModelWithDatesResponse;
+
+export type ParentModelWithDatesModelResponseTransformer = (data: any) => ParentModelWithDates;
+
+export type ModelWithDatesModelResponseTransformer = (data: any) => ModelWithDates;
+
+export const ModelWithDatesModelResponseTransformer: ModelWithDatesModelResponseTransformer = data => {
+    if (data?.modified) {
+        data.modified = new Date(data.modified);
+    }
+    if (data?.expires) {
+        data.expires = new Date(data.expires);
+    }
+    return data;
+};
+
+export const ParentModelWithDatesModelResponseTransformer: ParentModelWithDatesModelResponseTransformer = data => {
+    if (data?.modified) {
+        data.modified = new Date(data.modified);
+    }
+    if (Array.isArray(data?.items)) {
+        data.items.forEach(ModelWithDatesModelResponseTransformer);
+    }
+    if (data?.item) {
+        ModelWithDatesModelResponseTransformer(data.item);
+    }
+    if (Array.isArray(data?.dates)) {
+        data.dates = data.dates.map(item => new Date(item));
+    }
+    return data;
+};
+
+export const ParentModelWithDatesResponseTransformer: ParentModelWithDatesResponseTransformer = data => {
+    ParentModelWithDatesModelResponseTransformer(data);
+    return data;
+};
+
+export type ModelWithDatesResponseTransformer = (data: any) => ModelWithDatesResponse;
+
+export const ModelWithDatesResponseTransformer: ModelWithDatesResponseTransformer = data => {
+    ModelWithDatesModelResponseTransformer(data);
+    return data;
+};
+
+export type ModelWithDatesArrayResponseTransformer = (data: any) => ModelWithDatesArrayResponse;
+
+export const ModelWithDatesArrayResponseTransformer: ModelWithDatesArrayResponseTransformer = data => {
+    if (Array.isArray(data)) {
+        data.forEach(ModelWithDatesModelResponseTransformer);
+    }
+    return data;
 };

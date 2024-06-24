@@ -2,10 +2,22 @@
 
 import type { CancelablePromise } from './core/CancelablePromise';
 import type { BaseHttpRequest } from './core/BaseHttpRequest';
-import { ModelWithDatesResponse, ModelWithDatesArrayResponse, type ArrayOfDatesResponse, type DateResponse, type MultipleResponsesResponse } from './types.gen';
+import { type ParentModelWithDatesResponse, type ModelWithDatesResponse, type ModelWithDatesArrayResponse, type ArrayOfDatesResponse, type DateResponse, type MultipleResponsesResponse, ParentModelWithDatesResponseTransformer, ModelWithDatesResponseTransformer, ModelWithDatesArrayResponseTransformer } from './types.gen';
 
 export class DefaultService {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
+    
+    /**
+     * @returns ParentModelWithDates Success
+     * @throws ApiError
+     */
+    public parentModelWithDates(): CancelablePromise<ParentModelWithDatesResponse> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/model-with-dates',
+            responseTransformer: ParentModelWithDatesResponseTransformer
+        });
+    }
     
     /**
      * @returns ModelWithDates Success
@@ -15,7 +27,7 @@ export class DefaultService {
         return this.httpRequest.request({
             method: 'PUT',
             url: '/api/model-with-dates',
-            responseTransformer: ModelWithDatesResponse
+            responseTransformer: ModelWithDatesResponseTransformer
         });
     }
     
@@ -27,7 +39,7 @@ export class DefaultService {
         return this.httpRequest.request({
             method: 'PUT',
             url: '/api/model-with-dates-array',
-            responseTransformer: ModelWithDatesArrayResponse
+            responseTransformer: ModelWithDatesArrayResponseTransformer
         });
     }
     
