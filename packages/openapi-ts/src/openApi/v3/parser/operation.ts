@@ -66,6 +66,7 @@ export const getOperation = ({
     deprecated: Boolean(op.deprecated),
     description: op.description || null,
     errors: [],
+    id: op.operationId || null,
     imports: [],
     method: method.toUpperCase() as Operation['method'],
     name,
