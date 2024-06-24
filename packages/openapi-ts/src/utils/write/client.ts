@@ -11,6 +11,7 @@ import { writeCore } from './core';
 import { processIndex } from './index';
 import { processSchemas } from './schemas';
 import { processServices } from './services';
+import { processResponseTransformers } from './transformers';
 import { processTypes } from './types';
 
 /**
@@ -69,8 +70,30 @@ export const writeClient = async (
     });
   }
 
+  // schemas
   await processSchemas({ file: files.schemas, openApi });
+
+  // types
   await processTypes({ client, files });
+
+  // transformers
+  if (
+    files.services &&
+    client.services.length &&
+    config.types.dates === 'types+transform'
+  ) {
+    await processResponseTransformers({
+      client,
+      onNode: (node) => {
+        files.types?.add(node);
+      },
+      onRemoveNode: () => {
+        files.types?.removeNode();
+      },
+    });
+  }
+
+  // services
   await processServices({ client, files });
 
   // deprecated files

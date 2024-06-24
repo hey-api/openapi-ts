@@ -11,7 +11,7 @@ export type FunctionParameter = {
   isReadOnly?: boolean;
   isRequired?: boolean;
   name: string;
-  type: any | ts.TypeNode;
+  type?: any | ts.TypeNode;
 };
 
 /**

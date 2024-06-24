@@ -3,9 +3,22 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import { ModelWithDatesResponse, ModelWithDatesArrayResponse, type ArrayOfDatesResponse, type DateResponse, type MultipleResponsesResponse } from './types.gen';
+import { type ParentModelWithDatesResponse, type ModelWithDatesResponse, type ModelWithDatesArrayResponse, type ArrayOfDatesResponse, type DateResponse, type MultipleResponsesResponse, ParentModelWithDatesResponseTransformer, ModelWithDatesResponseTransformer, ModelWithDatesArrayResponseTransformer } from './types.gen';
 
 export class DefaultService {
+    /**
+     * @returns ParentModelWithDates Success
+     * @returns unknown Success
+     * @throws ApiError
+     */
+    public static parentModelWithDates(): CancelablePromise<ParentModelWithDatesResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/model-with-dates',
+            responseTransformer: ParentModelWithDatesResponseTransformer
+        });
+    }
+    
     /**
      * @returns ModelWithDates Success
      * @throws ApiError
@@ -14,7 +27,7 @@ export class DefaultService {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/model-with-dates',
-            responseTransformer: ModelWithDatesResponse
+            responseTransformer: ModelWithDatesResponseTransformer
         });
     }
     
@@ -26,7 +39,7 @@ export class DefaultService {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/model-with-dates-array',
-            responseTransformer: ModelWithDatesArrayResponse
+            responseTransformer: ModelWithDatesArrayResponseTransformer
         });
     }
     
