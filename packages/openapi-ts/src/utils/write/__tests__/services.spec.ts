@@ -14,6 +14,7 @@ describe('processServices', () => {
   it('writes to filesystem', async () => {
     setConfig({
       client: 'fetch',
+      configFile: '',
       debug: false,
       dryRun: false,
       exportCore: true,
@@ -107,6 +108,7 @@ describe('methodNameBuilder', () => {
   it('use default name', async () => {
     setConfig({
       client: 'fetch',
+      configFile: '',
       debug: false,
       dryRun: false,
       exportCore: true,
@@ -145,6 +147,7 @@ describe('methodNameBuilder', () => {
 
     setConfig({
       client: 'fetch',
+      configFile: '',
       debug: false,
       dryRun: false,
       exportCore: true,

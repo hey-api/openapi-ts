@@ -13,6 +13,7 @@ describe('processIndex', () => {
   it('writes to filesystem', async () => {
     setConfig({
       client: 'fetch',
+      configFile: '',
       debug: false,
       dryRun: false,
       exportCore: true,
