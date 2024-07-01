@@ -1,5 +1,15 @@
 # @hey-api/openapi-ts
 
+## 0.48.1
+
+### Patch Changes
+
+- [#734](https://github.com/hey-api/openapi-ts/pull/734) [`1f52b26`](https://github.com/hey-api/openapi-ts/commit/1f52b260807531edb2c14003473ea4907007ecdb) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: generate service types when types are enabled, even if services are disabled
+
+- [#737](https://github.com/hey-api/openapi-ts/pull/737) [`0537fe8`](https://github.com/hey-api/openapi-ts/commit/0537fe8682a93cc95d7637d643db4b9780318ea1) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: support custom config file path
+
+- [#736](https://github.com/hey-api/openapi-ts/pull/736) [`8410046`](https://github.com/hey-api/openapi-ts/commit/8410046c45d25db48ba940a0c6c7a7cda9e86b6a) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle async response transformers
+
 ## 0.48.0
 
 ### Minor Changes
