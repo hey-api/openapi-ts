@@ -115,7 +115,7 @@ export type $OpenApiTs = {
     };
 };
 
-export type ParentModelWithDatesResponseTransformer = (data: any) => ParentModelWithDatesResponse;
+export type ParentModelWithDatesResponseTransformer = (data: any) => Promise<ParentModelWithDatesResponse>;
 
 export type ParentModelWithDatesModelResponseTransformer = (data: any) => ParentModelWithDates;
 
@@ -147,23 +147,23 @@ export const ParentModelWithDatesModelResponseTransformer: ParentModelWithDatesM
     return data;
 };
 
-export const ParentModelWithDatesResponseTransformer: ParentModelWithDatesResponseTransformer = data => {
+export const ParentModelWithDatesResponseTransformer: ParentModelWithDatesResponseTransformer = async (data) => {
     if (data) {
         ParentModelWithDatesModelResponseTransformer(data);
     }
     return data;
 };
 
-export type ModelWithDatesResponseTransformer = (data: any) => ModelWithDatesResponse;
+export type ModelWithDatesResponseTransformer = (data: any) => Promise<ModelWithDatesResponse>;
 
-export const ModelWithDatesResponseTransformer: ModelWithDatesResponseTransformer = data => {
+export const ModelWithDatesResponseTransformer: ModelWithDatesResponseTransformer = async (data) => {
     ModelWithDatesModelResponseTransformer(data);
     return data;
 };
 
-export type ModelWithDatesArrayResponseTransformer = (data: any) => ModelWithDatesArrayResponse;
+export type ModelWithDatesArrayResponseTransformer = (data: any) => Promise<ModelWithDatesArrayResponse>;
 
-export const ModelWithDatesArrayResponseTransformer: ModelWithDatesArrayResponseTransformer = data => {
+export const ModelWithDatesArrayResponseTransformer: ModelWithDatesArrayResponseTransformer = async (data) => {
     if (Array.isArray(data)) {
         data.forEach(ModelWithDatesModelResponseTransformer);
     }

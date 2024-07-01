@@ -303,7 +303,7 @@ export const request = <T>(config: OpenAPIConfig, http: HttpClient, options: Api
 
 			let transformedBody = responseBody;
 			if (options.responseTransformer && response.ok) {
-				transformedBody = options.responseTransformer(responseBody)
+				transformedBody = await options.responseTransformer(responseBody)
 			}
 
 			return {

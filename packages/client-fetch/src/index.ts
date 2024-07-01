@@ -122,7 +122,7 @@ export const createClient = (config: Config): Client => {
 
       let data = await response[parseAs]();
       if (parseAs === 'json' && options.responseTransformer) {
-        data = options.responseTransformer(data);
+        data = await options.responseTransformer(data);
       }
 
       return {
