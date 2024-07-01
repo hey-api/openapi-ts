@@ -66,6 +66,7 @@ const ensureModelResponseTransformerExists = (
       });
       generateResponseTransformer({
         ...props,
+        async: false,
         name,
         statements,
       });
@@ -179,12 +180,14 @@ const processModel = (props: ModelProps): ts.Statement[] => {
 };
 
 const generateResponseTransformer = ({
+  async,
   client,
   name,
   onNode,
   onRemoveNode,
   statements,
 }: Pick<TypesProps, 'client' | 'onNode' | 'onRemoveNode'> & {
+  async: boolean;
   name: string;
   statements: Array<ts.Statement>;
 }) => {
@@ -205,6 +208,7 @@ const generateResponseTransformer = ({
   }
 
   const expression = compiler.types.function({
+    async,
     multiLine: true,
     parameters: [
       {
@@ -313,6 +317,7 @@ export const processResponseTransformers = async ({
                   path: [dataVariableName],
                 });
           generateResponseTransformer({
+            async: true,
             client,
             name: nameCreated,
             onNode,
@@ -321,7 +326,7 @@ export const processResponseTransformers = async ({
           });
         },
         onNode,
-        type: `(${dataVariableName}: any) => ${name}`,
+        type: `(${dataVariableName}: any) => Promise<${name}>`,
       });
     }
   }

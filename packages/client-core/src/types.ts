@@ -26,7 +26,7 @@ export type ApiRequestOptions<T = unknown> = {
   readonly path?: Record<string, unknown>;
   readonly query?: Record<string, unknown>;
   readonly responseHeader?: string;
-  readonly responseTransformer?: (data: unknown) => T;
+  readonly responseTransformer?: (data: unknown) => Promise<T>;
   readonly url: string;
 };
 
