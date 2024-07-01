@@ -199,16 +199,6 @@ describe('OpenAPI v3', () => {
         exportCore: false,
         schemas: false,
         services: false,
-        types: {},
-      }),
-      description: 'generate models',
-      name: 'v3_models',
-    },
-    {
-      config: createConfig({
-        exportCore: false,
-        schemas: false,
-        services: false,
         types: {
           include: '^(CamelCaseCommentWithBreaks|ArrayWithProperties)',
           name: 'PascalCase',
@@ -263,6 +253,16 @@ describe('OpenAPI v3', () => {
       }),
       description: 'generate tree-shakeable services',
       name: 'v3_tree_shakeable',
+    },
+    {
+      config: createConfig({
+        exportCore: false,
+        schemas: false,
+        services: false,
+        types: {},
+      }),
+      description: 'generate only types',
+      name: 'v3_types',
     },
   ];
 

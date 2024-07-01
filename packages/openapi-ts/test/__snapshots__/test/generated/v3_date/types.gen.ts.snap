@@ -14,3 +14,777 @@ export type ModelWithPattern = {
     patternWithNewline?: string;
     patternWithBacktick?: string;
 };
+
+export type PostServiceWithEmptyTagData = {
+    requestBody: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
+};
+
+export type PostServiceWithEmptyTagResponse = ModelWithReadOnlyAndWriteOnly;
+
+export type ApiVversionOdataControllerCountResponse = Model_From_Zendesk;
+
+export type DeleteFooData = {
+    /**
+     * bar in method
+     */
+    barParam: string;
+    /**
+     * foo in method
+     */
+    fooParam: string;
+    /**
+     * Parameter with illegal characters
+     */
+    xFooBar: ModelWithString;
+};
+
+export type CallWithDescriptionsData = {
+    /**
+     * Testing backticks in string: `backticks` and ```multiple backticks``` should work
+     */
+    parameterWithBackticks?: unknown;
+    /**
+     * Testing multiline comments in string: First line
+     * Second line
+     *
+     * Fourth line
+     */
+    parameterWithBreaks?: unknown;
+    /**
+     * Testing expression placeholders in string: ${expression} should work
+     */
+    parameterWithExpressionPlaceholders?: unknown;
+    /**
+     * Testing quotes in string: 'single quote''' and "double quotes""" should work
+     */
+    parameterWithQuotes?: unknown;
+    /**
+     * Testing reserved characters in string: * inline * and ** inline ** should work
+     */
+    parameterWithReservedCharacters?: unknown;
+    /**
+     * Testing slashes in string: \backwards\\\ and /forwards/// should work
+     */
+    parameterWithSlashes?: unknown;
+};
+
+export type DeprecatedCallData = {
+    /**
+     * This parameter is deprecated
+     * @deprecated
+     */
+    parameter: DeprecatedModel | null;
+};
+
+export type CallWithParametersData = {
+    fooAllOfEnum: ModelWithNestedArrayEnumsDataFoo;
+    fooRefEnum?: ModelWithNestedArrayEnumsDataFoo;
+    /**
+     * This is the parameter that goes into the cookie
+     */
+    parameterCookie: string | null;
+    /**
+     * This is the parameter that goes into the form data
+     */
+    parameterForm: string | null;
+    /**
+     * This is the parameter that goes into the header
+     */
+    parameterHeader: string | null;
+    /**
+     * This is the parameter that goes into the path
+     */
+    parameterPath: string | null;
+    /**
+     * This is the parameter that goes into the query params
+     */
+    parameterQuery: string | null;
+    /**
+     * This is the parameter that goes into the body
+     */
+    requestBody: ModelWithString | null;
+};
+
+export type CallWithWeirdParameterNamesData = {
+    /**
+     * This is the parameter with a reserved keyword
+     */
+    _default?: string;
+    /**
+     * This is the parameter that goes into the cookie
+     */
+    parameterCookie: string | null;
+    /**
+     * This is the parameter that goes into the request form data
+     */
+    parameterForm: string | null;
+    /**
+     * This is the parameter that goes into the request header
+     */
+    parameterHeader: string | null;
+    /**
+     * This is the parameter that goes into the path
+     */
+    parameterPath1?: string;
+    /**
+     * This is the parameter that goes into the path
+     */
+    parameterPath2?: string;
+    /**
+     * This is the parameter that goes into the path
+     */
+    parameterPath3?: string;
+    /**
+     * This is the parameter that goes into the request query params
+     */
+    parameterQuery: string | null;
+    /**
+     * This is the parameter that goes into the body
+     */
+    requestBody: ModelWithString | null;
+};
+
+export type GetCallWithOptionalParamData = {
+    /**
+     * This is an optional parameter
+     */
+    parameter?: string;
+    /**
+     * This is a required parameter
+     */
+    requestBody: ModelWithOneOfEnum;
+};
+
+export type PostCallWithOptionalParamData = {
+    /**
+     * This is a required parameter
+     */
+    parameter: Pageable;
+    /**
+     * This is an optional parameter
+     */
+    requestBody?: ModelWithString;
+};
+
+export type PostApiRequestBodyData = {
+    /**
+     * A reusable request body
+     */
+    foo?: ModelWithString;
+    /**
+     * This is a reusable parameter
+     */
+    parameter?: string;
+};
+
+export type PostApiFormDataData = {
+    /**
+     * A reusable request body
+     */
+    formData?: ModelWithString;
+    /**
+     * This is a reusable parameter
+     */
+    parameter?: string;
+};
+
+export type CallWithDefaultParametersData = {
+    /**
+     * This is a simple boolean with default value
+     */
+    parameterBoolean?: boolean | null;
+    /**
+     * This is a simple enum with default value
+     */
+    parameterEnum?: 'Success' | 'Warning' | 'Error';
+    /**
+     * This is a simple model with default value
+     */
+    parameterModel?: ModelWithString | null;
+    /**
+     * This is a simple number with default value
+     */
+    parameterNumber?: number | null;
+    /**
+     * This is a simple string with default value
+     */
+    parameterString?: string | null;
+};
+
+export type CallWithDefaultOptionalParametersData = {
+    /**
+     * This is a simple boolean that is optional with default value
+     */
+    parameterBoolean?: boolean;
+    /**
+     * This is a simple enum that is optional with default value
+     */
+    parameterEnum?: 'Success' | 'Warning' | 'Error';
+    /**
+     * This is a simple model that is optional with default value
+     */
+    parameterModel?: ModelWithString;
+    /**
+     * This is a simple number that is optional with default value
+     */
+    parameterNumber?: number;
+    /**
+     * This is a simple string that is optional with default value
+     */
+    parameterString?: string;
+};
+
+export type CallToTestOrderOfParamsData = {
+    /**
+     * This is a optional string with default
+     */
+    parameterOptionalStringWithDefault?: string;
+    /**
+     * This is a optional string with empty default
+     */
+    parameterOptionalStringWithEmptyDefault?: string;
+    /**
+     * This is a optional string with no default
+     */
+    parameterOptionalStringWithNoDefault?: string;
+    /**
+     * This is a string that can be null with default
+     */
+    parameterStringNullableWithDefault?: string | null;
+    /**
+     * This is a string that can be null with no default
+     */
+    parameterStringNullableWithNoDefault?: string | null;
+    /**
+     * This is a string with default
+     */
+    parameterStringWithDefault: string;
+    /**
+     * This is a string with empty default
+     */
+    parameterStringWithEmptyDefault: string;
+    /**
+     * This is a string with no default
+     */
+    parameterStringWithNoDefault: string;
+};
+
+export type CallWithNoContentResponseResponse = void;
+
+export type CallWithResponseAndNoContentResponseResponse = number | void;
+
+export type DummyAResponse = void;
+
+export type DummyBResponse = void;
+
+export type CallWithResponseResponse = ModelWithString;
+
+export type CallWithDuplicateResponsesResponse = ModelWithBoolean & ModelWithInteger | ModelWithString;
+
+export type CallWithResponsesResponse = {
+    readonly '@namespace.string'?: string;
+    readonly '@namespace.integer'?: number;
+    readonly value?: Array<ModelWithString>;
+} | ModelThatExtends | ModelThatExtendsExtends;
+
+export type CollectionFormatData = {
+    /**
+     * This is an array parameter that is sent as csv format (comma-separated values)
+     */
+    parameterArrayCsv: Array<(string)> | null;
+    /**
+     * This is an array parameter that is sent as multi format (multiple parameter instances)
+     */
+    parameterArrayMulti: Array<(string)> | null;
+    /**
+     * This is an array parameter that is sent as pipes format (pipe-separated values)
+     */
+    parameterArrayPipes: Array<(string)> | null;
+    /**
+     * This is an array parameter that is sent as ssv format (space-separated values)
+     */
+    parameterArraySsv: Array<(string)> | null;
+    /**
+     * This is an array parameter that is sent as tsv format (tab-separated values)
+     */
+    parameterArrayTsv: Array<(string)> | null;
+};
+
+export type TypesData = {
+    /**
+     * This is a number parameter
+     */
+    id?: number;
+    /**
+     * This is an array parameter
+     */
+    parameterArray: Array<(string)> | null;
+    /**
+     * This is a boolean parameter
+     */
+    parameterBoolean: boolean | null;
+    /**
+     * This is a dictionary parameter
+     */
+    parameterDictionary: {
+        [key: string]: unknown;
+    } | null;
+    /**
+     * This is an enum parameter
+     */
+    parameterEnum: 'Success' | 'Warning' | 'Error' | null;
+    /**
+     * This is a number parameter
+     */
+    parameterNumber: number;
+    /**
+     * This is an object parameter
+     */
+    parameterObject: {
+        [key: string]: unknown;
+    } | null;
+    /**
+     * This is a string parameter
+     */
+    parameterString: string | null;
+};
+
+export type TypesResponse = number | string | boolean | {
+    [key: string]: unknown;
+};
+
+export type UploadFileData = {
+    /**
+     * Supply a file reference for upload
+     */
+    file: (Blob | File);
+};
+
+export type UploadFileResponse = boolean;
+
+export type FileResponseData = {
+    id: string;
+};
+
+export type FileResponseResponse = (Blob | File);
+
+export type ComplexTypesData = {
+    /**
+     * Parameter containing object
+     */
+    parameterObject: {
+        first?: {
+            second?: {
+                third?: string;
+            };
+        };
+    };
+    /**
+     * Parameter containing reference
+     */
+    parameterReference: ModelWithString;
+};
+
+export type ComplexTypesResponse = Array<ModelWithString>;
+
+export type MultipartRequestData = {
+    formData?: {
+        content?: (Blob | File);
+        data?: ModelWithString | null;
+    };
+};
+
+export type MultipartResponseResponse = {
+    file?: (Blob | File);
+    metadata?: {
+        foo?: string;
+        bar?: string;
+    };
+};
+
+export type ComplexParamsData = {
+    id: number;
+    requestBody?: {
+        readonly key: string | null;
+        name: string | null;
+        enabled?: boolean;
+        readonly type: 'Monkey' | 'Horse' | 'Bird';
+        listOfModels?: Array<ModelWithString> | null;
+        listOfStrings?: Array<(string)> | null;
+        parameters: ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary;
+        readonly user?: {
+            readonly id?: number;
+            readonly name?: string | null;
+        };
+    };
+};
+
+export type ComplexParamsResponse = ModelWithString;
+
+export type CallWithResultFromHeaderResponse = string;
+
+export type TestErrorCodeData = {
+    /**
+     * Status code to return
+     */
+    status: number;
+};
+
+export type TestErrorCodeResponse = unknown;
+
+export type NonAsciiæøåÆøÅöôêÊ字符串Data = {
+    /**
+     * Dummy input param
+     */
+    nonAsciiParamæøåÆøÅöôêÊ: number;
+};
+
+export type NonAsciiæøåÆøÅöôêÊ字符串Response = Array<NonAsciiStringæøåÆØÅöôêÊ字符串>;
+
+export type $OpenApiTs = {
+    '/api/v{api-version}/no-tag': {
+        post: {
+            req: PostServiceWithEmptyTagData;
+            res: {
+                default: ModelWithReadOnlyAndWriteOnly;
+            };
+        };
+    };
+    '/api/v{api-version}/simple/$count': {
+        get: {
+            res: {
+                /**
+                 * Success
+                 */
+                200: Model_From_Zendesk;
+            };
+        };
+    };
+    '/api/v{api-version}/foo/{foo_param}/bar/{BarParam}': {
+        delete: {
+            req: DeleteFooData;
+        };
+    };
+    '/api/v{api-version}/descriptions/': {
+        post: {
+            req: CallWithDescriptionsData;
+        };
+    };
+    '/api/v{api-version}/parameters/deprecated': {
+        post: {
+            req: DeprecatedCallData;
+        };
+    };
+    '/api/v{api-version}/parameters/{parameterPath}': {
+        post: {
+            req: CallWithParametersData;
+        };
+    };
+    '/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}': {
+        post: {
+            req: CallWithWeirdParameterNamesData;
+        };
+    };
+    '/api/v{api-version}/parameters/': {
+        get: {
+            req: GetCallWithOptionalParamData;
+        };
+        post: {
+            req: PostCallWithOptionalParamData;
+        };
+    };
+    '/api/v{api-version}/requestBody/': {
+        post: {
+            req: PostApiRequestBodyData;
+        };
+    };
+    '/api/v{api-version}/formData/': {
+        post: {
+            req: PostApiFormDataData;
+        };
+    };
+    '/api/v{api-version}/defaults': {
+        get: {
+            req: CallWithDefaultParametersData;
+        };
+        post: {
+            req: CallWithDefaultOptionalParametersData;
+        };
+        put: {
+            req: CallToTestOrderOfParamsData;
+        };
+    };
+    '/api/v{api-version}/no-content': {
+        get: {
+            res: {
+                /**
+                 * Success
+                 */
+                204: void;
+            };
+        };
+    };
+    '/api/v{api-version}/multiple-tags/response-and-no-content': {
+        get: {
+            res: {
+                /**
+                 * Response is a simple number
+                 */
+                200: number;
+                /**
+                 * Success
+                 */
+                204: void;
+            };
+        };
+    };
+    '/api/v{api-version}/multiple-tags/a': {
+        get: {
+            res: {
+                /**
+                 * Success
+                 */
+                204: void;
+            };
+        };
+    };
+    '/api/v{api-version}/multiple-tags/b': {
+        get: {
+            res: {
+                /**
+                 * Success
+                 */
+                204: void;
+            };
+        };
+    };
+    '/api/v{api-version}/response': {
+        get: {
+            res: {
+                default: ModelWithString;
+            };
+        };
+        post: {
+            res: {
+                /**
+                 * Message for 200 response
+                 */
+                200: ModelWithBoolean & ModelWithInteger;
+                /**
+                 * Message for 201 response
+                 */
+                201: ModelWithString;
+                /**
+                 * Message for 500 error
+                 */
+                500: ModelWithStringError;
+                /**
+                 * Message for 501 error
+                 */
+                501: ModelWithStringError;
+                /**
+                 * Message for 502 error
+                 */
+                502: ModelWithStringError;
+                /**
+                 * Message for 4XX errors
+                 */
+                '4XX': DictionaryWithArray;
+                /**
+                 * Message for default response
+                 */
+                default: ModelWithBoolean;
+            };
+        };
+        put: {
+            res: {
+                /**
+                 * Message for 200 response
+                 */
+                200: {
+                    readonly '@namespace.string'?: string;
+                    readonly '@namespace.integer'?: number;
+                    readonly value?: Array<ModelWithString>;
+                };
+                /**
+                 * Message for 201 response
+                 */
+                201: ModelThatExtends;
+                /**
+                 * Message for 202 response
+                 */
+                202: ModelThatExtendsExtends;
+                /**
+                 * Message for 500 error
+                 */
+                500: ModelWithStringError;
+                /**
+                 * Message for 501 error
+                 */
+                501: ModelWithStringError;
+                /**
+                 * Message for 502 error
+                 */
+                502: ModelWithStringError;
+                /**
+                 * Message for default response
+                 */
+                default: ModelWithString;
+            };
+        };
+    };
+    '/api/v{api-version}/collectionFormat': {
+        get: {
+            req: CollectionFormatData;
+        };
+    };
+    '/api/v{api-version}/types': {
+        get: {
+            req: TypesData;
+            res: {
+                /**
+                 * Response is a simple number
+                 */
+                200: number;
+                /**
+                 * Response is a simple string
+                 */
+                201: string;
+                /**
+                 * Response is a simple boolean
+                 */
+                202: boolean;
+                /**
+                 * Response is a simple object
+                 */
+                203: {
+                    [key: string]: unknown;
+                };
+            };
+        };
+    };
+    '/api/v{api-version}/upload': {
+        post: {
+            req: UploadFileData;
+            res: {
+                200: boolean;
+            };
+        };
+    };
+    '/api/v{api-version}/file/{id}': {
+        get: {
+            req: FileResponseData;
+            res: {
+                /**
+                 * Success
+                 */
+                200: (Blob | File);
+            };
+        };
+    };
+    '/api/v{api-version}/complex': {
+        get: {
+            req: ComplexTypesData;
+            res: {
+                /**
+                 * Successful response
+                 */
+                200: Array<ModelWithString>;
+                /**
+                 * 400 `server` error
+                 */
+                400: unknown;
+                /**
+                 * 500 server error
+                 */
+                500: unknown;
+            };
+        };
+    };
+    '/api/v{api-version}/multipart': {
+        post: {
+            req: MultipartRequestData;
+        };
+        get: {
+            res: {
+                /**
+                 * OK
+                 */
+                200: {
+                    file?: (Blob | File);
+                    metadata?: {
+                        foo?: string;
+                        bar?: string;
+                    };
+                };
+            };
+        };
+    };
+    '/api/v{api-version}/complex/{id}': {
+        put: {
+            req: ComplexParamsData;
+            res: {
+                /**
+                 * Success
+                 */
+                200: ModelWithString;
+            };
+        };
+    };
+    '/api/v{api-version}/header': {
+        post: {
+            res: {
+                /**
+                 * Successful response
+                 */
+                200: string;
+                /**
+                 * 400 server error
+                 */
+                400: unknown;
+                /**
+                 * 500 server error
+                 */
+                500: unknown;
+            };
+        };
+    };
+    '/api/v{api-version}/error': {
+        post: {
+            req: TestErrorCodeData;
+            res: {
+                /**
+                 * Custom message: Successful response
+                 */
+                200: unknown;
+                /**
+                 * Custom message: Internal Server Error
+                 */
+                500: unknown;
+                /**
+                 * Custom message: Not Implemented
+                 */
+                501: unknown;
+                /**
+                 * Custom message: Bad Gateway
+                 */
+                502: unknown;
+                /**
+                 * Custom message: Service Unavailable
+                 */
+                503: unknown;
+            };
+        };
+    };
+    '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串': {
+        post: {
+            req: NonAsciiæøåÆøÅöôêÊ字符串Data;
+            res: {
+                /**
+                 * Successful response
+                 */
+                200: Array<NonAsciiStringæøåÆØÅöôêÊ字符串>;
+            };
+        };
+    };
+};
