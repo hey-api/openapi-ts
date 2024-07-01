@@ -6,6 +6,7 @@ import { getOperationName, parseResponseStatusCode } from '../operation';
 describe('getOperationName', () => {
   const options1: Parameters<typeof setConfig>[0] = {
     client: 'fetch',
+    configFile: '',
     debug: false,
     dryRun: true,
     exportCore: false,
@@ -29,6 +30,7 @@ describe('getOperationName', () => {
 
   const options2: Parameters<typeof setConfig>[0] = {
     client: 'fetch',
+    configFile: '',
     debug: false,
     dryRun: true,
     exportCore: false,

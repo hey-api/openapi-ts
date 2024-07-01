@@ -23,6 +23,7 @@ const params = program
   .option('-d, --debug', 'Run in debug mode?')
   .option('--dry-run [value]', 'Skip writing files to disk?')
   .option('--exportCore [value]', 'Write core files to disk')
+  .option('-f, --file [value]', 'Path to the config file')
   .option(
     '-i, --input <value>',
     'OpenAPI specification (path, url, or string content)',
@@ -55,6 +56,9 @@ const processParams = (obj, booleanKeys) => {
       delete obj[key];
       obj[key] = parsedValue;
     }
+  }
+  if (obj.file) {
+    obj.configFile = obj.file;
   }
   return obj;
 };
