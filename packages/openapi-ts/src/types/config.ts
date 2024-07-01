@@ -19,6 +19,11 @@ export interface ClientConfig {
     | 'node'
     | 'xhr';
   /**
+   * Path to the config file. Set this value if you don't use the default
+   * config file name, or it's not located in the project root.
+   */
+  configFile?: string;
+  /**
    * Run in debug mode?
    * @default false
    */

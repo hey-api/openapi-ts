@@ -26,6 +26,7 @@ describe('writeCore', () => {
 
     setConfig({
       client: 'fetch',
+      configFile: '',
       debug: false,
       dryRun: false,
       exportCore: true,
@@ -81,6 +82,7 @@ describe('writeCore', () => {
 
     const config = setConfig({
       client: 'fetch',
+      configFile: '',
       debug: false,
       dryRun: false,
       exportCore: true,
@@ -119,6 +121,7 @@ describe('writeCore', () => {
     const config = setConfig({
       base: 'foo',
       client: 'fetch',
+      configFile: '',
       debug: false,
       dryRun: false,
       exportCore: true,
