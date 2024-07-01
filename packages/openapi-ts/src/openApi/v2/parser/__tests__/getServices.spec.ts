@@ -7,6 +7,7 @@ describe('getServices', () => {
   it('should create a unnamed service if tags are empty', () => {
     setConfig({
       client: 'fetch',
+      configFile: '',
       debug: false,
       dryRun: true,
       exportCore: true,

@@ -171,7 +171,14 @@ const getTypes = (userConfig: ClientConfig): Config['types'] => {
 };
 
 const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
+  let configurationFile: string | undefined = undefined;
+  if (userConfig.configFile) {
+    const parts = userConfig.configFile.split('.');
+    configurationFile = parts.slice(0, parts.length - 1).join('.');
+  }
+
   const { config: configFromFile } = await loadConfig<UserConfig>({
+    configFile: configurationFile,
     jitiOptions: {
       esmResolve: true,
     },
@@ -191,6 +198,7 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
     const {
       base,
       client = 'fetch',
+      configFile = '',
       debug = false,
       dryRun = false,
       exportCore = true,
@@ -233,6 +241,7 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
     return setConfig({
       base,
       client,
+      configFile,
       debug,
       dryRun,
       exportCore: isStandaloneClient(client) ? false : exportCore,
