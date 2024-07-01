@@ -1,5 +1,11 @@
 # @hey-api/client-fetch
 
+## 0.1.7
+
+### Patch Changes
+
+- [#736](https://github.com/hey-api/openapi-ts/pull/736) [`8410046`](https://github.com/hey-api/openapi-ts/commit/8410046c45d25db48ba940a0c6c7a7cda9e86b6a) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle async response transformers
+
 ## 0.1.6
 
 ### Patch Changes
