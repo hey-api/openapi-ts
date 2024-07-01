@@ -108,12 +108,14 @@ export const toParameterDeclarations = (parameters: FunctionParameter[]) =>
  * Create Function type expression.
  */
 export const createFunction = ({
+  async,
   comment,
   multiLine,
   parameters = [],
   returnType,
   statements = [],
 }: {
+  async?: boolean;
   comment?: Comments;
   multiLine?: boolean;
   parameters?: FunctionParameter[];
@@ -121,7 +123,7 @@ export const createFunction = ({
   statements?: ts.Statement[];
 }) => {
   const expression = ts.factory.createArrowFunction(
-    undefined,
+    async ? [ts.factory.createModifier(ts.SyntaxKind.AsyncKeyword)] : undefined,
     undefined,
     toParameterDeclarations(parameters),
     returnType ? createTypeNode(returnType) : undefined,

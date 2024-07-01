@@ -90,8 +90,12 @@ export interface Config
    * {@link https://swagger.io/docs/specification/serialization/#query View examples}
    */
   querySerializer?: QuerySerializer | QuerySerializerOptions;
-
-  responseTransformer?: (data: unknown) => unknown;
+  /**
+   * A function for transforming response data before it's returned to the
+   * caller function. This is an ideal place to post-process server data,
+   * e.g. convert date ISO strings into native Date objects.
+   */
+  responseTransformer?: (data: unknown) => Promise<unknown>;
 }
 
 interface RequestOptionsBase extends Omit<Config, 'global'> {
