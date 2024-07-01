@@ -528,7 +528,5 @@ export const processTypes = async ({
     processModel({ client, model, onNode });
   }
 
-  if (files.services && client.services.length) {
-    processServiceTypes({ client, onNode });
-  }
+  processServiceTypes({ client, onNode });
 };
