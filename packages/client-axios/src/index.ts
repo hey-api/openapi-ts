@@ -226,7 +226,7 @@ export const request = <T>(
 
         let transformedBody = responseBody;
         if (options.responseTransformer && isSuccess(response.status)) {
-          transformedBody = options.responseTransformer(responseBody);
+          transformedBody = await options.responseTransformer(responseBody);
         }
 
         const result: ApiResult = {
