@@ -362,6 +362,7 @@ export class ResponseService {
     
     /**
      * @returns ModelWithString Message for 201 response
+     * @returns ModelWithString Message for 202 response
      * @throws ApiError
      */
     public static callWithDuplicateResponses(): CancelablePromise<CallWithDuplicateResponsesResponse> {

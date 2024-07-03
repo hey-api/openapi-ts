@@ -132,10 +132,14 @@ const toOperationReturnType = (client: Client, operation: Operation) => {
 
   let returnType = compiler.typedef.basic('void');
 
-  // TODO: we should return nothing when results don't exist
+  const successResponses = operation.responses.filter((response) =>
+    response.responseTypes.includes('success'),
+  );
+
+  // TODO: we should return nothing when successes don't exist
   // can't remove this logic without removing request/name config
   // as it complicates things
-  if (operation.results.length) {
+  if (successResponses.length) {
     const { name: importedType } = setUniqueTypeName({
       client,
       meta: {
@@ -193,14 +197,18 @@ const toOperationComment = (operation: Operation): Comments => {
     }
   }
 
+  const successResponses = operation.responses.filter((response) =>
+    response.responseTypes.includes('success'),
+  );
+
   const comment = [
     operation.deprecated && '@deprecated',
     operation.summary && escapeComment(operation.summary),
     operation.description && escapeComment(operation.description),
     ...params,
-    ...operation.results.map(
-      (r) =>
-        `@returns ${r.type} ${r.description ? escapeComment(r.description) : ''}`,
+    ...successResponses.map(
+      (response) =>
+        `@returns ${response.type} ${response.description ? escapeComment(response.description) : ''}`,
     ),
     '@throws ApiError',
   ];
@@ -254,7 +262,7 @@ const toRequestOptions = (
     }
 
     // TODO: set parseAs to skip inference if every result has the same
-    // content type. currently impossible because results do not contain
+    // content type. currently impossible because successes do not contain
     // header information
 
     obj = [
@@ -352,10 +360,13 @@ const toRequestOptions = (
     obj.responseTransformer = responseTransformerName;
   }
 
-  if (operation.errors.length) {
+  const errorResponses = operation.responses.filter((response) =>
+    response.responseTypes.includes('error'),
+  );
+  if (errorResponses.length > 0) {
     const errors: Record<number | string, string> = {};
-    operation.errors.forEach((err) => {
-      errors[err.code] = err.description ?? '';
+    errorResponses.forEach((response) => {
+      errors[response.code] = response.description ?? '';
     });
     obj.errors = errors;
   }
@@ -396,7 +407,10 @@ const toOperationStatements = (
       },
       nameTransformer: operationErrorTypeName,
     }).name;
-    const responseType = operation.results.length
+    const successResponses = operation.responses.filter((response) =>
+      response.responseTypes.includes('success'),
+    );
+    const responseType = successResponses.length
       ? setUniqueTypeName({
           client,
           meta: {
@@ -490,8 +504,10 @@ export const processService = (
       });
     }
 
-    // TODO: improve response type detection
-    if (operation.results.length) {
+    const successResponses = operation.responses.filter((response) =>
+      response.responseTypes.includes('success'),
+    );
+    if (successResponses.length) {
       generateImport({
         client,
         meta: {
