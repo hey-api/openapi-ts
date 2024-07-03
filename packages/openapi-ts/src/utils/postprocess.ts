@@ -50,12 +50,15 @@ const postProcessServiceOperations = (service: Service): Operation[] => {
   return service.operations.map((operation) => {
     const clone = { ...operation };
 
-    // Parse the service parameters and results, very similar to how we parse
+    // Parse the service parameters and successes, very similar to how we parse
     // properties of models. These methods will extend the type if needed.
     clone.imports.push(
       ...clone.parameters.flatMap((parameter) => parameter.imports),
     );
-    clone.imports.push(...clone.results.flatMap((result) => result.imports));
+    const successResponses = clone.responses.filter((response) =>
+      response.responseTypes.includes('success'),
+    );
+    clone.imports.push(...successResponses.flatMap((result) => result.imports));
 
     // Check if the operation name is unique, if not then prefix this with a number
     const name = clone.name;

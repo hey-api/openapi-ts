@@ -6,10 +6,6 @@ import {
 } from '../../compiler';
 import type { Model, OperationParameter } from '../../openApi';
 import type { Method } from '../../openApi/common/interfaces/client';
-import {
-  getErrorResponses,
-  getSuccessResponses,
-} from '../../openApi/common/parser/operation';
 import type { Client } from '../../types/client';
 import { getConfig, isStandaloneClient } from '../config';
 import { enumEntry, enumUnionType } from '../enum';
@@ -239,11 +235,7 @@ const processServiceTypes = ({
 
   for (const service of client.services) {
     for (const operation of service.operations) {
-      const hasReq = operation.parameters.length;
-      const hasRes = operation.results.length;
-      const hasErr = operation.errors.length;
-
-      if (!hasReq && !hasRes && !hasErr) {
+      if (!operation.parameters.length && !operation.responses.length) {
         continue;
       }
 
@@ -258,7 +250,21 @@ const processServiceTypes = ({
       const methodMap = pathMap[operation.method]!;
       methodMap.$ref = operation.name;
 
-      if (hasReq) {
+      if (operation.responses.length > 0) {
+        if (!methodMap.res) {
+          methodMap.res = {};
+        }
+
+        if (Array.isArray(methodMap.res)) {
+          continue;
+        }
+
+        operation.responses.forEach((response) => {
+          methodMap.res![response.code] = response;
+        });
+      }
+
+      if (operation.parameters.length > 0) {
         const bodyParameter = operation.parameters
           .filter((parameter) => parameter.in === 'body')
           .sort(sorterByName)[0];
@@ -345,21 +351,11 @@ const processServiceTypes = ({
         });
       }
 
-      if (hasRes) {
-        if (!methodMap.res) {
-          methodMap.res = {};
-        }
+      const successResponses = operation.responses.filter((response) =>
+        response.responseTypes.includes('success'),
+      );
 
-        if (Array.isArray(methodMap.res)) {
-          continue;
-        }
-
-        operation.results.forEach((result) => {
-          methodMap.res![result.code] = result;
-        });
-
-        const responses = getSuccessResponses(operation.results);
-
+      if (successResponses.length > 0) {
         // create type export for operation response
         generateType({
           client,
@@ -375,12 +371,15 @@ const processServiceTypes = ({
             ...emptyModel,
             export: 'any-of',
             isRequired: true,
-            properties: responses,
+            properties: successResponses,
           }),
         });
 
+        const errorResponses = operation.responses.filter((response) =>
+          response.responseTypes.includes('error'),
+        );
+
         if (isStandaloneClient(config)) {
-          const errorResults = getErrorResponses(operation.errors);
           // create type export for operation error
           generateType({
             client,
@@ -393,12 +392,12 @@ const processServiceTypes = ({
             nameTransformer: operationErrorTypeName,
             onNode,
             type: toType(
-              errorResults.length
+              errorResponses.length
                 ? {
                     ...emptyModel,
                     export: 'all-of',
                     isRequired: true,
-                    properties: errorResults,
+                    properties: errorResponses,
                   }
                 : {
                     ...emptyModel,
@@ -409,20 +408,6 @@ const processServiceTypes = ({
             ),
           });
         }
-      }
-
-      if (hasErr) {
-        if (!methodMap.res) {
-          methodMap.res = {};
-        }
-
-        if (Array.isArray(methodMap.res)) {
-          continue;
-        }
-
-        operation.errors.forEach((error) => {
-          methodMap.res![error.code] = error;
-        });
       }
     }
   }

@@ -37,6 +37,7 @@ export const getOperationResponse = ({
     link: null,
     name: '',
     properties: [],
+    responseTypes: [],
     template: null,
     type: code !== 204 ? 'unknown' : 'void',
   };
