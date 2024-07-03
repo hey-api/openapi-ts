@@ -4,11 +4,11 @@ const main = async () => {
   /** @type {import('../src/node/index').UserConfig} */
   const config = {
     client: '@hey-api/client-fetch',
-    // input: './test/spec/v3.json',
     debug: true,
-    input: './test/spec/v3-transforms.json',
+    // input: './test/spec/v3-transforms.json',
+    input: './test/spec/v3.json',
     // input: 'https://mongodb-mms-prod-build-server.s3.amazonaws.com/openapi/2caffd88277a4e27c95dcefc7e3b6a63a3b03297-v2-2023-11-15.json',
-    name: 'foo',
+    // name: 'foo',
     output: {
       path: './test/generated/sample/',
     },
@@ -21,7 +21,7 @@ const main = async () => {
       // name: '^Parameters',
     },
     types: {
-      dates: 'types+transform',
+      // dates: 'types+transform',
       enums: 'typescript',
       // include:
       //   '^ModelWithPrefixItemsConstantSizeArray|ModelWithAnyOfConstantSizeArray',

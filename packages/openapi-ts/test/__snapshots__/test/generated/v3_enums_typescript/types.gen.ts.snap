@@ -953,7 +953,7 @@ export type PostServiceWithEmptyTagData = {
     requestBody: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
 };
 
-export type PostServiceWithEmptyTagResponse3 = ModelWithReadOnlyAndWriteOnly;
+export type PostServiceWithEmptyTagResponse3 = Model_From_Zendesk | ModelWithReadOnlyAndWriteOnly;
 
 export type ApiVversionOdataControllerCountResponse = Model_From_Zendesk;
 
@@ -1380,6 +1380,13 @@ export type $OpenApiTs = {
         post: {
             req: PostServiceWithEmptyTagData;
             res: {
+                /**
+                 * Success
+                 */
+                200: Model_From_Zendesk;
+                /**
+                 * Default success response
+                 */
                 default: ModelWithReadOnlyAndWriteOnly;
             };
         };
@@ -1489,6 +1496,10 @@ export type $OpenApiTs = {
                  */
                 201: ModelWithString;
                 /**
+                 * Message for 202 response
+                 */
+                202: ModelWithString;
+                /**
                  * Message for 500 error
                  */
                 500: ModelWithStringError;
@@ -1505,7 +1516,7 @@ export type $OpenApiTs = {
                  */
                 '4XX': DictionaryWithArray;
                 /**
-                 * Message for default response
+                 * Default error response
                  */
                 default: ModelWithBoolean;
             };
@@ -1543,7 +1554,7 @@ export type $OpenApiTs = {
                 /**
                  * Message for default response
                  */
-                default: ModelWithString;
+                default: ModelWithStringError;
             };
         };
     };

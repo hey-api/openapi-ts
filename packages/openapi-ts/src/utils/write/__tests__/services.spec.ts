@@ -71,7 +71,6 @@ describe('methodNameBuilder', () => {
     $refs: [],
     deprecated: false,
     description: null,
-    errors: [],
     id: 'User_get',
     imports: [],
     method: 'GET',
@@ -85,7 +84,7 @@ describe('methodNameBuilder', () => {
     parametersQuery: [],
     path: '/users',
     responseHeader: null,
-    results: [],
+    responses: [],
     service: 'User',
     summary: null,
   };

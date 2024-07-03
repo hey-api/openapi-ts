@@ -1,30 +1,8 @@
 import camelCase from 'camelcase';
 
 import { getConfig } from '../../../utils/config';
-import type { Model, OperationResponse } from '../interfaces/client';
+import type { OperationResponse } from '../interfaces/client';
 import { sanitizeNamespaceIdentifier } from './sanitize';
-
-const areEqual = (a: Model, b: Model): boolean => {
-  const equal =
-    a.type === b.type && a.base === b.base && a.template === b.template;
-  if (equal && a.link && b.link) {
-    if (!Array.isArray(a.link) && !Array.isArray(b.link)) {
-      return areEqual(a.link, b.link);
-    }
-
-    if (
-      Array.isArray(a.link) &&
-      Array.isArray(b.link) &&
-      a.link.length === b.link.length
-    ) {
-      const bLinks = b.link;
-      return a.link.every((model, index) => areEqual(model, bLinks[index]!));
-    }
-
-    return false;
-  }
-  return equal;
-};
 
 /**
  * Convert the input value to a correct operation (method) class name.
@@ -104,6 +82,21 @@ export const parseResponseStatusCode = (
   return null;
 };
 
+export const sorterByResponseStatusCode = (
+  a: OperationResponse,
+  b: OperationResponse,
+) => {
+  if (a.code > b.code) {
+    return 1;
+  }
+
+  if (a.code < b.code) {
+    return -1;
+  }
+
+  return 0;
+};
+
 const isErrorStatusCode = (code: OperationResponse['code']) =>
   code === '3XX' ||
   code === '4XX' ||
@@ -114,55 +107,67 @@ const isSuccessStatusCode = (code: OperationResponse['code']) =>
   code === '2XX' || (typeof code === 'number' && code >= 200 && code < 300);
 
 /**
- * Returns only error status code responses.
+ * Detects whether default response is meant to be used
+ * for error or success response.
  */
-export const getErrorResponses = (
+const inferDefaultResponseTypes = (
+  response: OperationResponse,
   responses: OperationResponse[],
-): OperationResponse[] => {
-  const results = responses.filter(
-    ({ code }) =>
-      (code === 'default' && inferDefaultResponse(responses) === 'error') ||
-      isErrorStatusCode(code),
-  );
-  return results;
-};
+) => {
+  let types: Array<'error' | 'success'> = [];
 
-/**
- * Returns only successful status code responses.
- */
-export const getSuccessResponses = (
-  responses: OperationResponse[],
-): OperationResponse[] => {
-  const results = responses.filter(
-    ({ code }) =>
-      (code === 'default' && inferDefaultResponse(responses) === 'success') ||
-      isSuccessStatusCode(code),
-  );
-  return results.filter(
-    (result, index, arr) =>
-      arr.findIndex((item) => areEqual(item, result)) === index,
-  );
-};
+  const addResponseType = (type: (typeof types)[number]) => {
+    if (!types.includes(type)) {
+      types = [...types, type];
+    }
+  };
 
-/**
- * Detects whether default response is meant to be used for errors or
- * successful responses. Returns an empty string if there's no default
- * response.
- */
-export const inferDefaultResponse = (
-  responses: OperationResponse[],
-): 'error' | 'success' | '' => {
-  const defaultResponse = responses.find(({ code }) => code === 'default');
-  if (!defaultResponse) {
-    return '';
-  }
-
-  const successResponses = responses.filter(({ code }) =>
+  const hasSuccessResponse = responses.some(({ code }) =>
     isSuccessStatusCode(code),
   );
-  if (!successResponses.length) {
-    return 'success';
+  if (!hasSuccessResponse) {
+    addResponseType('success');
   }
 
-  return 'error';
+  const description = (response.description ?? '').toLocaleLowerCase();
+  const $refs = response.$refs.join('|').toLocaleLowerCase();
+
+  // must be in lowercase
+  const errorKeywords = ['error', 'problem'];
+  const successKeywords = ['success'];
+
+  if (
+    successKeywords.some(
+      (keyword) => description.includes(keyword) || $refs.includes(keyword),
+    )
+  ) {
+    addResponseType('success');
+  }
+
+  if (
+    errorKeywords.some(
+      (keyword) => description.includes(keyword) || $refs.includes(keyword),
+    )
+  ) {
+    addResponseType('error');
+  }
+
+  if (!types.length) {
+    addResponseType('error');
+  }
+
+  return types;
 };
+
+export const tagResponseTypes = (responses: OperationResponse[]) =>
+  responses.map((response) => {
+    const { code } = response;
+    if (code === 'default') {
+      response.responseTypes = inferDefaultResponseTypes(response, responses);
+    } else if (isSuccessStatusCode(code)) {
+      response.responseTypes = ['success'];
+    } else if (isErrorStatusCode(code)) {
+      response.responseTypes = ['error'];
+    }
+    return response;
+  });

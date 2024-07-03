@@ -793,6 +793,10 @@ export type $OpenApiTs = {
                  */
                 201: ModelWithString;
                 /**
+                 * Message for 202 response
+                 */
+                202: ModelWithString;
+                /**
                  * Message for 500 error
                  */
                 500: ModelWithStringError;
