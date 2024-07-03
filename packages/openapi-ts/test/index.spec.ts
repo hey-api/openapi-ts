@@ -57,9 +57,6 @@ describe('OpenAPI v3', () => {
     input: '',
     output: '',
     schemas: true,
-    services: {
-      asClass: true,
-    },
     types: {
       enums: 'javascript',
     },
@@ -73,13 +70,20 @@ describe('OpenAPI v3', () => {
 
   const clientScenarios = [
     {
-      config: createConfig(),
+      config: createConfig({
+        services: {
+          asClass: true,
+        },
+      }),
       description: 'generate fetch client',
       name: 'v3',
     },
     {
       config: createConfig({
         client: 'angular',
+        services: {
+          asClass: true,
+        },
         types: {},
       }),
       description: 'generate angular client',
@@ -88,6 +92,9 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         client: 'node',
+        services: {
+          asClass: true,
+        },
       }),
       description: 'generate node client',
       name: 'v3_node',
@@ -95,6 +102,9 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         client: 'axios',
+        services: {
+          asClass: true,
+        },
       }),
       description: 'generate axios client',
       name: 'v3_axios',
@@ -102,9 +112,6 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         client: '@hey-api/client-fetch',
-        services: {
-          asClass: false,
-        },
       }),
       description: 'generate axios client',
       name: 'v3_hey-api_client-fetch',
@@ -112,9 +119,6 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         client: '@hey-api/client-axios',
-        services: {
-          asClass: false,
-        },
       }),
       description: 'generate axios client',
       name: 'v3_hey-api_client-axios',
@@ -122,6 +126,9 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         client: 'xhr',
+        services: {
+          asClass: true,
+        },
       }),
       description: 'generate xhr client',
       name: 'v3_xhr',
@@ -187,6 +194,9 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         schemas: false,
+        services: {
+          asClass: true,
+        },
         types: {
           enums: 'typescript',
         },
