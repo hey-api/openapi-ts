@@ -506,7 +506,7 @@ export const processService = (
     }
   });
 
-  if (!config.services.asClass) {
+  if (!config.services.asClass && !config.name) {
     service.operations.forEach((operation) => {
       const expression = compiler.types.function({
         parameters: toOperationParamType(client, operation),

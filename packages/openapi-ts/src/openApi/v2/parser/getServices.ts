@@ -41,7 +41,7 @@ export const getServices = ({
           // Each method contains an OpenAPI operation, we parse the operation
           const op = path[method]!;
           const tags =
-            op.tags?.length && config.services.asClass
+            op.tags?.length && (config.services.asClass || config.name)
               ? op.tags.filter(unique)
               : ['Default'];
           tags.forEach((tag) => {

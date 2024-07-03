@@ -49,7 +49,7 @@ export const getServices = ({
       if (allowedServiceMethods.includes(method)) {
         const op = path[method]!;
         const tags =
-          op.tags?.length && config.services.asClass
+          op.tags?.length && (config.services.asClass || config.name)
             ? op.tags.filter(unique)
             : ['Default'];
         tags.forEach((tag) => {
