@@ -37,10 +37,21 @@
         },
         "responses": {
           "default": {
+            "description": "Default success response",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ModelWithReadOnlyAndWriteOnly"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json; type=collection": {
+                "schema": {
+                  "$ref": "#/components/schemas/Model-From.Zendesk"
                 }
               }
             }
@@ -802,7 +813,7 @@
         "operationId": "CallWithDuplicateResponses",
         "responses": {
           "default": {
-            "description": "Message for default response",
+            "description": "Default error response",
             "content": {
               "application/json": {
                 "schema": {
@@ -899,7 +910,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ModelWithString"
+                  "$ref": "#/components/schemas/ModelWithStringError"
                 }
               }
             }

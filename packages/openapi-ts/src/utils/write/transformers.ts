@@ -5,7 +5,6 @@ import type {
   ModelMeta,
   OperationResponse,
 } from '../../openApi/common/interfaces/client';
-import { getSuccessResponses } from '../../openApi/common/parser/operation';
 import { getConfig } from '../config';
 import {
   modelResponseTransformerTypeName,
@@ -244,15 +243,15 @@ export const processResponseTransformers = async ({
 
   for (const service of client.services) {
     for (const operation of service.operations) {
-      const hasRes = operation.results.length;
+      const successResponses = operation.responses.filter((response) =>
+        response.responseTypes.includes('success'),
+      );
 
-      if (!hasRes) {
+      if (!successResponses.length) {
         continue;
       }
 
-      const responses = getSuccessResponses(operation.results);
-
-      const nonVoidResponses = responses.filter(
+      const nonVoidResponses = successResponses.filter(
         (response) => !isVoidResponse(response),
       );
 
@@ -263,7 +262,7 @@ export const processResponseTransformers = async ({
       if (nonVoidResponses.length > 1) {
         if (config.debug) {
           console.warn(
-            `⚠️ Transformers warning: route ${operation.method} ${operation.path} has ${responses.length} success responses. This is currently not handled and we will not generate a response transformer. Please open an issue if you'd like this feature https://github.com/hey-api/openapi-ts/issues`,
+            `⚠️ Transformers warning: route ${operation.method} ${operation.path} has ${nonVoidResponses.length} non-void success responses. This is currently not handled and we will not generate a response transformer. Please open an issue if you'd like this feature https://github.com/hey-api/openapi-ts/issues`,
           );
         }
         continue;
@@ -279,8 +278,8 @@ export const processResponseTransformers = async ({
         nameTransformer: operationResponseTransformerTypeName,
         onCreated: (nameCreated) => {
           const statements =
-            responses.length > 1
-              ? responses.flatMap((response) => {
+            successResponses.length > 1
+              ? successResponses.flatMap((response) => {
                   const statements = processModel({
                     client,
                     meta: {
@@ -311,7 +310,7 @@ export const processResponseTransformers = async ({
                     $ref: `transformers/${name}`,
                     name,
                   },
-                  model: operation.results[0],
+                  model: successResponses[0],
                   onNode,
                   onRemoveNode,
                   path: [dataVariableName],

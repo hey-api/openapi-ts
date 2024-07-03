@@ -20,7 +20,8 @@ export class DefaultService {
     /**
      * @param data The data for the request.
      * @param data.requestBody
-     * @returns ModelWithReadOnlyAndWriteOnly
+     * @returns Model_From_Zendesk Success
+     * @returns ModelWithReadOnlyAndWriteOnly Default success response
      * @throws ApiError
      */
     public postServiceWithEmptyTag(data: PostServiceWithEmptyTagData): CancelablePromise<PostServiceWithEmptyTagResponse3> {
@@ -542,6 +543,7 @@ export class ResponseService {
     /**
      * @returns unknown Message for 200 response
      * @returns ModelWithString Message for 201 response
+     * @returns ModelWithString Message for 202 response
      * @throws ApiError
      */
     public callWithDuplicateResponses(): CancelablePromise<CallWithDuplicateResponsesResponse> {
@@ -553,7 +555,7 @@ export class ResponseService {
                 501: 'Message for 501 error',
                 502: 'Message for 502 error',
                 '4XX': 'Message for 4XX errors',
-                default: 'Message for default response'
+                default: 'Default error response'
             }
         });
     }
