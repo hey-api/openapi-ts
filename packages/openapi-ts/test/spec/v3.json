@@ -3282,6 +3282,31 @@
           }
         }
       },
+      "ModelWithOneOfAndProperties": {
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/parameters/SimpleParameter"
+          },
+          {
+            "$ref": "#/components/schemas/NonAsciiStringæøåÆØÅöôêÊ字符串"
+          }
+        ],
+        "required": ["baz", "qux"],
+        "properties": {
+          "baz": {
+            "type": "integer",
+            "format": "uint16",
+            "minimum": 0.0,
+            "nullable": true
+          },
+          "qux": {
+            "type": "integer",
+            "format": "uint8",
+            "minimum": 0.0
+          }
+        }
+      },
       "ParameterSimpleParameterUnused": {
         "description": "Model used to test deduplication strategy (unused)",
         "type": "string"

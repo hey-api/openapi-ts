@@ -116,33 +116,53 @@ export const getModelComposition = ({
 
   if (properties.length) {
     const foundComposition = findModelComposition(definition);
-    if (foundComposition?.type === 'one-of') {
-      composition.properties.forEach((property) => {
-        property.properties = [...property.properties, ...properties];
-      });
-    } else {
-      composition.properties = [
-        ...composition.properties,
-        {
-          $refs: [],
-          base: 'unknown',
-          description: '',
-          enum: [],
-          enums: [],
-          export: 'interface',
-          imports: [],
-          in: '',
-          isDefinition: false,
-          isNullable: false,
-          isReadOnly: false,
-          isRequired: false,
-          link: null,
-          name: 'properties',
-          properties,
-          template: null,
-          type: 'unknown',
-        },
-      ];
+    if (foundComposition) {
+      const propertiesProperty: Model = {
+        $refs: [],
+        base: 'unknown',
+        description: '',
+        enum: [],
+        enums: [],
+        export: 'interface',
+        imports: [],
+        in: '',
+        isDefinition: false,
+        isNullable: false,
+        isReadOnly: false,
+        isRequired: false,
+        link: null,
+        name: 'properties',
+        properties,
+        template: null,
+        type: 'unknown',
+      };
+
+      if (foundComposition.type === 'one-of') {
+        composition.properties = [
+          {
+            ...composition,
+            base: '',
+            description: null,
+            enum: [],
+            in: '',
+            isDefinition: false,
+            isNullable: false,
+            isReadOnly: false,
+            isRequired: true,
+            link: null,
+            name: '',
+            template: null,
+            type: '',
+          },
+          propertiesProperty,
+        ];
+        composition.export = 'all-of';
+      } else {
+        composition.properties = [
+          ...composition.properties,
+          propertiesProperty,
+        ];
+      }
     }
   }
 
