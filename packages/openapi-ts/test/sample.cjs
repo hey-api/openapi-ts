@@ -17,14 +17,14 @@ const main = async () => {
     },
     services: {
       // asClass: true,
-      export: false,
+      // export: false,
       // name: '^Parameters',
     },
     types: {
       // dates: 'types+transform',
       // enums: 'typescript',
-      include:
-        '^(ModelWithOneOfAndProperties|CompositionWithOneOfAndProperties)',
+      // include:
+      //   '^(ModelWithOneOfAndProperties|CompositionWithOneOfAndProperties)',
       // name: 'PascalCase',
     },
     // useOptions: false,
