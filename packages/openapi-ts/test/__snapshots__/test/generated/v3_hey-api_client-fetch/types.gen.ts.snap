@@ -1174,6 +1174,10 @@ export type PostApiRequestBodyData = {
 };
 
 export type PostApiFormDataData = {
+    /**
+     * A reusable request body
+     */
+    body?: ModelWithString;
     query?: {
         /**
          * This is a reusable parameter
@@ -1414,7 +1418,12 @@ export type ComplexTypesResponse = Array<ModelWithString>;
 
 export type ComplexTypesError = unknown;
 
-export type MultipartRequestData = unknown;
+export type MultipartRequestData = {
+    body?: {
+        content?: (Blob | File);
+        data?: ModelWithString | null;
+    };
+};
 
 export type MultipartResponseResponse = {
     file?: (Blob | File);
