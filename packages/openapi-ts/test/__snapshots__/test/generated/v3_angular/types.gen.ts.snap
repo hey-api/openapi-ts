@@ -687,10 +687,9 @@ export type NestedAnyOfArraysNullable = {
 
 export type CompositionWithOneOfAndProperties = {
     foo: ParameterSimpleParameter;
-    baz: number | null;
-    qux: number;
 } | {
     bar: NonAsciiStringæøåÆØÅöôêÊ字符串;
+} & {
     baz: number | null;
     qux: number;
 };
@@ -833,6 +832,11 @@ export type ModelWithBackticksInDescription = {
      * </pre>
      */
     template?: string;
+};
+
+export type ModelWithOneOfAndProperties = ParameterSimpleParameter | NonAsciiStringæøåÆØÅöôêÊ字符串 & {
+    baz: number | null;
+    qux: number;
 };
 
 /**
