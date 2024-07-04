@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/openapi-ts",
-  "version": "0.48.1",
+  "version": "0.48.2",
   "type": "module",
   "description": "Turn your OpenAPI specification into a beautiful TypeScript client",
   "homepage": "https://heyapi.vercel.app/",
