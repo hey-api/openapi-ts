@@ -265,15 +265,20 @@ const processServiceTypes = ({
       }
 
       if (operation.parameters.length > 0) {
-        const bodyParameter = operation.parameters
-          .filter((parameter) => parameter.in === 'body')
-          .sort(sorterByName)[0];
+        let bodyParameter = operation.parameters.find(
+          (parameter) => parameter.in === 'body',
+        );
+        if (!bodyParameter) {
+          bodyParameter = operation.parameters.find(
+            (parameter) => parameter.in === 'formData',
+          );
+        }
         const bodyParameters: OperationParameter = {
+          mediaType: null,
           ...emptyModel,
           ...bodyParameter,
           in: 'body',
           isRequired: bodyParameter ? bodyParameter.isRequired : false,
-          // mediaType: null,
           name: 'body',
           prop: 'body',
         };
@@ -379,7 +384,7 @@ const processServiceTypes = ({
           response.responseTypes.includes('error'),
         );
 
-        if (isStandaloneClient(config)) {
+        if (isStandalone) {
           // create type export for operation error
           generateType({
             client,
