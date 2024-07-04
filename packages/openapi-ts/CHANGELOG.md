@@ -1,5 +1,17 @@
 # @hey-api/openapi-ts
 
+## 0.48.2
+
+### Patch Changes
+
+- [#746](https://github.com/hey-api/openapi-ts/pull/746) [`0448823`](https://github.com/hey-api/openapi-ts/commit/044882399d56d1532c7125df2e69cfb3b5fb4f34) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle formData parameters in generated types
+
+- [#742](https://github.com/hey-api/openapi-ts/pull/742) [`efc30f4`](https://github.com/hey-api/openapi-ts/commit/efc30f4a2327b165b62f8467c68351a8bf94ffe5) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: ignore services.asClass setting for named clients
+
+- [#744](https://github.com/hey-api/openapi-ts/pull/744) [`1e9edde`](https://github.com/hey-api/openapi-ts/commit/1e9edde54abd8978405f91b821c99b97f067d566) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: improve default response type detection
+
+- [#745](https://github.com/hey-api/openapi-ts/pull/745) [`342772a`](https://github.com/hey-api/openapi-ts/commit/342772a560378c6718d25c29871eeab9a72c62a6) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle properties in one-of composition
+
 ## 0.48.1
 
 ### Patch Changes
