@@ -14,28 +14,29 @@ body:
     id: description
     attributes:
       label: Description
-      description: Please check if there is an existing bug report before creating a new issue. If you intend to submit a PR to fix this issue, let us know in the description.
+      description: Please check if there is an existing bug report before creating a new issue. If you intend to submit a pull request to fix this issue, let us know in the description.
       placeholder: Bug description
     validations:
       required: true
 
   - type: textarea
+    id: config
+    attributes:
+      label: Reproducible example or configuration
+      description: Please provide a reproducible StackBlitz example, your configuration file, or CLI command used to recreate the issue.
+      placeholder: https://stackblitz.com/edit/hey-api-client-fetch-example
+      value: https://stackblitz.com/edit/hey-api-client-fetch-example
+
+  - type: textarea
     id: openapi-spec
     attributes:
       label: OpenAPI specification (optional)
-      description: Please provide relevant part of your OpenAPI specification to recreate the issue.
+      description: Minimal OpenAPI specification needed to recreate the issue.
       placeholder: OpenAPI Specification
-
-  - type: textarea
-    id: config
-    attributes:
-      label: Configuration
-      description: Please provide your configuration file or CLI command used to recreate the issue.
-      placeholder: openapi-ts -i path/to/openapi.json -o src/client
 
   - type: textarea
     id: system-info
     attributes:
       label: System information (optional)
-      description: Please provide any relevant system information. This may include OS, browser, NPM version, Node.js version, etc.
+      description: Any additional relevant system information. This may include OS, browser, NPM version, Node.js version, etc.
       placeholder: System information
