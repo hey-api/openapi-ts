@@ -3,13 +3,13 @@ import path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
 
-import { TypeScriptFile } from '../../../compiler';
-import { setConfig } from '../../config';
-import { processIndex } from '../index';
+import { TypeScriptFile } from '../../compiler';
+import { setConfig } from '../../utils/config';
+import { generateIndexFile } from '../indexFile';
 
 vi.mock('node:fs');
 
-describe('processIndex', () => {
+describe('generateIndexFile', () => {
   it('writes to filesystem', async () => {
     setConfig({
       client: 'fetch',
@@ -29,7 +29,7 @@ describe('processIndex', () => {
       useOptions: true,
     });
 
-    const files: Parameters<typeof processIndex>[0]['files'] = {
+    const files: Parameters<typeof generateIndexFile>[0]['files'] = {
       index: new TypeScriptFile({
         dir: '/',
         name: 'index.ts',
@@ -48,7 +48,7 @@ describe('processIndex', () => {
       }),
     };
 
-    await processIndex({ files });
+    await generateIndexFile({ files });
 
     files.index.write();
 

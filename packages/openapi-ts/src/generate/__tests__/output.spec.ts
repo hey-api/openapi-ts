@@ -2,14 +2,13 @@ import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 
 import { describe, expect, it, vi } from 'vitest';
 
-import { setConfig } from '../../config';
-import { writeClient } from '../client';
-import { mockTemplates } from './mocks';
-import { openApi } from './models';
+import { setConfig } from '../../utils/config';
+import { generateOutput } from '../output';
+import { mockTemplates, openApi } from './mocks';
 
 vi.mock('node:fs');
 
-describe('writeClient', () => {
+describe('generateOutput', () => {
   it('writes to filesystem', async () => {
     setConfig({
       client: 'fetch',
@@ -30,7 +29,7 @@ describe('writeClient', () => {
       useOptions: false,
     });
 
-    const client: Parameters<typeof writeClient>[1] = {
+    const client: Parameters<typeof generateOutput>[1] = {
       models: [],
       server: 'http://localhost:8080',
       services: [],
@@ -38,7 +37,7 @@ describe('writeClient', () => {
       version: 'v1',
     };
 
-    await writeClient(openApi, client, mockTemplates);
+    await generateOutput(openApi, client, mockTemplates);
 
     expect(rmSync).toHaveBeenCalled();
     expect(mkdirSync).toHaveBeenCalled();

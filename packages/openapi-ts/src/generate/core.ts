@@ -7,10 +7,10 @@ import {
 } from 'node:fs';
 import path from 'node:path';
 
-import type { Client } from '../../types/client';
-import { getConfig } from '../config';
-import { getHttpRequestName } from '../getHttpRequestName';
-import type { Templates } from '../handlebars';
+import type { Client } from '../types/client';
+import { getConfig } from '../utils/config';
+import { getHttpRequestName } from '../utils/getHttpRequestName';
+import type { Templates } from '../utils/handlebars';
 
 /**
  * Generate OpenAPI core files, this includes the basic boilerplate code to handle requests.
@@ -18,7 +18,7 @@ import type { Templates } from '../handlebars';
  * @param client Client containing models, schemas, and services
  * @param templates The loaded handlebar templates
  */
-export const writeCore = async (
+export const generateCore = async (
   outputPath: string,
   client: Client,
   templates: Templates,

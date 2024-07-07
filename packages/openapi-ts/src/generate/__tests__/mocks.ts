@@ -1,6 +1,7 @@
 import { vi } from 'vitest';
 
-import type { Templates } from '../../handlebars';
+import type { OpenApi } from '../../openApi';
+import type { Templates } from '../../utils/handlebars';
 
 export const mockTemplates: Templates = {
   client: vi.fn().mockReturnValue('client'),
@@ -14,4 +15,14 @@ export const mockTemplates: Templates = {
     request: vi.fn().mockReturnValue('request'),
     settings: vi.fn().mockReturnValue('settings'),
   },
+};
+
+export const openApi: OpenApi = {
+  info: {
+    title: '',
+    version: '',
+  },
+  openapi: '',
+  paths: {},
+  swagger: '',
 };

@@ -3,24 +3,24 @@ import {
   compiler,
   type Node,
   TypeScriptFile,
-} from '../../compiler';
-import type { Model, OperationParameter } from '../../openApi';
-import type { Method } from '../../openApi/common/interfaces/client';
-import type { Client } from '../../types/client';
-import { getConfig, isStandaloneClient } from '../config';
-import { enumEntry, enumUnionType } from '../enum';
-import { escapeComment } from '../escape';
-import { sortByName, sorterByName } from '../sort';
+} from '../compiler';
+import type { Model, OperationParameter } from '../openApi';
+import type { Method } from '../openApi/common/interfaces/client';
+import type { Client } from '../types/client';
+import { getConfig, isStandaloneClient } from '../utils/config';
+import { enumEntry, enumUnionType } from '../utils/enum';
+import { escapeComment } from '../utils/escape';
+import { sortByName, sorterByName } from '../utils/sort';
+import {
+  setUniqueTypeName,
+  type SetUniqueTypeNameResult,
+  toType,
+} from '../utils/type';
 import {
   operationDataTypeName,
   operationErrorTypeName,
   operationResponseTypeName,
 } from './services';
-import {
-  setUniqueTypeName,
-  type SetUniqueTypeNameResult,
-  toType,
-} from './type';
 
 export interface TypesProps {
   client: Client;
@@ -503,7 +503,7 @@ const processServiceTypes = ({
   });
 };
 
-export const processTypes = async ({
+export const generateTypes = async ({
   client,
   files,
 }: {
