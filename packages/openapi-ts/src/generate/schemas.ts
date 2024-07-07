@@ -1,7 +1,7 @@
-import { compiler, TypeScriptFile } from '../../compiler';
-import type { OpenApi } from '../../openApi';
-import { ensureValidTypeScriptJavaScriptIdentifier } from '../../openApi/common/parser/sanitize';
-import { getConfig } from '../config';
+import { compiler, TypeScriptFile } from '../compiler';
+import type { OpenApi } from '../openApi';
+import { ensureValidTypeScriptJavaScriptIdentifier } from '../openApi/common/parser/sanitize';
+import { getConfig } from '../utils/config';
 
 const ensureValidSchemaOutput = (schema: unknown): object => {
   const config = getConfig();
@@ -47,7 +47,7 @@ const ensureValidSchemaOutput = (schema: unknown): object => {
   return result;
 };
 
-export const processSchemas = async ({
+export const generateSchemas = async ({
   file,
   openApi,
 }: {

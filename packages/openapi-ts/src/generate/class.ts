@@ -1,12 +1,12 @@
 import { writeFileSync } from 'node:fs';
 import path from 'node:path';
 
-import type { OpenApi } from '../../openApi';
-import type { Client } from '../../types/client';
-import { getConfig } from '../config';
-import { getHttpRequestName } from '../getHttpRequestName';
-import type { Templates } from '../handlebars';
-import { sortByName } from '../sort';
+import type { OpenApi } from '../openApi';
+import type { Client } from '../types/client';
+import { getConfig } from '../utils/config';
+import { getHttpRequestName } from '../utils/getHttpRequestName';
+import type { Templates } from '../utils/handlebars';
+import { sortByName } from '../utils/sort';
 
 /**
  * Generate the OpenAPI client index file using the Handlebar template and write it to disk.
@@ -17,7 +17,7 @@ import { sortByName } from '../sort';
  * @param client Client containing models, schemas, and services
  * @param templates The loaded handlebar templates
  */
-export const writeClientClass = async (
+export const generateClientClass = async (
   openApi: OpenApi,
   outputPath: string,
   client: Client,

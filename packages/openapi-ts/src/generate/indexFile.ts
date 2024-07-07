@@ -1,7 +1,7 @@
-import { compiler, TypeScriptFile } from '../../compiler';
-import { getConfig } from '../config';
+import { compiler, TypeScriptFile } from '../compiler';
+import { getConfig } from '../utils/config';
 
-export const processIndex = async ({
+export const generateIndexFile = async ({
   files,
 }: {
   files: Record<string, TypeScriptFile>;

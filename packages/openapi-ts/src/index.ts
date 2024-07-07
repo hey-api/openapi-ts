@@ -3,6 +3,7 @@ import path from 'node:path';
 import { loadConfig } from 'c12';
 import { sync } from 'cross-spawn';
 
+import { generateOutput } from './generate/output';
 import { parse } from './openApi';
 import type { Client } from './types/client';
 import type { ClientConfig, Config, UserConfig } from './types/config';
@@ -10,7 +11,6 @@ import { getConfig, isStandaloneClient, setConfig } from './utils/config';
 import { getOpenApiSpec } from './utils/getOpenApiSpec';
 import { registerHandlebarTemplates } from './utils/handlebars';
 import { postProcessClient } from './utils/postprocess';
-import { writeClient } from './utils/write/client';
 
 type OutputProcesser = {
   args: (path: string) => ReadonlyArray<string>;
@@ -279,7 +279,7 @@ export async function createClient(userConfig: UserConfig): Promise<Client[]> {
 
     if (!config.dryRun) {
       logClientMessage();
-      await writeClient(openApi, client, templates);
+      await generateOutput(openApi, client, templates);
       processOutput();
     }
 

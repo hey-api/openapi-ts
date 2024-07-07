@@ -1,18 +1,18 @@
 import { existsSync, mkdirSync } from 'node:fs';
 import path from 'node:path';
 
-import { TypeScriptFile } from '../../compiler';
-import type { OpenApi } from '../../openApi';
-import type { Client } from '../../types/client';
-import { getConfig } from '../config';
-import type { Templates } from '../handlebars';
-import { writeClientClass } from './class';
-import { writeCore } from './core';
-import { processIndex } from './index';
-import { processSchemas } from './schemas';
-import { processServices } from './services';
-import { processResponseTransformers } from './transformers';
-import { processTypes } from './types';
+import { TypeScriptFile } from '../compiler';
+import type { OpenApi } from '../openApi';
+import type { Client } from '../types/client';
+import { getConfig } from '../utils/config';
+import type { Templates } from '../utils/handlebars';
+import { generateClientClass } from './class';
+import { generateCore } from './core';
+import { generateIndexFile } from './indexFile';
+import { generateSchemas } from './schemas';
+import { generateServices } from './services';
+import { generateResponseTransformers } from './transformers';
+import { generateTypes } from './types';
 
 /**
  * Write our OpenAPI client, using the given templates at the given output
@@ -20,7 +20,7 @@ import { processTypes } from './types';
  * @param client Client containing models, schemas, and services
  * @param templates Templates wrapper with all loaded Handlebars templates
  */
-export const writeClient = async (
+export const generateOutput = async (
   openApi: OpenApi,
   client: Client,
   templates: Templates,
@@ -70,11 +70,11 @@ export const writeClient = async (
     });
   }
 
-  // schemas
-  await processSchemas({ file: files.schemas, openApi });
+  // types.gen.ts
+  await generateTypes({ client, files });
 
-  // types
-  await processTypes({ client, files });
+  // schemas.gen.ts
+  await generateSchemas({ file: files.schemas, openApi });
 
   // transformers
   if (
@@ -82,7 +82,7 @@ export const writeClient = async (
     client.services.length &&
     config.types.dates === 'types+transform'
   ) {
-    await processResponseTransformers({
+    await generateResponseTransformers({
       client,
       onNode: (node) => {
         files.types?.add(node);
@@ -93,14 +93,19 @@ export const writeClient = async (
     });
   }
 
-  // services
-  await processServices({ client, files });
+  // services.gen.ts
+  await generateServices({ client, files });
 
   // deprecated files
-  await writeClientClass(openApi, outputPath, client, templates);
-  await writeCore(path.resolve(config.output.path, 'core'), client, templates);
+  await generateClientClass(openApi, outputPath, client, templates);
+  await generateCore(
+    path.resolve(config.output.path, 'core'),
+    client,
+    templates,
+  );
 
-  await processIndex({ files });
+  // index.ts
+  await generateIndexFile({ files });
 
   files.schemas?.write('\n\n');
   files.services?.write('\n\n');
