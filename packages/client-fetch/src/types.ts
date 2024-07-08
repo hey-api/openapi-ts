@@ -23,7 +23,8 @@ export interface Config
     | RequestInit['body']
     | Record<string, unknown>
     | Array<Record<string, unknown>>
-    | Array<unknown>;
+    | Array<unknown>
+    | number;
   /**
    * A function for serializing request body parameter. By default,
    * {@link JSON.stringify()} will be used.
