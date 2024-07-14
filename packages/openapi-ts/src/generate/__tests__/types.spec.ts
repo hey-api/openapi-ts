@@ -22,6 +22,7 @@ describe('generateTypes', () => {
       output: {
         path: '',
       },
+      plugins: [],
       schemas: {},
       services: {},
       types: {

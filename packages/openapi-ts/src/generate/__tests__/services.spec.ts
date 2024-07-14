@@ -22,6 +22,7 @@ describe('generateServices', () => {
       output: {
         path: '',
       },
+      plugins: [],
       schemas: {},
       services: {
         asClass: true,
@@ -115,6 +116,7 @@ describe('methodNameBuilder', () => {
       output: {
         path: '',
       },
+      plugins: [],
       schemas: {},
       services: {
         asClass: true,
@@ -154,6 +156,7 @@ describe('methodNameBuilder', () => {
       output: {
         path: '',
       },
+      plugins: [],
       schemas: {},
       services: {
         asClass: true,

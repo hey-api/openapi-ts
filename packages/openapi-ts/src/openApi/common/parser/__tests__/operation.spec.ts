@@ -14,6 +14,7 @@ describe('getOperationName', () => {
     output: {
       path: '',
     },
+    plugins: [],
     schemas: {
       export: false,
     },
@@ -38,6 +39,7 @@ describe('getOperationName', () => {
     output: {
       path: '',
     },
+    plugins: [],
     schemas: {
       export: false,
     },

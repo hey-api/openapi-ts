@@ -23,6 +23,7 @@ describe('generateSchemas', () => {
       output: {
         path: '',
       },
+      plugins: [],
       schemas: {},
       services: {},
       types: {
