@@ -21,6 +21,7 @@ describe('generateClientClass', () => {
       output: {
         path: '',
       },
+      plugins: [],
       schemas: {},
       services: {},
       types: {

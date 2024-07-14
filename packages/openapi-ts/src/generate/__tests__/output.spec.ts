@@ -21,6 +21,7 @@ describe('generateOutput', () => {
         format: 'prettier',
         path: './dist',
       },
+      plugins: [],
       schemas: {},
       services: {},
       types: {

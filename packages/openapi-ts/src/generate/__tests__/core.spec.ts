@@ -35,6 +35,7 @@ describe('generateCore', () => {
       output: {
         path: '',
       },
+      plugins: [],
       schemas: {},
       services: {},
       types: {
@@ -91,6 +92,7 @@ describe('generateCore', () => {
       output: {
         path: '',
       },
+      plugins: [],
       schemas: {},
       services: {},
       types: {
@@ -130,6 +132,7 @@ describe('generateCore', () => {
       output: {
         path: '',
       },
+      plugins: [],
       schemas: {},
       services: {},
       types: {

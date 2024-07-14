@@ -21,6 +21,7 @@ describe('generateIndexFile', () => {
       output: {
         path: '',
       },
+      plugins: [],
       schemas: {},
       services: {},
       types: {
