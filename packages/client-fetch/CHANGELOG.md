@@ -1,5 +1,11 @@
 # @hey-api/client-fetch
 
+## 0.1.8
+
+### Patch Changes
+
+- [#756](https://github.com/hey-api/openapi-ts/pull/756) [`d546a3f`](https://github.com/hey-api/openapi-ts/commit/d546a3f9fd0a6ff5181deb50ed467acd75370889) Thanks [@jumika](https://github.com/jumika)! - fix: allow number as body type
+
 ## 0.1.7
 
 ### Patch Changes
