@@ -12,8 +12,13 @@ const main = async () => {
     output: {
       path: './test/generated/sample/',
     },
+    plugins: [
+      {
+        name: '@tanstack/react-query',
+      },
+    ],
     schemas: {
-      export: false,
+      // export: false,
     },
     services: {
       // asClass: true,

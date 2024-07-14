@@ -69,6 +69,12 @@ export const generateOutput = async (
       name: 'types.ts',
     });
   }
+  config.plugins.forEach((plugin) => {
+    files[plugin.name] = new TypeScriptFile({
+      dir: config.output.path,
+      name: `${plugin.name}.ts`,
+    });
+  });
 
   // types.gen.ts
   await generateTypes({ client, files });
@@ -110,5 +116,8 @@ export const generateOutput = async (
   files.schemas?.write('\n\n');
   files.services?.write('\n\n');
   files.types?.write('\n\n');
+  config.plugins.forEach((plugin) => {
+    files[plugin.name]?.write('\n\n');
+  });
   files.index.write();
 };

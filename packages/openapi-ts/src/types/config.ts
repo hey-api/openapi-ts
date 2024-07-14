@@ -1,4 +1,6 @@
 import type { Operation } from '../openApi';
+import type { Plugins } from './plugins';
+import type { ExtractArrayOfObjects } from './utils';
 
 export interface ClientConfig {
   /**
@@ -68,6 +70,10 @@ export interface ClientConfig {
          */
         path: string;
       };
+  /**
+   * Plugins are used to generate additional output files from provided input.
+   */
+  plugins?: ReadonlyArray<Plugins['name'] | Plugins>;
   /**
    * Path to custom request file
    * @deprecated
@@ -188,15 +194,26 @@ export interface ClientConfig {
   useOptions?: boolean;
 }
 
-// export type UserConfig = ClientConfig | Array<ClientConfig>
+// export type UserConfig = ClientConfig | ReadonlyArray<ClientConfig>
 export type UserConfig = ClientConfig;
 
 export type Config = Omit<
   Required<ClientConfig>,
-  'base' | 'name' | 'output' | 'request' | 'schemas' | 'services' | 'types'
+  | 'base'
+  | 'name'
+  | 'output'
+  | 'plugins'
+  | 'request'
+  | 'schemas'
+  | 'services'
+  | 'types'
 > &
   Pick<ClientConfig, 'base' | 'name' | 'request'> & {
     output: Extract<Required<ClientConfig>['output'], object>;
+    plugins: ExtractArrayOfObjects<
+      Required<ClientConfig>['plugins'],
+      { name: string }
+    >;
     schemas: Extract<Required<ClientConfig>['schemas'], object>;
     services: Extract<Required<ClientConfig>['services'], object>;
     types: Extract<Required<ClientConfig>['types'], object>;

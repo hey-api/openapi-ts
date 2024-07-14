@@ -113,6 +113,20 @@ const getOutput = (userConfig: ClientConfig): Config['output'] => {
   return output;
 };
 
+const getPlugins = (userConfig: ClientConfig): Config['plugins'] => {
+  const plugins: Config['plugins'] = (userConfig.plugins ?? []).map(
+    (plugin) => {
+      if (typeof plugin === 'string') {
+        return {
+          name: plugin,
+        };
+      }
+      return plugin;
+    },
+  );
+  return plugins;
+};
+
 const getSchemas = (userConfig: ClientConfig): Config['schemas'] => {
   let schemas: Config['schemas'] = {
     export: true,
@@ -232,6 +246,7 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
       );
     }
 
+    const plugins = getPlugins(userConfig);
     const schemas = getSchemas(userConfig);
     const services = getServices(userConfig);
     const types = getTypes(userConfig);
@@ -248,6 +263,7 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
       input,
       name,
       output,
+      plugins,
       request,
       schemas,
       services,

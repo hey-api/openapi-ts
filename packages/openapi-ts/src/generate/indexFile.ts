@@ -43,13 +43,11 @@ export const generateIndexFile = async ({
     );
   }
 
-  if (files.schemas && !files.schemas.isEmpty()) {
-    files.index.add(compiler.export.all(`./${files.schemas.getName(false)}`));
-  }
-  if (files.services && !files.services.isEmpty()) {
-    files.index.add(compiler.export.all(`./${files.services.getName(false)}`));
-  }
-  if (files.types && !files.types.isEmpty()) {
-    files.index.add(compiler.export.all(`./${files.types.getName(false)}`));
-  }
+  Object.entries(files).forEach(([name, file]) => {
+    if (name === 'index' || file.isEmpty()) {
+      return;
+    }
+
+    files.index.add(compiler.export.all(`./${file.getName(false)}`));
+  });
 };
