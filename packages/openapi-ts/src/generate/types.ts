@@ -29,7 +29,7 @@ export interface TypesProps {
   onRemoveNode?: VoidFunction;
 }
 
-const serviceExportedNamespace = () => '$OpenApiTs';
+const treeName = '$OpenApiTs';
 
 export const emptyModel: Model = {
   $refs: [],
@@ -489,18 +489,20 @@ const processServiceTypes = ({
     return pathKey;
   });
 
-  generateType({
-    client,
-    meta: {
-      $ref: '@hey-api/openapi-ts',
-      name: serviceExportedNamespace(),
-    },
-    onNode,
-    type: toType({
-      ...emptyModel,
-      properties,
-    }),
-  });
+  if (config.types.tree) {
+    generateType({
+      client,
+      meta: {
+        $ref: '@hey-api/openapi-ts',
+        name: treeName,
+      },
+      onNode,
+      type: toType({
+        ...emptyModel,
+        properties,
+      }),
+    });
+  }
 };
 
 export const generateTypes = async ({

@@ -271,8 +271,20 @@ describe('OpenAPI v3', () => {
         services: false,
         types: {},
       }),
-      description: 'generate only types',
+      description: 'generate only types with default settings',
       name: 'v3_types',
+    },
+    {
+      config: createConfig({
+        exportCore: false,
+        schemas: false,
+        services: false,
+        types: {
+          tree: false,
+        },
+      }),
+      description: 'generate only types without tree',
+      name: 'v3_types_no_tree',
     },
   ];
 
