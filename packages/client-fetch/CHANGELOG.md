@@ -1,5 +1,11 @@
 # @hey-api/client-fetch
 
+## 0.1.9
+
+### Patch Changes
+
+- [#779](https://github.com/hey-api/openapi-ts/pull/779) [`e7e98d2`](https://github.com/hey-api/openapi-ts/commit/e7e98d279fe0ee4c71ae72a7b57afdd517a89641) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: always use client options when passed to service
+
 ## 0.1.8
 
 ### Patch Changes
