@@ -170,6 +170,7 @@ const getTypes = (userConfig: ClientConfig): Config['types'] => {
     enums: false,
     export: true,
     name: 'preserve',
+    tree: true,
   };
   if (typeof userConfig.types === 'boolean') {
     types.export = userConfig.types;
