@@ -1,15 +1,14 @@
-import { writeFileSync } from 'node:fs';
+import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 
 import { describe, expect, it, vi } from 'vitest';
 
-import { setConfig } from '../../config';
-import { writeClientClass } from '../class';
-import { mockTemplates } from './mocks';
-import { openApi } from './models';
+import { setConfig } from '../../utils/config';
+import { generateOutput } from '../output';
+import { mockTemplates, openApi } from './mocks';
 
 vi.mock('node:fs');
 
-describe('writeClientClass', () => {
+describe('generateOutput', () => {
   it('writes to filesystem', async () => {
     setConfig({
       client: 'fetch',
@@ -18,19 +17,20 @@ describe('writeClientClass', () => {
       dryRun: false,
       exportCore: true,
       input: '',
-      name: 'AppClient',
       output: {
-        path: '',
+        format: 'prettier',
+        path: './dist',
       },
+      plugins: [],
       schemas: {},
       services: {},
       types: {
         enums: 'javascript',
       },
-      useOptions: true,
+      useOptions: false,
     });
 
-    const client: Parameters<typeof writeClientClass>[2] = {
+    const client: Parameters<typeof generateOutput>[1] = {
       models: [],
       server: 'http://localhost:8080',
       services: [],
@@ -38,8 +38,10 @@ describe('writeClientClass', () => {
       version: 'v1',
     };
 
-    await writeClientClass(openApi, './dist', client, mockTemplates);
+    await generateOutput(openApi, client, mockTemplates);
 
+    expect(rmSync).toHaveBeenCalled();
+    expect(mkdirSync).toHaveBeenCalled();
     expect(writeFileSync).toHaveBeenCalled();
   });
 });

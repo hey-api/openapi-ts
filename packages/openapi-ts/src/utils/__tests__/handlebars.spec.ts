@@ -20,6 +20,7 @@ describe('registerHandlebarHelpers', () => {
         format: 'prettier',
         path: '',
       },
+      plugins: [],
       schemas: {},
       services: {},
       types: {
@@ -50,6 +51,7 @@ describe('registerHandlebarTemplates', () => {
         format: 'prettier',
         path: '',
       },
+      plugins: [],
       schemas: {},
       services: {},
       types: {

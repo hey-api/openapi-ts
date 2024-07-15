@@ -1,11 +1,11 @@
-import { compiler, type Property, type TypeNode } from '../../compiler';
-import type { Model } from '../../openApi';
-import { transformTypeKeyName } from '../../openApi/common/parser/type';
-import type { Client } from '../../types/client';
-import { getConfig, isStandaloneClient } from '../config';
-import { enumValue } from '../enum';
-import { escapeComment, escapeName, unescapeName } from '../escape';
-import { unique } from '../unique';
+import { compiler, type Property, type TypeNode } from '../compiler';
+import type { Model } from '../openApi';
+import { transformTypeKeyName } from '../openApi/common/parser/type';
+import type { Client } from '../types/client';
+import { getConfig, isStandaloneClient } from './config';
+import { enumValue } from './enum';
+import { escapeComment, escapeName, unescapeName } from './escape';
+import { unique } from './unique';
 
 const base = (model: Model) => {
   const config = getConfig();

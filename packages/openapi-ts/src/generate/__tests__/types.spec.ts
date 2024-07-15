@@ -3,13 +3,13 @@ import path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
 
-import { TypeScriptFile } from '../../../compiler';
-import { setConfig } from '../../config';
-import { processTypes } from '../types';
+import { TypeScriptFile } from '../../compiler';
+import { setConfig } from '../../utils/config';
+import { generateTypes } from '../types';
 
 vi.mock('node:fs');
 
-describe('processTypes', () => {
+describe('generateTypes', () => {
   it('writes to filesystem', async () => {
     setConfig({
       client: 'fetch',
@@ -22,6 +22,7 @@ describe('processTypes', () => {
       output: {
         path: '',
       },
+      plugins: [],
       schemas: {},
       services: {},
       types: {
@@ -30,7 +31,7 @@ describe('processTypes', () => {
       useOptions: true,
     });
 
-    const client: Parameters<typeof processTypes>[0]['client'] = {
+    const client: Parameters<typeof generateTypes>[0]['client'] = {
       models: [
         {
           $refs: [],
@@ -69,7 +70,7 @@ describe('processTypes', () => {
       }),
     };
 
-    await processTypes({
+    await generateTypes({
       client,
       files,
     });

@@ -3,6 +3,7 @@ import path from 'node:path';
 import { loadConfig } from 'c12';
 import { sync } from 'cross-spawn';
 
+import { generateOutput } from './generate/output';
 import { parse } from './openApi';
 import type { Client } from './types/client';
 import type { ClientConfig, Config, UserConfig } from './types/config';
@@ -10,7 +11,6 @@ import { getConfig, isStandaloneClient, setConfig } from './utils/config';
 import { getOpenApiSpec } from './utils/getOpenApiSpec';
 import { registerHandlebarTemplates } from './utils/handlebars';
 import { postProcessClient } from './utils/postprocess';
-import { writeClient } from './utils/write/client';
 
 type OutputProcesser = {
   args: (path: string) => ReadonlyArray<string>;
@@ -111,6 +111,20 @@ const getOutput = (userConfig: ClientConfig): Config['output'] => {
     };
   }
   return output;
+};
+
+const getPlugins = (userConfig: ClientConfig): Config['plugins'] => {
+  const plugins: Config['plugins'] = (userConfig.plugins ?? []).map(
+    (plugin) => {
+      if (typeof plugin === 'string') {
+        return {
+          name: plugin,
+        };
+      }
+      return plugin;
+    },
+  );
+  return plugins;
 };
 
 const getSchemas = (userConfig: ClientConfig): Config['schemas'] => {
@@ -232,6 +246,7 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
       );
     }
 
+    const plugins = getPlugins(userConfig);
     const schemas = getSchemas(userConfig);
     const services = getServices(userConfig);
     const types = getTypes(userConfig);
@@ -248,6 +263,7 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
       input,
       name,
       output,
+      plugins,
       request,
       schemas,
       services,
@@ -279,7 +295,7 @@ export async function createClient(userConfig: UserConfig): Promise<Client[]> {
 
     if (!config.dryRun) {
       logClientMessage();
-      await writeClient(openApi, client, templates);
+      await generateOutput(openApi, client, templates);
       processOutput();
     }
 
