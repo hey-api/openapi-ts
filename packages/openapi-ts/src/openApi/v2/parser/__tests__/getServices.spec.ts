@@ -15,6 +15,7 @@ describe('getServices', () => {
       output: {
         path: '',
       },
+      plugins: [],
       schemas: {},
       services: {
         operationId: false,

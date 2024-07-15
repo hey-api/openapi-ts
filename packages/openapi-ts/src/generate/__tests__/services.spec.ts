@@ -3,14 +3,14 @@ import path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
 
-import { TypeScriptFile } from '../../../compiler';
-import type { Operation } from '../../../openApi';
-import { setConfig } from '../../config';
-import { processServices } from '../services';
+import { TypeScriptFile } from '../../compiler';
+import type { Operation } from '../../openApi';
+import { setConfig } from '../../utils/config';
+import { generateServices } from '../services';
 
 vi.mock('node:fs');
 
-describe('processServices', () => {
+describe('generateServices', () => {
   it('writes to filesystem', async () => {
     setConfig({
       client: 'fetch',
@@ -22,6 +22,7 @@ describe('processServices', () => {
       output: {
         path: '',
       },
+      plugins: [],
       schemas: {},
       services: {
         asClass: true,
@@ -30,7 +31,7 @@ describe('processServices', () => {
       useOptions: false,
     });
 
-    const client: Parameters<typeof processServices>[0]['client'] = {
+    const client: Parameters<typeof generateServices>[0]['client'] = {
       models: [],
       server: 'http://localhost:8080',
       services: [
@@ -53,7 +54,7 @@ describe('processServices', () => {
       services: file,
     };
 
-    await processServices({ client, files });
+    await generateServices({ client, files });
 
     file.write();
 
@@ -89,7 +90,7 @@ describe('methodNameBuilder', () => {
     summary: null,
   };
 
-  const client: Parameters<typeof processServices>[0]['client'] = {
+  const client: Parameters<typeof generateServices>[0]['client'] = {
     models: [],
     server: 'http://localhost:8080',
     services: [
@@ -115,6 +116,7 @@ describe('methodNameBuilder', () => {
       output: {
         path: '',
       },
+      plugins: [],
       schemas: {},
       services: {
         asClass: true,
@@ -131,7 +133,7 @@ describe('methodNameBuilder', () => {
       services: file,
     };
 
-    await processServices({ client, files });
+    await generateServices({ client, files });
 
     file.write();
 
@@ -154,6 +156,7 @@ describe('methodNameBuilder', () => {
       output: {
         path: '',
       },
+      plugins: [],
       schemas: {},
       services: {
         asClass: true,
@@ -171,7 +174,7 @@ describe('methodNameBuilder', () => {
       services: file,
     };
 
-    await processServices({ client, files });
+    await generateServices({ client, files });
 
     file.write();
 

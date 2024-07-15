@@ -1,17 +1,17 @@
 import ts from 'typescript';
 
-import { compiler } from '../../compiler';
+import { compiler } from '../compiler';
 import type {
   ModelMeta,
   OperationResponse,
-} from '../../openApi/common/interfaces/client';
-import { getConfig } from '../config';
+} from '../openApi/common/interfaces/client';
+import { getConfig } from '../utils/config';
+import { unsetUniqueTypeName } from '../utils/type';
 import {
   modelResponseTransformerTypeName,
   operationResponseTransformerTypeName,
   operationResponseTypeName,
 } from './services';
-import { unsetUniqueTypeName } from './type';
 import { generateType, type TypesProps } from './types';
 
 interface ModelProps extends TypesProps {
@@ -234,7 +234,7 @@ const generateResponseTransformer = ({
   };
 };
 
-export const processResponseTransformers = async ({
+export const generateResponseTransformers = async ({
   client,
   onNode,
   onRemoveNode,

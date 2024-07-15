@@ -7,20 +7,15 @@ import {
   FunctionParameter,
   type Node,
   TypeScriptFile,
-} from '../../compiler';
-import type { ObjectValue } from '../../compiler/types';
-import type {
-  Model,
-  Operation,
-  OperationParameter,
-  Service,
-} from '../../openApi';
-import type { Client } from '../../types/client';
-import { getConfig, isStandaloneClient } from '../config';
-import { escapeComment, escapeName } from '../escape';
-import { transformServiceName } from '../transform';
-import { unique } from '../unique';
-import { setUniqueTypeName } from './type';
+} from '../compiler';
+import type { ObjectValue } from '../compiler/types';
+import type { Model, Operation, OperationParameter, Service } from '../openApi';
+import type { Client } from '../types/client';
+import { getConfig, isStandaloneClient } from '../utils/config';
+import { escapeComment, escapeName } from '../utils/escape';
+import { transformServiceName } from '../utils/transform';
+import { setUniqueTypeName } from '../utils/type';
+import { unique } from '../utils/unique';
 
 type OnNode = (node: Node) => void;
 type OnImport = (name: string) => void;
@@ -464,7 +459,7 @@ const toOperationStatements = (
   ];
 };
 
-export const processService = (
+const processService = (
   client: Client,
   service: Service,
   onNode: OnNode,
@@ -610,7 +605,7 @@ export const processService = (
   onNode(statement);
 };
 
-export const processServices = async ({
+export const generateServices = async ({
   client,
   files,
 }: {

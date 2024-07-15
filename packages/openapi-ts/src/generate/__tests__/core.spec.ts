@@ -3,20 +3,20 @@ import path from 'node:path';
 
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { setConfig } from '../../config';
-import { writeCore } from '../core';
+import { setConfig } from '../../utils/config';
+import { generateCore } from '../core';
 import { mockTemplates } from './mocks';
 
 vi.mock('node:fs');
 
-describe('writeCore', () => {
-  let templates: Parameters<typeof writeCore>[2];
+describe('generateCore', () => {
+  let templates: Parameters<typeof generateCore>[2];
   beforeEach(() => {
     templates = mockTemplates;
   });
 
   it('writes to filesystem', async () => {
-    const client: Parameters<typeof writeCore>[1] = {
+    const client: Parameters<typeof generateCore>[1] = {
       models: [],
       server: 'http://localhost:8080',
       services: [],
@@ -35,6 +35,7 @@ describe('writeCore', () => {
       output: {
         path: '',
       },
+      plugins: [],
       schemas: {},
       services: {},
       types: {
@@ -43,7 +44,7 @@ describe('writeCore', () => {
       useOptions: true,
     });
 
-    await writeCore('/', client, templates);
+    await generateCore('/', client, templates);
 
     expect(writeFileSync).toHaveBeenCalledWith(
       path.resolve('/', '/OpenAPI.ts'),
@@ -72,7 +73,7 @@ describe('writeCore', () => {
   });
 
   it('uses client server value for base', async () => {
-    const client: Parameters<typeof writeCore>[1] = {
+    const client: Parameters<typeof generateCore>[1] = {
       models: [],
       server: 'http://localhost:8080',
       services: [],
@@ -91,6 +92,7 @@ describe('writeCore', () => {
       output: {
         path: '',
       },
+      plugins: [],
       schemas: {},
       services: {},
       types: {
@@ -99,7 +101,7 @@ describe('writeCore', () => {
       useOptions: true,
     });
 
-    await writeCore('/', client, templates);
+    await generateCore('/', client, templates);
 
     expect(templates.core.settings).toHaveBeenCalledWith({
       $config: config,
@@ -110,7 +112,7 @@ describe('writeCore', () => {
   });
 
   it('uses custom value for base', async () => {
-    const client: Parameters<typeof writeCore>[1] = {
+    const client: Parameters<typeof generateCore>[1] = {
       models: [],
       server: 'http://localhost:8080',
       services: [],
@@ -130,6 +132,7 @@ describe('writeCore', () => {
       output: {
         path: '',
       },
+      plugins: [],
       schemas: {},
       services: {},
       types: {
@@ -138,7 +141,7 @@ describe('writeCore', () => {
       useOptions: true,
     });
 
-    await writeCore('/', client, templates);
+    await generateCore('/', client, templates);
 
     expect(templates.core.settings).toHaveBeenCalledWith({
       $config: config,
