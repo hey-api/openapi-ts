@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.48.3
+
+### Patch Changes
+
+- [#781](https://github.com/hey-api/openapi-ts/pull/781) [`df3b799`](https://github.com/hey-api/openapi-ts/commit/df3b79996d47a69e4f2fdad93cea18ae1a01c419) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: use methodNameBuilder when asClass is false
+
+- [#782](https://github.com/hey-api/openapi-ts/pull/782) [`edfd2bd`](https://github.com/hey-api/openapi-ts/commit/edfd2bdbb64f6682ded16f6da30f88f1c113bbe0) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow not generating types tree with types.tree = false
+
 ## 0.48.2
 
 ### Patch Changes
