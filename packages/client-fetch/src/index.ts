@@ -34,7 +34,8 @@ export const createClient = (config: Config): Client => {
     globalConfig = { ..._config };
   }
 
-  const getConfig = () => (_config.global ? globalConfig : _config);
+  // @ts-ignore
+  const getConfig = () => (_config.root ? globalConfig : _config);
 
   const interceptors = _config.global
     ? globalInterceptors
@@ -159,4 +160,8 @@ export const createClient = (config: Config): Client => {
   };
 };
 
-export const client = createClient(globalConfig);
+export const client = createClient({
+  ...globalConfig,
+  // @ts-ignore
+  root: true,
+});
