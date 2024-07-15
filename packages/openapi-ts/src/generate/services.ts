@@ -381,6 +381,16 @@ const toRequestOptions = (
   });
 };
 
+const toOperationName = (operation: Operation) => {
+  const config = getConfig();
+
+  if (!config.services.methodNameBuilder) {
+    return operation.name;
+  }
+
+  return config.services.methodNameBuilder(operation);
+};
+
 const toOperationStatements = (
   client: Client,
   operation: Operation,
@@ -534,7 +544,7 @@ const processService = (
       const statement = compiler.export.const({
         comment: toOperationComment(operation),
         expression,
-        name: operation.name,
+        name: toOperationName(operation),
       });
       onNode(statement);
     });
@@ -546,9 +556,7 @@ const processService = (
       accessLevel: 'public',
       comment: toOperationComment(operation),
       isStatic: config.name === undefined && config.client !== 'angular',
-      name: config.services.methodNameBuilder
-        ? config.services.methodNameBuilder(operation)
-        : operation.name,
+      name: toOperationName(operation),
       parameters: toOperationParamType(client, operation),
       returnType: isStandalone
         ? undefined

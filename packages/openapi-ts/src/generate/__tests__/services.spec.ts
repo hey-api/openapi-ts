@@ -143,8 +143,8 @@ describe('methodNameBuilder', () => {
     );
   });
 
-  it('call methodNameBuilder', async () => {
-    const methodNameBuilderMock = vi.fn().mockReturnValue('customName');
+  it('use methodNameBuilder when asClass is true', async () => {
+    const methodNameBuilder = vi.fn().mockReturnValue('customName');
 
     setConfig({
       client: 'fetch',
@@ -160,7 +160,7 @@ describe('methodNameBuilder', () => {
       schemas: {},
       services: {
         asClass: true,
-        methodNameBuilder: methodNameBuilderMock,
+        methodNameBuilder,
       },
       types: {},
       useOptions: false,
@@ -183,6 +183,49 @@ describe('methodNameBuilder', () => {
       expect.stringContaining('public static customName()'),
     );
 
-    expect(methodNameBuilderMock).toHaveBeenCalledWith(operation);
+    expect(methodNameBuilder).toHaveBeenCalledWith(operation);
+  });
+
+  it('use methodNameBuilder when asClass is false', async () => {
+    const methodNameBuilder = vi.fn().mockReturnValue('customName');
+
+    setConfig({
+      client: 'fetch',
+      configFile: '',
+      debug: false,
+      dryRun: false,
+      exportCore: true,
+      input: '',
+      output: {
+        path: '',
+      },
+      plugins: [],
+      schemas: {},
+      services: {
+        asClass: false,
+        methodNameBuilder,
+      },
+      types: {},
+      useOptions: false,
+    });
+
+    const file = new TypeScriptFile({
+      dir: '/',
+      name: 'services.ts',
+    });
+    const files = {
+      services: file,
+    };
+
+    await generateServices({ client, files });
+
+    file.write();
+
+    expect(writeFileSync).toHaveBeenCalledWith(
+      path.resolve('/services.gen.ts'),
+      expect.stringContaining('public static customName()'),
+    );
+
+    expect(methodNameBuilder).toHaveBeenCalledWith(operation);
   });
 });
