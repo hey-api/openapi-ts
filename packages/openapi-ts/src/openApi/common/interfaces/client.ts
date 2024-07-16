@@ -53,9 +53,6 @@ export interface Operation extends OperationParameters {
    */
   id: string | null;
   method: Method;
-  /**
-   * Method name. Methods contain the request logic.
-   */
   name: string;
   path: string;
   responseHeader: string | null;

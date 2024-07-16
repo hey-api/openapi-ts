@@ -13,6 +13,7 @@ import type { Model, Operation, OperationParameter, Service } from '../openApi';
 import type { Client } from '../types/client';
 import { getConfig, isStandaloneClient } from '../utils/config';
 import { escapeComment, escapeName } from '../utils/escape';
+import { reservedWordsRegExp } from '../utils/reservedWords';
 import { transformServiceName } from '../utils/transform';
 import { setUniqueTypeName } from '../utils/type';
 import { unique } from '../utils/unique';
@@ -381,14 +382,18 @@ const toRequestOptions = (
   });
 };
 
-const toOperationName = (operation: Operation) => {
+const toOperationName = (operation: Operation, handleIllegal: boolean) => {
   const config = getConfig();
 
-  if (!config.services.methodNameBuilder) {
-    return operation.name;
+  if (config.services.methodNameBuilder) {
+    return config.services.methodNameBuilder(operation);
   }
 
-  return config.services.methodNameBuilder(operation);
+  if (handleIllegal && operation.name.match(reservedWordsRegExp)) {
+    return `${operation.name}_`;
+  }
+
+  return operation.name;
 };
 
 const toOperationStatements = (
@@ -544,7 +549,7 @@ const processService = (
       const statement = compiler.export.const({
         comment: toOperationComment(operation),
         expression,
-        name: toOperationName(operation),
+        name: toOperationName(operation, true),
       });
       onNode(statement);
     });
@@ -556,7 +561,7 @@ const processService = (
       accessLevel: 'public',
       comment: toOperationComment(operation),
       isStatic: config.name === undefined && config.client !== 'angular',
-      name: toOperationName(operation),
+      name: toOperationName(operation, false),
       parameters: toOperationParamType(client, operation),
       returnType: isStandalone
         ? undefined

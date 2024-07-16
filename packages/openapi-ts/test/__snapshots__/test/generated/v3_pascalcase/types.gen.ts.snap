@@ -16,11 +16,11 @@ export type ArrayWithProperties = Array<{
     bar?: string;
 }>;
 
-export type PostServiceWithEmptyTagData = {
+export type ImportData = {
     requestBody: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
 };
 
-export type PostServiceWithEmptyTagResponse = ModelFromZendesk | ModelWithReadOnlyAndWriteOnly;
+export type ImportResponse = ModelFromZendesk | ModelWithReadOnlyAndWriteOnly;
 
 export type ApiVversionOdataControllerCountResponse = ModelFromZendesk;
 
@@ -445,7 +445,7 @@ export type NonAsciiæøåÆøÅöôêÊ字符串Response = Array<NonAsciiString
 export type $OpenApiTs = {
     '/api/v{api-version}/no-tag': {
         post: {
-            req: PostServiceWithEmptyTagData;
+            req: ImportData;
             res: {
                 /**
                  * Success
