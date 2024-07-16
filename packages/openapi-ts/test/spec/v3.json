@@ -13,10 +13,10 @@
     "/api/v{api-version}/no-tag": {
       "tags": [],
       "get": {
-        "operationId": "ServiceWithEmptyTag"
+        "operationId": "export"
       },
       "post": {
-        "operationId": "PostServiceWithEmptyTag",
+        "operationId": "import",
         "requestBody": {
           "required": true,
           "content": {
