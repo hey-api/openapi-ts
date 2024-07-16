@@ -3,13 +3,13 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { PostServiceWithEmptyTagData, PostServiceWithEmptyTagResponse3, ApiVversionOdataControllerCountResponse, DeleteFooData3, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, CallWithDescriptionsData, DeprecatedCallData, PostApiRequestBodyData, PostApiFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, DummyAResponse, DummyBResponse, CollectionFormatData, TypesData, TypesResponse, UploadFileData, UploadFileResponse, FileResponseData, FileResponseResponse, ComplexTypesData, ComplexTypesResponse, ComplexParamsData, ComplexParamsResponse, MultipartRequestData, MultipartResponseResponse, CallWithResultFromHeaderResponse, TestErrorCodeData, TestErrorCodeResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response } from './types.gen';
+import type { ImportData, ImportResponse, ApiVversionOdataControllerCountResponse, DeleteFooData3, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, CallWithDescriptionsData, DeprecatedCallData, PostApiRequestBodyData, PostApiFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, DummyAResponse, DummyBResponse, CollectionFormatData, TypesData, TypesResponse, UploadFileData, UploadFileResponse, FileResponseData, FileResponseResponse, ComplexTypesData, ComplexTypesResponse, ComplexParamsData, ComplexParamsResponse, MultipartRequestData, MultipartResponseResponse, CallWithResultFromHeaderResponse, TestErrorCodeData, TestErrorCodeResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response } from './types.gen';
 
 export class DefaultService {
     /**
      * @throws ApiError
      */
-    public static serviceWithEmptyTag(): CancelablePromise<void> {
+    public static export(): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/no-tag'
@@ -23,7 +23,7 @@ export class DefaultService {
      * @returns ModelWithReadOnlyAndWriteOnly Default success response
      * @throws ApiError
      */
-    public static postServiceWithEmptyTag(data: PostServiceWithEmptyTagData): CancelablePromise<PostServiceWithEmptyTagResponse3> {
+    public static import(data: ImportData): CancelablePromise<ImportResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v{api-version}/no-tag',

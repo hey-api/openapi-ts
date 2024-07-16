@@ -1,10 +1,10 @@
 import camelcase from 'camelcase';
 
 import { getConfig, isStandaloneClient } from '../../../utils/config';
+import { reservedWordsRegExp } from '../../../utils/reservedWords';
 import { transformTypeName } from '../../../utils/transform';
 import { isDefinitionTypeNullable } from '../../v3/parser/inferType';
 import type { Type } from '../interfaces/Type';
-import { reservedWords } from './reservedWords';
 import {
   ensureValidTypeScriptJavaScriptIdentifier,
   sanitizeOperationParameterName,
@@ -166,5 +166,5 @@ export const transformTypeKeyName = (value: string): string => {
   }
 
   const clean = sanitizeOperationParameterName(value).trim();
-  return camelcase(clean).replace(reservedWords, '_$1');
+  return camelcase(clean).replace(reservedWordsRegExp, '_$1');
 };

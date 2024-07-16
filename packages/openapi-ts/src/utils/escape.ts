@@ -4,12 +4,12 @@ import { EOL } from 'os';
  * Javascript identifier regexp pattern retrieved from
  * {@link} https://developer.mozilla.org/docs/Web/JavaScript/Reference/Lexical_grammar#identifiers
  */
-const validTypescriptIdentifierRegex =
+const validTypescriptIdentifierRegExp =
   /^[$_\p{ID_Start}][$\u200c\u200d\p{ID_Continue}]*$/u;
 
 export const escapeName = (value: string): string => {
   if (value || value === '') {
-    const validName = validTypescriptIdentifierRegex.test(value);
+    const validName = validTypescriptIdentifierRegExp.test(value);
     if (!validName) {
       return `'${value}'`;
     }
