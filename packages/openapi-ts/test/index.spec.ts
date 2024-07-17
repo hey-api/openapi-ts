@@ -220,20 +220,6 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         exportCore: false,
-        schemas: false,
-        services: {
-          asClass: true,
-          include: '^(Simple|Parameters)',
-          name: 'myAwesome{{name}}Api',
-        },
-        types: false,
-      }),
-      description: 'generate services with custom name',
-      name: 'v3_services_name',
-    },
-    {
-      config: createConfig({
-        exportCore: false,
         schemas: {
           type: 'json',
         },
@@ -254,6 +240,32 @@ describe('OpenAPI v3', () => {
       }),
       description: 'generate form validation schemas',
       name: 'v3_schemas_form',
+    },
+    {
+      config: createConfig({
+        exportCore: false,
+        schemas: false,
+        services: {
+          asClass: true,
+          include: '^(Simple|Parameters)',
+          name: 'myAwesome{{name}}Api',
+        },
+        types: false,
+      }),
+      description: 'generate services with custom name',
+      name: 'v3_services_name',
+    },
+    {
+      config: createConfig({
+        exportCore: false,
+        schemas: false,
+        services: {
+          filter: '^\\w+ /api/v{api-version}/simple$',
+        },
+        types: false,
+      }),
+      description: 'generate services with specific endpoints',
+      name: 'v3_services_filter',
     },
     {
       config: createConfig({
