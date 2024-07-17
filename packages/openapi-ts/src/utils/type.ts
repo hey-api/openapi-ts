@@ -3,8 +3,10 @@ import type { Model } from '../openApi';
 import { transformTypeKeyName } from '../openApi/common/parser/type';
 import type { Client } from '../types/client';
 import { getConfig, isStandaloneClient } from './config';
+import { refSchemasPartial } from './const';
 import { enumValue } from './enum';
 import { escapeComment, escapeName, unescapeName } from './escape';
+import { getSchemasMeta } from './meta';
 import { unique } from './unique';
 
 const base = (model: Model) => {
@@ -27,7 +29,20 @@ const base = (model: Model) => {
 const typeReference = (model: Model) => {
   // nullable is false when base is null to avoid duplicate null statements
   const isNullable = model.base === 'null' ? false : model.isNullable;
-  const unionNode = compiler.typedef.union([base(model)], isNullable);
+  let typeNode = base(model);
+  /**
+   * special handling for single reference. The current approach didn't handle
+   * transformed names, this fixes that. We should add a more robust solution,
+   * but this will work for now.
+   * {@link https://github.com/hey-api/openapi-ts/issues/768}
+   */
+  if (model.export === 'reference' && model.$refs.length === 1) {
+    if (model.$refs[0].startsWith(refSchemasPartial)) {
+      const meta = getSchemasMeta(model.base);
+      typeNode = compiler.typedef.basic(meta.name);
+    }
+  }
+  const unionNode = compiler.typedef.union([typeNode], isNullable);
   return unionNode;
 };
 

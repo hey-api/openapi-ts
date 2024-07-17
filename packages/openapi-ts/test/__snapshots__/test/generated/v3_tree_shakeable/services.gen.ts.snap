@@ -428,7 +428,7 @@ export const dummyB = (): CancelablePromise<DummyBResponse> => { return __reques
 }); };
 
 /**
- * @returns ModelWithString
+ * @returns import
  * @throws ApiError
  */
 export const callWithResponse = (): CancelablePromise<CallWithResponseResponse> => { return __request(OpenAPI, {
