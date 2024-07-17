@@ -460,15 +460,11 @@ export const createInterceptors = <Req, Res, Options>() => ({
   response: new Interceptors<ResInterceptor<Res, Req, Options>>(),
 });
 
-const serializeFormDataPair = (
-  formData: FormData,
-  key: string,
-  value: unknown,
-) => {
+const serializeFormDataPair = (data: FormData, key: string, value: unknown) => {
   if (typeof value === 'string' || value instanceof Blob) {
-    formData.append(key, value);
+    data.append(key, value);
   } else {
-    formData.append(key, JSON.stringify(value));
+    data.append(key, JSON.stringify(value));
   }
 };
 
@@ -476,25 +472,58 @@ export const formDataBodySerializer = {
   bodySerializer: <T extends Record<string, any> | Array<Record<string, any>>>(
     body: T,
   ) => {
-    const formData = new FormData();
+    const data = new FormData();
 
     Object.entries(body).forEach(([key, value]) => {
       if (value === undefined || value === null) {
         return;
       }
       if (Array.isArray(value)) {
-        value.forEach((v) => serializeFormDataPair(formData, key, v));
+        value.forEach((v) => serializeFormDataPair(data, key, v));
       } else {
-        serializeFormDataPair(formData, key, value);
+        serializeFormDataPair(data, key, value);
       }
     });
 
-    return formData;
+    return data;
   },
 };
 
 export const jsonBodySerializer = {
   bodySerializer: <T>(body: T) => JSON.stringify(body),
+};
+
+const serializeUrlSearchParamsPair = (
+  data: URLSearchParams,
+  key: string,
+  value: unknown,
+) => {
+  if (typeof value === 'string') {
+    data.append(key, value);
+  } else {
+    data.append(key, JSON.stringify(value));
+  }
+};
+
+export const urlSearchParamsBodySerializer = {
+  bodySerializer: <T extends Record<string, any> | Array<Record<string, any>>>(
+    body: T,
+  ) => {
+    const data = new URLSearchParams();
+
+    Object.entries(body).forEach(([key, value]) => {
+      if (value === undefined || value === null) {
+        return;
+      }
+      if (Array.isArray(value)) {
+        value.forEach((v) => serializeUrlSearchParamsPair(data, key, v));
+      } else {
+        serializeUrlSearchParamsPair(data, key, value);
+      }
+    });
+
+    return data;
+  },
 };
 
 const defaultQuerySerializer = createQuerySerializer({

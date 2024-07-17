@@ -1428,6 +1428,10 @@ export type NonAsciiæøåÆøÅöôêÊ字符串Data = {
 
 export type NonAsciiæøåÆøÅöôêÊ字符串Response = Array<NonAsciiStringæøåÆØÅöôêÊ字符串>;
 
+export type PutWithFormUrlEncodedData = {
+    formData: ArrayWithStrings;
+};
+
 export type $OpenApiTs = {
     '/api/v{api-version}/no-tag': {
         post: {
@@ -1783,6 +1787,9 @@ export type $OpenApiTs = {
                  */
                 200: Array<NonAsciiStringæøåÆØÅöôêÊ字符串>;
             };
+        };
+        put: {
+            req: PutWithFormUrlEncodedData;
         };
     };
 };
