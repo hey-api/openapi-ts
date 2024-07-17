@@ -509,7 +509,7 @@ export class ResponseService {
     }
     
     /**
-     * @returns ModelWithString
+     * @returns import
      * @throws ApiError
      */
     public static callWithResponse(): CancelablePromise<CallWithResponseResponse> {
