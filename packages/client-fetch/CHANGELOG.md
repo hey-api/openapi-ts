@@ -1,5 +1,11 @@
 # @hey-api/client-fetch
 
+## 0.1.10
+
+### Patch Changes
+
+- [#788](https://github.com/hey-api/openapi-ts/pull/788) [`ecd94f2`](https://github.com/hey-api/openapi-ts/commit/ecd94f2adab1dbe10e7a9c310d1fb6d1f170d332) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle application/x-www-form-urlencoded content in request body
+
 ## 0.1.9
 
 ### Patch Changes
