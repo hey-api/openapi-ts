@@ -6,7 +6,9 @@ import { getServices } from '../getServices';
 describe('getServices', () => {
   it('should create a unnamed service if tags are empty', () => {
     setConfig({
-      client: 'fetch',
+      client: {
+        name: 'fetch',
+      },
       configFile: '',
       debug: false,
       dryRun: true,

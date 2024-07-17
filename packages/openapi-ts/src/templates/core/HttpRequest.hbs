@@ -1,4 +1,4 @@
-{{#equals @root.$config.client 'angular'}}
+{{#equals @root.$config.client.name 'angular'}}
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import type { Observable } from 'rxjs';
@@ -16,12 +16,12 @@ import type { OpenAPIConfig } from './OpenAPI';
 import { request as __request } from './request';
 {{/equals}}
 
-{{#equals @root.$config.client 'angular'}}
+{{#equals @root.$config.client.name 'angular'}}
 @Injectable()
 {{/equals}}
 export class {{httpRequest}} extends BaseHttpRequest {
 
-	{{#equals @root.$config.client 'angular'}}
+	{{#equals @root.$config.client.name 'angular'}}
 	constructor(
 		@Inject(OpenAPI)
 		config: OpenAPIConfig,
@@ -35,7 +35,7 @@ export class {{httpRequest}} extends BaseHttpRequest {
 	}
 	{{/equals}}
 
-	{{#equals @root.$config.client 'angular'}}
+	{{#equals @root.$config.client.name 'angular'}}
 	/**
 	 * Request method
 	 * @param options The request options from the service

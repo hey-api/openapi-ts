@@ -2,6 +2,15 @@ import type { Operation } from '../openApi';
 import type { Plugins } from './plugins';
 import type { ExtractArrayOfObjects } from './utils';
 
+type Client =
+  | '@hey-api/client-axios'
+  | '@hey-api/client-fetch'
+  | 'angular'
+  | 'axios'
+  | 'fetch'
+  | 'node'
+  | 'xhr';
+
 export interface ClientConfig {
   /**
    * Manually set base in OpenAPI config instead of inferring from server value
@@ -13,13 +22,24 @@ export interface ClientConfig {
    * @default 'fetch'
    */
   client?:
-    | '@hey-api/client-axios'
-    | '@hey-api/client-fetch'
-    | 'angular'
-    | 'axios'
-    | 'fetch'
-    | 'node'
-    | 'xhr';
+    | Client
+    | {
+        /**
+         * Inline the client module? Set this to true if you're using a standalone
+         * client package and don't want to declare it as a separate dependency.
+         * When true, the client module will be generated from the standalone
+         * package and bundled with the rest of the generated output. This is
+         * useful if you're repackaging the output, publishing it to other users,
+         * and you don't want them to install any dependencies.
+         * @default false
+         */
+        inline?: boolean;
+        /**
+         * HTTP client to generate
+         * @default 'fetch'
+         */
+        name: Client;
+      };
   /**
    * Path to the config file. Set this value if you don't use the default
    * config file name, or it's not located in the project root.
@@ -214,6 +234,7 @@ export type UserConfig = ClientConfig;
 export type Config = Omit<
   Required<ClientConfig>,
   | 'base'
+  | 'client'
   | 'name'
   | 'output'
   | 'plugins'
@@ -223,6 +244,7 @@ export type Config = Omit<
   | 'types'
 > &
   Pick<ClientConfig, 'base' | 'name' | 'request'> & {
+    client: Extract<Required<ClientConfig>['client'], object>;
     output: Extract<Required<ClientConfig>['output'], object>;
     plugins: ExtractArrayOfObjects<
       Required<ClientConfig>['plugins'],

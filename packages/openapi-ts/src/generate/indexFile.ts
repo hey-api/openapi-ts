@@ -9,37 +9,50 @@ export const generateIndexFile = async ({
   const config = getConfig();
 
   if (config.name) {
-    files.index.add(compiler.export.named([config.name], `./${config.name}`));
+    files.index.add(
+      compiler.export.named({
+        exports: config.name,
+        module: `./${config.name}`,
+      }),
+    );
   }
 
   if (config.exportCore) {
-    files.index.add(compiler.export.named('ApiError', './core/ApiError'));
+    files.index.add(
+      compiler.export.named({
+        exports: 'ApiError',
+        module: './core/ApiError',
+      }),
+    );
     if (config.services.response === 'response') {
       files.index.add(
-        compiler.export.named(
-          { asType: true, name: 'ApiResult' },
-          './core/ApiResult',
-        ),
+        compiler.export.named({
+          exports: { asType: true, name: 'ApiResult' },
+          module: './core/ApiResult',
+        }),
       );
     }
     if (config.name) {
       files.index.add(
-        compiler.export.named('BaseHttpRequest', './core/BaseHttpRequest'),
+        compiler.export.named({
+          exports: 'BaseHttpRequest',
+          module: './core/BaseHttpRequest',
+        }),
       );
     }
-    if (config.client !== 'angular') {
+    if (config.client.name !== 'angular') {
       files.index.add(
-        compiler.export.named(
-          ['CancelablePromise', 'CancelError'],
-          './core/CancelablePromise',
-        ),
+        compiler.export.named({
+          exports: ['CancelablePromise', 'CancelError'],
+          module: './core/CancelablePromise',
+        }),
       );
     }
     files.index.add(
-      compiler.export.named(
-        ['OpenAPI', { asType: true, name: 'OpenAPIConfig' }],
-        './core/OpenAPI',
-      ),
+      compiler.export.named({
+        exports: ['OpenAPI', { asType: true, name: 'OpenAPIConfig' }],
+        module: './core/OpenAPI',
+      }),
     );
   }
 
@@ -48,6 +61,10 @@ export const generateIndexFile = async ({
       return;
     }
 
-    files.index.add(compiler.export.all(`./${file.getName(false)}`));
+    files.index.add(
+      compiler.export.all({
+        module: `./${file.getName(false)}`,
+      }),
+    );
   });
 };
