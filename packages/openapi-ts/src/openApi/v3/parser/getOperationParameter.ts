@@ -1,5 +1,6 @@
 import type { Client } from '../../../types/client';
 import { getConfig, isStandaloneClient } from '../../../utils/config';
+import { refParametersPartial } from '../../../utils/const';
 import { enumMeta } from '../../../utils/enum';
 import type { OperationParameter } from '../../common/interfaces/client';
 import { getDefault } from '../../common/parser/getDefault';
@@ -71,7 +72,7 @@ export const getOperationParameter = ({
 
   let schema = getParameterSchema(parameter);
   if (schema) {
-    if (schema.$ref?.startsWith('#/components/parameters/')) {
+    if (schema.$ref?.startsWith(refParametersPartial)) {
       schema = getRef<OpenApiSchema>(openApi, schema);
     }
 

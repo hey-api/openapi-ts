@@ -1,6 +1,7 @@
 import camelcase from 'camelcase';
 
 import { getConfig, isStandaloneClient } from '../../../utils/config';
+import { refParametersPartial } from '../../../utils/const';
 import { reservedWordsRegExp } from '../../../utils/reservedWords';
 import { transformTypeName } from '../../../utils/transform';
 import { isDefinitionTypeNullable } from '../../v3/parser/inferType';
@@ -136,7 +137,7 @@ export const getType = ({
     let encodedType = transformTypeName(
       ensureValidTypeScriptJavaScriptIdentifier(typeWithoutNamespace),
     );
-    if (type.startsWith('#/components/parameters/')) {
+    if (type.startsWith(refParametersPartial)) {
       // prefix parameter names to avoid conflicts, assuming people are mostly
       // interested in importing schema types and don't care about this naming
       encodedType = `Parameter${encodedType}`;
@@ -166,5 +167,6 @@ export const transformTypeKeyName = (value: string): string => {
   }
 
   const clean = sanitizeOperationParameterName(value).trim();
-  return camelcase(clean).replace(reservedWordsRegExp, '_$1');
+  const name = camelcase(clean).replace(reservedWordsRegExp, '_$1');
+  return name;
 };

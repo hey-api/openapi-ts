@@ -62,14 +62,15 @@ export const getModelComposition = ({
   let properties: Model[] = [];
 
   definitions
-    .map((def) =>
-      getModel({
+    .map((def) => {
+      const modelFromDef = getModel({
         definition: def,
         openApi,
         parentDefinition: definition,
         types,
-      }),
-    )
+      });
+      return modelFromDef;
+    })
     .forEach((model) => {
       composition.$refs = [...composition.$refs, ...model.$refs];
       composition.imports = [...composition.imports, ...model.imports];
