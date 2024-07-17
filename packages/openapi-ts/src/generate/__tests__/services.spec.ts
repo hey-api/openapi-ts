@@ -13,7 +13,9 @@ vi.mock('node:fs');
 describe('generateServices', () => {
   it('writes to filesystem', async () => {
     setConfig({
-      client: 'fetch',
+      client: {
+        name: 'fetch',
+      },
       configFile: '',
       debug: false,
       dryRun: false,
@@ -129,7 +131,9 @@ describe('methodNameBuilder', () => {
 
   it('use default name', async () => {
     setConfig({
-      client: 'fetch',
+      client: {
+        name: 'fetch',
+      },
       configFile: '',
       debug: false,
       dryRun: false,
@@ -169,7 +173,9 @@ describe('methodNameBuilder', () => {
     const methodNameBuilder = vi.fn().mockReturnValue('customName');
 
     setConfig({
-      client: 'fetch',
+      client: {
+        name: 'fetch',
+      },
       configFile: '',
       debug: false,
       dryRun: false,
@@ -212,7 +218,9 @@ describe('methodNameBuilder', () => {
     const methodNameBuilder = vi.fn().mockReturnValue('customName');
 
     setConfig({
-      client: 'fetch',
+      client: {
+        name: 'fetch',
+      },
       configFile: '',
       debug: false,
       dryRun: false,

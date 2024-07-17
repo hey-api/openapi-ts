@@ -80,7 +80,7 @@ const processOutput = () => {
 
 const logClientMessage = () => {
   const { client } = getConfig();
-  switch (client) {
+  switch (client.name) {
     case 'angular':
       return console.log('✨ Creating Angular client');
     case '@hey-api/client-axios':
@@ -94,6 +94,22 @@ const logClientMessage = () => {
     case 'xhr':
       return console.log('✨ Creating XHR client');
   }
+};
+
+const getClient = (userConfig: ClientConfig): Config['client'] => {
+  let client: Config['client'] = {
+    inline: false,
+    name: 'fetch',
+  };
+  if (typeof userConfig.client === 'string') {
+    client.name = userConfig.client;
+  } else {
+    client = {
+      ...client,
+      ...userConfig.client,
+    };
+  }
+  return client;
 };
 
 const getOutput = (userConfig: ClientConfig): Config['output'] => {
@@ -212,7 +228,6 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
   return userConfigs.map((userConfig) => {
     const {
       base,
-      client = 'fetch',
       configFile = '',
       debug = false,
       dryRun = false,
@@ -247,6 +262,7 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
       );
     }
 
+    const client = getClient(userConfig);
     const plugins = getPlugins(userConfig);
     const schemas = getSchemas(userConfig);
     const services = getServices(userConfig);

@@ -113,8 +113,18 @@ describe('OpenAPI v3', () => {
       config: createConfig({
         client: '@hey-api/client-fetch',
       }),
-      description: 'generate axios client',
+      description: 'generate Fetch API client',
       name: 'v3_hey-api_client-fetch',
+    },
+    {
+      config: createConfig({
+        client: {
+          inline: true,
+          name: '@hey-api/client-fetch',
+        },
+      }),
+      description: 'generate Fetch API client without external dependencies',
+      name: 'v3_hey-api_client-fetch_inline',
     },
     {
       config: createConfig({

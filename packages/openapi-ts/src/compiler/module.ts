@@ -9,35 +9,43 @@ import {
 
 /**
  * Create export all declaration. Example: `export * from './y'`.
- * @param module - module to export from.
+ * @param module - module containing exports
  * @returns ts.ExportDeclaration
  */
-export const createExportAllDeclaration = (module: string) =>
-  ts.factory.createExportDeclaration(
+export const createExportAllDeclaration = ({
+  module,
+}: {
+  module: string;
+}): ts.ExportDeclaration => {
+  const statement = ts.factory.createExportDeclaration(
     undefined,
     false,
     undefined,
     ots.string(module),
   );
+  return statement;
+};
 
 type ImportExportItem = ImportExportItemObject | string;
 
 /**
  * Create a named export declaration. Example: `export { X } from './y'`.
- * @param items - the items to export.
- * @param module - module to export it from.
- * @returns ExportDeclaration
+ * @param exports - named imports to export
+ * @param module - module containing exports
+ * @returns ts.ExportDeclaration
  */
-export const createNamedExportDeclarations = (
-  items: Array<ImportExportItem> | ImportExportItem,
-  module: string,
-): ts.ExportDeclaration => {
-  items = Array.isArray(items) ? items : [items];
-  const exportedTypes = Array.isArray(items) ? items : [items];
+export const createNamedExportDeclarations = ({
+  exports,
+  module,
+}: {
+  exports: Array<ImportExportItem> | ImportExportItem;
+  module: string;
+}): ts.ExportDeclaration => {
+  const exportedTypes = Array.isArray(exports) ? exports : [exports];
   const hasNonTypeExport = exportedTypes.some(
     (item) => typeof item !== 'object' || !item.asType,
   );
-  const elements = items.map((name) => {
+  const elements = exportedTypes.map((name) => {
     const item = typeof name === 'string' ? { name } : name;
     return ots.export({
       alias: item.alias,
@@ -101,15 +109,18 @@ export const createExportConstVariable = ({
 
 /**
  * Create a named import declaration. Example: `import { X } from './y'`.
- * @param items - the items to export.
- * @param module - module to export it from.
- * @returns ImportDeclaration
+ * @param imports - named exports to import
+ * @param module - module containing imports
+ * @returns ts.ImportDeclaration
  */
-export const createNamedImportDeclarations = (
-  items: Array<ImportExportItem> | ImportExportItem,
-  module: string,
-): ts.ImportDeclaration => {
-  const importedTypes = Array.isArray(items) ? items : [items];
+export const createNamedImportDeclarations = ({
+  imports,
+  module,
+}: {
+  imports: Array<ImportExportItem> | ImportExportItem;
+  module: string;
+}): ts.ImportDeclaration => {
+  const importedTypes = Array.isArray(imports) ? imports : [imports];
   const hasNonTypeImport = importedTypes.some(
     (item) => typeof item !== 'object' || !item.asType,
   );

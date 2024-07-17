@@ -11,7 +11,9 @@ vi.mock('node:fs');
 describe('generateOutput', () => {
   it('writes to filesystem', async () => {
     setConfig({
-      client: 'fetch',
+      client: {
+        name: 'fetch',
+      },
       configFile: '',
       debug: false,
       dryRun: false,

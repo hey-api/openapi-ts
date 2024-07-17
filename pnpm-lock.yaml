@@ -266,6 +266,9 @@ importers:
       '@angular/router':
         specifier: 17.3.9
         version: 17.3.9(@angular/common@17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.7))(rxjs@7.8.1))(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.7))(@angular/platform-browser@17.3.9(@angular/animations@17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.7)))(@angular/common@17.3.9(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.7))(rxjs@7.8.1))(@angular/core@17.3.9(rxjs@7.8.1)(zone.js@0.14.7)))(rxjs@7.8.1)
+      '@hey-api/client-fetch':
+        specifier: workspace:*
+        version: link:../client-fetch
       '@rollup/plugin-json':
         specifier: 6.1.0
         version: 6.1.0(rollup@4.18.0)
