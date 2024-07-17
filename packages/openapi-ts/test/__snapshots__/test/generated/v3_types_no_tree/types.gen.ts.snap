@@ -1304,3 +1304,7 @@ export type NonAsciiæøåÆøÅöôêÊ字符串Data = {
 };
 
 export type NonAsciiæøåÆøÅöôêÊ字符串Response = Array<NonAsciiStringæøåÆØÅöôêÊ字符串>;
+
+export type PutWithFormUrlEncodedData = {
+    formData: ArrayWithStrings;
+};

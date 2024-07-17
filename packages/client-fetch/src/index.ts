@@ -69,10 +69,6 @@ export const createClient = (config: Config): Client => {
       redirect: 'follow',
       ...opts,
     };
-    // remove Content-Type if serialized body is FormData; browser will correctly set Content-Type and boundary expression
-    if (requestInit.body instanceof FormData) {
-      requestInit.headers.delete('Content-Type');
-    }
 
     let request = new Request(url, requestInit);
 
