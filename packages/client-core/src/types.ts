@@ -10,7 +10,7 @@ export type ApiRequestOptions<T = unknown> = {
   readonly body?: any;
   readonly cookies?: Record<string, unknown>;
   readonly errors?: Record<number | string, string>;
-  readonly formData?: Record<string, unknown>;
+  readonly formData?: Record<string, unknown> | any[];
   readonly headers?: Record<string, unknown>;
   readonly mediaType?: string;
   readonly method:

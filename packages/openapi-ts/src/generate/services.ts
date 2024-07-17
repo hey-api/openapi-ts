@@ -247,14 +247,33 @@ const toRequestOptions = (
       .map((parameter) => parameter.mediaType)
       .filter(Boolean)
       .filter(unique);
-    if (contents.length === 1 && contents[0] === 'multipart/form-data') {
-      obj = [
-        ...obj,
-        {
-          spread: 'formDataBodySerializer',
-        },
-      ];
-      onClientImport?.('formDataBodySerializer');
+    if (contents.length === 1) {
+      if (contents[0] === 'multipart/form-data') {
+        obj = [
+          ...obj,
+          {
+            spread: 'formDataBodySerializer',
+          },
+          // no need for Content-Type header, browser will set it automatically
+        ];
+        onClientImport?.('formDataBodySerializer');
+      }
+
+      if (contents[0] === 'application/x-www-form-urlencoded') {
+        obj = [
+          ...obj,
+          {
+            spread: 'urlSearchParamsBodySerializer',
+          },
+          {
+            key: 'headers',
+            value: {
+              'Content-Type': contents[0],
+            },
+          },
+        ];
+        onClientImport?.('urlSearchParamsBodySerializer');
+      }
     }
 
     // TODO: set parseAs to skip inference if every result has the same

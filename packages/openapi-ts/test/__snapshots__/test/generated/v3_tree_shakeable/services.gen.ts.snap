@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { ImportData, ImportResponse, ApiVversionOdataControllerCountResponse, DeleteFooData3, CallWithDescriptionsData, DeprecatedCallData, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostApiRequestBodyData, PostApiFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, DummyAResponse, DummyBResponse, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, CollectionFormatData, TypesData, TypesResponse, UploadFileData, UploadFileResponse, FileResponseData, FileResponseResponse, ComplexTypesData, ComplexTypesResponse, MultipartRequestData, MultipartResponseResponse, ComplexParamsData, ComplexParamsResponse, CallWithResultFromHeaderResponse, TestErrorCodeData, TestErrorCodeResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response } from './types.gen';
+import type { ImportData, ImportResponse, ApiVversionOdataControllerCountResponse, DeleteFooData3, CallWithDescriptionsData, DeprecatedCallData, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostApiRequestBodyData, PostApiFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, DummyAResponse, DummyBResponse, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, CollectionFormatData, TypesData, TypesResponse, UploadFileData, UploadFileResponse, FileResponseData, FileResponseResponse, ComplexTypesData, ComplexTypesResponse, MultipartRequestData, MultipartResponseResponse, ComplexParamsData, ComplexParamsResponse, CallWithResultFromHeaderResponse, TestErrorCodeData, TestErrorCodeResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData } from './types.gen';
 
 /**
  * @throws ApiError
@@ -657,4 +657,17 @@ export const nonAsciiæøåÆøÅöôêÊ字符串 = (data: NonAsciiæøåÆøÅ
     query: {
         'nonAsciiParamæøåÆØÅöôêÊ': data.nonAsciiParamæøåÆøÅöôêÊ
     }
+}); };
+
+/**
+ * Login User
+ * @param data The data for the request.
+ * @param data.formData
+ * @throws ApiError
+ */
+export const putWithFormUrlEncoded = (data: PutWithFormUrlEncodedData): CancelablePromise<void> => { return __request(OpenAPI, {
+    method: 'PUT',
+    url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
+    formData: data.formData,
+    mediaType: 'application/x-www-form-urlencoded'
 }); };
