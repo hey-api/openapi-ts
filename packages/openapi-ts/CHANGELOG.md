@@ -1,5 +1,19 @@
 # @hey-api/openapi-ts
 
+## 0.49.0
+
+### Minor Changes
+
+- [#787](https://github.com/hey-api/openapi-ts/pull/787) [`327c5fb`](https://github.com/hey-api/openapi-ts/commit/327c5fb629f0c7b9c727da87b6bc287b8e98bcd5) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: allow filtering service endpoints with `services.filter`
+
+### Patch Changes
+
+- [#784](https://github.com/hey-api/openapi-ts/pull/784) [`f12dccf`](https://github.com/hey-api/openapi-ts/commit/f12dccf0ae3a05badb5783354bcd093f18f3ab74) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: suffix illegal service names
+
+- [#786](https://github.com/hey-api/openapi-ts/pull/786) [`20759e2`](https://github.com/hey-api/openapi-ts/commit/20759e2cc52d78974fc0f78f581e9d9cb2d21ca5) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle references to schemas with illegal names
+
+- [#788](https://github.com/hey-api/openapi-ts/pull/788) [`ecd94f2`](https://github.com/hey-api/openapi-ts/commit/ecd94f2adab1dbe10e7a9c310d1fb6d1f170d332) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle application/x-www-form-urlencoded content in request body
+
 ## 0.48.3
 
 ### Patch Changes
