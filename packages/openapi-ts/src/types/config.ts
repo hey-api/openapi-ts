@@ -124,6 +124,14 @@ export interface ClientConfig {
          */
         export?: boolean;
         /**
+         * Filter endpoints to be included in the generated services.
+         * The provided string should be a regular expression where matched
+         * results will be included in the output. The input pattern this
+         * string will be tested against is `{method} {path}`. For example,
+         * you can match `POST /api/v1/foo` with `^POST /api/v1/foo$`.
+         */
+        filter?: string;
+        /**
          * Include only service classes with names matching regular expression
          *
          * This option has no effect if `services.asClass` is `false`.
