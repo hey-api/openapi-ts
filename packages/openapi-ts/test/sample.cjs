@@ -21,7 +21,8 @@ const main = async () => {
       // export: false,
     },
     services: {
-      // asClass: true,
+      asClass: true,
+      filter: '^\\w+ /api/v{api-version}/simple$',
       // export: false,
       // name: '^Parameters',
     },

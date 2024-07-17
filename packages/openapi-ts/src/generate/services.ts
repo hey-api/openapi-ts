@@ -485,7 +485,15 @@ const processService = (
 
   const isStandalone = isStandaloneClient(config);
 
-  service.operations.forEach((operation) => {
+  let filteredOperations = service.operations;
+  if (config.services.filter) {
+    const regexp = new RegExp(config.services.filter);
+    filteredOperations = service.operations.filter((operation) =>
+      regexp.test(`${operation.method} ${operation.path}`),
+    );
+  }
+
+  filteredOperations.forEach((operation) => {
     if (operation.parameters.length) {
       generateImport({
         client,
@@ -533,7 +541,7 @@ const processService = (
   });
 
   if (!config.services.asClass && !config.name) {
-    service.operations.forEach((operation) => {
+    filteredOperations.forEach((operation) => {
       const expression = compiler.types.function({
         parameters: toOperationParamType(client, operation),
         returnType: isStandalone
@@ -556,7 +564,7 @@ const processService = (
     return;
   }
 
-  const members: ClassElement[] = service.operations.map((operation) => {
+  let members: ClassElement[] = filteredOperations.map((operation) => {
     const node = compiler.class.method({
       accessLevel: 'public',
       comment: toOperationComment(operation),
@@ -576,9 +584,13 @@ const processService = (
     return node;
   });
 
+  if (!members.length) {
+    return;
+  }
+
   // Push to front constructor if needed
   if (config.name) {
-    members.unshift(
+    members = [
       compiler.class.constructor({
         multiLine: false,
         parameters: [
@@ -590,9 +602,10 @@ const processService = (
           },
         ],
       }),
-    );
+      ...members,
+    ];
   } else if (config.client === 'angular') {
-    members.unshift(
+    members = [
       compiler.class.constructor({
         multiLine: false,
         parameters: [
@@ -604,7 +617,8 @@ const processService = (
           },
         ],
       }),
-    );
+      ...members,
+    ];
   }
 
   const statement = compiler.class.create({
@@ -707,6 +721,11 @@ export const generateServices = async ({
       asType: !name.endsWith('Transformer'),
       name,
     }));
-    files.services?.addImport(importedTypes, `./${files.types.getName(false)}`);
+    if (importedTypes.length) {
+      files.services?.addImport(
+        importedTypes,
+        `./${files.types.getName(false)}`,
+      );
+    }
   }
 };
