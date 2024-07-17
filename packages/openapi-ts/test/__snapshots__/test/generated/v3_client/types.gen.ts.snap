@@ -777,8 +777,8 @@ export type ModelWithAnyOfConstantSizeArrayNullable = [
 ];
 
 export type ModelWithAnyOfConstantSizeArrayWithNSizeAndOptions = [
-    number | string,
-    number | string
+    number | _import,
+    number | _import
 ];
 
 export type ModelWithAnyOfConstantSizeArrayAndIntersect = [
@@ -863,6 +863,11 @@ export type DeleteFooData = string;
  * Model used to test deduplication strategy
  */
 export type DeleteFooData2 = string;
+
+/**
+ * Model with restricted keyword name
+ */
+export type _import = string;
 
 /**
  * This is a reusable parameter
@@ -1132,7 +1137,7 @@ export type CallWithNoContentResponseResponse = void;
 
 export type CallWithResponseAndNoContentResponseResponse = number | void;
 
-export type CallWithResponseResponse = ModelWithString;
+export type CallWithResponseResponse = _import;
 
 export type CallWithDuplicateResponsesResponse = ModelWithBoolean & ModelWithInteger | ModelWithString;
 
@@ -1407,7 +1412,7 @@ export type $OpenApiTs = {
     '/api/v{api-version}/response': {
         get: {
             res: {
-                default: ModelWithString;
+                default: _import;
             };
         };
         post: {

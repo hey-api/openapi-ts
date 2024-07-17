@@ -31,6 +31,7 @@ const main = async () => {
       // include:
       //   '^(ModelWithOneOfAndProperties|CompositionWithOneOfAndProperties)',
       // name: 'PascalCase',
+      // tree: false,
     },
     // useOptions: false,
   };

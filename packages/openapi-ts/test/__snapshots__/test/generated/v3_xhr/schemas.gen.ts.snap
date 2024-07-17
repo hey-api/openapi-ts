@@ -1637,7 +1637,7 @@ export const $ModelWithAnyOfConstantSizeArrayWithNSizeAndOptions = {
                 type: 'number'
             },
             {
-                type: 'string'
+                '$ref': '#/components/schemas/import'
             }
         ]
     },
@@ -1757,5 +1757,10 @@ export const $DeleteFooData = {
 
 export const $DeleteFooData2 = {
     description: 'Model used to test deduplication strategy',
+    type: 'string'
+} as const;
+
+export const $import = {
+    description: 'Model with restricted keyword name',
     type: 'string'
 } as const;

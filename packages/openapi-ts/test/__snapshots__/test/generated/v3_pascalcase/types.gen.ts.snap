@@ -278,7 +278,7 @@ export type DummyAResponse = void;
 
 export type DummyBResponse = void;
 
-export type CallWithResponseResponse = ModelWithString;
+export type CallWithResponseResponse = Import;
 
 export type CallWithDuplicateResponsesResponse = ModelWithBoolean & ModelWithInteger | ModelWithString;
 
@@ -569,7 +569,7 @@ export type $OpenApiTs = {
     '/api/v{api-version}/response': {
         get: {
             res: {
-                default: ModelWithString;
+                default: Import;
             };
         };
         post: {
