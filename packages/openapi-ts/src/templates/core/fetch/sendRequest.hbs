@@ -16,7 +16,7 @@ export const sendRequest = async (
 		signal: controller.signal,
 	};
 
-	{{#equals @root.$config.client 'fetch'}}
+	{{#equals @root.$config.client.name 'fetch'}}
 	if (config.WITH_CREDENTIALS) {
 		request.credentials = config.CREDENTIALS;
 	}

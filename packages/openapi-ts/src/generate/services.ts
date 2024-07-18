@@ -153,7 +153,7 @@ const toOperationReturnType = (client: Client, operation: Operation) => {
     returnType = compiler.typedef.basic('ApiResult', [returnType]);
   }
 
-  if (config.client === 'angular') {
+  if (config.client.name === 'angular') {
     returnType = compiler.typedef.basic('Observable', [returnType]);
   } else {
     returnType = compiler.typedef.basic('CancelablePromise', [returnType]);
@@ -476,7 +476,7 @@ const toOperationStatements = (
     ];
   }
 
-  if (config.client === 'angular') {
+  if (config.client.name === 'angular') {
     return [
       compiler.return.functionCall({
         args: ['OpenAPI', 'this.http', options],
@@ -587,7 +587,7 @@ const processService = (
     const node = compiler.class.method({
       accessLevel: 'public',
       comment: toOperationComment(operation),
-      isStatic: config.name === undefined && config.client !== 'angular',
+      isStatic: config.name === undefined && config.client.name !== 'angular',
       name: toOperationName(operation, false),
       parameters: toOperationParamType(client, operation),
       returnType: isStandalone
@@ -623,7 +623,7 @@ const processService = (
       }),
       ...members,
     ];
-  } else if (config.client === 'angular') {
+  } else if (config.client.name === 'angular') {
     members = [
       compiler.class.constructor({
         multiLine: false,
@@ -642,7 +642,7 @@ const processService = (
 
   const statement = compiler.class.create({
     decorator:
-      config.client === 'angular'
+      config.client.name === 'angular'
         ? { args: [{ providedIn: 'root' }], name: 'Injectable' }
         : undefined,
     members,
@@ -685,8 +685,8 @@ export const generateServices = async ({
 
   // Import required packages and core files.
   if (isStandaloneClient(config)) {
-    files.services?.addImport(
-      [
+    files.services?.addImport({
+      imports: [
         'client',
         {
           asType: true,
@@ -694,42 +694,57 @@ export const generateServices = async ({
         },
         ...clientImports.filter(unique),
       ],
-      config.client,
-    );
+      module: config.client.inline ? './client' : config.client.name,
+    });
   } else {
-    if (config.client === 'angular') {
-      files.services?.addImport('Injectable', '@angular/core');
+    if (config.client.name === 'angular') {
+      files.services?.addImport({
+        imports: 'Injectable',
+        module: '@angular/core',
+      });
 
       if (!config.name) {
-        files.services?.addImport('HttpClient', '@angular/common/http');
+        files.services?.addImport({
+          imports: 'HttpClient',
+          module: '@angular/common/http',
+        });
       }
 
-      files.services?.addImport({ asType: true, name: 'Observable' }, 'rxjs');
+      files.services?.addImport({
+        imports: { asType: true, name: 'Observable' },
+        module: 'rxjs',
+      });
     } else {
-      files.services?.addImport(
-        { asType: true, name: 'CancelablePromise' },
-        './core/CancelablePromise',
-      );
+      files.services?.addImport({
+        imports: { asType: true, name: 'CancelablePromise' },
+        module: './core/CancelablePromise',
+      });
     }
 
     if (config.services.response === 'response') {
-      files.services?.addImport(
-        { asType: true, name: 'ApiResult' },
-        './core/ApiResult',
-      );
+      files.services?.addImport({
+        imports: { asType: true, name: 'ApiResult' },
+        module: './core/ApiResult',
+      });
     }
 
     if (config.name) {
-      files.services?.addImport(
-        { asType: config.client !== 'angular', name: 'BaseHttpRequest' },
-        './core/BaseHttpRequest',
-      );
+      files.services?.addImport({
+        imports: {
+          asType: config.client.name !== 'angular',
+          name: 'BaseHttpRequest',
+        },
+        module: './core/BaseHttpRequest',
+      });
     } else {
-      files.services?.addImport('OpenAPI', './core/OpenAPI');
-      files.services?.addImport(
-        { alias: '__request', name: 'request' },
-        './core/request',
-      );
+      files.services?.addImport({
+        imports: 'OpenAPI',
+        module: './core/OpenAPI',
+      });
+      files.services?.addImport({
+        imports: { alias: '__request', name: 'request' },
+        module: './core/request',
+      });
     }
   }
 
@@ -741,10 +756,10 @@ export const generateServices = async ({
       name,
     }));
     if (importedTypes.length) {
-      files.services?.addImport(
-        importedTypes,
-        `./${files.types.getName(false)}`,
-      );
+      files.services?.addImport({
+        imports: importedTypes,
+        module: `./${files.types.getName(false)}`,
+      });
     }
   }
 };

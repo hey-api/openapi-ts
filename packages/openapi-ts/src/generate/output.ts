@@ -1,4 +1,3 @@
-import { existsSync, mkdirSync } from 'node:fs';
 import path from 'node:path';
 
 import { TypeScriptFile } from '../compiler';
@@ -7,12 +6,14 @@ import type { Client } from '../types/client';
 import { getConfig } from '../utils/config';
 import type { Templates } from '../utils/handlebars';
 import { generateClientClass } from './class';
+import { generateClient } from './client';
 import { generateCore } from './core';
 import { generateIndexFile } from './indexFile';
 import { generateSchemas } from './schemas';
 import { generateServices } from './services';
 import { generateResponseTransformers } from './transformers';
 import { generateTypes } from './types';
+import { ensureDirSync } from './utils';
 
 /**
  * Write our OpenAPI client, using the given templates at the given output
@@ -41,9 +42,7 @@ export const generateOutput = async (
 
   const outputPath = path.resolve(config.output.path);
 
-  if (!existsSync(outputPath)) {
-    mkdirSync(outputPath, { recursive: true });
-  }
+  ensureDirSync(outputPath);
 
   const files: Record<string, TypeScriptFile> = {
     index: new TypeScriptFile({
@@ -75,6 +74,8 @@ export const generateOutput = async (
       name: `${plugin.name}.ts`,
     });
   });
+
+  await generateClient(outputPath, config.client.name);
 
   // types.gen.ts
   await generateTypes({ client, files });
