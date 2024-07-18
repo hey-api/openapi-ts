@@ -1,4 +1,4 @@
-{{#equals @root.$config.client 'node'}}
+{{#equals @root.$config.client.name 'node'}}
 import fetch, { FormData, Headers } from 'node-fetch';
 import type { RequestInit, Response } from 'node-fetch';
 
