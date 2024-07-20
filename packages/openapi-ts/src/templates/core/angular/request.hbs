@@ -62,7 +62,7 @@ import type { OpenAPIConfig } from './OpenAPI';
  * @returns Observable<T>
  * @throws ApiError
  */
-export const request = <T>(config: OpenAPIConfig, http: HttpClient, options: ApiRequestOptions): Observable<T> => {
+export const request = <T>(config: OpenAPIConfig, http: HttpClient, options: ApiRequestOptions<T>): Observable<T> => {
 	const url = getUrl(config, options);
 	const formData = getFormData(options);
 	const body = getRequestBody(options);
@@ -77,12 +77,18 @@ export const request = <T>(config: OpenAPIConfig, http: HttpClient, options: Api
 			}
 			const responseBody = getResponseBody(response);
 			const responseHeader = getResponseHeader(response, options.responseHeader);
+
+			let transformedBody = responseBody;
+			if (options.responseTransformer && response.ok) {
+				transformedBody = await options.responseTransformer(responseBody)
+			}
+
 			return {
 				url,
 				ok: response.ok,
 				status: response.status,
 				statusText: response.statusText,
-				body: responseHeader ?? responseBody,
+				body: responseHeader ?? transformedBody,
 			} as ApiResult;
 		}),
 		catchError((error: HttpErrorResponse) => {

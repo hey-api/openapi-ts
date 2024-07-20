@@ -4,10 +4,8 @@ import type {
   OperationParameters,
 } from '../../common/interfaces/client';
 import {
-  getErrorResponses,
   getOperationName,
   getOperationResponseHeader,
-  getSuccessResponses,
 } from '../../common/parser/operation';
 import { getServiceName } from '../../common/parser/service';
 import { toSortedByRequired } from '../../common/parser/sort';
@@ -41,7 +39,7 @@ export const getOperation = ({
     $refs: [],
     deprecated: op.deprecated === true,
     description: op.description || null,
-    errors: [],
+    id: op.operationId || null,
     imports: [],
     method: method.toUpperCase() as Operation['method'],
     name,
@@ -54,7 +52,7 @@ export const getOperation = ({
     parametersQuery: [...pathParams.parametersQuery],
     path: url,
     responseHeader: null,
-    results: [],
+    responses: [],
     service: serviceName,
     summary: op.summary || null,
   };
@@ -93,19 +91,20 @@ export const getOperation = ({
 
   // Parse the operation responses.
   if (op.responses) {
-    const operationResponses = getOperationResponses({
+    operation.responses = getOperationResponses({
       openApi,
       responses: op.responses,
       types,
     });
-    operation.errors = getErrorResponses(operationResponses);
+    const successResponses = operation.responses.filter((response) =>
+      response.responseTypes.includes('success'),
+    );
 
-    const successResponses = getSuccessResponses(operationResponses);
     operation.responseHeader = getOperationResponseHeader(successResponses);
 
-    successResponses.forEach((operationResult) => {
-      operation.results = [...operation.results, operationResult];
-      operation.imports = [...operation.imports, ...operationResult.imports];
+    successResponses.forEach((response) => {
+      operation.$refs = [...operation.$refs, ...response.$refs];
+      operation.imports = [...operation.imports, ...response.imports];
     });
   }
 

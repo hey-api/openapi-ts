@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import type { Config } from '../../../../types/config';
-import { reservedWords } from '../../../common/parser/reservedWords';
+import { reservedWordsRegExp } from '../../../../utils/reservedWords';
 import { getType } from '../../../common/parser/type';
 import { getModel } from '../getModel';
 
@@ -96,7 +96,7 @@ describe('getModel', () => {
       isDefinition: true,
       meta: {
         $ref: '',
-        name: definitionType.base.replace(reservedWords, '_$1'),
+        name: definitionType.base.replace(reservedWordsRegExp, '_$1'),
       },
       openApi,
       types: {},
@@ -112,7 +112,7 @@ describe('getModel', () => {
       isDefinition: true,
       meta: {
         $ref: '',
-        name: definitionType.base.replace(reservedWords, '_$1'),
+        name: definitionType.base.replace(reservedWordsRegExp, '_$1'),
       },
       openApi,
       types: {},

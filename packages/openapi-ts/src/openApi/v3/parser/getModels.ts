@@ -1,7 +1,6 @@
 import type { Client } from '../../../types/client';
 import { getConfig } from '../../../utils/config';
-import { reservedWords } from '../../common/parser/reservedWords';
-import { getType } from '../../common/parser/type';
+import { getParametersMeta, getSchemasMeta } from '../../../utils/meta';
 import type { OpenApi } from '../interfaces/OpenApi';
 import { getModel } from './getModel';
 import { getParameterSchema } from './parameter';
@@ -23,13 +22,8 @@ export const getModels = (
 
   Object.entries(openApi.components.schemas ?? {}).forEach(
     ([definitionName, definition]) => {
-      const definitionType = getType({ type: definitionName });
-      const name = definitionType.base.replace(reservedWords, '_$1');
-      const meta = {
-        $ref: `#/components/schemas/${definitionName}`,
-        name,
-      };
-      types[name] = meta;
+      const meta = getSchemasMeta(definitionName);
+      types[meta.name] = meta;
       const model = getModel({
         definition,
         isDefinition: true,
@@ -51,27 +45,8 @@ export const getModels = (
         return;
       }
 
-      const definitionType = getType({ type: definitionName });
-      /**
-       * Prefix parameter names to avoid name conflicts with schemas.
-       * Assuming people are mostly interested in importing schema types
-       * and don't care about this name as much. It should be resolved in
-       * a cleaner way, there just isn't a good deduplication strategy
-       * today. This is a workaround in the meantime, hopefully reducing
-       * the chance of conflicts.
-       *
-       * Example where this would break: schema named `ParameterFoo` and
-       * parameter named `Foo` (this would transform to `ParameterFoo`)
-       *
-       * Note: there's a related code to this workaround in `getType()`
-       * method that needs to be cleaned up when this is addressed.
-       */
-      const name = `Parameter${definitionType.base.replace(reservedWords, '_$1')}`;
-      const meta = {
-        $ref: `#/components/parameters/${definitionName}`,
-        name,
-      };
-      types[name] = meta;
+      const meta = getParametersMeta(definitionName);
+      types[meta.name] = meta;
       const model = getModel({
         definition: schema,
         isDefinition: true,

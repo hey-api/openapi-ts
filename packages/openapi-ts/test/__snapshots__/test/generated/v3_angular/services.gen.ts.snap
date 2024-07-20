@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import type { Observable } from 'rxjs';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { PostServiceWithEmptyTagData, PostServiceWithEmptyTagResponse3, ApiVversionOdataControllerCountResponse, DeleteFooData3, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, CallWithDescriptionsData, DeprecatedCallData, PostApiRequestBodyData, PostApiFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, DummyAResponse, DummyBResponse, CollectionFormatData, TypesData, TypesResponse, UploadFileData, UploadFileResponse, FileResponseData, FileResponseResponse, ComplexTypesData, ComplexTypesResponse, ComplexParamsData, ComplexParamsResponse, MultipartRequestData, MultipartResponseResponse, CallWithResultFromHeaderResponse, TestErrorCodeData, TestErrorCodeResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response } from './types.gen';
+import type { ImportData, ImportResponse, ApiVversionOdataControllerCountResponse, DeleteFooData3, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, CallWithDescriptionsData, DeprecatedCallData, PostApiRequestBodyData, PostApiFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, DummyAResponse, DummyBResponse, CollectionFormatData, TypesData, TypesResponse, UploadFileData, UploadFileResponse, FileResponseData, FileResponseResponse, ComplexTypesData, ComplexTypesResponse, ComplexParamsData, ComplexParamsResponse, MultipartRequestData, MultipartResponseResponse, CallWithResultFromHeaderResponse, TestErrorCodeData, TestErrorCodeResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData } from './types.gen';
 
 @Injectable({
     providedIn: 'root'
@@ -16,7 +16,7 @@ export class DefaultService {
     /**
      * @throws ApiError
      */
-    public serviceWithEmptyTag(): Observable<void> {
+    public export(): Observable<void> {
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/no-tag'
@@ -26,10 +26,11 @@ export class DefaultService {
     /**
      * @param data The data for the request.
      * @param data.requestBody
-     * @returns ModelWithReadOnlyAndWriteOnly
+     * @returns Model_From_Zendesk Success
+     * @returns ModelWithReadOnlyAndWriteOnly Default success response
      * @throws ApiError
      */
-    public postServiceWithEmptyTag(data: PostServiceWithEmptyTagData): Observable<PostServiceWithEmptyTagResponse3> {
+    public import(data: ImportData): Observable<ImportResponse> {
         return __request(OpenAPI, this.http, {
             method: 'POST',
             url: '/api/v{api-version}/no-tag',
@@ -565,7 +566,7 @@ export class ResponseService {
     }
     
     /**
-     * @returns ModelWithString
+     * @returns import
      * @throws ApiError
      */
     public callWithResponse(): Observable<CallWithResponseResponse> {
@@ -578,6 +579,7 @@ export class ResponseService {
     /**
      * @returns unknown Message for 200 response
      * @returns ModelWithString Message for 201 response
+     * @returns ModelWithString Message for 202 response
      * @throws ApiError
      */
     public callWithDuplicateResponses(): Observable<CallWithDuplicateResponsesResponse> {
@@ -589,7 +591,7 @@ export class ResponseService {
                 501: 'Message for 501 error',
                 502: 'Message for 502 error',
                 '4XX': 'Message for 4XX errors',
-                default: 'Message for default response'
+                default: 'Default error response'
             }
         });
     }
@@ -971,6 +973,21 @@ export class NonAsciiÆøåÆøÅöôêÊService {
             query: {
                 'nonAsciiParamæøåÆØÅöôêÊ': data.nonAsciiParamæøåÆøÅöôêÊ
             }
+        });
+    }
+    
+    /**
+     * Login User
+     * @param data The data for the request.
+     * @param data.formData
+     * @throws ApiError
+     */
+    public putWithFormUrlEncoded(data: PutWithFormUrlEncodedData): Observable<void> {
+        return __request(OpenAPI, this.http, {
+            method: 'PUT',
+            url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
+            formData: data.formData,
+            mediaType: 'application/x-www-form-urlencoded'
         });
     }
     

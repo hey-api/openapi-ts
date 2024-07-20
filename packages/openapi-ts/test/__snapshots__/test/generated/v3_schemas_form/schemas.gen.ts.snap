@@ -1471,6 +1471,28 @@ export const $ModelWithAnyOfConstantSizeArray = {
     maxItems: 3
 } as const;
 
+export const $ModelWithPrefixItemsConstantSizeArray = {
+    type: 'array',
+    prefixItems: [
+        {
+            '$ref': '#/components/schemas/ModelWithInteger'
+        },
+        {
+            oneOf: [
+                {
+                    type: 'number'
+                },
+                {
+                    type: 'string'
+                }
+            ]
+        },
+        {
+            type: 'string'
+        }
+    ]
+} as const;
+
 export const $ModelWithAnyOfConstantSizeArrayNullable = {
     type: ['array'],
     items: {
@@ -1496,7 +1518,7 @@ export const $ModelWithAnyOfConstantSizeArrayWithNSizeAndOptions = {
                 type: 'number'
             },
             {
-                type: 'string'
+                '$ref': '#/components/schemas/import'
             }
         ]
     },
@@ -1539,6 +1561,32 @@ export const $ModelWithBackticksInDescription = {
     }
 } as const;
 
+export const $ModelWithOneOfAndProperties = {
+    type: 'object',
+    oneOf: [
+        {
+            '$ref': '#/components/parameters/SimpleParameter'
+        },
+        {
+            '$ref': '#/components/schemas/NonAsciiStringæøåÆØÅöôêÊ字符串'
+        }
+    ],
+    required: ['baz', 'qux'],
+    properties: {
+        baz: {
+            type: 'integer',
+            format: 'uint16',
+            minimum: 0,
+            nullable: true
+        },
+        qux: {
+            type: 'integer',
+            format: 'uint8',
+            minimum: 0
+        }
+    }
+} as const;
+
 export const $ParameterSimpleParameterUnused = {
     type: 'string'
 } as const;
@@ -1556,5 +1604,9 @@ export const $DeleteFooData = {
 } as const;
 
 export const $DeleteFooData2 = {
+    type: 'string'
+} as const;
+
+export const $import = {
     type: 'string'
 } as const;

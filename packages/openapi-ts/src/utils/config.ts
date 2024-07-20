@@ -10,6 +10,6 @@ export const setConfig = (config: Config) => {
 };
 
 export const isStandaloneClient = (config: Config | Config['client']) => {
-  const client = typeof config === 'string' ? config : config.client;
+  const client = 'client' in config ? config.client.name : config.name;
   return client.startsWith('@hey-api');
 };

@@ -1,8 +1,12 @@
-export const getHeaders = (config: OpenAPIConfig, options: ApiRequestOptions): Observable<HttpHeaders> => {
+export const getHeaders = <T>(config: OpenAPIConfig, options: ApiRequestOptions<T>): Observable<HttpHeaders> => {
 	return forkJoin({
+		// @ts-ignore
 		token: resolve(options, config.TOKEN),
+		// @ts-ignore
 		username: resolve(options, config.USERNAME),
+		// @ts-ignore
 		password: resolve(options, config.PASSWORD),
+		// @ts-ignore
 		additionalHeaders: resolve(options, config.HEADERS),
 	}).pipe(
 		map(({ token, username, password, additionalHeaders }) => {

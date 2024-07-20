@@ -50,6 +50,25 @@ This config option is deprecated and will be removed in favor of [clients](./cli
 
 This config option is deprecated and will be removed.
 
+## v0.48.0
+
+### Changed `methodNameBuilder()` signature
+
+The `services.methodNameBuilder()` function now provides a single `operation` argument instead of multiple cherry-picked properties from it.
+
+```js
+import { createClient } from '@hey-api/openapi-ts';
+
+createClient({
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  services: {
+    methodNameBuilder: (service, name) => name, // [!code --]
+    methodNameBuilder: (operation) => operation.name, // [!code ++]
+  },
+});
+```
+
 ## v0.46.0
 
 ### Tree-shakeable services

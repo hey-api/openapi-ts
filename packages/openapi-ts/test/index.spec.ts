@@ -8,6 +8,7 @@ import type { UserConfig } from '../src/types/config';
 
 const V2_SPEC_PATH = './test/spec/v2.json';
 const V3_SPEC_PATH = './test/spec/v3.json';
+const V3_TRANSFORMS_SPEC_PATH = './test/spec/v3-transforms.json';
 
 const OUTPUT_PREFIX = './test/generated/';
 
@@ -56,9 +57,6 @@ describe('OpenAPI v3', () => {
     input: '',
     output: '',
     schemas: true,
-    services: {
-      asClass: true,
-    },
     types: {
       enums: 'javascript',
     },
@@ -70,16 +68,22 @@ describe('OpenAPI v3', () => {
     ...userConfig,
   });
 
-  it.each([
+  const clientScenarios = [
     {
-      config: createConfig(),
+      config: createConfig({
+        services: {
+          asClass: true,
+        },
+      }),
       description: 'generate fetch client',
       name: 'v3',
     },
     {
       config: createConfig({
         client: 'angular',
-        schemas: false,
+        services: {
+          asClass: true,
+        },
         types: {},
       }),
       description: 'generate angular client',
@@ -88,9 +92,9 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         client: 'node',
-        schemas: false,
-        services: false,
-        types: false,
+        services: {
+          asClass: true,
+        },
       }),
       description: 'generate node client',
       name: 'v3_node',
@@ -98,9 +102,9 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         client: 'axios',
-        schemas: false,
-        services: false,
-        types: false,
+        services: {
+          asClass: true,
+        },
       }),
       description: 'generate axios client',
       name: 'v3_axios',
@@ -108,23 +112,51 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         client: '@hey-api/client-fetch',
-        services: {
-          asClass: false,
-        },
       }),
-      description: 'generate axios client',
+      description: 'generate Fetch API client',
       name: 'v3_hey-api_client-fetch',
     },
     {
       config: createConfig({
+        client: {
+          inline: true,
+          name: '@hey-api/client-fetch',
+        },
+      }),
+      description: 'generate Fetch API client without external dependencies',
+      name: 'v3_hey-api_client-fetch_inline',
+    },
+    {
+      config: createConfig({
+        client: '@hey-api/client-axios',
+      }),
+      description: 'generate axios client',
+      name: 'v3_hey-api_client-axios',
+    },
+    {
+      config: createConfig({
         client: 'xhr',
-        schemas: false,
-        services: false,
-        types: false,
+        services: {
+          asClass: true,
+        },
       }),
       description: 'generate xhr client',
       name: 'v3_xhr',
     },
+    {
+      config: createConfig({
+        name: 'ApiClient',
+        schemas: false,
+        types: {
+          dates: true,
+        },
+      }),
+      description: 'generate client',
+      name: 'v3_client',
+    },
+  ];
+
+  const allScenarios = [
     {
       config: createConfig({
         exportCore: false,
@@ -171,34 +203,16 @@ describe('OpenAPI v3', () => {
     },
     {
       config: createConfig({
-        name: 'ApiClient',
         schemas: false,
-        types: {
-          dates: true,
+        services: {
+          asClass: true,
         },
-      }),
-      description: 'generate client',
-      name: 'v3_client',
-    },
-    {
-      config: createConfig({
-        schemas: false,
         types: {
           enums: 'typescript',
         },
       }),
       description: 'generate TypeScript enums',
       name: 'v3_enums_typescript',
-    },
-    {
-      config: createConfig({
-        exportCore: false,
-        schemas: false,
-        services: false,
-        types: {},
-      }),
-      description: 'generate models',
-      name: 'v3_models',
     },
     {
       config: createConfig({
@@ -212,20 +226,6 @@ describe('OpenAPI v3', () => {
       }),
       description: 'generate pascalcase types',
       name: 'v3_pascalcase',
-    },
-    {
-      config: createConfig({
-        exportCore: false,
-        schemas: false,
-        services: {
-          asClass: true,
-          include: '^(Simple|Parameters)',
-          name: 'myAwesome{{name}}Api',
-        },
-        types: false,
-      }),
-      description: 'generate services with custom name',
-      name: 'v3_services_name',
     },
     {
       config: createConfig({
@@ -255,21 +255,95 @@ describe('OpenAPI v3', () => {
       config: createConfig({
         exportCore: false,
         schemas: false,
+        services: {
+          asClass: true,
+          include: '^(Simple|Parameters)',
+          name: 'myAwesome{{name}}Api',
+        },
+        types: false,
+      }),
+      description: 'generate services with custom name',
+      name: 'v3_services_name',
+    },
+    {
+      config: createConfig({
+        exportCore: false,
+        schemas: false,
+        services: {
+          filter: '^\\w+ /api/v{api-version}/simple$',
+        },
+        types: false,
+      }),
+      description: 'generate services with specific endpoints',
+      name: 'v3_services_filter',
+    },
+    {
+      config: createConfig({
+        exportCore: false,
+        schemas: false,
         services: true,
       }),
       description: 'generate tree-shakeable services',
       name: 'v3_tree_shakeable',
     },
-  ])('$description', async ({ name, config }) => {
-    const output = toOutputPath(name);
-    await createClient({
-      ...config,
-      input: V3_SPEC_PATH,
-      output,
-    });
-    sync(`${output}**/*.ts`).forEach((file) => {
-      const content = readFileSync(file, 'utf8').toString();
-      expect(content).toMatchFileSnapshot(toSnapshotPath(file));
-    });
-  });
+    {
+      config: createConfig({
+        exportCore: false,
+        schemas: false,
+        services: false,
+        types: {},
+      }),
+      description: 'generate only types with default settings',
+      name: 'v3_types',
+    },
+    {
+      config: createConfig({
+        exportCore: false,
+        schemas: false,
+        services: false,
+        types: {
+          tree: false,
+        },
+      }),
+      description: 'generate only types without tree',
+      name: 'v3_types_no_tree',
+    },
+  ];
+
+  it.each(clientScenarios.concat(allScenarios))(
+    '$description',
+    async ({ name, config }) => {
+      const output = toOutputPath(name);
+      await createClient({
+        ...config,
+        input: V3_SPEC_PATH,
+        output,
+      });
+      sync(`${output}**/*.ts`).forEach((file) => {
+        const content = readFileSync(file, 'utf8').toString();
+        expect(content).toMatchFileSnapshot(toSnapshotPath(file));
+      });
+    },
+  );
+
+  it.each(clientScenarios)(
+    'transforms $description',
+    async ({ name, config }) => {
+      const output = toOutputPath(name + '_transform');
+
+      await createClient({
+        ...config,
+        input: V3_TRANSFORMS_SPEC_PATH,
+        output,
+        types: {
+          dates: 'types+transform',
+        },
+      });
+
+      sync(`${output}**/*.ts`).forEach((file) => {
+        const content = readFileSync(file, 'utf8').toString();
+        expect(content).toMatchFileSnapshot(toSnapshotPath(file));
+      });
+    },
+  );
 });

@@ -1,3 +1,7 @@
 export { client, createClient } from '../';
-export type { Client, Options } from '../types';
-export { formDataBodySerializer, jsonBodySerializer } from '../utils';
+export type { Client, Options, RequestResult } from '../types';
+export {
+  formDataBodySerializer,
+  jsonBodySerializer,
+  urlSearchParamsBodySerializer,
+} from '../utils';
