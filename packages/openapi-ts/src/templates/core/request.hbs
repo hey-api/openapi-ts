@@ -1,5 +1,5 @@
-{{~#equals @root.$config.client 'angular'}}{{>angular/request}}{{/equals~}}
-{{~#equals @root.$config.client 'axios'}}{{>axios/request}}{{/equals~}}
-{{~#equals @root.$config.client 'fetch'}}{{>fetch/request}}{{/equals~}}
-{{~#equals @root.$config.client 'node'}}{{>fetch/request}}{{/equals~}}
-{{~#equals @root.$config.client 'xhr'}}{{>xhr/request}}{{/equals~}}
+{{~#equals @root.$config.client.name 'angular'}}{{>angular/request}}{{/equals~}}
+{{~#equals @root.$config.client.name 'axios'}}{{>axios/request}}{{/equals~}}
+{{~#equals @root.$config.client.name 'fetch'}}{{>fetch/request}}{{/equals~}}
+{{~#equals @root.$config.client.name 'node'}}{{>fetch/request}}{{/equals~}}
+{{~#equals @root.$config.client.name 'xhr'}}{{>xhr/request}}{{/equals~}}

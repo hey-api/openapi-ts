@@ -5,7 +5,7 @@ import type { Config } from '../types/config';
  * @param client HTTP client to generate
  */
 export const getHttpRequestName = (client: Config['client']): string => {
-  switch (client) {
+  switch (client.name) {
     case 'angular':
       return 'AngularHttpRequest';
     case 'axios':

@@ -1,0 +1,237 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "swagger",
+    "version": "v1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/base"
+    }
+  ],
+  "paths": {
+    "/api/model-with-dates": {
+      "post": {
+        "operationId": "parentModelWithDates",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json; type=collection": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParentModelWithDates"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Success"
+          }
+        }
+      },
+      "put": {
+        "operationId": "modelWithDates",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json; type=collection": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelWithDates"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/model-with-dates-array": {
+      "put": {
+        "operationId": "modelWithDatesArray",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json; type=collection": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ModelWithDates"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/array-of-dates": {
+      "put": {
+        "operationId": "arrayOfDates",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json; type=collection": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/date": {
+      "put": {
+        "operationId": "date",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json; type=collection": {
+                "schema": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/multiple-responses": {
+      "put": {
+        "operationId": "multiple-responses",
+        "responses": {
+          "200": {
+            "description": "Updated",
+            "content": {
+              "application/json; type=collection": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ModelWithDates"
+                  }
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json; type=collection": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SimpleModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SimpleModel": {
+        "description": "This is a model that contains a some dates",
+        "type": "object",
+        "required": ["id", "name", "enabled", "modified"],
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "maxLength": 255,
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean",
+            "readOnly": true
+          }
+        }
+      },
+      "ModelWithDates": {
+        "description": "This is a model that contains a some dates",
+        "type": "object",
+        "required": ["id", "name", "enabled", "modified"],
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "maxLength": 255,
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "modified": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "expires": {
+            "type": "string",
+            "format": "date",
+            "readOnly": true
+          }
+        }
+      },
+      "ParentModelWithDates": {
+        "description": "This is a model that contains a some dates and arrays",
+        "type": "object",
+        "required": ["id", "name"],
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "modified": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ModelWithDates"
+            }
+          },
+          "item": {
+            "$ref": "#/components/schemas/ModelWithDates"
+          },
+          "simpleItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SimpleModel"
+            }
+          },
+          "simpleItem": {
+            "$ref": "#/components/schemas/SimpleModel"
+          },
+          "dates": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "strings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

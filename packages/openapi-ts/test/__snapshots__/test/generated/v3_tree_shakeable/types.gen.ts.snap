@@ -783,10 +783,9 @@ export type NestedAnyOfArraysNullable = {
 
 export type CompositionWithOneOfAndProperties = {
     foo: ParameterSimpleParameter;
-    baz: number | null;
-    qux: number;
 } | {
     bar: NonAsciiStringæøåÆØÅöôêÊ字符串;
+} & {
     baz: number | null;
     qux: number;
 };
@@ -875,6 +874,12 @@ export type ModelWithAnyOfConstantSizeArray = [
     number | string
 ];
 
+export type ModelWithPrefixItemsConstantSizeArray = [
+    ModelWithInteger,
+    number | string,
+    string
+];
+
 export type ModelWithAnyOfConstantSizeArrayNullable = [
     number | null | string,
     number | null | string,
@@ -882,8 +887,8 @@ export type ModelWithAnyOfConstantSizeArrayNullable = [
 ];
 
 export type ModelWithAnyOfConstantSizeArrayWithNSizeAndOptions = [
-    number | string,
-    number | string
+    number | _import,
+    number | _import
 ];
 
 export type ModelWithAnyOfConstantSizeArrayAndIntersect = [
@@ -952,6 +957,11 @@ export type ModelWithBackticksInDescription = {
     template?: string;
 };
 
+export type ModelWithOneOfAndProperties = ParameterSimpleParameter | NonAsciiStringæøåÆØÅöôêÊ字符串 & {
+    baz: number | null;
+    qux: number;
+};
+
 /**
  * Model used to test deduplication strategy (unused)
  */
@@ -978,6 +988,11 @@ export type DeleteFooData = string;
 export type DeleteFooData2 = string;
 
 /**
+ * Model with restricted keyword name
+ */
+export type _import = string;
+
+/**
  * This is a reusable parameter
  */
 export type ParameterSimpleParameter = string;
@@ -987,11 +1002,11 @@ export type ParameterSimpleParameter = string;
  */
 export type Parameterx_Foo_Bar = ModelWithString;
 
-export type PostServiceWithEmptyTagData = {
+export type ImportData = {
     requestBody: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
 };
 
-export type PostServiceWithEmptyTagResponse3 = ModelWithReadOnlyAndWriteOnly;
+export type ImportResponse = Model_From_Zendesk | ModelWithReadOnlyAndWriteOnly;
 
 export type ApiVversionOdataControllerCountResponse = Model_From_Zendesk;
 
@@ -1249,7 +1264,7 @@ export type DummyAResponse = void;
 
 export type DummyBResponse = void;
 
-export type CallWithResponseResponse = ModelWithString;
+export type CallWithResponseResponse = _import;
 
 export type CallWithDuplicateResponsesResponse = ModelWithBoolean & ModelWithInteger | ModelWithString;
 
@@ -1413,11 +1428,22 @@ export type NonAsciiæøåÆøÅöôêÊ字符串Data = {
 
 export type NonAsciiæøåÆøÅöôêÊ字符串Response = Array<NonAsciiStringæøåÆØÅöôêÊ字符串>;
 
+export type PutWithFormUrlEncodedData = {
+    formData: ArrayWithStrings;
+};
+
 export type $OpenApiTs = {
     '/api/v{api-version}/no-tag': {
         post: {
-            req: PostServiceWithEmptyTagData;
+            req: ImportData;
             res: {
+                /**
+                 * Success
+                 */
+                200: Model_From_Zendesk;
+                /**
+                 * Default success response
+                 */
                 default: ModelWithReadOnlyAndWriteOnly;
             };
         };
@@ -1533,7 +1559,7 @@ export type $OpenApiTs = {
     '/api/v{api-version}/response': {
         get: {
             res: {
-                default: ModelWithString;
+                default: _import;
             };
         };
         post: {
@@ -1546,6 +1572,10 @@ export type $OpenApiTs = {
                  * Message for 201 response
                  */
                 201: ModelWithString;
+                /**
+                 * Message for 202 response
+                 */
+                202: ModelWithString;
                 /**
                  * Message for 500 error
                  */
@@ -1563,7 +1593,7 @@ export type $OpenApiTs = {
                  */
                 '4XX': DictionaryWithArray;
                 /**
-                 * Message for default response
+                 * Default error response
                  */
                 default: ModelWithBoolean;
             };
@@ -1601,7 +1631,7 @@ export type $OpenApiTs = {
                 /**
                  * Message for default response
                  */
-                default: ModelWithString;
+                default: ModelWithStringError;
             };
         };
     };
@@ -1757,6 +1787,9 @@ export type $OpenApiTs = {
                  */
                 200: Array<NonAsciiStringæøåÆØÅöôêÊ字符串>;
             };
+        };
+        put: {
+            req: PutWithFormUrlEncodedData;
         };
     };
 };

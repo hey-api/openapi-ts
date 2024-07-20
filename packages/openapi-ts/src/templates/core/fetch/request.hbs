@@ -1,4 +1,4 @@
-{{#equals @root.$config.client 'node'}}
+{{#equals @root.$config.client.name 'node'}}
 import fetch, { FormData, Headers } from 'node-fetch';
 import type { RequestInit, Response } from 'node-fetch';
 
@@ -62,7 +62,7 @@ import type { OpenAPIConfig } from './OpenAPI';
  * @returns CancelablePromise<{{#equals @root.$config.services.response 'response'}}ApiResult<T>{{else}}T{{/equals}}>
  * @throws ApiError
  */
-export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): CancelablePromise<{{#equals @root.$config.services.response 'response'}}ApiResult<T>{{else}}T{{/equals}}> => {
+export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions<T>): CancelablePromise<{{#equals @root.$config.services.response 'response'}}ApiResult<T>{{else}}T{{/equals}}> => {
 	return new CancelablePromise(async (resolve, reject, onCancel) => {
 		try {
 			const url = getUrl(config, options);
@@ -80,12 +80,17 @@ export const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions): C
 				const responseBody = await getResponseBody(response);
 				const responseHeader = getResponseHeader(response, options.responseHeader);
 
+				let transformedBody = responseBody;
+				if (options.responseTransformer && response.ok) {
+					transformedBody = await options.responseTransformer(responseBody)
+				}
+
 				const result: ApiResult = {
 					url,
 					ok: response.ok,
 					status: response.status,
 					statusText: response.statusText,
-					body: responseHeader ?? responseBody,
+					body: responseHeader ?? transformedBody,
 				};
 
 				catchErrorCodes(options, result);

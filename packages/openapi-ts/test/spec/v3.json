@@ -13,10 +13,10 @@
     "/api/v{api-version}/no-tag": {
       "tags": [],
       "get": {
-        "operationId": "ServiceWithEmptyTag"
+        "operationId": "export"
       },
       "post": {
-        "operationId": "PostServiceWithEmptyTag",
+        "operationId": "import",
         "requestBody": {
           "required": true,
           "content": {
@@ -37,10 +37,21 @@
         },
         "responses": {
           "default": {
+            "description": "Default success response",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ModelWithReadOnlyAndWriteOnly"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json; type=collection": {
+                "schema": {
+                  "$ref": "#/components/schemas/Model-From.Zendesk"
                 }
               }
             }
@@ -790,7 +801,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ModelWithString"
+                  "$ref": "#/components/schemas/import"
                 }
               }
             }
@@ -802,7 +813,7 @@
         "operationId": "CallWithDuplicateResponses",
         "responses": {
           "default": {
-            "description": "Message for default response",
+            "description": "Default error response",
             "content": {
               "application/json": {
                 "schema": {
@@ -899,7 +910,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ModelWithString"
+                  "$ref": "#/components/schemas/ModelWithStringError"
                 }
               }
             }
@@ -1614,6 +1625,21 @@
               }
             }
           }
+        }
+      },
+      "put": {
+        "tags": ["Non-Ascii-æøåÆØÅöôêÊ"],
+        "summary": "Login User",
+        "operationId": "putWithFormUrlEncoded",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/ArrayWithStrings"
+              }
+            }
+          },
+          "required": true
         }
       }
     }
@@ -3184,6 +3210,27 @@
         "minItems": 3,
         "maxItems": 3
       },
+      "ModelWithPrefixItemsConstantSizeArray": {
+        "type": "array",
+        "prefixItems": [
+          {
+            "$ref": "#/components/schemas/ModelWithInteger"
+          },
+          {
+            "oneOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          {
+            "type": "string"
+          }
+        ]
+      },
       "ModelWithAnyOfConstantSizeArrayNullable": {
         "type": ["array"],
         "items": {
@@ -3208,7 +3255,7 @@
               "type": "number"
             },
             {
-              "type": "string"
+              "$ref": "#/components/schemas/import"
             }
           ]
         },
@@ -3250,6 +3297,31 @@
           }
         }
       },
+      "ModelWithOneOfAndProperties": {
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/parameters/SimpleParameter"
+          },
+          {
+            "$ref": "#/components/schemas/NonAsciiStringæøåÆØÅöôêÊ字符串"
+          }
+        ],
+        "required": ["baz", "qux"],
+        "properties": {
+          "baz": {
+            "type": "integer",
+            "format": "uint16",
+            "minimum": 0.0,
+            "nullable": true
+          },
+          "qux": {
+            "type": "integer",
+            "format": "uint8",
+            "minimum": 0.0
+          }
+        }
+      },
       "ParameterSimpleParameterUnused": {
         "description": "Model used to test deduplication strategy (unused)",
         "type": "string"
@@ -3268,6 +3340,10 @@
       },
       "DeleteFooData2": {
         "description": "Model used to test deduplication strategy",
+        "type": "string"
+      },
+      "import": {
+        "description": "Model with restricted keyword name",
         "type": "string"
       }
     }

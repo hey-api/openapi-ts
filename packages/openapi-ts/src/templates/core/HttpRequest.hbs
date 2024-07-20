@@ -1,4 +1,4 @@
-{{#equals @root.$config.client 'angular'}}
+{{#equals @root.$config.client.name 'angular'}}
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import type { Observable } from 'rxjs';
@@ -16,12 +16,12 @@ import type { OpenAPIConfig } from './OpenAPI';
 import { request as __request } from './request';
 {{/equals}}
 
-{{#equals @root.$config.client 'angular'}}
+{{#equals @root.$config.client.name 'angular'}}
 @Injectable()
 {{/equals}}
 export class {{httpRequest}} extends BaseHttpRequest {
 
-	{{#equals @root.$config.client 'angular'}}
+	{{#equals @root.$config.client.name 'angular'}}
 	constructor(
 		@Inject(OpenAPI)
 		config: OpenAPIConfig,
@@ -35,14 +35,14 @@ export class {{httpRequest}} extends BaseHttpRequest {
 	}
 	{{/equals}}
 
-	{{#equals @root.$config.client 'angular'}}
+	{{#equals @root.$config.client.name 'angular'}}
 	/**
 	 * Request method
 	 * @param options The request options from the service
 	 * @returns Observable<T>
 	 * @throws ApiError
 	 */
-	public override request<T>(options: ApiRequestOptions): Observable<T> {
+	public override request<T>(options: ApiRequestOptions<T>): Observable<T> {
 		return __request(this.config, this.http, options);
 	}
 	{{else}}
@@ -52,7 +52,7 @@ export class {{httpRequest}} extends BaseHttpRequest {
 	 * @returns CancelablePromise<T>
 	 * @throws ApiError
 	 */
-	public override request<T>(options: ApiRequestOptions): CancelablePromise<T> {
+	public override request<T>(options: ApiRequestOptions<T>): CancelablePromise<T> {
 		return __request(this.config, options);
 	}
 	{{/equals}}

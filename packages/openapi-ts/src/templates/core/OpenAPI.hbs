@@ -1,17 +1,17 @@
-{{#equals @root.$config.client 'angular'}}
+{{#equals @root.$config.client.name 'angular'}}
 import type { HttpResponse } from '@angular/common/http';
 {{/equals}}
-{{#equals @root.$config.client 'axios'}}
+{{#equals @root.$config.client.name 'axios'}}
 import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 {{/equals}}
-{{#equals @root.$config.client 'node'}}
+{{#equals @root.$config.client.name 'node'}}
 import type { RequestInit, Response } from 'node-fetch';
 {{/equals}}
 import type { ApiRequestOptions } from './ApiRequestOptions';
 
 type Headers = Record<string, string>;
 type Middleware<T> = (value: T) => T | Promise<T>;
-type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
+type Resolver<T> = (options: ApiRequestOptions<T>) => Promise<T>;
 
 export class Interceptors<T> {
   _fns: Middleware<T>[];
@@ -43,22 +43,22 @@ export type OpenAPIConfig = {
 	VERSION: string;
 	WITH_CREDENTIALS: boolean;
 	interceptors: {
-		{{#equals @root.$config.client 'angular'}}
+		{{#equals @root.$config.client.name 'angular'}}
 		response: Interceptors<HttpResponse<any>>;
 		{{/equals}}
-		{{#equals @root.$config.client 'axios'}}
+		{{#equals @root.$config.client.name 'axios'}}
 		request: Interceptors<AxiosRequestConfig>;
 		response: Interceptors<AxiosResponse>;
 		{{/equals}}
-		{{#equals @root.$config.client 'fetch'}}
+		{{#equals @root.$config.client.name 'fetch'}}
 		request: Interceptors<RequestInit>;
 		response: Interceptors<Response>;
 		{{/equals}}
-		{{#equals @root.$config.client 'node'}}
+		{{#equals @root.$config.client.name 'node'}}
 		request: Interceptors<RequestInit>;
 		response: Interceptors<Response>;
 		{{/equals}}
-		{{#equals @root.$config.client 'xhr'}}
+		{{#equals @root.$config.client.name 'xhr'}}
 		request: Interceptors<XMLHttpRequest>;
 		response: Interceptors<XMLHttpRequest>;
 		{{/equals}}
@@ -76,7 +76,7 @@ export const OpenAPI: OpenAPIConfig = {
 	VERSION: '{{{version}}}',
 	WITH_CREDENTIALS: false,
 	interceptors: {
-		{{#notEquals @root.$config.client 'angular'}}
+		{{#notEquals @root.$config.client.name 'angular'}}
 		request: new Interceptors(),
 		{{/notEquals}}
 		response: new Interceptors(),

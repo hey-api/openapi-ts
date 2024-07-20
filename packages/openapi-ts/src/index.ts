@@ -3,6 +3,7 @@ import path from 'node:path';
 import { loadConfig } from 'c12';
 import { sync } from 'cross-spawn';
 
+import { generateOutput } from './generate/output';
 import { parse } from './openApi';
 import type { Client } from './types/client';
 import type { ClientConfig, Config, UserConfig } from './types/config';
@@ -10,7 +11,6 @@ import { getConfig, isStandaloneClient, setConfig } from './utils/config';
 import { getOpenApiSpec } from './utils/getOpenApiSpec';
 import { registerHandlebarTemplates } from './utils/handlebars';
 import { postProcessClient } from './utils/postprocess';
-import { writeClient } from './utils/write/client';
 
 type OutputProcesser = {
   args: (path: string) => ReadonlyArray<string>;
@@ -80,7 +80,7 @@ const processOutput = () => {
 
 const logClientMessage = () => {
   const { client } = getConfig();
-  switch (client) {
+  switch (client.name) {
     case 'angular':
       return console.log('✨ Creating Angular client');
     case '@hey-api/client-axios':
@@ -94,6 +94,22 @@ const logClientMessage = () => {
     case 'xhr':
       return console.log('✨ Creating XHR client');
   }
+};
+
+const getClient = (userConfig: ClientConfig): Config['client'] => {
+  let client: Config['client'] = {
+    inline: false,
+    name: 'fetch',
+  };
+  if (typeof userConfig.client === 'string') {
+    client.name = userConfig.client;
+  } else {
+    client = {
+      ...client,
+      ...userConfig.client,
+    };
+  }
+  return client;
 };
 
 const getOutput = (userConfig: ClientConfig): Config['output'] => {
@@ -111,6 +127,20 @@ const getOutput = (userConfig: ClientConfig): Config['output'] => {
     };
   }
   return output;
+};
+
+const getPlugins = (userConfig: ClientConfig): Config['plugins'] => {
+  const plugins: Config['plugins'] = (userConfig.plugins ?? []).map(
+    (plugin) => {
+      if (typeof plugin === 'string') {
+        return {
+          name: plugin,
+        };
+      }
+      return plugin;
+    },
+  );
+  return plugins;
 };
 
 const getSchemas = (userConfig: ClientConfig): Config['schemas'] => {
@@ -156,6 +186,7 @@ const getTypes = (userConfig: ClientConfig): Config['types'] => {
     enums: false,
     export: true,
     name: 'preserve',
+    tree: true,
   };
   if (typeof userConfig.types === 'boolean') {
     types.export = userConfig.types;
@@ -171,7 +202,14 @@ const getTypes = (userConfig: ClientConfig): Config['types'] => {
 };
 
 const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
+  let configurationFile: string | undefined = undefined;
+  if (userConfig.configFile) {
+    const parts = userConfig.configFile.split('.');
+    configurationFile = parts.slice(0, parts.length - 1).join('.');
+  }
+
   const { config: configFromFile } = await loadConfig<UserConfig>({
+    configFile: configurationFile,
     jitiOptions: {
       esmResolve: true,
     },
@@ -190,7 +228,7 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
   return userConfigs.map((userConfig) => {
     const {
       base,
-      client = 'fetch',
+      configFile = '',
       debug = false,
       dryRun = false,
       exportCore = true,
@@ -224,6 +262,8 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
       );
     }
 
+    const client = getClient(userConfig);
+    const plugins = getPlugins(userConfig);
     const schemas = getSchemas(userConfig);
     const services = getServices(userConfig);
     const types = getTypes(userConfig);
@@ -233,12 +273,14 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
     return setConfig({
       base,
       client,
+      configFile,
       debug,
       dryRun,
       exportCore: isStandaloneClient(client) ? false : exportCore,
       input,
       name,
       output,
+      plugins,
       request,
       schemas,
       services,
@@ -270,7 +312,7 @@ export async function createClient(userConfig: UserConfig): Promise<Client[]> {
 
     if (!config.dryRun) {
       logClientMessage();
-      await writeClient(openApi, client, templates);
+      await generateOutput(openApi, client, templates);
       processOutput();
     }
 

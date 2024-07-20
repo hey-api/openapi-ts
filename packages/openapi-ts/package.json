@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/openapi-ts",
-  "version": "0.46.3",
+  "version": "0.49.0",
   "type": "module",
   "description": "Turn your OpenAPI specification into a beautiful TypeScript client",
   "homepage": "https://heyapi.vercel.app/",
@@ -60,8 +60,8 @@
     "node": "^18.0.0 || >=20.0.0"
   },
   "dependencies": {
-    "@apidevtools/json-schema-ref-parser": "11.6.2",
-    "c12": "1.10.0",
+    "@apidevtools/json-schema-ref-parser": "11.6.4",
+    "c12": "1.11.1",
     "camelcase": "8.0.0",
     "commander": "12.1.0",
     "handlebars": "4.7.8"
@@ -81,21 +81,22 @@
     "@angular/platform-browser": "17.3.9",
     "@angular/platform-browser-dynamic": "17.3.9",
     "@angular/router": "17.3.9",
+    "@hey-api/client-fetch": "workspace:*",
     "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "15.2.3",
     "@types/cross-spawn": "6.0.6",
     "@types/express": "4.17.21",
     "axios": "1.7.2",
     "cross-spawn": "7.0.3",
-    "eslint": "9.3.0",
+    "eslint": "9.6.0",
     "express": "4.19.2",
-    "glob": "10.4.1",
+    "glob": "10.4.3",
     "node-fetch": "3.3.2",
-    "prettier": "3.2.5",
-    "puppeteer": "22.10.0",
+    "prettier": "3.3.2",
+    "puppeteer": "22.12.1",
     "rxjs": "7.8.1",
     "ts-node": "10.9.2",
-    "tslib": "2.6.2",
-    "typescript": "5.4.5"
+    "tslib": "2.6.3",
+    "typescript": "5.5.3"
   }
 }

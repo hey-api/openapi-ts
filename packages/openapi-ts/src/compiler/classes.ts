@@ -74,9 +74,12 @@ export const createMethodDeclaration = ({
   returnType?: string | ts.TypeNode;
   statements?: ts.Statement[];
 }) => {
-  const modifiers = toAccessLevelModifiers(accessLevel);
+  let modifiers = toAccessLevelModifiers(accessLevel);
   if (isStatic) {
-    modifiers.push(ts.factory.createModifier(ts.SyntaxKind.StaticKeyword));
+    modifiers = [
+      ...modifiers,
+      ts.factory.createModifier(ts.SyntaxKind.StaticKeyword),
+    ];
   }
   const node = ts.factory.createMethodDeclaration(
     modifiers,
@@ -115,11 +118,11 @@ export const createClassDeclaration = ({
   members?: ts.ClassElement[];
   name: string;
 }) => {
-  const modifiers: ts.ModifierLike[] = [
+  let modifiers: ts.ModifierLike[] = [
     ts.factory.createModifier(ts.SyntaxKind.ExportKeyword),
   ];
   if (decorator) {
-    modifiers.unshift(
+    modifiers = [
       ts.factory.createDecorator(
         ts.factory.createCallExpression(
           ts.factory.createIdentifier(decorator.name),
@@ -129,14 +132,14 @@ export const createClassDeclaration = ({
             .filter(isType<ts.Expression>),
         ),
       ),
-    );
+      ...modifiers,
+    ];
   }
   // Add newline between each class member.
-  const m: ts.ClassElement[] = [];
+  let m: ts.ClassElement[] = [];
   members.forEach((member) => {
-    m.push(member);
     // @ts-ignore
-    m.push(ts.factory.createIdentifier('\n'));
+    m = [...m, member, ts.factory.createIdentifier('\n')];
   });
   return ts.factory.createClassDeclaration(
     modifiers,

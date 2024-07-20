@@ -1,4 +1,4 @@
-{{#equals @root.$config.client 'angular'}}
+{{#equals @root.$config.client.name 'angular'}}
 import { NgModule} from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -20,7 +20,7 @@ import { {{{transformServiceName name}}} } from './services.gen';
 {{/each}}
 {{/if}}
 
-{{#equals @root.$config.client 'angular'}}
+{{#equals @root.$config.client.name 'angular'}}
 @NgModule({
 	imports: [HttpClientModule],
 	providers: [

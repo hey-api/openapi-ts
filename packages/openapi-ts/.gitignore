@@ -16,3 +16,4 @@ coverage
 # test files
 test/generated
 test/e2e/generated
+generated/
