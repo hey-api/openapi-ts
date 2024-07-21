@@ -2,4 +2,4 @@
 '@hey-api/openapi-ts': minor
 ---
 
-feat: allow inlining standalone clients with `client.inline = true`
+feat: allow bundling standalone clients with `client.bundle = true`

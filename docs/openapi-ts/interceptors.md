@@ -5,9 +5,11 @@ description: Understanding interceptors.
 
 # Interceptors
 
-Interceptors (middleware) can be used to modify requests before they're sent or responses before they're returned to the rest of your application. If you're not using the new Fetch API client, jump to the [legacy clients](#legacy-clients) section.
+Interceptors (middleware) can be used to modify requests before they're sent or responses before they're returned to the rest of your application. If you're not using the standalone client packages, jump to the [legacy clients](#legacy-clients) section.
 
-Below is an example request interceptor
+## Fetch API
+
+Fetch API does not have the interceptor functionality, so we implement our own. Below is an example request interceptor
 
 ::: code-group
 
@@ -58,6 +60,19 @@ client.interceptors.response.eject((response, request, options) => {
 ::: tip
 To eject, you must provide a reference to the function that was passed to `use()`.
 :::
+
+## Axios
+
+If you're using the new Axios client, refer to the Axios documentation on [interceptors](https://axios-http.com/docs/interceptors). We expose the Axios instance through the `instance` field.
+
+```js
+import { client } from '@hey-api/client-axios';
+
+client.instance.interceptors.request.use((config) => {
+  trackAnalytics(config);
+  return config;
+});
+```
 
 ## Legacy Clients
 

@@ -98,7 +98,7 @@ const logClientMessage = () => {
 
 const getClient = (userConfig: ClientConfig): Config['client'] => {
   let client: Config['client'] = {
-    inline: false,
+    bundle: false,
     name: 'fetch',
   };
   if (typeof userConfig.client === 'string') {
