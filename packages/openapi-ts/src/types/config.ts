@@ -25,7 +25,7 @@ export interface ClientConfig {
     | Client
     | {
         /**
-         * Inline the client module? Set this to true if you're using a standalone
+         * Bundle the client module? Set this to true if you're using a standalone
          * client package and don't want to declare it as a separate dependency.
          * When true, the client module will be generated from the standalone
          * package and bundled with the rest of the generated output. This is
@@ -33,7 +33,7 @@ export interface ClientConfig {
          * and you don't want them to install any dependencies.
          * @default false
          */
-        inline?: boolean;
+        bundle?: boolean;
         /**
          * HTTP client to generate
          * @default 'fetch'

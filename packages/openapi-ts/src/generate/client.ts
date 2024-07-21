@@ -10,7 +10,7 @@ const require = createRequire(import.meta.url);
 /**
  * (optional) Creates a `client.ts` file containing the same exports as a
  * standalone client package. Creates a `core` directory containing the modules
- * from standalone client. These files are generated only when `client.inline`
+ * from standalone client. These files are generated only when `client.bundle`
  * is set to true.
  */
 export const generateClient = async (
@@ -19,7 +19,7 @@ export const generateClient = async (
 ) => {
   const config = getConfig();
 
-  if (!isStandaloneClient(config) || !config.client.inline) {
+  if (!isStandaloneClient(config) || !config.client.bundle) {
     return;
   }
 
