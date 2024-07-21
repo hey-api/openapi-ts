@@ -23,7 +23,7 @@ import type { Pet } from './client/types.gen';
 
 createClient({
   // set default base url for requests
-  baseUrl: 'https://petstore3.swagger.io/api/v3',
+  baseURL: 'https://petstore3.swagger.io/api/v3',
   // set default headers for requests
   headers: {
     Authorization: 'Bearer <token_from_global_client>',
@@ -32,7 +32,7 @@ createClient({
 
 const localClient = createClient({
   // set default base url for requests made by this client
-  baseUrl: 'https://petstore3.swagger.io/api/v3',
+  baseURL: 'https://petstore3.swagger.io/api/v3',
   global: false,
   /**
    * Set default headers only for requests made by this client. This is to
@@ -44,18 +44,18 @@ const localClient = createClient({
   },
 });
 
-localClient.interceptors.request.use((request, options) => {
+localClient.instance.interceptors.request.use((config) => {
   // Middleware is great for adding authorization tokens to requests made to
   // protected paths. Headers are set randomly here to allow surfacing the
   // default headers, too.
   if (
-    options.url === '/pet/{petId}' &&
-    options.method === 'GET' &&
+    config.url?.startsWith('/pet/') &&
+    config.method === 'get' &&
     Math.random() < 0.5
   ) {
-    request.headers.set('Authorization', 'Bearer <token_from_interceptor>');
+    config.headers.set('Authorization', 'Bearer <token_from_interceptor>');
   }
-  return request;
+  return config;
 });
 
 function App() {
@@ -87,10 +87,12 @@ function App() {
         ],
       },
     });
+
     if (error) {
       console.log(error);
       return;
     }
+
     setPet(data!);
     setIsRequiredNameError(false);
   };

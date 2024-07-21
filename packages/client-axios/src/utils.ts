@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 import type { Config } from './types';
 
 interface PathSerializer {
@@ -14,8 +12,6 @@ type MatrixStyle = 'label' | 'matrix' | 'simple';
 type ArraySeparatorStyle = ArrayStyle | MatrixStyle;
 type ObjectStyle = 'form' | 'deepObject';
 type ObjectSeparatorStyle = ObjectStyle | MatrixStyle;
-
-export type QuerySerializer = (query: Record<string, unknown>) => string;
 
 export type BodySerializer = (body: any) => any;
 
@@ -36,12 +32,6 @@ interface SerializePrimitiveOptions {
 }
 interface SerializePrimitiveParam extends SerializePrimitiveOptions {
   value: string;
-}
-
-export interface QuerySerializerOptions {
-  allowReserved?: boolean;
-  array?: SerializerOptions<ArrayStyle>;
-  object?: SerializerOptions<ObjectStyle>;
 }
 
 const serializePrimitiveParam = ({
@@ -260,202 +250,13 @@ const defaultPathSerializer = ({ path, url: _url }: PathSerializer) => {
   return url;
 };
 
-export const createQuerySerializer = <T = unknown>({
-  allowReserved,
-  array,
-  object,
-}: QuerySerializerOptions = {}) => {
-  const querySerializer = (queryParams: T) => {
-    let search: string[] = [];
-    if (queryParams && typeof queryParams === 'object') {
-      for (const name in queryParams) {
-        const value = queryParams[name];
-
-        if (value === undefined || value === null) {
-          continue;
-        }
-
-        if (Array.isArray(value)) {
-          search = [
-            ...search,
-            serializeArrayParam({
-              allowReserved,
-              explode: true,
-              name,
-              style: 'form',
-              value,
-              ...array,
-            }),
-          ];
-          continue;
-        }
-
-        if (typeof value === 'object') {
-          search = [
-            ...search,
-            serializeObjectParam({
-              allowReserved,
-              explode: true,
-              name,
-              style: 'deepObject',
-              value: value as Record<string, unknown>,
-              ...object,
-            }),
-          ];
-          continue;
-        }
-
-        search = [
-          ...search,
-          serializePrimitiveParam({
-            allowReserved,
-            name,
-            value: value as string,
-          }),
-        ];
-      }
-    }
-    return search.join('&');
-  };
-  return querySerializer;
-};
-
-/**
- * Infers parseAs value from provided Content-Type header.
- */
-export const getParseAs = (
-  content: string | null,
-): Exclude<Config['parseAs'], 'auto' | 'stream'> => {
-  if (!content) {
-    return;
-  }
-
-  if (content === 'application/json' || content.endsWith('+json')) {
-    return 'json';
-  }
-
-  if (content === 'multipart/form-data') {
-    return 'formData';
-  }
-
-  if (
-    [
-      'application/octet-stream',
-      'application/pdf',
-      'application/zip',
-      'audio/',
-      'image/',
-      'video/',
-    ].some((type) => content.includes(type))
-  ) {
-    return 'blob';
-  }
-
-  if (content.includes('text/')) {
-    return 'text';
-  }
-};
-
 export const getUrl = ({
-  baseURL,
   path,
-  query,
-  querySerializer,
-  url: _url,
+  url,
 }: {
-  baseURL: string;
   path?: Record<string, unknown>;
-  query?: Record<string, unknown>;
-  querySerializer: QuerySerializer;
   url: string;
-}) => {
-  const pathUrl = _url.startsWith('/') ? _url : `/${_url}`;
-  let url = baseURL + pathUrl;
-  if (path) {
-    url = defaultPathSerializer({ path, url });
-  }
-  let search = query ? querySerializer(query) : '';
-  if (search.startsWith('?')) {
-    search = search.substring(1);
-  }
-  if (search) {
-    url += `?${search}`;
-  }
-  return url;
-};
-
-export const mergeHeaders = (
-  ...headers: Array<Required<Config>['headers'] | undefined>
-) => {
-  const mergedHeaders = new Headers();
-  for (const header of headers) {
-    if (!header || typeof header !== 'object') {
-      continue;
-    }
-
-    const iterator =
-      header instanceof Headers ? header.entries() : Object.entries(header);
-
-    for (const [key, value] of iterator) {
-      if (value === null) {
-        mergedHeaders.delete(key);
-      } else if (Array.isArray(value)) {
-        for (const v of value) {
-          mergedHeaders.append(key, v as string);
-        }
-      } else if (value !== undefined) {
-        mergedHeaders.set(key, value as string);
-      }
-    }
-  }
-  return mergedHeaders;
-};
-
-type ReqInterceptor<Req, Options> = (
-  request: Req,
-  options: Options,
-) => Req | Promise<Req>;
-
-type ResInterceptor<Res, Req, Options> = (
-  response: Res,
-  request: Req,
-  options: Options,
-) => Res | Promise<Res>;
-
-class Interceptors<Interceptor> {
-  _fns: Interceptor[];
-
-  constructor() {
-    this._fns = [];
-  }
-
-  eject(fn: Interceptor) {
-    const index = this._fns.indexOf(fn);
-    if (index !== -1) {
-      this._fns = [...this._fns.slice(0, index), ...this._fns.slice(index + 1)];
-    }
-  }
-
-  use(fn: Interceptor) {
-    this._fns = [...this._fns, fn];
-  }
-}
-
-// `createInterceptors()` response, meant for external use as it does not
-// expose internals
-export interface Middleware<Req, Res, Options> {
-  request: Pick<Interceptors<ReqInterceptor<Req, Options>>, 'eject' | 'use'>;
-  response: Pick<
-    Interceptors<ResInterceptor<Res, Req, Options>>,
-    'eject' | 'use'
-  >;
-}
-
-// do not add `Middleware` as return type so we can use _fns internally
-export const createInterceptors = <Req, Res, Options>() => ({
-  request: new Interceptors<ReqInterceptor<Req, Options>>(),
-  response: new Interceptors<ResInterceptor<Res, Req, Options>>(),
-});
+}) => (path ? defaultPathSerializer({ path, url }) : url);
 
 const serializeFormDataPair = (
   formData: FormData,
@@ -467,6 +268,38 @@ const serializeFormDataPair = (
   } else {
     formData.append(key, JSON.stringify(value));
   }
+};
+
+export const mergeHeaders = (
+  ...headers: Array<Required<Config>['headers'] | undefined>
+): Required<Config>['headers'] => {
+  const mergedHeaders: Required<Config>['headers'] = {};
+  for (const header of headers) {
+    if (!header || typeof header !== 'object') {
+      continue;
+    }
+
+    const iterator = Object.entries(header);
+
+    for (const [key, value] of iterator) {
+      if (value === null) {
+        // @ts-ignore
+        delete mergedHeaders[key];
+      } else if (Array.isArray(value)) {
+        for (const v of value) {
+          // @ts-ignore
+          mergedHeaders[key] = [...(mergedHeaders[key] ?? []), v as string];
+        }
+      } else if (value !== undefined) {
+        // assume object headers are meant to be JSON stringified, i.e. their
+        // content value in OpenAPI specification is 'application/json'
+        // @ts-ignore
+        mergedHeaders[key] =
+          typeof value === 'object' ? JSON.stringify(value) : (value as string);
+      }
+    }
+  }
+  return mergedHeaders;
 };
 
 export const formDataBodySerializer = {
@@ -494,27 +327,40 @@ export const jsonBodySerializer = {
   bodySerializer: <T>(body: T) => JSON.stringify(body),
 };
 
-const defaultQuerySerializer = createQuerySerializer({
-  allowReserved: false,
-  array: {
-    explode: true,
-    style: 'form',
-  },
-  object: {
-    explode: true,
-    style: 'deepObject',
-  },
-});
+const serializeUrlSearchParamsPair = (
+  data: URLSearchParams,
+  key: string,
+  value: unknown,
+) => {
+  if (typeof value === 'string') {
+    data.append(key, value);
+  } else {
+    data.append(key, JSON.stringify(value));
+  }
+};
 
-const defaultHeaders = {
-  'Content-Type': 'application/json',
+export const urlSearchParamsBodySerializer = {
+  bodySerializer: <T extends Record<string, any> | Array<Record<string, any>>>(
+    body: T,
+  ) => {
+    const data = new URLSearchParams();
+
+    Object.entries(body).forEach(([key, value]) => {
+      if (value === undefined || value === null) {
+        return;
+      }
+      if (Array.isArray(value)) {
+        value.forEach((v) => serializeUrlSearchParamsPair(data, key, v));
+      } else {
+        serializeUrlSearchParamsPair(data, key, value);
+      }
+    });
+
+    return data;
+  },
 };
 
 export const createDefaultConfig = (): Config => ({
-  ...jsonBodySerializer,
-  axios,
   baseURL: '',
   global: true,
-  headers: defaultHeaders,
-  querySerializer: defaultQuerySerializer,
 });

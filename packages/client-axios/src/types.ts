@@ -1,22 +1,22 @@
-import type { AxiosInstance, AxiosRequestConfig, AxiosStatic } from 'axios';
-
 import type {
-  BodySerializer,
-  Middleware,
-  QuerySerializer,
-  QuerySerializerOptions,
-} from './utils';
+  AxiosError,
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+  AxiosStatic,
+  CreateAxiosDefaults,
+} from 'axios';
+
+import type { BodySerializer } from './utils';
 
 type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
 
-// Omit<RequestInit, 'body' | 'headers' | 'method'>
-export interface Config extends Omit<AxiosRequestConfig, 'headers' | 'method'> {
+export interface Config extends Omit<CreateAxiosDefaults, 'headers'> {
   /**
    * Axios implementation. You can use this option to provide a custom
    * Axios instance.
    * @default axios
    */
-  // TODO: update signature interface
   axios?: AxiosStatic;
   /**
    * Any body that you want to add to your request.
@@ -26,7 +26,9 @@ export interface Config extends Omit<AxiosRequestConfig, 'headers' | 'method'> {
   body?:
     | RequestInit['body']
     | Record<string, unknown>
-    | Array<Record<string, unknown>>;
+    | Array<Record<string, unknown>>
+    | Array<unknown>
+    | number;
   /**
    * A function for serializing request body parameter. By default,
    * {@link JSON.stringify()} will be used.
@@ -45,7 +47,7 @@ export interface Config extends Omit<AxiosRequestConfig, 'headers' | 'method'> {
    * {@link https://developer.mozilla.org/docs/Web/API/Headers/Headers#init See more}
    */
   headers?:
-    | AxiosRequestConfig['headers']
+    | CreateAxiosDefaults['headers']
     | Record<
         string,
         | string
@@ -62,31 +64,21 @@ export interface Config extends Omit<AxiosRequestConfig, 'headers' | 'method'> {
    * {@link https://developer.mozilla.org/docs/Web/API/fetch#method See more}
    */
   method?:
-    | 'CONNECT'
-    | 'DELETE'
-    | 'GET'
-    | 'HEAD'
-    | 'OPTIONS'
-    | 'PATCH'
-    | 'POST'
-    | 'PUT'
-    | 'TRACE';
+    | 'connect'
+    | 'delete'
+    | 'get'
+    | 'head'
+    | 'options'
+    | 'patch'
+    | 'post'
+    | 'put'
+    | 'trace';
   /**
-   * Return the response data parsed in a specified format. By default, `auto`
-   * will infer the appropriate method from the `Content-Type` response header.
-   * You can override this behavior with any of the {@link Body} methods.
-   * Select `stream` if you don't want to parse response data at all.
-   * @default 'auto'
+   * A function for transforming response data before it's returned to the
+   * caller function. This is an ideal place to post-process server data,
+   * e.g. convert date ISO strings into native Date objects.
    */
-  parseAs?: Exclude<keyof Body, 'body' | 'bodyUsed'> | 'auto' | 'stream';
-  /**
-   * A function for serializing request query parameters. By default, arrays
-   * will be exploded in form style, objects will be exploded in deepObject
-   * style, and reserved characters are percent-encoded.
-   *
-   * {@link https://swagger.io/docs/specification/serialization/#query View examples}
-   */
-  querySerializer?: QuerySerializer | QuerySerializerOptions;
+  responseTransformer?: (data: unknown) => Promise<unknown>;
 }
 
 interface RequestOptionsBase extends Omit<Config, 'global'> {
@@ -95,12 +87,10 @@ interface RequestOptionsBase extends Omit<Config, 'global'> {
   url: string;
 }
 
-type RequestResult<Data = unknown, Error = unknown> = Promise<{
-  error?: Error;
-  data?: Data;
-  request: Request;
-  response: Response;
-}>;
+export type RequestResult<Data = unknown, Error = unknown> = Promise<
+  | (AxiosResponse<Data> & { error: never })
+  | (AxiosError<Error> & { data: never; error: Error })
+>;
 
 type MethodFn = <Data = unknown, Error = unknown>(
   options: RequestOptionsBase,
@@ -109,13 +99,12 @@ type RequestFn = <Data = unknown, Error = unknown>(
   options: RequestOptionsBase & Pick<Required<RequestOptionsBase>, 'method'>,
 ) => RequestResult<Data, Error>;
 
-interface ClientBase<Request = unknown, Response = unknown, Options = unknown> {
+export interface Client {
   delete: MethodFn;
   get: MethodFn;
-  getAxiosInstance: () => AxiosInstance;
   getConfig: () => Config;
   head: MethodFn;
-  interceptors: Middleware<Request, Response, Options>;
+  instance: AxiosInstance;
   options: MethodFn;
   patch: MethodFn;
   post: MethodFn;
@@ -125,10 +114,8 @@ interface ClientBase<Request = unknown, Response = unknown, Options = unknown> {
 
 export type RequestOptions = RequestOptionsBase &
   Config & {
-    headers: Headers;
+    headers: AxiosRequestConfig['headers'];
   };
-
-export type Client = ClientBase<Request, Response, RequestOptions>;
 
 type OptionsBase = Omit<RequestOptionsBase, 'url'> & {
   /**
@@ -141,8 +128,12 @@ type OptionsBase = Omit<RequestOptionsBase, 'url'> & {
 
 export type Options<T = unknown> = T extends { body?: any }
   ? T extends { headers?: any }
-    ? OmitKeys<OptionsBase, 'body' | 'headers'> & T
-    : OmitKeys<OptionsBase, 'body'> & T & Pick<OptionsBase, 'headers'>
+    ? OmitKeys<OptionsBase, 'body' | 'headers' | 'responseTransformer'> & T
+    : OmitKeys<OptionsBase, 'body' | 'responseTransformer'> &
+        T &
+        Pick<OptionsBase, 'headers'>
   : T extends { headers?: any }
-    ? OmitKeys<OptionsBase, 'headers'> & T & Pick<OptionsBase, 'body'>
+    ? OmitKeys<OptionsBase, 'headers' | 'responseTransformer'> &
+        T &
+        Pick<OptionsBase, 'body'>
     : OptionsBase & T;
