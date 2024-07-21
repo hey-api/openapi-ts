@@ -123,15 +123,25 @@ describe('OpenAPI v3', () => {
           name: '@hey-api/client-fetch',
         },
       }),
-      description: 'generate Fetch API client without external dependencies',
+      description: 'generate bundled Fetch API client',
       name: 'v3_hey-api_client-fetch_bundle',
     },
     {
       config: createConfig({
         client: '@hey-api/client-axios',
       }),
-      description: 'generate axios client',
+      description: 'generate Axios client',
       name: 'v3_hey-api_client-axios',
+    },
+    {
+      config: createConfig({
+        client: {
+          bundle: true,
+          name: '@hey-api/client-axios',
+        },
+      }),
+      description: 'generate bundled Axios client',
+      name: 'v3_hey-api_client-axios_bundle',
     },
     {
       config: createConfig({
