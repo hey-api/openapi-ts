@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.50.0
+
+### Minor Changes
+
+- [#790](https://github.com/hey-api/openapi-ts/pull/790) [`68c3921`](https://github.com/hey-api/openapi-ts/commit/68c3921fd6e9a5db41ebd9f06e4f3ef6e64ab051) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: allow bundling standalone clients with `client.bundle = true`
+
 ## 0.49.0
 
 ### Minor Changes
