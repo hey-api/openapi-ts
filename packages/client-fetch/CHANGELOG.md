@@ -1,5 +1,11 @@
 # @hey-api/client-fetch
 
+## 0.1.11
+
+### Patch Changes
+
+- [#613](https://github.com/hey-api/openapi-ts/pull/613) [`c0ee1e3`](https://github.com/hey-api/openapi-ts/commit/c0ee1e3b56d67ab922491c488233bd89c8902986) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: use opts to get responseTransformer instead of options
+
 ## 0.1.10
 
 ### Patch Changes
