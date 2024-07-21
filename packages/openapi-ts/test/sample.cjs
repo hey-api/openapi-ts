@@ -4,7 +4,7 @@ const main = async () => {
   /** @type {import('../src/node/index').UserConfig} */
   const config = {
     client: {
-      inline: true,
+      bundle: true,
       name: '@hey-api/client-fetch',
     },
     debug: true,

@@ -119,12 +119,12 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         client: {
-          inline: true,
+          bundle: true,
           name: '@hey-api/client-fetch',
         },
       }),
       description: 'generate Fetch API client without external dependencies',
-      name: 'v3_hey-api_client-fetch_inline',
+      name: 'v3_hey-api_client-fetch_bundle',
     },
     {
       config: createConfig({

@@ -694,7 +694,7 @@ export const generateServices = async ({
         },
         ...clientImports.filter(unique),
       ],
-      module: config.client.inline ? './client' : config.client.name,
+      module: config.client.bundle ? './client' : config.client.name,
     });
   } else {
     if (config.client.name === 'angular') {

@@ -13,8 +13,9 @@ Plug and play Fetch API wrapper for `@hey-api/openapi-ts` generator.
 - seamless integration with `@hey-api/openapi-ts`
 - typesafe response data and errors
 - access to the original request and response
-- each request call is configurable
+- granular request and response customization options
 - minimal learning curve thanks to extending the underlying technology
+- support bundling inside the generated output
 
 ## Documentation
 
