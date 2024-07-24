@@ -504,15 +504,7 @@ const processService = (
 
   const isStandalone = isStandaloneClient(config);
 
-  let filteredOperations = service.operations;
-  if (config.services.filter) {
-    const regexp = new RegExp(config.services.filter);
-    filteredOperations = service.operations.filter((operation) =>
-      regexp.test(`${operation.method} ${operation.path}`),
-    );
-  }
-
-  filteredOperations.forEach((operation) => {
+  service.operations.forEach((operation) => {
     if (operation.parameters.length) {
       generateImport({
         client,
@@ -560,7 +552,7 @@ const processService = (
   });
 
   if (!config.services.asClass && !config.name) {
-    filteredOperations.forEach((operation) => {
+    service.operations.forEach((operation) => {
       const expression = compiler.types.function({
         parameters: toOperationParamType(client, operation),
         returnType: isStandalone
@@ -583,7 +575,7 @@ const processService = (
     return;
   }
 
-  let members: ClassElement[] = filteredOperations.map((operation) => {
+  let members: ClassElement[] = service.operations.map((operation) => {
     const node = compiler.class.method({
       accessLevel: 'public',
       comment: toOperationComment(operation),

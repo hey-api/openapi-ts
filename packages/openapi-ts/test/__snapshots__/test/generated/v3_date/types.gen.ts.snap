@@ -102,7 +102,9 @@ export type CallWithParametersData = {
     /**
      * This is the parameter that goes into the body
      */
-    requestBody: ModelWithString | null;
+    requestBody: {
+        [key: string]: unknown;
+    } | null;
 };
 
 export type CallWithWeirdParameterNamesData = {

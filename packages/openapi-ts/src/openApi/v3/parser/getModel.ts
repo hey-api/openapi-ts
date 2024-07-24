@@ -22,6 +22,8 @@ import {
 } from './inferType';
 
 export const getModel = ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  debug,
   definition,
   initialValues = {},
   isDefinition = false,
@@ -30,6 +32,7 @@ export const getModel = ({
   parentDefinition = null,
   types,
 }: Pick<Client, 'types'> & {
+  debug?: boolean;
   definition: OpenApiSchema;
   /**
    * Pass through initial model values
@@ -245,7 +248,17 @@ export const getModel = ({
           openApi,
           types,
         });
-        model.properties.push(modelProperty);
+        model.properties = [...model.properties, modelProperty];
+      }
+
+      // objects with no explicit properties accept any key/value pair
+      if (
+        !model.properties.length &&
+        model.base === 'unknown' &&
+        model.type === 'unknown'
+      ) {
+        model.export = 'dictionary';
+        model.name = '[key: string]';
       }
 
       return model;

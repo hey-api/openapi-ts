@@ -322,7 +322,8 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ModelWithString"
+                "properties": {},
+                "type": "object"
               }
             }
           }

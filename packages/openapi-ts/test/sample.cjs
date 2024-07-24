@@ -21,17 +21,18 @@ const main = async () => {
       },
     ],
     schemas: {
-      // export: false,
+      export: false,
     },
     services: {
       // asClass: true,
-      filter: '^PUT /api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串$',
+      filter: '^POST /api/v{api-version}/parameters/{parameterPath}$',
       // export: false,
       // name: '^Parameters',
     },
     types: {
       // dates: 'types+transform',
       // enums: 'typescript',
+      // export: false,
       // include:
       //   '^(ModelWithOneOfAndProperties|CompositionWithOneOfAndProperties)',
       // name: 'PascalCase',
