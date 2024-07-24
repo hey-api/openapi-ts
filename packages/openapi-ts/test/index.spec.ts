@@ -133,17 +133,16 @@ describe('OpenAPI v3', () => {
       description: 'generate Axios client',
       name: 'v3_hey-api_client-axios',
     },
-    // TODO: enable after publishing Axios client
-    // {
-    //   config: createConfig({
-    //     client: {
-    //       bundle: true,
-    //       name: '@hey-api/client-axios',
-    //     },
-    //   }),
-    //   description: 'generate bundled Axios client',
-    //   name: 'v3_hey-api_client-axios_bundle',
-    // },
+    {
+      config: createConfig({
+        client: {
+          bundle: true,
+          name: '@hey-api/client-axios',
+        },
+      }),
+      description: 'generate bundled Axios client',
+      name: 'v3_hey-api_client-axios_bundle',
+    },
     {
       config: createConfig({
         client: 'xhr',
