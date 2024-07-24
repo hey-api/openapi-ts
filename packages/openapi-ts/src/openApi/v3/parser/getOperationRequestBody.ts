@@ -41,60 +41,69 @@ export const getOperationRequestBody = ({
     type: 'unknown',
   };
 
-  if (body.content) {
-    const content = getContent(openApi, body.content);
-    if (content) {
-      requestBody.mediaType = content.mediaType;
-      switch (requestBody.mediaType) {
-        case 'application/x-www-form-urlencoded':
-        case 'multipart/form-data':
-          requestBody.in = 'formData';
-          requestBody.name = 'formData';
-          requestBody.prop = 'formData';
-          break;
-      }
-      if (content.schema.$ref) {
-        const model = getType({ type: content.schema.$ref });
-        requestBody.export = 'reference';
-        requestBody.type = model.type;
-        requestBody.base = model.base;
-        requestBody.template = model.template;
-        requestBody.$refs = [...requestBody.$refs, ...model.$refs];
-        requestBody.imports = [...requestBody.imports, ...model.imports];
-        return requestBody;
-      } else {
-        const model = getModel({ definition: content.schema, openApi, types });
-        requestBody.export = model.export;
-        requestBody.type = model.type;
-        requestBody.base = model.base;
-        requestBody.template = model.template;
-        requestBody.link = model.link;
-        requestBody.isReadOnly = model.isReadOnly;
-        requestBody.isRequired = requestBody.isRequired || model.isRequired;
-        requestBody.isNullable = requestBody.isNullable || model.isNullable;
-        requestBody.format = model.format;
-        requestBody.maximum = model.maximum;
-        requestBody.exclusiveMaximum = model.exclusiveMaximum;
-        requestBody.minimum = model.minimum;
-        requestBody.exclusiveMinimum = model.exclusiveMinimum;
-        requestBody.multipleOf = model.multipleOf;
-        requestBody.maxLength = model.maxLength;
-        requestBody.minLength = model.minLength;
-        requestBody.maxItems = model.maxItems;
-        requestBody.minItems = model.minItems;
-        requestBody.uniqueItems = model.uniqueItems;
-        requestBody.maxProperties = model.maxProperties;
-        requestBody.minProperties = model.minProperties;
-        requestBody.pattern = getPattern(model.pattern);
-        requestBody.$refs = [...requestBody.$refs, ...model.$refs];
-        requestBody.imports = [...requestBody.imports, ...model.imports];
-        requestBody.enum.push(...model.enum);
-        requestBody.enums.push(...model.enums);
-        requestBody.properties.push(...model.properties);
-        return requestBody;
-      }
-    }
+  if (!body.content) {
+    return requestBody;
   }
 
+  const content = getContent(openApi, body.content);
+  if (!content) {
+    return requestBody;
+  }
+
+  requestBody.mediaType = content.mediaType;
+
+  switch (requestBody.mediaType) {
+    case 'application/x-www-form-urlencoded':
+    case 'multipart/form-data':
+      requestBody.in = 'formData';
+      requestBody.name = 'formData';
+      requestBody.prop = 'formData';
+      break;
+  }
+
+  if (content.schema.$ref) {
+    const model = getType({ type: content.schema.$ref });
+    requestBody.export = 'reference';
+    requestBody.type = model.type;
+    requestBody.base = model.base;
+    requestBody.template = model.template;
+    requestBody.$refs = [...requestBody.$refs, ...model.$refs];
+    requestBody.imports = [...requestBody.imports, ...model.imports];
+    return requestBody;
+  }
+
+  const model = getModel({
+    debug: true,
+    definition: content.schema,
+    openApi,
+    types,
+  });
+  requestBody.$refs = [...requestBody.$refs, ...model.$refs];
+  requestBody.base = model.base;
+  requestBody.enum = [...requestBody.enum, ...model.enum];
+  requestBody.enums = [...requestBody.enums, ...model.enums];
+  requestBody.exclusiveMaximum = model.exclusiveMaximum;
+  requestBody.exclusiveMinimum = model.exclusiveMinimum;
+  requestBody.export = model.export;
+  requestBody.format = model.format;
+  requestBody.imports = [...requestBody.imports, ...model.imports];
+  requestBody.isNullable = requestBody.isNullable || model.isNullable;
+  requestBody.isReadOnly = model.isReadOnly;
+  requestBody.isRequired = requestBody.isRequired || model.isRequired;
+  requestBody.link = model.link;
+  requestBody.maximum = model.maximum;
+  requestBody.maxItems = model.maxItems;
+  requestBody.maxLength = model.maxLength;
+  requestBody.maxProperties = model.maxProperties;
+  requestBody.minimum = model.minimum;
+  requestBody.minItems = model.minItems;
+  requestBody.minLength = model.minLength;
+  requestBody.minProperties = model.minProperties;
+  requestBody.multipleOf = model.multipleOf;
+  requestBody.pattern = getPattern(model.pattern);
+  requestBody.properties = [...requestBody.properties, ...model.properties];
+  requestBody.template = model.template;
+  requestBody.type = model.type;
+  requestBody.uniqueItems = model.uniqueItems;
   return requestBody;
 };
