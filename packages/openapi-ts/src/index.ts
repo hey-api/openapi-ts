@@ -5,6 +5,7 @@ import { sync } from 'cross-spawn';
 
 import { generateOutput } from './generate/output';
 import { parse } from './openApi';
+import { defaultPluginConfigs } from './plugins';
 import type { Client } from './types/client';
 import type { ClientConfig, Config, UserConfig } from './types/config';
 import { getConfig, isStandaloneClient, setConfig } from './utils/config';
@@ -130,15 +131,13 @@ const getOutput = (userConfig: ClientConfig): Config['output'] => {
 };
 
 const getPlugins = (userConfig: ClientConfig): Config['plugins'] => {
-  const plugins: Config['plugins'] = (userConfig.plugins ?? []).map(
-    (plugin) => {
-      if (typeof plugin === 'string') {
-        return {
-          name: plugin,
-        };
-      }
-      return plugin;
-    },
+  const plugins: Config['plugins'] = (userConfig.plugins ?? []).map((plugin) =>
+    typeof plugin === 'string'
+      ? defaultPluginConfigs[plugin]
+      : {
+          ...defaultPluginConfigs[plugin.name],
+          ...plugin,
+        },
   );
   return plugins;
 };

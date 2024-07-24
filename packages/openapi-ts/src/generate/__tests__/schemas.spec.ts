@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
 
-import { TypeScriptFile } from '../../compiler';
+import type { Files } from '../../types/utils';
 import { setConfig } from '../../utils/config';
 import { generateSchemas } from '../schemas';
 import { openApi } from './mocks';
@@ -26,7 +26,9 @@ describe('generateSchemas', () => {
         path: '',
       },
       plugins: [],
-      schemas: {},
+      schemas: {
+        export: true,
+      },
       services: {},
       types: {
         enums: 'javascript',
@@ -44,17 +46,14 @@ describe('generateSchemas', () => {
       };
     }
 
-    const file = new TypeScriptFile({
-      dir: '/',
-      name: 'schemas.ts',
-    });
+    const files: Files = {};
 
-    await generateSchemas({ file, openApi });
+    await generateSchemas({ files, openApi });
 
-    file.write();
+    files.schemas.write();
 
     expect(writeFileSync).toHaveBeenCalledWith(
-      path.resolve('/schemas.gen.ts'),
+      expect.stringContaining(path.resolve('schemas.gen.ts')),
       expect.anything(),
     );
   });

@@ -1,12 +1,18 @@
 import { compiler, TypeScriptFile } from '../compiler';
+import type { Files } from '../types/utils';
 import { getConfig } from '../utils/config';
 
 export const generateIndexFile = async ({
   files,
 }: {
-  files: Record<string, TypeScriptFile>;
+  files: Files;
 }): Promise<void> => {
   const config = getConfig();
+
+  files.index = new TypeScriptFile({
+    dir: config.output.path,
+    name: 'index.ts',
+  });
 
   if (config.name) {
     files.index.add(
@@ -56,15 +62,19 @@ export const generateIndexFile = async ({
     );
   }
 
-  Object.entries(files).forEach(([name, file]) => {
-    if (name === 'index' || file.isEmpty()) {
-      return;
-    }
+  Object.keys(files)
+    .sort()
+    .forEach((name) => {
+      const file = files[name];
 
-    files.index.add(
-      compiler.export.all({
-        module: `./${file.getName(false)}`,
-      }),
-    );
-  });
+      if (name === 'index' || file.isEmpty()) {
+        return;
+      }
+
+      files.index.add(
+        compiler.export.all({
+          module: `./${file.getName(false)}`,
+        }),
+      );
+    });
 };

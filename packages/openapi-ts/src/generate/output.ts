@@ -1,14 +1,15 @@
 import path from 'node:path';
 
-import { TypeScriptFile } from '../compiler';
 import type { OpenApi } from '../openApi';
 import type { Client } from '../types/client';
+import type { Files } from '../types/utils';
 import { getConfig } from '../utils/config';
 import type { Templates } from '../utils/handlebars';
 import { generateClientClass } from './class';
 import { generateClient } from './client';
 import { generateCore } from './core';
 import { generateIndexFile } from './indexFile';
+import { generatePlugins } from './plugins';
 import { generateSchemas } from './schemas';
 import { generateServices } from './services';
 import { generateResponseTransformers } from './transformers';
@@ -44,36 +45,7 @@ export const generateOutput = async (
 
   ensureDirSync(outputPath);
 
-  const files: Record<string, TypeScriptFile> = {
-    index: new TypeScriptFile({
-      dir: config.output.path,
-      name: 'index.ts',
-    }),
-  };
-  if (config.schemas.export) {
-    files.schemas = new TypeScriptFile({
-      dir: config.output.path,
-      name: 'schemas.ts',
-    });
-  }
-  if (config.services.export) {
-    files.services = new TypeScriptFile({
-      dir: config.output.path,
-      name: 'services.ts',
-    });
-  }
-  if (config.types.export) {
-    files.types = new TypeScriptFile({
-      dir: config.output.path,
-      name: 'types.ts',
-    });
-  }
-  config.plugins.forEach((plugin) => {
-    files[plugin.name] = new TypeScriptFile({
-      dir: config.output.path,
-      name: `${plugin.name}.ts`,
-    });
-  });
+  const files: Files = {};
 
   await generateClient(outputPath, config.client.name);
 
@@ -81,11 +53,11 @@ export const generateOutput = async (
   await generateTypes({ client, files });
 
   // schemas.gen.ts
-  await generateSchemas({ file: files.schemas, openApi });
+  await generateSchemas({ files, openApi });
 
   // transformers
   if (
-    files.services &&
+    config.services.export &&
     client.services.length &&
     config.types.dates === 'types+transform'
   ) {
@@ -111,14 +83,18 @@ export const generateOutput = async (
     templates,
   );
 
-  // index.ts
+  // index.ts. Any files generated after this won't be included in exports
+  // from the index file.
   await generateIndexFile({ files });
 
-  files.schemas?.write('\n\n');
-  files.services?.write('\n\n');
-  files.types?.write('\n\n');
-  config.plugins.forEach((plugin) => {
-    files[plugin.name]?.write('\n\n');
+  // plugins
+  await generatePlugins({ client, files });
+
+  Object.entries(files).forEach(([name, file]) => {
+    if (name === 'index') {
+      file.write();
+    } else {
+      file.write('\n\n');
+    }
   });
-  files.index.write();
 };
