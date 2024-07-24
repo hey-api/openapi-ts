@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.50.1
+
+### Patch Changes
+
+- [#807](https://github.com/hey-api/openapi-ts/pull/807) [`ef249ba`](https://github.com/hey-api/openapi-ts/commit/ef249ba5bd04dbfb0e0a497caaa021f9c7de6949) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: generate types only for filtered services
+
+- [#807](https://github.com/hey-api/openapi-ts/pull/807) [`ef249ba`](https://github.com/hey-api/openapi-ts/commit/ef249ba5bd04dbfb0e0a497caaa021f9c7de6949) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow any key/value pair in object types with empty properties object
+
 ## 0.50.0
 
 ### Minor Changes
