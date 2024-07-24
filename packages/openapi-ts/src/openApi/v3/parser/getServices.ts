@@ -34,6 +34,10 @@ export const getServices = ({
 }): Service[] => {
   const config = getConfig();
 
+  const regexp = config.services.filter
+    ? new RegExp(config.services.filter)
+    : undefined;
+
   const services = new Map<string, Service>();
 
   for (const url in openApi.paths) {
@@ -46,7 +50,11 @@ export const getServices = ({
 
     for (const key in path) {
       const method = key as Lowercase<Operation['method']>;
-      if (allowedServiceMethods.includes(method)) {
+
+      const shouldProcess =
+        !regexp || regexp.test(`${method.toUpperCase()} ${url}`);
+
+      if (shouldProcess && allowedServiceMethods.includes(method)) {
         const op = path[method]!;
         const tags =
           op.tags?.length && (config.services.asClass || config.name)

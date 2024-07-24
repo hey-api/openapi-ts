@@ -1,8 +1,19 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import type { Config } from '../../types/config';
 import { parse } from '..';
 import * as parseV2 from '../v2';
 import * as parseV3 from '../v3';
+
+vi.mock('../../utils/config', () => {
+  const config: Partial<Config> = {
+    services: {},
+    types: {},
+  };
+  return {
+    getConfig: () => config,
+  };
+});
 
 describe('parse', () => {
   afterEach(() => {

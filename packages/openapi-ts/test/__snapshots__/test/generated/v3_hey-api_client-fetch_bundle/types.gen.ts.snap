@@ -1079,7 +1079,9 @@ export type CallWithParametersData = {
     /**
      * This is the parameter that goes into the body
      */
-    body: ModelWithString | null;
+    body: {
+        [key: string]: unknown;
+    } | null;
     headers: {
         /**
          * This is the parameter that goes into the header
