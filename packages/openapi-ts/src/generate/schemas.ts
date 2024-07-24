@@ -1,6 +1,7 @@
 import { compiler, TypeScriptFile } from '../compiler';
 import type { OpenApi } from '../openApi';
 import { ensureValidTypeScriptJavaScriptIdentifier } from '../openApi/common/parser/sanitize';
+import type { Files } from '../types/utils';
 import { getConfig } from '../utils/config';
 
 const ensureValidSchemaOutput = (schema: unknown): object => {
@@ -48,15 +49,22 @@ const ensureValidSchemaOutput = (schema: unknown): object => {
 };
 
 export const generateSchemas = async ({
-  file,
+  files,
   openApi,
 }: {
-  file?: TypeScriptFile;
+  files: Files;
   openApi: OpenApi;
 }): Promise<void> => {
-  if (!file) {
+  const config = getConfig();
+
+  if (!config.schemas.export) {
     return;
   }
+
+  files.schemas = new TypeScriptFile({
+    dir: config.output.path,
+    name: 'schemas.ts',
+  });
 
   const addSchema = (name: string, schema: object) => {
     const validName = `$${ensureValidTypeScriptJavaScriptIdentifier(name)}`;
@@ -67,7 +75,7 @@ export const generateSchemas = async ({
       expression,
       name: validName,
     });
-    file.add(statement);
+    files.schemas.add(statement);
   };
 
   // OpenAPI 2.0

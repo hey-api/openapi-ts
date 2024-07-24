@@ -19,14 +19,19 @@ export const createReturnFunctionCall = ({
   name: string;
   types?: string[];
 }) => {
+  const typeArguments = types.map((type) =>
+    ts.factory.createTypeReferenceNode(type),
+  );
+  const argumentsArray = args
+    .map((arg) =>
+      ts.isExpression(arg) ? arg : ts.factory.createIdentifier(arg),
+    )
+    .filter(isType<ts.Identifier | ts.Expression>);
+  // TODO: refactor to call `createCallExpression()` from 'compiler/function'
   const expression = ts.factory.createCallExpression(
     ts.factory.createIdentifier(name),
-    types.map((type) => ts.factory.createTypeReferenceNode(type)),
-    args
-      .map((arg) =>
-        ts.isExpression(arg) ? arg : ts.factory.createIdentifier(arg),
-      )
-      .filter(isType<ts.Identifier | ts.Expression>),
+    typeArguments,
+    argumentsArray,
   );
   const statement = createReturnStatement({ expression });
   return statement;

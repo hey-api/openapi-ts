@@ -124,6 +124,7 @@ export const createClassDeclaration = ({
   if (decorator) {
     modifiers = [
       ts.factory.createDecorator(
+        // TODO: refactor to call `createCallExpression()` from 'compiler/function'
         ts.factory.createCallExpression(
           ts.factory.createIdentifier(decorator.name),
           undefined,
