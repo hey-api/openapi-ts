@@ -90,15 +90,15 @@
     "@types/express": "4.17.21",
     "axios": "1.7.2",
     "cross-spawn": "7.0.3",
-    "eslint": "9.6.0",
+    "eslint": "9.7.0",
     "express": "4.19.2",
-    "glob": "10.4.3",
+    "glob": "11.0.0",
     "node-fetch": "3.3.2",
-    "prettier": "3.3.2",
-    "puppeteer": "22.12.1",
+    "prettier": "3.3.3",
+    "puppeteer": "22.13.1",
     "rxjs": "7.8.1",
     "ts-node": "10.9.2",
     "tslib": "2.6.3",
-    "typescript": "5.5.3"
+    "typescript": "5.5.4"
   }
 }
