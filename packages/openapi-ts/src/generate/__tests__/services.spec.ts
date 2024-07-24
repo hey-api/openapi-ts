@@ -3,8 +3,8 @@ import path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
 
-import { TypeScriptFile } from '../../compiler';
 import type { Operation } from '../../openApi';
+import type { Files } from '../../types/utils';
 import { setConfig } from '../../utils/config';
 import { generateServices } from '../services';
 
@@ -28,6 +28,7 @@ describe('generateServices', () => {
       schemas: {},
       services: {
         asClass: true,
+        export: true,
       },
       types: {},
       useOptions: false,
@@ -70,20 +71,14 @@ describe('generateServices', () => {
       version: 'v1',
     };
 
-    const file = new TypeScriptFile({
-      dir: '/',
-      name: 'services.ts',
-    });
-    const files = {
-      services: file,
-    };
+    const files: Files = {};
 
     await generateServices({ client, files });
 
-    file.write();
+    files.services.write();
 
     expect(writeFileSync).toHaveBeenCalledWith(
-      path.resolve('/services.gen.ts'),
+      expect.stringContaining(path.resolve('services.gen.ts')),
       expect.anything(),
     );
   });
@@ -146,25 +141,20 @@ describe('methodNameBuilder', () => {
       schemas: {},
       services: {
         asClass: true,
+        export: true,
       },
       types: {},
       useOptions: false,
     });
 
-    const file = new TypeScriptFile({
-      dir: '/',
-      name: 'services.ts',
-    });
-    const files = {
-      services: file,
-    };
+    const files: Files = {};
 
     await generateServices({ client, files });
 
-    file.write();
+    files.services.write();
 
     expect(writeFileSync).toHaveBeenCalledWith(
-      path.resolve('/services.gen.ts'),
+      expect.stringContaining(path.resolve('services.gen.ts')),
       expect.stringContaining('public static userGet()'),
     );
   });
@@ -188,26 +178,21 @@ describe('methodNameBuilder', () => {
       schemas: {},
       services: {
         asClass: true,
+        export: true,
         methodNameBuilder,
       },
       types: {},
       useOptions: false,
     });
 
-    const file = new TypeScriptFile({
-      dir: '/',
-      name: 'services.ts',
-    });
-    const files = {
-      services: file,
-    };
+    const files: Files = {};
 
     await generateServices({ client, files });
 
-    file.write();
+    files.services.write();
 
     expect(writeFileSync).toHaveBeenCalledWith(
-      path.resolve('/services.gen.ts'),
+      expect.stringContaining(path.resolve('services.gen.ts')),
       expect.stringContaining('public static customName()'),
     );
 
@@ -233,26 +218,21 @@ describe('methodNameBuilder', () => {
       schemas: {},
       services: {
         asClass: false,
+        export: true,
         methodNameBuilder,
       },
       types: {},
       useOptions: false,
     });
 
-    const file = new TypeScriptFile({
-      dir: '/',
-      name: 'services.ts',
-    });
-    const files = {
-      services: file,
-    };
+    const files: Files = {};
 
     await generateServices({ client, files });
 
-    file.write();
+    files.services.write();
 
     expect(writeFileSync).toHaveBeenCalledWith(
-      path.resolve('/services.gen.ts'),
+      expect.stringContaining(path.resolve('services.gen.ts')),
       expect.stringContaining('public static customName()'),
     );
 

@@ -1,5 +1,5 @@
 import type { Operation } from '../openApi';
-import type { Plugins } from './plugins';
+import type { Plugins } from '../plugins/';
 import type { ExtractArrayOfObjects } from './utils';
 
 type Client =

@@ -7,6 +7,7 @@ import {
 import type { Model, OperationParameter } from '../openApi';
 import type { Method } from '../openApi/common/interfaces/client';
 import type { Client } from '../types/client';
+import type { Files } from '../types/utils';
 import { getConfig, isStandaloneClient } from '../utils/config';
 import { enumEntry, enumUnionType } from '../utils/enum';
 import { escapeComment } from '../utils/escape';
@@ -510,8 +511,17 @@ export const generateTypes = async ({
   files,
 }: {
   client: Client;
-  files: Record<string, TypeScriptFile>;
+  files: Files;
 }): Promise<void> => {
+  const config = getConfig();
+
+  if (config.types.export) {
+    files.types = new TypeScriptFile({
+      dir: config.output.path,
+      name: 'types.ts',
+    });
+  }
+
   const onNode: TypesProps['onNode'] = (node) => {
     files.types?.add(node);
   };

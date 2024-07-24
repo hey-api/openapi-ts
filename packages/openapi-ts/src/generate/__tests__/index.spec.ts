@@ -33,10 +33,6 @@ describe('generateIndexFile', () => {
     });
 
     const files: Parameters<typeof generateIndexFile>[0]['files'] = {
-      index: new TypeScriptFile({
-        dir: '/',
-        name: 'index.ts',
-      }),
       schemas: new TypeScriptFile({
         dir: '/',
         name: 'schemas.ts',
@@ -56,7 +52,7 @@ describe('generateIndexFile', () => {
     files.index.write();
 
     expect(writeFileSync).toHaveBeenCalledWith(
-      path.resolve('/', '/index.ts'),
+      expect.stringContaining(path.resolve('index.ts')),
       expect.anything(),
     );
   });

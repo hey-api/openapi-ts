@@ -81,6 +81,7 @@ export const createFunctionTransformMutation = ({
   const thenStatement = ts.factory.createBlock(
     [
       convertExpressionToStatement({
+        // TODO: refactor to call `createCallExpression()` from 'compiler/function'
         expression: ts.factory.createCallExpression(
           ts.factory.createIdentifier(transformerName),
           undefined,
@@ -112,6 +113,7 @@ export const createArrayTransformMutation = ({
   const accessExpression = createAccessExpression(path);
 
   const statement = createIfStatement({
+    // TODO: refactor to call `createCallExpression()` from 'compiler/function'
     expression: ts.factory.createCallExpression(
       ts.factory.createPropertyAccessExpression(
         ts.factory.createIdentifier('Array'),
@@ -163,6 +165,7 @@ export const createArrayMapTransform = ({
   const accessExpression = createAccessExpression(path);
 
   const statement = createIfStatement({
+    // TODO: refactor to call `createCallExpression()` from 'compiler/function'
     expression: ts.factory.createCallExpression(
       ts.factory.createPropertyAccessExpression(
         ts.factory.createIdentifier('Array'),
@@ -261,6 +264,7 @@ export const createResponseArrayTransform = ({
     ts.factory.createBlock(
       [
         createIfStatement({
+          // TODO: refactor to call `createCallExpression()` from 'compiler/function'
           expression: ts.factory.createCallExpression(
             ts.factory.createPropertyAccessExpression(
               ts.factory.createIdentifier('Array'),
@@ -272,6 +276,7 @@ export const createResponseArrayTransform = ({
           thenStatement: ts.factory.createBlock(
             [
               convertExpressionToStatement({
+                // TODO: refactor to call `createCallExpression()` from 'compiler/function'
                 expression: ts.factory.createCallExpression(
                   ts.factory.createPropertyAccessExpression(
                     ts.factory.createIdentifier('data'),

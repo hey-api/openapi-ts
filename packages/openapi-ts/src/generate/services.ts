@@ -11,6 +11,7 @@ import {
 import type { ObjectValue } from '../compiler/types';
 import type { Model, Operation, OperationParameter, Service } from '../openApi';
 import type { Client } from '../types/client';
+import type { Files } from '../types/utils';
 import { getConfig, isStandaloneClient } from '../utils/config';
 import { escapeComment, escapeName } from '../utils/escape';
 import { reservedWordsRegExp } from '../utils/reservedWords';
@@ -401,7 +402,10 @@ const toRequestOptions = (
   });
 };
 
-const toOperationName = (operation: Operation, handleIllegal: boolean) => {
+export const toOperationName = (
+  operation: Operation,
+  handleIllegal: boolean,
+) => {
   const config = getConfig();
 
   if (config.services.methodNameBuilder) {
@@ -504,7 +508,7 @@ const processService = (
 
   const isStandalone = isStandaloneClient(config);
 
-  service.operations.forEach((operation) => {
+  for (const operation of service.operations) {
     if (operation.parameters.length) {
       generateImport({
         client,
@@ -549,10 +553,10 @@ const processService = (
         onImport,
       });
     }
-  });
+  }
 
   if (!config.services.asClass && !config.name) {
-    service.operations.forEach((operation) => {
+    for (const operation of service.operations) {
       const expression = compiler.types.function({
         parameters: toOperationParamType(client, operation),
         returnType: isStandalone
@@ -571,7 +575,7 @@ const processService = (
         name: toOperationName(operation, true),
       });
       onNode(statement);
-    });
+    }
     return;
   }
 
@@ -648,13 +652,18 @@ export const generateServices = async ({
   files,
 }: {
   client: Client;
-  files: Record<string, TypeScriptFile>;
+  files: Files;
 }): Promise<void> => {
-  if (!files.services) {
+  const config = getConfig();
+
+  if (!config.services.export) {
     return;
   }
 
-  const config = getConfig();
+  files.services = new TypeScriptFile({
+    dir: config.output.path,
+    name: 'services.ts',
+  });
 
   let imports: string[] = [];
   let clientImports: string[] = [];
