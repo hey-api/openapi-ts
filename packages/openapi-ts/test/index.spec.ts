@@ -57,6 +57,7 @@ describe('OpenAPI v3', () => {
     input: '',
     output: '',
     schemas: true,
+    services: {},
     types: {
       enums: 'javascript',
     },
@@ -111,23 +112,6 @@ describe('OpenAPI v3', () => {
     },
     {
       config: createConfig({
-        client: '@hey-api/client-fetch',
-      }),
-      description: 'generate Fetch API client',
-      name: 'v3_hey-api_client-fetch',
-    },
-    {
-      config: createConfig({
-        client: {
-          bundle: true,
-          name: '@hey-api/client-fetch',
-        },
-      }),
-      description: 'generate bundled Fetch API client',
-      name: 'v3_hey-api_client-fetch_bundle',
-    },
-    {
-      config: createConfig({
         client: '@hey-api/client-axios',
       }),
       description: 'generate Axios client',
@@ -142,6 +126,32 @@ describe('OpenAPI v3', () => {
       }),
       description: 'generate bundled Axios client',
       name: 'v3_hey-api_client-axios_bundle',
+    },
+    {
+      config: createConfig({
+        client: '@hey-api/client-fetch',
+      }),
+      description: 'generate Fetch API client',
+      name: 'v3_hey-api_client-fetch',
+    },
+    {
+      config: createConfig({
+        client: '@hey-api/client-fetch',
+        plugins: ['@tanstack/react-query'],
+        schemas: false,
+      }),
+      description: 'generate Fetch API client with TanStack React Query plugin',
+      name: 'v3_hey-api_client-fetch_plugin_tanstack-react-query',
+    },
+    {
+      config: createConfig({
+        client: {
+          bundle: true,
+          name: '@hey-api/client-fetch',
+        },
+      }),
+      description: 'generate bundled Fetch API client',
+      name: 'v3_hey-api_client-fetch_bundle',
     },
     {
       config: createConfig({

@@ -15,17 +15,13 @@ const main = async () => {
     output: {
       path: './test/generated/sample/',
     },
-    plugins: [
-      {
-        name: '@tanstack/react-query',
-      },
-    ],
+    plugins: ['@tanstack/react-query'],
     schemas: {
       export: false,
     },
     services: {
       // asClass: true,
-      filter: '^POST /api/v{api-version}/parameters/{parameterPath}$',
+      // filter: '^POST /api/v{api-version}/parameters/{parameterPath}$',
       // export: false,
       // name: '^Parameters',
     },
