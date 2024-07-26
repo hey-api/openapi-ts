@@ -1,5 +1,11 @@
 # @hey-api/client-fetch
 
+## 0.1.12
+
+### Patch Changes
+
+- [#816](https://github.com/hey-api/openapi-ts/pull/816) [`0c4ee06`](https://github.com/hey-api/openapi-ts/commit/0c4ee06548f177ce83d73802471c659834c63566) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: remove Content-Type header when there's no request body
+
 ## 0.1.11
 
 ### Patch Changes

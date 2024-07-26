@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/client-fetch",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "type": "module",
   "description": "Typesafe Fetch API client for your @hey-api/openapi-ts types",
   "homepage": "https://heyapi.vercel.app/",
