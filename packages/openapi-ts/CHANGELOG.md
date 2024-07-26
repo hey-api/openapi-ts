@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.50.2
+
+### Patch Changes
+
+- [#818](https://github.com/hey-api/openapi-ts/pull/818) [`85d123c`](https://github.com/hey-api/openapi-ts/commit/85d123c9160f4ecb4c48e8a2ead54abf604dd21b) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle fully illegal schema names
+
 ## 0.50.1
 
 ### Patch Changes
