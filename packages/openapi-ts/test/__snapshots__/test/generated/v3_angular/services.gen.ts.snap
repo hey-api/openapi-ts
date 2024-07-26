@@ -624,7 +624,7 @@ export class MultipleTags1Service {
     constructor(public readonly http: HttpClient) { }
     
     /**
-     * @returns void Success
+     * @returns _400
      * @throws ApiError
      */
     public dummyA(): Observable<DummyAResponse> {
@@ -654,7 +654,7 @@ export class MultipleTags2Service {
     constructor(public readonly http: HttpClient) { }
     
     /**
-     * @returns void Success
+     * @returns _400
      * @throws ApiError
      */
     public dummyA(): Observable<DummyAResponse> {

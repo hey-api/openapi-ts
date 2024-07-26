@@ -585,7 +585,7 @@ export class MultipleTags1Service {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
     
     /**
-     * @returns void Success
+     * @returns _400
      * @throws ApiError
      */
     public dummyA(): CancelablePromise<DummyAResponse> {
@@ -612,7 +612,7 @@ export class MultipleTags2Service {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
     
     /**
-     * @returns void Success
+     * @returns _400
      * @throws ApiError
      */
     public dummyA(): CancelablePromise<DummyAResponse> {

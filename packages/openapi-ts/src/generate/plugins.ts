@@ -89,7 +89,7 @@ export const generatePlugins = async ({
         });
       }
 
-      if (importsServices.length) {
+      if (importsServices.length && files.services) {
         files[plugin.name].addImport({
           imports: importsServices,
           module: `./${files.services.getName(false)}`,
