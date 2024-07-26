@@ -22,7 +22,7 @@ const main = async () => {
     services: {
       // asClass: true,
       // filter: '^POST /api/v{api-version}/parameters/{parameterPath}$',
-      // export: false,
+      export: false,
       // name: '^Parameters',
     },
     types: {
@@ -30,7 +30,7 @@ const main = async () => {
       // enums: 'typescript',
       // export: false,
       // include:
-      //   '^(ModelWithOneOfAndProperties|CompositionWithOneOfAndProperties)',
+      //   '^(_400|CompositionWithOneOfAndProperties)',
       // name: 'PascalCase',
       // tree: false,
     },

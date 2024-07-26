@@ -275,7 +275,7 @@ export type CallWithNoContentResponseResponse = void;
 
 export type CallWithResponseAndNoContentResponseResponse = number | void;
 
-export type DummyAResponse = void;
+export type DummyAResponse = _400;
 
 export type DummyBResponse = void;
 
@@ -554,10 +554,7 @@ export type $OpenApiTs = {
     '/api/v{api-version}/multiple-tags/a': {
         get: {
             res: {
-                /**
-                 * Success
-                 */
-                204: void;
+                200: _400;
             };
         };
     };

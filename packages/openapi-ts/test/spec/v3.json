@@ -776,8 +776,14 @@
         "tags": ["MultipleTags1", "MultipleTags2"],
         "operationId": "DummyA",
         "responses": {
-          "204": {
-            "description": "Success"
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/400"
+                }
+              }
+            }
           }
         }
       }
@@ -3345,6 +3351,10 @@
       },
       "import": {
         "description": "Model with restricted keyword name",
+        "type": "string"
+      },
+      "400": {
+        "description": "Model with number-only name",
         "type": "string"
       }
     }

@@ -1,6 +1,7 @@
 import { getType } from '../openApi/common/parser/type';
 import { refParametersPartial, refSchemasPartial } from './const';
 import { reservedWordsRegExp } from './reservedWords';
+import { cleanAndTransformTypeName } from './transform';
 
 export const getParametersMeta = (definitionName: string) => {
   const definitionType = getType({ type: definitionName });
@@ -26,9 +27,12 @@ export const getParametersMeta = (definitionName: string) => {
   return meta;
 };
 
+/**
+ * @param definitionName Name of the schema definition in OpenAPI specification.
+ * @returns meta object
+ */
 export const getSchemasMeta = (definitionName: string) => {
-  const definitionType = getType({ type: definitionName });
-  const name = definitionType.base.replace(reservedWordsRegExp, '_$1');
+  const name = cleanAndTransformTypeName(definitionName);
   const meta = {
     $ref: refSchemasPartial + definitionName,
     name,
