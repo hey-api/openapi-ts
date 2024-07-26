@@ -54,6 +54,11 @@ export const createClient = (config: Config): Client => {
       opts.body = opts.bodySerializer(opts.body);
     }
 
+    // remove Content-Type header if body is empty to avoid sending invalid requests
+    if (!opts.body) {
+      opts.headers.delete('Content-Type');
+    }
+
     const url = getUrl({
       baseUrl: opts.baseUrl ?? '',
       path: opts.path,
