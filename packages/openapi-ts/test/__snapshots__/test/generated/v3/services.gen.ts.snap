@@ -562,7 +562,7 @@ export class ResponseService {
 
 export class MultipleTags1Service {
     /**
-     * @returns void Success
+     * @returns _400
      * @throws ApiError
      */
     public static dummyA(): CancelablePromise<DummyAResponse> {
@@ -587,7 +587,7 @@ export class MultipleTags1Service {
 
 export class MultipleTags2Service {
     /**
-     * @returns void Success
+     * @returns _400
      * @throws ApiError
      */
     public static dummyA(): CancelablePromise<DummyAResponse> {

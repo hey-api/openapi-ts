@@ -41,7 +41,8 @@ describe('ensureValidTypeScriptJavaScriptIdentifier', () => {
     { expected: 'abc', input: 'abc' },
     { expected: 'æbc', input: 'æbc' },
     { expected: 'æb_c', input: 'æb.c' },
-    { expected: 'æb_c', input: '1æb.c' },
+    { expected: '_1æb_c', input: '1æb.c' },
+    { expected: '_400', input: '400' },
   ])(
     'ensureValidTypeScriptJavaScriptIdentifier($input) -> $expected',
     ({ input, expected }) => {
