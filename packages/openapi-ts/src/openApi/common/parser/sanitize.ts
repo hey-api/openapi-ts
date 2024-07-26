@@ -1,3 +1,5 @@
+import { illegalStartCharactersRegExp } from '../../../utils/reservedWords';
+
 /**
  * Sanitizes names of types, so they are valid TypeScript identifiers of a certain form.
  *
@@ -10,10 +12,18 @@
  *
  * JavaScript identifier regexp pattern retrieved from https://developer.mozilla.org/docs/Web/JavaScript/Reference/Lexical_grammar#identifiers
  */
-export const ensureValidTypeScriptJavaScriptIdentifier = (name: string) =>
+const replaceInvalidTypeScriptJavaScriptIdentifier = (name: string) =>
   name
-    .replace(/^[^$_\p{ID_Start}]+/u, '')
+    .replace(illegalStartCharactersRegExp, '')
     .replace(/[^$\u200c\u200d\p{ID_Continue}]/gu, '_');
+
+export const ensureValidTypeScriptJavaScriptIdentifier = (name: string) => {
+  const startsWithIllegalCharacter = illegalStartCharactersRegExp.test(name);
+  // avoid removing all characters in case they're all illegal
+  const input = startsWithIllegalCharacter ? `_${name}` : name;
+  const cleaned = replaceInvalidTypeScriptJavaScriptIdentifier(input);
+  return cleaned;
+};
 
 /**
  * Sanitizes namespace identifiers so they are valid TypeScript identifiers of a certain form.

@@ -60,10 +60,16 @@ export const getMappedType = (
  * @param format String value like "binary" or "date".
  */
 export const getType = ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  debug,
   format,
   type = 'unknown',
 }: {
+  debug?: boolean;
   format?: string;
+  /**
+   * Type can be the name of a schema component, a ref string, or any definition type.
+   */
   type?: string | string[];
 }): Type => {
   const result: Type = {
