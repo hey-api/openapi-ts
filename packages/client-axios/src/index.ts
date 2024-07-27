@@ -57,10 +57,10 @@ export const createClient = (config: Config): Client => {
       };
     } catch (error) {
       const e = error as AxiosError;
-      return {
+      return Promise.reject({
         ...error,
         error: e.response?.data ?? {},
-      };
+      });
     }
   };
 
