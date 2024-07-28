@@ -4,7 +4,7 @@ import { setConfig } from '../../../../utils/config';
 import { getOperationName, parseResponseStatusCode } from '../operation';
 
 describe('getOperationName', () => {
-  const options1: Parameters<typeof setConfig>[0] = {
+  const optionsCommon: Parameters<typeof setConfig>[0] = {
     client: {
       name: 'fetch',
     },
@@ -31,31 +31,46 @@ describe('getOperationName', () => {
     useOptions: false,
   };
 
-  const options2: Parameters<typeof setConfig>[0] = {
-    client: {
-      name: 'fetch',
-    },
-    configFile: '',
-    debug: false,
-    dryRun: true,
-    exportCore: false,
-    input: '',
-    output: {
-      path: '',
-    },
-    plugins: [],
-    schemas: {
+  const options1: Parameters<typeof setConfig>[0] = {
+    ...optionsCommon,
+    services: {
       export: false,
+      operationId: true,
+      response: 'body',
+    },
+  };
+
+  const options2: Parameters<typeof setConfig>[0] = {
+    ...optionsCommon,
+    services: {
+      export: false,
+      operationId: false,
+      response: 'body',
+    },
+  };
+
+  const options3: Parameters<typeof setConfig>[0] = {
+    ...optionsCommon,
+    client: {
+      name: '@hey-api/client-fetch',
+    },
+    services: {
+      export: false,
+      operationId: true,
+      response: 'body',
+    },
+  };
+
+  const options4: Parameters<typeof setConfig>[0] = {
+    ...optionsCommon,
+    client: {
+      name: '@hey-api/client-fetch',
     },
     services: {
       export: false,
       operationId: false,
       response: 'body',
     },
-    types: {
-      export: false,
-    },
-    useOptions: false,
   };
 
   it.each([
@@ -218,6 +233,41 @@ describe('getOperationName', () => {
       method: 'GET',
       operationId: 'fooBar',
       options: options2,
+      url: '/api/v{api-version}/users/{userId}/location/{locationId}',
+    },
+    {
+      expected: 'getAllUsers',
+      method: 'GET',
+      operationId: 'GetAllUsers',
+      options: options3,
+      url: '/api/v1/users',
+    },
+    {
+      expected: 'fooBar',
+      method: 'GET',
+      operationId: 'fooBar',
+      options: options3,
+      url: '/api/v{api-version}/users',
+    },
+    {
+      expected: 'getApiV1Users',
+      method: 'GET',
+      operationId: 'GetAllUsers',
+      options: options4,
+      url: '/api/v1/users',
+    },
+    {
+      expected: 'getApiVbyApiVersionUsers',
+      method: 'GET',
+      operationId: 'fooBar',
+      options: options4,
+      url: '/api/v{api-version}/users',
+    },
+    {
+      expected: 'getApiVbyApiVersionUsersByUserIdLocationByLocationId',
+      method: 'GET',
+      operationId: 'fooBar',
+      options: options4,
       url: '/api/v{api-version}/users/{userId}/location/{locationId}',
     },
   ])(

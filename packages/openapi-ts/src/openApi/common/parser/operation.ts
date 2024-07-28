@@ -1,6 +1,6 @@
 import camelCase from 'camelcase';
 
-import { getConfig } from '../../../utils/config';
+import { getConfig, isStandaloneClient } from '../../../utils/config';
 import type { OperationResponse } from '../interfaces/client';
 import { sanitizeNamespaceIdentifier } from './sanitize';
 
@@ -20,9 +20,20 @@ export const getOperationName = (
     return camelCase(sanitizeNamespaceIdentifier(operationId).trim());
   }
 
-  const urlWithoutPlaceholders = url
-    .replace(/[^/]*?{api-version}.*?\//g, '')
+  let urlWithoutPlaceholders = url;
+
+  // legacy clients ignore the "api-version" param since we do not want to
+  // add it as the first/default parameter for each of the service calls
+  if (!isStandaloneClient(config)) {
+    urlWithoutPlaceholders = urlWithoutPlaceholders.replace(
+      /[^/]*?{api-version}.*?\//g,
+      '',
+    );
+  }
+
+  urlWithoutPlaceholders = urlWithoutPlaceholders
     .replace(/{(.*?)}/g, 'by-$1')
+    // replace slashes with hyphens for camelcase method at the end
     .replace(/\//g, '-');
 
   return camelCase(`${method}-${urlWithoutPlaceholders}`);
