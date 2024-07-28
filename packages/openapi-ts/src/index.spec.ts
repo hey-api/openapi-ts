@@ -5,6 +5,7 @@ import { createClient } from './index';
 describe('index', () => {
   it('parses v2 without issues', async () => {
     await createClient({
+      client: '@hey-api/client-fetch',
       dryRun: true,
       input: './test/spec/v2.json',
       output: './generated/v2/',
@@ -13,6 +14,7 @@ describe('index', () => {
 
   it('parses v3 without issues', async () => {
     await createClient({
+      client: '@hey-api/client-fetch',
       dryRun: true,
       input: './test/spec/v3.json',
       output: './generated/v3/',
@@ -21,7 +23,7 @@ describe('index', () => {
 
   it('parses v3-transforms without issues', async () => {
     await createClient({
-      client: 'fetch',
+      client: '@hey-api/client-fetch',
       dryRun: true,
       input: './test/spec/v3-transforms.json',
       output: './generated/v3/',
@@ -33,6 +35,7 @@ describe('index', () => {
 
   it('downloads and parses v2 without issues', async () => {
     await createClient({
+      client: '@hey-api/client-fetch',
       dryRun: true,
       input:
         'https://raw.githubusercontent.com/hey-api/openapi-ts/main/packages/openapi-ts/test/spec/v2.json',
@@ -42,6 +45,7 @@ describe('index', () => {
 
   it('downloads and parses v3 without issues', async () => {
     await createClient({
+      client: '@hey-api/client-fetch',
       dryRun: true,
       input:
         'https://raw.githubusercontent.com/hey-api/openapi-ts/main/packages/openapi-ts/test/spec/v3.json',

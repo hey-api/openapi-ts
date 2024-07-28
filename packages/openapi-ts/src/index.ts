@@ -100,7 +100,8 @@ const logClientMessage = () => {
 const getClient = (userConfig: ClientConfig): Config['client'] => {
   let client: Config['client'] = {
     bundle: false,
-    name: 'fetch',
+    // @ts-ignore
+    name: '',
   };
   if (typeof userConfig.client === 'string') {
     client.name = userConfig.client;
@@ -245,13 +246,21 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
 
     if (!input) {
       throw new Error(
-        '🚫 input not provided - provide path to OpenAPI specification',
+        '🚫 missing input - which OpenAPI specification should we use to generate your client?',
       );
     }
 
     if (!output.path) {
       throw new Error(
-        '🚫 output not provided - provide path where we should generate your client',
+        '🚫 missing output - where should we generate your client?',
+      );
+    }
+
+    const client = getClient(userConfig);
+
+    if (!client.name) {
+      throw new Error(
+        '🚫 missing client - which HTTP client do you want to generate?',
       );
     }
 
@@ -261,7 +270,6 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
       );
     }
 
-    const client = getClient(userConfig);
     const plugins = getPlugins(userConfig);
     const schemas = getSchemas(userConfig);
     const services = getServices(userConfig);

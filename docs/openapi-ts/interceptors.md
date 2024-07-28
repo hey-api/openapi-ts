@@ -63,7 +63,7 @@ To eject, you must provide a reference to the function that was passed to `use()
 
 ## Axios
 
-If you're using the new Axios client, refer to the Axios documentation on [interceptors](https://axios-http.com/docs/interceptors). We expose the Axios instance through the `instance` field.
+If you're using the standalone Axios client, refer to the Axios documentation on [interceptors](https://axios-http.com/docs/interceptors). We expose the Axios instance through the `instance` field.
 
 ```js
 import { client } from '@hey-api/client-axios';

@@ -13,7 +13,7 @@ These changes haven't been released yet. However, you can migrate your code toda
 
 ### Deprecated exports from `index.ts`
 
-Currently, `index.ts` file exports all generated artifacts. We will be slowly moving away from this practice.
+Currently, `index.ts` file exports all generated artifacts. We will be slowly moving away from this practice as it increases the chance of export conflicts.
 
 ```js
 export { ApiError } from './core/ApiError';
@@ -49,6 +49,20 @@ This config option is deprecated and will be removed in favor of [clients](./cli
 ### Deprecated `useOptions`
 
 This config option is deprecated and will be removed.
+
+## v0.51.0
+
+### Required `client` option
+
+Client now has to be explicitly specified and `@hey-api/openapi-ts` will no longer generate a legacy Fetch API client by default. To preserve the previous default behavior, set the `client` option to `fetch`.
+
+```js{2}
+export default {
+  client: 'fetch',
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+}
+```
 
 ## v0.48.0
 
