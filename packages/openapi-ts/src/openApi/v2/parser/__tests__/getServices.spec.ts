@@ -4,7 +4,7 @@ import { setConfig } from '../../../../utils/config';
 import { getServices } from '../getServices';
 
 describe('getServices', () => {
-  it('should create a unnamed service if tags are empty', () => {
+  it('should create an unnamed service if tags are empty', () => {
     setConfig({
       client: {
         name: 'fetch',
