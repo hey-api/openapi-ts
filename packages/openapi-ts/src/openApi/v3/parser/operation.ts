@@ -169,7 +169,6 @@ export const getOperation = ({
     pathParams.parametersQuery,
   );
 
-  // Sort by required
   operation.parameters = toSortedByRequired(operation.parameters);
 
   return operation;

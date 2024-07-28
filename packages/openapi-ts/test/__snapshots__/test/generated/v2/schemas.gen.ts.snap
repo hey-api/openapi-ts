@@ -611,3 +611,60 @@ bbb`
         }
     }
 } as const;
+
+export const $parameter_ActivityParams = {
+    type: 'object',
+    properties: {
+        description: {
+            type: 'string'
+        },
+        graduate_id: {
+            type: 'integer'
+        },
+        organization_id: {
+            type: 'integer'
+        },
+        parent_activity: {
+            type: 'integer'
+        },
+        post_id: {
+            type: 'integer'
+        }
+    }
+} as const;
+
+export const $response_PostActivityResponse = {
+    type: 'object',
+    properties: {
+        description: {
+            type: 'string'
+        },
+        graduate_id: {
+            type: 'integer'
+        },
+        organization_id: {
+            type: 'integer'
+        },
+        parent_activity_id: {
+            type: 'integer'
+        },
+        post_id: {
+            type: 'integer'
+        }
+    }
+} as const;
+
+export const $failure_Failure = {
+    type: 'object',
+    properties: {
+        error: {
+            type: 'string'
+        },
+        message: {
+            type: 'string'
+        },
+        reference_code: {
+            type: 'string'
+        }
+    }
+} as const;

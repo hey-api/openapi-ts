@@ -57,11 +57,11 @@ export const createTypeAliasDeclaration = ({
 
 // Property of a interface type node.
 export type Property = {
+  comment?: Comments;
+  isReadOnly?: boolean;
+  isRequired?: boolean;
   name: string;
   type: any | ts.TypeNode;
-  isRequired?: boolean;
-  isReadOnly?: boolean;
-  comment?: Comments;
 };
 
 /**
@@ -72,8 +72,8 @@ const maybeNullable = ({
   isNullable,
   node,
 }: {
-  node: ts.TypeNode;
   isNullable: boolean;
+  node: ts.TypeNode;
 }) => {
   if (!isNullable) {
     return node;

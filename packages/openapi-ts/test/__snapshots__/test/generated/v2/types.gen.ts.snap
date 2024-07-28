@@ -438,6 +438,37 @@ export type ModelWithPattern = {
     patternWithBacktick?: string;
 };
 
+export type parameter_ActivityParams = {
+    description?: string;
+    graduate_id?: number;
+    organization_id?: number;
+    parent_activity?: number;
+    post_id?: number;
+};
+
+export type response_PostActivityResponse = {
+    description?: string;
+    graduate_id?: number;
+    organization_id?: number;
+    parent_activity_id?: number;
+    post_id?: number;
+};
+
+export type failure_Failure = {
+    error?: string;
+    message?: string;
+    reference_code?: string;
+};
+
+export type PostApiBodyData = {
+    /**
+     * Body should not be unknown
+     */
+    request: parameter_ActivityParams;
+};
+
+export type PostApiBodyResponse = response_PostActivityResponse;
+
 export type CallWithDescriptionsData = {
     /**
      * Testing backticks in string: `backticks` and ```multiple backticks``` should work
@@ -727,6 +758,25 @@ export type NonAsciiæøåÆøÅöôêÊ字符串Data = {
 export type NonAsciiæøåÆøÅöôêÊ字符串Response = NonAsciiStringæøåÆØÅöôêÊ字符串;
 
 export type $OpenApiTs = {
+    '/api/v{api-version}/body': {
+        post: {
+            req: PostApiBodyData;
+            res: {
+                /**
+                 * OK
+                 */
+                200: response_PostActivityResponse;
+                /**
+                 * Bad Request
+                 */
+                400: failure_Failure;
+                /**
+                 * Internal Server Error
+                 */
+                500: failure_Failure;
+            };
+        };
+    };
     '/api/v{api-version}/descriptions/': {
         post: {
             req: CallWithDescriptionsData;

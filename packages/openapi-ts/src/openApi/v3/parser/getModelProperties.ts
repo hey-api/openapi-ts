@@ -21,10 +21,10 @@ export const getAdditionalPropertiesModel = ({
   openApi,
   types,
 }: {
-  openApi: OpenApi;
   definition: OpenApiSchema;
   getModel: GetModelFn;
   model: Model;
+  openApi: OpenApi;
   types: Client['types'];
 }): Model => {
   const ap =

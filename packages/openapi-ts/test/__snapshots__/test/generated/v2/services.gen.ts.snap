@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { CallWithDescriptionsData, CallWithParametersData, CallWithWeirdParameterNamesData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, DummyAResponse, DummyBResponse, CollectionFormatData, TypesData, TypesResponse, ComplexTypesData, ComplexTypesResponse, CallWithResultFromHeaderResponse, TestErrorCodeData, TestErrorCodeResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response } from './types.gen';
+import type { PostApiBodyData, PostApiBodyResponse, CallWithDescriptionsData, CallWithParametersData, CallWithWeirdParameterNamesData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, DummyAResponse, DummyBResponse, CollectionFormatData, TypesData, TypesResponse, ComplexTypesData, ComplexTypesResponse, CallWithResultFromHeaderResponse, TestErrorCodeData, TestErrorCodeResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response } from './types.gen';
 
 export class DefaultService {
     /**
@@ -13,6 +13,26 @@ export class DefaultService {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/no-tag'
+        });
+    }
+    
+    /**
+     * Body should not be unknown
+     * Body should not be unknown
+     * @param data The data for the request.
+     * @param data.request Body should not be unknown
+     * @returns response_PostActivityResponse OK
+     * @throws ApiError
+     */
+    public static postApiBody(data: PostApiBodyData): CancelablePromise<PostApiBodyResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v{api-version}/body',
+            body: data.request,
+            errors: {
+                400: 'Bad Request',
+                500: 'Internal Server Error'
+            }
         });
     }
     

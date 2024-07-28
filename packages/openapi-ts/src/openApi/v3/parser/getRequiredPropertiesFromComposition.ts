@@ -13,10 +13,10 @@ export const getRequiredPropertiesFromComposition = ({
   required,
   types,
 }: {
-  openApi: OpenApi;
-  required: string[];
   definitions: OpenApiSchema[];
   getModel: GetModelFn;
+  openApi: OpenApi;
+  required: string[];
   types: Client['types'];
 }): Model[] => {
   const requiredProperties = definitions

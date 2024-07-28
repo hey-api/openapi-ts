@@ -27,7 +27,7 @@ export const getOperationParameters = ({
     parametersForm: [],
     parametersHeader: [],
     parametersPath: [],
-    parametersQuery: [], // Not used in v3 -> @see requestBody
+    parametersQuery: [], // not used in v3 -> @see requestBody
   };
 
   parameters.forEach((parameterOrReference) => {

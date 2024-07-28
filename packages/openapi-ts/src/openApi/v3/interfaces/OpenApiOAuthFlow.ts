@@ -5,7 +5,7 @@ import type { Dictionary } from '../../common/interfaces/Dictionary';
  */
 export interface OpenApiOAuthFlow {
   authorizationUrl: string;
-  tokenUrl: string;
   refreshUrl?: string;
   scopes: Dictionary<string>;
+  tokenUrl: string;
 }

@@ -33,9 +33,9 @@ export const createIfStatement = ({
   thenStatement,
   elseStatement,
 }: {
+  elseStatement?: ts.Statement;
   expression: ts.Expression;
   thenStatement: ts.Statement;
-  elseStatement?: ts.Statement;
 }) => ts.factory.createIfStatement(expression, thenStatement, elseStatement);
 
 export const createDateTransformMutation = ({
@@ -243,8 +243,8 @@ export const createResponseArrayTransform = ({
   transform,
   name,
 }: {
-  transform: string;
   name: string;
+  transform: string;
 }) => {
   const transformFunction = ts.factory.createArrowFunction(
     undefined,

@@ -7,16 +7,16 @@ import type { OpenApiSecurityRequirement } from './OpenApiSecurityRequirement';
  * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#operation-object
  */
 export interface OpenApiOperation {
-  tags?: string[];
-  summary?: string;
+  consumes?: string[];
+  deprecated?: boolean;
   description?: string;
   externalDocs?: OpenApiExternalDocs;
   operationId?: string;
-  consumes?: string[];
-  produces?: string[];
   parameters?: OpenApiParameter[];
+  produces?: string[];
   responses: OpenApiResponses;
   schemes?: ('http' | 'https' | 'ws' | 'wss')[];
-  deprecated?: boolean;
   security?: OpenApiSecurityRequirement[];
+  summary?: string;
+  tags?: string[];
 }
