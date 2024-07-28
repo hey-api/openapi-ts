@@ -953,10 +953,6 @@ export type CallWithParametersData = {
      */
     parameterCookie: string | null;
     /**
-     * This is the parameter that goes into the form data
-     */
-    parameterForm: string | null;
-    /**
      * This is the parameter that goes into the header
      */
     parameterHeader: string | null;
@@ -985,10 +981,6 @@ export type CallWithWeirdParameterNamesData = {
      * This is the parameter that goes into the cookie
      */
     parameterCookie: string | null;
-    /**
-     * This is the parameter that goes into the request form data
-     */
-    parameterForm: string | null;
     /**
      * This is the parameter that goes into the request header
      */
@@ -1225,10 +1217,7 @@ export type TypesResponse = number | string | boolean | {
 };
 
 export type UploadFileData = {
-    /**
-     * Supply a file reference for upload
-     */
-    file: (Blob | File);
+    formData: (Blob | File);
 };
 
 export type UploadFileResponse = boolean;

@@ -1,4 +1,5 @@
 import type { Client } from '../../../types/client';
+import { getConfig, isStandaloneClient } from '../../../utils/config';
 import type { OperationParameters } from '../../common/interfaces/client';
 import { getRef } from '../../common/parser/getRef';
 import type { OpenApi } from '../interfaces/OpenApi';
@@ -18,6 +19,10 @@ export const getOperationParameters = ({
   parameters: OpenApiParameter[];
   types: Client['types'];
 }): OperationParameters => {
+  const config = getConfig();
+
+  const isStandalone = isStandaloneClient(config);
+
   const operationParameters: OperationParameters = {
     $refs: [],
     imports: [],
@@ -42,11 +47,11 @@ export const getOperationParameters = ({
       types,
     });
 
-    // ignore the "api-version" param since we do not want to add it
-    // as the first/default parameter for each of the service calls
+    // legacy clients ignore the "api-version" param since we do not want to
+    // add it as the first/default parameter for each of the service calls
     if (
-      parameter.prop === 'api-version' ||
-      !allowedIn.includes(parameterDef.in)
+      !allowedIn.includes(parameterDef.in) ||
+      (!isStandalone && parameter.prop === 'api-version')
     ) {
       return;
     }

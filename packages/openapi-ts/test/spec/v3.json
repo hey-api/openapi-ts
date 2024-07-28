@@ -276,16 +276,6 @@
             }
           },
           {
-            "description": "This is the parameter that goes into the form data",
-            "name": "parameterForm",
-            "in": "formData",
-            "required": true,
-            "nullable": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "description": "This is the parameter that goes into the cookie",
             "name": "parameterCookie",
             "in": "cookie",
@@ -306,6 +296,7 @@
             }
           },
           {
+            "description": "api-version should be required in standalone clients",
             "name": "api-version",
             "in": "path",
             "required": true,
@@ -396,16 +387,6 @@
             }
           },
           {
-            "description": "This is the parameter that goes into the request form data",
-            "name": "parameter_form",
-            "in": "formData",
-            "required": true,
-            "nullable": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "description": "This is the parameter that goes into the cookie",
             "name": "PARAMETER-COOKIE",
             "in": "cookie",
@@ -416,6 +397,7 @@
             }
           },
           {
+            "description": "api-version should be required in standalone clients",
             "name": "api-version",
             "in": "path",
             "required": true,
@@ -1224,15 +1206,7 @@
         "operationId": "UploadFile",
         "parameters": [
           {
-            "description": "Supply a file reference for upload",
-            "name": "file",
-            "in": "formData",
-            "required": true,
-            "schema": {
-              "type": "file"
-            }
-          },
-          {
+            "description": "api-version should be required in standalone clients",
             "name": "api-version",
             "in": "path",
             "required": true,
@@ -1242,6 +1216,17 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "description": "Supply a file reference for upload",
+              "schema": {
+                "type": "file"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "content": {
@@ -1269,6 +1254,7 @@
             }
           },
           {
+            "description": "api-version should be required in standalone clients",
             "name": "api-version",
             "in": "path",
             "required": true,
@@ -1443,6 +1429,7 @@
             }
           },
           {
+            "description": "api-version should be required in standalone clients",
             "name": "api-version",
             "in": "path",
             "required": true,
