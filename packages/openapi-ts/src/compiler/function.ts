@@ -4,8 +4,8 @@ export const createCallExpression = ({
   parameters,
   functionName,
 }: {
-  parameters: Array<string>;
   functionName: string;
+  parameters: Array<string>;
 }) => {
   const functionIdentifier = ts.factory.createIdentifier(functionName);
   const argumentsArray = parameters.map((parameter) =>

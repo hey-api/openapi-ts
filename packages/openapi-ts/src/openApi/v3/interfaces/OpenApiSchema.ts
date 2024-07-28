@@ -35,14 +35,14 @@ export interface OpenApiSchema extends OpenApiReference, WithEnumExtension {
     | 'password'
     | 'string';
   items?: OpenApiSchema;
-  maximum?: number;
   maxItems?: number;
   maxLength?: number;
   maxProperties?: number;
-  minimum?: number;
+  maximum?: number;
   minItems?: number;
   minLength?: number;
   minProperties?: number;
+  minimum?: number;
   multipleOf?: number;
   not?: OpenApiSchema[];
   nullable?: boolean;

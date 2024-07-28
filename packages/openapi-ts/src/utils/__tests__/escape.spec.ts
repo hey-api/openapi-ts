@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { escapeName, unescapeName } from '../escape';
 
-const toCheck: { unescaped: string; escaped: string }[] = [
+const toCheck: { escaped: string; unescaped: string }[] = [
   { escaped: "''", unescaped: '' },
   { escaped: 'fooBar', unescaped: 'fooBar' },
   { escaped: `'Foo Bar'`, unescaped: 'Foo Bar' },

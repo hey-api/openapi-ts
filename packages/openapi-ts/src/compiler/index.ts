@@ -41,8 +41,8 @@ export class TypeScriptFile {
     header = true,
   }: {
     dir: string;
-    name: string;
     header?: boolean;
+    name: string;
   }) {
     this._name = this._setName(name);
     this._path = path.resolve(dir, this.getName());

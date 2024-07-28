@@ -12,25 +12,16 @@ export interface OpenApiSchema
   extends OpenApiReference,
     WithEnumExtension,
     WithNullableExtension {
-  title?: string;
-  description?: string;
+  additionalProperties?: boolean | OpenApiSchema;
+  allOf?: OpenApiSchema[];
   default?: unknown;
-  multipleOf?: number;
-  maximum?: number;
-  exclusiveMaximum?: boolean;
-  minimum?: number;
-  exclusiveMinimum?: boolean;
-  maxLength?: number;
-  minLength?: number;
-  pattern?: string;
-  maxItems?: number;
-  minItems?: number;
-  uniqueItems?: boolean;
-  maxProperties?: number;
-  minProperties?: number;
-  required?: string[];
+  description?: string;
+  discriminator?: string;
   enum?: (string | number)[];
-  type?: string;
+  example?: unknown;
+  exclusiveMaximum?: boolean;
+  exclusiveMinimum?: boolean;
+  externalDocs?: OpenApiExternalDocs;
   format?:
     | 'int32'
     | 'int64'
@@ -44,12 +35,21 @@ export interface OpenApiSchema
     | 'date-time'
     | 'password';
   items?: OpenApiSchema;
-  allOf?: OpenApiSchema[];
+  maxItems?: number;
+  maxLength?: number;
+  maxProperties?: number;
+  maximum?: number;
+  minItems?: number;
+  minLength?: number;
+  minProperties?: number;
+  minimum?: number;
+  multipleOf?: number;
+  pattern?: string;
   properties?: Dictionary<OpenApiSchema>;
-  additionalProperties?: boolean | OpenApiSchema;
-  discriminator?: string;
   readOnly?: boolean;
+  required?: string[];
+  title?: string;
+  type?: string;
+  uniqueItems?: boolean;
   xml?: OpenApiXml;
-  externalDocs?: OpenApiExternalDocs;
-  example?: unknown;
 }
