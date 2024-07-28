@@ -1,5 +1,17 @@
 # @hey-api/openapi-ts
 
+## 0.51.0
+
+### Minor Changes
+
+- [#828](https://github.com/hey-api/openapi-ts/pull/828) [`82a4696`](https://github.com/hey-api/openapi-ts/commit/82a4696b0b209ea2d9147f47f213479e61aed3d7) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: make `client` config option required
+
+### Patch Changes
+
+- [#823](https://github.com/hey-api/openapi-ts/pull/823) [`23c9dcd`](https://github.com/hey-api/openapi-ts/commit/23c9dcd5de19de62d745cc539674c815b2588cd2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: correctly process body parameter for OpenAPI 2.0 specs
+
+- [#827](https://github.com/hey-api/openapi-ts/pull/827) [`8d81c06`](https://github.com/hey-api/openapi-ts/commit/8d81c0605dbf4b4d19ec1c2dc51a93f8a2aca5b2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: do not ignore api-version param in standalone clients
+
 ## 0.50.2
 
 ### Patch Changes
