@@ -1,5 +1,11 @@
 # @hey-api/docs
 
+## 0.5.9
+
+### Patch Changes
+
+- [#828](https://github.com/hey-api/openapi-ts/pull/828) [`82a4696`](https://github.com/hey-api/openapi-ts/commit/82a4696b0b209ea2d9147f47f213479e61aed3d7) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add migration guide for v0.51.0
+
 ## 0.5.8
 
 ### Patch Changes
