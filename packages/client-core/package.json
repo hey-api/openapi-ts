@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/client-core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "type": "module",
   "description": "Core utilities for typesafe @hey-api/openapi-ts clients",
