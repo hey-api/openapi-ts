@@ -9,6 +9,8 @@ describe('bin', () => {
       './test/spec/v3.json',
       '--output',
       './test/generated/bin',
+      '--client',
+      '@hey-api/client-fetch',
       '--dry-run',
       'true',
     ]);
@@ -128,6 +130,8 @@ describe('bin', () => {
       './test/spec/v3.json',
       '--output',
       './test/generated/bin',
+      '--client',
+      '@hey-api/client-fetch',
       '--services',
       '^(Simple|Types)',
       '--types',
