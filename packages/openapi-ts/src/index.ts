@@ -102,6 +102,7 @@ const getClient = (userConfig: ClientConfig): Config['client'] => {
     bundle: false,
     // @ts-ignore
     name: '',
+    throwOnError: false,
   };
   if (typeof userConfig.client === 'string') {
     client.name = userConfig.client;

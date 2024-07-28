@@ -171,9 +171,10 @@ const processEnum = ({ client, model, onNode }: TypesProps) => {
           obj: properties,
           unescape: true,
         });
-        const node = compiler.export.const({
+        const node = compiler.types.const({
           comment,
           constAssertion: true,
+          exportConst: true,
           expression,
           name,
         });

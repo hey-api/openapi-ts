@@ -161,7 +161,7 @@ const processModel = (props: ModelProps): ts.Statement[] => {
       return model.in === 'response'
         ? [
             compiler.convert.expressionToStatement({
-              expression: compiler.function.call({
+              expression: compiler.types.call({
                 functionName: nameModelResponseTransformer,
                 parameters: [dataVariableName],
               }),
@@ -221,7 +221,8 @@ const generateResponseTransformer = ({
       }),
     ],
   });
-  const statement = compiler.export.const({
+  const statement = compiler.types.const({
+    exportConst: true,
     expression,
     name,
     typeName: name,

@@ -1,10 +1,11 @@
 import type { Client, Config, RequestOptions } from './types';
 import {
-  createDefaultConfig,
+  createConfig,
   createInterceptors,
   createQuerySerializer,
   getParseAs,
   getUrl,
+  mergeConfigs,
   mergeHeaders,
 } from './utils';
 
@@ -13,42 +14,24 @@ type ReqInit = Omit<RequestInit, 'body' | 'headers'> & {
   headers: ReturnType<typeof mergeHeaders>;
 };
 
-let globalConfig = createDefaultConfig();
+export const createClient = (config: Config = {}): Client => {
+  let _config = mergeConfigs(createConfig(), config);
 
-const globalInterceptors = createInterceptors<
-  Request,
-  Response,
-  RequestOptions
->();
+  const getConfig = (): Config => ({ ..._config });
 
-export const createClient = (config: Config): Client => {
-  const defaultConfig = createDefaultConfig();
-  const _config = { ...defaultConfig, ...config };
+  const setConfig = (config: Config): Config => {
+    _config = mergeConfigs(_config, config);
+    return getConfig();
+  };
 
-  if (_config.baseUrl?.endsWith('/')) {
-    _config.baseUrl = _config.baseUrl.substring(0, _config.baseUrl.length - 1);
-  }
-  _config.headers = mergeHeaders(defaultConfig.headers, _config.headers);
-
-  if (_config.global) {
-    globalConfig = { ..._config };
-  }
-
-  // @ts-ignore
-  const getConfig = () => (_config.root ? globalConfig : _config);
-
-  const interceptors = _config.global
-    ? globalInterceptors
-    : createInterceptors<Request, Response, RequestOptions>();
+  const interceptors = createInterceptors<Request, Response, RequestOptions>();
 
   // @ts-ignore
   const request: Client['request'] = async (options) => {
-    const config = getConfig();
-
     const opts: RequestOptions = {
-      ...config,
+      ..._config,
       ...options,
-      headers: mergeHeaders(config.headers, options.headers),
+      headers: mergeHeaders(_config.headers, options.headers),
     };
     if (opts.body && opts.bodySerializer) {
       opts.body = opts.bodySerializer(opts.body);
@@ -93,30 +76,24 @@ export const createClient = (config: Config): Client => {
       response,
     };
 
-    // return empty objects so truthy checks for data/error succeed
-    if (
-      response.status === 204 ||
-      response.headers.get('Content-Length') === '0'
-    ) {
-      if (response.ok) {
+    if (response.ok) {
+      if (
+        response.status === 204 ||
+        response.headers.get('Content-Length') === '0'
+      ) {
         return {
           data: {},
           ...result,
         };
       }
-      return {
-        error: {},
-        ...result,
-      };
-    }
 
-    if (response.ok) {
       if (opts.parseAs === 'stream') {
         return {
           data: response.body,
           ...result,
         };
       }
+
       const parseAs =
         (opts.parseAs === 'auto'
           ? getParseAs(response.headers.get('Content-Type'))
@@ -134,13 +111,18 @@ export const createClient = (config: Config): Client => {
     }
 
     let error = await response.text();
+
+    if (opts.throwOnError) {
+      throw new Error(error);
+    }
+
     try {
       error = JSON.parse(error);
     } catch {
       // noop
     }
     return {
-      error,
+      error: error || {},
       ...result,
     };
   };
@@ -157,12 +139,7 @@ export const createClient = (config: Config): Client => {
     post: (options) => request({ ...options, method: 'POST' }),
     put: (options) => request({ ...options, method: 'PUT' }),
     request,
+    setConfig,
     trace: (options) => request({ ...options, method: 'TRACE' }),
   };
 };
-
-export const client = createClient({
-  ...globalConfig,
-  // @ts-ignore
-  root: true,
-});

@@ -39,6 +39,11 @@ export interface ClientConfig {
          * @default 'fetch'
          */
         name: Client;
+        /**
+         * Throw an error instead of returning it in the response?
+         * @default false
+         */
+        throwOnError?: boolean;
       };
   /**
    * Path to the config file. Set this value if you don't use the default

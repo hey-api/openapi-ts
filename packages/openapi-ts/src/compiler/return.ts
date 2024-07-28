@@ -1,5 +1,6 @@
 import ts from 'typescript';
 
+import { createCallExpression } from './module';
 import { isType } from './utils';
 
 /**
@@ -27,12 +28,11 @@ export const createReturnFunctionCall = ({
       ts.isExpression(arg) ? arg : ts.factory.createIdentifier(arg),
     )
     .filter(isType<ts.Identifier | ts.Expression>);
-  // TODO: refactor to call `createCallExpression()` from 'compiler/function'
-  const expression = ts.factory.createCallExpression(
-    ts.factory.createIdentifier(name),
-    typeArguments,
-    argumentsArray,
-  );
+  const expression = createCallExpression({
+    functionName: name,
+    parameters: argumentsArray,
+    types: typeArguments,
+  });
   const statement = createReturnStatement({ expression });
   return statement;
 };
