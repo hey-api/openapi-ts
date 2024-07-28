@@ -31,8 +31,9 @@ If your data isn't being transformed as expected, we encourage you to leave feed
 
 To automatically convert date strings into `Date` objects, you can use the `types.dates` configuration option.
 
-```js{5}
+```js{6}
 export default {
+  client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
   types: {
