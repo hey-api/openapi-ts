@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 
-import { type Client, type Config, type RequestOptions } from './types';
+import type { Client, Config, RequestOptions } from './types';
 import { createDefaultConfig, getUrl, mergeHeaders } from './utils';
 
 let globalConfig = createDefaultConfig();
