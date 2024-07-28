@@ -14,8 +14,8 @@ export interface Enum {
 
 export interface OperationParameter extends Model {
   in: 'body' | 'cookie' | 'formData' | 'header' | 'path' | 'query';
-  prop: string;
   mediaType: string | null;
+  prop: string;
 }
 
 export interface OperationParameters extends Pick<Model, '$refs' | 'imports'> {
@@ -29,8 +29,8 @@ export interface OperationParameters extends Pick<Model, '$refs' | 'imports'> {
 }
 
 export interface OperationResponse extends Model {
-  in: 'header' | 'response';
   code: number | 'default' | '1XX' | '2XX' | '3XX' | '4XX' | '5XX';
+  in: 'header' | 'response';
   responseTypes: Array<'error' | 'success'>;
 }
 
@@ -89,14 +89,14 @@ export interface Schema {
   isNullable: boolean;
   isReadOnly: boolean;
   isRequired: boolean;
-  maximum?: number;
   maxItems?: number;
   maxLength?: number;
   maxProperties?: number;
-  minimum?: number;
+  maximum?: number;
   minItems?: number;
   minLength?: number;
   minProperties?: number;
+  minimum?: number;
   multipleOf?: number;
   pattern?: string;
   uniqueItems?: boolean;

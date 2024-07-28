@@ -11,12 +11,13 @@ export interface OpenApiParameter
   extends OpenApiReference,
     WithEnumExtension,
     WithNullableExtension {
-  name: string;
-  in: 'path' | 'query' | 'header' | 'formData' | 'body';
+  allowEmptyValue?: boolean;
+  collectionFormat?: 'csv' | 'ssv' | 'tsv' | 'pipes' | 'multi';
+  default?: unknown;
   description?: string;
-  required?: boolean;
-  schema?: OpenApiSchema;
-  type?: string;
+  enum?: (string | number)[];
+  exclusiveMaximum?: boolean;
+  exclusiveMinimum?: boolean;
   format?:
     | 'int32'
     | 'int64'
@@ -29,20 +30,19 @@ export interface OpenApiParameter
     | 'date'
     | 'date-time'
     | 'password';
-  allowEmptyValue?: boolean;
+  in: 'path' | 'query' | 'header' | 'formData' | 'body';
   items?: OpenApiItems;
-  collectionFormat?: 'csv' | 'ssv' | 'tsv' | 'pipes' | 'multi';
-  default?: unknown;
-  maximum?: number;
-  exclusiveMaximum?: boolean;
-  minimum?: number;
-  exclusiveMinimum?: boolean;
-  maxLength?: number;
-  minLength?: number;
-  pattern?: string;
   maxItems?: number;
+  maxLength?: number;
+  maximum?: number;
   minItems?: number;
-  uniqueItems?: boolean;
-  enum?: (string | number)[];
+  minLength?: number;
+  minimum?: number;
   multipleOf?: number;
+  name: string;
+  pattern?: string;
+  required?: boolean;
+  schema?: OpenApiSchema;
+  type?: string;
+  uniqueItems?: boolean;
 }

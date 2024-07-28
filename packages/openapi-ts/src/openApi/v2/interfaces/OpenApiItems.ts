@@ -4,7 +4,11 @@ import type { WithEnumExtension } from '../../common/interfaces/WithEnumExtensio
  * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#items-object)
  */
 export interface OpenApiItems extends WithEnumExtension {
-  type?: string;
+  collectionFormat?: 'csv' | 'ssv' | 'tsv' | 'pipes';
+  default?: unknown;
+  enum?: (string | number)[];
+  exclusiveMaximum?: number;
+  exclusiveMinimum?: number;
   format?:
     | 'int32'
     | 'int64'
@@ -18,18 +22,14 @@ export interface OpenApiItems extends WithEnumExtension {
     | 'date-time'
     | 'password';
   items?: OpenApiItems;
-  collectionFormat?: 'csv' | 'ssv' | 'tsv' | 'pipes';
-  default?: unknown;
-  maximum?: number;
-  exclusiveMaximum?: number;
-  minimum?: number;
-  exclusiveMinimum?: number;
-  maxLength?: number;
-  minLength?: number;
-  pattern?: string;
   maxItems?: number;
+  maxLength?: number;
+  maximum?: number;
   minItems?: number;
-  uniqueItems?: boolean;
-  enum?: (string | number)[];
+  minLength?: number;
+  minimum?: number;
   multipleOf?: number;
+  pattern?: string;
+  type?: string;
+  uniqueItems?: boolean;
 }

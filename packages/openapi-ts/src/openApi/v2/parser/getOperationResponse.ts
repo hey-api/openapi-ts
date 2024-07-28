@@ -14,9 +14,9 @@ export const getOperationResponse = ({
   response,
   types,
 }: {
+  code: OperationResponse['code'];
   openApi: OpenApi;
   response: OpenApiResponse;
-  code: OperationResponse['code'];
   types: Client['types'];
 }): OperationResponse => {
   const operationResponse: OperationResponse = {

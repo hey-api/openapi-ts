@@ -9,8 +9,8 @@
 declare module '*.hbs' {
   const template: {
     compiler: [number, string];
-    useData: true;
     main: () => void;
+    useData: true;
   };
   export default template;
 }

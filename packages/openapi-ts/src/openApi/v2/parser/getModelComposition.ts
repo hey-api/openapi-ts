@@ -14,11 +14,11 @@ export const getModelComposition = ({
   type,
   types,
 }: {
-  openApi: OpenApi;
   definition: OpenApiSchema;
   definitions: OpenApiSchema[];
-  type: 'one-of' | 'any-of' | 'all-of';
   getModel: GetModelFn;
+  openApi: OpenApi;
+  type: 'one-of' | 'any-of' | 'all-of';
   types: Client['types'];
 }): ModelComposition => {
   const composition: ModelComposition = {

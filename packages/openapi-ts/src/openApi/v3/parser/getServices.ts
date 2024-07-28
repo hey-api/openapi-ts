@@ -2,28 +2,13 @@ import type { Client } from '../../../types/client';
 import { getConfig } from '../../../utils/config';
 import { unique } from '../../../utils/unique';
 import type { Operation, Service } from '../../common/interfaces/client';
+import {
+  allowedServiceMethods,
+  getNewService,
+} from '../../common/parser/service';
 import type { OpenApi } from '../interfaces/OpenApi';
 import { getOperationParameters } from './getOperationParameters';
 import { getOperation } from './operation';
-
-const allowedServiceMethods = [
-  'connect',
-  'delete',
-  'get',
-  'head',
-  'options',
-  'patch',
-  'post',
-  'put',
-  'trace',
-] as const;
-
-const getNewService = (operation: Operation): Service => ({
-  $refs: [],
-  imports: [],
-  name: operation.service,
-  operations: [],
-});
 
 export const getServices = ({
   openApi,
