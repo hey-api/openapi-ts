@@ -147,6 +147,14 @@ export const ots = {
   },
 };
 
+export const isTsNode = (node: any): node is ts.Expression =>
+  node !== null &&
+  typeof node === 'object' &&
+  typeof node.kind === 'number' &&
+  typeof node.flags === 'number' &&
+  typeof node.pos === 'number' &&
+  typeof node.end === 'number';
+
 export const isType = <T>(value: T | undefined): value is T =>
   value !== undefined;
 
