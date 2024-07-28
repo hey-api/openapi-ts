@@ -28,31 +28,31 @@ Live demo
 The fastest way to use `@hey-api/openapi-ts` is via npx
 
 ```sh
-npx @hey-api/openapi-ts -i path/to/openapi.json -o src/client
+npx @hey-api/openapi-ts -i path/to/openapi.json -o src/client -c @hey-api/client-fetch
 ```
 
 Congratulations on creating your first client! 🎉 You can learn more about the generated files on the [Output](/openapi-ts/output) page.
 
-While you can already make API requests with the client you've just created, you will probably want to configure it or pin a specific version. Let's start by adding `@hey-api/openapi-ts` to your dependencies.
+Before you can make API requests with the client you've just created, you need to install `@hey-api/client-fetch` and configure it. Let's start by declaring your dependencies.
 
 ## Installation
 
 ::: code-group
 
 ```sh [npm]
-npm install @hey-api/openapi-ts --save-dev
+npm install @hey-api/client-fetch && npm install @hey-api/openapi-ts -D
 ```
 
 ```sh [pnpm]
-pnpm add @hey-api/openapi-ts -D
+pnpm add @hey-api/client-fetch && pnpm add @hey-api/openapi-ts -D
 ```
 
 ```sh [yarn]
-yarn add @hey-api/openapi-ts -D
+yarn add @hey-api/client-fetch && yarn add @hey-api/openapi-ts -D
 ```
 
 ```sh [bun]
-bun add @hey-api/openapi-ts -D
+bun add @hey-api/client-fetch && bun add @hey-api/openapi-ts -D
 ```
 
 :::
@@ -65,24 +65,29 @@ Most people run `@hey-api/openapi-ts` via CLI. To do that, add a script to your 
 
 ```json
 "scripts": {
-  "openapi-ts": "openapi-ts -i path/to/openapi.json -o src/client"
+  "openapi-ts": "openapi-ts"
 }
 ```
 
-The above script can be executed by running `npm run openapi-ts` or equivalent command if you're not using npm.
+The above script can be executed by running `npm run openapi-ts` or equivalent command in other package managers. Next, we need to create a [configuration](/openapi-ts/configuration) file and move our options from Quick Start to it.
 
 ### Node.js
 
 You can also generate clients programmatically by importing `@hey-api/openapi-ts` in a TypeScript file.
 
-```ts
+::: code-group
+
+```ts [openapi-ts.ts]
 import { createClient } from '@hey-api/openapi-ts';
 
 createClient({
+  client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
 });
 ```
+
+:::
 
 ### Configuration
 

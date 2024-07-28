@@ -283,7 +283,7 @@ export default {
 
 ## Legacy Clients
 
-Before standalone client packages, clients were generated using `@hey-api/openapi-ts`. In fact, `@hey-api/openapi-ts` still generates a legacy Fetch API client by default. You can generate other legacy clients with the `client` config option.
+Before standalone client packages, clients were generated using `@hey-api/openapi-ts`. In fact, `@hey-api/openapi-ts` still supports generating legacy clients. You can generate them with the `client` config option.
 
 ::: code-group
 
@@ -337,7 +337,7 @@ The following legacy clients are available:
 - [node](https://nodejs.org/) (using [node-fetch](https://www.npmjs.com/package/node-fetch))
 - [xhr](https://developer.mozilla.org/docs/Web/API/XMLHttpRequest)
 
-Please be aware that legacy clients are missing some features:
+Please be aware that legacy clients are missing some key features:
 
 - no typesafe errors 🚫
 - no access to the original request and response 🚫
