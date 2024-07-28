@@ -1095,6 +1095,10 @@ export type CallWithParametersData = {
     };
     path: {
         /**
+         * api-version should be required in standalone clients
+         */
+        'api-version': string | null;
+        /**
          * This is the parameter that goes into the path
          */
         parameterPath: string | null;
@@ -1120,7 +1124,11 @@ export type CallWithWeirdParameterNamesData = {
          */
         'parameter.header': string | null;
     };
-    path?: {
+    path: {
+        /**
+         * api-version should be required in standalone clients
+         */
+        'api-version': string | null;
         /**
          * This is the parameter that goes into the path
          */
@@ -1172,7 +1180,7 @@ export type PostCallWithOptionalParamData = {
     };
 };
 
-export type PostApiRequestBodyData = {
+export type PostApiVbyApiVersionRequestBodyData = {
     /**
      * A reusable request body
      */
@@ -1185,7 +1193,7 @@ export type PostApiRequestBodyData = {
     };
 };
 
-export type PostApiFormDataData = {
+export type PostApiVbyApiVersionFormDataData = {
     /**
      * A reusable request body
      */
@@ -1391,7 +1399,15 @@ export type TypesResponse = number | string | boolean | {
 
 export type TypesError = unknown;
 
-export type UploadFileData = unknown;
+export type UploadFileData = {
+    body: (Blob | File);
+    path: {
+        /**
+         * api-version should be required in standalone clients
+         */
+        'api-version': string | null;
+    };
+};
 
 export type UploadFileResponse = boolean;
 
@@ -1399,6 +1415,10 @@ export type UploadFileError = unknown;
 
 export type FileResponseData = {
     path: {
+        /**
+         * api-version should be required in standalone clients
+         */
+        'api-version': string;
         id: string;
     };
 };
@@ -1462,6 +1482,10 @@ export type ComplexParamsData = {
         };
     };
     path: {
+        /**
+         * api-version should be required in standalone clients
+         */
+        'api-version': string;
         id: number;
     };
 };
@@ -1565,12 +1589,12 @@ export type $OpenApiTs = {
     };
     '/api/v{api-version}/requestBody/': {
         post: {
-            req: PostApiRequestBodyData;
+            req: PostApiVbyApiVersionRequestBodyData;
         };
     };
     '/api/v{api-version}/formData/': {
         post: {
-            req: PostApiFormDataData;
+            req: PostApiVbyApiVersionFormDataData;
         };
     };
     '/api/v{api-version}/defaults': {

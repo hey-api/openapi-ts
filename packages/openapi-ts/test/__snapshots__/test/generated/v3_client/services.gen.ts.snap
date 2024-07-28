@@ -150,7 +150,6 @@ export class ParametersService {
      * @param data.parameterHeader This is the parameter that goes into the header
      * @param data.fooAllOfEnum
      * @param data.parameterQuery This is the parameter that goes into the query params
-     * @param data.parameterForm This is the parameter that goes into the form data
      * @param data.parameterCookie This is the parameter that goes into the cookie
      * @param data.parameterPath This is the parameter that goes into the path
      * @param data.requestBody This is the parameter that goes into the body
@@ -175,9 +174,6 @@ export class ParametersService {
                 foo_all_of_enum: data.fooAllOfEnum,
                 parameterQuery: data.parameterQuery
             },
-            formData: {
-                parameterForm: data.parameterForm
-            },
             body: data.requestBody,
             mediaType: 'application/json'
         });
@@ -187,7 +183,6 @@ export class ParametersService {
      * @param data The data for the request.
      * @param data.parameterHeader This is the parameter that goes into the request header
      * @param data.parameterQuery This is the parameter that goes into the request query params
-     * @param data.parameterForm This is the parameter that goes into the request form data
      * @param data.parameterCookie This is the parameter that goes into the cookie
      * @param data.requestBody This is the parameter that goes into the body
      * @param data.parameterPath1 This is the parameter that goes into the path
@@ -214,9 +209,6 @@ export class ParametersService {
             query: {
                 default: data._default,
                 'parameter-query': data.parameterQuery
-            },
-            formData: {
-                parameter_form: data.parameterForm
             },
             body: data.requestBody,
             mediaType: 'application/json'
@@ -724,7 +716,7 @@ export class UploadService {
     
     /**
      * @param data The data for the request.
-     * @param data.file Supply a file reference for upload
+     * @param data.formData
      * @returns boolean
      * @throws ApiError
      */
@@ -732,9 +724,8 @@ export class UploadService {
         return this.httpRequest.request({
             method: 'POST',
             url: '/api/v{api-version}/upload',
-            formData: {
-                file: data.file
-            }
+            formData: data.formData,
+            mediaType: 'application/x-www-form-urlencoded'
         });
     }
     
