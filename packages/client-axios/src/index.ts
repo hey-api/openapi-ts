@@ -1,9 +1,18 @@
 import axios, { AxiosError } from 'axios';
 
-import type { Client, Config, RequestOptions } from './types';
+import { type Client, type Config, type RequestOptions } from './types';
 import { createDefaultConfig, getUrl, mergeHeaders } from './utils';
 
 let globalConfig = createDefaultConfig();
+
+export class OpenApiAxiosError extends AxiosError {
+  constructor(e: AxiosError) {
+    super(e.message, e.code, e.config, e.request, e.response);
+    this.error = e.response?.data ?? {};
+  }
+
+  error: any;
+}
 
 export const createClient = (config: Config): Client => {
   const defaultConfig = createDefaultConfig();
@@ -57,10 +66,7 @@ export const createClient = (config: Config): Client => {
       };
     } catch (error) {
       const e = error as AxiosError;
-      return Promise.reject({
-        ...error,
-        error: e.response?.data ?? {},
-      });
+      return Promise.reject(new OpenApiAxiosError(e));
     }
   };
 
