@@ -3,7 +3,7 @@
  * invalid types. Optional parameters cannot be positioned after required ones.
  */
 export function toSortedByRequired<
-  T extends { isRequired: boolean; default?: unknown },
+  T extends { default?: unknown; isRequired: boolean },
 >(values: T[]): T[] {
   return values.sort((a, b) => {
     const aNeedsValue = a.isRequired && a.default === undefined;

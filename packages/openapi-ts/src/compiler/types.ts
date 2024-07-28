@@ -188,11 +188,11 @@ export const createObjectType = <
   shorthand = false,
   unescape = false,
 }: {
-  obj: T;
   comments?: Record<string | number, Comments>;
   identifiers?: string[];
   leadingComment?: Comments;
   multiLine?: boolean;
+  obj: T;
   shorthand?: boolean;
   unescape?: boolean;
 }): ts.ObjectLiteralExpression => {

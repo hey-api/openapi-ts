@@ -497,13 +497,19 @@ const toOperationStatements = (
   ];
 };
 
-const processService = (
-  client: Client,
-  service: Service,
-  onNode: OnNode,
-  onImport: OnImport,
-  onClientImport: OnImport,
-) => {
+const processService = ({
+  client,
+  onClientImport,
+  onImport,
+  onNode,
+  service,
+}: {
+  client: Client;
+  onClientImport: OnImport;
+  onImport: OnImport;
+  onNode: OnNode;
+  service: Service;
+}) => {
   const config = getConfig();
 
   const isStandalone = isStandaloneClient(config);
@@ -669,19 +675,19 @@ export const generateServices = async ({
   let clientImports: string[] = [];
 
   for (const service of client.services) {
-    processService(
+    processService({
       client,
-      service,
-      (node) => {
-        files.services?.add(node);
-      },
-      (imported) => {
-        imports = [...imports, imported];
-      },
-      (imported) => {
+      onClientImport: (imported) => {
         clientImports = [...clientImports, imported];
       },
-    );
+      onImport: (imported) => {
+        imports = [...imports, imported];
+      },
+      onNode: (node) => {
+        files.services?.add(node);
+      },
+      service,
+    });
   }
 
   // Import required packages and core files.

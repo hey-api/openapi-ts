@@ -18,23 +18,22 @@ export const getOperation = ({
   method,
   op,
   openApi,
+  types,
   pathParams,
   tag,
-  types,
   url,
 }: {
-  openApi: OpenApi;
-  url: string;
   method: Lowercase<Operation['method']>;
-  tag: string;
   op: OpenApiOperation;
+  openApi: OpenApi;
   pathParams: OperationParameters;
+  tag: string;
   types: Client['types'];
+  url: string;
 }): Operation => {
-  const serviceName = getServiceName(tag);
+  const service = getServiceName(tag);
   const name = getOperationName(url, method, op.operationId);
 
-  // Create a new operation object for this method.
   const operation: Operation = {
     $refs: [],
     deprecated: op.deprecated === true,
@@ -53,26 +52,23 @@ export const getOperation = ({
     path: url,
     responseHeader: null,
     responses: [],
-    service: serviceName,
+    service,
     summary: op.summary || null,
   };
 
-  // Parse the operation parameters (path, query, body, etc).
   if (op.parameters) {
     const parameters = getOperationParameters({
       openApi,
       parameters: op.parameters,
       types,
     });
+    operation.$refs = [...operation.$refs, ...parameters.$refs];
     operation.imports = [...operation.imports, ...parameters.imports];
     operation.parameters = [...operation.parameters, ...parameters.parameters];
-    operation.parametersPath = [
-      ...operation.parametersPath,
-      ...parameters.parametersPath,
-    ];
-    operation.parametersQuery = [
-      ...operation.parametersQuery,
-      ...parameters.parametersQuery,
+    operation.parametersBody = parameters.parametersBody;
+    operation.parametersCookie = [
+      ...operation.parametersCookie,
+      ...parameters.parametersCookie,
     ];
     operation.parametersForm = [
       ...operation.parametersForm,
@@ -82,14 +78,16 @@ export const getOperation = ({
       ...operation.parametersHeader,
       ...parameters.parametersHeader,
     ];
-    operation.parametersCookie = [
-      ...operation.parametersCookie,
-      ...parameters.parametersCookie,
+    operation.parametersPath = [
+      ...operation.parametersPath,
+      ...parameters.parametersPath,
     ];
-    operation.parametersBody = parameters.parametersBody;
+    operation.parametersQuery = [
+      ...operation.parametersQuery,
+      ...parameters.parametersQuery,
+    ];
   }
 
-  // Parse the operation responses.
   if (op.responses) {
     operation.responses = getOperationResponses({
       openApi,

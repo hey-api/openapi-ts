@@ -54,19 +54,16 @@ export const getOperationParameter = ({
   };
 
   if (parameter.$ref) {
-    const definitionRef = getType({ type: parameter.$ref });
-    operationParameter.export = 'reference';
-    operationParameter.type = definitionRef.type;
-    operationParameter.base = definitionRef.base;
-    operationParameter.template = definitionRef.template;
-    operationParameter.$refs = [
-      ...operationParameter.$refs,
-      ...definitionRef.$refs,
-    ];
-    operationParameter.imports = [
-      ...operationParameter.imports,
-      ...definitionRef.imports,
-    ];
+    const model = getType({ type: parameter.$ref });
+    operationParameter = {
+      ...operationParameter,
+      $refs: [...operationParameter.$refs, ...model.$refs],
+      base: model.base,
+      export: 'reference',
+      imports: [...operationParameter.imports, ...model.imports],
+      template: model.template,
+      type: model.type,
+    };
     return operationParameter;
   }
 
@@ -78,15 +75,15 @@ export const getOperationParameter = ({
 
     if (schema.$ref) {
       const model = getType({ type: schema.$ref });
-      operationParameter.export = 'reference';
-      operationParameter.type = model.type;
-      operationParameter.base = model.base;
-      operationParameter.template = model.template;
-      operationParameter.$refs = [...operationParameter.$refs, ...model.$refs];
-      operationParameter.imports = [
-        ...operationParameter.imports,
-        ...model.imports,
-      ];
+      operationParameter = {
+        ...operationParameter,
+        $refs: [...operationParameter.$refs, ...model.$refs],
+        base: model.base,
+        export: 'reference',
+        imports: [...operationParameter.imports, ...model.imports],
+        template: model.template,
+        type: model.type,
+      };
       operationParameter.default = getDefault(schema);
       return operationParameter;
     }

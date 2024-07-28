@@ -1,6 +1,26 @@
 import camelCase from 'camelcase';
 
+import type { Operation, Service } from '../interfaces/client';
 import { sanitizeNamespaceIdentifier } from './sanitize';
+
+export const allowedServiceMethods = [
+  'connect',
+  'delete',
+  'get',
+  'head',
+  'options',
+  'patch',
+  'post',
+  'put',
+  'trace',
+] as const;
+
+export const getNewService = (operation: Operation): Service => ({
+  $refs: [],
+  imports: [],
+  name: operation.service,
+  operations: [],
+});
 
 /**
  * Convert the service version to 'normal' version.

@@ -98,8 +98,8 @@ export const createMethodDeclaration = ({
 };
 
 type ClassDecorator = {
-  name: string;
   args: any[];
+  name: string;
 };
 
 /**

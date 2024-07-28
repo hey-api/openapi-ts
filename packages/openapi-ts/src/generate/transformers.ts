@@ -15,8 +15,8 @@ import {
 import { generateType, type TypesProps } from './types';
 
 interface ModelProps extends TypesProps {
-  path: Array<string>;
   meta?: ModelMeta;
+  path: Array<string>;
 }
 
 const dataVariableName = 'data';
