@@ -1,5 +1,11 @@
 # @hey-api/client-fetch
 
+## 0.1.13
+
+### Patch Changes
+
+- [#842](https://github.com/hey-api/openapi-ts/pull/842) [`8e3c634`](https://github.com/hey-api/openapi-ts/commit/8e3c6343672b9280365c3266f94e4acba533bf29) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: correctly set default parseAs value to "auto"
+
 ## 0.1.12
 
 ### Patch Changes
