@@ -548,5 +548,6 @@ export const createDefaultConfig = (): Config => ({
   fetch: globalThis.fetch,
   global: true,
   headers: defaultHeaders,
+  parseAs: 'auto',
   querySerializer: defaultQuerySerializer,
 });
