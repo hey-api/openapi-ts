@@ -244,7 +244,7 @@ describe('OpenAPI v3', () => {
           enums: 'typescript+namespace',
         },
       }),
-      description: 'generate TypeScript enums',
+      description: 'generate TypeScript enums with namespace',
       name: 'v3_enums_typescript_namespace',
     },
     {
