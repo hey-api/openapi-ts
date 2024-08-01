@@ -28,6 +28,32 @@ export const createExportAllDeclaration = ({
 
 type ImportExportItem = ImportExportItemObject | string;
 
+export const createCallExpression = ({
+  parameters,
+  functionName,
+  types,
+}: {
+  functionName: string | ts.PropertyAccessExpression;
+  parameters: Array<string | ts.Expression>;
+  types?: ReadonlyArray<ts.TypeNode>;
+}) => {
+  const expression =
+    typeof functionName === 'string'
+      ? ts.factory.createIdentifier(functionName)
+      : functionName;
+  const argumentsArray = parameters.map((parameter) =>
+    typeof parameter === 'string'
+      ? ts.factory.createIdentifier(parameter)
+      : parameter,
+  );
+  const callExpression = ts.factory.createCallExpression(
+    expression,
+    types,
+    argumentsArray,
+  );
+  return callExpression;
+};
+
 /**
  * Create a named export declaration. Example: `export { X } from './y'`.
  * @param exports - named imports to export
@@ -65,22 +91,25 @@ export const createNamedExportDeclarations = ({
 };
 
 /**
- * Create a const variable export. Optionally, it can use const assertion.
- * Example: `export x = {} as const`.
+ * Create a const variable. Optionally, it can use const assertion or export
+ * statement. Example: `export x = {} as const`.
  * @param constAssertion use const assertion?
+ * @param exportConst export created variable?
  * @param expression expression for the variable.
  * @param name name of the variable.
  * @returns ts.VariableStatement
  */
-export const createExportConstVariable = ({
+export const createConstVariable = ({
   comment,
-  constAssertion = false,
+  constAssertion,
   expression,
+  exportConst,
   name,
   typeName,
 }: {
   comment?: Comments;
   constAssertion?: boolean;
+  exportConst?: boolean;
   expression: ts.Expression;
   name: string;
   typeName?: string;
@@ -98,7 +127,9 @@ export const createExportConstVariable = ({
     initializer,
   );
   const statement = ts.factory.createVariableStatement(
-    [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
+    exportConst
+      ? [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)]
+      : undefined,
     ts.factory.createVariableDeclarationList([declaration], ts.NodeFlags.Const),
   );
   if (comment) {

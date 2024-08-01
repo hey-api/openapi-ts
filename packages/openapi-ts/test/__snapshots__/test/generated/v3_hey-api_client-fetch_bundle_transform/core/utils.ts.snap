@@ -382,6 +382,15 @@ export const getUrl = ({
   return url;
 };
 
+export const mergeConfigs = (a: Config, b: Config): Config => {
+  const config = { ...a, ...b };
+  if (config.baseUrl?.endsWith('/')) {
+    config.baseUrl = config.baseUrl.substring(0, config.baseUrl.length - 1);
+  }
+  config.headers = mergeHeaders(a.headers, b.headers);
+  return config;
+};
+
 export const mergeHeaders = (
   ...headers: Array<Required<Config>['headers'] | undefined>
 ) => {
@@ -542,12 +551,12 @@ const defaultHeaders = {
   'Content-Type': 'application/json',
 };
 
-export const createDefaultConfig = (): Config => ({
+export const createConfig = (override: Config = {}): Config => ({
   ...jsonBodySerializer,
   baseUrl: '',
   fetch: globalThis.fetch,
-  global: true,
   headers: defaultHeaders,
   parseAs: 'auto',
   querySerializer: defaultQuerySerializer,
+  ...override,
 });

@@ -30,12 +30,6 @@ export interface Config extends Omit<CreateAxiosDefaults, 'headers'> {
    */
   bodySerializer?: BodySerializer;
   /**
-   * By default, options passed to this call will be applied to the global
-   * client instance. Set to false to create a local client instance.
-   * @default true
-   */
-  global?: boolean;
-  /**
    * An object containing any HTTP headers that you want to pre-populate your
    * `Headers` object with.
    *
@@ -74,9 +68,14 @@ export interface Config extends Omit<CreateAxiosDefaults, 'headers'> {
    * e.g. convert date ISO strings into native Date objects.
    */
   responseTransformer?: (data: unknown) => Promise<unknown>;
+  /**
+   * Throw an error instead of returning it in the response?
+   * @default false
+   */
+  throwOnError?: boolean;
 }
 
-interface RequestOptionsBase extends Omit<Config, 'global'> {
+interface RequestOptionsBase extends Config {
   path?: Record<string, unknown>;
   query?: Record<string, unknown>;
   url: string;
@@ -88,10 +87,12 @@ export type RequestResult<Data = unknown, Error = unknown> = Promise<
 >;
 
 type MethodFn = <Data = unknown, Error = unknown>(
-  options: RequestOptionsBase,
+  options: Omit<RequestOptionsBase, 'method'>,
 ) => RequestResult<Data, Error>;
+
 type RequestFn = <Data = unknown, Error = unknown>(
-  options: RequestOptionsBase & Pick<Required<RequestOptionsBase>, 'method'>,
+  options: Omit<RequestOptionsBase, 'method'> &
+    Pick<Required<RequestOptionsBase>, 'method'>,
 ) => RequestResult<Data, Error>;
 
 export interface Client {
@@ -105,6 +106,7 @@ export interface Client {
   post: MethodFn;
   put: MethodFn;
   request: RequestFn;
+  setConfig: (config: Config) => Config;
 }
 
 export type RequestOptions = RequestOptionsBase &

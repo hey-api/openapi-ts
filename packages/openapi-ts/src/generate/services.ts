@@ -575,8 +575,9 @@ const processService = ({
           onClientImport,
         ),
       });
-      const statement = compiler.export.const({
+      const statement = compiler.types.const({
         comment: toOperationComment(operation),
+        exportConst: true,
         expression,
         name: toOperationName(operation, true),
       });
@@ -666,10 +667,30 @@ export const generateServices = async ({
     return;
   }
 
+  const isStandalone = isStandaloneClient(config);
+
   files.services = new TypeScriptFile({
     dir: config.output.path,
     name: 'services.ts',
   });
+
+  // define client first
+  if (isStandalone) {
+    const innerFunction = compiler.types.call({
+      functionName: 'createConfig',
+      parameters: [],
+    });
+    const outerFunction = compiler.types.call({
+      functionName: 'createClient',
+      parameters: [innerFunction],
+    });
+    const statement = compiler.types.const({
+      exportConst: true,
+      expression: outerFunction,
+      name: 'client',
+    });
+    files.services.add(statement);
+  }
 
   let imports: string[] = [];
   let clientImports: string[] = [];
@@ -684,17 +705,18 @@ export const generateServices = async ({
         imports = [...imports, imported];
       },
       onNode: (node) => {
-        files.services?.add(node);
+        files.services.add(node);
       },
       service,
     });
   }
 
   // Import required packages and core files.
-  if (isStandaloneClient(config)) {
-    files.services?.addImport({
+  if (isStandalone) {
+    files.services.addImport({
       imports: [
-        'client',
+        'createClient',
+        'createConfig',
         {
           asType: true,
           name: 'Options',
@@ -705,38 +727,38 @@ export const generateServices = async ({
     });
   } else {
     if (config.client.name === 'angular') {
-      files.services?.addImport({
+      files.services.addImport({
         imports: 'Injectable',
         module: '@angular/core',
       });
 
       if (!config.name) {
-        files.services?.addImport({
+        files.services.addImport({
           imports: 'HttpClient',
           module: '@angular/common/http',
         });
       }
 
-      files.services?.addImport({
+      files.services.addImport({
         imports: { asType: true, name: 'Observable' },
         module: 'rxjs',
       });
     } else {
-      files.services?.addImport({
+      files.services.addImport({
         imports: { asType: true, name: 'CancelablePromise' },
         module: './core/CancelablePromise',
       });
     }
 
     if (config.services.response === 'response') {
-      files.services?.addImport({
+      files.services.addImport({
         imports: { asType: true, name: 'ApiResult' },
         module: './core/ApiResult',
       });
     }
 
     if (config.name) {
-      files.services?.addImport({
+      files.services.addImport({
         imports: {
           asType: config.client.name !== 'angular',
           name: 'BaseHttpRequest',
@@ -744,11 +766,11 @@ export const generateServices = async ({
         module: './core/BaseHttpRequest',
       });
     } else {
-      files.services?.addImport({
+      files.services.addImport({
         imports: 'OpenAPI',
         module: './core/OpenAPI',
       });
-      files.services?.addImport({
+      files.services.addImport({
         imports: { alias: '__request', name: 'request' },
         module: './core/request',
       });
@@ -763,7 +785,7 @@ export const generateServices = async ({
       name,
     }));
     if (importedTypes.length) {
-      files.services?.addImport({
+      files.services.addImport({
         imports: importedTypes,
         module: `./${files.types.getName(false)}`,
       });

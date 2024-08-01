@@ -258,7 +258,7 @@ export type CreateUsersWithListInputData = {
   body?: Array<User>;
 };
 
-export type CreateUsersWithListInputResponse = User;
+export type CreateUsersWithListInputResponse = User | unknown;
 
 export type CreateUsersWithListInputError = unknown;
 
