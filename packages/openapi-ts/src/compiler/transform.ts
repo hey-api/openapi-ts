@@ -1,6 +1,7 @@
 import ts from 'typescript';
 
 import { convertExpressionToStatement } from './convert';
+import { createCallExpression } from './module';
 import { createReturnStatement } from './return';
 
 export const createSafeAccessExpression = (path: string[]) =>
@@ -81,12 +82,10 @@ export const createFunctionTransformMutation = ({
   const thenStatement = ts.factory.createBlock(
     [
       convertExpressionToStatement({
-        // TODO: refactor to call `createCallExpression()` from 'compiler/function'
-        expression: ts.factory.createCallExpression(
-          ts.factory.createIdentifier(transformerName),
-          undefined,
-          [accessExpression],
-        ),
+        expression: createCallExpression({
+          functionName: transformerName,
+          parameters: [accessExpression],
+        }),
       }),
     ],
     true,
@@ -113,15 +112,13 @@ export const createArrayTransformMutation = ({
   const accessExpression = createAccessExpression(path);
 
   const statement = createIfStatement({
-    // TODO: refactor to call `createCallExpression()` from 'compiler/function'
-    expression: ts.factory.createCallExpression(
-      ts.factory.createPropertyAccessExpression(
+    expression: createCallExpression({
+      functionName: ts.factory.createPropertyAccessExpression(
         ts.factory.createIdentifier('Array'),
         ts.factory.createIdentifier('isArray'),
       ),
-      undefined,
-      [safeAccessExpression],
-    ),
+      parameters: [safeAccessExpression],
+    }),
     thenStatement: ts.factory.createBlock(
       [
         convertExpressionToStatement({
@@ -165,15 +162,13 @@ export const createArrayMapTransform = ({
   const accessExpression = createAccessExpression(path);
 
   const statement = createIfStatement({
-    // TODO: refactor to call `createCallExpression()` from 'compiler/function'
-    expression: ts.factory.createCallExpression(
-      ts.factory.createPropertyAccessExpression(
+    expression: createCallExpression({
+      functionName: ts.factory.createPropertyAccessExpression(
         ts.factory.createIdentifier('Array'),
         ts.factory.createIdentifier('isArray'),
       ),
-      undefined,
-      [safeAccessExpression],
-    ),
+      parameters: [safeAccessExpression],
+    }),
     thenStatement: ts.factory.createBlock(
       [
         convertExpressionToStatement({
@@ -264,27 +259,23 @@ export const createResponseArrayTransform = ({
     ts.factory.createBlock(
       [
         createIfStatement({
-          // TODO: refactor to call `createCallExpression()` from 'compiler/function'
-          expression: ts.factory.createCallExpression(
-            ts.factory.createPropertyAccessExpression(
+          expression: createCallExpression({
+            functionName: ts.factory.createPropertyAccessExpression(
               ts.factory.createIdentifier('Array'),
               ts.factory.createIdentifier('isArray'),
             ),
-            undefined,
-            [ts.factory.createIdentifier('data')],
-          ),
+            parameters: ['data'],
+          }),
           thenStatement: ts.factory.createBlock(
             [
               convertExpressionToStatement({
-                // TODO: refactor to call `createCallExpression()` from 'compiler/function'
-                expression: ts.factory.createCallExpression(
-                  ts.factory.createPropertyAccessExpression(
+                expression: createCallExpression({
+                  functionName: ts.factory.createPropertyAccessExpression(
                     ts.factory.createIdentifier('data'),
                     ts.factory.createIdentifier('forEach'),
                   ),
-                  undefined,
-                  [ts.factory.createIdentifier(transform)],
-                ),
+                  parameters: [transform],
+                }),
               }),
             ],
             true,

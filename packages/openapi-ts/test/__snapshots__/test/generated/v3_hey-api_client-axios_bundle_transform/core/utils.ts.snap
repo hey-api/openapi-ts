@@ -270,6 +270,12 @@ const serializeFormDataPair = (
   }
 };
 
+export const mergeConfigs = (a: Config, b: Config): Config => {
+  const config = { ...a, ...b };
+  config.headers = mergeHeaders(a.headers, b.headers);
+  return config;
+};
+
 export const mergeHeaders = (
   ...headers: Array<Required<Config>['headers'] | undefined>
 ): Required<Config>['headers'] => {
@@ -360,7 +366,7 @@ export const urlSearchParamsBodySerializer = {
   },
 };
 
-export const createDefaultConfig = (): Config => ({
+export const createConfig = (override: Config = {}): Config => ({
   baseURL: '',
-  global: true,
+  ...override,
 });

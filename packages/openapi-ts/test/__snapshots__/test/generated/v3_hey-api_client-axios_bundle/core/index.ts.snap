@@ -1,34 +1,33 @@
 import axios, { AxiosError } from 'axios';
 
 import type { Client, Config, RequestOptions } from './types';
-import { createDefaultConfig, getUrl, mergeHeaders } from './utils';
-
-let globalConfig = createDefaultConfig();
+import { createConfig, getUrl, mergeConfigs, mergeHeaders } from './utils';
 
 export const createClient = (config: Config): Client => {
-  const defaultConfig = createDefaultConfig();
-  const _config = { ...defaultConfig, ...config };
+  let _config = mergeConfigs(createConfig(), config);
 
-  _config.headers = mergeHeaders(defaultConfig.headers, _config.headers);
+  const instance = axios.create(_config);
 
-  if (_config.global) {
-    globalConfig = { ..._config };
-  }
+  const getConfig = (): Config => ({ ..._config });
 
-  // @ts-ignore
-  const getConfig = () => (_config.root ? globalConfig : _config);
-
-  const instance = axios.create(config);
+  const setConfig = (config: Config): Config => {
+    _config = mergeConfigs(_config, config);
+    instance.defaults = {
+      ...instance.defaults,
+      ..._config,
+      // @ts-ignore
+      headers: mergeHeaders(instance.defaults.headers, _config.headers),
+    };
+    return getConfig();
+  };
 
   // @ts-ignore
   const request: Client['request'] = async (options) => {
-    const config = getConfig();
-
     const opts: RequestOptions = {
-      ...config,
+      ..._config,
       ...options,
       // @ts-ignore
-      headers: mergeHeaders(config.headers, options.headers),
+      headers: mergeHeaders(_config.headers, options.headers),
     };
     if (opts.body && opts.bodySerializer) {
       opts.body = opts.bodySerializer(opts.body);
@@ -40,6 +39,7 @@ export const createClient = (config: Config): Client => {
     });
 
     const _axios = opts.axios || instance;
+
     try {
       const response = await _axios({
         ...opts,
@@ -47,20 +47,25 @@ export const createClient = (config: Config): Client => {
         params: opts.query,
         url,
       });
+
       let { data } = response;
+
       if (opts.responseType === 'json' && opts.responseTransformer) {
         data = await opts.responseTransformer(data);
       }
+
       return {
         ...response,
         data: data ?? {},
       };
     } catch (error) {
       const e = error as AxiosError;
-      return {
-        ...error,
-        error: e.response?.data ?? {},
-      };
+      if (opts.throwOnError) {
+        throw e;
+      }
+      // @ts-ignore
+      e.error = e.response?.data ?? {};
+      return e;
     }
   };
 
@@ -75,11 +80,6 @@ export const createClient = (config: Config): Client => {
     post: (options) => request({ ...options, method: 'post' }),
     put: (options) => request({ ...options, method: 'put' }),
     request,
+    setConfig,
   };
 };
-
-export const client = createClient({
-  ...globalConfig,
-  // @ts-ignore
-  root: true,
-});

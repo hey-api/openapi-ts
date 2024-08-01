@@ -18,26 +18,26 @@ import {
 import { useState } from 'react';
 
 import { $Pet } from './client/schemas.gen';
-import { addPet, getPetById, updatePet } from './client/services.gen';
+import { addPet, client, getPetById, updatePet } from './client/services.gen';
 import type { Pet } from './client/types.gen';
 
-createClient({
+// configure internal service client
+client.setConfig({
   // set default base url for requests
   baseUrl: 'https://petstore3.swagger.io/api/v3',
   // set default headers for requests
   headers: {
-    Authorization: 'Bearer <token_from_global_client>',
+    Authorization: 'Bearer <token_from_service_client>',
   },
 });
 
 const localClient = createClient({
   // set default base url for requests made by this client
   baseUrl: 'https://petstore3.swagger.io/api/v3',
-  global: false,
   /**
    * Set default headers only for requests made by this client. This is to
    * demonstrate local clients and their configuration taking precedence over
-   * global configuration.
+   * internal service client.
    */
   headers: {
     Authorization: 'Bearer <token_from_local_client>',

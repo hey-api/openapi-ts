@@ -66,7 +66,8 @@ export const generatePlugins = async ({
               }),
             ],
           });
-          const statement = compiler.export.const({
+          const statement = compiler.types.const({
+            exportConst: true,
             expression,
             name: toQueryOptionsName(operation),
           });

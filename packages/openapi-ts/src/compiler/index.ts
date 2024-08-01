@@ -5,13 +5,12 @@ import ts from 'typescript';
 
 import * as classes from './classes';
 import * as convert from './convert';
-import * as functions from './function';
 import * as module from './module';
 import * as _return from './return';
 import * as transform from './transform';
 import * as typedef from './typedef';
 import * as types from './types';
-import { stringToTsNodes, tsNodeToString } from './utils';
+import * as utils from './utils';
 
 export type { Property } from './typedef';
 export type { FunctionParameter } from './types';
@@ -104,7 +103,7 @@ export class TypeScriptFile {
     if (this._imports.length) {
       output = [
         ...output,
-        this._imports.map((node) => tsNodeToString({ node })).join('\n'),
+        this._imports.map((node) => utils.tsNodeToString({ node })).join('\n'),
       ];
     }
     output = [
@@ -112,7 +111,7 @@ export class TypeScriptFile {
       ...this._items.map((node) =>
         typeof node === 'string'
           ? node
-          : tsNodeToString({ node, unescape: true }),
+          : utils.tsNodeToString({ node, unescape: true }),
       ),
     ];
     return output.join(seperator);
@@ -138,11 +137,7 @@ export const compiler = {
   },
   export: {
     all: module.createExportAllDeclaration,
-    const: module.createExportConstVariable,
     named: module.createNamedExportDeclarations,
-  },
-  function: {
-    call: functions.createCallExpression,
   },
   import: {
     named: module.createNamedImportDeclarations,
@@ -177,13 +172,17 @@ export const compiler = {
   },
   types: {
     array: types.createArrayType,
+    call: module.createCallExpression,
+    const: module.createConstVariable,
     enum: types.createEnumDeclaration,
     function: types.createFunction,
     namespace: types.createNamespaceDeclaration,
     object: types.createObjectType,
   },
   utils: {
-    toNode: stringToTsNodes,
-    toString: tsNodeToString,
+    isTsNode: utils.isTsNode,
+    ots: utils.ots,
+    toNode: utils.stringToTsNodes,
+    toString: utils.tsNodeToString,
   },
 };

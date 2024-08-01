@@ -50,6 +50,36 @@ This config option is deprecated and will be removed in favor of [clients](./cli
 
 This config option is deprecated and will be removed.
 
+## v0.52.0
+
+### Removed internal `client` export
+
+Previously, standalone clients would create a default client which you'd then import and configure.
+
+```js
+import { client, createClient } from '@hey-api/client-fetch';
+
+createClient({
+  baseUrl: 'https://example.com',
+});
+
+console.log(client.getConfig().baseUrl); // <-- 'https://example.com'
+```
+
+This client instance was used internally by services unless overridden. Apart from running `createClient()` twice, people were confused about the meaning of `global` configuration option.
+
+Starting with v0.52.0, standalone clients will not create a default client. Instead, services will define their own client. You can now achieve the same configuration by importing `client` from services and using the new `setConfig()` method.
+
+```js
+import { client } from 'client/services.gen';
+
+client.setConfig({
+  baseUrl: 'https://example.com',
+});
+
+console.log(client.getConfig().baseUrl); // <-- 'https://example.com'
+```
+
 ## v0.51.0
 
 ### Required `client` option

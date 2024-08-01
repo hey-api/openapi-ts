@@ -1,5 +1,6 @@
 import ts from 'typescript';
 
+import { createCallExpression } from './module';
 import { createTypeNode } from './typedef';
 import {
   type AccessLevel,
@@ -124,14 +125,12 @@ export const createClassDeclaration = ({
   if (decorator) {
     modifiers = [
       ts.factory.createDecorator(
-        // TODO: refactor to call `createCallExpression()` from 'compiler/function'
-        ts.factory.createCallExpression(
-          ts.factory.createIdentifier(decorator.name),
-          undefined,
-          decorator.args
+        createCallExpression({
+          functionName: decorator.name,
+          parameters: decorator.args
             .map((arg) => toExpression({ value: arg }))
             .filter(isType<ts.Expression>),
-        ),
+        }),
       ),
       ...modifiers,
     ];

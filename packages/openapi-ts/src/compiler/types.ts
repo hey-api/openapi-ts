@@ -1,7 +1,13 @@
 import ts from 'typescript';
 
 import { createTypeNode } from './typedef';
-import { addLeadingJSDocComment, type Comments, isType, ots } from './utils';
+import {
+  addLeadingJSDocComment,
+  type Comments,
+  isTsNode,
+  isType,
+  ots,
+} from './utils';
 
 export type AccessLevel = 'public' | 'protected' | 'private';
 
@@ -230,14 +236,16 @@ export const createObjectType = <
               value.value,
             );
           } else {
-            let initializer: ts.Expression | undefined = toExpression({
-              identifiers: identifiers.includes(value.key)
-                ? Object.keys(value.value)
-                : [],
-              shorthand,
-              unescape,
-              value: value.value,
-            });
+            let initializer: ts.Expression | undefined = isTsNode(value.value)
+              ? value.value
+              : toExpression({
+                  identifiers: identifiers.includes(value.key)
+                    ? Object.keys(value.value)
+                    : [],
+                  shorthand,
+                  unescape,
+                  value: value.value,
+                });
             if (!initializer) {
               return undefined;
             }
