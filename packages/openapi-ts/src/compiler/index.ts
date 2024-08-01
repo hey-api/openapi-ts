@@ -176,6 +176,7 @@ export const compiler = {
     const: module.createConstVariable,
     enum: types.createEnumDeclaration,
     function: types.createFunction,
+    namespace: types.createNamespaceDeclaration,
     object: types.createObjectType,
   },
   utils: {

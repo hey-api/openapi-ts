@@ -1,5 +1,17 @@
 # @hey-api/client-fetch
 
+## 0.1.14
+
+### Patch Changes
+
+- [#845](https://github.com/hey-api/openapi-ts/pull/845) [`8c9c874`](https://github.com/hey-api/openapi-ts/commit/8c9c8749594622283eed2c37bddfa0f1b8cf23a4) Thanks [@julianklumpers](https://github.com/julianklumpers)! - Expose Config interface to consumers for Typescript augmentation
+
+## 0.1.13
+
+### Patch Changes
+
+- [#842](https://github.com/hey-api/openapi-ts/pull/842) [`8e3c634`](https://github.com/hey-api/openapi-ts/commit/8e3c6343672b9280365c3266f94e4acba533bf29) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: correctly set default parseAs value to "auto"
+
 ## 0.1.12
 
 ### Patch Changes
