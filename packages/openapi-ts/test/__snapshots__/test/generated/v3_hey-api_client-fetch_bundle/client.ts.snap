@@ -1,5 +1,5 @@
 export { client, createClient } from './core/';
-export type { Client, Options, RequestResult } from './core/types';
+export type { Client, Config, Options, RequestResult } from './core/types';
 export {
   formDataBodySerializer,
   jsonBodySerializer,
