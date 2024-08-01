@@ -79,7 +79,9 @@ const client = createClient({
 
 ## Interceptors
 
-Another common requirement is request authorization. Interceptors are ideal for adding headers to your requests.
+Interceptors (middleware) can be used to modify requests before they're sent or responses before they're returned to the rest of your application. Axios provides interceptors, please refer to their documentation on [interceptors](https://axios-http.com/docs/interceptors).
+
+We expose the Axios instance through the `instance` field.
 
 ```js
 import { client } from 'client/services.gen';

@@ -79,9 +79,11 @@ const client = createClient({
 
 ## Interceptors
 
-Another common requirement is request authorization. Interceptors are ideal for adding headers to your requests.
+Interceptors (middleware) can be used to modify requests before they're sent or responses before they're returned to the rest of your application. Fetch API does not have the interceptor functionality, so we implement our own. Below is an example request interceptor
 
-```js
+::: code-group
+
+```js [use]
 import { client } from 'client/services.gen';
 
 client.interceptors.request.use((request, options) => {
@@ -89,6 +91,45 @@ client.interceptors.request.use((request, options) => {
   return request;
 });
 ```
+
+```js [eject]
+import { client } from 'client/services.gen';
+
+client.interceptors.request.eject((request, options) => {
+  request.headers.set('Authorization', 'Bearer <my_token>');
+  return request;
+});
+```
+
+:::
+
+and an example response interceptor
+
+::: code-group
+
+```js [use]
+import { client } from 'client/services.gen';
+
+client.interceptors.response.use((response, request, options) => {
+  trackAnalytics(response);
+  return response;
+});
+```
+
+```js [eject]
+import { client } from 'client/services.gen';
+
+client.interceptors.response.eject((response, request, options) => {
+  trackAnalytics(response);
+  return response;
+});
+```
+
+:::
+
+::: tip
+To eject, you must provide a reference to the function that was passed to `use()`.
+:::
 
 ## Customization
 
