@@ -1,5 +1,15 @@
 # @hey-api/openapi-ts
 
+## 0.52.0
+
+### Minor Changes
+
+- [#835](https://github.com/hey-api/openapi-ts/pull/835) [`7ab277b`](https://github.com/hey-api/openapi-ts/commit/7ab277b22467fe268719af817aee701d6be3e828) Thanks [@LeeChSien](https://github.com/LeeChSien)! - feat: add namespace supporting for enums
+
+### Patch Changes
+
+- [#830](https://github.com/hey-api/openapi-ts/pull/830) [`babf11a`](https://github.com/hey-api/openapi-ts/commit/babf11ae082af642ac71cfee9c523cc976132a50) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: generate internal client for services when using standalone package
+
 ## 0.51.0
 
 ### Minor Changes

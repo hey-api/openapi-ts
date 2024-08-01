@@ -1,5 +1,15 @@
 # @hey-api/docs
 
+## 0.5.10
+
+### Patch Changes
+
+- [#830](https://github.com/hey-api/openapi-ts/pull/830) [`babf11a`](https://github.com/hey-api/openapi-ts/commit/babf11ae082af642ac71cfee9c523cc976132a50) Thanks [@mrlubos](https://github.com/mrlubos)! - docs: split clients documentation into separate pages
+
+- [#830](https://github.com/hey-api/openapi-ts/pull/830) [`323d0a0`](https://github.com/hey-api/openapi-ts/commit/323d0a03c6560f27d0ce5eee1708ee16dc395532) Thanks [@mrlubos](https://github.com/mrlubos)! - docs: remove interceptors page in favour of per-client sections
+
+- [#830](https://github.com/hey-api/openapi-ts/pull/830) [`babf11a`](https://github.com/hey-api/openapi-ts/commit/babf11ae082af642ac71cfee9c523cc976132a50) Thanks [@mrlubos](https://github.com/mrlubos)! - docs: add v0.52.0 migration
+
 ## 0.5.9
 
 ### Patch Changes
