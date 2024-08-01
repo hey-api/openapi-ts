@@ -236,6 +236,19 @@ describe('OpenAPI v3', () => {
     },
     {
       config: createConfig({
+        schemas: false,
+        services: {
+          asClass: true,
+        },
+        types: {
+          enums: 'typescript+namespace',
+        },
+      }),
+      description: 'generate TypeScript enums with namespace',
+      name: 'v3_enums_typescript_namespace',
+    },
+    {
+      config: createConfig({
         exportCore: false,
         schemas: false,
         services: false,

@@ -203,7 +203,7 @@ export interface ClientConfig {
          * Generate enum definitions?
          * @default false
          */
-        enums?: 'javascript' | 'typescript' | false;
+        enums?: 'javascript' | 'typescript' | 'typescript+namespace' | false;
         /**
          * Generate types?
          * @default true
