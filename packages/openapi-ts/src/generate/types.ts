@@ -1,3 +1,5 @@
+import { EnumDeclaration } from 'typescript';
+
 import {
   type Comments,
   compiler,
@@ -121,10 +123,34 @@ export const generateType = ({
 };
 
 const processComposition = (props: TypesProps) => {
-  processType(props);
-  props.model.enums.forEach((enumerator) =>
-    processEnum({ ...props, model: enumerator }),
-  );
+  const config = getConfig();
+
+  if (config.types.enums !== 'typescript+namespace') {
+    processType(props);
+    props.model.enums.forEach((enumerator) =>
+      processEnum({ ...props, model: enumerator }),
+    );
+  } else {
+    const enumDeclarations = [] as EnumDeclaration[];
+    props.model.enums.forEach((enumerator) =>
+      processScopedEnum({
+        ...props,
+        model: enumerator,
+        onNode: (node) => {
+          enumDeclarations.push(node as EnumDeclaration);
+        },
+      }),
+    );
+    processType(props);
+    if (enumDeclarations.length > 0) {
+      props.onNode(
+        compiler.types.namespace({
+          name: props.model.name,
+          statements: enumDeclarations,
+        }),
+      );
+    }
+  }
 };
 
 const processEnum = ({ client, model, onNode }: TypesProps) => {
@@ -146,7 +172,10 @@ const processEnum = ({ client, model, onNode }: TypesProps) => {
     model.deprecated && '@deprecated',
   ];
 
-  if (config.types.enums === 'typescript') {
+  if (
+    config.types.enums === 'typescript' ||
+    config.types.enums === 'typescript+namespace'
+  ) {
     generateEnum({
       client,
       comments,
@@ -183,6 +212,30 @@ const processEnum = ({ client, model, onNode }: TypesProps) => {
     onNode,
     type: enumUnionType(model.enum),
   });
+};
+
+const processScopedEnum = ({ model, onNode }: TypesProps) => {
+  const properties: Record<string | number, unknown> = {};
+  const comments: Record<string | number, Comments> = {};
+  model.enum.forEach((enumerator) => {
+    const { key, value } = enumEntry(enumerator);
+    properties[key] = value;
+    const comment = enumerator.customDescription || enumerator.description;
+    if (comment) {
+      comments[key] = [escapeComment(comment)];
+    }
+  });
+  onNode(
+    compiler.types.enum({
+      comments,
+      leadingComment: [
+        model.description && escapeComment(model.description),
+        model.deprecated && '@deprecated',
+      ],
+      name: model.meta?.name || model.name,
+      obj: properties,
+    }),
+  );
 };
 
 const processType = ({ client, model, onNode }: TypesProps) => {

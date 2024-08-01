@@ -355,3 +355,25 @@ export const createEnumDeclaration = <T extends object>({
   }
   return declaration;
 };
+
+/**
+ * Create namespace declaration. Example `export namespace MyNamespace { ... }`
+ * @param name - the name of the namespace.
+ * @param nodes - the nodes in the namespace.
+ * @returns
+ */
+export const createNamespaceDeclaration = <
+  T extends Array<ts.EnumDeclaration>,
+>({
+  name,
+  statements,
+}: {
+  name: string;
+  statements: T;
+}) =>
+  ts.factory.createModuleDeclaration(
+    [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
+    ts.factory.createIdentifier(name),
+    ts.factory.createModuleBlock(statements),
+    ts.NodeFlags.Namespace,
+  );
