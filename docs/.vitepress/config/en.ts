@@ -16,7 +16,25 @@ export default defineConfig({
       {
         items: [
           { link: '/openapi-ts/output', text: 'Output' },
-          { link: '/openapi-ts/clients', text: 'Clients' },
+          {
+            collapsed: true,
+            items: [
+              {
+                link: '/openapi-ts/clients/fetch',
+                text: 'Fetch API',
+              },
+              {
+                link: '/openapi-ts/clients/axios',
+                text: 'Axios',
+              },
+              {
+                link: '/openapi-ts/clients/legacy',
+                text: 'Legacy',
+              },
+            ],
+            link: '/openapi-ts/clients',
+            text: 'Clients',
+          },
           { link: '/openapi-ts/interceptors', text: 'Interceptors' },
           { link: '/openapi-ts/transformers', text: 'Transformers' },
           { link: '/openapi-ts/migrating', text: 'Migrating' },

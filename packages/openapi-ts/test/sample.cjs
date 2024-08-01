@@ -6,7 +6,6 @@ const main = async () => {
     client: {
       // bundle: true,
       name: '@hey-api/client-fetch',
-      throwOnError: true,
     },
     debug: true,
     // input: './test/spec/v3-transforms.json',
