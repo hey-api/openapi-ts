@@ -22,7 +22,7 @@ const main = async () => {
     },
     services: {
       // asClass: true,
-      filter: '^POST /api/v{api-version}/upload$',
+      // filter: '^POST /api/v{api-version}/upload$',
       // export: false,
       // name: '^Parameters',
     },
