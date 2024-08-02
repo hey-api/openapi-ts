@@ -161,7 +161,7 @@ const processModel = (props: ModelProps): ts.Statement[] => {
       return model.in === 'response'
         ? [
             compiler.convert.expressionToStatement({
-              expression: compiler.types.call({
+              expression: compiler.callExpression({
                 functionName: nameModelResponseTransformer,
                 parameters: [dataVariableName],
               }),
@@ -206,7 +206,7 @@ const generateResponseTransformer = ({
     return result;
   }
 
-  const expression = compiler.types.function({
+  const expression = compiler.types.arrowFunction({
     async,
     multiLine: true,
     parameters: [
@@ -216,12 +216,12 @@ const generateResponseTransformer = ({
     ],
     statements: [
       ...statements,
-      compiler.return.statement({
-        expression: ts.factory.createIdentifier(dataVariableName),
+      compiler.returnVariable({
+        name: dataVariableName,
       }),
     ],
   });
-  const statement = compiler.types.const({
+  const statement = compiler.constVariable({
     exportConst: true,
     expression,
     name,

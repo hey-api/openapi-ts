@@ -14,6 +14,7 @@ export type AccessLevel = 'public' | 'protected' | 'private';
 export type FunctionParameter = {
   accessLevel?: AccessLevel;
   default?: any;
+  destructure?: boolean;
   isReadOnly?: boolean;
   isRequired?: boolean;
   name: string;
@@ -30,11 +31,13 @@ export type FunctionParameter = {
  */
 export const toExpression = <T = unknown>({
   identifiers = [],
-  shorthand = false,
-  unescape = false,
+  isValueAccess,
+  shorthand,
+  unescape,
   value,
 }: {
   identifiers?: string[];
+  isValueAccess?: boolean;
   shorthand?: boolean;
   unescape?: boolean;
   value: T;
@@ -44,7 +47,7 @@ export const toExpression = <T = unknown>({
   }
 
   if (Array.isArray(value)) {
-    return createArrayType({ arr: value });
+    return createArrayLiteralExpression({ elements: value });
   }
 
   if (typeof value === 'object') {
@@ -60,6 +63,14 @@ export const toExpression = <T = unknown>({
   }
 
   if (typeof value === 'string') {
+    if (isValueAccess) {
+      // TODO; handle more than single nested level, i.e. foo.bar.baz
+      const parts = value.split('.');
+      return ts.factory.createPropertyAccessExpression(
+        ts.factory.createIdentifier(parts[0]),
+        ts.factory.createIdentifier(parts[1]),
+      );
+    }
     return ots.string(value, unescape);
   }
 };
@@ -93,27 +104,45 @@ export const toAccessLevelModifiers = (
  * @returns ts.ParameterDeclaration[]
  */
 export const toParameterDeclarations = (parameters: FunctionParameter[]) =>
-  parameters.map((p) => {
-    const modifiers = toAccessLevelModifiers(p.accessLevel);
-    if (p.isReadOnly) {
-      modifiers.push(ts.factory.createModifier(ts.SyntaxKind.ReadonlyKeyword));
+  parameters.map((parameter) => {
+    let modifiers = toAccessLevelModifiers(parameter.accessLevel);
+
+    if (parameter.isReadOnly) {
+      modifiers = [
+        ...modifiers,
+        ts.factory.createModifier(ts.SyntaxKind.ReadonlyKeyword),
+      ];
     }
+
+    const nameIdentifier = ts.factory.createIdentifier(parameter.name);
+
     return ts.factory.createParameterDeclaration(
       modifiers,
       undefined,
-      ts.factory.createIdentifier(p.name),
-      p.isRequired !== undefined && !p.isRequired
+      parameter.destructure
+        ? ts.factory.createObjectBindingPattern([
+            ts.factory.createBindingElement(
+              undefined,
+              undefined,
+              nameIdentifier,
+              undefined,
+            ),
+          ])
+        : nameIdentifier,
+      parameter.isRequired !== undefined && !parameter.isRequired
         ? ts.factory.createToken(ts.SyntaxKind.QuestionToken)
         : undefined,
-      p.type !== undefined ? createTypeNode(p.type) : undefined,
-      p.default !== undefined ? toExpression({ value: p.default }) : undefined,
+      parameter.type !== undefined ? createTypeNode(parameter.type) : undefined,
+      parameter.default !== undefined
+        ? toExpression({ value: parameter.default })
+        : undefined,
     );
   });
 
 /**
- * Create Function type expression.
+ * Create arrow function type expression.
  */
-export const createFunction = ({
+export const createArrowFunction = ({
   async,
   comment,
   multiLine,
@@ -126,7 +155,7 @@ export const createFunction = ({
   multiLine?: boolean;
   parameters?: FunctionParameter[];
   returnType?: string | ts.TypeNode;
-  statements?: ts.Statement[];
+  statements?: ts.Statement[] | ts.Expression;
 }) => {
   const expression = ts.factory.createArrowFunction(
     async ? [ts.factory.createModifier(ts.SyntaxKind.AsyncKeyword)] : undefined,
@@ -134,7 +163,9 @@ export const createFunction = ({
     toParameterDeclarations(parameters),
     returnType ? createTypeNode(returnType) : undefined,
     undefined,
-    ts.factory.createBlock(statements, multiLine),
+    Array.isArray(statements)
+      ? ts.factory.createBlock(statements, multiLine)
+      : statements,
   );
   if (comment) {
     addLeadingJSDocComment(expression, comment);
@@ -148,22 +179,34 @@ export const createFunction = ({
  * @param multiLine - if the array should be multiline.
  * @returns ts.ArrayLiteralExpression
  */
-export const createArrayType = <T>({
-  arr,
+export const createArrayLiteralExpression = <T>({
+  elements,
   multiLine = false,
 }: {
-  arr: T[];
+  elements: T[];
   multiLine?: boolean;
-}): ts.ArrayLiteralExpression =>
-  ts.factory.createArrayLiteralExpression(
-    arr.map((value) => toExpression({ value })).filter(isType<ts.Expression>),
-    // Multiline if the array contains objects, or if specified by the user.
-    (!Array.isArray(arr[0]) && typeof arr[0] === 'object') || multiLine,
+}): ts.ArrayLiteralExpression => {
+  const expression = ts.factory.createArrayLiteralExpression(
+    elements
+      .map((value) => (isTsNode(value) ? value : toExpression({ value })))
+      .filter(isType<ts.Expression>),
+    // multiline if array contains objects
+    multiLine ||
+      (!Array.isArray(elements[0]) && typeof elements[0] === 'object'),
   );
+  return expression;
+};
+
+export const createAwaitExpression = ({
+  expression,
+}: {
+  expression: ts.Expression;
+}) => ts.factory.createAwaitExpression(expression);
 
 export type ObjectValue =
   | { spread: string }
   | {
+      isValueAccess?: boolean;
       key: string;
       value: any;
     };
@@ -242,6 +285,7 @@ export const createObjectType = <
                   identifiers: identifiers.includes(value.key)
                     ? Object.keys(value.value)
                     : [],
+                  isValueAccess: value.isValueAccess,
                   shorthand,
                   unescape,
                   value: value.value,
