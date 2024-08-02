@@ -255,7 +255,13 @@ const toRequestOptions = (
           {
             spread: 'formDataBodySerializer',
           },
-          // no need for Content-Type header, browser will set it automatically
+          {
+            key: 'headers',
+            value: {
+              // no need for Content-Type header, browser will set it automatically
+              'Content-Type': null,
+            },
+          },
         ];
         onClientImport?.('formDataBodySerializer');
       }
