@@ -1,7 +1,10 @@
 import camelCase from 'camelcase';
 
 import { getConfig, isStandaloneClient } from '../../../utils/config';
-import type { OperationResponse } from '../interfaces/client';
+import type {
+  OperationParameter,
+  OperationResponse,
+} from '../interfaces/client';
 import { sanitizeNamespaceIdentifier } from './sanitize';
 
 /**
@@ -49,6 +52,17 @@ export const getOperationResponseHeader = (
     return header.name;
   }
   return null;
+};
+
+/**
+ * Does this operation have at least one required parameter?
+ * @returns boolean
+ */
+export const isOperationParameterRequired = (
+  parameters: OperationParameter[],
+) => {
+  const isRequired = parameters.some((parameter) => parameter.isRequired);
+  return isRequired;
 };
 
 /**

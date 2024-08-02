@@ -2,7 +2,8 @@ import ts from 'typescript';
 
 import { convertExpressionToStatement } from './convert';
 import { createCallExpression } from './module';
-import { createReturnStatement } from './return';
+import { createReturnVariable } from './return';
+import { createArrowFunction } from './types';
 
 export const createSafeAccessExpression = (path: string[]) =>
   path
@@ -183,23 +184,14 @@ export const createArrayMapTransform = ({
               undefined,
               undefined,
               [
-                ts.factory.createArrowFunction(
-                  undefined,
-                  undefined,
-                  [
-                    ts.factory.createParameterDeclaration(
-                      undefined,
-                      undefined,
-                      ts.factory.createIdentifier('item'),
-                      undefined,
-                      undefined,
-                      undefined,
-                    ),
+                createArrowFunction({
+                  parameters: [
+                    {
+                      name: 'item',
+                    },
                   ],
-                  undefined,
-                  ts.factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
-                  transformExpression,
-                ),
+                  statements: transformExpression,
+                }),
               ],
             ),
           ),
@@ -241,53 +233,43 @@ export const createResponseArrayTransform = ({
   name: string;
   transform: string;
 }) => {
-  const transformFunction = ts.factory.createArrowFunction(
-    undefined,
-    undefined,
-    [
-      ts.factory.createParameterDeclaration(
-        undefined,
-        undefined,
-        ts.factory.createIdentifier('data'),
-        undefined,
-        ts.factory.createKeywordTypeNode(ts.SyntaxKind.AnyKeyword),
-        undefined,
-      ),
+  const transformFunction = createArrowFunction({
+    multiLine: true,
+    parameters: [
+      {
+        name: 'data',
+        type: ts.SyntaxKind.AnyKeyword,
+      },
     ],
-    undefined,
-    ts.factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
-    ts.factory.createBlock(
-      [
-        createIfStatement({
-          expression: createCallExpression({
-            functionName: ts.factory.createPropertyAccessExpression(
-              ts.factory.createIdentifier('Array'),
-              ts.factory.createIdentifier('isArray'),
-            ),
-            parameters: ['data'],
-          }),
-          thenStatement: ts.factory.createBlock(
-            [
-              convertExpressionToStatement({
-                expression: createCallExpression({
-                  functionName: ts.factory.createPropertyAccessExpression(
-                    ts.factory.createIdentifier('data'),
-                    ts.factory.createIdentifier('forEach'),
-                  ),
-                  parameters: [transform],
-                }),
-              }),
-            ],
-            true,
+    statements: [
+      createIfStatement({
+        expression: createCallExpression({
+          functionName: ts.factory.createPropertyAccessExpression(
+            ts.factory.createIdentifier('Array'),
+            ts.factory.createIdentifier('isArray'),
           ),
+          parameters: ['data'],
         }),
-        createReturnStatement({
-          expression: ts.factory.createIdentifier('data'),
-        }),
-      ],
-      true,
-    ),
-  );
+        thenStatement: ts.factory.createBlock(
+          [
+            convertExpressionToStatement({
+              expression: createCallExpression({
+                functionName: ts.factory.createPropertyAccessExpression(
+                  ts.factory.createIdentifier('data'),
+                  ts.factory.createIdentifier('forEach'),
+                ),
+                parameters: [transform],
+              }),
+            }),
+          ],
+          true,
+        ),
+      }),
+      createReturnVariable({
+        name: 'data',
+      }),
+    ],
+  });
 
   const declaration = ts.factory.createVariableStatement(
     [ts.factory.createToken(ts.SyntaxKind.ExportKeyword)],

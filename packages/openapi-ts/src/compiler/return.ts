@@ -3,6 +3,12 @@ import ts from 'typescript';
 import { createCallExpression } from './module';
 import { isType } from './utils';
 
+const createReturnStatement = ({
+  expression,
+}: {
+  expression?: ts.Expression;
+}) => ts.factory.createReturnStatement(expression);
+
 /**
  * Create a return function call statement.
  * Example `return fn<string>(params)`.
@@ -37,8 +43,7 @@ export const createReturnFunctionCall = ({
   return statement;
 };
 
-export const createReturnStatement = ({
-  expression,
-}: {
-  expression?: ts.Expression;
-}) => ts.factory.createReturnStatement(expression);
+export const createReturnVariable = ({ name }: { name: string }) =>
+  createReturnStatement({
+    expression: ts.factory.createIdentifier(name),
+  });
