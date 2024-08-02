@@ -8,6 +8,7 @@ import {
 } from '../compiler';
 import type { Model, OperationParameter } from '../openApi';
 import type { Method } from '../openApi/common/interfaces/client';
+import { isOperationParameterRequired } from '../openApi/common/parser/operation';
 import type { Client } from '../types/client';
 import type { Files } from '../types/utils';
 import { getConfig, isStandaloneClient } from '../utils/config';
@@ -194,13 +195,13 @@ const processEnum = ({ client, model, onNode }: TypesProps) => {
     onCreated: (name) => {
       // create a separate JavaScript object export
       if (config.types.enums === 'javascript') {
-        const expression = compiler.types.object({
+        const expression = compiler.objectExpression({
           comments,
           multiLine: true,
           obj: properties,
           unescape: true,
         });
-        const node = compiler.types.const({
+        const node = compiler.constVariable({
           comment,
           constAssertion: true,
           exportConst: true,
@@ -340,9 +341,11 @@ const processServiceTypes = ({
         const headerParameters: OperationParameter = {
           ...emptyModel,
           in: 'header',
-          isRequired: operation.parameters
-            .filter((parameter) => parameter.in === 'header')
-            .some((parameter) => parameter.isRequired),
+          isRequired: isOperationParameterRequired(
+            operation.parameters.filter(
+              (parameter) => parameter.in === 'header',
+            ),
+          ),
           mediaType: null,
           name: isStandalone ? 'headers' : 'header',
           prop: isStandalone ? 'headers' : 'header',
@@ -353,9 +356,9 @@ const processServiceTypes = ({
         const pathParameters: OperationParameter = {
           ...emptyModel,
           in: 'path',
-          isRequired: operation.parameters
-            .filter((parameter) => parameter.in === 'path')
-            .some((parameter) => parameter.isRequired),
+          isRequired: isOperationParameterRequired(
+            operation.parameters.filter((parameter) => parameter.in === 'path'),
+          ),
           mediaType: null,
           name: 'path',
           prop: 'path',
@@ -366,9 +369,11 @@ const processServiceTypes = ({
         const queryParameters: OperationParameter = {
           ...emptyModel,
           in: 'query',
-          isRequired: operation.parameters
-            .filter((parameter) => parameter.in === 'query')
-            .some((parameter) => parameter.isRequired),
+          isRequired: isOperationParameterRequired(
+            operation.parameters.filter(
+              (parameter) => parameter.in === 'query',
+            ),
+          ),
           mediaType: null,
           name: 'query',
           prop: 'query',

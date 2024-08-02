@@ -69,8 +69,8 @@ export const generateSchemas = async ({
   const addSchema = (name: string, schema: object) => {
     const validName = `$${ensureValidTypeScriptJavaScriptIdentifier(name)}`;
     const obj = ensureValidSchemaOutput(schema);
-    const expression = compiler.types.object({ obj });
-    const statement = compiler.types.const({
+    const expression = compiler.objectExpression({ obj });
+    const statement = compiler.constVariable({
       constAssertion: true,
       exportConst: true,
       expression,

@@ -7,6 +7,13 @@ import { ensureDirSync } from './utils';
 
 const require = createRequire(import.meta.url);
 
+export const clientModulePath = () => {
+  const config = getConfig();
+  return config.client.bundle ? './client' : config.client.name;
+};
+
+export const clientOptionsTypeName = () => 'Options';
+
 /**
  * (optional) Creates a `client.ts` file containing the same exports as a
  * standalone client package. Creates a `core` directory containing the modules
