@@ -101,6 +101,9 @@ export const postApiVbyApiVersionRequestBody = (options?: Options<PostApiVbyApiV
 export const postApiVbyApiVersionFormData = (options?: Options<PostApiVbyApiVersionFormDataData>) => { return (options?.client ?? client).post<void>({
     ...options,
     ...formDataBodySerializer,
+    headers: {
+        'Content-Type': null
+    },
     url: '/api/v{api-version}/formData/'
 }); };
 
@@ -206,6 +209,9 @@ export const complexTypes = (options: Options<ComplexTypesData>) => { return (op
 export const multipartRequest = (options?: Options<MultipartRequestData>) => { return (options?.client ?? client).post<void>({
     ...options,
     ...formDataBodySerializer,
+    headers: {
+        'Content-Type': null
+    },
     url: '/api/v{api-version}/multipart'
 }); };
 
