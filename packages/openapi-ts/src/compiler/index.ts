@@ -126,12 +126,17 @@ export class TypeScriptFile {
   }
 }
 
+// TODO: flatten keys, it is hard to quickly find the desired method
 export const compiler = {
+  arrayLiteralExpression: types.createArrayLiteralExpression,
+  awaitExpression: types.createAwaitExpression,
+  callExpression: module.createCallExpression,
   class: {
     constructor: classes.createConstructorDeclaration,
     create: classes.createClassDeclaration,
     method: classes.createMethodDeclaration,
   },
+  constVariable: module.createConstVariable,
   convert: {
     expressionToStatement: convert.convertExpressionToStatement,
   },
@@ -147,10 +152,11 @@ export const compiler = {
     if: transform.createIfStatement,
     safeAccess: transform.createSafeAccessExpression,
   },
+  objectExpression: types.createObjectType,
   return: {
     functionCall: _return.createReturnFunctionCall,
-    statement: _return.createReturnStatement,
   },
+  returnVariable: _return.createReturnVariable,
   transform: {
     alias: transform.createAlias,
     arrayTransformMutation: transform.createArrayTransformMutation,
@@ -171,13 +177,9 @@ export const compiler = {
     union: typedef.createTypeUnionNode,
   },
   types: {
-    array: types.createArrayType,
-    call: module.createCallExpression,
-    const: module.createConstVariable,
+    arrowFunction: types.createArrowFunction,
     enum: types.createEnumDeclaration,
-    function: types.createFunction,
     namespace: types.createNamespaceDeclaration,
-    object: types.createObjectType,
   },
   utils: {
     isTsNode: utils.isTsNode,

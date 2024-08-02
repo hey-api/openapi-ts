@@ -10,6 +10,7 @@ import {
 } from '../compiler';
 import type { ObjectValue } from '../compiler/types';
 import type { Model, Operation, OperationParameter, Service } from '../openApi';
+import { isOperationParameterRequired } from '../openApi/common/parser/operation';
 import type { Client } from '../types/client';
 import type { Files } from '../types/utils';
 import { getConfig, isStandaloneClient } from '../utils/config';
@@ -18,11 +19,12 @@ import { reservedWordsRegExp } from '../utils/reservedWords';
 import { transformServiceName } from '../utils/transform';
 import { setUniqueTypeName } from '../utils/type';
 import { unique } from '../utils/unique';
+import { clientModulePath, clientOptionsTypeName } from './client';
 
 type OnNode = (node: Node) => void;
 type OnImport = (name: string) => void;
 
-const generateImport = ({
+export const generateImport = ({
   meta,
   onImport,
   ...setUniqueTypeNameArgs
@@ -57,6 +59,15 @@ export const operationResponseTransformerTypeName = (name: string) =>
 export const operationResponseTypeName = (name: string) =>
   `${camelcase(name, { pascalCase: true })}Response`;
 
+/**
+ * @param importedType unique type name returned from `setUniqueTypeName()`
+ * @returns options type
+ */
+export const operationOptionsType = (importedType?: string) => {
+  const optionsName = clientOptionsTypeName();
+  return importedType ? `${optionsName}<${importedType}>` : optionsName;
+};
+
 const toOperationParamType = (
   client: Client,
   operation: Operation,
@@ -74,16 +85,14 @@ const toOperationParamType = (
     nameTransformer: operationDataTypeName,
   });
 
-  const isRequired = operation.parameters.some(
-    (parameter) => parameter.isRequired,
-  );
+  const isRequired = isOperationParameterRequired(operation.parameters);
 
   if (isStandaloneClient(config)) {
     return [
       {
         isRequired,
         name: 'options',
-        type: importedType ? `Options<${importedType}>` : 'Options',
+        type: operationOptionsType(importedType),
       },
     ];
   }
@@ -305,7 +314,7 @@ const toRequestOptions = (
       ];
     }
 
-    return compiler.types.object({
+    return compiler.objectExpression({
       identifiers: ['responseTransformer'],
       obj,
     });
@@ -393,7 +402,7 @@ const toRequestOptions = (
     obj.errors = errors;
   }
 
-  return compiler.types.object({
+  return compiler.objectExpression({
     identifiers: [
       'body',
       'cookies',
@@ -569,7 +578,7 @@ const processService = ({
 
   if (!config.services.asClass && !config.name) {
     for (const operation of service.operations) {
-      const expression = compiler.types.function({
+      const expression = compiler.types.arrowFunction({
         parameters: toOperationParamType(client, operation),
         returnType: isStandalone
           ? undefined
@@ -581,7 +590,7 @@ const processService = ({
           onClientImport,
         ),
       });
-      const statement = compiler.types.const({
+      const statement = compiler.constVariable({
         comment: toOperationComment(operation),
         exportConst: true,
         expression,
@@ -682,17 +691,16 @@ export const generateServices = async ({
 
   // define client first
   if (isStandalone) {
-    const innerFunction = compiler.types.call({
-      functionName: 'createConfig',
-      parameters: [],
-    });
-    const outerFunction = compiler.types.call({
-      functionName: 'createClient',
-      parameters: [innerFunction],
-    });
-    const statement = compiler.types.const({
+    const statement = compiler.constVariable({
       exportConst: true,
-      expression: outerFunction,
+      expression: compiler.callExpression({
+        functionName: 'createClient',
+        parameters: [
+          compiler.callExpression({
+            functionName: 'createConfig',
+          }),
+        ],
+      }),
       name: 'client',
     });
     files.services.add(statement);
@@ -725,11 +733,11 @@ export const generateServices = async ({
         'createConfig',
         {
           asType: true,
-          name: 'Options',
+          name: clientOptionsTypeName(),
         },
         ...clientImports.filter(unique),
       ],
-      module: config.client.bundle ? './client' : config.client.name,
+      module: clientModulePath(),
     });
   } else {
     if (config.client.name === 'angular') {

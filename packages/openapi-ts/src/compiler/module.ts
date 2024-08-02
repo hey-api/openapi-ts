@@ -29,12 +29,12 @@ export const createExportAllDeclaration = ({
 type ImportExportItem = ImportExportItemObject | string;
 
 export const createCallExpression = ({
-  parameters,
+  parameters = [],
   functionName,
   types,
 }: {
   functionName: string | ts.PropertyAccessExpression;
-  parameters: Array<string | ts.Expression>;
+  parameters?: Array<string | ts.Expression>;
   types?: ReadonlyArray<ts.TypeNode>;
 }) => {
   const expression =
@@ -102,6 +102,7 @@ export const createNamedExportDeclarations = ({
 export const createConstVariable = ({
   comment,
   constAssertion,
+  destructure,
   expression,
   exportConst,
   name,
@@ -109,6 +110,7 @@ export const createConstVariable = ({
 }: {
   comment?: Comments;
   constAssertion?: boolean;
+  destructure?: boolean;
   exportConst?: boolean;
   expression: ts.Expression;
   name: string;
@@ -120,8 +122,18 @@ export const createConstVariable = ({
         ts.factory.createTypeReferenceNode('const'),
       )
     : expression;
+  const nameIdentifier = ts.factory.createIdentifier(name);
   const declaration = ts.factory.createVariableDeclaration(
-    ts.factory.createIdentifier(name),
+    destructure
+      ? ts.factory.createObjectBindingPattern([
+          ts.factory.createBindingElement(
+            undefined,
+            undefined,
+            nameIdentifier,
+            undefined,
+          ),
+        ])
+      : nameIdentifier,
     undefined,
     typeName ? ts.factory.createTypeReferenceNode(typeName) : undefined,
     initializer,
