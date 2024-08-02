@@ -337,19 +337,14 @@ export const getParseAs = (
   }
 
   if (
-    [
-      'application/octet-stream',
-      'application/pdf',
-      'application/zip',
-      'audio/',
-      'image/',
-      'video/',
-    ].some((type) => content.includes(type))
+    ['application/', 'audio/', 'image/', 'video/'].some((type) =>
+      content.startsWith(type),
+    )
   ) {
     return 'blob';
   }
 
-  if (content.includes('text/')) {
+  if (content.startsWith('text/')) {
     return 'text';
   }
 };
