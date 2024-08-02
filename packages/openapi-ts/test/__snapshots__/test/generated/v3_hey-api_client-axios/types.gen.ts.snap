@@ -1315,7 +1315,7 @@ export type CallWithResponseError = unknown;
 
 export type CallWithDuplicateResponsesResponse = ModelWithBoolean & ModelWithInteger | ModelWithString;
 
-export type CallWithDuplicateResponsesError = ModelWithStringError & DictionaryWithArray & ModelWithBoolean;
+export type CallWithDuplicateResponsesError = ModelWithStringError | DictionaryWithArray | ModelWithBoolean;
 
 export type CallWithResponsesResponse = {
     readonly '@namespace.string'?: string;
