@@ -455,7 +455,7 @@ const processServiceTypes = ({
               errorResponses.length
                 ? {
                     ...emptyModel,
-                    export: 'all-of',
+                    export: 'one-of',
                     isRequired: true,
                     properties: errorResponses,
                   }
