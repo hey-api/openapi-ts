@@ -120,10 +120,21 @@ const typeInterface = (model: Model) => {
   const properties: Property[] = model.properties.map((property) => {
     let maybeRequired = property.isRequired ? '' : '?';
     let value = toType(property);
+    let name = isStandalone
+      ? escapeName(unescapeName(transformTypeKeyName(property.name)))
+      : // special test for 1XX status codes. We need a more robust system
+        // for escaping values depending on context in which they're printed,
+        // but since this works for standalone client, it's not worth it right now
+        /^\dXX$/.test(property.name)
+        ? escapeName(property.name)
+        : property.name;
     // special case for additional properties type
-    if (property.name === '[key: string]' && maybeRequired) {
-      maybeRequired = '';
-      value = compiler.typedef.union([value, 'undefined']);
+    if (property.name === '[key: string]') {
+      name = property.name;
+      if (maybeRequired) {
+        maybeRequired = '';
+        value = compiler.typedef.union([value, 'undefined']);
+      }
     }
     return {
       comment: [
@@ -132,14 +143,7 @@ const typeInterface = (model: Model) => {
       ],
       isReadOnly: property.isReadOnly,
       isRequired: maybeRequired === '',
-      name: isStandalone
-        ? escapeName(unescapeName(transformTypeKeyName(property.name)))
-        : // special test for 1XX status codes. We need a more robust system
-          // for escaping values depending on context in which they're printed,
-          // but since this works for standalone client, it's not worth it right now
-          /^\dXX$/.test(property.name)
-          ? escapeName(property.name)
-          : property.name,
+      name,
       type: value,
     };
   });
