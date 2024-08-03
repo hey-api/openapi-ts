@@ -242,7 +242,7 @@ export type DictionaryWithString = {
 export type DictionaryWithPropertiesAndAdditionalProperties = {
     foo?: number;
     bar?: boolean;
-    '[key: string]': (string | number | boolean) | undefined;
+    [key: string]: (string | number | boolean) | undefined;
 };
 
 /**
@@ -779,7 +779,7 @@ export type ModelWithAdditionalPropertiesEqTrue = {
      * This is a simple string property
      */
     prop?: string;
-    '[key: string]': unknown | string;
+    [key: string]: unknown | string;
 };
 
 export type NestedAnyOfArraysNullable = {
