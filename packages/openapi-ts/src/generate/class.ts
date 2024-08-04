@@ -7,6 +7,7 @@ import { getConfig } from '../utils/config';
 import { getHttpRequestName } from '../utils/getHttpRequestName';
 import type { Templates } from '../utils/handlebars';
 import { sortByName } from '../utils/sort';
+import { ensureDirSync } from './utils';
 
 /**
  * Generate the OpenAPI client index file using the Handlebar template and write it to disk.
@@ -22,7 +23,7 @@ export const generateClientClass = async (
   outputPath: string,
   client: Client,
   templates: Templates,
-): Promise<void> => {
+) => {
   const config = getConfig();
 
   const templateResult = templates.client({
@@ -34,7 +35,8 @@ export const generateClientClass = async (
   });
 
   if (config.name) {
-    await writeFileSync(
+    ensureDirSync(outputPath);
+    writeFileSync(
       path.resolve(outputPath, `${config.name}.ts`),
       templateResult,
     );

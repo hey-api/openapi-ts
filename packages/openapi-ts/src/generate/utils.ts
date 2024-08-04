@@ -1,6 +1,6 @@
-import { existsSync, mkdirSync } from 'node:fs';
+import { existsSync, mkdirSync, type PathLike } from 'node:fs';
 
-export const ensureDirSync = (path: string) => {
+export const ensureDirSync = (path: PathLike) => {
   if (!existsSync(path)) {
     mkdirSync(path, { recursive: true });
   }

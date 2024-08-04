@@ -1,3 +1,5 @@
+import path from 'node:path';
+
 import { compiler, TypeScriptFile } from '../compiler';
 import type { Operation } from '../openApi';
 import { isOperationParameterRequired } from '../openApi/common/parser/operation';
@@ -34,9 +36,14 @@ export const generatePlugins = async ({
   }
 
   for (const plugin of config.plugins) {
+    const outputParts = plugin.output.split('/');
+    const outputDir = path.resolve(
+      config.output.path,
+      ...outputParts.slice(0, outputParts.length - 1),
+    );
     files[plugin.name] = new TypeScriptFile({
-      dir: config.output.path,
-      name: `${plugin.output}.ts`,
+      dir: outputDir,
+      name: `${outputParts[outputParts.length - 1]}.ts`,
     });
 
     if (plugin.name === '@tanstack/react-query') {
@@ -88,6 +95,9 @@ export const generatePlugins = async ({
                 compiler.objectExpression({
                   multiLine: true,
                   obj: [
+                    {
+                      spread: 'options',
+                    },
                     {
                       spread: 'queryKey[0].params',
                     },
@@ -142,20 +152,12 @@ export const generatePlugins = async ({
                 name: 'options',
                 type: operationOptionsType(importedType),
               },
-              {
-                isRequired: false,
-                name: 'queryOpts',
-                type: 'object',
-              },
             ],
             statements: [
               compiler.return.functionCall({
                 args: [
                   compiler.objectExpression({
                     obj: [
-                      {
-                        spread: 'queryOpts',
-                      },
                       {
                         key: 'queryFn',
                         value: queryFnArrowFunction,
@@ -219,9 +221,8 @@ export const generatePlugins = async ({
             ],
           });
           const statement = compiler.constVariable({
-            comment: [
-              'TODO: describe arguments, options is Hey API, queryOpts is TanStack Query',
-            ],
+            // TODO: describe options, same as the actual function call
+            comment: [],
             exportConst: true,
             expression,
             name: toQueryOptionsName(operation),
@@ -245,10 +246,13 @@ export const generatePlugins = async ({
         });
       }
 
+      const relativePath =
+        new Array(outputParts.length).fill('').join('../') || './';
+
       if (importsServices.length && files.services) {
         files[plugin.name].addImport({
           imports: importsServices,
-          module: `./${files.services.getName(false)}`,
+          module: relativePath + files.services.getName(false),
         });
       }
 
@@ -260,7 +264,7 @@ export const generatePlugins = async ({
         if (importedTypes.length) {
           files[plugin.name].addImport({
             imports: importedTypes,
-            module: `./${files.types.getName(false)}`,
+            module: relativePath + files.types.getName(false),
           });
         }
       }
