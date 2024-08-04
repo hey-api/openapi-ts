@@ -150,8 +150,12 @@ const serializeObjectParam = ({
   style,
   value,
 }: SerializeOptions<ObjectSeparatorStyle> & {
-  value: Record<string, unknown>;
+  value: Record<string, unknown> | Date;
 }) => {
+  if (value instanceof Date) {
+    return value.toISOString();
+  }
+
   if (style !== 'deepObject' && !explode) {
     let values: string[] = [];
     Object.entries(value).forEach(([key, v]) => {
