@@ -2,15 +2,12 @@
 
 import type { Options } from '@hey-api/client-fetch';
 import { queryOptions } from '@tanstack/react-query';
-import { parentModelWithDates, modelWithDates, modelWithDatesArray, arrayOfDates, date, multipleResponses } from './services.gen';
+import { parentModelWithDates, modelWithDates, modelWithDatesArray, arrayOfDates, date, multipleResponses } from '../services.gen';
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const parentModelWithDatesOptions = (options?: Options, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const parentModelWithDatesOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await parentModelWithDates({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -29,13 +26,10 @@ export const parentModelWithDatesOptions = (options?: Options, queryOpts?: objec
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const modelWithDatesOptions = (options?: Options, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const modelWithDatesOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await modelWithDates({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -54,13 +48,10 @@ export const modelWithDatesOptions = (options?: Options, queryOpts?: object) => 
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const modelWithDatesArrayOptions = (options?: Options, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const modelWithDatesArrayOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await modelWithDatesArray({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -79,13 +70,10 @@ export const modelWithDatesArrayOptions = (options?: Options, queryOpts?: object
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const arrayOfDatesOptions = (options?: Options, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const arrayOfDatesOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await arrayOfDates({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -104,13 +92,10 @@ export const arrayOfDatesOptions = (options?: Options, queryOpts?: object) => { 
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const dateOptions = (options?: Options, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const dateOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await date({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -129,13 +114,10 @@ export const dateOptions = (options?: Options, queryOpts?: object) => { return q
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const multipleResponsesOptions = (options?: Options, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const multipleResponsesOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await multipleResponses({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });

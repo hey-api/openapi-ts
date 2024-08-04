@@ -2,16 +2,13 @@
 
 import type { Options } from '@hey-api/client-fetch';
 import { queryOptions } from '@tanstack/react-query';
-import { export_, import_, apiVVersionOdataControllerCount, getCallWithoutParametersAndResponse, putCallWithoutParametersAndResponse, postCallWithoutParametersAndResponse, deleteCallWithoutParametersAndResponse, optionsCallWithoutParametersAndResponse, headCallWithoutParametersAndResponse, patchCallWithoutParametersAndResponse, deleteFoo, callWithDescriptions, deprecatedCall, callWithParameters, callWithWeirdParameterNames, getCallWithOptionalParam, postCallWithOptionalParam, postApiVbyApiVersionRequestBody, postApiVbyApiVersionFormData, callWithDefaultParameters, callWithDefaultOptionalParameters, callToTestOrderOfParams, duplicateName, duplicateName1, duplicateName2, duplicateName3, callWithNoContentResponse, callWithResponseAndNoContentResponse, dummyA, dummyB, callWithResponse, callWithDuplicateResponses, callWithResponses, collectionFormat, types, uploadFile, fileResponse, complexTypes, multipartRequest, multipartResponse, complexParams, callWithResultFromHeader, testErrorCode, nonAsciiæøåÆøÅöôêÊ字符串, putWithFormUrlEncoded } from './services.gen';
-import type { ImportData, DeleteFooData3, CallWithDescriptionsData, DeprecatedCallData, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostApiVbyApiVersionRequestBodyData, PostApiVbyApiVersionFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, CollectionFormatData, TypesData, UploadFileData, FileResponseData, ComplexTypesData, MultipartRequestData, ComplexParamsData, TestErrorCodeData, NonAsciiæøåÆøÅöôêÊ字符串Data, PutWithFormUrlEncodedData } from './types.gen';
+import { export_, import_, apiVVersionOdataControllerCount, getCallWithoutParametersAndResponse, putCallWithoutParametersAndResponse, postCallWithoutParametersAndResponse, deleteCallWithoutParametersAndResponse, optionsCallWithoutParametersAndResponse, headCallWithoutParametersAndResponse, patchCallWithoutParametersAndResponse, deleteFoo, callWithDescriptions, deprecatedCall, callWithParameters, callWithWeirdParameterNames, getCallWithOptionalParam, postCallWithOptionalParam, postApiVbyApiVersionRequestBody, postApiVbyApiVersionFormData, callWithDefaultParameters, callWithDefaultOptionalParameters, callToTestOrderOfParams, duplicateName, duplicateName1, duplicateName2, duplicateName3, callWithNoContentResponse, callWithResponseAndNoContentResponse, dummyA, dummyB, callWithResponse, callWithDuplicateResponses, callWithResponses, collectionFormat, types, uploadFile, fileResponse, complexTypes, multipartRequest, multipartResponse, complexParams, callWithResultFromHeader, testErrorCode, nonAsciiæøåÆøÅöôêÊ字符串, putWithFormUrlEncoded } from '../services.gen';
+import type { ImportData, DeleteFooData3, CallWithDescriptionsData, DeprecatedCallData, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostApiVbyApiVersionRequestBodyData, PostApiVbyApiVersionFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, CollectionFormatData, TypesData, UploadFileData, FileResponseData, ComplexTypesData, MultipartRequestData, ComplexParamsData, TestErrorCodeData, NonAsciiæøåÆøÅöôêÊ字符串Data, PutWithFormUrlEncodedData } from '../types.gen';
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const exportOptions = (options?: Options, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const exportOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await export_({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -30,13 +27,10 @@ export const exportOptions = (options?: Options, queryOpts?: object) => { return
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const importOptions = (options: Options<ImportData>, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const importOptions = (options: Options<ImportData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await import_({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -55,13 +49,10 @@ export const importOptions = (options: Options<ImportData>, queryOpts?: object) 
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const apiVVersionOdataControllerCountOptions = (options?: Options, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const apiVVersionOdataControllerCountOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await apiVVersionOdataControllerCount({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -80,13 +71,10 @@ export const apiVVersionOdataControllerCountOptions = (options?: Options, queryO
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const getCallWithoutParametersAndResponseOptions = (options?: Options, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const getCallWithoutParametersAndResponseOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await getCallWithoutParametersAndResponse({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -105,13 +93,10 @@ export const getCallWithoutParametersAndResponseOptions = (options?: Options, qu
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const putCallWithoutParametersAndResponseOptions = (options?: Options, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const putCallWithoutParametersAndResponseOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await putCallWithoutParametersAndResponse({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -130,13 +115,10 @@ export const putCallWithoutParametersAndResponseOptions = (options?: Options, qu
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const postCallWithoutParametersAndResponseOptions = (options?: Options, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const postCallWithoutParametersAndResponseOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await postCallWithoutParametersAndResponse({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -155,13 +137,10 @@ export const postCallWithoutParametersAndResponseOptions = (options?: Options, q
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const deleteCallWithoutParametersAndResponseOptions = (options?: Options, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const deleteCallWithoutParametersAndResponseOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await deleteCallWithoutParametersAndResponse({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -180,13 +159,10 @@ export const deleteCallWithoutParametersAndResponseOptions = (options?: Options,
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const optionsCallWithoutParametersAndResponseOptions = (options?: Options, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const optionsCallWithoutParametersAndResponseOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await optionsCallWithoutParametersAndResponse({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -205,13 +181,10 @@ export const optionsCallWithoutParametersAndResponseOptions = (options?: Options
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const headCallWithoutParametersAndResponseOptions = (options?: Options, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const headCallWithoutParametersAndResponseOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await headCallWithoutParametersAndResponse({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -230,13 +203,10 @@ export const headCallWithoutParametersAndResponseOptions = (options?: Options, q
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const patchCallWithoutParametersAndResponseOptions = (options?: Options, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const patchCallWithoutParametersAndResponseOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await patchCallWithoutParametersAndResponse({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -255,13 +225,10 @@ export const patchCallWithoutParametersAndResponseOptions = (options?: Options, 
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const deleteFooOptions = (options: Options<DeleteFooData3>, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const deleteFooOptions = (options: Options<DeleteFooData3>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await deleteFoo({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -280,13 +247,10 @@ export const deleteFooOptions = (options: Options<DeleteFooData3>, queryOpts?: o
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const callWithDescriptionsOptions = (options?: Options<CallWithDescriptionsData>, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const callWithDescriptionsOptions = (options?: Options<CallWithDescriptionsData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await callWithDescriptions({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -305,13 +269,10 @@ export const callWithDescriptionsOptions = (options?: Options<CallWithDescriptio
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const deprecatedCallOptions = (options: Options<DeprecatedCallData>, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const deprecatedCallOptions = (options: Options<DeprecatedCallData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await deprecatedCall({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -330,13 +291,10 @@ export const deprecatedCallOptions = (options: Options<DeprecatedCallData>, quer
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const callWithParametersOptions = (options: Options<CallWithParametersData>, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const callWithParametersOptions = (options: Options<CallWithParametersData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await callWithParameters({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -355,13 +313,10 @@ export const callWithParametersOptions = (options: Options<CallWithParametersDat
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const callWithWeirdParameterNamesOptions = (options: Options<CallWithWeirdParameterNamesData>, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const callWithWeirdParameterNamesOptions = (options: Options<CallWithWeirdParameterNamesData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await callWithWeirdParameterNames({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -380,13 +335,10 @@ export const callWithWeirdParameterNamesOptions = (options: Options<CallWithWeir
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const getCallWithOptionalParamOptions = (options: Options<GetCallWithOptionalParamData>, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const getCallWithOptionalParamOptions = (options: Options<GetCallWithOptionalParamData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await getCallWithOptionalParam({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -405,13 +357,10 @@ export const getCallWithOptionalParamOptions = (options: Options<GetCallWithOpti
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const postCallWithOptionalParamOptions = (options: Options<PostCallWithOptionalParamData>, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const postCallWithOptionalParamOptions = (options: Options<PostCallWithOptionalParamData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await postCallWithOptionalParam({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -430,13 +379,10 @@ export const postCallWithOptionalParamOptions = (options: Options<PostCallWithOp
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const postApiVbyApiVersionRequestBodyOptions = (options?: Options<PostApiVbyApiVersionRequestBodyData>, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const postApiVbyApiVersionRequestBodyOptions = (options?: Options<PostApiVbyApiVersionRequestBodyData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await postApiVbyApiVersionRequestBody({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -455,13 +401,10 @@ export const postApiVbyApiVersionRequestBodyOptions = (options?: Options<PostApi
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const postApiVbyApiVersionFormDataOptions = (options?: Options<PostApiVbyApiVersionFormDataData>, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const postApiVbyApiVersionFormDataOptions = (options?: Options<PostApiVbyApiVersionFormDataData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await postApiVbyApiVersionFormData({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -480,13 +423,10 @@ export const postApiVbyApiVersionFormDataOptions = (options?: Options<PostApiVby
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const callWithDefaultParametersOptions = (options?: Options<CallWithDefaultParametersData>, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const callWithDefaultParametersOptions = (options?: Options<CallWithDefaultParametersData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await callWithDefaultParameters({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -505,13 +445,10 @@ export const callWithDefaultParametersOptions = (options?: Options<CallWithDefau
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const callWithDefaultOptionalParametersOptions = (options?: Options<CallWithDefaultOptionalParametersData>, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const callWithDefaultOptionalParametersOptions = (options?: Options<CallWithDefaultOptionalParametersData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await callWithDefaultOptionalParameters({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -530,13 +467,10 @@ export const callWithDefaultOptionalParametersOptions = (options?: Options<CallW
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const callToTestOrderOfParamsOptions = (options: Options<CallToTestOrderOfParamsData>, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const callToTestOrderOfParamsOptions = (options: Options<CallToTestOrderOfParamsData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await callToTestOrderOfParams({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -555,13 +489,10 @@ export const callToTestOrderOfParamsOptions = (options: Options<CallToTestOrderO
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const duplicateNameOptions = (options?: Options, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const duplicateNameOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await duplicateName({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -580,13 +511,10 @@ export const duplicateNameOptions = (options?: Options, queryOpts?: object) => {
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const duplicateName1Options = (options?: Options, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const duplicateName1Options = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await duplicateName1({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -605,13 +533,10 @@ export const duplicateName1Options = (options?: Options, queryOpts?: object) => 
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const duplicateName2Options = (options?: Options, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const duplicateName2Options = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await duplicateName2({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -630,13 +555,10 @@ export const duplicateName2Options = (options?: Options, queryOpts?: object) => 
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const duplicateName3Options = (options?: Options, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const duplicateName3Options = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await duplicateName3({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -655,13 +577,10 @@ export const duplicateName3Options = (options?: Options, queryOpts?: object) => 
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const callWithNoContentResponseOptions = (options?: Options, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const callWithNoContentResponseOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await callWithNoContentResponse({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -680,13 +599,10 @@ export const callWithNoContentResponseOptions = (options?: Options, queryOpts?: 
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const callWithResponseAndNoContentResponseOptions = (options?: Options, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const callWithResponseAndNoContentResponseOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await callWithResponseAndNoContentResponse({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -705,13 +621,10 @@ export const callWithResponseAndNoContentResponseOptions = (options?: Options, q
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const dummyAOptions = (options?: Options, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const dummyAOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await dummyA({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -730,13 +643,10 @@ export const dummyAOptions = (options?: Options, queryOpts?: object) => { return
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const dummyBOptions = (options?: Options, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const dummyBOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await dummyB({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -755,13 +665,10 @@ export const dummyBOptions = (options?: Options, queryOpts?: object) => { return
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const callWithResponseOptions = (options?: Options, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const callWithResponseOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await callWithResponse({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -780,13 +687,10 @@ export const callWithResponseOptions = (options?: Options, queryOpts?: object) =
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const callWithDuplicateResponsesOptions = (options?: Options, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const callWithDuplicateResponsesOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await callWithDuplicateResponses({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -805,13 +709,10 @@ export const callWithDuplicateResponsesOptions = (options?: Options, queryOpts?:
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const callWithResponsesOptions = (options?: Options, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const callWithResponsesOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await callWithResponses({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -830,13 +731,10 @@ export const callWithResponsesOptions = (options?: Options, queryOpts?: object) 
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const collectionFormatOptions = (options: Options<CollectionFormatData>, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const collectionFormatOptions = (options: Options<CollectionFormatData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await collectionFormat({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -855,13 +753,10 @@ export const collectionFormatOptions = (options: Options<CollectionFormatData>, 
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const typesOptions = (options: Options<TypesData>, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const typesOptions = (options: Options<TypesData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await types({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -880,13 +775,10 @@ export const typesOptions = (options: Options<TypesData>, queryOpts?: object) =>
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const uploadFileOptions = (options: Options<UploadFileData>, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const uploadFileOptions = (options: Options<UploadFileData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await uploadFile({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -905,13 +797,10 @@ export const uploadFileOptions = (options: Options<UploadFileData>, queryOpts?: 
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const fileResponseOptions = (options: Options<FileResponseData>, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const fileResponseOptions = (options: Options<FileResponseData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await fileResponse({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -930,13 +819,10 @@ export const fileResponseOptions = (options: Options<FileResponseData>, queryOpt
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const complexTypesOptions = (options: Options<ComplexTypesData>, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const complexTypesOptions = (options: Options<ComplexTypesData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await complexTypes({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -955,13 +841,10 @@ export const complexTypesOptions = (options: Options<ComplexTypesData>, queryOpt
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const multipartRequestOptions = (options?: Options<MultipartRequestData>, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const multipartRequestOptions = (options?: Options<MultipartRequestData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await multipartRequest({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -980,13 +863,10 @@ export const multipartRequestOptions = (options?: Options<MultipartRequestData>,
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const multipartResponseOptions = (options?: Options, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const multipartResponseOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await multipartResponse({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -1005,13 +885,10 @@ export const multipartResponseOptions = (options?: Options, queryOpts?: object) 
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const complexParamsOptions = (options: Options<ComplexParamsData>, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const complexParamsOptions = (options: Options<ComplexParamsData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await complexParams({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -1030,13 +907,10 @@ export const complexParamsOptions = (options: Options<ComplexParamsData>, queryO
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const callWithResultFromHeaderOptions = (options?: Options, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const callWithResultFromHeaderOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await callWithResultFromHeader({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -1055,13 +929,10 @@ export const callWithResultFromHeaderOptions = (options?: Options, queryOpts?: o
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const testErrorCodeOptions = (options: Options<TestErrorCodeData>, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const testErrorCodeOptions = (options: Options<TestErrorCodeData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await testErrorCode({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -1080,13 +951,10 @@ export const testErrorCodeOptions = (options: Options<TestErrorCodeData>, queryO
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const nonAsciiæøåÆøÅöôêÊ字符串Options = (options: Options<NonAsciiæøåÆøÅöôêÊ字符串Data>, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const nonAsciiæøåÆøÅöôêÊ字符串Options = (options: Options<NonAsciiæøåÆøÅöôêÊ字符串Data>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await nonAsciiæøåÆøÅöôêÊ字符串({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });
@@ -1105,13 +973,10 @@ export const nonAsciiæøåÆøÅöôêÊ字符串Options = (options: Options<No
     ]
 }); };
 
-/**
- * TODO: describe arguments, options is Hey API, queryOpts is TanStack Query
- */
-export const putWithFormUrlEncodedOptions = (options: Options<PutWithFormUrlEncodedData>, queryOpts?: object) => { return queryOptions({
-    ...queryOpts,
+export const putWithFormUrlEncodedOptions = (options: Options<PutWithFormUrlEncodedData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await putWithFormUrlEncoded({
+            ...options,
             ...queryKey[0].params,
             throwOnError: true
         });

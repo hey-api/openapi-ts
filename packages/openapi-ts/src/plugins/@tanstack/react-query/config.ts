@@ -18,6 +18,6 @@ export interface PluginTanStackReactQuery {
 export const pluginTanStackReactQueryDefaultConfig: Required<PluginTanStackReactQuery> =
   {
     name: '@tanstack/react-query',
-    output: 'tanstack-query',
+    output: '@tanstack/query',
     queryOptions: true,
   };
