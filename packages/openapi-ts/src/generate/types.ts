@@ -287,6 +287,10 @@ const processServiceTypes = ({
 
   const config = getConfig();
 
+  if (!config.services.export && !config.types.tree) {
+    return;
+  }
+
   const isStandalone = isStandaloneClient(config);
 
   for (const service of client.services) {
