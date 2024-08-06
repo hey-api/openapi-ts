@@ -26,7 +26,7 @@ export const createExportAllDeclaration = ({
   return statement;
 };
 
-type ImportExportItem = ImportExportItemObject | string;
+export type ImportExportItem = ImportExportItemObject | string;
 
 export const createCallExpression = ({
   parameters = [],
@@ -114,6 +114,7 @@ export const createConstVariable = ({
   exportConst?: boolean;
   expression: ts.Expression;
   name: string;
+  // TODO: support a more intuitive definition of generics for example
   typeName?: string;
 }): ts.VariableStatement => {
   const initializer = constAssertion
