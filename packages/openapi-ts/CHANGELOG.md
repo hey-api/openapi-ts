@@ -1,5 +1,17 @@
 # @hey-api/openapi-ts
 
+## 0.52.1
+
+### Patch Changes
+
+- [#855](https://github.com/hey-api/openapi-ts/pull/855) [`7ac6274`](https://github.com/hey-api/openapi-ts/commit/7ac627463a15fa6be2c9d103b25200355df6b166) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: define multiple errors type as union instead of intersection
+
+- [#853](https://github.com/hey-api/openapi-ts/pull/853) [`6ab387d`](https://github.com/hey-api/openapi-ts/commit/6ab387d3440ec5ec524e7f198aedfa6734431d76) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: remove Content-Type header with multipart/form-data content type
+
+- [#861](https://github.com/hey-api/openapi-ts/pull/861) [`21ccf90`](https://github.com/hey-api/openapi-ts/commit/21ccf90b864590c211fbfa3de5c687dd3c48f897) Thanks [@qqilihq](https://github.com/qqilihq)! - fix: Additional properties key
+
+- [#869](https://github.com/hey-api/openapi-ts/pull/869) [`42d8a41`](https://github.com/hey-api/openapi-ts/commit/42d8a4151bace7b70af60a1abe46b7550ddad686) Thanks [@SamuelGuillemet](https://github.com/SamuelGuillemet)! - fix: add conditionnal generation for service related types
+
 ## 0.52.0
 
 ### Minor Changes
