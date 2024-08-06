@@ -98,7 +98,7 @@ export interface Config
   throwOnError?: boolean;
 }
 
-interface RequestOptionsBase extends Config {
+export interface RequestOptionsBase extends Config {
   path?: Record<string, unknown>;
   query?: Record<string, unknown>;
   url: string;
