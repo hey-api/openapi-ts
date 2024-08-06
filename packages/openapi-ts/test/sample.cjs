@@ -5,6 +5,7 @@ const main = async () => {
   const config = {
     client: {
       // bundle: true,
+      // name: '@hey-api/client-axios',
       name: '@hey-api/client-fetch',
     },
     debug: true,

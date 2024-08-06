@@ -62,8 +62,10 @@ export const client = createClient(createConfig());
  * Add a new pet to the store
  * Add a new pet to the store
  */
-export const addPet = (options: Options<AddPetData>) =>
-  (options?.client ?? client).post<AddPetResponse, AddPetError>({
+export const addPet = <ThrowOnError extends boolean = false>(
+  options: Options<AddPetData, ThrowOnError>,
+) =>
+  (options?.client ?? client).post<ThrowOnError, AddPetResponse, AddPetError>({
     ...options,
     url: '/pet',
   });
@@ -72,8 +74,14 @@ export const addPet = (options: Options<AddPetData>) =>
  * Update an existing pet
  * Update an existing pet by Id
  */
-export const updatePet = (options: Options<UpdatePetData>) =>
-  (options?.client ?? client).put<UpdatePetResponse, UpdatePetError>({
+export const updatePet = <ThrowOnError extends boolean = false>(
+  options: Options<UpdatePetData, ThrowOnError>,
+) =>
+  (options?.client ?? client).put<
+    ThrowOnError,
+    UpdatePetResponse,
+    UpdatePetError
+  >({
     ...options,
     url: '/pet',
   });
@@ -82,8 +90,11 @@ export const updatePet = (options: Options<UpdatePetData>) =>
  * Finds Pets by status
  * Multiple status values can be provided with comma separated strings
  */
-export const findPetsByStatus = (options?: Options<FindPetsByStatusData>) =>
+export const findPetsByStatus = <ThrowOnError extends boolean = false>(
+  options?: Options<FindPetsByStatusData, ThrowOnError>,
+) =>
   (options?.client ?? client).get<
+    ThrowOnError,
     FindPetsByStatusResponse,
     FindPetsByStatusError
   >({
@@ -95,8 +106,14 @@ export const findPetsByStatus = (options?: Options<FindPetsByStatusData>) =>
  * Finds Pets by tags
  * Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
  */
-export const findPetsByTags = (options?: Options<FindPetsByTagsData>) =>
-  (options?.client ?? client).get<FindPetsByTagsResponse, FindPetsByTagsError>({
+export const findPetsByTags = <ThrowOnError extends boolean = false>(
+  options?: Options<FindPetsByTagsData, ThrowOnError>,
+) =>
+  (options?.client ?? client).get<
+    ThrowOnError,
+    FindPetsByTagsResponse,
+    FindPetsByTagsError
+  >({
     ...options,
     url: '/pet/findByTags',
   });
@@ -105,8 +122,14 @@ export const findPetsByTags = (options?: Options<FindPetsByTagsData>) =>
  * Find pet by ID
  * Returns a single pet
  */
-export const getPetById = (options: Options<GetPetByIdData>) =>
-  (options?.client ?? client).get<GetPetByIdResponse, GetPetByIdError>({
+export const getPetById = <ThrowOnError extends boolean = false>(
+  options: Options<GetPetByIdData, ThrowOnError>,
+) =>
+  (options?.client ?? client).get<
+    ThrowOnError,
+    GetPetByIdResponse,
+    GetPetByIdError
+  >({
     ...options,
     url: '/pet/{petId}',
   });
@@ -114,8 +137,10 @@ export const getPetById = (options: Options<GetPetByIdData>) =>
 /**
  * Updates a pet in the store with form data
  */
-export const updatePetWithForm = (options: Options<UpdatePetWithFormData>) =>
-  (options?.client ?? client).post<void>({
+export const updatePetWithForm = <ThrowOnError extends boolean = false>(
+  options: Options<UpdatePetWithFormData, ThrowOnError>,
+) =>
+  (options?.client ?? client).post<ThrowOnError, void>({
     ...options,
     url: '/pet/{petId}',
   });
@@ -123,8 +148,10 @@ export const updatePetWithForm = (options: Options<UpdatePetWithFormData>) =>
 /**
  * Deletes a pet
  */
-export const deletePet = (options: Options<DeletePetData>) =>
-  (options?.client ?? client).delete<void>({
+export const deletePet = <ThrowOnError extends boolean = false>(
+  options: Options<DeletePetData, ThrowOnError>,
+) =>
+  (options?.client ?? client).delete<ThrowOnError, void>({
     ...options,
     url: '/pet/{petId}',
   });
@@ -132,8 +159,14 @@ export const deletePet = (options: Options<DeletePetData>) =>
 /**
  * uploads an image
  */
-export const uploadFile = (options: Options<UploadFileData>) =>
-  (options?.client ?? client).post<UploadFileResponse, UploadFileError>({
+export const uploadFile = <ThrowOnError extends boolean = false>(
+  options: Options<UploadFileData, ThrowOnError>,
+) =>
+  (options?.client ?? client).post<
+    ThrowOnError,
+    UploadFileResponse,
+    UploadFileError
+  >({
     ...options,
     url: '/pet/{petId}/uploadImage',
   });
@@ -142,8 +175,14 @@ export const uploadFile = (options: Options<UploadFileData>) =>
  * Returns pet inventories by status
  * Returns a map of status codes to quantities
  */
-export const getInventory = (options?: Options) =>
-  (options?.client ?? client).get<GetInventoryResponse, GetInventoryError>({
+export const getInventory = <ThrowOnError extends boolean = false>(
+  options?: Options<unknown, ThrowOnError>,
+) =>
+  (options?.client ?? client).get<
+    ThrowOnError,
+    GetInventoryResponse,
+    GetInventoryError
+  >({
     ...options,
     url: '/store/inventory',
   });
@@ -152,8 +191,14 @@ export const getInventory = (options?: Options) =>
  * Place an order for a pet
  * Place a new order in the store
  */
-export const placeOrder = (options?: Options<PlaceOrderData>) =>
-  (options?.client ?? client).post<PlaceOrderResponse, PlaceOrderError>({
+export const placeOrder = <ThrowOnError extends boolean = false>(
+  options?: Options<PlaceOrderData, ThrowOnError>,
+) =>
+  (options?.client ?? client).post<
+    ThrowOnError,
+    PlaceOrderResponse,
+    PlaceOrderError
+  >({
     ...options,
     url: '/store/order',
   });
@@ -162,8 +207,14 @@ export const placeOrder = (options?: Options<PlaceOrderData>) =>
  * Find purchase order by ID
  * For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions.
  */
-export const getOrderById = (options: Options<GetOrderByIdData>) =>
-  (options?.client ?? client).get<GetOrderByIdResponse, GetOrderByIdError>({
+export const getOrderById = <ThrowOnError extends boolean = false>(
+  options: Options<GetOrderByIdData, ThrowOnError>,
+) =>
+  (options?.client ?? client).get<
+    ThrowOnError,
+    GetOrderByIdResponse,
+    GetOrderByIdError
+  >({
     ...options,
     url: '/store/order/{orderId}',
   });
@@ -172,8 +223,10 @@ export const getOrderById = (options: Options<GetOrderByIdData>) =>
  * Delete purchase order by ID
  * For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors
  */
-export const deleteOrder = (options: Options<DeleteOrderData>) =>
-  (options?.client ?? client).delete<void>({
+export const deleteOrder = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteOrderData, ThrowOnError>,
+) =>
+  (options?.client ?? client).delete<ThrowOnError, void>({
     ...options,
     url: '/store/order/{orderId}',
   });
@@ -182,8 +235,14 @@ export const deleteOrder = (options: Options<DeleteOrderData>) =>
  * Create user
  * This can only be done by the logged in user.
  */
-export const createUser = (options?: Options<CreateUserData>) =>
-  (options?.client ?? client).post<CreateUserResponse, CreateUserError>({
+export const createUser = <ThrowOnError extends boolean = false>(
+  options?: Options<CreateUserData, ThrowOnError>,
+) =>
+  (options?.client ?? client).post<
+    ThrowOnError,
+    CreateUserResponse,
+    CreateUserError
+  >({
     ...options,
     url: '/user',
   });
@@ -192,10 +251,11 @@ export const createUser = (options?: Options<CreateUserData>) =>
  * Creates list of users with given input array
  * Creates list of users with given input array
  */
-export const createUsersWithListInput = (
-  options?: Options<CreateUsersWithListInputData>,
+export const createUsersWithListInput = <ThrowOnError extends boolean = false>(
+  options?: Options<CreateUsersWithListInputData, ThrowOnError>,
 ) =>
   (options?.client ?? client).post<
+    ThrowOnError,
     CreateUsersWithListInputResponse,
     CreateUsersWithListInputError
   >({
@@ -206,8 +266,14 @@ export const createUsersWithListInput = (
 /**
  * Logs user into the system
  */
-export const loginUser = (options?: Options<LoginUserData>) =>
-  (options?.client ?? client).get<LoginUserResponse, LoginUserError>({
+export const loginUser = <ThrowOnError extends boolean = false>(
+  options?: Options<LoginUserData, ThrowOnError>,
+) =>
+  (options?.client ?? client).get<
+    ThrowOnError,
+    LoginUserResponse,
+    LoginUserError
+  >({
     ...options,
     url: '/user/login',
   });
@@ -215,8 +281,14 @@ export const loginUser = (options?: Options<LoginUserData>) =>
 /**
  * Logs out current logged in user session
  */
-export const logoutUser = (options?: Options) =>
-  (options?.client ?? client).get<LogoutUserResponse, LogoutUserError>({
+export const logoutUser = <ThrowOnError extends boolean = false>(
+  options?: Options<unknown, ThrowOnError>,
+) =>
+  (options?.client ?? client).get<
+    ThrowOnError,
+    LogoutUserResponse,
+    LogoutUserError
+  >({
     ...options,
     url: '/user/logout',
   });
@@ -224,8 +296,14 @@ export const logoutUser = (options?: Options) =>
 /**
  * Get user by user name
  */
-export const getUserByName = (options: Options<GetUserByNameData>) =>
-  (options?.client ?? client).get<GetUserByNameResponse, GetUserByNameError>({
+export const getUserByName = <ThrowOnError extends boolean = false>(
+  options: Options<GetUserByNameData, ThrowOnError>,
+) =>
+  (options?.client ?? client).get<
+    ThrowOnError,
+    GetUserByNameResponse,
+    GetUserByNameError
+  >({
     ...options,
     url: '/user/{username}',
   });
@@ -234,8 +312,14 @@ export const getUserByName = (options: Options<GetUserByNameData>) =>
  * Update user
  * This can only be done by the logged in user.
  */
-export const updateUser = (options: Options<UpdateUserData>) =>
-  (options?.client ?? client).put<UpdateUserResponse, UpdateUserError>({
+export const updateUser = <ThrowOnError extends boolean = false>(
+  options: Options<UpdateUserData, ThrowOnError>,
+) =>
+  (options?.client ?? client).put<
+    ThrowOnError,
+    UpdateUserResponse,
+    UpdateUserError
+  >({
     ...options,
     url: '/user/{username}',
   });
@@ -244,8 +328,10 @@ export const updateUser = (options: Options<UpdateUserData>) =>
  * Delete user
  * This can only be done by the logged in user.
  */
-export const deleteUser = (options: Options<DeleteUserData>) =>
-  (options?.client ?? client).delete<void>({
+export const deleteUser = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteUserData, ThrowOnError>,
+) =>
+  (options?.client ?? client).delete<ThrowOnError, void>({
     ...options,
     url: '/user/{username}',
   });

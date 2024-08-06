@@ -14,7 +14,6 @@ import { generateSchemas } from './schemas';
 import { generateServices } from './services';
 import { generateResponseTransformers } from './transformers';
 import { generateTypes } from './types';
-import { ensureDirSync } from './utils';
 
 /**
  * Write our OpenAPI client, using the given templates at the given output
@@ -42,8 +41,6 @@ export const generateOutput = async (
   }
 
   const outputPath = path.resolve(config.output.path);
-
-  ensureDirSync(outputPath);
 
   const files: Files = {};
 

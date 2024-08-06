@@ -1,18 +1,27 @@
+import path from 'node:path';
+
 import { compiler, TypeScriptFile } from '../compiler';
+import type { ImportExportItem } from '../compiler/module';
+import type { ImportExportItemObject } from '../compiler/utils';
 import type { Operation } from '../openApi';
+import { Method } from '../openApi/common/interfaces/client';
 import { isOperationParameterRequired } from '../openApi/common/parser/operation';
 import type { Client } from '../types/client';
 import type { Files } from '../types/utils';
 import { getConfig, isStandaloneClient } from '../utils/config';
-import { setUniqueTypeName } from '../utils/type';
 import { unique } from '../utils/unique';
 import { clientModulePath, clientOptionsTypeName } from './client';
 import {
   generateImport,
   operationDataTypeName,
+  operationErrorTypeName,
   operationOptionsType,
+  operationResponseTypeName,
   toOperationName,
 } from './services';
+
+const toMutationOptionsName = (operation: Operation) =>
+  `${toOperationName(operation, false)}Mutation`;
 
 const toQueryOptionsName = (operation: Operation) =>
   `${toOperationName(operation, false)}Options`;
@@ -34,9 +43,14 @@ export const generatePlugins = async ({
   }
 
   for (const plugin of config.plugins) {
+    const outputParts = plugin.output.split('/');
+    const outputDir = path.resolve(
+      config.output.path,
+      ...outputParts.slice(0, outputParts.length - 1),
+    );
     files[plugin.name] = new TypeScriptFile({
-      dir: config.output.path,
-      name: `${plugin.output}.ts`,
+      dir: outputDir,
+      name: `${outputParts[outputParts.length - 1]}.ts`,
     });
 
     if (plugin.name === '@tanstack/react-query') {
@@ -54,98 +68,54 @@ export const generatePlugins = async ({
 
       const queryOptionsId = 'queryOptions';
 
-      let importsServices: Parameters<
-        TypeScriptFile['addImport']
-      >[0]['imports'] = [];
-      let importsTanStackQuery: Parameters<
-        TypeScriptFile['addImport']
-      >[0]['imports'] = [];
+      let importsServices: ImportExportItem[] = [];
+
+      // TODO: `addTanStackQueryImport()` should be a method of file class to create
+      // unique imports. It could be made more performant too
+      let importsTanStackQuery: ImportExportItemObject[] = [];
+      const addTanStackQueryImport = (imported: ImportExportItem) => {
+        const importedItem: ImportExportItemObject =
+          typeof imported === 'string'
+            ? {
+                name: imported,
+              }
+            : imported;
+        if (
+          importsTanStackQuery.every((item) => item.name !== importedItem.name)
+        ) {
+          importsTanStackQuery = [...importsTanStackQuery, importedItem];
+        }
+      };
 
       for (const service of client.services) {
         for (const operation of service.operations) {
-          if (operation.parameters.length) {
-            generateImport({
-              client,
-              meta: {
-                // TODO: this should be exact ref to operation for consistency,
-                // but name should work too as operation ID is unique
-                $ref: operation.name,
-                name: operation.name,
-              },
-              nameTransformer: operationDataTypeName,
-              onImport: (imported) => {
-                imports = [...imports, imported];
-              },
-            });
-          }
+          const { name: nameTypeData } = generateImport({
+            client,
+            meta: operation.parameters.length
+              ? {
+                  // TODO: this should be exact ref to operation for consistency,
+                  // but name should work too as operation ID is unique
+                  $ref: operation.name,
+                  name: operation.name,
+                }
+              : undefined,
+            nameTransformer: operationDataTypeName,
+            onImport: (imported) => {
+              imports = [...imports, imported];
+            },
+          });
 
           const queryFn = toOperationName(operation, true);
 
-          const awaitServiceExpression = compiler.awaitExpression({
-            expression: compiler.callExpression({
-              functionName: queryFn,
-              parameters: [
-                compiler.objectExpression({
-                  multiLine: true,
-                  obj: [
-                    {
-                      spread: 'queryKey[0].params',
-                    },
-                    {
-                      key: 'throwOnError',
-                      value: true,
-                    },
-                  ],
-                }),
-              ],
-            }),
-          });
-
-          const { name: importedType } = setUniqueTypeName({
-            client,
-            meta: {
-              // TODO: this should be exact ref to operation for consistency,
-              // but name should work too as operation ID is unique
-              $ref: operation.name,
-              name: operation.name,
-            },
-            nameTransformer: operationDataTypeName,
-          });
-
-          const queryFnArrowFunction = compiler.types.arrowFunction({
-            async: true,
-            multiLine: true,
-            parameters: [
-              {
-                destructure: true,
-                name: 'queryKey',
-              },
-            ],
-            statements: [
-              compiler.constVariable({
-                destructure: true,
-                expression: awaitServiceExpression,
-                name: 'data',
-              }),
-              compiler.returnVariable({
-                name: 'data',
-              }),
-            ],
-          });
-
           const isRequired = isOperationParameterRequired(operation.parameters);
+          const typeOptions = operationOptionsType(nameTypeData);
 
           const expression = compiler.types.arrowFunction({
             parameters: [
               {
                 isRequired,
                 name: 'options',
-                type: operationOptionsType(importedType),
-              },
-              {
-                isRequired: false,
-                name: 'queryOpts',
-                type: 'object',
+                type: typeOptions,
               },
             ],
             statements: [
@@ -154,15 +124,51 @@ export const generatePlugins = async ({
                   compiler.objectExpression({
                     obj: [
                       {
-                        spread: 'queryOpts',
-                      },
-                      {
                         key: 'queryFn',
-                        value: queryFnArrowFunction,
+                        value: compiler.types.arrowFunction({
+                          async: true,
+                          multiLine: true,
+                          parameters: [
+                            {
+                              destructure: true,
+                              name: 'queryKey',
+                            },
+                          ],
+                          statements: [
+                            compiler.constVariable({
+                              destructure: true,
+                              expression: compiler.awaitExpression({
+                                expression: compiler.callExpression({
+                                  functionName: queryFn,
+                                  parameters: [
+                                    compiler.objectExpression({
+                                      multiLine: true,
+                                      obj: [
+                                        {
+                                          spread: 'options',
+                                        },
+                                        {
+                                          spread: 'queryKey[0].params',
+                                        },
+                                        {
+                                          key: 'throwOnError',
+                                          value: true,
+                                        },
+                                      ],
+                                    }),
+                                  ],
+                                }),
+                              }),
+                              name: 'data',
+                            }),
+                            compiler.returnVariable({
+                              name: 'data',
+                            }),
+                          ],
+                        }),
                       },
                       {
                         key: 'queryKey',
-                        // TODO: queryKey strategy
                         value: compiler.arrayLiteralExpression({
                           elements: [
                             compiler.objectExpression({
@@ -219,18 +225,120 @@ export const generatePlugins = async ({
             ],
           });
           const statement = compiler.constVariable({
-            comment: [
-              'TODO: describe arguments, options is Hey API, queryOpts is TanStack Query',
-            ],
+            // TODO: describe options, same as the actual function call
+            comment: [],
             exportConst: true,
             expression,
             name: toQueryOptionsName(operation),
           });
           files[plugin.name].add(statement);
 
-          if (!importsTanStackQuery.includes(queryOptionsId)) {
-            importsTanStackQuery = [...importsTanStackQuery, queryOptionsId];
+          if (
+            plugin.mutationOptions &&
+            (
+              ['DELETE', 'PATCH', 'POST', 'PUT'] as ReadonlyArray<Method>
+            ).includes(operation.method)
+          ) {
+            addTanStackQueryImport({
+              asType: true,
+              name: 'UseMutationOptions',
+            });
+
+            const { name: nameTypeError } = generateImport({
+              client,
+              meta: {
+                // TODO: this should be exact ref to operation for consistency,
+                // but name should work too as operation ID is unique
+                $ref: operation.name,
+                name: operation.name,
+              },
+              nameTransformer: operationErrorTypeName,
+              onImport: (imported) => {
+                imports = [...imports, imported];
+              },
+            });
+
+            let typeError: ImportExportItem = nameTypeError;
+            if (!typeError) {
+              typeError = {
+                asType: true,
+                name: 'DefaultError',
+              };
+              addTanStackQueryImport(typeError);
+            }
+
+            const { name: nameTypeResponse } = generateImport({
+              client,
+              meta: {
+                // TODO: this should be exact ref to operation for consistency,
+                // but name should work too as operation ID is unique
+                $ref: operation.name,
+                name: operation.name,
+              },
+              nameTransformer: operationResponseTypeName,
+              onImport: (imported) => {
+                imports = [...imports, imported];
+              },
+            });
+
+            const typeResponse = nameTypeResponse || 'void';
+
+            const statement = compiler.constVariable({
+              // TODO: describe options, same as the actual function call
+              comment: [],
+              exportConst: true,
+              expression: compiler.objectExpression({
+                obj: [
+                  {
+                    key: 'mutationFn',
+                    value: compiler.types.arrowFunction({
+                      async: true,
+                      multiLine: true,
+                      parameters: [
+                        {
+                          name: 'options',
+                        },
+                      ],
+                      statements: [
+                        compiler.constVariable({
+                          destructure: true,
+                          expression: compiler.awaitExpression({
+                            expression: compiler.callExpression({
+                              functionName: queryFn,
+                              parameters: [
+                                compiler.objectExpression({
+                                  multiLine: true,
+                                  obj: [
+                                    {
+                                      spread: 'options',
+                                    },
+                                    {
+                                      key: 'throwOnError',
+                                      value: true,
+                                    },
+                                  ],
+                                }),
+                              ],
+                            }),
+                          }),
+                          name: 'data',
+                        }),
+                        compiler.returnVariable({
+                          name: 'data',
+                        }),
+                      ],
+                    }),
+                  },
+                ],
+              }),
+              name: toMutationOptionsName(operation),
+              // TODO: better types syntax
+              typeName: `UseMutationOptions<${typeResponse}, ${typeof typeError === 'string' ? typeError : typeError.name}, ${typeOptions}>`,
+            });
+            files[plugin.name].add(statement);
           }
+
+          addTanStackQueryImport(queryOptionsId);
 
           if (!importsServices.includes(queryFn)) {
             importsServices = [...importsServices, queryFn];
@@ -245,10 +353,13 @@ export const generatePlugins = async ({
         });
       }
 
+      const relativePath =
+        new Array(outputParts.length).fill('').join('../') || './';
+
       if (importsServices.length && files.services) {
         files[plugin.name].addImport({
           imports: importsServices,
-          module: `./${files.services.getName(false)}`,
+          module: relativePath + files.services.getName(false),
         });
       }
 
@@ -260,7 +371,7 @@ export const generatePlugins = async ({
         if (importedTypes.length) {
           files[plugin.name].addImport({
             imports: importedTypes,
-            module: `./${files.types.getName(false)}`,
+            module: relativePath + files.types.getName(false),
           });
         }
       }
