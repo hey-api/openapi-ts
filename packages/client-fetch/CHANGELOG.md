@@ -1,5 +1,17 @@
 # @hey-api/client-fetch
 
+## 0.2.1
+
+### Patch Changes
+
+- [#864](https://github.com/hey-api/openapi-ts/pull/864) [`ec6bfc8`](https://github.com/hey-api/openapi-ts/commit/ec6bfc8292cce7663dfc6e0fcd89b44c56f08bb4) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: infer response shape based on throwOnError option value
+
+- [#852](https://github.com/hey-api/openapi-ts/pull/852) [`93e2d11`](https://github.com/hey-api/openapi-ts/commit/93e2d11d2a8ddd1f78dde46eceeb5543cae07e36) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: process application types except for application/json as blobs
+
+- [#873](https://github.com/hey-api/openapi-ts/pull/873) [`a73da1c`](https://github.com/hey-api/openapi-ts/commit/a73da1c854503246b6c58f1abea5dd77727eedca) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export RequestOptionsBase interface
+
+- [#863](https://github.com/hey-api/openapi-ts/pull/863) [`da92c53`](https://github.com/hey-api/openapi-ts/commit/da92c535c14e3217d565472fe65c687243bc0dd8) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: cast query params dates into ISO strings
+
 ## 0.2.0
 
 ### Minor Changes
