@@ -171,9 +171,9 @@ export const createArrowFunction = ({
   comment,
   multiLine,
   parameters = [],
-  types = [],
   returnType,
   statements = [],
+  types = [],
 }: {
   async?: boolean;
   comment?: Comments;
