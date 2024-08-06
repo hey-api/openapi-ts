@@ -76,7 +76,7 @@ export interface Config<ThrowOnError extends boolean = false>
   throwOnError?: ThrowOnError;
 }
 
-interface RequestOptionsBase<ThrowOnError extends boolean>
+export interface RequestOptionsBase<ThrowOnError extends boolean>
   extends Config<ThrowOnError> {
   path?: Record<string, unknown>;
   query?: Record<string, unknown>;
