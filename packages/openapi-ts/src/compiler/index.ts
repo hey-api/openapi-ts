@@ -1,8 +1,9 @@
-import { PathLike, rmSync, writeFileSync } from 'node:fs';
+import { type PathLike, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import ts from 'typescript';
 
+import { ensureDirSync } from '../generate/utils';
 import * as classes from './classes';
 import * as convert from './convert';
 import * as module from './module';
@@ -122,6 +123,13 @@ export class TypeScriptFile {
       this.remove({ force: true });
       return;
     }
+
+    let dir = this._path;
+    if (typeof this._path === 'string') {
+      const parts = this._path.split(path.sep);
+      dir = parts.slice(0, parts.length - 1).join(path.sep);
+    }
+    ensureDirSync(dir);
     writeFileSync(this._path, this.toString(seperator));
   }
 }
