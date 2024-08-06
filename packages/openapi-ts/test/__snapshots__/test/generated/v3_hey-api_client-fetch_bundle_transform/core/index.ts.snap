@@ -28,6 +28,7 @@ export const createClient = (config: Config = {}): Client => {
 
   // @ts-ignore
   const request: Client['request'] = async (options) => {
+    // @ts-ignore
     const opts: RequestOptions = {
       ..._config,
       ...options,

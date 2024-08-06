@@ -5,35 +5,35 @@ import { type ParentModelWithDatesError, type ParentModelWithDatesResponse, type
 
 export const client = createClient(createConfig());
 
-export const parentModelWithDates = (options?: Options) => { return (options?.client ?? client).post<ParentModelWithDatesResponse, ParentModelWithDatesError>({
+export const parentModelWithDates = <ThrowOnError extends boolean = false>(options?: Options<unknown, ThrowOnError>) => { return (options?.client ?? client).post<ThrowOnError, ParentModelWithDatesResponse, ParentModelWithDatesError>({
     ...options,
     url: '/api/model-with-dates',
     responseTransformer: ParentModelWithDatesResponseTransformer
 }); };
 
-export const modelWithDates = (options?: Options) => { return (options?.client ?? client).put<ModelWithDatesResponse, ModelWithDatesError>({
+export const modelWithDates = <ThrowOnError extends boolean = false>(options?: Options<unknown, ThrowOnError>) => { return (options?.client ?? client).put<ThrowOnError, ModelWithDatesResponse, ModelWithDatesError>({
     ...options,
     url: '/api/model-with-dates',
     responseTransformer: ModelWithDatesResponseTransformer
 }); };
 
-export const modelWithDatesArray = (options?: Options) => { return (options?.client ?? client).put<ModelWithDatesArrayResponse, ModelWithDatesArrayError>({
+export const modelWithDatesArray = <ThrowOnError extends boolean = false>(options?: Options<unknown, ThrowOnError>) => { return (options?.client ?? client).put<ThrowOnError, ModelWithDatesArrayResponse, ModelWithDatesArrayError>({
     ...options,
     url: '/api/model-with-dates-array',
     responseTransformer: ModelWithDatesArrayResponseTransformer
 }); };
 
-export const arrayOfDates = (options?: Options) => { return (options?.client ?? client).put<ArrayOfDatesResponse, ArrayOfDatesError>({
+export const arrayOfDates = <ThrowOnError extends boolean = false>(options?: Options<unknown, ThrowOnError>) => { return (options?.client ?? client).put<ThrowOnError, ArrayOfDatesResponse, ArrayOfDatesError>({
     ...options,
     url: '/api/array-of-dates'
 }); };
 
-export const date = (options?: Options) => { return (options?.client ?? client).put<DateResponse, DateError>({
+export const date = <ThrowOnError extends boolean = false>(options?: Options<unknown, ThrowOnError>) => { return (options?.client ?? client).put<ThrowOnError, DateResponse, DateError>({
     ...options,
     url: '/api/date'
 }); };
 
-export const multipleResponses = (options?: Options) => { return (options?.client ?? client).put<MultipleResponsesResponse, MultipleResponsesError>({
+export const multipleResponses = <ThrowOnError extends boolean = false>(options?: Options<unknown, ThrowOnError>) => { return (options?.client ?? client).put<ThrowOnError, MultipleResponsesResponse, MultipleResponsesError>({
     ...options,
     url: '/api/multiple-responses'
 }); };

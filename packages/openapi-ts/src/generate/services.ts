@@ -34,13 +34,22 @@ export const generateImport = ({
   }) => {
   // generate imports only for top-level models
   if (!meta) {
-    return;
+    // TODO: this used to return undefined. We could refactor this function to
+    // return undefined again, but we will need to improve types so we can safely
+    // do `const { name } = generateImport({ meta: ... })` (note when meta is defined
+    // we guarantee the response to be an object). For now, nothing relies on this
+    // response shape except for plugins, so it was acceptable to patch it that way
+    return { created: false, name: '' };
   }
 
-  const { name } = setUniqueTypeName({ meta, ...setUniqueTypeNameArgs });
+  const { created, name } = setUniqueTypeName({
+    meta,
+    ...setUniqueTypeNameArgs,
+  });
   if (name) {
     onImport(name);
   }
+  return { created, name };
 };
 
 export const modelResponseTransformerTypeName = (name: string) =>
@@ -63,8 +72,15 @@ export const operationResponseTypeName = (name: string) =>
  * @param importedType unique type name returned from `setUniqueTypeName()`
  * @returns options type
  */
-export const operationOptionsType = (importedType?: string) => {
+export const operationOptionsType = (
+  importedType?: string,
+  throwOnError?: string,
+) => {
   const optionsName = clientOptionsTypeName();
+  // TODO: refactor this to be more generic, works for now
+  if (throwOnError) {
+    return `${optionsName}<${importedType || 'unknown'}, ${throwOnError}>`;
+  }
   return importedType ? `${optionsName}<${importedType}>` : optionsName;
 };
 
@@ -92,7 +108,7 @@ const toOperationParamType = (
       {
         isRequired,
         name: 'options',
-        type: operationOptionsType(importedType),
+        type: operationOptionsType(importedType, 'ThrowOnError'),
       },
     ];
   }
@@ -476,11 +492,11 @@ const toOperationStatements = (
         name: `(options?.client ?? client).${operation.method.toLocaleLowerCase()}`,
         types:
           errorType && responseType
-            ? [responseType, errorType]
+            ? ['ThrowOnError', responseType, errorType]
             : errorType
-              ? ['unknown', errorType]
+              ? ['ThrowOnError', 'unknown', errorType]
               : responseType
-                ? [responseType]
+                ? ['ThrowOnError', responseType]
                 : [],
       }),
     ];
@@ -589,6 +605,13 @@ const processService = ({
           onImport,
           onClientImport,
         ),
+        types: [
+          {
+            default: false,
+            extends: 'boolean',
+            name: 'ThrowOnError',
+          },
+        ],
       });
       const statement = compiler.constVariable({
         comment: toOperationComment(operation),

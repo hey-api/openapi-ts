@@ -11,7 +11,8 @@ import type { BodySerializer } from './utils';
 
 type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
 
-export interface Config extends Omit<CreateAxiosDefaults, 'headers'> {
+export interface Config<ThrowOnError extends boolean = false>
+  extends Omit<CreateAxiosDefaults, 'headers'> {
   /**
    * Axios implementation. You can use this option to provide a custom
    * Axios instance.
@@ -72,33 +73,48 @@ export interface Config extends Omit<CreateAxiosDefaults, 'headers'> {
    * Throw an error instead of returning it in the response?
    * @default false
    */
-  throwOnError?: boolean;
+  throwOnError?: ThrowOnError;
 }
 
-interface RequestOptionsBase extends Config {
+interface RequestOptionsBase<ThrowOnError extends boolean>
+  extends Config<ThrowOnError> {
   path?: Record<string, unknown>;
   query?: Record<string, unknown>;
   url: string;
 }
 
-export type RequestResult<Data = unknown, Error = unknown> = Promise<
-  | (AxiosResponse<Data> & { error: never })
-  | (AxiosError<Error> & { data: never; error: Error })
->;
+export type RequestResult<
+  ThrowOnError extends boolean,
+  Data = unknown,
+  TError = unknown,
+> = ThrowOnError extends true
+  ? Promise<AxiosResponse<Data>>
+  : Promise<
+      | (AxiosResponse<Data> & { error: undefined })
+      | (AxiosError<TError> & { data: undefined; error: TError })
+    >;
 
-type MethodFn = <Data = unknown, Error = unknown>(
-  options: Omit<RequestOptionsBase, 'method'>,
-) => RequestResult<Data, Error>;
+type MethodFn = <
+  ThrowOnError extends boolean,
+  Data = unknown,
+  TError = unknown,
+>(
+  options: Omit<RequestOptionsBase<ThrowOnError>, 'method'>,
+) => RequestResult<ThrowOnError, Data, TError>;
 
-type RequestFn = <Data = unknown, Error = unknown>(
-  options: Omit<RequestOptionsBase, 'method'> &
-    Pick<Required<RequestOptionsBase>, 'method'>,
-) => RequestResult<Data, Error>;
+type RequestFn = <
+  ThrowOnError extends boolean,
+  Data = unknown,
+  TError = unknown,
+>(
+  options: Omit<RequestOptionsBase<ThrowOnError>, 'method'> &
+    Pick<Required<RequestOptionsBase<ThrowOnError>>, 'method'>,
+) => RequestResult<ThrowOnError, Data, TError>;
 
 export interface Client {
   delete: MethodFn;
   get: MethodFn;
-  getConfig: () => Config;
+  getConfig: () => Config<false>;
   head: MethodFn;
   instance: AxiosInstance;
   options: MethodFn;
@@ -106,15 +122,18 @@ export interface Client {
   post: MethodFn;
   put: MethodFn;
   request: RequestFn;
-  setConfig: (config: Config) => Config;
+  setConfig: (config: Config<false>) => Config<false>;
 }
 
-export type RequestOptions = RequestOptionsBase &
-  Config & {
+export type RequestOptions = RequestOptionsBase<false> &
+  Config<false> & {
     headers: AxiosRequestConfig['headers'];
   };
 
-type OptionsBase = Omit<RequestOptionsBase, 'url'> & {
+type OptionsBase<ThrowOnError extends boolean> = Omit<
+  RequestOptionsBase<ThrowOnError>,
+  'url'
+> & {
   /**
    * You can provide a client instance returned by `createClient()` instead of
    * individual options. This might be also useful if you want to implement a
@@ -123,14 +142,21 @@ type OptionsBase = Omit<RequestOptionsBase, 'url'> & {
   client?: Client;
 };
 
-export type Options<T = unknown> = T extends { body?: any }
+export type Options<
+  T = unknown,
+  ThrowOnError extends boolean = false,
+> = T extends { body?: any }
   ? T extends { headers?: any }
-    ? OmitKeys<OptionsBase, 'body' | 'headers' | 'responseTransformer'> & T
-    : OmitKeys<OptionsBase, 'body' | 'responseTransformer'> &
+    ? OmitKeys<
+        OptionsBase<ThrowOnError>,
+        'body' | 'headers' | 'responseTransformer'
+      > &
+        T
+    : OmitKeys<OptionsBase<ThrowOnError>, 'body' | 'responseTransformer'> &
         T &
-        Pick<OptionsBase, 'headers'>
+        Pick<OptionsBase<ThrowOnError>, 'headers'>
   : T extends { headers?: any }
-    ? OmitKeys<OptionsBase, 'headers' | 'responseTransformer'> &
+    ? OmitKeys<OptionsBase<ThrowOnError>, 'headers' | 'responseTransformer'> &
         T &
-        Pick<OptionsBase, 'body'>
-    : OptionsBase & T;
+        Pick<OptionsBase<ThrowOnError>, 'body'>
+    : OptionsBase<ThrowOnError> & T;

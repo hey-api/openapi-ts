@@ -11,7 +11,7 @@ import {
 
 export type AccessLevel = 'public' | 'protected' | 'private';
 
-export type FunctionParameter = {
+export interface FunctionParameter {
   accessLevel?: AccessLevel;
   default?: any;
   destructure?: boolean;
@@ -19,7 +19,13 @@ export type FunctionParameter = {
   isRequired?: boolean;
   name: string;
   type?: any | ts.TypeNode;
-};
+}
+
+export interface FunctionTypeParameter {
+  default?: any;
+  extends?: any | ts.TypeNode;
+  name: string;
+}
 
 /**
  * Convert an unknown value to an expression.
@@ -139,6 +145,24 @@ export const toParameterDeclarations = (parameters: FunctionParameter[]) =>
     );
   });
 
+export const toTypeParameters = (types: FunctionTypeParameter[]) =>
+  types.map((type) =>
+    ts.factory.createTypeParameterDeclaration(
+      undefined,
+      type.name,
+      // TODO: support other extends values
+      type.extends
+        ? ts.factory.createKeywordTypeNode(ts.SyntaxKind.BooleanKeyword)
+        : undefined,
+      // TODO: support other default types
+      type.default !== undefined
+        ? ts.factory.createLiteralTypeNode(
+            type.default ? ts.factory.createTrue() : ts.factory.createFalse(),
+          )
+        : undefined,
+    ),
+  );
+
 /**
  * Create arrow function type expression.
  */
@@ -147,6 +171,7 @@ export const createArrowFunction = ({
   comment,
   multiLine,
   parameters = [],
+  types = [],
   returnType,
   statements = [],
 }: {
@@ -156,10 +181,11 @@ export const createArrowFunction = ({
   parameters?: FunctionParameter[];
   returnType?: string | ts.TypeNode;
   statements?: ts.Statement[] | ts.Expression;
+  types?: FunctionTypeParameter[];
 }) => {
   const expression = ts.factory.createArrowFunction(
     async ? [ts.factory.createModifier(ts.SyntaxKind.AsyncKeyword)] : undefined,
-    undefined,
+    types ? toTypeParameters(types) : undefined,
     toParameterDeclarations(parameters),
     returnType ? createTypeNode(returnType) : undefined,
     undefined,
