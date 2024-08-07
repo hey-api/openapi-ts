@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.52.2
+
+### Patch Changes
+
+- [#881](https://github.com/hey-api/openapi-ts/pull/881) [`a9ddfe6`](https://github.com/hey-api/openapi-ts/commit/a9ddfe6c4487fe5debd04a194ee6c6b6c611dc6b) Thanks [@hougesen](https://github.com/hougesen)! - fix: check if key is schema property before removing
+
 ## 0.52.1
 
 ### Patch Changes
