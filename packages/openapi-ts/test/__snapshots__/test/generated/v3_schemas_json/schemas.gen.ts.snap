@@ -1769,3 +1769,68 @@ export const $import = {
     description: 'Model with restricted keyword name',
     type: 'string'
 } as const;
+
+export const $SchemaWithFormRestrictedKeys = {
+    properties: {
+        description: {
+            type: 'string'
+        },
+        'x-enum-descriptions': {
+            type: 'string'
+        },
+        'x-enum-varnames': {
+            type: 'string'
+        },
+        'x-enumNames': {
+            type: 'string'
+        },
+        title: {
+            type: 'string'
+        },
+        object: {
+            type: 'object',
+            properties: {
+                description: {
+                    type: 'string'
+                },
+                'x-enum-descriptions': {
+                    type: 'string'
+                },
+                'x-enum-varnames': {
+                    type: 'string'
+                },
+                'x-enumNames': {
+                    type: 'string'
+                },
+                title: {
+                    type: 'string'
+                }
+            }
+        },
+        array: {
+            type: 'array',
+            items: [
+                {
+                    type: 'object',
+                    properties: {
+                        description: {
+                            type: 'string'
+                        },
+                        'x-enum-descriptions': {
+                            type: 'string'
+                        },
+                        'x-enum-varnames': {
+                            type: 'string'
+                        },
+                        'x-enumNames': {
+                            type: 'string'
+                        },
+                        title: {
+                            type: 'string'
+                        }
+                    }
+                }
+            ]
+        }
+    }
+} as const;

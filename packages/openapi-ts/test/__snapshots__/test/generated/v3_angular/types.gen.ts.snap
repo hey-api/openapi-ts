@@ -874,6 +874,28 @@ export type DeleteFooData2 = string;
  */
 export type _import = string;
 
+export type SchemaWithFormRestrictedKeys = {
+    description?: string;
+    'x-enum-descriptions'?: string;
+    'x-enum-varnames'?: string;
+    'x-enumNames'?: string;
+    title?: string;
+    object?: {
+        description?: string;
+        'x-enum-descriptions'?: string;
+        'x-enum-varnames'?: string;
+        'x-enumNames'?: string;
+        title?: string;
+    };
+    array?: Array<({
+    description?: string;
+    'x-enum-descriptions'?: string;
+    'x-enum-varnames'?: string;
+    'x-enumNames'?: string;
+    title?: string;
+})>;
+};
+
 /**
  * This is a reusable parameter
  */
