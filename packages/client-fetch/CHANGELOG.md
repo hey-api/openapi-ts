@@ -1,5 +1,11 @@
 # @hey-api/client-fetch
 
+## 0.2.2
+
+### Patch Changes
+
+- [#877](https://github.com/hey-api/openapi-ts/pull/877) [`72e2c4f`](https://github.com/hey-api/openapi-ts/commit/72e2c4fd7d07e532a848078c034bf33b6558ad3c) Thanks [@qqilihq](https://github.com/qqilihq)! - Relax JSON content type check so that e.g. `application/json; charset=utf-8` is properly detected
+
 ## 0.2.1
 
 ### Patch Changes
