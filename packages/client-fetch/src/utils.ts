@@ -332,7 +332,7 @@ export const getParseAs = (
     return;
   }
 
-  if (content === 'application/json' || content.endsWith('+json')) {
+  if (content.startsWith('application/json') || content.endsWith('+json')) {
     return 'json';
   }
 
