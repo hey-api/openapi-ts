@@ -4,7 +4,10 @@ import { ensureValidTypeScriptJavaScriptIdentifier } from '../openApi/common/par
 import type { Files } from '../types/utils';
 import { getConfig } from '../utils/config';
 
-const ensureValidSchemaOutput = (schema: unknown): object => {
+const ensureValidSchemaOutput = (
+  schema: unknown,
+  parentKey?: string,
+): object => {
   const config = getConfig();
 
   if (Array.isArray(schema)) {
@@ -25,7 +28,8 @@ const ensureValidSchemaOutput = (schema: unknown): object => {
           'x-enum-varnames',
           'x-enumNames',
           'title',
-        ].includes(key)
+        ].includes(key) &&
+        parentKey !== 'properties'
       ) {
         // @ts-ignore
         delete result[key];
@@ -42,7 +46,7 @@ const ensureValidSchemaOutput = (schema: unknown): object => {
 
     if (value && typeof value === 'object') {
       // @ts-ignore
-      result[key] = ensureValidSchemaOutput(value);
+      result[key] = ensureValidSchemaOutput(value, key);
     }
   });
   return result;
