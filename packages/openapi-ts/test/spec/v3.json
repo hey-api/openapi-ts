@@ -3343,6 +3343,70 @@
       "400": {
         "description": "Model with number-only name",
         "type": "string"
+      },
+      "SchemaWithFormRestrictedKeys": {
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "x-enum-descriptions": {
+            "type": "string"
+          },
+          "x-enum-varnames": {
+            "type": "string"
+          },
+          "x-enumNames": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "object": {
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string"
+              },
+              "x-enum-descriptions": {
+                "type": "string"
+              },
+              "x-enum-varnames": {
+                "type": "string"
+              },
+              "x-enumNames": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
+          },
+          "array": {
+            "type": "array",
+            "items": [
+              {
+                "type": "object",
+                "properties": {
+                  "description": {
+                    "type": "string"
+                  },
+                  "x-enum-descriptions": {
+                    "type": "string"
+                  },
+                  "x-enum-varnames": {
+                    "type": "string"
+                  },
+                  "x-enumNames": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  }
+                }
+              }
+            ]
+          }
+        }
       }
     }
   }
