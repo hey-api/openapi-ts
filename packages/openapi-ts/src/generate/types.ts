@@ -62,7 +62,7 @@ const generateEnum = ({
   obj,
   onNode,
   ...setUniqueTypeNameArgs
-}: Omit<Parameters<typeof compiler.types.enum>[0], 'name'> &
+}: Omit<Parameters<typeof compiler.enumDeclaration>[0], 'name'> &
   Pick<Parameters<typeof setUniqueTypeName>[0], 'client' | 'nameTransformer'> &
   Pick<Model, 'meta'> &
   Pick<TypesProps, 'onNode'>) => {
@@ -77,7 +77,7 @@ const generateEnum = ({
     ...setUniqueTypeNameArgs,
   });
   if (created) {
-    const node = compiler.types.enum({
+    const node = compiler.enumDeclaration({
       comments,
       leadingComment,
       name,
@@ -94,7 +94,7 @@ export const generateType = ({
   onNode,
   type,
   ...setUniqueTypeNameArgs
-}: Omit<Parameters<typeof compiler.typedef.alias>[0], 'name'> &
+}: Omit<Parameters<typeof compiler.typeAliasDeclaration>[0], 'name'> &
   Pick<Parameters<typeof setUniqueTypeName>[0], 'client' | 'nameTransformer'> &
   Pick<Model, 'meta'> &
   Pick<TypesProps, 'onNode'> & {
@@ -115,7 +115,7 @@ export const generateType = ({
   });
   const { created, name } = result;
   if (created) {
-    const node = compiler.typedef.alias({ comment, name, type });
+    const node = compiler.typeAliasDeclaration({ comment, name, type });
     onNode(node);
 
     onCreated?.(name);
@@ -145,7 +145,7 @@ const processComposition = (props: TypesProps) => {
     processType(props);
     if (enumDeclarations.length > 0) {
       props.onNode(
-        compiler.types.namespace({
+        compiler.namespaceDeclaration({
           name: props.model.name,
           statements: enumDeclarations,
         }),
@@ -228,7 +228,7 @@ const processScopedEnum = ({ model, onNode }: TypesProps) => {
     }
   });
   onNode(
-    compiler.types.enum({
+    compiler.enumDeclaration({
       comments,
       leadingComment: [
         model.description && escapeComment(model.description),

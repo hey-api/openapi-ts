@@ -16,7 +16,7 @@ export const generateIndexFile = async ({
 
   if (config.name) {
     files.index.add(
-      compiler.export.named({
+      compiler.exportNamedDeclaration({
         exports: config.name,
         module: `./${config.name}`,
       }),
@@ -25,14 +25,14 @@ export const generateIndexFile = async ({
 
   if (config.exportCore) {
     files.index.add(
-      compiler.export.named({
+      compiler.exportNamedDeclaration({
         exports: 'ApiError',
         module: './core/ApiError',
       }),
     );
     if (config.services.response === 'response') {
       files.index.add(
-        compiler.export.named({
+        compiler.exportNamedDeclaration({
           exports: { asType: true, name: 'ApiResult' },
           module: './core/ApiResult',
         }),
@@ -40,7 +40,7 @@ export const generateIndexFile = async ({
     }
     if (config.name) {
       files.index.add(
-        compiler.export.named({
+        compiler.exportNamedDeclaration({
           exports: 'BaseHttpRequest',
           module: './core/BaseHttpRequest',
         }),
@@ -48,14 +48,14 @@ export const generateIndexFile = async ({
     }
     if (config.client.name !== 'angular') {
       files.index.add(
-        compiler.export.named({
+        compiler.exportNamedDeclaration({
           exports: ['CancelablePromise', 'CancelError'],
           module: './core/CancelablePromise',
         }),
       );
     }
     files.index.add(
-      compiler.export.named({
+      compiler.exportNamedDeclaration({
         exports: ['OpenAPI', { asType: true, name: 'OpenAPIConfig' }],
         module: './core/OpenAPI',
       }),
@@ -72,7 +72,7 @@ export const generateIndexFile = async ({
       }
 
       files.index.add(
-        compiler.export.all({
+        compiler.exportAllDeclaration({
           module: `./${file.getName(false)}`,
         }),
       );

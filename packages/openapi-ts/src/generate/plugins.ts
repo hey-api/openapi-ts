@@ -110,7 +110,7 @@ export const generatePlugins = async ({
           const isRequired = isOperationParameterRequired(operation.parameters);
           const typeOptions = operationOptionsType(nameTypeData);
 
-          const expression = compiler.types.arrowFunction({
+          const expression = compiler.arrowFunction({
             parameters: [
               {
                 isRequired,
@@ -119,13 +119,13 @@ export const generatePlugins = async ({
               },
             ],
             statements: [
-              compiler.return.functionCall({
+              compiler.returnFunctionCall({
                 args: [
                   compiler.objectExpression({
                     obj: [
                       {
                         key: 'queryFn',
-                        value: compiler.types.arrowFunction({
+                        value: compiler.arrowFunction({
                           async: true,
                           multiLine: true,
                           parameters: [
@@ -291,7 +291,7 @@ export const generatePlugins = async ({
                 obj: [
                   {
                     key: 'mutationFn',
-                    value: compiler.types.arrowFunction({
+                    value: compiler.arrowFunction({
                       async: true,
                       multiLine: true,
                       parameters: [

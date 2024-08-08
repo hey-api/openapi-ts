@@ -56,7 +56,7 @@ describe('OpenAPI v3', () => {
     exportCore: true,
     input: '',
     output: '',
-    schemas: true,
+    schemas: false,
     services: {},
     types: {
       enums: 'javascript',
@@ -115,7 +115,7 @@ describe('OpenAPI v3', () => {
         client: '@hey-api/client-axios',
       }),
       description: 'generate Axios client',
-      name: 'v3_hey-api_client-axios',
+      name: 'v3-hey-api-client-axios',
     },
     {
       config: createConfig({
@@ -125,23 +125,32 @@ describe('OpenAPI v3', () => {
         },
       }),
       description: 'generate bundled Axios client',
-      name: 'v3_hey-api_client-axios_bundle',
+      name: 'v3-hey-api-client-axios-bundle',
+    },
+    {
+      config: createConfig({
+        client: '@hey-api/client-axios',
+        services: {
+          asClass: true,
+        },
+      }),
+      description: 'generate class-based Axios client',
+      name: 'v3-hey-api-client-axios-class',
+    },
+    {
+      config: createConfig({
+        client: '@hey-api/client-axios',
+        plugins: ['@tanstack/react-query'],
+      }),
+      description: 'generate Axios client with TanStack React Query plugin',
+      name: 'v3-hey-api-client-axios-plugin-tanstack-react-query',
     },
     {
       config: createConfig({
         client: '@hey-api/client-fetch',
       }),
       description: 'generate Fetch API client',
-      name: 'v3_hey-api_client-fetch',
-    },
-    {
-      config: createConfig({
-        client: '@hey-api/client-fetch',
-        plugins: ['@tanstack/react-query'],
-        schemas: false,
-      }),
-      description: 'generate Fetch API client with TanStack React Query plugin',
-      name: 'v3_hey-api_client-fetch_plugin_tanstack-react-query',
+      name: 'v3-hey-api-client-fetch',
     },
     {
       config: createConfig({
@@ -151,7 +160,25 @@ describe('OpenAPI v3', () => {
         },
       }),
       description: 'generate bundled Fetch API client',
-      name: 'v3_hey-api_client-fetch_bundle',
+      name: 'v3-hey-api-client-fetch-bundle',
+    },
+    {
+      config: createConfig({
+        client: '@hey-api/client-fetch',
+        services: {
+          asClass: true,
+        },
+      }),
+      description: 'generate class-based Fetch API client',
+      name: 'v3-hey-api-client-fetch-class',
+    },
+    {
+      config: createConfig({
+        client: '@hey-api/client-fetch',
+        plugins: ['@tanstack/react-query'],
+      }),
+      description: 'generate Fetch API client with TanStack React Query plugin',
+      name: 'v3-hey-api-client-fetch-plugin-tanstack-react-query',
     },
     {
       config: createConfig({
@@ -166,7 +193,6 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         name: 'ApiClient',
-        schemas: false,
         types: {
           dates: true,
         },
@@ -180,7 +206,6 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         exportCore: false,
-        schemas: false,
         services: false,
         types: {
           dates: true,
@@ -192,7 +217,6 @@ describe('OpenAPI v3', () => {
     },
     {
       config: createConfig({
-        schemas: false,
         services: {
           asClass: true,
           include: '^Defaults',
@@ -208,7 +232,6 @@ describe('OpenAPI v3', () => {
     },
     {
       config: createConfig({
-        schemas: false,
         services: {
           asClass: true,
           include: '^Defaults',
@@ -223,7 +246,6 @@ describe('OpenAPI v3', () => {
     },
     {
       config: createConfig({
-        schemas: false,
         services: {
           asClass: true,
         },
@@ -236,7 +258,6 @@ describe('OpenAPI v3', () => {
     },
     {
       config: createConfig({
-        schemas: false,
         services: {
           asClass: true,
         },
@@ -250,7 +271,6 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         exportCore: false,
-        schemas: false,
         services: false,
         types: {
           include: '^(CamelCaseCommentWithBreaks|ArrayWithProperties)',
@@ -264,30 +284,29 @@ describe('OpenAPI v3', () => {
       config: createConfig({
         exportCore: false,
         schemas: {
-          type: 'json',
-        },
-        services: false,
-        types: false,
-      }),
-      description: 'generate JSON Schemas',
-      name: 'v3_schemas_json',
-    },
-    {
-      config: createConfig({
-        exportCore: false,
-        schemas: {
           type: 'form',
         },
         services: false,
         types: false,
       }),
       description: 'generate form validation schemas',
-      name: 'v3_schemas_form',
+      name: 'v3-schemas-form',
     },
     {
       config: createConfig({
         exportCore: false,
-        schemas: false,
+        schemas: {
+          type: 'json',
+        },
+        services: false,
+        types: false,
+      }),
+      description: 'generate JSON Schemas',
+      name: 'v3-schemas-json',
+    },
+    {
+      config: createConfig({
+        exportCore: false,
         services: {
           asClass: true,
           include: '^(Simple|Parameters)',
@@ -301,7 +320,6 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         exportCore: false,
-        schemas: false,
         services: {
           filter: '^\\w+ /api/v{api-version}/simple$',
         },
@@ -313,7 +331,6 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         exportCore: false,
-        schemas: false,
         services: true,
       }),
       description: 'generate tree-shakeable services',
@@ -322,7 +339,6 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         exportCore: false,
-        schemas: false,
         services: false,
         types: {},
       }),
@@ -332,7 +348,6 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         exportCore: false,
-        schemas: false,
         services: false,
         types: {
           tree: false,

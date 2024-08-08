@@ -7,7 +7,7 @@ import { request as __request } from './core/request';
 /**
  * @throws ApiError
  */
-export const getCallWithoutParametersAndResponse = <ThrowOnError extends boolean = false>(): CancelablePromise<void> => { return __request(OpenAPI, {
+export const getCallWithoutParametersAndResponse = (): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'GET',
     url: '/api/v{api-version}/simple'
 }); };
@@ -15,7 +15,7 @@ export const getCallWithoutParametersAndResponse = <ThrowOnError extends boolean
 /**
  * @throws ApiError
  */
-export const putCallWithoutParametersAndResponse = <ThrowOnError extends boolean = false>(): CancelablePromise<void> => { return __request(OpenAPI, {
+export const putCallWithoutParametersAndResponse = (): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'PUT',
     url: '/api/v{api-version}/simple'
 }); };
@@ -23,7 +23,7 @@ export const putCallWithoutParametersAndResponse = <ThrowOnError extends boolean
 /**
  * @throws ApiError
  */
-export const postCallWithoutParametersAndResponse = <ThrowOnError extends boolean = false>(): CancelablePromise<void> => { return __request(OpenAPI, {
+export const postCallWithoutParametersAndResponse = (): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'POST',
     url: '/api/v{api-version}/simple'
 }); };
@@ -31,7 +31,7 @@ export const postCallWithoutParametersAndResponse = <ThrowOnError extends boolea
 /**
  * @throws ApiError
  */
-export const deleteCallWithoutParametersAndResponse = <ThrowOnError extends boolean = false>(): CancelablePromise<void> => { return __request(OpenAPI, {
+export const deleteCallWithoutParametersAndResponse = (): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'DELETE',
     url: '/api/v{api-version}/simple'
 }); };
@@ -39,7 +39,7 @@ export const deleteCallWithoutParametersAndResponse = <ThrowOnError extends bool
 /**
  * @throws ApiError
  */
-export const optionsCallWithoutParametersAndResponse = <ThrowOnError extends boolean = false>(): CancelablePromise<void> => { return __request(OpenAPI, {
+export const optionsCallWithoutParametersAndResponse = (): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'OPTIONS',
     url: '/api/v{api-version}/simple'
 }); };
@@ -47,7 +47,7 @@ export const optionsCallWithoutParametersAndResponse = <ThrowOnError extends boo
 /**
  * @throws ApiError
  */
-export const headCallWithoutParametersAndResponse = <ThrowOnError extends boolean = false>(): CancelablePromise<void> => { return __request(OpenAPI, {
+export const headCallWithoutParametersAndResponse = (): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'HEAD',
     url: '/api/v{api-version}/simple'
 }); };
@@ -55,7 +55,7 @@ export const headCallWithoutParametersAndResponse = <ThrowOnError extends boolea
 /**
  * @throws ApiError
  */
-export const patchCallWithoutParametersAndResponse = <ThrowOnError extends boolean = false>(): CancelablePromise<void> => { return __request(OpenAPI, {
+export const patchCallWithoutParametersAndResponse = (): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'PATCH',
     url: '/api/v{api-version}/simple'
 }); };
