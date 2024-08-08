@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.52.3
+
+### Patch Changes
+
+- [#884](https://github.com/hey-api/openapi-ts/pull/884) [`62a39e6`](https://github.com/hey-api/openapi-ts/commit/62a39e63f645bce0801779fb6b90531401748e86) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: generate ThrowOnError generic for class-based client methods
+
 ## 0.52.2
 
 ### Patch Changes
