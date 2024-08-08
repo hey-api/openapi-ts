@@ -8,7 +8,7 @@ import type { ImportData, ImportResponse, ApiVversionOdataControllerCountRespons
 /**
  * @throws ApiError
  */
-export const export_ = <ThrowOnError extends boolean = false>(): CancelablePromise<void> => { return __request(OpenAPI, {
+export const export_ = (): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'GET',
     url: '/api/v{api-version}/no-tag'
 }); };
@@ -20,7 +20,7 @@ export const export_ = <ThrowOnError extends boolean = false>(): CancelablePromi
  * @returns ModelWithReadOnlyAndWriteOnly Default success response
  * @throws ApiError
  */
-export const import_ = <ThrowOnError extends boolean = false>(data: ImportData): CancelablePromise<ImportResponse> => { return __request(OpenAPI, {
+export const import_ = (data: ImportData): CancelablePromise<ImportResponse> => { return __request(OpenAPI, {
     method: 'POST',
     url: '/api/v{api-version}/no-tag',
     body: data.requestBody,
@@ -31,7 +31,7 @@ export const import_ = <ThrowOnError extends boolean = false>(data: ImportData):
  * @returns Model_From_Zendesk Success
  * @throws ApiError
  */
-export const apiVVersionOdataControllerCount = <ThrowOnError extends boolean = false>(): CancelablePromise<ApiVversionOdataControllerCountResponse> => { return __request(OpenAPI, {
+export const apiVVersionOdataControllerCount = (): CancelablePromise<ApiVversionOdataControllerCountResponse> => { return __request(OpenAPI, {
     method: 'GET',
     url: '/api/v{api-version}/simple/$count'
 }); };
@@ -39,7 +39,7 @@ export const apiVVersionOdataControllerCount = <ThrowOnError extends boolean = f
 /**
  * @throws ApiError
  */
-export const getCallWithoutParametersAndResponse = <ThrowOnError extends boolean = false>(): CancelablePromise<void> => { return __request(OpenAPI, {
+export const getCallWithoutParametersAndResponse = (): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'GET',
     url: '/api/v{api-version}/simple'
 }); };
@@ -47,7 +47,7 @@ export const getCallWithoutParametersAndResponse = <ThrowOnError extends boolean
 /**
  * @throws ApiError
  */
-export const putCallWithoutParametersAndResponse = <ThrowOnError extends boolean = false>(): CancelablePromise<void> => { return __request(OpenAPI, {
+export const putCallWithoutParametersAndResponse = (): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'PUT',
     url: '/api/v{api-version}/simple'
 }); };
@@ -55,7 +55,7 @@ export const putCallWithoutParametersAndResponse = <ThrowOnError extends boolean
 /**
  * @throws ApiError
  */
-export const postCallWithoutParametersAndResponse = <ThrowOnError extends boolean = false>(): CancelablePromise<void> => { return __request(OpenAPI, {
+export const postCallWithoutParametersAndResponse = (): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'POST',
     url: '/api/v{api-version}/simple'
 }); };
@@ -63,7 +63,7 @@ export const postCallWithoutParametersAndResponse = <ThrowOnError extends boolea
 /**
  * @throws ApiError
  */
-export const deleteCallWithoutParametersAndResponse = <ThrowOnError extends boolean = false>(): CancelablePromise<void> => { return __request(OpenAPI, {
+export const deleteCallWithoutParametersAndResponse = (): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'DELETE',
     url: '/api/v{api-version}/simple'
 }); };
@@ -71,7 +71,7 @@ export const deleteCallWithoutParametersAndResponse = <ThrowOnError extends bool
 /**
  * @throws ApiError
  */
-export const optionsCallWithoutParametersAndResponse = <ThrowOnError extends boolean = false>(): CancelablePromise<void> => { return __request(OpenAPI, {
+export const optionsCallWithoutParametersAndResponse = (): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'OPTIONS',
     url: '/api/v{api-version}/simple'
 }); };
@@ -79,7 +79,7 @@ export const optionsCallWithoutParametersAndResponse = <ThrowOnError extends boo
 /**
  * @throws ApiError
  */
-export const headCallWithoutParametersAndResponse = <ThrowOnError extends boolean = false>(): CancelablePromise<void> => { return __request(OpenAPI, {
+export const headCallWithoutParametersAndResponse = (): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'HEAD',
     url: '/api/v{api-version}/simple'
 }); };
@@ -87,7 +87,7 @@ export const headCallWithoutParametersAndResponse = <ThrowOnError extends boolea
 /**
  * @throws ApiError
  */
-export const patchCallWithoutParametersAndResponse = <ThrowOnError extends boolean = false>(): CancelablePromise<void> => { return __request(OpenAPI, {
+export const patchCallWithoutParametersAndResponse = (): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'PATCH',
     url: '/api/v{api-version}/simple'
 }); };
@@ -99,7 +99,7 @@ export const patchCallWithoutParametersAndResponse = <ThrowOnError extends boole
  * @param data.xFooBar Parameter with illegal characters
  * @throws ApiError
  */
-export const deleteFoo = <ThrowOnError extends boolean = false>(data: DeleteFooData3): CancelablePromise<void> => { return __request(OpenAPI, {
+export const deleteFoo = (data: DeleteFooData3): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'DELETE',
     url: '/api/v{api-version}/foo/{foo_param}/bar/{BarParam}',
     path: {
@@ -124,7 +124,7 @@ export const deleteFoo = <ThrowOnError extends boolean = false>(data: DeleteFooD
  * @param data.parameterWithReservedCharacters Testing reserved characters in string: * inline * and ** inline ** should work
  * @throws ApiError
  */
-export const callWithDescriptions = <ThrowOnError extends boolean = false>(data: CallWithDescriptionsData = {}): CancelablePromise<void> => { return __request(OpenAPI, {
+export const callWithDescriptions = (data: CallWithDescriptionsData = {}): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'POST',
     url: '/api/v{api-version}/descriptions/',
     query: {
@@ -143,7 +143,7 @@ export const callWithDescriptions = <ThrowOnError extends boolean = false>(data:
  * @param data.parameter This parameter is deprecated
  * @throws ApiError
  */
-export const deprecatedCall = <ThrowOnError extends boolean = false>(data: DeprecatedCallData): CancelablePromise<void> => { return __request(OpenAPI, {
+export const deprecatedCall = (data: DeprecatedCallData): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'POST',
     url: '/api/v{api-version}/parameters/deprecated',
     headers: {
@@ -162,7 +162,7 @@ export const deprecatedCall = <ThrowOnError extends boolean = false>(data: Depre
  * @param data.fooRefEnum
  * @throws ApiError
  */
-export const callWithParameters = <ThrowOnError extends boolean = false>(data: CallWithParametersData): CancelablePromise<void> => { return __request(OpenAPI, {
+export const callWithParameters = (data: CallWithParametersData): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'POST',
     url: '/api/v{api-version}/parameters/{parameterPath}',
     path: {
@@ -195,7 +195,7 @@ export const callWithParameters = <ThrowOnError extends boolean = false>(data: C
  * @param data._default This is the parameter with a reserved keyword
  * @throws ApiError
  */
-export const callWithWeirdParameterNames = <ThrowOnError extends boolean = false>(data: CallWithWeirdParameterNamesData): CancelablePromise<void> => { return __request(OpenAPI, {
+export const callWithWeirdParameterNames = (data: CallWithWeirdParameterNamesData): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'POST',
     url: '/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}',
     path: {
@@ -223,7 +223,7 @@ export const callWithWeirdParameterNames = <ThrowOnError extends boolean = false
  * @param data.parameter This is an optional parameter
  * @throws ApiError
  */
-export const getCallWithOptionalParam = <ThrowOnError extends boolean = false>(data: GetCallWithOptionalParamData): CancelablePromise<void> => { return __request(OpenAPI, {
+export const getCallWithOptionalParam = (data: GetCallWithOptionalParamData): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'GET',
     url: '/api/v{api-version}/parameters/',
     query: {
@@ -239,7 +239,7 @@ export const getCallWithOptionalParam = <ThrowOnError extends boolean = false>(d
  * @param data.requestBody This is an optional parameter
  * @throws ApiError
  */
-export const postCallWithOptionalParam = <ThrowOnError extends boolean = false>(data: PostCallWithOptionalParamData): CancelablePromise<void> => { return __request(OpenAPI, {
+export const postCallWithOptionalParam = (data: PostCallWithOptionalParamData): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'POST',
     url: '/api/v{api-version}/parameters/',
     query: {
@@ -255,7 +255,7 @@ export const postCallWithOptionalParam = <ThrowOnError extends boolean = false>(
  * @param data.foo A reusable request body
  * @throws ApiError
  */
-export const postApiRequestBody = <ThrowOnError extends boolean = false>(data: PostApiRequestBodyData = {}): CancelablePromise<void> => { return __request(OpenAPI, {
+export const postApiRequestBody = (data: PostApiRequestBodyData = {}): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'POST',
     url: '/api/v{api-version}/requestBody/',
     query: {
@@ -271,7 +271,7 @@ export const postApiRequestBody = <ThrowOnError extends boolean = false>(data: P
  * @param data.formData A reusable request body
  * @throws ApiError
  */
-export const postApiFormData = <ThrowOnError extends boolean = false>(data: PostApiFormDataData = {}): CancelablePromise<void> => { return __request(OpenAPI, {
+export const postApiFormData = (data: PostApiFormDataData = {}): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'POST',
     url: '/api/v{api-version}/formData/',
     query: {
@@ -290,7 +290,7 @@ export const postApiFormData = <ThrowOnError extends boolean = false>(data: Post
  * @param data.parameterModel This is a simple model with default value
  * @throws ApiError
  */
-export const callWithDefaultParameters = <ThrowOnError extends boolean = false>(data: CallWithDefaultParametersData = {}): CancelablePromise<void> => { return __request(OpenAPI, {
+export const callWithDefaultParameters = (data: CallWithDefaultParametersData = {}): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'GET',
     url: '/api/v{api-version}/defaults',
     query: {
@@ -311,7 +311,7 @@ export const callWithDefaultParameters = <ThrowOnError extends boolean = false>(
  * @param data.parameterModel This is a simple model that is optional with default value
  * @throws ApiError
  */
-export const callWithDefaultOptionalParameters = <ThrowOnError extends boolean = false>(data: CallWithDefaultOptionalParametersData = {}): CancelablePromise<void> => { return __request(OpenAPI, {
+export const callWithDefaultOptionalParameters = (data: CallWithDefaultOptionalParametersData = {}): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'POST',
     url: '/api/v{api-version}/defaults',
     query: {
@@ -335,7 +335,7 @@ export const callWithDefaultOptionalParameters = <ThrowOnError extends boolean =
  * @param data.parameterStringNullableWithDefault This is a string that can be null with default
  * @throws ApiError
  */
-export const callToTestOrderOfParams = <ThrowOnError extends boolean = false>(data: CallToTestOrderOfParamsData): CancelablePromise<void> => { return __request(OpenAPI, {
+export const callToTestOrderOfParams = (data: CallToTestOrderOfParamsData): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'PUT',
     url: '/api/v{api-version}/defaults',
     query: {
@@ -353,7 +353,7 @@ export const callToTestOrderOfParams = <ThrowOnError extends boolean = false>(da
 /**
  * @throws ApiError
  */
-export const duplicateName = <ThrowOnError extends boolean = false>(): CancelablePromise<void> => { return __request(OpenAPI, {
+export const duplicateName = (): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'GET',
     url: '/api/v{api-version}/duplicate'
 }); };
@@ -361,7 +361,7 @@ export const duplicateName = <ThrowOnError extends boolean = false>(): Cancelabl
 /**
  * @throws ApiError
  */
-export const duplicateName1 = <ThrowOnError extends boolean = false>(): CancelablePromise<void> => { return __request(OpenAPI, {
+export const duplicateName1 = (): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'POST',
     url: '/api/v{api-version}/duplicate'
 }); };
@@ -369,7 +369,7 @@ export const duplicateName1 = <ThrowOnError extends boolean = false>(): Cancelab
 /**
  * @throws ApiError
  */
-export const duplicateName2 = <ThrowOnError extends boolean = false>(): CancelablePromise<void> => { return __request(OpenAPI, {
+export const duplicateName2 = (): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'PUT',
     url: '/api/v{api-version}/duplicate'
 }); };
@@ -377,7 +377,7 @@ export const duplicateName2 = <ThrowOnError extends boolean = false>(): Cancelab
 /**
  * @throws ApiError
  */
-export const duplicateName3 = <ThrowOnError extends boolean = false>(): CancelablePromise<void> => { return __request(OpenAPI, {
+export const duplicateName3 = (): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'DELETE',
     url: '/api/v{api-version}/duplicate'
 }); };
@@ -386,7 +386,7 @@ export const duplicateName3 = <ThrowOnError extends boolean = false>(): Cancelab
  * @returns void Success
  * @throws ApiError
  */
-export const callWithNoContentResponse = <ThrowOnError extends boolean = false>(): CancelablePromise<CallWithNoContentResponseResponse> => { return __request(OpenAPI, {
+export const callWithNoContentResponse = (): CancelablePromise<CallWithNoContentResponseResponse> => { return __request(OpenAPI, {
     method: 'GET',
     url: '/api/v{api-version}/no-content'
 }); };
@@ -396,7 +396,7 @@ export const callWithNoContentResponse = <ThrowOnError extends boolean = false>(
  * @returns void Success
  * @throws ApiError
  */
-export const callWithResponseAndNoContentResponse = <ThrowOnError extends boolean = false>(): CancelablePromise<CallWithResponseAndNoContentResponseResponse> => { return __request(OpenAPI, {
+export const callWithResponseAndNoContentResponse = (): CancelablePromise<CallWithResponseAndNoContentResponseResponse> => { return __request(OpenAPI, {
     method: 'GET',
     url: '/api/v{api-version}/multiple-tags/response-and-no-content'
 }); };
@@ -405,7 +405,7 @@ export const callWithResponseAndNoContentResponse = <ThrowOnError extends boolea
  * @returns _400
  * @throws ApiError
  */
-export const dummyA = <ThrowOnError extends boolean = false>(): CancelablePromise<DummyAResponse> => { return __request(OpenAPI, {
+export const dummyA = (): CancelablePromise<DummyAResponse> => { return __request(OpenAPI, {
     method: 'GET',
     url: '/api/v{api-version}/multiple-tags/a'
 }); };
@@ -414,7 +414,7 @@ export const dummyA = <ThrowOnError extends boolean = false>(): CancelablePromis
  * @returns void Success
  * @throws ApiError
  */
-export const dummyB = <ThrowOnError extends boolean = false>(): CancelablePromise<DummyBResponse> => { return __request(OpenAPI, {
+export const dummyB = (): CancelablePromise<DummyBResponse> => { return __request(OpenAPI, {
     method: 'GET',
     url: '/api/v{api-version}/multiple-tags/b'
 }); };
@@ -423,7 +423,7 @@ export const dummyB = <ThrowOnError extends boolean = false>(): CancelablePromis
  * @returns import
  * @throws ApiError
  */
-export const callWithResponse = <ThrowOnError extends boolean = false>(): CancelablePromise<CallWithResponseResponse> => { return __request(OpenAPI, {
+export const callWithResponse = (): CancelablePromise<CallWithResponseResponse> => { return __request(OpenAPI, {
     method: 'GET',
     url: '/api/v{api-version}/response'
 }); };
@@ -434,7 +434,7 @@ export const callWithResponse = <ThrowOnError extends boolean = false>(): Cancel
  * @returns ModelWithString Message for 202 response
  * @throws ApiError
  */
-export const callWithDuplicateResponses = <ThrowOnError extends boolean = false>(): CancelablePromise<CallWithDuplicateResponsesResponse> => { return __request(OpenAPI, {
+export const callWithDuplicateResponses = (): CancelablePromise<CallWithDuplicateResponsesResponse> => { return __request(OpenAPI, {
     method: 'POST',
     url: '/api/v{api-version}/response',
     errors: {
@@ -452,7 +452,7 @@ export const callWithDuplicateResponses = <ThrowOnError extends boolean = false>
  * @returns ModelThatExtendsExtends Message for 202 response
  * @throws ApiError
  */
-export const callWithResponses = <ThrowOnError extends boolean = false>(): CancelablePromise<CallWithResponsesResponse> => { return __request(OpenAPI, {
+export const callWithResponses = (): CancelablePromise<CallWithResponsesResponse> => { return __request(OpenAPI, {
     method: 'PUT',
     url: '/api/v{api-version}/response',
     errors: {
@@ -472,7 +472,7 @@ export const callWithResponses = <ThrowOnError extends boolean = false>(): Cance
  * @param data.parameterArrayMulti This is an array parameter that is sent as multi format (multiple parameter instances)
  * @throws ApiError
  */
-export const collectionFormat = <ThrowOnError extends boolean = false>(data: CollectionFormatData): CancelablePromise<void> => { return __request(OpenAPI, {
+export const collectionFormat = (data: CollectionFormatData): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'GET',
     url: '/api/v{api-version}/collectionFormat',
     query: {
@@ -500,7 +500,7 @@ export const collectionFormat = <ThrowOnError extends boolean = false>(data: Col
  * @returns unknown Response is a simple object
  * @throws ApiError
  */
-export const types = <ThrowOnError extends boolean = false>(data: TypesData): CancelablePromise<TypesResponse> => { return __request(OpenAPI, {
+export const types = (data: TypesData): CancelablePromise<TypesResponse> => { return __request(OpenAPI, {
     method: 'GET',
     url: '/api/v{api-version}/types',
     path: {
@@ -523,7 +523,7 @@ export const types = <ThrowOnError extends boolean = false>(data: TypesData): Ca
  * @returns boolean
  * @throws ApiError
  */
-export const uploadFile = <ThrowOnError extends boolean = false>(data: UploadFileData): CancelablePromise<UploadFileResponse> => { return __request(OpenAPI, {
+export const uploadFile = (data: UploadFileData): CancelablePromise<UploadFileResponse> => { return __request(OpenAPI, {
     method: 'POST',
     url: '/api/v{api-version}/upload',
     formData: data.formData,
@@ -536,7 +536,7 @@ export const uploadFile = <ThrowOnError extends boolean = false>(data: UploadFil
  * @returns binary Success
  * @throws ApiError
  */
-export const fileResponse = <ThrowOnError extends boolean = false>(data: FileResponseData): CancelablePromise<FileResponseResponse> => { return __request(OpenAPI, {
+export const fileResponse = (data: FileResponseData): CancelablePromise<FileResponseResponse> => { return __request(OpenAPI, {
     method: 'GET',
     url: '/api/v{api-version}/file/{id}',
     path: {
@@ -551,7 +551,7 @@ export const fileResponse = <ThrowOnError extends boolean = false>(data: FileRes
  * @returns ModelWithString Successful response
  * @throws ApiError
  */
-export const complexTypes = <ThrowOnError extends boolean = false>(data: ComplexTypesData): CancelablePromise<ComplexTypesResponse> => { return __request(OpenAPI, {
+export const complexTypes = (data: ComplexTypesData): CancelablePromise<ComplexTypesResponse> => { return __request(OpenAPI, {
     method: 'GET',
     url: '/api/v{api-version}/complex',
     query: {
@@ -569,7 +569,7 @@ export const complexTypes = <ThrowOnError extends boolean = false>(data: Complex
  * @param data.formData
  * @throws ApiError
  */
-export const multipartRequest = <ThrowOnError extends boolean = false>(data: MultipartRequestData = {}): CancelablePromise<void> => { return __request(OpenAPI, {
+export const multipartRequest = (data: MultipartRequestData = {}): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'POST',
     url: '/api/v{api-version}/multipart',
     formData: data.formData,
@@ -580,7 +580,7 @@ export const multipartRequest = <ThrowOnError extends boolean = false>(data: Mul
  * @returns unknown OK
  * @throws ApiError
  */
-export const multipartResponse = <ThrowOnError extends boolean = false>(): CancelablePromise<MultipartResponseResponse> => { return __request(OpenAPI, {
+export const multipartResponse = (): CancelablePromise<MultipartResponseResponse> => { return __request(OpenAPI, {
     method: 'GET',
     url: '/api/v{api-version}/multipart'
 }); };
@@ -592,7 +592,7 @@ export const multipartResponse = <ThrowOnError extends boolean = false>(): Cance
  * @returns ModelWithString Success
  * @throws ApiError
  */
-export const complexParams = <ThrowOnError extends boolean = false>(data: ComplexParamsData): CancelablePromise<ComplexParamsResponse> => { return __request(OpenAPI, {
+export const complexParams = (data: ComplexParamsData): CancelablePromise<ComplexParamsResponse> => { return __request(OpenAPI, {
     method: 'PUT',
     url: '/api/v{api-version}/complex/{id}',
     path: {
@@ -606,7 +606,7 @@ export const complexParams = <ThrowOnError extends boolean = false>(data: Comple
  * @returns string Successful response
  * @throws ApiError
  */
-export const callWithResultFromHeader = <ThrowOnError extends boolean = false>(): CancelablePromise<CallWithResultFromHeaderResponse> => { return __request(OpenAPI, {
+export const callWithResultFromHeader = (): CancelablePromise<CallWithResultFromHeaderResponse> => { return __request(OpenAPI, {
     method: 'POST',
     url: '/api/v{api-version}/header',
     responseHeader: 'operation-location',
@@ -622,7 +622,7 @@ export const callWithResultFromHeader = <ThrowOnError extends boolean = false>()
  * @returns unknown Custom message: Successful response
  * @throws ApiError
  */
-export const testErrorCode = <ThrowOnError extends boolean = false>(data: TestErrorCodeData): CancelablePromise<TestErrorCodeResponse> => { return __request(OpenAPI, {
+export const testErrorCode = (data: TestErrorCodeData): CancelablePromise<TestErrorCodeResponse> => { return __request(OpenAPI, {
     method: 'POST',
     url: '/api/v{api-version}/error',
     query: {
@@ -642,7 +642,7 @@ export const testErrorCode = <ThrowOnError extends boolean = false>(data: TestEr
  * @returns NonAsciiStringæøåÆØÅöôêÊ字符串 Successful response
  * @throws ApiError
  */
-export const nonAsciiæøåÆøÅöôêÊ字符串 = <ThrowOnError extends boolean = false>(data: NonAsciiæøåÆøÅöôêÊ字符串Data): CancelablePromise<NonAsciiæøåÆøÅöôêÊ字符串Response> => { return __request(OpenAPI, {
+export const nonAsciiæøåÆøÅöôêÊ字符串 = (data: NonAsciiæøåÆøÅöôêÊ字符串Data): CancelablePromise<NonAsciiæøåÆøÅöôêÊ字符串Response> => { return __request(OpenAPI, {
     method: 'POST',
     url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
     query: {
@@ -656,7 +656,7 @@ export const nonAsciiæøåÆøÅöôêÊ字符串 = <ThrowOnError extends boole
  * @param data.formData
  * @throws ApiError
  */
-export const putWithFormUrlEncoded = <ThrowOnError extends boolean = false>(data: PutWithFormUrlEncodedData): CancelablePromise<void> => { return __request(OpenAPI, {
+export const putWithFormUrlEncoded = (data: PutWithFormUrlEncodedData): CancelablePromise<void> => { return __request(OpenAPI, {
     method: 'PUT',
     url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
     formData: data.formData,

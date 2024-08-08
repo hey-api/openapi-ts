@@ -93,7 +93,7 @@ const processArray = (props: ModelProps) => {
     }
 
     return [
-      compiler.transform.arrayTransformMutation({
+      compiler.transformArrayMutation({
         path: props.path,
         transformerName: nameModelResponseTransformer,
       }),
@@ -102,9 +102,9 @@ const processArray = (props: ModelProps) => {
 
   if (model.format === 'date' || model.format === 'date-time') {
     return [
-      compiler.transform.mapArray({
+      compiler.transformArrayMap({
         path: props.path,
-        transformExpression: compiler.transform.newDate({
+        transformExpression: compiler.transformNewDate({
           parameterName: 'item',
         }),
       }),
@@ -124,7 +124,7 @@ const processProperty = (props: ModelProps) => {
     model.export !== 'array' &&
     (model.format === 'date-time' || model.format === 'date')
   ) {
-    return [compiler.transform.dateTransformMutation({ path })];
+    return [compiler.transformDateMutation({ path })];
   }
 
   // otherwise we recurse in case it's an object/array, and if it's not that will just bail with []
@@ -160,14 +160,14 @@ const processModel = (props: ModelProps): ts.Statement[] => {
 
       return model.in === 'response'
         ? [
-            compiler.convert.expressionToStatement({
+            compiler.expressionToStatement({
               expression: compiler.callExpression({
                 functionName: nameModelResponseTransformer,
                 parameters: [dataVariableName],
               }),
             }),
           ]
-        : compiler.transform.transformItem({
+        : compiler.transformFunctionMutation({
             path: props.path,
             transformerName: nameModelResponseTransformer,
           });
@@ -206,7 +206,7 @@ const generateResponseTransformer = ({
     return result;
   }
 
-  const expression = compiler.types.arrowFunction({
+  const expression = compiler.arrowFunction({
     async,
     multiLine: true,
     parameters: [
@@ -299,8 +299,8 @@ export const generateResponseTransformers = async ({
                   }
 
                   return [
-                    compiler.logic.if({
-                      expression: compiler.logic.safeAccess(['data']),
+                    compiler.ifStatement({
+                      expression: compiler.safeAccessExpression(['data']),
                       thenStatement: ts.factory.createBlock(statements),
                     }),
                   ];

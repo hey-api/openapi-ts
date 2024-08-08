@@ -8,7 +8,7 @@ import {
   type Node,
   TypeScriptFile,
 } from '../compiler';
-import type { ObjectValue } from '../compiler/types';
+import type { FunctionTypeParameter, ObjectValue } from '../compiler/types';
 import type { Model, Operation, OperationParameter, Service } from '../openApi';
 import { isOperationParameterRequired } from '../openApi/common/parser/operation';
 import type { Client } from '../types/client';
@@ -152,7 +152,7 @@ const toOperationParamType = (
 const toOperationReturnType = (client: Client, operation: Operation) => {
   const config = getConfig();
 
-  let returnType = compiler.typedef.basic('void');
+  let returnType = compiler.typeNode('void');
 
   const successResponses = operation.responses.filter((response) =>
     response.responseTypes.includes('success'),
@@ -172,17 +172,17 @@ const toOperationReturnType = (client: Client, operation: Operation) => {
       },
       nameTransformer: operationResponseTypeName,
     });
-    returnType = compiler.typedef.union([importedType]);
+    returnType = compiler.typeUnionNode([importedType]);
   }
 
   if (config.useOptions && config.services.response === 'response') {
-    returnType = compiler.typedef.basic('ApiResult', [returnType]);
+    returnType = compiler.typeNode('ApiResult', [returnType]);
   }
 
   if (config.client.name === 'angular') {
-    returnType = compiler.typedef.basic('Observable', [returnType]);
+    returnType = compiler.typeNode('Observable', [returnType]);
   } else {
-    returnType = compiler.typedef.basic('CancelablePromise', [returnType]);
+    returnType = compiler.typeNode('CancelablePromise', [returnType]);
   }
 
   return returnType;
@@ -487,7 +487,7 @@ const toOperationStatements = (
         }).name
       : 'void';
     return [
-      compiler.return.functionCall({
+      compiler.returnFunctionCall({
         args: [options],
         name: `(options?.client ?? client).${operation.method.toLocaleLowerCase()}`,
         types:
@@ -504,7 +504,7 @@ const toOperationStatements = (
 
   if (config.name) {
     return [
-      compiler.return.functionCall({
+      compiler.returnFunctionCall({
         args: [options],
         name: 'this.httpRequest.request',
       }),
@@ -513,7 +513,7 @@ const toOperationStatements = (
 
   if (config.client.name === 'angular') {
     return [
-      compiler.return.functionCall({
+      compiler.returnFunctionCall({
         args: ['OpenAPI', 'this.http', options],
         name: '__request',
       }),
@@ -521,7 +521,7 @@ const toOperationStatements = (
   }
 
   return [
-    compiler.return.functionCall({
+    compiler.returnFunctionCall({
       args: ['OpenAPI', options],
       name: '__request',
     }),
@@ -592,9 +592,15 @@ const processService = ({
     }
   }
 
+  const throwOnErrorTypeGeneric: FunctionTypeParameter = {
+    default: false,
+    extends: 'boolean',
+    name: 'ThrowOnError',
+  };
+
   if (!config.services.asClass && !config.name) {
     for (const operation of service.operations) {
-      const expression = compiler.types.arrowFunction({
+      const expression = compiler.arrowFunction({
         parameters: toOperationParamType(client, operation),
         returnType: isStandalone
           ? undefined
@@ -605,13 +611,7 @@ const processService = ({
           onImport,
           onClientImport,
         ),
-        types: [
-          {
-            default: false,
-            extends: 'boolean',
-            name: 'ThrowOnError',
-          },
-        ],
+        types: isStandalone ? [throwOnErrorTypeGeneric] : undefined,
       });
       const statement = compiler.constVariable({
         comment: toOperationComment(operation),
@@ -625,7 +625,7 @@ const processService = ({
   }
 
   let members: ClassElement[] = service.operations.map((operation) => {
-    const node = compiler.class.method({
+    const node = compiler.methodDeclaration({
       accessLevel: 'public',
       comment: toOperationComment(operation),
       isStatic: config.name === undefined && config.client.name !== 'angular',
@@ -640,6 +640,7 @@ const processService = ({
         onImport,
         onClientImport,
       ),
+      types: isStandalone ? [throwOnErrorTypeGeneric] : undefined,
     });
     return node;
   });
@@ -648,10 +649,10 @@ const processService = ({
     return;
   }
 
-  // Push to front constructor if needed
+  // Push constructor to front if needed
   if (config.name) {
     members = [
-      compiler.class.constructor({
+      compiler.constructorDeclaration({
         multiLine: false,
         parameters: [
           {
@@ -666,7 +667,7 @@ const processService = ({
     ];
   } else if (config.client.name === 'angular') {
     members = [
-      compiler.class.constructor({
+      compiler.constructorDeclaration({
         multiLine: false,
         parameters: [
           {
@@ -681,7 +682,7 @@ const processService = ({
     ];
   }
 
-  const statement = compiler.class.create({
+  const statement = compiler.classDeclaration({
     decorator:
       config.client.name === 'angular'
         ? { args: [{ providedIn: 'root' }], name: 'Injectable' }
