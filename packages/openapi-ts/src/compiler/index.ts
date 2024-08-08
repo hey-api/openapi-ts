@@ -59,8 +59,13 @@ export class TypeScriptFile {
     this._items = [...this._items, ...nodes];
   }
 
-  public addImport(...params: Parameters<typeof compiler.import.named>) {
-    this._imports = [...this._imports, compiler.import.named(...params)];
+  public addImport(
+    ...params: Parameters<typeof compiler.namedImportDeclarations>
+  ) {
+    this._imports = [
+      ...this._imports,
+      compiler.namedImportDeclarations(...params),
+    ];
   }
 
   public getName(withExtension = true) {
@@ -134,65 +139,41 @@ export class TypeScriptFile {
   }
 }
 
-// TODO: flatten keys, it is hard to quickly find the desired method
 export const compiler = {
   arrayLiteralExpression: types.createArrayLiteralExpression,
+  arrowFunction: types.createArrowFunction,
   awaitExpression: types.createAwaitExpression,
   callExpression: module.createCallExpression,
-  class: {
-    constructor: classes.createConstructorDeclaration,
-    create: classes.createClassDeclaration,
-    method: classes.createMethodDeclaration,
-  },
+  classDeclaration: classes.createClassDeclaration,
   constVariable: module.createConstVariable,
-  convert: {
-    expressionToStatement: convert.convertExpressionToStatement,
-  },
-  export: {
-    all: module.createExportAllDeclaration,
-    named: module.createNamedExportDeclarations,
-  },
-  import: {
-    named: module.createNamedImportDeclarations,
-  },
-  logic: {
-    access: transform.createAccessExpression,
-    if: transform.createIfStatement,
-    safeAccess: transform.createSafeAccessExpression,
-  },
+  constructorDeclaration: classes.createConstructorDeclaration,
+  enumDeclaration: types.createEnumDeclaration,
+  exportAllDeclaration: module.createExportAllDeclaration,
+  exportNamedDeclaration: module.createNamedExportDeclarations,
+  expressionToStatement: convert.expressionToStatement,
+  ifStatement: transform.createIfStatement,
+  isTsNode: utils.isTsNode,
+  methodDeclaration: classes.createMethodDeclaration,
+  namedImportDeclarations: module.createNamedImportDeclarations,
+  namespaceDeclaration: types.createNamespaceDeclaration,
+  nodeToString: utils.tsNodeToString,
   objectExpression: types.createObjectType,
-  return: {
-    functionCall: _return.createReturnFunctionCall,
-  },
+  ots: utils.ots,
+  returnFunctionCall: _return.createReturnFunctionCall,
   returnVariable: _return.createReturnVariable,
-  transform: {
-    alias: transform.createAlias,
-    arrayTransformMutation: transform.createArrayTransformMutation,
-    dateTransformMutation: transform.createDateTransformMutation,
-    mapArray: transform.createArrayMapTransform,
-    newDate: transform.createDateTransformerExpression,
-    responseArrayTransform: transform.createResponseArrayTransform,
-    transformItem: transform.createFunctionTransformMutation,
-  },
-  typedef: {
-    alias: typedef.createTypeAliasDeclaration,
-    array: typedef.createTypeArrayNode,
-    basic: typedef.createTypeNode,
-    interface: typedef.createTypeInterfaceNode,
-    intersect: typedef.createTypeIntersectNode,
-    record: typedef.createTypeRecordNode,
-    tuple: typedef.createTypeTupleNode,
-    union: typedef.createTypeUnionNode,
-  },
-  types: {
-    arrowFunction: types.createArrowFunction,
-    enum: types.createEnumDeclaration,
-    namespace: types.createNamespaceDeclaration,
-  },
-  utils: {
-    isTsNode: utils.isTsNode,
-    ots: utils.ots,
-    toNode: utils.stringToTsNodes,
-    toString: utils.tsNodeToString,
-  },
+  safeAccessExpression: transform.createSafeAccessExpression,
+  stringToTsNodes: utils.stringToTsNodes,
+  transformArrayMap: transform.createArrayMapTransform,
+  transformArrayMutation: transform.createArrayTransformMutation,
+  transformDateMutation: transform.createDateTransformMutation,
+  transformFunctionMutation: transform.createFunctionTransformMutation,
+  transformNewDate: transform.createDateTransformerExpression,
+  typeAliasDeclaration: typedef.createTypeAliasDeclaration,
+  typeArrayNode: typedef.createTypeArrayNode,
+  typeInterfaceNode: typedef.createTypeInterfaceNode,
+  typeIntersectNode: typedef.createTypeIntersectNode,
+  typeNode: typedef.createTypeNode,
+  typeRecordNode: typedef.createTypeRecordNode,
+  typeTupleNode: typedef.createTypeTupleNode,
+  typeUnionNode: typedef.createTypeUnionNode,
 };

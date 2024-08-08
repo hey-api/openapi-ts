@@ -13,17 +13,17 @@ const base = (model: Model) => {
   const config = getConfig();
 
   if (model.base === 'binary') {
-    return compiler.typedef.union(['Blob', 'File']);
+    return compiler.typeUnionNode(['Blob', 'File']);
   }
 
   if (
     config.types.dates &&
     (model.format === 'date-time' || model.format === 'date')
   ) {
-    return compiler.typedef.basic('Date');
+    return compiler.typeNode('Date');
   }
 
-  return compiler.typedef.basic(model.base);
+  return compiler.typeNode(model.base);
 };
 
 const typeReference = (model: Model) => {
@@ -39,10 +39,10 @@ const typeReference = (model: Model) => {
   if (model.export === 'reference' && model.$refs.length === 1) {
     if (model.$refs[0].startsWith(refSchemasPartial)) {
       const meta = getSchemasMeta(model.base);
-      typeNode = compiler.typedef.basic(meta.name);
+      typeNode = compiler.typeNode(meta.name);
     }
   }
-  const unionNode = compiler.typedef.union([typeNode], isNullable);
+  const unionNode = compiler.typeUnionNode([typeNode], isNullable);
   return unionNode;
 };
 
@@ -51,7 +51,7 @@ const typeArray = (model: Model) => {
     // We treat an array of `model.link` as constant size array definition.
     if (Array.isArray(model.link)) {
       const types = model.link.map((m) => toType(m));
-      const tuple = compiler.typedef.tuple({
+      const tuple = compiler.typeTupleNode({
         isNullable: model.isNullable,
         types,
       });
@@ -67,50 +67,50 @@ const typeArray = (model: Model) => {
       model.maxItems <= 100
     ) {
       const types = Array(model.maxItems).fill(toType(model.link));
-      const tuple = compiler.typedef.tuple({
+      const tuple = compiler.typeTupleNode({
         isNullable: model.isNullable,
         types,
       });
       return tuple;
     }
 
-    return compiler.typedef.array([toType(model.link)], model.isNullable);
+    return compiler.typeArrayNode([toType(model.link)], model.isNullable);
   }
 
-  return compiler.typedef.array([base(model)], model.isNullable);
+  return compiler.typeArrayNode([base(model)], model.isNullable);
 };
 
 const typeEnum = (model: Model) => {
   const values = model.enum.map((enumerator) => enumValue(enumerator.value));
-  return compiler.typedef.union(values, model.isNullable);
+  return compiler.typeUnionNode(values, model.isNullable);
 };
 
 const typeDict = (model: Model) => {
   const type =
     model.link && !Array.isArray(model.link) ? toType(model.link) : base(model);
-  return compiler.typedef.record(['string'], [type], model.isNullable);
+  return compiler.typeRecordNode(['string'], [type], model.isNullable);
 };
 
 const typeUnion = (model: Model) => {
   const models = model.properties;
   const types = models
     .map((model) =>
-      compiler.utils.toString({ node: toType(model), unescape: true }),
+      compiler.nodeToString({ node: toType(model), unescape: true }),
     )
     .filter(unique);
-  return compiler.typedef.union(types, model.isNullable);
+  return compiler.typeUnionNode(types, model.isNullable);
 };
 
 const typeIntersect = (model: Model) => {
   const types = model.properties
-    .map((m) => compiler.utils.toString({ node: toType(m), unescape: true }))
+    .map((m) => compiler.nodeToString({ node: toType(m), unescape: true }))
     .filter(unique);
-  return compiler.typedef.intersect(types, model.isNullable);
+  return compiler.typeIntersectNode(types, model.isNullable);
 };
 
 const typeInterface = (model: Model) => {
   if (!model.properties.length) {
-    return compiler.typedef.basic('unknown');
+    return compiler.typeNode('unknown');
   }
 
   const config = getConfig();
@@ -133,7 +133,7 @@ const typeInterface = (model: Model) => {
       name = property.name;
       if (maybeRequired) {
         maybeRequired = '';
-        value = compiler.typedef.union([value, 'undefined']);
+        value = compiler.typeUnionNode([value, 'undefined']);
       }
     }
     return {
@@ -148,7 +148,7 @@ const typeInterface = (model: Model) => {
     };
   });
 
-  return compiler.typedef.interface(properties, model.isNullable);
+  return compiler.typeInterfaceNode(properties, model.isNullable);
 };
 
 export const toType = (model: Model): TypeNode => {
