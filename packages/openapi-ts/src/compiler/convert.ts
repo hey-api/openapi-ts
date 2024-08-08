@@ -1,6 +1,6 @@
 import ts from 'typescript';
 
-export const convertExpressionToStatement = ({
+export const expressionToStatement = ({
   expression,
 }: {
   expression: ts.Expression;

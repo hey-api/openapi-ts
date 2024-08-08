@@ -5,9 +5,11 @@ import { createTypeNode } from './typedef';
 import {
   type AccessLevel,
   type FunctionParameter,
+  type FunctionTypeParameter,
   toAccessLevelModifiers,
   toExpression,
   toParameterDeclarations,
+  toTypeParameters,
 } from './types';
 import { addLeadingJSDocComment, Comments, isType } from './utils';
 
@@ -38,9 +40,11 @@ export const createConstructorDeclaration = ({
     toParameterDeclarations(parameters),
     ts.factory.createBlock(statements, multiLine),
   );
-  if (comment?.length) {
+
+  if (comment) {
     addLeadingJSDocComment(node, comment);
   }
+
   return node;
 };
 
@@ -65,6 +69,7 @@ export const createMethodDeclaration = ({
   parameters = [],
   returnType,
   statements = [],
+  types = [],
 }: {
   accessLevel?: AccessLevel;
   comment?: Comments;
@@ -74,27 +79,32 @@ export const createMethodDeclaration = ({
   parameters?: FunctionParameter[];
   returnType?: string | ts.TypeNode;
   statements?: ts.Statement[];
+  types?: FunctionTypeParameter[];
 }) => {
   let modifiers = toAccessLevelModifiers(accessLevel);
+
   if (isStatic) {
     modifiers = [
       ...modifiers,
       ts.factory.createModifier(ts.SyntaxKind.StaticKeyword),
     ];
   }
+
   const node = ts.factory.createMethodDeclaration(
     modifiers,
     undefined,
     ts.factory.createIdentifier(name),
     undefined,
-    [],
+    types ? toTypeParameters(types) : undefined,
     toParameterDeclarations(parameters),
     returnType ? createTypeNode(returnType) : undefined,
     ts.factory.createBlock(statements, multiLine),
   );
+
   if (comment) {
     addLeadingJSDocComment(node, comment);
   }
+
   return node;
 };
 
@@ -122,6 +132,7 @@ export const createClassDeclaration = ({
   let modifiers: ts.ModifierLike[] = [
     ts.factory.createModifier(ts.SyntaxKind.ExportKeyword),
   ];
+
   if (decorator) {
     modifiers = [
       ts.factory.createDecorator(
@@ -135,12 +146,14 @@ export const createClassDeclaration = ({
       ...modifiers,
     ];
   }
+
   // Add newline between each class member.
   let m: ts.ClassElement[] = [];
   members.forEach((member) => {
     // @ts-ignore
     m = [...m, member, ts.factory.createIdentifier('\n')];
   });
+
   return ts.factory.createClassDeclaration(
     modifiers,
     ts.factory.createIdentifier(name),

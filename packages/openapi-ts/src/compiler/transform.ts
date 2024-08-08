@@ -1,8 +1,7 @@
 import ts from 'typescript';
 
-import { convertExpressionToStatement } from './convert';
+import { expressionToStatement } from './convert';
 import { createCallExpression } from './module';
-import { createReturnVariable } from './return';
 import { createArrowFunction } from './types';
 
 export const createSafeAccessExpression = (path: string[]) =>
@@ -49,7 +48,7 @@ export const createDateTransformMutation = ({
   const accessExpression = createAccessExpression(path);
 
   const thenStatement = ts.factory.createBlock([
-    convertExpressionToStatement({
+    expressionToStatement({
       expression: ts.factory.createBinaryExpression(
         accessExpression,
         ts.SyntaxKind.EqualsToken,
@@ -82,7 +81,7 @@ export const createFunctionTransformMutation = ({
 
   const thenStatement = ts.factory.createBlock(
     [
-      convertExpressionToStatement({
+      expressionToStatement({
         expression: createCallExpression({
           functionName: transformerName,
           parameters: [accessExpression],
@@ -122,7 +121,7 @@ export const createArrayTransformMutation = ({
     }),
     thenStatement: ts.factory.createBlock(
       [
-        convertExpressionToStatement({
+        expressionToStatement({
           expression: ts.factory.createCallChain(
             ts.factory.createPropertyAccessExpression(
               accessExpression,
@@ -172,7 +171,7 @@ export const createArrayMapTransform = ({
     }),
     thenStatement: ts.factory.createBlock(
       [
-        convertExpressionToStatement({
+        expressionToStatement({
           expression: ts.factory.createBinaryExpression(
             accessExpression,
             ts.factory.createToken(ts.SyntaxKind.EqualsToken),
@@ -202,89 +201,4 @@ export const createArrayMapTransform = ({
   });
 
   return statement;
-};
-
-export const createAlias = ({
-  existingName,
-  name,
-}: {
-  existingName: string;
-  name: string;
-}) =>
-  ts.factory.createVariableStatement(
-    [ts.factory.createToken(ts.SyntaxKind.ExportKeyword)],
-    ts.factory.createVariableDeclarationList(
-      [
-        ts.factory.createVariableDeclaration(
-          ts.factory.createIdentifier(name),
-          undefined,
-          undefined,
-          ts.factory.createIdentifier(existingName),
-        ),
-      ],
-      ts.NodeFlags.Const,
-    ),
-  );
-
-export const createResponseArrayTransform = ({
-  transform,
-  name,
-}: {
-  name: string;
-  transform: string;
-}) => {
-  const transformFunction = createArrowFunction({
-    multiLine: true,
-    parameters: [
-      {
-        name: 'data',
-        type: ts.SyntaxKind.AnyKeyword,
-      },
-    ],
-    statements: [
-      createIfStatement({
-        expression: createCallExpression({
-          functionName: ts.factory.createPropertyAccessExpression(
-            ts.factory.createIdentifier('Array'),
-            ts.factory.createIdentifier('isArray'),
-          ),
-          parameters: ['data'],
-        }),
-        thenStatement: ts.factory.createBlock(
-          [
-            convertExpressionToStatement({
-              expression: createCallExpression({
-                functionName: ts.factory.createPropertyAccessExpression(
-                  ts.factory.createIdentifier('data'),
-                  ts.factory.createIdentifier('forEach'),
-                ),
-                parameters: [transform],
-              }),
-            }),
-          ],
-          true,
-        ),
-      }),
-      createReturnVariable({
-        name: 'data',
-      }),
-    ],
-  });
-
-  const declaration = ts.factory.createVariableStatement(
-    [ts.factory.createToken(ts.SyntaxKind.ExportKeyword)],
-    ts.factory.createVariableDeclarationList(
-      [
-        ts.factory.createVariableDeclaration(
-          ts.factory.createIdentifier(name),
-          undefined,
-          undefined,
-          transformFunction,
-        ),
-      ],
-      ts.NodeFlags.Const,
-    ),
-  );
-
-  return declaration;
 };
