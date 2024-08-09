@@ -155,6 +155,7 @@ export const compiler = {
   expressionToStatement: convert.expressionToStatement,
   identifier: utils.createIdentifier,
   ifStatement: transform.createIfStatement,
+  indexedAccessTypeNode: types.createIndexedAccessTypeNode,
   isTsNode: utils.isTsNode,
   keywordTypeNode: types.createKeywordTypeNode,
   methodDeclaration: classes.createMethodDeclaration,
