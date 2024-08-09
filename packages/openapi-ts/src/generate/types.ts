@@ -115,7 +115,12 @@ export const generateType = ({
   });
   const { created, name } = result;
   if (created) {
-    const node = compiler.typeAliasDeclaration({ comment, name, type });
+    const node = compiler.typeAliasDeclaration({
+      comment,
+      exportType: true,
+      name,
+      type,
+    });
     onNode(node);
 
     onCreated?.(name);
@@ -196,9 +201,12 @@ const processEnum = ({ client, model, onNode }: TypesProps) => {
       // create a separate JavaScript object export
       if (config.types.enums === 'javascript') {
         const expression = compiler.objectExpression({
-          comments,
           multiLine: true,
-          obj: properties,
+          obj: Object.entries(properties).map(([key, value]) => ({
+            comments: comments[key],
+            key,
+            value,
+          })),
           unescape: true,
         });
         const node = compiler.constVariable({

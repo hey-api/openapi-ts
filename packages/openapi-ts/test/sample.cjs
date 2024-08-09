@@ -5,8 +5,8 @@ const main = async () => {
   const config = {
     client: {
       // bundle: true,
-      name: '@hey-api/client-axios',
-      // name: '@hey-api/client-fetch',
+      // name: '@hey-api/client-axios',
+      name: '@hey-api/client-fetch',
     },
     debug: true,
     // input: './test/spec/v3-transforms.json',
@@ -17,19 +17,26 @@ const main = async () => {
     output: {
       path: './test/generated/sample/',
     },
-    // plugins: ['@tanstack/react-query'],
+    plugins: [
+      {
+        // infiniteQueryOptions: false,
+        mutationOptions: false,
+        name: '@tanstack/react-query',
+        queryOptions: false,
+      },
+    ],
     schemas: {
       export: false,
     },
     services: {
-      asClass: true,
+      // asClass: true,
       // filter: '^POST /api/v{api-version}/upload$',
       // export: false,
       // name: '^Parameters',
     },
     types: {
       // dates: 'types+transform',
-      // enums: 'typescript',
+      // enums: 'javascript',
       // export: false,
       // include:
       //   '^(_400|CompositionWithOneOfAndProperties)',

@@ -11,7 +11,12 @@ import {
   toParameterDeclarations,
   toTypeParameters,
 } from './types';
-import { addLeadingJSDocComment, Comments, isType } from './utils';
+import {
+  addLeadingComments,
+  Comments,
+  createIdentifier,
+  isType,
+} from './utils';
 
 /**
  * Create a class constructor declaration.
@@ -41,9 +46,10 @@ export const createConstructorDeclaration = ({
     ts.factory.createBlock(statements, multiLine),
   );
 
-  if (comment) {
-    addLeadingJSDocComment(node, comment);
-  }
+  addLeadingComments({
+    comments: comment,
+    node,
+  });
 
   return node;
 };
@@ -93,7 +99,7 @@ export const createMethodDeclaration = ({
   const node = ts.factory.createMethodDeclaration(
     modifiers,
     undefined,
-    ts.factory.createIdentifier(name),
+    createIdentifier({ text: name }),
     undefined,
     types ? toTypeParameters(types) : undefined,
     toParameterDeclarations(parameters),
@@ -101,9 +107,10 @@ export const createMethodDeclaration = ({
     ts.factory.createBlock(statements, multiLine),
   );
 
-  if (comment) {
-    addLeadingJSDocComment(node, comment);
-  }
+  addLeadingComments({
+    comments: comment,
+    node,
+  });
 
   return node;
 };
@@ -151,12 +158,12 @@ export const createClassDeclaration = ({
   let m: ts.ClassElement[] = [];
   members.forEach((member) => {
     // @ts-ignore
-    m = [...m, member, ts.factory.createIdentifier('\n')];
+    m = [...m, member, createIdentifier({ text: '\n' })];
   });
 
   return ts.factory.createClassDeclaration(
     modifiers,
-    ts.factory.createIdentifier(name),
+    createIdentifier({ text: name }),
     [],
     [],
     m,

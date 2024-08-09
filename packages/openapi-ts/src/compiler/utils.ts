@@ -81,6 +81,11 @@ export function stringToTsNodes(value: string): ts.Node {
   return file.statements[0];
 }
 
+export const createIdentifier = ({ text }: { text: string }) => {
+  const identifier = ts.factory.createIdentifier(text);
+  return identifier;
+};
+
 /**
  * ots for @hey-api/openapi-ts are helpers to reduce repetition of basic TypeScript
  * factory functions.
@@ -92,17 +97,17 @@ export const ots = {
   boolean: (value: boolean) =>
     value ? ts.factory.createTrue() : ts.factory.createFalse(),
   export: ({ alias, asType = false, name }: ImportExportItemObject) => {
-    const nameNode = ts.factory.createIdentifier(name);
+    const nameNode = createIdentifier({ text: name });
     if (alias) {
-      const aliasNode = ts.factory.createIdentifier(alias);
+      const aliasNode = createIdentifier({ text: alias });
       return ts.factory.createExportSpecifier(asType, nameNode, aliasNode);
     }
     return ts.factory.createExportSpecifier(asType, undefined, nameNode);
   },
   import: ({ alias, asType = false, name }: ImportExportItemObject) => {
-    const nameNode = ts.factory.createIdentifier(name);
+    const nameNode = createIdentifier({ text: name });
     if (alias) {
-      const aliasNode = ts.factory.createIdentifier(alias);
+      const aliasNode = createIdentifier({ text: alias });
       return ts.factory.createImportSpecifier(asType, nameNode, aliasNode);
     }
     return ts.factory.createImportSpecifier(asType, undefined, nameNode);
@@ -138,7 +143,7 @@ export const ots = {
       text = `\`${text.replace(/(?<!\\)`/g, '\\`').replace(/\${/g, '\\${')}\``;
     }
     if (text.startsWith('`')) {
-      return ts.factory.createIdentifier(text);
+      return createIdentifier({ text });
     }
     return ts.factory.createStringLiteral(
       text,
@@ -158,20 +163,53 @@ export const isTsNode = (node: any): node is ts.Expression =>
 export const isType = <T>(value: T | undefined): value is T =>
   value !== undefined;
 
-export type Comments = Array<string | null | false | undefined>;
+type CommentLines = Array<string | null | false | undefined>;
+type CommentObject = {
+  jsdoc?: boolean;
+  lines: CommentLines;
+};
+export type Comments = CommentLines | Array<CommentObject>;
 
-export const addLeadingJSDocComment = (node: ts.Node, text: Comments) => {
-  const comments = text.filter(Boolean);
-  if (!comments.length) {
+const processCommentObject = ({
+  commentObject,
+  node,
+}: {
+  commentObject: CommentObject;
+  node: ts.Node;
+}) => {
+  const lines = commentObject.lines.filter(
+    (line) => Boolean(line) || line === '',
+  ) as string[];
+  if (!lines.length) {
     return;
   }
 
-  const jsdocTexts = comments.map((c, l) =>
-    ts.factory.createJSDocText(`${c}${l !== comments.length ? '\n' : ''}`),
-  );
+  if (!commentObject.jsdoc) {
+    for (const line of lines) {
+      ts.addSyntheticLeadingComment(
+        node,
+        ts.SyntaxKind.SingleLineCommentTrivia,
+        ` ${line}`,
+        true,
+      );
+    }
+    return;
+  }
+
+  const jsdocTexts = lines.map((line, index) => {
+    let text = line;
+    if (index !== lines.length) {
+      text = `${text}\n`;
+    }
+    const jsdocText = ts.factory.createJSDocText(text);
+    return jsdocText;
+  });
+
   const jsdoc = ts.factory.createJSDocComment(
     ts.factory.createNodeArray(jsdocTexts),
+    undefined,
   );
+
   const cleanedJsdoc = tsNodeToString({ node: jsdoc, unescape: true })
     .replace('/*', '')
     .replace('*  */', '');
@@ -182,4 +220,33 @@ export const addLeadingJSDocComment = (node: ts.Node, text: Comments) => {
     cleanedJsdoc,
     true,
   );
+};
+
+export const addLeadingComments = ({
+  comments = [],
+  node,
+}: {
+  comments?: Comments;
+  node: ts.Node;
+}) => {
+  const isObjectStyle = Boolean(
+    comments.find((comment) => typeof comment === 'object' && comment),
+  );
+
+  let commentObjects = comments as Array<CommentObject>;
+  if (!isObjectStyle) {
+    commentObjects = [
+      {
+        jsdoc: true,
+        lines: comments as CommentLines,
+      },
+    ];
+  }
+
+  for (const commentObject of commentObjects) {
+    processCommentObject({
+      commentObject,
+      node,
+    });
+  }
 };
