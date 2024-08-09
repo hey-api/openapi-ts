@@ -5,6 +5,36 @@ import { queryOptions, type UseMutationOptions, type DefaultError, infiniteQuery
 import { export_, import_, apiVVersionOdataControllerCount, getCallWithoutParametersAndResponse, putCallWithoutParametersAndResponse, postCallWithoutParametersAndResponse, deleteCallWithoutParametersAndResponse, patchCallWithoutParametersAndResponse, deleteFoo, callWithDescriptions, deprecatedCall, callWithParameters, callWithWeirdParameterNames, getCallWithOptionalParam, postCallWithOptionalParam, postApiVbyApiVersionRequestBody, postApiVbyApiVersionFormData, callWithDefaultParameters, callWithDefaultOptionalParameters, callToTestOrderOfParams, duplicateName, duplicateName1, duplicateName2, duplicateName3, callWithNoContentResponse, callWithResponseAndNoContentResponse, dummyA, dummyB, callWithResponse, callWithDuplicateResponses, callWithResponses, collectionFormat, types, uploadFile, fileResponse, complexTypes, multipartRequest, multipartResponse, complexParams, callWithResultFromHeader, testErrorCode, nonAsciiæøåÆøÅöôêÊ字符串, putWithFormUrlEncoded } from '../services.gen';
 import type { ImportData, ImportError, ImportResponse, DeleteFooData3, CallWithDescriptionsData, DeprecatedCallData, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamError, PostCallWithOptionalParamResponse, PostApiVbyApiVersionRequestBodyData, PostApiVbyApiVersionFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, CallWithDuplicateResponsesError, CallWithDuplicateResponsesResponse, CallWithResponsesError, CallWithResponsesResponse, CollectionFormatData, TypesData, UploadFileData, UploadFileError, UploadFileResponse, FileResponseData, ComplexTypesData, MultipartRequestData, ComplexParamsError, ComplexParamsData, ComplexParamsResponse, CallWithResultFromHeaderError, CallWithResultFromHeaderResponse, TestErrorCodeData, TestErrorCodeError, TestErrorCodeResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Error, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData } from '../types.gen';
 
+type QueryKey = [
+    {
+        infinite?: boolean;
+        params: {
+            body?: any;
+            headers?: any;
+            path?: any;
+            query?: any;
+        };
+        scope: string;
+    }
+];
+
+const createQueryKeyParams = <T>(options?: Options<T>) => {
+    const params: QueryKey[0]["params"] = {};
+    if (options?.body) {
+        params.body = options.body;
+    }
+    if (options?.headers) {
+        params.headers = options.headers;
+    }
+    if (options?.path) {
+        params.path = options.path;
+    }
+    if (options?.query) {
+        params.query = options.query;
+    }
+    return params;
+};
+
 export const exportOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await export_({
@@ -16,12 +46,7 @@ export const exportOptions = (options?: Options) => { return queryOptions({
     },
     queryKey: [
         {
-            params: {
-                body: options?.body ?? {},
-                headers: options?.headers ?? {},
-                path: options?.path ?? {},
-                query: options?.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'export'
         }
     ]
@@ -38,12 +63,7 @@ export const importOptions = (options: Options<ImportData>) => { return queryOpt
     },
     queryKey: [
         {
-            params: {
-                body: options.body ?? {},
-                headers: options.headers ?? {},
-                path: options.path ?? {},
-                query: options.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'import'
         }
     ]
@@ -70,12 +90,7 @@ export const apiVVersionOdataControllerCountOptions = (options?: Options) => { r
     },
     queryKey: [
         {
-            params: {
-                body: options?.body ?? {},
-                headers: options?.headers ?? {},
-                path: options?.path ?? {},
-                query: options?.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'apiVVersionOdataControllerCount'
         }
     ]
@@ -92,12 +107,7 @@ export const getCallWithoutParametersAndResponseOptions = (options?: Options) =>
     },
     queryKey: [
         {
-            params: {
-                body: options?.body ?? {},
-                headers: options?.headers ?? {},
-                path: options?.path ?? {},
-                query: options?.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'getCallWithoutParametersAndResponse'
         }
     ]
@@ -124,12 +134,7 @@ export const postCallWithoutParametersAndResponseOptions = (options?: Options) =
     },
     queryKey: [
         {
-            params: {
-                body: options?.body ?? {},
-                headers: options?.headers ?? {},
-                path: options?.path ?? {},
-                query: options?.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'postCallWithoutParametersAndResponse'
         }
     ]
@@ -186,12 +191,7 @@ export const callWithDescriptionsOptions = (options?: Options<CallWithDescriptio
     },
     queryKey: [
         {
-            params: {
-                body: options?.body ?? {},
-                headers: options?.headers ?? {},
-                path: options?.path ?? {},
-                query: options?.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'callWithDescriptions'
         }
     ]
@@ -218,12 +218,7 @@ export const deprecatedCallOptions = (options: Options<DeprecatedCallData>) => {
     },
     queryKey: [
         {
-            params: {
-                body: options.body ?? {},
-                headers: options.headers ?? {},
-                path: options.path ?? {},
-                query: options.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'deprecatedCall'
         }
     ]
@@ -250,29 +245,11 @@ export const callWithParametersOptions = (options: Options<CallWithParametersDat
     },
     queryKey: [
         {
-            params: {
-                body: options.body ?? {},
-                headers: options.headers ?? {},
-                path: options.path ?? {},
-                query: options.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'callWithParameters'
         }
     ]
 }); };
-
-type QueryKey = [
-    {
-        infinite?: boolean;
-        params: {
-            body: any;
-            headers: any;
-            path: any;
-            query: any;
-        };
-        scope: string;
-    }
-];
 
 export const callWithParametersInfiniteOptions = (options: Options<CallWithParametersData>) => { return infiniteQueryOptions<void, DefaultError, InfiniteData<void>, QueryKey, unknown>(
 // @ts-ignore
@@ -292,12 +269,7 @@ export const callWithParametersInfiniteOptions = (options: Options<CallWithParam
     queryKey: [
         {
             infinite: true,
-            params: {
-                body: options.body ?? {},
-                headers: options.headers ?? {},
-                path: options.path ?? {},
-                query: options.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'callWithParameters'
         }
     ]
@@ -324,12 +296,7 @@ export const callWithWeirdParameterNamesOptions = (options: Options<CallWithWeir
     },
     queryKey: [
         {
-            params: {
-                body: options.body ?? {},
-                headers: options.headers ?? {},
-                path: options.path ?? {},
-                query: options.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'callWithWeirdParameterNames'
         }
     ]
@@ -356,12 +323,7 @@ export const getCallWithOptionalParamOptions = (options: Options<GetCallWithOpti
     },
     queryKey: [
         {
-            params: {
-                body: options.body ?? {},
-                headers: options.headers ?? {},
-                path: options.path ?? {},
-                query: options.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'getCallWithOptionalParam'
         }
     ]
@@ -385,12 +347,7 @@ export const getCallWithOptionalParamInfiniteOptions = (options: Options<GetCall
     queryKey: [
         {
             infinite: true,
-            params: {
-                body: options.body ?? {},
-                headers: options.headers ?? {},
-                path: options.path ?? {},
-                query: options.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'getCallWithOptionalParam'
         }
     ]
@@ -407,12 +364,7 @@ export const postCallWithOptionalParamOptions = (options: Options<PostCallWithOp
     },
     queryKey: [
         {
-            params: {
-                body: options.body ?? {},
-                headers: options.headers ?? {},
-                path: options.path ?? {},
-                query: options.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'postCallWithOptionalParam'
         }
     ]
@@ -436,12 +388,7 @@ export const postCallWithOptionalParamInfiniteOptions = (options: Options<PostCa
     queryKey: [
         {
             infinite: true,
-            params: {
-                body: options.body ?? {},
-                headers: options.headers ?? {},
-                path: options.path ?? {},
-                query: options.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'postCallWithOptionalParam'
         }
     ]
@@ -468,12 +415,7 @@ export const postApiVbyApiVersionRequestBodyOptions = (options?: Options<PostApi
     },
     queryKey: [
         {
-            params: {
-                body: options?.body ?? {},
-                headers: options?.headers ?? {},
-                path: options?.path ?? {},
-                query: options?.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'postApiVbyApiVersionRequestBody'
         }
     ]
@@ -500,12 +442,7 @@ export const postApiVbyApiVersionFormDataOptions = (options?: Options<PostApiVby
     },
     queryKey: [
         {
-            params: {
-                body: options?.body ?? {},
-                headers: options?.headers ?? {},
-                path: options?.path ?? {},
-                query: options?.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'postApiVbyApiVersionFormData'
         }
     ]
@@ -532,12 +469,7 @@ export const callWithDefaultParametersOptions = (options?: Options<CallWithDefau
     },
     queryKey: [
         {
-            params: {
-                body: options?.body ?? {},
-                headers: options?.headers ?? {},
-                path: options?.path ?? {},
-                query: options?.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'callWithDefaultParameters'
         }
     ]
@@ -554,12 +486,7 @@ export const callWithDefaultOptionalParametersOptions = (options?: Options<CallW
     },
     queryKey: [
         {
-            params: {
-                body: options?.body ?? {},
-                headers: options?.headers ?? {},
-                path: options?.path ?? {},
-                query: options?.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'callWithDefaultOptionalParameters'
         }
     ]
@@ -596,12 +523,7 @@ export const duplicateNameOptions = (options?: Options) => { return queryOptions
     },
     queryKey: [
         {
-            params: {
-                body: options?.body ?? {},
-                headers: options?.headers ?? {},
-                path: options?.path ?? {},
-                query: options?.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'duplicateName'
         }
     ]
@@ -618,12 +540,7 @@ export const duplicateName1Options = (options?: Options) => { return queryOption
     },
     queryKey: [
         {
-            params: {
-                body: options?.body ?? {},
-                headers: options?.headers ?? {},
-                path: options?.path ?? {},
-                query: options?.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'duplicateName1'
         }
     ]
@@ -670,12 +587,7 @@ export const callWithNoContentResponseOptions = (options?: Options) => { return 
     },
     queryKey: [
         {
-            params: {
-                body: options?.body ?? {},
-                headers: options?.headers ?? {},
-                path: options?.path ?? {},
-                query: options?.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'callWithNoContentResponse'
         }
     ]
@@ -692,12 +604,7 @@ export const callWithResponseAndNoContentResponseOptions = (options?: Options) =
     },
     queryKey: [
         {
-            params: {
-                body: options?.body ?? {},
-                headers: options?.headers ?? {},
-                path: options?.path ?? {},
-                query: options?.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'callWithResponseAndNoContentResponse'
         }
     ]
@@ -714,12 +621,7 @@ export const dummyAOptions = (options?: Options) => { return queryOptions({
     },
     queryKey: [
         {
-            params: {
-                body: options?.body ?? {},
-                headers: options?.headers ?? {},
-                path: options?.path ?? {},
-                query: options?.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'dummyA'
         }
     ]
@@ -736,12 +638,7 @@ export const dummyBOptions = (options?: Options) => { return queryOptions({
     },
     queryKey: [
         {
-            params: {
-                body: options?.body ?? {},
-                headers: options?.headers ?? {},
-                path: options?.path ?? {},
-                query: options?.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'dummyB'
         }
     ]
@@ -758,12 +655,7 @@ export const callWithResponseOptions = (options?: Options) => { return queryOpti
     },
     queryKey: [
         {
-            params: {
-                body: options?.body ?? {},
-                headers: options?.headers ?? {},
-                path: options?.path ?? {},
-                query: options?.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'callWithResponse'
         }
     ]
@@ -780,12 +672,7 @@ export const callWithDuplicateResponsesOptions = (options?: Options) => { return
     },
     queryKey: [
         {
-            params: {
-                body: options?.body ?? {},
-                headers: options?.headers ?? {},
-                path: options?.path ?? {},
-                query: options?.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'callWithDuplicateResponses'
         }
     ]
@@ -822,12 +709,7 @@ export const collectionFormatOptions = (options: Options<CollectionFormatData>) 
     },
     queryKey: [
         {
-            params: {
-                body: options.body ?? {},
-                headers: options.headers ?? {},
-                path: options.path ?? {},
-                query: options.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'collectionFormat'
         }
     ]
@@ -844,12 +726,7 @@ export const typesOptions = (options: Options<TypesData>) => { return queryOptio
     },
     queryKey: [
         {
-            params: {
-                body: options.body ?? {},
-                headers: options.headers ?? {},
-                path: options.path ?? {},
-                query: options.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'types'
         }
     ]
@@ -866,12 +743,7 @@ export const uploadFileOptions = (options: Options<UploadFileData>) => { return 
     },
     queryKey: [
         {
-            params: {
-                body: options.body ?? {},
-                headers: options.headers ?? {},
-                path: options.path ?? {},
-                query: options.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'uploadFile'
         }
     ]
@@ -898,12 +770,7 @@ export const fileResponseOptions = (options: Options<FileResponseData>) => { ret
     },
     queryKey: [
         {
-            params: {
-                body: options.body ?? {},
-                headers: options.headers ?? {},
-                path: options.path ?? {},
-                query: options.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'fileResponse'
         }
     ]
@@ -920,12 +787,7 @@ export const complexTypesOptions = (options: Options<ComplexTypesData>) => { ret
     },
     queryKey: [
         {
-            params: {
-                body: options.body ?? {},
-                headers: options.headers ?? {},
-                path: options.path ?? {},
-                query: options.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'complexTypes'
         }
     ]
@@ -942,12 +804,7 @@ export const multipartRequestOptions = (options?: Options<MultipartRequestData>)
     },
     queryKey: [
         {
-            params: {
-                body: options?.body ?? {},
-                headers: options?.headers ?? {},
-                path: options?.path ?? {},
-                query: options?.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'multipartRequest'
         }
     ]
@@ -974,12 +831,7 @@ export const multipartResponseOptions = (options?: Options) => { return queryOpt
     },
     queryKey: [
         {
-            params: {
-                body: options?.body ?? {},
-                headers: options?.headers ?? {},
-                path: options?.path ?? {},
-                query: options?.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'multipartResponse'
         }
     ]
@@ -1006,12 +858,7 @@ export const callWithResultFromHeaderOptions = (options?: Options) => { return q
     },
     queryKey: [
         {
-            params: {
-                body: options?.body ?? {},
-                headers: options?.headers ?? {},
-                path: options?.path ?? {},
-                query: options?.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'callWithResultFromHeader'
         }
     ]
@@ -1038,12 +885,7 @@ export const testErrorCodeOptions = (options: Options<TestErrorCodeData>) => { r
     },
     queryKey: [
         {
-            params: {
-                body: options.body ?? {},
-                headers: options.headers ?? {},
-                path: options.path ?? {},
-                query: options.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'testErrorCode'
         }
     ]
@@ -1070,12 +912,7 @@ export const nonAsciiæøåÆøÅöôêÊ字符串Options = (options: Options<No
     },
     queryKey: [
         {
-            params: {
-                body: options.body ?? {},
-                headers: options.headers ?? {},
-                path: options.path ?? {},
-                query: options.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'nonAsciiæøåÆøÅöôêÊ字符串'
         }
     ]

@@ -5,6 +5,36 @@ import { queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 import { parentModelWithDates, modelWithDates, modelWithDatesArray, arrayOfDates, date, multipleResponses } from '../services.gen';
 import type { ParentModelWithDatesError, ParentModelWithDatesResponse, ModelWithDatesError, ModelWithDatesResponse, ModelWithDatesArrayError, ModelWithDatesArrayResponse, ArrayOfDatesError, ArrayOfDatesResponse, DateError, DateResponse, MultipleResponsesError, MultipleResponsesResponse } from '../types.gen';
 
+type QueryKey = [
+    {
+        infinite?: boolean;
+        params: {
+            body?: any;
+            headers?: any;
+            path?: any;
+            query?: any;
+        };
+        scope: string;
+    }
+];
+
+const createQueryKeyParams = <T>(options?: Options<T>) => {
+    const params: QueryKey[0]["params"] = {};
+    if (options?.body) {
+        params.body = options.body;
+    }
+    if (options?.headers) {
+        params.headers = options.headers;
+    }
+    if (options?.path) {
+        params.path = options.path;
+    }
+    if (options?.query) {
+        params.query = options.query;
+    }
+    return params;
+};
+
 export const parentModelWithDatesOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await parentModelWithDates({
@@ -16,12 +46,7 @@ export const parentModelWithDatesOptions = (options?: Options) => { return query
     },
     queryKey: [
         {
-            params: {
-                body: options?.body ?? {},
-                headers: options?.headers ?? {},
-                path: options?.path ?? {},
-                query: options?.query ?? {}
-            },
+            params: createQueryKeyParams(options),
             scope: 'parentModelWithDates'
         }
     ]

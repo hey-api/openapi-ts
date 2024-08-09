@@ -33,16 +33,33 @@ export interface FunctionTypeParameter {
 
 export const createPropertyAccessExpression = ({
   expression,
+  isOptional,
   name,
 }: {
   expression: string | ts.Expression;
+  isOptional?: boolean;
   name: string | ts.MemberName;
 }) => {
-  const node = ts.factory.createPropertyAccessExpression(
+  const nodeExpression =
     typeof expression === 'string'
       ? createIdentifier({ text: expression })
-      : expression,
-    typeof name === 'string' ? createIdentifier({ text: name }) : name,
+      : expression;
+
+  const nodeName =
+    typeof name === 'string' ? createIdentifier({ text: name }) : name;
+
+  if (isOptional) {
+    const node = ts.factory.createPropertyAccessChain(
+      nodeExpression,
+      ts.factory.createToken(ts.SyntaxKind.QuestionDotToken),
+      nodeName,
+    );
+    return node;
+  }
+
+  const node = ts.factory.createPropertyAccessExpression(
+    nodeExpression,
+    nodeName,
   );
   return node;
 };
@@ -176,7 +193,7 @@ export const toParameterDeclarations = (parameters: FunctionParameter[]) =>
       modifiers,
       undefined,
       createIdentifier({ text: parameter.name }),
-      parameter.isRequired !== undefined && !parameter.isRequired
+      parameter.isRequired === false
         ? ts.factory.createToken(ts.SyntaxKind.QuestionToken)
         : undefined,
       parameter.type !== undefined ? createTypeNode(parameter.type) : undefined,
@@ -438,11 +455,6 @@ export const createObjectType = <
               ? ts.factory.createShorthandPropertyAssignment(value)
               : ts.factory.createPropertyAssignment(key, initializer);
 
-          // addLeadingComments({
-          //   comments: comments?.[key],
-          //   node: assignment,
-          // });
-
           return assignment;
         })
         .filter(isType<ObjectAssignment>);
@@ -525,3 +537,14 @@ export const createNamespaceDeclaration = <
     ts.factory.createModuleBlock(statements),
     ts.NodeFlags.Namespace,
   );
+
+export const createIndexedAccessTypeNode = ({
+  indexType,
+  objectType,
+}: {
+  indexType: ts.TypeNode;
+  objectType: ts.TypeNode;
+}) => {
+  const node = ts.factory.createIndexedAccessTypeNode(objectType, indexType);
+  return node;
+};
