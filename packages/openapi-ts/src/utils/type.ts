@@ -148,7 +148,10 @@ const typeInterface = (model: Model) => {
     };
   });
 
-  return compiler.typeInterfaceNode(properties, model.isNullable);
+  return compiler.typeInterfaceNode({
+    isNullable: model.isNullable,
+    properties,
+  });
 };
 
 export const toType = (model: Model): TypeNode => {

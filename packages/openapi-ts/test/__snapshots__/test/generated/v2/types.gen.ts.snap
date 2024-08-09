@@ -87,7 +87,7 @@ export const EnumWithStrings = {
     ERROR: 'Error',
     _SINGLE_QUOTE_: "'Single Quote'",
     _DOUBLE_QUOTES_: '"Double Quotes"',
-    'NON_ASCII__ØÆÅÔÖ_ØÆÅÔÖ字符串': 'Non-ascii: øæåôöØÆÅÔÖ字符串'
+    NON_ASCII__ØÆÅÔÖ_ØÆÅÔÖ字符串: 'Non-ascii: øæåôöØÆÅÔÖ字符串'
 } as const;
 
 /**

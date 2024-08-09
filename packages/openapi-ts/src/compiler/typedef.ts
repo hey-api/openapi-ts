@@ -1,8 +1,9 @@
 import ts from 'typescript';
 
 import {
-  addLeadingJSDocComment,
+  addLeadingComments,
   type Comments,
+  createIdentifier,
   ots,
   tsNodeToString,
 } from './utils';
@@ -36,22 +37,29 @@ export const createTypeNode = (
  */
 export const createTypeAliasDeclaration = ({
   comment,
+  exportType,
   name,
   type,
 }: {
   comment?: Comments;
+  exportType?: boolean;
   name: string;
   type: string | ts.TypeNode;
 }): ts.TypeAliasDeclaration => {
   const node = ts.factory.createTypeAliasDeclaration(
-    [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
-    ts.factory.createIdentifier(name),
+    exportType
+      ? [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)]
+      : undefined,
+    createIdentifier({ text: name }),
     [],
     createTypeNode(type),
   );
-  if (comment) {
-    addLeadingJSDocComment(node, comment);
-  }
+
+  addLeadingComments({
+    comments: comment,
+    node,
+  });
+
   return node;
 };
 
@@ -72,7 +80,7 @@ const maybeNullable = ({
   isNullable,
   node,
 }: {
-  isNullable: boolean;
+  isNullable?: boolean;
   node: ts.TypeNode;
 }) => {
   if (!isNullable) {
@@ -87,25 +95,38 @@ const maybeNullable = ({
  * @param isNullable - if the whole interface can be nullable
  * @returns ts.TypeLiteralNode | ts.TypeUnionNode
  */
-export const createTypeInterfaceNode = (
-  properties: Property[],
-  isNullable: boolean = false,
-) => {
+export const createTypeInterfaceNode = ({
+  isNullable,
+  properties,
+}: {
+  isNullable?: boolean;
+  properties: Property[];
+}) => {
   const node = ts.factory.createTypeLiteralNode(
     properties.map((property) => {
-      const signature = ts.factory.createPropertySignature(
-        property.isReadOnly
-          ? [ts.factory.createModifier(ts.SyntaxKind.ReadonlyKeyword)]
-          : undefined,
-        property.name,
-        property.isRequired
+      const modifiers: readonly ts.Modifier[] | undefined = property.isReadOnly
+        ? [ts.factory.createModifier(ts.SyntaxKind.ReadonlyKeyword)]
+        : undefined;
+
+      const questionToken: ts.QuestionToken | undefined =
+        property.isRequired !== false
           ? undefined
-          : ts.factory.createToken(ts.SyntaxKind.QuestionToken),
-        createTypeNode(property.type),
+          : ts.factory.createToken(ts.SyntaxKind.QuestionToken);
+
+      const type: ts.TypeNode | undefined = createTypeNode(property.type);
+
+      const signature = ts.factory.createPropertySignature(
+        modifiers,
+        property.name,
+        questionToken,
+        type,
       );
-      if (property.comment) {
-        addLeadingJSDocComment(signature, property.comment);
-      }
+
+      addLeadingComments({
+        comments: property.comment,
+        node: signature,
+      });
+
       return signature;
     }),
   );
@@ -179,13 +200,14 @@ export const createTypeRecordNode = (
   // NOTE: We use the syntax `{ [key: string]: string }` because using a Record causes
   //       invalid types with circular dependencies. This is functionally the same.
   // Ref: https://github.com/hey-api/openapi-ts/issues/370
-  const node = createTypeInterfaceNode([
-    {
-      isRequired: true,
-      name: `[key: ${tsNodeToString({ node: keyNode, unescape: true })}]`,
-      type: valueNode,
-    },
-  ]);
+  const node = createTypeInterfaceNode({
+    properties: [
+      {
+        name: `[key: ${tsNodeToString({ node: keyNode, unescape: true })}]`,
+        type: valueNode,
+      },
+    ],
+  });
   return maybeNullable({ isNullable, node });
 };
 

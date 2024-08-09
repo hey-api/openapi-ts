@@ -2,8 +2,9 @@ import ts from 'typescript';
 
 import { createTypeNode } from './typedef';
 import {
-  addLeadingJSDocComment,
+  addLeadingComments,
   type Comments,
+  createIdentifier,
   isTsNode,
   isType,
   ots,
@@ -11,21 +12,40 @@ import {
 
 export type AccessLevel = 'public' | 'protected' | 'private';
 
-export interface FunctionParameter {
-  accessLevel?: AccessLevel;
-  default?: any;
-  destructure?: boolean;
-  isReadOnly?: boolean;
-  isRequired?: boolean;
-  name: string;
-  type?: any | ts.TypeNode;
-}
+export type FunctionParameter =
+  | {
+      accessLevel?: AccessLevel;
+      default?: any;
+      isReadOnly?: boolean;
+      isRequired?: boolean;
+      name: string;
+      type?: any | ts.TypeNode;
+    }
+  | {
+      destructure: FunctionParameter[];
+    };
 
 export interface FunctionTypeParameter {
   default?: any;
   extends?: any | ts.TypeNode;
   name: string;
 }
+
+export const createPropertyAccessExpression = ({
+  expression,
+  name,
+}: {
+  expression: string | ts.Expression;
+  name: string | ts.MemberName;
+}) => {
+  const node = ts.factory.createPropertyAccessExpression(
+    typeof expression === 'string'
+      ? createIdentifier({ text: expression })
+      : expression,
+    typeof name === 'string' ? createIdentifier({ text: name }) : name,
+  );
+  return node;
+};
 
 /**
  * Convert an unknown value to an expression.
@@ -57,7 +77,11 @@ export const toExpression = <T = unknown>({
   }
 
   if (typeof value === 'object') {
-    return createObjectType({ identifiers, obj: value, shorthand });
+    return createObjectType({
+      identifiers,
+      obj: value,
+      shorthand,
+    });
   }
 
   if (typeof value === 'number') {
@@ -72,10 +96,10 @@ export const toExpression = <T = unknown>({
     if (isValueAccess) {
       // TODO; handle more than single nested level, i.e. foo.bar.baz
       const parts = value.split('.');
-      return ts.factory.createPropertyAccessExpression(
-        ts.factory.createIdentifier(parts[0]),
-        ts.factory.createIdentifier(parts[1]),
-      );
+      return createPropertyAccessExpression({
+        expression: parts[0],
+        name: parts[1],
+      });
     }
     return ots.string(value, unescape);
   }
@@ -111,6 +135,34 @@ export const toAccessLevelModifiers = (
  */
 export const toParameterDeclarations = (parameters: FunctionParameter[]) =>
   parameters.map((parameter) => {
+    if ('destructure' in parameter) {
+      return ts.factory.createParameterDeclaration(
+        undefined,
+        undefined,
+        ts.factory.createObjectBindingPattern(
+          parameter.destructure
+            .map((param) => {
+              // TODO: add support for nested destructuring, not needed at the moment
+              if ('destructure' in param) {
+                return;
+              }
+
+              const result = ts.factory.createBindingElement(
+                undefined,
+                undefined,
+                createIdentifier({ text: param.name }),
+                undefined,
+              );
+              return result;
+            })
+            .filter(Boolean) as ts.BindingElement[],
+        ),
+        undefined,
+        undefined,
+        undefined,
+      );
+    }
+
     let modifiers = toAccessLevelModifiers(parameter.accessLevel);
 
     if (parameter.isReadOnly) {
@@ -120,21 +172,10 @@ export const toParameterDeclarations = (parameters: FunctionParameter[]) =>
       ];
     }
 
-    const nameIdentifier = ts.factory.createIdentifier(parameter.name);
-
     return ts.factory.createParameterDeclaration(
       modifiers,
       undefined,
-      parameter.destructure
-        ? ts.factory.createObjectBindingPattern([
-            ts.factory.createBindingElement(
-              undefined,
-              undefined,
-              nameIdentifier,
-              undefined,
-            ),
-          ])
-        : nameIdentifier,
+      createIdentifier({ text: parameter.name }),
       parameter.isRequired !== undefined && !parameter.isRequired
         ? ts.factory.createToken(ts.SyntaxKind.QuestionToken)
         : undefined,
@@ -145,15 +186,30 @@ export const toParameterDeclarations = (parameters: FunctionParameter[]) =>
     );
   });
 
+export const createKeywordTypeNode = ({
+  keyword,
+}: {
+  keyword: 'any' | 'boolean' | 'string';
+}) => {
+  let kind: ts.KeywordTypeSyntaxKind = ts.SyntaxKind.AnyKeyword;
+  switch (keyword) {
+    case 'boolean':
+      kind = ts.SyntaxKind.BooleanKeyword;
+      break;
+    case 'string':
+      kind = ts.SyntaxKind.StringKeyword;
+      break;
+  }
+  return ts.factory.createKeywordTypeNode(kind);
+};
+
 export const toTypeParameters = (types: FunctionTypeParameter[]) =>
   types.map((type) =>
     ts.factory.createTypeParameterDeclaration(
       undefined,
       type.name,
       // TODO: support other extends values
-      type.extends
-        ? ts.factory.createKeywordTypeNode(ts.SyntaxKind.BooleanKeyword)
-        : undefined,
+      type.extends ? createKeywordTypeNode({ keyword: 'boolean' }) : undefined,
       // TODO: support other default types
       type.default !== undefined
         ? ts.factory.createLiteralTypeNode(
@@ -193,9 +249,12 @@ export const createArrowFunction = ({
       ? ts.factory.createBlock(statements, multiLine)
       : statements,
   );
-  if (comment) {
-    addLeadingJSDocComment(expression, comment);
-  }
+
+  addLeadingComments({
+    comments: comment,
+    node: expression,
+  });
+
   return expression;
 };
 
@@ -230,8 +289,12 @@ export const createAwaitExpression = ({
 }) => ts.factory.createAwaitExpression(expression);
 
 export type ObjectValue =
-  | { spread: string }
   | {
+      comments?: Comments;
+      spread: string;
+    }
+  | {
+      comments?: Comments;
       isValueAccess?: boolean;
       key: string;
       value: any;
@@ -257,15 +320,13 @@ export const createObjectType = <
 >({
   comments,
   identifiers = [],
-  leadingComment,
   multiLine = true,
   obj,
   shorthand = false,
   unescape = false,
 }: {
-  comments?: Record<string | number, Comments>;
+  comments?: Comments;
   identifiers?: string[];
-  leadingComment?: Comments;
   multiLine?: boolean;
   obj: T;
   shorthand?: boolean;
@@ -298,7 +359,7 @@ export const createObjectType = <
           let assignment: ObjectAssignment;
           if ('spread' in value) {
             assignment = ts.factory.createSpreadAssignment(
-              ts.factory.createIdentifier(value.spread),
+              createIdentifier({ text: value.spread }),
             );
           } else if (shorthand && canShorthand) {
             assignment = ts.factory.createShorthandPropertyAssignment(
@@ -324,19 +385,19 @@ export const createObjectType = <
               identifiers.includes(value.key) &&
               !ts.isObjectLiteralExpression(initializer)
             ) {
-              initializer = ts.factory.createIdentifier(value.value as string);
+              initializer = createIdentifier({ text: value.value as string });
             }
             assignment = ts.factory.createPropertyAssignment(
               value.key,
               initializer,
             );
           }
-          if ('key' in value) {
-            const comment = comments?.[value.key];
-            if (comment) {
-              addLeadingJSDocComment(assignment, comment);
-            }
-          }
+
+          addLeadingComments({
+            comments: value.comments,
+            node: assignment,
+          });
+
           return assignment;
         })
         .filter(isType<ObjectAssignment>)
@@ -357,7 +418,7 @@ export const createObjectType = <
             identifiers.includes(key) &&
             !ts.isObjectLiteralExpression(initializer)
           ) {
-            initializer = ts.factory.createIdentifier(value as string);
+            initializer = createIdentifier({ text: value as string });
           }
           // Check key value equality before possibly modifying it
           const canShorthand = key === value;
@@ -376,10 +437,12 @@ export const createObjectType = <
             shorthand && canShorthand
               ? ts.factory.createShorthandPropertyAssignment(value)
               : ts.factory.createPropertyAssignment(key, initializer);
-          const comment = comments?.[key];
-          if (comment) {
-            addLeadingJSDocComment(assignment, comment);
-          }
+
+          // addLeadingComments({
+          //   comments: comments?.[key],
+          //   node: assignment,
+          // });
+
           return assignment;
         })
         .filter(isType<ObjectAssignment>);
@@ -389,9 +452,10 @@ export const createObjectType = <
     multiLine,
   );
 
-  if (leadingComment) {
-    addLeadingJSDocComment(expression, leadingComment);
-  }
+  addLeadingComments({
+    comments,
+    node: expression,
+  });
 
   return expression;
 };
@@ -417,20 +481,26 @@ export const createEnumDeclaration = <T extends object>({
 }): ts.EnumDeclaration => {
   const declaration = ts.factory.createEnumDeclaration(
     [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
-    ts.factory.createIdentifier(name),
+    createIdentifier({ text: name }),
     Object.entries(obj).map(([key, value]) => {
       const initializer = toExpression({ unescape: true, value });
       const assignment = ts.factory.createEnumMember(key, initializer);
       const comment = comments?.[key];
-      if (comment) {
-        addLeadingJSDocComment(assignment, comment);
-      }
+
+      addLeadingComments({
+        comments: comment,
+        node: assignment,
+      });
+
       return assignment;
     }),
   );
-  if (leadingComment) {
-    addLeadingJSDocComment(declaration, leadingComment);
-  }
+
+  addLeadingComments({
+    comments: leadingComment,
+    node: declaration,
+  });
+
   return declaration;
 };
 
@@ -451,7 +521,7 @@ export const createNamespaceDeclaration = <
 }) =>
   ts.factory.createModuleDeclaration(
     [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
-    ts.factory.createIdentifier(name),
+    createIdentifier({ text: name }),
     ts.factory.createModuleBlock(statements),
     ts.NodeFlags.Namespace,
   );
