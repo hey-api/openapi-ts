@@ -63,9 +63,9 @@ export const generatePlugins = async ({
     });
 
     const isTanstackQueryPlugin =
+      plugin.name === '@tanstack/angular-query-experimental' ||
       plugin.name === '@tanstack/react-query' ||
       plugin.name === '@tanstack/solid-query' ||
-      plugin.name === '@tanstack/angular-query-experimental' ||
       plugin.name === '@tanstack/svelte-query' ||
       plugin.name === '@tanstack/vue-query';
 
@@ -87,9 +87,10 @@ export const generatePlugins = async ({
 
       const createQueryKeyParamsFn = 'createQueryKeyParams';
       const infiniteQueryOptionsFn = 'infiniteQueryOptions';
+
       const mutationsType =
-        plugin.name === '@tanstack/solid-query' ||
         plugin.name === '@tanstack/angular-query-experimental' ||
+        plugin.name === '@tanstack/solid-query' ||
         plugin.name === '@tanstack/svelte-query'
           ? 'MutationOptions'
           : 'UseMutationOptions';
@@ -740,7 +741,6 @@ export const generatePlugins = async ({
 
           // mutations
           if (
-            'mutationOptions' in plugin &&
             plugin.mutationOptions &&
             (
               ['DELETE', 'PATCH', 'POST', 'PUT'] as ReadonlyArray<Method>
