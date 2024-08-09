@@ -3,11 +3,8 @@ import {
   tanstackQueryDefaultConfig,
 } from '../config';
 
-export type PluginTanStackSvelteQuery = Omit<
-  PluginTanStackQueryConfig<'@tanstack/svelte-query'>,
-  // UseMutationOptions is not exposed from '@tanstack/svelte-query'
-  'mutationOptions'
->;
+export type PluginTanStackSvelteQuery =
+  PluginTanStackQueryConfig<'@tanstack/svelte-query'>;
 
 export const pluginTanStackSvelteQueryDefaultConfig: Required<PluginTanStackSvelteQuery> =
   tanstackQueryDefaultConfig('@tanstack/svelte-query');

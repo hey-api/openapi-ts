@@ -3,11 +3,8 @@ import {
   tanstackQueryDefaultConfig,
 } from '../config';
 
-export type PluginTanStackSolidQuery = Omit<
-  PluginTanStackQueryConfig<'@tanstack/solid-query'>,
-  // UseMutationOptions is not exposed from '@tanstack/solid-query'
-  'mutationOptions'
->;
+export type PluginTanStackSolidQuery =
+  PluginTanStackQueryConfig<'@tanstack/solid-query'>;
 
 export const pluginTanStackSolidQueryDefaultConfig: Required<PluginTanStackSolidQuery> =
   tanstackQueryDefaultConfig('@tanstack/solid-query');

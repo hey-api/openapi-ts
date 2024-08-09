@@ -87,7 +87,13 @@ export const generatePlugins = async ({
 
       const createQueryKeyParamsFn = 'createQueryKeyParams';
       const infiniteQueryOptionsFn = 'infiniteQueryOptions';
-      const mutationsType = 'UseMutationOptions';
+      const mutationsType =
+        plugin.name === '@tanstack/solid-query' ||
+        plugin.name === '@tanstack/angular-query-experimental' ||
+        plugin.name === '@tanstack/svelte-query'
+          ? 'MutationOptions'
+          : 'UseMutationOptions';
+
       const queryKeyName = 'QueryKey';
       const queryOptionsFn = 'queryOptions';
 

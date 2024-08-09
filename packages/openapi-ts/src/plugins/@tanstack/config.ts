@@ -64,6 +64,7 @@ export function tanstackQueryDefaultConfig(flavor: TanstackQueryFlavor) {
     case '@tanstack/angular-query-experimental': {
       const options: Required<PluginTanStackAngularQueryExperimental> = {
         infiniteQueryOptions,
+        mutationOptions,
         name: '@tanstack/angular-query-experimental',
         output,
         queryOptions,
@@ -85,6 +86,7 @@ export function tanstackQueryDefaultConfig(flavor: TanstackQueryFlavor) {
     case '@tanstack/solid-query': {
       const options: Required<PluginTanStackSolidQuery> = {
         infiniteQueryOptions,
+        mutationOptions,
         name: flavor,
         output,
         queryOptions,
@@ -95,6 +97,7 @@ export function tanstackQueryDefaultConfig(flavor: TanstackQueryFlavor) {
     case '@tanstack/svelte-query': {
       const options: Required<PluginTanStackSvelteQuery> = {
         infiniteQueryOptions,
+        mutationOptions,
         name: flavor,
         output,
         queryOptions,
