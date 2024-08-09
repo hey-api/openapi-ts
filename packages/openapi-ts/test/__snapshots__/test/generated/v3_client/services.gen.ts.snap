@@ -2,7 +2,7 @@
 
 import type { CancelablePromise } from './core/CancelablePromise';
 import type { BaseHttpRequest } from './core/BaseHttpRequest';
-import type { ImportData, ImportResponse, ApiVversionOdataControllerCountResponse, DeleteFooData3, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, CallWithDescriptionsData, DeprecatedCallData, PostApiRequestBodyData, PostApiFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, DummyAResponse, DummyBResponse, CollectionFormatData, TypesData, TypesResponse, UploadFileData, UploadFileResponse, FileResponseData, FileResponseResponse, ComplexTypesData, ComplexTypesResponse, ComplexParamsData, ComplexParamsResponse, MultipartRequestData, MultipartResponseResponse, CallWithResultFromHeaderResponse, TestErrorCodeData, TestErrorCodeResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData } from './types.gen';
+import type { ImportData, ImportResponse, ApiVversionOdataControllerCountResponse, DeleteFooData3, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, CallWithDescriptionsData, DeprecatedCallData, PostApiRequestBodyData, PostApiFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, DummyAResponse, DummyBResponse, CollectionFormatData, TypesData, TypesResponse, UploadFileData, UploadFileResponse, FileResponseData, FileResponseResponse, ComplexTypesData, ComplexTypesResponse, ComplexParamsData, ComplexParamsResponse, MultipartRequestData, MultipartResponseResponse, CallWithResultFromHeaderResponse, TestErrorCodeData, TestErrorCodeResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData } from './types.gen';
 
 export class DefaultService {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
@@ -149,7 +149,7 @@ export class ParametersService {
      * @param data The data for the request.
      * @param data.parameterHeader This is the parameter that goes into the header
      * @param data.fooAllOfEnum
-     * @param data.parameterQuery This is the parameter that goes into the query params
+     * @param data.cursor This is the parameter that goes into the query params
      * @param data.parameterCookie This is the parameter that goes into the cookie
      * @param data.parameterPath This is the parameter that goes into the path
      * @param data.requestBody This is the parameter that goes into the body
@@ -172,7 +172,7 @@ export class ParametersService {
             query: {
                 foo_ref_enum: data.fooRefEnum,
                 foo_all_of_enum: data.fooAllOfEnum,
-                parameterQuery: data.parameterQuery
+                cursor: data.cursor
             },
             body: data.requestBody,
             mediaType: 'application/json'
@@ -218,7 +218,7 @@ export class ParametersService {
     /**
      * @param data The data for the request.
      * @param data.requestBody This is a required parameter
-     * @param data.parameter This is an optional parameter
+     * @param data.page This is an optional parameter
      * @throws ApiError
      */
     public getCallWithOptionalParam(data: GetCallWithOptionalParamData): CancelablePromise<void> {
@@ -226,7 +226,7 @@ export class ParametersService {
             method: 'GET',
             url: '/api/v{api-version}/parameters/',
             query: {
-                parameter: data.parameter
+                page: data.page
             },
             body: data.requestBody,
             mediaType: 'application/json'
@@ -237,9 +237,11 @@ export class ParametersService {
      * @param data The data for the request.
      * @param data.parameter This is a required parameter
      * @param data.requestBody This is an optional parameter
+     * @returns number Response is a simple number
+     * @returns void Success
      * @throws ApiError
      */
-    public postCallWithOptionalParam(data: PostCallWithOptionalParamData): CancelablePromise<void> {
+    public postCallWithOptionalParam(data: PostCallWithOptionalParamData): CancelablePromise<PostCallWithOptionalParamResponse> {
         return this.httpRequest.request({
             method: 'POST',
             url: '/api/v{api-version}/parameters/',

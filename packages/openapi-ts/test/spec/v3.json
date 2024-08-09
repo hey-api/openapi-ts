@@ -267,7 +267,7 @@
           },
           {
             "description": "This is the parameter that goes into the query params",
-            "name": "parameterQuery",
+            "name": "cursor",
             "in": "query",
             "required": true,
             "nullable": true,
@@ -428,11 +428,11 @@
         "parameters": [
           {
             "description": "This is an optional parameter",
-            "name": "parameter",
+            "name": "page",
             "in": "query",
             "required": false,
             "schema": {
-              "type": "string"
+              "type": "number"
             }
           }
         ],
@@ -468,9 +468,31 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ModelWithString"
+                "properties": {
+                  "offset": {
+                    "nullable": true,
+                    "required": true,
+                    "type": "number"
+                  }
+                },
+                "type": "object"
               }
             }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Response is a simple number",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Success"
           }
         }
       }

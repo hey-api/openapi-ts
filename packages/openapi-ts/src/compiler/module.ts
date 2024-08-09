@@ -1,8 +1,9 @@
 import ts from 'typescript';
 
 import {
-  addLeadingJSDocComment,
+  addLeadingComments,
   type Comments,
+  createIdentifier,
   type ImportExportItemObject,
   ots,
 } from './utils';
@@ -39,11 +40,11 @@ export const createCallExpression = ({
 }) => {
   const expression =
     typeof functionName === 'string'
-      ? ts.factory.createIdentifier(functionName)
+      ? createIdentifier({ text: functionName })
       : functionName;
   const argumentsArray = parameters.map((parameter) =>
     typeof parameter === 'string'
-      ? ts.factory.createIdentifier(parameter)
+      ? createIdentifier({ text: parameter })
       : parameter,
   );
   const callExpression = ts.factory.createCallExpression(
@@ -123,7 +124,7 @@ export const createConstVariable = ({
         ts.factory.createTypeReferenceNode('const'),
       )
     : expression;
-  const nameIdentifier = ts.factory.createIdentifier(name);
+  const nameIdentifier = createIdentifier({ text: name });
   const declaration = ts.factory.createVariableDeclaration(
     destructure
       ? ts.factory.createObjectBindingPattern([
@@ -145,9 +146,12 @@ export const createConstVariable = ({
       : undefined,
     ts.factory.createVariableDeclarationList([declaration], ts.NodeFlags.Const),
   );
-  if (comment) {
-    addLeadingJSDocComment(statement, comment);
-  }
+
+  addLeadingComments({
+    comments: comment,
+    node: statement,
+  });
+
   return statement;
 };
 

@@ -1009,6 +1009,10 @@ export type DeleteFooData3 = {
 };
 
 export type CallWithParametersData = {
+    /**
+     * This is the parameter that goes into the query params
+     */
+    cursor: string | null;
     fooAllOfEnum: ModelWithNestedArrayEnumsDataFoo;
     fooRefEnum?: ModelWithNestedArrayEnumsDataFoo;
     /**
@@ -1023,10 +1027,6 @@ export type CallWithParametersData = {
      * This is the parameter that goes into the path
      */
     parameterPath: string | null;
-    /**
-     * This is the parameter that goes into the query params
-     */
-    parameterQuery: string | null;
     /**
      * This is the parameter that goes into the body
      */
@@ -1074,7 +1074,7 @@ export type GetCallWithOptionalParamData = {
     /**
      * This is an optional parameter
      */
-    parameter?: string;
+    page?: number;
     /**
      * This is a required parameter
      */
@@ -1089,8 +1089,12 @@ export type PostCallWithOptionalParamData = {
     /**
      * This is an optional parameter
      */
-    requestBody?: ModelWithString;
+    requestBody?: {
+        offset?: number | null;
+    };
 };
+
+export type PostCallWithOptionalParamResponse = number | void;
 
 export type CallWithDescriptionsData = {
     /**
@@ -1453,6 +1457,16 @@ export type $OpenApiTs = {
         };
         post: {
             req: PostCallWithOptionalParamData;
+            res: {
+                /**
+                 * Response is a simple number
+                 */
+                200: number;
+                /**
+                 * Success
+                 */
+                204: void;
+            };
         };
     };
     '/api/v{api-version}/descriptions/': {

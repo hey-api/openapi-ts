@@ -100,7 +100,7 @@ export const EnumWithStrings = {
     ERROR: 'Error',
     _SINGLE_QUOTE_: "'Single Quote'",
     _DOUBLE_QUOTES_: '"Double Quotes"',
-    'NON_ASCII__ØÆÅÔÖ_ØÆÅÔÖ字符串': 'Non-ascii: øæåôöØÆÅÔÖ字符串'
+    NON_ASCII__ØÆÅÔÖ_ØÆÅÔÖ字符串: 'Non-ascii: øæåôöØÆÅÔÖ字符串'
 } as const;
 
 export type EnumWithReplacedCharacters = "'Single Quote'" | '"Double Quotes"' | 'øæåôöØÆÅÔÖ字符串' | 3.1 | '';
@@ -108,7 +108,7 @@ export type EnumWithReplacedCharacters = "'Single Quote'" | '"Double Quotes"' | 
 export const EnumWithReplacedCharacters = {
     _SINGLE_QUOTE_: "'Single Quote'",
     _DOUBLE_QUOTES_: '"Double Quotes"',
-    'ØÆÅÔÖ_ØÆÅÔÖ字符串': 'øæåôöØÆÅÔÖ字符串',
+    ØÆÅÔÖ_ØÆÅÔÖ字符串: 'øæåôöØÆÅÔÖ字符串',
     '_3.1': 3.1,
     EMPTY_STRING: ''
 } as const;
@@ -361,7 +361,7 @@ export const foo_bar_enum = {
     SUCCESS: 'Success',
     WARNING: 'Warning',
     ERROR: 'Error',
-    'ØÆÅ字符串': 'ØÆÅ字符串'
+    ØÆÅ字符串: 'ØÆÅ字符串'
 } as const;
 
 /**
@@ -1126,12 +1126,12 @@ export type CallWithParametersData = {
         parameterPath: string | null;
     };
     query: {
-        foo_all_of_enum: ModelWithNestedArrayEnumsDataFoo;
-        foo_ref_enum?: ModelWithNestedArrayEnumsDataFoo;
         /**
          * This is the parameter that goes into the query params
          */
-        parameterQuery: string | null;
+        cursor: string | null;
+        foo_all_of_enum: ModelWithNestedArrayEnumsDataFoo;
+        foo_ref_enum?: ModelWithNestedArrayEnumsDataFoo;
     };
 };
 
@@ -1185,7 +1185,7 @@ export type GetCallWithOptionalParamData = {
         /**
          * This is an optional parameter
          */
-        parameter?: string;
+        page?: number;
     };
 };
 
@@ -1193,7 +1193,9 @@ export type PostCallWithOptionalParamData = {
     /**
      * This is an optional parameter
      */
-    body?: ModelWithString;
+    body?: {
+        offset?: number | null;
+    };
     query: {
         /**
          * This is a required parameter
@@ -1201,6 +1203,10 @@ export type PostCallWithOptionalParamData = {
         parameter: Pageable;
     };
 };
+
+export type PostCallWithOptionalParamResponse = number | void;
+
+export type PostCallWithOptionalParamError = unknown;
 
 export type PostApiVbyApiVersionRequestBodyData = {
     /**
@@ -1607,6 +1613,16 @@ export type $OpenApiTs = {
         };
         post: {
             req: PostCallWithOptionalParamData;
+            res: {
+                /**
+                 * Response is a simple number
+                 */
+                '200': number;
+                /**
+                 * Success
+                 */
+                '204': void;
+            };
         };
     };
     '/api/v{api-version}/requestBody/': {
