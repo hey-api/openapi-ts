@@ -1,6 +1,8 @@
 import path from 'node:path';
 
-import { compiler, TypeScriptFile } from '../compiler';
+import ts from 'typescript';
+
+import { compiler, Property, TypeScriptFile } from '../compiler';
 import type { ImportExportItem } from '../compiler/module';
 import type { ImportExportItemObject } from '../compiler/utils';
 import type { Operation } from '../openApi';
@@ -76,8 +78,10 @@ export const generatePlugins = async ({
       let imports: string[] = [];
       let importsServices: ImportExportItem[] = [];
 
+      const createQueryKeyParamsFn = 'createQueryKeyParams';
       const infiniteQueryOptionsFn = 'infiniteQueryOptions';
       const mutationsType = 'UseMutationOptions';
+      const queryKeyName = 'QueryKey';
       const queryOptionsFn = 'queryOptions';
 
       // TODO: `addTanStackQueryImport()` should be a method of file class to create
@@ -114,13 +118,153 @@ export const generatePlugins = async ({
         }
       };
 
+      let hasCreateQueryKeyParamsFunction = false;
+      const createQueryKeyParamsFunction = () => {
+        hasCreateQueryKeyParamsFunction = true;
+
+        const queryKeyParamsFunction = compiler.constVariable({
+          expression: compiler.arrowFunction({
+            multiLine: true,
+            parameters: [
+              {
+                isRequired: false,
+                name: 'options',
+                type: compiler.typeNode('Options', [compiler.typeNode('T')]),
+              },
+            ],
+            statements: [
+              compiler.constVariable({
+                expression: compiler.objectExpression({
+                  multiLine: false,
+                  obj: [],
+                }),
+                name: 'params',
+                typeName: compiler.indexedAccessTypeNode({
+                  indexType: ts.factory.createLiteralTypeNode(
+                    ts.factory.createStringLiteral('params'),
+                  ),
+                  objectType: compiler.indexedAccessTypeNode({
+                    indexType: compiler.typeNode(0),
+                    objectType: compiler.typeNode('QueryKey'),
+                  }),
+                }),
+              }),
+              compiler.ifStatement({
+                expression: compiler.propertyAccessExpression({
+                  expression: 'options',
+                  isOptional: true,
+                  name: 'body',
+                }),
+                thenStatement: ts.factory.createBlock(
+                  [
+                    compiler.expressionToStatement({
+                      expression: compiler.binaryExpression({
+                        left: compiler.propertyAccessExpression({
+                          expression: 'params',
+                          name: 'body',
+                        }),
+                        right: compiler.propertyAccessExpression({
+                          expression: 'options',
+                          name: 'body',
+                        }),
+                      }),
+                    }),
+                  ],
+                  true,
+                ),
+              }),
+              compiler.ifStatement({
+                expression: compiler.propertyAccessExpression({
+                  expression: 'options',
+                  isOptional: true,
+                  name: 'headers',
+                }),
+                thenStatement: ts.factory.createBlock(
+                  [
+                    compiler.expressionToStatement({
+                      expression: compiler.binaryExpression({
+                        left: compiler.propertyAccessExpression({
+                          expression: 'params',
+                          name: 'headers',
+                        }),
+                        right: compiler.propertyAccessExpression({
+                          expression: 'options',
+                          name: 'headers',
+                        }),
+                      }),
+                    }),
+                  ],
+                  true,
+                ),
+              }),
+              compiler.ifStatement({
+                expression: compiler.propertyAccessExpression({
+                  expression: 'options',
+                  isOptional: true,
+                  name: 'path',
+                }),
+                thenStatement: ts.factory.createBlock(
+                  [
+                    compiler.expressionToStatement({
+                      expression: compiler.binaryExpression({
+                        left: compiler.propertyAccessExpression({
+                          expression: 'params',
+                          name: 'path',
+                        }),
+                        right: compiler.propertyAccessExpression({
+                          expression: 'options',
+                          name: 'path',
+                        }),
+                      }),
+                    }),
+                  ],
+                  true,
+                ),
+              }),
+              compiler.ifStatement({
+                expression: compiler.propertyAccessExpression({
+                  expression: 'options',
+                  isOptional: true,
+                  name: 'query',
+                }),
+                thenStatement: ts.factory.createBlock(
+                  [
+                    compiler.expressionToStatement({
+                      expression: compiler.binaryExpression({
+                        left: compiler.propertyAccessExpression({
+                          expression: 'params',
+                          name: 'query',
+                        }),
+                        right: compiler.propertyAccessExpression({
+                          expression: 'options',
+                          name: 'query',
+                        }),
+                      }),
+                    }),
+                  ],
+                  true,
+                ),
+              }),
+              compiler.returnVariable({
+                name: 'params',
+              }),
+            ],
+            types: [
+              {
+                name: 'T',
+              },
+            ],
+          }),
+          name: createQueryKeyParamsFn,
+        });
+        files[plugin.name].add(queryKeyParamsFunction);
+      };
+
       const createQueryKeyLiteral = ({
         isInfinite,
-        isRequired,
         operation,
       }: {
         isInfinite?: boolean;
-        isRequired: boolean;
         operation: Operation;
       }) => {
         const queryKeyLiteral = compiler.arrayLiteralExpression({
@@ -133,37 +277,9 @@ export const generatePlugins = async ({
                 },
                 {
                   key: 'params',
-                  value: compiler.objectExpression({
-                    obj: [
-                      {
-                        isValueAccess: true,
-                        key: 'body',
-                        value: isRequired
-                          ? 'options.body ?? {}'
-                          : 'options?.body ?? {}',
-                      },
-                      {
-                        isValueAccess: true,
-                        key: 'headers',
-                        value: isRequired
-                          ? 'options.headers ?? {}'
-                          : 'options?.headers ?? {}',
-                      },
-                      {
-                        isValueAccess: true,
-                        key: 'path',
-                        value: isRequired
-                          ? 'options.path ?? {}'
-                          : 'options?.path ?? {}',
-                      },
-                      {
-                        isValueAccess: true,
-                        key: 'query',
-                        value: isRequired
-                          ? 'options.query ?? {}'
-                          : 'options?.query ?? {}',
-                      },
-                    ],
+                  value: compiler.callExpression({
+                    functionName: createQueryKeyParamsFn,
+                    parameters: ['options'],
                   }),
                 },
                 {
@@ -175,6 +291,67 @@ export const generatePlugins = async ({
           ],
         });
         return queryKeyLiteral;
+      };
+
+      const createQueryKeyType = () => {
+        const properties: Property[] = [
+          {
+            isRequired: false,
+            name: 'infinite',
+            type: compiler.keywordTypeNode({
+              keyword: 'boolean',
+            }),
+          },
+          {
+            name: 'params',
+            type: compiler.typeInterfaceNode({
+              properties: [
+                {
+                  isRequired: false,
+                  name: 'body',
+                  type: compiler.keywordTypeNode({
+                    keyword: 'any',
+                  }),
+                },
+                {
+                  isRequired: false,
+                  name: 'headers',
+                  type: compiler.keywordTypeNode({
+                    keyword: 'any',
+                  }),
+                },
+                {
+                  isRequired: false,
+                  name: 'path',
+                  type: compiler.keywordTypeNode({
+                    keyword: 'any',
+                  }),
+                },
+                {
+                  isRequired: false,
+                  name: 'query',
+                  type: compiler.keywordTypeNode({
+                    keyword: 'any',
+                  }),
+                },
+              ],
+            }),
+          },
+          {
+            name: 'scope',
+            type: compiler.keywordTypeNode({
+              keyword: 'string',
+            }),
+          },
+        ];
+
+        const queryKeyType = compiler.typeAliasDeclaration({
+          name: queryKeyName,
+          type: compiler.typeTupleNode({
+            types: [compiler.typeInterfaceNode({ properties })],
+          }),
+        });
+        files[plugin.name].add(queryKeyType);
       };
 
       let typeInfiniteData!: ImportExportItem;
@@ -196,6 +373,11 @@ export const generatePlugins = async ({
           ) {
             if (!hasQueries) {
               hasQueries = true;
+
+              if (!hasCreateQueryKeyParamsFunction) {
+                createQueryKeyType();
+                createQueryKeyParamsFunction();
+              }
 
               addTanStackQueryImport(queryOptionsFn);
             }
@@ -285,7 +467,6 @@ export const generatePlugins = async ({
                         {
                           key: 'queryKey',
                           value: createQueryKeyLiteral({
-                            isRequired,
                             operation,
                           }),
                         },
@@ -353,69 +534,17 @@ export const generatePlugins = async ({
               if (!hasInfiniteQueries) {
                 hasInfiniteQueries = true;
 
+                if (!hasCreateQueryKeyParamsFunction) {
+                  createQueryKeyType();
+                  createQueryKeyParamsFunction();
+                }
+
                 addTanStackQueryImport(infiniteQueryOptionsFn);
 
                 typeInfiniteData = addTanStackQueryImport({
                   asType: true,
                   name: 'InfiniteData',
                 });
-
-                const queryKeyType = compiler.typeAliasDeclaration({
-                  name: 'QueryKey',
-                  type: compiler.typeTupleNode({
-                    types: [
-                      compiler.typeInterfaceNode({
-                        properties: [
-                          {
-                            isRequired: false,
-                            name: 'infinite',
-                            type: compiler.keywordTypeNode({
-                              keyword: 'boolean',
-                            }),
-                          },
-                          {
-                            name: 'params',
-                            type: compiler.typeInterfaceNode({
-                              properties: [
-                                {
-                                  name: 'body',
-                                  type: compiler.keywordTypeNode({
-                                    keyword: 'any',
-                                  }),
-                                },
-                                {
-                                  name: 'headers',
-                                  type: compiler.keywordTypeNode({
-                                    keyword: 'any',
-                                  }),
-                                },
-                                {
-                                  name: 'path',
-                                  type: compiler.keywordTypeNode({
-                                    keyword: 'any',
-                                  }),
-                                },
-                                {
-                                  name: 'query',
-                                  type: compiler.keywordTypeNode({
-                                    keyword: 'any',
-                                  }),
-                                },
-                              ],
-                            }),
-                          },
-                          {
-                            name: 'scope',
-                            type: compiler.keywordTypeNode({
-                              keyword: 'string',
-                            }),
-                          },
-                        ],
-                      }),
-                    ],
-                  }),
-                });
-                files[plugin.name].add(queryKeyType);
               }
 
               hasUsedQueryFn = true;
@@ -570,7 +699,6 @@ export const generatePlugins = async ({
                             key: 'queryKey',
                             value: createQueryKeyLiteral({
                               isInfinite: true,
-                              isRequired,
                               operation,
                             }),
                           },
@@ -581,7 +709,7 @@ export const generatePlugins = async ({
                     // TODO: better types syntax
                     // TODO: detect pageParam type
                     types: [
-                      `${typeResponse}, ${typeof typeError === 'string' ? typeError : typeError.name}, ${typeof typeInfiniteData === 'string' ? typeInfiniteData : typeInfiniteData.name}<${typeResponse}>, QueryKey, unknown`,
+                      `${typeResponse}, ${typeof typeError === 'string' ? typeError : typeError.name}, ${typeof typeInfiniteData === 'string' ? typeInfiniteData : typeInfiniteData.name}<${typeResponse}>, ${queryKeyName}, unknown`,
                     ],
                   }),
                 ],
