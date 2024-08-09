@@ -6,14 +6,14 @@ import {
   TANSTACK_DEFAULT_QUERY_OPTIONS,
 } from '../config';
 
-export type PluginTanStackReactQuery =
-  PluginTanStackQueryConfig<'@tanstack/react-query'>;
+export type PluginTanStackSvelteQuery =
+  PluginTanStackQueryConfig<'@tanstack/svelte-query'>;
 
-export const pluginTanStackReactQueryDefaultConfig: Required<PluginTanStackReactQuery> =
+export const pluginTanStackSvelteQueryDefaultConfig: Required<PluginTanStackSvelteQuery> =
   {
     infiniteQueryOptions: TANSTACK_DEFAULT_INFINITE_QUERY_OPTIONS,
     mutationOptions: TANSTACK_DEFAULT_MUTATION_OPTIONS,
-    name: '@tanstack/react-query',
+    name: '@tanstack/svelte-query',
     output: TANSTACK_DEFAULT_OUTPUT,
     queryOptions: TANSTACK_DEFAULT_QUERY_OPTIONS,
   };
