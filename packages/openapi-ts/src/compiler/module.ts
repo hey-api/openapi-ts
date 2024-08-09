@@ -104,8 +104,8 @@ export const createConstVariable = ({
   comment,
   constAssertion,
   destructure,
-  expression,
   exportConst,
+  expression,
   name,
   typeName,
 }: {
@@ -116,7 +116,7 @@ export const createConstVariable = ({
   expression: ts.Expression;
   name: string;
   // TODO: support a more intuitive definition of generics for example
-  typeName?: string;
+  typeName?: string | ts.IndexedAccessTypeNode;
 }): ts.VariableStatement => {
   const initializer = constAssertion
     ? ts.factory.createAsExpression(
@@ -137,7 +137,11 @@ export const createConstVariable = ({
         ])
       : nameIdentifier,
     undefined,
-    typeName ? ts.factory.createTypeReferenceNode(typeName) : undefined,
+    typeName
+      ? typeof typeName === 'string'
+        ? ts.factory.createTypeReferenceNode(typeName)
+        : typeName
+      : undefined,
     initializer,
   );
   const statement = ts.factory.createVariableStatement(
