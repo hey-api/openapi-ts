@@ -132,13 +132,14 @@ const getOutput = (userConfig: ClientConfig): Config['output'] => {
 };
 
 const getPlugins = (userConfig: ClientConfig): Config['plugins'] => {
-  const plugins: Config['plugins'] = (userConfig.plugins ?? []).map((plugin) =>
-    typeof plugin === 'string'
-      ? defaultPluginConfigs[plugin]
-      : {
-          ...defaultPluginConfigs[plugin.name],
-          ...plugin,
-        },
+  const plugins: Config['plugins'] = (userConfig.plugins ?? []).map(
+    (plugin) => {
+      if (typeof plugin === 'string') {
+        return defaultPluginConfigs[plugin];
+      }
+
+      return Object.assign({}, defaultPluginConfigs[plugin.name], plugin);
+    },
   );
   return plugins;
 };

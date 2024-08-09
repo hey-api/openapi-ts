@@ -62,7 +62,14 @@ export const generatePlugins = async ({
       name: `${outputParts[outputParts.length - 1]}.ts`,
     });
 
-    if (plugin.name === '@tanstack/react-query') {
+    const isTanstackQueryPlugin =
+      plugin.name === '@tanstack/react-query' ||
+      plugin.name === '@tanstack/solid-query' ||
+      plugin.name === '@tanstack/angular-query-experimental' ||
+      plugin.name === '@tanstack/svelte-query' ||
+      plugin.name === '@tanstack/vue-query';
+
+    if (isTanstackQueryPlugin) {
       const paginationWordsRegExp = /^(cursor|offset|page|start)/;
 
       files[plugin.name].addImport({
@@ -727,6 +734,7 @@ export const generatePlugins = async ({
 
           // mutations
           if (
+            'mutationOptions' in plugin &&
             plugin.mutationOptions &&
             (
               ['DELETE', 'PATCH', 'POST', 'PUT'] as ReadonlyArray<Method>
@@ -861,7 +869,7 @@ export const generatePlugins = async ({
       if (importsTanStackQuery.length) {
         files[plugin.name].addImport({
           imports: importsTanStackQuery,
-          module: '@tanstack/react-query',
+          module: plugin.name,
         });
       }
 
