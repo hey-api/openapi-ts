@@ -2,7 +2,8 @@ import ts from 'typescript';
 
 import { expressionToStatement } from './convert';
 import { createCallExpression } from './module';
-import { createArrowFunction } from './types';
+import { createArrowFunction, createPropertyAccessExpression } from './types';
+import { createIdentifier, ots } from './utils';
 
 export const createSafeAccessExpression = (path: string[]) =>
   path
@@ -12,22 +13,69 @@ export const createSafeAccessExpression = (path: string[]) =>
         ts.factory.createPropertyAccessChain(
           expression,
           ts.factory.createToken(ts.SyntaxKind.QuestionDotToken),
-          ts.factory.createIdentifier(element),
+          createIdentifier({ text: element }),
         ),
-      ts.factory.createIdentifier(path[0]),
+      createIdentifier({ text: path[0] }),
     );
 
 export const createAccessExpression = (path: string[]) =>
-  path
-    .slice(1)
-    .reduce<ts.Expression>(
-      (expression, element) =>
-        ts.factory.createPropertyAccessExpression(
-          expression,
-          ts.factory.createIdentifier(element),
-        ),
-      ts.factory.createIdentifier(path[0]),
-    );
+  path.slice(1).reduce<ts.Expression>(
+    (expression, element) =>
+      createPropertyAccessExpression({
+        expression,
+        name: element,
+      }),
+    createIdentifier({ text: path[0] }),
+  );
+
+/**
+ * Handles an array of access expressions instead of nesting them (default TypeScript syntax)
+ */
+export const createPropertyAccessExpressions = ({
+  expressions,
+}: {
+  expressions: Array<string | ts.Expression | ts.MemberName>;
+}): ts.PropertyAccessExpression => {
+  const expression = expressions.reduce((expression, name) => {
+    const node = createPropertyAccessExpression({
+      expression,
+      // @ts-ignore
+      name,
+    });
+    return node;
+  });
+  return expression as ts.PropertyAccessExpression;
+};
+
+export const createElementAccessExpression = ({
+  index,
+  name,
+}: {
+  index: number;
+  name: string;
+}) => {
+  const expression = ts.factory.createElementAccessExpression(
+    createIdentifier({ text: name }),
+    ots.number(index),
+  );
+  return expression;
+};
+
+export const createBinaryExpression = ({
+  left,
+  right,
+}: {
+  left: ts.Expression;
+  right: ts.Expression | string;
+}) => {
+  const expression = ts.factory.createBinaryExpression(
+    left,
+    // TODO: add support for other tokens
+    ts.SyntaxKind.EqualsToken,
+    typeof right === 'string' ? createIdentifier({ text: right }) : right,
+  );
+  return expression;
+};
 
 export const createIfStatement = ({
   expression,
@@ -53,7 +101,7 @@ export const createDateTransformMutation = ({
         accessExpression,
         ts.SyntaxKind.EqualsToken,
         ts.factory.createNewExpression(
-          ts.factory.createIdentifier('Date'),
+          createIdentifier({ text: 'Date' }),
           undefined,
           [accessExpression],
         ),
@@ -113,23 +161,23 @@ export const createArrayTransformMutation = ({
 
   const statement = createIfStatement({
     expression: createCallExpression({
-      functionName: ts.factory.createPropertyAccessExpression(
-        ts.factory.createIdentifier('Array'),
-        ts.factory.createIdentifier('isArray'),
-      ),
+      functionName: createPropertyAccessExpression({
+        expression: 'Array',
+        name: 'isArray',
+      }),
       parameters: [safeAccessExpression],
     }),
     thenStatement: ts.factory.createBlock(
       [
         expressionToStatement({
           expression: ts.factory.createCallChain(
-            ts.factory.createPropertyAccessExpression(
-              accessExpression,
-              ts.factory.createIdentifier('forEach'),
-            ),
+            createPropertyAccessExpression({
+              expression: accessExpression,
+              name: 'forEach',
+            }),
             undefined,
             undefined,
-            [ts.factory.createIdentifier(transformerName)],
+            [createIdentifier({ text: transformerName })],
           ),
         }),
       ],
@@ -146,9 +194,9 @@ export const createDateTransformerExpression = ({
   parameterName: string;
 }) =>
   ts.factory.createNewExpression(
-    ts.factory.createIdentifier('Date'),
+    createIdentifier({ text: 'Date' }),
     undefined,
-    [ts.factory.createIdentifier(parameterName)],
+    [createIdentifier({ text: parameterName })],
   );
 
 export const createArrayMapTransform = ({
@@ -163,10 +211,10 @@ export const createArrayMapTransform = ({
 
   const statement = createIfStatement({
     expression: createCallExpression({
-      functionName: ts.factory.createPropertyAccessExpression(
-        ts.factory.createIdentifier('Array'),
-        ts.factory.createIdentifier('isArray'),
-      ),
+      functionName: createPropertyAccessExpression({
+        expression: 'Array',
+        name: 'isArray',
+      }),
       parameters: [safeAccessExpression],
     }),
     thenStatement: ts.factory.createBlock(
@@ -176,10 +224,10 @@ export const createArrayMapTransform = ({
             accessExpression,
             ts.factory.createToken(ts.SyntaxKind.EqualsToken),
             ts.factory.createCallChain(
-              ts.factory.createPropertyAccessExpression(
-                accessExpression,
-                ts.factory.createIdentifier('map'),
-              ),
+              createPropertyAccessExpression({
+                expression: accessExpression,
+                name: 'map',
+              }),
               undefined,
               undefined,
               [

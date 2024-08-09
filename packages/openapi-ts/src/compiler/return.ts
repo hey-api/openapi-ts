@@ -1,7 +1,7 @@
 import ts from 'typescript';
 
 import { createCallExpression } from './module';
-import { isType } from './utils';
+import { createIdentifier, isType } from './utils';
 
 const createReturnStatement = ({
   expression,
@@ -31,7 +31,7 @@ export const createReturnFunctionCall = ({
   );
   const argumentsArray = args
     .map((arg) =>
-      ts.isExpression(arg) ? arg : ts.factory.createIdentifier(arg),
+      ts.isExpression(arg) ? arg : createIdentifier({ text: arg }),
     )
     .filter(isType<ts.Identifier | ts.Expression>);
   const expression = createCallExpression({
@@ -45,5 +45,5 @@ export const createReturnFunctionCall = ({
 
 export const createReturnVariable = ({ name }: { name: string }) =>
   createReturnStatement({
-    expression: ts.factory.createIdentifier(name),
+    expression: createIdentifier({ text: name }),
   });
