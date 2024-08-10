@@ -5,8 +5,8 @@ const main = async () => {
   const config = {
     client: {
       // bundle: true,
-      // name: '@hey-api/client-axios',
-      name: '@hey-api/client-fetch',
+      name: '@hey-api/client-axios',
+      // name: '@hey-api/client-fetch',
     },
     debug: true,
     // input: './test/spec/v3-transforms.json',
@@ -20,9 +20,9 @@ const main = async () => {
     plugins: [
       {
         // infiniteQueryOptions: false,
-        mutationOptions: false,
+        // mutationOptions: false,
         name: '@tanstack/react-query',
-        queryOptions: false,
+        // queryOptions: false,
       },
     ],
     schemas: {
