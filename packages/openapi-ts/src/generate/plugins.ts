@@ -4,7 +4,7 @@ import ts from 'typescript';
 
 import { compiler, Property, TypeScriptFile } from '../compiler';
 import type { ImportExportItem } from '../compiler/module';
-import type { ImportExportItemObject } from '../compiler/utils';
+import { ImportExportItemObject } from '../compiler/utils';
 import type { Operation } from '../openApi';
 import type {
   Method,
@@ -15,7 +15,6 @@ import { isOperationParameterRequired } from '../openApi/common/parser/operation
 import type { Client } from '../types/client';
 import type { Files } from '../types/utils';
 import { getConfig, isStandaloneClient } from '../utils/config';
-import { unique } from '../utils/unique';
 import { clientModulePath, clientOptionsTypeName } from './client';
 import {
   generateImport,
@@ -61,53 +60,35 @@ export const generatePlugins = async ({
       dir: outputDir,
       name: `${outputParts[outputParts.length - 1]}.ts`,
     });
+    const file = files[plugin.name];
 
     if (plugin.name === '@tanstack/react-query') {
       const paginationWordsRegExp = /^(cursor|offset|page|start)/;
 
-      files[plugin.name].addImport({
-        imports: [
-          {
-            asType: true,
-            name: clientOptionsTypeName(),
-          },
-        ],
+      if (!files.services) {
+        // TODO: throw
+      }
+      if (!files.types) {
+        // TODO: throw
+      }
+
+      file.import({
+        asType: true,
         module: clientModulePath(),
+        name: clientOptionsTypeName(),
       });
 
-      let imports: string[] = [];
-      let importsServices: ImportExportItem[] = [];
+      const relativePath =
+        new Array(outputParts.length).fill('').join('../') || './';
+      const servicesModulePath = relativePath + files.services.getName(false);
+      const typesModulePath = relativePath + files.types.getName(false);
 
       const createQueryKeyParamsFn = 'createQueryKeyParams';
       const infiniteQueryOptionsFn = 'infiniteQueryOptions';
       const mutationsType = 'UseMutationOptions';
-      const optionsType = 'Options';
       const queryKeyName = 'QueryKey';
       const queryOptionsFn = 'queryOptions';
       const TOptionsType = 'TOptions';
-
-      // TODO: `addTanStackQueryImport()` should be a method of file class to create
-      // unique imports. It could be made more performant too
-      let importsTanStackQuery: ImportExportItemObject[] = [];
-      const addTanStackQueryImport = (
-        imported: ImportExportItem,
-      ): ImportExportItemObject => {
-        const importedItem: ImportExportItemObject =
-          typeof imported === 'string'
-            ? {
-                name: imported,
-              }
-            : imported;
-        const match = importsTanStackQuery.find(
-          (item) => item.name === importedItem.name,
-        );
-        if (match) {
-          return match;
-        }
-
-        importsTanStackQuery = [...importsTanStackQuery, importedItem];
-        return importedItem;
-      };
 
       const getPaginationIn = (parameter: OperationParameter) => {
         switch (parameter.in) {
@@ -260,7 +241,9 @@ export const generatePlugins = async ({
             types: [
               {
                 extends: compiler.typeReferenceNode({
-                  typeName: compiler.identifier({ text: optionsType }),
+                  typeName: compiler.identifier({
+                    text: clientOptionsTypeName(),
+                  }),
                 }),
                 name: TOptionsType,
               },
@@ -268,7 +251,7 @@ export const generatePlugins = async ({
           }),
           name: createQueryKeyParamsFn,
         });
-        files[plugin.name].add(queryKeyParamsFunction);
+        file.add(queryKeyParamsFunction);
       };
 
       const createQueryKeyLiteral = ({
@@ -347,13 +330,111 @@ export const generatePlugins = async ({
           typeParameters: [
             {
               extends: compiler.typeReferenceNode({
-                typeName: compiler.identifier({ text: optionsType }),
+                typeName: compiler.identifier({
+                  text: clientOptionsTypeName(),
+                }),
               }),
               name: TOptionsType,
             },
           ],
         });
-        files[plugin.name].add(queryKeyType);
+        file.add(queryKeyType);
+      };
+
+      const createTypeData = ({ operation }: { operation: Operation }) => {
+        const { name: nameTypeData } = generateImport({
+          client,
+          meta: operation.parameters.length
+            ? {
+                // TODO: this should be exact ref to operation for consistency,
+                // but name should work too as operation ID is unique
+                $ref: operation.name,
+                name: operation.name,
+              }
+            : undefined,
+          nameTransformer: operationDataTypeName,
+          onImport: (name) => {
+            file.import({
+              asType: true,
+              module: typesModulePath,
+              name,
+            });
+          },
+        });
+
+        const typeData = operationOptionsType(nameTypeData);
+
+        return { typeData };
+      };
+
+      const createTypeError = ({ operation }: { operation: Operation }) => {
+        const { name: nameTypeError } = generateImport({
+          client,
+          meta: {
+            // TODO: this should be exact ref to operation for consistency,
+            // but name should work too as operation ID is unique
+            $ref: operation.name,
+            name: operation.name,
+          },
+          nameTransformer: operationErrorTypeName,
+          onImport: (name) => {
+            file.import({
+              asType: true,
+              module: typesModulePath,
+              name,
+            });
+          },
+        });
+
+        let typeError: ImportExportItemObject = {
+          asType: true,
+          name: nameTypeError,
+        };
+        if (!typeError.name) {
+          typeError = file.import({
+            asType: true,
+            module: plugin.name,
+            name: 'DefaultError',
+          });
+        }
+
+        if (config.client.name === '@hey-api/client-axios') {
+          const axiosError = file.import({
+            asType: true,
+            module: 'axios',
+            name: 'AxiosError',
+          });
+          typeError = {
+            ...axiosError,
+            name: `${axiosError.name}<${typeError.name}>`,
+          };
+        }
+
+        return { typeError };
+      };
+
+      const createTypeResponse = ({ operation }: { operation: Operation }) => {
+        const { name: nameTypeResponse } = generateImport({
+          client,
+          meta: {
+            // TODO: this should be exact ref to operation for consistency,
+            // but name should work too as operation ID is unique
+            $ref: operation.name,
+            name: operation.name,
+          },
+          nameTransformer: operationResponseTypeName,
+          onImport: (imported) => {
+            file.import({
+              asType: true,
+              module: typesModulePath,
+              name: imported,
+            });
+          },
+        });
+
+        const typeResponse = nameTypeResponse || 'void';
+
+        return { typeResponse };
       };
 
       let typeInfiniteData!: ImportExportItem;
@@ -381,26 +462,15 @@ export const generatePlugins = async ({
                 createQueryKeyParamsFunction();
               }
 
-              addTanStackQueryImport(queryOptionsFn);
+              file.import({
+                module: plugin.name,
+                name: queryOptionsFn,
+              });
             }
 
             hasUsedQueryFn = true;
 
-            const { name: nameTypeData } = generateImport({
-              client,
-              meta: operation.parameters.length
-                ? {
-                    // TODO: this should be exact ref to operation for consistency,
-                    // but name should work too as operation ID is unique
-                    $ref: operation.name,
-                    name: operation.name,
-                  }
-                : undefined,
-              nameTransformer: operationDataTypeName,
-              onImport: (imported) => {
-                imports = [...imports, imported];
-              },
-            });
+            const { typeData } = createTypeData({ operation });
 
             const isRequired = isOperationParameterRequired(
               operation.parameters,
@@ -411,7 +481,7 @@ export const generatePlugins = async ({
                 {
                   isRequired,
                   name: 'options',
-                  type: operationOptionsType(nameTypeData),
+                  type: typeData,
                 },
               ],
               statements: [
@@ -485,8 +555,10 @@ export const generatePlugins = async ({
               exportConst: true,
               expression,
               name: toQueryOptionsName(operation),
+              // TODO: add type error
+              // TODO: AxiosError<PutSubmissionMetaError>
             });
-            files[plugin.name].add(statement);
+            file.add(statement);
           }
 
           // infinite queries
@@ -541,75 +613,29 @@ export const generatePlugins = async ({
                   createQueryKeyParamsFunction();
                 }
 
-                addTanStackQueryImport(infiniteQueryOptionsFn);
+                file.import({
+                  module: plugin.name,
+                  name: infiniteQueryOptionsFn,
+                });
 
-                typeInfiniteData = addTanStackQueryImport({
+                typeInfiniteData = file.import({
                   asType: true,
+                  module: plugin.name,
                   name: 'InfiniteData',
                 });
               }
 
               hasUsedQueryFn = true;
 
-              const { name: nameTypeError } = generateImport({
-                client,
-                meta: {
-                  // TODO: this should be exact ref to operation for consistency,
-                  // but name should work too as operation ID is unique
-                  $ref: operation.name,
-                  name: operation.name,
-                },
-                nameTransformer: operationErrorTypeName,
-                onImport: (imported) => {
-                  imports = [...imports, imported];
-                },
-              });
-
-              let typeError: ImportExportItem = nameTypeError;
-              if (!typeError) {
-                typeError = addTanStackQueryImport({
-                  asType: true,
-                  name: 'DefaultError',
-                });
-              }
-
-              const { name: nameTypeData } = generateImport({
-                client,
-                meta: operation.parameters.length
-                  ? {
-                      // TODO: this should be exact ref to operation for consistency,
-                      // but name should work too as operation ID is unique
-                      $ref: operation.name,
-                      name: operation.name,
-                    }
-                  : undefined,
-                nameTransformer: operationDataTypeName,
-                onImport: (imported) => {
-                  imports = [...imports, imported];
-                },
-              });
-
-              const { name: nameTypeResponse } = generateImport({
-                client,
-                meta: {
-                  // TODO: this should be exact ref to operation for consistency,
-                  // but name should work too as operation ID is unique
-                  $ref: operation.name,
-                  name: operation.name,
-                },
-                nameTransformer: operationResponseTypeName,
-                onImport: (imported) => {
-                  imports = [...imports, imported];
-                },
-              });
-
-              const typeResponse = nameTypeResponse || 'void';
+              const { typeData } = createTypeData({ operation });
+              const { typeError } = createTypeError({ operation });
+              const { typeResponse } = createTypeResponse({ operation });
 
               const isRequired = isOperationParameterRequired(
                 operation.parameters,
               );
 
-              const typeQueryKey = `${queryKeyName}<${optionsType}<${nameTypeData}>>`;
+              const typeQueryKey = `${queryKeyName}<${typeData}>`;
               const typePageObjectParam = `${typeQueryKey}[0]['params']`;
               const typePageParam = `${paginationField.base} | ${typePageObjectParam}`;
 
@@ -618,7 +644,7 @@ export const generatePlugins = async ({
                   {
                     isRequired,
                     name: 'options',
-                    type: operationOptionsType(nameTypeData),
+                    type: typeData,
                   },
                 ],
                 statements: [
@@ -800,9 +826,7 @@ export const generatePlugins = async ({
                     // TODO: better types syntax
                     types: [
                       typeResponse,
-                      typeof typeError === 'string'
-                        ? typeError
-                        : typeError.name,
+                      typeError.name,
                       `${typeof typeInfiniteData === 'string' ? typeInfiniteData : typeInfiniteData.name}<${typeResponse}>`,
                       typeQueryKey,
                       typePageParam,
@@ -817,7 +841,7 @@ export const generatePlugins = async ({
                 expression,
                 name: toInfiniteQueryOptionsName(operation),
               });
-              files[plugin.name].add(statement);
+              file.add(statement);
             }
           }
 
@@ -831,67 +855,18 @@ export const generatePlugins = async ({
             if (!hasMutations) {
               hasMutations = true;
 
-              addTanStackQueryImport({
+              file.import({
                 asType: true,
+                module: plugin.name,
                 name: mutationsType,
               });
             }
 
             hasUsedQueryFn = true;
 
-            const { name: nameTypeError } = generateImport({
-              client,
-              meta: {
-                // TODO: this should be exact ref to operation for consistency,
-                // but name should work too as operation ID is unique
-                $ref: operation.name,
-                name: operation.name,
-              },
-              nameTransformer: operationErrorTypeName,
-              onImport: (imported) => {
-                imports = [...imports, imported];
-              },
-            });
-
-            let typeError: ImportExportItem = nameTypeError;
-            if (!typeError) {
-              typeError = addTanStackQueryImport({
-                asType: true,
-                name: 'DefaultError',
-              });
-            }
-
-            const { name: nameTypeData } = generateImport({
-              client,
-              meta: operation.parameters.length
-                ? {
-                    // TODO: this should be exact ref to operation for consistency,
-                    // but name should work too as operation ID is unique
-                    $ref: operation.name,
-                    name: operation.name,
-                  }
-                : undefined,
-              nameTransformer: operationDataTypeName,
-              onImport: (imported) => {
-                imports = [...imports, imported];
-              },
-            });
-
-            const { name: nameTypeResponse } = generateImport({
-              client,
-              meta: {
-                // TODO: this should be exact ref to operation for consistency,
-                // but name should work too as operation ID is unique
-                $ref: operation.name,
-                name: operation.name,
-              },
-              nameTransformer: operationResponseTypeName,
-              onImport: (imported) => {
-                imports = [...imports, imported];
-              },
-            });
-
-            const typeResponse = nameTypeResponse || 'void';
+            const { typeData } = createTypeData({ operation });
+            const { typeError } = createTypeError({ operation });
+            const { typeResponse } = createTypeResponse({ operation });
 
             const statement = compiler.constVariable({
               // TODO: describe options, same as the actual function call
@@ -943,44 +918,17 @@ export const generatePlugins = async ({
               }),
               name: toMutationOptionsName(operation),
               // TODO: better types syntax
-              typeName: `${mutationsType}<${typeResponse}, ${typeof typeError === 'string' ? typeError : typeError.name}, ${operationOptionsType(nameTypeData)}>`,
+              typeName: `${mutationsType}<${typeResponse}, ${typeError.name}, ${typeData}>`,
             });
-            files[plugin.name].add(statement);
+            file.add(statement);
           }
 
-          if (hasUsedQueryFn && !importsServices.includes(queryFn)) {
-            importsServices = [...importsServices, queryFn];
+          if (hasUsedQueryFn) {
+            file.import({
+              module: servicesModulePath,
+              name: queryFn,
+            });
           }
-        }
-      }
-
-      if (importsTanStackQuery.length) {
-        files[plugin.name].addImport({
-          imports: importsTanStackQuery,
-          module: '@tanstack/react-query',
-        });
-      }
-
-      const relativePath =
-        new Array(outputParts.length).fill('').join('../') || './';
-
-      if (importsServices.length && files.services) {
-        files[plugin.name].addImport({
-          imports: importsServices,
-          module: relativePath + files.services.getName(false),
-        });
-      }
-
-      if (files.types && !files.types.isEmpty()) {
-        const importedTypes = imports.filter(unique).map((name) => ({
-          asType: true,
-          name,
-        }));
-        if (importedTypes.length) {
-          files[plugin.name].addImport({
-            imports: importedTypes,
-            module: relativePath + files.types.getName(false),
-          });
         }
       }
     }

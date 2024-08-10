@@ -706,12 +706,85 @@ export const generateServices = async ({
     return;
   }
 
+  if (!files.types) {
+    // TODO: throw
+  }
+
   const isStandalone = isStandaloneClient(config);
 
   files.services = new TypeScriptFile({
     dir: config.output.path,
     name: 'services.ts',
   });
+
+  // Import required packages and core files.
+  if (isStandalone) {
+    files.services.import({
+      module: clientModulePath(),
+      name: 'createClient',
+    });
+    files.services.import({
+      module: clientModulePath(),
+      name: 'createConfig',
+    });
+    files.services.import({
+      asType: true,
+      module: clientModulePath(),
+      name: clientOptionsTypeName(),
+    });
+  } else {
+    if (config.client.name === 'angular') {
+      files.services.import({
+        module: '@angular/core',
+        name: 'Injectable',
+      });
+
+      if (!config.name) {
+        files.services.import({
+          module: '@angular/common/http',
+          name: 'HttpClient',
+        });
+      }
+
+      files.services.import({
+        asType: true,
+        module: 'rxjs',
+        name: 'Observable',
+      });
+    } else {
+      files.services.import({
+        asType: true,
+        module: './core/CancelablePromise',
+        name: 'CancelablePromise',
+      });
+    }
+
+    if (config.services.response === 'response') {
+      files.services.import({
+        asType: true,
+        module: './core/ApiResult',
+        name: 'ApiResult',
+      });
+    }
+
+    if (config.name) {
+      files.services.import({
+        asType: config.client.name !== 'angular',
+        module: './core/BaseHttpRequest',
+        name: 'BaseHttpRequest',
+      });
+    } else {
+      files.services.import({
+        module: './core/OpenAPI',
+        name: 'OpenAPI',
+      });
+      files.services.import({
+        alias: '__request',
+        module: './core/request',
+        name: 'request',
+      });
+    }
+  }
 
   // define client first
   if (isStandalone) {
@@ -730,103 +803,27 @@ export const generateServices = async ({
     files.services.add(statement);
   }
 
-  let imports: string[] = [];
-  let clientImports: string[] = [];
-
   for (const service of client.services) {
     processService({
       client,
       onClientImport: (imported) => {
-        clientImports = [...clientImports, imported];
+        files.services.import({
+          module: clientModulePath(),
+          name: imported,
+        });
       },
       onImport: (imported) => {
-        imports = [...imports, imported];
+        files.services.import({
+          // this detection could be done safer, but it shouldn't cause any issues
+          asType: !imported.endsWith('Transformer'),
+          module: `./${files.types.getName(false)}`,
+          name: imported,
+        });
       },
       onNode: (node) => {
         files.services.add(node);
       },
       service,
     });
-  }
-
-  // Import required packages and core files.
-  if (isStandalone) {
-    files.services.addImport({
-      imports: [
-        'createClient',
-        'createConfig',
-        {
-          asType: true,
-          name: clientOptionsTypeName(),
-        },
-        ...clientImports.filter(unique),
-      ],
-      module: clientModulePath(),
-    });
-  } else {
-    if (config.client.name === 'angular') {
-      files.services.addImport({
-        imports: 'Injectable',
-        module: '@angular/core',
-      });
-
-      if (!config.name) {
-        files.services.addImport({
-          imports: 'HttpClient',
-          module: '@angular/common/http',
-        });
-      }
-
-      files.services.addImport({
-        imports: { asType: true, name: 'Observable' },
-        module: 'rxjs',
-      });
-    } else {
-      files.services.addImport({
-        imports: { asType: true, name: 'CancelablePromise' },
-        module: './core/CancelablePromise',
-      });
-    }
-
-    if (config.services.response === 'response') {
-      files.services.addImport({
-        imports: { asType: true, name: 'ApiResult' },
-        module: './core/ApiResult',
-      });
-    }
-
-    if (config.name) {
-      files.services.addImport({
-        imports: {
-          asType: config.client.name !== 'angular',
-          name: 'BaseHttpRequest',
-        },
-        module: './core/BaseHttpRequest',
-      });
-    } else {
-      files.services.addImport({
-        imports: 'OpenAPI',
-        module: './core/OpenAPI',
-      });
-      files.services.addImport({
-        imports: { alias: '__request', name: 'request' },
-        module: './core/request',
-      });
-    }
-  }
-
-  // Import all models required by the services.
-  if (files.types && !files.types.isEmpty()) {
-    const importedTypes = imports.filter(unique).map((name) => ({
-      // this detection could be done safer, but it shouldn't cause any issues
-      asType: !name.endsWith('Transformer'),
-      name,
-    }));
-    if (importedTypes.length) {
-      files.services.addImport({
-        imports: importedTypes,
-        module: `./${files.types.getName(false)}`,
-      });
-    }
   }
 };

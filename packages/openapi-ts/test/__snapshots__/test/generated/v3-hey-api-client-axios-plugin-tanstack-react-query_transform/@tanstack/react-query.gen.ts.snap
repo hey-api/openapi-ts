@@ -2,8 +2,9 @@
 
 import type { Options } from '@hey-api/client-axios';
 import { queryOptions, type UseMutationOptions } from '@tanstack/react-query';
-import { parentModelWithDates, modelWithDates, modelWithDatesArray, arrayOfDates, date, multipleResponses } from '../services.gen';
 import type { ParentModelWithDatesError, ParentModelWithDatesResponse, ModelWithDatesError, ModelWithDatesResponse, ModelWithDatesArrayError, ModelWithDatesArrayResponse, ArrayOfDatesError, ArrayOfDatesResponse, DateError, DateResponse, MultipleResponsesError, MultipleResponsesResponse } from '../types.gen';
+import type { AxiosError } from 'axios';
+import { parentModelWithDates, modelWithDates, modelWithDatesArray, arrayOfDates, date, multipleResponses } from '../services.gen';
 
 type QueryKey<TOptions extends Options> = [
     {
@@ -47,7 +48,7 @@ export const parentModelWithDatesOptions = (options?: Options) => { return query
     ]
 }); };
 
-export const parentModelWithDatesMutation: UseMutationOptions<ParentModelWithDatesResponse, ParentModelWithDatesError, Options> = {
+export const parentModelWithDatesMutation: UseMutationOptions<ParentModelWithDatesResponse, AxiosError<ParentModelWithDatesError>, Options> = {
     mutationFn: async (options) => {
         const { data } = await parentModelWithDates({
             ...options,
@@ -57,7 +58,7 @@ export const parentModelWithDatesMutation: UseMutationOptions<ParentModelWithDat
     }
 };
 
-export const modelWithDatesMutation: UseMutationOptions<ModelWithDatesResponse, ModelWithDatesError, Options> = {
+export const modelWithDatesMutation: UseMutationOptions<ModelWithDatesResponse, AxiosError<ModelWithDatesError>, Options> = {
     mutationFn: async (options) => {
         const { data } = await modelWithDates({
             ...options,
@@ -67,7 +68,7 @@ export const modelWithDatesMutation: UseMutationOptions<ModelWithDatesResponse, 
     }
 };
 
-export const modelWithDatesArrayMutation: UseMutationOptions<ModelWithDatesArrayResponse, ModelWithDatesArrayError, Options> = {
+export const modelWithDatesArrayMutation: UseMutationOptions<ModelWithDatesArrayResponse, AxiosError<ModelWithDatesArrayError>, Options> = {
     mutationFn: async (options) => {
         const { data } = await modelWithDatesArray({
             ...options,
@@ -77,7 +78,7 @@ export const modelWithDatesArrayMutation: UseMutationOptions<ModelWithDatesArray
     }
 };
 
-export const arrayOfDatesMutation: UseMutationOptions<ArrayOfDatesResponse, ArrayOfDatesError, Options> = {
+export const arrayOfDatesMutation: UseMutationOptions<ArrayOfDatesResponse, AxiosError<ArrayOfDatesError>, Options> = {
     mutationFn: async (options) => {
         const { data } = await arrayOfDates({
             ...options,
@@ -87,7 +88,7 @@ export const arrayOfDatesMutation: UseMutationOptions<ArrayOfDatesResponse, Arra
     }
 };
 
-export const dateMutation: UseMutationOptions<DateResponse, DateError, Options> = {
+export const dateMutation: UseMutationOptions<DateResponse, AxiosError<DateError>, Options> = {
     mutationFn: async (options) => {
         const { data } = await date({
             ...options,
@@ -97,7 +98,7 @@ export const dateMutation: UseMutationOptions<DateResponse, DateError, Options> 
     }
 };
 
-export const multipleResponsesMutation: UseMutationOptions<MultipleResponsesResponse, MultipleResponsesError, Options> = {
+export const multipleResponsesMutation: UseMutationOptions<MultipleResponsesResponse, AxiosError<MultipleResponsesError>, Options> = {
     mutationFn: async (options) => {
         const { data } = await multipleResponses({
             ...options,
