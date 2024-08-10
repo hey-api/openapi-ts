@@ -1,6 +1,6 @@
 import './App.css';
 
-import { createClient } from '@hey-api/client-axios';
+import { createClient } from '@hey-api/client-fetch';
 import * as Form from '@radix-ui/react-form';
 import { DownloadIcon, PlusIcon, ReloadIcon } from '@radix-ui/react-icons';
 import {
@@ -15,16 +15,22 @@ import {
   Text,
   TextField,
 } from '@radix-ui/themes';
-import { useState } from 'react';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
 
+import {
+  addPetMutation,
+  getPetByIdOptions,
+  updatePetMutation,
+} from './client/@tanstack/react-query.gen';
 import { $Pet } from './client/schemas.gen';
-import { addPet, client, getPetById, updatePet } from './client/services.gen';
+import { client } from './client/services.gen';
 import type { Pet } from './client/types.gen';
 
 // configure internal service client
 client.setConfig({
   // set default base url for requests
-  baseURL: 'https://petstore3.swagger.io/api/v3',
+  baseUrl: 'https://petstore3.swagger.io/api/v3',
   // set default headers for requests
   headers: {
     Authorization: 'Bearer <token_from_service_client>',
@@ -33,34 +39,67 @@ client.setConfig({
 
 const localClient = createClient({
   // set default base url for requests made by this client
-  baseURL: 'https://petstore3.swagger.io/api/v3',
+  baseUrl: 'https://petstore3.swagger.io/api/v3',
   /**
    * Set default headers only for requests made by this client. This is to
    * demonstrate local clients and their configuration taking precedence over
-   * global configuration.
+   * internal service client.
    */
   headers: {
     Authorization: 'Bearer <token_from_local_client>',
   },
 });
 
-localClient.instance.interceptors.request.use((config) => {
+localClient.interceptors.request.use((request, options) => {
   // Middleware is great for adding authorization tokens to requests made to
   // protected paths. Headers are set randomly here to allow surfacing the
   // default headers, too.
   if (
-    config.url?.startsWith('/pet/') &&
-    config.method === 'get' &&
+    options.url === '/pet/{petId}' &&
+    options.method === 'GET' &&
     Math.random() < 0.5
   ) {
-    config.headers.set('Authorization', 'Bearer <token_from_interceptor>');
+    request.headers.set('Authorization', 'Bearer <token_from_interceptor>');
   }
-  return config;
+  return request;
 });
 
 function App() {
   const [pet, setPet] = useState<Pet>();
+  const [petId, setPetId] = useState<number>();
   const [isRequiredNameError, setIsRequiredNameError] = useState(false);
+
+  const addPet = useMutation({
+    ...addPetMutation,
+    onError: (error) => {
+      console.log(error);
+      setIsRequiredNameError(false);
+    },
+    onSuccess: (data) => {
+      setPet(data);
+      setIsRequiredNameError(false);
+    },
+  });
+
+  const updatePet = useMutation({
+    ...updatePetMutation,
+    onError: (error) => {
+      console.log(error);
+    },
+    onSuccess: (data) => {
+      setPet(data);
+    },
+  });
+
+  const { data, error } = useQuery({
+    ...getPetByIdOptions({
+      client: localClient,
+      path: {
+        petId: petId!,
+      },
+    }),
+    enabled: Boolean(petId),
+  });
 
   const onAddPet = async (formData: FormData) => {
     // simple form field validation to demonstrate using schemas
@@ -69,7 +108,7 @@ function App() {
       return;
     }
 
-    const { data, error } = await addPet({
+    addPet.mutate({
       body: {
         category: {
           id: 0,
@@ -87,31 +126,15 @@ function App() {
         ],
       },
     });
-    if (error) {
-      console.log(error);
-      return;
-    }
-    setPet(data!);
-    setIsRequiredNameError(false);
   };
 
   const onGetPetById = async () => {
-    const { data, error } = await getPetById({
-      client: localClient,
-      path: {
-        // random id 1-10
-        petId: Math.floor(Math.random() * (10 - 1 + 1) + 1),
-      },
-    });
-    if (error) {
-      console.log(error);
-      return;
-    }
-    setPet(data!);
+    // random id 1-10
+    setPetId(Math.floor(Math.random() * (10 - 1 + 1) + 1));
   };
 
   const onUpdatePet = async () => {
-    const { data, error } = await updatePet({
+    updatePet.mutate({
       body: {
         category: {
           id: 0,
@@ -133,12 +156,15 @@ function App() {
         Authorization: 'Bearer <token_from_method>',
       },
     });
+  };
+
+  useEffect(() => {
     if (error) {
       console.log(error);
       return;
     }
     setPet(data!);
-  };
+  }, [data, error]);
 
   return (
     <Box
@@ -158,7 +184,7 @@ function App() {
               alt="Hey API logo"
             />
           </a>
-          <Heading>@hey-api/openapi-ts 🤝 Axios</Heading>
+          <Heading>@hey-api/openapi-ts 🤝 TanStack React Query</Heading>
         </Flex>
         <Section size="1" />
         <Flex direction="column" gapY="2">
