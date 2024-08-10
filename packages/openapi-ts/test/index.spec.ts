@@ -312,7 +312,6 @@ describe('OpenAPI v3', () => {
           include: '^(Simple|Parameters)',
           name: 'myAwesome{{name}}Api',
         },
-        types: false,
       }),
       description: 'generate services with custom name',
       name: 'v3_services_name',
