@@ -1,5 +1,14 @@
 # @example/openapi-ts-fetch
 
+## 0.0.20
+
+### Patch Changes
+
+- [#895](https://github.com/hey-api/openapi-ts/pull/895) [`44de8d8`](https://github.com/hey-api/openapi-ts/commit/44de8d89556b3abf48acc4e23c9b9c198059c757) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: define ThrowOnError generic as the last argument
+
+- Updated dependencies [[`44de8d8`](https://github.com/hey-api/openapi-ts/commit/44de8d89556b3abf48acc4e23c9b9c198059c757)]:
+  - @hey-api/client-fetch@0.2.3
+
 ## 0.0.19
 
 ### Patch Changes
