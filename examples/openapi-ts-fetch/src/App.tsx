@@ -147,10 +147,14 @@ function App() {
       <Container size="1">
         <Section size="1" />
         <Flex align="center">
-          <a href="https://heyapi.vercel.app/" target="_blank">
+          <a
+            className="shrink-0"
+            href="https://heyapi.vercel.app/"
+            target="_blank"
+          >
             <img
               src="https://heyapi.vercel.app/logo.png"
-              className="logo vanilla"
+              className="h-16 w-16 transition duration-300 will-change-auto"
               alt="Hey API logo"
             />
           </a>
