@@ -65,7 +65,7 @@ export const client = createClient(createConfig());
 export const addPet = <ThrowOnError extends boolean = false>(
   options: Options<AddPetData, ThrowOnError>,
 ) =>
-  (options?.client ?? client).post<ThrowOnError, AddPetResponse, AddPetError>({
+  (options?.client ?? client).post<AddPetResponse, AddPetError, ThrowOnError>({
     ...options,
     url: '/pet',
   });
@@ -78,9 +78,9 @@ export const updatePet = <ThrowOnError extends boolean = false>(
   options: Options<UpdatePetData, ThrowOnError>,
 ) =>
   (options?.client ?? client).put<
-    ThrowOnError,
     UpdatePetResponse,
-    UpdatePetError
+    UpdatePetError,
+    ThrowOnError
   >({
     ...options,
     url: '/pet',
@@ -94,9 +94,9 @@ export const findPetsByStatus = <ThrowOnError extends boolean = false>(
   options?: Options<FindPetsByStatusData, ThrowOnError>,
 ) =>
   (options?.client ?? client).get<
-    ThrowOnError,
     FindPetsByStatusResponse,
-    FindPetsByStatusError
+    FindPetsByStatusError,
+    ThrowOnError
   >({
     ...options,
     url: '/pet/findByStatus',
@@ -110,9 +110,9 @@ export const findPetsByTags = <ThrowOnError extends boolean = false>(
   options?: Options<FindPetsByTagsData, ThrowOnError>,
 ) =>
   (options?.client ?? client).get<
-    ThrowOnError,
     FindPetsByTagsResponse,
-    FindPetsByTagsError
+    FindPetsByTagsError,
+    ThrowOnError
   >({
     ...options,
     url: '/pet/findByTags',
@@ -126,9 +126,9 @@ export const getPetById = <ThrowOnError extends boolean = false>(
   options: Options<GetPetByIdData, ThrowOnError>,
 ) =>
   (options?.client ?? client).get<
-    ThrowOnError,
     GetPetByIdResponse,
-    GetPetByIdError
+    GetPetByIdError,
+    ThrowOnError
   >({
     ...options,
     url: '/pet/{petId}',
@@ -140,7 +140,7 @@ export const getPetById = <ThrowOnError extends boolean = false>(
 export const updatePetWithForm = <ThrowOnError extends boolean = false>(
   options: Options<UpdatePetWithFormData, ThrowOnError>,
 ) =>
-  (options?.client ?? client).post<ThrowOnError, void>({
+  (options?.client ?? client).post<void, unknown, ThrowOnError>({
     ...options,
     url: '/pet/{petId}',
   });
@@ -151,7 +151,7 @@ export const updatePetWithForm = <ThrowOnError extends boolean = false>(
 export const deletePet = <ThrowOnError extends boolean = false>(
   options: Options<DeletePetData, ThrowOnError>,
 ) =>
-  (options?.client ?? client).delete<ThrowOnError, void>({
+  (options?.client ?? client).delete<void, unknown, ThrowOnError>({
     ...options,
     url: '/pet/{petId}',
   });
@@ -163,9 +163,9 @@ export const uploadFile = <ThrowOnError extends boolean = false>(
   options: Options<UploadFileData, ThrowOnError>,
 ) =>
   (options?.client ?? client).post<
-    ThrowOnError,
     UploadFileResponse,
-    UploadFileError
+    UploadFileError,
+    ThrowOnError
   >({
     ...options,
     url: '/pet/{petId}/uploadImage',
@@ -179,9 +179,9 @@ export const getInventory = <ThrowOnError extends boolean = false>(
   options?: Options<unknown, ThrowOnError>,
 ) =>
   (options?.client ?? client).get<
-    ThrowOnError,
     GetInventoryResponse,
-    GetInventoryError
+    GetInventoryError,
+    ThrowOnError
   >({
     ...options,
     url: '/store/inventory',
@@ -195,9 +195,9 @@ export const placeOrder = <ThrowOnError extends boolean = false>(
   options?: Options<PlaceOrderData, ThrowOnError>,
 ) =>
   (options?.client ?? client).post<
-    ThrowOnError,
     PlaceOrderResponse,
-    PlaceOrderError
+    PlaceOrderError,
+    ThrowOnError
   >({
     ...options,
     url: '/store/order',
@@ -211,9 +211,9 @@ export const getOrderById = <ThrowOnError extends boolean = false>(
   options: Options<GetOrderByIdData, ThrowOnError>,
 ) =>
   (options?.client ?? client).get<
-    ThrowOnError,
     GetOrderByIdResponse,
-    GetOrderByIdError
+    GetOrderByIdError,
+    ThrowOnError
   >({
     ...options,
     url: '/store/order/{orderId}',
@@ -226,7 +226,7 @@ export const getOrderById = <ThrowOnError extends boolean = false>(
 export const deleteOrder = <ThrowOnError extends boolean = false>(
   options: Options<DeleteOrderData, ThrowOnError>,
 ) =>
-  (options?.client ?? client).delete<ThrowOnError, void>({
+  (options?.client ?? client).delete<void, unknown, ThrowOnError>({
     ...options,
     url: '/store/order/{orderId}',
   });
@@ -239,9 +239,9 @@ export const createUser = <ThrowOnError extends boolean = false>(
   options?: Options<CreateUserData, ThrowOnError>,
 ) =>
   (options?.client ?? client).post<
-    ThrowOnError,
     CreateUserResponse,
-    CreateUserError
+    CreateUserError,
+    ThrowOnError
   >({
     ...options,
     url: '/user',
@@ -255,9 +255,9 @@ export const createUsersWithListInput = <ThrowOnError extends boolean = false>(
   options?: Options<CreateUsersWithListInputData, ThrowOnError>,
 ) =>
   (options?.client ?? client).post<
-    ThrowOnError,
     CreateUsersWithListInputResponse,
-    CreateUsersWithListInputError
+    CreateUsersWithListInputError,
+    ThrowOnError
   >({
     ...options,
     url: '/user/createWithList',
@@ -270,9 +270,9 @@ export const loginUser = <ThrowOnError extends boolean = false>(
   options?: Options<LoginUserData, ThrowOnError>,
 ) =>
   (options?.client ?? client).get<
-    ThrowOnError,
     LoginUserResponse,
-    LoginUserError
+    LoginUserError,
+    ThrowOnError
   >({
     ...options,
     url: '/user/login',
@@ -285,9 +285,9 @@ export const logoutUser = <ThrowOnError extends boolean = false>(
   options?: Options<unknown, ThrowOnError>,
 ) =>
   (options?.client ?? client).get<
-    ThrowOnError,
     LogoutUserResponse,
-    LogoutUserError
+    LogoutUserError,
+    ThrowOnError
   >({
     ...options,
     url: '/user/logout',
@@ -300,9 +300,9 @@ export const getUserByName = <ThrowOnError extends boolean = false>(
   options: Options<GetUserByNameData, ThrowOnError>,
 ) =>
   (options?.client ?? client).get<
-    ThrowOnError,
     GetUserByNameResponse,
-    GetUserByNameError
+    GetUserByNameError,
+    ThrowOnError
   >({
     ...options,
     url: '/user/{username}',
@@ -316,9 +316,9 @@ export const updateUser = <ThrowOnError extends boolean = false>(
   options: Options<UpdateUserData, ThrowOnError>,
 ) =>
   (options?.client ?? client).put<
-    ThrowOnError,
     UpdateUserResponse,
-    UpdateUserError
+    UpdateUserError,
+    ThrowOnError
   >({
     ...options,
     url: '/user/{username}',
@@ -331,7 +331,7 @@ export const updateUser = <ThrowOnError extends boolean = false>(
 export const deleteUser = <ThrowOnError extends boolean = false>(
   options: Options<DeleteUserData, ThrowOnError>,
 ) =>
-  (options?.client ?? client).delete<ThrowOnError, void>({
+  (options?.client ?? client).delete<void, unknown, ThrowOnError>({
     ...options,
     url: '/user/{username}',
   });

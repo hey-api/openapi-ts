@@ -7,7 +7,7 @@ export const client = createClient(createConfig());
 
 export class DefaultService {
     public static parentModelWithDates<ThrowOnError extends boolean = false>(options?: Options<unknown, ThrowOnError>) {
-        return (options?.client ?? client).post<ThrowOnError, ParentModelWithDatesResponse, ParentModelWithDatesError>({
+        return (options?.client ?? client).post<ParentModelWithDatesResponse, ParentModelWithDatesError, ThrowOnError>({
             ...options,
             url: '/api/model-with-dates',
             responseTransformer: ParentModelWithDatesResponseTransformer
@@ -15,7 +15,7 @@ export class DefaultService {
     }
     
     public static modelWithDates<ThrowOnError extends boolean = false>(options?: Options<unknown, ThrowOnError>) {
-        return (options?.client ?? client).put<ThrowOnError, ModelWithDatesResponse, ModelWithDatesError>({
+        return (options?.client ?? client).put<ModelWithDatesResponse, ModelWithDatesError, ThrowOnError>({
             ...options,
             url: '/api/model-with-dates',
             responseTransformer: ModelWithDatesResponseTransformer
@@ -23,7 +23,7 @@ export class DefaultService {
     }
     
     public static modelWithDatesArray<ThrowOnError extends boolean = false>(options?: Options<unknown, ThrowOnError>) {
-        return (options?.client ?? client).put<ThrowOnError, ModelWithDatesArrayResponse, ModelWithDatesArrayError>({
+        return (options?.client ?? client).put<ModelWithDatesArrayResponse, ModelWithDatesArrayError, ThrowOnError>({
             ...options,
             url: '/api/model-with-dates-array',
             responseTransformer: ModelWithDatesArrayResponseTransformer
@@ -31,21 +31,21 @@ export class DefaultService {
     }
     
     public static arrayOfDates<ThrowOnError extends boolean = false>(options?: Options<unknown, ThrowOnError>) {
-        return (options?.client ?? client).put<ThrowOnError, ArrayOfDatesResponse, ArrayOfDatesError>({
+        return (options?.client ?? client).put<ArrayOfDatesResponse, ArrayOfDatesError, ThrowOnError>({
             ...options,
             url: '/api/array-of-dates'
         });
     }
     
     public static date<ThrowOnError extends boolean = false>(options?: Options<unknown, ThrowOnError>) {
-        return (options?.client ?? client).put<ThrowOnError, DateResponse, DateError>({
+        return (options?.client ?? client).put<DateResponse, DateError, ThrowOnError>({
             ...options,
             url: '/api/date'
         });
     }
     
     public static multipleResponses<ThrowOnError extends boolean = false>(options?: Options<unknown, ThrowOnError>) {
-        return (options?.client ?? client).put<ThrowOnError, MultipleResponsesResponse, MultipleResponsesError>({
+        return (options?.client ?? client).put<MultipleResponsesResponse, MultipleResponsesError, ThrowOnError>({
             ...options,
             url: '/api/multiple-responses'
         });
