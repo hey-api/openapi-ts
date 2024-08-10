@@ -11,7 +11,7 @@ import type { BodySerializer } from './utils';
 
 type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
 
-export interface Config<ThrowOnError extends boolean = false>
+export interface Config<ThrowOnError extends boolean = boolean>
   extends Omit<CreateAxiosDefaults, 'headers'> {
   /**
    * Axios implementation. You can use this option to provide a custom
@@ -84,9 +84,9 @@ export interface RequestOptionsBase<ThrowOnError extends boolean>
 }
 
 export type RequestResult<
-  ThrowOnError extends boolean,
   Data = unknown,
   TError = unknown,
+  ThrowOnError extends boolean = boolean,
 > = ThrowOnError extends true
   ? Promise<AxiosResponse<Data>>
   : Promise<
@@ -95,26 +95,26 @@ export type RequestResult<
     >;
 
 type MethodFn = <
-  ThrowOnError extends boolean,
   Data = unknown,
   TError = unknown,
+  ThrowOnError extends boolean = false,
 >(
   options: Omit<RequestOptionsBase<ThrowOnError>, 'method'>,
-) => RequestResult<ThrowOnError, Data, TError>;
+) => RequestResult<Data, TError, ThrowOnError>;
 
 type RequestFn = <
-  ThrowOnError extends boolean,
   Data = unknown,
   TError = unknown,
+  ThrowOnError extends boolean = false,
 >(
   options: Omit<RequestOptionsBase<ThrowOnError>, 'method'> &
     Pick<Required<RequestOptionsBase<ThrowOnError>>, 'method'>,
-) => RequestResult<ThrowOnError, Data, TError>;
+) => RequestResult<Data, TError, ThrowOnError>;
 
 export interface Client {
   delete: MethodFn;
   get: MethodFn;
-  getConfig: () => Config<false>;
+  getConfig: () => Config;
   head: MethodFn;
   instance: AxiosInstance;
   options: MethodFn;
@@ -122,7 +122,7 @@ export interface Client {
   post: MethodFn;
   put: MethodFn;
   request: RequestFn;
-  setConfig: (config: Config<false>) => Config<false>;
+  setConfig: (config: Config) => Config;
 }
 
 export type RequestOptions = RequestOptionsBase<false> &
@@ -144,7 +144,7 @@ type OptionsBase<ThrowOnError extends boolean> = Omit<
 
 export type Options<
   T = unknown,
-  ThrowOnError extends boolean = false,
+  ThrowOnError extends boolean = boolean,
 > = T extends { body?: any }
   ? T extends { headers?: any }
     ? OmitKeys<
