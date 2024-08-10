@@ -153,7 +153,7 @@ const serializeObjectParam = ({
   value: Record<string, unknown> | Date;
 }) => {
   if (value instanceof Date) {
-    return value.toISOString();
+    return `${name}=${value.toISOString()}`;
   }
 
   if (style !== 'deepObject' && !explode) {
