@@ -142,5 +142,5 @@ export const createClient = (config: Config = {}): Client => {
     request,
     setConfig,
     trace: (options) => request({ ...options, method: 'TRACE' }),
-  };
+  } as Client;
 };

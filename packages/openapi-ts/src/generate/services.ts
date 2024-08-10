@@ -492,11 +492,11 @@ const toOperationStatements = (
         name: `(options?.client ?? client).${operation.method.toLocaleLowerCase()}`,
         types:
           errorType && responseType
-            ? ['ThrowOnError', responseType, errorType]
+            ? [responseType, errorType, 'ThrowOnError']
             : errorType
-              ? ['ThrowOnError', 'unknown', errorType]
+              ? ['unknown', errorType, 'ThrowOnError']
               : responseType
-                ? ['ThrowOnError', responseType]
+                ? [responseType, 'unknown', 'ThrowOnError']
                 : [],
       }),
     ];
