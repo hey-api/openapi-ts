@@ -1,5 +1,6 @@
 import ts from 'typescript';
 
+import { createTypeReferenceNode } from './types';
 import {
   addLeadingComments,
   type Comments,
@@ -94,7 +95,7 @@ export const createNamedExportDeclarations = ({
 /**
  * Create a const variable. Optionally, it can use const assertion or export
  * statement. Example: `export x = {} as const`.
- * @param constAssertion use const assertion?
+ * @param assertion use const assertion?
  * @param exportConst export created variable?
  * @param expression expression for the variable.
  * @param name name of the variable.
@@ -102,15 +103,15 @@ export const createNamedExportDeclarations = ({
  */
 export const createConstVariable = ({
   comment,
-  constAssertion,
+  assertion,
   destructure,
   exportConst,
   expression,
   name,
   typeName,
 }: {
+  assertion?: 'const' | ts.TypeNode;
   comment?: Comments;
-  constAssertion?: boolean;
   destructure?: boolean;
   exportConst?: boolean;
   expression: ts.Expression;
@@ -118,10 +119,14 @@ export const createConstVariable = ({
   // TODO: support a more intuitive definition of generics for example
   typeName?: string | ts.IndexedAccessTypeNode;
 }): ts.VariableStatement => {
-  const initializer = constAssertion
+  const initializer = assertion
     ? ts.factory.createAsExpression(
         expression,
-        ts.factory.createTypeReferenceNode('const'),
+        typeof assertion === 'string'
+          ? createTypeReferenceNode({
+              typeName: assertion,
+            })
+          : assertion,
       )
     : expression;
   const nameIdentifier = createIdentifier({ text: name });
@@ -139,7 +144,7 @@ export const createConstVariable = ({
     undefined,
     typeName
       ? typeof typeName === 'string'
-        ? ts.factory.createTypeReferenceNode(typeName)
+        ? createTypeReferenceNode({ typeName })
         : typeName
       : undefined,
     initializer,

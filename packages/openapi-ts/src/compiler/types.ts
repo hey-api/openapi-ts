@@ -1,6 +1,5 @@
 import ts from 'typescript';
 
-import { createTypeNode } from './typedef';
 import {
   addLeadingComments,
   type Comments,
@@ -27,9 +26,27 @@ export type FunctionParameter =
 
 export interface FunctionTypeParameter {
   default?: any;
-  extends?: any | ts.TypeNode;
-  name: string;
+  extends?: string | ts.TypeNode;
+  name: string | ts.Identifier;
 }
+
+export const createTypeNode = (
+  base: any | ts.TypeNode,
+  args?: (any | ts.TypeNode)[],
+): ts.TypeNode => {
+  if (ts.isTypeNode(base)) {
+    return base;
+  }
+
+  if (typeof base === 'number') {
+    return ts.factory.createLiteralTypeNode(ots.number(base));
+  }
+
+  return createTypeReferenceNode({
+    typeArguments: args?.map((arg) => createTypeNode(arg)),
+    typeName: base,
+  });
+};
 
 export const createPropertyAccessExpression = ({
   expression,
@@ -226,12 +243,18 @@ export const toTypeParameters = (types: FunctionTypeParameter[]) =>
       undefined,
       type.name,
       // TODO: support other extends values
-      type.extends ? createKeywordTypeNode({ keyword: 'boolean' }) : undefined,
+      type.extends
+        ? typeof type.extends === 'string'
+          ? createKeywordTypeNode({ keyword: 'boolean' })
+          : type.extends
+        : undefined,
       // TODO: support other default types
       type.default !== undefined
-        ? ts.factory.createLiteralTypeNode(
-            type.default ? ts.factory.createTrue() : ts.factory.createFalse(),
-          )
+        ? isTsNode(type.default)
+          ? (type.default as unknown as ts.TypeNode)
+          : ts.factory.createLiteralTypeNode(
+              type.default ? ts.factory.createTrue() : ts.factory.createFalse(),
+            )
         : undefined,
     ),
   );
@@ -307,6 +330,7 @@ export const createAwaitExpression = ({
 
 export type ObjectValue =
   | {
+      assertion?: 'any';
       comments?: Comments;
       spread: string;
     }
@@ -375,8 +399,14 @@ export const createObjectType = <
           }
           let assignment: ObjectAssignment;
           if ('spread' in value) {
+            const nameIdentifier = createIdentifier({ text: value.spread });
             assignment = ts.factory.createSpreadAssignment(
-              createIdentifier({ text: value.spread }),
+              value.assertion
+                ? ts.factory.createAsExpression(
+                    nameIdentifier,
+                    createKeywordTypeNode({ keyword: value.assertion }),
+                  )
+                : nameIdentifier,
             );
           } else if (shorthand && canShorthand) {
             assignment = ts.factory.createShorthandPropertyAssignment(
@@ -546,5 +576,84 @@ export const createIndexedAccessTypeNode = ({
   objectType: ts.TypeNode;
 }) => {
   const node = ts.factory.createIndexedAccessTypeNode(objectType, indexType);
+  return node;
+};
+
+export const createStringLiteral = ({ text }: { text: string }) => {
+  const node = ts.factory.createStringLiteral(text);
+  return node;
+};
+
+export const createConditionalExpression = ({
+  condition,
+  whenFalse,
+  whenTrue,
+}: {
+  condition: ts.Expression;
+  whenFalse: ts.Expression;
+  whenTrue: ts.Expression;
+}) => {
+  const expression = ts.factory.createConditionalExpression(
+    condition,
+    ts.factory.createToken(ts.SyntaxKind.QuestionToken),
+    whenTrue,
+    ts.factory.createToken(ts.SyntaxKind.ColonToken),
+    whenFalse,
+  );
+  return expression;
+};
+
+export const createTypeOfExpression = ({ text }: { text: string }) => {
+  const expression = ts.factory.createTypeOfExpression(
+    createIdentifier({ text }),
+  );
+  return expression;
+};
+
+/**
+ * Create a type alias declaration. Example `export type X = Y;`.
+ * @param comment (optional) comments to add
+ * @param name the name of the type
+ * @param type the type
+ * @returns ts.TypeAliasDeclaration
+ */
+export const createTypeAliasDeclaration = ({
+  comment,
+  exportType,
+  name,
+  type,
+  typeParameters = [],
+}: {
+  comment?: Comments;
+  exportType?: boolean;
+  name: string;
+  type: string | ts.TypeNode;
+  typeParameters?: FunctionTypeParameter[];
+}): ts.TypeAliasDeclaration => {
+  const node = ts.factory.createTypeAliasDeclaration(
+    exportType
+      ? [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)]
+      : undefined,
+    createIdentifier({ text: name }),
+    toTypeParameters(typeParameters),
+    createTypeNode(type),
+  );
+
+  addLeadingComments({
+    comments: comment,
+    node,
+  });
+
+  return node;
+};
+
+export const createTypeReferenceNode = ({
+  typeArguments,
+  typeName,
+}: {
+  typeArguments?: ts.TypeNode[];
+  typeName: string | ts.EntityName;
+}) => {
+  const node = ts.factory.createTypeReferenceNode(typeName, typeArguments);
   return node;
 };
