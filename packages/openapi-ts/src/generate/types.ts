@@ -210,8 +210,8 @@ const processEnum = ({ client, model, onNode }: TypesProps) => {
           unescape: true,
         });
         const node = compiler.constVariable({
+          assertion: 'const',
           comment,
-          constAssertion: true,
           exportConst: true,
           expression,
           name,

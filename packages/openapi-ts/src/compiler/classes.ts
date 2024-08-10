@@ -1,9 +1,9 @@
 import ts from 'typescript';
 
 import { createCallExpression } from './module';
-import { createTypeNode } from './typedef';
 import {
   type AccessLevel,
+  createTypeNode,
   type FunctionParameter,
   type FunctionTypeParameter,
   toAccessLevelModifiers,

@@ -75,7 +75,7 @@ export const generateSchemas = async ({
     const obj = ensureValidSchemaOutput(schema);
     const expression = compiler.objectExpression({ obj });
     const statement = compiler.constVariable({
-      constAssertion: true,
+      assertion: 'const',
       exportConst: true,
       expression,
       name: validName,

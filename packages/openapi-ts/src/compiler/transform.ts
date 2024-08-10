@@ -63,15 +63,21 @@ export const createElementAccessExpression = ({
 
 export const createBinaryExpression = ({
   left,
+  operator = '=',
   right,
 }: {
   left: ts.Expression;
+  operator?: '=' | '===' | 'in';
   right: ts.Expression | string;
 }) => {
   const expression = ts.factory.createBinaryExpression(
     left,
     // TODO: add support for other tokens
-    ts.SyntaxKind.EqualsToken,
+    operator === '='
+      ? ts.SyntaxKind.EqualsToken
+      : operator === '==='
+        ? ts.SyntaxKind.EqualsEqualsEqualsToken
+        : ts.SyntaxKind.InKeyword,
     typeof right === 'string' ? createIdentifier({ text: right }) : right,
   );
   return expression;
