@@ -31,6 +31,6 @@ export const pluginTanStackReactQueryDefaultConfig: Required<PluginTanStackReact
     infiniteQueryOptions: true,
     mutationOptions: true,
     name: '@tanstack/react-query',
-    output: '@tanstack/query',
+    output: '@tanstack/react-query',
     queryOptions: true,
   };

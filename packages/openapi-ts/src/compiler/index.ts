@@ -30,7 +30,10 @@ const splitNameAndExtension = (fileName: string) => {
 
 export class TypeScriptFile {
   private _headers: Array<string> = [];
-  private _imports: Array<ts.Node> = [];
+  private _imports = new Map<
+    string,
+    Map<string, utils.ImportExportItemObject>
+  >();
   private _items: Array<ts.Node | string> = [];
   private _name: string;
   private _path: PathLike;
@@ -59,13 +62,29 @@ export class TypeScriptFile {
     this._items = [...this._items, ...nodes];
   }
 
-  public addImport(
-    ...params: Parameters<typeof compiler.namedImportDeclarations>
-  ) {
-    this._imports = [
-      ...this._imports,
-      compiler.namedImportDeclarations(...params),
-    ];
+  /**
+   * Adds an import to the provided module. Handles duplication, returns added import.
+   */
+  public import({
+    module,
+    ...importedItem
+  }: utils.ImportExportItemObject & {
+    module: string;
+  }): utils.ImportExportItemObject {
+    let moduleMap = this._imports.get(module);
+
+    if (!moduleMap) {
+      moduleMap = new Map<string, utils.ImportExportItemObject>();
+      this._imports.set(module, moduleMap);
+    }
+
+    const match = moduleMap.get(importedItem.name);
+    if (match) {
+      return match;
+    }
+
+    moduleMap.set(importedItem.name, importedItem);
+    return importedItem;
   }
 
   public getName(withExtension = true) {
@@ -106,11 +125,20 @@ export class TypeScriptFile {
     if (this._headers.length) {
       output = [...output, this._headers.join('\n')];
     }
-    if (this._imports.length) {
-      output = [
-        ...output,
-        this._imports.map((node) => utils.tsNodeToString({ node })).join('\n'),
+    let importsStringArray: string[] = [];
+    for (const [_module, moduleMap] of this._imports.entries()) {
+      const imports = Array.from(moduleMap.values());
+      const node = compiler.namedImportDeclarations({
+        imports,
+        module: _module,
+      });
+      importsStringArray = [
+        ...importsStringArray,
+        utils.tsNodeToString({ node }),
       ];
+    }
+    if (importsStringArray.length) {
+      output = [...output, importsStringArray.join('\n')];
     }
     output = [
       ...output,
