@@ -1,6 +1,7 @@
 import ts from 'typescript';
 
 import { createCallExpression } from './module';
+import { createTypeReferenceNode } from './types';
 import { createIdentifier, isType } from './utils';
 
 const createReturnStatement = ({
@@ -27,7 +28,7 @@ export const createReturnFunctionCall = ({
   types?: string[];
 }) => {
   const typeArguments = types.map((type) =>
-    ts.factory.createTypeReferenceNode(type),
+    createTypeReferenceNode({ typeName: type }),
   );
   const argumentsArray = args
     .map((arg) =>

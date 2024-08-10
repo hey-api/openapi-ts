@@ -81,8 +81,10 @@ export const generatePlugins = async ({
       const createQueryKeyParamsFn = 'createQueryKeyParams';
       const infiniteQueryOptionsFn = 'infiniteQueryOptions';
       const mutationsType = 'UseMutationOptions';
+      const optionsType = 'Options';
       const queryKeyName = 'QueryKey';
       const queryOptionsFn = 'queryOptions';
+      const TOptionsType = 'TOptions';
 
       // TODO: `addTanStackQueryImport()` should be a method of file class to create
       // unique imports. It could be made more performant too
@@ -122,6 +124,18 @@ export const generatePlugins = async ({
       const createQueryKeyParamsFunction = () => {
         hasCreateQueryKeyParamsFunction = true;
 
+        const returnType = compiler.indexedAccessTypeNode({
+          indexType: ts.factory.createLiteralTypeNode(
+            compiler.stringLiteral({ text: 'params' }),
+          ),
+          objectType: compiler.indexedAccessTypeNode({
+            indexType: compiler.typeNode(0),
+            objectType: compiler.typeNode(queryKeyName, [
+              compiler.typeNode(TOptionsType),
+            ]),
+          }),
+        });
+
         const queryKeyParamsFunction = compiler.constVariable({
           expression: compiler.arrowFunction({
             multiLine: true,
@@ -129,31 +143,25 @@ export const generatePlugins = async ({
               {
                 isRequired: false,
                 name: 'options',
-                type: compiler.typeNode('Options', [compiler.typeNode('T')]),
+                type: compiler.typeNode(TOptionsType),
               },
             ],
+            returnType,
             statements: [
               compiler.constVariable({
+                assertion: returnType,
                 expression: compiler.objectExpression({
                   multiLine: false,
                   obj: [],
                 }),
                 name: 'params',
-                typeName: compiler.indexedAccessTypeNode({
-                  indexType: ts.factory.createLiteralTypeNode(
-                    ts.factory.createStringLiteral('params'),
-                  ),
-                  objectType: compiler.indexedAccessTypeNode({
-                    indexType: compiler.typeNode(0),
-                    objectType: compiler.typeNode('QueryKey'),
-                  }),
-                }),
+                typeName: returnType,
               }),
               compiler.ifStatement({
                 expression: compiler.propertyAccessExpression({
-                  expression: 'options',
+                  expression: compiler.identifier({ text: 'options' }),
                   isOptional: true,
-                  name: 'body',
+                  name: compiler.identifier({ text: 'body' }),
                 }),
                 thenStatement: ts.factory.createBlock(
                   [
@@ -175,9 +183,9 @@ export const generatePlugins = async ({
               }),
               compiler.ifStatement({
                 expression: compiler.propertyAccessExpression({
-                  expression: 'options',
+                  expression: compiler.identifier({ text: 'options' }),
                   isOptional: true,
-                  name: 'headers',
+                  name: compiler.identifier({ text: 'headers' }),
                 }),
                 thenStatement: ts.factory.createBlock(
                   [
@@ -199,9 +207,9 @@ export const generatePlugins = async ({
               }),
               compiler.ifStatement({
                 expression: compiler.propertyAccessExpression({
-                  expression: 'options',
+                  expression: compiler.identifier({ text: 'options' }),
                   isOptional: true,
-                  name: 'path',
+                  name: compiler.identifier({ text: 'path' }),
                 }),
                 thenStatement: ts.factory.createBlock(
                   [
@@ -223,9 +231,9 @@ export const generatePlugins = async ({
               }),
               compiler.ifStatement({
                 expression: compiler.propertyAccessExpression({
-                  expression: 'options',
+                  expression: compiler.identifier({ text: 'options' }),
                   isOptional: true,
-                  name: 'query',
+                  name: compiler.identifier({ text: 'query' }),
                 }),
                 thenStatement: ts.factory.createBlock(
                   [
@@ -251,7 +259,10 @@ export const generatePlugins = async ({
             ],
             types: [
               {
-                name: 'T',
+                extends: compiler.typeReferenceNode({
+                  typeName: compiler.identifier({ text: optionsType }),
+                }),
+                name: TOptionsType,
               },
             ],
           }),
@@ -304,37 +315,20 @@ export const generatePlugins = async ({
           },
           {
             name: 'params',
-            type: compiler.typeInterfaceNode({
-              properties: [
-                {
-                  isRequired: false,
-                  name: 'body',
-                  type: compiler.keywordTypeNode({
-                    keyword: 'any',
-                  }),
-                },
-                {
-                  isRequired: false,
-                  name: 'headers',
-                  type: compiler.keywordTypeNode({
-                    keyword: 'any',
-                  }),
-                },
-                {
-                  isRequired: false,
-                  name: 'path',
-                  type: compiler.keywordTypeNode({
-                    keyword: 'any',
-                  }),
-                },
-                {
-                  isRequired: false,
-                  name: 'query',
-                  type: compiler.keywordTypeNode({
-                    keyword: 'any',
-                  }),
-                },
+            type: compiler.typeReferenceNode({
+              typeArguments: [
+                compiler.typeReferenceNode({
+                  typeName: compiler.identifier({ text: TOptionsType }),
+                }),
+                compiler.typeUnionNode(
+                  ['body', 'headers', 'path', 'query'].map((key) =>
+                    ts.factory.createLiteralTypeNode(
+                      compiler.stringLiteral({ text: key }),
+                    ),
+                  ),
+                ),
               ],
+              typeName: compiler.identifier({ text: 'Pick' }),
             }),
           },
           {
@@ -350,6 +344,14 @@ export const generatePlugins = async ({
           type: compiler.typeTupleNode({
             types: [compiler.typeInterfaceNode({ properties })],
           }),
+          typeParameters: [
+            {
+              extends: compiler.typeReferenceNode({
+                typeName: compiler.identifier({ text: optionsType }),
+              }),
+              name: TOptionsType,
+            },
+          ],
         });
         files[plugin.name].add(queryKeyType);
       };
@@ -607,6 +609,10 @@ export const generatePlugins = async ({
                 operation.parameters,
               );
 
+              const typeQueryKey = `${queryKeyName}<${optionsType}<${nameTypeData}>>`;
+              const typePageObjectParam = `${typeQueryKey}[0]['params']`;
+              const typePageParam = `${paginationField.base} | ${typePageObjectParam}`;
+
               const expression = compiler.arrowFunction({
                 parameters: [
                   {
@@ -645,6 +651,51 @@ export const generatePlugins = async ({
                               ],
                               statements: [
                                 compiler.constVariable({
+                                  comment: [
+                                    {
+                                      jsdoc: false,
+                                      lines: ['@ts-ignore'],
+                                    },
+                                  ],
+                                  expression: compiler.conditionalExpression({
+                                    condition: compiler.binaryExpression({
+                                      left: compiler.typeOfExpression({
+                                        text: 'pageParam',
+                                      }),
+                                      operator: '===',
+                                      right: compiler.stringLiteral({
+                                        text: 'object',
+                                      }),
+                                    }),
+                                    whenFalse: compiler.objectExpression({
+                                      multiLine: true,
+                                      obj: [
+                                        {
+                                          key: getPaginationIn(
+                                            paginationParameter,
+                                          ),
+                                          value: compiler.objectExpression({
+                                            multiLine: true,
+                                            obj: [
+                                              {
+                                                key: paginationField.name,
+                                                value: compiler.identifier({
+                                                  text: 'pageParam',
+                                                }),
+                                              },
+                                            ],
+                                          }),
+                                        },
+                                      ],
+                                    }),
+                                    whenTrue: compiler.identifier({
+                                      text: 'pageParam',
+                                    }),
+                                  }),
+                                  name: 'page',
+                                  typeName: typePageObjectParam,
+                                }),
+                                compiler.constVariable({
                                   destructure: true,
                                   expression: compiler.awaitExpression({
                                     expression: compiler.callExpression({
@@ -657,23 +708,63 @@ export const generatePlugins = async ({
                                               spread: 'options',
                                             },
                                             {
-                                              spread: 'queryKey[0].params',
-                                            },
-                                            {
-                                              key: getPaginationIn(
-                                                paginationParameter,
-                                              ),
+                                              key: 'body',
                                               value: compiler.objectExpression({
                                                 multiLine: true,
                                                 obj: [
                                                   {
-                                                    spread: `queryKey[0].params.${getPaginationIn(paginationParameter)}`,
+                                                    assertion: 'any',
+                                                    spread:
+                                                      'queryKey[0].params.body',
                                                   },
                                                   {
-                                                    key: paginationField.name,
-                                                    value: compiler.identifier({
-                                                      text: 'pageParam',
-                                                    }),
+                                                    assertion: 'any',
+                                                    spread: 'page.body',
+                                                  },
+                                                ],
+                                              }),
+                                            },
+                                            {
+                                              key: 'headers',
+                                              value: compiler.objectExpression({
+                                                multiLine: true,
+                                                obj: [
+                                                  {
+                                                    spread:
+                                                      'queryKey[0].params.headers',
+                                                  },
+                                                  {
+                                                    spread: 'page.headers',
+                                                  },
+                                                ],
+                                              }),
+                                            },
+                                            {
+                                              key: 'path',
+                                              value: compiler.objectExpression({
+                                                multiLine: true,
+                                                obj: [
+                                                  {
+                                                    spread:
+                                                      'queryKey[0].params.path',
+                                                  },
+                                                  {
+                                                    spread: 'page.path',
+                                                  },
+                                                ],
+                                              }),
+                                            },
+                                            {
+                                              key: 'query',
+                                              value: compiler.objectExpression({
+                                                multiLine: true,
+                                                obj: [
+                                                  {
+                                                    spread:
+                                                      'queryKey[0].params.query',
+                                                  },
+                                                  {
+                                                    spread: 'page.query',
                                                   },
                                                 ],
                                               }),
@@ -707,9 +798,14 @@ export const generatePlugins = async ({
                     ],
                     name: infiniteQueryOptionsFn,
                     // TODO: better types syntax
-                    // TODO: detect pageParam type
                     types: [
-                      `${typeResponse}, ${typeof typeError === 'string' ? typeError : typeError.name}, ${typeof typeInfiniteData === 'string' ? typeInfiniteData : typeInfiniteData.name}<${typeResponse}>, ${queryKeyName}, unknown`,
+                      typeResponse,
+                      typeof typeError === 'string'
+                        ? typeError
+                        : typeError.name,
+                      `${typeof typeInfiniteData === 'string' ? typeInfiniteData : typeInfiniteData.name}<${typeResponse}>`,
+                      typeQueryKey,
+                      typePageParam,
                     ],
                   }),
                 ],

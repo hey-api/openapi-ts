@@ -1,67 +1,9 @@
 import ts from 'typescript';
 
-import {
-  addLeadingComments,
-  type Comments,
-  createIdentifier,
-  ots,
-  tsNodeToString,
-} from './utils';
+import { createTypeNode, createTypeReferenceNode } from './types';
+import { addLeadingComments, type Comments, tsNodeToString } from './utils';
 
-const nullNode = ts.factory.createTypeReferenceNode('null');
-
-export const createTypeNode = (
-  base: any | ts.TypeNode,
-  args?: (any | ts.TypeNode)[],
-): ts.TypeNode => {
-  if (ts.isTypeNode(base)) {
-    return base;
-  }
-
-  if (typeof base === 'number') {
-    return ts.factory.createLiteralTypeNode(ots.number(base));
-  }
-
-  return ts.factory.createTypeReferenceNode(
-    base,
-    args?.map((arg) => createTypeNode(arg)),
-  );
-};
-
-/**
- * Create a type alias declaration. Example `export type X = Y;`.
- * @param comment (optional) comments to add
- * @param name the name of the type
- * @param type the type
- * @returns ts.TypeAliasDeclaration
- */
-export const createTypeAliasDeclaration = ({
-  comment,
-  exportType,
-  name,
-  type,
-}: {
-  comment?: Comments;
-  exportType?: boolean;
-  name: string;
-  type: string | ts.TypeNode;
-}): ts.TypeAliasDeclaration => {
-  const node = ts.factory.createTypeAliasDeclaration(
-    exportType
-      ? [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)]
-      : undefined,
-    createIdentifier({ text: name }),
-    [],
-    createTypeNode(type),
-  );
-
-  addLeadingComments({
-    comments: comment,
-    node,
-  });
-
-  return node;
-};
+const nullNode = createTypeReferenceNode({ typeName: 'null' });
 
 // Property of a interface type node.
 export type Property = {
@@ -221,8 +163,9 @@ export const createTypeArrayNode = (
   types: (any | ts.TypeNode)[],
   isNullable: boolean = false,
 ) => {
-  const node = ts.factory.createTypeReferenceNode('Array', [
-    createTypeUnionNode(types),
-  ]);
+  const node = createTypeReferenceNode({
+    typeArguments: [createTypeUnionNode(types)],
+    typeName: 'Array',
+  });
   return maybeNullable({ isNullable, node });
 };
