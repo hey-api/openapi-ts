@@ -81,5 +81,5 @@ export const createClient = (config: Config): Client => {
     put: (options) => request({ ...options, method: 'put' }),
     request,
     setConfig,
-  };
+  } as Client;
 };
