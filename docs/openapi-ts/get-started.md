@@ -94,3 +94,4 @@ createClient({
 It is a good practice to extract your configuration into a separate file. Learn how to do that and discover available options on the [Configuration](/openapi-ts/configuration) page.
 
 <!--@include: ../examples.md-->
+<!--@include: ../sponsorship.md-->

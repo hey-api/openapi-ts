@@ -69,3 +69,5 @@ export const foo = () =>
     url: '/foo',
   });
 ```
+
+<!--@include: ../sponsorship.md-->

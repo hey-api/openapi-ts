@@ -30,3 +30,4 @@ We all send HTTP requests in a slightly different way. Hey API doesn't force you
 If you'd like a standalone package for your client, let us know by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
 
 <!--@include: ../examples.md-->
+<!--@include: ../sponsorship.md-->

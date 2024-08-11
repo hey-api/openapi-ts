@@ -156,3 +156,4 @@ export default {
 ```
 
 <!--@include: ../../examples.md-->
+<!--@include: ../../sponsorship.md-->

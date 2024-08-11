@@ -20,6 +20,10 @@ Generate TypeScript interfaces, REST clients, and JSON Schemas from OpenAPI spec
 
 Please visit our [website](https://heyapi.vercel.app/) for documentation, guides, migrating, and more.
 
+## Sponsoring
+
+Love Hey API? Please consider becoming a [sponsor](https://github.com/sponsors/mrlubos).
+
 ## GitHub Integration (coming soon)
 
 Automatically update your code when the APIs it depends on change. [Find out more](https://heyapi.vercel.app/openapi-ts/integrations.html).

@@ -53,18 +53,6 @@ features:
 Read our [migration guide](/openapi-ts/migrating#openapi-typescript-codegen).
 
 <style>
-:root {
-  --github-mark-fill-color: #24292f;
-  --vp-home-hero-name-color: transparent;
-  --vp-home-hero-name-background: -webkit-linear-gradient(120deg, var(--c-gradient-start) 30%, var(--vp-c-brand-3));
-}
-
-html.dark {
-  --github-mark-fill-color: #fff;
-  --vp-home-hero-image-background-image: linear-gradient(-45deg, var(--vp-c-brand-3) 50%, var(--c-gradient-start) 50%);
-  --vp-home-hero-image-filter: blur(144px);
-}
-
 .icon-github path {
   fill: var(--github-mark-fill-color);
 }
