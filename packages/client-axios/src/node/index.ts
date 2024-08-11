@@ -1,5 +1,12 @@
 export { createClient } from '../';
-export type { Client, Config, Options, RequestResult } from '../types';
+export type {
+  Client,
+  Config,
+  Options,
+  RequestOptions,
+  RequestOptionsBase,
+  RequestResult,
+} from '../types';
 export {
   createConfig,
   formDataBodySerializer,
