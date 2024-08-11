@@ -129,3 +129,4 @@ Angular client does not currently support request interceptors.
 :::
 
 <!--@include: ../../examples.md-->
+<!--@include: ../../sponsorship.md-->
