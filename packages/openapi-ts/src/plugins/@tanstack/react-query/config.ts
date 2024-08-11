@@ -15,7 +15,7 @@ export interface PluginTanStackReactQuery {
   name: '@tanstack/react-query';
   /**
    * Name of the generated file.
-   * @default 'tanstack-query'
+   * @default '@tanstack/react-query'
    */
   output?: string;
   /**
