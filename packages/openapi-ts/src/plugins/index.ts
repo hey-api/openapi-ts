@@ -2,8 +2,12 @@ import {
   type PluginTanStackReactQuery,
   pluginTanStackReactQueryDefaultConfig,
 } from './@tanstack/react-query/config';
+import {
+  type PluginTanStackVueQuery,
+  pluginTanStackVueQueryDefaultConfig,
+} from './@tanstack/vue-query/config';
 
-export type Plugins = PluginTanStackReactQuery;
+export type Plugins = PluginTanStackReactQuery | PluginTanStackVueQuery;
 
 type KeyTypes = string | number | symbol;
 
@@ -22,4 +26,5 @@ type DefaultPluginConfigsMap<
 
 export const defaultPluginConfigs: DefaultPluginConfigsMap<Plugins> = {
   '@tanstack/react-query': pluginTanStackReactQueryDefaultConfig,
+  '@tanstack/vue-query': pluginTanStackVueQueryDefaultConfig,
 };
