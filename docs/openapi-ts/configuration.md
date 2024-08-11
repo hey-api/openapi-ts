@@ -251,3 +251,4 @@ You can also prevent your output from being linted by adding your output path to
 You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/types/config.ts) interface.
 
 <!--@include: ../examples.md-->
+<!--@include: ../sponsorship.md-->
