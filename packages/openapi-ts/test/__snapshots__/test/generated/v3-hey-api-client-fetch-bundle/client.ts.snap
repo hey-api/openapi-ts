@@ -1,8 +1,19 @@
 export { createClient } from './core/';
-export type { Client, Config, Options, RequestResult } from './core/types';
+export type {
+  Client,
+  Config,
+  Options,
+  RequestOptions,
+  RequestOptionsBase,
+  RequestResult,
+} from './core/types';
 export {
+  type BodySerializer,
   createConfig,
   formDataBodySerializer,
   jsonBodySerializer,
+  type Middleware,
+  type QuerySerializer,
+  type QuerySerializerOptions,
   urlSearchParamsBodySerializer,
 } from './core/utils';
