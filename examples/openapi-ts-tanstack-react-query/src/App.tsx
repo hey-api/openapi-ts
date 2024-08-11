@@ -24,18 +24,7 @@ import {
   updatePetMutation,
 } from './client/@tanstack/react-query.gen';
 import { $Pet } from './client/schemas.gen';
-import { client } from './client/services.gen';
 import type { Pet } from './client/types.gen';
-
-// configure internal service client
-client.setConfig({
-  // set default base url for requests
-  baseUrl: 'https://petstore3.swagger.io/api/v3',
-  // set default headers for requests
-  headers: {
-    Authorization: 'Bearer <token_from_service_client>',
-  },
-});
 
 const localClient = createClient({
   // set default base url for requests made by this client

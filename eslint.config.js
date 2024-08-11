@@ -1,8 +1,9 @@
 import eslint from '@eslint/js';
-import eslintConfigPrettier from 'eslint-config-prettier';
-import eslintPluginSimpleImportSort from 'eslint-plugin-simple-import-sort';
-import eslintPluginSortKeysFix from 'eslint-plugin-sort-keys-fix';
-import eslintPluginTypeScriptSortKeys from 'eslint-plugin-typescript-sort-keys';
+import configPrettier from 'eslint-config-prettier';
+import pluginSimpleImportSort from 'eslint-plugin-simple-import-sort';
+import pluginSortKeysFix from 'eslint-plugin-sort-keys-fix';
+import pluginTypeScriptSortKeys from 'eslint-plugin-typescript-sort-keys';
+// import pluginVue from 'eslint-plugin-vue'
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
@@ -17,9 +18,9 @@ export default tseslint.config(
       },
     },
     plugins: {
-      'simple-import-sort': eslintPluginSimpleImportSort,
-      'sort-keys-fix': eslintPluginSortKeysFix,
-      'typescript-sort-keys': eslintPluginTypeScriptSortKeys,
+      'simple-import-sort': pluginSimpleImportSort,
+      'sort-keys-fix': pluginSortKeysFix,
+      'typescript-sort-keys': pluginTypeScriptSortKeys,
     },
     rules: {
       '@typescript-eslint/ban-ts-comment': 'off',
@@ -42,7 +43,7 @@ export default tseslint.config(
       'typescript-sort-keys/string-enum': 'warn',
     },
   },
-  eslintConfigPrettier,
+  configPrettier,
   {
     ignores: [
       '**/dist/',

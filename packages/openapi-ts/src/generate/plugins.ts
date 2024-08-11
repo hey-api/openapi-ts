@@ -62,7 +62,10 @@ export const generatePlugins = async ({
     });
     const file = files[plugin.name];
 
-    if (plugin.name === '@tanstack/react-query') {
+    if (
+      plugin.name === '@tanstack/react-query' ||
+      plugin.name === '@tanstack/vue-query'
+    ) {
       const paginationWordsRegExp = /^(cursor|offset|page|start)/;
 
       if (!files.services) {
