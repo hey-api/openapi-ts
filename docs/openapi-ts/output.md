@@ -274,3 +274,4 @@ import { OpenAPI } from './client/core/OpenAPI';
 Different plugins may emit their own artifacts. These will be documented in their respective pages.
 
 <!--@include: ../examples.md-->
+<!--@include: ../sponsorship.md-->
