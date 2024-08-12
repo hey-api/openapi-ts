@@ -17,19 +17,19 @@ const main = async () => {
     output: {
       path: './test/generated/sample/',
     },
-    // plugins: [
-    //   {
-    //     // infiniteQueryOptions: false,
-    //     // mutationOptions: false,
-    //     name: '@tanstack/react-query',
-    //     // queryOptions: false,
-    //   },
-    // ],
+    plugins: [
+      {
+        // infiniteQueryOptions: false,
+        // mutationOptions: false,
+        name: '@tanstack/react-query',
+        // queryOptions: false,
+      },
+    ],
     schemas: {
       export: false,
     },
     services: {
-      export: false,
+      // export: false,
       // asClass: true,
       // filter: '^POST /api/v{api-version}/upload$',
       // export: false,
@@ -42,7 +42,7 @@ const main = async () => {
       // include:
       //   '^(_400|CompositionWithOneOfAndProperties)',
       // name: 'PascalCase',
-      tree: false,
+      // tree: false,
     },
     // useOptions: false,
   };

@@ -43,7 +43,7 @@ describe('generateIndexFile', () => {
       }),
       types: new TypeScriptFile({
         dir: '/',
-        name: 'models.ts',
+        name: 'types.ts',
       }),
     };
 
