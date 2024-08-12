@@ -1,5 +1,13 @@
 # @hey-api/client-fetch
 
+## 0.2.4
+
+### Patch Changes
+
+- [#899](https://github.com/hey-api/openapi-ts/pull/899) [`a8c84c0`](https://github.com/hey-api/openapi-ts/commit/a8c84c02dbb5ef1a59f5d414dff425e135c7a446) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: preserve key name in Date transformation
+
+- [#901](https://github.com/hey-api/openapi-ts/pull/901) [`7825a2f`](https://github.com/hey-api/openapi-ts/commit/7825a2fba566a76c63775172ef0569ef375406b6) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export more types to resolve TypeScript errors
+
 ## 0.2.3
 
 ### Patch Changes

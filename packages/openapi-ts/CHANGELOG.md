@@ -1,5 +1,15 @@
 # @hey-api/openapi-ts
 
+## 0.52.5
+
+### Patch Changes
+
+- [#910](https://github.com/hey-api/openapi-ts/pull/910) [`428dcad`](https://github.com/hey-api/openapi-ts/commit/428dcad06eba3ab14876c28092a6df81fcde7dbe) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: throw if prerequisite checks are not met
+
+- [#907](https://github.com/hey-api/openapi-ts/pull/907) [`a2a1ab8`](https://github.com/hey-api/openapi-ts/commit/a2a1ab8bd78c2cbbdcb7adb2ba3815250843dbe7) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: correctly transform string to pascalcase when referenced inside schema
+
+- [#908](https://github.com/hey-api/openapi-ts/pull/908) [`225b640`](https://github.com/hey-api/openapi-ts/commit/225b640b5ac628cb7ba3b7afb39ff271a0608055) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: do not generate types tree by default if services are enabled as it is unused
+
 ## 0.52.4
 
 ### Patch Changes
