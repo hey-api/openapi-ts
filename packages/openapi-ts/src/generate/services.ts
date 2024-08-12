@@ -701,6 +701,22 @@ const processService = ({
   onNode(statement);
 };
 
+const checkPrerequisites = ({ files }: { files: Files }) => {
+  const config = getConfig();
+
+  if (!config.client.name) {
+    throw new Error(
+      '🚫 client needs to be set to generate services - which HTTP client do you want to use?',
+    );
+  }
+
+  if (!files.types) {
+    throw new Error(
+      '🚫 types need to be exported to generate services - enable type generation',
+    );
+  }
+};
+
 export const generateServices = async ({
   client,
   files,
@@ -714,9 +730,7 @@ export const generateServices = async ({
     return;
   }
 
-  if (!files.types) {
-    // TODO: throw
-  }
+  checkPrerequisites({ files });
 
   const isStandalone = isStandaloneClient(config);
 

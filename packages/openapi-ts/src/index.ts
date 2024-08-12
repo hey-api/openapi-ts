@@ -100,7 +100,6 @@ const logClientMessage = () => {
 const getClient = (userConfig: ClientConfig): Config['client'] => {
   let client: Config['client'] = {
     bundle: false,
-    // @ts-ignore
     name: '',
   };
   if (typeof userConfig.client === 'string') {
@@ -261,12 +260,6 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
 
     const client = getClient(userConfig);
 
-    if (!client.name) {
-      throw new Error(
-        '🚫 missing client - which HTTP client do you want to generate?',
-      );
-    }
-
     if (!useOptions) {
       console.warn(
         '⚠️ Deprecation warning: useOptions set to false. This setting will be removed in future versions. Please migrate useOptions to true https://heyapi.vercel.app/openapi-ts/migrating.html#v0-27-38',
@@ -286,7 +279,8 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
       configFile,
       debug,
       dryRun,
-      exportCore: isStandaloneClient(client) ? false : exportCore,
+      exportCore:
+        isStandaloneClient(client) || !client.name ? false : exportCore,
       input,
       name,
       output,

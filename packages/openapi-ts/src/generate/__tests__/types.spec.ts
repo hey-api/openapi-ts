@@ -68,7 +68,7 @@ describe('generateTypes', () => {
     const files = {
       types: new TypeScriptFile({
         dir: '/',
-        name: 'models.ts',
+        name: 'types.ts',
       }),
     };
 
@@ -80,7 +80,7 @@ describe('generateTypes', () => {
     files.types.write();
 
     expect(writeFileSync).toHaveBeenCalledWith(
-      path.resolve('/models.gen.ts'),
+      path.resolve('/types.gen.ts'),
       expect.anything(),
     );
   });

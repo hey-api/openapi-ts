@@ -321,7 +321,6 @@ describe('OpenAPI v3', () => {
         services: {
           filter: '^\\w+ /api/v{api-version}/simple$',
         },
-        types: false,
       }),
       description: 'generate services with specific endpoints',
       name: 'v3_services_filter',
