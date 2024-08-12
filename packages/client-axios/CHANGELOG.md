@@ -1,5 +1,11 @@
 # @hey-api/client-axios
 
+## 0.2.3
+
+### Patch Changes
+
+- [#901](https://github.com/hey-api/openapi-ts/pull/901) [`7825a2f`](https://github.com/hey-api/openapi-ts/commit/7825a2fba566a76c63775172ef0569ef375406b6) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export more types to resolve TypeScript errors
+
 ## 0.2.2
 
 ### Patch Changes

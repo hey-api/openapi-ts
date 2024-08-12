@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/client-axios",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "type": "module",
   "description": "Typesafe Axios client for your @hey-api/openapi-ts types",
   "homepage": "https://heyapi.vercel.app/",
