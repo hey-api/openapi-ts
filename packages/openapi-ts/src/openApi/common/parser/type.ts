@@ -1,5 +1,4 @@
-import camelcase from 'camelcase';
-
+import { camelCase } from '../../../utils/camelCase';
 import { getConfig, isStandaloneClient } from '../../../utils/config';
 import { refParametersPartial } from '../../../utils/const';
 import { reservedWordsRegExp } from '../../../utils/reservedWords';
@@ -172,7 +171,8 @@ export const transformTypeKeyName = (value: string): string => {
     return value;
   }
 
-  const clean = sanitizeOperationParameterName(value).trim();
-  const name = camelcase(clean).replace(reservedWordsRegExp, '_$1');
+  const name = camelCase({
+    input: sanitizeOperationParameterName(value),
+  }).replace(reservedWordsRegExp, '_$1');
   return name;
 };

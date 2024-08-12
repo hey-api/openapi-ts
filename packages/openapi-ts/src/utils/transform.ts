@@ -1,6 +1,5 @@
-import camelcase from 'camelcase';
-
 import { ensureValidTypeScriptJavaScriptIdentifier } from '../openApi/common/parser/sanitize';
+import { camelCase } from './camelCase';
 import { getConfig } from './config';
 import { reservedWordsRegExp } from './reservedWords';
 
@@ -15,7 +14,10 @@ export const transformServiceName = (name: string) => {
 export const transformTypeName = (name: string) => {
   const config = getConfig();
   if (config.types.name === 'PascalCase') {
-    return camelcase(name, { pascalCase: true });
+    return camelCase({
+      input: name,
+      pascalCase: true,
+    });
   }
   return name;
 };
