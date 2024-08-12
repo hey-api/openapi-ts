@@ -58,17 +58,6 @@ export type AddPetData = {
 };
 
 export type AddPetResponse = Pet;
-
-export type $OpenApiTs = {
-  '/foo': {
-    post: {
-      req: AddPetData;
-      res: {
-        200: Pet;
-      };
-    };
-  };
-};
 ```
 
 :::
