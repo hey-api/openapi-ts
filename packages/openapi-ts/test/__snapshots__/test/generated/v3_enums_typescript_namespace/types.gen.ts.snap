@@ -1007,6 +1007,30 @@ export type SchemaWithFormRestrictedKeys = {
 };
 
 /**
+ * This schema was giving PascalCase transformations a hard time
+ */
+export type io_k8s_apimachinery_pkg_apis_meta_v1_DeleteOptions = {
+    /**
+     * Must be fulfilled before a deletion is carried out. If not possible, a 409 Conflict status will be returned.
+     */
+    preconditions?: io_k8s_apimachinery_pkg_apis_meta_v1_Preconditions;
+};
+
+/**
+ * This schema was giving PascalCase transformations a hard time
+ */
+export type io_k8s_apimachinery_pkg_apis_meta_v1_Preconditions = {
+    /**
+     * Specifies the target ResourceVersion
+     */
+    resourceVersion?: string;
+    /**
+     * Specifies the target UID.
+     */
+    uid?: string;
+};
+
+/**
  * This is a reusable parameter
  */
 export type ParameterSimpleParameter = string;

@@ -1,4 +1,3 @@
-import camelCase from 'camelcase';
 import Handlebars from 'handlebars/runtime';
 
 import templateClient from '../templates/client.hbs';
@@ -45,10 +44,18 @@ import xhrGetResponseBody from '../templates/core/xhr/getResponseBody.hbs';
 import xhrGetResponseHeader from '../templates/core/xhr/getResponseHeader.hbs';
 import xhrRequest from '../templates/core/xhr/request.hbs';
 import xhrSendRequest from '../templates/core/xhr/sendRequest.hbs';
+import { camelCase } from './camelCase';
 import { transformServiceName } from './transform';
 
 export const registerHandlebarHelpers = (): void => {
-  Handlebars.registerHelper('camelCase', camelCase);
+  Handlebars.registerHelper(
+    'camelCase',
+    function (this: unknown, name: string) {
+      return camelCase({
+        input: name,
+      });
+    },
+  );
 
   Handlebars.registerHelper(
     'equals',
