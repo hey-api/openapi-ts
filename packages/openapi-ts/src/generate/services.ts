@@ -1,5 +1,3 @@
-import camelcase from 'camelcase';
-
 import {
   ClassElement,
   type Comments,
@@ -13,6 +11,7 @@ import type { Model, Operation, OperationParameter, Service } from '../openApi';
 import { isOperationParameterRequired } from '../openApi/common/parser/operation';
 import type { Client } from '../types/client';
 import type { Files } from '../types/utils';
+import { camelCase } from '../utils/camelCase';
 import { getConfig, isStandaloneClient } from '../utils/config';
 import { escapeComment, escapeName } from '../utils/escape';
 import { reservedWordsRegExp } from '../utils/reservedWords';
@@ -56,17 +55,26 @@ export const modelResponseTransformerTypeName = (name: string) =>
   `${name}ModelResponseTransformer`;
 
 export const operationDataTypeName = (name: string) =>
-  `${camelcase(name, { pascalCase: true })}Data`;
+  `${camelCase({
+    input: name,
+    pascalCase: true,
+  })}Data`;
 
 export const operationErrorTypeName = (name: string) =>
-  `${camelcase(name, { pascalCase: true })}Error`;
+  `${camelCase({
+    input: name,
+    pascalCase: true,
+  })}Error`;
 
 // operation response type ends with "Response", it's enough to append "Transformer"
 export const operationResponseTransformerTypeName = (name: string) =>
   `${name}Transformer`;
 
 export const operationResponseTypeName = (name: string) =>
-  `${camelcase(name, { pascalCase: true })}Response`;
+  `${camelCase({
+    input: name,
+    pascalCase: true,
+  })}Response`;
 
 /**
  * @param importedType unique type name returned from `setUniqueTypeName()`

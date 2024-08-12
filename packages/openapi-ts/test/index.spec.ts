@@ -273,12 +273,11 @@ describe('OpenAPI v3', () => {
         exportCore: false,
         services: false,
         types: {
-          include: '^(CamelCaseCommentWithBreaks|ArrayWithProperties)',
           name: 'PascalCase',
         },
       }),
-      description: 'generate pascalcase types',
-      name: 'v3_pascalcase',
+      description: 'generate PascalCase types',
+      name: 'v3-types-PascalCase',
     },
     {
       config: createConfig({

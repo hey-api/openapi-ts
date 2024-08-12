@@ -1834,3 +1834,33 @@ export const $SchemaWithFormRestrictedKeys = {
         }
     }
 } as const;
+
+export const $io_k8s_apimachinery_pkg_apis_meta_v1_DeleteOptions = {
+    description: 'This schema was giving PascalCase transformations a hard time',
+    properties: {
+        preconditions: {
+            allOf: [
+                {
+                    '$ref': '#/components/schemas/io.k8s.apimachinery.pkg.apis.meta.v1.Preconditions'
+                }
+            ],
+            description: 'Must be fulfilled before a deletion is carried out. If not possible, a 409 Conflict status will be returned.'
+        }
+    },
+    type: 'object'
+} as const;
+
+export const $io_k8s_apimachinery_pkg_apis_meta_v1_Preconditions = {
+    description: 'This schema was giving PascalCase transformations a hard time',
+    properties: {
+        resourceVersion: {
+            description: 'Specifies the target ResourceVersion',
+            type: 'string'
+        },
+        uid: {
+            description: 'Specifies the target UID.',
+            type: 'string'
+        }
+    },
+    type: 'object'
+} as const;
