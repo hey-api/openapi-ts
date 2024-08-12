@@ -3,11 +3,11 @@ const path = require('node:path');
 const main = async () => {
   /** @type {import('../src/node/index').UserConfig} */
   const config = {
-    client: {
-      // bundle: true,
-      // name: '@hey-api/client-axios',
-      name: '@hey-api/client-fetch',
-    },
+    // client: {
+    //   // bundle: true,
+    //   // name: '@hey-api/client-axios',
+    //   name: '@hey-api/client-fetch',
+    // },
     debug: true,
     // input: './test/spec/v3-transforms.json',
     input: './test/spec/v3.json',
@@ -17,19 +17,19 @@ const main = async () => {
     output: {
       path: './test/generated/sample/',
     },
-    plugins: [
-      {
-        // infiniteQueryOptions: false,
-        // mutationOptions: false,
-        name: '@tanstack/react-query',
-        // queryOptions: false,
-      },
-    ],
+    // plugins: [
+    //   {
+    //     // infiniteQueryOptions: false,
+    //     // mutationOptions: false,
+    //     name: '@tanstack/react-query',
+    //     // queryOptions: false,
+    //   },
+    // ],
     schemas: {
       export: false,
     },
     services: {
-      // export: false,
+      export: false,
       // asClass: true,
       // filter: '^POST /api/v{api-version}/upload$',
       // export: false,
