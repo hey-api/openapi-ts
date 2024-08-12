@@ -29,6 +29,7 @@ const main = async () => {
       export: false,
     },
     services: {
+      export: false,
       // asClass: true,
       // filter: '^POST /api/v{api-version}/upload$',
       // export: false,
@@ -40,8 +41,8 @@ const main = async () => {
       // export: false,
       // include:
       //   '^(_400|CompositionWithOneOfAndProperties)',
-      name: 'PascalCase',
-      // tree: false,
+      // name: 'PascalCase',
+      tree: false,
     },
     // useOptions: false,
   };
