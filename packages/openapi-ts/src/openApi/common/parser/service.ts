@@ -1,5 +1,4 @@
-import camelCase from 'camelcase';
-
+import { camelCase } from '../../../utils/camelCase';
 import type { Operation, Service } from '../interfaces/client';
 import { sanitizeNamespaceIdentifier } from './sanitize';
 
@@ -35,7 +34,8 @@ export function getServiceVersion(version = '1.0'): string {
  * Convert the input value to a correct service name. This converts
  * the input string to PascalCase.
  */
-export const getServiceName = (value: string): string => {
-  const clean = sanitizeNamespaceIdentifier(value).trim();
-  return camelCase(clean, { pascalCase: true });
-};
+export const getServiceName = (value: string): string =>
+  camelCase({
+    input: sanitizeNamespaceIdentifier(value),
+    pascalCase: true,
+  });

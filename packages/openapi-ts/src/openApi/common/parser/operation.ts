@@ -1,5 +1,4 @@
-import camelCase from 'camelcase';
-
+import { camelCase } from '../../../utils/camelCase';
 import { getConfig, isStandaloneClient } from '../../../utils/config';
 import type {
   OperationParameter,
@@ -20,7 +19,9 @@ export const getOperationName = (
   const config = getConfig();
 
   if (config.services.operationId && operationId) {
-    return camelCase(sanitizeNamespaceIdentifier(operationId).trim());
+    return camelCase({
+      input: sanitizeNamespaceIdentifier(operationId),
+    });
   }
 
   let urlWithoutPlaceholders = url;
@@ -39,7 +40,9 @@ export const getOperationName = (
     // replace slashes with hyphens for camelcase method at the end
     .replace(/\//g, '-');
 
-  return camelCase(`${method}-${urlWithoutPlaceholders}`);
+  return camelCase({
+    input: `${method}-${urlWithoutPlaceholders}`,
+  });
 };
 
 export const getOperationResponseHeader = (

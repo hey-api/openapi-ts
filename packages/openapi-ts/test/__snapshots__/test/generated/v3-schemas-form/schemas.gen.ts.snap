@@ -1679,3 +1679,28 @@ export const $SchemaWithFormRestrictedKeys = {
         }
     }
 } as const;
+
+export const $io_k8s_apimachinery_pkg_apis_meta_v1_DeleteOptions = {
+    properties: {
+        preconditions: {
+            allOf: [
+                {
+                    '$ref': '#/components/schemas/io.k8s.apimachinery.pkg.apis.meta.v1.Preconditions'
+                }
+            ]
+        }
+    },
+    type: 'object'
+} as const;
+
+export const $io_k8s_apimachinery_pkg_apis_meta_v1_Preconditions = {
+    properties: {
+        resourceVersion: {
+            type: 'string'
+        },
+        uid: {
+            type: 'string'
+        }
+    },
+    type: 'object'
+} as const;
