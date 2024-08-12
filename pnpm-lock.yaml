@@ -103,8 +103,8 @@ importers:
         specifier: 1.3.0
         version: 1.3.0(react@18.3.1)
       '@radix-ui/themes':
-        specifier: 3.1.1
-        version: 3.1.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 3.1.3
+        version: 3.1.3(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       axios:
         specifier: 1.7.3
         version: 1.7.3
@@ -173,8 +173,8 @@ importers:
         specifier: 1.3.0
         version: 1.3.0(react@18.3.1)
       '@radix-ui/themes':
-        specifier: 3.1.1
-        version: 3.1.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 3.1.3
+        version: 3.1.3(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react:
         specifier: 18.3.1
         version: 18.3.1
@@ -240,8 +240,8 @@ importers:
         specifier: 1.3.0
         version: 1.3.0(react@18.3.1)
       '@radix-ui/themes':
-        specifier: 3.1.1
-        version: 3.1.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 3.1.3
+        version: 3.1.3(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tanstack/react-query':
         specifier: 5.51.23
         version: 5.51.23(react@18.3.1)
@@ -2684,8 +2684,8 @@ packages:
   '@radix-ui/rect@1.1.0':
     resolution: {integrity: sha512-A9+lCBZoaMJlVKcRBz2YByCG+Cp2t6nAnMnNba+XiWxnj6r4JUFqfsgwocMBZU9LPtdxC6wB56ySYpc7LQIoJg==}
 
-  '@radix-ui/themes@3.1.1':
-    resolution: {integrity: sha512-G+j+x+7kyqQXnn+ftlNPgk1DdZ8h/vVZnLsG4hZB0Mxw4fdKCh1tThQuXDSBNWhFt/vTG79BMzRMiflovENrmA==}
+  '@radix-ui/themes@3.1.3':
+    resolution: {integrity: sha512-GJt4r7Vh0w4yiGuqOKLvrZXLEAxUWfEUUtdj17rCfi+P/zpKUc7TsXro8GftA2Y1tm78Cx9x1HKt23dHc/WqIA==}
     peerDependencies:
       '@types/react': '*'
       '@types/react-dom': '*'
@@ -6619,10 +6619,6 @@ packages:
     resolution: {integrity: sha512-MpUEN2OodtUzxvKQl72cUF7RQ5EiHsGvSsVG0ia9c5RbWGL2CI4C7EpPS8UTBIplnlzZiNuV56w+FuNxy3ty2Q==}
     engines: {node: '>=10'}
 
-  supports-color@9.4.0:
-    resolution: {integrity: sha512-VL+lNrEoIXww1coLPOmiEmK/0sGigko5COxI09KzHc2VJXJsQ37UaQ+8quuxjDeA7+KnLGTWRyOXSLLR2Wb4jw==}
-    engines: {node: '>=12'}
-
   supports-preserve-symlinks-flag@1.0.0:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
@@ -9936,7 +9932,7 @@ snapshots:
 
   '@radix-ui/rect@1.1.0': {}
 
-  '@radix-ui/themes@3.1.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@radix-ui/themes@3.1.3(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@radix-ui/colors': 3.0.0
       '@radix-ui/primitive': 1.1.0
@@ -10385,7 +10381,7 @@ snapshots:
       '@typescript-eslint/types': 7.15.0
       '@typescript-eslint/typescript-estree': 7.15.0(typescript@5.5.3)
       '@typescript-eslint/visitor-keys': 7.15.0
-      debug: 4.3.5(supports-color@9.4.0)
+      debug: 4.3.5
       eslint: 9.6.0
     optionalDependencies:
       typescript: 5.5.3
@@ -10406,7 +10402,7 @@ snapshots:
     dependencies:
       '@typescript-eslint/typescript-estree': 7.15.0(typescript@5.5.3)
       '@typescript-eslint/utils': 7.15.0(eslint@9.6.0)(typescript@5.5.3)
-      debug: 4.3.5(supports-color@9.4.0)
+      debug: 4.3.5
       eslint: 9.6.0
       ts-api-utils: 1.3.0(typescript@5.5.3)
     optionalDependencies:
@@ -10422,7 +10418,7 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 5.62.0
       '@typescript-eslint/visitor-keys': 5.62.0
-      debug: 4.3.5(supports-color@9.4.0)
+      debug: 4.3.5
       globby: 11.1.0
       is-glob: 4.0.3
       semver: 7.6.2
@@ -10436,7 +10432,7 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 7.15.0
       '@typescript-eslint/visitor-keys': 7.15.0
-      debug: 4.3.5(supports-color@9.4.0)
+      debug: 4.3.5
       globby: 11.1.0
       is-glob: 4.0.3
       minimatch: 9.0.5
@@ -10522,7 +10518,7 @@ snapshots:
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
-      debug: 4.3.5(supports-color@9.4.0)
+      debug: 4.3.5
       istanbul-lib-coverage: 3.2.2
       istanbul-lib-report: 3.0.1
       istanbul-lib-source-maps: 5.0.4
@@ -10899,12 +10895,6 @@ snapshots:
   agent-base@7.1.1:
     dependencies:
       debug: 4.3.5
-    transitivePeerDependencies:
-      - supports-color
-
-  agent-base@7.1.1(supports-color@9.4.0):
-    dependencies:
-      debug: 4.3.5(supports-color@9.4.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -11541,12 +11531,6 @@ snapshots:
   debug@4.3.5:
     dependencies:
       ms: 2.1.2
-
-  debug@4.3.5(supports-color@9.4.0):
-    dependencies:
-      ms: 2.1.2
-    optionalDependencies:
-      supports-color: 9.4.0
 
   decimal.js@10.4.3: {}
 
@@ -12452,13 +12436,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  https-proxy-agent@7.0.4(supports-color@9.4.0):
-    dependencies:
-      agent-base: 7.1.1(supports-color@9.4.0)
-      debug: 4.3.5(supports-color@9.4.0)
-    transitivePeerDependencies:
-      - supports-color
-
   human-id@1.0.2: {}
 
   human-signals@2.1.0: {}
@@ -12656,7 +12633,7 @@ snapshots:
   istanbul-lib-source-maps@5.0.4:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
-      debug: 4.3.5(supports-color@9.4.0)
+      debug: 4.3.5
       istanbul-lib-coverage: 3.2.2
     transitivePeerDependencies:
       - supports-color
@@ -12713,7 +12690,7 @@ snapshots:
       form-data: 4.0.0
       html-encoding-sniffer: 4.0.0
       http-proxy-agent: 7.0.2
-      https-proxy-agent: 7.0.4(supports-color@9.4.0)
+      https-proxy-agent: 7.0.4
       is-potential-custom-element-name: 1.0.1
       nwsapi: 2.2.12
       parse5: 7.1.2
@@ -12827,7 +12804,7 @@ snapshots:
     dependencies:
       chalk: 5.3.0
       commander: 12.1.0
-      debug: 4.3.5(supports-color@9.4.0)
+      debug: 4.3.5
       execa: 8.0.1
       lilconfig: 3.1.2
       listr2: 8.2.3
@@ -14307,9 +14284,6 @@ snapshots:
     dependencies:
       has-flag: 4.0.0
 
-  supports-color@9.4.0:
-    optional: true
-
   supports-preserve-symlinks-flag@1.0.0: {}
 
   svg-tags@1.0.0: {}
@@ -14633,7 +14607,7 @@ snapshots:
   vite-node@1.6.0(@types/node@20.14.10)(less@4.2.0)(sass@1.71.1)(terser@5.31.1):
     dependencies:
       cac: 6.7.14
-      debug: 4.3.5(supports-color@9.4.0)
+      debug: 4.3.5
       pathe: 1.1.2
       picocolors: 1.0.1
       vite: 5.3.3(@types/node@20.14.10)(less@4.2.0)(sass@1.71.1)(terser@5.31.1)
@@ -14650,7 +14624,7 @@ snapshots:
   vite-node@1.6.0(@types/node@20.14.5)(less@4.2.0)(sass@1.71.1)(terser@5.31.1):
     dependencies:
       cac: 6.7.14
-      debug: 4.3.5(supports-color@9.4.0)
+      debug: 4.3.5
       pathe: 1.1.2
       picocolors: 1.0.1
       vite: 5.3.3(@types/node@20.14.5)(less@4.2.0)(sass@1.71.1)(terser@5.31.1)
@@ -14668,7 +14642,7 @@ snapshots:
     dependencies:
       '@antfu/utils': 0.7.10
       '@rollup/pluginutils': 5.1.0(rollup@4.18.0)
-      debug: 4.3.5(supports-color@9.4.0)
+      debug: 4.3.5
       error-stack-parser-es: 0.1.5
       fs-extra: 11.2.0
       open: 10.1.0
@@ -14803,7 +14777,7 @@ snapshots:
       '@vitest/utils': 1.6.0
       acorn-walk: 8.3.3
       chai: 4.4.1
-      debug: 4.3.5(supports-color@9.4.0)
+      debug: 4.3.5
       execa: 8.0.1
       local-pkg: 0.5.0
       magic-string: 0.30.10
@@ -14837,7 +14811,7 @@ snapshots:
       '@vitest/utils': 1.6.0
       acorn-walk: 8.3.3
       chai: 4.4.1
-      debug: 4.3.5(supports-color@9.4.0)
+      debug: 4.3.5
       execa: 8.0.1
       local-pkg: 0.5.0
       magic-string: 0.30.10
@@ -14872,7 +14846,7 @@ snapshots:
 
   vue-eslint-parser@9.4.3(eslint@9.6.0):
     dependencies:
-      debug: 4.3.5(supports-color@9.4.0)
+      debug: 4.3.5
       eslint: 9.6.0
       eslint-scope: 7.2.2
       eslint-visitor-keys: 3.4.3
