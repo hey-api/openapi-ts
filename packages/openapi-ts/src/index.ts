@@ -180,13 +180,16 @@ const getServices = (userConfig: ClientConfig): Config['services'] => {
   return services;
 };
 
-const getTypes = (userConfig: ClientConfig): Config['types'] => {
+const getTypes = (
+  userConfig: ClientConfig,
+  services: Config['services'],
+): Config['types'] => {
   let types: Config['types'] = {
     dates: false,
     enums: false,
     export: true,
     name: 'preserve',
-    tree: true,
+    tree: !services.export,
   };
   if (typeof userConfig.types === 'boolean') {
     types.export = userConfig.types;
@@ -273,7 +276,7 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
     const plugins = getPlugins(userConfig);
     const schemas = getSchemas(userConfig);
     const services = getServices(userConfig);
-    const types = getTypes(userConfig);
+    const types = getTypes(userConfig, services);
 
     output.path = path.resolve(process.cwd(), output.path);
 
