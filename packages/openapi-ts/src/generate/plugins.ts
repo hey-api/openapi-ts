@@ -50,7 +50,7 @@ export const generatePlugins = async ({
     return;
   }
 
-  for (const plugin of config.plugins) {
+  config.plugins.forEach((plugin) => {
     const outputParts = plugin.output.split('/');
     const outputDir = path.resolve(
       config.output.path,
@@ -66,14 +66,17 @@ export const generatePlugins = async ({
       plugin.name === '@tanstack/react-query' ||
       plugin.name === '@tanstack/vue-query'
     ) {
-      const paginationWordsRegExp = /^(cursor|offset|page|start)/;
+      const checkPrerequisites = ({ files }: { files: Files }) => {
+        if (!files.services) {
+          throw new Error(
+            '🚫 services need to be exported to use TanStack Query plugin - enable service generation',
+          );
+        }
+      };
 
-      if (!files.services) {
-        // TODO: throw
-      }
-      if (!files.types) {
-        // TODO: throw
-      }
+      checkPrerequisites({ files });
+
+      const paginationWordsRegExp = /^(cursor|offset|page|start)/;
 
       file.import({
         asType: true,
@@ -935,5 +938,5 @@ export const generatePlugins = async ({
         }
       }
     }
-  }
+  });
 };

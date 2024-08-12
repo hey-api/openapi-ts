@@ -3,6 +3,7 @@ import path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
 
+import { TypeScriptFile } from '../../compiler';
 import type { Operation } from '../../openApi';
 import type { Files } from '../../types/utils';
 import { setConfig } from '../../utils/config';
@@ -72,6 +73,11 @@ describe('generateServices', () => {
     };
 
     const files: Files = {};
+
+    files.types = new TypeScriptFile({
+      dir: '/',
+      name: 'types.ts',
+    });
 
     await generateServices({ client, files });
 
@@ -149,6 +155,11 @@ describe('methodNameBuilder', () => {
 
     const files: Files = {};
 
+    files.types = new TypeScriptFile({
+      dir: '/',
+      name: 'types.ts',
+    });
+
     await generateServices({ client, files });
 
     files.services.write();
@@ -186,6 +197,11 @@ describe('methodNameBuilder', () => {
     });
 
     const files: Files = {};
+
+    files.types = new TypeScriptFile({
+      dir: '/',
+      name: 'types.ts',
+    });
 
     await generateServices({ client, files });
 
@@ -226,6 +242,11 @@ describe('methodNameBuilder', () => {
     });
 
     const files: Files = {};
+
+    files.types = new TypeScriptFile({
+      dir: '/',
+      name: 'types.ts',
+    });
 
     await generateServices({ client, files });
 

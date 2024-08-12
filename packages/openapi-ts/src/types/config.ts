@@ -9,7 +9,8 @@ type Client =
   | 'axios'
   | 'fetch'
   | 'node'
-  | 'xhr';
+  | 'xhr'
+  | '';
 
 export interface ClientConfig {
   /**
