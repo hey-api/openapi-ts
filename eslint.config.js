@@ -51,6 +51,7 @@ export default tseslint.config(
       'temp/',
       '**/test/e2e/generated/',
       '**/test/generated/',
+      '**/.svelte-kit/',
       '**/.vitepress/cache',
       '**/.vitepress/dist',
     ],

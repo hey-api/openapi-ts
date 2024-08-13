@@ -64,6 +64,8 @@ export const generatePlugins = async ({
 
     if (
       plugin.name === '@tanstack/react-query' ||
+      plugin.name === '@tanstack/solid-query' ||
+      plugin.name === '@tanstack/svelte-query' ||
       plugin.name === '@tanstack/vue-query'
     ) {
       const checkPrerequisites = ({ files }: { files: Files }) => {
@@ -91,7 +93,11 @@ export const generatePlugins = async ({
 
       const createQueryKeyParamsFn = 'createQueryKeyParams';
       const infiniteQueryOptionsFn = 'infiniteQueryOptions';
-      const mutationsType = 'UseMutationOptions';
+      const mutationsType =
+        plugin.name === '@tanstack/svelte-query' ||
+        plugin.name === '@tanstack/solid-query'
+          ? 'MutationOptions'
+          : 'UseMutationOptions';
       const queryKeyName = 'QueryKey';
       const queryOptionsFn = 'queryOptions';
       const TOptionsType = 'TOptions';

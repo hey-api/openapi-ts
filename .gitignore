@@ -12,6 +12,7 @@ yarn-error.log*
 dist
 coverage
 .env
+.svelte-kit
 
 # test files
 test/generated
