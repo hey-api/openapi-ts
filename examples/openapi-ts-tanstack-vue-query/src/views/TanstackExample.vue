@@ -139,13 +139,13 @@ watch(error, (error) => {
 
 <template>
   <div class="bg-[#18191b] py-12">
-    <div class="flex flex-col gap-12 max-w-md mx-auto">
+    <div class="mx-auto flex max-w-md flex-col gap-12">
       <div class="flex items-center">
-        <a className="shrink-0" href="https://heyapi.vercel.app/" target="_blank">
+        <a class="shrink-0" href="https://heyapi.vercel.app/" target="_blank">
           <img
-            src="https://heyapi.vercel.app/logo.png"
-            class="h-16 w-16 transition duration-300 will-change-auto"
             alt="Hey API logo"
+            class="size-16 transition duration-300 will-change-auto"
+            src="https://heyapi.vercel.app/logo.png"
           />
         </a>
 
@@ -154,10 +154,10 @@ watch(error, (error) => {
 
       <div class="flex flex-col gap-2">
         <div
-          class="p-2 bg-[#1f2123] border-[#575e64] rounded border flex gap-3 w-[50%] items-center"
+          class="flex max-w-60 items-center gap-3 rounded border border-[#575e64] bg-[#1f2123] p-4"
         >
           <div
-            class="rounded-full bg-[#233057] flex size-[40px] text-[#9eb1ff] text-lg font-medium place-content-center place-items-center"
+            class="flex size-10 place-content-center place-items-center rounded-full bg-[#233057] text-lg font-medium text-[#9eb1ff]"
           >
             <span>
               {{ pet?.name?.slice(0, 1) || 'N' }}
@@ -165,56 +165,56 @@ watch(error, (error) => {
           </div>
 
           <div>
-            <p class="text-white text-sm font-bold">Name: {{ pet?.name || 'N/A' }}</p>
+            <p class="text-sm font-bold text-white">Name: {{ pet?.name || 'N/A' }}</p>
 
-            <p class="text-[#f1f7feb5] text-sm">Category: {{ pet?.category?.name || 'N/A' }}</p>
+            <p class="text-sm text-[#f1f7feb5]">Category: {{ pet?.category?.name || 'N/A' }}</p>
           </div>
         </div>
 
         <button
+          class="rounded bg-[#3e63dd] p-1 text-sm font-medium text-white"
           type="button"
-          class="text-white p-1 font-medium text-sm rounded bg-[#3e63dd]"
           @click="setRandomPetId"
         >
           Get Random Pet
         </button>
       </div>
 
-      <form @submit.prevent="handleAddPet" class="flex flex-col gap-3">
-        <div class="flex flex-col gap-1 w-64">
-          <label for="name" class="text-white font-medium">Name</label>
+      <form class="flex flex-col gap-3" @submit.prevent="handleAddPet">
+        <div class="flex w-64 flex-col gap-1">
+          <label class="font-medium text-white" for="name">Name</label>
 
           <input
             v-model="petInput.name"
+            class="rounded border border-[#575e64] bg-[#121314] p-1 text-sm text-white placeholder:text-[#575e64]"
             name="name"
-            required
-            class="border rounded bg-[#121314] text-sm p-1 border-[#575e64] placeholder:text-[#575e64] text-white"
             placeholder="Kitty"
+            required
           />
         </div>
 
-        <div class="flex flex-col gap-1 w-64">
-          <label for="category" class="text-white font-medium">Category</label>
+        <div class="flex w-64 flex-col gap-1">
+          <label class="font-medium text-white" for="category">Category</label>
 
           <input
             v-model="petInput.category"
+            class="rounded border border-[#575e64] bg-[#121314] p-1 text-sm text-white placeholder:text-[#575e64]"
             name="category"
-            required
-            class="border rounded bg-[#121314] text-sm p-1 border-[#575e64] placeholder:text-[#575e64] text-white"
             placeholder="Cats"
+            required
           />
         </div>
 
         <div class="flex gap-2">
-          <button type="submit" class="text-white p-2 font-medium text-sm rounded bg-[#3e63dd]">
+          <button class="rounded bg-[#3e63dd] p-2 text-sm font-medium text-white" type="submit">
             Add Pet
           </button>
 
           <button
-            type="button"
-            class="cursor- text-white p-2 font-medium text-sm rounded bg-[#3e63dd] disabled:cursor-not-allowed"
-            @click="handleUpdatePet"
+            class="rounded bg-[#3e63dd] p-2 text-sm font-medium text-white disabled:cursor-not-allowed"
             :disabled="!pet"
+            type="button"
+            @click="handleUpdatePet"
           >
             Update Pet
           </button>
