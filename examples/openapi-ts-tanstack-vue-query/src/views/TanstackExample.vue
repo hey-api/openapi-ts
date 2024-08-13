@@ -34,7 +34,6 @@ localClient.interceptors.request.use((request, options) => {
 
 const pet = ref<Pet>()
 const petId = ref<number>()
-const isRequiredNameError = ref(false)
 
 const petInput = ref({ name: '', category: '' })
 
@@ -42,11 +41,9 @@ const addPet = useMutation({
   ...addPetMutation,
   onError: (error) => {
     console.log(error)
-    isRequiredNameError.value = false
   },
   onSuccess: (data) => {
     pet.value = data
-    isRequiredNameError.value = false
   }
 })
 
@@ -74,7 +71,6 @@ const { data, error } = useQuery(
 
 const handleAddPet = async () => {
   if ($Pet.required.includes('name') && !petInput.value?.name?.length) {
-    isRequiredNameError.value = true
     return
   }
 
