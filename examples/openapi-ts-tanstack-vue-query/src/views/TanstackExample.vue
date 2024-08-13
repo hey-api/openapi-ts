@@ -6,8 +6,10 @@ import {
   updatePetMutation
 } from '@/client/@tanstack/vue-query.gen'
 import { createClient } from '@hey-api/client-fetch'
-import { useMutation, useQuery } from '@tanstack/vue-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { computed, ref, watch } from 'vue'
+
+const queryClient = useQueryClient()
 
 const localClient = createClient({
   // set default base url for requests made by this client
@@ -44,6 +46,13 @@ const addPet = useMutation({
   },
   onSuccess: (data) => {
     pet.value = data
+    petId.value = data.id ?? petId.value
+
+    if (typeof data?.id === 'number') {
+      queryClient.invalidateQueries({
+        queryKey: getPetByIdOptions({ path: { petId: data.id } }).queryKey
+      })
+    }
   }
 })
 
@@ -54,6 +63,13 @@ const updatePet = useMutation({
   },
   onSuccess: (data) => {
     pet.value = data
+    petId.value = data.id ?? petId.value
+
+    if (typeof data?.id === 'number') {
+      queryClient.invalidateQueries({
+        queryKey: getPetByIdOptions({ path: { petId: data.id } }).queryKey
+      })
+    }
   }
 })
 
