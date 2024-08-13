@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.52.6
+
+### Patch Changes
+
+- [#920](https://github.com/hey-api/openapi-ts/pull/920) [`4ff2404`](https://github.com/hey-api/openapi-ts/commit/4ff24049457b7d0d5333c3704f488f1f45dd0c5b) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add preview version of TanStack Query plugin
+
 ## 0.52.5
 
 ### Patch Changes
