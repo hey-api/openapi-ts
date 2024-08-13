@@ -1,0 +1,43 @@
+{
+  "name": "@example/openapi-ts-tanstack-svelte-query",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "dev": "vite dev",
+    "format": "prettier --write .",
+    "lint": "prettier --check . && eslint .",
+    "openapi-ts": "openapi-ts",
+    "prepare": "svelte-kit sync",
+    "preview": "vite preview",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@hey-api/client-fetch": "workspace:*",
+    "@tanstack/svelte-query": "5.51.21"
+  },
+  "devDependencies": {
+    "@fontsource/fira-mono": "5.0.0",
+    "@hey-api/openapi-ts": "workspace:*",
+    "@neoconfetti/svelte": "2.0.0",
+    "@sveltejs/adapter-auto": "3.0.0",
+    "@sveltejs/kit": "2.0.0",
+    "@sveltejs/vite-plugin-svelte": "3.0.0",
+    "@types/eslint": "9.6.0",
+    "eslint": "9.0.0",
+    "eslint-config-prettier": "9.1.0",
+    "eslint-plugin-svelte": "2.36.0",
+    "globals": "15.0.0",
+    "prettier": "3.1.1",
+    "prettier-plugin-svelte": "3.1.2",
+    "svelte": "4.2.7",
+    "svelte-check": "3.6.0",
+    "typescript": "5.5.3",
+    "typescript-eslint": "8.0.0",
+    "vite": "5.0.3",
+    "vitest": "2.0.0"
+  }
+}
