@@ -1864,3 +1864,52 @@ export const $io_k8s_apimachinery_pkg_apis_meta_v1_Preconditions = {
     },
     type: 'object'
 } as const;
+
+export const $AdditionalPropertiesUnknownIssue = {
+    type: 'object',
+    properties: {},
+    additionalProperties: {
+        anyOf: [
+            {
+                type: 'string'
+            },
+            {
+                type: 'number'
+            }
+        ]
+    }
+} as const;
+
+export const $AdditionalPropertiesUnknownIssue2 = {
+    type: 'object',
+    additionalProperties: {
+        anyOf: [
+            {
+                type: 'string'
+            },
+            {
+                type: 'number'
+            }
+        ]
+    }
+} as const;
+
+export const $AdditionalPropertiesUnknownIssue3 = {
+    type: 'object',
+    allOf: [
+        {
+            type: 'string'
+        },
+        {
+            type: 'object',
+            required: ['entries'],
+            properties: {
+                entries: {
+                    additionalProperties: {
+                        '$ref': '#/components/schemas/AdditionalPropertiesUnknownIssue'
+                    }
+                }
+            }
+        }
+    ]
+} as const;

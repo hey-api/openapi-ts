@@ -1043,6 +1043,20 @@ export type io_k8s_apimachinery_pkg_apis_meta_v1_Preconditions = {
     uid?: string;
 };
 
+export type AdditionalPropertiesUnknownIssue = {
+    [key: string]: (string | number);
+};
+
+export type AdditionalPropertiesUnknownIssue2 = {
+    [key: string]: (string | number);
+};
+
+export type AdditionalPropertiesUnknownIssue3 = string & {
+    entries: {
+        [key: string]: AdditionalPropertiesUnknownIssue;
+    };
+};
+
 /**
  * This is a reusable parameter
  */

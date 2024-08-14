@@ -8,7 +8,7 @@ const main = async () => {
     //   // name: '@hey-api/client-axios',
     //   name: '@hey-api/client-fetch',
     // },
-    debug: true,
+    // debug: true,
     // input: './test/spec/v3-transforms.json',
     input: './test/spec/v3.json',
     // input: './test/spec/v2.json',
@@ -42,7 +42,7 @@ const main = async () => {
       // include:
       //   '^(_400|CompositionWithOneOfAndProperties)',
       // name: 'PascalCase',
-      // tree: false,
+      tree: false,
     },
     // useOptions: false,
   };

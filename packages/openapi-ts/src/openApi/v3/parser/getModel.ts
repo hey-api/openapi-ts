@@ -22,7 +22,6 @@ import {
 } from './inferType';
 
 export const getModel = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   debug,
   definition,
   initialValues = {},
@@ -207,6 +206,7 @@ export const getModel = ({
   if (foundComposition) {
     const composition = getModelComposition({
       ...foundComposition,
+      debug,
       definition,
       getModel,
       model,
@@ -216,14 +216,25 @@ export const getModel = ({
     return { ...model, ...composition };
   }
 
-  if (definitionTypes.includes('object') || definition.properties) {
-    if (definition.properties) {
+  if (
+    definitionTypes.includes('object') ||
+    definition.properties ||
+    definition.additionalProperties
+  ) {
+    if (
+      definition.properties &&
+      !(
+        !Object.keys(definition.properties).length &&
+        definition.additionalProperties
+      )
+    ) {
       model.base = 'unknown';
       model.export = 'interface';
       model.type = 'unknown';
       model.default = getDefault(definition, model);
 
       const modelProperties = getModelProperties({
+        debug,
         definition,
         getModel,
         openApi,
@@ -265,6 +276,7 @@ export const getModel = ({
     }
 
     return getAdditionalPropertiesModel({
+      debug,
       definition,
       getModel,
       model,
