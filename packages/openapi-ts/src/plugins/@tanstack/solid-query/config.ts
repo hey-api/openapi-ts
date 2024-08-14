@@ -1,4 +1,7 @@
-export interface PluginTanStackSolidQuery {
+import type { PluginDefinition } from '../../types';
+import { handler } from '../query-core/plugin';
+
+export interface PluginTanStackSolidQuery extends PluginDefinition {
   /**
    * Generate `createInfiniteQuery()` helpers? These will be generated from GET and POST requests where a pagination parameter is detected.
    * @default true
@@ -28,6 +31,7 @@ export interface PluginTanStackSolidQuery {
 
 export const pluginTanStackSolidQueryDefaultConfig: Required<PluginTanStackSolidQuery> =
   {
+    handler,
     infiniteQueryOptions: true,
     mutationOptions: true,
     name: '@tanstack/solid-query',

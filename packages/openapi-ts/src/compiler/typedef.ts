@@ -98,10 +98,13 @@ export const createTypeUnionNode = (
  * @param isNullable - if the whole type can be null
  * @returns ts.IntersectionTypeNode | ts.UnionTypeNode
  */
-export const createTypeIntersectNode = (
-  types: (any | ts.TypeNode)[],
-  isNullable: boolean = false,
-) => {
+export const createTypeIntersectNode = ({
+  isNullable,
+  types,
+}: {
+  isNullable?: boolean;
+  types: (any | ts.TypeNode)[];
+}) => {
   const nodes = types.map((type) => createTypeNode(type));
   const node = ts.factory.createIntersectionTypeNode(nodes);
   return maybeNullable({ isNullable, node });

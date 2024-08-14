@@ -2,19 +2,21 @@
 
 import type { Options } from '@hey-api/client-fetch';
 import { queryOptions, type UseMutationOptions, type DefaultError, infiniteQueryOptions, type InfiniteData } from '@tanstack/vue-query';
-import { export_, import_, apiVVersionOdataControllerCount, getCallWithoutParametersAndResponse, putCallWithoutParametersAndResponse, postCallWithoutParametersAndResponse, deleteCallWithoutParametersAndResponse, patchCallWithoutParametersAndResponse, deleteFoo, callWithDescriptions, deprecatedCall, callWithParameters, callWithWeirdParameterNames, getCallWithOptionalParam, postCallWithOptionalParam, postApiVbyApiVersionRequestBody, postApiVbyApiVersionFormData, callWithDefaultParameters, callWithDefaultOptionalParameters, callToTestOrderOfParams, duplicateName, duplicateName1, duplicateName2, duplicateName3, callWithNoContentResponse, callWithResponseAndNoContentResponse, dummyA, dummyB, callWithResponse, callWithDuplicateResponses, callWithResponses, collectionFormat, types, uploadFile, fileResponse, complexTypes, multipartRequest, multipartResponse, complexParams, callWithResultFromHeader, testErrorCode, nonAsciiæøåÆøÅöôêÊ字符串, putWithFormUrlEncoded } from '../services.gen';
+import { client, export_, import_, apiVVersionOdataControllerCount, getCallWithoutParametersAndResponse, putCallWithoutParametersAndResponse, postCallWithoutParametersAndResponse, deleteCallWithoutParametersAndResponse, patchCallWithoutParametersAndResponse, deleteFoo, callWithDescriptions, deprecatedCall, callWithParameters, callWithWeirdParameterNames, getCallWithOptionalParam, postCallWithOptionalParam, postApiVbyApiVersionRequestBody, postApiVbyApiVersionFormData, callWithDefaultParameters, callWithDefaultOptionalParameters, callToTestOrderOfParams, duplicateName, duplicateName1, duplicateName2, duplicateName3, callWithNoContentResponse, callWithResponseAndNoContentResponse, dummyA, dummyB, callWithResponse, callWithDuplicateResponses, callWithResponses, collectionFormat, types, uploadFile, fileResponse, complexTypes, multipartRequest, multipartResponse, complexParams, callWithResultFromHeader, testErrorCode, nonAsciiæøåÆøÅöôêÊ字符串, putWithFormUrlEncoded } from '../services.gen';
 import type { ImportData, ImportError, ImportResponse, DeleteFooData3, CallWithDescriptionsData, DeprecatedCallData, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamError, PostCallWithOptionalParamResponse, PostApiVbyApiVersionRequestBodyData, PostApiVbyApiVersionFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, CallWithDuplicateResponsesError, CallWithDuplicateResponsesResponse, CallWithResponsesError, CallWithResponsesResponse, CollectionFormatData, TypesData, UploadFileData, UploadFileError, UploadFileResponse, FileResponseData, ComplexTypesData, MultipartRequestData, ComplexParamsData, ComplexParamsError, ComplexParamsResponse, CallWithResultFromHeaderError, CallWithResultFromHeaderResponse, TestErrorCodeData, TestErrorCodeError, TestErrorCodeResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Error, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData } from '../types.gen';
 
 type QueryKey<TOptions extends Options> = [
-    {
+    Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
+        _id: string;
         infinite?: boolean;
-        params: Pick<TOptions, "body" | "headers" | "path" | "query">;
-        scope: string;
     }
 ];
 
-const createQueryKeyParams = <TOptions extends Options>(options?: TOptions): QueryKey<TOptions>[0]["params"] => {
-    const params: QueryKey<TOptions>[0]["params"] = {} as QueryKey<TOptions>[0]["params"];
+const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, infinite?: boolean): QueryKey<TOptions>[0] => {
+    const params: QueryKey<TOptions>[0] = { _id: id, baseUrl: client.getConfig().baseUrl } as QueryKey<TOptions>[0];
+    if (infinite) {
+        params.infinite = infinite;
+    }
     if (options?.body) {
         params.body = options.body;
     }
@@ -34,16 +36,13 @@ export const exportOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await export_({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'export'
-        }
+        createQueryKey("export", options)
     ]
 }); };
 
@@ -51,20 +50,17 @@ export const importOptions = (options: Options<ImportData>) => { return queryOpt
     queryFn: async ({ queryKey }) => {
         const { data } = await import_({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'import'
-        }
+        createQueryKey("import", options)
     ]
 }); };
 
-export const importMutation: UseMutationOptions<ImportResponse, ImportError, Options<ImportData>> = {
+export const importMutation = () => { const mutationOptions: UseMutationOptions<ImportResponse, ImportError, Options<ImportData>> = {
     mutationFn: async (options) => {
         const { data } = await import_({
             ...options,
@@ -72,22 +68,19 @@ export const importMutation: UseMutationOptions<ImportResponse, ImportError, Opt
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
 export const apiVVersionOdataControllerCountOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await apiVVersionOdataControllerCount({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'apiVVersionOdataControllerCount'
-        }
+        createQueryKey("apiVVersionOdataControllerCount", options)
     ]
 }); };
 
@@ -95,20 +88,17 @@ export const getCallWithoutParametersAndResponseOptions = (options?: Options) =>
     queryFn: async ({ queryKey }) => {
         const { data } = await getCallWithoutParametersAndResponse({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'getCallWithoutParametersAndResponse'
-        }
+        createQueryKey("getCallWithoutParametersAndResponse", options)
     ]
 }); };
 
-export const putCallWithoutParametersAndResponseMutation: UseMutationOptions<void, DefaultError, Options> = {
+export const putCallWithoutParametersAndResponseMutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options> = {
     mutationFn: async (options) => {
         const { data } = await putCallWithoutParametersAndResponse({
             ...options,
@@ -116,26 +106,23 @@ export const putCallWithoutParametersAndResponseMutation: UseMutationOptions<voi
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
 export const postCallWithoutParametersAndResponseOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await postCallWithoutParametersAndResponse({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'postCallWithoutParametersAndResponse'
-        }
+        createQueryKey("postCallWithoutParametersAndResponse", options)
     ]
 }); };
 
-export const postCallWithoutParametersAndResponseMutation: UseMutationOptions<void, DefaultError, Options> = {
+export const postCallWithoutParametersAndResponseMutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options> = {
     mutationFn: async (options) => {
         const { data } = await postCallWithoutParametersAndResponse({
             ...options,
@@ -143,9 +130,9 @@ export const postCallWithoutParametersAndResponseMutation: UseMutationOptions<vo
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
-export const deleteCallWithoutParametersAndResponseMutation: UseMutationOptions<void, DefaultError, Options> = {
+export const deleteCallWithoutParametersAndResponseMutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options> = {
     mutationFn: async (options) => {
         const { data } = await deleteCallWithoutParametersAndResponse({
             ...options,
@@ -153,9 +140,9 @@ export const deleteCallWithoutParametersAndResponseMutation: UseMutationOptions<
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
-export const patchCallWithoutParametersAndResponseMutation: UseMutationOptions<void, DefaultError, Options> = {
+export const patchCallWithoutParametersAndResponseMutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options> = {
     mutationFn: async (options) => {
         const { data } = await patchCallWithoutParametersAndResponse({
             ...options,
@@ -163,9 +150,9 @@ export const patchCallWithoutParametersAndResponseMutation: UseMutationOptions<v
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
-export const deleteFooMutation: UseMutationOptions<void, DefaultError, Options<DeleteFooData3>> = {
+export const deleteFooMutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<DeleteFooData3>> = {
     mutationFn: async (options) => {
         const { data } = await deleteFoo({
             ...options,
@@ -173,26 +160,23 @@ export const deleteFooMutation: UseMutationOptions<void, DefaultError, Options<D
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
 export const callWithDescriptionsOptions = (options?: Options<CallWithDescriptionsData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await callWithDescriptions({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'callWithDescriptions'
-        }
+        createQueryKey("callWithDescriptions", options)
     ]
 }); };
 
-export const callWithDescriptionsMutation: UseMutationOptions<void, DefaultError, Options<CallWithDescriptionsData>> = {
+export const callWithDescriptionsMutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<CallWithDescriptionsData>> = {
     mutationFn: async (options) => {
         const { data } = await callWithDescriptions({
             ...options,
@@ -200,26 +184,23 @@ export const callWithDescriptionsMutation: UseMutationOptions<void, DefaultError
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
 export const deprecatedCallOptions = (options: Options<DeprecatedCallData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await deprecatedCall({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'deprecatedCall'
-        }
+        createQueryKey("deprecatedCall", options)
     ]
 }); };
 
-export const deprecatedCallMutation: UseMutationOptions<void, DefaultError, Options<DeprecatedCallData>> = {
+export const deprecatedCallMutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<DeprecatedCallData>> = {
     mutationFn: async (options) => {
         const { data } = await deprecatedCall({
             ...options,
@@ -227,31 +208,28 @@ export const deprecatedCallMutation: UseMutationOptions<void, DefaultError, Opti
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
 export const callWithParametersOptions = (options: Options<CallWithParametersData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await callWithParameters({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'callWithParameters'
-        }
+        createQueryKey("callWithParameters", options)
     ]
 }); };
 
-export const callWithParametersInfiniteOptions = (options: Options<CallWithParametersData>) => { return infiniteQueryOptions<void, DefaultError, InfiniteData<void>, QueryKey<Options<CallWithParametersData>>, string | QueryKey<Options<CallWithParametersData>>[0]['params']>(
+export const callWithParametersInfiniteOptions = (options: Options<CallWithParametersData>) => { return infiniteQueryOptions<void, DefaultError, InfiniteData<void>, QueryKey<Options<CallWithParametersData>>, string | QueryKey<Options<CallWithParametersData>>[0]>(
 // @ts-ignore
 {
     queryFn: async ({ pageParam, queryKey }) => {
         // @ts-ignore
-        const page: QueryKey<Options<CallWithParametersData>>[0]['params'] = typeof pageParam === "object" ? pageParam : {
+        const page: QueryKey<Options<CallWithParametersData>>[0] = typeof pageParam === "object" ? pageParam : {
             query: {
                 cursor: pageParam
             }
@@ -259,35 +237,32 @@ export const callWithParametersInfiniteOptions = (options: Options<CallWithParam
         const { data } = await callWithParameters({
             ...options,
             body: {
-                ...queryKey[0].params.body as any,
+                ...queryKey[0].body as any,
                 ...page.body as any
             },
             headers: {
-                ...queryKey[0].params.headers,
+                ...queryKey[0].headers,
                 ...page.headers
             },
             path: {
-                ...queryKey[0].params.path,
+                ...queryKey[0].path,
                 ...page.path
             },
             query: {
-                ...queryKey[0].params.query,
+                ...queryKey[0].query,
                 ...page.query
             },
+            baseUrl: client.getConfig().baseUrl,
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            infinite: true,
-            params: createQueryKeyParams(options),
-            scope: 'callWithParameters'
-        }
+        createQueryKey("callWithParameters", options, true)
     ]
 }); };
 
-export const callWithParametersMutation: UseMutationOptions<void, DefaultError, Options<CallWithParametersData>> = {
+export const callWithParametersMutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<CallWithParametersData>> = {
     mutationFn: async (options) => {
         const { data } = await callWithParameters({
             ...options,
@@ -295,26 +270,23 @@ export const callWithParametersMutation: UseMutationOptions<void, DefaultError, 
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
 export const callWithWeirdParameterNamesOptions = (options: Options<CallWithWeirdParameterNamesData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await callWithWeirdParameterNames({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'callWithWeirdParameterNames'
-        }
+        createQueryKey("callWithWeirdParameterNames", options)
     ]
 }); };
 
-export const callWithWeirdParameterNamesMutation: UseMutationOptions<void, DefaultError, Options<CallWithWeirdParameterNamesData>> = {
+export const callWithWeirdParameterNamesMutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<CallWithWeirdParameterNamesData>> = {
     mutationFn: async (options) => {
         const { data } = await callWithWeirdParameterNames({
             ...options,
@@ -322,31 +294,28 @@ export const callWithWeirdParameterNamesMutation: UseMutationOptions<void, Defau
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
 export const getCallWithOptionalParamOptions = (options: Options<GetCallWithOptionalParamData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await getCallWithOptionalParam({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'getCallWithOptionalParam'
-        }
+        createQueryKey("getCallWithOptionalParam", options)
     ]
 }); };
 
-export const getCallWithOptionalParamInfiniteOptions = (options: Options<GetCallWithOptionalParamData>) => { return infiniteQueryOptions<void, DefaultError, InfiniteData<void>, QueryKey<Options<GetCallWithOptionalParamData>>, number | QueryKey<Options<GetCallWithOptionalParamData>>[0]['params']>(
+export const getCallWithOptionalParamInfiniteOptions = (options: Options<GetCallWithOptionalParamData>) => { return infiniteQueryOptions<void, DefaultError, InfiniteData<void>, QueryKey<Options<GetCallWithOptionalParamData>>, number | QueryKey<Options<GetCallWithOptionalParamData>>[0]>(
 // @ts-ignore
 {
     queryFn: async ({ pageParam, queryKey }) => {
         // @ts-ignore
-        const page: QueryKey<Options<GetCallWithOptionalParamData>>[0]['params'] = typeof pageParam === "object" ? pageParam : {
+        const page: QueryKey<Options<GetCallWithOptionalParamData>>[0] = typeof pageParam === "object" ? pageParam : {
             query: {
                 page: pageParam
             }
@@ -354,31 +323,28 @@ export const getCallWithOptionalParamInfiniteOptions = (options: Options<GetCall
         const { data } = await getCallWithOptionalParam({
             ...options,
             body: {
-                ...queryKey[0].params.body as any,
+                ...queryKey[0].body as any,
                 ...page.body as any
             },
             headers: {
-                ...queryKey[0].params.headers,
+                ...queryKey[0].headers,
                 ...page.headers
             },
             path: {
-                ...queryKey[0].params.path,
+                ...queryKey[0].path,
                 ...page.path
             },
             query: {
-                ...queryKey[0].params.query,
+                ...queryKey[0].query,
                 ...page.query
             },
+            baseUrl: client.getConfig().baseUrl,
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            infinite: true,
-            params: createQueryKeyParams(options),
-            scope: 'getCallWithOptionalParam'
-        }
+        createQueryKey("getCallWithOptionalParam", options, true)
     ]
 }); };
 
@@ -386,25 +352,22 @@ export const postCallWithOptionalParamOptions = (options: Options<PostCallWithOp
     queryFn: async ({ queryKey }) => {
         const { data } = await postCallWithOptionalParam({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'postCallWithOptionalParam'
-        }
+        createQueryKey("postCallWithOptionalParam", options)
     ]
 }); };
 
-export const postCallWithOptionalParamInfiniteOptions = (options: Options<PostCallWithOptionalParamData>) => { return infiniteQueryOptions<PostCallWithOptionalParamResponse, PostCallWithOptionalParamError, InfiniteData<PostCallWithOptionalParamResponse>, QueryKey<Options<PostCallWithOptionalParamData>>, number | QueryKey<Options<PostCallWithOptionalParamData>>[0]['params']>(
+export const postCallWithOptionalParamInfiniteOptions = (options: Options<PostCallWithOptionalParamData>) => { return infiniteQueryOptions<PostCallWithOptionalParamResponse, PostCallWithOptionalParamError, InfiniteData<PostCallWithOptionalParamResponse>, QueryKey<Options<PostCallWithOptionalParamData>>, number | QueryKey<Options<PostCallWithOptionalParamData>>[0]>(
 // @ts-ignore
 {
     queryFn: async ({ pageParam, queryKey }) => {
         // @ts-ignore
-        const page: QueryKey<Options<PostCallWithOptionalParamData>>[0]['params'] = typeof pageParam === "object" ? pageParam : {
+        const page: QueryKey<Options<PostCallWithOptionalParamData>>[0] = typeof pageParam === "object" ? pageParam : {
             body: {
                 offset: pageParam
             }
@@ -412,35 +375,32 @@ export const postCallWithOptionalParamInfiniteOptions = (options: Options<PostCa
         const { data } = await postCallWithOptionalParam({
             ...options,
             body: {
-                ...queryKey[0].params.body as any,
+                ...queryKey[0].body as any,
                 ...page.body as any
             },
             headers: {
-                ...queryKey[0].params.headers,
+                ...queryKey[0].headers,
                 ...page.headers
             },
             path: {
-                ...queryKey[0].params.path,
+                ...queryKey[0].path,
                 ...page.path
             },
             query: {
-                ...queryKey[0].params.query,
+                ...queryKey[0].query,
                 ...page.query
             },
+            baseUrl: client.getConfig().baseUrl,
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            infinite: true,
-            params: createQueryKeyParams(options),
-            scope: 'postCallWithOptionalParam'
-        }
+        createQueryKey("postCallWithOptionalParam", options, true)
     ]
 }); };
 
-export const postCallWithOptionalParamMutation: UseMutationOptions<PostCallWithOptionalParamResponse, PostCallWithOptionalParamError, Options<PostCallWithOptionalParamData>> = {
+export const postCallWithOptionalParamMutation = () => { const mutationOptions: UseMutationOptions<PostCallWithOptionalParamResponse, PostCallWithOptionalParamError, Options<PostCallWithOptionalParamData>> = {
     mutationFn: async (options) => {
         const { data } = await postCallWithOptionalParam({
             ...options,
@@ -448,26 +408,23 @@ export const postCallWithOptionalParamMutation: UseMutationOptions<PostCallWithO
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
 export const postApiVbyApiVersionRequestBodyOptions = (options?: Options<PostApiVbyApiVersionRequestBodyData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await postApiVbyApiVersionRequestBody({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'postApiVbyApiVersionRequestBody'
-        }
+        createQueryKey("postApiVbyApiVersionRequestBody", options)
     ]
 }); };
 
-export const postApiVbyApiVersionRequestBodyMutation: UseMutationOptions<void, DefaultError, Options<PostApiVbyApiVersionRequestBodyData>> = {
+export const postApiVbyApiVersionRequestBodyMutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<PostApiVbyApiVersionRequestBodyData>> = {
     mutationFn: async (options) => {
         const { data } = await postApiVbyApiVersionRequestBody({
             ...options,
@@ -475,26 +432,23 @@ export const postApiVbyApiVersionRequestBodyMutation: UseMutationOptions<void, D
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
 export const postApiVbyApiVersionFormDataOptions = (options?: Options<PostApiVbyApiVersionFormDataData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await postApiVbyApiVersionFormData({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'postApiVbyApiVersionFormData'
-        }
+        createQueryKey("postApiVbyApiVersionFormData", options)
     ]
 }); };
 
-export const postApiVbyApiVersionFormDataMutation: UseMutationOptions<void, DefaultError, Options<PostApiVbyApiVersionFormDataData>> = {
+export const postApiVbyApiVersionFormDataMutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<PostApiVbyApiVersionFormDataData>> = {
     mutationFn: async (options) => {
         const { data } = await postApiVbyApiVersionFormData({
             ...options,
@@ -502,22 +456,19 @@ export const postApiVbyApiVersionFormDataMutation: UseMutationOptions<void, Defa
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
 export const callWithDefaultParametersOptions = (options?: Options<CallWithDefaultParametersData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await callWithDefaultParameters({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'callWithDefaultParameters'
-        }
+        createQueryKey("callWithDefaultParameters", options)
     ]
 }); };
 
@@ -525,20 +476,17 @@ export const callWithDefaultOptionalParametersOptions = (options?: Options<CallW
     queryFn: async ({ queryKey }) => {
         const { data } = await callWithDefaultOptionalParameters({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'callWithDefaultOptionalParameters'
-        }
+        createQueryKey("callWithDefaultOptionalParameters", options)
     ]
 }); };
 
-export const callWithDefaultOptionalParametersMutation: UseMutationOptions<void, DefaultError, Options<CallWithDefaultOptionalParametersData>> = {
+export const callWithDefaultOptionalParametersMutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<CallWithDefaultOptionalParametersData>> = {
     mutationFn: async (options) => {
         const { data } = await callWithDefaultOptionalParameters({
             ...options,
@@ -546,9 +494,9 @@ export const callWithDefaultOptionalParametersMutation: UseMutationOptions<void,
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
-export const callToTestOrderOfParamsMutation: UseMutationOptions<void, DefaultError, Options<CallToTestOrderOfParamsData>> = {
+export const callToTestOrderOfParamsMutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<CallToTestOrderOfParamsData>> = {
     mutationFn: async (options) => {
         const { data } = await callToTestOrderOfParams({
             ...options,
@@ -556,22 +504,19 @@ export const callToTestOrderOfParamsMutation: UseMutationOptions<void, DefaultEr
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
 export const duplicateNameOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await duplicateName({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'duplicateName'
-        }
+        createQueryKey("duplicateName", options)
     ]
 }); };
 
@@ -579,20 +524,17 @@ export const duplicateName1Options = (options?: Options) => { return queryOption
     queryFn: async ({ queryKey }) => {
         const { data } = await duplicateName1({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'duplicateName1'
-        }
+        createQueryKey("duplicateName1", options)
     ]
 }); };
 
-export const duplicateName1Mutation: UseMutationOptions<void, DefaultError, Options> = {
+export const duplicateName1Mutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options> = {
     mutationFn: async (options) => {
         const { data } = await duplicateName1({
             ...options,
@@ -600,9 +542,9 @@ export const duplicateName1Mutation: UseMutationOptions<void, DefaultError, Opti
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
-export const duplicateName2Mutation: UseMutationOptions<void, DefaultError, Options> = {
+export const duplicateName2Mutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options> = {
     mutationFn: async (options) => {
         const { data } = await duplicateName2({
             ...options,
@@ -610,9 +552,9 @@ export const duplicateName2Mutation: UseMutationOptions<void, DefaultError, Opti
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
-export const duplicateName3Mutation: UseMutationOptions<void, DefaultError, Options> = {
+export const duplicateName3Mutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options> = {
     mutationFn: async (options) => {
         const { data } = await duplicateName3({
             ...options,
@@ -620,22 +562,19 @@ export const duplicateName3Mutation: UseMutationOptions<void, DefaultError, Opti
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
 export const callWithNoContentResponseOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await callWithNoContentResponse({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'callWithNoContentResponse'
-        }
+        createQueryKey("callWithNoContentResponse", options)
     ]
 }); };
 
@@ -643,16 +582,13 @@ export const callWithResponseAndNoContentResponseOptions = (options?: Options) =
     queryFn: async ({ queryKey }) => {
         const { data } = await callWithResponseAndNoContentResponse({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'callWithResponseAndNoContentResponse'
-        }
+        createQueryKey("callWithResponseAndNoContentResponse", options)
     ]
 }); };
 
@@ -660,16 +596,13 @@ export const dummyAOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await dummyA({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'dummyA'
-        }
+        createQueryKey("dummyA", options)
     ]
 }); };
 
@@ -677,16 +610,13 @@ export const dummyBOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await dummyB({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'dummyB'
-        }
+        createQueryKey("dummyB", options)
     ]
 }); };
 
@@ -694,16 +624,13 @@ export const callWithResponseOptions = (options?: Options) => { return queryOpti
     queryFn: async ({ queryKey }) => {
         const { data } = await callWithResponse({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'callWithResponse'
-        }
+        createQueryKey("callWithResponse", options)
     ]
 }); };
 
@@ -711,20 +638,17 @@ export const callWithDuplicateResponsesOptions = (options?: Options) => { return
     queryFn: async ({ queryKey }) => {
         const { data } = await callWithDuplicateResponses({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'callWithDuplicateResponses'
-        }
+        createQueryKey("callWithDuplicateResponses", options)
     ]
 }); };
 
-export const callWithDuplicateResponsesMutation: UseMutationOptions<CallWithDuplicateResponsesResponse, CallWithDuplicateResponsesError, Options> = {
+export const callWithDuplicateResponsesMutation = () => { const mutationOptions: UseMutationOptions<CallWithDuplicateResponsesResponse, CallWithDuplicateResponsesError, Options> = {
     mutationFn: async (options) => {
         const { data } = await callWithDuplicateResponses({
             ...options,
@@ -732,9 +656,9 @@ export const callWithDuplicateResponsesMutation: UseMutationOptions<CallWithDupl
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
-export const callWithResponsesMutation: UseMutationOptions<CallWithResponsesResponse, CallWithResponsesError, Options> = {
+export const callWithResponsesMutation = () => { const mutationOptions: UseMutationOptions<CallWithResponsesResponse, CallWithResponsesError, Options> = {
     mutationFn: async (options) => {
         const { data } = await callWithResponses({
             ...options,
@@ -742,22 +666,19 @@ export const callWithResponsesMutation: UseMutationOptions<CallWithResponsesResp
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
 export const collectionFormatOptions = (options: Options<CollectionFormatData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await collectionFormat({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'collectionFormat'
-        }
+        createQueryKey("collectionFormat", options)
     ]
 }); };
 
@@ -765,16 +686,13 @@ export const typesOptions = (options: Options<TypesData>) => { return queryOptio
     queryFn: async ({ queryKey }) => {
         const { data } = await types({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'types'
-        }
+        createQueryKey("types", options)
     ]
 }); };
 
@@ -782,20 +700,17 @@ export const uploadFileOptions = (options: Options<UploadFileData>) => { return 
     queryFn: async ({ queryKey }) => {
         const { data } = await uploadFile({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'uploadFile'
-        }
+        createQueryKey("uploadFile", options)
     ]
 }); };
 
-export const uploadFileMutation: UseMutationOptions<UploadFileResponse, UploadFileError, Options<UploadFileData>> = {
+export const uploadFileMutation = () => { const mutationOptions: UseMutationOptions<UploadFileResponse, UploadFileError, Options<UploadFileData>> = {
     mutationFn: async (options) => {
         const { data } = await uploadFile({
             ...options,
@@ -803,22 +718,19 @@ export const uploadFileMutation: UseMutationOptions<UploadFileResponse, UploadFi
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
 export const fileResponseOptions = (options: Options<FileResponseData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await fileResponse({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'fileResponse'
-        }
+        createQueryKey("fileResponse", options)
     ]
 }); };
 
@@ -826,16 +738,13 @@ export const complexTypesOptions = (options: Options<ComplexTypesData>) => { ret
     queryFn: async ({ queryKey }) => {
         const { data } = await complexTypes({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'complexTypes'
-        }
+        createQueryKey("complexTypes", options)
     ]
 }); };
 
@@ -843,20 +752,17 @@ export const multipartRequestOptions = (options?: Options<MultipartRequestData>)
     queryFn: async ({ queryKey }) => {
         const { data } = await multipartRequest({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'multipartRequest'
-        }
+        createQueryKey("multipartRequest", options)
     ]
 }); };
 
-export const multipartRequestMutation: UseMutationOptions<void, DefaultError, Options<MultipartRequestData>> = {
+export const multipartRequestMutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<MultipartRequestData>> = {
     mutationFn: async (options) => {
         const { data } = await multipartRequest({
             ...options,
@@ -864,26 +770,23 @@ export const multipartRequestMutation: UseMutationOptions<void, DefaultError, Op
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
 export const multipartResponseOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await multipartResponse({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'multipartResponse'
-        }
+        createQueryKey("multipartResponse", options)
     ]
 }); };
 
-export const complexParamsMutation: UseMutationOptions<ComplexParamsResponse, ComplexParamsError, Options<ComplexParamsData>> = {
+export const complexParamsMutation = () => { const mutationOptions: UseMutationOptions<ComplexParamsResponse, ComplexParamsError, Options<ComplexParamsData>> = {
     mutationFn: async (options) => {
         const { data } = await complexParams({
             ...options,
@@ -891,26 +794,23 @@ export const complexParamsMutation: UseMutationOptions<ComplexParamsResponse, Co
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
 export const callWithResultFromHeaderOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await callWithResultFromHeader({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'callWithResultFromHeader'
-        }
+        createQueryKey("callWithResultFromHeader", options)
     ]
 }); };
 
-export const callWithResultFromHeaderMutation: UseMutationOptions<CallWithResultFromHeaderResponse, CallWithResultFromHeaderError, Options> = {
+export const callWithResultFromHeaderMutation = () => { const mutationOptions: UseMutationOptions<CallWithResultFromHeaderResponse, CallWithResultFromHeaderError, Options> = {
     mutationFn: async (options) => {
         const { data } = await callWithResultFromHeader({
             ...options,
@@ -918,26 +818,23 @@ export const callWithResultFromHeaderMutation: UseMutationOptions<CallWithResult
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
 export const testErrorCodeOptions = (options: Options<TestErrorCodeData>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await testErrorCode({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'testErrorCode'
-        }
+        createQueryKey("testErrorCode", options)
     ]
 }); };
 
-export const testErrorCodeMutation: UseMutationOptions<TestErrorCodeResponse, TestErrorCodeError, Options<TestErrorCodeData>> = {
+export const testErrorCodeMutation = () => { const mutationOptions: UseMutationOptions<TestErrorCodeResponse, TestErrorCodeError, Options<TestErrorCodeData>> = {
     mutationFn: async (options) => {
         const { data } = await testErrorCode({
             ...options,
@@ -945,26 +842,23 @@ export const testErrorCodeMutation: UseMutationOptions<TestErrorCodeResponse, Te
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
 export const nonAsciiæøåÆøÅöôêÊ字符串Options = (options: Options<NonAsciiæøåÆøÅöôêÊ字符串Data>) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await nonAsciiæøåÆøÅöôêÊ字符串({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'nonAsciiæøåÆøÅöôêÊ字符串'
-        }
+        createQueryKey("nonAsciiæøåÆøÅöôêÊ字符串", options)
     ]
 }); };
 
-export const nonAsciiæøåÆøÅöôêÊ字符串Mutation: UseMutationOptions<NonAsciiæøåÆøÅöôêÊ字符串Response, NonAsciiæøåÆøÅöôêÊ字符串Error, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>> = {
+export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = () => { const mutationOptions: UseMutationOptions<NonAsciiæøåÆøÅöôêÊ字符串Response, NonAsciiæøåÆøÅöôêÊ字符串Error, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>> = {
     mutationFn: async (options) => {
         const { data } = await nonAsciiæøåÆøÅöôêÊ字符串({
             ...options,
@@ -972,9 +866,9 @@ export const nonAsciiæøåÆøÅöôêÊ字符串Mutation: UseMutationOptions<N
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
-export const putWithFormUrlEncodedMutation: UseMutationOptions<void, DefaultError, Options<PutWithFormUrlEncodedData>> = {
+export const putWithFormUrlEncodedMutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<PutWithFormUrlEncodedData>> = {
     mutationFn: async (options) => {
         const { data } = await putWithFormUrlEncoded({
             ...options,
@@ -982,4 +876,4 @@ export const putWithFormUrlEncodedMutation: UseMutationOptions<void, DefaultErro
         });
         return data;
     }
-};
+}; return mutationOptions; };
