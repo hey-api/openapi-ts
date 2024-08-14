@@ -36,18 +36,20 @@ export const createCallExpression = ({
   types,
 }: {
   functionName: string | ts.PropertyAccessExpression;
-  parameters?: Array<string | ts.Expression>;
+  parameters?: Array<string | ts.Expression | undefined>;
   types?: ReadonlyArray<ts.TypeNode>;
 }) => {
   const expression =
     typeof functionName === 'string'
       ? createIdentifier({ text: functionName })
       : functionName;
-  const argumentsArray = parameters.map((parameter) =>
-    typeof parameter === 'string'
-      ? createIdentifier({ text: parameter })
-      : parameter,
-  );
+  const argumentsArray = parameters
+    .filter((parameter) => parameter !== undefined)
+    .map((parameter) =>
+      typeof parameter === 'string'
+        ? createIdentifier({ text: parameter })
+        : parameter,
+    );
   const callExpression = ts.factory.createCallExpression(
     expression,
     types,

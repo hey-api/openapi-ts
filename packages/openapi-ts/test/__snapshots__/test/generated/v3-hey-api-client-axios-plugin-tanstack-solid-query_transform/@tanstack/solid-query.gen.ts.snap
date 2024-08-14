@@ -4,18 +4,20 @@ import type { Options } from '@hey-api/client-axios';
 import { queryOptions, type MutationOptions } from '@tanstack/solid-query';
 import type { ParentModelWithDatesError, ParentModelWithDatesResponse, ModelWithDatesError, ModelWithDatesResponse, ModelWithDatesArrayError, ModelWithDatesArrayResponse, ArrayOfDatesError, ArrayOfDatesResponse, DateError, DateResponse, MultipleResponsesError, MultipleResponsesResponse } from '../types.gen';
 import type { AxiosError } from 'axios';
-import { parentModelWithDates, modelWithDates, modelWithDatesArray, arrayOfDates, date, multipleResponses } from '../services.gen';
+import { client, parentModelWithDates, modelWithDates, modelWithDatesArray, arrayOfDates, date, multipleResponses } from '../services.gen';
 
 type QueryKey<TOptions extends Options> = [
-    {
+    Pick<TOptions, 'baseURL' | 'body' | 'headers' | 'path' | 'query'> & {
+        _id: string;
         infinite?: boolean;
-        params: Pick<TOptions, "body" | "headers" | "path" | "query">;
-        scope: string;
     }
 ];
 
-const createQueryKeyParams = <TOptions extends Options>(options?: TOptions): QueryKey<TOptions>[0]["params"] => {
-    const params: QueryKey<TOptions>[0]["params"] = {} as QueryKey<TOptions>[0]["params"];
+const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, infinite?: boolean): QueryKey<TOptions>[0] => {
+    const params: QueryKey<TOptions>[0] = { _id: id, baseURL: client.getConfig().baseURL } as QueryKey<TOptions>[0];
+    if (infinite) {
+        params.infinite = infinite;
+    }
     if (options?.body) {
         params.body = options.body;
     }
@@ -35,20 +37,17 @@ export const parentModelWithDatesOptions = (options?: Options) => { return query
     queryFn: async ({ queryKey }) => {
         const { data } = await parentModelWithDates({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'parentModelWithDates'
-        }
+        createQueryKey("parentModelWithDates", options)
     ]
 }); };
 
-export const parentModelWithDatesMutation: MutationOptions<ParentModelWithDatesResponse, AxiosError<ParentModelWithDatesError>, Options> = {
+export const parentModelWithDatesMutation = () => { const mutationOptions: MutationOptions<ParentModelWithDatesResponse, AxiosError<ParentModelWithDatesError>, Options> = {
     mutationFn: async (options) => {
         const { data } = await parentModelWithDates({
             ...options,
@@ -56,9 +55,9 @@ export const parentModelWithDatesMutation: MutationOptions<ParentModelWithDatesR
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
-export const modelWithDatesMutation: MutationOptions<ModelWithDatesResponse, AxiosError<ModelWithDatesError>, Options> = {
+export const modelWithDatesMutation = () => { const mutationOptions: MutationOptions<ModelWithDatesResponse, AxiosError<ModelWithDatesError>, Options> = {
     mutationFn: async (options) => {
         const { data } = await modelWithDates({
             ...options,
@@ -66,9 +65,9 @@ export const modelWithDatesMutation: MutationOptions<ModelWithDatesResponse, Axi
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
-export const modelWithDatesArrayMutation: MutationOptions<ModelWithDatesArrayResponse, AxiosError<ModelWithDatesArrayError>, Options> = {
+export const modelWithDatesArrayMutation = () => { const mutationOptions: MutationOptions<ModelWithDatesArrayResponse, AxiosError<ModelWithDatesArrayError>, Options> = {
     mutationFn: async (options) => {
         const { data } = await modelWithDatesArray({
             ...options,
@@ -76,9 +75,9 @@ export const modelWithDatesArrayMutation: MutationOptions<ModelWithDatesArrayRes
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
-export const arrayOfDatesMutation: MutationOptions<ArrayOfDatesResponse, AxiosError<ArrayOfDatesError>, Options> = {
+export const arrayOfDatesMutation = () => { const mutationOptions: MutationOptions<ArrayOfDatesResponse, AxiosError<ArrayOfDatesError>, Options> = {
     mutationFn: async (options) => {
         const { data } = await arrayOfDates({
             ...options,
@@ -86,9 +85,9 @@ export const arrayOfDatesMutation: MutationOptions<ArrayOfDatesResponse, AxiosEr
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
-export const dateMutation: MutationOptions<DateResponse, AxiosError<DateError>, Options> = {
+export const dateMutation = () => { const mutationOptions: MutationOptions<DateResponse, AxiosError<DateError>, Options> = {
     mutationFn: async (options) => {
         const { data } = await date({
             ...options,
@@ -96,9 +95,9 @@ export const dateMutation: MutationOptions<DateResponse, AxiosError<DateError>, 
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
-export const multipleResponsesMutation: MutationOptions<MultipleResponsesResponse, AxiosError<MultipleResponsesError>, Options> = {
+export const multipleResponsesMutation = () => { const mutationOptions: MutationOptions<MultipleResponsesResponse, AxiosError<MultipleResponsesError>, Options> = {
     mutationFn: async (options) => {
         const { data } = await multipleResponses({
             ...options,
@@ -106,4 +105,4 @@ export const multipleResponsesMutation: MutationOptions<MultipleResponsesRespons
         });
         return data;
     }
-};
+}; return mutationOptions; };
