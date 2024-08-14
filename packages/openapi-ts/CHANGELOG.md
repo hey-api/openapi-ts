@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.52.8
+
+### Patch Changes
+
+- [#932](https://github.com/hey-api/openapi-ts/pull/932) [`cdf01e8`](https://github.com/hey-api/openapi-ts/commit/cdf01e8cc0dc63213465b9e8fe33b80443d36f55) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: cherry pick keys in mutation page param type
+
 ## 0.52.7
 
 ### Patch Changes
