@@ -105,7 +105,10 @@ const typeIntersect = (model: Model) => {
   const types = model.properties
     .map((m) => compiler.nodeToString({ node: toType(m), unescape: true }))
     .filter(unique);
-  return compiler.typeIntersectNode(types, model.isNullable);
+  return compiler.typeIntersectNode({
+    isNullable: model.isNullable,
+    types,
+  });
 };
 
 const typeInterface = (model: Model) => {

@@ -3,18 +3,20 @@
 import type { Options } from '@hey-api/client-fetch';
 import { queryOptions, type MutationOptions } from '@tanstack/svelte-query';
 import type { ParentModelWithDatesError, ParentModelWithDatesResponse, ModelWithDatesError, ModelWithDatesResponse, ModelWithDatesArrayError, ModelWithDatesArrayResponse, ArrayOfDatesError, ArrayOfDatesResponse, DateError, DateResponse, MultipleResponsesError, MultipleResponsesResponse } from '../types.gen';
-import { parentModelWithDates, modelWithDates, modelWithDatesArray, arrayOfDates, date, multipleResponses } from '../services.gen';
+import { client, parentModelWithDates, modelWithDates, modelWithDatesArray, arrayOfDates, date, multipleResponses } from '../services.gen';
 
 type QueryKey<TOptions extends Options> = [
-    {
+    Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
+        _id: string;
         infinite?: boolean;
-        params: Pick<TOptions, "body" | "headers" | "path" | "query">;
-        scope: string;
     }
 ];
 
-const createQueryKeyParams = <TOptions extends Options>(options?: TOptions): QueryKey<TOptions>[0]["params"] => {
-    const params: QueryKey<TOptions>[0]["params"] = {} as QueryKey<TOptions>[0]["params"];
+const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, infinite?: boolean): QueryKey<TOptions>[0] => {
+    const params: QueryKey<TOptions>[0] = { _id: id, baseUrl: client.getConfig().baseUrl } as QueryKey<TOptions>[0];
+    if (infinite) {
+        params.infinite = infinite;
+    }
     if (options?.body) {
         params.body = options.body;
     }
@@ -34,20 +36,17 @@ export const parentModelWithDatesOptions = (options?: Options) => { return query
     queryFn: async ({ queryKey }) => {
         const { data } = await parentModelWithDates({
             ...options,
-            ...queryKey[0].params,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
     queryKey: [
-        {
-            params: createQueryKeyParams(options),
-            scope: 'parentModelWithDates'
-        }
+        createQueryKey("parentModelWithDates", options)
     ]
 }); };
 
-export const parentModelWithDatesMutation: MutationOptions<ParentModelWithDatesResponse, ParentModelWithDatesError, Options> = {
+export const parentModelWithDatesMutation = () => { const mutationOptions: MutationOptions<ParentModelWithDatesResponse, ParentModelWithDatesError, Options> = {
     mutationFn: async (options) => {
         const { data } = await parentModelWithDates({
             ...options,
@@ -55,9 +54,9 @@ export const parentModelWithDatesMutation: MutationOptions<ParentModelWithDatesR
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
-export const modelWithDatesMutation: MutationOptions<ModelWithDatesResponse, ModelWithDatesError, Options> = {
+export const modelWithDatesMutation = () => { const mutationOptions: MutationOptions<ModelWithDatesResponse, ModelWithDatesError, Options> = {
     mutationFn: async (options) => {
         const { data } = await modelWithDates({
             ...options,
@@ -65,9 +64,9 @@ export const modelWithDatesMutation: MutationOptions<ModelWithDatesResponse, Mod
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
-export const modelWithDatesArrayMutation: MutationOptions<ModelWithDatesArrayResponse, ModelWithDatesArrayError, Options> = {
+export const modelWithDatesArrayMutation = () => { const mutationOptions: MutationOptions<ModelWithDatesArrayResponse, ModelWithDatesArrayError, Options> = {
     mutationFn: async (options) => {
         const { data } = await modelWithDatesArray({
             ...options,
@@ -75,9 +74,9 @@ export const modelWithDatesArrayMutation: MutationOptions<ModelWithDatesArrayRes
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
-export const arrayOfDatesMutation: MutationOptions<ArrayOfDatesResponse, ArrayOfDatesError, Options> = {
+export const arrayOfDatesMutation = () => { const mutationOptions: MutationOptions<ArrayOfDatesResponse, ArrayOfDatesError, Options> = {
     mutationFn: async (options) => {
         const { data } = await arrayOfDates({
             ...options,
@@ -85,9 +84,9 @@ export const arrayOfDatesMutation: MutationOptions<ArrayOfDatesResponse, ArrayOf
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
-export const dateMutation: MutationOptions<DateResponse, DateError, Options> = {
+export const dateMutation = () => { const mutationOptions: MutationOptions<DateResponse, DateError, Options> = {
     mutationFn: async (options) => {
         const { data } = await date({
             ...options,
@@ -95,9 +94,9 @@ export const dateMutation: MutationOptions<DateResponse, DateError, Options> = {
         });
         return data;
     }
-};
+}; return mutationOptions; };
 
-export const multipleResponsesMutation: MutationOptions<MultipleResponsesResponse, MultipleResponsesError, Options> = {
+export const multipleResponsesMutation = () => { const mutationOptions: MutationOptions<MultipleResponsesResponse, MultipleResponsesError, Options> = {
     mutationFn: async (options) => {
         const { data } = await multipleResponses({
             ...options,
@@ -105,4 +104,4 @@ export const multipleResponsesMutation: MutationOptions<MultipleResponsesRespons
         });
         return data;
     }
-};
+}; return mutationOptions; };
