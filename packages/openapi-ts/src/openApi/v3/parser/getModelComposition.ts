@@ -37,6 +37,7 @@ export const findModelComposition = (
 };
 
 export const getModelComposition = ({
+  debug,
   definition,
   definitions,
   getModel,
@@ -46,6 +47,7 @@ export const getModelComposition = ({
   types,
 }: Composition &
   Pick<Client, 'types'> & {
+    debug?: boolean;
     definition: OpenApiSchema;
     getModel: GetModelFn;
     model: Model;
@@ -64,6 +66,7 @@ export const getModelComposition = ({
   definitions
     .map((def) => {
       const modelFromDef = getModel({
+        debug,
         definition: def,
         openApi,
         parentDefinition: definition,
