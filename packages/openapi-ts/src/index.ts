@@ -115,6 +115,7 @@ const getClient = (userConfig: ClientConfig): Config['client'] => {
 
 const getOutput = (userConfig: ClientConfig): Config['output'] => {
   let output: Config['output'] = {
+    extension: '',
     format: false,
     lint: false,
     path: '',

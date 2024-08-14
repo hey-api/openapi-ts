@@ -9,6 +9,8 @@ export const generateIndexFile = async ({
 }): Promise<void> => {
   const config = getConfig();
 
+  const ext = config.output.extension || '';
+
   files.index = new TypeScriptFile({
     dir: config.output.path,
     name: 'index.ts',
@@ -18,7 +20,7 @@ export const generateIndexFile = async ({
     files.index.add(
       compiler.exportNamedDeclaration({
         exports: config.name,
-        module: `./${config.name}`,
+        module: `./${config.name}${ext}`,
       }),
     );
   }
@@ -27,14 +29,14 @@ export const generateIndexFile = async ({
     files.index.add(
       compiler.exportNamedDeclaration({
         exports: 'ApiError',
-        module: './core/ApiError',
+        module: `./core/ApiError${ext}`,
       }),
     );
     if (config.services.response === 'response') {
       files.index.add(
         compiler.exportNamedDeclaration({
           exports: { asType: true, name: 'ApiResult' },
-          module: './core/ApiResult',
+          module: `./core/ApiResult${ext}`,
         }),
       );
     }
@@ -42,7 +44,7 @@ export const generateIndexFile = async ({
       files.index.add(
         compiler.exportNamedDeclaration({
           exports: 'BaseHttpRequest',
-          module: './core/BaseHttpRequest',
+          module: `./core/BaseHttpRequest${ext}`,
         }),
       );
     }
@@ -50,14 +52,14 @@ export const generateIndexFile = async ({
       files.index.add(
         compiler.exportNamedDeclaration({
           exports: ['CancelablePromise', 'CancelError'],
-          module: './core/CancelablePromise',
+          module: `./core/CancelablePromise${ext}`,
         }),
       );
     }
     files.index.add(
       compiler.exportNamedDeclaration({
         exports: ['OpenAPI', { asType: true, name: 'OpenAPIConfig' }],
-        module: './core/OpenAPI',
+        module: `./core/OpenAPI${ext}`,
       }),
     );
   }
@@ -73,7 +75,7 @@ export const generateIndexFile = async ({
 
       files.index.add(
         compiler.exportAllDeclaration({
-          module: `./${file.getName(false)}`,
+          module: `./${file.getName(false)}${ext}`,
         }),
       );
     });

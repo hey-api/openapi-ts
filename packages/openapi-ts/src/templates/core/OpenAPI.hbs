@@ -7,7 +7,7 @@ import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 {{#equals @root.$config.client.name 'node'}}
 import type { RequestInit, Response } from 'node-fetch';
 {{/equals}}
-import type { ApiRequestOptions } from './ApiRequestOptions';
+import type { ApiRequestOptions } from './ApiRequestOptions{{@root.$config.output.extension}}';
 
 type Headers = Record<string, string>;
 type Middleware<T> = (value: T) => T | Promise<T>;

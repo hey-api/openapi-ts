@@ -3,17 +3,17 @@ import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import type { Observable } from 'rxjs';
 
-import type { ApiRequestOptions } from './ApiRequestOptions';
-import { BaseHttpRequest } from './BaseHttpRequest';
-import type { OpenAPIConfig } from './OpenAPI';
-import { OpenAPI } from './OpenAPI';
-import { request as __request } from './request';
+import type { ApiRequestOptions } from './ApiRequestOptions{{@root.$config.output.extension}}';
+import { BaseHttpRequest } from './BaseHttpRequest{{@root.$config.output.extension}}';
+import type { OpenAPIConfig } from './OpenAPI{{@root.$config.output.extension}}';
+import { OpenAPI } from './OpenAPI{{@root.$config.output.extension}}';
+import { request as __request } from './request{{@root.$config.output.extension}}';
 {{else}}
-import type { ApiRequestOptions } from './ApiRequestOptions';
-import { BaseHttpRequest } from './BaseHttpRequest';
-import type { CancelablePromise } from './CancelablePromise';
-import type { OpenAPIConfig } from './OpenAPI';
-import { request as __request } from './request';
+import type { ApiRequestOptions } from './ApiRequestOptions{{@root.$config.output.extension}}';
+import { BaseHttpRequest } from './BaseHttpRequest{{@root.$config.output.extension}}';
+import type { CancelablePromise } from './CancelablePromise{{@root.$config.output.extension}}';
+import type { OpenAPIConfig } from './OpenAPI{{@root.$config.output.extension}}';
+import { request as __request } from './request{{@root.$config.output.extension}}';
 {{/equals}}
 
 {{#equals @root.$config.client.name 'angular'}}
