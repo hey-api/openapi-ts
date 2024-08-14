@@ -1,5 +1,15 @@
 # @hey-api/openapi-ts
 
+## 0.52.7
+
+### Patch Changes
+
+- [#929](https://github.com/hey-api/openapi-ts/pull/929) [`b56c81c`](https://github.com/hey-api/openapi-ts/commit/b56c81ca67a2d069b33430c3139e2135a299b309) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle various issues with additionalProperties definitions
+
+- [#927](https://github.com/hey-api/openapi-ts/pull/927) [`65f151d`](https://github.com/hey-api/openapi-ts/commit/65f151dc0004ce817bc370486495bdd281439e55) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update TanStack Query key to contain base URL
+
+- [#927](https://github.com/hey-api/openapi-ts/pull/927) [`65f151d`](https://github.com/hey-api/openapi-ts/commit/65f151dc0004ce817bc370486495bdd281439e55) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: change TanStack Query mutation helpers to functions for consistent API
+
 ## 0.52.6
 
 ### Patch Changes
