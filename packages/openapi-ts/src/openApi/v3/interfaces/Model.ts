@@ -5,6 +5,7 @@ import type { OpenApiSchema } from './OpenApiSchema';
 
 export type GetModelFn = (
   args: Pick<Client, 'types'> & {
+    debug?: boolean;
     definition: OpenApiSchema;
     /**
      * Pass through initial model values

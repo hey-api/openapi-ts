@@ -920,6 +920,20 @@ export type IoK8sApimachineryPkgApisMetaV1Preconditions = {
     uid?: string;
 };
 
+export type AdditionalPropertiesUnknownIssue = {
+    [key: string]: (string | number);
+};
+
+export type AdditionalPropertiesUnknownIssue2 = {
+    [key: string]: (string | number);
+};
+
+export type AdditionalPropertiesUnknownIssue3 = string & {
+    entries: {
+        [key: string]: AdditionalPropertiesUnknownIssue;
+    };
+};
+
 /**
  * This is a reusable parameter
  */
