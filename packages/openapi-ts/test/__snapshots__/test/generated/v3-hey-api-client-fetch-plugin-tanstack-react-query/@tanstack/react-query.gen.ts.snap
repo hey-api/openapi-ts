@@ -224,12 +224,12 @@ export const callWithParametersOptions = (options: Options<CallWithParametersDat
     ]
 }); };
 
-export const callWithParametersInfiniteOptions = (options: Options<CallWithParametersData>) => { return infiniteQueryOptions<void, DefaultError, InfiniteData<void>, QueryKey<Options<CallWithParametersData>>, string | QueryKey<Options<CallWithParametersData>>[0]>(
+export const callWithParametersInfiniteOptions = (options: Options<CallWithParametersData>) => { return infiniteQueryOptions<void, DefaultError, InfiniteData<void>, QueryKey<Options<CallWithParametersData>>, string | Pick<QueryKey<Options<CallWithParametersData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
 // @ts-ignore
 {
     queryFn: async ({ pageParam, queryKey }) => {
         // @ts-ignore
-        const page: QueryKey<Options<CallWithParametersData>>[0] = typeof pageParam === "object" ? pageParam : {
+        const page: Pick<QueryKey<Options<CallWithParametersData>>[0], 'body' | 'headers' | 'path' | 'query'> = typeof pageParam === "object" ? pageParam : {
             query: {
                 cursor: pageParam
             }
@@ -310,12 +310,12 @@ export const getCallWithOptionalParamOptions = (options: Options<GetCallWithOpti
     ]
 }); };
 
-export const getCallWithOptionalParamInfiniteOptions = (options: Options<GetCallWithOptionalParamData>) => { return infiniteQueryOptions<void, DefaultError, InfiniteData<void>, QueryKey<Options<GetCallWithOptionalParamData>>, number | QueryKey<Options<GetCallWithOptionalParamData>>[0]>(
+export const getCallWithOptionalParamInfiniteOptions = (options: Options<GetCallWithOptionalParamData>) => { return infiniteQueryOptions<void, DefaultError, InfiniteData<void>, QueryKey<Options<GetCallWithOptionalParamData>>, number | Pick<QueryKey<Options<GetCallWithOptionalParamData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
 // @ts-ignore
 {
     queryFn: async ({ pageParam, queryKey }) => {
         // @ts-ignore
-        const page: QueryKey<Options<GetCallWithOptionalParamData>>[0] = typeof pageParam === "object" ? pageParam : {
+        const page: Pick<QueryKey<Options<GetCallWithOptionalParamData>>[0], 'body' | 'headers' | 'path' | 'query'> = typeof pageParam === "object" ? pageParam : {
             query: {
                 page: pageParam
             }
@@ -362,12 +362,12 @@ export const postCallWithOptionalParamOptions = (options: Options<PostCallWithOp
     ]
 }); };
 
-export const postCallWithOptionalParamInfiniteOptions = (options: Options<PostCallWithOptionalParamData>) => { return infiniteQueryOptions<PostCallWithOptionalParamResponse, PostCallWithOptionalParamError, InfiniteData<PostCallWithOptionalParamResponse>, QueryKey<Options<PostCallWithOptionalParamData>>, number | QueryKey<Options<PostCallWithOptionalParamData>>[0]>(
+export const postCallWithOptionalParamInfiniteOptions = (options: Options<PostCallWithOptionalParamData>) => { return infiniteQueryOptions<PostCallWithOptionalParamResponse, PostCallWithOptionalParamError, InfiniteData<PostCallWithOptionalParamResponse>, QueryKey<Options<PostCallWithOptionalParamData>>, number | Pick<QueryKey<Options<PostCallWithOptionalParamData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
 // @ts-ignore
 {
     queryFn: async ({ pageParam, queryKey }) => {
         // @ts-ignore
-        const page: QueryKey<Options<PostCallWithOptionalParamData>>[0] = typeof pageParam === "object" ? pageParam : {
+        const page: Pick<QueryKey<Options<PostCallWithOptionalParamData>>[0], 'body' | 'headers' | 'path' | 'query'> = typeof pageParam === "object" ? pageParam : {
             body: {
                 offset: pageParam
             }

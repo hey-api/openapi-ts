@@ -275,7 +275,7 @@ const createQueryKeyType = ({ file }: { file: Files[keyof Files] }) => {
         compiler.typeIntersectNode({
           types: [
             compiler.typeReferenceNode({
-              typeName: `Pick<TOptions, '${getClientBaseUrlKey()}' | 'body' | 'headers' | 'path' | 'query'>`,
+              typeName: `Pick<${TOptionsType}, '${getClientBaseUrlKey()}' | 'body' | 'headers' | 'path' | 'query'>`,
             }),
             compiler.typeInterfaceNode({ properties }),
           ],
@@ -697,7 +697,7 @@ export const handler: PluginDefinition['handler'] = ({
           const isRequired = isOperationParameterRequired(operation.parameters);
 
           const typeQueryKey = `${queryKeyName}<${typeData}>`;
-          const typePageObjectParam = `${typeQueryKey}[0]`;
+          const typePageObjectParam = `Pick<${typeQueryKey}[0], 'body' | 'headers' | 'path' | 'query'>`;
           const typePageParam = `${paginationField.base} | ${typePageObjectParam}`;
 
           const expression = compiler.arrowFunction({
