@@ -1,4 +1,7 @@
-export interface PluginTanStackVueQuery {
+import type { PluginDefinition } from '../../types';
+import { handler } from '../query-core/plugin';
+
+export interface PluginTanStackVueQuery extends PluginDefinition {
   /**
    * Generate {@link https://tanstack.com/query/v5/docs/framework/vue/reference/infiniteQueryOptions `infiniteQueryOptions()`} helpers? These will be generated from GET and POST requests where a pagination parameter is detected.
    * @default true
@@ -28,6 +31,7 @@ export interface PluginTanStackVueQuery {
 
 export const pluginTanStackVueQueryDefaultConfig: Required<PluginTanStackVueQuery> =
   {
+    handler,
     infiniteQueryOptions: true,
     mutationOptions: true,
     name: '@tanstack/vue-query',

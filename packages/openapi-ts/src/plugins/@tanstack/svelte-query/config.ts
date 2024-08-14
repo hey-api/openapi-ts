@@ -1,4 +1,7 @@
-export interface PluginTanStackSvelteQuery {
+import type { PluginDefinition } from '../../types';
+import { handler } from '../query-core/plugin';
+
+export interface PluginTanStackSvelteQuery extends PluginDefinition {
   /**
    * Generate `createInfiniteQuery()` helpers? These will be generated from GET and POST requests where a pagination parameter is detected.
    * @default true
@@ -28,6 +31,7 @@ export interface PluginTanStackSvelteQuery {
 
 export const pluginTanStackSvelteQueryDefaultConfig: Required<PluginTanStackSvelteQuery> =
   {
+    handler,
     infiniteQueryOptions: true,
     mutationOptions: true,
     name: '@tanstack/svelte-query',

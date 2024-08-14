@@ -338,6 +338,7 @@ export type ObjectValue =
       comments?: Comments;
       isValueAccess?: boolean;
       key: string;
+      shorthand?: boolean;
       value: any;
     };
 
@@ -363,7 +364,7 @@ export const createObjectType = <
   identifiers = [],
   multiLine = true,
   obj,
-  shorthand = false,
+  shorthand,
   unescape = false,
 }: {
   comments?: Comments;
@@ -399,7 +400,9 @@ export const createObjectType = <
           }
           let assignment: ObjectAssignment;
           if ('spread' in value) {
-            const nameIdentifier = createIdentifier({ text: value.spread });
+            const nameIdentifier = isTsNode(value.spread)
+              ? value.spread
+              : createIdentifier({ text: value.spread });
             assignment = ts.factory.createSpreadAssignment(
               value.assertion
                 ? ts.factory.createAsExpression(
@@ -408,7 +411,7 @@ export const createObjectType = <
                   )
                 : nameIdentifier,
             );
-          } else if (shorthand && canShorthand) {
+          } else if (value.shorthand || (shorthand && canShorthand)) {
             assignment = ts.factory.createShorthandPropertyAssignment(
               value.value,
             );
