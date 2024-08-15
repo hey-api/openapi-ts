@@ -10,6 +10,18 @@ import {
 } from './utils';
 
 /**
+ * Create default export declaration. Example: `export default x`.
+ */
+export const createDefaultExportDeclaration = ({
+  expression,
+}: {
+  expression: ts.Expression;
+}) => {
+  const statement = ts.factory.createExportDefault(expression);
+  return statement;
+};
+
+/**
  * Create export all declaration. Example: `export * from './y'`.
  * @param module - module containing exports
  * @returns ts.ExportDeclaration

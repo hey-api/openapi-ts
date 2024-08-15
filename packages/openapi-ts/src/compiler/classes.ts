@@ -95,7 +95,6 @@ export const createMethodDeclaration = ({
       ts.factory.createModifier(ts.SyntaxKind.StaticKeyword),
     ];
   }
-
   const node = ts.factory.createMethodDeclaration(
     modifiers,
     undefined,
@@ -131,10 +130,12 @@ export const createClassDeclaration = ({
   decorator,
   members = [],
   name,
+  spaceBetweenMembers = true,
 }: {
   decorator?: ClassDecorator;
   members?: ts.ClassElement[];
   name: string;
+  spaceBetweenMembers?: boolean;
 }) => {
   let modifiers: ts.ModifierLike[] = [
     ts.factory.createModifier(ts.SyntaxKind.ExportKeyword),
@@ -156,10 +157,14 @@ export const createClassDeclaration = ({
 
   // Add newline between each class member.
   let m: ts.ClassElement[] = [];
-  members.forEach((member) => {
-    // @ts-ignore
-    m = [...m, member, createIdentifier({ text: '\n' })];
-  });
+  if (spaceBetweenMembers) {
+    members.forEach((member) => {
+      // @ts-ignore
+      m = [...m, member, createIdentifier({ text: '\n' })];
+    });
+  } else {
+    m = members;
+  }
 
   return ts.factory.createClassDeclaration(
     modifiers,
@@ -169,3 +174,68 @@ export const createClassDeclaration = ({
     m,
   );
 };
+
+/**
+ * Create a class property declaration.
+ * @param accessLevel - the access level of the constructor.
+ * @param comment - comment to add to function.
+ * @param isReadonly - if the property is readonly.
+ * @param name - name of the property.
+ * @param type - the type of the property.
+ * @param value - the value of the property.
+ * @returns ts.PropertyDeclaration
+ */
+export const createPropertyDeclaration = ({
+  accessLevel,
+  comment,
+  isReadonly = false,
+  name,
+  type,
+  value,
+}: {
+  accessLevel?: AccessLevel;
+  comment?: Comments;
+  isReadonly?: boolean;
+  name: string;
+  type?: string | ts.TypeNode;
+  value?: string | ts.Expression;
+}) => {
+  let modifiers = toAccessLevelModifiers(accessLevel);
+
+  if (isReadonly) {
+    modifiers = [
+      ...modifiers,
+      ts.factory.createModifier(ts.SyntaxKind.ReadonlyKeyword),
+    ];
+  }
+
+  const node = ts.factory.createPropertyDeclaration(
+    modifiers,
+    createIdentifier({ text: name }),
+    undefined,
+    type ? createTypeNode(type) : undefined,
+    value ? toExpression({ value }) : undefined,
+  );
+
+  addLeadingComments({
+    comments: comment,
+    node,
+  });
+
+  return node;
+};
+
+/**
+ * Create a class new instance expression.
+ * @param name - name of the class.
+ * @returns ts.NewExpression
+ */
+export const newExpression = ({
+  expression,
+  args,
+  types,
+}: {
+  args?: ts.Expression[];
+  expression: ts.Expression;
+  types?: ts.TypeNode[];
+}) => ts.factory.createNewExpression(expression, types, args);

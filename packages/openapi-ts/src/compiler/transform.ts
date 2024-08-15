@@ -67,17 +67,19 @@ export const createBinaryExpression = ({
   right,
 }: {
   left: ts.Expression;
-  operator?: '=' | '===' | 'in';
+  operator?: '=' | '===' | 'in' | '??';
   right: ts.Expression | string;
 }) => {
   const expression = ts.factory.createBinaryExpression(
     left,
     // TODO: add support for other tokens
-    operator === '='
-      ? ts.SyntaxKind.EqualsToken
-      : operator === '==='
-        ? ts.SyntaxKind.EqualsEqualsEqualsToken
-        : ts.SyntaxKind.InKeyword,
+    operator === '??'
+      ? ts.SyntaxKind.QuestionQuestionToken
+      : operator === '='
+        ? ts.SyntaxKind.EqualsToken
+        : operator === '==='
+          ? ts.SyntaxKind.EqualsEqualsEqualsToken
+          : ts.SyntaxKind.InKeyword,
     typeof right === 'string' ? createIdentifier({ text: right }) : right,
   );
   return expression;
