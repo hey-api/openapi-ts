@@ -9,6 +9,7 @@ import path from 'node:path';
 
 import type { Client } from '../types/client';
 import { getConfig } from '../utils/config';
+import { getExt } from '../utils/extension';
 import { getHttpRequestName } from '../utils/getHttpRequestName';
 import type { Templates } from '../utils/handlebars';
 
@@ -27,6 +28,7 @@ export const generateCore = async (
 
   if (config.exportCore) {
     const context = {
+      ext: getExt(),
       httpRequest: getHttpRequestName(config.client),
       server: config.base !== undefined ? config.base : client.server,
       version: client.version,

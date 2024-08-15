@@ -4,10 +4,10 @@ import { forkJoin, of, throwError } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import type { Observable } from 'rxjs';
 
-import { ApiError } from './ApiError{{@root.$config.output.extension}}';
-import type { ApiRequestOptions } from './ApiRequestOptions{{@root.$config.output.extension}}';
-import type { ApiResult } from './ApiResult{{@root.$config.output.extension}}';
-import type { OpenAPIConfig } from './OpenAPI{{@root.$config.output.extension}}';
+import { ApiError } from './ApiError{{ext}}';
+import type { ApiRequestOptions } from './ApiRequestOptions{{ext}}';
+import type { ApiResult } from './ApiResult{{ext}}';
+import type { OpenAPIConfig } from './OpenAPI{{ext}}';
 
 {{>functions/isString}}
 

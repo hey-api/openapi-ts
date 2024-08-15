@@ -2,12 +2,12 @@
 import type { HttpClient } from '@angular/common/http';
 import type { Observable } from 'rxjs';
 
-import type { ApiRequestOptions } from './ApiRequestOptions{{@root.$config.output.extension}}';
-import type { OpenAPIConfig } from './OpenAPI{{@root.$config.output.extension}}';
+import type { ApiRequestOptions } from './ApiRequestOptions{{ext}}';
+import type { OpenAPIConfig } from './OpenAPI{{ext}}';
 {{else}}
-import type { ApiRequestOptions } from './ApiRequestOptions{{@root.$config.output.extension}}';
-import type { CancelablePromise } from './CancelablePromise{{@root.$config.output.extension}}';
-import type { OpenAPIConfig } from './OpenAPI{{@root.$config.output.extension}}';
+import type { ApiRequestOptions } from './ApiRequestOptions{{ext}}';
+import type { CancelablePromise } from './CancelablePromise{{ext}}';
+import type { OpenAPIConfig } from './OpenAPI{{ext}}';
 {{/equals}}
 
 export abstract class BaseHttpRequest {

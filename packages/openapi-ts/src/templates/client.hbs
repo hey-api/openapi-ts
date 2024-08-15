@@ -2,21 +2,21 @@
 import { NgModule} from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 
-import { AngularHttpRequest } from './core/AngularHttpRequest{{@root.$config.output.extension}}';
-import { BaseHttpRequest } from './core/BaseHttpRequest{{@root.$config.output.extension}}';
-import type { OpenAPIConfig } from './core/OpenAPI{{@root.$config.output.extension}}';
-import { OpenAPI } from './core/OpenAPI{{@root.$config.output.extension}}';
-import { Interceptors } from './core/OpenAPI{{@root.$config.output.extension}}';
+import { AngularHttpRequest } from './core/AngularHttpRequest{{ext}}';
+import { BaseHttpRequest } from './core/BaseHttpRequest{{ext}}';
+import type { OpenAPIConfig } from './core/OpenAPI{{ext}}';
+import { OpenAPI } from './core/OpenAPI{{ext}}';
+import { Interceptors } from './core/OpenAPI{{ext}}';
 {{else}}
-import type { BaseHttpRequest } from './core/BaseHttpRequest{{@root.$config.output.extension}}';
-import type { OpenAPIConfig } from './core/OpenAPI{{@root.$config.output.extension}}';
-import { Interceptors } from './core/OpenAPI{{@root.$config.output.extension}}';
-import { {{{httpRequest}}} } from './core/{{{httpRequest}}}{{@root.$config.output.extension}}';
+import type { BaseHttpRequest } from './core/BaseHttpRequest{{ext}}';
+import type { OpenAPIConfig } from './core/OpenAPI{{ext}}';
+import { Interceptors } from './core/OpenAPI{{ext}}';
+import { {{{httpRequest}}} } from './core/{{{httpRequest}}}{{ext}}';
 {{/equals}}
 
 {{#if services}}
 {{#each services}}
-import { {{{transformServiceName name}}} } from './services.gen{{@root.$config.output.extension}}';
+import { {{{transformServiceName name}}} } from './services.gen{{ext}}';
 {{/each}}
 {{/if}}
 

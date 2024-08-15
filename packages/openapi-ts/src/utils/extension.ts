@@ -12,3 +12,8 @@ export const appendExt = (fileName: string): string => {
   }
   return fileName;
 };
+
+/**
+ * Returns the file extension based on the current runtime
+ */
+export const getExt = (): string => appendExt('');
