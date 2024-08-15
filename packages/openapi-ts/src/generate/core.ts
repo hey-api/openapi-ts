@@ -13,6 +13,7 @@ import { getHttpRequestName } from '../utils/getHttpRequestName';
 import type { Templates } from '../utils/handlebars';
 
 /**
+ * @deprecated
  * Generate OpenAPI core files, this includes the basic boilerplate code to handle requests.
  * @param outputPath Directory to write the generated files to
  * @param client Client containing models, schemas, and services

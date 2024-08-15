@@ -5,7 +5,7 @@ import type { Client } from '../types/client';
 import type { Files } from '../types/utils';
 import { getConfig } from '../utils/config';
 import type { Templates } from '../utils/handlebars';
-import { generateClientClass } from './class';
+import { generateClientClass, generateSDKClass } from './class';
 import { generateClient } from './client';
 import { generateCore } from './core';
 import { generateIndexFile } from './indexFile';
@@ -71,6 +71,9 @@ export const generateOutput = async (
 
   // services.gen.ts
   await generateServices({ client, files });
+
+  // sdk.gen.ts
+  await generateSDKClass({ client, files });
 
   // deprecated files
   await generateClientClass(openApi, outputPath, client, templates);
