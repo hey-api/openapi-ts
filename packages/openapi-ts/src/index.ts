@@ -165,7 +165,9 @@ const getServices = (userConfig: ClientConfig): Config['services'] => {
     name: '{{name}}Service',
     operationId: true,
     response: 'body',
+    sdk: false,
   };
+
   if (typeof userConfig.services === 'boolean') {
     services.export = userConfig.services;
   } else if (typeof userConfig.services === 'string') {
@@ -175,6 +177,9 @@ const getServices = (userConfig: ClientConfig): Config['services'] => {
       ...services,
       ...userConfig.services,
     };
+  }
+  if (services.sdk) {
+    services.asClass = true;
   }
   return services;
 };

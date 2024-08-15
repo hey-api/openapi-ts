@@ -181,6 +181,15 @@ export interface ClientConfig {
          * @deprecated
          */
         response?: 'body' | 'response';
+        /**
+         * Generate the service as a full SDK class? When enabled, it will override the `asClass` option
+         * to true and generate the serivce as service classes.
+         *
+         * When set to true, the main service class will be named "SDK"
+         * When set to a string, the main service class will bare the name of the provided string
+         * @default false
+         */
+        sdk?: boolean | string;
       };
   /**
    * Generate types?
