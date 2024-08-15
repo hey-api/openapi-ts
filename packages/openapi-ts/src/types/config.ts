@@ -77,11 +77,6 @@ export interface ClientConfig {
     | string
     | {
         /**
-         * Imports and exports file extension
-         * @default ''
-         */
-        extension?: '' | '.js' | '.ts';
-        /**
          * Process output folder with formatter?
          * @default false
          */
