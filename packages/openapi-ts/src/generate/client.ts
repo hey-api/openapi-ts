@@ -3,17 +3,15 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 
 import { getConfig, isStandaloneClient } from '../utils/config';
+import { appendExt } from '../utils/extension';
 import { ensureDirSync } from './utils';
 
 const require = createRequire(import.meta.url);
 
 export const clientModulePath = () => {
   const config = getConfig();
-  const ext = config.output.extension || '';
 
-  return config.client.bundle
-    ? `./client${ext}`
-    : `${config.client.name}${ext}`;
+  return appendExt(config.client.bundle ? './client' : config.client.name);
 };
 
 export const clientOptionsTypeName = () => 'Options';

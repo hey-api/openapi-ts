@@ -1,6 +1,7 @@
 import { compiler, TypeScriptFile } from '../compiler';
 import type { Files } from '../types/utils';
 import { getConfig } from '../utils/config';
+import { appendExt } from '../utils/extension';
 
 export const generateIndexFile = async ({
   files,
@@ -8,8 +9,6 @@ export const generateIndexFile = async ({
   files: Files;
 }): Promise<void> => {
   const config = getConfig();
-
-  const ext = config.output.extension || '';
 
   files.index = new TypeScriptFile({
     dir: config.output.path,
@@ -20,7 +19,7 @@ export const generateIndexFile = async ({
     files.index.add(
       compiler.exportNamedDeclaration({
         exports: config.name,
-        module: `./${config.name}${ext}`,
+        module: appendExt(`./${config.name}`),
       }),
     );
   }
@@ -29,14 +28,14 @@ export const generateIndexFile = async ({
     files.index.add(
       compiler.exportNamedDeclaration({
         exports: 'ApiError',
-        module: `./core/ApiError${ext}`,
+        module: appendExt('./core/ApiError'),
       }),
     );
     if (config.services.response === 'response') {
       files.index.add(
         compiler.exportNamedDeclaration({
           exports: { asType: true, name: 'ApiResult' },
-          module: `./core/ApiResult${ext}`,
+          module: appendExt('./core/ApiResult'),
         }),
       );
     }
@@ -44,7 +43,7 @@ export const generateIndexFile = async ({
       files.index.add(
         compiler.exportNamedDeclaration({
           exports: 'BaseHttpRequest',
-          module: `./core/BaseHttpRequest${ext}`,
+          module: appendExt('./core/BaseHttpRequest'),
         }),
       );
     }
@@ -52,14 +51,14 @@ export const generateIndexFile = async ({
       files.index.add(
         compiler.exportNamedDeclaration({
           exports: ['CancelablePromise', 'CancelError'],
-          module: `./core/CancelablePromise${ext}`,
+          module: appendExt('./core/CancelablePromise'),
         }),
       );
     }
     files.index.add(
       compiler.exportNamedDeclaration({
         exports: ['OpenAPI', { asType: true, name: 'OpenAPIConfig' }],
-        module: `./core/OpenAPI${ext}`,
+        module: appendExt('./core/OpenAPI'),
       }),
     );
   }
@@ -75,7 +74,7 @@ export const generateIndexFile = async ({
 
       files.index.add(
         compiler.exportAllDeclaration({
-          module: `./${file.getName(false)}${ext}`,
+          module: appendExt(`./${file.getName(false)}`),
         }),
       );
     });
