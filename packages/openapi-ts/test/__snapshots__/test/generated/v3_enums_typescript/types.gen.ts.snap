@@ -1018,7 +1018,19 @@ export type AdditionalPropertiesIntegerIssue = {
     [key: string]: (number) | undefined;
 };
 
-export type OneOfAllOfIssue = ((ConstValue | ModelWithBoolean) & _3e_num_1Период) | _import;
+export type OneOfAllOfIssue = ((ConstValue | Generic_Schema_Duplicate_Issue_1_System_Boolean_) & _3e_num_1Период) | Generic_Schema_Duplicate_Issue_1_System_String_;
+
+export type Generic_Schema_Duplicate_Issue_1_System_Boolean_ = {
+    item?: boolean;
+    error?: (string) | null;
+    readonly hasError?: boolean;
+};
+
+export type Generic_Schema_Duplicate_Issue_1_System_String_ = {
+    item?: (string) | null;
+    error?: (string) | null;
+    readonly hasError?: boolean;
+};
 
 /**
  * This is a reusable parameter

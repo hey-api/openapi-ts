@@ -1777,7 +1777,7 @@ export const $OneOfAllOfIssue = {
                             '$ref': '#/components/schemas/ConstValue'
                         },
                         {
-                            '$ref': '#/components/schemas/ModelWithBoolean'
+                            '$ref': '#/components/schemas/Generic.Schema.Duplicate.Issue`1[System.Boolean]'
                         }
                     ]
                 },
@@ -1787,7 +1787,44 @@ export const $OneOfAllOfIssue = {
             ]
         },
         {
-            '$ref': '#/components/schemas/import'
+            '$ref': '#/components/schemas/Generic.Schema.Duplicate.Issue`1[System.String]'
         }
     ]
+} as const;
+
+export const $Generic_Schema_Duplicate_Issue_1_System_Boolean_ = {
+    type: 'object',
+    properties: {
+        item: {
+            type: 'boolean'
+        },
+        error: {
+            type: 'string',
+            nullable: true
+        },
+        hasError: {
+            type: 'boolean',
+            readOnly: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const $Generic_Schema_Duplicate_Issue_1_System_String_ = {
+    type: 'object',
+    properties: {
+        item: {
+            type: 'string',
+            nullable: true
+        },
+        error: {
+            type: 'string',
+            nullable: true
+        },
+        hasError: {
+            type: 'boolean',
+            readOnly: true
+        }
+    },
+    additionalProperties: false
 } as const;

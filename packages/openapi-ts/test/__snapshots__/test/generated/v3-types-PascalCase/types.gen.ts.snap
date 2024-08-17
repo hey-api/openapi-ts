@@ -939,7 +939,19 @@ export type AdditionalPropertiesIntegerIssue = {
     [key: string]: (number) | undefined;
 };
 
-export type OneOfAllOfIssue = ((ConstValue | ModelWithBoolean) & _3eNum1Период) | Import;
+export type OneOfAllOfIssue = ((ConstValue | GenericSchemaDuplicateIssue1SystemBoolean) & _3eNum1Период) | GenericSchemaDuplicateIssue1SystemString;
+
+export type GenericSchemaDuplicateIssue_1_systemBoolean_ = {
+    item?: boolean;
+    error?: (string) | null;
+    readonly hasError?: boolean;
+};
+
+export type GenericSchemaDuplicateIssue_1_systemString_ = {
+    item?: (string) | null;
+    error?: (string) | null;
+    readonly hasError?: boolean;
+};
 
 /**
  * This is a reusable parameter

@@ -55,12 +55,22 @@ export const getMappedType = (
 };
 
 /**
+ * Matches characters inside square brackets, including the brackets. Does not
+ * match if the opening bracket is preceded by "`1" which is a syntax for generics
+ * from C#.
+ *
+ * Hello[World] -> matches [World]
+ * Hello`1[World] -> no match
+ * string[] -> matches []
+ */
+export const hasSquareBracketsRegExp = /(?<!`1)\[.*\]$/g;
+
+/**
  * Parse any string value into a type object.
  * @param type String or String[] value like "integer", "Link[Model]" or ["string", "null"].
  * @param format String value like "binary" or "date".
  */
 export const getType = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   debug,
   format,
   type = 'unknown',
@@ -104,13 +114,16 @@ export const getType = ({
 
   const typeWithoutNamespace = decodeURIComponent(stripNamespace(type));
 
-  if (/\[.*\]$/g.test(typeWithoutNamespace)) {
+  hasSquareBracketsRegExp.lastIndex = 0;
+  if (hasSquareBracketsRegExp.test(typeWithoutNamespace)) {
     const matches = typeWithoutNamespace.match(/(.*?)\[(.*)\]$/);
     if (matches?.length) {
       const match1 = getType({
+        debug,
         type: ensureValidTypeScriptJavaScriptIdentifier(matches[1]),
       });
       const match2 = getType({
+        debug,
         type: ensureValidTypeScriptJavaScriptIdentifier(matches[2]),
       });
 
