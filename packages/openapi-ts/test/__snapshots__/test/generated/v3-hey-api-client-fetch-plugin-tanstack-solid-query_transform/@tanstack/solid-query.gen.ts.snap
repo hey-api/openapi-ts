@@ -8,14 +8,14 @@ import { client, parentModelWithDates, modelWithDates, modelWithDatesArray, arra
 type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
         _id: string;
-        infinite?: boolean;
+        _infinite?: boolean;
     }
 ];
 
 const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, infinite?: boolean): QueryKey<TOptions>[0] => {
     const params: QueryKey<TOptions>[0] = { _id: id, baseUrl: client.getConfig().baseUrl } as QueryKey<TOptions>[0];
     if (infinite) {
-        params.infinite = infinite;
+        params._infinite = infinite;
     }
     if (options?.body) {
         params.body = options.body;
