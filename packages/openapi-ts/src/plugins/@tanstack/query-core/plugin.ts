@@ -77,6 +77,8 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
     ]),
   });
 
+  const infiniteIdentifier = compiler.identifier({ text: 'infinite' });
+
   const fn = compiler.constVariable({
     expression: compiler.arrowFunction({
       multiLine: true,
@@ -119,16 +121,16 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
           typeName: returnType,
         }),
         compiler.ifStatement({
-          expression: compiler.identifier({ text: 'infinite' }),
+          expression: infiniteIdentifier,
           thenStatement: ts.factory.createBlock(
             [
               compiler.expressionToStatement({
                 expression: compiler.binaryExpression({
                   left: compiler.propertyAccessExpression({
                     expression: 'params',
-                    name: 'infinite',
+                    name: '_infinite',
                   }),
-                  right: compiler.identifier({ text: 'infinite' }),
+                  right: infiniteIdentifier,
                 }),
               }),
             ],
@@ -261,7 +263,7 @@ const createQueryKeyType = ({ file }: { file: Files[keyof Files] }) => {
     },
     {
       isRequired: false,
-      name: 'infinite',
+      name: '_infinite',
       type: compiler.keywordTypeNode({
         keyword: 'boolean',
       }),
@@ -796,6 +798,9 @@ export const handler: PluginDefinition['handler'] = ({
                                           spread: 'options',
                                         },
                                         {
+                                          spread: 'queryKey[0]',
+                                        },
+                                        {
                                           key: 'body',
                                           value: compiler.objectExpression({
                                             multiLine: true,
@@ -851,12 +856,6 @@ export const handler: PluginDefinition['handler'] = ({
                                                 spread: 'page.query',
                                               },
                                             ],
-                                          }),
-                                        },
-                                        {
-                                          key: getClientBaseUrlKey(),
-                                          value: compiler.identifier({
-                                            text: `client.getConfig().${getClientBaseUrlKey()}`,
                                           }),
                                         },
                                         {
