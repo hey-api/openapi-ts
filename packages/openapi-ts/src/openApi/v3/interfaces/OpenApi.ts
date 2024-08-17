@@ -7,7 +7,7 @@ import type { OpenApiServer } from './OpenApiServer';
 import type { OpenApiTag } from './OpenApiTag';
 
 /**
- * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.1.0.md
+ * {@link} https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md
  */
 export interface OpenApi {
   components?: OpenApiComponents;

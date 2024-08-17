@@ -1,7 +1,7 @@
 import type { WithEnumExtension } from '../../common/interfaces/WithEnumExtension';
 
 /**
- * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#items-object)
+ * {@link} https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#items-object)
  */
 export interface OpenApiItems extends WithEnumExtension {
   collectionFormat?: 'csv' | 'ssv' | 'tsv' | 'pipes';

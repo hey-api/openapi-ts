@@ -8,7 +8,7 @@ import type { OpenApiSecurityRequirement } from './OpenApiSecurityRequirement';
 import type { OpenApiServer } from './OpenApiServer';
 
 /**
- * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.1.0.md#operation-object
+ * {@link} https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#operation-object
  */
 export interface OpenApiOperation {
   callbacks?: Dictionary<OpenApiCallback>;

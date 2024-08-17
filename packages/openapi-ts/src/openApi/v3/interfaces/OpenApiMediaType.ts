@@ -5,7 +5,7 @@ import type { OpenApiReference } from './OpenApiReference';
 import type { OpenApiSchema } from './OpenApiSchema';
 
 /**
- * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.1.0.md#media-type-object
+ * {@link} https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#media-type-object
  */
 export interface OpenApiMediaType extends OpenApiReference {
   encoding?: Dictionary<OpenApiEncoding>;

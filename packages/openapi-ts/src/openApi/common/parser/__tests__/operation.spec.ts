@@ -11,6 +11,7 @@ describe('getOperationName', () => {
     configFile: '',
     debug: false,
     dryRun: true,
+    experimental_parser: false,
     exportCore: false,
     input: '',
     output: {

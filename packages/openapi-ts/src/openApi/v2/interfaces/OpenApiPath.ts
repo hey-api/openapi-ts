@@ -3,7 +3,7 @@ import type { OpenApiParameter } from './OpenApiParameter';
 import type { OpenApiReference } from './OpenApiReference';
 
 /**
- * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#path-item-object
+ * {@link} https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#path-item-object
  */
 export interface OpenApiPath extends OpenApiReference {
   connect?: OpenApiOperation;

@@ -57,6 +57,11 @@ export interface ClientConfig {
    */
   dryRun?: boolean;
   /**
+   * Use the experimental parser?
+   * @default false
+   */
+  experimental_parser?: boolean;
+  /**
    * Generate core client classes?
    * @default true
    */
