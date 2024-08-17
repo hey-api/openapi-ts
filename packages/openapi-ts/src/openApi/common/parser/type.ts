@@ -24,6 +24,7 @@ export const getMappedType = (
   switch (type) {
     case 'any':
     case 'object':
+    case 'unknown':
       return 'unknown';
     case 'array':
       return 'unknown[]';
