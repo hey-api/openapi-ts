@@ -24,7 +24,7 @@ export type CallWithDefaultParametersData = {
     /**
      * This is a simple boolean with default value
      */
-    parameterBoolean?: boolean | null;
+    parameterBoolean?: (boolean) | null;
     /**
      * This is a simple enum with default value
      */
@@ -32,15 +32,15 @@ export type CallWithDefaultParametersData = {
     /**
      * This is a simple model with default value
      */
-    parameterModel?: ModelWithString | null;
+    parameterModel?: (ModelWithString) | null;
     /**
      * This is a simple number with default value
      */
-    parameterNumber?: number | null;
+    parameterNumber?: (number) | null;
     /**
      * This is a simple string with default value
      */
-    parameterString?: string | null;
+    parameterString?: (string) | null;
 };
 
 export type CallWithDefaultOptionalParametersData = {
@@ -82,11 +82,11 @@ export type CallToTestOrderOfParamsData = {
     /**
      * This is a string that can be null with default
      */
-    parameterStringNullableWithDefault?: string | null;
+    parameterStringNullableWithDefault?: (string) | null;
     /**
      * This is a string that can be null with no default
      */
-    parameterStringNullableWithNoDefault?: string | null;
+    parameterStringNullableWithNoDefault?: (string) | null;
     /**
      * This is a string with default
      */

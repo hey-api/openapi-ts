@@ -660,3 +660,12 @@ export const createTypeReferenceNode = ({
   const node = ts.factory.createTypeReferenceNode(typeName, typeArguments);
   return node;
 };
+
+export const createTypeParenthesizedNode = ({
+  type,
+}: {
+  type: ts.TypeNode;
+}) => {
+  const node = ts.factory.createParenthesizedType(type);
+  return node;
+};

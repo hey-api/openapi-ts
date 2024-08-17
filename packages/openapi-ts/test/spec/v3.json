@@ -3515,6 +3515,30 @@
         "additionalProperties": {
           "type": "integer"
         }
+      },
+      "OneOfAllOfIssue": {
+        "oneOf": [
+          {
+            "allOf": [
+              {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/ConstValue"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ModelWithBoolean"
+                  }
+                ]
+              },
+              {
+                "$ref": "#/components/schemas/3e-num_1Период"
+              }
+            ]
+          },
+          {
+            "$ref": "#/components/schemas/import"
+          }
+        ]
       }
     }
   }

@@ -16,12 +16,12 @@ export type ModelWithPattern = {
 };
 
 export type ImportData = {
-    requestBody: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
+    requestBody: (ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly);
 };
 
-export type ImportResponse = Model_From_Zendesk | ModelWithReadOnlyAndWriteOnly;
+export type ImportResponse = (Model_From_Zendesk | ModelWithReadOnlyAndWriteOnly);
 
-export type ApiVversionOdataControllerCountResponse = Model_From_Zendesk;
+export type ApiVversionOdataControllerCountResponse = (Model_From_Zendesk);
 
 export type DeleteFooData = {
     /**
@@ -73,28 +73,28 @@ export type DeprecatedCallData = {
      * This parameter is deprecated
      * @deprecated
      */
-    parameter: DeprecatedModel | null;
+    parameter: (DeprecatedModel) | null;
 };
 
 export type CallWithParametersData = {
     /**
      * This is the parameter that goes into the query params
      */
-    cursor: string | null;
-    fooAllOfEnum: ModelWithNestedArrayEnumsDataFoo;
+    cursor: (string) | null;
+    fooAllOfEnum: (ModelWithNestedArrayEnumsDataFoo);
     fooRefEnum?: ModelWithNestedArrayEnumsDataFoo;
     /**
      * This is the parameter that goes into the cookie
      */
-    parameterCookie: string | null;
+    parameterCookie: (string) | null;
     /**
      * This is the parameter that goes into the header
      */
-    parameterHeader: string | null;
+    parameterHeader: (string) | null;
     /**
      * This is the parameter that goes into the path
      */
-    parameterPath: string | null;
+    parameterPath: (string) | null;
     /**
      * This is the parameter that goes into the body
      */
@@ -111,11 +111,11 @@ export type CallWithWeirdParameterNamesData = {
     /**
      * This is the parameter that goes into the cookie
      */
-    parameterCookie: string | null;
+    parameterCookie: (string) | null;
     /**
      * This is the parameter that goes into the request header
      */
-    parameterHeader: string | null;
+    parameterHeader: (string) | null;
     /**
      * This is the parameter that goes into the path
      */
@@ -131,11 +131,11 @@ export type CallWithWeirdParameterNamesData = {
     /**
      * This is the parameter that goes into the request query params
      */
-    parameterQuery: string | null;
+    parameterQuery: (string) | null;
     /**
      * This is the parameter that goes into the body
      */
-    requestBody: ModelWithString | null;
+    requestBody: (ModelWithString) | null;
 };
 
 export type GetCallWithOptionalParamData = {
@@ -158,11 +158,11 @@ export type PostCallWithOptionalParamData = {
      * This is an optional parameter
      */
     requestBody?: {
-        offset?: number | null;
+        offset?: (number) | null;
     };
 };
 
-export type PostCallWithOptionalParamResponse = number | void;
+export type PostCallWithOptionalParamResponse = (number | void);
 
 export type PostApiRequestBodyData = {
     /**
@@ -190,7 +190,7 @@ export type CallWithDefaultParametersData = {
     /**
      * This is a simple boolean with default value
      */
-    parameterBoolean?: boolean | null;
+    parameterBoolean?: (boolean) | null;
     /**
      * This is a simple enum with default value
      */
@@ -198,15 +198,15 @@ export type CallWithDefaultParametersData = {
     /**
      * This is a simple model with default value
      */
-    parameterModel?: ModelWithString | null;
+    parameterModel?: (ModelWithString) | null;
     /**
      * This is a simple number with default value
      */
-    parameterNumber?: number | null;
+    parameterNumber?: (number) | null;
     /**
      * This is a simple string with default value
      */
-    parameterString?: string | null;
+    parameterString?: (string) | null;
 };
 
 export type CallWithDefaultOptionalParametersData = {
@@ -248,11 +248,11 @@ export type CallToTestOrderOfParamsData = {
     /**
      * This is a string that can be null with default
      */
-    parameterStringNullableWithDefault?: string | null;
+    parameterStringNullableWithDefault?: (string) | null;
     /**
      * This is a string that can be null with no default
      */
-    parameterStringNullableWithNoDefault?: string | null;
+    parameterStringNullableWithNoDefault?: (string) | null;
     /**
      * This is a string with default
      */
@@ -267,23 +267,23 @@ export type CallToTestOrderOfParamsData = {
     parameterStringWithNoDefault: string;
 };
 
-export type CallWithNoContentResponseResponse = void;
+export type CallWithNoContentResponseResponse = (void);
 
-export type CallWithResponseAndNoContentResponseResponse = number | void;
+export type CallWithResponseAndNoContentResponseResponse = (number | void);
 
-export type DummyAResponse = _400;
+export type DummyAResponse = (_400);
 
-export type DummyBResponse = void;
+export type DummyBResponse = (void);
 
-export type CallWithResponseResponse = _import;
+export type CallWithResponseResponse = (_import);
 
-export type CallWithDuplicateResponsesResponse = ModelWithBoolean & ModelWithInteger | ModelWithString;
+export type CallWithDuplicateResponsesResponse = ((ModelWithBoolean & ModelWithInteger) | ModelWithString);
 
-export type CallWithResponsesResponse = {
+export type CallWithResponsesResponse = ({
     readonly '@namespace.string'?: string;
     readonly '@namespace.integer'?: number;
     readonly value?: Array<ModelWithString>;
-} | ModelThatExtends | ModelThatExtendsExtends;
+} | ModelThatExtends | ModelThatExtendsExtends);
 
 export type CollectionFormatData = {
     /**
@@ -320,7 +320,7 @@ export type TypesData = {
     /**
      * This is a boolean parameter
      */
-    parameterBoolean: boolean | null;
+    parameterBoolean: (boolean) | null;
     /**
      * This is a dictionary parameter
      */
@@ -330,7 +330,7 @@ export type TypesData = {
     /**
      * This is an enum parameter
      */
-    parameterEnum: 'Success' | 'Warning' | 'Error' | null;
+    parameterEnum: ('Success' | 'Warning' | 'Error') | null;
     /**
      * This is a number parameter
      */
@@ -344,24 +344,24 @@ export type TypesData = {
     /**
      * This is a string parameter
      */
-    parameterString: string | null;
+    parameterString: (string) | null;
 };
 
-export type TypesResponse = number | string | boolean | {
+export type TypesResponse = (number | string | boolean | {
     [key: string]: unknown;
-};
+});
 
 export type UploadFileData = {
     formData: (Blob | File);
 };
 
-export type UploadFileResponse = boolean;
+export type UploadFileResponse = (boolean);
 
 export type FileResponseData = {
     id: string;
 };
 
-export type FileResponseResponse = (Blob | File);
+export type FileResponseResponse = ((Blob | File));
 
 export type ComplexTypesData = {
     /**
@@ -380,43 +380,43 @@ export type ComplexTypesData = {
     parameterReference: ModelWithString;
 };
 
-export type ComplexTypesResponse = Array<ModelWithString>;
+export type ComplexTypesResponse = (Array<ModelWithString>);
 
 export type MultipartRequestData = {
     formData?: {
         content?: (Blob | File);
-        data?: ModelWithString | null;
+        data?: ((ModelWithString) | null);
     };
 };
 
-export type MultipartResponseResponse = {
+export type MultipartResponseResponse = ({
     file?: (Blob | File);
     metadata?: {
         foo?: string;
         bar?: string;
     };
-};
+});
 
 export type ComplexParamsData = {
     id: number;
     requestBody?: {
-        readonly key: string | null;
-        name: string | null;
+        readonly key: (string) | null;
+        name: (string) | null;
         enabled?: boolean;
         readonly type: 'Monkey' | 'Horse' | 'Bird';
         listOfModels?: Array<ModelWithString> | null;
         listOfStrings?: Array<(string)> | null;
-        parameters: ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary;
+        parameters: (ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary);
         readonly user?: {
             readonly id?: number;
-            readonly name?: string | null;
+            readonly name?: (string) | null;
         };
     };
 };
 
-export type ComplexParamsResponse = ModelWithString;
+export type ComplexParamsResponse = (ModelWithString);
 
-export type CallWithResultFromHeaderResponse = string;
+export type CallWithResultFromHeaderResponse = (string);
 
 export type TestErrorCodeData = {
     /**
@@ -425,7 +425,7 @@ export type TestErrorCodeData = {
     status: number;
 };
 
-export type TestErrorCodeResponse = unknown;
+export type TestErrorCodeResponse = (unknown);
 
 export type NonAsciiæøåÆøÅöôêÊ字符串Data = {
     /**
@@ -434,7 +434,7 @@ export type NonAsciiæøåÆøÅöôêÊ字符串Data = {
     nonAsciiParamæøåÆøÅöôêÊ: number;
 };
 
-export type NonAsciiæøåÆøÅöôêÊ字符串Response = Array<NonAsciiStringæøåÆØÅöôêÊ字符串>;
+export type NonAsciiæøåÆøÅöôêÊ字符串Response = (Array<NonAsciiStringæøåÆØÅöôêÊ字符串>);
 
 export type PutWithFormUrlEncodedData = {
     formData: ArrayWithStrings;
@@ -582,7 +582,7 @@ export type $OpenApiTs = {
                 /**
                  * Message for 200 response
                  */
-                200: ModelWithBoolean & ModelWithInteger;
+                200: (ModelWithBoolean & ModelWithInteger);
                 /**
                  * Message for 201 response
                  */

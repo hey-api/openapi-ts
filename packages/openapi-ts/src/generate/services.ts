@@ -180,7 +180,9 @@ const toOperationReturnType = (client: Client, operation: Operation) => {
       },
       nameTransformer: operationResponseTypeName,
     });
-    returnType = compiler.typeUnionNode([importedType]);
+    returnType = compiler.typeUnionNode({
+      types: [importedType],
+    });
   }
 
   if (config.useOptions && config.services.response === 'response') {
