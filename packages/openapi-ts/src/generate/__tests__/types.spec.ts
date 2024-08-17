@@ -59,6 +59,7 @@ describe('generateTypes', () => {
           type: 'User',
         },
       ],
+      operationIds: new Map(),
       server: 'http://localhost:8080',
       services: [],
       types: {},
