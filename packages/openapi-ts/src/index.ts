@@ -11,6 +11,7 @@ import type { ClientConfig, Config, UserConfig } from './types/config';
 import { getConfig, isStandaloneClient, setConfig } from './utils/config';
 import { getOpenApiSpec } from './utils/getOpenApiSpec';
 import { registerHandlebarTemplates } from './utils/handlebars';
+import { Performance } from './utils/performance';
 import { postProcessClient } from './utils/postprocess';
 
 type OutputProcesser = {
@@ -301,6 +302,8 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
  * @param userConfig {@link UserConfig} passed to the `createClient()` method
  */
 export async function createClient(userConfig: UserConfig): Promise<Client[]> {
+  Performance.start('createClient');
+
   const configs = await initConfigs(userConfig);
 
   const createClientPromise = (config: Config) => async () => {
@@ -331,6 +334,9 @@ export async function createClient(userConfig: UserConfig): Promise<Client[]> {
     const client = await clientPromise();
     clients = [...clients, client];
   }
+
+  Performance.end('createClient');
+
   return clients;
 }
 
