@@ -81,24 +81,25 @@ export const createTypeInterfaceNode = ({
  * @param isNullable - if the whole type can be null
  * @returns ts.UnionTypeNode
  */
-export const createTypeUnionNode = (
-  types: (any | ts.TypeNode)[],
-  isNullable: boolean = false,
-) => {
+export const createTypeUnionNode = ({
+  isNullable,
+  types,
+}: {
+  isNullable?: boolean;
+  types: (any | ts.TypeNode)[];
+}) => {
   const nodes = types.map((type) => createTypeNode(type));
-  if (!isNullable) {
-    return ts.factory.createUnionTypeNode(nodes);
-  }
-  return ts.factory.createUnionTypeNode([...nodes, nullNode]);
+  const node = ts.factory.createUnionTypeNode(nodes);
+  return maybeNullable({ isNullable, node });
 };
 
 /**
- * Create type intersect node. Example `string & number & boolean`
+ * Create type intersection node. Example `string & number & boolean`
  * @param types - the types in the union
  * @param isNullable - if the whole type can be null
  * @returns ts.IntersectionTypeNode | ts.UnionTypeNode
  */
-export const createTypeIntersectNode = ({
+export const createTypeIntersectionNode = ({
   isNullable,
   types,
 }: {
@@ -140,8 +141,12 @@ export const createTypeRecordNode = (
   values: (any | ts.TypeNode)[],
   isNullable: boolean = false,
 ) => {
-  const keyNode = createTypeUnionNode(keys);
-  const valueNode = createTypeUnionNode(values);
+  const keyNode = createTypeUnionNode({
+    types: keys,
+  });
+  const valueNode = createTypeUnionNode({
+    types: values,
+  });
   // NOTE: We use the syntax `{ [key: string]: string }` because using a Record causes
   //       invalid types with circular dependencies. This is functionally the same.
   // Ref: https://github.com/hey-api/openapi-ts/issues/370
@@ -167,7 +172,7 @@ export const createTypeArrayNode = (
   isNullable: boolean = false,
 ) => {
   const node = createTypeReferenceNode({
-    typeArguments: [createTypeUnionNode(types)],
+    typeArguments: [createTypeUnionNode({ types })],
     typeName: 'Array',
   });
   return maybeNullable({ isNullable, node });

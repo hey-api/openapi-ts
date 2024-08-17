@@ -213,7 +213,8 @@ export const getModel = ({
       openApi,
       types,
     });
-    return { ...model, ...composition };
+    const result = { ...model, ...composition };
+    return result;
   }
 
   if (
@@ -274,7 +275,7 @@ export const getModel = ({
       return model;
     }
 
-    return getAdditionalPropertiesModel({
+    const result = getAdditionalPropertiesModel({
       debug,
       definition,
       getModel,
@@ -282,6 +283,7 @@ export const getModel = ({
       openApi,
       types,
     });
+    return result;
   }
 
   if (definition.const !== undefined) {
