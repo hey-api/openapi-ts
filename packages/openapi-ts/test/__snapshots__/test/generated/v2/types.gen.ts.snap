@@ -269,11 +269,11 @@ export type ModelWithNullableString = {
     /**
      * This is a simple string property
      */
-    nullableProp?: string | null;
+    nullableProp?: (string) | null;
     /**
      * This is a simple string property
      */
-    nullableRequiredProp: string | null;
+    nullableRequiredProp: (string) | null;
 };
 
 /**
@@ -467,7 +467,7 @@ export type PostApiBodyData = {
     request: parameter_ActivityParams;
 };
 
-export type PostApiBodyResponse = response_PostActivityResponse;
+export type PostApiBodyResponse = (response_PostActivityResponse);
 
 export type CallWithDescriptionsData = {
     /**
@@ -619,11 +619,11 @@ export type CallToTestOrderOfParamsData = {
     /**
      * This is a string that can be null with default
      */
-    parameterStringNullableWithDefault?: string | null;
+    parameterStringNullableWithDefault?: (string) | null;
     /**
      * This is a string that can be null with no default
      */
-    parameterStringNullableWithNoDefault?: string | null;
+    parameterStringNullableWithNoDefault?: (string) | null;
     /**
      * This is a string with default
      */
@@ -638,23 +638,23 @@ export type CallToTestOrderOfParamsData = {
     parameterStringWithNoDefault: string;
 };
 
-export type CallWithNoContentResponseResponse = void;
+export type CallWithNoContentResponseResponse = (void);
 
-export type CallWithResponseAndNoContentResponseResponse = unknown | void;
+export type CallWithResponseAndNoContentResponseResponse = (unknown | void);
 
-export type CallWithResponseResponse = ModelWithString;
+export type CallWithResponseResponse = (ModelWithString);
 
-export type CallWithDuplicateResponsesResponse = ModelWithString;
+export type CallWithDuplicateResponsesResponse = (ModelWithString);
 
-export type CallWithResponsesResponse = {
+export type CallWithResponsesResponse = ({
     readonly '@namespace.string'?: string;
     readonly '@namespace.integer'?: number;
     readonly value?: Array<ModelWithString>;
-} | ModelThatExtends | ModelThatExtendsExtends;
+} | ModelThatExtends | ModelThatExtendsExtends);
 
-export type DummyAResponse = void;
+export type DummyAResponse = (void);
 
-export type DummyBResponse = void;
+export type DummyBResponse = (void);
 
 export type CollectionFormatData = {
     /**
@@ -716,7 +716,7 @@ export type TypesData = {
     parameterString: string;
 };
 
-export type TypesResponse = number | string | boolean | unknown;
+export type TypesResponse = (number | string | boolean | unknown);
 
 export type ComplexTypesData = {
     /**
@@ -735,9 +735,9 @@ export type ComplexTypesData = {
     parameterReference: ModelWithString;
 };
 
-export type ComplexTypesResponse = Array<ModelWithString>;
+export type ComplexTypesResponse = (Array<ModelWithString>);
 
-export type CallWithResultFromHeaderResponse = string;
+export type CallWithResultFromHeaderResponse = (string);
 
 export type TestErrorCodeData = {
     /**
@@ -746,7 +746,7 @@ export type TestErrorCodeData = {
     status: string;
 };
 
-export type TestErrorCodeResponse = unknown;
+export type TestErrorCodeResponse = (unknown);
 
 export type NonAsciiæøåÆøÅöôêÊ字符串Data = {
     /**
@@ -755,4 +755,4 @@ export type NonAsciiæøåÆøÅöôêÊ字符串Data = {
     nonAsciiParamæøåÆøÅöôêÊ: number;
 };
 
-export type NonAsciiæøåÆøÅöôêÊ字符串Response = NonAsciiStringæøåÆØÅöôêÊ字符串;
+export type NonAsciiæøåÆøÅöôêÊ字符串Response = (NonAsciiStringæøåÆØÅöôêÊ字符串);

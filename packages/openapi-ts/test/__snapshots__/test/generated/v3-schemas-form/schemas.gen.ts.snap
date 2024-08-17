@@ -1766,3 +1766,28 @@ export const $AdditionalPropertiesIntegerIssue = {
         type: 'integer'
     }
 } as const;
+
+export const $OneOfAllOfIssue = {
+    oneOf: [
+        {
+            allOf: [
+                {
+                    oneOf: [
+                        {
+                            '$ref': '#/components/schemas/ConstValue'
+                        },
+                        {
+                            '$ref': '#/components/schemas/ModelWithBoolean'
+                        }
+                    ]
+                },
+                {
+                    '$ref': '#/components/schemas/3e-num_1Период'
+                }
+            ]
+        },
+        {
+            '$ref': '#/components/schemas/import'
+        }
+    ]
+} as const;

@@ -34,17 +34,17 @@ export type ParentModelWithDates = {
     strings?: Array<(string)>;
 };
 
-export type ParentModelWithDatesResponse = ParentModelWithDates | unknown;
+export type ParentModelWithDatesResponse = (ParentModelWithDates | unknown);
 
-export type ModelWithDatesResponse = ModelWithDates;
+export type ModelWithDatesResponse = (ModelWithDates);
 
-export type ModelWithDatesArrayResponse = Array<ModelWithDates>;
+export type ModelWithDatesArrayResponse = (Array<ModelWithDates>);
 
-export type ArrayOfDatesResponse = Array<(Date)>;
+export type ArrayOfDatesResponse = (Array<(Date)>);
 
-export type DateResponse = Date;
+export type DateResponse = (Date);
 
-export type MultipleResponsesResponse = Array<ModelWithDates> | Array<SimpleModel>;
+export type MultipleResponsesResponse = (Array<ModelWithDates> | Array<SimpleModel>);
 
 export type ParentModelWithDatesResponseTransformer = (data: any) => Promise<ParentModelWithDatesResponse>;
 

@@ -272,7 +272,7 @@ const createQueryKeyType = ({ file }: { file: Files[keyof Files] }) => {
     name: queryKeyName,
     type: compiler.typeTupleNode({
       types: [
-        compiler.typeIntersectNode({
+        compiler.typeIntersectionNode({
           types: [
             compiler.typeReferenceNode({
               typeName: `Pick<${TOptionsType}, '${getClientBaseUrlKey()}' | 'body' | 'headers' | 'path' | 'query'>`,

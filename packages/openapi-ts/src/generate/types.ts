@@ -131,31 +131,34 @@ export const generateType = ({
 const processComposition = (props: TypesProps) => {
   const config = getConfig();
 
-  if (config.types.enums !== 'typescript+namespace') {
-    processType(props);
-    props.model.enums.forEach((enumerator) =>
-      processEnum({ ...props, model: enumerator }),
-    );
-  } else {
-    const enumDeclarations = [] as EnumDeclaration[];
-    props.model.enums.forEach((enumerator) =>
-      processScopedEnum({
+  const enumDeclarations = [] as EnumDeclaration[];
+
+  processType(props);
+
+  props.model.enums.forEach((enumerator) => {
+    if (config.types.enums !== 'typescript+namespace') {
+      return processEnum({
         ...props,
         model: enumerator,
-        onNode: (node) => {
-          enumDeclarations.push(node as EnumDeclaration);
-        },
+      });
+    }
+
+    return processScopedEnum({
+      ...props,
+      model: enumerator,
+      onNode: (node) => {
+        enumDeclarations.push(node as EnumDeclaration);
+      },
+    });
+  });
+
+  if (enumDeclarations.length) {
+    props.onNode(
+      compiler.namespaceDeclaration({
+        name: props.model.name,
+        statements: enumDeclarations,
       }),
     );
-    processType(props);
-    if (enumDeclarations.length > 0) {
-      props.onNode(
-        compiler.namespaceDeclaration({
-          name: props.model.name,
-          statements: enumDeclarations,
-        }),
-      );
-    }
   }
 };
 
