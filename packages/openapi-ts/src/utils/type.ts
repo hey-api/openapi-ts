@@ -13,7 +13,9 @@ const base = (model: Model) => {
   const config = getConfig();
 
   if (model.base === 'binary') {
-    return compiler.typeUnionNode(['Blob', 'File']);
+    return compiler.typeUnionNode({
+      types: ['Blob', 'File'],
+    });
   }
 
   if (
@@ -42,7 +44,10 @@ const typeReference = (model: Model) => {
       typeNode = compiler.typeNode(meta.name);
     }
   }
-  const unionNode = compiler.typeUnionNode([typeNode], isNullable);
+  const unionNode = compiler.typeUnionNode({
+    isNullable,
+    types: [typeNode],
+  });
   return unionNode;
 };
 
@@ -82,7 +87,10 @@ const typeArray = (model: Model) => {
 
 const typeEnum = (model: Model) => {
   const values = model.enum.map((enumerator) => enumValue(enumerator.value));
-  return compiler.typeUnionNode(values, model.isNullable);
+  return compiler.typeUnionNode({
+    isNullable: model.isNullable,
+    types: values,
+  });
 };
 
 const typeDict = (model: Model) => {
@@ -91,23 +99,41 @@ const typeDict = (model: Model) => {
   return compiler.typeRecordNode(['string'], [type], model.isNullable);
 };
 
-const typeUnion = (model: Model) => {
-  const models = model.properties;
-  const types = models
-    .map((model) =>
-      compiler.nodeToString({ node: toType(model), unescape: true }),
-    )
-    .filter(unique);
-  return compiler.typeUnionNode(types, model.isNullable);
-};
-
-const typeIntersect = (model: Model) => {
+const typeUnionOrIntersection = ({
+  model,
+  style,
+}: {
+  model: Model;
+  style: 'intersection' | 'union';
+}) => {
   const types = model.properties
-    .map((m) => compiler.nodeToString({ node: toType(m), unescape: true }))
+    .map((model) => {
+      const str = compiler.nodeToString({
+        node: toType(model),
+        unescape: true,
+      });
+      return str;
+    })
     .filter(unique);
-  return compiler.typeIntersectNode({
-    isNullable: model.isNullable,
-    types,
+
+  const node =
+    style === 'union'
+      ? compiler.typeUnionNode({
+          isNullable: model.isNullable,
+          types,
+        })
+      : compiler.typeIntersectionNode({
+          isNullable: model.isNullable,
+          types,
+        });
+
+  // top-level models don't need parentheses around them
+  if (model.meta) {
+    return node;
+  }
+
+  return compiler.typeParenthesizedNode({
+    type: node,
   });
 };
 
@@ -136,7 +162,9 @@ const typeInterface = (model: Model) => {
       name = property.name;
       if (maybeRequired) {
         maybeRequired = '';
-        value = compiler.typeUnionNode([value, 'undefined']);
+        value = compiler.typeUnionNode({
+          types: [value, 'undefined'],
+        });
       }
     }
     return {
@@ -160,10 +188,16 @@ const typeInterface = (model: Model) => {
 export const toType = (model: Model): TypeNode => {
   switch (model.export) {
     case 'all-of':
-      return typeIntersect(model);
+      return typeUnionOrIntersection({
+        model,
+        style: 'intersection',
+      });
     case 'any-of':
     case 'one-of':
-      return typeUnion(model);
+      return typeUnionOrIntersection({
+        model,
+        style: 'union',
+      });
     case 'array':
       return typeArray(model);
     case 'dictionary':
