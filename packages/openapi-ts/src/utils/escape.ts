@@ -9,6 +9,7 @@ const validTypescriptIdentifierRegExp =
 
 export const escapeName = (value: string): string => {
   if (value || value === '') {
+    validTypescriptIdentifierRegExp.lastIndex = 0;
     const validName = validTypescriptIdentifierRegExp.test(value);
     if (!validName) {
       return `'${value}'`;
