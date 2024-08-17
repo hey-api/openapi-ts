@@ -934,6 +934,11 @@ export type AdditionalPropertiesUnknownIssue3 = string & {
     };
 };
 
+export type AdditionalPropertiesIntegerIssue = {
+    value: number;
+    [key: string]: (number) | undefined;
+};
+
 /**
  * This is a reusable parameter
  */

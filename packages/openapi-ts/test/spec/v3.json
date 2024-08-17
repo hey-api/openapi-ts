@@ -3503,6 +3503,18 @@
             }
           }
         ]
+      },
+      "AdditionalPropertiesIntegerIssue": {
+        "type": "object",
+        "required": ["value"],
+        "properties": {
+          "value": {
+            "type": "integer"
+          }
+        },
+        "additionalProperties": {
+          "type": "integer"
+        }
       }
     }
   }

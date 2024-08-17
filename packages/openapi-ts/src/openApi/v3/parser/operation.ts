@@ -40,6 +40,7 @@ const mergeParameters = (
 };
 
 export const getOperation = ({
+  debug,
   method,
   op,
   openApi,
@@ -48,6 +49,7 @@ export const getOperation = ({
   types,
   url,
 }: {
+  debug?: boolean;
   method: Lowercase<Operation['method']>;
   op: OpenApiOperation;
   openApi: OpenApi;
@@ -117,6 +119,7 @@ export const getOperation = ({
     const requestBodyDef = getRef<OpenApiRequestBody>(openApi, op.requestBody);
     const requestBody = getOperationRequestBody({
       body: requestBodyDef,
+      debug,
       openApi,
       types,
     });

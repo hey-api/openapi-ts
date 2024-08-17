@@ -9,10 +9,12 @@ import { getModel } from './getModel';
 
 export const getOperationRequestBody = ({
   body,
+  debug,
   openApi,
   types,
 }: {
   body: OpenApiRequestBody;
+  debug?: boolean;
   openApi: OpenApi;
   types: Client['types'];
 }): OperationParameter => {
@@ -73,7 +75,7 @@ export const getOperationRequestBody = ({
   }
 
   const model = getModel({
-    debug: true,
+    debug,
     definition: content.schema,
     openApi,
     types,
