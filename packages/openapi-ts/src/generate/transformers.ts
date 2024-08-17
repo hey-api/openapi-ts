@@ -263,7 +263,7 @@ export const generateResponseTransformers = async ({
       if (nonVoidResponses.length > 1) {
         if (config.debug) {
           console.warn(
-            `⚠️ Transformers warning: route ${operation.method} ${operation.path} has ${nonVoidResponses.length} non-void success responses. This is currently not handled and we will not generate a response transformer. Please open an issue if you'd like this feature https://github.com/hey-api/openapi-ts/issues`,
+            `❗️ Transformers warning: route ${operation.method} ${operation.path} has ${nonVoidResponses.length} non-void success responses. This is currently not handled and we will not generate a response transformer. Please open an issue if you'd like this feature https://github.com/hey-api/openapi-ts/issues`,
           );
         }
         continue;
