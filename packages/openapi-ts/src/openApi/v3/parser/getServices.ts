@@ -16,13 +16,14 @@ export const getServices = ({
 }: {
   openApi: OpenApi;
   types: Client['types'];
-}): Service[] => {
+}): Pick<Client, 'operationIds' | 'services'> => {
   const config = getConfig();
 
   const regexp = config.services.filter
     ? new RegExp(config.services.filter)
     : undefined;
 
+  const operationIds = new Map<string, string>();
   const services = new Map<string, Service>();
 
   for (const url in openApi.paths) {
@@ -36,11 +37,22 @@ export const getServices = ({
     for (const key in path) {
       const method = key as Lowercase<Operation['method']>;
 
-      const shouldProcess =
-        !regexp || regexp.test(`${method.toUpperCase()} ${url}`);
+      const operationKey = `${method.toUpperCase()} ${url}`;
+      const shouldProcess = !regexp || regexp.test(operationKey);
 
       if (shouldProcess && allowedServiceMethods.includes(method)) {
         const op = path[method]!;
+
+        if (op.operationId) {
+          if (operationIds.has(op.operationId)) {
+            console.warn(
+              `❗️ Duplicate operationId: ${op.operationId} in ${operationKey}. Please ensure your operation IDs are unique. This behavior is not supported and will likely lead to unexpected results.`,
+            );
+          } else {
+            operationIds.set(op.operationId, operationKey);
+          }
+        }
+
         const tags =
           op.tags?.length && (config.services.asClass || config.name)
             ? op.tags.filter(unique)
@@ -66,5 +78,8 @@ export const getServices = ({
     }
   }
 
-  return Array.from(services.values());
+  return {
+    operationIds,
+    services: Array.from(services.values()),
+  };
 };
