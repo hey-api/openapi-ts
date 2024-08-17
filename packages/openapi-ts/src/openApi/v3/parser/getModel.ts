@@ -83,7 +83,10 @@ export const getModel = ({
   };
 
   if (definition.$ref) {
-    const definitionRef = getType({ type: definition.$ref });
+    const definitionRef = getType({
+      debug,
+      type: definition.$ref,
+    });
     model.$refs = [...model.$refs, decodeURIComponent(definition.$ref)];
     model.base = definitionRef.base;
     model.export = 'reference';

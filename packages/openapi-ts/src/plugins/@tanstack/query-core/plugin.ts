@@ -620,6 +620,7 @@ export const handler: PluginDefinition['handler'] = ({
         let paginationField!: Model | OperationParameter;
 
         const paginationParameter = operation.parameters.find((parameter) => {
+          paginationWordsRegExp.lastIndex = 0;
           if (paginationWordsRegExp.test(parameter.name)) {
             paginationField = parameter;
             return true;
@@ -635,6 +636,7 @@ export const handler: PluginDefinition['handler'] = ({
               (model) => model.meta?.$ref === ref,
             );
             return refModel?.properties.find((property) => {
+              paginationWordsRegExp.lastIndex = 0;
               if (paginationWordsRegExp.test(property.name)) {
                 paginationField = property;
                 return true;
@@ -643,6 +645,7 @@ export const handler: PluginDefinition['handler'] = ({
           }
 
           return parameter.properties.find((property) => {
+            paginationWordsRegExp.lastIndex = 0;
             if (paginationWordsRegExp.test(property.name)) {
               paginationField = property;
               return true;

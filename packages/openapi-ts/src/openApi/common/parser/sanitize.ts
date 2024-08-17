@@ -18,6 +18,7 @@ const replaceInvalidTypeScriptJavaScriptIdentifier = (name: string) =>
     .replace(/[^$\u200c\u200d\p{ID_Continue}]/gu, '_');
 
 export const ensureValidTypeScriptJavaScriptIdentifier = (name: string) => {
+  illegalStartCharactersRegExp.lastIndex = 0;
   const startsWithIllegalCharacter = illegalStartCharactersRegExp.test(name);
   // avoid removing all characters in case they're all illegal
   const input = startsWithIllegalCharacter ? `_${name}` : name;
