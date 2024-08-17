@@ -223,10 +223,8 @@ export const getModel = ({
   ) {
     if (
       definition.properties &&
-      !(
-        !Object.keys(definition.properties).length &&
-        definition.additionalProperties
-      )
+      (Object.keys(definition.properties).length > 0 ||
+        !definition.additionalProperties)
     ) {
       model.base = 'unknown';
       model.export = 'interface';
@@ -253,6 +251,7 @@ export const getModel = ({
 
       if (definition.additionalProperties) {
         const modelProperty = getAdditionalPropertiesModel({
+          debug,
           definition,
           getModel,
           model,
