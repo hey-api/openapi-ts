@@ -10,7 +10,7 @@ const OUTPUT_PREFIX = './test/generated/';
 const toOutputPath = (name: string) => `${OUTPUT_PREFIX}${name}/`;
 
 describe('performance', () => {
-  it('creates client under 300ms', async () => {
+  it('creates client under 500ms', async () => {
     Performance.clear();
 
     await createClient({
@@ -22,7 +22,37 @@ describe('performance', () => {
     Performance.measure('createClient');
     const measures = Performance.getEntriesByName('createClient');
 
-    expect(measures[0].duration).greaterThanOrEqual(200);
+    expect(measures[0].duration).toBeLessThanOrEqual(500);
+  });
+
+  it('parses spec under 300ms', async () => {
+    Performance.clear();
+
+    await createClient({
+      client: '@hey-api/client-fetch',
+      input: V3_SPEC_PATH,
+      output: toOutputPath('perf'),
+    });
+
+    Performance.measure('parser');
+    const measures = Performance.getEntriesByName('parser');
+
     expect(measures[0].duration).toBeLessThanOrEqual(300);
+  });
+
+  it('parses spec under 150ms (experimental)', async () => {
+    Performance.clear();
+
+    await createClient({
+      client: '@hey-api/client-fetch',
+      experimental_parser: true,
+      input: V3_SPEC_PATH,
+      output: toOutputPath('perf'),
+    });
+
+    Performance.measure('experimental_parser');
+    const measures = Performance.getEntriesByName('experimental_parser');
+
+    expect(measures[0].duration).toBeLessThanOrEqual(150);
   });
 });

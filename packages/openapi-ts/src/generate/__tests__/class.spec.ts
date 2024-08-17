@@ -17,6 +17,7 @@ describe('generateClientClass', () => {
       configFile: '',
       debug: false,
       dryRun: false,
+      experimental_parser: false,
       exportCore: true,
       input: '',
       name: 'AppClient',
