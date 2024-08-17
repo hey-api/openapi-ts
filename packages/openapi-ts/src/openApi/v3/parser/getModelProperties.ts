@@ -55,7 +55,7 @@ export const getAdditionalPropertiesModel = ({
   if (
     definition.additionalProperties &&
     definition.properties &&
-    Object.keys(definition.properties).length
+    Object.keys(definition.properties).length > 0
   ) {
     const additionalPropertiesType =
       typeof definition.additionalProperties === 'object' &&
@@ -64,7 +64,7 @@ export const getAdditionalPropertiesModel = ({
         ? definition.additionalProperties.type
         : apModel.base;
     const additionalProperties = [
-      additionalPropertiesType,
+      getType({ type: additionalPropertiesType }).base,
       ...model.properties.map((property) => property.base),
     ];
     apModel.base = additionalProperties.filter(unique).join(' | ');
