@@ -9,14 +9,14 @@ import type { AxiosError } from 'axios';
 type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseURL' | 'body' | 'headers' | 'path' | 'query'> & {
         _id: string;
-        infinite?: boolean;
+        _infinite?: boolean;
     }
 ];
 
 const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, infinite?: boolean): QueryKey<TOptions>[0] => {
     const params: QueryKey<TOptions>[0] = { _id: id, baseURL: client.getConfig().baseURL } as QueryKey<TOptions>[0];
     if (infinite) {
-        params.infinite = infinite;
+        params._infinite = infinite;
     }
     if (options?.body) {
         params.body = options.body;
@@ -237,6 +237,7 @@ export const callWithParametersInfiniteOptions = (options: Options<CallWithParam
         };
         const { data } = await callWithParameters({
             ...options,
+            ...queryKey[0],
             body: {
                 ...queryKey[0].body as any,
                 ...page.body as any
@@ -253,7 +254,6 @@ export const callWithParametersInfiniteOptions = (options: Options<CallWithParam
                 ...queryKey[0].query,
                 ...page.query
             },
-            baseURL: client.getConfig().baseURL,
             throwOnError: true
         });
         return data;
@@ -323,6 +323,7 @@ export const getCallWithOptionalParamInfiniteOptions = (options: Options<GetCall
         };
         const { data } = await getCallWithOptionalParam({
             ...options,
+            ...queryKey[0],
             body: {
                 ...queryKey[0].body as any,
                 ...page.body as any
@@ -339,7 +340,6 @@ export const getCallWithOptionalParamInfiniteOptions = (options: Options<GetCall
                 ...queryKey[0].query,
                 ...page.query
             },
-            baseURL: client.getConfig().baseURL,
             throwOnError: true
         });
         return data;
@@ -375,6 +375,7 @@ export const postCallWithOptionalParamInfiniteOptions = (options: Options<PostCa
         };
         const { data } = await postCallWithOptionalParam({
             ...options,
+            ...queryKey[0],
             body: {
                 ...queryKey[0].body as any,
                 ...page.body as any
@@ -391,7 +392,6 @@ export const postCallWithOptionalParamInfiniteOptions = (options: Options<PostCa
                 ...queryKey[0].query,
                 ...page.query
             },
-            baseURL: client.getConfig().baseURL,
             throwOnError: true
         });
         return data;
