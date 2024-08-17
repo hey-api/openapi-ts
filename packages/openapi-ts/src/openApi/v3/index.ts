@@ -14,10 +14,11 @@ export const parse = (openApi: OpenApi): Client => {
   const version = getServiceVersion(openApi.info.version);
   const server = getServer(openApi);
   const { models, types } = getModels(openApi);
-  const services = getServices({ openApi, types });
+  const { operationIds, services } = getServices({ openApi, types });
 
   return {
     models,
+    operationIds,
     server,
     services,
     types,

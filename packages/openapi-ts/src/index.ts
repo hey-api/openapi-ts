@@ -262,7 +262,7 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
 
     if (!useOptions) {
       console.warn(
-        '⚠️ Deprecation warning: useOptions set to false. This setting will be removed in future versions. Please migrate useOptions to true https://heyapi.vercel.app/openapi-ts/migrating.html#v0-27-38',
+        '❗️ Deprecation warning: useOptions set to false. This setting will be removed in future versions. Please migrate useOptions to true https://heyapi.vercel.app/openapi-ts/migrating.html#v0-27-38',
       );
     }
 

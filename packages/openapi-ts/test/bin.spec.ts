@@ -15,7 +15,7 @@ describe('bin', () => {
       'true',
     ]);
     expect(result.stdout.toString()).toContain('Done!');
-    expect(result.stderr.toString()).toBe('');
+    expect(result.stderr.toString()).toContain('Duplicate operationId');
   });
 
   it('generates angular client', () => {
@@ -31,7 +31,7 @@ describe('bin', () => {
       'true',
     ]);
     expect(result.stdout.toString()).toContain('');
-    expect(result.stderr.toString()).toBe('');
+    expect(result.stderr.toString()).toContain('Duplicate operationId');
   });
 
   it('generates axios client', () => {
@@ -47,7 +47,7 @@ describe('bin', () => {
       'true',
     ]);
     expect(result.stdout.toString()).toContain('');
-    expect(result.stderr.toString()).toBe('');
+    expect(result.stderr.toString()).toContain('Duplicate operationId');
   });
 
   it('generates fetch client', () => {
@@ -63,7 +63,7 @@ describe('bin', () => {
       'true',
     ]);
     expect(result.stdout.toString()).toContain('');
-    expect(result.stderr.toString()).toBe('');
+    expect(result.stderr.toString()).toContain('Duplicate operationId');
   });
 
   it('generates node client', () => {
@@ -79,7 +79,7 @@ describe('bin', () => {
       'true',
     ]);
     expect(result.stdout.toString()).toContain('');
-    expect(result.stderr.toString()).toBe('');
+    expect(result.stderr.toString()).toContain('Duplicate operationId');
   });
 
   it('generates xhr client', () => {
@@ -95,7 +95,7 @@ describe('bin', () => {
       'true',
     ]);
     expect(result.stdout.toString()).toContain('');
-    expect(result.stderr.toString()).toBe('');
+    expect(result.stderr.toString()).toContain('Duplicate operationId');
   });
 
   it('supports all parameters', () => {
@@ -120,7 +120,7 @@ describe('bin', () => {
       'true',
     ]);
     expect(result.stdout.toString()).toContain('Done!');
-    expect(result.stderr.toString()).toBe('');
+    expect(result.stderr.toString()).toContain('Duplicate operationId');
   });
 
   it('supports regexp parameters', () => {
@@ -140,7 +140,7 @@ describe('bin', () => {
       'true',
     ]);
     expect(result.stdout.toString()).toContain('Done!');
-    expect(result.stderr.toString()).toBe('');
+    expect(result.stderr.toString()).toContain('Duplicate operationId');
   });
 
   it('throws error without parameters', () => {

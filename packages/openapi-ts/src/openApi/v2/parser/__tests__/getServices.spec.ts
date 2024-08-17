@@ -26,7 +26,7 @@ describe('getServices', () => {
       useOptions: true,
     });
 
-    const services = getServices({
+    const { services } = getServices({
       openApi: {
         info: {
           title: 'x',
