@@ -10,7 +10,7 @@ import type { OpenApiSecurityScheme } from './OpenApiSecurityScheme';
 import type { OpenApiTag } from './OpenApiTag';
 
 /**
- * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md
+ * {@link} https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md
  */
 export interface OpenApi {
   basePath?: string;

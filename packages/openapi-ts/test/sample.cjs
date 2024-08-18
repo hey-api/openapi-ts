@@ -9,6 +9,7 @@ const main = async () => {
       name: '@hey-api/client-fetch',
     },
     // debug: true,
+    experimental_parser: true,
     // input: './test/spec/v3-transforms.json',
     input: './test/spec/v3.json',
     // input: './test/spec/v2.json',

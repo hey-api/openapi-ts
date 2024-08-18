@@ -11,6 +11,7 @@ import type { ClientConfig, Config, UserConfig } from './types/config';
 import { getConfig, isStandaloneClient, setConfig } from './utils/config';
 import { getOpenApiSpec } from './utils/getOpenApiSpec';
 import { registerHandlebarTemplates } from './utils/handlebars';
+import { Performance } from './utils/performance';
 import { postProcessClient } from './utils/postprocess';
 
 type OutputProcesser = {
@@ -234,6 +235,7 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
       debug = false,
       dryRun = false,
       exportCore = true,
+      experimental_parser = false,
       input,
       name,
       request,
@@ -279,6 +281,7 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
       configFile,
       debug,
       dryRun,
+      experimental_parser,
       exportCore:
         isStandaloneClient(client) || !client.name ? false : exportCore,
       input,
@@ -301,9 +304,13 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
  * @param userConfig {@link UserConfig} passed to the `createClient()` method
  */
 export async function createClient(userConfig: UserConfig): Promise<Client[]> {
+  Performance.start('createClient');
+
   const configs = await initConfigs(userConfig);
 
-  const createClientPromise = (config: Config) => async () => {
+  const templates = registerHandlebarTemplates();
+
+  const pCreateClient = (config: Config) => async () => {
     const openApi =
       typeof config.input === 'string'
         ? await getOpenApiSpec(config.input)
@@ -311,8 +318,16 @@ export async function createClient(userConfig: UserConfig): Promise<Client[]> {
             ReturnType<typeof getOpenApiSpec>
           >);
 
-    const client = postProcessClient(parse(openApi));
-    const templates = registerHandlebarTemplates();
+    Performance.start('parser');
+    const parsed = parse(openApi);
+    const client = postProcessClient(parsed);
+    Performance.end('parser');
+
+    if (config.experimental_parser) {
+      Performance.start('experimental_parser');
+      // TODO: experimental parser
+      Performance.end('experimental_parser');
+    }
 
     if (!config.dryRun) {
       logClientMessage();
@@ -325,12 +340,16 @@ export async function createClient(userConfig: UserConfig): Promise<Client[]> {
     return client;
   };
 
-  let clients: Client[] = [];
-  const clientPromises = configs.map((config) => createClientPromise(config));
-  for (const clientPromise of clientPromises) {
-    const client = await clientPromise();
-    clients = [...clients, client];
+  const clients: Client[] = [];
+
+  const pClients = configs.map((config) => pCreateClient(config));
+  for (const pClient of pClients) {
+    const client = await pClient();
+    clients.push(client);
   }
+
+  Performance.end('createClient');
+
   return clients;
 }
 

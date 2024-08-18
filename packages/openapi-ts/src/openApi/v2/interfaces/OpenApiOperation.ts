@@ -4,7 +4,7 @@ import type { OpenApiResponses } from './OpenApiResponses';
 import type { OpenApiSecurityRequirement } from './OpenApiSecurityRequirement';
 
 /**
- * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#operation-object
+ * {@link} https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#operation-object
  */
 export interface OpenApiOperation {
   consumes?: string[];
