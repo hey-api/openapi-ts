@@ -1,5 +1,19 @@
 # @hey-api/openapi-ts
 
+## 0.52.9
+
+### Patch Changes
+
+- [#948](https://github.com/hey-api/openapi-ts/pull/948) [`ebfd6ee`](https://github.com/hey-api/openapi-ts/commit/ebfd6eec434d7b84883a8f9058f31948fb1a40f2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle schemas with generics from C#
+
+- [#949](https://github.com/hey-api/openapi-ts/pull/949) [`16f8956`](https://github.com/hey-api/openapi-ts/commit/16f89566a7affeb09a6b928c43cfa2733e8b9adc) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: rename infinite key in query key to \_infinite
+
+- [#946](https://github.com/hey-api/openapi-ts/pull/946) [`f873fa6`](https://github.com/hey-api/openapi-ts/commit/f873fa67befe60b2fd8f63bc2c8b73437591f686) Thanks [@mrlubos](https://github.com/mrlubos)! - chore: warn on duplicate operation ID
+
+- [#947](https://github.com/hey-api/openapi-ts/pull/947) [`7f0fefe`](https://github.com/hey-api/openapi-ts/commit/7f0fefec92b25ce18ed0d1c6a6edf1adbc7d4481) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: correctly use parentheses around composed schemas
+
+- [#944](https://github.com/hey-api/openapi-ts/pull/944) [`2f7cc89`](https://github.com/hey-api/openapi-ts/commit/2f7cc8986c0644b41cc6a5526ddf52ebff880c79) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: correctly handle integer type in additional properties
+
 ## 0.52.8
 
 ### Patch Changes
