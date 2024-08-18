@@ -2,7 +2,7 @@ import type { Dictionary } from '../../common/interfaces/Dictionary';
 import type { OpenApiItems } from './OpenApiItems';
 
 /**
- * {@link} https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#header-object
+ * {@link} https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#header-object
  */
 export interface OpenApiHeader {
   collectionFormat?: 'csv' | 'ssv' | 'tsv' | 'pipes';

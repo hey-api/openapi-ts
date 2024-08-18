@@ -12,6 +12,7 @@ describe('getServices', () => {
       configFile: '',
       debug: false,
       dryRun: true,
+      experimental_parser: false,
       exportCore: true,
       input: '',
       output: {
