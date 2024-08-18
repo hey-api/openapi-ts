@@ -48,3 +48,8 @@ jobs:
 
       - name: Run e2e tests
         run: pnpm test:e2e
+
+      - name: Publish previews
+        # Node >= 20 is required
+        if: matrix.node-version != 18.x
+        run: pnpx pkg-pr-new publish --compact --pnpm './packages/*'
