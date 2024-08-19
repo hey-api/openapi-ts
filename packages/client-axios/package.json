@@ -66,6 +66,6 @@
     "axios": ">= 1.0.0 < 2"
   },
   "devDependencies": {
-    "axios": "1.7.3"
+    "axios": "1.7.4"
   }
 }
