@@ -79,10 +79,18 @@ const typeArray = (model: Model) => {
       return tuple;
     }
 
-    return compiler.typeArrayNode([toType(model.link)], model.isNullable);
+    return compiler.typeArrayNode(
+      [toType(model.link)],
+      model.isNullable,
+      model.uniqueItems,
+    );
   }
 
-  return compiler.typeArrayNode([base(model)], model.isNullable);
+  return compiler.typeArrayNode(
+    [base(model)],
+    model.isNullable,
+    model.uniqueItems,
+  );
 };
 
 const typeEnum = (model: Model) => {
