@@ -610,7 +610,7 @@ const processService = ({
 
   if (!config.services.asClass && !config.name) {
     for (const operation of service.operations) {
-      const expression = compiler.arrowFunction({
+      const compileFunctionParams = {
         parameters: toOperationParamType(client, operation),
         returnType: isStandalone
           ? undefined
@@ -622,7 +622,11 @@ const processService = ({
           onClientImport,
         ),
         types: isStandalone ? [throwOnErrorTypeGeneric] : undefined,
-      });
+      };
+      const expression =
+        config.client.name === 'angular'
+          ? compiler.anonymousFunction(compileFunctionParams)
+          : compiler.arrowFunction(compileFunctionParams);
       const statement = compiler.constVariable({
         comment: toOperationComment(operation),
         exportConst: true,
