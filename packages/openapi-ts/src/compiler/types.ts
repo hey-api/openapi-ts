@@ -299,6 +299,44 @@ export const createArrowFunction = ({
 };
 
 /**
+ * Create anonymous function type expression.
+ */
+export const createAnonymousFunction = ({
+  async,
+  comment,
+  multiLine,
+  parameters = [],
+  returnType,
+  statements = [],
+  types = [],
+}: {
+  async?: boolean;
+  comment?: Comments;
+  multiLine?: boolean;
+  parameters?: FunctionParameter[];
+  returnType?: string | ts.TypeNode;
+  statements?: ts.Statement[];
+  types?: FunctionTypeParameter[];
+}) => {
+  const expression = ts.factory.createFunctionExpression(
+    async ? [ts.factory.createModifier(ts.SyntaxKind.AsyncKeyword)] : undefined,
+    undefined,
+    undefined,
+    types ? toTypeParameters(types) : undefined,
+    toParameterDeclarations(parameters),
+    returnType ? createTypeNode(returnType) : undefined,
+    ts.factory.createBlock(statements, multiLine),
+  );
+
+  addLeadingComments({
+    comments: comment,
+    node: expression,
+  });
+
+  return expression;
+};
+
+/**
  * Create Array type expression.
  * @param arr - The array to create.
  * @param multiLine - if the array should be multiline.

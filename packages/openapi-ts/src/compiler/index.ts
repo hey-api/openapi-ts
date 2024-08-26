@@ -168,6 +168,7 @@ export class TypeScriptFile {
 }
 
 export const compiler = {
+  anonymousFunction: types.createAnonymousFunction,
   arrayLiteralExpression: types.createArrayLiteralExpression,
   arrowFunction: types.createArrowFunction,
   awaitExpression: types.createAwaitExpression,
