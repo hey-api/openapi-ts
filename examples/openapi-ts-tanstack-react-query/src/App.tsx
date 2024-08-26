@@ -59,7 +59,7 @@ function App() {
   const [isRequiredNameError, setIsRequiredNameError] = useState(false);
 
   const addPet = useMutation({
-    ...addPetMutation,
+    ...addPetMutation(),
     onError: (error) => {
       console.log(error);
       setIsRequiredNameError(false);
@@ -71,7 +71,7 @@ function App() {
   });
 
   const updatePet = useMutation({
-    ...updatePetMutation,
+    ...updatePetMutation(),
     onError: (error) => {
       console.log(error);
     },

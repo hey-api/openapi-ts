@@ -86,32 +86,32 @@ You can choose your preferred style using the `services` config option.
 
 ::: code-group
 
-```js{5} [flat]
+```js [flat]
 export default {
   input: 'path/to/openapi.json',
   output: 'src/client',
   services: {
-    asClass: false,
+    asClass: false, // [!code ++]
   },
-}
+};
 ```
 
-```js{5} [class]
+```js [class]
 export default {
   input: 'path/to/openapi.json',
   output: 'src/client',
   services: {
-    asClass: true,
+    asClass: true, // [!code ++]
   },
-}
+};
 ```
 
-```js{4} [none]
+```js [none]
 export default {
   input: 'path/to/openapi.json',
   output: 'src/client',
-  services: false,
-}
+  services: false, // [!code ++]
+};
 ```
 
 :::
@@ -120,14 +120,14 @@ export default {
 
 If you only want to include specific endpoints in the generated services, you can use the `services.filter` config option to filter endpoints. The provided value should be a regular expression to match against endpoints with the `{method} {path}` pattern. For example, the config below will only include all `/api/v1/foo` endpoints.
 
-```js{5}
+```js
 export default {
   input: 'path/to/openapi.json',
   output: 'src/client',
   services: {
-    filter: '^\\w+ /api/v1/foo$'
-  }
-}
+    filter: '^\\w+ /api/v1/foo$', // [!code ++]
+  },
+};
 ```
 
 ### Output

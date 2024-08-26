@@ -48,7 +48,7 @@ export default defineConfig({
           },
           {
             link: '/openapi-ts/tanstack-query',
-            text: 'TanStack Query <span class="soon">soon</span>',
+            text: 'TanStack Query',
           },
         ],
         text: 'Plugins',

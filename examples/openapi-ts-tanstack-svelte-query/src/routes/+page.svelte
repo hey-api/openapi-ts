@@ -14,7 +14,7 @@
 	});
 
 	const mutation = createMutation({
-		...addPetMutation
+		...addPetMutation()
 	});
 </script>
 
