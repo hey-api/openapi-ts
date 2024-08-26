@@ -5,6 +5,7 @@ import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanst
 
 import {
   addPet,
+  client,
   createUser,
   createUsersWithListInput,
   deleteOrder,
@@ -59,17 +60,24 @@ import type {
 } from '../types.gen'
 
 type QueryKey<TOptions extends Options> = [
-  {
-    infinite?: boolean
-    params: Pick<TOptions, 'body' | 'headers' | 'path' | 'query'>
-    scope: string
+  Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
+    _id: string
+    _infinite?: boolean
   }
 ]
 
-const createQueryKeyParams = <TOptions extends Options>(
-  options?: TOptions
-): QueryKey<TOptions>[0]['params'] => {
-  const params: QueryKey<TOptions>[0]['params'] = {} as QueryKey<TOptions>[0]['params']
+const createQueryKey = <TOptions extends Options>(
+  id: string,
+  options?: TOptions,
+  infinite?: boolean
+): QueryKey<TOptions>[0] => {
+  const params: QueryKey<TOptions>[0] = {
+    _id: id,
+    baseUrl: client.getConfig().baseUrl
+  } as QueryKey<TOptions>[0]
+  if (infinite) {
+    params._infinite = infinite
+  }
   if (options?.body) {
     params.body = options.body
   }
@@ -90,45 +98,42 @@ export const addPetOptions = (options: Options<AddPetData>) =>
     queryFn: async ({ queryKey }) => {
       const { data } = await addPet({
         ...options,
-        ...queryKey[0].params,
+        ...queryKey[0],
         throwOnError: true
       })
       return data
     },
-    queryKey: [
-      {
-        params: createQueryKeyParams(options),
-        scope: 'addPet'
-      }
-    ]
+    queryKey: [createQueryKey('addPet', options)]
   })
 
-export const addPetMutation: UseMutationOptions<
-  AddPetResponse,
-  AddPetError,
-  Options<AddPetData>
-> = {
-  mutationFn: async (options) => {
-    const { data } = await addPet({
-      ...options,
-      throwOnError: true
-    })
-    return data
+export const addPetMutation = () => {
+  const mutationOptions: UseMutationOptions<AddPetResponse, AddPetError, Options<AddPetData>> = {
+    mutationFn: async (options) => {
+      const { data } = await addPet({
+        ...options,
+        throwOnError: true
+      })
+      return data
+    }
   }
+  return mutationOptions
 }
 
-export const updatePetMutation: UseMutationOptions<
-  UpdatePetResponse,
-  UpdatePetError,
-  Options<UpdatePetData>
-> = {
-  mutationFn: async (options) => {
-    const { data } = await updatePet({
-      ...options,
-      throwOnError: true
-    })
-    return data
+export const updatePetMutation = () => {
+  const mutationOptions: UseMutationOptions<
+    UpdatePetResponse,
+    UpdatePetError,
+    Options<UpdatePetData>
+  > = {
+    mutationFn: async (options) => {
+      const { data } = await updatePet({
+        ...options,
+        throwOnError: true
+      })
+      return data
+    }
   }
+  return mutationOptions
 }
 
 export const findPetsByStatusOptions = (options?: Options<FindPetsByStatusData>) =>
@@ -136,17 +141,12 @@ export const findPetsByStatusOptions = (options?: Options<FindPetsByStatusData>)
     queryFn: async ({ queryKey }) => {
       const { data } = await findPetsByStatus({
         ...options,
-        ...queryKey[0].params,
+        ...queryKey[0],
         throwOnError: true
       })
       return data
     },
-    queryKey: [
-      {
-        params: createQueryKeyParams(options),
-        scope: 'findPetsByStatus'
-      }
-    ]
+    queryKey: [createQueryKey('findPetsByStatus', options)]
   })
 
 export const findPetsByTagsOptions = (options?: Options<FindPetsByTagsData>) =>
@@ -154,17 +154,12 @@ export const findPetsByTagsOptions = (options?: Options<FindPetsByTagsData>) =>
     queryFn: async ({ queryKey }) => {
       const { data } = await findPetsByTags({
         ...options,
-        ...queryKey[0].params,
+        ...queryKey[0],
         throwOnError: true
       })
       return data
     },
-    queryKey: [
-      {
-        params: createQueryKeyParams(options),
-        scope: 'findPetsByTags'
-      }
-    ]
+    queryKey: [createQueryKey('findPetsByTags', options)]
   })
 
 export const getPetByIdOptions = (options: Options<GetPetByIdData>) =>
@@ -172,17 +167,12 @@ export const getPetByIdOptions = (options: Options<GetPetByIdData>) =>
     queryFn: async ({ queryKey }) => {
       const { data } = await getPetById({
         ...options,
-        ...queryKey[0].params,
+        ...queryKey[0],
         throwOnError: true
       })
       return data
     },
-    queryKey: [
-      {
-        params: createQueryKeyParams(options),
-        scope: 'getPetById'
-      }
-    ]
+    queryKey: [createQueryKey('getPetById', options)]
   })
 
 export const updatePetWithFormOptions = (options: Options<UpdatePetWithFormData>) =>
@@ -190,41 +180,38 @@ export const updatePetWithFormOptions = (options: Options<UpdatePetWithFormData>
     queryFn: async ({ queryKey }) => {
       const { data } = await updatePetWithForm({
         ...options,
-        ...queryKey[0].params,
+        ...queryKey[0],
         throwOnError: true
       })
       return data
     },
-    queryKey: [
-      {
-        params: createQueryKeyParams(options),
-        scope: 'updatePetWithForm'
-      }
-    ]
+    queryKey: [createQueryKey('updatePetWithForm', options)]
   })
 
-export const updatePetWithFormMutation: UseMutationOptions<
-  void,
-  DefaultError,
-  Options<UpdatePetWithFormData>
-> = {
-  mutationFn: async (options) => {
-    const { data } = await updatePetWithForm({
-      ...options,
-      throwOnError: true
-    })
-    return data
+export const updatePetWithFormMutation = () => {
+  const mutationOptions: UseMutationOptions<void, DefaultError, Options<UpdatePetWithFormData>> = {
+    mutationFn: async (options) => {
+      const { data } = await updatePetWithForm({
+        ...options,
+        throwOnError: true
+      })
+      return data
+    }
   }
+  return mutationOptions
 }
 
-export const deletePetMutation: UseMutationOptions<void, DefaultError, Options<DeletePetData>> = {
-  mutationFn: async (options) => {
-    const { data } = await deletePet({
-      ...options,
-      throwOnError: true
-    })
-    return data
+export const deletePetMutation = () => {
+  const mutationOptions: UseMutationOptions<void, DefaultError, Options<DeletePetData>> = {
+    mutationFn: async (options) => {
+      const { data } = await deletePet({
+        ...options,
+        throwOnError: true
+      })
+      return data
+    }
   }
+  return mutationOptions
 }
 
 export const uploadFileOptions = (options: Options<UploadFileData>) =>
@@ -232,31 +219,29 @@ export const uploadFileOptions = (options: Options<UploadFileData>) =>
     queryFn: async ({ queryKey }) => {
       const { data } = await uploadFile({
         ...options,
-        ...queryKey[0].params,
+        ...queryKey[0],
         throwOnError: true
       })
       return data
     },
-    queryKey: [
-      {
-        params: createQueryKeyParams(options),
-        scope: 'uploadFile'
-      }
-    ]
+    queryKey: [createQueryKey('uploadFile', options)]
   })
 
-export const uploadFileMutation: UseMutationOptions<
-  UploadFileResponse,
-  UploadFileError,
-  Options<UploadFileData>
-> = {
-  mutationFn: async (options) => {
-    const { data } = await uploadFile({
-      ...options,
-      throwOnError: true
-    })
-    return data
+export const uploadFileMutation = () => {
+  const mutationOptions: UseMutationOptions<
+    UploadFileResponse,
+    UploadFileError,
+    Options<UploadFileData>
+  > = {
+    mutationFn: async (options) => {
+      const { data } = await uploadFile({
+        ...options,
+        throwOnError: true
+      })
+      return data
+    }
   }
+  return mutationOptions
 }
 
 export const getInventoryOptions = (options?: Options) =>
@@ -264,17 +249,12 @@ export const getInventoryOptions = (options?: Options) =>
     queryFn: async ({ queryKey }) => {
       const { data } = await getInventory({
         ...options,
-        ...queryKey[0].params,
+        ...queryKey[0],
         throwOnError: true
       })
       return data
     },
-    queryKey: [
-      {
-        params: createQueryKeyParams(options),
-        scope: 'getInventory'
-      }
-    ]
+    queryKey: [createQueryKey('getInventory', options)]
   })
 
 export const placeOrderOptions = (options?: Options<PlaceOrderData>) =>
@@ -282,31 +262,29 @@ export const placeOrderOptions = (options?: Options<PlaceOrderData>) =>
     queryFn: async ({ queryKey }) => {
       const { data } = await placeOrder({
         ...options,
-        ...queryKey[0].params,
+        ...queryKey[0],
         throwOnError: true
       })
       return data
     },
-    queryKey: [
-      {
-        params: createQueryKeyParams(options),
-        scope: 'placeOrder'
-      }
-    ]
+    queryKey: [createQueryKey('placeOrder', options)]
   })
 
-export const placeOrderMutation: UseMutationOptions<
-  PlaceOrderResponse,
-  PlaceOrderError,
-  Options<PlaceOrderData>
-> = {
-  mutationFn: async (options) => {
-    const { data } = await placeOrder({
-      ...options,
-      throwOnError: true
-    })
-    return data
+export const placeOrderMutation = () => {
+  const mutationOptions: UseMutationOptions<
+    PlaceOrderResponse,
+    PlaceOrderError,
+    Options<PlaceOrderData>
+  > = {
+    mutationFn: async (options) => {
+      const { data } = await placeOrder({
+        ...options,
+        throwOnError: true
+      })
+      return data
+    }
   }
+  return mutationOptions
 }
 
 export const getOrderByIdOptions = (options: Options<GetOrderByIdData>) =>
@@ -314,31 +292,25 @@ export const getOrderByIdOptions = (options: Options<GetOrderByIdData>) =>
     queryFn: async ({ queryKey }) => {
       const { data } = await getOrderById({
         ...options,
-        ...queryKey[0].params,
+        ...queryKey[0],
         throwOnError: true
       })
       return data
     },
-    queryKey: [
-      {
-        params: createQueryKeyParams(options),
-        scope: 'getOrderById'
-      }
-    ]
+    queryKey: [createQueryKey('getOrderById', options)]
   })
 
-export const deleteOrderMutation: UseMutationOptions<
-  void,
-  DefaultError,
-  Options<DeleteOrderData>
-> = {
-  mutationFn: async (options) => {
-    const { data } = await deleteOrder({
-      ...options,
-      throwOnError: true
-    })
-    return data
+export const deleteOrderMutation = () => {
+  const mutationOptions: UseMutationOptions<void, DefaultError, Options<DeleteOrderData>> = {
+    mutationFn: async (options) => {
+      const { data } = await deleteOrder({
+        ...options,
+        throwOnError: true
+      })
+      return data
+    }
   }
+  return mutationOptions
 }
 
 export const createUserOptions = (options?: Options<CreateUserData>) =>
@@ -346,31 +318,29 @@ export const createUserOptions = (options?: Options<CreateUserData>) =>
     queryFn: async ({ queryKey }) => {
       const { data } = await createUser({
         ...options,
-        ...queryKey[0].params,
+        ...queryKey[0],
         throwOnError: true
       })
       return data
     },
-    queryKey: [
-      {
-        params: createQueryKeyParams(options),
-        scope: 'createUser'
-      }
-    ]
+    queryKey: [createQueryKey('createUser', options)]
   })
 
-export const createUserMutation: UseMutationOptions<
-  CreateUserResponse,
-  CreateUserError,
-  Options<CreateUserData>
-> = {
-  mutationFn: async (options) => {
-    const { data } = await createUser({
-      ...options,
-      throwOnError: true
-    })
-    return data
+export const createUserMutation = () => {
+  const mutationOptions: UseMutationOptions<
+    CreateUserResponse,
+    CreateUserError,
+    Options<CreateUserData>
+  > = {
+    mutationFn: async (options) => {
+      const { data } = await createUser({
+        ...options,
+        throwOnError: true
+      })
+      return data
+    }
   }
+  return mutationOptions
 }
 
 export const createUsersWithListInputOptions = (options?: Options<CreateUsersWithListInputData>) =>
@@ -378,31 +348,29 @@ export const createUsersWithListInputOptions = (options?: Options<CreateUsersWit
     queryFn: async ({ queryKey }) => {
       const { data } = await createUsersWithListInput({
         ...options,
-        ...queryKey[0].params,
+        ...queryKey[0],
         throwOnError: true
       })
       return data
     },
-    queryKey: [
-      {
-        params: createQueryKeyParams(options),
-        scope: 'createUsersWithListInput'
-      }
-    ]
+    queryKey: [createQueryKey('createUsersWithListInput', options)]
   })
 
-export const createUsersWithListInputMutation: UseMutationOptions<
-  CreateUsersWithListInputResponse,
-  CreateUsersWithListInputError,
-  Options<CreateUsersWithListInputData>
-> = {
-  mutationFn: async (options) => {
-    const { data } = await createUsersWithListInput({
-      ...options,
-      throwOnError: true
-    })
-    return data
+export const createUsersWithListInputMutation = () => {
+  const mutationOptions: UseMutationOptions<
+    CreateUsersWithListInputResponse,
+    CreateUsersWithListInputError,
+    Options<CreateUsersWithListInputData>
+  > = {
+    mutationFn: async (options) => {
+      const { data } = await createUsersWithListInput({
+        ...options,
+        throwOnError: true
+      })
+      return data
+    }
   }
+  return mutationOptions
 }
 
 export const loginUserOptions = (options?: Options<LoginUserData>) =>
@@ -410,17 +378,12 @@ export const loginUserOptions = (options?: Options<LoginUserData>) =>
     queryFn: async ({ queryKey }) => {
       const { data } = await loginUser({
         ...options,
-        ...queryKey[0].params,
+        ...queryKey[0],
         throwOnError: true
       })
       return data
     },
-    queryKey: [
-      {
-        params: createQueryKeyParams(options),
-        scope: 'loginUser'
-      }
-    ]
+    queryKey: [createQueryKey('loginUser', options)]
   })
 
 export const logoutUserOptions = (options?: Options) =>
@@ -428,17 +391,12 @@ export const logoutUserOptions = (options?: Options) =>
     queryFn: async ({ queryKey }) => {
       const { data } = await logoutUser({
         ...options,
-        ...queryKey[0].params,
+        ...queryKey[0],
         throwOnError: true
       })
       return data
     },
-    queryKey: [
-      {
-        params: createQueryKeyParams(options),
-        scope: 'logoutUser'
-      }
-    ]
+    queryKey: [createQueryKey('logoutUser', options)]
   })
 
 export const getUserByNameOptions = (options: Options<GetUserByNameData>) =>
@@ -446,39 +404,40 @@ export const getUserByNameOptions = (options: Options<GetUserByNameData>) =>
     queryFn: async ({ queryKey }) => {
       const { data } = await getUserByName({
         ...options,
-        ...queryKey[0].params,
+        ...queryKey[0],
         throwOnError: true
       })
       return data
     },
-    queryKey: [
-      {
-        params: createQueryKeyParams(options),
-        scope: 'getUserByName'
-      }
-    ]
+    queryKey: [createQueryKey('getUserByName', options)]
   })
 
-export const updateUserMutation: UseMutationOptions<
-  UpdateUserResponse,
-  UpdateUserError,
-  Options<UpdateUserData>
-> = {
-  mutationFn: async (options) => {
-    const { data } = await updateUser({
-      ...options,
-      throwOnError: true
-    })
-    return data
+export const updateUserMutation = () => {
+  const mutationOptions: UseMutationOptions<
+    UpdateUserResponse,
+    UpdateUserError,
+    Options<UpdateUserData>
+  > = {
+    mutationFn: async (options) => {
+      const { data } = await updateUser({
+        ...options,
+        throwOnError: true
+      })
+      return data
+    }
   }
+  return mutationOptions
 }
 
-export const deleteUserMutation: UseMutationOptions<void, DefaultError, Options<DeleteUserData>> = {
-  mutationFn: async (options) => {
-    const { data } = await deleteUser({
-      ...options,
-      throwOnError: true
-    })
-    return data
+export const deleteUserMutation = () => {
+  const mutationOptions: UseMutationOptions<void, DefaultError, Options<DeleteUserData>> = {
+    mutationFn: async (options) => {
+      const { data } = await deleteUser({
+        ...options,
+        throwOnError: true
+      })
+      return data
+    }
   }
+  return mutationOptions
 }

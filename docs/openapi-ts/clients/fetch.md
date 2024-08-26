@@ -45,12 +45,12 @@ bun add @hey-api/client-fetch
 
 Ensure you have already [configured](/openapi-ts/get-started) `@hey-api/openapi-ts`. Update your configuration to use the Fetch API client package.
 
-```js{2}
+```js
 export default {
-  client: '@hey-api/client-fetch',
+  client: '@hey-api/client-fetch', // [!code ++]
   input: 'path/to/openapi.json',
   output: 'src/client',
-}
+};
 ```
 
 You can now run `openapi-ts` to use the new Fetch API client. 🎉
