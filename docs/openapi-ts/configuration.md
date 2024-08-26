@@ -84,37 +84,37 @@ By default, `@hey-api/openapi-ts` will only emit enums as types. You may want to
 
 ::: code-group
 
-```js{6} [disabled]
+```js [disabled]
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
   types: {
-    enums: false,
+    enums: false, // [!code ++]
   },
-}
+};
 ```
 
-```js{6} [javascript]
+```js [javascript]
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
   types: {
-    enums: 'javascript',
+    enums: 'javascript', // [!code ++]
   },
-}
+};
 ```
 
-```js{6} [typescript]
+```js [typescript]
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
   types: {
-    enums: 'typescript',
+    enums: 'typescript', // [!code ++]
   },
-}
+};
 ```
 
 :::
@@ -127,35 +127,35 @@ By default, `@hey-api/openapi-ts` generates schemas from your OpenAPI specificat
 
 ::: code-group
 
-```js{6} [json]
+```js [json]
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
   schemas: {
-    type: 'json'
+    type: 'json', // [!code ++]
   },
-}
+};
 ```
 
-```js{6} [form]
+```js [form]
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
   schemas: {
-    type: 'form'
+    type: 'form', // [!code ++]
   },
-}
+};
 ```
 
-```js{5} [disabled]
+```js [disabled]
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
-  schemas: false,
-}
+  schemas: false, // [!code ++]
+};
 ```
 
 :::
@@ -166,37 +166,37 @@ By default, `@hey-api/openapi-ts` will not automatically format your output. To 
 
 ::: code-group
 
-```js{5} [disabled]
+```js [disabled]
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: {
-    format: false,
+    format: false, // [!code ++]
     path: 'src/client',
   },
-}
+};
 ```
 
-```js{5} [prettier]
+```js [prettier]
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: {
-    format: 'prettier',
+    format: 'prettier', // [!code ++]
     path: 'src/client',
   },
-}
+};
 ```
 
-```js{5} [biome]
+```js [biome]
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: {
-    format: 'biome',
+    format: 'biome', // [!code ++]
     path: 'src/client',
   },
-}
+};
 ```
 
 :::
@@ -209,37 +209,37 @@ By default, `@hey-api/openapi-ts` will not automatically lint your output. To en
 
 ::: code-group
 
-```js{5} [disabled]
+```js [disabled]
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: {
-    lint: false,
+    lint: false, // [!code ++]
     path: 'src/client',
   },
-}
+};
 ```
 
-```js{5} [eslint]
+```js [eslint]
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: {
-    lint: 'eslint',
+    lint: 'eslint', // [!code ++]
     path: 'src/client',
   },
-}
+};
 ```
 
-```js{5} [biome]
+```js [biome]
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: {
-    lint: 'biome',
+    lint: 'biome', // [!code ++]
     path: 'src/client',
   },
-}
+};
 ```
 
 :::

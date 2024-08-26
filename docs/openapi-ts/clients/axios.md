@@ -45,12 +45,12 @@ bun add @hey-api/client-axios
 
 Ensure you have already [configured](/openapi-ts/get-started) `@hey-api/openapi-ts`. Update your configuration to use the Axios client package.
 
-```js{2}
+```js
 export default {
-  client: '@hey-api/client-axios',
+  client: '@hey-api/client-axios', // [!code ++]
   input: 'path/to/openapi.json',
   output: 'src/client',
-}
+};
 ```
 
 You can now run `openapi-ts` to use the new Axios client. 🎉
