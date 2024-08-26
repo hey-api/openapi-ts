@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.52.10
+
+### Patch Changes
+
+- [#973](https://github.com/hey-api/openapi-ts/pull/973) [`8f7a14f`](https://github.com/hey-api/openapi-ts/commit/8f7a14f570e2d17053f1e612f6e045df774916f1) Thanks [@jacobinu](https://github.com/jacobinu)! - fix: handle tree-shakeable angular client case
+
 ## 0.52.9
 
 ### Patch Changes
