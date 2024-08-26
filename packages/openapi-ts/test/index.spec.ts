@@ -92,6 +92,14 @@ describe('OpenAPI v3', () => {
     },
     {
       config: createConfig({
+        client: 'angular',
+        types: {},
+      }),
+      description: 'generate tree-shakeable angular client',
+      name: 'v3_angular_tree_shakeable',
+    },
+    {
+      config: createConfig({
         client: 'node',
         services: {
           asClass: true,
