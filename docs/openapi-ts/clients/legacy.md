@@ -13,44 +13,44 @@ Before standalone client packages, clients were generated using `@hey-api/openap
 
 ::: code-group
 
-```js{2} [fetch]
+```js [fetch]
 export default {
-  client: 'fetch',
+  client: 'fetch', // [!code ++]
   input: 'path/to/openapi.json',
   output: 'src/client',
-}
+};
 ```
 
-```js{2} [axios]
+```js [axios]
 export default {
-  client: 'axios',
+  client: 'axios', // [!code ++]
   input: 'path/to/openapi.json',
   output: 'src/client',
-}
+};
 ```
 
-```js{2} [angular]
+```js [angular]
 export default {
-  client: 'angular',
+  client: 'angular', // [!code ++]
   input: 'path/to/openapi.json',
   output: 'src/client',
-}
+};
 ```
 
-```js{2} [node]
+```js [node]
 export default {
-  client: 'node',
+  client: 'node', // [!code ++]
   input: 'path/to/openapi.json',
   output: 'src/client',
-}
+};
 ```
 
-```js{2} [xhr]
+```js [xhr]
 export default {
-  client: 'xhr',
+  client: 'xhr', // [!code ++]
   input: 'path/to/openapi.json',
   output: 'src/client',
-}
+};
 ```
 
 :::

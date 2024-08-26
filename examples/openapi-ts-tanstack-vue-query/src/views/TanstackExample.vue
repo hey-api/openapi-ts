@@ -40,7 +40,7 @@ const petId = ref<number>()
 const petInput = ref({ name: '', category: '' })
 
 const addPet = useMutation({
-  ...addPetMutation,
+  ...addPetMutation(),
   onError: (error) => {
     console.log(error)
   },
@@ -57,7 +57,7 @@ const addPet = useMutation({
 })
 
 const updatePet = useMutation({
-  ...updatePetMutation,
+  ...updatePetMutation(),
   onError: (error) => {
     console.log(error)
   },

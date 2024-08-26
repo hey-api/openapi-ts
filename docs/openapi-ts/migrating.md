@@ -86,12 +86,12 @@ console.log(client.getConfig().baseUrl); // <-- 'https://example.com'
 
 Client now has to be explicitly specified and `@hey-api/openapi-ts` will no longer generate a legacy Fetch API client by default. To preserve the previous default behavior, set the `client` option to `fetch`.
 
-```js{2}
+```js
 export default {
-  client: 'fetch',
+  client: 'fetch', // [!code ++]
   input: 'path/to/openapi.json',
   output: 'src/client',
-}
+};
 ```
 
 ## v0.48.0
@@ -137,14 +137,14 @@ foo(); // all references need to be changed
 
 If you want to preserve the old behavior, you can set the newly exposed `services.asClass` option to `true.`
 
-```js{5}
+```js
 export default {
   input: 'path/to/openapi.json',
   output: 'src/client',
   services: {
-    asClass: true,
+    asClass: true, // [!code ++]
   },
-}
+};
 ```
 
 ## v0.45.0
@@ -153,12 +153,12 @@ export default {
 
 `@hey-api/openapi-ts` will no longer infer which client you want to generate. By default, we will create a `fetch` client. If you want a different client, you can specify it using the `client` option.
 
-```js{2}
+```js
 export default {
-  client: 'axios',
+  client: 'axios', // [!code ++]
   input: 'path/to/openapi.json',
   output: 'src/client',
-}
+};
 ```
 
 ## v0.44.0
@@ -167,28 +167,30 @@ export default {
 
 This config option has been moved. You can now configure formatter using the `output.format` option.
 
-```js{4}
+```js
 export default {
+  format: 'prettier', // [!code --]
   input: 'path/to/openapi.json',
   output: {
-    format: 'prettier',
+    format: 'prettier', // [!code ++]
     path: 'src/client',
   },
-}
+};
 ```
 
 ### Moved `lint`
 
 This config option has been moved. You can now configure linter using the `output.lint` option.
 
-```js{4}
+```js
 export default {
   input: 'path/to/openapi.json',
+  lint: 'eslint', // [!code --]
   output: {
-    lint: 'eslint',
+    lint: 'eslint', // [!code ++]
     path: 'src/client',
   },
-}
+};
 ```
 
 ## v0.43.0
@@ -226,14 +228,15 @@ console.log(Foo.value); // all references need to be changed
 
 This config option has been moved. You can now configure enums using the `types.enums` option.
 
-```js{5}
+```js
 export default {
+  enums: 'javascript', // [!code --]
   input: 'path/to/openapi.json',
   output: 'src/client',
   types: {
-    enums: 'javascript',
+    enums: 'javascript', // [!code ++]
   },
-}
+};
 ```
 
 ## v0.42.0
