@@ -93,6 +93,8 @@ const createQueryKey = <TOptions extends Options>(
   return params
 }
 
+export const addPetQueryKey = (options: Options<AddPetData>) => [createQueryKey('addPet', options)]
+
 export const addPetOptions = (options: Options<AddPetData>) =>
   queryOptions({
     queryFn: async ({ queryKey }) => {
@@ -103,7 +105,7 @@ export const addPetOptions = (options: Options<AddPetData>) =>
       })
       return data
     },
-    queryKey: [createQueryKey('addPet', options)]
+    queryKey: addPetQueryKey(options)
   })
 
 export const addPetMutation = () => {
@@ -136,6 +138,10 @@ export const updatePetMutation = () => {
   return mutationOptions
 }
 
+export const findPetsByStatusQueryKey = (options?: Options<FindPetsByStatusData>) => [
+  createQueryKey('findPetsByStatus', options)
+]
+
 export const findPetsByStatusOptions = (options?: Options<FindPetsByStatusData>) =>
   queryOptions({
     queryFn: async ({ queryKey }) => {
@@ -146,8 +152,12 @@ export const findPetsByStatusOptions = (options?: Options<FindPetsByStatusData>)
       })
       return data
     },
-    queryKey: [createQueryKey('findPetsByStatus', options)]
+    queryKey: findPetsByStatusQueryKey(options)
   })
+
+export const findPetsByTagsQueryKey = (options?: Options<FindPetsByTagsData>) => [
+  createQueryKey('findPetsByTags', options)
+]
 
 export const findPetsByTagsOptions = (options?: Options<FindPetsByTagsData>) =>
   queryOptions({
@@ -159,8 +169,12 @@ export const findPetsByTagsOptions = (options?: Options<FindPetsByTagsData>) =>
       })
       return data
     },
-    queryKey: [createQueryKey('findPetsByTags', options)]
+    queryKey: findPetsByTagsQueryKey(options)
   })
+
+export const getPetByIdQueryKey = (options: Options<GetPetByIdData>) => [
+  createQueryKey('getPetById', options)
+]
 
 export const getPetByIdOptions = (options: Options<GetPetByIdData>) =>
   queryOptions({
@@ -172,8 +186,12 @@ export const getPetByIdOptions = (options: Options<GetPetByIdData>) =>
       })
       return data
     },
-    queryKey: [createQueryKey('getPetById', options)]
+    queryKey: getPetByIdQueryKey(options)
   })
+
+export const updatePetWithFormQueryKey = (options: Options<UpdatePetWithFormData>) => [
+  createQueryKey('updatePetWithForm', options)
+]
 
 export const updatePetWithFormOptions = (options: Options<UpdatePetWithFormData>) =>
   queryOptions({
@@ -185,7 +203,7 @@ export const updatePetWithFormOptions = (options: Options<UpdatePetWithFormData>
       })
       return data
     },
-    queryKey: [createQueryKey('updatePetWithForm', options)]
+    queryKey: updatePetWithFormQueryKey(options)
   })
 
 export const updatePetWithFormMutation = () => {
@@ -214,6 +232,10 @@ export const deletePetMutation = () => {
   return mutationOptions
 }
 
+export const uploadFileQueryKey = (options: Options<UploadFileData>) => [
+  createQueryKey('uploadFile', options)
+]
+
 export const uploadFileOptions = (options: Options<UploadFileData>) =>
   queryOptions({
     queryFn: async ({ queryKey }) => {
@@ -224,7 +246,7 @@ export const uploadFileOptions = (options: Options<UploadFileData>) =>
       })
       return data
     },
-    queryKey: [createQueryKey('uploadFile', options)]
+    queryKey: uploadFileQueryKey(options)
   })
 
 export const uploadFileMutation = () => {
@@ -244,6 +266,8 @@ export const uploadFileMutation = () => {
   return mutationOptions
 }
 
+export const getInventoryQueryKey = (options?: Options) => [createQueryKey('getInventory', options)]
+
 export const getInventoryOptions = (options?: Options) =>
   queryOptions({
     queryFn: async ({ queryKey }) => {
@@ -254,8 +278,12 @@ export const getInventoryOptions = (options?: Options) =>
       })
       return data
     },
-    queryKey: [createQueryKey('getInventory', options)]
+    queryKey: getInventoryQueryKey(options)
   })
+
+export const placeOrderQueryKey = (options?: Options<PlaceOrderData>) => [
+  createQueryKey('placeOrder', options)
+]
 
 export const placeOrderOptions = (options?: Options<PlaceOrderData>) =>
   queryOptions({
@@ -267,7 +295,7 @@ export const placeOrderOptions = (options?: Options<PlaceOrderData>) =>
       })
       return data
     },
-    queryKey: [createQueryKey('placeOrder', options)]
+    queryKey: placeOrderQueryKey(options)
   })
 
 export const placeOrderMutation = () => {
@@ -287,6 +315,10 @@ export const placeOrderMutation = () => {
   return mutationOptions
 }
 
+export const getOrderByIdQueryKey = (options: Options<GetOrderByIdData>) => [
+  createQueryKey('getOrderById', options)
+]
+
 export const getOrderByIdOptions = (options: Options<GetOrderByIdData>) =>
   queryOptions({
     queryFn: async ({ queryKey }) => {
@@ -297,7 +329,7 @@ export const getOrderByIdOptions = (options: Options<GetOrderByIdData>) =>
       })
       return data
     },
-    queryKey: [createQueryKey('getOrderById', options)]
+    queryKey: getOrderByIdQueryKey(options)
   })
 
 export const deleteOrderMutation = () => {
@@ -313,6 +345,10 @@ export const deleteOrderMutation = () => {
   return mutationOptions
 }
 
+export const createUserQueryKey = (options?: Options<CreateUserData>) => [
+  createQueryKey('createUser', options)
+]
+
 export const createUserOptions = (options?: Options<CreateUserData>) =>
   queryOptions({
     queryFn: async ({ queryKey }) => {
@@ -323,7 +359,7 @@ export const createUserOptions = (options?: Options<CreateUserData>) =>
       })
       return data
     },
-    queryKey: [createQueryKey('createUser', options)]
+    queryKey: createUserQueryKey(options)
   })
 
 export const createUserMutation = () => {
@@ -343,6 +379,10 @@ export const createUserMutation = () => {
   return mutationOptions
 }
 
+export const createUsersWithListInputQueryKey = (
+  options?: Options<CreateUsersWithListInputData>
+) => [createQueryKey('createUsersWithListInput', options)]
+
 export const createUsersWithListInputOptions = (options?: Options<CreateUsersWithListInputData>) =>
   queryOptions({
     queryFn: async ({ queryKey }) => {
@@ -353,7 +393,7 @@ export const createUsersWithListInputOptions = (options?: Options<CreateUsersWit
       })
       return data
     },
-    queryKey: [createQueryKey('createUsersWithListInput', options)]
+    queryKey: createUsersWithListInputQueryKey(options)
   })
 
 export const createUsersWithListInputMutation = () => {
@@ -373,6 +413,10 @@ export const createUsersWithListInputMutation = () => {
   return mutationOptions
 }
 
+export const loginUserQueryKey = (options?: Options<LoginUserData>) => [
+  createQueryKey('loginUser', options)
+]
+
 export const loginUserOptions = (options?: Options<LoginUserData>) =>
   queryOptions({
     queryFn: async ({ queryKey }) => {
@@ -383,8 +427,10 @@ export const loginUserOptions = (options?: Options<LoginUserData>) =>
       })
       return data
     },
-    queryKey: [createQueryKey('loginUser', options)]
+    queryKey: loginUserQueryKey(options)
   })
+
+export const logoutUserQueryKey = (options?: Options) => [createQueryKey('logoutUser', options)]
 
 export const logoutUserOptions = (options?: Options) =>
   queryOptions({
@@ -396,8 +442,12 @@ export const logoutUserOptions = (options?: Options) =>
       })
       return data
     },
-    queryKey: [createQueryKey('logoutUser', options)]
+    queryKey: logoutUserQueryKey(options)
   })
+
+export const getUserByNameQueryKey = (options: Options<GetUserByNameData>) => [
+  createQueryKey('getUserByName', options)
+]
 
 export const getUserByNameOptions = (options: Options<GetUserByNameData>) =>
   queryOptions({
@@ -409,7 +459,7 @@ export const getUserByNameOptions = (options: Options<GetUserByNameData>) =>
       })
       return data
     },
-    queryKey: [createQueryKey('getUserByName', options)]
+    queryKey: getUserByNameQueryKey(options)
   })
 
 export const updateUserMutation = () => {

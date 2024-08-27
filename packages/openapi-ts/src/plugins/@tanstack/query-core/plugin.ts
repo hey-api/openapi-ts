@@ -36,6 +36,9 @@ const toMutationOptionsName = (operation: Operation) =>
 const toQueryOptionsName = (operation: Operation) =>
   `${toOperationName(operation, false)}Options`;
 
+const toQueryKeyName = (operation: Operation, isInfinite?: boolean) =>
+  `${toOperationName(operation, false)}${isInfinite ? 'Infinite' : ''}QueryKey`;
+
 const checkPrerequisites = ({ files }: { files: Files }) => {
   if (!files.services) {
     throw new Error(
@@ -528,6 +531,24 @@ export const handler: PluginDefinition['handler'] = ({
 
         const isRequired = isOperationParameterRequired(operation.parameters);
 
+        const queryKeyStatement = compiler.constVariable({
+          exportConst: true,
+          expression: compiler.arrowFunction({
+            parameters: [
+              {
+                isRequired,
+                name: 'options',
+                type: typeData,
+              },
+            ],
+            statements: createQueryKeyLiteral({
+              operation,
+            }),
+          }),
+          name: toQueryKeyName(operation),
+        });
+        file.add(queryKeyStatement);
+
         const expression = compiler.arrowFunction({
           parameters: [
             {
@@ -590,8 +611,9 @@ export const handler: PluginDefinition['handler'] = ({
                     },
                     {
                       key: 'queryKey',
-                      value: createQueryKeyLiteral({
-                        operation,
+                      value: compiler.callExpression({
+                        functionName: toQueryKeyName(operation),
+                        parameters: ['options'],
                       }),
                     },
                   ],
@@ -704,6 +726,26 @@ export const handler: PluginDefinition['handler'] = ({
           const typeQueryKey = `${queryKeyName}<${typeData}>`;
           const typePageObjectParam = `Pick<${typeQueryKey}[0], 'body' | 'headers' | 'path' | 'query'>`;
           const typePageParam = `${paginationField.base} | ${typePageObjectParam}`;
+
+          const queryKeyStatement = compiler.constVariable({
+            exportConst: true,
+            expression: compiler.arrowFunction({
+              parameters: [
+                {
+                  isRequired,
+                  name: 'options',
+                  type: typeData,
+                },
+              ],
+              returnType: typeQueryKey,
+              statements: createQueryKeyLiteral({
+                isInfinite: true,
+                operation,
+              }),
+            }),
+            name: toQueryKeyName(operation, true),
+          });
+          file.add(queryKeyStatement);
 
           const expression = compiler.arrowFunction({
             parameters: [
@@ -877,9 +919,9 @@ export const handler: PluginDefinition['handler'] = ({
                       },
                       {
                         key: 'queryKey',
-                        value: createQueryKeyLiteral({
-                          isInfinite: true,
-                          operation,
+                        value: compiler.callExpression({
+                          functionName: toQueryKeyName(operation, true),
+                          parameters: ['options'],
                         }),
                       },
                     ],
