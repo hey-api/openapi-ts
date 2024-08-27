@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.52.11
+
+### Patch Changes
+
+- [#981](https://github.com/hey-api/openapi-ts/pull/981) [`afd8c43`](https://github.com/hey-api/openapi-ts/commit/afd8c4386fb7b2f86a54e73c9471945bdfad22ea) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export query key functions from TanStack Query plugin
+
 ## 0.52.10
 
 ### Patch Changes
