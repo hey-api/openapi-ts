@@ -33,6 +33,10 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
     return params;
 };
 
+export const parentModelWithDatesQueryKey = (options?: Options) => [
+    createQueryKey("parentModelWithDates", options)
+];
+
 export const parentModelWithDatesOptions = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
         const { data } = await parentModelWithDates({
@@ -42,9 +46,7 @@ export const parentModelWithDatesOptions = (options?: Options) => { return query
         });
         return data;
     },
-    queryKey: [
-        createQueryKey("parentModelWithDates", options)
-    ]
+    queryKey: parentModelWithDatesQueryKey(options)
 }); };
 
 export const parentModelWithDatesMutation = () => { const mutationOptions: UseMutationOptions<ParentModelWithDatesResponse, AxiosError<ParentModelWithDatesError>, Options> = {

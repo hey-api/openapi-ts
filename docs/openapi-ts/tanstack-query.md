@@ -69,7 +69,7 @@ You can now run `openapi-ts` to generate TanStack Query artifacts. 🎉
 
 The TanStack Query plugin will optionally generate the following output layers, depending on the input specification.
 
-### Queries
+## Queries
 
 Queries are generated from GET and POST endpoints. The generated functions follow the naming convention of services and append `Options`, e.g. `getPetByIdOptions()`.
 
@@ -83,7 +83,7 @@ const { data, error } = useQuery({
 });
 ```
 
-### Infinite Queries
+## Infinite Queries
 
 Infinite queries are generated from GET and POST endpoints if we detect a pagination parameter. The generated functions follow the naming convention of services and append `InfiniteOptions`, e.g. `getFooInfiniteOptions()`.
 
@@ -99,7 +99,7 @@ const { data, error } = useInfiniteQuery({
 });
 ```
 
-### Mutations
+## Mutations
 
 Mutations are generated from DELETE, PATCH, POST, and PUT endpoints. The generated functions follow the naming convention of services and append `Mutation`, e.g. `addPetMutation()`.
 
@@ -114,6 +114,28 @@ const addPet = useMutation({
 addPet.mutate({
   body: {
     name: 'Kitty',
+  },
+});
+```
+
+## Query Keys
+
+Query keys are generated for both queries and infinite queries. If you have access to the result of query or infinite query options function, you can get the query key from the `queryKey` field.
+
+```ts
+const { queryKey } = getPetByIdOptions({
+  path: {
+    petId: 1,
+  },
+});
+```
+
+Alternatively, you can access the same query key by calling `QueryKey` or `InfiniteQueryKey` function.
+
+```ts
+const queryKey = getPetByIdQueryKey({
+  path: {
+    petId: 1,
   },
 });
 ```
