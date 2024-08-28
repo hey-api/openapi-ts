@@ -233,8 +233,7 @@ export interface ClientConfig {
   useOptions?: boolean;
 }
 
-// export type UserConfig = ClientConfig | ReadonlyArray<ClientConfig>
-export type UserConfig = ClientConfig;
+export interface UserConfig extends ClientConfig {}
 
 export type Config = Omit<
   Required<ClientConfig>,
