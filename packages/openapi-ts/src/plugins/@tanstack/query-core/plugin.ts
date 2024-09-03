@@ -16,11 +16,7 @@ import {
   toOperationName,
 } from '../../../generate/services';
 import type { Operation } from '../../../openApi';
-import type {
-  Method,
-  Model,
-  OperationParameter,
-} from '../../../openApi/common/interfaces/client';
+import type { Method, Model, OperationParameter } from '../../../openApi';
 import { isOperationParameterRequired } from '../../../openApi/common/parser/operation';
 import type { Client } from '../../../types/client';
 import type { Files } from '../../../types/utils';
