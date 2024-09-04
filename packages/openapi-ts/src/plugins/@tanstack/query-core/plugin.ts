@@ -115,7 +115,7 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
               {
                 key: getClientBaseUrlKey(),
                 value: compiler.identifier({
-                  text: `client.getConfig().${getClientBaseUrlKey()}`,
+                  text: `(options?.client ?? client).getConfig().${getClientBaseUrlKey()}`,
                 }),
               },
             ],
