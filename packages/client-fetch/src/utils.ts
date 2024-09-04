@@ -440,6 +440,10 @@ class Interceptors<Interceptor> {
     this._fns = [];
   }
 
+  clear() {
+    this._fns = [];
+  }
+
   eject(fn: Interceptor) {
     const index = this._fns.indexOf(fn);
     if (index !== -1) {
