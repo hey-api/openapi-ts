@@ -15,7 +15,7 @@ describe('generateServices', () => {
   it('writes to filesystem', async () => {
     setConfig({
       client: {
-        name: 'fetch',
+        name: 'legacy/fetch',
       },
       configFile: '',
       debug: false,
@@ -136,7 +136,7 @@ describe('methodNameBuilder', () => {
   it('use default name', async () => {
     setConfig({
       client: {
-        name: 'fetch',
+        name: 'legacy/fetch',
       },
       configFile: '',
       debug: false,
@@ -179,7 +179,7 @@ describe('methodNameBuilder', () => {
 
     setConfig({
       client: {
-        name: 'fetch',
+        name: 'legacy/fetch',
       },
       configFile: '',
       debug: false,
@@ -225,7 +225,7 @@ describe('methodNameBuilder', () => {
 
     setConfig({
       client: {
-        name: 'fetch',
+        name: 'legacy/fetch',
       },
       configFile: '',
       debug: false,

@@ -8,7 +8,7 @@ import server from './scripts/server'
 describe('client.fetch', () => {
   beforeAll(async () => {
     cleanup('client/fetch')
-    await generateClient('client/fetch', 'v3', 'fetch', false, 'ApiClient')
+    await generateClient('client/fetch', 'v3', 'legacy/fetch', false, 'ApiClient')
     compileWithTypescript('client/fetch')
     await server.start('client/fetch')
   }, 40000)

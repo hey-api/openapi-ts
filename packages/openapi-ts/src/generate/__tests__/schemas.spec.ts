@@ -14,7 +14,7 @@ describe('generateSchemas', () => {
   it('writes to filesystem', async () => {
     setConfig({
       client: {
-        name: 'fetch',
+        name: 'legacy/fetch',
       },
       configFile: '',
       debug: false,

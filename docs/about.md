@@ -35,7 +35,7 @@ Hey API's objective is to provide a suite of TypeScript tools to manage API inte
 Typically, developers of such applications want to:
 
 - use TypeScript interfaces to model data for their APIs
-- send and fetch this data from server in a typesafe way
+- send and fetch this data from server in a type-safe way
 - build further abstractions on top of this data
 
 Doing any of these steps manually quickly becomes a huge time sink as your project grows and APIs evolve. Ideally, you want to spend most time on your application. Hey API allows you to do just that.

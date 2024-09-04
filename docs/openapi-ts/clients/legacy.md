@@ -15,7 +15,7 @@ Before standalone client packages, clients were generated using `@hey-api/openap
 
 ```js [fetch]
 export default {
-  client: 'fetch', // [!code ++]
+  client: 'legacy/fetch', // [!code ++]
   input: 'path/to/openapi.json',
   output: 'src/client',
 };
@@ -23,7 +23,7 @@ export default {
 
 ```js [axios]
 export default {
-  client: 'axios', // [!code ++]
+  client: 'legacy/axios', // [!code ++]
   input: 'path/to/openapi.json',
   output: 'src/client',
 };
@@ -31,7 +31,7 @@ export default {
 
 ```js [angular]
 export default {
-  client: 'angular', // [!code ++]
+  client: 'legacy/angular', // [!code ++]
   input: 'path/to/openapi.json',
   output: 'src/client',
 };
@@ -39,7 +39,7 @@ export default {
 
 ```js [node]
 export default {
-  client: 'node', // [!code ++]
+  client: 'legacy/node', // [!code ++]
   input: 'path/to/openapi.json',
   output: 'src/client',
 };
@@ -47,7 +47,7 @@ export default {
 
 ```js [xhr]
 export default {
-  client: 'xhr', // [!code ++]
+  client: 'legacy/xhr', // [!code ++]
   input: 'path/to/openapi.json',
   output: 'src/client',
 };
@@ -67,7 +67,7 @@ export default {
 
 Please be aware that legacy clients are missing some key features:
 
-- no typesafe errors 🚫
+- no type-safe errors 🚫
 - no access to the original request and response 🚫
 - hard to configure individual requests 👎
 - inconsistent interceptors and response APIs 👎
