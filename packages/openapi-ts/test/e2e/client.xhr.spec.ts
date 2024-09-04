@@ -8,7 +8,7 @@ import server from './scripts/server'
 describe.skip('client.xhr', () => {
   beforeAll(async () => {
     cleanup('client/xhr')
-    await generateClient('client/xhr', 'v3', 'xhr', false, 'ApiClient')
+    await generateClient('client/xhr', 'v3', 'legacy/xhr', false, 'ApiClient')
     compileWithTypescript('client/xhr')
     await server.start('client/xhr')
   }, 40000)

@@ -5,11 +5,11 @@ import type { ExtractArrayOfObjects } from './utils';
 type Client =
   | '@hey-api/client-axios'
   | '@hey-api/client-fetch'
-  | 'angular'
-  | 'axios'
-  | 'fetch'
-  | 'node'
-  | 'xhr'
+  | 'legacy/angular'
+  | 'legacy/axios'
+  | 'legacy/fetch'
+  | 'legacy/node'
+  | 'legacy/xhr'
   | '';
 
 export interface ClientConfig {
@@ -20,7 +20,6 @@ export interface ClientConfig {
   base?: string;
   /**
    * HTTP client to generate
-   * @default 'fetch'
    */
   client?:
     | Client
@@ -37,7 +36,6 @@ export interface ClientConfig {
         bundle?: boolean;
         /**
          * HTTP client to generate
-         * @default 'fetch'
          */
         name: Client;
       };

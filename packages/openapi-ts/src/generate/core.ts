@@ -68,7 +68,7 @@ export const generateCore = async (
         ...context,
       }),
     );
-    if (config.client.name !== 'angular') {
+    if (config.client.name !== 'legacy/angular') {
       await writeFileSync(
         path.resolve(outputPath, 'CancelablePromise.ts'),
         templates.core.cancelablePromise({

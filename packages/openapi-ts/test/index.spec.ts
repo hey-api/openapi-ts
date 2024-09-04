@@ -20,7 +20,7 @@ describe('OpenAPI v2', () => {
   it.each([
     {
       config: {
-        client: 'fetch',
+        client: 'legacy/fetch',
         exportCore: true,
         input: '',
         output: '',
@@ -52,7 +52,7 @@ describe('OpenAPI v2', () => {
 
 describe('OpenAPI v3', () => {
   const config: UserConfig = {
-    client: 'fetch',
+    client: 'legacy/fetch',
     exportCore: true,
     input: '',
     output: '',
@@ -81,7 +81,7 @@ describe('OpenAPI v3', () => {
     },
     {
       config: createConfig({
-        client: 'angular',
+        client: 'legacy/angular',
         services: {
           asClass: true,
         },
@@ -92,7 +92,7 @@ describe('OpenAPI v3', () => {
     },
     {
       config: createConfig({
-        client: 'angular',
+        client: 'legacy/angular',
         types: {},
       }),
       description: 'generate tree-shakeable angular client',
@@ -100,7 +100,7 @@ describe('OpenAPI v3', () => {
     },
     {
       config: createConfig({
-        client: 'node',
+        client: 'legacy/node',
         services: {
           asClass: true,
         },
@@ -110,7 +110,7 @@ describe('OpenAPI v3', () => {
     },
     {
       config: createConfig({
-        client: 'axios',
+        client: 'legacy/axios',
         services: {
           asClass: true,
         },
@@ -239,7 +239,7 @@ describe('OpenAPI v3', () => {
     },
     {
       config: createConfig({
-        client: 'xhr',
+        client: 'legacy/xhr',
         services: {
           asClass: true,
         },

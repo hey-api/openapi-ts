@@ -60,12 +60,12 @@ import { defineConfig } from '@hey-api/openapi-ts';
 
 export default defineConfig([
   {
-    client: 'fetch',
+    client: 'legacy/fetch',
     input: 'path/to/openapi_one.json',
     output: 'src/client_one',
   },
   {
-    client: 'axios',
+    client: 'legacy/axios',
     input: 'path/to/openapi_two.json',
     output: 'src/client_two',
   },

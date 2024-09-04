@@ -189,7 +189,7 @@ const toOperationReturnType = (client: Client, operation: Operation) => {
     returnType = compiler.typeNode('ApiResult', [returnType]);
   }
 
-  if (config.client.name === 'angular') {
+  if (config.client.name === 'legacy/angular') {
     returnType = compiler.typeNode('Observable', [returnType]);
   } else {
     returnType = compiler.typeNode('CancelablePromise', [returnType]);
@@ -521,7 +521,7 @@ const toOperationStatements = (
     ];
   }
 
-  if (config.client.name === 'angular') {
+  if (config.client.name === 'legacy/angular') {
     return [
       compiler.returnFunctionCall({
         args: ['OpenAPI', 'this.http', options],
@@ -624,7 +624,7 @@ const processService = ({
         types: isStandalone ? [throwOnErrorTypeGeneric] : undefined,
       };
       const expression =
-        config.client.name === 'angular'
+        config.client.name === 'legacy/angular'
           ? compiler.anonymousFunction(compileFunctionParams)
           : compiler.arrowFunction(compileFunctionParams);
       const statement = compiler.constVariable({
@@ -642,7 +642,8 @@ const processService = ({
     const node = compiler.methodDeclaration({
       accessLevel: 'public',
       comment: toOperationComment(operation),
-      isStatic: config.name === undefined && config.client.name !== 'angular',
+      isStatic:
+        config.name === undefined && config.client.name !== 'legacy/angular',
       name: toOperationName(operation, false),
       parameters: toOperationParamType(client, operation),
       returnType: isStandalone
@@ -679,7 +680,7 @@ const processService = ({
       }),
       ...members,
     ];
-  } else if (config.client.name === 'angular') {
+  } else if (config.client.name === 'legacy/angular') {
     members = [
       compiler.constructorDeclaration({
         multiLine: false,
@@ -698,7 +699,7 @@ const processService = ({
 
   const statement = compiler.classDeclaration({
     decorator:
-      config.client.name === 'angular'
+      config.client.name === 'legacy/angular'
         ? { args: [{ providedIn: 'root' }], name: 'Injectable' }
         : undefined,
     members,
@@ -761,7 +762,7 @@ export const generateServices = async ({
       name: clientOptionsTypeName(),
     });
   } else {
-    if (config.client.name === 'angular') {
+    if (config.client.name === 'legacy/angular') {
       files.services.import({
         module: '@angular/core',
         name: 'Injectable',
@@ -797,7 +798,7 @@ export const generateServices = async ({
 
     if (config.name) {
       files.services.import({
-        asType: config.client.name !== 'angular',
+        asType: config.client.name !== 'legacy/angular',
         module: './core/BaseHttpRequest',
         name: 'BaseHttpRequest',
       });
