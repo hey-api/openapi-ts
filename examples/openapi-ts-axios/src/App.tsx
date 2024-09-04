@@ -17,7 +17,7 @@ import {
 } from '@radix-ui/themes';
 import { useState } from 'react';
 
-import { $Pet } from './client/schemas.gen';
+import { PetSchema } from './client/schemas.gen';
 import { addPet, getPetById, updatePet } from './client/services.gen';
 import type { Pet } from './client/types.gen';
 
@@ -54,7 +54,7 @@ function App() {
 
   const onAddPet = async (formData: FormData) => {
     // simple form field validation to demonstrate using schemas
-    if ($Pet.required.includes('name') && !formData.get('name')) {
+    if (PetSchema.required.includes('name') && !formData.get('name')) {
       setIsRequiredNameError(true);
       return;
     }

@@ -1,10 +1,10 @@
-{{#equals @root.$config.client.name 'angular'}}
+{{#equals @root.$config.client.name 'legacy/angular'}}
 import type { HttpResponse } from '@angular/common/http';
 {{/equals}}
-{{#equals @root.$config.client.name 'axios'}}
+{{#equals @root.$config.client.name 'legacy/axios'}}
 import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 {{/equals}}
-{{#equals @root.$config.client.name 'node'}}
+{{#equals @root.$config.client.name 'legacy/node'}}
 import type { RequestInit, Response } from 'node-fetch';
 {{/equals}}
 import type { ApiRequestOptions } from './ApiRequestOptions';
@@ -43,22 +43,22 @@ export type OpenAPIConfig = {
 	VERSION: string;
 	WITH_CREDENTIALS: boolean;
 	interceptors: {
-		{{#equals @root.$config.client.name 'angular'}}
+		{{#equals @root.$config.client.name 'legacy/angular'}}
 		response: Interceptors<HttpResponse<any>>;
 		{{/equals}}
-		{{#equals @root.$config.client.name 'axios'}}
+		{{#equals @root.$config.client.name 'legacy/axios'}}
 		request: Interceptors<AxiosRequestConfig>;
 		response: Interceptors<AxiosResponse>;
 		{{/equals}}
-		{{#equals @root.$config.client.name 'fetch'}}
+		{{#equals @root.$config.client.name 'legacy/fetch'}}
 		request: Interceptors<RequestInit>;
 		response: Interceptors<Response>;
 		{{/equals}}
-		{{#equals @root.$config.client.name 'node'}}
+		{{#equals @root.$config.client.name 'legacy/node'}}
 		request: Interceptors<RequestInit>;
 		response: Interceptors<Response>;
 		{{/equals}}
-		{{#equals @root.$config.client.name 'xhr'}}
+		{{#equals @root.$config.client.name 'legacy/xhr'}}
 		request: Interceptors<XMLHttpRequest>;
 		response: Interceptors<XMLHttpRequest>;
 		{{/equals}}
@@ -76,7 +76,7 @@ export const OpenAPI: OpenAPIConfig = {
 	VERSION: '{{{version}}}',
 	WITH_CREDENTIALS: false,
 	interceptors: {
-		{{#notEquals @root.$config.client.name 'angular'}}
+		{{#notEquals @root.$config.client.name 'legacy/angular'}}
 		request: new Interceptors(),
 		{{/notEquals}}
 		response: new Interceptors(),
