@@ -36,7 +36,8 @@
   },
   "files": [
     "bin",
-    "dist"
+    "dist",
+    "LICENSE.md"
   ],
   "scripts": {
     "build-bundle": "rollup --config rollup.config.ts --configPlugin typescript",
