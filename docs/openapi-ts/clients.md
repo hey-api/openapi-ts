@@ -14,7 +14,7 @@ We all send HTTP requests in a slightly different way. Hey API doesn't force you
 ## Features
 
 - seamless integration with `@hey-api/openapi-ts`
-- typesafe response data and errors
+- type-safe response data and errors
 - access to the original request and response
 - granular request and response customization options
 - minimal learning curve thanks to extending the underlying technology

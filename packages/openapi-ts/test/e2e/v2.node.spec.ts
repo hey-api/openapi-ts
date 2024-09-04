@@ -8,7 +8,7 @@ import server from './scripts/server'
 describe('v2.node', () => {
   beforeAll(async () => {
     cleanup('v2/node')
-    await generateClient('v2/node', 'v2', 'node')
+    await generateClient('v2/node', 'v2', 'legacy/node')
     compileWithTypescript('v2/node')
     await server.start('v2/node')
   }, 40000)
@@ -61,7 +61,7 @@ describe('v2.node', () => {
 describe('v2.node useOptions', () => {
   beforeAll(async () => {
     cleanup('v2/node')
-    await generateClient('v2/node', 'v2', 'node', true)
+    await generateClient('v2/node', 'v2', 'legacy/node', true)
     compileWithTypescript('v2/node')
     await server.start('v2/node')
   }, 40000)

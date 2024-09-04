@@ -18,7 +18,7 @@ const params = program
   )
   .option(
     '-c, --client <value>',
-    'HTTP client to generate [angular, axios, fetch, node, xhr]',
+    'HTTP client to generate [@hey-api/client-axios, @hey-api/client-fetch, legacy/angular, legacy/axios, legacy/fetch, legacy/node, legacy/xhr]',
   )
   .option('-d, --debug', 'Run in debug mode?')
   .option('--dry-run [value]', 'Skip writing files to disk?')

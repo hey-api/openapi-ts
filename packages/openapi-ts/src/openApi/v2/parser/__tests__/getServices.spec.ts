@@ -7,7 +7,7 @@ describe('getServices', () => {
   it('should create an unnamed service if tags are empty', () => {
     setConfig({
       client: {
-        name: 'fetch',
+        name: 'legacy/fetch',
       },
       configFile: '',
       debug: false,

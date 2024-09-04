@@ -8,7 +8,7 @@ import server from './scripts/server'
 describe('v2.fetch', () => {
   beforeAll(async () => {
     cleanup('v2/fetch')
-    await generateClient('v2/fetch', 'v2', 'fetch')
+    await generateClient('v2/fetch', 'v2', 'legacy/fetch')
     compileWithTypescript('v2/fetch')
     await server.start('v2/fetch')
   }, 40000)
@@ -45,7 +45,7 @@ describe('v2.fetch', () => {
 describe('v2.fetch useOptions', () => {
   beforeAll(async () => {
     cleanup('v2/fetch')
-    await generateClient('v2/fetch', 'v2', 'fetch', true)
+    await generateClient('v2/fetch', 'v2', 'legacy/fetch', true)
     compileWithTypescript('v2/fetch')
     await server.start('v2/fetch')
   }, 40000)

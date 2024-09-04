@@ -11,7 +11,7 @@ describe('registerHandlebarHelpers', () => {
   it('should register the helpers', () => {
     setConfig({
       client: {
-        name: 'fetch',
+        name: 'legacy/fetch',
       },
       configFile: '',
       debug: false,
@@ -45,7 +45,7 @@ describe('registerHandlebarTemplates', () => {
   it('should return correct templates', () => {
     setConfig({
       client: {
-        name: 'fetch',
+        name: 'legacy/fetch',
       },
       configFile: '',
       debug: false,
