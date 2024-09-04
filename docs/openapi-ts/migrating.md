@@ -52,6 +52,20 @@ This config option is deprecated and will be removed.
 
 ## v0.53.0
 
+### Changed schemas name pattern
+
+Previously, generated schemas would have their definition names prefixed with `$`. This was problematic when using them with Svelte due to reserved keyword conflicts. The new naming pattern for schemas suffixes their definition names with `Schema`. You can continue using the previous pattern by setting the `schemas.name` configuration option.
+
+```js
+export default {
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  schemas: {
+    name: (name) => `$${name}`, // [!code ++]
+  },
+};
+```
+
 ### Renamed legacy clients
 
 Legacy clients were renamed to signal they are deprecated more clearly. To continue using legacy clients, you will need to update your configuration and prefix them with `legacy/`.
