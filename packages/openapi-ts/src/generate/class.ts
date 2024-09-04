@@ -1,7 +1,7 @@
 import { writeFileSync } from 'node:fs';
 import path from 'node:path';
 
-import type { OpenApi } from '../openApi';
+import type { OpenApi } from '../generator/openApi';
 import type { Client } from '../types/client';
 import { getConfig } from '../utils/config';
 import { getHttpRequestName } from '../utils/getHttpRequestName';

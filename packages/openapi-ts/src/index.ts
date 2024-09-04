@@ -4,7 +4,7 @@ import { loadConfig } from 'c12';
 import { sync } from 'cross-spawn';
 
 import { generateOutput } from './generate/output';
-import { parse } from './openApi';
+import { parse } from './generator/openApi';
 import { defaultPluginConfigs } from './plugins';
 import type { Client } from './types/client';
 import type { ClientConfig, Config, UserConfig } from './types/config';

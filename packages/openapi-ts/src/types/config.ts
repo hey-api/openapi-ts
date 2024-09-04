@@ -1,4 +1,4 @@
-import type { Operation } from '../openApi';
+import type { Operation } from '../generator/openApi';
 import type { Plugins } from '../plugins/';
 import type { ExtractArrayOfObjects } from './utils';
 

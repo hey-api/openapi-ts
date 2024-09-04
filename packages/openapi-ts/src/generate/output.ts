@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import type { OpenApi } from '../openApi';
+import type { OpenApi } from '../generator/openApi';
 import type { Client } from '../types/client';
 import type { Files } from '../types/utils';
 import { getConfig } from '../utils/config';

@@ -6,11 +6,11 @@ import {
   type Node,
   TypeScriptFile,
 } from '../compiler';
+import type { Model, OperationParameter } from '../generator/openApi';
+import type { Method } from '../generator/openApi';
+import { isOperationParameterRequired } from '../generator/openApi/common/parser/operation';
 import { enumEntry, enumUnionType } from '../generator/utils/enum';
 import { escapeComment } from '../generator/utils/escape';
-import type { Model, OperationParameter } from '../openApi';
-import type { Method } from '../openApi';
-import { isOperationParameterRequired } from '../openApi/common/parser/operation';
 import type { Client } from '../types/client';
 import type { Files } from '../types/utils';
 import { getConfig, isStandaloneClient } from '../utils/config';

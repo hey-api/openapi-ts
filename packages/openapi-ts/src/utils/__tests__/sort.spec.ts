@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { Model, Service } from '../../openApi';
+import type { Model, Service } from '../../generator/openApi';
 import { sort, sortByName } from '../sort';
 
 describe('sort', () => {

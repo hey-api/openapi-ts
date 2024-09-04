@@ -1,6 +1,6 @@
 import { compiler, TypeScriptFile } from '../compiler';
+import type { OpenApi } from '../generator/openApi';
 import { ensureValidTypeScriptJavaScriptIdentifier } from '../generator/utils/sanitize';
-import type { OpenApi } from '../openApi';
 import type { Files } from '../types/utils';
 import { getConfig } from '../utils/config';
 

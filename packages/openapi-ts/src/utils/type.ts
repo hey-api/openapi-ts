@@ -1,4 +1,6 @@
 import { compiler, type Property, type TypeNode } from '../compiler';
+import type { Model } from '../generator/openApi';
+import { transformTypeKeyName } from '../generator/openApi/common/parser/type';
 import { refSchemasPartial } from '../generator/utils/const';
 import { enumValue } from '../generator/utils/enum';
 import {
@@ -8,8 +10,6 @@ import {
 } from '../generator/utils/escape';
 import { getSchemasMeta } from '../generator/utils/meta';
 import { unique } from '../generator/utils/unique';
-import type { Model } from '../openApi';
-import { transformTypeKeyName } from '../openApi/common/parser/type';
 import type { Client } from '../types/client';
 import { getConfig, isStandaloneClient } from './config';
 

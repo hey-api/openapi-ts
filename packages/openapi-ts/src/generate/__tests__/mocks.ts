@@ -1,6 +1,6 @@
 import { vi } from 'vitest';
 
-import type { OpenApi } from '../../openApi';
+import type { OpenApi } from '../../generator/openApi';
 import type { Templates } from '../../utils/handlebars';
 
 export const mockTemplates: Templates = {
