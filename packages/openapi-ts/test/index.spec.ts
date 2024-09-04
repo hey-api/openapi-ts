@@ -363,6 +363,19 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         exportCore: false,
+        schemas: {
+          name: (name) => `$${name}`,
+          type: 'json',
+        },
+        services: false,
+        types: false,
+      }),
+      description: 'generate JSON Schemas with custom names',
+      name: 'v3-schemas-name',
+    },
+    {
+      config: createConfig({
+        exportCore: false,
         services: {
           asClass: true,
           include: '^(Simple|Parameters)',
