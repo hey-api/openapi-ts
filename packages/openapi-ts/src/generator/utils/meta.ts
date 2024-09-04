@@ -1,4 +1,4 @@
-import { getType } from '../openApi/common/parser/type';
+import { getType } from '../../openApi/common/parser/type';
 import { refParametersPartial, refSchemasPartial } from './const';
 import { reservedWordsRegExp } from './reservedWords';
 import { cleanAndTransformTypeName } from './transform';

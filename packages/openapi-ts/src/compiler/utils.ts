@@ -1,7 +1,7 @@
 import ts from 'typescript';
 
+import { unescapeName } from '../generator/utils/escape';
 import { getConfig } from '../utils/config';
-import { unescapeName } from '../utils/escape';
 
 export interface ImportExportItemObject {
   alias?: string;

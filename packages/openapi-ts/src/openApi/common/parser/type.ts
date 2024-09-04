@@ -1,14 +1,14 @@
-import { camelCase } from '../../../utils/camelCase';
-import { getConfig, isStandaloneClient } from '../../../utils/config';
-import { refParametersPartial } from '../../../utils/const';
-import { reservedWordsRegExp } from '../../../utils/reservedWords';
-import { transformTypeName } from '../../../utils/transform';
-import { isDefinitionTypeNullable } from '../../v3/parser/inferType';
-import type { Type } from '../interfaces/Type';
+import { camelCase } from '../../../generator/utils/camelCase';
+import { refParametersPartial } from '../../../generator/utils/const';
+import { reservedWordsRegExp } from '../../../generator/utils/reservedWords';
 import {
   ensureValidTypeScriptJavaScriptIdentifier,
   sanitizeOperationParameterName,
-} from './sanitize';
+} from '../../../generator/utils/sanitize';
+import { transformTypeName } from '../../../generator/utils/transform';
+import { getConfig, isStandaloneClient } from '../../../utils/config';
+import { isDefinitionTypeNullable } from '../../v3/parser/inferType';
+import type { Type } from '../interfaces/Type';
 import { stripNamespace } from './stripNamespace';
 
 /**

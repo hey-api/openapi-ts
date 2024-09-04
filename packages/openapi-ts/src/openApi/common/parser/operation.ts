@@ -1,10 +1,10 @@
-import { camelCase } from '../../../utils/camelCase';
+import { camelCase } from '../../../generator/utils/camelCase';
+import { sanitizeNamespaceIdentifier } from '../../../generator/utils/sanitize';
 import { getConfig, isStandaloneClient } from '../../../utils/config';
 import type {
   OperationParameter,
   OperationResponse,
 } from '../interfaces/client';
-import { sanitizeNamespaceIdentifier } from './sanitize';
 
 /**
  * Convert the input value to a correct operation (method) class name.

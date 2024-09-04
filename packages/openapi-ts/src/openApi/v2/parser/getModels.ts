@@ -1,5 +1,5 @@
+import { reservedWordsRegExp } from '../../../generator/utils/reservedWords';
 import type { Client } from '../../../types/client';
-import { reservedWordsRegExp } from '../../../utils/reservedWords';
 import { getType } from '../../common/parser/type';
 import type { OpenApi } from '../interfaces/OpenApi';
 import { getModel } from './getModel';

@@ -1,7 +1,7 @@
+import { refParametersPartial } from '../../../generator/utils/const';
+import { enumMeta } from '../../../generator/utils/enum';
 import type { Client } from '../../../types/client';
 import { getConfig, isStandaloneClient } from '../../../utils/config';
-import { refParametersPartial } from '../../../utils/const';
-import { enumMeta } from '../../../utils/enum';
 import type { OperationParameter } from '../../common/interfaces/client';
 import { getDefault } from '../../common/parser/getDefault';
 import { getPattern } from '../../common/parser/getPattern';

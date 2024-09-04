@@ -1,7 +1,7 @@
-import { ensureValidTypeScriptJavaScriptIdentifier } from '../openApi/common/parser/sanitize';
+import { getConfig } from '../../utils/config';
 import { camelCase } from './camelCase';
-import { getConfig } from './config';
 import { reservedWordsRegExp } from './reservedWords';
+import { ensureValidTypeScriptJavaScriptIdentifier } from './sanitize';
 
 export const transformServiceName = (name: string) => {
   const config = getConfig();

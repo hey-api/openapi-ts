@@ -7,17 +7,17 @@ import {
   TypeScriptFile,
 } from '../compiler';
 import type { FunctionTypeParameter, ObjectValue } from '../compiler/types';
+import { camelCase } from '../generator/utils/camelCase';
+import { escapeComment, escapeName } from '../generator/utils/escape';
+import { reservedWordsRegExp } from '../generator/utils/reservedWords';
+import { transformServiceName } from '../generator/utils/transform';
+import { unique } from '../generator/utils/unique';
 import type { Model, Operation, OperationParameter, Service } from '../openApi';
 import { isOperationParameterRequired } from '../openApi/common/parser/operation';
 import type { Client } from '../types/client';
 import type { Files } from '../types/utils';
-import { camelCase } from '../utils/camelCase';
 import { getConfig, isStandaloneClient } from '../utils/config';
-import { escapeComment, escapeName } from '../utils/escape';
-import { reservedWordsRegExp } from '../utils/reservedWords';
-import { transformServiceName } from '../utils/transform';
 import { setUniqueTypeName } from '../utils/type';
-import { unique } from '../utils/unique';
 import { clientModulePath, clientOptionsTypeName } from './client';
 
 type OnNode = (node: Node) => void;

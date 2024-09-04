@@ -1,6 +1,6 @@
+import { escapeName } from '../../../generator/utils/escape';
+import { unique } from '../../../generator/utils/unique';
 import type { Client } from '../../../types/client';
-import { escapeName } from '../../../utils/escape';
-import { unique } from '../../../utils/unique';
 import type { Model } from '../../common/interfaces/client';
 import { getDefault } from '../../common/parser/getDefault';
 import { getPattern } from '../../common/parser/getPattern';

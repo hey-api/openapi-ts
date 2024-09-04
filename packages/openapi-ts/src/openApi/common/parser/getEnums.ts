@@ -1,4 +1,4 @@
-import { unique } from '../../../utils/unique';
+import { unique } from '../../../generator/utils/unique';
 import type { Enum } from '../interfaces/client';
 import type { WithEnumExtension } from '../interfaces/WithEnumExtension';
 

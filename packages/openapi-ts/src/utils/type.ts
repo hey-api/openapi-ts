@@ -1,13 +1,17 @@
 import { compiler, type Property, type TypeNode } from '../compiler';
+import { refSchemasPartial } from '../generator/utils/const';
+import { enumValue } from '../generator/utils/enum';
+import {
+  escapeComment,
+  escapeName,
+  unescapeName,
+} from '../generator/utils/escape';
+import { getSchemasMeta } from '../generator/utils/meta';
+import { unique } from '../generator/utils/unique';
 import type { Model } from '../openApi';
 import { transformTypeKeyName } from '../openApi/common/parser/type';
 import type { Client } from '../types/client';
 import { getConfig, isStandaloneClient } from './config';
-import { refSchemasPartial } from './const';
-import { enumValue } from './enum';
-import { escapeComment, escapeName, unescapeName } from './escape';
-import { getSchemasMeta } from './meta';
-import { unique } from './unique';
 
 const base = (model: Model) => {
   const config = getConfig();

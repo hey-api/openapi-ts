@@ -1,5 +1,7 @@
 import Handlebars from 'handlebars/runtime';
 
+import { camelCase } from '../generator/utils/camelCase';
+import { transformServiceName } from '../generator/utils/transform';
 import templateClient from '../templates/client.hbs';
 import angularGetHeaders from '../templates/core/angular/getHeaders.hbs';
 import angularGetRequestBody from '../templates/core/angular/getRequestBody.hbs';
@@ -44,8 +46,6 @@ import xhrGetResponseBody from '../templates/core/xhr/getResponseBody.hbs';
 import xhrGetResponseHeader from '../templates/core/xhr/getResponseHeader.hbs';
 import xhrRequest from '../templates/core/xhr/request.hbs';
 import xhrSendRequest from '../templates/core/xhr/sendRequest.hbs';
-import { camelCase } from './camelCase';
-import { transformServiceName } from './transform';
 
 export const registerHandlebarHelpers = (): void => {
   Handlebars.registerHelper(

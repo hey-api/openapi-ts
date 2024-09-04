@@ -1,5 +1,5 @@
+import { enumMeta } from '../../../generator/utils/enum';
 import type { Client } from '../../../types/client';
-import { enumMeta } from '../../../utils/enum';
 import type { Model, ModelMeta } from '../../common/interfaces/client';
 import { getDefault } from '../../common/parser/getDefault';
 import { getEnums } from '../../common/parser/getEnums';

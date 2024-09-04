@@ -1,6 +1,6 @@
-import { camelCase } from '../../../utils/camelCase';
+import { camelCase } from '../../../generator/utils/camelCase';
+import { sanitizeNamespaceIdentifier } from '../../../generator/utils/sanitize';
 import type { Operation, Service } from '../interfaces/client';
-import { sanitizeNamespaceIdentifier } from './sanitize';
 
 export const allowedServiceMethods = [
   'connect',

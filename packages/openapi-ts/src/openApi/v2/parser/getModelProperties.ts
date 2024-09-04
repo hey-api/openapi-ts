@@ -1,5 +1,5 @@
+import { escapeName } from '../../../generator/utils/escape';
 import type { Client } from '../../../types/client';
-import { escapeName } from '../../../utils/escape';
 import type { Model } from '../../common/interfaces/client';
 import { getPattern } from '../../common/parser/getPattern';
 import { getType } from '../../common/parser/type';

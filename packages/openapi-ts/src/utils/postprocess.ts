@@ -1,7 +1,7 @@
+import { unique } from '../generator/utils/unique';
 import type { Model, Operation, Service } from '../openApi';
 import type { Client } from '../types/client';
 import { sort } from './sort';
-import { unique } from './unique';
 
 /**
  * Post process client

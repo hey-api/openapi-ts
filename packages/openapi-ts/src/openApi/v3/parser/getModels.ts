@@ -1,6 +1,9 @@
+import {
+  getParametersMeta,
+  getSchemasMeta,
+} from '../../../generator/utils/meta';
 import type { Client } from '../../../types/client';
 import { getConfig } from '../../../utils/config';
-import { getParametersMeta, getSchemasMeta } from '../../../utils/meta';
 import type { OpenApi } from '../interfaces/OpenApi';
 import { getModel } from './getModel';
 import { getParameterSchema } from './parameter';

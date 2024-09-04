@@ -1,6 +1,6 @@
+import { unique } from '../../../generator/utils/unique';
 import type { Client } from '../../../types/client';
 import { getConfig } from '../../../utils/config';
-import { unique } from '../../../utils/unique';
 import type { Operation, Service } from '../../common/interfaces/client';
 import {
   allowedServiceMethods,
