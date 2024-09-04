@@ -1,5 +1,19 @@
 # @hey-api/openapi-ts
 
+## 0.53.0
+
+### Minor Changes
+
+- [#1008](https://github.com/hey-api/openapi-ts/pull/1008) [`dc4a40d`](https://github.com/hey-api/openapi-ts/commit/dc4a40d517853e4cf5be532f5bf4874c84c924be) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: rename legacy clients with 'legacy/' prefix
+
+- [#1009](https://github.com/hey-api/openapi-ts/pull/1009) [`c6b044d`](https://github.com/hey-api/openapi-ts/commit/c6b044d0bc9dc54cb0eb58d23438f4e1d050cb38) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: change schemas name pattern, add schemas.name option
+
+### Patch Changes
+
+- [#989](https://github.com/hey-api/openapi-ts/pull/989) [`bc78a42`](https://github.com/hey-api/openapi-ts/commit/bc78a421eafed1920102b796842e227cacda6ef0) Thanks [@jacobinu](https://github.com/jacobinu)! - fix: make UserConfig interface instead of type
+
+- [#1010](https://github.com/hey-api/openapi-ts/pull/1010) [`b6e58c6`](https://github.com/hey-api/openapi-ts/commit/b6e58c64d1b71897533a85d1738cd7ce7ede178d) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: set query key base url from supplied client if provided
+
 ## 0.52.11
 
 ### Patch Changes
