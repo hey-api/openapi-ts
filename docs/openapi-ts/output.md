@@ -209,7 +209,7 @@ client.post({
 Schemas are located in the `schemas.gen.ts` file. This file contains runtime schemas generated from your OpenAPI specification definitions located in `#/components/schemas`. Starting with OpenAPI 3.1, these schemas are JSON Schema compliant.
 
 ```ts
-export const $Pet = {
+export const PetSchema = {
   required: ['name'],
   properties: {
     id: {
