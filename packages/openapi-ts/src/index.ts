@@ -83,17 +83,17 @@ const processOutput = () => {
 const logClientMessage = () => {
   const { client } = getConfig();
   switch (client.name) {
-    case 'angular':
+    case 'legacy/angular':
       return console.log('✨ Creating Angular client');
     case '@hey-api/client-axios':
-    case 'axios':
+    case 'legacy/axios':
       return console.log('✨ Creating Axios client');
     case '@hey-api/client-fetch':
-    case 'fetch':
+    case 'legacy/fetch':
       return console.log('✨ Creating Fetch client');
-    case 'node':
+    case 'legacy/node':
       return console.log('✨ Creating Node.js client');
-    case 'xhr':
+    case 'legacy/xhr':
       return console.log('✨ Creating XHR client');
   }
 };

@@ -46,7 +46,7 @@ export const generateIndexFile = async ({
         }),
       );
     }
-    if (config.client.name !== 'angular') {
+    if (config.client.name !== 'legacy/angular') {
       files.index.add(
         compiler.exportNamedDeclaration({
           exports: ['CancelablePromise', 'CancelError'],

@@ -8,7 +8,7 @@ import server from './scripts/server'
 describe('v3.axios', () => {
   beforeAll(async () => {
     cleanup('v3/axios')
-    await generateClient('v3/axios', 'v3', 'axios')
+    await generateClient('v3/axios', 'v3', 'legacy/axios')
     compileWithTypescript('v3/axios')
     await server.start('v3/axios')
   }, 40000)
@@ -169,7 +169,7 @@ describe('v3.axios', () => {
 describe('v3.axios useOptions', () => {
   beforeAll(async () => {
     cleanup('v3/axios')
-    await generateClient('v3/axios', 'v3', 'axios', true)
+    await generateClient('v3/axios', 'v3', 'legacy/axios', true)
     compileWithTypescript('v3/axios')
     await server.start('v3/axios')
   }, 40000)

@@ -27,7 +27,7 @@ describe('generateCore', () => {
 
     setConfig({
       client: {
-        name: 'fetch',
+        name: 'legacy/fetch',
       },
       configFile: '',
       debug: false,
@@ -88,7 +88,7 @@ describe('generateCore', () => {
 
     const config = setConfig({
       client: {
-        name: 'fetch',
+        name: 'legacy/fetch',
       },
       configFile: '',
       debug: false,
@@ -132,7 +132,7 @@ describe('generateCore', () => {
     const config = setConfig({
       base: 'foo',
       client: {
-        name: 'fetch',
+        name: 'legacy/fetch',
       },
       configFile: '',
       debug: false,
