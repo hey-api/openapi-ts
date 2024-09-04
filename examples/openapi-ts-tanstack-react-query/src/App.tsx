@@ -23,7 +23,7 @@ import {
   getPetByIdOptions,
   updatePetMutation,
 } from './client/@tanstack/react-query.gen';
-import { $Pet } from './client/schemas.gen';
+import { PetSchema } from './client/schemas.gen';
 import type { Pet } from './client/types.gen';
 
 const localClient = createClient({
@@ -92,7 +92,7 @@ function App() {
 
   const onAddPet = async (formData: FormData) => {
     // simple form field validation to demonstrate using schemas
-    if ($Pet.required.includes('name') && !formData.get('name')) {
+    if (PetSchema.required.includes('name') && !formData.get('name')) {
       setIsRequiredNameError(true);
       return;
     }
