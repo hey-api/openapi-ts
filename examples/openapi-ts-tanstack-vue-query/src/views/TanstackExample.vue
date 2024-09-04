@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { $Pet, type Pet } from '@/client'
+import { PetSchema, type Pet } from '@/client'
 import {
   addPetMutation,
   getPetByIdOptions,
@@ -86,7 +86,7 @@ const { data, error } = useQuery(
 )
 
 const handleAddPet = async () => {
-  if ($Pet.required.includes('name') && !petInput.value?.name?.length) {
+  if (PetSchema.required.includes('name') && !petInput.value?.name?.length) {
     return
   }
 
