@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/docs",
-  "version": "0.5.11",
+  "version": "0.6.0",
   "description": "Documentation for OpenaAPI TypeScript.",
   "private": true,
   "type": "module",

@@ -1,6 +1,8 @@
 import { compiler, TypeScriptFile } from '../compiler';
 import type { OpenApi } from '../openApi';
 import { ensureValidTypeScriptJavaScriptIdentifier } from '../openApi/common/parser/sanitize';
+import type { OpenApiSchema as OpenApiV2Schema } from '../openApi/v2/interfaces/OpenApiSchema';
+import type { OpenApiSchema as OpenApiV3Schema } from '../openApi/v3/interfaces/OpenApiSchema';
 import type { Files } from '../types/utils';
 import { getConfig } from '../utils/config';
 
@@ -52,6 +54,21 @@ const ensureValidSchemaOutput = (
   return result;
 };
 
+const toSchemaName = (
+  name: string,
+  schema: OpenApiV2Schema | OpenApiV3Schema,
+): string => {
+  const config = getConfig();
+
+  const validName = ensureValidTypeScriptJavaScriptIdentifier(name);
+
+  if (config.schemas.name) {
+    return config.schemas.name(validName, schema);
+  }
+
+  return `${validName}Schema`;
+};
+
 export const generateSchemas = async ({
   files,
   openApi,
@@ -70,15 +87,17 @@ export const generateSchemas = async ({
     name: 'schemas.ts',
   });
 
-  const addSchema = (name: string, schema: object) => {
-    const validName = `$${ensureValidTypeScriptJavaScriptIdentifier(name)}`;
+  const addSchema = (
+    name: string,
+    schema: OpenApiV2Schema | OpenApiV3Schema,
+  ) => {
     const obj = ensureValidSchemaOutput(schema);
     const expression = compiler.objectExpression({ obj });
     const statement = compiler.constVariable({
       assertion: 'const',
       exportConst: true,
       expression,
-      name: validName,
+      name: toSchemaName(name, schema),
     });
     files.schemas.add(statement);
   };

@@ -26,7 +26,7 @@ describe('bin', () => {
       '--output',
       './test/generated/bin',
       '--client',
-      'angular',
+      'legacy/angular',
       '--dry-run',
       'true',
     ]);
@@ -42,7 +42,7 @@ describe('bin', () => {
       '--output',
       './test/generated/bin',
       '--client',
-      'axios',
+      'legacy/axios',
       '--dry-run',
       'true',
     ]);
@@ -58,7 +58,7 @@ describe('bin', () => {
       '--output',
       './test/generated/bin',
       '--client',
-      'fetch',
+      'legacy/fetch',
       '--dry-run',
       'true',
     ]);
@@ -74,7 +74,7 @@ describe('bin', () => {
       '--output',
       './test/generated/bin',
       '--client',
-      'node',
+      'legacy/node',
       '--dry-run',
       'true',
     ]);
@@ -90,7 +90,7 @@ describe('bin', () => {
       '--output',
       './test/generated/bin',
       '--client',
-      'xhr',
+      'legacy/xhr',
       '--dry-run',
       'true',
     ]);
@@ -106,7 +106,7 @@ describe('bin', () => {
       '--output',
       './test/generated/bin',
       '--client',
-      'fetch',
+      'legacy/fetch',
       '--useOptions',
       '--exportCore',
       'true',

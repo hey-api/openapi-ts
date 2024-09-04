@@ -6,7 +6,7 @@ import { getOperationName, parseResponseStatusCode } from '../operation';
 describe('getOperationName', () => {
   const optionsCommon: Parameters<typeof setConfig>[0] = {
     client: {
-      name: 'fetch',
+      name: 'legacy/fetch',
     },
     configFile: '',
     debug: false,

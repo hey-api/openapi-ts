@@ -1,5 +1,11 @@
 # @hey-api/docs
 
+## 0.6.0
+
+### Minor Changes
+
+- [#1009](https://github.com/hey-api/openapi-ts/pull/1009) [`c6b044d`](https://github.com/hey-api/openapi-ts/commit/c6b044d0bc9dc54cb0eb58d23438f4e1d050cb38) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: change schemas name pattern, add schemas.name option
+
 ## 0.5.11
 
 ### Patch Changes

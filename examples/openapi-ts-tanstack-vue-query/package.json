@@ -1,7 +1,7 @@
 {
   "name": "@example/openapi-ts-tanstack-vue-query",
   "private": true,
-  "version": "0.0.2",
+  "version": "0.0.3",
   "type": "module",
   "scripts": {
     "build-only": "vite build",
@@ -17,8 +17,8 @@
   },
   "dependencies": {
     "@hey-api/client-fetch": "workspace:*",
-    "@tanstack/vue-query": "5.52.0",
-    "@tanstack/vue-query-devtools": "5.52.0",
+    "@tanstack/vue-query": "5.53.2",
+    "@tanstack/vue-query-devtools": "5.53.2",
     "pinia": "2.2.2",
     "vue": "3.4.38",
     "vue-router": "4.4.3"

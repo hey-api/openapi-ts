@@ -14,7 +14,7 @@ describe('client.angular', () => {
     await generateClient(
       'client/angular/app/src/client',
       'v3',
-      'angular',
+      'legacy/angular',
       false,
       'ApiModule'
     )

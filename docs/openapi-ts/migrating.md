@@ -50,6 +50,75 @@ This config option is deprecated and will be removed in favor of [clients](./cli
 
 This config option is deprecated and will be removed.
 
+## v0.53.0
+
+### Changed schemas name pattern
+
+Previously, generated schemas would have their definition names prefixed with `$`. This was problematic when using them with Svelte due to reserved keyword conflicts. The new naming pattern for schemas suffixes their definition names with `Schema`. You can continue using the previous pattern by setting the `schemas.name` configuration option.
+
+```js
+export default {
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  schemas: {
+    name: (name) => `$${name}`, // [!code ++]
+  },
+};
+```
+
+### Renamed legacy clients
+
+Legacy clients were renamed to signal they are deprecated more clearly. To continue using legacy clients, you will need to update your configuration and prefix them with `legacy/`.
+
+::: code-group
+
+```js [fetch]
+export default {
+  client: 'fetch', // [!code --]
+  client: 'legacy/fetch', // [!code ++]
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+};
+```
+
+```js [axios]
+export default {
+  client: 'axios', // [!code --]
+  client: 'legacy/axios', // [!code ++]
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+};
+```
+
+```js [angular]
+export default {
+  client: 'angular', // [!code --]
+  client: 'legacy/angular', // [!code ++]
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+};
+```
+
+```js [node]
+export default {
+  client: 'node', // [!code --]
+  client: 'legacy/node', // [!code ++]
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+};
+```
+
+```js [xhr]
+export default {
+  client: 'xhr', // [!code --]
+  client: 'legacy/xhr', // [!code ++]
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+};
+```
+
+:::
+
 ## v0.52.0
 
 ### Removed internal `client` export

@@ -2,7 +2,7 @@
   "name": "@hey-api/client-axios",
   "version": "0.2.3",
   "type": "module",
-  "description": "Typesafe Axios client for your @hey-api/openapi-ts types",
+  "description": "Type-safe Axios client for your @hey-api/openapi-ts types",
   "homepage": "https://heyapi.vercel.app/",
   "repository": {
     "type": "git",
@@ -44,6 +44,7 @@
   "sideEffects": false,
   "files": [
     "dist",
+    "LICENSE.md",
     "src"
   ],
   "scripts": {
@@ -66,6 +67,6 @@
     "axios": ">= 1.0.0 < 2"
   },
   "devDependencies": {
-    "axios": "1.7.5"
+    "axios": "1.7.7"
   }
 }

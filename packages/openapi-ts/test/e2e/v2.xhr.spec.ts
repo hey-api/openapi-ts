@@ -8,7 +8,7 @@ import server from './scripts/server'
 describe.skip('v2.xhr', () => {
   beforeAll(async () => {
     cleanup('v2/xhr')
-    await generateClient('v2/xhr', 'v2', 'xhr')
+    await generateClient('v2/xhr', 'v2', 'legacy/xhr')
     compileWithTypescript('v2/xhr')
     await server.start('v2/xhr')
   }, 40000)
@@ -45,7 +45,7 @@ describe.skip('v2.xhr', () => {
 describe.skip('v2.xhr useOptions', () => {
   beforeAll(async () => {
     cleanup('v2/xhr')
-    await generateClient('v2/xhr', 'v2', 'xhr', true)
+    await generateClient('v2/xhr', 'v2', 'legacy/xhr', true)
     compileWithTypescript('v2/xhr')
     await server.start('v2/xhr')
   }, 40000)
