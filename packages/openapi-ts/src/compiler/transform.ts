@@ -39,7 +39,7 @@ export const createPropertyAccessExpressions = ({
   const expression = expressions.reduce((expression, name) => {
     const node = createPropertyAccessExpression({
       expression,
-      // @ts-ignore
+      // @ts-expect-error
       name,
     });
     return node;

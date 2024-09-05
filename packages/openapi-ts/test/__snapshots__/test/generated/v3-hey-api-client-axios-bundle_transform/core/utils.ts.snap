@@ -289,17 +289,17 @@ export const mergeHeaders = (
 
     for (const [key, value] of iterator) {
       if (value === null) {
-        // @ts-ignore
+        // @ts-expect-error
         delete mergedHeaders[key];
       } else if (Array.isArray(value)) {
         for (const v of value) {
-          // @ts-ignore
+          // @ts-expect-error
           mergedHeaders[key] = [...(mergedHeaders[key] ?? []), v as string];
         }
       } else if (value !== undefined) {
         // assume object headers are meant to be JSON stringified, i.e. their
         // content value in OpenAPI specification is 'application/json'
-        // @ts-ignore
+        // @ts-expect-error
         mergedHeaders[key] =
           typeof value === 'object' ? JSON.stringify(value) : (value as string);
       }
