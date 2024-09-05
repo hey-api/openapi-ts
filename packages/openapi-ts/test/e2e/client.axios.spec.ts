@@ -27,7 +27,7 @@ describe('client.axios', () => {
     })
     const result = await client.simple.getCallWithoutParametersAndResponse()
     expect(tokenRequest.mock.calls.length).toBe(1)
-    // @ts-ignore
+    // @ts-expect-error
     expect(result.headers.authorization).toBe('Bearer MY_TOKEN')
   })
 
@@ -39,14 +39,14 @@ describe('client.axios', () => {
       USERNAME: 'username'
     })
     const result = await client.simple.getCallWithoutParametersAndResponse()
-    // @ts-ignore
+    // @ts-expect-error
     expect(result.headers.authorization).toBe('Basic dXNlcm5hbWU6cGFzc3dvcmQ=')
   })
 
   it('supports complex params', async () => {
     const { ApiClient } = await import('./generated/client/axios/index.js')
     const client = new ApiClient()
-    // @ts-ignore
+    // @ts-expect-error
     const result = await client.complex.complexTypes({
       first: {
         second: {
@@ -60,7 +60,7 @@ describe('client.axios', () => {
   it('supports form data', async () => {
     const { ApiClient } = await import('./generated/client/axios/index.js')
     const client = new ApiClient()
-    // @ts-ignore
+    // @ts-expect-error
     const result = await client.parameters.callWithParameters(
       'valueHeader',
       'valueQuery',
