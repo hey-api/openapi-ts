@@ -24,7 +24,7 @@ import {
  * @param comment - comment to add to function.
  * @param multiLine - if it should be multi line.
  * @param parameters - parameters for the constructor.
- * @param statements - statements to put in the contructor body.
+ * @param statements - statements to put in the constructor body.
  * @returns ts.ConstructorDeclaration
  */
 export const createConstructorDeclaration = ({
@@ -63,7 +63,7 @@ export const createConstructorDeclaration = ({
  * @param name - name of the method.
  * @param parameters - parameters for the method.
  * @param returnType - the return type of the method.
- * @param statements - statements to put in the contructor body.
+ * @param statements - statements to put in the constructor body.
  * @returns ts.MethodDeclaration
  */
 export const createMethodDeclaration = ({
