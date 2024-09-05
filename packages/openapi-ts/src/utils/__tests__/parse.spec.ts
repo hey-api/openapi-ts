@@ -7,7 +7,7 @@ import { operationNameFn } from '../parse';
 describe('operationNameFn', () => {
   const optionsCommon: Parameters<typeof setConfig>[0] = {
     client: {
-      name: 'fetch',
+      name: 'legacy/fetch',
     },
     configFile: '',
     debug: false,

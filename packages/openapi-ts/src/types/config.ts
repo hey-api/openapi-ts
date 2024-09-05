@@ -1,15 +1,15 @@
-import type { Operation } from '../generator/openApi';
+import type { OpenApiSchema, Operation } from '../generator/openApi';
 import type { Plugins } from '../plugins/';
 import type { ExtractArrayOfObjects } from './utils';
 
 type Client =
   | '@hey-api/client-axios'
   | '@hey-api/client-fetch'
-  | 'angular'
-  | 'axios'
-  | 'fetch'
-  | 'node'
-  | 'xhr'
+  | 'legacy/angular'
+  | 'legacy/axios'
+  | 'legacy/fetch'
+  | 'legacy/node'
+  | 'legacy/xhr'
   | '';
 
 export interface ClientConfig {
@@ -20,7 +20,6 @@ export interface ClientConfig {
   base?: string;
   /**
    * HTTP client to generate
-   * @default 'fetch'
    */
   client?:
     | Client
@@ -37,7 +36,6 @@ export interface ClientConfig {
         bundle?: boolean;
         /**
          * HTTP client to generate
-         * @default 'fetch'
          */
         name: Client;
       };
@@ -118,6 +116,12 @@ export interface ClientConfig {
          */
         export?: boolean;
         /**
+         * Customise the schema name. By default, `{{name}}Schema` is used. `name` is a
+         * valid JavaScript/TypeScript identifier, e.g. if your schema name is
+         * "Foo-Bar", `name` value would be "FooBar".
+         */
+        name?: (name: string, schema: OpenApiSchema) => string;
+        /**
          * Choose schema type to generate. Select 'form' if you don't want
          * descriptions to reduce bundle size and you plan to use schemas
          * for form validation
@@ -164,7 +168,7 @@ export interface ClientConfig {
          */
         include?: string;
         /**
-         * Customise the method name of methods within the service. By default, {@link Operation.name} is used.
+         * Customise the name of methods within the service. By default, {@link Operation.name} is used.
          */
         methodNameBuilder?: (operation: Operation) => string;
         /**

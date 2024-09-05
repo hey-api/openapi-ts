@@ -1,5 +1,5 @@
 import { compiler, TypeScriptFile } from '../compiler';
-import type { OpenApi } from '../generator/openApi';
+import type { OpenApi, OpenApiSchema } from '../generator/openApi';
 import { ensureValidTypeScriptJavaScriptIdentifier } from '../generator/utils/sanitize';
 import type { Files } from '../types/utils';
 import { getConfig } from '../utils/config';
@@ -52,6 +52,18 @@ const ensureValidSchemaOutput = (
   return result;
 };
 
+const toSchemaName = (name: string, schema: OpenApiSchema): string => {
+  const config = getConfig();
+
+  const validName = ensureValidTypeScriptJavaScriptIdentifier(name);
+
+  if (config.schemas.name) {
+    return config.schemas.name(validName, schema);
+  }
+
+  return `${validName}Schema`;
+};
+
 export const generateSchemas = async ({
   files,
   openApi,
@@ -70,15 +82,14 @@ export const generateSchemas = async ({
     name: 'schemas.ts',
   });
 
-  const addSchema = (name: string, schema: object) => {
-    const validName = `$${ensureValidTypeScriptJavaScriptIdentifier(name)}`;
+  const addSchema = (name: string, schema: OpenApiSchema) => {
     const obj = ensureValidSchemaOutput(schema);
     const expression = compiler.objectExpression({ obj });
     const statement = compiler.constVariable({
       assertion: 'const',
       exportConst: true,
       expression,
-      name: validName,
+      name: toSchemaName(name, schema),
     });
     files.schemas.add(statement);
   };

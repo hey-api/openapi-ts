@@ -1,7 +1,7 @@
 {
   "name": "@example/openapi-ts-tanstack-svelte-query",
   "private": true,
-  "version": "0.0.2",
+  "version": "0.0.3",
   "type": "module",
   "scripts": {
     "build": "vite build",
@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@hey-api/client-fetch": "workspace:*",
-    "@tanstack/svelte-query": "5.52.0"
+    "@tanstack/svelte-query": "5.53.2"
   },
   "devDependencies": {
     "@fontsource/fira-mono": "5.0.0",
