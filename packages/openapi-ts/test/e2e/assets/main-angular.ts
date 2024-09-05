@@ -44,7 +44,7 @@ export class AppComponent {
     private readonly simpleService: SimpleService,
     private readonly typesService: TypesService
   ) {
-    // @ts-ignore
+    // @ts-expect-error
     window.api = {
       CollectionFormatService: this.collectionFormatService,
       ComplexService: this.complexService,

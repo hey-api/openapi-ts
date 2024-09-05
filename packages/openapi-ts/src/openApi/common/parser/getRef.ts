@@ -22,7 +22,7 @@ export function getRef<T>(
         path.replace(ESCAPED_REF_SLASH, '/').replace(ESCAPED_REF_TILDE, '~'),
       );
       if (result.hasOwnProperty(decodedPath)) {
-        // @ts-ignore
+        // @ts-expect-error
         result = result[decodedPath];
       } else {
         throw new Error(`Could not find reference: "${item.$ref}"`);

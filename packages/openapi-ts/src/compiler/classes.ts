@@ -157,7 +157,7 @@ export const createClassDeclaration = ({
   // Add newline between each class member.
   let m: ts.ClassElement[] = [];
   members.forEach((member) => {
-    // @ts-ignore
+    // @ts-expect-error
     m = [...m, member, createIdentifier({ text: '\n' })];
   });
 
