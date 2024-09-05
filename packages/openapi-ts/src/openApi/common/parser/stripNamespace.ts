@@ -1,5 +1,5 @@
 /**
- * Strip (OpenAPI) namespaces fom values.
+ * Strip (OpenAPI) namespaces from values.
  * @param value
  */
 export const stripNamespace = (value: string): string =>
