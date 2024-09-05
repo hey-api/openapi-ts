@@ -11,7 +11,6 @@ import type {
   Model,
   Operation,
   OperationParameter,
-  Service,
 } from '../generator/openApi';
 import { isOperationParameterRequired } from '../generator/openApi/common/parser/operation';
 import { camelCase } from '../generator/utils/camelCase';
@@ -19,7 +18,7 @@ import { escapeComment, escapeName } from '../generator/utils/escape';
 import { reservedWordsRegExp } from '../generator/utils/reservedWords';
 import { transformServiceName } from '../generator/utils/transform';
 import { unique } from '../generator/utils/unique';
-import type { Client } from '../types/client';
+import type { Client, Service } from '../types/client';
 import type { Files } from '../types/utils';
 import { getConfig, isStandaloneClient } from '../utils/config';
 import { setUniqueTypeName } from '../utils/type';

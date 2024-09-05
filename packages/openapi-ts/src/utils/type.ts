@@ -1,6 +1,6 @@
 import { compiler, type Property, type TypeNode } from '../compiler';
 import type { Model } from '../generator/openApi';
-import { transformTypeKeyName } from '../generator/openApi/common/parser/type';
+import { camelCase } from '../generator/utils/camelCase';
 import { refSchemasPartial } from '../generator/utils/const';
 import { enumValue } from '../generator/utils/enum';
 import {
@@ -9,6 +9,8 @@ import {
   unescapeName,
 } from '../generator/utils/escape';
 import { getSchemasMeta } from '../generator/utils/meta';
+import { reservedWordsRegExp } from '../generator/utils/reservedWords';
+import { sanitizeOperationParameterName } from '../generator/utils/sanitize';
 import { unique } from '../generator/utils/unique';
 import type { Client } from '../types/client';
 import { getConfig, isStandaloneClient } from './config';
@@ -321,4 +323,22 @@ export const unsetUniqueTypeName = ({
     name,
   };
   return result;
+};
+
+/**
+ * Replaces any invalid characters from a parameter name.
+ * For example: 'filter.someProperty' becomes 'filterSomeProperty'.
+ */
+export const transformTypeKeyName = (value: string): string => {
+  const config = getConfig();
+
+  // do not transform anything for standalone clients
+  if (isStandaloneClient(config)) {
+    return value;
+  }
+
+  const name = camelCase({
+    input: sanitizeOperationParameterName(value),
+  }).replace(reservedWordsRegExp, '_$1');
+  return name;
 };

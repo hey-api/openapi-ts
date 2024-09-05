@@ -1,6 +1,6 @@
 import type { Client } from '../../../../types/client';
-import { getConfig, isStandaloneClient } from '../../../../utils/config';
 import type { OperationParameters } from '../../common/interfaces/client';
+import { Config } from '../../common/interfaces/config';
 import { getRef } from '../../common/parser/getRef';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiParameter } from '../interfaces/OpenApiParameter';
@@ -9,20 +9,16 @@ import { getOperationParameter } from './getOperationParameter';
 const allowedIn = ['body', 'formData', 'header', 'path', 'query'] as const;
 
 export const getOperationParameters = ({
-  debug,
+  config,
   openApi,
   parameters,
   types,
 }: {
-  debug?: boolean;
+  config: Config;
   openApi: OpenApi;
   parameters: OpenApiParameter[];
   types: Client['types'];
 }): OperationParameters => {
-  const config = getConfig();
-
-  const isStandalone = isStandaloneClient(config);
-
   const operationParameters: OperationParameters = {
     $refs: [],
     imports: [],
@@ -41,18 +37,16 @@ export const getOperationParameters = ({
       parameterOrReference,
     );
     const parameter = getOperationParameter({
-      debug,
+      config,
       openApi,
       parameter: parameterDef,
       types,
     });
 
-    // legacy clients ignore the "api-version" param since we do not want to
-    // add it as the first/default parameter for each of the service calls
-    if (
-      !allowedIn.includes(parameterDef.in) ||
-      (!isStandalone && parameter.prop === 'api-version')
-    ) {
+    const skip =
+      config.filterFn?.operationParameter &&
+      !config.filterFn?.operationParameter(parameter);
+    if (!allowedIn.includes(parameterDef.in) || skip) {
       return;
     }
 

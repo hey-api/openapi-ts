@@ -1,4 +1,16 @@
-import type { Model, ModelMeta, Service } from '../generator/openApi';
+import type {
+  Model,
+  ModelMeta,
+  Operation as ParserOperation,
+} from '../generator/openApi';
+
+export interface Operation extends ParserOperation {
+  service: string;
+}
+
+export interface Service extends Pick<Model, '$refs' | 'imports' | 'name'> {
+  operations: Operation[];
+}
 
 export interface Client {
   models: Model[];

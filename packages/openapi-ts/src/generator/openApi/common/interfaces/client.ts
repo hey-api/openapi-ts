@@ -61,12 +61,8 @@ export interface Operation extends OperationParameters {
    * Sorted by status code.
    */
   responses: OperationResponse[];
-  /**
-   * Service name, might be without postfix. This will be used to name the
-   * exported class.
-   */
-  service: string;
   summary: string | null;
+  tags: string[];
 }
 
 export interface Schema {
@@ -153,6 +149,17 @@ export interface Model extends Schema {
   type: string;
 }
 
-export interface Service extends Pick<Model, '$refs' | 'imports' | 'name'> {
+export interface Client {
+  models: Model[];
+  operationIds: Map<string, string>;
   operations: Operation[];
+  server: string;
+  /**
+   * Map of generated types where type names are keys. This is used to track
+   * uniquely generated types as we may want to deduplicate if there are
+   * multiple definitions with the same name but different value, or if we
+   * want to transform names.
+   */
+  types: Record<string, ModelMeta>;
+  version: string;
 }

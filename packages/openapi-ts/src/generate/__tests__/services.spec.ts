@@ -4,7 +4,7 @@ import path from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 
 import { TypeScriptFile } from '../../compiler';
-import type { Operation } from '../../generator/openApi';
+import type { Operation } from '../../types/client';
 import type { Files } from '../../types/utils';
 import { setConfig } from '../../utils/config';
 import { generateServices } from '../services';
@@ -66,6 +66,7 @@ describe('generateServices', () => {
               responses: [],
               service: '',
               summary: null,
+              tags: [],
             },
           ],
         },
@@ -115,6 +116,7 @@ describe('methodNameBuilder', () => {
     responses: [],
     service: 'User',
     summary: null,
+    tags: ['User'],
   };
 
   const client: Parameters<typeof generateServices>[0]['client'] = {

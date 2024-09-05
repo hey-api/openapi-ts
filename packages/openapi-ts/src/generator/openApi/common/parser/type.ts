@@ -1,11 +1,5 @@
-import { getConfig, isStandaloneClient } from '../../../../utils/config';
-import { camelCase } from '../../../utils/camelCase';
 import { refParametersPartial } from '../../../utils/const';
-import { reservedWordsRegExp } from '../../../utils/reservedWords';
-import {
-  ensureValidTypeScriptJavaScriptIdentifier,
-  sanitizeOperationParameterName,
-} from '../../../utils/sanitize';
+import { ensureValidTypeScriptJavaScriptIdentifier } from '../../../utils/sanitize';
 import { transformTypeName } from '../../../utils/transform';
 import { isDefinitionTypeNullable } from '../../v3/parser/inferType';
 import type { Type } from '../interfaces/Type';
@@ -171,22 +165,4 @@ export const getType = ({
   }
 
   return result;
-};
-
-/**
- * Replaces any invalid characters from a parameter name.
- * For example: 'filter.someProperty' becomes 'filterSomeProperty'.
- */
-export const transformTypeKeyName = (value: string): string => {
-  const config = getConfig();
-
-  // do not transform anything for standalone clients
-  if (isStandaloneClient(config)) {
-    return value;
-  }
-
-  const name = camelCase({
-    input: sanitizeOperationParameterName(value),
-  }).replace(reservedWordsRegExp, '_$1');
-  return name;
 };

@@ -1,49 +1,7 @@
-import { getConfig, isStandaloneClient } from '../../../../utils/config';
-import { camelCase } from '../../../utils/camelCase';
-import { sanitizeNamespaceIdentifier } from '../../../utils/sanitize';
 import type {
   OperationParameter,
   OperationResponse,
 } from '../interfaces/client';
-
-/**
- * Convert the input value to a correct operation (method) class name.
- * This will use the operation ID - if available - and otherwise fallback
- * on a generated name from the URL
- */
-export const getOperationName = (
-  url: string,
-  method: string,
-  operationId?: string,
-): string => {
-  const config = getConfig();
-
-  if (config.services.operationId && operationId) {
-    return camelCase({
-      input: sanitizeNamespaceIdentifier(operationId),
-    });
-  }
-
-  let urlWithoutPlaceholders = url;
-
-  // legacy clients ignore the "api-version" param since we do not want to
-  // add it as the first/default parameter for each of the service calls
-  if (!isStandaloneClient(config)) {
-    urlWithoutPlaceholders = urlWithoutPlaceholders.replace(
-      /[^/]*?{api-version}.*?\//g,
-      '',
-    );
-  }
-
-  urlWithoutPlaceholders = urlWithoutPlaceholders
-    .replace(/{(.*?)}/g, 'by-$1')
-    // replace slashes with hyphens for camelcase method at the end
-    .replace(/\//g, '-');
-
-  return camelCase({
-    input: `${method}-${urlWithoutPlaceholders}`,
-  });
-};
 
 export const getOperationResponseHeader = (
   operationResponses: OperationResponse[],

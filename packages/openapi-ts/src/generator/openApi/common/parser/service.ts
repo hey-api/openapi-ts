@@ -1,7 +1,3 @@
-import { camelCase } from '../../../utils/camelCase';
-import { sanitizeNamespaceIdentifier } from '../../../utils/sanitize';
-import type { Operation, Service } from '../interfaces/client';
-
 export const allowedServiceMethods = [
   'connect',
   'delete',
@@ -14,13 +10,6 @@ export const allowedServiceMethods = [
   'trace',
 ] as const;
 
-export const getNewService = (operation: Operation): Service => ({
-  $refs: [],
-  imports: [],
-  name: operation.service,
-  operations: [],
-});
-
 /**
  * Convert the service version to 'normal' version.
  * This basically removes any "v" prefix from the version string.
@@ -29,13 +18,3 @@ export const getNewService = (operation: Operation): Service => ({
 export function getServiceVersion(version = '1.0'): string {
   return String(version).replace(/^v/gi, '');
 }
-
-/**
- * Convert the input value to a correct service name. This converts
- * the input string to PascalCase.
- */
-export const getServiceName = (value: string): string =>
-  camelCase({
-    input: sanitizeNamespaceIdentifier(value),
-    pascalCase: true,
-  });

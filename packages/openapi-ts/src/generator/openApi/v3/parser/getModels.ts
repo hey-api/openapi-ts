@@ -1,15 +1,17 @@
 import type { Client } from '../../../../types/client';
-import { getConfig } from '../../../../utils/config';
 import { getParametersMeta, getSchemasMeta } from '../../../utils/meta';
+import type { Config } from '../../common/interfaces/config';
 import type { OpenApi } from '../interfaces/OpenApi';
 import { getModel } from './getModel';
 import { getParameterSchema } from './parameter';
 
-export const getModels = (
-  openApi: OpenApi,
-): Pick<Client, 'models' | 'types'> => {
-  const config = getConfig();
-
+export const getModels = ({
+  openApi,
+  config,
+}: {
+  config?: Config;
+  openApi: OpenApi;
+}): Pick<Client, 'models' | 'types'> => {
   const types: Client['types'] = {};
   let models: Client['models'] = [];
 
@@ -39,7 +41,7 @@ export const getModels = (
     ([definitionName, definition]) => {
       const schema = getParameterSchema(definition);
       if (!schema) {
-        if (config.debug) {
+        if (config?.debug) {
           console.warn('Skipping generating parameter:', definitionName);
         }
         return;

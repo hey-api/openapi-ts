@@ -1,17 +1,20 @@
-import type { Model, Operation, Service } from '../generator/openApi';
+import type { Client as ParserClient, Model } from '../generator/openApi';
+import { camelCase } from '../generator/utils/camelCase';
+import { sanitizeNamespaceIdentifier } from '../generator/utils/sanitize';
 import { unique } from '../generator/utils/unique';
-import type { Client } from '../types/client';
+import type { Client, Operation, Service } from '../types/client';
+import { getConfig } from './config';
 import { sort } from './sort';
 
 /**
  * Post process client
  * @param client Client object with all the models, services, etc.
  */
-export function postProcessClient(client: Client): Client {
+export function postProcessClient(client: ParserClient): Client {
   return {
     ...client,
     models: client.models.map((model) => postProcessModel(model)),
-    services: client.services.map((service) => postProcessService(service)),
+    services: postProcessOperations(client.operations).map(postProcessService),
     types: {},
   };
 }
@@ -33,6 +36,35 @@ const postProcessModel = (model: Model): Model => ({
     )
     .sort(sort),
 });
+
+const postProcessOperations = (
+  operations: ParserClient['operations'],
+): Client['services'] => {
+  const config = getConfig();
+
+  const services = new Map<string, Service>();
+
+  operations.forEach((parserOperation) => {
+    const tags =
+      parserOperation.tags.length && (config.services.asClass || config.name)
+        ? parserOperation.tags.filter(unique)
+        : ['Default'];
+    tags.forEach((tag) => {
+      const operation: Operation = {
+        ...parserOperation,
+        service: getServiceName(tag),
+      };
+      const service =
+        services.get(operation.service) || getNewService(operation);
+      service.$refs = [...service.$refs, ...operation.$refs];
+      service.imports = [...service.imports, ...operation.imports];
+      service.operations = [...service.operations, operation];
+      services.set(operation.service, service);
+    });
+  });
+
+  return Array.from(services.values());
+};
 
 const postProcessService = (service: Service): Service => {
   const clone = { ...service };
@@ -71,3 +103,20 @@ const postProcessServiceOperations = (service: Service): Operation[] => {
     return clone;
   });
 };
+
+export const getNewService = (operation: Operation): Service => ({
+  $refs: [],
+  imports: [],
+  name: operation.service,
+  operations: [],
+});
+
+/**
+ * Convert the input value to a correct service name. This converts
+ * the input string to PascalCase.
+ */
+export const getServiceName = (value: string): string =>
+  camelCase({
+    input: sanitizeNamespaceIdentifier(value),
+    pascalCase: true,
+  });

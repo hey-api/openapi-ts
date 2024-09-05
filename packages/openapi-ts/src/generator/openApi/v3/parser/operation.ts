@@ -4,12 +4,9 @@ import type {
   OperationParameter,
   OperationParameters,
 } from '../../common/interfaces/client';
+import { Config } from '../../common/interfaces/config';
 import { getRef } from '../../common/parser/getRef';
-import {
-  getOperationName,
-  getOperationResponseHeader,
-} from '../../common/parser/operation';
-import { getServiceName } from '../../common/parser/service';
+import { getOperationResponseHeader } from '../../common/parser/operation';
 import { toSortedByRequired } from '../../common/parser/sort';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiOperation } from '../interfaces/OpenApiOperation';
@@ -40,35 +37,29 @@ const mergeParameters = (
 };
 
 export const getOperation = ({
-  debug,
   method,
   op,
   openApi,
   pathParams,
-  tag,
   types,
   url,
+  config,
 }: {
-  debug?: boolean;
+  config: Config;
   method: Lowercase<Operation['method']>;
   op: OpenApiOperation;
   openApi: OpenApi;
   pathParams: OperationParameters;
-  tag: string;
   types: Client['types'];
   url: string;
 }): Operation => {
-  const service = getServiceName(tag);
-  const name = getOperationName(url, method, op.operationId);
-
-  const operation: Operation = {
+  const operationWithoutName: Omit<Operation, 'name'> = {
     $refs: [],
     deprecated: Boolean(op.deprecated),
     description: op.description || null,
     id: op.operationId || null,
     imports: [],
     method: method.toUpperCase() as Operation['method'],
-    name,
     parameters: [],
     parametersBody: pathParams.parametersBody,
     parametersCookie: [],
@@ -79,12 +70,17 @@ export const getOperation = ({
     path: url,
     responseHeader: null,
     responses: [],
-    service,
     summary: op.summary || null,
+    tags: op.tags || [],
+  };
+  const operation: Operation = {
+    ...operationWithoutName,
+    name: config.nameFn.operation(operationWithoutName),
   };
 
   if (op.parameters) {
     const parameters = getOperationParameters({
+      config,
       openApi,
       parameters: op.parameters,
       types,
@@ -119,7 +115,7 @@ export const getOperation = ({
     const requestBodyDef = getRef<OpenApiRequestBody>(openApi, op.requestBody);
     const requestBody = getOperationRequestBody({
       body: requestBodyDef,
-      debug,
+      debug: config.debug,
       openApi,
       types,
     });
