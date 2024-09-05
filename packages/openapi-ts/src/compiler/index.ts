@@ -120,7 +120,7 @@ export class TypeScriptFile {
     return [name, 'gen', extension].filter(Boolean).join('.');
   }
 
-  public toString(seperator: string = '\n') {
+  public toString(separator: string = '\n') {
     let output: string[] = [];
     if (this._headers.length) {
       output = [...output, this._headers.join('\n')];
@@ -148,10 +148,10 @@ export class TypeScriptFile {
           : utils.tsNodeToString({ node, unescape: true }),
       ),
     ];
-    return output.join(seperator);
+    return output.join(separator);
   }
 
-  public write(seperator = '\n') {
+  public write(separator = '\n') {
     if (this.isEmpty()) {
       this.remove({ force: true });
       return;
@@ -163,7 +163,7 @@ export class TypeScriptFile {
       dir = parts.slice(0, parts.length - 1).join(path.sep);
     }
     ensureDirSync(dir);
-    writeFileSync(this._path, this.toString(seperator));
+    writeFileSync(this._path, this.toString(separator));
   }
 }
 
