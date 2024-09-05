@@ -1,7 +1,4 @@
-import type {
-  OperationParameter,
-  OperationResponse,
-} from '../interfaces/client';
+import type { OperationResponse } from '../interfaces/client';
 
 export const getOperationResponseHeader = (
   operationResponses: OperationResponse[],
@@ -13,17 +10,6 @@ export const getOperationResponseHeader = (
     return header.name;
   }
   return null;
-};
-
-/**
- * Does this operation have at least one required parameter?
- * @returns boolean
- */
-export const isOperationParameterRequired = (
-  parameters: OperationParameter[],
-) => {
-  const isRequired = parameters.some((parameter) => parameter.isRequired);
-  return isRequired;
 };
 
 /**

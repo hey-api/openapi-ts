@@ -21,7 +21,7 @@ import type {
   Model,
   OperationParameter,
 } from '../../../generator/openApi';
-import { isOperationParameterRequired } from '../../../generator/openApi/common/parser/operation';
+import { isOperationParameterRequired } from '../../../generator/utils/operation';
 import type { Client } from '../../../types/client';
 import type { Files } from '../../../types/utils';
 import { getConfig } from '../../../utils/config';

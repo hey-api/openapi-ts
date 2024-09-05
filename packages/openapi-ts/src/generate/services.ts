@@ -12,9 +12,9 @@ import type {
   Operation,
   OperationParameter,
 } from '../generator/openApi';
-import { isOperationParameterRequired } from '../generator/openApi/common/parser/operation';
 import { camelCase } from '../generator/utils/camelCase';
 import { escapeComment, escapeName } from '../generator/utils/escape';
+import { isOperationParameterRequired } from '../generator/utils/operation';
 import { reservedWordsRegExp } from '../generator/utils/reservedWords';
 import { transformServiceName } from '../generator/utils/transform';
 import { unique } from '../generator/utils/unique';
