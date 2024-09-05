@@ -444,7 +444,7 @@ class Interceptors<Interceptor> {
     this._fns = [];
   }
 
-  exist(fn: Interceptor) {
+  exists(fn: Interceptor) {
     return this._fns.indexOf(fn) !== -1;
   }
 
