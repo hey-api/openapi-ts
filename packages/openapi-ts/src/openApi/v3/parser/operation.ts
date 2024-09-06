@@ -5,12 +5,10 @@ import type {
   OperationParameters,
 } from '../../common/interfaces/client';
 import { getRef } from '../../common/parser/getRef';
-import {
-  getOperationName,
-  getOperationResponseHeader,
-} from '../../common/parser/operation';
+import { getOperationResponseHeader } from '../../common/parser/operation';
 import { getServiceName } from '../../common/parser/service';
 import { toSortedByRequired } from '../../common/parser/sort';
+import { getConfig } from '../../config';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiOperation } from '../interfaces/OpenApiOperation';
 import type { OpenApiRequestBody } from '../interfaces/OpenApiRequestBody';
@@ -58,17 +56,16 @@ export const getOperation = ({
   types: Client['types'];
   url: string;
 }): Operation => {
+  const config = getConfig();
   const service = getServiceName(tag);
-  const name = getOperationName(url, method, op.operationId);
 
-  const operation: Operation = {
+  const operationWithoutName: Omit<Operation, 'name'> = {
     $refs: [],
     deprecated: Boolean(op.deprecated),
     description: op.description || null,
     id: op.operationId || null,
     imports: [],
     method: method.toUpperCase() as Operation['method'],
-    name,
     parameters: [],
     parametersBody: pathParams.parametersBody,
     parametersCookie: [],
@@ -81,6 +78,10 @@ export const getOperation = ({
     responses: [],
     service,
     summary: op.summary || null,
+  };
+  const operation = {
+    ...operationWithoutName,
+    name: config.nameFn.operation(operationWithoutName),
   };
 
   if (op.parameters) {

@@ -1,33 +1,18 @@
 import { describe, expect, it } from 'vitest';
 
-import { setConfig } from '../../../../utils/config';
+import { setConfig } from '../../../config';
 import { getServices } from '../getServices';
 
 describe('getServices', () => {
   it('should create an unnamed service if tags are empty', () => {
     setConfig({
-      client: {
-        name: 'legacy/fetch',
+      nameFn: {
+        operation: () => 'operation',
+        operationParameter: () => 'operationParameter',
       },
-      configFile: '',
-      debug: false,
-      dryRun: true,
-      experimental_parser: false,
-      exportCore: true,
-      input: '',
-      output: {
-        path: '',
-      },
-      plugins: [],
-      schemas: {},
-      services: {
-        operationId: false,
-      },
-      types: {},
-      useOptions: true,
     });
 
-    const { services } = getServices({
+    const services = getServices({
       openApi: {
         info: {
           title: 'x',

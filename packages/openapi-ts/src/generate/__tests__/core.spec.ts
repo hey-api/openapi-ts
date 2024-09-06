@@ -18,7 +18,6 @@ describe('generateCore', () => {
   it('writes to filesystem', async () => {
     const client: Parameters<typeof generateCore>[1] = {
       models: [],
-      operationIds: new Map(),
       server: 'http://localhost:8080',
       services: [],
       types: {},
@@ -79,7 +78,6 @@ describe('generateCore', () => {
   it('uses client server value for base', async () => {
     const client: Parameters<typeof generateCore>[1] = {
       models: [],
-      operationIds: new Map(),
       server: 'http://localhost:8080',
       services: [],
       types: {},
@@ -122,7 +120,6 @@ describe('generateCore', () => {
   it('uses custom value for base', async () => {
     const client: Parameters<typeof generateCore>[1] = {
       models: [],
-      operationIds: new Map(),
       server: 'http://localhost:8080',
       services: [],
       types: {},

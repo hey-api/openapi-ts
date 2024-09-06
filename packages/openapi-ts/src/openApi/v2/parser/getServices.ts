@@ -1,11 +1,11 @@
 import type { Client } from '../../../types/client';
-import { getConfig } from '../../../utils/config';
 import { unique } from '../../../utils/unique';
 import type { Operation, Service } from '../../common/interfaces/client';
 import {
   allowedServiceMethods,
   getNewService,
 } from '../../common/parser/service';
+import { getConfig } from '../../config';
 import type { OpenApi } from '../interfaces/OpenApi';
 import { getOperationParameters } from './getOperationParameters';
 import { getOperation } from './operation';
@@ -16,12 +16,8 @@ export const getServices = ({
 }: {
   openApi: OpenApi;
   types: Client['types'];
-}): Pick<Client, 'operationIds' | 'services'> => {
+}): Service[] => {
   const config = getConfig();
-
-  const regexp = config.services.filter
-    ? new RegExp(config.services.filter)
-    : undefined;
 
   const operationIds = new Map<string, string>();
   const services = new Map<string, Service>();
@@ -38,9 +34,8 @@ export const getServices = ({
       const method = key as Lowercase<Operation['method']>;
 
       const operationKey = `${method.toUpperCase()} ${url}`;
-      const shouldProcess = !regexp || regexp.test(operationKey);
 
-      if (shouldProcess && allowedServiceMethods.includes(method)) {
+      if (allowedServiceMethods.includes(method)) {
         const op = path[method]!;
 
         if (op.operationId) {
@@ -53,10 +48,7 @@ export const getServices = ({
           }
         }
 
-        const tags =
-          op.tags?.length && (config.services.asClass || config.name)
-            ? op.tags.filter(unique)
-            : ['Default'];
+        const tags = op.tags?.length ? op.tags.filter(unique) : ['Default'];
         tags.forEach((tag) => {
           const operation = getOperation({
             method,
@@ -67,19 +59,21 @@ export const getServices = ({
             types,
             url,
           });
-          const service =
-            services.get(operation.service) || getNewService(operation);
-          service.$refs = [...service.$refs, ...operation.$refs];
-          service.imports = [...service.imports, ...operation.imports];
-          service.operations = [...service.operations, operation];
-          services.set(operation.service, service);
+          if (
+            !config.filterFn?.operation ||
+            config.filterFn?.operation(operation)
+          ) {
+            const service =
+              services.get(operation.service) || getNewService(operation);
+            service.$refs = [...service.$refs, ...operation.$refs];
+            service.imports = [...service.imports, ...operation.imports];
+            service.operations = [...service.operations, operation];
+            services.set(operation.service, service);
+          }
         });
       }
     }
   }
 
-  return {
-    operationIds,
-    services: Array.from(services.values()),
-  };
+  return Array.from(services.values());
 };
