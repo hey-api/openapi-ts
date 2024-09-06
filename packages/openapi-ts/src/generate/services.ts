@@ -7,7 +7,7 @@ import {
   TypeScriptFile,
 } from '../compiler';
 import type { FunctionTypeParameter, ObjectValue } from '../compiler/types';
-import { isOperationParameterRequired } from '../openApi/common/parser/operation';
+import { isOperationParameterRequired } from '../openApi';
 import type {
   Client,
   Model,

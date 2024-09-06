@@ -15,7 +15,7 @@ import {
   operationResponseTypeName,
   toOperationName,
 } from '../../../generate/services';
-import { isOperationParameterRequired } from '../../../openApi/common/parser/operation';
+import { isOperationParameterRequired } from '../../../openApi';
 import type { Client } from '../../../types/client';
 import type {
   Method,

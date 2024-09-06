@@ -2,11 +2,13 @@ import type {
   Client as ParserClient,
   Method,
   Model,
+  ModelMeta,
   Operation as ParserOperation,
   OperationParameter,
+  OperationResponse,
 } from '../openApi';
 
-export type { Method, Model, OperationParameter };
+export type { Method, Model, ModelMeta, OperationParameter, OperationResponse };
 
 export interface Operation extends Omit<ParserOperation, 'tags'> {
   service: string;

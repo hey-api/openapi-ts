@@ -1,5 +1,5 @@
 import type { Client as ParserClient, Model } from '../openApi';
-import { sanitizeNamespaceIdentifier } from '../openApi/common/parser/sanitize';
+import { sanitizeNamespaceIdentifier } from '../openApi';
 import type { Client, Operation, Service } from '../types/client';
 import { camelCase } from './camelCase';
 import { getConfig } from './config';

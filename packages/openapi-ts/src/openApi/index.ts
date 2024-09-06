@@ -10,11 +10,22 @@ export type {
   Enum,
   Method,
   Model,
+  ModelMeta,
   Operation,
   OperationParameter,
+  OperationResponse,
 } from './common/interfaces/client';
 export type { Config } from './common/interfaces/config';
 export type { OpenApi } from './common/interfaces/OpenApi';
+export { isOperationParameterRequired } from './common/parser/operation';
+export {
+  ensureValidTypeScriptJavaScriptIdentifier,
+  sanitizeNamespaceIdentifier,
+  sanitizeOperationParameterName,
+} from './common/parser/sanitize';
+export { getType } from './common/parser/type';
+export type { OpenApiSchema as OpenApiV2Schema } from './v2/interfaces/OpenApiSchema';
+export type { OpenApiSchema as OpenApiV3Schema } from './v3/interfaces/OpenApiSchema';
 
 /**
  * Parse the OpenAPI specification to a Client model that contains
