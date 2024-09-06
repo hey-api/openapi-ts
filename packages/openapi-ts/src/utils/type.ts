@@ -1,6 +1,6 @@
 import { compiler, type Property, type TypeNode } from '../compiler';
 import type { Model } from '../openApi';
-import { sanitizeOperationParameterName } from '../openApi/common/parser/sanitize';
+import { sanitizeOperationParameterName } from '../openApi';
 import type { Client } from '../types/client';
 import { camelCase } from './camelCase';
 import { getConfig, isStandaloneClient } from './config';

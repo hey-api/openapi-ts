@@ -6,9 +6,8 @@ import {
   type Node,
   TypeScriptFile,
 } from '../compiler';
-import type { Model, OperationParameter } from '../openApi';
-import type { Method } from '../openApi/common/interfaces/client';
-import { isOperationParameterRequired } from '../openApi/common/parser/operation';
+import { isOperationParameterRequired } from '../openApi';
+import type { Method, Model, OperationParameter } from '../types/client';
 import type { Client } from '../types/client';
 import type { Files } from '../types/utils';
 import { getConfig, isStandaloneClient } from '../utils/config';

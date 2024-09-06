@@ -1,8 +1,5 @@
-import type {
-  Operation,
-  OperationParameter,
-} from '../openApi/common/interfaces/client';
-import { sanitizeNamespaceIdentifier } from '../openApi/common/parser/sanitize';
+import type { Operation, OperationParameter } from '../openApi';
+import { sanitizeNamespaceIdentifier } from '../openApi';
 import { camelCase } from './camelCase';
 import { getConfig, isStandaloneClient } from './config';
 import { transformTypeKeyName } from './type';
