@@ -1,10 +1,7 @@
 import ts from 'typescript';
 
 import { compiler } from '../compiler';
-import type {
-  ModelMeta,
-  OperationResponse,
-} from '../openApi/common/interfaces/client';
+import type { ModelMeta, OperationResponse } from '../types/client';
 import { getConfig } from '../utils/config';
 import { unsetUniqueTypeName } from '../utils/type';
 import {

@@ -1,8 +1,6 @@
 import { compiler, TypeScriptFile } from '../compiler';
-import type { OpenApi } from '../openApi';
-import { ensureValidTypeScriptJavaScriptIdentifier } from '../openApi/common/parser/sanitize';
-import type { OpenApiSchema as OpenApiV2Schema } from '../openApi/v2/interfaces/OpenApiSchema';
-import type { OpenApiSchema as OpenApiV3Schema } from '../openApi/v3/interfaces/OpenApiSchema';
+import type { OpenApi, OpenApiV2Schema, OpenApiV3Schema } from '../openApi';
+import { ensureValidTypeScriptJavaScriptIdentifier } from '../openApi';
 import type { Files } from '../types/utils';
 import { getConfig } from '../utils/config';
 

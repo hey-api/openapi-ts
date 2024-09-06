@@ -1,4 +1,4 @@
-import { ensureValidTypeScriptJavaScriptIdentifier } from '../openApi/common/parser/sanitize';
+import { ensureValidTypeScriptJavaScriptIdentifier } from '../openApi';
 import { camelCase } from './camelCase';
 import { getConfig } from './config';
 import { reservedWordsRegExp } from './reservedWords';

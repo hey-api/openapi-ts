@@ -35,7 +35,6 @@ describe('generateOutput', () => {
 
     const client: Parameters<typeof generateOutput>[1] = {
       models: [],
-      operationIds: new Map(),
       server: 'http://localhost:8080',
       services: [],
       types: {},
