@@ -38,7 +38,6 @@ describe('generateServices', () => {
 
     const client: Parameters<typeof generateServices>[0]['client'] = {
       models: [],
-      operationIds: new Map(),
       server: 'http://localhost:8080',
       services: [
         {
@@ -119,7 +118,6 @@ describe('methodNameBuilder', () => {
 
   const client: Parameters<typeof generateServices>[0]['client'] = {
     models: [],
-    operationIds: new Map(),
     server: 'http://localhost:8080',
     services: [
       {

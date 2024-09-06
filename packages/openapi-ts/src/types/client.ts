@@ -3,12 +3,6 @@ import type { ModelMeta } from '../openApi/common/interfaces/client';
 
 export interface Client {
   models: Model[];
-  /**
-   * Map of unique operation IDs where operation IDs are keys. The values
-   * are endpoints in the `${method} ${path}` format. This is used to detect
-   * duplicate operation IDs in the specification.
-   */
-  operationIds: Map<string, string>;
   server: string;
   services: Service[];
   /**
