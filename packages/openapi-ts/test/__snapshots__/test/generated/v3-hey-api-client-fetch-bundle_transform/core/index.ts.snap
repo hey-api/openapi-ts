@@ -26,9 +26,9 @@ export const createClient = (config: Config = {}): Client => {
 
   const interceptors = createInterceptors<Request, Response, RequestOptions>();
 
-  // @ts-ignore
+  // @ts-expect-error
   const request: Client['request'] = async (options) => {
-    // @ts-ignore
+    // @ts-expect-error
     const opts: RequestOptions = {
       ..._config,
       ...options,

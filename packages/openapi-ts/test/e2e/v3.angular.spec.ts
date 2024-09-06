@@ -31,16 +31,16 @@ describe('v3.angular', () => {
     const result = await browser.evaluate(
       async () =>
         await new Promise(resolve => {
-          // @ts-ignore
+          // @ts-expect-error
           const { OpenAPI, SimpleService } = window.api
-          // @ts-ignore
+          // @ts-expect-error
           OpenAPI.TOKEN = window.tokenRequest
           OpenAPI.USERNAME = undefined
           OpenAPI.PASSWORD = undefined
           SimpleService.getCallWithoutParametersAndResponse().subscribe(resolve)
         })
     )
-    // @ts-ignore
+    // @ts-expect-error
     expect(result.headers.authorization).toBe('Bearer MY_TOKEN')
   })
 
@@ -48,7 +48,7 @@ describe('v3.angular', () => {
     const result = await browser.evaluate(
       async () =>
         await new Promise(resolve => {
-          // @ts-ignore
+          // @ts-expect-error
           const { OpenAPI, SimpleService } = window.api
           OpenAPI.TOKEN = undefined
           OpenAPI.USERNAME = 'username'
@@ -56,7 +56,7 @@ describe('v3.angular', () => {
           SimpleService.getCallWithoutParametersAndResponse().subscribe(resolve)
         })
     )
-    // @ts-ignore
+    // @ts-expect-error
     expect(result.headers.authorization).toBe('Basic dXNlcm5hbWU6cGFzc3dvcmQ=')
   })
 
@@ -64,7 +64,7 @@ describe('v3.angular', () => {
     const result = await browser.evaluate(
       async () =>
         await new Promise(resolve => {
-          // @ts-ignore
+          // @ts-expect-error
           const { ComplexService } = window.api
           ComplexService.complexTypes({
             first: {
@@ -82,7 +82,7 @@ describe('v3.angular', () => {
     const result = await browser.evaluate(
       async () =>
         await new Promise(resolve => {
-          // @ts-ignore
+          // @ts-expect-error
           const { ParametersService } = window.api
           ParametersService.callWithParameters(
             'valueHeader',
@@ -103,7 +103,7 @@ describe('v3.angular', () => {
     const error = await browser.evaluate(async () => {
       try {
         await new Promise((resolve, reject) => {
-          // @ts-ignore
+          // @ts-expect-error
           const { ErrorService } = window.api
           ErrorService.testErrorCode(500).subscribe(resolve, reject)
         })
@@ -136,7 +136,7 @@ describe('v3.angular', () => {
 
   it('should throw unknown error (599)', async () => {
     const error = await browser.evaluate(async () => {
-      // @ts-ignore
+      // @ts-expect-error
       const { ErrorService } = window.api
       try {
         await new Promise((resolve, reject) => {

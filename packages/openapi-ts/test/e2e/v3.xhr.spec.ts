@@ -27,7 +27,7 @@ describe.skip('v3.xhr', () => {
     OpenAPI.PASSWORD = undefined
     const result = await SimpleService.getCallWithoutParametersAndResponse()
     expect(tokenRequest.mock.calls.length).toBe(1)
-    // @ts-ignore
+    // @ts-expect-error
     expect(result.headers.authorization).toBe('Bearer MY_TOKEN')
   })
 
@@ -39,14 +39,14 @@ describe.skip('v3.xhr', () => {
     OpenAPI.USERNAME = 'username'
     OpenAPI.PASSWORD = 'password'
     const result = await SimpleService.getCallWithoutParametersAndResponse()
-    // @ts-ignore
+    // @ts-expect-error
     expect(result.headers.authorization).toBe('Basic dXNlcm5hbWU6cGFzc3dvcmQ=')
   })
 
   it('supports complex params', async () => {
     const { ComplexService } = await import('./generated/v3/xhr/index.js')
     const result = await ComplexService.complexTypes({
-      // @ts-ignore
+      // @ts-expect-error
       first: {
         second: {
           third: 'Hello World!'
@@ -60,7 +60,7 @@ describe.skip('v3.xhr', () => {
     const { ParametersService } = await import('./generated/v3/xhr/index.js')
     const result = await ParametersService.callWithParameters(
       'valueHeader',
-      // @ts-ignore
+      // @ts-expect-error
       'valueQuery',
       'valueForm',
       'valueCookie',
@@ -91,7 +91,7 @@ describe.skip('v3.xhr', () => {
     let error
     try {
       const { ErrorService } = await import('./generated/v3/xhr/index.js')
-      // @ts-ignore
+      // @ts-expect-error
       await ErrorService.testErrorCode(500)
     } catch (err) {
       error = JSON.stringify({
@@ -122,7 +122,7 @@ describe.skip('v3.xhr', () => {
     let error
     try {
       const { ErrorService } = await import('./generated/v3/xhr/index.js')
-      // @ts-ignore
+      // @ts-expect-error
       await ErrorService.testErrorCode(599)
     } catch (err) {
       error = JSON.stringify({
@@ -153,12 +153,12 @@ describe.skip('v3.xhr', () => {
   it('it should parse query params', async () => {
     const { ParametersService } = await import('./generated/v3/xhr/index.js')
     const result = await ParametersService.postCallWithOptionalParam({
-      // @ts-ignore
+      // @ts-expect-error
       page: 0,
       size: 1,
       sort: ['location']
     })
-    // @ts-ignore
+    // @ts-expect-error
     expect(result.query).toStrictEqual({
       parameter: { page: '0', size: '1', sort: 'location' }
     })
@@ -180,28 +180,28 @@ describe.skip('v3.xhr useOptions', () => {
   it('returns result body by default', async () => {
     const { SimpleService } = await import('./generated/v3/xhr/index.js')
     const result = await SimpleService.getCallWithoutParametersAndResponse()
-    // @ts-ignore
+    // @ts-expect-error
     expect(result.body).toBeUndefined()
   })
 
   it('returns result body', async () => {
     const { SimpleService } = await import('./generated/v3/xhr/index.js')
-    // @ts-ignore
+    // @ts-expect-error
     const result = await SimpleService.getCallWithoutParametersAndResponse({
       _result: 'body'
     })
-    // @ts-ignore
+    // @ts-expect-error
     expect(result.body).toBeUndefined()
   })
 
   it('returns raw result', async ({ skip }) => {
     skip()
     const { SimpleService } = await import('./generated/v3/xhr/index.js')
-    // @ts-ignore
+    // @ts-expect-error
     const result = await SimpleService.getCallWithoutParametersAndResponse({
       _result: 'raw'
     })
-    // @ts-ignore
+    // @ts-expect-error
     expect(result.body).toBeDefined()
   })
 })
