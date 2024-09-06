@@ -1,16 +1,21 @@
-import { Model, Service } from '../openApi';
-import type { ModelMeta } from '../openApi/common/interfaces/client';
+import type {
+  Client as ParserClient,
+  Method,
+  Model,
+  Operation as ParserOperation,
+  OperationParameter,
+} from '../openApi';
 
-export interface Client {
-  models: Model[];
-  server: string;
+export type { Method, Model, OperationParameter };
+
+export interface Operation extends Omit<ParserOperation, 'tags'> {
+  service: string;
+}
+
+export interface Service extends Pick<Model, '$refs' | 'imports' | 'name'> {
+  operations: Operation[];
+}
+
+export interface Client extends Omit<ParserClient, 'operations'> {
   services: Service[];
-  /**
-   * Map of generated types where type names are keys. This is used to track
-   * uniquely generated types as we may want to deduplicate if there are
-   * multiple definitions with the same name but different value, or if we
-   * want to transform names.
-   */
-  types: Record<string, ModelMeta>;
-  version: string;
 }

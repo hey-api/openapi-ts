@@ -15,14 +15,14 @@ import {
   operationResponseTypeName,
   toOperationName,
 } from '../../../generate/services';
-import type { Operation } from '../../../openApi';
+import { isOperationParameterRequired } from '../../../openApi/common/parser/operation';
+import type { Client } from '../../../types/client';
 import type {
   Method,
   Model,
+  Operation,
   OperationParameter,
-} from '../../../openApi/common/interfaces/client';
-import { isOperationParameterRequired } from '../../../openApi/common/parser/operation';
-import type { Client } from '../../../types/client';
+} from '../../../types/client';
 import type { Files } from '../../../types/utils';
 import { getConfig } from '../../../utils/config';
 import type { PluginDefinition } from '../../types';

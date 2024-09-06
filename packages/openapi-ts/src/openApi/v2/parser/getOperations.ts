@@ -1,26 +1,21 @@
-import type { Client } from '../../../types/client';
-import { unique } from '../../../utils/unique';
-import type { Operation, Service } from '../../common/interfaces/client';
-import {
-  allowedServiceMethods,
-  getNewService,
-} from '../../common/parser/service';
+import type { Client, Operation } from '../../common/interfaces/client';
+import { allowedServiceMethods } from '../../common/parser/service';
 import { getConfig } from '../../config';
 import type { OpenApi } from '../interfaces/OpenApi';
 import { getOperationParameters } from './getOperationParameters';
 import { getOperation } from './operation';
 
-export const getServices = ({
+export const getOperations = ({
   openApi,
   types,
 }: {
   openApi: OpenApi;
   types: Client['types'];
-}): Service[] => {
+}): Operation[] => {
   const config = getConfig();
 
   const operationIds = new Map<string, string>();
-  const services = new Map<string, Service>();
+  const operations: Operation[] = [];
 
   for (const url in openApi.paths) {
     const path = openApi.paths[url];
@@ -48,32 +43,24 @@ export const getServices = ({
           }
         }
 
-        const tags = op.tags?.length ? op.tags.filter(unique) : ['Default'];
-        tags.forEach((tag) => {
-          const operation = getOperation({
-            method,
-            op,
-            openApi,
-            pathParams: pathParameters,
-            tag,
-            types,
-            url,
-          });
-          if (
-            !config.filterFn?.operation ||
-            config.filterFn?.operation(operation)
-          ) {
-            const service =
-              services.get(operation.service) || getNewService(operation);
-            service.$refs = [...service.$refs, ...operation.$refs];
-            service.imports = [...service.imports, ...operation.imports];
-            service.operations = [...service.operations, operation];
-            services.set(operation.service, service);
-          }
+        const operation = getOperation({
+          method,
+          op,
+          openApi,
+          pathParams: pathParameters,
+          types,
+          url,
         });
+
+        if (
+          !config.filterFn?.operation ||
+          config.filterFn?.operation(operation)
+        ) {
+          operations.push(operation);
+        }
       }
     }
   }
 
-  return Array.from(services.values());
+  return operations;
 };
