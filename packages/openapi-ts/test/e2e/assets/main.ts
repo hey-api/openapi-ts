@@ -1,4 +1,4 @@
 import * as api from './index'
 
-// @ts-ignore
+// @ts-expect-error
 window.api = api

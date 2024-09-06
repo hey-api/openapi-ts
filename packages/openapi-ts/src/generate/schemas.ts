@@ -31,7 +31,7 @@ const ensureValidSchemaOutput = (
         ].includes(key) &&
         parentKey !== 'properties'
       ) {
-        // @ts-ignore
+        // @ts-expect-error
         delete result[key];
         return;
       }
@@ -40,12 +40,12 @@ const ensureValidSchemaOutput = (
     // refs are encoded probably by json-schema-ref-parser, didn't investigate
     // further
     if (key === '$ref' && typeof value === 'string') {
-      // @ts-ignore
+      // @ts-expect-error
       result[key] = decodeURIComponent(value);
     }
 
     if (value && typeof value === 'object') {
-      // @ts-ignore
+      // @ts-expect-error
       result[key] = ensureValidSchemaOutput(value, key);
     }
   });

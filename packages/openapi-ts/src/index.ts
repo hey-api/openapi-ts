@@ -20,7 +20,7 @@ import {
 import { Performance } from './utils/performance';
 import { postProcessClient } from './utils/postprocess';
 
-type OutputProcesser = {
+type OutputProcessor = {
   args: (path: string) => ReadonlyArray<string>;
   command: string;
   name: string;
@@ -31,7 +31,7 @@ type OutputProcesser = {
  */
 const formatters: Record<
   Extract<Config['output']['format'], string>,
-  OutputProcesser
+  OutputProcessor
 > = {
   biome: {
     args: (path) => ['format', '--write', path],
@@ -56,7 +56,7 @@ const formatters: Record<
  */
 const linters: Record<
   Extract<Config['output']['lint'], string>,
-  OutputProcesser
+  OutputProcessor
 > = {
   biome: {
     args: (path) => ['lint', '--apply', path],

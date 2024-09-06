@@ -12,7 +12,7 @@ import { ensureDirSync } from './utils';
 /**
  * Generate the OpenAPI client index file using the Handlebar template and write it to disk.
  * The index file just contains all the exports you need to use the client as a standalone
- * library. But yuo can also import individual models and services directly.
+ * library. But you can also import individual models and services directly.
  * @param openApi {@link OpenApi} Dereferenced OpenAPI specification
  * @param outputPath Directory to write the generated files to
  * @param client Client containing models, schemas, and services
