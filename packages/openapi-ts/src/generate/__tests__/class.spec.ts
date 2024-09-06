@@ -35,7 +35,6 @@ describe('generateClientClass', () => {
 
     const client: Parameters<typeof generateClientClass>[2] = {
       models: [],
-      operationIds: new Map(),
       server: 'http://localhost:8080',
       services: [],
       types: {},
