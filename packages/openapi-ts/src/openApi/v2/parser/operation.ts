@@ -4,7 +4,6 @@ import type {
   OperationParameters,
 } from '../../common/interfaces/client';
 import { getOperationResponseHeader } from '../../common/parser/operation';
-import { getServiceName } from '../../common/parser/service';
 import { toSortedByRequired } from '../../common/parser/sort';
 import { getConfig } from '../../config';
 import type { OpenApi } from '../interfaces/OpenApi';
@@ -18,19 +17,16 @@ export const getOperation = ({
   openApi,
   types,
   pathParams,
-  tag,
   url,
 }: {
   method: Lowercase<Operation['method']>;
   op: OpenApiOperation;
   openApi: OpenApi;
   pathParams: OperationParameters;
-  tag: string;
   types: Client['types'];
   url: string;
 }): Operation => {
   const config = getConfig();
-  const service = getServiceName(tag);
 
   const operationWithoutName: Omit<Operation, 'name'> = {
     $refs: [],
@@ -49,8 +45,8 @@ export const getOperation = ({
     path: url,
     responseHeader: null,
     responses: [],
-    service,
     summary: op.summary || null,
+    tags: op.tags || null,
   };
   const operation = {
     ...operationWithoutName,

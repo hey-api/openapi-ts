@@ -1,16 +1,17 @@
-import type { Client } from '../types/client';
+import type { Client } from './common/interfaces/client';
 import type { Config } from './common/interfaces/config';
-import { OpenApi } from './common/interfaces/OpenApi';
+import type { OpenApi } from './common/interfaces/OpenApi';
 import { setConfig } from './config';
 import { parse as parseV2 } from './v2/index';
 import { parse as parseV3 } from './v3/index';
 
 export type {
+  Client,
   Enum,
+  Method,
   Model,
   Operation,
   OperationParameter,
-  Service,
 } from './common/interfaces/client';
 export type { Config } from './common/interfaces/config';
 export type { OpenApi } from './common/interfaces/OpenApi';
