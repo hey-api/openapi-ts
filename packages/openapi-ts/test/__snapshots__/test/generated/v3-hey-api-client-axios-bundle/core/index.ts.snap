@@ -15,18 +15,18 @@ export const createClient = (config: Config): Client => {
     instance.defaults = {
       ...instance.defaults,
       ..._config,
-      // @ts-ignore
+      // @ts-expect-error
       headers: mergeHeaders(instance.defaults.headers, _config.headers),
     };
     return getConfig();
   };
 
-  // @ts-ignore
+  // @ts-expect-error
   const request: Client['request'] = async (options) => {
     const opts: RequestOptions = {
       ..._config,
       ...options,
-      // @ts-ignore
+      // @ts-expect-error
       headers: mergeHeaders(_config.headers, options.headers),
     };
     if (opts.body && opts.bodySerializer) {
@@ -63,7 +63,7 @@ export const createClient = (config: Config): Client => {
       if (opts.throwOnError) {
         throw e;
       }
-      // @ts-ignore
+      // @ts-expect-error
       e.error = e.response?.data ?? {};
       return e;
     }

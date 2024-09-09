@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
 
-import type { OpenApiSchema } from '../../openApi/v3/interfaces/OpenApiSchema';
+import type { OpenApiV3Schema } from '../../openApi';
 import type { Files } from '../../types/utils';
 import { setConfig } from '../../utils/config';
 import { generateSchemas } from '../schemas';
@@ -89,7 +89,7 @@ describe('generateSchemas', () => {
       useOptions: true,
     });
 
-    const schema: OpenApiSchema = {
+    const schema: OpenApiV3Schema = {
       type: 'object',
     };
 

@@ -1,8 +1,6 @@
 import { compiler, TypeScriptFile } from '../compiler';
-import type { OpenApi } from '../openApi';
-import { ensureValidTypeScriptJavaScriptIdentifier } from '../openApi/common/parser/sanitize';
-import type { OpenApiSchema as OpenApiV2Schema } from '../openApi/v2/interfaces/OpenApiSchema';
-import type { OpenApiSchema as OpenApiV3Schema } from '../openApi/v3/interfaces/OpenApiSchema';
+import type { OpenApi, OpenApiV2Schema, OpenApiV3Schema } from '../openApi';
+import { ensureValidTypeScriptJavaScriptIdentifier } from '../openApi';
 import type { Files } from '../types/utils';
 import { getConfig } from '../utils/config';
 
@@ -33,7 +31,7 @@ const ensureValidSchemaOutput = (
         ].includes(key) &&
         parentKey !== 'properties'
       ) {
-        // @ts-ignore
+        // @ts-expect-error
         delete result[key];
         return;
       }
@@ -42,12 +40,12 @@ const ensureValidSchemaOutput = (
     // refs are encoded probably by json-schema-ref-parser, didn't investigate
     // further
     if (key === '$ref' && typeof value === 'string') {
-      // @ts-ignore
+      // @ts-expect-error
       result[key] = decodeURIComponent(value);
     }
 
     if (value && typeof value === 'object') {
-      // @ts-ignore
+      // @ts-expect-error
       result[key] = ensureValidSchemaOutput(value, key);
     }
   });

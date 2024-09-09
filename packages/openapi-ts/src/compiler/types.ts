@@ -164,7 +164,7 @@ export const toAccessLevelModifiers = (
 
 /**
  * Convert parameters to the declaration array expected by compiler API.
- * @param parameters - the parameters to conver to declarations
+ * @param parameters - the parameters to convert to declarations
  * @returns ts.ParameterDeclaration[]
  */
 export const toParameterDeclarations = (parameters: FunctionParameter[]) =>
