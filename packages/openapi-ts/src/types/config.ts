@@ -1,7 +1,6 @@
-import type { Operation } from '../openApi';
-import type { OpenApiSchema as OpenApiV2Schema } from '../openApi/v2/interfaces/OpenApiSchema';
-import type { OpenApiSchema as OpenApiV3Schema } from '../openApi/v3/interfaces/OpenApiSchema';
+import type { OpenApiV2Schema, OpenApiV3Schema } from '../openApi';
 import type { Plugins } from '../plugins/';
+import type { Operation } from '../types/client';
 import type { ExtractArrayOfObjects } from './utils';
 
 type Client =

@@ -7,9 +7,14 @@ import {
   TypeScriptFile,
 } from '../compiler';
 import type { FunctionTypeParameter, ObjectValue } from '../compiler/types';
-import type { Model, Operation, OperationParameter, Service } from '../openApi';
-import { isOperationParameterRequired } from '../openApi/common/parser/operation';
-import type { Client } from '../types/client';
+import { isOperationParameterRequired } from '../openApi';
+import type {
+  Client,
+  Model,
+  Operation,
+  OperationParameter,
+  Service,
+} from '../types/client';
 import type { Files } from '../types/utils';
 import { camelCase } from '../utils/camelCase';
 import { getConfig, isStandaloneClient } from '../utils/config';

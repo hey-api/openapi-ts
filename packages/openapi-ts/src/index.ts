@@ -11,10 +11,16 @@ import type { ClientConfig, Config, UserConfig } from './types/config';
 import { getConfig, isStandaloneClient, setConfig } from './utils/config';
 import { getOpenApiSpec } from './utils/getOpenApiSpec';
 import { registerHandlebarTemplates } from './utils/handlebars';
+import {
+  operationFilterFn,
+  operationNameFn,
+  operationParameterFilterFn,
+  operationParameterNameFn,
+} from './utils/parse';
 import { Performance } from './utils/performance';
 import { postProcessClient } from './utils/postprocess';
 
-type OutputProcesser = {
+type OutputProcessor = {
   args: (path: string) => ReadonlyArray<string>;
   command: string;
   name: string;
@@ -25,7 +31,7 @@ type OutputProcesser = {
  */
 const formatters: Record<
   Extract<Config['output']['format'], string>,
-  OutputProcesser
+  OutputProcessor
 > = {
   biome: {
     args: (path) => ['format', '--write', path],
@@ -50,7 +56,7 @@ const formatters: Record<
  */
 const linters: Record<
   Extract<Config['output']['lint'], string>,
-  OutputProcesser
+  OutputProcessor
 > = {
   biome: {
     args: (path) => ['lint', '--apply', path],
@@ -319,7 +325,19 @@ export async function createClient(userConfig: UserConfig): Promise<Client[]> {
           >);
 
     Performance.start('parser');
-    const parsed = parse(openApi);
+    const parsed = parse({
+      config: {
+        filterFn: {
+          operation: operationFilterFn,
+          operationParameter: operationParameterFilterFn,
+        },
+        nameFn: {
+          operation: operationNameFn,
+          operationParameter: operationParameterNameFn,
+        },
+      },
+      openApi,
+    });
     const client = postProcessClient(parsed);
     Performance.end('parser');
 
