@@ -1,7 +1,8 @@
-import { Server } from 'node:http'
+import type { Server } from 'node:http'
 import path from 'node:path'
 
-import express, { Express } from 'express'
+import type { Express } from 'express';
+import express from 'express'
 
 let _app: Express
 let _server: Server
