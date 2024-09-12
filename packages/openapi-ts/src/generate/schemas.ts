@@ -19,6 +19,20 @@ const ensureValidSchemaOutput = (
   }
 
   const result = { ...schema };
+
+  if ('oneOf' in result && Array.isArray(result.oneOf)) {
+    const oneOfArray = result.oneOf as any[];
+    const hasNull = oneOfArray.some((item) => item === null || item?.nullable);
+
+    if (hasNull) {
+      result.oneOf = oneOfArray.filter(
+        (item, index) =>
+          !(item === null || item?.nullable) ||
+          index === oneOfArray.findIndex((i) => i === null || i?.nullable),
+      );
+    }
+  }
+
   Object.entries(result).forEach(([key, value]) => {
     if (config.schemas.type === 'form') {
       if (
