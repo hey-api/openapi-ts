@@ -1,4 +1,4 @@
-import { EnumDeclaration } from 'typescript';
+import type { EnumDeclaration } from 'typescript';
 
 import {
   type Comments,
