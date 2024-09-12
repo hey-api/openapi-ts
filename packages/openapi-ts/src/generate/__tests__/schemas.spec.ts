@@ -141,13 +141,10 @@ describe('generateSchemas', () => {
       useOptions: true,
     });
 
+    // Creating a schema with duplicate nulls in oneOf
     const schemaWithDuplicateNulls: OpenApiV3Schema = {
       nullable: true,
-      oneOf: [
-        { type: 'string' },
-        { nullable: true, type: 'string' },
-        null as unknown as OpenApiV3Schema,
-      ],
+      oneOf: [{ type: 'string' }, { nullable: true, type: 'string' }, null],
     };
 
     if ('openapi' in openApi) {
@@ -164,16 +161,9 @@ describe('generateSchemas', () => {
 
     files.schemas.write();
 
-    expect(writeFileSync).toHaveBeenCalledWith(
-      expect.stringContaining(path.resolve('schemas.gen.ts')),
-      expect.stringContaining(`oneOf: [`),
-    );
+    const [outputPath, outputContent] = vi.mocked(writeFileSync).mock.calls[0];
 
-    expect(writeFileSync).toHaveBeenCalledWith(
-      expect.any(String),
-      expect.stringMatching(
-        /oneOf:\s*\[\s*{\s*type:\s*'string'\s*},\s*{\s*type:\s*'string',\s*nullable:\s*true\s*}\s*]/,
-      ),
-    );
+    expect(outputPath).toBe(path.resolve('schemas.gen.ts'));
+    expect(outputContent).toMatchSnapshot();
   });
 });
