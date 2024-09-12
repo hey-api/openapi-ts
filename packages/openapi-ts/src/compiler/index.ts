@@ -1,7 +1,7 @@
 import { type PathLike, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
-import ts from 'typescript';
+import type ts from 'typescript';
 
 import { ensureDirSync } from '../generate/utils';
 import * as classes from './classes';

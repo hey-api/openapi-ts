@@ -25,6 +25,7 @@ export default tseslint.config(
     rules: {
       '@typescript-eslint/ban-ts-comment': 'off',
       '@typescript-eslint/ban-ts-ignore': 'off',
+      '@typescript-eslint/consistent-type-imports': 'warn',
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
@@ -41,6 +42,12 @@ export default tseslint.config(
       'sort-keys-fix/sort-keys-fix': 'warn',
       'typescript-sort-keys/interface': 'warn',
       'typescript-sort-keys/string-enum': 'warn',
+    },
+  },
+  {
+    files: ['packages/openapi-ts/test/e2e/assets/main-angular-module.ts'],
+    rules: {
+      '@typescript-eslint/consistent-type-imports': 'off',
     },
   },
   configPrettier,
