@@ -1,11 +1,10 @@
-import {
+import type {
   ClassElement,
-  type Comments,
-  compiler,
+  Comments,
   FunctionParameter,
-  type Node,
-  TypeScriptFile,
+  Node,
 } from '../compiler';
+import { compiler, TypeScriptFile } from '../compiler';
 import type { FunctionTypeParameter, ObjectValue } from '../compiler/types';
 import { isOperationParameterRequired } from '../openApi';
 import type {

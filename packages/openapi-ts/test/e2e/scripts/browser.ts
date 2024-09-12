@@ -1,4 +1,5 @@
-import puppeteer, { Browser, EvaluateFunc, Page } from 'puppeteer'
+import type { Browser, EvaluateFunc, Page } from 'puppeteer';
+import puppeteer from 'puppeteer'
 
 let _browser: Browser
 let _page: Page
