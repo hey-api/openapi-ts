@@ -58,6 +58,18 @@ export type MultipleResponsesResponse = (Array<ModelWithDates> | Array<SimpleMod
 
 export type MultipleResponsesError = unknown;
 
+export type PostTestData = {
+    body?: {
+        weirdEnum?: (('' | string) | null);
+    };
+};
+
+export type PostTestResponse = ({
+    message?: string;
+});
+
+export type PostTestError = unknown;
+
 export type ParentModelWithDatesResponseTransformer = (data: any) => Promise<ParentModelWithDatesResponse>;
 
 export type ParentModelWithDatesModelResponseTransformer = (data: any) => ParentModelWithDates;

@@ -2,9 +2,9 @@
 
 import type { Options } from '@hey-api/client-axios';
 import { queryOptions, type MutationOptions } from '@tanstack/svelte-query';
-import type { ParentModelWithDatesError, ParentModelWithDatesResponse, ModelWithDatesError, ModelWithDatesResponse, ModelWithDatesArrayError, ModelWithDatesArrayResponse, ArrayOfDatesError, ArrayOfDatesResponse, DateError, DateResponse, MultipleResponsesError, MultipleResponsesResponse } from '../types.gen';
+import type { ParentModelWithDatesError, ParentModelWithDatesResponse, ModelWithDatesError, ModelWithDatesResponse, ModelWithDatesArrayError, ModelWithDatesArrayResponse, ArrayOfDatesError, ArrayOfDatesResponse, DateError, DateResponse, MultipleResponsesError, MultipleResponsesResponse, PostTestData, PostTestError, PostTestResponse } from '../types.gen';
 import type { AxiosError } from 'axios';
-import { client, parentModelWithDates, modelWithDates, modelWithDatesArray, arrayOfDates, date, multipleResponses } from '../services.gen';
+import { client, parentModelWithDates, modelWithDates, modelWithDatesArray, arrayOfDates, date, multipleResponses, postTest } from '../services.gen';
 
 type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseURL' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -102,6 +102,32 @@ export const dateMutation = () => { const mutationOptions: MutationOptions<DateR
 export const multipleResponsesMutation = () => { const mutationOptions: MutationOptions<MultipleResponsesResponse, AxiosError<MultipleResponsesError>, Options> = {
     mutationFn: async (options) => {
         const { data } = await multipleResponses({
+            ...options,
+            throwOnError: true
+        });
+        return data;
+    }
+}; return mutationOptions; };
+
+export const postTestQueryKey = (options?: Options<PostTestData>) => [
+    createQueryKey("postTest", options)
+];
+
+export const postTestOptions = (options?: Options<PostTestData>) => { return queryOptions({
+    queryFn: async ({ queryKey }) => {
+        const { data } = await postTest({
+            ...options,
+            ...queryKey[0],
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: postTestQueryKey(options)
+}); };
+
+export const postTestMutation = () => { const mutationOptions: MutationOptions<PostTestResponse, AxiosError<PostTestError>, Options<PostTestData>> = {
+    mutationFn: async (options) => {
+        const { data } = await postTest({
             ...options,
             throwOnError: true
         });

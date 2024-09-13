@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import type { Observable } from 'rxjs';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import { type ParentModelWithDatesResponse, type ModelWithDatesResponse, type ModelWithDatesArrayResponse, type ArrayOfDatesResponse, type DateResponse, type MultipleResponsesResponse, ParentModelWithDatesResponseTransformer, ModelWithDatesResponseTransformer, ModelWithDatesArrayResponseTransformer } from './types.gen';
+import { type ParentModelWithDatesResponse, type ModelWithDatesResponse, type ModelWithDatesArrayResponse, type ArrayOfDatesResponse, type DateResponse, type MultipleResponsesResponse, type PostTestData, type PostTestResponse, ParentModelWithDatesResponseTransformer, ModelWithDatesResponseTransformer, ModelWithDatesArrayResponseTransformer } from './types.gen';
 
 /**
  * @returns ParentModelWithDates Success
@@ -64,4 +64,17 @@ export const date = function (): Observable<DateResponse> { return __request(Ope
 export const multipleResponses = function (): Observable<MultipleResponsesResponse> { return __request(OpenAPI, this.http, {
     method: 'PUT',
     url: '/api/multiple-responses'
+}); };
+
+/**
+ * @param data The data for the request.
+ * @param data.requestBody
+ * @returns unknown Successful operation
+ * @throws ApiError
+ */
+export const postTest = function (data: PostTestData = {}): Observable<PostTestResponse> { return __request(OpenAPI, this.http, {
+    method: 'POST',
+    url: '/test',
+    body: data.requestBody,
+    mediaType: 'application/json'
 }); };

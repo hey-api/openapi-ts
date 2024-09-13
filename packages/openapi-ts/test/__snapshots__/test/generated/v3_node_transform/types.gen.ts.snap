@@ -46,6 +46,16 @@ export type DateResponse = (Date);
 
 export type MultipleResponsesResponse = (Array<ModelWithDates> | Array<SimpleModel>);
 
+export type PostTestData = {
+    requestBody?: {
+        weirdEnum?: (('' | string) | null);
+    };
+};
+
+export type PostTestResponse = ({
+    message?: string;
+});
+
 export type ParentModelWithDatesResponseTransformer = (data: any) => Promise<ParentModelWithDatesResponse>;
 
 export type ParentModelWithDatesModelResponseTransformer = (data: any) => ParentModelWithDates;

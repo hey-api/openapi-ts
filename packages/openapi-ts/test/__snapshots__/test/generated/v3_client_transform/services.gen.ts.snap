@@ -2,7 +2,7 @@
 
 import type { CancelablePromise } from './core/CancelablePromise';
 import type { BaseHttpRequest } from './core/BaseHttpRequest';
-import { type ParentModelWithDatesResponse, type ModelWithDatesResponse, type ModelWithDatesArrayResponse, type ArrayOfDatesResponse, type DateResponse, type MultipleResponsesResponse, ParentModelWithDatesResponseTransformer, ModelWithDatesResponseTransformer, ModelWithDatesArrayResponseTransformer } from './types.gen';
+import { type ParentModelWithDatesResponse, type ModelWithDatesResponse, type ModelWithDatesArrayResponse, type ArrayOfDatesResponse, type DateResponse, type MultipleResponsesResponse, type PostTestData, type PostTestResponse, ParentModelWithDatesResponseTransformer, ModelWithDatesResponseTransformer, ModelWithDatesArrayResponseTransformer } from './types.gen';
 
 export class DefaultService {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
@@ -75,6 +75,21 @@ export class DefaultService {
         return this.httpRequest.request({
             method: 'PUT',
             url: '/api/multiple-responses'
+        });
+    }
+    
+    /**
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @returns unknown Successful operation
+     * @throws ApiError
+     */
+    public postTest(data: PostTestData = {}): CancelablePromise<PostTestResponse> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/test',
+            body: data.requestBody,
+            mediaType: 'application/json'
         });
     }
     
