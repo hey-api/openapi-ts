@@ -1,5 +1,5 @@
 ---
-'@hey-api/openapi-ts': minor
+'@hey-api/openapi-ts': patch
 ---
 
 fix: duplicate null | null in union types
