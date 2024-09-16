@@ -17,11 +17,11 @@
   },
   "dependencies": {
     "@hey-api/client-fetch": "workspace:*",
-    "@tanstack/vue-query": "5.55.2",
-    "@tanstack/vue-query-devtools": "5.55.2",
+    "@tanstack/vue-query": "5.56.2",
+    "@tanstack/vue-query-devtools": "5.56.2",
     "pinia": "2.2.2",
-    "vue": "3.5.3",
-    "vue-router": "4.4.3"
+    "vue": "3.5.5",
+    "vue-router": "4.4.5"
   },
   "devDependencies": {
     "@hey-api/openapi-ts": "workspace:*",
