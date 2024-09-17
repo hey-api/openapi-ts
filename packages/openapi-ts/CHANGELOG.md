@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.53.1
+
+### Patch Changes
+
+- [#1050](https://github.com/hey-api/openapi-ts/pull/1050) [`6922b5a`](https://github.com/hey-api/openapi-ts/commit/6922b5a3ebe67190d2034ea79674706a5e80e818) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: throw error on invalid client value
+
 ## 0.53.0
 
 ### Minor Changes
