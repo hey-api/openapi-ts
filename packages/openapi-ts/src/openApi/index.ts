@@ -1,9 +1,10 @@
+import { type OpenApiV3_1, parseV3_1 } from './3.1';
 import type { Client } from './common/interfaces/client';
 import type { Config } from './common/interfaces/config';
 import type { OpenApi } from './common/interfaces/OpenApi';
 import { setConfig } from './config';
-import { parse as parseV2 } from './v2/index';
-import { parse as parseV3 } from './v3/index';
+import { parse as parseV2 } from './v2';
+import { parse as parseV3 } from './v3';
 
 export type {
   Client,
@@ -50,6 +51,17 @@ export function parse({
   }
 
   throw new Error(
-    `Unsupported Open API specification: ${JSON.stringify(openApi, null, 2)}`,
+    `Unsupported OpenAPI specification: ${JSON.stringify(openApi, null, 2)}`,
   );
 }
+
+export const parseExperimental = ({ spec }: { spec: unknown }) => {
+  const s = spec as OpenApiV3_1;
+
+  switch (s.openapi) {
+    case '3.1.0':
+      return parseV3_1(s);
+    default:
+      throw new Error('Unsupported OpenAPI specification');
+  }
+};
