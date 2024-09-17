@@ -6,10 +6,11 @@ const main = async () => {
     client: {
       // bundle: true,
       // name: '@hey-api/client-axios',
-      name: '@hey-api/client-fetch',
+      // name: '@hey-api/client-fetch',
+      name: 'foooooo',
     },
     // debug: true,
-    experimental_parser: true,
+    // experimental_parser: true,
     // input: './test/spec/v3-transforms.json',
     input: './test/spec/v3.json',
     // input: './test/spec/v2.json',
@@ -18,15 +19,15 @@ const main = async () => {
     output: {
       path: './test/generated/sample/',
     },
-    plugins: [
-      {
-        // infiniteQueryOptions: false,
-        // mutationOptions: false,
-        name: '@tanstack/react-query',
-        // queryOptions: false,
-      },
-      // '@hey-api/services',
-    ],
+    // plugins: [
+    //   {
+    //     // infiniteQueryOptions: false,
+    //     // mutationOptions: false,
+    //     name: '@tanstack/react-query',
+    //     // queryOptions: false,
+    //   },
+    //   // '@hey-api/services',
+    // ],
     schemas: {
       export: false,
     },

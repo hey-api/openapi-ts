@@ -1,11 +1,11 @@
-import type { OpenApiV3_1 } from '../types/spec';
+import type { OpenApiV3_1, PathsObject } from '../types/spec';
 import { parseOperation } from './operation';
 
 export const parseV3_1 = (spec: OpenApiV3_1) => {
   const operationIds = new Map<string, string>();
 
   for (const path in spec.paths) {
-    const pathItem = spec.paths[path];
+    const pathItem = spec.paths[path as keyof PathsObject];
 
     if (pathItem.delete) {
       parseOperation({
