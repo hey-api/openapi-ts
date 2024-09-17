@@ -143,10 +143,24 @@ describe('bin', () => {
     expect(result.stderr.toString()).toContain('Duplicate operationId');
   });
 
-  it('throws error without parameters', () => {
+  it('throws error without input', () => {
     const result = sync('node', ['./bin/index.cjs', '--dry-run', 'true']);
     expect(result.stdout.toString()).toBe('');
     expect(result.stderr.toString()).toContain('Unexpected error occurred');
+    expect(result.stderr.toString()).toContain('missing input');
+  });
+
+  it('throws error without output', () => {
+    const result = sync('node', [
+      './bin/index.cjs',
+      '--input',
+      './test/spec/v3.json',
+      '--dry-run',
+      'true',
+    ]);
+    expect(result.stdout.toString()).toBe('');
+    expect(result.stderr.toString()).toContain('Unexpected error occurred');
+    expect(result.stderr.toString()).toContain('missing output');
   });
 
   it('throws error with wrong parameters', () => {
@@ -164,6 +178,21 @@ describe('bin', () => {
     expect(result.stderr.toString()).toContain(
       `error: unknown option '--unknown'`,
     );
+  });
+
+  it('throws error with wrong client', () => {
+    const result = sync('node', [
+      './bin/index.cjs',
+      '--input',
+      './test/spec/v3.json',
+      '--output',
+      './test/generated/bin',
+      '--dry-run',
+      'true',
+    ]);
+    expect(result.stdout.toString()).toBe('');
+    expect(result.stderr.toString()).toContain('Unexpected error occurred');
+    expect(result.stderr.toString()).toContain('invalid client');
   });
 
   it('displays help', () => {

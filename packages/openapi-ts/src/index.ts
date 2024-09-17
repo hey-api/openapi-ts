@@ -8,6 +8,7 @@ import { parse, parseExperimental } from './openApi';
 import { defaultPluginConfigs } from './plugins';
 import type { Client } from './types/client';
 import type { ClientConfig, Config, UserConfig } from './types/config';
+import { CLIENTS } from './types/config';
 import { getConfig, isStandaloneClient, setConfig } from './utils/config';
 import { getOpenApiSpec } from './utils/getOpenApiSpec';
 import { registerHandlebarTemplates } from './utils/handlebars';
@@ -107,7 +108,7 @@ const logClientMessage = () => {
 const getClient = (userConfig: ClientConfig): Config['client'] => {
   let client: Config['client'] = {
     bundle: false,
-    name: '',
+    name: '' as Config['client']['name'],
   };
   if (typeof userConfig.client === 'string') {
     client.name = userConfig.client;
@@ -267,6 +268,10 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
     }
 
     const client = getClient(userConfig);
+
+    if (!CLIENTS.includes(client.name)) {
+      throw new Error('🚫 invalid client - select a valid client value');
+    }
 
     if (!useOptions) {
       console.warn(
