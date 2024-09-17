@@ -27,7 +27,8 @@ export interface OpenApiV3_1 {
   /**
    * The available paths and operations for the API.
    */
-  paths?: any;
+  // paths?: any;
+  paths?: Record<string, PathItemObject>;
   /**
    * A declaration of which security mechanisms can be used across the API. The list of values includes alternative security requirement objects that can be used. Only one of the security requirement objects need to be satisfied to authorize a request. Individual operations can override this definition. To make security optional, an empty security requirement (`{}`) can be included in the array.
    */
@@ -288,7 +289,7 @@ interface MediaTypeObject {
  *   - read:pets
  * ```
  */
-interface OperationObject {
+export interface OperationObject {
   /**
    * A map of possible out-of band callbacks related to the parent operation. The key is a unique identifier for the Callback Object. Each value in the map is a {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#callback-object Callback Object} that describes a request that may be initiated by the API provider and the expected responses.
    */

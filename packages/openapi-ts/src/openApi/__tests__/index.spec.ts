@@ -83,7 +83,7 @@ describe('parse', () => {
   it('throws on unknown version', () => {
     // @ts-expect-error
     expect(() => parse({ config, openApi: { foo: 'bar' } })).toThrow(
-      `Unsupported Open API specification: ${JSON.stringify({ foo: 'bar' }, null, 2)}`,
+      `Unsupported OpenAPI specification: ${JSON.stringify({ foo: 'bar' }, null, 2)}`,
     );
   });
 });

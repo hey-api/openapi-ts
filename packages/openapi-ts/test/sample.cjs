@@ -1,7 +1,7 @@
 const path = require('node:path');
 
 const main = async () => {
-  /** @type {import('../src/node/index').UserConfig} */
+  /** @type {import('../src/node').UserConfig} */
   const config = {
     client: {
       // bundle: true,
@@ -25,6 +25,7 @@ const main = async () => {
         name: '@tanstack/react-query',
         // queryOptions: false,
       },
+      // '@hey-api/services',
     ],
     schemas: {
       export: false,
@@ -32,7 +33,7 @@ const main = async () => {
     services: {
       // export: false,
       // asClass: true,
-      // filter: '^POST /api/v{api-version}/upload$',
+      filter: '^POST /api/v{api-version}/upload$',
       // export: false,
       // name: '^Parameters',
     },

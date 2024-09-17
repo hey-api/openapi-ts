@@ -4,7 +4,7 @@ import { loadConfig } from 'c12';
 import { sync } from 'cross-spawn';
 
 import { generateOutput } from './generate/output';
-import { parse } from './openApi';
+import { parse, parseExperimental } from './openApi';
 import { defaultPluginConfigs } from './plugins';
 import type { Client } from './types/client';
 import type { ClientConfig, Config, UserConfig } from './types/config';
@@ -143,7 +143,7 @@ const getPlugins = (userConfig: ClientConfig): Config['plugins'] => {
       ? defaultPluginConfigs[plugin]
       : {
           ...defaultPluginConfigs[plugin.name],
-          ...plugin,
+          ...(plugin as (typeof defaultPluginConfigs)[(typeof plugin)['name']]),
         },
   );
   return plugins;
@@ -309,7 +309,9 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
  * service layer, etc.
  * @param userConfig {@link UserConfig} passed to the `createClient()` method
  */
-export async function createClient(userConfig: UserConfig): Promise<Client[]> {
+export async function createClient(
+  userConfig: UserConfig,
+): Promise<ReadonlyArray<Client>> {
   Performance.start('createClient');
 
   const configs = await initConfigs(userConfig);
@@ -324,46 +326,50 @@ export async function createClient(userConfig: UserConfig): Promise<Client[]> {
             ReturnType<typeof getOpenApiSpec>
           >);
 
-    Performance.start('parser');
-    const parsed = parse({
-      config: {
-        filterFn: {
-          operation: operationFilterFn,
-          operationParameter: operationParameterFilterFn,
-        },
-        nameFn: {
-          operation: operationNameFn,
-          operationParameter: operationParameterNameFn,
-        },
-      },
-      openApi,
-    });
-    const client = postProcessClient(parsed);
-    Performance.end('parser');
-
     if (config.experimental_parser) {
       Performance.start('experimental_parser');
-      // TODO: experimental parser
+      parseExperimental({
+        spec: openApi,
+      });
       Performance.end('experimental_parser');
+    } else {
+      Performance.start('parser');
+      const parsed = parse({
+        config: {
+          filterFn: {
+            operation: operationFilterFn,
+            operationParameter: operationParameterFilterFn,
+          },
+          nameFn: {
+            operation: operationNameFn,
+            operationParameter: operationParameterNameFn,
+          },
+        },
+        openApi,
+      });
+      const client = postProcessClient(parsed);
+      Performance.end('parser');
+
+      if (!config.dryRun) {
+        logClientMessage();
+        await generateOutput(openApi, client, templates);
+        processOutput();
+      }
+
+      console.log('✨ Done! Your client is located in:', config.output.path);
+
+      return client;
     }
-
-    if (!config.dryRun) {
-      logClientMessage();
-      await generateOutput(openApi, client, templates);
-      processOutput();
-    }
-
-    console.log('✨ Done! Your client is located in:', config.output.path);
-
-    return client;
   };
 
-  const clients: Client[] = [];
+  const clients: Array<Client> = [];
 
   const pClients = configs.map((config) => pCreateClient(config));
   for (const pClient of pClients) {
     const client = await pClient();
-    clients.push(client);
+    if (client) {
+      clients.push(client);
+    }
   }
 
   Performance.end('createClient');
@@ -374,9 +380,7 @@ export async function createClient(userConfig: UserConfig): Promise<Client[]> {
 /**
  * Type helper for openapi-ts.config.ts, returns {@link UserConfig} object
  */
-export function defineConfig(config: UserConfig): UserConfig {
-  return config;
-}
+export const defineConfig = (config: UserConfig): UserConfig => config;
 
 export default {
   createClient,
