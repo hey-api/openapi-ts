@@ -1,30 +1,48 @@
 import {
-  type PluginTanStackReactQuery,
-  pluginTanStackReactQueryDefaultConfig,
-} from './@tanstack/react-query/config';
+  defaultConfig as heyApiSchemasDefaultConfig,
+  type PluginConfig as HeyApiSchemas,
+} from './@hey-api/schemas';
 import {
-  type PluginTanStackSolidQuery,
-  pluginTanStackSolidQueryDefaultConfig,
-} from './@tanstack/solid-query/config';
+  defaultConfig as heyApiServicesDefaultConfig,
+  type PluginConfig as HeyApiServices,
+} from './@hey-api/services';
 import {
-  type PluginTanStackSvelteQuery,
-  pluginTanStackSvelteQueryDefaultConfig,
-} from './@tanstack/svelte-query/config';
+  defaultConfig as heyApiTypesDefaultConfig,
+  type PluginConfig as HeyApiTypes,
+} from './@hey-api/types';
 import {
-  type PluginTanStackVueQuery,
-  pluginTanStackVueQueryDefaultConfig,
-} from './@tanstack/vue-query/config';
+  defaultConfig as tanStackReactQueryDefaultConfig,
+  type PluginConfig as TanStackReactQuery,
+} from './@tanstack/react-query';
+import {
+  defaultConfig as tanStackSolidQueryDefaultConfig,
+  type PluginConfig as TanStackSolidQuery,
+} from './@tanstack/solid-query';
+import {
+  defaultConfig as tanStackSvelteQueryDefaultConfig,
+  type PluginConfig as TanStackSvelteQuery,
+} from './@tanstack/svelte-query';
+import {
+  defaultConfig as tanStackVueQueryDefaultConfig,
+  type PluginConfig as TanStackVueQuery,
+} from './@tanstack/vue-query';
 import type { DefaultPluginConfigsMap } from './types';
 
 export type Plugins =
-  | PluginTanStackReactQuery
-  | PluginTanStackSolidQuery
-  | PluginTanStackSvelteQuery
-  | PluginTanStackVueQuery;
+  | HeyApiSchemas
+  | HeyApiServices
+  | HeyApiTypes
+  | TanStackReactQuery
+  | TanStackSolidQuery
+  | TanStackSvelteQuery
+  | TanStackVueQuery;
 
 export const defaultPluginConfigs: DefaultPluginConfigsMap<Plugins> = {
-  '@tanstack/react-query': pluginTanStackReactQueryDefaultConfig,
-  '@tanstack/solid-query': pluginTanStackSolidQueryDefaultConfig,
-  '@tanstack/svelte-query': pluginTanStackSvelteQueryDefaultConfig,
-  '@tanstack/vue-query': pluginTanStackVueQueryDefaultConfig,
+  '@hey-api/schemas': heyApiSchemasDefaultConfig,
+  '@hey-api/services': heyApiServicesDefaultConfig,
+  '@hey-api/types': heyApiTypesDefaultConfig,
+  '@tanstack/react-query': tanStackReactQueryDefaultConfig,
+  '@tanstack/solid-query': tanStackSolidQueryDefaultConfig,
+  '@tanstack/svelte-query': tanStackSvelteQueryDefaultConfig,
+  '@tanstack/vue-query': tanStackVueQueryDefaultConfig,
 };
