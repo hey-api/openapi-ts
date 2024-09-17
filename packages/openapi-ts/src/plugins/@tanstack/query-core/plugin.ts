@@ -2,7 +2,7 @@ import ts from 'typescript';
 
 import { compiler, type Property } from '../../../compiler';
 import type { ImportExportItem } from '../../../compiler/module';
-import { ImportExportItemObject } from '../../../compiler/utils';
+import type { ImportExportItemObject } from '../../../compiler/utils';
 import {
   clientModulePath,
   clientOptionsTypeName,
