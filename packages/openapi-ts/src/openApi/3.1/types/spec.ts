@@ -7,7 +7,7 @@ export interface OpenApiV3_1 {
   /**
    * An element to hold various schemas for the document.
    */
-  components?: any;
+  components?: ComponentsObject;
   /**
    * Additional external documentation.
    */
@@ -27,8 +27,7 @@ export interface OpenApiV3_1 {
   /**
    * The available paths and operations for the API.
    */
-  // paths?: any;
-  paths?: Record<string, PathItemObject>;
+  paths?: PathsObject;
   /**
    * A declaration of which security mechanisms can be used across the API. The list of values includes alternative security requirement objects that can be used. Only one of the security requirement objects need to be satisfied to authorize a request. Individual operations can override this definition. To make security optional, an empty security requirement (`{}`) can be included in the array.
    */
@@ -48,6 +47,247 @@ export interface OpenApiV3_1 {
 }
 
 /**
+ * A map of possible out-of band callbacks related to the parent operation. Each value in the map is a {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#path-item-object Path Item Object} that describes a set of requests that may be initiated by the API provider and the expected responses. The key value used to identify the path item object is an expression, evaluated at runtime, that identifies a URL to use for the callback operation.
+ *
+ * To describe incoming requests from the API provider independent from another API call, use the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#oasWebhooks `webhooks`} field.
+ *
+ * This object MAY be extended with {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#specification-extensions Specification Extensions}.
+ *
+ * TODO...
+ */
+export interface CallbackObject {
+  // TODO...
+}
+
+/**
+ * Holds a set of reusable objects for different aspects of the OAS. All objects defined within the components object will have no effect on the API unless they are explicitly referenced from properties outside the components object.
+ *
+ * This object MAY be extended with {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#specification-extensions Specification Extensions}.
+ *
+ * All the fixed fields declared above are objects that MUST use keys that match the regular expression: `^[a-zA-Z0-9\.\-_]+$`.
+ *
+ * TODO...
+ */
+export interface ComponentsObject {
+  /**
+   * An object to hold reusable {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#callback-object Callback Objects}.
+   */
+  callbacks?: Record<string, CallbackObject | ReferenceObject>;
+  /**
+   * An object to hold reusable {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#example-object Example Objects}.
+   */
+  examples?: Record<string, ExampleObject | ReferenceObject>;
+  /**
+   * An object to hold reusable {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#header-object Header Objects}.
+   */
+  headers?: Record<string, HeaderObject | ReferenceObject>;
+  /**
+   * An object to hold reusable {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#link-object Link Objects}.
+   */
+  links?: Record<string, LinkObject | ReferenceObject>;
+  /**
+   * An object to hold reusable {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#parameter-object Parameter Objects}.
+   */
+  parameters?: Record<string, ParameterObject | ReferenceObject>;
+  /**
+   * An object to hold reusable {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#path-item-object Path Item Object}.
+   */
+  pathItems?: Record<string, PathItemObject | ReferenceObject>;
+  /**
+   * An object to hold reusable {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#request-body-object Request Body Objects}.
+   */
+  requestBodies?: Record<string, RequestBodyObject | ReferenceObject>;
+  /**
+   * An object to hold reusable {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#response-object Response Objects}.
+   */
+  responses?: Record<string, ResponseObject | ReferenceObject>;
+  /**
+   * An object to hold reusable {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#schema-object Schema Objects}.
+   */
+  schemas?: Record<string, SchemaObject>;
+  /**
+   * An object to hold reusable {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#security-scheme-object Security Scheme Objects}.
+   */
+  securitySchemes?: Record<string, SecuritySchemeObject | ReferenceObject>;
+}
+
+/**
+ * Contact information for the exposed API.
+ *
+ * This object MAY be extended with {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#specification-extensions Specification Extensions}.
+ *
+ * @example
+ * ```yaml
+ * name: API Support
+ * url: https://www.example.com/support
+ * email: support@example.com
+ * ```
+ */
+export interface ContactObject {
+  /**
+   * The email address of the contact person/organization. This MUST be in the form of an email address.
+   */
+  email?: string;
+  /**
+   * The identifying name of the contact person/organization.
+   */
+  name?: string;
+  /**
+   * The URL pointing to the contact information. This MUST be in the form of a URL.
+   */
+  url?: string;
+}
+
+/**
+ * A single encoding definition applied to a single schema property.
+ *
+ * This object MAY be extended with {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#specification-extensions Specification Extensions}.
+ *
+ * @example
+ * ```yaml
+ * requestBody:
+ *   content:
+ *     multipart/form-data:
+ *       schema:
+ *         type: object
+ *         properties:
+ *           id:
+ *             # default is text/plain
+ *             type: string
+ *             format: uuid
+ *           address:
+ *             # default is application/json
+ *             type: object
+ *             properties: {}
+ *           historyMetadata:
+ *             # need to declare XML format!
+ *             description: metadata in XML format
+ *             type: object
+ *             properties: {}
+ *           profileImage: {}
+ *       encoding:
+ *         historyMetadata:
+ *           # require XML Content-Type in utf-8 encoding
+ *           contentType: application/xml; charset=utf-8
+ *         profileImage:
+ *           # only accept png/jpeg
+ *           contentType: image/png, image/jpeg
+ *           headers:
+ *             X-Rate-Limit-Limit:
+ *               description: The number of allowed requests in the current period
+ *               schema:
+ *                 type: integer
+ * ```
+ */
+export interface EncodingObject {
+  /**
+   * Determines whether the parameter value SHOULD allow reserved characters, as defined by {@link https://tools.ietf.org/html/rfc3986#section-2.2 RFC3986} `:/?#[]@!$&'()*+,;=` to be included without percent-encoding. The default value is `false`. This property SHALL be ignored if the request body media type is not `application/x-www-form-urlencoded` or `multipart/form-data`. If a value is explicitly defined, then the value of {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#encodingContentType `contentType`} (implicit or explicit) SHALL be ignored.
+   */
+  allowReserved?: boolean;
+  /**
+   * The Content-Type for encoding a specific property. Default value depends on the property type: for `object` - `application/json`; for `array` – the default is defined based on the inner type; for all other cases the default is `application/octet-stream`. The value can be a specific media type (e.g. `application/json`), a wildcard media type (e.g. `image/*`), or a comma-separated list of the two types.
+   */
+  contentType?: string;
+  /**
+   * When this is true, property values of type `array` or `object` generate separate parameters for each value of the array, or key-value-pair of the map. For other types of properties this property has no effect. When {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#encodingStyle `style`} is `form`, the default value is `true`. For all other styles, the default value is `false`. This property SHALL be ignored if the request body media type is not `application/x-www-form-urlencoded` or `multipart/form-data`. If a value is explicitly defined, then the value of {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#encodingContentType `contentType`} (implicit or explicit) SHALL be ignored.
+   */
+  explode?: boolean;
+  /**
+   * A map allowing additional information to be provided as headers, for example `Content-Disposition`. `Content-Type` is described separately and SHALL be ignored in this section. This property SHALL be ignored if the request body media type is not a `multipart`.
+   */
+  headers?: Record<string, HeaderObject | ReferenceObject>;
+  /**
+   * Describes how a specific property value will be serialized depending on its type. See {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#parameter-object Parameter Object} for details on the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#parameterStyle `style`} property. The behavior follows the same values as `query` parameters, including default values. This property SHALL be ignored if the request body media type is not `application/x-www-form-urlencoded` or `multipart/form-data`. If a value is explicitly defined, then the value of {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#encodingContentType `contentType`} (implicit or explicit) SHALL be ignored.
+   */
+  style?: string;
+}
+
+/**
+ * This object MAY be extended with {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#specification-extensions Specification Extensions}.
+ *
+ * In all cases, the example value is expected to be compatible with the type schema of its associated value. Tooling implementations MAY choose to validate compatibility automatically, and reject the example value(s) if incompatible.
+ *
+ * Example Object Examples
+ *
+ * In a request body:
+ *
+ * @example
+ * ```yaml
+ * requestBody:
+ *   content:
+ *     'application/json':
+ *       schema:
+ *         $ref: '#/components/schemas/Address'
+ *       examples:
+ *         foo:
+ *           summary: A foo example
+ *           value: {"foo": "bar"}
+ *         bar:
+ *           summary: A bar example
+ *           value: {"bar": "baz"}
+ *     'application/xml':
+ *       examples:
+ *         xmlExample:
+ *           summary: This is an example in XML
+ *           externalValue: 'https://example.org/examples/address-example.xml'
+ *     'text/plain':
+ *       examples:
+ *         textExample:
+ *           summary: This is a text example
+ *           externalValue: 'https://foo.bar/examples/address-example.txt'
+ * ```
+ *
+ * In a parameter:
+ *
+ * @example
+ * ```yaml
+ * parameters:
+ *   - name: 'zipCode'
+ *     in: 'query'
+ *     schema:
+ *       type: 'string'
+ *       format: 'zip-code'
+ *     examples:
+ *       zip-example:
+ *         $ref: '#/components/examples/zip-example'
+ * ```
+ *
+ * In a response:
+ *
+ * @example
+ * ```yaml
+ * responses:
+ *   '200':
+ *     description: your car appointment has been booked
+ *     content:
+ *       application/json:
+ *         schema:
+ *           $ref: '#/components/schemas/SuccessResponse'
+ *         examples:
+ *           confirmation-success:
+ *             $ref: '#/components/examples/confirmation-success'
+ * ```
+ */
+export interface ExampleObject {
+  /**
+   * Long description for the example. {@link https://spec.commonmark.org/ CommonMark syntax} MAY be used for rich text representation.
+   */
+  description?: string;
+  /**
+   * A URI that points to the literal example. This provides the capability to reference examples that cannot easily be included in JSON or YAML documents. The `value` field and `externalValue` field are mutually exclusive. See the rules for resolving {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#relative-references-in-uris Relative References}.
+   */
+  externalValue?: string;
+  /**
+   * Short description for the example.
+   */
+  summary?: string;
+  /**
+   * Embedded literal example. The `value` field and `externalValue` field are mutually exclusive. To represent examples of media types that cannot naturally represented in JSON or YAML, use a string value to contain the example, escaping where necessary.
+   */
+  value?: unknown;
+}
+
+/**
  * Allows referencing an external resource for extended documentation.
  *
  * This object MAY be extended with {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#specification-extensions Specification Extensions}.
@@ -58,7 +298,7 @@ export interface OpenApiV3_1 {
  * url: https://example.com
  * ```
  */
-interface ExternalDocumentationObject {
+export interface ExternalDocumentationObject {
   /**
    * A description of the target documentation. {@link https://spec.commonmark.org/ CommonMark syntax} MAY be used for rich text representation.
    */
@@ -83,7 +323,7 @@ interface ExternalDocumentationObject {
  *   type: integer
  * ```
  */
-interface HeaderObject extends Omit<ParameterObject, 'in' | 'name'> {}
+export interface HeaderObject extends Omit<ParameterObject, 'in' | 'name'> {}
 
 /**
  * The object provides metadata about the API. The metadata MAY be used by the clients if needed, and MAY be presented in editing or documentation generation tools for convenience.
@@ -106,7 +346,7 @@ interface HeaderObject extends Omit<ParameterObject, 'in' | 'name'> {}
  * version: 1.0.1
  * ```
  */
-interface InfoObject {
+export interface InfoObject {
   /**
    * The contact information for the exposed API.
    */
@@ -138,33 +378,6 @@ interface InfoObject {
 }
 
 /**
- * Contact information for the exposed API.
- *
- * This object MAY be extended with {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#specification-extensions Specification Extensions}.
- *
- * @example
- * ```yaml
- * name: API Support
- * url: https://www.example.com/support
- * email: support@example.com
- * ```
- */
-interface ContactObject {
-  /**
-   * The email address of the contact person/organization. This MUST be in the form of an email address.
-   */
-  email?: string;
-  /**
-   * The identifying name of the contact person/organization.
-   */
-  name?: string;
-  /**
-   * The URL pointing to the contact information. This MUST be in the form of a URL.
-   */
-  url?: string;
-}
-
-/**
  * License information for the exposed API.
  *
  * This object MAY be extended with {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#specification-extensions Specification Extensions}.
@@ -175,7 +388,7 @@ interface ContactObject {
  * identifier: Apache-2.0
  * ```
  */
-interface LicenseObject {
+export interface LicenseObject {
   /**
    * An {@link https://spdx.org/licenses/ SPDX} license expression for the API. The `identifier` field is mutually exclusive of the `url` field.
    */
@@ -188,6 +401,23 @@ interface LicenseObject {
    * A URL to the license used for the API. This MUST be in the form of a URL. The `url` field is mutually exclusive of the `identifier` field.
    */
   url?: string;
+}
+
+/**
+ * The `Link object` represents a possible design-time link for a response. The presence of a link does not guarantee the caller's ability to successfully invoke it, rather it provides a known relationship and traversal mechanism between responses and other operations.
+ *
+ * Unlike _dynamic_ links (i.e. links provided in the response payload), the OAS linking mechanism does not require link information in the runtime response.
+ *
+ * For computing links, and providing instructions to execute them, a {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#runtime-expressions runtime expression} is used for accessing values in an operation and using them as parameters while invoking the linked operation.
+ *
+ * This object MAY be extended with {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#specification-extensions Specification Extensions}.
+ *
+ * A linked operation MUST be identified using either an `operationRef` or `operationId`. In the case of an `operationId`, it MUST be unique and resolved in the scope of the OAS document. Because of the potential for name clashes, the `operationRef` syntax is preferred for OpenAPI documents with external references.
+ *
+ * TODO...
+ */
+export interface LinkObject {
+  // TODO...
 }
 
 /**
@@ -221,11 +451,11 @@ interface LicenseObject {
  *       $ref: "#/components/examples/frog-example"
  * ```
  */
-interface MediaTypeObject {
+export interface MediaTypeObject {
   /**
    * A map between a property name and its encoding information. The key, being the property name, MUST exist in the schema as a property. The encoding object SHALL only apply to `requestBody` objects when the media type is `multipart` or `application/x-www-form-urlencoded`.
    */
-  encoding?: Record<string, any>;
+  encoding?: Record<string, EncodingObject>;
   /**
    * Example of the media type. The example object SHOULD be in the correct format as specified by the media type. The `example` field is mutually exclusive of the `examples` field. Furthermore, if referencing a `schema` which contains an example, the `example` value SHALL _override_ the example provided by the schema.
    */
@@ -233,11 +463,11 @@ interface MediaTypeObject {
   /**
    * Examples of the media type. Each example object SHOULD match the media type and specified schema if present. The `examples` field is mutually exclusive of the `example` field. Furthermore, if referencing a `schema` which contains an example, the `examples` value SHALL _override_ the example provided by the schema.
    */
-  examples?: Record<string, any | ReferenceObject>;
+  examples?: Record<string, ExampleObject | ReferenceObject>;
   /**
    * The schema defining the content of the request, response, or parameter.
    */
-  schema?: any;
+  schema?: SchemaObject;
 }
 
 /**
@@ -293,7 +523,7 @@ export interface OperationObject {
   /**
    * A map of possible out-of band callbacks related to the parent operation. The key is a unique identifier for the Callback Object. Each value in the map is a {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#callback-object Callback Object} that describes a request that may be initiated by the API provider and the expected responses.
    */
-  callbacks?: Record<string, any | ReferenceObject>;
+  callbacks?: Record<string, CallbackObject | ReferenceObject>;
   /**
    * Declares this operation to be deprecated. Consumers SHOULD refrain from usage of the declared operation. Default value is `false`.
    */
@@ -317,7 +547,7 @@ export interface OperationObject {
   /**
    * The request body applicable for this operation. The `requestBody` is fully supported in HTTP methods where the HTTP 1.1 specification {@link https://datatracker.ietf.org/doc/html/rfc7231#section-4.3.1 RFC7231} has explicitly defined semantics for request bodies. In other cases where the HTTP spec is vague (such as {@link https://datatracker.ietf.org/doc/html/rfc7231#section-4.3.1 GET}, {@link https://datatracker.ietf.org/doc/html/rfc7231#section-4.3.2 HEAD} and {@link https://datatracker.ietf.org/doc/html/rfc7231#section-4.3.5 DELETE}), `requestBody` is permitted but does not have well-defined semantics and SHOULD be avoided if possible.
    */
-  requestBody?: any | ReferenceObject;
+  requestBody?: RequestBodyObject | ReferenceObject;
   /**
    * The list of possible responses as they are returned from executing this operation.
    */
@@ -437,7 +667,7 @@ export interface OperationObject {
  *           type: number
  * ```
  */
-interface ParameterObject {
+export interface ParameterObject {
   /**
    * Sets the ability to pass empty-valued parameters. This is valid only for `query` parameters and allows sending a parameter with an empty value. Default value is `false`. If {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#parameterStyle `style`} is used, and if behavior is `n/a` (cannot be serialized), the value of `allowEmptyValue` SHALL be ignored. Use of this property is NOT RECOMMENDED, as it is likely to be removed in a later revision.
    */
@@ -449,7 +679,7 @@ interface ParameterObject {
   /**
    * A map containing the representations for the parameter. The key is the media type and the value describes it. The map MUST only contain one entry.
    */
-  content?: Record<string, any>;
+  content?: Record<string, MediaTypeObject>;
   /**
    * Specifies that a parameter is deprecated and SHOULD be transitioned out of usage. Default value is `false`.
    */
@@ -465,7 +695,7 @@ interface ParameterObject {
   /**
    * Examples of the parameter's potential value. Each example SHOULD contain a value in the correct format as specified in the parameter encoding. The `examples` field is mutually exclusive of the `example` field. Furthermore, if referencing a `schema` that contains an example, the `examples` value SHALL _override_ the example provided by the schema.
    */
-  examples?: Record<string, any | ReferenceObject>;
+  examples?: Record<string, ExampleObject | ReferenceObject>;
   /**
    * When this is true, parameter values of type `array` or `object` generate separate parameters for each value of the array or key-value pair of the map. For other types of parameters this property has no effect. When {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#parameterStyle `style`} is `form`, the default value is `true`. For all other styles, the default value is `false`.
    */
@@ -488,7 +718,7 @@ interface ParameterObject {
   /**
    * The schema defining the type used for the parameter.
    */
-  schema?: any;
+  schema?: SchemaObject;
   /**
    * Describes how the parameter value will be serialized depending on the type of the parameter value. Default values (based on value of `in`): for `query` - `form`; for `path` - `simple`; for `header` - `simple`; for `cookie` - `form`.
    */
@@ -540,7 +770,7 @@ interface ParameterObject {
  *   style: simple
  * ```
  */
-interface PathItemObject {
+export interface PathItemObject {
   /**
    * Allows for a referenced definition of this path item. The referenced structure MUST be in the form of a {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#path-item-object Path Item Object}. In case a Path Item Object field appears both in the defined object and the referenced object, the behavior is undefined. See the rules for resolving {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#relative-references-in-uris Relative References}.
    */
@@ -596,6 +826,20 @@ interface PathItemObject {
 }
 
 /**
+ * Holds the relative paths to the individual endpoints and their operations. The path is appended to the URL from the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#server-object `Server Object`} in order to construct the full URL. The Paths MAY be empty, due to {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#security-filtering Access Control List (ACL) constraints}.
+ *
+ * This object MAY be extended with {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#specification-extensions Specification Extensions}.
+ *
+ * TODO...
+ */
+export interface PathsObject {
+  /**
+   * A relative path to an individual endpoint. The field name MUST begin with a forward slash (`/`). The path is **appended** (no relative URL resolution) to the expanded URL from the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#server-object `Server Object`}'s `url` field in order to construct the full URL. {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#path-templating Path templating} is allowed. When matching URLs, concrete (non-templated) paths would be matched before their templated counterparts. Templated paths with the same hierarchy but different templated names MUST NOT exist as they are identical. In case of ambiguous matching, it's up to the tooling to decide which one to use.
+   */
+  [path: `/${string}`]: PathItemObject;
+}
+
+/**
  * A simple object to allow referencing other components in the OpenAPI document, internally and externally.
  *
  * The `$ref` string value contains a URI {@link https://datatracker.ietf.org/doc/html/rfc3986 RFC3986}, which identifies the location of the value being referenced.
@@ -627,7 +871,7 @@ interface PathItemObject {
  * $ref: definitions.yaml#/Pet
  * ```
  */
-interface ReferenceObject {
+export interface ReferenceObject {
   /**
    * **REQUIRED**. The reference identifier. This MUST be in the form of a URI.
    */
@@ -640,6 +884,17 @@ interface ReferenceObject {
    * A short summary which by default SHOULD override that of the referenced component. If the referenced object-type does not allow a `summary` field, then this field has no effect.
    */
   summary?: string;
+}
+
+/**
+ * Describes a single request body.
+ *
+ * This object MAY be extended with {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#specification-extensions Specification Extensions}.
+ *
+ * TODO...
+ */
+export interface RequestBodyObject {
+  // TODO...
 }
 
 /**
@@ -703,7 +958,7 @@ interface ReferenceObject {
  * description: object created
  * ```
  */
-interface ResponseObject {
+export interface ResponseObject {
   /**
    * A map containing descriptions of potential response payloads. The key is a media type or {@link https://datatracker.ietf.org/doc/html/rfc7231#appendix-D media type range} and the value describes it. For responses that match multiple keys, only the most specific key is applicable. e.g. text/plain overrides text/*
    */
@@ -719,7 +974,7 @@ interface ResponseObject {
   /**
    * A map of operations links that can be followed from the response. The key of the map is a short name for the link, following the naming constraints of the names for {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#components-object Component Objects}.
    */
-  links?: Record<string, any | ReferenceObject>;
+  links?: Record<string, LinkObject | ReferenceObject>;
 }
 
 /**
@@ -751,7 +1006,7 @@ interface ResponseObject {
  *         $ref: '#/components/schemas/ErrorModel'
  * ```
  */
-interface ResponsesObject {
+export interface ResponsesObject {
   /**
    * Any {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#http-status-codes HTTP status code} can be used as the property name, but only one property per code, to describe the expected response for that HTTP status code. This field MUST be enclosed in quotation marks (for example, "200") for compatibility between JSON and YAML. To define a range of response codes, this field MAY contain the uppercase wildcard character `X`. For example, `2XX` represents all response codes between `[200-299]`. Only the following range definitions are allowed: `1XX`, `2XX`, `3XX`, `4XX`, and `5XX`. If a response is defined using an explicit code, the explicit code definition takes precedence over the range definition for that code.
    */
@@ -760,6 +1015,21 @@ interface ResponsesObject {
    * The documentation of responses other than the ones declared for specific HTTP response codes. Use this field to cover undeclared responses.
    */
   default?: ResponseObject | ReferenceObject;
+}
+
+/**
+ * The Schema Object allows the definition of input and output data types. These types can be objects, but also primitives and arrays. This object is a superset of the {@link https://tools.ietf.org/html/draft-bhutton-json-schema-00 JSON Schema Specification Draft 2020-12}.
+ *
+ * For more information about the properties, see {@link https://tools.ietf.org/html/draft-bhutton-json-schema-00 JSON Schema Core} and {@link https://tools.ietf.org/html/draft-bhutton-json-schema-validation-00 JSON Schema Validation}.
+ *
+ * Unless stated otherwise, the property definitions follow those of JSON Schema and do not add any additional semantics. Where JSON Schema indicates that behavior is defined by the application (e.g. for annotations), OAS also defers the definition of semantics to the application consuming the OpenAPI document.
+ *
+ * **Properties**
+ *
+ * TODO...
+ */
+export interface SchemaObject {
+  // TODO...
 }
 
 /**
@@ -796,11 +1066,24 @@ interface ResponsesObject {
  *   - read:pets
  * ```
  */
-interface SecurityRequirementObject {
+export interface SecurityRequirementObject {
   /**
    * Each name MUST correspond to a security scheme which is declared in the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#componentsSecuritySchemes Security Schemes} under the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#components-object Components Object}. If the security scheme is of type `"oauth2"` or `"openIdConnect"`, then the value is a list of scope names required for the execution, and the list MAY be empty if authorization does not require a specified scope. For other security scheme types, the array MAY contain a list of role names which are required for the execution, but are not otherwise defined or exchanged in-band.
    */
   [name: string]: ReadonlyArray<string>;
+}
+
+/**
+ * Defines a security scheme that can be used by the operations.
+ *
+ * Supported schemes are HTTP authentication, an API key (either as a header, a cookie parameter or as a query parameter), mutual TLS (use of a client certificate), OAuth2's common flows (implicit, password, client credentials and authorization code) as defined in {@link https://tools.ietf.org/html/rfc6749 RFC6749}, and {@link https://tools.ietf.org/html/draft-ietf-oauth-discovery-06 OpenID Connect Discovery}. Please note that as of 2020, the implicit flow is about to be deprecated by {@link https://tools.ietf.org/html/draft-ietf-oauth-security-topics OAuth 2.0 Security Best Current Practice}. Recommended for most use case is Authorization Code Grant flow with PKCE.
+ *
+ * This object MAY be extended with {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#specification-extensions Specification Extensions}.
+ *
+ * TODO...
+ */
+export interface SecuritySchemeObject {
+  // TODO...
 }
 
 /**
@@ -814,7 +1097,7 @@ interface SecurityRequirementObject {
  * description: Development server
  * ```
  */
-interface ServerObject {
+export interface ServerObject {
   /**
    * An optional string describing the host designated by the URL. {@link https://spec.commonmark.org/ CommonMark syntax} MAY be used for rich text representation.
    */
@@ -834,7 +1117,7 @@ interface ServerObject {
  *
  * This object MAY be extended with {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#specification-extensions Specification Extensions}.
  */
-interface ServerVariableObject {
+export interface ServerVariableObject {
   /**
    * **REQUIRED**. The default value to use for substitution, which SHALL be sent if an alternate value is _not_ supplied. Note this behavior is different than the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#schema-object Schema Object's} treatment of default values, because in those cases parameter values are optional. If the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#serverVariableEnum `enum`} is defined, the value MUST exist in the enum's values.
    */
@@ -860,7 +1143,7 @@ interface ServerVariableObject {
  * description: Pets operations
  * ```
  */
-interface TagObject {
+export interface TagObject {
   /**
    * A description for the tag. {@link https://spec.commonmark.org/ CommonMark syntax} MAY be used for rich text representation.
    */
