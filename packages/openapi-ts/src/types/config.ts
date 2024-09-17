@@ -3,15 +3,17 @@ import type { Plugins } from '../plugins/';
 import type { Operation } from '../types/client';
 import type { ExtractArrayOfObjects } from './utils';
 
-type Client =
-  | '@hey-api/client-axios'
-  | '@hey-api/client-fetch'
-  | 'legacy/angular'
-  | 'legacy/axios'
-  | 'legacy/fetch'
-  | 'legacy/node'
-  | 'legacy/xhr'
-  | '';
+export const CLIENTS = [
+  '@hey-api/client-axios',
+  '@hey-api/client-fetch',
+  'legacy/angular',
+  'legacy/axios',
+  'legacy/fetch',
+  'legacy/node',
+  'legacy/xhr',
+] as const;
+
+type Client = (typeof CLIENTS)[number];
 
 export interface ClientConfig {
   /**
