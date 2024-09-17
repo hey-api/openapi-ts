@@ -1,5 +1,11 @@
 # @hey-api/client-fetch
 
+## 0.3.0
+
+### Minor Changes
+
+- [#1011](https://github.com/hey-api/openapi-ts/pull/1011) [`7ebc1d4`](https://github.com/hey-api/openapi-ts/commit/7ebc1d44af74db2522219d71d240325f6bc5689d) Thanks [@goltra](https://github.com/goltra)! - feat: Function to clear and check if exist an interceptor in client-fetch
+
 ## 0.2.4
 
 ### Patch Changes
