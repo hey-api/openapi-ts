@@ -1,4 +1,5 @@
-import axios, { AxiosError } from 'axios';
+import type { AxiosError } from 'axios';
+import axios from 'axios';
 
 import type { Client, Config, RequestOptions } from './types';
 import { createConfig, getUrl, mergeConfigs, mergeHeaders } from './utils';
