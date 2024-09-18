@@ -4,13 +4,11 @@ import { camelCase } from './camelCase';
 import { getConfig, isStandaloneClient } from './config';
 import { transformTypeKeyName } from './type';
 
-export const operationFilterFn = (operation: Operation): boolean => {
+export const operationFilterFn = (operationKey: string): boolean => {
   const config = getConfig();
-
   const regexp = config.services.filter
     ? new RegExp(config.services.filter)
     : undefined;
-  const operationKey = `${operation.method} ${operation.path}`;
   return !regexp || regexp.test(operationKey);
 };
 
@@ -52,7 +50,7 @@ export const operationNameFn = (operation: Omit<Operation, 'name'>): string => {
   urlWithoutPlaceholders = urlWithoutPlaceholders
     .replace(/{(.*?)}/g, 'by-$1')
     // replace slashes with hyphens for camelcase method at the end
-    .replace(/\//g, '-');
+    .replace(/[/:]/g, '-');
 
   return camelCase({
     input: `${operation.method}-${urlWithoutPlaceholders}`,

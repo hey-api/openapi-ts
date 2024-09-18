@@ -6,8 +6,7 @@ const main = async () => {
     client: {
       // bundle: true,
       // name: '@hey-api/client-axios',
-      // name: '@hey-api/client-fetch',
-      name: 'foooooo',
+      name: '@hey-api/client-fetch',
     },
     // debug: true,
     // experimental_parser: true,
@@ -34,7 +33,7 @@ const main = async () => {
     services: {
       // export: false,
       // asClass: true,
-      filter: '^POST /api/v{api-version}/upload$',
+      filter: '^GET /api/v{api-version}/simple:operation$',
       // export: false,
       // name: '^Parameters',
     },
@@ -45,7 +44,7 @@ const main = async () => {
       // include:
       //   '^(_400|CompositionWithOneOfAndProperties)',
       // name: 'PascalCase',
-      tree: false,
+      // tree: false,
     },
     // useOptions: false,
   };

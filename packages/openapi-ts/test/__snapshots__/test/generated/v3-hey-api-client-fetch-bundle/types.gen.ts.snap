@@ -1098,6 +1098,19 @@ export type ApiVversionOdataControllerCountResponse = (Model_From_Zendesk);
 
 export type ApiVversionOdataControllerCountError = unknown;
 
+export type GetApiVbyApiVersionSimpleOperationData = {
+    path: {
+        /**
+         * foo in method
+         */
+        foo_param: string;
+    };
+};
+
+export type GetApiVbyApiVersionSimpleOperationResponse = (number);
+
+export type GetApiVbyApiVersionSimpleOperationError = (ModelWithBoolean);
+
 export type DeleteFooData3 = {
     headers: {
         /**
