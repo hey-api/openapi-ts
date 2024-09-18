@@ -77,6 +77,43 @@
         }
       }
     },
+    "/api/v{api-version}/simple:operation": {
+      "get": {
+        "parameters": [
+          {
+            "description": "foo in method",
+            "in": "path",
+            "name": "foo_param",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "Default error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelWithBoolean"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Response is a simple number",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v{api-version}/simple": {
       "get": {
         "tags": ["Simple"],

@@ -43,19 +43,18 @@ export const getOperations = ({
           }
         }
 
-        const operation = getOperation({
-          method,
-          op,
-          openApi,
-          pathParams: pathParameters,
-          types,
-          url,
-        });
-
         if (
           !config.filterFn?.operation ||
-          config.filterFn?.operation(operation)
+          config.filterFn?.operation(operationKey)
         ) {
+          const operation = getOperation({
+            method,
+            op,
+            openApi,
+            pathParams: pathParameters,
+            types,
+            url,
+          });
           operations.push(operation);
         }
       }

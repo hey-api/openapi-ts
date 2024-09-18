@@ -1094,6 +1094,15 @@ export type ImportResponse = (Model_From_Zendesk | ModelWithReadOnlyAndWriteOnly
 
 export type ApiVversionOdataControllerCountResponse = (Model_From_Zendesk);
 
+export type GetApiSimpleOperationData = {
+    /**
+     * foo in method
+     */
+    fooParam: string;
+};
+
+export type GetApiSimpleOperationResponse = (number);
+
 export type DeleteFooData3 = {
     /**
      * bar in method
