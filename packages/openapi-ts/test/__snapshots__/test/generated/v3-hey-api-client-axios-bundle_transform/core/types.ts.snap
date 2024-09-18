@@ -147,16 +147,12 @@ export type Options<
   ThrowOnError extends boolean = boolean,
 > = T extends { body?: any }
   ? T extends { headers?: any }
-    ? OmitKeys<
-        OptionsBase<ThrowOnError>,
-        'body' | 'headers' | 'responseTransformer'
-      > &
-        T
-    : OmitKeys<OptionsBase<ThrowOnError>, 'body' | 'responseTransformer'> &
+    ? OmitKeys<OptionsBase<ThrowOnError>, 'body' | 'headers'> & T
+    : OmitKeys<OptionsBase<ThrowOnError>, 'body'> &
         T &
         Pick<OptionsBase<ThrowOnError>, 'headers'>
   : T extends { headers?: any }
-    ? OmitKeys<OptionsBase<ThrowOnError>, 'headers' | 'responseTransformer'> &
+    ? OmitKeys<OptionsBase<ThrowOnError>, 'headers'> &
         T &
         Pick<OptionsBase<ThrowOnError>, 'body'>
     : OptionsBase<ThrowOnError> & T;
