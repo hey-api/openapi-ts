@@ -1,7 +1,7 @@
 import { ensureValidTypeScriptJavaScriptIdentifier } from '../openApi';
 import { camelCase } from './camelCase';
 import { getConfig } from './config';
-import { reservedWordsRegExp } from './reservedWords';
+import { reservedWordsRegExp } from './regexp';
 
 export const transformServiceName = (name: string) => {
   const config = getConfig();

@@ -1,6 +1,6 @@
 import { getType } from '../openApi';
 import { refParametersPartial, refSchemasPartial } from './const';
-import { reservedWordsRegExp } from './reservedWords';
+import { reservedWordsRegExp } from './regexp';
 import { cleanAndTransformTypeName } from './transform';
 
 export const getParametersMeta = (definitionName: string) => {

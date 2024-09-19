@@ -3,7 +3,7 @@ import ts from 'typescript';
 import { compiler } from '../compiler';
 import type { ModelMeta, OperationResponse } from '../types/client';
 import { getConfig } from '../utils/config';
-import { unsetUniqueTypeName } from '../utils/type';
+import { isModelDate, unsetUniqueTypeName } from '../utils/type';
 import {
   modelResponseTransformerTypeName,
   operationResponseTransformerTypeName,
@@ -97,12 +97,22 @@ const processArray = (props: ModelProps) => {
     ];
   }
 
-  if (model.format === 'date' || model.format === 'date-time') {
+  if (
+    isModelDate(model) ||
+    (model.link &&
+      !Array.isArray(model.link) &&
+      model.link.export === 'any-of' &&
+      model.link.properties.find((property) => isModelDate(property)))
+  ) {
     return [
       compiler.transformArrayMap({
         path: props.path,
-        transformExpression: compiler.transformNewDate({
-          parameterName: 'item',
+        transformExpression: compiler.conditionalExpression({
+          condition: compiler.identifier({ text: 'item' }),
+          whenFalse: compiler.identifier({ text: 'item' }),
+          whenTrue: compiler.transformNewDate({
+            parameterName: 'item',
+          }),
         }),
       }),
     ];
@@ -119,7 +129,7 @@ const processProperty = (props: ModelProps) => {
   if (
     model.type === 'string' &&
     model.export !== 'array' &&
-    (model.format === 'date-time' || model.format === 'date')
+    isModelDate(model)
   ) {
     return [compiler.transformDateMutation({ path })];
   }
