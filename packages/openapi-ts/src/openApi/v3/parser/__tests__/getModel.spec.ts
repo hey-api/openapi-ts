@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import type { Config } from '../../../../types/config';
-import { reservedWordsRegExp } from '../../../../utils/reservedWords';
+import { reservedWordsRegExp } from '../../../../utils/regexp';
 import { getType } from '../../../common/parser/type';
 import { getModel } from '../getModel';
 

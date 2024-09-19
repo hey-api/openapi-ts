@@ -178,7 +178,6 @@ export const compiler = {
   conditionalExpression: types.createConditionalExpression,
   constVariable: module.createConstVariable,
   constructorDeclaration: classes.createConstructorDeclaration,
-  elementAccessExpression: transform.createElementAccessExpression,
   enumDeclaration: types.createEnumDeclaration,
   exportAllDeclaration: module.createExportAllDeclaration,
   exportNamedDeclaration: module.createNamedExportDeclarations,

@@ -18,7 +18,7 @@ import type { Files } from '../types/utils';
 import { camelCase } from '../utils/camelCase';
 import { getConfig, isStandaloneClient } from '../utils/config';
 import { escapeComment, escapeName } from '../utils/escape';
-import { reservedWordsRegExp } from '../utils/reservedWords';
+import { reservedWordsRegExp } from '../utils/regexp';
 import { transformServiceName } from '../utils/transform';
 import { setUniqueTypeName } from '../utils/type';
 import { unique } from '../utils/unique';

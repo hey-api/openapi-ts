@@ -8,8 +8,11 @@ import { refSchemasPartial } from './const';
 import { enumValue } from './enum';
 import { escapeComment, escapeName, unescapeName } from './escape';
 import { getSchemasMeta } from './meta';
-import { reservedWordsRegExp } from './reservedWords';
+import { reservedWordsRegExp } from './regexp';
 import { unique } from './unique';
+
+export const isModelDate = (model: Model): boolean =>
+  model.format === 'date' || model.format === 'date-time';
 
 const base = (model: Model) => {
   const config = getConfig();
@@ -20,10 +23,7 @@ const base = (model: Model) => {
     });
   }
 
-  if (
-    config.types.dates &&
-    (model.format === 'date-time' || model.format === 'date')
-  ) {
+  if (config.types.dates && isModelDate(model)) {
     return compiler.typeNode('Date');
   }
 

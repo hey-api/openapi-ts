@@ -1,5 +1,6 @@
 import ts from 'typescript';
 
+import { validTypescriptIdentifierRegExp } from '../utils/regexp';
 import {
   addLeadingComments,
   type Comments,
@@ -48,6 +49,21 @@ export const createTypeNode = (
   });
 };
 
+export const createPropertyAccessChain = ({
+  expression,
+  name,
+}: {
+  expression: ts.Expression;
+  name: string | ts.MemberName;
+}) => {
+  const node = ts.factory.createPropertyAccessChain(
+    expression,
+    ts.factory.createToken(ts.SyntaxKind.QuestionDotToken),
+    name,
+  );
+  return node;
+};
+
 export const createPropertyAccessExpression = ({
   expression,
   isOptional,
@@ -56,22 +72,35 @@ export const createPropertyAccessExpression = ({
   expression: string | ts.Expression;
   isOptional?: boolean;
   name: string | ts.MemberName;
-}) => {
+}):
+  | ts.PropertyAccessChain
+  | ts.PropertyAccessExpression
+  | ts.ElementAccessExpression => {
   const nodeExpression =
     typeof expression === 'string'
       ? createIdentifier({ text: expression })
       : expression;
 
+  if (isOptional) {
+    const node = createPropertyAccessChain({
+      expression: nodeExpression,
+      name,
+    });
+    return node;
+  }
+
   const nodeName =
     typeof name === 'string' ? createIdentifier({ text: name }) : name;
 
-  if (isOptional) {
-    const node = ts.factory.createPropertyAccessChain(
-      nodeExpression,
-      ts.factory.createToken(ts.SyntaxKind.QuestionDotToken),
-      nodeName,
-    );
-    return node;
+  if (typeof name === 'string') {
+    validTypescriptIdentifierRegExp.lastIndex = 0;
+    if (!validTypescriptIdentifierRegExp.test(name)) {
+      const node = ts.factory.createElementAccessExpression(
+        nodeExpression,
+        nodeName,
+      );
+      return node;
+    }
   }
 
   const node = ts.factory.createPropertyAccessExpression(
