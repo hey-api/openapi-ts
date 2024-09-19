@@ -38,7 +38,7 @@ const main = async () => {
       // name: '^Parameters',
     },
     types: {
-      // dates: 'types+transform',
+      dates: 'types+transform',
       // enums: 'javascript',
       // export: false,
       // include:

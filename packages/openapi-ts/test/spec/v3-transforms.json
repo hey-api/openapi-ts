@@ -208,6 +208,15 @@
           "item": {
             "$ref": "#/components/schemas/ModelWithDates"
           },
+          "nullable-date": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                { "type": "string", "format": "date-time" },
+                { "type": "null" }
+              ]
+            }
+          },
           "simpleItems": {
             "type": "array",
             "items": {
