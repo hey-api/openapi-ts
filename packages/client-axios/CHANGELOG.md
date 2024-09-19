@@ -1,5 +1,13 @@
 # @hey-api/client-axios
 
+## 0.2.4
+
+### Patch Changes
+
+- [#1057](https://github.com/hey-api/openapi-ts/pull/1057) [`7ae2b1d`](https://github.com/hey-api/openapi-ts/commit/7ae2b1db047f3b6efe917a8b43ac7c851fb86c8f) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow responseTransformer property with body and headers
+
+- [#1064](https://github.com/hey-api/openapi-ts/pull/1064) [`2079c6e`](https://github.com/hey-api/openapi-ts/commit/2079c6e83a6b71e157c8e7ea56260b4e9ff8411d) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: encode path params
+
 ## 0.2.3
 
 ### Patch Changes
