@@ -272,7 +272,9 @@ export const getModel = ({
         model.type === 'unknown'
       ) {
         model.export = 'dictionary';
-        model.name = '[key: string]';
+        if (!model.name) {
+          model.name = '[key: string]';
+        }
       }
 
       return model;
