@@ -33,7 +33,7 @@ const main = async () => {
     services: {
       // export: false,
       // asClass: true,
-      filter: '^GET /api/v{api-version}/simple:operation$',
+      // filter: '^GET /api/v{api-version}/simple:operation$',
       // export: false,
       // name: '^Parameters',
     },

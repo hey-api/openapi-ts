@@ -107,7 +107,8 @@ export const postApiVbyApiVersionFormData = <ThrowOnError extends boolean = fals
     ...options,
     ...formDataBodySerializer,
     headers: {
-        'Content-Type': null
+        'Content-Type': null,
+        ...options?.headers
     },
     url: '/api/v{api-version}/formData/'
 }); };
@@ -196,7 +197,8 @@ export const uploadFile = <ThrowOnError extends boolean = false>(options: Option
     ...options,
     ...urlSearchParamsBodySerializer,
     headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded',
+        ...options?.headers
     },
     url: '/api/v{api-version}/upload'
 }); };
@@ -215,7 +217,8 @@ export const multipartRequest = <ThrowOnError extends boolean = false>(options?:
     ...options,
     ...formDataBodySerializer,
     headers: {
-        'Content-Type': null
+        'Content-Type': null,
+        ...options?.headers
     },
     url: '/api/v{api-version}/multipart'
 }); };
@@ -252,7 +255,8 @@ export const putWithFormUrlEncoded = <ThrowOnError extends boolean = false>(opti
     ...options,
     ...urlSearchParamsBodySerializer,
     headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded',
+        ...options?.headers
     },
     url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串'
 }); };
