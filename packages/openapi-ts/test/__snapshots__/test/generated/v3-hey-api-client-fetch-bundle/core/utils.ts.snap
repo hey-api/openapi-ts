@@ -253,10 +253,10 @@ const defaultPathSerializer = ({ path, url: _url }: PathSerializer) => {
         continue;
       }
 
-      url = url.replace(
-        match,
+      const replaceValue = encodeURIComponent(
         style === 'label' ? `.${value as string}` : (value as string),
       );
+      url = url.replace(match, replaceValue);
     }
   }
   return url;
