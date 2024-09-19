@@ -945,6 +945,9 @@ export type GenericSchemaDuplicateIssue_1_systemBoolean_ = {
     item?: boolean;
     error?: (string) | null;
     readonly hasError?: boolean;
+    data?: {
+        [key: string]: unknown;
+    };
 };
 
 export type GenericSchemaDuplicateIssue_1_systemString_ = {
