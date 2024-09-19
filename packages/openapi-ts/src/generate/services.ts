@@ -296,10 +296,16 @@ const toRequestOptions = (
           },
           {
             key: 'headers',
-            value: {
-              // no need for Content-Type header, browser will set it automatically
-              'Content-Type': null,
-            },
+            value: [
+              {
+                // no need for Content-Type header, browser will set it automatically
+                key: 'Content-Type',
+                value: null,
+              },
+              {
+                spread: 'options?.headers',
+              },
+            ],
           },
         ];
         onClientImport?.('formDataBodySerializer');
@@ -313,9 +319,15 @@ const toRequestOptions = (
           },
           {
             key: 'headers',
-            value: {
-              'Content-Type': contents[0],
-            },
+            value: [
+              {
+                key: 'Content-Type',
+                value: contents[0],
+              },
+              {
+                spread: 'options?.headers',
+              },
+            ],
           },
         ];
         onClientImport?.('urlSearchParamsBodySerializer');
