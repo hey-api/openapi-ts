@@ -1,22 +1,34 @@
 import ts from 'typescript';
 
+import { validTypescriptIdentifierRegExp } from '../utils/regexp';
 import { expressionToStatement } from './convert';
 import { createCallExpression } from './module';
-import { createArrowFunction, createPropertyAccessExpression } from './types';
-import { createIdentifier, ots } from './utils';
+import {
+  createArrowFunction,
+  createPropertyAccessChain,
+  createPropertyAccessExpression,
+} from './types';
+import { createIdentifier } from './utils';
 
 export const createSafeAccessExpression = (path: string[]) =>
-  path
-    .slice(1)
-    .reduce<ts.Expression>(
-      (expression, element) =>
-        ts.factory.createPropertyAccessChain(
+  path.slice(1).reduce<ts.Expression>(
+    (expression, element) => {
+      validTypescriptIdentifierRegExp.lastIndex = 0;
+      if (validTypescriptIdentifierRegExp.test(element)) {
+        return createPropertyAccessChain({
           expression,
-          ts.factory.createToken(ts.SyntaxKind.QuestionDotToken),
-          createIdentifier({ text: element }),
-        ),
-      createIdentifier({ text: path[0] }),
-    );
+          name: element,
+        });
+      }
+
+      return ts.factory.createElementAccessChain(
+        expression,
+        ts.factory.createToken(ts.SyntaxKind.QuestionDotToken),
+        createIdentifier({ text: element }),
+      );
+    },
+    createIdentifier({ text: path[0] }),
+  );
 
 export const createAccessExpression = (path: string[]) =>
   path.slice(1).reduce<ts.Expression>(
@@ -45,20 +57,6 @@ export const createPropertyAccessExpressions = ({
     return node;
   });
   return expression as ts.PropertyAccessExpression;
-};
-
-export const createElementAccessExpression = ({
-  index,
-  name,
-}: {
-  index: number;
-  name: string;
-}) => {
-  const expression = ts.factory.createElementAccessExpression(
-    createIdentifier({ text: name }),
-    ots.number(index),
-  );
-  return expression;
 };
 
 export const createBinaryExpression = ({
@@ -198,12 +196,13 @@ export const createDateTransformerExpression = ({
   parameterName,
 }: {
   parameterName: string;
-}) =>
-  ts.factory.createNewExpression(
-    createIdentifier({ text: 'Date' }),
-    undefined,
-    [createIdentifier({ text: parameterName })],
-  );
+}) => {
+  const expression = createIdentifier({ text: 'Date' });
+  const newExpression = ts.factory.createNewExpression(expression, undefined, [
+    createIdentifier({ text: parameterName }),
+  ]);
+  return newExpression;
+};
 
 export const createArrayMapTransform = ({
   path,
