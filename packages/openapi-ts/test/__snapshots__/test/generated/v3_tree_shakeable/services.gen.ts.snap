@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { ImportData, ImportResponse, ApiVversionOdataControllerCountResponse, DeleteFooData3, CallWithDescriptionsData, DeprecatedCallData, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, PostApiRequestBodyData, PostApiFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, DummyAResponse, DummyBResponse, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, CollectionFormatData, TypesData, TypesResponse, UploadFileData, UploadFileResponse, FileResponseData, FileResponseResponse, ComplexTypesData, ComplexTypesResponse, MultipartRequestData, MultipartResponseResponse, ComplexParamsData, ComplexParamsResponse, CallWithResultFromHeaderResponse, TestErrorCodeData, TestErrorCodeResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData } from './types.gen';
+import type { ImportData, ImportResponse, ApiVversionOdataControllerCountResponse, GetApiSimpleOperationData, GetApiSimpleOperationResponse, DeleteFooData3, CallWithDescriptionsData, DeprecatedCallData, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, PostApiRequestBodyData, PostApiFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, DummyAResponse, DummyBResponse, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, CollectionFormatData, TypesData, TypesResponse, UploadFileData, UploadFileResponse, FileResponseData, FileResponseResponse, ComplexTypesData, ComplexTypesResponse, MultipartRequestData, MultipartResponseResponse, ComplexParamsData, ComplexParamsResponse, CallWithResultFromHeaderResponse, TestErrorCodeData, TestErrorCodeResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData } from './types.gen';
 
 /**
  * @throws ApiError
@@ -34,6 +34,23 @@ export const import_ = (data: ImportData): CancelablePromise<ImportResponse> => 
 export const apiVVersionOdataControllerCount = (): CancelablePromise<ApiVversionOdataControllerCountResponse> => { return __request(OpenAPI, {
     method: 'GET',
     url: '/api/v{api-version}/simple/$count'
+}); };
+
+/**
+ * @param data The data for the request.
+ * @param data.fooParam foo in method
+ * @returns number Response is a simple number
+ * @throws ApiError
+ */
+export const getApiSimpleOperation = (data: GetApiSimpleOperationData): CancelablePromise<GetApiSimpleOperationResponse> => { return __request(OpenAPI, {
+    method: 'GET',
+    url: '/api/v{api-version}/simple:operation',
+    path: {
+        foo_param: data.fooParam
+    },
+    errors: {
+        default: 'Default error response'
+    }
 }); };
 
 /**
