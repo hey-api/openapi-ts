@@ -3,7 +3,7 @@ import type { Operation, OperationParameter } from './client';
 export interface Config {
   debug?: boolean;
   filterFn?: {
-    operation?: (operation: Operation) => boolean;
+    operation?: (operationKey: string) => boolean;
     operationParameter?: (parameter: OperationParameter) => boolean;
   };
   nameFn: {
