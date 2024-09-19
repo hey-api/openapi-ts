@@ -165,7 +165,8 @@ export class FormDataService {
             ...options,
             ...formDataBodySerializer,
             headers: {
-                'Content-Type': null
+                'Content-Type': null,
+                ...options?.headers
             },
             url: '/api/v{api-version}/formData/'
         });
@@ -346,7 +347,8 @@ export class UploadService {
             ...options,
             ...urlSearchParamsBodySerializer,
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
+                'Content-Type': 'application/x-www-form-urlencoded',
+                ...options?.headers
             },
             url: '/api/v{api-version}/upload'
         });
@@ -387,7 +389,8 @@ export class MultipartService {
             ...options,
             ...formDataBodySerializer,
             headers: {
-                'Content-Type': null
+                'Content-Type': null,
+                ...options?.headers
             },
             url: '/api/v{api-version}/multipart'
         });
@@ -438,7 +441,8 @@ export class NonAsciiÆøåÆøÅöôêÊService {
             ...options,
             ...urlSearchParamsBodySerializer,
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
+                'Content-Type': 'application/x-www-form-urlencoded',
+                ...options?.headers
             },
             url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串'
         });
