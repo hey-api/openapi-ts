@@ -1,7 +1,7 @@
 const path = require('node:path');
 
 const main = async () => {
-  /** @type {import('../src/node').UserConfig} */
+  /** @type {import('../src').UserConfig} */
   const config = {
     client: {
       // bundle: true,
@@ -38,7 +38,7 @@ const main = async () => {
       // name: '^Parameters',
     },
     types: {
-      dates: 'types+transform',
+      // dates: 'types+transform',
       // enums: 'javascript',
       // export: false,
       // include:
@@ -50,7 +50,7 @@ const main = async () => {
   };
 
   const { createClient } = await import(
-    path.resolve(process.cwd(), 'dist/node/index.cjs')
+    path.resolve(process.cwd(), 'dist', 'index.cjs')
   );
   await createClient(config);
 };

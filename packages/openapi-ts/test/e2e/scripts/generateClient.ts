@@ -4,7 +4,7 @@ import type { Config } from '../../../src/types/config'
 export const generateClient = async (
   dir: string,
   version: string,
-  client: Config['client'],
+  client: Config['client']['name'],
   useOptions: boolean = false,
   name?: string
 ) => {

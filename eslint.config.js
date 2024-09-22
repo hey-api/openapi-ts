@@ -53,9 +53,12 @@ export default tseslint.config(
   configPrettier,
   {
     ignores: [
+      '**/.tsup/',
       '**/dist/',
       '**/node_modules/',
       'temp/',
+      'packages/openapi-ts/src/legacy/handlebars/compiled/**/*.js',
+      'packages/openapi-ts/src/legacy/handlebars/templates/**/*.hbs',
       '**/test/e2e/generated/',
       '**/test/generated/',
       '**/.svelte-kit/',
