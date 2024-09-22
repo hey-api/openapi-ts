@@ -3,7 +3,5 @@
   "compilerOptions": {
     "declaration": false,
     "esModuleInterop": true
-  },
-  "exclude": ["node_modules", "**/__mocks__"],
-  "include": ["./src/**/*.ts", "rollup.config.ts", "rollup.dts.config.ts"]
+  }
 }

@@ -1,7 +1,6 @@
 {
   "name": "@hey-api/openapi-ts",
   "version": "0.53.2",
-  "type": "module",
   "description": "Turn your OpenAPI specification into a beautiful TypeScript client",
   "homepage": "https://heyapi.vercel.app/",
   "repository": {
@@ -29,8 +28,23 @@
     "xhr",
     "yaml"
   ],
-  "main": "./dist/node/index.cjs",
-  "types": "./dist/node/index.d.ts",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./package.json": "./package.json"
+  },
   "bin": {
     "openapi-ts": "bin/index.cjs"
   },
@@ -40,14 +54,10 @@
     "LICENSE.md"
   ],
   "scripts": {
-    "build-bundle": "rollup --config rollup.config.ts --configPlugin typescript",
-    "build-types-check": "tsc --project tsconfig.check.json",
-    "build-types-roll": "rollup --config rollup.dts.config.ts --configPlugin typescript && rimraf temp",
-    "build-types-temp": "tsc --emitDeclarationOnly --outDir temp -p src/node",
-    "build-types": "pnpm build-types-temp && pnpm build-types-roll && pnpm build-types-check",
-    "build": "pnpm clean && pnpm build-bundle && pnpm build-types",
-    "clean": "rimraf dist test/generated test/e2e/generated coverage node_modules/.cache",
-    "dev": "rimraf dist && pnpm build-bundle --watch",
+    "build": "tsup && pnpm check-exports",
+    "check-exports": "attw --pack .",
+    "dev": "tsup --watch",
+    "handlebars": "node src/legacy/handlebars/handlebars.cjs",
     "prepublishOnly": "pnpm build",
     "test:coverage": "vitest run --config vitest.config.unit.ts --coverage",
     "test:e2e": "vitest run --config vitest.config.e2e.ts",
@@ -83,8 +93,6 @@
     "@angular/router": "17.3.9",
     "@hey-api/client-axios": "workspace:*",
     "@hey-api/client-fetch": "workspace:*",
-    "@rollup/plugin-json": "6.1.0",
-    "@rollup/plugin-node-resolve": "15.2.3",
     "@tanstack/react-query": "5.56.2",
     "@tanstack/solid-query": "5.51.21",
     "@tanstack/svelte-query": "5.56.2",
