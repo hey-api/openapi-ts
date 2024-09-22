@@ -26,6 +26,7 @@ export interface ClientConfig {
    */
   client?:
     | Client
+    | false
     | {
         /**
          * Bundle the client module? Set this to true if you're using a standalone

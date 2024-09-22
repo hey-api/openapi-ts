@@ -38,6 +38,7 @@ describe('OpenAPI v2', () => {
     },
   ])('$description', async ({ name, config }) => {
     const output = toOutputPath(name);
+    // @ts-ignore
     await createClient({
       ...config,
       input: V2_SPEC_PATH,
@@ -429,6 +430,7 @@ describe('OpenAPI v3', () => {
     '$description',
     async ({ name, config }) => {
       const output = toOutputPath(name);
+      // @ts-ignore
       await createClient({
         ...config,
         input: V3_SPEC_PATH,
@@ -446,6 +448,7 @@ describe('OpenAPI v3', () => {
     async ({ name, config }) => {
       const output = toOutputPath(name + '_transform');
 
+      // @ts-ignore
       await createClient({
         ...config,
         input: V3_TRANSFORMS_SPEC_PATH,

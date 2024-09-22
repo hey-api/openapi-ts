@@ -1,5 +1,6 @@
 .DS_Store
 .idea
+.tsup
 .tmp
 junit.xml
 node_modules

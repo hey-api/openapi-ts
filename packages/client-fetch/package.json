@@ -1,7 +1,6 @@
 {
   "name": "@hey-api/client-fetch",
   "version": "0.3.1",
-  "type": "module",
   "description": "Type-safe Fetch API client for your @hey-api/openapi-ts types",
   "homepage": "https://heyapi.vercel.app/",
   "repository": {
@@ -25,18 +24,19 @@
     "typescript",
     "vue"
   ],
-  "types": "dist/node/index.d.ts",
-  "main": "dist/node/index.cjs",
-  "module": "dist/node/index.mjs",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": {
-        "types": "./dist/node/index.d.ts",
-        "default": "./dist/node/index.mjs"
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
       },
       "require": {
-        "types": "./dist/node/index.d.ts",
-        "default": "./dist/node/index.cjs"
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
       }
     },
     "./package.json": "./package.json"
@@ -48,14 +48,9 @@
     "src"
   ],
   "scripts": {
-    "build-bundle": "rollup --config rollup.config.ts --configPlugin typescript",
-    "build-types-check": "tsc --project tsconfig.check.json",
-    "build-types-roll": "rollup --config rollup.dts.config.ts --configPlugin typescript && rimraf temp",
-    "build-types-temp": "tsc --emitDeclarationOnly --outDir temp -p src/node",
-    "build-types": "pnpm build-types-temp && pnpm build-types-roll && pnpm build-types-check",
-    "build": "pnpm clean && pnpm build-bundle && pnpm build-types",
-    "clean": "rimraf dist coverage node_modules/.cache",
-    "dev": "rimraf dist && pnpm build-bundle --watch",
+    "build": "tsup && pnpm check-exports",
+    "check-exports": "attw --pack .",
+    "dev": "tsup --watch",
     "prepublishOnly": "pnpm build",
     "test:coverage": "vitest run --coverage",
     "test:update": "vitest watch --update",

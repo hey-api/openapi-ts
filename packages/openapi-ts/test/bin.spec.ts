@@ -14,7 +14,7 @@ describe('bin', () => {
       '--dry-run',
       'true',
     ]);
-    expect(result.stdout.toString()).toContain('Done!');
+    expect(result.stdout.toString()).toContain('Creating Fetch client');
     expect(result.stderr.toString()).toContain('Duplicate operationId');
   });
 
@@ -119,7 +119,7 @@ describe('bin', () => {
       '--dry-run',
       'true',
     ]);
-    expect(result.stdout.toString()).toContain('Done!');
+    expect(result.stdout.toString()).toContain('Creating Fetch client');
     expect(result.stderr.toString()).toContain('Duplicate operationId');
   });
 
@@ -139,7 +139,7 @@ describe('bin', () => {
       '--dry-run',
       'true',
     ]);
-    expect(result.stdout.toString()).toContain('Done!');
+    expect(result.stdout.toString()).toContain('Creating Fetch client');
     expect(result.stderr.toString()).toContain('Duplicate operationId');
   });
 
@@ -187,6 +187,8 @@ describe('bin', () => {
       './test/spec/v3.json',
       '--output',
       './test/generated/bin',
+      '--client',
+      'invalid/client',
       '--dry-run',
       'true',
     ]);
