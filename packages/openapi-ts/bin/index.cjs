@@ -66,9 +66,7 @@ const processParams = (obj, booleanKeys) => {
 async function start() {
   let userConfig;
   try {
-    const { createClient } = require(
-      resolve(__dirname, '../dist/node/index.cjs'),
-    );
+    const { createClient } = require(resolve(__dirname, '../dist/index.cjs'));
     userConfig = processParams(params, [
       'dryRun',
       'exportCore',

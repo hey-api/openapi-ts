@@ -1,11 +1,31 @@
-import { copyFileSync, readFileSync, writeFileSync } from 'node:fs';
-import { createRequire } from 'node:module';
+import { copyFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { getConfig, isStandaloneClient } from '../utils/config';
 import { ensureDirSync } from './utils';
 
-const require = createRequire(import.meta.url);
+const isESM = () => {
+  try {
+    return typeof import.meta.url === 'string';
+  } catch (error) {
+    return false;
+  }
+};
+
+const getRequire = async (): Promise<NodeRequire> => {
+  try {
+    if (isESM()) {
+      const module: any = await import('node:module');
+      const createRequire: (path: string | URL) => NodeRequire =
+        module.createRequire;
+      return createRequire(import.meta.url);
+    }
+
+    return module.require;
+  } catch (error) {
+    return module.require;
+  }
+};
 
 export const clientModulePath = () => {
   const config = getConfig();
@@ -16,7 +36,7 @@ export const clientOptionsTypeName = () => 'Options';
 
 /**
  * (optional) Creates a `client.ts` file containing the same exports as a
- * standalone client package. Creates a `core` directory containing the modules
+ * standalone client package. Creates a `client` directory containing the modules
  * from standalone client. These files are generated only when `client.bundle`
  * is set to true.
  */
@@ -31,9 +51,10 @@ export const generateClient = async (
   }
 
   // create directory for client modules
-  const dirPath = path.resolve(outputPath, 'core');
+  const dirPath = path.resolve(outputPath, 'client');
   ensureDirSync(dirPath);
 
+  const require = await getRequire();
   const clientModulePath = path.normalize(require.resolve(moduleName));
   const clientModulePathComponents = clientModulePath.split(path.sep);
   const clientSrcPath = [
@@ -52,12 +73,4 @@ export const generateClient = async (
       path.resolve(dirPath, file),
     );
   });
-
-  // copy index file with cherry-picked exports
-  const nodeIndexFile = readFileSync(
-    path.resolve(clientSrcPath, 'node', 'index.ts'),
-    'utf-8',
-  );
-  const indexFile = nodeIndexFile.replaceAll('../', './core/');
-  writeFileSync(path.resolve(outputPath, 'client.ts'), indexFile, 'utf-8');
 };

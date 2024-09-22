@@ -18,7 +18,7 @@ import {
   operationParameterFilterFn,
   operationParameterNameFn,
 } from './utils/parse';
-import { Performance } from './utils/performance';
+import { Performance, PerformanceReport } from './utils/performance';
 import { postProcessClient } from './utils/postprocess';
 
 type OutputProcessor = {
@@ -112,7 +112,7 @@ const getClient = (userConfig: ClientConfig): Config['client'] => {
   };
   if (typeof userConfig.client === 'string') {
     client.name = userConfig.client;
-  } else {
+  } else if (userConfig.client) {
     client = {
       ...client,
       ...userConfig.client,
@@ -269,7 +269,7 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
 
     const client = getClient(userConfig);
 
-    if (!CLIENTS.includes(client.name)) {
+    if (client.name && !CLIENTS.includes(client.name)) {
       throw new Error('🚫 invalid client - select a valid client value');
     }
 
@@ -286,7 +286,7 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
 
     output.path = path.resolve(process.cwd(), output.path);
 
-    return setConfig({
+    const config = setConfig({
       base,
       client,
       configFile,
@@ -305,6 +305,12 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
       types,
       useOptions,
     });
+
+    if (debug) {
+      console.warn('config:', config);
+    }
+
+    return config;
   });
 };
 
@@ -319,17 +325,23 @@ export async function createClient(
 ): Promise<ReadonlyArray<Client>> {
   Performance.start('createClient');
 
+  Performance.start('config');
   const configs = await initConfigs(userConfig);
+  Performance.end('config');
 
+  Performance.start('handlebars');
   const templates = registerHandlebarTemplates();
+  Performance.end('handlebars');
 
   const pCreateClient = (config: Config) => async () => {
+    Performance.start('openapi');
     const openApi =
       typeof config.input === 'string'
         ? await getOpenApiSpec(config.input)
         : (config.input as unknown as Awaited<
             ReturnType<typeof getOpenApiSpec>
           >);
+    Performance.end('openapi');
 
     if (config.experimental_parser) {
       Performance.start('experimental_parser');
@@ -355,13 +367,19 @@ export async function createClient(
       const client = postProcessClient(parsed);
       Performance.end('parser');
 
-      if (!config.dryRun) {
-        logClientMessage();
-        await generateOutput(openApi, client, templates);
-        processOutput();
-      }
+      logClientMessage();
 
-      console.log('✨ Done! Your client is located in:', config.output.path);
+      Performance.start('generator');
+      await generateOutput(openApi, client, templates);
+      Performance.end('generator');
+
+      Performance.start('postprocess');
+      if (!config.dryRun) {
+        processOutput();
+
+        console.log('✨ Done! Your client is located in:', config.output.path);
+      }
+      Performance.end('postprocess');
 
       return client;
     }
@@ -379,6 +397,22 @@ export async function createClient(
 
   Performance.end('createClient');
 
+  if (userConfig.debug) {
+    const perfReport = new PerformanceReport({
+      totalMark: 'createClient',
+    });
+    perfReport.report({
+      marks: [
+        'config',
+        'openapi',
+        'handlebars',
+        'parser',
+        'generator',
+        'postprocess',
+      ],
+    });
+  }
+
   return clients;
 }
 
@@ -391,3 +425,5 @@ export default {
   createClient,
   defineConfig,
 };
+
+export type { UserConfig } from './types/config';
