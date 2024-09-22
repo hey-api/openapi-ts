@@ -1,5 +1,11 @@
 # @hey-api/client-fetch
 
+## 0.3.2
+
+### Patch Changes
+
+- [#1075](https://github.com/hey-api/openapi-ts/pull/1075) [`11a276a`](https://github.com/hey-api/openapi-ts/commit/11a276a1e35dde0735363e892d8142016fd87eec) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: properly handle dual publishing and type generation
+
 ## 0.3.1
 
 ### Patch Changes
