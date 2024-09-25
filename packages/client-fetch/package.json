@@ -56,6 +56,6 @@
     "test:update": "vitest watch --update",
     "test:watch": "vitest watch",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "vitest --typecheck"
   }
 }
