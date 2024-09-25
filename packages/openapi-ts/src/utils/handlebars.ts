@@ -1,4 +1,4 @@
-import Handlebars from 'handlebars/runtime';
+import Handlebars from 'handlebars';
 
 // @ts-ignore
 import templateClient from '../legacy/handlebars/compiled/client.js';
