@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.53.4
+
+### Patch Changes
+
+- [#1087](https://github.com/hey-api/openapi-ts/pull/1087) [`b528236`](https://github.com/hey-api/openapi-ts/commit/b528236b626d12d4ac03b98b8abecc425291c5e5) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: import handlebars instead of runtime
+
+- [#1086](https://github.com/hey-api/openapi-ts/pull/1086) [`0bc1ebe`](https://github.com/hey-api/openapi-ts/commit/0bc1ebe318399d01296777746ce0bccc83c0e83d) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: support dynamic require in child_process
+
 ## 0.53.3
 
 ### Patch Changes
