@@ -4,29 +4,6 @@ import path from 'node:path';
 import { getConfig, isStandaloneClient } from '../utils/config';
 import { ensureDirSync } from './utils';
 
-const isESM = () => {
-  try {
-    return typeof import.meta.url === 'string';
-  } catch (error) {
-    return false;
-  }
-};
-
-const getRequire = async (): Promise<NodeRequire> => {
-  try {
-    if (isESM()) {
-      const module: any = await import('node:module');
-      const createRequire: (path: string | URL) => NodeRequire =
-        module.createRequire;
-      return createRequire(import.meta.url);
-    }
-
-    return module.require;
-  } catch (error) {
-    return module.require;
-  }
-};
-
 export const clientModulePath = () => {
   const config = getConfig();
   return config.client.bundle ? './client' : config.client.name;
@@ -54,7 +31,6 @@ export const generateClient = async (
   const dirPath = path.resolve(outputPath, 'client');
   ensureDirSync(dirPath);
 
-  const require = await getRequire();
   const clientModulePath = path.normalize(require.resolve(moduleName));
   const clientModulePathComponents = clientModulePath.split(path.sep);
   const clientSrcPath = [
