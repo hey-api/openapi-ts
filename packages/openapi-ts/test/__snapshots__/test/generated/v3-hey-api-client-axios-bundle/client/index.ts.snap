@@ -85,7 +85,7 @@ export const createClient = (config: Config): Client => {
   } as Client;
 };
 
-export type { Config, Options } from './types';
+export type { Client, Config, Options, RequestOptionsBase } from './types';
 export {
   createConfig,
   formDataBodySerializer,
