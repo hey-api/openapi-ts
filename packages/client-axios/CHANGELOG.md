@@ -1,5 +1,11 @@
 # @hey-api/client-axios
 
+## 0.2.6
+
+### Patch Changes
+
+- [#1083](https://github.com/hey-api/openapi-ts/pull/1083) [`fe743c2`](https://github.com/hey-api/openapi-ts/commit/fe743c2d41c23bf7e1706bceedd6319299131197) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export client-facing types again
+
 ## 0.2.5
 
 ### Patch Changes
