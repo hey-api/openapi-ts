@@ -1,5 +1,15 @@
 # @hey-api/openapi-ts
 
+## 0.53.5
+
+### Patch Changes
+
+- [#1096](https://github.com/hey-api/openapi-ts/pull/1096) [`b6e350a`](https://github.com/hey-api/openapi-ts/commit/b6e350a9cc2d82ac4496b7d57ec8b58978c951c2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: make TanStack Query plugin work with class-based services
+
+- [#1095](https://github.com/hey-api/openapi-ts/pull/1095) [`11ee53f`](https://github.com/hey-api/openapi-ts/commit/11ee53f4f519643ae7e3f0997ce4fe9b6cb050a8) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: avoid printing duplicate null nodes
+
+- [#1094](https://github.com/hey-api/openapi-ts/pull/1094) [`713ccd5`](https://github.com/hey-api/openapi-ts/commit/713ccd5e5e250a14cacf96fd1dffad252cc4cc6a) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: attach TanStack Query infinite page params only if they exist
+
 ## 0.53.4
 
 ### Patch Changes
