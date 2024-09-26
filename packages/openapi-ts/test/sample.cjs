@@ -11,29 +11,29 @@ const main = async () => {
     // debug: true,
     // experimental_parser: true,
     // input: './test/spec/v3-transforms.json',
-    // input: './test/spec/v3.json',
-    input: './test/spec/3.1.0/duplicate-null.json',
+    input: './test/spec/v3.json',
+    // input: './test/spec/3.1.0/duplicate-null.json',
     // input: './test/spec/v2.json',
     // input: 'https://mongodb-mms-prod-build-server.s3.amazonaws.com/openapi/2caffd88277a4e27c95dcefc7e3b6a63a3b03297-v2-2023-11-15.json',
     // name: 'foo',
     output: {
       path: './test/generated/sample/',
     },
-    // plugins: [
-    //   {
-    //     // infiniteQueryOptions: false,
-    //     // mutationOptions: false,
-    //     name: '@tanstack/react-query',
-    //     // queryOptions: false,
-    //   },
-    //   // '@hey-api/services',
-    // ],
+    plugins: [
+      {
+        // infiniteQueryOptions: false,
+        // mutationOptions: false,
+        name: '@tanstack/react-query',
+        // queryOptions: false,
+      },
+      // '@hey-api/services',
+    ],
     schemas: {
       export: false,
     },
     services: {
-      export: false,
-      // asClass: true,
+      // export: false,
+      asClass: true,
       // filter: '^GET /api/v{api-version}/simple:operation$',
       // export: false,
       // name: '^Parameters',

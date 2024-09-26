@@ -61,6 +61,7 @@ export default tseslint.config(
       'packages/openapi-ts/src/legacy/handlebars/templates/**/*.hbs',
       '**/test/e2e/generated/',
       '**/test/generated/',
+      '**/__snapshots__/',
       '**/.svelte-kit/',
       '**/.vitepress/cache',
       '**/.vitepress/dist',

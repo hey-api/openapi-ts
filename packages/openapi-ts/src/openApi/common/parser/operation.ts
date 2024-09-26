@@ -3,6 +3,14 @@ import type {
   OperationResponse,
 } from '../interfaces/client';
 
+export const getOperationKey = (operation: {
+  method: string;
+  path: string;
+}) => {
+  const operationKey = `${operation.method} ${operation.path}`;
+  return operationKey;
+};
+
 export const getOperationResponseHeader = (
   operationResponses: OperationResponse[],
 ): string | null => {
