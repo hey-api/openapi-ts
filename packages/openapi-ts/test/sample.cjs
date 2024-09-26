@@ -18,15 +18,15 @@ const main = async () => {
     output: {
       path: './test/generated/sample/',
     },
-    // plugins: [
-    //   {
-    //     // infiniteQueryOptions: false,
-    //     // mutationOptions: false,
-    //     name: '@tanstack/react-query',
-    //     // queryOptions: false,
-    //   },
-    //   // '@hey-api/services',
-    // ],
+    plugins: [
+      {
+        // infiniteQueryOptions: false,
+        // mutationOptions: false,
+        name: '@tanstack/react-query',
+        // queryOptions: false,
+      },
+      // '@hey-api/services',
+    ],
     schemas: {
       export: false,
     },
