@@ -16,6 +16,7 @@ import {
   toOperationName,
 } from '../../../generate/services';
 import { isOperationParameterRequired } from '../../../openApi';
+import { getOperationKey } from '../../../openApi/common/parser/operation';
 import type { Client } from '../../../types/client';
 import type {
   Method,
@@ -25,6 +26,7 @@ import type {
 } from '../../../types/client';
 import type { Files } from '../../../types/utils';
 import { getConfig } from '../../../utils/config';
+import { transformServiceName } from '../../../utils/transform';
 import type { PluginDefinition } from '../../types';
 
 const toInfiniteQueryOptionsName = (operation: Operation) =>
@@ -471,6 +473,7 @@ export const handler: PluginDefinition['handler'] = ({
 
   checkPrerequisites({ files });
 
+  const config = getConfig();
   const file = files[plugin.name];
 
   file.import({
@@ -495,9 +498,23 @@ export const handler: PluginDefinition['handler'] = ({
   let hasMutations = false;
   let hasQueries = false;
 
+  const processedOperations = new Map<string, boolean>();
+
   for (const service of client.services) {
     for (const operation of service.operations) {
-      const queryFn = toOperationName(operation, true);
+      // track processed operations to avoid creating duplicates
+      const operationKey = getOperationKey(operation);
+      if (processedOperations.has(operationKey)) {
+        continue;
+      }
+      processedOperations.set(operationKey, true);
+
+      const queryFn = [
+        config.services.asClass && transformServiceName(service.name),
+        toOperationName(operation, !config.services.asClass),
+      ]
+        .filter(Boolean)
+        .join('.');
       let hasUsedQueryFn = false;
 
       // queries
@@ -1149,7 +1166,7 @@ export const handler: PluginDefinition['handler'] = ({
       if (hasUsedQueryFn) {
         file.import({
           module: servicesModulePath,
-          name: queryFn,
+          name: queryFn.split('.')[0],
         });
       }
     }
