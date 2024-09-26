@@ -6,6 +6,7 @@
 **/.vitepress/cache
 **/.vitepress/dist
 **/test/e2e
+**/__snapshots__
 
 **/CHANGELOG.md
 pnpm-lock.yaml
