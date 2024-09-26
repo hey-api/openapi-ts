@@ -828,6 +828,143 @@ export const handler: PluginDefinition['handler'] = ({
                               typeName: typePageObjectParam,
                             }),
                             compiler.constVariable({
+                              expression: compiler.objectExpression({
+                                obj: [],
+                              }),
+                              name: 'params',
+                              typeName: `Partial<${typeData}>`,
+                            }),
+                            compiler.ifStatement({
+                              expression: compiler.propertyAccessExpression({
+                                expression: compiler.identifier({
+                                  text: 'page',
+                                }),
+                                name: compiler.identifier({ text: 'body' }),
+                              }),
+                              thenStatement: ts.factory.createBlock(
+                                [
+                                  compiler.expressionToStatement({
+                                    expression: compiler.binaryExpression({
+                                      left: compiler.propertyAccessExpression({
+                                        expression: 'params',
+                                        name: 'body',
+                                      }),
+                                      right: compiler.objectExpression({
+                                        multiLine: true,
+                                        obj: [
+                                          {
+                                            assertion: 'any',
+                                            spread: 'queryKey[0].body',
+                                          },
+                                          {
+                                            assertion: 'any',
+                                            spread: 'page.body',
+                                          },
+                                        ],
+                                      }),
+                                    }),
+                                  }),
+                                ],
+                                true,
+                              ),
+                            }),
+                            compiler.ifStatement({
+                              expression: compiler.propertyAccessExpression({
+                                expression: compiler.identifier({
+                                  text: 'page',
+                                }),
+                                name: compiler.identifier({ text: 'headers' }),
+                              }),
+                              thenStatement: ts.factory.createBlock(
+                                [
+                                  compiler.expressionToStatement({
+                                    expression: compiler.binaryExpression({
+                                      left: compiler.propertyAccessExpression({
+                                        expression: 'params',
+                                        name: 'headers',
+                                      }),
+                                      right: compiler.objectExpression({
+                                        multiLine: true,
+                                        obj: [
+                                          {
+                                            spread: 'queryKey[0].headers',
+                                          },
+                                          {
+                                            spread: 'page.headers',
+                                          },
+                                        ],
+                                      }),
+                                    }),
+                                  }),
+                                ],
+                                true,
+                              ),
+                            }),
+                            compiler.ifStatement({
+                              expression: compiler.propertyAccessExpression({
+                                expression: compiler.identifier({
+                                  text: 'page',
+                                }),
+                                name: compiler.identifier({ text: 'path' }),
+                              }),
+                              thenStatement: ts.factory.createBlock(
+                                [
+                                  compiler.expressionToStatement({
+                                    expression: compiler.binaryExpression({
+                                      left: compiler.propertyAccessExpression({
+                                        expression: 'params',
+                                        name: 'path',
+                                      }),
+                                      right: compiler.objectExpression({
+                                        multiLine: true,
+                                        obj: [
+                                          {
+                                            spread: 'queryKey[0].path',
+                                          },
+                                          {
+                                            spread: 'page.path',
+                                          },
+                                        ],
+                                      }),
+                                    }),
+                                  }),
+                                ],
+                                true,
+                              ),
+                            }),
+                            compiler.ifStatement({
+                              expression: compiler.propertyAccessExpression({
+                                expression: compiler.identifier({
+                                  text: 'page',
+                                }),
+                                name: compiler.identifier({ text: 'query' }),
+                              }),
+                              thenStatement: ts.factory.createBlock(
+                                [
+                                  compiler.expressionToStatement({
+                                    expression: compiler.binaryExpression({
+                                      left: compiler.propertyAccessExpression({
+                                        expression: 'params',
+                                        name: 'query',
+                                      }),
+                                      right: compiler.objectExpression({
+                                        multiLine: true,
+                                        obj: [
+                                          {
+                                            spread: 'queryKey[0].query',
+                                          },
+                                          {
+                                            spread: 'page.query',
+                                          },
+                                        ],
+                                      }),
+                                    }),
+                                  }),
+                                ],
+                                true,
+                              ),
+                            }),
+                            compiler.constVariable({
                               destructure: true,
                               expression: compiler.awaitExpression({
                                 expression: compiler.callExpression({
@@ -843,62 +980,7 @@ export const handler: PluginDefinition['handler'] = ({
                                           spread: 'queryKey[0]',
                                         },
                                         {
-                                          key: 'body',
-                                          value: compiler.objectExpression({
-                                            multiLine: true,
-                                            obj: [
-                                              {
-                                                assertion: 'any',
-                                                spread: 'queryKey[0].body',
-                                              },
-                                              {
-                                                assertion: 'any',
-                                                spread: 'page.body',
-                                              },
-                                            ],
-                                          }),
-                                        },
-                                        {
-                                          key: 'headers',
-                                          value: compiler.objectExpression({
-                                            multiLine: true,
-                                            obj: [
-                                              {
-                                                spread: 'queryKey[0].headers',
-                                              },
-                                              {
-                                                spread: 'page.headers',
-                                              },
-                                            ],
-                                          }),
-                                        },
-                                        {
-                                          key: 'path',
-                                          value: compiler.objectExpression({
-                                            multiLine: true,
-                                            obj: [
-                                              {
-                                                spread: 'queryKey[0].path',
-                                              },
-                                              {
-                                                spread: 'page.path',
-                                              },
-                                            ],
-                                          }),
-                                        },
-                                        {
-                                          key: 'query',
-                                          value: compiler.objectExpression({
-                                            multiLine: true,
-                                            obj: [
-                                              {
-                                                spread: 'queryKey[0].query',
-                                              },
-                                              {
-                                                spread: 'page.query',
-                                              },
-                                            ],
-                                          }),
+                                          spread: 'params',
                                         },
                                         {
                                           key: 'throwOnError',
