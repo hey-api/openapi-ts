@@ -1,4 +1,5 @@
 import type { Client, Operation } from '../../common/interfaces/client';
+import { getOperationKey } from '../../common/parser/operation';
 import { allowedServiceMethods } from '../../common/parser/service';
 import { getConfig } from '../../config';
 import type { OpenApi } from '../interfaces/OpenApi';
@@ -17,21 +18,24 @@ export const getOperations = ({
   const operationIds = new Map<string, string>();
   const operations: Operation[] = [];
 
-  for (const url in openApi.paths) {
-    const path = openApi.paths[url];
+  for (const path in openApi.paths) {
+    const pathItem = openApi.paths[path];
     const pathParameters = getOperationParameters({
       openApi,
-      parameters: path.parameters ?? [],
+      parameters: pathItem.parameters ?? [],
       types,
     });
 
-    for (const key in path) {
+    for (const key in pathItem) {
       const method = key as Lowercase<Operation['method']>;
 
-      const operationKey = `${method.toUpperCase()} ${url}`;
+      const operationKey = getOperationKey({
+        method: method.toUpperCase(),
+        path,
+      });
 
       if (allowedServiceMethods.includes(method)) {
-        const op = path[method]!;
+        const op = pathItem[method]!;
 
         if (op.operationId) {
           if (operationIds.has(op.operationId)) {
@@ -53,7 +57,7 @@ export const getOperations = ({
             openApi,
             pathParams: pathParameters,
             types,
-            url,
+            url: path,
           });
           operations.push(operation);
         }
