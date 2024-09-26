@@ -121,7 +121,10 @@ const typeUnionOrIntersection = ({
   const node =
     style === 'union'
       ? compiler.typeUnionNode({
-          isNullable: model.isNullable,
+          // avoid printing duplicate null statements
+          isNullable:
+            model.isNullable &&
+            !model.properties.find((property) => property.isNullable),
           types,
         })
       : compiler.typeIntersectionNode({
