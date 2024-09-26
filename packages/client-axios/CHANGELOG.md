@@ -1,5 +1,11 @@
 # @hey-api/client-axios
 
+## 0.2.7
+
+### Patch Changes
+
+- [#1092](https://github.com/hey-api/openapi-ts/pull/1092) [`7f986c2`](https://github.com/hey-api/openapi-ts/commit/7f986c2c7726ed8fbf16f8b235b7769c7d990502) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export RequestResult type
+
 ## 0.2.6
 
 ### Patch Changes
