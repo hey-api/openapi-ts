@@ -48,6 +48,11 @@ localClient.interceptors.request.use((request, options) => {
   return request;
 });
 
+localClient.interceptors.error.use((error) => {
+  console.log(error);
+  return error;
+});
+
 function App() {
   const [pet, setPet] = useState<Pet>();
   const [isRequiredNameError, setIsRequiredNameError] = useState(false);

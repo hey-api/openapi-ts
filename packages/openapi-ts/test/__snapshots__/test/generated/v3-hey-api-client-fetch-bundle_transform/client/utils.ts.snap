@@ -422,6 +422,13 @@ export const mergeHeaders = (
   return mergedHeaders;
 };
 
+type ErrInterceptor<Err, Res, Req, Options> = (
+  error: Err,
+  response: Res,
+  request: Req,
+  options: Options,
+) => Err | Promise<Err>;
+
 type ReqInterceptor<Req, Options> = (
   request: Req,
   options: Options,
@@ -462,7 +469,11 @@ class Interceptors<Interceptor> {
 
 // `createInterceptors()` response, meant for external use as it does not
 // expose internals
-export interface Middleware<Req, Res, Options> {
+export interface Middleware<Req, Res, Err, Options> {
+  error: Pick<
+    Interceptors<ErrInterceptor<Err, Res, Req, Options>>,
+    'eject' | 'use'
+  >;
   request: Pick<Interceptors<ReqInterceptor<Req, Options>>, 'eject' | 'use'>;
   response: Pick<
     Interceptors<ResInterceptor<Res, Req, Options>>,
@@ -471,7 +482,8 @@ export interface Middleware<Req, Res, Options> {
 }
 
 // do not add `Middleware` as return type so we can use _fns internally
-export const createInterceptors = <Req, Res, Options>() => ({
+export const createInterceptors = <Req, Res, Err, Options>() => ({
+  error: new Interceptors<ErrInterceptor<Err, Res, Req, Options>>(),
   request: new Interceptors<ReqInterceptor<Req, Options>>(),
   response: new Interceptors<ResInterceptor<Res, Req, Options>>(),
 });

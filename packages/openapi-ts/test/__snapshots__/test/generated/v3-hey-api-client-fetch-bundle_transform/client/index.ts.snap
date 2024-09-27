@@ -24,7 +24,12 @@ export const createClient = (config: Config = {}): Client => {
     return getConfig();
   };
 
-  const interceptors = createInterceptors<Request, Response, RequestOptions>();
+  const interceptors = createInterceptors<
+    Request,
+    Response,
+    unknown,
+    RequestOptions
+  >();
 
   // @ts-expect-error
   const request: Client['request'] = async (options) => {
@@ -113,17 +118,26 @@ export const createClient = (config: Config = {}): Client => {
 
     let error = await response.text();
 
-    if (opts.throwOnError) {
-      throw new Error(error);
-    }
-
     try {
       error = JSON.parse(error);
     } catch {
       // noop
     }
+
+    let finalError = error;
+
+    for (const fn of interceptors.error._fns) {
+      finalError = (await fn(error, response, request, opts)) as string;
+    }
+
+    finalError = finalError || ({} as string);
+
+    if (opts.throwOnError) {
+      throw finalError;
+    }
+
     return {
-      error: error || {},
+      error: finalError,
       ...result,
     };
   };
