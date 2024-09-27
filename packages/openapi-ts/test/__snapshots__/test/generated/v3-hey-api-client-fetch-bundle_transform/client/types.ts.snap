@@ -145,6 +145,7 @@ type RequestFn = <
 export interface Client<
   Req = Request,
   Res = Response,
+  Err = unknown,
   Options = RequestOptions,
 > {
   connect: MethodFn;
@@ -152,7 +153,7 @@ export interface Client<
   get: MethodFn;
   getConfig: () => Config;
   head: MethodFn;
-  interceptors: Middleware<Req, Res, Options>;
+  interceptors: Middleware<Req, Res, Err, Options>;
   options: MethodFn;
   patch: MethodFn;
   post: MethodFn;
