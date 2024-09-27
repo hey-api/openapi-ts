@@ -1,5 +1,15 @@
 # @hey-api/client-fetch
 
+## 0.4.0
+
+### Minor Changes
+
+- [#1098](https://github.com/hey-api/openapi-ts/pull/1098) [`df5c690`](https://github.com/hey-api/openapi-ts/commit/df5c69048a03a1c7729a5200c586164287a8a6fa) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add error interceptors
+
+### Patch Changes
+
+- [#1098](https://github.com/hey-api/openapi-ts/pull/1098) [`df5c690`](https://github.com/hey-api/openapi-ts/commit/df5c69048a03a1c7729a5200c586164287a8a6fa) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: throw raw error when throwOnError is true
+
 ## 0.3.4
 
 ### Patch Changes
