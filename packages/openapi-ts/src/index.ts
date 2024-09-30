@@ -426,4 +426,5 @@ export default {
   defineConfig,
 };
 
+export type { OpenApiV3_1 } from './openApi/3.1/types/spec';
 export type { UserConfig } from './types/config';
