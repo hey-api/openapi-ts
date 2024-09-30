@@ -1,43 +1,56 @@
 import {
   defaultConfig as heyApiSchemasDefaultConfig,
-  type PluginConfig as HeyApiSchemas,
+  type PluginConfig as PluginHeyApiSchemas,
 } from './@hey-api/schemas';
 import {
   defaultConfig as heyApiServicesDefaultConfig,
-  type PluginConfig as HeyApiServices,
+  type PluginConfig as PluginHeyApiServices,
 } from './@hey-api/services';
 import {
   defaultConfig as heyApiTypesDefaultConfig,
-  type PluginConfig as HeyApiTypes,
+  type PluginConfig as PluginHeyApiTypes,
 } from './@hey-api/types';
 import {
   defaultConfig as tanStackReactQueryDefaultConfig,
-  type PluginConfig as TanStackReactQuery,
+  type PluginConfig as PluginTanStackReactQuery,
+  type UserConfig as TanStackReactQuery,
 } from './@tanstack/react-query';
 import {
   defaultConfig as tanStackSolidQueryDefaultConfig,
-  type PluginConfig as TanStackSolidQuery,
+  type PluginConfig as PluginTanStackSolidQuery,
+  type UserConfig as TanStackSolidQuery,
 } from './@tanstack/solid-query';
 import {
   defaultConfig as tanStackSvelteQueryDefaultConfig,
-  type PluginConfig as TanStackSvelteQuery,
+  type PluginConfig as PluginTanStackSvelteQuery,
+  type UserConfig as TanStackSvelteQuery,
 } from './@tanstack/svelte-query';
 import {
   defaultConfig as tanStackVueQueryDefaultConfig,
-  type PluginConfig as TanStackVueQuery,
+  type PluginConfig as PluginTanStackVueQuery,
+  type UserConfig as TanStackVueQuery,
 } from './@tanstack/vue-query';
 import type { DefaultPluginConfigsMap } from './types';
 
-export type Plugins =
-  | HeyApiSchemas
-  | HeyApiServices
-  | HeyApiTypes
+/**
+ * User-facing plugin types.
+ */
+export type UserPlugins =
   | TanStackReactQuery
   | TanStackSolidQuery
   | TanStackSvelteQuery
   | TanStackVueQuery;
 
-export const defaultPluginConfigs: DefaultPluginConfigsMap<Plugins> = {
+export type ClientPlugins =
+  | PluginHeyApiSchemas
+  | PluginHeyApiServices
+  | PluginHeyApiTypes
+  | PluginTanStackReactQuery
+  | PluginTanStackSolidQuery
+  | PluginTanStackSvelteQuery
+  | PluginTanStackVueQuery;
+
+export const defaultPluginConfigs: DefaultPluginConfigsMap<ClientPlugins> = {
   '@hey-api/schemas': heyApiSchemasDefaultConfig,
   '@hey-api/services': heyApiServicesDefaultConfig,
   '@hey-api/types': heyApiTypesDefaultConfig,

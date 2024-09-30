@@ -12,4 +12,4 @@ export interface PluginConfig extends PluginDefinition {
   output?: string;
 }
 
-export interface UserConfig extends Pick<PluginConfig, 'output'> {}
+export interface UserConfig extends Pick<PluginConfig, 'name'> {}

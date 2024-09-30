@@ -1,5 +1,5 @@
 import type { OpenApiV2Schema, OpenApiV3Schema } from '../openApi';
-import type { Plugins } from '../plugins/';
+import type { ClientPlugins, UserPlugins } from '../plugins/';
 import type { Operation } from '../types/client';
 import type { ExtractArrayOfObjects } from './utils';
 
@@ -101,7 +101,7 @@ export interface ClientConfig {
   /**
    * Plugins are used to generate additional output files from provided input.
    */
-  plugins?: ReadonlyArray<Plugins['name'] | Plugins>;
+  plugins?: ReadonlyArray<UserPlugins['name'] | UserPlugins>;
   /**
    * Path to custom request file
    * @deprecated
@@ -262,7 +262,7 @@ export type Config = Omit<
     client: Extract<Required<ClientConfig>['client'], object>;
     output: Extract<Required<ClientConfig>['output'], object>;
     plugins: ExtractArrayOfObjects<
-      Required<ClientConfig>['plugins'],
+      ReadonlyArray<ClientPlugins>,
       { name: string }
     >;
     schemas: Extract<Required<ClientConfig>['schemas'], object>;

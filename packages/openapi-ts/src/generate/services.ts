@@ -284,7 +284,11 @@ const toRequestOptions = (
       (parameter) => parameter.in === 'body' || parameter.in === 'formData',
     );
     const contents = bodyParameters
-      .map((parameter) => parameter.mediaType)
+      .map(
+        (parameter) =>
+          parameter.mediaType ||
+          (parameter.in === 'formData' ? 'multipart/form-data' : undefined),
+      )
       .filter(Boolean)
       .filter(unique);
     if (contents.length === 1) {
