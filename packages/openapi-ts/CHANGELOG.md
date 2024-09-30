@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.53.6
+
+### Patch Changes
+
+- [#1104](https://github.com/hey-api/openapi-ts/pull/1104) [`a1eada1`](https://github.com/hey-api/openapi-ts/commit/a1eada1896046f0de1710682635efc59434a1e2c) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export spec-compliant OpenAPI 3.1 interface
+
+- [#1108](https://github.com/hey-api/openapi-ts/pull/1108) [`7677924`](https://github.com/hey-api/openapi-ts/commit/76779246534391deca5a371df2c7dc76e9d2eb73) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle multiple form-data parameters in Swagger 2.0
+
 ## 0.53.5
 
 ### Patch Changes
