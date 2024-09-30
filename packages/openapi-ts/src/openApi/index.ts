@@ -1,3 +1,4 @@
+import { type OpenApiV3_0_3, parseV3_0_3 } from './3.0.3';
 import { type OpenApiV3_1, parseV3_1 } from './3.1';
 import type { Client } from './common/interfaces/client';
 import type { Config } from './common/interfaces/config';
@@ -56,9 +57,11 @@ export function parse({
 }
 
 export const parseExperimental = ({ spec }: { spec: unknown }) => {
-  const s = spec as OpenApiV3_1;
+  const s = spec as OpenApiV3_0_3 | OpenApiV3_1;
 
   switch (s.openapi) {
+    case '3.0.3':
+      return parseV3_0_3(s);
     case '3.1.0':
       return parseV3_1(s);
     default:

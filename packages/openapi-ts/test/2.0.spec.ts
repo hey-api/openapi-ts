@@ -11,7 +11,7 @@ import { getFilePaths } from './utils';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const VERSION = '3.1.0';
+const VERSION = '2.0';
 
 describe(`OpenAPI ${VERSION}`, () => {
   const createConfig = (userConfig: UserConfig): UserConfig => ({
@@ -35,13 +35,10 @@ describe(`OpenAPI ${VERSION}`, () => {
   const scenarios = [
     {
       config: createConfig({
-        input: 'duplicate-null.json',
-        output: 'duplicate-null',
-        services: {
-          export: false,
-        },
+        input: 'form-data.json',
+        output: 'form-data',
       }),
-      description: 'does not generate duplicate null',
+      description: 'handles form data',
     },
   ];
 
