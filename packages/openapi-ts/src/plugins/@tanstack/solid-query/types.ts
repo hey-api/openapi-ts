@@ -31,5 +31,5 @@ export interface PluginConfig extends PluginDefinition {
 export interface UserConfig
   extends Pick<
     PluginConfig,
-    'infiniteQueryOptions' | 'mutationOptions' | 'output' | 'queryOptions'
+    'infiniteQueryOptions' | 'mutationOptions' | 'name' | 'queryOptions'
   > {}

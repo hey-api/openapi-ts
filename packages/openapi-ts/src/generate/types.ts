@@ -335,23 +335,44 @@ const processServiceTypes = ({
       }
 
       if (operation.parameters.length > 0) {
-        let bodyParameter = operation.parameters.find(
-          (parameter) => parameter.in === 'body',
-        );
-        if (!bodyParameter) {
-          bodyParameter = operation.parameters.find(
-            (parameter) => parameter.in === 'formData',
-          );
-        }
-        const bodyParameters: OperationParameter = {
+        let bodyParameters: OperationParameter = {
           mediaType: null,
           ...emptyModel,
-          ...bodyParameter,
           in: 'body',
-          isRequired: bodyParameter ? bodyParameter.isRequired : false,
           name: 'body',
           prop: 'body',
         };
+        let bodyParameter = operation.parameters.filter(
+          (parameter) => parameter.in === 'body',
+        );
+        if (!bodyParameter.length) {
+          bodyParameter = operation.parameters.filter(
+            (parameter) => parameter.in === 'formData',
+          );
+        }
+
+        if (bodyParameter.length === 1) {
+          bodyParameters = {
+            ...emptyModel,
+            ...bodyParameter[0],
+            in: 'body',
+            isRequired: bodyParameter[0].isRequired,
+            name: 'body',
+            prop: 'body',
+          };
+          // assume we have multiple formData parameters from Swagger 2.0
+        } else if (bodyParameter.length > 1) {
+          bodyParameters = {
+            ...emptyModel,
+            in: 'body',
+            isRequired: bodyParameter.some((parameter) => parameter.isRequired),
+            mediaType: 'multipart/form-data',
+            name: 'body',
+            prop: 'body',
+            properties: bodyParameter,
+          };
+        }
+
         const headerParameters: OperationParameter = {
           ...emptyModel,
           in: 'header',
