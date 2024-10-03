@@ -7,14 +7,4 @@ export type Foo = {
 
 export type Bar = Foo | {
     bar: number;
-};  weirdEnum?: ('' | (string) | null);
-    };
-};
-
-export type $OpenApiTs = {
-    '/test': {
-        post: {
-            req: PostTestData;
-        };
-    };
 };

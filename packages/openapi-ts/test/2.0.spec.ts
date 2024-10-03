@@ -13,6 +13,8 @@ const __dirname = path.dirname(__filename);
 
 const VERSION = '2.0';
 
+const outputDir = path.join(__dirname, 'generated', VERSION);
+
 describe(`OpenAPI ${VERSION}`, () => {
   const createConfig = (userConfig: UserConfig): UserConfig => ({
     client: '@hey-api/client-fetch',
@@ -25,9 +27,7 @@ describe(`OpenAPI ${VERSION}`, () => {
       typeof userConfig.input === 'string' ? userConfig.input : '',
     ),
     output: path.join(
-      __dirname,
-      'generated',
-      VERSION,
+      outputDir,
       typeof userConfig.output === 'string' ? userConfig.output : '',
     ),
   });
@@ -56,7 +56,7 @@ describe(`OpenAPI ${VERSION}`, () => {
           __dirname,
           '__snapshots__',
           VERSION,
-          filePath.slice(outputPath.length + 1),
+          filePath.slice(outputDir.length + 1),
         ),
       );
     });
