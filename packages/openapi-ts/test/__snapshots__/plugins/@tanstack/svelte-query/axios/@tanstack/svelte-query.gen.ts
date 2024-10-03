@@ -257,6 +257,35 @@ export const callWithParametersOptions = (options: Options<CallWithParametersDat
     queryKey: callWithParametersQueryKey(options)
 }); };
 
+const createInfiniteParams = <K extends Pick<QueryKey<Options>[0], 'body' | 'headers' | 'path' | 'query'>>(queryKey: QueryKey<Options>, page: K) => {
+    const params = queryKey[0];
+    if (page.body) {
+        params.body = {
+            ...queryKey[0].body as any,
+            ...page.body as any
+        };
+    }
+    if (page.headers) {
+        params.headers = {
+            ...queryKey[0].headers,
+            ...page.headers
+        };
+    }
+    if (page.path) {
+        params.path = {
+            ...queryKey[0].path,
+            ...page.path
+        };
+    }
+    if (page.query) {
+        params.query = {
+            ...queryKey[0].query,
+            ...page.query
+        };
+    }
+    return params as unknown as typeof page;
+};
+
 export const callWithParametersInfiniteQueryKey = (options: Options<CallWithParametersData>): QueryKey<Options<CallWithParametersData>> => [
     createQueryKey("callWithParameters", options, true)
 ];
@@ -271,34 +300,9 @@ export const callWithParametersInfiniteOptions = (options: Options<CallWithParam
                 cursor: pageParam
             }
         };
-        const params: Partial<Options<CallWithParametersData>> = {};
-        if (page.body) {
-            params.body = {
-                ...queryKey[0].body as any,
-                ...page.body as any
-            };
-        }
-        if (page.headers) {
-            params.headers = {
-                ...queryKey[0].headers,
-                ...page.headers
-            };
-        }
-        if (page.path) {
-            params.path = {
-                ...queryKey[0].path,
-                ...page.path
-            };
-        }
-        if (page.query) {
-            params.query = {
-                ...queryKey[0].query,
-                ...page.query
-            };
-        }
+        const params = createInfiniteParams(queryKey, page);
         const { data } = await callWithParameters({
             ...options,
-            ...queryKey[0],
             ...params,
             throwOnError: true
         });
@@ -373,34 +377,9 @@ export const getCallWithOptionalParamInfiniteOptions = (options: Options<GetCall
                 page: pageParam
             }
         };
-        const params: Partial<Options<GetCallWithOptionalParamData>> = {};
-        if (page.body) {
-            params.body = {
-                ...queryKey[0].body as any,
-                ...page.body as any
-            };
-        }
-        if (page.headers) {
-            params.headers = {
-                ...queryKey[0].headers,
-                ...page.headers
-            };
-        }
-        if (page.path) {
-            params.path = {
-                ...queryKey[0].path,
-                ...page.path
-            };
-        }
-        if (page.query) {
-            params.query = {
-                ...queryKey[0].query,
-                ...page.query
-            };
-        }
+        const params = createInfiniteParams(queryKey, page);
         const { data } = await getCallWithOptionalParam({
             ...options,
-            ...queryKey[0],
             ...params,
             throwOnError: true
         });
@@ -439,34 +418,9 @@ export const postCallWithOptionalParamInfiniteOptions = (options: Options<PostCa
                 offset: pageParam
             }
         };
-        const params: Partial<Options<PostCallWithOptionalParamData>> = {};
-        if (page.body) {
-            params.body = {
-                ...queryKey[0].body as any,
-                ...page.body as any
-            };
-        }
-        if (page.headers) {
-            params.headers = {
-                ...queryKey[0].headers,
-                ...page.headers
-            };
-        }
-        if (page.path) {
-            params.path = {
-                ...queryKey[0].path,
-                ...page.path
-            };
-        }
-        if (page.query) {
-            params.query = {
-                ...queryKey[0].query,
-                ...page.query
-            };
-        }
+        const params = createInfiniteParams(queryKey, page);
         const { data } = await postCallWithOptionalParam({
             ...options,
-            ...queryKey[0],
             ...params,
             throwOnError: true
         });

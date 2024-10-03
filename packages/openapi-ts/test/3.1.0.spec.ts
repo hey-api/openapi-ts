@@ -43,6 +43,47 @@ describe(`OpenAPI ${VERSION}`, () => {
       }),
       description: 'does not generate duplicate null',
     },
+    {
+      config: createConfig({
+        input: 'required-all-of-ref.json',
+        output: 'required-all-of-ref',
+        services: {
+          export: false,
+        },
+        types: {
+          tree: false,
+        },
+      }),
+      description: 'sets allOf composition ref model properties as required',
+    },
+    {
+      config: createConfig({
+        input: 'required-any-of-ref.json',
+        output: 'required-any-of-ref',
+        services: {
+          export: false,
+        },
+        types: {
+          tree: false,
+        },
+      }),
+      description:
+        'does not set anyOf composition ref model properties as required',
+    },
+    {
+      config: createConfig({
+        input: 'required-one-of-ref.json',
+        output: 'required-one-of-ref',
+        services: {
+          export: false,
+        },
+        types: {
+          tree: false,
+        },
+      }),
+      description:
+        'does not set oneOf composition ref model properties as required',
+    },
   ];
 
   it.each(scenarios)('$description', async ({ config }) => {

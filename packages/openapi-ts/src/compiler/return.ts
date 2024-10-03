@@ -44,7 +44,16 @@ export const createReturnFunctionCall = ({
   return statement;
 };
 
-export const createReturnVariable = ({ name }: { name: string }) =>
-  createReturnStatement({
-    expression: createIdentifier({ text: name }),
+export const createReturnVariable = ({
+  expression,
+}: {
+  expression: string | ts.Expression;
+}) => {
+  const statement = createReturnStatement({
+    expression:
+      typeof expression === 'string'
+        ? createIdentifier({ text: expression })
+        : expression,
   });
+  return statement;
+};
