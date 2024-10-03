@@ -11,9 +11,11 @@ import { getFilePaths } from './utils';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const outputDir = path.join(__dirname, 'generated', 'plugins');
+const VERSION = 'plugins';
 
-describe('plugins', () => {
+const outputDir = path.join(__dirname, 'generated', VERSION);
+
+describe(VERSION, () => {
   const createConfig = (
     userConfig: Omit<UserConfig, 'input'> &
       Pick<Required<UserConfig>, 'plugins'>,
@@ -152,7 +154,7 @@ describe('plugins', () => {
         path.join(
           __dirname,
           '__snapshots__',
-          'plugins',
+          VERSION,
           filePath.slice(outputDir.length + 1),
         ),
       );
