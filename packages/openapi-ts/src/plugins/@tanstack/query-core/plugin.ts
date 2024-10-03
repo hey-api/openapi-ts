@@ -62,6 +62,7 @@ const getPaginationIn = (parameter: OperationParameter) => {
 
 const paginationWordsRegExp = /^(cursor|offset|page|start)/;
 
+const createInfiniteParamsFn = 'createInfiniteParams';
 const createQueryKeyFn = 'createQueryKey';
 const infiniteQueryOptionsFn = 'infiniteQueryOptions';
 const mutationOptionsFn = 'mutationOptions';
@@ -72,6 +73,189 @@ const TOptionsType = 'TOptions';
 const getClientBaseUrlKey = () => {
   const config = getConfig();
   return config.client.name === '@hey-api/client-axios' ? 'baseURL' : 'baseUrl';
+};
+
+const createInfiniteParamsFunction = ({
+  file,
+}: {
+  file: Files[keyof Files];
+}) => {
+  const fn = compiler.constVariable({
+    expression: compiler.arrowFunction({
+      multiLine: true,
+      parameters: [
+        {
+          name: 'queryKey',
+          type: compiler.typeNode('QueryKey<Options>'),
+        },
+        {
+          name: 'page',
+          type: compiler.typeNode('K'),
+        },
+      ],
+      statements: [
+        compiler.constVariable({
+          expression: compiler.identifier({
+            text: 'queryKey[0]',
+          }),
+          name: 'params',
+        }),
+        compiler.ifStatement({
+          expression: compiler.propertyAccessExpression({
+            expression: compiler.identifier({
+              text: 'page',
+            }),
+            name: compiler.identifier({ text: 'body' }),
+          }),
+          thenStatement: ts.factory.createBlock(
+            [
+              compiler.expressionToStatement({
+                expression: compiler.binaryExpression({
+                  left: compiler.propertyAccessExpression({
+                    expression: 'params',
+                    name: 'body',
+                  }),
+                  right: compiler.objectExpression({
+                    multiLine: true,
+                    obj: [
+                      {
+                        assertion: 'any',
+                        spread: 'queryKey[0].body',
+                      },
+                      {
+                        assertion: 'any',
+                        spread: 'page.body',
+                      },
+                    ],
+                  }),
+                }),
+              }),
+            ],
+            true,
+          ),
+        }),
+        compiler.ifStatement({
+          expression: compiler.propertyAccessExpression({
+            expression: compiler.identifier({
+              text: 'page',
+            }),
+            name: compiler.identifier({ text: 'headers' }),
+          }),
+          thenStatement: ts.factory.createBlock(
+            [
+              compiler.expressionToStatement({
+                expression: compiler.binaryExpression({
+                  left: compiler.propertyAccessExpression({
+                    expression: 'params',
+                    name: 'headers',
+                  }),
+                  right: compiler.objectExpression({
+                    multiLine: true,
+                    obj: [
+                      {
+                        spread: 'queryKey[0].headers',
+                      },
+                      {
+                        spread: 'page.headers',
+                      },
+                    ],
+                  }),
+                }),
+              }),
+            ],
+            true,
+          ),
+        }),
+        compiler.ifStatement({
+          expression: compiler.propertyAccessExpression({
+            expression: compiler.identifier({
+              text: 'page',
+            }),
+            name: compiler.identifier({ text: 'path' }),
+          }),
+          thenStatement: ts.factory.createBlock(
+            [
+              compiler.expressionToStatement({
+                expression: compiler.binaryExpression({
+                  left: compiler.propertyAccessExpression({
+                    expression: 'params',
+                    name: 'path',
+                  }),
+                  right: compiler.objectExpression({
+                    multiLine: true,
+                    obj: [
+                      {
+                        spread: 'queryKey[0].path',
+                      },
+                      {
+                        spread: 'page.path',
+                      },
+                    ],
+                  }),
+                }),
+              }),
+            ],
+            true,
+          ),
+        }),
+        compiler.ifStatement({
+          expression: compiler.propertyAccessExpression({
+            expression: compiler.identifier({
+              text: 'page',
+            }),
+            name: compiler.identifier({ text: 'query' }),
+          }),
+          thenStatement: ts.factory.createBlock(
+            [
+              compiler.expressionToStatement({
+                expression: compiler.binaryExpression({
+                  left: compiler.propertyAccessExpression({
+                    expression: 'params',
+                    name: 'query',
+                  }),
+                  right: compiler.objectExpression({
+                    multiLine: true,
+                    obj: [
+                      {
+                        spread: 'queryKey[0].query',
+                      },
+                      {
+                        spread: 'page.query',
+                      },
+                    ],
+                  }),
+                }),
+              }),
+            ],
+            true,
+          ),
+        }),
+        compiler.returnVariable({
+          expression: ts.factory.createAsExpression(
+            ts.factory.createAsExpression(
+              compiler.identifier({ text: 'params' }),
+              ts.factory.createKeywordTypeNode(ts.SyntaxKind.UnknownKeyword),
+            ),
+            ts.factory.createTypeQueryNode(
+              compiler.identifier({ text: 'page' }),
+            ),
+          ),
+        }),
+      ],
+      types: [
+        {
+          extends: compiler.typeReferenceNode({
+            typeName: compiler.identifier({
+              text: "Pick<QueryKey<Options>[0], 'body' | 'headers' | 'path' | 'query'>",
+            }),
+          }),
+          name: 'K',
+        },
+      ],
+    }),
+    name: createInfiniteParamsFn,
+  });
+  file.add(fn);
 };
 
 const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
@@ -239,7 +423,7 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
           ),
         }),
         compiler.returnVariable({
-          name: 'params',
+          expression: 'params',
         }),
       ],
       types: [
@@ -493,6 +677,7 @@ export const handler: PluginDefinition['handler'] = ({
       : 'UseMutationOptions';
 
   let typeInfiniteData!: ImportExportItem;
+  let hasCreateInfiniteParamsFunction = false;
   let hasCreateQueryKeyParamsFunction = false;
   let hasInfiniteQueries = false;
   let hasMutations = false;
@@ -621,7 +806,7 @@ export const handler: PluginDefinition['handler'] = ({
                             name: 'data',
                           }),
                           compiler.returnVariable({
-                            name: 'data',
+                            expression: 'data',
                           }),
                         ],
                       }),
@@ -702,6 +887,11 @@ export const handler: PluginDefinition['handler'] = ({
               createQueryKeyType({ file });
               createQueryKeyFunction({ file });
               hasCreateQueryKeyParamsFunction = true;
+            }
+
+            if (!hasCreateInfiniteParamsFunction) {
+              createInfiniteParamsFunction({ file });
+              hasCreateInfiniteParamsFunction = true;
             }
 
             file.import({
@@ -845,141 +1035,11 @@ export const handler: PluginDefinition['handler'] = ({
                               typeName: typePageObjectParam,
                             }),
                             compiler.constVariable({
-                              expression: compiler.objectExpression({
-                                obj: [],
+                              expression: compiler.callExpression({
+                                functionName: 'createInfiniteParams',
+                                parameters: ['queryKey', 'page'],
                               }),
                               name: 'params',
-                              typeName: `Partial<${typeData}>`,
-                            }),
-                            compiler.ifStatement({
-                              expression: compiler.propertyAccessExpression({
-                                expression: compiler.identifier({
-                                  text: 'page',
-                                }),
-                                name: compiler.identifier({ text: 'body' }),
-                              }),
-                              thenStatement: ts.factory.createBlock(
-                                [
-                                  compiler.expressionToStatement({
-                                    expression: compiler.binaryExpression({
-                                      left: compiler.propertyAccessExpression({
-                                        expression: 'params',
-                                        name: 'body',
-                                      }),
-                                      right: compiler.objectExpression({
-                                        multiLine: true,
-                                        obj: [
-                                          {
-                                            assertion: 'any',
-                                            spread: 'queryKey[0].body',
-                                          },
-                                          {
-                                            assertion: 'any',
-                                            spread: 'page.body',
-                                          },
-                                        ],
-                                      }),
-                                    }),
-                                  }),
-                                ],
-                                true,
-                              ),
-                            }),
-                            compiler.ifStatement({
-                              expression: compiler.propertyAccessExpression({
-                                expression: compiler.identifier({
-                                  text: 'page',
-                                }),
-                                name: compiler.identifier({ text: 'headers' }),
-                              }),
-                              thenStatement: ts.factory.createBlock(
-                                [
-                                  compiler.expressionToStatement({
-                                    expression: compiler.binaryExpression({
-                                      left: compiler.propertyAccessExpression({
-                                        expression: 'params',
-                                        name: 'headers',
-                                      }),
-                                      right: compiler.objectExpression({
-                                        multiLine: true,
-                                        obj: [
-                                          {
-                                            spread: 'queryKey[0].headers',
-                                          },
-                                          {
-                                            spread: 'page.headers',
-                                          },
-                                        ],
-                                      }),
-                                    }),
-                                  }),
-                                ],
-                                true,
-                              ),
-                            }),
-                            compiler.ifStatement({
-                              expression: compiler.propertyAccessExpression({
-                                expression: compiler.identifier({
-                                  text: 'page',
-                                }),
-                                name: compiler.identifier({ text: 'path' }),
-                              }),
-                              thenStatement: ts.factory.createBlock(
-                                [
-                                  compiler.expressionToStatement({
-                                    expression: compiler.binaryExpression({
-                                      left: compiler.propertyAccessExpression({
-                                        expression: 'params',
-                                        name: 'path',
-                                      }),
-                                      right: compiler.objectExpression({
-                                        multiLine: true,
-                                        obj: [
-                                          {
-                                            spread: 'queryKey[0].path',
-                                          },
-                                          {
-                                            spread: 'page.path',
-                                          },
-                                        ],
-                                      }),
-                                    }),
-                                  }),
-                                ],
-                                true,
-                              ),
-                            }),
-                            compiler.ifStatement({
-                              expression: compiler.propertyAccessExpression({
-                                expression: compiler.identifier({
-                                  text: 'page',
-                                }),
-                                name: compiler.identifier({ text: 'query' }),
-                              }),
-                              thenStatement: ts.factory.createBlock(
-                                [
-                                  compiler.expressionToStatement({
-                                    expression: compiler.binaryExpression({
-                                      left: compiler.propertyAccessExpression({
-                                        expression: 'params',
-                                        name: 'query',
-                                      }),
-                                      right: compiler.objectExpression({
-                                        multiLine: true,
-                                        obj: [
-                                          {
-                                            spread: 'queryKey[0].query',
-                                          },
-                                          {
-                                            spread: 'page.query',
-                                          },
-                                        ],
-                                      }),
-                                    }),
-                                  }),
-                                ],
-                                true,
-                              ),
                             }),
                             compiler.constVariable({
                               destructure: true,
@@ -992,9 +1052,6 @@ export const handler: PluginDefinition['handler'] = ({
                                       obj: [
                                         {
                                           spread: 'options',
-                                        },
-                                        {
-                                          spread: 'queryKey[0]',
                                         },
                                         {
                                           spread: 'params',
@@ -1011,7 +1068,7 @@ export const handler: PluginDefinition['handler'] = ({
                               name: 'data',
                             }),
                             compiler.returnVariable({
-                              name: 'data',
+                              expression: 'data',
                             }),
                           ],
                         }),
@@ -1128,7 +1185,7 @@ export const handler: PluginDefinition['handler'] = ({
                           name: 'data',
                         }),
                         compiler.returnVariable({
-                          name: 'data',
+                          expression: 'data',
                         }),
                       ],
                     }),
@@ -1140,7 +1197,7 @@ export const handler: PluginDefinition['handler'] = ({
               typeName: `${mutationsType}<${typeResponse}, ${typeError.name}, ${typeData}>`,
             }),
             compiler.returnVariable({
-              name: mutationOptionsFn,
+              expression: mutationOptionsFn,
             }),
           ],
         });

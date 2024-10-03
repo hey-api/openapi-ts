@@ -13,6 +13,8 @@ const __dirname = path.dirname(__filename);
 
 const VERSION = '3.1.0';
 
+const outputDir = path.join(__dirname, 'generated', VERSION);
+
 describe(`OpenAPI ${VERSION}`, () => {
   const createConfig = (userConfig: UserConfig): UserConfig => ({
     client: '@hey-api/client-fetch',
@@ -25,9 +27,7 @@ describe(`OpenAPI ${VERSION}`, () => {
       typeof userConfig.input === 'string' ? userConfig.input : '',
     ),
     output: path.join(
-      __dirname,
-      'generated',
-      VERSION,
+      outputDir,
       typeof userConfig.output === 'string' ? userConfig.output : '',
     ),
   });
@@ -42,6 +42,47 @@ describe(`OpenAPI ${VERSION}`, () => {
         },
       }),
       description: 'does not generate duplicate null',
+    },
+    {
+      config: createConfig({
+        input: 'required-all-of-ref.json',
+        output: 'required-all-of-ref',
+        services: {
+          export: false,
+        },
+        types: {
+          tree: false,
+        },
+      }),
+      description: 'sets allOf composition ref model properties as required',
+    },
+    {
+      config: createConfig({
+        input: 'required-any-of-ref.json',
+        output: 'required-any-of-ref',
+        services: {
+          export: false,
+        },
+        types: {
+          tree: false,
+        },
+      }),
+      description:
+        'does not set anyOf composition ref model properties as required',
+    },
+    {
+      config: createConfig({
+        input: 'required-one-of-ref.json',
+        output: 'required-one-of-ref',
+        services: {
+          export: false,
+        },
+        types: {
+          tree: false,
+        },
+      }),
+      description:
+        'does not set oneOf composition ref model properties as required',
     },
   ];
 
@@ -59,7 +100,7 @@ describe(`OpenAPI ${VERSION}`, () => {
           __dirname,
           '__snapshots__',
           VERSION,
-          filePath.slice(outputPath.length + 1),
+          filePath.slice(outputDir.length + 1),
         ),
       );
     });
