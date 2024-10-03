@@ -81,8 +81,9 @@ export const getModelComposition = ({
       composition.properties = [...composition.properties, model];
     });
 
-  if (definition.required) {
+  if (definition.required && type === 'all-of') {
     const requiredProperties = getRequiredPropertiesFromComposition({
+      debug,
       definitions,
       getModel,
       openApi,
