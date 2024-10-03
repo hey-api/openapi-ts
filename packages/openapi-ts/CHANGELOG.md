@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.53.7
+
+### Patch Changes
+
+- [#1113](https://github.com/hey-api/openapi-ts/pull/1113) [`dc696e0`](https://github.com/hey-api/openapi-ts/commit/dc696e0b4500dba5ceb4c772110b123bd2f71b40) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: skip nested properties in oneOf and anyOf compositions
+
+- [#1115](https://github.com/hey-api/openapi-ts/pull/1115) [`5f077dd`](https://github.com/hey-api/openapi-ts/commit/5f077dd8d144bbfe71d8775bad5fe7ddda2315d6) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: abstract page params logic in TanStack Query plugin
+
 ## 0.53.6
 
 ### Patch Changes
