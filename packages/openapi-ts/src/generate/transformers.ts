@@ -225,7 +225,7 @@ const generateResponseTransformer = ({
     statements: [
       ...statements,
       compiler.returnVariable({
-        name: dataVariableName,
+        expression: dataVariableName,
       }),
     ],
   });
