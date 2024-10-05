@@ -6,7 +6,6 @@ export interface PluginDefinition {
   handler: (args: {
     client: Client;
     files: Files;
-    outputParts: string[];
     plugin: Config['plugins'][number];
   }) => void;
   name: string;

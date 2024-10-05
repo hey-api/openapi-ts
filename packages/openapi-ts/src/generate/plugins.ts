@@ -34,7 +34,6 @@ export const generatePlugins = async ({
     plugin.handler({
       client,
       files,
-      outputParts,
       plugin,
     });
   }

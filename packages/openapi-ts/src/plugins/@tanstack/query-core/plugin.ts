@@ -15,6 +15,7 @@ import {
   operationResponseTypeName,
   toOperationName,
 } from '../../../generate/services';
+import { relativeModulePath } from '../../../generate/utils';
 import { isOperationParameterRequired } from '../../../openApi';
 import { getOperationKey } from '../../../openApi/common/parser/operation';
 import type { Client } from '../../../types/client';
@@ -643,7 +644,6 @@ const createQueryKeyLiteral = ({
 export const handler: PluginDefinition['handler'] = ({
   client,
   files,
-  outputParts,
   plugin,
 }) => {
   if (
@@ -662,13 +662,14 @@ export const handler: PluginDefinition['handler'] = ({
 
   file.import({
     asType: true,
-    module: clientModulePath(),
+    module: clientModulePath({ sourceOutput: plugin.output }),
     name: clientOptionsTypeName(),
   });
 
-  const relativePath =
-    new Array(outputParts.length).fill('').join('../') || './';
-  const typesModulePath = relativePath + files.types.getName(false);
+  const typesModulePath = relativeModulePath({
+    moduleOutput: files.types.getName(false),
+    sourceOutput: plugin.output,
+  });
 
   const mutationsType =
     plugin.name === '@tanstack/svelte-query' ||
@@ -1211,7 +1212,10 @@ export const handler: PluginDefinition['handler'] = ({
         file.add(statement);
       }
 
-      const servicesModulePath = relativePath + files.services.getName(false);
+      const servicesModulePath = relativeModulePath({
+        moduleOutput: files.services.getName(false),
+        sourceOutput: plugin.output,
+      });
 
       if (hasQueries || hasInfiniteQueries) {
         file.import({
