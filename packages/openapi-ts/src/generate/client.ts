@@ -1,7 +1,7 @@
 import { copyFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { getConfig, isStandaloneClient } from '../utils/config';
+import { getConfig, isLegacyClient } from '../utils/config';
 import { ensureDirSync, relativeModulePath } from './utils';
 
 export const clientModulePath = ({
@@ -35,7 +35,7 @@ export const generateClient = async (
 ) => {
   const config = getConfig();
 
-  if (!isStandaloneClient(config) || !config.client.bundle) {
+  if (isLegacyClient(config) || !config.client.bundle) {
     return;
   }
 
