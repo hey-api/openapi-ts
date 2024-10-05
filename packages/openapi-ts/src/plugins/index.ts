@@ -31,6 +31,11 @@ import {
   type UserConfig as TanStackVueQuery,
 } from './@tanstack/vue-query';
 import type { DefaultPluginConfigsMap } from './types';
+import {
+  defaultConfig as zodDefaultConfig,
+  type PluginConfig as PluginZod,
+  // type UserConfig as Zod,
+} from './zod';
 
 /**
  * User-facing plugin types.
@@ -40,6 +45,7 @@ export type UserPlugins =
   | TanStackSolidQuery
   | TanStackSvelteQuery
   | TanStackVueQuery;
+// | Zod
 
 export type ClientPlugins =
   | PluginHeyApiSchemas
@@ -48,7 +54,8 @@ export type ClientPlugins =
   | PluginTanStackReactQuery
   | PluginTanStackSolidQuery
   | PluginTanStackSvelteQuery
-  | PluginTanStackVueQuery;
+  | PluginTanStackVueQuery
+  | PluginZod;
 
 export const defaultPluginConfigs: DefaultPluginConfigsMap<ClientPlugins> = {
   '@hey-api/schemas': heyApiSchemasDefaultConfig,
@@ -58,4 +65,5 @@ export const defaultPluginConfigs: DefaultPluginConfigsMap<ClientPlugins> = {
   '@tanstack/solid-query': tanStackSolidQueryDefaultConfig,
   '@tanstack/svelte-query': tanStackSvelteQueryDefaultConfig,
   '@tanstack/vue-query': tanStackVueQueryDefaultConfig,
+  zod: zodDefaultConfig,
 };

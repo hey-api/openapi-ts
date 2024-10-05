@@ -1,7 +1,7 @@
 import type { Operation, OperationParameter } from '../openApi';
 import { sanitizeNamespaceIdentifier } from '../openApi';
 import { camelCase } from './camelCase';
-import { getConfig, isStandaloneClient } from './config';
+import { getConfig, isLegacyClient } from './config';
 import { transformTypeKeyName } from './type';
 
 export const operationFilterFn = (operationKey: string): boolean => {
@@ -19,7 +19,7 @@ export const operationParameterFilterFn = (
 
   // legacy clients ignore the "api-version" param since we do not want to
   // add it as the first/default parameter for each of the service calls
-  return isStandaloneClient(config) || parameter.prop !== 'api-version';
+  return !isLegacyClient(config) || parameter.prop !== 'api-version';
 };
 
 /**
@@ -40,7 +40,7 @@ export const operationNameFn = (operation: Omit<Operation, 'name'>): string => {
 
   // legacy clients ignore the "api-version" param since we do not want to
   // add it as the first/default parameter for each of the service calls
-  if (!isStandaloneClient(config)) {
+  if (isLegacyClient(config)) {
     urlWithoutPlaceholders = urlWithoutPlaceholders.replace(
       /[^/]*?{api-version}.*?\//g,
       '',
@@ -62,7 +62,7 @@ export const operationParameterNameFn = (
 ): string => {
   const config = getConfig();
 
-  return isStandaloneClient(config)
+  return !isLegacyClient(config)
     ? parameter.prop
     : transformTypeKeyName(parameter.prop);
 };

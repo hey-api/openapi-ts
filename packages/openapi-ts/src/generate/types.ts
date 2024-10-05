@@ -10,7 +10,7 @@ import { isOperationParameterRequired } from '../openApi';
 import type { Method, Model, OperationParameter } from '../types/client';
 import type { Client } from '../types/client';
 import type { Files } from '../types/utils';
-import { getConfig, isStandaloneClient } from '../utils/config';
+import { getConfig, isLegacyClient } from '../utils/config';
 import { enumEntry, enumUnionType } from '../utils/enum';
 import { escapeComment } from '../utils/escape';
 import { sortByName, sorterByName } from '../utils/sort';
@@ -301,7 +301,7 @@ const processServiceTypes = ({
     return;
   }
 
-  const isStandalone = isStandaloneClient(config);
+  const isLegacy = isLegacyClient(config);
 
   for (const service of client.services) {
     for (const operation of service.operations) {
@@ -382,8 +382,8 @@ const processServiceTypes = ({
             ),
           ),
           mediaType: null,
-          name: isStandalone ? 'headers' : 'header',
-          prop: isStandalone ? 'headers' : 'header',
+          name: isLegacy ? 'header' : 'headers',
+          prop: isLegacy ? 'header' : 'headers',
           properties: operation.parameters
             .filter((parameter) => parameter.in === 'header')
             .sort(sorterByName),
@@ -416,7 +416,7 @@ const processServiceTypes = ({
             .filter((parameter) => parameter.in === 'query')
             .sort(sorterByName),
         };
-        const operationProperties = isStandalone
+        const operationProperties = !isLegacy
           ? [
               bodyParameters,
               headerParameters,
@@ -479,7 +479,7 @@ const processServiceTypes = ({
           response.responseTypes.includes('error'),
         );
 
-        if (isStandalone) {
+        if (!isLegacy) {
           // create type export for operation error
           generateType({
             client,

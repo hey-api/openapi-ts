@@ -1,6 +1,6 @@
-import type { PluginDefinition } from '../../types';
+import type { PluginHandler } from '../../types';
 
-export interface PluginConfig extends PluginDefinition {
+interface Config {
   /**
    * Generate `createInfiniteQuery()` helpers? These will be generated from GET and POST requests where a pagination parameter is detected.
    * @default true
@@ -28,8 +28,8 @@ export interface PluginConfig extends PluginDefinition {
   queryOptions?: boolean;
 }
 
-export interface UserConfig
-  extends Pick<
-    PluginConfig,
-    'infiniteQueryOptions' | 'mutationOptions' | 'name' | 'queryOptions'
-  > {}
+export interface PluginConfig extends Config {
+  handler: PluginHandler<Config>;
+}
+
+export interface UserConfig extends Omit<Config, 'output'> {}
