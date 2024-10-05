@@ -1,7 +1,7 @@
 import { describe, expect, it, type MockedFunction, vi } from 'vitest';
 
 import type { Config } from '../../types/config';
-import { isStandaloneClient } from '../config';
+import { isLegacyClient } from '../config';
 import { transformTypeKeyName } from '../type';
 
 vi.mock('../config', () => {
@@ -10,7 +10,7 @@ vi.mock('../config', () => {
   };
   return {
     getConfig: () => config,
-    isStandaloneClient: vi.fn().mockReturnValue(false),
+    isLegacyClient: vi.fn().mockReturnValue(true),
   };
 });
 
@@ -31,14 +31,14 @@ describe('transformTypeKeyName', () => {
       { expected: 'fooBar', input: 'foo[bar]' },
       { expected: 'fooBarArray', input: 'foo.bar[]' },
     ])('$input -> $expected', ({ input, expected }) => {
-      (isStandaloneClient as MockedFunction<any>).mockImplementationOnce(
-        () => false,
+      (isLegacyClient as MockedFunction<any>).mockImplementationOnce(
+        () => true,
       );
       expect(transformTypeKeyName(input)).toBe(expected);
     });
   });
 
-  describe('standalone client', () => {
+  describe('client', () => {
     it.each([
       { expected: '', input: '' },
       { expected: 'foobar', input: 'foobar' },
@@ -54,8 +54,8 @@ describe('transformTypeKeyName', () => {
       { expected: 'fooBar', input: 'foo[bar]' },
       { expected: 'fooBarArray', input: 'foo.bar[]' },
     ])('$input -> $input', ({ input }) => {
-      (isStandaloneClient as MockedFunction<any>).mockImplementationOnce(
-        () => true,
+      (isLegacyClient as MockedFunction<any>).mockImplementationOnce(
+        () => false,
       );
       expect(transformTypeKeyName(input)).toBe(input);
     });
