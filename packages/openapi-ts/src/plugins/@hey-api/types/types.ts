@@ -1,6 +1,6 @@
-import type { PluginDefinition } from '../../types';
+import type { PluginHandler } from '../../types';
 
-export interface PluginConfig extends PluginDefinition {
+interface Config {
   /**
    * Generate Hey API types from the provided input.
    */
@@ -12,4 +12,8 @@ export interface PluginConfig extends PluginDefinition {
   output?: string;
 }
 
-export interface UserConfig extends Pick<PluginConfig, 'name'> {}
+export interface PluginConfig extends Config {
+  handler: PluginHandler<Config>;
+}
+
+export interface UserConfig extends Omit<Config, 'output'> {}

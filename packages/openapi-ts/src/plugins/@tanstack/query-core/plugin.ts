@@ -28,7 +28,11 @@ import type {
 import type { Files } from '../../../types/utils';
 import { getConfig } from '../../../utils/config';
 import { transformServiceName } from '../../../utils/transform';
-import type { PluginDefinition } from '../../types';
+import type { PluginHandler } from '../../types';
+import type { PluginConfig as ReactQueryPluginConfig } from '../react-query';
+import type { PluginConfig as SolidQueryPluginConfig } from '../solid-query';
+import type { PluginConfig as SvelteQueryPluginConfig } from '../svelte-query';
+import type { PluginConfig as VueQueryPluginConfig } from '../vue-query';
 
 const toInfiniteQueryOptionsName = (operation: Operation) =>
   `${toOperationName(operation, false)}InfiniteOptions`;
@@ -641,20 +645,12 @@ const createQueryKeyLiteral = ({
   return queryKeyLiteral;
 };
 
-export const handler: PluginDefinition['handler'] = ({
-  client,
-  files,
-  plugin,
-}) => {
-  if (
-    plugin.name !== '@tanstack/react-query' &&
-    plugin.name !== '@tanstack/solid-query' &&
-    plugin.name !== '@tanstack/svelte-query' &&
-    plugin.name !== '@tanstack/vue-query'
-  ) {
-    return;
-  }
-
+export const handler: PluginHandler<
+  | ReactQueryPluginConfig
+  | SolidQueryPluginConfig
+  | SvelteQueryPluginConfig
+  | VueQueryPluginConfig
+> = ({ client, files, plugin }) => {
   checkPrerequisites({ files });
 
   const config = getConfig();

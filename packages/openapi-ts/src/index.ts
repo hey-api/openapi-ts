@@ -146,7 +146,7 @@ const getPlugins = (userConfig: ClientConfig): Config['plugins'] => {
           ...defaultPluginConfigs[plugin.name],
           ...(plugin as (typeof defaultPluginConfigs)[(typeof plugin)['name']]),
         },
-  );
+  ) as unknown as Config['plugins'];
   return plugins;
 };
 

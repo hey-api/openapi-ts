@@ -1,16 +1,11 @@
 import type { Client } from '../types/client';
-import type { Config } from '../types/config';
 import type { Files } from '../types/utils';
 
-export interface PluginDefinition {
-  handler: (args: {
-    client: Client;
-    files: Files;
-    plugin: Config['plugins'][number];
-  }) => void;
-  name: string;
-  output?: string;
-}
+export type PluginHandler<PluginConfig> = (args: {
+  client: Client;
+  files: Files;
+  plugin: Omit<Required<PluginConfig>, 'handler'>;
+}) => void;
 
 type KeyTypes = string | number | symbol;
 
@@ -24,5 +19,9 @@ export type DefaultPluginConfigsMap<
   T,
   U extends KeyTypes = ExtractFromPluginConfig<T>,
 > = {
-  [K in U]: Required<Extract<T, { name: K }>> & PluginDefinition;
+  [K in U]: {
+    handler: PluginHandler<Required<Extract<T, { name: K }>>>;
+    name: string;
+    output?: string;
+  };
 };
