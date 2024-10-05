@@ -761,24 +761,26 @@ export const generateServices = async ({
 
   const isStandalone = isStandaloneClient(config);
 
+  const servicesOutput = 'services';
+
   files.services = new TypeScriptFile({
     dir: config.output.path,
-    name: 'services.ts',
+    name: `${servicesOutput}.ts`,
   });
 
   // Import required packages and core files.
   if (isStandalone) {
     files.services.import({
-      module: clientModulePath(),
+      module: clientModulePath({ sourceOutput: servicesOutput }),
       name: 'createClient',
     });
     files.services.import({
-      module: clientModulePath(),
+      module: clientModulePath({ sourceOutput: servicesOutput }),
       name: 'createConfig',
     });
     files.services.import({
       asType: true,
-      module: clientModulePath(),
+      module: clientModulePath({ sourceOutput: servicesOutput }),
       name: clientOptionsTypeName(),
     });
   } else {
@@ -857,7 +859,7 @@ export const generateServices = async ({
       client,
       onClientImport: (imported) => {
         files.services.import({
-          module: clientModulePath(),
+          module: clientModulePath({ sourceOutput: servicesOutput }),
           name: imported,
         });
       },

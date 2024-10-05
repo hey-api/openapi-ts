@@ -2,11 +2,23 @@ import { copyFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { getConfig, isStandaloneClient } from '../utils/config';
-import { ensureDirSync } from './utils';
+import { ensureDirSync, relativeModulePath } from './utils';
 
-export const clientModulePath = () => {
+export const clientModulePath = ({
+  sourceOutput,
+}: {
+  sourceOutput: string;
+}) => {
   const config = getConfig();
-  return config.client.bundle ? './client' : config.client.name;
+
+  if (config.client.bundle) {
+    return relativeModulePath({
+      moduleOutput: 'client',
+      sourceOutput,
+    });
+  }
+
+  return config.client.name;
 };
 
 export const clientOptionsTypeName = () => 'Options';
