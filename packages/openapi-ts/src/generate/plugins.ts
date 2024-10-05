@@ -3,7 +3,7 @@ import path from 'node:path';
 import { TypeScriptFile } from '../compiler';
 import type { Client } from '../types/client';
 import type { Files } from '../types/utils';
-import { getConfig, isStandaloneClient } from '../utils/config';
+import { getConfig, isLegacyClient } from '../utils/config';
 
 export const generatePlugins = async ({
   client,
@@ -14,10 +14,8 @@ export const generatePlugins = async ({
 }) => {
   const config = getConfig();
 
-  const isStandalone = isStandaloneClient(config);
-
-  if (!isStandalone) {
-    // plugins work only with standalone clients
+  if (isLegacyClient(config)) {
+    // plugins do not work with legacy clients
     return;
   }
 

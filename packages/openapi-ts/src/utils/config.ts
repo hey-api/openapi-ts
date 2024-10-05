@@ -9,7 +9,7 @@ export const setConfig = (config: Config) => {
   return getConfig();
 };
 
-export const isStandaloneClient = (config: Config | Config['client']) => {
+export const isLegacyClient = (config: Config | Config['client']) => {
   const client = 'client' in config ? config.client.name : config.name;
-  return client.startsWith('@hey-api');
+  return client.startsWith('legacy/');
 };

@@ -9,7 +9,7 @@ import { defaultPluginConfigs } from './plugins';
 import type { Client } from './types/client';
 import type { ClientConfig, Config, UserConfig } from './types/config';
 import { CLIENTS } from './types/config';
-import { getConfig, isStandaloneClient, setConfig } from './utils/config';
+import { getConfig, isLegacyClient, setConfig } from './utils/config';
 import { getOpenApiSpec } from './utils/getOpenApiSpec';
 import { registerHandlebarTemplates } from './utils/handlebars';
 import {
@@ -293,8 +293,7 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
       debug,
       dryRun,
       experimental_parser,
-      exportCore:
-        isStandaloneClient(client) || !client.name ? false : exportCore,
+      exportCore: isLegacyClient(client) ? exportCore : false,
       input,
       name,
       output,
