@@ -32,7 +32,7 @@ export const generatePlugins = async ({
     plugin.handler({
       client,
       files,
-      plugin,
+      plugin: plugin as never,
     });
   }
 };

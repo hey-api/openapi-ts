@@ -4,7 +4,7 @@ const main = async () => {
   /** @type {import('../src').UserConfig} */
   const config = {
     client: {
-      bundle: true,
+      // bundle: true,
       // name: '@hey-api/client-axios',
       name: '@hey-api/client-fetch',
     },
@@ -20,13 +20,9 @@ const main = async () => {
       path: './test/generated/sample/',
     },
     plugins: [
-      {
-        // infiniteQueryOptions: false,
-        // mutationOptions: false,
-        name: '@tanstack/react-query',
-        // queryOptions: false,
-      },
+      // '@tanstack/react-query',
       // '@hey-api/services',
+      'zod',
     ],
     schemas: {
       export: false,

@@ -1,13 +1,13 @@
-import type { PluginHandler } from '../../types';
+import type { PluginHandler } from '../types';
 
 interface Config {
   /**
-   * Generate Hey API services from the provided input.
+   * Generate Zod output from the provided input.
    */
-  name: '@hey-api/services';
+  name: 'zod';
   /**
    * Name of the generated file.
-   * @default 'services'
+   * @default 'zod'
    */
   output?: string;
 }
