@@ -72,7 +72,7 @@
   },
   "dependencies": {
     "@apidevtools/json-schema-ref-parser": "11.7.0",
-    "c12": "1.11.2",
+    "c12": "2.0.1",
     "commander": "12.1.0",
     "handlebars": "4.7.8"
   },
