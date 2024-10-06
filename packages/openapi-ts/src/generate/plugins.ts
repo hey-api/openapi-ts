@@ -1,9 +1,9 @@
 import path from 'node:path';
 
-import { TypeScriptFile } from '../compiler';
 import type { Client } from '../types/client';
 import type { Files } from '../types/utils';
 import { getConfig, isLegacyClient } from '../utils/config';
+import { TypeScriptFile } from './files';
 
 export const generatePlugins = async ({
   client,
