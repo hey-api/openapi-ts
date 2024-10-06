@@ -220,9 +220,6 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
 
   const { config: configFromFile } = await loadConfig<UserConfig>({
     configFile: configurationFile,
-    jitiOptions: {
-      esmResolve: true,
-    },
     name: 'openapi-ts',
   });
 
