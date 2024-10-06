@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.53.8
+
+### Patch Changes
+
+- [#1123](https://github.com/hey-api/openapi-ts/pull/1123) [`032338c`](https://github.com/hey-api/openapi-ts/commit/032338c47506ccfd567bbbf915398942c8394bc2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: use correct relative path to bundled client when imported from nested module
+
 ## 0.53.7
 
 ### Patch Changes
