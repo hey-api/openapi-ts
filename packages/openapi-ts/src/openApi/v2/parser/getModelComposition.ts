@@ -46,7 +46,7 @@ export const getModelComposition = ({
       composition.properties.push(model);
     });
 
-  if (definition.required) {
+  if (definition.required && type === 'all-of') {
     const requiredProperties = getRequiredPropertiesFromComposition({
       definitions,
       getModel,

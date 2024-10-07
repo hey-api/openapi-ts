@@ -2,7 +2,7 @@ import ts from 'typescript';
 
 import { compiler, type Property } from '../../../compiler';
 import type { ImportExportItem } from '../../../compiler/module';
-import { ImportExportItemObject } from '../../../compiler/utils';
+import type { ImportExportItemObject } from '../../../compiler/utils';
 import {
   clientModulePath,
   clientOptionsTypeName,
@@ -15,7 +15,9 @@ import {
   operationResponseTypeName,
   toOperationName,
 } from '../../../generate/services';
+import { relativeModulePath } from '../../../generate/utils';
 import { isOperationParameterRequired } from '../../../openApi';
+import { getOperationKey } from '../../../openApi/common/parser/operation';
 import type { Client } from '../../../types/client';
 import type {
   Method,
@@ -25,7 +27,12 @@ import type {
 } from '../../../types/client';
 import type { Files } from '../../../types/utils';
 import { getConfig } from '../../../utils/config';
-import type { PluginDefinition } from '../../types';
+import { transformServiceName } from '../../../utils/transform';
+import type { PluginHandler } from '../../types';
+import type { PluginConfig as ReactQueryPluginConfig } from '../react-query';
+import type { PluginConfig as SolidQueryPluginConfig } from '../solid-query';
+import type { PluginConfig as SvelteQueryPluginConfig } from '../svelte-query';
+import type { PluginConfig as VueQueryPluginConfig } from '../vue-query';
 
 const toInfiniteQueryOptionsName = (operation: Operation) =>
   `${toOperationName(operation, false)}InfiniteOptions`;
@@ -60,6 +67,7 @@ const getPaginationIn = (parameter: OperationParameter) => {
 
 const paginationWordsRegExp = /^(cursor|offset|page|start)/;
 
+const createInfiniteParamsFn = 'createInfiniteParams';
 const createQueryKeyFn = 'createQueryKey';
 const infiniteQueryOptionsFn = 'infiniteQueryOptions';
 const mutationOptionsFn = 'mutationOptions';
@@ -70,6 +78,189 @@ const TOptionsType = 'TOptions';
 const getClientBaseUrlKey = () => {
   const config = getConfig();
   return config.client.name === '@hey-api/client-axios' ? 'baseURL' : 'baseUrl';
+};
+
+const createInfiniteParamsFunction = ({
+  file,
+}: {
+  file: Files[keyof Files];
+}) => {
+  const fn = compiler.constVariable({
+    expression: compiler.arrowFunction({
+      multiLine: true,
+      parameters: [
+        {
+          name: 'queryKey',
+          type: compiler.typeNode('QueryKey<Options>'),
+        },
+        {
+          name: 'page',
+          type: compiler.typeNode('K'),
+        },
+      ],
+      statements: [
+        compiler.constVariable({
+          expression: compiler.identifier({
+            text: 'queryKey[0]',
+          }),
+          name: 'params',
+        }),
+        compiler.ifStatement({
+          expression: compiler.propertyAccessExpression({
+            expression: compiler.identifier({
+              text: 'page',
+            }),
+            name: compiler.identifier({ text: 'body' }),
+          }),
+          thenStatement: ts.factory.createBlock(
+            [
+              compiler.expressionToStatement({
+                expression: compiler.binaryExpression({
+                  left: compiler.propertyAccessExpression({
+                    expression: 'params',
+                    name: 'body',
+                  }),
+                  right: compiler.objectExpression({
+                    multiLine: true,
+                    obj: [
+                      {
+                        assertion: 'any',
+                        spread: 'queryKey[0].body',
+                      },
+                      {
+                        assertion: 'any',
+                        spread: 'page.body',
+                      },
+                    ],
+                  }),
+                }),
+              }),
+            ],
+            true,
+          ),
+        }),
+        compiler.ifStatement({
+          expression: compiler.propertyAccessExpression({
+            expression: compiler.identifier({
+              text: 'page',
+            }),
+            name: compiler.identifier({ text: 'headers' }),
+          }),
+          thenStatement: ts.factory.createBlock(
+            [
+              compiler.expressionToStatement({
+                expression: compiler.binaryExpression({
+                  left: compiler.propertyAccessExpression({
+                    expression: 'params',
+                    name: 'headers',
+                  }),
+                  right: compiler.objectExpression({
+                    multiLine: true,
+                    obj: [
+                      {
+                        spread: 'queryKey[0].headers',
+                      },
+                      {
+                        spread: 'page.headers',
+                      },
+                    ],
+                  }),
+                }),
+              }),
+            ],
+            true,
+          ),
+        }),
+        compiler.ifStatement({
+          expression: compiler.propertyAccessExpression({
+            expression: compiler.identifier({
+              text: 'page',
+            }),
+            name: compiler.identifier({ text: 'path' }),
+          }),
+          thenStatement: ts.factory.createBlock(
+            [
+              compiler.expressionToStatement({
+                expression: compiler.binaryExpression({
+                  left: compiler.propertyAccessExpression({
+                    expression: 'params',
+                    name: 'path',
+                  }),
+                  right: compiler.objectExpression({
+                    multiLine: true,
+                    obj: [
+                      {
+                        spread: 'queryKey[0].path',
+                      },
+                      {
+                        spread: 'page.path',
+                      },
+                    ],
+                  }),
+                }),
+              }),
+            ],
+            true,
+          ),
+        }),
+        compiler.ifStatement({
+          expression: compiler.propertyAccessExpression({
+            expression: compiler.identifier({
+              text: 'page',
+            }),
+            name: compiler.identifier({ text: 'query' }),
+          }),
+          thenStatement: ts.factory.createBlock(
+            [
+              compiler.expressionToStatement({
+                expression: compiler.binaryExpression({
+                  left: compiler.propertyAccessExpression({
+                    expression: 'params',
+                    name: 'query',
+                  }),
+                  right: compiler.objectExpression({
+                    multiLine: true,
+                    obj: [
+                      {
+                        spread: 'queryKey[0].query',
+                      },
+                      {
+                        spread: 'page.query',
+                      },
+                    ],
+                  }),
+                }),
+              }),
+            ],
+            true,
+          ),
+        }),
+        compiler.returnVariable({
+          expression: ts.factory.createAsExpression(
+            ts.factory.createAsExpression(
+              compiler.identifier({ text: 'params' }),
+              ts.factory.createKeywordTypeNode(ts.SyntaxKind.UnknownKeyword),
+            ),
+            ts.factory.createTypeQueryNode(
+              compiler.identifier({ text: 'page' }),
+            ),
+          ),
+        }),
+      ],
+      types: [
+        {
+          extends: compiler.typeReferenceNode({
+            typeName: compiler.identifier({
+              text: "Pick<QueryKey<Options>[0], 'body' | 'headers' | 'path' | 'query'>",
+            }),
+          }),
+          name: 'K',
+        },
+      ],
+    }),
+    name: createInfiniteParamsFn,
+  });
+  file.add(fn);
 };
 
 const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
@@ -237,7 +428,7 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
           ),
         }),
         compiler.returnVariable({
-          name: 'params',
+          expression: 'params',
         }),
       ],
       types: [
@@ -454,34 +645,27 @@ const createQueryKeyLiteral = ({
   return queryKeyLiteral;
 };
 
-export const handler: PluginDefinition['handler'] = ({
-  client,
-  files,
-  outputParts,
-  plugin,
-}) => {
-  if (
-    plugin.name !== '@tanstack/react-query' &&
-    plugin.name !== '@tanstack/solid-query' &&
-    plugin.name !== '@tanstack/svelte-query' &&
-    plugin.name !== '@tanstack/vue-query'
-  ) {
-    return;
-  }
-
+export const handler: PluginHandler<
+  | ReactQueryPluginConfig
+  | SolidQueryPluginConfig
+  | SvelteQueryPluginConfig
+  | VueQueryPluginConfig
+> = ({ client, files, plugin }) => {
   checkPrerequisites({ files });
 
+  const config = getConfig();
   const file = files[plugin.name];
 
   file.import({
     asType: true,
-    module: clientModulePath(),
+    module: clientModulePath({ sourceOutput: plugin.output }),
     name: clientOptionsTypeName(),
   });
 
-  const relativePath =
-    new Array(outputParts.length).fill('').join('../') || './';
-  const typesModulePath = relativePath + files.types.getName(false);
+  const typesModulePath = relativeModulePath({
+    moduleOutput: files.types.getName(false),
+    sourceOutput: plugin.output,
+  });
 
   const mutationsType =
     plugin.name === '@tanstack/svelte-query' ||
@@ -490,14 +674,29 @@ export const handler: PluginDefinition['handler'] = ({
       : 'UseMutationOptions';
 
   let typeInfiniteData!: ImportExportItem;
+  let hasCreateInfiniteParamsFunction = false;
   let hasCreateQueryKeyParamsFunction = false;
   let hasInfiniteQueries = false;
   let hasMutations = false;
   let hasQueries = false;
 
+  const processedOperations = new Map<string, boolean>();
+
   for (const service of client.services) {
     for (const operation of service.operations) {
-      const queryFn = toOperationName(operation, true);
+      // track processed operations to avoid creating duplicates
+      const operationKey = getOperationKey(operation);
+      if (processedOperations.has(operationKey)) {
+        continue;
+      }
+      processedOperations.set(operationKey, true);
+
+      const queryFn = [
+        config.services.asClass && transformServiceName(service.name),
+        toOperationName(operation, !config.services.asClass),
+      ]
+        .filter(Boolean)
+        .join('.');
       let hasUsedQueryFn = false;
 
       // queries
@@ -604,7 +803,7 @@ export const handler: PluginDefinition['handler'] = ({
                             name: 'data',
                           }),
                           compiler.returnVariable({
-                            name: 'data',
+                            expression: 'data',
                           }),
                         ],
                       }),
@@ -685,6 +884,11 @@ export const handler: PluginDefinition['handler'] = ({
               createQueryKeyType({ file });
               createQueryKeyFunction({ file });
               hasCreateQueryKeyParamsFunction = true;
+            }
+
+            if (!hasCreateInfiniteParamsFunction) {
+              createInfiniteParamsFunction({ file });
+              hasCreateInfiniteParamsFunction = true;
             }
 
             file.import({
@@ -828,6 +1032,13 @@ export const handler: PluginDefinition['handler'] = ({
                               typeName: typePageObjectParam,
                             }),
                             compiler.constVariable({
+                              expression: compiler.callExpression({
+                                functionName: 'createInfiniteParams',
+                                parameters: ['queryKey', 'page'],
+                              }),
+                              name: 'params',
+                            }),
+                            compiler.constVariable({
                               destructure: true,
                               expression: compiler.awaitExpression({
                                 expression: compiler.callExpression({
@@ -840,65 +1051,7 @@ export const handler: PluginDefinition['handler'] = ({
                                           spread: 'options',
                                         },
                                         {
-                                          spread: 'queryKey[0]',
-                                        },
-                                        {
-                                          key: 'body',
-                                          value: compiler.objectExpression({
-                                            multiLine: true,
-                                            obj: [
-                                              {
-                                                assertion: 'any',
-                                                spread: 'queryKey[0].body',
-                                              },
-                                              {
-                                                assertion: 'any',
-                                                spread: 'page.body',
-                                              },
-                                            ],
-                                          }),
-                                        },
-                                        {
-                                          key: 'headers',
-                                          value: compiler.objectExpression({
-                                            multiLine: true,
-                                            obj: [
-                                              {
-                                                spread: 'queryKey[0].headers',
-                                              },
-                                              {
-                                                spread: 'page.headers',
-                                              },
-                                            ],
-                                          }),
-                                        },
-                                        {
-                                          key: 'path',
-                                          value: compiler.objectExpression({
-                                            multiLine: true,
-                                            obj: [
-                                              {
-                                                spread: 'queryKey[0].path',
-                                              },
-                                              {
-                                                spread: 'page.path',
-                                              },
-                                            ],
-                                          }),
-                                        },
-                                        {
-                                          key: 'query',
-                                          value: compiler.objectExpression({
-                                            multiLine: true,
-                                            obj: [
-                                              {
-                                                spread: 'queryKey[0].query',
-                                              },
-                                              {
-                                                spread: 'page.query',
-                                              },
-                                            ],
-                                          }),
+                                          spread: 'params',
                                         },
                                         {
                                           key: 'throwOnError',
@@ -912,7 +1065,7 @@ export const handler: PluginDefinition['handler'] = ({
                               name: 'data',
                             }),
                             compiler.returnVariable({
-                              name: 'data',
+                              expression: 'data',
                             }),
                           ],
                         }),
@@ -1029,7 +1182,7 @@ export const handler: PluginDefinition['handler'] = ({
                           name: 'data',
                         }),
                         compiler.returnVariable({
-                          name: 'data',
+                          expression: 'data',
                         }),
                       ],
                     }),
@@ -1041,7 +1194,7 @@ export const handler: PluginDefinition['handler'] = ({
               typeName: `${mutationsType}<${typeResponse}, ${typeError.name}, ${typeData}>`,
             }),
             compiler.returnVariable({
-              name: mutationOptionsFn,
+              expression: mutationOptionsFn,
             }),
           ],
         });
@@ -1055,7 +1208,10 @@ export const handler: PluginDefinition['handler'] = ({
         file.add(statement);
       }
 
-      const servicesModulePath = relativePath + files.services.getName(false);
+      const servicesModulePath = relativeModulePath({
+        moduleOutput: files.services.getName(false),
+        sourceOutput: plugin.output,
+      });
 
       if (hasQueries || hasInfiniteQueries) {
         file.import({
@@ -1067,7 +1223,7 @@ export const handler: PluginDefinition['handler'] = ({
       if (hasUsedQueryFn) {
         file.import({
           module: servicesModulePath,
-          name: queryFn,
+          name: queryFn.split('.')[0],
         });
       }
     }

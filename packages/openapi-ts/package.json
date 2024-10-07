@@ -1,7 +1,6 @@
 {
   "name": "@hey-api/openapi-ts",
-  "version": "0.53.0",
-  "type": "module",
+  "version": "0.53.8",
   "description": "Turn your OpenAPI specification into a beautiful TypeScript client",
   "homepage": "https://heyapi.vercel.app/",
   "repository": {
@@ -29,8 +28,23 @@
     "xhr",
     "yaml"
   ],
-  "main": "./dist/node/index.cjs",
-  "types": "./dist/node/index.d.ts",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./package.json": "./package.json"
+  },
   "bin": {
     "openapi-ts": "bin/index.cjs"
   },
@@ -40,14 +54,10 @@
     "LICENSE.md"
   ],
   "scripts": {
-    "build-bundle": "rollup --config rollup.config.ts --configPlugin typescript",
-    "build-types-check": "tsc --project tsconfig.check.json",
-    "build-types-roll": "rollup --config rollup.dts.config.ts --configPlugin typescript && rimraf temp",
-    "build-types-temp": "tsc --emitDeclarationOnly --outDir temp -p src/node",
-    "build-types": "pnpm build-types-temp && pnpm build-types-roll && pnpm build-types-check",
-    "build": "pnpm clean && pnpm build-bundle && pnpm build-types",
-    "clean": "rimraf dist test/generated test/e2e/generated coverage node_modules/.cache",
-    "dev": "rimraf dist && pnpm build-bundle --watch",
+    "build": "tsup && pnpm check-exports",
+    "check-exports": "attw --pack .",
+    "dev": "tsup --watch",
+    "handlebars": "node src/legacy/handlebars/handlebars.cjs",
     "prepublishOnly": "pnpm build",
     "test:coverage": "vitest run --config vitest.config.unit.ts --coverage",
     "test:e2e": "vitest run --config vitest.config.e2e.ts",
@@ -62,7 +72,7 @@
   },
   "dependencies": {
     "@apidevtools/json-schema-ref-parser": "11.7.0",
-    "c12": "1.11.1",
+    "c12": "2.0.1",
     "commander": "12.1.0",
     "handlebars": "4.7.8"
   },
@@ -83,18 +93,16 @@
     "@angular/router": "17.3.9",
     "@hey-api/client-axios": "workspace:*",
     "@hey-api/client-fetch": "workspace:*",
-    "@rollup/plugin-json": "6.1.0",
-    "@rollup/plugin-node-resolve": "15.2.3",
-    "@tanstack/react-query": "5.53.2",
+    "@tanstack/react-query": "5.56.2",
     "@tanstack/solid-query": "5.51.21",
-    "@tanstack/svelte-query": "5.53.2",
-    "@tanstack/vue-query": "5.53.2",
+    "@tanstack/svelte-query": "5.56.2",
+    "@tanstack/vue-query": "5.56.2",
     "@types/cross-spawn": "6.0.6",
     "@types/express": "4.17.21",
     "axios": "1.7.7",
     "cross-spawn": "7.0.3",
     "eslint": "9.6.0",
-    "express": "4.19.2",
+    "express": "4.21.0",
     "glob": "10.4.3",
     "node-fetch": "3.3.2",
     "prettier": "3.3.2",

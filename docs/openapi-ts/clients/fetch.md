@@ -79,7 +79,7 @@ const client = createClient({
 
 ## Interceptors
 
-Interceptors (middleware) can be used to modify requests before they're sent or responses before they're returned to the rest of your application. Fetch API does not have the interceptor functionality, so we implement our own. Below is an example request interceptor
+Interceptors (middleware) can be used to modify requests before they're sent or responses before they're returned to the rest of your application. They can be added with `use` or removed with `eject`. Fetch API does not have the interceptor functionality, so we implement our own. Below is an example request interceptor
 
 ::: code-group
 

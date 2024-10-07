@@ -1,11 +1,10 @@
-import {
+import type {
   ClassElement,
-  type Comments,
-  compiler,
+  Comments,
   FunctionParameter,
-  type Node,
-  TypeScriptFile,
+  Node,
 } from '../compiler';
+import { compiler, TypeScriptFile } from '../compiler';
 import type { FunctionTypeParameter, ObjectValue } from '../compiler/types';
 import { isOperationParameterRequired } from '../openApi';
 import type {
@@ -17,9 +16,9 @@ import type {
 } from '../types/client';
 import type { Files } from '../types/utils';
 import { camelCase } from '../utils/camelCase';
-import { getConfig, isStandaloneClient } from '../utils/config';
+import { getConfig, isLegacyClient } from '../utils/config';
 import { escapeComment, escapeName } from '../utils/escape';
-import { reservedWordsRegExp } from '../utils/reservedWords';
+import { reservedWordsRegExp } from '../utils/regexp';
 import { transformServiceName } from '../utils/transform';
 import { setUniqueTypeName } from '../utils/type';
 import { unique } from '../utils/unique';
@@ -116,7 +115,7 @@ const toOperationParamType = (
 
   const isRequired = isOperationParameterRequired(operation.parameters);
 
-  if (isStandaloneClient(config)) {
+  if (!isLegacyClient(config)) {
     return [
       {
         isRequired,
@@ -206,7 +205,7 @@ const toOperationReturnType = (client: Client, operation: Operation) => {
 const toOperationComment = (operation: Operation): Comments => {
   const config = getConfig();
 
-  if (isStandaloneClient(config)) {
+  if (!isLegacyClient(config)) {
     const comment = [
       operation.deprecated && '@deprecated',
       operation.summary && escapeComment(operation.summary),
@@ -274,7 +273,7 @@ const toRequestOptions = (
     onImport(responseTransformerName);
   }
 
-  if (isStandaloneClient(config)) {
+  if (!isLegacyClient(config)) {
     let obj: ObjectValue[] = [
       {
         spread: 'options',
@@ -285,7 +284,11 @@ const toRequestOptions = (
       (parameter) => parameter.in === 'body' || parameter.in === 'formData',
     );
     const contents = bodyParameters
-      .map((parameter) => parameter.mediaType)
+      .map(
+        (parameter) =>
+          parameter.mediaType ||
+          (parameter.in === 'formData' ? 'multipart/form-data' : undefined),
+      )
       .filter(Boolean)
       .filter(unique);
     if (contents.length === 1) {
@@ -297,10 +300,16 @@ const toRequestOptions = (
           },
           {
             key: 'headers',
-            value: {
-              // no need for Content-Type header, browser will set it automatically
-              'Content-Type': null,
-            },
+            value: [
+              {
+                // no need for Content-Type header, browser will set it automatically
+                key: 'Content-Type',
+                value: null,
+              },
+              {
+                spread: 'options?.headers',
+              },
+            ],
           },
         ];
         onClientImport?.('formDataBodySerializer');
@@ -314,9 +323,15 @@ const toRequestOptions = (
           },
           {
             key: 'headers',
-            value: {
-              'Content-Type': contents[0],
-            },
+            value: [
+              {
+                key: 'Content-Type',
+                value: contents[0],
+              },
+              {
+                spread: 'options?.headers',
+              },
+            ],
           },
         ];
         onClientImport?.('urlSearchParamsBodySerializer');
@@ -475,7 +490,7 @@ const toOperationStatements = (
 
   const options = toRequestOptions(client, operation, onImport, onClientImport);
 
-  if (isStandaloneClient(config)) {
+  if (!isLegacyClient(config)) {
     const errorType = setUniqueTypeName({
       client,
       meta: {
@@ -558,7 +573,7 @@ const processService = ({
 }) => {
   const config = getConfig();
 
-  const isStandalone = isStandaloneClient(config);
+  const isLegacy = isLegacyClient(config);
 
   for (const operation of service.operations) {
     if (operation.parameters.length) {
@@ -575,7 +590,7 @@ const processService = ({
       });
     }
 
-    if (isStandalone) {
+    if (!isLegacy) {
       generateImport({
         client,
         meta: {
@@ -617,7 +632,7 @@ const processService = ({
     for (const operation of service.operations) {
       const compileFunctionParams = {
         parameters: toOperationParamType(client, operation),
-        returnType: isStandalone
+        returnType: !isLegacy
           ? undefined
           : toOperationReturnType(client, operation),
         statements: toOperationStatements(
@@ -626,7 +641,7 @@ const processService = ({
           onImport,
           onClientImport,
         ),
-        types: isStandalone ? [throwOnErrorTypeGeneric] : undefined,
+        types: !isLegacy ? [throwOnErrorTypeGeneric] : undefined,
       };
       const expression =
         config.client.name === 'legacy/angular'
@@ -651,7 +666,7 @@ const processService = ({
         config.name === undefined && config.client.name !== 'legacy/angular',
       name: toOperationName(operation, false),
       parameters: toOperationParamType(client, operation),
-      returnType: isStandalone
+      returnType: !isLegacy
         ? undefined
         : toOperationReturnType(client, operation),
       statements: toOperationStatements(
@@ -660,7 +675,7 @@ const processService = ({
         onImport,
         onClientImport,
       ),
-      types: isStandalone ? [throwOnErrorTypeGeneric] : undefined,
+      types: !isLegacy ? [throwOnErrorTypeGeneric] : undefined,
     });
     return node;
   });
@@ -744,26 +759,28 @@ export const generateServices = async ({
 
   checkPrerequisites({ files });
 
-  const isStandalone = isStandaloneClient(config);
+  const isLegacy = isLegacyClient(config);
+
+  const servicesOutput = 'services';
 
   files.services = new TypeScriptFile({
     dir: config.output.path,
-    name: 'services.ts',
+    name: `${servicesOutput}.ts`,
   });
 
   // Import required packages and core files.
-  if (isStandalone) {
+  if (!isLegacy) {
     files.services.import({
-      module: clientModulePath(),
+      module: clientModulePath({ sourceOutput: servicesOutput }),
       name: 'createClient',
     });
     files.services.import({
-      module: clientModulePath(),
+      module: clientModulePath({ sourceOutput: servicesOutput }),
       name: 'createConfig',
     });
     files.services.import({
       asType: true,
-      module: clientModulePath(),
+      module: clientModulePath({ sourceOutput: servicesOutput }),
       name: clientOptionsTypeName(),
     });
   } else {
@@ -821,7 +838,7 @@ export const generateServices = async ({
   }
 
   // define client first
-  if (isStandalone) {
+  if (!isLegacy) {
     const statement = compiler.constVariable({
       exportConst: true,
       expression: compiler.callExpression({
@@ -842,7 +859,7 @@ export const generateServices = async ({
       client,
       onClientImport: (imported) => {
         files.services.import({
-          module: clientModulePath(),
+          module: clientModulePath({ sourceOutput: servicesOutput }),
           name: imported,
         });
       },

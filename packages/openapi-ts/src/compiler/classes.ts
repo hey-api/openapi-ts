@@ -11,12 +11,8 @@ import {
   toParameterDeclarations,
   toTypeParameters,
 } from './types';
-import {
-  addLeadingComments,
-  Comments,
-  createIdentifier,
-  isType,
-} from './utils';
+import type { Comments } from './utils';
+import { addLeadingComments, createIdentifier, isType } from './utils';
 
 /**
  * Create a class constructor declaration.

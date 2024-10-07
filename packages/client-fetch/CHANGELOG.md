@@ -1,5 +1,47 @@
 # @hey-api/client-fetch
 
+## 0.4.0
+
+### Minor Changes
+
+- [#1098](https://github.com/hey-api/openapi-ts/pull/1098) [`df5c690`](https://github.com/hey-api/openapi-ts/commit/df5c69048a03a1c7729a5200c586164287a8a6fa) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add error interceptors
+
+### Patch Changes
+
+- [#1098](https://github.com/hey-api/openapi-ts/pull/1098) [`df5c690`](https://github.com/hey-api/openapi-ts/commit/df5c69048a03a1c7729a5200c586164287a8a6fa) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: throw raw error when throwOnError is true
+
+## 0.3.4
+
+### Patch Changes
+
+- [#1092](https://github.com/hey-api/openapi-ts/pull/1092) [`7f986c2`](https://github.com/hey-api/openapi-ts/commit/7f986c2c7726ed8fbf16f8b235b7769c7d990502) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export RequestResult type
+
+## 0.3.3
+
+### Patch Changes
+
+- [#1083](https://github.com/hey-api/openapi-ts/pull/1083) [`fe743c2`](https://github.com/hey-api/openapi-ts/commit/fe743c2d41c23bf7e1706bceedd6319299131197) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export client-facing types again
+
+## 0.3.2
+
+### Patch Changes
+
+- [#1075](https://github.com/hey-api/openapi-ts/pull/1075) [`11a276a`](https://github.com/hey-api/openapi-ts/commit/11a276a1e35dde0735363e892d8142016fd87eec) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: properly handle dual publishing and type generation
+
+## 0.3.1
+
+### Patch Changes
+
+- [#1057](https://github.com/hey-api/openapi-ts/pull/1057) [`7ae2b1d`](https://github.com/hey-api/openapi-ts/commit/7ae2b1db047f3b6efe917a8b43ac7c851fb86c8f) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow responseTransformer property with body and headers
+
+- [#1064](https://github.com/hey-api/openapi-ts/pull/1064) [`2079c6e`](https://github.com/hey-api/openapi-ts/commit/2079c6e83a6b71e157c8e7ea56260b4e9ff8411d) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: encode path params
+
+## 0.3.0
+
+### Minor Changes
+
+- [#1011](https://github.com/hey-api/openapi-ts/pull/1011) [`7ebc1d4`](https://github.com/hey-api/openapi-ts/commit/7ebc1d44af74db2522219d71d240325f6bc5689d) Thanks [@goltra](https://github.com/goltra)! - feat: Function to clear and check if exist an interceptor in client-fetch
+
 ## 0.2.4
 
 ### Patch Changes

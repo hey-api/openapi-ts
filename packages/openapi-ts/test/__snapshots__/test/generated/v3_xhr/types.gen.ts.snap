@@ -100,7 +100,7 @@ export const EnumWithStrings = {
     ERROR: 'Error',
     _SINGLE_QUOTE_: "'Single Quote'",
     _DOUBLE_QUOTES_: '"Double Quotes"',
-    NON_ASCII__ØÆÅÔÖ_ØÆÅÔÖ字符串: 'Non-ascii: øæåôöØÆÅÔÖ字符串'
+    'NON_ASCII__ØÆÅÔÖ_ØÆÅÔÖ字符串': 'Non-ascii: øæåôöØÆÅÔÖ字符串'
 } as const;
 
 export type EnumWithReplacedCharacters = "'Single Quote'" | '"Double Quotes"' | 'øæåôöØÆÅÔÖ字符串' | 3.1 | '';
@@ -108,7 +108,7 @@ export type EnumWithReplacedCharacters = "'Single Quote'" | '"Double Quotes"' | 
 export const EnumWithReplacedCharacters = {
     _SINGLE_QUOTE_: "'Single Quote'",
     _DOUBLE_QUOTES_: '"Double Quotes"',
-    ØÆÅÔÖ_ØÆÅÔÖ字符串: 'øæåôöØÆÅÔÖ字符串',
+    'ØÆÅÔÖ_ØÆÅÔÖ字符串': 'øæåôöØÆÅÔÖ字符串',
     '_3.1': 3.1,
     EMPTY_STRING: ''
 } as const;
@@ -361,7 +361,7 @@ export const foo_bar_enum = {
     SUCCESS: 'Success',
     WARNING: 'Warning',
     ERROR: 'Error',
-    ØÆÅ字符串: 'ØÆÅ字符串'
+    'ØÆÅ字符串': 'ØÆÅ字符串'
 } as const;
 
 /**
@@ -1068,6 +1068,9 @@ export type Generic_Schema_Duplicate_Issue_1_System_Boolean_ = {
     item?: boolean;
     error?: (string) | null;
     readonly hasError?: boolean;
+    data?: {
+        [key: string]: unknown;
+    };
 };
 
 export type Generic_Schema_Duplicate_Issue_1_System_String_ = {
@@ -1091,6 +1094,15 @@ export type ImportData = {
 };
 
 export type ImportResponse = (Model_From_Zendesk | ModelWithReadOnlyAndWriteOnly);
+
+export type GetApiSimpleOperationData = {
+    /**
+     * foo in method
+     */
+    fooParam: string;
+};
+
+export type GetApiSimpleOperationResponse = (number);
 
 export type ApiVversionOdataControllerCountResponse = (Model_From_Zendesk);
 

@@ -1024,6 +1024,9 @@ export type Generic_Schema_Duplicate_Issue_1_System_Boolean_ = {
     item?: boolean;
     error?: (string) | null;
     readonly hasError?: boolean;
+    data?: {
+        [key: string]: unknown;
+    };
 };
 
 export type Generic_Schema_Duplicate_Issue_1_System_String_ = {
@@ -1047,6 +1050,15 @@ export type ImportData = {
 };
 
 export type ImportResponse = (Model_From_Zendesk | ModelWithReadOnlyAndWriteOnly);
+
+export type GetApiSimpleOperationData = {
+    /**
+     * foo in method
+     */
+    fooParam: string;
+};
+
+export type GetApiSimpleOperationResponse = (number);
 
 export type ApiVversionOdataControllerCountResponse = (Model_From_Zendesk);
 

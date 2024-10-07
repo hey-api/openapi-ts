@@ -3,13 +3,16 @@ import type { Model } from '../openApi';
 import { sanitizeOperationParameterName } from '../openApi';
 import type { Client } from '../types/client';
 import { camelCase } from './camelCase';
-import { getConfig, isStandaloneClient } from './config';
+import { getConfig, isLegacyClient } from './config';
 import { refSchemasPartial } from './const';
 import { enumValue } from './enum';
 import { escapeComment, escapeName, unescapeName } from './escape';
 import { getSchemasMeta } from './meta';
-import { reservedWordsRegExp } from './reservedWords';
+import { reservedWordsRegExp } from './regexp';
 import { unique } from './unique';
+
+export const isModelDate = (model: Model): boolean =>
+  model.format === 'date' || model.format === 'date-time';
 
 const base = (model: Model) => {
   const config = getConfig();
@@ -20,10 +23,7 @@ const base = (model: Model) => {
     });
   }
 
-  if (
-    config.types.dates &&
-    (model.format === 'date-time' || model.format === 'date')
-  ) {
+  if (config.types.dates && isModelDate(model)) {
     return compiler.typeNode('Date');
   }
 
@@ -121,7 +121,10 @@ const typeUnionOrIntersection = ({
   const node =
     style === 'union'
       ? compiler.typeUnionNode({
-          isNullable: model.isNullable,
+          // avoid printing duplicate null statements
+          isNullable:
+            model.isNullable &&
+            !model.properties.find((property) => property.isNullable),
           types,
         })
       : compiler.typeIntersectionNode({
@@ -146,12 +149,12 @@ const typeInterface = (model: Model) => {
 
   const config = getConfig();
 
-  const isStandalone = isStandaloneClient(config);
+  const isLegacy = isLegacyClient(config);
 
   const properties: Property[] = model.properties.map((property) => {
     let maybeRequired = property.isRequired ? '' : '?';
     let value = toType(property);
-    let name = isStandalone
+    let name = !isLegacy
       ? escapeName(unescapeName(transformTypeKeyName(property.name)))
       : // special test for 1XX status codes. We need a more robust system
         // for escaping values depending on context in which they're printed,
@@ -328,8 +331,8 @@ export const unsetUniqueTypeName = ({
 export const transformTypeKeyName = (value: string): string => {
   const config = getConfig();
 
-  // do not transform anything for standalone clients
-  if (isStandaloneClient(config)) {
+  // transform only for legacy clients
+  if (!isLegacyClient(config)) {
     return value;
   }
 

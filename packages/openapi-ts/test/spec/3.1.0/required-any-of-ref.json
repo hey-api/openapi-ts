@@ -1,0 +1,35 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "version": "1.0.0"
+  },
+  "components": {
+    "schemas": {
+      "Foo": {
+        "type": "object",
+        "properties": {
+          "foo": {
+            "type": "string"
+          },
+          "baz": {
+            "type": "string"
+          }
+        }
+      },
+      "Bar": {
+        "type": "object",
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/Foo"
+          }
+        ],
+        "properties": {
+          "bar": {
+            "type": "number"
+          }
+        },
+        "required": ["foo", "bar", "baz"]
+      }
+    }
+  }
+}

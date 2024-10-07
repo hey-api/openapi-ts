@@ -4,11 +4,12 @@ import { loadConfig } from 'c12';
 import { sync } from 'cross-spawn';
 
 import { generateOutput } from './generate/output';
-import { parse } from './openApi';
+import { parse, parseExperimental } from './openApi';
 import { defaultPluginConfigs } from './plugins';
 import type { Client } from './types/client';
 import type { ClientConfig, Config, UserConfig } from './types/config';
-import { getConfig, isStandaloneClient, setConfig } from './utils/config';
+import { CLIENTS } from './types/config';
+import { getConfig, isLegacyClient, setConfig } from './utils/config';
 import { getOpenApiSpec } from './utils/getOpenApiSpec';
 import { registerHandlebarTemplates } from './utils/handlebars';
 import {
@@ -17,7 +18,7 @@ import {
   operationParameterFilterFn,
   operationParameterNameFn,
 } from './utils/parse';
-import { Performance } from './utils/performance';
+import { Performance, PerformanceReport } from './utils/performance';
 import { postProcessClient } from './utils/postprocess';
 
 type OutputProcessor = {
@@ -107,11 +108,11 @@ const logClientMessage = () => {
 const getClient = (userConfig: ClientConfig): Config['client'] => {
   let client: Config['client'] = {
     bundle: false,
-    name: '',
+    name: '' as Config['client']['name'],
   };
   if (typeof userConfig.client === 'string') {
     client.name = userConfig.client;
-  } else {
+  } else if (userConfig.client) {
     client = {
       ...client,
       ...userConfig.client,
@@ -143,9 +144,9 @@ const getPlugins = (userConfig: ClientConfig): Config['plugins'] => {
       ? defaultPluginConfigs[plugin]
       : {
           ...defaultPluginConfigs[plugin.name],
-          ...plugin,
+          ...(plugin as (typeof defaultPluginConfigs)[(typeof plugin)['name']]),
         },
-  );
+  ) as unknown as Config['plugins'];
   return plugins;
 };
 
@@ -219,9 +220,6 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
 
   const { config: configFromFile } = await loadConfig<UserConfig>({
     configFile: configurationFile,
-    jitiOptions: {
-      esmResolve: true,
-    },
     name: 'openapi-ts',
   });
 
@@ -268,6 +266,10 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
 
     const client = getClient(userConfig);
 
+    if (client.name && !CLIENTS.includes(client.name)) {
+      throw new Error('🚫 invalid client - select a valid client value');
+    }
+
     if (!useOptions) {
       console.warn(
         '❗️ Deprecation warning: useOptions set to false. This setting will be removed in future versions. Please migrate useOptions to true https://heyapi.vercel.app/openapi-ts/migrating.html#v0-27-38',
@@ -281,15 +283,14 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
 
     output.path = path.resolve(process.cwd(), output.path);
 
-    return setConfig({
+    const config = setConfig({
       base,
       client,
       configFile,
       debug,
       dryRun,
       experimental_parser,
-      exportCore:
-        isStandaloneClient(client) || !client.name ? false : exportCore,
+      exportCore: isLegacyClient(client) ? exportCore : false,
       input,
       name,
       output,
@@ -300,6 +301,12 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
       types,
       useOptions,
     });
+
+    if (debug) {
+      console.warn('config:', config);
+    }
+
+    return config;
   });
 };
 
@@ -309,64 +316,98 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
  * service layer, etc.
  * @param userConfig {@link UserConfig} passed to the `createClient()` method
  */
-export async function createClient(userConfig: UserConfig): Promise<Client[]> {
+export async function createClient(
+  userConfig: UserConfig,
+): Promise<ReadonlyArray<Client>> {
   Performance.start('createClient');
 
+  Performance.start('config');
   const configs = await initConfigs(userConfig);
+  Performance.end('config');
 
+  Performance.start('handlebars');
   const templates = registerHandlebarTemplates();
+  Performance.end('handlebars');
 
   const pCreateClient = (config: Config) => async () => {
+    Performance.start('openapi');
     const openApi =
       typeof config.input === 'string'
         ? await getOpenApiSpec(config.input)
         : (config.input as unknown as Awaited<
             ReturnType<typeof getOpenApiSpec>
           >);
-
-    Performance.start('parser');
-    const parsed = parse({
-      config: {
-        filterFn: {
-          operation: operationFilterFn,
-          operationParameter: operationParameterFilterFn,
-        },
-        nameFn: {
-          operation: operationNameFn,
-          operationParameter: operationParameterNameFn,
-        },
-      },
-      openApi,
-    });
-    const client = postProcessClient(parsed);
-    Performance.end('parser');
+    Performance.end('openapi');
 
     if (config.experimental_parser) {
       Performance.start('experimental_parser');
-      // TODO: experimental parser
+      parseExperimental({
+        spec: openApi,
+      });
       Performance.end('experimental_parser');
-    }
+    } else {
+      Performance.start('parser');
+      const parsed = parse({
+        config: {
+          filterFn: {
+            operation: operationFilterFn,
+            operationParameter: operationParameterFilterFn,
+          },
+          nameFn: {
+            operation: operationNameFn,
+            operationParameter: operationParameterNameFn,
+          },
+        },
+        openApi,
+      });
+      const client = postProcessClient(parsed);
+      Performance.end('parser');
 
-    if (!config.dryRun) {
       logClientMessage();
+
+      Performance.start('generator');
       await generateOutput(openApi, client, templates);
-      processOutput();
+      Performance.end('generator');
+
+      Performance.start('postprocess');
+      if (!config.dryRun) {
+        processOutput();
+
+        console.log('✨ Done! Your client is located in:', config.output.path);
+      }
+      Performance.end('postprocess');
+
+      return client;
     }
-
-    console.log('✨ Done! Your client is located in:', config.output.path);
-
-    return client;
   };
 
-  const clients: Client[] = [];
+  const clients: Array<Client> = [];
 
   const pClients = configs.map((config) => pCreateClient(config));
   for (const pClient of pClients) {
     const client = await pClient();
-    clients.push(client);
+    if (client) {
+      clients.push(client);
+    }
   }
 
   Performance.end('createClient');
+
+  if (userConfig.debug) {
+    const perfReport = new PerformanceReport({
+      totalMark: 'createClient',
+    });
+    perfReport.report({
+      marks: [
+        'config',
+        'openapi',
+        'handlebars',
+        'parser',
+        'generator',
+        'postprocess',
+      ],
+    });
+  }
 
   return clients;
 }
@@ -374,11 +415,13 @@ export async function createClient(userConfig: UserConfig): Promise<Client[]> {
 /**
  * Type helper for openapi-ts.config.ts, returns {@link UserConfig} object
  */
-export function defineConfig(config: UserConfig): UserConfig {
-  return config;
-}
+export const defineConfig = (config: UserConfig): UserConfig => config;
 
 export default {
   createClient,
   defineConfig,
 };
+
+export type { OpenApiV3_0_3 } from './openApi/3.0.3';
+export type { OpenApiV3_1 } from './openApi/3.1';
+export type { UserConfig } from './types/config';
