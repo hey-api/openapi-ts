@@ -1,5 +1,47 @@
 # @example/openapi-ts-tanstack-svelte-query
 
+## 0.0.9
+
+### Patch Changes
+
+- Updated dependencies [[`df5c690`](https://github.com/hey-api/openapi-ts/commit/df5c69048a03a1c7729a5200c586164287a8a6fa), [`df5c690`](https://github.com/hey-api/openapi-ts/commit/df5c69048a03a1c7729a5200c586164287a8a6fa)]:
+  - @hey-api/client-fetch@0.4.0
+
+## 0.0.8
+
+### Patch Changes
+
+- Updated dependencies [[`7f986c2`](https://github.com/hey-api/openapi-ts/commit/7f986c2c7726ed8fbf16f8b235b7769c7d990502)]:
+  - @hey-api/client-fetch@0.3.4
+
+## 0.0.7
+
+### Patch Changes
+
+- Updated dependencies [[`fe743c2`](https://github.com/hey-api/openapi-ts/commit/fe743c2d41c23bf7e1706bceedd6319299131197)]:
+  - @hey-api/client-fetch@0.3.3
+
+## 0.0.6
+
+### Patch Changes
+
+- Updated dependencies [[`11a276a`](https://github.com/hey-api/openapi-ts/commit/11a276a1e35dde0735363e892d8142016fd87eec)]:
+  - @hey-api/client-fetch@0.3.2
+
+## 0.0.5
+
+### Patch Changes
+
+- Updated dependencies [[`7ae2b1d`](https://github.com/hey-api/openapi-ts/commit/7ae2b1db047f3b6efe917a8b43ac7c851fb86c8f), [`2079c6e`](https://github.com/hey-api/openapi-ts/commit/2079c6e83a6b71e157c8e7ea56260b4e9ff8411d)]:
+  - @hey-api/client-fetch@0.3.1
+
+## 0.0.4
+
+### Patch Changes
+
+- Updated dependencies [[`7ebc1d4`](https://github.com/hey-api/openapi-ts/commit/7ebc1d44af74db2522219d71d240325f6bc5689d)]:
+  - @hey-api/client-fetch@0.3.0
+
 ## 0.0.3
 
 ### Patch Changes

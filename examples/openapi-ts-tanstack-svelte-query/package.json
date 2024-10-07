@@ -1,7 +1,7 @@
 {
   "name": "@example/openapi-ts-tanstack-svelte-query",
   "private": true,
-  "version": "0.0.3",
+  "version": "0.0.9",
   "type": "module",
   "scripts": {
     "build": "vite build",
@@ -17,14 +17,14 @@
   },
   "dependencies": {
     "@hey-api/client-fetch": "workspace:*",
-    "@tanstack/svelte-query": "5.53.2"
+    "@tanstack/svelte-query": "5.56.2"
   },
   "devDependencies": {
     "@fontsource/fira-mono": "5.0.0",
     "@hey-api/openapi-ts": "workspace:*",
     "@neoconfetti/svelte": "2.0.0",
     "@sveltejs/adapter-auto": "3.0.0",
-    "@sveltejs/kit": "2.0.0",
+    "@sveltejs/kit": "2.5.28",
     "@sveltejs/vite-plugin-svelte": "3.0.0",
     "@types/eslint": "9.6.0",
     "eslint": "9.0.0",
@@ -33,11 +33,11 @@
     "globals": "15.0.0",
     "prettier": "3.1.1",
     "prettier-plugin-svelte": "3.1.2",
-    "svelte": "4.2.7",
+    "svelte": "4.2.19",
     "svelte-check": "3.6.0",
     "typescript": "5.5.3",
     "typescript-eslint": "8.0.0",
-    "vite": "5.0.3",
+    "vite": "5.4.6",
     "vitest": "2.0.0"
   }
 }

@@ -1,4 +1,4 @@
-import Handlebars from 'handlebars/runtime';
+import Handlebars from 'handlebars';
 import { describe, expect, it } from 'vitest';
 
 import { setConfig } from '../config';

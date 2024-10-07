@@ -945,6 +945,9 @@ export type GenericSchemaDuplicateIssue_1_systemBoolean_ = {
     item?: boolean;
     error?: (string) | null;
     readonly hasError?: boolean;
+    data?: {
+        [key: string]: unknown;
+    };
 };
 
 export type GenericSchemaDuplicateIssue_1_systemString_ = {
@@ -970,6 +973,15 @@ export type ImportData = {
 export type ImportResponse = (ModelFromZendesk | ModelWithReadOnlyAndWriteOnly);
 
 export type ApiVversionOdataControllerCountResponse = (ModelFromZendesk);
+
+export type GetApiSimpleOperationData = {
+    /**
+     * foo in method
+     */
+    fooParam: string;
+};
+
+export type GetApiSimpleOperationResponse = (number);
 
 export type DeleteFooData3 = {
     /**
@@ -1411,6 +1423,21 @@ export type $OpenApiTs = {
                  * Success
                  */
                 200: ModelFromZendesk;
+            };
+        };
+    };
+    '/api/v{api-version}/simple:operation': {
+        get: {
+            req: GetApiSimpleOperationData;
+            res: {
+                /**
+                 * Response is a simple number
+                 */
+                200: number;
+                /**
+                 * Default error response
+                 */
+                default: ModelWithBoolean;
             };
         };
     };

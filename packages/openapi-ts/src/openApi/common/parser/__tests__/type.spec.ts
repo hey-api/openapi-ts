@@ -9,7 +9,7 @@ vi.mock('../../../../utils/config', () => {
   };
   return {
     getConfig: () => config,
-    isStandaloneClient: vi.fn().mockReturnValue(false),
+    isLegacyClient: vi.fn().mockReturnValue(true),
   };
 });
 

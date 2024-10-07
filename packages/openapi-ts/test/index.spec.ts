@@ -38,6 +38,7 @@ describe('OpenAPI v2', () => {
     },
   ])('$description', async ({ name, config }) => {
     const output = toOutputPath(name);
+    // @ts-ignore
     await createClient({
       ...config,
       input: V2_SPEC_PATH,
@@ -147,38 +148,6 @@ describe('OpenAPI v3', () => {
     },
     {
       config: createConfig({
-        client: '@hey-api/client-axios',
-        plugins: ['@tanstack/react-query'],
-      }),
-      description: 'generate Axios client with TanStack React Query plugin',
-      name: 'v3-hey-api-client-axios-plugin-tanstack-react-query',
-    },
-    {
-      config: createConfig({
-        client: '@hey-api/client-axios',
-        plugins: ['@tanstack/solid-query'],
-      }),
-      description: 'generate Axios client with TanStack Solid Query plugin',
-      name: 'v3-hey-api-client-axios-plugin-tanstack-solid-query',
-    },
-    {
-      config: createConfig({
-        client: '@hey-api/client-axios',
-        plugins: ['@tanstack/svelte-query'],
-      }),
-      description: 'generate Axios client with TanStack Svelte Query plugin',
-      name: 'v3-hey-api-client-axios-plugin-tanstack-svelte-query',
-    },
-    {
-      config: createConfig({
-        client: '@hey-api/client-axios',
-        plugins: ['@tanstack/vue-query'],
-      }),
-      description: 'generate Axios client with TanStack Vue Query plugin',
-      name: 'v3-hey-api-client-axios-plugin-tanstack-vue-query',
-    },
-    {
-      config: createConfig({
         client: '@hey-api/client-fetch',
       }),
       description: 'generate Fetch API client',
@@ -203,39 +172,6 @@ describe('OpenAPI v3', () => {
       }),
       description: 'generate class-based Fetch API client',
       name: 'v3-hey-api-client-fetch-class',
-    },
-    {
-      config: createConfig({
-        client: '@hey-api/client-fetch',
-        plugins: ['@tanstack/react-query'],
-      }),
-      description: 'generate Fetch API client with TanStack React Query plugin',
-      name: 'v3-hey-api-client-fetch-plugin-tanstack-react-query',
-    },
-    {
-      config: createConfig({
-        client: '@hey-api/client-fetch',
-        plugins: ['@tanstack/solid-query'],
-      }),
-      description: 'generate Fetch API client with TanStack Solid Query plugin',
-      name: 'v3-hey-api-client-fetch-plugin-tanstack-solid-query',
-    },
-    {
-      config: createConfig({
-        client: '@hey-api/client-fetch',
-        plugins: ['@tanstack/svelte-query'],
-      }),
-      description:
-        'generate Fetch API client with TanStack Svelte Query plugin',
-      name: 'v3-hey-api-client-fetch-plugin-tanstack-svelte-query',
-    },
-    {
-      config: createConfig({
-        client: '@hey-api/client-fetch',
-        plugins: ['@tanstack/vue-query'],
-      }),
-      description: 'generate Fetch API client with TanStack Vue Query plugin',
-      name: 'v3-hey-api-client-fetch-plugin-tanstack-vue-query',
     },
     {
       config: createConfig({
@@ -429,6 +365,7 @@ describe('OpenAPI v3', () => {
     '$description',
     async ({ name, config }) => {
       const output = toOutputPath(name);
+      // @ts-ignore
       await createClient({
         ...config,
         input: V3_SPEC_PATH,
@@ -446,6 +383,7 @@ describe('OpenAPI v3', () => {
     async ({ name, config }) => {
       const output = toOutputPath(name + '_transform');
 
+      // @ts-ignore
       await createClient({
         ...config,
         input: V3_TRANSFORMS_SPEC_PATH,

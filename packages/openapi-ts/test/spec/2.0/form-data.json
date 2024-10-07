@@ -1,0 +1,51 @@
+{
+  "basePath": "/",
+  "host": "foo.bar.com",
+  "info": {
+    "description": "",
+    "title": "",
+    "version": "v1"
+  },
+  "schemes": ["https"],
+  "swagger": "2.0",
+  "tags": [],
+  "paths": {
+    "/v1/foo": {
+      "post": {
+        "consumes": ["multipart/form-data"],
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "file",
+            "required": true,
+            "type": "file"
+          },
+          {
+            "in": "formData",
+            "name": "info",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Foo"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Foo": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

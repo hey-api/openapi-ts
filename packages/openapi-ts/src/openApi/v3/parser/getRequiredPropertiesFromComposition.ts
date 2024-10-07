@@ -7,12 +7,14 @@ import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 
 export const getRequiredPropertiesFromComposition = ({
+  debug,
   definitions,
   getModel,
   openApi,
   required,
   types,
 }: {
+  debug?: boolean;
   definitions: OpenApiSchema[];
   getModel: GetModelFn;
   openApi: OpenApi;
@@ -38,6 +40,7 @@ export const getRequiredPropertiesFromComposition = ({
         return [
           ...properties,
           ...getModel({
+            debug,
             definition: schema,
             meta,
             openApi,
@@ -49,6 +52,7 @@ export const getRequiredPropertiesFromComposition = ({
       return [
         ...properties,
         ...getModel({
+          debug,
           definition,
           openApi,
           parentDefinition: definition,
@@ -63,5 +67,6 @@ export const getRequiredPropertiesFromComposition = ({
       ...property,
       isRequired: true,
     }));
+
   return requiredProperties;
 };

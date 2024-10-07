@@ -88,6 +88,10 @@ export const generateOutput = async (
   await generatePlugins({ client, files });
 
   Object.entries(files).forEach(([name, file]) => {
+    if (config.dryRun) {
+      return;
+    }
+
     if (name === 'index') {
       file.write();
     } else {

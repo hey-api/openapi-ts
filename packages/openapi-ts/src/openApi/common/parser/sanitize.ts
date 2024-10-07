@@ -1,4 +1,4 @@
-import { illegalStartCharactersRegExp } from '../../../utils/reservedWords';
+import { illegalStartCharactersRegExp } from '../../../utils/regexp';
 
 /**
  * Sanitizes names of types, so they are valid TypeScript identifiers of a certain form.

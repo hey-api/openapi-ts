@@ -146,6 +146,7 @@ type RequestFn = <
 export interface Client<
   Req = Request,
   Res = Response,
+  Err = unknown,
   Options = RequestOptions,
 > {
   connect: MethodFn;
@@ -153,7 +154,7 @@ export interface Client<
   get: MethodFn;
   getConfig: () => Config;
   head: MethodFn;
-  interceptors: Middleware<Req, Res, Options>;
+  interceptors: Middleware<Req, Res, Err, Options>;
   options: MethodFn;
   patch: MethodFn;
   post: MethodFn;
@@ -185,16 +186,12 @@ export type Options<
   ThrowOnError extends boolean = boolean,
 > = T extends { body?: any }
   ? T extends { headers?: any }
-    ? OmitKeys<
-        OptionsBase<ThrowOnError>,
-        'body' | 'headers' | 'responseTransformer'
-      > &
-        T
-    : OmitKeys<OptionsBase<ThrowOnError>, 'body' | 'responseTransformer'> &
+    ? OmitKeys<OptionsBase<ThrowOnError>, 'body' | 'headers'> & T
+    : OmitKeys<OptionsBase<ThrowOnError>, 'body'> &
         T &
         Pick<OptionsBase<ThrowOnError>, 'headers'>
   : T extends { headers?: any }
-    ? OmitKeys<OptionsBase<ThrowOnError>, 'headers' | 'responseTransformer'> &
+    ? OmitKeys<OptionsBase<ThrowOnError>, 'headers'> &
         T &
         Pick<OptionsBase<ThrowOnError>, 'body'>
     : OptionsBase<ThrowOnError> & T;

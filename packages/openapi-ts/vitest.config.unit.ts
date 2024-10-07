@@ -2,10 +2,8 @@ import { fileURLToPath } from 'node:url';
 
 import { configDefaults, defineConfig } from 'vitest/config';
 
-import { handlebarsPlugin } from './rollup.config';
-
 export default defineConfig({
-  plugins: [handlebarsPlugin()],
+  plugins: [],
   test: {
     coverage: {
       exclude: ['bin', 'dist', 'src/**/*.d.ts'],

@@ -1,17 +1,19 @@
 import type { OpenApiV2Schema, OpenApiV3Schema } from '../openApi';
-import type { Plugins } from '../plugins/';
+import type { ClientPlugins, UserPlugins } from '../plugins/';
 import type { Operation } from '../types/client';
 import type { ExtractArrayOfObjects } from './utils';
 
-type Client =
-  | '@hey-api/client-axios'
-  | '@hey-api/client-fetch'
-  | 'legacy/angular'
-  | 'legacy/axios'
-  | 'legacy/fetch'
-  | 'legacy/node'
-  | 'legacy/xhr'
-  | '';
+export const CLIENTS = [
+  '@hey-api/client-axios',
+  '@hey-api/client-fetch',
+  'legacy/angular',
+  'legacy/axios',
+  'legacy/fetch',
+  'legacy/node',
+  'legacy/xhr',
+] as const;
+
+type Client = (typeof CLIENTS)[number];
 
 export interface ClientConfig {
   /**
@@ -24,6 +26,7 @@ export interface ClientConfig {
    */
   client?:
     | Client
+    | false
     | {
         /**
          * Bundle the client module? Set this to true if you're using a standalone
@@ -98,7 +101,7 @@ export interface ClientConfig {
   /**
    * Plugins are used to generate additional output files from provided input.
    */
-  plugins?: ReadonlyArray<Plugins['name'] | Plugins>;
+  plugins?: ReadonlyArray<UserPlugins['name'] | UserPlugins>;
   /**
    * Path to custom request file
    * @deprecated
@@ -259,7 +262,7 @@ export type Config = Omit<
     client: Extract<Required<ClientConfig>['client'], object>;
     output: Extract<Required<ClientConfig>['output'], object>;
     plugins: ExtractArrayOfObjects<
-      Required<ClientConfig>['plugins'],
+      ReadonlyArray<ClientPlugins>,
       { name: string }
     >;
     schemas: Extract<Required<ClientConfig>['schemas'], object>;

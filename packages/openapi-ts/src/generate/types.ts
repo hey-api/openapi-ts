@@ -1,4 +1,4 @@
-import { EnumDeclaration } from 'typescript';
+import type { EnumDeclaration } from 'typescript';
 
 import {
   type Comments,
@@ -10,7 +10,7 @@ import { isOperationParameterRequired } from '../openApi';
 import type { Method, Model, OperationParameter } from '../types/client';
 import type { Client } from '../types/client';
 import type { Files } from '../types/utils';
-import { getConfig, isStandaloneClient } from '../utils/config';
+import { getConfig, isLegacyClient } from '../utils/config';
 import { enumEntry, enumUnionType } from '../utils/enum';
 import { escapeComment } from '../utils/escape';
 import { sortByName, sorterByName } from '../utils/sort';
@@ -301,7 +301,7 @@ const processServiceTypes = ({
     return;
   }
 
-  const isStandalone = isStandaloneClient(config);
+  const isLegacy = isLegacyClient(config);
 
   for (const service of client.services) {
     for (const operation of service.operations) {
@@ -335,23 +335,44 @@ const processServiceTypes = ({
       }
 
       if (operation.parameters.length > 0) {
-        let bodyParameter = operation.parameters.find(
-          (parameter) => parameter.in === 'body',
-        );
-        if (!bodyParameter) {
-          bodyParameter = operation.parameters.find(
-            (parameter) => parameter.in === 'formData',
-          );
-        }
-        const bodyParameters: OperationParameter = {
+        let bodyParameters: OperationParameter = {
           mediaType: null,
           ...emptyModel,
-          ...bodyParameter,
           in: 'body',
-          isRequired: bodyParameter ? bodyParameter.isRequired : false,
           name: 'body',
           prop: 'body',
         };
+        let bodyParameter = operation.parameters.filter(
+          (parameter) => parameter.in === 'body',
+        );
+        if (!bodyParameter.length) {
+          bodyParameter = operation.parameters.filter(
+            (parameter) => parameter.in === 'formData',
+          );
+        }
+
+        if (bodyParameter.length === 1) {
+          bodyParameters = {
+            ...emptyModel,
+            ...bodyParameter[0],
+            in: 'body',
+            isRequired: bodyParameter[0].isRequired,
+            name: 'body',
+            prop: 'body',
+          };
+          // assume we have multiple formData parameters from Swagger 2.0
+        } else if (bodyParameter.length > 1) {
+          bodyParameters = {
+            ...emptyModel,
+            in: 'body',
+            isRequired: bodyParameter.some((parameter) => parameter.isRequired),
+            mediaType: 'multipart/form-data',
+            name: 'body',
+            prop: 'body',
+            properties: bodyParameter,
+          };
+        }
+
         const headerParameters: OperationParameter = {
           ...emptyModel,
           in: 'header',
@@ -361,8 +382,8 @@ const processServiceTypes = ({
             ),
           ),
           mediaType: null,
-          name: isStandalone ? 'headers' : 'header',
-          prop: isStandalone ? 'headers' : 'header',
+          name: isLegacy ? 'header' : 'headers',
+          prop: isLegacy ? 'header' : 'headers',
           properties: operation.parameters
             .filter((parameter) => parameter.in === 'header')
             .sort(sorterByName),
@@ -395,7 +416,7 @@ const processServiceTypes = ({
             .filter((parameter) => parameter.in === 'query')
             .sort(sorterByName),
         };
-        const operationProperties = isStandalone
+        const operationProperties = !isLegacy
           ? [
               bodyParameters,
               headerParameters,
@@ -458,7 +479,7 @@ const processServiceTypes = ({
           response.responseTypes.includes('error'),
         );
 
-        if (isStandalone) {
+        if (!isLegacy) {
           // create type export for operation error
           generateType({
             client,
