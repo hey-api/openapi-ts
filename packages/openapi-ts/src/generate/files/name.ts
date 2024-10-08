@@ -1,27 +1,29 @@
-import type { ModelMeta } from '../../openApi';
 import type { EnsureUniqueIdentifierResult, Namespace } from './types';
 
 export const ensureUniqueIdentifier = ({
+  $ref,
   count = 1,
   create = false,
-  meta,
-  nameTransformer,
   namespace,
+  validNameTransformer,
 }: {
+  $ref: string;
   count?: number;
   create?: boolean;
-  meta?: ModelMeta;
-  nameTransformer?: (value: string) => string;
   namespace: Namespace;
+  validNameTransformer?: (value: string) => string;
 }): EnsureUniqueIdentifierResult => {
-  if (!meta) {
+  const parts = $ref.split('/');
+  let name = parts[parts.length - 1] || '';
+
+  if (!name) {
     return {
       created: false,
       name: '',
     };
   }
 
-  const refValue = namespace[meta.$ref];
+  const refValue = namespace[$ref];
   if (refValue) {
     return {
       created: false,
@@ -29,43 +31,45 @@ export const ensureUniqueIdentifier = ({
     };
   }
 
-  let name = meta.name;
-  if (nameTransformer) {
-    name = nameTransformer(name);
-  }
   if (count > 1) {
     name = `${name}${count}`;
   }
 
-  const nameValue = namespace[name];
-  if (!nameValue) {
-    if (create) {
-      namespace[name] = meta;
-      namespace[meta.$ref] = meta;
-
+  let nameValue = namespace[name];
+  if (nameValue) {
+    if (nameValue.$ref === $ref) {
       return {
-        created: true,
-        name,
+        created: false,
+        name: nameValue.name,
       };
     }
-  } else if (nameValue.$ref === meta.$ref) {
-    return {
-      created: false,
-      name,
-    };
-  } else {
+
     return ensureUniqueIdentifier({
+      $ref,
       count: count + 1,
       create,
-      meta,
-      nameTransformer,
       namespace,
+      validNameTransformer,
     });
   }
 
+  if (!create) {
+    return {
+      created: false,
+      name: '',
+    };
+  }
+
+  nameValue = {
+    $ref,
+    name: validNameTransformer ? validNameTransformer(name) : name,
+  };
+  namespace[name] = nameValue;
+  namespace[nameValue.$ref] = nameValue;
+
   return {
-    created: false,
-    name: '',
+    created: true,
+    name: nameValue.name,
   };
 };
 

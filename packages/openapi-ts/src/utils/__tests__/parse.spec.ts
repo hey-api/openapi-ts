@@ -1,8 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import type { Operation } from '../../openApi';
+import { operationNameFn } from '../../openApi/config';
 import { setConfig } from '../config';
-import { operationNameFn } from '../parse';
 
 describe('operationNameFn', () => {
   const optionsCommon: Parameters<typeof setConfig>[0] = {
@@ -277,7 +276,12 @@ describe('operationNameFn', () => {
     ({ url, method, options, operationId, expected }) => {
       setConfig(options);
       expect(
-        operationNameFn({ id: operationId, method, path: url } as Operation),
+        operationNameFn({
+          config: options,
+          method,
+          operationId,
+          path: url,
+        }),
       ).toBe(expected);
     },
   );

@@ -1,9 +1,11 @@
+import { IRContext } from '../ir/context';
+import type { Config } from '../types/config';
 import { type OpenApiV3_0_3, parseV3_0_3 } from './3.0.3';
-import { type OpenApiV3_1, parseV3_1 } from './3.1';
+import { type OpenApiV3_1_0, parseV3_1_0 } from './3.1.0';
 import type { Client } from './common/interfaces/client';
-import type { Config } from './common/interfaces/config';
 import type { OpenApi } from './common/interfaces/OpenApi';
-import { setConfig } from './config';
+import type { ParserConfig } from './config';
+import { setParserConfig } from './config';
 import { parse as parseV2 } from './v2';
 import { parse as parseV3 } from './v3';
 
@@ -17,7 +19,6 @@ export type {
   OperationParameter,
   OperationResponse,
 } from './common/interfaces/client';
-export type { Config } from './common/interfaces/config';
 export type { OpenApi } from './common/interfaces/OpenApi';
 export { isOperationParameterRequired } from './common/parser/operation';
 export {
@@ -36,12 +37,12 @@ export type { OpenApiSchema as OpenApiV3Schema } from './v3/interfaces/OpenApiSc
  */
 export function parse({
   openApi,
-  config,
+  parserConfig,
 }: {
-  config: Config;
   openApi: OpenApi;
+  parserConfig: ParserConfig;
 }): Client {
-  setConfig(config);
+  setParserConfig(parserConfig);
 
   if ('openapi' in openApi) {
     return parseV3(openApi);
@@ -56,15 +57,36 @@ export function parse({
   );
 }
 
-export const parseExperimental = ({ spec }: { spec: unknown }) => {
-  const s = spec as OpenApiV3_0_3 | OpenApiV3_1;
+// TODO: parser - add JSDoc comment
+export const parseExperimental = ({
+  config,
+  parserConfig,
+  spec,
+}: {
+  config: Config;
+  parserConfig: ParserConfig;
+  spec: unknown;
+}) => {
+  const context = new IRContext({
+    config,
+    parserConfig,
+    spec: spec as OpenApiV3_0_3 | OpenApiV3_1_0,
+  });
 
-  switch (s.openapi) {
+  switch (context.spec.openapi) {
     case '3.0.3':
-      return parseV3_0_3(s);
+      parseV3_0_3(context as IRContext<OpenApiV3_0_3>);
+      break;
     case '3.1.0':
-      return parseV3_1(s);
+      parseV3_1_0(context as IRContext<OpenApiV3_1_0>);
+      break;
     default:
-      throw new Error('Unsupported OpenAPI specification');
+      // TODO: parser - uncomment after removing legacy parser.
+      // For now, we fall back to legacy parser if spec version
+      // is not supported
+      break;
+    // throw new Error('Unsupported OpenAPI specification');
   }
+
+  return context;
 };

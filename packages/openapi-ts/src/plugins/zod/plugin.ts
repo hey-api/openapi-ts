@@ -12,9 +12,9 @@ interface TypesProps {
 }
 
 const processArray = ({ file, model }: TypesProps) => {
-  const identifier = file.ensureUniqueIdentifier({
+  const identifier = file.identifier({
+    $ref: model.meta?.$ref || '',
     create: true,
-    meta: model.meta,
     namespace: 'value',
   });
 
@@ -110,9 +110,9 @@ const processArray = ({ file, model }: TypesProps) => {
 };
 
 const processGeneric = ({ file, model }: TypesProps) => {
-  const identifier = file.ensureUniqueIdentifier({
+  const identifier = file.identifier({
+    $ref: model.meta?.$ref || '',
     create: true,
-    meta: model.meta,
     namespace: 'value',
   });
 

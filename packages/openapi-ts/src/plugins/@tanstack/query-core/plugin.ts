@@ -16,6 +16,8 @@ import {
   toOperationName,
 } from '../../../generate/services';
 import { relativeModulePath } from '../../../generate/utils';
+import type { IROperationObject, IRPathsObject } from '../../../ir/ir';
+import { hasParametersObjectRequired } from '../../../ir/parameter';
 import { isOperationParameterRequired } from '../../../openApi';
 import { getOperationKey } from '../../../openApi/common/parser/operation';
 import type { Client } from '../../../types/client';
@@ -25,26 +27,62 @@ import type {
   Operation,
   OperationParameter,
 } from '../../../types/client';
+import type { Config } from '../../../types/config';
 import type { Files } from '../../../types/utils';
 import { getConfig } from '../../../utils/config';
+import { getServiceName } from '../../../utils/postprocess';
 import { transformServiceName } from '../../../utils/transform';
-import type { PluginHandler } from '../../types';
+import type { PluginHandler, PluginHandlerExperimental } from '../../types';
 import type { PluginConfig as ReactQueryPluginConfig } from '../react-query';
 import type { PluginConfig as SolidQueryPluginConfig } from '../solid-query';
 import type { PluginConfig as SvelteQueryPluginConfig } from '../svelte-query';
 import type { PluginConfig as VueQueryPluginConfig } from '../vue-query';
 
 const toInfiniteQueryOptionsName = (operation: Operation) =>
-  `${toOperationName(operation, false)}InfiniteOptions`;
+  `${toOperationName({
+    config: getConfig(),
+    id: operation.name,
+    operation,
+  })}InfiniteOptions`;
 
 const toMutationOptionsName = (operation: Operation) =>
-  `${toOperationName(operation, false)}Mutation`;
+  `${toOperationName({
+    config: getConfig(),
+    id: operation.name,
+    operation,
+  })}Mutation`;
 
-const toQueryOptionsName = (operation: Operation) =>
-  `${toOperationName(operation, false)}Options`;
+const toQueryOptionsName = ({
+  config,
+  id,
+  operation,
+}: {
+  config: Config;
+  id: string;
+  operation: IROperationObject | Operation;
+}) =>
+  `${toOperationName({
+    config,
+    id,
+    operation,
+  })}Options`;
 
-const toQueryKeyName = (operation: Operation, isInfinite?: boolean) =>
-  `${toOperationName(operation, false)}${isInfinite ? 'Infinite' : ''}QueryKey`;
+const toQueryKeyName = ({
+  config,
+  id,
+  operation,
+  isInfinite,
+}: {
+  config: Config;
+  id: string;
+  isInfinite?: boolean;
+  operation: IROperationObject | Operation;
+}) =>
+  `${toOperationName({
+    config,
+    id,
+    operation,
+  })}${isInfinite ? 'Infinite' : ''}QueryKey`;
 
 const checkPrerequisites = ({ files }: { files: Files }) => {
   if (!files.services) {
@@ -473,7 +511,10 @@ const createQueryKeyType = ({ file }: { file: Files[keyof Files] }) => {
             compiler.typeReferenceNode({
               typeName: `Pick<${TOptionsType}, '${getClientBaseUrlKey()}' | 'body' | 'headers' | 'path' | 'query'>`,
             }),
-            compiler.typeInterfaceNode({ properties }),
+            compiler.typeInterfaceNode({
+              properties,
+              useLegacyResolution: true,
+            }),
           ],
         }),
       ],
@@ -624,17 +665,17 @@ const createTypeResponse = ({
 
 const createQueryKeyLiteral = ({
   isInfinite,
-  operation,
+  id,
 }: {
+  id: string;
   isInfinite?: boolean;
-  operation: Operation;
 }) => {
   const queryKeyLiteral = compiler.arrayLiteralExpression({
     elements: [
       compiler.callExpression({
         functionName: createQueryKeyFn,
         parameters: [
-          compiler.stringLiteral({ text: operation.name }),
+          compiler.ots.string(id),
           'options',
           isInfinite ? compiler.ots.boolean(true) : undefined,
         ],
@@ -692,8 +733,17 @@ export const handler: PluginHandler<
       processedOperations.set(operationKey, true);
 
       const queryFn = [
-        config.services.asClass && transformServiceName(service.name),
-        toOperationName(operation, !config.services.asClass),
+        config.services.asClass &&
+          transformServiceName({
+            config,
+            name: service.name,
+          }),
+        toOperationName({
+          config,
+          handleIllegal: !config.services.asClass,
+          id: operation.name,
+          operation,
+        }),
       ]
         .filter(Boolean)
         .join('.');
@@ -741,10 +791,14 @@ export const handler: PluginHandler<
               },
             ],
             statements: createQueryKeyLiteral({
-              operation,
+              id: operation.name,
             }),
           }),
-          name: toQueryKeyName(operation),
+          name: toQueryKeyName({
+            config,
+            id: operation.name,
+            operation,
+          }),
         });
         file.add(queryKeyStatement);
 
@@ -811,7 +865,11 @@ export const handler: PluginHandler<
                     {
                       key: 'queryKey',
                       value: compiler.callExpression({
-                        functionName: toQueryKeyName(operation),
+                        functionName: toQueryKeyName({
+                          config,
+                          id: operation.name,
+                          operation,
+                        }),
                         parameters: ['options'],
                       }),
                     },
@@ -827,7 +885,11 @@ export const handler: PluginHandler<
           comment: [],
           exportConst: true,
           expression,
-          name: toQueryOptionsName(operation),
+          name: toQueryOptionsName({
+            config,
+            id: operation.name,
+            operation,
+          }),
           // TODO: add type error
           // TODO: AxiosError<PutSubmissionMetaError>
         });
@@ -943,11 +1005,16 @@ export const handler: PluginHandler<
               ],
               returnType: typeQueryKey,
               statements: createQueryKeyLiteral({
+                id: operation.name,
                 isInfinite: true,
-                operation,
               }),
             }),
-            name: toQueryKeyName(operation, true),
+            name: toQueryKeyName({
+              config,
+              id: operation.name,
+              isInfinite: true,
+              operation,
+            }),
           });
           file.add(queryKeyStatement);
 
@@ -1001,9 +1068,7 @@ export const handler: PluginHandler<
                                     text: 'pageParam',
                                   }),
                                   operator: '===',
-                                  right: compiler.stringLiteral({
-                                    text: 'object',
-                                  }),
+                                  right: compiler.ots.string('object'),
                                 }),
                                 whenFalse: compiler.objectExpression({
                                   multiLine: true,
@@ -1073,7 +1138,12 @@ export const handler: PluginHandler<
                       {
                         key: 'queryKey',
                         value: compiler.callExpression({
-                          functionName: toQueryKeyName(operation, true),
+                          functionName: toQueryKeyName({
+                            config,
+                            id: operation.name,
+                            isInfinite: true,
+                            operation,
+                          }),
                           parameters: ['options'],
                         }),
                       },
@@ -1226,6 +1296,244 @@ export const handler: PluginHandler<
           name: queryFn.split('.')[0],
         });
       }
+    }
+  }
+};
+
+export const handler_experimental: PluginHandlerExperimental<
+  | ReactQueryPluginConfig
+  | SolidQueryPluginConfig
+  | SvelteQueryPluginConfig
+  | VueQueryPluginConfig
+> = ({ context, files, plugin }) => {
+  checkPrerequisites({ files });
+
+  const file = files[plugin.name];
+
+  // file.import({
+  //   asType: true,
+  //   module: clientModulePath({ sourceOutput: plugin.output }),
+  //   name: clientOptionsTypeName(),
+  // });
+
+  // const typesModulePath = relativeModulePath({
+  //   moduleOutput: files.types.getName(false),
+  //   sourceOutput: plugin.output,
+  // });
+
+  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const mutationsType =
+    plugin.name === '@tanstack/svelte-query' ||
+    plugin.name === '@tanstack/solid-query'
+      ? 'MutationOptions'
+      : 'UseMutationOptions';
+
+  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  let typeInfiniteData!: ImportExportItem;
+  // let hasCreateInfiniteParamsFunction = false;
+  let hasCreateQueryKeyParamsFunction = false;
+  // eslint-disable-next-line prefer-const
+  let hasInfiniteQueries = false;
+  // let hasMutations = false;
+  let hasQueries = false;
+
+  for (const path in context.ir.paths) {
+    const pathItem = context.ir.paths[path as keyof IRPathsObject];
+
+    const queryOperations: ReadonlyArray<IROperationObject> = [
+      pathItem.get,
+      pathItem.post,
+    ].filter(Boolean) as ReadonlyArray<IROperationObject>;
+
+    // console.warn(pathItem)
+    let hasUsedQueryFn = false;
+
+    // queries
+    if (plugin.queryOptions) {
+      for (const operation of queryOperations) {
+        const queryFn = [
+          context.config.services.asClass &&
+            transformServiceName({
+              config: context.config,
+              // TODO: parser - handle import from services, it will be enough to
+              // know one service that contains this operation
+              // name: service.name,
+              name: getServiceName('TODO'),
+            }),
+          toOperationName({
+            config: context.config,
+            handleIllegal: !context.config.services.asClass,
+            id: operation.id,
+            operation,
+          }),
+        ]
+          .filter(Boolean)
+          .join('.');
+
+        if (!hasQueries) {
+          hasQueries = true;
+
+          if (!hasCreateQueryKeyParamsFunction) {
+            createQueryKeyType({ file });
+            createQueryKeyFunction({ file });
+            hasCreateQueryKeyParamsFunction = true;
+          }
+
+          file.import({
+            module: plugin.name,
+            name: queryOptionsFn,
+          });
+        }
+
+        hasUsedQueryFn = true;
+
+        // TODO: parser - update this after rewriting services
+        const typeData = 'TODO';
+        // const { typeData } = createTypeData({
+        //   client,
+        //   file,
+        //   operation,
+        //   typesModulePath,
+        // });
+
+        const isRequired = hasParametersObjectRequired(operation.parameters);
+
+        const queryKeyStatement = compiler.constVariable({
+          exportConst: true,
+          expression: compiler.arrowFunction({
+            parameters: [
+              {
+                isRequired,
+                name: 'options',
+                type: typeData,
+              },
+            ],
+            statements: createQueryKeyLiteral({
+              id: operation.id,
+            }),
+          }),
+          name: toQueryKeyName({
+            config: context.config,
+            id: operation.id,
+            operation,
+          }),
+        });
+        file.add(queryKeyStatement);
+
+        const expression = compiler.arrowFunction({
+          parameters: [
+            {
+              isRequired,
+              name: 'options',
+              type: typeData,
+            },
+          ],
+          statements: [
+            compiler.returnFunctionCall({
+              args: [
+                compiler.objectExpression({
+                  obj: [
+                    {
+                      key: 'queryFn',
+                      value: compiler.arrowFunction({
+                        async: true,
+                        multiLine: true,
+                        parameters: [
+                          {
+                            destructure: [
+                              {
+                                name: 'queryKey',
+                              },
+                            ],
+                          },
+                        ],
+                        statements: [
+                          compiler.constVariable({
+                            destructure: true,
+                            expression: compiler.awaitExpression({
+                              expression: compiler.callExpression({
+                                functionName: queryFn,
+                                parameters: [
+                                  compiler.objectExpression({
+                                    multiLine: true,
+                                    obj: [
+                                      {
+                                        spread: 'options',
+                                      },
+                                      {
+                                        spread: 'queryKey[0]',
+                                      },
+                                      {
+                                        key: 'throwOnError',
+                                        value: true,
+                                      },
+                                    ],
+                                  }),
+                                ],
+                              }),
+                            }),
+                            name: 'data',
+                          }),
+                          compiler.returnVariable({
+                            expression: 'data',
+                          }),
+                        ],
+                      }),
+                    },
+                    {
+                      key: 'queryKey',
+                      value: compiler.callExpression({
+                        functionName: toQueryKeyName({
+                          config: context.config,
+                          id: operation.id,
+                          operation,
+                        }),
+                        parameters: ['options'],
+                      }),
+                    },
+                  ],
+                }),
+              ],
+              name: queryOptionsFn,
+            }),
+          ],
+        });
+        const statement = compiler.constVariable({
+          // TODO: describe options, same as the actual function call
+          comment: [],
+          exportConst: true,
+          expression,
+          name: toQueryOptionsName({
+            config: context.config,
+            id: operation.id,
+            operation,
+          }),
+          // TODO: add type error
+          // TODO: AxiosError<PutSubmissionMetaError>
+        });
+        file.add(statement);
+      }
+    }
+
+    // const servicesModulePath = relativeModulePath({
+    //   moduleOutput: files.services.getName(false),
+    //   sourceOutput: plugin.output,
+    // });
+
+    if (hasQueries || hasInfiniteQueries) {
+      // file.import({
+      //   module: servicesModulePath,
+      //   name: 'client',
+      // });
+    }
+
+    if (hasUsedQueryFn) {
+      // file.import({
+      //   module: servicesModulePath,
+      //   name: queryFn.split('.')[0],
+      // });
     }
   }
 };

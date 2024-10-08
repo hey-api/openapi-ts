@@ -1,5 +1,6 @@
 import ts from 'typescript';
 
+import { escapeName } from '../utils/escape';
 import { validTypescriptIdentifierRegExp } from '../utils/regexp';
 import {
   addLeadingComments,
@@ -110,6 +111,8 @@ export const createPropertyAccessExpression = ({
   return node;
 };
 
+export const createNull = (): ts.NullLiteral => ts.factory.createNull();
+
 /**
  * Convert an unknown value to an expression.
  * @param identifiers - list of keys that are treated as identifiers.
@@ -132,7 +135,7 @@ export const toExpression = <T = unknown>({
   value: T;
 }): ts.Expression | undefined => {
   if (value === null) {
-    return ts.factory.createNull();
+    return createNull();
   }
 
   if (Array.isArray(value)) {
@@ -252,15 +255,24 @@ export const toParameterDeclarations = (parameters: FunctionParameter[]) =>
 export const createKeywordTypeNode = ({
   keyword,
 }: {
-  keyword: 'any' | 'boolean' | 'string';
+  keyword: 'any' | 'boolean' | 'number' | 'string' | 'undefined' | 'unknown';
 }) => {
   let kind: ts.KeywordTypeSyntaxKind = ts.SyntaxKind.AnyKeyword;
   switch (keyword) {
     case 'boolean':
       kind = ts.SyntaxKind.BooleanKeyword;
       break;
+    case 'number':
+      kind = ts.SyntaxKind.NumberKeyword;
+      break;
     case 'string':
       kind = ts.SyntaxKind.StringKeyword;
+      break;
+    case 'undefined':
+      kind = ts.SyntaxKind.UndefinedKeyword;
+      break;
+    case 'unknown':
+      kind = ts.SyntaxKind.UnknownKeyword;
       break;
   }
   return ts.factory.createKeywordTypeNode(kind);
@@ -287,6 +299,15 @@ export const toTypeParameters = (types: FunctionTypeParameter[]) =>
         : undefined,
     ),
   );
+
+export const createLiteralTypeNode = ({
+  literal,
+}: {
+  literal: ts.LiteralTypeNode['literal'];
+}) => {
+  const node = ts.factory.createLiteralTypeNode(literal);
+  return node;
+};
 
 /**
  * Create arrow function type expression.
@@ -559,30 +580,32 @@ export const createObjectType = <
         })
         .filter(isType<ObjectAssignment>);
 
-  const expression = ts.factory.createObjectLiteralExpression(
+  const node = ts.factory.createObjectLiteralExpression(
     properties as any[],
     multiLine,
   );
 
   addLeadingComments({
     comments,
-    node: expression,
+    node,
   });
 
-  return expression;
+  return node;
 };
 
 /**
  * Create enum declaration. Example `export enum T = { X, Y };`
- * @param comments - comments to add to each property of enum.
+ * @param comments - comments to add to each property.
  * @param leadingComment - leading comment to add to enum.
  * @param name - the name of the enum.
  * @param obj - the object representing the enum.
- * @returns
+ * @returns ts.EnumDeclaration
  */
-export const createEnumDeclaration = <T extends object>({
-  comments,
-  leadingComment,
+export const createEnumDeclaration = <
+  T extends Record<string, any> | Array<ObjectValue>,
+>({
+  comments: enumMemberComments = {},
+  leadingComment: comments,
   name,
   obj,
 }: {
@@ -591,29 +614,46 @@ export const createEnumDeclaration = <T extends object>({
   name: string;
   obj: T;
 }): ts.EnumDeclaration => {
-  const declaration = ts.factory.createEnumDeclaration(
-    [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
-    createIdentifier({ text: name }),
-    Object.entries(obj).map(([key, value]) => {
-      const initializer = toExpression({ unescape: true, value });
-      const assignment = ts.factory.createEnumMember(key, initializer);
-      const comment = comments?.[key];
+  const members: Array<ts.EnumMember> = Array.isArray(obj)
+    ? obj.map((value) => {
+        const enumMember = ts.factory.createEnumMember(
+          escapeName(value.key),
+          toExpression({
+            value: value.value,
+          }),
+        );
 
-      addLeadingComments({
-        comments: comment,
-        node: assignment,
+        addLeadingComments({
+          comments: value.comments,
+          node: enumMember,
+        });
+
+        return enumMember;
+      })
+    : Object.entries(obj).map(([key, value]) => {
+        const initializer = toExpression({ unescape: true, value });
+        const enumMember = ts.factory.createEnumMember(key, initializer);
+
+        addLeadingComments({
+          comments: enumMemberComments[key],
+          node: enumMember,
+        });
+
+        return enumMember;
       });
 
-      return assignment;
-    }),
+  const node = ts.factory.createEnumDeclaration(
+    [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
+    createIdentifier({ text: name }),
+    members,
   );
 
   addLeadingComments({
-    comments: leadingComment,
-    node: declaration,
+    comments,
+    node,
   });
 
-  return declaration;
+  return node;
 };
 
 /**
@@ -622,14 +662,12 @@ export const createEnumDeclaration = <T extends object>({
  * @param nodes - the nodes in the namespace.
  * @returns
  */
-export const createNamespaceDeclaration = <
-  T extends Array<ts.EnumDeclaration>,
->({
+export const createNamespaceDeclaration = ({
   name,
   statements,
 }: {
   name: string;
-  statements: T;
+  statements: Array<ts.Statement>;
 }) =>
   ts.factory.createModuleDeclaration(
     [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
@@ -649,8 +687,17 @@ export const createIndexedAccessTypeNode = ({
   return node;
 };
 
-export const createStringLiteral = ({ text }: { text: string }) => {
-  const node = ts.factory.createStringLiteral(text);
+export const createStringLiteral = ({
+  isSingleQuote,
+  text,
+}: {
+  isSingleQuote?: boolean;
+  text: string;
+}) => {
+  if (isSingleQuote === undefined) {
+    isSingleQuote = !text.includes("'");
+  }
+  const node = ts.factory.createStringLiteral(text, isSingleQuote);
   return node;
 };
 

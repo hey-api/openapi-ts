@@ -4,7 +4,15 @@ import { loadConfig } from 'c12';
 import { sync } from 'cross-spawn';
 
 import { generateOutput } from './generate/output';
+import type { IRContext } from './ir/context';
 import { parse, parseExperimental } from './openApi';
+import type { ParserConfig } from './openApi/config';
+import {
+  operationFilterFn,
+  operationNameFn,
+  operationParameterFilterFn,
+  operationParameterNameFn,
+} from './openApi/config';
 import { defaultPluginConfigs } from './plugins';
 import type { Client } from './types/client';
 import type { ClientConfig, Config, UserConfig } from './types/config';
@@ -12,12 +20,6 @@ import { CLIENTS } from './types/config';
 import { getConfig, isLegacyClient, setConfig } from './utils/config';
 import { getOpenApiSpec } from './utils/getOpenApiSpec';
 import { registerHandlebarTemplates } from './utils/handlebars';
-import {
-  operationFilterFn,
-  operationNameFn,
-  operationParameterFilterFn,
-  operationParameterNameFn,
-} from './utils/parse';
 import { Performance, PerformanceReport } from './utils/performance';
 import { postProcessClient } from './utils/postprocess';
 
@@ -339,46 +341,57 @@ export async function createClient(
           >);
     Performance.end('openapi');
 
-    if (config.experimental_parser) {
-      Performance.start('experimental_parser');
-      parseExperimental({
+    let client: Client | undefined;
+    let context: IRContext | undefined;
+
+    Performance.start('parser');
+    const parserConfig: ParserConfig = {
+      filterFn: {
+        operation: operationFilterFn,
+        operationParameter: operationParameterFilterFn,
+      },
+      nameFn: {
+        operation: operationNameFn,
+        operationParameter: operationParameterNameFn,
+      },
+    };
+    if (config.experimental_parser && !isLegacyClient(config)) {
+      context = parseExperimental({
+        config,
+        parserConfig,
         spec: openApi,
       });
-      Performance.end('experimental_parser');
-    } else {
-      Performance.start('parser');
-      const parsed = parse({
-        config: {
-          filterFn: {
-            operation: operationFilterFn,
-            operationParameter: operationParameterFilterFn,
-          },
-          nameFn: {
-            operation: operationNameFn,
-            operationParameter: operationParameterNameFn,
-          },
-        },
-        openApi,
-      });
-      const client = postProcessClient(parsed);
-      Performance.end('parser');
-
-      logClientMessage();
-
-      Performance.start('generator');
-      await generateOutput(openApi, client, templates);
-      Performance.end('generator');
-
-      Performance.start('postprocess');
-      if (!config.dryRun) {
-        processOutput();
-
-        console.log('✨ Done! Your client is located in:', config.output.path);
-      }
-      Performance.end('postprocess');
-
-      return client;
     }
+
+    if (!context) {
+      const parsed = parse({
+        openApi,
+        parserConfig,
+      });
+      client = postProcessClient(parsed);
+    }
+    Performance.end('parser');
+
+    logClientMessage();
+
+    Performance.start('generator');
+    await generateOutput({
+      client,
+      context,
+      openApi,
+      templates,
+    });
+    Performance.end('generator');
+
+    Performance.start('postprocess');
+    if (!config.dryRun) {
+      processOutput();
+
+      console.log('✨ Done! Your client is located in:', config.output.path);
+    }
+    Performance.end('postprocess');
+
+    return context || client;
   };
 
   const clients: Array<Client> = [];
@@ -386,7 +399,7 @@ export async function createClient(
   const pClients = configs.map((config) => pCreateClient(config));
   for (const pClient of pClients) {
     const client = await pClient();
-    if (client) {
+    if (client && 'version' in client) {
       clients.push(client);
     }
   }
@@ -423,5 +436,5 @@ export default {
 };
 
 export type { OpenApiV3_0_3 } from './openApi/3.0.3';
-export type { OpenApiV3_1 } from './openApi/3.1';
+export type { OpenApiV3_1_0 } from './openApi/3.1.0';
 export type { UserConfig } from './types/config';

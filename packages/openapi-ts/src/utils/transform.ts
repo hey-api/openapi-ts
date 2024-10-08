@@ -1,13 +1,20 @@
 import { ensureValidTypeScriptJavaScriptIdentifier } from '../openApi';
+import type { Config } from '../types/config';
 import { camelCase } from './camelCase';
 import { getConfig } from './config';
 import { reservedWordsRegExp } from './regexp';
 
-export const transformServiceName = (name: string) => {
-  const config = getConfig();
+export const transformServiceName = ({
+  config,
+  name,
+}: {
+  config: Config;
+  name: string;
+}) => {
   if (config.services.name) {
     return config.services.name.replace('{{name}}', name);
   }
+
   return name;
 };
 
