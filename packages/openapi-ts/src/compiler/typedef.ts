@@ -170,10 +170,11 @@ export const createTypeRecordNode = (
 export const createTypeArrayNode = (
   types: (any | ts.TypeNode)[],
   isNullable: boolean = false,
+  isUnique: boolean = false,
 ) => {
   const node = createTypeReferenceNode({
     typeArguments: [createTypeUnionNode({ types })],
-    typeName: 'Array',
+    typeName: isUnique ? 'Set' : 'Array',
   });
   return maybeNullable({ isNullable, node });
 };
