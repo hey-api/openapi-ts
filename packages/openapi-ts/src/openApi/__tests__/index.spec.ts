@@ -1,11 +1,15 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { type OpenApi, parse } from '..';
-import type { Config } from '../common/interfaces/config';
+import type { ParserConfig } from '../config';
 import * as parseV2 from '../v2';
 import * as parseV3 from '../v3';
 
-const config: Config = {
+const parserConfig: ParserConfig = {
+  filterFn: {
+    operation: () => true,
+    operationParameter: () => true,
+  },
   nameFn: {
     operation: () => 'operation',
     operationParameter: () => 'operationParameter',
@@ -28,7 +32,7 @@ describe('parse', () => {
       paths: {},
       swagger: '2',
     };
-    parse({ config, openApi: spec });
+    parse({ openApi: spec, parserConfig });
     expect(spy).toHaveBeenCalledWith(spec);
 
     const spec2: OpenApi = {
@@ -39,7 +43,7 @@ describe('parse', () => {
       paths: {},
       swagger: '2.0',
     };
-    parse({ config, openApi: spec2 });
+    parse({ openApi: spec2, parserConfig });
     expect(spy).toHaveBeenCalledWith(spec2);
   });
 
@@ -54,7 +58,7 @@ describe('parse', () => {
       openapi: '3',
       paths: {},
     };
-    parse({ config, openApi: spec });
+    parse({ openApi: spec, parserConfig });
     expect(spy).toHaveBeenCalledWith(spec);
 
     const spec2: OpenApi = {
@@ -65,7 +69,7 @@ describe('parse', () => {
       openapi: '3.0',
       paths: {},
     };
-    parse({ config, openApi: spec2 });
+    parse({ openApi: spec2, parserConfig });
     expect(spy).toHaveBeenCalledWith(spec2);
 
     const spec3: OpenApi = {
@@ -76,13 +80,13 @@ describe('parse', () => {
       openapi: '3.1.0',
       paths: {},
     };
-    parse({ config, openApi: spec3 });
+    parse({ openApi: spec3, parserConfig });
     expect(spy).toHaveBeenCalledWith(spec3);
   });
 
   it('throws on unknown version', () => {
     // @ts-expect-error
-    expect(() => parse({ config, openApi: { foo: 'bar' } })).toThrow(
+    expect(() => parse({ openApi: { foo: 'bar' }, parserConfig })).toThrow(
       `Unsupported OpenAPI specification: ${JSON.stringify({ foo: 'bar' }, null, 2)}`,
     );
   });

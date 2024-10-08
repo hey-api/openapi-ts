@@ -89,6 +89,7 @@ import xhrRequest from '../legacy/handlebars/compiled/core/xhr/request.js';
 // @ts-ignore
 import xhrSendRequest from '../legacy/handlebars/compiled/core/xhr/sendRequest.js';
 import { camelCase } from './camelCase';
+import { getConfig } from './config';
 import { transformServiceName } from './transform';
 
 export const registerHandlebarHelpers = (): void => {
@@ -133,7 +134,15 @@ export const registerHandlebarHelpers = (): void => {
     },
   );
 
-  Handlebars.registerHelper('transformServiceName', transformServiceName);
+  Handlebars.registerHelper(
+    'transformServiceName',
+    function (this: unknown, name: string) {
+      return transformServiceName({
+        config: getConfig(),
+        name,
+      });
+    },
+  );
 };
 
 export interface Templates {

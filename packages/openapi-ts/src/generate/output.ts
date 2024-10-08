@@ -1,5 +1,6 @@
 import path from 'node:path';
 
+import type { IRContext } from '../ir/context';
 import type { OpenApi } from '../openApi';
 import type { Client } from '../types/client';
 import type { Files } from '../types/utils';
@@ -21,23 +22,32 @@ import { generateTypes } from './types';
  * @param client Client containing models, schemas, and services
  * @param templates Templates wrapper with all loaded Handlebars templates
  */
-export const generateOutput = async (
-  openApi: OpenApi,
-  client: Client,
-  templates: Templates,
-): Promise<void> => {
+export const generateOutput = async ({
+  client,
+  context,
+  openApi,
+  templates,
+}: {
+  client: Client | undefined;
+  context: IRContext | undefined;
+  openApi: OpenApi;
+  templates: Templates;
+}): Promise<void> => {
   const config = getConfig();
 
-  if (config.services.include && config.services.asClass) {
-    const regexp = new RegExp(config.services.include);
-    client.services = client.services.filter((service) =>
-      regexp.test(service.name),
-    );
-  }
+  // TODO: parser - handle IR
+  if (client) {
+    if (config.services.include && config.services.asClass) {
+      const regexp = new RegExp(config.services.include);
+      client.services = client.services.filter((service) =>
+        regexp.test(service.name),
+      );
+    }
 
-  if (config.types.include) {
-    const regexp = new RegExp(config.types.include);
-    client.models = client.models.filter((model) => regexp.test(model.name));
+    if (config.types.include) {
+      const regexp = new RegExp(config.types.include);
+      client.models = client.models.filter((model) => regexp.test(model.name));
+    }
   }
 
   const outputPath = path.resolve(config.output.path);
@@ -47,45 +57,62 @@ export const generateOutput = async (
   await generateClient(outputPath, config.client.name);
 
   // types.gen.ts
-  await generateTypes({ client, files });
+  await generateTypes({
+    client,
+    context,
+    files,
+  });
 
   // schemas.gen.ts
   await generateSchemas({ files, openApi });
 
   // transformers
-  if (
-    config.services.export &&
-    client.services.length &&
-    config.types.dates === 'types+transform'
-  ) {
-    await generateResponseTransformers({
-      client,
-      onNode: (node) => {
-        files.types?.add(node);
-      },
-      onRemoveNode: () => {
-        files.types?.removeNode();
-      },
-    });
+  // TODO: parser - handle IR
+  if (client) {
+    if (
+      config.services.export &&
+      client.services.length &&
+      config.types.dates === 'types+transform'
+    ) {
+      await generateResponseTransformers({
+        client,
+        onNode: (node) => {
+          files.types?.add(node);
+        },
+        onRemoveNode: () => {
+          files.types?.removeNode();
+        },
+      });
+    }
   }
 
   // services.gen.ts
-  await generateServices({ client, files });
+  await generateServices({
+    client,
+    context,
+    files,
+  });
 
   // deprecated files
-  await generateClientClass(openApi, outputPath, client, templates);
-  await generateCore(
-    path.resolve(config.output.path, 'core'),
-    client,
-    templates,
-  );
+  if (client) {
+    await generateClientClass(openApi, outputPath, client, templates);
+    await generateCore(
+      path.resolve(config.output.path, 'core'),
+      client,
+      templates,
+    );
+  }
 
   // index.ts. Any files generated after this won't be included in exports
   // from the index file.
   await generateIndexFile({ files });
 
   // plugins
-  await generatePlugins({ client, files });
+  await generatePlugins({
+    client,
+    context,
+    files,
+  });
 
   Object.entries(files).forEach(([name, file]) => {
     if (config.dryRun) {
@@ -98,4 +125,18 @@ export const generateOutput = async (
       file.write('\n\n');
     }
   });
+
+  if (context) {
+    Object.entries(context.files).forEach(([name, file]) => {
+      if (config.dryRun) {
+        return;
+      }
+
+      if (name === 'index') {
+        file.write();
+      } else {
+        file.write('\n\n');
+      }
+    });
+  }
 };

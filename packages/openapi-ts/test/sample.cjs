@@ -11,19 +11,21 @@ const main = async () => {
     // debug: true,
     // experimental_parser: true,
     // input: './test/spec/v3-transforms.json',
-    input: './test/spec/v3.json',
-    // input: './test/spec/3.1.0/required-all-of-ref.json',
+    // input: './test/spec/v3.json',
+    input: './test/spec/3.1.0/full.json',
     // input: './test/spec/v2.json',
     // input: 'https://mongodb-mms-prod-build-server.s3.amazonaws.com/openapi/2caffd88277a4e27c95dcefc7e3b6a63a3b03297-v2-2023-11-15.json',
     // name: 'foo',
     output: {
+      format: 'prettier',
+      lint: 'eslint',
       path: './test/generated/sample/',
     },
-    plugins: [
-      // '@tanstack/react-query',
-      // '@hey-api/services',
-      'zod',
-    ],
+    // plugins: [
+    //   '@tanstack/react-query',
+    //   // '@hey-api/services',
+    //   // 'zod',
+    // ],
     schemas: {
       export: false,
     },
@@ -36,7 +38,9 @@ const main = async () => {
     },
     types: {
       // dates: 'types+transform',
-      // enums: 'javascript',
+      // enums: 'typescript',
+      // enums: 'typescript+namespace',
+      enums: 'javascript',
       // export: false,
       // include:
       //   '^(_400|CompositionWithOneOfAndProperties)',

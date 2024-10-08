@@ -98,7 +98,7 @@ const typeEnum = (model: Model) => {
 const typeDict = (model: Model) => {
   const type =
     model.link && !Array.isArray(model.link) ? toType(model.link) : base(model);
-  return compiler.typeRecordNode(['string'], [type], model.isNullable);
+  return compiler.typeRecordNode(['string'], [type], model.isNullable, true);
 };
 
 const typeUnionOrIntersection = ({
@@ -187,6 +187,7 @@ const typeInterface = (model: Model) => {
   return compiler.typeInterfaceNode({
     isNullable: model.isNullable,
     properties,
+    useLegacyResolution: !config.experimental_parser,
   });
 };
 

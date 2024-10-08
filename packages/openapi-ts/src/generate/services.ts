@@ -6,6 +6,12 @@ import type {
 } from '../compiler';
 import { compiler } from '../compiler';
 import type { FunctionTypeParameter, ObjectValue } from '../compiler/types';
+import type { IRContext } from '../ir/context';
+import type {
+  IROperationObject,
+  IRPathItemObject,
+  IRPathsObject,
+} from '../ir/ir';
 import { isOperationParameterRequired } from '../openApi';
 import type {
   Client,
@@ -14,6 +20,7 @@ import type {
   OperationParameter,
   Service,
 } from '../types/client';
+import type { Config } from '../types/config';
 import type { Files } from '../types/utils';
 import { camelCase } from '../utils/camelCase';
 import { getConfig, isLegacyClient } from '../utils/config';
@@ -24,6 +31,7 @@ import { setUniqueTypeName } from '../utils/type';
 import { unique } from '../utils/unique';
 import { clientModulePath, clientOptionsTypeName } from './client';
 import { TypeScriptFile } from './files';
+import { irRef } from './types';
 
 type OnNode = (node: Node) => void;
 type OnImport = (name: string) => void;
@@ -59,11 +67,48 @@ export const generateImport = ({
 export const modelResponseTransformerTypeName = (name: string) =>
   `${name}ModelResponseTransformer`;
 
+interface OperationIRRef {
+  /**
+   * Operation ID
+   */
+  id: string;
+}
+
+const operationIrRef = ({
+  id,
+  type,
+}: OperationIRRef & {
+  type: 'data' | 'error' | 'response';
+}): string => {
+  let affix = '';
+  switch (type) {
+    case 'data':
+      affix = 'Data';
+      break;
+    case 'error':
+      affix = 'Error';
+      break;
+    case 'response':
+      affix = 'Response';
+      break;
+  }
+  return `${irRef}${camelCase({
+    input: id,
+    pascalCase: true,
+  })}${affix}`;
+};
+
+export const operationDataRef = ({ id }: OperationIRRef): string =>
+  operationIrRef({ id, type: 'data' });
+
 export const operationDataTypeName = (name: string) =>
   `${camelCase({
     input: name,
     pascalCase: true,
   })}Data`;
+
+export const operationErrorRef = ({ id }: OperationIRRef): string =>
+  operationIrRef({ id, type: 'error' });
 
 export const operationErrorTypeName = (name: string) =>
   `${camelCase({
@@ -74,6 +119,9 @@ export const operationErrorTypeName = (name: string) =>
 // operation response type ends with "Response", it's enough to append "Transformer"
 export const operationResponseTransformerTypeName = (name: string) =>
   `${name}Transformer`;
+
+export const operationResponseRef = ({ id }: OperationIRRef): string =>
+  operationIrRef({ id, type: 'response' });
 
 export const operationResponseTypeName = (name: string) =>
   `${camelCase({
@@ -464,21 +512,26 @@ const toRequestOptions = (
   });
 };
 
-export const toOperationName = (
-  operation: Operation,
-  handleIllegal: boolean,
-) => {
-  const config = getConfig();
-
+export const toOperationName = ({
+  config,
+  id,
+  operation,
+  handleIllegal,
+}: {
+  config: Config;
+  handleIllegal?: boolean;
+  id: string;
+  operation: IROperationObject | Operation;
+}) => {
   if (config.services.methodNameBuilder) {
     return config.services.methodNameBuilder(operation);
   }
 
-  if (handleIllegal && operation.name.match(reservedWordsRegExp)) {
-    return `${operation.name}_`;
+  if (handleIllegal && id.match(reservedWordsRegExp)) {
+    return `${id}_`;
   }
 
-  return operation.name;
+  return id;
 };
 
 const toOperationStatements = (
@@ -652,7 +705,12 @@ const processService = ({
         comment: toOperationComment(operation),
         exportConst: true,
         expression,
-        name: toOperationName(operation, true),
+        name: toOperationName({
+          config,
+          handleIllegal: true,
+          id: operation.name,
+          operation,
+        }),
       });
       onNode(statement);
     }
@@ -665,7 +723,11 @@ const processService = ({
       comment: toOperationComment(operation),
       isStatic:
         config.name === undefined && config.client.name !== 'legacy/angular',
-      name: toOperationName(operation, false),
+      name: toOperationName({
+        config,
+        id: operation.name,
+        operation,
+      }),
       parameters: toOperationParamType(client, operation),
       returnType: !isLegacy
         ? undefined
@@ -724,21 +786,46 @@ const processService = ({
         ? { args: [{ providedIn: 'root' }], name: 'Injectable' }
         : undefined,
     members,
-    name: transformServiceName(service.name),
+    name: transformServiceName({
+      config,
+      name: service.name,
+    }),
   });
   onNode(statement);
 };
 
-const checkPrerequisites = ({ files }: { files: Files }) => {
-  const config = getConfig();
+const checkPrerequisites = ({
+  context,
+  files,
+}: {
+  context: IRContext | undefined;
+  files: Files;
+}) => {
+  if (!context) {
+    const config = getConfig();
 
-  if (!config.client.name) {
+    if (!config.client.name) {
+      throw new Error(
+        '🚫 client needs to be set to generate services - which HTTP client do you want to use?',
+      );
+    }
+
+    if (!files.types) {
+      throw new Error(
+        '🚫 types need to be exported to generate services - enable type generation',
+      );
+    }
+
+    return;
+  }
+
+  if (!context.config.client.name) {
     throw new Error(
       '🚫 client needs to be set to generate services - which HTTP client do you want to use?',
     );
   }
 
-  if (!files.types) {
+  if (!context.file({ id: 'types' })) {
     throw new Error(
       '🚫 types need to be exported to generate services - enable type generation',
     );
@@ -747,9 +834,11 @@ const checkPrerequisites = ({ files }: { files: Files }) => {
 
 export const generateServices = async ({
   client,
+  context,
   files,
 }: {
-  client: Client;
+  client: Client | undefined;
+  context: IRContext | undefined;
   files: Files;
 }): Promise<void> => {
   const config = getConfig();
@@ -758,7 +847,7 @@ export const generateServices = async ({
     return;
   }
 
-  checkPrerequisites({ files });
+  checkPrerequisites({ context, files });
 
   const isLegacy = isLegacyClient(config);
 
@@ -855,27 +944,90 @@ export const generateServices = async ({
     files.services.add(statement);
   }
 
-  for (const service of client.services) {
-    processService({
-      client,
-      onClientImport: (imported) => {
-        files.services.import({
-          module: clientModulePath({ sourceOutput: servicesOutput }),
-          name: imported,
+  if (client) {
+    for (const service of client.services) {
+      processService({
+        client,
+        onClientImport: (imported) => {
+          files.services.import({
+            module: clientModulePath({ sourceOutput: servicesOutput }),
+            name: imported,
+          });
+        },
+        onImport: (imported) => {
+          files.services.import({
+            // this detection could be done safer, but it shouldn't cause any issues
+            asType: !imported.endsWith('Transformer'),
+            module: `./${files.types.getName(false)}`,
+            name: imported,
+          });
+        },
+        onNode: (node) => {
+          files.services.add(node);
+        },
+        service,
+      });
+    }
+    return;
+  }
+
+  if (!context) {
+    return;
+  }
+
+  // TODO: parser - generate services
+  for (const path in context.ir.paths) {
+    const pathItem = context.ir.paths[path as keyof IRPathsObject];
+    // console.warn(pathItem)
+
+    for (const method in pathItem) {
+      const operation = pathItem[method as keyof IRPathItemObject]!;
+
+      if (operation.parameters) {
+        const identifier = context.file({ id: 'types' })!.identifier({
+          $ref: operationDataRef({ id: operation.id }),
+          namespace: 'type',
         });
-      },
-      onImport: (imported) => {
-        files.services.import({
-          // this detection could be done safer, but it shouldn't cause any issues
-          asType: !imported.endsWith('Transformer'),
-          module: `./${files.types.getName(false)}`,
-          name: imported,
-        });
-      },
-      onNode: (node) => {
-        files.services.add(node);
-      },
-      service,
-    });
+        if (identifier.name) {
+          files.services.import({
+            // this detection could be done safer, but it shouldn't cause any issues
+            asType: !identifier.name.endsWith('Transformer'),
+            module: `./${context.file({ id: 'types' })!.getName(false)}`,
+            name: identifier.name,
+          });
+        }
+      }
+
+      // if (!isLegacy) {
+      //   generateImport({
+      //     client,
+      //     meta: {
+      //       // TODO: this should be exact ref to operation for consistency,
+      //       // but name should work too as operation ID is unique
+      //       $ref: operation.name,
+      //       name: operation.name,
+      //     },
+      //     nameTransformer: operationErrorTypeName,
+      //     onImport,
+      //   });
+      // }
+
+      // const successResponses = operation.responses.filter((response) =>
+      //   response.responseTypes.includes('success'),
+      // );
+      // if (successResponses.length) {
+      //   generateImport({
+      //     client,
+      //     meta: {
+      //       // TODO: this should be exact ref to operation for consistency,
+      //       // but name should work too as operation ID is unique
+      //       $ref: operation.name,
+      //       name: operation.name,
+      //     },
+      //     nameTransformer: operationResponseTypeName,
+      //     onImport,
+      //   });
+      // }
+    }
   }
 };

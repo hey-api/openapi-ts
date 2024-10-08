@@ -6,7 +6,7 @@ import { getDefault } from '../../common/parser/getDefault';
 import { getPattern } from '../../common/parser/getPattern';
 import { getRef } from '../../common/parser/getRef';
 import { getType } from '../../common/parser/type';
-import { getConfig } from '../../config';
+import { getParserConfig } from '../../config';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiParameter } from '../interfaces/OpenApiParameter';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
@@ -23,7 +23,7 @@ export const getOperationParameter = ({
   parameter: OpenApiParameter;
   types: Client['types'];
 }): OperationParameter => {
-  const config = getConfig();
+  const config = getParserConfig();
 
   const operationParameterWithoutName: Omit<OperationParameter, 'name'> = {
     $refs: [],

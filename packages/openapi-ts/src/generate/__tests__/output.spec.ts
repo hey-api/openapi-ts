@@ -2,6 +2,7 @@ import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 
 import { describe, expect, it, vi } from 'vitest';
 
+import type { Client } from '../../types/client';
 import { setConfig } from '../../utils/config';
 import { generateOutput } from '../output';
 import { mockTemplates, openApi } from './mocks';
@@ -33,7 +34,7 @@ describe('generateOutput', () => {
       useOptions: false,
     });
 
-    const client: Parameters<typeof generateOutput>[1] = {
+    const client: Client = {
       models: [],
       server: 'http://localhost:8080',
       services: [],
@@ -41,7 +42,12 @@ describe('generateOutput', () => {
       version: 'v1',
     };
 
-    await generateOutput(openApi, client, mockTemplates);
+    await generateOutput({
+      client,
+      context: undefined,
+      openApi,
+      templates: mockTemplates,
+    });
 
     expect(rmSync).toHaveBeenCalled();
     expect(mkdirSync).toHaveBeenCalled();
