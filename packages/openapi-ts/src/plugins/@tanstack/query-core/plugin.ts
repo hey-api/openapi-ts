@@ -1143,8 +1143,9 @@ export const handler: PluginHandler<
         const expression = compiler.arrowFunction({
           parameters: [
             {
+              isRequired: false,
               name: 'options',
-              type: typeData,
+              type: `Partial<${typeData}>`,
             },
           ],
           statements: [
