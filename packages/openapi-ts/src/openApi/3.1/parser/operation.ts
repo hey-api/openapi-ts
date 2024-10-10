@@ -1,22 +1,30 @@
+import type { IR, IRParametersObject, IRPathsObject } from '../../../ir/ir';
 import { getConfig } from '../../../utils/config';
-import type { OperationObject } from '../types/spec';
+import type { OperationObject, PathItemObject } from '../types/spec';
 
 export const parseOperation = ({
+  ir,
   method,
   operation,
   operationIds,
   path,
 }: {
-  method: string;
-  operation: OperationObject;
+  ir: IR;
+  method: Extract<
+    keyof PathItemObject,
+    'delete' | 'get' | 'head' | 'options' | 'patch' | 'post' | 'put' | 'trace'
+  >;
+  operation: Omit<OperationObject, 'parameters'> & {
+    parameters?: IRParametersObject;
+  };
   operationIds: Map<string, string>;
-  path: string;
+  path: keyof IRPathsObject;
 }) => {
-  const operationKey = `${method} ${path}`;
+  const operationKey = `${method.toUpperCase()} ${path}`;
 
   const config = getConfig();
 
-  // TODO: filter function, move services to plugin, cleaner syntax
+  // TODO: parser - filter function, move services to plugin, cleaner syntax
   const regexp = config.services.filter
     ? new RegExp(config.services.filter)
     : undefined;
@@ -24,7 +32,7 @@ export const parseOperation = ({
     return;
   }
 
-  // TODO: support throw on duplicate
+  // TODO: parser - support throw on duplicate
   if (operation.operationId) {
     if (operationIds.has(operation.operationId)) {
       console.warn(
@@ -35,5 +43,14 @@ export const parseOperation = ({
     }
   }
 
-  console.log(operation);
+  if (!ir.paths) {
+    ir.paths = {};
+  }
+
+  if (!ir.paths[path]) {
+    ir.paths[path] = {};
+  }
+
+  ir.paths[path][method] = operation;
+  // console.warn(operation);
 };

@@ -9,7 +9,7 @@ const main = async () => {
       name: '@hey-api/client-fetch',
     },
     // debug: true,
-    // experimental_parser: true,
+    experimental_parser: true,
     // input: './test/spec/v3-transforms.json',
     input: './test/spec/v3.json',
     // input: './test/spec/3.1.0/required-all-of-ref.json',
@@ -19,16 +19,16 @@ const main = async () => {
     output: {
       path: './test/generated/sample/',
     },
-    plugins: [
-      // '@tanstack/react-query',
-      // '@hey-api/services',
-      'zod',
-    ],
+    // plugins: [
+    //   // '@tanstack/react-query',
+    //   // '@hey-api/services',
+    //   'zod',
+    // ],
     schemas: {
       export: false,
     },
     services: {
-      // export: false,
+      export: false,
       // asClass: true,
       // filter: '^GET /api/v{api-version}/simple:operation$',
       // export: false,
@@ -37,7 +37,7 @@ const main = async () => {
     types: {
       // dates: 'types+transform',
       // enums: 'javascript',
-      // export: false,
+      export: false,
       // include:
       //   '^(_400|CompositionWithOneOfAndProperties)',
       // name: 'PascalCase',

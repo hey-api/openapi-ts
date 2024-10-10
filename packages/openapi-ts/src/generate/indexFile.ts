@@ -1,6 +1,7 @@
-import { compiler, TypeScriptFile } from '../compiler';
+import { compiler } from '../compiler';
 import type { Files } from '../types/utils';
 import { getConfig } from '../utils/config';
+import { TypeScriptFile } from './files';
 
 export const generateIndexFile = async ({
   files,
