@@ -628,8 +628,8 @@ const createQueryKeyLiteral = ({
 }: {
   isInfinite?: boolean;
   operation: Operation;
-}) =>
-  compiler.arrayLiteralExpression({
+}) => {
+  const queryKeyLiteral = compiler.arrayLiteralExpression({
     elements: [
       compiler.callExpression({
         functionName: createQueryKeyFn,
@@ -642,6 +642,8 @@ const createQueryKeyLiteral = ({
     ],
     multiLine: false,
   });
+  return queryKeyLiteral;
+};
 
 export const handler: PluginHandler<
   | ReactQueryPluginConfig
