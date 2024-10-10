@@ -18,8 +18,8 @@ import {
 import { relativeModulePath } from '../../../generate/utils';
 import { isOperationParameterRequired } from '../../../openApi';
 import { getOperationKey } from '../../../openApi/common/parser/operation';
-import type { Client } from '../../../types/client';
 import type {
+  Client,
   Method,
   Model,
   Operation,
@@ -628,8 +628,8 @@ const createQueryKeyLiteral = ({
 }: {
   isInfinite?: boolean;
   operation: Operation;
-}) => {
-  const queryKeyLiteral = compiler.arrayLiteralExpression({
+}) =>
+  compiler.arrayLiteralExpression({
     elements: [
       compiler.callExpression({
         functionName: createQueryKeyFn,
@@ -642,8 +642,6 @@ const createQueryKeyLiteral = ({
     ],
     multiLine: false,
   });
-  return queryKeyLiteral;
-};
 
 export const handler: PluginHandler<
   | ReactQueryPluginConfig
@@ -1143,6 +1141,12 @@ export const handler: PluginHandler<
         });
 
         const expression = compiler.arrowFunction({
+          parameters: [
+            {
+              name: 'options',
+              type: typeData,
+            },
+          ],
           statements: [
             compiler.constVariable({
               expression: compiler.objectExpression({
@@ -1154,7 +1158,7 @@ export const handler: PluginHandler<
                       multiLine: true,
                       parameters: [
                         {
-                          name: 'options',
+                          name: 'localOptions',
                         },
                       ],
                       statements: [
@@ -1169,6 +1173,9 @@ export const handler: PluginHandler<
                                   obj: [
                                     {
                                       spread: 'options',
+                                    },
+                                    {
+                                      spread: 'localOptions',
                                     },
                                     {
                                       key: 'throwOnError',
