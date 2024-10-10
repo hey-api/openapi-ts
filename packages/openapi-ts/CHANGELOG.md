@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.53.9
+
+### Patch Changes
+
+- [#1137](https://github.com/hey-api/openapi-ts/pull/1137) [`f4566c2`](https://github.com/hey-api/openapi-ts/commit/f4566c2bcd67f45f069bfa6220d3c710177f28cc) Thanks [@BierDav](https://github.com/BierDav)! - Add support for passing mutation specific options to `<operation_id>Mutation(options)`
+
 ## 0.53.8
 
 ### Patch Changes
