@@ -11,6 +11,12 @@
     "url": "https://github.com/hey-api/openapi-ts/issues"
   },
   "license": "MIT",
+  "author": {
+    "email": "lmenus@lmen.us",
+    "name": "Lubos Menus",
+    "url": "https://lmen.us"
+  },
+  "funding": "https://github.com/sponsors/mrlubos",
   "keywords": [
     "client",
     "fetch",
