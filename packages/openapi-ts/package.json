@@ -10,7 +10,13 @@
   "bugs": {
     "url": "https://github.com/hey-api/openapi-ts/issues"
   },
-  "license": "MIT",
+  "license": "FSL-1.1-MIT",
+  "author": {
+    "email": "lmenus@lmen.us",
+    "name": "Lubos Menus",
+    "url": "https://lmen.us"
+  },
+  "funding": "https://github.com/sponsors/mrlubos",
   "keywords": [
     "angular",
     "axios",
