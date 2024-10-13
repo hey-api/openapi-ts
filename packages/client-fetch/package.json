@@ -2,7 +2,7 @@
   "name": "@hey-api/client-fetch",
   "version": "0.4.1",
   "description": "Type-safe Fetch API client for your @hey-api/openapi-ts types",
-  "homepage": "https://heyapi.vercel.app/",
+  "homepage": "https://heyapi.dev/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hey-api/openapi-ts.git"

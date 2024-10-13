@@ -6,24 +6,22 @@ description: Hello from Hey API.
 <script setup>
 import { VPTeamMembers } from 'vitepress/theme'
 
-const members = [
+const hallOfFame = [
   {
-    avatar: 'https://github.com/mrlubos.png',
-    name: 'Lubos',
-    title: 'Author',
+    avatar: 'https://github.com/ferdikoomen.png',
+    name: 'Ferdi Koomen',
     links: [
-      { icon: 'github', link: 'https://github.com/mrlubos' },
-      { icon: 'twitter', link: 'https://twitter.com/mrlubos' }
+      { icon: 'github', link: 'https://github.com/ferdikoomen' },
     ],
-    sponsor: 'https://github.com/sponsors/mrlubos',
+    title: 'Author of OpenAPI TypeScript Codegen',
   },
   {
     avatar: 'https://github.com/jordanshatford.png',
     name: 'Jordan',
-    title: 'Maintainer',
     links: [
       { icon: 'github', link: 'https://github.com/jordanshatford' },
     ],
+    title: 'Maintainer',
   },
 ]
 </script>
@@ -40,16 +38,12 @@ Typically, developers of such applications want to:
 
 Doing any of these steps manually quickly becomes a huge time sink as your project grows and APIs evolve. Ideally, you want to spend most time on your application. Hey API allows you to do just that.
 
-We're constantly learning about the ways in which you use our tools. If you have any feedback, please [email us](mailto:lmenus@lmen.us), [open an issue](https://github.com/hey-api/openapi-ts/issues), or [join a discussion](https://github.com/hey-api/openapi-ts/discussions).
+We're constantly learning about the ways in which you use our tools. If you have any feedback, please [email us](mailto:lmenus@lmen.us), [open an issue](https://github.com/hey-api/openapi-ts/issues), or [join a discussion](https://github.com/orgs/hey-api/discussions).
 
-## Team
+## Hall of Fame
 
-<VPTeamMembers size="small" :members="members" />
+These are the people with significant contributions to Hey API. A special thank you goes to [Ferdi Koomen](https://madebyferdi.com/) for allowing us to use the original source code from OpenAPI TypeScript Codegen. None of this would've been possible without you!
 
-Our core members are [Jordan](https://github.com/jordanshatford) and [Lubos](https://lmen.us/), but we also accept external contributions. Please see our [contributing](./contributing) guide for more information.
-
-## Acknowledgements
-
-None of this would be possible without [Ferdi Koomen](https://madebyferdi.com/) and the contributors to OpenAPI TypeScript Codegen throughout the years. We want to say a huge thank you to all of you, and promise to continue the legacy of the original project.
+<VPTeamMembers size="small" :members="hallOfFame" />
 
 <!--@include: ./sponsorship.md-->

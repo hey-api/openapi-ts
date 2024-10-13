@@ -2,7 +2,7 @@
   "name": "@hey-api/client-axios",
   "version": "0.2.8",
   "description": "Type-safe Axios client for your @hey-api/openapi-ts types",
-  "homepage": "https://heyapi.vercel.app/",
+  "homepage": "https://heyapi.dev/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hey-api/openapi-ts.git"

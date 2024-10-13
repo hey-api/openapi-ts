@@ -1,8 +1,8 @@
 {
   "name": "@hey-api/openapi-ts",
   "version": "0.53.10",
-  "description": "Turn your OpenAPI specification into a beautiful TypeScript client",
-  "homepage": "https://heyapi.vercel.app/",
+  "description": "🚀 The OpenAPI to TypeScript codegen. Generate clients, SDKs, validators, and more.",
+  "homepage": "https://heyapi.dev/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hey-api/openapi-ts.git"
