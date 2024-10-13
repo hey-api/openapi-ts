@@ -137,13 +137,9 @@ function App() {
       <Container size="1">
         <Section size="1" />
         <Flex align="center">
-          <a
-            className="shrink-0"
-            href="https://heyapi.vercel.app/"
-            target="_blank"
-          >
+          <a className="shrink-0" href="https://heyapi.dev/" target="_blank">
             <img
-              src="https://heyapi.vercel.app/logo.png"
+              src="https://heyapi.dev/logo.png"
               className="h-16 w-16 transition duration-300 will-change-auto"
               alt="Hey API logo"
             />

@@ -9,7 +9,7 @@ import { embedProject } from '../embed'
 
 # Get Started
 
-Generate TypeScript interfaces, REST clients, and JSON Schemas from OpenAPI specifications.
+🚀 The OpenAPI to TypeScript codegen. Generate clients, SDKs, validators, and more.
 
 <button class="buttonLink" @click="(event) => embedProject('hey-api-example')(event)">
 Live demo
