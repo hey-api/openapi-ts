@@ -1,5 +1,14 @@
 # @example/openapi-ts-fetch
 
+## 0.0.29
+
+### Patch Changes
+
+- [#1151](https://github.com/hey-api/openapi-ts/pull/1151) [`587791d`](https://github.com/hey-api/openapi-ts/commit/587791dfede0167fbed229281467e4c4875936f5) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update website domain, add license documentation
+
+- Updated dependencies [[`587791d`](https://github.com/hey-api/openapi-ts/commit/587791dfede0167fbed229281467e4c4875936f5)]:
+  - @hey-api/client-fetch@0.4.2
+
 ## 0.0.28
 
 ### Patch Changes
