@@ -1,5 +1,5 @@
 <div align="center">
-  <img width="150" height="150" src="https://heyapi.vercel.app/logo.png" alt="Logo">
+  <img width="150" height="150" src="https://heyapi.dev/logo.png" alt="Logo">
   <h1 align="center"><b>Axios Client</b></h1>
   <p align="center">🚀 Type-safe Axios client for your Hey API types.</p>
 </div>
@@ -19,7 +19,7 @@ Plug and play Axios wrapper for `@hey-api/openapi-ts` generator.
 
 ## Documentation
 
-Please visit our [website](https://heyapi.vercel.app/) for documentation, guides, migrating, and more.
+Please visit our [website](https://heyapi.dev/) for documentation, guides, migrating, and more.
 
 ## Sponsoring
 
@@ -27,12 +27,12 @@ Love Hey API? Please consider becoming a [sponsor](https://github.com/sponsors/m
 
 ## GitHub Integration (coming soon)
 
-Automatically update your code when the APIs it depends on change. [Find out more](https://heyapi.vercel.app/openapi-ts/integrations.html).
+Automatically update your code when the APIs it depends on change. [Find out more](https://heyapi.dev/openapi-ts/integrations.html).
 
 ## Migrating from OpenAPI Typescript Codegen?
 
-Please read our [migration guide](https://heyapi.vercel.app/openapi-ts/migrating.html#openapi-typescript-codegen).
+Please read our [migration guide](https://heyapi.dev/openapi-ts/migrating.html#openapi-typescript-codegen).
 
 ## Contributing
 
-Want to get involved? Please refer to the [contributing guide](https://heyapi.vercel.app/contributing.html).
+Want to get involved? Please refer to the [contributing guide](https://heyapi.dev/contributing.html).

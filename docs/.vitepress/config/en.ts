@@ -2,7 +2,7 @@ import { defineConfig } from 'vitepress';
 
 export default defineConfig({
   description:
-    'Turn your OpenAPI specification into a beautiful TypeScript client',
+    '🚀 The OpenAPI to TypeScript codegen. Generate clients, SDKs, validators, and more.',
   lang: 'en-US',
   themeConfig: {
     sidebar: [
@@ -56,6 +56,7 @@ export default defineConfig({
       {
         items: [
           { link: '/about', text: 'Philosophy' },
+          { link: '/license', text: 'License' },
           { link: '/contributing', text: 'Contributing' },
         ],
         text: '@hey-api',
