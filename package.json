@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Public @hey-api monorepo",
   "private": true,
-  "homepage": "https://heyapi.vercel.app",
+  "homepage": "https://heyapi.dev",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hey-api/openapi-ts.git"
