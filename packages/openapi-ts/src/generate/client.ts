@@ -24,10 +24,10 @@ export const clientModulePath = ({
 export const clientOptionsTypeName = () => 'Options';
 
 /**
- * (optional) Creates a `client.ts` file containing the same exports as a
- * standalone client package. Creates a `client` directory containing the modules
- * from standalone client. These files are generated only when `client.bundle`
- * is set to true.
+ * (optional) Creates a `client.ts` file containing the same exports as the
+ * client package. Creates a `client` directory containing the modules from
+ * the client package. These files are generated only when `client.bundle` is
+ * set to true.
  */
 export const generateClient = async (
   outputPath: string,

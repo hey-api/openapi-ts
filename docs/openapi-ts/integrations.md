@@ -5,6 +5,10 @@ description: Automate your client generation.
 
 # Integrations <span class="soon">Soon</span>
 
+::: warning
+GitHub integration is not publicly available yet. We are gathering feedback from beta testers to ensure the final product meets our quality standards. To express your interest in joining the beta test, please open an issue on [GitHub](https://github.com/hey-api/upload-openapi-spec/issues).
+:::
+
 Integrations allow you to automate your client generation workflow. Create dependency links between your clients and APIs, and watch the magic unfold. While we prefer to use `@hey-api/openapi-ts` for generating clients, you can use any codegen.
 
 ## Upload OpenAPI Spec

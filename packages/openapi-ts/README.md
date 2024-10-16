@@ -13,6 +13,7 @@
 - supports both JSON and YAML input files
 - generates TypeScript interfaces, REST clients, and JSON Schemas
 - Fetch API, Axios, Angular, Node.js, and XHR clients available
+- plugin ecosystem to reduce third-party boilerplate
 
 ## Documentation
 
