@@ -4,7 +4,7 @@ import type {
   FunctionParameter,
   Node,
 } from '../compiler';
-import { compiler, TypeScriptFile } from '../compiler';
+import { compiler } from '../compiler';
 import type { FunctionTypeParameter, ObjectValue } from '../compiler/types';
 import { isOperationParameterRequired } from '../openApi';
 import type {
@@ -23,6 +23,7 @@ import { transformServiceName } from '../utils/transform';
 import { setUniqueTypeName } from '../utils/type';
 import { unique } from '../utils/unique';
 import { clientModulePath, clientOptionsTypeName } from './client';
+import { TypeScriptFile } from './files';
 
 type OnNode = (node: Node) => void;
 type OnImport = (name: string) => void;
