@@ -1,6 +1,6 @@
 ---
 title: TanStack Query
-description: Generate query keys and functions. Use them with our REST clients or bring your own.
+description: TanStack Query plugin for Hey API. Compatible with all our features.
 ---
 
 <script setup>
@@ -13,11 +13,18 @@ import { embedProject } from '../embed'
 TanStack Query plugin is currently in beta. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
 :::
 
-[TanStack Query](https://tanstack.com/query) is one of the most popular state management solutions. Hey API can generate query keys and functions for you, so you can focus on building your product. Everything is compatible with our REST clients, but you can bring your own too.
+[TanStack Query](https://tanstack.com/query) is a powerful asynchronous state management solution for TypeScript/JavaScript, React, Solid, Vue, Svelte, and Angular.
 
 <button class="buttonLink" @click="(event) => embedProject('hey-api-client-fetch-plugin-tanstack-react-query-example')(event)">
 Live demo
 </button>
+
+## Features
+
+- seamless integration with `@hey-api/openapi-ts` ecosystem
+- create query keys following the best practices
+- type-safe query options, infinite query options, and mutation options
+- minimal learning curve thanks to extending the underlying technology
 
 ## Installation
 
