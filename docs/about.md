@@ -13,15 +13,23 @@ const hallOfFame = [
     links: [
       { icon: 'github', link: 'https://github.com/ferdikoomen' },
     ],
-    title: 'Author of OpenAPI TypeScript Codegen',
+    title: 'OpenAPI TypeScript Codegen',
+  },
+  {
+    avatar: 'https://github.com/nicolas-chaulet.png',
+    name: 'Nicolas Chaulet',
+    links: [
+      { icon: 'github', link: 'https://github.com/nicolas-chaulet' },
+    ],
+    title: 'Made the Hey API fork',
   },
   {
     avatar: 'https://github.com/jordanshatford.png',
-    name: 'Jordan',
+    name: 'Jordan Shatford',
     links: [
       { icon: 'github', link: 'https://github.com/jordanshatford' },
     ],
-    title: 'Maintainer',
+    title: 'Maintainer and Contributor',
   },
 ]
 </script>

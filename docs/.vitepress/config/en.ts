@@ -5,6 +5,12 @@ export default defineConfig({
     '🚀 The OpenAPI to TypeScript codegen. Generate clients, SDKs, validators, and more.',
   lang: 'en-US',
   themeConfig: {
+    nav: [
+      {
+        link: 'https://github.com/sponsors/mrlubos',
+        text: 'Sponsor Hey API',
+      },
+    ],
     sidebar: [
       {
         items: [
@@ -36,28 +42,37 @@ export default defineConfig({
             text: 'Clients',
           },
           { link: '/openapi-ts/transformers', text: 'Transformers' },
-          { link: '/openapi-ts/migrating', text: 'Migrating' },
         ],
         text: 'Guides and Concepts',
       },
       {
         items: [
           {
-            link: '/openapi-ts/integrations',
-            text: 'Integrations <span class="soon">soon</span>',
-          },
-          {
             link: '/openapi-ts/tanstack-query',
             text: 'TanStack Query',
+          },
+          {
+            link: '/openapi-ts/zod',
+            text: 'Zod <span class="soon">soon</span>',
           },
         ],
         text: 'Plugins',
       },
       {
         items: [
+          {
+            link: '/openapi-ts/integrations',
+            text: 'GitHub <span class="soon">soon</span>',
+          },
+        ],
+        text: 'Integrations',
+      },
+      {
+        items: [
           { link: '/about', text: 'Philosophy' },
           { link: '/license', text: 'License' },
           { link: '/contributing', text: 'Contributing' },
+          { link: '/openapi-ts/migrating', text: 'Migrating' },
         ],
         text: '@hey-api',
       },

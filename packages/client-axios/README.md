@@ -1,16 +1,14 @@
 <div align="center">
   <img width="150" height="150" src="https://heyapi.dev/logo.png" alt="Logo">
   <h1 align="center"><b>Axios Client</b></h1>
-  <p align="center">🚀 Type-safe Axios client for your Hey API types.</p>
+  <p align="center">🚀 Axios client for `@hey-api/openapi-ts` codegen.</p>
 </div>
-
-Plug and play Axios wrapper for `@hey-api/openapi-ts` generator.
 
 [Live demo](https://stackblitz.com/edit/hey-api-client-axios-example?file=openapi-ts.config.ts,src%2Fclient%2Fschemas.gen.ts,src%2Fclient%2Fservices.gen.ts,src%2Fclient%2Ftypes.gen.ts,src%2FApp.tsx)
 
 ## Features
 
-- seamless integration with `@hey-api/openapi-ts`
+- seamless integration with `@hey-api/openapi-ts` ecosystem
 - type-safe response data and errors
 - access to the original request and response
 - granular request and response customization options
