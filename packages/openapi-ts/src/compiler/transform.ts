@@ -5,6 +5,7 @@ import { expressionToStatement } from './convert';
 import { createCallExpression } from './module';
 import {
   createArrowFunction,
+  createConditionalExpression,
   createPropertyAccessChain,
   createPropertyAccessExpression,
 } from './types';
@@ -104,11 +105,13 @@ export const createDateTransformMutation = ({
       expression: ts.factory.createBinaryExpression(
         accessExpression,
         ts.SyntaxKind.EqualsToken,
-        ts.factory.createNewExpression(
-          createIdentifier({ text: 'Date' }),
-          undefined,
-          [accessExpression],
-        ),
+        createConditionalExpression({
+          condition: accessExpression,
+          whenFalse: accessExpression,
+          whenTrue: createDateTransformerExpression({
+            parameterName: path.join('.'),
+          }),
+        }),
       ),
     }),
   ]);
