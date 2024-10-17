@@ -130,7 +130,11 @@ const processProperty = (props: ModelProps) => {
   if (
     model.type === 'string' &&
     model.export !== 'array' &&
-    isModelDate(model)
+    (isModelDate(model) ||
+      (model.export === 'any-of' &&
+        model.properties.find((property) => isModelDate(property))
+      )
+    )
   ) {
     return [compiler.transformDateMutation({ path })];
   }
