@@ -128,9 +128,12 @@ const processProperty = (props: ModelProps) => {
   const path = [...props.path, model.name];
 
   if (
-    model.type === 'string' &&
-    model.export !== 'array' &&
-    isModelDate(model)
+    (model.type === 'string' &&
+      model.export !== 'array' &&
+      isModelDate(model)) ||
+    (model.export === 'any-of' &&
+      model.properties.find((property) => property.type === 'null') &&
+      model.properties.find((property) => isModelDate(property)))
   ) {
     return [compiler.transformDateMutation({ path })];
   }
