@@ -64,10 +64,11 @@ export const complexTypesOptions = (options: Options<ComplexTypesData>) => { ret
     queryKey: complexTypesQueryKey(options)
 }); };
 
-export const complexParamsMutation = () => { const mutationOptions: UseMutationOptions<ComplexParamsResponse, ComplexParamsError, Options<ComplexParamsData>> = {
-    mutationFn: async (options) => {
+export const complexParamsMutation = (options?: Partial<Options<ComplexParamsData>>) => { const mutationOptions: UseMutationOptions<ComplexParamsResponse, ComplexParamsError, Options<ComplexParamsData>> = {
+    mutationFn: async (localOptions) => {
         const { data } = await ComplexService.complexParams({
             ...options,
+            ...localOptions,
             throwOnError: true
         });
         return data;
@@ -106,10 +107,11 @@ export const importOptions = (options: Options<ImportData>) => { return queryOpt
     queryKey: importQueryKey(options)
 }); };
 
-export const importMutation = () => { const mutationOptions: UseMutationOptions<ImportResponse, ImportError, Options<ImportData>> = {
-    mutationFn: async (options) => {
+export const importMutation = (options?: Partial<Options<ImportData>>) => { const mutationOptions: UseMutationOptions<ImportResponse, ImportError, Options<ImportData>> = {
+    mutationFn: async (localOptions) => {
         const { data } = await DefaultService.import({
             ...options,
+            ...localOptions,
             throwOnError: true
         });
         return data;
@@ -164,20 +166,22 @@ export const callWithDefaultOptionalParametersOptions = (options?: Options<CallW
     queryKey: callWithDefaultOptionalParametersQueryKey(options)
 }); };
 
-export const callWithDefaultOptionalParametersMutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<CallWithDefaultOptionalParametersData>> = {
-    mutationFn: async (options) => {
+export const callWithDefaultOptionalParametersMutation = (options?: Partial<Options<CallWithDefaultOptionalParametersData>>) => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<CallWithDefaultOptionalParametersData>> = {
+    mutationFn: async (localOptions) => {
         const { data } = await DefaultsService.callWithDefaultOptionalParameters({
             ...options,
+            ...localOptions,
             throwOnError: true
         });
         return data;
     }
 }; return mutationOptions; };
 
-export const callToTestOrderOfParamsMutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<CallToTestOrderOfParamsData>> = {
-    mutationFn: async (options) => {
+export const callToTestOrderOfParamsMutation = (options?: Partial<Options<CallToTestOrderOfParamsData>>) => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<CallToTestOrderOfParamsData>> = {
+    mutationFn: async (localOptions) => {
         const { data } = await DefaultsService.callToTestOrderOfParams({
             ...options,
+            ...localOptions,
             throwOnError: true
         });
         return data;
@@ -200,10 +204,11 @@ export const deprecatedCallOptions = (options: Options<DeprecatedCallData>) => {
     queryKey: deprecatedCallQueryKey(options)
 }); };
 
-export const deprecatedCallMutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<DeprecatedCallData>> = {
-    mutationFn: async (options) => {
+export const deprecatedCallMutation = (options?: Partial<Options<DeprecatedCallData>>) => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<DeprecatedCallData>> = {
+    mutationFn: async (localOptions) => {
         const { data } = await DeprecatedService.deprecatedCall({
             ...options,
+            ...localOptions,
             throwOnError: true
         });
         return data;
@@ -226,10 +231,11 @@ export const callWithDescriptionsOptions = (options?: Options<CallWithDescriptio
     queryKey: callWithDescriptionsQueryKey(options)
 }); };
 
-export const callWithDescriptionsMutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<CallWithDescriptionsData>> = {
-    mutationFn: async (options) => {
+export const callWithDescriptionsMutation = (options?: Partial<Options<CallWithDescriptionsData>>) => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<CallWithDescriptionsData>> = {
+    mutationFn: async (localOptions) => {
         const { data } = await DescriptionsService.callWithDescriptions({
             ...options,
+            ...localOptions,
             throwOnError: true
         });
         return data;
@@ -268,30 +274,33 @@ export const duplicateName1Options = (options?: Options) => { return queryOption
     queryKey: duplicateName1QueryKey(options)
 }); };
 
-export const duplicateName1Mutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options> = {
-    mutationFn: async (options) => {
+export const duplicateName1Mutation = (options?: Partial<Options>) => { const mutationOptions: UseMutationOptions<void, DefaultError, Options> = {
+    mutationFn: async (localOptions) => {
         const { data } = await DuplicateService.duplicateName1({
             ...options,
+            ...localOptions,
             throwOnError: true
         });
         return data;
     }
 }; return mutationOptions; };
 
-export const duplicateName2Mutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options> = {
-    mutationFn: async (options) => {
+export const duplicateName2Mutation = (options?: Partial<Options>) => { const mutationOptions: UseMutationOptions<void, DefaultError, Options> = {
+    mutationFn: async (localOptions) => {
         const { data } = await DuplicateService.duplicateName2({
             ...options,
+            ...localOptions,
             throwOnError: true
         });
         return data;
     }
 }; return mutationOptions; };
 
-export const duplicateName3Mutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options> = {
-    mutationFn: async (options) => {
+export const duplicateName3Mutation = (options?: Partial<Options>) => { const mutationOptions: UseMutationOptions<void, DefaultError, Options> = {
+    mutationFn: async (localOptions) => {
         const { data } = await DuplicateService.duplicateName3({
             ...options,
+            ...localOptions,
             throwOnError: true
         });
         return data;
@@ -314,10 +323,11 @@ export const testErrorCodeOptions = (options: Options<TestErrorCodeData>) => { r
     queryKey: testErrorCodeQueryKey(options)
 }); };
 
-export const testErrorCodeMutation = () => { const mutationOptions: UseMutationOptions<TestErrorCodeResponse, TestErrorCodeError, Options<TestErrorCodeData>> = {
-    mutationFn: async (options) => {
+export const testErrorCodeMutation = (options?: Partial<Options<TestErrorCodeData>>) => { const mutationOptions: UseMutationOptions<TestErrorCodeResponse, TestErrorCodeError, Options<TestErrorCodeData>> = {
+    mutationFn: async (localOptions) => {
         const { data } = await ErrorService.testErrorCode({
             ...options,
+            ...localOptions,
             throwOnError: true
         });
         return data;
@@ -356,10 +366,11 @@ export const postApiVbyApiVersionFormDataOptions = (options?: Options<PostApiVby
     queryKey: postApiVbyApiVersionFormDataQueryKey(options)
 }); };
 
-export const postApiVbyApiVersionFormDataMutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<PostApiVbyApiVersionFormDataData>> = {
-    mutationFn: async (options) => {
+export const postApiVbyApiVersionFormDataMutation = (options?: Partial<Options<PostApiVbyApiVersionFormDataData>>) => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<PostApiVbyApiVersionFormDataData>> = {
+    mutationFn: async (localOptions) => {
         const { data } = await FormDataService.postApiVbyApiVersionFormData({
             ...options,
+            ...localOptions,
             throwOnError: true
         });
         return data;
@@ -382,10 +393,11 @@ export const callWithResultFromHeaderOptions = (options?: Options) => { return q
     queryKey: callWithResultFromHeaderQueryKey(options)
 }); };
 
-export const callWithResultFromHeaderMutation = () => { const mutationOptions: UseMutationOptions<CallWithResultFromHeaderResponse, CallWithResultFromHeaderError, Options> = {
-    mutationFn: async (options) => {
+export const callWithResultFromHeaderMutation = (options?: Partial<Options>) => { const mutationOptions: UseMutationOptions<CallWithResultFromHeaderResponse, CallWithResultFromHeaderError, Options> = {
+    mutationFn: async (localOptions) => {
         const { data } = await HeaderService.callWithResultFromHeader({
             ...options,
+            ...localOptions,
             throwOnError: true
         });
         return data;
@@ -408,10 +420,11 @@ export const multipartRequestOptions = (options?: Options<MultipartRequestData>)
     queryKey: multipartRequestQueryKey(options)
 }); };
 
-export const multipartRequestMutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<MultipartRequestData>> = {
-    mutationFn: async (options) => {
+export const multipartRequestMutation = (options?: Partial<Options<MultipartRequestData>>) => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<MultipartRequestData>> = {
+    mutationFn: async (localOptions) => {
         const { data } = await MultipartService.multipartRequest({
             ...options,
+            ...localOptions,
             throwOnError: true
         });
         return data;
@@ -514,30 +527,33 @@ export const nonAsciiæøåÆøÅöôêÊ字符串Options = (options: Options<No
     queryKey: nonAsciiæøåÆøÅöôêÊ字符串QueryKey(options)
 }); };
 
-export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = () => { const mutationOptions: UseMutationOptions<NonAsciiæøåÆøÅöôêÊ字符串Response, NonAsciiæøåÆøÅöôêÊ字符串Error, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>> = {
-    mutationFn: async (options) => {
+export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options?: Partial<Options<NonAsciiæøåÆøÅöôêÊ字符串Data>>) => { const mutationOptions: UseMutationOptions<NonAsciiæøåÆøÅöôêÊ字符串Response, NonAsciiæøåÆøÅöôêÊ字符串Error, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>> = {
+    mutationFn: async (localOptions) => {
         const { data } = await NonAsciiÆøåÆøÅöôêÊService.nonAsciiæøåÆøÅöôêÊ字符串({
             ...options,
+            ...localOptions,
             throwOnError: true
         });
         return data;
     }
 }; return mutationOptions; };
 
-export const putWithFormUrlEncodedMutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<PutWithFormUrlEncodedData>> = {
-    mutationFn: async (options) => {
+export const putWithFormUrlEncodedMutation = (options?: Partial<Options<PutWithFormUrlEncodedData>>) => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<PutWithFormUrlEncodedData>> = {
+    mutationFn: async (localOptions) => {
         const { data } = await NonAsciiÆøåÆøÅöôêÊService.putWithFormUrlEncoded({
             ...options,
+            ...localOptions,
             throwOnError: true
         });
         return data;
     }
 }; return mutationOptions; };
 
-export const deleteFooMutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<DeleteFooData3>> = {
-    mutationFn: async (options) => {
+export const deleteFooMutation = (options?: Partial<Options<DeleteFooData3>>) => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<DeleteFooData3>> = {
+    mutationFn: async (localOptions) => {
         const { data } = await ParametersService.deleteFoo({
             ...options,
+            ...localOptions,
             throwOnError: true
         });
         return data;
@@ -614,10 +630,11 @@ export const callWithParametersInfiniteOptions = (options: Options<CallWithParam
     queryKey: callWithParametersInfiniteQueryKey(options)
 }); };
 
-export const callWithParametersMutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<CallWithParametersData>> = {
-    mutationFn: async (options) => {
+export const callWithParametersMutation = (options?: Partial<Options<CallWithParametersData>>) => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<CallWithParametersData>> = {
+    mutationFn: async (localOptions) => {
         const { data } = await ParametersService.callWithParameters({
             ...options,
+            ...localOptions,
             throwOnError: true
         });
         return data;
@@ -640,10 +657,11 @@ export const callWithWeirdParameterNamesOptions = (options: Options<CallWithWeir
     queryKey: callWithWeirdParameterNamesQueryKey(options)
 }); };
 
-export const callWithWeirdParameterNamesMutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<CallWithWeirdParameterNamesData>> = {
-    mutationFn: async (options) => {
+export const callWithWeirdParameterNamesMutation = (options?: Partial<Options<CallWithWeirdParameterNamesData>>) => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<CallWithWeirdParameterNamesData>> = {
+    mutationFn: async (localOptions) => {
         const { data } = await ParametersService.callWithWeirdParameterNames({
             ...options,
+            ...localOptions,
             throwOnError: true
         });
         return data;
@@ -732,10 +750,11 @@ export const postCallWithOptionalParamInfiniteOptions = (options: Options<PostCa
     queryKey: postCallWithOptionalParamInfiniteQueryKey(options)
 }); };
 
-export const postCallWithOptionalParamMutation = () => { const mutationOptions: UseMutationOptions<PostCallWithOptionalParamResponse, PostCallWithOptionalParamError, Options<PostCallWithOptionalParamData>> = {
-    mutationFn: async (options) => {
+export const postCallWithOptionalParamMutation = (options?: Partial<Options<PostCallWithOptionalParamData>>) => { const mutationOptions: UseMutationOptions<PostCallWithOptionalParamResponse, PostCallWithOptionalParamError, Options<PostCallWithOptionalParamData>> = {
+    mutationFn: async (localOptions) => {
         const { data } = await ParametersService.postCallWithOptionalParam({
             ...options,
+            ...localOptions,
             throwOnError: true
         });
         return data;
@@ -758,10 +777,11 @@ export const postApiVbyApiVersionRequestBodyOptions = (options?: Options<PostApi
     queryKey: postApiVbyApiVersionRequestBodyQueryKey(options)
 }); };
 
-export const postApiVbyApiVersionRequestBodyMutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<PostApiVbyApiVersionRequestBodyData>> = {
-    mutationFn: async (options) => {
+export const postApiVbyApiVersionRequestBodyMutation = (options?: Partial<Options<PostApiVbyApiVersionRequestBodyData>>) => { const mutationOptions: UseMutationOptions<void, DefaultError, Options<PostApiVbyApiVersionRequestBodyData>> = {
+    mutationFn: async (localOptions) => {
         const { data } = await RequestBodyService.postApiVbyApiVersionRequestBody({
             ...options,
+            ...localOptions,
             throwOnError: true
         });
         return data;
@@ -800,20 +820,22 @@ export const callWithDuplicateResponsesOptions = (options?: Options) => { return
     queryKey: callWithDuplicateResponsesQueryKey(options)
 }); };
 
-export const callWithDuplicateResponsesMutation = () => { const mutationOptions: UseMutationOptions<CallWithDuplicateResponsesResponse, CallWithDuplicateResponsesError, Options> = {
-    mutationFn: async (options) => {
+export const callWithDuplicateResponsesMutation = (options?: Partial<Options>) => { const mutationOptions: UseMutationOptions<CallWithDuplicateResponsesResponse, CallWithDuplicateResponsesError, Options> = {
+    mutationFn: async (localOptions) => {
         const { data } = await ResponseService.callWithDuplicateResponses({
             ...options,
+            ...localOptions,
             throwOnError: true
         });
         return data;
     }
 }; return mutationOptions; };
 
-export const callWithResponsesMutation = () => { const mutationOptions: UseMutationOptions<CallWithResponsesResponse, CallWithResponsesError, Options> = {
-    mutationFn: async (options) => {
+export const callWithResponsesMutation = (options?: Partial<Options>) => { const mutationOptions: UseMutationOptions<CallWithResponsesResponse, CallWithResponsesError, Options> = {
+    mutationFn: async (localOptions) => {
         const { data } = await ResponseService.callWithResponses({
             ...options,
+            ...localOptions,
             throwOnError: true
         });
         return data;
@@ -852,10 +874,11 @@ export const getCallWithoutParametersAndResponseOptions = (options?: Options) =>
     queryKey: getCallWithoutParametersAndResponseQueryKey(options)
 }); };
 
-export const putCallWithoutParametersAndResponseMutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options> = {
-    mutationFn: async (options) => {
+export const putCallWithoutParametersAndResponseMutation = (options?: Partial<Options>) => { const mutationOptions: UseMutationOptions<void, DefaultError, Options> = {
+    mutationFn: async (localOptions) => {
         const { data } = await SimpleService.putCallWithoutParametersAndResponse({
             ...options,
+            ...localOptions,
             throwOnError: true
         });
         return data;
@@ -878,30 +901,33 @@ export const postCallWithoutParametersAndResponseOptions = (options?: Options) =
     queryKey: postCallWithoutParametersAndResponseQueryKey(options)
 }); };
 
-export const postCallWithoutParametersAndResponseMutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options> = {
-    mutationFn: async (options) => {
+export const postCallWithoutParametersAndResponseMutation = (options?: Partial<Options>) => { const mutationOptions: UseMutationOptions<void, DefaultError, Options> = {
+    mutationFn: async (localOptions) => {
         const { data } = await SimpleService.postCallWithoutParametersAndResponse({
             ...options,
+            ...localOptions,
             throwOnError: true
         });
         return data;
     }
 }; return mutationOptions; };
 
-export const deleteCallWithoutParametersAndResponseMutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options> = {
-    mutationFn: async (options) => {
+export const deleteCallWithoutParametersAndResponseMutation = (options?: Partial<Options>) => { const mutationOptions: UseMutationOptions<void, DefaultError, Options> = {
+    mutationFn: async (localOptions) => {
         const { data } = await SimpleService.deleteCallWithoutParametersAndResponse({
             ...options,
+            ...localOptions,
             throwOnError: true
         });
         return data;
     }
 }; return mutationOptions; };
 
-export const patchCallWithoutParametersAndResponseMutation = () => { const mutationOptions: UseMutationOptions<void, DefaultError, Options> = {
-    mutationFn: async (options) => {
+export const patchCallWithoutParametersAndResponseMutation = (options?: Partial<Options>) => { const mutationOptions: UseMutationOptions<void, DefaultError, Options> = {
+    mutationFn: async (localOptions) => {
         const { data } = await SimpleService.patchCallWithoutParametersAndResponse({
             ...options,
+            ...localOptions,
             throwOnError: true
         });
         return data;
@@ -940,10 +966,11 @@ export const uploadFileOptions = (options: Options<UploadFileData>) => { return 
     queryKey: uploadFileQueryKey(options)
 }); };
 
-export const uploadFileMutation = () => { const mutationOptions: UseMutationOptions<UploadFileResponse, UploadFileError, Options<UploadFileData>> = {
-    mutationFn: async (options) => {
+export const uploadFileMutation = (options?: Partial<Options<UploadFileData>>) => { const mutationOptions: UseMutationOptions<UploadFileResponse, UploadFileError, Options<UploadFileData>> = {
+    mutationFn: async (localOptions) => {
         const { data } = await UploadService.uploadFile({
             ...options,
+            ...localOptions,
             throwOnError: true
         });
         return data;

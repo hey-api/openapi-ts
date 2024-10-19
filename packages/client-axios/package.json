@@ -1,8 +1,8 @@
 {
   "name": "@hey-api/client-axios",
-  "version": "0.2.7",
-  "description": "Type-safe Axios client for your @hey-api/openapi-ts types",
-  "homepage": "https://heyapi.vercel.app/",
+  "version": "0.2.9",
+  "description": "🚀 Axios client for `@hey-api/openapi-ts` codegen.",
+  "homepage": "https://heyapi.dev/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hey-api/openapi-ts.git"
@@ -11,6 +11,12 @@
     "url": "https://github.com/hey-api/openapi-ts/issues"
   },
   "license": "MIT",
+  "author": {
+    "email": "lmenus@lmen.us",
+    "name": "Lubos Menus",
+    "url": "https://lmen.us"
+  },
+  "funding": "https://github.com/sponsors/mrlubos",
   "keywords": [
     "axios",
     "client",

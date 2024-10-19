@@ -1,6 +1,6 @@
 ---
 title: Legacy clients
-description: Legacy client for your stack.
+description: Legacy clients for Hey API.
 ---
 
 <script setup>
@@ -9,7 +9,7 @@ import { embedProject } from '../../embed'
 
 # Legacy Clients
 
-Before standalone client packages, clients were generated using `@hey-api/openapi-ts`. In fact, `@hey-api/openapi-ts` still supports generating legacy clients. You can generate them with the `client` config option.
+Before client packages, clients were generated using `@hey-api/openapi-ts`. In fact, `@hey-api/openapi-ts` still supports generating legacy clients. You can generate them with the `client` config option.
 
 ::: code-group
 

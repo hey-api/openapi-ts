@@ -1,10 +1,10 @@
 {
   "name": "@hey-api/client-core",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "type": "module",
   "description": "Core utilities for type-safe @hey-api/openapi-ts clients",
-  "homepage": "https://heyapi.vercel.app/",
+  "homepage": "https://heyapi.dev/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hey-api/openapi-ts.git"

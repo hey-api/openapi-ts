@@ -3,9 +3,7 @@
   "version": "0.1.0",
   "description": "Public @hey-api monorepo",
   "private": true,
-  "type": "module",
-  "license": "MIT",
-  "homepage": "https://heyapi.vercel.app",
+  "homepage": "https://heyapi.dev",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hey-api/openapi-ts.git"
@@ -13,6 +11,14 @@
   "bugs": {
     "url": "https://github.com/hey-api/openapi-ts/issues"
   },
+  "license": "FSL-1.1-MIT",
+  "author": {
+    "email": "lmenus@lmen.us",
+    "name": "Lubos Menus",
+    "url": "https://lmen.us"
+  },
+  "funding": "https://github.com/sponsors/mrlubos",
+  "type": "module",
   "scripts": {
     "build": "pnpm --recursive build",
     "changeset": "changeset",

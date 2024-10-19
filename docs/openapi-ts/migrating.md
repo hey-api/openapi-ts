@@ -5,7 +5,7 @@ description: Migrating to @hey-api/openapi-ts.
 
 # Migrating
 
-While we try to avoid breaking changes, sometimes it's unavoidable in order to offer you the latest features. This page lists changes that require updates to your code. If you run into an issue with migration, please [open an issue](https://github.com/hey-api/openapi-ts/issues).
+While we try to avoid breaking changes, sometimes it's unavoidable in order to offer you the latest features. This page lists changes that require updates to your code. If you run into a problem with migration, please [open an issue](https://github.com/hey-api/openapi-ts/issues).
 
 ## @next
 
@@ -123,7 +123,7 @@ export default {
 
 ### Removed internal `client` export
 
-Previously, standalone clients would create a default client which you'd then import and configure.
+Previously, client packages would create a default client which you'd then import and configure.
 
 ```js
 import { client, createClient } from '@hey-api/client-fetch';
@@ -137,7 +137,7 @@ console.log(client.getConfig().baseUrl); // <-- 'https://example.com'
 
 This client instance was used internally by services unless overridden. Apart from running `createClient()` twice, people were confused about the meaning of `global` configuration option.
 
-Starting with v0.52.0, standalone clients will not create a default client. Instead, services will define their own client. You can now achieve the same configuration by importing `client` from services and using the new `setConfig()` method.
+Starting with v0.52.0, client packages will not create a default client. Instead, services will define their own client. You can now achieve the same configuration by importing `client` from services and using the new `setConfig()` method.
 
 ```js
 import { client } from 'client/services.gen';
