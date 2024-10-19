@@ -20,8 +20,8 @@ import type { IROperationObject, IRPathsObject } from '../../../ir/ir';
 import { hasParametersObjectRequired } from '../../../ir/parameter';
 import { isOperationParameterRequired } from '../../../openApi';
 import { getOperationKey } from '../../../openApi/common/parser/operation';
-import type { Client } from '../../../types/client';
 import type {
+  Client,
   Method,
   Model,
   Operation,
@@ -1213,6 +1213,13 @@ export const handler: PluginHandler<
         });
 
         const expression = compiler.arrowFunction({
+          parameters: [
+            {
+              isRequired: false,
+              name: 'options',
+              type: `Partial<${typeData}>`,
+            },
+          ],
           statements: [
             compiler.constVariable({
               expression: compiler.objectExpression({
@@ -1224,7 +1231,7 @@ export const handler: PluginHandler<
                       multiLine: true,
                       parameters: [
                         {
-                          name: 'options',
+                          name: 'localOptions',
                         },
                       ],
                       statements: [
@@ -1239,6 +1246,9 @@ export const handler: PluginHandler<
                                   obj: [
                                     {
                                       spread: 'options',
+                                    },
+                                    {
+                                      spread: 'localOptions',
                                     },
                                     {
                                       key: 'throwOnError',

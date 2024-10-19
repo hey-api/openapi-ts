@@ -30,9 +30,9 @@ export interface ClientConfig {
     | false
     | {
         /**
-         * Bundle the client module? Set this to true if you're using a standalone
-         * client package and don't want to declare it as a separate dependency.
-         * When true, the client module will be generated from the standalone
+         * Bundle the client module? Set this to true if you're using a client
+         * package and don't want to declare it as a separate dependency.
+         * When true, the client module will be generated from the client
          * package and bundled with the rest of the generated output. This is
          * useful if you're repackaging the output, publishing it to other users,
          * and you don't want them to install any dependencies.

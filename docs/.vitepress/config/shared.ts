@@ -9,13 +9,13 @@ export default defineConfig({
       'meta',
       {
         content:
-          'Turn your OpenAPI specification into a beautiful TypeScript client',
+          '🚀 The OpenAPI to TypeScript codegen. Generate clients, SDKs, validators, and more.',
         property: 'og:title',
       },
     ],
     ['meta', { content: 'OpenAPI TypeScript', property: 'og:site_name' }],
     ['meta', { content: '/logo.png', property: 'og:image' }],
-    ['meta', { content: 'https://heyapi.vercel.app', property: 'og:url' }],
+    ['meta', { content: 'https://heyapi.dev', property: 'og:url' }],
     [
       'script',
       {},
@@ -28,7 +28,7 @@ export default defineConfig({
   ].filter(Boolean) as HeadConfig[],
   lastUpdated: false,
   sitemap: {
-    hostname: 'https://heyapi.vercel.app',
+    hostname: 'https://heyapi.dev',
   },
   themeConfig: {
     externalLinkIcon: true,

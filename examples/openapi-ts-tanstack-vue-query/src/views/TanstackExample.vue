@@ -153,11 +153,11 @@ watch(error, (error) => {
   <div class="bg-[#18191b] py-12">
     <div class="mx-auto flex max-w-md flex-col gap-12">
       <div class="flex items-center">
-        <a class="shrink-0" href="https://heyapi.vercel.app/" target="_blank">
+        <a class="shrink-0" href="https://heyapi.dev/" target="_blank">
           <img
             alt="Hey API logo"
             class="size-16 transition duration-300 will-change-auto"
-            src="https://heyapi.vercel.app/logo.png"
+            src="https://heyapi.dev/logo.png"
           />
         </a>
 

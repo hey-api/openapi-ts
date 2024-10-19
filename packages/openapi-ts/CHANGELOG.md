@@ -1,5 +1,29 @@
 # @hey-api/openapi-ts
 
+## 0.53.11
+
+### Patch Changes
+
+- [#1151](https://github.com/hey-api/openapi-ts/pull/1151) [`587791d`](https://github.com/hey-api/openapi-ts/commit/587791dfede0167fbed229281467e4c4875936f5) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update website domain, add license documentation
+
+## 0.53.10
+
+### Patch Changes
+
+- [#1145](https://github.com/hey-api/openapi-ts/pull/1145) [`a0a5551`](https://github.com/hey-api/openapi-ts/commit/a0a55510d30a1a8dea0ade4908b5b13d51b5f9e6) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update license field in package.json to match the license, revert client packages license to MIT
+
+## 0.53.9
+
+### Patch Changes
+
+- [#1137](https://github.com/hey-api/openapi-ts/pull/1137) [`f4566c2`](https://github.com/hey-api/openapi-ts/commit/f4566c2bcd67f45f069bfa6220d3c710177f28cc) Thanks [@BierDav](https://github.com/BierDav)! - Add support for passing mutation specific options to `<operation_id>Mutation(options)`
+
+## 0.53.8
+
+### Patch Changes
+
+- [#1123](https://github.com/hey-api/openapi-ts/pull/1123) [`032338c`](https://github.com/hey-api/openapi-ts/commit/032338c47506ccfd567bbbf915398942c8394bc2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: use correct relative path to bundled client when imported from nested module
+
 ## 0.53.7
 
 ### Patch Changes
