@@ -1,6 +1,6 @@
 import type { Client } from '../../../types/client';
 import { getParametersMeta, getSchemasMeta } from '../../../utils/meta';
-import { getConfig } from '../../config';
+import { getParserConfig } from '../../config';
 import type { OpenApi } from '../interfaces/OpenApi';
 import { getModel } from './getModel';
 import { getParameterSchema } from './parameter';
@@ -8,7 +8,7 @@ import { getParameterSchema } from './parameter';
 export const getModels = (
   openApi: OpenApi,
 ): Pick<Client, 'models' | 'types'> => {
-  const config = getConfig();
+  const config = getParserConfig();
 
   const types: Client['types'] = {};
   let models: Client['models'] = [];

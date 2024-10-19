@@ -6,8 +6,8 @@ import type { OpenApiDiscriminator } from '../interfaces/OpenApiDiscriminator';
 
 const inverseDictionary = (map: Dictionary<string>): Dictionary<string> => {
   const m2: Dictionary<string> = {};
-  for (const key in map) {
-    m2[map[key]] = key;
+  for (const name in map) {
+    m2[map[name]] = name;
   }
   return m2;
 };

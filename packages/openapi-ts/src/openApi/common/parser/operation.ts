@@ -7,7 +7,7 @@ export const getOperationKey = (operation: {
   method: string;
   path: string;
 }) => {
-  const operationKey = `${operation.method} ${operation.path}`;
+  const operationKey = `${operation.method.toUpperCase()} ${operation.path}`;
   return operationKey;
 };
 

@@ -1,9 +1,14 @@
 import { describe, expect, it } from 'vitest';
 
-import { type Config, parse } from '../../openApi';
+import { parse } from '../../openApi';
+import type { ParserConfig } from '../../openApi/config';
 import { getServiceName, postProcessClient } from '../postprocess';
 
-const config: Config = {
+const parserConfig: ParserConfig = {
+  filterFn: {
+    operation: () => true,
+    operationParameter: () => true,
+  },
   nameFn: {
     operation: () => 'operation',
     operationParameter: () => 'operationParameter',
@@ -31,7 +36,6 @@ describe('getServiceName', () => {
 describe('getServices', () => {
   it('should create a unnamed service if tags are empty', () => {
     const parserClient = parse({
-      config,
       openApi: {
         info: {
           title: 'x',
@@ -54,6 +58,7 @@ describe('getServices', () => {
           },
         },
       },
+      parserConfig,
     });
     const { services } = postProcessClient(parserClient);
 
@@ -65,7 +70,6 @@ describe('getServices', () => {
 describe('getServices', () => {
   it('should create a unnamed service if tags are empty', () => {
     const parserClient = parse({
-      config,
       openApi: {
         info: {
           title: 'x',
@@ -88,6 +92,7 @@ describe('getServices', () => {
           },
         },
       },
+      parserConfig,
     });
     const { services } = postProcessClient(parserClient);
 

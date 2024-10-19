@@ -1,3 +1,4 @@
+import type { IROperationObject } from '../ir/ir';
 import type { OpenApiV2Schema, OpenApiV3Schema } from '../openApi';
 import type { ClientPlugins, UserPlugins } from '../plugins/';
 import type { Operation } from '../types/client';
@@ -175,9 +176,11 @@ export interface ClientConfig {
          */
         include?: string;
         /**
-         * Customise the name of methods within the service. By default, {@link Operation.name} is used.
+         * Customise the name of methods within the service. By default, {@link IROperationObject.id} or {@link Operation.name} is used.
          */
-        methodNameBuilder?: (operation: Operation) => string;
+        methodNameBuilder?: (
+          operation: IROperationObject | Operation,
+        ) => string;
         /**
          * Customize the generated service class names. The name variable is
          * obtained from your OpenAPI specification tags.
@@ -186,6 +189,7 @@ export interface ClientConfig {
          * @default '{{name}}Service'
          */
         name?: string;
+        // TODO: parser - rename operationId option to something like inferId?: boolean
         /**
          * Use operation ID to generate operation names?
          * @default true

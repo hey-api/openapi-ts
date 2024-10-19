@@ -1,7 +1,8 @@
+import { getConfig } from '../../../utils/config';
 import type { Client, Operation } from '../../common/interfaces/client';
 import { getOperationKey } from '../../common/parser/operation';
 import { allowedServiceMethods } from '../../common/parser/service';
-import { getConfig } from '../../config';
+import { getParserConfig } from '../../config';
 import type { OpenApi } from '../interfaces/OpenApi';
 import { getOperationParameters } from './getOperationParameters';
 import { getOperation } from './operation';
@@ -13,7 +14,7 @@ export const getOperations = ({
   openApi: OpenApi;
   types: Client['types'];
 }): Operation[] => {
-  const config = getConfig();
+  const config = getParserConfig();
 
   const operationIds = new Map<string, string>();
   const operations: Operation[] = [];
@@ -26,11 +27,11 @@ export const getOperations = ({
       types,
     });
 
-    for (const key in pathItem) {
-      const method = key as Lowercase<Operation['method']>;
+    for (const name in pathItem) {
+      const method = name as Lowercase<Operation['method']>;
 
       const operationKey = getOperationKey({
-        method: method.toUpperCase(),
+        method,
         path,
       });
 
@@ -48,8 +49,10 @@ export const getOperations = ({
         }
 
         if (
-          !config.filterFn?.operation ||
-          config.filterFn?.operation(operationKey)
+          config.filterFn.operation({
+            config: getConfig(),
+            operationKey,
+          })
         ) {
           const operation = getOperation({
             method,

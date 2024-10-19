@@ -1,8 +1,9 @@
-import { compiler, TypeScriptFile } from '../compiler';
+import { compiler } from '../compiler';
 import type { OpenApi, OpenApiV2Schema, OpenApiV3Schema } from '../openApi';
 import { ensureValidTypeScriptJavaScriptIdentifier } from '../openApi';
 import type { Files } from '../types/utils';
 import { getConfig } from '../utils/config';
+import { TypeScriptFile } from './files';
 
 const ensureValidSchemaOutput = (
   schema: unknown,

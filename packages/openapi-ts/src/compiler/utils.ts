@@ -2,6 +2,7 @@ import ts from 'typescript';
 
 import { getConfig } from '../utils/config';
 import { unescapeName } from '../utils/escape';
+import { createStringLiteral } from './types';
 
 export interface ImportExportItemObject {
   alias?: string;
@@ -9,22 +10,15 @@ export interface ImportExportItemObject {
   name: string;
 }
 
-export const CONFIG = {
-  newLine: ts.NewLineKind.LineFeed,
-  scriptKind: ts.ScriptKind.TS,
-  scriptTarget: ts.ScriptTarget.ES2015,
-  useSingleQuotes: true,
-};
-
-const printer = ts.createPrinter({ newLine: CONFIG.newLine });
+const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
 
 export const createSourceFile = (sourceText: string) =>
   ts.createSourceFile(
     '',
     sourceText,
-    CONFIG.scriptTarget,
+    ts.ScriptTarget.ES2015,
     undefined,
-    CONFIG.scriptKind,
+    ts.ScriptKind.TS,
   );
 
 const blankSourceFile = createSourceFile('');
@@ -145,10 +139,7 @@ export const ots = {
     if (text.startsWith('`')) {
       return createIdentifier({ text });
     }
-    return ts.factory.createStringLiteral(
-      text,
-      text.includes("'") ? false : CONFIG.useSingleQuotes,
-    );
+    return createStringLiteral({ text });
   },
 };
 
