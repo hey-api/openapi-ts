@@ -4,6 +4,7 @@ import { createClient } from '../src/index';
 import { Performance } from '../src/utils/performance';
 
 const V3_SPEC_PATH = './test/spec/v3.json';
+const V3_1_SPEC_PATH = './test/spec/3.1.0/full.json';
 
 const OUTPUT_PREFIX = './test/generated/';
 
@@ -40,19 +41,19 @@ describe('performance', () => {
     expect(measures[0].duration).toBeLessThanOrEqual(500);
   });
 
-  it('parses spec under 300ms (experimental)', async () => {
+  it('parses spec under 500ms (experimental)', async () => {
     Performance.clear();
 
     await createClient({
       client: '@hey-api/client-fetch',
       experimental_parser: true,
-      input: V3_SPEC_PATH,
+      input: V3_1_SPEC_PATH,
       output: toOutputPath('perf'),
     });
 
-    Performance.measure('experimental_parser');
-    const measures = Performance.getEntriesByName('experimental_parser');
+    Performance.measure('parser');
+    const measures = Performance.getEntriesByName('parser');
 
-    expect(measures[0].duration).toBeLessThanOrEqual(300);
+    expect(measures[0].duration).toBeLessThanOrEqual(500);
   });
 });

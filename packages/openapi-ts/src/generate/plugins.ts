@@ -1,15 +1,18 @@
 import path from 'node:path';
 
-import { TypeScriptFile } from '../compiler';
+import type { IRContext } from '../ir/context';
 import type { Client } from '../types/client';
 import type { Files } from '../types/utils';
 import { getConfig, isLegacyClient } from '../utils/config';
+import { TypeScriptFile } from './files';
 
 export const generatePlugins = async ({
   client,
   files,
+  context,
 }: {
-  client: Client;
+  client: Client | undefined;
+  context: IRContext | undefined;
   files: Files;
 }) => {
   const config = getConfig();
@@ -29,10 +32,19 @@ export const generatePlugins = async ({
       dir: outputDir,
       name: `${outputParts[outputParts.length - 1]}.ts`,
     });
-    plugin.handler({
-      client,
-      files,
-      plugin: plugin as never,
-    });
+
+    if (context) {
+      plugin.handler_experimental({
+        context,
+        files,
+        plugin: plugin as never,
+      });
+    } else if (client) {
+      plugin.handler({
+        client,
+        files,
+        plugin: plugin as never,
+      });
+    }
   }
 };

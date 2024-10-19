@@ -1,4 +1,5 @@
 import type { Client } from '../../../types/client';
+import { getConfig } from '../../../utils/config';
 import type {
   Operation,
   OperationParameter,
@@ -7,7 +8,7 @@ import type {
 import { getRef } from '../../common/parser/getRef';
 import { getOperationResponseHeader } from '../../common/parser/operation';
 import { toSortedByRequired } from '../../common/parser/sort';
-import { getConfig } from '../../config';
+import { getParserConfig } from '../../config';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiOperation } from '../interfaces/OpenApiOperation';
 import type { OpenApiRequestBody } from '../interfaces/OpenApiRequestBody';
@@ -53,7 +54,7 @@ export const getOperation = ({
   types: Client['types'];
   url: string;
 }): Operation => {
-  const config = getConfig();
+  const config = getParserConfig();
 
   const operationWithoutName: Omit<Operation, 'name'> = {
     $refs: [],
@@ -77,7 +78,12 @@ export const getOperation = ({
   };
   const operation = {
     ...operationWithoutName,
-    name: config.nameFn.operation(operationWithoutName),
+    name: config.nameFn.operation({
+      config: getConfig(),
+      method: operationWithoutName.method,
+      operationId: op.operationId,
+      path: operationWithoutName.path,
+    }),
   };
 
   if (op.parameters) {

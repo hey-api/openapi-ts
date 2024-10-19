@@ -1,4 +1,4 @@
-import type { TypeScriptFile } from '../compiler';
+import type { TypeScriptFile } from '../generate/files';
 
 type ExtractFromArray<T, Discriminator> = T extends Discriminator
   ? Required<T>
