@@ -187,7 +187,7 @@ const typeInterface = (model: Model) => {
   return compiler.typeInterfaceNode({
     isNullable: model.isNullable,
     properties,
-    useLegacyResolution: !config.experimental_parser,
+    useLegacyResolution: true,
   });
 };
 

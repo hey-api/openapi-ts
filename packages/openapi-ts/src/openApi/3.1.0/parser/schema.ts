@@ -15,8 +15,22 @@ const getSchemaTypes = ({
   schema,
 }: {
   schema: SchemaObject;
-}): ReadonlyArray<SchemaType> =>
-  typeof schema.type === 'string' ? [schema.type] : schema.type ?? [];
+}): ReadonlyArray<SchemaType> => {
+  if (typeof schema.type === 'string') {
+    return [schema.type];
+  }
+
+  if (schema.type) {
+    return schema.type;
+  }
+
+  // infer object based on the presence of properties
+  if (schema.properties) {
+    return ['object'];
+  }
+
+  return [];
+};
 
 const parseSchemaMeta = ({
   irSchema,
@@ -750,7 +764,8 @@ export const schemaToIrSchema = ({
     });
   }
 
-  if (schema.type) {
+  // infer object based on the presence of properties
+  if (schema.type || schema.properties) {
     return parseType({
       context,
       schema: schema as SchemaWithRequired<'type'>,

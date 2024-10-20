@@ -332,6 +332,7 @@ export const getParseAs = (
     return;
   }
 
+  // TODO: parser - better detection of MIME types
   if (content.startsWith('application/json') || content.endsWith('+json')) {
     return 'json';
   }

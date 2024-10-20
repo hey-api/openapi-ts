@@ -1,3 +1,5 @@
+import type ts from 'typescript';
+
 import type {
   ClassElement,
   Comments,
@@ -12,6 +14,7 @@ import type {
   IRPathItemObject,
   IRPathsObject,
 } from '../ir/ir';
+import { hasOperationDataRequired } from '../ir/operation';
 import { isOperationParameterRequired } from '../openApi';
 import type {
   Client,
@@ -25,6 +28,7 @@ import type { Files } from '../types/utils';
 import { camelCase } from '../utils/camelCase';
 import { getConfig, isLegacyClient } from '../utils/config';
 import { escapeComment, escapeName } from '../utils/escape';
+import { getServiceName } from '../utils/postprocess';
 import { reservedWordsRegExp } from '../utils/regexp';
 import { transformServiceName } from '../utils/transform';
 import { setUniqueTypeName } from '../utils/type';
@@ -135,10 +139,13 @@ export const operationResponseTypeName = (name: string) =>
  * @param importedType unique type name returned from `setUniqueTypeName()`
  * @returns options type
  */
-export const operationOptionsType = (
-  importedType?: string,
-  throwOnError?: string,
-) => {
+export const operationOptionsType = ({
+  importedType,
+  throwOnError,
+}: {
+  importedType?: string;
+  throwOnError?: string;
+}) => {
   const optionsName = clientOptionsTypeName();
   // TODO: refactor this to be more generic, works for now
   if (throwOnError) {
@@ -171,7 +178,10 @@ const toOperationParamType = (
       {
         isRequired,
         name: 'options',
-        type: operationOptionsType(importedType, 'ThrowOnError'),
+        type: operationOptionsType({
+          importedType,
+          throwOnError: 'ThrowOnError',
+        }),
       },
     ];
   }
@@ -514,7 +524,7 @@ const toRequestOptions = (
   });
 };
 
-export const toOperationName = ({
+export const serviceFunctionIdentifier = ({
   config,
   id,
   operation,
@@ -707,7 +717,7 @@ const processService = ({
         comment: toOperationComment(operation),
         exportConst: true,
         expression,
-        name: toOperationName({
+        name: serviceFunctionIdentifier({
           config,
           handleIllegal: true,
           id: operation.name,
@@ -725,7 +735,7 @@ const processService = ({
       comment: toOperationComment(operation),
       isStatic:
         config.name === undefined && config.client.name !== 'legacy/angular',
-      name: toOperationName({
+      name: serviceFunctionIdentifier({
         config,
         id: operation.name,
         operation,
@@ -961,6 +971,347 @@ export const generateLegacyServices = async ({
   }
 };
 
+const requestOptions = ({
+  context,
+  operation,
+  path,
+}: {
+  context: IRContext;
+  operation: IROperationObject;
+  path: string;
+}) => {
+  const file = context.file({ id: servicesId })!;
+  const servicesOutput = file.getName(false);
+  // const typesModule = `./${context.file({ id: 'types' })!.getName(false)}`
+
+  // TODO: parser - add response transformers
+  // const operationName = operationResponseTypeName(operation.name);
+  // const { name: responseTransformerName } = setUniqueTypeName({
+  //   client,
+  //   meta: {
+  //     $ref: `transformers/${operationName}`,
+  //     name: operationName,
+  //   },
+  //   nameTransformer: operationResponseTransformerTypeName,
+  // });
+
+  // if (responseTransformerName) {
+  //   file.import({
+  //     // this detection could be done safer, but it shouldn't cause any issues
+  //     asType: !responseTransformerName.endsWith('Transformer'),
+  //     module: typesModule,
+  //     name: responseTransformerName,
+  //   });
+  // }
+
+  const obj: ObjectValue[] = [{ spread: 'options' }];
+
+  if (operation.body) {
+    switch (operation.body.type) {
+      case 'form-data':
+        obj.push({ spread: 'formDataBodySerializer' });
+        file.import({
+          module: clientModulePath({
+            config: context.config,
+            sourceOutput: servicesOutput,
+          }),
+          name: 'formDataBodySerializer',
+        });
+        break;
+      case 'json':
+        break;
+      case 'url-search-params':
+        obj.push({ spread: 'urlSearchParamsBodySerializer' });
+        file.import({
+          module: clientModulePath({
+            config: context.config,
+            sourceOutput: servicesOutput,
+          }),
+          name: 'urlSearchParamsBodySerializer',
+        });
+        break;
+    }
+
+    obj.push({
+      key: 'headers',
+      value: [
+        {
+          key: 'Content-Type',
+          // form-data does not need Content-Type header, browser will set it automatically
+          value:
+            operation.body.type === 'form-data'
+              ? null
+              : operation.body.mediaType,
+        },
+        {
+          spread: 'options?.headers',
+        },
+      ],
+    });
+  }
+
+  // TODO: parser - set parseAs to skip inference if every response has the same
+  // content type. currently impossible because successes do not contain
+  // header information
+
+  obj.push({
+    key: 'url',
+    value: path,
+  });
+
+  // TODO: parser - add response transformers
+  // if (responseTransformerName) {
+  //   obj = [
+  //     ...obj,
+  //     {
+  //       key: 'responseTransformer',
+  //       value: responseTransformerName,
+  //     },
+  //   ];
+  // }
+
+  return compiler.objectExpression({
+    identifiers: ['responseTransformer'],
+    obj,
+  });
+};
+
+const generateClassServices = ({ context }: { context: IRContext }) => {
+  const file = context.file({ id: servicesId })!;
+  const typesModule = `./${context.file({ id: 'types' })!.getName(false)}`;
+
+  const services = new Map<string, Array<ts.MethodDeclaration>>();
+
+  for (const path in context.ir.paths) {
+    const pathItem = context.ir.paths[path as keyof IRPathsObject];
+
+    for (const _method in pathItem) {
+      const method = _method as keyof IRPathItemObject;
+      const operation = pathItem[method]!;
+
+      const identifierData = context.file({ id: 'types' })!.identifier({
+        $ref: operationDataRef({ id: operation.id }),
+        namespace: 'type',
+      });
+      if (identifierData.name) {
+        file.import({
+          // this detection could be done safer, but it shouldn't cause any issues
+          asType: !identifierData.name.endsWith('Transformer'),
+          module: typesModule,
+          name: identifierData.name,
+        });
+      }
+
+      const identifierError = context.file({ id: 'types' })!.identifier({
+        $ref: operationErrorRef({ id: operation.id }),
+        namespace: 'type',
+      });
+      if (identifierError.name) {
+        file.import({
+          // this detection could be done safer, but it shouldn't cause any issues
+          asType: !identifierError.name.endsWith('Transformer'),
+          module: typesModule,
+          name: identifierError.name,
+        });
+      }
+
+      const identifierResponse = context.file({ id: 'types' })!.identifier({
+        $ref: operationResponseRef({ id: operation.id }),
+        namespace: 'type',
+      });
+      if (identifierResponse.name) {
+        file.import({
+          // this detection could be done safer, but it shouldn't cause any issues
+          asType: !identifierResponse.name.endsWith('Transformer'),
+          module: typesModule,
+          name: identifierResponse.name,
+        });
+      }
+
+      const node = compiler.methodDeclaration({
+        accessLevel: 'public',
+        comment: [
+          operation.deprecated && '@deprecated',
+          operation.summary && escapeComment(operation.summary),
+          operation.description && escapeComment(operation.description),
+        ],
+        isStatic: true,
+        name: serviceFunctionIdentifier({
+          config: context.config,
+          handleIllegal: false,
+          id: operation.id,
+          operation,
+        }),
+        parameters: [
+          {
+            isRequired: hasOperationDataRequired(operation),
+            name: 'options',
+            type: operationOptionsType({
+              importedType: identifierData.name,
+              throwOnError: 'ThrowOnError',
+            }),
+          },
+        ],
+        returnType: undefined,
+        statements: [
+          compiler.returnFunctionCall({
+            args: [
+              requestOptions({
+                context,
+                operation,
+                path,
+              }),
+            ],
+            name: `(options?.client ?? client).${method}`,
+            types: [
+              identifierResponse.name || 'unknown',
+              identifierError.name || 'unknown',
+              'ThrowOnError',
+            ],
+          }),
+        ],
+        types: [
+          {
+            default: false,
+            extends: 'boolean',
+            name: 'ThrowOnError',
+          },
+        ],
+      });
+
+      const uniqueTags = Array.from(new Set(operation.tags));
+      if (!uniqueTags.length) {
+        uniqueTags.push('default');
+      }
+
+      for (const tag of uniqueTags) {
+        const serviceName = getServiceName(tag);
+        const nodes = services.get(serviceName) ?? [];
+        nodes.push(node);
+        services.set(serviceName, nodes);
+      }
+    }
+  }
+
+  for (const [serviceName, nodes] of services) {
+    const node = compiler.classDeclaration({
+      decorator: undefined,
+      members: nodes,
+      name: transformServiceName({
+        config: context.config,
+        name: serviceName,
+      }),
+    });
+    file.add(node);
+  }
+};
+
+const generateFlatServices = ({ context }: { context: IRContext }) => {
+  const file = context.file({ id: servicesId })!;
+  const typesModule = `./${context.file({ id: 'types' })!.getName(false)}`;
+
+  for (const path in context.ir.paths) {
+    const pathItem = context.ir.paths[path as keyof IRPathsObject];
+
+    for (const _method in pathItem) {
+      const method = _method as keyof IRPathItemObject;
+      const operation = pathItem[method]!;
+
+      const identifierData = context.file({ id: 'types' })!.identifier({
+        $ref: operationDataRef({ id: operation.id }),
+        namespace: 'type',
+      });
+      if (identifierData.name) {
+        file.import({
+          // this detection could be done safer, but it shouldn't cause any issues
+          asType: !identifierData.name.endsWith('Transformer'),
+          module: typesModule,
+          name: identifierData.name,
+        });
+      }
+
+      const identifierError = context.file({ id: 'types' })!.identifier({
+        $ref: operationErrorRef({ id: operation.id }),
+        namespace: 'type',
+      });
+      if (identifierError.name) {
+        file.import({
+          // this detection could be done safer, but it shouldn't cause any issues
+          asType: !identifierError.name.endsWith('Transformer'),
+          module: typesModule,
+          name: identifierError.name,
+        });
+      }
+
+      const identifierResponse = context.file({ id: 'types' })!.identifier({
+        $ref: operationResponseRef({ id: operation.id }),
+        namespace: 'type',
+      });
+      if (identifierResponse.name) {
+        file.import({
+          // this detection could be done safer, but it shouldn't cause any issues
+          asType: !identifierResponse.name.endsWith('Transformer'),
+          module: typesModule,
+          name: identifierResponse.name,
+        });
+      }
+
+      const node = compiler.constVariable({
+        comment: [
+          operation.deprecated && '@deprecated',
+          operation.summary && escapeComment(operation.summary),
+          operation.description && escapeComment(operation.description),
+        ],
+        exportConst: true,
+        expression: compiler.arrowFunction({
+          parameters: [
+            {
+              isRequired: hasOperationDataRequired(operation),
+              name: 'options',
+              type: operationOptionsType({
+                importedType: identifierData.name,
+                throwOnError: 'ThrowOnError',
+              }),
+            },
+          ],
+          returnType: undefined,
+          statements: [
+            compiler.returnFunctionCall({
+              args: [
+                requestOptions({
+                  context,
+                  operation,
+                  path,
+                }),
+              ],
+              name: `(options?.client ?? client).${method}`,
+              types: [
+                identifierResponse.name || 'unknown',
+                identifierError.name || 'unknown',
+                'ThrowOnError',
+              ],
+            }),
+          ],
+          types: [
+            {
+              default: false,
+              extends: 'boolean',
+              name: 'ThrowOnError',
+            },
+          ],
+        }),
+        name: serviceFunctionIdentifier({
+          config: context.config,
+          handleIllegal: true,
+          id: operation.id,
+          operation,
+        }),
+      });
+      file.add(node);
+    }
+  }
+};
+
 export const generateServices = ({ context }: { context: IRContext }) => {
   // TODO: parser - once services are a plugin, this logic can be simplified
   if (!context.config.services.export) {
@@ -1014,59 +1365,9 @@ export const generateServices = ({ context }: { context: IRContext }) => {
   });
   file.add(statement);
 
-  // TODO: parser - generate services
-  for (const path in context.ir.paths) {
-    const pathItem = context.ir.paths[path as keyof IRPathsObject];
-    // console.warn(pathItem)
-
-    for (const method in pathItem) {
-      const operation = pathItem[method as keyof IRPathItemObject]!;
-
-      if (operation.parameters) {
-        const identifier = context.file({ id: 'types' })!.identifier({
-          $ref: operationDataRef({ id: operation.id }),
-          namespace: 'type',
-        });
-        if (identifier.name) {
-          file.import({
-            // this detection could be done safer, but it shouldn't cause any issues
-            asType: !identifier.name.endsWith('Transformer'),
-            module: `./${context.file({ id: 'types' })!.getName(false)}`,
-            name: identifier.name,
-          });
-        }
-      }
-
-      // if (!isLegacy) {
-      //   generateImport({
-      //     client,
-      //     meta: {
-      //       // TODO: this should be exact ref to operation for consistency,
-      //       // but name should work too as operation ID is unique
-      //       $ref: operation.name,
-      //       name: operation.name,
-      //     },
-      //     nameTransformer: operationErrorTypeName,
-      //     onImport,
-      //   });
-      // }
-
-      // const successResponses = operation.responses.filter((response) =>
-      //   response.responseTypes.includes('success'),
-      // );
-      // if (successResponses.length) {
-      //   generateImport({
-      //     client,
-      //     meta: {
-      //       // TODO: this should be exact ref to operation for consistency,
-      //       // but name should work too as operation ID is unique
-      //       $ref: operation.name,
-      //       name: operation.name,
-      //     },
-      //     nameTransformer: operationResponseTypeName,
-      //     onImport,
-      //   });
-      // }
-    }
+  if (context.config.services.asClass) {
+    generateClassServices({ context });
+  } else {
+    generateFlatServices({ context });
   }
 };
