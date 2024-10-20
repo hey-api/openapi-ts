@@ -355,7 +355,7 @@ export async function createClient(
         operationParameter: operationParameterNameFn,
       },
     };
-    if (config.experimental_parser && !isLegacyClient(config)) {
+    if (config.experimental_parser && !isLegacyClient(config) && !config.name) {
       context = parseExperimental({
         config,
         parserConfig,

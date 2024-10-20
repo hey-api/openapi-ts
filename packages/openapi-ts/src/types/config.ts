@@ -74,7 +74,9 @@ export interface ClientConfig {
    */
   input: string | Record<string, unknown>;
   /**
-   * Custom client class name
+   * Custom client class name. Please note this option is deprecated and
+   * will be removed in favor of clients.
+   * @link https://heyapi.dev/openapi-ts/migrating.html#deprecated-name
    * @deprecated
    */
   name?: string;
@@ -104,7 +106,9 @@ export interface ClientConfig {
    */
   plugins?: ReadonlyArray<UserPlugins['name'] | UserPlugins>;
   /**
-   * Path to custom request file
+   * Path to custom request file. Please note this option is deprecated and
+   * will be removed in favor of clients.
+   * @link https://heyapi.dev/openapi-ts/migrating.html#deprecated-request
    * @deprecated
    */
   request?: string;
@@ -241,7 +245,9 @@ export interface ClientConfig {
         tree?: boolean;
       };
   /**
-   * Use options or arguments functions
+   * Use options or arguments functions. Please note this option is deprecated and
+   * will be removed in favor of clients.
+   * @link https://heyapi.dev/openapi-ts/migrating.html#deprecated-useoptions
    * @deprecated
    * @default true
    */

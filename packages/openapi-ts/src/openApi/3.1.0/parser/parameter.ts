@@ -1,7 +1,7 @@
 import type { IRContext } from '../../../ir/context';
 import type { IRParameterObject, IRParametersObject } from '../../../ir/ir';
 import type { ParameterObject, ReferenceObject } from '../types/spec';
-import { getMediaTypeSchema } from './mediaType';
+import { mediaTypeObject } from './mediaType';
 import { schemaToIrSchema } from './schema';
 
 export const parametersArrayToObject = ({
@@ -109,7 +109,7 @@ const parameterToIrParameter = ({
   let schema = parameter.schema;
 
   if (!schema) {
-    const content = getMediaTypeSchema({
+    const content = mediaTypeObject({
       content: parameter.content,
     });
     if (content) {
