@@ -18,7 +18,7 @@ import type { Templates } from '../utils/handlebars';
  * @param client Client containing models, schemas, and services
  * @param templates The loaded handlebar templates
  */
-export const generateCore = async (
+export const generateLegacyCore = async (
   outputPath: string,
   client: Client,
   templates: Templates,

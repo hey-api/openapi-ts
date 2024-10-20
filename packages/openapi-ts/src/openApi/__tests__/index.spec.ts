@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { type OpenApi, parse } from '..';
+import { type OpenApi, parseLegacy } from '..';
 import type { ParserConfig } from '../config';
 import * as parseV2 from '../v2';
 import * as parseV3 from '../v3';
@@ -32,7 +32,7 @@ describe('parse', () => {
       paths: {},
       swagger: '2',
     };
-    parse({ openApi: spec, parserConfig });
+    parseLegacy({ openApi: spec, parserConfig });
     expect(spy).toHaveBeenCalledWith(spec);
 
     const spec2: OpenApi = {
@@ -43,7 +43,7 @@ describe('parse', () => {
       paths: {},
       swagger: '2.0',
     };
-    parse({ openApi: spec2, parserConfig });
+    parseLegacy({ openApi: spec2, parserConfig });
     expect(spy).toHaveBeenCalledWith(spec2);
   });
 
@@ -58,7 +58,7 @@ describe('parse', () => {
       openapi: '3',
       paths: {},
     };
-    parse({ openApi: spec, parserConfig });
+    parseLegacy({ openApi: spec, parserConfig });
     expect(spy).toHaveBeenCalledWith(spec);
 
     const spec2: OpenApi = {
@@ -69,7 +69,7 @@ describe('parse', () => {
       openapi: '3.0',
       paths: {},
     };
-    parse({ openApi: spec2, parserConfig });
+    parseLegacy({ openApi: spec2, parserConfig });
     expect(spy).toHaveBeenCalledWith(spec2);
 
     const spec3: OpenApi = {
@@ -80,13 +80,15 @@ describe('parse', () => {
       openapi: '3.1.0',
       paths: {},
     };
-    parse({ openApi: spec3, parserConfig });
+    parseLegacy({ openApi: spec3, parserConfig });
     expect(spy).toHaveBeenCalledWith(spec3);
   });
 
   it('throws on unknown version', () => {
-    // @ts-expect-error
-    expect(() => parse({ openApi: { foo: 'bar' }, parserConfig })).toThrow(
+    expect(() =>
+      // @ts-expect-error
+      parseLegacy({ openApi: { foo: 'bar' }, parserConfig }),
+    ).toThrow(
       `Unsupported OpenAPI specification: ${JSON.stringify({ foo: 'bar' }, null, 2)}`,
     );
   });

@@ -32,7 +32,7 @@ import type { Files } from '../../../types/utils';
 import { getConfig } from '../../../utils/config';
 import { getServiceName } from '../../../utils/postprocess';
 import { transformServiceName } from '../../../utils/transform';
-import type { PluginHandler, PluginHandlerExperimental } from '../../types';
+import type { PluginHandler, PluginLegacyHandler } from '../../types';
 import type { PluginConfig as ReactQueryPluginConfig } from '../react-query';
 import type { PluginConfig as SolidQueryPluginConfig } from '../solid-query';
 import type { PluginConfig as SvelteQueryPluginConfig } from '../svelte-query';
@@ -686,7 +686,7 @@ const createQueryKeyLiteral = ({
   return queryKeyLiteral;
 };
 
-export const handler: PluginHandler<
+export const handlerLegacy: PluginLegacyHandler<
   | ReactQueryPluginConfig
   | SolidQueryPluginConfig
   | SvelteQueryPluginConfig
@@ -699,7 +699,7 @@ export const handler: PluginHandler<
 
   file.import({
     asType: true,
-    module: clientModulePath({ sourceOutput: plugin.output }),
+    module: clientModulePath({ config, sourceOutput: plugin.output }),
     name: clientOptionsTypeName(),
   });
 
@@ -1310,24 +1310,27 @@ export const handler: PluginHandler<
   }
 };
 
-export const handler_experimental: PluginHandlerExperimental<
+export const handler: PluginHandler<
   | ReactQueryPluginConfig
   | SolidQueryPluginConfig
   | SvelteQueryPluginConfig
   | VueQueryPluginConfig
-> = ({ context, files, plugin }) => {
-  checkPrerequisites({ files });
+> = ({ context, plugin }) => {
+  checkPrerequisites({ files: context.files });
 
-  const file = files[plugin.name];
+  const file = context.createFile({
+    id: plugin.name,
+    path: plugin.output,
+  });
 
   // file.import({
   //   asType: true,
-  //   module: clientModulePath({ sourceOutput: plugin.output }),
+  //   module: clientModulePath({ config: context.config, sourceOutput: plugin.output }),
   //   name: clientOptionsTypeName(),
   // });
 
   // const typesModulePath = relativeModulePath({
-  //   moduleOutput: files.types.getName(false),
+  //   moduleOutput: context.files.types.getName(false),
   //   sourceOutput: plugin.output,
   // });
 
@@ -1528,7 +1531,7 @@ export const handler_experimental: PluginHandlerExperimental<
     }
 
     // const servicesModulePath = relativeModulePath({
-    //   moduleOutput: files.services.getName(false),
+    //   moduleOutput: context.files.services.getName(false),
     //   sourceOutput: plugin.output,
     // });
 
