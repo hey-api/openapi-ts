@@ -36,6 +36,8 @@ import { irRef } from './types';
 type OnNode = (node: Node) => void;
 type OnImport = (name: string) => void;
 
+const servicesId = 'services';
+
 export const generateImport = ({
   meta,
   onImport,
@@ -794,31 +796,23 @@ const processService = ({
   onNode(statement);
 };
 
-const checkPrerequisites = ({
-  context,
-  files,
-}: {
-  context: IRContext | undefined;
-  files: Files;
-}) => {
-  if (!context) {
-    const config = getConfig();
+const checkLegacyPrerequisites = ({ files }: { files: Files }) => {
+  const config = getConfig();
 
-    if (!config.client.name) {
-      throw new Error(
-        '🚫 client needs to be set to generate services - which HTTP client do you want to use?',
-      );
-    }
-
-    if (!files.types) {
-      throw new Error(
-        '🚫 types need to be exported to generate services - enable type generation',
-      );
-    }
-
-    return;
+  if (!config.client.name) {
+    throw new Error(
+      '🚫 client needs to be set to generate services - which HTTP client do you want to use?',
+    );
   }
 
+  if (!files.types) {
+    throw new Error(
+      '🚫 types need to be exported to generate services - enable type generation',
+    );
+  }
+};
+
+const checkPrerequisites = ({ context }: { context: IRContext }) => {
   if (!context.config.client.name) {
     throw new Error(
       '🚫 client needs to be set to generate services - which HTTP client do you want to use?',
@@ -832,13 +826,11 @@ const checkPrerequisites = ({
   }
 };
 
-export const generateServices = async ({
+export const generateLegacyServices = async ({
   client,
-  context,
   files,
 }: {
-  client: Client | undefined;
-  context: IRContext | undefined;
+  client: Client;
   files: Files;
 }): Promise<void> => {
   const config = getConfig();
@@ -847,7 +839,7 @@ export const generateServices = async ({
     return;
   }
 
-  checkPrerequisites({ context, files });
+  checkLegacyPrerequisites({ files });
 
   const isLegacy = isLegacyClient(config);
 
@@ -861,16 +853,16 @@ export const generateServices = async ({
   // Import required packages and core files.
   if (!isLegacy) {
     files.services.import({
-      module: clientModulePath({ sourceOutput: servicesOutput }),
+      module: clientModulePath({ config, sourceOutput: servicesOutput }),
       name: 'createClient',
     });
     files.services.import({
-      module: clientModulePath({ sourceOutput: servicesOutput }),
+      module: clientModulePath({ config, sourceOutput: servicesOutput }),
       name: 'createConfig',
     });
     files.services.import({
       asType: true,
-      module: clientModulePath({ sourceOutput: servicesOutput }),
+      module: clientModulePath({ config, sourceOutput: servicesOutput }),
       name: clientOptionsTypeName(),
     });
   } else {
@@ -944,36 +936,83 @@ export const generateServices = async ({
     files.services.add(statement);
   }
 
-  if (client) {
-    for (const service of client.services) {
-      processService({
-        client,
-        onClientImport: (imported) => {
-          files.services.import({
-            module: clientModulePath({ sourceOutput: servicesOutput }),
-            name: imported,
-          });
-        },
-        onImport: (imported) => {
-          files.services.import({
-            // this detection could be done safer, but it shouldn't cause any issues
-            asType: !imported.endsWith('Transformer'),
-            module: `./${files.types.getName(false)}`,
-            name: imported,
-          });
-        },
-        onNode: (node) => {
-          files.services.add(node);
-        },
-        service,
-      });
-    }
+  for (const service of client.services) {
+    processService({
+      client,
+      onClientImport: (imported) => {
+        files.services.import({
+          module: clientModulePath({ config, sourceOutput: servicesOutput }),
+          name: imported,
+        });
+      },
+      onImport: (imported) => {
+        files.services.import({
+          // this detection could be done safer, but it shouldn't cause any issues
+          asType: !imported.endsWith('Transformer'),
+          module: `./${files.types.getName(false)}`,
+          name: imported,
+        });
+      },
+      onNode: (node) => {
+        files.services.add(node);
+      },
+      service,
+    });
+  }
+};
+
+export const generateServices = ({ context }: { context: IRContext }) => {
+  // TODO: parser - once services are a plugin, this logic can be simplified
+  if (!context.config.services.export) {
     return;
   }
 
-  if (!context) {
-    return;
-  }
+  checkPrerequisites({ context });
+
+  const file = context.createFile({
+    id: servicesId,
+    path: 'services',
+  });
+  const servicesOutput = file.getName(false);
+
+  // import required packages and core files
+  file.import({
+    module: clientModulePath({
+      config: context.config,
+      sourceOutput: servicesOutput,
+    }),
+    name: 'createClient',
+  });
+  file.import({
+    module: clientModulePath({
+      config: context.config,
+      sourceOutput: servicesOutput,
+    }),
+    name: 'createConfig',
+  });
+  file.import({
+    asType: true,
+    module: clientModulePath({
+      config: context.config,
+      sourceOutput: servicesOutput,
+    }),
+    name: clientOptionsTypeName(),
+  });
+
+  // define client first
+  const statement = compiler.constVariable({
+    exportConst: true,
+    expression: compiler.callExpression({
+      functionName: 'createClient',
+      parameters: [
+        compiler.callExpression({
+          functionName: 'createConfig',
+        }),
+      ],
+    }),
+    name: 'client',
+  });
+  file.add(statement);
 
   // TODO: parser - generate services
   for (const path in context.ir.paths) {
@@ -989,7 +1028,7 @@ export const generateServices = async ({
           namespace: 'type',
         });
         if (identifier.name) {
-          files.services.import({
+          file.import({
             // this detection could be done safer, but it shouldn't cause any issues
             asType: !identifier.name.endsWith('Transformer'),
             module: `./${context.file({ id: 'types' })!.getName(false)}`,

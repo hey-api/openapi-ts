@@ -6,12 +6,12 @@ import { describe, expect, it, vi } from 'vitest';
 import type { OpenApiV3Schema } from '../../openApi';
 import type { Files } from '../../types/utils';
 import { setConfig } from '../../utils/config';
-import { generateSchemas } from '../schemas';
+import { generateLegacySchemas } from '../schemas';
 import { openApi } from './mocks';
 
 vi.mock('node:fs');
 
-describe('generateSchemas', () => {
+describe('generateLegacySchemas', () => {
   it('writes to filesystem', async () => {
     setConfig({
       client: {
@@ -50,7 +50,7 @@ describe('generateSchemas', () => {
 
     const files: Files = {};
 
-    await generateSchemas({ files, openApi });
+    await generateLegacySchemas({ files, openApi });
 
     files.schemas.write();
 
@@ -103,7 +103,7 @@ describe('generateSchemas', () => {
 
     const files: Files = {};
 
-    await generateSchemas({ files, openApi });
+    await generateLegacySchemas({ files, openApi });
 
     files.schemas.write();
 

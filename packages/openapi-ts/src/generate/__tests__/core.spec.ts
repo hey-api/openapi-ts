@@ -4,19 +4,19 @@ import path from 'node:path';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { setConfig } from '../../utils/config';
-import { generateCore } from '../core';
+import { generateLegacyCore } from '../core';
 import { mockTemplates } from './mocks';
 
 vi.mock('node:fs');
 
-describe('generateCore', () => {
-  let templates: Parameters<typeof generateCore>[2];
+describe('generateLegacyCore', () => {
+  let templates: Parameters<typeof generateLegacyCore>[2];
   beforeEach(() => {
     templates = mockTemplates;
   });
 
   it('writes to filesystem', async () => {
-    const client: Parameters<typeof generateCore>[1] = {
+    const client: Parameters<typeof generateLegacyCore>[1] = {
       models: [],
       server: 'http://localhost:8080',
       services: [],
@@ -47,7 +47,7 @@ describe('generateCore', () => {
       useOptions: true,
     });
 
-    await generateCore('/', client, templates);
+    await generateLegacyCore('/', client, templates);
 
     expect(writeFileSync).toHaveBeenCalledWith(
       path.resolve('/', '/OpenAPI.ts'),
@@ -76,7 +76,7 @@ describe('generateCore', () => {
   });
 
   it('uses client server value for base', async () => {
-    const client: Parameters<typeof generateCore>[1] = {
+    const client: Parameters<typeof generateLegacyCore>[1] = {
       models: [],
       server: 'http://localhost:8080',
       services: [],
@@ -107,7 +107,7 @@ describe('generateCore', () => {
       useOptions: true,
     });
 
-    await generateCore('/', client, templates);
+    await generateLegacyCore('/', client, templates);
 
     expect(templates.core.settings).toHaveBeenCalledWith({
       $config: config,
@@ -118,7 +118,7 @@ describe('generateCore', () => {
   });
 
   it('uses custom value for base', async () => {
-    const client: Parameters<typeof generateCore>[1] = {
+    const client: Parameters<typeof generateLegacyCore>[1] = {
       models: [],
       server: 'http://localhost:8080',
       services: [],
@@ -150,7 +150,7 @@ describe('generateCore', () => {
       useOptions: true,
     });
 
-    await generateCore('/', client, templates);
+    await generateLegacyCore('/', client, templates);
 
     expect(templates.core.settings).toHaveBeenCalledWith({
       $config: config,

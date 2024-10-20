@@ -3,12 +3,12 @@ import { writeFileSync } from 'node:fs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { setConfig } from '../../utils/config';
-import { generateClientClass } from '../class';
+import { generateLegacyClientClass } from '../class';
 import { mockTemplates, openApi } from './mocks';
 
 vi.mock('node:fs');
 
-describe('generateClientClass', () => {
+describe('generateLegacyClientClass', () => {
   it('writes to filesystem', async () => {
     setConfig({
       client: {
@@ -33,7 +33,7 @@ describe('generateClientClass', () => {
       useOptions: true,
     });
 
-    const client: Parameters<typeof generateClientClass>[2] = {
+    const client: Parameters<typeof generateLegacyClientClass>[2] = {
       models: [],
       server: 'http://localhost:8080',
       services: [],
@@ -41,7 +41,7 @@ describe('generateClientClass', () => {
       version: 'v1',
     };
 
-    await generateClientClass(openApi, './dist', client, mockTemplates);
+    await generateLegacyClientClass(openApi, './dist', client, mockTemplates);
 
     expect(writeFileSync).toHaveBeenCalled();
   });

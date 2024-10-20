@@ -48,7 +48,7 @@ describe('generateIndexFile', () => {
       }),
     };
 
-    await generateIndexFile({ files });
+    generateIndexFile({ files });
 
     files.index.write();
 

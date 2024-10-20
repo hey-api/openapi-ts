@@ -1613,41 +1613,34 @@ const schemaToType = ({
   return type;
 };
 
-export const generateTypes = async ({
+export const generateLegacyTypes = async ({
   client,
-  context,
   files,
 }: {
-  client: Client | undefined;
-  context: IRContext | undefined;
+  client: Client;
   files: Files;
 }): Promise<void> => {
-  if (client) {
-    const config = getConfig();
+  const config = getConfig();
 
-    if (config.types.export) {
-      files.types = new TypeScriptFile({
-        dir: config.output.path,
-        name: 'types.ts',
-      });
-    }
-
-    const onNode: TypesProps['onNode'] = (node) => {
-      files.types?.add(node);
-    };
-
-    for (const model of client.models) {
-      processModel({ client, model, onNode });
-    }
-
-    processServiceTypes({ client, onNode });
-    return;
+  if (config.types.export) {
+    files.types = new TypeScriptFile({
+      dir: config.output.path,
+      name: 'types.ts',
+    });
   }
 
-  if (!context) {
-    return;
+  const onNode: TypesProps['onNode'] = (node) => {
+    files.types?.add(node);
+  };
+
+  for (const model of client.models) {
+    processModel({ client, model, onNode });
   }
 
+  processServiceTypes({ client, onNode });
+};
+
+export const generateTypes = ({ context }: { context: IRContext }): void => {
   // TODO: parser - once types are a plugin, this logic can be simplified
   if (!context.config.types.export) {
     return;
@@ -1680,6 +1673,9 @@ export const generateTypes = async ({
     }
   }
 
+  // TODO: parser - once types are a plugin, this logic can be simplified
+  // provide config option on types to generate path types and services
+  // will set it to true if needed
   if (context.config.services.export || context.config.types.tree) {
     for (const path in context.ir.paths) {
       const pathItem = context.ir.paths[path as keyof IRPathsObject];

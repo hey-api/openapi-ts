@@ -1,4 +1,4 @@
-import type { PluginHandler, PluginHandlerExperimental } from '../../types';
+import type { PluginHandler, PluginLegacyHandler } from '../../types';
 
 interface Config {
   /**
@@ -14,7 +14,7 @@ interface Config {
 
 export interface PluginConfig extends Config {
   handler: PluginHandler<Config>;
-  handler_experimental?: PluginHandlerExperimental<Config>;
+  handlerLegacy: PluginLegacyHandler<Config>;
 }
 
 export interface UserConfig extends Omit<Config, 'output'> {}
