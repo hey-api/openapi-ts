@@ -7,11 +7,11 @@ import type { Operation } from '../../types/client';
 import type { Files } from '../../types/utils';
 import { setConfig } from '../../utils/config';
 import { TypeScriptFile } from '../files';
-import { generateServices } from '../services';
+import { generateLegacyServices } from '../services';
 
 vi.mock('node:fs');
 
-describe('generateServices', () => {
+describe('generateLegacyServices', () => {
   it('writes to filesystem', async () => {
     setConfig({
       client: {
@@ -36,7 +36,7 @@ describe('generateServices', () => {
       useOptions: false,
     });
 
-    const client: Parameters<typeof generateServices>[0]['client'] = {
+    const client: Parameters<typeof generateLegacyServices>[0]['client'] = {
       models: [],
       server: 'http://localhost:8080',
       services: [
@@ -80,9 +80,8 @@ describe('generateServices', () => {
       name: 'types.ts',
     });
 
-    await generateServices({
+    await generateLegacyServices({
       client,
-      context: undefined,
       files,
     });
 
@@ -120,7 +119,7 @@ describe('methodNameBuilder', () => {
     summary: null,
   };
 
-  const client: Parameters<typeof generateServices>[0]['client'] = {
+  const client: Parameters<typeof generateLegacyServices>[0]['client'] = {
     models: [],
     server: 'http://localhost:8080',
     services: [
@@ -166,9 +165,8 @@ describe('methodNameBuilder', () => {
       name: 'types.ts',
     });
 
-    await generateServices({
+    await generateLegacyServices({
       client,
-      context: undefined,
       files,
     });
 
@@ -214,9 +212,8 @@ describe('methodNameBuilder', () => {
       name: 'types.ts',
     });
 
-    await generateServices({
+    await generateLegacyServices({
       client,
-      context: undefined,
       files,
     });
 
@@ -264,9 +261,8 @@ describe('methodNameBuilder', () => {
       name: 'types.ts',
     });
 
-    await generateServices({
+    await generateLegacyServices({
       client,
-      context: undefined,
       files,
     });
 

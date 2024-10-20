@@ -5,11 +5,11 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { setConfig } from '../../utils/config';
 import { TypeScriptFile } from '../files';
-import { generateTypes } from '../types';
+import { generateLegacyTypes } from '../types';
 
 vi.mock('node:fs');
 
-describe('generateTypes', () => {
+describe('generateLegacyTypes', () => {
   it('writes to filesystem', async () => {
     setConfig({
       client: {
@@ -34,7 +34,7 @@ describe('generateTypes', () => {
       useOptions: true,
     });
 
-    const client: Parameters<typeof generateTypes>[0]['client'] = {
+    const client: Parameters<typeof generateLegacyTypes>[0]['client'] = {
       models: [
         {
           $refs: [],
@@ -73,9 +73,8 @@ describe('generateTypes', () => {
       }),
     };
 
-    await generateTypes({
+    await generateLegacyTypes({
       client,
-      context: undefined,
       files,
     });
 

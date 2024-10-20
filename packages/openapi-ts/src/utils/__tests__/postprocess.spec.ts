@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { parse } from '../../openApi';
+import { parseLegacy } from '../../openApi';
 import type { ParserConfig } from '../../openApi/config';
 import { getServiceName, postProcessClient } from '../postprocess';
 
@@ -35,7 +35,7 @@ describe('getServiceName', () => {
 
 describe('getServices', () => {
   it('should create a unnamed service if tags are empty', () => {
-    const parserClient = parse({
+    const parserClient = parseLegacy({
       openApi: {
         info: {
           title: 'x',
@@ -69,7 +69,7 @@ describe('getServices', () => {
 
 describe('getServices', () => {
   it('should create a unnamed service if tags are empty', () => {
-    const parserClient = parse({
+    const parserClient = parseLegacy({
       openApi: {
         info: {
           title: 'x',

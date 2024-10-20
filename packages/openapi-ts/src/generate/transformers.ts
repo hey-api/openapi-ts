@@ -243,7 +243,8 @@ const generateResponseTransformer = ({
   };
 };
 
-export const generateResponseTransformers = async ({
+// handles only response transformers for now
+export const generateLegacyTransformers = async ({
   client,
   onNode,
   onRemoveNode,

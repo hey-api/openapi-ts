@@ -1,16 +1,21 @@
 import { copyFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { getConfig, isLegacyClient } from '../utils/config';
+import type { Config } from '../types/config';
 import { ensureDirSync, relativeModulePath } from './utils';
 
+/**
+ * Returns path to the client module. When using client packages, this will be
+ * simply the name of the package. When bundling a client, this will be a
+ * relative path to the bundled client folder.
+ */
 export const clientModulePath = ({
+  config,
   sourceOutput,
 }: {
+  config: Config;
   sourceOutput: string;
-}) => {
-  const config = getConfig();
-
+}): string => {
   if (config.client.bundle) {
     return relativeModulePath({
       moduleOutput: 'client',
@@ -24,26 +29,20 @@ export const clientModulePath = ({
 export const clientOptionsTypeName = () => 'Options';
 
 /**
- * (optional) Creates a `client.ts` file containing the same exports as the
- * client package. Creates a `client` directory containing the modules from
- * the client package. These files are generated only when `client.bundle` is
- * set to true.
+ * Creates a `client` directory containing the same modules as the client package.
  */
-export const generateClient = async (
-  outputPath: string,
-  moduleName: string,
-) => {
-  const config = getConfig();
-
-  if (isLegacyClient(config) || !config.client.bundle) {
-    return;
-  }
-
+export const generateClientBundle = ({
+  name,
+  outputPath,
+}: {
+  name: string;
+  outputPath: string;
+}): void => {
   // create directory for client modules
   const dirPath = path.resolve(outputPath, 'client');
   ensureDirSync(dirPath);
 
-  const clientModulePath = path.normalize(require.resolve(moduleName));
+  const clientModulePath = path.normalize(require.resolve(name));
   const clientModulePathComponents = clientModulePath.split(path.sep);
   const clientSrcPath = [
     ...clientModulePathComponents.slice(

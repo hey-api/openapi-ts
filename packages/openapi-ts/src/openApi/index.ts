@@ -35,7 +35,7 @@ export type { OpenApiSchema as OpenApiV3Schema } from './v3/interfaces/OpenApiSc
  * all the models, services and schema's we should output.
  * @param openApi The OpenAPI spec that we have loaded from disk.
  */
-export function parse({
+export function parseLegacy({
   openApi,
   parserConfig,
 }: {

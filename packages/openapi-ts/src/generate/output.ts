@@ -4,17 +4,17 @@ import type { IRContext } from '../ir/context';
 import type { OpenApi } from '../openApi';
 import type { Client } from '../types/client';
 import type { Files } from '../types/utils';
-import { getConfig } from '../utils/config';
+import { getConfig, isLegacyClient } from '../utils/config';
 import type { Templates } from '../utils/handlebars';
-import { generateClientClass } from './class';
-import { generateClient } from './client';
-import { generateCore } from './core';
+import { generateLegacyClientClass } from './class';
+import { generateClientBundle } from './client';
+import { generateLegacyCore } from './core';
 import { generateIndexFile } from './indexFile';
-import { generatePlugins } from './plugins';
-import { generateSchemas } from './schemas';
-import { generateServices } from './services';
-import { generateResponseTransformers } from './transformers';
-import { generateTypes } from './types';
+import { generateLegacyPlugins } from './plugins';
+import { generateLegacySchemas } from './schemas';
+import { generateLegacyServices, generateServices } from './services';
+import { generateLegacyTransformers } from './transformers';
+import { generateLegacyTypes, generateTypes } from './types';
 
 /**
  * Write our OpenAPI client, using the given templates at the given output
@@ -22,20 +22,18 @@ import { generateTypes } from './types';
  * @param client Client containing models, schemas, and services
  * @param templates Templates wrapper with all loaded Handlebars templates
  */
-export const generateOutput = async ({
+export const generateLegacyOutput = async ({
   client,
-  context,
   openApi,
   templates,
 }: {
-  client: Client | undefined;
-  context: IRContext | undefined;
+  client: Client;
   openApi: OpenApi;
   templates: Templates;
 }): Promise<void> => {
   const config = getConfig();
 
-  // TODO: parser - handle IR
+  // TODO: parser - move to config.input
   if (client) {
     if (config.services.include && config.services.asClass) {
       const regexp = new RegExp(config.services.include);
@@ -54,65 +52,51 @@ export const generateOutput = async ({
 
   const files: Files = {};
 
-  await generateClient(outputPath, config.client.name);
+  if (!isLegacyClient(config) && config.client.bundle) {
+    await generateClientBundle({ name: config.client.name, outputPath });
+  }
 
   // types.gen.ts
-  await generateTypes({
-    client,
-    context,
-    files,
-  });
+  await generateLegacyTypes({ client, files });
 
   // schemas.gen.ts
-  await generateSchemas({ files, openApi });
+  await generateLegacySchemas({ files, openApi });
 
   // transformers
-  // TODO: parser - handle IR
-  if (client) {
-    if (
-      config.services.export &&
-      client.services.length &&
-      config.types.dates === 'types+transform'
-    ) {
-      await generateResponseTransformers({
-        client,
-        onNode: (node) => {
-          files.types?.add(node);
-        },
-        onRemoveNode: () => {
-          files.types?.removeNode();
-        },
-      });
-    }
+  if (
+    config.services.export &&
+    client.services.length &&
+    config.types.dates === 'types+transform'
+  ) {
+    await generateLegacyTransformers({
+      client,
+      onNode: (node) => {
+        files.types?.add(node);
+      },
+      onRemoveNode: () => {
+        files.types?.removeNode();
+      },
+    });
   }
 
   // services.gen.ts
-  await generateServices({
-    client,
-    context,
-    files,
-  });
+  await generateLegacyServices({ client, files });
 
   // deprecated files
-  if (client) {
-    await generateClientClass(openApi, outputPath, client, templates);
-    await generateCore(
-      path.resolve(config.output.path, 'core'),
-      client,
-      templates,
-    );
-  }
+  await generateLegacyClientClass(openApi, outputPath, client, templates);
+  await generateLegacyCore(
+    path.resolve(config.output.path, 'core'),
+    client,
+    templates,
+  );
 
+  // TODO: parser - remove after moving types, services, transformers, and schemas into plugin
   // index.ts. Any files generated after this won't be included in exports
   // from the index file.
-  await generateIndexFile({ files });
+  generateIndexFile({ files });
 
   // plugins
-  await generatePlugins({
-    client,
-    context,
-    files,
-  });
+  await generateLegacyPlugins({ client, files });
 
   Object.entries(files).forEach(([name, file]) => {
     if (config.dryRun) {
@@ -125,18 +109,66 @@ export const generateOutput = async ({
       file.write('\n\n');
     }
   });
+};
 
-  if (context) {
-    Object.entries(context.files).forEach(([name, file]) => {
-      if (config.dryRun) {
-        return;
-      }
+export const generateOutput = async ({ context }: { context: IRContext }) => {
+  const outputPath = path.resolve(context.config.output.path);
 
-      if (name === 'index') {
-        file.write();
-      } else {
-        file.write('\n\n');
-      }
+  if (context.config.client.bundle) {
+    generateClientBundle({
+      name: context.config.client.name,
+      outputPath,
     });
   }
+
+  // types.gen.ts
+  generateTypes({ context });
+
+  // schemas.gen.ts
+  // await generateLegacySchemas({ files, openApi });
+
+  // transformers
+  if (
+    context.config.services.export &&
+    // client.services.length &&
+    context.config.types.dates === 'types+transform'
+  ) {
+    // await generateLegacyTransformers({
+    //   client,
+    //   onNode: (node) => {
+    //     files.types?.add(node);
+    //   },
+    //   onRemoveNode: () => {
+    //     files.types?.removeNode();
+    //   },
+    // });
+  }
+
+  // services.gen.ts
+  generateServices({ context });
+
+  // TODO: parser - remove after moving types, services, transformers, and schemas into plugin
+  // index.ts. Any files generated after this won't be included in exports
+  // from the index file.
+  generateIndexFile({ files: context.files });
+
+  // plugins
+  for (const plugin of context.config.plugins) {
+    plugin.handler({
+      context,
+      plugin: plugin as never,
+    });
+  }
+
+  Object.entries(context.files).forEach(([name, file]) => {
+    if (context.config.dryRun) {
+      return;
+    }
+
+    if (name === 'index') {
+      file.write();
+    } else {
+      file.write('\n\n');
+    }
+  });
 };

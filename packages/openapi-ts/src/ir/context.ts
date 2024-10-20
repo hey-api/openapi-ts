@@ -48,6 +48,7 @@ export class IRContext<Spec extends Record<string, any> = any> {
    * to the newly created file.
    */
   public createFile(file: ContextFile): TypeScriptFile {
+    // TODO: parser - handle attempt to create duplicate
     const outputParts = file.path.split('/');
     const outputDir = path.resolve(
       this.config.output.path,

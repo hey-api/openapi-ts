@@ -3,11 +3,7 @@ import type { Files } from '../types/utils';
 import { getConfig } from '../utils/config';
 import { TypeScriptFile } from './files';
 
-export const generateIndexFile = async ({
-  files,
-}: {
-  files: Files;
-}): Promise<void> => {
+export const generateIndexFile = ({ files }: { files: Files }): void => {
   const config = getConfig();
 
   files.index = new TypeScriptFile({

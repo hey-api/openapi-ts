@@ -4,12 +4,12 @@ import { describe, expect, it, vi } from 'vitest';
 
 import type { Client } from '../../types/client';
 import { setConfig } from '../../utils/config';
-import { generateOutput } from '../output';
+import { generateLegacyOutput } from '../output';
 import { mockTemplates, openApi } from './mocks';
 
 vi.mock('node:fs');
 
-describe('generateOutput', () => {
+describe('generateLegacyOutput', () => {
   it('writes to filesystem', async () => {
     setConfig({
       client: {
@@ -42,9 +42,8 @@ describe('generateOutput', () => {
       version: 'v1',
     };
 
-    await generateOutput({
+    await generateLegacyOutput({
       client,
-      context: undefined,
       openApi,
       templates: mockTemplates,
     });
