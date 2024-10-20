@@ -1,0 +1,28 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "version": "1.0.0"
+  },
+  "components": {
+    "schemas": {
+      "Foo": {
+        "properties": {
+          "foo": { "type": "string" },
+          "bar": { "type": "string" },
+          "baz": { "type": "string" }
+        },
+        "required": ["foo"],
+        "anyOf": [
+          {
+            "properties": { "bar": { "type": "string" } },
+            "required": ["bar"]
+          },
+          {
+            "properties": { "baz": { "type": "string" } },
+            "required": ["baz"]
+          }
+        ]
+      }
+    }
+  }
+}

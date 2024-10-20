@@ -781,26 +781,26 @@
       }
     },
     "/api/v{api-version}/duplicate": {
+      "delete": {
+        "tags": ["Duplicate", "Duplicate"],
+        "operationId": "DuplicateName"
+      },
       "get": {
         "tags": ["Duplicate"],
-        "operationId": "DuplicateName"
+        "operationId": "DuplicateName2"
       },
       "post": {
         "tags": ["Duplicate"],
-        "operationId": "DuplicateName"
+        "operationId": "DuplicateName3"
       },
       "put": {
         "tags": ["Duplicate"],
-        "operationId": "DuplicateName"
-      },
-      "delete": {
-        "tags": ["Duplicate"],
-        "operationId": "DuplicateName"
+        "operationId": "DuplicateName4"
       }
     },
     "/api/v{api-version}/no-content": {
       "get": {
-        "tags": ["NoContent"],
+        "tags": ["noContent"],
         "operationId": "CallWithNoContentResponse",
         "responses": {
           "204": {

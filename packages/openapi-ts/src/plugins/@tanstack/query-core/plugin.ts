@@ -13,11 +13,11 @@ import {
   operationErrorTypeName,
   operationOptionsType,
   operationResponseTypeName,
-  toOperationName,
+  serviceFunctionIdentifier,
 } from '../../../generate/services';
 import { relativeModulePath } from '../../../generate/utils';
 import type { IROperationObject, IRPathsObject } from '../../../ir/ir';
-import { hasParametersObjectRequired } from '../../../ir/parameter';
+import { hasOperationDataRequired } from '../../../ir/operation';
 import { isOperationParameterRequired } from '../../../openApi';
 import { getOperationKey } from '../../../openApi/common/parser/operation';
 import type {
@@ -39,14 +39,14 @@ import type { PluginConfig as SvelteQueryPluginConfig } from '../svelte-query';
 import type { PluginConfig as VueQueryPluginConfig } from '../vue-query';
 
 const toInfiniteQueryOptionsName = (operation: Operation) =>
-  `${toOperationName({
+  `${serviceFunctionIdentifier({
     config: getConfig(),
     id: operation.name,
     operation,
   })}InfiniteOptions`;
 
 const toMutationOptionsName = (operation: Operation) =>
-  `${toOperationName({
+  `${serviceFunctionIdentifier({
     config: getConfig(),
     id: operation.name,
     operation,
@@ -61,7 +61,7 @@ const toQueryOptionsName = ({
   id: string;
   operation: IROperationObject | Operation;
 }) =>
-  `${toOperationName({
+  `${serviceFunctionIdentifier({
     config,
     id,
     operation,
@@ -78,7 +78,7 @@ const toQueryKeyName = ({
   isInfinite?: boolean;
   operation: IROperationObject | Operation;
 }) =>
-  `${toOperationName({
+  `${serviceFunctionIdentifier({
     config,
     id,
     operation,
@@ -564,7 +564,7 @@ const createTypeData = ({
     },
   });
 
-  const typeData = operationOptionsType(nameTypeData);
+  const typeData = operationOptionsType({ importedType: nameTypeData });
 
   return { typeData };
 };
@@ -738,7 +738,7 @@ export const handlerLegacy: PluginLegacyHandler<
             config,
             name: service.name,
           }),
-        toOperationName({
+        serviceFunctionIdentifier({
           config,
           handleIllegal: !config.services.asClass,
           id: operation.name,
@@ -1375,7 +1375,7 @@ export const handler: PluginHandler<
               // name: service.name,
               name: getServiceName('TODO'),
             }),
-          toOperationName({
+          serviceFunctionIdentifier({
             config: context.config,
             handleIllegal: !context.config.services.asClass,
             id: operation.id,
@@ -1411,7 +1411,7 @@ export const handler: PluginHandler<
         //   typesModulePath,
         // });
 
-        const isRequired = hasParametersObjectRequired(operation.parameters);
+        const isRequired = hasOperationDataRequired(operation);
 
         const queryKeyStatement = compiler.constVariable({
           exportConst: true,

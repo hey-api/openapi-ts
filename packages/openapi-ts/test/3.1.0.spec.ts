@@ -45,6 +45,17 @@ describe(`OpenAPI ${VERSION}`, () => {
     },
     {
       config: createConfig({
+        input: 'object-properties-any-of.json',
+        output: 'object-properties-any-of',
+        services: {
+          export: false,
+        },
+      }),
+      description:
+        'sets correct logical operator and brackets on object with properties and anyOf composition',
+    },
+    {
+      config: createConfig({
         input: 'required-all-of-ref.json',
         output: 'required-all-of-ref',
         services: {

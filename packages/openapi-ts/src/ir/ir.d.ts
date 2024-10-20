@@ -1,4 +1,5 @@
 import type { JsonSchemaDraft2020_12 } from '../openApi/3.1.0/types/json-schema-draft-2020-12';
+import type { IRMediaType } from './mediaType';
 
 export interface IR {
   components?: IRComponentsObject;
@@ -40,8 +41,10 @@ export interface IROperationObject {
 }
 
 export interface IRBodyObject {
+  mediaType: string;
   required?: boolean;
   schema: IRSchemaObject;
+  type?: IRMediaType;
 }
 
 export interface IRParametersObject {

@@ -6,7 +6,7 @@ import type {
   RequestBodyObject,
   ResponseObject,
 } from '../types/spec';
-import { getMediaTypeSchema } from './mediaType';
+import { mediaTypeObject } from './mediaType';
 import { schemaToIrSchema } from './schema';
 
 interface Operation
@@ -72,11 +72,12 @@ const operationToIrOperation = ({
       '$ref' in operation.requestBody
         ? context.resolveRef<RequestBodyObject>(operation.requestBody.$ref)
         : operation.requestBody;
-    const content = getMediaTypeSchema({
+    const content = mediaTypeObject({
       content: requestBodyObject.content,
     });
     if (content) {
       irOperation.body = {
+        mediaType: content.mediaType,
         schema: schemaToIrSchema({
           context,
           schema: {
@@ -89,6 +90,10 @@ const operationToIrOperation = ({
       if (requestBodyObject.required) {
         irOperation.body.required = requestBodyObject.required;
       }
+
+      if (content.type) {
+        irOperation.body.type = content.type;
+      }
     }
   }
 
@@ -98,7 +103,7 @@ const operationToIrOperation = ({
       '$ref' in response
         ? context.resolveRef<ResponseObject>(response.$ref)
         : response;
-    const content = getMediaTypeSchema({
+    const content = mediaTypeObject({
       content: responseObject.content,
     });
     if (content) {
