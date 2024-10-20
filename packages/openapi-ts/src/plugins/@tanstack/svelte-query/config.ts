@@ -1,9 +1,9 @@
-import { handler, handler_experimental } from '../query-core/plugin';
+import { handler, handlerLegacy } from '../query-core/plugin';
 import type { PluginConfig } from './types';
 
 export const defaultConfig: Required<PluginConfig> = {
   handler,
-  handler_experimental,
+  handlerLegacy,
   infiniteQueryOptions: true,
   mutationOptions: true,
   name: '@tanstack/svelte-query',

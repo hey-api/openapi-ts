@@ -3,9 +3,9 @@ import path from 'node:path';
 import { loadConfig } from 'c12';
 import { sync } from 'cross-spawn';
 
-import { generateOutput } from './generate/output';
+import { generateLegacyOutput, generateOutput } from './generate/output';
 import type { IRContext } from './ir/context';
-import { parse, parseExperimental } from './openApi';
+import { parseExperimental, parseLegacy } from './openApi';
 import type { ParserConfig } from './openApi/config';
 import {
   operationFilterFn,
@@ -363,8 +363,9 @@ export async function createClient(
       });
     }
 
+    // fallback to legacy parser
     if (!context) {
-      const parsed = parse({
+      const parsed = parseLegacy({
         openApi,
         parserConfig,
       });
@@ -375,12 +376,11 @@ export async function createClient(
     logClientMessage();
 
     Performance.start('generator');
-    await generateOutput({
-      client,
-      context,
-      openApi,
-      templates,
-    });
+    if (context) {
+      await generateOutput({ context });
+    } else if (client) {
+      await generateLegacyOutput({ client, openApi, templates });
+    }
     Performance.end('generator');
 
     Performance.start('postprocess');

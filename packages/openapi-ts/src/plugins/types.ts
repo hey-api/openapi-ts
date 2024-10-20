@@ -2,16 +2,15 @@ import type { IRContext } from '../ir/context';
 import type { Client } from '../types/client';
 import type { Files } from '../types/utils';
 
-export type PluginHandler<PluginConfig> = (args: {
+export type PluginLegacyHandler<PluginConfig> = (args: {
   client: Client;
   files: Files;
-  plugin: Omit<Required<PluginConfig>, 'handler' | 'handler_experimental'>;
+  plugin: Omit<Required<PluginConfig>, 'handler' | 'handlerLegacy'>;
 }) => void;
 
-export type PluginHandlerExperimental<PluginConfig> = (args: {
+export type PluginHandler<PluginConfig> = (args: {
   context: IRContext;
-  files: Files;
-  plugin: Omit<Required<PluginConfig>, 'handler' | 'handler_experimental'>;
+  plugin: Omit<Required<PluginConfig>, 'handler' | 'handlerLegacy'>;
 }) => void;
 
 type KeyTypes = string | number | symbol;
@@ -28,9 +27,7 @@ export type DefaultPluginConfigsMap<
 > = {
   [K in U]: {
     handler: PluginHandler<Required<Extract<T, { name: K }>>>;
-    handler_experimental?: PluginHandlerExperimental<
-      Required<Extract<T, { name: K }>>
-    >;
+    handlerLegacy: PluginLegacyHandler<Required<Extract<T, { name: K }>>>;
     name: string;
     output?: string;
   };

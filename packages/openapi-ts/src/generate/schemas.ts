@@ -68,7 +68,7 @@ const toSchemaName = (
   return `${validName}Schema`;
 };
 
-export const generateSchemas = async ({
+export const generateLegacySchemas = async ({
   files,
   openApi,
 }: {
