@@ -18,6 +18,7 @@ const outputDir = path.join(__dirname, 'generated', VERSION);
 describe(`OpenAPI ${VERSION}`, () => {
   const createConfig = (userConfig: UserConfig): UserConfig => ({
     client: '@hey-api/client-fetch',
+    experimental_parser: true,
     schemas: false,
     ...userConfig,
     input: path.join(
@@ -45,6 +46,17 @@ describe(`OpenAPI ${VERSION}`, () => {
     },
     {
       config: createConfig({
+        input: 'object-properties-all-of.json',
+        output: 'object-properties-all-of',
+        services: {
+          export: false,
+        },
+      }),
+      description:
+        'sets correct logical operator and brackets on object with properties and allOf composition',
+    },
+    {
+      config: createConfig({
         input: 'object-properties-any-of.json',
         output: 'object-properties-any-of',
         services: {
@@ -53,6 +65,17 @@ describe(`OpenAPI ${VERSION}`, () => {
       }),
       description:
         'sets correct logical operator and brackets on object with properties and anyOf composition',
+    },
+    {
+      config: createConfig({
+        input: 'object-properties-one-of.json',
+        output: 'object-properties-one-of',
+        services: {
+          export: false,
+        },
+      }),
+      description:
+        'sets correct logical operator and brackets on object with properties and oneOf composition',
     },
     {
       config: createConfig({
