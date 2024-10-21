@@ -99,7 +99,7 @@
     "@angular/router": "17.3.9",
     "@hey-api/client-axios": "workspace:*",
     "@hey-api/client-fetch": "workspace:*",
-    "@tanstack/react-query": "5.59.13",
+    "@tanstack/react-query": "5.59.15",
     "@tanstack/solid-query": "5.51.21",
     "@tanstack/svelte-query": "5.59.13",
     "@tanstack/vue-query": "5.59.13",
