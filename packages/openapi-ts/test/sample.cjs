@@ -17,21 +17,22 @@ const main = async () => {
     // input: 'https://mongodb-mms-prod-build-server.s3.amazonaws.com/openapi/2caffd88277a4e27c95dcefc7e3b6a63a3b03297-v2-2023-11-15.json',
     // name: 'foo',
     output: {
-      format: 'prettier',
-      lint: 'eslint',
+      // format: 'prettier',
+      // lint: 'eslint',
       path: './test/generated/sample/',
     },
-    plugins: [
-      '@tanstack/react-query',
-      // '@hey-api/services',
-      // 'zod',
-    ],
+    // plugins: [
+    //   '@tanstack/react-query',
+    //   // '@hey-api/services',
+    //   // 'zod',
+    // ],
     schemas: {
-      export: false,
+      // export: false,
+      type: 'json',
     },
     services: {
       // asClass: true,
-      // export: false,
+      export: false,
       // filter: '^GET /api/v{api-version}/simple:operation$',
       // export: false,
       // name: '^Parameters',
@@ -41,7 +42,7 @@ const main = async () => {
       // enums: 'typescript',
       // enums: 'typescript+namespace',
       enums: 'javascript',
-      // export: false,
+      export: false,
       // include:
       //   '^(_400|CompositionWithOneOfAndProperties)',
       // name: 'PascalCase',

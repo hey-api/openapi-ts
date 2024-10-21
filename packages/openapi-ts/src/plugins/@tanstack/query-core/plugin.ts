@@ -11,13 +11,9 @@ import {
   clientOptionsTypeName,
 } from '../../../generate/client';
 import {
-  operationDataRef,
-  operationErrorRef,
   operationOptionsType,
-  operationResponseRef,
   serviceFunctionIdentifier,
 } from '../../../generate/services';
-import { schemaToType } from '../../../generate/types';
 import { relativeModulePath } from '../../../generate/utils';
 import type { IRContext } from '../../../ir/context';
 import type {
@@ -33,6 +29,12 @@ import type { Files } from '../../../types/utils';
 import { getConfig } from '../../../utils/config';
 import { getServiceName } from '../../../utils/postprocess';
 import { transformServiceName } from '../../../utils/transform';
+import {
+  operationDataRef,
+  operationErrorRef,
+  operationResponseRef,
+} from '../../@hey-api/services/plugin';
+import { schemaToType } from '../../@hey-api/types/plugin';
 import type { PluginHandler } from '../../types';
 import type { PluginConfig as ReactQueryPluginConfig } from '../react-query';
 import type { PluginConfig as SolidQueryPluginConfig } from '../solid-query';
