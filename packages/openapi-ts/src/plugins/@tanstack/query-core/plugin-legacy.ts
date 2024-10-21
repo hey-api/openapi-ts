@@ -2,96 +2,106 @@ import ts from 'typescript';
 
 import { compiler, type Property } from '../../../compiler';
 import type { ImportExportItem } from '../../../compiler/module';
-import {
-  type ImportExportItemObject,
-  tsNodeToString,
-} from '../../../compiler/utils';
+import type { ImportExportItemObject } from '../../../compiler/utils';
 import {
   clientModulePath,
   clientOptionsTypeName,
 } from '../../../generate/client';
 import {
-  operationDataRef,
-  operationErrorRef,
+  generateImport,
+  operationDataTypeName,
+  operationErrorTypeName,
   operationOptionsType,
-  operationResponseRef,
+  operationResponseTypeName,
   serviceFunctionIdentifier,
 } from '../../../generate/services';
-import { schemaToType } from '../../../generate/types';
 import { relativeModulePath } from '../../../generate/utils';
-import type { IRContext } from '../../../ir/context';
+import type { IROperationObject } from '../../../ir/ir';
+import { isOperationParameterRequired } from '../../../openApi';
+import { getOperationKey } from '../../../openApi/common/parser/operation';
 import type {
-  IROperationObject,
-  IRPathItemObject,
-  IRPathsObject,
-} from '../../../ir/ir';
-import {
-  hasOperationDataRequired,
-  operationPagination,
-} from '../../../ir/operation';
+  Client,
+  Method,
+  Model,
+  Operation,
+  OperationParameter,
+} from '../../../types/client';
+import type { Config } from '../../../types/config';
 import type { Files } from '../../../types/utils';
 import { getConfig } from '../../../utils/config';
-import { getServiceName } from '../../../utils/postprocess';
 import { transformServiceName } from '../../../utils/transform';
-import type { PluginHandler } from '../../types';
+import type { PluginLegacyHandler } from '../../types';
 import type { PluginConfig as ReactQueryPluginConfig } from '../react-query';
 import type { PluginConfig as SolidQueryPluginConfig } from '../solid-query';
 import type { PluginConfig as SvelteQueryPluginConfig } from '../svelte-query';
 import type { PluginConfig as VueQueryPluginConfig } from '../vue-query';
 
-const infiniteQueryOptionsFunctionIdentifier = ({
-  context,
-  operation,
-}: {
-  context: IRContext;
-  operation: IROperationObject;
-}) =>
+const toInfiniteQueryOptionsName = (operation: Operation) =>
   `${serviceFunctionIdentifier({
-    config: context.config,
-    id: operation.id,
+    config: getConfig(),
+    id: operation.name,
     operation,
   })}InfiniteOptions`;
 
-const mutationOptionsFunctionIdentifier = ({
-  context,
-  operation,
-}: {
-  context: IRContext;
-  operation: IROperationObject;
-}) =>
+const toMutationOptionsName = (operation: Operation) =>
   `${serviceFunctionIdentifier({
-    config: context.config,
-    id: operation.id,
+    config: getConfig(),
+    id: operation.name,
     operation,
   })}Mutation`;
 
-const queryOptionsFunctionIdentifier = ({
-  context,
+const toQueryOptionsName = ({
+  config,
+  id,
   operation,
 }: {
-  context: IRContext;
-  operation: IROperationObject;
+  config: Config;
+  id: string;
+  operation: IROperationObject | Operation;
 }) =>
   `${serviceFunctionIdentifier({
-    config: context.config,
-    id: operation.id,
+    config,
+    id,
     operation,
   })}Options`;
 
-const queryKeyFunctionIdentifier = ({
-  context,
+const toQueryKeyName = ({
+  config,
+  id,
   operation,
   isInfinite,
 }: {
-  context: IRContext;
+  config: Config;
+  id: string;
   isInfinite?: boolean;
-  operation: IROperationObject;
+  operation: IROperationObject | Operation;
 }) =>
   `${serviceFunctionIdentifier({
-    config: context.config,
-    id: operation.id,
+    config,
+    id,
     operation,
   })}${isInfinite ? 'Infinite' : ''}QueryKey`;
+
+const checkPrerequisites = ({ files }: { files: Files }) => {
+  if (!files.services) {
+    throw new Error(
+      '🚫 services need to be exported to use TanStack Query plugin - enable service generation',
+    );
+  }
+};
+
+const getPaginationIn = (parameter: OperationParameter) => {
+  switch (parameter.in) {
+    case 'formData':
+      return 'body';
+    case 'header':
+      return 'headers';
+    default:
+      return parameter.in;
+  }
+};
+
+const paginationWordsRegExp = /^(cursor|offset|page|start)/;
 
 const createInfiniteParamsFn = 'createInfiniteParams';
 const createQueryKeyFn = 'createQueryKey';
@@ -521,6 +531,136 @@ const createQueryKeyType = ({ file }: { file: Files[keyof Files] }) => {
   file.add(queryKeyType);
 };
 
+const createTypeData = ({
+  client,
+  file,
+  operation,
+  typesModulePath,
+}: {
+  client: Client;
+  file: Files[keyof Files];
+  operation: Operation;
+  typesModulePath: string;
+}) => {
+  const { name: nameTypeData } = generateImport({
+    client,
+    meta: operation.parameters.length
+      ? {
+          // TODO: this should be exact ref to operation for consistency,
+          // but name should work too as operation ID is unique
+          $ref: operation.name,
+          name: operation.name,
+        }
+      : undefined,
+    nameTransformer: operationDataTypeName,
+    onImport: (name) => {
+      file.import({
+        asType: true,
+        module: typesModulePath,
+        name,
+      });
+    },
+  });
+
+  const typeData = operationOptionsType({ importedType: nameTypeData });
+
+  return { typeData };
+};
+
+const createTypeError = ({
+  client,
+  file,
+  operation,
+  pluginName,
+  typesModulePath,
+}: {
+  client: Client;
+  file: Files[keyof Files];
+  operation: Operation;
+  pluginName: string;
+  typesModulePath: string;
+}) => {
+  const config = getConfig();
+
+  const { name: nameTypeError } = generateImport({
+    client,
+    meta: {
+      // TODO: this should be exact ref to operation for consistency,
+      // but name should work too as operation ID is unique
+      $ref: operation.name,
+      name: operation.name,
+    },
+    nameTransformer: operationErrorTypeName,
+    onImport: (name) => {
+      file.import({
+        asType: true,
+        module: typesModulePath,
+        name,
+      });
+    },
+  });
+
+  let typeError: ImportExportItemObject = {
+    asType: true,
+    name: nameTypeError,
+  };
+  if (!typeError.name) {
+    typeError = file.import({
+      asType: true,
+      module: pluginName,
+      name: 'DefaultError',
+    });
+  }
+
+  if (config.client.name === '@hey-api/client-axios') {
+    const axiosError = file.import({
+      asType: true,
+      module: 'axios',
+      name: 'AxiosError',
+    });
+    typeError = {
+      ...axiosError,
+      name: `${axiosError.name}<${typeError.name}>`,
+    };
+  }
+
+  return { typeError };
+};
+
+const createTypeResponse = ({
+  client,
+  file,
+  operation,
+  typesModulePath,
+}: {
+  client: Client;
+  file: Files[keyof Files];
+  operation: Operation;
+  typesModulePath: string;
+}) => {
+  const { name: nameTypeResponse } = generateImport({
+    client,
+    meta: {
+      // TODO: this should be exact ref to operation for consistency,
+      // but name should work too as operation ID is unique
+      $ref: operation.name,
+      name: operation.name,
+    },
+    nameTransformer: operationResponseTypeName,
+    onImport: (imported) => {
+      file.import({
+        asType: true,
+        module: typesModulePath,
+        name: imported,
+      });
+    },
+  });
+
+  const typeResponse = nameTypeResponse || 'void';
+
+  return { typeResponse };
+};
+
 const createQueryKeyLiteral = ({
   isInfinite,
   id,
@@ -544,146 +684,26 @@ const createQueryKeyLiteral = ({
   return queryKeyLiteral;
 };
 
-const checkPrerequisites = ({ context }: { context: IRContext }) => {
-  if (!context.file({ id: 'services' })) {
-    throw new Error(
-      '🚫 services need to be exported to use TanStack Query plugin - enable service generation',
-    );
-  }
-};
-
-interface Plugin {
-  name: string;
-  output: string;
-}
-
-const useTypeData = ({
-  context,
-  operation,
-  plugin,
-}: {
-  context: IRContext;
-  operation: IROperationObject;
-  plugin: Plugin;
-}) => {
-  const identifierData = context.file({ id: 'types' })!.identifier({
-    $ref: operationDataRef({ id: operation.id }),
-    namespace: 'type',
-  });
-  if (identifierData.name) {
-    context.file({ id: plugin.name })!.import({
-      asType: true,
-      module: relativeModulePath({
-        // TODO: parser - moduleOutput should be a full relative path to types file
-        moduleOutput: context.file({ id: 'types' })!.nameWithoutExtension(),
-        sourceOutput: plugin.output,
-      }),
-      name: identifierData.name,
-    });
-  }
-  const typeData = operationOptionsType({
-    importedType: identifierData.name,
-  });
-  return typeData;
-};
-
-const useTypeError = ({
-  context,
-  operation,
-  plugin,
-}: {
-  context: IRContext;
-  operation: IROperationObject;
-  plugin: Plugin;
-}) => {
-  const identifierError = context.file({ id: 'types' })!.identifier({
-    $ref: operationErrorRef({ id: operation.id }),
-    namespace: 'type',
-  });
-  if (identifierError.name) {
-    context.file({ id: plugin.name })!.import({
-      asType: true,
-      module: relativeModulePath({
-        // TODO: parser - moduleOutput should be a full relative path to types file
-        moduleOutput: context.file({ id: 'types' })!.nameWithoutExtension(),
-        sourceOutput: plugin.output,
-      }),
-      name: identifierError.name,
-    });
-  }
-  let typeError: ImportExportItemObject = {
-    asType: true,
-    name: identifierError.name,
-  };
-  if (!typeError.name) {
-    typeError = context.file({ id: plugin.name })!.import({
-      asType: true,
-      module: plugin.name,
-      name: 'DefaultError',
-    });
-  }
-  if (context.config.client.name === '@hey-api/client-axios') {
-    const axiosError = context.file({ id: plugin.name })!.import({
-      asType: true,
-      module: 'axios',
-      name: 'AxiosError',
-    });
-    typeError = {
-      ...axiosError,
-      name: `${axiosError.name}<${typeError.name}>`,
-    };
-  }
-  return typeError;
-};
-
-const useTypeResponse = ({
-  context,
-  operation,
-  plugin,
-}: {
-  context: IRContext;
-  operation: IROperationObject;
-  plugin: Plugin;
-}) => {
-  const identifierResponse = context.file({ id: 'types' })!.identifier({
-    $ref: operationResponseRef({ id: operation.id }),
-    namespace: 'type',
-  });
-  if (identifierResponse.name) {
-    context.file({ id: plugin.name })!.import({
-      asType: true,
-      module: relativeModulePath({
-        // TODO: parser - moduleOutput should be a full relative path to types file
-        moduleOutput: context.file({ id: 'types' })!.nameWithoutExtension(),
-        sourceOutput: plugin.output,
-      }),
-      name: identifierResponse.name,
-    });
-  }
-  const typeResponse = identifierResponse.name || 'unknown';
-  return typeResponse;
-};
-
-export const handler: PluginHandler<
+export const handlerLegacy: PluginLegacyHandler<
   | ReactQueryPluginConfig
   | SolidQueryPluginConfig
   | SvelteQueryPluginConfig
   | VueQueryPluginConfig
-> = ({ context, plugin }) => {
-  checkPrerequisites({ context });
+> = ({ client, files, plugin }) => {
+  checkPrerequisites({ files });
 
-  const file = context.createFile({
-    id: plugin.name,
-    path: plugin.output,
-  });
+  const config = getConfig();
+  const file = files[plugin.name];
 
   file.import({
     asType: true,
-    module: clientModulePath({
-      config: context.config,
-      sourceOutput: plugin.output,
-    }),
+    module: clientModulePath({ config, sourceOutput: plugin.output }),
     name: clientOptionsTypeName(),
+  });
+
+  const typesModulePath = relativeModulePath({
+    moduleOutput: files.types.nameWithoutExtension(),
+    sourceOutput: plugin.output,
   });
 
   const mutationsType =
@@ -699,23 +719,27 @@ export const handler: PluginHandler<
   let hasMutations = false;
   let hasQueries = false;
 
-  for (const path in context.ir.paths) {
-    const pathItem = context.ir.paths[path as keyof IRPathsObject];
+  const processedOperations = new Map<string, boolean>();
 
-    for (const _method in pathItem) {
-      const method = _method as keyof IRPathItemObject;
-      const operation = pathItem[method]!;
+  for (const service of client.services) {
+    for (const operation of service.operations) {
+      // track processed operations to avoid creating duplicates
+      const operationKey = getOperationKey(operation);
+      if (processedOperations.has(operationKey)) {
+        continue;
+      }
+      processedOperations.set(operationKey, true);
 
       const queryFn = [
-        context.config.services.asClass &&
+        config.services.asClass &&
           transformServiceName({
-            config: context.config,
-            name: getServiceName(operation.tags?.[0] || 'default'),
+            config,
+            name: service.name,
           }),
         serviceFunctionIdentifier({
-          config: context.config,
-          handleIllegal: !context.config.services.asClass,
-          id: operation.id,
+          config,
+          handleIllegal: !config.services.asClass,
+          id: operation.name,
           operation,
         }),
       ]
@@ -723,12 +747,10 @@ export const handler: PluginHandler<
         .join('.');
       let hasUsedQueryFn = false;
 
-      const isRequired = hasOperationDataRequired(operation);
-
       // queries
       if (
         plugin.queryOptions &&
-        (['get', 'post'] as (typeof method)[]).includes(method)
+        (['GET', 'POST'] as ReadonlyArray<Method>).includes(operation.method)
       ) {
         if (!hasQueries) {
           hasQueries = true;
@@ -747,7 +769,14 @@ export const handler: PluginHandler<
 
         hasUsedQueryFn = true;
 
-        const typeData = useTypeData({ context, operation, plugin });
+        const { typeData } = createTypeData({
+          client,
+          file,
+          operation,
+          typesModulePath,
+        });
+
+        const isRequired = isOperationParameterRequired(operation.parameters);
 
         const queryKeyStatement = compiler.constVariable({
           exportConst: true,
@@ -760,10 +789,14 @@ export const handler: PluginHandler<
               },
             ],
             statements: createQueryKeyLiteral({
-              id: operation.id,
+              id: operation.name,
             }),
           }),
-          name: queryKeyFunctionIdentifier({ context, operation }),
+          name: toQueryKeyName({
+            config,
+            id: operation.name,
+            operation,
+          }),
         });
         file.add(queryKeyStatement);
 
@@ -830,8 +863,9 @@ export const handler: PluginHandler<
                     {
                       key: 'queryKey',
                       value: compiler.callExpression({
-                        functionName: queryKeyFunctionIdentifier({
-                          context,
+                        functionName: toQueryKeyName({
+                          config,
+                          id: operation.name,
                           operation,
                         }),
                         parameters: ['options'],
@@ -849,7 +883,11 @@ export const handler: PluginHandler<
           comment: [],
           exportConst: true,
           expression,
-          name: queryOptionsFunctionIdentifier({ context, operation }),
+          name: toQueryOptionsName({
+            config,
+            id: operation.name,
+            operation,
+          }),
           // TODO: add type error
           // TODO: AxiosError<PutSubmissionMetaError>
         });
@@ -859,11 +897,46 @@ export const handler: PluginHandler<
       // infinite queries
       if (
         plugin.infiniteQueryOptions &&
-        (['get', 'post'] as (typeof method)[]).includes(method)
+        (['GET', 'POST'] as ReadonlyArray<Method>).includes(operation.method)
       ) {
-        const pagination = operationPagination(operation);
+        // the actual pagination field might be nested inside parameter, e.g. body
+        let paginationField!: Model | OperationParameter;
 
-        if (pagination) {
+        const paginationParameter = operation.parameters.find((parameter) => {
+          paginationWordsRegExp.lastIndex = 0;
+          if (paginationWordsRegExp.test(parameter.name)) {
+            paginationField = parameter;
+            return true;
+          }
+
+          if (parameter.in !== 'body') {
+            return;
+          }
+
+          if (parameter.export === 'reference') {
+            const ref = parameter.$refs[0];
+            const refModel = client.models.find(
+              (model) => model.meta?.$ref === ref,
+            );
+            return refModel?.properties.find((property) => {
+              paginationWordsRegExp.lastIndex = 0;
+              if (paginationWordsRegExp.test(property.name)) {
+                paginationField = property;
+                return true;
+              }
+            });
+          }
+
+          return parameter.properties.find((property) => {
+            paginationWordsRegExp.lastIndex = 0;
+            if (paginationWordsRegExp.test(property.name)) {
+              paginationField = property;
+              return true;
+            }
+          });
+        });
+
+        if (paginationParameter && paginationField) {
           if (!hasInfiniteQueries) {
             hasInfiniteQueries = true;
 
@@ -892,21 +965,31 @@ export const handler: PluginHandler<
 
           hasUsedQueryFn = true;
 
-          const typeData = useTypeData({ context, operation, plugin });
-          const typeError = useTypeError({ context, operation, plugin });
-          const typeResponse = useTypeResponse({ context, operation, plugin });
+          const { typeData } = createTypeData({
+            client,
+            file,
+            operation,
+            typesModulePath,
+          });
+          const { typeError } = createTypeError({
+            client,
+            file,
+            operation,
+            pluginName: plugin.name,
+            typesModulePath,
+          });
+          const { typeResponse } = createTypeResponse({
+            client,
+            file,
+            operation,
+            typesModulePath,
+          });
+
+          const isRequired = isOperationParameterRequired(operation.parameters);
 
           const typeQueryKey = `${queryKeyName}<${typeData}>`;
           const typePageObjectParam = `Pick<${typeQueryKey}[0], 'body' | 'headers' | 'path' | 'query'>`;
-          // TODO: parser - this is a bit clunky, need to compile type to string because
-          // `compiler.returnFunctionCall()` accepts only strings, should be cleaned up
-          const typePageParam = `${tsNodeToString({
-            node: schemaToType({
-              context,
-              schema: pagination.schema,
-            }),
-            unescape: true,
-          })} | ${typePageObjectParam}`;
+          const typePageParam = `${paginationField.base} | ${typePageObjectParam}`;
 
           const queryKeyStatement = compiler.constVariable({
             exportConst: true,
@@ -920,12 +1003,13 @@ export const handler: PluginHandler<
               ],
               returnType: typeQueryKey,
               statements: createQueryKeyLiteral({
-                id: operation.id,
+                id: operation.name,
                 isInfinite: true,
               }),
             }),
-            name: queryKeyFunctionIdentifier({
-              context,
+            name: toQueryKeyName({
+              config,
+              id: operation.name,
               isInfinite: true,
               operation,
             }),
@@ -988,12 +1072,12 @@ export const handler: PluginHandler<
                                   multiLine: true,
                                   obj: [
                                     {
-                                      key: pagination.in,
+                                      key: getPaginationIn(paginationParameter),
                                       value: compiler.objectExpression({
                                         multiLine: true,
                                         obj: [
                                           {
-                                            key: pagination.name,
+                                            key: paginationField.name,
                                             value: compiler.identifier({
                                               text: 'pageParam',
                                             }),
@@ -1052,8 +1136,9 @@ export const handler: PluginHandler<
                       {
                         key: 'queryKey',
                         value: compiler.callExpression({
-                          functionName: queryKeyFunctionIdentifier({
-                            context,
+                          functionName: toQueryKeyName({
+                            config,
+                            id: operation.name,
                             isInfinite: true,
                             operation,
                           }),
@@ -1080,10 +1165,7 @@ export const handler: PluginHandler<
             comment: [],
             exportConst: true,
             expression,
-            name: infiniteQueryOptionsFunctionIdentifier({
-              context,
-              operation,
-            }),
+            name: toInfiniteQueryOptionsName(operation),
           });
           file.add(statement);
         }
@@ -1092,8 +1174,8 @@ export const handler: PluginHandler<
       // mutations
       if (
         plugin.mutationOptions &&
-        (['delete', 'patch', 'post', 'put'] as (typeof method)[]).includes(
-          method,
+        (['DELETE', 'PATCH', 'POST', 'PUT'] as ReadonlyArray<Method>).includes(
+          operation.method,
         )
       ) {
         if (!hasMutations) {
@@ -1108,9 +1190,25 @@ export const handler: PluginHandler<
 
         hasUsedQueryFn = true;
 
-        const typeData = useTypeData({ context, operation, plugin });
-        const typeError = useTypeError({ context, operation, plugin });
-        const typeResponse = useTypeResponse({ context, operation, plugin });
+        const { typeData } = createTypeData({
+          client,
+          file,
+          operation,
+          typesModulePath,
+        });
+        const { typeError } = createTypeError({
+          client,
+          file,
+          operation,
+          pluginName: plugin.name,
+          typesModulePath,
+        });
+        const { typeResponse } = createTypeResponse({
+          client,
+          file,
+          operation,
+          typesModulePath,
+        });
 
         const expression = compiler.arrowFunction({
           parameters: [
@@ -1183,13 +1281,13 @@ export const handler: PluginHandler<
           comment: [],
           exportConst: true,
           expression,
-          name: mutationOptionsFunctionIdentifier({ context, operation }),
+          name: toMutationOptionsName(operation),
         });
         file.add(statement);
       }
 
       const servicesModulePath = relativeModulePath({
-        moduleOutput: context.file({ id: 'services' })!.nameWithoutExtension(),
+        moduleOutput: files.services.nameWithoutExtension(),
         sourceOutput: plugin.output,
       });
 

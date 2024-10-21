@@ -5,8 +5,10 @@ import type {
   PathItemObject,
   RequestBodyObject,
   ResponseObject,
+  SchemaObject,
 } from '../types/spec';
 import { mediaTypeObject } from './mediaType';
+import { paginationField } from './pagination';
 import { schemaToIrSchema } from './schema';
 
 interface Operation
@@ -76,16 +78,28 @@ const operationToIrOperation = ({
       content: requestBodyObject.content,
     });
     if (content) {
+      const finalSchema: SchemaObject = {
+        description: requestBodyObject.description,
+        ...content.schema,
+      };
+
+      const pagination = paginationField({
+        context,
+        name: '',
+        schema: finalSchema,
+      });
+
       irOperation.body = {
         mediaType: content.mediaType,
         schema: schemaToIrSchema({
           context,
-          schema: {
-            description: requestBodyObject.description,
-            ...content.schema,
-          },
+          schema: finalSchema,
         }),
       };
+
+      if (pagination) {
+        irOperation.body.pagination = pagination;
+      }
 
       if (requestBodyObject.required) {
         irOperation.body.required = requestBodyObject.required;
