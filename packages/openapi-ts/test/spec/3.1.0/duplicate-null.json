@@ -3,34 +3,22 @@
   "info": {
     "version": "1.0.0"
   },
-  "paths": {
-    "/test": {
-      "post": {
-        "requestBody": {
-          "description": "should not produce duplicate null",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "weirdEnum": {
-                    "oneOf": [
-                      {
-                        "type": "string",
-                        "enum": [""]
-                      },
-                      {
-                        "type": "string",
-                        "nullable": true
-                      }
-                    ],
-                    "nullable": true
-                  }
-                }
-              }
-            }
+  "components": {
+    "schemas": {
+      "WeirdEnum": {
+        "description": "should not produce duplicate null",
+        "oneOf": [
+          {
+            "type": "string",
+            "enum": [""]
+          },
+          {
+            "type": ["string", "null"]
+          },
+          {
+            "type": "null"
           }
-        }
+        ]
       }
     }
   }

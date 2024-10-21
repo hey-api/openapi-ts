@@ -17,8 +17,8 @@ const main = async () => {
     // input: 'https://mongodb-mms-prod-build-server.s3.amazonaws.com/openapi/2caffd88277a4e27c95dcefc7e3b6a63a3b03297-v2-2023-11-15.json',
     // name: 'foo',
     output: {
-      format: 'prettier',
-      lint: 'eslint',
+      // format: 'prettier',
+      // lint: 'eslint',
       path: './test/generated/sample/',
     },
     // plugins: [
@@ -30,8 +30,8 @@ const main = async () => {
       export: false,
     },
     services: {
+      // asClass: true,
       // export: false,
-      asClass: true,
       // filter: '^GET /api/v{api-version}/simple:operation$',
       // export: false,
       // name: '^Parameters',

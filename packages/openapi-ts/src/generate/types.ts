@@ -834,16 +834,28 @@ const arrayTypeToIdentifier = ({
     );
   }
 
-  return compiler.typeArrayNode(
+  schema = deduplicateSchema({ schema });
+
+  // at least one item is guaranteed
+  const itemTypes = schema.items!.map((item) =>
     schemaToType({
       context,
       namespace,
-      schema: {
-        ...schema,
-        type: undefined,
-      },
+      schema: item,
     }),
   );
+
+  if (itemTypes.length === 1) {
+    return compiler.typeArrayNode(itemTypes[0]);
+  }
+
+  if (schema.logicalOperator === 'and') {
+    return compiler.typeArrayNode(
+      compiler.typeIntersectionNode({ types: itemTypes }),
+    );
+  }
+
+  return compiler.typeArrayNode(compiler.typeUnionNode({ types: itemTypes }));
 };
 
 const booleanTypeToIdentifier = ({
@@ -1020,10 +1032,13 @@ const objectTypeToIdentifier = ({
       type: schemaToType({
         context,
         namespace,
-        schema: {
-          items: indexPropertyItems,
-          logicalOperator: 'or',
-        },
+        schema:
+          indexPropertyItems.length === 1
+            ? indexPropertyItems[0]
+            : {
+                items: indexPropertyItems,
+                logicalOperator: 'or',
+              },
       }),
     };
   }
@@ -1167,11 +1182,11 @@ const schemaTypeToIdentifier = ({
 /**
  * Ensure we don't produce redundant types, e.g. string | string.
  */
-const deduplicateSchema = ({
+const deduplicateSchema = <T extends IRSchemaObject>({
   schema,
 }: {
-  schema: IRSchemaObject;
-}): IRSchemaObject => {
+  schema: T;
+}): T => {
   if (!schema.items) {
     return schema;
   }
@@ -1182,6 +1197,7 @@ const deduplicateSchema = ({
   for (const item of schema.items) {
     // skip nested schemas for now, handle if necessary
     if (
+      !item.type ||
       item.type === 'boolean' ||
       item.type === 'null' ||
       item.type === 'number' ||
@@ -1189,7 +1205,9 @@ const deduplicateSchema = ({
       item.type === 'unknown' ||
       item.type === 'void'
     ) {
-      const typeId = `${item.$ref ?? ''}${item.type ?? ''}${item.const ?? ''}`;
+      // const needs namespace to handle empty string values, otherwise
+      // fallback would equal an actual value and we would skip an item
+      const typeId = `${item.$ref ?? ''}${item.type ?? ''}${item.const !== undefined ? `const-${item.const}` : ''}`;
       if (!typeIds.includes(typeId)) {
         typeIds.push(typeId);
         uniqueItems.push(item);
@@ -1220,7 +1238,7 @@ const deduplicateSchema = ({
 
   // exclude unknown if it's the only type left
   if (schema.type === 'unknown') {
-    return {};
+    return {} as T;
   }
 
   return schema;
@@ -1379,10 +1397,10 @@ const operationToResponseTypes = ({
     return;
   }
 
-  const errors: IRSchemaObject = {};
+  let errors: IRSchemaObject = {};
   const errorsItems: Array<IRSchemaObject> = [];
 
-  const responses: IRSchemaObject = {};
+  let responses: IRSchemaObject = {};
   const responsesItems: Array<IRSchemaObject> = [];
 
   let defaultResponse: IRResponseObject | undefined;
@@ -1452,21 +1470,14 @@ const operationToResponseTypes = ({
     }
   }
 
-  addItemsToSchema({
-    items: errorsItems,
-    schema: errors,
-  });
-
-  addItemsToSchema({
-    items: responsesItems,
-    schema: responses,
-  });
-
-  if (errors.items) {
-    const deduplicatedSchema = deduplicateSchema({
+  if (errorsItems.length) {
+    errors = addItemsToSchema({
+      items: errorsItems,
+      mutateSchemaOneItem: true,
       schema: errors,
     });
-    if (Object.keys(deduplicatedSchema).length) {
+    errors = deduplicateSchema({ schema: errors });
+    if (Object.keys(errors).length) {
       const identifier = context.file({ id: typesId })!.identifier({
         $ref: operationErrorRef({ id: operation.id }),
         create: true,
@@ -1477,18 +1488,21 @@ const operationToResponseTypes = ({
         name: identifier.name,
         type: schemaToType({
           context,
-          schema: deduplicatedSchema,
+          schema: errors,
         }),
       });
       context.file({ id: typesId })!.add(node);
     }
   }
 
-  if (responses.items) {
-    const deduplicatedSchema = deduplicateSchema({
+  if (responsesItems.length) {
+    responses = addItemsToSchema({
+      items: responsesItems,
+      mutateSchemaOneItem: true,
       schema: responses,
     });
-    if (Object.keys(deduplicatedSchema).length) {
+    responses = deduplicateSchema({ schema: responses });
+    if (Object.keys(responses).length) {
       const identifier = context.file({ id: typesId })!.identifier({
         $ref: operationResponseRef({ id: operation.id }),
         create: true,
@@ -1499,7 +1513,7 @@ const operationToResponseTypes = ({
         name: identifier.name,
         type: schemaToType({
           context,
-          schema: deduplicatedSchema,
+          schema: responses,
         }),
       });
       context.file({ id: typesId })!.add(node);
@@ -1555,17 +1569,26 @@ const schemaToType = ({
       schema,
     });
   } else if (schema.items) {
-    const itemTypes = schema.items.map((item) =>
-      schemaToType({
+    schema = deduplicateSchema({ schema });
+    if (schema.items) {
+      const itemTypes = schema.items.map((item) =>
+        schemaToType({
+          context,
+          namespace,
+          schema: item,
+        }),
+      );
+      type =
+        schema.logicalOperator === 'and'
+          ? compiler.typeIntersectionNode({ types: itemTypes })
+          : compiler.typeUnionNode({ types: itemTypes });
+    } else {
+      type = schemaToType({
         context,
         namespace,
-        schema: item,
-      }),
-    );
-    type =
-      schema.logicalOperator === 'and'
-        ? compiler.typeIntersectionNode({ types: itemTypes })
-        : compiler.typeUnionNode({ types: itemTypes });
+        schema,
+      });
+    }
   } else {
     // catch-all fallback for failed schemas
     type = schemaTypeToIdentifier({
