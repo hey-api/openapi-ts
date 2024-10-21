@@ -2,8 +2,8 @@
 
 import type { Options } from '@hey-api/client-axios';
 import { queryOptions, type UseMutationOptions, type DefaultError, infiniteQueryOptions, type InfiniteData } from '@tanstack/react-query';
-import { client, export_, import_, apiVVersionOdataControllerCount, getApiVbyApiVersionSimpleOperation, getCallWithoutParametersAndResponse, putCallWithoutParametersAndResponse, postCallWithoutParametersAndResponse, deleteCallWithoutParametersAndResponse, patchCallWithoutParametersAndResponse, deleteFoo, callWithDescriptions, deprecatedCall, callWithParameters, callWithWeirdParameterNames, getCallWithOptionalParam, postCallWithOptionalParam, postApiVbyApiVersionRequestBody, postApiVbyApiVersionFormData, callWithDefaultParameters, callWithDefaultOptionalParameters, callToTestOrderOfParams, duplicateName, duplicateName1, duplicateName2, duplicateName3, callWithNoContentResponse, callWithResponseAndNoContentResponse, dummyA, dummyB, callWithResponse, callWithDuplicateResponses, callWithResponses, collectionFormat, types, uploadFile, fileResponse, complexTypes, multipartRequest, multipartResponse, complexParams, callWithResultFromHeader, testErrorCode, nonAsciiæøåÆøÅöôêÊ字符串, putWithFormUrlEncoded } from '../services.gen';
-import type { ImportData, ImportError, ImportResponse, GetApiVbyApiVersionSimpleOperationData, DeleteFooData3, CallWithDescriptionsData, DeprecatedCallData, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamError, PostCallWithOptionalParamResponse, PostApiVbyApiVersionRequestBodyData, PostApiVbyApiVersionFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, CallWithDuplicateResponsesError, CallWithDuplicateResponsesResponse, CallWithResponsesError, CallWithResponsesResponse, CollectionFormatData, TypesData, UploadFileData, UploadFileError, UploadFileResponse, FileResponseData, ComplexTypesData, MultipartRequestData, ComplexParamsData, ComplexParamsError, ComplexParamsResponse, CallWithResultFromHeaderError, CallWithResultFromHeaderResponse, TestErrorCodeData, TestErrorCodeError, TestErrorCodeResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Error, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData } from '../types.gen';
+import { client, export_, import_, apiVVersionOdataControllerCount, getApiVbyApiVersionSimpleOperation, deleteCallWithoutParametersAndResponse, getCallWithoutParametersAndResponse, patchCallWithoutParametersAndResponse, postCallWithoutParametersAndResponse, putCallWithoutParametersAndResponse, deleteFoo, callWithDescriptions, deprecatedCall, callWithParameters, callWithWeirdParameterNames, getCallWithOptionalParam, postCallWithOptionalParam, postApiVbyApiVersionRequestBody, postApiVbyApiVersionFormData, callWithDefaultParameters, callWithDefaultOptionalParameters, callToTestOrderOfParams, duplicateName, duplicateName2, duplicateName3, duplicateName4, callWithNoContentResponse, callWithResponseAndNoContentResponse, dummyA, dummyB, callWithResponse, callWithDuplicateResponses, callWithResponses, collectionFormat, types, uploadFile, fileResponse, complexTypes, multipartResponse, multipartRequest, complexParams, callWithResultFromHeader, testErrorCode, nonAsciiæøåÆøÅöôêÊ字符串, putWithFormUrlEncoded } from '../services.gen';
+import type { ImportData, ImportResponse, GetApiVbyApiVersionSimpleOperationData, DeleteFooData3, CallWithDescriptionsData, DeprecatedCallData, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, PostApiVbyApiVersionRequestBodyData, PostApiVbyApiVersionFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, CallWithDuplicateResponsesError, CallWithDuplicateResponsesResponse, CallWithResponsesError, CallWithResponsesResponse, CollectionFormatData, TypesData, UploadFileData, UploadFileResponse, FileResponseData, ComplexTypesData, MultipartRequestData, ComplexParamsData, ComplexParamsResponse, TestErrorCodeData, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData } from '../types.gen';
 import type { AxiosError } from 'axios';
 
 type QueryKey<TOptions extends Options> = [
@@ -65,7 +65,7 @@ export const importOptions = (options: Options<ImportData>) => { return queryOpt
     queryKey: importQueryKey(options)
 }); };
 
-export const importMutation = (options?: Partial<Options<ImportData>>) => { const mutationOptions: UseMutationOptions<ImportResponse, AxiosError<ImportError>, Options<ImportData>> = {
+export const importMutation = (options?: Partial<Options<ImportData>>) => { const mutationOptions: UseMutationOptions<ImportResponse, AxiosError<DefaultError>, Options<ImportData>> = {
     mutationFn: async (localOptions) => {
         const { data } = await import_({
             ...options,
@@ -108,6 +108,17 @@ export const getApiVbyApiVersionSimpleOperationOptions = (options: Options<GetAp
     queryKey: getApiVbyApiVersionSimpleOperationQueryKey(options)
 }); };
 
+export const deleteCallWithoutParametersAndResponseMutation = (options?: Partial<Options>) => { const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options> = {
+    mutationFn: async (localOptions) => {
+        const { data } = await deleteCallWithoutParametersAndResponse({
+            ...options,
+            ...localOptions,
+            throwOnError: true
+        });
+        return data;
+    }
+}; return mutationOptions; };
+
 export const getCallWithoutParametersAndResponseQueryKey = (options?: Options) => [
     createQueryKey('getCallWithoutParametersAndResponse', options)
 ];
@@ -124,9 +135,9 @@ export const getCallWithoutParametersAndResponseOptions = (options?: Options) =>
     queryKey: getCallWithoutParametersAndResponseQueryKey(options)
 }); };
 
-export const putCallWithoutParametersAndResponseMutation = (options?: Partial<Options>) => { const mutationOptions: UseMutationOptions<void, AxiosError<DefaultError>, Options> = {
+export const patchCallWithoutParametersAndResponseMutation = (options?: Partial<Options>) => { const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options> = {
     mutationFn: async (localOptions) => {
-        const { data } = await putCallWithoutParametersAndResponse({
+        const { data } = await patchCallWithoutParametersAndResponse({
             ...options,
             ...localOptions,
             throwOnError: true
@@ -151,7 +162,7 @@ export const postCallWithoutParametersAndResponseOptions = (options?: Options) =
     queryKey: postCallWithoutParametersAndResponseQueryKey(options)
 }); };
 
-export const postCallWithoutParametersAndResponseMutation = (options?: Partial<Options>) => { const mutationOptions: UseMutationOptions<void, AxiosError<DefaultError>, Options> = {
+export const postCallWithoutParametersAndResponseMutation = (options?: Partial<Options>) => { const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options> = {
     mutationFn: async (localOptions) => {
         const { data } = await postCallWithoutParametersAndResponse({
             ...options,
@@ -162,9 +173,9 @@ export const postCallWithoutParametersAndResponseMutation = (options?: Partial<O
     }
 }; return mutationOptions; };
 
-export const deleteCallWithoutParametersAndResponseMutation = (options?: Partial<Options>) => { const mutationOptions: UseMutationOptions<void, AxiosError<DefaultError>, Options> = {
+export const putCallWithoutParametersAndResponseMutation = (options?: Partial<Options>) => { const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options> = {
     mutationFn: async (localOptions) => {
-        const { data } = await deleteCallWithoutParametersAndResponse({
+        const { data } = await putCallWithoutParametersAndResponse({
             ...options,
             ...localOptions,
             throwOnError: true
@@ -173,18 +184,7 @@ export const deleteCallWithoutParametersAndResponseMutation = (options?: Partial
     }
 }; return mutationOptions; };
 
-export const patchCallWithoutParametersAndResponseMutation = (options?: Partial<Options>) => { const mutationOptions: UseMutationOptions<void, AxiosError<DefaultError>, Options> = {
-    mutationFn: async (localOptions) => {
-        const { data } = await patchCallWithoutParametersAndResponse({
-            ...options,
-            ...localOptions,
-            throwOnError: true
-        });
-        return data;
-    }
-}; return mutationOptions; };
-
-export const deleteFooMutation = (options?: Partial<Options<DeleteFooData3>>) => { const mutationOptions: UseMutationOptions<void, AxiosError<DefaultError>, Options<DeleteFooData3>> = {
+export const deleteFooMutation = (options?: Partial<Options<DeleteFooData3>>) => { const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<DeleteFooData3>> = {
     mutationFn: async (localOptions) => {
         const { data } = await deleteFoo({
             ...options,
@@ -211,7 +211,7 @@ export const callWithDescriptionsOptions = (options?: Options<CallWithDescriptio
     queryKey: callWithDescriptionsQueryKey(options)
 }); };
 
-export const callWithDescriptionsMutation = (options?: Partial<Options<CallWithDescriptionsData>>) => { const mutationOptions: UseMutationOptions<void, AxiosError<DefaultError>, Options<CallWithDescriptionsData>> = {
+export const callWithDescriptionsMutation = (options?: Partial<Options<CallWithDescriptionsData>>) => { const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithDescriptionsData>> = {
     mutationFn: async (localOptions) => {
         const { data } = await callWithDescriptions({
             ...options,
@@ -238,7 +238,7 @@ export const deprecatedCallOptions = (options: Options<DeprecatedCallData>) => {
     queryKey: deprecatedCallQueryKey(options)
 }); };
 
-export const deprecatedCallMutation = (options?: Partial<Options<DeprecatedCallData>>) => { const mutationOptions: UseMutationOptions<void, AxiosError<DefaultError>, Options<DeprecatedCallData>> = {
+export const deprecatedCallMutation = (options?: Partial<Options<DeprecatedCallData>>) => { const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<DeprecatedCallData>> = {
     mutationFn: async (localOptions) => {
         const { data } = await deprecatedCall({
             ...options,
@@ -298,7 +298,7 @@ export const callWithParametersInfiniteQueryKey = (options: Options<CallWithPara
     createQueryKey('callWithParameters', options, true)
 ];
 
-export const callWithParametersInfiniteOptions = (options: Options<CallWithParametersData>) => { return infiniteQueryOptions<void, AxiosError<DefaultError>, InfiniteData<void>, QueryKey<Options<CallWithParametersData>>, string | Pick<QueryKey<Options<CallWithParametersData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
+export const callWithParametersInfiniteOptions = (options: Options<CallWithParametersData>) => { return infiniteQueryOptions<unknown, AxiosError<DefaultError>, InfiniteData<unknown>, QueryKey<Options<CallWithParametersData>>, string | null | Pick<QueryKey<Options<CallWithParametersData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
 // @ts-ignore
 {
     queryFn: async ({ pageParam, queryKey }) => {
@@ -319,7 +319,7 @@ export const callWithParametersInfiniteOptions = (options: Options<CallWithParam
     queryKey: callWithParametersInfiniteQueryKey(options)
 }); };
 
-export const callWithParametersMutation = (options?: Partial<Options<CallWithParametersData>>) => { const mutationOptions: UseMutationOptions<void, AxiosError<DefaultError>, Options<CallWithParametersData>> = {
+export const callWithParametersMutation = (options?: Partial<Options<CallWithParametersData>>) => { const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithParametersData>> = {
     mutationFn: async (localOptions) => {
         const { data } = await callWithParameters({
             ...options,
@@ -346,7 +346,7 @@ export const callWithWeirdParameterNamesOptions = (options: Options<CallWithWeir
     queryKey: callWithWeirdParameterNamesQueryKey(options)
 }); };
 
-export const callWithWeirdParameterNamesMutation = (options?: Partial<Options<CallWithWeirdParameterNamesData>>) => { const mutationOptions: UseMutationOptions<void, AxiosError<DefaultError>, Options<CallWithWeirdParameterNamesData>> = {
+export const callWithWeirdParameterNamesMutation = (options?: Partial<Options<CallWithWeirdParameterNamesData>>) => { const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithWeirdParameterNamesData>> = {
     mutationFn: async (localOptions) => {
         const { data } = await callWithWeirdParameterNames({
             ...options,
@@ -377,7 +377,7 @@ export const getCallWithOptionalParamInfiniteQueryKey = (options: Options<GetCal
     createQueryKey('getCallWithOptionalParam', options, true)
 ];
 
-export const getCallWithOptionalParamInfiniteOptions = (options: Options<GetCallWithOptionalParamData>) => { return infiniteQueryOptions<void, AxiosError<DefaultError>, InfiniteData<void>, QueryKey<Options<GetCallWithOptionalParamData>>, number | Pick<QueryKey<Options<GetCallWithOptionalParamData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
+export const getCallWithOptionalParamInfiniteOptions = (options: Options<GetCallWithOptionalParamData>) => { return infiniteQueryOptions<unknown, AxiosError<DefaultError>, InfiniteData<unknown>, QueryKey<Options<GetCallWithOptionalParamData>>, number | Pick<QueryKey<Options<GetCallWithOptionalParamData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
 // @ts-ignore
 {
     queryFn: async ({ pageParam, queryKey }) => {
@@ -418,7 +418,7 @@ export const postCallWithOptionalParamInfiniteQueryKey = (options: Options<PostC
     createQueryKey('postCallWithOptionalParam', options, true)
 ];
 
-export const postCallWithOptionalParamInfiniteOptions = (options: Options<PostCallWithOptionalParamData>) => { return infiniteQueryOptions<PostCallWithOptionalParamResponse, AxiosError<PostCallWithOptionalParamError>, InfiniteData<PostCallWithOptionalParamResponse>, QueryKey<Options<PostCallWithOptionalParamData>>, number | Pick<QueryKey<Options<PostCallWithOptionalParamData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
+export const postCallWithOptionalParamInfiniteOptions = (options: Options<PostCallWithOptionalParamData>) => { return infiniteQueryOptions<PostCallWithOptionalParamResponse, AxiosError<DefaultError>, InfiniteData<PostCallWithOptionalParamResponse>, QueryKey<Options<PostCallWithOptionalParamData>>, number | null | Pick<QueryKey<Options<PostCallWithOptionalParamData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
 // @ts-ignore
 {
     queryFn: async ({ pageParam, queryKey }) => {
@@ -439,7 +439,7 @@ export const postCallWithOptionalParamInfiniteOptions = (options: Options<PostCa
     queryKey: postCallWithOptionalParamInfiniteQueryKey(options)
 }); };
 
-export const postCallWithOptionalParamMutation = (options?: Partial<Options<PostCallWithOptionalParamData>>) => { const mutationOptions: UseMutationOptions<PostCallWithOptionalParamResponse, AxiosError<PostCallWithOptionalParamError>, Options<PostCallWithOptionalParamData>> = {
+export const postCallWithOptionalParamMutation = (options?: Partial<Options<PostCallWithOptionalParamData>>) => { const mutationOptions: UseMutationOptions<PostCallWithOptionalParamResponse, AxiosError<DefaultError>, Options<PostCallWithOptionalParamData>> = {
     mutationFn: async (localOptions) => {
         const { data } = await postCallWithOptionalParam({
             ...options,
@@ -466,7 +466,7 @@ export const postApiVbyApiVersionRequestBodyOptions = (options?: Options<PostApi
     queryKey: postApiVbyApiVersionRequestBodyQueryKey(options)
 }); };
 
-export const postApiVbyApiVersionRequestBodyMutation = (options?: Partial<Options<PostApiVbyApiVersionRequestBodyData>>) => { const mutationOptions: UseMutationOptions<void, AxiosError<DefaultError>, Options<PostApiVbyApiVersionRequestBodyData>> = {
+export const postApiVbyApiVersionRequestBodyMutation = (options?: Partial<Options<PostApiVbyApiVersionRequestBodyData>>) => { const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<PostApiVbyApiVersionRequestBodyData>> = {
     mutationFn: async (localOptions) => {
         const { data } = await postApiVbyApiVersionRequestBody({
             ...options,
@@ -493,7 +493,7 @@ export const postApiVbyApiVersionFormDataOptions = (options?: Options<PostApiVby
     queryKey: postApiVbyApiVersionFormDataQueryKey(options)
 }); };
 
-export const postApiVbyApiVersionFormDataMutation = (options?: Partial<Options<PostApiVbyApiVersionFormDataData>>) => { const mutationOptions: UseMutationOptions<void, AxiosError<DefaultError>, Options<PostApiVbyApiVersionFormDataData>> = {
+export const postApiVbyApiVersionFormDataMutation = (options?: Partial<Options<PostApiVbyApiVersionFormDataData>>) => { const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<PostApiVbyApiVersionFormDataData>> = {
     mutationFn: async (localOptions) => {
         const { data } = await postApiVbyApiVersionFormData({
             ...options,
@@ -536,7 +536,7 @@ export const callWithDefaultOptionalParametersOptions = (options?: Options<CallW
     queryKey: callWithDefaultOptionalParametersQueryKey(options)
 }); };
 
-export const callWithDefaultOptionalParametersMutation = (options?: Partial<Options<CallWithDefaultOptionalParametersData>>) => { const mutationOptions: UseMutationOptions<void, AxiosError<DefaultError>, Options<CallWithDefaultOptionalParametersData>> = {
+export const callWithDefaultOptionalParametersMutation = (options?: Partial<Options<CallWithDefaultOptionalParametersData>>) => { const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithDefaultOptionalParametersData>> = {
     mutationFn: async (localOptions) => {
         const { data } = await callWithDefaultOptionalParameters({
             ...options,
@@ -547,7 +547,7 @@ export const callWithDefaultOptionalParametersMutation = (options?: Partial<Opti
     }
 }; return mutationOptions; };
 
-export const callToTestOrderOfParamsMutation = (options?: Partial<Options<CallToTestOrderOfParamsData>>) => { const mutationOptions: UseMutationOptions<void, AxiosError<DefaultError>, Options<CallToTestOrderOfParamsData>> = {
+export const callToTestOrderOfParamsMutation = (options?: Partial<Options<CallToTestOrderOfParamsData>>) => { const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<CallToTestOrderOfParamsData>> = {
     mutationFn: async (localOptions) => {
         const { data } = await callToTestOrderOfParams({
             ...options,
@@ -558,63 +558,63 @@ export const callToTestOrderOfParamsMutation = (options?: Partial<Options<CallTo
     }
 }; return mutationOptions; };
 
-export const duplicateNameQueryKey = (options?: Options) => [
-    createQueryKey('duplicateName', options)
-];
-
-export const duplicateNameOptions = (options?: Options) => { return queryOptions({
-    queryFn: async ({ queryKey }) => {
+export const duplicateNameMutation = (options?: Partial<Options>) => { const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options> = {
+    mutationFn: async (localOptions) => {
         const { data } = await duplicateName({
             ...options,
-            ...queryKey[0],
+            ...localOptions,
             throwOnError: true
         });
         return data;
-    },
-    queryKey: duplicateNameQueryKey(options)
-}); };
+    }
+}; return mutationOptions; };
 
-export const duplicateName1QueryKey = (options?: Options) => [
-    createQueryKey('duplicateName1', options)
+export const duplicateName2QueryKey = (options?: Options) => [
+    createQueryKey('duplicateName2', options)
 ];
 
-export const duplicateName1Options = (options?: Options) => { return queryOptions({
+export const duplicateName2Options = (options?: Options) => { return queryOptions({
     queryFn: async ({ queryKey }) => {
-        const { data } = await duplicateName1({
+        const { data } = await duplicateName2({
             ...options,
             ...queryKey[0],
             throwOnError: true
         });
         return data;
     },
-    queryKey: duplicateName1QueryKey(options)
+    queryKey: duplicateName2QueryKey(options)
 }); };
 
-export const duplicateName1Mutation = (options?: Partial<Options>) => { const mutationOptions: UseMutationOptions<void, AxiosError<DefaultError>, Options> = {
-    mutationFn: async (localOptions) => {
-        const { data } = await duplicateName1({
+export const duplicateName3QueryKey = (options?: Options) => [
+    createQueryKey('duplicateName3', options)
+];
+
+export const duplicateName3Options = (options?: Options) => { return queryOptions({
+    queryFn: async ({ queryKey }) => {
+        const { data } = await duplicateName3({
             ...options,
-            ...localOptions,
+            ...queryKey[0],
             throwOnError: true
         });
         return data;
-    }
-}; return mutationOptions; };
+    },
+    queryKey: duplicateName3QueryKey(options)
+}); };
 
-export const duplicateName2Mutation = (options?: Partial<Options>) => { const mutationOptions: UseMutationOptions<void, AxiosError<DefaultError>, Options> = {
-    mutationFn: async (localOptions) => {
-        const { data } = await duplicateName2({
-            ...options,
-            ...localOptions,
-            throwOnError: true
-        });
-        return data;
-    }
-}; return mutationOptions; };
-
-export const duplicateName3Mutation = (options?: Partial<Options>) => { const mutationOptions: UseMutationOptions<void, AxiosError<DefaultError>, Options> = {
+export const duplicateName3Mutation = (options?: Partial<Options>) => { const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options> = {
     mutationFn: async (localOptions) => {
         const { data } = await duplicateName3({
+            ...options,
+            ...localOptions,
+            throwOnError: true
+        });
+        return data;
+    }
+}; return mutationOptions; };
+
+export const duplicateName4Mutation = (options?: Partial<Options>) => { const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options> = {
+    mutationFn: async (localOptions) => {
+        const { data } = await duplicateName4({
             ...options,
             ...localOptions,
             throwOnError: true
@@ -789,7 +789,7 @@ export const uploadFileOptions = (options: Options<UploadFileData>) => { return 
     queryKey: uploadFileQueryKey(options)
 }); };
 
-export const uploadFileMutation = (options?: Partial<Options<UploadFileData>>) => { const mutationOptions: UseMutationOptions<UploadFileResponse, AxiosError<UploadFileError>, Options<UploadFileData>> = {
+export const uploadFileMutation = (options?: Partial<Options<UploadFileData>>) => { const mutationOptions: UseMutationOptions<UploadFileResponse, AxiosError<DefaultError>, Options<UploadFileData>> = {
     mutationFn: async (localOptions) => {
         const { data } = await uploadFile({
             ...options,
@@ -832,33 +832,6 @@ export const complexTypesOptions = (options: Options<ComplexTypesData>) => { ret
     queryKey: complexTypesQueryKey(options)
 }); };
 
-export const multipartRequestQueryKey = (options?: Options<MultipartRequestData>) => [
-    createQueryKey('multipartRequest', options)
-];
-
-export const multipartRequestOptions = (options?: Options<MultipartRequestData>) => { return queryOptions({
-    queryFn: async ({ queryKey }) => {
-        const { data } = await multipartRequest({
-            ...options,
-            ...queryKey[0],
-            throwOnError: true
-        });
-        return data;
-    },
-    queryKey: multipartRequestQueryKey(options)
-}); };
-
-export const multipartRequestMutation = (options?: Partial<Options<MultipartRequestData>>) => { const mutationOptions: UseMutationOptions<void, AxiosError<DefaultError>, Options<MultipartRequestData>> = {
-    mutationFn: async (localOptions) => {
-        const { data } = await multipartRequest({
-            ...options,
-            ...localOptions,
-            throwOnError: true
-        });
-        return data;
-    }
-}; return mutationOptions; };
-
 export const multipartResponseQueryKey = (options?: Options) => [
     createQueryKey('multipartResponse', options)
 ];
@@ -875,7 +848,34 @@ export const multipartResponseOptions = (options?: Options) => { return queryOpt
     queryKey: multipartResponseQueryKey(options)
 }); };
 
-export const complexParamsMutation = (options?: Partial<Options<ComplexParamsData>>) => { const mutationOptions: UseMutationOptions<ComplexParamsResponse, AxiosError<ComplexParamsError>, Options<ComplexParamsData>> = {
+export const multipartRequestQueryKey = (options?: Options<MultipartRequestData>) => [
+    createQueryKey('multipartRequest', options)
+];
+
+export const multipartRequestOptions = (options?: Options<MultipartRequestData>) => { return queryOptions({
+    queryFn: async ({ queryKey }) => {
+        const { data } = await multipartRequest({
+            ...options,
+            ...queryKey[0],
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: multipartRequestQueryKey(options)
+}); };
+
+export const multipartRequestMutation = (options?: Partial<Options<MultipartRequestData>>) => { const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<MultipartRequestData>> = {
+    mutationFn: async (localOptions) => {
+        const { data } = await multipartRequest({
+            ...options,
+            ...localOptions,
+            throwOnError: true
+        });
+        return data;
+    }
+}; return mutationOptions; };
+
+export const complexParamsMutation = (options?: Partial<Options<ComplexParamsData>>) => { const mutationOptions: UseMutationOptions<ComplexParamsResponse, AxiosError<DefaultError>, Options<ComplexParamsData>> = {
     mutationFn: async (localOptions) => {
         const { data } = await complexParams({
             ...options,
@@ -902,7 +902,7 @@ export const callWithResultFromHeaderOptions = (options?: Options) => { return q
     queryKey: callWithResultFromHeaderQueryKey(options)
 }); };
 
-export const callWithResultFromHeaderMutation = (options?: Partial<Options>) => { const mutationOptions: UseMutationOptions<CallWithResultFromHeaderResponse, AxiosError<CallWithResultFromHeaderError>, Options> = {
+export const callWithResultFromHeaderMutation = (options?: Partial<Options>) => { const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options> = {
     mutationFn: async (localOptions) => {
         const { data } = await callWithResultFromHeader({
             ...options,
@@ -929,7 +929,7 @@ export const testErrorCodeOptions = (options: Options<TestErrorCodeData>) => { r
     queryKey: testErrorCodeQueryKey(options)
 }); };
 
-export const testErrorCodeMutation = (options?: Partial<Options<TestErrorCodeData>>) => { const mutationOptions: UseMutationOptions<TestErrorCodeResponse, AxiosError<TestErrorCodeError>, Options<TestErrorCodeData>> = {
+export const testErrorCodeMutation = (options?: Partial<Options<TestErrorCodeData>>) => { const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<TestErrorCodeData>> = {
     mutationFn: async (localOptions) => {
         const { data } = await testErrorCode({
             ...options,
@@ -956,7 +956,7 @@ export const nonAsciiæøåÆøÅöôêÊ字符串Options = (options: Options<No
     queryKey: nonAsciiæøåÆøÅöôêÊ字符串QueryKey(options)
 }); };
 
-export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options?: Partial<Options<NonAsciiæøåÆøÅöôêÊ字符串Data>>) => { const mutationOptions: UseMutationOptions<NonAsciiæøåÆøÅöôêÊ字符串Response, AxiosError<NonAsciiæøåÆøÅöôêÊ字符串Error>, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>> = {
+export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options?: Partial<Options<NonAsciiæøåÆøÅöôêÊ字符串Data>>) => { const mutationOptions: UseMutationOptions<NonAsciiæøåÆøÅöôêÊ字符串Response, AxiosError<DefaultError>, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>> = {
     mutationFn: async (localOptions) => {
         const { data } = await nonAsciiæøåÆøÅöôêÊ字符串({
             ...options,
@@ -967,7 +967,7 @@ export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options?: Partial<
     }
 }; return mutationOptions; };
 
-export const putWithFormUrlEncodedMutation = (options?: Partial<Options<PutWithFormUrlEncodedData>>) => { const mutationOptions: UseMutationOptions<void, AxiosError<DefaultError>, Options<PutWithFormUrlEncodedData>> = {
+export const putWithFormUrlEncodedMutation = (options?: Partial<Options<PutWithFormUrlEncodedData>>) => { const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<PutWithFormUrlEncodedData>> = {
     mutationFn: async (localOptions) => {
         const { data } = await putWithFormUrlEncoded({
             ...options,

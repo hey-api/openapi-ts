@@ -70,7 +70,7 @@ export const generateIndexFile = ({ files }: { files: Files }): void => {
 
       files.index.add(
         compiler.exportAllDeclaration({
-          module: `./${file.getName(false)}`,
+          module: `./${file.nameWithoutExtension()}`,
         }),
       );
     });

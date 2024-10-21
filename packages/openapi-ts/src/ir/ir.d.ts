@@ -42,6 +42,11 @@ export interface IROperationObject {
 
 export interface IRBodyObject {
   mediaType: string;
+  /**
+   * Does body control pagination? We handle only simple values
+   * for now, up to 1 nested field.
+   */
+  pagination?: boolean | string;
   required?: boolean;
   schema: IRSchemaObject;
   type?: IRMediaType;
@@ -60,6 +65,11 @@ export interface IRParameterObject {
    */
   location: 'cookie' | 'header' | 'path' | 'query';
   name: string;
+  /**
+   * Does this parameter control pagination? We handle only simple values
+   * for now, up to 1 nested field.
+   */
+  pagination?: boolean | string;
   required?: boolean;
   schema: IRSchemaObject;
 }
