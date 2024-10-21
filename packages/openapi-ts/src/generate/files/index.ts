@@ -25,6 +25,12 @@ export class TypeScriptFile {
     type: {},
     value: {},
   };
+  /**
+   * Path relative to the client output root.
+   */
+  // TODO: parser - add relative path property for quick access, currently
+  // everything is resolved into an absolute path with cwd
+  // public relativePath: string;
 
   public constructor({
     dir,
@@ -36,7 +42,7 @@ export class TypeScriptFile {
     name: string;
   }) {
     this._name = this._setName(name);
-    this._path = path.resolve(dir, this.getName());
+    this._path = path.resolve(dir, this._name);
 
     if (header) {
       this._headers.push(
@@ -99,17 +105,13 @@ export class TypeScriptFile {
     return importedItem;
   }
 
-  public getName(withExtension = true) {
-    if (withExtension) {
-      return this._name;
-    }
-
-    const { name } = splitNameAndExtension(this._name);
-    return name;
-  }
-
   public isEmpty() {
     return !this._items.length;
+  }
+
+  public nameWithoutExtension() {
+    const { name } = splitNameAndExtension(this._name);
+    return name;
   }
 
   public remove(options?: Parameters<typeof rmSync>[1]) {

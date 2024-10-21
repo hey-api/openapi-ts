@@ -959,7 +959,7 @@ export const generateLegacyServices = async ({
         files.services.import({
           // this detection could be done safer, but it shouldn't cause any issues
           asType: !imported.endsWith('Transformer'),
-          module: `./${files.types.getName(false)}`,
+          module: `./${files.types.nameWithoutExtension()}`,
           name: imported,
         });
       },
@@ -981,8 +981,8 @@ const requestOptions = ({
   path: string;
 }) => {
   const file = context.file({ id: servicesId })!;
-  const servicesOutput = file.getName(false);
-  // const typesModule = `./${context.file({ id: 'types' })!.getName(false)}`
+  const servicesOutput = file.nameWithoutExtension();
+  // const typesModule = `./${context.file({ id: 'types' })!.nameWithoutExtension()}`
 
   // TODO: parser - add response transformers
   // const operationName = operationResponseTypeName(operation.name);
@@ -1078,7 +1078,7 @@ const requestOptions = ({
 
 const generateClassServices = ({ context }: { context: IRContext }) => {
   const file = context.file({ id: servicesId })!;
-  const typesModule = `./${context.file({ id: 'types' })!.getName(false)}`;
+  const typesModule = `./${context.file({ id: 'types' })!.nameWithoutExtension()}`;
 
   const services = new Map<string, Array<ts.MethodDeclaration>>();
 
@@ -1208,7 +1208,7 @@ const generateClassServices = ({ context }: { context: IRContext }) => {
 
 const generateFlatServices = ({ context }: { context: IRContext }) => {
   const file = context.file({ id: servicesId })!;
-  const typesModule = `./${context.file({ id: 'types' })!.getName(false)}`;
+  const typesModule = `./${context.file({ id: 'types' })!.nameWithoutExtension()}`;
 
   for (const path in context.ir.paths) {
     const pathItem = context.ir.paths[path as keyof IRPathsObject];
@@ -1324,7 +1324,7 @@ export const generateServices = ({ context }: { context: IRContext }) => {
     id: servicesId,
     path: 'services',
   });
-  const servicesOutput = file.getName(false);
+  const servicesOutput = file.nameWithoutExtension();
 
   // import required packages and core files
   file.import({

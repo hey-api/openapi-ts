@@ -21,9 +21,10 @@ describe(VERSION, () => {
       Pick<Required<UserConfig>, 'plugins'>,
   ): UserConfig => ({
     client: '@hey-api/client-fetch',
+    experimental_parser: true,
     schemas: false,
     ...userConfig,
-    input: path.join(__dirname, 'spec', 'v3.json'),
+    input: path.join(__dirname, 'spec', '3.1.0', 'full.json'),
     output: path.join(
       outputDir,
       typeof userConfig.plugins[0] === 'string'

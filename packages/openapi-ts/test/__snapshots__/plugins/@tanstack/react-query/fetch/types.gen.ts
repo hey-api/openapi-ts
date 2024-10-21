@@ -74,7 +74,7 @@ export type NonAsciiStringæøåÆØÅöôêÊ字符串 = string;
 /**
  * This is a simple file
  */
-export type SimpleFile = (Blob | File);
+export type SimpleFile = Blob | File;
 
 /**
  * This is a simple reference
@@ -84,7 +84,7 @@ export type SimpleReference = ModelWithString;
 /**
  * This is a simple string
  */
-export type SimpleStringWithPattern = (string) | null;
+export type SimpleStringWithPattern = string | null;
 
 /**
  * This is a simple enum with strings
@@ -113,17 +113,17 @@ export type EnumWithXEnumNames = 0 | 1 | 2;
 /**
  * This is a simple array with numbers
  */
-export type ArrayWithNumbers = Array<(number)>;
+export type ArrayWithNumbers = Array<number>;
 
 /**
  * This is a simple array with booleans
  */
-export type ArrayWithBooleans = Array<(boolean)>;
+export type ArrayWithBooleans = Array<boolean>;
 
 /**
  * This is a simple array with strings
  */
-export type ArrayWithStrings = Array<(string)>;
+export type ArrayWithStrings = Array<string>;
 
 /**
  * This is a simple array with references
@@ -146,38 +146,38 @@ export type ArrayWithProperties = Array<{
 /**
  * This is a simple array with any of properties
  */
-export type ArrayWithAnyOfProperties = Array<({
+export type ArrayWithAnyOfProperties = Array<{
     foo?: string;
 } | {
     bar?: string;
-})>;
+}>;
 
 export type AnyOfAnyAndNull = {
-    data?: (unknown | null);
+    data?: unknown | null;
 };
 
 /**
  * This is a simple array with any of properties
  */
 export type AnyOfArrays = {
-    results?: Array<({
-    foo?: string;
-} | {
-    bar?: string;
-})>;
+    results?: Array<{
+        foo?: string;
+    } | {
+        bar?: string;
+    }>;
 };
 
 /**
  * This is a string dictionary
  */
 export type DictionaryWithString = {
-    [key: string]: (string);
+    [key: string]: string;
 };
 
 export type DictionaryWithPropertiesAndAdditionalProperties = {
     foo?: number;
     bar?: boolean;
-    [key: string]: (string | number | boolean) | undefined;
+    [key: string]: string | number | boolean | undefined;
 };
 
 /**
@@ -199,7 +199,7 @@ export type DictionaryWithArray = {
  */
 export type DictionaryWithDictionary = {
     [key: string]: {
-        [key: string]: (string);
+        [key: string]: string;
     };
 };
 
@@ -265,29 +265,24 @@ export type ModelWithNullableString = {
     /**
      * This is a simple string property
      */
-    nullableProp1?: (string) | null;
+    nullableProp1?: string | null;
     /**
      * This is a simple string property
      */
-    nullableRequiredProp1: (string) | null;
+    nullableRequiredProp1: string | null;
     /**
      * This is a simple string property
      */
-    nullableProp2?: (string) | null;
+    nullableProp2?: string | null;
     /**
      * This is a simple string property
      */
-    nullableRequiredProp2: (string) | null;
+    nullableRequiredProp2: string | null;
     /**
      * This is a simple enum with strings
      */
     'foo_bar-enum'?: 'Success' | 'Warning' | 'Error' | 'ØÆÅ字符串';
 };
-
-/**
- * This is a simple enum with strings
- */
-export type foo_bar_enum = 'Success' | 'Warning' | 'Error' | 'ØÆÅ字符串';
 
 /**
  * This is a model with one enum
@@ -304,13 +299,8 @@ export type ModelWithEnum = {
     /**
      * Simple boolean enum
      */
-    bool?: boolean;
+    bool?: true;
 };
-
-/**
- * These are the HTTP error code enums
- */
-export type statusCode = '100' | '200 FOO' | '300 FOO_BAR' | '400 foo-bar' | '500 foo.bar' | '600 foo&bar';
 
 /**
  * This is a model with one enum with escaped name
@@ -318,8 +308,6 @@ export type statusCode = '100' | '200 FOO' | '300 FOO_BAR' | '400 foo-bar' | '50
 export type ModelWithEnumWithHyphen = {
     'foo-bar-baz-qux'?: '3.0';
 };
-
-export type foo_bar_baz_qux = '3.0';
 
 /**
  * This is a model with one enum
@@ -336,13 +324,13 @@ export type ModelWithEnumFromDescription = {
  */
 export type ModelWithNestedEnums = {
     dictionaryWithEnum?: {
-        [key: string]: ('Success' | 'Warning' | 'Error');
+        [key: string]: 'Success' | 'Warning' | 'Error';
     };
     dictionaryWithEnumFromDescription?: {
-        [key: string]: (number);
+        [key: string]: number;
     };
-    arrayWithEnum?: Array<('Success' | 'Warning' | 'Error')>;
-    arrayWithDescription?: Array<(number)>;
+    arrayWithEnum?: Array<'Success' | 'Warning' | 'Error'>;
+    arrayWithDescription?: Array<number>;
     /**
      * This is a simple enum with strings
      */
@@ -361,8 +349,8 @@ export type ModelWithReference = {
  */
 export type ModelWithArrayReadOnlyAndWriteOnly = {
     prop?: Array<ModelWithReadOnlyAndWriteOnly>;
-    propWithFile?: Array<((Blob | File))>;
-    propWithNumber?: Array<(number)>;
+    propWithFile?: Array<Blob | File>;
+    propWithNumber?: Array<number>;
 };
 
 /**
@@ -370,8 +358,8 @@ export type ModelWithArrayReadOnlyAndWriteOnly = {
  */
 export type ModelWithArray = {
     prop?: Array<ModelWithString>;
-    propWithFile?: Array<((Blob | File))>;
-    propWithNumber?: Array<(number)>;
+    propWithFile?: Array<Blob | File>;
+    propWithNumber?: Array<number>;
 };
 
 /**
@@ -379,7 +367,7 @@ export type ModelWithArray = {
  */
 export type ModelWithDictionary = {
     prop?: {
-        [key: string]: (string);
+        [key: string]: string;
     };
 };
 
@@ -406,23 +394,23 @@ export type ModelWithCircularReference = {
  * This is a model with one property with a 'one of' relationship
  */
 export type CompositionWithOneOf = {
-    propA?: (ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary);
+    propA?: ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary;
 };
 
 /**
  * This is a model with one property with a 'one of' relationship where the options are not $ref
  */
 export type CompositionWithOneOfAnonymous = {
-    propA?: ({
-    propA?: string;
-} | string | number);
+    propA?: {
+        propA?: string;
+    } | string | number;
 };
 
 /**
  * Circle
  */
 export type ModelCircle = {
-    kind: 'circle';
+    kind: string;
     radius?: number;
 };
 
@@ -430,7 +418,7 @@ export type ModelCircle = {
  * Square
  */
 export type ModelSquare = {
-    kind: 'square';
+    kind: string;
     sideLength?: number;
 };
 
@@ -443,88 +431,88 @@ export type CompositionWithOneOfDiscriminator = ModelCircle | ModelSquare;
  * This is a model with one property with a 'any of' relationship
  */
 export type CompositionWithAnyOf = {
-    propA?: (ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary);
+    propA?: ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary;
 };
 
 /**
  * This is a model with one property with a 'any of' relationship where the options are not $ref
  */
 export type CompositionWithAnyOfAnonymous = {
-    propA?: ({
-    propA?: string;
-} | string | number);
+    propA?: {
+        propA?: string;
+    } | string | number;
 };
 
 /**
  * This is a model with nested 'any of' property with a type null
  */
 export type CompositionWithNestedAnyAndTypeNull = {
-    propA?: (Array<(ModelWithDictionary | null)> | Array<(ModelWithArray | null)>);
+    propA?: Array<ModelWithDictionary | null> | Array<ModelWithArray | null>;
 };
 
 export type _3e_num_1Период = 'Bird' | 'Dog';
 
-export type ConstValue = "ConstValue";
+export type ConstValue = 'ConstValue';
 
 /**
  * This is a model with one property with a 'any of' relationship where the options are not $ref
  */
 export type CompositionWithNestedAnyOfAndNull = {
-    propA?: (Array<(_3e_num_1Период | ConstValue)> | null);
+    propA?: Array<_3e_num_1Период | ConstValue> | null;
 };
 
 /**
  * This is a model with one property with a 'one of' relationship
  */
 export type CompositionWithOneOfAndNullable = {
-    propA?: (({
-    boolean?: boolean;
-} | ModelWithEnum | ModelWithArray | ModelWithDictionary) | null);
+    propA?: {
+        boolean?: boolean;
+    } | ModelWithEnum | ModelWithArray | ModelWithDictionary | null;
 };
 
 /**
  * This is a model that contains a simple dictionary within composition
  */
 export type CompositionWithOneOfAndSimpleDictionary = {
-    propA?: (boolean | {
-    [key: string]: (number);
-});
+    propA?: boolean | {
+        [key: string]: number;
+    };
 };
 
 /**
  * This is a model that contains a dictionary of simple arrays within composition
  */
 export type CompositionWithOneOfAndSimpleArrayDictionary = {
-    propA?: (boolean | {
-    [key: string]: Array<(boolean)>;
-});
+    propA?: boolean | {
+        [key: string]: Array<boolean>;
+    };
 };
 
 /**
  * This is a model that contains a dictionary of complex arrays (composited) within composition
  */
 export type CompositionWithOneOfAndComplexArrayDictionary = {
-    propA?: (boolean | {
-    [key: string]: Array<(number | string)>;
-});
+    propA?: boolean | {
+        [key: string]: Array<number | string>;
+    };
 };
 
 /**
  * This is a model with one property with a 'all of' relationship
  */
 export type CompositionWithAllOfAndNullable = {
-    propA?: (({
-    boolean?: boolean;
-} & ModelWithEnum & ModelWithArray & ModelWithDictionary) | null);
+    propA?: ({
+        boolean?: boolean;
+    } & ModelWithEnum & ModelWithArray & ModelWithDictionary) | null;
 };
 
 /**
  * This is a model with one property with a 'any of' relationship
  */
 export type CompositionWithAnyOfAndNullable = {
-    propA?: (({
-    boolean?: boolean;
-} | ModelWithEnum | ModelWithArray | ModelWithDictionary) | null);
+    propA?: {
+        boolean?: boolean;
+    } | ModelWithEnum | ModelWithArray | ModelWithDictionary | null;
 };
 
 /**
@@ -539,9 +527,9 @@ export type CompositionBaseModel = {
  * This is a model that extends the base model
  */
 export type CompositionExtendedModel = CompositionBaseModel & {
+    age: number;
     firstName: string;
     lastname: string;
-    age: number;
 };
 
 /**
@@ -550,7 +538,7 @@ export type CompositionExtendedModel = CompositionBaseModel & {
 export type ModelWithProperties = {
     required: string;
     readonly requiredAndReadOnly: string;
-    requiredAndNullable: (string) | null;
+    requiredAndNullable: string | null;
     string?: string;
     number?: number;
     boolean?: boolean;
@@ -568,7 +556,7 @@ export type ModelWithProperties = {
 export type ModelWithNestedProperties = {
     readonly first: {
         readonly second: {
-            readonly third: (string) | null;
+            readonly third: string | null;
         } | null;
     } | null;
 };
@@ -644,35 +632,29 @@ export type _default = {
 export type Pageable = {
     page?: number;
     size?: number;
-    sort?: Array<(string)>;
+    sort?: Array<string>;
 };
 
 /**
  * This is a free-form object without additionalProperties.
  */
-export type FreeFormObjectWithoutAdditionalProperties = {
-    [key: string]: unknown;
-};
+export type FreeFormObjectWithoutAdditionalProperties = {};
 
 /**
  * This is a free-form object with additionalProperties: true.
  */
-export type FreeFormObjectWithAdditionalPropertiesEqTrue = {
-    [key: string]: unknown;
-};
+export type FreeFormObjectWithAdditionalPropertiesEqTrue = {};
 
 /**
  * This is a free-form object with additionalProperties: {}.
  */
-export type FreeFormObjectWithAdditionalPropertiesEqEmptyObject = {
-    [key: string]: unknown;
-};
+export type FreeFormObjectWithAdditionalPropertiesEqEmptyObject = {};
 
 export type ModelWithConst = {
-    String?: "String";
+    String?: 'String';
     number?: 0;
     null?: null;
-    withType?: "Some string";
+    withType?: 'Some string';
 };
 
 /**
@@ -683,19 +665,19 @@ export type ModelWithAdditionalPropertiesEqTrue = {
      * This is a simple string property
      */
     prop?: string;
-    [key: string]: unknown | string;
+    [key: string]: unknown | string | undefined;
 };
 
 export type NestedAnyOfArraysNullable = {
-    nullableArray?: (Array<(string | boolean)> | null);
+    nullableArray?: Array<string | boolean> | null;
 };
 
 export type CompositionWithOneOfAndProperties = ({
-    foo: ParameterSimpleParameter;
+    foo: SimpleParameter;
 } | {
     bar: NonAsciiStringæøåÆØÅöôêÊ字符串;
 }) & {
-    baz: (number) | null;
+    baz: number | null;
     qux: number;
 };
 
@@ -726,13 +708,11 @@ export type ModelWithOneOfEnum = {
     foo: 'Quux';
 } | {
     content: [
-        (string),
-        (string)
+        string,
+        string
     ];
     foo: 'Corge';
 };
-
-export type foo = 'Bar';
 
 export type ModelWithNestedArrayEnumsDataFoo = 'foo' | 'bar';
 
@@ -744,12 +724,12 @@ export type ModelWithNestedArrayEnumsData = {
 };
 
 export type ModelWithNestedArrayEnums = {
-    array_strings?: Array<(string)>;
-    data?: (ModelWithNestedArrayEnumsData);
+    array_strings?: Array<string>;
+    data?: ModelWithNestedArrayEnumsData;
 };
 
 export type ModelWithNestedCompositionEnums = {
-    foo?: (ModelWithNestedArrayEnumsDataFoo);
+    foo?: ModelWithNestedArrayEnumsDataFoo;
 };
 
 export type ModelWithReadOnlyAndWriteOnly = {
@@ -764,31 +744,31 @@ export type ModelWithConstantSizeArray = [
 ];
 
 export type ModelWithAnyOfConstantSizeArray = [
-    (number | string),
-    (number | string),
-    (number | string)
+    number | string,
+    number | string,
+    number | string
 ];
 
 export type ModelWithPrefixItemsConstantSizeArray = [
     ModelWithInteger,
-    (number | string),
+    number | string,
     string
 ];
 
 export type ModelWithAnyOfConstantSizeArrayNullable = [
-    ((number) | null | string),
-    ((number) | null | string),
-    ((number) | null | string)
+    number | null | string,
+    number | null | string,
+    number | null | string
 ];
 
 export type ModelWithAnyOfConstantSizeArrayWithNSizeAndOptions = [
-    (number | _import),
-    (number | _import)
+    number | _import,
+    number | _import
 ];
 
 export type ModelWithAnyOfConstantSizeArrayAndIntersect = [
-    (number & string),
-    (number & string)
+    number & string,
+    number & string
 ];
 
 export type ModelWithNumericEnumUnion = {
@@ -797,11 +777,6 @@ export type ModelWithNumericEnumUnion = {
      */
     value?: -10 | -1 | 0 | 1 | 3 | 6 | 12;
 };
-
-/**
- * Период
- */
-export type value = -10 | -1 | 0 | 1 | 3 | 6 | 12;
 
 /**
  * Some description with `back ticks`
@@ -839,8 +814,8 @@ export type ModelWithBackticksInDescription = {
     template?: string;
 };
 
-export type ModelWithOneOfAndProperties = (ParameterSimpleParameter | NonAsciiStringæøåÆØÅöôêÊ字符串) & {
-    baz: (number) | null;
+export type ModelWithOneOfAndProperties = (SimpleParameter | NonAsciiStringæøåÆØÅöôêÊ字符串) & {
+    baz: number | null;
     qux: number;
 };
 
@@ -887,13 +862,13 @@ export type SchemaWithFormRestrictedKeys = {
         'x-enumNames'?: string;
         title?: string;
     };
-    array?: Array<({
-    description?: string;
-    'x-enum-descriptions'?: string;
-    'x-enum-varnames'?: string;
-    'x-enumNames'?: string;
-    title?: string;
-})>;
+    array?: Array<{
+        description?: string;
+        'x-enum-descriptions'?: string;
+        'x-enum-varnames'?: string;
+        'x-enumNames'?: string;
+        title?: string;
+    }>;
 };
 
 /**
@@ -903,7 +878,7 @@ export type io_k8s_apimachinery_pkg_apis_meta_v1_DeleteOptions = {
     /**
      * Must be fulfilled before a deletion is carried out. If not possible, a 409 Conflict status will be returned.
      */
-    preconditions?: (io_k8s_apimachinery_pkg_apis_meta_v1_Preconditions);
+    preconditions?: io_k8s_apimachinery_pkg_apis_meta_v1_Preconditions;
 };
 
 /**
@@ -921,11 +896,11 @@ export type io_k8s_apimachinery_pkg_apis_meta_v1_Preconditions = {
 };
 
 export type AdditionalPropertiesUnknownIssue = {
-    [key: string]: (string | number);
+    [key: string]: string | number;
 };
 
 export type AdditionalPropertiesUnknownIssue2 = {
-    [key: string]: (string | number);
+    [key: string]: string | number;
 };
 
 export type AdditionalPropertiesUnknownIssue3 = string & {
@@ -936,47 +911,41 @@ export type AdditionalPropertiesUnknownIssue3 = string & {
 
 export type AdditionalPropertiesIntegerIssue = {
     value: number;
-    [key: string]: (number) | undefined;
+    [key: string]: number;
 };
 
 export type OneOfAllOfIssue = ((ConstValue | Generic_Schema_Duplicate_Issue_1_System_Boolean_) & _3e_num_1Период) | Generic_Schema_Duplicate_Issue_1_System_String_;
 
 export type Generic_Schema_Duplicate_Issue_1_System_Boolean_ = {
     item?: boolean;
-    error?: (string) | null;
+    error?: string | null;
     readonly hasError?: boolean;
-    data?: {
-        [key: string]: unknown;
-    };
+    data?: {};
 };
 
 export type Generic_Schema_Duplicate_Issue_1_System_String_ = {
-    item?: (string) | null;
-    error?: (string) | null;
+    item?: string | null;
+    error?: string | null;
     readonly hasError?: boolean;
 };
 
 /**
  * This is a reusable parameter
  */
-export type ParameterSimpleParameter = string;
+export type SimpleParameter = string;
 
 /**
  * Parameter with illegal characters
  */
-export type Parameterx_Foo_Bar = ModelWithString;
+export type x_Foo_Bar = ModelWithString;
 
 export type ImportData = {
-    body: (ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly);
+    body: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
 };
 
-export type ImportResponse = (Model_From_Zendesk | ModelWithReadOnlyAndWriteOnly);
+export type ImportResponse = Model_From_Zendesk | ModelWithReadOnlyAndWriteOnly;
 
-export type ImportError = unknown;
-
-export type ApiVversionOdataControllerCountResponse = (Model_From_Zendesk);
-
-export type ApiVversionOdataControllerCountError = unknown;
+export type ApiVversionOdataControllerCountResponse = Model_From_Zendesk;
 
 export type GetApiVbyApiVersionSimpleOperationData = {
     path: {
@@ -987,9 +956,9 @@ export type GetApiVbyApiVersionSimpleOperationData = {
     };
 };
 
-export type GetApiVbyApiVersionSimpleOperationResponse = (number);
+export type GetApiVbyApiVersionSimpleOperationError = ModelWithBoolean;
 
-export type GetApiVbyApiVersionSimpleOperationError = (ModelWithBoolean);
+export type GetApiVbyApiVersionSimpleOperationResponse = number;
 
 export type DeleteFooData3 = {
     headers: {
@@ -1000,45 +969,45 @@ export type DeleteFooData3 = {
     };
     path: {
         /**
-         * bar in method
-         */
-        BarParam: string;
-        /**
          * foo in method
          */
         foo_param: string;
+        /**
+         * bar in method
+         */
+        BarParam: string;
     };
 };
 
 export type CallWithDescriptionsData = {
     query?: {
         /**
-         * Testing backticks in string: `backticks` and ```multiple backticks``` should work
-         */
-        parameterWithBackticks?: unknown;
-        /**
          * Testing multiline comments in string: First line
          * Second line
          *
          * Fourth line
          */
-        parameterWithBreaks?: unknown;
+        parameterWithBreaks?: string;
         /**
-         * Testing expression placeholders in string: ${expression} should work
+         * Testing backticks in string: `backticks` and ```multiple backticks``` should work
          */
-        parameterWithExpressionPlaceholders?: unknown;
-        /**
-         * Testing quotes in string: 'single quote''' and "double quotes""" should work
-         */
-        parameterWithQuotes?: unknown;
-        /**
-         * Testing reserved characters in string: * inline * and ** inline ** should work
-         */
-        parameterWithReservedCharacters?: unknown;
+        parameterWithBackticks?: string;
         /**
          * Testing slashes in string: \backwards\\\ and /forwards/// should work
          */
-        parameterWithSlashes?: unknown;
+        parameterWithSlashes?: string;
+        /**
+         * Testing expression placeholders in string: ${expression} should work
+         */
+        parameterWithExpressionPlaceholders?: string;
+        /**
+         * Testing quotes in string: 'single quote''' and "double quotes""" should work
+         */
+        parameterWithQuotes?: string;
+        /**
+         * Testing reserved characters in string: * inline * and ** inline ** should work
+         */
+        parameterWithReservedCharacters?: string;
     };
 };
 
@@ -1048,7 +1017,7 @@ export type DeprecatedCallData = {
          * This parameter is deprecated
          * @deprecated
          */
-        parameter: (DeprecatedModel) | null;
+        parameter: DeprecatedModel | null;
     };
 };
 
@@ -1056,32 +1025,30 @@ export type CallWithParametersData = {
     /**
      * This is the parameter that goes into the body
      */
-    body: {
-        [key: string]: unknown;
-    } | null;
+    body: {} | null;
     headers: {
         /**
          * This is the parameter that goes into the header
          */
-        parameterHeader: (string) | null;
+        parameterHeader: string | null;
     };
     path: {
         /**
-         * api-version should be required in standalone clients
-         */
-        'api-version': (string) | null;
-        /**
          * This is the parameter that goes into the path
          */
-        parameterPath: (string) | null;
+        parameterPath: string | null;
+        /**
+         * api-version should be required in standalone clients
+         */
+        'api-version': string | null;
     };
     query: {
+        foo_ref_enum?: ModelWithNestedArrayEnumsDataFoo;
+        foo_all_of_enum: ModelWithNestedArrayEnumsDataFoo;
         /**
          * This is the parameter that goes into the query params
          */
-        cursor: (string) | null;
-        foo_all_of_enum: (ModelWithNestedArrayEnumsDataFoo);
-        foo_ref_enum?: ModelWithNestedArrayEnumsDataFoo;
+        cursor: string | null;
     };
 };
 
@@ -1089,18 +1056,18 @@ export type CallWithWeirdParameterNamesData = {
     /**
      * This is the parameter that goes into the body
      */
-    body: (ModelWithString) | null;
+    body: ModelWithString | null;
     headers: {
         /**
          * This is the parameter that goes into the request header
          */
-        'parameter.header': (string) | null;
+        'parameter.header': string | null;
     };
     path: {
         /**
-         * api-version should be required in standalone clients
+         * This is the parameter that goes into the path
          */
-        'api-version': (string) | null;
+        'parameter.path.1'?: string;
         /**
          * This is the parameter that goes into the path
          */
@@ -1110,9 +1077,9 @@ export type CallWithWeirdParameterNamesData = {
          */
         'PARAMETER-PATH-3'?: string;
         /**
-         * This is the parameter that goes into the path
+         * api-version should be required in standalone clients
          */
-        'parameter.path.1'?: string;
+        'api-version': string | null;
     };
     query: {
         /**
@@ -1122,7 +1089,7 @@ export type CallWithWeirdParameterNamesData = {
         /**
          * This is the parameter that goes into the request query params
          */
-        'parameter-query': (string) | null;
+        'parameter-query': string | null;
     };
 };
 
@@ -1144,7 +1111,7 @@ export type PostCallWithOptionalParamData = {
      * This is an optional parameter
      */
     body?: {
-        offset?: (number) | null;
+        offset?: number | null;
     };
     query: {
         /**
@@ -1154,9 +1121,7 @@ export type PostCallWithOptionalParamData = {
     };
 };
 
-export type PostCallWithOptionalParamResponse = (number | void);
-
-export type PostCallWithOptionalParamError = unknown;
+export type PostCallWithOptionalParamResponse = number | undefined;
 
 export type PostApiVbyApiVersionRequestBodyData = {
     /**
@@ -1187,9 +1152,17 @@ export type PostApiVbyApiVersionFormDataData = {
 export type CallWithDefaultParametersData = {
     query?: {
         /**
+         * This is a simple string with default value
+         */
+        parameterString?: string | null;
+        /**
+         * This is a simple number with default value
+         */
+        parameterNumber?: number | null;
+        /**
          * This is a simple boolean with default value
          */
-        parameterBoolean?: (boolean) | null;
+        parameterBoolean?: boolean | null;
         /**
          * This is a simple enum with default value
          */
@@ -1197,20 +1170,20 @@ export type CallWithDefaultParametersData = {
         /**
          * This is a simple model with default value
          */
-        parameterModel?: (ModelWithString) | null;
-        /**
-         * This is a simple number with default value
-         */
-        parameterNumber?: (number) | null;
-        /**
-         * This is a simple string with default value
-         */
-        parameterString?: (string) | null;
+        parameterModel?: ModelWithString | null;
     };
 };
 
 export type CallWithDefaultOptionalParametersData = {
     query?: {
+        /**
+         * This is a simple string that is optional with default value
+         */
+        parameterString?: string;
+        /**
+         * This is a simple number that is optional with default value
+         */
+        parameterNumber?: number;
         /**
          * This is a simple boolean that is optional with default value
          */
@@ -1223,14 +1196,6 @@ export type CallWithDefaultOptionalParametersData = {
          * This is a simple model that is optional with default value
          */
         parameterModel?: ModelWithString;
-        /**
-         * This is a simple number that is optional with default value
-         */
-        parameterNumber?: number;
-        /**
-         * This is a simple string that is optional with default value
-         */
-        parameterString?: string;
     };
 };
 
@@ -1249,14 +1214,6 @@ export type CallToTestOrderOfParamsData = {
          */
         parameterOptionalStringWithNoDefault?: string;
         /**
-         * This is a string that can be null with default
-         */
-        parameterStringNullableWithDefault?: (string) | null;
-        /**
-         * This is a string that can be null with no default
-         */
-        parameterStringNullableWithNoDefault?: (string) | null;
-        /**
          * This is a string with default
          */
         parameterStringWithDefault: string;
@@ -1268,63 +1225,61 @@ export type CallToTestOrderOfParamsData = {
          * This is a string with no default
          */
         parameterStringWithNoDefault: string;
+        /**
+         * This is a string that can be null with no default
+         */
+        parameterStringNullableWithNoDefault?: string | null;
+        /**
+         * This is a string that can be null with default
+         */
+        parameterStringNullableWithDefault?: string | null;
     };
 };
 
-export type CallWithNoContentResponseResponse = (void);
+export type CallWithNoContentResponseResponse = undefined;
 
-export type CallWithNoContentResponseError = unknown;
+export type CallWithResponseAndNoContentResponseResponse = number | undefined;
 
-export type CallWithResponseAndNoContentResponseResponse = (number | void);
+export type DummyAResponse = _400;
 
-export type CallWithResponseAndNoContentResponseError = unknown;
+export type DummyBResponse = undefined;
 
-export type DummyAResponse = (_400);
+export type CallWithResponseResponse = _import;
 
-export type DummyAError = unknown;
+export type CallWithDuplicateResponsesError = ModelWithStringError | DictionaryWithArray | ModelWithBoolean;
 
-export type DummyBResponse = (void);
+export type CallWithDuplicateResponsesResponse = (ModelWithBoolean & ModelWithInteger) | ModelWithString;
 
-export type DummyBError = unknown;
+export type CallWithResponsesError = ModelWithStringError;
 
-export type CallWithResponseResponse = (_import);
-
-export type CallWithResponseError = unknown;
-
-export type CallWithDuplicateResponsesResponse = ((ModelWithBoolean & ModelWithInteger) | ModelWithString);
-
-export type CallWithDuplicateResponsesError = (ModelWithStringError | DictionaryWithArray | ModelWithBoolean);
-
-export type CallWithResponsesResponse = ({
+export type CallWithResponsesResponse = {
     readonly '@namespace.string'?: string;
     readonly '@namespace.integer'?: number;
     readonly value?: Array<ModelWithString>;
-} | ModelThatExtends | ModelThatExtendsExtends);
-
-export type CallWithResponsesError = (ModelWithStringError);
+} | ModelThatExtends | ModelThatExtendsExtends;
 
 export type CollectionFormatData = {
     query: {
         /**
          * This is an array parameter that is sent as csv format (comma-separated values)
          */
-        parameterArrayCSV: Array<(string)> | null;
-        /**
-         * This is an array parameter that is sent as multi format (multiple parameter instances)
-         */
-        parameterArrayMulti: Array<(string)> | null;
-        /**
-         * This is an array parameter that is sent as pipes format (pipe-separated values)
-         */
-        parameterArrayPipes: Array<(string)> | null;
+        parameterArrayCSV: Array<string> | null;
         /**
          * This is an array parameter that is sent as ssv format (space-separated values)
          */
-        parameterArraySSV: Array<(string)> | null;
+        parameterArraySSV: Array<string> | null;
         /**
          * This is an array parameter that is sent as tsv format (tab-separated values)
          */
-        parameterArrayTSV: Array<(string)> | null;
+        parameterArrayTSV: Array<string> | null;
+        /**
+         * This is an array parameter that is sent as pipes format (pipe-separated values)
+         */
+        parameterArrayPipes: Array<string> | null;
+        /**
+         * This is an array parameter that is sent as multi format (multiple parameter instances)
+         */
+        parameterArrayMulti: Array<string> | null;
     };
 };
 
@@ -1337,73 +1292,61 @@ export type TypesData = {
     };
     query: {
         /**
-         * This is an array parameter
-         */
-        parameterArray: Array<(string)> | null;
-        /**
-         * This is a boolean parameter
-         */
-        parameterBoolean: (boolean) | null;
-        /**
-         * This is a dictionary parameter
-         */
-        parameterDictionary: {
-            [key: string]: unknown;
-        } | null;
-        /**
-         * This is an enum parameter
-         */
-        parameterEnum: ('Success' | 'Warning' | 'Error') | null;
-        /**
          * This is a number parameter
          */
         parameterNumber: number;
         /**
-         * This is an object parameter
-         */
-        parameterObject: {
-            [key: string]: unknown;
-        } | null;
-        /**
          * This is a string parameter
          */
-        parameterString: (string) | null;
+        parameterString: string | null;
+        /**
+         * This is a boolean parameter
+         */
+        parameterBoolean: boolean | null;
+        /**
+         * This is an object parameter
+         */
+        parameterObject: {} | null;
+        /**
+         * This is an array parameter
+         */
+        parameterArray: Array<string> | null;
+        /**
+         * This is a dictionary parameter
+         */
+        parameterDictionary: {} | null;
+        /**
+         * This is an enum parameter
+         */
+        parameterEnum: 'Success' | 'Warning' | 'Error' | null;
     };
 };
 
-export type TypesResponse = (number | string | boolean | {
-    [key: string]: unknown;
-});
-
-export type TypesError = unknown;
+export type TypesResponse = number | string | boolean | {};
 
 export type UploadFileData = {
-    body: (Blob | File);
+    body: Blob | File;
     path: {
         /**
          * api-version should be required in standalone clients
          */
-        'api-version': (string) | null;
+        'api-version': string | null;
     };
 };
 
-export type UploadFileResponse = (boolean);
-
-export type UploadFileError = unknown;
+export type UploadFileResponse = boolean;
 
 export type FileResponseData = {
     path: {
+        id: string;
         /**
          * api-version should be required in standalone clients
          */
         'api-version': string;
-        id: string;
     };
 };
 
-export type FileResponseResponse = ((Blob | File));
-
-export type FileResponseError = unknown;
+export type FileResponseResponse = Blob | File;
 
 export type ComplexTypesData = {
     query: {
@@ -1424,57 +1367,47 @@ export type ComplexTypesData = {
     };
 };
 
-export type ComplexTypesResponse = (Array<ModelWithString>);
+export type ComplexTypesResponse = Array<ModelWithString>;
 
-export type ComplexTypesError = (unknown);
-
-export type MultipartRequestData = {
-    body?: {
-        content?: (Blob | File);
-        data?: ((ModelWithString) | null);
-    };
-};
-
-export type MultipartResponseResponse = ({
-    file?: (Blob | File);
+export type MultipartResponseResponse = {
+    file?: Blob | File;
     metadata?: {
         foo?: string;
         bar?: string;
     };
-});
+};
 
-export type MultipartResponseError = unknown;
+export type MultipartRequestData = {
+    body?: {
+        content?: Blob | File;
+        data?: ModelWithString | null;
+    };
+};
 
 export type ComplexParamsData = {
     body?: {
-        readonly key: (string) | null;
-        name: (string) | null;
+        readonly key: string | null;
+        name: string | null;
         enabled?: boolean;
-        readonly type: 'Monkey' | 'Horse' | 'Bird';
+        type: 'Monkey' | 'Horse' | 'Bird';
         listOfModels?: Array<ModelWithString> | null;
-        listOfStrings?: Array<(string)> | null;
-        parameters: (ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary);
+        listOfStrings?: Array<string> | null;
+        parameters: ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary;
         readonly user?: {
             readonly id?: number;
-            readonly name?: (string) | null;
+            readonly name?: string | null;
         };
     };
     path: {
+        id: number;
         /**
          * api-version should be required in standalone clients
          */
         'api-version': string;
-        id: number;
     };
 };
 
-export type ComplexParamsResponse = (ModelWithString);
-
-export type ComplexParamsError = unknown;
-
-export type CallWithResultFromHeaderResponse = (string);
-
-export type CallWithResultFromHeaderError = (unknown);
+export type ComplexParamsResponse = ModelWithString;
 
 export type TestErrorCodeData = {
     query: {
@@ -1485,10 +1418,6 @@ export type TestErrorCodeData = {
     };
 };
 
-export type TestErrorCodeResponse = (unknown);
-
-export type TestErrorCodeError = (unknown);
-
 export type NonAsciiæøåÆøÅöôêÊ字符串Data = {
     query: {
         /**
@@ -1498,9 +1427,7 @@ export type NonAsciiæøåÆøÅöôêÊ字符串Data = {
     };
 };
 
-export type NonAsciiæøåÆøÅöôêÊ字符串Response = (Array<NonAsciiStringæøåÆØÅöôêÊ字符串>);
-
-export type NonAsciiæøåÆøÅöôêÊ字符串Error = unknown;
+export type NonAsciiæøåÆøÅöôêÊ字符串Response = Array<NonAsciiStringæøåÆØÅöôêÊ字符串>;
 
 export type PutWithFormUrlEncodedData = {
     body: ArrayWithStrings;

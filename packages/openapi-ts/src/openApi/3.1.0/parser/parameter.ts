@@ -1,7 +1,12 @@
 import type { IRContext } from '../../../ir/context';
 import type { IRParameterObject, IRParametersObject } from '../../../ir/ir';
-import type { ParameterObject, ReferenceObject } from '../types/spec';
+import type {
+  ParameterObject,
+  ReferenceObject,
+  SchemaObject,
+} from '../types/spec';
 import { mediaTypeObject } from './mediaType';
+import { paginationField } from './pagination';
 import { schemaToIrSchema } from './schema';
 
 export const parametersArrayToObject = ({
@@ -117,20 +122,30 @@ const parameterToIrParameter = ({
     }
   }
 
-  const irSchema = schemaToIrSchema({
+  const finalSchema: SchemaObject = {
+    deprecated: parameter.deprecated,
+    description: parameter.description,
+    ...schema,
+  };
+
+  const pagination = paginationField({
     context,
-    schema: {
-      deprecated: parameter.deprecated,
-      description: parameter.description,
-      ...schema,
-    },
+    name: parameter.name,
+    schema: finalSchema,
   });
 
   const irParameter: IRParameterObject = {
     location: parameter.in,
     name: parameter.name,
-    schema: irSchema,
+    schema: schemaToIrSchema({
+      context,
+      schema: finalSchema,
+    }),
   };
+
+  if (pagination) {
+    irParameter.pagination = pagination;
+  }
 
   if (parameter.required) {
     irParameter.required = parameter.required;
