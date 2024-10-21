@@ -11,7 +11,7 @@ type SchemaWithRequired<K extends keyof Required<SchemaObject>> = Omit<
 
 type SchemaType = Extract<Required<SchemaObject>['type'], string>;
 
-const getSchemaTypes = ({
+export const getSchemaTypes = ({
   schema,
 }: {
   schema: SchemaObject;

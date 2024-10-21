@@ -1539,7 +1539,7 @@ const operationToType = ({
   });
 };
 
-const schemaToType = ({
+export const schemaToType = ({
   $ref,
   context,
   namespace = [],
