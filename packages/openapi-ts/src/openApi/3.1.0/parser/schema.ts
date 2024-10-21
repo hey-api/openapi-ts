@@ -135,7 +135,7 @@ const parseArray = ({
     }
   }
 
-  addItemsToSchema({
+  irSchema = addItemsToSchema({
     items: schemaItems,
     schema: irSchema,
   });
@@ -348,10 +348,12 @@ const parseAllOf = ({
     }
   }
 
-  if (schemaItems.length) {
-    irSchema.items = schemaItems;
-    irSchema.logicalOperator = 'and';
-  }
+  irSchema = addItemsToSchema({
+    items: schemaItems,
+    logicalOperator: 'and',
+    mutateSchemaOneItem: true,
+    schema: irSchema,
+  });
 
   if (schemaTypes.includes('null')) {
     // nest composition to avoid producing an intersection with null
@@ -404,8 +406,9 @@ const parseAnyOf = ({
     schemaItems.push({ type: 'null' });
   }
 
-  addItemsToSchema({
+  irSchema = addItemsToSchema({
     items: schemaItems,
+    mutateSchemaOneItem: true,
     schema: irSchema,
   });
 
@@ -442,7 +445,7 @@ const parseEnum = ({
   context: IRContext;
   schema: SchemaWithRequired<'enum'>;
 }): IRSchemaObject => {
-  const irSchema = initIrSchema({ schema });
+  let irSchema = initIrSchema({ schema });
 
   irSchema.type = 'enum';
 
@@ -477,7 +480,7 @@ const parseEnum = ({
     }
   }
 
-  addItemsToSchema({
+  irSchema = addItemsToSchema({
     items: schemaItems,
     schema: irSchema,
   });
@@ -517,8 +520,9 @@ const parseOneOf = ({
     schemaItems.push({ type: 'null' });
   }
 
-  addItemsToSchema({
+  irSchema = addItemsToSchema({
     items: schemaItems,
+    mutateSchemaOneItem: true,
     schema: irSchema,
   });
 
@@ -659,7 +663,7 @@ const parseManyTypes = ({
     );
   }
 
-  addItemsToSchema({
+  irSchema = addItemsToSchema({
     items: schemaItems,
     schema: irSchema,
   });

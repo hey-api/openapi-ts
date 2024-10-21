@@ -5,6 +5,6 @@ export type Foo = {
     baz?: string;
 };
 
-export type Bar = (Foo) & {
+export type Bar = Foo & {
     bar: number;
 };
