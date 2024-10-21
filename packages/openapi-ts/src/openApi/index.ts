@@ -57,6 +57,8 @@ export function parseLegacy({
   );
 }
 
+export type ParserOpenApiSpec = OpenApiV3_0_3 | OpenApiV3_1_0;
+
 // TODO: parser - add JSDoc comment
 export const parseExperimental = ({
   config,
@@ -70,7 +72,7 @@ export const parseExperimental = ({
   const context = new IRContext({
     config,
     parserConfig,
-    spec: spec as OpenApiV3_0_3 | OpenApiV3_1_0,
+    spec: spec as ParserOpenApiSpec,
   });
 
   switch (context.spec.openapi) {

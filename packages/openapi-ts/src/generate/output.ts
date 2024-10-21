@@ -2,6 +2,9 @@ import path from 'node:path';
 
 import type { IRContext } from '../ir/context';
 import type { OpenApi } from '../openApi';
+import { generateSchemas } from '../plugins/@hey-api/schemas/plugin';
+import { generateServices } from '../plugins/@hey-api/services/plugin';
+import { generateTypes } from '../plugins/@hey-api/types/plugin';
 import type { Client } from '../types/client';
 import type { Files } from '../types/utils';
 import { getConfig, isLegacyClient } from '../utils/config';
@@ -12,9 +15,9 @@ import { generateLegacyCore } from './core';
 import { generateIndexFile } from './indexFile';
 import { generateLegacyPlugins } from './plugins';
 import { generateLegacySchemas } from './schemas';
-import { generateLegacyServices, generateServices } from './services';
+import { generateLegacyServices } from './services';
 import { generateLegacyTransformers } from './transformers';
-import { generateLegacyTypes, generateTypes } from './types';
+import { generateLegacyTypes } from './types';
 
 /**
  * Write our OpenAPI client, using the given templates at the given output
@@ -125,7 +128,7 @@ export const generateOutput = async ({ context }: { context: IRContext }) => {
   generateTypes({ context });
 
   // schemas.gen.ts
-  // await generateLegacySchemas({ files, openApi });
+  generateSchemas({ context });
 
   // transformers
   if (
