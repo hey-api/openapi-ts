@@ -1,5 +1,6 @@
 import type { IROperationObject } from '../ir/ir';
 import type { OpenApiV2Schema, OpenApiV3Schema } from '../openApi';
+import type { SchemaObject as OpenApiV3_1_0SchemaObject } from '../openApi/3.1.0/types/spec';
 import type { ClientPlugins, UserPlugins } from '../plugins/';
 import type { Operation } from '../types/client';
 import type { ExtractArrayOfObjects } from './utils';
@@ -131,7 +132,7 @@ export interface ClientConfig {
          */
         name?: (
           name: string,
-          schema: OpenApiV2Schema | OpenApiV3Schema,
+          schema: OpenApiV2Schema | OpenApiV3Schema | OpenApiV3_1_0SchemaObject,
         ) => string;
         /**
          * Choose schema type to generate. Select 'form' if you don't want
