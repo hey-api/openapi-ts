@@ -6,7 +6,7 @@ export type Foo = {
 };
 
 export type Bar = Foo & {
+    bar: number;
     foo: string;
     baz: string;
-    bar: number;
 };
