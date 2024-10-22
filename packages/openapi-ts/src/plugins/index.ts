@@ -7,6 +7,10 @@ import {
   type PluginConfig as PluginHeyApiServices,
 } from './@hey-api/services';
 import {
+  defaultConfig as heyApiTransformersDefaultConfig,
+  type PluginConfig as PluginHeyApiTransformers,
+} from './@hey-api/transformers';
+import {
   defaultConfig as heyApiTypesDefaultConfig,
   type PluginConfig as PluginHeyApiTypes,
 } from './@hey-api/types';
@@ -50,6 +54,7 @@ export type UserPlugins =
 export type ClientPlugins =
   | PluginHeyApiSchemas
   | PluginHeyApiServices
+  | PluginHeyApiTransformers
   | PluginHeyApiTypes
   | PluginTanStackReactQuery
   | PluginTanStackSolidQuery
@@ -60,6 +65,7 @@ export type ClientPlugins =
 export const defaultPluginConfigs: DefaultPluginConfigsMap<ClientPlugins> = {
   '@hey-api/schemas': heyApiSchemasDefaultConfig,
   '@hey-api/services': heyApiServicesDefaultConfig,
+  '@hey-api/transformers': heyApiTransformersDefaultConfig,
   '@hey-api/types': heyApiTypesDefaultConfig,
   '@tanstack/react-query': tanStackReactQueryDefaultConfig,
   '@tanstack/solid-query': tanStackSolidQueryDefaultConfig,

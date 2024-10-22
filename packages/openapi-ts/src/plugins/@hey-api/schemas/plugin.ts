@@ -170,11 +170,11 @@ const schemasV3_1_0 = (context: IRContext<OpenApiV3_1_0>) => {
   }
 };
 
-export const generateSchemas = async ({
+export const generateSchemas = ({
   context,
 }: {
   context: IRContext<ParserOpenApiSpec>;
-}): Promise<void> => {
+}): void => {
   // TODO: parser - once schemas are a plugin, this logic can be simplified
   if (!context.config.schemas.export) {
     return;

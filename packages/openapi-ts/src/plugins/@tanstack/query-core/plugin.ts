@@ -119,11 +119,11 @@ const createInfiniteParamsFunction = ({
       parameters: [
         {
           name: 'queryKey',
-          type: compiler.typeNode('QueryKey<Options>'),
+          type: compiler.typeReferenceNode({ typeName: 'QueryKey<Options>' }),
         },
         {
           name: 'page',
-          type: compiler.typeNode('K'),
+          type: compiler.typeReferenceNode({ typeName: 'K' }),
         },
       ],
       statements: [
@@ -293,10 +293,13 @@ const createInfiniteParamsFunction = ({
 
 const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
   const returnType = compiler.indexedAccessTypeNode({
-    indexType: compiler.typeNode(0),
-    objectType: compiler.typeNode(queryKeyName, [
-      compiler.typeNode(TOptionsType),
-    ]),
+    indexType: compiler.literalTypeNode({
+      literal: compiler.ots.number(0),
+    }),
+    objectType: compiler.typeReferenceNode({
+      typeArguments: [compiler.typeReferenceNode({ typeName: TOptionsType })],
+      typeName: queryKeyName,
+    }),
   });
 
   const infiniteIdentifier = compiler.identifier({ text: 'infinite' });
@@ -307,17 +310,17 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
       parameters: [
         {
           name: 'id',
-          type: compiler.typeNode('string'),
+          type: compiler.typeReferenceNode({ typeName: 'string' }),
         },
         {
           isRequired: false,
           name: 'options',
-          type: compiler.typeNode(TOptionsType),
+          type: compiler.typeReferenceNode({ typeName: TOptionsType }),
         },
         {
           isRequired: false,
           name: 'infinite',
-          type: compiler.typeNode('boolean'),
+          type: compiler.typeReferenceNode({ typeName: 'boolean' }),
         },
       ],
       returnType,

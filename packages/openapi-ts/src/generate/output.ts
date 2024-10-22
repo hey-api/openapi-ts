@@ -4,6 +4,7 @@ import type { IRContext } from '../ir/context';
 import type { OpenApi } from '../openApi';
 import { generateSchemas } from '../plugins/@hey-api/schemas/plugin';
 import { generateServices } from '../plugins/@hey-api/services/plugin';
+import { generateTransformers } from '../plugins/@hey-api/transformers/plugin';
 import { generateTypes } from '../plugins/@hey-api/types/plugin';
 import type { Client } from '../types/client';
 import type { Files } from '../types/utils';
@@ -124,38 +125,15 @@ export const generateOutput = async ({ context }: { context: IRContext }) => {
     });
   }
 
-  // types.gen.ts
+  // TODO: parser - move types, schemas, transformers, and services into plugins
   generateTypes({ context });
-
-  // schemas.gen.ts
   generateSchemas({ context });
-
-  // transformers
-  if (
-    context.config.services.export &&
-    // client.services.length &&
-    context.config.types.dates === 'types+transform'
-  ) {
-    // await generateLegacyTransformers({
-    //   client,
-    //   onNode: (node) => {
-    //     files.types?.add(node);
-    //   },
-    //   onRemoveNode: () => {
-    //     files.types?.removeNode();
-    //   },
-    // });
-  }
-
-  // services.gen.ts
+  generateTransformers({ context });
   generateServices({ context });
 
-  // TODO: parser - remove after moving types, services, transformers, and schemas into plugin
-  // index.ts. Any files generated after this won't be included in exports
-  // from the index file.
+  // TODO: parser - remove index file after above is migrated to plugins
   generateIndexFile({ files: context.files });
 
-  // plugins
   for (const plugin of context.config.plugins) {
     plugin.handler({
       context,
