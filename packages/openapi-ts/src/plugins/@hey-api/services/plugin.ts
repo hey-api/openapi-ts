@@ -420,7 +420,7 @@ const generateFlatServices = ({ context }: { context: IRContext }) => {
   }
 };
 
-export const generateServices = ({ context }: { context: IRContext }) => {
+export const generateServices = ({ context }: { context: IRContext }): void => {
   // TODO: parser - once services are a plugin, this logic can be simplified
   if (!context.config.services.export) {
     return;

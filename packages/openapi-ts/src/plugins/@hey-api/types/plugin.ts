@@ -6,11 +6,12 @@ import type { IRContext } from '../../../ir/context';
 import type {
   IROperationObject,
   IRParameterObject,
+  IRPathItemObject,
   IRPathsObject,
-  IRResponseObject,
   IRSchemaObject,
 } from '../../../ir/ir';
-import { addItemsToSchema } from '../../../ir/utils';
+import { operationResponsesMap } from '../../../ir/operation';
+import { deduplicateSchema } from '../../../ir/schema';
 import { ensureValidTypeScriptJavaScriptIdentifier } from '../../../openApi';
 import { escapeComment } from '../../../utils/escape';
 import { irRef, isRefOpenApiComponent } from '../../../utils/ref';
@@ -452,6 +453,7 @@ const objectTypeToIdentifier = ({
 };
 
 const stringTypeToIdentifier = ({
+  context,
   schema,
 }: {
   context: IRContext;
@@ -476,6 +478,13 @@ const stringTypeToIdentifier = ({
           }),
         ],
       });
+    }
+
+    if (schema.format === 'date-time' || schema.format === 'date') {
+      // TODO: parser - add ability to skip type transformers
+      if (context.config.types.dates) {
+        return compiler.typeReferenceNode({ typeName: 'Date' });
+      }
     }
   }
 
@@ -578,71 +587,6 @@ const schemaTypeToIdentifier = ({
         keyword: 'undefined',
       });
   }
-};
-
-/**
- * Ensure we don't produce redundant types, e.g. string | string.
- */
-const deduplicateSchema = <T extends IRSchemaObject>({
-  schema,
-}: {
-  schema: T;
-}): T => {
-  if (!schema.items) {
-    return schema;
-  }
-
-  const uniqueItems: Array<IRSchemaObject> = [];
-  const typeIds: Array<string> = [];
-
-  for (const item of schema.items) {
-    // skip nested schemas for now, handle if necessary
-    if (
-      !item.type ||
-      item.type === 'boolean' ||
-      item.type === 'null' ||
-      item.type === 'number' ||
-      item.type === 'string' ||
-      item.type === 'unknown' ||
-      item.type === 'void'
-    ) {
-      // const needs namespace to handle empty string values, otherwise
-      // fallback would equal an actual value and we would skip an item
-      const typeId = `${item.$ref ?? ''}${item.type ?? ''}${item.const !== undefined ? `const-${item.const}` : ''}`;
-      if (!typeIds.includes(typeId)) {
-        typeIds.push(typeId);
-        uniqueItems.push(item);
-      }
-      continue;
-    }
-
-    uniqueItems.push(item);
-  }
-
-  schema.items = uniqueItems;
-
-  if (
-    schema.items.length <= 1 &&
-    schema.type !== 'array' &&
-    schema.type !== 'enum' &&
-    schema.type !== 'tuple'
-  ) {
-    // bring the only item up to clean up the schema
-    const liftedSchema = schema.items[0];
-    delete schema.logicalOperator;
-    delete schema.items;
-    schema = {
-      ...schema,
-      ...liftedSchema,
-    };
-  }
-
-  // exclude unknown if it's the only type left
-  if (schema.type === 'unknown') {
-    return {} as T;
-  }
-
-  return schema;
 };
 
 const irParametersToIrSchema = ({
@@ -762,166 +706,6 @@ const operationToDataType = ({
   }
 };
 
-type StatusGroup = '1XX' | '2XX' | '3XX' | '4XX' | '5XX' | 'default';
-
-const statusCodeToGroup = ({
-  statusCode,
-}: {
-  statusCode: string;
-}): StatusGroup => {
-  switch (statusCode) {
-    case '1XX':
-      return '1XX';
-    case '2XX':
-      return '2XX';
-    case '3XX':
-      return '3XX';
-    case '4XX':
-      return '4XX';
-    case '5XX':
-      return '5XX';
-    case 'default':
-      return 'default';
-    default:
-      return `${statusCode[0]}XX` as StatusGroup;
-  }
-};
-
-const operationToResponseTypes = ({
-  context,
-  operation,
-}: {
-  context: IRContext;
-  operation: IROperationObject;
-}) => {
-  if (!operation.responses) {
-    return;
-  }
-
-  let errors: IRSchemaObject = {};
-  const errorsItems: Array<IRSchemaObject> = [];
-
-  let responses: IRSchemaObject = {};
-  const responsesItems: Array<IRSchemaObject> = [];
-
-  let defaultResponse: IRResponseObject | undefined;
-
-  for (const name in operation.responses) {
-    const response = operation.responses[name]!;
-
-    switch (statusCodeToGroup({ statusCode: name })) {
-      case '1XX':
-      case '3XX':
-        // TODO: parser - handle informational and redirection status codes
-        break;
-      case '2XX':
-        responsesItems.push(response.schema);
-        break;
-      case '4XX':
-      case '5XX':
-        errorsItems.push(response.schema);
-        break;
-      case 'default':
-        // store default response to be evaluated last
-        defaultResponse = response;
-        break;
-    }
-  }
-
-  // infer default response type
-  if (defaultResponse) {
-    let inferred = false;
-
-    // assume default is intended for success if none exists yet
-    if (!responsesItems.length) {
-      responsesItems.push(defaultResponse.schema);
-      inferred = true;
-    }
-
-    const description = (
-      defaultResponse.schema.description ?? ''
-    ).toLocaleLowerCase();
-    const $ref = (defaultResponse.schema.$ref ?? '').toLocaleLowerCase();
-
-    // TODO: parser - this could be rewritten using regular expressions
-    const successKeywords = ['success'];
-    if (
-      successKeywords.some(
-        (keyword) => description.includes(keyword) || $ref.includes(keyword),
-      )
-    ) {
-      responsesItems.push(defaultResponse.schema);
-      inferred = true;
-    }
-
-    // TODO: parser - this could be rewritten using regular expressions
-    const errorKeywords = ['error', 'problem'];
-    if (
-      errorKeywords.some(
-        (keyword) => description.includes(keyword) || $ref.includes(keyword),
-      )
-    ) {
-      errorsItems.push(defaultResponse.schema);
-      inferred = true;
-    }
-
-    // if no keyword match, assume default schema is intended for error
-    if (!inferred) {
-      errorsItems.push(defaultResponse.schema);
-    }
-  }
-
-  if (errorsItems.length) {
-    errors = addItemsToSchema({
-      items: errorsItems,
-      mutateSchemaOneItem: true,
-      schema: errors,
-    });
-    errors = deduplicateSchema({ schema: errors });
-    if (Object.keys(errors).length) {
-      const identifier = context.file({ id: typesId })!.identifier({
-        $ref: operationErrorRef({ id: operation.id }),
-        create: true,
-        namespace: 'type',
-      });
-      const node = compiler.typeAliasDeclaration({
-        exportType: true,
-        name: identifier.name,
-        type: schemaToType({
-          context,
-          schema: errors,
-        }),
-      });
-      context.file({ id: typesId })!.add(node);
-    }
-  }
-
-  if (responsesItems.length) {
-    responses = addItemsToSchema({
-      items: responsesItems,
-      mutateSchemaOneItem: true,
-      schema: responses,
-    });
-    responses = deduplicateSchema({ schema: responses });
-    if (Object.keys(responses).length) {
-      const identifier = context.file({ id: typesId })!.identifier({
-        $ref: operationResponseRef({ id: operation.id }),
-        create: true,
-        namespace: 'type',
-      });
-      const node = compiler.typeAliasDeclaration({
-        exportType: true,
-        name: identifier.name,
-        type: schemaToType({
-          context,
-          schema: responses,
-        }),
-      });
-      context.file({ id: typesId })!.add(node);
-    }
-  }
-};
-
 const operationToType = ({
   context,
   operation,
@@ -934,10 +718,41 @@ const operationToType = ({
     operation,
   });
 
-  operationToResponseTypes({
-    context,
-    operation,
-  });
+  const { error, response } = operationResponsesMap(operation);
+
+  if (error) {
+    const identifier = context.file({ id: typesId })!.identifier({
+      $ref: operationErrorRef({ id: operation.id }),
+      create: true,
+      namespace: 'type',
+    });
+    const node = compiler.typeAliasDeclaration({
+      exportType: true,
+      name: identifier.name,
+      type: schemaToType({
+        context,
+        schema: error,
+      }),
+    });
+    context.file({ id: typesId })!.add(node);
+  }
+
+  if (response) {
+    const identifier = context.file({ id: typesId })!.identifier({
+      $ref: operationResponseRef({ id: operation.id }),
+      create: true,
+      namespace: 'type',
+    });
+    const node = compiler.typeAliasDeclaration({
+      exportType: true,
+      name: identifier.name,
+      type: schemaToType({
+        context,
+        schema: response,
+      }),
+    });
+    context.file({ id: typesId })!.add(node);
+  }
 };
 
 export const schemaToType = ({
@@ -1077,59 +892,13 @@ export const generateTypes = ({ context }: { context: IRContext }): void => {
     for (const path in context.ir.paths) {
       const pathItem = context.ir.paths[path as keyof IRPathsObject];
 
-      if (pathItem.delete) {
-        operationToType({
-          context,
-          operation: pathItem.delete,
-        });
-      }
+      for (const _method in pathItem) {
+        const method = _method as keyof IRPathItemObject;
+        const operation = pathItem[method]!;
 
-      if (pathItem.get) {
         operationToType({
           context,
-          operation: pathItem.get,
-        });
-      }
-
-      if (pathItem.head) {
-        operationToType({
-          context,
-          operation: pathItem.head,
-        });
-      }
-
-      if (pathItem.options) {
-        operationToType({
-          context,
-          operation: pathItem.options,
-        });
-      }
-
-      if (pathItem.patch) {
-        operationToType({
-          context,
-          operation: pathItem.patch,
-        });
-      }
-
-      if (pathItem.post) {
-        operationToType({
-          context,
-          operation: pathItem.post,
-        });
-      }
-
-      if (pathItem.put) {
-        operationToType({
-          context,
-          operation: pathItem.put,
-        });
-      }
-
-      if (pathItem.trace) {
-        operationToType({
-          context,
-          operation: pathItem.trace,
+          operation,
         });
       }
     }
