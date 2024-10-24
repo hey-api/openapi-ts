@@ -86,30 +86,29 @@ export interface RequestOptionsBase<ThrowOnError extends boolean>
 export type RequestResult<
   Data = unknown,
   TError = unknown,
-  ThrowOnError extends boolean = boolean,
-> = ThrowOnError extends true
-  ? Promise<AxiosResponse<Data>>
-  : Promise<
-      | (AxiosResponse<Data> & { error: undefined })
-      | (AxiosError<TError> & { data: undefined; error: TError })
-    >;
+  Options extends { throwOnError?: boolean } = { throwOnError?: boolean },
+> = Promise<
+  Options['throwOnError'] extends true
+    ? AxiosResponse<Data>
+    : | (AxiosResponse<Data> & { error: undefined })
+    | (AxiosError<TError> & { data: undefined; error: TError })
+>;
 
 type MethodFn = <
+  Options extends RequestOptionsBase<boolean>,
   Data = unknown,
   TError = unknown,
-  ThrowOnError extends boolean = false,
 >(
-  options: Omit<RequestOptionsBase<ThrowOnError>, 'method'>,
-) => RequestResult<Data, TError, ThrowOnError>;
+  options: Options,
+) => RequestResult<Data, TError, Options>;
 
 type RequestFn = <
+  Options extends RequestOptionsBase<boolean> & { method: string },
   Data = unknown,
   TError = unknown,
-  ThrowOnError extends boolean = false,
 >(
-  options: Omit<RequestOptionsBase<ThrowOnError>, 'method'> &
-    Pick<Required<RequestOptionsBase<ThrowOnError>>, 'method'>,
-) => RequestResult<Data, TError, ThrowOnError>;
+  options: Options,
+) => RequestResult<Data, TError, Options>;
 
 export interface Client {
   delete: MethodFn;
