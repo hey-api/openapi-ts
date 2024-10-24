@@ -4,7 +4,7 @@ import { createCallExpression } from './module';
 import { createTypeReferenceNode } from './types';
 import { createIdentifier, isType } from './utils';
 
-const createReturnStatement = ({
+export const createReturnStatement = ({
   expression,
 }: {
   expression?: ts.Expression;

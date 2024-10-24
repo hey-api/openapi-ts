@@ -71,7 +71,7 @@ const addJavaScriptEnum = ({
     comment: parseSchemaJsDoc({ schema }),
     exportConst: true,
     expression,
-    name: identifier.name,
+    name: identifier.name || '',
   });
   return node;
 };
@@ -156,7 +156,7 @@ const addTypeEnum = ({
   const node = compiler.typeAliasDeclaration({
     comment: parseSchemaJsDoc({ schema }),
     exportType: true,
-    name: identifier.name,
+    name: identifier.name || '',
     type: schemaToType({
       context,
       schema: {
@@ -213,7 +213,7 @@ const addTypeScriptEnum = ({
 
   const node = compiler.enumDeclaration({
     leadingComment: parseSchemaJsDoc({ schema }),
-    name: identifier.name,
+    name: identifier.name || '',
     obj: enumObject.obj,
   });
   return node;
@@ -696,7 +696,7 @@ const operationToDataType = ({
     });
     const node = compiler.typeAliasDeclaration({
       exportType: true,
-      name: identifier.name,
+      name: identifier.name || '',
       type: schemaToType({
         context,
         schema: data,
@@ -728,7 +728,7 @@ const operationToType = ({
     });
     const node = compiler.typeAliasDeclaration({
       exportType: true,
-      name: identifier.name,
+      name: identifier.name || '',
       type: schemaToType({
         context,
         schema: error,
@@ -745,7 +745,7 @@ const operationToType = ({
     });
     const node = compiler.typeAliasDeclaration({
       exportType: true,
-      name: identifier.name,
+      name: identifier.name || '',
       type: schemaToType({
         context,
         schema: response,
@@ -775,7 +775,7 @@ export const schemaToType = ({
       namespace: 'type',
     });
     type = compiler.typeReferenceNode({
-      typeName: identifier.name,
+      typeName: identifier.name || '',
     });
   } else if (schema.type) {
     type = schemaTypeToIdentifier({
@@ -826,7 +826,7 @@ export const schemaToType = ({
         namespace: 'value',
       });
       const node = compiler.namespaceDeclaration({
-        name: identifier.name,
+        name: identifier.name || '',
         statements: namespace,
       });
       context.file({ id: typesId })!.add(node);
@@ -842,7 +842,7 @@ export const schemaToType = ({
       const node = compiler.typeAliasDeclaration({
         comment: parseSchemaJsDoc({ schema }),
         exportType: true,
-        name: identifier.name,
+        name: identifier.name || '',
         type,
       });
       context.file({ id: typesId })!.add(node);

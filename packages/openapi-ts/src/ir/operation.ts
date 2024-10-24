@@ -161,7 +161,7 @@ export const operationResponsesMap = (
       schema: errors,
     });
     errors = deduplicateSchema({ schema: errors });
-    if (Object.keys(errors).length) {
+    if (Object.keys(errors).length && errors.type !== 'unknown') {
       result.error = errors;
     }
   }
@@ -173,7 +173,7 @@ export const operationResponsesMap = (
       schema: responses,
     });
     responses = deduplicateSchema({ schema: responses });
-    if (Object.keys(responses).length) {
+    if (Object.keys(responses).length && responses.type !== 'unknown') {
       result.response = responses;
     }
   }

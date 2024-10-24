@@ -5,12 +5,14 @@ import type { PostV1FooData, PostV1FooError, PostV1FooResponse } from './types.g
 
 export const client = createClient(createConfig());
 
-export const postV1Foo = <ThrowOnError extends boolean = false>(options: Options<PostV1FooData, ThrowOnError>) => { return (options?.client ?? client).post<PostV1FooResponse, PostV1FooError, ThrowOnError>({
-    ...options,
-    ...formDataBodySerializer,
-    headers: {
-        'Content-Type': null,
-        ...options?.headers
-    },
-    url: '/v1/foo'
-}); };
+export const postV1Foo = <ThrowOnError extends boolean = false>(options: Options<PostV1FooData, ThrowOnError>) => {
+    return (options?.client ?? client).post<PostV1FooResponse, PostV1FooError, ThrowOnError>({
+        ...options,
+        ...formDataBodySerializer,
+        headers: {
+            'Content-Type': null,
+            ...options?.headers
+        },
+        url: '/v1/foo'
+    });
+};
