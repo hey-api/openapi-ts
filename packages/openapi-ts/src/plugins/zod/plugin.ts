@@ -41,7 +41,7 @@ const processArray = ({ file, model }: TypesProps) => {
     const statement = compiler.constVariable({
       exportConst: true,
       expression: zArrayExpression,
-      name: identifier.name,
+      name: identifier.name || '',
     });
     file.add(statement);
     return;
@@ -83,7 +83,7 @@ const processArray = ({ file, model }: TypesProps) => {
     const statement = compiler.constVariable({
       exportConst: true,
       expression,
-      name: identifier.name,
+      name: identifier.name || '',
     });
     file.add(statement);
     return;
@@ -104,7 +104,7 @@ const processArray = ({ file, model }: TypesProps) => {
         }),
       ],
     }),
-    name: identifier.name,
+    name: identifier.name || '',
   });
   file.add(statement);
 };
@@ -129,7 +129,7 @@ const processGeneric = ({ file, model }: TypesProps) => {
           name: 'string',
         }),
       }),
-      name: identifier.name,
+      name: identifier.name || '',
     });
     file.add(statement);
     return;
@@ -145,7 +145,7 @@ const processGeneric = ({ file, model }: TypesProps) => {
           name: 'boolean',
         }),
       }),
-      name: identifier.name,
+      name: identifier.name || '',
     });
     file.add(statement);
     return;
@@ -166,7 +166,7 @@ const processGeneric = ({ file, model }: TypesProps) => {
         }),
       ],
     }),
-    name: identifier.name,
+    name: identifier.name || '',
   });
   file.add(statement);
 };

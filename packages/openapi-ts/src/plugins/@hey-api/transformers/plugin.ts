@@ -1,244 +1,357 @@
-// import type ts from 'typescript';
+import ts from 'typescript';
 
+import { compiler } from '../../../compiler';
 import type { IRContext } from '../../../ir/context';
-import type { IRPathItemObject, IRPathsObject } from '../../../ir/ir';
+import type {
+  IRPathItemObject,
+  IRPathsObject,
+  IRSchemaObject,
+} from '../../../ir/ir';
 import { operationResponsesMap } from '../../../ir/operation';
-// import { compiler } from '../compiler';
-// import { getOperationKey } from '../openApi/common/parser/operation';
-// import type { ModelMeta, OperationResponse } from '../types/client';
-// import { isModelDate, unsetUniqueTypeName } from '../utils/type';
-// import {
-//   modelResponseTransformerTypeName,
-//   operationResponseTransformerTypeName,
-//   operationResponseTypeName,
-// } from './services';
-// import { generateType, type TypesProps } from './types';
+import { camelCase } from '../../../utils/camelCase';
+import { irRef } from '../../../utils/ref';
+import { operationResponseRef } from '../services/plugin';
+
+interface OperationIRRef {
+  /**
+   * Operation ID
+   */
+  id: string;
+}
+
+const operationIrRef = ({
+  id,
+  type,
+}: OperationIRRef & {
+  type: 'data' | 'error' | 'response';
+}): string => {
+  let affix = '';
+  switch (type) {
+    case 'data':
+      affix = 'DataResponseTransformer';
+      break;
+    case 'error':
+      affix = 'ErrorResponseTransformer';
+      break;
+    case 'response':
+      affix = 'ResponseTransformer';
+      break;
+  }
+  return `${irRef}${camelCase({
+    input: id,
+    // TODO: parser - do not pascalcase for functions, only for types
+    pascalCase: false,
+  })}${affix}`;
+};
+
+// TODO: parser - currently unused
+export const operationDataTransformerRef = ({ id }: OperationIRRef): string =>
+  operationIrRef({ id, type: 'data' });
+
+// TODO: parser - currently unused
+export const operationErrorTransformerRef = ({ id }: OperationIRRef): string =>
+  operationIrRef({ id, type: 'error' });
+
+export const operationResponseTransformerRef = ({
+  id,
+}: OperationIRRef): string => operationIrRef({ id, type: 'response' });
+
+const schemaIrRef = ({
+  $ref,
+  type,
+}: {
+  $ref: string;
+  type: 'response';
+}): string => {
+  let affix = '';
+  switch (type) {
+    case 'response':
+      affix = 'SchemaResponseTransformer';
+      break;
+  }
+  const parts = $ref.split('/');
+  return `${parts.slice(0, parts.length - 1).join('/')}/${camelCase({
+    input: parts[parts.length - 1],
+    pascalCase: false,
+  })}${affix}`;
+};
+
+export const schemaResponseTransformerRef = ({
+  $ref,
+}: {
+  $ref: string;
+}): string => schemaIrRef({ $ref, type: 'response' });
 
 const transformersId = 'transformers';
+const dataVariableName = 'data';
 
-// interface ModelProps extends TypesProps {
-//   meta?: ModelMeta;
-//   path: Array<string>;
-// }
+const ensureStatements = (
+  nodes: Array<ts.Expression | ts.Statement>,
+): Array<ts.Statement> =>
+  nodes.map((node) =>
+    ts.isStatement(node)
+      ? node
+      : compiler.expressionToStatement({ expression: node }),
+  );
 
-// const dataVariableName = 'data';
+const schemaResponseTransformerNodes = ({
+  context,
+  schema,
+}: {
+  context: IRContext;
+  schema: IRSchemaObject;
+}): Array<ts.Expression | ts.Statement> => {
+  const identifierData = compiler.identifier({ text: dataVariableName });
+  const nodes = processSchemaType({
+    context,
+    dataExpression: identifierData,
+    schema,
+  });
+  if (nodes.length) {
+    nodes.push(compiler.returnStatement({ expression: identifierData }));
+  }
+  return nodes;
+};
 
-// const getRefModels = ({
-//   client,
-//   model,
-// }: Pick<TypesProps, 'client' | 'model'>) => {
-//   const refModels = model.$refs.map((ref) => {
-//     const refModel = client.models.find((model) => model.meta?.$ref === ref);
-//     if (!refModel) {
-//       throw new Error(
-//         `Ref ${ref} could not be found. Transformers cannot be generated without having access to all refs.`,
-//       );
-//     }
-//     return refModel;
-//   });
-//   return refModels;
-// };
+const processSchemaType = ({
+  context,
+  dataExpression,
+  schema,
+}: {
+  context: IRContext;
+  dataExpression?: ts.Expression | string;
+  schema: IRSchemaObject;
+}): Array<ts.Expression | ts.Statement> => {
+  const file = context.file({ id: transformersId })!;
 
-// const ensureModelResponseTransformerExists = (
-//   props: Omit<ModelProps, 'path'>,
-// ) => {
-//   const modelName = props.model.meta!.name;
+  if (schema.$ref) {
+    let identifier = file.identifier({
+      $ref: schemaResponseTransformerRef({ $ref: schema.$ref }),
+      create: true,
+      namespace: 'value',
+    });
 
-//   const { name } = generateType({
-//     ...props,
-//     meta: {
-//       $ref: `transformers/${modelName}`,
-//       name: modelName,
-//     },
-//     nameTransformer: modelResponseTransformerTypeName,
-//     onCreated: (name) => {
-//       const statements = processModel({
-//         ...props,
-//         meta: {
-//           $ref: `transformers/${modelName}`,
-//           name,
-//         },
-//         path: [dataVariableName],
-//       });
-//       generateResponseTransformer({
-//         ...props,
-//         async: false,
-//         name,
-//         statements,
-//       });
-//     },
-//     type: `(${dataVariableName}: any) => ${modelName}`,
-//   });
+    if (identifier.created && identifier.name) {
+      // create each schema response transformer only once
+      const refSchema = context.resolveIrRef<IRSchemaObject>(schema.$ref);
+      const nodes = schemaResponseTransformerNodes({
+        context,
+        schema: refSchema,
+      });
+      if (nodes.length) {
+        const node = compiler.constVariable({
+          expression: compiler.arrowFunction({
+            async: false,
+            multiLine: true,
+            parameters: [
+              {
+                name: dataVariableName,
+                // TODO: parser - add types, generate types without transformed dates
+                type: compiler.keywordTypeNode({ keyword: 'any' }),
+              },
+            ],
+            statements: ensureStatements(nodes),
+          }),
+          name: identifier.name,
+        });
+        file.add(node);
+      } else {
+        // the created schema response transformer was empty, do not generate
+        // it and prevent any future attempts
+        identifier = file.blockIdentifier({
+          $ref: schemaResponseTransformerRef({ $ref: schema.$ref }),
+          namespace: 'value',
+        });
+      }
+    }
 
-//   const result = {
-//     created: Boolean(props.client.types[name]),
-//     name,
-//   };
-//   return result;
-// };
+    if (identifier.name) {
+      const callExpression = compiler.callExpression({
+        functionName: identifier.name,
+        parameters: [dataExpression],
+      });
 
-// const processArray = (props: ModelProps) => {
-//   const { model } = props;
-//   const refModels = getRefModels(props);
+      if (typeof dataExpression === 'string') {
+        return [callExpression];
+      }
 
-//   if (refModels.length === 1) {
-//     const { created, name: nameModelResponseTransformer } =
-//       ensureModelResponseTransformerExists({ ...props, model: refModels[0] });
+      if (dataExpression) {
+        return [
+          compiler.assignment({
+            left: dataExpression,
+            right: callExpression,
+          }),
+        ];
+      }
+    }
 
-//     if (!created) {
-//       return [];
-//     }
+    return [];
+  }
 
-//     return [
-//       compiler.transformArrayMutation({
-//         path: props.path,
-//         transformerName: nameModelResponseTransformer,
-//       }),
-//     ];
-//   }
+  if (schema.type === 'array') {
+    // TODO: parser - handle tuples and complex arrays
+    const nodes = !schema.items
+      ? []
+      : processSchemaType({
+          context,
+          schema: {
+            ...schema,
+            type: undefined,
+          },
+        });
+    if (!nodes.length) {
+      return [];
+    }
+    if (dataExpression && typeof dataExpression !== 'string') {
+      return [
+        compiler.assignment({
+          left: dataExpression,
+          right: compiler.callExpression({
+            functionName: compiler.propertyAccessExpression({
+              expression: dataExpression,
+              name: 'map',
+            }),
+            parameters: [
+              compiler.arrowFunction({
+                multiLine: true,
+                parameters: [{ name: 'item' }],
+                statements:
+                  nodes.length === 1
+                    ? ts.isStatement(nodes[0])
+                      ? []
+                      : [
+                          compiler.returnStatement({
+                            expression: nodes[0],
+                          }),
+                        ]
+                    : ensureStatements(nodes),
+              }),
+            ],
+          }),
+        }),
+      ];
+    }
+    return [];
+  }
 
-//   if (
-//     isModelDate(model) ||
-//     (model.link &&
-//       !Array.isArray(model.link) &&
-//       model.link.export === 'any-of' &&
-//       model.link.properties.find((property) => isModelDate(property)))
-//   ) {
-//     return [
-//       compiler.transformArrayMap({
-//         path: props.path,
-//         transformExpression: compiler.conditionalExpression({
-//           condition: compiler.identifier({ text: 'item' }),
-//           whenFalse: compiler.identifier({ text: 'item' }),
-//           whenTrue: compiler.transformNewDate({
-//             parameterName: 'item',
-//           }),
-//         }),
-//       }),
-//     ];
-//   }
+  if (schema.type === 'object') {
+    let nodes: Array<ts.Expression | ts.Statement> = [];
+    const required = schema.required ?? [];
 
-//   // Not transform for this type
-//   return [];
-// };
+    for (const name in schema.properties) {
+      const property = schema.properties[name];
+      const propertyAccessExpression = compiler.propertyAccessExpression({
+        expression: dataVariableName,
+        name,
+      });
+      const propertyNodes = processSchemaType({
+        context,
+        dataExpression: propertyAccessExpression,
+        schema: property,
+      });
+      if (propertyNodes.length) {
+        if (required.includes(name)) {
+          nodes = nodes.concat(propertyNodes);
+        } else {
+          nodes.push(
+            compiler.ifStatement({
+              expression: propertyAccessExpression,
+              thenStatement: compiler.block({
+                statements: ensureStatements(propertyNodes),
+              }),
+            }),
+          );
+        }
+      }
+    }
 
-// const processProperty = (props: ModelProps) => {
-//   const { model } = props;
-//   const path = [...props.path, model.name];
+    return nodes;
+  }
 
-//   if (
-//     model.type === 'string' &&
-//     model.export !== 'array' &&
-//     isModelDate(model)
-//   ) {
-//     return [compiler.transformDateMutation({ path })];
-//   }
+  if (
+    schema.type === 'string' &&
+    (schema.format === 'date' || schema.format === 'date-time')
+  ) {
+    const identifierDate = compiler.identifier({ text: 'Date' });
 
-//   // otherwise we recurse in case it's an object/array, and if it's not that will just bail with []
-//   return processModel({
-//     ...props,
-//     model,
-//     path,
-//   });
-// };
+    if (typeof dataExpression === 'string') {
+      return [
+        compiler.newExpression({
+          argumentsArray: [compiler.identifier({ text: dataExpression })],
+          expression: identifierDate,
+        }),
+      ];
+    }
 
-// const processModel = (props: ModelProps): ts.Statement[] => {
-//   const { model } = props;
+    if (dataExpression) {
+      return [
+        compiler.assignment({
+          left: dataExpression,
+          right: compiler.newExpression({
+            argumentsArray: [dataExpression],
+            expression: identifierDate,
+          }),
+        }),
+      ];
+    }
 
-//   switch (model.export) {
-//     case 'array':
-//       return processArray(props);
-//     case 'interface':
-//       return model.properties.flatMap((property) =>
-//         processProperty({ ...props, model: property }),
-//       );
-//     case 'reference': {
-//       if (model.$refs.length !== 1) {
-//         return [];
-//       }
-//       const refModels = getRefModels(props);
+    return [];
+  }
 
-//       const { created, name: nameModelResponseTransformer } =
-//         ensureModelResponseTransformerExists({ ...props, model: refModels[0] });
+  if (schema.items) {
+    if (schema.items.length === 1) {
+      return processSchemaType({
+        context,
+        dataExpression: 'item',
+        schema: schema.items[0],
+      });
+    }
 
-//       if (!created) {
-//         return [];
-//       }
+    const nodes: Array<ts.Expression | ts.Statement> = [];
+    if (
+      schema.items.length === 2 &&
+      schema.items.find((item) => item.type === 'null' || item.type === 'void')
+    ) {
+      // process 2 items if one of them is null
+      for (const item of schema.items) {
+        const nodes = processSchemaType({
+          context,
+          dataExpression: 'item',
+          schema: item,
+        });
+        if (nodes.length) {
+          const identifierItem = compiler.identifier({ text: 'item' });
+          // processed means the item was transformed
+          nodes.push(
+            compiler.ifStatement({
+              expression: identifierItem,
+              thenStatement: compiler.block({
+                statements:
+                  nodes.length === 1
+                    ? ts.isStatement(nodes[0])
+                      ? []
+                      : [
+                          compiler.returnStatement({
+                            expression: nodes[0],
+                          }),
+                        ]
+                    : ensureStatements(nodes),
+              }),
+            }),
+            compiler.returnStatement({ expression: identifierItem }),
+          );
+        }
+      }
+      return nodes;
+    }
 
-//       return model.in === 'response'
-//         ? [
-//             compiler.expressionToStatement({
-//               expression: compiler.callExpression({
-//                 functionName: nameModelResponseTransformer,
-//                 parameters: [dataVariableName],
-//               }),
-//             }),
-//           ]
-//         : compiler.transformFunctionMutation({
-//             path: props.path,
-//             transformerName: nameModelResponseTransformer,
-//           });
-//     }
-//     // unsupported
-//     default:
-//       return [];
-//   }
-// };
+    console.warn(
+      `❗️ Transformers warning: schema ${JSON.stringify(schema)} is too complex and won't be currently processed. This will likely produce an incomplete transformer which is not what you want. Please open an issue if you'd like this improved https://github.com/hey-api/openapi-ts/issues`,
+    );
+  }
 
-// const generateResponseTransformer = ({
-//   async,
-//   client,
-//   name,
-//   statements,
-// }: Pick<TypesProps, 'client'> & {
-//   async: boolean;
-//   name: string;
-//   statements: Array<ts.Statement>;
-// }) => {
-//   const result = {
-//     created: false,
-//     name,
-//   };
-
-//   if (!statements.length) {
-//     // clean up created type for response transformer if it turns out
-//     // the transformer was never generated
-//     unsetUniqueTypeName({
-//       client,
-//       name,
-//     });
-//     files.types?.removeNode();
-//     return result;
-//   }
-
-//   const expression = compiler.arrowFunction({
-//     async,
-//     multiLine: true,
-//     parameters: [
-//       {
-//         name: dataVariableName,
-//       },
-//     ],
-//     statements: [
-//       ...statements,
-//       compiler.returnVariable({
-//         expression: dataVariableName,
-//       }),
-//     ],
-//   });
-//   const statement = compiler.constVariable({
-//     exportConst: true,
-//     expression,
-//     name,
-//     typeName: name,
-//   });
-//   files.types?.add(statement);
-
-//   return {
-//     created: true,
-//     name,
-//   };
-// };
+  return [];
+};
 
 // handles only response transformers for now
 export const generateTransformers = ({
@@ -255,7 +368,7 @@ export const generateTransformers = ({
     return;
   }
 
-  context.createFile({
+  const file = context.createFile({
     id: transformersId,
     path: 'transformers',
   });
@@ -282,60 +395,67 @@ export const generateTransformers = ({
         continue;
       }
 
-      // console.warn(operation.id, response)
+      const identifierResponse = context.file({ id: 'types' })!.identifier({
+        $ref: operationResponseRef({ id: operation.id }),
+        namespace: 'type',
+      });
+      if (!identifierResponse.name) {
+        continue;
+      }
 
-      // const name = operationResponseTypeName(operation.name);
-      // generateType({
-      //   client,
-      //   meta: {
-      //     $ref: `transformers/${name}`,
-      //     name,
-      //   },
-      //   nameTransformer: operationResponseTransformerTypeName,
-      //   onCreated: (nameCreated) => {
-      //     const statements =
-      //       successResponses.length > 1
-      //         ? successResponses.flatMap((response) => {
-      //             const statements = processModel({
-      //               client,
-      //               meta: {
-      //                 $ref: `transformers/${name}`,
-      //                 name,
-      //               },
-      //               model: response,
-      //               path: [dataVariableName],
-      //             });
+      let identifierResponseTransformer = file.identifier({
+        $ref: operationResponseTransformerRef({ id: operation.id }),
+        create: true,
+        namespace: 'value',
+      });
+      if (!identifierResponseTransformer.name) {
+        continue;
+      }
 
-      //             // assume unprocessed responses are void
-      //             if (!statements.length) {
-      //               return [];
-      //             }
-
-      //             return [
-      //               compiler.ifStatement({
-      //                 expression: compiler.safeAccessExpression(['data']),
-      //                 thenStatement: ts.factory.createBlock(statements),
-      //               }),
-      //             ];
-      //           })
-      //         : processModel({
-      //             client,
-      //             meta: {
-      //               $ref: `transformers/${name}`,
-      //               name,
-      //             },
-      //             model: successResponses[0],
-      //             path: [dataVariableName],
-      //           });
-      //     generateResponseTransformer({
-      //       async: true,
-      //       client,
-      //       name: nameCreated,
-      //       statements,
-      //     });
-      //   },
-      //   type: `(${dataVariableName}: any) => Promise<${name}>`,
-      // });
+      // TODO: parser - consider handling simple string response which is also a date
+      const nodes = schemaResponseTransformerNodes({
+        context,
+        schema: response,
+      });
+      if (nodes.length) {
+        file.import({
+          asType: true,
+          module: file.relativePathToFile({ context, id: 'types' }),
+          name: identifierResponse.name,
+        });
+        const responseTransformerNode = compiler.constVariable({
+          exportConst: true,
+          expression: compiler.arrowFunction({
+            async: true,
+            multiLine: true,
+            parameters: [
+              {
+                name: dataVariableName,
+                // TODO: parser - add types, generate types without transformed dates
+                type: compiler.keywordTypeNode({ keyword: 'any' }),
+              },
+            ],
+            returnType: compiler.typeReferenceNode({
+              typeArguments: [
+                compiler.typeReferenceNode({
+                  typeName: identifierResponse.name,
+                }),
+              ],
+              typeName: 'Promise',
+            }),
+            statements: ensureStatements(nodes),
+          }),
+          name: identifierResponseTransformer.name,
+        });
+        file.add(responseTransformerNode);
+      } else {
+        // the created schema response transformer was empty, do not generate
+        // it and prevent any future attempts
+        identifierResponseTransformer = file.blockIdentifier({
+          $ref: operationResponseTransformerRef({ id: operation.id }),
+          namespace: 'value',
+        });
+      }
     }
   }
 };

@@ -66,6 +66,17 @@ export class IRContext<Spec extends Record<string, any> = any> {
     return this.files[id];
   }
 
+  // TODO: parser - works the same as resolveRef, but for IR schemas.
+  // for now, they map 1:1, but if they diverge (like with OpenAPI 2.0),
+  // we will want to rewrite $refs at parse time, so they continue pointing
+  // to the correct IR location
+  public resolveIrRef<T>($ref: string) {
+    return resolveRef<T>({
+      $ref,
+      spec: this.ir,
+    });
+  }
+
   public resolveRef<T>($ref: string) {
     return resolveRef<T>({
       $ref,

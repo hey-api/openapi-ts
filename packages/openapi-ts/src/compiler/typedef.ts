@@ -3,6 +3,7 @@ import ts from 'typescript';
 import { validTypescriptIdentifierRegExp } from '../utils/regexp';
 import {
   createKeywordTypeNode,
+  createParameterDeclaration,
   createStringLiteral,
   createTypeNode,
   createTypeReferenceNode,
@@ -109,16 +110,10 @@ export const createTypeInterfaceNode = ({
     const indexSignature = ts.factory.createIndexSignature(
       modifiers,
       [
-        ts.factory.createParameterDeclaration(
-          undefined,
-          undefined,
-          createIdentifier({ text: indexProperty.name }),
-          undefined,
-          createKeywordTypeNode({
-            keyword: 'string',
-          }),
-          undefined,
-        ),
+        createParameterDeclaration({
+          name: createIdentifier({ text: indexProperty.name }),
+          type: createKeywordTypeNode({ keyword: 'string' }),
+        }),
       ],
       createTypeNode(indexProperty.type),
     );

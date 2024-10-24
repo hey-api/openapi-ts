@@ -3,6 +3,7 @@ import ts from 'typescript';
 import { createCallExpression } from './module';
 import {
   type AccessLevel,
+  createBlock,
   createTypeNode,
   type FunctionParameter,
   type FunctionTypeParameter,
@@ -39,7 +40,7 @@ export const createConstructorDeclaration = ({
   const node = ts.factory.createConstructorDeclaration(
     toAccessLevelModifiers(accessLevel),
     toParameterDeclarations(parameters),
-    ts.factory.createBlock(statements, multiLine),
+    createBlock({ multiLine, statements }),
   );
 
   addLeadingComments({
@@ -100,7 +101,7 @@ export const createMethodDeclaration = ({
     types ? toTypeParameters(types) : undefined,
     toParameterDeclarations(parameters),
     returnType ? createTypeNode(returnType) : undefined,
-    ts.factory.createBlock(statements, multiLine),
+    createBlock({ multiLine, statements }),
   );
 
   addLeadingComments({
