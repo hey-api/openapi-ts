@@ -25,7 +25,14 @@
             }
           },
           "201": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json; type=collection": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParentModelWithDates"
+                }
+              }
+            }
           }
         }
       },
@@ -86,24 +93,6 @@
         }
       }
     },
-    "/api/date": {
-      "put": {
-        "operationId": "date",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json; type=collection": {
-                "schema": {
-                  "type": "string",
-                  "format": "date-time"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/multiple-responses": {
       "put": {
         "operationId": "multiple-responses",
@@ -136,10 +125,64 @@
           }
         }
       }
+    },
+    "/api/no-response-transformer": {
+      "put": {
+        "responses": {
+          "200": {
+            "description": "Updated",
+            "content": {
+              "application/json; type=collection": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SimpleModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/simple-date-response": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "Simple date string",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "responses": {
+          "200": {
+            "description": "Simple date string ref",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DateString"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "DateString": {
+        "type": "string",
+        "format": "date-time"
+      },
       "SimpleModel": {
         "description": "This is a model that contains a some dates",
         "type": "object",

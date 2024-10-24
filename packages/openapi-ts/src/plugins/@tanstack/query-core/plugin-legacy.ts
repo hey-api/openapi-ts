@@ -148,8 +148,8 @@ const createInfiniteParamsFunction = ({
             }),
             name: compiler.identifier({ text: 'body' }),
           }),
-          thenStatement: ts.factory.createBlock(
-            [
+          thenStatement: compiler.block({
+            statements: [
               compiler.expressionToStatement({
                 expression: compiler.binaryExpression({
                   left: compiler.propertyAccessExpression({
@@ -172,8 +172,7 @@ const createInfiniteParamsFunction = ({
                 }),
               }),
             ],
-            true,
-          ),
+          }),
         }),
         compiler.ifStatement({
           expression: compiler.propertyAccessExpression({
@@ -182,8 +181,8 @@ const createInfiniteParamsFunction = ({
             }),
             name: compiler.identifier({ text: 'headers' }),
           }),
-          thenStatement: ts.factory.createBlock(
-            [
+          thenStatement: compiler.block({
+            statements: [
               compiler.expressionToStatement({
                 expression: compiler.binaryExpression({
                   left: compiler.propertyAccessExpression({
@@ -204,8 +203,7 @@ const createInfiniteParamsFunction = ({
                 }),
               }),
             ],
-            true,
-          ),
+          }),
         }),
         compiler.ifStatement({
           expression: compiler.propertyAccessExpression({
@@ -214,8 +212,8 @@ const createInfiniteParamsFunction = ({
             }),
             name: compiler.identifier({ text: 'path' }),
           }),
-          thenStatement: ts.factory.createBlock(
-            [
+          thenStatement: compiler.block({
+            statements: [
               compiler.expressionToStatement({
                 expression: compiler.binaryExpression({
                   left: compiler.propertyAccessExpression({
@@ -236,8 +234,7 @@ const createInfiniteParamsFunction = ({
                 }),
               }),
             ],
-            true,
-          ),
+          }),
         }),
         compiler.ifStatement({
           expression: compiler.propertyAccessExpression({
@@ -246,8 +243,8 @@ const createInfiniteParamsFunction = ({
             }),
             name: compiler.identifier({ text: 'query' }),
           }),
-          thenStatement: ts.factory.createBlock(
-            [
+          thenStatement: compiler.block({
+            statements: [
               compiler.expressionToStatement({
                 expression: compiler.binaryExpression({
                   left: compiler.propertyAccessExpression({
@@ -268,8 +265,7 @@ const createInfiniteParamsFunction = ({
                 }),
               }),
             ],
-            true,
-          ),
+          }),
         }),
         compiler.returnVariable({
           expression: ts.factory.createAsExpression(
@@ -352,8 +348,8 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
         }),
         compiler.ifStatement({
           expression: infiniteIdentifier,
-          thenStatement: ts.factory.createBlock(
-            [
+          thenStatement: compiler.block({
+            statements: [
               compiler.expressionToStatement({
                 expression: compiler.binaryExpression({
                   left: compiler.propertyAccessExpression({
@@ -364,8 +360,7 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
                 }),
               }),
             ],
-            true,
-          ),
+          }),
         }),
         compiler.ifStatement({
           expression: compiler.propertyAccessExpression({
@@ -373,8 +368,8 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
             isOptional: true,
             name: compiler.identifier({ text: 'body' }),
           }),
-          thenStatement: ts.factory.createBlock(
-            [
+          thenStatement: compiler.block({
+            statements: [
               compiler.expressionToStatement({
                 expression: compiler.binaryExpression({
                   left: compiler.propertyAccessExpression({
@@ -388,8 +383,7 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
                 }),
               }),
             ],
-            true,
-          ),
+          }),
         }),
         compiler.ifStatement({
           expression: compiler.propertyAccessExpression({
@@ -397,8 +391,8 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
             isOptional: true,
             name: compiler.identifier({ text: 'headers' }),
           }),
-          thenStatement: ts.factory.createBlock(
-            [
+          thenStatement: compiler.block({
+            statements: [
               compiler.expressionToStatement({
                 expression: compiler.binaryExpression({
                   left: compiler.propertyAccessExpression({
@@ -412,8 +406,7 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
                 }),
               }),
             ],
-            true,
-          ),
+          }),
         }),
         compiler.ifStatement({
           expression: compiler.propertyAccessExpression({
@@ -421,8 +414,8 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
             isOptional: true,
             name: compiler.identifier({ text: 'path' }),
           }),
-          thenStatement: ts.factory.createBlock(
-            [
+          thenStatement: compiler.block({
+            statements: [
               compiler.expressionToStatement({
                 expression: compiler.binaryExpression({
                   left: compiler.propertyAccessExpression({
@@ -436,8 +429,7 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
                 }),
               }),
             ],
-            true,
-          ),
+          }),
         }),
         compiler.ifStatement({
           expression: compiler.propertyAccessExpression({
@@ -445,8 +437,8 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
             isOptional: true,
             name: compiler.identifier({ text: 'query' }),
           }),
-          thenStatement: ts.factory.createBlock(
-            [
+          thenStatement: compiler.block({
+            statements: [
               compiler.expressionToStatement({
                 expression: compiler.binaryExpression({
                   left: compiler.propertyAccessExpression({
@@ -460,8 +452,7 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
                 }),
               }),
             ],
-            true,
-          ),
+          }),
         }),
         compiler.returnVariable({
           expression: 'params',

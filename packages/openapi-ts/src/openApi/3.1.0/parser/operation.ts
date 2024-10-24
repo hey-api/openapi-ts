@@ -112,6 +112,10 @@ const operationToIrOperation = ({
   }
 
   for (const name in operation.responses) {
+    if (!irOperation.responses) {
+      irOperation.responses = {};
+    }
+
     const response = operation.responses[name]!;
     const responseObject =
       '$ref' in response
@@ -120,11 +124,8 @@ const operationToIrOperation = ({
     const content = mediaTypeObject({
       content: responseObject.content,
     });
-    if (content) {
-      if (!irOperation.responses) {
-        irOperation.responses = {};
-      }
 
+    if (content) {
       irOperation.responses[name] = {
         schema: schemaToIrSchema({
           context,
@@ -134,15 +135,13 @@ const operationToIrOperation = ({
           },
         }),
       };
-    } else if (name === '204') {
-      if (!irOperation.responses) {
-        irOperation.responses = {};
-      }
-
+    } else {
       irOperation.responses[name] = {
         schema: {
           description: responseObject.description,
-          type: 'void',
+          // TODO: parser - cover all statues with empty response bodies
+          // 1xx, 204, 205, 304
+          type: name === '204' ? 'void' : 'unknown',
         },
       };
     }
