@@ -1,4 +1,4 @@
-import ts from 'typescript';
+import type ts from 'typescript';
 
 import { compiler } from '../compiler';
 import { getOperationKey } from '../openApi/common/parser/operation';
@@ -310,7 +310,7 @@ export const generateLegacyTransformers = async ({
                   return [
                     compiler.ifStatement({
                       expression: compiler.safeAccessExpression(['data']),
-                      thenStatement: ts.factory.createBlock(statements),
+                      thenStatement: compiler.block({ statements }),
                     }),
                   ];
                 })

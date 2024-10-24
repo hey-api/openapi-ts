@@ -20,11 +20,11 @@ const main = async () => {
       // lint: 'eslint',
       path: './test/generated/sample/',
     },
-    // plugins: [
-    //   '@tanstack/react-query',
-    //   // '@hey-api/services',
-    //   // 'zod',
-    // ],
+    plugins: [
+      '@tanstack/react-query',
+      // '@hey-api/services',
+      // 'zod',
+    ],
     schemas: {
       export: false,
       // type: 'json',

@@ -91,7 +91,7 @@ export const operationOptionsType = ({
   importedType,
   throwOnError,
 }: {
-  importedType?: string;
+  importedType?: string | false;
   throwOnError?: string;
 }) => {
   const optionsName = clientOptionsTypeName();

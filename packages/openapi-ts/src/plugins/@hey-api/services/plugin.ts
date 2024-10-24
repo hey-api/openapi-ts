@@ -22,6 +22,7 @@ import { escapeComment } from '../../../utils/escape';
 import { getServiceName } from '../../../utils/postprocess';
 import { irRef } from '../../../utils/ref';
 import { transformServiceName } from '../../../utils/transform';
+import { operationResponseTransformerRef } from '../transformers/plugin';
 
 interface OperationIRRef {
   /**
@@ -90,27 +91,6 @@ const requestOptions = ({
 }) => {
   const file = context.file({ id: servicesId })!;
   const servicesOutput = file.nameWithoutExtension();
-  // const typesModule = `./${context.file({ id: 'types' })!.nameWithoutExtension()}`
-
-  // TODO: parser - add response transformers
-  // const operationName = operationResponseTypeName(operation.name);
-  // const { name: responseTransformerName } = setUniqueTypeName({
-  //   client,
-  //   meta: {
-  //     $ref: `transformers/${operationName}`,
-  //     name: operationName,
-  //   },
-  //   nameTransformer: operationResponseTransformerTypeName,
-  // });
-
-  // if (responseTransformerName) {
-  //   file.import({
-  //     // this detection could be done safer, but it shouldn't cause any issues
-  //     asType: !responseTransformerName.endsWith('Transformer'),
-  //     module: typesModule,
-  //     name: responseTransformerName,
-  //   });
-  // }
 
   const obj: ObjectValue[] = [{ spread: 'options' }];
 
@@ -167,16 +147,23 @@ const requestOptions = ({
     value: path,
   });
 
-  // TODO: parser - add response transformers
-  // if (responseTransformerName) {
-  //   obj = [
-  //     ...obj,
-  //     {
-  //       key: 'responseTransformer',
-  //       value: responseTransformerName,
-  //     },
-  //   ];
-  // }
+  const fileTransformers = context.file({ id: 'transformers' });
+  if (fileTransformers) {
+    const identifier = fileTransformers.identifier({
+      $ref: operationResponseTransformerRef({ id: operation.id }),
+      namespace: 'value',
+    });
+    if (identifier.name) {
+      file.import({
+        module: file.relativePathToFile({ context, id: 'transformers' }),
+        name: identifier.name,
+      });
+      obj.push({
+        key: 'responseTransformer',
+        value: identifier.name,
+      });
+    }
+  }
 
   return compiler.objectExpression({
     identifiers: ['responseTransformer'],
@@ -186,7 +173,7 @@ const requestOptions = ({
 
 const generateClassServices = ({ context }: { context: IRContext }) => {
   const file = context.file({ id: servicesId })!;
-  const typesModule = `./${context.file({ id: 'types' })!.nameWithoutExtension()}`;
+  const typesModule = file.relativePathToFile({ context, id: 'types' });
 
   const services = new Map<string, Array<ts.MethodDeclaration>>();
 
@@ -203,8 +190,7 @@ const generateClassServices = ({ context }: { context: IRContext }) => {
       });
       if (identifierData.name) {
         file.import({
-          // this detection could be done safer, but it shouldn't cause any issues
-          asType: !identifierData.name.endsWith('Transformer'),
+          asType: true,
           module: typesModule,
           name: identifierData.name,
         });
@@ -216,8 +202,7 @@ const generateClassServices = ({ context }: { context: IRContext }) => {
       });
       if (identifierError.name) {
         file.import({
-          // this detection could be done safer, but it shouldn't cause any issues
-          asType: !identifierError.name.endsWith('Transformer'),
+          asType: true,
           module: typesModule,
           name: identifierError.name,
         });
@@ -229,8 +214,7 @@ const generateClassServices = ({ context }: { context: IRContext }) => {
       });
       if (identifierResponse.name) {
         file.import({
-          // this detection could be done safer, but it shouldn't cause any issues
-          asType: !identifierResponse.name.endsWith('Transformer'),
+          asType: true,
           module: typesModule,
           name: identifierResponse.name,
         });
@@ -316,7 +300,7 @@ const generateClassServices = ({ context }: { context: IRContext }) => {
 
 const generateFlatServices = ({ context }: { context: IRContext }) => {
   const file = context.file({ id: servicesId })!;
-  const typesModule = `./${context.file({ id: 'types' })!.nameWithoutExtension()}`;
+  const typesModule = file.relativePathToFile({ context, id: 'types' });
 
   for (const path in context.ir.paths) {
     const pathItem = context.ir.paths[path as keyof IRPathsObject];
@@ -331,8 +315,7 @@ const generateFlatServices = ({ context }: { context: IRContext }) => {
       });
       if (identifierData.name) {
         file.import({
-          // this detection could be done safer, but it shouldn't cause any issues
-          asType: !identifierData.name.endsWith('Transformer'),
+          asType: true,
           module: typesModule,
           name: identifierData.name,
         });
@@ -344,8 +327,7 @@ const generateFlatServices = ({ context }: { context: IRContext }) => {
       });
       if (identifierError.name) {
         file.import({
-          // this detection could be done safer, but it shouldn't cause any issues
-          asType: !identifierError.name.endsWith('Transformer'),
+          asType: true,
           module: typesModule,
           name: identifierError.name,
         });
@@ -357,8 +339,7 @@ const generateFlatServices = ({ context }: { context: IRContext }) => {
       });
       if (identifierResponse.name) {
         file.import({
-          // this detection could be done safer, but it shouldn't cause any issues
-          asType: !identifierResponse.name.endsWith('Transformer'),
+          asType: true,
           module: typesModule,
           name: identifierResponse.name,
         });

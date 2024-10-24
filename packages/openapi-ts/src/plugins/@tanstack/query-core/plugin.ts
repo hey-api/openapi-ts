@@ -14,7 +14,6 @@ import {
   operationOptionsType,
   serviceFunctionIdentifier,
 } from '../../../generate/services';
-import { relativeModulePath } from '../../../generate/utils';
 import type { IRContext } from '../../../ir/context';
 import type {
   IROperationObject,
@@ -140,8 +139,8 @@ const createInfiniteParamsFunction = ({
             }),
             name: compiler.identifier({ text: 'body' }),
           }),
-          thenStatement: ts.factory.createBlock(
-            [
+          thenStatement: compiler.block({
+            statements: [
               compiler.expressionToStatement({
                 expression: compiler.binaryExpression({
                   left: compiler.propertyAccessExpression({
@@ -164,8 +163,7 @@ const createInfiniteParamsFunction = ({
                 }),
               }),
             ],
-            true,
-          ),
+          }),
         }),
         compiler.ifStatement({
           expression: compiler.propertyAccessExpression({
@@ -174,8 +172,8 @@ const createInfiniteParamsFunction = ({
             }),
             name: compiler.identifier({ text: 'headers' }),
           }),
-          thenStatement: ts.factory.createBlock(
-            [
+          thenStatement: compiler.block({
+            statements: [
               compiler.expressionToStatement({
                 expression: compiler.binaryExpression({
                   left: compiler.propertyAccessExpression({
@@ -196,8 +194,7 @@ const createInfiniteParamsFunction = ({
                 }),
               }),
             ],
-            true,
-          ),
+          }),
         }),
         compiler.ifStatement({
           expression: compiler.propertyAccessExpression({
@@ -206,8 +203,8 @@ const createInfiniteParamsFunction = ({
             }),
             name: compiler.identifier({ text: 'path' }),
           }),
-          thenStatement: ts.factory.createBlock(
-            [
+          thenStatement: compiler.block({
+            statements: [
               compiler.expressionToStatement({
                 expression: compiler.binaryExpression({
                   left: compiler.propertyAccessExpression({
@@ -228,8 +225,7 @@ const createInfiniteParamsFunction = ({
                 }),
               }),
             ],
-            true,
-          ),
+          }),
         }),
         compiler.ifStatement({
           expression: compiler.propertyAccessExpression({
@@ -238,8 +234,8 @@ const createInfiniteParamsFunction = ({
             }),
             name: compiler.identifier({ text: 'query' }),
           }),
-          thenStatement: ts.factory.createBlock(
-            [
+          thenStatement: compiler.block({
+            statements: [
               compiler.expressionToStatement({
                 expression: compiler.binaryExpression({
                   left: compiler.propertyAccessExpression({
@@ -260,8 +256,7 @@ const createInfiniteParamsFunction = ({
                 }),
               }),
             ],
-            true,
-          ),
+          }),
         }),
         compiler.returnVariable({
           expression: ts.factory.createAsExpression(
@@ -347,8 +342,8 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
         }),
         compiler.ifStatement({
           expression: infiniteIdentifier,
-          thenStatement: ts.factory.createBlock(
-            [
+          thenStatement: compiler.block({
+            statements: [
               compiler.expressionToStatement({
                 expression: compiler.binaryExpression({
                   left: compiler.propertyAccessExpression({
@@ -359,8 +354,7 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
                 }),
               }),
             ],
-            true,
-          ),
+          }),
         }),
         compiler.ifStatement({
           expression: compiler.propertyAccessExpression({
@@ -368,8 +362,8 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
             isOptional: true,
             name: compiler.identifier({ text: 'body' }),
           }),
-          thenStatement: ts.factory.createBlock(
-            [
+          thenStatement: compiler.block({
+            statements: [
               compiler.expressionToStatement({
                 expression: compiler.binaryExpression({
                   left: compiler.propertyAccessExpression({
@@ -383,8 +377,7 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
                 }),
               }),
             ],
-            true,
-          ),
+          }),
         }),
         compiler.ifStatement({
           expression: compiler.propertyAccessExpression({
@@ -392,8 +385,8 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
             isOptional: true,
             name: compiler.identifier({ text: 'headers' }),
           }),
-          thenStatement: ts.factory.createBlock(
-            [
+          thenStatement: compiler.block({
+            statements: [
               compiler.expressionToStatement({
                 expression: compiler.binaryExpression({
                   left: compiler.propertyAccessExpression({
@@ -407,8 +400,7 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
                 }),
               }),
             ],
-            true,
-          ),
+          }),
         }),
         compiler.ifStatement({
           expression: compiler.propertyAccessExpression({
@@ -416,8 +408,8 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
             isOptional: true,
             name: compiler.identifier({ text: 'path' }),
           }),
-          thenStatement: ts.factory.createBlock(
-            [
+          thenStatement: compiler.block({
+            statements: [
               compiler.expressionToStatement({
                 expression: compiler.binaryExpression({
                   left: compiler.propertyAccessExpression({
@@ -431,8 +423,7 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
                 }),
               }),
             ],
-            true,
-          ),
+          }),
         }),
         compiler.ifStatement({
           expression: compiler.propertyAccessExpression({
@@ -440,8 +431,8 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
             isOptional: true,
             name: compiler.identifier({ text: 'query' }),
           }),
-          thenStatement: ts.factory.createBlock(
-            [
+          thenStatement: compiler.block({
+            statements: [
               compiler.expressionToStatement({
                 expression: compiler.binaryExpression({
                   left: compiler.propertyAccessExpression({
@@ -455,8 +446,7 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
                 }),
               }),
             ],
-            true,
-          ),
+          }),
         }),
         compiler.returnVariable({
           expression: 'params',
@@ -578,11 +568,9 @@ const useTypeData = ({
   if (identifierData.name) {
     context.file({ id: plugin.name })!.import({
       asType: true,
-      module: relativeModulePath({
-        // TODO: parser - moduleOutput should be a full relative path to types file
-        moduleOutput: context.file({ id: 'types' })!.nameWithoutExtension(),
-        sourceOutput: plugin.output,
-      }),
+      module: context
+        .file({ id: plugin.name })!
+        .relativePathToFile({ context, id: 'types' }),
       name: identifierData.name,
     });
   }
@@ -601,34 +589,33 @@ const useTypeError = ({
   operation: IROperationObject;
   plugin: Plugin;
 }) => {
+  const file = context.file({ id: plugin.name })!;
   const identifierError = context.file({ id: 'types' })!.identifier({
     $ref: operationErrorRef({ id: operation.id }),
     namespace: 'type',
   });
   if (identifierError.name) {
-    context.file({ id: plugin.name })!.import({
+    file.import({
       asType: true,
-      module: relativeModulePath({
-        // TODO: parser - moduleOutput should be a full relative path to types file
-        moduleOutput: context.file({ id: 'types' })!.nameWithoutExtension(),
-        sourceOutput: plugin.output,
-      }),
+      module: context
+        .file({ id: plugin.name })!
+        .relativePathToFile({ context, id: 'types' }),
       name: identifierError.name,
     });
   }
   let typeError: ImportExportItemObject = {
     asType: true,
-    name: identifierError.name,
+    name: identifierError.name || '',
   };
   if (!typeError.name) {
-    typeError = context.file({ id: plugin.name })!.import({
+    typeError = file.import({
       asType: true,
       module: plugin.name,
       name: 'DefaultError',
     });
   }
   if (context.config.client.name === '@hey-api/client-axios') {
-    const axiosError = context.file({ id: plugin.name })!.import({
+    const axiosError = file.import({
       asType: true,
       module: 'axios',
       name: 'AxiosError',
@@ -657,11 +644,9 @@ const useTypeResponse = ({
   if (identifierResponse.name) {
     context.file({ id: plugin.name })!.import({
       asType: true,
-      module: relativeModulePath({
-        // TODO: parser - moduleOutput should be a full relative path to types file
-        moduleOutput: context.file({ id: 'types' })!.nameWithoutExtension(),
-        sourceOutput: plugin.output,
-      }),
+      module: context
+        .file({ id: plugin.name })!
+        .relativePathToFile({ context, id: 'types' }),
       name: identifierResponse.name,
     });
   }
@@ -1193,21 +1178,20 @@ export const handler: PluginHandler<
         file.add(statement);
       }
 
-      const servicesModulePath = relativeModulePath({
-        moduleOutput: context.file({ id: 'services' })!.nameWithoutExtension(),
-        sourceOutput: plugin.output,
-      });
-
       if (hasQueries || hasInfiniteQueries) {
         file.import({
-          module: servicesModulePath,
+          module: context
+            .file({ id: plugin.name })!
+            .relativePathToFile({ context, id: 'services' }),
           name: 'client',
         });
       }
 
       if (hasUsedQueryFn) {
         file.import({
-          module: servicesModulePath,
+          module: context
+            .file({ id: plugin.name })!
+            .relativePathToFile({ context, id: 'services' }),
           name: queryFn.split('.')[0],
         });
       }

@@ -10,10 +10,12 @@ import type { ImportData, ImportResponse, ApiVversionOdataControllerCountRespons
 /**
  * @throws ApiError
  */
-export const export_ = function (): Observable<void> { return __request(OpenAPI, this.http, {
-    method: 'GET',
-    url: '/api/v{api-version}/no-tag'
-}); };
+export const export_ = function (): Observable<void> {
+    return __request(OpenAPI, this.http, {
+        method: 'GET',
+        url: '/api/v{api-version}/no-tag'
+    });
+};
 
 /**
  * @param data The data for the request.
@@ -22,21 +24,25 @@ export const export_ = function (): Observable<void> { return __request(OpenAPI,
  * @returns ModelWithReadOnlyAndWriteOnly Default success response
  * @throws ApiError
  */
-export const import_ = function (data: ImportData): Observable<ImportResponse> { return __request(OpenAPI, this.http, {
-    method: 'POST',
-    url: '/api/v{api-version}/no-tag',
-    body: data.requestBody,
-    mediaType: 'application/json'
-}); };
+export const import_ = function (data: ImportData): Observable<ImportResponse> {
+    return __request(OpenAPI, this.http, {
+        method: 'POST',
+        url: '/api/v{api-version}/no-tag',
+        body: data.requestBody,
+        mediaType: 'application/json'
+    });
+};
 
 /**
  * @returns Model_From_Zendesk Success
  * @throws ApiError
  */
-export const apiVVersionOdataControllerCount = function (): Observable<ApiVversionOdataControllerCountResponse> { return __request(OpenAPI, this.http, {
-    method: 'GET',
-    url: '/api/v{api-version}/simple/$count'
-}); };
+export const apiVVersionOdataControllerCount = function (): Observable<ApiVversionOdataControllerCountResponse> {
+    return __request(OpenAPI, this.http, {
+        method: 'GET',
+        url: '/api/v{api-version}/simple/$count'
+    });
+};
 
 /**
  * @param data The data for the request.
@@ -44,72 +50,88 @@ export const apiVVersionOdataControllerCount = function (): Observable<ApiVversi
  * @returns number Response is a simple number
  * @throws ApiError
  */
-export const getApiSimpleOperation = function (data: GetApiSimpleOperationData): Observable<GetApiSimpleOperationResponse> { return __request(OpenAPI, this.http, {
-    method: 'GET',
-    url: '/api/v{api-version}/simple:operation',
-    path: {
-        foo_param: data.fooParam
-    },
-    errors: {
-        default: 'Default error response'
-    }
-}); };
+export const getApiSimpleOperation = function (data: GetApiSimpleOperationData): Observable<GetApiSimpleOperationResponse> {
+    return __request(OpenAPI, this.http, {
+        method: 'GET',
+        url: '/api/v{api-version}/simple:operation',
+        path: {
+            foo_param: data.fooParam
+        },
+        errors: {
+            default: 'Default error response'
+        }
+    });
+};
 
 /**
  * @throws ApiError
  */
-export const getCallWithoutParametersAndResponse = function (): Observable<void> { return __request(OpenAPI, this.http, {
-    method: 'GET',
-    url: '/api/v{api-version}/simple'
-}); };
+export const getCallWithoutParametersAndResponse = function (): Observable<void> {
+    return __request(OpenAPI, this.http, {
+        method: 'GET',
+        url: '/api/v{api-version}/simple'
+    });
+};
 
 /**
  * @throws ApiError
  */
-export const putCallWithoutParametersAndResponse = function (): Observable<void> { return __request(OpenAPI, this.http, {
-    method: 'PUT',
-    url: '/api/v{api-version}/simple'
-}); };
+export const putCallWithoutParametersAndResponse = function (): Observable<void> {
+    return __request(OpenAPI, this.http, {
+        method: 'PUT',
+        url: '/api/v{api-version}/simple'
+    });
+};
 
 /**
  * @throws ApiError
  */
-export const postCallWithoutParametersAndResponse = function (): Observable<void> { return __request(OpenAPI, this.http, {
-    method: 'POST',
-    url: '/api/v{api-version}/simple'
-}); };
+export const postCallWithoutParametersAndResponse = function (): Observable<void> {
+    return __request(OpenAPI, this.http, {
+        method: 'POST',
+        url: '/api/v{api-version}/simple'
+    });
+};
 
 /**
  * @throws ApiError
  */
-export const deleteCallWithoutParametersAndResponse = function (): Observable<void> { return __request(OpenAPI, this.http, {
-    method: 'DELETE',
-    url: '/api/v{api-version}/simple'
-}); };
+export const deleteCallWithoutParametersAndResponse = function (): Observable<void> {
+    return __request(OpenAPI, this.http, {
+        method: 'DELETE',
+        url: '/api/v{api-version}/simple'
+    });
+};
 
 /**
  * @throws ApiError
  */
-export const optionsCallWithoutParametersAndResponse = function (): Observable<void> { return __request(OpenAPI, this.http, {
-    method: 'OPTIONS',
-    url: '/api/v{api-version}/simple'
-}); };
+export const optionsCallWithoutParametersAndResponse = function (): Observable<void> {
+    return __request(OpenAPI, this.http, {
+        method: 'OPTIONS',
+        url: '/api/v{api-version}/simple'
+    });
+};
 
 /**
  * @throws ApiError
  */
-export const headCallWithoutParametersAndResponse = function (): Observable<void> { return __request(OpenAPI, this.http, {
-    method: 'HEAD',
-    url: '/api/v{api-version}/simple'
-}); };
+export const headCallWithoutParametersAndResponse = function (): Observable<void> {
+    return __request(OpenAPI, this.http, {
+        method: 'HEAD',
+        url: '/api/v{api-version}/simple'
+    });
+};
 
 /**
  * @throws ApiError
  */
-export const patchCallWithoutParametersAndResponse = function (): Observable<void> { return __request(OpenAPI, this.http, {
-    method: 'PATCH',
-    url: '/api/v{api-version}/simple'
-}); };
+export const patchCallWithoutParametersAndResponse = function (): Observable<void> {
+    return __request(OpenAPI, this.http, {
+        method: 'PATCH',
+        url: '/api/v{api-version}/simple'
+    });
+};
 
 /**
  * @param data The data for the request.
@@ -118,17 +140,19 @@ export const patchCallWithoutParametersAndResponse = function (): Observable<voi
  * @param data.xFooBar Parameter with illegal characters
  * @throws ApiError
  */
-export const deleteFoo = function (data: DeleteFooData3): Observable<void> { return __request(OpenAPI, this.http, {
-    method: 'DELETE',
-    url: '/api/v{api-version}/foo/{foo_param}/bar/{BarParam}',
-    path: {
-        foo_param: data.fooParam,
-        BarParam: data.barParam
-    },
-    headers: {
-        'x-Foo-Bar': data.xFooBar
-    }
-}); };
+export const deleteFoo = function (data: DeleteFooData3): Observable<void> {
+    return __request(OpenAPI, this.http, {
+        method: 'DELETE',
+        url: '/api/v{api-version}/foo/{foo_param}/bar/{BarParam}',
+        path: {
+            foo_param: data.fooParam,
+            BarParam: data.barParam
+        },
+        headers: {
+            'x-Foo-Bar': data.xFooBar
+        }
+    });
+};
 
 /**
  * @param data The data for the request.
@@ -143,18 +167,20 @@ export const deleteFoo = function (data: DeleteFooData3): Observable<void> { ret
  * @param data.parameterWithReservedCharacters Testing reserved characters in string: * inline * and ** inline ** should work
  * @throws ApiError
  */
-export const callWithDescriptions = function (data: CallWithDescriptionsData = {}): Observable<void> { return __request(OpenAPI, this.http, {
-    method: 'POST',
-    url: '/api/v{api-version}/descriptions/',
-    query: {
-        parameterWithBreaks: data.parameterWithBreaks,
-        parameterWithBackticks: data.parameterWithBackticks,
-        parameterWithSlashes: data.parameterWithSlashes,
-        parameterWithExpressionPlaceholders: data.parameterWithExpressionPlaceholders,
-        parameterWithQuotes: data.parameterWithQuotes,
-        parameterWithReservedCharacters: data.parameterWithReservedCharacters
-    }
-}); };
+export const callWithDescriptions = function (data: CallWithDescriptionsData = {}): Observable<void> {
+    return __request(OpenAPI, this.http, {
+        method: 'POST',
+        url: '/api/v{api-version}/descriptions/',
+        query: {
+            parameterWithBreaks: data.parameterWithBreaks,
+            parameterWithBackticks: data.parameterWithBackticks,
+            parameterWithSlashes: data.parameterWithSlashes,
+            parameterWithExpressionPlaceholders: data.parameterWithExpressionPlaceholders,
+            parameterWithQuotes: data.parameterWithQuotes,
+            parameterWithReservedCharacters: data.parameterWithReservedCharacters
+        }
+    });
+};
 
 /**
  * @deprecated
@@ -162,13 +188,15 @@ export const callWithDescriptions = function (data: CallWithDescriptionsData = {
  * @param data.parameter This parameter is deprecated
  * @throws ApiError
  */
-export const deprecatedCall = function (data: DeprecatedCallData): Observable<void> { return __request(OpenAPI, this.http, {
-    method: 'POST',
-    url: '/api/v{api-version}/parameters/deprecated',
-    headers: {
-        parameter: data.parameter
-    }
-}); };
+export const deprecatedCall = function (data: DeprecatedCallData): Observable<void> {
+    return __request(OpenAPI, this.http, {
+        method: 'POST',
+        url: '/api/v{api-version}/parameters/deprecated',
+        headers: {
+            parameter: data.parameter
+        }
+    });
+};
 
 /**
  * @param data The data for the request.
@@ -181,26 +209,28 @@ export const deprecatedCall = function (data: DeprecatedCallData): Observable<vo
  * @param data.fooRefEnum
  * @throws ApiError
  */
-export const callWithParameters = function (data: CallWithParametersData): Observable<void> { return __request(OpenAPI, this.http, {
-    method: 'POST',
-    url: '/api/v{api-version}/parameters/{parameterPath}',
-    path: {
-        parameterPath: data.parameterPath
-    },
-    cookies: {
-        parameterCookie: data.parameterCookie
-    },
-    headers: {
-        parameterHeader: data.parameterHeader
-    },
-    query: {
-        foo_ref_enum: data.fooRefEnum,
-        foo_all_of_enum: data.fooAllOfEnum,
-        cursor: data.cursor
-    },
-    body: data.requestBody,
-    mediaType: 'application/json'
-}); };
+export const callWithParameters = function (data: CallWithParametersData): Observable<void> {
+    return __request(OpenAPI, this.http, {
+        method: 'POST',
+        url: '/api/v{api-version}/parameters/{parameterPath}',
+        path: {
+            parameterPath: data.parameterPath
+        },
+        cookies: {
+            parameterCookie: data.parameterCookie
+        },
+        headers: {
+            parameterHeader: data.parameterHeader
+        },
+        query: {
+            foo_ref_enum: data.fooRefEnum,
+            foo_all_of_enum: data.fooAllOfEnum,
+            cursor: data.cursor
+        },
+        body: data.requestBody,
+        mediaType: 'application/json'
+    });
+};
 
 /**
  * @param data The data for the request.
@@ -214,27 +244,29 @@ export const callWithParameters = function (data: CallWithParametersData): Obser
  * @param data._default This is the parameter with a reserved keyword
  * @throws ApiError
  */
-export const callWithWeirdParameterNames = function (data: CallWithWeirdParameterNamesData): Observable<void> { return __request(OpenAPI, this.http, {
-    method: 'POST',
-    url: '/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}',
-    path: {
-        'parameter.path.1': data.parameterPath1,
-        'parameter-path-2': data.parameterPath2,
-        'PARAMETER-PATH-3': data.parameterPath3
-    },
-    cookies: {
-        'PARAMETER-COOKIE': data.parameterCookie
-    },
-    headers: {
-        'parameter.header': data.parameterHeader
-    },
-    query: {
-        default: data._default,
-        'parameter-query': data.parameterQuery
-    },
-    body: data.requestBody,
-    mediaType: 'application/json'
-}); };
+export const callWithWeirdParameterNames = function (data: CallWithWeirdParameterNamesData): Observable<void> {
+    return __request(OpenAPI, this.http, {
+        method: 'POST',
+        url: '/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}',
+        path: {
+            'parameter.path.1': data.parameterPath1,
+            'parameter-path-2': data.parameterPath2,
+            'PARAMETER-PATH-3': data.parameterPath3
+        },
+        cookies: {
+            'PARAMETER-COOKIE': data.parameterCookie
+        },
+        headers: {
+            'parameter.header': data.parameterHeader
+        },
+        query: {
+            default: data._default,
+            'parameter-query': data.parameterQuery
+        },
+        body: data.requestBody,
+        mediaType: 'application/json'
+    });
+};
 
 /**
  * @param data The data for the request.
@@ -242,15 +274,17 @@ export const callWithWeirdParameterNames = function (data: CallWithWeirdParamete
  * @param data.page This is an optional parameter
  * @throws ApiError
  */
-export const getCallWithOptionalParam = function (data: GetCallWithOptionalParamData): Observable<void> { return __request(OpenAPI, this.http, {
-    method: 'GET',
-    url: '/api/v{api-version}/parameters/',
-    query: {
-        page: data.page
-    },
-    body: data.requestBody,
-    mediaType: 'application/json'
-}); };
+export const getCallWithOptionalParam = function (data: GetCallWithOptionalParamData): Observable<void> {
+    return __request(OpenAPI, this.http, {
+        method: 'GET',
+        url: '/api/v{api-version}/parameters/',
+        query: {
+            page: data.page
+        },
+        body: data.requestBody,
+        mediaType: 'application/json'
+    });
+};
 
 /**
  * @param data The data for the request.
@@ -260,15 +294,17 @@ export const getCallWithOptionalParam = function (data: GetCallWithOptionalParam
  * @returns void Success
  * @throws ApiError
  */
-export const postCallWithOptionalParam = function (data: PostCallWithOptionalParamData): Observable<PostCallWithOptionalParamResponse> { return __request(OpenAPI, this.http, {
-    method: 'POST',
-    url: '/api/v{api-version}/parameters/',
-    query: {
-        parameter: data.parameter
-    },
-    body: data.requestBody,
-    mediaType: 'application/json'
-}); };
+export const postCallWithOptionalParam = function (data: PostCallWithOptionalParamData): Observable<PostCallWithOptionalParamResponse> {
+    return __request(OpenAPI, this.http, {
+        method: 'POST',
+        url: '/api/v{api-version}/parameters/',
+        query: {
+            parameter: data.parameter
+        },
+        body: data.requestBody,
+        mediaType: 'application/json'
+    });
+};
 
 /**
  * @param data The data for the request.
@@ -276,15 +312,17 @@ export const postCallWithOptionalParam = function (data: PostCallWithOptionalPar
  * @param data.foo A reusable request body
  * @throws ApiError
  */
-export const postApiRequestBody = function (data: PostApiRequestBodyData = {}): Observable<void> { return __request(OpenAPI, this.http, {
-    method: 'POST',
-    url: '/api/v{api-version}/requestBody/',
-    query: {
-        parameter: data.parameter
-    },
-    body: data.foo,
-    mediaType: 'application/json'
-}); };
+export const postApiRequestBody = function (data: PostApiRequestBodyData = {}): Observable<void> {
+    return __request(OpenAPI, this.http, {
+        method: 'POST',
+        url: '/api/v{api-version}/requestBody/',
+        query: {
+            parameter: data.parameter
+        },
+        body: data.foo,
+        mediaType: 'application/json'
+    });
+};
 
 /**
  * @param data The data for the request.
@@ -292,15 +330,17 @@ export const postApiRequestBody = function (data: PostApiRequestBodyData = {}): 
  * @param data.formData A reusable request body
  * @throws ApiError
  */
-export const postApiFormData = function (data: PostApiFormDataData = {}): Observable<void> { return __request(OpenAPI, this.http, {
-    method: 'POST',
-    url: '/api/v{api-version}/formData/',
-    query: {
-        parameter: data.parameter
-    },
-    formData: data.formData,
-    mediaType: 'multipart/form-data'
-}); };
+export const postApiFormData = function (data: PostApiFormDataData = {}): Observable<void> {
+    return __request(OpenAPI, this.http, {
+        method: 'POST',
+        url: '/api/v{api-version}/formData/',
+        query: {
+            parameter: data.parameter
+        },
+        formData: data.formData,
+        mediaType: 'multipart/form-data'
+    });
+};
 
 /**
  * @param data The data for the request.
@@ -311,17 +351,19 @@ export const postApiFormData = function (data: PostApiFormDataData = {}): Observ
  * @param data.parameterModel This is a simple model with default value
  * @throws ApiError
  */
-export const callWithDefaultParameters = function (data: CallWithDefaultParametersData = {}): Observable<void> { return __request(OpenAPI, this.http, {
-    method: 'GET',
-    url: '/api/v{api-version}/defaults',
-    query: {
-        parameterString: data.parameterString,
-        parameterNumber: data.parameterNumber,
-        parameterBoolean: data.parameterBoolean,
-        parameterEnum: data.parameterEnum,
-        parameterModel: data.parameterModel
-    }
-}); };
+export const callWithDefaultParameters = function (data: CallWithDefaultParametersData = {}): Observable<void> {
+    return __request(OpenAPI, this.http, {
+        method: 'GET',
+        url: '/api/v{api-version}/defaults',
+        query: {
+            parameterString: data.parameterString,
+            parameterNumber: data.parameterNumber,
+            parameterBoolean: data.parameterBoolean,
+            parameterEnum: data.parameterEnum,
+            parameterModel: data.parameterModel
+        }
+    });
+};
 
 /**
  * @param data The data for the request.
@@ -332,17 +374,19 @@ export const callWithDefaultParameters = function (data: CallWithDefaultParamete
  * @param data.parameterModel This is a simple model that is optional with default value
  * @throws ApiError
  */
-export const callWithDefaultOptionalParameters = function (data: CallWithDefaultOptionalParametersData = {}): Observable<void> { return __request(OpenAPI, this.http, {
-    method: 'POST',
-    url: '/api/v{api-version}/defaults',
-    query: {
-        parameterString: data.parameterString,
-        parameterNumber: data.parameterNumber,
-        parameterBoolean: data.parameterBoolean,
-        parameterEnum: data.parameterEnum,
-        parameterModel: data.parameterModel
-    }
-}); };
+export const callWithDefaultOptionalParameters = function (data: CallWithDefaultOptionalParametersData = {}): Observable<void> {
+    return __request(OpenAPI, this.http, {
+        method: 'POST',
+        url: '/api/v{api-version}/defaults',
+        query: {
+            parameterString: data.parameterString,
+            parameterNumber: data.parameterNumber,
+            parameterBoolean: data.parameterBoolean,
+            parameterEnum: data.parameterEnum,
+            parameterModel: data.parameterModel
+        }
+    });
+};
 
 /**
  * @param data The data for the request.
@@ -356,98 +400,118 @@ export const callWithDefaultOptionalParameters = function (data: CallWithDefault
  * @param data.parameterStringNullableWithDefault This is a string that can be null with default
  * @throws ApiError
  */
-export const callToTestOrderOfParams = function (data: CallToTestOrderOfParamsData): Observable<void> { return __request(OpenAPI, this.http, {
-    method: 'PUT',
-    url: '/api/v{api-version}/defaults',
-    query: {
-        parameterOptionalStringWithDefault: data.parameterOptionalStringWithDefault,
-        parameterOptionalStringWithEmptyDefault: data.parameterOptionalStringWithEmptyDefault,
-        parameterOptionalStringWithNoDefault: data.parameterOptionalStringWithNoDefault,
-        parameterStringWithDefault: data.parameterStringWithDefault,
-        parameterStringWithEmptyDefault: data.parameterStringWithEmptyDefault,
-        parameterStringWithNoDefault: data.parameterStringWithNoDefault,
-        parameterStringNullableWithNoDefault: data.parameterStringNullableWithNoDefault,
-        parameterStringNullableWithDefault: data.parameterStringNullableWithDefault
-    }
-}); };
+export const callToTestOrderOfParams = function (data: CallToTestOrderOfParamsData): Observable<void> {
+    return __request(OpenAPI, this.http, {
+        method: 'PUT',
+        url: '/api/v{api-version}/defaults',
+        query: {
+            parameterOptionalStringWithDefault: data.parameterOptionalStringWithDefault,
+            parameterOptionalStringWithEmptyDefault: data.parameterOptionalStringWithEmptyDefault,
+            parameterOptionalStringWithNoDefault: data.parameterOptionalStringWithNoDefault,
+            parameterStringWithDefault: data.parameterStringWithDefault,
+            parameterStringWithEmptyDefault: data.parameterStringWithEmptyDefault,
+            parameterStringWithNoDefault: data.parameterStringWithNoDefault,
+            parameterStringNullableWithNoDefault: data.parameterStringNullableWithNoDefault,
+            parameterStringNullableWithDefault: data.parameterStringNullableWithDefault
+        }
+    });
+};
 
 /**
  * @throws ApiError
  */
-export const duplicateName = function (): Observable<void> { return __request(OpenAPI, this.http, {
-    method: 'GET',
-    url: '/api/v{api-version}/duplicate'
-}); };
+export const duplicateName = function (): Observable<void> {
+    return __request(OpenAPI, this.http, {
+        method: 'GET',
+        url: '/api/v{api-version}/duplicate'
+    });
+};
 
 /**
  * @throws ApiError
  */
-export const duplicateName1 = function (): Observable<void> { return __request(OpenAPI, this.http, {
-    method: 'POST',
-    url: '/api/v{api-version}/duplicate'
-}); };
+export const duplicateName1 = function (): Observable<void> {
+    return __request(OpenAPI, this.http, {
+        method: 'POST',
+        url: '/api/v{api-version}/duplicate'
+    });
+};
 
 /**
  * @throws ApiError
  */
-export const duplicateName2 = function (): Observable<void> { return __request(OpenAPI, this.http, {
-    method: 'PUT',
-    url: '/api/v{api-version}/duplicate'
-}); };
+export const duplicateName2 = function (): Observable<void> {
+    return __request(OpenAPI, this.http, {
+        method: 'PUT',
+        url: '/api/v{api-version}/duplicate'
+    });
+};
 
 /**
  * @throws ApiError
  */
-export const duplicateName3 = function (): Observable<void> { return __request(OpenAPI, this.http, {
-    method: 'DELETE',
-    url: '/api/v{api-version}/duplicate'
-}); };
+export const duplicateName3 = function (): Observable<void> {
+    return __request(OpenAPI, this.http, {
+        method: 'DELETE',
+        url: '/api/v{api-version}/duplicate'
+    });
+};
 
 /**
  * @returns void Success
  * @throws ApiError
  */
-export const callWithNoContentResponse = function (): Observable<CallWithNoContentResponseResponse> { return __request(OpenAPI, this.http, {
-    method: 'GET',
-    url: '/api/v{api-version}/no-content'
-}); };
+export const callWithNoContentResponse = function (): Observable<CallWithNoContentResponseResponse> {
+    return __request(OpenAPI, this.http, {
+        method: 'GET',
+        url: '/api/v{api-version}/no-content'
+    });
+};
 
 /**
  * @returns number Response is a simple number
  * @returns void Success
  * @throws ApiError
  */
-export const callWithResponseAndNoContentResponse = function (): Observable<CallWithResponseAndNoContentResponseResponse> { return __request(OpenAPI, this.http, {
-    method: 'GET',
-    url: '/api/v{api-version}/multiple-tags/response-and-no-content'
-}); };
+export const callWithResponseAndNoContentResponse = function (): Observable<CallWithResponseAndNoContentResponseResponse> {
+    return __request(OpenAPI, this.http, {
+        method: 'GET',
+        url: '/api/v{api-version}/multiple-tags/response-and-no-content'
+    });
+};
 
 /**
  * @returns _400
  * @throws ApiError
  */
-export const dummyA = function (): Observable<DummyAResponse> { return __request(OpenAPI, this.http, {
-    method: 'GET',
-    url: '/api/v{api-version}/multiple-tags/a'
-}); };
+export const dummyA = function (): Observable<DummyAResponse> {
+    return __request(OpenAPI, this.http, {
+        method: 'GET',
+        url: '/api/v{api-version}/multiple-tags/a'
+    });
+};
 
 /**
  * @returns void Success
  * @throws ApiError
  */
-export const dummyB = function (): Observable<DummyBResponse> { return __request(OpenAPI, this.http, {
-    method: 'GET',
-    url: '/api/v{api-version}/multiple-tags/b'
-}); };
+export const dummyB = function (): Observable<DummyBResponse> {
+    return __request(OpenAPI, this.http, {
+        method: 'GET',
+        url: '/api/v{api-version}/multiple-tags/b'
+    });
+};
 
 /**
  * @returns import
  * @throws ApiError
  */
-export const callWithResponse = function (): Observable<CallWithResponseResponse> { return __request(OpenAPI, this.http, {
-    method: 'GET',
-    url: '/api/v{api-version}/response'
-}); };
+export const callWithResponse = function (): Observable<CallWithResponseResponse> {
+    return __request(OpenAPI, this.http, {
+        method: 'GET',
+        url: '/api/v{api-version}/response'
+    });
+};
 
 /**
  * @returns unknown Message for 200 response
@@ -455,17 +519,19 @@ export const callWithResponse = function (): Observable<CallWithResponseResponse
  * @returns ModelWithString Message for 202 response
  * @throws ApiError
  */
-export const callWithDuplicateResponses = function (): Observable<CallWithDuplicateResponsesResponse> { return __request(OpenAPI, this.http, {
-    method: 'POST',
-    url: '/api/v{api-version}/response',
-    errors: {
-        500: 'Message for 500 error',
-        501: 'Message for 501 error',
-        502: 'Message for 502 error',
-        '4XX': 'Message for 4XX errors',
-        default: 'Default error response'
-    }
-}); };
+export const callWithDuplicateResponses = function (): Observable<CallWithDuplicateResponsesResponse> {
+    return __request(OpenAPI, this.http, {
+        method: 'POST',
+        url: '/api/v{api-version}/response',
+        errors: {
+            500: 'Message for 500 error',
+            501: 'Message for 501 error',
+            502: 'Message for 502 error',
+            '4XX': 'Message for 4XX errors',
+            default: 'Default error response'
+        }
+    });
+};
 
 /**
  * @returns unknown Message for 200 response
@@ -473,16 +539,18 @@ export const callWithDuplicateResponses = function (): Observable<CallWithDuplic
  * @returns ModelThatExtendsExtends Message for 202 response
  * @throws ApiError
  */
-export const callWithResponses = function (): Observable<CallWithResponsesResponse> { return __request(OpenAPI, this.http, {
-    method: 'PUT',
-    url: '/api/v{api-version}/response',
-    errors: {
-        500: 'Message for 500 error',
-        501: 'Message for 501 error',
-        502: 'Message for 502 error',
-        default: 'Message for default response'
-    }
-}); };
+export const callWithResponses = function (): Observable<CallWithResponsesResponse> {
+    return __request(OpenAPI, this.http, {
+        method: 'PUT',
+        url: '/api/v{api-version}/response',
+        errors: {
+            500: 'Message for 500 error',
+            501: 'Message for 501 error',
+            502: 'Message for 502 error',
+            default: 'Message for default response'
+        }
+    });
+};
 
 /**
  * @param data The data for the request.
@@ -493,17 +561,19 @@ export const callWithResponses = function (): Observable<CallWithResponsesRespon
  * @param data.parameterArrayMulti This is an array parameter that is sent as multi format (multiple parameter instances)
  * @throws ApiError
  */
-export const collectionFormat = function (data: CollectionFormatData): Observable<void> { return __request(OpenAPI, this.http, {
-    method: 'GET',
-    url: '/api/v{api-version}/collectionFormat',
-    query: {
-        parameterArrayCSV: data.parameterArrayCsv,
-        parameterArraySSV: data.parameterArraySsv,
-        parameterArrayTSV: data.parameterArrayTsv,
-        parameterArrayPipes: data.parameterArrayPipes,
-        parameterArrayMulti: data.parameterArrayMulti
-    }
-}); };
+export const collectionFormat = function (data: CollectionFormatData): Observable<void> {
+    return __request(OpenAPI, this.http, {
+        method: 'GET',
+        url: '/api/v{api-version}/collectionFormat',
+        query: {
+            parameterArrayCSV: data.parameterArrayCsv,
+            parameterArraySSV: data.parameterArraySsv,
+            parameterArrayTSV: data.parameterArrayTsv,
+            parameterArrayPipes: data.parameterArrayPipes,
+            parameterArrayMulti: data.parameterArrayMulti
+        }
+    });
+};
 
 /**
  * @param data The data for the request.
@@ -521,22 +591,24 @@ export const collectionFormat = function (data: CollectionFormatData): Observabl
  * @returns unknown Response is a simple object
  * @throws ApiError
  */
-export const types = function (data: TypesData): Observable<TypesResponse> { return __request(OpenAPI, this.http, {
-    method: 'GET',
-    url: '/api/v{api-version}/types',
-    path: {
-        id: data.id
-    },
-    query: {
-        parameterNumber: data.parameterNumber,
-        parameterString: data.parameterString,
-        parameterBoolean: data.parameterBoolean,
-        parameterObject: data.parameterObject,
-        parameterArray: data.parameterArray,
-        parameterDictionary: data.parameterDictionary,
-        parameterEnum: data.parameterEnum
-    }
-}); };
+export const types = function (data: TypesData): Observable<TypesResponse> {
+    return __request(OpenAPI, this.http, {
+        method: 'GET',
+        url: '/api/v{api-version}/types',
+        path: {
+            id: data.id
+        },
+        query: {
+            parameterNumber: data.parameterNumber,
+            parameterString: data.parameterString,
+            parameterBoolean: data.parameterBoolean,
+            parameterObject: data.parameterObject,
+            parameterArray: data.parameterArray,
+            parameterDictionary: data.parameterDictionary,
+            parameterEnum: data.parameterEnum
+        }
+    });
+};
 
 /**
  * @param data The data for the request.
@@ -544,12 +616,14 @@ export const types = function (data: TypesData): Observable<TypesResponse> { ret
  * @returns boolean
  * @throws ApiError
  */
-export const uploadFile = function (data: UploadFileData): Observable<UploadFileResponse> { return __request(OpenAPI, this.http, {
-    method: 'POST',
-    url: '/api/v{api-version}/upload',
-    formData: data.formData,
-    mediaType: 'application/x-www-form-urlencoded'
-}); };
+export const uploadFile = function (data: UploadFileData): Observable<UploadFileResponse> {
+    return __request(OpenAPI, this.http, {
+        method: 'POST',
+        url: '/api/v{api-version}/upload',
+        formData: data.formData,
+        mediaType: 'application/x-www-form-urlencoded'
+    });
+};
 
 /**
  * @param data The data for the request.
@@ -557,13 +631,15 @@ export const uploadFile = function (data: UploadFileData): Observable<UploadFile
  * @returns binary Success
  * @throws ApiError
  */
-export const fileResponse = function (data: FileResponseData): Observable<FileResponseResponse> { return __request(OpenAPI, this.http, {
-    method: 'GET',
-    url: '/api/v{api-version}/file/{id}',
-    path: {
-        id: data.id
-    }
-}); };
+export const fileResponse = function (data: FileResponseData): Observable<FileResponseResponse> {
+    return __request(OpenAPI, this.http, {
+        method: 'GET',
+        url: '/api/v{api-version}/file/{id}',
+        path: {
+            id: data.id
+        }
+    });
+};
 
 /**
  * @param data The data for the request.
@@ -572,39 +648,45 @@ export const fileResponse = function (data: FileResponseData): Observable<FileRe
  * @returns ModelWithString Successful response
  * @throws ApiError
  */
-export const complexTypes = function (data: ComplexTypesData): Observable<ComplexTypesResponse> { return __request(OpenAPI, this.http, {
-    method: 'GET',
-    url: '/api/v{api-version}/complex',
-    query: {
-        parameterObject: data.parameterObject,
-        parameterReference: data.parameterReference
-    },
-    errors: {
-        400: '400 `server` error',
-        500: '500 server error'
-    }
-}); };
+export const complexTypes = function (data: ComplexTypesData): Observable<ComplexTypesResponse> {
+    return __request(OpenAPI, this.http, {
+        method: 'GET',
+        url: '/api/v{api-version}/complex',
+        query: {
+            parameterObject: data.parameterObject,
+            parameterReference: data.parameterReference
+        },
+        errors: {
+            400: '400 `server` error',
+            500: '500 server error'
+        }
+    });
+};
 
 /**
  * @param data The data for the request.
  * @param data.formData
  * @throws ApiError
  */
-export const multipartRequest = function (data: MultipartRequestData = {}): Observable<void> { return __request(OpenAPI, this.http, {
-    method: 'POST',
-    url: '/api/v{api-version}/multipart',
-    formData: data.formData,
-    mediaType: 'multipart/form-data'
-}); };
+export const multipartRequest = function (data: MultipartRequestData = {}): Observable<void> {
+    return __request(OpenAPI, this.http, {
+        method: 'POST',
+        url: '/api/v{api-version}/multipart',
+        formData: data.formData,
+        mediaType: 'multipart/form-data'
+    });
+};
 
 /**
  * @returns unknown OK
  * @throws ApiError
  */
-export const multipartResponse = function (): Observable<MultipartResponseResponse> { return __request(OpenAPI, this.http, {
-    method: 'GET',
-    url: '/api/v{api-version}/multipart'
-}); };
+export const multipartResponse = function (): Observable<MultipartResponseResponse> {
+    return __request(OpenAPI, this.http, {
+        method: 'GET',
+        url: '/api/v{api-version}/multipart'
+    });
+};
 
 /**
  * @param data The data for the request.
@@ -613,29 +695,33 @@ export const multipartResponse = function (): Observable<MultipartResponseRespon
  * @returns ModelWithString Success
  * @throws ApiError
  */
-export const complexParams = function (data: ComplexParamsData): Observable<ComplexParamsResponse> { return __request(OpenAPI, this.http, {
-    method: 'PUT',
-    url: '/api/v{api-version}/complex/{id}',
-    path: {
-        id: data.id
-    },
-    body: data.requestBody,
-    mediaType: 'application/json-patch+json'
-}); };
+export const complexParams = function (data: ComplexParamsData): Observable<ComplexParamsResponse> {
+    return __request(OpenAPI, this.http, {
+        method: 'PUT',
+        url: '/api/v{api-version}/complex/{id}',
+        path: {
+            id: data.id
+        },
+        body: data.requestBody,
+        mediaType: 'application/json-patch+json'
+    });
+};
 
 /**
  * @returns string Successful response
  * @throws ApiError
  */
-export const callWithResultFromHeader = function (): Observable<CallWithResultFromHeaderResponse> { return __request(OpenAPI, this.http, {
-    method: 'POST',
-    url: '/api/v{api-version}/header',
-    responseHeader: 'operation-location',
-    errors: {
-        400: '400 server error',
-        500: '500 server error'
-    }
-}); };
+export const callWithResultFromHeader = function (): Observable<CallWithResultFromHeaderResponse> {
+    return __request(OpenAPI, this.http, {
+        method: 'POST',
+        url: '/api/v{api-version}/header',
+        responseHeader: 'operation-location',
+        errors: {
+            400: '400 server error',
+            500: '500 server error'
+        }
+    });
+};
 
 /**
  * @param data The data for the request.
@@ -643,19 +729,21 @@ export const callWithResultFromHeader = function (): Observable<CallWithResultFr
  * @returns unknown Custom message: Successful response
  * @throws ApiError
  */
-export const testErrorCode = function (data: TestErrorCodeData): Observable<TestErrorCodeResponse> { return __request(OpenAPI, this.http, {
-    method: 'POST',
-    url: '/api/v{api-version}/error',
-    query: {
-        status: data.status
-    },
-    errors: {
-        500: 'Custom message: Internal Server Error',
-        501: 'Custom message: Not Implemented',
-        502: 'Custom message: Bad Gateway',
-        503: 'Custom message: Service Unavailable'
-    }
-}); };
+export const testErrorCode = function (data: TestErrorCodeData): Observable<TestErrorCodeResponse> {
+    return __request(OpenAPI, this.http, {
+        method: 'POST',
+        url: '/api/v{api-version}/error',
+        query: {
+            status: data.status
+        },
+        errors: {
+            500: 'Custom message: Internal Server Error',
+            501: 'Custom message: Not Implemented',
+            502: 'Custom message: Bad Gateway',
+            503: 'Custom message: Service Unavailable'
+        }
+    });
+};
 
 /**
  * @param data The data for the request.
@@ -663,13 +751,15 @@ export const testErrorCode = function (data: TestErrorCodeData): Observable<Test
  * @returns NonAsciiStringæøåÆØÅöôêÊ字符串 Successful response
  * @throws ApiError
  */
-export const nonAsciiæøåÆøÅöôêÊ字符串 = function (data: NonAsciiæøåÆøÅöôêÊ字符串Data): Observable<NonAsciiæøåÆøÅöôêÊ字符串Response> { return __request(OpenAPI, this.http, {
-    method: 'POST',
-    url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
-    query: {
-        'nonAsciiParamæøåÆØÅöôêÊ': data.nonAsciiParamæøåÆøÅöôêÊ
-    }
-}); };
+export const nonAsciiæøåÆøÅöôêÊ字符串 = function (data: NonAsciiæøåÆøÅöôêÊ字符串Data): Observable<NonAsciiæøåÆøÅöôêÊ字符串Response> {
+    return __request(OpenAPI, this.http, {
+        method: 'POST',
+        url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
+        query: {
+            'nonAsciiParamæøåÆØÅöôêÊ': data.nonAsciiParamæøåÆøÅöôêÊ
+        }
+    });
+};
 
 /**
  * Login User
@@ -677,9 +767,11 @@ export const nonAsciiæøåÆøÅöôêÊ字符串 = function (data: NonAsciiæ�
  * @param data.formData
  * @throws ApiError
  */
-export const putWithFormUrlEncoded = function (data: PutWithFormUrlEncodedData): Observable<void> { return __request(OpenAPI, this.http, {
-    method: 'PUT',
-    url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
-    formData: data.formData,
-    mediaType: 'application/x-www-form-urlencoded'
-}); };
+export const putWithFormUrlEncoded = function (data: PutWithFormUrlEncodedData): Observable<void> {
+    return __request(OpenAPI, this.http, {
+        method: 'PUT',
+        url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
+        formData: data.formData,
+        mediaType: 'application/x-www-form-urlencoded'
+    });
+};
