@@ -68,7 +68,7 @@ export const parseExperimental = ({
   config: Config;
   parserConfig: ParserConfig;
   spec: unknown;
-}) => {
+}): IRContext | undefined => {
   const context = new IRContext({
     config,
     parserConfig,
@@ -78,17 +78,15 @@ export const parseExperimental = ({
   switch (context.spec.openapi) {
     case '3.0.3':
       parseV3_0_3(context as IRContext<OpenApiV3_0_3>);
-      break;
+      return context;
     case '3.1.0':
       parseV3_1_0(context as IRContext<OpenApiV3_1_0>);
-      break;
+      return context;
     default:
       // TODO: parser - uncomment after removing legacy parser.
       // For now, we fall back to legacy parser if spec version
       // is not supported
-      break;
-    // throw new Error('Unsupported OpenAPI specification');
+      // throw new Error('Unsupported OpenAPI specification');
+      return;
   }
-
-  return context;
 };

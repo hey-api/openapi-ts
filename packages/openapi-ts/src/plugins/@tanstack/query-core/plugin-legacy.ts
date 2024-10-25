@@ -17,6 +17,7 @@ import {
 } from '../../../generate/services';
 import { relativeModulePath } from '../../../generate/utils';
 import type { IROperationObject } from '../../../ir/ir';
+import { paginationKeywordsRegExp } from '../../../ir/pagination';
 import { isOperationParameterRequired } from '../../../openApi';
 import { getOperationKey } from '../../../openApi/common/parser/operation';
 import type {
@@ -100,8 +101,6 @@ const getPaginationIn = (parameter: OperationParameter) => {
       return parameter.in;
   }
 };
-
-const paginationWordsRegExp = /^(cursor|offset|page|start)/;
 
 const createInfiniteParamsFn = 'createInfiniteParams';
 const createQueryKeyFn = 'createQueryKey';
@@ -903,8 +902,8 @@ export const handlerLegacy: PluginLegacyHandler<
         let paginationField!: Model | OperationParameter;
 
         const paginationParameter = operation.parameters.find((parameter) => {
-          paginationWordsRegExp.lastIndex = 0;
-          if (paginationWordsRegExp.test(parameter.name)) {
+          paginationKeywordsRegExp.lastIndex = 0;
+          if (paginationKeywordsRegExp.test(parameter.name)) {
             paginationField = parameter;
             return true;
           }
@@ -919,8 +918,8 @@ export const handlerLegacy: PluginLegacyHandler<
               (model) => model.meta?.$ref === ref,
             );
             return refModel?.properties.find((property) => {
-              paginationWordsRegExp.lastIndex = 0;
-              if (paginationWordsRegExp.test(property.name)) {
+              paginationKeywordsRegExp.lastIndex = 0;
+              if (paginationKeywordsRegExp.test(property.name)) {
                 paginationField = property;
                 return true;
               }
@@ -928,8 +927,8 @@ export const handlerLegacy: PluginLegacyHandler<
           }
 
           return parameter.properties.find((property) => {
-            paginationWordsRegExp.lastIndex = 0;
-            if (paginationWordsRegExp.test(property.name)) {
+            paginationKeywordsRegExp.lastIndex = 0;
+            if (paginationKeywordsRegExp.test(property.name)) {
               paginationField = property;
               return true;
             }
