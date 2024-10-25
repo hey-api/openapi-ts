@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.53.12
+
+### Patch Changes
+
+- [#1195](https://github.com/hey-api/openapi-ts/pull/1195) [`753643f`](https://github.com/hey-api/openapi-ts/commit/753643fae74d4248df8dc5fe9dda5f28a1dabdf1) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: TanStack Query plugin using missing import for infinite query
+
+- [#1194](https://github.com/hey-api/openapi-ts/pull/1194) [`c38deaf`](https://github.com/hey-api/openapi-ts/commit/c38deaf02b606b92edd9c316b1444b6b6c12916d) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: pass TanStack query signal to client call
+
 ## 0.53.11
 
 ### Patch Changes
