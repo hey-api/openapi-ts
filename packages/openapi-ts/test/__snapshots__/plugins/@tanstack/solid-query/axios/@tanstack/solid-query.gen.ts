@@ -39,10 +39,11 @@ export const exportQueryKey = (options?: Options) => [
 
 export const exportOptions = (options?: Options) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await export_({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -57,10 +58,11 @@ export const importQueryKey = (options: Options<ImportData>) => [
 
 export const importOptions = (options: Options<ImportData>) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await import_({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -89,10 +91,11 @@ export const apiVVersionOdataControllerCountQueryKey = (options?: Options) => [
 
 export const apiVVersionOdataControllerCountOptions = (options?: Options) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await apiVVersionOdataControllerCount({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -107,10 +110,11 @@ export const getApiVbyApiVersionSimpleOperationQueryKey = (options: Options<GetA
 
 export const getApiVbyApiVersionSimpleOperationOptions = (options: Options<GetApiVbyApiVersionSimpleOperationData>) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await getApiVbyApiVersionSimpleOperation({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -139,10 +143,11 @@ export const getCallWithoutParametersAndResponseQueryKey = (options?: Options) =
 
 export const getCallWithoutParametersAndResponseOptions = (options?: Options) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await getCallWithoutParametersAndResponse({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -171,10 +176,11 @@ export const postCallWithoutParametersAndResponseQueryKey = (options?: Options) 
 
 export const postCallWithoutParametersAndResponseOptions = (options?: Options) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await postCallWithoutParametersAndResponse({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -231,10 +237,11 @@ export const callWithDescriptionsQueryKey = (options?: Options<CallWithDescripti
 
 export const callWithDescriptionsOptions = (options?: Options<CallWithDescriptionsData>) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await callWithDescriptions({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -263,10 +270,11 @@ export const deprecatedCallQueryKey = (options: Options<DeprecatedCallData>) => 
 
 export const deprecatedCallOptions = (options: Options<DeprecatedCallData>) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await deprecatedCall({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -295,10 +303,11 @@ export const callWithParametersQueryKey = (options: Options<CallWithParametersDa
 
 export const callWithParametersOptions = (options: Options<CallWithParametersData>) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await callWithParameters({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -344,7 +353,7 @@ export const callWithParametersInfiniteOptions = (options: Options<CallWithParam
     return infiniteQueryOptions<unknown, AxiosError<DefaultError>, InfiniteData<unknown>, QueryKey<Options<CallWithParametersData>>, string | null | Pick<QueryKey<Options<CallWithParametersData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
     // @ts-ignore
     {
-        queryFn: async ({ pageParam, queryKey }) => {
+        queryFn: async ({ pageParam, queryKey, signal }) => {
             // @ts-ignore
             const page: Pick<QueryKey<Options<CallWithParametersData>>[0], 'body' | 'headers' | 'path' | 'query'> = typeof pageParam === 'object' ? pageParam : {
                 query: {
@@ -355,6 +364,7 @@ export const callWithParametersInfiniteOptions = (options: Options<CallWithParam
             const { data } = await callWithParameters({
                 ...options,
                 ...params,
+                signal,
                 throwOnError: true
             });
             return data;
@@ -383,10 +393,11 @@ export const callWithWeirdParameterNamesQueryKey = (options: Options<CallWithWei
 
 export const callWithWeirdParameterNamesOptions = (options: Options<CallWithWeirdParameterNamesData>) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await callWithWeirdParameterNames({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -415,10 +426,11 @@ export const getCallWithOptionalParamQueryKey = (options: Options<GetCallWithOpt
 
 export const getCallWithOptionalParamOptions = (options: Options<GetCallWithOptionalParamData>) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await getCallWithOptionalParam({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -435,7 +447,7 @@ export const getCallWithOptionalParamInfiniteOptions = (options: Options<GetCall
     return infiniteQueryOptions<unknown, AxiosError<DefaultError>, InfiniteData<unknown>, QueryKey<Options<GetCallWithOptionalParamData>>, number | Pick<QueryKey<Options<GetCallWithOptionalParamData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
     // @ts-ignore
     {
-        queryFn: async ({ pageParam, queryKey }) => {
+        queryFn: async ({ pageParam, queryKey, signal }) => {
             // @ts-ignore
             const page: Pick<QueryKey<Options<GetCallWithOptionalParamData>>[0], 'body' | 'headers' | 'path' | 'query'> = typeof pageParam === 'object' ? pageParam : {
                 query: {
@@ -446,6 +458,7 @@ export const getCallWithOptionalParamInfiniteOptions = (options: Options<GetCall
             const { data } = await getCallWithOptionalParam({
                 ...options,
                 ...params,
+                signal,
                 throwOnError: true
             });
             return data;
@@ -460,10 +473,11 @@ export const postCallWithOptionalParamQueryKey = (options: Options<PostCallWithO
 
 export const postCallWithOptionalParamOptions = (options: Options<PostCallWithOptionalParamData>) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await postCallWithOptionalParam({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -480,7 +494,7 @@ export const postCallWithOptionalParamInfiniteOptions = (options: Options<PostCa
     return infiniteQueryOptions<PostCallWithOptionalParamResponse, AxiosError<DefaultError>, InfiniteData<PostCallWithOptionalParamResponse>, QueryKey<Options<PostCallWithOptionalParamData>>, number | null | Pick<QueryKey<Options<PostCallWithOptionalParamData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
     // @ts-ignore
     {
-        queryFn: async ({ pageParam, queryKey }) => {
+        queryFn: async ({ pageParam, queryKey, signal }) => {
             // @ts-ignore
             const page: Pick<QueryKey<Options<PostCallWithOptionalParamData>>[0], 'body' | 'headers' | 'path' | 'query'> = typeof pageParam === 'object' ? pageParam : {
                 body: {
@@ -491,6 +505,7 @@ export const postCallWithOptionalParamInfiniteOptions = (options: Options<PostCa
             const { data } = await postCallWithOptionalParam({
                 ...options,
                 ...params,
+                signal,
                 throwOnError: true
             });
             return data;
@@ -519,10 +534,11 @@ export const postApiVbyApiVersionRequestBodyQueryKey = (options?: Options<PostAp
 
 export const postApiVbyApiVersionRequestBodyOptions = (options?: Options<PostApiVbyApiVersionRequestBodyData>) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await postApiVbyApiVersionRequestBody({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -551,10 +567,11 @@ export const postApiVbyApiVersionFormDataQueryKey = (options?: Options<PostApiVb
 
 export const postApiVbyApiVersionFormDataOptions = (options?: Options<PostApiVbyApiVersionFormDataData>) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await postApiVbyApiVersionFormData({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -583,10 +600,11 @@ export const callWithDefaultParametersQueryKey = (options?: Options<CallWithDefa
 
 export const callWithDefaultParametersOptions = (options?: Options<CallWithDefaultParametersData>) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await callWithDefaultParameters({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -601,10 +619,11 @@ export const callWithDefaultOptionalParametersQueryKey = (options?: Options<Call
 
 export const callWithDefaultOptionalParametersOptions = (options?: Options<CallWithDefaultOptionalParametersData>) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await callWithDefaultOptionalParameters({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -661,10 +680,11 @@ export const duplicateName2QueryKey = (options?: Options) => [
 
 export const duplicateName2Options = (options?: Options) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await duplicateName2({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -679,10 +699,11 @@ export const duplicateName3QueryKey = (options?: Options) => [
 
 export const duplicateName3Options = (options?: Options) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await duplicateName3({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -725,10 +746,11 @@ export const callWithNoContentResponseQueryKey = (options?: Options) => [
 
 export const callWithNoContentResponseOptions = (options?: Options) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await callWithNoContentResponse({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -743,10 +765,11 @@ export const callWithResponseAndNoContentResponseQueryKey = (options?: Options) 
 
 export const callWithResponseAndNoContentResponseOptions = (options?: Options) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await callWithResponseAndNoContentResponse({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -761,10 +784,11 @@ export const dummyAQueryKey = (options?: Options) => [
 
 export const dummyAOptions = (options?: Options) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await dummyA({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -779,10 +803,11 @@ export const dummyBQueryKey = (options?: Options) => [
 
 export const dummyBOptions = (options?: Options) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await dummyB({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -797,10 +822,11 @@ export const callWithResponseQueryKey = (options?: Options) => [
 
 export const callWithResponseOptions = (options?: Options) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await callWithResponse({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -815,10 +841,11 @@ export const callWithDuplicateResponsesQueryKey = (options?: Options) => [
 
 export const callWithDuplicateResponsesOptions = (options?: Options) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await callWithDuplicateResponses({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -861,10 +888,11 @@ export const collectionFormatQueryKey = (options: Options<CollectionFormatData>)
 
 export const collectionFormatOptions = (options: Options<CollectionFormatData>) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await collectionFormat({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -879,10 +907,11 @@ export const typesQueryKey = (options: Options<TypesData>) => [
 
 export const typesOptions = (options: Options<TypesData>) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await types({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -897,10 +926,11 @@ export const uploadFileQueryKey = (options: Options<UploadFileData>) => [
 
 export const uploadFileOptions = (options: Options<UploadFileData>) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await uploadFile({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -929,10 +959,11 @@ export const fileResponseQueryKey = (options: Options<FileResponseData>) => [
 
 export const fileResponseOptions = (options: Options<FileResponseData>) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await fileResponse({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -947,10 +978,11 @@ export const complexTypesQueryKey = (options: Options<ComplexTypesData>) => [
 
 export const complexTypesOptions = (options: Options<ComplexTypesData>) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await complexTypes({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -965,10 +997,11 @@ export const multipartResponseQueryKey = (options?: Options) => [
 
 export const multipartResponseOptions = (options?: Options) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await multipartResponse({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -983,10 +1016,11 @@ export const multipartRequestQueryKey = (options?: Options<MultipartRequestData>
 
 export const multipartRequestOptions = (options?: Options<MultipartRequestData>) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await multipartRequest({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -1029,10 +1063,11 @@ export const callWithResultFromHeaderQueryKey = (options?: Options) => [
 
 export const callWithResultFromHeaderOptions = (options?: Options) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await callWithResultFromHeader({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -1061,10 +1096,11 @@ export const testErrorCodeQueryKey = (options: Options<TestErrorCodeData>) => [
 
 export const testErrorCodeOptions = (options: Options<TestErrorCodeData>) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await testErrorCode({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
@@ -1093,10 +1129,11 @@ export const nonAsciiæøåÆøÅöôêÊ字符串QueryKey = (options: Options<N
 
 export const nonAsciiæøåÆøÅöôêÊ字符串Options = (options: Options<NonAsciiæøåÆøÅöôêÊ字符串Data>) => {
     return queryOptions({
-        queryFn: async ({ queryKey }) => {
+        queryFn: async ({ queryKey, signal }) => {
             const { data } = await nonAsciiæøåÆøÅöôêÊ字符串({
                 ...options,
                 ...queryKey[0],
+                signal,
                 throwOnError: true
             });
             return data;
