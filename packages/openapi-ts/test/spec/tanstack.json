@@ -1,0 +1,71 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
+  "paths": {
+    "/api/search": {
+      "post": {
+        "operationId": "search",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchRequest"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SearchParamsRequest": {
+        "required": ["contractIds", "contractNumbers"],
+        "type": "object",
+        "properties": {
+          "contractIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "contractNumbers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "SearchRequest": {
+        "required": ["searchParameters"],
+        "type": "object",
+        "properties": {
+          "searchParameters": {
+            "$ref": "#/components/schemas/SearchParamsRequest"
+          },
+          "pageParameters": {
+            "$ref": "#/components/schemas/PageParameters"
+          }
+        }
+      },
+      "PageParameters": {
+        "type": "object",
+        "properties": {
+          "offset": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "limit": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      }
+    }
+  }
+}
