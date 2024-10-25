@@ -757,88 +757,97 @@ export const handler: PluginHandler<
         });
         file.add(queryKeyStatement);
 
-        const expression = compiler.arrowFunction({
-          parameters: [
-            {
-              isRequired,
-              name: 'options',
-              type: typeData,
-            },
-          ],
-          statements: [
-            compiler.returnFunctionCall({
-              args: [
-                compiler.objectExpression({
-                  obj: [
-                    {
-                      key: 'queryFn',
-                      value: compiler.arrowFunction({
-                        async: true,
-                        multiLine: true,
-                        parameters: [
-                          {
-                            destructure: [
-                              {
-                                name: 'queryKey',
-                              },
-                            ],
-                          },
-                        ],
-                        statements: [
-                          compiler.constVariable({
-                            destructure: true,
-                            expression: compiler.awaitExpression({
-                              expression: compiler.callExpression({
-                                functionName: queryFn,
-                                parameters: [
-                                  compiler.objectExpression({
-                                    multiLine: true,
-                                    obj: [
-                                      {
-                                        spread: 'options',
-                                      },
-                                      {
-                                        spread: 'queryKey[0]',
-                                      },
-                                      {
-                                        key: 'throwOnError',
-                                        value: true,
-                                      },
-                                    ],
-                                  }),
-                                ],
-                              }),
-                            }),
-                            name: 'data',
-                          }),
-                          compiler.returnVariable({
-                            expression: 'data',
-                          }),
-                        ],
-                      }),
-                    },
-                    {
-                      key: 'queryKey',
-                      value: compiler.callExpression({
-                        functionName: queryKeyFunctionIdentifier({
-                          context,
-                          operation,
-                        }),
-                        parameters: ['options'],
-                      }),
-                    },
-                  ],
-                }),
-              ],
-              name: queryOptionsFn,
-            }),
-          ],
-        });
         const statement = compiler.constVariable({
           // TODO: describe options, same as the actual function call
           comment: [],
           exportConst: true,
-          expression,
+          expression: compiler.arrowFunction({
+            parameters: [
+              {
+                isRequired,
+                name: 'options',
+                type: typeData,
+              },
+            ],
+            statements: [
+              compiler.returnFunctionCall({
+                args: [
+                  compiler.objectExpression({
+                    obj: [
+                      {
+                        key: 'queryFn',
+                        value: compiler.arrowFunction({
+                          async: true,
+                          multiLine: true,
+                          parameters: [
+                            {
+                              destructure: [
+                                {
+                                  name: 'queryKey',
+                                },
+                                {
+                                  name: 'signal',
+                                },
+                              ],
+                            },
+                          ],
+                          statements: [
+                            compiler.constVariable({
+                              destructure: true,
+                              expression: compiler.awaitExpression({
+                                expression: compiler.callExpression({
+                                  functionName: queryFn,
+                                  parameters: [
+                                    compiler.objectExpression({
+                                      multiLine: true,
+                                      obj: [
+                                        {
+                                          spread: 'options',
+                                        },
+                                        {
+                                          spread: 'queryKey[0]',
+                                        },
+                                        {
+                                          key: 'signal',
+                                          shorthand: true,
+                                          value: compiler.identifier({
+                                            text: 'signal',
+                                          }),
+                                        },
+                                        {
+                                          key: 'throwOnError',
+                                          value: true,
+                                        },
+                                      ],
+                                    }),
+                                  ],
+                                }),
+                              }),
+                              name: 'data',
+                            }),
+                            compiler.returnVariable({
+                              expression: 'data',
+                            }),
+                          ],
+                        }),
+                      },
+                      {
+                        key: 'queryKey',
+                        value: compiler.callExpression({
+                          functionName: queryKeyFunctionIdentifier({
+                            context,
+                            operation,
+                          }),
+                          parameters: ['options'],
+                        }),
+                      },
+                    ],
+                  }),
+                ],
+                name: queryOptionsFn,
+              }),
+            ],
+          }),
           name: queryOptionsFunctionIdentifier({ context, operation }),
           // TODO: add type error
           // TODO: AxiosError<PutSubmissionMetaError>
@@ -922,154 +931,163 @@ export const handler: PluginHandler<
           });
           file.add(queryKeyStatement);
 
-          const expression = compiler.arrowFunction({
-            parameters: [
-              {
-                isRequired,
-                name: 'options',
-                type: typeData,
-              },
-            ],
-            statements: [
-              compiler.returnFunctionCall({
-                args: [
-                  compiler.objectExpression({
-                    comments: [
-                      {
-                        jsdoc: false,
-                        lines: ['@ts-ignore'],
-                      },
-                    ],
-                    obj: [
-                      {
-                        key: 'queryFn',
-                        value: compiler.arrowFunction({
-                          async: true,
-                          multiLine: true,
-                          parameters: [
-                            {
-                              destructure: [
-                                {
-                                  name: 'pageParam',
-                                },
-                                {
-                                  name: 'queryKey',
-                                },
-                              ],
-                            },
-                          ],
-                          statements: [
-                            compiler.constVariable({
-                              comment: [
-                                {
-                                  jsdoc: false,
-                                  lines: ['@ts-ignore'],
-                                },
-                              ],
-                              expression: compiler.conditionalExpression({
-                                condition: compiler.binaryExpression({
-                                  left: compiler.typeOfExpression({
-                                    text: 'pageParam',
-                                  }),
-                                  operator: '===',
-                                  right: compiler.ots.string('object'),
-                                }),
-                                whenFalse: compiler.objectExpression({
-                                  multiLine: true,
-                                  obj: [
-                                    {
-                                      key: pagination.in,
-                                      value: compiler.objectExpression({
-                                        multiLine: true,
-                                        obj: [
-                                          {
-                                            key: pagination.name,
-                                            value: compiler.identifier({
-                                              text: 'pageParam',
-                                            }),
-                                          },
-                                        ],
-                                      }),
-                                    },
-                                  ],
-                                }),
-                                whenTrue: compiler.identifier({
-                                  text: 'pageParam',
-                                }),
-                              }),
-                              name: 'page',
-                              typeName: typePageObjectParam,
-                            }),
-                            compiler.constVariable({
-                              expression: compiler.callExpression({
-                                functionName: 'createInfiniteParams',
-                                parameters: ['queryKey', 'page'],
-                              }),
-                              name: 'params',
-                            }),
-                            compiler.constVariable({
-                              destructure: true,
-                              expression: compiler.awaitExpression({
-                                expression: compiler.callExpression({
-                                  functionName: queryFn,
-                                  parameters: [
-                                    compiler.objectExpression({
-                                      multiLine: true,
-                                      obj: [
-                                        {
-                                          spread: 'options',
-                                        },
-                                        {
-                                          spread: 'params',
-                                        },
-                                        {
-                                          key: 'throwOnError',
-                                          value: true,
-                                        },
-                                      ],
-                                    }),
-                                  ],
-                                }),
-                              }),
-                              name: 'data',
-                            }),
-                            compiler.returnVariable({
-                              expression: 'data',
-                            }),
-                          ],
-                        }),
-                      },
-                      {
-                        key: 'queryKey',
-                        value: compiler.callExpression({
-                          functionName: queryKeyFunctionIdentifier({
-                            context,
-                            isInfinite: true,
-                            operation,
-                          }),
-                          parameters: ['options'],
-                        }),
-                      },
-                    ],
-                  }),
-                ],
-                name: infiniteQueryOptionsFn,
-                // TODO: better types syntax
-                types: [
-                  typeResponse,
-                  typeError.name,
-                  `${typeof typeInfiniteData === 'string' ? typeInfiniteData : typeInfiniteData.name}<${typeResponse}>`,
-                  typeQueryKey,
-                  typePageParam,
-                ],
-              }),
-            ],
-          });
           const statement = compiler.constVariable({
             // TODO: describe options, same as the actual function call
             comment: [],
             exportConst: true,
-            expression,
+            expression: compiler.arrowFunction({
+              parameters: [
+                {
+                  isRequired,
+                  name: 'options',
+                  type: typeData,
+                },
+              ],
+              statements: [
+                compiler.returnFunctionCall({
+                  args: [
+                    compiler.objectExpression({
+                      comments: [
+                        {
+                          jsdoc: false,
+                          lines: ['@ts-ignore'],
+                        },
+                      ],
+                      obj: [
+                        {
+                          key: 'queryFn',
+                          value: compiler.arrowFunction({
+                            async: true,
+                            multiLine: true,
+                            parameters: [
+                              {
+                                destructure: [
+                                  {
+                                    name: 'pageParam',
+                                  },
+                                  {
+                                    name: 'queryKey',
+                                  },
+                                  {
+                                    name: 'signal',
+                                  },
+                                ],
+                              },
+                            ],
+                            statements: [
+                              compiler.constVariable({
+                                comment: [
+                                  {
+                                    jsdoc: false,
+                                    lines: ['@ts-ignore'],
+                                  },
+                                ],
+                                expression: compiler.conditionalExpression({
+                                  condition: compiler.binaryExpression({
+                                    left: compiler.typeOfExpression({
+                                      text: 'pageParam',
+                                    }),
+                                    operator: '===',
+                                    right: compiler.ots.string('object'),
+                                  }),
+                                  whenFalse: compiler.objectExpression({
+                                    multiLine: true,
+                                    obj: [
+                                      {
+                                        key: pagination.in,
+                                        value: compiler.objectExpression({
+                                          multiLine: true,
+                                          obj: [
+                                            {
+                                              key: pagination.name,
+                                              value: compiler.identifier({
+                                                text: 'pageParam',
+                                              }),
+                                            },
+                                          ],
+                                        }),
+                                      },
+                                    ],
+                                  }),
+                                  whenTrue: compiler.identifier({
+                                    text: 'pageParam',
+                                  }),
+                                }),
+                                name: 'page',
+                                typeName: typePageObjectParam,
+                              }),
+                              compiler.constVariable({
+                                expression: compiler.callExpression({
+                                  functionName: 'createInfiniteParams',
+                                  parameters: ['queryKey', 'page'],
+                                }),
+                                name: 'params',
+                              }),
+                              compiler.constVariable({
+                                destructure: true,
+                                expression: compiler.awaitExpression({
+                                  expression: compiler.callExpression({
+                                    functionName: queryFn,
+                                    parameters: [
+                                      compiler.objectExpression({
+                                        multiLine: true,
+                                        obj: [
+                                          {
+                                            spread: 'options',
+                                          },
+                                          {
+                                            spread: 'params',
+                                          },
+                                          {
+                                            key: 'signal',
+                                            shorthand: true,
+                                            value: compiler.identifier({
+                                              text: 'signal',
+                                            }),
+                                          },
+                                          {
+                                            key: 'throwOnError',
+                                            value: true,
+                                          },
+                                        ],
+                                      }),
+                                    ],
+                                  }),
+                                }),
+                                name: 'data',
+                              }),
+                              compiler.returnVariable({
+                                expression: 'data',
+                              }),
+                            ],
+                          }),
+                        },
+                        {
+                          key: 'queryKey',
+                          value: compiler.callExpression({
+                            functionName: queryKeyFunctionIdentifier({
+                              context,
+                              isInfinite: true,
+                              operation,
+                            }),
+                            parameters: ['options'],
+                          }),
+                        },
+                      ],
+                    }),
+                  ],
+                  name: infiniteQueryOptionsFn,
+                  // TODO: better types syntax
+                  types: [
+                    typeResponse,
+                    typeError.name,
+                    `${typeof typeInfiniteData === 'string' ? typeInfiniteData : typeInfiniteData.name}<${typeResponse}>`,
+                    typeQueryKey,
+                    typePageParam,
+                  ],
+                }),
+              ],
+            }),
             name: infiniteQueryOptionsFunctionIdentifier({
               context,
               operation,
