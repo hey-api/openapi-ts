@@ -1,5 +1,11 @@
 # @hey-api/docs
 
+## 0.6.2
+
+### Patch Changes
+
+- [#1162](https://github.com/hey-api/openapi-ts/pull/1162) [`1c85c24`](https://github.com/hey-api/openapi-ts/commit/1c85c24af514e9781aab1960298caa28effef5d3) Thanks [@mrlubos](https://github.com/mrlubos)! - docs: add Zod plugin page
+
 ## 0.6.1
 
 ### Patch Changes
