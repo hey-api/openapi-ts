@@ -1,13 +1,2 @@
-import { defaultConfig } from './config';
-import type { PluginConfig, UserConfig } from './types';
-
-export { defaultConfig } from './config';
-export type { PluginConfig, UserConfig } from './types';
-
-/**
- * Type helper for Hey API schemas plugin, returns {@link PluginConfig} object
- */
-export const defineConfig = (config?: UserConfig): PluginConfig => ({
-  ...defaultConfig,
-  ...config,
-});
+export { defaultConfig, defineConfig } from './config';
+export type { Config } from './types';

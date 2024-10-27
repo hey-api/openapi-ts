@@ -1,6 +1,6 @@
-import type { PluginHandler, PluginLegacyHandler } from '../../types';
+import type { PluginName } from '../../types';
 
-interface Config {
+export interface Config extends PluginName<'@tanstack/react-query'> {
   /**
    * Generate {@link https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions `infiniteQueryOptions()`} helpers? These will be generated from GET and POST requests where a pagination parameter is detected.
    * @default true
@@ -11,10 +11,6 @@ interface Config {
    * @default true
    */
   mutationOptions?: boolean;
-  /**
-   * Generate TanStack React Query output from the provided input.
-   */
-  name: '@tanstack/react-query';
   /**
    * Name of the generated file.
    * @default '@tanstack/react-query'
@@ -27,10 +23,3 @@ interface Config {
    */
   queryOptions?: boolean;
 }
-
-export interface PluginConfig extends Config {
-  handler: PluginHandler<Config>;
-  handlerLegacy: PluginLegacyHandler<Config>;
-}
-
-export interface UserConfig extends Omit<Config, 'output'> {}

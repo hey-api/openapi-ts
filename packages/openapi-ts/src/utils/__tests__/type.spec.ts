@@ -5,9 +5,7 @@ import { isLegacyClient } from '../config';
 import { transformTypeKeyName } from '../type';
 
 vi.mock('../config', () => {
-  const config: Partial<Config> = {
-    types: {},
-  };
+  const config: Partial<Config> = {};
   return {
     getConfig: () => config,
     isLegacyClient: vi.fn().mockReturnValue(true),

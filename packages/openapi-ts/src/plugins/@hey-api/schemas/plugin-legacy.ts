@@ -1,9 +1,10 @@
-import { compiler } from '../compiler';
-import type { OpenApi, OpenApiV2Schema, OpenApiV3Schema } from '../openApi';
-import { ensureValidTypeScriptJavaScriptIdentifier } from '../openApi';
-import type { Files } from '../types/utils';
-import { getConfig } from '../utils/config';
-import { TypeScriptFile } from './files';
+import { compiler } from '../../../compiler';
+import { TypeScriptFile } from '../../../generate/files';
+import type { OpenApiV2Schema, OpenApiV3Schema } from '../../../openApi';
+import { ensureValidTypeScriptJavaScriptIdentifier } from '../../../openApi';
+import { getConfig } from '../../../utils/config';
+import type { PluginLegacyHandler } from '../../types';
+import type { Config } from './types';
 
 const ensureValidSchemaOutput = (
   schema: unknown,
@@ -21,7 +22,7 @@ const ensureValidSchemaOutput = (
 
   const result = { ...schema };
   Object.entries(result).forEach(([key, value]) => {
-    if (config.schemas.type === 'form') {
+    if (config.plugins['@hey-api/schemas']?.type === 'form') {
       if (
         [
           'description',
@@ -61,25 +62,18 @@ const toSchemaName = (
 
   const validName = ensureValidTypeScriptJavaScriptIdentifier(name);
 
-  if (config.schemas.name) {
-    return config.schemas.name(validName, schema);
+  if (config.plugins['@hey-api/schemas']?.nameBuilder) {
+    return config.plugins['@hey-api/schemas'].nameBuilder(validName, schema);
   }
 
   return `${validName}Schema`;
 };
 
-export const generateLegacySchemas = async ({
+export const handlerLegacy: PluginLegacyHandler<Config> = ({
   files,
   openApi,
-}: {
-  files: Files;
-  openApi: OpenApi;
-}): Promise<void> => {
+}) => {
   const config = getConfig();
-
-  if (!config.schemas.export) {
-    return;
-  }
 
   files.schemas = new TypeScriptFile({
     dir: config.output.path,

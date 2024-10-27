@@ -2,7 +2,7 @@ import { compiler } from '../../compiler';
 import type { TypeScriptFile } from '../../generate/files';
 import type { Client, Model } from '../../types/client';
 import type { PluginLegacyHandler } from '../types';
-import type { PluginConfig } from './types';
+import type { Config } from './types';
 
 interface TypesProps {
   client: Client;
@@ -189,7 +189,7 @@ const processModel = (props: TypesProps) => {
   }
 };
 
-export const handlerLegacy: PluginLegacyHandler<PluginConfig> = ({
+export const handlerLegacy: PluginLegacyHandler<Config> = ({
   client,
   files,
   plugin,

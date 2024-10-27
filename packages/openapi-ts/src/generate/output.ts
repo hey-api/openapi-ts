@@ -1,11 +1,8 @@
 import path from 'node:path';
 
+import { compiler } from '../compiler';
 import type { IRContext } from '../ir/context';
 import type { OpenApi } from '../openApi';
-import { generateSchemas } from '../plugins/@hey-api/schemas/plugin';
-import { generateServices } from '../plugins/@hey-api/services/plugin';
-import { generateTransformers } from '../plugins/@hey-api/transformers/plugin';
-import { generateTypes } from '../plugins/@hey-api/types/plugin';
 import type { Client } from '../types/client';
 import type { Files } from '../types/utils';
 import { getConfig, isLegacyClient } from '../utils/config';
@@ -13,12 +10,8 @@ import type { Templates } from '../utils/handlebars';
 import { generateLegacyClientClass } from './class';
 import { generateClientBundle } from './client';
 import { generateLegacyCore } from './core';
+import { TypeScriptFile } from './files';
 import { generateIndexFile } from './indexFile';
-import { generateLegacyPlugins } from './plugins';
-import { generateLegacySchemas } from './schemas';
-import { generateLegacyServices } from './services';
-import { generateLegacyTransformers } from './transformers';
-import { generateLegacyTypes } from './types';
 
 /**
  * Write our OpenAPI client, using the given templates at the given output
@@ -39,52 +32,27 @@ export const generateLegacyOutput = async ({
 
   // TODO: parser - move to config.input
   if (client) {
-    if (config.services.include && config.services.asClass) {
-      const regexp = new RegExp(config.services.include);
+    if (
+      config.plugins['@hey-api/services']?.include &&
+      config.plugins['@hey-api/services'].asClass
+    ) {
+      const regexp = new RegExp(config.plugins['@hey-api/services'].include);
       client.services = client.services.filter((service) =>
         regexp.test(service.name),
       );
     }
 
-    if (config.types.include) {
-      const regexp = new RegExp(config.types.include);
+    if (config.plugins['@hey-api/types']?.include) {
+      const regexp = new RegExp(config.plugins['@hey-api/types'].include);
       client.models = client.models.filter((model) => regexp.test(model.name));
     }
   }
 
   const outputPath = path.resolve(config.output.path);
 
-  const files: Files = {};
-
   if (!isLegacyClient(config) && config.client.bundle) {
     await generateClientBundle({ name: config.client.name, outputPath });
   }
-
-  // types.gen.ts
-  await generateLegacyTypes({ client, files });
-
-  // schemas.gen.ts
-  await generateLegacySchemas({ files, openApi });
-
-  // transformers
-  if (
-    config.services.export &&
-    client.services.length &&
-    config.types.dates === 'types+transform'
-  ) {
-    await generateLegacyTransformers({
-      client,
-      onNode: (node) => {
-        files.types?.add(node);
-      },
-      onRemoveNode: () => {
-        files.types?.removeNode();
-      },
-    });
-  }
-
-  // services.gen.ts
-  await generateLegacyServices({ client, files });
 
   // deprecated files
   await generateLegacyClientClass(openApi, outputPath, client, templates);
@@ -94,13 +62,28 @@ export const generateLegacyOutput = async ({
     templates,
   );
 
-  // TODO: parser - remove after moving types, services, transformers, and schemas into plugin
-  // index.ts. Any files generated after this won't be included in exports
-  // from the index file.
-  generateIndexFile({ files });
+  const files: Files = {};
 
-  // plugins
-  await generateLegacyPlugins({ client, files });
+  for (const name of config.pluginOrder) {
+    const plugin = config.plugins[name]!;
+    const outputParts = (plugin.output ?? '').split('/');
+    const outputDir = path.resolve(
+      config.output.path,
+      ...outputParts.slice(0, outputParts.length - 1),
+    );
+    files[plugin.name] = new TypeScriptFile({
+      dir: outputDir,
+      name: `${outputParts[outputParts.length - 1]}.ts`,
+    });
+    plugin._handlerLegacy({
+      client,
+      files,
+      openApi,
+      plugin: plugin as never,
+    });
+  }
+
+  generateIndexFile({ files });
 
   Object.entries(files).forEach(([name, file]) => {
     if (config.dryRun) {
@@ -125,31 +108,39 @@ export const generateOutput = async ({ context }: { context: IRContext }) => {
     });
   }
 
-  // TODO: parser - move types, schemas, transformers, and services into plugins
-  generateTypes({ context });
-  generateSchemas({ context });
-  generateTransformers({ context });
-  generateServices({ context });
-
-  // TODO: parser - remove index file after above is migrated to plugins
-  generateIndexFile({ files: context.files });
-
-  for (const plugin of context.config.plugins) {
-    plugin.handler({
+  for (const name of context.config.pluginOrder) {
+    const plugin = context.config.plugins[name]!;
+    plugin._handler({
       context,
       plugin: plugin as never,
     });
   }
 
+  const indexFile = context.createFile({
+    id: '_index',
+    path: 'index',
+  });
+
   Object.entries(context.files).forEach(([name, file]) => {
-    if (context.config.dryRun) {
+    if (context.config.dryRun || name === '_index') {
       return;
     }
 
-    if (name === 'index') {
-      file.write();
-    } else {
-      file.write('\n\n');
+    if (
+      !file.isEmpty() &&
+      ['schemas', 'services', 'transformers', 'types'].includes(name)
+    ) {
+      indexFile.add(
+        compiler.exportAllDeclaration({
+          module: `./${file.nameWithoutExtension()}`,
+        }),
+      );
     }
+
+    file.write('\n\n');
   });
+
+  if (!context.config.dryRun) {
+    indexFile.write();
+  }
 };

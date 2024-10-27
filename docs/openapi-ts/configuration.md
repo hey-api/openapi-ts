@@ -5,7 +5,7 @@ description: Configure @hey-api/openapi-ts.
 
 # Configuration
 
-`@hey-api/openapi-ts` supports loading configuration from any file inside your project root directory supported by [jiti loader](https://github.com/unjs/c12?tab=readme-ov-file#-features). Below are the most common file formats.
+`@hey-api/openapi-ts` supports loading configuration from any file inside your project root folder supported by [jiti loader](https://github.com/unjs/c12?tab=readme-ov-file#-features). Below are the most common file formats.
 
 ::: code-group
 
@@ -41,128 +41,25 @@ export default {
 
 Alternatively, you can use `openapi-ts.config.js` and configure the export statement depending on your project setup.
 
-## Clients
+## Input
 
-Clients are responsible for sending the actual HTTP requests. Apart from input and output, this is the only required option.
+Input is the first thing you must define. It can be a local path, remote URL, or a string content resolving to an OpenAPI specification. Hey API supports all valid OpenAPI versions and file formats.
 
-You can learn more on the [Clients](/openapi-ts/clients) page.
-
-<!--
-TODO: uncomment after c12 supports multiple configs
-see https://github.com/unjs/c12/issues/92
--->
-<!-- ### Multiple Clients
-
-If you want to generate multiple clients with a single `openapi-ts` command, you can provide an array of configuration objects.
-
-```js
-import { defineConfig } from '@hey-api/openapi-ts';
-
-export default defineConfig([
-  {
-    client: 'legacy/fetch',
-    input: 'path/to/openapi_one.json',
-    output: 'src/client_one',
-  },
-  {
-    client: 'legacy/axios',
-    input: 'path/to/openapi_two.json',
-    output: 'src/client_two',
-  },
-])
-``` -->
-
-## Services
-
-Services are abstractions on top of clients and serve the same purpose. By default, `@hey-api/openapi-ts` will generate a flat service layer. Your choice to use services comes down to personal preferences and bundle size considerations.
-
-You can learn more on the [Output](/openapi-ts/output#api-services) page.
-
-## Enums
-
-By default, `@hey-api/openapi-ts` will only emit enums as types. You may want to generate runtime artifacts. A good use case is iterating through possible field values without manually typing arrays. To emit runtime enums, set `types.enums` to a valid option.
-
-::: code-group
-
-```js [disabled]
-export default {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
-  output: 'src/client',
-  types: {
-    enums: false, // [!code ++]
-  },
-};
-```
-
-```js [javascript]
-export default {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
-  output: 'src/client',
-  types: {
-    enums: 'javascript', // [!code ++]
-  },
-};
-```
-
-```js [typescript]
-export default {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
-  output: 'src/client',
-  types: {
-    enums: 'typescript', // [!code ++]
-  },
-};
-```
-
+::: info
+We use [`@apidevtools/json-schema-ref-parser`](https://github.com/APIDevTools/json-schema-ref-parser) to resolve file locations. Please note that accessing a HTTPS URL on localhost has a known [workaround](https://github.com/hey-api/openapi-ts/issues/276).
 :::
 
-We recommend exporting enums as plain JavaScript objects. [TypeScript enums](https://www.typescriptlang.org/docs/handbook/enums.html) are not a type-level extension of JavaScript and pose [typing challenges](https://dev.to/ivanzm123/dont-use-enums-in-typescript-they-are-very-dangerous-57bh).
+## Output
 
-## JSON Schemas
+Output is the next thing to define. It can be either a string pointing to the destination folder or a configuration object containing the destination folder path and optional settings (these are described below).
 
-By default, `@hey-api/openapi-ts` generates schemas from your OpenAPI specification. A great use case for schemas is client-side form input validation. If you're using OpenAPI 3.1, your [schemas](/openapi-ts/output#json-schemas) are JSON Schema compliant and can be used with other tools supporting JSON Schema. However, if you only want to validate form input, you probably don't want to include string descriptions inside your bundle. You can choose your preferred type using `schemas.type` option.
-
-::: code-group
-
-```js [json]
-export default {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
-  output: 'src/client',
-  schemas: {
-    type: 'json', // [!code ++]
-  },
-};
-```
-
-```js [form]
-export default {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
-  output: 'src/client',
-  schemas: {
-    type: 'form', // [!code ++]
-  },
-};
-```
-
-```js [disabled]
-export default {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
-  output: 'src/client',
-  schemas: false, // [!code ++]
-};
-```
-
+::: tip
+You should treat the output folder as a dependency. Do not directly modify its contents as your changes might be erased when you run `@hey-api/openapi-ts` again.
 :::
 
 ## Formatting
 
-By default, `@hey-api/openapi-ts` will not automatically format your output. To enable this feature, set `output.format` to a valid formatter.
+To format your output folder contents, set `output.format` to a valid formatter.
 
 ::: code-group
 
@@ -205,7 +102,7 @@ You can also prevent your output from being formatted by adding your output path
 
 ## Linting
 
-By default, `@hey-api/openapi-ts` will not automatically lint your output. To enable this feature, set `output.lint` to a valid linter.
+To lint your output folder contents, set `output.lint` to a valid linter.
 
 ::: code-group
 
@@ -245,6 +142,43 @@ export default {
 :::
 
 You can also prevent your output from being linted by adding your output path to the linter's ignore file.
+
+## Clients
+
+Clients are responsible for sending the actual HTTP requests. The `client` value is not required, but you must define it if you're generating the service layer (enabled by default).
+
+You can learn more on the [Clients](/openapi-ts/clients) page.
+
+<!--
+TODO: uncomment after c12 supports multiple configs
+see https://github.com/unjs/c12/issues/92
+-->
+<!-- ### Multiple Clients
+
+If you want to generate multiple clients with a single `openapi-ts` command, you can provide an array of configuration objects.
+
+```js
+import { defineConfig } from '@hey-api/openapi-ts';
+
+export default defineConfig([
+  {
+    client: 'legacy/fetch',
+    input: 'path/to/openapi_one.json',
+    output: 'src/client_one',
+  },
+  {
+    client: 'legacy/axios',
+    input: 'path/to/openapi_two.json',
+    output: 'src/client_two',
+  },
+])
+``` -->
+
+## Plugins
+
+Plugins are responsible for generating artifacts from your input. By default, Hey API will generate TypeScript interfaces, JSON Schemas, and services from your OpenAPI specification. You can add, remove, or customize any of the plugins. In fact, we highly encourage you to do so!
+
+You can learn more on the [Output](/openapi-ts/output) page.
 
 ## Config API
 

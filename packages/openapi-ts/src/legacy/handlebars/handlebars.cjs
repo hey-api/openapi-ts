@@ -47,6 +47,7 @@ templatePaths.forEach((templatePath) => {
     knownHelpers: {
       camelCase: true,
       equals: true,
+      ifServicesResponse: true,
       ifdef: true,
       notEquals: true,
       transformServiceName: true,

@@ -6,10 +6,6 @@ import {
   clientModulePath,
   clientOptionsTypeName,
 } from '../../../generate/client';
-import {
-  operationOptionsType,
-  serviceFunctionIdentifier,
-} from '../../../generate/services';
 import type { IRContext } from '../../../ir/context';
 import type {
   IROperationObject,
@@ -22,7 +18,13 @@ import { escapeComment } from '../../../utils/escape';
 import { getServiceName } from '../../../utils/postprocess';
 import { irRef } from '../../../utils/ref';
 import { transformServiceName } from '../../../utils/transform';
+import type { PluginHandler } from '../../types';
 import { operationResponseTransformerRef } from '../transformers/plugin';
+import {
+  operationOptionsType,
+  serviceFunctionIdentifier,
+} from './plugin-legacy';
+import type { Config } from './types';
 
 interface OperationIRRef {
   /**
@@ -65,20 +67,6 @@ export const operationResponseRef = ({ id }: OperationIRRef): string =>
   operationIrRef({ id, type: 'response' });
 
 const servicesId = 'services';
-
-const checkPrerequisites = ({ context }: { context: IRContext }) => {
-  if (!context.config.client.name) {
-    throw new Error(
-      '🚫 client needs to be set to generate services - which HTTP client do you want to use?',
-    );
-  }
-
-  if (!context.file({ id: 'types' })) {
-    throw new Error(
-      '🚫 types need to be exported to generate services - enable type generation',
-    );
-  }
-};
 
 const requestOptions = ({
   context,
@@ -401,13 +389,12 @@ const generateFlatServices = ({ context }: { context: IRContext }) => {
   }
 };
 
-export const generateServices = ({ context }: { context: IRContext }): void => {
-  // TODO: parser - once services are a plugin, this logic can be simplified
-  if (!context.config.services.export) {
-    return;
+export const handler: PluginHandler<Config> = ({ context }) => {
+  if (!context.config.client.name) {
+    throw new Error(
+      '🚫 client needs to be set to generate services - which HTTP client do you want to use?',
+    );
   }
-
-  checkPrerequisites({ context });
 
   const file = context.createFile({
     id: servicesId,
@@ -454,7 +441,7 @@ export const generateServices = ({ context }: { context: IRContext }): void => {
   });
   file.add(statement);
 
-  if (context.config.services.asClass) {
+  if (context.config.plugins['@hey-api/services']?.asClass) {
     generateClassServices({ context });
   } else {
     generateFlatServices({ context });

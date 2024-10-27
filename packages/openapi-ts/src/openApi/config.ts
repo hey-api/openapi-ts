@@ -33,8 +33,8 @@ export const operationFilterFn = ({
   config: Config;
   operationKey: string;
 }): boolean => {
-  const regexp = config.services.filter
-    ? new RegExp(config.services.filter)
+  const regexp = config.plugins['@hey-api/services']?.filter
+    ? new RegExp(config.plugins['@hey-api/services']?.filter)
     : undefined;
   return !regexp || regexp.test(operationKey);
 };
@@ -65,7 +65,7 @@ export const operationNameFn = ({
   operationId: string | undefined;
   path: string;
 }): string => {
-  if (config.services.operationId && operationId) {
+  if (config.plugins['@hey-api/services']?.operationId && operationId) {
     return camelCase({
       input: sanitizeNamespaceIdentifier(operationId),
     });
