@@ -114,6 +114,15 @@ export const registerHandlebarHelpers = (): void => {
     },
   );
 
+  Handlebars.registerHelper(
+    'ifServicesResponse',
+    function (this: unknown, value: string, options: Handlebars.HelperOptions) {
+      return getConfig().plugins['@hey-api/services']?.response === value
+        ? options.fn(this)
+        : options.inverse(this);
+    },
+  );
+
   Handlebars.registerHelper('ifdef', function (this: unknown, ...args): string {
     const options = args.pop();
     if (!args.every((value) => !value)) {

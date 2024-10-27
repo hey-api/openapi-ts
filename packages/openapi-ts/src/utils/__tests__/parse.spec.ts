@@ -11,42 +11,48 @@ describe('operationNameFn', () => {
     configFile: '',
     debug: false,
     dryRun: true,
-    experimental_parser: false,
+    experimentalParser: false,
     exportCore: false,
     input: '',
     output: {
       path: '',
     },
-    plugins: [],
-    schemas: {
-      export: false,
-    },
-    services: {
-      export: false,
-      operationId: true,
-      response: 'body',
-    },
-    types: {
-      export: false,
+    pluginOrder: [],
+    plugins: {
+      '@hey-api/services': {
+        _handler: () => {},
+        _handlerLegacy: () => {},
+        name: '@hey-api/services',
+        operationId: true,
+        response: 'body',
+      },
     },
     useOptions: false,
   };
 
   const options1: Parameters<typeof setConfig>[0] = {
     ...optionsCommon,
-    services: {
-      export: false,
-      operationId: true,
-      response: 'body',
+    plugins: {
+      '@hey-api/services': {
+        _handler: () => {},
+        _handlerLegacy: () => {},
+        name: '@hey-api/services',
+        operationId: true,
+        response: 'body',
+      },
     },
   };
 
   const options2: Parameters<typeof setConfig>[0] = {
     ...optionsCommon,
-    services: {
-      export: false,
-      operationId: false,
-      response: 'body',
+    plugins: {
+      '@hey-api/services': {
+        _handler: () => {},
+        _handlerLegacy: () => {},
+        name: '@hey-api/services',
+        operationId: false,
+        response: 'body',
+      },
     },
   };
 
@@ -55,10 +61,14 @@ describe('operationNameFn', () => {
     client: {
       name: '@hey-api/client-fetch',
     },
-    services: {
-      export: false,
-      operationId: true,
-      response: 'body',
+    plugins: {
+      '@hey-api/services': {
+        _handler: () => {},
+        _handlerLegacy: () => {},
+        name: '@hey-api/services',
+        operationId: true,
+        response: 'body',
+      },
     },
   };
 
@@ -67,10 +77,14 @@ describe('operationNameFn', () => {
     client: {
       name: '@hey-api/client-fetch',
     },
-    services: {
-      export: false,
-      operationId: false,
-      response: 'body',
+    plugins: {
+      '@hey-api/services': {
+        _handler: () => {},
+        _handlerLegacy: () => {},
+        name: '@hey-api/services',
+        operationId: false,
+        response: 'body',
+      },
     },
   };
 

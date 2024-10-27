@@ -27,9 +27,15 @@ describe('index', () => {
       dryRun: true,
       input: './test/spec/v3-transforms.json',
       output: './generated/v3/',
-      types: {
-        dates: 'types+transform',
-      },
+      plugins: [
+        '@hey-api/schemas',
+        '@hey-api/services',
+        '@hey-api/types',
+        {
+          dates: true,
+          name: '@hey-api/transformers',
+        },
+      ],
     });
   });
 

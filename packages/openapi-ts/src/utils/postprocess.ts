@@ -46,7 +46,8 @@ const postProcessOperations = (
 
   operations.forEach((parserOperation) => {
     const tags =
-      parserOperation.tags?.length && (config.services.asClass || config.name)
+      parserOperation.tags?.length &&
+      (config.plugins['@hey-api/services']?.asClass || config.name)
         ? parserOperation.tags.filter(unique)
         : ['Default'];
     tags.forEach((tag) => {

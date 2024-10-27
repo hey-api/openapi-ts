@@ -5,7 +5,13 @@ import { getMappedType, getType } from '../type';
 
 vi.mock('../../../../utils/config', () => {
   const config: Partial<Config> = {
-    types: {},
+    plugins: {
+      '@hey-api/types': {
+        _handler: () => {},
+        _handlerLegacy: () => {},
+        name: '@hey-api/types',
+      },
+    },
   };
   return {
     getConfig: () => config,

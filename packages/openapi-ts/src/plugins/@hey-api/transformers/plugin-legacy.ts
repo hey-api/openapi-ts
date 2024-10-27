@@ -1,16 +1,18 @@
 import type ts from 'typescript';
 
-import { compiler } from '../compiler';
-import { getOperationKey } from '../openApi/common/parser/operation';
-import type { ModelMeta, OperationResponse } from '../types/client';
-import { getConfig } from '../utils/config';
-import { isModelDate, unsetUniqueTypeName } from '../utils/type';
+import { compiler } from '../../../compiler';
+import { getOperationKey } from '../../../openApi/common/parser/operation';
+import type { ModelMeta, OperationResponse } from '../../../types/client';
+import { getConfig } from '../../../utils/config';
+import { isModelDate, unsetUniqueTypeName } from '../../../utils/type';
+import type { PluginLegacyHandler } from '../../types';
 import {
   modelResponseTransformerTypeName,
   operationResponseTransformerTypeName,
   operationResponseTypeName,
-} from './services';
-import { generateType, type TypesProps } from './types';
+} from '../services/plugin-legacy';
+import { generateType, type TypesProps } from '../types/plugin-legacy';
+import type { Config } from './types';
 
 interface ModelProps extends TypesProps {
   meta?: ModelMeta;
@@ -244,12 +246,18 @@ const generateResponseTransformer = ({
 };
 
 // handles only response transformers for now
-export const generateLegacyTransformers = async ({
+export const handlerLegacy: PluginLegacyHandler<Config> = ({
   client,
-  onNode,
-  onRemoveNode,
-}: Pick<TypesProps, 'client' | 'onNode' | 'onRemoveNode'>) => {
+  files,
+}) => {
   const config = getConfig();
+
+  const onNode: TypesProps['onNode'] = (node) => {
+    files.types?.add(node);
+  };
+  const onRemoveNode: TypesProps['onRemoveNode'] = () => {
+    files.types?.removeNode();
+  };
 
   for (const service of client.services) {
     for (const operation of service.operations) {

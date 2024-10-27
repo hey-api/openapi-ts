@@ -18,7 +18,7 @@ const outputDir = path.join(__dirname, 'generated', VERSION);
 describe(`OpenAPI ${VERSION}`, () => {
   const createConfig = (userConfig: UserConfig): UserConfig => ({
     client: '@hey-api/client-fetch',
-    schemas: false,
+    plugins: ['@hey-api/services', '@hey-api/types'],
     ...userConfig,
     input: path.join(
       __dirname,

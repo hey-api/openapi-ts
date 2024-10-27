@@ -21,8 +21,7 @@ describe(VERSION, () => {
       Pick<Required<UserConfig>, 'plugins'>,
   ): UserConfig => ({
     client: '@hey-api/client-fetch',
-    experimental_parser: true,
-    schemas: false,
+    experimentalParser: true,
     ...userConfig,
     input: path.join(__dirname, 'spec', '3.1.0', 'full.json'),
     output: path.join(
@@ -99,10 +98,13 @@ describe(VERSION, () => {
     {
       config: createConfig({
         output: 'asClass',
-        plugins: ['@tanstack/react-query'],
-        services: {
-          asClass: true,
-        },
+        plugins: [
+          '@tanstack/react-query',
+          {
+            asClass: true,
+            name: '@hey-api/services',
+          },
+        ],
       }),
       description:
         'generate Fetch API client with TanStack React Query plugin using class-based services',
@@ -110,10 +112,13 @@ describe(VERSION, () => {
     {
       config: createConfig({
         output: 'asClass',
-        plugins: ['@tanstack/solid-query'],
-        services: {
-          asClass: true,
-        },
+        plugins: [
+          '@tanstack/solid-query',
+          {
+            asClass: true,
+            name: '@hey-api/services',
+          },
+        ],
       }),
       description:
         'generate Fetch API client with TanStack Solid Query plugin using class-based services',
@@ -121,10 +126,13 @@ describe(VERSION, () => {
     {
       config: createConfig({
         output: 'asClass',
-        plugins: ['@tanstack/svelte-query'],
-        services: {
-          asClass: true,
-        },
+        plugins: [
+          '@tanstack/svelte-query',
+          {
+            asClass: true,
+            name: '@hey-api/services',
+          },
+        ],
       }),
       description:
         'generate Fetch API client with TanStack Svelte Query plugin using class-based services',
@@ -132,10 +140,13 @@ describe(VERSION, () => {
     {
       config: createConfig({
         output: 'asClass',
-        plugins: ['@tanstack/vue-query'],
-        services: {
-          asClass: true,
-        },
+        plugins: [
+          '@tanstack/vue-query',
+          {
+            asClass: true,
+            name: '@hey-api/services',
+          },
+        ],
       }),
       description:
         'generate Fetch API client with TanStack Vue Query plugin using class-based services',

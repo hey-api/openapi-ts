@@ -15,11 +15,13 @@ import { deduplicateSchema } from '../../../ir/schema';
 import { ensureValidTypeScriptJavaScriptIdentifier } from '../../../openApi';
 import { escapeComment } from '../../../utils/escape';
 import { irRef, isRefOpenApiComponent } from '../../../utils/ref';
+import type { PluginHandler } from '../../types';
 import {
   operationDataRef,
   operationErrorRef,
   operationResponseRef,
 } from '../services/plugin';
+import type { Config } from './types';
 
 interface SchemaWithType<T extends Required<IRSchemaObject>['type']>
   extends Omit<IRSchemaObject, 'type'> {
@@ -148,7 +150,7 @@ const addTypeEnum = ({
   // they have a duplicate value.
   if (
     !identifier.created &&
-    context.config.types.enums !== 'typescript+namespace'
+    context.config.plugins['@hey-api/types']?.enums !== 'typescript+namespace'
   ) {
     return;
   }
@@ -190,7 +192,7 @@ const addTypeScriptEnum = ({
   // they have a duplicate value.
   if (
     !identifier.created &&
-    context.config.types.enums !== 'typescript+namespace'
+    context.config.plugins['@hey-api/types']?.enums !== 'typescript+namespace'
   ) {
     return;
   }
@@ -295,7 +297,7 @@ const enumTypeToIdentifier = ({
 
     // when enums are disabled (default), emit only reusable components
     // as types, otherwise the output would be broken if we skipped all enums
-    if (!context.config.types.enums && isRefComponent) {
+    if (!context.config.plugins['@hey-api/types']?.enums && isRefComponent) {
       const typeNode = addTypeEnum({
         $ref,
         context,
@@ -306,7 +308,7 @@ const enumTypeToIdentifier = ({
       }
     }
 
-    if (context.config.types.enums === 'javascript') {
+    if (context.config.plugins['@hey-api/types']?.enums === 'javascript') {
       const typeNode = addTypeEnum({
         $ref,
         context,
@@ -326,7 +328,7 @@ const enumTypeToIdentifier = ({
       }
     }
 
-    if (context.config.types.enums === 'typescript') {
+    if (context.config.plugins['@hey-api/types']?.enums === 'typescript') {
       const enumNode = addTypeScriptEnum({
         $ref,
         context,
@@ -337,7 +339,9 @@ const enumTypeToIdentifier = ({
       }
     }
 
-    if (context.config.types.enums === 'typescript+namespace') {
+    if (
+      context.config.plugins['@hey-api/types']?.enums === 'typescript+namespace'
+    ) {
       const enumNode = addTypeScriptEnum({
         $ref,
         context,
@@ -482,7 +486,7 @@ const stringTypeToIdentifier = ({
 
     if (schema.format === 'date-time' || schema.format === 'date') {
       // TODO: parser - add ability to skip type transformers
-      if (context.config.types.dates) {
+      if (context.config.plugins['@hey-api/transformers']?.dates) {
         return compiler.typeReferenceNode({ typeName: 'Date' });
       }
     }
@@ -852,12 +856,7 @@ export const schemaToType = ({
   return type;
 };
 
-export const generateTypes = ({ context }: { context: IRContext }): void => {
-  // TODO: parser - once types are a plugin, this logic can be simplified
-  if (!context.config.types.export) {
-    return;
-  }
-
+export const handler: PluginHandler<Config> = ({ context }) => {
   context.createFile({
     id: typesId,
     path: 'types',
@@ -888,7 +887,10 @@ export const generateTypes = ({ context }: { context: IRContext }): void => {
   // TODO: parser - once types are a plugin, this logic can be simplified
   // provide config option on types to generate path types and services
   // will set it to true if needed
-  if (context.config.services.export || context.config.types.tree) {
+  if (
+    context.config.plugins['@hey-api/services'] ||
+    context.config.plugins['@hey-api/types']?.tree
+  ) {
     for (const path in context.ir.paths) {
       const pathItem = context.ir.paths[path as keyof IRPathsObject];
 

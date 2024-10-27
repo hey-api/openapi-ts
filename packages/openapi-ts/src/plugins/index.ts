@@ -1,75 +1,75 @@
 import {
-  defaultConfig as heyApiSchemasDefaultConfig,
-  type PluginConfig as PluginHeyApiSchemas,
+  type Config as HeyApiSchemas,
+  defaultConfig as heyApiSchemas,
 } from './@hey-api/schemas';
 import {
-  defaultConfig as heyApiServicesDefaultConfig,
-  type PluginConfig as PluginHeyApiServices,
+  type Config as HeyApiServices,
+  defaultConfig as heyApiServices,
 } from './@hey-api/services';
 import {
-  defaultConfig as heyApiTransformersDefaultConfig,
-  type PluginConfig as PluginHeyApiTransformers,
+  type Config as HeyApiTransformers,
+  defaultConfig as heyApiTransformers,
 } from './@hey-api/transformers';
 import {
-  defaultConfig as heyApiTypesDefaultConfig,
-  type PluginConfig as PluginHeyApiTypes,
+  type Config as HeyApiTypes,
+  defaultConfig as heyApiTypes,
 } from './@hey-api/types';
 import {
-  defaultConfig as tanStackReactQueryDefaultConfig,
-  type PluginConfig as PluginTanStackReactQuery,
-  type UserConfig as TanStackReactQuery,
+  type Config as TanStackReactQuery,
+  defaultConfig as tanStackReactQuery,
 } from './@tanstack/react-query';
 import {
-  defaultConfig as tanStackSolidQueryDefaultConfig,
-  type PluginConfig as PluginTanStackSolidQuery,
-  type UserConfig as TanStackSolidQuery,
+  type Config as TanStackSolidQuery,
+  defaultConfig as tanStackSolidQuery,
 } from './@tanstack/solid-query';
 import {
-  defaultConfig as tanStackSvelteQueryDefaultConfig,
-  type PluginConfig as PluginTanStackSvelteQuery,
-  type UserConfig as TanStackSvelteQuery,
+  type Config as TanStackSvelteQuery,
+  defaultConfig as tanStackSvelteQuery,
 } from './@tanstack/svelte-query';
 import {
-  defaultConfig as tanStackVueQueryDefaultConfig,
-  type PluginConfig as PluginTanStackVueQuery,
-  type UserConfig as TanStackVueQuery,
+  type Config as TanStackVueQuery,
+  defaultConfig as tanStackVueQuery,
 } from './@tanstack/vue-query';
-import type { DefaultPluginConfigsMap } from './types';
-import {
-  defaultConfig as zodDefaultConfig,
-  type PluginConfig as PluginZod,
-  // type UserConfig as Zod,
-} from './zod';
+import type {
+  DefaultPluginConfigsMap,
+  PluginConfig,
+  UserConfig,
+} from './types';
+import { type Config as Zod, defaultConfig as zod } from './zod';
 
 /**
  * User-facing plugin types.
  */
 export type UserPlugins =
-  | TanStackReactQuery
-  | TanStackSolidQuery
-  | TanStackSvelteQuery
-  | TanStackVueQuery;
-// | Zod
+  | UserConfig<HeyApiSchemas>
+  | UserConfig<HeyApiServices>
+  | UserConfig<HeyApiTransformers>
+  | UserConfig<HeyApiTypes>
+  | UserConfig<TanStackReactQuery>
+  | UserConfig<TanStackSolidQuery>
+  | UserConfig<TanStackSvelteQuery>
+  | UserConfig<TanStackVueQuery>;
+// | UserConfig<Zod>
 
 export type ClientPlugins =
-  | PluginHeyApiSchemas
-  | PluginHeyApiServices
-  | PluginHeyApiTransformers
-  | PluginHeyApiTypes
-  | PluginTanStackReactQuery
-  | PluginTanStackSolidQuery
-  | PluginTanStackSvelteQuery
-  | PluginTanStackVueQuery
-  | PluginZod;
+  | PluginConfig<HeyApiSchemas>
+  | PluginConfig<HeyApiServices>
+  | PluginConfig<HeyApiTransformers>
+  | PluginConfig<HeyApiTypes>
+  | PluginConfig<TanStackReactQuery>
+  | PluginConfig<TanStackSolidQuery>
+  | PluginConfig<TanStackSvelteQuery>
+  | PluginConfig<TanStackVueQuery>
+  | PluginConfig<Zod>;
 
 export const defaultPluginConfigs: DefaultPluginConfigsMap<ClientPlugins> = {
-  '@hey-api/schemas': heyApiSchemasDefaultConfig,
-  '@hey-api/services': heyApiServicesDefaultConfig,
-  '@hey-api/transformers': heyApiTransformersDefaultConfig,
-  '@hey-api/types': heyApiTypesDefaultConfig,
-  '@tanstack/react-query': tanStackReactQueryDefaultConfig,
-  '@tanstack/solid-query': tanStackSolidQueryDefaultConfig,
-  '@tanstack/svelte-query': tanStackSvelteQueryDefaultConfig,
-  '@tanstack/vue-query': tanStackVueQueryDefaultConfig,
-  zod: zodDefaultConfig,
+  '@hey-api/schemas': heyApiSchemas,
+  '@hey-api/services': heyApiServices,
+  '@hey-api/transformers': heyApiTransformers,
+  '@hey-api/types': heyApiTypes,
+  '@tanstack/react-query': tanStackReactQuery,
+  '@tanstack/solid-query': tanStackSolidQuery,
+  '@tanstack/svelte-query': tanStackSvelteQuery,
+  '@tanstack/vue-query': tanStackVueQuery,
+  zod,
 };

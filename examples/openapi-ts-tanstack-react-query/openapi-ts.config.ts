@@ -9,8 +9,13 @@ export default defineConfig({
     lint: 'eslint',
     path: './src/client',
   },
-  plugins: ['@tanstack/react-query'],
-  types: {
-    enums: 'javascript',
-  },
+  plugins: [
+    '@hey-api/schemas',
+    '@hey-api/services',
+    {
+      enums: 'javascript',
+      name: '@hey-api/types',
+    },
+    '@tanstack/react-query',
+  ],
 });
