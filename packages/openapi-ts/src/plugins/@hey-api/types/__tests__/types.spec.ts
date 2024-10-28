@@ -1,11 +1,11 @@
 import { writeFileSync } from 'node:fs';
-import path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
 
-import { setConfig } from '../../utils/config';
-import { TypeScriptFile } from '../files';
-import { generateLegacyTypes } from '../types';
+import { openApi } from '../../../../generate/__tests__/mocks';
+import { TypeScriptFile } from '../../../../generate/files';
+import { setConfig } from '../../../../utils/config';
+import { handlerLegacy } from '../plugin-legacy';
 
 vi.mock('node:fs');
 
@@ -18,23 +18,36 @@ describe('generateLegacyTypes', () => {
       configFile: '',
       debug: false,
       dryRun: false,
-      experimental_parser: false,
+      experimentalParser: false,
       exportCore: true,
       input: '',
       name: 'AppClient',
       output: {
         path: '',
       },
-      plugins: [],
-      schemas: {},
-      services: {},
-      types: {
-        enums: 'javascript',
+      pluginOrder: ['@hey-api/types', '@hey-api/schemas', '@hey-api/services'],
+      plugins: {
+        '@hey-api/schemas': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          name: '@hey-api/schemas',
+        },
+        '@hey-api/services': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          name: '@hey-api/services',
+        },
+        '@hey-api/types': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          enums: 'javascript',
+          name: '@hey-api/types',
+        },
       },
       useOptions: true,
     });
 
-    const client: Parameters<typeof generateLegacyTypes>[0]['client'] = {
+    const client: Parameters<typeof handlerLegacy>[0]['client'] = {
       models: [
         {
           $refs: [],
@@ -73,15 +86,20 @@ describe('generateLegacyTypes', () => {
       }),
     };
 
-    await generateLegacyTypes({
+    await handlerLegacy({
       client,
       files,
+      openApi,
+      plugin: {
+        name: '@hey-api/types',
+        output: '',
+      },
     });
 
     files.types.write();
 
     expect(writeFileSync).toHaveBeenCalledWith(
-      path.resolve('/types.gen.ts'),
+      expect.stringContaining('types.gen.ts'),
       expect.anything(),
     );
   });

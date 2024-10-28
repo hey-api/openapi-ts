@@ -3,29 +3,35 @@ import type {
   Comments,
   FunctionParameter,
   Node,
-} from '../compiler';
-import { compiler } from '../compiler';
-import type { FunctionTypeParameter, ObjectValue } from '../compiler/types';
-import type { IROperationObject } from '../ir/ir';
-import { isOperationParameterRequired } from '../openApi';
+} from '../../../compiler';
+import { compiler } from '../../../compiler';
+import type {
+  FunctionTypeParameter,
+  ObjectValue,
+} from '../../../compiler/types';
+import {
+  clientModulePath,
+  clientOptionsTypeName,
+} from '../../../generate/client';
+import { TypeScriptFile } from '../../../generate/files';
+import type { IROperationObject } from '../../../ir/ir';
+import { isOperationParameterRequired } from '../../../openApi';
 import type {
   Client,
   Model,
   Operation,
   OperationParameter,
   Service,
-} from '../types/client';
-import type { Config } from '../types/config';
-import type { Files } from '../types/utils';
-import { camelCase } from '../utils/camelCase';
-import { getConfig, isLegacyClient } from '../utils/config';
-import { escapeComment, escapeName } from '../utils/escape';
-import { reservedWordsRegExp } from '../utils/regexp';
-import { transformServiceName } from '../utils/transform';
-import { setUniqueTypeName } from '../utils/type';
-import { unique } from '../utils/unique';
-import { clientModulePath, clientOptionsTypeName } from './client';
-import { TypeScriptFile } from './files';
+} from '../../../types/client';
+import type { Config } from '../../../types/config';
+import { camelCase } from '../../../utils/camelCase';
+import { getConfig, isLegacyClient } from '../../../utils/config';
+import { escapeComment, escapeName } from '../../../utils/escape';
+import { reservedWordsRegExp } from '../../../utils/regexp';
+import { transformServiceName } from '../../../utils/transform';
+import { setUniqueTypeName } from '../../../utils/type';
+import { unique } from '../../../utils/unique';
+import type { PluginLegacyHandler } from '../../types';
 
 type OnNode = (node: Node) => void;
 type OnImport = (name: string) => void;
@@ -198,7 +204,10 @@ const toOperationReturnType = (client: Client, operation: Operation) => {
     });
   }
 
-  if (config.useOptions && config.services.response === 'response') {
+  if (
+    config.useOptions &&
+    config.plugins['@hey-api/services']?.response === 'response'
+  ) {
     returnType = compiler.typeNode('ApiResult', [returnType]);
   }
 
@@ -268,12 +277,12 @@ const toRequestOptions = (
 ) => {
   const config = getConfig();
 
-  const operationName = operationResponseTypeName(operation.name);
+  const name = operationResponseTypeName(operation.name);
   const { name: responseTransformerName } = setUniqueTypeName({
     client,
     meta: {
-      $ref: `transformers/${operationName}`,
-      name: operationName,
+      $ref: `transformers/${name}`,
+      name,
     },
     nameTransformer: operationResponseTransformerTypeName,
   });
@@ -483,8 +492,8 @@ export const serviceFunctionIdentifier = ({
   id: string;
   operation: IROperationObject | Operation;
 }) => {
-  if (config.services.methodNameBuilder) {
-    return config.services.methodNameBuilder(operation);
+  if (config.plugins['@hey-api/services']?.methodNameBuilder) {
+    return config.plugins['@hey-api/services'].methodNameBuilder(operation);
   }
 
   if (handleIllegal && id.match(reservedWordsRegExp)) {
@@ -642,7 +651,7 @@ const processService = ({
     name: 'ThrowOnError',
   };
 
-  if (!config.services.asClass && !config.name) {
+  if (!config.plugins['@hey-api/services']?.asClass && !config.name) {
     for (const operation of service.operations) {
       const compileFunctionParams = {
         parameters: toOperationParamType(client, operation),
@@ -754,7 +763,7 @@ const processService = ({
   onNode(statement);
 };
 
-const checkLegacyPrerequisites = ({ files }: { files: Files }) => {
+export const handlerLegacy: PluginLegacyHandler<any> = ({ client, files }) => {
   const config = getConfig();
 
   if (!config.client.name) {
@@ -762,28 +771,6 @@ const checkLegacyPrerequisites = ({ files }: { files: Files }) => {
       '🚫 client needs to be set to generate services - which HTTP client do you want to use?',
     );
   }
-
-  if (!files.types) {
-    throw new Error(
-      '🚫 types need to be exported to generate services - enable type generation',
-    );
-  }
-};
-
-export const generateLegacyServices = async ({
-  client,
-  files,
-}: {
-  client: Client;
-  files: Files;
-}): Promise<void> => {
-  const config = getConfig();
-
-  if (!config.services.export) {
-    return;
-  }
-
-  checkLegacyPrerequisites({ files });
 
   const isLegacy = isLegacyClient(config);
 
@@ -836,7 +823,7 @@ export const generateLegacyServices = async ({
       });
     }
 
-    if (config.services.response === 'response') {
+    if (config.plugins['@hey-api/services']?.response === 'response') {
       files.services.import({
         asType: true,
         module: './core/ApiResult',

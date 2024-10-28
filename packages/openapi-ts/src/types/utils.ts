@@ -1,8 +1,6 @@
 import type { TypeScriptFile } from '../generate/files';
 
-type ExtractFromArray<T, Discriminator> = T extends Discriminator
-  ? Required<T>
-  : never;
+type ExtractFromArray<T, Discriminator> = T extends Discriminator ? T : never;
 
 /**
  * Accepts an array of elements union and attempts to extract only objects.
@@ -17,3 +15,15 @@ export type ExtractArrayOfObjects<T, Discriminator> =
       : never;
 
 export type Files = Record<string, TypeScriptFile>;
+
+/**
+ * Transforms an array of objects into an optional object map.
+ * For example, Array<{ id: string }> would result in
+ * { [key: string]?: { id: string } }
+ */
+export type ArrayOfObjectsToObjectMap<
+  T extends ReadonlyArray<Record<string, any>>,
+  D extends keyof T[number],
+> = {
+  [K in T[number][D]]?: Extract<T[number], Record<D, K>>;
+};

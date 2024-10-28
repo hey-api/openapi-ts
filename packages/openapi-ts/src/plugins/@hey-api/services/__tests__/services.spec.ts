@@ -3,11 +3,12 @@ import path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
 
-import type { Operation } from '../../types/client';
-import type { Files } from '../../types/utils';
-import { setConfig } from '../../utils/config';
-import { TypeScriptFile } from '../files';
-import { generateLegacyServices } from '../services';
+import { openApi } from '../../../../generate/__tests__/mocks';
+import { TypeScriptFile } from '../../../../generate/files';
+import type { Operation } from '../../../../types/client';
+import type { Files } from '../../../../types/utils';
+import { setConfig } from '../../../../utils/config';
+import { handlerLegacy } from '../plugin-legacy';
 
 vi.mock('node:fs');
 
@@ -20,23 +21,35 @@ describe('generateLegacyServices', () => {
       configFile: '',
       debug: false,
       dryRun: false,
-      experimental_parser: false,
+      experimentalParser: false,
       exportCore: true,
       input: '',
       output: {
         path: '',
       },
-      plugins: [],
-      schemas: {},
-      services: {
-        asClass: true,
-        export: true,
+      pluginOrder: ['@hey-api/types', '@hey-api/schemas', '@hey-api/services'],
+      plugins: {
+        '@hey-api/schemas': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          name: '@hey-api/schemas',
+        },
+        '@hey-api/services': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          asClass: true,
+          name: '@hey-api/services',
+        },
+        '@hey-api/types': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          name: '@hey-api/types',
+        },
       },
-      types: {},
       useOptions: false,
     });
 
-    const client: Parameters<typeof generateLegacyServices>[0]['client'] = {
+    const client: Parameters<typeof handlerLegacy>[0]['client'] = {
       models: [],
       server: 'http://localhost:8080',
       services: [
@@ -80,9 +93,13 @@ describe('generateLegacyServices', () => {
       name: 'types.ts',
     });
 
-    await generateLegacyServices({
+    await handlerLegacy({
       client,
       files,
+      openApi,
+      plugin: {
+        output: '',
+      },
     });
 
     files.services.write();
@@ -119,7 +136,7 @@ describe('methodNameBuilder', () => {
     summary: null,
   };
 
-  const client: Parameters<typeof generateLegacyServices>[0]['client'] = {
+  const client: Parameters<typeof handlerLegacy>[0]['client'] = {
     models: [],
     server: 'http://localhost:8080',
     services: [
@@ -142,19 +159,31 @@ describe('methodNameBuilder', () => {
       configFile: '',
       debug: false,
       dryRun: false,
-      experimental_parser: false,
+      experimentalParser: false,
       exportCore: true,
       input: '',
       output: {
         path: '',
       },
-      plugins: [],
-      schemas: {},
-      services: {
-        asClass: true,
-        export: true,
+      pluginOrder: ['@hey-api/types', '@hey-api/schemas', '@hey-api/services'],
+      plugins: {
+        '@hey-api/schemas': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          name: '@hey-api/schemas',
+        },
+        '@hey-api/services': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          asClass: true,
+          name: '@hey-api/services',
+        },
+        '@hey-api/types': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          name: '@hey-api/types',
+        },
       },
-      types: {},
       useOptions: false,
     });
 
@@ -165,9 +194,13 @@ describe('methodNameBuilder', () => {
       name: 'types.ts',
     });
 
-    await generateLegacyServices({
+    await handlerLegacy({
       client,
       files,
+      openApi,
+      plugin: {
+        output: '',
+      },
     });
 
     files.services.write();
@@ -188,20 +221,32 @@ describe('methodNameBuilder', () => {
       configFile: '',
       debug: false,
       dryRun: false,
-      experimental_parser: false,
+      experimentalParser: false,
       exportCore: true,
       input: '',
       output: {
         path: '',
       },
-      plugins: [],
-      schemas: {},
-      services: {
-        asClass: true,
-        export: true,
-        methodNameBuilder,
+      pluginOrder: ['@hey-api/types', '@hey-api/schemas', '@hey-api/services'],
+      plugins: {
+        '@hey-api/schemas': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          name: '@hey-api/schemas',
+        },
+        '@hey-api/services': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          asClass: true,
+          methodNameBuilder,
+          name: '@hey-api/services',
+        },
+        '@hey-api/types': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          name: '@hey-api/types',
+        },
       },
-      types: {},
       useOptions: false,
     });
 
@@ -212,9 +257,13 @@ describe('methodNameBuilder', () => {
       name: 'types.ts',
     });
 
-    await generateLegacyServices({
+    await handlerLegacy({
       client,
       files,
+      openApi,
+      plugin: {
+        output: '',
+      },
     });
 
     files.services.write();
@@ -237,20 +286,32 @@ describe('methodNameBuilder', () => {
       configFile: '',
       debug: false,
       dryRun: false,
-      experimental_parser: false,
+      experimentalParser: false,
       exportCore: true,
       input: '',
       output: {
         path: '',
       },
-      plugins: [],
-      schemas: {},
-      services: {
-        asClass: false,
-        export: true,
-        methodNameBuilder,
+      pluginOrder: ['@hey-api/types', '@hey-api/schemas', '@hey-api/services'],
+      plugins: {
+        '@hey-api/schemas': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          name: '@hey-api/schemas',
+        },
+        '@hey-api/services': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          asClass: false,
+          methodNameBuilder,
+          name: '@hey-api/services',
+        },
+        '@hey-api/types': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          name: '@hey-api/types',
+        },
       },
-      types: {},
       useOptions: false,
     });
 
@@ -261,9 +322,13 @@ describe('methodNameBuilder', () => {
       name: 'types.ts',
     });
 
-    await generateLegacyServices({
+    await handlerLegacy({
       client,
       files,
+      openApi,
+      plugin: {
+        output: '',
+      },
     });
 
     files.services.write();

@@ -110,32 +110,10 @@ describe('bin', () => {
       '--useOptions',
       '--exportCore',
       'true',
-      '--services',
-      'true',
-      '--types',
-      'true',
-      '--schemas',
-      'true',
-      '--dry-run',
-      'true',
-    ]);
-    expect(result.stdout.toString()).toContain('Creating Fetch client');
-    expect(result.stderr.toString()).toContain('Duplicate operationId');
-  });
-
-  it('supports regexp parameters', () => {
-    const result = sync('node', [
-      './bin/index.cjs',
-      '--input',
-      './test/spec/v3.json',
-      '--output',
-      './test/generated/bin',
-      '--client',
-      '@hey-api/client-fetch',
-      '--services',
-      '^(Simple|Types)',
-      '--types',
-      '^(Simple|Types)',
+      '--plugins',
+      '@hey-api/schemas',
+      '@hey-api/services',
+      '@hey-api/types',
       '--dry-run',
       'true',
     ]);
@@ -222,12 +200,7 @@ describe('cli', () => {
       '--debug',
       '--exportCore',
       'false',
-      '--types',
-      'false',
-      '--schemas',
-      'false',
-      '--services',
-      'false',
+      '--plugins',
       '--useOptions',
       'false',
       '--dry-run',
@@ -236,9 +209,9 @@ describe('cli', () => {
     expect(result.stderr.toString()).toContain('debug: true');
     expect(result.stderr.toString()).toContain('dryRun: true');
     expect(result.stderr.toString()).toContain('exportCore: false');
-    expect(result.stderr.toString()).toContain('types: false');
-    expect(result.stderr.toString()).toContain('services: false');
-    expect(result.stderr.toString()).toContain('schemas: false');
+    expect(result.stderr.toString()).not.toContain('@hey-api/types');
+    expect(result.stderr.toString()).not.toContain('@hey-api/services');
+    expect(result.stderr.toString()).not.toContain('@hey-api/schemas');
     expect(result.stderr.toString()).toContain('useOptions: false');
   });
 
@@ -249,15 +222,15 @@ describe('cli', () => {
       './test/spec/v3.json',
       '--output',
       './test/generated/bin',
+      '--client',
+      '@hey-api/client-fetch',
       '--debug',
       '--exportCore',
       'true',
-      '--types',
-      'true',
-      '--schemas',
-      'true',
-      '--services',
-      'true',
+      '--plugins',
+      '@hey-api/schemas',
+      '@hey-api/services',
+      '@hey-api/types',
       '--useOptions',
       'true',
       '--dry-run',
@@ -266,9 +239,9 @@ describe('cli', () => {
     expect(result.stderr.toString()).toContain('debug: true');
     expect(result.stderr.toString()).toContain('dryRun: true');
     expect(result.stderr.toString()).toContain('exportCore: true');
-    expect(result.stderr.toString()).toContain('types: true');
-    expect(result.stderr.toString()).toContain('services: true');
-    expect(result.stderr.toString()).toContain('schemas: true');
+    expect(result.stderr.toString()).toContain('@hey-api/types');
+    expect(result.stderr.toString()).toContain('@hey-api/services');
+    expect(result.stderr.toString()).toContain('@hey-api/schemas');
     expect(result.stderr.toString()).toContain('useOptions: true');
   });
 
@@ -279,13 +252,14 @@ describe('cli', () => {
       './test/spec/v3.json',
       '--output',
       './test/generated/bin',
+      '--client',
+      '@hey-api/client-fetch',
       '--debug',
       '--exportCore',
-      '--types',
-      'foo',
-      '--schemas',
-      '--services',
-      'bar',
+      '--plugins',
+      '@hey-api/schemas',
+      '@hey-api/services',
+      '@hey-api/types',
       '--useOptions',
       '--dry-run',
       'true',
@@ -293,9 +267,9 @@ describe('cli', () => {
     expect(result.stderr.toString()).toContain('debug: true');
     expect(result.stderr.toString()).toContain('dryRun: true');
     expect(result.stderr.toString()).toContain('exportCore: true');
-    expect(result.stderr.toString()).toContain('schemas: true');
+    expect(result.stderr.toString()).toContain('@hey-api/schemas');
+    expect(result.stderr.toString()).toContain('@hey-api/services');
+    expect(result.stderr.toString()).toContain('@hey-api/types');
     expect(result.stderr.toString()).toContain('useOptions: true');
-    expect(result.stderr.toString()).toContain("types: 'foo");
-    expect(result.stderr.toString()).toContain("services: 'bar'");
   });
 });

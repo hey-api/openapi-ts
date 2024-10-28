@@ -10,7 +10,9 @@ import type {
 import { operationResponsesMap } from '../../../ir/operation';
 import { camelCase } from '../../../utils/camelCase';
 import { irRef } from '../../../utils/ref';
+import type { PluginHandler } from '../../types';
 import { operationResponseRef } from '../services/plugin';
+import type { Config } from './types';
 
 interface OperationIRRef {
   /**
@@ -354,20 +356,7 @@ const processSchemaType = ({
 };
 
 // handles only response transformers for now
-export const generateTransformers = ({
-  context,
-}: {
-  context: IRContext;
-}): void => {
-  // TODO: parser - once transformers are a plugin, this logic can be simplified
-  if (
-    !context.config.services.export ||
-    // client.services.length &&
-    context.config.types.dates !== 'types+transform'
-  ) {
-    return;
-  }
-
+export const handler: PluginHandler<Config> = ({ context }) => {
   const file = context.createFile({
     id: transformersId,
     path: 'transformers',

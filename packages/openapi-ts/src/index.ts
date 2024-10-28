@@ -14,10 +14,11 @@ import {
   operationParameterNameFn,
 } from './openApi/config';
 import { defaultPluginConfigs } from './plugins';
+import type { PluginNames } from './plugins/types';
 import type { Client } from './types/client';
 import type { ClientConfig, Config, UserConfig } from './types/config';
 import { CLIENTS } from './types/config';
-import { getConfig, isLegacyClient, setConfig } from './utils/config';
+import { isLegacyClient, setConfig } from './utils/config';
 import { getOpenApiSpec } from './utils/getOpenApiSpec';
 import { registerHandlebarTemplates } from './utils/handlebars';
 import { Performance, PerformanceReport } from './utils/performance';
@@ -73,9 +74,7 @@ const linters: Record<
   },
 };
 
-const processOutput = () => {
-  const config = getConfig();
-
+const processOutput = ({ config }: { config: Config }) => {
   if (config.output.format) {
     const module = formatters[config.output.format];
     console.log(`✨ Running ${module.name}`);
@@ -89,9 +88,8 @@ const processOutput = () => {
   }
 };
 
-const logClientMessage = () => {
-  const { client } = getConfig();
-  switch (client.name) {
+const logClientMessage = ({ config }: { config: Config }) => {
+  switch (config.client.name) {
     case 'legacy/angular':
       return console.log('✨ Creating Angular client');
     case '@hey-api/client-axios':
@@ -140,77 +138,83 @@ const getOutput = (userConfig: ClientConfig): Config['output'] => {
   return output;
 };
 
-const getPlugins = (userConfig: ClientConfig): Config['plugins'] => {
-  const plugins: Config['plugins'] = (userConfig.plugins ?? []).map((plugin) =>
-    typeof plugin === 'string'
-      ? defaultPluginConfigs[plugin]
-      : {
-          ...defaultPluginConfigs[plugin.name],
-          ...(plugin as (typeof defaultPluginConfigs)[(typeof plugin)['name']]),
-        },
-  ) as unknown as Config['plugins'];
-  return plugins;
-};
+const getPluginOrder = ({
+  userPlugins,
+}: {
+  userPlugins: ReadonlyArray<PluginNames>;
+}): Config['pluginOrder'] => {
+  const circularReferenceTracker = new Set<PluginNames>();
+  const visitedNodes = new Set<PluginNames>();
 
-const getSchemas = (userConfig: ClientConfig): Config['schemas'] => {
-  let schemas: Config['schemas'] = {
-    export: true,
-    type: 'json',
+  const dfs = (name: PluginNames) => {
+    if (circularReferenceTracker.has(name)) {
+      throw new Error(`Circular reference detected at '${name}'`);
+    }
+
+    if (!visitedNodes.has(name)) {
+      circularReferenceTracker.add(name);
+
+      for (const dependency of defaultPluginConfigs[name]._dependencies || []) {
+        dfs(dependency);
+      }
+
+      for (const dependency of defaultPluginConfigs[name]
+        ._optionalDependencies || []) {
+        if (userPlugins.includes(dependency)) {
+          dfs(dependency);
+        }
+      }
+
+      circularReferenceTracker.delete(name);
+      visitedNodes.add(name);
+    }
   };
-  if (typeof userConfig.schemas === 'boolean') {
-    schemas.export = userConfig.schemas;
-  } else {
-    schemas = {
-      ...schemas,
-      ...userConfig.schemas,
-    };
+
+  for (const name of userPlugins) {
+    dfs(name);
   }
-  return schemas;
+
+  return Array.from(visitedNodes);
 };
 
-const getServices = (userConfig: ClientConfig): Config['services'] => {
-  let services: Config['services'] = {
-    asClass: false,
-    export: true,
-    name: '{{name}}Service',
-    operationId: true,
-    response: 'body',
-  };
-  if (typeof userConfig.services === 'boolean') {
-    services.export = userConfig.services;
-  } else if (typeof userConfig.services === 'string') {
-    services.include = userConfig.services;
-  } else {
-    services = {
-      ...services,
-      ...userConfig.services,
-    };
-  }
-  return services;
-};
-
-const getTypes = (
+const getPlugins = (
   userConfig: ClientConfig,
-  services: Config['services'],
-): Config['types'] => {
-  let types: Config['types'] = {
-    dates: false,
-    enums: false,
-    export: true,
-    name: 'preserve',
-    tree: !services.export,
+): Pick<Config, 'plugins' | 'pluginOrder'> => {
+  const userPluginsConfig: Config['plugins'] = {};
+
+  const userPlugins = (
+    userConfig.plugins ?? [
+      '@hey-api/types',
+      '@hey-api/schemas',
+      '@hey-api/services',
+    ]
+  ).map((plugin) => {
+    if (typeof plugin === 'string') {
+      return plugin;
+    }
+
+    // @ts-ignore
+    userPluginsConfig[plugin.name] = plugin;
+    return plugin.name;
+  });
+  const pluginOrder = getPluginOrder({ userPlugins });
+
+  const plugins = pluginOrder.reduce(
+    (result, name) => {
+      // @ts-ignore
+      result[name] = {
+        ...defaultPluginConfigs[name],
+        ...userPluginsConfig[name],
+      };
+      return result;
+    },
+    {} as Config['plugins'],
+  );
+
+  return {
+    pluginOrder,
+    plugins,
   };
-  if (typeof userConfig.types === 'boolean') {
-    types.export = userConfig.types;
-  } else if (typeof userConfig.types === 'string') {
-    types.include = userConfig.types;
-  } else {
-    types = {
-      ...types,
-      ...userConfig.types,
-    };
-  }
-  return types;
 };
 
 const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
@@ -241,7 +245,7 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
       debug = false,
       dryRun = false,
       exportCore = true,
-      experimental_parser = false,
+      experimentalParser = false,
       input,
       name,
       request,
@@ -278,29 +282,21 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
       );
     }
 
-    const plugins = getPlugins(userConfig);
-    const schemas = getSchemas(userConfig);
-    const services = getServices(userConfig);
-    const types = getTypes(userConfig, services);
-
     output.path = path.resolve(process.cwd(), output.path);
 
     const config = setConfig({
+      ...getPlugins(userConfig),
       base,
       client,
       configFile,
       debug,
       dryRun,
-      experimental_parser,
+      experimentalParser,
       exportCore: isLegacyClient(client) ? exportCore : false,
       input,
       name,
       output,
-      plugins,
       request,
-      schemas,
-      services,
-      types,
       useOptions,
     });
 
@@ -355,7 +351,7 @@ export async function createClient(
         operationParameter: operationParameterNameFn,
       },
     };
-    if (config.experimental_parser && !isLegacyClient(config) && !config.name) {
+    if (config.experimentalParser && !isLegacyClient(config) && !config.name) {
       context = parseExperimental({
         config,
         parserConfig,
@@ -373,7 +369,7 @@ export async function createClient(
     }
     Performance.end('parser');
 
-    logClientMessage();
+    logClientMessage({ config });
 
     Performance.start('generator');
     if (context) {
@@ -385,7 +381,7 @@ export async function createClient(
 
     Performance.start('postprocess');
     if (!config.dryRun) {
-      processOutput();
+      processOutput({ config });
 
       console.log('✨ Done! Your client is located in:', config.output.path);
     }

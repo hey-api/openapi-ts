@@ -6,6 +6,8 @@ import {
 } from '../../../openApi';
 import type { OpenApiV3_1_0 } from '../../../openApi/3.1.0';
 import type { SchemaObject as OpenApiV3_1_0SchemaObject } from '../../../openApi/3.1.0/types/spec';
+import type { PluginHandler } from '../../types';
+import type { Config } from './types';
 
 const schemasId = 'schemas';
 
@@ -16,7 +18,7 @@ const stripSchema = ({
   context: IRContext;
   schema: OpenApiV3_1_0SchemaObject;
 }) => {
-  if (context.config.schemas.type === 'form') {
+  if (context.config.plugins['@hey-api/schemas']?.type === 'form') {
     if (schema.description) {
       delete schema.description;
     }
@@ -142,8 +144,11 @@ const schemaName = ({
 }): string => {
   const validName = ensureValidTypeScriptJavaScriptIdentifier(name);
 
-  if (context.config.schemas.name) {
-    return context.config.schemas.name(validName, schema);
+  if (context.config.plugins['@hey-api/schemas']?.nameBuilder) {
+    return context.config.plugins['@hey-api/schemas'].nameBuilder(
+      validName,
+      schema,
+    );
   }
 
   return `${validName}Schema`;
@@ -170,31 +175,25 @@ const schemasV3_1_0 = (context: IRContext<OpenApiV3_1_0>) => {
   }
 };
 
-export const generateSchemas = ({
-  context,
-}: {
-  context: IRContext<ParserOpenApiSpec>;
-}): void => {
-  // TODO: parser - once schemas are a plugin, this logic can be simplified
-  if (!context.config.schemas.export) {
-    return;
-  }
-
+export const handler: PluginHandler<Config> = ({ context }) => {
   context.createFile({
     id: schemasId,
     path: 'schemas',
   });
 
-  // TODO: parser - copy-pasted from experimental parser for now
-  switch (context.spec.openapi) {
-    case '3.0.3':
-      // ...
-      break;
-    case '3.1.0':
-      schemasV3_1_0(context as IRContext<OpenApiV3_1_0>);
-      break;
-    default:
-      break;
+  if (context.spec.openapi) {
+    const ctx = context as IRContext<ParserOpenApiSpec>;
+    // TODO: parser - copy-pasted from experimental parser for now
+    switch (ctx.spec.openapi) {
+      case '3.0.3':
+        // ...
+        break;
+      case '3.1.0':
+        schemasV3_1_0(context as IRContext<OpenApiV3_1_0>);
+        break;
+      default:
+        break;
+    }
   }
 
   // OpenAPI 2.0

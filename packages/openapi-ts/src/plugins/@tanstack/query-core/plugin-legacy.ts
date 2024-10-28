@@ -7,14 +7,6 @@ import {
   clientModulePath,
   clientOptionsTypeName,
 } from '../../../generate/client';
-import {
-  generateImport,
-  operationDataTypeName,
-  operationErrorTypeName,
-  operationOptionsType,
-  operationResponseTypeName,
-  serviceFunctionIdentifier,
-} from '../../../generate/services';
 import { relativeModulePath } from '../../../generate/utils';
 import type { IROperationObject } from '../../../ir/ir';
 import { paginationKeywordsRegExp } from '../../../ir/pagination';
@@ -29,13 +21,21 @@ import type {
 } from '../../../types/client';
 import type { Config } from '../../../types/config';
 import type { Files } from '../../../types/utils';
-import { getConfig } from '../../../utils/config';
+import { getConfig, isLegacyClient } from '../../../utils/config';
 import { transformServiceName } from '../../../utils/transform';
+import {
+  generateImport,
+  operationDataTypeName,
+  operationErrorTypeName,
+  operationOptionsType,
+  operationResponseTypeName,
+  serviceFunctionIdentifier,
+} from '../../@hey-api/services/plugin-legacy';
 import type { PluginLegacyHandler } from '../../types';
-import type { PluginConfig as ReactQueryPluginConfig } from '../react-query';
-import type { PluginConfig as SolidQueryPluginConfig } from '../solid-query';
-import type { PluginConfig as SvelteQueryPluginConfig } from '../svelte-query';
-import type { PluginConfig as VueQueryPluginConfig } from '../vue-query';
+import type { Config as ReactQueryConfig } from '../react-query';
+import type { Config as SolidQueryConfig } from '../solid-query';
+import type { Config as SvelteQueryConfig } from '../svelte-query';
+import type { Config as VueQueryConfig } from '../vue-query';
 
 const toInfiniteQueryOptionsName = (operation: Operation) =>
   `${serviceFunctionIdentifier({
@@ -82,14 +82,6 @@ const toQueryKeyName = ({
     id,
     operation,
   })}${isInfinite ? 'Infinite' : ''}QueryKey`;
-
-const checkPrerequisites = ({ files }: { files: Files }) => {
-  if (!files.services) {
-    throw new Error(
-      '🚫 services need to be exported to use TanStack Query plugin - enable service generation',
-    );
-  }
-};
 
 const getPaginationIn = (parameter: OperationParameter) => {
   switch (parameter.in) {
@@ -675,14 +667,14 @@ const createQueryKeyLiteral = ({
 };
 
 export const handlerLegacy: PluginLegacyHandler<
-  | ReactQueryPluginConfig
-  | SolidQueryPluginConfig
-  | SvelteQueryPluginConfig
-  | VueQueryPluginConfig
+  ReactQueryConfig | SolidQueryConfig | SvelteQueryConfig | VueQueryConfig
 > = ({ client, files, plugin }) => {
-  checkPrerequisites({ files });
-
   const config = getConfig();
+
+  if (isLegacyClient(config)) {
+    throw new Error('🚫 TanStack Query plugin does not support legacy clients');
+  }
+
   const file = files[plugin.name];
 
   file.import({
@@ -721,14 +713,14 @@ export const handlerLegacy: PluginLegacyHandler<
       processedOperations.set(operationKey, true);
 
       const queryFn = [
-        config.services.asClass &&
+        config.plugins['@hey-api/services']?.asClass &&
           transformServiceName({
             config,
             name: service.name,
           }),
         serviceFunctionIdentifier({
           config,
-          handleIllegal: !config.services.asClass,
+          handleIllegal: !config.plugins['@hey-api/services']?.asClass,
           id: operation.name,
           operation,
         }),
