@@ -1,9 +1,5 @@
-import type { IROperationObject } from '../ir/ir';
-import type { OpenApiV2Schema, OpenApiV3Schema } from '../openApi';
-import type { SchemaObject as OpenApiV3_1_0SchemaObject } from '../openApi/3.1.0/types/spec';
 import type { ClientPlugins, UserPlugins } from '../plugins/';
-import type { Operation } from '../types/client';
-import type { ExtractArrayOfObjects } from './utils';
+import type { ArrayOfObjectsToObjectMap, ExtractArrayOfObjects } from './utils';
 
 export const CLIENTS = [
   '@hey-api/client-axios',
@@ -61,10 +57,10 @@ export interface ClientConfig {
    */
   dryRun?: boolean;
   /**
-   * Use the experimental parser?
+   * Opt-in to the experimental parser?
    * @default false
    */
-  experimental_parser?: boolean;
+  experimentalParser?: boolean;
   /**
    * Generate core client classes?
    * @default true
@@ -82,7 +78,7 @@ export interface ClientConfig {
    */
   name?: string;
   /**
-   * The relative location of the output directory
+   * The relative location of the output folder
    */
   output:
     | string
@@ -98,12 +94,12 @@ export interface ClientConfig {
          */
         lint?: 'biome' | 'eslint' | false;
         /**
-         * The relative location of the output directory
+         * The relative location of the output folder
          */
         path: string;
       };
   /**
-   * Plugins are used to generate additional output files from provided input.
+   * Plugins are used to generate artifacts from provided input.
    */
   plugins?: ReadonlyArray<UserPlugins['name'] | UserPlugins>;
   /**
@@ -113,138 +109,6 @@ export interface ClientConfig {
    * @deprecated
    */
   request?: string;
-  /**
-   * Generate JSON schemas?
-   * @default true
-   */
-  schemas?:
-    | boolean
-    | {
-        /**
-         * Generate JSON schemas?
-         * @default true
-         */
-        export?: boolean;
-        /**
-         * Customise the schema name. By default, `{{name}}Schema` is used. `name` is a
-         * valid JavaScript/TypeScript identifier, e.g. if your schema name is
-         * "Foo-Bar", `name` value would be "FooBar".
-         */
-        name?: (
-          name: string,
-          schema: OpenApiV2Schema | OpenApiV3Schema | OpenApiV3_1_0SchemaObject,
-        ) => string;
-        /**
-         * Choose schema type to generate. Select 'form' if you don't want
-         * descriptions to reduce bundle size and you plan to use schemas
-         * for form validation
-         * @default 'json'
-         */
-        type?: 'form' | 'json';
-      };
-  /**
-   * Generate services?
-   * @default true
-   */
-  services?:
-    | boolean
-    | string
-    | {
-        /**
-         * Group operation methods into service classes? When enabled, you can
-         * select which classes to export with `services.include` and/or
-         * transform their names with `services.name`.
-         *
-         * Note that by enabling this option, your services will **NOT**
-         * support {@link https://developer.mozilla.org/docs/Glossary/Tree_shaking tree-shaking}.
-         * For this reason, it is disabled by default.
-         * @default false
-         */
-        asClass?: boolean;
-        /**
-         * Generate services?
-         * @default true
-         */
-        export?: boolean;
-        /**
-         * Filter endpoints to be included in the generated services.
-         * The provided string should be a regular expression where matched
-         * results will be included in the output. The input pattern this
-         * string will be tested against is `{method} {path}`. For example,
-         * you can match `POST /api/v1/foo` with `^POST /api/v1/foo$`.
-         */
-        filter?: string;
-        /**
-         * Include only service classes with names matching regular expression
-         *
-         * This option has no effect if `services.asClass` is `false`.
-         */
-        include?: string;
-        /**
-         * Customise the name of methods within the service. By default, {@link IROperationObject.id} or {@link Operation.name} is used.
-         */
-        methodNameBuilder?: (
-          operation: IROperationObject | Operation,
-        ) => string;
-        /**
-         * Customize the generated service class names. The name variable is
-         * obtained from your OpenAPI specification tags.
-         *
-         * This option has no effect if `services.asClass` is `false`.
-         * @default '{{name}}Service'
-         */
-        name?: string;
-        // TODO: parser - rename operationId option to something like inferId?: boolean
-        /**
-         * Use operation ID to generate operation names?
-         * @default true
-         */
-        operationId?: boolean;
-        /**
-         * Define shape of returned value from service calls
-         * @default 'body'
-         * @deprecated
-         */
-        response?: 'body' | 'response';
-      };
-  /**
-   * Generate types?
-   * @default true
-   */
-  types?:
-    | boolean
-    | string
-    | {
-        /**
-         * Output Date type and possibly runtime transform instead of string for format "date-time"
-         * @default false
-         */
-        dates?: boolean | 'types+transform' | 'types';
-        /**
-         * Generate enum definitions?
-         * @default false
-         */
-        enums?: 'javascript' | 'typescript' | 'typescript+namespace' | false;
-        /**
-         * Generate types?
-         * @default true
-         */
-        export?: boolean;
-        /**
-         * Include only types matching regular expression
-         */
-        include?: string;
-        /**
-         * Use your preferred naming pattern
-         * @default 'preserve'
-         */
-        name?: 'PascalCase' | 'preserve';
-        /**
-         * Generate a tree of types containing all operations? It will be named
-         * $OpenApiTs and is generated by default only when not using services.
-         */
-        tree?: boolean;
-      };
   /**
    * Use options or arguments functions. Please note this option is deprecated and
    * will be removed in favor of clients.
@@ -259,24 +123,14 @@ export interface UserConfig extends ClientConfig {}
 
 export type Config = Omit<
   Required<ClientConfig>,
-  | 'base'
-  | 'client'
-  | 'name'
-  | 'output'
-  | 'plugins'
-  | 'request'
-  | 'schemas'
-  | 'services'
-  | 'types'
+  'base' | 'client' | 'name' | 'output' | 'plugins' | 'request'
 > &
   Pick<ClientConfig, 'base' | 'name' | 'request'> & {
     client: Extract<Required<ClientConfig>['client'], object>;
     output: Extract<Required<ClientConfig>['output'], object>;
-    plugins: ExtractArrayOfObjects<
-      ReadonlyArray<ClientPlugins>,
-      { name: string }
+    pluginOrder: ReadonlyArray<ClientPlugins['name']>;
+    plugins: ArrayOfObjectsToObjectMap<
+      ExtractArrayOfObjects<ReadonlyArray<ClientPlugins>, { name: string }>,
+      'name'
     >;
-    schemas: Extract<Required<ClientConfig>['schemas'], object>;
-    services: Extract<Required<ClientConfig>['services'], object>;
-    types: Extract<Required<ClientConfig>['types'], object>;
   };

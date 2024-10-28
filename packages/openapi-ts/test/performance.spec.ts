@@ -46,7 +46,7 @@ describe('performance', () => {
 
     await createClient({
       client: '@hey-api/client-fetch',
-      experimental_parser: true,
+      experimentalParser: true,
       input: V3_1_SPEC_PATH,
       output: toOutputPath('perf'),
     });

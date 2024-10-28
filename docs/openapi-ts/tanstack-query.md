@@ -32,40 +32,52 @@ Ensure you have already [configured](/openapi-ts/get-started) `@hey-api/openapi-
 
 ::: code-group
 
-```js{5} [react]
+```js [react]
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
-  plugins: ['@tanstack/react-query'], // [!code ++]
-}
+  plugins: [
+    // ...other plugins
+    '@tanstack/react-query', // [!code ++]
+  ],
+};
 ```
 
-```js{5} [vue]
+```js [vue]
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
-  plugins: ['@tanstack/vue-query'], // [!code ++]
-}
+  plugins: [
+    // ...other plugins
+    '@tanstack/vue-query', // [!code ++]
+  ],
+};
 ```
 
-```js{5} [solid]
+```js [solid]
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
-  plugins: ['@tanstack/solid-query'], // [!code ++]
-}
+  plugins: [
+    // ...other plugins
+    '@tanstack/solid-query', // [!code ++]
+  ],
+};
 ```
 
-```js{5} [svelte]
+```js [svelte]
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
-  plugins: ['@tanstack/svelte-query'], // [!code ++]
-}
+  plugins: [
+    // ...other plugins
+    '@tanstack/svelte-query', // [!code ++]
+  ],
+};
 ```
 
 :::

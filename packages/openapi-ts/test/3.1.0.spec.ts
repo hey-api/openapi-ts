@@ -18,8 +18,8 @@ const outputDir = path.join(__dirname, 'generated', VERSION);
 describe(`OpenAPI ${VERSION}`, () => {
   const createConfig = (userConfig: UserConfig): UserConfig => ({
     client: '@hey-api/client-fetch',
-    experimental_parser: true,
-    schemas: false,
+    experimentalParser: true,
+    plugins: ['@hey-api/types'],
     ...userConfig,
     input: path.join(
       __dirname,
@@ -38,9 +38,6 @@ describe(`OpenAPI ${VERSION}`, () => {
       config: createConfig({
         input: 'duplicate-null.json',
         output: 'duplicate-null',
-        services: {
-          export: false,
-        },
       }),
       description: 'does not generate duplicate null',
     },
@@ -48,9 +45,6 @@ describe(`OpenAPI ${VERSION}`, () => {
       config: createConfig({
         input: 'object-properties-all-of.json',
         output: 'object-properties-all-of',
-        services: {
-          export: false,
-        },
       }),
       description:
         'sets correct logical operator and brackets on object with properties and allOf composition',
@@ -59,9 +53,6 @@ describe(`OpenAPI ${VERSION}`, () => {
       config: createConfig({
         input: 'object-properties-any-of.json',
         output: 'object-properties-any-of',
-        services: {
-          export: false,
-        },
       }),
       description:
         'sets correct logical operator and brackets on object with properties and anyOf composition',
@@ -70,9 +61,6 @@ describe(`OpenAPI ${VERSION}`, () => {
       config: createConfig({
         input: 'object-properties-one-of.json',
         output: 'object-properties-one-of',
-        services: {
-          export: false,
-        },
       }),
       description:
         'sets correct logical operator and brackets on object with properties and oneOf composition',
@@ -81,12 +69,12 @@ describe(`OpenAPI ${VERSION}`, () => {
       config: createConfig({
         input: 'required-all-of-ref.json',
         output: 'required-all-of-ref',
-        services: {
-          export: false,
-        },
-        types: {
-          tree: false,
-        },
+        plugins: [
+          {
+            name: '@hey-api/types',
+            tree: false,
+          },
+        ],
       }),
       description: 'sets allOf composition ref model properties as required',
     },
@@ -94,12 +82,12 @@ describe(`OpenAPI ${VERSION}`, () => {
       config: createConfig({
         input: 'required-any-of-ref.json',
         output: 'required-any-of-ref',
-        services: {
-          export: false,
-        },
-        types: {
-          tree: false,
-        },
+        plugins: [
+          {
+            name: '@hey-api/types',
+            tree: false,
+          },
+        ],
       }),
       description:
         'does not set anyOf composition ref model properties as required',
@@ -108,12 +96,12 @@ describe(`OpenAPI ${VERSION}`, () => {
       config: createConfig({
         input: 'required-one-of-ref.json',
         output: 'required-one-of-ref',
-        services: {
-          export: false,
-        },
-        types: {
-          tree: false,
-        },
+        plugins: [
+          {
+            name: '@hey-api/types',
+            tree: false,
+          },
+        ],
       }),
       description:
         'does not set oneOf composition ref model properties as required',

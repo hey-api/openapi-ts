@@ -11,7 +11,12 @@ export default defineConfig({
     lint: 'eslint',
     path: './src/client',
   },
-  types: {
-    enums: 'javascript',
-  },
+  plugins: [
+    '@hey-api/schemas',
+    '@hey-api/services',
+    {
+      enums: 'javascript',
+      name: '@hey-api/types',
+    },
+  ],
 });

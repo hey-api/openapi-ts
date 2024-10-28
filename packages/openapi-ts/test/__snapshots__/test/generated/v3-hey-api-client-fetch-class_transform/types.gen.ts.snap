@@ -3,15 +3,6 @@
 /**
  * This is a model that contains a some dates
  */
-export type SimpleModel = {
-    id: number;
-    name: string;
-    readonly enabled: boolean;
-};
-
-/**
- * This is a model that contains a some dates
- */
 export type ModelWithDates = {
     id: number;
     name: string;
@@ -33,6 +24,15 @@ export type ParentModelWithDates = {
     simpleItem?: SimpleModel;
     dates?: Array<(Date)>;
     strings?: Array<(string)>;
+};
+
+/**
+ * This is a model that contains a some dates
+ */
+export type SimpleModel = {
+    id: number;
+    name: string;
+    readonly enabled: boolean;
 };
 
 export type ParentModelWithDatesResponse = (ParentModelWithDates | unknown);

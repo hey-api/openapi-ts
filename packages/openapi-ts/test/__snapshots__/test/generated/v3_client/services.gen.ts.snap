@@ -2,7 +2,81 @@
 
 import type { CancelablePromise } from './core/CancelablePromise';
 import type { BaseHttpRequest } from './core/BaseHttpRequest';
-import type { ImportData, ImportResponse, GetApiSimpleOperationData, GetApiSimpleOperationResponse, ApiVversionOdataControllerCountResponse, DeleteFooData3, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, CallWithDescriptionsData, DeprecatedCallData, PostApiRequestBodyData, PostApiFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, DummyAResponse, DummyBResponse, CollectionFormatData, TypesData, TypesResponse, UploadFileData, UploadFileResponse, FileResponseData, FileResponseResponse, ComplexTypesData, ComplexTypesResponse, ComplexParamsData, ComplexParamsResponse, MultipartRequestData, MultipartResponseResponse, CallWithResultFromHeaderResponse, TestErrorCodeData, TestErrorCodeResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData } from './types.gen';
+import type { CollectionFormatData, ComplexTypesData, ComplexTypesResponse, ComplexParamsData, ComplexParamsResponse, ImportData, ImportResponse, GetApiSimpleOperationData, GetApiSimpleOperationResponse, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, DeprecatedCallData, CallWithDescriptionsData, TestErrorCodeData, TestErrorCodeResponse, FileResponseData, FileResponseResponse, PostApiFormDataData, CallWithResultFromHeaderResponse, MultipartRequestData, MultipartResponseResponse, DummyAResponse, DummyBResponse, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData, DeleteFooData3, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, PostApiRequestBodyData, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, ApiVversionOdataControllerCountResponse, TypesData, TypesResponse, UploadFileData, UploadFileResponse } from './types.gen';
+
+export class CollectionFormatService {
+    constructor(public readonly httpRequest: BaseHttpRequest) { }
+    
+    /**
+     * @param data The data for the request.
+     * @param data.parameterArrayCsv This is an array parameter that is sent as csv format (comma-separated values)
+     * @param data.parameterArraySsv This is an array parameter that is sent as ssv format (space-separated values)
+     * @param data.parameterArrayTsv This is an array parameter that is sent as tsv format (tab-separated values)
+     * @param data.parameterArrayPipes This is an array parameter that is sent as pipes format (pipe-separated values)
+     * @param data.parameterArrayMulti This is an array parameter that is sent as multi format (multiple parameter instances)
+     * @throws ApiError
+     */
+    public collectionFormat(data: CollectionFormatData): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/collectionFormat',
+            query: {
+                parameterArrayCSV: data.parameterArrayCsv,
+                parameterArraySSV: data.parameterArraySsv,
+                parameterArrayTSV: data.parameterArrayTsv,
+                parameterArrayPipes: data.parameterArrayPipes,
+                parameterArrayMulti: data.parameterArrayMulti
+            }
+        });
+    }
+    
+}
+
+export class ComplexService {
+    constructor(public readonly httpRequest: BaseHttpRequest) { }
+    
+    /**
+     * @param data The data for the request.
+     * @param data.parameterObject Parameter containing object
+     * @param data.parameterReference Parameter containing reference
+     * @returns ModelWithString Successful response
+     * @throws ApiError
+     */
+    public complexTypes(data: ComplexTypesData): CancelablePromise<ComplexTypesResponse> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/complex',
+            query: {
+                parameterObject: data.parameterObject,
+                parameterReference: data.parameterReference
+            },
+            errors: {
+                400: '400 `server` error',
+                500: '500 server error'
+            }
+        });
+    }
+    
+    /**
+     * @param data The data for the request.
+     * @param data.id
+     * @param data.requestBody
+     * @returns ModelWithString Success
+     * @throws ApiError
+     */
+    public complexParams(data: ComplexParamsData): CancelablePromise<ComplexParamsResponse> {
+        return this.httpRequest.request({
+            method: 'PUT',
+            url: '/api/v{api-version}/complex/{id}',
+            path: {
+                id: data.id
+            },
+            body: data.requestBody,
+            mediaType: 'application/json-patch+json'
+        });
+    }
+    
+}
 
 export class DefaultService {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
@@ -54,87 +128,436 @@ export class DefaultService {
     
 }
 
-export class SimpleService {
+export class DefaultsService {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
     
     /**
-     * @returns Model_From_Zendesk Success
+     * @param data The data for the request.
+     * @param data.parameterString This is a simple string with default value
+     * @param data.parameterNumber This is a simple number with default value
+     * @param data.parameterBoolean This is a simple boolean with default value
+     * @param data.parameterEnum This is a simple enum with default value
+     * @param data.parameterModel This is a simple model with default value
      * @throws ApiError
      */
-    public apiVVersionOdataControllerCount(): CancelablePromise<ApiVversionOdataControllerCountResponse> {
+    public callWithDefaultParameters(data: CallWithDefaultParametersData = {}): CancelablePromise<void> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/api/v{api-version}/simple/$count'
+            url: '/api/v{api-version}/defaults',
+            query: {
+                parameterString: data.parameterString,
+                parameterNumber: data.parameterNumber,
+                parameterBoolean: data.parameterBoolean,
+                parameterEnum: data.parameterEnum,
+                parameterModel: data.parameterModel
+            }
         });
     }
     
     /**
+     * @param data The data for the request.
+     * @param data.parameterString This is a simple string that is optional with default value
+     * @param data.parameterNumber This is a simple number that is optional with default value
+     * @param data.parameterBoolean This is a simple boolean that is optional with default value
+     * @param data.parameterEnum This is a simple enum that is optional with default value
+     * @param data.parameterModel This is a simple model that is optional with default value
      * @throws ApiError
      */
-    public getCallWithoutParametersAndResponse(): CancelablePromise<void> {
-        return this.httpRequest.request({
-            method: 'GET',
-            url: '/api/v{api-version}/simple'
-        });
-    }
-    
-    /**
-     * @throws ApiError
-     */
-    public putCallWithoutParametersAndResponse(): CancelablePromise<void> {
-        return this.httpRequest.request({
-            method: 'PUT',
-            url: '/api/v{api-version}/simple'
-        });
-    }
-    
-    /**
-     * @throws ApiError
-     */
-    public postCallWithoutParametersAndResponse(): CancelablePromise<void> {
+    public callWithDefaultOptionalParameters(data: CallWithDefaultOptionalParametersData = {}): CancelablePromise<void> {
         return this.httpRequest.request({
             method: 'POST',
-            url: '/api/v{api-version}/simple'
+            url: '/api/v{api-version}/defaults',
+            query: {
+                parameterString: data.parameterString,
+                parameterNumber: data.parameterNumber,
+                parameterBoolean: data.parameterBoolean,
+                parameterEnum: data.parameterEnum,
+                parameterModel: data.parameterModel
+            }
+        });
+    }
+    
+    /**
+     * @param data The data for the request.
+     * @param data.parameterStringWithNoDefault This is a string with no default
+     * @param data.parameterOptionalStringWithDefault This is a optional string with default
+     * @param data.parameterOptionalStringWithEmptyDefault This is a optional string with empty default
+     * @param data.parameterOptionalStringWithNoDefault This is a optional string with no default
+     * @param data.parameterStringWithDefault This is a string with default
+     * @param data.parameterStringWithEmptyDefault This is a string with empty default
+     * @param data.parameterStringNullableWithNoDefault This is a string that can be null with no default
+     * @param data.parameterStringNullableWithDefault This is a string that can be null with default
+     * @throws ApiError
+     */
+    public callToTestOrderOfParams(data: CallToTestOrderOfParamsData): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'PUT',
+            url: '/api/v{api-version}/defaults',
+            query: {
+                parameterOptionalStringWithDefault: data.parameterOptionalStringWithDefault,
+                parameterOptionalStringWithEmptyDefault: data.parameterOptionalStringWithEmptyDefault,
+                parameterOptionalStringWithNoDefault: data.parameterOptionalStringWithNoDefault,
+                parameterStringWithDefault: data.parameterStringWithDefault,
+                parameterStringWithEmptyDefault: data.parameterStringWithEmptyDefault,
+                parameterStringWithNoDefault: data.parameterStringWithNoDefault,
+                parameterStringNullableWithNoDefault: data.parameterStringNullableWithNoDefault,
+                parameterStringNullableWithDefault: data.parameterStringNullableWithDefault
+            }
+        });
+    }
+    
+}
+
+export class DeprecatedService {
+    constructor(public readonly httpRequest: BaseHttpRequest) { }
+    
+    /**
+     * @deprecated
+     * @param data The data for the request.
+     * @param data.parameter This parameter is deprecated
+     * @throws ApiError
+     */
+    public deprecatedCall(data: DeprecatedCallData): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/v{api-version}/parameters/deprecated',
+            headers: {
+                parameter: data.parameter
+            }
+        });
+    }
+    
+}
+
+export class DescriptionsService {
+    constructor(public readonly httpRequest: BaseHttpRequest) { }
+    
+    /**
+     * @param data The data for the request.
+     * @param data.parameterWithBreaks Testing multiline comments in string: First line
+     * Second line
+     *
+     * Fourth line
+     * @param data.parameterWithBackticks Testing backticks in string: `backticks` and ```multiple backticks``` should work
+     * @param data.parameterWithSlashes Testing slashes in string: \backwards\\\ and /forwards/// should work
+     * @param data.parameterWithExpressionPlaceholders Testing expression placeholders in string: ${expression} should work
+     * @param data.parameterWithQuotes Testing quotes in string: 'single quote''' and "double quotes""" should work
+     * @param data.parameterWithReservedCharacters Testing reserved characters in string: * inline * and ** inline ** should work
+     * @throws ApiError
+     */
+    public callWithDescriptions(data: CallWithDescriptionsData = {}): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/v{api-version}/descriptions/',
+            query: {
+                parameterWithBreaks: data.parameterWithBreaks,
+                parameterWithBackticks: data.parameterWithBackticks,
+                parameterWithSlashes: data.parameterWithSlashes,
+                parameterWithExpressionPlaceholders: data.parameterWithExpressionPlaceholders,
+                parameterWithQuotes: data.parameterWithQuotes,
+                parameterWithReservedCharacters: data.parameterWithReservedCharacters
+            }
+        });
+    }
+    
+}
+
+export class DuplicateService {
+    constructor(public readonly httpRequest: BaseHttpRequest) { }
+    
+    /**
+     * @throws ApiError
+     */
+    public duplicateName(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/duplicate'
         });
     }
     
     /**
      * @throws ApiError
      */
-    public deleteCallWithoutParametersAndResponse(): CancelablePromise<void> {
+    public duplicateName1(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/v{api-version}/duplicate'
+        });
+    }
+    
+    /**
+     * @throws ApiError
+     */
+    public duplicateName2(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'PUT',
+            url: '/api/v{api-version}/duplicate'
+        });
+    }
+    
+    /**
+     * @throws ApiError
+     */
+    public duplicateName3(): CancelablePromise<void> {
         return this.httpRequest.request({
             method: 'DELETE',
-            url: '/api/v{api-version}/simple'
+            url: '/api/v{api-version}/duplicate'
+        });
+    }
+    
+}
+
+export class ErrorService {
+    constructor(public readonly httpRequest: BaseHttpRequest) { }
+    
+    /**
+     * @param data The data for the request.
+     * @param data.status Status code to return
+     * @returns unknown Custom message: Successful response
+     * @throws ApiError
+     */
+    public testErrorCode(data: TestErrorCodeData): CancelablePromise<TestErrorCodeResponse> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/v{api-version}/error',
+            query: {
+                status: data.status
+            },
+            errors: {
+                500: 'Custom message: Internal Server Error',
+                501: 'Custom message: Not Implemented',
+                502: 'Custom message: Bad Gateway',
+                503: 'Custom message: Service Unavailable'
+            }
+        });
+    }
+    
+}
+
+export class FileResponseService {
+    constructor(public readonly httpRequest: BaseHttpRequest) { }
+    
+    /**
+     * @param data The data for the request.
+     * @param data.id
+     * @returns binary Success
+     * @throws ApiError
+     */
+    public fileResponse(data: FileResponseData): CancelablePromise<FileResponseResponse> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/file/{id}',
+            path: {
+                id: data.id
+            }
+        });
+    }
+    
+}
+
+export class FormDataService {
+    constructor(public readonly httpRequest: BaseHttpRequest) { }
+    
+    /**
+     * @param data The data for the request.
+     * @param data.parameter This is a reusable parameter
+     * @param data.formData A reusable request body
+     * @throws ApiError
+     */
+    public postApiFormData(data: PostApiFormDataData = {}): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/v{api-version}/formData/',
+            query: {
+                parameter: data.parameter
+            },
+            formData: data.formData,
+            mediaType: 'multipart/form-data'
+        });
+    }
+    
+}
+
+export class HeaderService {
+    constructor(public readonly httpRequest: BaseHttpRequest) { }
+    
+    /**
+     * @returns string Successful response
+     * @throws ApiError
+     */
+    public callWithResultFromHeader(): CancelablePromise<CallWithResultFromHeaderResponse> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/v{api-version}/header',
+            responseHeader: 'operation-location',
+            errors: {
+                400: '400 server error',
+                500: '500 server error'
+            }
+        });
+    }
+    
+}
+
+export class MultipartService {
+    constructor(public readonly httpRequest: BaseHttpRequest) { }
+    
+    /**
+     * @param data The data for the request.
+     * @param data.formData
+     * @throws ApiError
+     */
+    public multipartRequest(data: MultipartRequestData = {}): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/v{api-version}/multipart',
+            formData: data.formData,
+            mediaType: 'multipart/form-data'
         });
     }
     
     /**
+     * @returns unknown OK
      * @throws ApiError
      */
-    public optionsCallWithoutParametersAndResponse(): CancelablePromise<void> {
+    public multipartResponse(): CancelablePromise<MultipartResponseResponse> {
         return this.httpRequest.request({
-            method: 'OPTIONS',
-            url: '/api/v{api-version}/simple'
+            method: 'GET',
+            url: '/api/v{api-version}/multipart'
+        });
+    }
+    
+}
+
+export class MultipleTags1Service {
+    constructor(public readonly httpRequest: BaseHttpRequest) { }
+    
+    /**
+     * @returns _400
+     * @throws ApiError
+     */
+    public dummyA(): CancelablePromise<DummyAResponse> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/multiple-tags/a'
         });
     }
     
     /**
+     * @returns void Success
      * @throws ApiError
      */
-    public headCallWithoutParametersAndResponse(): CancelablePromise<void> {
+    public dummyB(): CancelablePromise<DummyBResponse> {
         return this.httpRequest.request({
-            method: 'HEAD',
-            url: '/api/v{api-version}/simple'
+            method: 'GET',
+            url: '/api/v{api-version}/multiple-tags/b'
+        });
+    }
+    
+}
+
+export class MultipleTags2Service {
+    constructor(public readonly httpRequest: BaseHttpRequest) { }
+    
+    /**
+     * @returns _400
+     * @throws ApiError
+     */
+    public dummyA(): CancelablePromise<DummyAResponse> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/multiple-tags/a'
         });
     }
     
     /**
+     * @returns void Success
      * @throws ApiError
      */
-    public patchCallWithoutParametersAndResponse(): CancelablePromise<void> {
+    public dummyB(): CancelablePromise<DummyBResponse> {
         return this.httpRequest.request({
-            method: 'PATCH',
-            url: '/api/v{api-version}/simple'
+            method: 'GET',
+            url: '/api/v{api-version}/multiple-tags/b'
+        });
+    }
+    
+}
+
+export class MultipleTags3Service {
+    constructor(public readonly httpRequest: BaseHttpRequest) { }
+    
+    /**
+     * @returns void Success
+     * @throws ApiError
+     */
+    public dummyB(): CancelablePromise<DummyBResponse> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/multiple-tags/b'
+        });
+    }
+    
+}
+
+export class NoContentService {
+    constructor(public readonly httpRequest: BaseHttpRequest) { }
+    
+    /**
+     * @returns void Success
+     * @throws ApiError
+     */
+    public callWithNoContentResponse(): CancelablePromise<CallWithNoContentResponseResponse> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/no-content'
+        });
+    }
+    
+    /**
+     * @returns number Response is a simple number
+     * @returns void Success
+     * @throws ApiError
+     */
+    public callWithResponseAndNoContentResponse(): CancelablePromise<CallWithResponseAndNoContentResponseResponse> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/v{api-version}/multiple-tags/response-and-no-content'
+        });
+    }
+    
+}
+
+export class NonAsciiÆøåÆøÅöôêÊService {
+    constructor(public readonly httpRequest: BaseHttpRequest) { }
+    
+    /**
+     * @param data The data for the request.
+     * @param data.nonAsciiParamæøåÆøÅöôêÊ Dummy input param
+     * @returns NonAsciiStringæøåÆØÅöôêÊ字符串 Successful response
+     * @throws ApiError
+     */
+    public nonAsciiæøåÆøÅöôêÊ字符串(data: NonAsciiæøåÆøÅöôêÊ字符串Data): CancelablePromise<NonAsciiæøåÆøÅöôêÊ字符串Response> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
+            query: {
+                'nonAsciiParamæøåÆØÅöôêÊ': data.nonAsciiParamæøåÆøÅöôêÊ
+            }
+        });
+    }
+    
+    /**
+     * Login User
+     * @param data The data for the request.
+     * @param data.formData
+     * @throws ApiError
+     */
+    public putWithFormUrlEncoded(data: PutWithFormUrlEncodedData): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'PUT',
+            url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
+            formData: data.formData,
+            mediaType: 'application/x-www-form-urlencoded'
         });
     }
     
@@ -274,60 +697,6 @@ export class ParametersService {
     
 }
 
-export class DescriptionsService {
-    constructor(public readonly httpRequest: BaseHttpRequest) { }
-    
-    /**
-     * @param data The data for the request.
-     * @param data.parameterWithBreaks Testing multiline comments in string: First line
-     * Second line
-     *
-     * Fourth line
-     * @param data.parameterWithBackticks Testing backticks in string: `backticks` and ```multiple backticks``` should work
-     * @param data.parameterWithSlashes Testing slashes in string: \backwards\\\ and /forwards/// should work
-     * @param data.parameterWithExpressionPlaceholders Testing expression placeholders in string: ${expression} should work
-     * @param data.parameterWithQuotes Testing quotes in string: 'single quote''' and "double quotes""" should work
-     * @param data.parameterWithReservedCharacters Testing reserved characters in string: * inline * and ** inline ** should work
-     * @throws ApiError
-     */
-    public callWithDescriptions(data: CallWithDescriptionsData = {}): CancelablePromise<void> {
-        return this.httpRequest.request({
-            method: 'POST',
-            url: '/api/v{api-version}/descriptions/',
-            query: {
-                parameterWithBreaks: data.parameterWithBreaks,
-                parameterWithBackticks: data.parameterWithBackticks,
-                parameterWithSlashes: data.parameterWithSlashes,
-                parameterWithExpressionPlaceholders: data.parameterWithExpressionPlaceholders,
-                parameterWithQuotes: data.parameterWithQuotes,
-                parameterWithReservedCharacters: data.parameterWithReservedCharacters
-            }
-        });
-    }
-    
-}
-
-export class DeprecatedService {
-    constructor(public readonly httpRequest: BaseHttpRequest) { }
-    
-    /**
-     * @deprecated
-     * @param data The data for the request.
-     * @param data.parameter This parameter is deprecated
-     * @throws ApiError
-     */
-    public deprecatedCall(data: DeprecatedCallData): CancelablePromise<void> {
-        return this.httpRequest.request({
-            method: 'POST',
-            url: '/api/v{api-version}/parameters/deprecated',
-            headers: {
-                parameter: data.parameter
-            }
-        });
-    }
-    
-}
-
 export class RequestBodyService {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
     
@@ -346,182 +715,6 @@ export class RequestBodyService {
             },
             body: data.foo,
             mediaType: 'application/json'
-        });
-    }
-    
-}
-
-export class FormDataService {
-    constructor(public readonly httpRequest: BaseHttpRequest) { }
-    
-    /**
-     * @param data The data for the request.
-     * @param data.parameter This is a reusable parameter
-     * @param data.formData A reusable request body
-     * @throws ApiError
-     */
-    public postApiFormData(data: PostApiFormDataData = {}): CancelablePromise<void> {
-        return this.httpRequest.request({
-            method: 'POST',
-            url: '/api/v{api-version}/formData/',
-            query: {
-                parameter: data.parameter
-            },
-            formData: data.formData,
-            mediaType: 'multipart/form-data'
-        });
-    }
-    
-}
-
-export class DefaultsService {
-    constructor(public readonly httpRequest: BaseHttpRequest) { }
-    
-    /**
-     * @param data The data for the request.
-     * @param data.parameterString This is a simple string with default value
-     * @param data.parameterNumber This is a simple number with default value
-     * @param data.parameterBoolean This is a simple boolean with default value
-     * @param data.parameterEnum This is a simple enum with default value
-     * @param data.parameterModel This is a simple model with default value
-     * @throws ApiError
-     */
-    public callWithDefaultParameters(data: CallWithDefaultParametersData = {}): CancelablePromise<void> {
-        return this.httpRequest.request({
-            method: 'GET',
-            url: '/api/v{api-version}/defaults',
-            query: {
-                parameterString: data.parameterString,
-                parameterNumber: data.parameterNumber,
-                parameterBoolean: data.parameterBoolean,
-                parameterEnum: data.parameterEnum,
-                parameterModel: data.parameterModel
-            }
-        });
-    }
-    
-    /**
-     * @param data The data for the request.
-     * @param data.parameterString This is a simple string that is optional with default value
-     * @param data.parameterNumber This is a simple number that is optional with default value
-     * @param data.parameterBoolean This is a simple boolean that is optional with default value
-     * @param data.parameterEnum This is a simple enum that is optional with default value
-     * @param data.parameterModel This is a simple model that is optional with default value
-     * @throws ApiError
-     */
-    public callWithDefaultOptionalParameters(data: CallWithDefaultOptionalParametersData = {}): CancelablePromise<void> {
-        return this.httpRequest.request({
-            method: 'POST',
-            url: '/api/v{api-version}/defaults',
-            query: {
-                parameterString: data.parameterString,
-                parameterNumber: data.parameterNumber,
-                parameterBoolean: data.parameterBoolean,
-                parameterEnum: data.parameterEnum,
-                parameterModel: data.parameterModel
-            }
-        });
-    }
-    
-    /**
-     * @param data The data for the request.
-     * @param data.parameterStringWithNoDefault This is a string with no default
-     * @param data.parameterOptionalStringWithDefault This is a optional string with default
-     * @param data.parameterOptionalStringWithEmptyDefault This is a optional string with empty default
-     * @param data.parameterOptionalStringWithNoDefault This is a optional string with no default
-     * @param data.parameterStringWithDefault This is a string with default
-     * @param data.parameterStringWithEmptyDefault This is a string with empty default
-     * @param data.parameterStringNullableWithNoDefault This is a string that can be null with no default
-     * @param data.parameterStringNullableWithDefault This is a string that can be null with default
-     * @throws ApiError
-     */
-    public callToTestOrderOfParams(data: CallToTestOrderOfParamsData): CancelablePromise<void> {
-        return this.httpRequest.request({
-            method: 'PUT',
-            url: '/api/v{api-version}/defaults',
-            query: {
-                parameterOptionalStringWithDefault: data.parameterOptionalStringWithDefault,
-                parameterOptionalStringWithEmptyDefault: data.parameterOptionalStringWithEmptyDefault,
-                parameterOptionalStringWithNoDefault: data.parameterOptionalStringWithNoDefault,
-                parameterStringWithDefault: data.parameterStringWithDefault,
-                parameterStringWithEmptyDefault: data.parameterStringWithEmptyDefault,
-                parameterStringWithNoDefault: data.parameterStringWithNoDefault,
-                parameterStringNullableWithNoDefault: data.parameterStringNullableWithNoDefault,
-                parameterStringNullableWithDefault: data.parameterStringNullableWithDefault
-            }
-        });
-    }
-    
-}
-
-export class DuplicateService {
-    constructor(public readonly httpRequest: BaseHttpRequest) { }
-    
-    /**
-     * @throws ApiError
-     */
-    public duplicateName(): CancelablePromise<void> {
-        return this.httpRequest.request({
-            method: 'GET',
-            url: '/api/v{api-version}/duplicate'
-        });
-    }
-    
-    /**
-     * @throws ApiError
-     */
-    public duplicateName1(): CancelablePromise<void> {
-        return this.httpRequest.request({
-            method: 'POST',
-            url: '/api/v{api-version}/duplicate'
-        });
-    }
-    
-    /**
-     * @throws ApiError
-     */
-    public duplicateName2(): CancelablePromise<void> {
-        return this.httpRequest.request({
-            method: 'PUT',
-            url: '/api/v{api-version}/duplicate'
-        });
-    }
-    
-    /**
-     * @throws ApiError
-     */
-    public duplicateName3(): CancelablePromise<void> {
-        return this.httpRequest.request({
-            method: 'DELETE',
-            url: '/api/v{api-version}/duplicate'
-        });
-    }
-    
-}
-
-export class NoContentService {
-    constructor(public readonly httpRequest: BaseHttpRequest) { }
-    
-    /**
-     * @returns void Success
-     * @throws ApiError
-     */
-    public callWithNoContentResponse(): CancelablePromise<CallWithNoContentResponseResponse> {
-        return this.httpRequest.request({
-            method: 'GET',
-            url: '/api/v{api-version}/no-content'
-        });
-    }
-    
-    /**
-     * @returns number Response is a simple number
-     * @returns void Success
-     * @throws ApiError
-     */
-    public callWithResponseAndNoContentResponse(): CancelablePromise<CallWithResponseAndNoContentResponseResponse> {
-        return this.httpRequest.request({
-            method: 'GET',
-            url: '/api/v{api-version}/multiple-tags/response-and-no-content'
         });
     }
     
@@ -594,99 +787,87 @@ export class ResponseService {
     
 }
 
-export class MultipleTags1Service {
+export class SimpleService {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
     
     /**
-     * @returns _400
+     * @returns Model_From_Zendesk Success
      * @throws ApiError
      */
-    public dummyA(): CancelablePromise<DummyAResponse> {
+    public apiVVersionOdataControllerCount(): CancelablePromise<ApiVversionOdataControllerCountResponse> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/api/v{api-version}/multiple-tags/a'
+            url: '/api/v{api-version}/simple/$count'
         });
     }
     
     /**
-     * @returns void Success
      * @throws ApiError
      */
-    public dummyB(): CancelablePromise<DummyBResponse> {
+    public getCallWithoutParametersAndResponse(): CancelablePromise<void> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/api/v{api-version}/multiple-tags/b'
-        });
-    }
-    
-}
-
-export class MultipleTags2Service {
-    constructor(public readonly httpRequest: BaseHttpRequest) { }
-    
-    /**
-     * @returns _400
-     * @throws ApiError
-     */
-    public dummyA(): CancelablePromise<DummyAResponse> {
-        return this.httpRequest.request({
-            method: 'GET',
-            url: '/api/v{api-version}/multiple-tags/a'
+            url: '/api/v{api-version}/simple'
         });
     }
     
     /**
-     * @returns void Success
      * @throws ApiError
      */
-    public dummyB(): CancelablePromise<DummyBResponse> {
+    public putCallWithoutParametersAndResponse(): CancelablePromise<void> {
         return this.httpRequest.request({
-            method: 'GET',
-            url: '/api/v{api-version}/multiple-tags/b'
+            method: 'PUT',
+            url: '/api/v{api-version}/simple'
         });
     }
     
-}
-
-export class MultipleTags3Service {
-    constructor(public readonly httpRequest: BaseHttpRequest) { }
-    
     /**
-     * @returns void Success
      * @throws ApiError
      */
-    public dummyB(): CancelablePromise<DummyBResponse> {
+    public postCallWithoutParametersAndResponse(): CancelablePromise<void> {
         return this.httpRequest.request({
-            method: 'GET',
-            url: '/api/v{api-version}/multiple-tags/b'
+            method: 'POST',
+            url: '/api/v{api-version}/simple'
         });
     }
     
-}
-
-export class CollectionFormatService {
-    constructor(public readonly httpRequest: BaseHttpRequest) { }
-    
     /**
-     * @param data The data for the request.
-     * @param data.parameterArrayCsv This is an array parameter that is sent as csv format (comma-separated values)
-     * @param data.parameterArraySsv This is an array parameter that is sent as ssv format (space-separated values)
-     * @param data.parameterArrayTsv This is an array parameter that is sent as tsv format (tab-separated values)
-     * @param data.parameterArrayPipes This is an array parameter that is sent as pipes format (pipe-separated values)
-     * @param data.parameterArrayMulti This is an array parameter that is sent as multi format (multiple parameter instances)
      * @throws ApiError
      */
-    public collectionFormat(data: CollectionFormatData): CancelablePromise<void> {
+    public deleteCallWithoutParametersAndResponse(): CancelablePromise<void> {
         return this.httpRequest.request({
-            method: 'GET',
-            url: '/api/v{api-version}/collectionFormat',
-            query: {
-                parameterArrayCSV: data.parameterArrayCsv,
-                parameterArraySSV: data.parameterArraySsv,
-                parameterArrayTSV: data.parameterArrayTsv,
-                parameterArrayPipes: data.parameterArrayPipes,
-                parameterArrayMulti: data.parameterArrayMulti
-            }
+            method: 'DELETE',
+            url: '/api/v{api-version}/simple'
+        });
+    }
+    
+    /**
+     * @throws ApiError
+     */
+    public optionsCallWithoutParametersAndResponse(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'OPTIONS',
+            url: '/api/v{api-version}/simple'
+        });
+    }
+    
+    /**
+     * @throws ApiError
+     */
+    public headCallWithoutParametersAndResponse(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'HEAD',
+            url: '/api/v{api-version}/simple'
+        });
+    }
+    
+    /**
+     * @throws ApiError
+     */
+    public patchCallWithoutParametersAndResponse(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'PATCH',
+            url: '/api/v{api-version}/simple'
         });
     }
     
@@ -745,187 +926,6 @@ export class UploadService {
         return this.httpRequest.request({
             method: 'POST',
             url: '/api/v{api-version}/upload',
-            formData: data.formData,
-            mediaType: 'application/x-www-form-urlencoded'
-        });
-    }
-    
-}
-
-export class FileResponseService {
-    constructor(public readonly httpRequest: BaseHttpRequest) { }
-    
-    /**
-     * @param data The data for the request.
-     * @param data.id
-     * @returns binary Success
-     * @throws ApiError
-     */
-    public fileResponse(data: FileResponseData): CancelablePromise<FileResponseResponse> {
-        return this.httpRequest.request({
-            method: 'GET',
-            url: '/api/v{api-version}/file/{id}',
-            path: {
-                id: data.id
-            }
-        });
-    }
-    
-}
-
-export class ComplexService {
-    constructor(public readonly httpRequest: BaseHttpRequest) { }
-    
-    /**
-     * @param data The data for the request.
-     * @param data.parameterObject Parameter containing object
-     * @param data.parameterReference Parameter containing reference
-     * @returns ModelWithString Successful response
-     * @throws ApiError
-     */
-    public complexTypes(data: ComplexTypesData): CancelablePromise<ComplexTypesResponse> {
-        return this.httpRequest.request({
-            method: 'GET',
-            url: '/api/v{api-version}/complex',
-            query: {
-                parameterObject: data.parameterObject,
-                parameterReference: data.parameterReference
-            },
-            errors: {
-                400: '400 `server` error',
-                500: '500 server error'
-            }
-        });
-    }
-    
-    /**
-     * @param data The data for the request.
-     * @param data.id
-     * @param data.requestBody
-     * @returns ModelWithString Success
-     * @throws ApiError
-     */
-    public complexParams(data: ComplexParamsData): CancelablePromise<ComplexParamsResponse> {
-        return this.httpRequest.request({
-            method: 'PUT',
-            url: '/api/v{api-version}/complex/{id}',
-            path: {
-                id: data.id
-            },
-            body: data.requestBody,
-            mediaType: 'application/json-patch+json'
-        });
-    }
-    
-}
-
-export class MultipartService {
-    constructor(public readonly httpRequest: BaseHttpRequest) { }
-    
-    /**
-     * @param data The data for the request.
-     * @param data.formData
-     * @throws ApiError
-     */
-    public multipartRequest(data: MultipartRequestData = {}): CancelablePromise<void> {
-        return this.httpRequest.request({
-            method: 'POST',
-            url: '/api/v{api-version}/multipart',
-            formData: data.formData,
-            mediaType: 'multipart/form-data'
-        });
-    }
-    
-    /**
-     * @returns unknown OK
-     * @throws ApiError
-     */
-    public multipartResponse(): CancelablePromise<MultipartResponseResponse> {
-        return this.httpRequest.request({
-            method: 'GET',
-            url: '/api/v{api-version}/multipart'
-        });
-    }
-    
-}
-
-export class HeaderService {
-    constructor(public readonly httpRequest: BaseHttpRequest) { }
-    
-    /**
-     * @returns string Successful response
-     * @throws ApiError
-     */
-    public callWithResultFromHeader(): CancelablePromise<CallWithResultFromHeaderResponse> {
-        return this.httpRequest.request({
-            method: 'POST',
-            url: '/api/v{api-version}/header',
-            responseHeader: 'operation-location',
-            errors: {
-                400: '400 server error',
-                500: '500 server error'
-            }
-        });
-    }
-    
-}
-
-export class ErrorService {
-    constructor(public readonly httpRequest: BaseHttpRequest) { }
-    
-    /**
-     * @param data The data for the request.
-     * @param data.status Status code to return
-     * @returns unknown Custom message: Successful response
-     * @throws ApiError
-     */
-    public testErrorCode(data: TestErrorCodeData): CancelablePromise<TestErrorCodeResponse> {
-        return this.httpRequest.request({
-            method: 'POST',
-            url: '/api/v{api-version}/error',
-            query: {
-                status: data.status
-            },
-            errors: {
-                500: 'Custom message: Internal Server Error',
-                501: 'Custom message: Not Implemented',
-                502: 'Custom message: Bad Gateway',
-                503: 'Custom message: Service Unavailable'
-            }
-        });
-    }
-    
-}
-
-export class NonAsciiÆøåÆøÅöôêÊService {
-    constructor(public readonly httpRequest: BaseHttpRequest) { }
-    
-    /**
-     * @param data The data for the request.
-     * @param data.nonAsciiParamæøåÆøÅöôêÊ Dummy input param
-     * @returns NonAsciiStringæøåÆØÅöôêÊ字符串 Successful response
-     * @throws ApiError
-     */
-    public nonAsciiæøåÆøÅöôêÊ字符串(data: NonAsciiæøåÆøÅöôêÊ字符串Data): CancelablePromise<NonAsciiæøåÆøÅöôêÊ字符串Response> {
-        return this.httpRequest.request({
-            method: 'POST',
-            url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
-            query: {
-                'nonAsciiParamæøåÆØÅöôêÊ': data.nonAsciiParamæøåÆøÅöôêÊ
-            }
-        });
-    }
-    
-    /**
-     * Login User
-     * @param data The data for the request.
-     * @param data.formData
-     * @throws ApiError
-     */
-    public putWithFormUrlEncoded(data: PutWithFormUrlEncodedData): CancelablePromise<void> {
-        return this.httpRequest.request({
-            method: 'PUT',
-            url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
             formData: data.formData,
             mediaType: 'application/x-www-form-urlencoded'
         });

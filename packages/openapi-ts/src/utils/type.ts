@@ -23,7 +23,7 @@ const base = (model: Model) => {
     });
   }
 
-  if (config.types.dates && isModelDate(model)) {
+  if (config.plugins['@hey-api/transformers']?.dates && isModelDate(model)) {
     return compiler.typeNode('Date');
   }
 

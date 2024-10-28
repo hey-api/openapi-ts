@@ -10,10 +10,6 @@ import {
   clientModulePath,
   clientOptionsTypeName,
 } from '../../../generate/client';
-import {
-  operationOptionsType,
-  serviceFunctionIdentifier,
-} from '../../../generate/services';
 import type { IRContext } from '../../../ir/context';
 import type {
   IROperationObject,
@@ -33,12 +29,16 @@ import {
   operationErrorRef,
   operationResponseRef,
 } from '../../@hey-api/services/plugin';
+import {
+  operationOptionsType,
+  serviceFunctionIdentifier,
+} from '../../@hey-api/services/plugin-legacy';
 import { schemaToType } from '../../@hey-api/types/plugin';
 import type { PluginHandler } from '../../types';
-import type { PluginConfig as ReactQueryPluginConfig } from '../react-query';
-import type { PluginConfig as SolidQueryPluginConfig } from '../solid-query';
-import type { PluginConfig as SvelteQueryPluginConfig } from '../svelte-query';
-import type { PluginConfig as VueQueryPluginConfig } from '../vue-query';
+import type { Config as ReactQueryConfig } from '../react-query';
+import type { Config as SolidQueryConfig } from '../solid-query';
+import type { Config as SvelteQueryConfig } from '../svelte-query';
+import type { Config as VueQueryConfig } from '../vue-query';
 
 const infiniteQueryOptionsFunctionIdentifier = ({
   context,
@@ -539,14 +539,6 @@ const createQueryKeyLiteral = ({
   return queryKeyLiteral;
 };
 
-const checkPrerequisites = ({ context }: { context: IRContext }) => {
-  if (!context.file({ id: 'services' })) {
-    throw new Error(
-      '🚫 services need to be exported to use TanStack Query plugin - enable service generation',
-    );
-  }
-};
-
 interface Plugin {
   name: string;
   output: string;
@@ -655,13 +647,8 @@ const useTypeResponse = ({
 };
 
 export const handler: PluginHandler<
-  | ReactQueryPluginConfig
-  | SolidQueryPluginConfig
-  | SvelteQueryPluginConfig
-  | VueQueryPluginConfig
+  ReactQueryConfig | SolidQueryConfig | SvelteQueryConfig | VueQueryConfig
 > = ({ context, plugin }) => {
-  checkPrerequisites({ context });
-
   const file = context.createFile({
     id: plugin.name,
     path: plugin.output,
@@ -697,14 +684,14 @@ export const handler: PluginHandler<
       const operation = pathItem[method]!;
 
       const queryFn = [
-        context.config.services.asClass &&
+        context.config.plugins['@hey-api/services']?.asClass &&
           transformServiceName({
             config: context.config,
             name: getServiceName(operation.tags?.[0] || 'default'),
           }),
         serviceFunctionIdentifier({
           config: context.config,
-          handleIllegal: !context.config.services.asClass,
+          handleIllegal: !context.config.plugins['@hey-api/services']?.asClass,
           id: operation.id,
           operation,
         }),

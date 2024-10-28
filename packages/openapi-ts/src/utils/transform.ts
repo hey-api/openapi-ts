@@ -11,8 +11,11 @@ export const transformServiceName = ({
   config: Config;
   name: string;
 }) => {
-  if (config.services.name) {
-    return config.services.name.replace('{{name}}', name);
+  if (config.plugins['@hey-api/services']?.serviceNameBuilder) {
+    return config.plugins['@hey-api/services'].serviceNameBuilder.replace(
+      '{{name}}',
+      name,
+    );
   }
 
   return name;
@@ -20,7 +23,7 @@ export const transformServiceName = ({
 
 export const transformTypeName = (name: string) => {
   const config = getConfig();
-  if (config.types.name === 'PascalCase') {
+  if (config.plugins['@hey-api/types']?.style === 'PascalCase') {
     return camelCase({
       input: name,
       pascalCase: true,

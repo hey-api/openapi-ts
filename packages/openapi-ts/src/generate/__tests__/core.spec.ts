@@ -31,18 +31,31 @@ describe('generateLegacyCore', () => {
       configFile: '',
       debug: false,
       dryRun: false,
-      experimental_parser: false,
+      experimentalParser: false,
       exportCore: true,
       input: '',
       name: 'AppClient',
       output: {
         path: '',
       },
-      plugins: [],
-      schemas: {},
-      services: {},
-      types: {
-        enums: 'javascript',
+      pluginOrder: ['@hey-api/types', '@hey-api/schemas', '@hey-api/services'],
+      plugins: {
+        '@hey-api/schemas': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          name: '@hey-api/schemas',
+        },
+        '@hey-api/services': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          name: '@hey-api/services',
+        },
+        '@hey-api/types': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          enums: 'javascript',
+          name: '@hey-api/types',
+        },
       },
       useOptions: true,
     });
@@ -91,18 +104,31 @@ describe('generateLegacyCore', () => {
       configFile: '',
       debug: false,
       dryRun: false,
-      experimental_parser: false,
+      experimentalParser: false,
       exportCore: true,
       input: '',
       name: 'AppClient',
       output: {
         path: '',
       },
-      plugins: [],
-      schemas: {},
-      services: {},
-      types: {
-        enums: 'javascript',
+      pluginOrder: ['@hey-api/types', '@hey-api/schemas', '@hey-api/services'],
+      plugins: {
+        '@hey-api/schemas': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          name: '@hey-api/schemas',
+        },
+        '@hey-api/services': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          name: '@hey-api/services',
+        },
+        '@hey-api/types': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          enums: 'javascript',
+          name: '@hey-api/types',
+        },
       },
       useOptions: true,
     });
@@ -134,18 +160,31 @@ describe('generateLegacyCore', () => {
       configFile: '',
       debug: false,
       dryRun: false,
-      experimental_parser: false,
+      experimentalParser: false,
       exportCore: true,
       input: '',
       name: 'AppClient',
       output: {
         path: '',
       },
-      plugins: [],
-      schemas: {},
-      services: {},
-      types: {
-        enums: 'javascript',
+      pluginOrder: ['@hey-api/types', '@hey-api/schemas', '@hey-api/services'],
+      plugins: {
+        '@hey-api/schemas': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          name: '@hey-api/schemas',
+        },
+        '@hey-api/services': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          name: '@hey-api/services',
+        },
+        '@hey-api/types': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          enums: 'javascript',
+          name: '@hey-api/types',
+        },
       },
       useOptions: true,
     });

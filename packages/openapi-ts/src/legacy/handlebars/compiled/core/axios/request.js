@@ -250,75 +250,54 @@ export default {
         ? stack1
         : '') +
       '\n\n/**\n * Request method\n * @param config The OpenAPI configuration object\n * @param options The request options from the service\n * @param axiosClient The axios client instance to use\n * @returns CancelablePromise<' +
-      ((stack1 = lookupProperty(helpers, 'equals').call(
+      ((stack1 = lookupProperty(helpers, 'ifServicesResponse').call(
         alias1,
-        lookupProperty(
-          lookupProperty(
-            lookupProperty(lookupProperty(data, 'root'), '$config'),
-            'services',
-          ),
-          'response',
-        ),
         'response',
         {
-          name: 'equals',
+          name: 'ifServicesResponse',
           hash: {},
           fn: container.program(1, data, 0),
           inverse: container.program(3, data, 0),
           data: data,
           loc: {
             start: { line: 64, column: 30 },
-            end: { line: 64, column: 116 },
+            end: { line: 64, column: 108 },
           },
         },
       )) != null
         ? stack1
         : '') +
       '>\n * @throws ApiError\n */\nexport const request = <T>(config: OpenAPIConfig, options: ApiRequestOptions<T>, axiosClient: AxiosInstance = axios): CancelablePromise<' +
-      ((stack1 = lookupProperty(helpers, 'equals').call(
+      ((stack1 = lookupProperty(helpers, 'ifServicesResponse').call(
         alias1,
-        lookupProperty(
-          lookupProperty(
-            lookupProperty(lookupProperty(data, 'root'), '$config'),
-            'services',
-          ),
-          'response',
-        ),
         'response',
         {
-          name: 'equals',
+          name: 'ifServicesResponse',
           hash: {},
           fn: container.program(1, data, 0),
           inverse: container.program(3, data, 0),
           data: data,
           loc: {
             start: { line: 67, column: 136 },
-            end: { line: 67, column: 222 },
+            end: { line: 67, column: 214 },
           },
         },
       )) != null
         ? stack1
         : '') +
       '> => {\n	return new CancelablePromise(async (resolve, reject, onCancel) => {\n		try {\n			const url = getUrl(config, options);\n			const formData = getFormData(options);\n			const body = getRequestBody(options);\n			const headers = await getHeaders(config, options);\n\n			if (!onCancel.isCancelled) {\n				let response = await sendRequest<T>(config, options, url, body, formData, headers, onCancel, axiosClient);\n\n				for (const fn of config.interceptors.response._fns) {\n					response = await fn(response);\n				}\n\n				const responseBody = getResponseBody(response);\n				const responseHeader = getResponseHeader(response, options.responseHeader);\n\n				let transformedBody = responseBody;\n				if (options.responseTransformer && isSuccess(response.status)) {\n					transformedBody = await options.responseTransformer(responseBody)\n				}\n\n				const result: ApiResult = {\n					url,\n					ok: isSuccess(response.status),\n					status: response.status,\n					statusText: response.statusText,\n					body: responseHeader ?? transformedBody,\n				};\n\n				catchErrorCodes(options, result);\n\n				resolve(' +
-      ((stack1 = lookupProperty(helpers, 'equals').call(
+      ((stack1 = lookupProperty(helpers, 'ifServicesResponse').call(
         alias1,
-        lookupProperty(
-          lookupProperty(
-            lookupProperty(lookupProperty(data, 'root'), '$config'),
-            'services',
-          ),
-          'response',
-        ),
         'body',
         {
-          name: 'equals',
+          name: 'ifServicesResponse',
           hash: {},
           fn: container.program(5, data, 0),
           inverse: container.program(7, data, 0),
           data: data,
           loc: {
             start: { line: 100, column: 12 },
-            end: { line: 100, column: 98 },
+            end: { line: 100, column: 90 },
           },
         },
       )) != null

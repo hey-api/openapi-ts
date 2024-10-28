@@ -29,7 +29,7 @@ export const clientModulePath = ({
 export const clientOptionsTypeName = () => 'Options';
 
 /**
- * Creates a `client` directory containing the same modules as the client package.
+ * Creates a `client` folder containing the same modules as the client package.
  */
 export const generateClientBundle = ({
   name,
@@ -38,7 +38,7 @@ export const generateClientBundle = ({
   name: string;
   outputPath: string;
 }): void => {
-  // create directory for client modules
+  // create folder for client modules
   const dirPath = path.resolve(outputPath, 'client');
   ensureDirSync(dirPath);
 
