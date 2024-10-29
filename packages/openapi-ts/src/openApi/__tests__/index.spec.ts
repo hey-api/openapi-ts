@@ -1,9 +1,20 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { type OpenApi, parseLegacy } from '..';
+import { type OpenApi, parseExperimental, parseLegacy } from '..';
+import type { OpenApiV3_0_0 } from '../3.0.x';
+import { parseV3_0_0 } from '../3.0.x';
+import type { OpenApiV3_1_0 } from '../3.1.x';
+import { parseV3_1_0 } from '../3.1.x';
 import type { ParserConfig } from '../config';
 import * as parseV2 from '../v2';
 import * as parseV3 from '../v3';
+
+vi.mock('../3.0.x', () => ({
+  parseV3_0_0: vi.fn(),
+}));
+vi.mock('../3.1.x', () => ({
+  parseV3_1_0: vi.fn(),
+}));
 
 const parserConfig: ParserConfig = {
   filterFn: {
@@ -91,5 +102,130 @@ describe('parse', () => {
     ).toThrow(
       `Unsupported OpenAPI specification: ${JSON.stringify({ foo: 'bar' }, null, 2)}`,
     );
+  });
+});
+
+describe('experimentalParser', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('handles OpenAPI 3.0.0', () => {
+    const spec: OpenApiV3_0_0 = {
+      // info: {
+      //   title: '',
+      //   version: '1',
+      // },
+      openapi: '3.0.0',
+    };
+    parseExperimental({
+      // @ts-ignore
+      config: {},
+      parserConfig,
+      spec,
+    });
+    expect(parseV3_0_0).toHaveBeenCalled();
+  });
+
+  it('handles OpenAPI 3.0.1', () => {
+    const spec: OpenApiV3_0_0 = {
+      // info: {
+      //   title: '',
+      //   version: '1',
+      // },
+      openapi: '3.0.1',
+    };
+    parseExperimental({
+      // @ts-ignore
+      config: {},
+      parserConfig,
+      spec,
+    });
+    expect(parseV3_0_0).toHaveBeenCalled();
+  });
+
+  it('handles OpenAPI 3.0.2', () => {
+    const spec: OpenApiV3_0_0 = {
+      // info: {
+      //   title: '',
+      //   version: '1',
+      // },
+      openapi: '3.0.2',
+    };
+    parseExperimental({
+      // @ts-ignore
+      config: {},
+      parserConfig,
+      spec,
+    });
+    expect(parseV3_0_0).toHaveBeenCalled();
+  });
+
+  it('handles OpenAPI 3.0.3', () => {
+    const spec: OpenApiV3_0_0 = {
+      // info: {
+      //   title: '',
+      //   version: '1',
+      // },
+      openapi: '3.0.3',
+    };
+    parseExperimental({
+      // @ts-ignore
+      config: {},
+      parserConfig,
+      spec,
+    });
+    expect(parseV3_0_0).toHaveBeenCalled();
+  });
+
+  it('handles OpenAPI 3.0.4', () => {
+    const spec: OpenApiV3_0_0 = {
+      // info: {
+      //   title: '',
+      //   version: '1',
+      // },
+      openapi: '3.0.4',
+    };
+    parseExperimental({
+      // @ts-ignore
+      config: {},
+      parserConfig,
+      spec,
+    });
+    expect(parseV3_0_0).toHaveBeenCalled();
+  });
+
+  it('handles OpenAPI 3.1.0', () => {
+    const spec: OpenApiV3_1_0 = {
+      info: {
+        title: '',
+        version: '1',
+      },
+      openapi: '3.1.0',
+    };
+    parseExperimental({
+      // @ts-ignore
+      config: {},
+      parserConfig,
+      spec,
+    });
+    expect(parseV3_1_0).toHaveBeenCalled();
+  });
+
+  it('handles OpenAPI 3.1.1', () => {
+    const spec: OpenApiV3_1_0 = {
+      info: {
+        title: '',
+        version: '1',
+      },
+      openapi: '3.1.1',
+    };
+    parseExperimental({
+      // @ts-ignore
+      config: {},
+      parserConfig,
+      spec,
+    });
+    expect(parseV3_1_0).toHaveBeenCalled();
   });
 });

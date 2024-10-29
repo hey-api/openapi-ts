@@ -1,11 +1,10 @@
 import { compiler } from '../../../compiler';
 import type { IRContext } from '../../../ir/context';
-import {
-  ensureValidTypeScriptJavaScriptIdentifier,
-  type ParserOpenApiSpec,
-} from '../../../openApi';
-import type { OpenApiV3_1_0 } from '../../../openApi/3.1.0';
-import type { SchemaObject as OpenApiV3_1_0SchemaObject } from '../../../openApi/3.1.0/types/spec';
+import { ensureValidTypeScriptJavaScriptIdentifier } from '../../../openApi';
+import type { OpenApiV3_0_0 } from '../../../openApi/3.0.x';
+import type { OpenApiV3_1_0 } from '../../../openApi/3.1.x';
+// import type { SchemaObject as OpenApiV3_0_0SchemaObject } from '../../../openApi/3.0.x/types/spec';
+import type { SchemaObject as OpenApiV3_1_0SchemaObject } from '../../../openApi/3.1.x/types/spec';
 import type { PluginHandler } from '../../types';
 import type { Config } from './types';
 
@@ -154,6 +153,14 @@ const schemaName = ({
   return `${validName}Schema`;
 };
 
+const schemasV3_0_0 = (context: IRContext<OpenApiV3_0_0>) => {
+  if (!context.spec.components) {
+    return;
+  }
+
+  // TODO: parser - handle OpenAPI 3.0.x
+};
+
 const schemasV3_1_0 = (context: IRContext<OpenApiV3_1_0>) => {
   if (!context.spec.components) {
     return;
@@ -182,13 +189,18 @@ export const handler: PluginHandler<Config> = ({ context }) => {
   });
 
   if (context.spec.openapi) {
-    const ctx = context as IRContext<ParserOpenApiSpec>;
-    // TODO: parser - copy-pasted from experimental parser for now
+    const ctx = context as IRContext<OpenApiV3_0_0 | OpenApiV3_1_0>;
     switch (ctx.spec.openapi) {
+      // TODO: parser - handle Swagger 2.0
+      case '3.0.0':
+      case '3.0.1':
+      case '3.0.2':
       case '3.0.3':
-        // ...
+      case '3.0.4':
+        schemasV3_0_0(context as IRContext<OpenApiV3_0_0>);
         break;
       case '3.1.0':
+      case '3.1.1':
         schemasV3_1_0(context as IRContext<OpenApiV3_1_0>);
         break;
       default:
