@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import type { OpenApi } from '../openApi';
 import type { Client } from '../types/client';
-import { getConfig } from '../utils/config';
+import { getConfig, legacyNameFromConfig } from '../utils/config';
 import { getHttpRequestName } from '../utils/getHttpRequestName';
 import type { Templates } from '../utils/handlebars';
 import { sortByName } from '../utils/sort';
@@ -34,10 +34,10 @@ export const generateLegacyClientClass = async (
     services: sortByName(client.services),
   });
 
-  if (config.name) {
+  if (legacyNameFromConfig(config)) {
     ensureDirSync(outputPath);
     writeFileSync(
-      path.resolve(outputPath, `${config.name}.ts`),
+      path.resolve(outputPath, `${legacyNameFromConfig(config)}.ts`),
       templateResult,
     );
   }
