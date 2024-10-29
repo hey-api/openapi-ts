@@ -8,7 +8,7 @@ import {
 import path from 'node:path';
 
 import type { Client } from '../types/client';
-import { getConfig } from '../utils/config';
+import { getConfig, legacyNameFromConfig } from '../utils/config';
 import { getHttpRequestName } from '../utils/getHttpRequestName';
 import type { Templates } from '../utils/handlebars';
 
@@ -85,7 +85,7 @@ export const generateLegacyCore = async (
       }),
     );
 
-    if (config.name) {
+    if (legacyNameFromConfig(config)) {
       await writeFileSync(
         path.resolve(outputPath, 'BaseHttpRequest.ts'),
         templates.core.baseHttpRequest({
