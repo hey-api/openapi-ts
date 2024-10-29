@@ -1,6 +1,6 @@
 import { compiler } from '../compiler';
 import type { Files } from '../types/utils';
-import { getConfig } from '../utils/config';
+import { getConfig, legacyNameFromConfig } from '../utils/config';
 import { TypeScriptFile } from './files';
 
 export const generateIndexFile = ({ files }: { files: Files }): void => {
@@ -11,11 +11,11 @@ export const generateIndexFile = ({ files }: { files: Files }): void => {
     name: 'index.ts',
   });
 
-  if (config.name) {
+  if (legacyNameFromConfig(config)) {
     files.index.add(
       compiler.exportNamedDeclaration({
-        exports: config.name,
-        module: `./${config.name}`,
+        exports: legacyNameFromConfig(config)!,
+        module: `./${legacyNameFromConfig(config)}`,
       }),
     );
   }
@@ -35,7 +35,7 @@ export const generateIndexFile = ({ files }: { files: Files }): void => {
         }),
       );
     }
-    if (config.name) {
+    if (legacyNameFromConfig(config)) {
       files.index.add(
         compiler.exportNamedDeclaration({
           exports: 'BaseHttpRequest',

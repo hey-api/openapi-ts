@@ -25,7 +25,11 @@ import type {
 } from '../../../types/client';
 import type { Config } from '../../../types/config';
 import { camelCase } from '../../../utils/camelCase';
-import { getConfig, isLegacyClient } from '../../../utils/config';
+import {
+  getConfig,
+  isLegacyClient,
+  legacyNameFromConfig,
+} from '../../../utils/config';
 import { escapeComment, escapeName } from '../../../utils/escape';
 import { reservedWordsRegExp } from '../../../utils/regexp';
 import { transformServiceName } from '../../../utils/transform';
@@ -555,7 +559,7 @@ const toOperationStatements = (
     ];
   }
 
-  if (config.name) {
+  if (legacyNameFromConfig(config)) {
     return [
       compiler.returnFunctionCall({
         args: [options],
@@ -651,7 +655,10 @@ const processService = ({
     name: 'ThrowOnError',
   };
 
-  if (!config.plugins['@hey-api/services']?.asClass && !config.name) {
+  if (
+    !config.plugins['@hey-api/services']?.asClass &&
+    !legacyNameFromConfig(config)
+  ) {
     for (const operation of service.operations) {
       const compileFunctionParams = {
         parameters: toOperationParamType(client, operation),
@@ -691,7 +698,8 @@ const processService = ({
       accessLevel: 'public',
       comment: toOperationComment(operation),
       isStatic:
-        config.name === undefined && config.client.name !== 'legacy/angular',
+        legacyNameFromConfig(config) === undefined &&
+        config.client.name !== 'legacy/angular',
       name: serviceFunctionIdentifier({
         config,
         id: operation.name,
@@ -717,7 +725,7 @@ const processService = ({
   }
 
   // Push constructor to front if needed
-  if (config.name) {
+  if (legacyNameFromConfig(config)) {
     members = [
       compiler.constructorDeclaration({
         multiLine: false,
@@ -803,7 +811,7 @@ export const handlerLegacy: PluginLegacyHandler<any> = ({ client, files }) => {
         name: 'Injectable',
       });
 
-      if (!config.name) {
+      if (!legacyNameFromConfig(config)) {
         files.services.import({
           module: '@angular/common/http',
           name: 'HttpClient',
@@ -831,7 +839,7 @@ export const handlerLegacy: PluginLegacyHandler<any> = ({ client, files }) => {
       });
     }
 
-    if (config.name) {
+    if (legacyNameFromConfig(config)) {
       files.services.import({
         asType: config.client.name !== 'legacy/angular',
         module: './core/BaseHttpRequest',

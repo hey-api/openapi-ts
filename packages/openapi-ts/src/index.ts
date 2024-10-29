@@ -18,7 +18,11 @@ import type { PluginNames } from './plugins/types';
 import type { Client } from './types/client';
 import type { ClientConfig, Config, UserConfig } from './types/config';
 import { CLIENTS } from './types/config';
-import { isLegacyClient, setConfig } from './utils/config';
+import {
+  isLegacyClient,
+  legacyNameFromConfig,
+  setConfig,
+} from './utils/config';
 import { getOpenApiSpec } from './utils/getOpenApiSpec';
 import { registerHandlebarTemplates } from './utils/handlebars';
 import { Performance, PerformanceReport } from './utils/performance';
@@ -351,7 +355,11 @@ export async function createClient(
         operationParameter: operationParameterNameFn,
       },
     };
-    if (config.experimentalParser && !isLegacyClient(config) && !config.name) {
+    if (
+      config.experimentalParser &&
+      !isLegacyClient(config) &&
+      !legacyNameFromConfig(config)
+    ) {
       context = parseExperimental({
         config,
         parserConfig,

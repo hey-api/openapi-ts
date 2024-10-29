@@ -2,7 +2,7 @@ import type { Client as ParserClient, Model } from '../openApi';
 import { sanitizeNamespaceIdentifier } from '../openApi';
 import type { Client, Operation, Service } from '../types/client';
 import { camelCase } from './camelCase';
-import { getConfig } from './config';
+import { getConfig, legacyNameFromConfig } from './config';
 import { sort } from './sort';
 import { unique } from './unique';
 
@@ -47,7 +47,8 @@ const postProcessOperations = (
   operations.forEach((parserOperation) => {
     const tags =
       parserOperation.tags?.length &&
-      (config.plugins['@hey-api/services']?.asClass || config.name)
+      (config.plugins['@hey-api/services']?.asClass ||
+        legacyNameFromConfig(config))
         ? parserOperation.tags.filter(unique)
         : ['Default'];
     tags.forEach((tag) => {
