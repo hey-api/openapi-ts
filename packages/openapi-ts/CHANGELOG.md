@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.54.1
+
+### Patch Changes
+
+- [#1211](https://github.com/hey-api/openapi-ts/pull/1211) [`c8a3e3d`](https://github.com/hey-api/openapi-ts/commit/c8a3e3d7e59692698b7cf45182ca92494fc4af96) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: ignore name option when not used with legacy clients to avoid producing broken output
+
+- [#1209](https://github.com/hey-api/openapi-ts/pull/1209) [`3a80b9f`](https://github.com/hey-api/openapi-ts/commit/3a80b9fd009c8229d69f3f349acbfb19b7549a94) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add support for OpenAPI 3.1.1 to experimental parser
+
 ## 0.54.0
 
 ### Minor Changes
