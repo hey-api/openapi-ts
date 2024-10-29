@@ -1,5 +1,7 @@
 import type { OpenApiV2Schema, OpenApiV3Schema } from '../../../openApi';
-import type { SchemaObject as OpenApiV3_1_0SchemaObject } from '../../../openApi/3.1.0/types/spec';
+// TODO: parser - add new parser schema object to `nameBuilder`
+// import type { SchemaObject as OpenApiV3_0_0SchemaObject } from '../../../openApi/3.0.x/types/spec';
+import type { SchemaObject as OpenApiV3_1_0SchemaObject } from '../../../openApi/3.1.x/types/spec';
 import type { PluginName } from '../../types';
 
 export interface Config extends PluginName<'@hey-api/schemas'> {
