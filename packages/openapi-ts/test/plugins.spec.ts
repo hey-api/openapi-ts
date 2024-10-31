@@ -151,6 +151,13 @@ describe(VERSION, () => {
       description:
         'generate Fetch API client with TanStack Vue Query plugin using class-based services',
     },
+    {
+      config: createConfig({
+        output: '.',
+        plugins: ['fastify'],
+      }),
+      description: 'generate Fastify types with Fastify plugin',
+    },
   ];
 
   it.each(scenarios)('$description', async ({ config }) => {

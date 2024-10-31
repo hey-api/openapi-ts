@@ -32,6 +32,7 @@ export type PluginNames =
   | '@tanstack/solid-query'
   | '@tanstack/svelte-query'
   | '@tanstack/vue-query'
+  | 'fastify'
   | 'zod';
 
 export interface PluginName<Name extends PluginNames> {
