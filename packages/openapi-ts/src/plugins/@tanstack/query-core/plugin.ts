@@ -35,6 +35,7 @@ import {
 } from '../../@hey-api/services/plugin-legacy';
 import { schemaToType } from '../../@hey-api/types/plugin';
 import type { PluginHandler } from '../../types';
+import type { Config as AngularQueryConfig } from '../angular-query-experimental';
 import type { Config as ReactQueryConfig } from '../react-query';
 import type { Config as SolidQueryConfig } from '../solid-query';
 import type { Config as SvelteQueryConfig } from '../svelte-query';
@@ -647,7 +648,11 @@ const useTypeResponse = ({
 };
 
 export const handler: PluginHandler<
-  ReactQueryConfig | SolidQueryConfig | SvelteQueryConfig | VueQueryConfig
+  | ReactQueryConfig
+  | AngularQueryConfig
+  | SolidQueryConfig
+  | SvelteQueryConfig
+  | VueQueryConfig
 > = ({ context, plugin }) => {
   const file = context.createFile({
     id: plugin.name,
@@ -664,6 +669,7 @@ export const handler: PluginHandler<
   });
 
   const mutationsType =
+    plugin.name === '@tanstack/angular-query-experimental' ||
     plugin.name === '@tanstack/svelte-query' ||
     plugin.name === '@tanstack/solid-query'
       ? 'MutationOptions'

@@ -28,6 +28,7 @@ export type PluginNames =
   | '@hey-api/services'
   | '@hey-api/transformers'
   | '@hey-api/types'
+  | '@tanstack/angular-query-experimental'
   | '@tanstack/react-query'
   | '@tanstack/solid-query'
   | '@tanstack/svelte-query'
