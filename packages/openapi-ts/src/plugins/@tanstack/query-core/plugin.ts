@@ -33,8 +33,10 @@ import {
   operationOptionsType,
   serviceFunctionIdentifier,
 } from '../../@hey-api/services/plugin-legacy';
-import { schemaToType } from '../../@hey-api/types/plugin';
+import { typesId } from '../../@hey-api/types/plugin';
 import type { PluginHandler } from '../../types';
+import type { SchemaToTypeOptions } from '../../utils/types';
+import { schemaToType } from '../../utils/types';
 import type { Config as ReactQueryConfig } from '../react-query';
 import type { Config as SolidQueryConfig } from '../solid-query';
 import type { Config as SvelteQueryConfig } from '../svelte-query';
@@ -884,11 +886,17 @@ export const handler: PluginHandler<
 
           const typeQueryKey = `${queryKeyName}<${typeData}>`;
           const typePageObjectParam = `Pick<${typeQueryKey}[0], 'body' | 'headers' | 'path' | 'query'>`;
+          const options: SchemaToTypeOptions = {
+            enums: context.config.plugins['@hey-api/types']?.enums,
+            file: context.file({ id: typesId })!,
+            useTransformersDate:
+              context.config.plugins['@hey-api/transformers']?.dates,
+          };
           // TODO: parser - this is a bit clunky, need to compile type to string because
           // `compiler.returnFunctionCall()` accepts only strings, should be cleaned up
           const typePageParam = `${tsNodeToString({
             node: schemaToType({
-              context,
+              options,
               schema: pagination.schema,
             }),
             unescape: true,
