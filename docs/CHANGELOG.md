@@ -1,5 +1,11 @@
 # @hey-api/docs
 
+## 0.7.1
+
+### Patch Changes
+
+- [#1222](https://github.com/hey-api/openapi-ts/pull/1222) [`ceb4363`](https://github.com/hey-api/openapi-ts/commit/ceb4363d52893ebe947e21aac402b868ff2820d4) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add support for @tanstack/angular-query-experimental package
+
 ## 0.7.0
 
 ### Minor Changes
