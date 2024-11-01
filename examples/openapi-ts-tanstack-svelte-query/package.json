@@ -13,7 +13,7 @@
     "openapi-ts": "openapi-ts",
     "prepare": "svelte-kit sync",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest --watch=false"
   },
   "dependencies": {
     "@hey-api/client-fetch": "workspace:*",
