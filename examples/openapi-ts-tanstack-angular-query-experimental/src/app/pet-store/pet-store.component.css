@@ -1,0 +1,16 @@
+:host {
+  display: grid;
+  gap: 20px;
+
+  max-width: 400px;
+  margin: auto;
+}
+
+mat-card {
+  margin-bottom: 20px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}

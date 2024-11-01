@@ -37,6 +37,14 @@ describe(VERSION, () => {
     {
       config: createConfig({
         output: 'fetch',
+        plugins: ['@tanstack/angular-query-experimental'],
+      }),
+      description:
+        'generate Fetch API client with TanStack Angular Query Experimental plugin',
+    },
+    {
+      config: createConfig({
+        output: 'fetch',
         plugins: ['@tanstack/react-query'],
       }),
       description: 'generate Fetch API client with TanStack React Query plugin',
@@ -62,6 +70,15 @@ describe(VERSION, () => {
         plugins: ['@tanstack/vue-query'],
       }),
       description: 'generate Fetch API client with TanStack Vue Query plugin',
+    },
+    {
+      config: createConfig({
+        client: '@hey-api/client-axios',
+        output: 'axios',
+        plugins: ['@tanstack/angular-query-experimental'],
+      }),
+      description:
+        'generate Axios client with TanStack Angular Query Experimental plugin',
     },
     {
       config: createConfig({
@@ -94,6 +111,20 @@ describe(VERSION, () => {
         plugins: ['@tanstack/vue-query'],
       }),
       description: 'generate Axios client with TanStack Vue Query plugin',
+    },
+    {
+      config: createConfig({
+        output: 'asClass',
+        plugins: [
+          '@tanstack/angular-query-experimental',
+          {
+            asClass: true,
+            name: '@hey-api/services',
+          },
+        ],
+      }),
+      description:
+        'generate Fetch API client with TanStack Angular Query Experimental plugin using class-based services',
     },
     {
       config: createConfig({
@@ -154,7 +185,6 @@ describe(VERSION, () => {
   ];
 
   it.each(scenarios)('$description', async ({ config }) => {
-    // @ts-ignore
     await createClient(config);
 
     const outputPath = typeof config.output === 'string' ? config.output : '';
