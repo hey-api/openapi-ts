@@ -65,6 +65,7 @@ export default tseslint.config(
       '**/.svelte-kit/',
       '**/.vitepress/cache',
       '**/.vitepress/dist',
+      '**/.angular',
     ],
   },
 );

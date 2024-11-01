@@ -1,0 +1,52 @@
+<mat-card *ngIf="pet.data()!">
+  <mat-card-header>
+    <mat-card-title>{{ pet.data()!.name }}</mat-card-title>
+    <mat-card-subtitle>{{ pet.data()!.category }}</mat-card-subtitle>
+  </mat-card-header>
+  <img
+    mat-card-image
+    [src]="pet.data()!.photoUrls.at(0)"
+    alt="{{ pet.data()!.name }}"
+  />
+</mat-card>
+
+<pre *ngIf="addPet.data()">
+  <code>{{addPet.data()|json}}</code>
+</pre>
+
+<pre *ngIf="updatePet.data()">
+  <code>{{updatePet.data()|json}}</code>
+</pre>
+
+<button mat-raised-button (click)="getRandomPet()">Get Random Pet</button>
+
+<form #petForm="ngForm" (submit)="onSubmit(petForm)">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title><p>Pet Form</p></mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-form-field appearance="fill">
+        <mat-label>Name</mat-label>
+        <input matInput name="name" ngModel required />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Category</mat-label>
+        <input matInput name="category" ngModel required />
+      </mat-form-field>
+    </mat-card-content>
+    <mat-card-footer>
+      <mat-card-actions>
+        <button mat-button color="primary" type="submit">Add Pet</button>
+        <button
+          mat-button
+          color="accent"
+          (click)="handleUpdatePet(petForm.value.name, petForm.value.category)"
+        >
+          Update Pet
+        </button>
+      </mat-card-actions>
+    </mat-card-footer>
+  </mat-card>
+</form>

@@ -62,6 +62,6 @@
     "test:update": "vitest watch --update",
     "test:watch": "vitest watch",
     "test": "vitest run",
-    "typecheck": "vitest --typecheck"
+    "typecheck": "vitest --typecheck --watch=false"
   }
 }

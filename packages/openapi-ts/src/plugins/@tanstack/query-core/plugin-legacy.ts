@@ -32,6 +32,7 @@ import {
   serviceFunctionIdentifier,
 } from '../../@hey-api/services/plugin-legacy';
 import type { PluginLegacyHandler } from '../../types';
+import type { Config as AngularQueryConfig } from '../angular-query-experimental';
 import type { Config as ReactQueryConfig } from '../react-query';
 import type { Config as SolidQueryConfig } from '../solid-query';
 import type { Config as SvelteQueryConfig } from '../svelte-query';
@@ -667,7 +668,11 @@ const createQueryKeyLiteral = ({
 };
 
 export const handlerLegacy: PluginLegacyHandler<
-  ReactQueryConfig | SolidQueryConfig | SvelteQueryConfig | VueQueryConfig
+  | ReactQueryConfig
+  | AngularQueryConfig
+  | SolidQueryConfig
+  | SvelteQueryConfig
+  | VueQueryConfig
 > = ({ client, files, plugin }) => {
   const config = getConfig();
 
@@ -689,6 +694,7 @@ export const handlerLegacy: PluginLegacyHandler<
   });
 
   const mutationsType =
+    plugin.name === '@tanstack/angular-query-experimental' ||
     plugin.name === '@tanstack/svelte-query' ||
     plugin.name === '@tanstack/solid-query'
       ? 'MutationOptions'

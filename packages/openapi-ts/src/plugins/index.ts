@@ -15,6 +15,10 @@ import {
   defaultConfig as heyApiTypes,
 } from './@hey-api/types';
 import {
+  type Config as TanStackAngularQueryExperimental,
+  defaultConfig as tanStackAngularQueryExperimental,
+} from './@tanstack/angular-query-experimental';
+import {
   type Config as TanStackReactQuery,
   defaultConfig as tanStackReactQuery,
 } from './@tanstack/react-query';
@@ -45,6 +49,7 @@ export type UserPlugins =
   | UserConfig<HeyApiServices>
   | UserConfig<HeyApiTransformers>
   | UserConfig<HeyApiTypes>
+  | UserConfig<TanStackAngularQueryExperimental>
   | UserConfig<TanStackReactQuery>
   | UserConfig<TanStackSolidQuery>
   | UserConfig<TanStackSvelteQuery>
@@ -56,6 +61,7 @@ export type ClientPlugins =
   | PluginConfig<HeyApiServices>
   | PluginConfig<HeyApiTransformers>
   | PluginConfig<HeyApiTypes>
+  | PluginConfig<TanStackAngularQueryExperimental>
   | PluginConfig<TanStackReactQuery>
   | PluginConfig<TanStackSolidQuery>
   | PluginConfig<TanStackSvelteQuery>
@@ -67,6 +73,7 @@ export const defaultPluginConfigs: DefaultPluginConfigsMap<ClientPlugins> = {
   '@hey-api/services': heyApiServices,
   '@hey-api/transformers': heyApiTransformers,
   '@hey-api/types': heyApiTypes,
+  '@tanstack/angular-query-experimental': tanStackAngularQueryExperimental,
   '@tanstack/react-query': tanStackReactQuery,
   '@tanstack/solid-query': tanStackSolidQuery,
   '@tanstack/svelte-query': tanStackSvelteQuery,
