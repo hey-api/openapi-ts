@@ -6,6 +6,7 @@
 **/.vitepress/cache
 **/.vitepress/dist
 **/test/e2e
+**/test/generated
 **/__snapshots__
 
 **/CHANGELOG.md
