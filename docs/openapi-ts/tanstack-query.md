@@ -56,14 +56,14 @@ export default {
 };
 ```
 
-```js [solid]
+```js [angular]
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
   plugins: [
     // ...other plugins
-    '@tanstack/solid-query', // [!code ++]
+    '@tanstack/angular-query-experimental', // [!code ++]
   ],
 };
 ```
@@ -76,6 +76,18 @@ export default {
   plugins: [
     // ...other plugins
     '@tanstack/svelte-query', // [!code ++]
+  ],
+};
+```
+
+```js [solid]
+export default {
+  client: '@hey-api/client-fetch',
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    '@tanstack/solid-query', // [!code ++]
   ],
 };
 ```
