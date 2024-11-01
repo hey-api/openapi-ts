@@ -471,7 +471,6 @@ describe('OpenAPI v3', () => {
     '$description',
     async ({ name, config }) => {
       const output = toOutputPath(name);
-      // @ts-ignore
       await createClient({
         ...config,
         input: V3_SPEC_PATH,
