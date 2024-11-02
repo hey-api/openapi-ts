@@ -1,7 +1,7 @@
 import type { OpenApiV2Schema, OpenApiV3Schema } from '../../../openApi';
 // TODO: parser - add new parser schema object to `nameBuilder`
-// import type { SchemaObject as OpenApiV3_0_0SchemaObject } from '../../../openApi/3.0.x/types/spec';
-import type { SchemaObject as OpenApiV3_1_0SchemaObject } from '../../../openApi/3.1.x/types/spec';
+// import type { SchemaObject as OpenApiV3_0_XSchemaObject } from '../../../openApi/3.0.x/types/spec';
+import type { SchemaObject as OpenApiV3_1_XSchemaObject } from '../../../openApi/3.1.x/types/spec';
 import type { PluginName } from '../../types';
 
 export interface Config extends PluginName<'@hey-api/schemas'> {
@@ -12,7 +12,7 @@ export interface Config extends PluginName<'@hey-api/schemas'> {
    */
   nameBuilder?: (
     name: string,
-    schema: OpenApiV2Schema | OpenApiV3Schema | OpenApiV3_1_0SchemaObject,
+    schema: OpenApiV2Schema | OpenApiV3Schema | OpenApiV3_1_XSchemaObject,
   ) => string;
   /**
    * Name of the generated file.
