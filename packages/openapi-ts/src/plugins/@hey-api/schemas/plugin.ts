@@ -1,10 +1,10 @@
 import { compiler } from '../../../compiler';
 import type { IRContext } from '../../../ir/context';
 import { ensureValidTypeScriptJavaScriptIdentifier } from '../../../openApi';
-import type { OpenApiV3_0_0 } from '../../../openApi/3.0.x';
-import type { OpenApiV3_1_0 } from '../../../openApi/3.1.x';
-// import type { SchemaObject as OpenApiV3_0_0SchemaObject } from '../../../openApi/3.0.x/types/spec';
-import type { SchemaObject as OpenApiV3_1_0SchemaObject } from '../../../openApi/3.1.x/types/spec';
+import type { OpenApiV3_0_X } from '../../../openApi/3.0.x';
+import type { OpenApiV3_1_X } from '../../../openApi/3.1.x';
+// import type { SchemaObject as OpenApiV3_0_XSchemaObject } from '../../../openApi/3.0.x/types/spec';
+import type { SchemaObject as OpenApiV3_1_XSchemaObject } from '../../../openApi/3.1.x/types/spec';
 import type { PluginHandler } from '../../types';
 import type { Config } from './types';
 
@@ -15,7 +15,7 @@ const stripSchema = ({
   schema,
 }: {
   context: IRContext;
-  schema: OpenApiV3_1_0SchemaObject;
+  schema: OpenApiV3_1_XSchemaObject;
 }) => {
   if (context.config.plugins['@hey-api/schemas']?.type === 'form') {
     if (schema.description) {
@@ -45,7 +45,7 @@ const schemaToJsonSchema2020_12 = ({
   schema: _schema,
 }: {
   context: IRContext;
-  schema: OpenApiV3_1_0SchemaObject;
+  schema: OpenApiV3_1_XSchemaObject;
 }): object => {
   if (Array.isArray(_schema)) {
     return _schema.map((item) =>
@@ -139,7 +139,7 @@ const schemaName = ({
 }: {
   context: IRContext;
   name: string;
-  schema: OpenApiV3_1_0SchemaObject;
+  schema: OpenApiV3_1_XSchemaObject;
 }): string => {
   const validName = ensureValidTypeScriptJavaScriptIdentifier(name);
 
@@ -153,7 +153,7 @@ const schemaName = ({
   return `${validName}Schema`;
 };
 
-const schemasV3_0_0 = (context: IRContext<OpenApiV3_0_0>) => {
+const schemasV3_0_X = (context: IRContext<OpenApiV3_0_X>) => {
   if (!context.spec.components) {
     return;
   }
@@ -161,7 +161,7 @@ const schemasV3_0_0 = (context: IRContext<OpenApiV3_0_0>) => {
   // TODO: parser - handle OpenAPI 3.0.x
 };
 
-const schemasV3_1_0 = (context: IRContext<OpenApiV3_1_0>) => {
+const schemasV3_1_X = (context: IRContext<OpenApiV3_1_X>) => {
   if (!context.spec.components) {
     return;
   }
@@ -189,7 +189,7 @@ export const handler: PluginHandler<Config> = ({ context }) => {
   });
 
   if (context.spec.openapi) {
-    const ctx = context as IRContext<OpenApiV3_0_0 | OpenApiV3_1_0>;
+    const ctx = context as IRContext<OpenApiV3_0_X | OpenApiV3_1_X>;
     switch (ctx.spec.openapi) {
       // TODO: parser - handle Swagger 2.0
       case '3.0.0':
@@ -197,11 +197,11 @@ export const handler: PluginHandler<Config> = ({ context }) => {
       case '3.0.2':
       case '3.0.3':
       case '3.0.4':
-        schemasV3_0_0(context as IRContext<OpenApiV3_0_0>);
+        schemasV3_0_X(context as IRContext<OpenApiV3_0_X>);
         break;
       case '3.1.0':
       case '3.1.1':
-        schemasV3_1_0(context as IRContext<OpenApiV3_1_0>);
+        schemasV3_1_X(context as IRContext<OpenApiV3_1_X>);
         break;
       default:
         break;

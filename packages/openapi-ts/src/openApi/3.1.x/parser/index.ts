@@ -1,6 +1,6 @@
 import type { IRContext } from '../../../ir/context';
 import type {
-  OpenApiV3_1_0,
+  OpenApiV3_1_X,
   ParameterObject,
   PathItemObject,
   PathsObject,
@@ -13,7 +13,7 @@ import {
 } from './parameter';
 import { parseSchema } from './schema';
 
-export const parseV3_1_0 = (context: IRContext<OpenApiV3_1_0>) => {
+export const parseV3_1_X = (context: IRContext<OpenApiV3_1_X>) => {
   const operationIds = new Map<string, string>();
 
   for (const path in context.spec.paths) {

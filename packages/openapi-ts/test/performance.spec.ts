@@ -4,7 +4,7 @@ import { createClient } from '../src/index';
 import { Performance } from '../src/utils/performance';
 
 const V3_SPEC_PATH = './test/spec/v3.json';
-const V3_1_SPEC_PATH = './test/spec/3.1.0/full.json';
+const V3_1_X_SPEC_PATH = './test/spec/3.1.x/full.json';
 
 const OUTPUT_PREFIX = './test/generated/';
 
@@ -47,7 +47,7 @@ describe('performance', () => {
     await createClient({
       client: '@hey-api/client-fetch',
       experimentalParser: true,
-      input: V3_1_SPEC_PATH,
+      input: V3_1_X_SPEC_PATH,
       output: toOutputPath('perf'),
     });
 

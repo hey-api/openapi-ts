@@ -11,7 +11,7 @@ import { getFilePaths } from './utils';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const VERSION = '3.1.0';
+const VERSION = '3.1.x';
 
 const outputDir = path.join(__dirname, 'generated', VERSION);
 

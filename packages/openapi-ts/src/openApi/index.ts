@@ -1,7 +1,7 @@
 import { IRContext } from '../ir/context';
 import type { Config } from '../types/config';
-import { type OpenApiV3_0_0, parseV3_0_0 } from './3.0.x';
-import { type OpenApiV3_1_0, parseV3_1_0 } from './3.1.x';
+import { type OpenApiV3_0_X, parseV3_0_X } from './3.0.x';
+import { type OpenApiV3_1_X, parseV3_1_X } from './3.1.x';
 import type { Client } from './common/interfaces/client';
 import type { OpenApi } from './common/interfaces/OpenApi';
 import type { ParserConfig } from './config';
@@ -73,7 +73,7 @@ export const parseExperimental = ({
     spec: spec as Record<string, any>,
   });
 
-  const ctx = context as IRContext<OpenApiV3_0_0 | OpenApiV3_1_0>;
+  const ctx = context as IRContext<OpenApiV3_0_X | OpenApiV3_1_X>;
   switch (ctx.spec.openapi) {
     // TODO: parser - handle Swagger 2.0
     case '3.0.0':
@@ -81,11 +81,11 @@ export const parseExperimental = ({
     case '3.0.2':
     case '3.0.3':
     case '3.0.4':
-      parseV3_0_0(context as IRContext<OpenApiV3_0_0>);
+      parseV3_0_X(context as IRContext<OpenApiV3_0_X>);
       break;
     case '3.1.0':
     case '3.1.1':
-      parseV3_1_0(context as IRContext<OpenApiV3_1_0>);
+      parseV3_1_X(context as IRContext<OpenApiV3_1_X>);
       break;
     default:
       // TODO: parser - uncomment after removing legacy parser.
