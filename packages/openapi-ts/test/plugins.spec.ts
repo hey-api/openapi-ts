@@ -23,7 +23,7 @@ describe(VERSION, () => {
     client: '@hey-api/client-fetch',
     experimentalParser: true,
     ...userConfig,
-    input: path.join(__dirname, 'spec', '3.1.0', 'full.json'),
+    input: path.join(__dirname, 'spec', '3.1.x', 'full.json'),
     output: path.join(
       outputDir,
       typeof userConfig.plugins[0] === 'string'

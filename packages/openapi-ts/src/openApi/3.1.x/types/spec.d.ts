@@ -5,7 +5,7 @@ import type { JsonSchemaDraft2020_12 } from './json-schema-draft-2020-12';
  *
  * This object MAY be extended with {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#specification-extensions Specification Extensions}.
  */
-export interface OpenApiV3_1_0 {
+export interface OpenApiV3_1_X {
   /**
    * An element to hold various schemas for the document.
    */
@@ -493,7 +493,14 @@ export interface EncodingObject {
   /**
    * Describes how a specific property value will be serialized depending on its type. See {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#parameter-object Parameter Object} for details on the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#parameterStyle `style`} property. The behavior follows the same values as `query` parameters, including default values. This property SHALL be ignored if the request body media type is not `application/x-www-form-urlencoded` or `multipart/form-data`. If a value is explicitly defined, then the value of {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#encodingContentType `contentType`} (implicit or explicit) SHALL be ignored.
    */
-  style?: string;
+  style?:
+    | 'deepObject'
+    | 'form'
+    | 'label'
+    | 'matrix'
+    | 'pipeDelimited'
+    | 'simple'
+    | 'spaceDelimited';
 }
 
 /**
@@ -1622,7 +1629,7 @@ export interface ResponsesObject {
   /**
    * Any {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#http-status-codes HTTP status code} can be used as the property name, but only one property per code, to describe the expected response for that HTTP status code. This field MUST be enclosed in quotation marks (for example, "200") for compatibility between JSON and YAML. To define a range of response codes, this field MAY contain the uppercase wildcard character `X`. For example, `2XX` represents all response codes between `[200-299]`. Only the following range definitions are allowed: `1XX`, `2XX`, `3XX`, `4XX`, and `5XX`. If a response is defined using an explicit code, the explicit code definition takes precedence over the range definition for that code.
    */
-  [statusCode: string]: ResponseObject | ReferenceObject | undefined;
+  [httpStatusCode: string]: ResponseObject | ReferenceObject | undefined;
   /**
    * The documentation of responses other than the ones declared for specific HTTP response codes. Use this field to cover undeclared responses.
    */
