@@ -1,2 +1,2 @@
-export { parseV3_1_0 } from './parser';
-export type { OpenApiV3_1_0 } from './types/spec';
+export { parseV3_1_X } from './parser';
+export type { OpenApiV3_1_X } from './types/spec';
