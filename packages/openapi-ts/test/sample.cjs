@@ -11,6 +11,7 @@ const main = async () => {
     // debug: true,
     experimentalParser: true,
     input: './test/spec/3.0.x/full.json',
+    // input: './test/spec/3.1.x/full.json',
     // input: 'https://mongodb-mms-prod-build-server.s3.amazonaws.com/openapi/2caffd88277a4e27c95dcefc7e3b6a63a3b03297-v2-2023-11-15.json',
     // name: 'foo',
     output: {
@@ -23,12 +24,12 @@ const main = async () => {
       //   name: '@hey-api/schemas',
       //   type: 'json',
       // },
-      // {
-      //   // asClass: true,
-      //   // filter: '^GET /api/v{api-version}/simple:operation$',
-      //   name: '@hey-api/services',
-      //   // serviceNameBuilder: '^Parameters',
-      // },
+      {
+        // asClass: true,
+        // filter: '^GET /api/v{api-version}/simple:operation$',
+        name: '@hey-api/services',
+        // serviceNameBuilder: '^Parameters',
+      },
       // {
       //   dates: true,
       //   name: '@hey-api/transformers',
@@ -36,7 +37,7 @@ const main = async () => {
       {
         // enums: 'typescript',
         // enums: 'typescript+namespace',
-        enums: 'javascript',
+        // enums: 'javascript',
         // include:
         //   '^(_400|CompositionWithOneOfAndProperties)',
         name: '@hey-api/types',

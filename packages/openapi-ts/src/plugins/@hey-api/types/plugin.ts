@@ -150,6 +150,7 @@ const addTypeEnum = ({
   // they have a duplicate value.
   if (
     !identifier.created &&
+    !isRefOpenApiComponent($ref) &&
     context.config.plugins['@hey-api/types']?.enums !== 'typescript+namespace'
   ) {
     return;
@@ -865,22 +866,38 @@ export const handler: PluginHandler<Config> = ({ context }) => {
   if (context.ir.components) {
     for (const name in context.ir.components.schemas) {
       const schema = context.ir.components.schemas[name];
+      const $ref = `#/components/schemas/${name}`;
 
-      schemaToType({
-        $ref: `#/components/schemas/${name}`,
-        context,
-        schema,
-      });
+      try {
+        schemaToType({
+          $ref,
+          context,
+          schema,
+        });
+      } catch (error) {
+        console.error(
+          `🔥 Failed to process schema ${name}\n$ref: ${$ref}\nschema: ${JSON.stringify(schema, null, 2)}`,
+        );
+        throw error;
+      }
     }
 
     for (const name in context.ir.components.parameters) {
       const parameter = context.ir.components.parameters[name];
+      const $ref = `#/components/parameters/${name}`;
 
-      schemaToType({
-        $ref: `#/components/parameters/${name}`,
-        context,
-        schema: parameter.schema,
-      });
+      try {
+        schemaToType({
+          $ref,
+          context,
+          schema: parameter.schema,
+        });
+      } catch (error) {
+        console.error(
+          `🔥 Failed to process schema ${name}\n$ref: ${$ref}\nschema: ${JSON.stringify(parameter.schema, null, 2)}`,
+        );
+        throw error;
+      }
     }
   }
 
