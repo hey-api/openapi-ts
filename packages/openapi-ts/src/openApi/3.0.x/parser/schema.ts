@@ -1,7 +1,7 @@
 import type { IRContext } from '../../../ir/context';
 import type { IRSchemaObject } from '../../../ir/ir';
 import { addItemsToSchema } from '../../../ir/utils';
-import type { SchemaObject } from '../types/spec';
+import type { ReferenceObject, SchemaObject } from '../types/spec';
 
 type SchemaWithRequired<K extends keyof Required<SchemaObject>> = Omit<
   SchemaObject,
@@ -9,27 +9,21 @@ type SchemaWithRequired<K extends keyof Required<SchemaObject>> = Omit<
 > &
   Pick<Required<SchemaObject>, K>;
 
-type SchemaType = Extract<Required<SchemaObject>['type'], string>;
+type SchemaType = Required<SchemaObject>['type'];
 
-export const getSchemaTypes = ({
+export const getSchemaType = ({
   schema,
 }: {
   schema: SchemaObject;
-}): ReadonlyArray<SchemaType> => {
-  if (typeof schema.type === 'string') {
-    return [schema.type];
-  }
-
+}): SchemaType | undefined => {
   if (schema.type) {
     return schema.type;
   }
 
   // infer object based on the presence of properties
   if (schema.properties) {
-    return ['object'];
+    return 'object';
   }
-
-  return [];
 };
 
 const parseSchemaMeta = ({
@@ -39,30 +33,6 @@ const parseSchemaMeta = ({
   irSchema: IRSchemaObject;
   schema: SchemaObject;
 }) => {
-  if (schema.const !== undefined) {
-    irSchema.const = schema.const;
-
-    // try to infer schema type
-    if (!schema.type) {
-      if (schema.const === null) {
-        irSchema.type = 'null';
-      } else {
-        switch (typeof schema.const) {
-          case 'bigint':
-          case 'number':
-            irSchema.type = 'number';
-            break;
-          case 'boolean':
-            irSchema.type = 'boolean';
-            break;
-          case 'string':
-            irSchema.type = 'string';
-            break;
-        }
-      }
-    }
-  }
-
   if (schema.format) {
     irSchema.format = schema.format;
   }
@@ -87,10 +57,7 @@ const parseArray = ({
   irSchema?: IRSchemaObject;
   schema: SchemaObject;
 }): IRSchemaObject => {
-  if (
-    (schema.prefixItems && schema.prefixItems.length) ||
-    (schema.maxItems && schema.maxItems === schema.minItems)
-  ) {
+  if (schema.maxItems && schema.maxItems === schema.minItems) {
     irSchema.type = 'tuple';
   } else {
     irSchema.type = 'array';
@@ -98,14 +65,14 @@ const parseArray = ({
 
   let schemaItems: Array<IRSchemaObject> = [];
 
-  for (const item of schema.prefixItems ?? []) {
-    schemaItems.push(
-      schemaToIrSchema({
-        context,
-        schema: item,
-      }),
-    );
-  }
+  // for (const item of schema.prefixItems ?? []) {
+  //   schemaItems.push(
+  //     schemaToIrSchema({
+  //       context,
+  //       schema: item,
+  //     }),
+  //   );
+  // }
 
   if (schema.items) {
     const irItemsSchema = schemaToIrSchema({
@@ -120,17 +87,21 @@ const parseArray = ({
     ) {
       schemaItems = Array(schema.maxItems).fill(irItemsSchema);
     } else {
-      const isComposedSchema = Boolean(
-        schema.items.allOf || schema.items.anyOf || schema.items.oneOf,
-      );
-      if (isComposedSchema) {
-        // bring composition up to avoid incorrectly nested arrays
-        irSchema = {
-          ...irSchema,
-          ...irItemsSchema,
-        };
-      } else {
+      if ('$ref' in schema.items) {
         schemaItems.push(irItemsSchema);
+      } else {
+        const isComposedSchema = Boolean(
+          schema.items.allOf || schema.items.anyOf || schema.items.oneOf,
+        );
+        if (isComposedSchema) {
+          // bring composition up to avoid incorrectly nested arrays
+          irSchema = {
+            ...irSchema,
+            ...irItemsSchema,
+          };
+        } else {
+          schemaItems.push(irItemsSchema);
+        }
       }
     }
   }
@@ -151,18 +122,6 @@ const parseBoolean = ({
   schema: SchemaObject;
 }): IRSchemaObject => {
   irSchema.type = 'boolean';
-
-  return irSchema;
-};
-
-const parseNull = ({
-  irSchema = {},
-}: {
-  context: IRContext;
-  irSchema?: IRSchemaObject;
-  schema: SchemaObject;
-}) => {
-  irSchema.type = 'null';
 
   return irSchema;
 };
@@ -291,7 +250,7 @@ const parseAllOf = ({
   let irSchema = initIrSchema({ schema });
 
   const schemaItems: Array<IRSchemaObject> = [];
-  const schemaTypes = getSchemaTypes({ schema });
+  const schemaType = getSchemaType({ schema });
 
   const compositionSchemas = schema.allOf;
 
@@ -304,7 +263,7 @@ const parseAllOf = ({
     );
   }
 
-  if (schemaTypes.includes('object')) {
+  if (schemaType === 'object') {
     const irObjectSchema = parseOneType({
       context,
       schema: {
@@ -318,14 +277,13 @@ const parseAllOf = ({
         if (!irObjectSchema.properties[requiredProperty]) {
           for (const compositionSchema of compositionSchemas) {
             // TODO: parser - this could be probably resolved more accurately
-            const finalCompositionSchema = compositionSchema.$ref
-              ? context.resolveRef<SchemaObject>(compositionSchema.$ref)
-              : compositionSchema;
+            const finalCompositionSchema =
+              '$ref' in compositionSchema
+                ? context.resolveRef<SchemaObject>(compositionSchema.$ref)
+                : compositionSchema;
 
             if (
-              getSchemaTypes({ schema: finalCompositionSchema }).includes(
-                'object',
-              )
+              getSchemaType({ schema: finalCompositionSchema }) === 'object'
             ) {
               const irCompositionSchema = parseOneType({
                 context,
@@ -355,7 +313,7 @@ const parseAllOf = ({
     schema: irSchema,
   });
 
-  if (schemaTypes.includes('null')) {
+  if (schema.nullable) {
     // nest composition to avoid producing an intersection with null
     const nestedItems: Array<IRSchemaObject> = [
       {
@@ -371,6 +329,18 @@ const parseAllOf = ({
       items: nestedItems,
       logicalOperator: 'or',
     };
+
+    // TODO: parser - this is a hack to bring back up meta fields
+    // without it, some schemas were missing original deprecated
+    if (nestedItems[0].deprecated) {
+      irSchema.deprecated = nestedItems[0].deprecated;
+    }
+
+    // TODO: parser - this is a hack to bring back up meta fields
+    // without it, some schemas were missing original description
+    if (nestedItems[0].description) {
+      irSchema.description = nestedItems[0].description;
+    }
   }
 
   if (schema.discriminator) {
@@ -391,7 +361,7 @@ const parseAnyOf = ({
   let irSchema = initIrSchema({ schema });
 
   const schemaItems: Array<IRSchemaObject> = [];
-  const schemaTypes = getSchemaTypes({ schema });
+  const schemaType = getSchemaType({ schema });
 
   for (const anyOf of schema.anyOf) {
     schemaItems.push(
@@ -402,7 +372,7 @@ const parseAnyOf = ({
     );
   }
 
-  if (schemaTypes.includes('null')) {
+  if (schema.nullable) {
     schemaItems.push({ type: 'null' });
   }
 
@@ -412,7 +382,7 @@ const parseAnyOf = ({
     schema: irSchema,
   });
 
-  if (schemaTypes.includes('object')) {
+  if (schemaType === 'object') {
     // nest composition to avoid producing a union with object properties
     const irObjectSchema = parseOneType({
       context,
@@ -458,19 +428,18 @@ const parseEnum = ({
       typeOfEnumValue === 'number' ||
       typeOfEnumValue === 'boolean'
     ) {
-      schemaItems.push(
-        parseOneType({
-          context,
-          schema: {
-            const: enumValue,
-            description: schema['x-enum-descriptions']?.[index],
-            title:
-              schema['x-enum-varnames']?.[index] ??
-              schema['x-enumNames']?.[index],
-            type: typeOfEnumValue,
-          },
-        }),
-      );
+      const enumSchema = parseOneType({
+        context,
+        schema: {
+          description: schema['x-enum-descriptions']?.[index],
+          title:
+            schema['x-enum-varnames']?.[index] ??
+            schema['x-enumNames']?.[index],
+          type: typeOfEnumValue,
+        },
+      });
+      enumSchema.const = enumValue;
+      schemaItems.push(enumSchema);
     } else {
       console.warn(
         '🚨',
@@ -478,6 +447,12 @@ const parseEnum = ({
         schema.enum,
       );
     }
+  }
+
+  if (schema.nullable) {
+    schemaItems.push({
+      type: 'null',
+    });
   }
 
   irSchema = addItemsToSchema({
@@ -498,7 +473,7 @@ const parseOneOf = ({
   let irSchema = initIrSchema({ schema });
 
   let schemaItems: Array<IRSchemaObject> = [];
-  const schemaTypes = getSchemaTypes({ schema });
+  const schemaType = getSchemaType({ schema });
 
   for (const oneOf of schema.oneOf) {
     const irOneOfSchema = schemaToIrSchema({
@@ -516,7 +491,7 @@ const parseOneOf = ({
     }
   }
 
-  if (schemaTypes.includes('null')) {
+  if (schema.nullable) {
     schemaItems.push({ type: 'null' });
   }
 
@@ -526,7 +501,7 @@ const parseOneOf = ({
     schema: irSchema,
   });
 
-  if (schemaTypes.includes('object')) {
+  if (schemaType === 'object') {
     // nest composition to avoid producing a union with object properties
     const irObjectSchema = parseOneType({
       context,
@@ -556,15 +531,93 @@ const parseRef = ({
   schema,
 }: {
   context: IRContext;
-  schema: SchemaWithRequired<'$ref'>;
+  schema: ReferenceObject;
 }): IRSchemaObject => {
-  const irSchema = initIrSchema({ schema });
+  const irSchema: IRSchemaObject = {};
 
   // refs using unicode characters become encoded, didn't investigate why
   // but the suspicion is this comes from `@apidevtools/json-schema-ref-parser`
   irSchema.$ref = decodeURI(schema.$ref);
 
   return irSchema;
+};
+
+const parseNullableType = ({
+  context,
+  irSchema,
+  schema,
+}: {
+  context: IRContext;
+  irSchema?: IRSchemaObject;
+  schema: SchemaWithRequired<'type'>;
+}): IRSchemaObject => {
+  if (!irSchema) {
+    irSchema = initIrSchema({ schema });
+
+    parseSchemaMeta({
+      irSchema,
+      schema,
+    });
+  }
+
+  const schemaItems: Array<IRSchemaObject> = [
+    parseOneType({
+      context,
+      irSchema: {},
+      schema,
+    }),
+    {
+      type: 'null',
+    },
+  ];
+
+  irSchema = addItemsToSchema({
+    items: schemaItems,
+    schema: irSchema,
+  });
+
+  return irSchema;
+};
+
+const parseType = ({
+  context,
+  schema,
+}: {
+  context: IRContext;
+  schema: SchemaWithRequired<'type'>;
+}): IRSchemaObject => {
+  const irSchema = initIrSchema({ schema });
+
+  parseSchemaMeta({
+    irSchema,
+    schema,
+  });
+
+  const type = getSchemaType({ schema });
+
+  if (!type) {
+    return irSchema;
+  }
+
+  if (!schema.nullable) {
+    return parseOneType({
+      context,
+      irSchema,
+      schema: {
+        ...schema,
+        type,
+      },
+    });
+  }
+
+  return parseNullableType({
+    context,
+    irSchema,
+    schema: {
+      ...schema,
+      type,
+    },
+  });
 };
 
 const parseOneType = ({
@@ -574,9 +627,7 @@ const parseOneType = ({
 }: {
   context: IRContext;
   irSchema?: IRSchemaObject;
-  schema: Omit<SchemaObject, 'type'> & {
-    type: SchemaType;
-  };
+  schema: SchemaWithRequired<'type'>;
 }): IRSchemaObject => {
   if (!irSchema) {
     irSchema = initIrSchema({ schema });
@@ -607,12 +658,6 @@ const parseOneType = ({
         irSchema,
         schema,
       });
-    case 'null':
-      return parseNull({
-        context,
-        irSchema,
-        schema,
-      });
     case 'object':
       return parseObject({
         context,
@@ -626,86 +671,6 @@ const parseOneType = ({
         schema,
       });
   }
-};
-
-const parseManyTypes = ({
-  context,
-  irSchema,
-  schema,
-}: {
-  context: IRContext;
-  irSchema?: IRSchemaObject;
-  schema: Omit<SchemaObject, 'type'> & {
-    type: ReadonlyArray<SchemaType>;
-  };
-}): IRSchemaObject => {
-  if (!irSchema) {
-    irSchema = initIrSchema({ schema });
-
-    parseSchemaMeta({
-      irSchema,
-      schema,
-    });
-  }
-
-  const schemaItems: Array<IRSchemaObject> = [];
-
-  for (const type of schema.type) {
-    schemaItems.push(
-      parseOneType({
-        context,
-        irSchema: {},
-        schema: {
-          ...schema,
-          type,
-        },
-      }),
-    );
-  }
-
-  irSchema = addItemsToSchema({
-    items: schemaItems,
-    schema: irSchema,
-  });
-
-  return irSchema;
-};
-
-const parseType = ({
-  context,
-  schema,
-}: {
-  context: IRContext;
-  schema: SchemaWithRequired<'type'>;
-}): IRSchemaObject => {
-  const irSchema = initIrSchema({ schema });
-
-  parseSchemaMeta({
-    irSchema,
-    schema,
-  });
-
-  const schemaTypes = getSchemaTypes({ schema });
-
-  if (schemaTypes.length === 1) {
-    return parseOneType({
-      context,
-      irSchema,
-      schema: {
-        ...schema,
-        type: schemaTypes[0],
-      },
-    });
-  }
-
-  return parseManyTypes({
-    context,
-    irSchema,
-    schema: {
-      ...schema,
-      type: schemaTypes,
-    },
-  });
 };
 
 const parseUnknown = ({
@@ -731,12 +696,12 @@ export const schemaToIrSchema = ({
   schema,
 }: {
   context: IRContext;
-  schema: SchemaObject;
+  schema: SchemaObject | ReferenceObject;
 }): IRSchemaObject => {
-  if (schema.$ref) {
+  if ('$ref' in schema) {
     return parseRef({
       context,
-      schema: schema as SchemaWithRequired<'$ref'>,
+      schema,
     });
   }
 
@@ -789,7 +754,7 @@ export const parseSchema = ({
 }: {
   context: IRContext;
   name: string;
-  schema: SchemaObject;
+  schema: SchemaObject | ReferenceObject;
 }) => {
   if (!context.ir.components) {
     context.ir.components = {};
