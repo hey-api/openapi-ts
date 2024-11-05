@@ -1,9 +1,13 @@
 import type { IRContext } from '../../../ir/context';
 import { paginationKeywordsRegExp } from '../../../ir/pagination';
-import type { ParameterObject, RequestBodyObject } from '../types/spec';
+import type {
+  ParameterObject,
+  ReferenceObject,
+  RequestBodyObject,
+} from '../types/spec';
 import { type SchemaObject } from '../types/spec';
 import { mediaTypeObject } from './mediaType';
-import { getSchemaTypes } from './schema';
+import { getSchemaType } from './schema';
 
 // We handle only simple values for now, up to 1 nested field
 export const paginationField = ({
@@ -13,20 +17,20 @@ export const paginationField = ({
 }: {
   context: IRContext;
   name: string;
-  schema: SchemaObject;
+  schema: SchemaObject | ReferenceObject;
 }): boolean | string => {
   paginationKeywordsRegExp.lastIndex = 0;
   if (paginationKeywordsRegExp.test(name)) {
     return true;
   }
 
-  if (schema.$ref) {
+  if ('$ref' in schema) {
     const ref = context.resolveRef<
       ParameterObject | RequestBodyObject | SchemaObject
     >(schema.$ref);
 
     if ('content' in ref || 'in' in ref) {
-      let refSchema: SchemaObject | undefined;
+      let refSchema: SchemaObject | ReferenceObject | undefined;
 
       if ('in' in ref) {
         refSchema = ref.schema;
@@ -64,15 +68,15 @@ export const paginationField = ({
     if (paginationKeywordsRegExp.test(name)) {
       const property = schema.properties[name];
 
-      if (typeof property !== 'boolean') {
-        const schemaTypes = getSchemaTypes({ schema: property });
+      if (typeof property !== 'boolean' && !('$ref' in property)) {
+        const schemaType = getSchemaType({ schema: property });
         // TODO: resolve deeper references
 
         if (
-          schemaTypes.includes('boolean') ||
-          schemaTypes.includes('integer') ||
-          schemaTypes.includes('number') ||
-          schemaTypes.includes('string')
+          schemaType === 'boolean' ||
+          schemaType === 'integer' ||
+          schemaType === 'number' ||
+          schemaType === 'string'
         ) {
           return name;
         }

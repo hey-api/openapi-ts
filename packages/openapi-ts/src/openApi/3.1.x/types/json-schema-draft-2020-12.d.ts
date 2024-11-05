@@ -1,4 +1,4 @@
-import type { EnumExtensions } from '../../common/types/openapi-spec-extensions';
+import type { EnumExtensions } from '../../shared/types/openapi-spec-extensions';
 import type { OpenApiSchemaExtensions } from './spec-extensions';
 
 // TODO: left out some keywords related to structuring a complex schema and declaring a dialect

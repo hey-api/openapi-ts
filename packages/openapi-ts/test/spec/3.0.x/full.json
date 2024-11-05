@@ -212,37 +212,49 @@
             "description": "Testing multiline comments in string: First line\nSecond line\n\nFourth line",
             "name": "parameterWithBreaks",
             "in": "query",
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "description": "Testing backticks in string: `backticks` and ```multiple backticks``` should work",
             "name": "parameterWithBackticks",
             "in": "query",
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "description": "Testing slashes in string: \\backwards\\\\\\ and /forwards/// should work",
             "name": "parameterWithSlashes",
             "in": "query",
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "description": "Testing expression placeholders in string: ${expression} should work",
             "name": "parameterWithExpressionPlaceholders",
             "in": "query",
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "description": "Testing quotes in string: 'single quote''' and \"double quotes\"\"\" should work",
             "name": "parameterWithQuotes",
             "in": "query",
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "description": "Testing reserved characters in string: /* inline */ and /** inline **/ should work",
             "name": "parameterWithReservedCharacters",
             "in": "query",
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           }
         ]
       }
@@ -259,9 +271,13 @@
             "name": "parameter",
             "in": "header",
             "required": true,
-            "nullable": true,
             "schema": {
-              "$ref": "#/components/schemas/DeprecatedModel"
+              "nullable": true,
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/DeprecatedModel"
+                }
+              ]
             }
           }
         ]
@@ -277,8 +293,8 @@
             "name": "parameterHeader",
             "in": "header",
             "required": true,
-            "nullable": true,
             "schema": {
+              "nullable": true,
               "type": "string"
             }
           },
@@ -307,8 +323,8 @@
             "name": "cursor",
             "in": "query",
             "required": true,
-            "nullable": true,
             "schema": {
+              "nullable": true,
               "type": "string"
             }
           },
@@ -317,8 +333,8 @@
             "name": "parameterCookie",
             "in": "cookie",
             "required": true,
-            "nullable": true,
             "schema": {
+              "nullable": true,
               "type": "string"
             }
           },
@@ -327,8 +343,8 @@
             "name": "parameterPath",
             "in": "path",
             "required": true,
-            "nullable": true,
             "schema": {
+              "nullable": true,
               "type": "string"
             }
           },
@@ -337,8 +353,8 @@
             "name": "api-version",
             "in": "path",
             "required": true,
-            "nullable": true,
             "schema": {
+              "nullable": true,
               "type": "string"
             }
           }
@@ -346,10 +362,10 @@
         "requestBody": {
           "description": "This is the parameter that goes into the body",
           "required": true,
-          "nullable": true,
           "content": {
             "application/json": {
               "schema": {
+                "nullable": true,
                 "properties": {},
                 "type": "object"
               }
@@ -368,8 +384,8 @@
             "name": "parameter.path.1",
             "in": "path",
             "required": false,
-            "nullable": false,
             "schema": {
+              "nullable": false,
               "type": "string"
             }
           },
@@ -378,8 +394,8 @@
             "name": "parameter-path-2",
             "in": "path",
             "required": false,
-            "nullable": false,
             "schema": {
+              "nullable": false,
               "type": "string"
             }
           },
@@ -388,8 +404,8 @@
             "name": "PARAMETER-PATH-3",
             "in": "path",
             "required": false,
-            "nullable": false,
             "schema": {
+              "nullable": false,
               "type": "string"
             }
           },
@@ -398,8 +414,8 @@
             "name": "default",
             "in": "query",
             "required": false,
-            "nullable": false,
             "schema": {
+              "nullable": false,
               "type": "string"
             }
           },
@@ -408,8 +424,8 @@
             "name": "parameter.header",
             "in": "header",
             "required": true,
-            "nullable": true,
             "schema": {
+              "nullable": true,
               "type": "string"
             }
           },
@@ -418,8 +434,8 @@
             "name": "parameter-query",
             "in": "query",
             "required": true,
-            "nullable": true,
             "schema": {
+              "nullable": true,
               "type": "string"
             }
           },
@@ -428,8 +444,8 @@
             "name": "PARAMETER-COOKIE",
             "in": "cookie",
             "required": true,
-            "nullable": true,
             "schema": {
+              "nullable": true,
               "type": "string"
             }
           },
@@ -438,8 +454,8 @@
             "name": "api-version",
             "in": "path",
             "required": true,
-            "nullable": true,
             "schema": {
+              "nullable": true,
               "type": "string"
             }
           }
@@ -447,11 +463,15 @@
         "requestBody": {
           "description": "This is the parameter that goes into the body",
           "required": true,
-          "nullable": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ModelWithString"
+                "nullable": true,
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ModelWithString"
+                  }
+                ]
               }
             }
           }
@@ -569,8 +589,8 @@
             "description": "This is a simple string with default value",
             "name": "parameterString",
             "in": "query",
-            "nullable": true,
             "schema": {
+              "nullable": true,
               "type": "string",
               "default": "Hello World!"
             }
@@ -579,8 +599,8 @@
             "description": "This is a simple number with default value",
             "name": "parameterNumber",
             "in": "query",
-            "nullable": true,
             "schema": {
+              "nullable": true,
               "type": "number",
               "default": 123
             }
@@ -589,8 +609,8 @@
             "description": "This is a simple boolean with default value",
             "name": "parameterBoolean",
             "in": "query",
-            "nullable": true,
             "schema": {
+              "nullable": true,
               "type": "boolean",
               "default": true
             }
@@ -608,9 +628,13 @@
             "description": "This is a simple model with default value",
             "name": "parameterModel",
             "in": "query",
-            "nullable": true,
             "schema": {
-              "$ref": "#/components/schemas/ModelWithString",
+              "nullable": true,
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/ModelWithString"
+                }
+              ],
               "default": {
                 "prop": "Hello World!"
               }
@@ -1053,8 +1077,8 @@
             "name": "parameterArrayCSV",
             "in": "query",
             "required": true,
-            "nullable": true,
             "schema": {
+              "nullable": true,
               "type": "array",
               "items": {
                 "type": "string"
@@ -1067,8 +1091,8 @@
             "name": "parameterArraySSV",
             "in": "query",
             "required": true,
-            "nullable": true,
             "schema": {
+              "nullable": true,
               "type": "array",
               "items": {
                 "type": "string"
@@ -1081,8 +1105,8 @@
             "name": "parameterArrayTSV",
             "in": "query",
             "required": true,
-            "nullable": true,
             "schema": {
+              "nullable": true,
               "type": "array",
               "items": {
                 "type": "string"
@@ -1095,8 +1119,8 @@
             "name": "parameterArrayPipes",
             "in": "query",
             "required": true,
-            "nullable": true,
             "schema": {
+              "nullable": true,
               "type": "array",
               "items": {
                 "type": "string"
@@ -1109,8 +1133,8 @@
             "name": "parameterArrayMulti",
             "in": "query",
             "required": true,
-            "nullable": true,
             "schema": {
+              "nullable": true,
               "type": "array",
               "items": {
                 "type": "string"
@@ -1280,7 +1304,8 @@
             "application/x-www-form-urlencoded": {
               "description": "Supply a file reference for upload",
               "schema": {
-                "type": "file"
+                "format": "binary",
+                "type": "string"
               }
             }
           },
@@ -1328,12 +1353,14 @@
             "content": {
               "audio/*": {
                 "schema": {
-                  "type": "file"
+                  "format": "binary",
+                  "type": "string"
                 }
               },
               "video/*": {
                 "schema": {
-                  "type": "file"
+                  "format": "binary",
+                  "type": "string"
                 }
               }
             }
@@ -1418,7 +1445,7 @@
                     "format": "binary"
                   },
                   "data": {
-                    "oneOf": [
+                    "allOf": [
                       {
                         "$ref": "#/components/schemas/ModelWithString"
                       }
@@ -1798,11 +1825,16 @@
       },
       "SimpleFile": {
         "description": "This is a simple file",
-        "type": "file"
+        "format": "binary",
+        "type": "string"
       },
       "SimpleReference": {
         "description": "This is a simple reference",
-        "$ref": "#/components/schemas/ModelWithString"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ModelWithString"
+          }
+        ]
       },
       "SimpleStringWithPattern": {
         "description": "This is a simple string",
@@ -1944,7 +1976,7 @@
             "anyOf": [
               {},
               {
-                "type": "null"
+                "nullable": true
               }
             ]
           }
@@ -2103,11 +2135,13 @@
           },
           "nullableProp2": {
             "description": "This is a simple string property",
-            "type": ["string", "null"]
+            "nullable": true,
+            "type": "string"
           },
           "nullableRequiredProp2": {
             "description": "This is a simple string property",
-            "type": ["string", "null"]
+            "nullable": true,
+            "type": "string"
           },
           "foo_bar-enum": {
             "description": "This is a simple enum with strings",
@@ -2221,7 +2255,8 @@
           "propWithFile": {
             "type": "array",
             "items": {
-              "type": "file"
+              "format": "binary",
+              "type": "string"
             }
           },
           "propWithNumber": {
@@ -2245,7 +2280,8 @@
           "propWithFile": {
             "type": "array",
             "items": {
-              "type": "file"
+              "format": "binary",
+              "type": "string"
             }
           },
           "propWithNumber": {
@@ -2445,12 +2481,10 @@
             "anyOf": [
               {
                 "items": {
-                  "anyOf": [
+                  "nullable": true,
+                  "allOf": [
                     {
                       "$ref": "#/components/schemas/ModelWithDictionary"
-                    },
-                    {
-                      "type": "null"
                     }
                   ]
                 },
@@ -2458,12 +2492,10 @@
               },
               {
                 "items": {
-                  "anyOf": [
+                  "nullable": true,
+                  "allOf": [
                     {
                       "$ref": "#/components/schemas/ModelWithArray"
-                    },
-                    {
-                      "type": "null"
                     }
                   ]
                 },
@@ -2478,15 +2510,16 @@
         "type": "string"
       },
       "ConstValue": {
-        "type": "string",
-        "const": "ConstValue"
+        "enum": ["ConstValue"],
+        "type": "string"
       },
       "CompositionWithNestedAnyOfAndNull": {
         "description": "This is a model with one property with a 'any of' relationship where the options are not $ref",
         "type": "object",
         "properties": {
           "propA": {
-            "anyOf": [
+            "nullable": true,
+            "allOf": [
               {
                 "items": {
                   "anyOf": [
@@ -2499,9 +2532,6 @@
                   ]
                 },
                 "type": "array"
-              },
-              {
-                "type": "null"
               }
             ],
             "title": "Scopes"
@@ -2774,12 +2804,6 @@
         "properties": {
           "prop": {
             "$ref": "#/components/schemas/ModelWithString"
-          },
-          "prop": {
-            "$ref": "#/components/schemas/ModelWithString"
-          },
-          "prop": {
-            "$ref": "#/components/schemas/ModelWithString"
           }
         }
       },
@@ -2985,17 +3009,19 @@
         "type": "object",
         "properties": {
           "String": {
-            "const": "String"
+            "enum": ["String"],
+            "type": "string"
           },
           "number": {
-            "const": 0
+            "enum": [0],
+            "type": "number"
           },
           "null": {
-            "const": null
+            "nullable": true
           },
           "withType": {
-            "type": "string",
-            "const": "Some string"
+            "enum": ["Some string"],
+            "type": "string"
           }
         }
       },
@@ -3013,7 +3039,8 @@
       "NestedAnyOfArraysNullable": {
         "properties": {
           "nullableArray": {
-            "anyOf": [
+            "nullable": true,
+            "allOf": [
               {
                 "items": {
                   "anyOf": [
@@ -3026,9 +3053,6 @@
                   ]
                 },
                 "type": "array"
-              },
-              {
-                "type": "null"
               }
             ]
           }
@@ -3075,8 +3099,9 @@
         }
       },
       "NullableObject": {
-        "type": ["object", "null"],
         "description": "An object that can be null",
+        "nullable": true,
+        "type": "object",
         "properties": {
           "foo": {
             "type": "string"
@@ -3148,15 +3173,10 @@
             "properties": {
               "content": {
                 "type": "array",
-                "items": [
-                  {
-                    "type": "string",
-                    "format": "date-time"
-                  },
-                  {
-                    "type": "string"
-                  }
-                ],
+                "items": {
+                  "type": "string",
+                  "format": "date-time"
+                },
                 "maxItems": 2,
                 "minItems": 2
               },
@@ -3265,27 +3285,22 @@
       },
       "ModelWithPrefixItemsConstantSizeArray": {
         "type": "array",
-        "prefixItems": [
-          {
-            "$ref": "#/components/schemas/ModelWithInteger"
-          },
-          {
-            "oneOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "string"
-              }
-            ]
-          },
-          {
-            "type": "string"
-          }
-        ]
+        "items": {
+          "oneOf": [
+            {
+              "$ref": "#/components/schemas/ModelWithInteger"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        }
       },
       "ModelWithAnyOfConstantSizeArrayNullable": {
-        "type": ["array"],
+        "type": "array",
         "items": {
           "oneOf": [
             {
@@ -3442,28 +3457,26 @@
           },
           "array": {
             "type": "array",
-            "items": [
-              {
-                "type": "object",
-                "properties": {
-                  "description": {
-                    "type": "string"
-                  },
-                  "x-enum-descriptions": {
-                    "type": "string"
-                  },
-                  "x-enum-varnames": {
-                    "type": "string"
-                  },
-                  "x-enumNames": {
-                    "type": "string"
-                  },
-                  "title": {
-                    "type": "string"
-                  }
+            "items": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "x-enum-descriptions": {
+                  "type": "string"
+                },
+                "x-enum-varnames": {
+                  "type": "string"
+                },
+                "x-enumNames": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
                 }
               }
-            ]
+            }
           }
         }
       },
@@ -3533,6 +3546,7 @@
             "required": ["entries"],
             "properties": {
               "entries": {
+                "type": "object",
                 "additionalProperties": {
                   "$ref": "#/components/schemas/AdditionalPropertiesUnknownIssue"
                 }
