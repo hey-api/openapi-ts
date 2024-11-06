@@ -952,12 +952,14 @@ export type ImportResponse = Model_From_Zendesk | ModelWithReadOnlyAndWriteOnly;
 export type ApiVversionOdataControllerCountResponse = Model_From_Zendesk;
 
 export type GetApiVbyApiVersionSimpleOperationData = {
+    body?: never;
     path: {
         /**
          * foo in method
          */
         foo_param: string;
     };
+    query?: never;
 };
 
 export type GetApiVbyApiVersionSimpleOperationError = ModelWithBoolean;
@@ -965,6 +967,7 @@ export type GetApiVbyApiVersionSimpleOperationError = ModelWithBoolean;
 export type GetApiVbyApiVersionSimpleOperationResponse = number;
 
 export type DeleteFooData3 = {
+    body?: never;
     headers: {
         /**
          * Parameter with illegal characters
@@ -981,9 +984,12 @@ export type DeleteFooData3 = {
          */
         BarParam: string;
     };
+    query?: never;
 };
 
 export type CallWithDescriptionsData = {
+    body?: never;
+    path?: never;
     query?: {
         /**
          * Testing multiline comments in string: First line
@@ -1016,6 +1022,7 @@ export type CallWithDescriptionsData = {
 };
 
 export type DeprecatedCallData = {
+    body?: never;
     headers: {
         /**
          * This parameter is deprecated
@@ -1023,6 +1030,8 @@ export type DeprecatedCallData = {
          */
         parameter: DeprecatedModel | null;
     };
+    path?: never;
+    query?: never;
 };
 
 export type CallWithParametersData = {
@@ -1102,6 +1111,7 @@ export type GetCallWithOptionalParamData = {
      * This is a required parameter
      */
     body: ModelWithOneOfEnum;
+    path?: never;
     query?: {
         /**
          * This is an optional parameter
@@ -1117,6 +1127,7 @@ export type PostCallWithOptionalParamData = {
     body?: {
         offset?: number | null;
     };
+    path?: never;
     query: {
         /**
          * This is a required parameter
@@ -1132,6 +1143,7 @@ export type PostApiVbyApiVersionRequestBodyData = {
      * A reusable request body
      */
     body?: ModelWithString;
+    path?: never;
     query?: {
         /**
          * This is a reusable parameter
@@ -1145,6 +1157,7 @@ export type PostApiVbyApiVersionFormDataData = {
      * A reusable request body
      */
     body?: ModelWithString;
+    path?: never;
     query?: {
         /**
          * This is a reusable parameter
@@ -1154,6 +1167,8 @@ export type PostApiVbyApiVersionFormDataData = {
 };
 
 export type CallWithDefaultParametersData = {
+    body?: never;
+    path?: never;
     query?: {
         /**
          * This is a simple string with default value
@@ -1179,6 +1194,8 @@ export type CallWithDefaultParametersData = {
 };
 
 export type CallWithDefaultOptionalParametersData = {
+    body?: never;
+    path?: never;
     query?: {
         /**
          * This is a simple string that is optional with default value
@@ -1204,6 +1221,8 @@ export type CallWithDefaultOptionalParametersData = {
 };
 
 export type CallToTestOrderOfParamsData = {
+    body?: never;
+    path?: never;
     query: {
         /**
          * This is a optional string with default
@@ -1263,6 +1282,8 @@ export type CallWithResponsesResponse = {
 } | ModelThatExtends | ModelThatExtendsExtends;
 
 export type CollectionFormatData = {
+    body?: never;
+    path?: never;
     query: {
         /**
          * This is an array parameter that is sent as csv format (comma-separated values)
@@ -1288,6 +1309,7 @@ export type CollectionFormatData = {
 };
 
 export type TypesData = {
+    body?: never;
     path?: {
         /**
          * This is a number parameter
@@ -1336,11 +1358,13 @@ export type UploadFileData = {
          */
         'api-version': string | null;
     };
+    query?: never;
 };
 
 export type UploadFileResponse = boolean;
 
 export type FileResponseData = {
+    body?: never;
     path: {
         id: string;
         /**
@@ -1348,11 +1372,14 @@ export type FileResponseData = {
          */
         'api-version': string;
     };
+    query?: never;
 };
 
 export type FileResponseResponse = Blob | File;
 
 export type ComplexTypesData = {
+    body?: never;
+    path?: never;
     query: {
         /**
          * Parameter containing object
@@ -1409,11 +1436,14 @@ export type ComplexParamsData = {
          */
         'api-version': string;
     };
+    query?: never;
 };
 
 export type ComplexParamsResponse = ModelWithString;
 
 export type TestErrorCodeData = {
+    body?: never;
+    path?: never;
     query: {
         /**
          * Status code to return
@@ -1423,6 +1453,8 @@ export type TestErrorCodeData = {
 };
 
 export type NonAsciiæøåÆøÅöôêÊ字符串Data = {
+    body?: never;
+    path?: never;
     query: {
         /**
          * Dummy input param
