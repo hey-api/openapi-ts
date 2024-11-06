@@ -65,15 +65,6 @@ const parseArray = ({
 
   let schemaItems: Array<IRSchemaObject> = [];
 
-  // for (const item of schema.prefixItems ?? []) {
-  //   schemaItems.push(
-  //     schemaToIrSchema({
-  //       context,
-  //       schema: item,
-  //     }),
-  //   );
-  // }
-
   if (schema.items) {
     const irItemsSchema = schemaToIrSchema({
       context,

@@ -43,7 +43,6 @@ describe(`OpenAPI ${VERSION}`, () => {
   ];
 
   it.each(scenarios)('$description', async ({ config }) => {
-    // @ts-ignore
     await createClient(config);
 
     const outputPath = typeof config.output === 'string' ? config.output : '';
