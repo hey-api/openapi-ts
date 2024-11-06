@@ -651,27 +651,31 @@ const operationToDataType = ({
     type: 'object',
   };
   const dataRequired: Array<string> = [];
+  let hasAnyProperties = false;
+
+  if (!data.properties) {
+    data.properties = {};
+  }
 
   if (operation.body) {
-    if (!data.properties) {
-      data.properties = {};
-    }
-
+    hasAnyProperties = true;
     data.properties.body = operation.body.schema;
 
     if (operation.body.required) {
       dataRequired.push('body');
     }
+  } else {
+    data.properties.body = {
+      type: 'never',
+    };
   }
 
   if (operation.parameters) {
-    if (!data.properties) {
-      data.properties = {};
-    }
-
     // TODO: parser - handle cookie parameters
 
+    // do not set headers to never so we can always pass arbitrary values
     if (operation.parameters.header) {
+      hasAnyProperties = true;
       data.properties.headers = irParametersToIrSchema({
         parameters: operation.parameters.header,
       });
@@ -682,6 +686,7 @@ const operationToDataType = ({
     }
 
     if (operation.parameters.path) {
+      hasAnyProperties = true;
       data.properties.path = irParametersToIrSchema({
         parameters: operation.parameters.path,
       });
@@ -689,9 +694,14 @@ const operationToDataType = ({
       if (data.properties.path.required) {
         dataRequired.push('path');
       }
+    } else {
+      data.properties.path = {
+        type: 'never',
+      };
     }
 
     if (operation.parameters.query) {
+      hasAnyProperties = true;
       data.properties.query = irParametersToIrSchema({
         parameters: operation.parameters.query,
       });
@@ -699,12 +709,16 @@ const operationToDataType = ({
       if (data.properties.query.required) {
         dataRequired.push('query');
       }
+    } else {
+      data.properties.query = {
+        type: 'never',
+      };
     }
   }
 
   data.required = dataRequired;
 
-  if (data.properties) {
+  if (hasAnyProperties) {
     const identifier = context.file({ id: typesId })!.identifier({
       $ref: operationDataRef({ id: operation.id }),
       create: true,

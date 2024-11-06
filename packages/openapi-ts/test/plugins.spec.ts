@@ -194,6 +194,13 @@ for (const version of versions) {
         }),
         description: 'generate schemas',
       },
+      {
+        config: createConfig({
+          output: 'default',
+          plugins: ['@hey-api/services'],
+        }),
+        description: 'generate services',
+      },
     ];
 
     it.each(scenarios)('$description', async ({ config }) => {
