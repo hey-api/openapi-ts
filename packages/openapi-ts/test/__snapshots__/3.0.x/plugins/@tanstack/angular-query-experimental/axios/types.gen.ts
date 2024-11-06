@@ -643,7 +643,9 @@ export type FreeFormObjectWithoutAdditionalProperties = {};
 /**
  * This is a free-form object with additionalProperties: true.
  */
-export type FreeFormObjectWithAdditionalPropertiesEqTrue = {};
+export type FreeFormObjectWithAdditionalPropertiesEqTrue = {
+    [key: string]: unknown;
+};
 
 /**
  * This is a free-form object with additionalProperties: {}.
@@ -920,7 +922,9 @@ export type Generic_Schema_Duplicate_Issue_1_System_Boolean_ = {
     item?: boolean;
     error?: string | null;
     readonly hasError?: boolean;
-    data?: {};
+    data?: {
+        [key: string]: never;
+    };
 };
 
 export type Generic_Schema_Duplicate_Issue_1_System_String_ = {

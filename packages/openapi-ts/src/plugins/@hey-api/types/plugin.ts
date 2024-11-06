@@ -398,7 +398,7 @@ const objectTypeToIdentifier = ({
 }) => {
   let indexProperty: Property | undefined;
   const schemaProperties: Array<Property> = [];
-  const indexPropertyItems: Array<IRSchemaObject> = [];
+  let indexPropertyItems: Array<IRSchemaObject> = [];
   const required = schema.required ?? [];
   let hasOptionalProperties = false;
 
@@ -424,8 +424,15 @@ const objectTypeToIdentifier = ({
     }
   }
 
-  if (schema.additionalProperties) {
-    indexPropertyItems.unshift(schema.additionalProperties);
+  if (
+    schema.additionalProperties &&
+    (schema.additionalProperties.type !== 'never' || !indexPropertyItems.length)
+  ) {
+    if (schema.additionalProperties.type === 'never') {
+      indexPropertyItems = [schema.additionalProperties];
+    } else {
+      indexPropertyItems.unshift(schema.additionalProperties);
+    }
 
     if (hasOptionalProperties) {
       indexPropertyItems.push({
@@ -554,6 +561,10 @@ const schemaTypeToIdentifier = ({
         context,
         namespace,
         schema: schema as SchemaWithType<'enum'>,
+      });
+    case 'never':
+      return compiler.keywordTypeNode({
+        keyword: 'never',
       });
     case 'null':
       return compiler.literalTypeNode({

@@ -248,12 +248,22 @@ export const toParameterDeclarations = (parameters: FunctionParameter[]) =>
 export const createKeywordTypeNode = ({
   keyword,
 }: {
-  keyword: 'any' | 'boolean' | 'number' | 'string' | 'undefined' | 'unknown';
+  keyword:
+    | 'any'
+    | 'boolean'
+    | 'never'
+    | 'number'
+    | 'string'
+    | 'undefined'
+    | 'unknown';
 }) => {
   let kind: ts.KeywordTypeSyntaxKind = ts.SyntaxKind.AnyKeyword;
   switch (keyword) {
     case 'boolean':
       kind = ts.SyntaxKind.BooleanKeyword;
+      break;
+    case 'never':
+      kind = ts.SyntaxKind.NeverKeyword;
       break;
     case 'number':
       kind = ts.SyntaxKind.NumberKeyword;

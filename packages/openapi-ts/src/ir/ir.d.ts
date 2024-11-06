@@ -132,6 +132,7 @@ export interface IRSchemaObject
     | 'array'
     | 'boolean'
     | 'enum'
+    | 'never'
     | 'null'
     | 'number'
     | 'object'
