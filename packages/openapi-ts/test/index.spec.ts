@@ -42,7 +42,6 @@ describe('OpenAPI v2', () => {
     },
   ])('$description', async ({ name, config }) => {
     const output = toOutputPath(name);
-    // @ts-ignore
     await createClient({
       ...config,
       input: V2_SPEC_PATH,
