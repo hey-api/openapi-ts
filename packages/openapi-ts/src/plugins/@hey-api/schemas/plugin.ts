@@ -2,8 +2,11 @@ import { compiler } from '../../../compiler';
 import type { IRContext } from '../../../ir/context';
 import { ensureValidTypeScriptJavaScriptIdentifier } from '../../../openApi';
 import type { OpenApiV3_0_X } from '../../../openApi/3.0.x';
+import type {
+  ReferenceObject as OpenApiV3_0_XReferenceObject,
+  SchemaObject as OpenApiV3_0_XSchemaObject,
+} from '../../../openApi/3.0.x/types/spec';
 import type { OpenApiV3_1_X } from '../../../openApi/3.1.x';
-// import type { SchemaObject as OpenApiV3_0_XSchemaObject } from '../../../openApi/3.0.x/types/spec';
 import type { SchemaObject as OpenApiV3_1_XSchemaObject } from '../../../openApi/3.1.x/types/spec';
 import type { PluginHandler } from '../../types';
 import type { Config } from './types';
@@ -15,7 +18,7 @@ const stripSchema = ({
   schema,
 }: {
   context: IRContext;
-  schema: OpenApiV3_1_XSchemaObject;
+  schema: OpenApiV3_0_XSchemaObject | OpenApiV3_1_XSchemaObject;
 }) => {
   if (context.config.plugins['@hey-api/schemas']?.type === 'form') {
     if (schema.description) {
@@ -38,6 +41,93 @@ const stripSchema = ({
       delete schema.title;
     }
   }
+};
+
+const schemaToJsonSchemaDraft_05 = ({
+  context,
+  schema: _schema,
+}: {
+  context: IRContext;
+  schema: OpenApiV3_0_XSchemaObject | OpenApiV3_0_XReferenceObject;
+}): object => {
+  if (Array.isArray(_schema)) {
+    return _schema.map((item) =>
+      schemaToJsonSchemaDraft_05({
+        context,
+        schema: item,
+      }),
+    );
+  }
+
+  const schema = structuredClone(_schema);
+
+  if ('$ref' in schema) {
+    // refs are encoded probably by json-schema-ref-parser, didn't investigate
+    // further
+    schema.$ref = decodeURIComponent(schema.$ref);
+    return schema;
+  }
+
+  stripSchema({ context, schema });
+
+  if (
+    schema.additionalProperties &&
+    typeof schema.additionalProperties !== 'boolean'
+  ) {
+    schema.additionalProperties = schemaToJsonSchemaDraft_05({
+      context,
+      schema: schema.additionalProperties,
+    });
+  }
+
+  if (schema.allOf) {
+    schema.allOf = schema.allOf.map((item) =>
+      schemaToJsonSchemaDraft_05({
+        context,
+        schema: item,
+      }),
+    );
+  }
+
+  if (schema.anyOf) {
+    schema.anyOf = schema.anyOf.map((item) =>
+      schemaToJsonSchemaDraft_05({
+        context,
+        schema: item,
+      }),
+    );
+  }
+
+  if (schema.items) {
+    schema.items = schemaToJsonSchemaDraft_05({
+      context,
+      schema: schema.items,
+    });
+  }
+
+  if (schema.oneOf) {
+    schema.oneOf = schema.oneOf.map((item) =>
+      schemaToJsonSchemaDraft_05({
+        context,
+        schema: item,
+      }),
+    );
+  }
+
+  if (schema.properties) {
+    for (const name in schema.properties) {
+      const property = schema.properties[name];
+
+      if (typeof property !== 'boolean') {
+        schema.properties[name] = schemaToJsonSchemaDraft_05({
+          context,
+          schema: property,
+        });
+      }
+    }
+  }
+
+  return schema;
 };
 
 const schemaToJsonSchema2020_12 = ({
@@ -66,7 +156,10 @@ const schemaToJsonSchema2020_12 = ({
     schema.$ref = decodeURIComponent(schema.$ref);
   }
 
-  if (schema.additionalProperties) {
+  if (
+    schema.additionalProperties &&
+    typeof schema.additionalProperties !== 'boolean'
+  ) {
     schema.additionalProperties = schemaToJsonSchema2020_12({
       context,
       schema: schema.additionalProperties,
@@ -139,7 +232,10 @@ const schemaName = ({
 }: {
   context: IRContext;
   name: string;
-  schema: OpenApiV3_1_XSchemaObject;
+  schema:
+    | OpenApiV3_0_XReferenceObject
+    | OpenApiV3_0_XSchemaObject
+    | OpenApiV3_1_XSchemaObject;
 }): string => {
   const validName = ensureValidTypeScriptJavaScriptIdentifier(name);
 
@@ -158,7 +254,20 @@ const schemasV3_0_X = (context: IRContext<OpenApiV3_0_X>) => {
     return;
   }
 
-  // TODO: parser - handle OpenAPI 3.0.x
+  for (const name in context.spec.components.schemas) {
+    const schema = context.spec.components.schemas[name];
+    const obj = schemaToJsonSchemaDraft_05({
+      context,
+      schema,
+    });
+    const statement = compiler.constVariable({
+      assertion: 'const',
+      exportConst: true,
+      expression: compiler.objectExpression({ obj }),
+      name: schemaName({ context, name, schema }),
+    });
+    context.file({ id: schemasId })!.add(statement);
+  }
 };
 
 const schemasV3_1_X = (context: IRContext<OpenApiV3_1_X>) => {
