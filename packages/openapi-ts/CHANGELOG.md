@@ -1,5 +1,38 @@
 # @hey-api/openapi-ts
 
+## 0.54.4
+
+### Patch Changes
+
+- [#1237](https://github.com/hey-api/openapi-ts/pull/1237) [`63ccc07`](https://github.com/hey-api/openapi-ts/commit/63ccc0775e24a096bc46ac7ff29b99b694aad621) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: forbid any body, path, or query parameters if not defined in spec
+
+- [#1235](https://github.com/hey-api/openapi-ts/pull/1235) [`7a1a419`](https://github.com/hey-api/openapi-ts/commit/7a1a419f07d5ad39e07265771b30d49a4b754a88) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle additionalProperties: boolean in experimental parser
+
+- [#1233](https://github.com/hey-api/openapi-ts/pull/1233) [`08baa77`](https://github.com/hey-api/openapi-ts/commit/08baa77afdc5e2c49d4789b20673e949951ab0b2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update schemas plugin to handle experimental 3.0.x parser
+
+  This release adds an experimental parser for OpenAPI versions 3.0.x. In the future, this will become the default parser. If you're using OpenAPI 3.0 or newer, we encourage you to try it out today.
+
+  You can enable the experimental parser by setting the `experimentalParser` boolean flag to `true` in your configuration file or CLI.
+
+  ```js
+  export default {
+    client: '@hey-api/client-fetch',
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    experimentalParser: true,
+  };
+  ```
+
+  ```sh
+  npx @hey-api/openapi-ts -i path/to/openapi.json -o src/client -c @hey-api/client-fetch -e
+  ```
+
+  The generated output should not structurally change, despite few things being generated in a different order. In fact, the output should be cleaner! That's the immediate side effect you should notice. If that's not true, please leave feedback in [GitHub issues](https://github.com/hey-api/openapi-ts/issues).
+
+  Hey API parser marks an important milestone towards v1 of `@hey-api/openapi-ts`. More features will be added to the parser in the future and the original parser from `openapi-typescript-codegen` will be deprecated and used only for generating legacy clients.
+
+  If you'd like to work with the parser more closely (e.g. to generate code not natively supported by this package), feel free to reach out with any feedback or suggestions. Happy parsing! 🎉
+
 ## 0.54.3
 
 ### Patch Changes
