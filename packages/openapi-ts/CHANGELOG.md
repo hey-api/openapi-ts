@@ -1,5 +1,15 @@
 # @hey-api/openapi-ts
 
+## 0.55.0
+
+### Minor Changes
+
+- [#1241](https://github.com/hey-api/openapi-ts/pull/1241) [`41cee41`](https://github.com/hey-api/openapi-ts/commit/41cee417055c50de6170e6fdeae65bd6e643d19c) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add input.include option
+
+### Patch Changes
+
+- [#1239](https://github.com/hey-api/openapi-ts/pull/1239) [`319a28a`](https://github.com/hey-api/openapi-ts/commit/319a28af29541d7f61cca82389e1d486204f321f) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle pagination with basic refs
+
 ## 0.54.4
 
 ### Patch Changes
