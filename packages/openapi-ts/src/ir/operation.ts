@@ -1,3 +1,4 @@
+import type { IRContext } from './context';
 import type { IROperationObject, IRResponseObject, IRSchemaObject } from './ir';
 import type { Pagination } from './pagination';
 import {
@@ -21,18 +22,29 @@ export const hasOperationDataRequired = (
   return false;
 };
 
-export const operationPagination = (
-  operation: IROperationObject,
-): Pagination | undefined => {
+export const operationPagination = ({
+  context,
+  operation,
+}: {
+  context: IRContext;
+  operation: IROperationObject;
+}): Pagination | undefined => {
   if (operation.body?.pagination) {
+    if (typeof operation.body.pagination === 'boolean') {
+      return {
+        in: 'body',
+        name: 'body',
+        schema: operation.body.schema,
+      };
+    }
+
+    const schema = operation.body.schema.$ref
+      ? context.resolveIrRef<IRSchemaObject>(operation.body.schema.$ref)
+      : operation.body.schema;
     return {
       in: 'body',
-      name:
-        operation.body.pagination === true ? 'body' : operation.body.pagination,
-      schema:
-        operation.body.pagination === true
-          ? operation.body.schema
-          : operation.body.schema.properties![operation.body.pagination],
+      name: operation.body.pagination,
+      schema: schema.properties![operation.body.pagination],
     };
   }
 
