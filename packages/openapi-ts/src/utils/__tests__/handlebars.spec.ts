@@ -18,7 +18,9 @@ describe('registerHandlebarHelpers', () => {
       dryRun: false,
       experimentalParser: false,
       exportCore: true,
-      input: '',
+      input: {
+        path: '',
+      },
       output: {
         format: 'prettier',
         path: '',
@@ -66,7 +68,9 @@ describe('registerHandlebarTemplates', () => {
       dryRun: false,
       experimentalParser: false,
       exportCore: true,
-      input: '',
+      input: {
+        path: '',
+      },
       output: {
         format: 'prettier',
         path: '',

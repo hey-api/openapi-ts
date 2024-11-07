@@ -48,6 +48,13 @@ describe(`OpenAPI ${VERSION}`, () => {
       }),
       description: 'allows arbitrary properties on objects',
     },
+    {
+      config: createConfig({
+        input: 'enum-escape.json',
+        output: 'enum-escape',
+      }),
+      description: 'escapes enum values',
+    },
   ];
 
   it.each(scenarios)('$description', async ({ config }) => {

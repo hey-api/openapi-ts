@@ -7,7 +7,11 @@ export interface Config extends PluginName<'@hey-api/types'> {
    */
   enums?: 'javascript' | 'typescript' | 'typescript+namespace' | false;
   /**
-   * Include only types matching regular expression
+   * Include only types matching regular expression.
+   *
+   * This option does not work with the experimental parser.
+   *
+   * @deprecated
    */
   include?: string;
   /**

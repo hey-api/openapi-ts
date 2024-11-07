@@ -23,7 +23,9 @@ describe('generateLegacyServices', () => {
       dryRun: false,
       experimentalParser: false,
       exportCore: true,
-      input: '',
+      input: {
+        path: '',
+      },
       output: {
         path: '',
       },
@@ -161,7 +163,9 @@ describe('methodNameBuilder', () => {
       dryRun: false,
       experimentalParser: false,
       exportCore: true,
-      input: '',
+      input: {
+        path: '',
+      },
       output: {
         path: '',
       },
@@ -223,7 +227,9 @@ describe('methodNameBuilder', () => {
       dryRun: false,
       experimentalParser: false,
       exportCore: true,
-      input: '',
+      input: {
+        path: '',
+      },
       output: {
         path: '',
       },
@@ -288,7 +294,9 @@ describe('methodNameBuilder', () => {
       dryRun: false,
       experimentalParser: false,
       exportCore: true,
-      input: '',
+      input: {
+        path: '',
+      },
       output: {
         path: '',
       },

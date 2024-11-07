@@ -69,10 +69,10 @@ export default defineConfig({
       },
       {
         items: [
-          { link: '/about', text: 'Philosophy' },
-          { link: '/license', text: 'License' },
-          { link: '/contributing', text: 'Contributing' },
           { link: '/openapi-ts/migrating', text: 'Migrating' },
+          { link: '/license', text: 'License' },
+          { link: '/about', text: 'Philosophy' },
+          { link: '/contributing', text: 'Contributing' },
         ],
         text: '@hey-api',
       },

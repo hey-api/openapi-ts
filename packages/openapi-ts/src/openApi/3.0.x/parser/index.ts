@@ -1,4 +1,5 @@
 import type { IRContext } from '../../../ir/context';
+import { canProcessRef } from '../../shared/utils/filter';
 import type {
   OpenApiV3_0_X,
   ParameterObject,
@@ -15,6 +16,10 @@ import { parseSchema } from './schema';
 
 export const parseV3_0_X = (context: IRContext<OpenApiV3_0_X>) => {
   const operationIds = new Map<string, string>();
+
+  const regexp = context.config.input.include
+    ? new RegExp(context.config.input.include)
+    : undefined;
 
   for (const path in context.spec.paths) {
     const pathItem = context.spec.paths[path as keyof PathsObject];
@@ -50,7 +55,8 @@ export const parseV3_0_X = (context: IRContext<OpenApiV3_0_X>) => {
       path: path as keyof PathsObject,
     };
 
-    if (finalPathItem.delete) {
+    const $refDelete = `#/paths${path}/delete`;
+    if (finalPathItem.delete && canProcessRef($refDelete, regexp)) {
       parseOperation({
         ...operationArgs,
         method: 'delete',
@@ -68,7 +74,8 @@ export const parseV3_0_X = (context: IRContext<OpenApiV3_0_X>) => {
       });
     }
 
-    if (finalPathItem.get) {
+    const $refGet = `#/paths${path}/get`;
+    if (finalPathItem.get && canProcessRef($refGet, regexp)) {
       parseOperation({
         ...operationArgs,
         method: 'get',
@@ -86,7 +93,8 @@ export const parseV3_0_X = (context: IRContext<OpenApiV3_0_X>) => {
       });
     }
 
-    if (finalPathItem.head) {
+    const $refHead = `#/paths${path}/head`;
+    if (finalPathItem.head && canProcessRef($refHead, regexp)) {
       parseOperation({
         ...operationArgs,
         method: 'head',
@@ -104,7 +112,8 @@ export const parseV3_0_X = (context: IRContext<OpenApiV3_0_X>) => {
       });
     }
 
-    if (finalPathItem.options) {
+    const $refOptions = `#/paths${path}/options`;
+    if (finalPathItem.options && canProcessRef($refOptions, regexp)) {
       parseOperation({
         ...operationArgs,
         method: 'options',
@@ -122,7 +131,8 @@ export const parseV3_0_X = (context: IRContext<OpenApiV3_0_X>) => {
       });
     }
 
-    if (finalPathItem.patch) {
+    const $refPatch = `#/paths${path}/patch`;
+    if (finalPathItem.patch && canProcessRef($refPatch, regexp)) {
       parseOperation({
         ...operationArgs,
         method: 'patch',
@@ -140,7 +150,8 @@ export const parseV3_0_X = (context: IRContext<OpenApiV3_0_X>) => {
       });
     }
 
-    if (finalPathItem.post) {
+    const $refPost = `#/paths${path}/post`;
+    if (finalPathItem.post && canProcessRef($refPost, regexp)) {
       parseOperation({
         ...operationArgs,
         method: 'post',
@@ -158,7 +169,8 @@ export const parseV3_0_X = (context: IRContext<OpenApiV3_0_X>) => {
       });
     }
 
-    if (finalPathItem.put) {
+    const $refPut = `#/paths${path}/put`;
+    if (finalPathItem.put && canProcessRef($refPut, regexp)) {
       parseOperation({
         ...operationArgs,
         method: 'put',
@@ -176,7 +188,8 @@ export const parseV3_0_X = (context: IRContext<OpenApiV3_0_X>) => {
       });
     }
 
-    if (finalPathItem.trace) {
+    const $refTrace = `#/paths${path}/trace`;
+    if (finalPathItem.trace && canProcessRef($refTrace, regexp)) {
       parseOperation({
         ...operationArgs,
         method: 'trace',
@@ -198,6 +211,11 @@ export const parseV3_0_X = (context: IRContext<OpenApiV3_0_X>) => {
   // TODO: parser - handle more component types, old parser handles only parameters and schemas
   if (context.spec.components) {
     for (const name in context.spec.components.parameters) {
+      const $ref = `#/components/parameters/${name}`;
+      if (!canProcessRef($ref, regexp)) {
+        continue;
+      }
+
       const parameterOrReference = context.spec.components.parameters[name];
       const parameter =
         '$ref' in parameterOrReference
@@ -212,6 +230,11 @@ export const parseV3_0_X = (context: IRContext<OpenApiV3_0_X>) => {
     }
 
     for (const name in context.spec.components.schemas) {
+      const $ref = `#/components/schemas/${name}`;
+      if (!canProcessRef($ref, regexp)) {
+        continue;
+      }
+
       const schema = context.spec.components.schemas[name];
 
       parseSchema({

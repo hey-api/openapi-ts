@@ -211,7 +211,7 @@
         }
       ]
     },
-    "/api/v{api-version}/descriptions/": {
+    "/api/v{api-version}/descriptions": {
       "post": {
         "tags": ["Descriptions"],
         "operationId": "CallWithDescriptions",
@@ -476,7 +476,7 @@
         }
       }
     },
-    "/api/v{api-version}/parameters/": {
+    "/api/v{api-version}/parameters": {
       "get": {
         "tags": ["Parameters"],
         "operationId": "GetCallWithOptionalParam",
@@ -551,7 +551,7 @@
         }
       }
     },
-    "/api/v{api-version}/requestBody/": {
+    "/api/v{api-version}/requestBody": {
       "post": {
         "tags": ["RequestBody"],
         "parameters": [
@@ -564,7 +564,7 @@
         }
       }
     },
-    "/api/v{api-version}/formData/": {
+    "/api/v{api-version}/formData": {
       "post": {
         "tags": ["FormData"],
         "parameters": [
