@@ -1,5 +1,7 @@
+import { existsSync } from 'node:fs';
 import path from 'node:path';
 
+import $RefParser from '@apidevtools/json-schema-ref-parser';
 import { loadConfig } from 'c12';
 import { sync } from 'cross-spawn';
 
@@ -23,7 +25,6 @@ import {
   legacyNameFromConfig,
   setConfig,
 } from './utils/config';
-import { getOpenApiSpec } from './utils/getOpenApiSpec';
 import { registerHandlebarTemplates } from './utils/handlebars';
 import { Performance, PerformanceReport } from './utils/performance';
 import { postProcessClient } from './utils/postprocess';
@@ -125,6 +126,26 @@ const getClient = (userConfig: ClientConfig): Config['client'] => {
   return client;
 };
 
+const getInput = (userConfig: ClientConfig): Config['input'] => {
+  let input: Config['input'] = {
+    path: '',
+  };
+  if (typeof userConfig.input === 'string') {
+    input.path = userConfig.input;
+  } else if (userConfig.input && userConfig.input.path) {
+    input = {
+      ...input,
+      ...userConfig.input,
+    };
+  } else {
+    input = {
+      ...input,
+      path: userConfig.input,
+    };
+  }
+  return input;
+};
+
 const getOutput = (userConfig: ClientConfig): Config['output'] => {
   let output: Config['output'] = {
     format: false,
@@ -221,6 +242,19 @@ const getPlugins = (
   };
 };
 
+const getSpec = async ({ config }: { config: Config }) => {
+  let spec: unknown = config.input.path;
+
+  if (typeof config.input.path === 'string') {
+    const absolutePathOrUrl = existsSync(config.input.path)
+      ? path.resolve(config.input.path)
+      : config.input.path;
+    spec = await $RefParser.bundle(absolutePathOrUrl, absolutePathOrUrl, {});
+  }
+
+  return spec;
+};
+
 const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
   let configurationFile: string | undefined = undefined;
   if (userConfig.configFile) {
@@ -250,7 +284,6 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
       dryRun = false,
       exportCore = true,
       experimentalParser = false,
-      input,
       name,
       request,
       useOptions = true,
@@ -260,9 +293,10 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
       console.warn('userConfig:', userConfig);
     }
 
+    const input = getInput(userConfig);
     const output = getOutput(userConfig);
 
-    if (!input) {
+    if (!input.path) {
       throw new Error(
         '🚫 missing input - which OpenAPI specification should we use to generate your client?',
       );
@@ -332,14 +366,9 @@ export async function createClient(
   Performance.end('handlebars');
 
   const pCreateClient = (config: Config) => async () => {
-    Performance.start('openapi');
-    const openApi =
-      typeof config.input === 'string'
-        ? await getOpenApiSpec(config.input)
-        : (config.input as unknown as Awaited<
-            ReturnType<typeof getOpenApiSpec>
-          >);
-    Performance.end('openapi');
+    Performance.start('spec');
+    const spec = await getSpec({ config });
+    Performance.end('spec');
 
     let client: Client | undefined;
     let context: IRContext | undefined;
@@ -363,14 +392,14 @@ export async function createClient(
       context = parseExperimental({
         config,
         parserConfig,
-        spec: openApi,
+        spec,
       });
     }
 
     // fallback to legacy parser
     if (!context) {
       const parsed = parseLegacy({
-        openApi,
+        openApi: spec,
         parserConfig,
       });
       client = postProcessClient(parsed);
@@ -383,7 +412,7 @@ export async function createClient(
     if (context) {
       await generateOutput({ context });
     } else if (client) {
-      await generateLegacyOutput({ client, openApi, templates });
+      await generateLegacyOutput({ client, openApi: spec, templates });
     }
     Performance.end('generator');
 

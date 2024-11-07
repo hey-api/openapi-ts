@@ -13,7 +13,9 @@ describe('operationNameFn', () => {
     dryRun: true,
     experimentalParser: false,
     exportCore: false,
-    input: '',
+    input: {
+      path: '',
+    },
     output: {
       path: '',
     },

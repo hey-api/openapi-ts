@@ -20,7 +20,9 @@ describe('generateIndexFile', () => {
       dryRun: false,
       experimentalParser: false,
       exportCore: true,
-      input: '',
+      input: {
+        path: '',
+      },
       output: {
         path: '',
       },
