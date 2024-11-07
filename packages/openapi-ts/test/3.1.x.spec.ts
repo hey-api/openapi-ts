@@ -57,6 +57,13 @@ describe(`OpenAPI ${VERSION}`, () => {
     },
     {
       config: createConfig({
+        input: 'enum-escape.json',
+        output: 'enum-escape',
+      }),
+      description: 'escapes enum values',
+    },
+    {
+      config: createConfig({
         input: 'object-properties-all-of.json',
         output: 'object-properties-all-of',
       }),
