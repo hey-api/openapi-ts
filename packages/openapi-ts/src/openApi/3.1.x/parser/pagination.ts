@@ -80,5 +80,16 @@ export const paginationField = ({
     }
   }
 
+  for (const allOf of schema.allOf ?? []) {
+    const pagination = paginationField({
+      context,
+      name,
+      schema: allOf,
+    });
+    if (pagination) {
+      return pagination;
+    }
+  }
+
   return false;
 };
