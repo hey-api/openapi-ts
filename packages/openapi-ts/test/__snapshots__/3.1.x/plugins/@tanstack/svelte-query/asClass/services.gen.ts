@@ -129,7 +129,7 @@ export class ParametersService {
                 'Content-Type': 'application/json',
                 ...options?.headers
             },
-            url: '/api/v{api-version}/parameters/'
+            url: '/api/v{api-version}/parameters'
         });
     }
     
@@ -140,7 +140,7 @@ export class ParametersService {
                 'Content-Type': 'application/json',
                 ...options?.headers
             },
-            url: '/api/v{api-version}/parameters/'
+            url: '/api/v{api-version}/parameters'
         });
     }
     
@@ -150,7 +150,7 @@ export class DescriptionsService {
     public static callWithDescriptions<ThrowOnError extends boolean = false>(options?: Options<CallWithDescriptionsData, ThrowOnError>) {
         return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
             ...options,
-            url: '/api/v{api-version}/descriptions/'
+            url: '/api/v{api-version}/descriptions'
         });
     }
     
@@ -177,7 +177,7 @@ export class RequestBodyService {
                 'Content-Type': 'application/json',
                 ...options?.headers
             },
-            url: '/api/v{api-version}/requestBody/'
+            url: '/api/v{api-version}/requestBody'
         });
     }
     
@@ -192,7 +192,7 @@ export class FormDataService {
                 'Content-Type': null,
                 ...options?.headers
             },
-            url: '/api/v{api-version}/formData/'
+            url: '/api/v{api-version}/formData'
         });
     }
     

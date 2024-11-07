@@ -20,7 +20,9 @@ describe('generateLegacyTypes', () => {
       dryRun: false,
       experimentalParser: false,
       exportCore: true,
-      input: '',
+      input: {
+        path: '',
+      },
       name: 'AppClient',
       output: {
         path: '',

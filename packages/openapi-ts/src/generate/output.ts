@@ -25,10 +25,12 @@ export const generateLegacyOutput = async ({
   templates,
 }: {
   client: Client;
-  openApi: OpenApi;
+  openApi: unknown;
   templates: Templates;
 }): Promise<void> => {
   const config = getConfig();
+
+  const spec = openApi as OpenApi;
 
   // TODO: parser - move to config.input
   if (client) {
@@ -55,7 +57,7 @@ export const generateLegacyOutput = async ({
   }
 
   // deprecated files
-  await generateLegacyClientClass(openApi, outputPath, client, templates);
+  await generateLegacyClientClass(spec, outputPath, client, templates);
   await generateLegacyCore(
     path.resolve(config.output.path, 'core'),
     client,
@@ -78,7 +80,7 @@ export const generateLegacyOutput = async ({
     plugin._handlerLegacy({
       client,
       files,
-      openApi,
+      openApi: spec,
       plugin: plugin as never,
     });
   }

@@ -20,7 +20,9 @@ describe('generateLegacyOutput', () => {
       dryRun: false,
       experimentalParser: false,
       exportCore: true,
-      input: '',
+      input: {
+        path: '',
+      },
       output: {
         format: 'prettier',
         path: './dist',

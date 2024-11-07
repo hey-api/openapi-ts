@@ -8,9 +8,7 @@ description: Learn about files generated with @hey-api/openapi-ts.
 Learn about files generated with `@hey-api/openapi-ts`.
 
 ::: tip
-
 Your actual output depends on your Hey API configuration. It may contain a different number of files and their contents might differ.
-
 :::
 
 ## Overview

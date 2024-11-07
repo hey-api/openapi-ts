@@ -20,6 +20,10 @@ export interface Config extends PluginName<'@hey-api/services'> {
    * results will be included in the output. The input pattern this
    * string will be tested against is `{method} {path}`. For example,
    * you can match `POST /api/v1/foo` with `^POST /api/v1/foo$`.
+   *
+   * This option does not work with the experimental parser.
+   *
+   * @deprecated
    */
   filter?: string;
   /**

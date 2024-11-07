@@ -1,0 +1,24 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "OpenAPI 3.1.1 enum escape example",
+    "version": "1"
+  },
+  "components": {
+    "schemas": {
+      "Foo": {
+        "type": "object",
+        "properties": {
+          "foo": {
+            "enum": ["foo'bar", "foo\"bar"],
+            "type": "string"
+          }
+        }
+      },
+      "Bar": {
+        "enum": ["foo'bar", "foo\"bar"],
+        "type": "string"
+      }
+    }
+  }
+}

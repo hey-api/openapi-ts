@@ -50,6 +50,38 @@ This config option is deprecated and will be removed in favor of [clients](./cli
 
 This config option is deprecated and will be removed.
 
+## v0.55.0
+
+This release adds the ability to filter your OpenAPI specification before it's processed. This feature will be useful if you are working with a large specification and are interested in generating output only from a small subset.
+
+This feature is available only in the experimental parser. In the future, this will become the default parser. To opt-in to the experimental parser, set the `experimentalParser` flag in your configuration to `true`.
+
+### Deprecated `include` in `@hey-api/types`
+
+This config option is deprecated and will be removed when the experimental parser becomes the default.
+
+### Deprecated `filter` in `@hey-api/services`
+
+This config option is deprecated and will be removed when the experimental parser becomes the default.
+
+### Added `input.include` option
+
+This config option can be used to replace the deprecated options. It accepts a regular expression string matching against references within the bundled specification.
+
+```js
+export default {
+  client: '@hey-api/client-fetch',
+  experimentalParser: true,
+  input: {
+    include: '^(#/components/schemas/foo|#/paths/api/v1/foo/get)$', // [!code ++]
+    path: 'path/to/openapi.json',
+  },
+  output: 'src/client',
+};
+```
+
+The configuration above will process only the schema named `foo` and `GET` operation for the `/api/v1/foo` path.
+
 ## v0.54.0
 
 This release makes plugins first-class citizens. In order to achieve that, the following breaking changes were introduced.

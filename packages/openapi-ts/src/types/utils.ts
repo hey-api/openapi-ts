@@ -1,6 +1,8 @@
 import type { TypeScriptFile } from '../generate/files';
 
-type ExtractFromArray<T, Discriminator> = T extends Discriminator ? T : never;
+export type ExtractWithDiscriminator<T, Discriminator> = T extends Discriminator
+  ? T
+  : never;
 
 /**
  * Accepts an array of elements union and attempts to extract only objects.
@@ -9,9 +11,9 @@ type ExtractFromArray<T, Discriminator> = T extends Discriminator ? T : never;
  */
 export type ExtractArrayOfObjects<T, Discriminator> =
   T extends Array<infer U>
-    ? Array<ExtractFromArray<U, Discriminator>>
+    ? Array<ExtractWithDiscriminator<U, Discriminator>>
     : T extends ReadonlyArray<infer U>
-      ? ReadonlyArray<ExtractFromArray<U, Discriminator>>
+      ? ReadonlyArray<ExtractWithDiscriminator<U, Discriminator>>
       : never;
 
 export type Files = Record<string, TypeScriptFile>;

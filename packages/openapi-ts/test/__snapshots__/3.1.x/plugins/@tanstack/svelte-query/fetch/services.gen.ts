@@ -96,7 +96,7 @@ export const deleteFoo = <ThrowOnError extends boolean = false>(options: Options
 export const callWithDescriptions = <ThrowOnError extends boolean = false>(options?: Options<CallWithDescriptionsData, ThrowOnError>) => {
     return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
         ...options,
-        url: '/api/v{api-version}/descriptions/'
+        url: '/api/v{api-version}/descriptions'
     });
 };
 
@@ -139,7 +139,7 @@ export const getCallWithOptionalParam = <ThrowOnError extends boolean = false>(o
             'Content-Type': 'application/json',
             ...options?.headers
         },
-        url: '/api/v{api-version}/parameters/'
+        url: '/api/v{api-version}/parameters'
     });
 };
 
@@ -150,7 +150,7 @@ export const postCallWithOptionalParam = <ThrowOnError extends boolean = false>(
             'Content-Type': 'application/json',
             ...options?.headers
         },
-        url: '/api/v{api-version}/parameters/'
+        url: '/api/v{api-version}/parameters'
     });
 };
 
@@ -161,7 +161,7 @@ export const postApiVbyApiVersionRequestBody = <ThrowOnError extends boolean = f
             'Content-Type': 'application/json',
             ...options?.headers
         },
-        url: '/api/v{api-version}/requestBody/'
+        url: '/api/v{api-version}/requestBody'
     });
 };
 
@@ -173,7 +173,7 @@ export const postApiVbyApiVersionFormData = <ThrowOnError extends boolean = fals
             'Content-Type': null,
             ...options?.headers
         },
-        url: '/api/v{api-version}/formData/'
+        url: '/api/v{api-version}/formData'
     });
 };
 
