@@ -853,7 +853,7 @@ export const handler: PluginHandler<
         plugin.infiniteQueryOptions &&
         (['get', 'post'] as (typeof method)[]).includes(method)
       ) {
-        const pagination = operationPagination(operation);
+        const pagination = operationPagination({ context, operation });
 
         if (pagination) {
           if (!hasInfiniteQueries) {

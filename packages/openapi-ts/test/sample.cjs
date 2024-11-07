@@ -43,7 +43,7 @@ const main = async () => {
         // style: 'PascalCase',
         // tree: false,
       },
-      // '@tanstack/react-query',
+      '@tanstack/react-query',
       // 'zod',
     ],
     // useOptions: false,
