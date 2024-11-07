@@ -49,6 +49,28 @@ Input is the first thing you must define. It can be a local path, remote URL, or
 We use [`@apidevtools/json-schema-ref-parser`](https://github.com/APIDevTools/json-schema-ref-parser) to resolve file locations. Please note that accessing a HTTPS URL on localhost has a known [workaround](https://github.com/hey-api/openapi-ts/issues/276).
 :::
 
+## Filters
+
+::: warning
+Filters work only with the [experimental parser](#parser) which is currently an opt-in feature.
+:::
+
+If you work with large specifications and want to generate output from their subset, set `input.include` to a valid regular expression string.
+
+```js
+export default {
+  client: '@hey-api/client-fetch',
+  experimentalParser: true, // [!code ++]
+  input: {
+    include: '^(#/components/schemas/foo|#/paths/api/v1/foo/get)$', // [!code ++]
+    path: 'path/to/openapi.json',
+  },
+  output: 'src/client',
+};
+```
+
+The configuration above will process only the schema named `foo` and `GET` operation for the `/api/v1/foo` path.
+
 ## Output
 
 Output is the next thing to define. It can be either a string pointing to the destination folder or a configuration object containing the destination folder path and optional settings (these are described below).
@@ -179,6 +201,31 @@ export default defineConfig([
 Plugins are responsible for generating artifacts from your input. By default, Hey API will generate TypeScript interfaces, JSON Schemas, and services from your OpenAPI specification. You can add, remove, or customize any of the plugins. In fact, we highly encourage you to do so!
 
 You can learn more on the [Output](/openapi-ts/output) page.
+
+## Parser
+
+If you're using OpenAPI 3.0 or newer, we encourage you to try out the experimental parser. In the future it will become the default parser, but until it's been tested it's an opt-in feature. To try it out, set the `experimentalParser` flag in your configuration to `true`.
+
+::: code-group
+
+```js [config]
+export default {
+  client: '@hey-api/client-fetch',
+  experimentalParser: true, // [!code ++]
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+};
+```
+
+```sh [cli]
+npx @hey-api/openapi-ts -i path/to/openapi.json -o src/client -c @hey-api/client-fetch -e
+```
+
+:::
+
+The experimental parser produces a cleaner output while being faster than the legacy parser. It also supports features such as [Filters](#filters) and more will be added in the future.
+
+The legacy parser will remain enabled for the [legacy clients](/openapi-ts/clients/legacy) regardless of the `experimentalParser` flag value. However, it's unlikely to receive any further updates.
 
 ## Config API
 

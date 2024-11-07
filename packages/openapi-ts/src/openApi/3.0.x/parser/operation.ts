@@ -184,20 +184,10 @@ export const parseOperation = ({
   operationIds: Map<string, string>;
   path: keyof IRPathsObject;
 }) => {
-  const operationKey = `${method.toUpperCase()} ${path}`;
-
-  // TODO: parser - move services to plugin, cleaner syntax
-  if (
-    !context.parserConfig.filterFn.operation({
-      config: context.config,
-      operationKey,
-    })
-  ) {
-    return;
-  }
-
   // TODO: parser - support throw on duplicate
   if (operation.operationId) {
+    const operationKey = `${method.toUpperCase()} ${path}`;
+
     if (operationIds.has(operation.operationId)) {
       console.warn(
         `❗️ Duplicate operationId: ${operation.operationId} in ${operationKey}. Please ensure your operation IDs are unique. This behavior is not supported and will likely lead to unexpected results.`,

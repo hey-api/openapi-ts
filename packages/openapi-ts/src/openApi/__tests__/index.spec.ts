@@ -97,7 +97,6 @@ describe('parse', () => {
 
   it('throws on unknown version', () => {
     expect(() =>
-      // @ts-expect-error
       parseLegacy({ openApi: { foo: 'bar' }, parserConfig }),
     ).toThrow(
       `Unsupported OpenAPI specification: ${JSON.stringify({ foo: 'bar' }, null, 2)}`,

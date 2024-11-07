@@ -1,5 +1,9 @@
 import type { ClientPlugins, UserPlugins } from '../plugins/';
-import type { ArrayOfObjectsToObjectMap, ExtractArrayOfObjects } from './utils';
+import type {
+  ArrayOfObjectsToObjectMap,
+  ExtractArrayOfObjects,
+  ExtractWithDiscriminator,
+} from './utils';
 
 export const CLIENTS = [
   '@hey-api/client-axios',
@@ -67,9 +71,32 @@ export interface ClientConfig {
    */
   exportCore?: boolean;
   /**
-   * The relative location of the OpenAPI spec
+   * Path to the OpenAPI specification. This can be either local or remote path.
+   * Both JSON and YAML file formats are supported. You can also pass the parsed
+   * object directly if you're fetching the file yourself.
+   *
+   * Alternatively, you can define a configuration object with more options.
    */
-  input: string | Record<string, unknown>;
+  input:
+    | string
+    | Record<string, unknown>
+    | {
+        /**
+         * Process only parts matching the regular expression. You can select both
+         * operations and components by reference within the bundled input.
+         *
+         * @example
+         * operation: '^#/paths/api/v1/foo/get$'
+         * schema: '^#/components/schemas/Foo$'
+         */
+        include?: string;
+        /**
+         * Path to the OpenAPI specification. This can be either local or remote path.
+         * Both JSON and YAML file formats are supported. You can also pass the parsed
+         * object directly if you're fetching the file yourself.
+         */
+        path: string | Record<string, unknown>;
+      };
   /**
    * Custom client class name. Please note this option is deprecated and
    * will be removed in favor of clients.
@@ -123,11 +150,12 @@ export interface UserConfig extends ClientConfig {}
 
 export type Config = Omit<
   Required<ClientConfig>,
-  'base' | 'client' | 'name' | 'output' | 'plugins' | 'request'
+  'base' | 'client' | 'input' | 'name' | 'output' | 'plugins' | 'request'
 > &
   Pick<ClientConfig, 'base' | 'name' | 'request'> & {
     client: Extract<Required<ClientConfig>['client'], object>;
-    output: Extract<Required<ClientConfig>['output'], object>;
+    input: ExtractWithDiscriminator<ClientConfig['input'], { path: unknown }>;
+    output: Extract<ClientConfig['output'], object>;
     pluginOrder: ReadonlyArray<ClientPlugins['name']>;
     plugins: ArrayOfObjectsToObjectMap<
       ExtractArrayOfObjects<ReadonlyArray<ClientPlugins>, { name: string }>,

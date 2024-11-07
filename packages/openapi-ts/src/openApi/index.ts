@@ -39,21 +39,23 @@ export function parseLegacy({
   openApi,
   parserConfig,
 }: {
-  openApi: OpenApi;
+  openApi: unknown;
   parserConfig: ParserConfig;
 }): Client {
+  const spec = openApi as OpenApi;
+
   setParserConfig(parserConfig);
 
-  if ('openapi' in openApi) {
-    return parseV3(openApi);
+  if ('openapi' in spec) {
+    return parseV3(spec);
   }
 
-  if ('swagger' in openApi) {
-    return parseV2(openApi);
+  if ('swagger' in spec) {
+    return parseV2(spec);
   }
 
   throw new Error(
-    `Unsupported OpenAPI specification: ${JSON.stringify(openApi, null, 2)}`,
+    `Unsupported OpenAPI specification: ${JSON.stringify(spec, null, 2)}`,
   );
 }
 
