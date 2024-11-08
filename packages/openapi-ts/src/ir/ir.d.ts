@@ -138,6 +138,7 @@ export interface IRSchemaObject
     | 'object'
     | 'string'
     | 'tuple'
+    | 'undefined'
     | 'unknown'
     | 'void';
 }

@@ -436,7 +436,7 @@ const objectTypeToIdentifier = ({
 
     if (hasOptionalProperties) {
       indexPropertyItems.push({
-        type: 'void',
+        type: 'undefined',
       });
     }
 
@@ -594,13 +594,17 @@ const schemaTypeToIdentifier = ({
         namespace,
         schema: schema as SchemaWithType<'tuple'>,
       });
+    case 'undefined':
+      return compiler.keywordTypeNode({
+        keyword: 'undefined',
+      });
     case 'unknown':
       return compiler.keywordTypeNode({
         keyword: 'unknown',
       });
     case 'void':
       return compiler.keywordTypeNode({
-        keyword: 'undefined',
+        keyword: 'void',
       });
   }
 };

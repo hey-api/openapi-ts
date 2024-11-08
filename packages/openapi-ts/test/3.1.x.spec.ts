@@ -95,6 +95,19 @@ describe(`OpenAPI ${VERSION}`, () => {
     },
     {
       config: createConfig({
+        input: 'operation-204.json',
+        output: 'operation-204',
+        plugins: [
+          {
+            name: '@hey-api/types',
+            tree: true,
+          },
+        ],
+      }),
+      description: 'handles empty response status codes',
+    },
+    {
+      config: createConfig({
         input: 'required-all-of-ref.json',
         output: 'required-all-of-ref',
         plugins: [
