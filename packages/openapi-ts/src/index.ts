@@ -15,8 +15,9 @@ import {
   operationParameterFilterFn,
   operationParameterNameFn,
 } from './openApi/config';
+import type { ClientPlugins } from './plugins';
 import { defaultPluginConfigs } from './plugins';
-import type { PluginNames } from './plugins/types';
+import type { DefaultPluginConfigsMap, PluginNames } from './plugins/types';
 import type { Client } from './types/client';
 import type { ClientConfig, Config, UserConfig } from './types/config';
 import { CLIENTS } from './types/config';
@@ -164,8 +165,10 @@ const getOutput = (userConfig: ClientConfig): Config['output'] => {
 };
 
 const getPluginOrder = ({
+  pluginConfigs,
   userPlugins,
 }: {
+  pluginConfigs: DefaultPluginConfigsMap<ClientPlugins>;
   userPlugins: ReadonlyArray<PluginNames>;
 }): Config['pluginOrder'] => {
   const circularReferenceTracker = new Set<PluginNames>();
@@ -179,12 +182,19 @@ const getPluginOrder = ({
     if (!visitedNodes.has(name)) {
       circularReferenceTracker.add(name);
 
-      for (const dependency of defaultPluginConfigs[name]._dependencies || []) {
+      const pluginConfig = pluginConfigs[name];
+
+      if (!pluginConfig) {
+        throw new Error(
+          `🚫 unknown plugin dependency "${name}" - do you need to register a custom plugin with this name?`,
+        );
+      }
+
+      for (const dependency of pluginConfig._dependencies || []) {
         dfs(dependency);
       }
 
-      for (const dependency of defaultPluginConfigs[name]
-        ._optionalDependencies || []) {
+      for (const dependency of pluginConfig._optionalDependencies || []) {
         if (userPlugins.includes(dependency)) {
           dfs(dependency);
         }
@@ -218,18 +228,37 @@ const getPlugins = (
       return plugin;
     }
 
-    // @ts-ignore
+    // @ts-expect-error
     userPluginsConfig[plugin.name] = plugin;
     return plugin.name;
   });
-  const pluginOrder = getPluginOrder({ userPlugins });
+
+  const pluginOrder = getPluginOrder({
+    pluginConfigs: {
+      ...userPluginsConfig,
+      ...defaultPluginConfigs,
+    },
+    userPlugins,
+  });
 
   const plugins = pluginOrder.reduce(
     (result, name) => {
-      // @ts-ignore
+      const defaultOptions = defaultPluginConfigs[name];
+      const userOptions = userPluginsConfig[name];
+      if (userOptions && defaultOptions) {
+        const nativePluginOption = Object.keys(userOptions).find((key) =>
+          key.startsWith('_'),
+        );
+        if (nativePluginOption) {
+          throw new Error(
+            `🚫 cannot register plugin "${userOptions.name}" - attempting to override a native plugin option "${nativePluginOption}"`,
+          );
+        }
+      }
+      // @ts-expect-error
       result[name] = {
-        ...defaultPluginConfigs[name],
-        ...userPluginsConfig[name],
+        ...defaultOptions,
+        ...userOptions,
       };
       return result;
     },
