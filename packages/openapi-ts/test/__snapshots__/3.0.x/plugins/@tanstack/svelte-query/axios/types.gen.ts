@@ -1136,7 +1136,7 @@ export type PostCallWithOptionalParamData = {
     };
 };
 
-export type PostCallWithOptionalParamResponse = number | undefined;
+export type PostCallWithOptionalParamResponse = number | void;
 
 export type PostApiVbyApiVersionRequestBodyData = {
     /**
@@ -1259,13 +1259,13 @@ export type CallToTestOrderOfParamsData = {
     };
 };
 
-export type CallWithNoContentResponseResponse = undefined;
+export type CallWithNoContentResponseResponse = void;
 
-export type CallWithResponseAndNoContentResponseResponse = number | undefined;
+export type CallWithResponseAndNoContentResponseResponse = number | void;
 
 export type DummyAResponse = _400;
 
-export type DummyBResponse = undefined;
+export type DummyBResponse = void;
 
 export type CallWithResponseResponse = _import;
 

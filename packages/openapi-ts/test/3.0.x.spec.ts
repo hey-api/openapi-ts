@@ -62,6 +62,19 @@ describe(`OpenAPI ${VERSION}`, () => {
       }),
       description: 'handles null enums',
     },
+    {
+      config: createConfig({
+        input: 'operation-204.json',
+        output: 'operation-204',
+        plugins: [
+          {
+            name: '@hey-api/types',
+            tree: true,
+          },
+        ],
+      }),
+      description: 'handles empty response status codes',
+    },
   ];
 
   it.each(scenarios)('$description', async ({ config }) => {
