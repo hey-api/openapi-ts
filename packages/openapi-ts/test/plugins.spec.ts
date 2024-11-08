@@ -2,9 +2,10 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { createClient } from '../';
+import type { PluginConfig } from '../src/plugins/types';
 import type { UserConfig } from '../src/types/config';
 import { getFilePaths } from './utils';
 
@@ -221,6 +222,89 @@ for (const version of versions) {
           ),
         );
       });
+    });
+  });
+
+  describe('custom plugin', () => {
+    it('handles a custom plugin', async () => {
+      const myPlugin: PluginConfig<{
+        customOption: boolean;
+        name: string;
+        output: string;
+      }> = {
+        _dependencies: ['@hey-api/types'],
+        _handler: vi.fn(),
+        _handlerLegacy: vi.fn(),
+        customOption: true,
+        name: 'my-plugin',
+        output: 'my-plugin',
+      };
+
+      await createClient({
+        client: '@hey-api/client-fetch',
+        experimentalParser: true,
+        input: path.join(__dirname, 'spec', '3.1.x', 'full.json'),
+        output: path.join(outputDir, myPlugin.name, 'default'),
+        // @ts-expect-error
+        plugins: [myPlugin],
+      });
+
+      expect(myPlugin._handler).toHaveBeenCalled();
+      expect(myPlugin._handlerLegacy).not.toHaveBeenCalled();
+    });
+
+    it('throws on invalid dependency', async () => {
+      const myPlugin: PluginConfig<{
+        name: string;
+        output: string;
+      }> = {
+        // @ts-expect-error
+        _dependencies: ['@hey-api/oops'],
+        _handler: vi.fn(),
+        _handlerLegacy: vi.fn(),
+        name: 'my-plugin',
+        output: 'my-plugin',
+      };
+
+      await expect(() =>
+        createClient({
+          client: '@hey-api/client-fetch',
+          experimentalParser: true,
+          input: path.join(__dirname, 'spec', '3.1.x', 'full.json'),
+          output: path.join(outputDir, myPlugin.name, 'default'),
+          // @ts-expect-error
+          plugins: [myPlugin],
+        }),
+      ).rejects.toThrowError(/unknown plugin/g);
+
+      expect(myPlugin._handler).not.toHaveBeenCalled();
+      expect(myPlugin._handlerLegacy).not.toHaveBeenCalled();
+    });
+
+    it('throws on native plugin override', async () => {
+      const myPlugin: PluginConfig<{
+        name: string;
+        output: string;
+      }> = {
+        _handler: vi.fn(),
+        _handlerLegacy: vi.fn(),
+        name: '@hey-api/types',
+        output: 'my-plugin',
+      };
+
+      await expect(() =>
+        createClient({
+          client: '@hey-api/client-fetch',
+          experimentalParser: true,
+          input: path.join(__dirname, 'spec', '3.1.x', 'full.json'),
+          output: path.join(outputDir, myPlugin.name, 'default'),
+          // @ts-expect-error
+          plugins: [myPlugin],
+        }),
+      ).rejects.toThrowError(/cannot register plugin/g);
+
+      expect(myPlugin._handler).not.toHaveBeenCalled();
+      expect(myPlugin._handlerLegacy).not.toHaveBeenCalled();
     });
   });
 }
