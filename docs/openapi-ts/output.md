@@ -207,26 +207,6 @@ export default {
 
 :::
 
-### Filtering Endpoints
-
-If you only want to include specific endpoints in the generated services, you can use the `filter` config option to filter endpoints. The provided value should be a regular expression to match against endpoints with the `{method} {path}` pattern. For example, the config below will only include all `/api/v1/foo` endpoints.
-
-```js
-export default {
-  client: '@hey-api/client-fetch',
-  input: 'path/to/openapi.json',
-  output: 'src/client',
-  plugins: [
-    '@hey-api/schemas', // preserves default output
-    '@hey-api/types', // preserves default output
-    {
-      filter: '^\\w+ /api/v1/foo$', // [!code ++]
-      name: '@hey-api/services',
-    },
-  ],
-};
-```
-
 ### Output
 
 Below are different outputs depending on your chosen style. No services approach will not generate the `services.gen.ts` file.
