@@ -7,7 +7,7 @@ export default defineConfig({
   themeConfig: {
     nav: [
       {
-        link: 'https://github.com/sponsors/mrlubos',
+        link: 'https://github.com/sponsors/hey-api',
         text: 'Sponsor Hey API',
       },
     ],
