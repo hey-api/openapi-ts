@@ -64,6 +64,13 @@ describe(`OpenAPI ${VERSION}`, () => {
     },
     {
       config: createConfig({
+        input: 'enum-null.json',
+        output: 'enum-null',
+      }),
+      description: 'handles null enums',
+    },
+    {
+      config: createConfig({
         input: 'object-properties-all-of.json',
         output: 'object-properties-all-of',
       }),
