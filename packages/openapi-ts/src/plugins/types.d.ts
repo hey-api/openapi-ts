@@ -40,7 +40,8 @@ export interface PluginName<Name extends PluginNames> {
 }
 
 interface CommonConfig {
-  name: PluginNames;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  name: PluginNames | (string & {});
   output?: string;
 }
 
