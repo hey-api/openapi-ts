@@ -55,7 +55,7 @@ We use [`@apidevtools/json-schema-ref-parser`](https://github.com/APIDevTools/js
 Filters work only with the [experimental parser](#parser) which is currently an opt-in feature.
 :::
 
-If you work with large specifications and want to generate output from their subset, set `input.include` to a valid regular expression string.
+If you work with large specifications and want to generate output from their subset, set `input.include` to a regular expression string matching against resource references.
 
 ```js
 export default {

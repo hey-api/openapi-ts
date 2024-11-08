@@ -21,7 +21,7 @@ Please visit our [website](https://heyapi.dev/) for documentation, guides, migra
 
 ## Sponsoring
 
-Love Hey API? Please consider becoming a [sponsor](https://github.com/sponsors/mrlubos).
+Love Hey API? Please consider becoming a [sponsor](https://github.com/sponsors/hey-api).
 
 ## GitHub Integration (coming soon)
 
