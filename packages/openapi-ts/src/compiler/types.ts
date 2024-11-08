@@ -255,7 +255,8 @@ export const createKeywordTypeNode = ({
     | 'number'
     | 'string'
     | 'undefined'
-    | 'unknown';
+    | 'unknown'
+    | 'void';
 }) => {
   let kind: ts.KeywordTypeSyntaxKind = ts.SyntaxKind.AnyKeyword;
   switch (keyword) {
@@ -276,6 +277,9 @@ export const createKeywordTypeNode = ({
       break;
     case 'unknown':
       kind = ts.SyntaxKind.UnknownKeyword;
+      break;
+    case 'void':
+      kind = ts.SyntaxKind.VoidKeyword;
       break;
   }
   return ts.factory.createKeywordTypeNode(kind);
