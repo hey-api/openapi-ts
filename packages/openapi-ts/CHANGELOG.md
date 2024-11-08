@@ -1,5 +1,15 @@
 # @hey-api/openapi-ts
 
+## 0.55.1
+
+### Patch Changes
+
+- [#1248](https://github.com/hey-api/openapi-ts/pull/1248) [`61cd848`](https://github.com/hey-api/openapi-ts/commit/61cd848262b20580fb185d023c28aa54754bf19c) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle nullable enums in experimental parser
+
+- [#1251](https://github.com/hey-api/openapi-ts/pull/1251) [`07800d4`](https://github.com/hey-api/openapi-ts/commit/07800d4fbb849614ed2c23b8acc9c82f1ef74598) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add support for custom plugins
+
+- [#1250](https://github.com/hey-api/openapi-ts/pull/1250) [`9e07675`](https://github.com/hey-api/openapi-ts/commit/9e07675802c75b8f5105dd104bb7736aeb83ece6) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: render void for empty response status codes in experimental parser
+
 ## 0.55.0
 
 ### Minor Changes
