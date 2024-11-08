@@ -443,27 +443,23 @@ const parseEnum = ({
   irSchema.type = 'enum';
 
   const schemaItems: Array<IRSchemaObject> = [];
+  const schemaTypes = getSchemaTypes({ schema });
 
   for (const [index, enumValue] of schema.enum.entries()) {
     const typeOfEnumValue = typeof enumValue;
+    let enumType: SchemaType | undefined;
+
     if (
       typeOfEnumValue === 'string' ||
       typeOfEnumValue === 'number' ||
       typeOfEnumValue === 'boolean'
     ) {
-      schemaItems.push(
-        parseOneType({
-          context,
-          schema: {
-            const: enumValue,
-            description: schema['x-enum-descriptions']?.[index],
-            title:
-              schema['x-enum-varnames']?.[index] ??
-              schema['x-enumNames']?.[index],
-            type: typeOfEnumValue,
-          },
-        }),
-      );
+      enumType = typeOfEnumValue;
+    } else if (enumValue === null) {
+      // type must contain null
+      if (schemaTypes.includes('null')) {
+        enumType = 'null';
+      }
     } else {
       console.warn(
         '🚨',
@@ -471,6 +467,24 @@ const parseEnum = ({
         schema.enum,
       );
     }
+
+    if (!enumType) {
+      continue;
+    }
+
+    schemaItems.push(
+      parseOneType({
+        context,
+        schema: {
+          const: enumValue,
+          description: schema['x-enum-descriptions']?.[index],
+          title:
+            schema['x-enum-varnames']?.[index] ??
+            schema['x-enumNames']?.[index],
+          type: enumType,
+        },
+      }),
+    );
   }
 
   irSchema = addItemsToSchema({
