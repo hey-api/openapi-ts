@@ -75,31 +75,26 @@ export const parseExperimental = ({
     spec: spec as Record<string, any>,
   });
 
+  // TODO: parser - handle Swagger 2.0
+
   const ctx = context as IRContext<OpenApiV3_0_X | OpenApiV3_1_X>;
   switch (ctx.spec.openapi) {
-    // TODO: parser - handle Swagger 2.0
     case '3.0.0':
     case '3.0.1':
     case '3.0.2':
     case '3.0.3':
     case '3.0.4':
       parseV3_0_X(context as IRContext<OpenApiV3_0_X>);
-      break;
+      return context;
     case '3.1.0':
     case '3.1.1':
       parseV3_1_X(context as IRContext<OpenApiV3_1_X>);
-      break;
+      return context;
     default:
       // TODO: parser - uncomment after removing legacy parser.
       // For now, we fall back to legacy parser if spec version
       // is not supported
       // throw new Error('Unsupported OpenAPI specification');
-      break;
+      return;
   }
-
-  if (!Object.keys(context.ir).length) {
-    return;
-  }
-
-  return context;
 };

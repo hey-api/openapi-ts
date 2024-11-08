@@ -55,6 +55,13 @@ describe(`OpenAPI ${VERSION}`, () => {
       }),
       description: 'escapes enum values',
     },
+    {
+      config: createConfig({
+        input: 'enum-null.json',
+        output: 'enum-null',
+      }),
+      description: 'handles null enums',
+    },
   ];
 
   it.each(scenarios)('$description', async ({ config }) => {

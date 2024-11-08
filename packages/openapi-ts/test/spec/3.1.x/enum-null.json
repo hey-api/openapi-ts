@@ -1,0 +1,23 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OpenAPI 3.1.0 enum null example",
+    "version": "1"
+  },
+  "components": {
+    "schemas": {
+      "Foo": {
+        "enum": ["foo", "bar", null],
+        "type": ["string", "null"]
+      },
+      "Bar": {
+        "enum": ["foo", "bar", null],
+        "type": "string"
+      },
+      "Baz": {
+        "enum": ["foo", "bar"],
+        "type": ["string", "null"]
+      }
+    }
+  }
+}

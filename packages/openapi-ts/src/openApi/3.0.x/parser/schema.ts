@@ -407,23 +407,19 @@ const parseEnum = ({
 
   for (const [index, enumValue] of schema.enum.entries()) {
     const typeOfEnumValue = typeof enumValue;
+    let enumType: SchemaType | 'null' | undefined;
+
     if (
       typeOfEnumValue === 'string' ||
       typeOfEnumValue === 'number' ||
       typeOfEnumValue === 'boolean'
     ) {
-      const enumSchema = parseOneType({
-        context,
-        schema: {
-          description: schema['x-enum-descriptions']?.[index],
-          title:
-            schema['x-enum-varnames']?.[index] ??
-            schema['x-enumNames']?.[index],
-          type: typeOfEnumValue,
-        },
-      });
-      enumSchema.const = enumValue;
-      schemaItems.push(enumSchema);
+      enumType = typeOfEnumValue;
+    } else if (enumValue === null) {
+      // nullable must be true
+      if (schema.nullable) {
+        enumType = 'null';
+      }
     } else {
       console.warn(
         '🚨',
@@ -431,12 +427,30 @@ const parseEnum = ({
         schema.enum,
       );
     }
-  }
 
-  if (schema.nullable) {
-    schemaItems.push({
-      type: 'null',
+    if (!enumType) {
+      continue;
+    }
+
+    const enumSchema = parseOneType({
+      context,
+      schema: {
+        description: schema['x-enum-descriptions']?.[index],
+        title:
+          schema['x-enum-varnames']?.[index] ?? schema['x-enumNames']?.[index],
+        // cast enum to string temporarily
+        type: enumType === 'null' ? 'string' : enumType,
+      },
     });
+
+    enumSchema.const = enumValue;
+
+    // cast enum back
+    if (enumType === 'null') {
+      enumSchema.type = enumType;
+    }
+
+    schemaItems.push(enumSchema);
   }
 
   irSchema = addItemsToSchema({
