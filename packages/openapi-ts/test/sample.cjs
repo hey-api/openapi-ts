@@ -13,7 +13,7 @@ const main = async () => {
     input: {
       // include:
       //   '^(#/components/schemas/import|#/paths/api/v{api-version}/simple/options)$',
-      path: './test/spec/3.0.x/parameter-explode-false.json',
+      path: './test/spec/3.1.x/array-items-one-of-length-1.json',
       // path: 'https://mongodb-mms-prod-build-server.s3.amazonaws.com/openapi/2caffd88277a4e27c95dcefc7e3b6a63a3b03297-v2-2023-11-15.json',
     },
     // name: 'foo',
@@ -30,7 +30,7 @@ const main = async () => {
       {
         // asClass: true,
         // include...
-        name: '@hey-api/services',
+        // name: '@hey-api/services',
         // serviceNameBuilder: '^Parameters',
       },
       {

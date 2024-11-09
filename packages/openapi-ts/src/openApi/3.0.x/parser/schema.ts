@@ -81,10 +81,9 @@ const parseArray = ({
       if ('$ref' in schema.items) {
         schemaItems.push(irItemsSchema);
       } else {
-        const isComposedSchema = Boolean(
-          schema.items.allOf || schema.items.anyOf || schema.items.oneOf,
-        );
-        if (isComposedSchema) {
+        const ofArray =
+          schema.items.allOf || schema.items.anyOf || schema.items.oneOf;
+        if (ofArray && ofArray.length > 1 && !schema.items.nullable) {
           // bring composition up to avoid incorrectly nested arrays
           irSchema = {
             ...irSchema,

@@ -50,6 +50,14 @@ describe(`OpenAPI ${VERSION}`, () => {
     },
     {
       config: createConfig({
+        input: 'array-items-one-of-length-1.json',
+        output: 'array-items-one-of-length-1',
+      }),
+      description:
+        'generates correct array when items are oneOf array with single item',
+    },
+    {
+      config: createConfig({
         input: 'duplicate-null.json',
         output: 'duplicate-null',
       }),
