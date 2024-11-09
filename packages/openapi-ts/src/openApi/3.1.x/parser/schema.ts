@@ -120,10 +120,13 @@ const parseArray = ({
     ) {
       schemaItems = Array(schema.maxItems).fill(irItemsSchema);
     } else {
-      const isComposedSchema = Boolean(
-        schema.items.allOf || schema.items.anyOf || schema.items.oneOf,
-      );
-      if (isComposedSchema) {
+      const ofArray =
+        schema.items.allOf || schema.items.anyOf || schema.items.oneOf;
+      if (
+        ofArray &&
+        ofArray.length > 1 &&
+        !getSchemaTypes({ schema: schema.items }).includes('null')
+      ) {
         // bring composition up to avoid incorrectly nested arrays
         irSchema = {
           ...irSchema,
