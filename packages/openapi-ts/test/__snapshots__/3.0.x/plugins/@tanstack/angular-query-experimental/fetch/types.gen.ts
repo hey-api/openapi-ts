@@ -153,7 +153,7 @@ export type ArrayWithAnyOfProperties = Array<{
 }>;
 
 export type AnyOfAnyAndNull = {
-    data?: unknown | null;
+    data?: unknown;
 };
 
 /**
@@ -655,7 +655,7 @@ export type FreeFormObjectWithAdditionalPropertiesEqEmptyObject = {};
 export type ModelWithConst = {
     String?: 'String';
     number?: 0;
-    null?: null;
+    null?: unknown;
     withType?: 'Some string';
 };
 
@@ -751,11 +751,7 @@ export type ModelWithAnyOfConstantSizeArray = [
     number | string
 ];
 
-export type ModelWithPrefixItemsConstantSizeArray = [
-    ModelWithInteger,
-    number | string,
-    string
-];
+export type ModelWithPrefixItemsConstantSizeArray = Array<ModelWithInteger | number | string>;
 
 export type ModelWithAnyOfConstantSizeArrayNullable = [
     number | null | string,
@@ -1344,7 +1340,7 @@ export type TypesData = {
         /**
          * This is an enum parameter
          */
-        parameterEnum: 'Success' | 'Warning' | 'Error' | null;
+        parameterEnum: 'Success' | 'Warning' | 'Error';
     };
 };
 
