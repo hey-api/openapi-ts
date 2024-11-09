@@ -75,6 +75,14 @@ describe(`OpenAPI ${VERSION}`, () => {
       }),
       description: 'handles empty response status codes',
     },
+    {
+      config: createConfig({
+        input: 'parameter-explode-false.json',
+        output: 'parameter-explode-false',
+        plugins: ['@hey-api/services'],
+      }),
+      description: 'handles non-exploded array query parameters',
+    },
   ];
 
   it.each(scenarios)('$description', async ({ config }) => {
