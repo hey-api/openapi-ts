@@ -223,15 +223,20 @@ const getPlugins = (
       '@hey-api/schemas',
       '@hey-api/services',
     ]
-  ).map((plugin) => {
-    if (typeof plugin === 'string') {
-      return plugin;
-    }
+  )
+    .map((plugin) => {
+      if (typeof plugin === 'string') {
+        return plugin;
+      }
 
-    // @ts-expect-error
-    userPluginsConfig[plugin.name] = plugin;
-    return plugin.name;
-  });
+      if (plugin.name) {
+        // @ts-expect-error
+        userPluginsConfig[plugin.name] = plugin;
+      }
+
+      return plugin.name;
+    })
+    .filter(Boolean);
 
   const pluginOrder = getPluginOrder({
     pluginConfigs: {

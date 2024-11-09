@@ -108,6 +108,14 @@ describe(`OpenAPI ${VERSION}`, () => {
     },
     {
       config: createConfig({
+        input: 'parameter-explode-false.json',
+        output: 'parameter-explode-false',
+        plugins: ['@hey-api/services'],
+      }),
+      description: 'handles non-exploded array query parameters',
+    },
+    {
+      config: createConfig({
         input: 'required-all-of-ref.json',
         output: 'required-all-of-ref',
         plugins: [

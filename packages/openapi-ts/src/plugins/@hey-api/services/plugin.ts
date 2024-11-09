@@ -153,6 +153,38 @@ const requestOptions = ({
     }
   }
 
+  for (const name in operation.parameters?.query) {
+    const parameter = operation.parameters.query[name];
+    if (
+      (parameter.schema.type === 'array' ||
+        parameter.schema.type === 'tuple') &&
+      (parameter.style !== 'form' || !parameter.explode)
+    ) {
+      // override the default settings for `querySerializer`
+      if (context.config.client.name === '@hey-api/client-fetch') {
+        obj.push({
+          key: 'querySerializer',
+          value: [
+            {
+              key: 'array',
+              value: [
+                {
+                  key: 'explode',
+                  value: false,
+                },
+                {
+                  key: 'style',
+                  value: 'form',
+                },
+              ],
+            },
+          ],
+        });
+      }
+      break;
+    }
+  }
+
   return compiler.objectExpression({
     identifiers: ['responseTransformer'],
     obj,

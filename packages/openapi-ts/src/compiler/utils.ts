@@ -10,14 +10,17 @@ export interface ImportExportItemObject {
   name: string;
 }
 
-const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
+const printer = ts.createPrinter({
+  newLine: ts.NewLineKind.LineFeed,
+  removeComments: false,
+});
 
 export const createSourceFile = (sourceText: string) =>
   ts.createSourceFile(
     '',
     sourceText,
-    ts.ScriptTarget.ES2015,
-    undefined,
+    ts.ScriptTarget.ESNext,
+    false,
     ts.ScriptKind.TS,
   );
 
