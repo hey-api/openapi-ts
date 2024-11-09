@@ -61,6 +61,14 @@ export interface IRParametersObject {
 
 export interface IRParameterObject {
   /**
+   * Determines whether the parameter value SHOULD allow reserved characters, as defined by RFC3986 `:/?#[]@!$&'()*+,;=` to be included without percent-encoding. The default value is `false`. This property SHALL be ignored if the request body media type is not `application/x-www-form-urlencoded` or `multipart/form-data`. If a value is explicitly defined, then the value of `contentType` (implicit or explicit) SHALL be ignored.
+   */
+  allowReserved?: boolean;
+  /**
+   * When this is true, property values of type `array` or `object` generate separate parameters for each value of the array, or key-value-pair of the map. For other types of properties this property has no effect. When `style` is `form`, the default value is `true`. For all other styles, the default value is `false`. This property SHALL be ignored if the request body media type is not `application/x-www-form-urlencoded` or `multipart/form-data`. If a value is explicitly defined, then the value of `contentType` (implicit or explicit) SHALL be ignored.
+   */
+  explode: boolean;
+  /**
    * Endpoint parameters must specify their location.
    */
   location: 'cookie' | 'header' | 'path' | 'query';
@@ -72,6 +80,17 @@ export interface IRParameterObject {
   pagination?: boolean | string;
   required?: boolean;
   schema: IRSchemaObject;
+  /**
+   * Describes how the parameter value will be serialized depending on the type of the parameter value. Default values (based on value of `in`): for `query` - `form`; for `path` - `simple`; for `header` - `simple`; for `cookie` - `form`.
+   */
+  style:
+    | 'deepObject'
+    | 'form'
+    | 'label'
+    | 'matrix'
+    | 'pipeDelimited'
+    | 'simple'
+    | 'spaceDelimited';
 }
 
 export interface IRResponsesObject {

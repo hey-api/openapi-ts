@@ -1,0 +1,31 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "OpenAPI 3.0.0 parameter explode false example",
+    "version": "1"
+  },
+  "paths": {
+    "/foo": {
+      "post": {
+        "parameters": [
+          {
+            "name": "foo",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

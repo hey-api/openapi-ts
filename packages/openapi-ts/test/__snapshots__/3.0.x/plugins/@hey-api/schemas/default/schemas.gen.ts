@@ -79,14 +79,19 @@ export const SimpleFileSchema = {
 
 export const SimpleReferenceSchema = {
     description: 'This is a simple reference',
-    '$ref': '#/components/schemas/ModelWithString'
+    allOf: [
+        {
+            '$ref': '#/components/schemas/ModelWithString'
+        }
+    ]
 } as const;
 
 export const SimpleStringWithPatternSchema = {
     description: 'This is a simple string',
+    type: 'string',
+    nullable: true,
     maxLength: 64,
-    pattern: '^[a-zA-Z0-9_]*$',
-    type: ['string', 'null']
+    pattern: '^[a-zA-Z0-9_]*$'
 } as const;
 
 export const EnumWithStringsSchema = {
@@ -215,7 +220,7 @@ export const AnyOfAnyAndNullSchema = {
             anyOf: [
                 {},
                 {
-                    type: 'null'
+                    nullable: true
                 }
             ]
         }
@@ -377,19 +382,23 @@ export const ModelWithNullableStringSchema = {
     properties: {
         nullableProp1: {
             description: 'This is a simple string property',
-            type: ['string', 'null']
+            type: 'string',
+            nullable: true
         },
         nullableRequiredProp1: {
             description: 'This is a simple string property',
-            type: ['string', 'null']
+            type: 'string',
+            nullable: true
         },
         nullableProp2: {
             description: 'This is a simple string property',
-            type: ['string', 'null']
+            nullable: true,
+            type: 'string'
         },
         nullableRequiredProp2: {
             description: 'This is a simple string property',
-            type: ['string', 'null']
+            nullable: true,
+            type: 'string'
         },
         'foo_bar-enum': {
             description: 'This is a simple enum with strings',
@@ -740,12 +749,10 @@ export const CompositionWithNestedAnyAndTypeNullSchema = {
             anyOf: [
                 {
                     items: {
-                        anyOf: [
+                        nullable: true,
+                        allOf: [
                             {
                                 '$ref': '#/components/schemas/ModelWithDictionary'
-                            },
-                            {
-                                type: 'null'
                             }
                         ]
                     },
@@ -753,12 +760,10 @@ export const CompositionWithNestedAnyAndTypeNullSchema = {
                 },
                 {
                     items: {
-                        anyOf: [
+                        nullable: true,
+                        allOf: [
                             {
                                 '$ref': '#/components/schemas/ModelWithArray'
-                            },
-                            {
-                                type: 'null'
                             }
                         ]
                     },
@@ -775,8 +780,8 @@ export const _3e_num_1ПериодSchema = {
 } as const;
 
 export const ConstValueSchema = {
-    type: 'string',
-    const: 'ConstValue'
+    enum: ['ConstValue'],
+    type: 'string'
 } as const;
 
 export const CompositionWithNestedAnyOfAndNullSchema = {
@@ -784,7 +789,8 @@ export const CompositionWithNestedAnyOfAndNullSchema = {
     type: 'object',
     properties: {
         propA: {
-            anyOf: [
+            nullable: true,
+            allOf: [
                 {
                     items: {
                         anyOf: [
@@ -797,9 +803,6 @@ export const CompositionWithNestedAnyOfAndNullSchema = {
                         ]
                     },
                     type: 'array'
-                },
-                {
-                    type: 'null'
                 }
             ],
             title: 'Scopes'
@@ -812,7 +815,8 @@ export const CompositionWithOneOfAndNullableSchema = {
     type: 'object',
     properties: {
         propA: {
-            type: ['object', 'null'],
+            nullable: true,
+            type: 'object',
             oneOf: [
                 {
                     type: 'object',
@@ -914,7 +918,8 @@ export const CompositionWithAllOfAndNullableSchema = {
     type: 'object',
     properties: {
         propA: {
-            type: ['object', 'null'],
+            nullable: true,
+            type: 'object',
             allOf: [
                 {
                     type: 'object',
@@ -943,7 +948,8 @@ export const CompositionWithAnyOfAndNullableSchema = {
     type: 'object',
     properties: {
         propA: {
-            type: ['object', 'null'],
+            nullable: true,
+            type: 'object',
             anyOf: [
                 {
                     type: 'object',
@@ -1009,7 +1015,8 @@ export const ModelWithPropertiesSchema = {
             readOnly: true
         },
         requiredAndNullable: {
-            type: ['string', 'null']
+            type: 'string',
+            nullable: true
         },
         string: {
             type: 'string'
@@ -1049,19 +1056,22 @@ export const ModelWithNestedPropertiesSchema = {
     required: ['first'],
     properties: {
         first: {
-            type: ['object', 'null'],
+            type: 'object',
             required: ['second'],
             readOnly: true,
+            nullable: true,
             properties: {
                 second: {
-                    type: ['object', 'null'],
+                    type: 'object',
                     required: ['third'],
                     readOnly: true,
+                    nullable: true,
                     properties: {
                         third: {
-                            type: ['string', 'null'],
+                            type: 'string',
                             required: true,
-                            readOnly: true
+                            readOnly: true,
+                            nullable: true
                         }
                     }
                 }
@@ -1294,17 +1304,19 @@ export const ModelWithConstSchema = {
     type: 'object',
     properties: {
         String: {
-            const: 'String'
+            enum: ['String'],
+            type: 'string'
         },
         number: {
-            const: 0
+            enum: [0],
+            type: 'number'
         },
         null: {
-            const: null
+            nullable: true
         },
         withType: {
-            type: 'string',
-            const: 'Some string'
+            enum: ['Some string'],
+            type: 'string'
         }
     }
 } as const;
@@ -1324,7 +1336,8 @@ export const ModelWithAdditionalPropertiesEqTrueSchema = {
 export const NestedAnyOfArraysNullableSchema = {
     properties: {
         nullableArray: {
-            anyOf: [
+            nullable: true,
+            allOf: [
                 {
                     items: {
                         anyOf: [
@@ -1337,9 +1350,6 @@ export const NestedAnyOfArraysNullableSchema = {
                         ]
                     },
                     type: 'array'
-                },
-                {
-                    type: 'null'
                 }
             ]
         }
@@ -1374,9 +1384,10 @@ export const CompositionWithOneOfAndPropertiesSchema = {
     required: ['baz', 'qux'],
     properties: {
         baz: {
-            type: ['integer', 'null'],
+            type: 'integer',
             format: 'uint16',
-            minimum: 0
+            minimum: 0,
+            nullable: true
         },
         qux: {
             type: 'integer',
@@ -1387,8 +1398,9 @@ export const CompositionWithOneOfAndPropertiesSchema = {
 } as const;
 
 export const NullableObjectSchema = {
-    type: ['object', 'null'],
     description: 'An object that can be null',
+    nullable: true,
+    type: 'object',
     properties: {
         foo: {
             type: 'string'
@@ -1463,15 +1475,10 @@ export const ModelWithOneOfEnumSchema = {
             properties: {
                 content: {
                     type: 'array',
-                    prefixItems: [
-                        {
-                            type: 'string',
-                            format: 'date-time'
-                        },
-                        {
-                            type: 'string'
-                        }
-                    ],
+                    items: {
+                        type: 'string',
+                        format: 'date-time'
+                    },
                     maxItems: 2,
                     minItems: 2
                 },
@@ -1589,32 +1596,28 @@ export const ModelWithAnyOfConstantSizeArraySchema = {
 
 export const ModelWithPrefixItemsConstantSizeArraySchema = {
     type: 'array',
-    prefixItems: [
-        {
-            '$ref': '#/components/schemas/ModelWithInteger'
-        },
-        {
-            oneOf: [
-                {
-                    type: 'number'
-                },
-                {
-                    type: 'string'
-                }
-            ]
-        },
-        {
-            type: 'string'
-        }
-    ]
-} as const;
-
-export const ModelWithAnyOfConstantSizeArrayNullableSchema = {
-    type: ['array'],
     items: {
         oneOf: [
             {
-                type: ['number', 'null']
+                '$ref': '#/components/schemas/ModelWithInteger'
+            },
+            {
+                type: 'number'
+            },
+            {
+                type: 'string'
+            }
+        ]
+    }
+} as const;
+
+export const ModelWithAnyOfConstantSizeArrayNullableSchema = {
+    type: 'array',
+    items: {
+        oneOf: [
+            {
+                type: 'number',
+                nullable: true
             },
             {
                 type: 'string'
@@ -1718,9 +1721,10 @@ export const ModelWithOneOfAndPropertiesSchema = {
     required: ['baz', 'qux'],
     properties: {
         baz: {
-            type: ['integer', 'null'],
+            type: 'integer',
             format: 'uint16',
-            minimum: 0
+            minimum: 0,
+            nullable: true
         },
         qux: {
             type: 'integer',
@@ -1761,7 +1765,6 @@ export const importSchema = {
 } as const;
 
 export const SchemaWithFormRestrictedKeysSchema = {
-    type: 'object',
     properties: {
         description: {
             type: 'string'
@@ -1949,7 +1952,8 @@ export const Generic_Schema_Duplicate_Issue_1_System_Boolean_Schema = {
             type: 'boolean'
         },
         error: {
-            type: ['string', 'null']
+            type: 'string',
+            nullable: true
         },
         hasError: {
             type: 'boolean',
@@ -1968,10 +1972,12 @@ export const Generic_Schema_Duplicate_Issue_1_System_String_Schema = {
     type: 'object',
     properties: {
         item: {
-            type: ['string', 'null']
+            type: 'string',
+            nullable: true
         },
         error: {
-            type: ['string', 'null']
+            type: 'string',
+            nullable: true
         },
         hasError: {
             type: 'boolean',

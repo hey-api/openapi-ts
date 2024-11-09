@@ -9,6 +9,52 @@ import { mediaTypeObject } from './mediaType';
 import { paginationField } from './pagination';
 import { schemaToIrSchema } from './schema';
 
+/**
+ * Returns default parameter `allowReserved` based on value of `in`.
+ */
+const defaultAllowReserved = (
+  _in: ParameterObject['in'],
+): boolean | undefined => {
+  switch (_in) {
+    // this keyword only applies to parameters with an `in` value of `query`
+    case 'query':
+      return false;
+    default:
+      return;
+  }
+};
+
+/**
+ * Returns default parameter `explode` based on value of `style`.
+ */
+const defaultExplode = (style: Required<ParameterObject>['style']): boolean => {
+  switch (style) {
+    // default value for `deepObject` is `false`, but that behavior is undefined
+    // so we use `true` to make this work with the `client-fetch` package
+    case 'deepObject':
+    case 'form':
+      return true;
+    default:
+      return false;
+  }
+};
+
+/**
+ * Returns default parameter `style` based on value of `in`.
+ */
+const defaultStyle = (
+  _in: ParameterObject['in'],
+): Required<ParameterObject>['style'] => {
+  switch (_in) {
+    case 'header':
+    case 'path':
+      return 'simple';
+    case 'cookie':
+    case 'query':
+      return 'form';
+  }
+};
+
 export const parametersArrayToObject = ({
   context,
   parameters,
@@ -141,13 +187,24 @@ const parameterToIrParameter = ({
     schema: finalSchema,
   });
 
+  const style = parameter.style || defaultStyle(parameter.in);
+  const explode =
+    parameter.explode !== undefined ? parameter.explode : defaultExplode(style);
+  const allowReserved =
+    parameter.allowReserved !== undefined
+      ? parameter.allowReserved
+      : defaultAllowReserved(parameter.in);
+
   const irParameter: IRParameterObject = {
+    allowReserved,
+    explode,
     location: parameter.in,
     name: parameter.name,
     schema: schemaToIrSchema({
       context,
       schema: finalSchema,
     }),
+    style,
   };
 
   if (pagination) {
