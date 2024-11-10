@@ -1,0 +1,23 @@
+openapi: 3.0.3
+info:
+  title: OpenAPI 3.0.3 $ref duplicate URL example
+  version: 1
+paths:
+  /a:
+    get:
+      responses:
+        default:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './enum-escape.json#/components/schemas/Foo'
+  /b:
+    get:
+      responses:
+        default:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './enum-escape.json#/components/schemas/Foo'
