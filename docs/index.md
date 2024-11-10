@@ -43,6 +43,8 @@ features:
     linkText: Find out more
 ---
 
+<br />
+
 <div class="home-list home-sponsors">
 
 ### Sponsors
@@ -56,6 +58,12 @@ features:
 </ul>
 
 </div>
+
+<br />
+
+<!--@include: ./email-form.md-->
+
+<br />
 
 <div class="home-list">
 
