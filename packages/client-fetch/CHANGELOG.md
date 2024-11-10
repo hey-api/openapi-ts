@@ -1,5 +1,11 @@
 # @hey-api/client-fetch
 
+## 0.4.3
+
+### Patch Changes
+
+- [#1253](https://github.com/hey-api/openapi-ts/pull/1253) [`01dee3d`](https://github.com/hey-api/openapi-ts/commit/01dee3df879232939e43355231147b3d910fb482) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update sponsorship links
+
 ## 0.4.2
 
 ### Patch Changes
