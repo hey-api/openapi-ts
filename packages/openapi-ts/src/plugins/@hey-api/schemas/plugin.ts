@@ -62,9 +62,9 @@ const schemaToJsonSchemaDraft_05 = ({
   const schema = structuredClone(_schema);
 
   if ('$ref' in schema) {
-    // refs are encoded probably by json-schema-ref-parser, didn't investigate
-    // further
-    schema.$ref = decodeURIComponent(schema.$ref);
+    // refs using unicode characters become encoded, didn't investigate why
+    // but the suspicion is this comes from `@apidevtools/json-schema-ref-parser`
+    schema.$ref = decodeURI(schema.$ref);
     return schema;
   }
 
@@ -151,9 +151,9 @@ const schemaToJsonSchema2020_12 = ({
   stripSchema({ context, schema });
 
   if (schema.$ref) {
-    // refs are encoded probably by json-schema-ref-parser, didn't investigate
-    // further
-    schema.$ref = decodeURIComponent(schema.$ref);
+    // refs using unicode characters become encoded, didn't investigate why
+    // but the suspicion is this comes from `@apidevtools/json-schema-ref-parser`
+    schema.$ref = decodeURI(schema.$ref);
   }
 
   if (

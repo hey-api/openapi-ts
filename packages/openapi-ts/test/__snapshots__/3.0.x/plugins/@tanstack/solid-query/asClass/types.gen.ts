@@ -425,7 +425,11 @@ export type ModelSquare = {
 /**
  * This is a model with one property with a 'one of' relationship where the options are not $ref
  */
-export type CompositionWithOneOfDiscriminator = ModelCircle | ModelSquare;
+export type CompositionWithOneOfDiscriminator = ({
+    kind?: 'circle';
+} & ModelCircle) | ({
+    kind?: 'square';
+} & ModelSquare);
 
 /**
  * This is a model with one property with a 'any of' relationship

@@ -21,10 +21,23 @@ interface ContextFile {
 }
 
 export class IRContext<Spec extends Record<string, any> = any> {
+  /**
+   * Configuration for parsing and generating the output. This
+   * is a mix of user-provided and default values.
+   */
   public config: Config;
+  /**
+   * A map of files that will be generated from `spec`.
+   */
   public files: Files;
+  /**
+   * Intermediate representation model obtained from `spec`.
+   */
   public ir: IR;
   public parserConfig: ParserConfig;
+  /**
+   * Resolved specification from `input`.
+   */
   public spec: Spec;
 
   constructor({
@@ -62,6 +75,9 @@ export class IRContext<Spec extends Record<string, any> = any> {
     return createdFile;
   }
 
+  /**
+   * Returns a specific file by ID from `files`.
+   */
   public file({ id }: Pick<ContextFile, 'id'>): TypeScriptFile | undefined {
     return this.files[id];
   }
@@ -77,6 +93,9 @@ export class IRContext<Spec extends Record<string, any> = any> {
     });
   }
 
+  /**
+   * Returns a resolved reference from `spec`.
+   */
   public resolveRef<T>($ref: string) {
     return resolveRef<T>({
       $ref,
