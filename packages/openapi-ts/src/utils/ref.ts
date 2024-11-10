@@ -6,6 +6,17 @@ export const isRefOpenApiComponent = ($ref: string): boolean => {
   return parts.length === 3 && parts[0] === 'components';
 };
 
+/**
+ * Returns the component name from `$ref`.
+ */
+export const refToName = ($ref: string): string => {
+  const parts = refToParts($ref);
+  const name = parts[parts.length - 1];
+  // refs using unicode characters become encoded, didn't investigate why
+  // but the suspicion is this comes from `@apidevtools/json-schema-ref-parser`
+  return decodeURI(name);
+};
+
 const refToParts = ($ref: string): string[] => {
   // Remove the leading `#` and split by `/` to traverse the object
   const parts = $ref.replace(/^#\//, '').split('/');
@@ -19,7 +30,9 @@ export const resolveRef = <T>({
   $ref: string;
   spec: Record<string, any>;
 }): T => {
-  const parts = refToParts($ref);
+  // refs using unicode characters become encoded, didn't investigate why
+  // but the suspicion is this comes from `@apidevtools/json-schema-ref-parser`
+  const parts = refToParts(decodeURI($ref));
 
   let current = spec;
 

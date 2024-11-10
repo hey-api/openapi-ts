@@ -58,6 +58,27 @@ describe(`OpenAPI ${VERSION}`, () => {
     },
     {
       config: createConfig({
+        input: 'discriminator-all-of.yaml',
+        output: 'discriminator-all-of',
+      }),
+      description: 'handles discriminator with and without mapping',
+    },
+    {
+      config: createConfig({
+        input: 'discriminator-any-of.yaml',
+        output: 'discriminator-any-of',
+      }),
+      description: 'handles discriminator with and without mapping',
+    },
+    {
+      config: createConfig({
+        input: 'discriminator-one-of.yaml',
+        output: 'discriminator-one-of',
+      }),
+      description: 'handles discriminator with and without mapping',
+    },
+    {
+      config: createConfig({
         input: 'enum-escape.json',
         output: 'enum-escape',
       }),

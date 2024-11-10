@@ -283,7 +283,7 @@ const getSpec = async ({ config }: { config: Config }) => {
     const absolutePathOrUrl = existsSync(config.input.path)
       ? path.resolve(config.input.path)
       : config.input.path;
-    spec = await $RefParser.bundle(absolutePathOrUrl, absolutePathOrUrl, {});
+    spec = await $RefParser.bundle(absolutePathOrUrl);
   }
 
   return spec;

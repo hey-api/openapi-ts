@@ -231,8 +231,8 @@ export const parseV3_1_X = (context: IRContext<OpenApiV3_1_X>) => {
       const schema = context.spec.components.schemas[name];
 
       parseSchema({
+        $ref,
         context,
-        name,
         schema,
       });
     }
