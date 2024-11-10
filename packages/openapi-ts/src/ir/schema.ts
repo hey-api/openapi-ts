@@ -17,7 +17,13 @@ export const deduplicateSchema = <T extends IRSchemaObject>({
 
   for (const item of schema.items) {
     // skip nested schemas for now, handle if necessary
+    if (!item.type && item.items) {
+      uniqueItems.push(item);
+      continue;
+    }
+
     if (
+      // no `type` might still include `$ref` or `const`
       !item.type ||
       item.type === 'boolean' ||
       item.type === 'null' ||
