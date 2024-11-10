@@ -1,5 +1,12 @@
 # @example/openapi-ts-tanstack-svelte-query
 
+## 0.0.12
+
+### Patch Changes
+
+- Updated dependencies [[`01dee3d`](https://github.com/hey-api/openapi-ts/commit/01dee3df879232939e43355231147b3d910fb482)]:
+  - @hey-api/client-fetch@0.4.3
+
 ## 0.0.11
 
 ### Patch Changes
