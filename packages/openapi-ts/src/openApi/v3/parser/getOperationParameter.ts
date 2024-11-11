@@ -1,12 +1,12 @@
 import type { Client } from '../../../types/client';
-import { getConfig, isStandaloneClient } from '../../../utils/config';
 import { refParametersPartial } from '../../../utils/const';
 import { enumMeta } from '../../../utils/enum';
 import type { OperationParameter } from '../../common/interfaces/client';
 import { getDefault } from '../../common/parser/getDefault';
 import { getPattern } from '../../common/parser/getPattern';
 import { getRef } from '../../common/parser/getRef';
-import { getType, transformTypeKeyName } from '../../common/parser/type';
+import { getType } from '../../common/parser/type';
+import { getParserConfig } from '../../config';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiParameter } from '../interfaces/OpenApiParameter';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
@@ -15,20 +15,17 @@ import { isDefinitionNullable } from './inferType';
 import { getParameterSchema } from './parameter';
 
 export const getOperationParameter = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  debug,
   openApi,
   parameter,
   types,
 }: {
-  debug?: boolean;
   openApi: OpenApi;
   parameter: OpenApiParameter;
   types: Client['types'];
 }): OperationParameter => {
-  const config = getConfig();
+  const config = getParserConfig();
 
-  let operationParameter: OperationParameter = {
+  const operationParameterWithoutName: Omit<OperationParameter, 'name'> = {
     $refs: [],
     base: 'unknown',
     deprecated: parameter.deprecated === true,
@@ -44,13 +41,14 @@ export const getOperationParameter = ({
     isRequired: parameter.required === true,
     link: null,
     mediaType: null,
-    name: isStandaloneClient(config)
-      ? parameter.name
-      : transformTypeKeyName(parameter.name),
     prop: parameter.name,
     properties: [],
     template: null,
     type: 'unknown',
+  };
+  let operationParameter = {
+    ...operationParameterWithoutName,
+    name: config.nameFn.operationParameter(operationParameterWithoutName),
   };
 
   if (parameter.$ref) {

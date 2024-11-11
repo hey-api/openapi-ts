@@ -1,6 +1,6 @@
 ---
 title: Clients
-description: REST clients for your stack. Compatible with all our features.
+description: REST clients for Hey API. Compatible with all our features.
 ---
 
 <script setup>
@@ -13,8 +13,8 @@ We all send HTTP requests in a slightly different way. Hey API doesn't force you
 
 ## Features
 
-- seamless integration with `@hey-api/openapi-ts`
-- typesafe response data and errors
+- seamless integration with `@hey-api/openapi-ts` ecosystem
+- type-safe response data and errors
 - access to the original request and response
 - granular request and response customization options
 - minimal learning curve thanks to extending the underlying technology
@@ -27,7 +27,7 @@ We all send HTTP requests in a slightly different way. Hey API doesn't force you
 - [Legacy](/openapi-ts/clients/legacy)
 - [Next.js](https://nextjs.org/) <span class="soon">Soon</span>
 
-If you'd like a standalone package for your client, let us know by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
+If you'd like Hey API to support your client, let us know by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
 
 <!--@include: ../examples.md-->
 <!--@include: ../sponsorship.md-->

@@ -1,12 +1,9 @@
-import { compiler, TypeScriptFile } from '../compiler';
+import { compiler } from '../compiler';
 import type { Files } from '../types/utils';
-import { getConfig } from '../utils/config';
+import { getConfig, legacyNameFromConfig } from '../utils/config';
+import { TypeScriptFile } from './files';
 
-export const generateIndexFile = async ({
-  files,
-}: {
-  files: Files;
-}): Promise<void> => {
+export const generateIndexFile = ({ files }: { files: Files }): void => {
   const config = getConfig();
 
   files.index = new TypeScriptFile({
@@ -14,11 +11,11 @@ export const generateIndexFile = async ({
     name: 'index.ts',
   });
 
-  if (config.name) {
+  if (legacyNameFromConfig(config)) {
     files.index.add(
       compiler.exportNamedDeclaration({
-        exports: config.name,
-        module: `./${config.name}`,
+        exports: legacyNameFromConfig(config)!,
+        module: `./${legacyNameFromConfig(config)}`,
       }),
     );
   }
@@ -30,7 +27,7 @@ export const generateIndexFile = async ({
         module: './core/ApiError',
       }),
     );
-    if (config.services.response === 'response') {
+    if (config.plugins['@hey-api/services']?.response === 'response') {
       files.index.add(
         compiler.exportNamedDeclaration({
           exports: { asType: true, name: 'ApiResult' },
@@ -38,7 +35,7 @@ export const generateIndexFile = async ({
         }),
       );
     }
-    if (config.name) {
+    if (legacyNameFromConfig(config)) {
       files.index.add(
         compiler.exportNamedDeclaration({
           exports: 'BaseHttpRequest',
@@ -46,7 +43,7 @@ export const generateIndexFile = async ({
         }),
       );
     }
-    if (config.client.name !== 'angular') {
+    if (config.client.name !== 'legacy/angular') {
       files.index.add(
         compiler.exportNamedDeclaration({
           exports: ['CancelablePromise', 'CancelError'],
@@ -71,10 +68,12 @@ export const generateIndexFile = async ({
         return;
       }
 
-      files.index.add(
-        compiler.exportAllDeclaration({
-          module: `./${file.getName(false)}`,
-        }),
-      );
+      if (['schemas', 'services', 'transformers', 'types'].includes(name)) {
+        files.index.add(
+          compiler.exportAllDeclaration({
+            module: `./${file.nameWithoutExtension()}`,
+          }),
+        );
+      }
     });
 };

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { Model, Service } from '../../openApi';
+import type { Model, Service } from '../../types/client';
 import { sort, sortByName } from '../sort';
 
 describe('sort', () => {
@@ -104,7 +104,7 @@ describe('sortByName', () => {
 
   it('should throw errors when trying to sort without a name entry', () => {
     const values = ['some', 'string', 'array'];
-    // @ts-ignore
+    // @ts-expect-error
     expect(() => sortByName(values)).toThrow(TypeError);
   });
 });

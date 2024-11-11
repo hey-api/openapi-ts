@@ -8,7 +8,7 @@ import server from './scripts/server'
 describe('client.node', () => {
   beforeAll(async () => {
     cleanup('client/node')
-    await generateClient('client/node', 'v3', 'node', false, 'ApiClient')
+    await generateClient('client/node', 'v3', 'legacy/node', false, 'ApiClient')
     compileWithTypescript('client/node')
     await server.start('client/node')
   }, 40000)
@@ -27,7 +27,7 @@ describe('client.node', () => {
     })
     const result = await client.simple.getCallWithoutParametersAndResponse()
     expect(tokenRequest.mock.calls.length).toBe(1)
-    // @ts-ignore
+    // @ts-expect-error
     expect(result.headers.authorization).toBe('Bearer MY_TOKEN')
   })
 
@@ -39,14 +39,14 @@ describe('client.node', () => {
       USERNAME: 'username'
     })
     const result = await client.simple.getCallWithoutParametersAndResponse()
-    // @ts-ignore
+    // @ts-expect-error
     expect(result.headers.authorization).toBe('Basic dXNlcm5hbWU6cGFzc3dvcmQ=')
   })
 
   it('supports complex params', async () => {
     const { ApiClient } = await import('./generated/client/node/index.js')
     const client = new ApiClient()
-    // @ts-ignore
+    // @ts-expect-error
     const result = await client.complex.complexTypes({
       first: {
         second: {
@@ -60,7 +60,7 @@ describe('client.node', () => {
   it('support form data', async () => {
     const { ApiClient } = await import('./generated/client/node/index.js')
     const client = new ApiClient()
-    // @ts-ignore
+    // @ts-expect-error
     const result = await client.parameters.callWithParameters(
       'valueHeader',
       'valueQuery',

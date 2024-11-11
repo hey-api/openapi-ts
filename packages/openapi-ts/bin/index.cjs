@@ -13,28 +13,33 @@ const params = program
   .usage('[options]')
   .version(pkg.version)
   .option(
-    '--base [value]',
-    'Manually set base in OpenAPI config instead of inferring from server value',
-  )
-  .option(
     '-c, --client <value>',
-    'HTTP client to generate [angular, axios, fetch, node, xhr]',
+    'HTTP client to generate [@hey-api/client-axios, @hey-api/client-fetch, legacy/angular, legacy/axios, legacy/fetch, legacy/node, legacy/xhr]',
   )
   .option('-d, --debug', 'Run in debug mode?')
   .option('--dry-run [value]', 'Skip writing files to disk?')
-  .option('--exportCore [value]', 'Write core files to disk')
+  .option(
+    '-e, --experimental-parser [value]',
+    'Opt-in to the experimental parser?',
+  )
   .option('-f, --file [value]', 'Path to the config file')
   .option(
     '-i, --input <value>',
     'OpenAPI specification (path, url, or string content)',
   )
-  .option('--name <value>', 'Custom client class name')
-  .option('-o, --output <value>', 'Output directory')
-  .option('--request <value>', 'Path to custom request file')
-  .option('--schemas [value]', 'Write schemas to disk')
-  .option('--services [value]', 'Write services to disk')
-  .option('--types [value]', 'Write types to disk')
-  .option('--useOptions [value]', 'Use options instead of arguments')
+  .option('-o, --output <value>', 'Output folder')
+  .option('-p, --plugins [value...]', "List of plugins you'd like to use")
+  .option(
+    '--base [value]',
+    'DEPRECATED. Manually set base in OpenAPI config instead of inferring from server value',
+  )
+  .option('--exportCore [value]', 'DEPRECATED. Write core files to disk')
+  .option('--name <value>', 'DEPRECATED. Custom client class name')
+  .option('--request <value>', 'DEPRECATED. Path to custom request file')
+  .option(
+    '--useOptions [value]',
+    'DEPRECATED. Use options instead of arguments?',
+  )
   .parse(process.argv)
   .opts();
 
@@ -66,17 +71,18 @@ const processParams = (obj, booleanKeys) => {
 async function start() {
   let userConfig;
   try {
-    const { createClient } = require(
-      resolve(__dirname, '../dist/node/index.cjs'),
-    );
+    const { createClient } = require(resolve(__dirname, '../dist/index.cjs'));
     userConfig = processParams(params, [
       'dryRun',
+      'experimentalParser',
       'exportCore',
-      'schemas',
-      'services',
-      'types',
       'useOptions',
     ]);
+    if (params.plugins === true) {
+      userConfig.plugins = [];
+    } else if (params.plugins) {
+      userConfig.plugins = params.plugins;
+    }
     await createClient(userConfig);
     process.exit(0);
   } catch (error) {

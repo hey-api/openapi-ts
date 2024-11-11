@@ -14,7 +14,7 @@ describe('client.angular', () => {
     await generateClient(
       'client/angular/app/src/client',
       'v3',
-      'angular',
+      'legacy/angular',
       false,
       'ApiModule'
     )
@@ -37,16 +37,16 @@ describe('client.angular', () => {
     const result = await browser.evaluate(
       async () =>
         await new Promise(resolve => {
-          // @ts-ignore
+          // @ts-expect-error
           const { SimpleService } = window.api
-          // @ts-ignore
+          // @ts-expect-error
           SimpleService.httpRequest.config.TOKEN = window.tokenRequest
           SimpleService.httpRequest.config.USERNAME = undefined
           SimpleService.httpRequest.config.PASSWORD = undefined
           SimpleService.getCallWithoutParametersAndResponse().subscribe(resolve)
         })
     )
-    // @ts-ignore
+    // @ts-expect-error
     expect(result.headers.authorization).toBe('Bearer MY_TOKEN')
   })
 
@@ -54,7 +54,7 @@ describe('client.angular', () => {
     const result = await browser.evaluate(
       async () =>
         await new Promise(resolve => {
-          // @ts-ignore
+          // @ts-expect-error
           const { SimpleService } = window.api
           SimpleService.httpRequest.config.TOKEN = undefined
           SimpleService.httpRequest.config.USERNAME = 'username'
@@ -62,7 +62,7 @@ describe('client.angular', () => {
           SimpleService.getCallWithoutParametersAndResponse().subscribe(resolve)
         })
     )
-    // @ts-ignore
+    // @ts-expect-error
     expect(result.headers.authorization).toBe('Basic dXNlcm5hbWU6cGFzc3dvcmQ=')
   })
 
@@ -70,7 +70,7 @@ describe('client.angular', () => {
     const result = await browser.evaluate(
       async () =>
         await new Promise(resolve => {
-          // @ts-ignore
+          // @ts-expect-error
           const { ComplexService } = window.api
           ComplexService.complexTypes({
             first: {
@@ -88,7 +88,7 @@ describe('client.angular', () => {
     const result = await browser.evaluate(
       async () =>
         await new Promise(resolve => {
-          // @ts-ignore
+          // @ts-expect-error
           const { ParametersService } = window.api
           ParametersService.callWithParameters(
             'valueHeader',
@@ -109,28 +109,28 @@ describe('client.angular', () => {
     const error = await browser.evaluate(
       async () =>
         await new Promise(resolve => {
-          // @ts-ignore
+          // @ts-expect-error
           const { ErrorService } = window.api
           ErrorService.testErrorCode(500).subscribe({
             error: (e: unknown) => {
               resolve(
                 JSON.stringify({
-                  // @ts-ignore
+                  // @ts-expect-error
                   body: e.body,
 
-                  // @ts-ignore
+                  // @ts-expect-error
                   message: e.message,
 
-                  // @ts-ignore
+                  // @ts-expect-error
                   name: e.name,
 
-                  // @ts-ignore
+                  // @ts-expect-error
                   status: e.status,
 
-                  // @ts-ignore
+                  // @ts-expect-error
                   statusText: e.statusText,
 
-                  // @ts-ignore
+                  // @ts-expect-error
                   url: e.url
                 })
               )
@@ -157,28 +157,28 @@ describe('client.angular', () => {
     const error = await browser.evaluate(
       async () =>
         await new Promise(resolve => {
-          // @ts-ignore
+          // @ts-expect-error
           const { ErrorService } = window.api
           ErrorService.testErrorCode(599).subscribe({
             error: (e: unknown) => {
               resolve(
                 JSON.stringify({
-                  // @ts-ignore
+                  // @ts-expect-error
                   body: e.body,
 
-                  // @ts-ignore
+                  // @ts-expect-error
                   message: e.message,
 
-                  // @ts-ignore
+                  // @ts-expect-error
                   name: e.name,
 
-                  // @ts-ignore
+                  // @ts-expect-error
                   status: e.status,
 
-                  // @ts-ignore
+                  // @ts-expect-error
                   statusText: e.statusText,
 
-                  // @ts-ignore
+                  // @ts-expect-error
                   url: e.url
                 })
               )

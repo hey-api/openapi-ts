@@ -1,40 +1,48 @@
-import { copyFileSync, readFileSync, writeFileSync } from 'node:fs';
-import { createRequire } from 'node:module';
+import { copyFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { getConfig, isStandaloneClient } from '../utils/config';
-import { ensureDirSync } from './utils';
+import type { Config } from '../types/config';
+import { ensureDirSync, relativeModulePath } from './utils';
 
-const require = createRequire(import.meta.url);
+/**
+ * Returns path to the client module. When using client packages, this will be
+ * simply the name of the package. When bundling a client, this will be a
+ * relative path to the bundled client folder.
+ */
+export const clientModulePath = ({
+  config,
+  sourceOutput,
+}: {
+  config: Config;
+  sourceOutput: string;
+}): string => {
+  if (config.client.bundle) {
+    return relativeModulePath({
+      moduleOutput: 'client',
+      sourceOutput,
+    });
+  }
 
-export const clientModulePath = () => {
-  const config = getConfig();
-  return config.client.bundle ? './client' : config.client.name;
+  return config.client.name;
 };
 
 export const clientOptionsTypeName = () => 'Options';
 
 /**
- * (optional) Creates a `client.ts` file containing the same exports as a
- * standalone client package. Creates a `core` directory containing the modules
- * from standalone client. These files are generated only when `client.bundle`
- * is set to true.
+ * Creates a `client` folder containing the same modules as the client package.
  */
-export const generateClient = async (
-  outputPath: string,
-  moduleName: string,
-) => {
-  const config = getConfig();
-
-  if (!isStandaloneClient(config) || !config.client.bundle) {
-    return;
-  }
-
-  // create directory for client modules
-  const dirPath = path.resolve(outputPath, 'core');
+export const generateClientBundle = ({
+  name,
+  outputPath,
+}: {
+  name: string;
+  outputPath: string;
+}): void => {
+  // create folder for client modules
+  const dirPath = path.resolve(outputPath, 'client');
   ensureDirSync(dirPath);
 
-  const clientModulePath = path.normalize(require.resolve(moduleName));
+  const clientModulePath = path.normalize(require.resolve(name));
   const clientModulePathComponents = clientModulePath.split(path.sep);
   const clientSrcPath = [
     ...clientModulePathComponents.slice(
@@ -52,12 +60,4 @@ export const generateClient = async (
       path.resolve(dirPath, file),
     );
   });
-
-  // copy index file with cherry-picked exports
-  const nodeIndexFile = readFileSync(
-    path.resolve(clientSrcPath, 'node', 'index.ts'),
-    'utf-8',
-  );
-  const indexFile = nodeIndexFile.replaceAll('../', './core/');
-  writeFileSync(path.resolve(outputPath, 'client.ts'), indexFile, 'utf-8');
 };

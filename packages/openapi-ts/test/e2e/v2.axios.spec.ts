@@ -8,7 +8,7 @@ import server from './scripts/server'
 describe('v2.axios', () => {
   beforeAll(async () => {
     cleanup('v2/axios')
-    await generateClient('v2/axios', 'v2', 'axios')
+    await generateClient('v2/axios', 'v2', 'legacy/axios')
     compileWithTypescript('v2/axios')
     await server.start('v2/axios')
   }, 40000)
@@ -25,14 +25,14 @@ describe('v2.axios', () => {
     OpenAPI.TOKEN = tokenRequest
     const result = await SimpleService.getCallWithoutParametersAndResponse()
     expect(tokenRequest.mock.calls.length).toBe(1)
-    // @ts-ignore
+    // @ts-expect-error
     expect(result.headers.authorization).toBe('Bearer MY_TOKEN')
   })
 
   it('supports complex params', async () => {
     const { ComplexService } = await import('./generated/v2/axios/index.js')
     const result = await ComplexService.complexTypes({
-      // @ts-ignore
+      // @ts-expect-error
       first: {
         second: {
           third: 'Hello World!'
@@ -46,7 +46,7 @@ describe('v2.axios', () => {
 describe('v2.axios useOptions', () => {
   beforeAll(async () => {
     cleanup('v2/axios')
-    await generateClient('v2/axios', 'v2', 'axios', true)
+    await generateClient('v2/axios', 'v2', 'legacy/axios', true)
     compileWithTypescript('v2/axios')
     await server.start('v2/axios')
   }, 40000)
@@ -58,28 +58,28 @@ describe('v2.axios useOptions', () => {
   it('returns result body by default', async () => {
     const { SimpleService } = await import('./generated/v2/axios/index.js')
     const result = await SimpleService.getCallWithoutParametersAndResponse()
-    // @ts-ignore
+    // @ts-expect-error
     expect(result.body).toBeUndefined()
   })
 
   it('returns result body', async () => {
     const { SimpleService } = await import('./generated/v2/axios/index.js')
-    // @ts-ignore
+    // @ts-expect-error
     const result = await SimpleService.getCallWithoutParametersAndResponse({
       _result: 'body'
     })
-    // @ts-ignore
+    // @ts-expect-error
     expect(result.body).toBeUndefined()
   })
 
   it('returns raw result', async ({ skip }) => {
     skip()
     const { SimpleService } = await import('./generated/v2/axios/index.js')
-    // @ts-ignore
+    // @ts-expect-error
     const result = await SimpleService.getCallWithoutParametersAndResponse({
       _result: 'raw'
     })
-    // @ts-ignore
+    // @ts-expect-error
     expect(result.body).toBeDefined()
   })
 })

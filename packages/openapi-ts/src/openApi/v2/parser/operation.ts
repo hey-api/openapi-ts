@@ -1,14 +1,12 @@
 import type { Client } from '../../../types/client';
+import { getConfig } from '../../../utils/config';
 import type {
   Operation,
   OperationParameters,
 } from '../../common/interfaces/client';
-import {
-  getOperationName,
-  getOperationResponseHeader,
-} from '../../common/parser/operation';
-import { getServiceName } from '../../common/parser/service';
+import { getOperationResponseHeader } from '../../common/parser/operation';
 import { toSortedByRequired } from '../../common/parser/sort';
+import { getParserConfig } from '../../config';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiOperation } from '../interfaces/OpenApiOperation';
 import { getOperationParameters } from './getOperationParameters';
@@ -20,28 +18,24 @@ export const getOperation = ({
   openApi,
   types,
   pathParams,
-  tag,
   url,
 }: {
   method: Lowercase<Operation['method']>;
   op: OpenApiOperation;
   openApi: OpenApi;
   pathParams: OperationParameters;
-  tag: string;
   types: Client['types'];
   url: string;
 }): Operation => {
-  const service = getServiceName(tag);
-  const name = getOperationName(url, method, op.operationId);
+  const config = getParserConfig();
 
-  const operation: Operation = {
+  const operationWithoutName: Omit<Operation, 'name'> = {
     $refs: [],
     deprecated: op.deprecated === true,
     description: op.description || null,
     id: op.operationId || null,
     imports: [],
     method: method.toUpperCase() as Operation['method'],
-    name,
     parameters: [...pathParams.parameters],
     parametersBody: pathParams.parametersBody,
     parametersCookie: [...pathParams.parametersCookie],
@@ -52,8 +46,17 @@ export const getOperation = ({
     path: url,
     responseHeader: null,
     responses: [],
-    service,
     summary: op.summary || null,
+    tags: op.tags || null,
+  };
+  const operation = {
+    ...operationWithoutName,
+    name: config.nameFn.operation({
+      config: getConfig(),
+      method: operationWithoutName.method,
+      operationId: op.operationId,
+      path: operationWithoutName.path,
+    }),
   };
 
   if (op.parameters) {

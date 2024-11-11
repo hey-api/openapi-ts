@@ -3,6 +3,7 @@ import ts from 'typescript';
 import { createCallExpression } from './module';
 import {
   type AccessLevel,
+  createBlock,
   createTypeNode,
   type FunctionParameter,
   type FunctionTypeParameter,
@@ -11,12 +12,8 @@ import {
   toParameterDeclarations,
   toTypeParameters,
 } from './types';
-import {
-  addLeadingComments,
-  Comments,
-  createIdentifier,
-  isType,
-} from './utils';
+import type { Comments } from './utils';
+import { addLeadingComments, createIdentifier, isType } from './utils';
 
 /**
  * Create a class constructor declaration.
@@ -24,7 +21,7 @@ import {
  * @param comment - comment to add to function.
  * @param multiLine - if it should be multi line.
  * @param parameters - parameters for the constructor.
- * @param statements - statements to put in the contructor body.
+ * @param statements - statements to put in the constructor body.
  * @returns ts.ConstructorDeclaration
  */
 export const createConstructorDeclaration = ({
@@ -43,7 +40,7 @@ export const createConstructorDeclaration = ({
   const node = ts.factory.createConstructorDeclaration(
     toAccessLevelModifiers(accessLevel),
     toParameterDeclarations(parameters),
-    ts.factory.createBlock(statements, multiLine),
+    createBlock({ multiLine, statements }),
   );
 
   addLeadingComments({
@@ -63,7 +60,7 @@ export const createConstructorDeclaration = ({
  * @param name - name of the method.
  * @param parameters - parameters for the method.
  * @param returnType - the return type of the method.
- * @param statements - statements to put in the contructor body.
+ * @param statements - statements to put in the constructor body.
  * @returns ts.MethodDeclaration
  */
 export const createMethodDeclaration = ({
@@ -104,7 +101,7 @@ export const createMethodDeclaration = ({
     types ? toTypeParameters(types) : undefined,
     toParameterDeclarations(parameters),
     returnType ? createTypeNode(returnType) : undefined,
-    ts.factory.createBlock(statements, multiLine),
+    createBlock({ multiLine, statements }),
   );
 
   addLeadingComments({
@@ -157,7 +154,7 @@ export const createClassDeclaration = ({
   // Add newline between each class member.
   let m: ts.ClassElement[] = [];
   members.forEach((member) => {
-    // @ts-ignore
+    // @ts-expect-error
     m = [...m, member, createIdentifier({ text: '\n' })];
   });
 

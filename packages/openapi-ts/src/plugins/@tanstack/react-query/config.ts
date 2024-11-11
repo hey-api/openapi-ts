@@ -1,40 +1,23 @@
-import type { PluginDefinition } from '../../types';
+import type { DefineConfig, PluginConfig } from '../../types';
 import { handler } from '../query-core/plugin';
+import { handlerLegacy } from '../query-core/plugin-legacy';
+import type { Config } from './types';
 
-export interface PluginTanStackReactQuery extends PluginDefinition {
-  /**
-   * Generate {@link https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions `infiniteQueryOptions()`} helpers? These will be generated from GET and POST requests where a pagination parameter is detected.
-   * @default true
-   */
-  infiniteQueryOptions?: boolean;
-  /**
-   * Generate {@link https://tanstack.com/query/v5/docs/framework/react/reference/useMutation `useMutation()`} helpers? These will be generated from DELETE, PATCH, POST, and PUT requests.
-   * @default true
-   */
-  mutationOptions?: boolean;
-  /**
-   * Generate TanStack React Query output from the provided input.
-   */
-  name: '@tanstack/react-query';
-  /**
-   * Name of the generated file.
-   * @default '@tanstack/react-query'
-   */
-  output?: string;
-  /**
-   * Generate {@link https://tanstack.com/query/v5/docs/framework/react/reference/queryOptions `queryOptions()`} helpers?
-   * These will be generated from all requests.
-   * @default true
-   */
-  queryOptions?: boolean;
-}
+export const defaultConfig: PluginConfig<Config> = {
+  _dependencies: ['@hey-api/services', '@hey-api/types'],
+  _handler: handler,
+  _handlerLegacy: handlerLegacy,
+  infiniteQueryOptions: true,
+  mutationOptions: true,
+  name: '@tanstack/react-query',
+  output: '@tanstack/react-query',
+  queryOptions: true,
+};
 
-export const pluginTanStackReactQueryDefaultConfig: Required<PluginTanStackReactQuery> =
-  {
-    handler,
-    infiniteQueryOptions: true,
-    mutationOptions: true,
-    name: '@tanstack/react-query',
-    output: '@tanstack/react-query',
-    queryOptions: true,
-  };
+/**
+ * Type helper for TanStack React Query plugin, returns {@link PluginConfig} object
+ */
+export const defineConfig: DefineConfig<Config> = (config) => ({
+  ...defaultConfig,
+  ...config,
+});

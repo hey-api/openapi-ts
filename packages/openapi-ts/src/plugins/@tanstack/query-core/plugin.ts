@@ -2,61 +2,100 @@ import ts from 'typescript';
 
 import { compiler, type Property } from '../../../compiler';
 import type { ImportExportItem } from '../../../compiler/module';
-import { ImportExportItemObject } from '../../../compiler/utils';
+import {
+  type ImportExportItemObject,
+  tsNodeToString,
+} from '../../../compiler/utils';
 import {
   clientModulePath,
   clientOptionsTypeName,
 } from '../../../generate/client';
-import {
-  generateImport,
-  operationDataTypeName,
-  operationErrorTypeName,
-  operationOptionsType,
-  operationResponseTypeName,
-  toOperationName,
-} from '../../../generate/services';
-import type { Operation } from '../../../openApi';
+import type { IRContext } from '../../../ir/context';
 import type {
-  Method,
-  Model,
-  OperationParameter,
-} from '../../../openApi/common/interfaces/client';
-import { isOperationParameterRequired } from '../../../openApi/common/parser/operation';
-import type { Client } from '../../../types/client';
+  IROperationObject,
+  IRPathItemObject,
+  IRPathsObject,
+} from '../../../ir/ir';
+import {
+  hasOperationDataRequired,
+  operationPagination,
+} from '../../../ir/operation';
 import type { Files } from '../../../types/utils';
 import { getConfig } from '../../../utils/config';
-import type { PluginDefinition } from '../../types';
+import { getServiceName } from '../../../utils/postprocess';
+import { transformServiceName } from '../../../utils/transform';
+import {
+  operationDataRef,
+  operationErrorRef,
+  operationResponseRef,
+} from '../../@hey-api/services/plugin';
+import {
+  operationOptionsType,
+  serviceFunctionIdentifier,
+} from '../../@hey-api/services/plugin-legacy';
+import { schemaToType } from '../../@hey-api/types/plugin';
+import type { PluginHandler } from '../../types';
+import type { Config as AngularQueryConfig } from '../angular-query-experimental';
+import type { Config as ReactQueryConfig } from '../react-query';
+import type { Config as SolidQueryConfig } from '../solid-query';
+import type { Config as SvelteQueryConfig } from '../svelte-query';
+import type { Config as VueQueryConfig } from '../vue-query';
 
-const toInfiniteQueryOptionsName = (operation: Operation) =>
-  `${toOperationName(operation, false)}InfiniteOptions`;
+const infiniteQueryOptionsFunctionIdentifier = ({
+  context,
+  operation,
+}: {
+  context: IRContext;
+  operation: IROperationObject;
+}) =>
+  `${serviceFunctionIdentifier({
+    config: context.config,
+    id: operation.id,
+    operation,
+  })}InfiniteOptions`;
 
-const toMutationOptionsName = (operation: Operation) =>
-  `${toOperationName(operation, false)}Mutation`;
+const mutationOptionsFunctionIdentifier = ({
+  context,
+  operation,
+}: {
+  context: IRContext;
+  operation: IROperationObject;
+}) =>
+  `${serviceFunctionIdentifier({
+    config: context.config,
+    id: operation.id,
+    operation,
+  })}Mutation`;
 
-const toQueryOptionsName = (operation: Operation) =>
-  `${toOperationName(operation, false)}Options`;
+const queryOptionsFunctionIdentifier = ({
+  context,
+  operation,
+}: {
+  context: IRContext;
+  operation: IROperationObject;
+}) =>
+  `${serviceFunctionIdentifier({
+    config: context.config,
+    id: operation.id,
+    operation,
+  })}Options`;
 
-const checkPrerequisites = ({ files }: { files: Files }) => {
-  if (!files.services) {
-    throw new Error(
-      '🚫 services need to be exported to use TanStack Query plugin - enable service generation',
-    );
-  }
-};
+const queryKeyFunctionIdentifier = ({
+  context,
+  operation,
+  isInfinite,
+}: {
+  context: IRContext;
+  isInfinite?: boolean;
+  operation: IROperationObject;
+}) =>
+  `${serviceFunctionIdentifier({
+    config: context.config,
+    id: operation.id,
+    operation,
+  })}${isInfinite ? 'Infinite' : ''}QueryKey`;
 
-const getPaginationIn = (parameter: OperationParameter) => {
-  switch (parameter.in) {
-    case 'formData':
-      return 'body';
-    case 'header':
-      return 'headers';
-    default:
-      return parameter.in;
-  }
-};
-
-const paginationWordsRegExp = /^(cursor|offset|page|start)/;
-
+const createInfiniteParamsFn = 'createInfiniteParams';
 const createQueryKeyFn = 'createQueryKey';
 const infiniteQueryOptionsFn = 'infiniteQueryOptions';
 const mutationOptionsFn = 'mutationOptions';
@@ -69,12 +108,194 @@ const getClientBaseUrlKey = () => {
   return config.client.name === '@hey-api/client-axios' ? 'baseURL' : 'baseUrl';
 };
 
+const createInfiniteParamsFunction = ({
+  file,
+}: {
+  file: Files[keyof Files];
+}) => {
+  const fn = compiler.constVariable({
+    expression: compiler.arrowFunction({
+      multiLine: true,
+      parameters: [
+        {
+          name: 'queryKey',
+          type: compiler.typeReferenceNode({ typeName: 'QueryKey<Options>' }),
+        },
+        {
+          name: 'page',
+          type: compiler.typeReferenceNode({ typeName: 'K' }),
+        },
+      ],
+      statements: [
+        compiler.constVariable({
+          expression: compiler.identifier({
+            text: 'queryKey[0]',
+          }),
+          name: 'params',
+        }),
+        compiler.ifStatement({
+          expression: compiler.propertyAccessExpression({
+            expression: compiler.identifier({
+              text: 'page',
+            }),
+            name: compiler.identifier({ text: 'body' }),
+          }),
+          thenStatement: compiler.block({
+            statements: [
+              compiler.expressionToStatement({
+                expression: compiler.binaryExpression({
+                  left: compiler.propertyAccessExpression({
+                    expression: 'params',
+                    name: 'body',
+                  }),
+                  right: compiler.objectExpression({
+                    multiLine: true,
+                    obj: [
+                      {
+                        assertion: 'any',
+                        spread: 'queryKey[0].body',
+                      },
+                      {
+                        assertion: 'any',
+                        spread: 'page.body',
+                      },
+                    ],
+                  }),
+                }),
+              }),
+            ],
+          }),
+        }),
+        compiler.ifStatement({
+          expression: compiler.propertyAccessExpression({
+            expression: compiler.identifier({
+              text: 'page',
+            }),
+            name: compiler.identifier({ text: 'headers' }),
+          }),
+          thenStatement: compiler.block({
+            statements: [
+              compiler.expressionToStatement({
+                expression: compiler.binaryExpression({
+                  left: compiler.propertyAccessExpression({
+                    expression: 'params',
+                    name: 'headers',
+                  }),
+                  right: compiler.objectExpression({
+                    multiLine: true,
+                    obj: [
+                      {
+                        spread: 'queryKey[0].headers',
+                      },
+                      {
+                        spread: 'page.headers',
+                      },
+                    ],
+                  }),
+                }),
+              }),
+            ],
+          }),
+        }),
+        compiler.ifStatement({
+          expression: compiler.propertyAccessExpression({
+            expression: compiler.identifier({
+              text: 'page',
+            }),
+            name: compiler.identifier({ text: 'path' }),
+          }),
+          thenStatement: compiler.block({
+            statements: [
+              compiler.expressionToStatement({
+                expression: compiler.binaryExpression({
+                  left: compiler.propertyAccessExpression({
+                    expression: 'params',
+                    name: 'path',
+                  }),
+                  right: compiler.objectExpression({
+                    multiLine: true,
+                    obj: [
+                      {
+                        spread: 'queryKey[0].path',
+                      },
+                      {
+                        spread: 'page.path',
+                      },
+                    ],
+                  }),
+                }),
+              }),
+            ],
+          }),
+        }),
+        compiler.ifStatement({
+          expression: compiler.propertyAccessExpression({
+            expression: compiler.identifier({
+              text: 'page',
+            }),
+            name: compiler.identifier({ text: 'query' }),
+          }),
+          thenStatement: compiler.block({
+            statements: [
+              compiler.expressionToStatement({
+                expression: compiler.binaryExpression({
+                  left: compiler.propertyAccessExpression({
+                    expression: 'params',
+                    name: 'query',
+                  }),
+                  right: compiler.objectExpression({
+                    multiLine: true,
+                    obj: [
+                      {
+                        spread: 'queryKey[0].query',
+                      },
+                      {
+                        spread: 'page.query',
+                      },
+                    ],
+                  }),
+                }),
+              }),
+            ],
+          }),
+        }),
+        compiler.returnVariable({
+          expression: ts.factory.createAsExpression(
+            ts.factory.createAsExpression(
+              compiler.identifier({ text: 'params' }),
+              ts.factory.createKeywordTypeNode(ts.SyntaxKind.UnknownKeyword),
+            ),
+            ts.factory.createTypeQueryNode(
+              compiler.identifier({ text: 'page' }),
+            ),
+          ),
+        }),
+      ],
+      types: [
+        {
+          extends: compiler.typeReferenceNode({
+            typeName: compiler.identifier({
+              text: "Pick<QueryKey<Options>[0], 'body' | 'headers' | 'path' | 'query'>",
+            }),
+          }),
+          name: 'K',
+        },
+      ],
+    }),
+    name: createInfiniteParamsFn,
+  });
+  file.add(fn);
+};
+
 const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
   const returnType = compiler.indexedAccessTypeNode({
-    indexType: compiler.typeNode(0),
-    objectType: compiler.typeNode(queryKeyName, [
-      compiler.typeNode(TOptionsType),
-    ]),
+    indexType: compiler.literalTypeNode({
+      literal: compiler.ots.number(0),
+    }),
+    objectType: compiler.typeReferenceNode({
+      typeArguments: [compiler.typeReferenceNode({ typeName: TOptionsType })],
+      typeName: queryKeyName,
+    }),
   });
 
   const infiniteIdentifier = compiler.identifier({ text: 'infinite' });
@@ -85,17 +306,17 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
       parameters: [
         {
           name: 'id',
-          type: compiler.typeNode('string'),
+          type: compiler.typeReferenceNode({ typeName: 'string' }),
         },
         {
           isRequired: false,
           name: 'options',
-          type: compiler.typeNode(TOptionsType),
+          type: compiler.typeReferenceNode({ typeName: TOptionsType }),
         },
         {
           isRequired: false,
           name: 'infinite',
-          type: compiler.typeNode('boolean'),
+          type: compiler.typeReferenceNode({ typeName: 'boolean' }),
         },
       ],
       returnType,
@@ -112,7 +333,7 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
               {
                 key: getClientBaseUrlKey(),
                 value: compiler.identifier({
-                  text: `client.getConfig().${getClientBaseUrlKey()}`,
+                  text: `(options?.client ?? client).getConfig().${getClientBaseUrlKey()}`,
                 }),
               },
             ],
@@ -122,8 +343,8 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
         }),
         compiler.ifStatement({
           expression: infiniteIdentifier,
-          thenStatement: ts.factory.createBlock(
-            [
+          thenStatement: compiler.block({
+            statements: [
               compiler.expressionToStatement({
                 expression: compiler.binaryExpression({
                   left: compiler.propertyAccessExpression({
@@ -134,8 +355,7 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
                 }),
               }),
             ],
-            true,
-          ),
+          }),
         }),
         compiler.ifStatement({
           expression: compiler.propertyAccessExpression({
@@ -143,8 +363,8 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
             isOptional: true,
             name: compiler.identifier({ text: 'body' }),
           }),
-          thenStatement: ts.factory.createBlock(
-            [
+          thenStatement: compiler.block({
+            statements: [
               compiler.expressionToStatement({
                 expression: compiler.binaryExpression({
                   left: compiler.propertyAccessExpression({
@@ -158,8 +378,7 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
                 }),
               }),
             ],
-            true,
-          ),
+          }),
         }),
         compiler.ifStatement({
           expression: compiler.propertyAccessExpression({
@@ -167,8 +386,8 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
             isOptional: true,
             name: compiler.identifier({ text: 'headers' }),
           }),
-          thenStatement: ts.factory.createBlock(
-            [
+          thenStatement: compiler.block({
+            statements: [
               compiler.expressionToStatement({
                 expression: compiler.binaryExpression({
                   left: compiler.propertyAccessExpression({
@@ -182,8 +401,7 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
                 }),
               }),
             ],
-            true,
-          ),
+          }),
         }),
         compiler.ifStatement({
           expression: compiler.propertyAccessExpression({
@@ -191,8 +409,8 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
             isOptional: true,
             name: compiler.identifier({ text: 'path' }),
           }),
-          thenStatement: ts.factory.createBlock(
-            [
+          thenStatement: compiler.block({
+            statements: [
               compiler.expressionToStatement({
                 expression: compiler.binaryExpression({
                   left: compiler.propertyAccessExpression({
@@ -206,8 +424,7 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
                 }),
               }),
             ],
-            true,
-          ),
+          }),
         }),
         compiler.ifStatement({
           expression: compiler.propertyAccessExpression({
@@ -215,8 +432,8 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
             isOptional: true,
             name: compiler.identifier({ text: 'query' }),
           }),
-          thenStatement: ts.factory.createBlock(
-            [
+          thenStatement: compiler.block({
+            statements: [
               compiler.expressionToStatement({
                 expression: compiler.binaryExpression({
                   left: compiler.propertyAccessExpression({
@@ -230,11 +447,10 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
                 }),
               }),
             ],
-            true,
-          ),
+          }),
         }),
         compiler.returnVariable({
-          name: 'params',
+          expression: 'params',
         }),
       ],
       types: [
@@ -279,7 +495,10 @@ const createQueryKeyType = ({ file }: { file: Files[keyof Files] }) => {
             compiler.typeReferenceNode({
               typeName: `Pick<${TOptionsType}, '${getClientBaseUrlKey()}' | 'body' | 'headers' | 'path' | 'query'>`,
             }),
-            compiler.typeInterfaceNode({ properties }),
+            compiler.typeInterfaceNode({
+              properties,
+              useLegacyResolution: true,
+            }),
           ],
         }),
       ],
@@ -298,149 +517,19 @@ const createQueryKeyType = ({ file }: { file: Files[keyof Files] }) => {
   file.add(queryKeyType);
 };
 
-const createTypeData = ({
-  client,
-  file,
-  operation,
-  typesModulePath,
-}: {
-  client: Client;
-  file: Files[keyof Files];
-  operation: Operation;
-  typesModulePath: string;
-}) => {
-  const { name: nameTypeData } = generateImport({
-    client,
-    meta: operation.parameters.length
-      ? {
-          // TODO: this should be exact ref to operation for consistency,
-          // but name should work too as operation ID is unique
-          $ref: operation.name,
-          name: operation.name,
-        }
-      : undefined,
-    nameTransformer: operationDataTypeName,
-    onImport: (name) => {
-      file.import({
-        asType: true,
-        module: typesModulePath,
-        name,
-      });
-    },
-  });
-
-  const typeData = operationOptionsType(nameTypeData);
-
-  return { typeData };
-};
-
-const createTypeError = ({
-  client,
-  file,
-  operation,
-  pluginName,
-  typesModulePath,
-}: {
-  client: Client;
-  file: Files[keyof Files];
-  operation: Operation;
-  pluginName: string;
-  typesModulePath: string;
-}) => {
-  const config = getConfig();
-
-  const { name: nameTypeError } = generateImport({
-    client,
-    meta: {
-      // TODO: this should be exact ref to operation for consistency,
-      // but name should work too as operation ID is unique
-      $ref: operation.name,
-      name: operation.name,
-    },
-    nameTransformer: operationErrorTypeName,
-    onImport: (name) => {
-      file.import({
-        asType: true,
-        module: typesModulePath,
-        name,
-      });
-    },
-  });
-
-  let typeError: ImportExportItemObject = {
-    asType: true,
-    name: nameTypeError,
-  };
-  if (!typeError.name) {
-    typeError = file.import({
-      asType: true,
-      module: pluginName,
-      name: 'DefaultError',
-    });
-  }
-
-  if (config.client.name === '@hey-api/client-axios') {
-    const axiosError = file.import({
-      asType: true,
-      module: 'axios',
-      name: 'AxiosError',
-    });
-    typeError = {
-      ...axiosError,
-      name: `${axiosError.name}<${typeError.name}>`,
-    };
-  }
-
-  return { typeError };
-};
-
-const createTypeResponse = ({
-  client,
-  file,
-  operation,
-  typesModulePath,
-}: {
-  client: Client;
-  file: Files[keyof Files];
-  operation: Operation;
-  typesModulePath: string;
-}) => {
-  const { name: nameTypeResponse } = generateImport({
-    client,
-    meta: {
-      // TODO: this should be exact ref to operation for consistency,
-      // but name should work too as operation ID is unique
-      $ref: operation.name,
-      name: operation.name,
-    },
-    nameTransformer: operationResponseTypeName,
-    onImport: (imported) => {
-      file.import({
-        asType: true,
-        module: typesModulePath,
-        name: imported,
-      });
-    },
-  });
-
-  const typeResponse = nameTypeResponse || 'void';
-
-  return { typeResponse };
-};
-
 const createQueryKeyLiteral = ({
   isInfinite,
-  operation,
+  id,
 }: {
+  id: string;
   isInfinite?: boolean;
-  operation: Operation;
 }) => {
   const queryKeyLiteral = compiler.arrayLiteralExpression({
     elements: [
       compiler.callExpression({
         functionName: createQueryKeyFn,
         parameters: [
-          compiler.stringLiteral({ text: operation.name }),
+          compiler.ots.string(id),
           'options',
           isInfinite ? compiler.ots.boolean(true) : undefined,
         ],
@@ -451,56 +540,178 @@ const createQueryKeyLiteral = ({
   return queryKeyLiteral;
 };
 
-export const handler: PluginDefinition['handler'] = ({
-  client,
-  files,
-  outputParts,
+interface Plugin {
+  name: string;
+  output: string;
+}
+
+const useTypeData = ({
+  context,
+  operation,
   plugin,
+}: {
+  context: IRContext;
+  operation: IROperationObject;
+  plugin: Plugin;
 }) => {
-  if (
-    plugin.name !== '@tanstack/react-query' &&
-    plugin.name !== '@tanstack/solid-query' &&
-    plugin.name !== '@tanstack/svelte-query' &&
-    plugin.name !== '@tanstack/vue-query'
-  ) {
-    return;
+  const identifierData = context.file({ id: 'types' })!.identifier({
+    $ref: operationDataRef({ id: operation.id }),
+    namespace: 'type',
+  });
+  if (identifierData.name) {
+    context.file({ id: plugin.name })!.import({
+      asType: true,
+      module: context
+        .file({ id: plugin.name })!
+        .relativePathToFile({ context, id: 'types' }),
+      name: identifierData.name,
+    });
   }
+  const typeData = operationOptionsType({
+    importedType: identifierData.name,
+  });
+  return typeData;
+};
 
-  checkPrerequisites({ files });
+const useTypeError = ({
+  context,
+  operation,
+  plugin,
+}: {
+  context: IRContext;
+  operation: IROperationObject;
+  plugin: Plugin;
+}) => {
+  const file = context.file({ id: plugin.name })!;
+  const identifierError = context.file({ id: 'types' })!.identifier({
+    $ref: operationErrorRef({ id: operation.id }),
+    namespace: 'type',
+  });
+  if (identifierError.name) {
+    file.import({
+      asType: true,
+      module: context
+        .file({ id: plugin.name })!
+        .relativePathToFile({ context, id: 'types' }),
+      name: identifierError.name,
+    });
+  }
+  let typeError: ImportExportItemObject = {
+    asType: true,
+    name: identifierError.name || '',
+  };
+  if (!typeError.name) {
+    typeError = file.import({
+      asType: true,
+      module: plugin.name,
+      name: 'DefaultError',
+    });
+  }
+  if (context.config.client.name === '@hey-api/client-axios') {
+    const axiosError = file.import({
+      asType: true,
+      module: 'axios',
+      name: 'AxiosError',
+    });
+    typeError = {
+      ...axiosError,
+      name: `${axiosError.name}<${typeError.name}>`,
+    };
+  }
+  return typeError;
+};
 
-  const file = files[plugin.name];
+const useTypeResponse = ({
+  context,
+  operation,
+  plugin,
+}: {
+  context: IRContext;
+  operation: IROperationObject;
+  plugin: Plugin;
+}) => {
+  const identifierResponse = context.file({ id: 'types' })!.identifier({
+    $ref: operationResponseRef({ id: operation.id }),
+    namespace: 'type',
+  });
+  if (identifierResponse.name) {
+    context.file({ id: plugin.name })!.import({
+      asType: true,
+      module: context
+        .file({ id: plugin.name })!
+        .relativePathToFile({ context, id: 'types' }),
+      name: identifierResponse.name,
+    });
+  }
+  const typeResponse = identifierResponse.name || 'unknown';
+  return typeResponse;
+};
+
+export const handler: PluginHandler<
+  | ReactQueryConfig
+  | AngularQueryConfig
+  | SolidQueryConfig
+  | SvelteQueryConfig
+  | VueQueryConfig
+> = ({ context, plugin }) => {
+  const file = context.createFile({
+    id: plugin.name,
+    path: plugin.output,
+  });
 
   file.import({
     asType: true,
-    module: clientModulePath(),
+    module: clientModulePath({
+      config: context.config,
+      sourceOutput: plugin.output,
+    }),
     name: clientOptionsTypeName(),
   });
 
-  const relativePath =
-    new Array(outputParts.length).fill('').join('../') || './';
-  const typesModulePath = relativePath + files.types.getName(false);
-
   const mutationsType =
+    plugin.name === '@tanstack/angular-query-experimental' ||
     plugin.name === '@tanstack/svelte-query' ||
     plugin.name === '@tanstack/solid-query'
       ? 'MutationOptions'
       : 'UseMutationOptions';
 
   let typeInfiniteData!: ImportExportItem;
+  let hasCreateInfiniteParamsFunction = false;
   let hasCreateQueryKeyParamsFunction = false;
   let hasInfiniteQueries = false;
   let hasMutations = false;
   let hasQueries = false;
 
-  for (const service of client.services) {
-    for (const operation of service.operations) {
-      const queryFn = toOperationName(operation, true);
+  for (const path in context.ir.paths) {
+    const pathItem = context.ir.paths[path as keyof IRPathsObject];
+
+    for (const _method in pathItem) {
+      const method = _method as keyof IRPathItemObject;
+      const operation = pathItem[method]!;
+
+      const queryFn = [
+        context.config.plugins['@hey-api/services']?.asClass &&
+          transformServiceName({
+            config: context.config,
+            name: getServiceName(operation.tags?.[0] || 'default'),
+          }),
+        serviceFunctionIdentifier({
+          config: context.config,
+          handleIllegal: !context.config.plugins['@hey-api/services']?.asClass,
+          id: operation.id,
+          operation,
+        }),
+      ]
+        .filter(Boolean)
+        .join('.');
       let hasUsedQueryFn = false;
+
+      const isRequired = hasOperationDataRequired(operation);
 
       // queries
       if (
         plugin.queryOptions &&
-        (['GET', 'POST'] as ReadonlyArray<Method>).includes(operation.method)
+        (['get', 'post'] as (typeof method)[]).includes(method)
       ) {
         if (!hasQueries) {
           hasQueries = true;
@@ -519,193 +730,31 @@ export const handler: PluginDefinition['handler'] = ({
 
         hasUsedQueryFn = true;
 
-        const { typeData } = createTypeData({
-          client,
-          file,
-          operation,
-          typesModulePath,
-        });
+        const typeData = useTypeData({ context, operation, plugin });
 
-        const isRequired = isOperationParameterRequired(operation.parameters);
-
-        const expression = compiler.arrowFunction({
-          parameters: [
-            {
-              isRequired,
-              name: 'options',
-              type: typeData,
-            },
-          ],
-          statements: [
-            compiler.returnFunctionCall({
-              args: [
-                compiler.objectExpression({
-                  obj: [
-                    {
-                      key: 'queryFn',
-                      value: compiler.arrowFunction({
-                        async: true,
-                        multiLine: true,
-                        parameters: [
-                          {
-                            destructure: [
-                              {
-                                name: 'queryKey',
-                              },
-                            ],
-                          },
-                        ],
-                        statements: [
-                          compiler.constVariable({
-                            destructure: true,
-                            expression: compiler.awaitExpression({
-                              expression: compiler.callExpression({
-                                functionName: queryFn,
-                                parameters: [
-                                  compiler.objectExpression({
-                                    multiLine: true,
-                                    obj: [
-                                      {
-                                        spread: 'options',
-                                      },
-                                      {
-                                        spread: 'queryKey[0]',
-                                      },
-                                      {
-                                        key: 'throwOnError',
-                                        value: true,
-                                      },
-                                    ],
-                                  }),
-                                ],
-                              }),
-                            }),
-                            name: 'data',
-                          }),
-                          compiler.returnVariable({
-                            name: 'data',
-                          }),
-                        ],
-                      }),
-                    },
-                    {
-                      key: 'queryKey',
-                      value: createQueryKeyLiteral({
-                        operation,
-                      }),
-                    },
-                  ],
-                }),
-              ],
-              name: queryOptionsFn,
+        const queryKeyStatement = compiler.constVariable({
+          exportConst: true,
+          expression: compiler.arrowFunction({
+            parameters: [
+              {
+                isRequired,
+                name: 'options',
+                type: typeData,
+              },
+            ],
+            statements: createQueryKeyLiteral({
+              id: operation.id,
             }),
-          ],
+          }),
+          name: queryKeyFunctionIdentifier({ context, operation }),
         });
+        file.add(queryKeyStatement);
+
         const statement = compiler.constVariable({
           // TODO: describe options, same as the actual function call
           comment: [],
           exportConst: true,
-          expression,
-          name: toQueryOptionsName(operation),
-          // TODO: add type error
-          // TODO: AxiosError<PutSubmissionMetaError>
-        });
-        file.add(statement);
-      }
-
-      // infinite queries
-      if (
-        plugin.infiniteQueryOptions &&
-        (['GET', 'POST'] as ReadonlyArray<Method>).includes(operation.method)
-      ) {
-        // the actual pagination field might be nested inside parameter, e.g. body
-        let paginationField!: Model | OperationParameter;
-
-        const paginationParameter = operation.parameters.find((parameter) => {
-          paginationWordsRegExp.lastIndex = 0;
-          if (paginationWordsRegExp.test(parameter.name)) {
-            paginationField = parameter;
-            return true;
-          }
-
-          if (parameter.in !== 'body') {
-            return;
-          }
-
-          if (parameter.export === 'reference') {
-            const ref = parameter.$refs[0];
-            const refModel = client.models.find(
-              (model) => model.meta?.$ref === ref,
-            );
-            return refModel?.properties.find((property) => {
-              paginationWordsRegExp.lastIndex = 0;
-              if (paginationWordsRegExp.test(property.name)) {
-                paginationField = property;
-                return true;
-              }
-            });
-          }
-
-          return parameter.properties.find((property) => {
-            paginationWordsRegExp.lastIndex = 0;
-            if (paginationWordsRegExp.test(property.name)) {
-              paginationField = property;
-              return true;
-            }
-          });
-        });
-
-        if (paginationParameter && paginationField) {
-          if (!hasInfiniteQueries) {
-            hasInfiniteQueries = true;
-
-            if (!hasCreateQueryKeyParamsFunction) {
-              createQueryKeyType({ file });
-              createQueryKeyFunction({ file });
-              hasCreateQueryKeyParamsFunction = true;
-            }
-
-            file.import({
-              module: plugin.name,
-              name: infiniteQueryOptionsFn,
-            });
-
-            typeInfiniteData = file.import({
-              asType: true,
-              module: plugin.name,
-              name: 'InfiniteData',
-            });
-          }
-
-          hasUsedQueryFn = true;
-
-          const { typeData } = createTypeData({
-            client,
-            file,
-            operation,
-            typesModulePath,
-          });
-          const { typeError } = createTypeError({
-            client,
-            file,
-            operation,
-            pluginName: plugin.name,
-            typesModulePath,
-          });
-          const { typeResponse } = createTypeResponse({
-            client,
-            file,
-            operation,
-            typesModulePath,
-          });
-
-          const isRequired = isOperationParameterRequired(operation.parameters);
-
-          const typeQueryKey = `${queryKeyName}<${typeData}>`;
-          const typePageObjectParam = `Pick<${typeQueryKey}[0], 'body' | 'headers' | 'path' | 'query'>`;
-          const typePageParam = `${paginationField.base} | ${typePageObjectParam}`;
-
-          const expression = compiler.arrowFunction({
+          expression: compiler.arrowFunction({
             parameters: [
               {
                 isRequired,
@@ -717,12 +766,6 @@ export const handler: PluginDefinition['handler'] = ({
               compiler.returnFunctionCall({
                 args: [
                   compiler.objectExpression({
-                    comments: [
-                      {
-                        jsdoc: false,
-                        lines: ['@ts-ignore'],
-                      },
-                    ],
                     obj: [
                       {
                         key: 'queryFn',
@@ -733,58 +776,15 @@ export const handler: PluginDefinition['handler'] = ({
                             {
                               destructure: [
                                 {
-                                  name: 'pageParam',
+                                  name: 'queryKey',
                                 },
                                 {
-                                  name: 'queryKey',
+                                  name: 'signal',
                                 },
                               ],
                             },
                           ],
                           statements: [
-                            compiler.constVariable({
-                              comment: [
-                                {
-                                  jsdoc: false,
-                                  lines: ['@ts-ignore'],
-                                },
-                              ],
-                              expression: compiler.conditionalExpression({
-                                condition: compiler.binaryExpression({
-                                  left: compiler.typeOfExpression({
-                                    text: 'pageParam',
-                                  }),
-                                  operator: '===',
-                                  right: compiler.stringLiteral({
-                                    text: 'object',
-                                  }),
-                                }),
-                                whenFalse: compiler.objectExpression({
-                                  multiLine: true,
-                                  obj: [
-                                    {
-                                      key: getPaginationIn(paginationParameter),
-                                      value: compiler.objectExpression({
-                                        multiLine: true,
-                                        obj: [
-                                          {
-                                            key: paginationField.name,
-                                            value: compiler.identifier({
-                                              text: 'pageParam',
-                                            }),
-                                          },
-                                        ],
-                                      }),
-                                    },
-                                  ],
-                                }),
-                                whenTrue: compiler.identifier({
-                                  text: 'pageParam',
-                                }),
-                              }),
-                              name: 'page',
-                              typeName: typePageObjectParam,
-                            }),
                             compiler.constVariable({
                               destructure: true,
                               expression: compiler.awaitExpression({
@@ -801,61 +801,10 @@ export const handler: PluginDefinition['handler'] = ({
                                           spread: 'queryKey[0]',
                                         },
                                         {
-                                          key: 'body',
-                                          value: compiler.objectExpression({
-                                            multiLine: true,
-                                            obj: [
-                                              {
-                                                assertion: 'any',
-                                                spread: 'queryKey[0].body',
-                                              },
-                                              {
-                                                assertion: 'any',
-                                                spread: 'page.body',
-                                              },
-                                            ],
-                                          }),
-                                        },
-                                        {
-                                          key: 'headers',
-                                          value: compiler.objectExpression({
-                                            multiLine: true,
-                                            obj: [
-                                              {
-                                                spread: 'queryKey[0].headers',
-                                              },
-                                              {
-                                                spread: 'page.headers',
-                                              },
-                                            ],
-                                          }),
-                                        },
-                                        {
-                                          key: 'path',
-                                          value: compiler.objectExpression({
-                                            multiLine: true,
-                                            obj: [
-                                              {
-                                                spread: 'queryKey[0].path',
-                                              },
-                                              {
-                                                spread: 'page.path',
-                                              },
-                                            ],
-                                          }),
-                                        },
-                                        {
-                                          key: 'query',
-                                          value: compiler.objectExpression({
-                                            multiLine: true,
-                                            obj: [
-                                              {
-                                                spread: 'queryKey[0].query',
-                                              },
-                                              {
-                                                spread: 'page.query',
-                                              },
-                                            ],
+                                          key: 'signal',
+                                          shorthand: true,
+                                          value: compiler.identifier({
+                                            text: 'signal',
                                           }),
                                         },
                                         {
@@ -870,39 +819,272 @@ export const handler: PluginDefinition['handler'] = ({
                               name: 'data',
                             }),
                             compiler.returnVariable({
-                              name: 'data',
+                              expression: 'data',
                             }),
                           ],
                         }),
                       },
                       {
                         key: 'queryKey',
-                        value: createQueryKeyLiteral({
-                          isInfinite: true,
-                          operation,
+                        value: compiler.callExpression({
+                          functionName: queryKeyFunctionIdentifier({
+                            context,
+                            operation,
+                          }),
+                          parameters: ['options'],
                         }),
                       },
                     ],
                   }),
                 ],
-                name: infiniteQueryOptionsFn,
-                // TODO: better types syntax
-                types: [
-                  typeResponse,
-                  typeError.name,
-                  `${typeof typeInfiniteData === 'string' ? typeInfiniteData : typeInfiniteData.name}<${typeResponse}>`,
-                  typeQueryKey,
-                  typePageParam,
-                ],
+                name: queryOptionsFn,
               }),
             ],
+          }),
+          name: queryOptionsFunctionIdentifier({ context, operation }),
+          // TODO: add type error
+          // TODO: AxiosError<PutSubmissionMetaError>
+        });
+        file.add(statement);
+      }
+
+      // infinite queries
+      if (
+        plugin.infiniteQueryOptions &&
+        (['get', 'post'] as (typeof method)[]).includes(method)
+      ) {
+        const pagination = operationPagination({ context, operation });
+
+        if (pagination) {
+          if (!hasInfiniteQueries) {
+            hasInfiniteQueries = true;
+
+            if (!hasCreateQueryKeyParamsFunction) {
+              createQueryKeyType({ file });
+              createQueryKeyFunction({ file });
+              hasCreateQueryKeyParamsFunction = true;
+            }
+
+            if (!hasCreateInfiniteParamsFunction) {
+              createInfiniteParamsFunction({ file });
+              hasCreateInfiniteParamsFunction = true;
+            }
+
+            file.import({
+              module: plugin.name,
+              name: infiniteQueryOptionsFn,
+            });
+
+            typeInfiniteData = file.import({
+              asType: true,
+              module: plugin.name,
+              name: 'InfiniteData',
+            });
+          }
+
+          hasUsedQueryFn = true;
+
+          const typeData = useTypeData({ context, operation, plugin });
+          const typeError = useTypeError({ context, operation, plugin });
+          const typeResponse = useTypeResponse({ context, operation, plugin });
+
+          const typeQueryKey = `${queryKeyName}<${typeData}>`;
+          const typePageObjectParam = `Pick<${typeQueryKey}[0], 'body' | 'headers' | 'path' | 'query'>`;
+          // TODO: parser - this is a bit clunky, need to compile type to string because
+          // `compiler.returnFunctionCall()` accepts only strings, should be cleaned up
+          const typePageParam = `${tsNodeToString({
+            node: schemaToType({
+              context,
+              schema: pagination.schema,
+            }),
+            unescape: true,
+          })} | ${typePageObjectParam}`;
+
+          const queryKeyStatement = compiler.constVariable({
+            exportConst: true,
+            expression: compiler.arrowFunction({
+              parameters: [
+                {
+                  isRequired,
+                  name: 'options',
+                  type: typeData,
+                },
+              ],
+              returnType: typeQueryKey,
+              statements: createQueryKeyLiteral({
+                id: operation.id,
+                isInfinite: true,
+              }),
+            }),
+            name: queryKeyFunctionIdentifier({
+              context,
+              isInfinite: true,
+              operation,
+            }),
           });
+          file.add(queryKeyStatement);
+
           const statement = compiler.constVariable({
             // TODO: describe options, same as the actual function call
             comment: [],
             exportConst: true,
-            expression,
-            name: toInfiniteQueryOptionsName(operation),
+            expression: compiler.arrowFunction({
+              parameters: [
+                {
+                  isRequired,
+                  name: 'options',
+                  type: typeData,
+                },
+              ],
+              statements: [
+                compiler.returnFunctionCall({
+                  args: [
+                    compiler.objectExpression({
+                      comments: [
+                        {
+                          jsdoc: false,
+                          lines: ['@ts-ignore'],
+                        },
+                      ],
+                      obj: [
+                        {
+                          key: 'queryFn',
+                          value: compiler.arrowFunction({
+                            async: true,
+                            multiLine: true,
+                            parameters: [
+                              {
+                                destructure: [
+                                  {
+                                    name: 'pageParam',
+                                  },
+                                  {
+                                    name: 'queryKey',
+                                  },
+                                  {
+                                    name: 'signal',
+                                  },
+                                ],
+                              },
+                            ],
+                            statements: [
+                              compiler.constVariable({
+                                comment: [
+                                  {
+                                    jsdoc: false,
+                                    lines: ['@ts-ignore'],
+                                  },
+                                ],
+                                expression: compiler.conditionalExpression({
+                                  condition: compiler.binaryExpression({
+                                    left: compiler.typeOfExpression({
+                                      text: 'pageParam',
+                                    }),
+                                    operator: '===',
+                                    right: compiler.ots.string('object'),
+                                  }),
+                                  whenFalse: compiler.objectExpression({
+                                    multiLine: true,
+                                    obj: [
+                                      {
+                                        key: pagination.in,
+                                        value: compiler.objectExpression({
+                                          multiLine: true,
+                                          obj: [
+                                            {
+                                              key: pagination.name,
+                                              value: compiler.identifier({
+                                                text: 'pageParam',
+                                              }),
+                                            },
+                                          ],
+                                        }),
+                                      },
+                                    ],
+                                  }),
+                                  whenTrue: compiler.identifier({
+                                    text: 'pageParam',
+                                  }),
+                                }),
+                                name: 'page',
+                                typeName: typePageObjectParam,
+                              }),
+                              compiler.constVariable({
+                                expression: compiler.callExpression({
+                                  functionName: 'createInfiniteParams',
+                                  parameters: ['queryKey', 'page'],
+                                }),
+                                name: 'params',
+                              }),
+                              compiler.constVariable({
+                                destructure: true,
+                                expression: compiler.awaitExpression({
+                                  expression: compiler.callExpression({
+                                    functionName: queryFn,
+                                    parameters: [
+                                      compiler.objectExpression({
+                                        multiLine: true,
+                                        obj: [
+                                          {
+                                            spread: 'options',
+                                          },
+                                          {
+                                            spread: 'params',
+                                          },
+                                          {
+                                            key: 'signal',
+                                            shorthand: true,
+                                            value: compiler.identifier({
+                                              text: 'signal',
+                                            }),
+                                          },
+                                          {
+                                            key: 'throwOnError',
+                                            value: true,
+                                          },
+                                        ],
+                                      }),
+                                    ],
+                                  }),
+                                }),
+                                name: 'data',
+                              }),
+                              compiler.returnVariable({
+                                expression: 'data',
+                              }),
+                            ],
+                          }),
+                        },
+                        {
+                          key: 'queryKey',
+                          value: compiler.callExpression({
+                            functionName: queryKeyFunctionIdentifier({
+                              context,
+                              isInfinite: true,
+                              operation,
+                            }),
+                            parameters: ['options'],
+                          }),
+                        },
+                      ],
+                    }),
+                  ],
+                  name: infiniteQueryOptionsFn,
+                  // TODO: better types syntax
+                  types: [
+                    typeResponse,
+                    typeError.name,
+                    `${typeof typeInfiniteData === 'string' ? typeInfiniteData : typeInfiniteData.name}<${typeResponse}>`,
+                    typeQueryKey,
+                    typePageParam,
+                  ],
+                }),
+              ],
+            }),
+            name: infiniteQueryOptionsFunctionIdentifier({
+              context,
+              operation,
+            }),
           });
           file.add(statement);
         }
@@ -911,8 +1093,8 @@ export const handler: PluginDefinition['handler'] = ({
       // mutations
       if (
         plugin.mutationOptions &&
-        (['DELETE', 'PATCH', 'POST', 'PUT'] as ReadonlyArray<Method>).includes(
-          operation.method,
+        (['delete', 'patch', 'post', 'put'] as (typeof method)[]).includes(
+          method,
         )
       ) {
         if (!hasMutations) {
@@ -927,27 +1109,18 @@ export const handler: PluginDefinition['handler'] = ({
 
         hasUsedQueryFn = true;
 
-        const { typeData } = createTypeData({
-          client,
-          file,
-          operation,
-          typesModulePath,
-        });
-        const { typeError } = createTypeError({
-          client,
-          file,
-          operation,
-          pluginName: plugin.name,
-          typesModulePath,
-        });
-        const { typeResponse } = createTypeResponse({
-          client,
-          file,
-          operation,
-          typesModulePath,
-        });
+        const typeData = useTypeData({ context, operation, plugin });
+        const typeError = useTypeError({ context, operation, plugin });
+        const typeResponse = useTypeResponse({ context, operation, plugin });
 
         const expression = compiler.arrowFunction({
+          parameters: [
+            {
+              isRequired: false,
+              name: 'options',
+              type: `Partial<${typeData}>`,
+            },
+          ],
           statements: [
             compiler.constVariable({
               expression: compiler.objectExpression({
@@ -959,7 +1132,7 @@ export const handler: PluginDefinition['handler'] = ({
                       multiLine: true,
                       parameters: [
                         {
-                          name: 'options',
+                          name: 'localOptions',
                         },
                       ],
                       statements: [
@@ -976,6 +1149,9 @@ export const handler: PluginDefinition['handler'] = ({
                                       spread: 'options',
                                     },
                                     {
+                                      spread: 'localOptions',
+                                    },
+                                    {
                                       key: 'throwOnError',
                                       value: true,
                                     },
@@ -987,7 +1163,7 @@ export const handler: PluginDefinition['handler'] = ({
                           name: 'data',
                         }),
                         compiler.returnVariable({
-                          name: 'data',
+                          expression: 'data',
                         }),
                       ],
                     }),
@@ -999,7 +1175,7 @@ export const handler: PluginDefinition['handler'] = ({
               typeName: `${mutationsType}<${typeResponse}, ${typeError.name}, ${typeData}>`,
             }),
             compiler.returnVariable({
-              name: mutationOptionsFn,
+              expression: mutationOptionsFn,
             }),
           ],
         });
@@ -1008,24 +1184,26 @@ export const handler: PluginDefinition['handler'] = ({
           comment: [],
           exportConst: true,
           expression,
-          name: toMutationOptionsName(operation),
+          name: mutationOptionsFunctionIdentifier({ context, operation }),
         });
         file.add(statement);
       }
 
-      const servicesModulePath = relativePath + files.services.getName(false);
-
       if (hasQueries || hasInfiniteQueries) {
         file.import({
-          module: servicesModulePath,
+          module: context
+            .file({ id: plugin.name })!
+            .relativePathToFile({ context, id: 'services' }),
           name: 'client',
         });
       }
 
       if (hasUsedQueryFn) {
         file.import({
-          module: servicesModulePath,
-          name: queryFn,
+          module: context
+            .file({ id: plugin.name })!
+            .relativePathToFile({ context, id: 'services' }),
+          name: queryFn.split('.')[0],
         });
       }
     }

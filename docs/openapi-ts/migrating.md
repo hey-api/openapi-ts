@@ -5,7 +5,7 @@ description: Migrating to @hey-api/openapi-ts.
 
 # Migrating
 
-While we try to avoid breaking changes, sometimes it's unavoidable in order to offer you the latest features. This page lists changes that require updates to your code. If you run into an issue with migration, please [open an issue](https://github.com/hey-api/openapi-ts/issues).
+While we try to avoid breaking changes, sometimes it's unavoidable in order to offer you the latest features. This page lists changes that require updates to your code. If you run into a problem with migration, please [open an issue](https://github.com/hey-api/openapi-ts/issues).
 
 ## @next
 
@@ -32,7 +32,7 @@ import { DefaultService } from 'client/services.gen';
 import type { Model } from 'client/types.gen';
 ```
 
-You don't have to update imports from `core` directory. These will be addressed in later releases.
+You don't have to update imports from `core` folder. These will be addressed in later releases.
 
 ### Deprecated `base`
 
@@ -50,11 +50,278 @@ This config option is deprecated and will be removed in favor of [clients](./cli
 
 This config option is deprecated and will be removed.
 
+## v0.55.0
+
+This release adds the ability to filter your OpenAPI specification before it's processed. This feature will be useful if you are working with a large specification and are interested in generating output only from a small subset.
+
+This feature is available only in the experimental parser. In the future, this will become the default parser. To opt-in to the experimental parser, set the `experimentalParser` flag in your configuration to `true`.
+
+### Deprecated `include` in `@hey-api/types`
+
+This config option is deprecated and will be removed when the experimental parser becomes the default.
+
+### Deprecated `filter` in `@hey-api/services`
+
+This config option is deprecated and will be removed when the experimental parser becomes the default.
+
+### Added `input.include` option
+
+This config option can be used to replace the deprecated options. It accepts a regular expression string matching against references within the bundled specification.
+
+```js
+export default {
+  client: '@hey-api/client-fetch',
+  experimentalParser: true,
+  input: {
+    include: '^(#/components/schemas/foo|#/paths/api/v1/foo/get)$', // [!code ++]
+    path: 'path/to/openapi.json',
+  },
+  output: 'src/client',
+};
+```
+
+The configuration above will process only the schema named `foo` and `GET` operation for the `/api/v1/foo` path.
+
+## v0.54.0
+
+This release makes plugins first-class citizens. In order to achieve that, the following breaking changes were introduced.
+
+### Removed CLI options
+
+The `--types`, `--schemas`, and `--services` CLI options have been removed. You can list which plugins you'd like to use explicitly by passing a list of plugins as `--plugins <plugin1> <plugin2>`
+
+### Removed `*.export` option
+
+Previously, you could explicitly disable export of certain artifacts using the `*.export` option or its shorthand variant. These were both removed. You can now disable export of specific artifacts by manually defining an array of `plugins` and excluding the unwanted plugin.
+
+::: code-group
+
+```js [shorthand]
+export default {
+  client: '@hey-api/client-fetch',
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  schemas: false, // [!code --]
+  plugins: ['@hey-api/types', '@hey-api/services'], // [!code ++]
+};
+```
+
+```js [*.export]
+export default {
+  client: '@hey-api/client-fetch',
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  schemas: {
+    export: false, // [!code --]
+  },
+  plugins: ['@hey-api/types', '@hey-api/services'], // [!code ++]
+};
+```
+
+:::
+
+### Renamed `schemas.name` option
+
+Each plugin definition contains a `name` field. This was conflicting with the `schemas.name` option. As a result, it has been renamed to `nameBuilder`.
+
+```js
+export default {
+  client: '@hey-api/client-fetch',
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  schemas: {
+    name: (name) => `${name}Schema`, // [!code --]
+  },
+  plugins: [
+    // ...other plugins
+    {
+      nameBuilder: (name) => `${name}Schema`, // [!code ++]
+      name: '@hey-api/schemas',
+    },
+  ],
+};
+```
+
+### Removed `services.include` shorthand option
+
+Previously, you could use a string value as a shorthand for the `services.include` configuration option. You can now achieve the same result using the `include` option.
+
+```js
+export default {
+  client: '@hey-api/client-fetch',
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  services: '^MySchema', // [!code --]
+  plugins: [
+    // ...other plugins
+    {
+      include: '^MySchema', // [!code ++]
+      name: '@hey-api/services',
+    },
+  ],
+};
+```
+
+### Renamed `services.name` option
+
+Each plugin definition contains a `name` field. This was conflicting with the `services.name` option. As a result, it has been renamed to `serviceNameBuilder`.
+
+```js
+export default {
+  client: '@hey-api/client-fetch',
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  services: {
+    name: '{{name}}Service', // [!code --]
+  },
+  plugins: [
+    // ...other plugins
+    {
+      serviceNameBuilder: '{{name}}Service', // [!code ++]
+      name: '@hey-api/services',
+    },
+  ],
+};
+```
+
+### Renamed `types.dates` option
+
+Previously, you could set `types.dates` to a boolean or a string value, depending on whether you wanted to transform only type strings into dates, or runtime code too. Many people found these options confusing, so they have been simplified to a boolean and extracted into a separate `@hey-api/transformers` plugin.
+
+```js
+export default {
+  client: '@hey-api/client-fetch',
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  types: {
+    dates: 'types+transform', // [!code --]
+  },
+  plugins: [
+    // ...other plugins
+    {
+      dates: true, // [!code ++]
+      name: '@hey-api/transformers',
+    },
+  ],
+};
+```
+
+### Removed `types.include` shorthand option
+
+Previously, you could use a string value as a shorthand for the `types.include` configuration option. You can now achieve the same result using the `include` option.
+
+```js
+export default {
+  client: '@hey-api/client-fetch',
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  types: '^MySchema', // [!code --]
+  plugins: [
+    // ...other plugins
+    {
+      include: '^MySchema', // [!code ++]
+      name: '@hey-api/types',
+    },
+  ],
+};
+```
+
+### Renamed `types.name` option
+
+Each plugin definition contains a `name` field. This was conflicting with the `types.name` option. As a result, it has been renamed to `style`.
+
+```js
+export default {
+  client: '@hey-api/client-fetch',
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  types: {
+    name: 'PascalCase', // [!code --]
+  },
+  plugins: [
+    // ...other plugins
+    {
+      name: '@hey-api/types',
+      style: 'PascalCase', // [!code ++]
+    },
+  ],
+};
+```
+
+## v0.53.0
+
+### Changed schemas name pattern
+
+Previously, generated schemas would have their definition names prefixed with `$`. This was problematic when using them with Svelte due to reserved keyword conflicts. The new naming pattern for schemas suffixes their definition names with `Schema`. You can continue using the previous pattern by setting the `schemas.name` configuration option.
+
+```js
+export default {
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  schemas: {
+    name: (name) => `$${name}`, // [!code ++]
+  },
+};
+```
+
+### Renamed legacy clients
+
+Legacy clients were renamed to signal they are deprecated more clearly. To continue using legacy clients, you will need to update your configuration and prefix them with `legacy/`.
+
+::: code-group
+
+```js [fetch]
+export default {
+  client: 'fetch', // [!code --]
+  client: 'legacy/fetch', // [!code ++]
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+};
+```
+
+```js [axios]
+export default {
+  client: 'axios', // [!code --]
+  client: 'legacy/axios', // [!code ++]
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+};
+```
+
+```js [angular]
+export default {
+  client: 'angular', // [!code --]
+  client: 'legacy/angular', // [!code ++]
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+};
+```
+
+```js [node]
+export default {
+  client: 'node', // [!code --]
+  client: 'legacy/node', // [!code ++]
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+};
+```
+
+```js [xhr]
+export default {
+  client: 'xhr', // [!code --]
+  client: 'legacy/xhr', // [!code ++]
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+};
+```
+
+:::
+
 ## v0.52.0
 
 ### Removed internal `client` export
 
-Previously, standalone clients would create a default client which you'd then import and configure.
+Previously, client packages would create a default client which you'd then import and configure.
 
 ```js
 import { client, createClient } from '@hey-api/client-fetch';
@@ -68,7 +335,7 @@ console.log(client.getConfig().baseUrl); // <-- 'https://example.com'
 
 This client instance was used internally by services unless overridden. Apart from running `createClient()` twice, people were confused about the meaning of `global` configuration option.
 
-Starting with v0.52.0, standalone clients will not create a default client. Instead, services will define their own client. You can now achieve the same configuration by importing `client` from services and using the new `setConfig()` method.
+Starting with v0.52.0, client packages will not create a default client. Instead, services will define their own client. You can now achieve the same configuration by importing `client` from services and using the new `setConfig()` method.
 
 ```js
 import { client } from 'client/services.gen';
@@ -86,12 +353,12 @@ console.log(client.getConfig().baseUrl); // <-- 'https://example.com'
 
 Client now has to be explicitly specified and `@hey-api/openapi-ts` will no longer generate a legacy Fetch API client by default. To preserve the previous default behavior, set the `client` option to `fetch`.
 
-```js{2}
+```js
 export default {
-  client: 'fetch',
+  client: 'fetch', // [!code ++]
   input: 'path/to/openapi.json',
   output: 'src/client',
-}
+};
 ```
 
 ## v0.48.0
@@ -137,14 +404,14 @@ foo(); // all references need to be changed
 
 If you want to preserve the old behavior, you can set the newly exposed `services.asClass` option to `true.`
 
-```js{5}
+```js
 export default {
   input: 'path/to/openapi.json',
   output: 'src/client',
   services: {
-    asClass: true,
+    asClass: true, // [!code ++]
   },
-}
+};
 ```
 
 ## v0.45.0
@@ -153,12 +420,12 @@ export default {
 
 `@hey-api/openapi-ts` will no longer infer which client you want to generate. By default, we will create a `fetch` client. If you want a different client, you can specify it using the `client` option.
 
-```js{2}
+```js
 export default {
-  client: 'axios',
+  client: 'axios', // [!code ++]
   input: 'path/to/openapi.json',
   output: 'src/client',
-}
+};
 ```
 
 ## v0.44.0
@@ -167,28 +434,30 @@ export default {
 
 This config option has been moved. You can now configure formatter using the `output.format` option.
 
-```js{4}
+```js
 export default {
+  format: 'prettier', // [!code --]
   input: 'path/to/openapi.json',
   output: {
-    format: 'prettier',
+    format: 'prettier', // [!code ++]
     path: 'src/client',
   },
-}
+};
 ```
 
 ### Moved `lint`
 
 This config option has been moved. You can now configure linter using the `output.lint` option.
 
-```js{4}
+```js
 export default {
   input: 'path/to/openapi.json',
+  lint: 'eslint', // [!code --]
   output: {
-    lint: 'eslint',
+    lint: 'eslint', // [!code ++]
     path: 'src/client',
   },
-}
+};
 ```
 
 ## v0.43.0
@@ -226,14 +495,15 @@ console.log(Foo.value); // all references need to be changed
 
 This config option has been moved. You can now configure enums using the `types.enums` option.
 
-```js{5}
+```js
 export default {
+  enums: 'javascript', // [!code --]
   input: 'path/to/openapi.json',
   output: 'src/client',
   types: {
-    enums: 'javascript',
+    enums: 'javascript', // [!code ++]
   },
-}
+};
 ```
 
 ## v0.42.0

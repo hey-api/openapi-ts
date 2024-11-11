@@ -1,5 +1,211 @@
 # @hey-api/docs
 
+## 0.7.2
+
+### Patch Changes
+
+- [#1253](https://github.com/hey-api/openapi-ts/pull/1253) [`01dee3d`](https://github.com/hey-api/openapi-ts/commit/01dee3df879232939e43355231147b3d910fb482) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update sponsorship links
+
+## 0.7.1
+
+### Patch Changes
+
+- [#1222](https://github.com/hey-api/openapi-ts/pull/1222) [`ceb4363`](https://github.com/hey-api/openapi-ts/commit/ceb4363d52893ebe947e21aac402b868ff2820d4) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add support for @tanstack/angular-query-experimental package
+
+## 0.7.0
+
+### Minor Changes
+
+- [#1201](https://github.com/hey-api/openapi-ts/pull/1201) [`972a93a`](https://github.com/hey-api/openapi-ts/commit/972a93a91a945cc9ead73c08bb0fa9ee120433ba) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: make plugins first-class citizens
+
+  This release makes plugins first-class citizens. In order to achieve that, the following breaking changes were introduced.
+
+  ### Removed CLI options
+
+  The `--types`, `--schemas`, and `--services` CLI options have been removed. You can list which plugins you'd like to use explicitly by passing a list of plugins as `--plugins <plugin1> <plugin2>`
+
+  ### Removed `*.export` option
+
+  Previously, you could explicitly disable export of certain artifacts using the `*.export` option or its shorthand variant. These were both removed. You can now disable export of specific artifacts by manually defining an array of `plugins` and excluding the unwanted plugin.
+
+  ::: code-group
+
+  ```js [shorthand]
+  export default {
+    client: '@hey-api/client-fetch',
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    schemas: false, // [!code --]
+    plugins: ['@hey-api/types', '@hey-api/services'], // [!code ++]
+  };
+  ```
+
+  ```js [*.export]
+  export default {
+    client: '@hey-api/client-fetch',
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    schemas: {
+      export: false, // [!code --]
+    },
+    plugins: ['@hey-api/types', '@hey-api/services'], // [!code ++]
+  };
+  ```
+
+  :::
+
+  ### Renamed `schemas.name` option
+
+  Each plugin definition contains a `name` field. This was conflicting with the `schemas.name` option. As a result, it has been renamed to `nameBuilder`.
+
+  ```js
+  export default {
+    client: '@hey-api/client-fetch',
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    schemas: {
+      name: (name) => `${name}Schema`, // [!code --]
+    },
+    plugins: [
+      // ...other plugins
+      {
+        nameBuilder: (name) => `${name}Schema`, // [!code ++]
+        name: '@hey-api/schemas',
+      },
+    ],
+  };
+  ```
+
+  ### Removed `services.include` shorthand option
+
+  Previously, you could use a string value as a shorthand for the `services.include` configuration option. You can now achieve the same result using the `include` option.
+
+  ```js
+  export default {
+    client: '@hey-api/client-fetch',
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    services: '^MySchema', // [!code --]
+    plugins: [
+      // ...other plugins
+      {
+        include: '^MySchema', // [!code ++]
+        name: '@hey-api/services',
+      },
+    ],
+  };
+  ```
+
+  ### Renamed `services.name` option
+
+  Each plugin definition contains a `name` field. This was conflicting with the `services.name` option. As a result, it has been renamed to `serviceNameBuilder`.
+
+  ```js
+  export default {
+    client: '@hey-api/client-fetch',
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    services: {
+      name: '{{name}}Service', // [!code --]
+    },
+    plugins: [
+      // ...other plugins
+      {
+        serviceNameBuilder: '{{name}}Service', // [!code ++]
+        name: '@hey-api/services',
+      },
+    ],
+  };
+  ```
+
+  ### Renamed `types.dates` option
+
+  Previously, you could set `types.dates` to a boolean or a string value, depending on whether you wanted to transform only type strings into dates, or runtime code too. Many people found these options confusing, so they have been simplified to a boolean and extracted into a separate `@hey-api/transformers` plugin.
+
+  ```js
+  export default {
+    client: '@hey-api/client-fetch',
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    types: {
+      dates: 'types+transform', // [!code --]
+    },
+    plugins: [
+      // ...other plugins
+      {
+        dates: true, // [!code ++]
+        name: '@hey-api/transformers',
+      },
+    ],
+  };
+  ```
+
+  ### Removed `types.include` shorthand option
+
+  Previously, you could use a string value as a shorthand for the `types.include` configuration option. You can now achieve the same result using the `include` option.
+
+  ```js
+  export default {
+    client: '@hey-api/client-fetch',
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    types: '^MySchema', // [!code --]
+    plugins: [
+      // ...other plugins
+      {
+        include: '^MySchema', // [!code ++]
+        name: '@hey-api/types',
+      },
+    ],
+  };
+  ```
+
+  ### Renamed `types.name` option
+
+  Each plugin definition contains a `name` field. This was conflicting with the `types.name` option. As a result, it has been renamed to `style`.
+
+  ```js
+  export default {
+    client: '@hey-api/client-fetch',
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    types: {
+      name: 'PascalCase', // [!code --]
+    },
+    plugins: [
+      // ...other plugins
+      {
+        name: '@hey-api/types',
+        style: 'PascalCase', // [!code ++]
+      },
+    ],
+  };
+  ```
+
+## 0.6.2
+
+### Patch Changes
+
+- [#1162](https://github.com/hey-api/openapi-ts/pull/1162) [`1c85c24`](https://github.com/hey-api/openapi-ts/commit/1c85c24af514e9781aab1960298caa28effef5d3) Thanks [@mrlubos](https://github.com/mrlubos)! - docs: add Zod plugin page
+
+## 0.6.1
+
+### Patch Changes
+
+- [#1151](https://github.com/hey-api/openapi-ts/pull/1151) [`587791d`](https://github.com/hey-api/openapi-ts/commit/587791dfede0167fbed229281467e4c4875936f5) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update website domain, add license documentation
+
+## 0.6.0
+
+### Minor Changes
+
+- [#1009](https://github.com/hey-api/openapi-ts/pull/1009) [`c6b044d`](https://github.com/hey-api/openapi-ts/commit/c6b044d0bc9dc54cb0eb58d23438f4e1d050cb38) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: change schemas name pattern, add schemas.name option
+
+## 0.5.11
+
+### Patch Changes
+
+- [#978](https://github.com/hey-api/openapi-ts/pull/978) [`2e051a5`](https://github.com/hey-api/openapi-ts/commit/2e051a596302c2e103dca25951a07b4aae1e9e23) Thanks [@mrlubos](https://github.com/mrlubos)! - docs: add basic TanStack Query plugin description
+
 ## 0.5.10
 
 ### Patch Changes

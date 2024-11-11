@@ -17,7 +17,7 @@ import {
 } from '@radix-ui/themes';
 import { useState } from 'react';
 
-import { $Pet } from './client/schemas.gen';
+import { PetSchema } from './client/schemas.gen';
 import { addPet, getPetById, updatePet } from './client/services.gen';
 import type { Pet } from './client/types.gen';
 
@@ -54,7 +54,7 @@ function App() {
 
   const onAddPet = async (formData: FormData) => {
     // simple form field validation to demonstrate using schemas
-    if ($Pet.required.includes('name') && !formData.get('name')) {
+    if (PetSchema.required.includes('name') && !formData.get('name')) {
       setIsRequiredNameError(true);
       return;
     }
@@ -137,13 +137,9 @@ function App() {
       <Container size="1">
         <Section size="1" />
         <Flex align="center">
-          <a
-            className="shrink-0"
-            href="https://heyapi.vercel.app/"
-            target="_blank"
-          >
+          <a className="shrink-0" href="https://heyapi.dev/" target="_blank">
             <img
-              src="https://heyapi.vercel.app/logo.png"
+              src="https://heyapi.dev/logo.png"
               className="h-16 w-16 transition duration-300 will-change-auto"
               alt="Hey API logo"
             />

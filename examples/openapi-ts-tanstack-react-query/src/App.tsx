@@ -23,7 +23,7 @@ import {
   getPetByIdOptions,
   updatePetMutation,
 } from './client/@tanstack/react-query.gen';
-import { $Pet } from './client/schemas.gen';
+import { PetSchema } from './client/schemas.gen';
 import type { Pet } from './client/types.gen';
 
 const localClient = createClient({
@@ -59,7 +59,7 @@ function App() {
   const [isRequiredNameError, setIsRequiredNameError] = useState(false);
 
   const addPet = useMutation({
-    ...addPetMutation,
+    ...addPetMutation(),
     onError: (error) => {
       console.log(error);
       setIsRequiredNameError(false);
@@ -71,7 +71,7 @@ function App() {
   });
 
   const updatePet = useMutation({
-    ...updatePetMutation,
+    ...updatePetMutation(),
     onError: (error) => {
       console.log(error);
     },
@@ -92,7 +92,7 @@ function App() {
 
   const onAddPet = async (formData: FormData) => {
     // simple form field validation to demonstrate using schemas
-    if ($Pet.required.includes('name') && !formData.get('name')) {
+    if (PetSchema.required.includes('name') && !formData.get('name')) {
       setIsRequiredNameError(true);
       return;
     }
@@ -162,13 +162,9 @@ function App() {
       <Container size="1">
         <Section size="1" />
         <Flex align="center">
-          <a
-            className="shrink-0"
-            href="https://heyapi.vercel.app/"
-            target="_blank"
-          >
+          <a className="shrink-0" href="https://heyapi.dev/" target="_blank">
             <img
-              src="https://heyapi.vercel.app/logo.png"
+              src="https://heyapi.dev/logo.png"
               className="h-16 w-16 transition duration-300 will-change-auto"
               alt="Hey API logo"
             />

@@ -3,15 +3,6 @@
 /**
  * This is a model that contains a some dates
  */
-export type SimpleModel = {
-    id: number;
-    name: string;
-    readonly enabled: boolean;
-};
-
-/**
- * This is a model that contains a some dates
- */
 export type ModelWithDates = {
     id: number;
     name: string;
@@ -28,10 +19,20 @@ export type ParentModelWithDates = {
     readonly modified?: Date;
     items?: Array<ModelWithDates>;
     item?: ModelWithDates;
+    'nullable-date'?: Array<(Date | null)>;
     simpleItems?: Array<SimpleModel>;
     simpleItem?: SimpleModel;
     dates?: Array<(Date)>;
     strings?: Array<(string)>;
+};
+
+/**
+ * This is a model that contains a some dates
+ */
+export type SimpleModel = {
+    id: number;
+    name: string;
+    readonly enabled: boolean;
 };
 
 export type ParentModelWithDatesResponse = (ParentModelWithDates | unknown);
@@ -84,8 +85,11 @@ export const ParentModelWithDatesModelResponseTransformer: ParentModelWithDatesM
     if (data?.item) {
         ModelWithDatesModelResponseTransformer(data.item);
     }
+    if (Array.isArray(data?.['nullable-date'])) {
+        data['nullable-date'] = data['nullable-date'].map(item => item ? new Date(item) : item);
+    }
     if (Array.isArray(data?.dates)) {
-        data.dates = data.dates.map(item => new Date(item));
+        data.dates = data.dates.map(item => item ? new Date(item) : item);
     }
     return data;
 };

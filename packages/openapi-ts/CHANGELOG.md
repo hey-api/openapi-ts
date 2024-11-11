@@ -1,5 +1,401 @@
 # @hey-api/openapi-ts
 
+## 0.55.2
+
+### Patch Changes
+
+- [#1253](https://github.com/hey-api/openapi-ts/pull/1253) [`01dee3d`](https://github.com/hey-api/openapi-ts/commit/01dee3df879232939e43355231147b3d910fb482) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update sponsorship links
+
+- [#1266](https://github.com/hey-api/openapi-ts/pull/1266) [`d60d260`](https://github.com/hey-api/openapi-ts/commit/d60d260342ff3013c2e228151e9b897224eb89cc) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: correctly generate array when items are a oneOf array with length 1
+
+- [#1265](https://github.com/hey-api/openapi-ts/pull/1265) [`691cdc2`](https://github.com/hey-api/openapi-ts/commit/691cdc28b6ad5bc1a38e1ae9eb134a2b41d4ead8) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle non-exploded array query parameters
+
+- [#1267](https://github.com/hey-api/openapi-ts/pull/1267) [`ff3aa4a`](https://github.com/hey-api/openapi-ts/commit/ff3aa4ac58068671d2b9eedbd7528eb4f9969386) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle discriminators in experimental parser
+
+## 0.55.1
+
+### Patch Changes
+
+- [#1248](https://github.com/hey-api/openapi-ts/pull/1248) [`61cd848`](https://github.com/hey-api/openapi-ts/commit/61cd848262b20580fb185d023c28aa54754bf19c) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle nullable enums in experimental parser
+
+- [#1251](https://github.com/hey-api/openapi-ts/pull/1251) [`07800d4`](https://github.com/hey-api/openapi-ts/commit/07800d4fbb849614ed2c23b8acc9c82f1ef74598) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add support for custom plugins
+
+- [#1250](https://github.com/hey-api/openapi-ts/pull/1250) [`9e07675`](https://github.com/hey-api/openapi-ts/commit/9e07675802c75b8f5105dd104bb7736aeb83ece6) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: render void for empty response status codes in experimental parser
+
+## 0.55.0
+
+### Minor Changes
+
+- [#1241](https://github.com/hey-api/openapi-ts/pull/1241) [`41cee41`](https://github.com/hey-api/openapi-ts/commit/41cee417055c50de6170e6fdeae65bd6e643d19c) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add input.include option
+
+### Patch Changes
+
+- [#1239](https://github.com/hey-api/openapi-ts/pull/1239) [`319a28a`](https://github.com/hey-api/openapi-ts/commit/319a28af29541d7f61cca82389e1d486204f321f) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle pagination with basic refs
+
+## 0.54.4
+
+### Patch Changes
+
+- [#1237](https://github.com/hey-api/openapi-ts/pull/1237) [`63ccc07`](https://github.com/hey-api/openapi-ts/commit/63ccc0775e24a096bc46ac7ff29b99b694aad621) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: forbid any body, path, or query parameters if not defined in spec
+
+- [#1235](https://github.com/hey-api/openapi-ts/pull/1235) [`7a1a419`](https://github.com/hey-api/openapi-ts/commit/7a1a419f07d5ad39e07265771b30d49a4b754a88) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle additionalProperties: boolean in experimental parser
+
+- [#1233](https://github.com/hey-api/openapi-ts/pull/1233) [`08baa77`](https://github.com/hey-api/openapi-ts/commit/08baa77afdc5e2c49d4789b20673e949951ab0b2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update schemas plugin to handle experimental 3.0.x parser
+
+  This release adds an experimental parser for OpenAPI versions 3.0.x. In the future, this will become the default parser. If you're using OpenAPI 3.0 or newer, we encourage you to try it out today.
+
+  You can enable the experimental parser by setting the `experimentalParser` boolean flag to `true` in your configuration file or CLI.
+
+  ```js
+  export default {
+    client: '@hey-api/client-fetch',
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    experimentalParser: true,
+  };
+  ```
+
+  ```sh
+  npx @hey-api/openapi-ts -i path/to/openapi.json -o src/client -c @hey-api/client-fetch -e
+  ```
+
+  The generated output should not structurally change, despite few things being generated in a different order. In fact, the output should be cleaner! That's the immediate side effect you should notice. If that's not true, please leave feedback in [GitHub issues](https://github.com/hey-api/openapi-ts/issues).
+
+  Hey API parser marks an important milestone towards v1 of `@hey-api/openapi-ts`. More features will be added to the parser in the future and the original parser from `openapi-typescript-codegen` will be deprecated and used only for generating legacy clients.
+
+  If you'd like to work with the parser more closely (e.g. to generate code not natively supported by this package), feel free to reach out with any feedback or suggestions. Happy parsing! 🎉
+
+## 0.54.3
+
+### Patch Changes
+
+- [#1230](https://github.com/hey-api/openapi-ts/pull/1230) [`3e65ae0`](https://github.com/hey-api/openapi-ts/commit/3e65ae06bcd2823482cf012909388c7630e18229) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add OpenAPI 3.0.x experimental parser
+
+  This release adds an experimental parser for OpenAPI versions 3.0.x. In the future, this will become the default parser. If you're using OpenAPI 3.0 or newer, we encourage you to try it out today.
+
+  You can enable the experimental parser by setting the `experimentalParser` boolean flag to `true` in your configuration file or CLI.
+
+  ```js
+  export default {
+    client: '@hey-api/client-fetch',
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    experimentalParser: true,
+  };
+  ```
+
+  ```sh
+  npx @hey-api/openapi-ts -i path/to/openapi.json -o src/client -c @hey-api/client-fetch -e
+  ```
+
+  The generated output should not structurally change, despite few things being generated in a different order. In fact, the output should be cleaner! That's the immediate side effect you should notice. If that's not true, please leave feedback in [GitHub issues](https://github.com/hey-api/openapi-ts/issues).
+
+  Hey API parser marks an important milestone towards v1 of `@hey-api/openapi-ts`. More features will be added to the parser in the future and the original parser from `openapi-typescript-codegen` will be deprecated and used only for generating legacy clients.
+
+  If you'd like to work with the parser more closely (e.g. to generate code not natively supported by this package), feel free to reach out with any feedback or suggestions. Happy parsing! 🎉
+
+## 0.54.2
+
+### Patch Changes
+
+- [#1222](https://github.com/hey-api/openapi-ts/pull/1222) [`ceb4363`](https://github.com/hey-api/openapi-ts/commit/ceb4363d52893ebe947e21aac402b868ff2820d4) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add support for @tanstack/angular-query-experimental package
+
+## 0.54.1
+
+### Patch Changes
+
+- [#1211](https://github.com/hey-api/openapi-ts/pull/1211) [`c8a3e3d`](https://github.com/hey-api/openapi-ts/commit/c8a3e3d7e59692698b7cf45182ca92494fc4af96) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: ignore name option when not used with legacy clients to avoid producing broken output
+
+- [#1209](https://github.com/hey-api/openapi-ts/pull/1209) [`3a80b9f`](https://github.com/hey-api/openapi-ts/commit/3a80b9fd009c8229d69f3f349acbfb19b7549a94) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add support for OpenAPI 3.1.1 to experimental parser
+
+## 0.54.0
+
+### Minor Changes
+
+- [#1201](https://github.com/hey-api/openapi-ts/pull/1201) [`972a93a`](https://github.com/hey-api/openapi-ts/commit/972a93a91a945cc9ead73c08bb0fa9ee120433ba) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: make plugins first-class citizens
+
+  This release makes plugins first-class citizens. In order to achieve that, the following breaking changes were introduced.
+
+  ### Removed CLI options
+
+  The `--types`, `--schemas`, and `--services` CLI options have been removed. You can list which plugins you'd like to use explicitly by passing a list of plugins as `--plugins <plugin1> <plugin2>`
+
+  ### Removed `*.export` option
+
+  Previously, you could explicitly disable export of certain artifacts using the `*.export` option or its shorthand variant. These were both removed. You can now disable export of specific artifacts by manually defining an array of `plugins` and excluding the unwanted plugin.
+
+  ::: code-group
+
+  ```js [shorthand]
+  export default {
+    client: '@hey-api/client-fetch',
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    schemas: false, // [!code --]
+    plugins: ['@hey-api/types', '@hey-api/services'], // [!code ++]
+  };
+  ```
+
+  ```js [*.export]
+  export default {
+    client: '@hey-api/client-fetch',
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    schemas: {
+      export: false, // [!code --]
+    },
+    plugins: ['@hey-api/types', '@hey-api/services'], // [!code ++]
+  };
+  ```
+
+  :::
+
+  ### Renamed `schemas.name` option
+
+  Each plugin definition contains a `name` field. This was conflicting with the `schemas.name` option. As a result, it has been renamed to `nameBuilder`.
+
+  ```js
+  export default {
+    client: '@hey-api/client-fetch',
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    schemas: {
+      name: (name) => `${name}Schema`, // [!code --]
+    },
+    plugins: [
+      // ...other plugins
+      {
+        nameBuilder: (name) => `${name}Schema`, // [!code ++]
+        name: '@hey-api/schemas',
+      },
+    ],
+  };
+  ```
+
+  ### Removed `services.include` shorthand option
+
+  Previously, you could use a string value as a shorthand for the `services.include` configuration option. You can now achieve the same result using the `include` option.
+
+  ```js
+  export default {
+    client: '@hey-api/client-fetch',
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    services: '^MySchema', // [!code --]
+    plugins: [
+      // ...other plugins
+      {
+        include: '^MySchema', // [!code ++]
+        name: '@hey-api/services',
+      },
+    ],
+  };
+  ```
+
+  ### Renamed `services.name` option
+
+  Each plugin definition contains a `name` field. This was conflicting with the `services.name` option. As a result, it has been renamed to `serviceNameBuilder`.
+
+  ```js
+  export default {
+    client: '@hey-api/client-fetch',
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    services: {
+      name: '{{name}}Service', // [!code --]
+    },
+    plugins: [
+      // ...other plugins
+      {
+        serviceNameBuilder: '{{name}}Service', // [!code ++]
+        name: '@hey-api/services',
+      },
+    ],
+  };
+  ```
+
+  ### Renamed `types.dates` option
+
+  Previously, you could set `types.dates` to a boolean or a string value, depending on whether you wanted to transform only type strings into dates, or runtime code too. Many people found these options confusing, so they have been simplified to a boolean and extracted into a separate `@hey-api/transformers` plugin.
+
+  ```js
+  export default {
+    client: '@hey-api/client-fetch',
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    types: {
+      dates: 'types+transform', // [!code --]
+    },
+    plugins: [
+      // ...other plugins
+      {
+        dates: true, // [!code ++]
+        name: '@hey-api/transformers',
+      },
+    ],
+  };
+  ```
+
+  ### Removed `types.include` shorthand option
+
+  Previously, you could use a string value as a shorthand for the `types.include` configuration option. You can now achieve the same result using the `include` option.
+
+  ```js
+  export default {
+    client: '@hey-api/client-fetch',
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    types: '^MySchema', // [!code --]
+    plugins: [
+      // ...other plugins
+      {
+        include: '^MySchema', // [!code ++]
+        name: '@hey-api/types',
+      },
+    ],
+  };
+  ```
+
+  ### Renamed `types.name` option
+
+  Each plugin definition contains a `name` field. This was conflicting with the `types.name` option. As a result, it has been renamed to `style`.
+
+  ```js
+  export default {
+    client: '@hey-api/client-fetch',
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    types: {
+      name: 'PascalCase', // [!code --]
+    },
+    plugins: [
+      // ...other plugins
+      {
+        name: '@hey-api/types',
+        style: 'PascalCase', // [!code ++]
+      },
+    ],
+  };
+  ```
+
+## 0.53.12
+
+### Patch Changes
+
+- [#1195](https://github.com/hey-api/openapi-ts/pull/1195) [`753643f`](https://github.com/hey-api/openapi-ts/commit/753643fae74d4248df8dc5fe9dda5f28a1dabdf1) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: TanStack Query plugin using missing import for infinite query
+
+- [#1194](https://github.com/hey-api/openapi-ts/pull/1194) [`c38deaf`](https://github.com/hey-api/openapi-ts/commit/c38deaf02b606b92edd9c316b1444b6b6c12916d) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: pass TanStack query signal to client call
+
+## 0.53.11
+
+### Patch Changes
+
+- [#1151](https://github.com/hey-api/openapi-ts/pull/1151) [`587791d`](https://github.com/hey-api/openapi-ts/commit/587791dfede0167fbed229281467e4c4875936f5) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update website domain, add license documentation
+
+## 0.53.10
+
+### Patch Changes
+
+- [#1145](https://github.com/hey-api/openapi-ts/pull/1145) [`a0a5551`](https://github.com/hey-api/openapi-ts/commit/a0a55510d30a1a8dea0ade4908b5b13d51b5f9e6) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update license field in package.json to match the license, revert client packages license to MIT
+
+## 0.53.9
+
+### Patch Changes
+
+- [#1137](https://github.com/hey-api/openapi-ts/pull/1137) [`f4566c2`](https://github.com/hey-api/openapi-ts/commit/f4566c2bcd67f45f069bfa6220d3c710177f28cc) Thanks [@BierDav](https://github.com/BierDav)! - Add support for passing mutation specific options to `<operation_id>Mutation(options)`
+
+## 0.53.8
+
+### Patch Changes
+
+- [#1123](https://github.com/hey-api/openapi-ts/pull/1123) [`032338c`](https://github.com/hey-api/openapi-ts/commit/032338c47506ccfd567bbbf915398942c8394bc2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: use correct relative path to bundled client when imported from nested module
+
+## 0.53.7
+
+### Patch Changes
+
+- [#1113](https://github.com/hey-api/openapi-ts/pull/1113) [`dc696e0`](https://github.com/hey-api/openapi-ts/commit/dc696e0b4500dba5ceb4c772110b123bd2f71b40) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: skip nested properties in oneOf and anyOf compositions
+
+- [#1115](https://github.com/hey-api/openapi-ts/pull/1115) [`5f077dd`](https://github.com/hey-api/openapi-ts/commit/5f077dd8d144bbfe71d8775bad5fe7ddda2315d6) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: abstract page params logic in TanStack Query plugin
+
+## 0.53.6
+
+### Patch Changes
+
+- [#1104](https://github.com/hey-api/openapi-ts/pull/1104) [`a1eada1`](https://github.com/hey-api/openapi-ts/commit/a1eada1896046f0de1710682635efc59434a1e2c) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export spec-compliant OpenAPI 3.1 interface
+
+- [#1108](https://github.com/hey-api/openapi-ts/pull/1108) [`7677924`](https://github.com/hey-api/openapi-ts/commit/76779246534391deca5a371df2c7dc76e9d2eb73) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle multiple form-data parameters in Swagger 2.0
+
+## 0.53.5
+
+### Patch Changes
+
+- [#1096](https://github.com/hey-api/openapi-ts/pull/1096) [`b6e350a`](https://github.com/hey-api/openapi-ts/commit/b6e350a9cc2d82ac4496b7d57ec8b58978c951c2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: make TanStack Query plugin work with class-based services
+
+- [#1095](https://github.com/hey-api/openapi-ts/pull/1095) [`11ee53f`](https://github.com/hey-api/openapi-ts/commit/11ee53f4f519643ae7e3f0997ce4fe9b6cb050a8) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: avoid printing duplicate null nodes
+
+- [#1094](https://github.com/hey-api/openapi-ts/pull/1094) [`713ccd5`](https://github.com/hey-api/openapi-ts/commit/713ccd5e5e250a14cacf96fd1dffad252cc4cc6a) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: attach TanStack Query infinite page params only if they exist
+
+## 0.53.4
+
+### Patch Changes
+
+- [#1087](https://github.com/hey-api/openapi-ts/pull/1087) [`b528236`](https://github.com/hey-api/openapi-ts/commit/b528236b626d12d4ac03b98b8abecc425291c5e5) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: import handlebars instead of runtime
+
+- [#1086](https://github.com/hey-api/openapi-ts/pull/1086) [`0bc1ebe`](https://github.com/hey-api/openapi-ts/commit/0bc1ebe318399d01296777746ce0bccc83c0e83d) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: support dynamic require in child_process
+
+## 0.53.3
+
+### Patch Changes
+
+- [#1075](https://github.com/hey-api/openapi-ts/pull/1075) [`11a276a`](https://github.com/hey-api/openapi-ts/commit/11a276a1e35dde0735363e892d8142016fd87eec) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: properly handle dual publishing and type generation
+
+## 0.53.2
+
+### Patch Changes
+
+- [#1060](https://github.com/hey-api/openapi-ts/pull/1060) [`8d66c08`](https://github.com/hey-api/openapi-ts/commit/8d66c085cf81e0e166c3e172ce319d5e2d4002bf) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle colon in operation path
+
+- [#1065](https://github.com/hey-api/openapi-ts/pull/1065) [`a756987`](https://github.com/hey-api/openapi-ts/commit/a756987ad396fd7e68cc5eff63f6615bffef3782) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow overriding generated headers from options
+
+- [#1068](https://github.com/hey-api/openapi-ts/pull/1068) [`a48be86`](https://github.com/hey-api/openapi-ts/commit/a48be8660f6d1d84fdf25a3952587fb963482e8a) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export Operation interface
+
+- [#1067](https://github.com/hey-api/openapi-ts/pull/1067) [`5a52da1`](https://github.com/hey-api/openapi-ts/commit/5a52da1425abef9f4fef58ef077dbd05545e25a2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle named object property with no nested properties
+
+- [#1066](https://github.com/hey-api/openapi-ts/pull/1066) [`e8a38ae`](https://github.com/hey-api/openapi-ts/commit/e8a38ae4e3f021a105d18764ef3252db7efa9aa0) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: transform any-of nullable dates
+
+## 0.53.1
+
+### Patch Changes
+
+- [#1050](https://github.com/hey-api/openapi-ts/pull/1050) [`6922b5a`](https://github.com/hey-api/openapi-ts/commit/6922b5a3ebe67190d2034ea79674706a5e80e818) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: throw error on invalid client value
+
+## 0.53.0
+
+### Minor Changes
+
+- [#1008](https://github.com/hey-api/openapi-ts/pull/1008) [`dc4a40d`](https://github.com/hey-api/openapi-ts/commit/dc4a40d517853e4cf5be532f5bf4874c84c924be) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: rename legacy clients with 'legacy/' prefix
+
+- [#1009](https://github.com/hey-api/openapi-ts/pull/1009) [`c6b044d`](https://github.com/hey-api/openapi-ts/commit/c6b044d0bc9dc54cb0eb58d23438f4e1d050cb38) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: change schemas name pattern, add schemas.name option
+
+### Patch Changes
+
+- [#989](https://github.com/hey-api/openapi-ts/pull/989) [`bc78a42`](https://github.com/hey-api/openapi-ts/commit/bc78a421eafed1920102b796842e227cacda6ef0) Thanks [@jacobinu](https://github.com/jacobinu)! - fix: make UserConfig interface instead of type
+
+- [#1010](https://github.com/hey-api/openapi-ts/pull/1010) [`b6e58c6`](https://github.com/hey-api/openapi-ts/commit/b6e58c64d1b71897533a85d1738cd7ce7ede178d) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: set query key base url from supplied client if provided
+
+## 0.52.11
+
+### Patch Changes
+
+- [#981](https://github.com/hey-api/openapi-ts/pull/981) [`afd8c43`](https://github.com/hey-api/openapi-ts/commit/afd8c4386fb7b2f86a54e73c9471945bdfad22ea) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export query key functions from TanStack Query plugin
+
+## 0.52.10
+
+### Patch Changes
+
+- [#973](https://github.com/hey-api/openapi-ts/pull/973) [`8f7a14f`](https://github.com/hey-api/openapi-ts/commit/8f7a14f570e2d17053f1e612f6e045df774916f1) Thanks [@jacobinu](https://github.com/jacobinu)! - fix: handle tree-shakeable angular client case
+
 ## 0.52.9
 
 ### Patch Changes

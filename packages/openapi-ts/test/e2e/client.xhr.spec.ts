@@ -8,7 +8,7 @@ import server from './scripts/server'
 describe.skip('client.xhr', () => {
   beforeAll(async () => {
     cleanup('client/xhr')
-    await generateClient('client/xhr', 'v3', 'xhr', false, 'ApiClient')
+    await generateClient('client/xhr', 'v3', 'legacy/xhr', false, 'ApiClient')
     compileWithTypescript('client/xhr')
     await server.start('client/xhr')
   }, 40000)
@@ -26,7 +26,7 @@ describe.skip('client.xhr', () => {
       USERNAME: undefined
     })
     const result = await client.simple.getCallWithoutParametersAndResponse()
-    // @ts-ignore
+    // @ts-expect-error
     expect(result.headers.authorization).toBe('Bearer MY_TOKEN')
   })
 
@@ -38,14 +38,14 @@ describe.skip('client.xhr', () => {
       USERNAME: 'username'
     })
     const result = await client.simple.getCallWithoutParametersAndResponse()
-    // @ts-ignore
+    // @ts-expect-error
     expect(result.headers.authorization).toBe('Basic dXNlcm5hbWU6cGFzc3dvcmQ=')
   })
 
   it('supports complex params', async () => {
     const { ApiClient } = await import('./generated/client/xhr/index.js')
     const client = new ApiClient()
-    // @ts-ignore
+    // @ts-expect-error
     const result = await client.complex.complexTypes({
       first: {
         second: {
@@ -59,7 +59,7 @@ describe.skip('client.xhr', () => {
   it('support form data', async () => {
     const { ApiClient } = await import('./generated/client/xhr/index.js')
     const client = new ApiClient()
-    // @ts-ignore
+    // @ts-expect-error
     const result = await client.parameters.callWithParameters(
       'valueHeader',
       'valueQuery',

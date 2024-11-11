@@ -2,9 +2,15 @@ import { defineConfig } from 'vitepress';
 
 export default defineConfig({
   description:
-    'Turn your OpenAPI specification into a beautiful TypeScript client',
+    '🚀 The OpenAPI to TypeScript codegen. Generate clients, SDKs, validators, and more.',
   lang: 'en-US',
   themeConfig: {
+    nav: [
+      {
+        link: 'https://github.com/sponsors/hey-api',
+        text: 'Sponsor Hey API',
+      },
+    ],
     sidebar: [
       {
         items: [
@@ -36,25 +42,35 @@ export default defineConfig({
             text: 'Clients',
           },
           { link: '/openapi-ts/transformers', text: 'Transformers' },
-          { link: '/openapi-ts/migrating', text: 'Migrating' },
         ],
         text: 'Guides and Concepts',
       },
       {
         items: [
           {
-            link: '/openapi-ts/integrations',
-            text: 'Integrations <span class="soon">soon</span>',
+            link: '/openapi-ts/tanstack-query',
+            text: 'TanStack Query',
           },
           {
-            link: '/openapi-ts/tanstack-query',
-            text: 'TanStack Query <span class="soon">soon</span>',
+            link: '/openapi-ts/zod',
+            text: 'Zod <span class="soon">soon</span>',
           },
         ],
         text: 'Plugins',
       },
       {
         items: [
+          {
+            link: '/openapi-ts/integrations',
+            text: 'GitHub <span class="soon">soon</span>',
+          },
+        ],
+        text: 'Integrations',
+      },
+      {
+        items: [
+          { link: '/openapi-ts/migrating', text: 'Migrating' },
+          { link: '/license', text: 'License' },
           { link: '/about', text: 'Philosophy' },
           { link: '/contributing', text: 'Contributing' },
         ],

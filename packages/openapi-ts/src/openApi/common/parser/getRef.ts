@@ -1,6 +1,6 @@
 import type { OpenApiReference as OpenApiReferenceV2 } from '../../v2/interfaces/OpenApiReference';
 import type { OpenApiReference as OpenApiReferenceV3 } from '../../v3/interfaces/OpenApiReference';
-import { OpenApi } from '../interfaces/OpenApi';
+import type { OpenApi } from '../interfaces/OpenApi';
 
 const ESCAPED_REF_SLASH = /~1/g;
 const ESCAPED_REF_TILDE = /~0/g;
@@ -22,7 +22,7 @@ export function getRef<T>(
         path.replace(ESCAPED_REF_SLASH, '/').replace(ESCAPED_REF_TILDE, '~'),
       );
       if (result.hasOwnProperty(decodedPath)) {
-        // @ts-ignore
+        // @ts-expect-error
         result = result[decodedPath];
       } else {
         throw new Error(`Could not find reference: "${item.$ref}"`);

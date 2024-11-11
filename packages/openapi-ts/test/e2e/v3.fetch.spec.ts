@@ -8,7 +8,7 @@ import server from './scripts/server'
 describe('v3.fetch', () => {
   beforeAll(async () => {
     cleanup('v3/fetch')
-    await generateClient('v3/fetch', 'v3', 'fetch')
+    await generateClient('v3/fetch', 'v3', 'legacy/fetch')
     compileWithTypescript('v3/fetch')
     await server.start('v3/fetch')
   }, 40000)
@@ -27,7 +27,7 @@ describe('v3.fetch', () => {
     OpenAPI.PASSWORD = undefined
     const result = await SimpleService.getCallWithoutParametersAndResponse()
     expect(tokenRequest.mock.calls.length).toBe(1)
-    // @ts-ignore
+    // @ts-expect-error
     expect(result.headers.authorization).toBe('Bearer MY_TOKEN')
   })
 
@@ -39,14 +39,14 @@ describe('v3.fetch', () => {
     OpenAPI.USERNAME = 'username'
     OpenAPI.PASSWORD = 'password'
     const result = await SimpleService.getCallWithoutParametersAndResponse()
-    // @ts-ignore
+    // @ts-expect-error
     expect(result.headers.authorization).toBe('Basic dXNlcm5hbWU6cGFzc3dvcmQ=')
   })
 
   it('supports complex params', async () => {
     const { ComplexService } = await import('./generated/v3/fetch/index.js')
     const result = await ComplexService.complexTypes({
-      // @ts-ignore
+      // @ts-expect-error
       first: {
         second: {
           third: 'Hello World!'
@@ -60,7 +60,7 @@ describe('v3.fetch', () => {
     const { ParametersService } = await import('./generated/v3/fetch/index.js')
     const result = await ParametersService.callWithParameters(
       'valueHeader',
-      // @ts-ignore
+      // @ts-expect-error
       'valueQuery',
       'valueForm',
       'valueCookie',
@@ -76,7 +76,7 @@ describe('v3.fetch', () => {
     const { FileResponseService } = await import(
       './generated/v3/fetch/index.js'
     )
-    // @ts-ignore
+    // @ts-expect-error
     const result = await FileResponseService.fileResponse('test')
     expect(result).toBeDefined()
   })
@@ -100,7 +100,7 @@ describe('v3.fetch', () => {
     let error
     try {
       const { ErrorService } = await import('./generated/v3/fetch/index.js')
-      // @ts-ignore
+      // @ts-expect-error
       await ErrorService.testErrorCode(500)
     } catch (err) {
       error = JSON.stringify({
@@ -131,7 +131,7 @@ describe('v3.fetch', () => {
     let error
     try {
       const { ErrorService } = await import('./generated/v3/fetch/index.js')
-      // @ts-ignore
+      // @ts-expect-error
       await ErrorService.testErrorCode(599)
     } catch (err) {
       error = JSON.stringify({
@@ -162,12 +162,12 @@ describe('v3.fetch', () => {
   it('it should parse query params', async () => {
     const { ParametersService } = await import('./generated/v3/fetch/index.js')
     const result = await ParametersService.postCallWithOptionalParam({
-      // @ts-ignore
+      // @ts-expect-error
       page: 0,
       size: 1,
       sort: ['location']
     })
-    // @ts-ignore
+    // @ts-expect-error
     expect(result.query).toStrictEqual({
       parameter: { page: '0', size: '1', sort: 'location' }
     })
@@ -177,7 +177,7 @@ describe('v3.fetch', () => {
 describe('v3.fetch useOptions', () => {
   beforeAll(async () => {
     cleanup('v3/fetch')
-    await generateClient('v3/fetch', 'v3', 'fetch', true)
+    await generateClient('v3/fetch', 'v3', 'legacy/fetch', true)
     compileWithTypescript('v3/fetch')
     await server.start('v3/fetch')
   }, 40000)
@@ -189,28 +189,28 @@ describe('v3.fetch useOptions', () => {
   it('returns result body by default', async () => {
     const { SimpleService } = await import('./generated/v3/fetch/index.js')
     const result = await SimpleService.getCallWithoutParametersAndResponse()
-    // @ts-ignore
+    // @ts-expect-error
     expect(result.body).toBeUndefined()
   })
 
   it('returns result body', async () => {
     const { SimpleService } = await import('./generated/v3/fetch/index.js')
-    // @ts-ignore
+    // @ts-expect-error
     const result = await SimpleService.getCallWithoutParametersAndResponse({
       _result: 'body'
     })
-    // @ts-ignore
+    // @ts-expect-error
     expect(result.body).toBeUndefined()
   })
 
   it('returns raw result', async ({ skip }) => {
     skip()
     const { SimpleService } = await import('./generated/v3/fetch/index.js')
-    // @ts-ignore
+    // @ts-expect-error
     const result = await SimpleService.getCallWithoutParametersAndResponse({
       _result: 'raw'
     })
-    // @ts-ignore
+    // @ts-expect-error
     expect(result.body).toBeDefined()
   })
 })

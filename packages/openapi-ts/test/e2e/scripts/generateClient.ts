@@ -4,7 +4,7 @@ import type { Config } from '../../../src/types/config'
 export const generateClient = async (
   dir: string,
   version: string,
-  client: Config['client'],
+  client: Config['client']['name'],
   useOptions: boolean = false,
   name?: string
 ) => {
@@ -13,9 +13,10 @@ export const generateClient = async (
     input: `./test/spec/${version}.json`,
     name,
     output: `./test/e2e/generated/${dir}/`,
-    services: {
+    plugins: ['@hey-api/types', '@hey-api/schemas', {
       asClass: true,
-    },
+      name: '@hey-api/services',
+    }],
     useOptions
   })
 }

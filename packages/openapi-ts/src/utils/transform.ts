@@ -1,19 +1,29 @@
-import { ensureValidTypeScriptJavaScriptIdentifier } from '../openApi/common/parser/sanitize';
+import { ensureValidTypeScriptJavaScriptIdentifier } from '../openApi';
+import type { Config } from '../types/config';
 import { camelCase } from './camelCase';
 import { getConfig } from './config';
-import { reservedWordsRegExp } from './reservedWords';
+import { reservedWordsRegExp } from './regexp';
 
-export const transformServiceName = (name: string) => {
-  const config = getConfig();
-  if (config.services.name) {
-    return config.services.name.replace('{{name}}', name);
+export const transformServiceName = ({
+  config,
+  name,
+}: {
+  config: Config;
+  name: string;
+}) => {
+  if (config.plugins['@hey-api/services']?.serviceNameBuilder) {
+    return config.plugins['@hey-api/services'].serviceNameBuilder.replace(
+      '{{name}}',
+      name,
+    );
   }
+
   return name;
 };
 
 export const transformTypeName = (name: string) => {
   const config = getConfig();
-  if (config.types.name === 'PascalCase') {
+  if (config.plugins['@hey-api/types']?.style === 'PascalCase') {
     return camelCase({
       input: name,
       pascalCase: true,

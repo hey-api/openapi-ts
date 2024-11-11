@@ -1,5 +1,7 @@
 import ts from 'typescript';
 
+import { escapeName } from '../utils/escape';
+import { validTypescriptIdentifierRegExp } from '../utils/regexp';
 import {
   addLeadingComments,
   type Comments,
@@ -48,6 +50,21 @@ export const createTypeNode = (
   });
 };
 
+export const createPropertyAccessChain = ({
+  expression,
+  name,
+}: {
+  expression: ts.Expression;
+  name: string | ts.MemberName;
+}) => {
+  const node = ts.factory.createPropertyAccessChain(
+    expression,
+    ts.factory.createToken(ts.SyntaxKind.QuestionDotToken),
+    name,
+  );
+  return node;
+};
+
 export const createPropertyAccessExpression = ({
   expression,
   isOptional,
@@ -56,30 +73,42 @@ export const createPropertyAccessExpression = ({
   expression: string | ts.Expression;
   isOptional?: boolean;
   name: string | ts.MemberName;
-}) => {
+}):
+  | ts.PropertyAccessChain
+  | ts.PropertyAccessExpression
+  | ts.ElementAccessExpression => {
   const nodeExpression =
     typeof expression === 'string'
       ? createIdentifier({ text: expression })
       : expression;
 
+  if (isOptional) {
+    return createPropertyAccessChain({
+      expression: nodeExpression,
+      name,
+    });
+  }
+
+  if (typeof name === 'string') {
+    validTypescriptIdentifierRegExp.lastIndex = 0;
+    if (!validTypescriptIdentifierRegExp.test(name)) {
+      // TODO: parser - this should escape name only for new parser
+      if (!name.startsWith("'") && !name.endsWith("'")) {
+        // eslint-disable-next-line no-useless-escape
+        name = `\'${name}\'`;
+      }
+      const nodeName = createIdentifier({ text: name });
+      return ts.factory.createElementAccessExpression(nodeExpression, nodeName);
+    }
+  }
+
   const nodeName =
     typeof name === 'string' ? createIdentifier({ text: name }) : name;
 
-  if (isOptional) {
-    const node = ts.factory.createPropertyAccessChain(
-      nodeExpression,
-      ts.factory.createToken(ts.SyntaxKind.QuestionDotToken),
-      nodeName,
-    );
-    return node;
-  }
-
-  const node = ts.factory.createPropertyAccessExpression(
-    nodeExpression,
-    nodeName,
-  );
-  return node;
+  return ts.factory.createPropertyAccessExpression(nodeExpression, nodeName);
 };
+
+export const createNull = (): ts.NullLiteral => ts.factory.createNull();
 
 /**
  * Convert an unknown value to an expression.
@@ -103,7 +132,7 @@ export const toExpression = <T = unknown>({
   value: T;
 }): ts.Expression | undefined => {
   if (value === null) {
-    return ts.factory.createNull();
+    return createNull();
   }
 
   if (Array.isArray(value)) {
@@ -164,16 +193,14 @@ export const toAccessLevelModifiers = (
 
 /**
  * Convert parameters to the declaration array expected by compiler API.
- * @param parameters - the parameters to conver to declarations
+ * @param parameters - the parameters to convert to declarations
  * @returns ts.ParameterDeclaration[]
  */
 export const toParameterDeclarations = (parameters: FunctionParameter[]) =>
   parameters.map((parameter) => {
     if ('destructure' in parameter) {
-      return ts.factory.createParameterDeclaration(
-        undefined,
-        undefined,
-        ts.factory.createObjectBindingPattern(
+      return createParameterDeclaration({
+        name: ts.factory.createObjectBindingPattern(
           parameter.destructure
             .map((param) => {
               // TODO: add support for nested destructuring, not needed at the moment
@@ -191,10 +218,7 @@ export const toParameterDeclarations = (parameters: FunctionParameter[]) =>
             })
             .filter(Boolean) as ts.BindingElement[],
         ),
-        undefined,
-        undefined,
-        undefined,
-      );
+      });
     }
 
     let modifiers = toAccessLevelModifiers(parameter.accessLevel);
@@ -206,32 +230,56 @@ export const toParameterDeclarations = (parameters: FunctionParameter[]) =>
       ];
     }
 
-    return ts.factory.createParameterDeclaration(
+    return createParameterDeclaration({
+      initializer:
+        parameter.default !== undefined
+          ? toExpression({ value: parameter.default })
+          : undefined,
       modifiers,
-      undefined,
-      createIdentifier({ text: parameter.name }),
-      parameter.isRequired === false
-        ? ts.factory.createToken(ts.SyntaxKind.QuestionToken)
-        : undefined,
-      parameter.type !== undefined ? createTypeNode(parameter.type) : undefined,
-      parameter.default !== undefined
-        ? toExpression({ value: parameter.default })
-        : undefined,
-    );
+      name: createIdentifier({ text: parameter.name }),
+      required: parameter.isRequired !== false,
+      type:
+        parameter.type !== undefined
+          ? createTypeNode(parameter.type)
+          : undefined,
+    });
   });
 
 export const createKeywordTypeNode = ({
   keyword,
 }: {
-  keyword: 'any' | 'boolean' | 'string';
+  keyword:
+    | 'any'
+    | 'boolean'
+    | 'never'
+    | 'number'
+    | 'string'
+    | 'undefined'
+    | 'unknown'
+    | 'void';
 }) => {
   let kind: ts.KeywordTypeSyntaxKind = ts.SyntaxKind.AnyKeyword;
   switch (keyword) {
     case 'boolean':
       kind = ts.SyntaxKind.BooleanKeyword;
       break;
+    case 'never':
+      kind = ts.SyntaxKind.NeverKeyword;
+      break;
+    case 'number':
+      kind = ts.SyntaxKind.NumberKeyword;
+      break;
     case 'string':
       kind = ts.SyntaxKind.StringKeyword;
+      break;
+    case 'undefined':
+      kind = ts.SyntaxKind.UndefinedKeyword;
+      break;
+    case 'unknown':
+      kind = ts.SyntaxKind.UnknownKeyword;
+      break;
+    case 'void':
+      kind = ts.SyntaxKind.VoidKeyword;
       break;
   }
   return ts.factory.createKeywordTypeNode(kind);
@@ -258,6 +306,15 @@ export const toTypeParameters = (types: FunctionTypeParameter[]) =>
         : undefined,
     ),
   );
+
+export const createLiteralTypeNode = ({
+  literal,
+}: {
+  literal: ts.LiteralTypeNode['literal'];
+}) => {
+  const node = ts.factory.createLiteralTypeNode(literal);
+  return node;
+};
 
 /**
  * Create arrow function type expression.
@@ -286,8 +343,46 @@ export const createArrowFunction = ({
     returnType ? createTypeNode(returnType) : undefined,
     undefined,
     Array.isArray(statements)
-      ? ts.factory.createBlock(statements, multiLine)
+      ? createBlock({ multiLine, statements })
       : statements,
+  );
+
+  addLeadingComments({
+    comments: comment,
+    node: expression,
+  });
+
+  return expression;
+};
+
+/**
+ * Create anonymous function type expression.
+ */
+export const createAnonymousFunction = ({
+  async,
+  comment,
+  multiLine,
+  parameters = [],
+  returnType,
+  statements = [],
+  types = [],
+}: {
+  async?: boolean;
+  comment?: Comments;
+  multiLine?: boolean;
+  parameters?: FunctionParameter[];
+  returnType?: string | ts.TypeNode;
+  statements?: ts.Statement[];
+  types?: FunctionTypeParameter[];
+}) => {
+  const expression = ts.factory.createFunctionExpression(
+    async ? [ts.factory.createModifier(ts.SyntaxKind.AsyncKeyword)] : undefined,
+    undefined,
+    undefined,
+    types ? toTypeParameters(types) : undefined,
+    toParameterDeclarations(parameters),
+    returnType ? createTypeNode(returnType) : undefined,
+    createBlock({ multiLine, statements }),
   );
 
   addLeadingComments({
@@ -327,6 +422,23 @@ export const createAwaitExpression = ({
 }: {
   expression: ts.Expression;
 }) => ts.factory.createAwaitExpression(expression);
+
+export const createFunctionTypeNode = ({
+  parameters = [],
+  returnType,
+  typeParameters,
+}: {
+  parameters?: ts.ParameterDeclaration[];
+  returnType: ts.TypeNode;
+  typeParameters?: ts.TypeParameterDeclaration[];
+}) => {
+  const node = ts.factory.createFunctionTypeNode(
+    typeParameters,
+    parameters,
+    returnType,
+  );
+  return node;
+};
 
 export type ObjectValue =
   | {
@@ -380,22 +492,15 @@ export const createObjectType = <
           // Check key value equality before possibly modifying it
           let canShorthand = false;
           if ('key' in value) {
-            let { key } = value;
+            const { key } = value;
             canShorthand = key === value.value;
             if (
-              key.match(/^[0-9]/) &&
-              key.match(/\D+/g) &&
+              ((key.match(/^[0-9]/) && key.match(/\D+/g)) ||
+                key.match(/\W/g)) &&
               !key.startsWith("'") &&
               !key.endsWith("'")
             ) {
-              key = `'${key}'`;
-            }
-            if (
-              key.match(/\W/g) &&
-              !key.startsWith("'") &&
-              !key.endsWith("'")
-            ) {
-              key = `'${key}'`;
+              value.key = `'${key}'`;
             }
           }
           let assignment: ObjectAssignment;
@@ -418,15 +523,22 @@ export const createObjectType = <
           } else {
             let initializer: ts.Expression | undefined = isTsNode(value.value)
               ? value.value
-              : toExpression({
-                  identifiers: identifiers.includes(value.key)
-                    ? Object.keys(value.value)
-                    : [],
-                  isValueAccess: value.isValueAccess,
-                  shorthand,
-                  unescape,
-                  value: value.value,
-                });
+              : Array.isArray(value.value)
+                ? createObjectType({
+                    multiLine,
+                    obj: value.value,
+                    shorthand,
+                    unescape,
+                  })
+                : toExpression({
+                    identifiers: identifiers.includes(value.key)
+                      ? Object.keys(value.value)
+                      : [],
+                    isValueAccess: value.isValueAccess,
+                    shorthand,
+                    unescape,
+                    value: value.value,
+                  });
             if (!initializer) {
               return undefined;
             }
@@ -492,30 +604,32 @@ export const createObjectType = <
         })
         .filter(isType<ObjectAssignment>);
 
-  const expression = ts.factory.createObjectLiteralExpression(
+  const node = ts.factory.createObjectLiteralExpression(
     properties as any[],
     multiLine,
   );
 
   addLeadingComments({
     comments,
-    node: expression,
+    node,
   });
 
-  return expression;
+  return node;
 };
 
 /**
  * Create enum declaration. Example `export enum T = { X, Y };`
- * @param comments - comments to add to each property of enum.
+ * @param comments - comments to add to each property.
  * @param leadingComment - leading comment to add to enum.
  * @param name - the name of the enum.
  * @param obj - the object representing the enum.
- * @returns
+ * @returns ts.EnumDeclaration
  */
-export const createEnumDeclaration = <T extends object>({
-  comments,
-  leadingComment,
+export const createEnumDeclaration = <
+  T extends Record<string, any> | Array<ObjectValue>,
+>({
+  comments: enumMemberComments = {},
+  leadingComment: comments,
   name,
   obj,
 }: {
@@ -524,29 +638,46 @@ export const createEnumDeclaration = <T extends object>({
   name: string;
   obj: T;
 }): ts.EnumDeclaration => {
-  const declaration = ts.factory.createEnumDeclaration(
-    [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
-    createIdentifier({ text: name }),
-    Object.entries(obj).map(([key, value]) => {
-      const initializer = toExpression({ unescape: true, value });
-      const assignment = ts.factory.createEnumMember(key, initializer);
-      const comment = comments?.[key];
+  const members: Array<ts.EnumMember> = Array.isArray(obj)
+    ? obj.map((value) => {
+        const enumMember = ts.factory.createEnumMember(
+          escapeName(value.key),
+          toExpression({
+            value: value.value,
+          }),
+        );
 
-      addLeadingComments({
-        comments: comment,
-        node: assignment,
+        addLeadingComments({
+          comments: value.comments,
+          node: enumMember,
+        });
+
+        return enumMember;
+      })
+    : Object.entries(obj).map(([key, value]) => {
+        const initializer = toExpression({ unescape: true, value });
+        const enumMember = ts.factory.createEnumMember(key, initializer);
+
+        addLeadingComments({
+          comments: enumMemberComments[key],
+          node: enumMember,
+        });
+
+        return enumMember;
       });
 
-      return assignment;
-    }),
+  const node = ts.factory.createEnumDeclaration(
+    [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
+    createIdentifier({ text: name }),
+    members,
   );
 
   addLeadingComments({
-    comments: leadingComment,
-    node: declaration,
+    comments,
+    node,
   });
 
-  return declaration;
+  return node;
 };
 
 /**
@@ -555,14 +686,12 @@ export const createEnumDeclaration = <T extends object>({
  * @param nodes - the nodes in the namespace.
  * @returns
  */
-export const createNamespaceDeclaration = <
-  T extends Array<ts.EnumDeclaration>,
->({
+export const createNamespaceDeclaration = ({
   name,
   statements,
 }: {
   name: string;
-  statements: T;
+  statements: Array<ts.Statement>;
 }) =>
   ts.factory.createModuleDeclaration(
     [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
@@ -582,8 +711,17 @@ export const createIndexedAccessTypeNode = ({
   return node;
 };
 
-export const createStringLiteral = ({ text }: { text: string }) => {
-  const node = ts.factory.createStringLiteral(text);
+export const createStringLiteral = ({
+  isSingleQuote,
+  text,
+}: {
+  isSingleQuote?: boolean;
+  text: string;
+}) => {
+  if (isSingleQuote === undefined) {
+    isSingleQuote = !text.includes("'");
+  }
+  const node = ts.factory.createStringLiteral(text, isSingleQuote);
   return node;
 };
 
@@ -669,3 +807,81 @@ export const createTypeParenthesizedNode = ({
   const node = ts.factory.createParenthesizedType(type);
   return node;
 };
+
+export const createParameterDeclaration = ({
+  initializer,
+  modifiers,
+  name,
+  required = true,
+  type,
+}: {
+  initializer?: ts.Expression;
+  modifiers?: ts.ModifierLike[];
+  name: string | ts.BindingName;
+  required?: boolean;
+  type?: ts.TypeNode;
+}) => {
+  const node = ts.factory.createParameterDeclaration(
+    modifiers,
+    undefined,
+    name,
+    required ? undefined : ts.factory.createToken(ts.SyntaxKind.QuestionToken),
+    type,
+    initializer,
+  );
+  return node;
+};
+
+export const createNewExpression = ({
+  argumentsArray,
+  expression,
+  typeArguments,
+}: {
+  argumentsArray?: Array<ts.Expression>;
+  expression: ts.Expression;
+  typeArguments?: Array<ts.TypeNode>;
+}) => {
+  const node = ts.factory.createNewExpression(
+    expression,
+    typeArguments,
+    argumentsArray,
+  );
+  return node;
+};
+
+export const createForOfStatement = ({
+  awaitModifier,
+  expression,
+  initializer,
+  statement,
+}: {
+  // TODO: parser - simplify this to be await?: boolean
+  awaitModifier?: ts.AwaitKeyword;
+  expression: ts.Expression;
+  initializer: ts.ForInitializer;
+  statement: ts.Statement;
+}) => {
+  const node = ts.factory.createForOfStatement(
+    awaitModifier,
+    initializer,
+    expression,
+    statement,
+  );
+  return node;
+};
+
+export const createAssignment = ({
+  left,
+  right,
+}: {
+  left: ts.Expression;
+  right: ts.Expression;
+}) => ts.factory.createAssignment(left, right);
+
+export const createBlock = ({
+  multiLine = true,
+  statements,
+}: {
+  multiLine?: boolean;
+  statements: Array<ts.Statement>;
+}) => ts.factory.createBlock(statements, multiLine);

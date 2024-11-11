@@ -1,16 +1,21 @@
-import type { Operation } from '../openApi';
-import type { Plugins } from '../plugins/';
-import type { ExtractArrayOfObjects } from './utils';
+import type { ClientPlugins, UserPlugins } from '../plugins/';
+import type {
+  ArrayOfObjectsToObjectMap,
+  ExtractArrayOfObjects,
+  ExtractWithDiscriminator,
+} from './utils';
 
-type Client =
-  | '@hey-api/client-axios'
-  | '@hey-api/client-fetch'
-  | 'angular'
-  | 'axios'
-  | 'fetch'
-  | 'node'
-  | 'xhr'
-  | '';
+export const CLIENTS = [
+  '@hey-api/client-axios',
+  '@hey-api/client-fetch',
+  'legacy/angular',
+  'legacy/axios',
+  'legacy/fetch',
+  'legacy/node',
+  'legacy/xhr',
+] as const;
+
+type Client = (typeof CLIENTS)[number];
 
 export interface ClientConfig {
   /**
@@ -20,15 +25,15 @@ export interface ClientConfig {
   base?: string;
   /**
    * HTTP client to generate
-   * @default 'fetch'
    */
   client?:
     | Client
+    | false
     | {
         /**
-         * Bundle the client module? Set this to true if you're using a standalone
-         * client package and don't want to declare it as a separate dependency.
-         * When true, the client module will be generated from the standalone
+         * Bundle the client module? Set this to true if you're using a client
+         * package and don't want to declare it as a separate dependency.
+         * When true, the client module will be generated from the client
          * package and bundled with the rest of the generated output. This is
          * useful if you're repackaging the output, publishing it to other users,
          * and you don't want them to install any dependencies.
@@ -37,7 +42,6 @@ export interface ClientConfig {
         bundle?: boolean;
         /**
          * HTTP client to generate
-         * @default 'fetch'
          */
         name: Client;
       };
@@ -57,26 +61,51 @@ export interface ClientConfig {
    */
   dryRun?: boolean;
   /**
-   * Use the experimental parser?
+   * Opt-in to the experimental parser?
    * @default false
    */
-  experimental_parser?: boolean;
+  experimentalParser?: boolean;
   /**
    * Generate core client classes?
    * @default true
    */
   exportCore?: boolean;
   /**
-   * The relative location of the OpenAPI spec
+   * Path to the OpenAPI specification. This can be either local or remote path.
+   * Both JSON and YAML file formats are supported. You can also pass the parsed
+   * object directly if you're fetching the file yourself.
+   *
+   * Alternatively, you can define a configuration object with more options.
    */
-  input: string | Record<string, unknown>;
+  input:
+    | string
+    | Record<string, unknown>
+    | {
+        /**
+         * Process only parts matching the regular expression. You can select both
+         * operations and components by reference within the bundled input.
+         *
+         * @example
+         * operation: '^#/paths/api/v1/foo/get$'
+         * schema: '^#/components/schemas/Foo$'
+         */
+        include?: string;
+        /**
+         * Path to the OpenAPI specification. This can be either local or remote path.
+         * Both JSON and YAML file formats are supported. You can also pass the parsed
+         * object directly if you're fetching the file yourself.
+         */
+        path: string | Record<string, unknown>;
+      };
   /**
-   * Custom client class name
+   * Custom client class name. Please note this option is deprecated and
+   * will be removed in favor of clients.
+   * @link https://heyapi.dev/openapi-ts/migrating.html#deprecated-name
    * @deprecated
    */
   name?: string;
   /**
-   * The relative location of the output directory
+   * The relative location of the output folder
    */
   output:
     | string
@@ -92,170 +121,44 @@ export interface ClientConfig {
          */
         lint?: 'biome' | 'eslint' | false;
         /**
-         * The relative location of the output directory
+         * The relative location of the output folder
          */
         path: string;
       };
   /**
-   * Plugins are used to generate additional output files from provided input.
+   * Plugins are used to generate artifacts from provided input.
    */
-  plugins?: ReadonlyArray<Plugins['name'] | Plugins>;
+  plugins?: ReadonlyArray<UserPlugins['name'] | UserPlugins>;
   /**
-   * Path to custom request file
+   * Path to custom request file. Please note this option is deprecated and
+   * will be removed in favor of clients.
+   * @link https://heyapi.dev/openapi-ts/migrating.html#deprecated-request
    * @deprecated
    */
   request?: string;
   /**
-   * Generate JSON schemas?
-   * @default true
-   */
-  schemas?:
-    | boolean
-    | {
-        /**
-         * Generate JSON schemas?
-         * @default true
-         */
-        export?: boolean;
-        /**
-         * Choose schema type to generate. Select 'form' if you don't want
-         * descriptions to reduce bundle size and you plan to use schemas
-         * for form validation
-         * @default 'json'
-         */
-        type?: 'form' | 'json';
-      };
-  /**
-   * Generate services?
-   * @default true
-   */
-  services?:
-    | boolean
-    | string
-    | {
-        /**
-         * Group operation methods into service classes? When enabled, you can
-         * select which classes to export with `services.include` and/or
-         * transform their names with `services.name`.
-         *
-         * Note that by enabling this option, your services will **NOT**
-         * support {@link https://developer.mozilla.org/docs/Glossary/Tree_shaking tree-shaking}.
-         * For this reason, it is disabled by default.
-         * @default false
-         */
-        asClass?: boolean;
-        /**
-         * Generate services?
-         * @default true
-         */
-        export?: boolean;
-        /**
-         * Filter endpoints to be included in the generated services.
-         * The provided string should be a regular expression where matched
-         * results will be included in the output. The input pattern this
-         * string will be tested against is `{method} {path}`. For example,
-         * you can match `POST /api/v1/foo` with `^POST /api/v1/foo$`.
-         */
-        filter?: string;
-        /**
-         * Include only service classes with names matching regular expression
-         *
-         * This option has no effect if `services.asClass` is `false`.
-         */
-        include?: string;
-        /**
-         * Customise the method name of methods within the service. By default, {@link Operation.name} is used.
-         */
-        methodNameBuilder?: (operation: Operation) => string;
-        /**
-         * Customize the generated service class names. The name variable is
-         * obtained from your OpenAPI specification tags.
-         *
-         * This option has no effect if `services.asClass` is `false`.
-         * @default '{{name}}Service'
-         */
-        name?: string;
-        /**
-         * Use operation ID to generate operation names?
-         * @default true
-         */
-        operationId?: boolean;
-        /**
-         * Define shape of returned value from service calls
-         * @default 'body'
-         * @deprecated
-         */
-        response?: 'body' | 'response';
-      };
-  /**
-   * Generate types?
-   * @default true
-   */
-  types?:
-    | boolean
-    | string
-    | {
-        /**
-         * Output Date type and possibly runtime transform instead of string for format "date-time"
-         * @default false
-         */
-        dates?: boolean | 'types+transform' | 'types';
-        /**
-         * Generate enum definitions?
-         * @default false
-         */
-        enums?: 'javascript' | 'typescript' | 'typescript+namespace' | false;
-        /**
-         * Generate types?
-         * @default true
-         */
-        export?: boolean;
-        /**
-         * Include only types matching regular expression
-         */
-        include?: string;
-        /**
-         * Use your preferred naming pattern
-         * @default 'preserve'
-         */
-        name?: 'PascalCase' | 'preserve';
-        /**
-         * Generate a tree of types containing all operations? It will be named
-         * $OpenApiTs and is generated by default only when not using services.
-         */
-        tree?: boolean;
-      };
-  /**
-   * Use options or arguments functions
+   * Use options or arguments functions. Please note this option is deprecated and
+   * will be removed in favor of clients.
+   * @link https://heyapi.dev/openapi-ts/migrating.html#deprecated-useoptions
    * @deprecated
    * @default true
    */
   useOptions?: boolean;
 }
 
-// export type UserConfig = ClientConfig | ReadonlyArray<ClientConfig>
-export type UserConfig = ClientConfig;
+export interface UserConfig extends ClientConfig {}
 
 export type Config = Omit<
   Required<ClientConfig>,
-  | 'base'
-  | 'client'
-  | 'name'
-  | 'output'
-  | 'plugins'
-  | 'request'
-  | 'schemas'
-  | 'services'
-  | 'types'
+  'base' | 'client' | 'input' | 'name' | 'output' | 'plugins' | 'request'
 > &
   Pick<ClientConfig, 'base' | 'name' | 'request'> & {
     client: Extract<Required<ClientConfig>['client'], object>;
-    output: Extract<Required<ClientConfig>['output'], object>;
-    plugins: ExtractArrayOfObjects<
-      Required<ClientConfig>['plugins'],
-      { name: string }
+    input: ExtractWithDiscriminator<ClientConfig['input'], { path: unknown }>;
+    output: Extract<ClientConfig['output'], object>;
+    pluginOrder: ReadonlyArray<ClientPlugins['name']>;
+    plugins: ArrayOfObjectsToObjectMap<
+      ExtractArrayOfObjects<ReadonlyArray<ClientPlugins>, { name: string }>,
+      'name'
     >;
-    schemas: Extract<Required<ClientConfig>['schemas'], object>;
-    services: Extract<Required<ClientConfig>['services'], object>;
-    types: Extract<Required<ClientConfig>['types'], object>;
   };

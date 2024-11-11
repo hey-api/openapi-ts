@@ -1,0 +1,25 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "version": "1.0.0"
+  },
+  "components": {
+    "schemas": {
+      "WeirdEnum": {
+        "description": "should not produce duplicate null",
+        "oneOf": [
+          {
+            "type": "string",
+            "enum": [""]
+          },
+          {
+            "type": ["string", "null"]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    }
+  }
+}

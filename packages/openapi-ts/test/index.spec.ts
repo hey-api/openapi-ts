@@ -20,17 +20,21 @@ describe('OpenAPI v2', () => {
   it.each([
     {
       config: {
-        client: 'fetch',
+        client: 'legacy/fetch',
         exportCore: true,
         input: '',
         output: '',
-        schemas: true,
-        services: {
-          asClass: true,
-        },
-        types: {
-          enums: 'javascript',
-        },
+        plugins: [
+          '@hey-api/schemas',
+          {
+            asClass: true,
+            name: '@hey-api/services',
+          },
+          {
+            enums: 'javascript',
+            name: '@hey-api/types',
+          },
+        ],
         useOptions: true,
       } as UserConfig,
       description: 'generate fetch client',
@@ -52,15 +56,17 @@ describe('OpenAPI v2', () => {
 
 describe('OpenAPI v3', () => {
   const config: UserConfig = {
-    client: 'fetch',
+    client: 'legacy/fetch',
     exportCore: true,
     input: '',
     output: '',
-    schemas: false,
-    services: {},
-    types: {
-      enums: 'javascript',
-    },
+    plugins: [
+      '@hey-api/services',
+      {
+        enums: 'javascript',
+        name: '@hey-api/types',
+      },
+    ],
     useOptions: true,
   };
 
@@ -72,40 +78,72 @@ describe('OpenAPI v3', () => {
   const clientScenarios = [
     {
       config: createConfig({
-        services: {
-          asClass: true,
-        },
+        plugins: [
+          {
+            enums: 'javascript',
+            name: '@hey-api/types',
+          },
+          {
+            asClass: true,
+            name: '@hey-api/services',
+          },
+        ],
       }),
       description: 'generate fetch client',
       name: 'v3',
     },
     {
       config: createConfig({
-        client: 'angular',
-        services: {
-          asClass: true,
-        },
-        types: {},
+        client: 'legacy/angular',
+        plugins: [
+          '@hey-api/types',
+          {
+            asClass: true,
+            name: '@hey-api/services',
+          },
+        ],
       }),
       description: 'generate angular client',
       name: 'v3_angular',
     },
     {
       config: createConfig({
-        client: 'node',
-        services: {
-          asClass: true,
-        },
+        client: 'legacy/angular',
+        plugins: ['@hey-api/types', '@hey-api/services'],
+      }),
+      description: 'generate tree-shakeable angular client',
+      name: 'v3_angular_tree_shakeable',
+    },
+    {
+      config: createConfig({
+        client: 'legacy/node',
+        plugins: [
+          {
+            enums: 'javascript',
+            name: '@hey-api/types',
+          },
+          {
+            asClass: true,
+            name: '@hey-api/services',
+          },
+        ],
       }),
       description: 'generate node client',
       name: 'v3_node',
     },
     {
       config: createConfig({
-        client: 'axios',
-        services: {
-          asClass: true,
-        },
+        client: 'legacy/axios',
+        plugins: [
+          {
+            enums: 'javascript',
+            name: '@hey-api/types',
+          },
+          {
+            asClass: true,
+            name: '@hey-api/services',
+          },
+        ],
       }),
       description: 'generate axios client',
       name: 'v3_axios',
@@ -130,44 +168,19 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         client: '@hey-api/client-axios',
-        services: {
-          asClass: true,
-        },
+        plugins: [
+          {
+            enums: 'javascript',
+            name: '@hey-api/types',
+          },
+          {
+            asClass: true,
+            name: '@hey-api/services',
+          },
+        ],
       }),
       description: 'generate class-based Axios client',
       name: 'v3-hey-api-client-axios-class',
-    },
-    {
-      config: createConfig({
-        client: '@hey-api/client-axios',
-        plugins: ['@tanstack/react-query'],
-      }),
-      description: 'generate Axios client with TanStack React Query plugin',
-      name: 'v3-hey-api-client-axios-plugin-tanstack-react-query',
-    },
-    {
-      config: createConfig({
-        client: '@hey-api/client-axios',
-        plugins: ['@tanstack/solid-query'],
-      }),
-      description: 'generate Axios client with TanStack Solid Query plugin',
-      name: 'v3-hey-api-client-axios-plugin-tanstack-solid-query',
-    },
-    {
-      config: createConfig({
-        client: '@hey-api/client-axios',
-        plugins: ['@tanstack/svelte-query'],
-      }),
-      description: 'generate Axios client with TanStack Svelte Query plugin',
-      name: 'v3-hey-api-client-axios-plugin-tanstack-svelte-query',
-    },
-    {
-      config: createConfig({
-        client: '@hey-api/client-axios',
-        plugins: ['@tanstack/vue-query'],
-      }),
-      description: 'generate Axios client with TanStack Vue Query plugin',
-      name: 'v3-hey-api-client-axios-plugin-tanstack-vue-query',
     },
     {
       config: createConfig({
@@ -189,52 +202,33 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         client: '@hey-api/client-fetch',
-        services: {
-          asClass: true,
-        },
+        plugins: [
+          {
+            enums: 'javascript',
+            name: '@hey-api/types',
+          },
+          {
+            asClass: true,
+            name: '@hey-api/services',
+          },
+        ],
       }),
       description: 'generate class-based Fetch API client',
       name: 'v3-hey-api-client-fetch-class',
     },
     {
       config: createConfig({
-        client: '@hey-api/client-fetch',
-        plugins: ['@tanstack/react-query'],
-      }),
-      description: 'generate Fetch API client with TanStack React Query plugin',
-      name: 'v3-hey-api-client-fetch-plugin-tanstack-react-query',
-    },
-    {
-      config: createConfig({
-        client: '@hey-api/client-fetch',
-        plugins: ['@tanstack/solid-query'],
-      }),
-      description: 'generate Fetch API client with TanStack Solid Query plugin',
-      name: 'v3-hey-api-client-fetch-plugin-tanstack-solid-query',
-    },
-    {
-      config: createConfig({
-        client: '@hey-api/client-fetch',
-        plugins: ['@tanstack/svelte-query'],
-      }),
-      description:
-        'generate Fetch API client with TanStack Svelte Query plugin',
-      name: 'v3-hey-api-client-fetch-plugin-tanstack-svelte-query',
-    },
-    {
-      config: createConfig({
-        client: '@hey-api/client-fetch',
-        plugins: ['@tanstack/vue-query'],
-      }),
-      description: 'generate Fetch API client with TanStack Vue Query plugin',
-      name: 'v3-hey-api-client-fetch-plugin-tanstack-vue-query',
-    },
-    {
-      config: createConfig({
-        client: 'xhr',
-        services: {
-          asClass: true,
-        },
+        client: 'legacy/xhr',
+        plugins: [
+          {
+            enums: 'javascript',
+            name: '@hey-api/types',
+          },
+          {
+            asClass: true,
+            name: '@hey-api/services',
+          },
+        ],
       }),
       description: 'generate xhr client',
       name: 'v3_xhr',
@@ -242,9 +236,14 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         name: 'ApiClient',
-        types: {
-          dates: true,
-        },
+        plugins: [
+          '@hey-api/types',
+          '@hey-api/services',
+          {
+            dates: true,
+            name: '@hey-api/transformers',
+          },
+        ],
       }),
       description: 'generate client',
       name: 'v3_client',
@@ -255,25 +254,34 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         exportCore: false,
-        services: false,
-        types: {
-          dates: true,
-          include: '^ModelWithPattern',
-        },
+        plugins: [
+          {
+            dates: true,
+            name: '@hey-api/transformers',
+          },
+          '@hey-api/types',
+        ],
       }),
       description: 'generate Date types',
       name: 'v3_date',
     },
     {
       config: createConfig({
-        services: {
-          asClass: true,
-          include: '^Defaults',
-        },
-        types: {
-          dates: true,
-          include: '^ModelWithString',
-        },
+        plugins: [
+          {
+            include: '^ModelWithString',
+            name: '@hey-api/types',
+          },
+          {
+            asClass: true,
+            include: '^Defaults',
+            name: '@hey-api/services',
+          },
+          {
+            dates: true,
+            name: '@hey-api/transformers',
+          },
+        ],
         useOptions: false,
       }),
       description: 'generate legacy positional arguments',
@@ -281,38 +289,53 @@ describe('OpenAPI v3', () => {
     },
     {
       config: createConfig({
-        services: {
-          asClass: true,
-          include: '^Defaults',
-        },
-        types: {
-          dates: true,
-          include: '^ModelWithString',
-        },
+        plugins: [
+          {
+            include: '^ModelWithString',
+            name: '@hey-api/types',
+          },
+          {
+            asClass: true,
+            include: '^Defaults',
+            name: '@hey-api/services',
+          },
+          {
+            dates: true,
+            name: '@hey-api/transformers',
+          },
+        ],
       }),
       description: 'generate optional arguments',
       name: 'v3_options',
     },
     {
       config: createConfig({
-        services: {
-          asClass: true,
-        },
-        types: {
-          enums: 'typescript',
-        },
+        plugins: [
+          {
+            enums: 'typescript',
+            name: '@hey-api/types',
+          },
+          {
+            asClass: true,
+            name: '@hey-api/services',
+          },
+        ],
       }),
       description: 'generate TypeScript enums',
       name: 'v3_enums_typescript',
     },
     {
       config: createConfig({
-        services: {
-          asClass: true,
-        },
-        types: {
-          enums: 'typescript+namespace',
-        },
+        plugins: [
+          {
+            enums: 'typescript+namespace',
+            name: '@hey-api/types',
+          },
+          {
+            asClass: true,
+            name: '@hey-api/services',
+          },
+        ],
       }),
       description: 'generate TypeScript enums with namespace',
       name: 'v3_enums_typescript_namespace',
@@ -320,10 +343,12 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         exportCore: false,
-        services: false,
-        types: {
-          name: 'PascalCase',
-        },
+        plugins: [
+          {
+            name: '@hey-api/types',
+            style: 'PascalCase',
+          },
+        ],
       }),
       description: 'generate PascalCase types',
       name: 'v3-types-PascalCase',
@@ -331,11 +356,12 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         exportCore: false,
-        schemas: {
-          type: 'form',
-        },
-        services: false,
-        types: false,
+        plugins: [
+          {
+            name: '@hey-api/schemas',
+            type: 'form',
+          },
+        ],
       }),
       description: 'generate form validation schemas',
       name: 'v3-schemas-form',
@@ -343,11 +369,12 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         exportCore: false,
-        schemas: {
-          type: 'json',
-        },
-        services: false,
-        types: false,
+        plugins: [
+          {
+            name: '@hey-api/schemas',
+            type: 'json',
+          },
+        ],
       }),
       description: 'generate JSON Schemas',
       name: 'v3-schemas-json',
@@ -355,11 +382,32 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         exportCore: false,
-        services: {
-          asClass: true,
-          include: '^(Simple|Parameters)',
-          name: 'myAwesome{{name}}Api',
-        },
+        plugins: [
+          {
+            name: '@hey-api/schemas',
+            nameBuilder: (name) => `$${name}`,
+            type: 'json',
+          },
+        ],
+      }),
+      description: 'generate JSON Schemas with custom names',
+      name: 'v3-schemas-name',
+    },
+    {
+      config: createConfig({
+        exportCore: false,
+        plugins: [
+          {
+            enums: 'javascript',
+            name: '@hey-api/types',
+          },
+          {
+            asClass: true,
+            include: '^(Simple|Parameters)',
+            name: '@hey-api/services',
+            serviceNameBuilder: 'myAwesome{{name}}Api',
+          },
+        ],
       }),
       description: 'generate services with custom name',
       name: 'v3_services_name',
@@ -367,9 +415,16 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         exportCore: false,
-        services: {
-          filter: '^\\w+ /api/v{api-version}/simple$',
-        },
+        plugins: [
+          {
+            enums: 'javascript',
+            name: '@hey-api/types',
+          },
+          {
+            filter: '^\\w+ /api/v{api-version}/simple$',
+            name: '@hey-api/services',
+          },
+        ],
       }),
       description: 'generate services with specific endpoints',
       name: 'v3_services_filter',
@@ -377,7 +432,13 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         exportCore: false,
-        services: true,
+        plugins: [
+          {
+            enums: 'javascript',
+            name: '@hey-api/types',
+          },
+          '@hey-api/services',
+        ],
       }),
       description: 'generate tree-shakeable services',
       name: 'v3_tree_shakeable',
@@ -385,8 +446,7 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         exportCore: false,
-        services: false,
-        types: {},
+        plugins: ['@hey-api/types'],
       }),
       description: 'generate only types with default settings',
       name: 'v3_types',
@@ -394,10 +454,12 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         exportCore: false,
-        services: false,
-        types: {
-          tree: false,
-        },
+        plugins: [
+          {
+            name: '@hey-api/types',
+            tree: false,
+          },
+        ],
       }),
       description: 'generate only types without tree',
       name: 'v3_types_no_tree',
@@ -429,9 +491,13 @@ describe('OpenAPI v3', () => {
         ...config,
         input: V3_TRANSFORMS_SPEC_PATH,
         output,
-        types: {
-          dates: 'types+transform',
-        },
+        plugins: [
+          ...(config.plugins ?? []),
+          {
+            dates: true,
+            name: '@hey-api/transformers',
+          },
+        ],
       });
 
       sync(`${output}**/*.ts`).forEach((file) => {

@@ -1,6 +1,6 @@
 ---
 title: Fetch API client
-description: Fetch API client for your stack. Compatible with all our features.
+description: Fetch API client for Hey API. Compatible with all our features.
 ---
 
 <script setup>
@@ -13,7 +13,7 @@ import { embedProject } from '../../embed'
 Fetch API client is currently in beta. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
 :::
 
-Plug and play Fetch API wrapper for `@hey-api/openapi-ts` generator.
+The [Fetch API](https://developer.mozilla.org/docs/Web/API/Fetch_API) provides an interface for fetching resources (including across the network). It is a more powerful and flexible replacement for XMLHttpRequest.
 
 <button class="buttonLink" @click="(event) => embedProject('hey-api-client-fetch-example')(event)">
 Live demo
@@ -45,12 +45,12 @@ bun add @hey-api/client-fetch
 
 Ensure you have already [configured](/openapi-ts/get-started) `@hey-api/openapi-ts`. Update your configuration to use the Fetch API client package.
 
-```js{2}
+```js
 export default {
-  client: '@hey-api/client-fetch',
+  client: '@hey-api/client-fetch', // [!code ++]
   input: 'path/to/openapi.json',
   output: 'src/client',
-}
+};
 ```
 
 You can now run `openapi-ts` to use the new Fetch API client. 🎉
@@ -79,7 +79,7 @@ const client = createClient({
 
 ## Interceptors
 
-Interceptors (middleware) can be used to modify requests before they're sent or responses before they're returned to the rest of your application. Fetch API does not have the interceptor functionality, so we implement our own. Below is an example request interceptor
+Interceptors (middleware) can be used to modify requests before they're sent or responses before they're returned to the rest of your application. They can be added with `use` or removed with `eject`. Fetch API does not have the interceptor functionality, so we implement our own. Below is an example request interceptor
 
 ::: code-group
 
@@ -181,7 +181,7 @@ const response = await getFoo({
 
 ## Bundling
 
-Sometimes, you may not want to declare standalone clients as a dependency. This scenario is common if you're using Hey API to generate output that is repackaged and published for other consumers under your own brand. For such cases, our clients support bundling through the `client.bundle` configuration option.
+Sometimes, you may not want to declare client packages as a dependency. This scenario is common if you're using Hey API to generate output that is repackaged and published for other consumers under your own brand. For such cases, our clients support bundling through the `client.bundle` configuration option.
 
 ```js
 export default {

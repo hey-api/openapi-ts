@@ -1,5 +1,56 @@
 # @example/openapi-ts-axios
 
+## 0.0.14
+
+### Patch Changes
+
+- Updated dependencies [[`01dee3d`](https://github.com/hey-api/openapi-ts/commit/01dee3df879232939e43355231147b3d910fb482)]:
+  - @hey-api/client-axios@0.2.10
+
+## 0.0.13
+
+### Patch Changes
+
+- [#1151](https://github.com/hey-api/openapi-ts/pull/1151) [`587791d`](https://github.com/hey-api/openapi-ts/commit/587791dfede0167fbed229281467e4c4875936f5) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update website domain, add license documentation
+
+- Updated dependencies [[`587791d`](https://github.com/hey-api/openapi-ts/commit/587791dfede0167fbed229281467e4c4875936f5)]:
+  - @hey-api/client-axios@0.2.9
+
+## 0.0.12
+
+### Patch Changes
+
+- Updated dependencies [[`a0a5551`](https://github.com/hey-api/openapi-ts/commit/a0a55510d30a1a8dea0ade4908b5b13d51b5f9e6)]:
+  - @hey-api/client-axios@0.2.8
+
+## 0.0.11
+
+### Patch Changes
+
+- Updated dependencies [[`7f986c2`](https://github.com/hey-api/openapi-ts/commit/7f986c2c7726ed8fbf16f8b235b7769c7d990502)]:
+  - @hey-api/client-axios@0.2.7
+
+## 0.0.10
+
+### Patch Changes
+
+- Updated dependencies [[`fe743c2`](https://github.com/hey-api/openapi-ts/commit/fe743c2d41c23bf7e1706bceedd6319299131197)]:
+  - @hey-api/client-axios@0.2.6
+
+## 0.0.9
+
+### Patch Changes
+
+- Updated dependencies [[`11a276a`](https://github.com/hey-api/openapi-ts/commit/11a276a1e35dde0735363e892d8142016fd87eec)]:
+  - @hey-api/client-axios@0.2.5
+
+## 0.0.8
+
+### Patch Changes
+
+- Updated dependencies [[`7ae2b1d`](https://github.com/hey-api/openapi-ts/commit/7ae2b1db047f3b6efe917a8b43ac7c851fb86c8f), [`2079c6e`](https://github.com/hey-api/openapi-ts/commit/2079c6e83a6b71e157c8e7ea56260b4e9ff8411d)]:
+  - @hey-api/client-axios@0.2.4
+
 ## 0.0.7
 
 ### Patch Changes

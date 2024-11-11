@@ -4,21 +4,20 @@ import path from 'node:path';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { setConfig } from '../../utils/config';
-import { generateCore } from '../core';
+import { generateLegacyCore } from '../core';
 import { mockTemplates } from './mocks';
 
 vi.mock('node:fs');
 
-describe('generateCore', () => {
-  let templates: Parameters<typeof generateCore>[2];
+describe('generateLegacyCore', () => {
+  let templates: Parameters<typeof generateLegacyCore>[2];
   beforeEach(() => {
     templates = mockTemplates;
   });
 
   it('writes to filesystem', async () => {
-    const client: Parameters<typeof generateCore>[1] = {
+    const client: Parameters<typeof generateLegacyCore>[1] = {
       models: [],
-      operationIds: new Map(),
       server: 'http://localhost:8080',
       services: [],
       types: {},
@@ -27,28 +26,43 @@ describe('generateCore', () => {
 
     setConfig({
       client: {
-        name: 'fetch',
+        name: 'legacy/fetch',
       },
       configFile: '',
       debug: false,
       dryRun: false,
-      experimental_parser: false,
+      experimentalParser: false,
       exportCore: true,
-      input: '',
+      input: {
+        path: '',
+      },
       name: 'AppClient',
       output: {
         path: '',
       },
-      plugins: [],
-      schemas: {},
-      services: {},
-      types: {
-        enums: 'javascript',
+      pluginOrder: ['@hey-api/types', '@hey-api/schemas', '@hey-api/services'],
+      plugins: {
+        '@hey-api/schemas': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          name: '@hey-api/schemas',
+        },
+        '@hey-api/services': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          name: '@hey-api/services',
+        },
+        '@hey-api/types': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          enums: 'javascript',
+          name: '@hey-api/types',
+        },
       },
       useOptions: true,
     });
 
-    await generateCore('/', client, templates);
+    await generateLegacyCore('/', client, templates);
 
     expect(writeFileSync).toHaveBeenCalledWith(
       path.resolve('/', '/OpenAPI.ts'),
@@ -77,9 +91,8 @@ describe('generateCore', () => {
   });
 
   it('uses client server value for base', async () => {
-    const client: Parameters<typeof generateCore>[1] = {
+    const client: Parameters<typeof generateLegacyCore>[1] = {
       models: [],
-      operationIds: new Map(),
       server: 'http://localhost:8080',
       services: [],
       types: {},
@@ -88,28 +101,43 @@ describe('generateCore', () => {
 
     const config = setConfig({
       client: {
-        name: 'fetch',
+        name: 'legacy/fetch',
       },
       configFile: '',
       debug: false,
       dryRun: false,
-      experimental_parser: false,
+      experimentalParser: false,
       exportCore: true,
-      input: '',
+      input: {
+        path: '',
+      },
       name: 'AppClient',
       output: {
         path: '',
       },
-      plugins: [],
-      schemas: {},
-      services: {},
-      types: {
-        enums: 'javascript',
+      pluginOrder: ['@hey-api/types', '@hey-api/schemas', '@hey-api/services'],
+      plugins: {
+        '@hey-api/schemas': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          name: '@hey-api/schemas',
+        },
+        '@hey-api/services': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          name: '@hey-api/services',
+        },
+        '@hey-api/types': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          enums: 'javascript',
+          name: '@hey-api/types',
+        },
       },
       useOptions: true,
     });
 
-    await generateCore('/', client, templates);
+    await generateLegacyCore('/', client, templates);
 
     expect(templates.core.settings).toHaveBeenCalledWith({
       $config: config,
@@ -120,9 +148,8 @@ describe('generateCore', () => {
   });
 
   it('uses custom value for base', async () => {
-    const client: Parameters<typeof generateCore>[1] = {
+    const client: Parameters<typeof generateLegacyCore>[1] = {
       models: [],
-      operationIds: new Map(),
       server: 'http://localhost:8080',
       services: [],
       types: {},
@@ -132,28 +159,43 @@ describe('generateCore', () => {
     const config = setConfig({
       base: 'foo',
       client: {
-        name: 'fetch',
+        name: 'legacy/fetch',
       },
       configFile: '',
       debug: false,
       dryRun: false,
-      experimental_parser: false,
+      experimentalParser: false,
       exportCore: true,
-      input: '',
+      input: {
+        path: '',
+      },
       name: 'AppClient',
       output: {
         path: '',
       },
-      plugins: [],
-      schemas: {},
-      services: {},
-      types: {
-        enums: 'javascript',
+      pluginOrder: ['@hey-api/types', '@hey-api/schemas', '@hey-api/services'],
+      plugins: {
+        '@hey-api/schemas': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          name: '@hey-api/schemas',
+        },
+        '@hey-api/services': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          name: '@hey-api/services',
+        },
+        '@hey-api/types': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          enums: 'javascript',
+          name: '@hey-api/types',
+        },
       },
       useOptions: true,
     });
 
-    await generateCore('/', client, templates);
+    await generateLegacyCore('/', client, templates);
 
     expect(templates.core.settings).toHaveBeenCalledWith({
       $config: config,

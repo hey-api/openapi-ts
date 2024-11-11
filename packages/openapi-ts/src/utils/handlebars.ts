@@ -1,50 +1,95 @@
-import Handlebars from 'handlebars/runtime';
+import Handlebars from 'handlebars';
 
-import templateClient from '../templates/client.hbs';
-import angularGetHeaders from '../templates/core/angular/getHeaders.hbs';
-import angularGetRequestBody from '../templates/core/angular/getRequestBody.hbs';
-import angularGetResponseBody from '../templates/core/angular/getResponseBody.hbs';
-import angularGetResponseHeader from '../templates/core/angular/getResponseHeader.hbs';
-import angularRequest from '../templates/core/angular/request.hbs';
-import angularSendRequest from '../templates/core/angular/sendRequest.hbs';
-import templateCoreApiError from '../templates/core/ApiError.hbs';
-import templateCoreApiRequestOptions from '../templates/core/ApiRequestOptions.hbs';
-import templateCoreApiResult from '../templates/core/ApiResult.hbs';
-import axiosGetHeaders from '../templates/core/axios/getHeaders.hbs';
-import axiosGetRequestBody from '../templates/core/axios/getRequestBody.hbs';
-import axiosGetResponseBody from '../templates/core/axios/getResponseBody.hbs';
-import axiosGetResponseHeader from '../templates/core/axios/getResponseHeader.hbs';
-import axiosRequest from '../templates/core/axios/request.hbs';
-import axiosSendRequest from '../templates/core/axios/sendRequest.hbs';
-import templateCoreBaseHttpRequest from '../templates/core/BaseHttpRequest.hbs';
-import templateCancelablePromise from '../templates/core/CancelablePromise.hbs';
-import fetchGetHeaders from '../templates/core/fetch/getHeaders.hbs';
-import fetchGetRequestBody from '../templates/core/fetch/getRequestBody.hbs';
-import fetchGetResponseBody from '../templates/core/fetch/getResponseBody.hbs';
-import fetchGetResponseHeader from '../templates/core/fetch/getResponseHeader.hbs';
-import fetchRequest from '../templates/core/fetch/request.hbs';
-import fetchSendRequest from '../templates/core/fetch/sendRequest.hbs';
-import functionBase64 from '../templates/core/functions/base64.hbs';
-import functionCatchErrorCodes from '../templates/core/functions/catchErrorCodes.hbs';
-import functionGetFormData from '../templates/core/functions/getFormData.hbs';
-import functionGetQueryString from '../templates/core/functions/getQueryString.hbs';
-import functionGetUrl from '../templates/core/functions/getUrl.hbs';
-import functionIsBlob from '../templates/core/functions/isBlob.hbs';
-import functionIsFormData from '../templates/core/functions/isFormData.hbs';
-import functionIsString from '../templates/core/functions/isString.hbs';
-import functionIsStringWithValue from '../templates/core/functions/isStringWithValue.hbs';
-import functionIsSuccess from '../templates/core/functions/isSuccess.hbs';
-import functionResolve from '../templates/core/functions/resolve.hbs';
-import templateCoreHttpRequest from '../templates/core/HttpRequest.hbs';
-import templateCoreSettings from '../templates/core/OpenAPI.hbs';
-import templateCoreRequest from '../templates/core/request.hbs';
-import xhrGetHeaders from '../templates/core/xhr/getHeaders.hbs';
-import xhrGetRequestBody from '../templates/core/xhr/getRequestBody.hbs';
-import xhrGetResponseBody from '../templates/core/xhr/getResponseBody.hbs';
-import xhrGetResponseHeader from '../templates/core/xhr/getResponseHeader.hbs';
-import xhrRequest from '../templates/core/xhr/request.hbs';
-import xhrSendRequest from '../templates/core/xhr/sendRequest.hbs';
+// @ts-ignore
+import templateClient from '../legacy/handlebars/compiled/client.js';
+// @ts-ignore
+import angularGetHeaders from '../legacy/handlebars/compiled/core/angular/getHeaders.js';
+// @ts-ignore
+import angularGetRequestBody from '../legacy/handlebars/compiled/core/angular/getRequestBody.js';
+// @ts-ignore
+import angularGetResponseBody from '../legacy/handlebars/compiled/core/angular/getResponseBody.js';
+// @ts-ignore
+import angularGetResponseHeader from '../legacy/handlebars/compiled/core/angular/getResponseHeader.js';
+// @ts-ignore
+import angularRequest from '../legacy/handlebars/compiled/core/angular/request.js';
+// @ts-ignore
+import angularSendRequest from '../legacy/handlebars/compiled/core/angular/sendRequest.js';
+// @ts-ignore
+import templateCoreApiError from '../legacy/handlebars/compiled/core/ApiError.js';
+// @ts-ignore
+import templateCoreApiRequestOptions from '../legacy/handlebars/compiled/core/ApiRequestOptions.js';
+// @ts-ignore
+import templateCoreApiResult from '../legacy/handlebars/compiled/core/ApiResult.js';
+// @ts-ignore
+import axiosGetHeaders from '../legacy/handlebars/compiled/core/axios/getHeaders.js';
+// @ts-ignore
+import axiosGetRequestBody from '../legacy/handlebars/compiled/core/axios/getRequestBody.js';
+// @ts-ignore
+import axiosGetResponseBody from '../legacy/handlebars/compiled/core/axios/getResponseBody.js';
+// @ts-ignore
+import axiosGetResponseHeader from '../legacy/handlebars/compiled/core/axios/getResponseHeader.js';
+// @ts-ignore
+import axiosRequest from '../legacy/handlebars/compiled/core/axios/request.js';
+// @ts-ignore
+import axiosSendRequest from '../legacy/handlebars/compiled/core/axios/sendRequest.js';
+// @ts-ignore
+import templateCoreBaseHttpRequest from '../legacy/handlebars/compiled/core/BaseHttpRequest.js';
+// @ts-ignore
+import templateCancelablePromise from '../legacy/handlebars/compiled/core/CancelablePromise.js';
+// @ts-ignore
+import fetchGetHeaders from '../legacy/handlebars/compiled/core/fetch/getHeaders.js';
+// @ts-ignore
+import fetchGetRequestBody from '../legacy/handlebars/compiled/core/fetch/getRequestBody.js';
+// @ts-ignore
+import fetchGetResponseBody from '../legacy/handlebars/compiled/core/fetch/getResponseBody.js';
+// @ts-ignore
+import fetchGetResponseHeader from '../legacy/handlebars/compiled/core/fetch/getResponseHeader.js';
+// @ts-ignore
+import fetchRequest from '../legacy/handlebars/compiled/core/fetch/request.js';
+// @ts-ignore
+import fetchSendRequest from '../legacy/handlebars/compiled/core/fetch/sendRequest.js';
+// @ts-ignore
+import functionBase64 from '../legacy/handlebars/compiled/core/functions/base64.js';
+// @ts-ignore
+import functionCatchErrorCodes from '../legacy/handlebars/compiled/core/functions/catchErrorCodes.js';
+// @ts-ignore
+import functionGetFormData from '../legacy/handlebars/compiled/core/functions/getFormData.js';
+// @ts-ignore
+import functionGetQueryString from '../legacy/handlebars/compiled/core/functions/getQueryString.js';
+// @ts-ignore
+import functionGetUrl from '../legacy/handlebars/compiled/core/functions/getUrl.js';
+// @ts-ignore
+import functionIsBlob from '../legacy/handlebars/compiled/core/functions/isBlob.js';
+// @ts-ignore
+import functionIsFormData from '../legacy/handlebars/compiled/core/functions/isFormData.js';
+// @ts-ignore
+import functionIsString from '../legacy/handlebars/compiled/core/functions/isString.js';
+// @ts-ignore
+import functionIsStringWithValue from '../legacy/handlebars/compiled/core/functions/isStringWithValue.js';
+// @ts-ignore
+import functionIsSuccess from '../legacy/handlebars/compiled/core/functions/isSuccess.js';
+// @ts-ignore
+import functionResolve from '../legacy/handlebars/compiled/core/functions/resolve.js';
+// @ts-ignore
+import templateCoreHttpRequest from '../legacy/handlebars/compiled/core/HttpRequest.js';
+// @ts-ignore
+import templateCoreSettings from '../legacy/handlebars/compiled/core/OpenAPI.js';
+// @ts-ignore
+import templateCoreRequest from '../legacy/handlebars/compiled/core/request.js';
+// @ts-ignore
+import xhrGetHeaders from '../legacy/handlebars/compiled/core/xhr/getHeaders.js';
+// @ts-ignore
+import xhrGetRequestBody from '../legacy/handlebars/compiled/core/xhr/getRequestBody.js';
+// @ts-ignore
+import xhrGetResponseBody from '../legacy/handlebars/compiled/core/xhr/getResponseBody.js';
+// @ts-ignore
+import xhrGetResponseHeader from '../legacy/handlebars/compiled/core/xhr/getResponseHeader.js';
+// @ts-ignore
+import xhrRequest from '../legacy/handlebars/compiled/core/xhr/request.js';
+// @ts-ignore
+import xhrSendRequest from '../legacy/handlebars/compiled/core/xhr/sendRequest.js';
 import { camelCase } from './camelCase';
+import { getConfig } from './config';
 import { transformServiceName } from './transform';
 
 export const registerHandlebarHelpers = (): void => {
@@ -69,6 +114,15 @@ export const registerHandlebarHelpers = (): void => {
     },
   );
 
+  Handlebars.registerHelper(
+    'ifServicesResponse',
+    function (this: unknown, value: string, options: Handlebars.HelperOptions) {
+      return getConfig().plugins['@hey-api/services']?.response === value
+        ? options.fn(this)
+        : options.inverse(this);
+    },
+  );
+
   Handlebars.registerHelper('ifdef', function (this: unknown, ...args): string {
     const options = args.pop();
     if (!args.every((value) => !value)) {
@@ -89,7 +143,15 @@ export const registerHandlebarHelpers = (): void => {
     },
   );
 
-  Handlebars.registerHelper('transformServiceName', transformServiceName);
+  Handlebars.registerHelper(
+    'transformServiceName',
+    function (this: unknown, name: string) {
+      return transformServiceName({
+        config: getConfig(),
+        name,
+      });
+    },
+  );
 };
 
 export interface Templates {
@@ -128,7 +190,7 @@ export const registerHandlebarTemplates = (): Templates => {
     },
   };
 
-  // Generic functions used in 'request' file @see src/templates/core/request.hbs for more info
+  // Generic functions used in 'request' file @see src/legacy/handlebars/templates/core/request.hbs for more info
   Handlebars.registerPartial(
     'functions/base64',
     Handlebars.template(functionBase64),

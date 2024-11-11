@@ -11,7 +11,7 @@ describe('v2.angular', () => {
   beforeAll(async () => {
     cleanup('v2/angular')
     createAngularProject('v2/angular', 'app')
-    await generateClient('v2/angular/app/src/client', 'v2', 'angular')
+    await generateClient('v2/angular/app/src/client', 'v2', 'legacy/angular')
     copyAsset('main-angular.ts', 'v2/angular/app/src/main.ts')
     buildAngularProject('v2/angular', 'app', 'dist')
     await server.start('v2/angular/app/dist/browser')
@@ -31,14 +31,14 @@ describe('v2.angular', () => {
     const result = await browser.evaluate(
       async () =>
         await new Promise(resolve => {
-          // @ts-ignore
+          // @ts-expect-error
           const { OpenAPI, SimpleService } = window.api
-          // @ts-ignore
+          // @ts-expect-error
           OpenAPI.TOKEN = window.tokenRequest
           SimpleService.getCallWithoutParametersAndResponse().subscribe(resolve)
         })
     )
-    // @ts-ignore
+    // @ts-expect-error
     expect(result.headers.authorization).toBe('Bearer MY_TOKEN')
   })
 
@@ -46,7 +46,7 @@ describe('v2.angular', () => {
     const result = await browser.evaluate(
       async () =>
         await new Promise(resolve => {
-          // @ts-ignore
+          // @ts-expect-error
           const { ComplexService } = window.api
           ComplexService.complexTypes({
             first: {

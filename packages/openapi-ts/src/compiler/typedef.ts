@@ -1,7 +1,19 @@
 import ts from 'typescript';
 
-import { createTypeNode, createTypeReferenceNode } from './types';
-import { addLeadingComments, type Comments, tsNodeToString } from './utils';
+import { validTypescriptIdentifierRegExp } from '../utils/regexp';
+import {
+  createKeywordTypeNode,
+  createParameterDeclaration,
+  createStringLiteral,
+  createTypeNode,
+  createTypeReferenceNode,
+} from './types';
+import {
+  addLeadingComments,
+  type Comments,
+  createIdentifier,
+  tsNodeToString,
+} from './utils';
 
 const nullNode = createTypeReferenceNode({ typeName: 'null' });
 
@@ -38,40 +50,77 @@ const maybeNullable = ({
  * @returns ts.TypeLiteralNode | ts.TypeUnionNode
  */
 export const createTypeInterfaceNode = ({
+  indexProperty,
   isNullable,
   properties,
+  useLegacyResolution,
 }: {
+  /**
+   * Adds an index signature if defined.
+   * @example
+   * ```ts
+   * type IndexProperty = {
+   *   [key: string]: string
+   * }
+   * ```
+   */
+  indexProperty?: Property;
   isNullable?: boolean;
   properties: Property[];
+  useLegacyResolution: boolean;
 }) => {
-  const node = ts.factory.createTypeLiteralNode(
-    properties.map((property) => {
-      const modifiers: readonly ts.Modifier[] | undefined = property.isReadOnly
+  const propertyTypes: Array<ts.TypeNode> = [];
+
+  const members: Array<ts.TypeElement> = properties.map((property) => {
+    const modifiers: readonly ts.Modifier[] | undefined = property.isReadOnly
+      ? [ts.factory.createModifier(ts.SyntaxKind.ReadonlyKeyword)]
+      : undefined;
+
+    const questionToken: ts.QuestionToken | undefined =
+      property.isRequired !== false
+        ? undefined
+        : ts.factory.createToken(ts.SyntaxKind.QuestionToken);
+
+    const type: ts.TypeNode | undefined = createTypeNode(property.type);
+    propertyTypes.push(type);
+
+    const signature = ts.factory.createPropertySignature(
+      modifiers,
+      useLegacyResolution ||
+        property.name.match(validTypescriptIdentifierRegExp)
+        ? property.name
+        : createStringLiteral({ text: property.name }),
+      questionToken,
+      type,
+    );
+
+    addLeadingComments({
+      comments: property.comment,
+      node: signature,
+    });
+
+    return signature;
+  });
+
+  if (indexProperty) {
+    const modifiers: readonly ts.Modifier[] | undefined =
+      indexProperty.isReadOnly
         ? [ts.factory.createModifier(ts.SyntaxKind.ReadonlyKeyword)]
         : undefined;
+    const indexSignature = ts.factory.createIndexSignature(
+      modifiers,
+      [
+        createParameterDeclaration({
+          name: createIdentifier({ text: indexProperty.name }),
+          type: createKeywordTypeNode({ keyword: 'string' }),
+        }),
+      ],
+      createTypeNode(indexProperty.type),
+    );
+    members.push(indexSignature);
+  }
 
-      const questionToken: ts.QuestionToken | undefined =
-        property.isRequired !== false
-          ? undefined
-          : ts.factory.createToken(ts.SyntaxKind.QuestionToken);
-
-      const type: ts.TypeNode | undefined = createTypeNode(property.type);
-
-      const signature = ts.factory.createPropertySignature(
-        modifiers,
-        property.name,
-        questionToken,
-        type,
-      );
-
-      addLeadingComments({
-        comments: property.comment,
-        node: signature,
-      });
-
-      return signature;
-    }),
-  );
+  const node = ts.factory.createTypeLiteralNode(members);
   return maybeNullable({ isNullable, node });
 };
 
@@ -140,6 +189,7 @@ export const createTypeRecordNode = (
   keys: (any | ts.TypeNode)[],
   values: (any | ts.TypeNode)[],
   isNullable: boolean = false,
+  useLegacyResolution: boolean = true,
 ) => {
   const keyNode = createTypeUnionNode({
     types: keys,
@@ -157,6 +207,7 @@ export const createTypeRecordNode = (
         type: valueNode,
       },
     ],
+    useLegacyResolution,
   });
   return maybeNullable({ isNullable, node });
 };
@@ -168,11 +219,14 @@ export const createTypeRecordNode = (
  * @returns ts.TypeReferenceNode | ts.UnionTypeNode
  */
 export const createTypeArrayNode = (
-  types: (any | ts.TypeNode)[],
+  types: (any | ts.TypeNode)[] | ts.TypeNode | string,
   isNullable: boolean = false,
 ) => {
   const node = createTypeReferenceNode({
-    typeArguments: [createTypeUnionNode({ types })],
+    typeArguments: [
+      // @ts-ignore
+      Array.isArray(types) ? createTypeUnionNode({ types }) : types,
+    ],
     typeName: 'Array',
   });
   return maybeNullable({ isNullable, node });

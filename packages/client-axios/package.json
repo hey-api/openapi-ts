@@ -1,9 +1,8 @@
 {
   "name": "@hey-api/client-axios",
-  "version": "0.2.3",
-  "type": "module",
-  "description": "Typesafe Axios client for your @hey-api/openapi-ts types",
-  "homepage": "https://heyapi.vercel.app/",
+  "version": "0.2.10",
+  "description": "🚀 Axios client for `@hey-api/openapi-ts` codegen.",
+  "homepage": "https://heyapi.dev/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hey-api/openapi-ts.git"
@@ -12,6 +11,12 @@
     "url": "https://github.com/hey-api/openapi-ts/issues"
   },
   "license": "MIT",
+  "author": {
+    "email": "lmenus@lmen.us",
+    "name": "Lubos Menus",
+    "url": "https://lmen.us"
+  },
+  "funding": "https://github.com/sponsors/hey-api",
   "keywords": [
     "axios",
     "client",
@@ -25,18 +30,19 @@
     "typescript",
     "vue"
   ],
-  "types": "dist/node/index.d.ts",
-  "main": "dist/node/index.cjs",
-  "module": "dist/node/index.mjs",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": {
-        "types": "./dist/node/index.d.ts",
-        "default": "./dist/node/index.mjs"
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
       },
       "require": {
-        "types": "./dist/node/index.d.ts",
-        "default": "./dist/node/index.cjs"
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
       }
     },
     "./package.json": "./package.json"
@@ -44,28 +50,24 @@
   "sideEffects": false,
   "files": [
     "dist",
+    "LICENSE.md",
     "src"
   ],
   "scripts": {
-    "build-bundle": "rollup --config rollup.config.ts --configPlugin typescript",
-    "build-types-check": "tsc --project tsconfig.check.json",
-    "build-types-roll": "rollup --config rollup.dts.config.ts --configPlugin typescript && rimraf temp",
-    "build-types-temp": "tsc --emitDeclarationOnly --outDir temp -p src/node",
-    "build-types": "pnpm build-types-temp && pnpm build-types-roll && pnpm build-types-check",
-    "build": "pnpm clean && pnpm build-bundle && pnpm build-types",
-    "clean": "rimraf dist coverage node_modules/.cache",
-    "dev": "rimraf dist && pnpm build-bundle --watch",
+    "build": "tsup && pnpm check-exports",
+    "check-exports": "attw --pack .",
+    "dev": "tsup --watch",
     "prepublishOnly": "pnpm build",
     "test:coverage": "vitest run --coverage",
     "test:update": "vitest watch --update",
     "test:watch": "vitest watch",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "vitest --typecheck --watch=false"
   },
   "peerDependencies": {
     "axios": ">= 1.0.0 < 2"
   },
   "devDependencies": {
-    "axios": "1.7.3"
+    "axios": "1.7.7"
   }
 }

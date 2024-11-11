@@ -1,6 +1,6 @@
 ---
 title: Axios client
-description: Axios client for your stack. Compatible with all our features.
+description: Axios client for Hey API. Compatible with all our features.
 ---
 
 <script setup>
@@ -13,7 +13,7 @@ import { embedProject } from '../../embed'
 Axios client is currently in beta. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
 :::
 
-Plug and play Axios wrapper for `@hey-api/openapi-ts` generator.
+[Axios](https://axios-http.com/) is a simple promise based HTTP client for the browser and Node.js. Axios provides a simple to use library in a small package with a very extensible interface.
 
 <button class="buttonLink" @click="(event) => embedProject('hey-api-client-axios-example')(event)">
 Live demo
@@ -45,12 +45,12 @@ bun add @hey-api/client-axios
 
 Ensure you have already [configured](/openapi-ts/get-started) `@hey-api/openapi-ts`. Update your configuration to use the Axios client package.
 
-```js{2}
+```js
 export default {
-  client: '@hey-api/client-axios',
+  client: '@hey-api/client-axios', // [!code ++]
   input: 'path/to/openapi.json',
   output: 'src/client',
-}
+};
 ```
 
 You can now run `openapi-ts` to use the new Axios client. 🎉
@@ -142,7 +142,7 @@ const response = await getFoo({
 
 ## Bundling
 
-Sometimes, you may not want to declare standalone clients as a dependency. This scenario is common if you're using Hey API to generate output that is repackaged and published for other consumers under your own brand. For such cases, our clients support bundling through the `client.bundle` configuration option.
+Sometimes, you may not want to declare client packages as a dependency. This scenario is common if you're using Hey API to generate output that is repackaged and published for other consumers under your own brand. For such cases, our clients support bundling through the `client.bundle` configuration option.
 
 ```js
 export default {

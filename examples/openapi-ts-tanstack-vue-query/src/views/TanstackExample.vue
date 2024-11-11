@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { $Pet, type Pet } from '@/client'
+import { PetSchema, type Pet } from '@/client'
 import {
   addPetMutation,
   getPetByIdOptions,
@@ -40,7 +40,7 @@ const petId = ref<number>()
 const petInput = ref({ name: '', category: '' })
 
 const addPet = useMutation({
-  ...addPetMutation,
+  ...addPetMutation(),
   onError: (error) => {
     console.log(error)
   },
@@ -57,7 +57,7 @@ const addPet = useMutation({
 })
 
 const updatePet = useMutation({
-  ...updatePetMutation,
+  ...updatePetMutation(),
   onError: (error) => {
     console.log(error)
   },
@@ -86,7 +86,7 @@ const { data, error } = useQuery(
 )
 
 const handleAddPet = async () => {
-  if ($Pet.required.includes('name') && !petInput.value?.name?.length) {
+  if (PetSchema.required.includes('name') && !petInput.value?.name?.length) {
     return
   }
 
@@ -153,11 +153,11 @@ watch(error, (error) => {
   <div class="bg-[#18191b] py-12">
     <div class="mx-auto flex max-w-md flex-col gap-12">
       <div class="flex items-center">
-        <a class="shrink-0" href="https://heyapi.vercel.app/" target="_blank">
+        <a class="shrink-0" href="https://heyapi.dev/" target="_blank">
           <img
             alt="Hey API logo"
             class="size-16 transition duration-300 will-change-auto"
-            src="https://heyapi.vercel.app/logo.png"
+            src="https://heyapi.dev/logo.png"
           />
         </a>
 

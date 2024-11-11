@@ -8,7 +8,7 @@ import server from './scripts/server'
 describe('client.fetch', () => {
   beforeAll(async () => {
     cleanup('client/fetch')
-    await generateClient('client/fetch', 'v3', 'fetch', false, 'ApiClient')
+    await generateClient('client/fetch', 'v3', 'legacy/fetch', false, 'ApiClient')
     compileWithTypescript('client/fetch')
     await server.start('client/fetch')
   }, 40000)
@@ -26,7 +26,7 @@ describe('client.fetch', () => {
       USERNAME: undefined
     })
     const result = await client.simple.getCallWithoutParametersAndResponse()
-    // @ts-ignore
+    // @ts-expect-error
     expect(result.headers.authorization).toBe('Bearer MY_TOKEN')
   })
 
@@ -38,14 +38,14 @@ describe('client.fetch', () => {
       USERNAME: 'username'
     })
     const result = await client.simple.getCallWithoutParametersAndResponse()
-    // @ts-ignore
+    // @ts-expect-error
     expect(result.headers.authorization).toBe('Basic dXNlcm5hbWU6cGFzc3dvcmQ=')
   })
 
   it('supports complex params', async () => {
     const { ApiClient } = await import('./generated/client/fetch/index.js')
     const client = new ApiClient()
-    // @ts-ignore
+    // @ts-expect-error
     const result = await client.complex.complexTypes({
       first: {
         second: {
@@ -59,7 +59,7 @@ describe('client.fetch', () => {
   it('support form data', async () => {
     const { ApiClient } = await import('./generated/client/fetch/index.js')
     const client = new ApiClient()
-    // @ts-ignore
+    // @ts-expect-error
     const result = await client.parameters.callWithParameters(
       'valueHeader',
       'valueQuery',
@@ -167,7 +167,7 @@ describe('client.fetch', () => {
       size: 1,
       sort: ['location']
     })
-    // @ts-ignore
+    // @ts-expect-error
     expect(result.query).toStrictEqual({
       parameter: { page: '0', size: '1', sort: 'location' }
     })

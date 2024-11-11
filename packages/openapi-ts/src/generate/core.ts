@@ -8,7 +8,7 @@ import {
 import path from 'node:path';
 
 import type { Client } from '../types/client';
-import { getConfig } from '../utils/config';
+import { getConfig, legacyNameFromConfig } from '../utils/config';
 import { getHttpRequestName } from '../utils/getHttpRequestName';
 import type { Templates } from '../utils/handlebars';
 
@@ -18,7 +18,7 @@ import type { Templates } from '../utils/handlebars';
  * @param client Client containing models, schemas, and services
  * @param templates The loaded handlebar templates
  */
-export const generateCore = async (
+export const generateLegacyCore = async (
   outputPath: string,
   client: Client,
   templates: Templates,
@@ -68,7 +68,7 @@ export const generateCore = async (
         ...context,
       }),
     );
-    if (config.client.name !== 'angular') {
+    if (config.client.name !== 'legacy/angular') {
       await writeFileSync(
         path.resolve(outputPath, 'CancelablePromise.ts'),
         templates.core.cancelablePromise({
@@ -85,7 +85,7 @@ export const generateCore = async (
       }),
     );
 
-    if (config.name) {
+    if (legacyNameFromConfig(config)) {
       await writeFileSync(
         path.resolve(outputPath, 'BaseHttpRequest.ts'),
         templates.core.baseHttpRequest({

@@ -1,40 +1,23 @@
-import type { PluginDefinition } from '../../types';
+import type { DefineConfig, PluginConfig } from '../../types';
 import { handler } from '../query-core/plugin';
+import { handlerLegacy } from '../query-core/plugin-legacy';
+import type { Config } from './types';
 
-export interface PluginTanStackVueQuery extends PluginDefinition {
-  /**
-   * Generate {@link https://tanstack.com/query/v5/docs/framework/vue/reference/infiniteQueryOptions `infiniteQueryOptions()`} helpers? These will be generated from GET and POST requests where a pagination parameter is detected.
-   * @default true
-   */
-  infiniteQueryOptions?: boolean;
-  /**
-   * Generate {@link https://tanstack.com/query/v5/docs/framework/vue/reference/useMutation `useMutation()`} helpers? These will be generated from DELETE, PATCH, POST, and PUT requests.
-   * @default true
-   */
-  mutationOptions?: boolean;
-  /**
-   * Generate TanStack Vue Query output from the provided input.
-   */
-  name: '@tanstack/vue-query';
-  /**
-   * Name of the generated file.
-   * @default '@tanstack/vue-query'
-   */
-  output?: string;
-  /**
-   * Generate {@link https://tanstack.com/query/v5/docs/framework/vue/guides/query-options `queryOptions()`} helpers?
-   * These will be generated from all requests.
-   * @default true
-   */
-  queryOptions?: boolean;
-}
+export const defaultConfig: PluginConfig<Config> = {
+  _dependencies: ['@hey-api/services', '@hey-api/types'],
+  _handler: handler,
+  _handlerLegacy: handlerLegacy,
+  infiniteQueryOptions: true,
+  mutationOptions: true,
+  name: '@tanstack/vue-query',
+  output: '@tanstack/vue-query',
+  queryOptions: true,
+};
 
-export const pluginTanStackVueQueryDefaultConfig: Required<PluginTanStackVueQuery> =
-  {
-    handler,
-    infiniteQueryOptions: true,
-    mutationOptions: true,
-    name: '@tanstack/vue-query',
-    output: '@tanstack/vue-query',
-    queryOptions: true,
-  };
+/**
+ * Type helper for TanStack Vue Query plugin, returns {@link PluginConfig} object
+ */
+export const defineConfig: DefineConfig<Config> = (config) => ({
+  ...defaultConfig,
+  ...config,
+});

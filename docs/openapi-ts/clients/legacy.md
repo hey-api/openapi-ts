@@ -1,6 +1,6 @@
 ---
 title: Legacy clients
-description: Legacy client for your stack.
+description: Legacy clients for Hey API.
 ---
 
 <script setup>
@@ -9,48 +9,48 @@ import { embedProject } from '../../embed'
 
 # Legacy Clients
 
-Before standalone client packages, clients were generated using `@hey-api/openapi-ts`. In fact, `@hey-api/openapi-ts` still supports generating legacy clients. You can generate them with the `client` config option.
+Before client packages, clients were generated using `@hey-api/openapi-ts`. In fact, `@hey-api/openapi-ts` still supports generating legacy clients. You can generate them with the `client` config option.
 
 ::: code-group
 
-```js{2} [fetch]
+```js [fetch]
 export default {
-  client: 'fetch',
+  client: 'legacy/fetch', // [!code ++]
   input: 'path/to/openapi.json',
   output: 'src/client',
-}
+};
 ```
 
-```js{2} [axios]
+```js [axios]
 export default {
-  client: 'axios',
+  client: 'legacy/axios', // [!code ++]
   input: 'path/to/openapi.json',
   output: 'src/client',
-}
+};
 ```
 
-```js{2} [angular]
+```js [angular]
 export default {
-  client: 'angular',
+  client: 'legacy/angular', // [!code ++]
   input: 'path/to/openapi.json',
   output: 'src/client',
-}
+};
 ```
 
-```js{2} [node]
+```js [node]
 export default {
-  client: 'node',
+  client: 'legacy/node', // [!code ++]
   input: 'path/to/openapi.json',
   output: 'src/client',
-}
+};
 ```
 
-```js{2} [xhr]
+```js [xhr]
 export default {
-  client: 'xhr',
+  client: 'legacy/xhr', // [!code ++]
   input: 'path/to/openapi.json',
   output: 'src/client',
-}
+};
 ```
 
 :::
@@ -67,7 +67,7 @@ export default {
 
 Please be aware that legacy clients are missing some key features:
 
-- no typesafe errors 🚫
+- no type-safe errors 🚫
 - no access to the original request and response 🚫
 - hard to configure individual requests 👎
 - inconsistent interceptors and response APIs 👎

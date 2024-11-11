@@ -1,19 +1,17 @@
 import path from 'node:path';
 
+import { compiler } from '../compiler';
+import type { IRContext } from '../ir/context';
 import type { OpenApi } from '../openApi';
 import type { Client } from '../types/client';
 import type { Files } from '../types/utils';
-import { getConfig } from '../utils/config';
+import { getConfig, isLegacyClient } from '../utils/config';
 import type { Templates } from '../utils/handlebars';
-import { generateClientClass } from './class';
-import { generateClient } from './client';
-import { generateCore } from './core';
+import { generateLegacyClientClass } from './class';
+import { generateClientBundle } from './client';
+import { generateLegacyCore } from './core';
+import { TypeScriptFile } from './files';
 import { generateIndexFile } from './indexFile';
-import { generatePlugins } from './plugins';
-import { generateSchemas } from './schemas';
-import { generateServices } from './services';
-import { generateResponseTransformers } from './transformers';
-import { generateTypes } from './types';
 
 /**
  * Write our OpenAPI client, using the given templates at the given output
@@ -21,77 +19,130 @@ import { generateTypes } from './types';
  * @param client Client containing models, schemas, and services
  * @param templates Templates wrapper with all loaded Handlebars templates
  */
-export const generateOutput = async (
-  openApi: OpenApi,
-  client: Client,
-  templates: Templates,
-): Promise<void> => {
+export const generateLegacyOutput = async ({
+  client,
+  openApi,
+  templates,
+}: {
+  client: Client;
+  openApi: unknown;
+  templates: Templates;
+}): Promise<void> => {
   const config = getConfig();
 
-  if (config.services.include && config.services.asClass) {
-    const regexp = new RegExp(config.services.include);
-    client.services = client.services.filter((service) =>
-      regexp.test(service.name),
-    );
-  }
+  const spec = openApi as OpenApi;
 
-  if (config.types.include) {
-    const regexp = new RegExp(config.types.include);
-    client.models = client.models.filter((model) => regexp.test(model.name));
+  // TODO: parser - move to config.input
+  if (client) {
+    if (
+      config.plugins['@hey-api/services']?.include &&
+      config.plugins['@hey-api/services'].asClass
+    ) {
+      const regexp = new RegExp(config.plugins['@hey-api/services'].include);
+      client.services = client.services.filter((service) =>
+        regexp.test(service.name),
+      );
+    }
+
+    if (config.plugins['@hey-api/types']?.include) {
+      const regexp = new RegExp(config.plugins['@hey-api/types'].include);
+      client.models = client.models.filter((model) => regexp.test(model.name));
+    }
   }
 
   const outputPath = path.resolve(config.output.path);
 
-  const files: Files = {};
-
-  await generateClient(outputPath, config.client.name);
-
-  // types.gen.ts
-  await generateTypes({ client, files });
-
-  // schemas.gen.ts
-  await generateSchemas({ files, openApi });
-
-  // transformers
-  if (
-    config.services.export &&
-    client.services.length &&
-    config.types.dates === 'types+transform'
-  ) {
-    await generateResponseTransformers({
-      client,
-      onNode: (node) => {
-        files.types?.add(node);
-      },
-      onRemoveNode: () => {
-        files.types?.removeNode();
-      },
-    });
+  if (!isLegacyClient(config) && config.client.bundle) {
+    await generateClientBundle({ name: config.client.name, outputPath });
   }
 
-  // services.gen.ts
-  await generateServices({ client, files });
-
   // deprecated files
-  await generateClientClass(openApi, outputPath, client, templates);
-  await generateCore(
+  await generateLegacyClientClass(spec, outputPath, client, templates);
+  await generateLegacyCore(
     path.resolve(config.output.path, 'core'),
     client,
     templates,
   );
 
-  // index.ts. Any files generated after this won't be included in exports
-  // from the index file.
-  await generateIndexFile({ files });
+  const files: Files = {};
 
-  // plugins
-  await generatePlugins({ client, files });
+  for (const name of config.pluginOrder) {
+    const plugin = config.plugins[name]!;
+    const outputParts = (plugin.output ?? '').split('/');
+    const outputDir = path.resolve(
+      config.output.path,
+      ...outputParts.slice(0, outputParts.length - 1),
+    );
+    files[plugin.name] = new TypeScriptFile({
+      dir: outputDir,
+      name: `${outputParts[outputParts.length - 1]}.ts`,
+    });
+    plugin._handlerLegacy({
+      client,
+      files,
+      openApi: spec,
+      plugin: plugin as never,
+    });
+  }
+
+  generateIndexFile({ files });
 
   Object.entries(files).forEach(([name, file]) => {
+    if (config.dryRun) {
+      return;
+    }
+
     if (name === 'index') {
       file.write();
     } else {
       file.write('\n\n');
     }
   });
+};
+
+export const generateOutput = async ({ context }: { context: IRContext }) => {
+  const outputPath = path.resolve(context.config.output.path);
+
+  if (context.config.client.bundle) {
+    generateClientBundle({
+      name: context.config.client.name,
+      outputPath,
+    });
+  }
+
+  for (const name of context.config.pluginOrder) {
+    const plugin = context.config.plugins[name]!;
+    plugin._handler({
+      context,
+      plugin: plugin as never,
+    });
+  }
+
+  const indexFile = context.createFile({
+    id: '_index',
+    path: 'index',
+  });
+
+  Object.entries(context.files).forEach(([name, file]) => {
+    if (context.config.dryRun || name === '_index') {
+      return;
+    }
+
+    if (
+      !file.isEmpty() &&
+      ['schemas', 'services', 'transformers', 'types'].includes(name)
+    ) {
+      indexFile.add(
+        compiler.exportAllDeclaration({
+          module: `./${file.nameWithoutExtension()}`,
+        }),
+      );
+    }
+
+    file.write('\n\n');
+  });
+
+  if (!context.config.dryRun) {
+    indexFile.write();
+  }
 };

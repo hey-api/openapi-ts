@@ -3,8 +3,8 @@ import path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
 
-import { TypeScriptFile } from '../../compiler';
 import { setConfig } from '../../utils/config';
+import { TypeScriptFile } from '../files';
 import { generateIndexFile } from '../indexFile';
 
 vi.mock('node:fs');
@@ -13,22 +13,37 @@ describe('generateIndexFile', () => {
   it('writes to filesystem', async () => {
     setConfig({
       client: {
-        name: 'fetch',
+        name: 'legacy/fetch',
       },
       configFile: '',
       debug: false,
       dryRun: false,
-      experimental_parser: false,
+      experimentalParser: false,
       exportCore: true,
-      input: '',
+      input: {
+        path: '',
+      },
       output: {
         path: '',
       },
-      plugins: [],
-      schemas: {},
-      services: {},
-      types: {
-        enums: 'javascript',
+      pluginOrder: ['@hey-api/types', '@hey-api/schemas', '@hey-api/services'],
+      plugins: {
+        '@hey-api/schemas': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          name: '@hey-api/schemas',
+        },
+        '@hey-api/services': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          name: '@hey-api/services',
+        },
+        '@hey-api/types': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          enums: 'javascript',
+          name: '@hey-api/types',
+        },
       },
       useOptions: true,
     });
@@ -48,7 +63,7 @@ describe('generateIndexFile', () => {
       }),
     };
 
-    await generateIndexFile({ files });
+    generateIndexFile({ files });
 
     files.index.write();
 

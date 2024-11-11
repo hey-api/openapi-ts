@@ -1,22 +1,36 @@
 import ts from 'typescript';
 
+import { validTypescriptIdentifierRegExp } from '../utils/regexp';
 import { expressionToStatement } from './convert';
 import { createCallExpression } from './module';
-import { createArrowFunction, createPropertyAccessExpression } from './types';
-import { createIdentifier, ots } from './utils';
+import {
+  createArrowFunction,
+  createBlock,
+  createNewExpression,
+  createPropertyAccessChain,
+  createPropertyAccessExpression,
+} from './types';
+import { createIdentifier } from './utils';
 
 export const createSafeAccessExpression = (path: string[]) =>
-  path
-    .slice(1)
-    .reduce<ts.Expression>(
-      (expression, element) =>
-        ts.factory.createPropertyAccessChain(
+  path.slice(1).reduce<ts.Expression>(
+    (expression, element) => {
+      validTypescriptIdentifierRegExp.lastIndex = 0;
+      if (validTypescriptIdentifierRegExp.test(element)) {
+        return createPropertyAccessChain({
           expression,
-          ts.factory.createToken(ts.SyntaxKind.QuestionDotToken),
-          createIdentifier({ text: element }),
-        ),
-      createIdentifier({ text: path[0] }),
-    );
+          name: element,
+        });
+      }
+
+      return ts.factory.createElementAccessChain(
+        expression,
+        ts.factory.createToken(ts.SyntaxKind.QuestionDotToken),
+        createIdentifier({ text: element }),
+      );
+    },
+    createIdentifier({ text: path[0] }),
+  );
 
 export const createAccessExpression = (path: string[]) =>
   path.slice(1).reduce<ts.Expression>(
@@ -39,26 +53,12 @@ export const createPropertyAccessExpressions = ({
   const expression = expressions.reduce((expression, name) => {
     const node = createPropertyAccessExpression({
       expression,
-      // @ts-ignore
+      // @ts-expect-error
       name,
     });
     return node;
   });
   return expression as ts.PropertyAccessExpression;
-};
-
-export const createElementAccessExpression = ({
-  index,
-  name,
-}: {
-  index: number;
-  name: string;
-}) => {
-  const expression = ts.factory.createElementAccessExpression(
-    createIdentifier({ text: name }),
-    ots.number(index),
-  );
-  return expression;
 };
 
 export const createBinaryExpression = ({
@@ -101,19 +101,20 @@ export const createDateTransformMutation = ({
   const safeAccessExpression = createSafeAccessExpression(path);
   const accessExpression = createAccessExpression(path);
 
-  const thenStatement = ts.factory.createBlock([
-    expressionToStatement({
-      expression: ts.factory.createBinaryExpression(
-        accessExpression,
-        ts.SyntaxKind.EqualsToken,
-        ts.factory.createNewExpression(
-          createIdentifier({ text: 'Date' }),
-          undefined,
-          [accessExpression],
+  const thenStatement = createBlock({
+    statements: [
+      expressionToStatement({
+        expression: ts.factory.createBinaryExpression(
+          accessExpression,
+          ts.SyntaxKind.EqualsToken,
+          createNewExpression({
+            argumentsArray: [accessExpression],
+            expression: createIdentifier({ text: 'Date' }),
+          }),
         ),
-      ),
-    }),
-  ]);
+      }),
+    ],
+  });
 
   const statement = createIfStatement({
     expression: safeAccessExpression,
@@ -133,8 +134,8 @@ export const createFunctionTransformMutation = ({
   const safeAccessExpression = createSafeAccessExpression(path);
   const accessExpression = createAccessExpression(path);
 
-  const thenStatement = ts.factory.createBlock(
-    [
+  const thenStatement = createBlock({
+    statements: [
       expressionToStatement({
         expression: createCallExpression({
           functionName: transformerName,
@@ -142,8 +143,7 @@ export const createFunctionTransformMutation = ({
         }),
       }),
     ],
-    true,
-  );
+  });
 
   const statement = [
     createIfStatement({
@@ -173,8 +173,8 @@ export const createArrayTransformMutation = ({
       }),
       parameters: [safeAccessExpression],
     }),
-    thenStatement: ts.factory.createBlock(
-      [
+    thenStatement: createBlock({
+      statements: [
         expressionToStatement({
           expression: ts.factory.createCallChain(
             createPropertyAccessExpression({
@@ -187,8 +187,7 @@ export const createArrayTransformMutation = ({
           ),
         }),
       ],
-      true,
-    ),
+    }),
   });
 
   return statement;
@@ -198,12 +197,14 @@ export const createDateTransformerExpression = ({
   parameterName,
 }: {
   parameterName: string;
-}) =>
-  ts.factory.createNewExpression(
-    createIdentifier({ text: 'Date' }),
-    undefined,
-    [createIdentifier({ text: parameterName })],
-  );
+}) => {
+  const expression = createIdentifier({ text: 'Date' });
+  const newExpression = createNewExpression({
+    argumentsArray: [createIdentifier({ text: parameterName })],
+    expression,
+  });
+  return newExpression;
+};
 
 export const createArrayMapTransform = ({
   path,
@@ -223,8 +224,8 @@ export const createArrayMapTransform = ({
       }),
       parameters: [safeAccessExpression],
     }),
-    thenStatement: ts.factory.createBlock(
-      [
+    thenStatement: createBlock({
+      statements: [
         expressionToStatement({
           expression: ts.factory.createBinaryExpression(
             accessExpression,
@@ -250,8 +251,7 @@ export const createArrayMapTransform = ({
           ),
         }),
       ],
-      true,
-    ),
+    }),
   });
 
   return statement;
