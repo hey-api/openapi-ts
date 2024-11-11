@@ -24,8 +24,7 @@ export interface Config<ThrowOnError extends boolean = boolean>
     | Record<string, unknown>
     | Array<Record<string, unknown>>
     | Array<unknown>
-    | number
-    | unknown;
+    | number;
   /**
    * A function for serializing request body parameter. By default,
    * {@link JSON.stringify()} will be used.
