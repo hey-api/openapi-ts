@@ -119,7 +119,7 @@ export interface ClientConfig {
          * Process output folder with linter?
          * @default false
          */
-        lint?: 'biome' | 'eslint' | false;
+        lint?: 'biome' | 'eslint' | 'oxlint' | false;
         /**
          * The relative location of the output folder
          */
