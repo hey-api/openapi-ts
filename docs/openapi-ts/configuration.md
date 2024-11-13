@@ -161,6 +161,17 @@ export default {
 };
 ```
 
+```js [oxlint]
+export default {
+  client: '@hey-api/client-fetch',
+  input: 'path/to/openapi.json',
+  output: {
+    lint: 'oxlint', // [!code ++]
+    path: 'src/client',
+  },
+};
+```
+
 :::
 
 You can also prevent your output from being linted by adding your output path to the linter's ignore file.
