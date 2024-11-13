@@ -78,6 +78,11 @@ const linters: Record<
     command: 'eslint',
     name: 'ESLint',
   },
+  oxlint: {
+    args: (path) => ['--fix', path],
+    command: 'oxlint',
+    name: 'oxlint',
+  },
 };
 
 const processOutput = ({ config }: { config: Config }) => {
