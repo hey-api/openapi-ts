@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.55.3
+
+### Patch Changes
+
+- [#1283](https://github.com/hey-api/openapi-ts/pull/1283) [`781d1a4`](https://github.com/hey-api/openapi-ts/commit/781d1a40d10ce380f1ca2cb2bc7aca7d3b169bc6) Thanks [@hougesen](https://github.com/hougesen)! - feat: add support for oxlint as linter
+
 ## 0.55.2
 
 ### Patch Changes
