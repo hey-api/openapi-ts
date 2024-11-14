@@ -139,7 +139,11 @@ const addTypeEnum = ({
   // blocker for referencing these identifiers within the file as
   // we cannot guarantee just because they have a duplicate identifier,
   // they have a duplicate value.
-  if (!identifier.created && options.enums !== 'typescript+namespace') {
+  if (
+    !identifier.created &&
+    !isRefOpenApiComponent($ref) &&
+    options.enums !== 'typescript+namespace'
+  ) {
     return;
   }
 
@@ -376,7 +380,7 @@ const objectTypeToIdentifier = ({
 }) => {
   let indexProperty: Property | undefined;
   const schemaProperties: Array<Property> = [];
-  const indexPropertyItems: Array<IRSchemaObject> = [];
+  let indexPropertyItems: Array<IRSchemaObject> = [];
   const required = schema.required ?? [];
   let hasOptionalProperties = false;
 
@@ -402,12 +406,19 @@ const objectTypeToIdentifier = ({
     }
   }
 
-  if (schema.additionalProperties) {
-    indexPropertyItems.unshift(schema.additionalProperties);
+  if (
+    schema.additionalProperties &&
+    (schema.additionalProperties.type !== 'never' || !indexPropertyItems.length)
+  ) {
+    if (schema.additionalProperties.type === 'never') {
+      indexPropertyItems = [schema.additionalProperties];
+    } else {
+      indexPropertyItems.unshift(schema.additionalProperties);
+    }
 
     if (hasOptionalProperties) {
       indexPropertyItems.push({
-        type: 'void',
+        type: 'undefined',
       });
     }
 
@@ -530,6 +541,8 @@ const schemaTypeToIdentifier = ({
         options,
         schema: schema as SchemaWithType<'enum'>,
       });
+    case 'never':
+      return compiler.keywordTypeNode({ keyword: 'never' });
     case 'null':
       return compiler.literalTypeNode({
         literal: compiler.null(),
@@ -555,13 +568,15 @@ const schemaTypeToIdentifier = ({
         options,
         schema: schema as SchemaWithType<'tuple'>,
       });
+    case 'undefined':
+      return compiler.keywordTypeNode({ keyword: 'undefined' });
     case 'unknown':
       return compiler.keywordTypeNode({
         keyword: 'unknown',
       });
     case 'void':
       return compiler.keywordTypeNode({
-        keyword: 'undefined',
+        keyword: 'void',
       });
   }
 };
@@ -673,9 +688,10 @@ export const componentsToType = ({
   if (context.ir.components) {
     for (const name in context.ir.components.schemas) {
       const schema = context.ir.components.schemas[name];
+      const $ref = `#/components/schemas/${name}`;
 
       schemaToType({
-        $ref: `#/components/schemas/${name}`,
+        $ref,
         options,
         schema,
       });
@@ -683,9 +699,10 @@ export const componentsToType = ({
 
     for (const name in context.ir.components.parameters) {
       const parameter = context.ir.components.parameters[name];
+      const $ref = `#/components/parameters/${name}`;
 
       schemaToType({
-        $ref: `#/components/parameters/${name}`,
+        $ref,
         options,
         schema: parameter.schema,
       });

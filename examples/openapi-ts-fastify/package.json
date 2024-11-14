@@ -1,0 +1,20 @@
+{
+  "name": "@example/openapi-ts-fastify",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "openapi-ts": "openapi-ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@hey-api/openapi-ts": "workspace:*",
+    "fastify": "5.0.0",
+    "fastify-openapi-glue": "4.7.1"
+  },
+  "devDependencies": {
+    "@hey-api/client-fetch": "workspace:*",
+    "vitest": "2.1.5"
+  }
+}

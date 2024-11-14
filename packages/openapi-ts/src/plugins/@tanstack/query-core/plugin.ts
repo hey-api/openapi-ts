@@ -35,6 +35,7 @@ import {
 } from '../../@hey-api/services/plugin-legacy';
 import { typesId } from '../../@hey-api/types/plugin';
 import type { PluginHandler } from '../../types';
+import { schemaToType, type SchemaToTypeOptions } from '../../utils/types';
 import type { Config as AngularQueryConfig } from '../angular-query-experimental';
 import type { Config as ReactQueryConfig } from '../react-query';
 import type { Config as SolidQueryConfig } from '../solid-query';
