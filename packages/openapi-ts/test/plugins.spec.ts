@@ -202,6 +202,13 @@ for (const version of versions) {
         }),
         description: 'generate services',
       },
+      {
+        config: createConfig({
+          output: '.',
+          plugins: ['fastify'],
+        }),
+        description: 'generate Fastify types with Fastify plugin',
+      },
     ];
 
     it.each(scenarios)('$description', async ({ config }) => {
