@@ -204,7 +204,7 @@ for (const version of versions) {
       },
       {
         config: createConfig({
-          output: '.',
+          output: 'default',
           plugins: ['fastify'],
         }),
         description: 'generate Fastify types with Fastify plugin',
