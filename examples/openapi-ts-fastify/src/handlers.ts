@@ -1,4 +1,4 @@
-import type { Pet, RouteHandlers } from './gen/fastify.gen';
+import type { Pet, RouteHandlers } from './client/fastify.gen';
 
 export const serviceHandlers: Pick<RouteHandlers, 'showPetById'> = {
   showPetById(request, reply) {

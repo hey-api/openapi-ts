@@ -5,16 +5,19 @@
   "type": "module",
   "scripts": {
     "openapi-ts": "openapi-ts",
-    "typecheck": "tsc --noEmit",
-    "test": "vitest"
+    "test": "vitest",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@hey-api/openapi-ts": "workspace:*",
+    "@hey-api/client-fetch": "workspace:*",
     "fastify": "5.0.0",
     "fastify-openapi-glue": "4.7.1"
   },
   "devDependencies": {
-    "@hey-api/client-fetch": "workspace:*",
+    "@hey-api/openapi-ts": "workspace:*",
+    "eslint": "9.6.0",
+    "prettier": "3.3.2",
+    "typescript": "5.5.3",
     "vitest": "2.1.5"
   }
 }
