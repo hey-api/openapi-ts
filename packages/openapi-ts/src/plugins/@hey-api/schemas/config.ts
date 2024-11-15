@@ -13,7 +13,7 @@ export const defaultConfig: PluginConfig<Config> = {
 };
 
 /**
- * Type helper for Hey API schemas plugin, returns {@link PluginConfig} object
+ * Type helper for `@hey-api/schemas` plugin, returns {@link PluginConfig} object
  */
 export const defineConfig: DefineConfig<Config> = (config) => ({
   ...defaultConfig,

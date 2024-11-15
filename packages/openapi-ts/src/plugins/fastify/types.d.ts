@@ -13,5 +13,3 @@ export interface Config extends PluginName<'fastify'> {
    */
   output?: string;
 }
-
-export interface UserConfig extends Omit<Config, 'output'> {}

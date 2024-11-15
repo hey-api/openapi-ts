@@ -15,7 +15,7 @@ export const defaultConfig: PluginConfig<Config> = {
 };
 
 /**
- * Type helper for TanStack Angular Query Experimental plugin, returns {@link PluginConfig} object
+ * Type helper for `@tanstack/angular-query-experimental` plugin, returns {@link PluginConfig} object
  */
 export const defineConfig: DefineConfig<Config> = (config) => ({
   ...defaultConfig,

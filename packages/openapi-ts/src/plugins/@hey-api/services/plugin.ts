@@ -421,7 +421,7 @@ const generateFlatServices = ({ context }: { context: IRContext }) => {
   }
 };
 
-export const handler: PluginHandler<Config> = ({ context }) => {
+export const handler: PluginHandler<Config> = ({ context, plugin }) => {
   if (!context.config.client.name) {
     throw new Error(
       '🚫 client needs to be set to generate services - which HTTP client do you want to use?',
@@ -430,7 +430,7 @@ export const handler: PluginHandler<Config> = ({ context }) => {
 
   const file = context.createFile({
     id: servicesId,
-    path: 'services',
+    path: plugin.output,
   });
   const servicesOutput = file.nameWithoutExtension();
 
