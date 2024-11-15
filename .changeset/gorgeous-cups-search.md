@@ -2,4 +2,4 @@
 '@hey-api/openapi-ts': minor
 ---
 
-feat: add fastify-openapi-glue plugin
+feat: add `fastify` plugin
