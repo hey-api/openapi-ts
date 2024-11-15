@@ -356,10 +356,10 @@ const processSchemaType = ({
 };
 
 // handles only response transformers for now
-export const handler: PluginHandler<Config> = ({ context }) => {
+export const handler: PluginHandler<Config> = ({ context, plugin }) => {
   const file = context.createFile({
     id: transformersId,
-    path: 'transformers',
+    path: plugin.output,
   });
 
   for (const path in context.ir.paths) {

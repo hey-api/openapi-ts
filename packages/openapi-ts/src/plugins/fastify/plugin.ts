@@ -17,7 +17,7 @@ import {
 } from '../utils/types';
 import type { Config } from './types';
 
-const FILE_ID = 'fastify';
+const fastifyId = 'fastify';
 const ROUTE_HANDLER_NAME = 'RouteHandler';
 const OPERATIONS_IDENTIFIER = 'RouteHandlers';
 const ROUTE_PROPERTY_NAME = {
@@ -154,7 +154,7 @@ const pathsToType = ({
     }
   }
 
-  const identifier = context.file({ id: FILE_ID })!.identifier({
+  const identifier = context.file({ id: fastifyId })!.identifier({
     $ref: OPERATIONS_IDENTIFIER,
     create: true,
     namespace: 'type',
@@ -171,7 +171,11 @@ const pathsToType = ({
 };
 
 export const handler: PluginHandler<Config> = ({ context, plugin }) => {
-  const file = context.createFile({ id: FILE_ID, path: plugin.output });
+  const file = context.createFile({
+    id: fastifyId,
+    path: plugin.output,
+  });
+
   const options: SchemaToTypeOptions = { file };
   file.import({ asType: true, module: 'fastify', name: ROUTE_HANDLER_NAME });
   componentsToType({

@@ -173,10 +173,10 @@ const operationToType = ({
   }
 };
 
-export const handler: PluginHandler<Config> = ({ context }) => {
+export const handler: PluginHandler<Config> = ({ context, plugin }) => {
   const file = context.createFile({
     id: typesId,
-    path: 'types',
+    path: plugin.output,
   });
   const options: SchemaToTypeOptions = {
     enums: context.config.plugins['@hey-api/types']?.enums,

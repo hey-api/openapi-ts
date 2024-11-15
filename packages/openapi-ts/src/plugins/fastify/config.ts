@@ -12,7 +12,7 @@ export const defaultConfig: PluginConfig<Config> = {
 };
 
 /**
- * Type helper for the Fastify plugin, returns {@link PluginConfig} object
+ * Type helper for `fastify` plugin, returns {@link PluginConfig} object
  */
 export const defineConfig: DefineConfig<Config> = (config) => ({
   ...defaultConfig,
