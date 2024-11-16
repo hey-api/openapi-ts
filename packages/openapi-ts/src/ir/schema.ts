@@ -80,27 +80,25 @@ export const irParametersToIrSchema = ({
     type: 'object',
   };
 
-  if (parameters) {
-    const properties: Record<string, IRSchemaObject> = {};
-    const required: Array<string> = [];
+  const properties: Record<string, IRSchemaObject> = {};
+  const required: Array<string> = [];
 
-    for (const name in parameters) {
-      const parameter = parameters[name];
+  for (const name in parameters) {
+    const parameter = parameters[name];
 
-      properties[name] = deduplicateSchema({
-        schema: parameter.schema,
-      });
+    properties[name] = deduplicateSchema({
+      schema: parameter.schema,
+    });
 
-      if (parameter.required) {
-        required.push(name);
-      }
+    if (parameter.required) {
+      required.push(name);
     }
+  }
 
-    irSchema.properties = properties;
+  irSchema.properties = properties;
 
-    if (required.length) {
-      irSchema.required = required;
-    }
+  if (required.length) {
+    irSchema.required = required;
   }
 
   return irSchema;

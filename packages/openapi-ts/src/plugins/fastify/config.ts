@@ -7,7 +7,6 @@ export const defaultConfig: PluginConfig<Config> = {
   _handler: handler,
   _handlerLegacy: () => {},
   name: 'fastify',
-  operationId: true,
   output: 'fastify',
 };
 

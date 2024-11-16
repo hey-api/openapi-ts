@@ -1,68 +1,34 @@
-import ts from 'typescript';
-
 import { compiler, type Property } from '../../compiler';
 import type { IRContext } from '../../ir/context';
 import type {
   IROperationObject,
-  IRParameterObject,
   IRPathItemObject,
   IRPathsObject,
 } from '../../ir/ir';
 import { irParametersToIrSchema } from '../../ir/schema';
 import type { PluginHandler } from '../types';
-import {
-  componentsToType,
-  schemaToType,
-  type SchemaToTypeOptions,
-} from '../utils/types';
+import { componentsToType, schemaToType } from '../utils/types';
 import type { Config } from './types';
 
 const fastifyId = 'fastify';
-const ROUTE_HANDLER_NAME = 'RouteHandler';
-const OPERATIONS_IDENTIFIER = 'RouteHandlers';
-const ROUTE_PROPERTY_NAME = {
-  BODY: 'Body',
-  HEADER: 'Headers',
-  PATH: 'Params',
-  QUERY: 'Querystring',
-  RESPONSE: 'Reply',
-};
-const NUMERIC_CODE_REGEX = /\b[0-9]{3}\b/;
 
-const parameterToProperty = ({
-  options,
-  parameter,
-  name,
-}: {
-  name: string;
-  options: SchemaToTypeOptions;
-  parameter: Record<string, IRParameterObject>;
-}): Property => {
-  const schema = irParametersToIrSchema({
-    parameters: parameter,
-  });
-  return {
-    isRequired: !!schema.required,
-    name,
-    type: schemaToType({ options, schema }),
-  };
-};
-
-const operationToProperty = ({
+const operationToRouteHandler = ({
+  context,
   operation,
-  options,
 }: {
+  context: IRContext;
   operation: IROperationObject;
-  options: SchemaToTypeOptions;
 }): Property => {
-  const operationProperties: Array<Property> = [];
+  const file = context.file({ id: fastifyId })!;
+
+  const properties: Array<Property> = [];
 
   if (operation.body) {
-    operationProperties.push({
+    properties.push({
       isRequired: operation.body.required,
-      name: ROUTE_PROPERTY_NAME.BODY,
+      name: 'Body',
       type: schemaToType({
-        options,
+        options: { file },
         schema: operation.body.schema,
       }),
     });
@@ -70,53 +36,68 @@ const operationToProperty = ({
 
   if (operation.parameters) {
     if (operation.parameters.header) {
-      operationProperties.push(
-        parameterToProperty({
-          name: ROUTE_PROPERTY_NAME.HEADER,
-          options,
-          parameter: operation.parameters.header,
+      const schema = irParametersToIrSchema({
+        parameters: operation.parameters.header,
+      });
+      properties.push({
+        isRequired: Boolean(schema.required),
+        name: 'Headers',
+        type: schemaToType({
+          options: { file },
+          schema,
         }),
-      );
-    }
-
-    if (operation.parameters.query) {
-      operationProperties.push(
-        parameterToProperty({
-          name: ROUTE_PROPERTY_NAME.QUERY,
-          options,
-          parameter: operation.parameters.query,
-        }),
-      );
+      });
     }
 
     if (operation.parameters.path) {
-      operationProperties.push(
-        parameterToProperty({
-          name: ROUTE_PROPERTY_NAME.PATH,
-          options,
-          parameter: operation.parameters.path,
+      const schema = irParametersToIrSchema({
+        parameters: operation.parameters.path,
+      });
+      properties.push({
+        isRequired: Boolean(schema.required),
+        name: 'Params',
+        type: schemaToType({
+          options: { file },
+          schema,
         }),
-      );
+      });
+    }
+
+    if (operation.parameters.query) {
+      const schema = irParametersToIrSchema({
+        parameters: operation.parameters.query,
+      });
+      properties.push({
+        isRequired: Boolean(schema.required),
+        name: 'Querystring',
+        type: schemaToType({
+          options: { file },
+          schema,
+        }),
+      });
     }
   }
 
   if (operation.responses) {
     const responseProperties: Array<Property> = [];
+
     for (const code in operation.responses) {
-      if (code === 'default') continue;
-      const response = operation.responses[code];
+      if (code === 'default') {
+        continue;
+      }
+
+      const response = operation.responses[code]!;
       responseProperties.push({
-        name: NUMERIC_CODE_REGEX.test(code)
-          ? ts.factory.createNumericLiteral(code)
-          : code,
+        name: code,
         type: schemaToType({
-          options,
-          schema: response?.schema ?? {},
+          options: { file },
+          schema: response.schema,
         }),
       });
     }
-    operationProperties.push({
-      name: ROUTE_PROPERTY_NAME.RESPONSE,
+
+    properties.push({
+      name: 'Reply',
       type: compiler.typeInterfaceNode({
         properties: responseProperties,
         useLegacyResolution: false,
@@ -124,50 +105,52 @@ const operationToProperty = ({
     });
   }
 
-  const operationType = compiler.typeInterfaceNode({
-    properties: operationProperties,
-    useLegacyResolution: false,
-  });
-  const property: Property = {
+  const routeHandler: Property = {
     name: operation.id,
-    type: compiler.typeNode(ROUTE_HANDLER_NAME, [operationType]),
+    type: compiler.typeNode('RouteHandler', [
+      compiler.typeInterfaceNode({
+        properties,
+        useLegacyResolution: false,
+      }),
+    ]),
   };
-  return property;
+  return routeHandler;
 };
 
-const pathsToType = ({
-  context,
-  options,
-}: {
-  context: IRContext;
-  options: SchemaToTypeOptions;
-}): ts.Node => {
-  const operationsProperties = [];
+const processRouteHandlers = ({ context }: { context: IRContext }) => {
+  const file = context.file({ id: fastifyId })!;
+
+  const routeHandlers: Array<Property> = [];
+
   for (const path in context.ir.paths) {
     const pathItem = context.ir.paths[path as keyof IRPathsObject];
-    for (const method in pathItem) {
-      const operation = pathItem[method as keyof IRPathItemObject];
-      if (operation) {
-        const operationProperty = operationToProperty({ operation, options });
-        operationsProperties.push(operationProperty);
-      }
+
+    for (const _method in pathItem) {
+      const method = _method as keyof IRPathItemObject;
+      const operation = pathItem[method]!;
+
+      const routeHandler = operationToRouteHandler({ context, operation });
+      routeHandlers.push(routeHandler);
     }
   }
 
-  const identifier = context.file({ id: fastifyId })!.identifier({
-    $ref: OPERATIONS_IDENTIFIER,
+  const identifier = file.identifier({
+    $ref: 'RouteHandlers',
     create: true,
     namespace: 'type',
   });
-  const paths = compiler.typeAliasDeclaration({
-    exportType: true,
-    name: identifier.name || '',
-    type: compiler.typeInterfaceNode({
-      properties: operationsProperties,
-      useLegacyResolution: false,
-    }),
-  });
-  return paths;
+  if (identifier.name) {
+    file.add(
+      compiler.typeAliasDeclaration({
+        exportType: true,
+        name: identifier.name,
+        type: compiler.typeInterfaceNode({
+          properties: routeHandlers,
+          useLegacyResolution: false,
+        }),
+      }),
+    );
+  }
 };
 
 export const handler: PluginHandler<Config> = ({ context, plugin }) => {
@@ -175,12 +158,16 @@ export const handler: PluginHandler<Config> = ({ context, plugin }) => {
     id: fastifyId,
     path: plugin.output,
   });
-
-  const options: SchemaToTypeOptions = { file };
-  file.import({ asType: true, module: 'fastify', name: ROUTE_HANDLER_NAME });
+  file.import({
+    asType: true,
+    module: 'fastify',
+    name: 'RouteHandler',
+  });
   componentsToType({
     context,
-    options,
+    options: {
+      file,
+    },
   });
-  file.add(pathsToType({ context, options }));
+  processRouteHandlers({ context });
 };
