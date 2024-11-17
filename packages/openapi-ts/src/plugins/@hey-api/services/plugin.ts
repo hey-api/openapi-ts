@@ -19,7 +19,7 @@ import { getServiceName } from '../../../utils/postprocess';
 import { irRef } from '../../../utils/ref';
 import { transformServiceName } from '../../../utils/transform';
 import type { PluginHandler } from '../../types';
-import { operationResponseTransformerRef } from '../transformers/plugin';
+import { operationTransformerIrRef } from '../transformers/plugin';
 import {
   operationOptionsType,
   serviceFunctionIdentifier,
@@ -139,7 +139,7 @@ const requestOptions = ({
   const fileTransformers = context.file({ id: 'transformers' });
   if (fileTransformers) {
     const identifier = fileTransformers.identifier({
-      $ref: operationResponseTransformerRef({ id: operation.id }),
+      $ref: operationTransformerIrRef({ id: operation.id, type: 'response' }),
       namespace: 'value',
     });
     if (identifier.name) {
