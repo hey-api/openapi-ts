@@ -107,7 +107,7 @@
     "@types/cross-spawn": "6.0.6",
     "@types/express": "4.17.21",
     "axios": "1.7.7",
-    "cross-spawn": "7.0.3",
+    "cross-spawn": "7.0.5",
     "eslint": "9.6.0",
     "express": "4.21.0",
     "fastify": "5.0.0",

@@ -294,7 +294,7 @@ importers:
     devDependencies:
       '@angular-devkit/build-angular':
         specifier: ^18.2.11
-        version: 18.2.11(@angular/compiler-cli@18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.5.3))(@types/node@22.8.5)(chokidar@3.6.0)(karma@6.4.4)(tailwindcss@3.4.9(ts-node@10.9.2(@types/node@22.8.5)(typescript@5.5.3)))(typescript@5.5.3)
+        version: 18.2.11(@angular/compiler-cli@18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.5.3))(@types/node@22.8.5)(chokidar@3.6.0)(karma@6.4.4)(tailwindcss@3.4.9)(typescript@5.5.3)
       '@angular/cli':
         specifier: ^18.2.11
         version: 18.2.11(chokidar@3.6.0)
@@ -652,8 +652,8 @@ importers:
         specifier: 1.7.7
         version: 1.7.7
       cross-spawn:
-        specifier: 7.0.3
-        version: 7.0.3
+        specifier: 7.0.5
+        version: 7.0.5
       eslint:
         specifier: 9.6.0
         version: 9.6.0
@@ -4858,6 +4858,10 @@ packages:
 
   cross-spawn@7.0.3:
     resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}
+    engines: {node: '>= 8'}
+
+  cross-spawn@7.0.5:
+    resolution: {integrity: sha512-ZVJrKKYunU38/76t0RMOulHOnUcbU9GbpWKAOZ0mhjr7CX6FVrH+4FrAapSOekrgFQ3f/8gwMEuIft0aKq6Hug==}
     engines: {node: '>= 8'}
 
   css-loader@7.1.2:
@@ -9226,6 +9230,94 @@ snapshots:
       - utf-8-validate
       - webpack-cli
 
+  '@angular-devkit/build-angular@18.2.11(@angular/compiler-cli@18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.5.3))(@types/node@22.8.5)(chokidar@3.6.0)(karma@6.4.4)(tailwindcss@3.4.9)(typescript@5.5.3)':
+    dependencies:
+      '@ampproject/remapping': 2.3.0
+      '@angular-devkit/architect': 0.1802.11(chokidar@3.6.0)
+      '@angular-devkit/build-webpack': 0.1802.11(chokidar@3.6.0)(webpack-dev-server@5.0.4(webpack@5.94.0(esbuild@0.23.0)))(webpack@5.94.0(esbuild@0.23.0))
+      '@angular-devkit/core': 18.2.11(chokidar@3.6.0)
+      '@angular/build': 18.2.11(@angular/compiler-cli@18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.5.3))(@types/node@22.8.5)(chokidar@3.6.0)(less@4.2.0)(postcss@8.4.41)(tailwindcss@3.4.9)(terser@5.31.6)(typescript@5.5.3)
+      '@angular/compiler-cli': 18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.5.3)
+      '@babel/core': 7.25.2
+      '@babel/generator': 7.25.0
+      '@babel/helper-annotate-as-pure': 7.24.7
+      '@babel/helper-split-export-declaration': 7.24.7
+      '@babel/plugin-transform-async-generator-functions': 7.25.0(@babel/core@7.25.2)
+      '@babel/plugin-transform-async-to-generator': 7.24.7(@babel/core@7.25.2)
+      '@babel/plugin-transform-runtime': 7.24.7(@babel/core@7.25.2)
+      '@babel/preset-env': 7.25.3(@babel/core@7.25.2)
+      '@babel/runtime': 7.25.0
+      '@discoveryjs/json-ext': 0.6.1
+      '@ngtools/webpack': 18.2.11(@angular/compiler-cli@18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.5.3))(typescript@5.5.3)(webpack@5.94.0(esbuild@0.23.0))
+      '@vitejs/plugin-basic-ssl': 1.1.0(vite@5.4.6(@types/node@22.8.5)(less@4.2.0)(sass@1.77.6)(terser@5.31.6))
+      ansi-colors: 4.1.3
+      autoprefixer: 10.4.20(postcss@8.4.41)
+      babel-loader: 9.1.3(@babel/core@7.25.2)(webpack@5.94.0(esbuild@0.23.0))
+      browserslist: 4.24.2
+      copy-webpack-plugin: 12.0.2(webpack@5.94.0(esbuild@0.23.0))
+      critters: 0.0.24
+      css-loader: 7.1.2(webpack@5.94.0(esbuild@0.23.0))
+      esbuild-wasm: 0.23.0
+      fast-glob: 3.3.2
+      http-proxy-middleware: 3.0.3
+      https-proxy-agent: 7.0.5
+      istanbul-lib-instrument: 6.0.3
+      jsonc-parser: 3.3.1
+      karma-source-map-support: 1.4.0
+      less: 4.2.0
+      less-loader: 12.2.0(less@4.2.0)(webpack@5.94.0(esbuild@0.23.0))
+      license-webpack-plugin: 4.0.2(webpack@5.94.0(esbuild@0.23.0))
+      loader-utils: 3.3.1
+      magic-string: 0.30.11
+      mini-css-extract-plugin: 2.9.0(webpack@5.94.0(esbuild@0.23.0))
+      mrmime: 2.0.0
+      open: 10.1.0
+      ora: 5.4.1
+      parse5-html-rewriting-stream: 7.0.0
+      picomatch: 4.0.2
+      piscina: 4.6.1
+      postcss: 8.4.41
+      postcss-loader: 8.1.1(postcss@8.4.41)(typescript@5.5.3)(webpack@5.94.0(esbuild@0.23.0))
+      resolve-url-loader: 5.0.0
+      rxjs: 7.8.1
+      sass: 1.77.6
+      sass-loader: 16.0.0(sass@1.77.6)(webpack@5.94.0(esbuild@0.23.0))
+      semver: 7.6.3
+      source-map-loader: 5.0.0(webpack@5.94.0(esbuild@0.23.0))
+      source-map-support: 0.5.21
+      terser: 5.31.6
+      tree-kill: 1.2.2
+      tslib: 2.6.3
+      typescript: 5.5.3
+      vite: 5.4.6(@types/node@22.8.5)(less@4.2.0)(sass@1.77.6)(terser@5.31.6)
+      watchpack: 2.4.1
+      webpack: 5.94.0(esbuild@0.23.1)
+      webpack-dev-middleware: 7.4.2(webpack@5.94.0(esbuild@0.23.0))
+      webpack-dev-server: 5.0.4(webpack@5.94.0(esbuild@0.23.0))
+      webpack-merge: 6.0.1
+      webpack-subresource-integrity: 5.1.0(webpack@5.94.0(esbuild@0.23.0))
+    optionalDependencies:
+      esbuild: 0.23.0
+      karma: 6.4.4
+      tailwindcss: 3.4.9(ts-node@10.9.2(@types/node@20.14.5)(typescript@5.5.3))
+    transitivePeerDependencies:
+      - '@rspack/core'
+      - '@swc/core'
+      - '@types/node'
+      - bufferutil
+      - chokidar
+      - debug
+      - html-webpack-plugin
+      - lightningcss
+      - node-sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - uglify-js
+      - utf-8-validate
+      - webpack-cli
+
   '@angular-devkit/build-webpack@0.1802.11(chokidar@3.6.0)(webpack-dev-server@5.0.4(webpack@5.94.0(esbuild@0.23.0)))(webpack@5.94.0(esbuild@0.23.0))':
     dependencies:
       '@angular-devkit/architect': 0.1802.11(chokidar@3.6.0)
@@ -9294,6 +9386,49 @@ snapshots:
       less: 4.2.0
       postcss: 8.4.41
       tailwindcss: 3.4.9(ts-node@10.9.2(@types/node@22.8.5)(typescript@5.5.3))
+    transitivePeerDependencies:
+      - '@types/node'
+      - chokidar
+      - lightningcss
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+
+  '@angular/build@18.2.11(@angular/compiler-cli@18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.5.3))(@types/node@22.8.5)(chokidar@3.6.0)(less@4.2.0)(postcss@8.4.41)(tailwindcss@3.4.9)(terser@5.31.6)(typescript@5.5.3)':
+    dependencies:
+      '@ampproject/remapping': 2.3.0
+      '@angular-devkit/architect': 0.1802.11(chokidar@3.6.0)
+      '@angular/compiler-cli': 18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.5.3)
+      '@babel/core': 7.25.2
+      '@babel/helper-annotate-as-pure': 7.24.7
+      '@babel/helper-split-export-declaration': 7.24.7
+      '@babel/plugin-syntax-import-attributes': 7.24.7(@babel/core@7.25.2)
+      '@inquirer/confirm': 3.1.22
+      '@vitejs/plugin-basic-ssl': 1.1.0(vite@5.4.6(@types/node@22.8.5)(less@4.2.0)(sass@1.77.6)(terser@5.31.6))
+      browserslist: 4.24.2
+      critters: 0.0.24
+      esbuild: 0.23.0
+      fast-glob: 3.3.2
+      https-proxy-agent: 7.0.5
+      listr2: 8.2.4
+      lmdb: 3.0.13
+      magic-string: 0.30.11
+      mrmime: 2.0.0
+      parse5-html-rewriting-stream: 7.0.0
+      picomatch: 4.0.2
+      piscina: 4.6.1
+      rollup: 4.22.4
+      sass: 1.77.6
+      semver: 7.6.3
+      typescript: 5.5.3
+      vite: 5.4.6(@types/node@22.8.5)(less@4.2.0)(sass@1.77.6)(terser@5.31.6)
+      watchpack: 2.4.1
+    optionalDependencies:
+      less: 4.2.0
+      postcss: 8.4.41
+      tailwindcss: 3.4.9(ts-node@10.9.2(@types/node@20.14.5)(typescript@5.5.3))
     transitivePeerDependencies:
       - '@types/node'
       - chokidar
@@ -13978,6 +14113,12 @@ snapshots:
       shebang-command: 2.0.0
       which: 2.0.2
 
+  cross-spawn@7.0.5:
+    dependencies:
+      path-key: 3.1.1
+      shebang-command: 2.0.0
+      which: 2.0.2
+
   css-loader@7.1.2(webpack@5.94.0(esbuild@0.23.0)):
     dependencies:
       icss-utils: 5.1.0(postcss@8.4.41)
@@ -14536,7 +14677,7 @@ snapshots:
       '@nodelib/fs.walk': 1.2.8
       ajv: 6.12.6
       chalk: 4.1.2
-      cross-spawn: 7.0.3
+      cross-spawn: 7.0.5
       debug: 4.3.7
       escape-string-regexp: 4.0.0
       eslint-scope: 8.0.1
@@ -14615,7 +14756,7 @@ snapshots:
 
   execa@5.1.1:
     dependencies:
-      cross-spawn: 7.0.3
+      cross-spawn: 7.0.5
       get-stream: 6.0.1
       human-signals: 2.1.0
       is-stream: 2.0.1
@@ -14627,7 +14768,7 @@ snapshots:
 
   execa@8.0.1:
     dependencies:
-      cross-spawn: 7.0.3
+      cross-spawn: 7.0.5
       get-stream: 8.0.1
       human-signals: 5.0.0
       is-stream: 3.0.0
@@ -14864,7 +15005,7 @@ snapshots:
 
   foreground-child@3.2.1:
     dependencies:
-      cross-spawn: 7.0.3
+      cross-spawn: 7.0.5
       signal-exit: 4.1.0
 
   form-data@4.0.0:
