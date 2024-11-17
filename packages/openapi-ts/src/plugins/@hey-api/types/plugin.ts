@@ -2,12 +2,13 @@ import { compiler } from '../../../compiler';
 import type { IRContext } from '../../../ir/context';
 import type {
   IROperationObject,
+  IRParameterObject,
   IRPathItemObject,
   IRPathsObject,
   IRSchemaObject,
 } from '../../../ir/ir';
 import { operationResponsesMap } from '../../../ir/operation';
-import { irParametersToIrSchema } from '../../../ir/schema';
+import { deduplicateSchema } from '../../../ir/schema';
 import type { PluginHandler } from '../../types';
 import {
   componentsToType,
@@ -22,6 +23,41 @@ import {
 import type { Config } from './types';
 
 export const typesId = 'types';
+
+const irParametersToIrSchema = ({
+  parameters,
+}: {
+  parameters: Record<string, IRParameterObject>;
+}): IRSchemaObject => {
+  const irSchema: IRSchemaObject = {
+    type: 'object',
+  };
+
+  if (parameters) {
+    const properties: Record<string, IRSchemaObject> = {};
+    const required: Array<string> = [];
+
+    for (const name in parameters) {
+      const parameter = parameters[name];
+
+      properties[name] = deduplicateSchema({
+        schema: parameter.schema,
+      });
+
+      if (parameter.required) {
+        required.push(name);
+      }
+    }
+
+    irSchema.properties = properties;
+
+    if (required.length) {
+      irSchema.required = required;
+    }
+  }
+
+  return irSchema;
+};
 
 const operationToDataType = ({
   context,

@@ -1,4 +1,4 @@
-import type { IRParameterObject, IRSchemaObject } from './ir';
+import type { IRSchemaObject } from './ir';
 
 /**
  * Ensure we don't produce redundant types, e.g. string | string.
@@ -69,37 +69,4 @@ export const deduplicateSchema = <T extends IRSchemaObject>({
   }
 
   return schema;
-};
-
-export const irParametersToIrSchema = ({
-  parameters,
-}: {
-  parameters: Record<string, IRParameterObject>;
-}): IRSchemaObject => {
-  const irSchema: IRSchemaObject = {
-    type: 'object',
-  };
-
-  const properties: Record<string, IRSchemaObject> = {};
-  const required: Array<string> = [];
-
-  for (const name in parameters) {
-    const parameter = parameters[name];
-
-    properties[name] = deduplicateSchema({
-      schema: parameter.schema,
-    });
-
-    if (parameter.required) {
-      required.push(name);
-    }
-  }
-
-  irSchema.properties = properties;
-
-  if (required.length) {
-    irSchema.required = required;
-  }
-
-  return irSchema;
 };
