@@ -951,9 +951,27 @@ export type ImportData = {
     body: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
 };
 
-export type ImportResponse = Model_From_Zendesk | ModelWithReadOnlyAndWriteOnly;
+export type ImportResponses = {
+    /**
+     * Success
+     */
+    200: Model_From_Zendesk;
+    /**
+     * Default success response
+     */
+    default: ModelWithReadOnlyAndWriteOnly;
+};
 
-export type ApiVversionOdataControllerCountResponse = Model_From_Zendesk;
+export type ImportResponse = ImportResponses[keyof ImportResponses];
+
+export type ApiVversionOdataControllerCountResponses = {
+    /**
+     * Success
+     */
+    200: Model_From_Zendesk;
+};
+
+export type ApiVversionOdataControllerCountResponse = ApiVversionOdataControllerCountResponses[keyof ApiVversionOdataControllerCountResponses];
 
 export type GetApiVbyApiVersionSimpleOperationData = {
     body?: never;
@@ -966,9 +984,23 @@ export type GetApiVbyApiVersionSimpleOperationData = {
     query?: never;
 };
 
-export type GetApiVbyApiVersionSimpleOperationError = ModelWithBoolean;
+export type GetApiVbyApiVersionSimpleOperationErrors = {
+    /**
+     * Default error response
+     */
+    default: ModelWithBoolean;
+};
 
-export type GetApiVbyApiVersionSimpleOperationResponse = number;
+export type GetApiVbyApiVersionSimpleOperationError = GetApiVbyApiVersionSimpleOperationErrors[keyof GetApiVbyApiVersionSimpleOperationErrors];
+
+export type GetApiVbyApiVersionSimpleOperationResponses = {
+    /**
+     * Response is a simple number
+     */
+    200: number;
+};
+
+export type GetApiVbyApiVersionSimpleOperationResponse = GetApiVbyApiVersionSimpleOperationResponses[keyof GetApiVbyApiVersionSimpleOperationResponses];
 
 export type DeleteFooData3 = {
     body?: never;
@@ -1140,7 +1172,18 @@ export type PostCallWithOptionalParamData = {
     };
 };
 
-export type PostCallWithOptionalParamResponse = number | void;
+export type PostCallWithOptionalParamResponses = {
+    /**
+     * Response is a simple number
+     */
+    200: number;
+    /**
+     * Success
+     */
+    204: void;
+};
+
+export type PostCallWithOptionalParamResponse = PostCallWithOptionalParamResponses[keyof PostCallWithOptionalParamResponses];
 
 export type PostApiVbyApiVersionRequestBodyData = {
     /**
@@ -1263,27 +1306,132 @@ export type CallToTestOrderOfParamsData = {
     };
 };
 
-export type CallWithNoContentResponseResponse = void;
+export type CallWithNoContentResponseResponses = {
+    /**
+     * Success
+     */
+    204: void;
+};
 
-export type CallWithResponseAndNoContentResponseResponse = number | void;
+export type CallWithNoContentResponseResponse = CallWithNoContentResponseResponses[keyof CallWithNoContentResponseResponses];
 
-export type DummyAResponse = _400;
+export type CallWithResponseAndNoContentResponseResponses = {
+    /**
+     * Response is a simple number
+     */
+    200: number;
+    /**
+     * Success
+     */
+    204: void;
+};
 
-export type DummyBResponse = void;
+export type CallWithResponseAndNoContentResponseResponse = CallWithResponseAndNoContentResponseResponses[keyof CallWithResponseAndNoContentResponseResponses];
 
-export type CallWithResponseResponse = _import;
+export type DummyAResponses = {
+    200: _400;
+};
 
-export type CallWithDuplicateResponsesError = ModelWithStringError | DictionaryWithArray | ModelWithBoolean;
+export type DummyAResponse = DummyAResponses[keyof DummyAResponses];
 
-export type CallWithDuplicateResponsesResponse = (ModelWithBoolean & ModelWithInteger) | ModelWithString;
+export type DummyBResponses = {
+    /**
+     * Success
+     */
+    204: void;
+};
 
-export type CallWithResponsesError = ModelWithStringError;
+export type DummyBResponse = DummyBResponses[keyof DummyBResponses];
 
-export type CallWithResponsesResponse = {
-    readonly '@namespace.string'?: string;
-    readonly '@namespace.integer'?: number;
-    readonly value?: Array<ModelWithString>;
-} | ModelThatExtends | ModelThatExtendsExtends;
+export type CallWithResponseResponses = {
+    default: _import;
+};
+
+export type CallWithResponseResponse = CallWithResponseResponses[keyof CallWithResponseResponses];
+
+export type CallWithDuplicateResponsesErrors = {
+    /**
+     * Message for 500 error
+     */
+    500: ModelWithStringError;
+    /**
+     * Message for 501 error
+     */
+    501: ModelWithStringError;
+    /**
+     * Message for 502 error
+     */
+    502: ModelWithStringError;
+    /**
+     * Message for 4XX errors
+     */
+    '4XX': DictionaryWithArray;
+    /**
+     * Default error response
+     */
+    default: ModelWithBoolean;
+};
+
+export type CallWithDuplicateResponsesError = CallWithDuplicateResponsesErrors[keyof CallWithDuplicateResponsesErrors];
+
+export type CallWithDuplicateResponsesResponses = {
+    /**
+     * Message for 200 response
+     */
+    200: ModelWithBoolean & ModelWithInteger;
+    /**
+     * Message for 201 response
+     */
+    201: ModelWithString;
+    /**
+     * Message for 202 response
+     */
+    202: ModelWithString;
+};
+
+export type CallWithDuplicateResponsesResponse = CallWithDuplicateResponsesResponses[keyof CallWithDuplicateResponsesResponses];
+
+export type CallWithResponsesErrors = {
+    /**
+     * Message for 500 error
+     */
+    500: ModelWithStringError;
+    /**
+     * Message for 501 error
+     */
+    501: ModelWithStringError;
+    /**
+     * Message for 502 error
+     */
+    502: ModelWithStringError;
+    /**
+     * Message for default response
+     */
+    default: ModelWithStringError;
+};
+
+export type CallWithResponsesError = CallWithResponsesErrors[keyof CallWithResponsesErrors];
+
+export type CallWithResponsesResponses = {
+    /**
+     * Message for 200 response
+     */
+    200: {
+        readonly '@namespace.string'?: string;
+        readonly '@namespace.integer'?: number;
+        readonly value?: Array<ModelWithString>;
+    };
+    /**
+     * Message for 201 response
+     */
+    201: ModelThatExtends;
+    /**
+     * Message for 202 response
+     */
+    202: ModelThatExtendsExtends;
+};
+
+export type CallWithResponsesResponse = CallWithResponsesResponses[keyof CallWithResponsesResponses];
 
 export type CollectionFormatData = {
     body?: never;
@@ -1352,7 +1500,26 @@ export type TypesData = {
     };
 };
 
-export type TypesResponse = number | string | boolean | {};
+export type TypesResponses = {
+    /**
+     * Response is a simple number
+     */
+    200: number;
+    /**
+     * Response is a simple string
+     */
+    201: string;
+    /**
+     * Response is a simple boolean
+     */
+    202: boolean;
+    /**
+     * Response is a simple object
+     */
+    203: {};
+};
+
+export type TypesResponse = TypesResponses[keyof TypesResponses];
 
 export type UploadFileData = {
     body: Blob | File;
@@ -1365,7 +1532,11 @@ export type UploadFileData = {
     query?: never;
 };
 
-export type UploadFileResponse = boolean;
+export type UploadFileResponses = {
+    200: boolean;
+};
+
+export type UploadFileResponse = UploadFileResponses[keyof UploadFileResponses];
 
 export type FileResponseData = {
     body?: never;
@@ -1379,7 +1550,14 @@ export type FileResponseData = {
     query?: never;
 };
 
-export type FileResponseResponse = Blob | File;
+export type FileResponseResponses = {
+    /**
+     * Success
+     */
+    200: Blob | File;
+};
+
+export type FileResponseResponse = FileResponseResponses[keyof FileResponseResponses];
 
 export type ComplexTypesData = {
     body?: never;
@@ -1402,15 +1580,40 @@ export type ComplexTypesData = {
     };
 };
 
-export type ComplexTypesResponse = Array<ModelWithString>;
+export type ComplexTypesErrors = {
+    /**
+     * 400 `server` error
+     */
+    400: unknown;
+    /**
+     * 500 server error
+     */
+    500: unknown;
+};
 
-export type MultipartResponseResponse = {
-    file?: Blob | File;
-    metadata?: {
-        foo?: string;
-        bar?: string;
+export type ComplexTypesResponses = {
+    /**
+     * Successful response
+     */
+    200: Array<ModelWithString>;
+};
+
+export type ComplexTypesResponse = ComplexTypesResponses[keyof ComplexTypesResponses];
+
+export type MultipartResponseResponses = {
+    /**
+     * OK
+     */
+    200: {
+        file?: Blob | File;
+        metadata?: {
+            foo?: string;
+            bar?: string;
+        };
     };
 };
+
+export type MultipartResponseResponse = MultipartResponseResponses[keyof MultipartResponseResponses];
 
 export type MultipartRequestData = {
     body?: {
@@ -1443,7 +1646,32 @@ export type ComplexParamsData = {
     query?: never;
 };
 
-export type ComplexParamsResponse = ModelWithString;
+export type ComplexParamsResponses = {
+    /**
+     * Success
+     */
+    200: ModelWithString;
+};
+
+export type ComplexParamsResponse = ComplexParamsResponses[keyof ComplexParamsResponses];
+
+export type CallWithResultFromHeaderErrors = {
+    /**
+     * 400 server error
+     */
+    400: unknown;
+    /**
+     * 500 server error
+     */
+    500: unknown;
+};
+
+export type CallWithResultFromHeaderResponses = {
+    /**
+     * Successful response
+     */
+    200: unknown;
+};
 
 export type TestErrorCodeData = {
     body?: never;
@@ -1454,6 +1682,32 @@ export type TestErrorCodeData = {
          */
         status: number;
     };
+};
+
+export type TestErrorCodeErrors = {
+    /**
+     * Custom message: Internal Server Error
+     */
+    500: unknown;
+    /**
+     * Custom message: Not Implemented
+     */
+    501: unknown;
+    /**
+     * Custom message: Bad Gateway
+     */
+    502: unknown;
+    /**
+     * Custom message: Service Unavailable
+     */
+    503: unknown;
+};
+
+export type TestErrorCodeResponses = {
+    /**
+     * Custom message: Successful response
+     */
+    200: unknown;
 };
 
 export type NonAsciiæøåÆøÅöôêÊ字符串Data = {
@@ -1467,7 +1721,14 @@ export type NonAsciiæøåÆøÅöôêÊ字符串Data = {
     };
 };
 
-export type NonAsciiæøåÆøÅöôêÊ字符串Response = Array<NonAsciiStringæøåÆØÅöôêÊ字符串>;
+export type NonAsciiæøåÆøÅöôêÊ字符串Responses = {
+    /**
+     * Successful response
+     */
+    200: Array<NonAsciiStringæøåÆØÅöôêÊ字符串>;
+};
+
+export type NonAsciiæøåÆøÅöôêÊ字符串Response = NonAsciiæøåÆøÅöôêÊ字符串Responses[keyof NonAsciiæøåÆøÅöôêÊ字符串Responses];
 
 export type PutWithFormUrlEncodedData = {
     body: ArrayWithStrings;

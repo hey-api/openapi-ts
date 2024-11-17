@@ -24,18 +24,14 @@ import type { Files } from '../../../types/utils';
 import { getConfig } from '../../../utils/config';
 import { getServiceName } from '../../../utils/postprocess';
 import { transformServiceName } from '../../../utils/transform';
-import {
-  operationDataRef,
-  operationErrorRef,
-  operationResponseRef,
-} from '../../@hey-api/services/plugin';
+import { operationIrRef } from '../../@hey-api/services/plugin';
 import {
   operationOptionsType,
   serviceFunctionIdentifier,
 } from '../../@hey-api/services/plugin-legacy';
 import { typesId } from '../../@hey-api/types/plugin';
 import type { PluginHandler } from '../../types';
-import { schemaToType, type SchemaToTypeOptions } from '../../utils/types';
+import { schemaToType } from '../../utils/types';
 import type { Config as AngularQueryConfig } from '../angular-query-experimental';
 import type { Config as ReactQueryConfig } from '../react-query';
 import type { Config as SolidQueryConfig } from '../solid-query';
@@ -556,7 +552,7 @@ const useTypeData = ({
   plugin: Plugin;
 }) => {
   const identifierData = context.file({ id: 'types' })!.identifier({
-    $ref: operationDataRef({ id: operation.id }),
+    $ref: operationIrRef({ id: operation.id, type: 'data' }),
     namespace: 'type',
   });
   if (identifierData.name) {
@@ -585,7 +581,7 @@ const useTypeError = ({
 }) => {
   const file = context.file({ id: plugin.name })!;
   const identifierError = context.file({ id: 'types' })!.identifier({
-    $ref: operationErrorRef({ id: operation.id }),
+    $ref: operationIrRef({ id: operation.id, type: 'error' }),
     namespace: 'type',
   });
   if (identifierError.name) {
@@ -632,7 +628,7 @@ const useTypeResponse = ({
   plugin: Plugin;
 }) => {
   const identifierResponse = context.file({ id: 'types' })!.identifier({
-    $ref: operationResponseRef({ id: operation.id }),
+    $ref: operationIrRef({ id: operation.id, type: 'response' }),
     namespace: 'type',
   });
   if (identifierResponse.name) {
@@ -891,17 +887,16 @@ export const handler: PluginHandler<
 
           const typeQueryKey = `${queryKeyName}<${typeData}>`;
           const typePageObjectParam = `Pick<${typeQueryKey}[0], 'body' | 'headers' | 'path' | 'query'>`;
-          const options: SchemaToTypeOptions = {
-            enums: context.config.plugins['@hey-api/types']?.enums,
-            file: context.file({ id: typesId })!,
-            useTransformersDate:
-              context.config.plugins['@hey-api/transformers']?.dates,
-          };
           // TODO: parser - this is a bit clunky, need to compile type to string because
           // `compiler.returnFunctionCall()` accepts only strings, should be cleaned up
           const typePageParam = `${tsNodeToString({
             node: schemaToType({
-              options,
+              options: {
+                enums: context.config.plugins['@hey-api/types']?.enums,
+                file: context.file({ id: typesId })!,
+                useTransformersDate:
+                  context.config.plugins['@hey-api/transformers']?.dates,
+              },
               schema: pagination.schema,
             }),
             unescape: true,

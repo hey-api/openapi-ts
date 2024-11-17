@@ -11,7 +11,7 @@ import { operationResponsesMap } from '../../../ir/operation';
 import { camelCase } from '../../../utils/camelCase';
 import { irRef } from '../../../utils/ref';
 import type { PluginHandler } from '../../types';
-import { operationResponseRef } from '../services/plugin';
+import { operationIrRef } from '../services/plugin';
 import type { Config } from './types';
 
 interface OperationIRRef {
@@ -21,7 +21,7 @@ interface OperationIRRef {
   id: string;
 }
 
-const operationIrRef = ({
+const operationTransformerIrRef = ({
   id,
   type,
 }: OperationIRRef & {
@@ -48,15 +48,16 @@ const operationIrRef = ({
 
 // TODO: parser - currently unused
 export const operationDataTransformerRef = ({ id }: OperationIRRef): string =>
-  operationIrRef({ id, type: 'data' });
+  operationTransformerIrRef({ id, type: 'data' });
 
 // TODO: parser - currently unused
 export const operationErrorTransformerRef = ({ id }: OperationIRRef): string =>
-  operationIrRef({ id, type: 'error' });
+  operationTransformerIrRef({ id, type: 'error' });
 
 export const operationResponseTransformerRef = ({
   id,
-}: OperationIRRef): string => operationIrRef({ id, type: 'response' });
+}: OperationIRRef): string =>
+  operationTransformerIrRef({ id, type: 'response' });
 
 const schemaIrRef = ({
   $ref,
@@ -385,7 +386,7 @@ export const handler: PluginHandler<Config> = ({ context, plugin }) => {
       }
 
       const identifierResponse = context.file({ id: 'types' })!.identifier({
-        $ref: operationResponseRef({ id: operation.id }),
+        $ref: operationIrRef({ id: operation.id, type: 'response' }),
         namespace: 'type',
       });
       if (!identifierResponse.name) {

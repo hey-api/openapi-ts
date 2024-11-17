@@ -77,28 +77,34 @@ const statusCodeToGroup = ({
 };
 
 interface OperationResponsesMap {
-  error: IRSchemaObject | undefined;
-  response: IRSchemaObject | undefined;
+  error?: IRSchemaObject;
+  errors?: IRSchemaObject;
+  response?: IRSchemaObject;
+  responses?: IRSchemaObject;
 }
 
 export const operationResponsesMap = (
   operation: IROperationObject,
 ): OperationResponsesMap => {
-  const result: OperationResponsesMap = {
-    error: undefined,
-    response: undefined,
-  };
+  const result: OperationResponsesMap = {};
 
   if (!operation.responses) {
     return result;
   }
 
-  let errors: IRSchemaObject = {};
-  const errorsItems: Array<IRSchemaObject> = [];
+  const errors: Omit<IRSchemaObject, 'properties'> &
+    Pick<Required<IRSchemaObject>, 'properties'> = {
+    properties: {},
+    type: 'object',
+  };
 
-  let responses: IRSchemaObject = {};
-  const responsesItems: Array<IRSchemaObject> = [];
+  const responses: Omit<IRSchemaObject, 'properties'> &
+    Pick<Required<IRSchemaObject>, 'properties'> = {
+    properties: {},
+    type: 'object',
+  };
 
+  // store default response to be evaluated last
   let defaultResponse: IRResponseObject | undefined;
 
   for (const name in operation.responses) {
@@ -110,14 +116,13 @@ export const operationResponsesMap = (
         // TODO: parser - handle informational and redirection status codes
         break;
       case '2XX':
-        responsesItems.push(response.schema);
+        responses.properties[name] = response.schema;
         break;
       case '4XX':
       case '5XX':
-        errorsItems.push(response.schema);
+        errors.properties[name] = response.schema;
         break;
       case 'default':
-        // store default response to be evaluated last
         defaultResponse = response;
         break;
     }
@@ -128,8 +133,8 @@ export const operationResponsesMap = (
     let inferred = false;
 
     // assume default is intended for success if none exists yet
-    if (!responsesItems.length) {
-      responsesItems.push(defaultResponse.schema);
+    if (!Object.keys(responses.properties).length) {
+      responses.properties.default = defaultResponse.schema;
       inferred = true;
     }
 
@@ -145,7 +150,7 @@ export const operationResponsesMap = (
         (keyword) => description.includes(keyword) || $ref.includes(keyword),
       )
     ) {
-      responsesItems.push(defaultResponse.schema);
+      responses.properties.default = defaultResponse.schema;
       inferred = true;
     }
 
@@ -156,37 +161,45 @@ export const operationResponsesMap = (
         (keyword) => description.includes(keyword) || $ref.includes(keyword),
       )
     ) {
-      errorsItems.push(defaultResponse.schema);
+      errors.properties.default = defaultResponse.schema;
       inferred = true;
     }
 
     // if no keyword match, assume default schema is intended for error
     if (!inferred) {
-      errorsItems.push(defaultResponse.schema);
+      errors.properties.default = defaultResponse.schema;
     }
   }
 
-  if (errorsItems.length) {
-    errors = addItemsToSchema({
-      items: errorsItems,
+  const errorKeys = Object.keys(errors.properties);
+  if (errorKeys.length) {
+    errors.required = errorKeys;
+    result.errors = errors;
+
+    let errorUnion = addItemsToSchema({
+      items: Object.values(errors.properties),
       mutateSchemaOneItem: true,
-      schema: errors,
+      schema: {},
     });
-    errors = deduplicateSchema({ schema: errors });
-    if (Object.keys(errors).length && errors.type !== 'unknown') {
-      result.error = errors;
+    errorUnion = deduplicateSchema({ schema: errorUnion });
+    if (Object.keys(errorUnion).length && errorUnion.type !== 'unknown') {
+      result.error = errorUnion;
     }
   }
 
-  if (responsesItems.length) {
-    responses = addItemsToSchema({
-      items: responsesItems,
+  const responseKeys = Object.keys(responses.properties);
+  if (responseKeys.length) {
+    responses.required = responseKeys;
+    result.responses = responses;
+
+    let responseUnion = addItemsToSchema({
+      items: Object.values(responses.properties),
       mutateSchemaOneItem: true,
-      schema: responses,
+      schema: {},
     });
-    responses = deduplicateSchema({ schema: responses });
-    if (Object.keys(responses).length && responses.type !== 'unknown') {
-      result.response = responses;
+    responseUnion = deduplicateSchema({ schema: responseUnion });
+    if (Object.keys(responseUnion).length && responseUnion.type !== 'unknown') {
+      result.response = responseUnion;
     }
   }
 

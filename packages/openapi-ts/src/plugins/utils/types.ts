@@ -1,9 +1,8 @@
-import type ts from 'typescript';
+import ts from 'typescript';
 
 import type { Property } from '../../compiler';
 import { compiler } from '../../compiler';
 import type { TypeScriptFile } from '../../generate/files';
-import type { IRContext } from '../../ir/context';
 import type { IRSchemaObject } from '../../ir/ir';
 import { deduplicateSchema } from '../../ir/schema';
 import { ensureValidTypeScriptJavaScriptIdentifier } from '../../openApi';
@@ -369,6 +368,8 @@ const numberTypeToIdentifier = ({
   });
 };
 
+const digitsRegExp = /^\d+$/;
+
 const objectTypeToIdentifier = ({
   namespace,
   schema,
@@ -387,11 +388,14 @@ const objectTypeToIdentifier = ({
   for (const name in schema.properties) {
     const property = schema.properties[name];
     const isRequired = required.includes(name);
+    digitsRegExp.lastIndex = 0;
     schemaProperties.push({
       comment: parseSchemaJsDoc({ schema: property }),
       isReadOnly: property.accessScope === 'read',
       isRequired,
-      name,
+      name: digitsRegExp.test(name)
+        ? ts.factory.createNumericLiteral(name)
+        : name,
       type: schemaToType({
         $ref: `${irRef}${name}`,
         namespace,
@@ -676,36 +680,4 @@ export const schemaToType = ({
   }
 
   return type;
-};
-
-export const componentsToType = ({
-  context,
-  options,
-}: {
-  context: IRContext;
-  options: SchemaToTypeOptions;
-}) => {
-  if (context.ir.components) {
-    for (const name in context.ir.components.schemas) {
-      const schema = context.ir.components.schemas[name];
-      const $ref = `#/components/schemas/${name}`;
-
-      schemaToType({
-        $ref,
-        options,
-        schema,
-      });
-    }
-
-    for (const name in context.ir.components.parameters) {
-      const parameter = context.ir.components.parameters[name];
-      const $ref = `#/components/parameters/${name}`;
-
-      schemaToType({
-        $ref,
-        options,
-        schema: parameter.schema,
-      });
-    }
-  }
 };
