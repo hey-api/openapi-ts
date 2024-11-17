@@ -24,11 +24,39 @@ export type ListPetsData = {
   };
 };
 
-export type ListPetsError = Error;
+export type ListPetsErrors = {
+  /**
+   * unexpected error
+   */
+  default: Error;
+};
 
-export type ListPetsResponse = Pets;
+export type ListPetsError = ListPetsErrors[keyof ListPetsErrors];
 
-export type CreatePetsError = Error;
+export type ListPetsResponses = {
+  /**
+   * A paged array of pets
+   */
+  200: Pets;
+};
+
+export type ListPetsResponse = ListPetsResponses[keyof ListPetsResponses];
+
+export type CreatePetsErrors = {
+  /**
+   * unexpected error
+   */
+  default: Error;
+};
+
+export type CreatePetsError = CreatePetsErrors[keyof CreatePetsErrors];
+
+export type CreatePetsResponses = {
+  /**
+   * Null response
+   */
+  201: unknown;
+};
 
 export type ShowPetByIdData = {
   body?: never;
@@ -41,6 +69,21 @@ export type ShowPetByIdData = {
   query?: never;
 };
 
-export type ShowPetByIdError = Error;
+export type ShowPetByIdErrors = {
+  /**
+   * unexpected error
+   */
+  default: Error;
+};
 
-export type ShowPetByIdResponse = Pet;
+export type ShowPetByIdError = ShowPetByIdErrors[keyof ShowPetByIdErrors];
+
+export type ShowPetByIdResponses = {
+  /**
+   * Expected response to a valid request
+   */
+  200: Pet;
+};
+
+export type ShowPetByIdResponse =
+  ShowPetByIdResponses[keyof ShowPetByIdResponses];

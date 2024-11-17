@@ -7,6 +7,7 @@ import type {
   IRPathItemObject,
   IRPathsObject,
 } from '../../ir/ir';
+import { operationResponsesMap } from '../../ir/operation';
 import { hasParameterGroupObjectRequired } from '../../ir/parameter';
 import { operationIrRef } from '../@hey-api/services/plugin';
 import type { PluginHandler } from '../types';
@@ -30,7 +31,6 @@ const operationToRouteHandler = ({
     $ref: operationIrRef({ id: operation.id, type: 'data' }),
     namespace: 'type',
   });
-
   if (identifierData.name) {
     if (operation.body) {
       file.import({
@@ -93,20 +93,44 @@ const operationToRouteHandler = ({
     }
   }
 
+  const { errors, responses } = operationResponsesMap(operation);
+
   let errorsTypeReference: ts.TypeReferenceNode | undefined = undefined;
   const identifierErrors = fileTypes.identifier({
     $ref: operationIrRef({ id: operation.id, type: 'errors' }),
     namespace: 'type',
   });
-  if (identifierErrors.name) {
-    file.import({
-      asType: true,
-      module: file.relativePathToFile({ context, id: 'types' }),
-      name: identifierErrors.name,
-    });
-    errorsTypeReference = compiler.typeReferenceNode({
-      typeName: identifierErrors.name,
-    });
+  if (identifierErrors.name && errors && errors.properties) {
+    const keys = Object.keys(errors.properties);
+    if (keys.length) {
+      const hasDefaultResponse = keys.includes('default');
+      if (!hasDefaultResponse) {
+        file.import({
+          asType: true,
+          module: file.relativePathToFile({ context, id: 'types' }),
+          name: identifierErrors.name,
+        });
+        errorsTypeReference = compiler.typeReferenceNode({
+          typeName: identifierErrors.name,
+        });
+      } else if (keys.length > 1) {
+        file.import({
+          asType: true,
+          module: file.relativePathToFile({ context, id: 'types' }),
+          name: identifierErrors.name,
+        });
+        const errorsType = compiler.typeReferenceNode({
+          typeName: identifierErrors.name,
+        });
+        const defaultType = compiler.literalTypeNode({
+          literal: compiler.stringLiteral({ text: 'default' }),
+        });
+        errorsTypeReference = compiler.typeReferenceNode({
+          typeArguments: [errorsType, defaultType],
+          typeName: 'Omit',
+        });
+      }
+    }
   }
 
   let responsesTypeReference: ts.TypeReferenceNode | undefined = undefined;
@@ -114,15 +138,37 @@ const operationToRouteHandler = ({
     $ref: operationIrRef({ id: operation.id, type: 'responses' }),
     namespace: 'type',
   });
-  if (identifierResponses.name) {
-    file.import({
-      asType: true,
-      module: file.relativePathToFile({ context, id: 'types' }),
-      name: identifierResponses.name,
-    });
-    responsesTypeReference = compiler.typeReferenceNode({
-      typeName: identifierResponses.name,
-    });
+  if (identifierResponses.name && responses && responses.properties) {
+    const keys = Object.keys(responses.properties);
+    if (keys.length) {
+      const hasDefaultResponse = keys.includes('default');
+      if (!hasDefaultResponse) {
+        file.import({
+          asType: true,
+          module: file.relativePathToFile({ context, id: 'types' }),
+          name: identifierResponses.name,
+        });
+        responsesTypeReference = compiler.typeReferenceNode({
+          typeName: identifierResponses.name,
+        });
+      } else if (keys.length > 1) {
+        file.import({
+          asType: true,
+          module: file.relativePathToFile({ context, id: 'types' }),
+          name: identifierResponses.name,
+        });
+        const responsesType = compiler.typeReferenceNode({
+          typeName: identifierResponses.name,
+        });
+        const defaultType = compiler.literalTypeNode({
+          literal: compiler.stringLiteral({ text: 'default' }),
+        });
+        responsesTypeReference = compiler.typeReferenceNode({
+          typeArguments: [responsesType, defaultType],
+          typeName: 'Omit',
+        });
+      }
+    }
   }
 
   const replyTypes = [errorsTypeReference, responsesTypeReference].filter(
