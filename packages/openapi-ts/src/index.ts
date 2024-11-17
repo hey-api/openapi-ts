@@ -8,13 +8,6 @@ import { sync } from 'cross-spawn';
 import { generateLegacyOutput, generateOutput } from './generate/output';
 import type { IRContext } from './ir/context';
 import { parseExperimental, parseLegacy } from './openApi';
-import type { ParserConfig } from './openApi/config';
-import {
-  operationFilterFn,
-  operationNameFn,
-  operationParameterFilterFn,
-  operationParameterNameFn,
-} from './openApi/config';
 import type { ClientPlugins } from './plugins';
 import { defaultPluginConfigs } from './plugins';
 import type { DefaultPluginConfigsMap, PluginNames } from './plugins/types';
@@ -413,34 +406,17 @@ export async function createClient(
     let context: IRContext | undefined;
 
     Performance.start('parser');
-    const parserConfig: ParserConfig = {
-      filterFn: {
-        operation: operationFilterFn,
-        operationParameter: operationParameterFilterFn,
-      },
-      nameFn: {
-        operation: operationNameFn,
-        operationParameter: operationParameterNameFn,
-      },
-    };
     if (
       config.experimentalParser &&
       !isLegacyClient(config) &&
       !legacyNameFromConfig(config)
     ) {
-      context = parseExperimental({
-        config,
-        parserConfig,
-        spec,
-      });
+      context = parseExperimental({ config, spec });
     }
 
     // fallback to legacy parser
     if (!context) {
-      const parsed = parseLegacy({
-        openApi: spec,
-        parserConfig,
-      });
+      const parsed = parseLegacy({ openApi: spec });
       client = postProcessClient(parsed);
     }
     Performance.end('parser');

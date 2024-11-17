@@ -4,8 +4,6 @@ import { type OpenApiV3_0_X, parseV3_0_X } from './3.0.x';
 import { type OpenApiV3_1_X, parseV3_1_X } from './3.1.x';
 import type { Client } from './common/interfaces/client';
 import type { OpenApi } from './common/interfaces/OpenApi';
-import type { ParserConfig } from './config';
-import { setParserConfig } from './config';
 import { parse as parseV2 } from './v2';
 import { parse as parseV3 } from './v3';
 
@@ -35,16 +33,8 @@ export type { OpenApiSchema as OpenApiV3Schema } from './v3/interfaces/OpenApiSc
  * all the models, services and schema's we should output.
  * @param openApi The OpenAPI spec that we have loaded from disk.
  */
-export function parseLegacy({
-  openApi,
-  parserConfig,
-}: {
-  openApi: unknown;
-  parserConfig: ParserConfig;
-}): Client {
+export function parseLegacy({ openApi }: { openApi: unknown }): Client {
   const spec = openApi as OpenApi;
-
-  setParserConfig(parserConfig);
 
   if ('openapi' in spec) {
     return parseV3(spec);
@@ -62,16 +52,13 @@ export function parseLegacy({
 // TODO: parser - add JSDoc comment
 export const parseExperimental = ({
   config,
-  parserConfig,
   spec,
 }: {
   config: Config;
-  parserConfig: ParserConfig;
   spec: unknown;
 }): IRContext | undefined => {
   const context = new IRContext({
     config,
-    parserConfig,
     spec: spec as Record<string, any>,
   });
 

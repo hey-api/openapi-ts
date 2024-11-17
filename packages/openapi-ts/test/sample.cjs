@@ -32,6 +32,7 @@ const main = async () => {
         // asClass: true,
         // include...
         // name: '@hey-api/services',
+        // operationId: false,
         // serviceNameBuilder: '^Parameters',
       },
       {

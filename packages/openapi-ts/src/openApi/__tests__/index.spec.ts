@@ -5,7 +5,6 @@ import type { OpenApiV3_0_X } from '../3.0.x';
 import { parseV3_0_X } from '../3.0.x';
 import type { OpenApiV3_1_X } from '../3.1.x';
 import { parseV3_1_X } from '../3.1.x';
-import type { ParserConfig } from '../config';
 import * as parseV2 from '../v2';
 import * as parseV3 from '../v3';
 
@@ -15,17 +14,6 @@ vi.mock('../3.0.x', () => ({
 vi.mock('../3.1.x', () => ({
   parseV3_1_X: vi.fn(),
 }));
-
-const parserConfig: ParserConfig = {
-  filterFn: {
-    operation: () => true,
-    operationParameter: () => true,
-  },
-  nameFn: {
-    operation: () => 'operation',
-    operationParameter: () => 'operationParameter',
-  },
-};
 
 describe('parse', () => {
   afterEach(() => {
@@ -43,7 +31,7 @@ describe('parse', () => {
       paths: {},
       swagger: '2',
     };
-    parseLegacy({ openApi: spec, parserConfig });
+    parseLegacy({ openApi: spec });
     expect(spy).toHaveBeenCalledWith(spec);
 
     const spec2: OpenApi = {
@@ -54,7 +42,7 @@ describe('parse', () => {
       paths: {},
       swagger: '2.0',
     };
-    parseLegacy({ openApi: spec2, parserConfig });
+    parseLegacy({ openApi: spec2 });
     expect(spy).toHaveBeenCalledWith(spec2);
   });
 
@@ -69,7 +57,7 @@ describe('parse', () => {
       openapi: '3',
       paths: {},
     };
-    parseLegacy({ openApi: spec, parserConfig });
+    parseLegacy({ openApi: spec });
     expect(spy).toHaveBeenCalledWith(spec);
 
     const spec2: OpenApi = {
@@ -80,7 +68,7 @@ describe('parse', () => {
       openapi: '3.0',
       paths: {},
     };
-    parseLegacy({ openApi: spec2, parserConfig });
+    parseLegacy({ openApi: spec2 });
     expect(spy).toHaveBeenCalledWith(spec2);
 
     const spec3: OpenApi = {
@@ -91,14 +79,12 @@ describe('parse', () => {
       openapi: '3.1.0',
       paths: {},
     };
-    parseLegacy({ openApi: spec3, parserConfig });
+    parseLegacy({ openApi: spec3 });
     expect(spy).toHaveBeenCalledWith(spec3);
   });
 
   it('throws on unknown version', () => {
-    expect(() =>
-      parseLegacy({ openApi: { foo: 'bar' }, parserConfig }),
-    ).toThrow(
+    expect(() => parseLegacy({ openApi: { foo: 'bar' } })).toThrow(
       `Unsupported OpenAPI specification: ${JSON.stringify({ foo: 'bar' }, null, 2)}`,
     );
   });
@@ -121,7 +107,6 @@ describe('experimentalParser', () => {
     parseExperimental({
       // @ts-ignore
       config: {},
-      parserConfig,
       spec,
     });
     expect(parseV3_0_X).toHaveBeenCalled();
@@ -139,7 +124,6 @@ describe('experimentalParser', () => {
     parseExperimental({
       // @ts-ignore
       config: {},
-      parserConfig,
       spec,
     });
     expect(parseV3_0_X).toHaveBeenCalled();
@@ -157,7 +141,6 @@ describe('experimentalParser', () => {
     parseExperimental({
       // @ts-ignore
       config: {},
-      parserConfig,
       spec,
     });
     expect(parseV3_0_X).toHaveBeenCalled();
@@ -175,7 +158,6 @@ describe('experimentalParser', () => {
     parseExperimental({
       // @ts-ignore
       config: {},
-      parserConfig,
       spec,
     });
     expect(parseV3_0_X).toHaveBeenCalled();
@@ -193,7 +175,6 @@ describe('experimentalParser', () => {
     parseExperimental({
       // @ts-ignore
       config: {},
-      parserConfig,
       spec,
     });
     expect(parseV3_0_X).toHaveBeenCalled();
@@ -210,7 +191,6 @@ describe('experimentalParser', () => {
     parseExperimental({
       // @ts-ignore
       config: {},
-      parserConfig,
       spec,
     });
     expect(parseV3_1_X).toHaveBeenCalled();
@@ -227,7 +207,6 @@ describe('experimentalParser', () => {
     parseExperimental({
       // @ts-ignore
       config: {},
-      parserConfig,
       spec,
     });
     expect(parseV3_1_X).toHaveBeenCalled();

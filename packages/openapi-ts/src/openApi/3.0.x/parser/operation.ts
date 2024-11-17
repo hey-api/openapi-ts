@@ -1,5 +1,6 @@
 import type { IRContext } from '../../../ir/context';
 import type { IROperationObject, IRPathsObject } from '../../../ir/ir';
+import { operationToId } from '../../shared/utils/operation';
 import type {
   OperationObject,
   PathItemObject,
@@ -205,10 +206,10 @@ export const parseOperation = ({
     context.ir.paths[path] = {};
   }
 
-  operation.id = context.parserConfig.nameFn.operation({
-    config: context.config,
+  operation.id = operationToId({
+    context,
+    id: operation.operationId,
     method,
-    operationId: operation.operationId,
     path,
   });
 
