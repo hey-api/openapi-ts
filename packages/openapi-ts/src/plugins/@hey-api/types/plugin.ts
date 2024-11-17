@@ -1,3 +1,5 @@
+import ts from 'typescript';
+
 import { compiler } from '../../../compiler';
 import type { IRContext } from '../../../ir/context';
 import type {
@@ -10,16 +12,8 @@ import type {
 import { operationResponsesMap } from '../../../ir/operation';
 import { deduplicateSchema } from '../../../ir/schema';
 import type { PluginHandler } from '../../types';
-import {
-  componentsToType,
-  schemaToType,
-  type SchemaToTypeOptions,
-} from '../../utils/types';
-import {
-  operationDataRef,
-  operationErrorRef,
-  operationResponseRef,
-} from '../services/plugin';
+import { schemaToType, type SchemaToTypeOptions } from '../../utils/types';
+import { operationIrRef } from '../services/plugin';
 import type { Config } from './types';
 
 export const typesId = 'types';
@@ -141,7 +135,7 @@ const operationToDataType = ({
 
   if (hasAnyProperties) {
     const identifier = context.file({ id: typesId })!.identifier({
-      $ref: operationDataRef({ id: operation.id }),
+      $ref: operationIrRef({ id: operation.id, type: 'data' }),
       create: true,
       namespace: 'type',
     });
@@ -172,40 +166,99 @@ const operationToType = ({
     options,
   });
 
-  const { error, response } = operationResponsesMap(operation);
+  const file = context.file({ id: typesId })!;
 
-  if (error) {
-    const identifier = context.file({ id: typesId })!.identifier({
-      $ref: operationErrorRef({ id: operation.id }),
+  const { error, errors, response, responses } =
+    operationResponsesMap(operation);
+
+  if (errors) {
+    const identifierErrors = file.identifier({
+      $ref: operationIrRef({ id: operation.id, type: 'errors' }),
       create: true,
       namespace: 'type',
     });
-    const node = compiler.typeAliasDeclaration({
-      exportType: true,
-      name: identifier.name || '',
-      type: schemaToType({
-        options,
-        schema: error,
-      }),
-    });
-    context.file({ id: typesId })!.add(node);
+    if (identifierErrors.name) {
+      const node = compiler.typeAliasDeclaration({
+        exportType: true,
+        name: identifierErrors.name,
+        type: schemaToType({
+          options,
+          schema: errors,
+        }),
+      });
+      file.add(node);
+
+      if (error) {
+        const identifierError = file.identifier({
+          $ref: operationIrRef({ id: operation.id, type: 'error' }),
+          create: true,
+          namespace: 'type',
+        });
+        if (identifierError.name) {
+          const errorsType = compiler.typeReferenceNode({
+            typeName: identifierErrors.name,
+          });
+          const keyofType = ts.factory.createTypeOperatorNode(
+            ts.SyntaxKind.KeyOfKeyword,
+            errorsType,
+          );
+          const node = compiler.typeAliasDeclaration({
+            exportType: true,
+            name: identifierError.name,
+            type: compiler.indexedAccessTypeNode({
+              indexType: keyofType,
+              objectType: errorsType,
+            }),
+          });
+          file.add(node);
+        }
+      }
+    }
   }
 
-  if (response) {
-    const identifier = context.file({ id: typesId })!.identifier({
-      $ref: operationResponseRef({ id: operation.id }),
+  if (responses) {
+    const identifierResponses = file.identifier({
+      $ref: operationIrRef({ id: operation.id, type: 'responses' }),
       create: true,
       namespace: 'type',
     });
-    const node = compiler.typeAliasDeclaration({
-      exportType: true,
-      name: identifier.name || '',
-      type: schemaToType({
-        options,
-        schema: response,
-      }),
-    });
-    context.file({ id: typesId })!.add(node);
+    if (identifierResponses.name) {
+      const node = compiler.typeAliasDeclaration({
+        exportType: true,
+        name: identifierResponses.name,
+        type: schemaToType({
+          options,
+          schema: responses,
+        }),
+      });
+      file.add(node);
+
+      if (response) {
+        const identifierResponse = file.identifier({
+          $ref: operationIrRef({ id: operation.id, type: 'response' }),
+          create: true,
+          namespace: 'type',
+        });
+        if (identifierResponse.name) {
+          const responsesType = compiler.typeReferenceNode({
+            typeName: identifierResponses.name,
+          });
+          const keyofType = ts.factory.createTypeOperatorNode(
+            ts.SyntaxKind.KeyOfKeyword,
+            responsesType,
+          );
+          const node = compiler.typeAliasDeclaration({
+            exportType: true,
+            name: identifierResponse.name,
+            type: compiler.indexedAccessTypeNode({
+              indexType: keyofType,
+              objectType: responsesType,
+            }),
+          });
+          file.add(node);
+        }
+      }
+    }
   }
 };
 
@@ -220,7 +273,29 @@ export const handler: PluginHandler<Config> = ({ context, plugin }) => {
     useTransformersDate: context.config.plugins['@hey-api/transformers']?.dates,
   };
 
-  componentsToType({ context, options });
+  if (context.ir.components) {
+    for (const name in context.ir.components.schemas) {
+      const schema = context.ir.components.schemas[name];
+      const $ref = `#/components/schemas/${name}`;
+
+      schemaToType({
+        $ref,
+        options,
+        schema,
+      });
+    }
+
+    for (const name in context.ir.components.parameters) {
+      const parameter = context.ir.components.parameters[name];
+      const $ref = `#/components/parameters/${name}`;
+
+      schemaToType({
+        $ref,
+        options,
+        schema: parameter.schema,
+      });
+    }
+  }
 
   // TODO: parser - once types are a plugin, this logic can be simplified
   // provide config option on types to generate path types and services

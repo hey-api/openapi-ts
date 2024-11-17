@@ -1,3 +1,5 @@
+import type ts from 'typescript';
+
 import { compiler, type Property } from '../../compiler';
 import type { IRContext } from '../../ir/context';
 import type {
@@ -6,9 +8,8 @@ import type {
   IRPathsObject,
 } from '../../ir/ir';
 import { hasParameterGroupObjectRequired } from '../../ir/parameter';
-import { operationDataRef } from '../@hey-api/services/plugin';
+import { operationIrRef } from '../@hey-api/services/plugin';
 import type { PluginHandler } from '../types';
-import { componentsToType, schemaToType } from '../utils/types';
 import type { Config } from './types';
 
 const fastifyId = 'fastify';
@@ -19,13 +20,14 @@ const operationToRouteHandler = ({
 }: {
   context: IRContext;
   operation: IROperationObject;
-}): Property => {
+}): Property | undefined => {
   const file = context.file({ id: fastifyId })!;
+  const fileTypes = context.file({ id: 'types' })!;
 
   const properties: Array<Property> = [];
 
-  const identifierData = context.file({ id: 'types' })!.identifier({
-    $ref: operationDataRef({ id: operation.id }),
+  const identifierData = fileTypes.identifier({
+    $ref: operationIrRef({ id: operation.id, type: 'data' }),
     namespace: 'type',
   });
 
@@ -91,32 +93,52 @@ const operationToRouteHandler = ({
     }
   }
 
-  if (operation.responses) {
-    const responseProperties: Array<Property> = [];
+  let errorsTypeReference: ts.TypeReferenceNode | undefined = undefined;
+  const identifierErrors = fileTypes.identifier({
+    $ref: operationIrRef({ id: operation.id, type: 'errors' }),
+    namespace: 'type',
+  });
+  if (identifierErrors.name) {
+    file.import({
+      asType: true,
+      module: file.relativePathToFile({ context, id: 'types' }),
+      name: identifierErrors.name,
+    });
+    errorsTypeReference = compiler.typeReferenceNode({
+      typeName: identifierErrors.name,
+    });
+  }
 
-    for (const code in operation.responses) {
-      if (code === 'default') {
-        continue;
-      }
+  let responsesTypeReference: ts.TypeReferenceNode | undefined = undefined;
+  const identifierResponses = fileTypes.identifier({
+    $ref: operationIrRef({ id: operation.id, type: 'responses' }),
+    namespace: 'type',
+  });
+  if (identifierResponses.name) {
+    file.import({
+      asType: true,
+      module: file.relativePathToFile({ context, id: 'types' }),
+      name: identifierResponses.name,
+    });
+    responsesTypeReference = compiler.typeReferenceNode({
+      typeName: identifierResponses.name,
+    });
+  }
 
-      const response = operation.responses[code]!;
-      // TODO: numeric literal for numbers
-      responseProperties.push({
-        name: code,
-        type: schemaToType({
-          options: { file },
-          schema: response.schema,
-        }),
-      });
-    }
-
+  const replyTypes = [errorsTypeReference, responsesTypeReference].filter(
+    Boolean,
+  );
+  if (replyTypes.length) {
     properties.push({
       name: 'Reply',
-      type: compiler.typeInterfaceNode({
-        properties: responseProperties,
-        useLegacyResolution: false,
+      type: compiler.typeIntersectionNode({
+        types: replyTypes,
       }),
     });
+  }
+
+  if (!properties.length) {
+    return;
   }
 
   const routeHandler: Property = {
@@ -131,8 +153,11 @@ const operationToRouteHandler = ({
   return routeHandler;
 };
 
-const processRouteHandlers = ({ context }: { context: IRContext }) => {
-  const file = context.file({ id: fastifyId })!;
+export const handler: PluginHandler<Config> = ({ context, plugin }) => {
+  const file = context.createFile({
+    id: fastifyId,
+    path: plugin.output,
+  });
 
   const routeHandlers: Array<Property> = [];
 
@@ -144,7 +169,9 @@ const processRouteHandlers = ({ context }: { context: IRContext }) => {
       const operation = pathItem[method]!;
 
       const routeHandler = operationToRouteHandler({ context, operation });
-      routeHandlers.push(routeHandler);
+      if (routeHandler) {
+        routeHandlers.push(routeHandler);
+      }
     }
   }
 
@@ -154,6 +181,14 @@ const processRouteHandlers = ({ context }: { context: IRContext }) => {
     namespace: 'type',
   });
   if (identifier.name) {
+    if (routeHandlers.length) {
+      file.import({
+        asType: true,
+        module: 'fastify',
+        name: 'RouteHandler',
+      });
+    }
+
     file.add(
       compiler.typeAliasDeclaration({
         exportType: true,
@@ -165,23 +200,4 @@ const processRouteHandlers = ({ context }: { context: IRContext }) => {
       }),
     );
   }
-};
-
-export const handler: PluginHandler<Config> = ({ context, plugin }) => {
-  const file = context.createFile({
-    id: fastifyId,
-    path: plugin.output,
-  });
-  file.import({
-    asType: true,
-    module: 'fastify',
-    name: 'RouteHandler',
-  });
-  componentsToType({
-    context,
-    options: {
-      file,
-    },
-  });
-  processRouteHandlers({ context });
 };
