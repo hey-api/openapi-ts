@@ -34,6 +34,7 @@ import {
   type Config as TanStackVueQuery,
   defaultConfig as tanStackVueQuery,
 } from './@tanstack/vue-query';
+import { type Config as Fastify, defaultConfig as fastify } from './fastify';
 import type {
   DefaultPluginConfigsMap,
   PluginConfig,
@@ -53,7 +54,8 @@ export type UserPlugins =
   | UserConfig<TanStackReactQuery>
   | UserConfig<TanStackSolidQuery>
   | UserConfig<TanStackSvelteQuery>
-  | UserConfig<TanStackVueQuery>;
+  | UserConfig<TanStackVueQuery>
+  | UserConfig<Fastify>;
 // | UserConfig<Zod>
 
 export type ClientPlugins =
@@ -66,6 +68,7 @@ export type ClientPlugins =
   | PluginConfig<TanStackSolidQuery>
   | PluginConfig<TanStackSvelteQuery>
   | PluginConfig<TanStackVueQuery>
+  | PluginConfig<Fastify>
   | PluginConfig<Zod>;
 
 export const defaultPluginConfigs: DefaultPluginConfigsMap<ClientPlugins> = {
@@ -78,5 +81,6 @@ export const defaultPluginConfigs: DefaultPluginConfigsMap<ClientPlugins> = {
   '@tanstack/solid-query': tanStackSolidQuery,
   '@tanstack/svelte-query': tanStackSvelteQuery,
   '@tanstack/vue-query': tanStackVueQuery,
+  fastify,
   zod,
 };

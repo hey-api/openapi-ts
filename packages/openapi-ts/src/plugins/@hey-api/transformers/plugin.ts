@@ -11,7 +11,7 @@ import { operationResponsesMap } from '../../../ir/operation';
 import { camelCase } from '../../../utils/camelCase';
 import { irRef } from '../../../utils/ref';
 import type { PluginHandler } from '../../types';
-import { operationResponseRef } from '../services/plugin';
+import { operationIrRef } from '../services/plugin';
 import type { Config } from './types';
 
 interface OperationIRRef {
@@ -21,7 +21,7 @@ interface OperationIRRef {
   id: string;
 }
 
-const operationIrRef = ({
+export const operationTransformerIrRef = ({
   id,
   type,
 }: OperationIRRef & {
@@ -45,18 +45,6 @@ const operationIrRef = ({
     pascalCase: false,
   })}${affix}`;
 };
-
-// TODO: parser - currently unused
-export const operationDataTransformerRef = ({ id }: OperationIRRef): string =>
-  operationIrRef({ id, type: 'data' });
-
-// TODO: parser - currently unused
-export const operationErrorTransformerRef = ({ id }: OperationIRRef): string =>
-  operationIrRef({ id, type: 'error' });
-
-export const operationResponseTransformerRef = ({
-  id,
-}: OperationIRRef): string => operationIrRef({ id, type: 'response' });
 
 const schemaIrRef = ({
   $ref,
@@ -356,10 +344,10 @@ const processSchemaType = ({
 };
 
 // handles only response transformers for now
-export const handler: PluginHandler<Config> = ({ context }) => {
+export const handler: PluginHandler<Config> = ({ context, plugin }) => {
   const file = context.createFile({
     id: transformersId,
-    path: 'transformers',
+    path: plugin.output,
   });
 
   for (const path in context.ir.paths) {
@@ -385,7 +373,7 @@ export const handler: PluginHandler<Config> = ({ context }) => {
       }
 
       const identifierResponse = context.file({ id: 'types' })!.identifier({
-        $ref: operationResponseRef({ id: operation.id }),
+        $ref: operationIrRef({ id: operation.id, type: 'response' }),
         namespace: 'type',
       });
       if (!identifierResponse.name) {
@@ -393,7 +381,7 @@ export const handler: PluginHandler<Config> = ({ context }) => {
       }
 
       let identifierResponseTransformer = file.identifier({
-        $ref: operationResponseTransformerRef({ id: operation.id }),
+        $ref: operationTransformerIrRef({ id: operation.id, type: 'response' }),
         create: true,
         namespace: 'value',
       });
@@ -441,7 +429,10 @@ export const handler: PluginHandler<Config> = ({ context }) => {
         // the created schema response transformer was empty, do not generate
         // it and prevent any future attempts
         identifierResponseTransformer = file.blockIdentifier({
-          $ref: operationResponseTransformerRef({ id: operation.id }),
+          $ref: operationTransformerIrRef({
+            id: operation.id,
+            type: 'response',
+          }),
           namespace: 'value',
         });
       }

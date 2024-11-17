@@ -6,9 +6,11 @@ import type {
   OperationParameters,
 } from '../../common/interfaces/client';
 import { getRef } from '../../common/parser/getRef';
-import { getOperationResponseHeader } from '../../common/parser/operation';
+import {
+  getOperationResponseHeader,
+  operationNameFn,
+} from '../../common/parser/operation';
 import { toSortedByRequired } from '../../common/parser/sort';
-import { getParserConfig } from '../../config';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiOperation } from '../interfaces/OpenApiOperation';
 import type { OpenApiRequestBody } from '../interfaces/OpenApiRequestBody';
@@ -54,8 +56,6 @@ export const getOperation = ({
   types: Client['types'];
   url: string;
 }): Operation => {
-  const config = getParserConfig();
-
   const operationWithoutName: Omit<Operation, 'name'> = {
     $refs: [],
     deprecated: Boolean(op.deprecated),
@@ -78,7 +78,7 @@ export const getOperation = ({
   };
   const operation = {
     ...operationWithoutName,
-    name: config.nameFn.operation({
+    name: operationNameFn({
       config: getConfig(),
       method: operationWithoutName.method,
       operationId: op.operationId,

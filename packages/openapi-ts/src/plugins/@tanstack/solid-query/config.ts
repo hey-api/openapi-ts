@@ -15,7 +15,7 @@ export const defaultConfig: PluginConfig<Config> = {
 };
 
 /**
- * Type helper for TanStack Solid Query plugin, returns {@link PluginConfig} object
+ * Type helper for `@tanstack/solid-query` plugin, returns {@link PluginConfig} object
  */
 export const defineConfig: DefineConfig<Config> = (config) => ({
   ...defaultConfig,

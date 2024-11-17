@@ -22,7 +22,7 @@ export type Property = {
   comment?: Comments;
   isReadOnly?: boolean;
   isRequired?: boolean;
-  name: string;
+  name: string | ts.PropertyName;
   type: any | ts.TypeNode;
 };
 
@@ -87,7 +87,9 @@ export const createTypeInterfaceNode = ({
     const signature = ts.factory.createPropertySignature(
       modifiers,
       useLegacyResolution ||
-        property.name.match(validTypescriptIdentifierRegExp)
+        (typeof property.name === 'string' &&
+          property.name.match(validTypescriptIdentifierRegExp)) ||
+        (typeof property.name !== 'string' && ts.isPropertyName(property.name))
         ? property.name
         : createStringLiteral({ text: property.name }),
       questionToken,
@@ -111,7 +113,7 @@ export const createTypeInterfaceNode = ({
       modifiers,
       [
         createParameterDeclaration({
-          name: createIdentifier({ text: indexProperty.name }),
+          name: createIdentifier({ text: String(indexProperty.name) }),
           type: createKeywordTypeNode({ keyword: 'string' }),
         }),
       ],

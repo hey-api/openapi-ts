@@ -50,6 +50,12 @@ This config option is deprecated and will be removed in favor of [clients](./cli
 
 This config option is deprecated and will be removed.
 
+## v0.56.0
+
+### Deprecated `tree` in `@hey-api/types`
+
+This config option is deprecated and will be removed when the experimental parser becomes the default.
+
 ## v0.55.0
 
 This release adds the ability to filter your OpenAPI specification before it's processed. This feature will be useful if you are working with a large specification and are interested in generating output only from a small subset.

@@ -94,11 +94,11 @@ export default {
 
 :::
 
-You can now run `openapi-ts` to generate TanStack Query artifacts. 🎉
+You can now generate TanStack Query artifacts. 🎉
 
 ## Output
 
-The TanStack Query plugin will optionally generate the following output layers, depending on the input specification.
+The TanStack Query plugin will optionally generate the following artifacts, depending on the input specification.
 
 ## Queries
 

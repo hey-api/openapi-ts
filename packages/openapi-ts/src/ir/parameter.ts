@@ -1,5 +1,17 @@
-import type { IRParametersObject } from './ir';
+import type { IRParameterObject, IRParametersObject } from './ir';
 import type { Pagination } from './pagination';
+
+export const hasParameterGroupObjectRequired = (
+  parameterGroup?: Record<string, IRParameterObject>,
+): boolean => {
+  for (const name in parameterGroup) {
+    if (parameterGroup[name].required) {
+      return true;
+    }
+  }
+
+  return false;
+};
 
 export const hasParametersObjectRequired = (
   parameters: IRParametersObject | undefined,
@@ -8,28 +20,20 @@ export const hasParametersObjectRequired = (
     return false;
   }
 
-  for (const name in parameters.cookie) {
-    if (parameters.cookie[name].required) {
-      return true;
-    }
+  if (hasParameterGroupObjectRequired(parameters.cookie)) {
+    return true;
   }
 
-  for (const name in parameters.header) {
-    if (parameters.header[name].required) {
-      return true;
-    }
+  if (hasParameterGroupObjectRequired(parameters.header)) {
+    return true;
   }
 
-  for (const name in parameters.path) {
-    if (parameters.path[name].required) {
-      return true;
-    }
+  if (hasParameterGroupObjectRequired(parameters.path)) {
+    return true;
   }
 
-  for (const name in parameters.query) {
-    if (parameters.query[name].required) {
-      return true;
-    }
+  if (hasParameterGroupObjectRequired(parameters.query)) {
+    return true;
   }
 
   return false;

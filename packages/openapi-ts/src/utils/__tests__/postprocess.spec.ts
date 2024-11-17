@@ -1,19 +1,18 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { parseLegacy } from '../../openApi';
-import type { ParserConfig } from '../../openApi/config';
+import type { Config } from '../../types/config';
 import { getServiceName, postProcessClient } from '../postprocess';
 
-const parserConfig: ParserConfig = {
-  filterFn: {
-    operation: () => true,
-    operationParameter: () => true,
-  },
-  nameFn: {
-    operation: () => 'operation',
-    operationParameter: () => 'operationParameter',
-  },
-};
+vi.mock('../config', () => {
+  const config: Partial<Config> = {
+    plugins: {},
+  };
+  return {
+    getConfig: () => config,
+    isLegacyClient: vi.fn().mockReturnValue(true),
+  };
+});
 
 describe('getServiceName', () => {
   it.each([
@@ -58,7 +57,6 @@ describe('getServices', () => {
           },
         },
       },
-      parserConfig,
     });
     const { services } = postProcessClient(parserClient);
 
@@ -92,7 +90,6 @@ describe('getServices', () => {
           },
         },
       },
-      parserConfig,
     });
     const { services } = postProcessClient(parserClient);
 
