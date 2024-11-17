@@ -5,7 +5,8 @@ import type {
   IRPathItemObject,
   IRPathsObject,
 } from '../../ir/ir';
-import { irParametersToIrSchema } from '../../ir/schema';
+import { hasParameterGroupObjectRequired } from '../../ir/parameter';
+import { operationDataRef } from '../@hey-api/services/plugin';
 import type { PluginHandler } from '../types';
 import { componentsToType, schemaToType } from '../utils/types';
 import type { Config } from './types';
@@ -23,58 +24,70 @@ const operationToRouteHandler = ({
 
   const properties: Array<Property> = [];
 
-  if (operation.body) {
-    properties.push({
-      isRequired: operation.body.required,
-      name: 'Body',
-      type: schemaToType({
-        options: { file },
-        schema: operation.body.schema,
-      }),
-    });
-  }
+  const identifierData = context.file({ id: 'types' })!.identifier({
+    $ref: operationDataRef({ id: operation.id }),
+    namespace: 'type',
+  });
 
-  if (operation.parameters) {
-    if (operation.parameters.header) {
-      const schema = irParametersToIrSchema({
-        parameters: operation.parameters.header,
+  if (identifierData.name) {
+    if (operation.body) {
+      file.import({
+        asType: true,
+        module: file.relativePathToFile({ context, id: 'types' }),
+        name: identifierData.name,
       });
       properties.push({
-        isRequired: Boolean(schema.required),
-        name: 'Headers',
-        type: schemaToType({
-          options: { file },
-          schema,
-        }),
+        isRequired: operation.body.required,
+        name: 'Body',
+        type: `${identifierData.name}['body']`,
       });
     }
 
-    if (operation.parameters.path) {
-      const schema = irParametersToIrSchema({
-        parameters: operation.parameters.path,
-      });
-      properties.push({
-        isRequired: Boolean(schema.required),
-        name: 'Params',
-        type: schemaToType({
-          options: { file },
-          schema,
-        }),
-      });
-    }
+    if (operation.parameters) {
+      if (operation.parameters.header) {
+        file.import({
+          asType: true,
+          module: file.relativePathToFile({ context, id: 'types' }),
+          name: identifierData.name,
+        });
+        properties.push({
+          isRequired: hasParameterGroupObjectRequired(
+            operation.parameters.header,
+          ),
+          name: 'Headers',
+          type: `${identifierData.name}['headers']`,
+        });
+      }
 
-    if (operation.parameters.query) {
-      const schema = irParametersToIrSchema({
-        parameters: operation.parameters.query,
-      });
-      properties.push({
-        isRequired: Boolean(schema.required),
-        name: 'Querystring',
-        type: schemaToType({
-          options: { file },
-          schema,
-        }),
-      });
+      if (operation.parameters.path) {
+        file.import({
+          asType: true,
+          module: file.relativePathToFile({ context, id: 'types' }),
+          name: identifierData.name,
+        });
+        properties.push({
+          isRequired: hasParameterGroupObjectRequired(
+            operation.parameters.path,
+          ),
+          name: 'Params',
+          type: `${identifierData.name}['path']`,
+        });
+      }
+
+      if (operation.parameters.query) {
+        file.import({
+          asType: true,
+          module: file.relativePathToFile({ context, id: 'types' }),
+          name: identifierData.name,
+        });
+        properties.push({
+          isRequired: hasParameterGroupObjectRequired(
+            operation.parameters.query,
+          ),
+          name: 'Querystring',
+          type: `${identifierData.name}['query']`,
+        });
+      }
     }
   }
 
@@ -87,6 +100,7 @@ const operationToRouteHandler = ({
       }
 
       const response = operation.responses[code]!;
+      // TODO: numeric literal for numbers
       responseProperties.push({
         name: code,
         type: schemaToType({

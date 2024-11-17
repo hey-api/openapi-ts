@@ -3,7 +3,7 @@ import { handler } from './plugin';
 import type { Config } from './types';
 
 export const defaultConfig: PluginConfig<Config> = {
-  _dependencies: ['@hey-api/services'],
+  _dependencies: ['@hey-api/types', '@hey-api/services'],
   _handler: handler,
   _handlerLegacy: () => {},
   name: 'fastify',
