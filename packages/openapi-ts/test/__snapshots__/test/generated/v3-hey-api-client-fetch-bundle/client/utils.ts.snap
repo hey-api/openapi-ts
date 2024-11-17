@@ -326,30 +326,34 @@ export const createQuerySerializer = <T = unknown>({
  * Infers parseAs value from provided Content-Type header.
  */
 export const getParseAs = (
-  content: string | null,
+  contentType: string | null,
 ): Exclude<Config['parseAs'], 'auto' | 'stream'> => {
-  if (!content) {
+  if (!contentType) {
     return;
   }
 
-  // TODO: parser - better detection of MIME types
-  if (content.startsWith('application/json') || content.endsWith('+json')) {
+  const cleanContent = contentType.split(';')[0].trim();
+
+  if (
+    cleanContent.startsWith('application/json') ||
+    cleanContent.endsWith('+json')
+  ) {
     return 'json';
   }
 
-  if (content === 'multipart/form-data') {
+  if (cleanContent === 'multipart/form-data') {
     return 'formData';
   }
 
   if (
     ['application/', 'audio/', 'image/', 'video/'].some((type) =>
-      content.startsWith(type),
+      cleanContent.startsWith(type),
     )
   ) {
     return 'blob';
   }
 
-  if (content.startsWith('text/')) {
+  if (cleanContent.startsWith('text/')) {
     return 'text';
   }
 };
