@@ -29,9 +29,8 @@ import {
   operationOptionsType,
   serviceFunctionIdentifier,
 } from '../../@hey-api/services/plugin-legacy';
-import { typesId } from '../../@hey-api/types/plugin';
+import { schemaToType } from '../../@hey-api/types/plugin';
 import type { PluginHandler } from '../../types';
-import { schemaToType } from '../../utils/types';
 import type { Config as AngularQueryConfig } from '../angular-query-experimental';
 import type { Config as ReactQueryConfig } from '../react-query';
 import type { Config as SolidQueryConfig } from '../solid-query';
@@ -891,12 +890,7 @@ export const handler: PluginHandler<
           // `compiler.returnFunctionCall()` accepts only strings, should be cleaned up
           const typePageParam = `${tsNodeToString({
             node: schemaToType({
-              options: {
-                enums: context.config.plugins['@hey-api/types']?.enums,
-                file: context.file({ id: typesId })!,
-                useTransformersDate:
-                  context.config.plugins['@hey-api/transformers']?.dates,
-              },
+              context,
               schema: pagination.schema,
             }),
             unescape: true,
