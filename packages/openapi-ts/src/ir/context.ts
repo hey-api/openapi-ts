@@ -1,7 +1,6 @@
 import path from 'node:path';
 
 import { TypeScriptFile } from '../generate/files';
-import type { ParserConfig } from '../openApi/config';
 import type { Config } from '../types/config';
 import type { Files } from '../types/utils';
 import { resolveRef } from '../utils/ref';
@@ -34,25 +33,15 @@ export class IRContext<Spec extends Record<string, any> = any> {
    * Intermediate representation model obtained from `spec`.
    */
   public ir: IR;
-  public parserConfig: ParserConfig;
   /**
    * Resolved specification from `input`.
    */
   public spec: Spec;
 
-  constructor({
-    config,
-    parserConfig,
-    spec,
-  }: {
-    config: Config;
-    parserConfig: ParserConfig;
-    spec: Spec;
-  }) {
+  constructor({ config, spec }: { config: Config; spec: Spec }) {
     this.config = config;
     this.files = {};
     this.ir = {};
-    this.parserConfig = parserConfig;
     this.spec = spec;
   }
 

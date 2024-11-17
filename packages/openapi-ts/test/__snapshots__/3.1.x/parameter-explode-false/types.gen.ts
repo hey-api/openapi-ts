@@ -7,3 +7,10 @@ export type PostFooData = {
         foo?: Array<string>;
     };
 };
+
+export type PostFooResponses = {
+    /**
+     * OK
+     */
+    default: unknown;
+};

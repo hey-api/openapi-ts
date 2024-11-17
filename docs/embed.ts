@@ -25,6 +25,13 @@ export const embedProject = (projectId: string) => async (event: Event) => {
           'openapi-ts.config.ts,src/client/schemas.gen.ts,src/client/services.gen.ts,src/client/types.gen.ts,src/App.tsx',
         view: 'editor',
       });
+    case 'hey-api-client-fetch-plugin-fastify-example':
+      return await sdk.embedProjectId(container, projectId, {
+        height: 700,
+        openFile:
+          'openapi-ts.config.ts,src/client/fastify.gen.ts,src/client/types.gen.ts,src/server.ts',
+        view: 'editor',
+      });
     case 'hey-api-client-fetch-plugin-tanstack-react-query-example':
       return await sdk.embedProjectId(container, projectId, {
         height: 700,

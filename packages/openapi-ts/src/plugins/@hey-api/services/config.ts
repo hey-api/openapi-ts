@@ -17,7 +17,7 @@ export const defaultConfig: PluginConfig<Config> = {
 };
 
 /**
- * Type helper for Hey API services plugin, returns {@link PluginConfig} object
+ * Type helper for `@hey-api/services` plugin, returns {@link PluginConfig} object
  */
 export const defineConfig: DefineConfig<Config> = (config) => ({
   ...defaultConfig,

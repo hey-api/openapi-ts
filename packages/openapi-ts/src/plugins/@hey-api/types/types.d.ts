@@ -28,6 +28,8 @@ export interface Config extends PluginName<'@hey-api/types'> {
    * Generate a tree of types containing all operations? It will be named
    * $OpenApiTs.
    * @default false
+   *
+   * @deprecated
    */
   tree?: boolean;
 }

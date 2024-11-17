@@ -291,10 +291,10 @@ const schemasV3_1_X = (context: IRContext<OpenApiV3_1_X>) => {
   }
 };
 
-export const handler: PluginHandler<Config> = ({ context }) => {
+export const handler: PluginHandler<Config> = ({ context, plugin }) => {
   context.createFile({
     id: schemasId,
-    path: 'schemas',
+    path: plugin.output,
   });
 
   if (context.spec.openapi) {

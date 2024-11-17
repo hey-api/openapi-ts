@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { operationNameFn } from '../../openApi/config';
+import { operationNameFn } from '../../openApi/common/parser/operation';
 import { setConfig } from '../config';
 
 describe('operationNameFn', () => {

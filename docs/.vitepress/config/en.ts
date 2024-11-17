@@ -48,6 +48,10 @@ export default defineConfig({
       {
         items: [
           {
+            link: '/openapi-ts/fastify',
+            text: 'Fastify',
+          },
+          {
             link: '/openapi-ts/tanstack-query',
             text: 'TanStack Query',
           },

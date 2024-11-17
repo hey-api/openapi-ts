@@ -19,7 +19,7 @@ import { getServiceName } from '../../../utils/postprocess';
 import { irRef } from '../../../utils/ref';
 import { transformServiceName } from '../../../utils/transform';
 import type { PluginHandler } from '../../types';
-import { operationResponseTransformerRef } from '../transformers/plugin';
+import { operationTransformerIrRef } from '../transformers/plugin';
 import {
   operationOptionsType,
   serviceFunctionIdentifier,
@@ -33,11 +33,11 @@ interface OperationIRRef {
   id: string;
 }
 
-const operationIrRef = ({
+export const operationIrRef = ({
   id,
   type,
 }: OperationIRRef & {
-  type: 'data' | 'error' | 'response';
+  type: 'data' | 'error' | 'errors' | 'response' | 'responses';
 }): string => {
   let affix = '';
   switch (type) {
@@ -45,10 +45,20 @@ const operationIrRef = ({
       affix = 'Data';
       break;
     case 'error':
+      // error union
       affix = 'Error';
       break;
+    case 'errors':
+      // errors map
+      affix = 'Errors';
+      break;
     case 'response':
+      // response union
       affix = 'Response';
+      break;
+    case 'responses':
+      // responses map
+      affix = 'Responses';
       break;
   }
   return `${irRef}${camelCase({
@@ -56,15 +66,6 @@ const operationIrRef = ({
     pascalCase: true,
   })}${affix}`;
 };
-
-export const operationDataRef = ({ id }: OperationIRRef): string =>
-  operationIrRef({ id, type: 'data' });
-
-export const operationErrorRef = ({ id }: OperationIRRef): string =>
-  operationIrRef({ id, type: 'error' });
-
-export const operationResponseRef = ({ id }: OperationIRRef): string =>
-  operationIrRef({ id, type: 'response' });
 
 const servicesId = 'services';
 
@@ -138,7 +139,7 @@ const requestOptions = ({
   const fileTransformers = context.file({ id: 'transformers' });
   if (fileTransformers) {
     const identifier = fileTransformers.identifier({
-      $ref: operationResponseTransformerRef({ id: operation.id }),
+      $ref: operationTransformerIrRef({ id: operation.id, type: 'response' }),
       namespace: 'value',
     });
     if (identifier.name) {
@@ -205,7 +206,7 @@ const generateClassServices = ({ context }: { context: IRContext }) => {
       const operation = pathItem[method]!;
 
       const identifierData = context.file({ id: 'types' })!.identifier({
-        $ref: operationDataRef({ id: operation.id }),
+        $ref: operationIrRef({ id: operation.id, type: 'data' }),
         namespace: 'type',
       });
       if (identifierData.name) {
@@ -217,7 +218,7 @@ const generateClassServices = ({ context }: { context: IRContext }) => {
       }
 
       const identifierError = context.file({ id: 'types' })!.identifier({
-        $ref: operationErrorRef({ id: operation.id }),
+        $ref: operationIrRef({ id: operation.id, type: 'error' }),
         namespace: 'type',
       });
       if (identifierError.name) {
@@ -229,7 +230,7 @@ const generateClassServices = ({ context }: { context: IRContext }) => {
       }
 
       const identifierResponse = context.file({ id: 'types' })!.identifier({
-        $ref: operationResponseRef({ id: operation.id }),
+        $ref: operationIrRef({ id: operation.id, type: 'response' }),
         namespace: 'type',
       });
       if (identifierResponse.name) {
@@ -330,7 +331,7 @@ const generateFlatServices = ({ context }: { context: IRContext }) => {
       const operation = pathItem[method]!;
 
       const identifierData = context.file({ id: 'types' })!.identifier({
-        $ref: operationDataRef({ id: operation.id }),
+        $ref: operationIrRef({ id: operation.id, type: 'data' }),
         namespace: 'type',
       });
       if (identifierData.name) {
@@ -342,7 +343,7 @@ const generateFlatServices = ({ context }: { context: IRContext }) => {
       }
 
       const identifierError = context.file({ id: 'types' })!.identifier({
-        $ref: operationErrorRef({ id: operation.id }),
+        $ref: operationIrRef({ id: operation.id, type: 'error' }),
         namespace: 'type',
       });
       if (identifierError.name) {
@@ -354,7 +355,7 @@ const generateFlatServices = ({ context }: { context: IRContext }) => {
       }
 
       const identifierResponse = context.file({ id: 'types' })!.identifier({
-        $ref: operationResponseRef({ id: operation.id }),
+        $ref: operationIrRef({ id: operation.id, type: 'response' }),
         namespace: 'type',
       });
       if (identifierResponse.name) {
@@ -421,7 +422,7 @@ const generateFlatServices = ({ context }: { context: IRContext }) => {
   }
 };
 
-export const handler: PluginHandler<Config> = ({ context }) => {
+export const handler: PluginHandler<Config> = ({ context, plugin }) => {
   if (!context.config.client.name) {
     throw new Error(
       '🚫 client needs to be set to generate services - which HTTP client do you want to use?',
@@ -430,7 +431,7 @@ export const handler: PluginHandler<Config> = ({ context }) => {
 
   const file = context.createFile({
     id: servicesId,
-    path: 'services',
+    path: plugin.output,
   });
   const servicesOutput = file.nameWithoutExtension();
 

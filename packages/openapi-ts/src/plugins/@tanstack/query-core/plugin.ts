@@ -24,11 +24,7 @@ import type { Files } from '../../../types/utils';
 import { getConfig } from '../../../utils/config';
 import { getServiceName } from '../../../utils/postprocess';
 import { transformServiceName } from '../../../utils/transform';
-import {
-  operationDataRef,
-  operationErrorRef,
-  operationResponseRef,
-} from '../../@hey-api/services/plugin';
+import { operationIrRef } from '../../@hey-api/services/plugin';
 import {
   operationOptionsType,
   serviceFunctionIdentifier,
@@ -555,7 +551,7 @@ const useTypeData = ({
   plugin: Plugin;
 }) => {
   const identifierData = context.file({ id: 'types' })!.identifier({
-    $ref: operationDataRef({ id: operation.id }),
+    $ref: operationIrRef({ id: operation.id, type: 'data' }),
     namespace: 'type',
   });
   if (identifierData.name) {
@@ -584,7 +580,7 @@ const useTypeError = ({
 }) => {
   const file = context.file({ id: plugin.name })!;
   const identifierError = context.file({ id: 'types' })!.identifier({
-    $ref: operationErrorRef({ id: operation.id }),
+    $ref: operationIrRef({ id: operation.id, type: 'error' }),
     namespace: 'type',
   });
   if (identifierError.name) {
@@ -631,7 +627,7 @@ const useTypeResponse = ({
   plugin: Plugin;
 }) => {
   const identifierResponse = context.file({ id: 'types' })!.identifier({
-    $ref: operationResponseRef({ id: operation.id }),
+    $ref: operationIrRef({ id: operation.id, type: 'response' }),
     namespace: 'type',
   });
   if (identifierResponse.name) {

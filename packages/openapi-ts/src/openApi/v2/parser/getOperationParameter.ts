@@ -4,8 +4,8 @@ import { getDefault } from '../../common/parser/getDefault';
 import { getEnums } from '../../common/parser/getEnums';
 import { getPattern } from '../../common/parser/getPattern';
 import { getRef } from '../../common/parser/getRef';
+import { operationParameterNameFn } from '../../common/parser/operation';
 import { getType } from '../../common/parser/type';
-import { getParserConfig } from '../../config';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiParameter } from '../interfaces/OpenApiParameter';
 import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
@@ -20,8 +20,6 @@ export const getOperationParameter = ({
   parameter: OpenApiParameter;
   types: Client['types'];
 }): OperationParameter => {
-  const config = getParserConfig();
-
   const operationParameterWithoutName: Omit<OperationParameter, 'name'> = {
     $refs: [],
     base: 'unknown',
@@ -56,7 +54,7 @@ export const getOperationParameter = ({
   };
   let operationParameter = {
     ...operationParameterWithoutName,
-    name: config.nameFn.operationParameter(operationParameterWithoutName),
+    name: operationParameterNameFn(operationParameterWithoutName),
   };
 
   if (parameter.$ref) {
