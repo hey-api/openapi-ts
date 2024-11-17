@@ -13,7 +13,6 @@ const main = async () => {
     input: {
       // include:
       //   '^(#/components/schemas/import|#/paths/api/v{api-version}/simple/options)$',
-      // path: './test/spec/3.1.x/discriminator-one-of.yaml',
       path: './test/spec/3.0.x/full.json',
       // path: 'https://mongodb-mms-prod-build-server.s3.amazonaws.com/openapi/2caffd88277a4e27c95dcefc7e3b6a63a3b03297-v2-2023-11-15.json',
     },
@@ -31,7 +30,7 @@ const main = async () => {
       {
         // asClass: true,
         // include...
-        // name: '@hey-api/services',
+        name: '@hey-api/services',
         // operationId: false,
         // serviceNameBuilder: '^Parameters',
       },
@@ -45,14 +44,14 @@ const main = async () => {
         // enums: 'javascript',
         name: '@hey-api/types',
         // style: 'PascalCase',
-        tree: true,
+        // tree: true,
       },
       {
         // name: '@tanstack/react-query',
       },
       {
         // name: 'zod',
-        name: 'fastify',
+        // name: 'fastify',
       },
     ],
     // useOptions: false,
