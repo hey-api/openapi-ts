@@ -21,7 +21,7 @@ interface OperationIRRef {
   id: string;
 }
 
-const operationTransformerIrRef = ({
+export const operationTransformerIrRef = ({
   id,
   type,
 }: OperationIRRef & {
@@ -45,19 +45,6 @@ const operationTransformerIrRef = ({
     pascalCase: false,
   })}${affix}`;
 };
-
-// TODO: parser - currently unused
-export const operationDataTransformerRef = ({ id }: OperationIRRef): string =>
-  operationTransformerIrRef({ id, type: 'data' });
-
-// TODO: parser - currently unused
-export const operationErrorTransformerRef = ({ id }: OperationIRRef): string =>
-  operationTransformerIrRef({ id, type: 'error' });
-
-export const operationResponseTransformerRef = ({
-  id,
-}: OperationIRRef): string =>
-  operationTransformerIrRef({ id, type: 'response' });
 
 const schemaIrRef = ({
   $ref,
@@ -394,7 +381,7 @@ export const handler: PluginHandler<Config> = ({ context, plugin }) => {
       }
 
       let identifierResponseTransformer = file.identifier({
-        $ref: operationResponseTransformerRef({ id: operation.id }),
+        $ref: operationTransformerIrRef({ id: operation.id, type: 'response' }),
         create: true,
         namespace: 'value',
       });
@@ -442,7 +429,10 @@ export const handler: PluginHandler<Config> = ({ context, plugin }) => {
         // the created schema response transformer was empty, do not generate
         // it and prevent any future attempts
         identifierResponseTransformer = file.blockIdentifier({
-          $ref: operationResponseTransformerRef({ id: operation.id }),
+          $ref: operationTransformerIrRef({
+            id: operation.id,
+            type: 'response',
+          }),
           namespace: 'value',
         });
       }
