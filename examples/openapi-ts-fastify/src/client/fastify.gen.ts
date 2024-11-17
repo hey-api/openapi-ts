@@ -2,45 +2,24 @@
 
 import type { RouteHandler } from 'fastify';
 
-export type Pet = {
-  id: number;
-  name: string;
-  tag?: string;
-};
-
-export type Pets = Array<Pet>;
-
-export type Error = {
-  code: number;
-  message: string;
-};
+import type {
+  CreatePetsResponses,
+  ListPetsData,
+  ListPetsResponses,
+  ShowPetByIdData,
+  ShowPetByIdResponses,
+} from './types.gen';
 
 export type RouteHandlers = {
   createPets: RouteHandler<{
-    Reply: {
-      201: unknown;
-    };
+    Reply: CreatePetsResponses;
   }>;
   listPets: RouteHandler<{
-    Querystring?: {
-      /**
-       * How many items to return at one time (max 100)
-       */
-      limit?: number;
-    };
-    Reply: {
-      200: Pets;
-    };
+    Querystring?: ListPetsData['query'];
+    Reply: ListPetsResponses;
   }>;
   showPetById: RouteHandler<{
-    Params: {
-      /**
-       * The id of the pet to retrieve
-       */
-      petId: string;
-    };
-    Reply: {
-      200: Pet;
-    };
+    Params: ShowPetByIdData['path'];
+    Reply: ShowPetByIdResponses;
   }>;
 };
