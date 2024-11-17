@@ -1,15 +1,16 @@
 import type { RouteHandlers } from './client/fastify.gen';
-import type { Pet } from './client/types.gen';
 
-export const serviceHandlers: Pick<RouteHandlers, 'showPetById'> = {
+export const serviceHandlers: RouteHandlers = {
+  createPets(request, reply) {
+    reply.code(201).send();
+  },
+  listPets(request, reply) {
+    reply.code(200).send([]);
+  },
   showPetById(request, reply) {
-    const {
-      params: { petId },
-    } = request;
-    const pet: Pet = {
-      id: Number(petId),
-      name: 'petname',
-    };
-    reply.code(200).send(pet);
+    reply.code(200).send({
+      id: Number(request.params.petId),
+      name: 'Kitty',
+    });
   },
 };

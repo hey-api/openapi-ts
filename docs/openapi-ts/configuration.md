@@ -236,7 +236,7 @@ npx @hey-api/openapi-ts -i path/to/openapi.json -o src/client -c @hey-api/client
 
 The experimental parser produces a cleaner output while being faster than the legacy parser. It also supports features such as [Filters](#filters) and more will be added in the future.
 
-The legacy parser will remain enabled for the [legacy clients](/openapi-ts/clients/legacy) regardless of the `experimentalParser` flag value. However, it's unlikely to receive any further updates.
+The legacy parser will be used with the [legacy clients](/openapi-ts/clients/legacy) regardless of the `experimentalParser` flag value. However, it's unlikely to receive any further updates.
 
 ## Config API
 
