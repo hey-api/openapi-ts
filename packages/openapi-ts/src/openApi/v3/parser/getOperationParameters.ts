@@ -1,7 +1,7 @@
 import type { Client } from '../../../types/client';
 import type { OperationParameters } from '../../common/interfaces/client';
 import { getRef } from '../../common/parser/getRef';
-import { getParserConfig } from '../../config';
+import { operationParameterFilterFn } from '../../common/parser/operation';
 import type { OpenApi } from '../interfaces/OpenApi';
 import type { OpenApiParameter } from '../interfaces/OpenApiParameter';
 import { getOperationParameter } from './getOperationParameter';
@@ -17,8 +17,6 @@ export const getOperationParameters = ({
   parameters: OpenApiParameter[];
   types: Client['types'];
 }): OperationParameters => {
-  const config = getParserConfig();
-
   const operationParameters: OperationParameters = {
     $refs: [],
     imports: [],
@@ -42,7 +40,7 @@ export const getOperationParameters = ({
       types,
     });
 
-    const skip = !config.filterFn.operationParameter(parameter);
+    const skip = !operationParameterFilterFn(parameter);
     if (!allowedIn.includes(parameterDef.in) || skip) {
       return;
     }

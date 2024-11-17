@@ -990,27 +990,17 @@ export const handler: PluginHandler<Config> = ({ context, plugin }) => {
     }
   }
 
-  // TODO: parser - once types are a plugin, this logic can be simplified
-  // provide config option on types to generate path types and services
-  // will set it to true if needed
-  if (
-    context.config.plugins['@hey-api/services'] ||
-    context.config.plugins['@hey-api/types']?.tree
-  ) {
-    for (const path in context.ir.paths) {
-      const pathItem = context.ir.paths[path as keyof IRPathsObject];
+  for (const path in context.ir.paths) {
+    const pathItem = context.ir.paths[path as keyof IRPathsObject];
 
-      for (const _method in pathItem) {
-        const method = _method as keyof IRPathItemObject;
-        const operation = pathItem[method]!;
+    for (const _method in pathItem) {
+      const method = _method as keyof IRPathItemObject;
+      const operation = pathItem[method]!;
 
-        operationToType({
-          context,
-          operation,
-        });
-      }
+      operationToType({
+        context,
+        operation,
+      });
     }
-
-    // TODO: parser - document removal of tree? migrate it?
   }
 };
