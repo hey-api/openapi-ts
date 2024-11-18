@@ -58,6 +58,13 @@ describe(`OpenAPI ${VERSION}`, () => {
     },
     {
       config: createConfig({
+        input: 'const.json',
+        output: 'const',
+      }),
+      description: 'handles const keyword',
+    },
+    {
+      config: createConfig({
         input: 'content-binary.json',
         output: 'content-binary',
       }),
