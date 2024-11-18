@@ -1,5 +1,11 @@
 # @hey-api/client-fetch
 
+## 0.4.4
+
+### Patch Changes
+
+- [#1296](https://github.com/hey-api/openapi-ts/pull/1296) [`4c853d0`](https://github.com/hey-api/openapi-ts/commit/4c853d090b79245854d13831f64731db4a92978b) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle charset in auto parseAs detection
+
 ## 0.4.3
 
 ### Patch Changes

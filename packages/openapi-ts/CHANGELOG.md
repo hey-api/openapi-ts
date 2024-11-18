@@ -1,5 +1,19 @@
 # @hey-api/openapi-ts
 
+## 0.56.0
+
+### Minor Changes
+
+- [#1286](https://github.com/hey-api/openapi-ts/pull/1286) [`5514de4`](https://github.com/hey-api/openapi-ts/commit/5514de46a8c913ddc40f07d0142c80266e9837cd) Thanks [@jacobinu](https://github.com/jacobinu)! - feat: add `fastify` plugin
+
+### Patch Changes
+
+- [#1286](https://github.com/hey-api/openapi-ts/pull/1286) [`cebf327`](https://github.com/hey-api/openapi-ts/commit/cebf327046c801b375846bae6b07561b8ad1bdd6) Thanks [@jacobinu](https://github.com/jacobinu)! - fix: export a map of error and response types by status code
+
+- [#1286](https://github.com/hey-api/openapi-ts/pull/1286) [`8a15a35`](https://github.com/hey-api/openapi-ts/commit/8a15a35e86ff22eca85dc218bc1793315b934556) Thanks [@jacobinu](https://github.com/jacobinu)! - fix: deprecate types.tree option
+
+- [#1305](https://github.com/hey-api/openapi-ts/pull/1305) [`a3698a7`](https://github.com/hey-api/openapi-ts/commit/a3698a7f1680d7dfb913c6253f8685ebbdd132ca) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle file-like content media type without explicit schema
+
 ## 0.55.3
 
 ### Patch Changes
