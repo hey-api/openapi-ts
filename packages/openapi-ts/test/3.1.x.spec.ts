@@ -140,12 +140,6 @@ describe(`OpenAPI ${VERSION}`, () => {
       config: createConfig({
         input: 'operation-204.json',
         output: 'operation-204',
-        plugins: [
-          {
-            name: '@hey-api/types',
-            tree: true,
-          },
-        ],
       }),
       description: 'handles empty response status codes',
     },
@@ -161,12 +155,6 @@ describe(`OpenAPI ${VERSION}`, () => {
       config: createConfig({
         input: 'required-all-of-ref.json',
         output: 'required-all-of-ref',
-        plugins: [
-          {
-            name: '@hey-api/types',
-            tree: false,
-          },
-        ],
       }),
       description: 'sets allOf composition ref model properties as required',
     },
@@ -174,12 +162,6 @@ describe(`OpenAPI ${VERSION}`, () => {
       config: createConfig({
         input: 'required-any-of-ref.json',
         output: 'required-any-of-ref',
-        plugins: [
-          {
-            name: '@hey-api/types',
-            tree: false,
-          },
-        ],
       }),
       description:
         'does not set anyOf composition ref model properties as required',
@@ -188,15 +170,16 @@ describe(`OpenAPI ${VERSION}`, () => {
       config: createConfig({
         input: 'required-one-of-ref.json',
         output: 'required-one-of-ref',
-        plugins: [
-          {
-            name: '@hey-api/types',
-            tree: false,
-          },
-        ],
       }),
       description:
         'does not set oneOf composition ref model properties as required',
+    },
+    {
+      config: createConfig({
+        input: 'type-invalid.json',
+        output: 'type-invalid',
+      }),
+      description: 'gracefully handles invalid type',
     },
   ];
 
