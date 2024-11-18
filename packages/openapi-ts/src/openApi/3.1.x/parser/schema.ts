@@ -684,6 +684,13 @@ const parseOneType = ({
         irSchema,
         schema,
       });
+    default:
+      // gracefully handle invalid type
+      return parseUnknown({
+        context,
+        irSchema,
+        schema,
+      });
   }
 };
 
@@ -766,11 +773,15 @@ const parseType = ({
 };
 
 const parseUnknown = ({
+  irSchema,
   schema,
 }: SchemaContext & {
+  irSchema?: IRSchemaObject;
   schema: SchemaObject;
 }): IRSchemaObject => {
-  const irSchema = initIrSchema({ schema });
+  if (!irSchema) {
+    irSchema = initIrSchema({ schema });
+  }
 
   irSchema.type = 'unknown';
 
