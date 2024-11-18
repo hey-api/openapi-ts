@@ -106,6 +106,7 @@ export interface IRResponsesObject {
 
 export interface IRResponseObject {
   // TODO: parser - handle headers, links, and possibly other media types?
+  mediaType?: string;
   schema: IRSchemaObject;
 }
 

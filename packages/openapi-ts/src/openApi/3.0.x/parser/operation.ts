@@ -8,7 +8,7 @@ import type {
   ResponseObject,
   SchemaObject,
 } from '../types/spec';
-import { mediaTypeObject } from './mediaType';
+import { contentToSchema, mediaTypeObject } from './mediaType';
 import { paginationField } from './pagination';
 import { schemaToIrSchema } from './schema';
 
@@ -134,18 +134,13 @@ const operationToIrOperation = ({
 
     if (content) {
       irOperation.responses[name] = {
+        mediaType: content.mediaType,
         schema: schemaToIrSchema({
           context,
-          schema:
-            content.schema && '$ref' in content.schema
-              ? {
-                  allOf: [{ ...content.schema }],
-                  description: responseObject.description,
-                }
-              : {
-                  description: responseObject.description,
-                  ...content.schema,
-                },
+          schema: {
+            description: responseObject.description,
+            ...contentToSchema({ content }),
+          },
         }),
       };
     } else {
