@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.56.1
+
+### Patch Changes
+
+- [#1309](https://github.com/hey-api/openapi-ts/pull/1309) [`785480b`](https://github.com/hey-api/openapi-ts/commit/785480b2d5f96a681dfc1f7f0fb626f744bb221f) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: gracefully handle invalid schema type in experimental parser
+
 ## 0.56.0
 
 ### Minor Changes
