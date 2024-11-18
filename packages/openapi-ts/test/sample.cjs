@@ -13,7 +13,7 @@ const main = async () => {
     input: {
       // include:
       //   '^(#/components/schemas/import|#/paths/api/v{api-version}/simple/options)$',
-      path: './test/spec/3.0.x/full.json',
+      path: './test/spec/3.0.x/content-binary.json',
       // path: 'https://mongodb-mms-prod-build-server.s3.amazonaws.com/openapi/2caffd88277a4e27c95dcefc7e3b6a63a3b03297-v2-2023-11-15.json',
     },
     // name: 'foo',
