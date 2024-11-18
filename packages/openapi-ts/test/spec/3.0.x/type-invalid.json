@@ -1,0 +1,14 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "OpenAPI 3.0.0 type invalid example",
+    "version": "1"
+  },
+  "components": {
+    "schemas": {
+      "Foo": {
+        "type": "invalid"
+      }
+    }
+  }
+}

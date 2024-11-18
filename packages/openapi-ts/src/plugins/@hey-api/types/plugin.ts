@@ -997,10 +997,17 @@ export const handler: PluginHandler<Config> = ({ context, plugin }) => {
       const method = _method as keyof IRPathItemObject;
       const operation = pathItem[method]!;
 
-      operationToType({
-        context,
-        operation,
-      });
+      try {
+        operationToType({
+          context,
+          operation,
+        });
+      } catch (error) {
+        console.error(
+          `🔥 Failed to process operation ${method} ${path}\nschema: ${JSON.stringify(operation, null, 2)}`,
+        );
+        throw error;
+      }
     }
   }
 };
