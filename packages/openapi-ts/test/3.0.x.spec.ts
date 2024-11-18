@@ -102,12 +102,6 @@ describe(`OpenAPI ${VERSION}`, () => {
       config: createConfig({
         input: 'operation-204.json',
         output: 'operation-204',
-        plugins: [
-          {
-            name: '@hey-api/types',
-            tree: true,
-          },
-        ],
       }),
       description: 'handles empty response status codes',
     },
@@ -118,6 +112,13 @@ describe(`OpenAPI ${VERSION}`, () => {
         plugins: ['@hey-api/services'],
       }),
       description: 'handles non-exploded array query parameters',
+    },
+    {
+      config: createConfig({
+        input: 'type-invalid.json',
+        output: 'type-invalid',
+      }),
+      description: 'gracefully handles invalid type',
     },
   ];
 
