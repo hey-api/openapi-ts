@@ -40,7 +40,7 @@ jobs:
         run: pnpm test:coverage
 
       - name: Upload code coverage to codecov.io
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           directory: ./packages/openapi-ts/coverage
