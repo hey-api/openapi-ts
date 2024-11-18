@@ -58,6 +58,13 @@ describe(`OpenAPI ${VERSION}`, () => {
     },
     {
       config: createConfig({
+        input: 'content-binary.json',
+        output: 'content-binary',
+      }),
+      description: 'handles binary content',
+    },
+    {
+      config: createConfig({
         input: 'discriminator-all-of.yaml',
         output: 'discriminator-all-of',
       }),
