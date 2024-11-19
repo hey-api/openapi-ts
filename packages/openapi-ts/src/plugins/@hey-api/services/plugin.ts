@@ -7,11 +7,7 @@ import {
   clientOptionsTypeName,
 } from '../../../generate/client';
 import type { IRContext } from '../../../ir/context';
-import type {
-  IROperationObject,
-  IRPathItemObject,
-  IRPathsObject,
-} from '../../../ir/ir';
+import type { IROperationObject } from '../../../ir/ir';
 import { hasOperationDataRequired } from '../../../ir/operation';
 import { camelCase } from '../../../utils/camelCase';
 import { escapeComment } from '../../../utils/escape';
@@ -198,63 +194,171 @@ const generateClassServices = ({ context }: { context: IRContext }) => {
 
   const services = new Map<string, Array<ts.MethodDeclaration>>();
 
-  for (const path in context.ir.paths) {
-    const pathItem = context.ir.paths[path as keyof IRPathsObject];
-
-    for (const _method in pathItem) {
-      const method = _method as keyof IRPathItemObject;
-      const operation = pathItem[method]!;
-
-      const identifierData = context.file({ id: 'types' })!.identifier({
-        $ref: operationIrRef({ id: operation.id, type: 'data' }),
-        namespace: 'type',
+  context.subscribe('operation', ({ operation, method, path }) => {
+    const identifierData = context.file({ id: 'types' })!.identifier({
+      $ref: operationIrRef({ id: operation.id, type: 'data' }),
+      namespace: 'type',
+    });
+    if (identifierData.name) {
+      file.import({
+        asType: true,
+        module: typesModule,
+        name: identifierData.name,
       });
-      if (identifierData.name) {
-        file.import({
-          asType: true,
-          module: typesModule,
-          name: identifierData.name,
-        });
-      }
+    }
 
-      const identifierError = context.file({ id: 'types' })!.identifier({
-        $ref: operationIrRef({ id: operation.id, type: 'error' }),
-        namespace: 'type',
+    const identifierError = context.file({ id: 'types' })!.identifier({
+      $ref: operationIrRef({ id: operation.id, type: 'error' }),
+      namespace: 'type',
+    });
+    if (identifierError.name) {
+      file.import({
+        asType: true,
+        module: typesModule,
+        name: identifierError.name,
       });
-      if (identifierError.name) {
-        file.import({
-          asType: true,
-          module: typesModule,
-          name: identifierError.name,
-        });
-      }
+    }
 
-      const identifierResponse = context.file({ id: 'types' })!.identifier({
-        $ref: operationIrRef({ id: operation.id, type: 'response' }),
-        namespace: 'type',
+    const identifierResponse = context.file({ id: 'types' })!.identifier({
+      $ref: operationIrRef({ id: operation.id, type: 'response' }),
+      namespace: 'type',
+    });
+    if (identifierResponse.name) {
+      file.import({
+        asType: true,
+        module: typesModule,
+        name: identifierResponse.name,
       });
-      if (identifierResponse.name) {
-        file.import({
-          asType: true,
-          module: typesModule,
-          name: identifierResponse.name,
-        });
-      }
+    }
 
-      const node = compiler.methodDeclaration({
-        accessLevel: 'public',
-        comment: [
-          operation.deprecated && '@deprecated',
-          operation.summary && escapeComment(operation.summary),
-          operation.description && escapeComment(operation.description),
-        ],
-        isStatic: true,
-        name: serviceFunctionIdentifier({
-          config: context.config,
-          handleIllegal: false,
-          id: operation.id,
-          operation,
+    const node = compiler.methodDeclaration({
+      accessLevel: 'public',
+      comment: [
+        operation.deprecated && '@deprecated',
+        operation.summary && escapeComment(operation.summary),
+        operation.description && escapeComment(operation.description),
+      ],
+      isStatic: true,
+      name: serviceFunctionIdentifier({
+        config: context.config,
+        handleIllegal: false,
+        id: operation.id,
+        operation,
+      }),
+      parameters: [
+        {
+          isRequired: hasOperationDataRequired(operation),
+          name: 'options',
+          type: operationOptionsType({
+            importedType: identifierData.name,
+            throwOnError: 'ThrowOnError',
+          }),
+        },
+      ],
+      returnType: undefined,
+      statements: [
+        compiler.returnFunctionCall({
+          args: [
+            requestOptions({
+              context,
+              operation,
+              path,
+            }),
+          ],
+          name: `(options?.client ?? client).${method}`,
+          types: [
+            identifierResponse.name || 'unknown',
+            identifierError.name || 'unknown',
+            'ThrowOnError',
+          ],
         }),
+      ],
+      types: [
+        {
+          default: false,
+          extends: 'boolean',
+          name: 'ThrowOnError',
+        },
+      ],
+    });
+
+    const uniqueTags = Array.from(new Set(operation.tags));
+    if (!uniqueTags.length) {
+      uniqueTags.push('default');
+    }
+
+    for (const tag of uniqueTags) {
+      const serviceName = getServiceName(tag);
+      const nodes = services.get(serviceName) ?? [];
+      nodes.push(node);
+      services.set(serviceName, nodes);
+    }
+  });
+
+  context.subscribe('after', () => {
+    for (const [serviceName, nodes] of services) {
+      const node = compiler.classDeclaration({
+        decorator: undefined,
+        members: nodes,
+        name: transformServiceName({
+          config: context.config,
+          name: serviceName,
+        }),
+      });
+      file.add(node);
+    }
+  });
+};
+
+const generateFlatServices = ({ context }: { context: IRContext }) => {
+  const file = context.file({ id: servicesId })!;
+  const typesModule = file.relativePathToFile({ context, id: 'types' });
+
+  context.subscribe('operation', ({ operation, method, path }) => {
+    const identifierData = context.file({ id: 'types' })!.identifier({
+      $ref: operationIrRef({ id: operation.id, type: 'data' }),
+      namespace: 'type',
+    });
+    if (identifierData.name) {
+      file.import({
+        asType: true,
+        module: typesModule,
+        name: identifierData.name,
+      });
+    }
+
+    const identifierError = context.file({ id: 'types' })!.identifier({
+      $ref: operationIrRef({ id: operation.id, type: 'error' }),
+      namespace: 'type',
+    });
+    if (identifierError.name) {
+      file.import({
+        asType: true,
+        module: typesModule,
+        name: identifierError.name,
+      });
+    }
+
+    const identifierResponse = context.file({ id: 'types' })!.identifier({
+      $ref: operationIrRef({ id: operation.id, type: 'response' }),
+      namespace: 'type',
+    });
+    if (identifierResponse.name) {
+      file.import({
+        asType: true,
+        module: typesModule,
+        name: identifierResponse.name,
+      });
+    }
+
+    const node = compiler.constVariable({
+      comment: [
+        operation.deprecated && '@deprecated',
+        operation.summary && escapeComment(operation.summary),
+        operation.description && escapeComment(operation.description),
+      ],
+      exportConst: true,
+      expression: compiler.arrowFunction({
         parameters: [
           {
             isRequired: hasOperationDataRequired(operation),
@@ -290,136 +394,16 @@ const generateClassServices = ({ context }: { context: IRContext }) => {
             name: 'ThrowOnError',
           },
         ],
-      });
-
-      const uniqueTags = Array.from(new Set(operation.tags));
-      if (!uniqueTags.length) {
-        uniqueTags.push('default');
-      }
-
-      for (const tag of uniqueTags) {
-        const serviceName = getServiceName(tag);
-        const nodes = services.get(serviceName) ?? [];
-        nodes.push(node);
-        services.set(serviceName, nodes);
-      }
-    }
-  }
-
-  for (const [serviceName, nodes] of services) {
-    const node = compiler.classDeclaration({
-      decorator: undefined,
-      members: nodes,
-      name: transformServiceName({
+      }),
+      name: serviceFunctionIdentifier({
         config: context.config,
-        name: serviceName,
+        handleIllegal: true,
+        id: operation.id,
+        operation,
       }),
     });
     file.add(node);
-  }
-};
-
-const generateFlatServices = ({ context }: { context: IRContext }) => {
-  const file = context.file({ id: servicesId })!;
-  const typesModule = file.relativePathToFile({ context, id: 'types' });
-
-  for (const path in context.ir.paths) {
-    const pathItem = context.ir.paths[path as keyof IRPathsObject];
-
-    for (const _method in pathItem) {
-      const method = _method as keyof IRPathItemObject;
-      const operation = pathItem[method]!;
-
-      const identifierData = context.file({ id: 'types' })!.identifier({
-        $ref: operationIrRef({ id: operation.id, type: 'data' }),
-        namespace: 'type',
-      });
-      if (identifierData.name) {
-        file.import({
-          asType: true,
-          module: typesModule,
-          name: identifierData.name,
-        });
-      }
-
-      const identifierError = context.file({ id: 'types' })!.identifier({
-        $ref: operationIrRef({ id: operation.id, type: 'error' }),
-        namespace: 'type',
-      });
-      if (identifierError.name) {
-        file.import({
-          asType: true,
-          module: typesModule,
-          name: identifierError.name,
-        });
-      }
-
-      const identifierResponse = context.file({ id: 'types' })!.identifier({
-        $ref: operationIrRef({ id: operation.id, type: 'response' }),
-        namespace: 'type',
-      });
-      if (identifierResponse.name) {
-        file.import({
-          asType: true,
-          module: typesModule,
-          name: identifierResponse.name,
-        });
-      }
-
-      const node = compiler.constVariable({
-        comment: [
-          operation.deprecated && '@deprecated',
-          operation.summary && escapeComment(operation.summary),
-          operation.description && escapeComment(operation.description),
-        ],
-        exportConst: true,
-        expression: compiler.arrowFunction({
-          parameters: [
-            {
-              isRequired: hasOperationDataRequired(operation),
-              name: 'options',
-              type: operationOptionsType({
-                importedType: identifierData.name,
-                throwOnError: 'ThrowOnError',
-              }),
-            },
-          ],
-          returnType: undefined,
-          statements: [
-            compiler.returnFunctionCall({
-              args: [
-                requestOptions({
-                  context,
-                  operation,
-                  path,
-                }),
-              ],
-              name: `(options?.client ?? client).${method}`,
-              types: [
-                identifierResponse.name || 'unknown',
-                identifierError.name || 'unknown',
-                'ThrowOnError',
-              ],
-            }),
-          ],
-          types: [
-            {
-              default: false,
-              extends: 'boolean',
-              name: 'ThrowOnError',
-            },
-          ],
-        }),
-        name: serviceFunctionIdentifier({
-          config: context.config,
-          handleIllegal: true,
-          id: operation.id,
-          operation,
-        }),
-      });
-      file.add(node);
-    }
-  }
+  });
 };
 
 export const handler: PluginHandler<Config> = ({ context, plugin }) => {

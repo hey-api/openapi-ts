@@ -4,7 +4,13 @@ import { TypeScriptFile } from '../generate/files';
 import type { Config } from '../types/config';
 import type { Files } from '../types/utils';
 import { resolveRef } from '../utils/ref';
-import type { IR } from './ir';
+import type {
+  IR,
+  IROperationObject,
+  IRParameterObject,
+  IRPathItemObject,
+  IRSchemaObject,
+} from './ir';
 
 interface ContextFile {
   /**
@@ -18,6 +24,36 @@ interface ContextFile {
    */
   path: string;
 }
+
+interface Events {
+  /**
+   * Called after parsing.
+   */
+  after: () => void;
+  /**
+   * Called before parsing.
+   */
+  before: () => void;
+  operation: (args: {
+    method: keyof IRPathItemObject;
+    operation: IROperationObject;
+    path: string;
+  }) => void;
+  parameter: (args: {
+    $ref: string;
+    name: string;
+    parameter: IRParameterObject;
+  }) => void;
+  schema: (args: {
+    $ref: string;
+    name: string;
+    schema: IRSchemaObject;
+  }) => void;
+}
+
+type Listeners = {
+  [T in keyof Events]?: Array<Events[T]>;
+};
 
 export class IRContext<Spec extends Record<string, any> = any> {
   /**
@@ -38,11 +74,44 @@ export class IRContext<Spec extends Record<string, any> = any> {
    */
   public spec: Spec;
 
+  /**
+   * A map of event listeners.
+   */
+  private listeners: Listeners;
+
   constructor({ config, spec }: { config: Config; spec: Spec }) {
     this.config = config;
     this.files = {};
     this.ir = {};
+    this.listeners = {};
     this.spec = spec;
+  }
+
+  /**
+   * Notify all event listeners about `event`.
+   */
+  public async broadcast<T extends keyof Events>(
+    event: T,
+    ...args: Parameters<Events[T]>
+  ): Promise<void> {
+    if (!this.listeners[event]) {
+      return;
+    }
+
+    await Promise.all(
+      this.listeners[event].map((callbackFn, index) => {
+        try {
+          // @ts-expect-error
+          const response = callbackFn(...args);
+          return Promise.resolve(response);
+        } catch (error) {
+          console.error(
+            `🔥 Event broadcast: "${event}"\nindex: ${index}\narguments: ${JSON.stringify(args, null, 2)}`,
+          );
+          throw error;
+        }
+      }),
+    );
   }
 
   /**
@@ -90,5 +159,18 @@ export class IRContext<Spec extends Record<string, any> = any> {
       $ref,
       spec: this.spec,
     });
+  }
+
+  /**
+   * Register a new `event` listener.
+   */
+  public subscribe<T extends keyof Events>(
+    event: T,
+    callbackFn: Events[T],
+  ): void {
+    if (!this.listeners[event]) {
+      this.listeners[event] = [];
+    }
+    this.listeners[event].push(callbackFn);
   }
 }

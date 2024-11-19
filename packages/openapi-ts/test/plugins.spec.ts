@@ -209,6 +209,14 @@ for (const version of versions) {
         }),
         description: 'generate Fastify types with Fastify plugin',
       },
+      {
+        config: createConfig({
+          output: 'default',
+          // @ts-expect-error
+          plugins: ['zod'],
+        }),
+        description: 'generate Zod schemas with Zod plugin',
+      },
     ];
 
     it.each(scenarios)('$description', async ({ config }) => {
