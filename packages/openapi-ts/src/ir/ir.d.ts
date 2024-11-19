@@ -15,7 +15,7 @@ interface IRPathsObject {
   [path: `/${string}`]: IRPathItemObject;
 }
 
-interface IRPathItemObject {
+export interface IRPathItemObject {
   delete?: IROperationObject;
   get?: IROperationObject;
   head?: IROperationObject;

@@ -2,6 +2,7 @@ import path from 'node:path';
 
 import { compiler } from '../compiler';
 import type { IRContext } from '../ir/context';
+import { parseIR } from '../ir/parser';
 import type { OpenApi } from '../openApi';
 import type { Client } from '../types/client';
 import type { Files } from '../types/utils';
@@ -117,6 +118,8 @@ export const generateOutput = async ({ context }: { context: IRContext }) => {
       plugin: plugin as never,
     });
   }
+
+  await parseIR({ context });
 
   const indexFile = context.createFile({
     id: '_index',
