@@ -2,11 +2,7 @@ import type ts from 'typescript';
 
 import { compiler, type Property } from '../../compiler';
 import type { IRContext } from '../../ir/context';
-import type {
-  IROperationObject,
-  IRPathItemObject,
-  IRPathsObject,
-} from '../../ir/ir';
+import type { IROperationObject } from '../../ir/ir';
 import { operationResponsesMap } from '../../ir/operation';
 import { hasParameterGroupObjectRequired } from '../../ir/parameter';
 import { operationIrRef } from '../@hey-api/services/plugin';
@@ -207,26 +203,24 @@ export const handler: PluginHandler<Config> = ({ context, plugin }) => {
 
   const routeHandlers: Array<Property> = [];
 
-  for (const path in context.ir.paths) {
-    const pathItem = context.ir.paths[path as keyof IRPathsObject];
-
-    for (const _method in pathItem) {
-      const method = _method as keyof IRPathItemObject;
-      const operation = pathItem[method]!;
-
-      const routeHandler = operationToRouteHandler({ context, operation });
-      if (routeHandler) {
-        routeHandlers.push(routeHandler);
-      }
+  context.subscribe('operation', ({ operation }) => {
+    const routeHandler = operationToRouteHandler({ context, operation });
+    if (routeHandler) {
+      routeHandlers.push(routeHandler);
     }
-  }
-
-  const identifier = file.identifier({
-    $ref: 'RouteHandlers',
-    create: true,
-    namespace: 'type',
   });
-  if (identifier.name) {
+
+  context.subscribe('after', () => {
+    const identifier = file.identifier({
+      $ref: 'RouteHandlers',
+      create: true,
+      namespace: 'type',
+    });
+
+    if (!identifier.name) {
+      return;
+    }
+
     if (routeHandlers.length) {
       file.import({
         asType: true,
@@ -245,5 +239,5 @@ export const handler: PluginHandler<Config> = ({ context, plugin }) => {
         }),
       }),
     );
-  }
+  });
 };

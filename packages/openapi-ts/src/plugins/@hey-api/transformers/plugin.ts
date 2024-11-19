@@ -2,11 +2,7 @@ import ts from 'typescript';
 
 import { compiler } from '../../../compiler';
 import type { IRContext } from '../../../ir/context';
-import type {
-  IRPathItemObject,
-  IRPathsObject,
-  IRSchemaObject,
-} from '../../../ir/ir';
+import type { IRSchemaObject } from '../../../ir/ir';
 import { operationResponsesMap } from '../../../ir/operation';
 import { camelCase } from '../../../utils/camelCase';
 import { irRef } from '../../../utils/ref';
@@ -350,92 +346,85 @@ export const handler: PluginHandler<Config> = ({ context, plugin }) => {
     path: plugin.output,
   });
 
-  for (const path in context.ir.paths) {
-    const pathItem = context.ir.paths[path as keyof IRPathsObject];
+  context.subscribe('operation', ({ method, operation, path }) => {
+    const { response } = operationResponsesMap(operation);
 
-    for (const _method in pathItem) {
-      const method = _method as keyof IRPathItemObject;
-      const operation = pathItem[method]!;
+    if (!response) {
+      return;
+    }
 
-      const { response } = operationResponsesMap(operation);
-
-      if (!response) {
-        continue;
+    if (response.items && response.items.length > 1) {
+      if (context.config.debug) {
+        console.warn(
+          `❗️ Transformers warning: route ${`${method.toUpperCase()} ${path}`} has ${response.items.length} non-void success responses. This is currently not handled and we will not generate a response transformer. Please open an issue if you'd like this feature https://github.com/hey-api/openapi-ts/issues`,
+        );
       }
+      return;
+    }
 
-      if (response.items && response.items.length > 1) {
-        if (context.config.debug) {
-          console.warn(
-            `❗️ Transformers warning: route ${`${method.toUpperCase()} ${path}`} has ${response.items.length} non-void success responses. This is currently not handled and we will not generate a response transformer. Please open an issue if you'd like this feature https://github.com/hey-api/openapi-ts/issues`,
-          );
-        }
-        continue;
-      }
+    const identifierResponse = context.file({ id: 'types' })!.identifier({
+      $ref: operationIrRef({ id: operation.id, type: 'response' }),
+      namespace: 'type',
+    });
+    if (!identifierResponse.name) {
+      return;
+    }
 
-      const identifierResponse = context.file({ id: 'types' })!.identifier({
-        $ref: operationIrRef({ id: operation.id, type: 'response' }),
-        namespace: 'type',
+    let identifierResponseTransformer = file.identifier({
+      $ref: operationTransformerIrRef({ id: operation.id, type: 'response' }),
+      create: true,
+      namespace: 'value',
+    });
+    if (!identifierResponseTransformer.name) {
+      return;
+    }
+
+    // TODO: parser - consider handling simple string response which is also a date
+    const nodes = schemaResponseTransformerNodes({
+      context,
+      schema: response,
+    });
+    if (nodes.length) {
+      file.import({
+        asType: true,
+        module: file.relativePathToFile({ context, id: 'types' }),
+        name: identifierResponse.name,
       });
-      if (!identifierResponse.name) {
-        continue;
-      }
-
-      let identifierResponseTransformer = file.identifier({
-        $ref: operationTransformerIrRef({ id: operation.id, type: 'response' }),
-        create: true,
+      const responseTransformerNode = compiler.constVariable({
+        exportConst: true,
+        expression: compiler.arrowFunction({
+          async: true,
+          multiLine: true,
+          parameters: [
+            {
+              name: dataVariableName,
+              // TODO: parser - add types, generate types without transformed dates
+              type: compiler.keywordTypeNode({ keyword: 'any' }),
+            },
+          ],
+          returnType: compiler.typeReferenceNode({
+            typeArguments: [
+              compiler.typeReferenceNode({
+                typeName: identifierResponse.name,
+              }),
+            ],
+            typeName: 'Promise',
+          }),
+          statements: ensureStatements(nodes),
+        }),
+        name: identifierResponseTransformer.name,
+      });
+      file.add(responseTransformerNode);
+    } else {
+      // the created schema response transformer was empty, do not generate
+      // it and prevent any future attempts
+      identifierResponseTransformer = file.blockIdentifier({
+        $ref: operationTransformerIrRef({
+          id: operation.id,
+          type: 'response',
+        }),
         namespace: 'value',
       });
-      if (!identifierResponseTransformer.name) {
-        continue;
-      }
-
-      // TODO: parser - consider handling simple string response which is also a date
-      const nodes = schemaResponseTransformerNodes({
-        context,
-        schema: response,
-      });
-      if (nodes.length) {
-        file.import({
-          asType: true,
-          module: file.relativePathToFile({ context, id: 'types' }),
-          name: identifierResponse.name,
-        });
-        const responseTransformerNode = compiler.constVariable({
-          exportConst: true,
-          expression: compiler.arrowFunction({
-            async: true,
-            multiLine: true,
-            parameters: [
-              {
-                name: dataVariableName,
-                // TODO: parser - add types, generate types without transformed dates
-                type: compiler.keywordTypeNode({ keyword: 'any' }),
-              },
-            ],
-            returnType: compiler.typeReferenceNode({
-              typeArguments: [
-                compiler.typeReferenceNode({
-                  typeName: identifierResponse.name,
-                }),
-              ],
-              typeName: 'Promise',
-            }),
-            statements: ensureStatements(nodes),
-          }),
-          name: identifierResponseTransformer.name,
-        });
-        file.add(responseTransformerNode);
-      } else {
-        // the created schema response transformer was empty, do not generate
-        // it and prevent any future attempts
-        identifierResponseTransformer = file.blockIdentifier({
-          $ref: operationTransformerIrRef({
-            id: operation.id,
-            type: 'response',
-          }),
-          namespace: 'value',
-        });
-      }
     }
-  }
+  });
 };

@@ -1,17 +1,16 @@
 import { compiler } from '../../compiler';
 import type { TypeScriptFile } from '../../generate/files';
-import type { Client, Model } from '../../types/client';
+import type { Model } from '../../types/client';
 import type { PluginLegacyHandler } from '../types';
 import type { Config } from './types';
 
-interface TypesProps {
-  client: Client;
+const processArray = ({
+  file,
+  model,
+}: {
   file: TypeScriptFile;
   model: Model;
-  onRemoveNode?: VoidFunction;
-}
-
-const processArray = ({ file, model }: TypesProps) => {
+}) => {
   const identifier = file.identifier({
     $ref: model.meta?.$ref || '',
     create: true,
@@ -36,16 +35,6 @@ const processArray = ({ file, model }: TypesProps) => {
       }),
     ],
   });
-
-  if (model.base === 'string' || model.base === 'boolean') {
-    const statement = compiler.constVariable({
-      exportConst: true,
-      expression: zArrayExpression,
-      name: identifier.name || '',
-    });
-    file.add(statement);
-    return;
-  }
 
   if (model.base === 'number') {
     let expression = zArrayExpression;
@@ -109,86 +98,6 @@ const processArray = ({ file, model }: TypesProps) => {
   file.add(statement);
 };
 
-const processGeneric = ({ file, model }: TypesProps) => {
-  const identifier = file.identifier({
-    $ref: model.meta?.$ref || '',
-    create: true,
-    namespace: 'value',
-  });
-
-  if (!identifier.created) {
-    return;
-  }
-
-  if (model.base === 'string') {
-    const statement = compiler.constVariable({
-      exportConst: true,
-      expression: compiler.callExpression({
-        functionName: compiler.propertyAccessExpression({
-          expression: 'z',
-          name: 'string',
-        }),
-      }),
-      name: identifier.name || '',
-    });
-    file.add(statement);
-    return;
-  }
-
-  if (model.base === 'boolean') {
-    // console.warn(model)
-    const statement = compiler.constVariable({
-      exportConst: true,
-      expression: compiler.callExpression({
-        functionName: compiler.propertyAccessExpression({
-          expression: 'z',
-          name: 'boolean',
-        }),
-      }),
-      name: identifier.name || '',
-    });
-    file.add(statement);
-    return;
-  }
-
-  // console.warn(model.base)
-  const statement = compiler.constVariable({
-    exportConst: true,
-    expression: compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
-        expression: 'z',
-        name: 'object',
-      }),
-      parameters: [
-        compiler.objectExpression({
-          multiLine: true,
-          obj: [],
-        }),
-      ],
-    }),
-    name: identifier.name || '',
-  });
-  file.add(statement);
-};
-
-const processModel = (props: TypesProps) => {
-  switch (props.model.export) {
-    case 'all-of':
-    case 'any-of':
-    case 'one-of':
-    case 'interface':
-      // return processComposition(props);
-      return;
-    case 'array':
-      return processArray(props);
-    case 'enum':
-      // return processEnum(props);
-      return;
-    default:
-      return processGeneric(props);
-  }
-};
-
 export const handlerLegacy: PluginLegacyHandler<Config> = ({
   client,
   files,
@@ -202,10 +111,12 @@ export const handlerLegacy: PluginLegacyHandler<Config> = ({
   });
 
   for (const model of client.models) {
-    processModel({
-      client,
-      file,
-      model,
-    });
+    switch (model.export) {
+      case 'array':
+        return processArray({
+          file,
+          model,
+        });
+    }
   }
 };
