@@ -6,8 +6,6 @@ import type { IRContext } from '../../../ir/context';
 import type {
   IROperationObject,
   IRParameterObject,
-  IRPathItemObject,
-  IRPathsObject,
   IRSchemaObject,
 } from '../../../ir/ir';
 import { operationResponsesMap } from '../../../ir/operation';
@@ -952,62 +950,26 @@ export const handler: PluginHandler<Config> = ({ context, plugin }) => {
     path: plugin.output,
   });
 
-  if (context.ir.components) {
-    for (const name in context.ir.components.schemas) {
-      const schema = context.ir.components.schemas[name];
-      const $ref = `#/components/schemas/${name}`;
+  context.subscribe('schema', ({ $ref, schema }) => {
+    schemaToType({
+      $ref,
+      context,
+      schema,
+    });
+  });
 
-      try {
-        schemaToType({
-          $ref,
-          context,
-          schema,
-        });
-      } catch (error) {
-        console.error(
-          `🔥 Failed to process schema ${name}\n$ref: ${$ref}\nschema: ${JSON.stringify(schema, null, 2)}`,
-        );
-        throw error;
-      }
-    }
+  context.subscribe('parameter', ({ $ref, parameter }) => {
+    schemaToType({
+      $ref,
+      context,
+      schema: parameter.schema,
+    });
+  });
 
-    for (const name in context.ir.components.parameters) {
-      const parameter = context.ir.components.parameters[name];
-      const $ref = `#/components/parameters/${name}`;
-
-      try {
-        schemaToType({
-          $ref,
-          context,
-          schema: parameter.schema,
-        });
-      } catch (error) {
-        console.error(
-          `🔥 Failed to process schema ${name}\n$ref: ${$ref}\nschema: ${JSON.stringify(parameter.schema, null, 2)}`,
-        );
-        throw error;
-      }
-    }
-  }
-
-  for (const path in context.ir.paths) {
-    const pathItem = context.ir.paths[path as keyof IRPathsObject];
-
-    for (const _method in pathItem) {
-      const method = _method as keyof IRPathItemObject;
-      const operation = pathItem[method]!;
-
-      try {
-        operationToType({
-          context,
-          operation,
-        });
-      } catch (error) {
-        console.error(
-          `🔥 Failed to process operation ${method} ${path}\nschema: ${JSON.stringify(operation, null, 2)}`,
-        );
-        throw error;
-      }
-    }
-  }
+  context.subscribe('operation', ({ operation }) => {
+    operationToType({
+      context,
+      operation,
+    });
+  });
 };
