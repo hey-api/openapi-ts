@@ -48,6 +48,10 @@ export default defineConfig({
       {
         items: [
           {
+            link: '/openapi-ts/plugins',
+            text: 'Introduction',
+          },
+          {
             link: '/openapi-ts/fastify',
             text: 'Fastify',
           },
@@ -57,7 +61,7 @@ export default defineConfig({
           },
           {
             link: '/openapi-ts/zod',
-            text: 'Zod <span class="soon">soon</span>',
+            text: 'Zod',
           },
         ],
         text: 'Plugins',

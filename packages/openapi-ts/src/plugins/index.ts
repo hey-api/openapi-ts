@@ -55,8 +55,8 @@ export type UserPlugins =
   | UserConfig<TanStackSolidQuery>
   | UserConfig<TanStackSvelteQuery>
   | UserConfig<TanStackVueQuery>
-  | UserConfig<Fastify>;
-// | UserConfig<Zod>
+  | UserConfig<Fastify>
+  | UserConfig<Zod>;
 
 export type ClientPlugins =
   | PluginConfig<HeyApiSchemas>
