@@ -82,8 +82,20 @@ export interface ClientConfig {
     | Record<string, unknown>
     | {
         /**
+         * Prevent parts matching the regular expression from being processed.
+         * You can select both operations and components by reference within
+         * the bundled input. In case of conflicts, `exclude` takes precedence
+         * over `include`.
+         *
+         * @example
+         * operation: '^#/paths/api/v1/foo/get$'
+         * schema: '^#/components/schemas/Foo$'
+         */
+        exclude?: string;
+        /**
          * Process only parts matching the regular expression. You can select both
-         * operations and components by reference within the bundled input.
+         * operations and components by reference within the bundled input. In
+         * case of conflicts, `exclude` takes precedence over `include`.
          *
          * @example
          * operation: '^#/paths/api/v1/foo/get$'

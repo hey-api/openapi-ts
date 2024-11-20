@@ -11,6 +11,7 @@ const main = async () => {
     // debug: true,
     experimentalParser: true,
     input: {
+      exclude: '^#/components/schemas/ModelWithCircularReference$',
       // include:
       //   '^(#/components/schemas/import|#/paths/api/v{api-version}/simple/options)$',
       path: './test/spec/3.1.x/full.json',

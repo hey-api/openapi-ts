@@ -48,6 +48,7 @@ export const compiler = {
   parameterDeclaration: types.createParameterDeclaration,
   propertyAccessExpression: types.createPropertyAccessExpression,
   propertyAccessExpressions: transform.createPropertyAccessExpressions,
+  propertyAssignment: types.createPropertyAssignment,
   returnFunctionCall: _return.createReturnFunctionCall,
   returnStatement: _return.createReturnStatement,
   returnVariable: _return.createReturnVariable,
