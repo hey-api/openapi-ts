@@ -1,5 +1,11 @@
 # @hey-api/docs
 
+## 0.7.3
+
+### Patch Changes
+
+- [#1316](https://github.com/hey-api/openapi-ts/pull/1316) [`a79fac8`](https://github.com/hey-api/openapi-ts/commit/a79fac8919ed29eec7195cbd441ffa38b559d63c) Thanks [@mrlubos](https://github.com/mrlubos)! - docs: add Plugins page
+
 ## 0.7.2
 
 ### Patch Changes
