@@ -55,13 +55,16 @@ We use [`@apidevtools/json-schema-ref-parser`](https://github.com/APIDevTools/js
 Filters work only with the [experimental parser](#parser) which is currently an opt-in feature.
 :::
 
-If you work with large specifications and want to generate output from their subset, set `input.include` to a regular expression string matching against resource references.
+If you work with large specifications and want to generate output from their subset, you can use regular expressions to select the relevant definitions. Set `input.include` to match resource references to be included or `input.exclude` to match resource references to be excluded. When both regular expressions match the same definition, `input.exclude` takes precedence over `input.include`.
 
-```js
+::: code-group
+
+```js [include]
 export default {
   client: '@hey-api/client-fetch',
   experimentalParser: true, // [!code ++]
   input: {
+    // match only the schema named `foo` and `GET` operation for the `/api/v1/foo` path // [!code ++]
     include: '^(#/components/schemas/foo|#/paths/api/v1/foo/get)$', // [!code ++]
     path: 'path/to/openapi.json',
   },
@@ -69,7 +72,20 @@ export default {
 };
 ```
 
-The configuration above will process only the schema named `foo` and `GET` operation for the `/api/v1/foo` path.
+```js [exclude]
+export default {
+  client: '@hey-api/client-fetch',
+  experimentalParser: true, // [!code ++]
+  input: {
+    // match everything except for the schema named `foo` and `GET` operation for the `/api/v1/foo` path // [!code ++]
+    exclude: '^(#/components/schemas/foo|#/paths/api/v1/foo/get)$', // [!code ++]
+    path: 'path/to/openapi.json',
+  },
+  output: 'src/client',
+};
+```
+
+:::
 
 ## Output
 

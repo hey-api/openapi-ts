@@ -22,12 +22,13 @@ for (const version of versions) {
   describe(`OpenAPI ${version} ${namespace}`, () => {
     const createConfig = (
       userConfig: Omit<UserConfig, 'input'> &
-        Pick<Required<UserConfig>, 'plugins'>,
+        Pick<Required<UserConfig>, 'plugins'> &
+        Pick<Partial<UserConfig>, 'input'>,
     ): UserConfig => ({
       client: '@hey-api/client-fetch',
       experimentalParser: true,
-      ...userConfig,
       input: path.join(__dirname, 'spec', version, 'full.json'),
+      ...userConfig,
       output: path.join(
         outputDir,
         typeof userConfig.plugins[0] === 'string'
@@ -211,8 +212,12 @@ for (const version of versions) {
       },
       {
         config: createConfig({
+          input: {
+            // TODO: parser - remove `exclude` once recursive references are handled
+            exclude: '^#/components/schemas/ModelWithCircularReference$',
+            path: path.join(__dirname, 'spec', version, 'full.json'),
+          },
           output: 'default',
-          // @ts-expect-error
           plugins: ['zod'],
         }),
         description: 'generate Zod schemas with Zod plugin',

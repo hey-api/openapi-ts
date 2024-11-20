@@ -46,7 +46,7 @@ export default {
 };
 ```
 
-This will generate types that use `Date` instead of `string` and appropriate transformers. Note that third party date packages are not supported at the moment.
+This will generate types that use `Date` instead of `string` and appropriate transformers. Note that third-party date packages are not supported at the moment.
 
 ## Example
 

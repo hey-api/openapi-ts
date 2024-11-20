@@ -17,7 +17,10 @@ import { parseSchema } from './schema';
 export const parseV3_0_X = (context: IRContext<OpenApiV3_0_X>) => {
   const operationIds = new Map<string, string>();
 
-  const regexp = context.config.input.include
+  const excludeRegExp = context.config.input.exclude
+    ? new RegExp(context.config.input.exclude)
+    : undefined;
+  const includeRegExp = context.config.input.include
     ? new RegExp(context.config.input.include)
     : undefined;
 
@@ -56,7 +59,14 @@ export const parseV3_0_X = (context: IRContext<OpenApiV3_0_X>) => {
     };
 
     const $refDelete = `#/paths${path}/delete`;
-    if (finalPathItem.delete && canProcessRef($refDelete, regexp)) {
+    if (
+      finalPathItem.delete &&
+      canProcessRef({
+        $ref: $refDelete,
+        excludeRegExp,
+        includeRegExp,
+      })
+    ) {
       parseOperation({
         ...operationArgs,
         method: 'delete',
@@ -75,7 +85,14 @@ export const parseV3_0_X = (context: IRContext<OpenApiV3_0_X>) => {
     }
 
     const $refGet = `#/paths${path}/get`;
-    if (finalPathItem.get && canProcessRef($refGet, regexp)) {
+    if (
+      finalPathItem.get &&
+      canProcessRef({
+        $ref: $refGet,
+        excludeRegExp,
+        includeRegExp,
+      })
+    ) {
       parseOperation({
         ...operationArgs,
         method: 'get',
@@ -94,7 +111,14 @@ export const parseV3_0_X = (context: IRContext<OpenApiV3_0_X>) => {
     }
 
     const $refHead = `#/paths${path}/head`;
-    if (finalPathItem.head && canProcessRef($refHead, regexp)) {
+    if (
+      finalPathItem.head &&
+      canProcessRef({
+        $ref: $refHead,
+        excludeRegExp,
+        includeRegExp,
+      })
+    ) {
       parseOperation({
         ...operationArgs,
         method: 'head',
@@ -113,7 +137,14 @@ export const parseV3_0_X = (context: IRContext<OpenApiV3_0_X>) => {
     }
 
     const $refOptions = `#/paths${path}/options`;
-    if (finalPathItem.options && canProcessRef($refOptions, regexp)) {
+    if (
+      finalPathItem.options &&
+      canProcessRef({
+        $ref: $refOptions,
+        excludeRegExp,
+        includeRegExp,
+      })
+    ) {
       parseOperation({
         ...operationArgs,
         method: 'options',
@@ -132,7 +163,14 @@ export const parseV3_0_X = (context: IRContext<OpenApiV3_0_X>) => {
     }
 
     const $refPatch = `#/paths${path}/patch`;
-    if (finalPathItem.patch && canProcessRef($refPatch, regexp)) {
+    if (
+      finalPathItem.patch &&
+      canProcessRef({
+        $ref: $refPatch,
+        excludeRegExp,
+        includeRegExp,
+      })
+    ) {
       parseOperation({
         ...operationArgs,
         method: 'patch',
@@ -151,7 +189,14 @@ export const parseV3_0_X = (context: IRContext<OpenApiV3_0_X>) => {
     }
 
     const $refPost = `#/paths${path}/post`;
-    if (finalPathItem.post && canProcessRef($refPost, regexp)) {
+    if (
+      finalPathItem.post &&
+      canProcessRef({
+        $ref: $refPost,
+        excludeRegExp,
+        includeRegExp,
+      })
+    ) {
       parseOperation({
         ...operationArgs,
         method: 'post',
@@ -170,7 +215,14 @@ export const parseV3_0_X = (context: IRContext<OpenApiV3_0_X>) => {
     }
 
     const $refPut = `#/paths${path}/put`;
-    if (finalPathItem.put && canProcessRef($refPut, regexp)) {
+    if (
+      finalPathItem.put &&
+      canProcessRef({
+        $ref: $refPut,
+        excludeRegExp,
+        includeRegExp,
+      })
+    ) {
       parseOperation({
         ...operationArgs,
         method: 'put',
@@ -189,7 +241,14 @@ export const parseV3_0_X = (context: IRContext<OpenApiV3_0_X>) => {
     }
 
     const $refTrace = `#/paths${path}/trace`;
-    if (finalPathItem.trace && canProcessRef($refTrace, regexp)) {
+    if (
+      finalPathItem.trace &&
+      canProcessRef({
+        $ref: $refTrace,
+        excludeRegExp,
+        includeRegExp,
+      })
+    ) {
       parseOperation({
         ...operationArgs,
         method: 'trace',
@@ -212,7 +271,13 @@ export const parseV3_0_X = (context: IRContext<OpenApiV3_0_X>) => {
   if (context.spec.components) {
     for (const name in context.spec.components.parameters) {
       const $ref = `#/components/parameters/${name}`;
-      if (!canProcessRef($ref, regexp)) {
+      if (
+        !canProcessRef({
+          $ref,
+          excludeRegExp,
+          includeRegExp,
+        })
+      ) {
         continue;
       }
 
@@ -231,7 +296,13 @@ export const parseV3_0_X = (context: IRContext<OpenApiV3_0_X>) => {
 
     for (const name in context.spec.components.schemas) {
       const $ref = `#/components/schemas/${name}`;
-      if (!canProcessRef($ref, regexp)) {
+      if (
+        !canProcessRef({
+          $ref,
+          excludeRegExp,
+          includeRegExp,
+        })
+      ) {
         continue;
       }
 
