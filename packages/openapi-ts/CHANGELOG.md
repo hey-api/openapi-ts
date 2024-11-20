@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.56.2
+
+### Patch Changes
+
+- [#1316](https://github.com/hey-api/openapi-ts/pull/1316) [`a79fac8`](https://github.com/hey-api/openapi-ts/commit/a79fac8919ed29eec7195cbd441ffa38b559d63c) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add input.exclude option
+
+- [#1316](https://github.com/hey-api/openapi-ts/pull/1316) [`a79fac8`](https://github.com/hey-api/openapi-ts/commit/a79fac8919ed29eec7195cbd441ffa38b559d63c) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: make Zod plugin available in plugins options
+
 ## 0.56.1
 
 ### Patch Changes
