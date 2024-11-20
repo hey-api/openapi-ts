@@ -1,8 +1,30 @@
-export const canProcessRef = ($ref: string, regexp?: RegExp): boolean => {
-  if (!regexp) {
+/**
+ * Exclude takes precedence over include.
+ */
+export const canProcessRef = ({
+  $ref,
+  excludeRegExp,
+  includeRegExp,
+}: {
+  $ref: string;
+  excludeRegExp?: RegExp;
+  includeRegExp?: RegExp;
+}): boolean => {
+  if (!excludeRegExp && !includeRegExp) {
     return true;
   }
 
-  regexp.lastIndex = 0;
-  return regexp.test($ref);
+  if (excludeRegExp) {
+    excludeRegExp.lastIndex = 0;
+    if (excludeRegExp.test($ref)) {
+      return false;
+    }
+  }
+
+  if (includeRegExp) {
+    includeRegExp.lastIndex = 0;
+    return includeRegExp.test($ref);
+  }
+
+  return true;
 };

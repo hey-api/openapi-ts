@@ -549,10 +549,10 @@ export const createObjectType = <
             ) {
               initializer = createIdentifier({ text: value.value as string });
             }
-            assignment = ts.factory.createPropertyAssignment(
-              value.key,
+            assignment = createPropertyAssignment({
               initializer,
-            );
+              name: value.key,
+            });
           }
 
           addLeadingComments({
@@ -598,7 +598,7 @@ export const createObjectType = <
           const assignment =
             shorthand && canShorthand
               ? ts.factory.createShorthandPropertyAssignment(value)
-              : ts.factory.createPropertyAssignment(key, initializer);
+              : createPropertyAssignment({ initializer, name: key });
 
           return assignment;
         })
@@ -885,3 +885,11 @@ export const createBlock = ({
   multiLine?: boolean;
   statements: Array<ts.Statement>;
 }) => ts.factory.createBlock(statements, multiLine);
+
+export const createPropertyAssignment = ({
+  initializer,
+  name,
+}: {
+  initializer: ts.Expression;
+  name: string | ts.PropertyName;
+}) => ts.factory.createPropertyAssignment(name, initializer);
