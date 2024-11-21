@@ -16,7 +16,7 @@ describe('getPattern', () => {
     { expected: '\\\\/', pattern: '\\/' },
     { expected: '\\\\/\\\\/', pattern: '\\/\\/' },
     { expected: "\\'", pattern: "'" },
-  ])('getPattern($pattern) -> $expected', ({ pattern, expected }) => {
+  ])('getPattern($pattern) -> $expected', ({ expected, pattern }) => {
     expect(getPattern(pattern)).toEqual(expected);
   });
 });

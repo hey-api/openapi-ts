@@ -71,4 +71,5 @@ export const compiler = {
   typeReferenceNode: types.createTypeReferenceNode,
   typeTupleNode: typedef.createTypeTupleNode,
   typeUnionNode: typedef.createTypeUnionNode,
+  valueToExpression: types.toExpression,
 };

@@ -18,7 +18,9 @@ const zodId = 'zod';
 const digitsRegExp = /^\d+$/;
 
 // frequently used identifiers
+const defaultIdentifier = compiler.identifier({ text: 'default' });
 const optionalIdentifier = compiler.identifier({ text: 'optional' });
+const readonlyIdentifier = compiler.identifier({ text: 'readonly' });
 const zIdentifier = compiler.identifier({ text: 'z' });
 
 const arrayTypeToZodSchema = ({
@@ -29,13 +31,17 @@ const arrayTypeToZodSchema = ({
   context: IRContext;
   namespace: Array<ts.Statement>;
   schema: SchemaWithType<'array'>;
-}) => {
+}): ts.CallExpression => {
+  const functionName = compiler.propertyAccessExpression({
+    expression: zIdentifier,
+    name: compiler.identifier({ text: schema.type }),
+  });
+
+  let arrayExpression: ts.CallExpression | undefined;
+
   if (!schema.items) {
-    const expression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
-        expression: zIdentifier,
-        name: compiler.identifier({ text: schema.type }),
-      }),
+    arrayExpression = compiler.callExpression({
+      functionName,
       parameters: [
         unknownTypeToZodSchema({
           context,
@@ -46,57 +52,80 @@ const arrayTypeToZodSchema = ({
         }),
       ],
     });
-    return expression;
-  }
+  } else {
+    schema = deduplicateSchema({ schema });
 
-  schema = deduplicateSchema({ schema });
-
-  // at least one item is guaranteed
-  const itemExpressions = schema.items!.map((item) =>
-    schemaToZodSchema({
-      context,
-      namespace,
-      schema: item,
-    }),
-  );
-
-  if (itemExpressions.length === 1) {
-    const expression = compiler.callExpression({
-      functionName: compiler.propertyAccessExpression({
-        expression: zIdentifier,
-        name: compiler.identifier({ text: schema.type }),
-      }),
-      parameters: itemExpressions,
-    });
-    return expression;
-  }
-
-  if (schema.logicalOperator === 'and') {
-    // TODO: parser - handle intersection
-    // return compiler.typeArrayNode(
-    //   compiler.typeIntersectionNode({ types: itemExpressions }),
-    // );
-  }
-
-  // TODO: parser - handle union
-  // return compiler.typeArrayNode(compiler.typeUnionNode({ types: itemExpressions }));
-
-  const expression = compiler.callExpression({
-    functionName: compiler.propertyAccessExpression({
-      expression: zIdentifier,
-      name: compiler.identifier({ text: schema.type }),
-    }),
-    parameters: [
-      unknownTypeToZodSchema({
+    // at least one item is guaranteed
+    const itemExpressions = schema.items!.map((item) =>
+      schemaToZodSchema({
         context,
         namespace,
-        schema: {
-          type: 'unknown',
-        },
+        schema: item,
       }),
-    ],
-  });
-  return expression;
+    );
+
+    if (itemExpressions.length === 1) {
+      arrayExpression = compiler.callExpression({
+        functionName,
+        parameters: itemExpressions,
+      });
+    } else {
+      if (schema.logicalOperator === 'and') {
+        // TODO: parser - handle intersection
+        // return compiler.typeArrayNode(
+        //   compiler.typeIntersectionNode({ types: itemExpressions }),
+        // );
+      }
+
+      // TODO: parser - handle union
+      // return compiler.typeArrayNode(compiler.typeUnionNode({ types: itemExpressions }));
+
+      arrayExpression = compiler.callExpression({
+        functionName,
+        parameters: [
+          unknownTypeToZodSchema({
+            context,
+            namespace,
+            schema: {
+              type: 'unknown',
+            },
+          }),
+        ],
+      });
+    }
+  }
+
+  if (schema.minItems === schema.maxItems && schema.minItems !== undefined) {
+    arrayExpression = compiler.callExpression({
+      functionName: compiler.propertyAccessExpression({
+        expression: arrayExpression,
+        name: compiler.identifier({ text: 'length' }),
+      }),
+      parameters: [compiler.valueToExpression({ value: schema.minItems })],
+    });
+  } else {
+    if (schema.minItems !== undefined) {
+      arrayExpression = compiler.callExpression({
+        functionName: compiler.propertyAccessExpression({
+          expression: arrayExpression,
+          name: compiler.identifier({ text: 'min' }),
+        }),
+        parameters: [compiler.valueToExpression({ value: schema.minItems })],
+      });
+    }
+
+    if (schema.maxItems !== undefined) {
+      arrayExpression = compiler.callExpression({
+        functionName: compiler.propertyAccessExpression({
+          expression: arrayExpression,
+          name: compiler.identifier({ text: 'max' }),
+        }),
+        parameters: [compiler.valueToExpression({ value: schema.maxItems })],
+      });
+    }
+  }
+
+  return arrayExpression;
 };
 
 const booleanTypeToZodSchema = ({
@@ -130,7 +159,7 @@ const enumTypeToZodSchema = ({
   context: IRContext;
   namespace: Array<ts.Statement>;
   schema: SchemaWithType<'enum'>;
-}): ts.Expression => {
+}): ts.CallExpression => {
   const enumMembers: Array<ts.LiteralExpression> = [];
 
   for (const item of schema.items ?? []) {
@@ -209,7 +238,12 @@ const numberTypeToZodSchema = ({
   namespace: Array<ts.Statement>;
   schema: SchemaWithType<'number'>;
 }) => {
-  // TODO: parser - handle min/max length
+  let numberExpression = compiler.callExpression({
+    functionName: compiler.propertyAccessExpression({
+      expression: zIdentifier,
+      name: compiler.identifier({ text: schema.type }),
+    }),
+  });
 
   if (schema.const !== undefined) {
     // TODO: parser - add constant
@@ -218,13 +252,47 @@ const numberTypeToZodSchema = ({
     // });
   }
 
-  const expression = compiler.callExpression({
-    functionName: compiler.propertyAccessExpression({
-      expression: zIdentifier,
-      name: compiler.identifier({ text: schema.type }),
-    }),
-  });
-  return expression;
+  if (schema.exclusiveMinimum !== undefined) {
+    numberExpression = compiler.callExpression({
+      functionName: compiler.propertyAccessExpression({
+        expression: numberExpression,
+        name: compiler.identifier({ text: 'gt' }),
+      }),
+      parameters: [
+        compiler.valueToExpression({ value: schema.exclusiveMinimum }),
+      ],
+    });
+  } else if (schema.minimum !== undefined) {
+    numberExpression = compiler.callExpression({
+      functionName: compiler.propertyAccessExpression({
+        expression: numberExpression,
+        name: compiler.identifier({ text: 'gte' }),
+      }),
+      parameters: [compiler.valueToExpression({ value: schema.minimum })],
+    });
+  }
+
+  if (schema.exclusiveMaximum !== undefined) {
+    numberExpression = compiler.callExpression({
+      functionName: compiler.propertyAccessExpression({
+        expression: numberExpression,
+        name: compiler.identifier({ text: 'lt' }),
+      }),
+      parameters: [
+        compiler.valueToExpression({ value: schema.exclusiveMaximum }),
+      ],
+    });
+  } else if (schema.maximum !== undefined) {
+    numberExpression = compiler.callExpression({
+      functionName: compiler.propertyAccessExpression({
+        expression: numberExpression,
+        name: compiler.identifier({ text: 'lte' }),
+      }),
+      parameters: [compiler.valueToExpression({ value: schema.maximum })],
+    });
+  }
+
+  return numberExpression;
 };
 
 const objectTypeToZodSchema = ({
@@ -258,7 +326,7 @@ const objectTypeToZodSchema = ({
       propertyExpression = compiler.callExpression({
         functionName: compiler.propertyAccessExpression({
           expression: propertyExpression,
-          name: compiler.identifier({ text: 'readonly' }),
+          name: readonlyIdentifier,
         }),
       });
     }
@@ -270,6 +338,21 @@ const objectTypeToZodSchema = ({
           name: optionalIdentifier,
         }),
       });
+    }
+
+    if (property.default !== undefined) {
+      const callParameter = compiler.valueToExpression({
+        value: property.default,
+      });
+      if (callParameter) {
+        propertyExpression = compiler.callExpression({
+          functionName: compiler.propertyAccessExpression({
+            expression: propertyExpression,
+            name: defaultIdentifier,
+          }),
+          parameters: [callParameter],
+        });
+      }
     }
 
     digitsRegExp.lastIndex = 0;
@@ -404,6 +487,36 @@ const stringTypeToZodSchema = ({
           }),
         });
         break;
+    }
+  }
+
+  if (schema.minLength === schema.maxLength && schema.minLength !== undefined) {
+    stringExpression = compiler.callExpression({
+      functionName: compiler.propertyAccessExpression({
+        expression: stringExpression,
+        name: compiler.identifier({ text: 'length' }),
+      }),
+      parameters: [compiler.valueToExpression({ value: schema.minLength })],
+    });
+  } else {
+    if (schema.minLength !== undefined) {
+      stringExpression = compiler.callExpression({
+        functionName: compiler.propertyAccessExpression({
+          expression: stringExpression,
+          name: compiler.identifier({ text: 'min' }),
+        }),
+        parameters: [compiler.valueToExpression({ value: schema.minLength })],
+      });
+    }
+
+    if (schema.maxLength !== undefined) {
+      stringExpression = compiler.callExpression({
+        functionName: compiler.propertyAccessExpression({
+          expression: stringExpression,
+          name: compiler.identifier({ text: 'max' }),
+        }),
+        parameters: [compiler.valueToExpression({ value: schema.maxLength })],
+      });
     }
   }
 
@@ -579,7 +692,7 @@ const schemaToZodSchema = ({
       namespace: 'value',
     });
     if (identifier.name) {
-      expression = compiler.identifier({ text: identifier.name || '' });
+      expression = compiler.identifier({ text: `z${identifier.name || ''}` });
     } else {
       const ref = context.resolveIrRef<IRSchemaObject>(schema.$ref);
       expression = schemaToZodSchema({
@@ -646,7 +759,7 @@ const schemaToZodSchema = ({
     const statement = compiler.constVariable({
       exportConst: true,
       expression,
-      name: identifier.name || '',
+      name: `z${identifier.name || ''}`,
     });
     file.add(statement);
   }
@@ -664,6 +777,14 @@ export const handler: PluginHandler<Config> = ({ context, plugin }) => {
     module: 'zod',
     name: 'z',
   });
+
+  // context.subscribe('operation', ({ operation }) => {
+  //   schemaToZodSchema({
+  //     $ref,
+  //     context,
+  //     schema,
+  //   });
+  // });
 
   context.subscribe('schema', ({ $ref, schema }) => {
     schemaToZodSchema({

@@ -63,7 +63,7 @@ describe('isMediaTypeFileLike', () => {
 
   it.each(scenarios)(
     'detects $mediaType as file-like? $fileLike',
-    async ({ mediaType, fileLike }) => {
+    async ({ fileLike, mediaType }) => {
       expect(isMediaTypeFileLike({ mediaType })).toEqual(fileLike);
     },
   );

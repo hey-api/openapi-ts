@@ -31,8 +31,8 @@ export const createExportAllDeclaration = ({
 export type ImportExportItem = ImportExportItemObject | string;
 
 export const createCallExpression = ({
-  parameters = [],
   functionName,
+  parameters = [],
   types,
 }: {
   functionName:
@@ -108,8 +108,8 @@ export const createNamedExportDeclarations = ({
  * @returns ts.VariableStatement
  */
 export const createConstVariable = ({
-  comment,
   assertion,
+  comment,
   destructure,
   exportConst,
   expression,

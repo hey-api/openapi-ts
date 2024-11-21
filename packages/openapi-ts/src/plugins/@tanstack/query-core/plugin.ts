@@ -74,8 +74,8 @@ const queryOptionsFunctionIdentifier = ({
 
 const queryKeyFunctionIdentifier = ({
   context,
-  operation,
   isInfinite,
+  operation,
 }: {
   context: IRContext;
   isInfinite?: boolean;
@@ -510,8 +510,8 @@ const createQueryKeyType = ({ file }: { file: Files[keyof Files] }) => {
 };
 
 const createQueryKeyLiteral = ({
-  isInfinite,
   id,
+  isInfinite,
 }: {
   id: string;
   isInfinite?: boolean;

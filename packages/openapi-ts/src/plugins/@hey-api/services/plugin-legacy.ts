@@ -487,9 +487,9 @@ const toRequestOptions = (
 
 export const serviceFunctionIdentifier = ({
   config,
+  handleIllegal,
   id,
   operation,
-  handleIllegal,
 }: {
   config: Config;
   handleIllegal?: boolean;

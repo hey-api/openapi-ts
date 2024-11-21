@@ -113,7 +113,21 @@ export interface IRResponseObject {
 export interface IRSchemaObject
   extends Pick<
     JsonSchemaDraft2020_12,
-    '$ref' | 'const' | 'deprecated' | 'description' | 'required' | 'title'
+    | '$ref'
+    | 'const'
+    | 'default'
+    | 'deprecated'
+    | 'description'
+    | 'exclusiveMaximum'
+    | 'exclusiveMinimum'
+    | 'maximum'
+    | 'maxItems'
+    | 'maxLength'
+    | 'minimum'
+    | 'minItems'
+    | 'minLength'
+    | 'required'
+    | 'title'
   > {
   /**
    * If the schema is intended to be used as an object property, it can be

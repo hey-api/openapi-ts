@@ -27,7 +27,7 @@ describe('getServiceName', () => {
       expected: 'NonAsciiÆøåÆøÅöôêÊ字符串',
       input: 'non-ascii-æøåÆØÅöôêÊ字符串',
     },
-  ])('getServiceName($input) -> $expected', ({ input, expected }) => {
+  ])('getServiceName($input) -> $expected', ({ expected, input }) => {
     expect(getServiceName(input)).toEqual(expected);
   });
 });

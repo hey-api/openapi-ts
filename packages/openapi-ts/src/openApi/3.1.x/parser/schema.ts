@@ -74,8 +74,44 @@ const parseSchemaMeta = ({
     }
   }
 
+  if (schema.default !== undefined) {
+    irSchema.default = schema.default;
+  }
+
+  if (schema.exclusiveMaximum) {
+    irSchema.exclusiveMaximum = schema.exclusiveMaximum;
+  }
+
+  if (schema.exclusiveMinimum) {
+    irSchema.exclusiveMinimum = schema.exclusiveMinimum;
+  }
+
   if (schema.format) {
     irSchema.format = schema.format;
+  }
+
+  if (schema.maximum !== undefined) {
+    irSchema.maximum = schema.maximum;
+  }
+
+  if (schema.maxItems !== undefined) {
+    irSchema.maxItems = schema.maxItems;
+  }
+
+  if (schema.maxLength !== undefined) {
+    irSchema.maxLength = schema.maxLength;
+  }
+
+  if (schema.minimum !== undefined) {
+    irSchema.minimum = schema.minimum;
+  }
+
+  if (schema.minItems !== undefined) {
+    irSchema.minItems = schema.minItems;
+  }
+
+  if (schema.minLength !== undefined) {
+    irSchema.minLength = schema.minLength;
   }
 
   if (schema.readOnly) {
