@@ -15,7 +15,7 @@ describe('sanitizeOperationParameterName', () => {
     { expected: 'unknownArray', input: 'unknown[]' },
   ])(
     'sanitizeOperationParameterName($input) -> $expected',
-    ({ input, expected }) => {
+    ({ expected, input }) => {
       expect(sanitizeOperationParameterName(input)).toEqual(expected);
     },
   );
@@ -30,7 +30,7 @@ describe('sanitizeNamespaceIdentifier', () => {
     { expected: 'a-b-c--d--e', input: 'a/b{c}/d/$e' },
   ])(
     'sanitizeNamespaceIdentifier($input) -> $expected',
-    ({ input, expected }) => {
+    ({ expected, input }) => {
       expect(sanitizeNamespaceIdentifier(input)).toEqual(expected);
     },
   );
@@ -45,7 +45,7 @@ describe('ensureValidTypeScriptJavaScriptIdentifier', () => {
     { expected: '_400', input: '400' },
   ])(
     'ensureValidTypeScriptJavaScriptIdentifier($input) -> $expected',
-    ({ input, expected }) => {
+    ({ expected, input }) => {
       expect(ensureValidTypeScriptJavaScriptIdentifier(input)).toEqual(
         expected,
       );

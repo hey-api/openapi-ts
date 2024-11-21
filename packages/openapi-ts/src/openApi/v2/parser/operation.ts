@@ -18,8 +18,8 @@ export const getOperation = ({
   method,
   op,
   openApi,
-  types,
   pathParams,
+  types,
   url,
 }: {
   method: Lowercase<Operation['method']>;

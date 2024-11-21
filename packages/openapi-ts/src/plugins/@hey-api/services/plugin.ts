@@ -194,7 +194,7 @@ const generateClassServices = ({ context }: { context: IRContext }) => {
 
   const services = new Map<string, Array<ts.MethodDeclaration>>();
 
-  context.subscribe('operation', ({ operation, method, path }) => {
+  context.subscribe('operation', ({ method, operation, path }) => {
     const identifierData = context.file({ id: 'types' })!.identifier({
       $ref: operationIrRef({ id: operation.id, type: 'data' }),
       namespace: 'type',
@@ -314,7 +314,7 @@ const generateFlatServices = ({ context }: { context: IRContext }) => {
   const file = context.file({ id: servicesId })!;
   const typesModule = file.relativePathToFile({ context, id: 'types' });
 
-  context.subscribe('operation', ({ operation, method, path }) => {
+  context.subscribe('operation', ({ method, operation, path }) => {
     const identifierData = context.file({ id: 'types' })!.identifier({
       $ref: operationIrRef({ id: operation.id, type: 'data' }),
       namespace: 'type',

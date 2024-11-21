@@ -43,7 +43,7 @@ describe('getMappedType', () => {
     { expected: 'unknown[]', type: 'array' },
     { expected: 'void', type: 'void' },
     { expected: undefined, type: '' },
-  ])('should map type $type to $expected', ({ type, expected }) => {
+  ])('should map type $type to $expected', ({ expected, type }) => {
     expect(getMappedType(type)).toEqual(expected);
   });
 });

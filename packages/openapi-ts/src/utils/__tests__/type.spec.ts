@@ -28,7 +28,7 @@ describe('transformTypeKeyName', () => {
       { expected: 'fooBar', input: 'FOO-BAR' },
       { expected: 'fooBar', input: 'foo[bar]' },
       { expected: 'fooBarArray', input: 'foo.bar[]' },
-    ])('$input -> $expected', ({ input, expected }) => {
+    ])('$input -> $expected', ({ expected, input }) => {
       (isLegacyClient as MockedFunction<any>).mockImplementationOnce(
         () => true,
       );

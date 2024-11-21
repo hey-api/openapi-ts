@@ -17,7 +17,7 @@ describe('stripNamespace', () => {
     { expected: 'Item', input: '#/components/securitySchemes/Item' },
     { expected: 'Item', input: '#/components/links/Item' },
     { expected: 'Item', input: '#/components/callbacks/Item' },
-  ])('stripNamespace($input) -> $expected', ({ input, expected }) => {
+  ])('stripNamespace($input) -> $expected', ({ expected, input }) => {
     expect(stripNamespace(input)).toEqual(expected);
   });
 });

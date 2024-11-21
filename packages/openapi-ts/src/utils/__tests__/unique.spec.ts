@@ -11,7 +11,7 @@ describe('unique', () => {
     { arr: ['y', 'z', 'a'], index: 2, result: true, value: 'a' },
   ])(
     'unique($value, $index, $arr) -> $result',
-    ({ value, index, arr, result }) => {
+    ({ arr, index, result, value }) => {
       expect(unique(value, index, arr)).toEqual(result);
     },
   );
@@ -21,7 +21,7 @@ describe('unique', () => {
     { expected: [1, 2, 3, 4, 5, 6], input: [1, 2, 3, 4, 4, 5, 6, 3] },
   ])(
     'should filter: $input to the unique array: $expected',
-    ({ input, expected }) => {
+    ({ expected, input }) => {
       expect(input.filter(unique)).toEqual(expected);
     },
   );
