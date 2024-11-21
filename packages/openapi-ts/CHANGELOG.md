@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.56.3
+
+### Patch Changes
+
+- [#1319](https://github.com/hey-api/openapi-ts/pull/1319) [`af76a77`](https://github.com/hey-api/openapi-ts/commit/af76a7705c585fcfae0c72872f358936f7d19d56) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: Zod plugin handles value constraints and defaults
+
 ## 0.56.2
 
 ### Patch Changes
