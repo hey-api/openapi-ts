@@ -12,7 +12,7 @@ describe('parseResponseStatusCode', () => {
     { expected: '4XX', input: '4XX' },
     { expected: null, input: 'abc' },
     { expected: null, input: '-100' },
-  ])('parseResponseStatusCode($input) -> $expected', ({ input, expected }) => {
+  ])('parseResponseStatusCode($input) -> $expected', ({ expected, input }) => {
     expect(parseResponseStatusCode(input)).toBe(expected);
   });
 });

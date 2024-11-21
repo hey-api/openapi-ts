@@ -289,7 +289,7 @@ describe('operationNameFn', () => {
     },
   ])(
     'getOperationName($url, $method, { operationId: $useOperationId }, $operationId) -> $expected',
-    ({ url, method, options, operationId, expected }) => {
+    ({ expected, method, operationId, options, url }) => {
       setConfig(options);
       expect(
         operationNameFn({

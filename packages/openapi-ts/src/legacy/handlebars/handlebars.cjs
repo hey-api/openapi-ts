@@ -1,12 +1,12 @@
 const Handlebars = require('handlebars');
 const {
-  readFileSync,
-  readdirSync,
-  statSync,
   existsSync,
   mkdirSync,
-  writeFileSync,
+  readFileSync,
+  readdirSync,
   rmdirSync,
+  statSync,
+  writeFileSync,
 } = require('node:fs');
 const path = require('node:path');
 

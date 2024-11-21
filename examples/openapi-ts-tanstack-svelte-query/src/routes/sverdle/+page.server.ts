@@ -30,7 +30,7 @@ export const actions = {
    * Modify game state in reaction to a guessed word. This logic always runs on
    * the server, so that people can't cheat by peeking at the JavaScript
    */
-  enter: async ({ request, cookies }) => {
+  enter: async ({ cookies, request }) => {
     const game = new Game(cookies.get('sverdle'));
 
     const data = await request.formData();
@@ -51,7 +51,7 @@ export const actions = {
    * Modify game state in reaction to a keypress. If client-side JavaScript
    * is available, this will happen in the browser instead of here
    */
-  update: async ({ request, cookies }) => {
+  update: async ({ cookies, request }) => {
     const game = new Game(cookies.get('sverdle'));
 
     const data = await request.formData();

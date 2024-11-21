@@ -2,41 +2,41 @@
 
 import { z } from 'zod';
 
-export const _400 = z.string();
+export const z_400 = z.string();
 
-export const camelCaseCommentWithBreaks = z.number();
+export const zcamelCaseCommentWithBreaks = z.number();
 
-export const CommentWithBreaks = z.number();
+export const zCommentWithBreaks = z.number();
 
-export const CommentWithBackticks = z.number();
+export const zCommentWithBackticks = z.number();
 
-export const CommentWithBackticksAndQuotes = z.number();
+export const zCommentWithBackticksAndQuotes = z.number();
 
-export const CommentWithSlashes = z.number();
+export const zCommentWithSlashes = z.number();
 
-export const CommentWithExpressionPlaceholders = z.number();
+export const zCommentWithExpressionPlaceholders = z.number();
 
-export const CommentWithQuotes = z.number();
+export const zCommentWithQuotes = z.number();
 
-export const CommentWithReservedCharacters = z.number();
+export const zCommentWithReservedCharacters = z.number();
 
-export const SimpleInteger = z.number();
+export const zSimpleInteger = z.number();
 
-export const SimpleBoolean = z.boolean();
+export const zSimpleBoolean = z.boolean();
 
-export const SimpleString = z.string();
+export const zSimpleString = z.string();
 
-export const NonAsciiStringæøåÆØÅöôêÊ字符串 = z.string();
+export const zNonAsciiStringæøåÆØÅöôêÊ字符串 = z.string();
 
-export const SimpleFile = z.string();
+export const zSimpleFile = z.string();
 
-export const SimpleReference = z.object({
+export const zSimpleReference = z.object({
     prop: z.string().optional()
 });
 
-export const SimpleStringWithPattern = z.unknown();
+export const zSimpleStringWithPattern = z.unknown();
 
-export const EnumWithStrings = z.enum([
+export const zEnumWithStrings = z.enum([
     'Success',
     'Warning',
     'Error',
@@ -45,84 +45,84 @@ export const EnumWithStrings = z.enum([
     'Non-ascii: øæåôöØÆÅÔÖ字符串'
 ]);
 
-export const EnumWithReplacedCharacters = z.enum([
+export const zEnumWithReplacedCharacters = z.enum([
     "'Single Quote'",
     '"Double Quotes"',
     'øæåôöØÆÅÔÖ字符串',
     ''
 ]);
 
-export const EnumWithNumbers = z.unknown();
+export const zEnumWithNumbers = z.unknown();
 
-export const EnumFromDescription = z.number();
+export const zEnumFromDescription = z.number();
 
-export const EnumWithExtensions = z.unknown();
+export const zEnumWithExtensions = z.unknown();
 
-export const EnumWithXEnumNames = z.unknown();
+export const zEnumWithXEnumNames = z.unknown();
 
-export const ArrayWithNumbers = z.array(z.number());
+export const zArrayWithNumbers = z.array(z.number());
 
-export const ArrayWithBooleans = z.array(z.boolean());
+export const zArrayWithBooleans = z.array(z.boolean());
 
-export const ArrayWithStrings = z.array(z.string());
+export const zArrayWithStrings = z.array(z.string());
 
-export const ArrayWithReferences = z.array(z.object({
+export const zArrayWithReferences = z.array(z.object({
     prop: z.string().optional()
 }));
 
-export const ArrayWithArray = z.array(z.array(z.object({
+export const zArrayWithArray = z.array(z.array(z.object({
     prop: z.string().optional()
 })));
 
-export const ArrayWithProperties = z.array(z.object({
-    '16x16': camelCaseCommentWithBreaks.optional(),
+export const zArrayWithProperties = z.array(z.object({
+    '16x16': zcamelCaseCommentWithBreaks.optional(),
     bar: z.string().optional()
 }));
 
-export const ArrayWithAnyOfProperties = z.array(z.unknown());
+export const zArrayWithAnyOfProperties = z.array(z.unknown());
 
-export const AnyOfAnyAndNull = z.object({
+export const zAnyOfAnyAndNull = z.object({
     data: z.unknown().optional()
 });
 
-export const AnyOfArrays = z.object({
+export const zAnyOfArrays = z.object({
     results: z.array(z.unknown()).optional()
 });
 
-export const DictionaryWithString = z.object({});
+export const zDictionaryWithString = z.object({});
 
-export const DictionaryWithPropertiesAndAdditionalProperties = z.object({
+export const zDictionaryWithPropertiesAndAdditionalProperties = z.object({
     foo: z.number().optional(),
     bar: z.boolean().optional()
 });
 
-export const DictionaryWithReference = z.object({});
+export const zDictionaryWithReference = z.object({});
 
-export const DictionaryWithArray = z.object({});
+export const zDictionaryWithArray = z.object({});
 
-export const DictionaryWithDictionary = z.object({});
+export const zDictionaryWithDictionary = z.object({});
 
-export const DictionaryWithProperties = z.object({});
+export const zDictionaryWithProperties = z.object({});
 
-export const ModelWithInteger = z.object({
+export const zModelWithInteger = z.object({
     prop: z.number().optional()
 });
 
-export const ModelWithBoolean = z.object({
+export const zModelWithBoolean = z.object({
     prop: z.boolean().optional()
 });
 
-export const ModelWithString = z.object({
+export const zModelWithString = z.object({
     prop: z.string().optional()
 });
 
-export const ModelWithStringError = z.object({
+export const zModelWithStringError = z.object({
     prop: z.string().optional()
 });
 
-export const Model_From_Zendesk = z.string();
+export const zModel_From_Zendesk = z.string();
 
-export const ModelWithNullableString = z.object({
+export const zModelWithNullableString = z.object({
     nullableProp1: z.unknown().optional(),
     nullableRequiredProp1: z.unknown(),
     nullableProp2: z.unknown().optional(),
@@ -135,7 +135,7 @@ export const ModelWithNullableString = z.object({
     ]).optional()
 });
 
-export const ModelWithEnum = z.object({
+export const zModelWithEnum = z.object({
     'foo_bar-enum': z.enum([
         'Success',
         'Warning',
@@ -153,17 +153,17 @@ export const ModelWithEnum = z.object({
     bool: z.unknown().optional()
 });
 
-export const ModelWithEnumWithHyphen = z.object({
+export const zModelWithEnumWithHyphen = z.object({
     'foo-bar-baz-qux': z.enum([
         '3.0'
     ]).optional()
 });
 
-export const ModelWithEnumFromDescription = z.object({
+export const zModelWithEnumFromDescription = z.object({
     test: z.number().optional()
 });
 
-export const ModelWithNestedEnums = z.object({
+export const zModelWithNestedEnums = z.object({
     dictionaryWithEnum: z.object({}).optional(),
     dictionaryWithEnumFromDescription: z.object({}).optional(),
     arrayWithEnum: z.array(z.enum([
@@ -180,7 +180,7 @@ export const ModelWithNestedEnums = z.object({
     ]).optional()
 });
 
-export const ModelWithReference = z.object({
+export const zModelWithReference = z.object({
     prop: z.object({
         required: z.string(),
         requiredAndReadOnly: z.string().readonly(),
@@ -188,7 +188,7 @@ export const ModelWithReference = z.object({
         string: z.string().optional(),
         number: z.number().optional(),
         boolean: z.boolean().optional(),
-        reference: ModelWithString.optional(),
+        reference: zModelWithString.optional(),
         'property with space': z.string().optional(),
         default: z.string().optional(),
         try: z.string().optional(),
@@ -197,7 +197,7 @@ export const ModelWithReference = z.object({
     }).optional()
 });
 
-export const ModelWithArrayReadOnlyAndWriteOnly = z.object({
+export const zModelWithArrayReadOnlyAndWriteOnly = z.object({
     prop: z.array(z.object({
         foo: z.string(),
         bar: z.string().readonly(),
@@ -207,102 +207,102 @@ export const ModelWithArrayReadOnlyAndWriteOnly = z.object({
     propWithNumber: z.array(z.number()).optional()
 });
 
-export const ModelWithArray = z.object({
-    prop: z.array(ModelWithString).optional(),
+export const zModelWithArray = z.object({
+    prop: z.array(zModelWithString).optional(),
     propWithFile: z.array(z.string()).optional(),
     propWithNumber: z.array(z.number()).optional()
 });
 
-export const ModelWithDictionary = z.object({
+export const zModelWithDictionary = z.object({
     prop: z.object({}).optional()
 });
 
-export const DeprecatedModel = z.object({
+export const zDeprecatedModel = z.object({
     prop: z.string().optional()
 });
 
-export const CompositionWithOneOf = z.object({
+export const zCompositionWithOneOf = z.object({
     propA: z.unknown().optional()
 });
 
-export const CompositionWithOneOfAnonymous = z.object({
+export const zCompositionWithOneOfAnonymous = z.object({
     propA: z.unknown().optional()
 });
 
-export const ModelCircle = z.object({
+export const zModelCircle = z.object({
     kind: z.string(),
     radius: z.number().optional()
 });
 
-export const ModelSquare = z.object({
+export const zModelSquare = z.object({
     kind: z.string(),
     sideLength: z.number().optional()
 });
 
-export const CompositionWithOneOfDiscriminator = z.unknown();
+export const zCompositionWithOneOfDiscriminator = z.unknown();
 
-export const CompositionWithAnyOf = z.object({
+export const zCompositionWithAnyOf = z.object({
     propA: z.unknown().optional()
 });
 
-export const CompositionWithAnyOfAnonymous = z.object({
+export const zCompositionWithAnyOfAnonymous = z.object({
     propA: z.unknown().optional()
 });
 
-export const CompositionWithNestedAnyAndTypeNull = z.object({
+export const zCompositionWithNestedAnyAndTypeNull = z.object({
     propA: z.unknown().optional()
 });
 
-export const _3e_num_1Период = z.enum([
+export const z_3e_num_1Период = z.enum([
     'Bird',
     'Dog'
 ]);
 
-export const ConstValue = z.string();
+export const zConstValue = z.string();
 
-export const CompositionWithNestedAnyOfAndNull = z.object({
+export const zCompositionWithNestedAnyOfAndNull = z.object({
     propA: z.unknown().optional()
 });
 
-export const CompositionWithOneOfAndNullable = z.object({
+export const zCompositionWithOneOfAndNullable = z.object({
     propA: z.unknown().optional()
 });
 
-export const CompositionWithOneOfAndSimpleDictionary = z.object({
+export const zCompositionWithOneOfAndSimpleDictionary = z.object({
     propA: z.unknown().optional()
 });
 
-export const CompositionWithOneOfAndSimpleArrayDictionary = z.object({
+export const zCompositionWithOneOfAndSimpleArrayDictionary = z.object({
     propA: z.unknown().optional()
 });
 
-export const CompositionWithOneOfAndComplexArrayDictionary = z.object({
+export const zCompositionWithOneOfAndComplexArrayDictionary = z.object({
     propA: z.unknown().optional()
 });
 
-export const CompositionWithAllOfAndNullable = z.object({
+export const zCompositionWithAllOfAndNullable = z.object({
     propA: z.unknown().optional()
 });
 
-export const CompositionWithAnyOfAndNullable = z.object({
+export const zCompositionWithAnyOfAndNullable = z.object({
     propA: z.unknown().optional()
 });
 
-export const CompositionBaseModel = z.object({
+export const zCompositionBaseModel = z.object({
     firstName: z.string().optional(),
     lastname: z.string().optional()
 });
 
-export const CompositionExtendedModel = z.unknown();
+export const zCompositionExtendedModel = z.unknown();
 
-export const ModelWithProperties = z.object({
+export const zModelWithProperties = z.object({
     required: z.string(),
     requiredAndReadOnly: z.string().readonly(),
     requiredAndNullable: z.unknown(),
     string: z.string().optional(),
     number: z.number().optional(),
     boolean: z.boolean().optional(),
-    reference: ModelWithString.optional(),
+    reference: zModelWithString.optional(),
     'property with space': z.string().optional(),
     default: z.string().optional(),
     try: z.string().optional(),
@@ -310,33 +310,33 @@ export const ModelWithProperties = z.object({
     '@namespace.integer': z.number().readonly().optional()
 });
 
-export const ModelWithNestedProperties = z.object({
+export const zModelWithNestedProperties = z.object({
     first: z.unknown().readonly()
 });
 
-export const ModelWithDuplicateProperties = z.object({
-    prop: ModelWithString.optional()
+export const zModelWithDuplicateProperties = z.object({
+    prop: zModelWithString.optional()
 });
 
-export const ModelWithOrderedProperties = z.object({
+export const zModelWithOrderedProperties = z.object({
     zebra: z.string().optional(),
     apple: z.string().optional(),
     hawaii: z.string().optional()
 });
 
-export const ModelWithDuplicateImports = z.object({
-    propA: ModelWithString.optional(),
-    propB: ModelWithString.optional(),
-    propC: ModelWithString.optional()
+export const zModelWithDuplicateImports = z.object({
+    propA: zModelWithString.optional(),
+    propB: zModelWithString.optional(),
+    propC: zModelWithString.optional()
 });
 
-export const ModelThatExtends = z.unknown();
+export const zModelThatExtends = z.unknown();
 
-export const ModelThatExtendsExtends = z.unknown();
+export const zModelThatExtendsExtends = z.unknown();
 
-export const ModelWithPattern = z.object({
-    key: z.string(),
-    name: z.string(),
+export const zModelWithPattern = z.object({
+    key: z.string().max(64),
+    name: z.string().max(255),
     enabled: z.boolean().readonly().optional(),
     modified: z.string().datetime().readonly().optional(),
     id: z.string().optional(),
@@ -346,122 +346,122 @@ export const ModelWithPattern = z.object({
     patternWithBacktick: z.string().optional()
 });
 
-export const File = z.object({
-    id: z.string().readonly().optional(),
+export const zFile = z.object({
+    id: z.string().min(1).readonly().optional(),
     updated_at: z.string().datetime().readonly().optional(),
     created_at: z.string().datetime().readonly().optional(),
-    mime: z.string(),
+    mime: z.string().min(1).max(24),
     file: z.string().url().readonly().optional()
 });
 
-export const _default = z.object({
+export const z_default = z.object({
     name: z.string().optional()
 });
 
-export const Pageable = z.object({
-    page: z.number().optional(),
-    size: z.number().optional(),
+export const zPageable = z.object({
+    page: z.number().gte(0).optional().default(0),
+    size: z.number().gte(1).optional(),
     sort: z.array(z.string()).optional()
 });
 
-export const FreeFormObjectWithoutAdditionalProperties = z.object({});
+export const zFreeFormObjectWithoutAdditionalProperties = z.object({});
 
-export const FreeFormObjectWithAdditionalPropertiesEqTrue = z.object({});
+export const zFreeFormObjectWithAdditionalPropertiesEqTrue = z.object({});
 
-export const FreeFormObjectWithAdditionalPropertiesEqEmptyObject = z.object({});
+export const zFreeFormObjectWithAdditionalPropertiesEqEmptyObject = z.object({});
 
-export const ModelWithConst = z.object({
+export const zModelWithConst = z.object({
     String: z.string().optional(),
     number: z.number().optional(),
     null: z.null().optional(),
     withType: z.string().optional()
 });
 
-export const ModelWithAdditionalPropertiesEqTrue = z.object({
+export const zModelWithAdditionalPropertiesEqTrue = z.object({
     prop: z.string().optional()
 });
 
-export const NestedAnyOfArraysNullable = z.object({
+export const zNestedAnyOfArraysNullable = z.object({
     nullableArray: z.unknown().optional()
 });
 
-export const CompositionWithOneOfAndProperties = z.unknown();
+export const zCompositionWithOneOfAndProperties = z.unknown();
 
-export const NullableObject = z.unknown();
+export const zNullableObject = z.unknown();
 
-export const CharactersInDescription = z.string();
+export const zCharactersInDescription = z.string();
 
-export const ModelWithNullableObject = z.object({
-    data: NullableObject.optional()
+export const zModelWithNullableObject = z.object({
+    data: zNullableObject.optional()
 });
 
-export const ModelWithOneOfEnum = z.unknown();
+export const zModelWithOneOfEnum = z.unknown();
 
-export const ModelWithNestedArrayEnumsDataFoo = z.enum([
+export const zModelWithNestedArrayEnumsDataFoo = z.enum([
     'foo',
     'bar'
 ]);
 
-export const ModelWithNestedArrayEnumsDataBar = z.enum([
+export const zModelWithNestedArrayEnumsDataBar = z.enum([
     'baz',
     'qux'
 ]);
 
-export const ModelWithNestedArrayEnumsData = z.object({
-    foo: z.array(ModelWithNestedArrayEnumsDataFoo).optional(),
-    bar: z.array(ModelWithNestedArrayEnumsDataBar).optional()
+export const zModelWithNestedArrayEnumsData = z.object({
+    foo: z.array(zModelWithNestedArrayEnumsDataFoo).optional(),
+    bar: z.array(zModelWithNestedArrayEnumsDataBar).optional()
 });
 
-export const ModelWithNestedArrayEnums = z.object({
+export const zModelWithNestedArrayEnums = z.object({
     array_strings: z.array(z.string()).optional(),
-    data: ModelWithNestedArrayEnumsData.optional()
+    data: zModelWithNestedArrayEnumsData.optional()
 });
 
-export const ModelWithNestedCompositionEnums = z.object({
-    foo: ModelWithNestedArrayEnumsDataFoo.optional()
+export const zModelWithNestedCompositionEnums = z.object({
+    foo: zModelWithNestedArrayEnumsDataFoo.optional()
 });
 
-export const ModelWithReadOnlyAndWriteOnly = z.object({
+export const zModelWithReadOnlyAndWriteOnly = z.object({
     foo: z.string(),
     bar: z.string().readonly(),
     baz: z.string()
 });
 
-export const ModelWithConstantSizeArray = z.unknown();
+export const zModelWithConstantSizeArray = z.unknown();
 
-export const ModelWithAnyOfConstantSizeArray = z.unknown();
+export const zModelWithAnyOfConstantSizeArray = z.unknown();
 
-export const ModelWithPrefixItemsConstantSizeArray = z.unknown();
+export const zModelWithPrefixItemsConstantSizeArray = z.unknown();
 
-export const ModelWithAnyOfConstantSizeArrayNullable = z.unknown();
+export const zModelWithAnyOfConstantSizeArrayNullable = z.unknown();
 
-export const ModelWithAnyOfConstantSizeArrayWithNSizeAndOptions = z.unknown();
+export const zModelWithAnyOfConstantSizeArrayWithNSizeAndOptions = z.unknown();
 
-export const ModelWithAnyOfConstantSizeArrayAndIntersect = z.unknown();
+export const zModelWithAnyOfConstantSizeArrayAndIntersect = z.unknown();
 
-export const ModelWithNumericEnumUnion = z.object({
+export const zModelWithNumericEnumUnion = z.object({
     value: z.unknown().optional()
 });
 
-export const ModelWithBackticksInDescription = z.object({
+export const zModelWithBackticksInDescription = z.object({
     template: z.string().optional()
 });
 
-export const ModelWithOneOfAndProperties = z.unknown();
+export const zModelWithOneOfAndProperties = z.unknown();
 
-export const ParameterSimpleParameterUnused = z.string();
+export const zParameterSimpleParameterUnused = z.string();
 
-export const PostServiceWithEmptyTagResponse = z.string();
+export const zPostServiceWithEmptyTagResponse = z.string();
 
-export const PostServiceWithEmptyTagResponse2 = z.string();
+export const zPostServiceWithEmptyTagResponse2 = z.string();
 
-export const DeleteFooData = z.string();
+export const zDeleteFooData = z.string();
 
-export const DeleteFooData2 = z.string();
+export const zDeleteFooData2 = z.string();
 
-export const _import = z.string();
+export const z_import = z.string();
 
-export const SchemaWithFormRestrictedKeys = z.object({
+export const zSchemaWithFormRestrictedKeys = z.object({
     description: z.string().optional(),
     'x-enum-descriptions': z.string().optional(),
     'x-enum-varnames': z.string().optional(),
@@ -483,38 +483,38 @@ export const SchemaWithFormRestrictedKeys = z.object({
     })).optional()
 });
 
-export const io_k8s_apimachinery_pkg_apis_meta_v1_DeleteOptions = z.object({
+export const zio_k8s_apimachinery_pkg_apis_meta_v1_DeleteOptions = z.object({
     preconditions: z.object({
         resourceVersion: z.string().optional(),
         uid: z.string().optional()
     }).optional()
 });
 
-export const io_k8s_apimachinery_pkg_apis_meta_v1_Preconditions = z.object({
+export const zio_k8s_apimachinery_pkg_apis_meta_v1_Preconditions = z.object({
     resourceVersion: z.string().optional(),
     uid: z.string().optional()
 });
 
-export const AdditionalPropertiesUnknownIssue = z.object({});
+export const zAdditionalPropertiesUnknownIssue = z.object({});
 
-export const AdditionalPropertiesUnknownIssue2 = z.object({});
+export const zAdditionalPropertiesUnknownIssue2 = z.object({});
 
-export const AdditionalPropertiesUnknownIssue3 = z.unknown();
+export const zAdditionalPropertiesUnknownIssue3 = z.unknown();
 
-export const AdditionalPropertiesIntegerIssue = z.object({
+export const zAdditionalPropertiesIntegerIssue = z.object({
     value: z.number()
 });
 
-export const OneOfAllOfIssue = z.unknown();
+export const zOneOfAllOfIssue = z.unknown();
 
-export const Generic_Schema_Duplicate_Issue_1_System_Boolean_ = z.object({
+export const zGeneric_Schema_Duplicate_Issue_1_System_Boolean_ = z.object({
     item: z.boolean().optional(),
     error: z.unknown().optional(),
     hasError: z.boolean().readonly().optional(),
     data: z.object({}).optional()
 });
 
-export const Generic_Schema_Duplicate_Issue_1_System_String_ = z.object({
+export const zGeneric_Schema_Duplicate_Issue_1_System_String_ = z.object({
     item: z.unknown().optional(),
     error: z.unknown().optional(),
     hasError: z.boolean().readonly().optional()
