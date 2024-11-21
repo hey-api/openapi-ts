@@ -70,8 +70,8 @@ const toQueryOptionsName = ({
 const toQueryKeyName = ({
   config,
   id,
-  operation,
   isInfinite,
+  operation,
 }: {
   config: Config;
   id: string;
@@ -645,8 +645,8 @@ const createTypeResponse = ({
 };
 
 const createQueryKeyLiteral = ({
-  isInfinite,
   id,
+  isInfinite,
 }: {
   id: string;
   isInfinite?: boolean;

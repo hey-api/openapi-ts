@@ -56,8 +56,8 @@ export const emptyModel: Model = {
 };
 
 const generateEnum = ({
-  leadingComment,
   comments,
+  leadingComment,
   meta,
   obj,
   onNode,

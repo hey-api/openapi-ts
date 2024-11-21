@@ -90,7 +90,7 @@ export class PetStoreComponent {
       return;
     }
 
-    const { name, category } = form.value as {
+    const { category, name } = form.value as {
       category: string;
       name: string;
     };

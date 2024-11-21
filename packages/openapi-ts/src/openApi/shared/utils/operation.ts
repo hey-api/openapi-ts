@@ -9,8 +9,8 @@ import { sanitizeNamespaceIdentifier } from '../../common/parser/sanitize';
  */
 export const operationToId = ({
   context,
-  method,
   id,
+  method,
   path,
 }: {
   context: IRContext;

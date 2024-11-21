@@ -7,7 +7,7 @@ describe('getServiceVersion', () => {
     { expected: '1.0', input: '1.0' },
     { expected: '1.2', input: 'v1.2' },
     { expected: '2.4', input: 'V2.4' },
-  ])('should get $expected when version is $input', ({ input, expected }) => {
+  ])('should get $expected when version is $input', ({ expected, input }) => {
     expect(getServiceVersion(input)).toEqual(expected);
   });
 });

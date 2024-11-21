@@ -40,7 +40,7 @@ describe('OpenAPI v2', () => {
       description: 'generate fetch client',
       name: 'v2',
     },
-  ])('$description', async ({ name, config }) => {
+  ])('$description', async ({ config, name }) => {
     const output = toOutputPath(name);
     await createClient({
       ...config,
@@ -468,7 +468,7 @@ describe('OpenAPI v3', () => {
 
   it.each(clientScenarios.concat(allScenarios))(
     '$description',
-    async ({ name, config }) => {
+    async ({ config, name }) => {
       const output = toOutputPath(name);
       await createClient({
         ...config,
@@ -484,7 +484,7 @@ describe('OpenAPI v3', () => {
 
   it.each(clientScenarios)(
     'transforms $description',
-    async ({ name, config }) => {
+    async ({ config, name }) => {
       const output = toOutputPath(name + '_transform');
 
       await createClient({

@@ -44,8 +44,44 @@ const parseSchemaMeta = ({
   irSchema: IRSchemaObject;
   schema: SchemaObject;
 }) => {
+  if (schema.default !== undefined) {
+    irSchema.default = schema.default;
+  }
+
+  if (schema.exclusiveMaximum) {
+    if (schema.maximum !== undefined) {
+      irSchema.exclusiveMaximum = schema.maximum;
+    }
+  } else if (schema.maximum !== undefined) {
+    irSchema.maximum = schema.maximum;
+  }
+
+  if (schema.exclusiveMinimum) {
+    if (schema.minimum !== undefined) {
+      irSchema.exclusiveMinimum = schema.minimum;
+    }
+  } else if (schema.minimum !== undefined) {
+    irSchema.minimum = schema.minimum;
+  }
+
   if (schema.format) {
     irSchema.format = schema.format;
+  }
+
+  if (schema.maxItems !== undefined) {
+    irSchema.maxItems = schema.maxItems;
+  }
+
+  if (schema.maxLength !== undefined) {
+    irSchema.maxLength = schema.maxLength;
+  }
+
+  if (schema.minItems !== undefined) {
+    irSchema.minItems = schema.minItems;
+  }
+
+  if (schema.minLength !== undefined) {
+    irSchema.minLength = schema.minLength;
   }
 
   if (schema.readOnly) {

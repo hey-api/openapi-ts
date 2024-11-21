@@ -23,7 +23,7 @@ const toCheck: { escaped: string; unescaped: string }[] = [
 describe('escapeName', () => {
   it.each(toCheck)(
     'should escape $unescaped to $escaped',
-    ({ unescaped, escaped }) => {
+    ({ escaped, unescaped }) => {
       expect(escapeName(unescaped)).toBe(escaped);
     },
   );
@@ -32,7 +32,7 @@ describe('escapeName', () => {
 describe('unescapeName', () => {
   it.each(toCheck)(
     'should unescape $escaped to $unescaped',
-    ({ unescaped, escaped }) => {
+    ({ escaped, unescaped }) => {
       expect(unescapeName(escaped)).toBe(unescaped);
     },
   );

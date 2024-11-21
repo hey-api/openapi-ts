@@ -84,9 +84,9 @@ export const createBinaryExpression = ({
 };
 
 export const createIfStatement = ({
+  elseStatement,
   expression,
   thenStatement,
-  elseStatement,
 }: {
   elseStatement?: ts.Statement;
   expression: ts.Expression;

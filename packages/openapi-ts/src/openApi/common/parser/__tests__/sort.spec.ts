@@ -30,7 +30,7 @@ describe('sort', () => {
     },
   ])(
     'should sort $input by required to produce $expected',
-    ({ input, expected }) => {
+    ({ expected, input }) => {
       expect(toSortedByRequired(input)).toEqual(expected);
     },
   );

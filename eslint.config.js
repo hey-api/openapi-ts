@@ -1,6 +1,7 @@
 import eslint from '@eslint/js';
 import configPrettier from 'eslint-config-prettier';
 import pluginSimpleImportSort from 'eslint-plugin-simple-import-sort';
+import pluginSortDestructureKeys from 'eslint-plugin-sort-destructure-keys';
 import pluginSortKeysFix from 'eslint-plugin-sort-keys-fix';
 import pluginTypeScriptSortKeys from 'eslint-plugin-typescript-sort-keys';
 // import pluginVue from 'eslint-plugin-vue'
@@ -19,6 +20,7 @@ export default tseslint.config(
     },
     plugins: {
       'simple-import-sort': pluginSimpleImportSort,
+      'sort-destructure-keys': pluginSortDestructureKeys,
       'sort-keys-fix': pluginSortKeysFix,
       'typescript-sort-keys': pluginTypeScriptSortKeys,
     },
@@ -38,6 +40,7 @@ export default tseslint.config(
       'object-shorthand': 'error',
       'simple-import-sort/exports': 'error',
       'simple-import-sort/imports': 'error',
+      'sort-destructure-keys/sort-destructure-keys': 'warn',
       'sort-imports': 'off',
       'sort-keys-fix/sort-keys-fix': 'warn',
       'typescript-sort-keys/interface': 'warn',
