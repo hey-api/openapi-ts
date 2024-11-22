@@ -13,9 +13,9 @@ export const generateClient = async (
     input: `./test/spec/${version}.json`,
     name,
     output: `./test/e2e/generated/${dir}/`,
-    plugins: ['@hey-api/types', '@hey-api/schemas', {
+    plugins: ['@hey-api/typescript', '@hey-api/schemas', {
       asClass: true,
-      name: '@hey-api/services',
+      name: '@hey-api/sdk',
     }],
     useOptions
   })

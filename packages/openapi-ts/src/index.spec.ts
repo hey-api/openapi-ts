@@ -29,8 +29,8 @@ describe('index', () => {
       output: './generated/v3/',
       plugins: [
         '@hey-api/schemas',
-        '@hey-api/services',
-        '@hey-api/types',
+        '@hey-api/sdk',
+        '@hey-api/typescript',
         {
           dates: true,
           name: '@hey-api/transformers',

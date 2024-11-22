@@ -126,12 +126,12 @@ for (const version of versions) {
             '@tanstack/angular-query-experimental',
             {
               asClass: true,
-              name: '@hey-api/services',
+              name: '@hey-api/sdk',
             },
           ],
         }),
         description:
-          'generate Fetch API client with TanStack Angular Query Experimental plugin using class-based services',
+          'generate Fetch API client with TanStack Angular Query Experimental plugin using class-based SDKs',
       },
       {
         config: createConfig({
@@ -140,12 +140,12 @@ for (const version of versions) {
             '@tanstack/react-query',
             {
               asClass: true,
-              name: '@hey-api/services',
+              name: '@hey-api/sdk',
             },
           ],
         }),
         description:
-          'generate Fetch API client with TanStack React Query plugin using class-based services',
+          'generate Fetch API client with TanStack React Query plugin using class-based SDKs',
       },
       {
         config: createConfig({
@@ -154,12 +154,12 @@ for (const version of versions) {
             '@tanstack/solid-query',
             {
               asClass: true,
-              name: '@hey-api/services',
+              name: '@hey-api/sdk',
             },
           ],
         }),
         description:
-          'generate Fetch API client with TanStack Solid Query plugin using class-based services',
+          'generate Fetch API client with TanStack Solid Query plugin using class-based SDKs',
       },
       {
         config: createConfig({
@@ -168,12 +168,12 @@ for (const version of versions) {
             '@tanstack/svelte-query',
             {
               asClass: true,
-              name: '@hey-api/services',
+              name: '@hey-api/sdk',
             },
           ],
         }),
         description:
-          'generate Fetch API client with TanStack Svelte Query plugin using class-based services',
+          'generate Fetch API client with TanStack Svelte Query plugin using class-based SDKs',
       },
       {
         config: createConfig({
@@ -182,12 +182,12 @@ for (const version of versions) {
             '@tanstack/vue-query',
             {
               asClass: true,
-              name: '@hey-api/services',
+              name: '@hey-api/sdk',
             },
           ],
         }),
         description:
-          'generate Fetch API client with TanStack Vue Query plugin using class-based services',
+          'generate Fetch API client with TanStack Vue Query plugin using class-based SDKs',
       },
       {
         config: createConfig({
@@ -199,9 +199,9 @@ for (const version of versions) {
       {
         config: createConfig({
           output: 'default',
-          plugins: ['@hey-api/services'],
+          plugins: ['@hey-api/sdk'],
         }),
-        description: 'generate services',
+        description: 'generate SDK',
       },
       {
         config: createConfig({
@@ -252,7 +252,7 @@ for (const version of versions) {
         name: string;
         output: string;
       }> = {
-        _dependencies: ['@hey-api/types'],
+        _dependencies: ['@hey-api/typescript'],
         _handler: vi.fn(),
         _handlerLegacy: vi.fn(),
         customOption: true,
@@ -308,7 +308,7 @@ for (const version of versions) {
       }> = {
         _handler: vi.fn(),
         _handlerLegacy: vi.fn(),
-        name: '@hey-api/types',
+        name: '@hey-api/typescript',
         output: 'my-plugin',
       };
 

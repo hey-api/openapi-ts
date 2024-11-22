@@ -57,17 +57,17 @@ You can now run `openapi-ts` to use the new Fetch API client. 🎉
 
 ## Configuration
 
-If you're using services, you will want to configure the internal client instance. You can do that with the `setConfig()` method. Call it at the beginning of your application.
+If you're using SDKs, you will want to configure the internal client instance. You can do that with the `setConfig()` method. Call it at the beginning of your application.
 
 ```js
-import { client } from 'client/services.gen';
+import { client } from 'client/sdk.gen';
 
 client.setConfig({
   baseUrl: 'https://example.com',
 });
 ```
 
-If you aren't using services, you can create your own client instance.
+If you aren't using SDKs, you can create your own client instance.
 
 ```js
 import { createClient } from '@hey-api/client-fetch';
@@ -84,7 +84,7 @@ Interceptors (middleware) can be used to modify requests before they're sent or 
 ::: code-group
 
 ```js [use]
-import { client } from 'client/services.gen';
+import { client } from 'client/sdk.gen';
 
 client.interceptors.request.use((request, options) => {
   request.headers.set('Authorization', 'Bearer <my_token>');
@@ -93,7 +93,7 @@ client.interceptors.request.use((request, options) => {
 ```
 
 ```js [eject]
-import { client } from 'client/services.gen';
+import { client } from 'client/sdk.gen';
 
 client.interceptors.request.eject((request, options) => {
   request.headers.set('Authorization', 'Bearer <my_token>');
@@ -108,7 +108,7 @@ and an example response interceptor
 ::: code-group
 
 ```js [use]
-import { client } from 'client/services.gen';
+import { client } from 'client/sdk.gen';
 
 client.interceptors.response.use((response, request, options) => {
   trackAnalytics(response);
@@ -117,7 +117,7 @@ client.interceptors.response.use((response, request, options) => {
 ```
 
 ```js [eject]
-import { client } from 'client/services.gen';
+import { client } from 'client/sdk.gen';
 
 client.interceptors.response.eject((response, request, options) => {
   trackAnalytics(response);
@@ -133,14 +133,14 @@ To eject, you must provide a reference to the function that was passed to `use()
 
 ## Customization
 
-Our Fetch client is built as a thin wrapper on top of Fetch API, extending its functionality to work with Hey API. If you're already familiar with Fetch, customizing your client will feel like working directly with Fetch API. You can customize requests in three ways – through services, per client, or per request.
+Our Fetch client is built as a thin wrapper on top of Fetch API, extending its functionality to work with Hey API. If you're already familiar with Fetch, customizing your client will feel like working directly with Fetch API. You can customize requests in three ways – through SDKs, per client, or per request.
 
-### Services
+### SDKs
 
-This is the most common requirement. Our generated services consume an internal Fetch instance, so you will want to configure that.
+This is the most common requirement. The generated SDKs consume an internal Fetch instance, so you will want to configure that.
 
 ```js
-import { client } from 'client/services.gen';
+import { client } from 'client/sdk.gen';
 
 client.setConfig({
   baseUrl: 'https://example.com',
@@ -161,7 +161,7 @@ const myClient = createClient({
 });
 ```
 
-You can then pass this instance to any generated service through the `client` option. This will override the internal instance.
+You can then pass this instance to any SDK function through the `client` option. This will override the internal instance.
 
 ```js
 const response = await getFoo({
@@ -171,7 +171,7 @@ const response = await getFoo({
 
 ### Request
 
-Alternatively, you can pass the Fetch API configuration options to each service call directly. This is useful if you don't want to create a separate client for one-off use cases.
+Alternatively, you can pass the Fetch API configuration options to each SDK function. This is useful if you don't want to create a client instance for one-off use cases.
 
 ```js
 const response = await getFoo({

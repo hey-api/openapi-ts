@@ -25,23 +25,23 @@ describe('registerHandlebarHelpers', () => {
         format: 'prettier',
         path: '',
       },
-      pluginOrder: ['@hey-api/types', '@hey-api/schemas', '@hey-api/services'],
+      pluginOrder: ['@hey-api/typescript', '@hey-api/schemas', '@hey-api/sdk'],
       plugins: {
         '@hey-api/schemas': {
           _handler: () => {},
           _handlerLegacy: () => {},
           name: '@hey-api/schemas',
         },
-        '@hey-api/services': {
+        '@hey-api/sdk': {
           _handler: () => {},
           _handlerLegacy: () => {},
-          name: '@hey-api/services',
+          name: '@hey-api/sdk',
         },
-        '@hey-api/types': {
+        '@hey-api/typescript': {
           _handler: () => {},
           _handlerLegacy: () => {},
           enums: 'javascript',
-          name: '@hey-api/types',
+          name: '@hey-api/typescript',
         },
       },
       useOptions: false,
@@ -75,23 +75,23 @@ describe('registerHandlebarTemplates', () => {
         format: 'prettier',
         path: '',
       },
-      pluginOrder: ['@hey-api/types', '@hey-api/schemas', '@hey-api/services'],
+      pluginOrder: ['@hey-api/typescript', '@hey-api/schemas', '@hey-api/sdk'],
       plugins: {
         '@hey-api/schemas': {
           _handler: () => {},
           _handlerLegacy: () => {},
           name: '@hey-api/schemas',
         },
-        '@hey-api/services': {
+        '@hey-api/sdk': {
           _handler: () => {},
           _handlerLegacy: () => {},
-          name: '@hey-api/services',
+          name: '@hey-api/sdk',
         },
-        '@hey-api/types': {
+        '@hey-api/typescript': {
           _handler: () => {},
           _handlerLegacy: () => {},
           enums: 'javascript',
-          name: '@hey-api/types',
+          name: '@hey-api/typescript',
         },
       },
       useOptions: false,

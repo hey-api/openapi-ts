@@ -210,7 +210,7 @@ const toOperationReturnType = (client: Client, operation: Operation) => {
 
   if (
     config.useOptions &&
-    config.plugins['@hey-api/services']?.response === 'response'
+    config.plugins['@hey-api/sdk']?.response === 'response'
   ) {
     returnType = compiler.typeNode('ApiResult', [returnType]);
   }
@@ -496,8 +496,8 @@ export const serviceFunctionIdentifier = ({
   id: string;
   operation: IROperationObject | Operation;
 }) => {
-  if (config.plugins['@hey-api/services']?.methodNameBuilder) {
-    return config.plugins['@hey-api/services'].methodNameBuilder(operation);
+  if (config.plugins['@hey-api/sdk']?.methodNameBuilder) {
+    return config.plugins['@hey-api/sdk'].methodNameBuilder(operation);
   }
 
   if (handleIllegal && id.match(reservedWordsRegExp)) {
@@ -656,7 +656,7 @@ const processService = ({
   };
 
   if (
-    !config.plugins['@hey-api/services']?.asClass &&
+    !config.plugins['@hey-api/sdk']?.asClass &&
     !legacyNameFromConfig(config)
   ) {
     for (const operation of service.operations) {
@@ -776,63 +776,63 @@ export const handlerLegacy: PluginLegacyHandler<any> = ({ client, files }) => {
 
   if (!config.client.name) {
     throw new Error(
-      '🚫 client needs to be set to generate services - which HTTP client do you want to use?',
+      '🚫 client needs to be set to generate SDKs - which HTTP client do you want to use?',
     );
   }
 
   const isLegacy = isLegacyClient(config);
 
-  const servicesOutput = 'services';
+  const sdkOutput = 'sdk';
 
-  files.services = new TypeScriptFile({
+  files.sdk = new TypeScriptFile({
     dir: config.output.path,
-    name: `${servicesOutput}.ts`,
+    name: `${sdkOutput}.ts`,
   });
 
   // Import required packages and core files.
   if (!isLegacy) {
-    files.services.import({
-      module: clientModulePath({ config, sourceOutput: servicesOutput }),
+    files.sdk.import({
+      module: clientModulePath({ config, sourceOutput: sdkOutput }),
       name: 'createClient',
     });
-    files.services.import({
-      module: clientModulePath({ config, sourceOutput: servicesOutput }),
+    files.sdk.import({
+      module: clientModulePath({ config, sourceOutput: sdkOutput }),
       name: 'createConfig',
     });
-    files.services.import({
+    files.sdk.import({
       asType: true,
-      module: clientModulePath({ config, sourceOutput: servicesOutput }),
+      module: clientModulePath({ config, sourceOutput: sdkOutput }),
       name: clientOptionsTypeName(),
     });
   } else {
     if (config.client.name === 'legacy/angular') {
-      files.services.import({
+      files.sdk.import({
         module: '@angular/core',
         name: 'Injectable',
       });
 
       if (!legacyNameFromConfig(config)) {
-        files.services.import({
+        files.sdk.import({
           module: '@angular/common/http',
           name: 'HttpClient',
         });
       }
 
-      files.services.import({
+      files.sdk.import({
         asType: true,
         module: 'rxjs',
         name: 'Observable',
       });
     } else {
-      files.services.import({
+      files.sdk.import({
         asType: true,
         module: './core/CancelablePromise',
         name: 'CancelablePromise',
       });
     }
 
-    if (config.plugins['@hey-api/services']?.response === 'response') {
-      files.services.import({
+    if (config.plugins['@hey-api/sdk']?.response === 'response') {
+      files.sdk.import({
         asType: true,
         module: './core/ApiResult',
         name: 'ApiResult',
@@ -840,17 +840,17 @@ export const handlerLegacy: PluginLegacyHandler<any> = ({ client, files }) => {
     }
 
     if (legacyNameFromConfig(config)) {
-      files.services.import({
+      files.sdk.import({
         asType: config.client.name !== 'legacy/angular',
         module: './core/BaseHttpRequest',
         name: 'BaseHttpRequest',
       });
     } else {
-      files.services.import({
+      files.sdk.import({
         module: './core/OpenAPI',
         name: 'OpenAPI',
       });
-      files.services.import({
+      files.sdk.import({
         alias: '__request',
         module: './core/request',
         name: 'request',
@@ -872,20 +872,20 @@ export const handlerLegacy: PluginLegacyHandler<any> = ({ client, files }) => {
       }),
       name: 'client',
     });
-    files.services.add(statement);
+    files.sdk.add(statement);
   }
 
   for (const service of client.services) {
     processService({
       client,
       onClientImport: (imported) => {
-        files.services.import({
-          module: clientModulePath({ config, sourceOutput: servicesOutput }),
+        files.sdk.import({
+          module: clientModulePath({ config, sourceOutput: sdkOutput }),
           name: imported,
         });
       },
       onImport: (imported) => {
-        files.services.import({
+        files.sdk.import({
           // this detection could be done safer, but it shouldn't cause any issues
           asType: !imported.endsWith('Transformer'),
           module: `./${files.types.nameWithoutExtension()}`,
@@ -893,7 +893,7 @@ export const handlerLegacy: PluginLegacyHandler<any> = ({ client, files }) => {
         });
       },
       onNode: (node) => {
-        files.services.add(node);
+        files.sdk.add(node);
       },
       service,
     });

@@ -4,14 +4,14 @@
   <p align="center">🚀 The OpenAPI to TypeScript codegen. Generate clients, SDKs, validators, and more.</p>
 </div>
 
-[Live demo](https://stackblitz.com/edit/hey-api-example?file=openapi-ts.config.ts,src%2Fclient%2Fschemas.gen.ts,src%2Fclient%2Fservices.gen.ts,src%2Fclient%2Ftypes.gen.ts)
+[Live demo](https://stackblitz.com/edit/hey-api-example?file=openapi-ts.config.ts,src%2Fclient%2Fschemas.gen.ts,src%2Fclient%2Fsdk.gen.ts,src%2Fclient%2Ftypes.gen.ts)
 
 ## Features
 
 - works with CLI, Node.js 18+, or npx
 - supports OpenAPI 2.0, 3.0, and 3.1 specifications
 - supports both JSON and YAML input files
-- generates TypeScript interfaces, REST clients, and JSON Schemas
+- generates TypeScript interfaces, SDKs, and JSON Schemas
 - Fetch API, Axios, Angular, Node.js, and XHR clients available
 - plugin ecosystem to reduce third-party boilerplate
 

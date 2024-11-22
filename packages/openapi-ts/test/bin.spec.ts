@@ -112,8 +112,8 @@ describe('bin', () => {
       'true',
       '--plugins',
       '@hey-api/schemas',
-      '@hey-api/services',
-      '@hey-api/types',
+      '@hey-api/sdk',
+      '@hey-api/typescript',
       '--dry-run',
       'true',
     ]);
@@ -209,8 +209,8 @@ describe('cli', () => {
     expect(result.stderr.toString()).toContain('debug: true');
     expect(result.stderr.toString()).toContain('dryRun: true');
     expect(result.stderr.toString()).toContain('exportCore: false');
-    expect(result.stderr.toString()).not.toContain('@hey-api/types');
-    expect(result.stderr.toString()).not.toContain('@hey-api/services');
+    expect(result.stderr.toString()).not.toContain('@hey-api/typescript');
+    expect(result.stderr.toString()).not.toContain('@hey-api/sdk');
     expect(result.stderr.toString()).not.toContain('@hey-api/schemas');
     expect(result.stderr.toString()).toContain('useOptions: false');
   });
@@ -229,8 +229,8 @@ describe('cli', () => {
       'true',
       '--plugins',
       '@hey-api/schemas',
-      '@hey-api/services',
-      '@hey-api/types',
+      '@hey-api/sdk',
+      '@hey-api/typescript',
       '--useOptions',
       'true',
       '--dry-run',
@@ -239,8 +239,8 @@ describe('cli', () => {
     expect(result.stderr.toString()).toContain('debug: true');
     expect(result.stderr.toString()).toContain('dryRun: true');
     expect(result.stderr.toString()).toContain('exportCore: true');
-    expect(result.stderr.toString()).toContain('@hey-api/types');
-    expect(result.stderr.toString()).toContain('@hey-api/services');
+    expect(result.stderr.toString()).toContain('@hey-api/typescript');
+    expect(result.stderr.toString()).toContain('@hey-api/sdk');
     expect(result.stderr.toString()).toContain('@hey-api/schemas');
     expect(result.stderr.toString()).toContain('useOptions: true');
   });
@@ -258,8 +258,8 @@ describe('cli', () => {
       '--exportCore',
       '--plugins',
       '@hey-api/schemas',
-      '@hey-api/services',
-      '@hey-api/types',
+      '@hey-api/sdk',
+      '@hey-api/typescript',
       '--useOptions',
       '--dry-run',
       'true',
@@ -268,8 +268,8 @@ describe('cli', () => {
     expect(result.stderr.toString()).toContain('dryRun: true');
     expect(result.stderr.toString()).toContain('exportCore: true');
     expect(result.stderr.toString()).toContain('@hey-api/schemas');
-    expect(result.stderr.toString()).toContain('@hey-api/services');
-    expect(result.stderr.toString()).toContain('@hey-api/types');
+    expect(result.stderr.toString()).toContain('@hey-api/sdk');
+    expect(result.stderr.toString()).toContain('@hey-api/typescript');
     expect(result.stderr.toString()).toContain('useOptions: true');
   });
 });

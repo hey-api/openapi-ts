@@ -23,7 +23,7 @@ import {
   operationDataTypeName,
   operationErrorTypeName,
   operationResponseTypeName,
-} from '../services/plugin-legacy';
+} from '../sdk/plugin-legacy';
 import type { Config } from './types';
 
 export interface TypesProps {
@@ -136,7 +136,9 @@ const processComposition = (props: TypesProps) => {
   processType(props);
 
   props.model.enums.forEach((enumerator) => {
-    if (config.plugins['@hey-api/types']?.enums !== 'typescript+namespace') {
+    if (
+      config.plugins['@hey-api/typescript']?.enums !== 'typescript+namespace'
+    ) {
       return processEnum({
         ...props,
         model: enumerator,
@@ -182,8 +184,8 @@ const processEnum = ({ client, model, onNode }: TypesProps) => {
   ];
 
   if (
-    config.plugins['@hey-api/types']?.enums === 'typescript' ||
-    config.plugins['@hey-api/types']?.enums === 'typescript+namespace'
+    config.plugins['@hey-api/typescript']?.enums === 'typescript' ||
+    config.plugins['@hey-api/typescript']?.enums === 'typescript+namespace'
   ) {
     generateEnum({
       client,
@@ -202,7 +204,7 @@ const processEnum = ({ client, model, onNode }: TypesProps) => {
     meta: model.meta,
     onCreated: (name) => {
       // create a separate JavaScript object export
-      if (config.plugins['@hey-api/types']?.enums === 'javascript') {
+      if (config.plugins['@hey-api/typescript']?.enums === 'javascript') {
         const expression = compiler.objectExpression({
           multiLine: true,
           obj: Object.entries(properties).map(([key, value]) => ({
@@ -299,8 +301,8 @@ const processServiceTypes = ({
   const config = getConfig();
 
   if (
-    !config.plugins['@hey-api/services'] &&
-    !config.plugins['@hey-api/types']?.tree
+    !config.plugins['@hey-api/sdk'] &&
+    !config.plugins['@hey-api/typescript']?.tree
   ) {
     return;
   }
@@ -588,7 +590,7 @@ const processServiceTypes = ({
     return pathKey;
   });
 
-  if (config.plugins['@hey-api/types']?.tree) {
+  if (config.plugins['@hey-api/typescript']?.tree) {
     generateType({
       client,
       meta: {

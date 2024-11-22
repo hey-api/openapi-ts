@@ -165,8 +165,8 @@ export const operationFilterFn = ({
   config: Config;
   operationKey: string;
 }): boolean => {
-  const regexp = config.plugins['@hey-api/services']?.filter
-    ? new RegExp(config.plugins['@hey-api/services']?.filter)
+  const regexp = config.plugins['@hey-api/sdk']?.filter
+    ? new RegExp(config.plugins['@hey-api/sdk']?.filter)
     : undefined;
   return !regexp || regexp.test(operationKey);
 };
@@ -187,7 +187,7 @@ export const operationNameFn = ({
   operationId: string | undefined;
   path: string;
 }): string => {
-  if (config.plugins['@hey-api/services']?.operationId && operationId) {
+  if (config.plugins['@hey-api/sdk']?.operationId && operationId) {
     return camelCase({
       input: sanitizeNamespaceIdentifier(operationId),
     });

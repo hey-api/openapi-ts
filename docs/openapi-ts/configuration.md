@@ -194,7 +194,7 @@ You can also prevent your output from being linted by adding your output path to
 
 ## Clients
 
-Clients are responsible for sending the actual HTTP requests. The `client` value is not required, but you must define it if you're generating the service layer (enabled by default).
+Clients are responsible for sending the actual HTTP requests. The `client` value is not required, but you must define it if you're generating SDKs (enabled by default).
 
 You can learn more on the [Clients](/openapi-ts/clients) page.
 
@@ -225,7 +225,7 @@ export default defineConfig([
 
 ## Plugins
 
-Plugins are responsible for generating artifacts from your input. By default, Hey API will generate TypeScript interfaces, JSON Schemas, and services from your OpenAPI specification. You can add, remove, or customize any of the plugins. In fact, we highly encourage you to do so!
+Plugins are responsible for generating artifacts from your input. By default, Hey API will generate TypeScript interfaces, an SDK, and JSON Schemas from your OpenAPI specification. You can add, remove, or customize any of the plugins. In fact, we highly encourage you to do so!
 
 You can learn more on the [Output](/openapi-ts/output) page.
 
