@@ -93,6 +93,39 @@ describe(`OpenAPI ${VERSION}`, () => {
     },
     {
       config: createConfig({
+        input: 'enum-names.json',
+        output: 'enum-names',
+      }),
+      description: 'handles enum names',
+    },
+    {
+      config: createConfig({
+        input: 'enum-names.json',
+        output: 'enum-names-javascript',
+        plugins: [
+          {
+            enums: 'javascript',
+            name: '@hey-api/typescript',
+          },
+        ],
+      }),
+      description: 'handles enum names (JavaScript)',
+    },
+    {
+      config: createConfig({
+        input: 'enum-names.json',
+        output: 'enum-names-typescript',
+        plugins: [
+          {
+            enums: 'typescript',
+            name: '@hey-api/typescript',
+          },
+        ],
+      }),
+      description: 'handles enum names (TypeScript)',
+    },
+    {
+      config: createConfig({
         input: 'enum-null.json',
         output: 'enum-null',
       }),

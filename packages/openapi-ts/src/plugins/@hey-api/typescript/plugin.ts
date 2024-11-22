@@ -10,7 +10,6 @@ import type {
 } from '../../../ir/ir';
 import { operationResponsesMap } from '../../../ir/operation';
 import { deduplicateSchema } from '../../../ir/schema';
-import { ensureValidTypeScriptJavaScriptIdentifier } from '../../../openApi';
 import { escapeComment } from '../../../utils/escape';
 import { irRef, isRefOpenApiComponent } from '../../../utils/ref';
 import type { PluginHandler } from '../../types';
@@ -94,6 +93,7 @@ const schemaToEnumObject = ({ schema }: { schema: IRSchemaObject }) => {
     }
 
     let key;
+
     if (item.title) {
       key = item.title;
     } else if (typeOfItemConst === 'number') {
@@ -101,16 +101,11 @@ const schemaToEnumObject = ({ schema }: { schema: IRSchemaObject }) => {
     } else if (typeOfItemConst === 'boolean') {
       const valid = typeOfItemConst ? 'true' : 'false';
       key = valid.toLocaleUpperCase();
-    } else {
-      let valid = ensureValidTypeScriptJavaScriptIdentifier(
-        item.const as string,
-      );
-      if (!valid) {
-        // TODO: parser - abstract empty string handling
-        valid = 'empty_string';
-      }
-      key = valid.toLocaleUpperCase();
+    } else if (typeof item.const === 'string') {
+      key = item.const.replace(/(\p{Lowercase})(\p{Uppercase}+)/gu, '$1_$2');
+      key = key.toLocaleUpperCase();
     }
+
     return {
       comments: parseSchemaJsDoc({ schema: item }),
       key,
