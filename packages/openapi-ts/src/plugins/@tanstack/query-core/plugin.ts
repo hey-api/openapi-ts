@@ -881,6 +881,9 @@ export const handler: PluginHandler<
         const typePageParam = `${tsNodeToString({
           node: schemaToType({
             context,
+            plugin: context.config.plugins['@hey-api/typescript'] as Parameters<
+              typeof schemaToType
+            >[0]['plugin'],
             schema: pagination.schema,
           }),
           unescape: true,

@@ -16,6 +16,8 @@ import type { PluginHandler } from '../../types';
 import { operationIrRef } from '../sdk/plugin';
 import type { Config } from './types';
 
+type Plugin = Parameters<PluginHandler<Config>>[0]['plugin'];
+
 interface SchemaWithType<T extends Required<IRSchemaObject>['type']>
   extends Omit<IRSchemaObject, 'type'> {
   type: Extract<Required<IRSchemaObject>['type'], T>;
@@ -122,10 +124,12 @@ const schemaToEnumObject = ({ schema }: { schema: IRSchemaObject }) => {
 const addTypeEnum = ({
   $ref,
   context,
+  plugin,
   schema,
 }: {
   $ref: string;
   context: IRContext;
+  plugin: Plugin;
   schema: SchemaWithType<'enum'>;
 }) => {
   const identifier = context.file({ id: typesId })!.identifier({
@@ -142,8 +146,7 @@ const addTypeEnum = ({
   if (
     !identifier.created &&
     !isRefOpenApiComponent($ref) &&
-    context.config.plugins['@hey-api/typescript']?.enums !==
-      'typescript+namespace'
+    plugin.enums !== 'typescript+namespace'
   ) {
     return;
   }
@@ -154,6 +157,7 @@ const addTypeEnum = ({
     name: identifier.name || '',
     type: schemaToType({
       context,
+      plugin,
       schema: {
         ...schema,
         type: undefined,
@@ -166,10 +170,12 @@ const addTypeEnum = ({
 const addTypeScriptEnum = ({
   $ref,
   context,
+  plugin,
   schema,
 }: {
   $ref: string;
   context: IRContext;
+  plugin: Plugin;
   schema: SchemaWithType<'enum'>;
 }) => {
   const identifier = context.file({ id: typesId })!.identifier({
@@ -183,11 +189,7 @@ const addTypeScriptEnum = ({
   // blocker for referencing these identifiers within the file as
   // we cannot guarantee just because they have a duplicate identifier,
   // they have a duplicate value.
-  if (
-    !identifier.created &&
-    context.config.plugins['@hey-api/typescript']?.enums !==
-      'typescript+namespace'
-  ) {
+  if (!identifier.created && plugin.enums !== 'typescript+namespace') {
     return;
   }
 
@@ -202,6 +204,7 @@ const addTypeScriptEnum = ({
     const node = addTypeEnum({
       $ref,
       context,
+      plugin,
       schema,
     });
     return node;
@@ -218,10 +221,12 @@ const addTypeScriptEnum = ({
 const arrayTypeToIdentifier = ({
   context,
   namespace,
+  plugin,
   schema,
 }: {
   context: IRContext;
   namespace: Array<ts.Statement>;
+  plugin: Plugin;
   schema: SchemaWithType<'array'>;
 }) => {
   if (!schema.items) {
@@ -239,6 +244,7 @@ const arrayTypeToIdentifier = ({
     schemaToType({
       context,
       namespace,
+      plugin,
       schema: item,
     }),
   );
@@ -278,26 +284,26 @@ const enumTypeToIdentifier = ({
   $ref,
   context,
   namespace,
+  plugin,
   schema,
 }: {
   $ref?: string;
   context: IRContext;
   namespace: Array<ts.Statement>;
+  plugin: Plugin;
   schema: SchemaWithType<'enum'>;
 }): ts.TypeNode => {
-  // TODO: parser - add option to inline enums
-  if ($ref) {
-    const isRefComponent = isRefOpenApiComponent($ref);
+  const isRefComponent = $ref ? isRefOpenApiComponent($ref) : false;
+  const shouldExportEnum = isRefComponent || Boolean(plugin.exportInlineEnums);
 
+  if ($ref && shouldExportEnum) {
     // when enums are disabled (default), emit only reusable components
     // as types, otherwise the output would be broken if we skipped all enums
-    if (
-      !context.config.plugins['@hey-api/typescript']?.enums &&
-      isRefComponent
-    ) {
+    if (!plugin.enums) {
       const typeNode = addTypeEnum({
         $ref,
         context,
+        plugin,
         schema,
       });
       if (typeNode) {
@@ -305,10 +311,11 @@ const enumTypeToIdentifier = ({
       }
     }
 
-    if (context.config.plugins['@hey-api/typescript']?.enums === 'javascript') {
+    if (plugin.enums === 'javascript') {
       const typeNode = addTypeEnum({
         $ref,
         context,
+        plugin,
         schema,
       });
       if (typeNode) {
@@ -325,10 +332,11 @@ const enumTypeToIdentifier = ({
       }
     }
 
-    if (context.config.plugins['@hey-api/typescript']?.enums === 'typescript') {
+    if (plugin.enums === 'typescript') {
       const enumNode = addTypeScriptEnum({
         $ref,
         context,
+        plugin,
         schema,
       });
       if (enumNode) {
@@ -336,13 +344,11 @@ const enumTypeToIdentifier = ({
       }
     }
 
-    if (
-      context.config.plugins['@hey-api/typescript']?.enums ===
-      'typescript+namespace'
-    ) {
+    if (plugin.enums === 'typescript+namespace') {
       const enumNode = addTypeScriptEnum({
         $ref,
         context,
+        plugin,
         schema,
       });
       if (enumNode) {
@@ -358,6 +364,7 @@ const enumTypeToIdentifier = ({
 
   const type = schemaToType({
     context,
+    plugin,
     schema: {
       ...schema,
       type: undefined,
@@ -387,10 +394,12 @@ const numberTypeToIdentifier = ({
 const objectTypeToIdentifier = ({
   context,
   namespace,
+  plugin,
   schema,
 }: {
   context: IRContext;
   namespace: Array<ts.Statement>;
+  plugin: Plugin;
   schema: SchemaWithType<'object'>;
 }) => {
   let indexProperty: Property | undefined;
@@ -414,6 +423,7 @@ const objectTypeToIdentifier = ({
         $ref: `${irRef}${name}`,
         context,
         namespace,
+        plugin,
         schema: property,
       }),
     });
@@ -446,6 +456,7 @@ const objectTypeToIdentifier = ({
       type: schemaToType({
         context,
         namespace,
+        plugin,
         schema:
           indexPropertyItems.length === 1
             ? indexPropertyItems[0]
@@ -508,10 +519,12 @@ const stringTypeToIdentifier = ({
 const tupleTypeToIdentifier = ({
   context,
   namespace,
+  plugin,
   schema,
 }: {
   context: IRContext;
   namespace: Array<ts.Statement>;
+  plugin: Plugin;
   schema: SchemaWithType<'tuple'>;
 }) => {
   const itemTypes: Array<ts.TypeNode> = [];
@@ -521,6 +534,7 @@ const tupleTypeToIdentifier = ({
       schemaToType({
         context,
         namespace,
+        plugin,
         schema: item,
       }),
     );
@@ -535,11 +549,13 @@ const schemaTypeToIdentifier = ({
   $ref,
   context,
   namespace,
+  plugin,
   schema,
 }: {
   $ref?: string;
   context: IRContext;
   namespace: Array<ts.Statement>;
+  plugin: Plugin;
   schema: IRSchemaObject;
 }): ts.TypeNode => {
   switch (schema.type as Required<IRSchemaObject>['type']) {
@@ -547,6 +563,7 @@ const schemaTypeToIdentifier = ({
       return arrayTypeToIdentifier({
         context,
         namespace,
+        plugin,
         schema: schema as SchemaWithType<'array'>,
       });
     case 'boolean':
@@ -560,6 +577,7 @@ const schemaTypeToIdentifier = ({
         $ref,
         context,
         namespace,
+        plugin,
         schema: schema as SchemaWithType<'enum'>,
       });
     case 'never':
@@ -580,6 +598,7 @@ const schemaTypeToIdentifier = ({
       return objectTypeToIdentifier({
         context,
         namespace,
+        plugin,
         schema: schema as SchemaWithType<'object'>,
       });
     case 'string':
@@ -592,6 +611,7 @@ const schemaTypeToIdentifier = ({
       return tupleTypeToIdentifier({
         context,
         namespace,
+        plugin,
         schema: schema as SchemaWithType<'tuple'>,
       });
     case 'undefined':
@@ -647,9 +667,11 @@ const irParametersToIrSchema = ({
 const operationToDataType = ({
   context,
   operation,
+  plugin,
 }: {
   context: IRContext;
   operation: IROperationObject;
+  plugin: Plugin;
 }) => {
   const data: IRSchemaObject = {
     type: 'object',
@@ -733,6 +755,7 @@ const operationToDataType = ({
       name: identifier.name || '',
       type: schemaToType({
         context,
+        plugin,
         schema: data,
       }),
     });
@@ -743,13 +766,16 @@ const operationToDataType = ({
 const operationToType = ({
   context,
   operation,
+  plugin,
 }: {
   context: IRContext;
   operation: IROperationObject;
+  plugin: Plugin;
 }) => {
   operationToDataType({
     context,
     operation,
+    plugin,
   });
 
   const file = context.file({ id: typesId })!;
@@ -769,6 +795,7 @@ const operationToType = ({
         name: identifierErrors.name,
         type: schemaToType({
           context,
+          plugin,
           schema: errors,
         }),
       });
@@ -814,6 +841,7 @@ const operationToType = ({
         name: identifierResponses.name,
         type: schemaToType({
           context,
+          plugin,
           schema: responses,
         }),
       });
@@ -852,11 +880,13 @@ export const schemaToType = ({
   $ref,
   context,
   namespace = [],
+  plugin,
   schema,
 }: {
   $ref?: string;
   context: IRContext;
   namespace?: Array<ts.Statement>;
+  plugin: Plugin;
   schema: IRSchemaObject;
 }): ts.TypeNode => {
   let type: ts.TypeNode | undefined;
@@ -875,6 +905,7 @@ export const schemaToType = ({
       $ref,
       context,
       namespace,
+      plugin,
       schema,
     });
   } else if (schema.items) {
@@ -884,6 +915,7 @@ export const schemaToType = ({
         schemaToType({
           context,
           namespace,
+          plugin,
           schema: item,
         }),
       );
@@ -895,6 +927,7 @@ export const schemaToType = ({
       type = schemaToType({
         context,
         namespace,
+        plugin,
         schema,
       });
     }
@@ -903,6 +936,7 @@ export const schemaToType = ({
     type = schemaTypeToIdentifier({
       context,
       namespace,
+      plugin,
       schema: {
         type: 'unknown',
       },
@@ -955,6 +989,7 @@ export const handler: PluginHandler<Config> = ({ context, plugin }) => {
     schemaToType({
       $ref,
       context,
+      plugin,
       schema,
     });
   });
@@ -963,6 +998,7 @@ export const handler: PluginHandler<Config> = ({ context, plugin }) => {
     schemaToType({
       $ref,
       context,
+      plugin,
       schema: parameter.schema,
     });
   });
@@ -971,6 +1007,7 @@ export const handler: PluginHandler<Config> = ({ context, plugin }) => {
     operationToType({
       context,
       operation,
+      plugin,
     });
   });
 };
