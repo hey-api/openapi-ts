@@ -10,5 +10,5 @@ export default defineConfig({
     lint: 'eslint',
     path: './src/client',
   },
-  plugins: ['fastify', '@hey-api/services'],
+  plugins: ['fastify', '@hey-api/sdk'],
 });

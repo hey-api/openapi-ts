@@ -28,23 +28,23 @@ describe('generateLegacySchemas', () => {
       output: {
         path: '',
       },
-      pluginOrder: ['@hey-api/types', '@hey-api/schemas', '@hey-api/services'],
+      pluginOrder: ['@hey-api/typescript', '@hey-api/schemas', '@hey-api/sdk'],
       plugins: {
         '@hey-api/schemas': {
           _handler: () => {},
           _handlerLegacy: () => {},
           name: '@hey-api/schemas',
         },
-        '@hey-api/services': {
+        '@hey-api/sdk': {
           _handler: () => {},
           _handlerLegacy: () => {},
-          name: '@hey-api/services',
+          name: '@hey-api/sdk',
         },
-        '@hey-api/types': {
+        '@hey-api/typescript': {
           _handler: () => {},
           _handlerLegacy: () => {},
           enums: 'javascript',
-          name: '@hey-api/types',
+          name: '@hey-api/typescript',
         },
       },
       useOptions: true,
@@ -99,7 +99,7 @@ describe('generateLegacySchemas', () => {
       output: {
         path: '',
       },
-      pluginOrder: ['@hey-api/types', '@hey-api/schemas', '@hey-api/services'],
+      pluginOrder: ['@hey-api/typescript', '@hey-api/schemas', '@hey-api/sdk'],
       plugins: {
         '@hey-api/schemas': {
           _handler: () => {},
@@ -107,16 +107,16 @@ describe('generateLegacySchemas', () => {
           name: '@hey-api/schemas',
           nameBuilder: nameFn,
         },
-        '@hey-api/services': {
+        '@hey-api/sdk': {
           _handler: () => {},
           _handlerLegacy: () => {},
-          name: '@hey-api/services',
+          name: '@hey-api/sdk',
         },
-        '@hey-api/types': {
+        '@hey-api/typescript': {
           _handler: () => {},
           _handlerLegacy: () => {},
           enums: 'javascript',
-          name: '@hey-api/types',
+          name: '@hey-api/typescript',
         },
       },
       useOptions: true,

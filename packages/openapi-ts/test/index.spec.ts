@@ -28,11 +28,11 @@ describe('OpenAPI v2', () => {
           '@hey-api/schemas',
           {
             asClass: true,
-            name: '@hey-api/services',
+            name: '@hey-api/sdk',
           },
           {
             enums: 'javascript',
-            name: '@hey-api/types',
+            name: '@hey-api/typescript',
           },
         ],
         useOptions: true,
@@ -61,10 +61,10 @@ describe('OpenAPI v3', () => {
     input: '',
     output: '',
     plugins: [
-      '@hey-api/services',
+      '@hey-api/sdk',
       {
         enums: 'javascript',
-        name: '@hey-api/types',
+        name: '@hey-api/typescript',
       },
     ],
     useOptions: true,
@@ -81,11 +81,11 @@ describe('OpenAPI v3', () => {
         plugins: [
           {
             enums: 'javascript',
-            name: '@hey-api/types',
+            name: '@hey-api/typescript',
           },
           {
             asClass: true,
-            name: '@hey-api/services',
+            name: '@hey-api/sdk',
           },
         ],
       }),
@@ -96,10 +96,10 @@ describe('OpenAPI v3', () => {
       config: createConfig({
         client: 'legacy/angular',
         plugins: [
-          '@hey-api/types',
+          '@hey-api/typescript',
           {
             asClass: true,
-            name: '@hey-api/services',
+            name: '@hey-api/sdk',
           },
         ],
       }),
@@ -109,7 +109,7 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         client: 'legacy/angular',
-        plugins: ['@hey-api/types', '@hey-api/services'],
+        plugins: ['@hey-api/typescript', '@hey-api/sdk'],
       }),
       description: 'generate tree-shakeable angular client',
       name: 'v3_angular_tree_shakeable',
@@ -120,11 +120,11 @@ describe('OpenAPI v3', () => {
         plugins: [
           {
             enums: 'javascript',
-            name: '@hey-api/types',
+            name: '@hey-api/typescript',
           },
           {
             asClass: true,
-            name: '@hey-api/services',
+            name: '@hey-api/sdk',
           },
         ],
       }),
@@ -137,11 +137,11 @@ describe('OpenAPI v3', () => {
         plugins: [
           {
             enums: 'javascript',
-            name: '@hey-api/types',
+            name: '@hey-api/typescript',
           },
           {
             asClass: true,
-            name: '@hey-api/services',
+            name: '@hey-api/sdk',
           },
         ],
       }),
@@ -171,11 +171,11 @@ describe('OpenAPI v3', () => {
         plugins: [
           {
             enums: 'javascript',
-            name: '@hey-api/types',
+            name: '@hey-api/typescript',
           },
           {
             asClass: true,
-            name: '@hey-api/services',
+            name: '@hey-api/sdk',
           },
         ],
       }),
@@ -205,11 +205,11 @@ describe('OpenAPI v3', () => {
         plugins: [
           {
             enums: 'javascript',
-            name: '@hey-api/types',
+            name: '@hey-api/typescript',
           },
           {
             asClass: true,
-            name: '@hey-api/services',
+            name: '@hey-api/sdk',
           },
         ],
       }),
@@ -222,11 +222,11 @@ describe('OpenAPI v3', () => {
         plugins: [
           {
             enums: 'javascript',
-            name: '@hey-api/types',
+            name: '@hey-api/typescript',
           },
           {
             asClass: true,
-            name: '@hey-api/services',
+            name: '@hey-api/sdk',
           },
         ],
       }),
@@ -237,8 +237,8 @@ describe('OpenAPI v3', () => {
       config: createConfig({
         name: 'ApiClient',
         plugins: [
-          '@hey-api/types',
-          '@hey-api/services',
+          '@hey-api/typescript',
+          '@hey-api/sdk',
           {
             dates: true,
             name: '@hey-api/transformers',
@@ -259,7 +259,7 @@ describe('OpenAPI v3', () => {
             dates: true,
             name: '@hey-api/transformers',
           },
-          '@hey-api/types',
+          '@hey-api/typescript',
         ],
       }),
       description: 'generate Date types',
@@ -270,12 +270,12 @@ describe('OpenAPI v3', () => {
         plugins: [
           {
             include: '^ModelWithString',
-            name: '@hey-api/types',
+            name: '@hey-api/typescript',
           },
           {
             asClass: true,
             include: '^Defaults',
-            name: '@hey-api/services',
+            name: '@hey-api/sdk',
           },
           {
             dates: true,
@@ -292,12 +292,12 @@ describe('OpenAPI v3', () => {
         plugins: [
           {
             include: '^ModelWithString',
-            name: '@hey-api/types',
+            name: '@hey-api/typescript',
           },
           {
             asClass: true,
             include: '^Defaults',
-            name: '@hey-api/services',
+            name: '@hey-api/sdk',
           },
           {
             dates: true,
@@ -313,11 +313,11 @@ describe('OpenAPI v3', () => {
         plugins: [
           {
             enums: 'typescript',
-            name: '@hey-api/types',
+            name: '@hey-api/typescript',
           },
           {
             asClass: true,
-            name: '@hey-api/services',
+            name: '@hey-api/sdk',
           },
         ],
       }),
@@ -329,11 +329,11 @@ describe('OpenAPI v3', () => {
         plugins: [
           {
             enums: 'typescript+namespace',
-            name: '@hey-api/types',
+            name: '@hey-api/typescript',
           },
           {
             asClass: true,
-            name: '@hey-api/services',
+            name: '@hey-api/sdk',
           },
         ],
       }),
@@ -345,7 +345,7 @@ describe('OpenAPI v3', () => {
         exportCore: false,
         plugins: [
           {
-            name: '@hey-api/types',
+            name: '@hey-api/typescript',
             style: 'PascalCase',
           },
         ],
@@ -399,12 +399,12 @@ describe('OpenAPI v3', () => {
         plugins: [
           {
             enums: 'javascript',
-            name: '@hey-api/types',
+            name: '@hey-api/typescript',
           },
           {
             asClass: true,
             include: '^(Simple|Parameters)',
-            name: '@hey-api/services',
+            name: '@hey-api/sdk',
             serviceNameBuilder: 'myAwesome{{name}}Api',
           },
         ],
@@ -418,11 +418,11 @@ describe('OpenAPI v3', () => {
         plugins: [
           {
             enums: 'javascript',
-            name: '@hey-api/types',
+            name: '@hey-api/typescript',
           },
           {
             filter: '^\\w+ /api/v{api-version}/simple$',
-            name: '@hey-api/services',
+            name: '@hey-api/sdk',
           },
         ],
       }),
@@ -435,9 +435,9 @@ describe('OpenAPI v3', () => {
         plugins: [
           {
             enums: 'javascript',
-            name: '@hey-api/types',
+            name: '@hey-api/typescript',
           },
-          '@hey-api/services',
+          '@hey-api/sdk',
         ],
       }),
       description: 'generate tree-shakeable services',
@@ -446,7 +446,7 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         exportCore: false,
-        plugins: ['@hey-api/types'],
+        plugins: ['@hey-api/typescript'],
       }),
       description: 'generate only types with default settings',
       name: 'v3_types',
@@ -456,7 +456,7 @@ describe('OpenAPI v3', () => {
         exportCore: false,
         plugins: [
           {
-            name: '@hey-api/types',
+            name: '@hey-api/typescript',
             tree: false,
           },
         ],

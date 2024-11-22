@@ -25,9 +25,9 @@ export type PluginHandler<PluginConfig extends CommonConfig> = (args: {
 
 export type PluginNames =
   | '@hey-api/schemas'
-  | '@hey-api/services'
+  | '@hey-api/sdk'
   | '@hey-api/transformers'
-  | '@hey-api/types'
+  | '@hey-api/typescript'
   | '@tanstack/angular-query-experimental'
   | '@tanstack/react-query'
   | '@tanstack/solid-query'

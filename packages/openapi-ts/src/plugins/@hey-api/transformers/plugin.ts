@@ -7,7 +7,7 @@ import { operationResponsesMap } from '../../../ir/operation';
 import { camelCase } from '../../../utils/camelCase';
 import { irRef } from '../../../utils/ref';
 import type { PluginHandler } from '../../types';
-import { operationIrRef } from '../services/plugin';
+import { operationIrRef } from '../sdk/plugin';
 import type { Config } from './types';
 
 interface OperationIRRef {

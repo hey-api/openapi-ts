@@ -85,7 +85,7 @@ export default {
       )) != null
         ? stack1
         : '') +
-      " } from './services.gen';\n"
+      " } from './sdk.gen';\n"
     );
   },
   8: function (container, depth0, helpers, partials, data) {

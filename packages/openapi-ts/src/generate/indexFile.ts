@@ -27,7 +27,7 @@ export const generateIndexFile = ({ files }: { files: Files }): void => {
         module: './core/ApiError',
       }),
     );
-    if (config.plugins['@hey-api/services']?.response === 'response') {
+    if (config.plugins['@hey-api/sdk']?.response === 'response') {
       files.index.add(
         compiler.exportNamedDeclaration({
           exports: { asType: true, name: 'ApiResult' },
@@ -68,7 +68,7 @@ export const generateIndexFile = ({ files }: { files: Files }): void => {
         return;
       }
 
-      if (['schemas', 'services', 'transformers', 'types'].includes(name)) {
+      if (['schemas', 'sdk', 'transformers', 'types'].includes(name)) {
         files.index.add(
           compiler.exportAllDeclaration({
             module: `./${file.nameWithoutExtension()}`,

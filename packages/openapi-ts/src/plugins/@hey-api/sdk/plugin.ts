@@ -63,7 +63,7 @@ export const operationIrRef = ({
   })}${affix}`;
 };
 
-const servicesId = 'services';
+const sdkId = 'sdk';
 
 const requestOptions = ({
   context,
@@ -74,8 +74,8 @@ const requestOptions = ({
   operation: IROperationObject;
   path: string;
 }) => {
-  const file = context.file({ id: servicesId })!;
-  const servicesOutput = file.nameWithoutExtension();
+  const file = context.file({ id: sdkId })!;
+  const sdkOutput = file.nameWithoutExtension();
 
   const obj: ObjectValue[] = [{ spread: 'options' }];
 
@@ -86,7 +86,7 @@ const requestOptions = ({
         file.import({
           module: clientModulePath({
             config: context.config,
-            sourceOutput: servicesOutput,
+            sourceOutput: sdkOutput,
           }),
           name: 'formDataBodySerializer',
         });
@@ -98,7 +98,7 @@ const requestOptions = ({
         file.import({
           module: clientModulePath({
             config: context.config,
-            sourceOutput: servicesOutput,
+            sourceOutput: sdkOutput,
           }),
           name: 'urlSearchParamsBodySerializer',
         });
@@ -188,11 +188,11 @@ const requestOptions = ({
   });
 };
 
-const generateClassServices = ({ context }: { context: IRContext }) => {
-  const file = context.file({ id: servicesId })!;
+const generateClassSdk = ({ context }: { context: IRContext }) => {
+  const file = context.file({ id: sdkId })!;
   const typesModule = file.relativePathToFile({ context, id: 'types' });
 
-  const services = new Map<string, Array<ts.MethodDeclaration>>();
+  const sdks = new Map<string, Array<ts.MethodDeclaration>>();
 
   context.subscribe('operation', ({ method, operation, path }) => {
     const identifierData = context.file({ id: 'types' })!.identifier({
@@ -288,21 +288,21 @@ const generateClassServices = ({ context }: { context: IRContext }) => {
     }
 
     for (const tag of uniqueTags) {
-      const serviceName = getServiceName(tag);
-      const nodes = services.get(serviceName) ?? [];
+      const name = getServiceName(tag);
+      const nodes = sdks.get(name) ?? [];
       nodes.push(node);
-      services.set(serviceName, nodes);
+      sdks.set(name, nodes);
     }
   });
 
   context.subscribe('after', () => {
-    for (const [serviceName, nodes] of services) {
+    for (const [name, nodes] of sdks) {
       const node = compiler.classDeclaration({
         decorator: undefined,
         members: nodes,
         name: transformServiceName({
           config: context.config,
-          name: serviceName,
+          name,
         }),
       });
       file.add(node);
@@ -310,8 +310,8 @@ const generateClassServices = ({ context }: { context: IRContext }) => {
   });
 };
 
-const generateFlatServices = ({ context }: { context: IRContext }) => {
-  const file = context.file({ id: servicesId })!;
+const generateFlatSdk = ({ context }: { context: IRContext }) => {
+  const file = context.file({ id: sdkId })!;
   const typesModule = file.relativePathToFile({ context, id: 'types' });
 
   context.subscribe('operation', ({ method, operation, path }) => {
@@ -409,28 +409,28 @@ const generateFlatServices = ({ context }: { context: IRContext }) => {
 export const handler: PluginHandler<Config> = ({ context, plugin }) => {
   if (!context.config.client.name) {
     throw new Error(
-      '🚫 client needs to be set to generate services - which HTTP client do you want to use?',
+      '🚫 client needs to be set to generate SDKs - which HTTP client do you want to use?',
     );
   }
 
   const file = context.createFile({
-    id: servicesId,
+    id: sdkId,
     path: plugin.output,
   });
-  const servicesOutput = file.nameWithoutExtension();
+  const sdkOutput = file.nameWithoutExtension();
 
   // import required packages and core files
   file.import({
     module: clientModulePath({
       config: context.config,
-      sourceOutput: servicesOutput,
+      sourceOutput: sdkOutput,
     }),
     name: 'createClient',
   });
   file.import({
     module: clientModulePath({
       config: context.config,
-      sourceOutput: servicesOutput,
+      sourceOutput: sdkOutput,
     }),
     name: 'createConfig',
   });
@@ -438,7 +438,7 @@ export const handler: PluginHandler<Config> = ({ context, plugin }) => {
     asType: true,
     module: clientModulePath({
       config: context.config,
-      sourceOutput: servicesOutput,
+      sourceOutput: sdkOutput,
     }),
     name: clientOptionsTypeName(),
   });
@@ -458,9 +458,9 @@ export const handler: PluginHandler<Config> = ({ context, plugin }) => {
   });
   file.add(statement);
 
-  if (context.config.plugins['@hey-api/services']?.asClass) {
-    generateClassServices({ context });
+  if (context.config.plugins['@hey-api/sdk']?.asClass) {
+    generateClassSdk({ context });
   } else {
-    generateFlatServices({ context });
+    generateFlatSdk({ context });
   }
 };

@@ -10,7 +10,7 @@ hero:
       link: /openapi-ts/get-started
     - theme: alt
       text: View Demo
-      link: https://stackblitz.com/edit/hey-api-example?file=openapi-ts.config.ts,src%2Fclient%2Fschemas.gen.ts,src%2Fclient%2Fservices.gen.ts,src%2Fclient%2Ftypes.gen.ts
+      link: https://stackblitz.com/edit/hey-api-example?file=openapi-ts.config.ts,src%2Fclient%2Fschemas.gen.ts,src%2Fclient%2Fsdk.gen.ts,src%2Fclient%2Ftypes.gen.ts
   image:
     src: /logo.png
     alt: logo

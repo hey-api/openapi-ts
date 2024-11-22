@@ -36,17 +36,17 @@ export const generateLegacyOutput = async ({
   // TODO: parser - move to config.input
   if (client) {
     if (
-      config.plugins['@hey-api/services']?.include &&
-      config.plugins['@hey-api/services'].asClass
+      config.plugins['@hey-api/sdk']?.include &&
+      config.plugins['@hey-api/sdk'].asClass
     ) {
-      const regexp = new RegExp(config.plugins['@hey-api/services'].include);
+      const regexp = new RegExp(config.plugins['@hey-api/sdk'].include);
       client.services = client.services.filter((service) =>
         regexp.test(service.name),
       );
     }
 
-    if (config.plugins['@hey-api/types']?.include) {
-      const regexp = new RegExp(config.plugins['@hey-api/types'].include);
+    if (config.plugins['@hey-api/typescript']?.include) {
+      const regexp = new RegExp(config.plugins['@hey-api/typescript'].include);
       client.models = client.models.filter((model) => regexp.test(model.name));
     }
   }
@@ -133,7 +133,7 @@ export const generateOutput = async ({ context }: { context: IRContext }) => {
 
     if (
       !file.isEmpty() &&
-      ['schemas', 'services', 'transformers', 'types'].includes(name)
+      ['schemas', 'sdk', 'transformers', 'types'].includes(name)
     ) {
       indexFile.add(
         compiler.exportAllDeclaration({

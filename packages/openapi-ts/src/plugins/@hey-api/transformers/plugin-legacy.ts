@@ -10,8 +10,8 @@ import {
   modelResponseTransformerTypeName,
   operationResponseTransformerTypeName,
   operationResponseTypeName,
-} from '../services/plugin-legacy';
-import { generateType, type TypesProps } from '../types/plugin-legacy';
+} from '../sdk/plugin-legacy';
+import { generateType, type TypesProps } from '../typescript/plugin-legacy';
 import type { Config } from './types';
 
 interface ModelProps extends TypesProps {

@@ -11,29 +11,6 @@ While we try to avoid breaking changes, sometimes it's unavoidable in order to o
 
 These changes haven't been released yet. However, you can migrate your code today to save time on migration once they're released.
 
-### Deprecated exports from `index.ts`
-
-Currently, `index.ts` file exports all generated artifacts. We will be slowly moving away from this practice as it increases the chance of export conflicts.
-
-```js
-export { ApiError } from './core/ApiError';
-export { CancelablePromise, CancelError } from './core/CancelablePromise';
-export { OpenAPI, type OpenAPIConfig } from './core/OpenAPI';
-export * from './schemas.gen'; // [!code --]
-export * from './services.gen'; // [!code --]
-export * from './types.gen'; // [!code --]
-```
-
-Any non-core related imports should be imported as
-
-```js
-import { $Schema } from 'client/schemas.gen';
-import { DefaultService } from 'client/services.gen';
-import type { Model } from 'client/types.gen';
-```
-
-You don't have to update imports from `core` folder. These will be addressed in later releases.
-
 ### Deprecated `base`
 
 This config option is deprecated and will be removed in favor of [clients](./clients).
@@ -49,6 +26,25 @@ This config option is deprecated and will be removed in favor of [clients](./cli
 ### Deprecated `useOptions`
 
 This config option is deprecated and will be removed.
+
+## v0.57.0
+
+### Renamed `@hey-api/services` plugin
+
+This plugin has been renamed to `@hey-api/sdk`.
+
+### Changed `sdk.output` value
+
+To align with the updated name, the `@hey-api/sdk` plugin will generate an `sdk.gen.ts` file. This will result in a breaking change if you're importing from `services.gen.ts`. Please update your imports to reflect this change.
+
+```js
+import { client } from 'client/services.gen'; // [!code --]
+import { client } from 'client/sdk.gen'; // [!code ++]
+```
+
+### Renamed `@hey-api/types` plugin
+
+This plugin has been renamed to `@hey-api/typescript`.
 
 ## v0.56.0
 

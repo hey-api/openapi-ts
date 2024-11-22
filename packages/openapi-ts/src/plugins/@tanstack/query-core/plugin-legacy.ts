@@ -30,7 +30,7 @@ import {
   operationOptionsType,
   operationResponseTypeName,
   serviceFunctionIdentifier,
-} from '../../@hey-api/services/plugin-legacy';
+} from '../../@hey-api/sdk/plugin-legacy';
 import type { PluginLegacyHandler } from '../../types';
 import type { Config as AngularQueryConfig } from '../angular-query-experimental';
 import type { Config as ReactQueryConfig } from '../react-query';
@@ -719,14 +719,14 @@ export const handlerLegacy: PluginLegacyHandler<
       processedOperations.set(operationKey, true);
 
       const queryFn = [
-        config.plugins['@hey-api/services']?.asClass &&
+        config.plugins['@hey-api/sdk']?.asClass &&
           transformServiceName({
             config,
             name: service.name,
           }),
         serviceFunctionIdentifier({
           config,
-          handleIllegal: !config.plugins['@hey-api/services']?.asClass,
+          handleIllegal: !config.plugins['@hey-api/sdk']?.asClass,
           id: operation.name,
           operation,
         }),
@@ -1294,21 +1294,21 @@ export const handlerLegacy: PluginLegacyHandler<
         file.add(statement);
       }
 
-      const servicesModulePath = relativeModulePath({
-        moduleOutput: files.services.nameWithoutExtension(),
+      const sdkModulePath = relativeModulePath({
+        moduleOutput: files.sdk.nameWithoutExtension(),
         sourceOutput: plugin.output,
       });
 
       if (hasQueries || hasInfiniteQueries) {
         file.import({
-          module: servicesModulePath,
+          module: sdkModulePath,
           name: 'client',
         });
       }
 
       if (hasUsedQueryFn) {
         file.import({
-          module: servicesModulePath,
+          module: sdkModulePath,
           name: queryFn.split('.')[0],
         });
       }

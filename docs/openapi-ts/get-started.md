@@ -24,7 +24,7 @@ Live demo
 - works with CLI, Node.js 18+, or npx
 - supports OpenAPI 2.0, 3.0, and 3.1 specifications
 - supports both JSON and YAML input files
-- generates TypeScript interfaces, REST clients, and JSON Schemas
+- generates TypeScript interfaces, SDKs, and JSON Schemas
 - Fetch API, Axios, Angular, Node.js, and XHR clients available
 - plugin ecosystem to reduce third-party boilerplate
 

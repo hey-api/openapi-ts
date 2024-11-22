@@ -5,7 +5,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 
 import App from './App.tsx';
-import { client } from './client/services.gen';
+import { client } from './client/sdk.gen';
 
 // configure internal service client
 client.setConfig({

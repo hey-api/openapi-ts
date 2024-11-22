@@ -21,10 +21,10 @@ describe('operationNameFn', () => {
     },
     pluginOrder: [],
     plugins: {
-      '@hey-api/services': {
+      '@hey-api/sdk': {
         _handler: () => {},
         _handlerLegacy: () => {},
-        name: '@hey-api/services',
+        name: '@hey-api/sdk',
         operationId: true,
         response: 'body',
       },
@@ -35,10 +35,10 @@ describe('operationNameFn', () => {
   const options1: Parameters<typeof setConfig>[0] = {
     ...optionsCommon,
     plugins: {
-      '@hey-api/services': {
+      '@hey-api/sdk': {
         _handler: () => {},
         _handlerLegacy: () => {},
-        name: '@hey-api/services',
+        name: '@hey-api/sdk',
         operationId: true,
         response: 'body',
       },
@@ -48,10 +48,10 @@ describe('operationNameFn', () => {
   const options2: Parameters<typeof setConfig>[0] = {
     ...optionsCommon,
     plugins: {
-      '@hey-api/services': {
+      '@hey-api/sdk': {
         _handler: () => {},
         _handlerLegacy: () => {},
-        name: '@hey-api/services',
+        name: '@hey-api/sdk',
         operationId: false,
         response: 'body',
       },
@@ -64,10 +64,10 @@ describe('operationNameFn', () => {
       name: '@hey-api/client-fetch',
     },
     plugins: {
-      '@hey-api/services': {
+      '@hey-api/sdk': {
         _handler: () => {},
         _handlerLegacy: () => {},
-        name: '@hey-api/services',
+        name: '@hey-api/sdk',
         operationId: true,
         response: 'body',
       },
@@ -80,10 +80,10 @@ describe('operationNameFn', () => {
       name: '@hey-api/client-fetch',
     },
     plugins: {
-      '@hey-api/services': {
+      '@hey-api/sdk': {
         _handler: () => {},
         _handlerLegacy: () => {},
-        name: '@hey-api/services',
+        name: '@hey-api/sdk',
         operationId: false,
         response: 'body',
       },

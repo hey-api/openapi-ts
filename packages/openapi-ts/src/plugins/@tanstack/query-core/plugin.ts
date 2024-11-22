@@ -20,12 +20,12 @@ import type { Files } from '../../../types/utils';
 import { getConfig } from '../../../utils/config';
 import { getServiceName } from '../../../utils/postprocess';
 import { transformServiceName } from '../../../utils/transform';
-import { operationIrRef } from '../../@hey-api/services/plugin';
+import { operationIrRef } from '../../@hey-api/sdk/plugin';
 import {
   operationOptionsType,
   serviceFunctionIdentifier,
-} from '../../@hey-api/services/plugin-legacy';
-import { schemaToType } from '../../@hey-api/types/plugin';
+} from '../../@hey-api/sdk/plugin-legacy';
+import { schemaToType } from '../../@hey-api/typescript/plugin';
 import type { PluginHandler } from '../../types';
 import type { Config as AngularQueryConfig } from '../angular-query-experimental';
 import type { Config as ReactQueryConfig } from '../react-query';
@@ -676,14 +676,14 @@ export const handler: PluginHandler<
 
   context.subscribe('operation', ({ method, operation }) => {
     const queryFn = [
-      context.config.plugins['@hey-api/services']?.asClass &&
+      context.config.plugins['@hey-api/sdk']?.asClass &&
         transformServiceName({
           config: context.config,
           name: getServiceName(operation.tags?.[0] || 'default'),
         }),
       serviceFunctionIdentifier({
         config: context.config,
-        handleIllegal: !context.config.plugins['@hey-api/services']?.asClass,
+        handleIllegal: !context.config.plugins['@hey-api/sdk']?.asClass,
         id: operation.id,
         operation,
       }),
@@ -1177,7 +1177,7 @@ export const handler: PluginHandler<
       file.import({
         module: context
           .file({ id: plugin.name })!
-          .relativePathToFile({ context, id: 'services' }),
+          .relativePathToFile({ context, id: 'sdk' }),
         name: 'client',
       });
     }
@@ -1186,7 +1186,7 @@ export const handler: PluginHandler<
       file.import({
         module: context
           .file({ id: plugin.name })!
-          .relativePathToFile({ context, id: 'services' }),
+          .relativePathToFile({ context, id: 'sdk' }),
         name: queryFn.split('.')[0],
       });
     }

@@ -21,7 +21,7 @@ import {
   ResponseService,
   SimpleService,
   TypesService
-} from './client/services.gen'
+} from './client/sdk.gen'
 
 @Component({
   selector: 'app-root',

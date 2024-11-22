@@ -4,7 +4,7 @@ import { sanitizeNamespaceIdentifier } from '../../common/parser/sanitize';
 
 /**
  * Returns an operation ID to use across the application. By default, we try
- * to use the provided ID. If it's not provided or the services are configured
+ * to use the provided ID. If it's not provided or the SDK is configured
  * to exclude it, we generate operation ID from its location.
  */
 export const operationToId = ({
@@ -20,8 +20,8 @@ export const operationToId = ({
 }): string => {
   if (
     id &&
-    (!context.config.plugins['@hey-api/services'] ||
-      context.config.plugins['@hey-api/services'].operationId)
+    (!context.config.plugins['@hey-api/sdk'] ||
+      context.config.plugins['@hey-api/sdk'].operationId)
   ) {
     return camelCase({
       input: sanitizeNamespaceIdentifier(id),
