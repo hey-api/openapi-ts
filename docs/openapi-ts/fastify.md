@@ -50,7 +50,7 @@ The Fastify plugin will generate the following artifacts, depending on the input
 
 ## Route Handlers
 
-Route handlers are generated from all endpoints. The generated interface follows the naming convention of services.
+Route handlers are generated from all endpoints. The generated interface follows the naming convention of SDK functions.
 
 ```ts
 const fastify = Fastify();

@@ -18,7 +18,7 @@ import {
 import { useState } from 'react';
 
 import { PetSchema } from './client/schemas.gen';
-import { addPet, getPetById, updatePet } from './client/services.gen';
+import { addPet, getPetById, updatePet } from './client/sdk.gen';
 import type { Pet } from './client/types.gen';
 
 const localClient = createClient({

@@ -15,11 +15,11 @@ Transformers currently handle only the most common use cases. If your data isn't
 
 ## Considerations
 
-Before deciding whether transformers are right for you, let's explain how they work. Transformers are generated on the [service layer](/openapi-ts/output#api-services), therefore they impact the bundle size. We generate a single transformer per operation response for the most efficient result, just like a human engineer would.
+Before deciding whether transformers are right for you, let's explain how they work. Transformers generate a runtime file, therefore they impact the bundle size. We generate a single transformer per operation response for the most efficient result, just like a human engineer would.
 
 ### Limitations
 
-Transformers currently handle the most common scenarios. Some of the known limitations are:
+Transformers handle only the most common scenarios. Some of the known limitations are:
 
 - union types are not transformed (e.g. if you have multiple possible response shapes)
 - only types defined through `$ref` are transformed

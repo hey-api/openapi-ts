@@ -8,10 +8,10 @@ import { getModel } from '../getModel';
 vi.mock('../../../../utils/config', () => {
   const config: Partial<Config> = {
     plugins: {
-      '@hey-api/types': {
+      '@hey-api/typescript': {
         _handler: () => {},
         _handlerLegacy: () => {},
-        name: '@hey-api/types',
+        name: '@hey-api/typescript',
       },
     },
   };

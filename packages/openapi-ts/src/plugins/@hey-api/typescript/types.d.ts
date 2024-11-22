@@ -1,6 +1,6 @@
 import type { PluginName } from '../../types';
 
-export interface Config extends PluginName<'@hey-api/types'> {
+export interface Config extends PluginName<'@hey-api/typescript'> {
   /**
    * Generate enum definitions?
    * @default false

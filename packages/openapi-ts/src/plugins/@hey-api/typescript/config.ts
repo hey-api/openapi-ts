@@ -7,14 +7,14 @@ export const defaultConfig: PluginConfig<Config> = {
   _handler: handler,
   _handlerLegacy: handlerLegacy,
   enums: false,
-  name: '@hey-api/types',
+  name: '@hey-api/typescript',
   output: 'types',
   style: 'preserve',
   tree: false,
 };
 
 /**
- * Type helper for `@hey-api/types` plugin, returns {@link PluginConfig} object
+ * Type helper for `@hey-api/typescript` plugin, returns {@link PluginConfig} object
  */
 export const defineConfig: DefineConfig<Config> = (config) => ({
   ...defaultConfig,

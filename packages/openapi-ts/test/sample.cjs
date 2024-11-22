@@ -31,7 +31,7 @@ const main = async () => {
       {
         // asClass: true,
         // include...
-        name: '@hey-api/services',
+        name: '@hey-api/sdk',
         // operationId: false,
         // serviceNameBuilder: '^Parameters',
       },
@@ -43,7 +43,7 @@ const main = async () => {
         // enums: 'typescript',
         // enums: 'typescript+namespace',
         // enums: 'javascript',
-        name: '@hey-api/types',
+        name: '@hey-api/typescript',
         // style: 'PascalCase',
         // tree: true,
       },

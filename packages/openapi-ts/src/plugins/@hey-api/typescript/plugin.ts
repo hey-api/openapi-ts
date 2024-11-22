@@ -14,7 +14,7 @@ import { ensureValidTypeScriptJavaScriptIdentifier } from '../../../openApi';
 import { escapeComment } from '../../../utils/escape';
 import { irRef, isRefOpenApiComponent } from '../../../utils/ref';
 import type { PluginHandler } from '../../types';
-import { operationIrRef } from '../services/plugin';
+import { operationIrRef } from '../sdk/plugin';
 import type { Config } from './types';
 
 interface SchemaWithType<T extends Required<IRSchemaObject>['type']>
@@ -147,7 +147,8 @@ const addTypeEnum = ({
   if (
     !identifier.created &&
     !isRefOpenApiComponent($ref) &&
-    context.config.plugins['@hey-api/types']?.enums !== 'typescript+namespace'
+    context.config.plugins['@hey-api/typescript']?.enums !==
+      'typescript+namespace'
   ) {
     return;
   }
@@ -189,7 +190,8 @@ const addTypeScriptEnum = ({
   // they have a duplicate value.
   if (
     !identifier.created &&
-    context.config.plugins['@hey-api/types']?.enums !== 'typescript+namespace'
+    context.config.plugins['@hey-api/typescript']?.enums !==
+      'typescript+namespace'
   ) {
     return;
   }
@@ -294,7 +296,10 @@ const enumTypeToIdentifier = ({
 
     // when enums are disabled (default), emit only reusable components
     // as types, otherwise the output would be broken if we skipped all enums
-    if (!context.config.plugins['@hey-api/types']?.enums && isRefComponent) {
+    if (
+      !context.config.plugins['@hey-api/typescript']?.enums &&
+      isRefComponent
+    ) {
       const typeNode = addTypeEnum({
         $ref,
         context,
@@ -305,7 +310,7 @@ const enumTypeToIdentifier = ({
       }
     }
 
-    if (context.config.plugins['@hey-api/types']?.enums === 'javascript') {
+    if (context.config.plugins['@hey-api/typescript']?.enums === 'javascript') {
       const typeNode = addTypeEnum({
         $ref,
         context,
@@ -325,7 +330,7 @@ const enumTypeToIdentifier = ({
       }
     }
 
-    if (context.config.plugins['@hey-api/types']?.enums === 'typescript') {
+    if (context.config.plugins['@hey-api/typescript']?.enums === 'typescript') {
       const enumNode = addTypeScriptEnum({
         $ref,
         context,
@@ -337,7 +342,8 @@ const enumTypeToIdentifier = ({
     }
 
     if (
-      context.config.plugins['@hey-api/types']?.enums === 'typescript+namespace'
+      context.config.plugins['@hey-api/typescript']?.enums ===
+      'typescript+namespace'
     ) {
       const enumNode = addTypeScriptEnum({
         $ref,

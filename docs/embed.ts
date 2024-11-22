@@ -15,14 +15,14 @@ export const embedProject = (projectId: string) => async (event: Event) => {
       return await sdk.embedProjectId(container, projectId, {
         height: 700,
         openFile:
-          'openapi-ts.config.ts,src/client/schemas.gen.ts,src/client/services.gen.ts,src/client/types.gen.ts,src/App.tsx',
+          'openapi-ts.config.ts,src/client/schemas.gen.ts,src/client/sdk.gen.ts,src/client/types.gen.ts,src/App.tsx',
         view: 'editor',
       });
     case 'hey-api-client-fetch-example':
       return await sdk.embedProjectId(container, projectId, {
         height: 700,
         openFile:
-          'openapi-ts.config.ts,src/client/schemas.gen.ts,src/client/services.gen.ts,src/client/types.gen.ts,src/App.tsx',
+          'openapi-ts.config.ts,src/client/schemas.gen.ts,src/client/sdk.gen.ts,src/client/types.gen.ts,src/App.tsx',
         view: 'editor',
       });
     case 'hey-api-client-fetch-plugin-fastify-example':
@@ -49,7 +49,7 @@ export const embedProject = (projectId: string) => async (event: Event) => {
       return await sdk.embedProjectId(container, projectId, {
         height: 700,
         openFile:
-          'openapi-ts.config.ts,src/client/schemas.gen.ts,src/client/services.gen.ts,src/client/types.gen.ts',
+          'openapi-ts.config.ts,src/client/schemas.gen.ts,src/client/sdk.gen.ts,src/client/types.gen.ts',
         view: 'editor',
       });
   }

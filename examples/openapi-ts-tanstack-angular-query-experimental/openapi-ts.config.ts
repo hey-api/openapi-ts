@@ -11,10 +11,10 @@ export default defineConfig({
   },
   plugins: [
     '@hey-api/schemas',
-    '@hey-api/services',
+    '@hey-api/sdk',
     {
       enums: 'javascript',
-      name: '@hey-api/types',
+      name: '@hey-api/typescript',
     },
     '@tanstack/angular-query-experimental',
   ],
