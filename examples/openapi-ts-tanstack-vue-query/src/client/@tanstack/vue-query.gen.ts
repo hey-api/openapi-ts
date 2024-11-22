@@ -24,7 +24,7 @@ import {
   updatePetWithForm,
   updateUser,
   uploadFile
-} from '../services.gen'
+} from '../sdk.gen'
 import type {
   AddPetData,
   AddPetError,

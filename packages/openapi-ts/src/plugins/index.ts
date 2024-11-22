@@ -3,17 +3,17 @@ import {
   defaultConfig as heyApiSchemas,
 } from './@hey-api/schemas';
 import {
-  type Config as HeyApiServices,
-  defaultConfig as heyApiServices,
-} from './@hey-api/services';
+  type Config as HeyApiSdk,
+  defaultConfig as heyApiSdk,
+} from './@hey-api/sdk';
 import {
   type Config as HeyApiTransformers,
   defaultConfig as heyApiTransformers,
 } from './@hey-api/transformers';
 import {
-  type Config as HeyApiTypes,
-  defaultConfig as heyApiTypes,
-} from './@hey-api/types';
+  type Config as HeyApiTypeScript,
+  defaultConfig as heyApiTypeScript,
+} from './@hey-api/typescript';
 import {
   type Config as TanStackAngularQueryExperimental,
   defaultConfig as tanStackAngularQueryExperimental,
@@ -47,9 +47,9 @@ import { type Config as Zod, defaultConfig as zod } from './zod';
  */
 export type UserPlugins =
   | UserConfig<HeyApiSchemas>
-  | UserConfig<HeyApiServices>
+  | UserConfig<HeyApiSdk>
   | UserConfig<HeyApiTransformers>
-  | UserConfig<HeyApiTypes>
+  | UserConfig<HeyApiTypeScript>
   | UserConfig<TanStackAngularQueryExperimental>
   | UserConfig<TanStackReactQuery>
   | UserConfig<TanStackSolidQuery>
@@ -60,9 +60,9 @@ export type UserPlugins =
 
 export type ClientPlugins =
   | PluginConfig<HeyApiSchemas>
-  | PluginConfig<HeyApiServices>
+  | PluginConfig<HeyApiSdk>
   | PluginConfig<HeyApiTransformers>
-  | PluginConfig<HeyApiTypes>
+  | PluginConfig<HeyApiTypeScript>
   | PluginConfig<TanStackAngularQueryExperimental>
   | PluginConfig<TanStackReactQuery>
   | PluginConfig<TanStackSolidQuery>
@@ -73,9 +73,9 @@ export type ClientPlugins =
 
 export const defaultPluginConfigs: DefaultPluginConfigsMap<ClientPlugins> = {
   '@hey-api/schemas': heyApiSchemas,
-  '@hey-api/services': heyApiServices,
+  '@hey-api/sdk': heyApiSdk,
   '@hey-api/transformers': heyApiTransformers,
-  '@hey-api/types': heyApiTypes,
+  '@hey-api/typescript': heyApiTypeScript,
   '@tanstack/angular-query-experimental': tanStackAngularQueryExperimental,
   '@tanstack/react-query': tanStackReactQuery,
   '@tanstack/solid-query': tanStackSolidQuery,

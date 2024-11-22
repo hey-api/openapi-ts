@@ -12,7 +12,7 @@ import { handlerLegacy } from '../plugin-legacy';
 
 vi.mock('node:fs');
 
-describe('generateLegacyServices', () => {
+describe('handlerLegacy', () => {
   it('writes to filesystem', async () => {
     setConfig({
       client: {
@@ -29,23 +29,23 @@ describe('generateLegacyServices', () => {
       output: {
         path: '',
       },
-      pluginOrder: ['@hey-api/types', '@hey-api/schemas', '@hey-api/services'],
+      pluginOrder: ['@hey-api/typescript', '@hey-api/schemas', '@hey-api/sdk'],
       plugins: {
         '@hey-api/schemas': {
           _handler: () => {},
           _handlerLegacy: () => {},
           name: '@hey-api/schemas',
         },
-        '@hey-api/services': {
+        '@hey-api/sdk': {
           _handler: () => {},
           _handlerLegacy: () => {},
           asClass: true,
-          name: '@hey-api/services',
+          name: '@hey-api/sdk',
         },
-        '@hey-api/types': {
+        '@hey-api/typescript': {
           _handler: () => {},
           _handlerLegacy: () => {},
-          name: '@hey-api/types',
+          name: '@hey-api/typescript',
         },
       },
       useOptions: false,
@@ -104,10 +104,10 @@ describe('generateLegacyServices', () => {
       },
     });
 
-    files.services.write();
+    files.sdk.write();
 
     expect(writeFileSync).toHaveBeenCalledWith(
-      expect.stringContaining(path.resolve('services.gen.ts')),
+      expect.stringContaining(path.resolve('sdk.gen.ts')),
       expect.anything(),
     );
   });
@@ -169,23 +169,23 @@ describe('methodNameBuilder', () => {
       output: {
         path: '',
       },
-      pluginOrder: ['@hey-api/types', '@hey-api/schemas', '@hey-api/services'],
+      pluginOrder: ['@hey-api/typescript', '@hey-api/schemas', '@hey-api/sdk'],
       plugins: {
         '@hey-api/schemas': {
           _handler: () => {},
           _handlerLegacy: () => {},
           name: '@hey-api/schemas',
         },
-        '@hey-api/services': {
+        '@hey-api/sdk': {
           _handler: () => {},
           _handlerLegacy: () => {},
           asClass: true,
-          name: '@hey-api/services',
+          name: '@hey-api/sdk',
         },
-        '@hey-api/types': {
+        '@hey-api/typescript': {
           _handler: () => {},
           _handlerLegacy: () => {},
-          name: '@hey-api/types',
+          name: '@hey-api/typescript',
         },
       },
       useOptions: false,
@@ -207,10 +207,10 @@ describe('methodNameBuilder', () => {
       },
     });
 
-    files.services.write();
+    files.sdk.write();
 
     expect(writeFileSync).toHaveBeenCalledWith(
-      expect.stringContaining(path.resolve('services.gen.ts')),
+      expect.stringContaining(path.resolve('sdk.gen.ts')),
       expect.stringContaining('public static userGet()'),
     );
   });
@@ -233,24 +233,24 @@ describe('methodNameBuilder', () => {
       output: {
         path: '',
       },
-      pluginOrder: ['@hey-api/types', '@hey-api/schemas', '@hey-api/services'],
+      pluginOrder: ['@hey-api/typescript', '@hey-api/schemas', '@hey-api/sdk'],
       plugins: {
         '@hey-api/schemas': {
           _handler: () => {},
           _handlerLegacy: () => {},
           name: '@hey-api/schemas',
         },
-        '@hey-api/services': {
+        '@hey-api/sdk': {
           _handler: () => {},
           _handlerLegacy: () => {},
           asClass: true,
           methodNameBuilder,
-          name: '@hey-api/services',
+          name: '@hey-api/sdk',
         },
-        '@hey-api/types': {
+        '@hey-api/typescript': {
           _handler: () => {},
           _handlerLegacy: () => {},
-          name: '@hey-api/types',
+          name: '@hey-api/typescript',
         },
       },
       useOptions: false,
@@ -272,10 +272,10 @@ describe('methodNameBuilder', () => {
       },
     });
 
-    files.services.write();
+    files.sdk.write();
 
     expect(writeFileSync).toHaveBeenCalledWith(
-      expect.stringContaining(path.resolve('services.gen.ts')),
+      expect.stringContaining(path.resolve('sdk.gen.ts')),
       expect.stringContaining('public static customName()'),
     );
 
@@ -300,24 +300,24 @@ describe('methodNameBuilder', () => {
       output: {
         path: '',
       },
-      pluginOrder: ['@hey-api/types', '@hey-api/schemas', '@hey-api/services'],
+      pluginOrder: ['@hey-api/typescript', '@hey-api/schemas', '@hey-api/sdk'],
       plugins: {
         '@hey-api/schemas': {
           _handler: () => {},
           _handlerLegacy: () => {},
           name: '@hey-api/schemas',
         },
-        '@hey-api/services': {
+        '@hey-api/sdk': {
           _handler: () => {},
           _handlerLegacy: () => {},
           asClass: false,
           methodNameBuilder,
-          name: '@hey-api/services',
+          name: '@hey-api/sdk',
         },
-        '@hey-api/types': {
+        '@hey-api/typescript': {
           _handler: () => {},
           _handlerLegacy: () => {},
-          name: '@hey-api/types',
+          name: '@hey-api/typescript',
         },
       },
       useOptions: false,
@@ -339,10 +339,10 @@ describe('methodNameBuilder', () => {
       },
     });
 
-    files.services.write();
+    files.sdk.write();
 
     expect(writeFileSync).toHaveBeenCalledWith(
-      expect.stringContaining(path.resolve('services.gen.ts')),
+      expect.stringContaining(path.resolve('sdk.gen.ts')),
       expect.stringContaining('public static customName()'),
     );
 

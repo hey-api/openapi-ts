@@ -33,16 +33,16 @@ describe('generateLegacyClientClass', () => {
           _handlerLegacy: () => {},
           name: '@hey-api/schemas',
         },
-        '@hey-api/services': {
+        '@hey-api/sdk': {
           _handler: () => {},
           _handlerLegacy: () => {},
-          name: '@hey-api/services',
+          name: '@hey-api/sdk',
         },
-        '@hey-api/types': {
+        '@hey-api/typescript': {
           _handler: () => {},
           _handlerLegacy: () => {},
           enums: 'javascript',
-          name: '@hey-api/types',
+          name: '@hey-api/typescript',
         },
       },
       useOptions: true,

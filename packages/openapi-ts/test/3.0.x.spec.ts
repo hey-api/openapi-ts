@@ -19,7 +19,7 @@ describe(`OpenAPI ${VERSION}`, () => {
   const createConfig = (userConfig: UserConfig): UserConfig => ({
     client: '@hey-api/client-fetch',
     experimentalParser: true,
-    plugins: ['@hey-api/types'],
+    plugins: ['@hey-api/typescript'],
     ...userConfig,
     input: path.join(
       __dirname,
@@ -109,7 +109,7 @@ describe(`OpenAPI ${VERSION}`, () => {
       config: createConfig({
         input: 'parameter-explode-false.json',
         output: 'parameter-explode-false',
-        plugins: ['@hey-api/services'],
+        plugins: ['@hey-api/sdk'],
       }),
       description: 'handles non-exploded array query parameters',
     },

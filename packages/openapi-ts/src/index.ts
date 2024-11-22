@@ -217,9 +217,9 @@ const getPlugins = (
 
   const userPlugins = (
     userConfig.plugins ?? [
-      '@hey-api/types',
+      '@hey-api/typescript',
       '@hey-api/schemas',
-      '@hey-api/services',
+      '@hey-api/sdk',
     ]
   )
     .map((plugin) => {

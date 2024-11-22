@@ -8,7 +8,7 @@ export const ensureDirSync = (path: PathLike) => {
 
 /**
  * Construct a relative import path to modules. This is used for example
- * in plugins to import types or services module.
+ * in plugins to import types or SDK module.
  */
 export const relativeModulePath = ({
   moduleOutput,

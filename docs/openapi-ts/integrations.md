@@ -13,7 +13,7 @@ Integrations allow you to automate your client generation workflow. Create depen
 
 ## Upload OpenAPI Spec
 
-First, you need to configure your API services to send us OpenAPI specifications. This can be done by adding our [hey-api/upload-openapi-spec](https://github.com/marketplace/actions/upload-openapi-spec-by-hey-api) GitHub Action into your CI workflow.
+First, you need to configure your API build workflow to send us OpenAPI specifications. This can be done by adding our [hey-api/upload-openapi-spec](https://github.com/marketplace/actions/upload-openapi-spec-by-hey-api) GitHub Action into your CI workflow.
 
 ```yaml
 name: Upload OpenAPI Specification

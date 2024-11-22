@@ -102,7 +102,7 @@ The TanStack Query plugin will optionally generate the following artifacts, depe
 
 ## Queries
 
-Queries are generated from GET and POST endpoints. The generated functions follow the naming convention of services and append `Options`, e.g. `getPetByIdOptions()`.
+Queries are generated from GET and POST endpoints. The generated functions follow the naming convention of SDK functions and append `Options`, e.g. `getPetByIdOptions()`.
 
 ```ts
 const { data, error } = useQuery({
@@ -116,7 +116,7 @@ const { data, error } = useQuery({
 
 ## Infinite Queries
 
-Infinite queries are generated from GET and POST endpoints if we detect a pagination parameter. The generated functions follow the naming convention of services and append `InfiniteOptions`, e.g. `getFooInfiniteOptions()`.
+Infinite queries are generated from GET and POST endpoints if we detect a pagination parameter. The generated functions follow the naming convention of SDK functions and append `InfiniteOptions`, e.g. `getFooInfiniteOptions()`.
 
 ```ts
 const { data, error } = useInfiniteQuery({
@@ -132,7 +132,7 @@ const { data, error } = useInfiniteQuery({
 
 ## Mutations
 
-Mutations are generated from DELETE, PATCH, POST, and PUT endpoints. The generated functions follow the naming convention of services and append `Mutation`, e.g. `addPetMutation()`.
+Mutations are generated from DELETE, PATCH, POST, and PUT endpoints. The generated functions follow the naming convention of SDK functions and append `Mutation`, e.g. `addPetMutation()`.
 
 ```ts
 const addPet = useMutation({

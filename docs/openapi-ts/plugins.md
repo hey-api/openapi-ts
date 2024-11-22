@@ -12,20 +12,20 @@ Every generated file in your output is created by a plugin. You already learned 
 Apart from being responsible for the default output, Hey API plugins are the foundation for other plugins. Instead of creating their own primitives, other plugins can reuse the artifacts from Hey API plugins. This results in smaller output and a better user experience.
 
 - `@hey-api/schemas` - export OpenAPI definitions as JavaScript objects
-- `@hey-api/services` - robust and polished SDKs
+- `@hey-api/sdk` - robust and polished SDKs
 - `@hey-api/transformers` - response data transformer functions
-- `@hey-api/types` - TypeScript interfaces and enums
+- `@hey-api/typescript` - TypeScript interfaces and enums
 
 ## Third Party
 
 These plugins help reduce boilerplate associated with third-party dependencies. Hey API natively supports the most popular packages. Please open an issue on [GitHub](https://github.com/hey-api/openapi-ts/issues) if you'd like us to support your favorite package.
 
-- [`fastify`](/openapi-ts/fastify) - TypeScript interface for Fastify route handlers
 - [`@tanstack/angular-query-experimental`](/openapi-ts/tanstack-query) - TanStack Query functions and query keys
 - [`@tanstack/react-query`](/openapi-ts/tanstack-query) - TanStack Query functions and query keys
 - [`@tanstack/solid-query`](/openapi-ts/tanstack-query) - TanStack Query functions and query keys
 - [`@tanstack/svelte-query`](/openapi-ts/tanstack-query) - TanStack Query functions and query keys
 - [`@tanstack/vue-query`](/openapi-ts/tanstack-query) - TanStack Query functions and query keys
+- [`fastify`](/openapi-ts/fastify) - TypeScript interface for Fastify route handlers
 - [`zod`](/openapi-ts/zod) - Zod schemas to validate your data
 
 ## Community
@@ -90,7 +90,7 @@ import { handler } from './plugin';
 import type { Config } from './types';
 
 export const defaultConfig: PluginConfig<Config> = {
-  _dependencies: ['@hey-api/types'],
+  _dependencies: ['@hey-api/typescript'],
   _handler: handler,
   _handlerLegacy: () => {},
   name: 'my-plugin',
@@ -108,7 +108,7 @@ export const defineConfig: DefineConfig<Config> = (config) => ({
 
 :::
 
-In the `config.ts` above, we define a `my-plugin` plugin which will generate a `my-plugin.gen.ts` output file. We also demonstrate declaring `@hey-api/types` as a dependency for our plugin, so we can safely import artifacts from `types.gen.ts`.
+In the `config.ts` above, we define a `my-plugin` plugin which will generate a `my-plugin.gen.ts` output file. We also demonstrate declaring `@hey-api/typescript` as a dependency for our plugin, so we can safely import artifacts from `types.gen.ts`.
 
 Lastly, we define the `_handler` method which will be responsible for generating our custom output. We just need to create the remaining `plugin.ts` file.
 
