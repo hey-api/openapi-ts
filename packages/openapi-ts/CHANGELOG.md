@@ -1,5 +1,56 @@
 # @hey-api/openapi-ts
 
+## 0.57.0
+
+### Minor Changes
+
+- [#1324](https://github.com/hey-api/openapi-ts/pull/1324) [`4e62378`](https://github.com/hey-api/openapi-ts/commit/4e62378352d8306580293ee4aeef43756d245f85) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: rename Hey API plugins
+
+  ### Renamed `@hey-api/services` plugin
+
+  This plugin has been renamed to `@hey-api/sdk`.
+
+  ### Changed `sdk.output` value
+
+  To align with the updated name, the `@hey-api/sdk` plugin will generate an `sdk.gen.ts` file. This will result in a breaking change if you're importing from `services.gen.ts`. Please update your imports to reflect this change.
+
+  ```js
+  import { client } from 'client/services.gen'; // [!code --]
+  import { client } from 'client/sdk.gen'; // [!code ++]
+  ```
+
+  ### Renamed `@hey-api/types` plugin
+
+  This plugin has been renamed to `@hey-api/typescript`.
+
+- [#1327](https://github.com/hey-api/openapi-ts/pull/1327) [`62e37d5`](https://github.com/hey-api/openapi-ts/commit/62e37d51e9d829e11d08a494060c1e808ce2e3f3) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add typescript.exportInlineEnums option
+
+  ### Added `typescript.exportInlineEnums` option
+
+  By default, inline enums (enums not defined as reusable components in the input file) will be generated only as inlined union types. You can set `exportInlineEnums` to `true` to treat inline enums as reusable components. When `true`, the exported enums will follow the style defined in `enums`.
+
+  This is a breaking change since in the previous versions, inline enums were always treated as reusable components. To preserve your current output, set `exportInlineEnums` to `true`. This feature works only with the experimental parser.
+
+  ```js
+  export default {
+    client: '@hey-api/client-fetch',
+    experimentalParser: true,
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    plugins: [
+      // ...other plugins
+      {
+        exportInlineEnums: true, // [!code ++]
+        name: '@hey-api/typescript',
+      },
+    ],
+  };
+  ```
+
+### Patch Changes
+
+- [#1326](https://github.com/hey-api/openapi-ts/pull/1326) [`01c3d69`](https://github.com/hey-api/openapi-ts/commit/01c3d69e4c97262cd6dda5061f0a76f3b4fda31a) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: improve generated enum keys in experimental parser
+
 ## 0.56.3
 
 ### Patch Changes
