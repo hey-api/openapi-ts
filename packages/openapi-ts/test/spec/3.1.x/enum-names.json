@@ -1,0 +1,23 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "OpenAPI 3.1.1 enum names example",
+    "version": "1"
+  },
+  "components": {
+    "schemas": {
+      "1-10": {
+        "enum": ["1-10", "11-20"],
+        "type": "string"
+      },
+      "myFoo": {
+        "enum": ["myFoo", "myBar"],
+        "type": "string"
+      },
+      "MyFoo": {
+        "enum": ["MyFoo", "MyBar"],
+        "type": "string"
+      }
+    }
+  }
+}
