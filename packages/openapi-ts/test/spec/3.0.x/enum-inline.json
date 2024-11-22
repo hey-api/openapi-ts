@@ -1,0 +1,20 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "OpenAPI 3.0.3 enum inline example",
+    "version": "1"
+  },
+  "components": {
+    "schemas": {
+      "Foo": {
+        "properties": {
+          "type": {
+            "enum": ["foo", "bar"],
+            "type": "string"
+          }
+        },
+        "type": "object"
+      }
+    }
+  }
+}
