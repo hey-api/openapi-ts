@@ -7,6 +7,7 @@ export const defaultConfig: PluginConfig<Config> = {
   _handler: handler,
   _handlerLegacy: handlerLegacy,
   enums: false,
+  exportInlineEnums: false,
   name: '@hey-api/typescript',
   output: 'types',
   style: 'preserve',

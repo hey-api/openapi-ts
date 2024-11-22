@@ -107,6 +107,61 @@ describe(`OpenAPI ${VERSION}`, () => {
     },
     {
       config: createConfig({
+        input: 'enum-inline.json',
+        output: 'enum-inline',
+        plugins: [
+          {
+            exportInlineEnums: true,
+            name: '@hey-api/typescript',
+          },
+        ],
+      }),
+      description: 'exports inline enums',
+    },
+    {
+      config: createConfig({
+        input: 'enum-inline.json',
+        output: 'enum-inline-javascript',
+        plugins: [
+          {
+            enums: 'javascript',
+            exportInlineEnums: true,
+            name: '@hey-api/typescript',
+          },
+        ],
+      }),
+      description: 'exports inline enums (JavaScript)',
+    },
+    {
+      config: createConfig({
+        input: 'enum-inline.json',
+        output: 'enum-inline-typescript',
+        plugins: [
+          {
+            enums: 'typescript',
+            exportInlineEnums: true,
+            name: '@hey-api/typescript',
+          },
+        ],
+      }),
+      description: 'exports inline enums (TypeScript)',
+    },
+    {
+      config: createConfig({
+        input: 'enum-inline.json',
+        output: 'enum-inline-typescript-namespace',
+        plugins: [
+          {
+            enums: 'typescript+namespace',
+            exportInlineEnums: true,
+            name: '@hey-api/typescript',
+          },
+        ],
+      }),
+      description: 'exports inline enums (TypeScript namespace)',
+    },
+    {
+      config: createConfig({
         input: 'enum-names.json',
         output: 'enum-names',
       }),
