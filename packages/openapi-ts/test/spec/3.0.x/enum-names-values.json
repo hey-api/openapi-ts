@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "title": "OpenAPI 3.0.2 enum names example",
+    "title": "OpenAPI 3.0.2 enum names values example",
     "version": "1"
   },
   "components": {
@@ -16,6 +16,11 @@
       },
       "MyFoo": {
         "enum": ["MyFoo", "MyBar"],
+        "type": "string"
+      },
+      "Foo": {
+        "enum": ["foo", "bar", null, ""],
+        "nullable": true,
         "type": "string"
       }
     }
