@@ -314,7 +314,7 @@ const processSchemaType = ({
       });
     }
 
-    const nodes: Array<ts.Expression | ts.Statement> = [];
+    let arrayNodes: Array<ts.Expression | ts.Statement> = [];
     if (
       schema.items.length === 2 &&
       schema.items.find((item) => item.type === 'null' || item.type === 'void')
@@ -323,33 +323,37 @@ const processSchemaType = ({
       for (const item of schema.items) {
         const nodes = processSchemaType({
           context,
-          dataExpression: 'item',
+          dataExpression: dataExpression || 'item',
           schema: item,
         });
         if (nodes.length) {
-          const identifierItem = compiler.identifier({ text: 'item' });
-          // processed means the item was transformed
-          nodes.push(
-            compiler.ifStatement({
-              expression: identifierItem,
-              thenStatement: compiler.block({
-                statements:
-                  nodes.length === 1
-                    ? ts.isStatement(nodes[0])
-                      ? []
-                      : [
-                          compiler.returnStatement({
-                            expression: nodes[0],
-                          }),
-                        ]
-                    : ensureStatements(nodes),
+          if (dataExpression) {
+            arrayNodes = arrayNodes.concat(nodes);
+          } else {
+            const identifierItem = compiler.identifier({ text: 'item' });
+            // processed means the item was transformed
+            arrayNodes.push(
+              compiler.ifStatement({
+                expression: identifierItem,
+                thenStatement: compiler.block({
+                  statements:
+                    nodes.length === 1
+                      ? ts.isStatement(nodes[0])
+                        ? []
+                        : [
+                            compiler.returnStatement({
+                              expression: nodes[0],
+                            }),
+                          ]
+                      : ensureStatements(nodes),
+                }),
               }),
-            }),
-            compiler.returnStatement({ expression: identifierItem }),
-          );
+              compiler.returnStatement({ expression: identifierItem }),
+            );
+          }
         }
       }
-      return nodes;
+      return arrayNodes;
     }
 
     console.warn(
