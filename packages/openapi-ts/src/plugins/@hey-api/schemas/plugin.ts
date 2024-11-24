@@ -8,19 +8,19 @@ import type {
 } from '../../../openApi/3.0.x/types/spec';
 import type { OpenApiV3_1_X } from '../../../openApi/3.1.x';
 import type { SchemaObject as OpenApiV3_1_XSchemaObject } from '../../../openApi/3.1.x/types/spec';
-import type { PluginHandler } from '../../types';
+import type { Plugin, PluginHandler } from '../../types';
 import type { Config } from './types';
 
 const schemasId = 'schemas';
 
 const stripSchema = ({
-  context,
+  plugin,
   schema,
 }: {
-  context: IRContext;
+  plugin: Plugin<Config>;
   schema: OpenApiV3_0_XSchemaObject | OpenApiV3_1_XSchemaObject;
 }) => {
-  if (context.config.plugins['@hey-api/schemas']?.type === 'form') {
+  if (plugin.type === 'form') {
     if (schema.description) {
       delete schema.description;
     }
@@ -45,15 +45,18 @@ const stripSchema = ({
 
 const schemaToJsonSchemaDraft_05 = ({
   context,
+  plugin,
   schema: _schema,
 }: {
   context: IRContext;
+  plugin: Plugin<Config>;
   schema: OpenApiV3_0_XSchemaObject | OpenApiV3_0_XReferenceObject;
 }): object => {
   if (Array.isArray(_schema)) {
     return _schema.map((item) =>
       schemaToJsonSchemaDraft_05({
         context,
+        plugin,
         schema: item,
       }),
     );
@@ -68,7 +71,7 @@ const schemaToJsonSchemaDraft_05 = ({
     return schema;
   }
 
-  stripSchema({ context, schema });
+  stripSchema({ plugin, schema });
 
   if (
     schema.additionalProperties &&
@@ -76,6 +79,7 @@ const schemaToJsonSchemaDraft_05 = ({
   ) {
     schema.additionalProperties = schemaToJsonSchemaDraft_05({
       context,
+      plugin,
       schema: schema.additionalProperties,
     });
   }
@@ -84,6 +88,7 @@ const schemaToJsonSchemaDraft_05 = ({
     schema.allOf = schema.allOf.map((item) =>
       schemaToJsonSchemaDraft_05({
         context,
+        plugin,
         schema: item,
       }),
     );
@@ -93,6 +98,7 @@ const schemaToJsonSchemaDraft_05 = ({
     schema.anyOf = schema.anyOf.map((item) =>
       schemaToJsonSchemaDraft_05({
         context,
+        plugin,
         schema: item,
       }),
     );
@@ -101,6 +107,7 @@ const schemaToJsonSchemaDraft_05 = ({
   if (schema.items) {
     schema.items = schemaToJsonSchemaDraft_05({
       context,
+      plugin,
       schema: schema.items,
     });
   }
@@ -109,6 +116,7 @@ const schemaToJsonSchemaDraft_05 = ({
     schema.oneOf = schema.oneOf.map((item) =>
       schemaToJsonSchemaDraft_05({
         context,
+        plugin,
         schema: item,
       }),
     );
@@ -121,6 +129,7 @@ const schemaToJsonSchemaDraft_05 = ({
       if (typeof property !== 'boolean') {
         schema.properties[name] = schemaToJsonSchemaDraft_05({
           context,
+          plugin,
           schema: property,
         });
       }
@@ -132,15 +141,18 @@ const schemaToJsonSchemaDraft_05 = ({
 
 const schemaToJsonSchema2020_12 = ({
   context,
+  plugin,
   schema: _schema,
 }: {
   context: IRContext;
+  plugin: Plugin<Config>;
   schema: OpenApiV3_1_XSchemaObject;
 }): object => {
   if (Array.isArray(_schema)) {
     return _schema.map((item) =>
       schemaToJsonSchema2020_12({
         context,
+        plugin,
         schema: item,
       }),
     );
@@ -148,7 +160,7 @@ const schemaToJsonSchema2020_12 = ({
 
   const schema = structuredClone(_schema);
 
-  stripSchema({ context, schema });
+  stripSchema({ plugin, schema });
 
   if (schema.$ref) {
     // refs using unicode characters become encoded, didn't investigate why
@@ -162,6 +174,7 @@ const schemaToJsonSchema2020_12 = ({
   ) {
     schema.additionalProperties = schemaToJsonSchema2020_12({
       context,
+      plugin,
       schema: schema.additionalProperties,
     });
   }
@@ -170,6 +183,7 @@ const schemaToJsonSchema2020_12 = ({
     schema.allOf = schema.allOf.map((item) =>
       schemaToJsonSchema2020_12({
         context,
+        plugin,
         schema: item,
       }),
     );
@@ -179,6 +193,7 @@ const schemaToJsonSchema2020_12 = ({
     schema.anyOf = schema.anyOf.map((item) =>
       schemaToJsonSchema2020_12({
         context,
+        plugin,
         schema: item,
       }),
     );
@@ -187,6 +202,7 @@ const schemaToJsonSchema2020_12 = ({
   if (schema.items) {
     schema.items = schemaToJsonSchema2020_12({
       context,
+      plugin,
       schema: schema.items,
     });
   }
@@ -195,6 +211,7 @@ const schemaToJsonSchema2020_12 = ({
     schema.oneOf = schema.oneOf.map((item) =>
       schemaToJsonSchema2020_12({
         context,
+        plugin,
         schema: item,
       }),
     );
@@ -204,6 +221,7 @@ const schemaToJsonSchema2020_12 = ({
     schema.prefixItems = schema.prefixItems.map((item) =>
       schemaToJsonSchema2020_12({
         context,
+        plugin,
         schema: item,
       }),
     );
@@ -216,6 +234,7 @@ const schemaToJsonSchema2020_12 = ({
       if (typeof property !== 'boolean') {
         schema.properties[name] = schemaToJsonSchema2020_12({
           context,
+          plugin,
           schema: property,
         });
       }
@@ -226,12 +245,12 @@ const schemaToJsonSchema2020_12 = ({
 };
 
 const schemaName = ({
-  context,
   name,
+  plugin,
   schema,
 }: {
-  context: IRContext;
   name: string;
+  plugin: Plugin<Config>;
   schema:
     | OpenApiV3_0_XReferenceObject
     | OpenApiV3_0_XSchemaObject
@@ -239,17 +258,20 @@ const schemaName = ({
 }): string => {
   const validName = ensureValidTypeScriptJavaScriptIdentifier(name);
 
-  if (context.config.plugins['@hey-api/schemas']?.nameBuilder) {
-    return context.config.plugins['@hey-api/schemas'].nameBuilder(
-      validName,
-      schema,
-    );
+  if (plugin.nameBuilder) {
+    return plugin.nameBuilder(validName, schema);
   }
 
   return `${validName}Schema`;
 };
 
-const schemasV3_0_X = (context: IRContext<OpenApiV3_0_X>) => {
+const schemasV3_0_X = ({
+  context,
+  plugin,
+}: {
+  context: IRContext<OpenApiV3_0_X>;
+  plugin: Plugin<Config>;
+}) => {
   if (!context.spec.components) {
     return;
   }
@@ -258,19 +280,26 @@ const schemasV3_0_X = (context: IRContext<OpenApiV3_0_X>) => {
     const schema = context.spec.components.schemas[name];
     const obj = schemaToJsonSchemaDraft_05({
       context,
+      plugin,
       schema,
     });
     const statement = compiler.constVariable({
       assertion: 'const',
       exportConst: true,
       expression: compiler.objectExpression({ obj }),
-      name: schemaName({ context, name, schema }),
+      name: schemaName({ name, plugin, schema }),
     });
     context.file({ id: schemasId })!.add(statement);
   }
 };
 
-const schemasV3_1_X = (context: IRContext<OpenApiV3_1_X>) => {
+const schemasV3_1_X = ({
+  context,
+  plugin,
+}: {
+  context: IRContext<OpenApiV3_1_X>;
+  plugin: Plugin<Config>;
+}) => {
   if (!context.spec.components) {
     return;
   }
@@ -279,13 +308,14 @@ const schemasV3_1_X = (context: IRContext<OpenApiV3_1_X>) => {
     const schema = context.spec.components.schemas[name];
     const obj = schemaToJsonSchema2020_12({
       context,
+      plugin,
       schema,
     });
     const statement = compiler.constVariable({
       assertion: 'const',
       exportConst: true,
       expression: compiler.objectExpression({ obj }),
-      name: schemaName({ context, name, schema }),
+      name: schemaName({ name, plugin, schema }),
     });
     context.file({ id: schemasId })!.add(statement);
   }
@@ -306,11 +336,17 @@ export const handler: PluginHandler<Config> = ({ context, plugin }) => {
       case '3.0.2':
       case '3.0.3':
       case '3.0.4':
-        schemasV3_0_X(context as IRContext<OpenApiV3_0_X>);
+        schemasV3_0_X({
+          context: context as IRContext<OpenApiV3_0_X>,
+          plugin,
+        });
         break;
       case '3.1.0':
       case '3.1.1':
-        schemasV3_1_X(context as IRContext<OpenApiV3_1_X>);
+        schemasV3_1_X({
+          context: context as IRContext<OpenApiV3_1_X>,
+          plugin,
+        });
         break;
       default:
         break;
