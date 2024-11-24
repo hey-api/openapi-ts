@@ -94,7 +94,7 @@ client.instance.interceptors.request.use((config) => {
 
 ## Customization
 
-Our Axios client is built as a thin wrapper on top of Axios, extending its functionality to work with Hey API. If you're already familiar with Axios, customizing your client will feel like working directly with Axios. You can customize requests in three ways – through SDKs, per client, or per request.
+The Axios client is built as a thin wrapper on top of Axios, extending its functionality to work with Hey API. If you're already familiar with Axios, customizing your client will feel like working directly with Axios. You can customize requests in three ways – through SDKs, per client, or per request.
 
 ### SDKs
 

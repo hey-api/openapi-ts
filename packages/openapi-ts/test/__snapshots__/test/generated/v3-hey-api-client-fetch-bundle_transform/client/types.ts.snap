@@ -98,11 +98,13 @@ export interface Config<ThrowOnError extends boolean = boolean>
   throwOnError?: ThrowOnError;
 }
 
-export interface RequestOptionsBase<ThrowOnError extends boolean>
-  extends Config<ThrowOnError> {
+export interface RequestOptionsBase<
+  ThrowOnError extends boolean,
+  Url extends string = string,
+> extends Config<ThrowOnError> {
   path?: Record<string, unknown>;
   query?: Record<string, unknown>;
-  url: string;
+  url: Url;
 }
 
 export type RequestResult<
@@ -146,14 +148,18 @@ export interface Client<
   Req = Request,
   Res = Response,
   Err = unknown,
-  Options = RequestOptions,
+  Opts = RequestOptions,
 > {
+  /**
+   * Returns the final request URL. This method works only with experimental parser.
+   */
+  buildUrl: <T extends { url: string }>(options: T & Options<T>) => string;
   connect: MethodFn;
   delete: MethodFn;
   get: MethodFn;
   getConfig: () => Config;
   head: MethodFn;
-  interceptors: Middleware<Req, Res, Err, Options>;
+  interceptors: Middleware<Req, Res, Err, Opts>;
   options: MethodFn;
   patch: MethodFn;
   post: MethodFn;
@@ -181,6 +187,21 @@ type OptionsBase<ThrowOnError extends boolean> = Omit<
 };
 
 export type Options<
+  T extends { url: string } = { url: string },
+  ThrowOnError extends boolean = boolean,
+> = T extends { body?: any }
+  ? T extends { headers?: any }
+    ? OmitKeys<OptionsBase<ThrowOnError>, 'body' | 'headers'> & Omit<T, 'url'>
+    : OmitKeys<OptionsBase<ThrowOnError>, 'body'> &
+        Omit<T, 'url'> &
+        Pick<OptionsBase<ThrowOnError>, 'headers'>
+  : T extends { headers?: any }
+    ? OmitKeys<OptionsBase<ThrowOnError>, 'headers'> &
+        Omit<T, 'url'> &
+        Pick<OptionsBase<ThrowOnError>, 'body'>
+    : OptionsBase<ThrowOnError> & Omit<T, 'url'>;
+
+export type OptionsLegacyParser<
   T = unknown,
   ThrowOnError extends boolean = boolean,
 > = T extends { body?: any }

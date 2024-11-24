@@ -133,7 +133,7 @@ To eject, you must provide a reference to the function that was passed to `use()
 
 ## Customization
 
-Our Fetch client is built as a thin wrapper on top of Fetch API, extending its functionality to work with Hey API. If you're already familiar with Fetch, customizing your client will feel like working directly with Fetch API. You can customize requests in three ways – through SDKs, per client, or per request.
+The Fetch client is built as a thin wrapper on top of Fetch API, extending its functionality to work with Hey API. If you're already familiar with Fetch, customizing your client will feel like working directly with Fetch API. You can customize requests in three ways – through SDKs, per client, or per request.
 
 ### SDKs
 
@@ -177,6 +177,37 @@ Alternatively, you can pass the Fetch API configuration options to each SDK func
 const response = await getFoo({
   baseUrl: 'https://example.com', // <-- override internal configuration
 });
+```
+
+## Build URL
+
+::: warning
+To use this feature, you must opt in to the [experimental parser](/openapi-ts/configuration#parser).
+:::
+
+If you need to access the compiled URL, you can use the `buildUrl()` method. It's loosely typed by default to accept almost any value; in practice, you will want to pass a type hint.
+
+```ts
+type FooData = {
+  path: {
+    fooId: number;
+  };
+  query?: {
+    bar?: string;
+  };
+  url: '/foo/{fooId}';
+};
+
+const url = client.buildUrl<FooData>({
+  path: {
+    fooId: 1,
+  },
+  query: {
+    bar: 'baz',
+  },
+  url: '/foo/{fooId}',
+});
+console.log(url); // prints '/foo/1?bar=baz'
 ```
 
 ## Bundling
