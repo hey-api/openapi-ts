@@ -22,6 +22,7 @@ export type ListPetsData = {
      */
     limit?: number;
   };
+  url: '/pets';
 };
 
 export type ListPetsErrors = {
@@ -41,6 +42,11 @@ export type ListPetsResponses = {
 };
 
 export type ListPetsResponse = ListPetsResponses[keyof ListPetsResponses];
+
+export type CreatePetsData = {
+  body?: never;
+  url: '/pets';
+};
 
 export type CreatePetsErrors = {
   /**
@@ -67,6 +73,7 @@ export type ShowPetByIdData = {
     petId: string;
   };
   query?: never;
+  url: '/pets/{petId}';
 };
 
 export type ShowPetByIdErrors = {

@@ -7,6 +7,7 @@ import {
 } from '@hey-api/client-fetch';
 
 import type {
+  CreatePetsData,
   CreatePetsError,
   ListPetsData,
   ListPetsError,
@@ -37,7 +38,7 @@ export const listPets = <ThrowOnError extends boolean = false>(
  * Create a pet
  */
 export const createPets = <ThrowOnError extends boolean = false>(
-  options?: Options<unknown, ThrowOnError>,
+  options?: Options<CreatePetsData, ThrowOnError>,
 ) =>
   (options?.client ?? client).post<unknown, CreatePetsError, ThrowOnError>({
     ...options,

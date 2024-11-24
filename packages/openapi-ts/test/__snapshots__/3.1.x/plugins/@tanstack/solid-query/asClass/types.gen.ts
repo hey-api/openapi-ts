@@ -947,8 +947,14 @@ export type SimpleParameter = string;
  */
 export type x_Foo_Bar = ModelWithString;
 
+export type ExportData = {
+    body?: never;
+    url: '/api/v{api-version}/no-tag';
+};
+
 export type ImportData = {
     body: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
+    url: '/api/v{api-version}/no-tag';
 };
 
 export type ImportResponses = {
@@ -963,6 +969,11 @@ export type ImportResponses = {
 };
 
 export type ImportResponse = ImportResponses[keyof ImportResponses];
+
+export type ApiVversionOdataControllerCountData = {
+    body?: never;
+    url: '/api/v{api-version}/simple/$count';
+};
 
 export type ApiVversionOdataControllerCountResponses = {
     /**
@@ -982,6 +993,7 @@ export type GetApiVbyApiVersionSimpleOperationData = {
         foo_param: string;
     };
     query?: never;
+    url: '/api/v{api-version}/simple:operation';
 };
 
 export type GetApiVbyApiVersionSimpleOperationErrors = {
@@ -1002,6 +1014,41 @@ export type GetApiVbyApiVersionSimpleOperationResponses = {
 
 export type GetApiVbyApiVersionSimpleOperationResponse = GetApiVbyApiVersionSimpleOperationResponses[keyof GetApiVbyApiVersionSimpleOperationResponses];
 
+export type DeleteCallWithoutParametersAndResponseData = {
+    body?: never;
+    url: '/api/v{api-version}/simple';
+};
+
+export type GetCallWithoutParametersAndResponseData = {
+    body?: never;
+    url: '/api/v{api-version}/simple';
+};
+
+export type HeadCallWithoutParametersAndResponseData = {
+    body?: never;
+    url: '/api/v{api-version}/simple';
+};
+
+export type OptionsCallWithoutParametersAndResponseData = {
+    body?: never;
+    url: '/api/v{api-version}/simple';
+};
+
+export type PatchCallWithoutParametersAndResponseData = {
+    body?: never;
+    url: '/api/v{api-version}/simple';
+};
+
+export type PostCallWithoutParametersAndResponseData = {
+    body?: never;
+    url: '/api/v{api-version}/simple';
+};
+
+export type PutCallWithoutParametersAndResponseData = {
+    body?: never;
+    url: '/api/v{api-version}/simple';
+};
+
 export type DeleteFooData3 = {
     body?: never;
     headers: {
@@ -1021,6 +1068,7 @@ export type DeleteFooData3 = {
         BarParam: string;
     };
     query?: never;
+    url: '/api/v{api-version}/foo/{foo_param}/bar/{BarParam}';
 };
 
 export type CallWithDescriptionsData = {
@@ -1055,6 +1103,7 @@ export type CallWithDescriptionsData = {
          */
         parameterWithReservedCharacters?: string;
     };
+    url: '/api/v{api-version}/descriptions';
 };
 
 export type DeprecatedCallData = {
@@ -1068,6 +1117,7 @@ export type DeprecatedCallData = {
     };
     path?: never;
     query?: never;
+    url: '/api/v{api-version}/parameters/deprecated';
 };
 
 export type CallWithParametersData = {
@@ -1099,6 +1149,7 @@ export type CallWithParametersData = {
          */
         cursor: string | null;
     };
+    url: '/api/v{api-version}/parameters/{parameterPath}';
 };
 
 export type CallWithWeirdParameterNamesData = {
@@ -1140,6 +1191,7 @@ export type CallWithWeirdParameterNamesData = {
          */
         'parameter-query': string | null;
     };
+    url: '/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}';
 };
 
 export type GetCallWithOptionalParamData = {
@@ -1154,6 +1206,7 @@ export type GetCallWithOptionalParamData = {
          */
         page?: number;
     };
+    url: '/api/v{api-version}/parameters';
 };
 
 export type PostCallWithOptionalParamData = {
@@ -1170,6 +1223,7 @@ export type PostCallWithOptionalParamData = {
          */
         parameter: Pageable;
     };
+    url: '/api/v{api-version}/parameters';
 };
 
 export type PostCallWithOptionalParamResponses = {
@@ -1197,6 +1251,7 @@ export type PostApiVbyApiVersionRequestBodyData = {
          */
         parameter?: string;
     };
+    url: '/api/v{api-version}/requestBody';
 };
 
 export type PostApiVbyApiVersionFormDataData = {
@@ -1211,6 +1266,7 @@ export type PostApiVbyApiVersionFormDataData = {
          */
         parameter?: string;
     };
+    url: '/api/v{api-version}/formData';
 };
 
 export type CallWithDefaultParametersData = {
@@ -1238,6 +1294,7 @@ export type CallWithDefaultParametersData = {
          */
         parameterModel?: ModelWithString | null;
     };
+    url: '/api/v{api-version}/defaults';
 };
 
 export type CallWithDefaultOptionalParametersData = {
@@ -1265,6 +1322,7 @@ export type CallWithDefaultOptionalParametersData = {
          */
         parameterModel?: ModelWithString;
     };
+    url: '/api/v{api-version}/defaults';
 };
 
 export type CallToTestOrderOfParamsData = {
@@ -1304,6 +1362,32 @@ export type CallToTestOrderOfParamsData = {
          */
         parameterStringNullableWithDefault?: string | null;
     };
+    url: '/api/v{api-version}/defaults';
+};
+
+export type DuplicateNameData = {
+    body?: never;
+    url: '/api/v{api-version}/duplicate';
+};
+
+export type DuplicateName2Data = {
+    body?: never;
+    url: '/api/v{api-version}/duplicate';
+};
+
+export type DuplicateName3Data = {
+    body?: never;
+    url: '/api/v{api-version}/duplicate';
+};
+
+export type DuplicateName4Data = {
+    body?: never;
+    url: '/api/v{api-version}/duplicate';
+};
+
+export type CallWithNoContentResponseData = {
+    body?: never;
+    url: '/api/v{api-version}/no-content';
 };
 
 export type CallWithNoContentResponseResponses = {
@@ -1314,6 +1398,11 @@ export type CallWithNoContentResponseResponses = {
 };
 
 export type CallWithNoContentResponseResponse = CallWithNoContentResponseResponses[keyof CallWithNoContentResponseResponses];
+
+export type CallWithResponseAndNoContentResponseData = {
+    body?: never;
+    url: '/api/v{api-version}/multiple-tags/response-and-no-content';
+};
 
 export type CallWithResponseAndNoContentResponseResponses = {
     /**
@@ -1328,11 +1417,21 @@ export type CallWithResponseAndNoContentResponseResponses = {
 
 export type CallWithResponseAndNoContentResponseResponse = CallWithResponseAndNoContentResponseResponses[keyof CallWithResponseAndNoContentResponseResponses];
 
+export type DummyAData = {
+    body?: never;
+    url: '/api/v{api-version}/multiple-tags/a';
+};
+
 export type DummyAResponses = {
     200: _400;
 };
 
 export type DummyAResponse = DummyAResponses[keyof DummyAResponses];
+
+export type DummyBData = {
+    body?: never;
+    url: '/api/v{api-version}/multiple-tags/b';
+};
 
 export type DummyBResponses = {
     /**
@@ -1343,11 +1442,21 @@ export type DummyBResponses = {
 
 export type DummyBResponse = DummyBResponses[keyof DummyBResponses];
 
+export type CallWithResponseData = {
+    body?: never;
+    url: '/api/v{api-version}/response';
+};
+
 export type CallWithResponseResponses = {
     default: _import;
 };
 
 export type CallWithResponseResponse = CallWithResponseResponses[keyof CallWithResponseResponses];
+
+export type CallWithDuplicateResponsesData = {
+    body?: never;
+    url: '/api/v{api-version}/response';
+};
 
 export type CallWithDuplicateResponsesErrors = {
     /**
@@ -1390,6 +1499,11 @@ export type CallWithDuplicateResponsesResponses = {
 };
 
 export type CallWithDuplicateResponsesResponse = CallWithDuplicateResponsesResponses[keyof CallWithDuplicateResponsesResponses];
+
+export type CallWithResponsesData = {
+    body?: never;
+    url: '/api/v{api-version}/response';
+};
 
 export type CallWithResponsesErrors = {
     /**
@@ -1458,6 +1572,7 @@ export type CollectionFormatData = {
          */
         parameterArrayMulti: Array<string> | null;
     };
+    url: '/api/v{api-version}/collectionFormat';
 };
 
 export type TypesData = {
@@ -1498,6 +1613,7 @@ export type TypesData = {
          */
         parameterEnum: 'Success' | 'Warning' | 'Error' | null;
     };
+    url: '/api/v{api-version}/types';
 };
 
 export type TypesResponses = {
@@ -1530,6 +1646,7 @@ export type UploadFileData = {
         'api-version': string | null;
     };
     query?: never;
+    url: '/api/v{api-version}/upload';
 };
 
 export type UploadFileResponses = {
@@ -1548,6 +1665,7 @@ export type FileResponseData = {
         'api-version': string;
     };
     query?: never;
+    url: '/api/v{api-version}/file/{id}';
 };
 
 export type FileResponseResponses = {
@@ -1578,6 +1696,7 @@ export type ComplexTypesData = {
          */
         parameterReference: ModelWithString;
     };
+    url: '/api/v{api-version}/complex';
 };
 
 export type ComplexTypesErrors = {
@@ -1600,6 +1719,11 @@ export type ComplexTypesResponses = {
 
 export type ComplexTypesResponse = ComplexTypesResponses[keyof ComplexTypesResponses];
 
+export type MultipartResponseData = {
+    body?: never;
+    url: '/api/v{api-version}/multipart';
+};
+
 export type MultipartResponseResponses = {
     /**
      * OK
@@ -1620,6 +1744,7 @@ export type MultipartRequestData = {
         content?: Blob | File;
         data?: ModelWithString | null;
     };
+    url: '/api/v{api-version}/multipart';
 };
 
 export type ComplexParamsData = {
@@ -1644,6 +1769,7 @@ export type ComplexParamsData = {
         'api-version': string;
     };
     query?: never;
+    url: '/api/v{api-version}/complex/{id}';
 };
 
 export type ComplexParamsResponses = {
@@ -1654,6 +1780,11 @@ export type ComplexParamsResponses = {
 };
 
 export type ComplexParamsResponse = ComplexParamsResponses[keyof ComplexParamsResponses];
+
+export type CallWithResultFromHeaderData = {
+    body?: never;
+    url: '/api/v{api-version}/header';
+};
 
 export type CallWithResultFromHeaderErrors = {
     /**
@@ -1682,6 +1813,7 @@ export type TestErrorCodeData = {
          */
         status: number;
     };
+    url: '/api/v{api-version}/error';
 };
 
 export type TestErrorCodeErrors = {
@@ -1719,6 +1851,7 @@ export type NonAsciiæøåÆøÅöôêÊ字符串Data = {
          */
         nonAsciiParamæøåÆØÅöôêÊ: number;
     };
+    url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串';
 };
 
 export type NonAsciiæøåÆøÅöôêÊ字符串Responses = {
@@ -1732,4 +1865,5 @@ export type NonAsciiæøåÆøÅöôêÊ字符串Response = NonAsciiæøåÆøÅ
 
 export type PutWithFormUrlEncodedData = {
     body: ArrayWithStrings;
+    url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串';
 };

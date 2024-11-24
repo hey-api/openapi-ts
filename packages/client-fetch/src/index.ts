@@ -24,6 +24,20 @@ export const createClient = (config: Config = {}): Client => {
     return getConfig();
   };
 
+  const buildUrl: Client['buildUrl'] = (options) => {
+    const url = getUrl({
+      baseUrl: options.baseUrl ?? '',
+      path: options.path,
+      query: options.query,
+      querySerializer:
+        typeof options.querySerializer === 'function'
+          ? options.querySerializer
+          : createQuerySerializer(options.querySerializer),
+      url: options.url,
+    });
+    return url;
+  };
+
   const interceptors = createInterceptors<
     Request,
     Response,
@@ -48,17 +62,7 @@ export const createClient = (config: Config = {}): Client => {
       opts.headers.delete('Content-Type');
     }
 
-    const url = getUrl({
-      baseUrl: opts.baseUrl ?? '',
-      path: opts.path,
-      query: opts.query,
-      querySerializer:
-        typeof opts.querySerializer === 'function'
-          ? opts.querySerializer
-          : createQuerySerializer(opts.querySerializer),
-      url: opts.url,
-    });
-
+    const url = buildUrl(opts);
     const requestInit: ReqInit = {
       redirect: 'follow',
       ...opts,
@@ -143,6 +147,7 @@ export const createClient = (config: Config = {}): Client => {
   };
 
   return {
+    buildUrl,
     connect: (options) => request({ ...options, method: 'CONNECT' }),
     delete: (options) => request({ ...options, method: 'DELETE' }),
     get: (options) => request({ ...options, method: 'GET' }),
@@ -163,6 +168,7 @@ export type {
   Client,
   Config,
   Options,
+  OptionsLegacyParser,
   RequestOptionsBase,
   RequestResult,
 } from './types';

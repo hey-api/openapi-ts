@@ -1,6 +1,7 @@
 import { copyFileSync } from 'node:fs';
 import path from 'node:path';
 
+import type { ImportExportItemObject } from '../compiler/utils';
 import type { Config } from '../types/config';
 import { ensureDirSync, relativeModulePath } from './utils';
 
@@ -26,7 +27,16 @@ export const clientModulePath = ({
   return config.client.name;
 };
 
-export const clientOptionsTypeName = () => 'Options';
+export const clientApi = {
+  Options: {
+    asType: true,
+    name: 'Options',
+  },
+  OptionsLegacyParser: {
+    asType: true,
+    name: 'OptionsLegacyParser',
+  },
+} satisfies Record<string, ImportExportItemObject>;
 
 /**
  * Creates a `client` folder containing the same modules as the client package.
