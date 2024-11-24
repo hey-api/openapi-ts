@@ -20,3 +20,12 @@ export const MyFoo = {
     MY_FOO: 'MyFoo',
     MY_BAR: 'MyBar'
 } as const;
+
+export type Foo = 'foo' | 'bar' | null | '';
+
+export const Foo = {
+    FOO: 'foo',
+    BAR: 'bar',
+    NULL: null,
+    '': ''
+} as const;

@@ -31,7 +31,12 @@ const parseSchemaJsDoc = ({ schema }: { schema: IRSchemaObject }) => {
   const comments = [
     schema.description && escapeComment(schema.description),
     schema.deprecated && '@deprecated',
-  ];
+  ].filter(Boolean);
+
+  if (!comments.length) {
+    return;
+  }
+
   return comments;
 };
 
@@ -77,20 +82,22 @@ const addJavaScriptEnum = ({
 
 const schemaToEnumObject = ({ schema }: { schema: IRSchemaObject }) => {
   const typeofItems: Array<
-    | 'string'
-    | 'number'
     | 'bigint'
     | 'boolean'
+    | 'function'
+    | 'number'
+    | 'object'
+    | 'string'
     | 'symbol'
     | 'undefined'
-    | 'object'
-    | 'function'
   > = [];
 
   const obj = (schema.items ?? []).map((item) => {
     const typeOfItemConst = typeof item.const;
 
     if (!typeofItems.includes(typeOfItemConst)) {
+      // track types of enum values because some modes support
+      // only enums with string and number types
       typeofItems.push(typeOfItemConst);
     }
 
@@ -105,6 +112,9 @@ const schemaToEnumObject = ({ schema }: { schema: IRSchemaObject }) => {
       key = valid.toLocaleUpperCase();
     } else if (typeof item.const === 'string') {
       key = item.const.replace(/(\p{Lowercase})(\p{Uppercase}+)/gu, '$1_$2');
+      key = key.toLocaleUpperCase();
+    } else if (item.const === null) {
+      key = 'null';
       key = key.toLocaleUpperCase();
     }
 

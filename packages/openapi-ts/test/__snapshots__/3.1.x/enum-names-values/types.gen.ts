@@ -5,3 +5,5 @@ export type _1_10 = '1-10' | '11-20';
 export type myFoo = 'myFoo' | 'myBar';
 
 export type MyFoo = 'MyFoo' | 'MyBar';
+
+export type Foo = 'foo' | 'bar' | null | '';
