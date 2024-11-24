@@ -37,6 +37,26 @@ export const getSchemaType = ({
   }
 };
 
+const parseSchemaJsDoc = ({
+  irSchema,
+  schema,
+}: {
+  irSchema: IRSchemaObject;
+  schema: SchemaObject;
+}) => {
+  if (schema.deprecated !== undefined) {
+    irSchema.deprecated = schema.deprecated;
+  }
+
+  if (schema.description) {
+    irSchema.description = schema.description;
+  }
+
+  if (schema.title) {
+    irSchema.title = schema.title;
+  }
+};
+
 const parseSchemaMeta = ({
   irSchema,
   schema,
@@ -88,10 +108,6 @@ const parseSchemaMeta = ({
     irSchema.accessScope = 'read';
   } else if (schema.writeOnly) {
     irSchema.accessScope = 'write';
-  }
-
-  if (schema.title) {
-    irSchema.title = schema.title;
   }
 };
 
@@ -236,22 +252,6 @@ const parseString = ({
   irSchema.type = 'string';
 
   return irSchema;
-};
-
-const parseSchemaJsDoc = ({
-  irSchema,
-  schema,
-}: {
-  irSchema: IRSchemaObject;
-  schema: SchemaObject;
-}) => {
-  if (schema.deprecated !== undefined) {
-    irSchema.deprecated = schema.deprecated;
-  }
-
-  if (schema.description) {
-    irSchema.description = schema.description;
-  }
 };
 
 const initIrSchema = ({ schema }: { schema: SchemaObject }): IRSchemaObject => {
@@ -636,17 +636,19 @@ const parseNullableType = ({
 }): IRSchemaObject => {
   if (!irSchema) {
     irSchema = initIrSchema({ schema });
-
-    parseSchemaMeta({
-      irSchema,
-      schema,
-    });
   }
+
+  const typeIrSchema: IRSchemaObject = {};
+
+  parseSchemaMeta({
+    irSchema: typeIrSchema,
+    schema,
+  });
 
   const schemaItems: Array<IRSchemaObject> = [
     parseOneType({
       context,
-      irSchema: {},
+      irSchema: typeIrSchema,
       schema,
     }),
     {
