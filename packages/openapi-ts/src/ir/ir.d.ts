@@ -31,7 +31,9 @@ export interface IROperationObject {
   deprecated?: boolean;
   description?: string;
   id: string;
+  method: keyof IRPathItemObject;
   parameters?: IRParametersObject;
+  path: keyof IRPathsObject;
   responses?: IRResponsesObject;
   // TODO: parser - add more properties
   // security?: ReadonlyArray<SecurityRequirementObject>;

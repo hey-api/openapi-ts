@@ -2,10 +2,7 @@ import type ts from 'typescript';
 
 import { compiler } from '../../../compiler';
 import type { ObjectValue } from '../../../compiler/types';
-import {
-  clientModulePath,
-  clientOptionsTypeName,
-} from '../../../generate/client';
+import { clientApi, clientModulePath } from '../../../generate/client';
 import type { IRContext } from '../../../ir/context';
 import type { IROperationObject } from '../../../ir/ir';
 import { hasOperationDataRequired } from '../../../ir/operation';
@@ -16,10 +13,7 @@ import { irRef } from '../../../utils/ref';
 import { transformServiceName } from '../../../utils/transform';
 import type { PluginHandler } from '../../types';
 import { operationTransformerIrRef } from '../transformers/plugin';
-import {
-  operationOptionsType,
-  serviceFunctionIdentifier,
-} from './plugin-legacy';
+import { serviceFunctionIdentifier } from './plugin-legacy';
 import type { Config } from './types';
 
 interface OperationIRRef {
@@ -63,16 +57,29 @@ export const operationIrRef = ({
   })}${affix}`;
 };
 
+export const operationOptionsType = ({
+  importedType,
+  throwOnError,
+}: {
+  importedType?: string | false;
+  throwOnError?: string;
+}) => {
+  const optionsName = clientApi.Options.name;
+  // TODO: refactor this to be more generic, works for now
+  if (throwOnError) {
+    return `${optionsName}<${importedType || 'unknown'}, ${throwOnError}>`;
+  }
+  return importedType ? `${optionsName}<${importedType}>` : optionsName;
+};
+
 const sdkId = 'sdk';
 
 const requestOptions = ({
   context,
   operation,
-  path,
 }: {
   context: IRContext;
   operation: IROperationObject;
-  path: string;
 }) => {
   const file = context.file({ id: sdkId })!;
   const sdkOutput = file.nameWithoutExtension();
@@ -129,7 +136,7 @@ const requestOptions = ({
 
   obj.push({
     key: 'url',
-    value: path,
+    value: operation.path,
   });
 
   const fileTransformers = context.file({ id: 'transformers' });
@@ -194,7 +201,7 @@ const generateClassSdk = ({ context }: { context: IRContext }) => {
 
   const sdks = new Map<string, Array<ts.MethodDeclaration>>();
 
-  context.subscribe('operation', ({ method, operation, path }) => {
+  context.subscribe('operation', ({ operation }) => {
     const identifierData = context.file({ id: 'types' })!.identifier({
       $ref: operationIrRef({ id: operation.id, type: 'data' }),
       namespace: 'type',
@@ -258,14 +265,8 @@ const generateClassSdk = ({ context }: { context: IRContext }) => {
       returnType: undefined,
       statements: [
         compiler.returnFunctionCall({
-          args: [
-            requestOptions({
-              context,
-              operation,
-              path,
-            }),
-          ],
-          name: `(options?.client ?? client).${method}`,
+          args: [requestOptions({ context, operation })],
+          name: `(options?.client ?? client).${operation.method}`,
           types: [
             identifierResponse.name || 'unknown',
             identifierError.name || 'unknown',
@@ -314,7 +315,7 @@ const generateFlatSdk = ({ context }: { context: IRContext }) => {
   const file = context.file({ id: sdkId })!;
   const typesModule = file.relativePathToFile({ context, id: 'types' });
 
-  context.subscribe('operation', ({ method, operation, path }) => {
+  context.subscribe('operation', ({ operation }) => {
     const identifierData = context.file({ id: 'types' })!.identifier({
       $ref: operationIrRef({ id: operation.id, type: 'data' }),
       namespace: 'type',
@@ -372,14 +373,8 @@ const generateFlatSdk = ({ context }: { context: IRContext }) => {
         returnType: undefined,
         statements: [
           compiler.returnFunctionCall({
-            args: [
-              requestOptions({
-                context,
-                operation,
-                path,
-              }),
-            ],
-            name: `(options?.client ?? client).${method}`,
+            args: [requestOptions({ context, operation })],
+            name: `(options?.client ?? client).${operation.method}`,
             types: [
               identifierResponse.name || 'unknown',
               identifierError.name || 'unknown',
@@ -435,12 +430,11 @@ export const handler: PluginHandler<Config> = ({ context, plugin }) => {
     name: 'createConfig',
   });
   file.import({
-    asType: true,
+    ...clientApi.Options,
     module: clientModulePath({
       config: context.config,
       sourceOutput: sdkOutput,
     }),
-    name: clientOptionsTypeName(),
   });
 
   // define client first

@@ -685,14 +685,12 @@ const operationToDataType = ({
     type: 'object',
   };
   const dataRequired: Array<string> = [];
-  let hasAnyProperties = false;
 
   if (!data.properties) {
     data.properties = {};
   }
 
   if (operation.body) {
-    hasAnyProperties = true;
     data.properties.body = operation.body.schema;
 
     if (operation.body.required) {
@@ -709,7 +707,6 @@ const operationToDataType = ({
 
     // do not set headers to never so we can always pass arbitrary values
     if (operation.parameters.header) {
-      hasAnyProperties = true;
       data.properties.headers = irParametersToIrSchema({
         parameters: operation.parameters.header,
       });
@@ -720,7 +717,6 @@ const operationToDataType = ({
     }
 
     if (operation.parameters.path) {
-      hasAnyProperties = true;
       data.properties.path = irParametersToIrSchema({
         parameters: operation.parameters.path,
       });
@@ -735,7 +731,6 @@ const operationToDataType = ({
     }
 
     if (operation.parameters.query) {
-      hasAnyProperties = true;
       data.properties.query = irParametersToIrSchema({
         parameters: operation.parameters.query,
       });
@@ -750,25 +745,29 @@ const operationToDataType = ({
     }
   }
 
+  data.properties.url = {
+    const: operation.path,
+    type: 'string',
+  };
+  dataRequired.push('url');
+
   data.required = dataRequired;
 
-  if (hasAnyProperties) {
-    const identifier = context.file({ id: typesId })!.identifier({
-      $ref: operationIrRef({ id: operation.id, type: 'data' }),
-      create: true,
-      namespace: 'type',
-    });
-    const node = compiler.typeAliasDeclaration({
-      exportType: true,
-      name: identifier.name || '',
-      type: schemaToType({
-        context,
-        plugin,
-        schema: data,
-      }),
-    });
-    context.file({ id: typesId })!.add(node);
-  }
+  const identifier = context.file({ id: typesId })!.identifier({
+    $ref: operationIrRef({ id: operation.id, type: 'data' }),
+    create: true,
+    namespace: 'type',
+  });
+  const node = compiler.typeAliasDeclaration({
+    exportType: true,
+    name: identifier.name || '',
+    type: schemaToType({
+      context,
+      plugin,
+      schema: data,
+    }),
+  });
+  context.file({ id: typesId })!.add(node);
 };
 
 const operationToType = ({

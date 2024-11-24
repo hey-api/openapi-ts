@@ -9,10 +9,7 @@ import type {
   FunctionTypeParameter,
   ObjectValue,
 } from '../../../compiler/types';
-import {
-  clientModulePath,
-  clientOptionsTypeName,
-} from '../../../generate/client';
+import { clientApi, clientModulePath } from '../../../generate/client';
 import { TypeScriptFile } from '../../../generate/files';
 import type { IROperationObject } from '../../../ir/ir';
 import { isOperationParameterRequired } from '../../../openApi';
@@ -97,14 +94,14 @@ export const operationResponseTypeName = (name: string) =>
  * @param importedType unique type name returned from `setUniqueTypeName()`
  * @returns options type
  */
-export const operationOptionsType = ({
+export const operationOptionsLegacyParserType = ({
   importedType,
   throwOnError,
 }: {
   importedType?: string | false;
   throwOnError?: string;
 }) => {
-  const optionsName = clientOptionsTypeName();
+  const optionsName = clientApi.OptionsLegacyParser.name;
   // TODO: refactor this to be more generic, works for now
   if (throwOnError) {
     return `${optionsName}<${importedType || 'unknown'}, ${throwOnError}>`;
@@ -136,7 +133,7 @@ const toOperationParamType = (
       {
         isRequired,
         name: 'options',
-        type: operationOptionsType({
+        type: operationOptionsLegacyParserType({
           importedType,
           throwOnError: 'ThrowOnError',
         }),
@@ -800,9 +797,8 @@ export const handlerLegacy: PluginLegacyHandler<any> = ({ client, files }) => {
       name: 'createConfig',
     });
     files.sdk.import({
-      asType: true,
+      ...clientApi.OptionsLegacyParser,
       module: clientModulePath({ config, sourceOutput: sdkOutput }),
-      name: clientOptionsTypeName(),
     });
   } else {
     if (config.client.name === 'legacy/angular') {

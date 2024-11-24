@@ -89,6 +89,7 @@ export type {
   Client,
   Config,
   Options,
+  OptionsLegacyParser,
   RequestOptionsBase,
   RequestResult,
 } from './types';

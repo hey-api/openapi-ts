@@ -24,7 +24,7 @@ Live demo
 ## Installation
 
 ::: warning
-Fastify plugin works only with the [experimental parser](/openapi-ts/configuration#parser) which is currently an opt-in feature.
+To use this feature, you must opt in to the [experimental parser](/openapi-ts/configuration#parser).
 :::
 
 Ensure you have already [configured](/openapi-ts/get-started) `@hey-api/openapi-ts`. Update your configuration to use the Fastify plugin.

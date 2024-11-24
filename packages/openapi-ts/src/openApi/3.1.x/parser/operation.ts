@@ -41,12 +41,16 @@ const parseOperationJsDoc = ({
 };
 
 const initIrOperation = ({
+  method,
   operation,
-}: {
+  path,
+}: Pick<IROperationObject, 'method' | 'path'> & {
   operation: Operation;
 }): IROperationObject => {
   const irOperation: IROperationObject = {
     id: operation.id,
+    method,
+    path,
   };
 
   parseOperationJsDoc({
@@ -59,12 +63,14 @@ const initIrOperation = ({
 
 const operationToIrOperation = ({
   context,
+  method,
   operation,
-}: {
+  path,
+}: Pick<IROperationObject, 'method' | 'path'> & {
   context: IRContext;
   operation: Operation;
 }): IROperationObject => {
-  const irOperation = initIrOperation({ operation });
+  const irOperation = initIrOperation({ method, operation, path });
 
   if (operation.parameters) {
     irOperation.parameters = operation.parameters;
@@ -204,6 +210,8 @@ export const parseOperation = ({
 
   context.ir.paths[path][method] = operationToIrOperation({
     context,
+    method,
     operation,
+    path,
   });
 };
