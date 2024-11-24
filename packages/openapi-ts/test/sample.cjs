@@ -14,7 +14,7 @@ const main = async () => {
       exclude: '^#/components/schemas/ModelWithCircularReference$',
       // include:
       //   '^(#/components/schemas/import|#/paths/api/v{api-version}/simple/options)$',
-      path: './test/spec/3.1.x/enum-names-values.json',
+      path: './test/spec/3.1.x/full.json',
       // path: 'https://mongodb-mms-prod-build-server.s3.amazonaws.com/openapi/2caffd88277a4e27c95dcefc7e3b6a63a3b03297-v2-2023-11-15.json',
     },
     // name: 'foo',
@@ -49,9 +49,9 @@ const main = async () => {
         // tree: true,
       },
       {
-        // name: '@tanstack/react-query',
+        name: '@tanstack/react-query',
         // name: 'fastify',
-        name: 'zod',
+        // name: 'zod',
       },
     ],
     // useOptions: false,

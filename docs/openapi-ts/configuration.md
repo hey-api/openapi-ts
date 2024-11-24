@@ -52,7 +52,7 @@ We use [`@apidevtools/json-schema-ref-parser`](https://github.com/APIDevTools/js
 ## Filters
 
 ::: warning
-Filters work only with the [experimental parser](#parser) which is currently an opt-in feature.
+To use this feature, you must opt in to the [experimental parser](#parser).
 :::
 
 If you work with large specifications and want to generate output from their subset, you can use regular expressions to select the relevant definitions. Set `input.include` to match resource references to be included or `input.exclude` to match resource references to be excluded. When both regular expressions match the same definition, `input.exclude` takes precedence over `input.include`.

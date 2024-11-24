@@ -6,10 +6,7 @@ import {
   type ImportExportItemObject,
   tsNodeToString,
 } from '../../../compiler/utils';
-import {
-  clientModulePath,
-  clientOptionsTypeName,
-} from '../../../generate/client';
+import { clientApi, clientModulePath } from '../../../generate/client';
 import type { IRContext } from '../../../ir/context';
 import type { IROperationObject } from '../../../ir/ir';
 import {
@@ -20,11 +17,11 @@ import type { Files } from '../../../types/utils';
 import { getConfig } from '../../../utils/config';
 import { getServiceName } from '../../../utils/postprocess';
 import { transformServiceName } from '../../../utils/transform';
-import { operationIrRef } from '../../@hey-api/sdk/plugin';
 import {
+  operationIrRef,
   operationOptionsType,
-  serviceFunctionIdentifier,
-} from '../../@hey-api/sdk/plugin-legacy';
+} from '../../@hey-api/sdk/plugin';
+import { serviceFunctionIdentifier } from '../../@hey-api/sdk/plugin-legacy';
 import { schemaToType } from '../../@hey-api/typescript/plugin';
 import type { PluginHandler } from '../../types';
 import type { Config as AngularQueryConfig } from '../angular-query-experimental';
@@ -111,7 +108,9 @@ const createInfiniteParamsFunction = ({
       parameters: [
         {
           name: 'queryKey',
-          type: compiler.typeReferenceNode({ typeName: 'QueryKey<Options>' }),
+          type: compiler.typeReferenceNode({
+            typeName: `QueryKey<${clientApi.Options.name}>`,
+          }),
         },
         {
           name: 'page',
@@ -267,7 +266,7 @@ const createInfiniteParamsFunction = ({
         {
           extends: compiler.typeReferenceNode({
             typeName: compiler.identifier({
-              text: "Pick<QueryKey<Options>[0], 'body' | 'headers' | 'path' | 'query'>",
+              text: `Pick<QueryKey<${clientApi.Options.name}>[0], 'body' | 'headers' | 'path' | 'query'>`,
             }),
           }),
           name: 'K',
@@ -449,7 +448,7 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
         {
           extends: compiler.typeReferenceNode({
             typeName: compiler.identifier({
-              text: clientOptionsTypeName(),
+              text: clientApi.Options.name,
             }),
           }),
           name: TOptionsType,
@@ -499,7 +498,7 @@ const createQueryKeyType = ({ file }: { file: Files[keyof Files] }) => {
       {
         extends: compiler.typeReferenceNode({
           typeName: compiler.identifier({
-            text: clientOptionsTypeName(),
+            text: clientApi.Options.name,
           }),
         }),
         name: TOptionsType,
@@ -652,12 +651,11 @@ export const handler: PluginHandler<
   });
 
   file.import({
-    asType: true,
+    ...clientApi.Options,
     module: clientModulePath({
       config: context.config,
       sourceOutput: plugin.output,
     }),
-    name: clientOptionsTypeName(),
   });
 
   const mutationsType =
@@ -674,7 +672,7 @@ export const handler: PluginHandler<
   let hasMutations = false;
   let hasQueries = false;
 
-  context.subscribe('operation', ({ method, operation }) => {
+  context.subscribe('operation', ({ operation }) => {
     const queryFn = [
       context.config.plugins['@hey-api/sdk']?.asClass &&
         transformServiceName({
@@ -697,7 +695,9 @@ export const handler: PluginHandler<
     // queries
     if (
       plugin.queryOptions &&
-      (['get', 'post'] as (typeof method)[]).includes(method)
+      (['get', 'post'] as (typeof operation.method)[]).includes(
+        operation.method,
+      )
     ) {
       if (!hasQueries) {
         hasQueries = true;
@@ -837,7 +837,9 @@ export const handler: PluginHandler<
     // infinite queries
     if (
       plugin.infiniteQueryOptions &&
-      (['get', 'post'] as (typeof method)[]).includes(method)
+      (['get', 'post'] as (typeof operation.method)[]).includes(
+        operation.method,
+      )
     ) {
       const pagination = operationPagination({ context, operation });
 
@@ -1082,7 +1084,9 @@ export const handler: PluginHandler<
     // mutations
     if (
       plugin.mutationOptions &&
-      (['delete', 'patch', 'post', 'put'] as (typeof method)[]).includes(method)
+      (
+        ['delete', 'patch', 'post', 'put'] as (typeof operation.method)[]
+      ).includes(operation.method)
     ) {
       if (!hasMutations) {
         hasMutations = true;

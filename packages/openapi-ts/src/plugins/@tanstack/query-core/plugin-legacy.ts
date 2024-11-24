@@ -3,10 +3,7 @@ import ts from 'typescript';
 import { compiler, type Property } from '../../../compiler';
 import type { ImportExportItem } from '../../../compiler/module';
 import type { ImportExportItemObject } from '../../../compiler/utils';
-import {
-  clientModulePath,
-  clientOptionsTypeName,
-} from '../../../generate/client';
+import { clientApi, clientModulePath } from '../../../generate/client';
 import { relativeModulePath } from '../../../generate/utils';
 import type { IROperationObject } from '../../../ir/ir';
 import { paginationKeywordsRegExp } from '../../../ir/pagination';
@@ -27,7 +24,7 @@ import {
   generateImport,
   operationDataTypeName,
   operationErrorTypeName,
-  operationOptionsType,
+  operationOptionsLegacyParserType,
   operationResponseTypeName,
   serviceFunctionIdentifier,
 } from '../../@hey-api/sdk/plugin-legacy';
@@ -119,7 +116,9 @@ const createInfiniteParamsFunction = ({
       parameters: [
         {
           name: 'queryKey',
-          type: compiler.typeNode('QueryKey<Options>'),
+          type: compiler.typeNode(
+            `QueryKey<${clientApi.OptionsLegacyParser.name}>`,
+          ),
         },
         {
           name: 'page',
@@ -275,7 +274,7 @@ const createInfiniteParamsFunction = ({
         {
           extends: compiler.typeReferenceNode({
             typeName: compiler.identifier({
-              text: "Pick<QueryKey<Options>[0], 'body' | 'headers' | 'path' | 'query'>",
+              text: `Pick<QueryKey<${clientApi.OptionsLegacyParser.name}>[0], 'body' | 'headers' | 'path' | 'query'>`,
             }),
           }),
           name: 'K',
@@ -454,7 +453,7 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
         {
           extends: compiler.typeReferenceNode({
             typeName: compiler.identifier({
-              text: clientOptionsTypeName(),
+              text: clientApi.OptionsLegacyParser.name,
             }),
           }),
           name: TOptionsType,
@@ -504,7 +503,7 @@ const createQueryKeyType = ({ file }: { file: Files[keyof Files] }) => {
       {
         extends: compiler.typeReferenceNode({
           typeName: compiler.identifier({
-            text: clientOptionsTypeName(),
+            text: clientApi.OptionsLegacyParser.name,
           }),
         }),
         name: TOptionsType,
@@ -545,7 +544,9 @@ const createTypeData = ({
     },
   });
 
-  const typeData = operationOptionsType({ importedType: nameTypeData });
+  const typeData = operationOptionsLegacyParserType({
+    importedType: nameTypeData,
+  });
 
   return { typeData };
 };
@@ -683,9 +684,8 @@ export const handlerLegacy: PluginLegacyHandler<
   const file = files[plugin.name];
 
   file.import({
-    asType: true,
+    ...clientApi.OptionsLegacyParser,
     module: clientModulePath({ config, sourceOutput: plugin.output }),
-    name: clientOptionsTypeName(),
   });
 
   const typesModulePath = relativeModulePath({

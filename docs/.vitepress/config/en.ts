@@ -14,14 +14,23 @@ export default defineConfig({
     sidebar: [
       {
         items: [
-          { link: '/openapi-ts/get-started', text: 'Get Started' },
-          { link: '/openapi-ts/configuration', text: 'Configuration' },
+          {
+            link: '/openapi-ts/get-started',
+            text: 'Get Started',
+          },
+          {
+            link: '/openapi-ts/configuration',
+            text: 'Configuration',
+          },
         ],
         text: '@hey-api/openapi-ts',
       },
       {
         items: [
-          { link: '/openapi-ts/output', text: 'Output' },
+          {
+            link: '/openapi-ts/output',
+            text: 'Output',
+          },
           {
             collapsed: true,
             items: [
@@ -41,7 +50,10 @@ export default defineConfig({
             link: '/openapi-ts/clients',
             text: 'Clients',
           },
-          { link: '/openapi-ts/transformers', text: 'Transformers' },
+          {
+            link: '/openapi-ts/transformers',
+            text: 'Transformers',
+          },
         ],
         text: 'Guides and Concepts',
       },
@@ -77,10 +89,22 @@ export default defineConfig({
       },
       {
         items: [
-          { link: '/openapi-ts/migrating', text: 'Migrating' },
-          { link: '/license', text: 'License' },
-          { link: '/about', text: 'Philosophy' },
-          { link: '/contributing', text: 'Contributing' },
+          {
+            link: '/openapi-ts/migrating',
+            text: 'Migrating',
+          },
+          {
+            link: '/license',
+            text: 'License',
+          },
+          {
+            link: '/about',
+            text: 'Philosophy',
+          },
+          {
+            link: '/contributing',
+            text: 'Contributing',
+          },
         ],
         text: '@hey-api',
       },

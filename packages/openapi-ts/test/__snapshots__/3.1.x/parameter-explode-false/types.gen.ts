@@ -6,6 +6,7 @@ export type PostFooData = {
     query?: {
         foo?: Array<string>;
     };
+    url: '/foo';
 };
 
 export type PostFooResponses = {
