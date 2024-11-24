@@ -458,7 +458,7 @@ export const handler: PluginHandler<Config> = ({ context, plugin }) => {
   });
   file.add(statement);
 
-  if (context.config.plugins['@hey-api/sdk']?.asClass) {
+  if (plugin.asClass) {
     generateClassSdk({ context });
   } else {
     generateFlatSdk({ context });
