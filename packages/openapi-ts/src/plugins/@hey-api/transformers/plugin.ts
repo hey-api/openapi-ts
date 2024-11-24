@@ -93,7 +93,11 @@ const schemaResponseTransformerNodes = ({
     dataExpression: identifierData,
     schema,
   });
-  if (nodes.length) {
+  // append return statement if one does not already exist
+  if (
+    nodes.length &&
+    nodes[nodes.length - 1].kind !== ts.SyntaxKind.ReturnStatement
+  ) {
     nodes.push(compiler.returnStatement({ expression: identifierData }));
   }
   return nodes;
@@ -175,6 +179,10 @@ const processSchemaType = ({
   }
 
   if (schema.type === 'array') {
+    if (!dataExpression || typeof dataExpression === 'string') {
+      return [];
+    }
+
     // TODO: parser - handle tuples and complex arrays
     const nodes = !schema.items
       ? []
@@ -185,39 +193,43 @@ const processSchemaType = ({
             type: undefined,
           },
         });
+
     if (!nodes.length) {
       return [];
     }
-    if (dataExpression && typeof dataExpression !== 'string') {
-      return [
-        compiler.assignment({
-          left: dataExpression,
-          right: compiler.callExpression({
-            functionName: compiler.propertyAccessExpression({
-              expression: dataExpression,
-              name: 'map',
-            }),
-            parameters: [
-              compiler.arrowFunction({
-                multiLine: true,
-                parameters: [{ name: 'item' }],
-                statements:
-                  nodes.length === 1
-                    ? ts.isStatement(nodes[0])
-                      ? []
-                      : [
-                          compiler.returnStatement({
-                            expression: nodes[0],
-                          }),
-                        ]
-                    : ensureStatements(nodes),
-              }),
-            ],
+
+    return [
+      compiler.assignment({
+        left: dataExpression,
+        right: compiler.callExpression({
+          functionName: compiler.propertyAccessExpression({
+            expression: dataExpression,
+            name: 'map',
           }),
+          parameters: [
+            compiler.arrowFunction({
+              multiLine: true,
+              parameters: [
+                {
+                  name: 'item',
+                  type: 'any',
+                },
+              ],
+              statements:
+                nodes.length === 1
+                  ? ts.isStatement(nodes[0])
+                    ? []
+                    : [
+                        compiler.returnStatement({
+                          expression: nodes[0],
+                        }),
+                      ]
+                  : ensureStatements(nodes),
+            }),
+          ],
         }),
-      ];
-    }
-    return [];
+      }),
+    ];
   }
 
   if (schema.type === 'object') {
@@ -227,7 +239,7 @@ const processSchemaType = ({
     for (const name in schema.properties) {
       const property = schema.properties[name];
       const propertyAccessExpression = compiler.propertyAccessExpression({
-        expression: dataVariableName,
+        expression: dataExpression || dataVariableName,
         name,
       });
       const propertyNodes = processSchemaType({
@@ -250,6 +262,15 @@ const processSchemaType = ({
         }
       }
     }
+
+    nodes.push(
+      compiler.returnStatement({
+        expression:
+          typeof dataExpression === 'string'
+            ? compiler.identifier({ text: dataExpression })
+            : dataExpression,
+      }),
+    );
 
     return nodes;
   }

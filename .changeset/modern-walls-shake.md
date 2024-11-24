@@ -2,6 +2,8 @@
 '@hey-api/client-fetch': minor
 ---
 
+feat: add buildUrl() method
+
 ## Build URL
 
 ::: warning

@@ -264,6 +264,14 @@ describe(`OpenAPI ${VERSION}`, () => {
     },
     {
       config: createConfig({
+        input: 'transformers-array.json',
+        output: 'transformers-array',
+        plugins: ['@hey-api/transformers'],
+      }),
+      description: 'correctly transforms an array',
+    },
+    {
+      config: createConfig({
         input: 'type-invalid.json',
         output: 'type-invalid',
       }),
