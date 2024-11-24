@@ -264,11 +264,19 @@ describe(`OpenAPI ${VERSION}`, () => {
     },
     {
       config: createConfig({
+        input: 'transformers-any-of-null.json',
+        output: 'transformers-any-of-null',
+        plugins: ['@hey-api/transformers'],
+      }),
+      description: 'transforms nullable date property',
+    },
+    {
+      config: createConfig({
         input: 'transformers-array.json',
         output: 'transformers-array',
         plugins: ['@hey-api/transformers'],
       }),
-      description: 'correctly transforms an array',
+      description: 'transforms an array',
     },
     {
       config: createConfig({
