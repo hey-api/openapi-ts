@@ -14,3 +14,5 @@ export enum MyFoo {
     MY_FOO = 'MyFoo',
     MY_BAR = 'MyBar'
 }
+
+export type Foo = 'foo' | 'bar' | null | '';
