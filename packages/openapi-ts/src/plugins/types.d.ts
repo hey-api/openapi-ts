@@ -3,24 +3,22 @@ import type { OpenApi } from '../openApi';
 import type { Client } from '../types/client';
 import type { Files } from '../types/utils';
 
+export type Plugin<PluginConfig extends CommonConfig> = Omit<
+  PluginConfig,
+  '_dependencies' | '_handler' | '_handlerLegacy' | '_optionalDependencies'
+> &
+  Pick<Required<PluginConfig>, 'output'>;
+
 export type PluginLegacyHandler<PluginConfig extends CommonConfig> = (args: {
   client: Client;
   files: Files;
   openApi: OpenApi;
-  plugin: Omit<
-    PluginConfig,
-    '_dependencies' | '_handler' | '_handlerLegacy' | '_optionalDependencies'
-  > &
-    Pick<Required<PluginConfig>, 'output'>;
+  plugin: Plugin<PluginConfig>;
 }) => void;
 
 export type PluginHandler<PluginConfig extends CommonConfig> = (args: {
   context: IRContext;
-  plugin: Omit<
-    PluginConfig,
-    '_dependencies' | '_handler' | '_handlerLegacy' | '_optionalDependencies'
-  > &
-    Pick<Required<PluginConfig>, 'output'>;
+  plugin: Plugin<PluginConfig>;
 }) => void;
 
 export type PluginNames =

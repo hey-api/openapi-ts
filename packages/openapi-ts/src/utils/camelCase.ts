@@ -1,14 +1,17 @@
-const UPPERCASE = /[\p{Lu}]/u;
-const LOWERCASE = /[\p{Ll}]/u;
-const IDENTIFIER = /([\p{Alpha}\p{N}_]|$)/u;
-const SEPARATORS = /[_.\- ]+/;
+const uppercaseRegExp = /[\p{Lu}]/u;
+const lowercaseRegExp = /[\p{Ll}]/u;
+const identifierRegExp = /([\p{Alpha}\p{N}_]|$)/u;
+const separatorsRegExp = /[_.\- ]+/;
 
-const LEADING_SEPARATORS = new RegExp('^' + SEPARATORS.source);
+const LEADING_SEPARATORS = new RegExp('^' + separatorsRegExp.source);
 const SEPARATORS_AND_IDENTIFIER = new RegExp(
-  SEPARATORS.source + IDENTIFIER.source,
+  separatorsRegExp.source + identifierRegExp.source,
   'gu',
 );
-const NUMBERS_AND_IDENTIFIER = new RegExp('\\d+' + IDENTIFIER.source, 'gu');
+const NUMBERS_AND_IDENTIFIER = new RegExp(
+  '\\d+' + identifierRegExp.source,
+  'gu',
+);
 
 const preserveCamelCase = (string: string) => {
   let isLastCharLower = false;
@@ -20,30 +23,47 @@ const preserveCamelCase = (string: string) => {
     const character = string[index];
     isLastLastCharPreserved = index > 2 ? string[index - 3] === '-' : true;
 
-    if (isLastCharLower && UPPERCASE.test(character)) {
+    uppercaseRegExp.lastIndex = 0;
+    if (isLastCharLower && uppercaseRegExp.test(character)) {
       string = string.slice(0, index) + '-' + string.slice(index);
-      isLastCharLower = false;
-      isLastLastCharUpper = isLastCharUpper;
-      isLastCharUpper = true;
       index++;
-    } else if (
-      isLastCharUpper &&
-      isLastLastCharUpper &&
-      LOWERCASE.test(character) &&
-      !isLastLastCharPreserved
-    ) {
-      string = string.slice(0, index - 1) + '-' + string.slice(index - 1);
       isLastLastCharUpper = isLastCharUpper;
-      isLastCharUpper = false;
-      isLastCharLower = true;
+      isLastCharLower = false;
+      isLastCharUpper = true;
     } else {
-      isLastCharLower =
-        character.toLocaleLowerCase() === character &&
-        character.toLocaleUpperCase() !== character;
-      isLastLastCharUpper = isLastCharUpper;
-      isLastCharUpper =
-        character.toLocaleUpperCase() === character &&
-        character.toLocaleLowerCase() !== character;
+      let nextIndex = index + 1;
+      let nextCharacter = string[nextIndex];
+      separatorsRegExp.lastIndex = 0;
+      while (nextCharacter && separatorsRegExp.test(nextCharacter)) {
+        nextIndex += 1;
+        nextCharacter = string[nextIndex];
+      }
+
+      if (
+        isLastCharUpper &&
+        isLastLastCharUpper &&
+        lowercaseRegExp.test(character) &&
+        !isLastLastCharPreserved &&
+        // naive detection of plurals
+        !(
+          character === 's' &&
+          (!nextCharacter ||
+            nextCharacter.toLocaleLowerCase() !== nextCharacter)
+        )
+      ) {
+        string = string.slice(0, index - 1) + '-' + string.slice(index - 1);
+        isLastLastCharUpper = isLastCharUpper;
+        isLastCharLower = true;
+        isLastCharUpper = false;
+      } else {
+        const characterLower = character.toLocaleLowerCase();
+        const characterUpper = character.toLocaleUpperCase();
+        isLastLastCharUpper = isLastCharUpper;
+        isLastCharLower =
+          characterLower === character && characterUpper !== character;
+        isLastCharUpper =
+          characterUpper === character && characterLower !== character;
+      }
     }
   }
 
@@ -72,7 +92,8 @@ export const camelCase = ({
   }
 
   if (result.length === 1) {
-    if (SEPARATORS.test(result)) {
+    separatorsRegExp.lastIndex = 0;
+    if (separatorsRegExp.test(result)) {
       return '';
     }
 

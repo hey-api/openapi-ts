@@ -12,11 +12,9 @@ import { operationResponsesMap } from '../../../ir/operation';
 import { deduplicateSchema } from '../../../ir/schema';
 import { escapeComment } from '../../../utils/escape';
 import { irRef, isRefOpenApiComponent } from '../../../utils/ref';
-import type { PluginHandler } from '../../types';
+import type { Plugin, PluginHandler } from '../../types';
 import { operationIrRef } from '../sdk/plugin';
 import type { Config } from './types';
-
-type Plugin = Parameters<PluginHandler<Config>>[0]['plugin'];
 
 interface SchemaWithType<T extends Required<IRSchemaObject>['type']>
   extends Omit<IRSchemaObject, 'type'> {
@@ -139,7 +137,7 @@ const addTypeEnum = ({
 }: {
   $ref: string;
   context: IRContext;
-  plugin: Plugin;
+  plugin: Plugin<Config>;
   schema: SchemaWithType<'enum'>;
 }) => {
   const identifier = context.file({ id: typesId })!.identifier({
@@ -185,7 +183,7 @@ const addTypeScriptEnum = ({
 }: {
   $ref: string;
   context: IRContext;
-  plugin: Plugin;
+  plugin: Plugin<Config>;
   schema: SchemaWithType<'enum'>;
 }) => {
   const identifier = context.file({ id: typesId })!.identifier({
@@ -236,7 +234,7 @@ const arrayTypeToIdentifier = ({
 }: {
   context: IRContext;
   namespace: Array<ts.Statement>;
-  plugin: Plugin;
+  plugin: Plugin<Config>;
   schema: SchemaWithType<'array'>;
 }) => {
   if (!schema.items) {
@@ -300,7 +298,7 @@ const enumTypeToIdentifier = ({
   $ref?: string;
   context: IRContext;
   namespace: Array<ts.Statement>;
-  plugin: Plugin;
+  plugin: Plugin<Config>;
   schema: SchemaWithType<'enum'>;
 }): ts.TypeNode => {
   const isRefComponent = $ref ? isRefOpenApiComponent($ref) : false;
@@ -409,7 +407,7 @@ const objectTypeToIdentifier = ({
 }: {
   context: IRContext;
   namespace: Array<ts.Statement>;
-  plugin: Plugin;
+  plugin: Plugin<Config>;
   schema: SchemaWithType<'object'>;
 }) => {
   let indexProperty: Property | undefined;
@@ -534,7 +532,7 @@ const tupleTypeToIdentifier = ({
 }: {
   context: IRContext;
   namespace: Array<ts.Statement>;
-  plugin: Plugin;
+  plugin: Plugin<Config>;
   schema: SchemaWithType<'tuple'>;
 }) => {
   const itemTypes: Array<ts.TypeNode> = [];
@@ -565,7 +563,7 @@ const schemaTypeToIdentifier = ({
   $ref?: string;
   context: IRContext;
   namespace: Array<ts.Statement>;
-  plugin: Plugin;
+  plugin: Plugin<Config>;
   schema: IRSchemaObject;
 }): ts.TypeNode => {
   switch (schema.type as Required<IRSchemaObject>['type']) {
@@ -681,7 +679,7 @@ const operationToDataType = ({
 }: {
   context: IRContext;
   operation: IROperationObject;
-  plugin: Plugin;
+  plugin: Plugin<Config>;
 }) => {
   const data: IRSchemaObject = {
     type: 'object',
@@ -780,7 +778,7 @@ const operationToType = ({
 }: {
   context: IRContext;
   operation: IROperationObject;
-  plugin: Plugin;
+  plugin: Plugin<Config>;
 }) => {
   operationToDataType({
     context,
@@ -896,7 +894,7 @@ export const schemaToType = ({
   $ref?: string;
   context: IRContext;
   namespace?: Array<ts.Statement>;
-  plugin: Plugin;
+  plugin: Plugin<Config>;
   schema: IRSchemaObject;
 }): ts.TypeNode => {
   let type: ts.TypeNode | undefined;
