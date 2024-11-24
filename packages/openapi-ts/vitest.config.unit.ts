@@ -10,7 +10,7 @@ export default defineConfig({
       include: ['src/**/*.ts'],
       provider: 'v8',
     },
-    exclude: [...configDefaults.exclude, 'test/e2e/**/*.spec.ts'],
+    exclude: [...configDefaults.exclude, 'test/e2e/**/*.test.ts'],
     root: fileURLToPath(new URL('./', import.meta.url)),
   },
 });
