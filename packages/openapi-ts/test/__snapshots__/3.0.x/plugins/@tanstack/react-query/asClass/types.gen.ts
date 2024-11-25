@@ -943,6 +943,10 @@ export type SimpleParameter = string;
  */
 export type x_Foo_Bar = ModelWithString;
 
+export type SimpleRequestBody = ModelWithString;
+
+export type SimpleFormData = ModelWithString;
+
 export type ExportData = {
     body?: never;
     url: '/api/v{api-version}/no-tag';
@@ -1239,7 +1243,7 @@ export type PostApiVbyApiVersionRequestBodyData = {
     /**
      * A reusable request body
      */
-    body?: ModelWithString;
+    body?: SimpleRequestBody;
     path?: never;
     query?: {
         /**
@@ -1254,7 +1258,7 @@ export type PostApiVbyApiVersionFormDataData = {
     /**
      * A reusable request body
      */
-    body?: ModelWithString;
+    body?: SimpleFormData;
     path?: never;
     query?: {
         /**
