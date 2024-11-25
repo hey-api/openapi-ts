@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/client-axios",
-  "version": "0.2.10",
+  "version": "0.2.11",
   "description": "🚀 Axios client for `@hey-api/openapi-ts` codegen.",
   "homepage": "https://heyapi.dev/",
   "repository": {
