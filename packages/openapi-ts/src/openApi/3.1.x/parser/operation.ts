@@ -6,7 +6,6 @@ import type {
   PathItemObject,
   RequestBodyObject,
   ResponseObject,
-  SchemaObject,
 } from '../types/spec';
 import { contentToSchema, mediaTypeObject } from './mediaType';
 import { paginationField } from './pagination';
@@ -77,30 +76,33 @@ const operationToIrOperation = ({
   }
 
   if (operation.requestBody) {
-    const requestBodyObject =
+    const requestBody =
       '$ref' in operation.requestBody
         ? context.resolveRef<RequestBodyObject>(operation.requestBody.$ref)
         : operation.requestBody;
     const content = mediaTypeObject({
-      content: requestBodyObject.content,
+      content: requestBody.content,
     });
     if (content) {
-      const finalSchema: SchemaObject = {
-        description: requestBodyObject.description,
-        ...content.schema,
-      };
-
       const pagination = paginationField({
         context,
         name: '',
-        schema: finalSchema,
+        schema: {
+          description: requestBody.description,
+          ...content.schema,
+        },
       });
 
       irOperation.body = {
         mediaType: content.mediaType,
         schema: schemaToIrSchema({
           context,
-          schema: finalSchema,
+          schema: {
+            description: requestBody.description,
+            ...('$ref' in operation.requestBody
+              ? operation.requestBody
+              : content.schema),
+          },
         }),
       };
 
@@ -108,8 +110,8 @@ const operationToIrOperation = ({
         irOperation.body.pagination = pagination;
       }
 
-      if (requestBodyObject.required) {
-        irOperation.body.required = requestBodyObject.required;
+      if (requestBody.required) {
+        irOperation.body.required = requestBody.required;
       }
 
       if (content.type) {

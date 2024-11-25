@@ -20,6 +20,12 @@ export const parseIR = async ({ context }: { context: IRContext }) => {
       const $ref = `#/components/parameters/${name}`;
       await context.broadcast('parameter', { $ref, name, parameter });
     }
+
+    for (const name in context.ir.components.requestBodies) {
+      const requestBody = context.ir.components.requestBodies[name];
+      const $ref = `#/components/requestBodies/${name}`;
+      await context.broadcast('requestBody', { $ref, name, requestBody });
+    }
   }
 
   for (const path in context.ir.paths) {

@@ -8,6 +8,7 @@ export interface IR {
 
 interface IRComponentsObject {
   parameters?: Record<string, IRParameterObject>;
+  requestBodies?: Record<string, IRRequestBodyObject>;
   schemas?: Record<string, IRSchemaObject>;
 }
 
@@ -61,7 +62,8 @@ export interface IRParametersObject {
   query?: Record<string, IRParameterObject>;
 }
 
-export interface IRParameterObject {
+export interface IRParameterObject
+  extends Pick<JsonSchemaDraft2020_12, 'deprecated' | 'description'> {
   /**
    * Determines whether the parameter value SHOULD allow reserved characters, as defined by RFC3986 `:/?#[]@!$&'()*+,;=` to be included without percent-encoding. The default value is `false`. This property SHALL be ignored if the request body media type is not `application/x-www-form-urlencoded` or `multipart/form-data`. If a value is explicitly defined, then the value of `contentType` (implicit or explicit) SHALL be ignored.
    */
@@ -93,6 +95,12 @@ export interface IRParameterObject {
     | 'pipeDelimited'
     | 'simple'
     | 'spaceDelimited';
+}
+
+export interface IRRequestBodyObject
+  extends Pick<JsonSchemaDraft2020_12, 'description'> {
+  required?: boolean;
+  schema: IRSchemaObject;
 }
 
 export interface IRResponsesObject {

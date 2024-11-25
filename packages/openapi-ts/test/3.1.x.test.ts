@@ -58,6 +58,13 @@ describe(`OpenAPI ${VERSION}`, () => {
     },
     {
       config: createConfig({
+        input: 'components-request-bodies.json',
+        output: 'components-request-bodies',
+      }),
+      description: 'handles reusable request bodies',
+    },
+    {
+      config: createConfig({
         input: 'const.json',
         output: 'const',
       }),

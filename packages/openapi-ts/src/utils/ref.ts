@@ -7,7 +7,7 @@ export const isRefOpenApiComponent = ($ref: string): boolean => {
 };
 
 /**
- * Returns the component name from `$ref`.
+ * Returns the reusable component name from `$ref`.
  */
 export const refToName = ($ref: string): string => {
   const parts = refToParts($ref);
