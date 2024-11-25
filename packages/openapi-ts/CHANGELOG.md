@@ -1,5 +1,21 @@
 # @hey-api/openapi-ts
 
+## 0.57.1
+
+### Patch Changes
+
+- [#1335](https://github.com/hey-api/openapi-ts/pull/1335) [`bb9a848`](https://github.com/hey-api/openapi-ts/commit/bb9a84869dc911861f3b12f725a470b8fd6b67fe) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: transformers correctly handle an array
+
+- [#1332](https://github.com/hey-api/openapi-ts/pull/1332) [`25b598b`](https://github.com/hey-api/openapi-ts/commit/25b598bcecd1dd3eb3da6b7c7f24f4adb0170114) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: improve camelcase with abbreviated plurals
+
+- [#1333](https://github.com/hey-api/openapi-ts/pull/1333) [`734a62d`](https://github.com/hey-api/openapi-ts/commit/734a62dd8d594b8266964fe16766a481d37eb7df) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: experimental parser generates url inside data types
+
+- [#1336](https://github.com/hey-api/openapi-ts/pull/1336) [`6857da8`](https://github.com/hey-api/openapi-ts/commit/6857da8a7f23829a89115b2237aaac9a71a38dfb) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: experimental parser transforms anyOf date and null
+
+- [#1330](https://github.com/hey-api/openapi-ts/pull/1330) [`3d68587`](https://github.com/hey-api/openapi-ts/commit/3d6858748c94d6e33fd4dae7ddbf6cb70d21aaee) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: experimental parser handles empty string and null enum values in JavaScript mode
+
+- [#1340](https://github.com/hey-api/openapi-ts/pull/1340) [`c8511e0`](https://github.com/hey-api/openapi-ts/commit/c8511e0d84dd408407bf764fb0bae4938b70dacb) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: experimental parser exports reusable request bodies
+
 ## 0.57.0
 
 ### Minor Changes

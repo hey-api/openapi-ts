@@ -1,5 +1,11 @@
 # @hey-api/client-axios
 
+## 0.2.11
+
+### Patch Changes
+
+- [#1333](https://github.com/hey-api/openapi-ts/pull/1333) [`734a62d`](https://github.com/hey-api/openapi-ts/commit/734a62dd8d594b8266964fe16766a481d37eb7df) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: experimental parser generates url inside data types
+
 ## 0.2.10
 
 ### Patch Changes
