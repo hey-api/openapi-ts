@@ -1,5 +1,6 @@
 import type { IRContext } from '../../../ir/context';
 import type { IRParameterObject, IRParametersObject } from '../../../ir/ir';
+import { refToName } from '../../../utils/ref';
 import type {
   ParameterObject,
   ReferenceObject,
@@ -207,6 +208,14 @@ const parameterToIrParameter = ({
     style,
   };
 
+  if (parameter.deprecated) {
+    irParameter.deprecated = parameter.deprecated;
+  }
+
+  if (parameter.description) {
+    irParameter.description = parameter.description;
+  }
+
   if (pagination) {
     irParameter.pagination = pagination;
   }
@@ -219,12 +228,12 @@ const parameterToIrParameter = ({
 };
 
 export const parseParameter = ({
+  $ref,
   context,
-  name,
   parameter,
 }: {
+  $ref: string;
   context: IRContext;
-  name: string;
   parameter: ParameterObject;
 }) => {
   if (!context.ir.components) {
@@ -235,7 +244,7 @@ export const parseParameter = ({
     context.ir.components.parameters = {};
   }
 
-  context.ir.components.parameters[name] = parameterToIrParameter({
+  context.ir.components.parameters[refToName($ref)] = parameterToIrParameter({
     context,
     parameter,
   });

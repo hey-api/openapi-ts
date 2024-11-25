@@ -9,6 +9,7 @@ import type {
   IROperationObject,
   IRParameterObject,
   IRPathItemObject,
+  IRRequestBodyObject,
   IRSchemaObject,
 } from './ir';
 
@@ -43,6 +44,11 @@ interface Events {
     $ref: string;
     name: string;
     parameter: IRParameterObject;
+  }) => void;
+  requestBody: (args: {
+    $ref: string;
+    name: string;
+    requestBody: IRRequestBodyObject;
   }) => void;
   schema: (args: {
     $ref: string;

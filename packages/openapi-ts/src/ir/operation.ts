@@ -1,5 +1,10 @@
 import type { IRContext } from './context';
-import type { IROperationObject, IRResponseObject, IRSchemaObject } from './ir';
+import type { IRRequestBodyObject } from './ir';
+import {
+  type IROperationObject,
+  type IRResponseObject,
+  type IRSchemaObject,
+} from './ir';
 import type { Pagination } from './pagination';
 import {
   hasParametersObjectRequired,
@@ -39,12 +44,15 @@ export const operationPagination = ({
     }
 
     const schema = operation.body.schema.$ref
-      ? context.resolveIrRef<IRSchemaObject>(operation.body.schema.$ref)
+      ? context.resolveIrRef<IRRequestBodyObject | IRSchemaObject>(
+          operation.body.schema.$ref,
+        )
       : operation.body.schema;
+    const finalSchema = 'schema' in schema ? schema.schema : schema;
     return {
       in: 'body',
       name: operation.body.pagination,
-      schema: schema.properties![operation.body.pagination],
+      schema: finalSchema.properties![operation.body.pagination],
     };
   }
 
