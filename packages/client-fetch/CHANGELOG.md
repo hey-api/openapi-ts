@@ -1,5 +1,46 @@
 # @hey-api/client-fetch
 
+## 0.5.0
+
+### Minor Changes
+
+- [#1333](https://github.com/hey-api/openapi-ts/pull/1333) [`734a62d`](https://github.com/hey-api/openapi-ts/commit/734a62dd8d594b8266964fe16766a481d37eb7df) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add buildUrl() method
+
+  ## Build URL
+
+  ::: warning
+  To use this feature, you must opt in to the [experimental parser](/openapi-ts/configuration#parser).
+  :::
+
+  If you need to access the compiled URL, you can use the `buildUrl()` method. It's loosely typed by default to accept almost any value; in practice, you will want to pass a type hint.
+
+  ```ts
+  type FooData = {
+    path: {
+      fooId: number;
+    };
+    query?: {
+      bar?: string;
+    };
+    url: '/foo/{fooId}';
+  };
+
+  const url = client.buildUrl<FooData>({
+    path: {
+      fooId: 1,
+    },
+    query: {
+      bar: 'baz',
+    },
+    url: '/foo/{fooId}',
+  });
+  console.log(url); // prints '/foo/1?bar=baz'
+  ```
+
+### Patch Changes
+
+- [#1333](https://github.com/hey-api/openapi-ts/pull/1333) [`734a62d`](https://github.com/hey-api/openapi-ts/commit/734a62dd8d594b8266964fe16766a481d37eb7df) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: experimental parser generates url inside data types
+
 ## 0.4.4
 
 ### Patch Changes
