@@ -1,0 +1,41 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "OpenAPI 3.0.4 components request bodies example",
+    "version": "1"
+  },
+  "paths": {
+    "/foo": {
+      "post": {
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Foo"
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "requestBodies": {
+      "Foo": {
+        "description": "Foo",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "page": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

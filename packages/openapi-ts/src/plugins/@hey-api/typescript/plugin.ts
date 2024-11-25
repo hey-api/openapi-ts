@@ -1010,6 +1010,15 @@ export const handler: PluginHandler<Config> = ({ context, plugin }) => {
     });
   });
 
+  context.subscribe('requestBody', ({ $ref, requestBody }) => {
+    schemaToType({
+      $ref,
+      context,
+      plugin,
+      schema: requestBody.schema,
+    });
+  });
+
   context.subscribe('operation', ({ operation }) => {
     operationToType({
       context,

@@ -5,6 +5,7 @@ import type {
   ParameterObject,
   PathItemObject,
   PathsObject,
+  RequestBodyObject,
 } from '../types/spec';
 import { parseOperation } from './operation';
 import {
@@ -12,6 +13,7 @@ import {
   parametersArrayToObject,
   parseParameter,
 } from './parameter';
+import { parseRequestBody } from './requestBody';
 import { parseSchema } from './schema';
 
 export const parseV3_1_X = (context: IRContext<OpenApiV3_1_X>) => {
@@ -23,6 +25,70 @@ export const parseV3_1_X = (context: IRContext<OpenApiV3_1_X>) => {
   const includeRegExp = context.config.input.include
     ? new RegExp(context.config.input.include)
     : undefined;
+
+  const shouldProcessRef = ($ref: string) =>
+    canProcessRef({
+      $ref,
+      excludeRegExp,
+      includeRegExp,
+    });
+
+  // TODO: parser - handle more component types, old parser handles only parameters and schemas
+  if (context.spec.components) {
+    for (const name in context.spec.components.parameters) {
+      const $ref = `#/components/parameters/${name}`;
+      if (!shouldProcessRef($ref)) {
+        continue;
+      }
+
+      const parameterOrReference = context.spec.components.parameters[name];
+      const parameter =
+        '$ref' in parameterOrReference
+          ? context.resolveRef<ParameterObject>(parameterOrReference.$ref)
+          : parameterOrReference;
+
+      parseParameter({
+        $ref,
+        context,
+        parameter,
+      });
+    }
+
+    for (const name in context.spec.components.requestBodies) {
+      const $ref = `#/components/requestBodies/${name}`;
+      if (!shouldProcessRef($ref)) {
+        continue;
+      }
+
+      const requestBodyOrReference =
+        context.spec.components.requestBodies[name];
+      const requestBody =
+        '$ref' in requestBodyOrReference
+          ? context.resolveRef<RequestBodyObject>(requestBodyOrReference.$ref)
+          : requestBodyOrReference;
+
+      parseRequestBody({
+        $ref,
+        context,
+        requestBody,
+      });
+    }
+
+    for (const name in context.spec.components.schemas) {
+      const $ref = `#/components/schemas/${name}`;
+      if (!shouldProcessRef($ref)) {
+        continue;
+      }
+
+      const schema = context.spec.components.schemas[name];
+
+      parseSchema({
+        $ref,
+        context,
+        schema,
+      });
+    }
+  }
 
   for (const path in context.spec.paths) {
     const pathItem = context.spec.paths[path as keyof PathsObject];
@@ -52,14 +118,7 @@ export const parseV3_1_X = (context: IRContext<OpenApiV3_1_X>) => {
       };
 
     const $refDelete = `#/paths${path}/delete`;
-    if (
-      finalPathItem.delete &&
-      canProcessRef({
-        $ref: $refDelete,
-        excludeRegExp,
-        includeRegExp,
-      })
-    ) {
+    if (finalPathItem.delete && shouldProcessRef($refDelete)) {
       parseOperation({
         ...operationArgs,
         method: 'delete',
@@ -78,14 +137,7 @@ export const parseV3_1_X = (context: IRContext<OpenApiV3_1_X>) => {
     }
 
     const $refGet = `#/paths${path}/get`;
-    if (
-      finalPathItem.get &&
-      canProcessRef({
-        $ref: $refGet,
-        excludeRegExp,
-        includeRegExp,
-      })
-    ) {
+    if (finalPathItem.get && shouldProcessRef($refGet)) {
       parseOperation({
         ...operationArgs,
         method: 'get',
@@ -104,14 +156,7 @@ export const parseV3_1_X = (context: IRContext<OpenApiV3_1_X>) => {
     }
 
     const $refHead = `#/paths${path}/head`;
-    if (
-      finalPathItem.head &&
-      canProcessRef({
-        $ref: $refHead,
-        excludeRegExp,
-        includeRegExp,
-      })
-    ) {
+    if (finalPathItem.head && shouldProcessRef($refHead)) {
       parseOperation({
         ...operationArgs,
         method: 'head',
@@ -130,14 +175,7 @@ export const parseV3_1_X = (context: IRContext<OpenApiV3_1_X>) => {
     }
 
     const $refOptions = `#/paths${path}/options`;
-    if (
-      finalPathItem.options &&
-      canProcessRef({
-        $ref: $refOptions,
-        excludeRegExp,
-        includeRegExp,
-      })
-    ) {
+    if (finalPathItem.options && shouldProcessRef($refOptions)) {
       parseOperation({
         ...operationArgs,
         method: 'options',
@@ -156,14 +194,7 @@ export const parseV3_1_X = (context: IRContext<OpenApiV3_1_X>) => {
     }
 
     const $refPatch = `#/paths${path}/patch`;
-    if (
-      finalPathItem.patch &&
-      canProcessRef({
-        $ref: $refPatch,
-        excludeRegExp,
-        includeRegExp,
-      })
-    ) {
+    if (finalPathItem.patch && shouldProcessRef($refPatch)) {
       parseOperation({
         ...operationArgs,
         method: 'patch',
@@ -182,14 +213,7 @@ export const parseV3_1_X = (context: IRContext<OpenApiV3_1_X>) => {
     }
 
     const $refPost = `#/paths${path}/post`;
-    if (
-      finalPathItem.post &&
-      canProcessRef({
-        $ref: $refPost,
-        excludeRegExp,
-        includeRegExp,
-      })
-    ) {
+    if (finalPathItem.post && shouldProcessRef($refPost)) {
       parseOperation({
         ...operationArgs,
         method: 'post',
@@ -208,14 +232,7 @@ export const parseV3_1_X = (context: IRContext<OpenApiV3_1_X>) => {
     }
 
     const $refPut = `#/paths${path}/put`;
-    if (
-      finalPathItem.put &&
-      canProcessRef({
-        $ref: $refPut,
-        excludeRegExp,
-        includeRegExp,
-      })
-    ) {
+    if (finalPathItem.put && shouldProcessRef($refPut)) {
       parseOperation({
         ...operationArgs,
         method: 'put',
@@ -234,14 +251,7 @@ export const parseV3_1_X = (context: IRContext<OpenApiV3_1_X>) => {
     }
 
     const $refTrace = `#/paths${path}/trace`;
-    if (
-      finalPathItem.trace &&
-      canProcessRef({
-        $ref: $refTrace,
-        excludeRegExp,
-        includeRegExp,
-      })
-    ) {
+    if (finalPathItem.trace && shouldProcessRef($refTrace)) {
       parseOperation({
         ...operationArgs,
         method: 'trace',
@@ -256,55 +266,6 @@ export const parseV3_1_X = (context: IRContext<OpenApiV3_1_X>) => {
             target: operationArgs.operation.parameters,
           }),
         },
-      });
-    }
-  }
-
-  // TODO: parser - handle more component types, old parser handles only parameters and schemas
-  if (context.spec.components) {
-    for (const name in context.spec.components.parameters) {
-      const $ref = `#/components/parameters/${name}`;
-      if (
-        !canProcessRef({
-          $ref,
-          excludeRegExp,
-          includeRegExp,
-        })
-      ) {
-        continue;
-      }
-
-      const parameterOrReference = context.spec.components.parameters[name];
-      const parameter =
-        '$ref' in parameterOrReference
-          ? context.resolveRef<ParameterObject>(parameterOrReference.$ref)
-          : parameterOrReference;
-
-      parseParameter({
-        context,
-        name,
-        parameter,
-      });
-    }
-
-    for (const name in context.spec.components.schemas) {
-      const $ref = `#/components/schemas/${name}`;
-      if (
-        !canProcessRef({
-          $ref,
-          excludeRegExp,
-          includeRegExp,
-        })
-      ) {
-        continue;
-      }
-
-      const schema = context.spec.components.schemas[name];
-
-      parseSchema({
-        $ref,
-        context,
-        schema,
       });
     }
   }
