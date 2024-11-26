@@ -20,6 +20,7 @@ type Client = (typeof CLIENTS)[number];
 export interface ClientConfig {
   /**
    * Manually set base in OpenAPI config instead of inferring from server value
+   *
    * @deprecated
    */
   base?: string;
@@ -37,6 +38,7 @@ export interface ClientConfig {
          * package and bundled with the rest of the generated output. This is
          * useful if you're repackaging the output, publishing it to other users,
          * and you don't want them to install any dependencies.
+         *
          * @default false
          */
         bundle?: boolean;
@@ -52,21 +54,25 @@ export interface ClientConfig {
   configFile?: string;
   /**
    * Run in debug mode?
+   *
    * @default false
    */
   debug?: boolean;
   /**
    * Skip writing files to disk?
+   *
    * @default false
    */
   dryRun?: boolean;
   /**
-   * Opt-in to the experimental parser?
+   * Opt in to the experimental parser?
+   *
    * @default false
    */
   experimentalParser?: boolean;
   /**
    * Generate core client classes?
+   *
    * @default true
    */
   exportCore?: boolean;
@@ -82,6 +88,8 @@ export interface ClientConfig {
     | Record<string, unknown>
     | {
         /**
+         * **This feature works only with the experimental parser**
+         *
          * Prevent parts matching the regular expression from being processed.
          * You can select both operations and components by reference within
          * the bundled input. In case of conflicts, `exclude` takes precedence
@@ -93,6 +101,8 @@ export interface ClientConfig {
          */
         exclude?: string;
         /**
+         * **This feature works only with the experimental parser**
+
          * Process only parts matching the regular expression. You can select both
          * operations and components by reference within the bundled input. In
          * case of conflicts, `exclude` takes precedence over `include`.
@@ -112,7 +122,9 @@ export interface ClientConfig {
   /**
    * Custom client class name. Please note this option is deprecated and
    * will be removed in favor of clients.
+   *
    * @link https://heyapi.dev/openapi-ts/migrating.html#deprecated-name
+   *
    * @deprecated
    */
   name?: string;
@@ -123,12 +135,24 @@ export interface ClientConfig {
     | string
     | {
         /**
+         * **This feature works only with the experimental parser**
+         *
+         * Defines casing of the output fields. By default, we preserve
+         * `input` values as data transforms incur a performance penalty
+         * at runtime. You can also supply a function for custom transforms.
+         *
+         * @default undefined
+         */
+        case?: 'camelCase' | 'PascalCase' | 'snake_case' | (() => string);
+        /**
          * Process output folder with formatter?
+         *
          * @default false
          */
         format?: 'biome' | 'prettier' | false;
         /**
          * Process output folder with linter?
+         *
          * @default false
          */
         lint?: 'biome' | 'eslint' | 'oxlint' | false;
@@ -144,15 +168,20 @@ export interface ClientConfig {
   /**
    * Path to custom request file. Please note this option is deprecated and
    * will be removed in favor of clients.
+   *
    * @link https://heyapi.dev/openapi-ts/migrating.html#deprecated-request
+   *
    * @deprecated
    */
   request?: string;
   /**
    * Use options or arguments functions. Please note this option is deprecated and
    * will be removed in favor of clients.
+   *
    * @link https://heyapi.dev/openapi-ts/migrating.html#deprecated-useoptions
+   *
    * @deprecated
+   *
    * @default true
    */
   useOptions?: boolean;

@@ -12,6 +12,7 @@ import { operationResponsesMap } from '../../../ir/operation';
 import { deduplicateSchema } from '../../../ir/schema';
 import { escapeComment } from '../../../utils/escape';
 import { irRef, isRefOpenApiComponent } from '../../../utils/ref';
+import { fieldName } from '../../shared/utils/case';
 import type { Plugin, PluginHandler } from '../../types';
 import { operationIrRef } from '../sdk/plugin';
 import type { Config } from './types';
@@ -22,8 +23,6 @@ interface SchemaWithType<T extends Required<IRSchemaObject>['type']>
 }
 
 const typesId = 'types';
-
-const digitsRegExp = /^\d+$/;
 
 const parseSchemaJsDoc = ({ schema }: { schema: IRSchemaObject }) => {
   const comments = [
@@ -419,14 +418,11 @@ const objectTypeToIdentifier = ({
   for (const name in schema.properties) {
     const property = schema.properties[name];
     const isRequired = required.includes(name);
-    digitsRegExp.lastIndex = 0;
     schemaProperties.push({
       comment: parseSchemaJsDoc({ schema: property }),
       isReadOnly: property.accessScope === 'read',
       isRequired,
-      name: digitsRegExp.test(name)
-        ? ts.factory.createNumericLiteral(name)
-        : name,
+      name: fieldName({ context, name }),
       type: schemaToType({
         $ref: `${irRef}${name}`,
         context,

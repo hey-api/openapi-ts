@@ -1,5 +1,5 @@
 import type { IRContext } from '../../../ir/context';
-import { camelCase } from '../../../utils/camelCase';
+import { stringCase } from '../../../utils/stringCase';
 import { sanitizeNamespaceIdentifier } from '../../common/parser/sanitize';
 
 /**
@@ -23,8 +23,9 @@ export const operationToId = ({
     (!context.config.plugins['@hey-api/sdk'] ||
       context.config.plugins['@hey-api/sdk'].operationId)
   ) {
-    return camelCase({
+    return stringCase({
       input: sanitizeNamespaceIdentifier(id),
+      style: 'camelCase',
     });
   }
 
@@ -33,7 +34,8 @@ export const operationToId = ({
     // replace slashes with hyphens for camelcase method at the end
     .replace(/[/:]/g, '-');
 
-  return camelCase({
+  return stringCase({
     input: `${method}-${urlWithoutPlaceholders}`,
+    style: 'camelCase',
   });
 };

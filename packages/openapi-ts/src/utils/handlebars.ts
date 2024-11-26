@@ -88,16 +88,17 @@ import xhrGetResponseHeader from '../legacy/handlebars/compiled/core/xhr/getResp
 import xhrRequest from '../legacy/handlebars/compiled/core/xhr/request.js';
 // @ts-ignore
 import xhrSendRequest from '../legacy/handlebars/compiled/core/xhr/sendRequest.js';
-import { camelCase } from './camelCase';
 import { getConfig } from './config';
+import { stringCase } from './stringCase';
 import { transformServiceName } from './transform';
 
 export const registerHandlebarHelpers = (): void => {
   Handlebars.registerHelper(
     'camelCase',
     function (this: unknown, name: string) {
-      return camelCase({
+      return stringCase({
         input: name,
+        style: 'camelCase',
       });
     },
   );

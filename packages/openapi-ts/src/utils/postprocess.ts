@@ -1,9 +1,9 @@
 import type { Client as ParserClient, Model } from '../openApi';
 import { sanitizeNamespaceIdentifier } from '../openApi';
 import type { Client, Operation, Service } from '../types/client';
-import { camelCase } from './camelCase';
 import { getConfig, legacyNameFromConfig } from './config';
 import { sort } from './sort';
+import { stringCase } from './stringCase';
 import { unique } from './unique';
 
 /**
@@ -117,7 +117,7 @@ export const getNewService = (operation: Operation): Service => ({
  * the input string to PascalCase.
  */
 export const getServiceName = (value: string): string =>
-  camelCase({
+  stringCase({
     input: sanitizeNamespaceIdentifier(value),
-    pascalCase: true,
+    style: 'PascalCase',
   });

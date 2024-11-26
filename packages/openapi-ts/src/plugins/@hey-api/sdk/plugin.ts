@@ -6,10 +6,10 @@ import { clientApi, clientModulePath } from '../../../generate/client';
 import type { IRContext } from '../../../ir/context';
 import type { IROperationObject } from '../../../ir/ir';
 import { hasOperationDataRequired } from '../../../ir/operation';
-import { camelCase } from '../../../utils/camelCase';
 import { escapeComment } from '../../../utils/escape';
 import { getServiceName } from '../../../utils/postprocess';
 import { irRef } from '../../../utils/ref';
+import { stringCase } from '../../../utils/stringCase';
 import { transformServiceName } from '../../../utils/transform';
 import type { PluginHandler } from '../../types';
 import { operationTransformerIrRef } from '../transformers/plugin';
@@ -51,9 +51,9 @@ export const operationIrRef = ({
       affix = 'Responses';
       break;
   }
-  return `${irRef}${camelCase({
+  return `${irRef}${stringCase({
     input: id,
-    pascalCase: true,
+    style: 'PascalCase',
   })}${affix}`;
 };
 
