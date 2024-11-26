@@ -25,10 +25,9 @@ export const fieldName = ({
     return name;
   }
 
-  if (typeof context.config.output.case === 'function') {
-    // TODO: parser - pass arguments
-    return context.config.output.case();
-  }
+  // if (typeof context.config.output.case === 'function') {
+  //   return context.config.output.case({ value: name });
+  // }
 
   return stringCase({ input: name, style: context.config.output.case });
 };
