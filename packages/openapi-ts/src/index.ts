@@ -147,6 +147,7 @@ const getInput = (userConfig: ClientConfig): Config['input'] => {
 
 const getOutput = (userConfig: ClientConfig): Config['output'] => {
   let output: Config['output'] = {
+    clean: true,
     format: false,
     lint: false,
     path: '',
