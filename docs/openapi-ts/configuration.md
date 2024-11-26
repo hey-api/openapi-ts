@@ -49,44 +49,6 @@ Input is the first thing you must define. It can be a local path, remote URL, or
 We use [`@apidevtools/json-schema-ref-parser`](https://github.com/APIDevTools/json-schema-ref-parser) to resolve file locations. Please note that accessing a HTTPS URL on localhost has a known [workaround](https://github.com/hey-api/openapi-ts/issues/276).
 :::
 
-## Filters
-
-::: warning
-To use this feature, you must opt in to the [experimental parser](#parser).
-:::
-
-If you work with large specifications and want to generate output from their subset, you can use regular expressions to select the relevant definitions. Set `input.include` to match resource references to be included or `input.exclude` to match resource references to be excluded. When both regular expressions match the same definition, `input.exclude` takes precedence over `input.include`.
-
-::: code-group
-
-```js [include]
-export default {
-  client: '@hey-api/client-fetch',
-  experimentalParser: true, // [!code ++]
-  input: {
-    // match only the schema named `foo` and `GET` operation for the `/api/v1/foo` path // [!code ++]
-    include: '^(#/components/schemas/foo|#/paths/api/v1/foo/get)$', // [!code ++]
-    path: 'path/to/openapi.json',
-  },
-  output: 'src/client',
-};
-```
-
-```js [exclude]
-export default {
-  client: '@hey-api/client-fetch',
-  experimentalParser: true, // [!code ++]
-  input: {
-    // match everything except for the schema named `foo` and `GET` operation for the `/api/v1/foo` path // [!code ++]
-    exclude: '^(#/components/schemas/foo|#/paths/api/v1/foo/get)$', // [!code ++]
-    path: 'path/to/openapi.json',
-  },
-  output: 'src/client',
-};
-```
-
-:::
-
 ## Output
 
 Output is the next thing to define. It can be either a string pointing to the destination folder or a configuration object containing the destination folder path and optional settings (these are described below).
@@ -253,6 +215,63 @@ npx @hey-api/openapi-ts -i path/to/openapi.json -o src/client -c @hey-api/client
 The experimental parser produces a cleaner output while being faster than the legacy parser. It also supports features such as [Filters](#filters) and more will be added in the future.
 
 The legacy parser will be used with the [legacy clients](/openapi-ts/clients/legacy) regardless of the `experimentalParser` flag value. However, it's unlikely to receive any further updates.
+
+## Filters
+
+::: warning
+To use this feature, you must opt in to the [experimental parser](#parser).
+:::
+
+If you work with large specifications and want to generate output from their subset, you can use regular expressions to select the relevant definitions. Set `input.include` to match resource references to be included or `input.exclude` to match resource references to be excluded. When both regular expressions match the same definition, `input.exclude` takes precedence over `input.include`.
+
+::: code-group
+
+```js [include]
+export default {
+  client: '@hey-api/client-fetch',
+  experimentalParser: true, // [!code ++]
+  input: {
+    // match only the schema named `foo` and `GET` operation for the `/api/v1/foo` path // [!code ++]
+    include: '^(#/components/schemas/foo|#/paths/api/v1/foo/get)$', // [!code ++]
+    path: 'path/to/openapi.json',
+  },
+  output: 'src/client',
+};
+```
+
+```js [exclude]
+export default {
+  client: '@hey-api/client-fetch',
+  experimentalParser: true, // [!code ++]
+  input: {
+    // match everything except for the schema named `foo` and `GET` operation for the `/api/v1/foo` path // [!code ++]
+    exclude: '^(#/components/schemas/foo|#/paths/api/v1/foo/get)$', // [!code ++]
+    path: 'path/to/openapi.json',
+  },
+  output: 'src/client',
+};
+```
+
+:::
+
+## Custom Files
+
+By default, you can't keep custom files in the `output.path` folder because it's emptied on every run. If you're sure you need to disable this behavior, set `output.clean` to `false`.
+
+```js
+export default {
+  client: '@hey-api/client-fetch',
+  input: 'path/to/openapi.json',
+  output: {
+    clean: false, // [!code ++]
+    path: 'src/client',
+  },
+};
+```
+
+::: warning
+Setting `output.clean` to `false` may result in broken output. Ensure you typecheck your code.
+:::
 
 ## Config API
 

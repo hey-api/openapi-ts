@@ -4,6 +4,63 @@
     "title": "OpenAPI 3.0.2 case example",
     "version": "1"
   },
+  "paths": {
+    "/foo": {
+      "get": {
+        "parameters": [
+          {
+            "description": "original name: fooBar",
+            "in": "query",
+            "name": "fooBar",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "original name: BarBaz",
+            "in": "query",
+            "name": "BarBaz",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "original name: qux_quux",
+            "in": "query",
+            "name": "qux_quux",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Foo"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Foo"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
   "components": {
     "schemas": {
       "Foo": {
@@ -14,7 +71,11 @@
           },
           "BarBaz": {
             "description": "original name: BarBaz",
-            "$ref": "#/components/schemas/Foo"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Foo"
+              }
+            ]
           },
           "qux_quux": {
             "description": "original name: qux_quux",
