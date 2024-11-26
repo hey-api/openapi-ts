@@ -13,6 +13,7 @@ import { generateClientBundle } from './client';
 import { generateLegacyCore } from './core';
 import { TypeScriptFile } from './files';
 import { generateIndexFile } from './indexFile';
+import { removeDirSync } from './utils';
 
 /**
  * Write our OpenAPI client, using the given templates at the given output
@@ -52,6 +53,10 @@ export const generateLegacyOutput = async ({
   }
 
   const outputPath = path.resolve(config.output.path);
+
+  if (config.output.clean) {
+    removeDirSync(outputPath);
+  }
 
   if (!isLegacyClient(config) && config.client.bundle) {
     await generateClientBundle({ name: config.client.name, outputPath });
@@ -103,6 +108,10 @@ export const generateLegacyOutput = async ({
 
 export const generateOutput = async ({ context }: { context: IRContext }) => {
   const outputPath = path.resolve(context.config.output.path);
+
+  if (context.config.output.clean) {
+    removeDirSync(outputPath);
+  }
 
   if (context.config.client.bundle) {
     generateClientBundle({

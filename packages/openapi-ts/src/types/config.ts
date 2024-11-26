@@ -139,11 +139,20 @@ export interface ClientConfig {
          *
          * Defines casing of the output fields. By default, we preserve
          * `input` values as data transforms incur a performance penalty
-         * at runtime. You can also supply a function for custom transforms.
+         * at runtime.
          *
          * @default undefined
          */
-        case?: 'camelCase' | 'PascalCase' | 'snake_case' | (() => string);
+        case?: 'camelCase' | 'PascalCase' | 'snake_case';
+        /**
+         * Clean the `output` folder on every run? If disabled, this folder may
+         * be used to store additional files. The default option is `true` to
+         * reduce the risk of keeping outdated files around when configuration,
+         * input, or package version changes.
+         *
+         * @default true
+         */
+        clean?: boolean;
         /**
          * Process output folder with formatter?
          *

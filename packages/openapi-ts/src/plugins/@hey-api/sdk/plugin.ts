@@ -74,22 +74,63 @@ export const operationOptionsType = ({
 
 const sdkId = 'sdk';
 
-const requestOptions = ({
+const operationStatements = ({
   context,
   operation,
 }: {
   context: IRContext;
   operation: IROperationObject;
-}) => {
+}): Array<ts.Statement> => {
   const file = context.file({ id: sdkId })!;
   const sdkOutput = file.nameWithoutExtension();
+  const typesModule = file.relativePathToFile({ context, id: 'types' });
 
-  const obj: ObjectValue[] = [{ spread: 'options' }];
+  const identifierError = context.file({ id: 'types' })!.identifier({
+    $ref: operationIrRef({ id: operation.id, type: 'error' }),
+    namespace: 'type',
+  });
+  if (identifierError.name) {
+    file.import({
+      asType: true,
+      module: typesModule,
+      name: identifierError.name,
+    });
+  }
+
+  const identifierResponse = context.file({ id: 'types' })!.identifier({
+    $ref: operationIrRef({ id: operation.id, type: 'response' }),
+    namespace: 'type',
+  });
+  if (identifierResponse.name) {
+    file.import({
+      asType: true,
+      module: typesModule,
+      name: identifierResponse.name,
+    });
+  }
+
+  // TODO: transform parameters
+  // const query = {
+  //   BarBaz: options.query.bar_baz,
+  //   qux_quux: options.query.qux_quux,
+  //   fooBar: options.query.foo_bar,
+  // };
+
+  // if (operation.parameters) {
+  //   for (const name in operation.parameters.query) {
+  //     const parameter = operation.parameters.query[name]
+  //     if (parameter.name !== fieldName({ context, name: parameter.name })) {
+  //       console.warn(parameter.name)
+  //     }
+  //   }
+  // }
+
+  const requestOptions: ObjectValue[] = [{ spread: 'options' }];
 
   if (operation.body) {
     switch (operation.body.type) {
       case 'form-data':
-        obj.push({ spread: 'formDataBodySerializer' });
+        requestOptions.push({ spread: 'formDataBodySerializer' });
         file.import({
           module: clientModulePath({
             config: context.config,
@@ -101,7 +142,7 @@ const requestOptions = ({
       case 'json':
         break;
       case 'url-search-params':
-        obj.push({ spread: 'urlSearchParamsBodySerializer' });
+        requestOptions.push({ spread: 'urlSearchParamsBodySerializer' });
         file.import({
           module: clientModulePath({
             config: context.config,
@@ -112,7 +153,7 @@ const requestOptions = ({
         break;
     }
 
-    obj.push({
+    requestOptions.push({
       key: 'headers',
       value: [
         {
@@ -134,7 +175,7 @@ const requestOptions = ({
   // content type. currently impossible because successes do not contain
   // header information
 
-  obj.push({
+  requestOptions.push({
     key: 'url',
     value: operation.path,
   });
@@ -150,7 +191,7 @@ const requestOptions = ({
         module: file.relativePathToFile({ context, id: 'transformers' }),
         name: identifier.name,
       });
-      obj.push({
+      requestOptions.push({
         key: 'responseTransformer',
         value: identifier.name,
       });
@@ -166,7 +207,7 @@ const requestOptions = ({
     ) {
       // override the default settings for `querySerializer`
       if (context.config.client.name === '@hey-api/client-fetch') {
-        obj.push({
+        requestOptions.push({
           key: 'querySerializer',
           value: [
             {
@@ -189,10 +230,22 @@ const requestOptions = ({
     }
   }
 
-  return compiler.objectExpression({
-    identifiers: ['responseTransformer'],
-    obj,
-  });
+  return [
+    compiler.returnFunctionCall({
+      args: [
+        compiler.objectExpression({
+          identifiers: ['responseTransformer'],
+          obj: requestOptions,
+        }),
+      ],
+      name: `(options?.client ?? client).${operation.method}`,
+      types: [
+        identifierResponse.name || 'unknown',
+        identifierError.name || 'unknown',
+        'ThrowOnError',
+      ],
+    }),
+  ];
 };
 
 const generateClassSdk = ({ context }: { context: IRContext }) => {
@@ -211,30 +264,6 @@ const generateClassSdk = ({ context }: { context: IRContext }) => {
         asType: true,
         module: typesModule,
         name: identifierData.name,
-      });
-    }
-
-    const identifierError = context.file({ id: 'types' })!.identifier({
-      $ref: operationIrRef({ id: operation.id, type: 'error' }),
-      namespace: 'type',
-    });
-    if (identifierError.name) {
-      file.import({
-        asType: true,
-        module: typesModule,
-        name: identifierError.name,
-      });
-    }
-
-    const identifierResponse = context.file({ id: 'types' })!.identifier({
-      $ref: operationIrRef({ id: operation.id, type: 'response' }),
-      namespace: 'type',
-    });
-    if (identifierResponse.name) {
-      file.import({
-        asType: true,
-        module: typesModule,
-        name: identifierResponse.name,
       });
     }
 
@@ -263,17 +292,7 @@ const generateClassSdk = ({ context }: { context: IRContext }) => {
         },
       ],
       returnType: undefined,
-      statements: [
-        compiler.returnFunctionCall({
-          args: [requestOptions({ context, operation })],
-          name: `(options?.client ?? client).${operation.method}`,
-          types: [
-            identifierResponse.name || 'unknown',
-            identifierError.name || 'unknown',
-            'ThrowOnError',
-          ],
-        }),
-      ],
+      statements: operationStatements({ context, operation }),
       types: [
         {
           default: false,
@@ -328,30 +347,6 @@ const generateFlatSdk = ({ context }: { context: IRContext }) => {
       });
     }
 
-    const identifierError = context.file({ id: 'types' })!.identifier({
-      $ref: operationIrRef({ id: operation.id, type: 'error' }),
-      namespace: 'type',
-    });
-    if (identifierError.name) {
-      file.import({
-        asType: true,
-        module: typesModule,
-        name: identifierError.name,
-      });
-    }
-
-    const identifierResponse = context.file({ id: 'types' })!.identifier({
-      $ref: operationIrRef({ id: operation.id, type: 'response' }),
-      namespace: 'type',
-    });
-    if (identifierResponse.name) {
-      file.import({
-        asType: true,
-        module: typesModule,
-        name: identifierResponse.name,
-      });
-    }
-
     const node = compiler.constVariable({
       comment: [
         operation.deprecated && '@deprecated',
@@ -371,17 +366,7 @@ const generateFlatSdk = ({ context }: { context: IRContext }) => {
           },
         ],
         returnType: undefined,
-        statements: [
-          compiler.returnFunctionCall({
-            args: [requestOptions({ context, operation })],
-            name: `(options?.client ?? client).${operation.method}`,
-            types: [
-              identifierResponse.name || 'unknown',
-              identifierError.name || 'unknown',
-              'ThrowOnError',
-            ],
-          }),
-        ],
+        statements: operationStatements({ context, operation }),
         types: [
           {
             default: false,

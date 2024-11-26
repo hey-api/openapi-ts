@@ -33,13 +33,13 @@ const main = async () => {
       {
         // asClass: true,
         // include...
-        // name: '@hey-api/sdk',
+        name: '@hey-api/sdk',
         // operationId: false,
         // serviceNameBuilder: '^Parameters',
       },
       {
         // dates: true,
-        name: '@hey-api/transformers',
+        // name: '@hey-api/transformers',
       },
       {
         // enums: 'typescript',
