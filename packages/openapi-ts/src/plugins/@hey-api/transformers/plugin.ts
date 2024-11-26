@@ -4,8 +4,8 @@ import { compiler } from '../../../compiler';
 import type { IRContext } from '../../../ir/context';
 import type { IRSchemaObject } from '../../../ir/ir';
 import { operationResponsesMap } from '../../../ir/operation';
-import { camelCase } from '../../../utils/camelCase';
 import { irRef } from '../../../utils/ref';
+import { stringCase } from '../../../utils/stringCase';
 import type { PluginHandler } from '../../types';
 import { operationIrRef } from '../sdk/plugin';
 import type { Config } from './types';
@@ -35,10 +35,10 @@ export const operationTransformerIrRef = ({
       affix = 'ResponseTransformer';
       break;
   }
-  return `${irRef}${camelCase({
+  return `${irRef}${stringCase({
     input: id,
     // TODO: parser - do not pascalcase for functions, only for types
-    pascalCase: false,
+    style: 'camelCase',
   })}${affix}`;
 };
 
@@ -56,9 +56,9 @@ const schemaIrRef = ({
       break;
   }
   const parts = $ref.split('/');
-  return `${parts.slice(0, parts.length - 1).join('/')}/${camelCase({
+  return `${parts.slice(0, parts.length - 1).join('/')}/${stringCase({
     input: parts[parts.length - 1],
-    pascalCase: false,
+    style: 'camelCase',
   })}${affix}`;
 };
 

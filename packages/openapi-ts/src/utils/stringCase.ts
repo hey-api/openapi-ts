@@ -13,19 +13,28 @@ const NUMBERS_AND_IDENTIFIER = new RegExp(
   'gu',
 );
 
-const preserveCamelCase = (string: string) => {
+const preserveCase = ({
+  string,
+  style,
+}: {
+  string: string;
+  readonly style?: 'camelCase' | 'PascalCase' | 'snake_case';
+}) => {
   let isLastCharLower = false;
   let isLastCharUpper = false;
   let isLastLastCharUpper = false;
   let isLastLastCharPreserved = false;
 
+  const separator = style === 'snake_case' ? '_' : '-';
+
   for (let index = 0; index < string.length; index++) {
     const character = string[index];
-    isLastLastCharPreserved = index > 2 ? string[index - 3] === '-' : true;
+    isLastLastCharPreserved =
+      index > 2 ? string[index - 3] === separator : true;
 
     uppercaseRegExp.lastIndex = 0;
     if (isLastCharLower && uppercaseRegExp.test(character)) {
-      string = string.slice(0, index) + '-' + string.slice(index);
+      string = `${string.slice(0, index)}${separator}${string.slice(index)}`;
       index++;
       isLastLastCharUpper = isLastCharUpper;
       isLastCharLower = false;
@@ -51,7 +60,7 @@ const preserveCamelCase = (string: string) => {
             nextCharacter.toLocaleLowerCase() !== nextCharacter)
         )
       ) {
-        string = string.slice(0, index - 1) + '-' + string.slice(index - 1);
+        string = `${string.slice(0, index - 1)}${separator}${string.slice(index - 1)}`;
         isLastLastCharUpper = isLastCharUpper;
         isLastCharLower = true;
         isLastCharUpper = false;
@@ -70,20 +79,12 @@ const preserveCamelCase = (string: string) => {
   return string;
 };
 
-/**
- * Convert a dash/dot/underscore/space separated string to camelCase or PascalCase: `foo-bar` → `fooBar`. Correctly handles Unicode strings. Returns transformed string.
- */
-export const camelCase = ({
+export const stringCase = ({
   input,
-  pascalCase,
+  style,
 }: {
   input: string;
-  /**
-   * Uppercase the first character: `foo-bar` → `FooBar`
-   *
-   * @default false
-   */
-  readonly pascalCase?: boolean;
+  readonly style?: 'camelCase' | 'PascalCase' | 'snake_case';
 }): string => {
   let result = input.trim();
 
@@ -97,36 +98,40 @@ export const camelCase = ({
       return '';
     }
 
-    return pascalCase ? result.toLocaleUpperCase() : result.toLocaleLowerCase();
+    return style === 'PascalCase'
+      ? result.toLocaleUpperCase()
+      : result.toLocaleLowerCase();
   }
 
   const hasUpperCase = result !== result.toLocaleLowerCase();
 
   if (hasUpperCase) {
-    result = preserveCamelCase(result);
+    result = preserveCase({ string: result, style });
   }
 
   result = result.replace(LEADING_SEPARATORS, '');
   result = result.toLocaleLowerCase();
 
-  if (pascalCase) {
+  if (style === 'PascalCase') {
     result = result.charAt(0).toLocaleUpperCase() + result.slice(1);
   }
 
-  SEPARATORS_AND_IDENTIFIER.lastIndex = 0;
-  NUMBERS_AND_IDENTIFIER.lastIndex = 0;
+  if (style !== 'snake_case') {
+    SEPARATORS_AND_IDENTIFIER.lastIndex = 0;
+    NUMBERS_AND_IDENTIFIER.lastIndex = 0;
 
-  result = result.replaceAll(NUMBERS_AND_IDENTIFIER, (match, _, offset) => {
-    if (['_', '-', '.'].includes(result.charAt(offset + match.length))) {
-      return match;
-    }
+    result = result.replaceAll(NUMBERS_AND_IDENTIFIER, (match, _, offset) => {
+      if (['_', '-', '.'].includes(result.charAt(offset + match.length))) {
+        return match;
+      }
 
-    return match.toLocaleUpperCase();
-  });
+      return match.toLocaleUpperCase();
+    });
 
-  result = result.replaceAll(SEPARATORS_AND_IDENTIFIER, (_, identifier) =>
-    identifier.toLocaleUpperCase(),
-  );
+    result = result.replaceAll(SEPARATORS_AND_IDENTIFIER, (_, identifier) =>
+      identifier.toLocaleUpperCase(),
+    );
+  }
 
   return result;
 };

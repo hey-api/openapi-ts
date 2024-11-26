@@ -1,6 +1,6 @@
 import type { Config } from '../../../types/config';
-import { camelCase } from '../../../utils/camelCase';
 import { getConfig, isLegacyClient } from '../../../utils/config';
+import { stringCase } from '../../../utils/stringCase';
 import { transformTypeKeyName } from '../../../utils/type';
 import type {
   OperationParameter,
@@ -188,8 +188,9 @@ export const operationNameFn = ({
   path: string;
 }): string => {
   if (config.plugins['@hey-api/sdk']?.operationId && operationId) {
-    return camelCase({
+    return stringCase({
       input: sanitizeNamespaceIdentifier(operationId),
+      style: 'camelCase',
     });
   }
 
@@ -209,8 +210,9 @@ export const operationNameFn = ({
     // replace slashes with hyphens for camelcase method at the end
     .replace(/[/:]/g, '-');
 
-  return camelCase({
+  return stringCase({
     input: `${method}-${urlWithoutPlaceholders}`,
+    style: 'camelCase',
   });
 };
 
