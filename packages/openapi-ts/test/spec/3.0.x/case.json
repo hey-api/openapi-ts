@@ -1,0 +1,44 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "OpenAPI 3.0.2 case example",
+    "version": "1"
+  },
+  "components": {
+    "schemas": {
+      "Foo": {
+        "properties": {
+          "fooBar": {
+            "description": "original name: fooBar",
+            "type": "string"
+          },
+          "BarBaz": {
+            "description": "original name: BarBaz",
+            "$ref": "#/components/schemas/Foo"
+          },
+          "qux_quux": {
+            "description": "original name: qux_quux",
+            "properties": {
+              "fooBar": {
+                "description": "original name: fooBar",
+                "type": "string"
+              },
+              "BarBaz": {
+                "description": "original name: BarBaz",
+                "type": "number"
+              },
+              "qux_quux": {
+                "description": "original name: qux_quux",
+                "type": "boolean"
+              }
+            },
+            "required": ["fooBar", "BarBaz", "qux_quux"],
+            "type": "object"
+          }
+        },
+        "required": ["fooBar", "BarBaz", "qux_quux"],
+        "type": "object"
+      }
+    }
+  }
+}

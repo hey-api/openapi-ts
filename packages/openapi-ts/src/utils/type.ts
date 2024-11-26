@@ -2,13 +2,13 @@ import { compiler, type Property, type TypeNode } from '../compiler';
 import type { Model } from '../openApi';
 import { sanitizeOperationParameterName } from '../openApi';
 import type { Client } from '../types/client';
-import { camelCase } from './camelCase';
 import { getConfig, isLegacyClient } from './config';
 import { refSchemasPartial } from './const';
 import { enumValue } from './enum';
 import { escapeComment, escapeName, unescapeName } from './escape';
 import { getSchemasMeta } from './meta';
 import { reservedWordsRegExp } from './regexp';
+import { stringCase } from './stringCase';
 import { unique } from './unique';
 
 export const isModelDate = (model: Model): boolean =>
@@ -337,8 +337,9 @@ export const transformTypeKeyName = (value: string): string => {
     return value;
   }
 
-  const name = camelCase({
+  const name = stringCase({
     input: sanitizeOperationParameterName(value),
+    style: 'camelCase',
   }).replace(reservedWordsRegExp, '_$1');
   return name;
 };

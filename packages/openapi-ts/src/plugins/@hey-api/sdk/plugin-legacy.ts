@@ -21,7 +21,6 @@ import type {
   Service,
 } from '../../../types/client';
 import type { Config } from '../../../types/config';
-import { camelCase } from '../../../utils/camelCase';
 import {
   getConfig,
   isLegacyClient,
@@ -29,6 +28,7 @@ import {
 } from '../../../utils/config';
 import { escapeComment, escapeName } from '../../../utils/escape';
 import { reservedWordsRegExp } from '../../../utils/regexp';
+import { stringCase } from '../../../utils/stringCase';
 import { transformServiceName } from '../../../utils/transform';
 import { setUniqueTypeName } from '../../../utils/type';
 import { unique } from '../../../utils/unique';
@@ -69,15 +69,15 @@ export const modelResponseTransformerTypeName = (name: string) =>
   `${name}ModelResponseTransformer`;
 
 export const operationDataTypeName = (name: string) =>
-  `${camelCase({
+  `${stringCase({
     input: name,
-    pascalCase: true,
+    style: 'PascalCase',
   })}Data`;
 
 export const operationErrorTypeName = (name: string) =>
-  `${camelCase({
+  `${stringCase({
     input: name,
-    pascalCase: true,
+    style: 'PascalCase',
   })}Error`;
 
 // operation response type ends with "Response", it's enough to append "Transformer"
@@ -85,9 +85,9 @@ export const operationResponseTransformerTypeName = (name: string) =>
   `${name}Transformer`;
 
 export const operationResponseTypeName = (name: string) =>
-  `${camelCase({
+  `${stringCase({
     input: name,
-    pascalCase: true,
+    style: 'PascalCase',
   })}Response`;
 
 /**

@@ -34,7 +34,10 @@ export interface Config extends PluginName<'@hey-api/typescript'> {
   output?: string;
   /**
    * Use your preferred naming pattern
+   *
    * @default 'preserve'
+   *
+   * @deprecated
    */
   style?: 'PascalCase' | 'preserve';
   /**
