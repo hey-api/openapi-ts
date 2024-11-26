@@ -14,11 +14,13 @@ const main = async () => {
       exclude: '^#/components/schemas/ModelWithCircularReference$',
       // include:
       //   '^(#/components/schemas/import|#/paths/api/v{api-version}/simple/options)$',
-      path: './test/spec/3.0.x/components-request-bodies.json',
+      // path: './test/spec/3.0.x/components-request-bodies.json',
+      path: './test/spec/3.0.x/case.json',
       // path: 'https://mongodb-mms-prod-build-server.s3.amazonaws.com/openapi/2caffd88277a4e27c95dcefc7e3b6a63a3b03297-v2-2023-11-15.json',
     },
     // name: 'foo',
     output: {
+      case: 'snake_case',
       // format: 'prettier',
       // lint: 'eslint',
       path: './test/generated/sample/',
@@ -31,27 +33,28 @@ const main = async () => {
       {
         // asClass: true,
         // include...
-        name: '@hey-api/sdk',
+        // name: '@hey-api/sdk',
         // operationId: false,
         // serviceNameBuilder: '^Parameters',
       },
       {
         // dates: true,
-        // name: '@hey-api/transformers',
+        name: '@hey-api/transformers',
       },
       {
         // enums: 'typescript',
         // enums: 'typescript+namespace',
         // enums: 'javascript',
         // exportInlineEnums: true,
-        // name: '@hey-api/typescript',
-        // style: 'PascalCase',
+        name: '@hey-api/typescript',
+        style: 'PascalCase',
         // tree: true,
       },
       {
-        name: '@tanstack/react-query',
         // name: 'fastify',
-        // name: 'zod',
+      },
+      {
+        // name: '@tanstack/react-query',
       },
       {
         // name: 'zod',

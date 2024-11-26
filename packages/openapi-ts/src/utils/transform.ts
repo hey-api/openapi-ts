@@ -1,8 +1,8 @@
 import { ensureValidTypeScriptJavaScriptIdentifier } from '../openApi';
 import type { Config } from '../types/config';
-import { camelCase } from './camelCase';
 import { getConfig } from './config';
 import { reservedWordsRegExp } from './regexp';
+import { stringCase } from './stringCase';
 
 export const transformServiceName = ({
   config,
@@ -24,9 +24,9 @@ export const transformServiceName = ({
 export const transformTypeName = (name: string) => {
   const config = getConfig();
   if (config.plugins['@hey-api/typescript']?.style === 'PascalCase') {
-    return camelCase({
+    return stringCase({
       input: name,
-      pascalCase: true,
+      style: 'PascalCase',
     });
   }
   return name;
