@@ -70,14 +70,14 @@ export const modelResponseTransformerTypeName = (name: string) =>
 
 export const operationDataTypeName = (name: string) =>
   `${stringCase({
-    input: name,
-    style: 'PascalCase',
+    case: 'PascalCase',
+    value: name,
   })}Data`;
 
 export const operationErrorTypeName = (name: string) =>
   `${stringCase({
-    input: name,
-    style: 'PascalCase',
+    case: 'PascalCase',
+    value: name,
   })}Error`;
 
 // operation response type ends with "Response", it's enough to append "Transformer"
@@ -86,8 +86,8 @@ export const operationResponseTransformerTypeName = (name: string) =>
 
 export const operationResponseTypeName = (name: string) =>
   `${stringCase({
-    input: name,
-    style: 'PascalCase',
+    case: 'PascalCase',
+    value: name,
   })}Response`;
 
 /**

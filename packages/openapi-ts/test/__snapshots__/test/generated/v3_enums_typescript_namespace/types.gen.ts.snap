@@ -1459,7 +1459,7 @@ export type CallWithResponsesResponse = ({
     readonly value?: Array<ModelWithString>;
 } | ModelThatExtends | ModelThatExtendsExtends);
 
-export type ApiVversionOdataControllerCountResponse = (Model_From_Zendesk);
+export type ApiVVersionODataControllerCountResponse = (Model_From_Zendesk);
 
 export type TypesData = {
     /**

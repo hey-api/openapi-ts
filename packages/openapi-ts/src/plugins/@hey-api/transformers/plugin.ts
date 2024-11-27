@@ -36,9 +36,9 @@ export const operationTransformerIrRef = ({
       break;
   }
   return `${irRef}${stringCase({
-    input: id,
     // TODO: parser - do not pascalcase for functions, only for types
-    style: 'camelCase',
+    case: 'camelCase',
+    value: id,
   })}${affix}`;
 };
 
@@ -57,8 +57,8 @@ const schemaIrRef = ({
   }
   const parts = $ref.split('/');
   return `${parts.slice(0, parts.length - 1).join('/')}/${stringCase({
-    input: parts[parts.length - 1],
-    style: 'camelCase',
+    case: 'camelCase',
+    value: parts[parts.length - 1],
   })}${affix}`;
 };
 

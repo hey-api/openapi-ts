@@ -97,8 +97,8 @@ export const registerHandlebarHelpers = (): void => {
     'camelCase',
     function (this: unknown, name: string) {
       return stringCase({
-        input: name,
-        style: 'camelCase',
+        case: 'camelCase',
+        value: name,
       });
     },
   );

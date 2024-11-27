@@ -52,9 +52,9 @@ export const operationIrRef = ({
       break;
   }
   return `${irRef}${stringCase({
-    input: id,
-    style: 'PascalCase',
-  })}${affix}`;
+    case: 'PascalCase',
+    value: id,
+  })}-${affix}`;
 };
 
 export const operationOptionsType = ({

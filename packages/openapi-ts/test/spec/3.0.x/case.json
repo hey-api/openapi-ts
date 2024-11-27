@@ -56,6 +56,16 @@
                 }
               }
             }
+          },
+          "201": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/201"
+                }
+              }
+            }
           }
         }
       }
@@ -64,10 +74,15 @@
   "components": {
     "schemas": {
       "Foo": {
+        "description": "original name: Foo",
         "properties": {
           "fooBar": {
             "description": "original name: fooBar",
-            "type": "string"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/foo_bar"
+              }
+            ]
           },
           "BarBaz": {
             "description": "original name: BarBaz",
@@ -82,11 +97,19 @@
             "properties": {
               "fooBar": {
                 "description": "original name: fooBar",
-                "type": "string"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/fooBar"
+                  }
+                ]
               },
               "BarBaz": {
                 "description": "original name: BarBaz",
-                "type": "number"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/FooBar"
+                  }
+                ]
               },
               "qux_quux": {
                 "description": "original name: qux_quux",
@@ -99,6 +122,22 @@
         },
         "required": ["fooBar", "BarBaz", "qux_quux"],
         "type": "object"
+      },
+      "201": {
+        "description": "original name: 201",
+        "type": "number"
+      },
+      "foo_bar": {
+        "description": "original name: foo_bar",
+        "type": "boolean"
+      },
+      "fooBar": {
+        "description": "original name: fooBar",
+        "type": "number"
+      },
+      "FooBar": {
+        "description": "original name: FooBar",
+        "type": "string"
       }
     }
   }

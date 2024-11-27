@@ -58,6 +58,58 @@ describe(`OpenAPI ${VERSION}`, () => {
     },
     {
       config: createConfig({
+        input: 'case.json',
+        output: 'case',
+        plugins: [
+          {
+            identifierCase: undefined,
+            name: '@hey-api/typescript',
+          },
+        ],
+      }),
+      description: 'handles preserved identifier casing',
+    },
+    {
+      config: createConfig({
+        input: 'case.json',
+        output: 'case-PascalCase',
+        plugins: [
+          {
+            identifierCase: 'PascalCase',
+            name: '@hey-api/typescript',
+          },
+        ],
+      }),
+      description: 'handles PascalCase identifier casing',
+    },
+    {
+      config: createConfig({
+        input: 'case.json',
+        output: 'case-camelCase',
+        plugins: [
+          {
+            identifierCase: 'camelCase',
+            name: '@hey-api/typescript',
+          },
+        ],
+      }),
+      description: 'handles camelCase identifier casing',
+    },
+    {
+      config: createConfig({
+        input: 'case.json',
+        output: 'case-snake_case',
+        plugins: [
+          {
+            identifierCase: 'snake_case',
+            name: '@hey-api/typescript',
+          },
+        ],
+      }),
+      description: 'handles snake_case identifier casing',
+    },
+    {
+      config: createConfig({
         input: 'components-request-bodies.json',
         output: 'components-request-bodies',
       }),
