@@ -2,8 +2,8 @@
 
 import type { Options } from '@hey-api/client-fetch';
 import { queryOptions, type UseMutationOptions, type DefaultError, infiniteQueryOptions, type InfiniteData } from '@tanstack/react-query';
-import type { ExportData, ImportData, ImportResponse, ApiVversionOdataControllerCountData, GetApiVbyApiVersionSimpleOperationData, DeleteCallWithoutParametersAndResponseData, GetCallWithoutParametersAndResponseData, PatchCallWithoutParametersAndResponseData, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, DeleteFooData3, CallWithDescriptionsData, DeprecatedCallData, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, PostApiVbyApiVersionRequestBodyData, PostApiVbyApiVersionFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, DuplicateNameData, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data, CallWithNoContentResponseData, CallWithResponseAndNoContentResponseData, DummyAData, DummyBData, CallWithResponseData, CallWithDuplicateResponsesData, CallWithDuplicateResponsesError, CallWithDuplicateResponsesResponse, CallWithResponsesData, CallWithResponsesError, CallWithResponsesResponse, CollectionFormatData, TypesData, UploadFileData, UploadFileResponse, FileResponseData, ComplexTypesData, MultipartResponseData, MultipartRequestData, ComplexParamsData, ComplexParamsResponse, CallWithResultFromHeaderData, TestErrorCodeData, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData } from '../types.gen';
-import { client, export_, import_, apiVVersionOdataControllerCount, getApiVbyApiVersionSimpleOperation, deleteCallWithoutParametersAndResponse, getCallWithoutParametersAndResponse, patchCallWithoutParametersAndResponse, postCallWithoutParametersAndResponse, putCallWithoutParametersAndResponse, deleteFoo, callWithDescriptions, deprecatedCall, callWithParameters, callWithWeirdParameterNames, getCallWithOptionalParam, postCallWithOptionalParam, postApiVbyApiVersionRequestBody, postApiVbyApiVersionFormData, callWithDefaultParameters, callWithDefaultOptionalParameters, callToTestOrderOfParams, duplicateName, duplicateName2, duplicateName3, duplicateName4, callWithNoContentResponse, callWithResponseAndNoContentResponse, dummyA, dummyB, callWithResponse, callWithDuplicateResponses, callWithResponses, collectionFormat, types, uploadFile, fileResponse, complexTypes, multipartResponse, multipartRequest, complexParams, callWithResultFromHeader, testErrorCode, nonAsciiæøåÆøÅöôêÊ字符串, putWithFormUrlEncoded } from '../sdk.gen';
+import type { ExportData, ImportData, ImportResponse, ApiVVersionODataControllerCountData, GetApiVbyApiVersionSimpleOperationData, DeleteCallWithoutParametersAndResponseData, GetCallWithoutParametersAndResponseData, PatchCallWithoutParametersAndResponseData, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, DeleteFooData3, CallWithDescriptionsData, DeprecatedCallData, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, PostApiVbyApiVersionRequestBodyData, PostApiVbyApiVersionFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, DuplicateNameData, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data, CallWithNoContentResponseData, CallWithResponseAndNoContentResponseData, DummyAData, DummyBData, CallWithResponseData, CallWithDuplicateResponsesData, CallWithDuplicateResponsesError, CallWithDuplicateResponsesResponse, CallWithResponsesData, CallWithResponsesError, CallWithResponsesResponse, CollectionFormatData, TypesData, UploadFileData, UploadFileResponse, FileResponseData, ComplexTypesData, MultipartResponseData, MultipartRequestData, ComplexParamsData, ComplexParamsResponse, CallWithResultFromHeaderData, TestErrorCodeData, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData } from '../types.gen';
+import { client, export_, import_, apiVVersionODataControllerCount, getApiVbyApiVersionSimpleOperation, deleteCallWithoutParametersAndResponse, getCallWithoutParametersAndResponse, patchCallWithoutParametersAndResponse, postCallWithoutParametersAndResponse, putCallWithoutParametersAndResponse, deleteFoo, callWithDescriptions, deprecatedCall, callWithParameters, callWithWeirdParameterNames, getCallWithOptionalParam, postCallWithOptionalParam, postApiVbyApiVersionRequestBody, postApiVbyApiVersionFormData, callWithDefaultParameters, callWithDefaultOptionalParameters, callToTestOrderOfParams, duplicateName, duplicateName2, duplicateName3, duplicateName4, callWithNoContentResponse, callWithResponseAndNoContentResponse, dummyA, dummyB, callWithResponse, callWithDuplicateResponses, callWithResponses, collectionFormat, types, uploadFile, fileResponse, complexTypes, multipartResponse, multipartRequest, complexParams, callWithResultFromHeader, testErrorCode, nonAsciiæøåÆøÅöôêÊ字符串, putWithFormUrlEncoded } from '../sdk.gen';
 
 type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -84,14 +84,14 @@ export const importMutation = (options?: Partial<Options<ImportData>>) => {
     return mutationOptions;
 };
 
-export const apiVVersionOdataControllerCountQueryKey = (options?: Options<ApiVversionOdataControllerCountData>) => [
-    createQueryKey('apiVVersionOdataControllerCount', options)
+export const apiVVersionODataControllerCountQueryKey = (options?: Options<ApiVVersionODataControllerCountData>) => [
+    createQueryKey('apiVVersionODataControllerCount', options)
 ];
 
-export const apiVVersionOdataControllerCountOptions = (options?: Options<ApiVversionOdataControllerCountData>) => {
+export const apiVVersionODataControllerCountOptions = (options?: Options<ApiVVersionODataControllerCountData>) => {
     return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
-            const { data } = await apiVVersionOdataControllerCount({
+            const { data } = await apiVVersionODataControllerCount({
                 ...options,
                 ...queryKey[0],
                 signal,
@@ -99,7 +99,7 @@ export const apiVVersionOdataControllerCountOptions = (options?: Options<ApiVver
             });
             return data;
         },
-        queryKey: apiVVersionOdataControllerCountQueryKey(options)
+        queryKey: apiVVersionODataControllerCountQueryKey(options)
     });
 };
 

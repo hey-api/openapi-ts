@@ -11,7 +11,7 @@ export type _400 = string;
  *
  * Fourth line
  */
-export type camelCaseCommentWithBreaks = number;
+export type CamelCaseCommentWithBreaks = number;
 
 /**
  * Testing multiline comments in string: First line
@@ -69,7 +69,7 @@ export type SimpleString = string;
 /**
  * A string with non-ascii (unicode) characters valid in typescript identifiers (æøåÆØÅöÔèÈ字符串)
  */
-export type NonAsciiStringæøåÆØÅöôêÊ字符串 = string;
+export type NonAsciiStringæøåÆøÅöôêÊ字符串 = string;
 
 /**
  * This is a simple file
@@ -139,7 +139,7 @@ export type ArrayWithArray = Array<Array<ModelWithString>>;
  * This is a simple array with properties
  */
 export type ArrayWithProperties = Array<{
-    '16x16'?: camelCaseCommentWithBreaks;
+    '16x16'?: CamelCaseCommentWithBreaks;
     bar?: string;
 }>;
 
@@ -256,7 +256,7 @@ export type ModelWithStringError = {
 /**
  * `Comment` or `VoiceComment`. The JSON object for adding voice comments to tickets is different. See [Adding voice comments to tickets](/documentation/ticketing/managing-tickets/adding-voice-comments-to-tickets)
  */
-export type Model_From_Zendesk = string;
+export type ModelFromZendesk = string;
 
 /**
  * This is a model with one string property
@@ -454,7 +454,7 @@ export type CompositionWithNestedAnyAndTypeNull = {
     propA?: Array<ModelWithDictionary | null> | Array<ModelWithArray | null>;
 };
 
-export type _3e_num_1Период = 'Bird' | 'Dog';
+export type _3eNum1Период = 'Bird' | 'Dog';
 
 export type ConstValue = 'ConstValue';
 
@@ -462,7 +462,7 @@ export type ConstValue = 'ConstValue';
  * This is a model with one property with a 'any of' relationship where the options are not $ref
  */
 export type CompositionWithNestedAnyOfAndNull = {
-    propA?: Array<_3e_num_1Период | ConstValue> | null;
+    propA?: Array<_3eNum1Период | ConstValue> | null;
 };
 
 /**
@@ -629,7 +629,7 @@ export type File = {
     readonly file?: string;
 };
 
-export type _default = {
+export type Default = {
     name?: string;
 };
 
@@ -681,7 +681,7 @@ export type NestedAnyOfArraysNullable = {
 export type CompositionWithOneOfAndProperties = ({
     foo: SimpleParameter;
 } | {
-    bar: NonAsciiStringæøåÆØÅöôêÊ字符串;
+    bar: NonAsciiStringæøåÆøÅöôêÊ字符串;
 }) & {
     baz: number | null;
     qux: number;
@@ -764,8 +764,8 @@ export type ModelWithAnyOfConstantSizeArrayNullable = [
 ];
 
 export type ModelWithAnyOfConstantSizeArrayWithNSizeAndOptions = [
-    number | _import,
-    number | _import
+    number | Import,
+    number | Import
 ];
 
 export type ModelWithAnyOfConstantSizeArrayAndIntersect = [
@@ -816,7 +816,7 @@ export type ModelWithBackticksInDescription = {
     template?: string;
 };
 
-export type ModelWithOneOfAndProperties = (SimpleParameter | NonAsciiStringæøåÆØÅöôêÊ字符串) & {
+export type ModelWithOneOfAndProperties = (SimpleParameter | NonAsciiStringæøåÆøÅöôêÊ字符串) & {
     baz: number | null;
     qux: number;
 };
@@ -849,7 +849,7 @@ export type DeleteFooData2 = string;
 /**
  * Model with restricted keyword name
  */
-export type _import = string;
+export type Import = string;
 
 export type SchemaWithFormRestrictedKeys = {
     description?: string;
@@ -876,17 +876,17 @@ export type SchemaWithFormRestrictedKeys = {
 /**
  * This schema was giving PascalCase transformations a hard time
  */
-export type io_k8s_apimachinery_pkg_apis_meta_v1_DeleteOptions = {
+export type IoK8sApimachineryPkgApisMetaV1DeleteOptions = {
     /**
      * Must be fulfilled before a deletion is carried out. If not possible, a 409 Conflict status will be returned.
      */
-    preconditions?: io_k8s_apimachinery_pkg_apis_meta_v1_Preconditions;
+    preconditions?: IoK8sApimachineryPkgApisMetaV1Preconditions;
 };
 
 /**
  * This schema was giving PascalCase transformations a hard time
  */
-export type io_k8s_apimachinery_pkg_apis_meta_v1_Preconditions = {
+export type IoK8sApimachineryPkgApisMetaV1Preconditions = {
     /**
      * Specifies the target ResourceVersion
      */
@@ -916,9 +916,9 @@ export type AdditionalPropertiesIntegerIssue = {
     [key: string]: number;
 };
 
-export type OneOfAllOfIssue = ((ConstValue | Generic_Schema_Duplicate_Issue_1_System_Boolean_) & _3e_num_1Период) | Generic_Schema_Duplicate_Issue_1_System_String_;
+export type OneOfAllOfIssue = ((ConstValue | GenericSchemaDuplicateIssue1SystemBoolean) & _3eNum1Период) | GenericSchemaDuplicateIssue1SystemString;
 
-export type Generic_Schema_Duplicate_Issue_1_System_Boolean_ = {
+export type GenericSchemaDuplicateIssue1SystemBoolean = {
     item?: boolean;
     error?: string | null;
     readonly hasError?: boolean;
@@ -927,7 +927,7 @@ export type Generic_Schema_Duplicate_Issue_1_System_Boolean_ = {
     };
 };
 
-export type Generic_Schema_Duplicate_Issue_1_System_String_ = {
+export type GenericSchemaDuplicateIssue1SystemString = {
     item?: string | null;
     error?: string | null;
     readonly hasError?: boolean;
@@ -941,7 +941,7 @@ export type SimpleParameter = string;
 /**
  * Parameter with illegal characters
  */
-export type x_Foo_Bar = ModelWithString;
+export type XFooBar = ModelWithString;
 
 export type SimpleRequestBody = ModelWithString;
 
@@ -961,7 +961,7 @@ export type ImportResponses = {
     /**
      * Success
      */
-    200: Model_From_Zendesk;
+    200: ModelFromZendesk;
     /**
      * Default success response
      */
@@ -970,19 +970,19 @@ export type ImportResponses = {
 
 export type ImportResponse = ImportResponses[keyof ImportResponses];
 
-export type ApiVversionOdataControllerCountData = {
+export type ApiVVersionODataControllerCountData = {
     body?: never;
     url: '/api/v{api-version}/simple/$count';
 };
 
-export type ApiVversionOdataControllerCountResponses = {
+export type ApiVVersionODataControllerCountResponses = {
     /**
      * Success
      */
-    200: Model_From_Zendesk;
+    200: ModelFromZendesk;
 };
 
-export type ApiVversionOdataControllerCountResponse = ApiVversionOdataControllerCountResponses[keyof ApiVversionOdataControllerCountResponses];
+export type ApiVVersionODataControllerCountResponse = ApiVVersionODataControllerCountResponses[keyof ApiVVersionODataControllerCountResponses];
 
 export type GetApiVbyApiVersionSimpleOperationData = {
     body?: never;
@@ -1448,7 +1448,7 @@ export type CallWithResponseData = {
 };
 
 export type CallWithResponseResponses = {
-    default: _import;
+    default: Import;
 };
 
 export type CallWithResponseResponse = CallWithResponseResponses[keyof CallWithResponseResponses];
@@ -1858,7 +1858,7 @@ export type NonAsciiæøåÆøÅöôêÊ字符串Responses = {
     /**
      * Successful response
      */
-    200: Array<NonAsciiStringæøåÆØÅöôêÊ字符串>;
+    200: Array<NonAsciiStringæøåÆøÅöôêÊ字符串>;
 };
 
 export type NonAsciiæøåÆøÅöôêÊ字符串Response = NonAsciiæøåÆøÅöôêÊ字符串Responses[keyof NonAsciiæøåÆøÅöôêÊ字符串Responses];

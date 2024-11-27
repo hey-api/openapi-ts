@@ -24,8 +24,8 @@ export const operationToId = ({
       context.config.plugins['@hey-api/sdk'].operationId)
   ) {
     return stringCase({
-      input: sanitizeNamespaceIdentifier(id),
-      style: 'camelCase',
+      case: 'camelCase',
+      value: sanitizeNamespaceIdentifier(id),
     });
   }
 
@@ -35,7 +35,7 @@ export const operationToId = ({
     .replace(/[/:]/g, '-');
 
   return stringCase({
-    input: `${method}-${urlWithoutPlaceholders}`,
-    style: 'camelCase',
+    case: 'camelCase',
+    value: `${method}-${urlWithoutPlaceholders}`,
   });
 };

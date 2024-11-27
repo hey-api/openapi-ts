@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import type { Observable } from 'rxjs';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { ImportData, ImportResponse, ApiVversionOdataControllerCountResponse, GetApiSimpleOperationData, GetApiSimpleOperationResponse, DeleteFooData3, CallWithDescriptionsData, DeprecatedCallData, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, PostApiRequestBodyData, PostApiFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, DummyAResponse, DummyBResponse, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, CollectionFormatData, TypesData, TypesResponse, UploadFileData, UploadFileResponse, FileResponseData, FileResponseResponse, ComplexTypesData, ComplexTypesResponse, MultipartRequestData, MultipartResponseResponse, ComplexParamsData, ComplexParamsResponse, CallWithResultFromHeaderResponse, TestErrorCodeData, TestErrorCodeResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData } from './types.gen';
+import type { ImportData, ImportResponse, ApiVVersionODataControllerCountResponse, GetApiSimpleOperationData, GetApiSimpleOperationResponse, DeleteFooData3, CallWithDescriptionsData, DeprecatedCallData, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, PostApiRequestBodyData, PostApiFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, DummyAResponse, DummyBResponse, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, CollectionFormatData, TypesData, TypesResponse, UploadFileData, UploadFileResponse, FileResponseData, FileResponseResponse, ComplexTypesData, ComplexTypesResponse, MultipartRequestData, MultipartResponseResponse, ComplexParamsData, ComplexParamsResponse, CallWithResultFromHeaderResponse, TestErrorCodeData, TestErrorCodeResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData } from './types.gen';
 
 /**
  * @throws ApiError
@@ -37,7 +37,7 @@ export const import_ = function (data: ImportData): Observable<ImportResponse> {
  * @returns Model_From_Zendesk Success
  * @throws ApiError
  */
-export const apiVVersionOdataControllerCount = function (): Observable<ApiVversionOdataControllerCountResponse> {
+export const apiVVersionODataControllerCount = function (): Observable<ApiVVersionODataControllerCountResponse> {
     return __request(OpenAPI, this.http, {
         method: 'GET',
         url: '/api/v{api-version}/simple/$count'

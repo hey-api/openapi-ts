@@ -44,9 +44,11 @@ const addJavaScriptEnum = ({
 }: {
   $ref: string;
   context: IRContext;
+  plugin: Plugin<Config>;
   schema: SchemaWithType<'enum'>;
 }) => {
-  const identifier = context.file({ id: typesId })!.identifier({
+  const file = context.file({ id: typesId })!;
+  const identifier = file.identifier({
     $ref,
     create: true,
     namespace: 'value',
@@ -139,7 +141,8 @@ const addTypeEnum = ({
   plugin: Plugin<Config>;
   schema: SchemaWithType<'enum'>;
 }) => {
-  const identifier = context.file({ id: typesId })!.identifier({
+  const file = context.file({ id: typesId })!;
+  const identifier = file.identifier({
     $ref,
     create: true,
     namespace: 'type',
@@ -185,7 +188,8 @@ const addTypeScriptEnum = ({
   plugin: Plugin<Config>;
   schema: SchemaWithType<'enum'>;
 }) => {
-  const identifier = context.file({ id: typesId })!.identifier({
+  const file = context.file({ id: typesId })!;
+  const identifier = file.identifier({
     $ref,
     create: true,
     namespace: 'value',
@@ -300,6 +304,7 @@ const enumTypeToIdentifier = ({
   plugin: Plugin<Config>;
   schema: SchemaWithType<'enum'>;
 }): ts.TypeNode => {
+  const file = context.file({ id: typesId })!;
   const isRefComponent = $ref ? isRefOpenApiComponent($ref) : false;
   const shouldExportEnum = isRefComponent || Boolean(plugin.exportInlineEnums);
 
@@ -314,7 +319,7 @@ const enumTypeToIdentifier = ({
         schema,
       });
       if (typeNode) {
-        context.file({ id: typesId })!.add(typeNode);
+        file.add(typeNode);
       }
     }
 
@@ -326,16 +331,17 @@ const enumTypeToIdentifier = ({
         schema,
       });
       if (typeNode) {
-        context.file({ id: typesId })!.add(typeNode);
+        file.add(typeNode);
       }
 
       const objectNode = addJavaScriptEnum({
         $ref,
         context,
+        plugin,
         schema,
       });
       if (objectNode) {
-        context.file({ id: typesId })!.add(objectNode);
+        file.add(objectNode);
       }
     }
 
@@ -347,7 +353,7 @@ const enumTypeToIdentifier = ({
         schema,
       });
       if (enumNode) {
-        context.file({ id: typesId })!.add(enumNode);
+        file.add(enumNode);
       }
     }
 
@@ -360,7 +366,7 @@ const enumTypeToIdentifier = ({
       });
       if (enumNode) {
         if (isRefComponent) {
-          context.file({ id: typesId })!.add(enumNode);
+          file.add(enumNode);
         } else {
           // emit enum inside TypeScript namespace
           namespace.push(enumNode);
@@ -677,6 +683,7 @@ const operationToDataType = ({
   operation: IROperationObject;
   plugin: Plugin<Config>;
 }) => {
+  const file = context.file({ id: typesId })!;
   const data: IRSchemaObject = {
     type: 'object',
   };
@@ -749,7 +756,7 @@ const operationToDataType = ({
 
   data.required = dataRequired;
 
-  const identifier = context.file({ id: typesId })!.identifier({
+  const identifier = file.identifier({
     $ref: operationIrRef({ id: operation.id, type: 'data' }),
     create: true,
     namespace: 'type',
@@ -763,7 +770,7 @@ const operationToDataType = ({
       schema: data,
     }),
   });
-  context.file({ id: typesId })!.add(node);
+  file.add(node);
 };
 
 const operationToType = ({
@@ -892,10 +899,12 @@ export const schemaToType = ({
   plugin: Plugin<Config>;
   schema: IRSchemaObject;
 }): ts.TypeNode => {
+  const file = context.file({ id: typesId })!;
+
   let type: ts.TypeNode | undefined;
 
   if (schema.$ref) {
-    const identifier = context.file({ id: typesId })!.identifier({
+    const identifier = file.identifier({
       $ref: schema.$ref,
       create: true,
       namespace: 'type',
@@ -950,7 +959,7 @@ export const schemaToType = ({
   if ($ref && isRefOpenApiComponent($ref)) {
     // emit namespace if it has any members
     if (namespace.length) {
-      const identifier = context.file({ id: typesId })!.identifier({
+      const identifier = file.identifier({
         $ref,
         create: true,
         namespace: 'value',
@@ -959,12 +968,12 @@ export const schemaToType = ({
         name: identifier.name || '',
         statements: namespace,
       });
-      context.file({ id: typesId })!.add(node);
+      file.add(node);
     }
 
     // enum handler emits its own artifacts
     if (schema.type !== 'enum') {
-      const identifier = context.file({ id: typesId })!.identifier({
+      const identifier = file.identifier({
         $ref,
         create: true,
         namespace: 'type',
@@ -975,7 +984,7 @@ export const schemaToType = ({
         name: identifier.name || '',
         type,
       });
-      context.file({ id: typesId })!.add(node);
+      file.add(node);
     }
   }
 
@@ -985,6 +994,7 @@ export const schemaToType = ({
 export const handler: PluginHandler<Config> = ({ context, plugin }) => {
   context.createFile({
     id: typesId,
+    identifierCase: plugin.identifierCase,
     path: plugin.output,
   });
 

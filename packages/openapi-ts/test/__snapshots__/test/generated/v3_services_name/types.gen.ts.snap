@@ -1192,4 +1192,4 @@ export type PostCallWithOptionalParamData = {
 
 export type PostCallWithOptionalParamResponse = (number | void);
 
-export type ApiVversionOdataControllerCountResponse = (Model_From_Zendesk);
+export type ApiVVersionODataControllerCountResponse = (Model_From_Zendesk);

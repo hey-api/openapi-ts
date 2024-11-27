@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import type { Observable } from 'rxjs';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { CollectionFormatData, ComplexTypesData, ComplexTypesResponse, ComplexParamsData, ComplexParamsResponse, ImportData, ImportResponse, GetApiSimpleOperationData, GetApiSimpleOperationResponse, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, DeprecatedCallData, CallWithDescriptionsData, TestErrorCodeData, TestErrorCodeResponse, FileResponseData, FileResponseResponse, PostApiFormDataData, CallWithResultFromHeaderResponse, MultipartRequestData, MultipartResponseResponse, DummyAResponse, DummyBResponse, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData, DeleteFooData3, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, PostApiRequestBodyData, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, ApiVversionOdataControllerCountResponse, TypesData, TypesResponse, UploadFileData, UploadFileResponse } from './types.gen';
+import type { CollectionFormatData, ComplexTypesData, ComplexTypesResponse, ComplexParamsData, ComplexParamsResponse, ImportData, ImportResponse, GetApiSimpleOperationData, GetApiSimpleOperationResponse, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, DeprecatedCallData, CallWithDescriptionsData, TestErrorCodeData, TestErrorCodeResponse, FileResponseData, FileResponseResponse, PostApiFormDataData, CallWithResultFromHeaderResponse, MultipartRequestData, MultipartResponseResponse, DummyAResponse, DummyBResponse, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData, DeleteFooData3, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, PostApiRequestBodyData, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, ApiVVersionODataControllerCountResponse, TypesData, TypesResponse, UploadFileData, UploadFileResponse } from './types.gen';
 
 @Injectable({
     providedIn: 'root'
@@ -860,7 +860,7 @@ export class SimpleService {
      * @returns Model_From_Zendesk Success
      * @throws ApiError
      */
-    public apiVVersionOdataControllerCount(): Observable<ApiVversionOdataControllerCountResponse> {
+    public apiVVersionODataControllerCount(): Observable<ApiVVersionODataControllerCountResponse> {
         return __request(OpenAPI, this.http, {
             method: 'GET',
             url: '/api/v{api-version}/simple/$count'

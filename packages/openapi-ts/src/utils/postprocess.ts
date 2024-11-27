@@ -118,6 +118,6 @@ export const getNewService = (operation: Operation): Service => ({
  */
 export const getServiceName = (value: string): string =>
   stringCase({
-    input: sanitizeNamespaceIdentifier(value),
-    style: 'PascalCase',
+    case: 'PascalCase',
+    value: sanitizeNamespaceIdentifier(value),
   });
