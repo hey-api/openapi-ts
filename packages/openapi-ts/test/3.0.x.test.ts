@@ -215,28 +215,152 @@ describe(`OpenAPI ${VERSION}`, () => {
     {
       config: createConfig({
         input: 'enum-names-values.json',
-        output: 'enum-names-values-javascript',
+        output: 'enum-names-values-javascript-SCREAMING_SNAKE_CASE',
         plugins: [
           {
             enums: 'javascript',
+            enumsCase: 'SCREAMING_SNAKE_CASE',
             name: '@hey-api/typescript',
           },
         ],
       }),
-      description: 'handles various enum names and values (JavaScript)',
+      description:
+        'handles various enum names and values (JavaScript, SCREAMING_SNAKE_CASE)',
     },
     {
       config: createConfig({
         input: 'enum-names-values.json',
-        output: 'enum-names-values-typescript',
+        output: 'enum-names-values-javascript-PascalCase',
         plugins: [
           {
-            enums: 'typescript',
+            enums: 'javascript',
+            enumsCase: 'PascalCase',
             name: '@hey-api/typescript',
           },
         ],
       }),
-      description: 'handles various enum names and values (TypeScript)',
+      description:
+        'handles various enum names and values (JavaScript, PascalCase)',
+    },
+    {
+      config: createConfig({
+        input: 'enum-names-values.json',
+        output: 'enum-names-values-javascript-camelCase',
+        plugins: [
+          {
+            enums: 'javascript',
+            enumsCase: 'camelCase',
+            name: '@hey-api/typescript',
+          },
+        ],
+      }),
+      description:
+        'handles various enum names and values (JavaScript, camelCase)',
+    },
+    {
+      config: createConfig({
+        input: 'enum-names-values.json',
+        output: 'enum-names-values-javascript-snake_case',
+        plugins: [
+          {
+            enums: 'javascript',
+            enumsCase: 'snake_case',
+            name: '@hey-api/typescript',
+          },
+        ],
+      }),
+      description:
+        'handles various enum names and values (JavaScript, snake_case)',
+    },
+    {
+      config: createConfig({
+        input: 'enum-names-values.json',
+        output: 'enum-names-values-javascript-preserve',
+        plugins: [
+          {
+            enums: 'javascript',
+            enumsCase: 'preserve',
+            name: '@hey-api/typescript',
+          },
+        ],
+      }),
+      description:
+        'handles various enum names and values (JavaScript, preserve)',
+    },
+    {
+      config: createConfig({
+        input: 'enum-names-values.json',
+        output: 'enum-names-values-typescript-SCREAMING_SNAKE_CASE',
+        plugins: [
+          {
+            enums: 'typescript',
+            enumsCase: 'SCREAMING_SNAKE_CASE',
+            name: '@hey-api/typescript',
+          },
+        ],
+      }),
+      description:
+        'handles various enum names and values (TypeScript, SCREAMING_SNAKE_CASE)',
+    },
+    {
+      config: createConfig({
+        input: 'enum-names-values.json',
+        output: 'enum-names-values-typescript-PascalCase',
+        plugins: [
+          {
+            enums: 'typescript',
+            enumsCase: 'PascalCase',
+            name: '@hey-api/typescript',
+          },
+        ],
+      }),
+      description:
+        'handles various enum names and values (TypeScript, PascalCase)',
+    },
+    {
+      config: createConfig({
+        input: 'enum-names-values.json',
+        output: 'enum-names-values-typescript-camelCase',
+        plugins: [
+          {
+            enums: 'typescript',
+            enumsCase: 'camelCase',
+            name: '@hey-api/typescript',
+          },
+        ],
+      }),
+      description:
+        'handles various enum names and values (TypeScript, camelCase)',
+    },
+    {
+      config: createConfig({
+        input: 'enum-names-values.json',
+        output: 'enum-names-values-typescript-snake_case',
+        plugins: [
+          {
+            enums: 'typescript',
+            enumsCase: 'snake_case',
+            name: '@hey-api/typescript',
+          },
+        ],
+      }),
+      description:
+        'handles various enum names and values (TypeScript, snake_case)',
+    },
+    {
+      config: createConfig({
+        input: 'enum-names-values.json',
+        output: 'enum-names-values-typescript-preserve',
+        plugins: [
+          {
+            enums: 'typescript',
+            enumsCase: 'preserve',
+            name: '@hey-api/typescript',
+          },
+        ],
+      }),
+      description:
+        'handles various enum names and values (TypeScript, preserve)',
     },
     {
       config: createConfig({
