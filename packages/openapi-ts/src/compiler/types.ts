@@ -494,9 +494,10 @@ export const createObjectType = <
           if ('key' in value) {
             const { key } = value;
             canShorthand = key === value.value;
-            const digitsOnly = key.match(/^[0-9]/) && key.match(/\D+/g);
+            const firstDigitAndNonDigits =
+              key.match(/^[0-9]/) && key.match(/\D+/g);
             if (
-              (digitsOnly || key.match(/\W/g) || key === '') &&
+              (firstDigitAndNonDigits || key.match(/\W/g) || key === '') &&
               !key.startsWith("'") &&
               !key.endsWith("'")
             ) {

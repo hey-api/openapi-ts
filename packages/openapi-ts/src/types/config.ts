@@ -21,7 +21,12 @@ export type Formatters = 'biome' | 'prettier';
 
 export type Linters = 'biome' | 'eslint' | 'oxlint';
 
-export type StringCase = 'camelCase' | 'PascalCase' | 'preserve' | 'snake_case';
+export type StringCase =
+  | 'camelCase'
+  | 'PascalCase'
+  | 'preserve'
+  | 'snake_case'
+  | 'SCREAMING_SNAKE_CASE';
 
 export interface ClientConfig {
   /**
@@ -148,7 +153,7 @@ export interface ClientConfig {
          *
          * @default undefined
          */
-        case?: StringCase;
+        case?: Exclude<StringCase, 'SCREAMING_SNAKE_CASE'>;
         /**
          * Clean the `output` folder on every run? If disabled, this folder may
          * be used to store additional files. The default option is `true` to
