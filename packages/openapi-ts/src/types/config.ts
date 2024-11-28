@@ -17,6 +17,12 @@ export const CLIENTS = [
 
 type Client = (typeof CLIENTS)[number];
 
+export type Formatters = 'biome' | 'prettier';
+
+export type Linters = 'biome' | 'eslint' | 'oxlint';
+
+export type StringCase = 'camelCase' | 'PascalCase' | 'preserve' | 'snake_case';
+
 export interface ClientConfig {
   /**
    * Manually set base in OpenAPI config instead of inferring from server value
@@ -137,13 +143,12 @@ export interface ClientConfig {
         /**
          * **This feature works only with the experimental parser**
          *
-         * Defines casing of the output fields. By default, we preserve
-         * `input` values as data transforms incur a performance penalty
-         * at runtime.
+         * Defines casing of the output fields. By default, we preserve `input`
+         * values as data transforms incur a performance penalty at runtime.
          *
          * @default undefined
          */
-        case?: 'camelCase' | 'PascalCase' | 'snake_case';
+        case?: StringCase;
         /**
          * Clean the `output` folder on every run? If disabled, this folder may
          * be used to store additional files. The default option is `true` to
@@ -158,13 +163,13 @@ export interface ClientConfig {
          *
          * @default false
          */
-        format?: 'biome' | 'prettier' | false;
+        format?: Formatters | false;
         /**
          * Process output folder with linter?
          *
          * @default false
          */
-        lint?: 'biome' | 'eslint' | 'oxlint' | false;
+        lint?: Linters | false;
         /**
          * The relative location of the output folder
          */

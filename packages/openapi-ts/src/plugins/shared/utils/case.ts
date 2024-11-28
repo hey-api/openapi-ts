@@ -21,13 +21,9 @@ export const fieldName = ({
     return ts.factory.createNumericLiteral(name);
   }
 
-  if (!context.config.output.case) {
-    return name;
-  }
-
   // if (typeof context.config.output.case === 'function') {
   //   return context.config.output.case({ value: name });
   // }
 
-  return stringCase({ input: name, style: context.config.output.case });
+  return stringCase({ case: context.config.output.case, value: name });
 };

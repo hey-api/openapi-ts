@@ -338,8 +338,8 @@ export const transformTypeKeyName = (value: string): string => {
   }
 
   const name = stringCase({
-    input: sanitizeOperationParameterName(value),
-    style: 'camelCase',
+    case: 'camelCase',
+    value: sanitizeOperationParameterName(value),
   }).replace(reservedWordsRegExp, '_$1');
   return name;
 };

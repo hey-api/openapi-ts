@@ -12,7 +12,13 @@ import type { ClientPlugins } from './plugins';
 import { defaultPluginConfigs } from './plugins';
 import type { DefaultPluginConfigsMap, PluginNames } from './plugins/types';
 import type { Client } from './types/client';
-import type { ClientConfig, Config, UserConfig } from './types/config';
+import type {
+  ClientConfig,
+  Config,
+  Formatters,
+  Linters,
+  UserConfig,
+} from './types/config';
 import { CLIENTS } from './types/config';
 import {
   isLegacyClient,
@@ -32,10 +38,7 @@ type OutputProcessor = {
 /**
  * Map of supported formatters
  */
-const formatters: Record<
-  Extract<Config['output']['format'], string>,
-  OutputProcessor
-> = {
+const formatters: Record<Formatters, OutputProcessor> = {
   biome: {
     args: (path) => ['format', '--write', path],
     command: 'biome',
@@ -57,10 +60,7 @@ const formatters: Record<
 /**
  * Map of supported linters
  */
-const linters: Record<
-  Extract<Config['output']['lint'], string>,
-  OutputProcessor
-> = {
+const linters: Record<Linters, OutputProcessor> = {
   biome: {
     args: (path) => ['lint', '--apply', path],
     command: 'biome',

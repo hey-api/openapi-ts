@@ -1,7 +1,7 @@
 import path from 'node:path';
 
 import { TypeScriptFile } from '../generate/files';
-import type { Config } from '../types/config';
+import type { Config, StringCase } from '../types/config';
 import type { Files } from '../types/utils';
 import { resolveRef } from '../utils/ref';
 import type {
@@ -18,6 +18,10 @@ interface ContextFile {
    * Unique file identifier.
    */
   id: string;
+  /**
+   * Define casing for identifiers in this file.
+   */
+  identifierCase?: StringCase;
   /**
    * Relative file path to the output path.
    * @example
@@ -133,6 +137,7 @@ export class IRContext<Spec extends Record<string, any> = any> {
     );
     const createdFile = new TypeScriptFile({
       dir: outputDir,
+      identifierCase: file.identifierCase,
       name: `${outputParts[outputParts.length - 1]}.ts`,
     });
     this.files[file.id] = createdFile;

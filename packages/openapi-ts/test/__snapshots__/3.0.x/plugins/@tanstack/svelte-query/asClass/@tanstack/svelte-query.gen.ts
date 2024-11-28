@@ -2,7 +2,7 @@
 
 import type { Options } from '@hey-api/client-fetch';
 import { queryOptions, type MutationOptions, type DefaultError, infiniteQueryOptions, type InfiniteData } from '@tanstack/svelte-query';
-import type { ExportData, ImportData, ImportResponse, ApiVversionOdataControllerCountData, GetApiVbyApiVersionSimpleOperationData, DeleteCallWithoutParametersAndResponseData, GetCallWithoutParametersAndResponseData, PatchCallWithoutParametersAndResponseData, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, DeleteFooData3, CallWithDescriptionsData, DeprecatedCallData, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, PostApiVbyApiVersionRequestBodyData, PostApiVbyApiVersionFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, DuplicateNameData, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data, CallWithNoContentResponseData, CallWithResponseAndNoContentResponseData, DummyAData, DummyBData, CallWithResponseData, CallWithDuplicateResponsesData, CallWithDuplicateResponsesError, CallWithDuplicateResponsesResponse, CallWithResponsesData, CallWithResponsesError, CallWithResponsesResponse, CollectionFormatData, TypesData, UploadFileData, UploadFileResponse, FileResponseData, ComplexTypesData, MultipartResponseData, MultipartRequestData, ComplexParamsData, ComplexParamsResponse, CallWithResultFromHeaderData, TestErrorCodeData, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData } from '../types.gen';
+import type { ExportData, ImportData, ImportResponse, ApiVVersionODataControllerCountData, GetApiVbyApiVersionSimpleOperationData, DeleteCallWithoutParametersAndResponseData, GetCallWithoutParametersAndResponseData, PatchCallWithoutParametersAndResponseData, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, DeleteFooData3, CallWithDescriptionsData, DeprecatedCallData, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, PostApiVbyApiVersionRequestBodyData, PostApiVbyApiVersionFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, DuplicateNameData, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data, CallWithNoContentResponseData, CallWithResponseAndNoContentResponseData, DummyAData, DummyBData, CallWithResponseData, CallWithDuplicateResponsesData, CallWithDuplicateResponsesError, CallWithDuplicateResponsesResponse, CallWithResponsesData, CallWithResponsesError, CallWithResponsesResponse, CollectionFormatData, TypesData, UploadFileData, UploadFileResponse, FileResponseData, ComplexTypesData, MultipartResponseData, MultipartRequestData, ComplexParamsData, ComplexParamsResponse, CallWithResultFromHeaderData, TestErrorCodeData, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData } from '../types.gen';
 import { client, DefaultService, SimpleService, ParametersService, DescriptionsService, DeprecatedService, RequestBodyService, FormDataService, DefaultsService, DuplicateService, NoContentService, ResponseService, MultipleTags1Service, CollectionFormatService, TypesService, UploadService, FileResponseService, ComplexService, MultipartService, HeaderService, ErrorService, NonAsciiÆøåÆøÅöôêÊService } from '../sdk.gen';
 
 type QueryKey<TOptions extends Options> = [
@@ -84,14 +84,14 @@ export const importMutation = (options?: Partial<Options<ImportData>>) => {
     return mutationOptions;
 };
 
-export const apiVVersionOdataControllerCountQueryKey = (options?: Options<ApiVversionOdataControllerCountData>) => [
-    createQueryKey('apiVVersionOdataControllerCount', options)
+export const apiVVersionODataControllerCountQueryKey = (options?: Options<ApiVVersionODataControllerCountData>) => [
+    createQueryKey('apiVVersionODataControllerCount', options)
 ];
 
-export const apiVVersionOdataControllerCountOptions = (options?: Options<ApiVversionOdataControllerCountData>) => {
+export const apiVVersionODataControllerCountOptions = (options?: Options<ApiVVersionODataControllerCountData>) => {
     return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
-            const { data } = await SimpleService.apiVVersionOdataControllerCount({
+            const { data } = await SimpleService.apiVVersionODataControllerCount({
                 ...options,
                 ...queryKey[0],
                 signal,
@@ -99,7 +99,7 @@ export const apiVVersionOdataControllerCountOptions = (options?: Options<ApiVver
             });
             return data;
         },
-        queryKey: apiVVersionOdataControllerCountQueryKey(options)
+        queryKey: apiVVersionODataControllerCountQueryKey(options)
     });
 };
 

@@ -361,7 +361,7 @@ export type EnumWithReplacedCharacters = "'Single Quote'" | '"Double Quotes"' | 
  */
 export type EnumWithStrings = 'Success' | 'Warning' | 'Error' | "'Single Quote'" | '"Double Quotes"' | 'Non-ascii: øæåôöØÆÅÔÖ字符串';
 
-export type EnumWithXenumNames = 0 | 1 | 2;
+export type EnumWithXEnumNames = 0 | 1 | 2;
 
 export type File = {
     readonly id?: string;
@@ -392,7 +392,7 @@ export type FreeFormObjectWithoutAdditionalProperties = {
     [key: string]: unknown;
 };
 
-export type GenericSchemaDuplicateIssue_1_systemBoolean_ = {
+export type GenericSchemaDuplicateIssue1SystemBoolean = {
     item?: boolean;
     error?: (string) | null;
     readonly hasError?: boolean;
@@ -401,7 +401,7 @@ export type GenericSchemaDuplicateIssue_1_systemBoolean_ = {
     };
 };
 
-export type GenericSchemaDuplicateIssue_1_systemString_ = {
+export type GenericSchemaDuplicateIssue1SystemString = {
     item?: (string) | null;
     error?: (string) | null;
     readonly hasError?: boolean;
@@ -501,7 +501,7 @@ export type ModelWithAnyOfConstantSizeArrayNullable = [
     ((number) | null | string)
 ];
 
-export type ModelWithAnyOfConstantSizeArrayWithNsizeAndOptions = [
+export type ModelWithAnyOfConstantSizeArrayWithNSizeAndOptions = [
     (number | Import),
     (number | Import)
 ];
