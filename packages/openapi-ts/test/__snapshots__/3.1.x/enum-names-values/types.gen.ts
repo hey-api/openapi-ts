@@ -6,4 +6,6 @@ export type MyFoo = 'myFoo' | 'myBar';
 
 export type MyFoo2 = 'MyFoo' | 'MyBar';
 
-export type Foo = 'foo' | 'bar' | null | '';
+export type Foo = 'foo' | 'bar' | null | '' | true | false;
+
+export type Numbers = 100 | 200 | 300;

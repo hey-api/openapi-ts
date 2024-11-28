@@ -12,6 +12,8 @@ import { operationResponsesMap } from '../../../ir/operation';
 import { deduplicateSchema } from '../../../ir/schema';
 import { escapeComment } from '../../../utils/escape';
 import { irRef, isRefOpenApiComponent } from '../../../utils/ref';
+import { digitsRegExp } from '../../../utils/regexp';
+import { stringCase } from '../../../utils/stringCase';
 import { fieldName } from '../../shared/utils/case';
 import type { Plugin, PluginHandler } from '../../types';
 import { operationIrRef } from '../sdk/plugin';
@@ -40,6 +42,7 @@ const parseSchemaJsDoc = ({ schema }: { schema: IRSchemaObject }) => {
 const addJavaScriptEnum = ({
   $ref,
   context,
+  plugin,
   schema,
 }: {
   $ref: string;
@@ -63,7 +66,7 @@ const addJavaScriptEnum = ({
     return;
   }
 
-  const enumObject = schemaToEnumObject({ schema });
+  const enumObject = schemaToEnumObject({ plugin, schema });
 
   const expression = compiler.objectExpression({
     multiLine: true,
@@ -79,7 +82,13 @@ const addJavaScriptEnum = ({
   return node;
 };
 
-const schemaToEnumObject = ({ schema }: { schema: IRSchemaObject }) => {
+const schemaToEnumObject = ({
+  plugin,
+  schema,
+}: {
+  plugin: Plugin<Config>;
+  schema: IRSchemaObject;
+}) => {
   const typeofItems: Array<
     | 'bigint'
     | 'boolean'
@@ -100,21 +109,29 @@ const schemaToEnumObject = ({ schema }: { schema: IRSchemaObject }) => {
       typeofItems.push(typeOfItemConst);
     }
 
-    let key;
-
+    let key: string | undefined;
     if (item.title) {
       key = item.title;
-    } else if (typeOfItemConst === 'number') {
-      key = `_${item.const}`;
+    } else if (typeOfItemConst === 'number' || typeOfItemConst === 'string') {
+      key = `${item.const}`;
     } else if (typeOfItemConst === 'boolean') {
-      const valid = typeOfItemConst ? 'true' : 'false';
-      key = valid.toLocaleUpperCase();
-    } else if (typeof item.const === 'string') {
-      key = item.const.replace(/(\p{Lowercase})(\p{Uppercase}+)/gu, '$1_$2');
-      key = key.toLocaleUpperCase();
+      key = item.const ? 'true' : 'false';
     } else if (item.const === null) {
       key = 'null';
-      key = key.toLocaleUpperCase();
+    }
+
+    if (key) {
+      key = stringCase({ case: plugin.enumsCase, value: key });
+
+      digitsRegExp.lastIndex = 0;
+      // TypeScript enum keys cannot be numbers
+      if (
+        digitsRegExp.test(key) &&
+        (plugin.enums === 'typescript' ||
+          plugin.enums === 'typescript+namespace')
+      ) {
+        key = `_${key}`;
+      }
     }
 
     return {
@@ -204,7 +221,7 @@ const addTypeScriptEnum = ({
     return;
   }
 
-  const enumObject = schemaToEnumObject({ schema });
+  const enumObject = schemaToEnumObject({ plugin, schema });
 
   // TypeScript enums support only string and number values so we need to fallback to types
   if (

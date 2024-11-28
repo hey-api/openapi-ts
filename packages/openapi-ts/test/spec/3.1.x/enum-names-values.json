@@ -19,8 +19,12 @@
         "type": "string"
       },
       "Foo": {
-        "enum": ["foo", "bar", null, ""],
+        "enum": ["foo", "bar", null, "", true, false],
         "type": ["string", "null"]
+      },
+      "Numbers": {
+        "enum": [100, 200, 300],
+        "type": "number"
       }
     }
   }

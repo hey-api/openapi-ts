@@ -3,8 +3,8 @@
 export type _110 = '1-10' | '11-20';
 
 export const _110 = {
-    '1-10': '1-10',
-    '11-20': '11-20'
+    '1_10': '1-10',
+    '11_20': '11-20'
 } as const;
 
 export type MyFoo = 'myFoo' | 'myBar';
@@ -21,11 +21,21 @@ export const MyFoo2 = {
     MY_BAR: 'MyBar'
 } as const;
 
-export type Foo = 'foo' | 'bar' | null | '';
+export type Foo = 'foo' | 'bar' | null | '' | true | false;
 
 export const Foo = {
     FOO: 'foo',
     BAR: 'bar',
     NULL: null,
-    '': ''
+    '': '',
+    TRUE: true,
+    FALSE: false
+} as const;
+
+export type Numbers = 100 | 200 | 300;
+
+export const Numbers = {
+    100: 100,
+    200: 200,
+    300: 300
 } as const;

@@ -7,6 +7,7 @@ export const defaultConfig: PluginConfig<Config> = {
   _handler: handler,
   _handlerLegacy: handlerLegacy,
   enums: false,
+  enumsCase: 'SCREAMING_SNAKE_CASE',
   exportInlineEnums: false,
   identifierCase: 'PascalCase',
   name: '@hey-api/typescript',
