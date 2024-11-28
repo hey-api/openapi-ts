@@ -68,7 +68,7 @@ export const generateIndexFile = ({ files }: { files: Files }): void => {
         return;
       }
 
-      if (['schemas', 'sdk', 'transformers', 'types'].includes(name)) {
+      if (['sdk', 'types'].includes(name)) {
         files.index.add(
           compiler.exportAllDeclaration({
             module: `./${file.nameWithoutExtension()}`,
