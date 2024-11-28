@@ -7,7 +7,9 @@ import { compiler } from '../compiler';
 import { type ImportExportItemObject, tsNodeToString } from '../compiler/utils';
 import type { IRContext } from '../ir/context';
 import { ensureValidTypeScriptJavaScriptIdentifier } from '../openApi';
+import type { StringCase } from '../types/config';
 import { reservedWordsRegExp } from '../utils/regexp';
+import { stringCase } from '../utils/stringCase';
 import { ensureDirSync } from './utils';
 
 interface Identifier {
@@ -52,6 +54,7 @@ interface Namespaces {
 
 export class TypeScriptFile {
   private _headers: Array<string> = [];
+  private _identifierCase: StringCase | undefined;
   private _imports = new Map<string, Map<string, ImportExportItemObject>>();
   private _items: Array<ts.Node | string> = [];
   private _name: string;
@@ -71,12 +74,15 @@ export class TypeScriptFile {
   public constructor({
     dir,
     header = true,
+    identifierCase,
     name,
   }: {
     dir: string;
     header?: boolean;
+    identifierCase?: StringCase;
     name: string;
   }) {
+    this._identifierCase = identifierCase;
     this._name = this._setName(name);
     this._path = path.resolve(dir, this._name);
 
@@ -120,7 +126,7 @@ export class TypeScriptFile {
   public identifier({
     namespace,
     ...args
-  }: Omit<EnsureUniqueIdentifierData, 'namespace'> & {
+  }: Omit<EnsureUniqueIdentifierData, 'case' | 'namespace'> & {
     namespace: keyof Namespaces;
   }): Identifier {
     let validNameTransformer: ((name: string) => string) | undefined;
@@ -136,6 +142,7 @@ export class TypeScriptFile {
         break;
     }
     return ensureUniqueIdentifier({
+      case: this._identifierCase,
       namespace: this.namespaces[namespace],
       validNameTransformer,
       ...args,
@@ -265,6 +272,7 @@ export class TypeScriptFile {
 
 interface EnsureUniqueIdentifierData {
   $ref: string;
+  case: StringCase | undefined;
   count?: number;
   create?: boolean;
   namespace: Namespace;
@@ -273,13 +281,14 @@ interface EnsureUniqueIdentifierData {
 
 const ensureUniqueIdentifier = ({
   $ref,
+  case: identifierCase,
   count = 1,
   create = false,
   namespace,
   validNameTransformer,
 }: EnsureUniqueIdentifierData): Identifier => {
   const parts = $ref.split('/');
-  let name = parts[parts.length - 1] || '';
+  const name = parts[parts.length - 1] || '';
 
   if (!name) {
     return {
@@ -296,11 +305,13 @@ const ensureUniqueIdentifier = ({
     };
   }
 
+  let nameWithCasing = stringCase({ case: identifierCase, value: name });
+
   if (count > 1) {
-    name = `${name}${count}`;
+    nameWithCasing = `${nameWithCasing}${count}`;
   }
 
-  let nameValue = namespace[name];
+  let nameValue = namespace[nameWithCasing];
   if (nameValue) {
     if (nameValue.$ref === $ref) {
       return {
@@ -311,6 +322,7 @@ const ensureUniqueIdentifier = ({
 
     return ensureUniqueIdentifier({
       $ref,
+      case: identifierCase,
       count: count + 1,
       create,
       namespace,
@@ -327,9 +339,11 @@ const ensureUniqueIdentifier = ({
 
   nameValue = {
     $ref,
-    name: validNameTransformer ? validNameTransformer(name) : name,
+    name: validNameTransformer
+      ? validNameTransformer(nameWithCasing)
+      : nameWithCasing,
   };
-  namespace[name] = nameValue;
+  namespace[nameWithCasing] = nameValue;
   namespace[nameValue.$ref] = nameValue;
 
   return {

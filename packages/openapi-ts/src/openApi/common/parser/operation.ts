@@ -189,8 +189,8 @@ export const operationNameFn = ({
 }): string => {
   if (config.plugins['@hey-api/sdk']?.operationId && operationId) {
     return stringCase({
-      input: sanitizeNamespaceIdentifier(operationId),
-      style: 'camelCase',
+      case: 'camelCase',
+      value: sanitizeNamespaceIdentifier(operationId),
     });
   }
 
@@ -211,8 +211,8 @@ export const operationNameFn = ({
     .replace(/[/:]/g, '-');
 
   return stringCase({
-    input: `${method}-${urlWithoutPlaceholders}`,
-    style: 'camelCase',
+    case: 'camelCase',
+    value: `${method}-${urlWithoutPlaceholders}`,
   });
 };
 

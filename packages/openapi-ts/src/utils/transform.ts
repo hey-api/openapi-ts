@@ -25,8 +25,8 @@ export const transformTypeName = (name: string) => {
   const config = getConfig();
   if (config.plugins['@hey-api/typescript']?.style === 'PascalCase') {
     return stringCase({
-      input: name,
-      style: 'PascalCase',
+      case: 'PascalCase',
+      value: name,
     });
   }
   return name;

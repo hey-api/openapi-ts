@@ -1,3 +1,4 @@
+import type { StringCase } from '../../../types/config';
 import type { PluginName } from '../../types';
 
 export interface Config extends PluginName<'@hey-api/typescript'> {
@@ -9,6 +10,8 @@ export interface Config extends PluginName<'@hey-api/typescript'> {
    */
   enums?: 'javascript' | 'typescript' | 'typescript+namespace' | false;
   /**
+   * **This feature works only with the experimental parser**
+   *
    * By default, inline enums (enums not defined as reusable components in
    * the input file) are generated as inlined union types. You can set
    * `exportInlineEnums` to `true` to treat inline enums as reusable components.
@@ -19,6 +22,14 @@ export interface Config extends PluginName<'@hey-api/typescript'> {
    * @default false
    */
   exportInlineEnums?: boolean;
+  /**
+   * **This feature works only with the experimental parser**
+   *
+   * Defines casing of the identifiers. By default, we use `PascalCase`.
+   *
+   * @default 'PascalCase'
+   */
+  identifierCase?: StringCase;
   /**
    * Include only types matching regular expression.
    *
@@ -33,12 +44,18 @@ export interface Config extends PluginName<'@hey-api/typescript'> {
    */
   output?: string;
   /**
+   * **This feature works only with the legacy parser**
+   *
    * Use your preferred naming pattern
    *
    * @default 'preserve'
+   *
+   * @deprecated
    */
   style?: 'PascalCase' | 'preserve';
   /**
+   * **This feature works only with the legacy parser**
+   *
    * Generate a tree of types containing all operations? It will be named
    * $OpenApiTs.
    * @default false

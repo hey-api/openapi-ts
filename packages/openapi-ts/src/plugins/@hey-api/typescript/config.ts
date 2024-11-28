@@ -8,6 +8,7 @@ export const defaultConfig: PluginConfig<Config> = {
   _handlerLegacy: handlerLegacy,
   enums: false,
   exportInlineEnums: false,
+  identifierCase: 'PascalCase',
   name: '@hey-api/typescript',
   output: 'types',
   style: 'preserve',

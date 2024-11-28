@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { DeleteFooData3, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, ApiVversionOdataControllerCountResponse } from './types.gen';
+import type { DeleteFooData3, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, ApiVVersionODataControllerCountResponse } from './types.gen';
 
 export class myAwesomeParametersApi {
     /**
@@ -142,7 +142,7 @@ export class myAwesomeSimpleApi {
      * @returns Model_From_Zendesk Success
      * @throws ApiError
      */
-    public static apiVVersionOdataControllerCount(): CancelablePromise<ApiVversionOdataControllerCountResponse> {
+    public static apiVVersionODataControllerCount(): CancelablePromise<ApiVVersionODataControllerCountResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v{api-version}/simple/$count'
