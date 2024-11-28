@@ -1,6 +1,7 @@
 import type { IRSchemaObject } from './ir';
 
-export const paginationKeywordsRegExp = /^(cursor|offset|page|start)$/;
+export const paginationKeywordsRegExp =
+  /^(after|before|cursor|offset|page|start)$/;
 
 export interface Pagination {
   in: string;
