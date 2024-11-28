@@ -1,4 +1,9 @@
 /**
+ * Matches string if it contains only digits.
+ */
+export const digitsRegExp = /^\d+$/;
+
+/**
  * Matches characters from the start as long as they're not allowed.
  */
 export const illegalStartCharactersRegExp = /^[^$_\p{ID_Start}]+/u;

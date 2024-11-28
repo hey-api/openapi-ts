@@ -27,7 +27,8 @@ const preserveCase = ({
   let isLastLastCharUpper = false;
   let isLastLastCharPreserved = false;
 
-  const separator = _case === 'snake_case' ? '_' : '-';
+  const separator =
+    _case === 'snake_case' || _case === 'SCREAMING_SNAKE_CASE' ? '_' : '-';
 
   for (let index = 0; index < string.length; index++) {
     const character = string[index];
@@ -112,7 +113,7 @@ export const stringCase = ({
       return '';
     }
 
-    return _case === 'PascalCase'
+    return _case === 'PascalCase' || _case === 'SCREAMING_SNAKE_CASE'
       ? result.toLocaleUpperCase()
       : result.toLocaleLowerCase();
   }
@@ -124,13 +125,16 @@ export const stringCase = ({
   }
 
   result = result.replace(leadingSeparatorsRegExp, '');
-  result = result.toLocaleLowerCase();
+  result =
+    _case === 'SCREAMING_SNAKE_CASE'
+      ? result.toLocaleUpperCase()
+      : result.toLocaleLowerCase();
 
   if (_case === 'PascalCase') {
     result = `${result.charAt(0).toLocaleUpperCase()}${result.slice(1)}`;
   }
 
-  if (_case === 'snake_case') {
+  if (_case === 'snake_case' || _case === 'SCREAMING_SNAKE_CASE') {
     result = result.replaceAll(
       separatorsAndIdentifierRegExp,
       (_, identifier) => `_${identifier}`,

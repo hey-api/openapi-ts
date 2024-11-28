@@ -6,9 +6,19 @@ export interface Config extends PluginName<'@hey-api/typescript'> {
    * By default, enums are generated as TypeScript types. In addition to that,
    * you can choose to generate them as JavaScript objects, TypeScript enums,
    * or TypeScript enums contained within namespaces.
+   *
    * @default false
    */
   enums?: 'javascript' | 'typescript' | 'typescript+namespace' | false;
+  /**
+   * **This feature works only with the experimental parser**
+   *
+   * Defines casing of the enum keys. By default, we use `SCREAMING_SNAKE_CASE`.
+   * This option has effect only when `enums` is defined.
+   *
+   * @default 'SCREAMING_SNAKE_CASE'
+   */
+  enumsCase?: StringCase;
   /**
    * **This feature works only with the experimental parser**
    *
@@ -16,8 +26,6 @@ export interface Config extends PluginName<'@hey-api/typescript'> {
    * the input file) are generated as inlined union types. You can set
    * `exportInlineEnums` to `true` to treat inline enums as reusable components.
    * When `true`, the exported enums will follow the style defined in `enums`.
-   *
-   * This option works only with the experimental parser.
    *
    * @default false
    */
@@ -29,7 +37,7 @@ export interface Config extends PluginName<'@hey-api/typescript'> {
    *
    * @default 'PascalCase'
    */
-  identifierCase?: StringCase;
+  identifierCase?: Exclude<StringCase, 'SCREAMING_SNAKE_CASE'>;
   /**
    * Include only types matching regular expression.
    *
@@ -58,6 +66,7 @@ export interface Config extends PluginName<'@hey-api/typescript'> {
    *
    * Generate a tree of types containing all operations? It will be named
    * $OpenApiTs.
+   *
    * @default false
    *
    * @deprecated

@@ -1,9 +1,8 @@
 import ts from 'typescript';
 
 import type { IRContext } from '../../../ir/context';
+import { digitsRegExp } from '../../../utils/regexp';
 import { stringCase } from '../../../utils/stringCase';
-
-const digitsRegExp = /^\d+$/;
 
 /**
  * Returns final field name for object properties. This might differ from the

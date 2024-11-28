@@ -5,6 +5,7 @@ import type { IRContext } from '../../ir/context';
 import type { IRSchemaObject } from '../../ir/ir';
 import { deduplicateSchema } from '../../ir/schema';
 import { isRefOpenApiComponent } from '../../utils/ref';
+import { digitsRegExp } from '../../utils/regexp';
 import type { PluginHandler } from '../types';
 import type { Config } from './types';
 
@@ -14,8 +15,6 @@ interface SchemaWithType<T extends Required<IRSchemaObject>['type']>
 }
 
 const zodId = 'zod';
-
-const digitsRegExp = /^\d+$/;
 
 // frequently used identifiers
 const defaultIdentifier = compiler.identifier({ text: 'default' });
