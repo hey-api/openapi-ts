@@ -140,10 +140,7 @@ export const generateOutput = async ({ context }: { context: IRContext }) => {
       return;
     }
 
-    if (
-      !file.isEmpty() &&
-      ['schemas', 'sdk', 'transformers', 'types'].includes(name)
-    ) {
+    if (!file.isEmpty() && ['sdk', 'types'].includes(name)) {
       indexFile.add(
         compiler.exportAllDeclaration({
           module: `./${file.nameWithoutExtension()}`,
