@@ -84,12 +84,12 @@ export interface Config {
 ::: code-group
 
 ```ts [config.ts]
-import type { DefineConfig, PluginConfig } from '@hey-api/openapi-ts/plugins';
+import type { Plugins } from '@hey-api/openapi-ts';
 
 import { handler } from './plugin';
 import type { Config } from './types';
 
-export const defaultConfig: PluginConfig<Config> = {
+export const defaultConfig: Plugins.PluginConfig<Config> = {
   _dependencies: ['@hey-api/typescript'],
   _handler: handler,
   _handlerLegacy: () => {},
@@ -98,9 +98,9 @@ export const defaultConfig: PluginConfig<Config> = {
 };
 
 /**
- * Type helper for `my-plugin` plugin, returns {@link PluginConfig} object
+ * Type helper for `my-plugin` plugin, returns {@link Plugins.PluginConfig} object
  */
-export const defineConfig: DefineConfig<Config> = (config) => ({
+export const defineConfig: Plugins.DefineConfig<Config> = (config) => ({
   ...defaultConfig,
   ...config,
 });
@@ -115,11 +115,11 @@ Lastly, we define the `_handler` method which will be responsible for generating
 ::: code-group
 
 ```ts [plugin.ts]
-import type { PluginHandler } from '@hey-api/openapi-ts/plugins';
+import type { Plugins } from '@hey-api/openapi-ts';
 
 import type { Config } from './types';
 
-export const handler: PluginHandler<Config> = ({ context, plugin }) => {
+export const handler: Plugins.PluginHandler<Config> = ({ context, plugin }) => {
   // create a file for our output
   const file = context.createFile({
     id: plugin.name,

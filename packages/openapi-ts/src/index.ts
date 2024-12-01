@@ -486,4 +486,5 @@ export default {
 
 export type { OpenApiV3_0_X } from './openApi/3.0.x';
 export type { OpenApiV3_1_X } from './openApi/3.1.x';
+export type * as Plugins from './plugins/types';
 export type { UserConfig } from './types/config';
