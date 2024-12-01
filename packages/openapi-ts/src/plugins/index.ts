@@ -35,43 +35,42 @@ import {
   defaultConfig as tanStackVueQuery,
 } from './@tanstack/vue-query';
 import { type Config as Fastify, defaultConfig as fastify } from './fastify';
-import type {
-  DefaultPluginConfigsMap,
-  PluginConfig,
-  UserConfig,
-} from './types';
+import type { DefaultPluginConfigs, Plugin } from './types';
 import { type Config as Zod, defaultConfig as zod } from './zod';
 
 /**
  * User-facing plugin types.
  */
 export type UserPlugins =
-  | UserConfig<HeyApiSchemas>
-  | UserConfig<HeyApiSdk>
-  | UserConfig<HeyApiTransformers>
-  | UserConfig<HeyApiTypeScript>
-  | UserConfig<TanStackAngularQueryExperimental>
-  | UserConfig<TanStackReactQuery>
-  | UserConfig<TanStackSolidQuery>
-  | UserConfig<TanStackSvelteQuery>
-  | UserConfig<TanStackVueQuery>
-  | UserConfig<Fastify>
-  | UserConfig<Zod>;
+  | Plugin.UserConfig<HeyApiSchemas>
+  | Plugin.UserConfig<HeyApiSdk>
+  | Plugin.UserConfig<HeyApiTransformers>
+  | Plugin.UserConfig<HeyApiTypeScript>
+  | Plugin.UserConfig<TanStackAngularQueryExperimental>
+  | Plugin.UserConfig<TanStackReactQuery>
+  | Plugin.UserConfig<TanStackSolidQuery>
+  | Plugin.UserConfig<TanStackSvelteQuery>
+  | Plugin.UserConfig<TanStackVueQuery>
+  | Plugin.UserConfig<Fastify>
+  | Plugin.UserConfig<Zod>;
 
+/**
+ * Internal plugin types.
+ */
 export type ClientPlugins =
-  | PluginConfig<HeyApiSchemas>
-  | PluginConfig<HeyApiSdk>
-  | PluginConfig<HeyApiTransformers>
-  | PluginConfig<HeyApiTypeScript>
-  | PluginConfig<TanStackAngularQueryExperimental>
-  | PluginConfig<TanStackReactQuery>
-  | PluginConfig<TanStackSolidQuery>
-  | PluginConfig<TanStackSvelteQuery>
-  | PluginConfig<TanStackVueQuery>
-  | PluginConfig<Fastify>
-  | PluginConfig<Zod>;
+  | Plugin.Config<HeyApiSchemas>
+  | Plugin.Config<HeyApiSdk>
+  | Plugin.Config<HeyApiTransformers>
+  | Plugin.Config<HeyApiTypeScript>
+  | Plugin.Config<TanStackAngularQueryExperimental>
+  | Plugin.Config<TanStackReactQuery>
+  | Plugin.Config<TanStackSolidQuery>
+  | Plugin.Config<TanStackSvelteQuery>
+  | Plugin.Config<TanStackVueQuery>
+  | Plugin.Config<Fastify>
+  | Plugin.Config<Zod>;
 
-export const defaultPluginConfigs: DefaultPluginConfigsMap<ClientPlugins> = {
+export const defaultPluginConfigs: DefaultPluginConfigs<ClientPlugins> = {
   '@hey-api/schemas': heyApiSchemas,
   '@hey-api/sdk': heyApiSdk,
   '@hey-api/transformers': heyApiTransformers,

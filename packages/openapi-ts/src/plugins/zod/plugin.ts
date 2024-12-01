@@ -6,7 +6,7 @@ import type { IRSchemaObject } from '../../ir/ir';
 import { deduplicateSchema } from '../../ir/schema';
 import { isRefOpenApiComponent } from '../../utils/ref';
 import { digitsRegExp } from '../../utils/regexp';
-import type { PluginHandler } from '../types';
+import type { Plugin } from '../types';
 import type { Config } from './types';
 
 interface SchemaWithType<T extends Required<IRSchemaObject>['type']>
@@ -766,7 +766,7 @@ const schemaToZodSchema = ({
   return expression;
 };
 
-export const handler: PluginHandler<Config> = ({ context, plugin }) => {
+export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
   const file = context.createFile({
     id: zodId,
     path: plugin.output,

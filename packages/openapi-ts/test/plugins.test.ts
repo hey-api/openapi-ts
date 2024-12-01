@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it, vi } from 'vitest';
 
 import { createClient } from '../';
-import type { PluginConfig } from '../src/plugins/types';
+import type { Plugin } from '../src/plugins/types';
 import type { UserConfig } from '../src/types/config';
 import { getFilePaths } from './utils';
 
@@ -247,7 +247,7 @@ for (const version of versions) {
 
   describe('custom plugin', () => {
     it('handles a custom plugin', async () => {
-      const myPlugin: PluginConfig<{
+      const myPlugin: Plugin.Config<{
         customOption: boolean;
         name: string;
         output: string;
@@ -274,7 +274,7 @@ for (const version of versions) {
     });
 
     it('throws on invalid dependency', async () => {
-      const myPlugin: PluginConfig<{
+      const myPlugin: Plugin.Config<{
         name: string;
         output: string;
       }> = {
@@ -302,7 +302,7 @@ for (const version of versions) {
     });
 
     it('throws on native plugin override', async () => {
-      const myPlugin: PluginConfig<{
+      const myPlugin: Plugin.Config<{
         name: string;
         output: string;
       }> = {

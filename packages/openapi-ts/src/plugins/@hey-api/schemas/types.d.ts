@@ -4,9 +4,9 @@ import type {
   SchemaObject as OpenApiV3_0_XSchemaObject,
 } from '../../../openApi/3.0.x/types/spec';
 import type { SchemaObject as OpenApiV3_1_XSchemaObject } from '../../../openApi/3.1.x/types/spec';
-import type { PluginName } from '../../types';
+import type { Plugin } from '../../types';
 
-export interface Config extends PluginName<'@hey-api/schemas'> {
+export interface Config extends Plugin.Name<'@hey-api/schemas'> {
   /**
    * Customise the schema name. By default, `{{name}}Schema` is used. `name` is a
    * valid JavaScript/TypeScript identifier, e.g. if your schema name is

@@ -1,6 +1,6 @@
-import type { PluginName } from '../../types';
+import type { Plugin } from '../../types';
 
-export interface Config extends PluginName<'@tanstack/svelte-query'> {
+export interface Config extends Plugin.Name<'@tanstack/svelte-query'> {
   /**
    * Generate `createInfiniteQuery()` helpers? These will be generated from GET and POST requests where a pagination parameter is detected.
    * @default true

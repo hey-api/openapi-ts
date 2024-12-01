@@ -6,7 +6,7 @@ import type { IRSchemaObject } from '../../../ir/ir';
 import { operationResponsesMap } from '../../../ir/operation';
 import { irRef } from '../../../utils/ref';
 import { stringCase } from '../../../utils/stringCase';
-import type { PluginHandler } from '../../types';
+import type { Plugin } from '../../types';
 import { operationIrRef } from '../sdk/plugin';
 import type { Config } from './types';
 
@@ -365,7 +365,7 @@ const processSchemaType = ({
 };
 
 // handles only response transformers for now
-export const handler: PluginHandler<Config> = ({ context, plugin }) => {
+export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
   const file = context.createFile({
     id: transformersId,
     path: plugin.output,

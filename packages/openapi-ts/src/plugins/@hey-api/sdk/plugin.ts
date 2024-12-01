@@ -11,7 +11,7 @@ import { getServiceName } from '../../../utils/postprocess';
 import { irRef } from '../../../utils/ref';
 import { stringCase } from '../../../utils/stringCase';
 import { transformServiceName } from '../../../utils/transform';
-import type { PluginHandler } from '../../types';
+import type { Plugin } from '../../types';
 import { operationTransformerIrRef } from '../transformers/plugin';
 import { serviceFunctionIdentifier } from './plugin-legacy';
 import type { Config } from './types';
@@ -386,7 +386,7 @@ const generateFlatSdk = ({ context }: { context: IRContext }) => {
   });
 };
 
-export const handler: PluginHandler<Config> = ({ context, plugin }) => {
+export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
   if (!context.config.client.name) {
     throw new Error(
       '🚫 client needs to be set to generate SDKs - which HTTP client do you want to use?',
