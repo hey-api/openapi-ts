@@ -1,6 +1,6 @@
-import type { PluginName } from '../types';
+import type { Plugin } from '../types';
 
-export interface Config extends PluginName<'fastify'> {
+export interface Config extends Plugin.Name<'fastify'> {
   /**
    * Name of the generated file.
    * @default 'fastify'

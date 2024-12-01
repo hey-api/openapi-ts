@@ -8,7 +8,7 @@ import type {
 } from '../../../openApi/3.0.x/types/spec';
 import type { OpenApiV3_1_X } from '../../../openApi/3.1.x';
 import type { SchemaObject as OpenApiV3_1_XSchemaObject } from '../../../openApi/3.1.x/types/spec';
-import type { Plugin, PluginHandler } from '../../types';
+import type { Plugin } from '../../types';
 import type { Config } from './types';
 
 const schemasId = 'schemas';
@@ -17,7 +17,7 @@ const stripSchema = ({
   plugin,
   schema,
 }: {
-  plugin: Plugin<Config>;
+  plugin: Plugin.Instance<Config>;
   schema: OpenApiV3_0_XSchemaObject | OpenApiV3_1_XSchemaObject;
 }) => {
   if (plugin.type === 'form') {
@@ -49,7 +49,7 @@ const schemaToJsonSchemaDraft_05 = ({
   schema: _schema,
 }: {
   context: IRContext;
-  plugin: Plugin<Config>;
+  plugin: Plugin.Instance<Config>;
   schema: OpenApiV3_0_XSchemaObject | OpenApiV3_0_XReferenceObject;
 }): object => {
   if (Array.isArray(_schema)) {
@@ -145,7 +145,7 @@ const schemaToJsonSchema2020_12 = ({
   schema: _schema,
 }: {
   context: IRContext;
-  plugin: Plugin<Config>;
+  plugin: Plugin.Instance<Config>;
   schema: OpenApiV3_1_XSchemaObject;
 }): object => {
   if (Array.isArray(_schema)) {
@@ -250,7 +250,7 @@ const schemaName = ({
   schema,
 }: {
   name: string;
-  plugin: Plugin<Config>;
+  plugin: Plugin.Instance<Config>;
   schema:
     | OpenApiV3_0_XReferenceObject
     | OpenApiV3_0_XSchemaObject
@@ -270,7 +270,7 @@ const schemasV3_0_X = ({
   plugin,
 }: {
   context: IRContext<OpenApiV3_0_X>;
-  plugin: Plugin<Config>;
+  plugin: Plugin.Instance<Config>;
 }) => {
   if (!context.spec.components) {
     return;
@@ -298,7 +298,7 @@ const schemasV3_1_X = ({
   plugin,
 }: {
   context: IRContext<OpenApiV3_1_X>;
-  plugin: Plugin<Config>;
+  plugin: Plugin.Instance<Config>;
 }) => {
   if (!context.spec.components) {
     return;
@@ -321,7 +321,7 @@ const schemasV3_1_X = ({
   }
 };
 
-export const handler: PluginHandler<Config> = ({ context, plugin }) => {
+export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
   context.createFile({
     id: schemasId,
     path: plugin.output,

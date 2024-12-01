@@ -15,7 +15,7 @@ import { irRef, isRefOpenApiComponent } from '../../../utils/ref';
 import { digitsRegExp } from '../../../utils/regexp';
 import { stringCase } from '../../../utils/stringCase';
 import { fieldName } from '../../shared/utils/case';
-import type { Plugin, PluginHandler } from '../../types';
+import type { Plugin } from '../../types';
 import { operationIrRef } from '../sdk/plugin';
 import type { Config } from './types';
 
@@ -47,7 +47,7 @@ const addJavaScriptEnum = ({
 }: {
   $ref: string;
   context: IRContext;
-  plugin: Plugin<Config>;
+  plugin: Plugin.Instance<Config>;
   schema: SchemaWithType<'enum'>;
 }) => {
   const file = context.file({ id: typesId })!;
@@ -86,7 +86,7 @@ const schemaToEnumObject = ({
   plugin,
   schema,
 }: {
-  plugin: Plugin<Config>;
+  plugin: Plugin.Instance<Config>;
   schema: IRSchemaObject;
 }) => {
   const typeofItems: Array<
@@ -155,7 +155,7 @@ const addTypeEnum = ({
 }: {
   $ref: string;
   context: IRContext;
-  plugin: Plugin<Config>;
+  plugin: Plugin.Instance<Config>;
   schema: SchemaWithType<'enum'>;
 }) => {
   const file = context.file({ id: typesId })!;
@@ -202,7 +202,7 @@ const addTypeScriptEnum = ({
 }: {
   $ref: string;
   context: IRContext;
-  plugin: Plugin<Config>;
+  plugin: Plugin.Instance<Config>;
   schema: SchemaWithType<'enum'>;
 }) => {
   const file = context.file({ id: typesId })!;
@@ -254,7 +254,7 @@ const arrayTypeToIdentifier = ({
 }: {
   context: IRContext;
   namespace: Array<ts.Statement>;
-  plugin: Plugin<Config>;
+  plugin: Plugin.Instance<Config>;
   schema: SchemaWithType<'array'>;
 }) => {
   if (!schema.items) {
@@ -318,7 +318,7 @@ const enumTypeToIdentifier = ({
   $ref?: string;
   context: IRContext;
   namespace: Array<ts.Statement>;
-  plugin: Plugin<Config>;
+  plugin: Plugin.Instance<Config>;
   schema: SchemaWithType<'enum'>;
 }): ts.TypeNode => {
   const file = context.file({ id: typesId })!;
@@ -429,7 +429,7 @@ const objectTypeToIdentifier = ({
 }: {
   context: IRContext;
   namespace: Array<ts.Statement>;
-  plugin: Plugin<Config>;
+  plugin: Plugin.Instance<Config>;
   schema: SchemaWithType<'object'>;
 }) => {
   let indexProperty: Property | undefined;
@@ -551,7 +551,7 @@ const tupleTypeToIdentifier = ({
 }: {
   context: IRContext;
   namespace: Array<ts.Statement>;
-  plugin: Plugin<Config>;
+  plugin: Plugin.Instance<Config>;
   schema: SchemaWithType<'tuple'>;
 }) => {
   const itemTypes: Array<ts.TypeNode> = [];
@@ -582,7 +582,7 @@ const schemaTypeToIdentifier = ({
   $ref?: string;
   context: IRContext;
   namespace: Array<ts.Statement>;
-  plugin: Plugin<Config>;
+  plugin: Plugin.Instance<Config>;
   schema: IRSchemaObject;
 }): ts.TypeNode => {
   switch (schema.type as Required<IRSchemaObject>['type']) {
@@ -698,7 +698,7 @@ const operationToDataType = ({
 }: {
   context: IRContext;
   operation: IROperationObject;
-  plugin: Plugin<Config>;
+  plugin: Plugin.Instance<Config>;
 }) => {
   const file = context.file({ id: typesId })!;
   const data: IRSchemaObject = {
@@ -797,7 +797,7 @@ const operationToType = ({
 }: {
   context: IRContext;
   operation: IROperationObject;
-  plugin: Plugin<Config>;
+  plugin: Plugin.Instance<Config>;
 }) => {
   operationToDataType({
     context,
@@ -913,7 +913,7 @@ export const schemaToType = ({
   $ref?: string;
   context: IRContext;
   namespace?: Array<ts.Statement>;
-  plugin: Plugin<Config>;
+  plugin: Plugin.Instance<Config>;
   schema: IRSchemaObject;
 }): ts.TypeNode => {
   const file = context.file({ id: typesId })!;
@@ -1008,7 +1008,7 @@ export const schemaToType = ({
   return type;
 };
 
-export const handler: PluginHandler<Config> = ({ context, plugin }) => {
+export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
   context.createFile({
     id: typesId,
     identifierCase: plugin.identifierCase,

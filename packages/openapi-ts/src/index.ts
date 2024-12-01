@@ -10,7 +10,7 @@ import type { IRContext } from './ir/context';
 import { parseExperimental, parseLegacy } from './openApi';
 import type { ClientPlugins } from './plugins';
 import { defaultPluginConfigs } from './plugins';
-import type { DefaultPluginConfigsMap, PluginNames } from './plugins/types';
+import type { DefaultPluginConfigs, PluginNames } from './plugins/types';
 import type { Client } from './types/client';
 import type {
   ClientConfig,
@@ -167,7 +167,7 @@ const getPluginOrder = ({
   pluginConfigs,
   userPlugins,
 }: {
-  pluginConfigs: DefaultPluginConfigsMap<ClientPlugins>;
+  pluginConfigs: DefaultPluginConfigs<ClientPlugins>;
   userPlugins: ReadonlyArray<PluginNames>;
 }): Config['pluginOrder'] => {
   const circularReferenceTracker = new Set<PluginNames>();
@@ -486,5 +486,5 @@ export default {
 
 export type { OpenApiV3_0_X } from './openApi/3.0.x';
 export type { OpenApiV3_1_X } from './openApi/3.1.x';
-export type * as Plugins from './plugins/types';
+export type { Plugin } from './plugins/types';
 export type { UserConfig } from './types/config';

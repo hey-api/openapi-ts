@@ -3,7 +3,7 @@ import { TypeScriptFile } from '../../../generate/files';
 import type { OpenApiV2Schema, OpenApiV3Schema } from '../../../openApi';
 import { ensureValidTypeScriptJavaScriptIdentifier } from '../../../openApi';
 import { getConfig } from '../../../utils/config';
-import type { PluginLegacyHandler } from '../../types';
+import type { Plugin } from '../../types';
 import type { Config } from './types';
 
 const ensureValidSchemaOutput = (
@@ -69,7 +69,7 @@ const toSchemaName = (
   return `${validName}Schema`;
 };
 
-export const handlerLegacy: PluginLegacyHandler<Config> = ({
+export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
   files,
   openApi,
 }) => {
