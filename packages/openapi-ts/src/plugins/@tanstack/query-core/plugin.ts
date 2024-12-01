@@ -30,6 +30,14 @@ import type { Config as SolidQueryConfig } from '../solid-query';
 import type { Config as SvelteQueryConfig } from '../svelte-query';
 import type { Config as VueQueryConfig } from '../vue-query';
 
+type PluginInstance = Plugin.Instance<
+  | AngularQueryConfig
+  | ReactQueryConfig
+  | SolidQueryConfig
+  | SvelteQueryConfig
+  | VueQueryConfig
+>;
+
 const infiniteQueryOptionsFunctionIdentifier = ({
   context,
   operation,
@@ -98,10 +106,14 @@ const getClientBaseUrlKey = () => {
 };
 
 const createInfiniteParamsFunction = ({
-  file,
+  context,
+  plugin,
 }: {
-  file: Files[keyof Files];
+  context: IRContext;
+  plugin: PluginInstance;
 }) => {
+  const file = context.file({ id: plugin.name })!;
+
   const fn = compiler.constVariable({
     expression: compiler.arrowFunction({
       multiLine: true,
@@ -278,7 +290,15 @@ const createInfiniteParamsFunction = ({
   file.add(fn);
 };
 
-const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
+const createQueryKeyFunction = ({
+  context,
+  plugin,
+}: {
+  context: IRContext;
+  plugin: PluginInstance;
+}) => {
+  const file = context.file({ id: plugin.name })!;
+
   const returnType = compiler.indexedAccessTypeNode({
     indexType: compiler.literalTypeNode({
       literal: compiler.ots.number(0),
@@ -290,6 +310,12 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
   });
 
   const infiniteIdentifier = compiler.identifier({ text: 'infinite' });
+
+  const identifierCreateQueryKey = file.identifier({
+    $ref: `#/ir/${createQueryKeyFn}`,
+    create: true,
+    namespace: 'value',
+  });
 
   const fn = compiler.constVariable({
     expression: compiler.arrowFunction({
@@ -455,7 +481,7 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
         },
       ],
     }),
-    name: createQueryKeyFn,
+    name: identifierCreateQueryKey.name || '',
   });
   file.add(fn);
 };
@@ -509,16 +535,25 @@ const createQueryKeyType = ({ file }: { file: Files[keyof Files] }) => {
 };
 
 const createQueryKeyLiteral = ({
+  context,
   id,
   isInfinite,
+  plugin,
 }: {
+  context: IRContext;
   id: string;
   isInfinite?: boolean;
+  plugin: PluginInstance;
 }) => {
+  const file = context.file({ id: plugin.name })!;
+  const identifierCreateQueryKey = file.identifier({
+    $ref: `#/ir/${createQueryKeyFn}`,
+    namespace: 'value',
+  });
   const queryKeyLiteral = compiler.arrayLiteralExpression({
     elements: [
       compiler.callExpression({
-        functionName: createQueryKeyFn,
+        functionName: identifierCreateQueryKey.name || '',
         parameters: [
           compiler.ots.string(id),
           'options',
@@ -538,20 +573,15 @@ const useTypeData = ({
 }: {
   context: IRContext;
   operation: IROperationObject;
-  plugin: Plugin.Instance<
-    | AngularQueryConfig
-    | ReactQueryConfig
-    | SolidQueryConfig
-    | SvelteQueryConfig
-    | VueQueryConfig
-  >;
+  plugin: PluginInstance;
 }) => {
   const identifierData = context.file({ id: 'types' })!.identifier({
     $ref: operationIrRef({ id: operation.id, type: 'data' }),
     namespace: 'type',
   });
   if (identifierData.name) {
-    context.file({ id: plugin.name })!.import({
+    const file = context.file({ id: plugin.name })!;
+    file.import({
       asType: true,
       module: context
         .file({ id: plugin.name })!
@@ -572,13 +602,7 @@ const useTypeError = ({
 }: {
   context: IRContext;
   operation: IROperationObject;
-  plugin: Plugin.Instance<
-    | AngularQueryConfig
-    | ReactQueryConfig
-    | SolidQueryConfig
-    | SvelteQueryConfig
-    | VueQueryConfig
-  >;
+  plugin: PluginInstance;
 }) => {
   const file = context.file({ id: plugin.name })!;
   const identifierError = context.file({ id: 'types' })!.identifier({
@@ -626,20 +650,15 @@ const useTypeResponse = ({
 }: {
   context: IRContext;
   operation: IROperationObject;
-  plugin: Plugin.Instance<
-    | AngularQueryConfig
-    | ReactQueryConfig
-    | SolidQueryConfig
-    | SvelteQueryConfig
-    | VueQueryConfig
-  >;
+  plugin: PluginInstance;
 }) => {
   const identifierResponse = context.file({ id: 'types' })!.identifier({
     $ref: operationIrRef({ id: operation.id, type: 'response' }),
     namespace: 'type',
   });
   if (identifierResponse.name) {
-    context.file({ id: plugin.name })!.import({
+    const file = context.file({ id: plugin.name })!;
+    file.import({
       asType: true,
       module: context
         .file({ id: plugin.name })!
@@ -649,6 +668,54 @@ const useTypeResponse = ({
   }
   const typeResponse = identifierResponse.name || 'unknown';
   return typeResponse;
+};
+
+const queryKeyStatement = ({
+  context,
+  isInfinite,
+  operation,
+  plugin,
+  typeQueryKey,
+}: {
+  context: IRContext;
+  isInfinite: boolean;
+  operation: IROperationObject;
+  plugin: PluginInstance;
+  typeQueryKey?: string;
+}) => {
+  const file = context.file({ id: plugin.name })!;
+  const typeData = useTypeData({ context, operation, plugin });
+  const name = queryKeyFunctionIdentifier({
+    context,
+    isInfinite,
+    operation,
+  });
+  const identifierQueryKey = file.identifier({
+    $ref: `#/queryKey/${name}`,
+    create: true,
+    namespace: 'value',
+  });
+  const statement = compiler.constVariable({
+    exportConst: true,
+    expression: compiler.arrowFunction({
+      parameters: [
+        {
+          isRequired: hasOperationDataRequired(operation),
+          name: 'options',
+          type: typeData,
+        },
+      ],
+      returnType: isInfinite ? typeQueryKey : undefined,
+      statements: createQueryKeyLiteral({
+        context,
+        id: operation.id,
+        isInfinite,
+        plugin,
+      }),
+    }),
+    name: identifierQueryKey.name || '',
+  });
+  return statement;
 };
 
 export const handler: Plugin.Handler<
@@ -717,7 +784,7 @@ export const handler: Plugin.Handler<
 
         if (!hasCreateQueryKeyParamsFunction) {
           createQueryKeyType({ file });
-          createQueryKeyFunction({ file });
+          createQueryKeyFunction({ context, plugin });
           hasCreateQueryKeyParamsFunction = true;
         }
 
@@ -729,25 +796,25 @@ export const handler: Plugin.Handler<
 
       hasUsedQueryFn = true;
 
+      const node = queryKeyStatement({
+        context,
+        isInfinite: false,
+        operation,
+        plugin,
+      });
+      file.add(node);
+
       const typeData = useTypeData({ context, operation, plugin });
 
-      const queryKeyStatement = compiler.constVariable({
-        exportConst: true,
-        expression: compiler.arrowFunction({
-          parameters: [
-            {
-              isRequired,
-              name: 'options',
-              type: typeData,
-            },
-          ],
-          statements: createQueryKeyLiteral({
-            id: operation.id,
-          }),
-        }),
-        name: queryKeyFunctionIdentifier({ context, operation }),
+      const queryKeyName = queryKeyFunctionIdentifier({
+        context,
+        isInfinite: false,
+        operation,
       });
-      file.add(queryKeyStatement);
+      const identifierQueryKey = file.identifier({
+        $ref: `#/queryKey/${queryKeyName}`,
+        namespace: 'value',
+      });
 
       const statement = compiler.constVariable({
         // TODO: describe options, same as the actual function call
@@ -826,10 +893,7 @@ export const handler: Plugin.Handler<
                     {
                       key: 'queryKey',
                       value: compiler.callExpression({
-                        functionName: queryKeyFunctionIdentifier({
-                          context,
-                          operation,
-                        }),
+                        functionName: identifierQueryKey.name || '',
                         parameters: ['options'],
                       }),
                     },
@@ -862,12 +926,12 @@ export const handler: Plugin.Handler<
 
           if (!hasCreateQueryKeyParamsFunction) {
             createQueryKeyType({ file });
-            createQueryKeyFunction({ file });
+            createQueryKeyFunction({ context, plugin });
             hasCreateQueryKeyParamsFunction = true;
           }
 
           if (!hasCreateInfiniteParamsFunction) {
-            createInfiniteParamsFunction({ file });
+            createInfiniteParamsFunction({ context, plugin });
             hasCreateInfiniteParamsFunction = true;
           }
 
@@ -904,29 +968,24 @@ export const handler: Plugin.Handler<
           unescape: true,
         })} | ${typePageObjectParam}`;
 
-        const queryKeyStatement = compiler.constVariable({
-          exportConst: true,
-          expression: compiler.arrowFunction({
-            parameters: [
-              {
-                isRequired,
-                name: 'options',
-                type: typeData,
-              },
-            ],
-            returnType: typeQueryKey,
-            statements: createQueryKeyLiteral({
-              id: operation.id,
-              isInfinite: true,
-            }),
-          }),
-          name: queryKeyFunctionIdentifier({
-            context,
-            isInfinite: true,
-            operation,
-          }),
+        const node = queryKeyStatement({
+          context,
+          isInfinite: true,
+          operation,
+          plugin,
+          typeQueryKey,
         });
-        file.add(queryKeyStatement);
+        file.add(node);
+
+        const infiniteQueryKeyName = queryKeyFunctionIdentifier({
+          context,
+          isInfinite: true,
+          operation,
+        });
+        const identifierQueryKey = file.identifier({
+          $ref: `#/queryKey/${infiniteQueryKeyName}`,
+          namespace: 'value',
+        });
 
         const statement = compiler.constVariable({
           // TODO: describe options, same as the actual function call
@@ -1062,11 +1121,7 @@ export const handler: Plugin.Handler<
                       {
                         key: 'queryKey',
                         value: compiler.callExpression({
-                          functionName: queryKeyFunctionIdentifier({
-                            context,
-                            isInfinite: true,
-                            operation,
-                          }),
+                          functionName: identifierQueryKey.name || '',
                           parameters: ['options'],
                         }),
                       },
