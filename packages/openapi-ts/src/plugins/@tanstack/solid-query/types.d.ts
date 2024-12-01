@@ -1,6 +1,6 @@
-import type { PluginName } from '../../types';
+import type { Plugin } from '../../types';
 
-export interface Config extends PluginName<'@tanstack/solid-query'> {
+export interface Config extends Plugin.Name<'@tanstack/solid-query'> {
   /**
    * Generate `createInfiniteQuery()` helpers? These will be generated from GET and POST requests where a pagination parameter is detected.
    * @default true

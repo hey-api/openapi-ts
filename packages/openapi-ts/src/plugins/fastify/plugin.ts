@@ -6,7 +6,7 @@ import type { IROperationObject } from '../../ir/ir';
 import { operationResponsesMap } from '../../ir/operation';
 import { hasParameterGroupObjectRequired } from '../../ir/parameter';
 import { operationIrRef } from '../@hey-api/sdk/plugin';
-import type { PluginHandler } from '../types';
+import type { Plugin } from '../types';
 import type { Config } from './types';
 
 const fastifyId = 'fastify';
@@ -195,7 +195,7 @@ const operationToRouteHandler = ({
   return routeHandler;
 };
 
-export const handler: PluginHandler<Config> = ({ context, plugin }) => {
+export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
   const file = context.createFile({
     id: fastifyId,
     path: plugin.output,

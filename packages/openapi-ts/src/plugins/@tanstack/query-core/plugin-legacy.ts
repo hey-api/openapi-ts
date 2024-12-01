@@ -28,7 +28,7 @@ import {
   operationResponseTypeName,
   serviceFunctionIdentifier,
 } from '../../@hey-api/sdk/plugin-legacy';
-import type { PluginLegacyHandler } from '../../types';
+import type { Plugin } from '../../types';
 import type { Config as AngularQueryConfig } from '../angular-query-experimental';
 import type { Config as ReactQueryConfig } from '../react-query';
 import type { Config as SolidQueryConfig } from '../solid-query';
@@ -668,7 +668,7 @@ const createQueryKeyLiteral = ({
   return queryKeyLiteral;
 };
 
-export const handlerLegacy: PluginLegacyHandler<
+export const handlerLegacy: Plugin.LegacyHandler<
   | ReactQueryConfig
   | AngularQueryConfig
   | SolidQueryConfig

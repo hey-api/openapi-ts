@@ -18,7 +18,7 @@ import {
   type SetUniqueTypeNameResult,
   toType,
 } from '../../../utils/type';
-import type { PluginLegacyHandler } from '../../types';
+import type { Plugin } from '../../types';
 import {
   operationDataTypeName,
   operationErrorTypeName,
@@ -606,7 +606,7 @@ const processServiceTypes = ({
   }
 };
 
-export const handlerLegacy: PluginLegacyHandler<Config> = ({
+export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
   client,
   files,
 }) => {

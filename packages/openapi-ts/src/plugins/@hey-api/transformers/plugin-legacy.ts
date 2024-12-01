@@ -5,7 +5,7 @@ import { getOperationKey } from '../../../openApi/common/parser/operation';
 import type { ModelMeta, OperationResponse } from '../../../types/client';
 import { getConfig } from '../../../utils/config';
 import { isModelDate, unsetUniqueTypeName } from '../../../utils/type';
-import type { PluginLegacyHandler } from '../../types';
+import type { Plugin } from '../../types';
 import {
   modelResponseTransformerTypeName,
   operationResponseTransformerTypeName,
@@ -246,7 +246,7 @@ const generateResponseTransformer = ({
 };
 
 // handles only response transformers for now
-export const handlerLegacy: PluginLegacyHandler<Config> = ({
+export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
   client,
   files,
 }) => {

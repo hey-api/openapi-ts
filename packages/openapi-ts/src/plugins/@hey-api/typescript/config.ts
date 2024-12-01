@@ -1,9 +1,9 @@
-import type { DefineConfig, PluginConfig } from '../../types';
+import type { Plugin } from '../../types';
 import { handler } from './plugin';
 import { handlerLegacy } from './plugin-legacy';
 import type { Config } from './types';
 
-export const defaultConfig: PluginConfig<Config> = {
+export const defaultConfig: Plugin.Config<Config> = {
   _handler: handler,
   _handlerLegacy: handlerLegacy,
   enums: false,
@@ -17,9 +17,9 @@ export const defaultConfig: PluginConfig<Config> = {
 };
 
 /**
- * Type helper for `@hey-api/typescript` plugin, returns {@link PluginConfig} object
+ * Type helper for `@hey-api/typescript` plugin, returns {@link Plugin.Config} object
  */
-export const defineConfig: DefineConfig<Config> = (config) => ({
+export const defineConfig: Plugin.DefineConfig<Config> = (config) => ({
   ...defaultConfig,
   ...config,
 });

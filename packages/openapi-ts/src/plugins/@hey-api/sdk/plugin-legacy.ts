@@ -32,7 +32,7 @@ import { stringCase } from '../../../utils/stringCase';
 import { transformServiceName } from '../../../utils/transform';
 import { setUniqueTypeName } from '../../../utils/type';
 import { unique } from '../../../utils/unique';
-import type { PluginLegacyHandler } from '../../types';
+import type { Plugin } from '../../types';
 
 type OnNode = (node: Node) => void;
 type OnImport = (name: string) => void;
@@ -768,7 +768,7 @@ const processService = ({
   onNode(statement);
 };
 
-export const handlerLegacy: PluginLegacyHandler<any> = ({ client, files }) => {
+export const handlerLegacy: Plugin.LegacyHandler<any> = ({ client, files }) => {
   const config = getConfig();
 
   if (!config.client.name) {

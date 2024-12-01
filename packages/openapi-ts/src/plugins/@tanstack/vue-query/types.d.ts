@@ -1,6 +1,6 @@
-import type { PluginName } from '../../types';
+import type { Plugin } from '../../types';
 
-export interface Config extends PluginName<'@tanstack/vue-query'> {
+export interface Config extends Plugin.Name<'@tanstack/vue-query'> {
   /**
    * Generate {@link https://tanstack.com/query/v5/docs/framework/vue/reference/infiniteQueryOptions `infiniteQueryOptions()`} helpers? These will be generated from GET and POST requests where a pagination parameter is detected.
    * @default true
