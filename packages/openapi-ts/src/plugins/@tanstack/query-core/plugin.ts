@@ -23,7 +23,7 @@ import {
 } from '../../@hey-api/sdk/plugin';
 import { serviceFunctionIdentifier } from '../../@hey-api/sdk/plugin-legacy';
 import { schemaToType } from '../../@hey-api/typescript/plugin';
-import type { PluginHandler } from '../../types';
+import type { Plugin } from '../../types';
 import type { Config as AngularQueryConfig } from '../angular-query-experimental';
 import type { Config as ReactQueryConfig } from '../react-query';
 import type { Config as SolidQueryConfig } from '../solid-query';
@@ -531,11 +531,6 @@ const createQueryKeyLiteral = ({
   return queryKeyLiteral;
 };
 
-interface Plugin {
-  name: string;
-  output: string;
-}
-
 const useTypeData = ({
   context,
   operation,
@@ -543,7 +538,13 @@ const useTypeData = ({
 }: {
   context: IRContext;
   operation: IROperationObject;
-  plugin: Plugin;
+  plugin: Plugin.Instance<
+    | AngularQueryConfig
+    | ReactQueryConfig
+    | SolidQueryConfig
+    | SvelteQueryConfig
+    | VueQueryConfig
+  >;
 }) => {
   const identifierData = context.file({ id: 'types' })!.identifier({
     $ref: operationIrRef({ id: operation.id, type: 'data' }),
@@ -571,7 +572,13 @@ const useTypeError = ({
 }: {
   context: IRContext;
   operation: IROperationObject;
-  plugin: Plugin;
+  plugin: Plugin.Instance<
+    | AngularQueryConfig
+    | ReactQueryConfig
+    | SolidQueryConfig
+    | SvelteQueryConfig
+    | VueQueryConfig
+  >;
 }) => {
   const file = context.file({ id: plugin.name })!;
   const identifierError = context.file({ id: 'types' })!.identifier({
@@ -619,7 +626,13 @@ const useTypeResponse = ({
 }: {
   context: IRContext;
   operation: IROperationObject;
-  plugin: Plugin;
+  plugin: Plugin.Instance<
+    | AngularQueryConfig
+    | ReactQueryConfig
+    | SolidQueryConfig
+    | SvelteQueryConfig
+    | VueQueryConfig
+  >;
 }) => {
   const identifierResponse = context.file({ id: 'types' })!.identifier({
     $ref: operationIrRef({ id: operation.id, type: 'response' }),
@@ -638,7 +651,7 @@ const useTypeResponse = ({
   return typeResponse;
 };
 
-export const handler: PluginHandler<
+export const handler: Plugin.Handler<
   | ReactQueryConfig
   | AngularQueryConfig
   | SolidQueryConfig

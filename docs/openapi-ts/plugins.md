@@ -37,7 +37,7 @@ Featured community plugins.
 ## Custom
 
 ::: warning
-Plugins API is in development. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
+Plugin API is in development. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
 :::
 
 If the existing plugins do not handle your use case or you're working with proprietary packages, you might want to create your own plugin.
@@ -79,17 +79,17 @@ export interface Config {
 
 :::
 
-`config.ts` contains the runtime configuration for your plugin. It must implement the `Config` interface from `types.d.ts` and additional plugin metadata defined in the `PluginConfig` interface.
+`config.ts` contains the runtime configuration for your plugin. It must implement the `Config` interface from `types.d.ts` and additional plugin metadata defined in the `Plugin.Config` interface.
 
 ::: code-group
 
 ```ts [config.ts]
-import type { Plugins } from '@hey-api/openapi-ts';
+import type { Plugin } from '@hey-api/openapi-ts';
 
 import { handler } from './plugin';
 import type { Config } from './types';
 
-export const defaultConfig: Plugins.PluginConfig<Config> = {
+export const defaultConfig: Plugin.Config<Config> = {
   _dependencies: ['@hey-api/typescript'],
   _handler: handler,
   _handlerLegacy: () => {},
@@ -98,9 +98,9 @@ export const defaultConfig: Plugins.PluginConfig<Config> = {
 };
 
 /**
- * Type helper for `my-plugin` plugin, returns {@link Plugins.PluginConfig} object
+ * Type helper for `my-plugin` plugin, returns {@link Plugin.Config} object
  */
-export const defineConfig: Plugins.DefineConfig<Config> = (config) => ({
+export const defineConfig: Plugin.DefineConfig<Config> = (config) => ({
   ...defaultConfig,
   ...config,
 });
@@ -115,11 +115,11 @@ Lastly, we define the `_handler` method which will be responsible for generating
 ::: code-group
 
 ```ts [plugin.ts]
-import type { Plugins } from '@hey-api/openapi-ts';
+import type { Plugin } from '@hey-api/openapi-ts';
 
 import type { Config } from './types';
 
-export const handler: Plugins.PluginHandler<Config> = ({ context, plugin }) => {
+export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
   // create a file for our output
   const file = context.createFile({
     id: plugin.name,

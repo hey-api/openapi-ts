@@ -1,8 +1,8 @@
 import type { IROperationObject } from '../../../ir/ir';
 import type { Operation } from '../../../types/client';
-import type { PluginName } from '../../types';
+import type { Plugin } from '../../types';
 
-export interface Config extends PluginName<'@hey-api/sdk'> {
+export interface Config extends Plugin.Name<'@hey-api/sdk'> {
   /**
    * Group operation methods into classes? When enabled, you can
    * select which classes to export with `sdk.include` and/or
