@@ -385,6 +385,15 @@ describe(`OpenAPI ${VERSION}`, () => {
     },
     {
       config: createConfig({
+        input: 'internal-name-conflict.json',
+        output: 'internal-name-conflict',
+        plugins: ['@tanstack/react-query'],
+      }),
+      description:
+        'handles conflict between generated code and internal artifacts',
+    },
+    {
+      config: createConfig({
         input: 'object-properties-all-of.json',
         output: 'object-properties-all-of',
       }),
