@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/openapi-ts",
-  "version": "0.57.1",
+  "version": "0.58.0",
   "description": "🚀 The OpenAPI to TypeScript codegen. Generate clients, SDKs, validators, and more.",
   "homepage": "https://heyapi.dev/",
   "repository": {
