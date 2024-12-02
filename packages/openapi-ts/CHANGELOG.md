@@ -1,5 +1,78 @@
 # @hey-api/openapi-ts
 
+## 0.58.0
+
+### Minor Changes
+
+- [#1353](https://github.com/hey-api/openapi-ts/pull/1353) [`efd3e54`](https://github.com/hey-api/openapi-ts/commit/efd3e5444d208ea0c8dda7573f26bb04c31cc372) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add typescript.identifierCase option
+
+  ### Added `typescript.identifierCase` option
+
+  **This change affects only the experimental parser.** By default, the generated TypeScript interfaces will follow the PascalCase naming convention. In the previous versions, we tried to preserve the original name as much as possible. To keep the previous behavior, set `typescript.identifierCase` to `preserve`.
+
+  ```js
+  export default {
+    client: '@hey-api/client-fetch',
+    experimentalParser: true,
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    plugins: [
+      // ...other plugins
+      {
+        identifierCase: 'preserve', // [!code ++]
+        name: '@hey-api/typescript',
+      },
+    ],
+  };
+  ```
+
+- [#1360](https://github.com/hey-api/openapi-ts/pull/1360) [`5f6ddd7`](https://github.com/hey-api/openapi-ts/commit/5f6ddd796f0ce77bcca55fd13981f2a8481aecd3) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: remove schemas and transformers re-exports from index.ts
+
+  ### Removed `schemas.gen.ts` re-export
+
+  `index.ts` will no longer re-export `schemas.gen.ts` to reduce the chance of producing broken output. Please update your code to import from `schemas.gen.ts` directly.
+
+  ```js
+  import { mySchema } from 'client'; // [!code --]
+  import { mySchema } from 'client/schemas.gen'; // [!code ++]
+  ```
+
+  ### Removed `transformers.gen.ts` re-export
+
+  `index.ts` will no longer re-export `transformers.gen.ts` to reduce the chance of producing broken output. Please update your code to import from `transformers.gen.ts` directly.
+
+  ```js
+  import { myTransformer } from 'client'; // [!code --]
+  import { myTransformer } from 'client/transformers.gen'; // [!code ++]
+  ```
+
+- [#1360](https://github.com/hey-api/openapi-ts/pull/1360) [`5f6ddd7`](https://github.com/hey-api/openapi-ts/commit/5f6ddd796f0ce77bcca55fd13981f2a8481aecd3) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add output.clean option
+
+  ### Added `output.clean` option
+
+  By default, the `output.path` folder will be emptied on every run. To preserve the previous behavior, set `output.clean` to `false`.
+
+  ```js
+  export default {
+    client: '@hey-api/client-fetch',
+    input: 'path/to/openapi.json',
+    output: {
+      clean: false, // [!code ++]
+      path: 'src/client',
+    },
+  };
+  ```
+
+- [#1362](https://github.com/hey-api/openapi-ts/pull/1362) [`3bf7169`](https://github.com/hey-api/openapi-ts/commit/3bf7169b620946d99c17cf5398d7a818d0099f94) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add typescript.enumsCase option
+
+### Patch Changes
+
+- [#1361](https://github.com/hey-api/openapi-ts/pull/1361) [`a23c25e`](https://github.com/hey-api/openapi-ts/commit/a23c25ea1b5ca8bf421302bf93690168df3473cb) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add before and after to pagination keywords
+
+- [#1368](https://github.com/hey-api/openapi-ts/pull/1368) [`cca2290`](https://github.com/hey-api/openapi-ts/commit/cca2290aeaab0b9807c928d73dbfc1e4bacadc4d) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export Plugin API namespace
+
+- [#1369](https://github.com/hey-api/openapi-ts/pull/1369) [`11163f0`](https://github.com/hey-api/openapi-ts/commit/11163f0d6885633078126849c04c0646e7d19255) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: TanStack Query plugin handles conflict with internal function name in experimental parser
+
 ## 0.57.1
 
 ### Patch Changes
