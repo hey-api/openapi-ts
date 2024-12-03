@@ -29,6 +29,7 @@ const params = program
   )
   .option('-o, --output <value>', 'Output folder')
   .option('-p, --plugins [value...]', "List of plugins you'd like to use")
+  .option('--log-directory <value>', 'Path to write log file to')
   .option(
     '--base [value]',
     'DEPRECATED. Manually set base in OpenAPI config instead of inferring from server value',
@@ -87,8 +88,9 @@ async function start() {
     process.exit(0);
   } catch (error) {
     if (!userConfig?.dryRun) {
+      const logDirectory = userConfig?.logDirectory || process.cwd();
       const logName = `openapi-ts-error-${Date.now()}.log`;
-      const logPath = resolve(process.cwd(), logName);
+      const logPath = resolve(logDirectory, logName);
       writeFileSync(logPath, `${error.message}\n${error.stack}`);
       console.error(`🔥 Unexpected error occurred. Log saved to ${logPath}`);
     }
