@@ -61,7 +61,7 @@ export function tsNodeToString({
      */
     return unescapeUnicode(result);
   } catch {
-    if (getConfig().debug) {
+    if (getConfig().logs.level === 'debug') {
       console.warn('Could not decode value:', result);
     }
     return result;

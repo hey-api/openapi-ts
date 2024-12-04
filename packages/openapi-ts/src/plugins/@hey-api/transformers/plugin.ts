@@ -402,7 +402,7 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     }
 
     if (response.items && response.items.length > 1) {
-      if (context.config.debug) {
+      if (context.config.logs.level === 'debug') {
         console.warn(
           `❗️ Transformers warning: route ${`${operation.method.toUpperCase()} ${operation.path}`} has ${response.items.length} non-void success responses. This is currently not handled and we will not generate a response transformer. Please open an issue if you'd like this feature https://github.com/hey-api/openapi-ts/issues`,
         );
