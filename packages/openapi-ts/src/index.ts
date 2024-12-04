@@ -9,7 +9,7 @@ import { generateLegacyOutput, generateOutput } from './generate/output';
 import { ensureDirSync } from './generate/utils';
 import type { IRContext } from './ir/context';
 import { parseExperimental, parseLegacy } from './openApi';
-import type { ClientPlugins } from './plugins';
+import type { ClientPlugins, UserPlugins } from './plugins';
 import { defaultPluginConfigs } from './plugins';
 import type { DefaultPluginConfigs, PluginNames } from './plugins/types';
 import type { Client } from './types/client';
@@ -233,13 +233,7 @@ const getPlugins = (
 ): Pick<Config, 'plugins' | 'pluginOrder'> => {
   const userPluginsConfig: Config['plugins'] = {};
 
-  const userPlugins = (
-    userConfig.plugins ?? [
-      '@hey-api/typescript',
-      '@hey-api/schemas',
-      '@hey-api/sdk',
-    ]
-  )
+  const userPlugins = (userConfig.plugins ?? defaultPlugins)
     .map((plugin) => {
       if (typeof plugin === 'string') {
         return plugin;
@@ -512,6 +506,14 @@ export async function createClient(
     throw error;
   }
 }
+
+/**
+ * Default plugins used to generate artifacts if plugins aren't specified.
+ */
+export const defaultPlugins = [
+  '@hey-api/typescript',
+  '@hey-api/sdk',
+] as const satisfies ReadonlyArray<UserPlugins['name']>;
 
 /**
  * Type helper for openapi-ts.config.ts, returns {@link UserConfig} object
