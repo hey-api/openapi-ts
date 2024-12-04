@@ -1,14 +1,15 @@
-import { existsSync, mkdirSync, type PathLike, rmSync } from 'node:fs';
+import type { PathLike } from 'node:fs';
+import fs from 'node:fs';
 
 export const ensureDirSync = (path: PathLike) => {
-  if (!existsSync(path)) {
-    mkdirSync(path, { recursive: true });
+  if (!fs.existsSync(path)) {
+    fs.mkdirSync(path, { recursive: true });
   }
 };
 
 export const removeDirSync = (path: PathLike) => {
-  if (existsSync(path)) {
-    rmSync(path, { force: true, recursive: true });
+  if (fs.existsSync(path)) {
+    fs.rmSync(path, { force: true, recursive: true });
   }
 };
 

@@ -1,13 +1,13 @@
-import { readdirSync, statSync } from 'node:fs';
+import fs from 'node:fs';
 import path from 'node:path';
 
 export const getFilePaths = (dirPath: string): Array<string> => {
   let filePaths: Array<string> = [];
-  const files = readdirSync(dirPath);
+  const files = fs.readdirSync(dirPath);
 
   for (const file of files) {
     const filePath = path.join(dirPath, file);
-    const stat = statSync(filePath);
+    const stat = fs.statSync(filePath);
 
     if (stat.isDirectory()) {
       filePaths = filePaths.concat(getFilePaths(filePath));

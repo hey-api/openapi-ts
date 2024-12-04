@@ -2,8 +2,7 @@
 
 'use strict';
 
-const { writeFileSync } = require('fs');
-const { resolve } = require('path');
+const path = require('path');
 
 const { program } = require('commander');
 const pkg = require('../package.json');
@@ -27,6 +26,7 @@ const params = program
     '-i, --input <value>',
     'OpenAPI specification (path, url, or string content)',
   )
+  .option('-l, --logs [value]', 'Logs folder')
   .option('-o, --output <value>', 'Output folder')
   .option('-p, --plugins [value...]', "List of plugins you'd like to use")
   .option(
@@ -71,7 +71,9 @@ const processParams = (obj, booleanKeys) => {
 async function start() {
   let userConfig;
   try {
-    const { createClient } = require(resolve(__dirname, '../dist/index.cjs'));
+    const { createClient } = require(
+      path.resolve(__dirname, '../dist/index.cjs'),
+    );
     userConfig = processParams(params, [
       'dryRun',
       'experimentalParser',
@@ -86,13 +88,6 @@ async function start() {
     await createClient(userConfig);
     process.exit(0);
   } catch (error) {
-    if (!userConfig?.dryRun) {
-      const logName = `openapi-ts-error-${Date.now()}.log`;
-      const logPath = resolve(process.cwd(), logName);
-      writeFileSync(logPath, `${error.message}\n${error.stack}`);
-      console.error(`🔥 Unexpected error occurred. Log saved to ${logPath}`);
-    }
-    console.error(`🔥 Unexpected error occurred. ${error.message}`);
     process.exit(1);
   }
 }
