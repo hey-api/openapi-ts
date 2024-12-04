@@ -332,11 +332,11 @@ export const getParseAs = (
     return;
   }
 
-  const cleanContent = contentType.split(';')[0].trim();
+	const cleanContent = contentType?.split(';')[0]?.trim();
 
   if (
-    cleanContent.startsWith('application/json') ||
-    cleanContent.endsWith('+json')
+    cleanContent?.startsWith('application/json') ||
+		cleanContent?.endsWith('+json')
   ) {
     return 'json';
   }
@@ -347,13 +347,13 @@ export const getParseAs = (
 
   if (
     ['application/', 'audio/', 'image/', 'video/'].some((type) =>
-      cleanContent.startsWith(type),
+      cleanContent?.startsWith(type),
     )
   ) {
     return 'blob';
   }
 
-  if (cleanContent.startsWith('text/')) {
+	if (cleanContent?.startsWith('text/')) {
     return 'text';
   }
 };
