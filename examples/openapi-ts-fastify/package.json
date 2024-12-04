@@ -11,7 +11,7 @@
   "dependencies": {
     "@hey-api/client-fetch": "workspace:*",
     "fastify": "5.1.0",
-    "fastify-openapi-glue": "4.7.3"
+    "fastify-openapi-glue": "4.7.4"
   },
   "devDependencies": {
     "@hey-api/openapi-ts": "workspace:*",
