@@ -187,7 +187,7 @@ export default defineConfig([
 
 ## Plugins
 
-Plugins are responsible for generating artifacts from your input. By default, Hey API will generate TypeScript interfaces, an SDK, and JSON Schemas from your OpenAPI specification. You can add, remove, or customize any of the plugins. In fact, we highly encourage you to do so!
+Plugins are responsible for generating artifacts from your input. By default, Hey API will generate TypeScript interfaces and SDK from your OpenAPI specification. You can add, remove, or customize any of the plugins. In fact, we highly encourage you to do so!
 
 You can learn more on the [Output](/openapi-ts/output) page.
 

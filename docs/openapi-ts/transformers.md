@@ -32,12 +32,14 @@ If your data isn't being transformed as expected, we encourage you to leave feed
 To convert date strings into `Date` objects, use the `dates` configuration option.
 
 ```js
+import { defaultPlugins } from '@hey-api/openapi-ts';
+
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
   plugins: [
-    // ...default plugins
+    ...defaultPlugins,
     {
       dates: true, // [!code ++]
       name: '@hey-api/transformers',
@@ -52,25 +54,52 @@ This will generate types that use `Date` instead of `string` and appropriate tra
 
 A generated response transformer might look something like this. Please note the example has been edited for brevity.
 
-```ts
-export type MyResponse = {
-  foo: string;
-  bar: string;
-  baz?: Date;
-};
+::: code-group
 
-export const myResponseTransformer = async (data: any): Promise<MyResponse> => {
+```ts [transformers.gen.ts]
+import type { GetFooResponse } from './types.gen';
+
+const quxSchemaResponseTransformer = (data: any) => {
   if (data.baz) {
     data.baz = new Date(data.baz);
   }
   return data;
 };
 
-export const myResponse = () =>
-  client.get<MyResponse>({
-    responseTransformer: myResponseTransformer,
-    url: '/foo',
-  });
+const bazSchemaResponseTransformer = (data: any) => {
+  data = quxSchemaResponseTransformer(data);
+  data.bar = new Date(data.bar);
+  return data;
+};
+
+export const getFooResponseTransformer = async (
+  data: any,
+): Promise<GetFooResponse> => {
+  data = bazSchemaResponseTransformer(data);
+  return data;
+};
 ```
+
+```ts [types.gen.ts]
+export type Baz = Qux & {
+  id: 'Baz';
+} & {
+  foo: number;
+  bar: Date;
+  baz: 'foo' | 'bar' | 'baz';
+  qux: number;
+};
+
+export type Qux = {
+  foo: number;
+  bar: number;
+  baz?: Date;
+  id: string;
+};
+
+export type GetFooResponse = Baz;
+```
+
+:::
 
 <!--@include: ../sponsorship.md-->

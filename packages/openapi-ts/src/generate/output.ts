@@ -140,6 +140,7 @@ export const generateOutput = async ({ context }: { context: IRContext }) => {
       return;
     }
 
+    // TODO: parser - refactor once we have typed Plugin Files API
     if (!file.isEmpty() && ['sdk', 'types'].includes(name)) {
       indexFile.add(
         compiler.exportAllDeclaration({

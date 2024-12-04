@@ -29,13 +29,15 @@ To use this feature, you must opt in to the [experimental parser](/openapi-ts/co
 Ensure you have already [configured](/openapi-ts/get-started) `@hey-api/openapi-ts`. Update your configuration to use the Zod plugin.
 
 ```js
+import { defaultPlugins } from '@hey-api/openapi-ts';
+
 export default {
   client: '@hey-api/client-fetch',
   experimentalParser: true, // [!code ++]
   input: 'path/to/openapi.json',
   output: 'src/client',
   plugins: [
-    // ...other plugins
+    ...defaultPlugins,
     'zod', // [!code ++]
   ],
 };
