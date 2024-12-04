@@ -216,23 +216,27 @@ const parseObject = ({
     irSchema.properties = schemaProperties;
   }
 
-  if (schema.additionalProperties !== undefined) {
-    if (typeof schema.additionalProperties === 'boolean') {
+  if (schema.additionalProperties === undefined) {
+    if (!irSchema.properties) {
       irSchema.additionalProperties = {
-        type: schema.additionalProperties ? 'unknown' : 'never',
+        type: 'unknown',
       };
-    } else {
-      const irAdditionalPropertiesSchema = schemaToIrSchema({
-        context,
-        schema: schema.additionalProperties,
-      });
-      // no need to add "any" additional properties if there are no defined properties
-      if (
-        irSchema.properties ||
-        irAdditionalPropertiesSchema.type !== 'unknown'
-      ) {
-        irSchema.additionalProperties = irAdditionalPropertiesSchema;
-      }
+    }
+  } else if (typeof schema.additionalProperties === 'boolean') {
+    irSchema.additionalProperties = {
+      type: schema.additionalProperties ? 'unknown' : 'never',
+    };
+  } else {
+    const irAdditionalPropertiesSchema = schemaToIrSchema({
+      context,
+      schema: schema.additionalProperties,
+    });
+    // no need to add "any" additional properties if there are no defined properties
+    if (
+      irSchema.properties ||
+      irAdditionalPropertiesSchema.type !== 'unknown'
+    ) {
+      irSchema.additionalProperties = irAdditionalPropertiesSchema;
     }
   }
 
