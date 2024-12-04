@@ -578,7 +578,6 @@ const defaultHeaders = {
 export const createConfig = (override: Config = {}): Config => ({
   ...jsonBodySerializer,
   baseUrl: '',
-  fetch: globalThis.fetch,
   headers: defaultHeaders,
   parseAs: 'auto',
   querySerializer: defaultQuerySerializer,
