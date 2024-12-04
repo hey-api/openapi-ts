@@ -456,6 +456,14 @@ describe(`OpenAPI ${VERSION}`, () => {
     },
     {
       config: createConfig({
+        input: 'transformers-all-of.yaml',
+        output: 'transformers-all-of',
+        plugins: ['@hey-api/transformers'],
+      }),
+      description: 'transforms nested date in all of composition',
+    },
+    {
+      config: createConfig({
         input: 'transformers-any-of-null.json',
         output: 'transformers-any-of-null',
         plugins: ['@hey-api/transformers'],
