@@ -11,7 +11,7 @@ export type GetFooResponses = {
      */
     200: {
         foo: Array<{
-            baz: string;
+            baz: Date;
         }>;
     };
 };

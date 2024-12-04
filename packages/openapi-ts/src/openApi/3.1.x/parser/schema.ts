@@ -333,12 +333,23 @@ const parseAllOf = ({
   const compositionSchemas = schema.allOf;
 
   for (const compositionSchema of compositionSchemas) {
-    schemaItems.push(
-      schemaToIrSchema({
-        context,
-        schema: compositionSchema,
-      }),
-    );
+    const irCompositionSchema = schemaToIrSchema({
+      context,
+      schema: compositionSchema,
+    });
+
+    if (schema.required) {
+      if (irCompositionSchema.required) {
+        irCompositionSchema.required = [
+          ...irCompositionSchema.required,
+          ...schema.required,
+        ];
+      } else {
+        irCompositionSchema.required = schema.required;
+      }
+    }
+
+    schemaItems.push(irCompositionSchema);
 
     if (compositionSchema.$ref) {
       const ref = context.resolveRef<SchemaObject>(compositionSchema.$ref);
@@ -353,6 +364,9 @@ const parseAllOf = ({
           },
           type: 'object',
         };
+        if (ref.required?.includes(ref.discriminator.propertyName)) {
+          irDiscriminatorSchema.required = [ref.discriminator.propertyName];
+        }
         schemaItems.push(irDiscriminatorSchema);
       }
     }
