@@ -1,0 +1,20 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "OpenAPI 3.1.1 additional properties undefined example",
+    "version": "1"
+  },
+  "components": {
+    "schemas": {
+      "Foo": {
+        "properties": {
+          "foo": {
+            "type": "object"
+          }
+        },
+        "required": ["foo"],
+        "type": "object"
+      }
+    }
+  }
+}

@@ -2,7 +2,7 @@
 '@hey-api/openapi-ts': minor
 ---
 
-feat: add logs.level option
+feat: add `logs.level` option
 
 ### Added `logs.level` option
 

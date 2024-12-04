@@ -50,6 +50,13 @@ describe(`OpenAPI ${VERSION}`, () => {
     },
     {
       config: createConfig({
+        input: 'additional-properties-undefined.json',
+        output: 'additional-properties-undefined',
+      }),
+      description: 'allows arbitrary properties on objects',
+    },
+    {
+      config: createConfig({
         input: 'array-items-one-of-length-1.json',
         output: 'array-items-one-of-length-1',
       }),
