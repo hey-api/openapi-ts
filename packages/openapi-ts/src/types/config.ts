@@ -1,4 +1,4 @@
-import type { ClientPlugins, UserPlugins } from '../plugins/';
+import type { ClientPlugins, UserPlugins } from '../plugins';
 import type {
   ArrayOfObjectsToObjectMap,
   ExtractArrayOfObjects,
@@ -29,12 +29,6 @@ export type StringCase =
   | 'SCREAMING_SNAKE_CASE';
 
 export interface ClientConfig {
-  /**
-   * Manually set base in OpenAPI config instead of inferring from server value
-   *
-   * @deprecated
-   */
-  base?: string;
   /**
    * HTTP client to generate
    */
@@ -76,12 +70,6 @@ export interface ClientConfig {
    */
   experimentalParser?: boolean;
   /**
-   * Generate core client classes?
-   *
-   * @default true
-   */
-  exportCore?: boolean;
-  /**
    * Path to the OpenAPI specification. This can be either local or remote path.
    * Both JSON and YAML file formats are supported. You can also pass the parsed
    * object directly if you're fetching the file yourself.
@@ -107,7 +95,7 @@ export interface ClientConfig {
         exclude?: string;
         /**
          * **This feature works only with the experimental parser**
-
+         *
          * Process only parts matching the regular expression. You can select both
          * operations and components by reference within the bundled input. In
          * case of conflicts, `exclude` takes precedence over `include`.
@@ -165,15 +153,6 @@ export interface ClientConfig {
         path?: string;
       };
   /**
-   * Custom client class name. Please note this option is deprecated and
-   * will be removed in favor of clients.
-   *
-   * @link https://heyapi.dev/openapi-ts/migrating.html#deprecated-name
-   *
-   * @deprecated
-   */
-  name?: string;
-  /**
    * The relative location of the output folder
    */
   output:
@@ -215,9 +194,37 @@ export interface ClientConfig {
         path: string;
       };
   /**
-   * Plugins are used to generate artifacts from provided input.
+   * Plugins generate artifacts from `input`. By default, we generate SDK
+   * functions and TypeScript interfaces. If you manually define `plugins`,
+   * you need to include the default plugins if you wish to use them.
+   *
+   * @default ['@hey-api/typescript', '@hey-api/sdk']
    */
   plugins?: ReadonlyArray<UserPlugins['name'] | UserPlugins>;
+  /**
+   * Manually set base in OpenAPI config instead of inferring from server value
+   *
+   * @deprecated
+   */
+  // eslint-disable-next-line typescript-sort-keys/interface
+  base?: string;
+  /**
+   * Generate core client classes?
+   *
+   * @deprecated
+   *
+   * @default true
+   */
+  exportCore?: boolean;
+  /**
+   * Custom client class name. Please note this option is deprecated and
+   * will be removed in favor of clients.
+   *
+   * @link https://heyapi.dev/openapi-ts/migrating.html#deprecated-name
+   *
+   * @deprecated
+   */
+  name?: string;
   /**
    * Path to custom request file. Please note this option is deprecated and
    * will be removed in favor of clients.

@@ -21,7 +21,6 @@ my-app/
 ├── src/
 │ ├── client/
 │ │ ├── index.ts
-│ │ ├── schemas.gen.ts
 │ │ ├── sdk.gen.ts
 │ │ └── types.gen.ts
 │ └── index.ts
@@ -65,16 +64,17 @@ As you can see, everything is exported from `types.gen.ts`. You can import indiv
 
 ### Configuration
 
-You can modify the contents of `types.gen.ts` by configuring the `@hey-api/typescript` plugin. Note that you must specify the other default plugins to preserve the default output.
+You can modify the contents of `types.gen.ts` by configuring the `@hey-api/typescript` plugin. Note that you must specify the default plugins to preserve the default output.
 
 ```js
+import { defaultPlugins } from '@hey-api/openapi-ts';
+
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
   plugins: [
-    '@hey-api/schemas', // preserve default output
-    '@hey-api/sdk', // preserve default output
+    ...defaultPlugins,
     {
       name: '@hey-api/typescript',
       // ...custom options // [!code ++]
@@ -90,12 +90,14 @@ By default, `@hey-api/openapi-ts` will only emit enums as types. You may want to
 ::: code-group
 
 ```js [disabled]
+import { defaultPlugins } from '@hey-api/openapi-ts';
+
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
   plugins: [
-    // ...default plugins
+    ...defaultPlugins,
     {
       enums: false, // default // [!code ++]
       name: '@hey-api/typescript',
@@ -105,12 +107,14 @@ export default {
 ```
 
 ```js [javascript]
+import { defaultPlugins } from '@hey-api/openapi-ts';
+
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
   plugins: [
-    // ...default plugins
+    ...defaultPlugins,
     {
       enums: 'javascript', // [!code ++]
       name: '@hey-api/typescript',
@@ -120,12 +124,14 @@ export default {
 ```
 
 ```js [typescript]
+import { defaultPlugins } from '@hey-api/openapi-ts';
+
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
   plugins: [
-    // ...default plugins
+    ...defaultPlugins,
     {
       enums: 'typescript', // [!code ++]
       name: '@hey-api/typescript',
@@ -152,22 +158,23 @@ Class SDKs do not support tree-shaking which will lead to increased bundle sizes
 
 ### No SDKs
 
-If you prefer to use clients directly or do not need the SDK layer, define `plugins` manually and omit the `@hey-api/sdk` plugin. Type support for clients is currently limited due to popularity of other options. If you'd like to use this option and need better types, [open an issue](https://github.com/hey-api/openapi-ts/issues).
+If you prefer to use clients directly or do not need the SDK layer, define `plugins` manually and omit the `@hey-api/sdk` plugin. Type support for clients is currently limited due to popularity of other options. If you'd like to use this option and need better types, please [open an issue](https://github.com/hey-api/openapi-ts/issues).
 
 ### Configuration
 
-You can modify the contents of `sdk.gen.ts` by configuring the `@hey-api/sdk` plugin. Note that you must specify the other default plugins to preserve the default output.
+You can modify the contents of `sdk.gen.ts` by configuring the `@hey-api/sdk` plugin. Note that you must specify the default plugins to preserve the default output.
 
 ::: code-group
 
 ```js [flat]
+import { defaultPlugins } from '@hey-api/openapi-ts';
+
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
   plugins: [
-    '@hey-api/schemas', // preserve default output
-    '@hey-api/typescript', // preserve default output
+    ...defaultPlugins,
     {
       asClass: false, // default // [!code ++]
       name: '@hey-api/sdk',
@@ -177,13 +184,14 @@ export default {
 ```
 
 ```js [class]
+import { defaultPlugins } from '@hey-api/openapi-ts';
+
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
   plugins: [
-    '@hey-api/schemas', // preserve default output
-    '@hey-api/typescript', // preserve default output
+    ...defaultPlugins,
     {
       asClass: true, // [!code ++]
       name: '@hey-api/sdk',
@@ -198,8 +206,7 @@ export default {
   input: 'path/to/openapi.json',
   output: 'src/client',
   plugins: [
-    '@hey-api/schemas', // preserve default output
-    '@hey-api/typescript', // preserve default output
+    '@hey-api/typescript',
     '@hey-api/sdk', // [!code --]
   ],
 };
@@ -287,18 +294,19 @@ Schemas are located in the `schemas.gen.ts` file. This file contains runtime sch
 
 ### Configuration
 
-You can modify the contents of `schemas.gen.ts` by configuring the `@hey-api/schemas` plugin. Note that you must specify the other default plugins to preserve the default output.
+You can modify the contents of `schemas.gen.ts` by configuring the `@hey-api/schemas` plugin. Note that you must specify the default plugins to preserve the default output.
 
 ::: code-group
 
 ```js [json]
+import { defaultPlugins } from '@hey-api/openapi-ts';
+
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
   plugins: [
-    '@hey-api/sdk', // preserve default output
-    '@hey-api/typescript', // preserve default output
+    ...defaultPlugins,
     {
       name: '@hey-api/schemas',
       type: 'json', // [!code ++]
@@ -308,13 +316,14 @@ export default {
 ```
 
 ```js [form]
+import { defaultPlugins } from '@hey-api/openapi-ts';
+
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
   plugins: [
-    '@hey-api/sdk', // preserve default output
-    '@hey-api/typescript', // preserve default output
+    ...defaultPlugins,
     {
       name: '@hey-api/schemas',
       type: 'form', // [!code ++]
@@ -324,13 +333,14 @@ export default {
 ```
 
 ```js [disabled]
+import { defaultPlugins } from '@hey-api/openapi-ts';
+
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
   plugins: [
-    '@hey-api/sdk', // preserve default output
-    '@hey-api/typescript', // preserve default output
+    ...defaultPlugins,
     '@hey-api/schemas', // [!code --]
   ],
 };
@@ -376,7 +386,7 @@ if (userInput.length > maxInputLength) {
 
 ## Index
 
-For convenience, every artifact generated by Hey API plugins is re-exported from `index.ts`. However, we recommend importing artifacts from their files to avoid ambiguity.
+For convenience, every artifact generated by default plugins is re-exported from `index.ts`. However, we recommend importing artifacts from their files to avoid ambiguity.
 
 ```ts
 import type { Pet } from './client'; // [!code --] // 👎

@@ -33,60 +33,70 @@ Ensure you have already [configured](/openapi-ts/get-started) `@hey-api/openapi-
 ::: code-group
 
 ```js [react]
+import { defaultPlugins } from '@hey-api/openapi-ts';
+
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
   plugins: [
-    // ...other plugins
+    ...defaultPlugins,
     '@tanstack/react-query', // [!code ++]
   ],
 };
 ```
 
 ```js [vue]
+import { defaultPlugins } from '@hey-api/openapi-ts';
+
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
   plugins: [
-    // ...other plugins
+    ...defaultPlugins,
     '@tanstack/vue-query', // [!code ++]
   ],
 };
 ```
 
 ```js [angular]
+import { defaultPlugins } from '@hey-api/openapi-ts';
+
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
   plugins: [
-    // ...other plugins
+    ...defaultPlugins,
     '@tanstack/angular-query-experimental', // [!code ++]
   ],
 };
 ```
 
 ```js [svelte]
+import { defaultPlugins } from '@hey-api/openapi-ts';
+
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
   plugins: [
-    // ...other plugins
+    ...defaultPlugins,
     '@tanstack/svelte-query', // [!code ++]
   ],
 };
 ```
 
 ```js [solid]
+import { defaultPlugins } from '@hey-api/openapi-ts';
+
 export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
   plugins: [
-    // ...other plugins
+    ...defaultPlugins,
     '@tanstack/solid-query', // [!code ++]
   ],
 };
