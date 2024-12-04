@@ -1,24 +1,16 @@
 const Handlebars = require('handlebars');
-const {
-  existsSync,
-  mkdirSync,
-  readFileSync,
-  readdirSync,
-  rmdirSync,
-  statSync,
-  writeFileSync,
-} = require('node:fs');
+const fs = require('node:fs');
 const path = require('node:path');
 
 const getFilesRecursively = (folderPath) => {
   let fileList = [];
 
-  const files = readdirSync(folderPath);
+  const files = fs.readdirSync(folderPath);
 
   files.forEach((file) => {
     const fullPath = path.join(folderPath, file);
 
-    if (statSync(fullPath).isDirectory()) {
+    if (fs.statSync(fullPath).isDirectory()) {
       fileList = fileList.concat(getFilesRecursively(fullPath));
     } else {
       fileList.push(fullPath);
@@ -34,14 +26,14 @@ const templatePaths = getFilesRecursively(
 
 const compiledDirPath = path.resolve('src', 'legacy', 'handlebars', 'compiled');
 
-if (existsSync(compiledDirPath)) {
-  rmdirSync(compiledDirPath, {
+if (fs.existsSync(compiledDirPath)) {
+  fs.rmdirSync(compiledDirPath, {
     recursive: true,
   });
 }
 
 templatePaths.forEach((templatePath) => {
-  const template = readFileSync(templatePath, 'utf8').toString().trim();
+  const template = fs.readFileSync(templatePath, 'utf8').toString().trim();
 
   const compiled = Handlebars.precompile(template, {
     knownHelpers: {
@@ -72,9 +64,9 @@ templatePaths.forEach((templatePath) => {
 
   const compiledDir = path.dirname(compiledPath);
 
-  if (!existsSync(compiledDir)) {
-    mkdirSync(compiledDir, { recursive: true });
+  if (!fs.existsSync(compiledDir)) {
+    fs.mkdirSync(compiledDir, { recursive: true });
   }
 
-  writeFileSync(compiledPath, `export default ${compiled};`);
+  fs.writeFileSync(compiledPath, `export default ${compiled};`);
 });

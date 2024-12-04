@@ -1,4 +1,4 @@
-import { rmSync, writeFileSync } from 'node:fs';
+import fs from 'node:fs';
 import path from 'node:path';
 
 import type ts from 'typescript';
@@ -207,8 +207,8 @@ export class TypeScriptFile {
     return `${relativePath}${splitNameAndExtension(fileRelativePath).name}`;
   }
 
-  public remove(options?: Parameters<typeof rmSync>[1]) {
-    rmSync(this._path, options);
+  public remove(options?: Parameters<typeof fs.rmSync>[1]) {
+    fs.rmSync(this._path, options);
   }
 
   /**
@@ -266,7 +266,7 @@ export class TypeScriptFile {
       dir = parts.slice(0, parts.length - 1).join(path.sep);
     }
     ensureDirSync(dir);
-    writeFileSync(this._path, this.toString(separator));
+    fs.writeFileSync(this._path, this.toString(separator));
   }
 }
 

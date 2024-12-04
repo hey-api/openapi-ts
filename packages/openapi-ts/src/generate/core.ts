@@ -1,10 +1,4 @@
-import {
-  copyFileSync,
-  existsSync,
-  mkdirSync,
-  rmSync,
-  writeFileSync,
-} from 'node:fs';
+import fs from 'node:fs';
 import path from 'node:path';
 
 import type { Client } from '../types/client';
@@ -32,36 +26,36 @@ export const generateLegacyCore = async (
       version: client.version,
     };
 
-    rmSync(path.resolve(outputPath), {
+    fs.rmSync(path.resolve(outputPath), {
       force: true,
       recursive: true,
     });
-    mkdirSync(path.resolve(outputPath), {
+    fs.mkdirSync(path.resolve(outputPath), {
       recursive: true,
     });
 
-    await writeFileSync(
+    await fs.writeFileSync(
       path.resolve(outputPath, 'OpenAPI.ts'),
       templates.core.settings({
         $config: config,
         ...context,
       }),
     );
-    await writeFileSync(
+    await fs.writeFileSync(
       path.resolve(outputPath, 'ApiError.ts'),
       templates.core.apiError({
         $config: config,
         ...context,
       }),
     );
-    await writeFileSync(
+    await fs.writeFileSync(
       path.resolve(outputPath, 'ApiRequestOptions.ts'),
       templates.core.apiRequestOptions({
         $config: config,
         ...context,
       }),
     );
-    await writeFileSync(
+    await fs.writeFileSync(
       path.resolve(outputPath, 'ApiResult.ts'),
       templates.core.apiResult({
         $config: config,
@@ -69,7 +63,7 @@ export const generateLegacyCore = async (
       }),
     );
     if (config.client.name !== 'legacy/angular') {
-      await writeFileSync(
+      await fs.writeFileSync(
         path.resolve(outputPath, 'CancelablePromise.ts'),
         templates.core.cancelablePromise({
           $config: config,
@@ -77,7 +71,7 @@ export const generateLegacyCore = async (
         }),
       );
     }
-    await writeFileSync(
+    await fs.writeFileSync(
       path.resolve(outputPath, 'request.ts'),
       templates.core.request({
         $config: config,
@@ -86,14 +80,14 @@ export const generateLegacyCore = async (
     );
 
     if (legacyNameFromConfig(config)) {
-      await writeFileSync(
+      await fs.writeFileSync(
         path.resolve(outputPath, 'BaseHttpRequest.ts'),
         templates.core.baseHttpRequest({
           $config: config,
           ...context,
         }),
       );
-      await writeFileSync(
+      await fs.writeFileSync(
         path.resolve(outputPath, `${context.httpRequest}.ts`),
         templates.core.httpRequest({
           $config: config,
@@ -104,11 +98,14 @@ export const generateLegacyCore = async (
 
     if (config.request) {
       const requestFile = path.resolve(process.cwd(), config.request);
-      const requestFileExists = await existsSync(requestFile);
+      const requestFileExists = await fs.existsSync(requestFile);
       if (!requestFileExists) {
         throw new Error(`Custom request file "${requestFile}" does not exists`);
       }
-      await copyFileSync(requestFile, path.resolve(outputPath, 'request.ts'));
+      await fs.copyFileSync(
+        requestFile,
+        path.resolve(outputPath, 'request.ts'),
+      );
     }
   }
 };

@@ -21,6 +21,10 @@ describe('registerHandlebarHelpers', () => {
       input: {
         path: '',
       },
+      logs: {
+        level: 'info',
+        path: process.cwd(),
+      },
       output: {
         format: 'prettier',
         path: '',
@@ -70,6 +74,10 @@ describe('registerHandlebarTemplates', () => {
       exportCore: true,
       input: {
         path: '',
+      },
+      logs: {
+        level: 'info',
+        path: process.cwd(),
       },
       output: {
         format: 'prettier',

@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -494,7 +494,7 @@ describe(`OpenAPI ${VERSION}`, () => {
     const filePaths = getFilePaths(outputPath);
 
     filePaths.forEach((filePath) => {
-      const fileContent = readFileSync(filePath, 'utf-8');
+      const fileContent = fs.readFileSync(filePath, 'utf-8');
       expect(fileContent).toMatchFileSnapshot(
         path.join(
           __dirname,

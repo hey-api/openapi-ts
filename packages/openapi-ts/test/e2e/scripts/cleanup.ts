@@ -1,7 +1,7 @@
-import { rmSync } from 'node:fs'
+import fs from 'node:fs';
 
 export const cleanup = (dir: string) => {
-  rmSync(`./test/e2e/generated/${dir}/`, {
+  fs.rmSync(`./test/e2e/generated/${dir}/`, {
     force: true,
     recursive: true
   })

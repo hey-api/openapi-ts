@@ -1,4 +1,4 @@
-import { writeFileSync } from 'node:fs';
+import fs from 'node:fs';
 import path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
@@ -22,6 +22,10 @@ describe('generateIndexFile', () => {
       exportCore: true,
       input: {
         path: '',
+      },
+      logs: {
+        level: 'info',
+        path: process.cwd(),
       },
       output: {
         path: '',
@@ -67,7 +71,7 @@ describe('generateIndexFile', () => {
 
     files.index.write();
 
-    expect(writeFileSync).toHaveBeenCalledWith(
+    expect(fs.writeFileSync).toHaveBeenCalledWith(
       expect.stringContaining(path.resolve('index.ts')),
       expect.anything(),
     );

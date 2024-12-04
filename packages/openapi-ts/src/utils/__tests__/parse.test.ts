@@ -16,6 +16,10 @@ describe('operationNameFn', () => {
     input: {
       path: '',
     },
+    logs: {
+      level: 'info',
+      path: process.cwd(),
+    },
     output: {
       path: '',
     },
