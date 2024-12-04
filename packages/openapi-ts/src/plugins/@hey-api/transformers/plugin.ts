@@ -80,23 +80,32 @@ const ensureStatements = (
       : compiler.expressionToStatement({ expression: node }),
   );
 
+const isNodeReturnStatement = ({
+  node,
+}: {
+  node: ts.Expression | ts.Statement;
+}) => node.kind === ts.SyntaxKind.ReturnStatement;
+
 const schemaResponseTransformerNodes = ({
   context,
+  plugin,
   schema,
 }: {
   context: IRContext;
+  plugin: Plugin.Instance<Config>;
   schema: IRSchemaObject;
 }): Array<ts.Expression | ts.Statement> => {
   const identifierData = compiler.identifier({ text: dataVariableName });
   const nodes = processSchemaType({
     context,
     dataExpression: identifierData,
+    plugin,
     schema,
   });
   // append return statement if one does not already exist
   if (
     nodes.length &&
-    nodes[nodes.length - 1].kind !== ts.SyntaxKind.ReturnStatement
+    !isNodeReturnStatement({ node: nodes[nodes.length - 1] })
   ) {
     nodes.push(compiler.returnStatement({ expression: identifierData }));
   }
@@ -106,10 +115,12 @@ const schemaResponseTransformerNodes = ({
 const processSchemaType = ({
   context,
   dataExpression,
+  plugin,
   schema,
 }: {
   context: IRContext;
   dataExpression?: ts.Expression | string;
+  plugin: Plugin.Instance<Config>;
   schema: IRSchemaObject;
 }): Array<ts.Expression | ts.Statement> => {
   const file = context.file({ id: transformersId })!;
@@ -126,6 +137,7 @@ const processSchemaType = ({
       const refSchema = context.resolveIrRef<IRSchemaObject>(schema.$ref);
       const nodes = schemaResponseTransformerNodes({
         context,
+        plugin,
         schema: refSchema,
       });
       if (nodes.length) {
@@ -161,16 +173,14 @@ const processSchemaType = ({
         parameters: [dataExpression],
       });
 
-      if (typeof dataExpression === 'string') {
-        return [callExpression];
-      }
-
       if (dataExpression) {
         return [
-          compiler.assignment({
-            left: dataExpression,
-            right: callExpression,
-          }),
+          typeof dataExpression === 'string'
+            ? callExpression
+            : compiler.assignment({
+                left: dataExpression,
+                right: callExpression,
+              }),
         ];
       }
     }
@@ -188,6 +198,7 @@ const processSchemaType = ({
       ? []
       : processSchemaType({
           context,
+          plugin,
           schema: {
             ...schema,
             type: undefined,
@@ -245,6 +256,7 @@ const processSchemaType = ({
       const propertyNodes = processSchemaType({
         context,
         dataExpression: propertyAccessExpression,
+        plugin,
         schema: property,
       });
       if (propertyNodes.length) {
@@ -263,19 +275,22 @@ const processSchemaType = ({
       }
     }
 
-    nodes.push(
-      compiler.returnStatement({
-        expression:
-          typeof dataExpression === 'string'
-            ? compiler.identifier({ text: dataExpression })
-            : dataExpression,
-      }),
-    );
+    if (nodes.length) {
+      nodes.push(
+        compiler.returnStatement({
+          expression:
+            typeof dataExpression === 'string'
+              ? compiler.identifier({ text: dataExpression })
+              : dataExpression,
+        }),
+      );
+    }
 
     return nodes;
   }
 
   if (
+    plugin.dates &&
     schema.type === 'string' &&
     (schema.format === 'date' || schema.format === 'date-time')
   ) {
@@ -310,20 +325,25 @@ const processSchemaType = ({
       return processSchemaType({
         context,
         dataExpression: 'item',
+        plugin,
         schema: schema.items[0],
       });
     }
 
     let arrayNodes: Array<ts.Expression | ts.Statement> = [];
+    // process 2 items if one of them is null
     if (
-      schema.items.length === 2 &&
-      schema.items.find((item) => item.type === 'null' || item.type === 'void')
+      schema.logicalOperator === 'and' ||
+      (schema.items.length === 2 &&
+        schema.items.find(
+          (item) => item.type === 'null' || item.type === 'void',
+        ))
     ) {
-      // process 2 items if one of them is null
       for (const item of schema.items) {
         const nodes = processSchemaType({
           context,
           dataExpression: dataExpression || 'item',
+          plugin,
           schema: item,
         });
         if (nodes.length) {
@@ -356,9 +376,12 @@ const processSchemaType = ({
       return arrayNodes;
     }
 
-    console.warn(
-      `❗️ Transformers warning: schema ${JSON.stringify(schema)} is too complex and won't be currently processed. This will likely produce an incomplete transformer which is not what you want. Please open an issue if you'd like this improved https://github.com/hey-api/openapi-ts/issues`,
-    );
+    // assume enums do not contain transformable values
+    if (schema.type !== 'enum') {
+      console.warn(
+        `❗️ Transformers warning: schema ${JSON.stringify(schema)} is too complex and won't be currently processed. This will likely produce an incomplete transformer which is not what you want. Please open an issue if you'd like this improved https://github.com/hey-api/openapi-ts/issues`,
+      );
+    }
   }
 
   return [];
@@ -407,6 +430,7 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     // TODO: parser - consider handling simple string response which is also a date
     const nodes = schemaResponseTransformerNodes({
       context,
+      plugin,
       schema: response,
     });
     if (nodes.length) {

@@ -1,0 +1,87 @@
+openapi: 3.1.1
+info:
+  title: OpenAPI 3.1.1 transformers all of example
+  version: 1
+paths:
+  /foo:
+    get:
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Foo'
+          description: OK
+components:
+  schemas:
+    Foo:
+      type: object
+      properties:
+        foo:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bar'
+      required:
+        - foo
+    Bar:
+      type: object
+      properties:
+        foo:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/Baz'
+        bar:
+          type: string
+          enum:
+            - foo
+            - bar
+            - baz
+      required:
+        - foo
+        - bar
+    Baz:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/Qux'
+        - type: object
+          properties:
+            foo:
+              format: int32
+              type: integer
+            bar:
+              format: date-time
+              type: string
+            baz:
+              type: string
+              enum:
+                - foo
+                - bar
+                - baz
+            qux:
+              format: int32
+              type: integer
+      required:
+        - foo
+        - bar
+        - baz
+        - qux
+    Qux:
+      type: object
+      discriminator:
+        propertyName: id
+      properties:
+        foo:
+          type: integer
+          format: int32
+        bar:
+          type: number
+        baz:
+          format: date-time
+          type: string
+        id:
+          type: string
+      required:
+        - foo
+        - bar
+        - id
