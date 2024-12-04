@@ -1,11 +1,11 @@
-import { mkdirSync, rmSync } from 'node:fs'
+import fs from 'node:fs';
 import path from 'node:path'
 
 import { sync } from 'cross-spawn'
 
 export const createAngularProject = (dir: string, name: string) => {
   const cwd = `./test/e2e/generated/${dir}/`
-  mkdirSync(cwd, {
+  fs.mkdirSync(cwd, {
     recursive: true
   })
   sync(
@@ -38,7 +38,7 @@ export const createAngularProject = (dir: string, name: string) => {
       stdio: 'inherit'
     }
   )
-  rmSync(`${cwd}/${name}/src/app/`, {
+  fs.rmSync(`${cwd}/${name}/src/app/`, {
     recursive: true
   })
 }

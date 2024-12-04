@@ -2,8 +2,7 @@
 
 'use strict';
 
-const { writeFileSync } = require('fs');
-const { resolve } = require('path');
+const path = require('path');
 
 const { program } = require('commander');
 const pkg = require('../package.json');
@@ -16,7 +15,7 @@ const params = program
     '-c, --client <value>',
     'HTTP client to generate [@hey-api/client-axios, @hey-api/client-fetch, legacy/angular, legacy/axios, legacy/fetch, legacy/node, legacy/xhr]',
   )
-  .option('-d, --debug', 'Run in debug mode?')
+  .option('-d, --debug', 'Set log level to debug')
   .option('--dry-run [value]', 'Skip writing files to disk?')
   .option(
     '-e, --experimental-parser [value]',
@@ -27,12 +26,14 @@ const params = program
     '-i, --input <value>',
     'OpenAPI specification (path, url, or string content)',
   )
+  .option('-l, --logs [value]', 'Logs folder')
   .option('-o, --output <value>', 'Output folder')
   .option('-p, --plugins [value...]', "List of plugins you'd like to use")
   .option(
     '--base [value]',
     'DEPRECATED. Manually set base in OpenAPI config instead of inferring from server value',
   )
+  .option('-s, --silent', 'Set log level to silent')
   .option('--exportCore [value]', 'DEPRECATED. Write core files to disk')
   .option('--name <value>', 'DEPRECATED. Custom client class name')
   .option('--request <value>', 'DEPRECATED. Path to custom request file')
@@ -70,29 +71,40 @@ const processParams = (obj, booleanKeys) => {
 
 async function start() {
   let userConfig;
+
   try {
-    const { createClient } = require(resolve(__dirname, '../dist/index.cjs'));
+    const { createClient } = require(
+      path.resolve(__dirname, '../dist/index.cjs'),
+    );
+
     userConfig = processParams(params, [
       'dryRun',
       'experimentalParser',
       'exportCore',
       'useOptions',
     ]);
+
     if (params.plugins === true) {
       userConfig.plugins = [];
     } else if (params.plugins) {
       userConfig.plugins = params.plugins;
     }
+
+    userConfig.logs = userConfig.logs
+      ? {
+          path: userConfig.logs,
+        }
+      : {};
+
+    if (userConfig.debug || stringToBoolean(process.env.DEBUG)) {
+      userConfig.logs.level = 'debug';
+    } else if (userConfig.silent) {
+      userConfig.logs.level = 'silent';
+    }
+
     await createClient(userConfig);
     process.exit(0);
   } catch (error) {
-    if (!userConfig?.dryRun) {
-      const logName = `openapi-ts-error-${Date.now()}.log`;
-      const logPath = resolve(process.cwd(), logName);
-      writeFileSync(logPath, `${error.message}\n${error.stack}`);
-      console.error(`🔥 Unexpected error occurred. Log saved to ${logPath}`);
-    }
-    console.error(`🔥 Unexpected error occurred. ${error.message}`);
     process.exit(1);
   }
 }

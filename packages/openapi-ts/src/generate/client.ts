@@ -1,4 +1,4 @@
-import { copyFileSync } from 'node:fs';
+import fs from 'node:fs';
 import path from 'node:path';
 
 import type { ImportExportItemObject } from '../compiler/utils';
@@ -65,7 +65,7 @@ export const generateClientBundle = ({
   // copy client modules
   const files = ['index.ts', 'types.ts', 'utils.ts'];
   files.forEach((file) => {
-    copyFileSync(
+    fs.copyFileSync(
       path.resolve(clientSrcPath, file),
       path.resolve(dirPath, file),
     );

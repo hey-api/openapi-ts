@@ -1,4 +1,4 @@
-import { writeFileSync } from 'node:fs';
+import fs from 'node:fs';
 import path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
@@ -19,12 +19,15 @@ describe('handlerLegacy', () => {
         name: 'legacy/fetch',
       },
       configFile: '',
-      debug: false,
       dryRun: false,
       experimentalParser: false,
       exportCore: true,
       input: {
         path: '',
+      },
+      logs: {
+        level: 'info',
+        path: process.cwd(),
       },
       output: {
         path: '',
@@ -106,7 +109,7 @@ describe('handlerLegacy', () => {
 
     files.sdk.write();
 
-    expect(writeFileSync).toHaveBeenCalledWith(
+    expect(fs.writeFileSync).toHaveBeenCalledWith(
       expect.stringContaining(path.resolve('sdk.gen.ts')),
       expect.anything(),
     );
@@ -159,12 +162,15 @@ describe('methodNameBuilder', () => {
         name: 'legacy/fetch',
       },
       configFile: '',
-      debug: false,
       dryRun: false,
       experimentalParser: false,
       exportCore: true,
       input: {
         path: '',
+      },
+      logs: {
+        level: 'info',
+        path: process.cwd(),
       },
       output: {
         path: '',
@@ -209,7 +215,7 @@ describe('methodNameBuilder', () => {
 
     files.sdk.write();
 
-    expect(writeFileSync).toHaveBeenCalledWith(
+    expect(fs.writeFileSync).toHaveBeenCalledWith(
       expect.stringContaining(path.resolve('sdk.gen.ts')),
       expect.stringContaining('public static userGet()'),
     );
@@ -223,12 +229,15 @@ describe('methodNameBuilder', () => {
         name: 'legacy/fetch',
       },
       configFile: '',
-      debug: false,
       dryRun: false,
       experimentalParser: false,
       exportCore: true,
       input: {
         path: '',
+      },
+      logs: {
+        level: 'info',
+        path: process.cwd(),
       },
       output: {
         path: '',
@@ -274,7 +283,7 @@ describe('methodNameBuilder', () => {
 
     files.sdk.write();
 
-    expect(writeFileSync).toHaveBeenCalledWith(
+    expect(fs.writeFileSync).toHaveBeenCalledWith(
       expect.stringContaining(path.resolve('sdk.gen.ts')),
       expect.stringContaining('public static customName()'),
     );
@@ -290,12 +299,15 @@ describe('methodNameBuilder', () => {
         name: 'legacy/fetch',
       },
       configFile: '',
-      debug: false,
       dryRun: false,
       experimentalParser: false,
       exportCore: true,
       input: {
         path: '',
+      },
+      logs: {
+        level: 'info',
+        path: process.cwd(),
       },
       output: {
         path: '',
@@ -341,7 +353,7 @@ describe('methodNameBuilder', () => {
 
     files.sdk.write();
 
-    expect(writeFileSync).toHaveBeenCalledWith(
+    expect(fs.writeFileSync).toHaveBeenCalledWith(
       expect.stringContaining(path.resolve('sdk.gen.ts')),
       expect.stringContaining('public static customName()'),
     );

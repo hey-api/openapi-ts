@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import fs from 'node:fs';
 
 import { sync } from 'glob';
 import { describe, expect, it } from 'vitest';
@@ -48,7 +48,7 @@ describe('OpenAPI v2', () => {
       output,
     });
     sync(`${output}**/*.ts`).forEach((file) => {
-      const content = readFileSync(file, 'utf8').toString();
+      const content = fs.readFileSync(file, 'utf8').toString();
       expect(content).toMatchFileSnapshot(toSnapshotPath(file));
     });
   });
@@ -476,7 +476,7 @@ describe('OpenAPI v3', () => {
         output,
       });
       sync(`${output}**/*.ts`).forEach((file) => {
-        const content = readFileSync(file, 'utf8').toString();
+        const content = fs.readFileSync(file, 'utf8').toString();
         expect(content).toMatchFileSnapshot(toSnapshotPath(file));
       });
     },
@@ -501,7 +501,7 @@ describe('OpenAPI v3', () => {
       });
 
       sync(`${output}**/*.ts`).forEach((file) => {
-        const content = readFileSync(file, 'utf8').toString();
+        const content = fs.readFileSync(file, 'utf8').toString();
         expect(content).toMatchFileSnapshot(toSnapshotPath(file));
       });
     },
