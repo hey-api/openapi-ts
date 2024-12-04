@@ -16,7 +16,6 @@ describe('generateLegacyOutput', () => {
         name: 'legacy/fetch',
       },
       configFile: '',
-      debug: false,
       dryRun: false,
       experimentalParser: false,
       exportCore: true,

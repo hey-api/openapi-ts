@@ -64,12 +64,6 @@ export interface ClientConfig {
    */
   configFile?: string;
   /**
-   * Run in debug mode?
-   *
-   * @default false
-   */
-  debug?: boolean;
-  /**
    * Skip writing files to disk?
    *
    * @default false

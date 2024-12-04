@@ -8,7 +8,6 @@ const main = async () => {
       name: '@hey-api/client-axios',
       // name: '@hey-api/client-fetch',
     },
-    // debug: true,
     experimentalParser: true,
     input: {
       exclude: '^#/components/schemas/ModelWithCircularReference$',
@@ -17,7 +16,10 @@ const main = async () => {
       path: './test/spec/3.1.x/transformers-all-of.yaml',
       // path: 'https://mongodb-mms-prod-build-server.s3.amazonaws.com/openapi/2caffd88277a4e27c95dcefc7e3b6a63a3b03297-v2-2023-11-15.json',
     },
-    logs: './logs',
+    logs: {
+      // level: 'debug',
+      path: './logs',
+    },
     // name: 'foo',
     output: {
       case: 'snake_case',

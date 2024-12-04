@@ -9,7 +9,6 @@ describe('operationNameFn', () => {
       name: 'legacy/fetch',
     },
     configFile: '',
-    debug: false,
     dryRun: true,
     experimentalParser: false,
     exportCore: false,

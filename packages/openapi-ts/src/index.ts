@@ -330,7 +330,6 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
     const {
       base,
       configFile = '',
-      debug = false,
       dryRun = false,
       experimentalParser = false,
       exportCore = true,
@@ -339,7 +338,9 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
       useOptions = true,
     } = userConfig;
 
-    if (debug) {
+    const logs = getLogs(userConfig);
+
+    if (logs.level === 'debug') {
       console.warn('userConfig:', userConfig);
     }
 
@@ -377,19 +378,18 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
       base,
       client,
       configFile,
-      debug,
       dryRun,
       experimentalParser,
       exportCore: isLegacyClient(client) ? exportCore : false,
       input,
-      logs: getLogs(userConfig),
+      logs,
       name,
       output,
       request,
       useOptions,
     });
 
-    if (debug) {
+    if (logs.level === 'debug') {
       console.warn('config:', config);
     }
 
@@ -476,7 +476,7 @@ export async function createClient(
 
     Performance.end('createClient');
 
-    if (configs[0].debug) {
+    if (configs[0].logs.level === 'debug') {
       const perfReport = new PerformanceReport({
         totalMark: 'createClient',
       });

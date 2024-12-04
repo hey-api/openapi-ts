@@ -27,6 +27,24 @@ This config option is deprecated and will be removed in favor of [clients](./cli
 
 This config option is deprecated and will be removed.
 
+## v0.59.0
+
+### Added `logs.level` option
+
+You can now configure different log levels. As part of this feature, we had to introduce a breaking change by moving the `debug` option to `logs.level`. This will affect you if you're calling `@hey-api/openapi-ts` from Node.js (not CLI) or using the configuration file.
+
+```js
+export default {
+  client: '@hey-api/client-fetch',
+  debug: true, // [!code --]
+  input: 'path/to/openapi.json',
+  logs: {
+    level: 'debug', // [!code ++]
+  },
+  output: 'src/client',
+};
+```
+
 ## v0.58.0
 
 ### Removed `schemas.gen.ts` re-export
