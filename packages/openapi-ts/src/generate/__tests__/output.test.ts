@@ -1,4 +1,4 @@
-import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import fs from 'node:fs';
 
 import { describe, expect, it, vi } from 'vitest';
 
@@ -16,12 +16,15 @@ describe('generateLegacyOutput', () => {
         name: 'legacy/fetch',
       },
       configFile: '',
-      debug: false,
       dryRun: false,
       experimentalParser: false,
       exportCore: true,
       input: {
         path: '',
+      },
+      logs: {
+        level: 'info',
+        path: process.cwd(),
       },
       output: {
         format: 'prettier',
@@ -63,8 +66,8 @@ describe('generateLegacyOutput', () => {
       templates: mockTemplates,
     });
 
-    expect(rmSync).toHaveBeenCalled();
-    expect(mkdirSync).toHaveBeenCalled();
-    expect(writeFileSync).toHaveBeenCalled();
+    expect(fs.rmSync).toHaveBeenCalled();
+    expect(fs.mkdirSync).toHaveBeenCalled();
+    expect(fs.writeFileSync).toHaveBeenCalled();
   });
 });

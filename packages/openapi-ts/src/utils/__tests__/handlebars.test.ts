@@ -14,12 +14,15 @@ describe('registerHandlebarHelpers', () => {
         name: 'legacy/fetch',
       },
       configFile: '',
-      debug: false,
       dryRun: false,
       experimentalParser: false,
       exportCore: true,
       input: {
         path: '',
+      },
+      logs: {
+        level: 'info',
+        path: process.cwd(),
       },
       output: {
         format: 'prettier',
@@ -64,12 +67,15 @@ describe('registerHandlebarTemplates', () => {
         name: 'legacy/fetch',
       },
       configFile: '',
-      debug: false,
       dryRun: false,
       experimentalParser: false,
       exportCore: true,
       input: {
         path: '',
+      },
+      logs: {
+        level: 'info',
+        path: process.cwd(),
       },
       output: {
         format: 'prettier',

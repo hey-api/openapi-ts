@@ -1,4 +1,4 @@
-import { existsSync } from 'node:fs';
+import fs from 'node:fs';
 import path from 'node:path';
 
 import $RefParser from '@apidevtools/json-schema-ref-parser';
@@ -6,6 +6,7 @@ import { loadConfig } from 'c12';
 import { sync } from 'cross-spawn';
 
 import { generateLegacyOutput, generateOutput } from './generate/output';
+import { ensureDirSync } from './generate/utils';
 import type { IRContext } from './ir/context';
 import { parseExperimental, parseLegacy } from './openApi';
 import type { ClientPlugins } from './plugins';
@@ -145,6 +146,22 @@ const getInput = (userConfig: ClientConfig): Config['input'] => {
   return input;
 };
 
+const getLogs = (userConfig: ClientConfig): Config['logs'] => {
+  let logs: Config['logs'] = {
+    level: 'info',
+    path: process.cwd(),
+  };
+  if (typeof userConfig.logs === 'string') {
+    logs.path = userConfig.logs;
+  } else {
+    logs = {
+      ...logs,
+      ...userConfig.logs,
+    };
+  }
+  return logs;
+};
+
 const getOutput = (userConfig: ClientConfig): Config['output'] => {
   let output: Config['output'] = {
     clean: true,
@@ -279,7 +296,7 @@ const getSpec = async ({ config }: { config: Config }) => {
   let spec: unknown = config.input.path;
 
   if (typeof config.input.path === 'string') {
-    const absolutePathOrUrl = existsSync(config.input.path)
+    const absolutePathOrUrl = fs.existsSync(config.input.path)
       ? path.resolve(config.input.path)
       : config.input.path;
     spec = await $RefParser.bundle(absolutePathOrUrl);
@@ -313,7 +330,6 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
     const {
       base,
       configFile = '',
-      debug = false,
       dryRun = false,
       experimentalParser = false,
       exportCore = true,
@@ -322,7 +338,9 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
       useOptions = true,
     } = userConfig;
 
-    if (debug) {
+    const logs = getLogs(userConfig);
+
+    if (logs.level === 'debug') {
       console.warn('userConfig:', userConfig);
     }
 
@@ -360,18 +378,18 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
       base,
       client,
       configFile,
-      debug,
       dryRun,
       experimentalParser,
       exportCore: isLegacyClient(client) ? exportCore : false,
       input,
+      logs,
       name,
       output,
       request,
       useOptions,
     });
 
-    if (debug) {
+    if (logs.level === 'debug') {
       console.warn('config:', config);
     }
 
@@ -388,90 +406,111 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
 export async function createClient(
   userConfig: UserConfig,
 ): Promise<ReadonlyArray<Client>> {
-  Performance.start('createClient');
+  let configs: Config[] = [];
 
-  Performance.start('config');
-  const configs = await initConfigs(userConfig);
-  Performance.end('config');
+  try {
+    Performance.start('createClient');
 
-  Performance.start('handlebars');
-  const templates = registerHandlebarTemplates();
-  Performance.end('handlebars');
+    Performance.start('config');
+    configs = await initConfigs(userConfig);
+    Performance.end('config');
 
-  const pCreateClient = (config: Config) => async () => {
-    Performance.start('spec');
-    const spec = await getSpec({ config });
-    Performance.end('spec');
+    Performance.start('handlebars');
+    const templates = registerHandlebarTemplates();
+    Performance.end('handlebars');
 
-    let client: Client | undefined;
-    let context: IRContext | undefined;
+    const pCreateClient = (config: Config) => async () => {
+      Performance.start('spec');
+      const spec = await getSpec({ config });
+      Performance.end('spec');
 
-    Performance.start('parser');
-    if (
-      config.experimentalParser &&
-      !isLegacyClient(config) &&
-      !legacyNameFromConfig(config)
-    ) {
-      context = parseExperimental({ config, spec });
+      let client: Client | undefined;
+      let context: IRContext | undefined;
+
+      Performance.start('parser');
+      if (
+        config.experimentalParser &&
+        !isLegacyClient(config) &&
+        !legacyNameFromConfig(config)
+      ) {
+        context = parseExperimental({ config, spec });
+      }
+
+      // fallback to legacy parser
+      if (!context) {
+        const parsed = parseLegacy({ openApi: spec });
+        client = postProcessClient(parsed);
+      }
+      Performance.end('parser');
+
+      logClientMessage({ config });
+
+      Performance.start('generator');
+      if (context) {
+        await generateOutput({ context });
+      } else if (client) {
+        await generateLegacyOutput({ client, openApi: spec, templates });
+      }
+      Performance.end('generator');
+
+      Performance.start('postprocess');
+      if (!config.dryRun) {
+        processOutput({ config });
+
+        console.log('✨ Done! Your client is located in:', config.output.path);
+      }
+      Performance.end('postprocess');
+
+      return context || client;
+    };
+
+    const clients: Array<Client> = [];
+
+    const pClients = configs.map((config) => pCreateClient(config));
+    for (const pClient of pClients) {
+      const client = await pClient();
+      if (client && 'version' in client) {
+        clients.push(client);
+      }
     }
 
-    // fallback to legacy parser
-    if (!context) {
-      const parsed = parseLegacy({ openApi: spec });
-      client = postProcessClient(parsed);
+    Performance.end('createClient');
+
+    if (configs[0].logs.level === 'debug') {
+      const perfReport = new PerformanceReport({
+        totalMark: 'createClient',
+      });
+      perfReport.report({
+        marks: [
+          'config',
+          'openapi',
+          'handlebars',
+          'parser',
+          'generator',
+          'postprocess',
+        ],
+      });
     }
-    Performance.end('parser');
 
-    logClientMessage({ config });
-
-    Performance.start('generator');
-    if (context) {
-      await generateOutput({ context });
-    } else if (client) {
-      await generateLegacyOutput({ client, openApi: spec, templates });
+    return clients;
+  } catch (error) {
+    const config = configs[0] as Config | undefined;
+    const dryRun = config ? config.dryRun : userConfig?.dryRun;
+    // TODO: add setting for log output
+    if (!dryRun) {
+      const logs = config?.logs ?? getLogs(userConfig);
+      if (logs.level !== 'silent') {
+        const logName = `openapi-ts-error-${Date.now()}.log`;
+        const logsDir = path.resolve(process.cwd(), logs.path ?? '');
+        ensureDirSync(logsDir);
+        const logPath = path.resolve(logsDir, logName);
+        fs.writeFileSync(logPath, `${error.message}\n${error.stack}`);
+        console.error(`🔥 Unexpected error occurred. Log saved to ${logPath}`);
+      }
     }
-    Performance.end('generator');
-
-    Performance.start('postprocess');
-    if (!config.dryRun) {
-      processOutput({ config });
-
-      console.log('✨ Done! Your client is located in:', config.output.path);
-    }
-    Performance.end('postprocess');
-
-    return context || client;
-  };
-
-  const clients: Array<Client> = [];
-
-  const pClients = configs.map((config) => pCreateClient(config));
-  for (const pClient of pClients) {
-    const client = await pClient();
-    if (client && 'version' in client) {
-      clients.push(client);
-    }
+    console.error(`🔥 Unexpected error occurred. ${error.message}`);
+    throw error;
   }
-
-  Performance.end('createClient');
-
-  if (userConfig.debug) {
-    const perfReport = new PerformanceReport({
-      totalMark: 'createClient',
-    });
-    perfReport.report({
-      marks: [
-        'config',
-        'openapi',
-        'handlebars',
-        'parser',
-        'generator',
-        'postprocess',
-      ],
-    });
-  }
-
-  return clients;
 }
 
 /**

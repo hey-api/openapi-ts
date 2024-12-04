@@ -9,12 +9,15 @@ describe('operationNameFn', () => {
       name: 'legacy/fetch',
     },
     configFile: '',
-    debug: false,
     dryRun: true,
     experimentalParser: false,
     exportCore: false,
     input: {
       path: '',
+    },
+    logs: {
+      level: 'info',
+      path: process.cwd(),
     },
     output: {
       path: '',

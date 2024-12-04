@@ -64,12 +64,6 @@ export interface ClientConfig {
    */
   configFile?: string;
   /**
-   * Run in debug mode?
-   *
-   * @default false
-   */
-  debug?: boolean;
-  /**
    * Skip writing files to disk?
    *
    * @default false
@@ -129,6 +123,46 @@ export interface ClientConfig {
          * object directly if you're fetching the file yourself.
          */
         path: string | Record<string, unknown>;
+      };
+  /**
+   * The relative location of the logs folder
+   *
+   * @default process.cwd()
+   */
+  logs?:
+    | string
+    | {
+        /**
+         * The logging level to control the verbosity of log output.
+         * Determines which messages are logged based on their severity.
+         *
+         * Available levels (in increasing order of severity):
+         * - `trace`: Detailed debug information, primarily for development.
+         * - `debug`: Diagnostic information useful during debugging.
+         * - `info`: General operational messages that indicate normal application behavior.
+         * - `warn`: Potentially problematic situations that require attention.
+         * - `error`: Errors that prevent some functionality but do not crash the application.
+         * - `fatal`: Critical errors that cause the application to terminate.
+         * - `silent`: Disables all logging.
+         *
+         * Messages with a severity equal to or higher than the specified level will be logged.
+         *
+         * @default 'info'
+         */
+        level?:
+          | 'debug'
+          | 'error'
+          | 'fatal'
+          | 'info'
+          | 'silent'
+          | 'trace'
+          | 'warn';
+        /**
+         * The relative location of the logs folder
+         *
+         * @default process.cwd()
+         */
+        path?: string;
       };
   /**
    * Custom client class name. Please note this option is deprecated and
@@ -210,11 +244,19 @@ export interface UserConfig extends ClientConfig {}
 
 export type Config = Omit<
   Required<ClientConfig>,
-  'base' | 'client' | 'input' | 'name' | 'output' | 'plugins' | 'request'
+  | 'base'
+  | 'client'
+  | 'input'
+  | 'logs'
+  | 'name'
+  | 'output'
+  | 'plugins'
+  | 'request'
 > &
   Pick<ClientConfig, 'base' | 'name' | 'request'> & {
     client: Extract<Required<ClientConfig>['client'], object>;
     input: ExtractWithDiscriminator<ClientConfig['input'], { path: unknown }>;
+    logs: Extract<Required<ClientConfig['logs']>, object>;
     output: Extract<ClientConfig['output'], object>;
     pluginOrder: ReadonlyArray<ClientPlugins['name']>;
     plugins: ArrayOfObjectsToObjectMap<

@@ -1,4 +1,4 @@
-import { writeFileSync } from 'node:fs';
+import fs from 'node:fs';
 
 import { describe, expect, it, vi } from 'vitest';
 
@@ -16,12 +16,15 @@ describe('generateLegacyTypes', () => {
         name: 'legacy/fetch',
       },
       configFile: '',
-      debug: false,
       dryRun: false,
       experimentalParser: false,
       exportCore: true,
       input: {
         path: '',
+      },
+      logs: {
+        level: 'info',
+        path: process.cwd(),
       },
       name: 'AppClient',
       output: {
@@ -100,7 +103,7 @@ describe('generateLegacyTypes', () => {
 
     files.types.write();
 
-    expect(writeFileSync).toHaveBeenCalledWith(
+    expect(fs.writeFileSync).toHaveBeenCalledWith(
       expect.stringContaining('types.gen.ts'),
       expect.anything(),
     );
