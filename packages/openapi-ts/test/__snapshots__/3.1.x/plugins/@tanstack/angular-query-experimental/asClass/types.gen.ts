@@ -642,7 +642,9 @@ export type Pageable = {
 /**
  * This is a free-form object without additionalProperties.
  */
-export type FreeFormObjectWithoutAdditionalProperties = {};
+export type FreeFormObjectWithoutAdditionalProperties = {
+    [key: string]: unknown;
+};
 
 /**
  * This is a free-form object with additionalProperties: true.
@@ -1134,7 +1136,9 @@ export type CallWithParametersData = {
     /**
      * This is the parameter that goes into the body
      */
-    body: {} | null;
+    body: {
+        [key: string]: unknown;
+    } | null;
     headers: {
         /**
          * This is the parameter that goes into the header
@@ -1609,7 +1613,9 @@ export type TypesData = {
         /**
          * This is an object parameter
          */
-        parameterObject: {} | null;
+        parameterObject: {
+            [key: string]: unknown;
+        } | null;
         /**
          * This is an array parameter
          */
@@ -1617,7 +1623,9 @@ export type TypesData = {
         /**
          * This is a dictionary parameter
          */
-        parameterDictionary: {} | null;
+        parameterDictionary: {
+            [key: string]: unknown;
+        } | null;
         /**
          * This is an enum parameter
          */
@@ -1642,7 +1650,9 @@ export type TypesResponses = {
     /**
      * Response is a simple object
      */
-    203: {};
+    203: {
+        [key: string]: unknown;
+    };
 };
 
 export type TypesResponse = TypesResponses[keyof TypesResponses];
