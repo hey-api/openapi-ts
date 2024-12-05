@@ -1,7 +1,7 @@
-import type { AxiosError } from 'axios';
+import type { AxiosError, RawAxiosRequestHeaders } from 'axios';
 import axios from 'axios';
 
-import type { Client, Config, RequestOptions } from './types';
+import type { Client, Config } from './types';
 import { createConfig, getUrl, mergeConfigs, mergeHeaders } from './utils';
 
 export const createClient = (config: Config): Client => {
@@ -24,11 +24,13 @@ export const createClient = (config: Config): Client => {
 
   // @ts-expect-error
   const request: Client['request'] = async (options) => {
-    const opts: RequestOptions = {
+    const opts = {
       ..._config,
       ...options,
-      // @ts-expect-error
-      headers: mergeHeaders(_config.headers, options.headers),
+      headers: mergeHeaders(
+        _config.headers,
+        options.headers,
+      ) as RawAxiosRequestHeaders,
     };
     if (opts.body && opts.bodySerializer) {
       opts.body = opts.bodySerializer(opts.body);
@@ -90,7 +92,7 @@ export type {
   Config,
   Options,
   OptionsLegacyParser,
-  RequestOptionsBase,
+  RequestOptions,
   RequestResult,
 } from './types';
 export {
