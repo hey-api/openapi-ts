@@ -1,7 +1,6 @@
 import type {
   AxiosError,
   AxiosInstance,
-  AxiosRequestConfig,
   AxiosResponse,
   AxiosStatic,
   CreateAxiosDefaults,
@@ -19,12 +18,6 @@ export interface Config<ThrowOnError extends boolean = boolean>
    * @default axios
    */
   axios?: AxiosStatic;
-  /**
-   * Any body that you want to add to your request.
-   *
-   * {@link https://developer.mozilla.org/docs/Web/API/fetch#body}
-   */
-  body?: unknown;
   /**
    * A function for serializing request body parameter. By default,
    * {@link JSON.stringify()} will be used.
@@ -76,10 +69,22 @@ export interface Config<ThrowOnError extends boolean = boolean>
   throwOnError?: ThrowOnError;
 }
 
-export interface RequestOptionsBase<
-  ThrowOnError extends boolean,
+export interface RequestOptions<
+  ThrowOnError extends boolean = false,
   Url extends string = string,
 > extends Config<ThrowOnError> {
+  /**
+   * Any body that you want to add to your request.
+   *
+   * {@link https://developer.mozilla.org/docs/Web/API/fetch#body}
+   */
+  body?: unknown;
+  /**
+   * You can provide a client instance returned by `createClient()` instead of
+   * individual options. This might be also useful if you want to implement a
+   * custom client.
+   */
+  client?: Client;
   path?: Record<string, unknown>;
   query?: Record<string, unknown>;
   url: Url;
@@ -101,7 +106,7 @@ type MethodFn = <
   TError = unknown,
   ThrowOnError extends boolean = false,
 >(
-  options: Omit<RequestOptionsBase<ThrowOnError>, 'method'>,
+  options: Omit<RequestOptions<ThrowOnError>, 'method'>,
 ) => RequestResult<Data, TError, ThrowOnError>;
 
 type RequestFn = <
@@ -109,8 +114,8 @@ type RequestFn = <
   TError = unknown,
   ThrowOnError extends boolean = false,
 >(
-  options: Omit<RequestOptionsBase<ThrowOnError>, 'method'> &
-    Pick<Required<RequestOptionsBase<ThrowOnError>>, 'method'>,
+  options: Omit<RequestOptions<ThrowOnError>, 'method'> &
+    Pick<Required<RequestOptions<ThrowOnError>>, 'method'>,
 ) => RequestResult<Data, TError, ThrowOnError>;
 
 export interface Client {
@@ -127,49 +132,23 @@ export interface Client {
   setConfig: (config: Config) => Config;
 }
 
-export type RequestOptions = RequestOptionsBase<false> &
-  Config<false> & {
-    headers: AxiosRequestConfig['headers'];
-  };
-
-type OptionsBase<ThrowOnError extends boolean> = Omit<
-  RequestOptionsBase<ThrowOnError>,
-  'url'
-> & {
-  /**
-   * You can provide a client instance returned by `createClient()` instead of
-   * individual options. This might be also useful if you want to implement a
-   * custom client.
-   */
-  client?: Client;
-};
-
 export type Options<
-  T extends { url: string } = { url: string },
+  Data extends { url: string } = { url: string },
   ThrowOnError extends boolean = boolean,
-> = T extends { body?: any }
-  ? T extends { headers?: any }
-    ? OmitKeys<OptionsBase<ThrowOnError>, 'body' | 'headers'> & Omit<T, 'url'>
-    : OmitKeys<OptionsBase<ThrowOnError>, 'body'> &
-        Omit<T, 'url'> &
-        Pick<OptionsBase<ThrowOnError>, 'headers'>
-  : T extends { headers?: any }
-    ? OmitKeys<OptionsBase<ThrowOnError>, 'headers'> &
-        Omit<T, 'url'> &
-        Pick<OptionsBase<ThrowOnError>, 'body'>
-    : OptionsBase<ThrowOnError> & Omit<T, 'url'>;
+> = OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'path' | 'query' | 'url'> &
+  Omit<Data, 'url'>;
 
 export type OptionsLegacyParser<
-  T = unknown,
+  Data = unknown,
   ThrowOnError extends boolean = boolean,
-> = T extends { body?: any }
-  ? T extends { headers?: any }
-    ? OmitKeys<OptionsBase<ThrowOnError>, 'body' | 'headers'> & T
-    : OmitKeys<OptionsBase<ThrowOnError>, 'body'> &
-        T &
-        Pick<OptionsBase<ThrowOnError>, 'headers'>
-  : T extends { headers?: any }
-    ? OmitKeys<OptionsBase<ThrowOnError>, 'headers'> &
-        T &
-        Pick<OptionsBase<ThrowOnError>, 'body'>
-    : OptionsBase<ThrowOnError> & T;
+> = Data extends { body?: any }
+  ? Data extends { headers?: any }
+    ? OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'headers' | 'url'> & Data
+    : OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'url'> &
+        Data &
+        Pick<RequestOptions<ThrowOnError>, 'headers'>
+  : Data extends { headers?: any }
+    ? OmitKeys<RequestOptions<ThrowOnError>, 'headers' | 'url'> &
+        Data &
+        Pick<RequestOptions<ThrowOnError>, 'body'>
+    : OmitKeys<RequestOptions<ThrowOnError>, 'url'> & Data;
