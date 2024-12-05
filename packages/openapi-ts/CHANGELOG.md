@@ -1,5 +1,62 @@
 # @hey-api/openapi-ts
 
+## 0.59.0
+
+### Minor Changes
+
+- [#1387](https://github.com/hey-api/openapi-ts/pull/1387) [`7c4335d`](https://github.com/hey-api/openapi-ts/commit/7c4335d12782c73b5b242e7d5786ec8778857d1d) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add `logs.level` option
+
+  ### Added `logs.level` option
+
+  You can now configure different log levels. As part of this feature, we had to introduce a breaking change by moving the `debug` option to `logs.level`. This will affect you if you're calling `@hey-api/openapi-ts` from Node.js (not CLI) or using the configuration file.
+
+  ```js
+  export default {
+    client: '@hey-api/client-fetch',
+    debug: true, // [!code --]
+    input: 'path/to/openapi.json',
+    logs: {
+      level: 'debug', // [!code ++]
+    },
+    output: 'src/client',
+  };
+  ```
+
+- [#1389](https://github.com/hey-api/openapi-ts/pull/1389) [`f4c98ec`](https://github.com/hey-api/openapi-ts/commit/f4c98ec429ee989ae1c76328f4d42d44f14cb52e) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: remove `@hey-api/schemas` from default plugins
+
+  ### Updated default `plugins`
+
+  `@hey-api/schemas` has been removed from the default plugins. To continue using it, add it to your plugins array.
+
+  ```js
+  import { defaultPlugins } from '@hey-api/openapi-ts';
+
+  export default {
+    client: '@hey-api/client-fetch',
+    experimentalParser: true,
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    plugins: [
+      ...defaultPlugins,
+      '@hey-api/schemas', // [!code ++]
+    ],
+  };
+  ```
+
+### Patch Changes
+
+- [#1382](https://github.com/hey-api/openapi-ts/pull/1382) [`3580c1e`](https://github.com/hey-api/openapi-ts/commit/3580c1eec4640d235a1e0f78bf76581e532aaf8b) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: correctly resolve required properties in nested allOf composition
+
+- [#1387](https://github.com/hey-api/openapi-ts/pull/1387) [`7c4335d`](https://github.com/hey-api/openapi-ts/commit/7c4335d12782c73b5b242e7d5786ec8778857d1d) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add `--silent` or `-s` CLI option for silent log level
+
+- [#1382](https://github.com/hey-api/openapi-ts/pull/1382) [`3580c1e`](https://github.com/hey-api/openapi-ts/commit/3580c1eec4640d235a1e0f78bf76581e532aaf8b) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: transformers handle allOf composition in experimental parser
+
+- [#1387](https://github.com/hey-api/openapi-ts/pull/1387) [`0def82c`](https://github.com/hey-api/openapi-ts/commit/0def82c91d1be936702690b8cf5a21775974d946) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add `logs` configuration option to customize log directory
+
+- [#1390](https://github.com/hey-api/openapi-ts/pull/1390) [`8388c47`](https://github.com/hey-api/openapi-ts/commit/8388c4720dbb657899d5e30bd8d59c19583cad98) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow arbitrary object properties when additionalProperties is undefined
+
+- [#1387](https://github.com/hey-api/openapi-ts/pull/1387) [`7c4335d`](https://github.com/hey-api/openapi-ts/commit/7c4335d12782c73b5b242e7d5786ec8778857d1d) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: support `DEBUG` environment variable
+
 ## 0.58.0
 
 ### Minor Changes

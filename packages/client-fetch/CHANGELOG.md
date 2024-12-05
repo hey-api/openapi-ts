@@ -1,5 +1,11 @@
 # @hey-api/client-fetch
 
+## 0.5.1
+
+### Patch Changes
+
+- [#1391](https://github.com/hey-api/openapi-ts/pull/1391) [`fa8b0f1`](https://github.com/hey-api/openapi-ts/commit/fa8b0f11ed99c63f694a494944ccc2fbfa9706cc) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: assign default fetch implementation dynamically to work with msw
+
 ## 0.5.0
 
 ### Minor Changes
