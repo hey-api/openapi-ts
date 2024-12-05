@@ -45,6 +45,8 @@ export type ListPetsResponse = ListPetsResponses[keyof ListPetsResponses];
 
 export type CreatePetsData = {
   body?: never;
+  path?: never;
+  query?: never;
   url: '/pets';
 };
 

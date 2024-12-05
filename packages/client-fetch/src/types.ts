@@ -195,12 +195,12 @@ export type OptionsLegacyParser<
   ThrowOnError extends boolean = boolean,
 > = Data extends { body?: any }
   ? Data extends { headers?: any }
-    ? OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'headers'> & Data
-    : OmitKeys<RequestOptions<ThrowOnError>, 'body'> &
+    ? OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'headers' | 'url'> & Data
+    : OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'url'> &
         Data &
         Pick<RequestOptions<ThrowOnError>, 'headers'>
   : Data extends { headers?: any }
-    ? OmitKeys<RequestOptions<ThrowOnError>, 'headers'> &
+    ? OmitKeys<RequestOptions<ThrowOnError>, 'headers' | 'url'> &
         Data &
         Pick<RequestOptions<ThrowOnError>, 'body'>
-    : RequestOptions<ThrowOnError> & Data;
+    : OmitKeys<RequestOptions<ThrowOnError>, 'url'> & Data;

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { PetSchema, type Pet } from '@/client'
+import type { Pet } from '@/client'
+import { PetSchema } from '@/client/schemas.gen'
 import {
   addPetMutation,
   getPetByIdOptions,
