@@ -332,7 +332,7 @@ export const getParseAs = (
     return;
   }
 
-	const cleanContent = contentType?.split(';')[0]?.trim();
+	const cleanContent = contentType.split(';')[0]?.trim();
 
   if (
     cleanContent?.startsWith('application/json') ||
