@@ -1,8 +1,8 @@
 import { illegalStartCharactersRegExp } from '../../../utils/regexp';
 
 export const ensureValidTypeScriptJavaScriptIdentifier = (name: string) => {
-  illegalStartCharactersRegExp.lastIndex = 0;
   const replaced = name.replace(/[^$\u200c\u200d\p{ID_Continue}]/gu, '_');
+  illegalStartCharactersRegExp.lastIndex = 0;
   const startsWithIllegalCharacter =
     illegalStartCharactersRegExp.test(replaced);
   const valid = startsWithIllegalCharacter ? `_${replaced}` : replaced;

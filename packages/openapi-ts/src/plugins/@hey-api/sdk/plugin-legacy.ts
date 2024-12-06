@@ -27,7 +27,7 @@ import {
   legacyNameFromConfig,
 } from '../../../utils/config';
 import { escapeComment, escapeName } from '../../../utils/escape';
-import { reservedWordsRegExp } from '../../../utils/regexp';
+import { reservedJavaScriptKeywordsRegExp } from '../../../utils/regexp';
 import { stringCase } from '../../../utils/stringCase';
 import { transformServiceName } from '../../../utils/transform';
 import { setUniqueTypeName } from '../../../utils/type';
@@ -497,7 +497,7 @@ export const serviceFunctionIdentifier = ({
     return config.plugins['@hey-api/sdk'].methodNameBuilder(operation);
   }
 
-  if (handleIllegal && id.match(reservedWordsRegExp)) {
+  if (handleIllegal && id.match(reservedJavaScriptKeywordsRegExp)) {
     return `${id}_`;
   }
 
