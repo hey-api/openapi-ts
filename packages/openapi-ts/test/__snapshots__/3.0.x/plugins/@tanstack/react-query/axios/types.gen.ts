@@ -951,11 +951,15 @@ export type SimpleFormData = ModelWithString;
 
 export type ExportData = {
     body?: never;
+    path?: never;
+    query?: never;
     url: '/api/v{api-version}/no-tag';
 };
 
 export type ImportData = {
     body: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
+    path?: never;
+    query?: never;
     url: '/api/v{api-version}/no-tag';
 };
 
@@ -974,6 +978,8 @@ export type ImportResponse = ImportResponses[keyof ImportResponses];
 
 export type ApiVVersionODataControllerCountData = {
     body?: never;
+    path?: never;
+    query?: never;
     url: '/api/v{api-version}/simple/$count';
 };
 
@@ -1018,36 +1024,50 @@ export type GetApiVbyApiVersionSimpleOperationResponse = GetApiVbyApiVersionSimp
 
 export type DeleteCallWithoutParametersAndResponseData = {
     body?: never;
+    path?: never;
+    query?: never;
     url: '/api/v{api-version}/simple';
 };
 
 export type GetCallWithoutParametersAndResponseData = {
     body?: never;
+    path?: never;
+    query?: never;
     url: '/api/v{api-version}/simple';
 };
 
 export type HeadCallWithoutParametersAndResponseData = {
     body?: never;
+    path?: never;
+    query?: never;
     url: '/api/v{api-version}/simple';
 };
 
 export type OptionsCallWithoutParametersAndResponseData = {
     body?: never;
+    path?: never;
+    query?: never;
     url: '/api/v{api-version}/simple';
 };
 
 export type PatchCallWithoutParametersAndResponseData = {
     body?: never;
+    path?: never;
+    query?: never;
     url: '/api/v{api-version}/simple';
 };
 
 export type PostCallWithoutParametersAndResponseData = {
     body?: never;
+    path?: never;
+    query?: never;
     url: '/api/v{api-version}/simple';
 };
 
 export type PutCallWithoutParametersAndResponseData = {
     body?: never;
+    path?: never;
+    query?: never;
     url: '/api/v{api-version}/simple';
 };
 
@@ -1371,26 +1391,36 @@ export type CallToTestOrderOfParamsData = {
 
 export type DuplicateNameData = {
     body?: never;
+    path?: never;
+    query?: never;
     url: '/api/v{api-version}/duplicate';
 };
 
 export type DuplicateName2Data = {
     body?: never;
+    path?: never;
+    query?: never;
     url: '/api/v{api-version}/duplicate';
 };
 
 export type DuplicateName3Data = {
     body?: never;
+    path?: never;
+    query?: never;
     url: '/api/v{api-version}/duplicate';
 };
 
 export type DuplicateName4Data = {
     body?: never;
+    path?: never;
+    query?: never;
     url: '/api/v{api-version}/duplicate';
 };
 
 export type CallWithNoContentResponseData = {
     body?: never;
+    path?: never;
+    query?: never;
     url: '/api/v{api-version}/no-content';
 };
 
@@ -1405,6 +1435,8 @@ export type CallWithNoContentResponseResponse = CallWithNoContentResponseRespons
 
 export type CallWithResponseAndNoContentResponseData = {
     body?: never;
+    path?: never;
+    query?: never;
     url: '/api/v{api-version}/multiple-tags/response-and-no-content';
 };
 
@@ -1423,6 +1455,8 @@ export type CallWithResponseAndNoContentResponseResponse = CallWithResponseAndNo
 
 export type DummyAData = {
     body?: never;
+    path?: never;
+    query?: never;
     url: '/api/v{api-version}/multiple-tags/a';
 };
 
@@ -1434,6 +1468,8 @@ export type DummyAResponse = DummyAResponses[keyof DummyAResponses];
 
 export type DummyBData = {
     body?: never;
+    path?: never;
+    query?: never;
     url: '/api/v{api-version}/multiple-tags/b';
 };
 
@@ -1448,6 +1484,8 @@ export type DummyBResponse = DummyBResponses[keyof DummyBResponses];
 
 export type CallWithResponseData = {
     body?: never;
+    path?: never;
+    query?: never;
     url: '/api/v{api-version}/response';
 };
 
@@ -1459,6 +1497,8 @@ export type CallWithResponseResponse = CallWithResponseResponses[keyof CallWithR
 
 export type CallWithDuplicateResponsesData = {
     body?: never;
+    path?: never;
+    query?: never;
     url: '/api/v{api-version}/response';
 };
 
@@ -1506,6 +1546,8 @@ export type CallWithDuplicateResponsesResponse = CallWithDuplicateResponsesRespo
 
 export type CallWithResponsesData = {
     body?: never;
+    path?: never;
+    query?: never;
     url: '/api/v{api-version}/response';
 };
 
@@ -1731,6 +1773,8 @@ export type ComplexTypesResponse = ComplexTypesResponses[keyof ComplexTypesRespo
 
 export type MultipartResponseData = {
     body?: never;
+    path?: never;
+    query?: never;
     url: '/api/v{api-version}/multipart';
 };
 
@@ -1754,6 +1798,8 @@ export type MultipartRequestData = {
         content?: Blob | File;
         data?: ModelWithString | null;
     };
+    path?: never;
+    query?: never;
     url: '/api/v{api-version}/multipart';
 };
 
@@ -1793,6 +1839,8 @@ export type ComplexParamsResponse = ComplexParamsResponses[keyof ComplexParamsRe
 
 export type CallWithResultFromHeaderData = {
     body?: never;
+    path?: never;
+    query?: never;
     url: '/api/v{api-version}/header';
 };
 
@@ -1875,5 +1923,7 @@ export type NonAsciiæøåÆøÅöôêÊ字符串Response = NonAsciiæøåÆøÅ
 
 export type PutWithFormUrlEncodedData = {
     body: ArrayWithStrings;
+    path?: never;
+    query?: never;
     url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串';
 };

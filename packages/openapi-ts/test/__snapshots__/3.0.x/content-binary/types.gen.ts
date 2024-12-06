@@ -2,6 +2,8 @@
 
 export type GetFooData = {
     body?: never;
+    path?: never;
+    query?: never;
     url: '/foo';
 };
 
@@ -13,6 +15,8 @@ export type GetFooResponse = GetFooResponses[keyof GetFooResponses];
 
 export type GetBarData = {
     body?: never;
+    path?: never;
+    query?: never;
     url: '/bar';
 };
 

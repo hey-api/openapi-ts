@@ -8,6 +8,8 @@ export type Foo = {
 
 export type GetFooData = {
     body?: never;
+    path?: never;
+    query?: never;
     url: '/foo';
 };
 
