@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.59.1
+
+### Patch Changes
+
+- [#1398](https://github.com/hey-api/openapi-ts/pull/1398) [`a88e7d9`](https://github.com/hey-api/openapi-ts/commit/a88e7d9f8a313c641cf651256a710d0610b95b5d) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: prefix restricted identifier names with underscore
+
+- [#1394](https://github.com/hey-api/openapi-ts/pull/1394) [`ec48d32`](https://github.com/hey-api/openapi-ts/commit/ec48d323d80de8e6a47ce7ecd732288f0a47e17a) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: disallow additional query parameters in experimental parser output
+
 ## 0.59.0
 
 ### Minor Changes
