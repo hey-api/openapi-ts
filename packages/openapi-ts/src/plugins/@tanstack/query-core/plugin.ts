@@ -13,7 +13,6 @@ import {
   hasOperationDataRequired,
   operationPagination,
 } from '../../../ir/operation';
-import type { Files } from '../../../types/utils';
 import { getConfig } from '../../../utils/config';
 import { getServiceName } from '../../../utils/postprocess';
 import { transformServiceName } from '../../../utils/transform';
@@ -219,9 +218,11 @@ const createInfiniteParamsFunction = ({
                     multiLine: true,
                     obj: [
                       {
+                        assertion: 'any',
                         spread: 'queryKey[0].path',
                       },
                       {
+                        assertion: 'any',
                         spread: 'page.path',
                       },
                     ],
@@ -250,9 +251,11 @@ const createInfiniteParamsFunction = ({
                     multiLine: true,
                     obj: [
                       {
+                        assertion: 'any',
                         spread: 'queryKey[0].query',
                       },
                       {
+                        assertion: 'any',
                         spread: 'page.query',
                       },
                     ],
@@ -486,7 +489,15 @@ const createQueryKeyFunction = ({
   file.add(fn);
 };
 
-const createQueryKeyType = ({ file }: { file: Files[keyof Files] }) => {
+const createQueryKeyType = ({
+  context,
+  plugin,
+}: {
+  context: IRContext;
+  plugin: PluginInstance;
+}) => {
+  const file = context.file({ id: plugin.name })!;
+
   const properties: Property[] = [
     {
       name: '_id',
@@ -783,7 +794,7 @@ export const handler: Plugin.Handler<
         hasQueries = true;
 
         if (!hasCreateQueryKeyParamsFunction) {
-          createQueryKeyType({ file });
+          createQueryKeyType({ context, plugin });
           createQueryKeyFunction({ context, plugin });
           hasCreateQueryKeyParamsFunction = true;
         }
@@ -925,7 +936,7 @@ export const handler: Plugin.Handler<
           hasInfiniteQueries = true;
 
           if (!hasCreateQueryKeyParamsFunction) {
-            createQueryKeyType({ file });
+            createQueryKeyType({ context, plugin });
             createQueryKeyFunction({ context, plugin });
             hasCreateQueryKeyParamsFunction = true;
           }
@@ -1074,7 +1085,7 @@ export const handler: Plugin.Handler<
                             }),
                             compiler.constVariable({
                               expression: compiler.callExpression({
-                                functionName: 'createInfiniteParams',
+                                functionName: createInfiniteParamsFn,
                                 parameters: ['queryKey', 'page'],
                               }),
                               name: 'params',

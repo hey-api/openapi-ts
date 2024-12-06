@@ -2,6 +2,8 @@
 
 export type CreateData = {
     body?: never;
+    path?: never;
+    query?: never;
     url: '/foo';
 };
 

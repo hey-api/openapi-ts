@@ -12,6 +12,8 @@ export type PostFooData = {
      * Foo
      */
     body: Foo;
+    path?: never;
+    query?: never;
     url: '/foo';
 };
 

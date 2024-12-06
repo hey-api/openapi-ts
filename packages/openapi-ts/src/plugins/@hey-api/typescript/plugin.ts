@@ -722,47 +722,45 @@ const operationToDataType = ({
     };
   }
 
-  if (operation.parameters) {
-    // TODO: parser - handle cookie parameters
+  // TODO: parser - handle cookie parameters
 
-    // do not set headers to never so we can always pass arbitrary values
-    if (operation.parameters.header) {
-      data.properties.headers = irParametersToIrSchema({
-        parameters: operation.parameters.header,
-      });
+  // do not set headers to never so we can always pass arbitrary values
+  if (operation.parameters?.header) {
+    data.properties.headers = irParametersToIrSchema({
+      parameters: operation.parameters.header,
+    });
 
-      if (data.properties.headers.required) {
-        dataRequired.push('headers');
-      }
+    if (data.properties.headers.required) {
+      dataRequired.push('headers');
     }
+  }
 
-    if (operation.parameters.path) {
-      data.properties.path = irParametersToIrSchema({
-        parameters: operation.parameters.path,
-      });
+  if (operation.parameters?.path) {
+    data.properties.path = irParametersToIrSchema({
+      parameters: operation.parameters.path,
+    });
 
-      if (data.properties.path.required) {
-        dataRequired.push('path');
-      }
-    } else {
-      data.properties.path = {
-        type: 'never',
-      };
+    if (data.properties.path.required) {
+      dataRequired.push('path');
     }
+  } else {
+    data.properties.path = {
+      type: 'never',
+    };
+  }
 
-    if (operation.parameters.query) {
-      data.properties.query = irParametersToIrSchema({
-        parameters: operation.parameters.query,
-      });
+  if (operation.parameters?.query) {
+    data.properties.query = irParametersToIrSchema({
+      parameters: operation.parameters.query,
+    });
 
-      if (data.properties.query.required) {
-        dataRequired.push('query');
-      }
-    } else {
-      data.properties.query = {
-        type: 'never',
-      };
+    if (data.properties.query.required) {
+      dataRequired.push('query');
     }
+  } else {
+    data.properties.query = {
+      type: 'never',
+    };
   }
 
   data.properties.url = {

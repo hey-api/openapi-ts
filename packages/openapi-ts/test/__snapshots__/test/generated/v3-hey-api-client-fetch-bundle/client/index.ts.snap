@@ -47,8 +47,7 @@ export const createClient = (config: Config = {}): Client => {
 
   // @ts-expect-error
   const request: Client['request'] = async (options) => {
-    // @ts-expect-error
-    const opts: RequestOptions = {
+    const opts = {
       ..._config,
       ...options,
       fetch: options.fetch ?? _config.fetch ?? globalThis.fetch,
@@ -170,7 +169,7 @@ export type {
   Config,
   Options,
   OptionsLegacyParser,
-  RequestOptionsBase,
+  RequestOptions,
   RequestResult,
 } from './types';
 export {

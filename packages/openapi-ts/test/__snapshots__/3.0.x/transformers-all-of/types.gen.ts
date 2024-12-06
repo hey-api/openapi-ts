@@ -27,6 +27,8 @@ export type Qux = {
 
 export type GetFooData = {
     body?: never;
+    path?: never;
+    query?: never;
     url: '/foo';
 };
 
