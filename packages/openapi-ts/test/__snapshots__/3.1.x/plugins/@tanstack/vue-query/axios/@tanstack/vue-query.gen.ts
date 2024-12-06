@@ -332,14 +332,14 @@ const createInfiniteParams = <K extends Pick<QueryKey<Options>[0], 'body' | 'hea
     }
     if (page.path) {
         params.path = {
-            ...queryKey[0].path,
-            ...page.path
+            ...queryKey[0].path as any,
+            ...page.path as any
         };
     }
     if (page.query) {
         params.query = {
-            ...queryKey[0].query,
-            ...page.query
+            ...queryKey[0].query as any,
+            ...page.query as any
         };
     }
     return params as unknown as typeof page;
