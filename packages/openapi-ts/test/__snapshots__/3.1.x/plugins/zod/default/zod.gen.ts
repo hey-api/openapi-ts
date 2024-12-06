@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 
-export const z_400 = z.string();
+export const z400 = z.string();
 
 export const zcamelCaseCommentWithBreaks = z.number();
 
@@ -253,7 +253,7 @@ export const zCompositionWithNestedAnyAndTypeNull = z.object({
     propA: z.unknown().optional()
 });
 
-export const z_3e_num_1Период = z.enum([
+export const z3e_num_1Период = z.enum([
     'Bird',
     'Dog'
 ]);
@@ -354,7 +354,7 @@ export const zFile = z.object({
     file: z.string().url().readonly().optional()
 });
 
-export const z_default = z.object({
+export const zdefault = z.object({
     name: z.string().optional()
 });
 
@@ -459,7 +459,7 @@ export const zDeleteFooData = z.string();
 
 export const zDeleteFooData2 = z.string();
 
-export const z_import = z.string();
+export const zimport = z.string();
 
 export const zSchemaWithFormRestrictedKeys = z.object({
     description: z.string().optional(),
