@@ -1,5 +1,11 @@
 # @hey-api/client-axios
 
+## 0.2.12
+
+### Patch Changes
+
+- [#1394](https://github.com/hey-api/openapi-ts/pull/1394) [`ec48d32`](https://github.com/hey-api/openapi-ts/commit/ec48d323d80de8e6a47ce7ecd732288f0a47e17a) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: disallow additional query parameters in experimental parser output
+
 ## 0.2.11
 
 ### Patch Changes
