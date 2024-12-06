@@ -7,7 +7,7 @@ import { refSchemasPartial } from './const';
 import { enumValue } from './enum';
 import { escapeComment, escapeName, unescapeName } from './escape';
 import { getSchemasMeta } from './meta';
-import { reservedWordsRegExp } from './regexp';
+import { reservedJavaScriptKeywordsRegExp } from './regexp';
 import { stringCase } from './stringCase';
 import { unique } from './unique';
 
@@ -340,6 +340,6 @@ export const transformTypeKeyName = (value: string): string => {
   const name = stringCase({
     case: 'camelCase',
     value: sanitizeOperationParameterName(value),
-  }).replace(reservedWordsRegExp, '_$1');
+  }).replace(reservedJavaScriptKeywordsRegExp, '_$1');
   return name;
 };

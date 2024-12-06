@@ -1,7 +1,7 @@
 import { ensureValidTypeScriptJavaScriptIdentifier } from '../openApi';
 import type { Config } from '../types/config';
 import { getConfig } from './config';
-import { reservedWordsRegExp } from './regexp';
+import { reservedJavaScriptKeywordsRegExp } from './regexp';
 import { stringCase } from './stringCase';
 
 export const transformServiceName = ({
@@ -47,6 +47,6 @@ export const transformTypeName = (name: string) => {
 export const cleanAndTransformTypeName = (name: string) => {
   const transformed = transformTypeName(name);
   const cleaned = ensureValidTypeScriptJavaScriptIdentifier(transformed);
-  const result = cleaned.replace(reservedWordsRegExp, '_$1');
+  const result = cleaned.replace(reservedJavaScriptKeywordsRegExp, '_$1');
   return result;
 };
