@@ -56,7 +56,7 @@ const main = async () => {
         // name: 'fastify',
       },
       {
-        // name: '@tanstack/react-query',
+        name: '@tanstack/vue-query',
       },
       {
         // name: 'zod',

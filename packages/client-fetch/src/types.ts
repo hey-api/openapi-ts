@@ -184,8 +184,16 @@ export interface Client<
   trace: MethodFn;
 }
 
+interface DataShape {
+  body?: unknown;
+  headers?: unknown;
+  path?: unknown;
+  query?: unknown;
+  url: string;
+}
+
 export type Options<
-  Data extends { url: string } = { url: string },
+  Data extends DataShape = DataShape,
   ThrowOnError extends boolean = boolean,
 > = OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'path' | 'query' | 'url'> &
   Omit<Data, 'url'>;
