@@ -22,6 +22,8 @@ const optionalIdentifier = compiler.identifier({ text: 'optional' });
 const readonlyIdentifier = compiler.identifier({ text: 'readonly' });
 const zIdentifier = compiler.identifier({ text: 'z' });
 
+const nameTransformer = (name: string) => `z${name}`;
+
 const arrayTypeToZodSchema = ({
   context,
   namespace,
@@ -688,10 +690,11 @@ const schemaToZodSchema = ({
     // this could be (maybe?) fixed by reshuffling the generation order
     const identifier = file.identifier({
       $ref: schema.$ref,
+      nameTransformer,
       namespace: 'value',
     });
     if (identifier.name) {
-      expression = compiler.identifier({ text: `z${identifier.name || ''}` });
+      expression = compiler.identifier({ text: identifier.name || '' });
     } else {
       const ref = context.resolveIrRef<IRSchemaObject>(schema.$ref);
       expression = schemaToZodSchema({
@@ -753,12 +756,13 @@ const schemaToZodSchema = ({
     const identifier = file.identifier({
       $ref,
       create: true,
+      nameTransformer,
       namespace: 'value',
     });
     const statement = compiler.constVariable({
       exportConst: true,
       expression,
-      name: `z${identifier.name || ''}`,
+      name: identifier.name || '',
     });
     file.add(statement);
   }

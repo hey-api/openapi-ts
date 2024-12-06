@@ -1,6 +1,5 @@
 import { compiler } from '../../../compiler';
 import type { IRContext } from '../../../ir/context';
-import { ensureValidTypeScriptJavaScriptIdentifier } from '../../../openApi';
 import type { OpenApiV3_0_X } from '../../../openApi/3.0.x';
 import type {
   ReferenceObject as OpenApiV3_0_XReferenceObject,
@@ -8,6 +7,7 @@ import type {
 } from '../../../openApi/3.0.x/types/spec';
 import type { OpenApiV3_1_X } from '../../../openApi/3.1.x';
 import type { SchemaObject as OpenApiV3_1_XSchemaObject } from '../../../openApi/3.1.x/types/spec';
+import { ensureValidIdentifier } from '../../../openApi/shared/utils/identifier';
 import type { Plugin } from '../../types';
 import type { Config } from './types';
 
@@ -256,13 +256,8 @@ const schemaName = ({
     | OpenApiV3_0_XSchemaObject
     | OpenApiV3_1_XSchemaObject;
 }): string => {
-  const validName = ensureValidTypeScriptJavaScriptIdentifier(name);
-
-  if (plugin.nameBuilder) {
-    return plugin.nameBuilder(validName, schema);
-  }
-
-  return `${validName}Schema`;
+  const customName = plugin.nameBuilder?.(name, schema) ?? `${name}Schema`;
+  return ensureValidIdentifier(customName);
 };
 
 const schemasV3_0_X = ({

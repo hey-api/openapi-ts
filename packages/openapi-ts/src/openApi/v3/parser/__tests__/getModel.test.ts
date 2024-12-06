@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import type { Config } from '../../../../types/config';
-import { reservedWordsRegExp } from '../../../../utils/regexp';
+import { reservedJavaScriptKeywordsRegExp } from '../../../../utils/regexp';
 import { getType } from '../../../common/parser/type';
 import { getModel } from '../getModel';
 
@@ -102,7 +102,10 @@ describe('getModel', () => {
       isDefinition: true,
       meta: {
         $ref: '',
-        name: definitionType.base.replace(reservedWordsRegExp, '_$1'),
+        name: definitionType.base.replace(
+          reservedJavaScriptKeywordsRegExp,
+          '_$1',
+        ),
       },
       openApi,
       types: {},
@@ -118,7 +121,10 @@ describe('getModel', () => {
       isDefinition: true,
       meta: {
         $ref: '',
-        name: definitionType.base.replace(reservedWordsRegExp, '_$1'),
+        name: definitionType.base.replace(
+          reservedJavaScriptKeywordsRegExp,
+          '_$1',
+        ),
       },
       openApi,
       types: {},

@@ -1,6 +1,6 @@
 import { getType } from '../openApi';
 import { refParametersPartial, refSchemasPartial } from './const';
-import { reservedWordsRegExp } from './regexp';
+import { reservedJavaScriptKeywordsRegExp } from './regexp';
 import { cleanAndTransformTypeName } from './transform';
 
 export const getParametersMeta = (definitionName: string) => {
@@ -19,7 +19,7 @@ export const getParametersMeta = (definitionName: string) => {
    * Note: there's a related code to this workaround in `getType()`
    * method that needs to be cleaned up when this is addressed.
    */
-  const name = `Parameter${definitionType.base.replace(reservedWordsRegExp, '_$1')}`;
+  const name = `Parameter${definitionType.base.replace(reservedJavaScriptKeywordsRegExp, '_$1')}`;
   const meta = {
     $ref: refParametersPartial + definitionName,
     name,
