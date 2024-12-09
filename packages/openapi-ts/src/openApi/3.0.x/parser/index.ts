@@ -6,6 +6,7 @@ import type {
   PathItemObject,
   PathsObject,
   RequestBodyObject,
+  SecuritySchemeObject,
 } from '../types/spec';
 import { parseOperation } from './operation';
 import {
@@ -18,6 +19,7 @@ import { parseSchema } from './schema';
 
 export const parseV3_0_X = (context: IRContext<OpenApiV3_0_X>) => {
   const operationIds = new Map<string, string>();
+  const securitySchemesMap = new Map<string, SecuritySchemeObject>();
 
   const excludeRegExp = context.config.input.exclude
     ? new RegExp(context.config.input.exclude)
@@ -35,6 +37,15 @@ export const parseV3_0_X = (context: IRContext<OpenApiV3_0_X>) => {
 
   // TODO: parser - handle more component types, old parser handles only parameters and schemas
   if (context.spec.components) {
+    for (const name in context.spec.components.securitySchemes) {
+      const securityOrReference = context.spec.components.securitySchemes[name];
+      const securitySchemeObject =
+        '$ref' in securityOrReference
+          ? context.resolveRef<SecuritySchemeObject>(securityOrReference.$ref)
+          : securityOrReference;
+      securitySchemesMap.set(name, securitySchemeObject);
+    }
+
     for (const name in context.spec.components.parameters) {
       const $ref = `#/components/parameters/${name}`;
       if (!shouldProcessRef($ref)) {
@@ -117,11 +128,13 @@ export const parseV3_0_X = (context: IRContext<OpenApiV3_0_X>) => {
           context,
           parameters: finalPathItem.parameters,
         }),
+        security: context.spec.security,
         servers: finalPathItem.servers,
         summary: finalPathItem.summary,
       },
       operationIds,
       path: path as keyof PathsObject,
+      securitySchemesMap,
     };
 
     const $refDelete = `#/paths${path}/delete`;

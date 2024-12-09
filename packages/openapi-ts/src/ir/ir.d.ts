@@ -1,4 +1,5 @@
 import type { JsonSchemaDraft2020_12 } from '../openApi/3.1.x/types/json-schema-draft-2020-12';
+import type { SecuritySchemeObject } from '../openApi/3.1.x/types/spec';
 import type { IRMediaType } from './mediaType';
 
 export interface IR {
@@ -36,8 +37,8 @@ export interface IROperationObject {
   parameters?: IRParametersObject;
   path: keyof IRPathsObject;
   responses?: IRResponsesObject;
+  security?: ReadonlyArray<SecuritySchemeObject>;
   // TODO: parser - add more properties
-  // security?: ReadonlyArray<SecurityRequirementObject>;
   // servers?: ReadonlyArray<ServerObject>;
   summary?: string;
   tags?: ReadonlyArray<string>;

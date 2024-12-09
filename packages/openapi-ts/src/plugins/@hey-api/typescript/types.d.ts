@@ -39,15 +39,16 @@ export interface Config extends Plugin.Name<'@hey-api/typescript'> {
    */
   identifierCase?: Exclude<StringCase, 'SCREAMING_SNAKE_CASE'>;
   /**
-   * Include only types matching regular expression.
+   * **This feature works only with the legacy parser**
    *
-   * This option does not work with the experimental parser.
+   * Include only types matching regular expression.
    *
    * @deprecated
    */
   include?: string;
   /**
    * Name of the generated file.
+   *
    * @default 'types'
    */
   output?: string;

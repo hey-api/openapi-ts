@@ -9,6 +9,7 @@ export const defaultConfig: Plugin.Config<Config> = {
   _handlerLegacy: handlerLegacy,
   _optionalDependencies: ['@hey-api/transformers'],
   asClass: false,
+  auth: true,
   name: '@hey-api/sdk',
   operationId: true,
   output: 'sdk',

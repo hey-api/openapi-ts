@@ -2,7 +2,13 @@ import type { AxiosError, RawAxiosRequestHeaders } from 'axios';
 import axios from 'axios';
 
 import type { Client, Config } from './types';
-import { createConfig, getUrl, mergeConfigs, mergeHeaders } from './utils';
+import {
+  createConfig,
+  getUrl,
+  mergeConfigs,
+  mergeHeaders,
+  setAuthParams,
+} from './utils';
 
 export const createClient = (config: Config): Client => {
   let _config = mergeConfigs(createConfig(), config);
@@ -27,11 +33,17 @@ export const createClient = (config: Config): Client => {
     const opts = {
       ..._config,
       ...options,
-      headers: mergeHeaders(
-        _config.headers,
-        options.headers,
-      ) as RawAxiosRequestHeaders,
+      axios: options.axios ?? _config.axios ?? instance,
+      headers: mergeHeaders(_config.headers, options.headers),
     };
+
+    if (opts.security) {
+      await setAuthParams({
+        ...opts,
+        security: opts.security,
+      });
+    }
+
     if (opts.body && opts.bodySerializer) {
       opts.body = opts.bodySerializer(opts.body);
     }
@@ -41,12 +53,11 @@ export const createClient = (config: Config): Client => {
       url: opts.url,
     });
 
-    const _axios = opts.axios || instance;
-
     try {
-      const response = await _axios({
+      const response = await opts.axios({
         ...opts,
         data: opts.body,
+        headers: opts.headers as RawAxiosRequestHeaders,
         params: opts.query,
         url,
       });
