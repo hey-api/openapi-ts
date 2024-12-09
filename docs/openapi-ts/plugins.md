@@ -67,6 +67,7 @@ export interface Config {
   name: 'my-plugin';
   /**
    * Name of the generated file.
+   *
    * @default 'my-plugin'
    */
   output?: string;

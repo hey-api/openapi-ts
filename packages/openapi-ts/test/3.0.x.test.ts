@@ -402,6 +402,45 @@ describe(`OpenAPI ${VERSION}`, () => {
     },
     {
       config: createConfig({
+        input: 'security-api-key.json',
+        output: 'security-api-key',
+        plugins: [
+          {
+            auth: true,
+            name: '@hey-api/sdk',
+          },
+        ],
+      }),
+      description: 'generates SDK functions with auth (api key)',
+    },
+    {
+      config: createConfig({
+        input: 'security-oauth2.json',
+        output: 'security-oauth2',
+        plugins: [
+          {
+            auth: true,
+            name: '@hey-api/sdk',
+          },
+        ],
+      }),
+      description: 'generates SDK functions with auth (oauth2)',
+    },
+    {
+      config: createConfig({
+        input: 'security-oauth2.json',
+        output: 'security-false',
+        plugins: [
+          {
+            auth: false,
+            name: '@hey-api/sdk',
+          },
+        ],
+      }),
+      description: 'generates SDK functions without auth',
+    },
+    {
+      config: createConfig({
         input: 'transformers-all-of.yaml',
         output: 'transformers-all-of',
         plugins: ['@hey-api/transformers'],

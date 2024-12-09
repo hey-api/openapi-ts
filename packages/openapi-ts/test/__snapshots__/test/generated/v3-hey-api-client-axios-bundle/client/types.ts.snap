@@ -13,8 +13,19 @@ type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
 export interface Config<ThrowOnError extends boolean = boolean>
   extends Omit<CreateAxiosDefaults, 'headers'> {
   /**
+   * Access token or a function returning access token. The resolved token will
+   * be added to request payload as required.
+   */
+  accessToken?: (() => Promise<string | undefined>) | string | undefined;
+  /**
+   * API key or a function returning API key. The resolved key will be added
+   * to the request payload as required.
+   */
+  apiKey?: (() => Promise<string | undefined>) | string | undefined;
+  /**
    * Axios implementation. You can use this option to provide a custom
    * Axios instance.
+   *
    * @default axios
    */
   axios?: AxiosStatic;
@@ -64,6 +75,7 @@ export interface Config<ThrowOnError extends boolean = boolean>
   responseTransformer?: (data: unknown) => Promise<unknown>;
   /**
    * Throw an error instead of returning it in the response?
+   *
    * @default false
    */
   throwOnError?: ThrowOnError;
@@ -87,6 +99,10 @@ export interface RequestOptions<
   client?: Client;
   path?: Record<string, unknown>;
   query?: Record<string, unknown>;
+  /**
+   * Security mechanism(s) to use for the request.
+   */
+  security?: ReadonlyArray<Security>;
   url: Url;
 }
 
@@ -100,6 +116,12 @@ export type RequestResult<
       | (AxiosResponse<Data> & { error: undefined })
       | (AxiosError<TError> & { data: undefined; error: TError })
     >;
+
+export interface Security {
+  fn: 'accessToken' | 'apiKey';
+  in: 'header' | 'query';
+  name: string;
+}
 
 type MethodFn = <
   Data = unknown,

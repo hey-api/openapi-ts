@@ -77,9 +77,11 @@ const sdkId = 'sdk';
 const operationStatements = ({
   context,
   operation,
+  plugin,
 }: {
   context: IRContext;
   operation: IROperationObject;
+  plugin: Plugin.Instance<Config>;
 }): Array<ts.Statement> => {
   const file = context.file({ id: sdkId })!;
   const sdkOutput = file.nameWithoutExtension();
@@ -175,6 +177,48 @@ const operationStatements = ({
   // content type. currently impossible because successes do not contain
   // header information
 
+  if (operation.security && plugin.auth) {
+    // TODO: parser - handle more security types
+    // type copied from client packages
+    const security: Array<{
+      fn: 'accessToken' | 'apiKey';
+      in: 'header' | 'query';
+      name: string;
+    }> = [];
+
+    for (const securitySchemeObject of operation.security) {
+      if (securitySchemeObject.type === 'oauth2') {
+        if (securitySchemeObject.flows.password) {
+          security.push({
+            fn: 'accessToken',
+            in: 'header',
+            name: 'Authorization',
+          });
+        }
+      } else if (securitySchemeObject.type === 'apiKey') {
+        // TODO: parser - support cookies auth
+        if (securitySchemeObject.in !== 'cookie') {
+          security.push({
+            fn: 'apiKey',
+            in: securitySchemeObject.in,
+            name: securitySchemeObject.name,
+          });
+        }
+      } else {
+        console.warn(
+          `❗️ SDK warning: security scheme isn't currently supported. Please open an issue if you'd like it added https://github.com/hey-api/openapi-ts/issues\n${JSON.stringify(securitySchemeObject, null, 2)}`,
+        );
+      }
+    }
+
+    if (security.length) {
+      requestOptions.push({
+        key: 'security',
+        value: compiler.arrayLiteralExpression({ elements: security }),
+      });
+    }
+  }
+
   requestOptions.push({
     key: 'url',
     value: operation.path,
@@ -248,7 +292,13 @@ const operationStatements = ({
   ];
 };
 
-const generateClassSdk = ({ context }: { context: IRContext }) => {
+const generateClassSdk = ({
+  context,
+  plugin,
+}: {
+  context: IRContext;
+  plugin: Plugin.Instance<Config>;
+}) => {
   const file = context.file({ id: sdkId })!;
   const typesModule = file.relativePathToFile({ context, id: 'types' });
 
@@ -292,7 +342,11 @@ const generateClassSdk = ({ context }: { context: IRContext }) => {
         },
       ],
       returnType: undefined,
-      statements: operationStatements({ context, operation }),
+      statements: operationStatements({
+        context,
+        operation,
+        plugin,
+      }),
       types: [
         {
           default: false,
@@ -330,7 +384,13 @@ const generateClassSdk = ({ context }: { context: IRContext }) => {
   });
 };
 
-const generateFlatSdk = ({ context }: { context: IRContext }) => {
+const generateFlatSdk = ({
+  context,
+  plugin,
+}: {
+  context: IRContext;
+  plugin: Plugin.Instance<Config>;
+}) => {
   const file = context.file({ id: sdkId })!;
   const typesModule = file.relativePathToFile({ context, id: 'types' });
 
@@ -366,7 +426,11 @@ const generateFlatSdk = ({ context }: { context: IRContext }) => {
           },
         ],
         returnType: undefined,
-        statements: operationStatements({ context, operation }),
+        statements: operationStatements({
+          context,
+          operation,
+          plugin,
+        }),
         types: [
           {
             default: false,
@@ -438,8 +502,8 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
   file.add(statement);
 
   if (plugin.asClass) {
-    generateClassSdk({ context });
+    generateClassSdk({ context, plugin });
   } else {
-    generateFlatSdk({ context });
+    generateFlatSdk({ context, plugin });
   }
 };

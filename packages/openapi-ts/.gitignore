@@ -3,6 +3,7 @@
 .tsup
 .tmp
 junit.xml
+logs
 node_modules
 npm-debug.log*
 temp
