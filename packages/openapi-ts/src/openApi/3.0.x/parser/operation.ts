@@ -6,6 +6,7 @@ import type {
   PathItemObject,
   RequestBodyObject,
   ResponseObject,
+  SecuritySchemeObject,
 } from '../types/spec';
 import { contentToSchema, mediaTypeObject } from './mediaType';
 import { paginationField } from './pagination';
@@ -65,9 +66,11 @@ const operationToIrOperation = ({
   method,
   operation,
   path,
+  securitySchemesMap,
 }: Pick<IROperationObject, 'method' | 'path'> & {
   context: IRContext;
   operation: Operation;
+  securitySchemesMap: Map<string, SecuritySchemeObject>;
 }): IROperationObject => {
   const irOperation = initIrOperation({ method, operation, path });
 
@@ -172,8 +175,22 @@ const operationToIrOperation = ({
     }
   }
 
-  // TODO: parser - handle security
-  // baz: operation.security
+  if (operation.security) {
+    const securitySchemeObjects: Array<SecuritySchemeObject> = [];
+
+    for (const securityRequirementObject of operation.security) {
+      for (const name in securityRequirementObject) {
+        const securitySchemeObject = securitySchemesMap.get(name);
+        if (securitySchemeObject) {
+          securitySchemeObjects.push(securitySchemeObject);
+        }
+      }
+    }
+
+    if (securitySchemeObjects.length) {
+      irOperation.security = securitySchemeObjects;
+    }
+  }
 
   // TODO: parser - handle servers
   // qux: operation.servers
@@ -187,6 +204,7 @@ export const parseOperation = ({
   operation,
   operationIds,
   path,
+  securitySchemesMap,
 }: {
   context: IRContext;
   method: Extract<
@@ -196,6 +214,7 @@ export const parseOperation = ({
   operation: Operation;
   operationIds: Map<string, string>;
   path: keyof IRPathsObject;
+  securitySchemesMap: Map<string, SecuritySchemeObject>;
 }) => {
   // TODO: parser - support throw on duplicate
   if (operation.operationId) {
@@ -230,5 +249,6 @@ export const parseOperation = ({
     method,
     operation,
     path,
+    securitySchemesMap,
   });
 };

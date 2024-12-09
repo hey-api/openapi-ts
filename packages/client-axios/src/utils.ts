@@ -1,4 +1,4 @@
-import type { Config } from './types';
+import type { Config, RequestOptions, Security } from './types';
 
 interface PathSerializer {
   path: Record<string, unknown>;
@@ -250,6 +250,53 @@ const defaultPathSerializer = ({ path, url: _url }: PathSerializer) => {
   return url;
 };
 
+export const getAuthToken = async (
+  security: Security,
+  options: Pick<RequestOptions, 'accessToken' | 'apiKey'>,
+): Promise<string | undefined> => {
+  if (security.fn === 'accessToken') {
+    const token =
+      typeof options.accessToken === 'function'
+        ? await options.accessToken()
+        : options.accessToken;
+    return token ? `Bearer ${token}` : undefined;
+  }
+
+  if (security.fn === 'apiKey') {
+    return typeof options.apiKey === 'function'
+      ? await options.apiKey()
+      : options.apiKey;
+  }
+};
+
+export const setAuthParams = async ({
+  security,
+  ...options
+}: Pick<Required<RequestOptions>, 'security'> &
+  Pick<RequestOptions, 'accessToken' | 'apiKey' | 'query'> & {
+    headers: Record<any, unknown>;
+  }) => {
+  for (const scheme of security) {
+    const token = await getAuthToken(scheme, options);
+
+    if (!token) {
+      continue;
+    }
+
+    if (scheme.in === 'header') {
+      options.headers[scheme.name] = token;
+    } else if (scheme.in === 'query') {
+      if (!options.query) {
+        options.query = {};
+      }
+
+      options.query[scheme.name] = token;
+    }
+
+    return;
+  }
+};
+
 export const getUrl = ({
   path,
   url,
@@ -278,8 +325,8 @@ export const mergeConfigs = (a: Config, b: Config): Config => {
 
 export const mergeHeaders = (
   ...headers: Array<Required<Config>['headers'] | undefined>
-): Required<Config>['headers'] => {
-  const mergedHeaders: Required<Config>['headers'] = {};
+): Record<any, unknown> => {
+  const mergedHeaders: Record<any, unknown> = {};
   for (const header of headers) {
     if (!header || typeof header !== 'object') {
       continue;
@@ -289,7 +336,6 @@ export const mergeHeaders = (
 
     for (const [key, value] of iterator) {
       if (value === null) {
-        // @ts-expect-error
         delete mergedHeaders[key];
       } else if (Array.isArray(value)) {
         for (const v of value) {
@@ -299,7 +345,6 @@ export const mergeHeaders = (
       } else if (value !== undefined) {
         // assume object headers are meant to be JSON stringified, i.e. their
         // content value in OpenAPI specification is 'application/json'
-        // @ts-expect-error
         mergedHeaders[key] =
           typeof value === 'object' ? JSON.stringify(value) : (value as string);
       }
