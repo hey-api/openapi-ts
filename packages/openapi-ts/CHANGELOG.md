@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.59.2
+
+### Patch Changes
+
+- [#1409](https://github.com/hey-api/openapi-ts/pull/1409) [`646064d`](https://github.com/hey-api/openapi-ts/commit/646064d1aecea988d2b4df73bd24b2ee83394ae0) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: support oauth2 and apiKey security schemes
+
 ## 0.59.1
 
 ### Patch Changes
