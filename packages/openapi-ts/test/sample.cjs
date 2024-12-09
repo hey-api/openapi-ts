@@ -5,15 +5,15 @@ const main = async () => {
   const config = {
     client: {
       // bundle: true,
-      // name: '@hey-api/client-axios',
-      name: '@hey-api/client-fetch',
+      name: '@hey-api/client-axios',
+      // name: '@hey-api/client-fetch',
     },
     experimentalParser: true,
     input: {
       exclude: '^#/components/schemas/ModelWithCircularReference$',
       // include:
       //   '^(#/components/schemas/import|#/paths/api/v{api-version}/simple/options)$',
-      path: './test/spec/3.0.x/full.json',
+      path: './test/spec/3.0.x/security-api-key.json',
       // path: 'https://mongodb-mms-prod-build-server.s3.amazonaws.com/openapi/2caffd88277a4e27c95dcefc7e3b6a63a3b03297-v2-2023-11-15.json',
       // path: 'https://raw.githubusercontent.com/swagger-api/swagger-petstore/master/src/main/resources/openapi.yaml',
     },
@@ -35,8 +35,9 @@ const main = async () => {
       },
       {
         // asClass: true,
+        // auth: false,
         // include...
-        // name: '@hey-api/sdk',
+        name: '@hey-api/sdk',
         // operationId: false,
         // serviceNameBuilder: '^Parameters',
       },
@@ -50,7 +51,7 @@ const main = async () => {
         enums: 'javascript',
         // exportInlineEnums: true,
         identifierCase: 'preserve',
-        // name: '@hey-api/typescript',
+        name: '@hey-api/typescript',
         // tree: true,
       },
       {
@@ -60,7 +61,7 @@ const main = async () => {
         // name: '@tanstack/vue-query',
       },
       {
-        name: 'zod',
+        // name: 'zod',
       },
     ],
     // useOptions: false,

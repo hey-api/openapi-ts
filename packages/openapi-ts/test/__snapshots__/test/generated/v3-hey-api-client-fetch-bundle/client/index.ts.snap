@@ -1,12 +1,12 @@
 import type { Client, Config, RequestOptions } from './types';
 import {
+  buildUrl,
   createConfig,
   createInterceptors,
-  createQuerySerializer,
   getParseAs,
-  getUrl,
   mergeConfigs,
   mergeHeaders,
+  setAuthParams,
 } from './utils';
 
 type ReqInit = Omit<RequestInit, 'body' | 'headers'> & {
@@ -24,20 +24,6 @@ export const createClient = (config: Config = {}): Client => {
     return getConfig();
   };
 
-  const buildUrl: Client['buildUrl'] = (options) => {
-    const url = getUrl({
-      baseUrl: options.baseUrl ?? '',
-      path: options.path,
-      query: options.query,
-      querySerializer:
-        typeof options.querySerializer === 'function'
-          ? options.querySerializer
-          : createQuerySerializer(options.querySerializer),
-      url: options.url,
-    });
-    return url;
-  };
-
   const interceptors = createInterceptors<
     Request,
     Response,
@@ -53,6 +39,14 @@ export const createClient = (config: Config = {}): Client => {
       fetch: options.fetch ?? _config.fetch ?? globalThis.fetch,
       headers: mergeHeaders(_config.headers, options.headers),
     };
+
+    if (opts.security) {
+      await setAuthParams({
+        ...opts,
+        security: opts.security,
+      });
+    }
+
     if (opts.body && opts.bodySerializer) {
       opts.body = opts.bodySerializer(opts.body);
     }
@@ -74,8 +68,7 @@ export const createClient = (config: Config = {}): Client => {
       request = await fn(request, opts);
     }
 
-    const _fetch = opts.fetch!;
-    let response = await _fetch(request);
+    let response = await opts.fetch(request);
 
     for (const fn of interceptors.response._fns) {
       response = await fn(response, request, opts);

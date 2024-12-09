@@ -1,4 +1,4 @@
-import type { Config } from './types';
+import type { Client, Config, RequestOptions, Security } from './types';
 
 interface PathSerializer {
   path: Record<string, unknown>;
@@ -358,6 +358,67 @@ export const getParseAs = (
   }
 };
 
+export const getAuthToken = async (
+  security: Security,
+  options: Pick<RequestOptions, 'accessToken' | 'apiKey'>,
+): Promise<string | undefined> => {
+  if (security.fn === 'accessToken') {
+    const token =
+      typeof options.accessToken === 'function'
+        ? await options.accessToken()
+        : options.accessToken;
+    return token ? `Bearer ${token}` : undefined;
+  }
+
+  if (security.fn === 'apiKey') {
+    return typeof options.apiKey === 'function'
+      ? await options.apiKey()
+      : options.apiKey;
+  }
+};
+
+export const setAuthParams = async ({
+  security,
+  ...options
+}: Pick<Required<RequestOptions>, 'security'> &
+  Pick<RequestOptions, 'accessToken' | 'apiKey' | 'query'> & {
+    headers: Headers;
+  }) => {
+  for (const scheme of security) {
+    const token = await getAuthToken(scheme, options);
+
+    if (!token) {
+      continue;
+    }
+
+    if (scheme.in === 'header') {
+      options.headers.set(scheme.name, token);
+    } else if (scheme.in === 'query') {
+      if (!options.query) {
+        options.query = {};
+      }
+
+      options.query[scheme.name] = token;
+    }
+
+    return;
+  }
+};
+
+export const buildUrl: Client['buildUrl'] = (options) => {
+  const url = getUrl({
+    baseUrl: options.baseUrl ?? '',
+    path: options.path,
+    query: options.query,
+    querySerializer:
+      typeof options.querySerializer === 'function'
+        ? options.querySerializer
+        : createQuerySerializer(options.querySerializer),
+    url: options.url,
+  });
+  return url;
+};
+
 export const getUrl = ({
   baseUrl,
   path,
@@ -397,7 +458,7 @@ export const mergeConfigs = (a: Config, b: Config): Config => {
 
 export const mergeHeaders = (
   ...headers: Array<Required<Config>['headers'] | undefined>
-) => {
+): Headers => {
   const mergedHeaders = new Headers();
   for (const header of headers) {
     if (!header || typeof header !== 'object') {

@@ -10,7 +10,18 @@ type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
 export interface Config<ThrowOnError extends boolean = boolean>
   extends Omit<RequestInit, 'body' | 'headers' | 'method'> {
   /**
+   * Access token or a function returning access token. The resolved token
+   * will be added to request headers where it's required.
+   */
+  accessToken?: (() => Promise<string | undefined>) | string | undefined;
+  /**
+   * API key or a function returning API key. The resolved key will be added
+   * to the request payload as required.
+   */
+  apiKey?: (() => Promise<string | undefined>) | string | undefined;
+  /**
    * Base URL for all requests made by this client.
+   *
    * @default ''
    */
   baseUrl?: string;
@@ -22,6 +33,7 @@ export interface Config<ThrowOnError extends boolean = boolean>
   /**
    * Fetch API implementation. You can use this option to provide a custom
    * fetch instance.
+   *
    * @default globalThis.fetch
    */
   fetch?: (request: Request) => ReturnType<typeof fetch>;
@@ -63,6 +75,7 @@ export interface Config<ThrowOnError extends boolean = boolean>
    * will infer the appropriate method from the `Content-Type` response header.
    * You can override this behavior with any of the {@link Body} methods.
    * Select `stream` if you don't want to parse response data at all.
+   *
    * @default 'auto'
    */
   parseAs?: Exclude<keyof Body, 'body' | 'bodyUsed'> | 'auto' | 'stream';
@@ -82,6 +95,7 @@ export interface Config<ThrowOnError extends boolean = boolean>
   responseTransformer?: (data: unknown) => Promise<unknown>;
   /**
    * Throw an error instead of returning it in the response?
+   *
    * @default false
    */
   throwOnError?: ThrowOnError;
@@ -110,6 +124,10 @@ export interface RequestOptions<
   client?: Client;
   path?: Record<string, unknown>;
   query?: Record<string, unknown>;
+  /**
+   * Security mechanism(s) to use for the request.
+   */
+  security?: ReadonlyArray<Security>;
   url: Url;
 }
 
@@ -132,6 +150,12 @@ export type RequestResult<
         response: Response;
       }
     >;
+
+export interface Security {
+  fn: 'accessToken' | 'apiKey';
+  in: 'header' | 'query';
+  name: string;
+}
 
 type MethodFn = <
   Data = unknown,
