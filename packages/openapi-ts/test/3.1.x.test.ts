@@ -463,6 +463,14 @@ describe(`OpenAPI ${VERSION}`, () => {
     },
     {
       config: createConfig({
+        input: 'schema-recursive.json',
+        output: 'schema-recursive',
+        plugins: ['zod'],
+      }),
+      description: 'generates Zod schemas with from recursive schemas',
+    },
+    {
+      config: createConfig({
         input: 'security-api-key.json',
         output: 'security-api-key',
         plugins: [

@@ -1,0 +1,36 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OpenAPI 3.1.0 schema recursive example",
+    "version": "1"
+  },
+  "components": {
+    "schemas": {
+      "Foo": {
+        "type": "object",
+        "properties": {
+          "foo": {
+            "type": "string"
+          },
+          "bar": {
+            "$ref": "#/components/schemas/Bar"
+          },
+          "baz": {
+            "items": {
+              "$ref": "#/components/schemas/Foo"
+            },
+            "type": "array"
+          }
+        }
+      },
+      "Bar": {
+        "properties": {
+          "foo": {
+            "$ref": "#/components/schemas/Foo"
+          }
+        },
+        "type": "object"
+      }
+    }
+  }
+}
