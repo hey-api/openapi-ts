@@ -13,7 +13,7 @@ import { embedProject } from '../embed'
 This package is in initial development. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
 :::
 
-[@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) is an OpenAPI to TypeScript codegen trusted more than 600k times each month to generate reliable API clients and SDKs.
+[@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) is an OpenAPI to TypeScript codegen trusted more than 700k times each month to generate reliable API clients and SDKs.
 
 <button class="buttonLink" @click="(event) => embedProject('hey-api-example')(event)">
 Live demo
