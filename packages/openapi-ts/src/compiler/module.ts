@@ -123,7 +123,7 @@ export const createConstVariable = ({
   expression: ts.Expression;
   name: string;
   // TODO: support a more intuitive definition of generics for example
-  typeName?: string | ts.IndexedAccessTypeNode;
+  typeName?: string | ts.IndexedAccessTypeNode | ts.TypeNode;
 }): ts.VariableStatement => {
   const initializer = assertion
     ? ts.factory.createAsExpression(

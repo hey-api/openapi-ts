@@ -14,10 +14,16 @@ interface SchemaWithType<T extends Required<IRSchemaObject>['type']>
   type: Extract<Required<IRSchemaObject>['type'], T>;
 }
 
+interface Result {
+  circularReferenceTracker: Set<string>;
+  hasCircularReference: boolean;
+}
+
 const zodId = 'zod';
 
 // frequently used identifiers
 const defaultIdentifier = compiler.identifier({ text: 'default' });
+const lazyIdentifier = compiler.identifier({ text: 'lazy' });
 const optionalIdentifier = compiler.identifier({ text: 'optional' });
 const readonlyIdentifier = compiler.identifier({ text: 'readonly' });
 const zIdentifier = compiler.identifier({ text: 'z' });
@@ -27,10 +33,12 @@ const nameTransformer = (name: string) => `z${name}`;
 const arrayTypeToZodSchema = ({
   context,
   namespace,
+  result,
   schema,
 }: {
   context: IRContext;
   namespace: Array<ts.Statement>;
+  result: Result;
   schema: SchemaWithType<'array'>;
 }): ts.CallExpression => {
   const functionName = compiler.propertyAccessExpression({
@@ -61,6 +69,7 @@ const arrayTypeToZodSchema = ({
       schemaToZodSchema({
         context,
         namespace,
+        result,
         schema: item,
       }),
     );
@@ -299,11 +308,12 @@ const numberTypeToZodSchema = ({
 const objectTypeToZodSchema = ({
   context,
   // namespace,
-
+  result,
   schema,
 }: {
   context: IRContext;
   namespace: Array<ts.Statement>;
+  result: Result;
   schema: SchemaWithType<'object'>;
 }) => {
   const properties: Array<ts.PropertyAssignment> = [];
@@ -320,6 +330,7 @@ const objectTypeToZodSchema = ({
 
     let propertyExpression = schemaToZodSchema({
       context,
+      result,
       schema: property,
     });
 
@@ -573,14 +584,14 @@ const voidTypeToZodSchema = ({
 };
 
 const schemaTypeToZodSchema = ({
-  // $ref,
   context,
   namespace,
+  result,
   schema,
 }: {
-  $ref?: string;
   context: IRContext;
   namespace: Array<ts.Statement>;
+  result: Result;
   schema: IRSchemaObject;
 }): ts.Expression => {
   switch (schema.type as Required<IRSchemaObject>['type']) {
@@ -588,6 +599,7 @@ const schemaTypeToZodSchema = ({
       return arrayTypeToZodSchema({
         context,
         namespace,
+        result,
         schema: schema as SchemaWithType<'array'>,
       });
     case 'boolean':
@@ -624,6 +636,7 @@ const schemaTypeToZodSchema = ({
       return objectTypeToZodSchema({
         context,
         namespace,
+        result,
         schema: schema as SchemaWithType<'object'>,
       });
     case 'string':
@@ -673,40 +686,92 @@ const schemaToZodSchema = ({
   context,
   // TODO: parser - remove namespace, it's a type plugin construct
   namespace = [],
+  result,
   schema,
 }: {
   $ref?: string;
   context: IRContext;
   namespace?: Array<ts.Statement>;
+  result: Result;
   schema: IRSchemaObject;
 }): ts.Expression => {
   const file = context.file({ id: zodId })!;
 
   let expression: ts.Expression | undefined;
+  let identifier: ReturnType<typeof file.identifier> | undefined;
+
+  if ($ref) {
+    result.circularReferenceTracker.add($ref);
+
+    // emit nodes only if $ref points to a reusable component
+    if (isRefOpenApiComponent($ref)) {
+      identifier = file.identifier({
+        $ref,
+        create: true,
+        nameTransformer,
+        namespace: 'value',
+      });
+    }
+  }
 
   if (schema.$ref) {
+    const isCircularReference = result.circularReferenceTracker.has(
+      schema.$ref,
+    );
+
     // if $ref hasn't been processed yet, inline it to avoid the
     // "Block-scoped variable used before its declaration." error
     // this could be (maybe?) fixed by reshuffling the generation order
-    const identifier = file.identifier({
+    let identifierRef = file.identifier({
       $ref: schema.$ref,
       nameTransformer,
       namespace: 'value',
     });
-    if (identifier.name) {
-      expression = compiler.identifier({ text: identifier.name || '' });
-    } else {
+
+    if (!identifierRef.name) {
       const ref = context.resolveIrRef<IRSchemaObject>(schema.$ref);
       expression = schemaToZodSchema({
         context,
+        result,
         schema: ref,
       });
+
+      identifierRef = file.identifier({
+        $ref: schema.$ref,
+        nameTransformer,
+        namespace: 'value',
+      });
+    }
+
+    // if `identifierRef.name` is falsy, we already set expression above
+    if (identifierRef.name) {
+      const refIdentifier = compiler.identifier({ text: identifierRef.name });
+      if (isCircularReference) {
+        expression = compiler.callExpression({
+          functionName: compiler.propertyAccessExpression({
+            expression: zIdentifier,
+            name: lazyIdentifier,
+          }),
+          parameters: [
+            compiler.arrowFunction({
+              statements: [
+                compiler.returnStatement({
+                  expression: refIdentifier,
+                }),
+              ],
+            }),
+          ],
+        });
+        result.hasCircularReference = true;
+      } else {
+        expression = refIdentifier;
+      }
     }
   } else if (schema.type) {
     expression = schemaTypeToZodSchema({
-      $ref,
       context,
       namespace,
+      result,
       schema,
     });
   } else if (schema.items) {
@@ -745,29 +810,34 @@ const schemaToZodSchema = ({
     expression = schemaTypeToZodSchema({
       context,
       namespace,
+      result,
       schema: {
         type: 'unknown',
       },
     });
   }
 
+  if ($ref) {
+    result.circularReferenceTracker.delete($ref);
+  }
+
   // emit nodes only if $ref points to a reusable component
-  if ($ref && isRefOpenApiComponent($ref)) {
-    const identifier = file.identifier({
-      $ref,
-      create: true,
-      nameTransformer,
-      namespace: 'value',
-    });
+  if (identifier?.name) {
     const statement = compiler.constVariable({
       exportConst: true,
-      expression,
-      name: identifier.name || '',
+      expression: expression!,
+      name: identifier.name,
+      typeName: result.hasCircularReference
+        ? (compiler.propertyAccessExpression({
+            expression: zIdentifier,
+            name: 'ZodTypeAny',
+          }) as unknown as ts.TypeNode)
+        : undefined,
     });
     file.add(statement);
   }
 
-  return expression;
+  return expression!;
 };
 
 export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
@@ -790,9 +860,15 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
   // });
 
   context.subscribe('schema', ({ $ref, schema }) => {
+    const result: Result = {
+      circularReferenceTracker: new Set(),
+      hasCircularReference: false,
+    };
+
     schemaToZodSchema({
       $ref,
       context,
+      result,
       schema,
     });
   });
