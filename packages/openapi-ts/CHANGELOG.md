@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.59.2
+
+### Patch Changes
+
+- [#1409](https://github.com/hey-api/openapi-ts/pull/1409) [`646064d`](https://github.com/hey-api/openapi-ts/commit/646064d1aecea988d2b4df73bd24b2ee83394ae0) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: support oauth2 and apiKey security schemes
+
+- [#1416](https://github.com/hey-api/openapi-ts/pull/1416) [`2a605b7`](https://github.com/hey-api/openapi-ts/commit/2a605b7e43655b3100e302e10b9979fbbad6cdfe) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: zod plugin handles recursive schemas
+
 ## 0.59.1
 
 ### Patch Changes
