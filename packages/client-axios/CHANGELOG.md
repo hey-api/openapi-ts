@@ -1,5 +1,11 @@
 # @hey-api/client-axios
 
+## 0.2.13
+
+### Patch Changes
+
+- [#1409](https://github.com/hey-api/openapi-ts/pull/1409) [`646064d`](https://github.com/hey-api/openapi-ts/commit/646064d1aecea988d2b4df73bd24b2ee83394ae0) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: support oauth2 and apiKey security schemes
+
 ## 0.2.12
 
 ### Patch Changes
