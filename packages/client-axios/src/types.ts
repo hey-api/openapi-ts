@@ -6,7 +6,11 @@ import type {
   CreateAxiosDefaults,
 } from 'axios';
 
-import type { BodySerializer } from './utils';
+import type {
+  BodySerializer,
+  QuerySerializer,
+  QuerySerializerOptions,
+} from './utils';
 
 type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
 
@@ -67,6 +71,17 @@ export interface Config<ThrowOnError extends boolean = boolean>
     | 'post'
     | 'put'
     | 'trace';
+  /**
+   * A function for serializing request query parameters. By default, arrays
+   * will be exploded in form style, objects will be exploded in deepObject
+   * style, and reserved characters are percent-encoded.
+   *
+   * This method will have no effect if the native `paramsSerializer()` Axios
+   * API function is used.
+   *
+   * {@link https://swagger.io/docs/specification/serialization/#query View examples}
+   */
+  querySerializer?: QuerySerializer | QuerySerializerOptions;
   /**
    * A function for transforming response data before it's returned to the
    * caller function. This is an ideal place to post-process server data,
@@ -141,6 +156,19 @@ type RequestFn = <
 ) => RequestResult<Data, TError, ThrowOnError>;
 
 export interface Client {
+  /**
+   * Returns the final request URL. This method works only with experimental parser.
+   */
+  buildUrl: <
+    Data extends {
+      body?: unknown;
+      path?: Record<string, unknown>;
+      query?: Record<string, unknown>;
+      url: string;
+    },
+  >(
+    options: Pick<Data, 'url'> & Omit<Options<Data>, 'axios'>,
+  ) => string;
   delete: MethodFn;
   get: MethodFn;
   getConfig: () => Config;
