@@ -304,6 +304,7 @@ export const uploadFile = <ThrowOnError extends boolean = false>(options: Option
 export const fileResponse = <ThrowOnError extends boolean = false>(options: Options<FileResponseData, ThrowOnError>) => {
     return (options?.client ?? client).get<FileResponseResponse, unknown, ThrowOnError>({
         ...options,
+        responseType: 'blob',
         url: '/api/v{api-version}/file/{id}'
     });
 };

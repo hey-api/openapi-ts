@@ -61,7 +61,7 @@ export const operationPagination = ({
 
 type StatusGroup = '1XX' | '2XX' | '3XX' | '4XX' | '5XX' | 'default';
 
-const statusCodeToGroup = ({
+export const statusCodeToGroup = ({
   statusCode,
 }: {
   statusCode: string;
