@@ -402,6 +402,15 @@ describe(`OpenAPI ${VERSION}`, () => {
     },
     {
       config: createConfig({
+        client: '@hey-api/client-axios',
+        input: 'parameter-explode-false.json',
+        output: 'parameter-explode-false-axios',
+        plugins: ['@hey-api/sdk'],
+      }),
+      description: 'handles non-exploded array query parameters (Axios)',
+    },
+    {
+      config: createConfig({
         input: 'security-api-key.json',
         output: 'security-api-key',
         plugins: [
