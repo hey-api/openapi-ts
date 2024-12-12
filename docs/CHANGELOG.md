@@ -1,5 +1,11 @@
 # @hey-api/docs
 
+## 0.7.4
+
+### Patch Changes
+
+- [#1420](https://github.com/hey-api/openapi-ts/pull/1420) [`8010dbb`](https://github.com/hey-api/openapi-ts/commit/8010dbb1ab8b91d1d49d5cf16276183764a63ff3) Thanks [@mrlubos](https://github.com/mrlubos)! - docs: add buildUrl() method to Axios client page
+
 ## 0.7.3
 
 ### Patch Changes
