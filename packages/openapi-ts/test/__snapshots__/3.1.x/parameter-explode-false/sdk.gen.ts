@@ -8,12 +8,12 @@ export const client = createClient(createConfig());
 export const postFoo = <ThrowOnError extends boolean = false>(options?: Options<PostFooData, ThrowOnError>) => {
     return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
         ...options,
-        url: '/foo',
         querySerializer: {
             array: {
                 explode: false,
                 style: 'form'
             }
-        }
+        },
+        url: '/foo'
     });
 };

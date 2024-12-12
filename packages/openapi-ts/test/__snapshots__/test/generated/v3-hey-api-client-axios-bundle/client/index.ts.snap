@@ -3,8 +3,8 @@ import axios from 'axios';
 
 import type { Client, Config } from './types';
 import {
+  buildUrl,
   createConfig,
-  getUrl,
   mergeConfigs,
   mergeHeaders,
   setAuthParams,
@@ -48,17 +48,15 @@ export const createClient = (config: Config): Client => {
       opts.body = opts.bodySerializer(opts.body);
     }
 
-    const url = getUrl({
-      path: opts.path,
-      url: opts.url,
-    });
+    const url = buildUrl(opts);
 
     try {
       const response = await opts.axios({
         ...opts,
         data: opts.body,
         headers: opts.headers as RawAxiosRequestHeaders,
-        params: opts.query,
+        // let `paramsSerializer()` handle query params if it exists
+        params: opts.paramsSerializer ? opts.query : undefined,
         url,
       });
 
@@ -84,6 +82,7 @@ export const createClient = (config: Config): Client => {
   };
 
   return {
+    buildUrl,
     delete: (options) => request({ ...options, method: 'delete' }),
     get: (options) => request({ ...options, method: 'get' }),
     getConfig,
