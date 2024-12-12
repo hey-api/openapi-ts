@@ -5,7 +5,10 @@ import type { ObjectValue } from '../../../compiler/types';
 import { clientApi, clientModulePath } from '../../../generate/client';
 import type { IRContext } from '../../../ir/context';
 import type { IROperationObject } from '../../../ir/ir';
-import { hasOperationDataRequired } from '../../../ir/operation';
+import {
+  hasOperationDataRequired,
+  statusCodeToGroup,
+} from '../../../ir/operation';
 import { escapeComment } from '../../../utils/escape';
 import { getServiceName } from '../../../utils/postprocess';
 import { irRef } from '../../../utils/ref';
@@ -73,6 +76,56 @@ export const operationOptionsType = ({
 };
 
 const sdkId = 'sdk';
+
+/**
+ * Infers `responseType` value from provided response content type. This is
+ * an adapted version of `getParseAs()` from the Fetch API client.
+ *
+ * From Axios documentation:
+ * `responseType` indicates the type of data that the server will respond with
+ * options are: 'arraybuffer', 'document', 'json', 'text', 'stream'
+ * browser only: 'blob'
+ */
+export const getResponseType = (
+  contentType: string | null | undefined,
+):
+  | 'arraybuffer'
+  | 'blob'
+  | 'document'
+  | 'json'
+  | 'stream'
+  | 'text'
+  | undefined => {
+  if (!contentType) {
+    return;
+  }
+
+  const cleanContent = contentType.split(';')[0].trim();
+
+  if (
+    cleanContent.startsWith('application/json') ||
+    cleanContent.endsWith('+json')
+  ) {
+    return 'json';
+  }
+
+  // Axios does not handle form data out of the box
+  // if (cleanContent === 'multipart/form-data') {
+  //   return 'formData';
+  // }
+
+  if (
+    ['application/', 'audio/', 'image/', 'video/'].some((type) =>
+      cleanContent.startsWith(type),
+    )
+  ) {
+    return 'blob';
+  }
+
+  if (cleanContent.startsWith('text/')) {
+    return 'text';
+  }
+};
 
 const operationStatements = ({
   context,
@@ -171,6 +224,26 @@ const operationStatements = ({
         },
       ],
     });
+  }
+
+  if (context.config.client.name === '@hey-api/client-axios') {
+    // try to infer `responseType` option for Axios. We don't need this in
+    // Fetch API client because it automatically detects the correct response
+    // during runtime.
+    for (const statusCode in operation.responses) {
+      // this doesn't handle default status code for now
+      if (statusCodeToGroup({ statusCode }) === '2XX') {
+        const response = operation.responses[statusCode];
+        const responseType = getResponseType(response?.mediaType);
+        // json is the default, skip it
+        if (responseType && responseType !== 'json') {
+          requestOptions.push({
+            key: 'responseType',
+            value: responseType,
+          });
+        }
+      }
+    }
   }
 
   // TODO: parser - set parseAs to skip inference if every response has the same
