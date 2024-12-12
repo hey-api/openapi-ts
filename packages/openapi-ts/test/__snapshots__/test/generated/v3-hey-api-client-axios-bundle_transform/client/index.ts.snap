@@ -51,7 +51,9 @@ export const createClient = (config: Config): Client => {
     const url = buildUrl(opts);
 
     try {
-      const response = await opts.axios({
+      // assign Axios here for consistency with fetch
+      const _axios = opts.axios;
+      const response = await _axios({
         ...opts,
         data: opts.body,
         headers: opts.headers as RawAxiosRequestHeaders,
