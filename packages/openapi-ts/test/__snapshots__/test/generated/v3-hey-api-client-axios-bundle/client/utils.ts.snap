@@ -1,4 +1,4 @@
-import type { Config, RequestOptions, Security } from './types';
+import type { Client, Config, RequestOptions, Security } from './types';
 
 interface PathSerializer {
   path: Record<string, unknown>;
@@ -12,6 +12,8 @@ type MatrixStyle = 'label' | 'matrix' | 'simple';
 type ArraySeparatorStyle = ArrayStyle | MatrixStyle;
 type ObjectStyle = 'form' | 'deepObject';
 type ObjectSeparatorStyle = ObjectStyle | MatrixStyle;
+
+export type QuerySerializer = (query: Record<string, unknown>) => string;
 
 export type BodySerializer = (body: any) => any;
 
@@ -32,6 +34,12 @@ interface SerializePrimitiveOptions {
 }
 interface SerializePrimitiveParam extends SerializePrimitiveOptions {
   value: string;
+}
+
+export interface QuerySerializerOptions {
+  allowReserved?: boolean;
+  array?: SerializerOptions<ArrayStyle>;
+  object?: SerializerOptions<ObjectStyle>;
 }
 
 const serializePrimitiveParam = ({
@@ -250,6 +258,66 @@ const defaultPathSerializer = ({ path, url: _url }: PathSerializer) => {
   return url;
 };
 
+export const createQuerySerializer = <T = unknown>({
+  allowReserved,
+  array,
+  object,
+}: QuerySerializerOptions = {}) => {
+  const querySerializer = (queryParams: T) => {
+    let search: string[] = [];
+    if (queryParams && typeof queryParams === 'object') {
+      for (const name in queryParams) {
+        const value = queryParams[name];
+
+        if (value === undefined || value === null) {
+          continue;
+        }
+
+        if (Array.isArray(value)) {
+          search = [
+            ...search,
+            serializeArrayParam({
+              allowReserved,
+              explode: true,
+              name,
+              style: 'form',
+              value,
+              ...array,
+            }),
+          ];
+          continue;
+        }
+
+        if (typeof value === 'object') {
+          search = [
+            ...search,
+            serializeObjectParam({
+              allowReserved,
+              explode: true,
+              name,
+              style: 'deepObject',
+              value: value as Record<string, unknown>,
+              ...object,
+            }),
+          ];
+          continue;
+        }
+
+        search = [
+          ...search,
+          serializePrimitiveParam({
+            allowReserved,
+            name,
+            value: value as string,
+          }),
+        ];
+      }
+    }
+    return search.join('&');
+  };
+  return querySerializer;
+};
+
 export const getAuthToken = async (
   security: Security,
   options: Pick<RequestOptions, 'accessToken' | 'apiKey'>,
@@ -297,13 +365,45 @@ export const setAuthParams = async ({
   }
 };
 
+export const buildUrl: Client['buildUrl'] = (options) => {
+  const url = getUrl({
+    path: options.path,
+    // let `paramsSerializer()` handle query params if it exists
+    query: !options.paramsSerializer ? options.query : undefined,
+    querySerializer:
+      typeof options.querySerializer === 'function'
+        ? options.querySerializer
+        : createQuerySerializer(options.querySerializer),
+    url: options.url,
+  });
+  return url;
+};
+
 export const getUrl = ({
   path,
-  url,
+  query,
+  querySerializer,
+  url: _url,
 }: {
   path?: Record<string, unknown>;
+  query?: Record<string, unknown>;
+  querySerializer: QuerySerializer;
   url: string;
-}) => (path ? defaultPathSerializer({ path, url }) : url);
+}) => {
+  const pathUrl = _url.startsWith('/') ? _url : `/${_url}`;
+  let url = pathUrl;
+  if (path) {
+    url = defaultPathSerializer({ path, url });
+  }
+  let search = query ? querySerializer(query) : '';
+  if (search.startsWith('?')) {
+    search = search.substring(1);
+  }
+  if (search) {
+    url += `?${search}`;
+  }
+  return url;
+};
 
 const serializeFormDataPair = (
   formData: FormData,

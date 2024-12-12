@@ -292,10 +292,35 @@ const operationStatements = ({
     }
   }
 
-  requestOptions.push({
-    key: 'url',
-    value: operation.path,
-  });
+  for (const name in operation.parameters?.query) {
+    const parameter = operation.parameters.query[name];
+    if (
+      (parameter.schema.type === 'array' ||
+        parameter.schema.type === 'tuple') &&
+      (parameter.style !== 'form' || !parameter.explode)
+    ) {
+      // override the default settings for `querySerializer`
+      requestOptions.push({
+        key: 'querySerializer',
+        value: [
+          {
+            key: 'array',
+            value: [
+              {
+                key: 'explode',
+                value: false,
+              },
+              {
+                key: 'style',
+                value: 'form',
+              },
+            ],
+          },
+        ],
+      });
+      break;
+    }
+  }
 
   const fileTransformers = context.file({ id: 'transformers' });
   if (fileTransformers) {
@@ -315,37 +340,10 @@ const operationStatements = ({
     }
   }
 
-  for (const name in operation.parameters?.query) {
-    const parameter = operation.parameters.query[name];
-    if (
-      (parameter.schema.type === 'array' ||
-        parameter.schema.type === 'tuple') &&
-      (parameter.style !== 'form' || !parameter.explode)
-    ) {
-      // override the default settings for `querySerializer`
-      if (context.config.client.name === '@hey-api/client-fetch') {
-        requestOptions.push({
-          key: 'querySerializer',
-          value: [
-            {
-              key: 'array',
-              value: [
-                {
-                  key: 'explode',
-                  value: false,
-                },
-                {
-                  key: 'style',
-                  value: 'form',
-                },
-              ],
-            },
-          ],
-        });
-      }
-      break;
-    }
-  }
+  requestOptions.push({
+    key: 'url',
+    value: operation.path,
+  });
 
   return [
     compiler.returnFunctionCall({
