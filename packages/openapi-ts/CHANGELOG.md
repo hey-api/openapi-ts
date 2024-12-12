@@ -1,5 +1,17 @@
 # @hey-api/openapi-ts
 
+## 0.59.2
+
+### Patch Changes
+
+- [#1420](https://github.com/hey-api/openapi-ts/pull/1420) [`8010dbb`](https://github.com/hey-api/openapi-ts/commit/8010dbb1ab8b91d1d49d5cf16276183764a63ff3) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: generate querySerializer options for Axios client
+
+- [#1419](https://github.com/hey-api/openapi-ts/pull/1419) [`4555796`](https://github.com/hey-api/openapi-ts/commit/4555796df3a33fb3fdf7d7417f7d1f3b22d89bcf) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: infer responseType in SDKs for axios client
+
+- [#1409](https://github.com/hey-api/openapi-ts/pull/1409) [`646064d`](https://github.com/hey-api/openapi-ts/commit/646064d1aecea988d2b4df73bd24b2ee83394ae0) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: support oauth2 and apiKey security schemes
+
+- [#1416](https://github.com/hey-api/openapi-ts/pull/1416) [`2a605b7`](https://github.com/hey-api/openapi-ts/commit/2a605b7e43655b3100e302e10b9979fbbad6cdfe) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: zod plugin handles recursive schemas
+
 ## 0.59.1
 
 ### Patch Changes
