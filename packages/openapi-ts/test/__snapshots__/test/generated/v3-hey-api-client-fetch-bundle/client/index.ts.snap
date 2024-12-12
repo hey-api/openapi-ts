@@ -68,7 +68,10 @@ export const createClient = (config: Config = {}): Client => {
       request = await fn(request, opts);
     }
 
-    let response = await opts.fetch(request);
+    // fetch must be assigned here, otherwise it would throw the error:
+    // TypeError: Failed to execute 'fetch' on 'Window': Illegal invocation
+    const _fetch = opts.fetch!;
+    let response = await _fetch(request);
 
     for (const fn of interceptors.response._fns) {
       response = await fn(response, request, opts);
