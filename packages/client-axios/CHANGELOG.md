@@ -1,5 +1,11 @@
 # @hey-api/client-axios
 
+## 0.3.1
+
+### Patch Changes
+
+- [#1424](https://github.com/hey-api/openapi-ts/pull/1424) [`cbf4e84`](https://github.com/hey-api/openapi-ts/commit/cbf4e84db7f3a47f19d8c3eaa87c71b27912c1a2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: assign axios to variable before sending requests
+
 ## 0.3.0
 
 ### Minor Changes
