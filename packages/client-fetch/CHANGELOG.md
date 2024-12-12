@@ -1,5 +1,11 @@
 # @hey-api/client-fetch
 
+## 0.5.4
+
+### Patch Changes
+
+- [#1424](https://github.com/hey-api/openapi-ts/pull/1424) [`cbf4e84`](https://github.com/hey-api/openapi-ts/commit/cbf4e84db7f3a47f19d8c3eaa87c71b27912c1a2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: assign fetch to variable before sending requests
+
 ## 0.5.3
 
 ### Patch Changes
