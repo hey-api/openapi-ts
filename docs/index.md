@@ -67,7 +67,7 @@ features:
 
 <div class="home-list">
 
-### Migration guides
+### Migration Guides
 
 - [OpenAPI TypeScript Codegen](/openapi-ts/migrating#openapi-typescript-codegen)
 

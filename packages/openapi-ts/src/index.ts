@@ -11,7 +11,11 @@ import type { IRContext } from './ir/context';
 import { parseExperimental, parseLegacy } from './openApi';
 import type { ClientPlugins, UserPlugins } from './plugins';
 import { defaultPluginConfigs } from './plugins';
-import type { DefaultPluginConfigs, PluginNames } from './plugins/types';
+import type {
+  DefaultPluginConfigs,
+  PluginContext,
+  PluginNames,
+} from './plugins/types';
 import type { Client } from './types/client';
 import type {
   ClientConfig,
@@ -180,44 +184,88 @@ const getOutput = (userConfig: ClientConfig): Config['output'] => {
   return output;
 };
 
-const getPluginOrder = ({
+const getPluginsConfig = ({
   pluginConfigs,
   userPlugins,
+  userPluginsConfig,
 }: {
   pluginConfigs: DefaultPluginConfigs<ClientPlugins>;
   userPlugins: ReadonlyArray<PluginNames>;
-}): Config['pluginOrder'] => {
+  userPluginsConfig: Config['plugins'];
+}): Pick<Config, 'plugins' | 'pluginOrder'> => {
   const circularReferenceTracker = new Set<PluginNames>();
-  const visitedNodes = new Set<PluginNames>();
+  const pluginOrder = new Set<PluginNames>();
+  const plugins: Config['plugins'] = {};
 
   const dfs = (name: PluginNames) => {
     if (circularReferenceTracker.has(name)) {
       throw new Error(`Circular reference detected at '${name}'`);
     }
 
-    if (!visitedNodes.has(name)) {
+    if (!pluginOrder.has(name)) {
       circularReferenceTracker.add(name);
 
       const pluginConfig = pluginConfigs[name];
-
       if (!pluginConfig) {
         throw new Error(
           `🚫 unknown plugin dependency "${name}" - do you need to register a custom plugin with this name?`,
         );
       }
 
-      for (const dependency of pluginConfig._dependencies || []) {
-        dfs(dependency);
-      }
-
-      for (const dependency of pluginConfig._optionalDependencies || []) {
-        if (userPlugins.includes(dependency)) {
-          dfs(dependency);
+      const defaultOptions = defaultPluginConfigs[name];
+      const userOptions = userPluginsConfig[name];
+      if (userOptions && defaultOptions) {
+        const nativePluginOption = Object.keys(userOptions).find((key) =>
+          key.startsWith('_'),
+        );
+        if (nativePluginOption) {
+          throw new Error(
+            `🚫 cannot register plugin "${name}" - attempting to override a native plugin option "${nativePluginOption}"`,
+          );
         }
       }
 
+      const config = {
+        _dependencies: [],
+        ...defaultOptions,
+        ...userOptions,
+      };
+
+      if (config._infer) {
+        const context: PluginContext = {
+          ensureDependency: (dependency) => {
+            if (
+              typeof dependency === 'string' &&
+              !config._dependencies.includes(dependency)
+            ) {
+              config._dependencies = [...config._dependencies, dependency];
+            }
+          },
+          pluginByTag: (tag) => {
+            for (const userPlugin of userPlugins) {
+              const defaultConfig = defaultPluginConfigs[userPlugin];
+              if (
+                defaultConfig &&
+                defaultConfig._tags?.includes(tag) &&
+                userPlugin !== name
+              ) {
+                return userPlugin;
+              }
+            }
+          },
+        };
+        config._infer(config, context);
+      }
+
+      for (const dependency of config._dependencies) {
+        dfs(dependency);
+      }
+
       circularReferenceTracker.delete(name);
-      visitedNodes.add(name);
+      pluginOrder.add(name);
+
+      // @ts-expect-error
+      plugins[name] = config;
     }
   };
 
@@ -225,7 +273,10 @@ const getPluginOrder = ({
     dfs(name);
   }
 
-  return Array.from(visitedNodes);
+  return {
+    pluginOrder: Array.from(pluginOrder),
+    plugins,
+  };
 };
 
 const getPlugins = (
@@ -248,42 +299,14 @@ const getPlugins = (
     })
     .filter(Boolean);
 
-  const pluginOrder = getPluginOrder({
+  return getPluginsConfig({
     pluginConfigs: {
       ...userPluginsConfig,
       ...defaultPluginConfigs,
     },
     userPlugins,
+    userPluginsConfig,
   });
-
-  const plugins = pluginOrder.reduce(
-    (result, name) => {
-      const defaultOptions = defaultPluginConfigs[name];
-      const userOptions = userPluginsConfig[name];
-      if (userOptions && defaultOptions) {
-        const nativePluginOption = Object.keys(userOptions).find((key) =>
-          key.startsWith('_'),
-        );
-        if (nativePluginOption) {
-          throw new Error(
-            `🚫 cannot register plugin "${userOptions.name}" - attempting to override a native plugin option "${nativePluginOption}"`,
-          );
-        }
-      }
-      // @ts-expect-error
-      result[name] = {
-        ...defaultOptions,
-        ...userOptions,
-      };
-      return result;
-    },
-    {} as Config['plugins'],
-  );
-
-  return {
-    pluginOrder,
-    plugins,
-  };
 };
 
 const getSpec = async ({ config }: { config: Config }) => {

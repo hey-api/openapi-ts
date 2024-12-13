@@ -212,11 +212,6 @@ for (const version of versions) {
       },
       {
         config: createConfig({
-          input: {
-            // TODO: parser - remove `exclude` once recursive references are handled
-            exclude: '^#/components/schemas/ModelWithCircularReference$',
-            path: path.join(__dirname, 'spec', version, 'full.json'),
-          },
           output: 'default',
           plugins: ['zod'],
         }),

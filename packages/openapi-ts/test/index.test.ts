@@ -492,7 +492,26 @@ describe('OpenAPI v3', () => {
         input: V3_TRANSFORMS_SPEC_PATH,
         output,
         plugins: [
-          ...(config.plugins ?? []),
+          ...(config.plugins ?? []).map((plugin) => {
+            if (typeof plugin === 'string') {
+              if (plugin === '@hey-api/sdk') {
+                return {
+                  // @ts-expect-error
+                  ...plugin,
+                  name: '@hey-api/sdk',
+                  transformer: true,
+                };
+              }
+            } else if (plugin.name === '@hey-api/sdk') {
+              return {
+                ...plugin,
+                name: '@hey-api/sdk',
+                transformer: true,
+              };
+            }
+
+            return plugin;
+          }),
           {
             dates: true,
             name: '@hey-api/transformers',

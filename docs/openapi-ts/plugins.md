@@ -26,7 +26,7 @@ These plugins help reduce boilerplate associated with third-party dependencies. 
 - [`@tanstack/svelte-query`](/openapi-ts/tanstack-query) - TanStack Query functions and query keys
 - [`@tanstack/vue-query`](/openapi-ts/tanstack-query) - TanStack Query functions and query keys
 - [`fastify`](/openapi-ts/fastify) - TypeScript interface for Fastify route handlers
-- [`zod`](/openapi-ts/zod) - Zod schemas to validate your data
+- [`zod`](/openapi-ts/validators/zod) - Zod schemas to validate your data
 
 ## Community
 
