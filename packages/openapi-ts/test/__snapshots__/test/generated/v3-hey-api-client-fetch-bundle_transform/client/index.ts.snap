@@ -106,8 +106,14 @@ export const createClient = (config: Config = {}): Client => {
           : opts.parseAs) ?? 'json';
 
       let data = await response[parseAs]();
-      if (parseAs === 'json' && opts.responseTransformer) {
-        data = await opts.responseTransformer(data);
+      if (parseAs === 'json') {
+        if (opts.responseValidator) {
+          await opts.responseValidator(data);
+        }
+
+        if (opts.responseTransformer) {
+          data = await opts.responseTransformer(data);
+        }
       }
 
       return {

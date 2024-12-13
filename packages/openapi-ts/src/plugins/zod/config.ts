@@ -5,6 +5,7 @@ import type { Config } from './types';
 export const defaultConfig: Plugin.Config<Config> = {
   _handler: handler,
   _handlerLegacy: () => {},
+  _tags: ['validator'],
   name: 'zod',
   output: 'zod',
 };

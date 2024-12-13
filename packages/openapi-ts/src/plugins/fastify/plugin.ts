@@ -5,7 +5,7 @@ import type { IRContext } from '../../ir/context';
 import type { IROperationObject } from '../../ir/ir';
 import { operationResponsesMap } from '../../ir/operation';
 import { hasParameterGroupObjectRequired } from '../../ir/parameter';
-import { operationIrRef } from '../@hey-api/sdk/plugin';
+import { operationIrRef } from '../shared/utils/ref';
 import type { Plugin } from '../types';
 import type { Config } from './types';
 

@@ -15,8 +15,8 @@ import { irRef, isRefOpenApiComponent } from '../../../utils/ref';
 import { digitsRegExp } from '../../../utils/regexp';
 import { stringCase } from '../../../utils/stringCase';
 import { fieldName } from '../../shared/utils/case';
+import { operationIrRef } from '../../shared/utils/ref';
 import type { Plugin } from '../../types';
-import { operationIrRef } from '../sdk/plugin';
 import type { Config } from './types';
 
 interface SchemaWithType<T extends Required<IRSchemaObject>['type']>

@@ -51,6 +51,17 @@ export default defineConfig({
             text: 'Clients',
           },
           {
+            collapsed: true,
+            items: [
+              {
+                link: '/openapi-ts/validators/zod',
+                text: 'Zod',
+              },
+            ],
+            link: '/openapi-ts/validators',
+            text: 'Validators',
+          },
+          {
             link: '/openapi-ts/transformers',
             text: 'Transformers',
           },
@@ -70,10 +81,6 @@ export default defineConfig({
           {
             link: '/openapi-ts/tanstack-query',
             text: 'TanStack Query',
-          },
-          {
-            link: '/openapi-ts/zod',
-            text: 'Zod',
           },
         ],
         text: 'Plugins',

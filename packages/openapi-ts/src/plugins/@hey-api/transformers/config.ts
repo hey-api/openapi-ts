@@ -7,6 +7,7 @@ export const defaultConfig: Plugin.Config<Config> = {
   _dependencies: ['@hey-api/typescript'],
   _handler: handler,
   _handlerLegacy: handlerLegacy,
+  _tags: ['transformer'],
   dates: true,
   name: '@hey-api/transformers',
   output: 'transformers',

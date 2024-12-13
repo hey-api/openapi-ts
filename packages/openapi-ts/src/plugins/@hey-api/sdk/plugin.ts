@@ -11,54 +11,16 @@ import {
 } from '../../../ir/operation';
 import { escapeComment } from '../../../utils/escape';
 import { getServiceName } from '../../../utils/postprocess';
-import { irRef } from '../../../utils/ref';
-import { stringCase } from '../../../utils/stringCase';
 import { transformServiceName } from '../../../utils/transform';
+import { operationIrRef } from '../../shared/utils/ref';
 import type { Plugin } from '../../types';
-import { operationTransformerIrRef } from '../transformers/plugin';
+import { zodId } from '../../zod/plugin';
+import {
+  operationTransformerIrRef,
+  transformersId,
+} from '../transformers/plugin';
 import { serviceFunctionIdentifier } from './plugin-legacy';
 import type { Config } from './types';
-
-interface OperationIRRef {
-  /**
-   * Operation ID
-   */
-  id: string;
-}
-
-export const operationIrRef = ({
-  id,
-  type,
-}: OperationIRRef & {
-  type: 'data' | 'error' | 'errors' | 'response' | 'responses';
-}): string => {
-  let affix = '';
-  switch (type) {
-    case 'data':
-      affix = 'Data';
-      break;
-    case 'error':
-      // error union
-      affix = 'Error';
-      break;
-    case 'errors':
-      // errors map
-      affix = 'Errors';
-      break;
-    case 'response':
-      // response union
-      affix = 'Response';
-      break;
-    case 'responses':
-      // responses map
-      affix = 'Responses';
-      break;
-  }
-  return `${irRef}${stringCase({
-    case: 'PascalCase',
-    value: id,
-  })}-${affix}`;
-};
 
 export const operationOptionsType = ({
   importedType,
@@ -322,20 +284,74 @@ const operationStatements = ({
     }
   }
 
-  const fileTransformers = context.file({ id: 'transformers' });
-  if (fileTransformers) {
-    const identifier = fileTransformers.identifier({
-      $ref: operationTransformerIrRef({ id: operation.id, type: 'response' }),
-      namespace: 'value',
-    });
-    if (identifier.name) {
-      file.import({
-        module: file.relativePathToFile({ context, id: 'transformers' }),
-        name: identifier.name,
+  if (plugin.transformer === '@hey-api/transformers') {
+    const identifierTransformer = context
+      .file({ id: transformersId })!
+      .identifier({
+        $ref: operationTransformerIrRef({ id: operation.id, type: 'response' }),
+        namespace: 'value',
       });
+
+    if (identifierTransformer.name) {
+      file.import({
+        module: file.relativePathToFile({
+          context,
+          id: transformersId,
+        }),
+        name: identifierTransformer.name,
+      });
+
       requestOptions.push({
         key: 'responseTransformer',
-        value: identifier.name,
+        value: identifierTransformer.name,
+      });
+    }
+  }
+
+  if (plugin.validator === 'zod') {
+    const identifierSchema = context.file({ id: zodId })!.identifier({
+      $ref: operationIrRef({
+        case: 'camelCase',
+        id: operation.id,
+        type: 'response',
+      }),
+      namespace: 'value',
+    });
+
+    if (identifierSchema.name) {
+      file.import({
+        module: file.relativePathToFile({
+          context,
+          id: zodId,
+        }),
+        name: identifierSchema.name,
+      });
+
+      requestOptions.push({
+        key: 'responseValidator',
+        value: compiler.arrowFunction({
+          async: true,
+          parameters: [
+            {
+              name: 'data',
+            },
+          ],
+          statements: [
+            compiler.returnStatement({
+              expression: compiler.awaitExpression({
+                expression: compiler.callExpression({
+                  functionName: compiler.propertyAccessExpression({
+                    expression: compiler.identifier({
+                      text: identifierSchema.name,
+                    }),
+                    name: compiler.identifier({ text: 'parseAsync' }),
+                  }),
+                  parameters: [compiler.identifier({ text: 'data' })],
+                }),
+              }),
+            }),
+          ],
+        }),
       });
     }
   }

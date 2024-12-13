@@ -16,12 +16,10 @@ import {
 import { getConfig } from '../../../utils/config';
 import { getServiceName } from '../../../utils/postprocess';
 import { transformServiceName } from '../../../utils/transform';
-import {
-  operationIrRef,
-  operationOptionsType,
-} from '../../@hey-api/sdk/plugin';
+import { operationOptionsType } from '../../@hey-api/sdk/plugin';
 import { serviceFunctionIdentifier } from '../../@hey-api/sdk/plugin-legacy';
 import { schemaToType } from '../../@hey-api/typescript/plugin';
+import { operationIrRef } from '../../shared/utils/ref';
 import type { Plugin } from '../../types';
 import type { Config as AngularQueryConfig } from '../angular-query-experimental';
 import type { Config as ReactQueryConfig } from '../react-query';

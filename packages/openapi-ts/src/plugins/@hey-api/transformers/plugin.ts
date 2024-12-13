@@ -6,8 +6,8 @@ import type { IRSchemaObject } from '../../../ir/ir';
 import { operationResponsesMap } from '../../../ir/operation';
 import { irRef } from '../../../utils/ref';
 import { stringCase } from '../../../utils/stringCase';
+import { operationIrRef } from '../../shared/utils/ref';
 import type { Plugin } from '../../types';
-import { operationIrRef } from '../sdk/plugin';
 import type { Config } from './types';
 
 interface OperationIRRef {
@@ -68,7 +68,7 @@ export const schemaResponseTransformerRef = ({
   $ref: string;
 }): string => schemaIrRef({ $ref, type: 'response' });
 
-const transformersId = 'transformers';
+export const transformersId = 'transformers';
 const dataVariableName = 'data';
 
 const ensureStatements = (
