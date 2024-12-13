@@ -83,11 +83,16 @@ export interface Config<ThrowOnError extends boolean = boolean>
    */
   querySerializer?: QuerySerializer | QuerySerializerOptions;
   /**
-   * A function for transforming response data before it's returned to the
-   * caller function. This is an ideal place to post-process server data,
-   * e.g. convert date ISO strings into native Date objects.
+   * A function transforming response data before it's returned. This is useful
+   * for post-processing data, e.g. converting ISO strings into Date objects.
    */
   responseTransformer?: (data: unknown) => Promise<unknown>;
+  /**
+   * A function validating response data. This is useful if you want to ensure
+   * the response conforms to the desired shape, so it can be safely passed to
+   * the transformers and returned to the user.
+   */
+  responseValidator?: (data: unknown) => Promise<unknown>;
   /**
    * Throw an error instead of returning it in the response?
    *
@@ -97,7 +102,7 @@ export interface Config<ThrowOnError extends boolean = boolean>
 }
 
 export interface RequestOptions<
-  ThrowOnError extends boolean = false,
+  ThrowOnError extends boolean = boolean,
   Url extends string = string,
 > extends Config<ThrowOnError> {
   /**

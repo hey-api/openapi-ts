@@ -77,4 +77,32 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
    * @default '{{name}}Service'
    */
   serviceNameBuilder?: string;
+  /**
+   * Transform response data before returning. This is useful if you want to
+   * convert for example ISO strings into Date objects. However, transformation
+   * adds runtime overhead, so it's not recommended to use unless necessary.
+   *
+   * You can customize the selected transformer output through its plugin. You
+   * can also set `transformer` to `true` to automatically choose the
+   * transformer from your defined plugins.
+   *
+   * @default false
+   */
+  transformer?: '@hey-api/transformers' | boolean;
+  /**
+   * **This feature works only with the experimental parser**
+   *
+   * Validate response data against schema before returning. This is useful
+   * if you want to ensure the response conforms to a desired shape. However,
+   * validation adds runtime overhead, so it's not recommended to use unless
+   * absolutely necessary.
+   *
+   * Ensure you have declared the selected library as a dependency to avoid
+   * errors. You can customize the selected validator output through its
+   * plugin. You can also set `validator` to `true` to automatically choose
+   * the validator from your defined plugins.
+   *
+   * @default false
+   */
+  validator?: 'zod' | boolean;
 }

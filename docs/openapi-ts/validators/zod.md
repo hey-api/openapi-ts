@@ -45,6 +45,28 @@ export default {
 
 You can now generate Zod artifacts. 🎉
 
+## SDKs
+
+To automatically validate response data in your SDKs, set `validator` to `true`.
+
+```js
+import { defaultPlugins } from '@hey-api/openapi-ts';
+
+export default {
+  client: '@hey-api/client-fetch',
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  plugins: [
+    ...defaultPlugins,
+    'zod',
+    {
+      name: '@hey-api/sdk', // [!code ++]
+      validator: true, // [!code ++]
+    },
+  ],
+};
+```
+
 ## Output
 
 The Zod plugin will generate the following artifacts, depending on the input specification.
@@ -53,5 +75,5 @@ The Zod plugin will generate the following artifacts, depending on the input spe
 
 More information will be provided as we finalize the plugin.
 
-<!--@include: ../examples.md-->
-<!--@include: ../sponsorship.md-->
+<!--@include: ../../examples.md-->
+<!--@include: ../../sponsorship.md-->

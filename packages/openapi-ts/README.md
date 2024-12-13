@@ -27,10 +27,6 @@ Love Hey API? Please consider becoming a [sponsor](https://github.com/sponsors/h
 
 Automatically update your code when the APIs it depends on change. [Find out more](https://heyapi.dev/openapi-ts/integrations.html).
 
-## Migrating from OpenAPI Typescript Codegen?
+## Migration Guides
 
-Please read our [migration guide](https://heyapi.dev/openapi-ts/migrating.html#openapi-typescript-codegen).
-
-## Contributing
-
-Want to get involved? Please refer to the [contributing guide](https://heyapi.dev/contributing.html).
+[OpenAPI Typescript Codegen](https://heyapi.dev/openapi-ts/migrating.html#openapi-typescript-codegen).
