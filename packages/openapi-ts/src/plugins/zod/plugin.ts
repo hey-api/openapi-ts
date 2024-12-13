@@ -2,10 +2,11 @@ import ts from 'typescript';
 
 import { compiler } from '../../compiler';
 import type { IRContext } from '../../ir/context';
-import type { IRSchemaObject } from '../../ir/ir';
+import type { IROperationObject, IRSchemaObject } from '../../ir/ir';
+import { operationResponsesMap } from '../../ir/operation';
 import { deduplicateSchema } from '../../ir/schema';
-import { isRefOpenApiComponent } from '../../utils/ref';
 import { digitsRegExp } from '../../utils/regexp';
+import { operationIrRef } from '../shared/utils/ref';
 import type { Plugin } from '../types';
 import type { Config } from './types';
 
@@ -19,25 +20,26 @@ interface Result {
   hasCircularReference: boolean;
 }
 
-const zodId = 'zod';
+export const zodId = 'zod';
 
 // frequently used identifiers
 const defaultIdentifier = compiler.identifier({ text: 'default' });
+const intersectionIdentifier = compiler.identifier({ text: 'intersection' });
 const lazyIdentifier = compiler.identifier({ text: 'lazy' });
+const mergeIdentifier = compiler.identifier({ text: 'merge' });
 const optionalIdentifier = compiler.identifier({ text: 'optional' });
 const readonlyIdentifier = compiler.identifier({ text: 'readonly' });
+const unionIdentifier = compiler.identifier({ text: 'union' });
 const zIdentifier = compiler.identifier({ text: 'z' });
 
-const nameTransformer = (name: string) => `z${name}`;
+const nameTransformer = (name: string) => `z-${name}`;
 
 const arrayTypeToZodSchema = ({
   context,
-  namespace,
   result,
   schema,
 }: {
   context: IRContext;
-  namespace: Array<ts.Statement>;
   result: Result;
   schema: SchemaWithType<'array'>;
 }): ts.CallExpression => {
@@ -54,7 +56,6 @@ const arrayTypeToZodSchema = ({
       parameters: [
         unknownTypeToZodSchema({
           context,
-          namespace,
           schema: {
             type: 'unknown',
           },
@@ -68,7 +69,6 @@ const arrayTypeToZodSchema = ({
     const itemExpressions = schema.items!.map((item) =>
       schemaToZodSchema({
         context,
-        namespace,
         result,
         schema: item,
       }),
@@ -95,7 +95,6 @@ const arrayTypeToZodSchema = ({
         parameters: [
           unknownTypeToZodSchema({
             context,
-            namespace,
             schema: {
               type: 'unknown',
             },
@@ -142,7 +141,6 @@ const booleanTypeToZodSchema = ({
   schema,
 }: {
   context: IRContext;
-  namespace: Array<ts.Statement>;
   schema: SchemaWithType<'boolean'>;
 }) => {
   if (schema.const !== undefined) {
@@ -163,11 +161,9 @@ const booleanTypeToZodSchema = ({
 
 const enumTypeToZodSchema = ({
   context,
-  namespace,
   schema,
 }: {
   context: IRContext;
-  namespace: Array<ts.Statement>;
   schema: SchemaWithType<'enum'>;
 }): ts.CallExpression => {
   const enumMembers: Array<ts.LiteralExpression> = [];
@@ -186,7 +182,6 @@ const enumTypeToZodSchema = ({
   if (!enumMembers.length) {
     return unknownTypeToZodSchema({
       context,
-      namespace,
       schema: {
         type: 'unknown',
       },
@@ -213,7 +208,6 @@ const neverTypeToZodSchema = ({
   schema,
 }: {
   context: IRContext;
-  namespace: Array<ts.Statement>;
   schema: SchemaWithType<'never'>;
 }) => {
   const expression = compiler.callExpression({
@@ -229,7 +223,6 @@ const nullTypeToZodSchema = ({
   schema,
 }: {
   context: IRContext;
-  namespace: Array<ts.Statement>;
   schema: SchemaWithType<'null'>;
 }) => {
   const expression = compiler.callExpression({
@@ -245,7 +238,6 @@ const numberTypeToZodSchema = ({
   schema,
 }: {
   context: IRContext;
-  namespace: Array<ts.Statement>;
   schema: SchemaWithType<'number'>;
 }) => {
   let numberExpression = compiler.callExpression({
@@ -307,12 +299,10 @@ const numberTypeToZodSchema = ({
 
 const objectTypeToZodSchema = ({
   context,
-  // namespace,
   result,
   schema,
 }: {
   context: IRContext;
-  namespace: Array<ts.Statement>;
   result: Result;
   schema: SchemaWithType<'object'>;
 }) => {
@@ -413,7 +403,6 @@ const objectTypeToZodSchema = ({
   //     name: 'key',
   //     type: schemaToZodSchema({
   //       context,
-  //       namespace,
   //       schema:
   //         indexPropertyItems.length === 1
   //           ? indexPropertyItems[0]
@@ -444,7 +433,6 @@ const stringTypeToZodSchema = ({
   schema,
 }: {
   context: IRContext;
-  namespace: Array<ts.Statement>;
   schema: SchemaWithType<'string'>;
 }) => {
   let stringExpression = compiler.callExpression({
@@ -539,7 +527,6 @@ const undefinedTypeToZodSchema = ({
   schema,
 }: {
   context: IRContext;
-  namespace: Array<ts.Statement>;
   schema: SchemaWithType<'undefined'>;
 }) => {
   const expression = compiler.callExpression({
@@ -555,7 +542,6 @@ const unknownTypeToZodSchema = ({
   schema,
 }: {
   context: IRContext;
-  namespace: Array<ts.Statement>;
   schema: SchemaWithType<'unknown'>;
 }) => {
   const expression = compiler.callExpression({
@@ -571,7 +557,6 @@ const voidTypeToZodSchema = ({
   schema,
 }: {
   context: IRContext;
-  namespace: Array<ts.Statement>;
   schema: SchemaWithType<'void'>;
 }) => {
   const expression = compiler.callExpression({
@@ -585,12 +570,10 @@ const voidTypeToZodSchema = ({
 
 const schemaTypeToZodSchema = ({
   context,
-  namespace,
   result,
   schema,
 }: {
   context: IRContext;
-  namespace: Array<ts.Statement>;
   result: Result;
   schema: IRSchemaObject;
 }): ts.Expression => {
@@ -598,58 +581,49 @@ const schemaTypeToZodSchema = ({
     case 'array':
       return arrayTypeToZodSchema({
         context,
-        namespace,
         result,
         schema: schema as SchemaWithType<'array'>,
       });
     case 'boolean':
       return booleanTypeToZodSchema({
         context,
-        namespace,
         schema: schema as SchemaWithType<'boolean'>,
       });
     case 'enum':
       return enumTypeToZodSchema({
         context,
-        namespace,
         schema: schema as SchemaWithType<'enum'>,
       });
     case 'never':
       return neverTypeToZodSchema({
         context,
-        namespace,
         schema: schema as SchemaWithType<'never'>,
       });
     case 'null':
       return nullTypeToZodSchema({
         context,
-        namespace,
         schema: schema as SchemaWithType<'null'>,
       });
     case 'number':
       return numberTypeToZodSchema({
         context,
-        namespace,
         schema: schema as SchemaWithType<'number'>,
       });
     case 'object':
       return objectTypeToZodSchema({
         context,
-        namespace,
         result,
         schema: schema as SchemaWithType<'object'>,
       });
     case 'string':
       return stringTypeToZodSchema({
         context,
-        namespace,
         schema: schema as SchemaWithType<'string'>,
       });
     case 'tuple':
       // TODO: parser - temporary unknown while not handled
       return unknownTypeToZodSchema({
         context,
-        namespace,
         schema: {
           type: 'unknown',
         },
@@ -657,41 +631,64 @@ const schemaTypeToZodSchema = ({
     // TODO: parser - handle tuple
     // return tupleTypeToIdentifier({
     //   context,
-    //   namespace,
     //   schema: schema as SchemaWithType<'tuple'>,
     // });
     case 'undefined':
       return undefinedTypeToZodSchema({
         context,
-        namespace,
         schema: schema as SchemaWithType<'undefined'>,
       });
     case 'unknown':
       return unknownTypeToZodSchema({
         context,
-        namespace,
         schema: schema as SchemaWithType<'unknown'>,
       });
     case 'void':
       return voidTypeToZodSchema({
         context,
-        namespace,
         schema: schema as SchemaWithType<'void'>,
       });
+  }
+};
+
+const operationToZodSchema = ({
+  context,
+  operation,
+  result,
+}: {
+  context: IRContext;
+  operation: IROperationObject;
+  result: Result;
+}) => {
+  if (operation.responses) {
+    const { response } = operationResponsesMap(operation);
+
+    if (response) {
+      schemaToZodSchema({
+        $ref: operationIrRef({
+          case: 'camelCase',
+          id: operation.id,
+          type: 'response',
+        }),
+        context,
+        result,
+        schema: response,
+      });
+    }
   }
 };
 
 const schemaToZodSchema = ({
   $ref,
   context,
-  // TODO: parser - remove namespace, it's a type plugin construct
-  namespace = [],
   result,
   schema,
 }: {
+  /**
+   * When $ref is supplied, a node will be emitted to the file.
+   */
   $ref?: string;
   context: IRContext;
-  namespace?: Array<ts.Statement>;
   result: Result;
   schema: IRSchemaObject;
 }): ts.Expression => {
@@ -703,15 +700,12 @@ const schemaToZodSchema = ({
   if ($ref) {
     result.circularReferenceTracker.add($ref);
 
-    // emit nodes only if $ref points to a reusable component
-    if (isRefOpenApiComponent($ref)) {
-      identifier = file.identifier({
-        $ref,
-        create: true,
-        nameTransformer,
-        namespace: 'value',
-      });
-    }
+    identifier = file.identifier({
+      $ref,
+      create: true,
+      nameTransformer,
+      namespace: 'value',
+    });
   }
 
   if (schema.$ref) {
@@ -770,46 +764,73 @@ const schemaToZodSchema = ({
   } else if (schema.type) {
     expression = schemaTypeToZodSchema({
       context,
-      namespace,
       result,
       schema,
     });
   } else if (schema.items) {
-    // TODO: parser - temporary unknown while not handled
-    expression = unknownTypeToZodSchema({
-      context,
-      namespace,
-      schema: {
-        type: 'unknown',
-      },
-    });
+    schema = deduplicateSchema({ schema });
 
-    // TODO: parser - handle items
-    // schema = deduplicateSchema({ schema });
-    // if (schema.items) {
-    //   const itemTypes = schema.items.map((item) =>
-    //     schemaToZodSchema({
-    //       context,
-    //       namespace,
-    //       schema: item,
-    //     }),
-    //   );
-    //   expression =
-    //     schema.logicalOperator === 'and'
-    //       ? compiler.typeIntersectionNode({ types: itemTypes })
-    //       : compiler.typeUnionNode({ types: itemTypes });
-    // } else {
-    //   expression = schemaToZodSchema({
-    //     context,
-    //     namespace,
-    //     schema,
-    //   });
-    // }
+    if (schema.items) {
+      const itemTypes = schema.items.map((item) =>
+        schemaToZodSchema({
+          context,
+          result,
+          schema: item,
+        }),
+      );
+
+      if (schema.logicalOperator === 'and') {
+        const firstSchema = schema.items[0];
+        // we want to add an intersection, but not every schema can use the same API.
+        // if the first item contains another array or not an object, we cannot use
+        // `.merge()` as that does not exist on `.union()` and non-object schemas.
+        if (
+          firstSchema.logicalOperator === 'or' ||
+          (firstSchema.type && firstSchema.type !== 'object')
+        ) {
+          expression = compiler.callExpression({
+            functionName: compiler.propertyAccessExpression({
+              expression: zIdentifier,
+              name: intersectionIdentifier,
+            }),
+            parameters: itemTypes,
+          });
+        } else {
+          expression = itemTypes[0];
+          itemTypes.slice(1).forEach((item) => {
+            expression = compiler.callExpression({
+              functionName: compiler.propertyAccessExpression({
+                expression: expression!,
+                name: mergeIdentifier,
+              }),
+              parameters: [item],
+            });
+          });
+        }
+      } else {
+        expression = compiler.callExpression({
+          functionName: compiler.propertyAccessExpression({
+            expression: zIdentifier,
+            name: unionIdentifier,
+          }),
+          parameters: [
+            compiler.arrayLiteralExpression({
+              elements: itemTypes,
+            }),
+          ],
+        });
+      }
+    } else {
+      expression = schemaToZodSchema({
+        context,
+        result,
+        schema,
+      });
+    }
   } else {
     // catch-all fallback for failed schemas
     expression = schemaTypeToZodSchema({
       context,
-      namespace,
       result,
       schema: {
         type: 'unknown',
@@ -843,6 +864,7 @@ const schemaToZodSchema = ({
 export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
   const file = context.createFile({
     id: zodId,
+    identifierCase: 'camelCase',
     path: plugin.output,
   });
 
@@ -851,13 +873,18 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     name: 'z',
   });
 
-  // context.subscribe('operation', ({ operation }) => {
-  //   schemaToZodSchema({
-  //     $ref,
-  //     context,
-  //     schema,
-  //   });
-  // });
+  context.subscribe('operation', ({ operation }) => {
+    const result: Result = {
+      circularReferenceTracker: new Set(),
+      hasCircularReference: false,
+    };
+
+    operationToZodSchema({
+      context,
+      operation,
+      result,
+    });
+  });
 
   context.subscribe('schema', ({ $ref, schema }) => {
     const result: Result = {

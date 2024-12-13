@@ -85,9 +85,21 @@ export const statusCodeToGroup = ({
 };
 
 interface OperationResponsesMap {
+  /**
+   * A deduplicated union of all error types. Unknown types are omitted.
+   */
   error?: IRSchemaObject;
+  /**
+   * An object containing a map of status codes for each error type.
+   */
   errors?: IRSchemaObject;
+  /**
+   * A deduplicated union of all response types. Unknown types are omitted.
+   */
   response?: IRSchemaObject;
+  /**
+   * An object containing a map of status codes for each response type.
+   */
   responses?: IRSchemaObject;
 }
 

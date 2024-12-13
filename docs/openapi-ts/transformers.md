@@ -1,6 +1,6 @@
 ---
 title: Transformers
-description: Learn about transforming payloads with @hey-api/openapi-ts.
+description: Learn about transforming data with @hey-api/openapi-ts.
 ---
 
 # Transformers
@@ -26,6 +26,46 @@ Transformers handle only the most common scenarios. Some of the known limitation
 - error responses are not transformed
 
 If your data isn't being transformed as expected, we encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
+
+## Configuration
+
+To generate transformers, add `@hey-api/transformers` to your plugins.
+
+```js
+import { defaultPlugins } from '@hey-api/openapi-ts';
+
+export default {
+  client: '@hey-api/client-fetch',
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  plugins: [
+    ...defaultPlugins,
+    '@hey-api/transformers', // [!code ++]
+  ],
+};
+```
+
+## SDKs
+
+To automatically transform response data in your SDKs, set `transformer` to `true`.
+
+```js
+import { defaultPlugins } from '@hey-api/openapi-ts';
+
+export default {
+  client: '@hey-api/client-fetch',
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  plugins: [
+    ...defaultPlugins,
+    '@hey-api/transformers',
+    {
+      name: '@hey-api/sdk', // [!code ++]
+      transformer: true, // [!code ++]
+    },
+  ],
+};
+```
 
 ## Dates
 

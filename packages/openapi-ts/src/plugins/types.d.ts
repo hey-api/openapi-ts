@@ -3,6 +3,10 @@ import type { OpenApi } from '../openApi';
 import type { Client } from '../types/client';
 import type { Files } from '../types/utils';
 
+type OmitUnderscoreKeys<T> = {
+  [K in keyof T as K extends `_${string}` ? never : K]: T[K];
+};
+
 export type PluginNames =
   | '@hey-api/schemas'
   | '@hey-api/sdk'
@@ -16,28 +20,44 @@ export type PluginNames =
   | 'fastify'
   | 'zod';
 
+type PluginTag = 'transformer' | 'validator';
+
+export interface PluginContext {
+  ensureDependency: (name: PluginNames | true) => void;
+  pluginByTag: (tag: PluginTag) => PluginNames | undefined;
+}
+
 interface BaseConfig {
   // eslint-disable-next-line @typescript-eslint/ban-types
   name: PluginNames | (string & {});
   output?: string;
 }
 
-interface Dependencies {
+interface Meta<Config extends BaseConfig> {
   /**
-   * Required dependencies will be always processed, regardless of whether
-   * a user defines them in their `plugins` config.
+   * Dependency plugins will be always processed, regardless of whether user
+   * explicitly defines them in their `plugins` config.
    */
   _dependencies?: ReadonlyArray<PluginNames>;
   /**
-   * Optional dependencies are not processed unless a user explicitly defines
-   * them in their `plugins` config.
+   * Allows overriding config before it's sent to the parser. An example is
+   * defining `validator` as `true` and the plugin figures out which plugin
+   * should be used for validation.
    */
-  _optionalDependencies?: ReadonlyArray<PluginNames>;
+  _infer?: (
+    config: Config & Omit<Meta<Config>, '_infer'>,
+    context: PluginContext,
+  ) => void;
+  /**
+   * Optional tags can be used to help with deciding plugin order and inferring
+   * plugin configuration options.
+   */
+  _tags?: ReadonlyArray<PluginTag>;
 }
 
 export type DefaultPluginConfigs<T> = {
   [K in PluginNames]: BaseConfig &
-    Dependencies & {
+    Meta<any> & {
       _handler: Plugin.Handler<Required<Extract<T, { name: K }>>>;
       _handlerLegacy: Plugin.LegacyHandler<Required<Extract<T, { name: K }>>>;
     };
@@ -48,7 +68,7 @@ export type DefaultPluginConfigs<T> = {
  */
 export namespace Plugin {
   export type Config<Config extends BaseConfig> = Config &
-    Dependencies & {
+    Meta<Config> & {
       _handler: Plugin.Handler<Config>;
       _handlerLegacy: Plugin.LegacyHandler<Config>;
     };
@@ -65,10 +85,7 @@ export namespace Plugin {
     plugin: Plugin.Instance<Config>;
   }) => void;
 
-  export type Instance<Config extends BaseConfig> = Omit<
-    Config,
-    '_dependencies' | '_handler' | '_handlerLegacy' | '_optionalDependencies'
-  > &
+  export type Instance<Config extends BaseConfig> = OmitUnderscoreKeys<Config> &
     Pick<Required<Config>, 'output'>;
 
   /**
