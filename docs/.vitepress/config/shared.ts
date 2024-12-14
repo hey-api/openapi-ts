@@ -1,6 +1,7 @@
 import { defineConfig, type HeadConfig } from 'vitepress';
 
 export default defineConfig({
+  cleanUrls: true,
   head: [
     ['link', { href: '/logo.png', rel: 'icon', type: 'image/png' }],
     ['meta', { content: 'website', property: 'og:type' }],
