@@ -1,0 +1,15 @@
+{
+  "buildCommand": "npm run build",
+  "cleanUrls": true,
+  "devCommand": "npm run dev",
+  "framework": "vitepress",
+  "outputDirectory": ".vitepress/dist",
+  "redirects": [
+    {
+      "source": "/openapi-ts",
+      "destination": "/openapi-ts/get-started",
+      "permanent": true
+    }
+  ],
+  "trailingSlash": false
+}
