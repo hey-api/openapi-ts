@@ -45,17 +45,11 @@ features:
 
 <br />
 
-<div class="home-list home-sponsors">
+<div class="home-list sponsors-list">
 
 ### Sponsors
 
-<ul>
-  <li class="home-sponsors-new">
-    <a href="mailto:lmenus@lmen.us?subject=Hey%20API%20sponsorship%20enquiry">
-      + your logo
-    </a>
-  </li>
-</ul>
+<!--@include: ./sponsors-list.md-->
 
 </div>
 
