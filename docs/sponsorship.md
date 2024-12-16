@@ -1,3 +1,9 @@
 ## Sponsoring
 
-Love Hey API? Please consider becoming a [sponsor](https://github.com/sponsors/hey-api).
+Love Hey API? Become our [sponsor](https://github.com/sponsors/hey-api).
+
+<div class="sponsors-list">
+
+<!--@include: ./sponsors-list.md-->
+
+</div>
