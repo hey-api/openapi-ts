@@ -88,8 +88,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/client-axios
       '@radix-ui/react-form':
-        specifier: 0.1.0
-        version: 0.1.0(@types/react-dom@19.0.1)(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        specifier: 0.1.1
+        version: 0.1.1(@types/react-dom@19.0.1)(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@radix-ui/react-icons':
         specifier: 1.3.2
         version: 1.3.2(react@19.0.0)
@@ -158,8 +158,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/client-fetch
       fastify:
-        specifier: 5.1.0
-        version: 5.1.0
+        specifier: 5.2.0
+        version: 5.2.0
       fastify-openapi-glue:
         specifier: 4.8.0
         version: 4.8.0
@@ -186,8 +186,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/client-fetch
       '@radix-ui/react-form':
-        specifier: 0.1.0
-        version: 0.1.0(@types/react-dom@19.0.1)(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        specifier: 0.1.1
+        version: 0.1.1(@types/react-dom@19.0.1)(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@radix-ui/react-icons':
         specifier: 1.3.2
         version: 1.3.2(react@19.0.0)
@@ -283,8 +283,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/client-fetch
       '@tanstack/angular-query-experimental':
-        specifier: 5.62.4
-        version: 5.62.4(@angular/common@19.0.3(@angular/core@19.0.3(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.0.3(rxjs@7.8.1)(zone.js@0.15.0))
+        specifier: 5.62.7
+        version: 5.62.7(@angular/common@19.0.3(@angular/core@19.0.3(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.0.3(rxjs@7.8.1)(zone.js@0.15.0))
       rxjs:
         specifier: ~7.8.0
         version: 7.8.1
@@ -338,8 +338,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/client-fetch
       '@radix-ui/react-form':
-        specifier: 0.1.0
-        version: 0.1.0(@types/react-dom@19.0.1)(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        specifier: 0.1.1
+        version: 0.1.1(@types/react-dom@19.0.1)(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@radix-ui/react-icons':
         specifier: 1.3.2
         version: 1.3.2(react@19.0.0)
@@ -347,11 +347,11 @@ importers:
         specifier: 3.1.6
         version: 3.1.6(@types/react-dom@19.0.1)(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@tanstack/react-query':
-        specifier: 5.62.3
-        version: 5.62.3(react@19.0.0)
+        specifier: 5.62.7
+        version: 5.62.7(react@19.0.0)
       '@tanstack/react-query-devtools':
-        specifier: 5.62.3
-        version: 5.62.3(@tanstack/react-query@5.62.3(react@19.0.0))(react@19.0.0)
+        specifier: 5.62.7
+        version: 5.62.7(@tanstack/react-query@5.62.7(react@19.0.0))(react@19.0.0)
       react:
         specifier: 19.0.0
         version: 19.0.0
@@ -411,8 +411,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/client-fetch
       '@tanstack/svelte-query':
-        specifier: 5.62.3
-        version: 5.62.3(svelte@4.2.19)
+        specifier: 5.62.7
+        version: 5.62.7(svelte@4.2.19)
     devDependencies:
       '@fontsource/fira-mono':
         specifier: 5.0.0
@@ -478,11 +478,11 @@ importers:
         specifier: workspace:*
         version: link:../../packages/client-fetch
       '@tanstack/vue-query':
-        specifier: 5.62.3
-        version: 5.62.3(vue@3.5.13(typescript@5.5.3))
+        specifier: 5.62.7
+        version: 5.62.7(vue@3.5.13(typescript@5.5.3))
       '@tanstack/vue-query-devtools':
-        specifier: 5.62.3
-        version: 5.62.3(@tanstack/vue-query@5.62.3(vue@3.5.13(typescript@5.5.3)))(vue@3.5.13(typescript@5.5.3))
+        specifier: 5.62.7
+        version: 5.62.7(@tanstack/vue-query@5.62.7(vue@3.5.13(typescript@5.5.3)))(vue@3.5.13(typescript@5.5.3))
       pinia:
         specifier: 2.3.0
         version: 2.3.0(typescript@5.5.3)(vue@3.5.13(typescript@5.5.3))
@@ -631,20 +631,20 @@ importers:
         specifier: workspace:*
         version: link:../client-fetch
       '@tanstack/angular-query-experimental':
-        specifier: 5.62.4
-        version: 5.62.4(@angular/common@19.0.3(@angular/core@19.0.3(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.0.3(rxjs@7.8.1)(zone.js@0.15.0))
+        specifier: 5.62.7
+        version: 5.62.7(@angular/common@19.0.3(@angular/core@19.0.3(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.0.3(rxjs@7.8.1)(zone.js@0.15.0))
       '@tanstack/react-query':
-        specifier: 5.62.3
-        version: 5.62.3(react@19.0.0)
+        specifier: 5.62.7
+        version: 5.62.7(react@19.0.0)
       '@tanstack/solid-query':
         specifier: 5.51.21
         version: 5.51.21(solid-js@1.8.20)
       '@tanstack/svelte-query':
-        specifier: 5.62.3
-        version: 5.62.3(svelte@4.2.19)
+        specifier: 5.62.7
+        version: 5.62.7(svelte@4.2.19)
       '@tanstack/vue-query':
-        specifier: 5.62.3
-        version: 5.62.3(vue@3.5.13(typescript@5.5.3))
+        specifier: 5.62.7
+        version: 5.62.7(vue@3.5.13(typescript@5.5.3))
       '@types/cross-spawn':
         specifier: 6.0.6
         version: 6.0.6
@@ -664,8 +664,8 @@ importers:
         specifier: 4.21.0
         version: 4.21.0
       fastify:
-        specifier: 5.1.0
-        version: 5.1.0
+        specifier: 5.2.0
+        version: 5.2.0
       glob:
         specifier: 10.4.3
         version: 10.4.3
@@ -2764,6 +2764,9 @@ packages:
   '@radix-ui/primitive@1.1.0':
     resolution: {integrity: sha512-4Z8dn6Upk0qk4P74xBhZ6Hd/w0mPEzOOLxy4xiPXOXqjF7jZS0VAKk7/x/H6FyY2zCkYJqePf1G5KmkmNJ4RBA==}
 
+  '@radix-ui/primitive@1.1.1':
+    resolution: {integrity: sha512-SJ31y+Q/zAyShtXJc8x83i9TYdbAfHZ++tUZnvjJJqFjzsdUnKsxPL6IEtBlxKkU7yzer//GQtZSV4GbldL3YA==}
+
   '@radix-ui/react-accessible-icon@1.1.0':
     resolution: {integrity: sha512-i9Zg4NOSXlfUva0agzI2DjWrvFJm9uO4L6CMW7nmMa5CIOOX/Yin894W7WwjodFQWPwe5kmAJ4JF33R8slKI2g==}
     peerDependencies:
@@ -2857,6 +2860,15 @@ packages:
 
   '@radix-ui/react-compose-refs@1.1.0':
     resolution: {integrity: sha512-b4inOtiaOnYf9KWyO3jAeeCG6FeyfY6ldiEPanbUjWd+xIk5wZeHa8yVwmrJ2vderhu/BQvzCrJI0lHd+wIiqw==}
+    peerDependencies:
+      '@types/react': '*'
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+
+  '@radix-ui/react-compose-refs@1.1.1':
+    resolution: {integrity: sha512-Y9VzoRDSJtgFMUCoiZBDVo084VQ5hfpXxVE+NgkdNsjiDBByiImMZKKhxMwCbdHvhlENG6a833CbFkOQvTricw==}
     peerDependencies:
       '@types/react': '*'
       react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
@@ -2965,8 +2977,8 @@ packages:
       '@types/react-dom':
         optional: true
 
-  '@radix-ui/react-form@0.1.0':
-    resolution: {integrity: sha512-1/oVYPDjbFILOLIarcGcMKo+y6SbTVT/iUKVEw59CF4offwZgBgC3ZOeSBewjqU0vdA6FWTPWTN63obj55S/tQ==}
+  '@radix-ui/react-form@0.1.1':
+    resolution: {integrity: sha512-Ah2TBvzl2trb4DL9DQtyUJgAUfq/djMN7j5CHzdpbdR3W7OL8N4JcJgE80cXMf3ssCE+8yg0zFQoJ0srxqfsFA==}
     peerDependencies:
       '@types/react': '*'
       '@types/react-dom': '*'
@@ -3005,8 +3017,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@radix-ui/react-label@2.1.0':
-    resolution: {integrity: sha512-peLblDlFw/ngk3UWq0VnYaOLy6agTZZ+MUO/WhVfm14vJGML+xH4FAl2XQGLqdefjNb7ApRg6Yn7U42ZhmYXdw==}
+  '@radix-ui/react-label@2.1.1':
+    resolution: {integrity: sha512-UUw5E4e/2+4kFMH7+YxORXGWggtY6sM8WIwh5RZchhLuUg2H1hc98Py+pr8HMz6rdaYrK2t296ZEjYLOCO5uUw==}
     peerDependencies:
       '@types/react': '*'
       '@types/react-dom': '*'
@@ -3109,6 +3121,19 @@ packages:
       '@types/react-dom':
         optional: true
 
+  '@radix-ui/react-primitive@2.0.1':
+    resolution: {integrity: sha512-sHCWTtxwNn3L3fH8qAfnF3WbUZycW93SM1j3NFDzXBiz8D6F5UTTy8G1+WFEaiCdvCVRJWj6N2R4Xq6HdiHmDg==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+
   '@radix-ui/react-progress@1.1.0':
     resolution: {integrity: sha512-aSzvnYpP725CROcxAOEBVZZSIQVQdHgBr2QQFKySsaD14u8dNT0batuXI+AAGDdAHfXH8rbnHmjYFqVJ21KkRg==}
     peerDependencies:
@@ -3189,6 +3214,15 @@ packages:
 
   '@radix-ui/react-slot@1.1.0':
     resolution: {integrity: sha512-FUCf5XMfmW4dtYl69pdS4DbxKy8nj4M7SafBgPllysxmdachynNflAdp/gCsnYWNDnge6tI9onzMp5ARYc1KNw==}
+    peerDependencies:
+      '@types/react': '*'
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+
+  '@radix-ui/react-slot@1.1.1':
+    resolution: {integrity: sha512-RApLLOcINYJA+dMVbOju7MYv1Mb2EBp2nH4HdDzXTSyaR5optlm6Otrz1euW3HbdOR8UmmFK06TD+A9frYWv+g==}
     peerDependencies:
       '@types/react': '*'
       react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
@@ -3641,8 +3675,8 @@ packages:
       svelte: ^4.0.0 || ^5.0.0-next.0
       vite: ^5.0.0
 
-  '@tanstack/angular-query-experimental@5.62.4':
-    resolution: {integrity: sha512-4K3PGMwAQyLdPTayRAOgW1ld1odbjVyxnIC+oYcCK1mkOX2l+RCNbEsZv0AHu178abmd4P0lPMrfKArMaUzbVg==}
+  '@tanstack/angular-query-experimental@5.62.7':
+    resolution: {integrity: sha512-ZDPZYVhwu4ym+2b+G7UwdKX5vqiYyopFxYe7549bBjOT/DO4o8JK4fiXxQgE92JbgKSi6HR1EXvxTtvg55LDPg==}
     peerDependencies:
       '@angular/common': '>=16.0.0'
       '@angular/core': '>=16.0.0'
@@ -3654,20 +3688,20 @@ packages:
   '@tanstack/query-core@5.51.21':
     resolution: {integrity: sha512-POQxm42IUp6n89kKWF4IZi18v3fxQWFRolvBA6phNVmA8psdfB1MvDnGacCJdS+EOX12w/CyHM62z//rHmYmvw==}
 
-  '@tanstack/query-core@5.62.3':
-    resolution: {integrity: sha512-Jp/nYoz8cnO7kqhOlSv8ke/0MJRJVGuZ0P/JO9KQ+f45mpN90hrerzavyTKeSoT/pOzeoOUkv1Xd0wPsxAWXfg==}
+  '@tanstack/query-core@5.62.7':
+    resolution: {integrity: sha512-fgpfmwatsrUal6V+8EC2cxZIQVl9xvL7qYa03gsdsCy985UTUlS4N+/3hCzwR0PclYDqisca2AqR1BVgJGpUDA==}
 
   '@tanstack/query-devtools@5.61.4':
     resolution: {integrity: sha512-21Tw+u8E3IJJj4A/Bct4H0uBaDTEu7zBrR79FeSyY+mS2gx5/m316oDtJiKkILc819VSTYt+sFzODoJNcpPqZQ==}
 
-  '@tanstack/react-query-devtools@5.62.3':
-    resolution: {integrity: sha512-4iaQap/iP5ErS094u1WehFntHtjRo6g5HJMvyHovBVbsxnvgPc6AtKAw7qxPPoKy6Wj5Bew0045eYP5phiiBmw==}
+  '@tanstack/react-query-devtools@5.62.7':
+    resolution: {integrity: sha512-wxXsdTZJRs//hMtJMU5aNlUaTclRFPqLvDNeWbRj8YpGD3aoo4zyu53W55W2DY16+ycg3fti21uCW4N9oyj91w==}
     peerDependencies:
-      '@tanstack/react-query': ^5.62.3
+      '@tanstack/react-query': ^5.62.7
       react: ^18 || ^19
 
-  '@tanstack/react-query@5.62.3':
-    resolution: {integrity: sha512-y2zDNKuhgiuMgsKkqd4AcsLIBiCfEO8U11AdrtAUihmLbRNztPrlcZqx2lH1GacZsx+y1qRRbCcJLYTtF1vKsw==}
+  '@tanstack/react-query@5.62.7':
+    resolution: {integrity: sha512-+xCtP4UAFDTlRTYyEjLx0sRtWyr5GIk7TZjZwBu4YaNahi3Rt2oMyRqfpfVrtwsqY2sayP4iXVCwmC+ZqqFmuw==}
     peerDependencies:
       react: ^18 || ^19
 
@@ -3676,19 +3710,19 @@ packages:
     peerDependencies:
       solid-js: ^1.6.0
 
-  '@tanstack/svelte-query@5.62.3':
-    resolution: {integrity: sha512-upo28cP5ZidXwbM1AQ3Ga/Uq3cmtkNkU0Vv8MFG78bwkEANqXQ5FpNs8ixvU6MqZnlJ3Zqp3BlUIc7dSpKD7qQ==}
+  '@tanstack/svelte-query@5.62.7':
+    resolution: {integrity: sha512-WTu70TtgX90r8OVlvQbRhDAnj12mvQRQ5Sp+2Dgsvdq1b3uDWwjV9ufhyhAM/2YkY03Gtlfs2GL1fyMhSx9tbQ==}
     peerDependencies:
       svelte: ^3.54.0 || ^4.0.0 || ^5.0.0-next.0
 
-  '@tanstack/vue-query-devtools@5.62.3':
-    resolution: {integrity: sha512-9Q5LHVTBBlVXLme5eLjJ4PRKuPkHw4Zo32YnQrXDT9Oy9mq7ZEoyhCRemyV29z4pbIj6iQnIDQ34WWVJvty12w==}
+  '@tanstack/vue-query-devtools@5.62.7':
+    resolution: {integrity: sha512-9w524GE4hP6EKj8AonoJcoFFXJvyHZw91S2zt+S50pNwPjFnBpMkK3PBF05t9v44C7KBsB+qnV33oFcvpZW1cQ==}
     peerDependencies:
-      '@tanstack/vue-query': ^5.62.3
+      '@tanstack/vue-query': ^5.62.7
       vue: ^3.3.0
 
-  '@tanstack/vue-query@5.62.3':
-    resolution: {integrity: sha512-6zU8yR0xKVxb/SilCSVAb0j6+bc++f+YeMA1TnG1qN9zHicWgF9fjtJi86FfIjBnytfFSPwo7Gykp8iId7G9yQ==}
+  '@tanstack/vue-query@5.62.7':
+    resolution: {integrity: sha512-FVSnVw2fw9BHciCbWWSfPMB3PRtGHbGf4Q1Gq7mFlieojiKZBF5Nz5AKFQLKs+IGnrVDTKqfU8ojjPfthPTYxQ==}
     peerDependencies:
       '@vue/composition-api': ^1.1.2
       vue: ^2.6.0 || ^3.3.0
@@ -5677,8 +5711,8 @@ packages:
   fastify-plugin@5.0.1:
     resolution: {integrity: sha512-HCxs+YnRaWzCl+cWRYFnHmeRFyR5GVnJTAaCJQiYzQSDwK9MgJdyAsuL3nh0EWRCYMgQ5MeziymvmAhUHYHDUQ==}
 
-  fastify@5.1.0:
-    resolution: {integrity: sha512-0SdUC5AoiSgMSc2Vxwv3WyKzyGMDJRAW/PgNsK1kZrnkO6MeqUIW9ovVg9F2UGIqtIcclYMyeJa4rK6OZc7Jxg==}
+  fastify@5.2.0:
+    resolution: {integrity: sha512-3s+Qt5S14Eq5dCpnE0FxTp3z4xKChI83ZnMv+k0FwX+VUoZrgCFoLAxpfdi/vT4y6Mk+g7aAMt9pgXDoZmkefQ==}
 
   fastq@1.17.1:
     resolution: {integrity: sha512-sRVD3lWVIXWg6By68ZN7vho9a1pQcN/WBFaAAsDDFzlJjvoGx0P8z7V1t72grFJfJhu3YPZBuu25f7Kaw2jN1w==}
@@ -6147,6 +6181,10 @@ packages:
 
   is-core-module@2.14.0:
     resolution: {integrity: sha512-a5dFJih5ZLYlRtDc0dZWP7RiKr6xIKzmn/oAYCDvdLThadVgyJwlaoQPmRtMSpz+rk0OGAgIu+TcM9HUF0fk1A==}
+    engines: {node: '>= 0.4'}
+
+  is-core-module@2.16.0:
+    resolution: {integrity: sha512-urTSINYfAYgcbLb0yDQ6egFm6h3Mo1DcF9EkyXSRjjzdHbsulg01qhwWuXdOoUBuTkbQ80KDboXa0vFJ+BDH+g==}
     engines: {node: '>= 0.4'}
 
   is-docker@3.0.0:
@@ -7754,6 +7792,10 @@ packages:
     resolution: {integrity: sha512-oKWePCxqpd6FlLvGV1VU0x7bkPmmCNolxzjMf4NczoDnQcIWrAF+cPtZn5i6n+RfD2d9i0tzpKnG6Yk168yIyw==}
     hasBin: true
 
+  resolve@1.22.9:
+    resolution: {integrity: sha512-QxrmX1DzraFIi9PxdG5VkRfRwIgjwyud+z/iBwfRRrVmHc+P9Q7u2lSSpQ6bjr2gy5lrqIiU9vb6iAeGf2400A==}
+    hasBin: true
+
   restore-cursor@3.1.0:
     resolution: {integrity: sha512-l+sSefzHpj5qimhFSE5a8nufZYAM3sBSVMAPtYkmC+4EH2anSGaEMXSD0izRQbu9nfyQ9y5JrVmp7E8oZrUjvA==}
     engines: {node: '>=8'}
@@ -7898,8 +7940,8 @@ packages:
   search-insights@2.14.0:
     resolution: {integrity: sha512-OLN6MsPMCghDOqlCtsIsYgtsC0pnwVTyT9Mu6A3ewOj1DxvzZF6COrn2g86E/c05xbktB0XN04m/t1Z+n+fTGw==}
 
-  secure-json-parse@2.7.0:
-    resolution: {integrity: sha512-6aU+Rwsezw7VR8/nyvKTx8QpWH9FrcYiXXlqC4z5d5XQBDRqtbfsRjnwGyqbi3gddNtWHuEk9OANUotL26qKUw==}
+  secure-json-parse@3.0.1:
+    resolution: {integrity: sha512-9QR7G96th4QJ2+dJwvZB+JoXyt8PN+DbEjOr6kL2/JU4KH8Eb2sFdU+gt8EDdzWDWoWH0uocDdfCoFzdVSixUA==}
 
   select-hose@2.0.0:
     resolution: {integrity: sha512-mEugaLK+YfkijB4fx0e6kImuJdCIt2LxCRcbEYPqRGCs4F2ogyfZU5IAZRdjCP8JPq2AtdNoC/Dux63d9Kiryg==}
@@ -9439,7 +9481,7 @@ snapshots:
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@angular-devkit/architect': 0.1900.4(chokidar@4.0.1)
-      '@angular-devkit/build-webpack': 0.1900.4(chokidar@4.0.1)(webpack-dev-server@5.1.0(webpack@5.96.1(esbuild@0.23.1)))(webpack@5.96.1(esbuild@0.24.0))
+      '@angular-devkit/build-webpack': 0.1900.4(chokidar@4.0.1)(webpack-dev-server@5.1.0(webpack@5.96.1(esbuild@0.24.0)))(webpack@5.96.1(esbuild@0.24.0))
       '@angular-devkit/core': 19.0.4(chokidar@4.0.1)
       '@angular/build': 19.0.4(@angular/compiler-cli@19.0.3(@angular/compiler@19.0.3(@angular/core@19.0.3(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.5.3))(@angular/compiler@19.0.3(@angular/core@19.0.3(rxjs@7.8.1)(zone.js@0.15.0)))(@types/node@22.8.5)(chokidar@4.0.1)(less@4.2.0)(postcss@8.4.49)(tailwindcss@3.4.9(ts-node@10.9.2(@types/node@22.8.5)(typescript@5.5.3)))(terser@5.36.0)(typescript@5.5.3)
       '@angular/compiler-cli': 19.0.3(@angular/compiler@19.0.3(@angular/core@19.0.3(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.5.3)
@@ -9489,9 +9531,9 @@ snapshots:
       tree-kill: 1.2.2
       tslib: 2.8.1
       typescript: 5.5.3
-      webpack: 5.96.1(esbuild@0.24.0)
-      webpack-dev-middleware: 7.4.2(webpack@5.96.1(esbuild@0.23.1))
-      webpack-dev-server: 5.1.0(webpack@5.96.1(esbuild@0.23.1))
+      webpack: 5.96.1(esbuild@0.23.1)
+      webpack-dev-middleware: 7.4.2(webpack@5.96.1(esbuild@0.24.0))
+      webpack-dev-server: 5.1.0(webpack@5.96.1(esbuild@0.24.0))
       webpack-merge: 6.0.1
       webpack-subresource-integrity: 5.1.0(webpack@5.96.1(esbuild@0.24.0))
     optionalDependencies:
@@ -9518,12 +9560,12 @@ snapshots:
       - vite
       - webpack-cli
 
-  '@angular-devkit/build-webpack@0.1900.4(chokidar@4.0.1)(webpack-dev-server@5.1.0(webpack@5.96.1(esbuild@0.23.1)))(webpack@5.96.1(esbuild@0.24.0))':
+  '@angular-devkit/build-webpack@0.1900.4(chokidar@4.0.1)(webpack-dev-server@5.1.0(webpack@5.96.1(esbuild@0.24.0)))(webpack@5.96.1(esbuild@0.24.0))':
     dependencies:
       '@angular-devkit/architect': 0.1900.4(chokidar@4.0.1)
       rxjs: 7.8.1
-      webpack: 5.96.1(esbuild@0.24.0)
-      webpack-dev-server: 5.1.0(webpack@5.96.1(esbuild@0.23.1))
+      webpack: 5.96.1(esbuild@0.23.1)
+      webpack-dev-server: 5.1.0(webpack@5.96.1(esbuild@0.24.0))
     transitivePeerDependencies:
       - chokidar
 
@@ -11401,7 +11443,7 @@ snapshots:
       '@rushstack/ts-command-line': 4.22.8(@types/node@20.14.10)
       lodash: 4.17.21
       minimatch: 3.0.8
-      resolve: 1.22.8
+      resolve: 1.22.9
       semver: 7.5.4
       source-map: 0.6.1
       typescript: 5.4.2
@@ -11414,7 +11456,7 @@ snapshots:
       '@microsoft/tsdoc': 0.15.1
       ajv: 8.12.0
       jju: 1.4.0
-      resolve: 1.22.8
+      resolve: 1.22.9
     optional: true
 
   '@microsoft/tsdoc@0.15.1':
@@ -11512,7 +11554,7 @@ snapshots:
     dependencies:
       '@angular/compiler-cli': 19.0.3(@angular/compiler@19.0.3(@angular/core@19.0.3(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.5.3)
       typescript: 5.5.3
-      webpack: 5.96.1(esbuild@0.24.0)
+      webpack: 5.96.1(esbuild@0.23.1)
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -11694,6 +11736,8 @@ snapshots:
 
   '@radix-ui/primitive@1.1.0': {}
 
+  '@radix-ui/primitive@1.1.1': {}
+
   '@radix-ui/react-accessible-icon@1.1.0(@types/react-dom@19.0.1)(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@radix-ui/react-visually-hidden': 1.1.0(@types/react-dom@19.0.1)(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -11776,6 +11820,12 @@ snapshots:
       '@types/react-dom': 19.0.1
 
   '@radix-ui/react-compose-refs@1.1.0(@types/react@19.0.1)(react@19.0.0)':
+    dependencies:
+      react: 19.0.0
+    optionalDependencies:
+      '@types/react': 19.0.1
+
+  '@radix-ui/react-compose-refs@1.1.1(@types/react@19.0.1)(react@19.0.0)':
     dependencies:
       react: 19.0.0
     optionalDependencies:
@@ -11880,14 +11930,14 @@ snapshots:
       '@types/react': 19.0.1
       '@types/react-dom': 19.0.1
 
-  '@radix-ui/react-form@0.1.0(@types/react-dom@19.0.1)(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+  '@radix-ui/react-form@0.1.1(@types/react-dom@19.0.1)(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@radix-ui/primitive': 1.1.0
-      '@radix-ui/react-compose-refs': 1.1.0(@types/react@19.0.1)(react@19.0.0)
-      '@radix-ui/react-context': 1.1.0(@types/react@19.0.1)(react@19.0.0)
+      '@radix-ui/primitive': 1.1.1
+      '@radix-ui/react-compose-refs': 1.1.1(@types/react@19.0.1)(react@19.0.0)
+      '@radix-ui/react-context': 1.1.1(@types/react@19.0.1)(react@19.0.0)
       '@radix-ui/react-id': 1.1.0(@types/react@19.0.1)(react@19.0.0)
-      '@radix-ui/react-label': 2.1.0(@types/react-dom@19.0.1)(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      '@radix-ui/react-primitive': 2.0.0(@types/react-dom@19.0.1)(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-label': 2.1.1(@types/react-dom@19.0.1)(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-primitive': 2.0.1(@types/react-dom@19.0.1)(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
     optionalDependencies:
@@ -11922,9 +11972,9 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.0.1
 
-  '@radix-ui/react-label@2.1.0(@types/react-dom@19.0.1)(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+  '@radix-ui/react-label@2.1.1(@types/react-dom@19.0.1)(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@radix-ui/react-primitive': 2.0.0(@types/react-dom@19.0.1)(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@radix-ui/react-primitive': 2.0.1(@types/react-dom@19.0.1)(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
     optionalDependencies:
@@ -12049,6 +12099,15 @@ snapshots:
       '@types/react': 19.0.1
       '@types/react-dom': 19.0.1
 
+  '@radix-ui/react-primitive@2.0.1(@types/react-dom@19.0.1)(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@radix-ui/react-slot': 1.1.1(@types/react@19.0.1)(react@19.0.0)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+    optionalDependencies:
+      '@types/react': 19.0.1
+      '@types/react-dom': 19.0.1
+
   '@radix-ui/react-progress@1.1.0(@types/react-dom@19.0.1)(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@radix-ui/react-context': 1.1.0(@types/react@19.0.1)(react@19.0.0)
@@ -12162,6 +12221,13 @@ snapshots:
   '@radix-ui/react-slot@1.1.0(@types/react@19.0.1)(react@19.0.0)':
     dependencies:
       '@radix-ui/react-compose-refs': 1.1.0(@types/react@19.0.1)(react@19.0.0)
+      react: 19.0.0
+    optionalDependencies:
+      '@types/react': 19.0.1
+
+  '@radix-ui/react-slot@1.1.1(@types/react@19.0.1)(react@19.0.0)':
+    dependencies:
+      '@radix-ui/react-compose-refs': 1.1.1(@types/react@19.0.1)(react@19.0.0)
       react: 19.0.0
     optionalDependencies:
       '@types/react': 19.0.1
@@ -12462,7 +12528,7 @@ snapshots:
       fs-extra: 7.0.1
       import-lazy: 4.0.0
       jju: 1.4.0
-      resolve: 1.22.8
+      resolve: 1.22.9
       semver: 7.5.4
     optionalDependencies:
       '@types/node': 20.14.10
@@ -12470,7 +12536,7 @@ snapshots:
 
   '@rushstack/rig-package@0.5.3':
     dependencies:
-      resolve: 1.22.8
+      resolve: 1.22.9
       strip-json-comments: 3.1.1
     optional: true
 
@@ -12604,11 +12670,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@tanstack/angular-query-experimental@5.62.4(@angular/common@19.0.3(@angular/core@19.0.3(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.0.3(rxjs@7.8.1)(zone.js@0.15.0))':
+  '@tanstack/angular-query-experimental@5.62.7(@angular/common@19.0.3(@angular/core@19.0.3(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.0.3(rxjs@7.8.1)(zone.js@0.15.0))':
     dependencies:
       '@angular/common': 19.0.3(@angular/core@19.0.3(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       '@angular/core': 19.0.3(rxjs@7.8.1)(zone.js@0.15.0)
-      '@tanstack/query-core': 5.62.3
+      '@tanstack/query-core': 5.62.7
       '@tanstack/query-devtools': 5.61.4
 
   '@tanstack/match-sorter-utils@8.19.4':
@@ -12617,19 +12683,19 @@ snapshots:
 
   '@tanstack/query-core@5.51.21': {}
 
-  '@tanstack/query-core@5.62.3': {}
+  '@tanstack/query-core@5.62.7': {}
 
   '@tanstack/query-devtools@5.61.4': {}
 
-  '@tanstack/react-query-devtools@5.62.3(@tanstack/react-query@5.62.3(react@19.0.0))(react@19.0.0)':
+  '@tanstack/react-query-devtools@5.62.7(@tanstack/react-query@5.62.7(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@tanstack/query-devtools': 5.61.4
-      '@tanstack/react-query': 5.62.3(react@19.0.0)
+      '@tanstack/react-query': 5.62.7(react@19.0.0)
       react: 19.0.0
 
-  '@tanstack/react-query@5.62.3(react@19.0.0)':
+  '@tanstack/react-query@5.62.7(react@19.0.0)':
     dependencies:
-      '@tanstack/query-core': 5.62.3
+      '@tanstack/query-core': 5.62.7
       react: 19.0.0
 
   '@tanstack/solid-query@5.51.21(solid-js@1.8.20)':
@@ -12637,21 +12703,21 @@ snapshots:
       '@tanstack/query-core': 5.51.21
       solid-js: 1.8.20
 
-  '@tanstack/svelte-query@5.62.3(svelte@4.2.19)':
+  '@tanstack/svelte-query@5.62.7(svelte@4.2.19)':
     dependencies:
-      '@tanstack/query-core': 5.62.3
+      '@tanstack/query-core': 5.62.7
       svelte: 4.2.19
 
-  '@tanstack/vue-query-devtools@5.62.3(@tanstack/vue-query@5.62.3(vue@3.5.13(typescript@5.5.3)))(vue@3.5.13(typescript@5.5.3))':
+  '@tanstack/vue-query-devtools@5.62.7(@tanstack/vue-query@5.62.7(vue@3.5.13(typescript@5.5.3)))(vue@3.5.13(typescript@5.5.3))':
     dependencies:
       '@tanstack/query-devtools': 5.61.4
-      '@tanstack/vue-query': 5.62.3(vue@3.5.13(typescript@5.5.3))
+      '@tanstack/vue-query': 5.62.7(vue@3.5.13(typescript@5.5.3))
       vue: 3.5.13(typescript@5.5.3)
 
-  '@tanstack/vue-query@5.62.3(vue@3.5.13(typescript@5.5.3))':
+  '@tanstack/vue-query@5.62.7(vue@3.5.13(typescript@5.5.3))':
     dependencies:
       '@tanstack/match-sorter-utils': 8.19.4
-      '@tanstack/query-core': 5.62.3
+      '@tanstack/query-core': 5.62.7
       '@vue/devtools-api': 6.6.4
       vue: 3.5.13(typescript@5.5.3)
       vue-demi: 0.14.10(vue@3.5.13(typescript@5.5.3))
@@ -13853,7 +13919,7 @@ snapshots:
       '@babel/core': 7.26.0
       find-cache-dir: 4.0.0
       schema-utils: 4.2.0
-      webpack: 5.96.1(esbuild@0.24.0)
+      webpack: 5.96.1(esbuild@0.23.1)
 
   babel-plugin-polyfill-corejs2@0.4.11(@babel/core@7.26.0):
     dependencies:
@@ -14344,7 +14410,7 @@ snapshots:
       normalize-path: 3.0.0
       schema-utils: 4.2.0
       serialize-javascript: 6.0.2
-      webpack: 5.96.1(esbuild@0.24.0)
+      webpack: 5.96.1(esbuild@0.23.1)
 
   core-js-compat@3.39.0:
     dependencies:
@@ -14391,7 +14457,7 @@ snapshots:
       postcss-value-parser: 4.2.0
       semver: 7.6.3
     optionalDependencies:
-      webpack: 5.96.1(esbuild@0.24.0)
+      webpack: 5.96.1(esbuild@0.23.1)
 
   css-select@5.1.0:
     dependencies:
@@ -15151,7 +15217,7 @@ snapshots:
 
   fastify-plugin@5.0.1: {}
 
-  fastify@5.1.0:
+  fastify@5.2.0:
     dependencies:
       '@fastify/ajv-compiler': 4.0.1
       '@fastify/error': 4.0.0
@@ -15165,7 +15231,7 @@ snapshots:
       process-warning: 4.0.0
       proxy-addr: 2.0.7
       rfdc: 1.4.1
-      secure-json-parse: 2.7.0
+      secure-json-parse: 3.0.1
       semver: 7.6.3
       toad-cache: 3.7.0
 
@@ -15654,6 +15720,11 @@ snapshots:
     dependencies:
       hasown: 2.0.2
 
+  is-core-module@2.16.0:
+    dependencies:
+      hasown: 2.0.2
+    optional: true
+
   is-docker@3.0.0: {}
 
   is-extglob@2.1.1: {}
@@ -15976,7 +16047,7 @@ snapshots:
     dependencies:
       less: 4.2.0
     optionalDependencies:
-      webpack: 5.96.1(esbuild@0.24.0)
+      webpack: 5.96.1(esbuild@0.23.1)
 
   less@4.2.0:
     dependencies:
@@ -16001,7 +16072,7 @@ snapshots:
     dependencies:
       webpack-sources: 3.2.3
     optionalDependencies:
-      webpack: 5.96.1(esbuild@0.24.0)
+      webpack: 5.96.1(esbuild@0.23.1)
 
   light-my-request@6.3.0:
     dependencies:
@@ -16299,7 +16370,7 @@ snapshots:
     dependencies:
       schema-utils: 4.2.0
       tapable: 2.2.1
-      webpack: 5.96.1(esbuild@0.24.0)
+      webpack: 5.96.1(esbuild@0.23.1)
 
   minimalistic-assert@1.0.1: {}
 
@@ -16957,7 +17028,7 @@ snapshots:
       postcss: 8.4.49
       semver: 7.6.3
     optionalDependencies:
-      webpack: 5.96.1(esbuild@0.24.0)
+      webpack: 5.96.1(esbuild@0.23.1)
     transitivePeerDependencies:
       - typescript
 
@@ -17319,6 +17390,13 @@ snapshots:
       path-parse: 1.0.7
       supports-preserve-symlinks-flag: 1.0.0
 
+  resolve@1.22.9:
+    dependencies:
+      is-core-module: 2.16.0
+      path-parse: 1.0.7
+      supports-preserve-symlinks-flag: 1.0.0
+    optional: true
+
   restore-cursor@3.1.0:
     dependencies:
       onetime: 5.1.2
@@ -17444,7 +17522,7 @@ snapshots:
       neo-async: 2.6.2
     optionalDependencies:
       sass: 1.80.7
-      webpack: 5.96.1(esbuild@0.24.0)
+      webpack: 5.96.1(esbuild@0.23.1)
 
   sass@1.80.7:
     dependencies:
@@ -17483,7 +17561,7 @@ snapshots:
 
   search-insights@2.14.0: {}
 
-  secure-json-parse@2.7.0: {}
+  secure-json-parse@3.0.1: {}
 
   select-hose@2.0.0: {}
 
@@ -17727,7 +17805,7 @@ snapshots:
     dependencies:
       iconv-lite: 0.6.3
       source-map-js: 1.2.1
-      webpack: 5.96.1(esbuild@0.24.0)
+      webpack: 5.96.1(esbuild@0.23.1)
 
   source-map-support@0.5.21:
     dependencies:
@@ -18109,16 +18187,16 @@ snapshots:
 
   term-size@2.2.1: {}
 
-  terser-webpack-plugin@5.3.10(esbuild@0.24.0)(webpack@5.96.1(esbuild@0.23.1)):
+  terser-webpack-plugin@5.3.10(esbuild@0.23.1)(webpack@5.96.1(esbuild@0.24.0)):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
       jest-worker: 27.5.1
       schema-utils: 3.3.0
       serialize-javascript: 6.0.2
       terser: 5.36.0
-      webpack: 5.96.1(esbuild@0.24.0)
+      webpack: 5.96.1(esbuild@0.23.1)
     optionalDependencies:
-      esbuild: 0.24.0
+      esbuild: 0.23.1
 
   terser@5.36.0:
     dependencies:
@@ -18244,7 +18322,7 @@ snapshots:
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
       '@types/node': 20.14.5
-      acorn: 8.12.1
+      acorn: 8.14.0
       acorn-walk: 8.3.3
       arg: 4.1.3
       create-require: 1.1.1
@@ -18939,7 +19017,7 @@ snapshots:
 
   webidl-conversions@7.0.0: {}
 
-  webpack-dev-middleware@7.4.2(webpack@5.96.1(esbuild@0.23.1)):
+  webpack-dev-middleware@7.4.2(webpack@5.96.1(esbuild@0.24.0)):
     dependencies:
       colorette: 2.0.20
       memfs: 4.14.0
@@ -18948,9 +19026,9 @@ snapshots:
       range-parser: 1.2.1
       schema-utils: 4.2.0
     optionalDependencies:
-      webpack: 5.96.1(esbuild@0.24.0)
+      webpack: 5.96.1(esbuild@0.23.1)
 
-  webpack-dev-server@5.1.0(webpack@5.96.1(esbuild@0.23.1)):
+  webpack-dev-server@5.1.0(webpack@5.96.1(esbuild@0.24.0)):
     dependencies:
       '@types/bonjour': 3.5.13
       '@types/connect-history-api-fallback': 1.5.4
@@ -18978,10 +19056,10 @@ snapshots:
       serve-index: 1.9.1
       sockjs: 0.3.24
       spdy: 4.0.2
-      webpack-dev-middleware: 7.4.2(webpack@5.96.1(esbuild@0.23.1))
+      webpack-dev-middleware: 7.4.2(webpack@5.96.1(esbuild@0.24.0))
       ws: 8.18.0
     optionalDependencies:
-      webpack: 5.96.1(esbuild@0.24.0)
+      webpack: 5.96.1(esbuild@0.23.1)
     transitivePeerDependencies:
       - bufferutil
       - debug
@@ -18999,9 +19077,9 @@ snapshots:
   webpack-subresource-integrity@5.1.0(webpack@5.96.1(esbuild@0.24.0)):
     dependencies:
       typed-assert: 1.0.9
-      webpack: 5.96.1(esbuild@0.24.0)
+      webpack: 5.96.1(esbuild@0.23.1)
 
-  webpack@5.96.1(esbuild@0.24.0):
+  webpack@5.96.1(esbuild@0.23.1):
     dependencies:
       '@types/eslint-scope': 3.7.7
       '@types/estree': 1.0.6
@@ -19023,7 +19101,7 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 3.3.0
       tapable: 2.2.1
-      terser-webpack-plugin: 5.3.10(esbuild@0.24.0)(webpack@5.96.1(esbuild@0.23.1))
+      terser-webpack-plugin: 5.3.10(esbuild@0.23.1)(webpack@5.96.1(esbuild@0.24.0))
       watchpack: 2.4.2
       webpack-sources: 3.2.3
     transitivePeerDependencies:
