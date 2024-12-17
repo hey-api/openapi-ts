@@ -1,5 +1,42 @@
 # @hey-api/openapi-ts
 
+## 0.60.0
+
+### Minor Changes
+
+- [#1430](https://github.com/hey-api/openapi-ts/pull/1430) [`9cec9e8`](https://github.com/hey-api/openapi-ts/commit/9cec9e8582c12a8c041b922d9587e16f6f19782a) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: require sdk.transformer to use generated transformers
+
+  ### Added `sdk.transformer` option
+
+  When generating SDKs, you now have to specify `transformer` in order to modify response data. By default, adding `@hey-api/transformers` to your plugins will only produce additional output. To preserve the previous functionality, set `sdk.transformer` to `true`.
+
+  ```js
+  import { defaultPlugins } from '@hey-api/openapi-ts';
+
+  export default {
+    client: '@hey-api/client-fetch',
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    plugins: [
+      ...defaultPlugins,
+      {
+        dates: true,
+        name: '@hey-api/transformers',
+      },
+      {
+        name: '@hey-api/sdk',
+        transformer: true, // [!code ++]
+      },
+    ],
+  };
+  ```
+
+- [#1447](https://github.com/hey-api/openapi-ts/pull/1447) [`200821b`](https://github.com/hey-api/openapi-ts/commit/200821b3ceea8ffca7656fe3f6e2ef98b7110a2a) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: revert license to MIT
+
+### Patch Changes
+
+- [#1430](https://github.com/hey-api/openapi-ts/pull/1430) [`9cec9e8`](https://github.com/hey-api/openapi-ts/commit/9cec9e8582c12a8c041b922d9587e16f6f19782a) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: Zod plugin generates response schemas
+
 ## 0.59.2
 
 ### Patch Changes
