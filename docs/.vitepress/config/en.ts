@@ -5,6 +5,9 @@ export default defineConfig({
     '🚀 The OpenAPI to TypeScript codegen. Generate clients, SDKs, validators, and more.',
   lang: 'en-US',
   themeConfig: {
+    footer: {
+      message: 'Released under the MIT License.',
+    },
     nav: [
       {
         link: 'https://github.com/sponsors/hey-api',

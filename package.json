@@ -11,7 +11,7 @@
   "bugs": {
     "url": "https://github.com/hey-api/openapi-ts/issues"
   },
-  "license": "FSL-1.1-MIT",
+  "license": "MIT",
   "author": {
     "email": "lubos@heyapi.dev",
     "name": "Lubos Menus",
