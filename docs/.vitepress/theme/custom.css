@@ -76,9 +76,12 @@ iframe {
   justify-content: center;
 }
 
+.home-list > ul {
+  align-items: center;
+}
+
 .home-list > ul,
 .sponsors-list > ul {
-  align-items: center;
   display: flex;
   flex-direction: column;
   row-gap: 2rem;
