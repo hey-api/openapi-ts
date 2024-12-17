@@ -21,7 +21,15 @@ Please visit our [website](https://heyapi.dev/) for documentation, guides, migra
 
 ## Sponsoring
 
-Love Hey API? Please consider becoming a [sponsor](https://github.com/sponsors/hey-api).
+Love Hey API? Become our [sponsor](https://github.com/sponsors/hey-api).
+
+<ul>
+  <li>
+    <a href="https://stainlessapi.com/" target="_blank">
+      <img alt="Stainless logo" height="100" src="https://heyapi.dev/images/stainless-logo-wordmark-480w.png" />
+    </a>
+  </li>
+</ul>
 
 ## GitHub Integration (coming soon)
 

@@ -67,14 +67,28 @@ iframe {
   text-align: center;
 }
 
-.home-list li {
+.home-list li,
+.sponsors-list li {
   list-style: none;
 }
 
-.home-list > ul {
-  display: flex;
+.home-list.sponsors-list > ul {
   justify-content: center;
+}
+
+.home-list > ul,
+.sponsors-list > ul {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  row-gap: 2rem;
+  column-gap: 3rem;
   padding: 0;
+}
+
+.home-list > ul:not(:last-child),
+.sponsors-list > ul:not(:last-child) {
+  padding-bottom: 1rem;
 }
 
 .home-list > h3 {
@@ -85,7 +99,7 @@ iframe {
   text-transform: uppercase;
 }
 
-.home-sponsors li {
+.sponsors-list li {
   align-items: center;
   display: flex;
   height: 100px;
@@ -94,17 +108,42 @@ iframe {
   width: 100%;
 }
 
-.home-sponsors-new > a {
+.sponsors-list li + li {
+  margin-top: 0;
+}
+
+.sponsors-list li > a {
   align-items: center;
-  border: 1px solid currentColor;
+  border: 1px solid transparent;
   border-radius: 10px;
-  color: var(--vp-c-text-2);
   display: flex;
   height: 100%;
   justify-content: center;
+  padding: 1rem;
   text-decoration: none;
-  text-transform: lowercase;
+  transition: border-color ease-out 300ms;
   width: 100%;
+}
+
+html.dark .sponsors-list li > a {
+  background-color: var(--vp-button-brand-bg);
+}
+
+.sponsors-list li > :is(.vp-doc a[href*='://'], .vp-doc a[target='_blank'])::after
+{
+  display: none;
+}
+
+.sponsors-list li > a:hover,
+.sponsors-list li > a:focus {
+  border-color: var(--vp-c-brand-1);
+}
+
+/* .sponsors-list-new currently unused, keep in case we want to reuse it again */
+.sponsors-list-new > a {
+  border: 1px solid currentColor;
+  color: var(--vp-c-text-2);
+  text-transform: lowercase;
 }
 
 .VPFeatures.VPHomeFeatures {
@@ -131,6 +170,11 @@ iframe {
   .VPFeatures.VPHomeFeatures > .container > .items {
     padding: 0.4rem 3rem;
     scroll-padding-inline: 3rem;
+  }
+
+  .home-list > ul,
+  .sponsors-list > ul {
+    flex-direction: row;
   }
 }
 
