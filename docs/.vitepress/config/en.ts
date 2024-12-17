@@ -101,10 +101,6 @@ export default defineConfig({
             text: 'Migrating',
           },
           {
-            link: '/license',
-            text: 'License',
-          },
-          {
             link: '/about',
             text: 'Philosophy',
           },
