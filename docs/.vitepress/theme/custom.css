@@ -78,6 +78,7 @@ iframe {
 
 .home-list > ul {
   align-items: center;
+  justify-content: center;
 }
 
 .home-list > ul,
