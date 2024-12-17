@@ -1,6 +1,6 @@
 <ul>
   <li>
-    <a href="https://stainlessapi.com/" target="_blank">
+    <a href="https://kutt.it/pkEZyc" target="_blank">
       <picture>
         <source srcset="/images/stainless-logo-wordmark-480w.webp" media="(max-width: 480px)" type="image/webp" />
         <source srcset="/images/stainless-logo-wordmark-768w.webp" media="(max-width: 768px)" type="image/webp" />
