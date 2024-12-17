@@ -24,13 +24,11 @@ Please visit our [website](https://heyapi.dev/) for documentation, guides, migra
 
 Love Hey API? Become our [sponsor](https://github.com/sponsors/hey-api).
 
-<ul>
-  <li>
-    <a href="https://stainlessapi.com/" target="_blank">
-      <img alt="Stainless logo" height="100" src="https://heyapi.dev/images/stainless-logo-wordmark-480w.png" />
-    </a>
-  </li>
-</ul>
+<p>
+  <a href="https://kutt.it/pkEZyc" target="_blank">
+    <img alt="Stainless logo" height="50" src="https://heyapi.dev/images/stainless-logo-wordmark-480w.png" />
+  </a>
+</p>
 
 ## GitHub Integration (coming soon)
 
