@@ -1,5 +1,11 @@
 # @hey-api/client-fetch
 
+## 0.5.5
+
+### Patch Changes
+
+- [#1430](https://github.com/hey-api/openapi-ts/pull/1430) [`9cec9e8`](https://github.com/hey-api/openapi-ts/commit/9cec9e8582c12a8c041b922d9587e16f6f19782a) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add responseValidator option
+
 ## 0.5.4
 
 ### Patch Changes
