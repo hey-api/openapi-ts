@@ -12,6 +12,7 @@ import { parseExperimental, parseLegacy } from './openApi';
 import type { ClientPlugins, UserPlugins } from './plugins';
 import { defaultPluginConfigs } from './plugins';
 import type {
+  AnyPluginName,
   DefaultPluginConfigs,
   PluginContext,
   PluginNames,
@@ -190,14 +191,14 @@ const getPluginsConfig = ({
   userPluginsConfig,
 }: {
   pluginConfigs: DefaultPluginConfigs<ClientPlugins>;
-  userPlugins: ReadonlyArray<PluginNames>;
+  userPlugins: ReadonlyArray<AnyPluginName>;
   userPluginsConfig: Config['plugins'];
 }): Pick<Config, 'plugins' | 'pluginOrder'> => {
-  const circularReferenceTracker = new Set<PluginNames>();
-  const pluginOrder = new Set<PluginNames>();
+  const circularReferenceTracker = new Set<AnyPluginName>();
+  const pluginOrder = new Set<AnyPluginName>();
   const plugins: Config['plugins'] = {};
 
-  const dfs = (name: PluginNames) => {
+  const dfs = (name: AnyPluginName) => {
     if (circularReferenceTracker.has(name)) {
       throw new Error(`Circular reference detected at '${name}'`);
     }
@@ -205,15 +206,15 @@ const getPluginsConfig = ({
     if (!pluginOrder.has(name)) {
       circularReferenceTracker.add(name);
 
-      const pluginConfig = pluginConfigs[name];
+      const pluginConfig = pluginConfigs[name as PluginNames];
       if (!pluginConfig) {
         throw new Error(
           `🚫 unknown plugin dependency "${name}" - do you need to register a custom plugin with this name?`,
         );
       }
 
-      const defaultOptions = defaultPluginConfigs[name];
-      const userOptions = userPluginsConfig[name];
+      const defaultOptions = defaultPluginConfigs[name as PluginNames];
+      const userOptions = userPluginsConfig[name as PluginNames];
       if (userOptions && defaultOptions) {
         const nativePluginOption = Object.keys(userOptions).find((key) =>
           key.startsWith('_'),
@@ -243,7 +244,8 @@ const getPluginsConfig = ({
           },
           pluginByTag: (tag) => {
             for (const userPlugin of userPlugins) {
-              const defaultConfig = defaultPluginConfigs[userPlugin];
+              const defaultConfig =
+                defaultPluginConfigs[userPlugin as PluginNames];
               if (
                 defaultConfig &&
                 defaultConfig._tags?.includes(tag) &&
@@ -274,7 +276,7 @@ const getPluginsConfig = ({
   }
 
   return {
-    pluginOrder: Array.from(pluginOrder),
+    pluginOrder: Array.from(pluginOrder) as ReadonlyArray<PluginNames>,
     plugins,
   };
 };
