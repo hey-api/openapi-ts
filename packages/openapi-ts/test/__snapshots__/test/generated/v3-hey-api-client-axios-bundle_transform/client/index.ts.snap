@@ -112,6 +112,7 @@ export type {
   OptionsLegacyParser,
   RequestOptions,
   RequestResult,
+  Security,
 } from './types';
 export {
   createConfig,
