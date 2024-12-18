@@ -103,6 +103,7 @@ describe('handlerLegacy', () => {
       files,
       openApi,
       plugin: {
+        exportFromIndex: false,
         output: '',
       },
     });
@@ -209,6 +210,7 @@ describe('methodNameBuilder', () => {
       files,
       openApi,
       plugin: {
+        exportFromIndex: false,
         output: '',
       },
     });
@@ -277,6 +279,7 @@ describe('methodNameBuilder', () => {
       files,
       openApi,
       plugin: {
+        exportFromIndex: false,
         output: '',
       },
     });
@@ -347,6 +350,7 @@ describe('methodNameBuilder', () => {
       files,
       openApi,
       plugin: {
+        exportFromIndex: false,
         output: '',
       },
     });
