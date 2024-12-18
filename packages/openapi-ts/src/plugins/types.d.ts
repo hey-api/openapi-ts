@@ -20,11 +20,14 @@ export type PluginNames =
   | 'fastify'
   | 'zod';
 
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type AnyPluginName = PluginNames | (string & {});
+
 type PluginTag = 'transformer' | 'validator';
 
 export interface PluginContext {
   ensureDependency: (name: PluginNames | true) => void;
-  pluginByTag: (tag: PluginTag) => PluginNames | undefined;
+  pluginByTag: (tag: PluginTag) => AnyPluginName | undefined;
 }
 
 interface BaseConfig {
@@ -35,8 +38,7 @@ interface BaseConfig {
    * barrel file?
    */
   exportFromIndex?: boolean;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  name: PluginNames | (string & {});
+  name: AnyPluginName;
   output?: string;
 }
 
@@ -45,7 +47,7 @@ interface Meta<Config extends BaseConfig> {
    * Dependency plugins will be always processed, regardless of whether user
    * explicitly defines them in their `plugins` config.
    */
-  _dependencies?: ReadonlyArray<PluginNames>;
+  _dependencies?: ReadonlyArray<AnyPluginName>;
   /**
    * Allows overriding config before it's sent to the parser. An example is
    * defining `validator` as `true` and the plugin figures out which plugin
@@ -83,7 +85,15 @@ export namespace Plugin {
 
   export type DefineConfig<Config extends BaseConfig> = (
     config?: Plugin.UserConfig<Config>,
-  ) => Plugin.Config<Config>;
+  ) => Omit<Plugin.Config<Config>, 'name'> & {
+    /**
+     * Cast name to `any` so it doesn't throw type error in `plugins` array.
+     * We could allow any `string` as plugin `name` in the object syntax, but
+     * that TypeScript trick would cause all string methods to appear as
+     * suggested auto completions, which is undesirable.
+     */
+    name: any;
+  };
 
   /**
    * Plugin implementation for experimental parser.
