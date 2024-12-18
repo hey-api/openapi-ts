@@ -52,6 +52,10 @@ interface Namespaces {
 }
 
 export class TypeScriptFile {
+  /**
+   * Should the exports from this file be re-exported in the index barrel file?
+   */
+  private _exportFromIndex: boolean;
   private _headers: Array<string> = [];
   private _identifierCase: StringCase | undefined;
   private _imports = new Map<string, Map<string, ImportExportItemObject>>();
@@ -72,15 +76,21 @@ export class TypeScriptFile {
 
   public constructor({
     dir,
+    exportFromIndex = false,
     header = true,
     identifierCase,
     name,
   }: {
     dir: string;
+    /**
+     * Should the exports from this file be re-exported in the index barrel file?
+     */
+    exportFromIndex?: boolean;
     header?: boolean;
     identifierCase?: StringCase;
     name: string;
   }) {
+    this._exportFromIndex = exportFromIndex;
     this._identifierCase = identifierCase;
     this._name = this._setName(name);
     this._path = path.resolve(dir, this._name);
@@ -120,6 +130,10 @@ export class TypeScriptFile {
       created: false,
       name: refValue.name,
     };
+  }
+
+  public get exportFromIndex(): boolean {
+    return this._exportFromIndex;
   }
 
   public identifier({

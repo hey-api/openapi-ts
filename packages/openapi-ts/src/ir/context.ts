@@ -15,6 +15,10 @@ import type {
 
 interface ContextFile {
   /**
+   * Should the exports from this file be re-exported in the index barrel file?
+   */
+  exportFromIndex?: boolean;
+  /**
    * Unique file identifier.
    */
   id: string;
@@ -137,6 +141,7 @@ export class IRContext<Spec extends Record<string, any> = any> {
     );
     const createdFile = new TypeScriptFile({
       dir: outputDir,
+      exportFromIndex: file.exportFromIndex,
       identifierCase: file.identifierCase,
       name: `${outputParts[outputParts.length - 1]}.ts`,
     });

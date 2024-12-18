@@ -545,6 +545,7 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
   }
 
   const file = context.createFile({
+    exportFromIndex: plugin.exportFromIndex,
     id: sdkId,
     path: plugin.output,
   });

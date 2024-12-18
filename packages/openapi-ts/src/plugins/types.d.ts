@@ -28,6 +28,13 @@ export interface PluginContext {
 }
 
 interface BaseConfig {
+  /**
+   * **This feature works only with the experimental parser**
+   *
+   * Should the exports from the plugin's file be re-exported in the index
+   * barrel file?
+   */
+  exportFromIndex?: boolean;
   // eslint-disable-next-line @typescript-eslint/ban-types
   name: PluginNames | (string & {});
   output?: string;
@@ -71,6 +78,7 @@ export namespace Plugin {
     Meta<Config> & {
       _handler: Plugin.Handler<Config>;
       _handlerLegacy: Plugin.LegacyHandler<Config>;
+      exportFromIndex?: boolean;
     };
 
   export type DefineConfig<Config extends BaseConfig> = (
@@ -86,7 +94,7 @@ export namespace Plugin {
   }) => void;
 
   export type Instance<Config extends BaseConfig> = OmitUnderscoreKeys<Config> &
-    Pick<Required<Config>, 'output'>;
+    Pick<Required<BaseConfig>, 'exportFromIndex' | 'output'>;
 
   /**
    * Plugin implementation for legacy parser. Use only if you need to support

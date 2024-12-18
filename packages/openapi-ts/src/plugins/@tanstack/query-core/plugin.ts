@@ -735,6 +735,7 @@ export const handler: Plugin.Handler<
   | VueQueryConfig
 > = ({ context, plugin }) => {
   const file = context.createFile({
+    exportFromIndex: plugin.exportFromIndex,
     id: plugin.name,
     path: plugin.output,
   });
