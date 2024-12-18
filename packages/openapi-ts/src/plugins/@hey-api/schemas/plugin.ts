@@ -318,6 +318,7 @@ const schemasV3_1_X = ({
 
 export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
   context.createFile({
+    exportFromIndex: plugin.exportFromIndex,
     id: schemasId,
     path: plugin.output,
   });

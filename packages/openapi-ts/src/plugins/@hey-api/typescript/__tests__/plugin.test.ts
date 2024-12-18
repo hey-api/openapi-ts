@@ -96,6 +96,7 @@ describe('generateLegacyTypes', () => {
       files,
       openApi,
       plugin: {
+        exportFromIndex: false,
         name: '@hey-api/typescript',
         output: '',
       },
