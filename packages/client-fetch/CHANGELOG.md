@@ -1,5 +1,11 @@
 # @hey-api/client-fetch
 
+## 0.5.6
+
+### Patch Changes
+
+- [#1452](https://github.com/hey-api/openapi-ts/pull/1452) [`ba56424`](https://github.com/hey-api/openapi-ts/commit/ba5642486cdd5461c2372c34b63019c02bc6874e) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export Security interface
+
 ## 0.5.5
 
 ### Patch Changes
