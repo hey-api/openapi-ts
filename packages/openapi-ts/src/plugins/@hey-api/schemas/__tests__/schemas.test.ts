@@ -70,6 +70,7 @@ describe('generateLegacySchemas', () => {
       files,
       openApi,
       plugin: {
+        exportFromIndex: false,
         name: '@hey-api/schemas',
         output: 'schemas',
       },
@@ -147,6 +148,7 @@ describe('generateLegacySchemas', () => {
       files,
       openApi,
       plugin: {
+        exportFromIndex: false,
         name: '@hey-api/schemas',
         output: 'schemas',
       },

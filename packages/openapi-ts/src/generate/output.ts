@@ -130,29 +130,32 @@ export const generateOutput = async ({ context }: { context: IRContext }) => {
 
   await parseIR({ context });
 
-  const indexFile = context.createFile({
-    id: '_index',
-    path: 'index',
-  });
-
-  Object.entries(context.files).forEach(([name, file]) => {
-    if (context.config.dryRun || name === '_index') {
-      return;
-    }
-
-    // TODO: parser - refactor once we have typed Plugin Files API
-    if (!file.isEmpty() && ['sdk', 'types'].includes(name)) {
-      indexFile.add(
-        compiler.exportAllDeclaration({
-          module: `./${file.nameWithoutExtension()}`,
-        }),
-      );
-    }
-
-    file.write('\n\n');
-  });
-
   if (!context.config.dryRun) {
+    const indexFile = context.createFile({
+      id: '_index',
+      path: 'index',
+    });
+
+    for (const file of Object.values(context.files)) {
+      const fileName = file.nameWithoutExtension();
+
+      if (fileName === indexFile.nameWithoutExtension()) {
+        continue;
+      }
+
+      if (!file.isEmpty() && file.exportFromIndex) {
+        // TODO: parser - add export method for more granular control over
+        // what's exported so we can support named exports
+        indexFile.add(
+          compiler.exportAllDeclaration({
+            module: `./${fileName}`,
+          }),
+        );
+      }
+
+      file.write('\n\n');
+    }
+
     indexFile.write();
   }
 };
