@@ -244,7 +244,7 @@ for (const version of versions) {
     it('handles a custom plugin', async () => {
       const myPlugin: Plugin.Config<{
         customOption: boolean;
-        name: string;
+        name: any;
         output: string;
       }> = {
         _dependencies: ['@hey-api/typescript'],
@@ -260,7 +260,6 @@ for (const version of versions) {
         experimentalParser: true,
         input: path.join(__dirname, 'spec', '3.1.x', 'full.json'),
         output: path.join(outputDir, myPlugin.name, 'default'),
-        // @ts-expect-error
         plugins: [myPlugin],
       });
 
@@ -270,10 +269,9 @@ for (const version of versions) {
 
     it('throws on invalid dependency', async () => {
       const myPlugin: Plugin.Config<{
-        name: string;
+        name: any;
         output: string;
       }> = {
-        // @ts-expect-error
         _dependencies: ['@hey-api/oops'],
         _handler: vi.fn(),
         _handlerLegacy: vi.fn(),
@@ -290,7 +288,6 @@ for (const version of versions) {
             level: 'silent',
           },
           output: path.join(outputDir, myPlugin.name, 'default'),
-          // @ts-expect-error
           plugins: [myPlugin],
         }),
       ).rejects.toThrowError(/unknown plugin/g);
@@ -301,7 +298,7 @@ for (const version of versions) {
 
     it('throws on native plugin override', async () => {
       const myPlugin: Plugin.Config<{
-        name: string;
+        name: any;
         output: string;
       }> = {
         _handler: vi.fn(),
@@ -319,7 +316,6 @@ for (const version of versions) {
             level: 'silent',
           },
           output: path.join(outputDir, myPlugin.name, 'default'),
-          // @ts-expect-error
           plugins: [myPlugin],
         }),
       ).rejects.toThrowError(/cannot register plugin/g);
