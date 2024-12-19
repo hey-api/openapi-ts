@@ -103,6 +103,10 @@ const parseSchemaMeta = ({
     irSchema.minLength = schema.minLength;
   }
 
+  if (schema.pattern) {
+    irSchema.pattern = schema.pattern;
+  }
+
   if (schema.readOnly) {
     irSchema.accessScope = 'read';
   } else if (schema.writeOnly) {
@@ -665,6 +669,12 @@ const parseNullableType = ({
     irSchema: typeIrSchema,
     schema,
   });
+
+  if (typeIrSchema.default === null) {
+    // clear to avoid duplicate default inside the non-null schema.
+    // this would produce incorrect validator output
+    delete typeIrSchema.default;
+  }
 
   const schemaItems: Array<IR.SchemaObject> = [
     parseOneType({

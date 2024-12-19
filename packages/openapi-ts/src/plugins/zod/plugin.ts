@@ -25,9 +25,13 @@ export const zodId = 'zod';
 const defaultIdentifier = compiler.identifier({ text: 'default' });
 const intersectionIdentifier = compiler.identifier({ text: 'intersection' });
 const lazyIdentifier = compiler.identifier({ text: 'lazy' });
+const lengthIdentifier = compiler.identifier({ text: 'length' });
+const maxIdentifier = compiler.identifier({ text: 'max' });
 const mergeIdentifier = compiler.identifier({ text: 'merge' });
+const minIdentifier = compiler.identifier({ text: 'min' });
 const optionalIdentifier = compiler.identifier({ text: 'optional' });
 const readonlyIdentifier = compiler.identifier({ text: 'readonly' });
+const regexIdentifier = compiler.identifier({ text: 'regex' });
 const unionIdentifier = compiler.identifier({ text: 'union' });
 const zIdentifier = compiler.identifier({ text: 'z' });
 
@@ -107,7 +111,7 @@ const arrayTypeToZodSchema = ({
     arrayExpression = compiler.callExpression({
       functionName: compiler.propertyAccessExpression({
         expression: arrayExpression,
-        name: compiler.identifier({ text: 'length' }),
+        name: lengthIdentifier,
       }),
       parameters: [compiler.valueToExpression({ value: schema.minItems })],
     });
@@ -116,7 +120,7 @@ const arrayTypeToZodSchema = ({
       arrayExpression = compiler.callExpression({
         functionName: compiler.propertyAccessExpression({
           expression: arrayExpression,
-          name: compiler.identifier({ text: 'min' }),
+          name: minIdentifier,
         }),
         parameters: [compiler.valueToExpression({ value: schema.minItems })],
       });
@@ -126,7 +130,7 @@ const arrayTypeToZodSchema = ({
       arrayExpression = compiler.callExpression({
         functionName: compiler.propertyAccessExpression({
           expression: arrayExpression,
-          name: compiler.identifier({ text: 'max' }),
+          name: maxIdentifier,
         }),
         parameters: [compiler.valueToExpression({ value: schema.maxItems })],
       });
@@ -317,44 +321,12 @@ const objectTypeToZodSchema = ({
     const property = schema.properties[name]!;
     const isRequired = required.includes(name);
 
-    let propertyExpression = schemaToZodSchema({
+    const propertyExpression = schemaToZodSchema({
       context,
+      optional: !isRequired,
       result,
       schema: property,
     });
-
-    if (property.accessScope === 'read') {
-      propertyExpression = compiler.callExpression({
-        functionName: compiler.propertyAccessExpression({
-          expression: propertyExpression,
-          name: readonlyIdentifier,
-        }),
-      });
-    }
-
-    if (!isRequired) {
-      propertyExpression = compiler.callExpression({
-        functionName: compiler.propertyAccessExpression({
-          expression: propertyExpression,
-          name: optionalIdentifier,
-        }),
-      });
-    }
-
-    if (property.default !== undefined) {
-      const callParameter = compiler.valueToExpression({
-        value: property.default,
-      });
-      if (callParameter) {
-        propertyExpression = compiler.callExpression({
-          functionName: compiler.propertyAccessExpression({
-            expression: propertyExpression,
-            name: defaultIdentifier,
-          }),
-          parameters: [callParameter],
-        });
-      }
-    }
 
     digitsRegExp.lastIndex = 0;
     let propertyName = digitsRegExp.test(name)
@@ -493,7 +465,7 @@ const stringTypeToZodSchema = ({
     stringExpression = compiler.callExpression({
       functionName: compiler.propertyAccessExpression({
         expression: stringExpression,
-        name: compiler.identifier({ text: 'length' }),
+        name: lengthIdentifier,
       }),
       parameters: [compiler.valueToExpression({ value: schema.minLength })],
     });
@@ -502,7 +474,7 @@ const stringTypeToZodSchema = ({
       stringExpression = compiler.callExpression({
         functionName: compiler.propertyAccessExpression({
           expression: stringExpression,
-          name: compiler.identifier({ text: 'min' }),
+          name: minIdentifier,
         }),
         parameters: [compiler.valueToExpression({ value: schema.minLength })],
       });
@@ -512,11 +484,30 @@ const stringTypeToZodSchema = ({
       stringExpression = compiler.callExpression({
         functionName: compiler.propertyAccessExpression({
           expression: stringExpression,
-          name: compiler.identifier({ text: 'max' }),
+          name: maxIdentifier,
         }),
         parameters: [compiler.valueToExpression({ value: schema.maxLength })],
       });
     }
+  }
+
+  if (schema.pattern) {
+    const text = schema.pattern
+      .replace(/\\/g, '\\\\') // backslashes
+      .replace(/\n/g, '\\n') // newlines
+      .replace(/\r/g, '\\r') // carriage returns
+      .replace(/\t/g, '\\t') // tabs
+      .replace(/\f/g, '\\f') // form feeds
+      .replace(/\v/g, '\\v') // vertical tabs
+      .replace(/'/g, "\\'") // single quotes
+      .replace(/"/g, '\\"'); // double quotes
+    stringExpression = compiler.callExpression({
+      functionName: compiler.propertyAccessExpression({
+        expression: stringExpression,
+        name: regexIdentifier,
+      }),
+      parameters: [compiler.regularExpressionLiteral({ text })],
+    });
   }
 
   return stringExpression;
@@ -680,6 +671,7 @@ const operationToZodSchema = ({
 const schemaToZodSchema = ({
   $ref,
   context,
+  optional,
   result,
   schema,
 }: {
@@ -688,6 +680,12 @@ const schemaToZodSchema = ({
    */
   $ref?: string;
   context: IR.Context;
+  /**
+   * Accept `optional` to handle optional object properties. We can't handle
+   * this inside the object function because `.optional()` must come before
+   * `.default()` which is handled in this function.
+   */
+  optional?: boolean;
   result: Result;
   schema: IR.SchemaObject;
 }): ts.Expression => {
@@ -839,6 +837,41 @@ const schemaToZodSchema = ({
 
   if ($ref) {
     result.circularReferenceTracker.delete($ref);
+  }
+
+  if (expression) {
+    if (schema.accessScope === 'read') {
+      expression = compiler.callExpression({
+        functionName: compiler.propertyAccessExpression({
+          expression,
+          name: readonlyIdentifier,
+        }),
+      });
+    }
+
+    if (optional) {
+      expression = compiler.callExpression({
+        functionName: compiler.propertyAccessExpression({
+          expression,
+          name: optionalIdentifier,
+        }),
+      });
+    }
+
+    if (schema.default !== undefined) {
+      const callParameter = compiler.valueToExpression({
+        value: schema.default,
+      });
+      if (callParameter) {
+        expression = compiler.callExpression({
+          functionName: compiler.propertyAccessExpression({
+            expression,
+            name: defaultIdentifier,
+          }),
+          parameters: [callParameter],
+        });
+      }
+    }
   }
 
   // emit nodes only if $ref points to a reusable component

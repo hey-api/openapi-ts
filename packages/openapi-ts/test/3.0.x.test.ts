@@ -479,6 +479,14 @@ describe(`OpenAPI ${VERSION}`, () => {
       }),
       description: 'gracefully handles invalid type',
     },
+    {
+      config: createConfig({
+        input: 'validators.json',
+        output: 'validators',
+        plugins: ['zod'],
+      }),
+      description: 'generates Zod schemas',
+    },
   ];
 
   it.each(scenarios)('$description', async ({ config }) => {

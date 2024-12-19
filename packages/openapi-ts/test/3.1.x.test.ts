@@ -472,14 +472,6 @@ describe(`OpenAPI ${VERSION}`, () => {
     },
     {
       config: createConfig({
-        input: 'schema-recursive.json',
-        output: 'schema-recursive',
-        plugins: ['zod'],
-      }),
-      description: 'generates Zod schemas with from recursive schemas',
-    },
-    {
-      config: createConfig({
         input: 'security-api-key.json',
         output: 'security-api-key',
         plugins: [
@@ -547,6 +539,14 @@ describe(`OpenAPI ${VERSION}`, () => {
         output: 'type-invalid',
       }),
       description: 'gracefully handles invalid type',
+    },
+    {
+      config: createConfig({
+        input: 'validators.json',
+        output: 'validators',
+        plugins: ['zod'],
+      }),
+      description: 'generates Zod schemas',
     },
   ];
 
