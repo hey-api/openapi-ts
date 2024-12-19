@@ -1,8 +1,8 @@
-import type { IRParameterObject, IRParametersObject } from './ir';
 import type { Pagination } from './pagination';
+import type { IR } from './types';
 
 export const hasParameterGroupObjectRequired = (
-  parameterGroup?: Record<string, IRParameterObject>,
+  parameterGroup?: Record<string, IR.ParameterObject>,
 ): boolean => {
   for (const name in parameterGroup) {
     if (parameterGroup[name].required) {
@@ -14,7 +14,7 @@ export const hasParameterGroupObjectRequired = (
 };
 
 export const hasParametersObjectRequired = (
-  parameters: IRParametersObject | undefined,
+  parameters: IR.ParametersObject | undefined,
 ): boolean => {
   if (!parameters) {
     return false;
@@ -40,7 +40,7 @@ export const hasParametersObjectRequired = (
 };
 
 export const parameterWithPagination = (
-  parameters: IRParametersObject | undefined,
+  parameters: IR.ParametersObject | undefined,
 ): Pagination | undefined => {
   if (!parameters) {
     return;

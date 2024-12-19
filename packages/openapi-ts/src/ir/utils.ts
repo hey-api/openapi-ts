@@ -1,4 +1,4 @@
-import type { IRSchemaObject } from './ir';
+import type { IR } from './types';
 
 /**
  * Simply adds `items` to the schema. Also handles setting the logical operator
@@ -10,10 +10,10 @@ export const addItemsToSchema = ({
   mutateSchemaOneItem = false,
   schema,
 }: {
-  items: Array<IRSchemaObject>;
-  logicalOperator?: IRSchemaObject['logicalOperator'];
+  items: Array<IR.SchemaObject>;
+  logicalOperator?: IR.SchemaObject['logicalOperator'];
   mutateSchemaOneItem?: boolean;
-  schema: IRSchemaObject;
+  schema: IR.SchemaObject;
 }) => {
   if (!items.length) {
     return schema;

@@ -1,9 +1,9 @@
-import type { IRSchemaObject } from './ir';
+import type { IR } from './types';
 
 /**
  * Ensure we don't produce redundant types, e.g. string | string.
  */
-export const deduplicateSchema = <T extends IRSchemaObject>({
+export const deduplicateSchema = <T extends IR.SchemaObject>({
   schema,
 }: {
   schema: T;
@@ -12,7 +12,7 @@ export const deduplicateSchema = <T extends IRSchemaObject>({
     return schema;
   }
 
-  const uniqueItems: Array<IRSchemaObject> = [];
+  const uniqueItems: Array<IR.SchemaObject> = [];
   const typeIds: Array<string> = [];
 
   for (const item of schema.items) {

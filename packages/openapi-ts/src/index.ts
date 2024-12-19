@@ -7,7 +7,7 @@ import { sync } from 'cross-spawn';
 
 import { generateLegacyOutput, generateOutput } from './generate/output';
 import { ensureDirSync } from './generate/utils';
-import type { IRContext } from './ir/context';
+import type { IR } from './ir/types';
 import { parseExperimental, parseLegacy } from './openApi';
 import type { ClientPlugins, UserPlugins } from './plugins';
 import { defaultPluginConfigs } from './plugins';
@@ -444,7 +444,7 @@ export async function createClient(
       Performance.end('spec');
 
       let client: Client | undefined;
-      let context: IRContext | undefined;
+      let context: IR.Context | undefined;
 
       Performance.start('parser');
       if (
@@ -550,7 +550,7 @@ export default {
   defineConfig,
 };
 
-export type { OpenApiV3_0_X } from './openApi/3.0.x';
-export type { OpenApiV3_1_X } from './openApi/3.1.x';
+export type { IR } from './ir/types';
+export type { OpenApi } from './openApi/types';
 export type { Plugin } from './plugins/types';
 export type { UserConfig } from './types/config';

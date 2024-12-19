@@ -1,9 +1,8 @@
 import ts from 'typescript';
 
 import { compiler } from '../../../compiler';
-import type { IRContext } from '../../../ir/context';
-import type { IRSchemaObject } from '../../../ir/ir';
 import { operationResponsesMap } from '../../../ir/operation';
+import type { IR } from '../../../ir/types';
 import { irRef } from '../../../utils/ref';
 import { stringCase } from '../../../utils/stringCase';
 import { operationIrRef } from '../../shared/utils/ref';
@@ -91,9 +90,9 @@ const schemaResponseTransformerNodes = ({
   plugin,
   schema,
 }: {
-  context: IRContext;
+  context: IR.Context;
   plugin: Plugin.Instance<Config>;
-  schema: IRSchemaObject;
+  schema: IR.SchemaObject;
 }): Array<ts.Expression | ts.Statement> => {
   const identifierData = compiler.identifier({ text: dataVariableName });
   const nodes = processSchemaType({
@@ -118,10 +117,10 @@ const processSchemaType = ({
   plugin,
   schema,
 }: {
-  context: IRContext;
+  context: IR.Context;
   dataExpression?: ts.Expression | string;
   plugin: Plugin.Instance<Config>;
-  schema: IRSchemaObject;
+  schema: IR.SchemaObject;
 }): Array<ts.Expression | ts.Statement> => {
   const file = context.file({ id: transformersId })!;
 
@@ -134,7 +133,7 @@ const processSchemaType = ({
 
     if (identifier.created && identifier.name) {
       // create each schema response transformer only once
-      const refSchema = context.resolveIrRef<IRSchemaObject>(schema.$ref);
+      const refSchema = context.resolveIrRef<IR.SchemaObject>(schema.$ref);
       const nodes = schemaResponseTransformerNodes({
         context,
         plugin,

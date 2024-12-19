@@ -1,4 +1,4 @@
-import type { IRContext } from '../../../ir/context';
+import type { IR } from '../../../ir/types';
 import { stringCase } from '../../../utils/stringCase';
 import { sanitizeNamespaceIdentifier } from '../../common/parser/sanitize';
 
@@ -13,7 +13,7 @@ export const operationToId = ({
   method,
   path,
 }: {
-  context: IRContext;
+  context: IR.Context;
   id: string | undefined;
   method: string;
   path: string;

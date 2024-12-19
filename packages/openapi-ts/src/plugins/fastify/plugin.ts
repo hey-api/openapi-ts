@@ -1,10 +1,9 @@
 import type ts from 'typescript';
 
 import { compiler, type Property } from '../../compiler';
-import type { IRContext } from '../../ir/context';
-import type { IROperationObject } from '../../ir/ir';
 import { operationResponsesMap } from '../../ir/operation';
 import { hasParameterGroupObjectRequired } from '../../ir/parameter';
+import type { IR } from '../../ir/types';
 import { operationIrRef } from '../shared/utils/ref';
 import type { Plugin } from '../types';
 import type { Config } from './types';
@@ -15,8 +14,8 @@ const operationToRouteHandler = ({
   context,
   operation,
 }: {
-  context: IRContext;
-  operation: IROperationObject;
+  context: IR.Context;
+  operation: IR.OperationObject;
 }): Property | undefined => {
   const file = context.file({ id: fastifyId })!;
   const fileTypes = context.file({ id: 'types' })!;

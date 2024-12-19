@@ -1,4 +1,4 @@
-import type { IROperationObject } from '../../../ir/ir';
+import type { IR } from '../../../ir/types';
 import type { Operation } from '../../../types/client';
 import type { Plugin } from '../../types';
 
@@ -44,9 +44,9 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
    */
   include?: string;
   /**
-   * Customise the name of methods within the service. By default, {@link IROperationObject.id} or {@link Operation.name} is used.
+   * Customise the name of methods within the service. By default, {@link IR.OperationObject.id} or {@link Operation.name} is used.
    */
-  methodNameBuilder?: (operation: IROperationObject | Operation) => string;
+  methodNameBuilder?: (operation: IR.OperationObject | Operation) => string;
   // TODO: parser - rename operationId option to something like inferId?: boolean
   /**
    * Use operation ID to generate operation names?
