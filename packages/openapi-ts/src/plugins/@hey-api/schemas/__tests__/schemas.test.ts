@@ -76,7 +76,7 @@ describe('generateLegacySchemas', () => {
       },
     });
 
-    files.schemas.write();
+    files.schemas!.write();
 
     expect(fs.writeFileSync).toHaveBeenCalledWith(
       expect.stringContaining('schemas.gen.ts'),
@@ -154,7 +154,7 @@ describe('generateLegacySchemas', () => {
       },
     });
 
-    files.schemas.write();
+    files.schemas!.write();
 
     expect(fs.writeFileSync).toHaveBeenCalledWith(
       expect.stringContaining('schemas.gen.ts'),

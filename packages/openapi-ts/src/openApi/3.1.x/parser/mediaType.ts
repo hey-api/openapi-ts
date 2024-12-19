@@ -51,7 +51,7 @@ export const mediaTypeObject = ({
   for (const mediaType in content) {
     return {
       mediaType,
-      schema: content[mediaType].schema,
+      schema: content[mediaType]!.schema,
       type: mediaTypeToIrMediaType({ mediaType }),
     };
   }

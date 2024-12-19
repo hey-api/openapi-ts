@@ -160,8 +160,8 @@ export const toExpression = <T = unknown>({
       // TODO; handle more than single nested level, i.e. foo.bar.baz
       const parts = value.split('.');
       return createPropertyAccessExpression({
-        expression: parts[0],
-        name: parts[1],
+        expression: parts[0]!,
+        name: parts[1]!,
       });
     }
     return ots.string(value, unescape);

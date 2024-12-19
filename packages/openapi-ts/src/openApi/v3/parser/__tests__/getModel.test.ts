@@ -110,7 +110,7 @@ describe('getModel', () => {
       openApi,
       types: {},
     });
-    expect(model.properties[0].properties.length).toBe(2);
+    expect(model.properties[0]!.properties.length).toBe(2);
   });
 
   it('Parses any of 2', () => {
@@ -129,6 +129,6 @@ describe('getModel', () => {
       openApi,
       types: {},
     });
-    expect(model.properties[0].properties.length).toBe(3);
+    expect(model.properties[0]!.properties.length).toBe(3);
   });
 });

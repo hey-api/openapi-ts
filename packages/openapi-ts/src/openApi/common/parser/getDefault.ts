@@ -26,7 +26,7 @@ export const getDefault = (
         model?.export === 'enum' &&
         model.enum?.[definition.default as number]
       ) {
-        const { value } = model.enum[definition.default as number];
+        const { value } = model.enum[definition.default as number]!;
         return value;
       }
       return definition.default;

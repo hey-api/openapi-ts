@@ -33,7 +33,7 @@ for (const version of versions) {
         outputDir,
         typeof userConfig.plugins[0] === 'string'
           ? userConfig.plugins[0]
-          : userConfig.plugins[0].name,
+          : userConfig.plugins[0]!.name,
         typeof userConfig.output === 'string' ? userConfig.output : '',
       ),
     });

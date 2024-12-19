@@ -253,7 +253,7 @@ const parseObject = ({
   const schemaProperties: Record<string, IR.SchemaObject> = {};
 
   for (const name in schema.properties) {
-    const property = schema.properties[name];
+    const property = schema.properties[name]!;
     if (typeof property === 'boolean') {
       // TODO: parser - handle boolean properties
     } else {
@@ -820,7 +820,7 @@ const parseType = ({
       irSchema,
       schema: {
         ...schema,
-        type: schemaTypes[0],
+        type: schemaTypes[0]!,
       },
     });
   }

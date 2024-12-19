@@ -9,19 +9,19 @@ export const parseIR = async ({ context }: { context: IR.Context }) => {
 
   if (context.ir.components) {
     for (const name in context.ir.components.schemas) {
-      const schema = context.ir.components.schemas[name];
+      const schema = context.ir.components.schemas[name]!;
       const $ref = `#/components/schemas/${name}`;
       await context.broadcast('schema', { $ref, name, schema });
     }
 
     for (const name in context.ir.components.parameters) {
-      const parameter = context.ir.components.parameters[name];
+      const parameter = context.ir.components.parameters[name]!;
       const $ref = `#/components/parameters/${name}`;
       await context.broadcast('parameter', { $ref, name, parameter });
     }
 
     for (const name in context.ir.components.requestBodies) {
-      const requestBody = context.ir.components.requestBodies[name];
+      const requestBody = context.ir.components.requestBodies[name]!;
       const $ref = `#/components/requestBodies/${name}`;
       await context.broadcast('requestBody', { $ref, name, requestBody });
     }

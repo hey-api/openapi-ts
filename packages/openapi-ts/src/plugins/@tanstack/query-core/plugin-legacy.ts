@@ -681,7 +681,7 @@ export const handlerLegacy: Plugin.LegacyHandler<
     throw new Error('🚫 TanStack Query plugin does not support legacy clients');
   }
 
-  const file = files[plugin.name];
+  const file = files[plugin.name]!;
 
   file.import({
     ...clientApi.OptionsLegacyParser,
@@ -689,7 +689,7 @@ export const handlerLegacy: Plugin.LegacyHandler<
   });
 
   const typesModulePath = relativeModulePath({
-    moduleOutput: files.types.nameWithoutExtension(),
+    moduleOutput: files.types!.nameWithoutExtension(),
     sourceOutput: plugin.output,
   });
 
@@ -1295,7 +1295,7 @@ export const handlerLegacy: Plugin.LegacyHandler<
       }
 
       const sdkModulePath = relativeModulePath({
-        moduleOutput: files.sdk.nameWithoutExtension(),
+        moduleOutput: files.sdk!.nameWithoutExtension(),
         sourceOutput: plugin.output,
       });
 
@@ -1309,7 +1309,7 @@ export const handlerLegacy: Plugin.LegacyHandler<
       if (hasUsedQueryFn) {
         file.import({
           module: sdkModulePath,
-          name: queryFn.split('.')[0],
+          name: queryFn.split('.')[0]!,
         });
       }
     }

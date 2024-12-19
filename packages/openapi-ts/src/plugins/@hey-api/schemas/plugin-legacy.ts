@@ -92,7 +92,7 @@ export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
       expression,
       name: toSchemaName(name, schema),
     });
-    files.schemas.add(statement);
+    files.schemas!.add(statement);
   };
 
   // OpenAPI 2.0
