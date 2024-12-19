@@ -66,7 +66,7 @@ export const paginationField = ({
     paginationKeywordsRegExp.lastIndex = 0;
 
     if (paginationKeywordsRegExp.test(name)) {
-      const property = schema.properties[name];
+      const property = schema.properties[name]!;
 
       if (typeof property !== 'boolean' && !('$ref' in property)) {
         const schemaType = getSchemaType({ schema: property });

@@ -31,7 +31,7 @@ const preserveCase = ({
     _case === 'snake_case' || _case === 'SCREAMING_SNAKE_CASE' ? '_' : '-';
 
   for (let index = 0; index < string.length; index++) {
-    const character = string[index];
+    const character = string[index]!;
     isLastLastCharPreserved =
       index > 2 ? string[index - 3] === separator : true;
 

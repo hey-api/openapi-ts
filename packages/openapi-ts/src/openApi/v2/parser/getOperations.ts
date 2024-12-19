@@ -20,7 +20,7 @@ export const getOperations = ({
   const operations: Operation[] = [];
 
   for (const path in openApi.paths) {
-    const pathItem = openApi.paths[path];
+    const pathItem = openApi.paths[path]!;
     const pathParameters = getOperationParameters({
       openApi,
       parameters: pathItem.parameters ?? [],

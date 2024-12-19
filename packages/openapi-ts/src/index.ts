@@ -495,7 +495,7 @@ export async function createClient(
 
     Performance.end('createClient');
 
-    if (configs[0].logs.level === 'debug') {
+    if (configs[0]!.logs.level === 'debug') {
       const perfReport = new PerformanceReport({
         totalMark: 'createClient',
       });

@@ -114,11 +114,11 @@ export const getType = ({
     if (matches?.length) {
       const match1 = getType({
         debug,
-        type: ensureValidTypeScriptJavaScriptIdentifier(matches[1]),
+        type: ensureValidTypeScriptJavaScriptIdentifier(matches[1]!),
       });
       const match2 = getType({
         debug,
-        type: ensureValidTypeScriptJavaScriptIdentifier(matches[2]),
+        type: ensureValidTypeScriptJavaScriptIdentifier(matches[2]!),
       });
 
       if (match1.type === 'unknown[]') {

@@ -61,7 +61,11 @@ export const getResponseType = (
     return;
   }
 
-  const cleanContent = contentType.split(';')[0].trim();
+  const cleanContent = contentType.split(';')[0]?.trim();
+
+  if (!cleanContent) {
+    return;
+  }
 
   if (
     cleanContent.startsWith('application/json') ||
@@ -254,7 +258,7 @@ const operationStatements = ({
   }
 
   for (const name in operation.parameters?.query) {
-    const parameter = operation.parameters.query[name];
+    const parameter = operation.parameters.query[name]!;
     if (
       (parameter.schema.type === 'array' ||
         parameter.schema.type === 'tuple') &&

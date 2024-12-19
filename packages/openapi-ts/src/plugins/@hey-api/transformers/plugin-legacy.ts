@@ -86,7 +86,7 @@ const processArray = (props: ModelProps) => {
 
   if (refModels.length === 1) {
     const { created, name: nameModelResponseTransformer } =
-      ensureModelResponseTransformerExists({ ...props, model: refModels[0] });
+      ensureModelResponseTransformerExists({ ...props, model: refModels[0]! });
 
     if (!created) {
       return [];
@@ -162,7 +162,10 @@ const processModel = (props: ModelProps): ts.Statement[] => {
       const refModels = getRefModels(props);
 
       const { created, name: nameModelResponseTransformer } =
-        ensureModelResponseTransformerExists({ ...props, model: refModels[0] });
+        ensureModelResponseTransformerExists({
+          ...props,
+          model: refModels[0]!,
+        });
 
       if (!created) {
         return [];
@@ -328,7 +331,7 @@ export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
                     $ref: `transformers/${name}`,
                     name,
                   },
-                  model: successResponses[0],
+                  model: successResponses[0]!,
                   onNode,
                   onRemoveNode,
                   path: [dataVariableName],

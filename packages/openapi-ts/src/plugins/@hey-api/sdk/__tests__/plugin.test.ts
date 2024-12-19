@@ -108,7 +108,7 @@ describe('handlerLegacy', () => {
       },
     });
 
-    files.sdk.write();
+    files.sdk!.write();
 
     expect(fs.writeFileSync).toHaveBeenCalledWith(
       expect.stringContaining(path.resolve('sdk.gen.ts')),
@@ -215,7 +215,7 @@ describe('methodNameBuilder', () => {
       },
     });
 
-    files.sdk.write();
+    files.sdk!.write();
 
     expect(fs.writeFileSync).toHaveBeenCalledWith(
       expect.stringContaining(path.resolve('sdk.gen.ts')),
@@ -284,7 +284,7 @@ describe('methodNameBuilder', () => {
       },
     });
 
-    files.sdk.write();
+    files.sdk!.write();
 
     expect(fs.writeFileSync).toHaveBeenCalledWith(
       expect.stringContaining(path.resolve('sdk.gen.ts')),
@@ -355,7 +355,7 @@ describe('methodNameBuilder', () => {
       },
     });
 
-    files.sdk.write();
+    files.sdk!.write();
 
     expect(fs.writeFileSync).toHaveBeenCalledWith(
       expect.stringContaining(path.resolve('sdk.gen.ts')),
