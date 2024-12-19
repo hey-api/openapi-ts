@@ -81,7 +81,7 @@ export interface ClientConfig {
     | Record<string, unknown>
     | {
         /**
-         * **This feature works only with the experimental parser**
+         * **This feature works only with the [experimental parser](https://heyapi.dev/openapi-ts/configuration#parser)**
          *
          * Prevent parts matching the regular expression from being processed.
          * You can select both operations and components by reference within
@@ -94,7 +94,7 @@ export interface ClientConfig {
          */
         exclude?: string;
         /**
-         * **This feature works only with the experimental parser**
+         * **This feature works only with the [experimental parser](https://heyapi.dev/openapi-ts/configuration#parser)**
          *
          * Process only parts matching the regular expression. You can select both
          * operations and components by reference within the bundled input. In
@@ -159,7 +159,7 @@ export interface ClientConfig {
     | string
     | {
         /**
-         * **This feature works only with the experimental parser**
+         * **This feature works only with the [experimental parser](https://heyapi.dev/openapi-ts/configuration#parser)**
          *
          * Defines casing of the output fields. By default, we preserve `input`
          * values as data transforms incur a performance penalty at runtime.

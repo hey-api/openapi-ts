@@ -16,7 +16,7 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
    */
   asClass?: boolean;
   /**
-   * **This feature works only with the experimental parser**
+   * **This feature works only with the [experimental parser](https://heyapi.dev/openapi-ts/configuration#parser)**
    *
    * Should the generated functions contain auth mechanisms? You may want to
    * disable this option if you're handling auth yourself or defining it
@@ -90,7 +90,7 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
    */
   transformer?: '@hey-api/transformers' | boolean;
   /**
-   * **This feature works only with the experimental parser**
+   * **This feature works only with the [experimental parser](https://heyapi.dev/openapi-ts/configuration#parser)**
    *
    * Validate response data against schema before returning. This is useful
    * if you want to ensure the response conforms to a desired shape. However,
