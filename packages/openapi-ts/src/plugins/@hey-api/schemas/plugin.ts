@@ -1,13 +1,12 @@
 import { compiler } from '../../../compiler';
-import type { IRContext } from '../../../ir/context';
-import type { OpenApiV3_0_X } from '../../../openApi/3.0.x';
+import type { IR } from '../../../ir/types';
 import type {
   ReferenceObject as OpenApiV3_0_XReferenceObject,
   SchemaObject as OpenApiV3_0_XSchemaObject,
 } from '../../../openApi/3.0.x/types/spec';
-import type { OpenApiV3_1_X } from '../../../openApi/3.1.x';
 import type { SchemaObject as OpenApiV3_1_XSchemaObject } from '../../../openApi/3.1.x/types/spec';
 import { ensureValidIdentifier } from '../../../openApi/shared/utils/identifier';
+import type { OpenApi } from '../../../openApi/types';
 import type { Plugin } from '../../types';
 import type { Config } from './types';
 
@@ -48,7 +47,7 @@ const schemaToJsonSchemaDraft_05 = ({
   plugin,
   schema: _schema,
 }: {
-  context: IRContext;
+  context: IR.Context;
   plugin: Plugin.Instance<Config>;
   schema: OpenApiV3_0_XSchemaObject | OpenApiV3_0_XReferenceObject;
 }): object => {
@@ -144,7 +143,7 @@ const schemaToJsonSchema2020_12 = ({
   plugin,
   schema: _schema,
 }: {
-  context: IRContext;
+  context: IR.Context;
   plugin: Plugin.Instance<Config>;
   schema: OpenApiV3_1_XSchemaObject;
 }): object => {
@@ -264,7 +263,7 @@ const schemasV3_0_X = ({
   context,
   plugin,
 }: {
-  context: IRContext<OpenApiV3_0_X>;
+  context: IR.Context<OpenApi.V3_0_X>;
   plugin: Plugin.Instance<Config>;
 }) => {
   if (!context.spec.components) {
@@ -292,7 +291,7 @@ const schemasV3_1_X = ({
   context,
   plugin,
 }: {
-  context: IRContext<OpenApiV3_1_X>;
+  context: IR.Context<OpenApi.V3_1_X>;
   plugin: Plugin.Instance<Config>;
 }) => {
   if (!context.spec.components) {
@@ -324,7 +323,7 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
   });
 
   if (context.spec.openapi) {
-    const ctx = context as IRContext<OpenApiV3_0_X | OpenApiV3_1_X>;
+    const ctx = context as IR.Context<OpenApi.V3_0_X | OpenApi.V3_1_X>;
     switch (ctx.spec.openapi) {
       // TODO: parser - handle Swagger 2.0
       case '3.0.0':
@@ -333,14 +332,14 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
       case '3.0.3':
       case '3.0.4':
         schemasV3_0_X({
-          context: context as IRContext<OpenApiV3_0_X>,
+          context: context as IR.Context<OpenApi.V3_0_X>,
           plugin,
         });
         break;
       case '3.1.0':
       case '3.1.1':
         schemasV3_1_X({
-          context: context as IRContext<OpenApiV3_1_X>,
+          context: context as IR.Context<OpenApi.V3_1_X>,
           plugin,
         });
         break;

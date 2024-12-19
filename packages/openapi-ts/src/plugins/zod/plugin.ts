@@ -1,18 +1,17 @@
 import ts from 'typescript';
 
 import { compiler } from '../../compiler';
-import type { IRContext } from '../../ir/context';
-import type { IROperationObject, IRSchemaObject } from '../../ir/ir';
 import { operationResponsesMap } from '../../ir/operation';
 import { deduplicateSchema } from '../../ir/schema';
+import type { IR } from '../../ir/types';
 import { digitsRegExp } from '../../utils/regexp';
 import { operationIrRef } from '../shared/utils/ref';
 import type { Plugin } from '../types';
 import type { Config } from './types';
 
-interface SchemaWithType<T extends Required<IRSchemaObject>['type']>
-  extends Omit<IRSchemaObject, 'type'> {
-  type: Extract<Required<IRSchemaObject>['type'], T>;
+interface SchemaWithType<T extends Required<IR.SchemaObject>['type']>
+  extends Omit<IR.SchemaObject, 'type'> {
+  type: Extract<Required<IR.SchemaObject>['type'], T>;
 }
 
 interface Result {
@@ -39,7 +38,7 @@ const arrayTypeToZodSchema = ({
   result,
   schema,
 }: {
-  context: IRContext;
+  context: IR.Context;
   result: Result;
   schema: SchemaWithType<'array'>;
 }): ts.CallExpression => {
@@ -140,7 +139,7 @@ const arrayTypeToZodSchema = ({
 const booleanTypeToZodSchema = ({
   schema,
 }: {
-  context: IRContext;
+  context: IR.Context;
   schema: SchemaWithType<'boolean'>;
 }) => {
   if (schema.const !== undefined) {
@@ -163,7 +162,7 @@ const enumTypeToZodSchema = ({
   context,
   schema,
 }: {
-  context: IRContext;
+  context: IR.Context;
   schema: SchemaWithType<'enum'>;
 }): ts.CallExpression => {
   const enumMembers: Array<ts.LiteralExpression> = [];
@@ -207,7 +206,7 @@ const enumTypeToZodSchema = ({
 const neverTypeToZodSchema = ({
   schema,
 }: {
-  context: IRContext;
+  context: IR.Context;
   schema: SchemaWithType<'never'>;
 }) => {
   const expression = compiler.callExpression({
@@ -222,7 +221,7 @@ const neverTypeToZodSchema = ({
 const nullTypeToZodSchema = ({
   schema,
 }: {
-  context: IRContext;
+  context: IR.Context;
   schema: SchemaWithType<'null'>;
 }) => {
   const expression = compiler.callExpression({
@@ -237,7 +236,7 @@ const nullTypeToZodSchema = ({
 const numberTypeToZodSchema = ({
   schema,
 }: {
-  context: IRContext;
+  context: IR.Context;
   schema: SchemaWithType<'number'>;
 }) => {
   let numberExpression = compiler.callExpression({
@@ -302,7 +301,7 @@ const objectTypeToZodSchema = ({
   result,
   schema,
 }: {
-  context: IRContext;
+  context: IR.Context;
   result: Result;
   schema: SchemaWithType<'object'>;
 }) => {
@@ -310,7 +309,7 @@ const objectTypeToZodSchema = ({
 
   // let indexProperty: Property | undefined;
   // const schemaProperties: Array<Property> = [];
-  // let indexPropertyItems: Array<IRSchemaObject> = [];
+  // let indexPropertyItems: Array<IR.SchemaObject> = [];
   const required = schema.required ?? [];
   // let hasOptionalProperties = false;
 
@@ -432,7 +431,7 @@ const objectTypeToZodSchema = ({
 const stringTypeToZodSchema = ({
   schema,
 }: {
-  context: IRContext;
+  context: IR.Context;
   schema: SchemaWithType<'string'>;
 }) => {
   let stringExpression = compiler.callExpression({
@@ -526,7 +525,7 @@ const stringTypeToZodSchema = ({
 const undefinedTypeToZodSchema = ({
   schema,
 }: {
-  context: IRContext;
+  context: IR.Context;
   schema: SchemaWithType<'undefined'>;
 }) => {
   const expression = compiler.callExpression({
@@ -541,7 +540,7 @@ const undefinedTypeToZodSchema = ({
 const unknownTypeToZodSchema = ({
   schema,
 }: {
-  context: IRContext;
+  context: IR.Context;
   schema: SchemaWithType<'unknown'>;
 }) => {
   const expression = compiler.callExpression({
@@ -556,7 +555,7 @@ const unknownTypeToZodSchema = ({
 const voidTypeToZodSchema = ({
   schema,
 }: {
-  context: IRContext;
+  context: IR.Context;
   schema: SchemaWithType<'void'>;
 }) => {
   const expression = compiler.callExpression({
@@ -573,11 +572,11 @@ const schemaTypeToZodSchema = ({
   result,
   schema,
 }: {
-  context: IRContext;
+  context: IR.Context;
   result: Result;
-  schema: IRSchemaObject;
+  schema: IR.SchemaObject;
 }): ts.Expression => {
-  switch (schema.type as Required<IRSchemaObject>['type']) {
+  switch (schema.type as Required<IR.SchemaObject>['type']) {
     case 'array':
       return arrayTypeToZodSchema({
         context,
@@ -656,8 +655,8 @@ const operationToZodSchema = ({
   operation,
   result,
 }: {
-  context: IRContext;
-  operation: IROperationObject;
+  context: IR.Context;
+  operation: IR.OperationObject;
   result: Result;
 }) => {
   if (operation.responses) {
@@ -688,9 +687,9 @@ const schemaToZodSchema = ({
    * When $ref is supplied, a node will be emitted to the file.
    */
   $ref?: string;
-  context: IRContext;
+  context: IR.Context;
   result: Result;
-  schema: IRSchemaObject;
+  schema: IR.SchemaObject;
 }): ts.Expression => {
   const file = context.file({ id: zodId })!;
 
@@ -723,7 +722,7 @@ const schemaToZodSchema = ({
     });
 
     if (!identifierRef.name) {
-      const ref = context.resolveIrRef<IRSchemaObject>(schema.$ref);
+      const ref = context.resolveIrRef<IR.SchemaObject>(schema.$ref);
       expression = schemaToZodSchema({
         context,
         result,

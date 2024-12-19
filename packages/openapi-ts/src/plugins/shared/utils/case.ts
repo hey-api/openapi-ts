@@ -1,6 +1,6 @@
 import ts from 'typescript';
 
-import type { IRContext } from '../../../ir/context';
+import type { IR } from '../../../ir/types';
 import { digitsRegExp } from '../../../utils/regexp';
 import { stringCase } from '../../../utils/stringCase';
 
@@ -12,7 +12,7 @@ export const fieldName = ({
   context,
   name,
 }: {
-  context: IRContext;
+  context: IR.Context;
   name: string;
 }) => {
   digitsRegExp.lastIndex = 0;

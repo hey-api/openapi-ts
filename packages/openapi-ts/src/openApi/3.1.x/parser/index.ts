@@ -1,4 +1,4 @@
-import type { IRContext } from '../../../ir/context';
+import type { IR } from '../../../ir/types';
 import { canProcessRef } from '../../shared/utils/filter';
 import type {
   OpenApiV3_1_X,
@@ -17,7 +17,7 @@ import {
 import { parseRequestBody } from './requestBody';
 import { parseSchema } from './schema';
 
-export const parseV3_1_X = (context: IRContext<OpenApiV3_1_X>) => {
+export const parseV3_1_X = (context: IR.Context<OpenApiV3_1_X>) => {
   const operationIds = new Map<string, string>();
   const securitySchemesMap = new Map<string, SecuritySchemeObject>();
 

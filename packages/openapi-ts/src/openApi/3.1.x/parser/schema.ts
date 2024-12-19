@@ -1,5 +1,4 @@
-import type { IRContext } from '../../../ir/context';
-import type { IRSchemaObject } from '../../../ir/ir';
+import type { IR } from '../../../ir/types';
 import { addItemsToSchema } from '../../../ir/utils';
 import { refToName } from '../../../utils/ref';
 import { discriminatorValue } from '../../shared/utils/discriminator';
@@ -11,7 +10,7 @@ interface SchemaContext {
    * from the OpenAPI specification.
    */
   $ref?: string;
-  context: IRContext;
+  context: IR.Context;
 }
 
 type SchemaWithRequired<K extends keyof Required<SchemaObject>> = Omit<
@@ -47,7 +46,7 @@ const parseSchemaJsDoc = ({
   irSchema,
   schema,
 }: {
-  irSchema: IRSchemaObject;
+  irSchema: IR.SchemaObject;
   schema: SchemaObject;
 }) => {
   if (schema.deprecated !== undefined) {
@@ -67,7 +66,7 @@ const parseSchemaMeta = ({
   irSchema,
   schema,
 }: {
-  irSchema: IRSchemaObject;
+  irSchema: IR.SchemaObject;
   schema: SchemaObject;
 }) => {
   if (schema.const !== undefined) {
@@ -146,9 +145,9 @@ const parseArray = ({
   irSchema = {},
   schema,
 }: SchemaContext & {
-  irSchema?: IRSchemaObject;
+  irSchema?: IR.SchemaObject;
   schema: SchemaObject;
-}): IRSchemaObject => {
+}): IR.SchemaObject => {
   if (
     (schema.prefixItems && schema.prefixItems.length) ||
     (schema.maxItems && schema.maxItems === schema.minItems)
@@ -158,7 +157,7 @@ const parseArray = ({
     irSchema.type = 'array';
   }
 
-  let schemaItems: Array<IRSchemaObject> = [];
+  let schemaItems: Array<IR.SchemaObject> = [];
 
   for (const item of schema.prefixItems ?? []) {
     schemaItems.push(
@@ -211,9 +210,9 @@ const parseArray = ({
 const parseBoolean = ({
   irSchema = {},
 }: SchemaContext & {
-  irSchema?: IRSchemaObject;
+  irSchema?: IR.SchemaObject;
   schema: SchemaObject;
-}): IRSchemaObject => {
+}): IR.SchemaObject => {
   irSchema.type = 'boolean';
 
   return irSchema;
@@ -222,7 +221,7 @@ const parseBoolean = ({
 const parseNull = ({
   irSchema = {},
 }: SchemaContext & {
-  irSchema?: IRSchemaObject;
+  irSchema?: IR.SchemaObject;
   schema: SchemaObject;
 }) => {
   irSchema.type = 'null';
@@ -233,9 +232,9 @@ const parseNull = ({
 const parseNumber = ({
   irSchema = {},
 }: SchemaContext & {
-  irSchema?: IRSchemaObject;
+  irSchema?: IR.SchemaObject;
   schema: SchemaObject;
-}): IRSchemaObject => {
+}): IR.SchemaObject => {
   irSchema.type = 'number';
 
   return irSchema;
@@ -246,12 +245,12 @@ const parseObject = ({
   irSchema = {},
   schema,
 }: SchemaContext & {
-  irSchema?: IRSchemaObject;
+  irSchema?: IR.SchemaObject;
   schema: SchemaObject;
-}): IRSchemaObject => {
+}): IR.SchemaObject => {
   irSchema.type = 'object';
 
-  const schemaProperties: Record<string, IRSchemaObject> = {};
+  const schemaProperties: Record<string, IR.SchemaObject> = {};
 
   for (const name in schema.properties) {
     const property = schema.properties[name];
@@ -303,16 +302,20 @@ const parseObject = ({
 const parseString = ({
   irSchema = {},
 }: SchemaContext & {
-  irSchema?: IRSchemaObject;
+  irSchema?: IR.SchemaObject;
   schema: SchemaObject;
-}): IRSchemaObject => {
+}): IR.SchemaObject => {
   irSchema.type = 'string';
 
   return irSchema;
 };
 
-const initIrSchema = ({ schema }: { schema: SchemaObject }): IRSchemaObject => {
-  const irSchema: IRSchemaObject = {};
+const initIrSchema = ({
+  schema,
+}: {
+  schema: SchemaObject;
+}): IR.SchemaObject => {
+  const irSchema: IR.SchemaObject = {};
 
   parseSchemaJsDoc({
     irSchema,
@@ -328,10 +331,10 @@ const parseAllOf = ({
   schema,
 }: SchemaContext & {
   schema: SchemaWithRequired<'allOf'>;
-}): IRSchemaObject => {
+}): IR.SchemaObject => {
   let irSchema = initIrSchema({ schema });
 
-  const schemaItems: Array<IRSchemaObject> = [];
+  const schemaItems: Array<IR.SchemaObject> = [];
   const schemaTypes = getSchemaTypes({ schema });
 
   const compositionSchemas = schema.allOf;
@@ -359,7 +362,7 @@ const parseAllOf = ({
       const ref = context.resolveRef<SchemaObject>(compositionSchema.$ref);
       // `$ref` should be passed from the root `parseSchema()` call
       if (ref.discriminator && $ref) {
-        const irDiscriminatorSchema: IRSchemaObject = {
+        const irDiscriminatorSchema: IR.SchemaObject = {
           properties: {
             [ref.discriminator.propertyName]: {
               const: discriminatorValue($ref, ref.discriminator.mapping),
@@ -429,7 +432,7 @@ const parseAllOf = ({
 
   if (schemaTypes.includes('null')) {
     // nest composition to avoid producing an intersection with null
-    const nestedItems: Array<IRSchemaObject> = [
+    const nestedItems: Array<IR.SchemaObject> = [
       {
         type: 'null',
       },
@@ -453,10 +456,10 @@ const parseAnyOf = ({
   schema,
 }: SchemaContext & {
   schema: SchemaWithRequired<'anyOf'>;
-}): IRSchemaObject => {
+}): IR.SchemaObject => {
   let irSchema = initIrSchema({ schema });
 
-  const schemaItems: Array<IRSchemaObject> = [];
+  const schemaItems: Array<IR.SchemaObject> = [];
   const schemaTypes = getSchemaTypes({ schema });
 
   const compositionSchemas = schema.anyOf;
@@ -469,7 +472,7 @@ const parseAnyOf = ({
 
     // `$ref` should be defined with discriminators
     if (schema.discriminator && compositionSchema.$ref) {
-      const irDiscriminatorSchema: IRSchemaObject = {
+      const irDiscriminatorSchema: IR.SchemaObject = {
         properties: {
           [schema.discriminator.propertyName]: {
             const: discriminatorValue(
@@ -526,12 +529,12 @@ const parseEnum = ({
   schema,
 }: SchemaContext & {
   schema: SchemaWithRequired<'enum'>;
-}): IRSchemaObject => {
+}): IR.SchemaObject => {
   let irSchema = initIrSchema({ schema });
 
   irSchema.type = 'enum';
 
-  const schemaItems: Array<IRSchemaObject> = [];
+  const schemaItems: Array<IR.SchemaObject> = [];
   const schemaTypes = getSchemaTypes({ schema });
 
   for (const [index, enumValue] of schema.enum.entries()) {
@@ -589,10 +592,10 @@ const parseOneOf = ({
   schema,
 }: SchemaContext & {
   schema: SchemaWithRequired<'oneOf'>;
-}): IRSchemaObject => {
+}): IR.SchemaObject => {
   let irSchema = initIrSchema({ schema });
 
-  let schemaItems: Array<IRSchemaObject> = [];
+  let schemaItems: Array<IR.SchemaObject> = [];
   const schemaTypes = getSchemaTypes({ schema });
 
   const compositionSchemas = schema.oneOf;
@@ -605,7 +608,7 @@ const parseOneOf = ({
 
     // `$ref` should be defined with discriminators
     if (schema.discriminator && compositionSchema.$ref) {
-      const irDiscriminatorSchema: IRSchemaObject = {
+      const irDiscriminatorSchema: IR.SchemaObject = {
         properties: {
           [schema.discriminator.propertyName]: {
             const: discriminatorValue(
@@ -671,7 +674,7 @@ const parseRef = ({
   schema,
 }: SchemaContext & {
   schema: SchemaWithRequired<'$ref'>;
-}): IRSchemaObject => {
+}): IR.SchemaObject => {
   const irSchema = initIrSchema({ schema });
 
   // refs using unicode characters become encoded, didn't investigate why
@@ -686,11 +689,11 @@ const parseOneType = ({
   irSchema,
   schema,
 }: SchemaContext & {
-  irSchema?: IRSchemaObject;
+  irSchema?: IR.SchemaObject;
   schema: Omit<SchemaObject, 'type'> & {
     type: SchemaType;
   };
-}): IRSchemaObject => {
+}): IR.SchemaObject => {
   if (!irSchema) {
     irSchema = initIrSchema({ schema });
 
@@ -753,23 +756,23 @@ const parseManyTypes = ({
   irSchema,
   schema,
 }: SchemaContext & {
-  irSchema?: IRSchemaObject;
+  irSchema?: IR.SchemaObject;
   schema: Omit<SchemaObject, 'type'> & {
     type: ReadonlyArray<SchemaType>;
   };
-}): IRSchemaObject => {
+}): IR.SchemaObject => {
   if (!irSchema) {
     irSchema = initIrSchema({ schema });
   }
 
-  const typeIrSchema: IRSchemaObject = {};
+  const typeIrSchema: IR.SchemaObject = {};
 
   parseSchemaMeta({
     irSchema: typeIrSchema,
     schema,
   });
 
-  const schemaItems: Array<IRSchemaObject> = [];
+  const schemaItems: Array<IR.SchemaObject> = [];
 
   for (const type of schema.type) {
     if (type === 'null') {
@@ -801,7 +804,7 @@ const parseType = ({
   schema,
 }: SchemaContext & {
   schema: SchemaWithRequired<'type'>;
-}): IRSchemaObject => {
+}): IR.SchemaObject => {
   const irSchema = initIrSchema({ schema });
 
   parseSchemaMeta({
@@ -836,9 +839,9 @@ const parseUnknown = ({
   irSchema,
   schema,
 }: SchemaContext & {
-  irSchema?: IRSchemaObject;
+  irSchema?: IR.SchemaObject;
   schema: SchemaObject;
-}): IRSchemaObject => {
+}): IR.SchemaObject => {
   if (!irSchema) {
     irSchema = initIrSchema({ schema });
   }
@@ -859,7 +862,7 @@ export const schemaToIrSchema = ({
   schema,
 }: SchemaContext & {
   schema: SchemaObject;
-}): IRSchemaObject => {
+}): IR.SchemaObject => {
   if (schema.$ref) {
     return parseRef({
       $ref,

@@ -1,5 +1,4 @@
-import type { IRContext } from '../../../ir/context';
-import type { IROperationObject, IRPathsObject } from '../../../ir/ir';
+import type { IR } from '../../../ir/types';
 import { operationToId } from '../../shared/utils/operation';
 import type {
   OperationObject,
@@ -14,13 +13,13 @@ import { schemaToIrSchema } from './schema';
 
 interface Operation
   extends Omit<OperationObject, 'parameters'>,
-    Pick<IROperationObject, 'id' | 'parameters'> {}
+    Pick<IR.OperationObject, 'id' | 'parameters'> {}
 
 const parseOperationJsDoc = ({
   irOperation,
   operation,
 }: {
-  irOperation: IROperationObject;
+  irOperation: IR.OperationObject;
   operation: Operation;
 }) => {
   if (operation.deprecated !== undefined) {
@@ -44,10 +43,10 @@ const initIrOperation = ({
   method,
   operation,
   path,
-}: Pick<IROperationObject, 'method' | 'path'> & {
+}: Pick<IR.OperationObject, 'method' | 'path'> & {
   operation: Operation;
-}): IROperationObject => {
-  const irOperation: IROperationObject = {
+}): IR.OperationObject => {
+  const irOperation: IR.OperationObject = {
     id: operation.id,
     method,
     path,
@@ -67,11 +66,11 @@ const operationToIrOperation = ({
   operation,
   path,
   securitySchemesMap,
-}: Pick<IROperationObject, 'method' | 'path'> & {
-  context: IRContext;
+}: Pick<IR.OperationObject, 'method' | 'path'> & {
+  context: IR.Context;
   operation: Operation;
   securitySchemesMap: Map<string, SecuritySchemeObject>;
-}): IROperationObject => {
+}): IR.OperationObject => {
   const irOperation = initIrOperation({ method, operation, path });
 
   if (operation.parameters) {
@@ -191,14 +190,14 @@ export const parseOperation = ({
   path,
   securitySchemesMap,
 }: {
-  context: IRContext;
+  context: IR.Context;
   method: Extract<
     keyof PathItemObject,
     'delete' | 'get' | 'head' | 'options' | 'patch' | 'post' | 'put' | 'trace'
   >;
   operation: Operation;
   operationIds: Map<string, string>;
-  path: keyof IRPathsObject;
+  path: keyof IR.PathsObject;
   securitySchemesMap: Map<string, SecuritySchemeObject>;
 }) => {
   // TODO: parser - support throw on duplicate
