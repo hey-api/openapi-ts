@@ -32,7 +32,7 @@ export interface PluginContext {
 
 interface BaseConfig {
   /**
-   * **This feature works only with the experimental parser**
+   * **This feature works only with the [experimental parser](https://heyapi.dev/openapi-ts/configuration#parser)**
    *
    * Should the exports from the plugin's file be re-exported in the index
    * barrel file?
