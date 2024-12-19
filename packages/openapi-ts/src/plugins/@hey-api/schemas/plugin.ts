@@ -123,7 +123,7 @@ const schemaToJsonSchemaDraft_05 = ({
 
   if (schema.properties) {
     for (const name in schema.properties) {
-      const property = schema.properties[name];
+      const property = schema.properties[name]!;
 
       if (typeof property !== 'boolean') {
         schema.properties[name] = schemaToJsonSchemaDraft_05({
@@ -228,7 +228,7 @@ const schemaToJsonSchema2020_12 = ({
 
   if (schema.properties) {
     for (const name in schema.properties) {
-      const property = schema.properties[name];
+      const property = schema.properties[name]!;
 
       if (typeof property !== 'boolean') {
         schema.properties[name] = schemaToJsonSchema2020_12({
@@ -271,7 +271,7 @@ const schemasV3_0_X = ({
   }
 
   for (const name in context.spec.components.schemas) {
-    const schema = context.spec.components.schemas[name];
+    const schema = context.spec.components.schemas[name]!;
     const obj = schemaToJsonSchemaDraft_05({
       context,
       plugin,
@@ -299,7 +299,7 @@ const schemasV3_1_X = ({
   }
 
   for (const name in context.spec.components.schemas) {
-    const schema = context.spec.components.schemas[name];
+    const schema = context.spec.components.schemas[name]!;
     const obj = schemaToJsonSchema2020_12({
       context,
       plugin,

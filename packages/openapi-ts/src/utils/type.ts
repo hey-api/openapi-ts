@@ -41,7 +41,7 @@ const typeReference = (model: Model) => {
    * {@link https://github.com/hey-api/openapi-ts/issues/768}
    */
   if (model.export === 'reference' && model.$refs.length === 1) {
-    if (model.$refs[0].startsWith(refSchemasPartial)) {
+    if (model.$refs[0]!.startsWith(refSchemasPartial)) {
       const meta = getSchemasMeta(model.base);
       typeNode = compiler.typeNode(meta.name);
     }

@@ -75,7 +75,7 @@ export function tsNodeToString({
  */
 export function stringToTsNodes(value: string): ts.Node {
   const file = createSourceFile(value);
-  return file.statements[0];
+  return file.statements[0]!;
 }
 
 export const createIdentifier = ({ text }: { text: string }) => {

@@ -26,7 +26,7 @@ const mergeParameters = (
   let mergedParameters = [...opParams];
   let pendingParameters = [...globalParams];
   while (pendingParameters.length > 0) {
-    const pendingParam = pendingParameters[0];
+    const pendingParam = pendingParameters[0]!;
     pendingParameters = pendingParameters.slice(1);
     const canMerge = mergedParameters.every(
       (param) =>

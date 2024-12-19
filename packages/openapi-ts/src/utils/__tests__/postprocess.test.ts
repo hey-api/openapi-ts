@@ -61,7 +61,7 @@ describe('getServices', () => {
     const { services } = postProcessClient(parserClient);
 
     expect(services).toHaveLength(1);
-    expect(services[0].name).toEqual('Default');
+    expect(services[0]!.name).toEqual('Default');
   });
 });
 
@@ -94,6 +94,6 @@ describe('getServices', () => {
     const { services } = postProcessClient(parserClient);
 
     expect(services).toHaveLength(1);
-    expect(services[0].name).toEqual('Default');
+    expect(services[0]!.name).toEqual('Default');
   });
 });

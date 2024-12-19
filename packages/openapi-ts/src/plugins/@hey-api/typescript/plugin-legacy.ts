@@ -360,9 +360,9 @@ const processServiceTypes = ({
         if (bodyParameter.length === 1) {
           bodyParameters = {
             ...emptyModel,
-            ...bodyParameter[0],
+            ...bodyParameter[0]!,
             in: 'body',
-            isRequired: bodyParameter[0].isRequired,
+            isRequired: bodyParameter[0]!.isRequired,
             name: 'body',
             prop: 'body',
           };

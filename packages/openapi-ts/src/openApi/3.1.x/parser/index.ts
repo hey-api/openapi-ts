@@ -38,7 +38,8 @@ export const parseV3_1_X = (context: IR.Context<OpenApiV3_1_X>) => {
   // TODO: parser - handle more component types, old parser handles only parameters and schemas
   if (context.spec.components) {
     for (const name in context.spec.components.securitySchemes) {
-      const securityOrReference = context.spec.components.securitySchemes[name];
+      const securityOrReference =
+        context.spec.components.securitySchemes[name]!;
       const securitySchemeObject =
         '$ref' in securityOrReference
           ? context.resolveRef<SecuritySchemeObject>(securityOrReference.$ref)
@@ -52,7 +53,7 @@ export const parseV3_1_X = (context: IR.Context<OpenApiV3_1_X>) => {
         continue;
       }
 
-      const parameterOrReference = context.spec.components.parameters[name];
+      const parameterOrReference = context.spec.components.parameters[name]!;
       const parameter =
         '$ref' in parameterOrReference
           ? context.resolveRef<ParameterObject>(parameterOrReference.$ref)
@@ -72,7 +73,7 @@ export const parseV3_1_X = (context: IR.Context<OpenApiV3_1_X>) => {
       }
 
       const requestBodyOrReference =
-        context.spec.components.requestBodies[name];
+        context.spec.components.requestBodies[name]!;
       const requestBody =
         '$ref' in requestBodyOrReference
           ? context.resolveRef<RequestBodyObject>(requestBodyOrReference.$ref)
@@ -91,7 +92,7 @@ export const parseV3_1_X = (context: IR.Context<OpenApiV3_1_X>) => {
         continue;
       }
 
-      const schema = context.spec.components.schemas[name];
+      const schema = context.spec.components.schemas[name]!;
 
       parseSchema({
         $ref,
@@ -102,7 +103,7 @@ export const parseV3_1_X = (context: IR.Context<OpenApiV3_1_X>) => {
   }
 
   for (const path in context.spec.paths) {
-    const pathItem = context.spec.paths[path as keyof PathsObject];
+    const pathItem = context.spec.paths[path as keyof PathsObject]!;
 
     const finalPathItem = pathItem.$ref
       ? {

@@ -23,7 +23,7 @@ describe('performance', () => {
     Performance.measure('createClient');
     const measures = Performance.getEntriesByName('createClient');
 
-    expect(measures[0].duration).toBeLessThanOrEqual(1000);
+    expect(measures[0]!.duration).toBeLessThanOrEqual(1000);
   });
 
   it('parses spec under 500ms', async () => {
@@ -38,7 +38,7 @@ describe('performance', () => {
     Performance.measure('parser');
     const measures = Performance.getEntriesByName('parser');
 
-    expect(measures[0].duration).toBeLessThanOrEqual(500);
+    expect(measures[0]!.duration).toBeLessThanOrEqual(500);
   });
 
   it('parses spec under 500ms (experimental)', async () => {
@@ -54,6 +54,6 @@ describe('performance', () => {
     Performance.measure('parser');
     const measures = Performance.getEntriesByName('parser');
 
-    expect(measures[0].duration).toBeLessThanOrEqual(500);
+    expect(measures[0]!.duration).toBeLessThanOrEqual(500);
   });
 });

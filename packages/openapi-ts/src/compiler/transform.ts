@@ -29,7 +29,7 @@ export const createSafeAccessExpression = (path: string[]) =>
         createIdentifier({ text: element }),
       );
     },
-    createIdentifier({ text: path[0] }),
+    createIdentifier({ text: path[0]! }),
   );
 
 export const createAccessExpression = (path: string[]) =>
@@ -39,7 +39,7 @@ export const createAccessExpression = (path: string[]) =>
         expression,
         name: element,
       }),
-    createIdentifier({ text: path[0] }),
+    createIdentifier({ text: path[0]! }),
   );
 
 /**

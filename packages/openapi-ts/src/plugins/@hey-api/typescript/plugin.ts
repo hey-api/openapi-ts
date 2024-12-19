@@ -273,7 +273,7 @@ const arrayTypeToIdentifier = ({
   );
 
   if (itemTypes.length === 1) {
-    return compiler.typeArrayNode(itemTypes[0]);
+    return compiler.typeArrayNode(itemTypes[0]!);
   }
 
   if (schema.logicalOperator === 'and') {
@@ -434,7 +434,7 @@ const objectTypeToIdentifier = ({
   let hasOptionalProperties = false;
 
   for (const name in schema.properties) {
-    const property = schema.properties[name];
+    const property = schema.properties[name]!;
     const isRequired = required.includes(name);
     schemaProperties.push({
       comment: parseSchemaJsDoc({ schema: property }),
@@ -481,7 +481,7 @@ const objectTypeToIdentifier = ({
         plugin,
         schema:
           indexPropertyItems.length === 1
-            ? indexPropertyItems[0]
+            ? indexPropertyItems[0]!
             : {
                 items: indexPropertyItems,
                 logicalOperator: 'or',
@@ -665,7 +665,7 @@ const irParametersToIrSchema = ({
     const required: Array<string> = [];
 
     for (const name in parameters) {
-      const parameter = parameters[name];
+      const parameter = parameters[name]!;
 
       properties[name] = deduplicateSchema({
         schema: parameter.schema,

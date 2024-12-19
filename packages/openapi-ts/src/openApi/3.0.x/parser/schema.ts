@@ -200,7 +200,7 @@ const parseObject = ({
   const schemaProperties: Record<string, IR.SchemaObject> = {};
 
   for (const name in schema.properties) {
-    const property = schema.properties[name];
+    const property = schema.properties[name]!;
     if (typeof property === 'boolean') {
       // TODO: parser - handle boolean properties
     } else {
@@ -395,14 +395,14 @@ const parseAllOf = ({
 
     // TODO: parser - this is a hack to bring back up meta fields
     // without it, some schemas were missing original deprecated
-    if (nestedItems[0].deprecated) {
-      irSchema.deprecated = nestedItems[0].deprecated;
+    if (nestedItems[0]!.deprecated) {
+      irSchema.deprecated = nestedItems[0]!.deprecated;
     }
 
     // TODO: parser - this is a hack to bring back up meta fields
     // without it, some schemas were missing original description
-    if (nestedItems[0].description) {
-      irSchema.description = nestedItems[0].description;
+    if (nestedItems[0]!.description) {
+      irSchema.description = nestedItems[0]!.description;
     }
   }
 

@@ -57,7 +57,7 @@ const schemaIrRef = ({
   const parts = $ref.split('/');
   return `${parts.slice(0, parts.length - 1).join('/')}/${stringCase({
     case: 'camelCase',
-    value: parts[parts.length - 1],
+    value: parts[parts.length - 1]!,
   })}${affix}`;
 };
 
@@ -104,7 +104,7 @@ const schemaResponseTransformerNodes = ({
   // append return statement if one does not already exist
   if (
     nodes.length &&
-    !isNodeReturnStatement({ node: nodes[nodes.length - 1] })
+    !isNodeReturnStatement({ node: nodes[nodes.length - 1]! })
   ) {
     nodes.push(compiler.returnStatement({ expression: identifierData }));
   }
@@ -227,7 +227,7 @@ const processSchemaType = ({
               ],
               statements:
                 nodes.length === 1
-                  ? ts.isStatement(nodes[0])
+                  ? ts.isStatement(nodes[0]!)
                     ? []
                     : [
                         compiler.returnStatement({
@@ -247,7 +247,7 @@ const processSchemaType = ({
     const required = schema.required ?? [];
 
     for (const name in schema.properties) {
-      const property = schema.properties[name];
+      const property = schema.properties[name]!;
       const propertyAccessExpression = compiler.propertyAccessExpression({
         expression: dataExpression || dataVariableName,
         name,
@@ -325,7 +325,7 @@ const processSchemaType = ({
         context,
         dataExpression: 'item',
         plugin,
-        schema: schema.items[0],
+        schema: schema.items[0]!,
       });
     }
 
@@ -357,7 +357,7 @@ const processSchemaType = ({
                 thenStatement: compiler.block({
                   statements:
                     nodes.length === 1
-                      ? ts.isStatement(nodes[0])
+                      ? ts.isStatement(nodes[0]!)
                         ? []
                         : [
                             compiler.returnStatement({
