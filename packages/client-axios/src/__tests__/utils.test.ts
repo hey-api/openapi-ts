@@ -1,6 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { getAuthToken, setAuthParams } from '../utils';
+import {
+  axiosHeadersKeywords,
+  getAuthToken,
+  mergeHeaders,
+  setAuthParams,
+} from '../utils';
 
 describe('getAuthToken', () => {
   it('returns access token', async () => {
@@ -68,6 +73,30 @@ describe('getAuthToken', () => {
     );
     expect(token).toBeUndefined();
   });
+});
+
+describe('mergeHeaders', () => {
+  it.each(axiosHeadersKeywords)(
+    'handles "%s" Axios special keyword',
+    (keyword) => {
+      const headers = mergeHeaders(
+        {
+          foo: 'foo',
+        },
+        {
+          [keyword]: {
+            foo: 'foo',
+          },
+        },
+      );
+      expect(headers).toEqual({
+        foo: 'foo',
+        [keyword]: {
+          foo: 'foo',
+        },
+      });
+    },
+  );
 });
 
 describe('setAuthParams', () => {
