@@ -10,11 +10,15 @@ type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
 export interface Config<ThrowOnError extends boolean = boolean>
   extends Omit<RequestInit, 'body' | 'headers' | 'method'> {
   /**
+   * **This feature works only with the [experimental parser](https://heyapi.dev/openapi-ts/configuration#parser)**
+   *
    * Access token or a function returning access token. The resolved token
    * will be added to request headers where it's required.
    */
   accessToken?: (() => Promise<string | undefined>) | string | undefined;
   /**
+   * **This feature works only with the [experimental parser](https://heyapi.dev/openapi-ts/configuration#parser)**
+   *
    * API key or a function returning API key. The resolved key will be added
    * to the request payload as required.
    */
@@ -93,6 +97,8 @@ export interface Config<ThrowOnError extends boolean = boolean>
    */
   responseTransformer?: (data: unknown) => Promise<unknown>;
   /**
+   * **This feature works only with the [experimental parser](https://heyapi.dev/openapi-ts/configuration#parser)**
+   *
    * A function validating response data. This is useful if you want to ensure
    * the response conforms to the desired shape, so it can be safely passed to
    * the transformers and returned to the user.

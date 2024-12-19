@@ -11,7 +11,7 @@ export interface Config extends Plugin.Name<'@hey-api/typescript'> {
    */
   enums?: 'javascript' | 'typescript' | 'typescript+namespace' | false;
   /**
-   * **This feature works only with the experimental parser**
+   * **This feature works only with the [experimental parser](https://heyapi.dev/openapi-ts/configuration#parser)**
    *
    * Defines casing of the enum keys. By default, we use `SCREAMING_SNAKE_CASE`.
    * This option has effect only when `enums` is defined.
@@ -20,7 +20,7 @@ export interface Config extends Plugin.Name<'@hey-api/typescript'> {
    */
   enumsCase?: StringCase;
   /**
-   * **This feature works only with the experimental parser**
+   * **This feature works only with the [experimental parser](https://heyapi.dev/openapi-ts/configuration#parser)**
    *
    * By default, inline enums (enums not defined as reusable components in
    * the input file) are generated as inlined union types. You can set
@@ -31,7 +31,7 @@ export interface Config extends Plugin.Name<'@hey-api/typescript'> {
    */
   exportInlineEnums?: boolean;
   /**
-   * **This feature works only with the experimental parser**
+   * **This feature works only with the [experimental parser](https://heyapi.dev/openapi-ts/configuration#parser)**
    *
    * Defines casing of the identifiers. By default, we use `PascalCase`.
    *
