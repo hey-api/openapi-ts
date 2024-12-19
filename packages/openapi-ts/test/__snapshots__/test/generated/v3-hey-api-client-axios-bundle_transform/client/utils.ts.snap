@@ -423,6 +423,19 @@ export const mergeConfigs = (a: Config, b: Config): Config => {
   return config;
 };
 
+/**
+ * Special Axios headers keywords allowing to set headers by request method.
+ */
+export const axiosHeadersKeywords = [
+  'common',
+  'delete',
+  'get',
+  'head',
+  'patch',
+  'post',
+  'put',
+] as const;
+
 export const mergeHeaders = (
   ...headers: Array<Required<Config>['headers'] | undefined>
 ): Record<any, unknown> => {
@@ -435,7 +448,17 @@ export const mergeHeaders = (
     const iterator = Object.entries(header);
 
     for (const [key, value] of iterator) {
-      if (value === null) {
+      if (
+        axiosHeadersKeywords.includes(
+          key as (typeof axiosHeadersKeywords)[number],
+        ) &&
+        typeof value === 'object'
+      ) {
+        mergedHeaders[key] = {
+          ...(mergedHeaders[key] as Record<any, unknown>),
+          ...value,
+        };
+      } else if (value === null) {
         delete mergedHeaders[key];
       } else if (Array.isArray(value)) {
         for (const v of value) {
