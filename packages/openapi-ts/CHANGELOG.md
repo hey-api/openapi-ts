@@ -1,5 +1,15 @@
 # @hey-api/openapi-ts
 
+## 0.60.1
+
+### Patch Changes
+
+- [#1462](https://github.com/hey-api/openapi-ts/pull/1462) [`893d6ef`](https://github.com/hey-api/openapi-ts/commit/893d6ef5677d17b96174f505937f6da686abb2bc) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update types for custom plugins so defineConfig does not throw
+
+- [#1464](https://github.com/hey-api/openapi-ts/pull/1464) [`787d59c`](https://github.com/hey-api/openapi-ts/commit/787d59c307549f5faf9f83314a8e9692bb01eb5d) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export IR types
+
+- [#1457](https://github.com/hey-api/openapi-ts/pull/1457) [`bc03c37`](https://github.com/hey-api/openapi-ts/commit/bc03c373f4df61d8d715dc13badba2a6c5a3a450) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow plugins to explicitly declare whether they should be re-exported from the index file
+
 ## 0.60.0
 
 ### Minor Changes
