@@ -1,5 +1,23 @@
 # @hey-api/openapi-ts
 
+## 0.60.1
+
+### Patch Changes
+
+- [#1468](https://github.com/hey-api/openapi-ts/pull/1468) [`20d7497`](https://github.com/hey-api/openapi-ts/commit/20d7497acb6c046f6a4206c2d8137414e17b2263) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle indexed access checks
+
+- [#1469](https://github.com/hey-api/openapi-ts/pull/1469) [`a7608c2`](https://github.com/hey-api/openapi-ts/commit/a7608c27ced3419dee228f4b0cd96479b3dc2c04) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: zod: generate patterns and improve plain schemas
+
+- [#1471](https://github.com/hey-api/openapi-ts/pull/1471) [`f86d293`](https://github.com/hey-api/openapi-ts/commit/f86d293f18f133ef6dd2f4864d037611b81edd26) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add links to the experimental parser callouts
+
+- [#1462](https://github.com/hey-api/openapi-ts/pull/1462) [`893d6ef`](https://github.com/hey-api/openapi-ts/commit/893d6ef5677d17b96174f505937f6da686abb2bc) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update types for custom plugins so defineConfig does not throw
+
+- [#1464](https://github.com/hey-api/openapi-ts/pull/1464) [`787d59c`](https://github.com/hey-api/openapi-ts/commit/787d59c307549f5faf9f83314a8e9692bb01eb5d) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export IR types
+
+- [#1467](https://github.com/hey-api/openapi-ts/pull/1467) [`3a3f8d7`](https://github.com/hey-api/openapi-ts/commit/3a3f8d7ea4c993d4372e4bc52f6d9525bf1e45b6) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export utils
+
+- [#1457](https://github.com/hey-api/openapi-ts/pull/1457) [`bc03c37`](https://github.com/hey-api/openapi-ts/commit/bc03c373f4df61d8d715dc13badba2a6c5a3a450) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow plugins to explicitly declare whether they should be re-exported from the index file
+
 ## 0.60.0
 
 ### Minor Changes
