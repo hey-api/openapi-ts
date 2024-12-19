@@ -36,4 +36,4 @@ Automatically update your code when the APIs it depends on change. [Find out mor
 
 ## Migration Guides
 
-[OpenAPI Typescript Codegen](https://heyapi.dev/openapi-ts/migrating.html#openapi-typescript-codegen).
+[OpenAPI Typescript Codegen](https://heyapi.dev/openapi-ts/migrating.html#openapi-typescript-codegen)
