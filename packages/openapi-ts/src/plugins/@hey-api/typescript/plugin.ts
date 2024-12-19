@@ -2,14 +2,9 @@ import ts from 'typescript';
 
 import type { Property } from '../../../compiler';
 import { compiler } from '../../../compiler';
-import type { IRContext } from '../../../ir/context';
-import type {
-  IROperationObject,
-  IRParameterObject,
-  IRSchemaObject,
-} from '../../../ir/ir';
 import { operationResponsesMap } from '../../../ir/operation';
 import { deduplicateSchema } from '../../../ir/schema';
+import type { IR } from '../../../ir/types';
 import { escapeComment } from '../../../utils/escape';
 import { irRef, isRefOpenApiComponent } from '../../../utils/ref';
 import { digitsRegExp } from '../../../utils/regexp';
@@ -19,14 +14,14 @@ import { operationIrRef } from '../../shared/utils/ref';
 import type { Plugin } from '../../types';
 import type { Config } from './types';
 
-interface SchemaWithType<T extends Required<IRSchemaObject>['type']>
-  extends Omit<IRSchemaObject, 'type'> {
-  type: Extract<Required<IRSchemaObject>['type'], T>;
+interface SchemaWithType<T extends Required<IR.SchemaObject>['type']>
+  extends Omit<IR.SchemaObject, 'type'> {
+  type: Extract<Required<IR.SchemaObject>['type'], T>;
 }
 
 const typesId = 'types';
 
-const parseSchemaJsDoc = ({ schema }: { schema: IRSchemaObject }) => {
+const parseSchemaJsDoc = ({ schema }: { schema: IR.SchemaObject }) => {
   const comments = [
     schema.description && escapeComment(schema.description),
     schema.deprecated && '@deprecated',
@@ -46,7 +41,7 @@ const addJavaScriptEnum = ({
   schema,
 }: {
   $ref: string;
-  context: IRContext;
+  context: IR.Context;
   plugin: Plugin.Instance<Config>;
   schema: SchemaWithType<'enum'>;
 }) => {
@@ -87,7 +82,7 @@ const schemaToEnumObject = ({
   schema,
 }: {
   plugin: Plugin.Instance<Config>;
-  schema: IRSchemaObject;
+  schema: IR.SchemaObject;
 }) => {
   const typeofItems: Array<
     | 'bigint'
@@ -154,7 +149,7 @@ const addTypeEnum = ({
   schema,
 }: {
   $ref: string;
-  context: IRContext;
+  context: IR.Context;
   plugin: Plugin.Instance<Config>;
   schema: SchemaWithType<'enum'>;
 }) => {
@@ -201,7 +196,7 @@ const addTypeScriptEnum = ({
   schema,
 }: {
   $ref: string;
-  context: IRContext;
+  context: IR.Context;
   plugin: Plugin.Instance<Config>;
   schema: SchemaWithType<'enum'>;
 }) => {
@@ -252,7 +247,7 @@ const arrayTypeToIdentifier = ({
   plugin,
   schema,
 }: {
-  context: IRContext;
+  context: IR.Context;
   namespace: Array<ts.Statement>;
   plugin: Plugin.Instance<Config>;
   schema: SchemaWithType<'array'>;
@@ -293,7 +288,7 @@ const arrayTypeToIdentifier = ({
 const booleanTypeToIdentifier = ({
   schema,
 }: {
-  context: IRContext;
+  context: IR.Context;
   namespace: Array<ts.Statement>;
   schema: SchemaWithType<'boolean'>;
 }) => {
@@ -316,7 +311,7 @@ const enumTypeToIdentifier = ({
   schema,
 }: {
   $ref?: string;
-  context: IRContext;
+  context: IR.Context;
   namespace: Array<ts.Statement>;
   plugin: Plugin.Instance<Config>;
   schema: SchemaWithType<'enum'>;
@@ -406,7 +401,7 @@ const enumTypeToIdentifier = ({
 const numberTypeToIdentifier = ({
   schema,
 }: {
-  context: IRContext;
+  context: IR.Context;
   namespace: Array<ts.Statement>;
   schema: SchemaWithType<'number'>;
 }) => {
@@ -427,14 +422,14 @@ const objectTypeToIdentifier = ({
   plugin,
   schema,
 }: {
-  context: IRContext;
+  context: IR.Context;
   namespace: Array<ts.Statement>;
   plugin: Plugin.Instance<Config>;
   schema: SchemaWithType<'object'>;
 }) => {
   let indexProperty: Property | undefined;
   const schemaProperties: Array<Property> = [];
-  let indexPropertyItems: Array<IRSchemaObject> = [];
+  let indexPropertyItems: Array<IR.SchemaObject> = [];
   const required = schema.required ?? [];
   let hasOptionalProperties = false;
 
@@ -506,7 +501,7 @@ const stringTypeToIdentifier = ({
   context,
   schema,
 }: {
-  context: IRContext;
+  context: IR.Context;
   namespace: Array<ts.Statement>;
   schema: SchemaWithType<'string'>;
 }) => {
@@ -549,7 +544,7 @@ const tupleTypeToIdentifier = ({
   plugin,
   schema,
 }: {
-  context: IRContext;
+  context: IR.Context;
   namespace: Array<ts.Statement>;
   plugin: Plugin.Instance<Config>;
   schema: SchemaWithType<'tuple'>;
@@ -580,12 +575,12 @@ const schemaTypeToIdentifier = ({
   schema,
 }: {
   $ref?: string;
-  context: IRContext;
+  context: IR.Context;
   namespace: Array<ts.Statement>;
   plugin: Plugin.Instance<Config>;
-  schema: IRSchemaObject;
+  schema: IR.SchemaObject;
 }): ts.TypeNode => {
-  switch (schema.type as Required<IRSchemaObject>['type']) {
+  switch (schema.type as Required<IR.SchemaObject>['type']) {
     case 'array':
       return arrayTypeToIdentifier({
         context,
@@ -659,14 +654,14 @@ const schemaTypeToIdentifier = ({
 const irParametersToIrSchema = ({
   parameters,
 }: {
-  parameters: Record<string, IRParameterObject>;
-}): IRSchemaObject => {
-  const irSchema: IRSchemaObject = {
+  parameters: Record<string, IR.ParameterObject>;
+}): IR.SchemaObject => {
+  const irSchema: IR.SchemaObject = {
     type: 'object',
   };
 
   if (parameters) {
-    const properties: Record<string, IRSchemaObject> = {};
+    const properties: Record<string, IR.SchemaObject> = {};
     const required: Array<string> = [];
 
     for (const name in parameters) {
@@ -696,12 +691,12 @@ const operationToDataType = ({
   operation,
   plugin,
 }: {
-  context: IRContext;
-  operation: IROperationObject;
+  context: IR.Context;
+  operation: IR.OperationObject;
   plugin: Plugin.Instance<Config>;
 }) => {
   const file = context.file({ id: typesId })!;
-  const data: IRSchemaObject = {
+  const data: IR.SchemaObject = {
     type: 'object',
   };
   const dataRequired: Array<string> = [];
@@ -793,8 +788,8 @@ const operationToType = ({
   operation,
   plugin,
 }: {
-  context: IRContext;
-  operation: IROperationObject;
+  context: IR.Context;
+  operation: IR.OperationObject;
   plugin: Plugin.Instance<Config>;
 }) => {
   operationToDataType({
@@ -909,10 +904,10 @@ export const schemaToType = ({
   schema,
 }: {
   $ref?: string;
-  context: IRContext;
+  context: IR.Context;
   namespace?: Array<ts.Statement>;
   plugin: Plugin.Instance<Config>;
-  schema: IRSchemaObject;
+  schema: IR.SchemaObject;
 }): ts.TypeNode => {
   const file = context.file({ id: typesId })!;
 

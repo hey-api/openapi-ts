@@ -1,11 +1,7 @@
 import type { JsonSchemaDraft2020_12 } from '../openApi/3.1.x/types/json-schema-draft-2020-12';
 import type { SecuritySchemeObject } from '../openApi/3.1.x/types/spec';
+import type { IRContext } from './context';
 import type { IRMediaType } from './mediaType';
-
-export interface IR {
-  components?: IRComponentsObject;
-  paths?: IRPathsObject;
-}
 
 interface IRComponentsObject {
   parameters?: Record<string, IRParameterObject>;
@@ -17,7 +13,7 @@ interface IRPathsObject {
   [path: `/${string}`]: IRPathItemObject;
 }
 
-export interface IRPathItemObject {
+interface IRPathItemObject {
   delete?: IROperationObject;
   get?: IROperationObject;
   head?: IROperationObject;
@@ -28,7 +24,7 @@ export interface IRPathItemObject {
   trace?: IROperationObject;
 }
 
-export interface IROperationObject {
+interface IROperationObject {
   body?: IRBodyObject;
   deprecated?: boolean;
   description?: string;
@@ -44,7 +40,7 @@ export interface IROperationObject {
   tags?: ReadonlyArray<string>;
 }
 
-export interface IRBodyObject {
+interface IRBodyObject {
   mediaType: string;
   /**
    * Does body control pagination? We handle only simple values
@@ -56,14 +52,14 @@ export interface IRBodyObject {
   type?: IRMediaType;
 }
 
-export interface IRParametersObject {
+interface IRParametersObject {
   cookie?: Record<string, IRParameterObject>;
   header?: Record<string, IRParameterObject>;
   path?: Record<string, IRParameterObject>;
   query?: Record<string, IRParameterObject>;
 }
 
-export interface IRParameterObject
+interface IRParameterObject
   extends Pick<JsonSchemaDraft2020_12, 'deprecated' | 'description'> {
   /**
    * Determines whether the parameter value SHOULD allow reserved characters, as defined by RFC3986 `:/?#[]@!$&'()*+,;=` to be included without percent-encoding. The default value is `false`. This property SHALL be ignored if the request body media type is not `application/x-www-form-urlencoded` or `multipart/form-data`. If a value is explicitly defined, then the value of `contentType` (implicit or explicit) SHALL be ignored.
@@ -98,13 +94,13 @@ export interface IRParameterObject
     | 'spaceDelimited';
 }
 
-export interface IRRequestBodyObject
+interface IRRequestBodyObject
   extends Pick<JsonSchemaDraft2020_12, 'description'> {
   required?: boolean;
   schema: IRSchemaObject;
 }
 
-export interface IRResponsesObject {
+interface IRResponsesObject {
   /**
    * Any {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#http-status-codes HTTP status code} can be used as the property name, but only one property per code, to describe the expected response for that HTTP status code. This field MUST be enclosed in quotation marks (for example, "200") for compatibility between JSON and YAML. To define a range of response codes, this field MAY contain the uppercase wildcard character `X`. For example, `2XX` represents all response codes between `[200-299]`. Only the following range definitions are allowed: `1XX`, `2XX`, `3XX`, `4XX`, and `5XX`. If a response is defined using an explicit code, the explicit code definition takes precedence over the range definition for that code.
    */
@@ -115,13 +111,13 @@ export interface IRResponsesObject {
   default?: IRResponseObject;
 }
 
-export interface IRResponseObject {
+interface IRResponseObject {
   // TODO: parser - handle headers, links, and possibly other media types?
   mediaType?: string;
   schema: IRSchemaObject;
 }
 
-export interface IRSchemaObject
+interface IRSchemaObject
   extends Pick<
     JsonSchemaDraft2020_12,
     | '$ref'
@@ -186,4 +182,25 @@ export interface IRSchemaObject
     | 'undefined'
     | 'unknown'
     | 'void';
+}
+
+interface IRModel {
+  components?: IRComponentsObject;
+  paths?: IRPathsObject;
+}
+
+export namespace IR {
+  export type BodyObject = IRBodyObject;
+  export type ComponentsObject = IRComponentsObject;
+  export type Context<Spec extends Record<string, any> = any> = IRContext<Spec>;
+  export type Model = IRModel;
+  export type OperationObject = IROperationObject;
+  export type ParameterObject = IRParameterObject;
+  export type ParametersObject = IRParametersObject;
+  export type PathItemObject = IRPathItemObject;
+  export type PathsObject = IRPathsObject;
+  export type RequestBodyObject = IRRequestBodyObject;
+  export type ResponseObject = IRResponseObject;
+  export type ResponsesObject = IRResponsesObject;
+  export type SchemaObject = IRSchemaObject;
 }

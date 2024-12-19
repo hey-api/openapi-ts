@@ -1,5 +1,5 @@
-import type { IRContext } from '../../../ir/context';
 import { paginationKeywordsRegExp } from '../../../ir/pagination';
+import type { IR } from '../../../ir/types';
 import type {
   ParameterObject,
   ReferenceObject,
@@ -15,7 +15,7 @@ export const paginationField = ({
   name,
   schema,
 }: {
-  context: IRContext;
+  context: IR.Context;
   name: string;
   schema: SchemaObject | ReferenceObject;
 }): boolean | string => {

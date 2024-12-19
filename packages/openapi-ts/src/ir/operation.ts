@@ -1,20 +1,14 @@
-import type { IRContext } from './context';
-import type { IRRequestBodyObject } from './ir';
-import {
-  type IROperationObject,
-  type IRResponseObject,
-  type IRSchemaObject,
-} from './ir';
 import type { Pagination } from './pagination';
 import {
   hasParametersObjectRequired,
   parameterWithPagination,
 } from './parameter';
 import { deduplicateSchema } from './schema';
+import type { IR } from './types';
 import { addItemsToSchema } from './utils';
 
 export const hasOperationDataRequired = (
-  operation: IROperationObject,
+  operation: IR.OperationObject,
 ): boolean => {
   if (hasParametersObjectRequired(operation.parameters)) {
     return true;
@@ -31,8 +25,8 @@ export const operationPagination = ({
   context,
   operation,
 }: {
-  context: IRContext;
-  operation: IROperationObject;
+  context: IR.Context;
+  operation: IR.OperationObject;
 }): Pagination | undefined => {
   if (operation.body?.pagination) {
     if (typeof operation.body.pagination === 'boolean') {
@@ -44,7 +38,7 @@ export const operationPagination = ({
     }
 
     const schema = operation.body.schema.$ref
-      ? context.resolveIrRef<IRRequestBodyObject | IRSchemaObject>(
+      ? context.resolveIrRef<IR.RequestBodyObject | IR.SchemaObject>(
           operation.body.schema.$ref,
         )
       : operation.body.schema;
@@ -88,23 +82,23 @@ interface OperationResponsesMap {
   /**
    * A deduplicated union of all error types. Unknown types are omitted.
    */
-  error?: IRSchemaObject;
+  error?: IR.SchemaObject;
   /**
    * An object containing a map of status codes for each error type.
    */
-  errors?: IRSchemaObject;
+  errors?: IR.SchemaObject;
   /**
    * A deduplicated union of all response types. Unknown types are omitted.
    */
-  response?: IRSchemaObject;
+  response?: IR.SchemaObject;
   /**
    * An object containing a map of status codes for each response type.
    */
-  responses?: IRSchemaObject;
+  responses?: IR.SchemaObject;
 }
 
 export const operationResponsesMap = (
-  operation: IROperationObject,
+  operation: IR.OperationObject,
 ): OperationResponsesMap => {
   const result: OperationResponsesMap = {};
 
@@ -112,20 +106,20 @@ export const operationResponsesMap = (
     return result;
   }
 
-  const errors: Omit<IRSchemaObject, 'properties'> &
-    Pick<Required<IRSchemaObject>, 'properties'> = {
+  const errors: Omit<IR.SchemaObject, 'properties'> &
+    Pick<Required<IR.SchemaObject>, 'properties'> = {
     properties: {},
     type: 'object',
   };
 
-  const responses: Omit<IRSchemaObject, 'properties'> &
-    Pick<Required<IRSchemaObject>, 'properties'> = {
+  const responses: Omit<IR.SchemaObject, 'properties'> &
+    Pick<Required<IR.SchemaObject>, 'properties'> = {
     properties: {},
     type: 'object',
   };
 
   // store default response to be evaluated last
-  let defaultResponse: IRResponseObject | undefined;
+  let defaultResponse: IR.ResponseObject | undefined;
 
   for (const name in operation.responses) {
     const response = operation.responses[name]!;

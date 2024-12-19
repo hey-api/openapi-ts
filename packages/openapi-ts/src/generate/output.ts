@@ -1,8 +1,8 @@
 import path from 'node:path';
 
 import { compiler } from '../compiler';
-import type { IRContext } from '../ir/context';
 import { parseIR } from '../ir/parser';
+import type { IR } from '../ir/types';
 import type { OpenApi } from '../openApi';
 import type { Client } from '../types/client';
 import type { Files } from '../types/utils';
@@ -106,7 +106,7 @@ export const generateLegacyOutput = async ({
   });
 };
 
-export const generateOutput = async ({ context }: { context: IRContext }) => {
+export const generateOutput = async ({ context }: { context: IR.Context }) => {
   const outputPath = path.resolve(context.config.output.path);
 
   if (context.config.output.clean) {
