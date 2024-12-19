@@ -68,7 +68,7 @@ describe('generateIndexFile', () => {
 
     generateIndexFile({ files });
 
-    files.index.write();
+    files.index!.write();
 
     expect(fs.writeFileSync).toHaveBeenCalledWith(
       expect.stringContaining(path.resolve('index.ts')),

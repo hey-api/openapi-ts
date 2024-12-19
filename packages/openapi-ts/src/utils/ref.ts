@@ -11,7 +11,7 @@ export const isRefOpenApiComponent = ($ref: string): boolean => {
  */
 export const refToName = ($ref: string): string => {
   const parts = refToParts($ref);
-  const name = parts[parts.length - 1];
+  const name = parts[parts.length - 1]!;
   // refs using unicode characters become encoded, didn't investigate why
   // but the suspicion is this comes from `@apidevtools/json-schema-ref-parser`
   return decodeURI(name);

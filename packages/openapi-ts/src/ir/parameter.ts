@@ -5,7 +5,7 @@ export const hasParameterGroupObjectRequired = (
   parameterGroup?: Record<string, IR.ParameterObject>,
 ): boolean => {
   for (const name in parameterGroup) {
-    if (parameterGroup[name].required) {
+    if (parameterGroup[name]!.required) {
       return true;
     }
   }
@@ -47,7 +47,7 @@ export const parameterWithPagination = (
   }
 
   for (const name in parameters.cookie) {
-    const parameter = parameters.cookie[name];
+    const parameter = parameters.cookie[name]!;
     if (parameter.pagination) {
       return {
         in: parameter.location,
@@ -58,13 +58,13 @@ export const parameterWithPagination = (
         schema:
           parameter.pagination === true
             ? parameter.schema
-            : parameter.schema.properties![parameter.pagination],
+            : parameter.schema.properties![parameter.pagination]!,
       };
     }
   }
 
   for (const name in parameters.header) {
-    const parameter = parameters.header[name];
+    const parameter = parameters.header[name]!;
     if (parameter.pagination) {
       return {
         in: parameter.location,
@@ -75,13 +75,13 @@ export const parameterWithPagination = (
         schema:
           parameter.pagination === true
             ? parameter.schema
-            : parameter.schema.properties![parameter.pagination],
+            : parameter.schema.properties![parameter.pagination]!,
       };
     }
   }
 
   for (const name in parameters.path) {
-    const parameter = parameters.path[name];
+    const parameter = parameters.path[name]!;
     if (parameter.pagination) {
       return {
         in: parameter.location,
@@ -92,13 +92,13 @@ export const parameterWithPagination = (
         schema:
           parameter.pagination === true
             ? parameter.schema
-            : parameter.schema.properties![parameter.pagination],
+            : parameter.schema.properties![parameter.pagination]!,
       };
     }
   }
 
   for (const name in parameters.query) {
-    const parameter = parameters.query[name];
+    const parameter = parameters.query[name]!;
     if (parameter.pagination) {
       return {
         in: parameter.location,
@@ -109,7 +109,7 @@ export const parameterWithPagination = (
         schema:
           parameter.pagination === true
             ? parameter.schema
-            : parameter.schema.properties![parameter.pagination],
+            : parameter.schema.properties![parameter.pagination]!,
       };
     }
   }

@@ -1271,7 +1271,7 @@ export const handler: Plugin.Handler<
         module: context
           .file({ id: plugin.name })!
           .relativePathToFile({ context, id: 'sdk' }),
-        name: queryFn.split('.')[0],
+        name: queryFn.split('.')[0]!,
       });
     }
   });

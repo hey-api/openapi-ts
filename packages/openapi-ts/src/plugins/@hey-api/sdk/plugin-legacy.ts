@@ -875,21 +875,21 @@ export const handlerLegacy: Plugin.LegacyHandler<any> = ({ client, files }) => {
     processService({
       client,
       onClientImport: (imported) => {
-        files.sdk.import({
+        files.sdk!.import({
           module: clientModulePath({ config, sourceOutput: sdkOutput }),
           name: imported,
         });
       },
       onImport: (imported) => {
-        files.sdk.import({
+        files.sdk!.import({
           // this detection could be done safer, but it shouldn't cause any issues
           asType: !imported.endsWith('Transformer'),
-          module: `./${files.types.nameWithoutExtension()}`,
+          module: `./${files.types!.nameWithoutExtension()}`,
           name: imported,
         });
       },
       onNode: (node) => {
-        files.sdk.add(node);
+        files.sdk!.add(node);
       },
       service,
     });

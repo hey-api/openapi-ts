@@ -314,7 +314,7 @@ const objectTypeToZodSchema = ({
   // let hasOptionalProperties = false;
 
   for (const name in schema.properties) {
-    const property = schema.properties[name];
+    const property = schema.properties[name]!;
     const isRequired = required.includes(name);
 
     let propertyExpression = schemaToZodSchema({
@@ -779,7 +779,7 @@ const schemaToZodSchema = ({
       );
 
       if (schema.logicalOperator === 'and') {
-        const firstSchema = schema.items[0];
+        const firstSchema = schema.items[0]!;
         // we want to add an intersection, but not every schema can use the same API.
         // if the first item contains another array or not an object, we cannot use
         // `.merge()` as that does not exist on `.union()` and non-object schemas.

@@ -46,7 +46,7 @@ export const operationPagination = ({
     return {
       in: 'body',
       name: operation.body.pagination,
-      schema: finalSchema.properties![operation.body.pagination],
+      schema: finalSchema.properties![operation.body.pagination]!,
     };
   }
 

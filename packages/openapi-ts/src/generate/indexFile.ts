@@ -62,14 +62,14 @@ export const generateIndexFile = ({ files }: { files: Files }): void => {
   Object.keys(files)
     .sort()
     .forEach((name) => {
-      const file = files[name];
+      const file = files[name]!;
 
       if (name === 'index' || file.isEmpty()) {
         return;
       }
 
       if (['sdk', 'types'].includes(name)) {
-        files.index.add(
+        files.index!.add(
           compiler.exportAllDeclaration({
             module: `./${file.nameWithoutExtension()}`,
           }),

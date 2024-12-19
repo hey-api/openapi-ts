@@ -27,7 +27,7 @@ export const getContent = (
 ): Content | undefined => {
   const basicMediaTypeWithSchema = Object.keys(content)
     .filter((mediaType) => {
-      const cleanMediaType = mediaType.split(';')[0].trim();
+      const cleanMediaType = mediaType.split(';')[0]!.trim();
       return BASIC_MEDIA_TYPES.includes(cleanMediaType);
     })
     .find((mediaType) => Boolean(content[mediaType]?.schema));
@@ -35,7 +35,7 @@ export const getContent = (
   if (basicMediaTypeWithSchema) {
     return {
       mediaType: basicMediaTypeWithSchema,
-      schema: content[basicMediaTypeWithSchema].schema as OpenApiSchema,
+      schema: content[basicMediaTypeWithSchema]!.schema as OpenApiSchema,
     };
   }
 
@@ -46,7 +46,7 @@ export const getContent = (
   if (firstMediaTypeWithSchema) {
     return {
       mediaType: firstMediaTypeWithSchema,
-      schema: content[firstMediaTypeWithSchema].schema as OpenApiSchema,
+      schema: content[firstMediaTypeWithSchema]!.schema as OpenApiSchema,
     };
   }
 };
