@@ -545,12 +545,9 @@ export const defaultPlugins = [
  */
 export const defineConfig = (config: UserConfig): UserConfig => config;
 
-export default {
-  createClient,
-  defineConfig,
-};
-
 export type { IR } from './ir/types';
 export type { OpenApi } from './openApi/types';
 export type { Plugin } from './plugins/types';
 export type { UserConfig } from './types/config';
+export type { LegacyIR } from './types/types';
+export { utils } from './utils/exports';
