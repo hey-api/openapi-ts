@@ -11,7 +11,7 @@ import type {
 } from '../../../compiler/types';
 import { clientApi, clientModulePath } from '../../../generate/client';
 import { TypeScriptFile } from '../../../generate/files';
-import type { IROperationObject } from '../../../ir/ir';
+import type { IR } from '../../../ir/types';
 import { isOperationParameterRequired } from '../../../openApi';
 import type {
   Client,
@@ -491,7 +491,7 @@ export const serviceFunctionIdentifier = ({
   config: Config;
   handleIllegal?: boolean;
   id: string;
-  operation: IROperationObject | Operation;
+  operation: IR.OperationObject | Operation;
 }) => {
   if (config.plugins['@hey-api/sdk']?.methodNameBuilder) {
     return config.plugins['@hey-api/sdk'].methodNameBuilder(operation);

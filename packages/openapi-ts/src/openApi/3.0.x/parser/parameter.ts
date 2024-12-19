@@ -1,5 +1,4 @@
-import type { IRContext } from '../../../ir/context';
-import type { IRParameterObject, IRParametersObject } from '../../../ir/ir';
+import type { IR } from '../../../ir/types';
 import { refToName } from '../../../utils/ref';
 import type {
   ParameterObject,
@@ -60,14 +59,14 @@ export const parametersArrayToObject = ({
   context,
   parameters,
 }: {
-  context: IRContext;
+  context: IR.Context;
   parameters?: ReadonlyArray<ParameterObject | ReferenceObject>;
-}): IRParametersObject | undefined => {
+}): IR.ParametersObject | undefined => {
   if (!parameters || !Object.keys(parameters).length) {
     return;
   }
 
-  const parametersObject: IRParametersObject = {};
+  const parametersObject: IR.ParametersObject = {};
 
   for (const parameterOrReference of parameters) {
     const parameter =
@@ -92,9 +91,9 @@ export const mergeParametersObjects = ({
   source,
   target,
 }: {
-  source: IRParametersObject | undefined;
-  target: IRParametersObject | undefined;
-}): IRParametersObject | undefined => {
+  source: IR.ParametersObject | undefined;
+  target: IR.ParametersObject | undefined;
+}): IR.ParametersObject | undefined => {
   const result = { ...target };
 
   if (source) {
@@ -154,9 +153,9 @@ const parameterToIrParameter = ({
   context,
   parameter,
 }: {
-  context: IRContext;
+  context: IR.Context;
   parameter: ParameterObject;
-}): IRParameterObject => {
+}): IR.ParameterObject => {
   // TODO: parser - fix
   let schema = parameter.schema;
 
@@ -196,7 +195,7 @@ const parameterToIrParameter = ({
       ? parameter.allowReserved
       : defaultAllowReserved(parameter.in);
 
-  const irParameter: IRParameterObject = {
+  const irParameter: IR.ParameterObject = {
     allowReserved,
     explode,
     location: parameter.in,
@@ -233,7 +232,7 @@ export const parseParameter = ({
   parameter,
 }: {
   $ref: string;
-  context: IRContext;
+  context: IR.Context;
   parameter: ParameterObject;
 }) => {
   if (!context.ir.components) {

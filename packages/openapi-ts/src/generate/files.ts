@@ -5,7 +5,7 @@ import type ts from 'typescript';
 
 import { compiler } from '../compiler';
 import { type ImportExportItemObject, tsNodeToString } from '../compiler/utils';
-import type { IRContext } from '../ir/context';
+import type { IR } from '../ir/types';
 import { ensureValidIdentifier } from '../openApi/shared/utils/identifier';
 import type { StringCase } from '../types/config';
 import { stringCase } from '../utils/stringCase';
@@ -187,7 +187,7 @@ export class TypeScriptFile {
     context,
     id,
   }: {
-    context: IRContext;
+    context: IR.Context;
     id: string;
   }): string {
     const file = context.file({ id });

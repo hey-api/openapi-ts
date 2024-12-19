@@ -5,8 +5,8 @@ import type { ImportExportItem } from '../../../compiler/module';
 import type { ImportExportItemObject } from '../../../compiler/utils';
 import { clientApi, clientModulePath } from '../../../generate/client';
 import { relativeModulePath } from '../../../generate/utils';
-import type { IROperationObject } from '../../../ir/ir';
 import { paginationKeywordsRegExp } from '../../../ir/pagination';
+import type { IR } from '../../../ir/types';
 import { isOperationParameterRequired } from '../../../openApi';
 import { getOperationKey } from '../../../openApi/common/parser/operation';
 import type {
@@ -56,7 +56,7 @@ const toQueryOptionsName = ({
 }: {
   config: Config;
   id: string;
-  operation: IROperationObject | Operation;
+  operation: IR.OperationObject | Operation;
 }) =>
   `${serviceFunctionIdentifier({
     config,
@@ -73,7 +73,7 @@ const toQueryKeyName = ({
   config: Config;
   id: string;
   isInfinite?: boolean;
-  operation: IROperationObject | Operation;
+  operation: IR.OperationObject | Operation;
 }) =>
   `${serviceFunctionIdentifier({
     config,

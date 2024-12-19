@@ -1,4 +1,4 @@
-import type { IRContext } from '../ir/context';
+import type { IR } from '../ir/types';
 import type { OpenApi } from '../openApi';
 import type { Client } from '../types/client';
 import type { Files } from '../types/utils';
@@ -99,7 +99,7 @@ export namespace Plugin {
    * Plugin implementation for experimental parser.
    */
   export type Handler<Config extends BaseConfig> = (args: {
-    context: IRContext;
+    context: IR.Context;
     plugin: Plugin.Instance<Config>;
   }) => void;
 

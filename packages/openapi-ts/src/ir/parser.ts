@@ -1,11 +1,10 @@
-import type { IRContext } from './context';
-import type { IRPathItemObject, IRPathsObject } from './ir';
+import type { IR } from './types';
 
 /**
  * Traverse the parsed intermediate representation model and broadcast
  * various events to listeners.
  */
-export const parseIR = async ({ context }: { context: IRContext }) => {
+export const parseIR = async ({ context }: { context: IR.Context }) => {
   await context.broadcast('before');
 
   if (context.ir.components) {
@@ -29,10 +28,10 @@ export const parseIR = async ({ context }: { context: IRContext }) => {
   }
 
   for (const path in context.ir.paths) {
-    const pathItem = context.ir.paths[path as keyof IRPathsObject];
+    const pathItem = context.ir.paths[path as keyof IR.PathsObject];
 
     for (const _method in pathItem) {
-      const method = _method as keyof IRPathItemObject;
+      const method = _method as keyof IR.PathItemObject;
       const operation = pathItem[method]!;
       await context.broadcast('operation', { method, operation, path });
     }

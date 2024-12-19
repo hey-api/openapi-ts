@@ -1,9 +1,11 @@
 import { IRContext } from '../ir/context';
+import type { IR } from '../ir/types';
 import type { Config } from '../types/config';
-import { type OpenApiV3_0_X, parseV3_0_X } from './3.0.x';
-import { type OpenApiV3_1_X, parseV3_1_X } from './3.1.x';
+import { parseV3_0_X } from './3.0.x';
+import { parseV3_1_X } from './3.1.x';
 import type { Client } from './common/interfaces/client';
-import type { OpenApi } from './common/interfaces/OpenApi';
+import type { OpenApi as LegacyOpenApi } from './common/interfaces/OpenApi';
+import type { OpenApi } from './types';
 import { parse as parseV2 } from './v2';
 import { parse as parseV3 } from './v3';
 
@@ -34,7 +36,7 @@ export type { OpenApiSchema as OpenApiV3Schema } from './v3/interfaces/OpenApiSc
  * @param openApi The OpenAPI spec that we have loaded from disk.
  */
 export function parseLegacy({ openApi }: { openApi: unknown }): Client {
-  const spec = openApi as OpenApi;
+  const spec = openApi as LegacyOpenApi;
 
   if ('openapi' in spec) {
     return parseV3(spec);
@@ -56,7 +58,7 @@ export const parseExperimental = ({
 }: {
   config: Config;
   spec: unknown;
-}): IRContext | undefined => {
+}): IR.Context | undefined => {
   const context = new IRContext({
     config,
     spec: spec as Record<string, any>,
@@ -64,18 +66,18 @@ export const parseExperimental = ({
 
   // TODO: parser - handle Swagger 2.0
 
-  const ctx = context as IRContext<OpenApiV3_0_X | OpenApiV3_1_X>;
+  const ctx = context as IR.Context<OpenApi.V3_0_X | OpenApi.V3_1_X>;
   switch (ctx.spec.openapi) {
     case '3.0.0':
     case '3.0.1':
     case '3.0.2':
     case '3.0.3':
     case '3.0.4':
-      parseV3_0_X(context as IRContext<OpenApiV3_0_X>);
+      parseV3_0_X(context as IR.Context<OpenApi.V3_0_X>);
       return context;
     case '3.1.0':
     case '3.1.1':
-      parseV3_1_X(context as IRContext<OpenApiV3_1_X>);
+      parseV3_1_X(context as IR.Context<OpenApi.V3_1_X>);
       return context;
     default:
       // TODO: parser - uncomment after removing legacy parser.

@@ -3,12 +3,11 @@ import type ts from 'typescript';
 import { compiler } from '../../../compiler';
 import type { ObjectValue } from '../../../compiler/types';
 import { clientApi, clientModulePath } from '../../../generate/client';
-import type { IRContext } from '../../../ir/context';
-import type { IROperationObject } from '../../../ir/ir';
 import {
   hasOperationDataRequired,
   statusCodeToGroup,
 } from '../../../ir/operation';
+import type { IR } from '../../../ir/types';
 import { escapeComment } from '../../../utils/escape';
 import { getServiceName } from '../../../utils/postprocess';
 import { transformServiceName } from '../../../utils/transform';
@@ -94,8 +93,8 @@ const operationStatements = ({
   operation,
   plugin,
 }: {
-  context: IRContext;
-  operation: IROperationObject;
+  context: IR.Context;
+  operation: IR.OperationObject;
   plugin: Plugin.Instance<Config>;
 }): Array<ts.Statement> => {
   const file = context.file({ id: sdkId })!;
@@ -383,7 +382,7 @@ const generateClassSdk = ({
   context,
   plugin,
 }: {
-  context: IRContext;
+  context: IR.Context;
   plugin: Plugin.Instance<Config>;
 }) => {
   const file = context.file({ id: sdkId })!;
@@ -475,7 +474,7 @@ const generateFlatSdk = ({
   context,
   plugin,
 }: {
-  context: IRContext;
+  context: IR.Context;
   plugin: Plugin.Instance<Config>;
 }) => {
   const file = context.file({ id: sdkId })!;

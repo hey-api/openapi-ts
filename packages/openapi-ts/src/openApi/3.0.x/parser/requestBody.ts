@@ -1,5 +1,4 @@
-import type { IRContext } from '../../../ir/context';
-import type { IRRequestBodyObject } from '../../../ir/ir';
+import type { IR } from '../../../ir/types';
 import { refToName } from '../../../utils/ref';
 import type { RequestBodyObject, SchemaObject } from '../types/spec';
 import { mediaTypeObject } from './mediaType';
@@ -9,9 +8,9 @@ const requestBodyToIrRequestBody = ({
   context,
   requestBody,
 }: {
-  context: IRContext;
+  context: IR.Context;
   requestBody: RequestBodyObject;
-}): IRRequestBodyObject => {
+}): IR.RequestBodyObject => {
   // TODO: parser - fix
   const content = mediaTypeObject({
     content: requestBody.content,
@@ -23,7 +22,7 @@ const requestBodyToIrRequestBody = ({
     ...schema,
   };
 
-  const irRequestBody: IRRequestBodyObject = {
+  const irRequestBody: IR.RequestBodyObject = {
     schema: schemaToIrSchema({
       context,
       schema: finalSchema,
@@ -47,7 +46,7 @@ export const parseRequestBody = ({
   requestBody,
 }: {
   $ref: string;
-  context: IRContext;
+  context: IR.Context;
   requestBody: RequestBodyObject;
 }) => {
   if (!context.ir.components) {

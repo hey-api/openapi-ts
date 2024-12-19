@@ -4,14 +4,7 @@ import { TypeScriptFile } from '../generate/files';
 import type { Config, StringCase } from '../types/config';
 import type { Files } from '../types/utils';
 import { resolveRef } from '../utils/ref';
-import type {
-  IR,
-  IROperationObject,
-  IRParameterObject,
-  IRPathItemObject,
-  IRRequestBodyObject,
-  IRSchemaObject,
-} from './ir';
+import type { IR } from './types';
 
 interface ContextFile {
   /**
@@ -44,24 +37,24 @@ interface Events {
    */
   before: () => void;
   operation: (args: {
-    method: keyof IRPathItemObject;
-    operation: IROperationObject;
+    method: keyof IR.PathItemObject;
+    operation: IR.OperationObject;
     path: string;
   }) => void;
   parameter: (args: {
     $ref: string;
     name: string;
-    parameter: IRParameterObject;
+    parameter: IR.ParameterObject;
   }) => void;
   requestBody: (args: {
     $ref: string;
     name: string;
-    requestBody: IRRequestBodyObject;
+    requestBody: IR.RequestBodyObject;
   }) => void;
   schema: (args: {
     $ref: string;
     name: string;
-    schema: IRSchemaObject;
+    schema: IR.SchemaObject;
   }) => void;
 }
 
@@ -82,7 +75,7 @@ export class IRContext<Spec extends Record<string, any> = any> {
   /**
    * Intermediate representation model obtained from `spec`.
    */
-  public ir: IR;
+  public ir: IR.Model;
   /**
    * Resolved specification from `input`.
    */

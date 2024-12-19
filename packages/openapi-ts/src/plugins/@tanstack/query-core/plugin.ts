@@ -7,12 +7,11 @@ import {
   tsNodeToString,
 } from '../../../compiler/utils';
 import { clientApi, clientModulePath } from '../../../generate/client';
-import type { IRContext } from '../../../ir/context';
-import type { IROperationObject } from '../../../ir/ir';
 import {
   hasOperationDataRequired,
   operationPagination,
 } from '../../../ir/operation';
+import type { IR } from '../../../ir/types';
 import { getConfig } from '../../../utils/config';
 import { getServiceName } from '../../../utils/postprocess';
 import { transformServiceName } from '../../../utils/transform';
@@ -39,8 +38,8 @@ const infiniteQueryOptionsFunctionIdentifier = ({
   context,
   operation,
 }: {
-  context: IRContext;
-  operation: IROperationObject;
+  context: IR.Context;
+  operation: IR.OperationObject;
 }) =>
   `${serviceFunctionIdentifier({
     config: context.config,
@@ -52,8 +51,8 @@ const mutationOptionsFunctionIdentifier = ({
   context,
   operation,
 }: {
-  context: IRContext;
-  operation: IROperationObject;
+  context: IR.Context;
+  operation: IR.OperationObject;
 }) =>
   `${serviceFunctionIdentifier({
     config: context.config,
@@ -65,8 +64,8 @@ const queryOptionsFunctionIdentifier = ({
   context,
   operation,
 }: {
-  context: IRContext;
-  operation: IROperationObject;
+  context: IR.Context;
+  operation: IR.OperationObject;
 }) =>
   `${serviceFunctionIdentifier({
     config: context.config,
@@ -79,9 +78,9 @@ const queryKeyFunctionIdentifier = ({
   isInfinite,
   operation,
 }: {
-  context: IRContext;
+  context: IR.Context;
   isInfinite?: boolean;
-  operation: IROperationObject;
+  operation: IR.OperationObject;
 }) =>
   `${serviceFunctionIdentifier({
     config: context.config,
@@ -106,7 +105,7 @@ const createInfiniteParamsFunction = ({
   context,
   plugin,
 }: {
-  context: IRContext;
+  context: IR.Context;
   plugin: PluginInstance;
 }) => {
   const file = context.file({ id: plugin.name })!;
@@ -295,7 +294,7 @@ const createQueryKeyFunction = ({
   context,
   plugin,
 }: {
-  context: IRContext;
+  context: IR.Context;
   plugin: PluginInstance;
 }) => {
   const file = context.file({ id: plugin.name })!;
@@ -491,7 +490,7 @@ const createQueryKeyType = ({
   context,
   plugin,
 }: {
-  context: IRContext;
+  context: IR.Context;
   plugin: PluginInstance;
 }) => {
   const file = context.file({ id: plugin.name })!;
@@ -549,7 +548,7 @@ const createQueryKeyLiteral = ({
   isInfinite,
   plugin,
 }: {
-  context: IRContext;
+  context: IR.Context;
   id: string;
   isInfinite?: boolean;
   plugin: PluginInstance;
@@ -580,8 +579,8 @@ const useTypeData = ({
   operation,
   plugin,
 }: {
-  context: IRContext;
-  operation: IROperationObject;
+  context: IR.Context;
+  operation: IR.OperationObject;
   plugin: PluginInstance;
 }) => {
   const identifierData = context.file({ id: 'types' })!.identifier({
@@ -609,8 +608,8 @@ const useTypeError = ({
   operation,
   plugin,
 }: {
-  context: IRContext;
-  operation: IROperationObject;
+  context: IR.Context;
+  operation: IR.OperationObject;
   plugin: PluginInstance;
 }) => {
   const file = context.file({ id: plugin.name })!;
@@ -657,8 +656,8 @@ const useTypeResponse = ({
   operation,
   plugin,
 }: {
-  context: IRContext;
-  operation: IROperationObject;
+  context: IR.Context;
+  operation: IR.OperationObject;
   plugin: PluginInstance;
 }) => {
   const identifierResponse = context.file({ id: 'types' })!.identifier({
@@ -686,9 +685,9 @@ const queryKeyStatement = ({
   plugin,
   typeQueryKey,
 }: {
-  context: IRContext;
+  context: IR.Context;
   isInfinite: boolean;
-  operation: IROperationObject;
+  operation: IR.OperationObject;
   plugin: PluginInstance;
   typeQueryKey?: string;
 }) => {
