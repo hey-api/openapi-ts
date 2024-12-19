@@ -35,10 +35,15 @@ async function processImages() {
         const outputFileName = `${baseName}-${size}w.${format}`;
         const outputPath = path.join(outputDir, outputFileName);
 
-        await sharp(inputPath)
-          .resize(size)
-          .toFormat(format, { quality: 80 })
-          .toFile(outputPath);
+        let image = sharp(inputPath).resize(size).toFormat(format, {
+          quality: 80,
+        });
+
+        if (format === 'jpeg') {
+          image = image.flatten({ background: '#ffffff' });
+        }
+
+        await image.toFile(outputPath);
 
         console.log(`Generated: ${outputFileName}`);
       }
