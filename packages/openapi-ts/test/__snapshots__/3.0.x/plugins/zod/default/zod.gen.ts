@@ -35,7 +35,7 @@ export const zSimpleReference = z.object({
 });
 
 export const zSimpleStringWithPattern = z.union([
-    z.string().max(64),
+    z.string().max(64).regex(/^[a-zA-Z0-9_]*$/),
     z.null()
 ]);
 
@@ -67,7 +67,7 @@ export const zArrayWithNumbers = z.array(z.number());
 
 export const zArrayWithBooleans = z.array(z.boolean());
 
-export const zArrayWithStrings = z.array(z.string());
+export const zArrayWithStrings = z.array(z.string()).default(['test']);
 
 export const zArrayWithReferences = z.array(z.object({
     prop: z.string().optional()
@@ -420,13 +420,13 @@ export const zModelWithNestedProperties = z.object({
             second: z.union([
                 z.object({
                     third: z.union([
-                        z.string(),
+                        z.string().readonly(),
                         z.null()
                     ]).readonly()
-                }),
+                }).readonly(),
                 z.null()
             ]).readonly()
-        }),
+        }).readonly(),
         z.null()
     ]).readonly()
 });
@@ -458,15 +458,15 @@ export const zModelThatExtendsExtends = zModelWithString.merge(zModelThatExtends
 }));
 
 export const zModelWithPattern = z.object({
-    key: z.string().max(64),
+    key: z.string().max(64).regex(/^[a-zA-Z0-9_]*$/),
     name: z.string().max(255),
     enabled: z.boolean().readonly().optional(),
     modified: z.string().datetime().readonly().optional(),
-    id: z.string().optional(),
-    text: z.string().optional(),
-    patternWithSingleQuotes: z.string().optional(),
-    patternWithNewline: z.string().optional(),
-    patternWithBacktick: z.string().optional()
+    id: z.string().regex(/^\\d{2}-\\d{3}-\\d{4}$/).optional(),
+    text: z.string().regex(/^\\w+$/).optional(),
+    patternWithSingleQuotes: z.string().regex(/^[a-zA-Z0-9\']*$/).optional(),
+    patternWithNewline: z.string().regex(/aaa\nbbb/).optional(),
+    patternWithBacktick: z.string().regex(/aaa`bbb/).optional()
 });
 
 export const zFile = z.object({
@@ -535,7 +535,7 @@ export const zNullableObject = z.union([
         foo: z.string().optional()
     }),
     z.null()
-]);
+]).default(null);
 
 export const zCharactersInDescription = z.string();
 

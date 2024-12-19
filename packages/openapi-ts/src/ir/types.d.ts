@@ -133,6 +133,7 @@ interface IRSchemaObject
     | 'minimum'
     | 'minItems'
     | 'minLength'
+    | 'pattern'
     | 'required'
     | 'title'
   > {

@@ -894,3 +894,11 @@ export const createPropertyAssignment = ({
   initializer: ts.Expression;
   name: string | ts.PropertyName;
 }) => ts.factory.createPropertyAssignment(name, initializer);
+
+export const createRegularExpressionLiteral = ({
+  flags = [],
+  text,
+}: {
+  flags?: ReadonlyArray<'g' | 'i' | 'm' | 's' | 'u' | 'y'>;
+  text: string;
+}) => ts.factory.createRegularExpressionLiteral(`/${text}/${flags.join('')}`);

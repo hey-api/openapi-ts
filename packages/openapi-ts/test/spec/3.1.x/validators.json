@@ -1,15 +1,16 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "OpenAPI 3.1.0 schema recursive example",
+    "title": "OpenAPI 3.1.0 validators example",
     "version": "1"
   },
   "components": {
     "schemas": {
       "Foo": {
-        "type": "object",
+        "default": null,
         "properties": {
           "foo": {
+            "pattern": "^\\d{3}-\\d{2}-\\d{4}$",
             "type": "string"
           },
           "bar": {
@@ -20,8 +21,13 @@
               "$ref": "#/components/schemas/Foo"
             },
             "type": "array"
+          },
+          "qux": {
+            "default": 0,
+            "type": "number"
           }
-        }
+        },
+        "type": ["object", "null"]
       },
       "Bar": {
         "properties": {
@@ -30,6 +36,12 @@
           }
         },
         "type": "object"
+      },
+      "Baz": {
+        "default": "baz",
+        "pattern": "foo\nbar",
+        "readOnly": true,
+        "type": "string"
       }
     }
   }
