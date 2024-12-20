@@ -4,7 +4,7 @@ description: TanStack Query plugin for Hey API. Compatible with all our features
 ---
 
 <script setup>
-import { embedProject } from '../embed'
+import { embedProject } from '../../embed'
 </script>
 
 # TanStack Query
@@ -28,7 +28,7 @@ Live demo
 
 ## Installation
 
-Ensure you have already [configured](/openapi-ts/get-started) `@hey-api/openapi-ts`. Update your configuration to use the TanStack Query plugin.
+Assuming you have already created a [configuration](/openapi-ts/get-started) file, simply add TanStack Query to your plugins and you'll be ready to generate TanStack Query artifacts. :tada:
 
 ::: code-group
 
@@ -103,8 +103,6 @@ export default {
 ```
 
 :::
-
-You can now generate TanStack Query artifacts. 🎉
 
 ## Output
 
@@ -181,5 +179,5 @@ const queryKey = getPetByIdQueryKey({
 });
 ```
 
-<!--@include: ../examples.md-->
-<!--@include: ../sponsorship.md-->
+<!--@include: ../../examples.md-->
+<!--@include: ../../sponsorship.md-->

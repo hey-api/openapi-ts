@@ -31,7 +31,7 @@ html.dark {
   --vp-home-hero-image-filter: blur(144px);
 }
 
-.soon {
+[data-soon] {
   background-color: var(--vp-button-brand-bg);
   border-radius: 1em;
   color: var(--vp-button-brand-text);

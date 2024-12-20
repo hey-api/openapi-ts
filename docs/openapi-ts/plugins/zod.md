@@ -6,7 +6,7 @@ description: Zod plugin for Hey API. Compatible with all our features.
 # Zod
 
 ::: warning
-Zod plugin is in development. You can follow the updates and provide feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues/876).
+This feature is in development! :tada: Try it out and provide feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues/876).
 :::
 
 [Zod](https://zod.dev/) is a TypeScript-first schema validation library with static type inference.
@@ -26,7 +26,7 @@ Live demo
 To use this feature, you must opt in to the [experimental parser](/openapi-ts/configuration#parser).
 :::
 
-Ensure you have already [configured](/openapi-ts/get-started) `@hey-api/openapi-ts`. Update your configuration to use the Zod plugin.
+Assuming you have already created a [configuration](/openapi-ts/get-started) file, simply add `zod` to your plugins and you'll be ready to generate Zod artifacts. :tada:
 
 ```js
 import { defaultPlugins } from '@hey-api/openapi-ts';
@@ -43,11 +43,9 @@ export default {
 };
 ```
 
-You can now generate Zod artifacts. 🎉
-
 ## SDKs
 
-To automatically validate response data in your SDKs, set `validator` to `true`.
+To automatically validate response data in your SDKs, set `sdk.validator` to `true`.
 
 ```js
 import { defaultPlugins } from '@hey-api/openapi-ts';

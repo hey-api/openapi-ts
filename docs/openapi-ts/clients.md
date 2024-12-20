@@ -21,14 +21,16 @@ We all send HTTP requests in a slightly different way. Hey API doesn't force you
 - minimal learning curve thanks to extending the underlying technology
 - support bundling inside the generated output
 
-## Available Clients
+## Options
+
+Hey API natively supports the following clients.
 
 - [Fetch API](/openapi-ts/clients/fetch)
 - [Axios](/openapi-ts/clients/axios)
 - [Legacy](/openapi-ts/clients/legacy)
-- [Next.js](https://nextjs.org/) <span class="soon">Soon</span>
+- [Next.js](https://nextjs.org/) <span data-soon>Soon</span>
 
-If you'd like Hey API to support your client, let us know by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
+Don't see your client? Let us know your interest by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
 
 <!--@include: ../examples.md-->
 <!--@include: ../sponsorship.md-->

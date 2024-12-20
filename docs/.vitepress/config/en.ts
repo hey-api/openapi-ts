@@ -38,6 +38,17 @@ export default defineConfig({
             collapsed: true,
             items: [
               {
+                link: '/openapi-ts/custom-plugin',
+                text: 'Custom Plugin',
+              },
+            ],
+            link: '/openapi-ts/plugins',
+            text: 'Plugins',
+          },
+          {
+            collapsed: true,
+            items: [
+              {
                 link: '/openapi-ts/clients/fetch',
                 text: 'Fetch API',
               },
@@ -57,8 +68,36 @@ export default defineConfig({
             collapsed: true,
             items: [
               {
-                link: '/openapi-ts/validators/zod',
+                link: '/openapi-ts/plugins/zod',
                 text: 'Zod',
+              },
+              {
+                link: '/openapi-ts/plugins/ajv',
+                text: 'Ajv <span data-soon>soon</soon>',
+              },
+              {
+                link: '/openapi-ts/plugins/arktype',
+                text: 'Arktype <span data-soon>soon</soon>',
+              },
+              {
+                link: '/openapi-ts/plugins/joi',
+                text: 'Joi <span data-soon>soon</soon>',
+              },
+              {
+                link: '/openapi-ts/plugins/superstruct',
+                text: 'Superstruct <span data-soon>soon</soon>',
+              },
+              {
+                link: '/openapi-ts/plugins/typebox',
+                text: 'TypeBox <span data-soon>soon</soon>',
+              },
+              {
+                link: '/openapi-ts/plugins/valibot',
+                text: 'Valibot <span data-soon>soon</soon>',
+              },
+              {
+                link: '/openapi-ts/plugins/yup',
+                text: 'Yup <span data-soon>soon</soon>',
               },
             ],
             link: '/openapi-ts/validators',
@@ -68,31 +107,87 @@ export default defineConfig({
             link: '/openapi-ts/transformers',
             text: 'Transformers',
           },
+          {
+            collapsed: true,
+            items: [
+              {
+                link: '/openapi-ts/plugins/tanstack-query',
+                text: 'TanStack Query',
+              },
+              {
+                link: '/openapi-ts/plugins/pinia-colada',
+                text: 'Pinia Colada <span data-soon>soon</soon>',
+              },
+              {
+                link: '/openapi-ts/plugins/swr',
+                text: 'SWR <span data-soon>soon</soon>',
+              },
+              {
+                link: '/openapi-ts/plugins/zustand',
+                text: 'Zustand <span data-soon>soon</soon>',
+              },
+            ],
+            link: '/openapi-ts/state-management',
+            text: 'State Management',
+          },
+          {
+            collapsed: true,
+            items: [
+              {
+                link: '/openapi-ts/plugins/faker',
+                text: 'Faker <span data-soon>soon</soon>',
+              },
+              {
+                link: '/openapi-ts/plugins/msw',
+                text: 'MSW <span data-soon>soon</soon>',
+              },
+              {
+                link: '/openapi-ts/plugins/nock',
+                text: 'Nock <span data-soon>soon</soon>',
+              },
+              {
+                link: '/openapi-ts/plugins/supertest',
+                text: 'Supertest <span data-soon>soon</soon>',
+              },
+            ],
+            link: '/openapi-ts/mocks',
+            text: 'Mocks',
+          },
+          {
+            collapsed: true,
+            items: [
+              {
+                link: '/openapi-ts/plugins/fastify',
+                text: 'Fastify',
+              },
+              {
+                link: '/openapi-ts/plugins/express',
+                text: 'Express <span data-soon>soon</soon>',
+              },
+              {
+                link: '/openapi-ts/plugins/hono',
+                text: 'Hono <span data-soon>soon</soon>',
+              },
+              {
+                link: '/openapi-ts/plugins/koa',
+                text: 'Koa <span data-soon>soon</soon>',
+              },
+              {
+                link: '/openapi-ts/plugins/nest',
+                text: 'Nest <span data-soon>soon</soon>',
+              },
+            ],
+            link: '/openapi-ts/web-frameworks',
+            text: 'Web Frameworks',
+          },
         ],
         text: 'Guides and Concepts',
       },
       {
         items: [
           {
-            link: '/openapi-ts/plugins',
-            text: 'Introduction',
-          },
-          {
-            link: '/openapi-ts/fastify',
-            text: 'Fastify',
-          },
-          {
-            link: '/openapi-ts/tanstack-query',
-            text: 'TanStack Query',
-          },
-        ],
-        text: 'Plugins',
-      },
-      {
-        items: [
-          {
             link: '/openapi-ts/integrations',
-            text: 'GitHub <span class="soon">soon</span>',
+            text: 'GitHub <span data-soon>soon</span>',
           },
         ],
         text: 'Integrations',
