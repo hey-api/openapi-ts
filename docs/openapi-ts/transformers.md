@@ -27,9 +27,9 @@ Transformers handle only the most common scenarios. Some of the known limitation
 
 If your data isn't being transformed as expected, we encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
 
-## Configuration
+## Installation
 
-To generate transformers, add `@hey-api/transformers` to your plugins.
+Assuming you have already created a [configuration](/openapi-ts/get-started) file, simply add `@hey-api/transformers` to your plugins and you'll be ready to generate transformers. :tada:
 
 ```js
 import { defaultPlugins } from '@hey-api/openapi-ts';
@@ -47,7 +47,7 @@ export default {
 
 ## SDKs
 
-To automatically transform response data in your SDKs, set `transformer` to `true`.
+To automatically transform response data in your SDKs, set `sdk.transformer` to `true`.
 
 ```js
 import { defaultPlugins } from '@hey-api/openapi-ts';
