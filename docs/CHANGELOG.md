@@ -1,5 +1,11 @@
 # @hey-api/docs
 
+## 0.8.1
+
+### Patch Changes
+
+- [#1496](https://github.com/hey-api/openapi-ts/pull/1496) [`1e418ba`](https://github.com/hey-api/openapi-ts/commit/1e418ba760b9903326ec37009651c32e195e24a9) Thanks [@mrlubos](https://github.com/mrlubos)! - docs: split output section into multiple pages
+
 ## 0.8.0
 
 ### Minor Changes
