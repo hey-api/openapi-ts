@@ -3,7 +3,7 @@ title: Integrations
 description: Automate your client generation.
 ---
 
-# Integrations <span class="soon">Soon</span>
+# Integrations <span data-soon>Soon</span>
 
 ::: warning
 GitHub integration is not publicly available yet. We are gathering feedback from beta testers to ensure the final product meets our quality standards. To express your interest in joining the beta test, please open an issue on [GitHub](https://github.com/hey-api/upload-openapi-spec/issues).
