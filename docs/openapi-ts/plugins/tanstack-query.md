@@ -180,4 +180,4 @@ const queryKey = getPetByIdQueryKey({
 ```
 
 <!--@include: ../../examples.md-->
-<!--@include: ../../sponsorship.md-->
+<!--@include: ../../sponsors.md-->

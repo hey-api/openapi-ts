@@ -11,4 +11,4 @@ This feature isn't in development yet. Help us prioritize it by voting on [GitHu
 
 [Arktype](https://arktype.io/) is a TypeScript's 1:1 validator, optimized from editor to runtime.
 
-<!--@include: ../../sponsorship.md-->
+<!--@include: ../../sponsors.md-->

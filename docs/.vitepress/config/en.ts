@@ -31,6 +31,21 @@ export default defineConfig({
       {
         items: [
           {
+            collapsed: true,
+            items: [
+              {
+                link: '/openapi-ts/output/typescript',
+                text: 'TypeScript',
+              },
+              {
+                link: '/openapi-ts/output/sdk',
+                text: 'SDK',
+              },
+              {
+                link: '/openapi-ts/output/json-schema',
+                text: 'JSON Schema',
+              },
+            ],
             link: '/openapi-ts/output',
             text: 'Output',
           },
@@ -209,6 +224,10 @@ export default defineConfig({
           {
             link: '/contributing',
             text: 'Contributing',
+          },
+          {
+            link: 'https://github.com/orgs/hey-api/discussions/1495',
+            text: 'Roadmap',
           },
         ],
         text: '@hey-api',
