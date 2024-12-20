@@ -11,4 +11,4 @@ This feature isn't in development yet. Help us prioritize it by voting on [GitHu
 
 [Yup](https://github.com/jquense/yup) is a schema builder for runtime value parsing and validation.
 
-<!--@include: ../../sponsorship.md-->
+<!--@include: ../../sponsors.md-->

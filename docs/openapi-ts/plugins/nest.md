@@ -11,4 +11,4 @@ This feature isn't in development yet. Help us prioritize it by voting on [GitHu
 
 [Nest](https://nestjs.com/) is a progressive Node.js framework for building efficient, reliable and scalable server-side applications.
 
-<!--@include: ../../sponsorship.md-->
+<!--@include: ../../sponsors.md-->

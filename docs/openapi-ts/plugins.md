@@ -5,7 +5,7 @@ description: Learn about and discover available plugins.
 
 # Plugins
 
-Every generated file in your output is created by a plugin. You already learned about the default plugins in [Output](/openapi-ts/output). This page contains all native and selected community plugins.
+Every generated file in your output is created by a plugin. You already learned about the default plugins in [Output](/openapi-ts/output). However, you might be working with third-party packages and wishing to automate more of your boilerplate. This page lists all native and selected community plugins enabling you to do that.
 
 ## Hey API
 
@@ -58,4 +58,4 @@ Featured community plugins.
 - [add plugin](https://github.com/hey-api/openapi-ts/pulls)
 
 <!--@include: ../examples.md-->
-<!--@include: ../sponsorship.md-->
+<!--@include: ../sponsors.md-->
