@@ -11,4 +11,4 @@ This feature isn't in development yet. Help us prioritize it by voting on [GitHu
 
 [Express](https://expressjs.com/) is a minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.
 
-<!--@include: ../../sponsorship.md-->
+<!--@include: ../../sponsors.md-->

@@ -142,4 +142,4 @@ export type GetFooResponse = Baz;
 
 :::
 
-<!--@include: ../sponsorship.md-->
+<!--@include: ../sponsors.md-->

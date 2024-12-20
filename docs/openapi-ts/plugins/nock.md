@@ -11,4 +11,4 @@ This feature isn't in development yet. Help us prioritize it by voting on [GitHu
 
 [Nock](https://github.com/nock/nock) is an HTTP server mocking and expectations library for Node.js.
 
-<!--@include: ../../sponsorship.md-->
+<!--@include: ../../sponsors.md-->

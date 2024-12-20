@@ -187,4 +187,4 @@ export default {
 ```
 
 <!--@include: ../../examples.md-->
-<!--@include: ../../sponsorship.md-->
+<!--@include: ../../sponsors.md-->
