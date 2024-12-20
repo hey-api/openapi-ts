@@ -74,4 +74,4 @@ The Zod plugin will generate the following artifacts, depending on the input spe
 More information will be provided as we finalize the plugin.
 
 <!--@include: ../../examples.md-->
-<!--@include: ../../sponsorship.md-->
+<!--@include: ../../sponsors.md-->

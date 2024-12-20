@@ -48,4 +48,4 @@ These are the people with significant contributions to Hey API. A special thank 
 
 <VPTeamMembers size="small" :members="hallOfFame" />
 
-<!--@include: ./sponsorship.md-->
+<!--@include: ./sponsors.md-->

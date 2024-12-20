@@ -11,4 +11,4 @@ This feature isn't in development yet. Help us prioritize it by voting on [GitHu
 
 [Valibot](https://valibot.dev/) is the open source schema library for TypeScript with bundle size, type safety and developer experience in mind.
 
-<!--@include: ../../sponsorship.md-->
+<!--@include: ../../sponsors.md-->
