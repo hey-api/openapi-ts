@@ -27,7 +27,7 @@ Live demo
 To use this feature, you must opt in to the [experimental parser](/openapi-ts/configuration#parser).
 :::
 
-Ensure you have already [configured](/openapi-ts/get-started) `@hey-api/openapi-ts`. Update your configuration to use the Fastify plugin.
+Assuming you have already created a [configuration](/openapi-ts/get-started) file, simply add `fastify` to your plugins and you'll be ready to generate Fastify artifacts. :tada:
 
 ```js
 import { defaultPlugins } from '@hey-api/openapi-ts';
@@ -43,8 +43,6 @@ export default {
   ],
 };
 ```
-
-You can now generate Fastify artifacts. 🎉
 
 ## Output
 
@@ -73,5 +71,5 @@ const serviceHandlers: RouteHandlers = {
 fastify.register(glue, { serviceHandlers });
 ```
 
-<!--@include: ../examples.md-->
-<!--@include: ../sponsorship.md-->
+<!--@include: ../../examples.md-->
+<!--@include: ../../sponsorship.md-->

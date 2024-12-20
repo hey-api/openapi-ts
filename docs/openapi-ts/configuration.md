@@ -193,7 +193,7 @@ You can learn more on the [Output](/openapi-ts/output) page.
 
 ## Parser
 
-If you're using OpenAPI 3.0 or newer, we encourage you to try out the experimental parser. In the future it will become the default parser, but until it's been tested it's an opt-in feature. To try it out, set the `experimentalParser` flag in your configuration to `true`.
+If you're using OpenAPI 3.0 or newer, we encourage you to try out the experimental parser. In the future this will become the default parser, but until it's been tested it's an opt-in feature. To try it out, set the `experimentalParser` flag in your configuration to `true`.
 
 ::: code-group
 
@@ -212,7 +212,7 @@ npx @hey-api/openapi-ts -i path/to/openapi.json -o src/client -c @hey-api/client
 
 :::
 
-The experimental parser produces a cleaner output while being faster than the legacy parser. It also supports features such as [Filters](#filters) and more will be added in the future.
+The experimental parser produces a cleaner output while being faster than the legacy parser. It also supports features such as [Filters](#filters) and more are being added.
 
 The legacy parser will be used with the [legacy clients](/openapi-ts/clients/legacy) regardless of the `experimentalParser` flag value. However, it's unlikely to receive any further updates.
 

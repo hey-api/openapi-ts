@@ -20,4 +20,12 @@ Your [pull request](https://help.github.com/articles/using-pull-requests) must:
 - use clear commit messages
 - be possible to merge automatically
 
-<!--@include: ./sponsorship.md-->
+## Sponsors
+
+You can also contribute by becoming our [sponsor](https://github.com/sponsors/hey-api).
+
+<div class="sponsors-list">
+
+<!--@include: ./sponsors-list.md-->
+
+</div>

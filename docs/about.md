@@ -36,15 +36,9 @@ const hallOfFame = [
 
 # About
 
-Hey API's objective is to provide a suite of TypeScript tools to manage API interactions. Whether you're building a front-end application, API-to-API service, or micro-frontends, we want Hey API to be your go-to resource.
+Hey API is building a suite of TypeScript tools to manage API interactions. Whether you're building a web app, mobile app, or API server, we want to be part of your stack.
 
-Typically, developers of such applications want to:
-
-- use TypeScript interfaces to model data for their APIs
-- send and fetch this data from server in a type-safe way
-- build further abstractions on top of this data
-
-Doing any of these steps manually quickly becomes a huge time sink as your project grows and APIs evolve. Ideally, you want to spend most time on your application. Hey API allows you to do just that.
+We aim to do this by offering quality code abstractions necessary to perform type-safe HTTP requests. Attempting to manage this manually quickly becomes a huge time sink as your project grows and APIs evolve. Ideally, you want to spend most time on your application. Hey API allows you to do just that.
 
 We're constantly learning about the ways in which you use our tools. If you have any feedback, please [email us](mailto:lubos@heyapi.dev), [open an issue](https://github.com/hey-api/openapi-ts/issues), or [join a discussion](https://github.com/orgs/hey-api/discussions).
 
