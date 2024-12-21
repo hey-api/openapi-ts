@@ -3,12 +3,53 @@ import path from 'node:path';
 
 import sharp from 'sharp';
 
-const inputDir = 'public/raw';
-const outputDir = 'public/images';
+const allowedImageExtensions = ['.png', '.jpg', '.jpeg', '.webp'];
+const images = [
+  {
+    sizes: [
+      {
+        formats: ['png'],
+        width: 16,
+      },
+      {
+        formats: ['png'],
+        width: 32,
+      },
+      {
+        formats: ['png'],
+        width: 48,
+      },
+      {
+        formats: ['png'],
+        width: 150,
+      },
+      {
+        formats: ['png'],
+        width: 640,
+      },
+    ],
+    source: 'logo.png',
+  },
+  {
+    sizes: [
+      {
+        formats: ['jpeg', 'webp'],
+        width: 480,
+      },
+      {
+        formats: ['webp'],
+        width: 768,
+      },
+      {
+        formats: ['png', 'webp'],
+        width: 1200,
+      },
+    ],
+    source: 'stainless-logo-wordmark.png',
+  },
+];
 
-const supportedExtensions = ['.png', '.jpg', '.jpeg', '.webp'];
-const sizes = [480, 768, 1200];
-const formats = ['png', 'webp', 'jpeg'];
+const outputDir = 'public/images';
 
 if (fs.existsSync(outputDir)) {
   fs.rmSync(outputDir, { force: true, recursive: true });
@@ -17,22 +58,23 @@ if (fs.existsSync(outputDir)) {
 fs.mkdirSync(outputDir, { recursive: true });
 
 async function processImages() {
-  const files = fs.readdirSync(inputDir);
+  for (const image of images) {
+    const inputPath = path.join('public', image.source);
+    const ext = path.extname(image.source).toLowerCase();
+    const name = path.basename(image.source, ext);
 
-  for (const file of files) {
-    const inputPath = path.join(inputDir, file);
-    const ext = path.extname(file).toLowerCase();
-    const baseName = path.basename(file, ext);
-
-    if (!supportedExtensions.includes(ext)) {
+    if (!allowedImageExtensions.includes(ext)) {
       continue;
     }
 
-    console.log(`Processing ${file}...`);
-
-    for (const size of sizes) {
+    for (const imageSize of image.sizes) {
+      const size = typeof imageSize === 'object' ? imageSize.width : imageSize;
+      const formats =
+        typeof imageSize === 'object'
+          ? imageSize.formats || image.formats
+          : image.formats;
       for (const format of formats) {
-        const outputFileName = `${baseName}-${size}w.${format}`;
+        const outputFileName = `${name}-${size}w.${format}`;
         const outputPath = path.join(outputDir, outputFileName);
 
         let image = sharp(inputPath).resize(size).toFormat(format, {
@@ -44,12 +86,9 @@ async function processImages() {
         }
 
         await image.toFile(outputPath);
-
-        console.log(`Generated: ${outputFileName}`);
       }
     }
   }
-  console.log('✅ Image optimization complete!');
 }
 
 processImages().catch((err) => {
