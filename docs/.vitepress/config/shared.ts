@@ -3,7 +3,33 @@ import { defineConfig, type HeadConfig } from 'vitepress';
 export default defineConfig({
   cleanUrls: true,
   head: [
-    ['link', { href: '/logo.png', rel: 'icon', type: 'image/png' }],
+    [
+      'link',
+      {
+        href: '/images/logo-16w.png',
+        rel: 'icon',
+        sizes: '16x16',
+        type: 'image/png',
+      },
+    ],
+    [
+      'link',
+      {
+        href: '/images/logo-32w.png',
+        rel: 'icon',
+        sizes: '32x32',
+        type: 'image/png',
+      },
+    ],
+    [
+      'link',
+      {
+        href: '/images/logo-48w.png',
+        rel: 'icon',
+        sizes: '48x48',
+        type: 'image/png',
+      },
+    ],
     ['meta', { content: 'website', property: 'og:type' }],
     ['meta', { content: 'en', property: 'og:locale' }],
     [
@@ -15,7 +41,7 @@ export default defineConfig({
       },
     ],
     ['meta', { content: 'OpenAPI TypeScript', property: 'og:site_name' }],
-    ['meta', { content: '/logo.png', property: 'og:image' }],
+    ['meta', { content: '/images/logo-640w.png', property: 'og:image' }],
     ['meta', { content: 'https://heyapi.dev', property: 'og:url' }],
     [
       'script',
@@ -33,7 +59,7 @@ export default defineConfig({
   },
   themeConfig: {
     externalLinkIcon: true,
-    logo: '/logo.png',
+    logo: '/images/logo-48w.png',
     search: {
       provider: 'local',
     },
