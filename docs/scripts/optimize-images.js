@@ -21,7 +21,7 @@ const images = [
       },
       {
         formats: ['png'],
-        width: 150,
+        width: 300,
       },
       {
         formats: ['png'],
