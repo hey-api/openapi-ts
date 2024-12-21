@@ -1,5 +1,5 @@
 <div align="center">
-  <img width="150" height="150" src="https://heyapi.dev/logo.png" alt="Logo">
+  <img alt="Hey API logo" height="150" src="https://heyapi.dev/images/logo-150w.png" width="150">
   <h1 align="center"><b>Axios Client</b></h1>
   <p align="center">🚀 Axios client for `@hey-api/openapi-ts` codegen.</p>
 </div>
