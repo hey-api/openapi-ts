@@ -77,7 +77,7 @@ describe('getParseAs', () => {
   }> = [
     {
       content: null,
-      parseAs: undefined,
+      parseAs: 'stream',
     },
     {
       content: 'application/json',

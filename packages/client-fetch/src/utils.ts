@@ -327,9 +327,11 @@ export const createQuerySerializer = <T = unknown>({
  */
 export const getParseAs = (
   contentType: string | null,
-): Exclude<Config['parseAs'], 'auto' | 'stream'> => {
+): Exclude<Config['parseAs'], 'auto'> => {
   if (!contentType) {
-    return;
+    // If no Content-Type header is provided, the best we can do is return the raw response body,
+    // which is effectively the same as the 'stream' option.
+    return 'stream';
   }
 
   const cleanContent = contentType.split(';')[0]?.trim();
