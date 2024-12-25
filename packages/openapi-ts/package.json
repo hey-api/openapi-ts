@@ -76,7 +76,7 @@
     "node": "^18.0.0 || >=20.0.0"
   },
   "dependencies": {
-    "@hey-api/json-schema-ref-parser": "0.0.1",
+    "@hey-api/json-schema-ref-parser": "0.0.2",
     "c12": "2.0.1",
     "commander": "12.1.0",
     "handlebars": "4.7.8"

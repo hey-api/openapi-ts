@@ -582,8 +582,8 @@ importers:
   packages/openapi-ts:
     dependencies:
       '@hey-api/json-schema-ref-parser':
-        specifier: 0.0.1
-        version: 0.0.1
+        specifier: 0.0.2
+        version: 0.0.2
       c12:
         specifier: 2.0.1
         version: 2.0.1
@@ -2235,8 +2235,8 @@ packages:
   '@fontsource/fira-mono@5.0.0':
     resolution: {integrity: sha512-IsinH/oLYJyv/sQv7SbKmjoAXZsSjm6Q1Tz5GBBXCXi3Jg9MzXmKvWm9bSLC8lFI6CDsi8GkH/DAgZ98t8bhTQ==}
 
-  '@hey-api/json-schema-ref-parser@0.0.1':
-    resolution: {integrity: sha512-9DkhVGqRoyjAK7RB/fi/BXyHf+gfC1oJwbdY3j5KPsaG9WAaPl/CSxO2dADC8invS33mscwr8qo0Jk0/RGvzOw==}
+  '@hey-api/json-schema-ref-parser@0.0.2':
+    resolution: {integrity: sha512-cwO2OAvMxyX+U6sPDWQ8+23OOOGvxH1pLODXA9rJCdCbxG9kUe+Uon3YPgQtT7uSkLis/BoWccmtqH5VGCs8gA==}
     engines: {node: '>= 16'}
 
   '@humanwhocodes/config-array@0.12.3':
@@ -11313,7 +11313,7 @@ snapshots:
 
   '@fontsource/fira-mono@5.0.0': {}
 
-  '@hey-api/json-schema-ref-parser@0.0.1':
+  '@hey-api/json-schema-ref-parser@0.0.2':
     dependencies:
       '@jsdevtools/ono': 7.1.3
       '@types/json-schema': 7.0.15
