@@ -3,6 +3,7 @@ import path from 'node:path';
 
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import type { Config } from '../../types/config';
 import { setConfig } from '../../utils/config';
 import { generateLegacyCore } from '../core';
 import { mockTemplates } from './mocks';
@@ -17,6 +18,7 @@ describe('generateLegacyCore', () => {
 
   it('writes to filesystem', async () => {
     const client: Parameters<typeof generateLegacyCore>[1] = {
+      config: {} as Config,
       models: [],
       server: 'http://localhost:8080',
       services: [],
@@ -63,6 +65,10 @@ describe('generateLegacyCore', () => {
         },
       },
       useOptions: true,
+      watch: {
+        enabled: false,
+        interval: 1000,
+      },
     });
 
     await generateLegacyCore('/', client, templates);
@@ -95,6 +101,7 @@ describe('generateLegacyCore', () => {
 
   it('uses client server value for base', async () => {
     const client: Parameters<typeof generateLegacyCore>[1] = {
+      config: {} as Config,
       models: [],
       server: 'http://localhost:8080',
       services: [],
@@ -141,6 +148,10 @@ describe('generateLegacyCore', () => {
         },
       },
       useOptions: true,
+      watch: {
+        enabled: false,
+        interval: 1000,
+      },
     });
 
     await generateLegacyCore('/', client, templates);
@@ -155,6 +166,7 @@ describe('generateLegacyCore', () => {
 
   it('uses custom value for base', async () => {
     const client: Parameters<typeof generateLegacyCore>[1] = {
+      config: {} as Config,
       models: [],
       server: 'http://localhost:8080',
       services: [],
@@ -202,6 +214,10 @@ describe('generateLegacyCore', () => {
         },
       },
       useOptions: true,
+      watch: {
+        enabled: false,
+        interval: 1000,
+      },
     });
 
     await generateLegacyCore('/', client, templates);

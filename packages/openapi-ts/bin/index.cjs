@@ -34,6 +34,10 @@ const params = program
     'DEPRECATED. Manually set base in OpenAPI config instead of inferring from server value',
   )
   .option('-s, --silent', 'Set log level to silent')
+  .option(
+    '-w, --watch [value]',
+    'Regenerate the client when the input file changes?',
+  )
   .option('--exportCore [value]', 'DEPRECATED. Write core files to disk')
   .option('--name <value>', 'DEPRECATED. Custom client class name')
   .option('--request <value>', 'DEPRECATED. Path to custom request file')
@@ -102,8 +106,14 @@ async function start() {
       userConfig.logs.level = 'silent';
     }
 
-    await createClient(userConfig);
-    process.exit(0);
+    if (typeof params.watch === 'string') {
+      userConfig.watch = Number.parseInt(params.watch, 10);
+    }
+
+    const context = await createClient(userConfig);
+    if (!context[0] || !context[0].config.watch) {
+      process.exit(0);
+    }
   } catch (error) {
     process.exit(1);
   }

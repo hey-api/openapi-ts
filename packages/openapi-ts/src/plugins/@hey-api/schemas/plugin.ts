@@ -65,7 +65,7 @@ const schemaToJsonSchemaDraft_05 = ({
 
   if ('$ref' in schema) {
     // refs using unicode characters become encoded, didn't investigate why
-    // but the suspicion is this comes from `@apidevtools/json-schema-ref-parser`
+    // but the suspicion is this comes from `@hey-api/json-schema-ref-parser`
     schema.$ref = decodeURI(schema.$ref);
     return schema;
   }
@@ -163,7 +163,7 @@ const schemaToJsonSchema2020_12 = ({
 
   if (schema.$ref) {
     // refs using unicode characters become encoded, didn't investigate why
-    // but the suspicion is this comes from `@apidevtools/json-schema-ref-parser`
+    // but the suspicion is this comes from `@hey-api/json-schema-ref-parser`
     schema.$ref = decodeURI(schema.$ref);
   }
 

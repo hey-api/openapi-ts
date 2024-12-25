@@ -58,7 +58,7 @@ describe('getServices', () => {
         },
       },
     });
-    const { services } = postProcessClient(parserClient);
+    const { services } = postProcessClient(parserClient, {} as Config);
 
     expect(services).toHaveLength(1);
     expect(services[0]!.name).toEqual('Default');
@@ -91,7 +91,7 @@ describe('getServices', () => {
         },
       },
     });
-    const { services } = postProcessClient(parserClient);
+    const { services } = postProcessClient(parserClient, {} as Config);
 
     expect(services).toHaveLength(1);
     expect(services[0]!.name).toEqual('Default');

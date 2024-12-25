@@ -581,9 +581,9 @@ importers:
 
   packages/openapi-ts:
     dependencies:
-      '@apidevtools/json-schema-ref-parser':
-        specifier: 11.7.3
-        version: 11.7.3
+      '@hey-api/json-schema-ref-parser':
+        specifier: 0.0.2
+        version: 0.0.2
       c12:
         specifier: 2.0.1
         version: 2.0.1
@@ -973,10 +973,6 @@ packages:
 
   '@antfu/utils@0.7.10':
     resolution: {integrity: sha512-+562v9k4aI80m1+VuMHehNJWLOFjBnXn3tdOitzD0il5b7smkSBal4+a3oKiQTbrwMmN/TBUMDvbdoWDehgOww==}
-
-  '@apidevtools/json-schema-ref-parser@11.7.3':
-    resolution: {integrity: sha512-WApSdLdXEBb/1FUPca2lteASewEfpjEYJ8oXZP+0gExK5qSfsEKBKcA+WjY6Q4wvXwyv0+W6Kvc372pSceib9w==}
-    engines: {node: '>= 16'}
 
   '@arethetypeswrong/cli@0.16.4':
     resolution: {integrity: sha512-qMmdVlJon5FtA+ahn0c1oAVNxiq4xW5lqFiTZ21XHIeVwAVIQ+uRz4UEivqRMsjVV1grzRgJSKqaOrq1MvlVyQ==}
@@ -2238,6 +2234,10 @@ packages:
 
   '@fontsource/fira-mono@5.0.0':
     resolution: {integrity: sha512-IsinH/oLYJyv/sQv7SbKmjoAXZsSjm6Q1Tz5GBBXCXi3Jg9MzXmKvWm9bSLC8lFI6CDsi8GkH/DAgZ98t8bhTQ==}
+
+  '@hey-api/json-schema-ref-parser@0.0.2':
+    resolution: {integrity: sha512-cwO2OAvMxyX+U6sPDWQ8+23OOOGvxH1pLODXA9rJCdCbxG9kUe+Uon3YPgQtT7uSkLis/BoWccmtqH5VGCs8gA==}
+    engines: {node: '>= 16'}
 
   '@humanwhocodes/config-array@0.12.3':
     resolution: {integrity: sha512-jsNnTBlMWuTpDkeE3on7+dWJi0D6fdDfeANj/w7MpS8ztROCoLvIO2nG0CcFj+E4k8j4QrSTh4Oryi3i2G669g==}
@@ -6776,9 +6776,6 @@ packages:
   magic-string@0.30.10:
     resolution: {integrity: sha512-iIRwTIf0QKV3UAnYK4PU8uiEc4SRh5jX0mwpIwETPpHdhVM4f53RSwS/vXvN1JhGX+Cs7B8qIq3d6AH49O5fAQ==}
 
-  magic-string@0.30.11:
-    resolution: {integrity: sha512-+Wri9p0QHMy+545hKww7YAu5NyzF8iomPL/RQazugQ9+Ez4Ic3mERMd8ZTX5rfK944j+560ZJi8iAwgak1Ac7A==}
-
   magic-string@0.30.12:
     resolution: {integrity: sha512-Ea8I3sQMVXr8JhN4z+H/d8zwo+tYDgHE9+5G4Wnrwhs0gaK9fXTKx0Tw5Xwsd/bCPTTZNRAdpyzvoeORe9LYpw==}
 
@@ -9877,12 +9874,6 @@ snapshots:
 
   '@antfu/utils@0.7.10': {}
 
-  '@apidevtools/json-schema-ref-parser@11.7.3':
-    dependencies:
-      '@jsdevtools/ono': 7.1.3
-      '@types/json-schema': 7.0.15
-      js-yaml: 4.1.0
-
   '@arethetypeswrong/cli@0.16.4':
     dependencies:
       '@arethetypeswrong/core': 0.16.4
@@ -11321,6 +11312,12 @@ snapshots:
   '@floating-ui/utils@0.2.2': {}
 
   '@fontsource/fira-mono@5.0.0': {}
+
+  '@hey-api/json-schema-ref-parser@0.0.2':
+    dependencies:
+      '@jsdevtools/ono': 7.1.3
+      '@types/json-schema': 7.0.15
+      js-yaml: 4.1.0
 
   '@humanwhocodes/config-array@0.12.3':
     dependencies:
@@ -12994,7 +12991,7 @@ snapshots:
 
   '@types/cors@2.8.17':
     dependencies:
-      '@types/node': 20.14.10
+      '@types/node': 22.8.5
 
   '@types/cross-spawn@6.0.6':
     dependencies:
@@ -14508,7 +14505,7 @@ snapshots:
   code-red@1.0.4:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.0
-      '@types/estree': 1.0.5
+      '@types/estree': 1.0.6
       acorn: 8.14.0
       estree-walker: 3.0.3
       periscopic: 3.1.0
@@ -15286,7 +15283,7 @@ snapshots:
 
   estree-walker@3.0.3:
     dependencies:
-      '@types/estree': 1.0.5
+      '@types/estree': 1.0.6
 
   esutils@2.0.3: {}
 
@@ -15978,7 +15975,7 @@ snapshots:
 
   is-reference@3.0.2:
     dependencies:
-      '@types/estree': 1.0.5
+      '@types/estree': 1.0.6
 
   is-stream@2.0.1: {}
 
@@ -16452,10 +16449,6 @@ snapshots:
   lru-cache@7.18.3: {}
 
   magic-string@0.30.10:
-    dependencies:
-      '@jridgewell/sourcemap-codec': 1.5.0
-
-  magic-string@0.30.11:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.0
 
@@ -17121,7 +17114,7 @@ snapshots:
 
   periscopic@3.1.0:
     dependencies:
-      '@types/estree': 1.0.5
+      '@types/estree': 1.0.6
       estree-walker: 3.0.3
       is-reference: 3.0.2
 
@@ -18284,7 +18277,7 @@ snapshots:
       '@ampproject/remapping': 2.3.0
       '@jridgewell/sourcemap-codec': 1.5.0
       '@jridgewell/trace-mapping': 0.3.25
-      '@types/estree': 1.0.5
+      '@types/estree': 1.0.6
       acorn: 8.14.0
       aria-query: 5.3.0
       axobject-query: 4.1.0
@@ -18293,7 +18286,7 @@ snapshots:
       estree-walker: 3.0.3
       is-reference: 3.0.2
       locate-character: 3.0.0
-      magic-string: 0.30.11
+      magic-string: 0.30.12
       periscopic: 3.1.0
 
   svg-tags@1.0.0: {}

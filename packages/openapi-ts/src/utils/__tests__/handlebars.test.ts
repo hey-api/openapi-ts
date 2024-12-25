@@ -48,6 +48,10 @@ describe('registerHandlebarHelpers', () => {
         },
       },
       useOptions: false,
+      watch: {
+        enabled: false,
+        interval: 1000,
+      },
     });
     registerHandlebarHelpers();
     const helpers = Object.keys(Handlebars.helpers);
@@ -101,6 +105,10 @@ describe('registerHandlebarTemplates', () => {
         },
       },
       useOptions: false,
+      watch: {
+        enabled: false,
+        interval: 1000,
+      },
     });
     const templates = registerHandlebarTemplates();
     expect(templates.core.settings).toBeDefined();

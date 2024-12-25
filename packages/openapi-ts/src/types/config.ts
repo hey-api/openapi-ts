@@ -245,6 +245,28 @@ export interface ClientConfig {
    * @default true
    */
   useOptions?: boolean;
+  /**
+   * Regenerate the client when the input file changes?
+   *
+   * @default false
+   */
+  watch?:
+    | boolean
+    | number
+    | {
+        /**
+         * Regenerate the client when the input file changes?
+         *
+         * @default false
+         */
+        enabled?: boolean;
+        /**
+         * How often should we attempt to detect the input file change?
+         *
+         * @default 1000
+         */
+        interval?: number;
+      };
 }
 
 export interface UserConfig extends ClientConfig {}
@@ -259,6 +281,7 @@ export type Config = Omit<
   | 'output'
   | 'plugins'
   | 'request'
+  | 'watch'
 > &
   Pick<ClientConfig, 'base' | 'name' | 'request'> & {
     client: Extract<Required<ClientConfig>['client'], object>;
@@ -270,4 +293,5 @@ export type Config = Omit<
       ExtractArrayOfObjects<ReadonlyArray<ClientPlugins>, { name: string }>,
       'name'
     >;
+    watch: Extract<ClientConfig['watch'], object>;
   };

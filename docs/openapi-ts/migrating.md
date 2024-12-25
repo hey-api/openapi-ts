@@ -27,6 +27,12 @@ This config option is deprecated and will be removed in favor of [clients](./cli
 
 This config option is deprecated and will be removed.
 
+## v0.61.0
+
+### Added `watch` option
+
+While this is a new feature, supporting it involved replacing the `@apidevtools/json-schema-ref-parser` dependency with our own implementation. Since this was a big change, we're applying caution and marking this as a breaking change.
+
 ## v0.60.0
 
 ### Added `sdk.transformer` option

@@ -1,3 +1,4 @@
+import type { Config } from '../../../types/config';
 import type { OpenApiParameter } from '../../v3/interfaces/OpenApiParameter';
 
 export interface ModelComposition
@@ -150,6 +151,11 @@ export interface Model extends Schema {
 }
 
 export interface Client {
+  /**
+   * Configuration for parsing and generating the output. This
+   * is a mix of user-provided and default values.
+   */
+  config: Config;
   models: Model[];
   operations: Operation[];
   server: string;

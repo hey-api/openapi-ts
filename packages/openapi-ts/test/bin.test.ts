@@ -14,7 +14,7 @@ describe('bin', () => {
       '--dry-run',
       'true',
     ]);
-    expect(result.stdout.toString()).toContain('Creating Fetch client');
+    expect(result.stdout.toString()).toContain('Generating from');
     expect(result.stderr.toString()).toContain('Duplicate operationId');
   });
 
@@ -117,7 +117,7 @@ describe('bin', () => {
       '--dry-run',
       'true',
     ]);
-    expect(result.stdout.toString()).toContain('Creating Fetch client');
+    expect(result.stdout.toString()).toContain('Generating from');
     expect(result.stderr.toString()).toContain('Duplicate operationId');
   });
 

@@ -2,6 +2,7 @@ import fs from 'node:fs';
 
 import { describe, expect, it, vi } from 'vitest';
 
+import type { Config } from '../../types/config';
 import { setConfig } from '../../utils/config';
 import { generateLegacyClientClass } from '../class';
 import { mockTemplates, openApi } from './mocks';
@@ -49,9 +50,14 @@ describe('generateLegacyClientClass', () => {
         },
       },
       useOptions: true,
+      watch: {
+        enabled: false,
+        interval: 1000,
+      },
     });
 
     const client: Parameters<typeof generateLegacyClientClass>[2] = {
+      config: {} as Config,
       models: [],
       server: 'http://localhost:8080',
       services: [],

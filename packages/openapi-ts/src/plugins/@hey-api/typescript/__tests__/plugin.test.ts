@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { openApi } from '../../../../generate/__tests__/mocks';
 import { TypeScriptFile } from '../../../../generate/files';
+import type { Config } from '../../../../types/config';
 import { setConfig } from '../../../../utils/config';
 import { handlerLegacy } from '../plugin-legacy';
 
@@ -50,9 +51,14 @@ describe('generateLegacyTypes', () => {
         },
       },
       useOptions: true,
+      watch: {
+        enabled: false,
+        interval: 1000,
+      },
     });
 
     const client: Parameters<typeof handlerLegacy>[0]['client'] = {
+      config: {} as Config,
       models: [
         {
           $refs: [],
