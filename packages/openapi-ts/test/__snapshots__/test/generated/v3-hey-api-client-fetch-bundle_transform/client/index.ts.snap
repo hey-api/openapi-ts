@@ -93,17 +93,17 @@ export const createClient = (config: Config = {}): Client => {
         };
       }
 
-      if (opts.parseAs === 'stream') {
+      const parseAs =
+        (opts.parseAs === 'auto'
+          ? getParseAs(response.headers.get('Content-Type'))
+          : opts.parseAs) ?? 'json';
+
+      if (parseAs === 'stream') {
         return {
           data: response.body,
           ...result,
         };
       }
-
-      const parseAs =
-        (opts.parseAs === 'auto'
-          ? getParseAs(response.headers.get('Content-Type'))
-          : opts.parseAs) ?? 'json';
 
       let data = await response[parseAs]();
       if (parseAs === 'json') {
