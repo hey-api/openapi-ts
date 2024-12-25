@@ -33,6 +33,10 @@ describe('operationNameFn', () => {
       },
     },
     useOptions: false,
+    watch: {
+      enabled: false,
+      interval: 1000,
+    },
   };
 
   const options1: Parameters<typeof setConfig>[0] = {

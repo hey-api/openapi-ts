@@ -645,7 +645,7 @@ const parseRef = ({
   const irSchema: IR.SchemaObject = {};
 
   // refs using unicode characters become encoded, didn't investigate why
-  // but the suspicion is this comes from `@apidevtools/json-schema-ref-parser`
+  // but the suspicion is this comes from `@hey-api/json-schema-ref-parser`
   irSchema.$ref = decodeURI(schema.$ref);
 
   return irSchema;
