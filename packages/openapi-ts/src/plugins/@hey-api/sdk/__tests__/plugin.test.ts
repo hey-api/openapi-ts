@@ -6,6 +6,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { openApi } from '../../../../generate/__tests__/mocks';
 import { TypeScriptFile } from '../../../../generate/files';
 import type { Operation } from '../../../../types/client';
+import type { Config } from '../../../../types/config';
 import type { Files } from '../../../../types/utils';
 import { setConfig } from '../../../../utils/config';
 import { handlerLegacy } from '../plugin-legacy';
@@ -52,9 +53,14 @@ describe('handlerLegacy', () => {
         },
       },
       useOptions: false,
+      watch: {
+        enabled: false,
+        interval: 1000,
+      },
     });
 
     const client: Parameters<typeof handlerLegacy>[0]['client'] = {
+      config: {} as Config,
       models: [],
       server: 'http://localhost:8080',
       services: [
@@ -143,6 +149,7 @@ describe('methodNameBuilder', () => {
   };
 
   const client: Parameters<typeof handlerLegacy>[0]['client'] = {
+    config: {} as Config,
     models: [],
     server: 'http://localhost:8080',
     services: [
@@ -196,6 +203,10 @@ describe('methodNameBuilder', () => {
         },
       },
       useOptions: false,
+      watch: {
+        enabled: false,
+        interval: 1000,
+      },
     });
 
     const files: Files = {};
@@ -265,6 +276,10 @@ describe('methodNameBuilder', () => {
         },
       },
       useOptions: false,
+      watch: {
+        enabled: false,
+        interval: 1000,
+      },
     });
 
     const files: Files = {};
@@ -336,6 +351,10 @@ describe('methodNameBuilder', () => {
         },
       },
       useOptions: false,
+      watch: {
+        enabled: false,
+        interval: 1000,
+      },
     });
 
     const files: Files = {};

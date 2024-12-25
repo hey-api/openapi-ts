@@ -1,7 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import $RefParser from '@apidevtools/json-schema-ref-parser';
+import {
+  $RefParser,
+  getResolvedInput,
+  type JSONSchema,
+  sendRequest,
+} from '@hey-api/json-schema-ref-parser';
 import { loadConfig } from 'c12';
 import { sync } from 'cross-spawn';
 
@@ -95,23 +100,6 @@ const processOutput = ({ config }: { config: Config }) => {
     const module = linters[config.output.lint];
     console.log(`✨ Running ${module.name}`);
     sync(module.command, module.args(config.output.path));
-  }
-};
-
-const logClientMessage = ({ config }: { config: Config }) => {
-  switch (config.client.name) {
-    case 'legacy/angular':
-      return console.log('✨ Creating Angular client');
-    case '@hey-api/client-axios':
-    case 'legacy/axios':
-      return console.log('✨ Creating Axios client');
-    case '@hey-api/client-fetch':
-    case 'legacy/fetch':
-      return console.log('✨ Creating Fetch client');
-    case 'legacy/node':
-      return console.log('✨ Creating Node.js client');
-    case 'legacy/xhr':
-      return console.log('✨ Creating XHR client');
   }
 };
 
@@ -311,17 +299,163 @@ const getPlugins = (
   });
 };
 
-const getSpec = async ({ config }: { config: Config }) => {
-  let spec: unknown = config.input.path;
+const getSpec = async ({
+  inputPath,
+  watch,
+}: {
+  inputPath: Config['input']['path'];
+  watch: {
+    headers: Headers;
+    lastValue: string | undefined;
+  };
+}): Promise<
+  | {
+      data: JSONSchema;
+      error?: undefined;
+      response?: undefined;
+    }
+  | {
+      data?: undefined;
+      error: 'not-modified' | 'not-ok';
+      response: Response;
+    }
+> => {
+  const refParser = new $RefParser();
+  const resolvedInput = getResolvedInput({ pathOrUrlOrSchema: inputPath });
 
-  if (typeof config.input.path === 'string') {
-    const absolutePathOrUrl = fs.existsSync(config.input.path)
-      ? path.resolve(config.input.path)
-      : config.input.path;
-    spec = await $RefParser.bundle(absolutePathOrUrl);
+  let arrayBuffer: ArrayBuffer | undefined;
+  // boolean signals whether the file has **definitely** changed
+  let hasChanged: boolean | undefined;
+  let response: Response | undefined;
+
+  // no support for watching files and objects for now
+  if (resolvedInput.type === 'url') {
+    const request = await sendRequest({
+      init: {
+        headers: watch.headers,
+        method: 'HEAD',
+      },
+      url: resolvedInput.path,
+    });
+    response = request.response;
+
+    if (!response.ok) {
+      // assume the server is no longer running
+      // do nothing, it might be restarted later
+      return {
+        error: 'not-ok',
+        response,
+      };
+    }
+
+    if (response.status === 304) {
+      return {
+        error: 'not-modified',
+        response,
+      };
+    }
+
+    if (hasChanged === undefined) {
+      const eTag = response.headers.get('ETag');
+      if (eTag) {
+        hasChanged = eTag !== watch.headers.get('If-None-Match');
+
+        if (hasChanged) {
+          watch.headers.set('If-None-Match', eTag);
+        }
+      }
+    }
+
+    if (hasChanged === undefined) {
+      const lastModified = response.headers.get('Last-Modified');
+      if (lastModified) {
+        hasChanged = lastModified !== watch.headers.get('If-Modified-Since');
+
+        if (hasChanged) {
+          watch.headers.set('If-Modified-Since', lastModified);
+        }
+      }
+    }
+
+    // we definitely know the input has not changed
+    if (hasChanged === false) {
+      return {
+        error: 'not-modified',
+        response,
+      };
+    }
+
+    const fileRequest = await sendRequest({
+      init: {
+        method: 'GET',
+      },
+      url: resolvedInput.path,
+    });
+    response = fileRequest.response;
+
+    if (!response.ok) {
+      // assume the server is no longer running
+      // do nothing, it might be restarted later
+      return {
+        error: 'not-ok',
+        response,
+      };
+    }
+
+    arrayBuffer = response.body
+      ? await response.arrayBuffer()
+      : new ArrayBuffer(0);
+
+    if (hasChanged === undefined) {
+      const content = new TextDecoder().decode(arrayBuffer);
+      hasChanged = content !== watch.lastValue;
+      watch.lastValue = content;
+    }
   }
 
-  return spec;
+  if (hasChanged === false) {
+    return {
+      error: 'not-modified',
+      response: response!,
+    };
+  }
+
+  const data = await refParser.bundle({
+    arrayBuffer,
+    pathOrUrlOrSchema: undefined,
+    resolvedInput,
+  });
+
+  return {
+    data,
+  };
+};
+
+const getWatch = (
+  userConfig: Pick<ClientConfig, 'watch'> & Pick<Config, 'input'>,
+): Config['watch'] => {
+  let watch: Config['watch'] = {
+    enabled: false,
+    interval: 1000,
+  };
+  // we cannot watch spec passed as an object
+  if (typeof userConfig.input.path !== 'string') {
+    return watch;
+  }
+  if (typeof userConfig.watch === 'boolean') {
+    watch.enabled = userConfig.watch;
+  } else if (typeof userConfig.watch === 'number') {
+    watch = {
+      enabled: true,
+      interval: userConfig.watch,
+    };
+  } else if (userConfig.watch) {
+    watch = {
+      ...watch,
+      ...userConfig.watch,
+    };
+  }
+  return watch;
 };
 
 const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
@@ -406,6 +540,7 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
       output,
       request,
       useOptions,
+      watch: getWatch({ ...userConfig, input }),
     });
 
     if (logs.level === 'debug') {
@@ -424,7 +559,7 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
  */
 export async function createClient(
   userConfig: UserConfig,
-): Promise<ReadonlyArray<Client>> {
+): Promise<ReadonlyArray<Client | IR.Context>> {
   let configs: Config[] = [];
 
   try {
@@ -438,64 +573,99 @@ export async function createClient(
     const templates = registerHandlebarTemplates();
     Performance.end('handlebars');
 
-    const pCreateClient = (config: Config) => async () => {
+    const pCreateClient = async ({
+      config,
+      watch: _watch,
+    }: {
+      config: Config;
+      watch?: {
+        headers: Headers;
+        lastValue: string | undefined;
+      };
+    }) => {
+      const inputPath = config.input.path;
+
+      const watch = _watch || {
+        headers: new Headers(),
+        lastValue: undefined,
+      };
+
       Performance.start('spec');
-      const spec = await getSpec({ config });
+      const { data, error, response } = await getSpec({ inputPath, watch });
       Performance.end('spec');
+
+      // throw on first run if there's an error to preserve user experience
+      // if in watch mode, subsequent errors won't throw to gracefully handle
+      // cases where server might be reloading
+      if (error && !_watch) {
+        throw new Error(
+          `Request failed with status ${response.status}: ${response.statusText}`,
+        );
+      }
 
       let client: Client | undefined;
       let context: IR.Context | undefined;
 
-      Performance.start('parser');
-      if (
-        config.experimentalParser &&
-        !isLegacyClient(config) &&
-        !legacyNameFromConfig(config)
-      ) {
-        context = parseExperimental({ config, spec });
+      if (data) {
+        if (_watch) {
+          console.log(`⏳ Input changed, generating from ${inputPath}`);
+        } else {
+          console.log(`⏳ Generating from ${inputPath}`);
+        }
+
+        Performance.start('parser');
+        if (
+          config.experimentalParser &&
+          !isLegacyClient(config) &&
+          !legacyNameFromConfig(config)
+        ) {
+          context = parseExperimental({ config, spec: data });
+        }
+
+        // fallback to legacy parser
+        if (!context) {
+          const parsed = parseLegacy({ openApi: data });
+          client = postProcessClient(parsed, config);
+        }
+        Performance.end('parser');
+
+        Performance.start('generator');
+        if (context) {
+          await generateOutput({ context });
+        } else if (client) {
+          await generateLegacyOutput({ client, openApi: data, templates });
+        }
+        Performance.end('generator');
+
+        Performance.start('postprocess');
+        if (!config.dryRun) {
+          processOutput({ config });
+
+          console.log(`🚀 Done! Your output is in ${config.output.path}`);
+        }
+        Performance.end('postprocess');
       }
 
-      // fallback to legacy parser
-      if (!context) {
-        const parsed = parseLegacy({ openApi: spec });
-        client = postProcessClient(parsed);
+      if (config.watch.enabled && typeof inputPath === 'string') {
+        setTimeout(() => {
+          pCreateClient({ config, watch });
+        }, config.watch.interval);
       }
-      Performance.end('parser');
-
-      logClientMessage({ config });
-
-      Performance.start('generator');
-      if (context) {
-        await generateOutput({ context });
-      } else if (client) {
-        await generateLegacyOutput({ client, openApi: spec, templates });
-      }
-      Performance.end('generator');
-
-      Performance.start('postprocess');
-      if (!config.dryRun) {
-        processOutput({ config });
-
-        console.log('✨ Done! Your client is located in:', config.output.path);
-      }
-      Performance.end('postprocess');
 
       return context || client;
     };
 
-    const clients: Array<Client> = [];
-
-    const pClients = configs.map((config) => pCreateClient(config));
-    for (const pClient of pClients) {
-      const client = await pClient();
-      if (client && 'version' in client) {
-        clients.push(client);
-      }
-    }
+    const clients = await Promise.all(
+      configs.map((config) => pCreateClient({ config })),
+    );
+    const result = clients.filter((client) => Boolean(client)) as ReadonlyArray<
+      Client | IR.Context
+    >;
 
     Performance.end('createClient');
 
-    if (configs[0]!.logs.level === 'debug') {
+    const config = configs[0];
+    if (config && config.logs.level === 'debug') {
       const perfReport = new PerformanceReport({
         totalMark: 'createClient',
       });
@@ -511,7 +681,7 @@ export async function createClient(
       });
     }
 
-    return clients;
+    return result;
   } catch (error) {
     const config = configs[0] as Config | undefined;
     const dryRun = config ? config.dryRun : userConfig?.dryRun;

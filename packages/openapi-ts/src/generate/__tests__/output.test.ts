@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import { describe, expect, it, vi } from 'vitest';
 
 import type { Client } from '../../types/client';
+import type { Config } from '../../types/config';
 import { setConfig } from '../../utils/config';
 import { generateLegacyOutput } from '../output';
 import { mockTemplates, openApi } from './mocks';
@@ -50,9 +51,14 @@ describe('generateLegacyOutput', () => {
         },
       },
       useOptions: false,
+      watch: {
+        enabled: false,
+        interval: 1000,
+      },
     });
 
     const client: Client = {
+      config: {} as Config,
       models: [],
       server: 'http://localhost:8080',
       services: [],

@@ -43,10 +43,10 @@ Alternatively, you can use `openapi-ts.config.js` and configure the export state
 
 ## Input
 
-Input is the first thing you must define. It can be a local path, remote URL, or a string content resolving to an OpenAPI specification. Hey API supports all valid OpenAPI versions and file formats.
+Input is the first thing you must define. It can be a path, URL, or a string content resolving to an OpenAPI specification. Hey API supports all valid OpenAPI versions and file formats.
 
 ::: info
-We use [`@apidevtools/json-schema-ref-parser`](https://github.com/APIDevTools/json-schema-ref-parser) to resolve file locations. Please note that accessing a HTTPS URL on localhost has a known [workaround](https://github.com/hey-api/openapi-ts/issues/276).
+We use [`@hey-api/json-schema-ref-parser`](https://github.com/hey-api/json-schema-ref-parser) to resolve file locations. Please note that accessing a HTTPS URL on localhost has a known [workaround](https://github.com/hey-api/openapi-ts/issues/276).
 :::
 
 ## Output
@@ -56,6 +56,68 @@ Output is the next thing to define. It can be either a string pointing to the de
 ::: tip
 You should treat the output folder as a dependency. Do not directly modify its contents as your changes might be erased when you run `@hey-api/openapi-ts` again.
 :::
+
+## Clients
+
+Clients are responsible for sending the actual HTTP requests. The `client` value is not required, but you must define it if you're generating SDKs (enabled by default).
+
+You can learn more on the [Clients](/openapi-ts/clients) page.
+
+<!--
+TODO: uncomment after c12 supports multiple configs
+see https://github.com/unjs/c12/issues/92
+-->
+<!-- ### Multiple Clients
+
+If you want to generate multiple clients with a single `openapi-ts` command, you can provide an array of configuration objects.
+
+```js
+import { defineConfig } from '@hey-api/openapi-ts';
+
+export default defineConfig([
+  {
+    client: 'legacy/fetch',
+    input: 'path/to/openapi_one.json',
+    output: 'src/client_one',
+  },
+  {
+    client: 'legacy/axios',
+    input: 'path/to/openapi_two.json',
+    output: 'src/client_two',
+  },
+])
+``` -->
+
+## Plugins
+
+Plugins are responsible for generating artifacts from your input. By default, Hey API will generate TypeScript interfaces and SDK from your OpenAPI specification. You can add, remove, or customize any of the plugins. In fact, we highly encourage you to do so!
+
+You can learn more on the [Output](/openapi-ts/output) page.
+
+## Parser
+
+If you're using OpenAPI 3.0 or newer, we encourage you to try out the experimental parser. In the future this will become the default parser, but until it's been tested it's an opt-in feature. To try it out, set the `experimentalParser` flag in your configuration to `true`.
+
+::: code-group
+
+```js [config]
+export default {
+  client: '@hey-api/client-fetch',
+  experimentalParser: true, // [!code ++]
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+};
+```
+
+```sh [cli]
+npx @hey-api/openapi-ts -i path/to/openapi.json -o src/client -c @hey-api/client-fetch -e
+```
+
+:::
+
+The experimental parser produces a cleaner output while being faster than the legacy parser. It also supports features such as [Filters](#filters) and more are being added.
+
+The legacy parser will be used with the [legacy clients](/openapi-ts/clients/legacy) regardless of the `experimentalParser` flag value. However, it's unlikely to receive any further updates.
 
 ## Formatting
 
@@ -154,68 +216,6 @@ export default {
 
 You can also prevent your output from being linted by adding your output path to the linter's ignore file.
 
-## Clients
-
-Clients are responsible for sending the actual HTTP requests. The `client` value is not required, but you must define it if you're generating SDKs (enabled by default).
-
-You can learn more on the [Clients](/openapi-ts/clients) page.
-
-<!--
-TODO: uncomment after c12 supports multiple configs
-see https://github.com/unjs/c12/issues/92
--->
-<!-- ### Multiple Clients
-
-If you want to generate multiple clients with a single `openapi-ts` command, you can provide an array of configuration objects.
-
-```js
-import { defineConfig } from '@hey-api/openapi-ts';
-
-export default defineConfig([
-  {
-    client: 'legacy/fetch',
-    input: 'path/to/openapi_one.json',
-    output: 'src/client_one',
-  },
-  {
-    client: 'legacy/axios',
-    input: 'path/to/openapi_two.json',
-    output: 'src/client_two',
-  },
-])
-``` -->
-
-## Plugins
-
-Plugins are responsible for generating artifacts from your input. By default, Hey API will generate TypeScript interfaces and SDK from your OpenAPI specification. You can add, remove, or customize any of the plugins. In fact, we highly encourage you to do so!
-
-You can learn more on the [Output](/openapi-ts/output) page.
-
-## Parser
-
-If you're using OpenAPI 3.0 or newer, we encourage you to try out the experimental parser. In the future this will become the default parser, but until it's been tested it's an opt-in feature. To try it out, set the `experimentalParser` flag in your configuration to `true`.
-
-::: code-group
-
-```js [config]
-export default {
-  client: '@hey-api/client-fetch',
-  experimentalParser: true, // [!code ++]
-  input: 'path/to/openapi.json',
-  output: 'src/client',
-};
-```
-
-```sh [cli]
-npx @hey-api/openapi-ts -i path/to/openapi.json -o src/client -c @hey-api/client-fetch -e
-```
-
-:::
-
-The experimental parser produces a cleaner output while being faster than the legacy parser. It also supports features such as [Filters](#filters) and more are being added.
-
-The legacy parser will be used with the [legacy clients](/openapi-ts/clients/legacy) regardless of the `experimentalParser` flag value. However, it's unlikely to receive any further updates.
-
 ## Filters
 
 ::: warning
@@ -250,6 +250,31 @@ export default {
   },
   output: 'src/client',
 };
+```
+
+:::
+
+## Watch Mode
+
+::: warning
+Watch mode currently supports only remote files via URL.
+:::
+
+If your schema changes frequently, you may want to automatically regenerate the output during development. To watch your input file for changes, enable `watch` mode in your configuration or pass the `--watch` flag to the CLI.
+
+::: code-group
+
+```js [config]
+export default {
+  client: '@hey-api/client-fetch',
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  watch: true, // [!code ++]
+};
+```
+
+```sh [cli]
+npx @hey-api/openapi-ts -i path/to/openapi.json -o src/client -c @hey-api/client-fetch -w
 ```
 
 :::
