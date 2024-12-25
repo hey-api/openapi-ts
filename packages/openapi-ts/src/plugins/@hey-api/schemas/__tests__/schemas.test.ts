@@ -51,6 +51,10 @@ describe('generateLegacySchemas', () => {
         },
       },
       useOptions: true,
+      watch: {
+        enabled: false,
+        interval: 1000,
+      },
     });
 
     if ('openapi' in openApi) {
@@ -127,6 +131,10 @@ describe('generateLegacySchemas', () => {
         },
       },
       useOptions: true,
+      watch: {
+        enabled: false,
+        interval: 1000,
+      },
     });
 
     const schema: OpenApiV3Schema = {

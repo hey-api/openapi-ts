@@ -1,6 +1,7 @@
 import type { Client as ParserClient, Model } from '../openApi';
 import { sanitizeNamespaceIdentifier } from '../openApi';
 import type { Client, Operation, Service } from '../types/client';
+import type { Config } from '../types/config';
 import { getConfig, legacyNameFromConfig } from './config';
 import { sort } from './sort';
 import { stringCase } from './stringCase';
@@ -10,9 +11,13 @@ import { unique } from './unique';
  * Post process client
  * @param client Client object with all the models, services, etc.
  */
-export function postProcessClient(client: ParserClient): Client {
+export function postProcessClient(
+  client: Omit<ParserClient, 'config'>,
+  config: Config,
+): Client {
   return {
     ...client,
+    config,
     models: client.models.map((model) => postProcessModel(model)),
     services: postProcessOperations(client.operations).map(postProcessService),
     types: {},

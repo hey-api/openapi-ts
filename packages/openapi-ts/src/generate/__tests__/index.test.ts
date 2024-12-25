@@ -49,6 +49,10 @@ describe('generateIndexFile', () => {
         },
       },
       useOptions: true,
+      watch: {
+        enabled: false,
+        interval: 1000,
+      },
     });
 
     const files: Parameters<typeof generateIndexFile>[0]['files'] = {
