@@ -439,7 +439,7 @@ const generateClassSdk = ({
       }),
       types: [
         {
-          default: false,
+          default: plugin.throwOnError,
           extends: 'boolean',
           name: 'ThrowOnError',
         },
@@ -523,7 +523,7 @@ const generateFlatSdk = ({
         }),
         types: [
           {
-            default: false,
+            default: plugin.throwOnError,
             extends: 'boolean',
             name: 'ThrowOnError',
           },
@@ -585,6 +585,18 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
       parameters: [
         compiler.callExpression({
           functionName: 'createConfig',
+          parameters: [
+            plugin.throwOnError
+              ? compiler.objectExpression({
+                  obj: [
+                    {
+                      key: 'throwOnError',
+                      value: plugin.throwOnError,
+                    },
+                  ],
+                })
+              : undefined,
+          ],
         }),
       ],
     }),

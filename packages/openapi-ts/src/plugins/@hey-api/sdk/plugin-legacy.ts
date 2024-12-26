@@ -20,7 +20,7 @@ import type {
   OperationParameter,
   Service,
 } from '../../../types/client';
-import type { Config } from '../../../types/config';
+import type { Config as ClientConfig } from '../../../types/config';
 import {
   getConfig,
   isLegacyClient,
@@ -33,6 +33,7 @@ import { transformServiceName } from '../../../utils/transform';
 import { setUniqueTypeName } from '../../../utils/type';
 import { unique } from '../../../utils/unique';
 import type { Plugin } from '../../types';
+import type { Config } from './types';
 
 type OnNode = (node: Node) => void;
 type OnImport = (name: string) => void;
@@ -270,12 +271,17 @@ const toOperationComment = (operation: Operation): Comments => {
   return comment;
 };
 
-const toRequestOptions = (
-  client: Client,
-  operation: Operation,
-  onImport: OnImport,
-  onClientImport: OnImport | undefined,
-) => {
+const toRequestOptions = ({
+  client,
+  onClientImport,
+  onImport,
+  operation,
+}: {
+  client: Client;
+  onClientImport: OnImport | undefined;
+  onImport: OnImport;
+  operation: Operation;
+}) => {
   const config = getConfig();
 
   const name = operationResponseTypeName(operation.name);
@@ -488,7 +494,7 @@ export const serviceFunctionIdentifier = ({
   id,
   operation,
 }: {
-  config: Config;
+  config: ClientConfig;
   handleIllegal?: boolean;
   id: string;
   operation: IR.OperationObject | Operation;
@@ -504,15 +510,25 @@ export const serviceFunctionIdentifier = ({
   return id;
 };
 
-const toOperationStatements = (
-  client: Client,
-  operation: Operation,
-  onImport: OnImport,
-  onClientImport?: OnImport,
-) => {
+const toOperationStatements = ({
+  client,
+  onClientImport,
+  onImport,
+  operation,
+}: {
+  client: Client;
+  onClientImport?: OnImport;
+  onImport: OnImport;
+  operation: Operation;
+}) => {
   const config = getConfig();
 
-  const options = toRequestOptions(client, operation, onImport, onClientImport);
+  const options = toRequestOptions({
+    client,
+    onClientImport,
+    onImport,
+    operation,
+  });
 
   if (!isLegacyClient(config)) {
     const errorType = setUniqueTypeName({
@@ -587,12 +603,14 @@ const processService = ({
   onClientImport,
   onImport,
   onNode,
+  plugin,
   service,
 }: {
   client: Client;
   onClientImport: OnImport;
   onImport: OnImport;
   onNode: OnNode;
+  plugin: Plugin.Instance<Config>;
   service: Service;
 }) => {
   const config = getConfig();
@@ -647,7 +665,7 @@ const processService = ({
   }
 
   const throwOnErrorTypeGeneric: FunctionTypeParameter = {
-    default: false,
+    default: plugin.throwOnError,
     extends: 'boolean',
     name: 'ThrowOnError',
   };
@@ -662,12 +680,12 @@ const processService = ({
         returnType: !isLegacy
           ? undefined
           : toOperationReturnType(client, operation),
-        statements: toOperationStatements(
+        statements: toOperationStatements({
           client,
-          operation,
-          onImport,
           onClientImport,
-        ),
+          onImport,
+          operation,
+        }),
         types: !isLegacy ? [throwOnErrorTypeGeneric] : undefined,
       };
       const expression =
@@ -706,12 +724,12 @@ const processService = ({
       returnType: !isLegacy
         ? undefined
         : toOperationReturnType(client, operation),
-      statements: toOperationStatements(
+      statements: toOperationStatements({
         client,
-        operation,
-        onImport,
         onClientImport,
-      ),
+        onImport,
+        operation,
+      }),
       types: !isLegacy ? [throwOnErrorTypeGeneric] : undefined,
     });
     return node;
@@ -768,7 +786,11 @@ const processService = ({
   onNode(statement);
 };
 
-export const handlerLegacy: Plugin.LegacyHandler<any> = ({ client, files }) => {
+export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
+  client,
+  files,
+  plugin,
+}) => {
   const config = getConfig();
 
   if (!config.client.name) {
@@ -863,6 +885,18 @@ export const handlerLegacy: Plugin.LegacyHandler<any> = ({ client, files }) => {
         parameters: [
           compiler.callExpression({
             functionName: 'createConfig',
+            parameters: [
+              plugin.throwOnError
+                ? compiler.objectExpression({
+                    obj: [
+                      {
+                        key: 'throwOnError',
+                        value: plugin.throwOnError,
+                      },
+                    ],
+                  })
+                : undefined,
+            ],
           }),
         ],
       }),
@@ -891,6 +925,7 @@ export const handlerLegacy: Plugin.LegacyHandler<any> = ({ client, files }) => {
       onNode: (node) => {
         files.sdk!.add(node);
       },
+      plugin,
       service,
     });
   }

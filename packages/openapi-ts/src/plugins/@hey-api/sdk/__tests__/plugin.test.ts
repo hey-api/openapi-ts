@@ -110,6 +110,7 @@ describe('handlerLegacy', () => {
       openApi,
       plugin: {
         exportFromIndex: false,
+        name: '@hey-api/sdk',
         output: '',
       },
     });
@@ -222,6 +223,7 @@ describe('methodNameBuilder', () => {
       openApi,
       plugin: {
         exportFromIndex: false,
+        name: '@hey-api/sdk',
         output: '',
       },
     });
@@ -295,6 +297,7 @@ describe('methodNameBuilder', () => {
       openApi,
       plugin: {
         exportFromIndex: false,
+        name: '@hey-api/sdk',
         output: '',
       },
     });
@@ -370,6 +373,7 @@ describe('methodNameBuilder', () => {
       openApi,
       plugin: {
         exportFromIndex: false,
+        name: '@hey-api/sdk',
         output: '',
       },
     });
