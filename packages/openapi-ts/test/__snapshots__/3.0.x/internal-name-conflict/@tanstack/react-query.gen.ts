@@ -3,7 +3,7 @@
 import type { Options } from '@hey-api/client-fetch';
 import { queryOptions, type UseMutationOptions, type DefaultError } from '@tanstack/react-query';
 import type { CreateData } from '../types.gen';
-import { client, create } from '../sdk.gen';
+import { create, client } from '../sdk.gen';
 
 type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
