@@ -16,6 +16,7 @@ export const compiler = {
   anonymousFunction: types.createAnonymousFunction,
   arrayLiteralExpression: types.createArrayLiteralExpression,
   arrowFunction: types.createArrowFunction,
+  asExpression: types.createAsExpression,
   assignment: types.createAssignment,
   awaitExpression: types.createAwaitExpression,
   binaryExpression: transform.createBinaryExpression,

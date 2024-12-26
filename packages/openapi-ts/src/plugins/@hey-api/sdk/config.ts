@@ -36,6 +36,7 @@ export const defaultConfig: Plugin.Config<Config> = {
   output: 'sdk',
   response: 'body',
   serviceNameBuilder: '{{name}}Service',
+  throwOnError: false,
 };
 
 /**

@@ -442,7 +442,7 @@ export const createFunctionTypeNode = ({
 
 export type ObjectValue =
   | {
-      assertion?: 'any';
+      assertion?: 'any' | ts.TypeNode;
       comments?: Comments;
       spread: string;
     }
@@ -511,10 +511,13 @@ export const createObjectType = <
               : createIdentifier({ text: value.spread });
             assignment = ts.factory.createSpreadAssignment(
               value.assertion
-                ? ts.factory.createAsExpression(
-                    nameIdentifier,
-                    createKeywordTypeNode({ keyword: value.assertion }),
-                  )
+                ? createAsExpression({
+                    expression: nameIdentifier,
+                    type:
+                      typeof value.assertion === 'string'
+                        ? createKeywordTypeNode({ keyword: value.assertion })
+                        : value.assertion,
+                  })
                 : nameIdentifier,
             );
           } else if (value.shorthand || (shorthand && canShorthand)) {
@@ -902,3 +905,11 @@ export const createRegularExpressionLiteral = ({
   flags?: ReadonlyArray<'g' | 'i' | 'm' | 's' | 'u' | 'y'>;
   text: string;
 }) => ts.factory.createRegularExpressionLiteral(`/${text}/${flags.join('')}`);
+
+export const createAsExpression = ({
+  expression,
+  type,
+}: {
+  expression: ts.Expression;
+  type: ts.TypeNode;
+}) => ts.factory.createAsExpression(expression, type);

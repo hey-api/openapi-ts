@@ -78,6 +78,12 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
    */
   serviceNameBuilder?: string;
   /**
+   * Throw an error instead of returning it in the response?
+   *
+   * @default false
+   */
+  throwOnError?: boolean;
+  /**
    * Transform response data before returning. This is useful if you want to
    * convert for example ISO strings into Date objects. However, transformation
    * adds runtime overhead, so it's not recommended to use unless necessary.
