@@ -1,6 +1,6 @@
 import ts from 'typescript';
 
-import { createTypeReferenceNode } from './types';
+import { createAsExpression, createTypeReferenceNode } from './types';
 import {
   addLeadingComments,
   type Comments,
@@ -126,14 +126,13 @@ export const createConstVariable = ({
   typeName?: string | ts.IndexedAccessTypeNode | ts.TypeNode;
 }): ts.VariableStatement => {
   const initializer = assertion
-    ? ts.factory.createAsExpression(
+    ? createAsExpression({
         expression,
-        typeof assertion === 'string'
-          ? createTypeReferenceNode({
-              typeName: assertion,
-            })
-          : assertion,
-      )
+        type:
+          typeof assertion === 'string'
+            ? createTypeReferenceNode({ typeName: assertion })
+            : assertion,
+      })
     : expression;
   const nameIdentifier = createIdentifier({ text: name });
   const declaration = ts.factory.createVariableDeclaration(

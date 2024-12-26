@@ -205,6 +205,18 @@ for (const version of versions) {
       },
       {
         config: createConfig({
+          output: 'throwOnError',
+          plugins: [
+            {
+              name: '@hey-api/sdk',
+              throwOnError: true,
+            },
+          ],
+        }),
+        description: 'generate SDK that throws on error',
+      },
+      {
+        config: createConfig({
           output: 'default',
           plugins: ['fastify'],
         }),
