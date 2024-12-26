@@ -7,13 +7,13 @@ export default defineConfig({
     name: '@hey-api/client-fetch',
     // name: 'legacy/xhr',
   },
-  // experimentalParser: true,
+  experimentalParser: true,
   input: {
     // exclude: '^#/components/schemas/ModelWithCircularReference$',
     // include:
     //   '^(#/components/schemas/import|#/paths/api/v{api-version}/simple/options)$',
-    // path: './test/spec/3.0.x/validators.json',
-    path: './test/spec/v3-transforms.json',
+    path: './packages/openapi-ts/test/spec/3.0.x/full.json',
+    // path: './test/spec/v3-transforms.json',
     // path: 'https://mongodb-mms-prod-build-server.s3.amazonaws.com/openapi/2caffd88277a4e27c95dcefc7e3b6a63a3b03297-v2-2023-11-15.json',
     // path: 'https://raw.githubusercontent.com/swagger-api/swagger-petstore/master/src/main/resources/openapi.yaml',
   },
@@ -42,6 +42,7 @@ export default defineConfig({
       name: '@hey-api/sdk',
       // operationId: false,
       // serviceNameBuilder: '^Parameters',
+      throwOnError: true,
       // transformer: '@hey-api/transformers',
       transformer: true,
       // validator: 'zod',
@@ -75,8 +76,8 @@ export default defineConfig({
     },
   ],
   // useOptions: false,
-  watch: {
-    enabled: true,
-    interval: 1_000,
-  },
+  // watch: {
+  //   enabled: true,
+  //   interval: 1_000,
+  // },
 });
