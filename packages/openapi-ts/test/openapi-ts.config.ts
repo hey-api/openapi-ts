@@ -68,7 +68,7 @@ export default defineConfig({
     },
     // @ts-ignore
     {
-      // name: '@tanstack/vue-query',
+      name: '@tanstack/react-query',
     },
     // @ts-ignore
     {
