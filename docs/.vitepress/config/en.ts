@@ -72,6 +72,14 @@ export default defineConfig({
                 text: 'Axios',
               },
               {
+                link: '/openapi-ts/clients/next-js',
+                text: 'Next.js <span data-soon>soon</span>',
+              },
+              {
+                link: '/openapi-ts/clients/nuxt',
+                text: 'Nuxt <span data-soon>soon</span>',
+              },
+              {
                 link: '/openapi-ts/clients/legacy',
                 text: 'Legacy',
               },
@@ -88,31 +96,31 @@ export default defineConfig({
               },
               {
                 link: '/openapi-ts/plugins/ajv',
-                text: 'Ajv <span data-soon>soon</soon>',
+                text: 'Ajv <span data-soon>soon</span>',
               },
               {
                 link: '/openapi-ts/plugins/arktype',
-                text: 'Arktype <span data-soon>soon</soon>',
+                text: 'Arktype <span data-soon>soon</span>',
               },
               {
                 link: '/openapi-ts/plugins/joi',
-                text: 'Joi <span data-soon>soon</soon>',
+                text: 'Joi <span data-soon>soon</span>',
               },
               {
                 link: '/openapi-ts/plugins/superstruct',
-                text: 'Superstruct <span data-soon>soon</soon>',
+                text: 'Superstruct <span data-soon>soon</span>',
               },
               {
                 link: '/openapi-ts/plugins/typebox',
-                text: 'TypeBox <span data-soon>soon</soon>',
+                text: 'TypeBox <span data-soon>soon</span>',
               },
               {
                 link: '/openapi-ts/plugins/valibot',
-                text: 'Valibot <span data-soon>soon</soon>',
+                text: 'Valibot <span data-soon>soon</span>',
               },
               {
                 link: '/openapi-ts/plugins/yup',
-                text: 'Yup <span data-soon>soon</soon>',
+                text: 'Yup <span data-soon>soon</span>',
               },
             ],
             link: '/openapi-ts/validators',
@@ -131,15 +139,15 @@ export default defineConfig({
               },
               {
                 link: '/openapi-ts/plugins/pinia-colada',
-                text: 'Pinia Colada <span data-soon>soon</soon>',
+                text: 'Pinia Colada <span data-soon>soon</span>',
               },
               {
                 link: '/openapi-ts/plugins/swr',
-                text: 'SWR <span data-soon>soon</soon>',
+                text: 'SWR <span data-soon>soon</span>',
               },
               {
                 link: '/openapi-ts/plugins/zustand',
-                text: 'Zustand <span data-soon>soon</soon>',
+                text: 'Zustand <span data-soon>soon</span>',
               },
             ],
             link: '/openapi-ts/state-management',
@@ -150,19 +158,19 @@ export default defineConfig({
             items: [
               {
                 link: '/openapi-ts/plugins/faker',
-                text: 'Faker <span data-soon>soon</soon>',
+                text: 'Faker <span data-soon>soon</span>',
               },
               {
                 link: '/openapi-ts/plugins/msw',
-                text: 'MSW <span data-soon>soon</soon>',
+                text: 'MSW <span data-soon>soon</span>',
               },
               {
                 link: '/openapi-ts/plugins/nock',
-                text: 'Nock <span data-soon>soon</soon>',
+                text: 'Nock <span data-soon>soon</span>',
               },
               {
                 link: '/openapi-ts/plugins/supertest',
-                text: 'Supertest <span data-soon>soon</soon>',
+                text: 'Supertest <span data-soon>soon</span>',
               },
             ],
             link: '/openapi-ts/mocks',
@@ -177,19 +185,19 @@ export default defineConfig({
               },
               {
                 link: '/openapi-ts/plugins/express',
-                text: 'Express <span data-soon>soon</soon>',
+                text: 'Express <span data-soon>soon</span>',
               },
               {
                 link: '/openapi-ts/plugins/hono',
-                text: 'Hono <span data-soon>soon</soon>',
+                text: 'Hono <span data-soon>soon</span>',
               },
               {
                 link: '/openapi-ts/plugins/koa',
-                text: 'Koa <span data-soon>soon</soon>',
+                text: 'Koa <span data-soon>soon</span>',
               },
               {
                 link: '/openapi-ts/plugins/nest',
-                text: 'Nest <span data-soon>soon</soon>',
+                text: 'Nest <span data-soon>soon</span>',
               },
             ],
             link: '/openapi-ts/web-frameworks',
