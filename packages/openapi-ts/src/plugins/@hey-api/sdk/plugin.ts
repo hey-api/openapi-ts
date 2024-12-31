@@ -3,6 +3,7 @@ import type ts from 'typescript';
 import { compiler } from '../../../compiler';
 import type { ObjectValue } from '../../../compiler/types';
 import { clientApi, clientModulePath } from '../../../generate/client';
+import type { TypeScriptFile } from '../../../generate/files';
 import {
   hasOperationDataRequired,
   statusCodeToGroup,
@@ -18,22 +19,37 @@ import {
   operationTransformerIrRef,
   transformersId,
 } from '../transformers/plugin';
+import {
+  importIdentifierData,
+  importIdentifierError,
+  importIdentifierResponse,
+} from '../typescript/ref';
 import { serviceFunctionIdentifier } from './plugin-legacy';
 import type { Config } from './types';
 
 export const operationOptionsType = ({
-  importedType,
+  context,
+  identifierData,
+  identifierError,
   throwOnError,
 }: {
-  importedType?: string | false;
+  context: IR.Context;
+  identifierData?: ReturnType<TypeScriptFile['identifier']>;
+  identifierError?: ReturnType<TypeScriptFile['identifier']>;
   throwOnError?: string;
 }) => {
   const optionsName = clientApi.Options.name;
+  if (context.config.client.name === '@hey-api/client-nuxt') {
+    return `${optionsName}<${identifierData?.name || 'unknown'}, ${identifierError?.name || 'unknown'}, TComposable>`;
+  }
+
   // TODO: refactor this to be more generic, works for now
   if (throwOnError) {
-    return `${optionsName}<${importedType || 'unknown'}, ${throwOnError}>`;
+    return `${optionsName}<${identifierData?.name || 'unknown'}, ${throwOnError}>`;
   }
-  return importedType ? `${optionsName}<${importedType}>` : optionsName;
+  return identifierData
+    ? `${optionsName}<${identifierData.name}>`
+    : optionsName;
 };
 
 const sdkId = 'sdk';
@@ -103,31 +119,13 @@ const operationStatements = ({
 }): Array<ts.Statement> => {
   const file = context.file({ id: sdkId })!;
   const sdkOutput = file.nameWithoutExtension();
-  const typesModule = file.relativePathToFile({ context, id: 'types' });
 
-  const identifierError = context.file({ id: 'types' })!.identifier({
-    $ref: operationIrRef({ id: operation.id, type: 'error' }),
-    namespace: 'type',
+  const identifierError = importIdentifierError({ context, file, operation });
+  const identifierResponse = importIdentifierResponse({
+    context,
+    file,
+    operation,
   });
-  if (identifierError.name) {
-    file.import({
-      asType: true,
-      module: typesModule,
-      name: identifierError.name,
-    });
-  }
-
-  const identifierResponse = context.file({ id: 'types' })!.identifier({
-    $ref: operationIrRef({ id: operation.id, type: 'response' }),
-    namespace: 'type',
-  });
-  if (identifierResponse.name) {
-    file.import({
-      asType: true,
-      module: typesModule,
-      name: identifierResponse.name,
-    });
-  }
 
   // TODO: transform parameters
   // const query = {
@@ -364,6 +362,8 @@ const operationStatements = ({
     value: operation.path,
   });
 
+  const isNuxtClient = context.config.client.name === '@hey-api/client-nuxt';
+
   return [
     compiler.returnFunctionCall({
       args: [
@@ -376,7 +376,7 @@ const operationStatements = ({
       types: [
         identifierResponse.name || 'unknown',
         identifierError.name || 'unknown',
-        'ThrowOnError',
+        isNuxtClient ? 'TComposable' : 'ThrowOnError',
       ],
     }),
   ];
@@ -390,22 +390,13 @@ const generateClassSdk = ({
   plugin: Plugin.Instance<Config>;
 }) => {
   const file = context.file({ id: sdkId })!;
-  const typesModule = file.relativePathToFile({ context, id: 'types' });
-
   const sdks = new Map<string, Array<ts.MethodDeclaration>>();
 
   context.subscribe('operation', ({ operation }) => {
-    const identifierData = context.file({ id: 'types' })!.identifier({
-      $ref: operationIrRef({ id: operation.id, type: 'data' }),
-      namespace: 'type',
-    });
-    if (identifierData.name) {
-      file.import({
-        asType: true,
-        module: typesModule,
-        name: identifierData.name,
-      });
-    }
+    const identifierData = importIdentifierData({ context, file, operation });
+    const identifierError = importIdentifierError({ context, file, operation });
+
+    const isNuxtClient = context.config.client.name === '@hey-api/client-nuxt';
 
     const node = compiler.methodDeclaration({
       accessLevel: 'public',
@@ -426,8 +417,10 @@ const generateClassSdk = ({
           isRequired: hasOperationDataRequired(operation),
           name: 'options',
           type: operationOptionsType({
-            importedType: identifierData.name,
-            throwOnError: 'ThrowOnError',
+            context,
+            identifierData,
+            identifierError,
+            throwOnError: isNuxtClient ? undefined : 'ThrowOnError',
           }),
         },
       ],
@@ -437,13 +430,20 @@ const generateClassSdk = ({
         operation,
         plugin,
       }),
-      types: [
-        {
-          default: plugin.throwOnError,
-          extends: 'boolean',
-          name: 'ThrowOnError',
-        },
-      ],
+      types: isNuxtClient
+        ? [
+            {
+              extends: compiler.typeNode('Composable'),
+              name: 'TComposable',
+            },
+          ]
+        : [
+            {
+              default: plugin.throwOnError,
+              extends: 'boolean',
+              name: 'ThrowOnError',
+            },
+          ],
     });
 
     const uniqueTags = Array.from(new Set(operation.tags));
@@ -482,20 +482,12 @@ const generateFlatSdk = ({
   plugin: Plugin.Instance<Config>;
 }) => {
   const file = context.file({ id: sdkId })!;
-  const typesModule = file.relativePathToFile({ context, id: 'types' });
 
   context.subscribe('operation', ({ operation }) => {
-    const identifierData = context.file({ id: 'types' })!.identifier({
-      $ref: operationIrRef({ id: operation.id, type: 'data' }),
-      namespace: 'type',
-    });
-    if (identifierData.name) {
-      file.import({
-        asType: true,
-        module: typesModule,
-        name: identifierData.name,
-      });
-    }
+    const identifierData = importIdentifierData({ context, file, operation });
+    const identifierError = importIdentifierError({ context, file, operation });
+
+    const isNuxtClient = context.config.client.name === '@hey-api/client-nuxt';
 
     const node = compiler.constVariable({
       comment: [
@@ -510,8 +502,10 @@ const generateFlatSdk = ({
             isRequired: hasOperationDataRequired(operation),
             name: 'options',
             type: operationOptionsType({
-              importedType: identifierData.name,
-              throwOnError: 'ThrowOnError',
+              context,
+              identifierData,
+              identifierError,
+              throwOnError: isNuxtClient ? undefined : 'ThrowOnError',
             }),
           },
         ],
@@ -521,13 +515,20 @@ const generateFlatSdk = ({
           operation,
           plugin,
         }),
-        types: [
-          {
-            default: plugin.throwOnError,
-            extends: 'boolean',
-            name: 'ThrowOnError',
-          },
-        ],
+        types: isNuxtClient
+          ? [
+              {
+                extends: compiler.typeNode('Composable'),
+                name: 'TComposable',
+              },
+            ]
+          : [
+              {
+                default: plugin.throwOnError,
+                extends: 'boolean',
+                name: 'ThrowOnError',
+              },
+            ],
       }),
       name: serviceFunctionIdentifier({
         config: context.config,
@@ -555,26 +556,26 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
   const sdkOutput = file.nameWithoutExtension();
 
   // import required packages and core files
+  const clientModule = clientModulePath({
+    config: context.config,
+    sourceOutput: sdkOutput,
+  });
   file.import({
-    module: clientModulePath({
-      config: context.config,
-      sourceOutput: sdkOutput,
-    }),
+    module: clientModule,
     name: 'createClient',
   });
   file.import({
-    module: clientModulePath({
-      config: context.config,
-      sourceOutput: sdkOutput,
-    }),
+    module: clientModule,
     name: 'createConfig',
   });
   file.import({
     ...clientApi.Options,
-    module: clientModulePath({
-      config: context.config,
-      sourceOutput: sdkOutput,
-    }),
+    module: clientModule,
+  });
+  file.import({
+    asType: true,
+    module: clientModule,
+    name: 'Composable',
   });
 
   // define client first

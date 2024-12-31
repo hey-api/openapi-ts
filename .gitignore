@@ -12,6 +12,7 @@ yarn-error.log*
 dist
 coverage
 .env
+.nuxt
 .svelte-kit
 
 # test files
