@@ -424,6 +424,19 @@ describe(`OpenAPI ${VERSION}`, () => {
     },
     {
       config: createConfig({
+        input: 'security-http-bearer.json',
+        output: 'security-http-bearer',
+        plugins: [
+          {
+            auth: true,
+            name: '@hey-api/sdk',
+          },
+        ],
+      }),
+      description: 'generates SDK functions with auth (Bearer token)',
+    },
+    {
+      config: createConfig({
         input: 'security-oauth2.json',
         output: 'security-oauth2',
         plugins: [
