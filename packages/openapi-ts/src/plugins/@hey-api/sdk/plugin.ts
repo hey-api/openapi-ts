@@ -225,6 +225,8 @@ const operationStatements = ({
     }> = [];
 
     for (const securitySchemeObject of operation.security) {
+      let supported = false;
+
       if (securitySchemeObject.type === 'oauth2') {
         if (securitySchemeObject.flows.password) {
           security.push({
@@ -232,6 +234,8 @@ const operationStatements = ({
             in: 'header',
             name: 'Authorization',
           });
+
+          supported = true;
         }
       } else if (securitySchemeObject.type === 'apiKey') {
         // TODO: parser - support cookies auth
@@ -241,8 +245,23 @@ const operationStatements = ({
             in: securitySchemeObject.in,
             name: securitySchemeObject.name,
           });
+
+          supported = true;
         }
-      } else {
+      } else if (securitySchemeObject.type === 'http') {
+        if (securitySchemeObject.scheme === 'bearer') {
+          // Our accessToken function puts Bearer in front of the token, so it works for this scheme too
+          security.push({
+            fn: 'accessToken',
+            in: 'header',
+            name: 'Authorization',
+          });
+
+          supported = true;
+        }
+      }
+
+      if (!supported) {
         console.warn(
           `❗️ SDK warning: security scheme isn't currently supported. Please open an issue if you'd like it added https://github.com/hey-api/openapi-ts/issues\n${JSON.stringify(securitySchemeObject, null, 2)}`,
         );
