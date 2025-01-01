@@ -3,6 +3,7 @@ import type ts from 'typescript';
 import { compiler } from '../../../compiler';
 import type { ObjectValue } from '../../../compiler/types';
 import { clientApi, clientModulePath } from '../../../generate/client';
+import type { TypeScriptFile } from '../../../generate/files';
 import {
   hasOperationDataRequired,
   statusCodeToGroup,
@@ -18,22 +19,33 @@ import {
   operationTransformerIrRef,
   transformersId,
 } from '../transformers/plugin';
+import {
+  importIdentifierData,
+  importIdentifierError,
+  importIdentifierResponse,
+} from '../typescript/ref';
 import { serviceFunctionIdentifier } from './plugin-legacy';
 import type { Config } from './types';
 
 export const operationOptionsType = ({
-  importedType,
+  identifierData,
   throwOnError,
 }: {
-  importedType?: string | false;
+  context: IR.Context;
+  identifierData?: ReturnType<TypeScriptFile['identifier']>;
+  // TODO: refactor this so we don't need to import error type unless it's used here
+  identifierError?: ReturnType<TypeScriptFile['identifier']>;
   throwOnError?: string;
 }) => {
   const optionsName = clientApi.Options.name;
+
   // TODO: refactor this to be more generic, works for now
   if (throwOnError) {
-    return `${optionsName}<${importedType || 'unknown'}, ${throwOnError}>`;
+    return `${optionsName}<${identifierData?.name || 'unknown'}, ${throwOnError}>`;
   }
-  return importedType ? `${optionsName}<${importedType}>` : optionsName;
+  return identifierData
+    ? `${optionsName}<${identifierData.name}>`
+    : optionsName;
 };
 
 const sdkId = 'sdk';
@@ -103,31 +115,13 @@ const operationStatements = ({
 }): Array<ts.Statement> => {
   const file = context.file({ id: sdkId })!;
   const sdkOutput = file.nameWithoutExtension();
-  const typesModule = file.relativePathToFile({ context, id: 'types' });
 
-  const identifierError = context.file({ id: 'types' })!.identifier({
-    $ref: operationIrRef({ id: operation.id, type: 'error' }),
-    namespace: 'type',
+  const identifierError = importIdentifierError({ context, file, operation });
+  const identifierResponse = importIdentifierResponse({
+    context,
+    file,
+    operation,
   });
-  if (identifierError.name) {
-    file.import({
-      asType: true,
-      module: typesModule,
-      name: identifierError.name,
-    });
-  }
-
-  const identifierResponse = context.file({ id: 'types' })!.identifier({
-    $ref: operationIrRef({ id: operation.id, type: 'response' }),
-    namespace: 'type',
-  });
-  if (identifierResponse.name) {
-    file.import({
-      asType: true,
-      module: typesModule,
-      name: identifierResponse.name,
-    });
-  }
 
   // TODO: transform parameters
   // const query = {
@@ -409,22 +403,12 @@ const generateClassSdk = ({
   plugin: Plugin.Instance<Config>;
 }) => {
   const file = context.file({ id: sdkId })!;
-  const typesModule = file.relativePathToFile({ context, id: 'types' });
-
   const sdks = new Map<string, Array<ts.MethodDeclaration>>();
 
   context.subscribe('operation', ({ operation }) => {
-    const identifierData = context.file({ id: 'types' })!.identifier({
-      $ref: operationIrRef({ id: operation.id, type: 'data' }),
-      namespace: 'type',
-    });
-    if (identifierData.name) {
-      file.import({
-        asType: true,
-        module: typesModule,
-        name: identifierData.name,
-      });
-    }
+    const identifierData = importIdentifierData({ context, file, operation });
+    // TODO: import error type only if we are sure we are going to use it
+    // const identifierError = importIdentifierError({ context, file, operation });
 
     const node = compiler.methodDeclaration({
       accessLevel: 'public',
@@ -445,7 +429,9 @@ const generateClassSdk = ({
           isRequired: hasOperationDataRequired(operation),
           name: 'options',
           type: operationOptionsType({
-            importedType: identifierData.name,
+            context,
+            identifierData,
+            // identifierError,
             throwOnError: 'ThrowOnError',
           }),
         },
@@ -501,20 +487,11 @@ const generateFlatSdk = ({
   plugin: Plugin.Instance<Config>;
 }) => {
   const file = context.file({ id: sdkId })!;
-  const typesModule = file.relativePathToFile({ context, id: 'types' });
 
   context.subscribe('operation', ({ operation }) => {
-    const identifierData = context.file({ id: 'types' })!.identifier({
-      $ref: operationIrRef({ id: operation.id, type: 'data' }),
-      namespace: 'type',
-    });
-    if (identifierData.name) {
-      file.import({
-        asType: true,
-        module: typesModule,
-        name: identifierData.name,
-      });
-    }
+    const identifierData = importIdentifierData({ context, file, operation });
+    // TODO: import error type only if we are sure we are going to use it
+    // const identifierError = importIdentifierError({ context, file, operation });
 
     const node = compiler.constVariable({
       comment: [
@@ -529,7 +506,9 @@ const generateFlatSdk = ({
             isRequired: hasOperationDataRequired(operation),
             name: 'options',
             type: operationOptionsType({
-              importedType: identifierData.name,
+              context,
+              identifierData,
+              // identifierError,
               throwOnError: 'ThrowOnError',
             }),
           },
@@ -574,26 +553,21 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
   const sdkOutput = file.nameWithoutExtension();
 
   // import required packages and core files
+  const clientModule = clientModulePath({
+    config: context.config,
+    sourceOutput: sdkOutput,
+  });
   file.import({
-    module: clientModulePath({
-      config: context.config,
-      sourceOutput: sdkOutput,
-    }),
+    module: clientModule,
     name: 'createClient',
   });
   file.import({
-    module: clientModulePath({
-      config: context.config,
-      sourceOutput: sdkOutput,
-    }),
+    module: clientModule,
     name: 'createConfig',
   });
   file.import({
     ...clientApi.Options,
-    module: clientModulePath({
-      config: context.config,
-      sourceOutput: sdkOutput,
-    }),
+    module: clientModule,
   });
 
   // define client first
