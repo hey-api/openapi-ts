@@ -1,7 +1,11 @@
 import type { ImportExportItemObject } from '../../../compiler/utils';
 import type { IR } from '../../../ir/types';
 import { operationOptionsType } from '../../@hey-api/sdk/plugin';
-import { operationIrRef } from '../../shared/utils/ref';
+import {
+  importIdentifierData,
+  importIdentifierError,
+  importIdentifierResponse,
+} from '../../@hey-api/typescript/ref';
 import type { PluginInstance } from './types';
 
 export const useTypeData = ({
@@ -13,22 +17,16 @@ export const useTypeData = ({
   operation: IR.OperationObject;
   plugin: PluginInstance;
 }) => {
-  const identifierData = context.file({ id: 'types' })!.identifier({
-    $ref: operationIrRef({ id: operation.id, type: 'data' }),
-    namespace: 'type',
-  });
-  if (identifierData.name) {
-    const file = context.file({ id: plugin.name })!;
-    file.import({
-      asType: true,
-      module: context
-        .file({ id: plugin.name })!
-        .relativePathToFile({ context, id: 'types' }),
-      name: identifierData.name,
-    });
-  }
+  const file = context.file({ id: plugin.name })!;
+
+  const identifierData = importIdentifierData({ context, file, operation });
+  // TODO: import error type only if we are sure we are going to use it
+  // const identifierError = importIdentifierError({ context, file, operation });
+
   const typeData = operationOptionsType({
-    importedType: identifierData.name,
+    context,
+    identifierData,
+    // identifierError,
   });
   return typeData;
 };
@@ -43,19 +41,7 @@ export const useTypeError = ({
   plugin: PluginInstance;
 }) => {
   const file = context.file({ id: plugin.name })!;
-  const identifierError = context.file({ id: 'types' })!.identifier({
-    $ref: operationIrRef({ id: operation.id, type: 'error' }),
-    namespace: 'type',
-  });
-  if (identifierError.name) {
-    file.import({
-      asType: true,
-      module: context
-        .file({ id: plugin.name })!
-        .relativePathToFile({ context, id: 'types' }),
-      name: identifierError.name,
-    });
-  }
+  const identifierError = importIdentifierError({ context, file, operation });
   let typeError: ImportExportItemObject = {
     asType: true,
     name: identifierError.name || '',
@@ -90,20 +76,12 @@ export const useTypeResponse = ({
   operation: IR.OperationObject;
   plugin: PluginInstance;
 }) => {
-  const identifierResponse = context.file({ id: 'types' })!.identifier({
-    $ref: operationIrRef({ id: operation.id, type: 'response' }),
-    namespace: 'type',
+  const file = context.file({ id: plugin.name })!;
+  const identifierResponse = importIdentifierResponse({
+    context,
+    file,
+    operation,
   });
-  if (identifierResponse.name) {
-    const file = context.file({ id: plugin.name })!;
-    file.import({
-      asType: true,
-      module: context
-        .file({ id: plugin.name })!
-        .relativePathToFile({ context, id: 'types' }),
-      name: identifierResponse.name,
-    });
-  }
   const typeResponse = identifierResponse.name || 'unknown';
   return typeResponse;
 };
