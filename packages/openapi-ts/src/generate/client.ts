@@ -28,6 +28,10 @@ export const clientModulePath = ({
 };
 
 export const clientApi = {
+  Client: {
+    asType: true,
+    name: 'Client',
+  },
   Options: {
     asType: true,
     name: 'Options',

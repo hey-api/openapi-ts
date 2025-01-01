@@ -898,6 +898,42 @@ export const createPropertyAssignment = ({
   name: string | ts.PropertyName;
 }) => ts.factory.createPropertyAssignment(name, initializer);
 
+export const createPropertyDeclaration = ({
+  accessLevel,
+  comment,
+  initializer,
+  isReadonly,
+  name,
+  type,
+}: {
+  accessLevel?: AccessLevel;
+  comment?: Comments;
+  initializer?: ts.Expression;
+  isReadonly?: boolean;
+  name: string;
+  type: ts.TypeNode;
+}) => {
+  const modifiers = toAccessLevelModifiers(accessLevel);
+  if (isReadonly) {
+    modifiers.push(ts.factory.createModifier(ts.SyntaxKind.ReadonlyKeyword));
+  }
+
+  const node = ts.factory.createPropertyDeclaration(
+    modifiers,
+    createIdentifier({ text: name }),
+    undefined,
+    type,
+    initializer,
+  );
+
+  addLeadingComments({
+    comments: comment,
+    node,
+  });
+
+  return node;
+};
+
 export const createRegularExpressionLiteral = ({
   flags = [],
   text,
