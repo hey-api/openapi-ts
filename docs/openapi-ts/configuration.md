@@ -46,7 +46,7 @@ Alternatively, you can use `openapi-ts.config.js` and configure the export state
 Input is the first thing you must define. It can be a path, URL, or a string content resolving to an OpenAPI specification. Hey API supports all valid OpenAPI versions and file formats.
 
 ::: info
-We use [`@hey-api/json-schema-ref-parser`](https://github.com/hey-api/json-schema-ref-parser) to resolve file locations. Please note that accessing a HTTPS URL on localhost has a known [workaround](https://github.com/hey-api/openapi-ts/issues/276).
+If you use an HTTPS URL with a self-signed certificate in development, you will need to set [`NODE_TLS_REJECT_UNAUTHORIZED=0`](https://github.com/hey-api/openapi-ts/issues/276#issuecomment-2043143501) in your environment.
 :::
 
 ## Output

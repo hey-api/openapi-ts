@@ -12,14 +12,13 @@ import { stringCase } from '../../../utils/stringCase';
 import { fieldName } from '../../shared/utils/case';
 import { operationIrRef } from '../../shared/utils/ref';
 import type { Plugin } from '../../types';
+import { typesId } from './ref';
 import type { Config } from './types';
 
 interface SchemaWithType<T extends Required<IR.SchemaObject>['type']>
   extends Omit<IR.SchemaObject, 'type'> {
   type: Extract<Required<IR.SchemaObject>['type'], T>;
 }
-
-const typesId = 'types';
 
 const parseSchemaJsDoc = ({ schema }: { schema: IR.SchemaObject }) => {
   const comments = [

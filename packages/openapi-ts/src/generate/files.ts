@@ -204,6 +204,7 @@ export class TypeScriptFile {
     const outputParts = thisRelativePath.split(path.sep);
     const relativePath =
       new Array(outputParts.length).fill('').join('../') || './';
+    // TODO: parser - cache responses
     return `${relativePath}${splitNameAndExtension(fileRelativePath).name}`;
   }
 

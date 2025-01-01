@@ -641,7 +641,10 @@ export async function createClient(
         if (!config.dryRun) {
           processOutput({ config });
 
-          console.log(`🚀 Done! Your output is in ${config.output.path}`);
+          const outputPath = process.env.INIT_CWD
+            ? `./${path.relative(process.env.INIT_CWD, config.output.path)}`
+            : config.output.path;
+          console.log(`🚀 Done! Your output is in ${outputPath}`);
         }
         Performance.end('postprocess');
       }
