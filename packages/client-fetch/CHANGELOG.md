@@ -1,5 +1,11 @@
 # @hey-api/client-fetch
 
+## 0.6.0
+
+### Minor Changes
+
+- [#1507](https://github.com/hey-api/openapi-ts/pull/1507) [`e2e1410`](https://github.com/hey-api/openapi-ts/commit/e2e1410b22c0c84c40d1b1803e9650d546350cb7) Thanks [@nimobeeren](https://github.com/nimobeeren)! - [BREAKING] return raw response body (of type `ReadableStream`) when `Content-Type` response header is not provided and `parseAs` is set to `auto`
+
 ## 0.5.7
 
 ### Patch Changes
