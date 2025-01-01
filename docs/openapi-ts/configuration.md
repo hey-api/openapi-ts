@@ -96,7 +96,7 @@ You can learn more on the [Output](/openapi-ts/output) page.
 
 ## Parser
 
-If you're using OpenAPI 3.0 or newer, we encourage you to try out the experimental parser. In the future this will become the default parser, but until it's been tested it's an opt-in feature. To try it out, set the `experimentalParser` flag in your configuration to `true`.
+If you're NOT using a legacy client, we encourage you to try out the experimental parser. Soon, it will become the default parser, but until it's been tested it's an opt-in feature. To try it out, set the `experimentalParser` flag in your configuration to `true`.
 
 ::: code-group
 

@@ -1,7 +1,7 @@
 import ts from 'typescript';
 
 import type { IR } from '../../../ir/types';
-import { digitsRegExp } from '../../../utils/regexp';
+import { numberRegExp } from '../../../utils/regexp';
 import { stringCase } from '../../../utils/stringCase';
 
 /**
@@ -15,8 +15,8 @@ export const fieldName = ({
   context: IR.Context;
   name: string;
 }) => {
-  digitsRegExp.lastIndex = 0;
-  if (digitsRegExp.test(name)) {
+  numberRegExp.lastIndex = 0;
+  if (numberRegExp.test(name)) {
     return ts.factory.createNumericLiteral(name);
   }
 

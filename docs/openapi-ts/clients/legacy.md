@@ -9,6 +9,10 @@ import { embedProject } from '../../embed'
 
 # Legacy Clients
 
+::: warning
+This feature is deprecated and no longer maintained. Please migrate to one of the client packages.
+:::
+
 Before client packages, clients were generated using `@hey-api/openapi-ts`. In fact, `@hey-api/openapi-ts` still supports generating legacy clients. You can generate them with the `client` config option.
 
 ::: code-group

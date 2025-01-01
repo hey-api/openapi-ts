@@ -13,7 +13,7 @@ import { sync } from 'cross-spawn';
 import { generateLegacyOutput, generateOutput } from './generate/output';
 import { ensureDirSync } from './generate/utils';
 import type { IR } from './ir/types';
-import { parseExperimental, parseLegacy } from './openApi';
+import { parseLegacy, parseOpenApiSpec } from './openApi';
 import type { ClientPlugins, UserPlugins } from './plugins';
 import { defaultPluginConfigs } from './plugins';
 import type {
@@ -619,7 +619,7 @@ export async function createClient(
           !isLegacyClient(config) &&
           !legacyNameFromConfig(config)
         ) {
-          context = parseExperimental({ config, spec: data });
+          context = parseOpenApiSpec({ config, spec: data });
         }
 
         // fallback to legacy parser

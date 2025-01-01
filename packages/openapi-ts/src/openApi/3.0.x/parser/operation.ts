@@ -1,5 +1,8 @@
 import type { IR } from '../../../ir/types';
-import { operationToId } from '../../shared/utils/operation';
+import {
+  ensureUniqueOperationId,
+  operationToId,
+} from '../../shared/utils/operation';
 import type {
   OperationObject,
   PathItemObject,
@@ -34,7 +37,7 @@ const parseOperationJsDoc = ({
     irOperation.summary = operation.summary;
   }
 
-  if (operation.tags && operation.tags.length) {
+  if (operation.tags?.length) {
     irOperation.tags = operation.tags;
   }
 };
@@ -175,14 +178,17 @@ const operationToIrOperation = ({
   }
 
   if (operation.security) {
-    const securitySchemeObjects: Array<SecuritySchemeObject> = [];
+    const securitySchemeObjects: Array<IR.SecurityObject> = [];
 
     for (const securityRequirementObject of operation.security) {
       for (const name in securityRequirementObject) {
         const securitySchemeObject = securitySchemesMap.get(name);
-        if (securitySchemeObject) {
-          securitySchemeObjects.push(securitySchemeObject);
+
+        if (!securitySchemeObject) {
+          continue;
         }
+
+        securitySchemeObjects.push(securitySchemeObject);
       }
     }
 
@@ -215,18 +221,12 @@ export const parseOperation = ({
   path: keyof IR.PathsObject;
   securitySchemesMap: Map<string, SecuritySchemeObject>;
 }) => {
-  // TODO: parser - support throw on duplicate
-  if (operation.operationId) {
-    const operationKey = `${method.toUpperCase()} ${path}`;
-
-    if (operationIds.has(operation.operationId)) {
-      console.warn(
-        `❗️ Duplicate operationId: ${operation.operationId} in ${operationKey}. Please ensure your operation IDs are unique. This behavior is not supported and will likely lead to unexpected results.`,
-      );
-    } else {
-      operationIds.set(operation.operationId, operationKey);
-    }
-  }
+  ensureUniqueOperationId({
+    id: operation.operationId,
+    method,
+    operationIds,
+    path,
+  });
 
   if (!context.ir.paths) {
     context.ir.paths = {};
