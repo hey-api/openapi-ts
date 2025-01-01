@@ -26,6 +26,18 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
    */
   auth?: boolean;
   /**
+   * **This feature works only with the [experimental parser](https://heyapi.dev/openapi-ts/configuration#parser)**
+   *
+   * Should the generated SDK do a createClient call automatically? If this is
+   * set to false, the generated SDK will expect a client to be passed in during:
+   *
+   * - instantiation if asClass is set to true (and the client will be passed to the constructor. All methods will not be static either)
+   * - each method call if asClass is set to false
+   *
+   * @default true
+   */
+  autoCreateClient?: boolean;
+  /**
    * **This feature works only with the legacy parser**
    *
    * Filter endpoints to be included in the generated SDK. The provided

@@ -30,6 +30,7 @@ export const defaultConfig: Plugin.Config<Config> = {
   },
   asClass: false,
   auth: true,
+  autoCreateClient: true,
   exportFromIndex: true,
   name: '@hey-api/sdk',
   operationId: true,

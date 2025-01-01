@@ -28,9 +28,11 @@ import { serviceFunctionIdentifier } from './plugin-legacy';
 import type { Config } from './types';
 
 export const operationOptionsType = ({
+  clientOption,
   identifierData,
   throwOnError,
 }: {
+  clientOption?: 'required' | 'omitted';
   context: IR.Context;
   identifierData?: ReturnType<TypeScriptFile['identifier']>;
   // TODO: refactor this so we don't need to import error type unless it's used here
@@ -39,13 +41,24 @@ export const operationOptionsType = ({
 }) => {
   const optionsName = clientApi.Options.name;
 
-  // TODO: refactor this to be more generic, works for now
-  if (throwOnError) {
-    return `${optionsName}<${identifierData?.name || 'unknown'}, ${throwOnError}>`;
-  }
-  return identifierData
+  let optionsType = identifierData
     ? `${optionsName}<${identifierData.name}>`
     : optionsName;
+
+  // TODO: refactor this to be more generic, works for now
+  if (throwOnError) {
+    optionsType = `${optionsName}<${identifierData?.name || 'unknown'}, ${throwOnError}>`;
+  }
+
+  if (clientOption === 'required') {
+    optionsType += ` & { client: Client }`;
+  }
+
+  if (clientOption === 'omitted') {
+    optionsType = `Omit<${optionsType}, 'client'>`;
+  }
+
+  return optionsType;
 };
 
 const sdkId = 'sdk';
@@ -377,6 +390,12 @@ const operationStatements = ({
     value: operation.path,
   });
 
+  let clientCall = '(options?.client ?? client)';
+
+  if (!plugin.autoCreateClient) {
+    clientCall = plugin.asClass ? 'this._client' : 'options.client';
+  }
+
   return [
     compiler.returnFunctionCall({
       args: [
@@ -385,7 +404,7 @@ const operationStatements = ({
           obj: requestOptions,
         }),
       ],
-      name: `(options?.client ?? client).${operation.method}`,
+      name: `${clientCall}.${operation.method}`,
       types: [
         identifierResponse.name || 'unknown',
         identifierError.name || 'unknown',
@@ -417,7 +436,7 @@ const generateClassSdk = ({
         operation.summary && escapeComment(operation.summary),
         operation.description && escapeComment(operation.description),
       ],
-      isStatic: true,
+      isStatic: !!plugin.autoCreateClient, // if client is required, methods are not static
       name: serviceFunctionIdentifier({
         config: context.config,
         handleIllegal: false,
@@ -429,6 +448,7 @@ const generateClassSdk = ({
           isRequired: hasOperationDataRequired(operation),
           name: 'options',
           type: operationOptionsType({
+            clientOption: !plugin.autoCreateClient ? 'omitted' : undefined,
             context,
             identifierData,
             // identifierError,
@@ -466,9 +486,45 @@ const generateClassSdk = ({
 
   context.subscribe('after', () => {
     for (const [name, nodes] of sdks) {
+      const extraMembers: ts.ClassElement[] = [];
+
+      // Add client property and constructor if autoCreateClient is false
+      if (!plugin.autoCreateClient) {
+        const clientType = 'Client';
+
+        const clientProperty = compiler.propertyDeclaration({
+          accessLevel: 'private',
+          comment: ['Client Instance'],
+          name: '_client',
+          type: compiler.typeReferenceNode({ typeName: clientType }),
+        });
+
+        const constructor = compiler.constructorDeclaration({
+          comment: ['@param client - Client Instance'],
+          parameters: [
+            {
+              isRequired: true,
+              name: 'client',
+              type: clientType,
+            },
+          ],
+          statements: [
+            compiler.expressionToStatement({
+              expression: compiler.binaryExpression({
+                left: compiler.identifier({ text: 'this._client ' }),
+                operator: '=',
+                right: compiler.identifier({ text: 'client' }),
+              }),
+            }),
+          ],
+        });
+
+        extraMembers.push(clientProperty, constructor);
+      }
+
       const node = compiler.classDeclaration({
         decorator: undefined,
-        members: nodes,
+        members: [...extraMembers, ...nodes],
         name: transformServiceName({
           config: context.config,
           name,
@@ -503,9 +559,11 @@ const generateFlatSdk = ({
       expression: compiler.arrowFunction({
         parameters: [
           {
-            isRequired: hasOperationDataRequired(operation),
+            isRequired:
+              hasOperationDataRequired(operation) || !plugin.autoCreateClient,
             name: 'options',
             type: operationOptionsType({
+              clientOption: !plugin.autoCreateClient ? 'required' : undefined,
               context,
               identifierData,
               // identifierError,
@@ -550,6 +608,7 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     id: sdkId,
     path: plugin.output,
   });
+
   const sdkOutput = file.nameWithoutExtension();
 
   // import required packages and core files
@@ -557,45 +616,56 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     config: context.config,
     sourceOutput: sdkOutput,
   });
-  file.import({
-    module: clientModule,
-    name: 'createClient',
-  });
-  file.import({
-    module: clientModule,
-    name: 'createConfig',
-  });
+
+  if (plugin.autoCreateClient) {
+    file.import({
+      module: clientModule,
+      name: 'createClient',
+    });
+    file.import({
+      module: clientModule,
+      name: 'createConfig',
+    });
+
+    // define client first
+    const statement = compiler.constVariable({
+      exportConst: true,
+      expression: compiler.callExpression({
+        functionName: 'createClient',
+        parameters: [
+          compiler.callExpression({
+            functionName: 'createConfig',
+            parameters: [
+              plugin.throwOnError
+                ? compiler.objectExpression({
+                    obj: [
+                      {
+                        key: 'throwOnError',
+                        value: plugin.throwOnError,
+                      },
+                    ],
+                  })
+                : undefined,
+            ],
+          }),
+        ],
+      }),
+      name: 'client',
+    });
+
+    file.add(statement);
+  } else {
+    // Bring in the client type
+    file.import({
+      ...clientApi.Client,
+      module: clientModule,
+    });
+  }
+
   file.import({
     ...clientApi.Options,
     module: clientModule,
   });
-
-  // define client first
-  const statement = compiler.constVariable({
-    exportConst: true,
-    expression: compiler.callExpression({
-      functionName: 'createClient',
-      parameters: [
-        compiler.callExpression({
-          functionName: 'createConfig',
-          parameters: [
-            plugin.throwOnError
-              ? compiler.objectExpression({
-                  obj: [
-                    {
-                      key: 'throwOnError',
-                      value: plugin.throwOnError,
-                    },
-                  ],
-                })
-              : undefined,
-          ],
-        }),
-      ],
-    }),
-    name: 'client',
-  });
-  file.add(statement);
 
   if (plugin.asClass) {
     generateClassSdk({ context, plugin });
