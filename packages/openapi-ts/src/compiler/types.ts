@@ -644,12 +644,12 @@ export const createEnumDeclaration = <
 }): ts.EnumDeclaration => {
   const members: Array<ts.EnumMember> = Array.isArray(obj)
     ? obj.map((value) => {
-        const enumMember = ts.factory.createEnumMember(
-          escapeName(value.key),
-          toExpression({
+        const enumMember = createEnumMember({
+          initializer: toExpression({
             value: value.value,
           }),
-        );
+          name: value.key,
+        });
 
         addLeadingComments({
           comments: value.comments,
@@ -658,9 +658,15 @@ export const createEnumDeclaration = <
 
         return enumMember;
       })
-    : Object.entries(obj).map(([key, value]) => {
-        const initializer = toExpression({ unescape: true, value });
-        const enumMember = ts.factory.createEnumMember(key, initializer);
+    : // TODO: parser - deprecate object syntax
+      Object.entries(obj).map(([key, value]) => {
+        const enumMember = ts.factory.createEnumMember(
+          key,
+          toExpression({
+            unescape: true,
+            value,
+          }),
+        );
 
         addLeadingComments({
           comments: enumMemberComments[key],
@@ -682,6 +688,27 @@ export const createEnumDeclaration = <
   });
 
   return node;
+};
+
+const createEnumMember = ({
+  initializer,
+  name,
+}: {
+  initializer?: ts.Expression;
+  name: string | ts.PropertyName;
+}) => {
+  let key = name;
+  if (typeof key === 'string') {
+    if (key.startsWith("'") && key.endsWith("'")) {
+      key = createStringLiteral({
+        isSingleQuote: false,
+        text: key,
+      });
+    } else {
+      key = escapeName(key);
+    }
+  }
+  return ts.factory.createEnumMember(key, initializer);
 };
 
 /**

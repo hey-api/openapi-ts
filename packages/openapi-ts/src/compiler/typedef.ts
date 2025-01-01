@@ -226,7 +226,7 @@ export const createTypeArrayNode = (
 ) => {
   const node = createTypeReferenceNode({
     typeArguments: [
-      // @ts-ignore
+      // @ts-expect-error
       Array.isArray(types) ? createTypeUnionNode({ types }) : types,
     ],
     typeName: 'Array',

@@ -1,6 +1,7 @@
 import { IRContext } from '../ir/context';
 import type { IR } from '../ir/types';
 import type { Config } from '../types/config';
+import { parseV2_0_X } from './2.0.x';
 import { parseV3_0_X } from './3.0.x';
 import { parseV3_1_X } from './3.1.x';
 import type { Client } from './common/interfaces/client';
@@ -55,8 +56,11 @@ export function parseLegacy({
   );
 }
 
-// TODO: parser - add JSDoc comment
-export const parseExperimental = ({
+/**
+ * Parse the resolved OpenAPI specification. This will populate and return
+ * `context` with intermediate representation obtained from the parsed spec.
+ */
+export const parseOpenApiSpec = ({
   config,
   spec,
 }: {
@@ -65,13 +69,15 @@ export const parseExperimental = ({
 }): IR.Context | undefined => {
   const context = new IRContext({
     config,
-    spec: spec as Record<string, any>,
+    spec: spec as OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X,
   });
 
-  // TODO: parser - handle Swagger 2.0
+  if ('swagger' in context.spec) {
+    parseV2_0_X(context as IR.Context<OpenApi.V2_0_X>);
+    return context;
+  }
 
-  const ctx = context as IR.Context<OpenApi.V3_0_X | OpenApi.V3_1_X>;
-  switch (ctx.spec.openapi) {
+  switch (context.spec.openapi) {
     case '3.0.0':
     case '3.0.1':
     case '3.0.2':
@@ -84,10 +90,8 @@ export const parseExperimental = ({
       parseV3_1_X(context as IR.Context<OpenApi.V3_1_X>);
       return context;
     default:
-      // TODO: parser - uncomment after removing legacy parser.
-      // For now, we fall back to legacy parser if spec version
-      // is not supported
-      // throw new Error('Unsupported OpenAPI specification');
-      return;
+      break;
   }
+
+  throw new Error('Unsupported OpenAPI specification');
 };
