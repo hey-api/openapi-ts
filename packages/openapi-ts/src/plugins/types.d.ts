@@ -1,5 +1,6 @@
 import type { IR } from '../ir/types';
-import type { OpenApi } from '../openApi';
+import type { OpenApi as LegacyOpenApi } from '../openApi';
+import type { OpenApi } from '../openApi/types';
 import type { Client } from '../types/client';
 import type { Files } from '../types/utils';
 
@@ -99,7 +100,7 @@ export namespace Plugin {
    * Plugin implementation for experimental parser.
    */
   export type Handler<Config extends BaseConfig> = (args: {
-    context: IR.Context;
+    context: IR.Context<OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X>;
     plugin: Plugin.Instance<Config>;
   }) => void;
 
@@ -113,7 +114,7 @@ export namespace Plugin {
   export type LegacyHandler<Config extends BaseConfig> = (args: {
     client: Client;
     files: Files;
-    openApi: OpenApi;
+    openApi: LegacyOpenApi;
     plugin: Plugin.Instance<Config>;
   }) => void;
 

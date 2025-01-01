@@ -259,6 +259,20 @@ const schemaName = ({
   return ensureValidIdentifier(customName);
 };
 
+const schemasV2_0_X = ({
+  context,
+  plugin,
+}: {
+  context: IR.Context<OpenApi.V2_0_X>;
+  plugin: Plugin.Instance<Config>;
+}) => {
+  // TODO: parser - add support for OpenAPI 2.0
+  // Object.entries(openApi.definitions ?? {}).forEach(([name, definition]) => {
+  //   addSchema(name, definition);
+  // });
+  console.warn(context, plugin);
+};
+
 const schemasV3_0_X = ({
   context,
   plugin,
@@ -322,36 +336,33 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     path: plugin.output,
   });
 
-  if (context.spec.openapi) {
-    const ctx = context as IR.Context<OpenApi.V3_0_X | OpenApi.V3_1_X>;
-    switch (ctx.spec.openapi) {
-      // TODO: parser - handle Swagger 2.0
-      case '3.0.0':
-      case '3.0.1':
-      case '3.0.2':
-      case '3.0.3':
-      case '3.0.4':
-        schemasV3_0_X({
-          context: context as IR.Context<OpenApi.V3_0_X>,
-          plugin,
-        });
-        break;
-      case '3.1.0':
-      case '3.1.1':
-        schemasV3_1_X({
-          context: context as IR.Context<OpenApi.V3_1_X>,
-          plugin,
-        });
-        break;
-      default:
-        break;
-    }
+  if ('swagger' in context.spec) {
+    schemasV2_0_X({
+      context: context as IR.Context<OpenApi.V2_0_X>,
+      plugin,
+    });
+    return;
   }
 
-  // OpenAPI 2.0
-  // if ('swagger' in openApi) {
-  //   Object.entries(openApi.definitions ?? {}).forEach(([name, definition]) => {
-  //     addSchema(name, definition);
-  //   });
-  // }
+  switch (context.spec.openapi) {
+    case '3.0.0':
+    case '3.0.1':
+    case '3.0.2':
+    case '3.0.3':
+    case '3.0.4':
+      schemasV3_0_X({
+        context: context as IR.Context<OpenApi.V3_0_X>,
+        plugin,
+      });
+      break;
+    case '3.1.0':
+    case '3.1.1':
+      schemasV3_1_X({
+        context: context as IR.Context<OpenApi.V3_1_X>,
+        plugin,
+      });
+      break;
+    default:
+      break;
+  }
 };
