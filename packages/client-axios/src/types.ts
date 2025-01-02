@@ -4,6 +4,7 @@ import type {
   AxiosResponse,
   AxiosStatic,
   CreateAxiosDefaults,
+  AxiosRequestHeaders
 } from 'axios';
 
 import type {
@@ -49,7 +50,7 @@ export interface Config<ThrowOnError extends boolean = boolean>
    * {@link https://developer.mozilla.org/docs/Web/API/Headers/Headers#init See more}
    */
   headers?:
-    | CreateAxiosDefaults['headers']
+    | AxiosRequestHeaders
     | Record<
         string,
         | string
