@@ -1,5 +1,31 @@
 # @hey-api/client-fetch
 
+## 0.6.0
+
+### Minor Changes
+
+- **BREAKING**: please update `@hey-api/openapi-ts` to the latest version
+
+  feat: replace accessToken and apiKey functions with auth
+
+  ### Added `auth` option
+
+  Client package functions `accessToken` and `apiKey` were replaced with a single `auth` function for fetching auth tokens. If your API supports multiple auth mechanisms, you can use the `auth` argument to return the appropriate token.
+
+  ```js
+  import { client } from 'client/sdk.gen';
+
+  client.setConfig({
+    accessToken: () => '<my_token>', // [!code --]
+    apiKey: () => '<my_token>', // [!code --]
+    auth: (auth) => '<my_token>', // [!code ++]
+  });
+  ```
+
+- **BREAKING**: rename exported Security interface to Auth
+
+- [#1507](https://github.com/hey-api/openapi-ts/pull/1507) [`e2e1410`](https://github.com/hey-api/openapi-ts/commit/e2e1410b22c0c84c40d1b1803e9650d546350cb7) Thanks [@nimobeeren](https://github.com/nimobeeren)! - **BREAKING**: return raw response body (of type `ReadableStream`) when `Content-Type` response header is not provided and `parseAs` is set to `auto`
+
 ## 0.5.7
 
 ### Patch Changes
