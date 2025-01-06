@@ -174,6 +174,7 @@ interface IRSchemaObject
     | 'array'
     | 'boolean'
     | 'enum'
+    | 'integer'
     | 'never'
     | 'null'
     | 'number'

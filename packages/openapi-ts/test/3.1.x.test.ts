@@ -11,11 +11,11 @@ import { getFilePaths } from './utils';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const VERSION = '3.1.x';
+const version = '3.1.x';
 
-const outputDir = path.join(__dirname, 'generated', VERSION);
+const outputDir = path.join(__dirname, 'generated', version);
 
-describe(`OpenAPI ${VERSION}`, () => {
+describe(`OpenAPI ${version}`, () => {
   const createConfig = (userConfig: UserConfig): UserConfig => ({
     client: '@hey-api/client-fetch',
     experimentalParser: true,
@@ -24,7 +24,7 @@ describe(`OpenAPI ${VERSION}`, () => {
     input: path.join(
       __dirname,
       'spec',
-      VERSION,
+      version,
       typeof userConfig.input === 'string' ? userConfig.input : '',
     ),
     output: path.join(
@@ -575,7 +575,7 @@ describe(`OpenAPI ${VERSION}`, () => {
         path.join(
           __dirname,
           '__snapshots__',
-          VERSION,
+          version,
           filePath.slice(outputDir.length + 1),
         ),
       );
