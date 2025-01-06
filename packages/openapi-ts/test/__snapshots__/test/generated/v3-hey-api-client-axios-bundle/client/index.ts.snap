@@ -13,7 +13,9 @@ import {
 export const createClient = (config: Config): Client => {
   let _config = mergeConfigs(createConfig(), config);
 
-  const instance = axios.create(_config);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { auth, ...configWithoutAuth } = _config;
+  const instance = axios.create(configWithoutAuth);
 
   const getConfig = (): Config => ({ ..._config });
 
@@ -53,8 +55,10 @@ export const createClient = (config: Config): Client => {
     try {
       // assign Axios here for consistency with fetch
       const _axios = opts.axios;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { auth, ...optsWithoutAuth } = opts;
       const response = await _axios({
-        ...opts,
+        ...optsWithoutAuth,
         data: opts.body,
         headers: opts.headers as RawAxiosRequestHeaders,
         // let `paramsSerializer()` handle query params if it exists
@@ -106,13 +110,13 @@ export const createClient = (config: Config): Client => {
 };
 
 export type {
+  Auth,
   Client,
   Config,
   Options,
   OptionsLegacyParser,
   RequestOptions,
   RequestResult,
-  Security,
 } from './types';
 export {
   createConfig,
