@@ -1,5 +1,44 @@
 # @hey-api/docs
 
+## 0.9.0
+
+### Minor Changes
+
+- [#1511](https://github.com/hey-api/openapi-ts/pull/1511) [`4e8064d`](https://github.com/hey-api/openapi-ts/commit/4e8064d9a589e14b42d2b1a329e2436f242884da) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add watch mode
+
+  ## Watch Mode
+
+  ::: warning
+  Watch mode currently supports only remote files via URL.
+  :::
+
+  If your schema changes frequently, you may want to automatically regenerate the output during development. To watch your input file for changes, enable `watch` mode in your configuration or pass the `--watch` flag to the CLI.
+
+  ### Config
+
+  ```js
+  export default {
+    client: '@hey-api/client-fetch',
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    watch: true,
+  };
+  ```
+
+  ### CLI
+
+  ```sh
+  npx @hey-api/openapi-ts \
+    -c @hey-api/client-fetch \
+    -i path/to/openapi.json \
+    -o src/client \
+    -w
+  ```
+
+### Patch Changes
+
+- [#1496](https://github.com/hey-api/openapi-ts/pull/1496) [`1e418ba`](https://github.com/hey-api/openapi-ts/commit/1e418ba760b9903326ec37009651c32e195e24a9) Thanks [@mrlubos](https://github.com/mrlubos)! - docs: split output section into multiple pages
+
 ## 0.8.0
 
 ### Minor Changes
