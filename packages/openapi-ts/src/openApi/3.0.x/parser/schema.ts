@@ -170,11 +170,12 @@ const parseBoolean = ({
 
 const parseNumber = ({
   irSchema = {},
+  schema,
 }: SchemaContext & {
   irSchema?: IR.SchemaObject;
-  schema: SchemaObject;
+  schema: SchemaWithRequired<SchemaObject, 'type'>;
 }): IR.SchemaObject => {
-  irSchema.type = 'number';
+  irSchema.type = schema.type;
 
   return irSchema;
 };
