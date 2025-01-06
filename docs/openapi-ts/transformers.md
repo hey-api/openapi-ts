@@ -29,7 +29,7 @@ If your data isn't being transformed as expected, we encourage you to leave feed
 
 ## Installation
 
-Assuming you have already created a [configuration](/openapi-ts/get-started) file, simply add `@hey-api/transformers` to your plugins and you'll be ready to generate transformers. :tada:
+In your [configuration](/openapi-ts/get-started), add `@hey-api/transformers` to your plugins and you'll be ready to generate transformers. :tada:
 
 ```js
 import { defaultPlugins } from '@hey-api/openapi-ts';

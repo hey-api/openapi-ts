@@ -28,7 +28,7 @@ Live demo
 
 ## Installation
 
-Assuming you have already created a [configuration](/openapi-ts/get-started) file, simply add TanStack Query to your plugins and you'll be ready to generate TanStack Query artifacts. :tada:
+In your [configuration](/openapi-ts/get-started), add TanStack Query to your plugins and you'll be ready to generate TanStack Query artifacts. :tada:
 
 ::: code-group
 

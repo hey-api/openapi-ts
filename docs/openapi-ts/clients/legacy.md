@@ -82,7 +82,7 @@ You might not need a `node` client. Fetch API is [experimental](https://nodejs.o
 
 ## Interceptors
 
-Interceptors (middleware) can be used to modify requests before they're sent or responses before they're returned to the rest of your application.
+Interceptors (middleware) can be used to modify requests before they're sent or responses before they're returned to your application.
 
 Below is an example request interceptor
 

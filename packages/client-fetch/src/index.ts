@@ -167,13 +167,13 @@ export const createClient = (config: Config = {}): Client => {
 };
 
 export type {
+  Auth,
   Client,
   Config,
   Options,
   OptionsLegacyParser,
   RequestOptions,
   RequestResult,
-  Security,
 } from './types';
 export {
   createConfig,

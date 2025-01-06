@@ -10,9 +10,8 @@ export const getFoo = <ThrowOnError extends boolean = false>(options?: Options<G
         ...options,
         security: [
             {
-                fn: 'accessToken',
-                in: 'header',
-                name: 'Authorization'
+                scheme: 'bearer',
+                type: 'http'
             }
         ],
         url: '/foo'

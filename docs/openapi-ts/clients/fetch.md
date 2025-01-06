@@ -43,9 +43,11 @@ bun add @hey-api/client-fetch
 
 :::
 
-Ensure you have already [configured](/openapi-ts/get-started) `@hey-api/openapi-ts`. Update your configuration to use the Fetch API client package.
+In your [configuration](/openapi-ts/get-started), set `client` to `@hey-api/client-fetch` and you'll be ready to use the Fetch API client. :tada:
 
-```js
+::: code-group
+
+```js [config]
 export default {
   client: '@hey-api/client-fetch', // [!code ++]
   input: 'path/to/openapi.json',
@@ -53,7 +55,14 @@ export default {
 };
 ```
 
-You can now run `openapi-ts` to use the new Fetch API client. 🎉
+```sh [cli]
+npx @hey-api/openapi-ts \
+  -c @hey-api/client-fetch \  # [!code ++]
+  -i path/to/openapi.json \
+  -o src/client
+```
+
+:::
 
 ## Configuration
 
@@ -79,15 +88,15 @@ const client = createClient({
 
 ## Interceptors
 
-Interceptors (middleware) can be used to modify requests before they're sent or responses before they're returned to the rest of your application. They can be added with `use` or removed with `eject`. Fetch API does not have the interceptor functionality, so we implement our own. Below is an example request interceptor
+Interceptors (middleware) can be used to modify requests before they're sent or responses before they're returned to your application. They can be added with `use` and removed with `eject`. Fetch API does not have the interceptor functionality, so we implement our own. Below is an example request interceptor
 
 ::: code-group
 
 ```js [use]
 import { client } from 'client/sdk.gen';
 
-client.interceptors.request.use((request, options) => {
-  request.headers.set('Authorization', 'Bearer <my_token>');
+client.interceptors.request.use((request) => {
+  // do something
   return request;
 });
 ```
@@ -95,8 +104,8 @@ client.interceptors.request.use((request, options) => {
 ```js [eject]
 import { client } from 'client/sdk.gen';
 
-client.interceptors.request.eject((request, options) => {
-  request.headers.set('Authorization', 'Bearer <my_token>');
+client.interceptors.request.eject((request) => {
+  // do something
   return request;
 });
 ```
@@ -110,8 +119,8 @@ and an example response interceptor
 ```js [use]
 import { client } from 'client/sdk.gen';
 
-client.interceptors.response.use((response, request, options) => {
-  trackAnalytics(response);
+client.interceptors.response.use((response) => {
+  // do something
   return response;
 });
 ```
@@ -119,8 +128,8 @@ client.interceptors.response.use((response, request, options) => {
 ```js [eject]
 import { client } from 'client/sdk.gen';
 
-client.interceptors.response.eject((response, request, options) => {
-  trackAnalytics(response);
+client.interceptors.response.eject((response) => {
+  // do something
   return response;
 });
 ```
@@ -137,7 +146,7 @@ The Fetch client is built as a thin wrapper on top of Fetch API, extending its f
 
 ### SDKs
 
-This is the most common requirement. The generated SDKs consume an internal Fetch instance, so you will want to configure that.
+This is the most common requirement. The generated SDKs consume an internal client instance, so you will want to configure that.
 
 ```js
 import { client } from 'client/sdk.gen';
@@ -176,6 +185,34 @@ Alternatively, you can pass the Fetch API configuration options to each SDK func
 ```js
 const response = await getFoo({
   baseUrl: 'https://example.com', // <-- override internal configuration
+});
+```
+
+## Auth
+
+::: warning
+To use this feature, you must opt in to the [experimental parser](/openapi-ts/configuration#parser).
+:::
+
+The SDKs include auth mechanisms for every endpoint. You will want to configure the `auth` field to pass the right token for each request. The `auth` field can be a string or a function returning a string representing the token. The returned value will be attached only to requests that require auth.
+
+```js
+import { client } from 'client/sdk.gen';
+
+client.setConfig({
+  auth: () => '<my_token>', // [!code ++]
+  baseUrl: 'https://example.com',
+});
+```
+
+If you're not using SDKs or generating auth, using interceptors is a common approach to configuring auth for each request.
+
+```js
+import { client } from 'client/sdk.gen';
+
+client.interceptors.request.use((request, options) => {
+  request.headers.set('Authorization', 'Bearer <my_token>'); // [!code ++]
+  return request;
 });
 ```
 
