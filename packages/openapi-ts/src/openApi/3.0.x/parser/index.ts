@@ -1,5 +1,6 @@
 import type { IR } from '../../../ir/types';
 import { canProcessRef } from '../../shared/utils/filter';
+import { mergeParametersObjects } from '../../shared/utils/parameter';
 import type {
   OpenApiV3_0_X,
   ParameterObject,
@@ -9,11 +10,7 @@ import type {
   SecuritySchemeObject,
 } from '../types/spec';
 import { parseOperation } from './operation';
-import {
-  mergeParametersObjects,
-  parametersArrayToObject,
-  parseParameter,
-} from './parameter';
+import { parametersArrayToObject, parseParameter } from './parameter';
 import { parseRequestBody } from './requestBody';
 import { parseSchema } from './schema';
 

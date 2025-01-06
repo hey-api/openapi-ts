@@ -4,7 +4,7 @@ import { compiler } from '../../compiler';
 import { operationResponsesMap } from '../../ir/operation';
 import { deduplicateSchema } from '../../ir/schema';
 import type { IR } from '../../ir/types';
-import { digitsRegExp } from '../../utils/regexp';
+import { numberRegExp } from '../../utils/regexp';
 import { operationIrRef } from '../shared/utils/ref';
 import type { Plugin } from '../types';
 import type { Config } from './types';
@@ -328,8 +328,8 @@ const objectTypeToZodSchema = ({
       schema: property,
     });
 
-    digitsRegExp.lastIndex = 0;
-    let propertyName = digitsRegExp.test(name)
+    numberRegExp.lastIndex = 0;
+    let propertyName = numberRegExp.test(name)
       ? ts.factory.createNumericLiteral(name)
       : name;
     // TODO: parser - abstract safe property name logic

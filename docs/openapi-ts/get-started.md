@@ -33,7 +33,10 @@ Live demo
 The fastest way to use `@hey-api/openapi-ts` is via npx
 
 ```sh
-npx @hey-api/openapi-ts -i path/to/openapi.json -o src/client -c @hey-api/client-fetch
+npx @hey-api/openapi-ts \
+  -c @hey-api/client-fetch \
+  -i path/to/openapi.json \
+  -o src/client \
 ```
 
 Congratulations on creating your first client! 🎉 You can learn more about the generated files on the [Output](/openapi-ts/output) page.

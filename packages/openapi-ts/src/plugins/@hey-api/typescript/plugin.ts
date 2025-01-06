@@ -7,7 +7,7 @@ import { deduplicateSchema } from '../../../ir/schema';
 import type { IR } from '../../../ir/types';
 import { escapeComment } from '../../../utils/escape';
 import { irRef, isRefOpenApiComponent } from '../../../utils/ref';
-import { digitsRegExp } from '../../../utils/regexp';
+import { numberRegExp } from '../../../utils/regexp';
 import { stringCase } from '../../../utils/stringCase';
 import { fieldName } from '../../shared/utils/case';
 import { operationIrRef } from '../../shared/utils/ref';
@@ -115,12 +115,16 @@ const schemaToEnumObject = ({
     }
 
     if (key) {
-      key = stringCase({ case: plugin.enumsCase, value: key });
+      key = stringCase({
+        case: plugin.enumsCase,
+        stripLeadingSeparators: false,
+        value: key,
+      });
 
-      digitsRegExp.lastIndex = 0;
+      numberRegExp.lastIndex = 0;
       // TypeScript enum keys cannot be numbers
       if (
-        digitsRegExp.test(key) &&
+        numberRegExp.test(key) &&
         (plugin.enums === 'typescript' ||
           plugin.enums === 'typescript+namespace')
       ) {
