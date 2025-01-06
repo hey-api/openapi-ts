@@ -2,4 +2,4 @@
 '@hey-api/openapi-ts': patch
 ---
 
-fix: preserve leading indicators in enum keys
+fix: preserve leading separators in enum keys

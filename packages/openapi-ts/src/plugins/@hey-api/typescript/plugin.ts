@@ -402,16 +402,24 @@ const enumTypeToIdentifier = ({
 };
 
 const numberTypeToIdentifier = ({
+  context,
   schema,
 }: {
   context: IR.Context;
   namespace: Array<ts.Statement>;
-  schema: SchemaWithType<'number'>;
+  schema: SchemaWithType<'integer' | 'number'>;
 }) => {
   if (schema.const !== undefined) {
     return compiler.literalTypeNode({
       literal: compiler.ots.number(schema.const as number),
     });
+  }
+
+  if (schema.type === 'integer' && schema.format === 'int64') {
+    // TODO: parser - add ability to skip type transformers
+    if (context.config.plugins['@hey-api/transformers']?.bigInt) {
+      return compiler.typeReferenceNode({ typeName: 'BigInt' });
+    }
   }
 
   return compiler.keywordTypeNode({
@@ -605,6 +613,13 @@ const schemaTypeToIdentifier = ({
         plugin,
         schema: schema as SchemaWithType<'enum'>,
       });
+    case 'integer':
+    case 'number':
+      return numberTypeToIdentifier({
+        context,
+        namespace,
+        schema: schema as SchemaWithType<'integer' | 'number'>,
+      });
     case 'never':
       return compiler.keywordTypeNode({
         keyword: 'never',
@@ -612,12 +627,6 @@ const schemaTypeToIdentifier = ({
     case 'null':
       return compiler.literalTypeNode({
         literal: compiler.null(),
-      });
-    case 'number':
-      return numberTypeToIdentifier({
-        context,
-        namespace,
-        schema: schema as SchemaWithType<'number'>,
       });
     case 'object':
       return objectTypeToIdentifier({

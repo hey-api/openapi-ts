@@ -26,6 +26,7 @@ export const deduplicateSchema = <T extends IR.SchemaObject>({
       // no `type` might still include `$ref` or `const`
       !item.type ||
       item.type === 'boolean' ||
+      item.type === 'integer' ||
       item.type === 'null' ||
       item.type === 'number' ||
       item.type === 'string' ||

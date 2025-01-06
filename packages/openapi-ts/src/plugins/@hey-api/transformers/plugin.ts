@@ -16,6 +16,75 @@ interface OperationIRRef {
   id: string;
 }
 
+const bigIntExpressions = ({
+  dataExpression,
+}: {
+  dataExpression?: ts.Expression | string;
+}): Array<ts.Expression> => {
+  const bigIntCallExpression =
+    dataExpression !== undefined
+      ? compiler.callExpression({
+          functionName: 'BigInt',
+          parameters: [
+            compiler.callExpression({
+              functionName: compiler.propertyAccessExpression({
+                expression: dataExpression,
+                name: 'toString',
+              }),
+            }),
+          ],
+        })
+      : undefined;
+
+  if (bigIntCallExpression) {
+    if (typeof dataExpression === 'string') {
+      return [bigIntCallExpression];
+    }
+
+    if (dataExpression) {
+      return [
+        compiler.assignment({
+          left: dataExpression,
+          right: bigIntCallExpression,
+        }),
+      ];
+    }
+  }
+
+  return [];
+};
+
+const dateExpressions = ({
+  dataExpression,
+}: {
+  dataExpression?: ts.Expression | string;
+}): Array<ts.Expression> => {
+  const identifierDate = compiler.identifier({ text: 'Date' });
+
+  if (typeof dataExpression === 'string') {
+    return [
+      compiler.newExpression({
+        argumentsArray: [compiler.identifier({ text: dataExpression })],
+        expression: identifierDate,
+      }),
+    ];
+  }
+
+  if (dataExpression) {
+    return [
+      compiler.assignment({
+        left: dataExpression,
+        right: compiler.newExpression({
+          argumentsArray: [dataExpression],
+          expression: identifierDate,
+        }),
+      }),
+    ];
+  }
+
+  return [];
+};
+
 export const operationTransformerIrRef = ({
   id,
   type,
@@ -147,7 +216,7 @@ const processSchemaType = ({
             parameters: [
               {
                 name: dataVariableName,
-                // TODO: parser - add types, generate types without transformed dates
+                // TODO: parser - add types, generate types without transforms
                 type: compiler.keywordTypeNode({ keyword: 'any' }),
               },
             ],
@@ -293,30 +362,11 @@ const processSchemaType = ({
     schema.type === 'string' &&
     (schema.format === 'date' || schema.format === 'date-time')
   ) {
-    const identifierDate = compiler.identifier({ text: 'Date' });
+    return dateExpressions({ dataExpression });
+  }
 
-    if (typeof dataExpression === 'string') {
-      return [
-        compiler.newExpression({
-          argumentsArray: [compiler.identifier({ text: dataExpression })],
-          expression: identifierDate,
-        }),
-      ];
-    }
-
-    if (dataExpression) {
-      return [
-        compiler.assignment({
-          left: dataExpression,
-          right: compiler.newExpression({
-            argumentsArray: [dataExpression],
-            expression: identifierDate,
-          }),
-        }),
-      ];
-    }
-
-    return [];
+  if (plugin.bigInt && schema.type === 'integer' && schema.format === 'int64') {
+    return bigIntExpressions({ dataExpression });
   }
 
   if (schema.items) {
@@ -447,7 +497,7 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
           parameters: [
             {
               name: dataVariableName,
-              // TODO: parser - add types, generate types without transformed dates
+              // TODO: parser - add types, generate types without transforms
               type: compiler.keywordTypeNode({ keyword: 'any' }),
             },
           ],

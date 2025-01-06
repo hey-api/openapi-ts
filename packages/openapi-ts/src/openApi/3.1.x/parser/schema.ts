@@ -223,11 +223,14 @@ const parseNull = ({
 
 const parseNumber = ({
   irSchema = {},
+  schema,
 }: SchemaContext & {
   irSchema?: IR.SchemaObject;
-  schema: SchemaObject;
+  schema: Omit<SchemaObject, 'type'> & {
+    type: SchemaType<SchemaObject>;
+  };
 }): IR.SchemaObject => {
-  irSchema.type = 'number';
+  irSchema.type = schema.type;
 
   return irSchema;
 };

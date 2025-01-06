@@ -241,14 +241,27 @@ const numberTypeToZodSchema = ({
   schema,
 }: {
   context: IR.Context;
-  schema: SchemaWithType<'number'>;
+  schema: SchemaWithType<'integer' | 'number'>;
 }) => {
+  const isBigInt = schema.type === 'integer' && schema.format === 'int64';
+
   let numberExpression = compiler.callExpression({
     functionName: compiler.propertyAccessExpression({
       expression: zIdentifier,
-      name: compiler.identifier({ text: schema.type }),
+      name: isBigInt
+        ? compiler.identifier({ text: 'bigint' })
+        : compiler.identifier({ text: 'number' }),
     }),
   });
+
+  if (!isBigInt && schema.type === 'integer') {
+    numberExpression = compiler.callExpression({
+      functionName: compiler.propertyAccessExpression({
+        expression: numberExpression,
+        name: compiler.identifier({ text: 'int' }),
+      }),
+    });
+  }
 
   if (schema.const !== undefined) {
     // TODO: parser - add constant
@@ -584,6 +597,12 @@ const schemaTypeToZodSchema = ({
         context,
         schema: schema as SchemaWithType<'enum'>,
       });
+    case 'integer':
+    case 'number':
+      return numberTypeToZodSchema({
+        context,
+        schema: schema as SchemaWithType<'integer' | 'number'>,
+      });
     case 'never':
       return neverTypeToZodSchema({
         context,
@@ -593,11 +612,6 @@ const schemaTypeToZodSchema = ({
       return nullTypeToZodSchema({
         context,
         schema: schema as SchemaWithType<'null'>,
-      });
-    case 'number':
-      return numberTypeToZodSchema({
-        context,
-        schema: schema as SchemaWithType<'number'>,
       });
     case 'object':
       return objectTypeToZodSchema({
