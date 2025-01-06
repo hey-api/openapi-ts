@@ -20,12 +20,16 @@ export default {
   client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
-  watch: true, // [!code ++]
+  watch: true,
 };
 ```
 
 ### CLI
 
 ```sh
-npx @hey-api/openapi-ts -i path/to/openapi.json -o src/client -c @hey-api/client-fetch -w
+npx @hey-api/openapi-ts \
+  -c @hey-api/client-fetch \
+  -i path/to/openapi.json \
+  -o src/client \
+  -w
 ```

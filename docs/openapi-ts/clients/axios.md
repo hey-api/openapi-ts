@@ -43,9 +43,11 @@ bun add @hey-api/client-axios
 
 :::
 
-Ensure you have already [configured](/openapi-ts/get-started) `@hey-api/openapi-ts`. Update your configuration to use the Axios client package.
+In your [configuration](/openapi-ts/get-started), set `client` to `@hey-api/client-axios` and you'll be ready to use the Axios client. :tada:
 
-```js
+::: code-group
+
+```js [config]
 export default {
   client: '@hey-api/client-axios', // [!code ++]
   input: 'path/to/openapi.json',
@@ -53,7 +55,14 @@ export default {
 };
 ```
 
-You can now run `openapi-ts` to use the new Axios client. 🎉
+```sh [cli]
+npx @hey-api/openapi-ts \
+  -c @hey-api/client-axios \  # [!code ++]
+  -i path/to/openapi.json \
+  -o src/client
+```
+
+:::
 
 ## Configuration
 
@@ -79,7 +88,7 @@ const client = createClient({
 
 ## Interceptors
 
-Interceptors (middleware) can be used to modify requests before they're sent or responses before they're returned to the rest of your application. Axios provides interceptors, please refer to their documentation on [interceptors](https://axios-http.com/docs/interceptors).
+Interceptors (middleware) can be used to modify requests before they're sent or responses before they're returned to your application. Axios provides interceptors, please refer to their documentation on [interceptors](https://axios-http.com/docs/interceptors).
 
 We expose the Axios instance through the `instance` field.
 
@@ -87,7 +96,7 @@ We expose the Axios instance through the `instance` field.
 import { client } from 'client/sdk.gen';
 
 client.instance.interceptors.request.use((config) => {
-  config.headers.set('Authorization', 'Bearer <my_token>');
+  // do something
   return config;
 });
 ```
@@ -98,7 +107,7 @@ The Axios client is built as a thin wrapper on top of Axios, extending its funct
 
 ### SDKs
 
-This is the most common requirement. Our generated SDKs consume an internal Axios instance, so you will want to configure that.
+This is the most common requirement. The generated SDKs consume an internal client instance, so you will want to configure that.
 
 ```js
 import { client } from 'client/sdk.gen';
@@ -108,7 +117,7 @@ client.setConfig({
 });
 ```
 
-You can pass any Axios configuration option to `setConfig()`, and even your own Axios implementation.
+You can pass any Axios configuration option to `setConfig()` (except for `auth`), and even your own Axios implementation.
 
 ### Client
 
@@ -137,6 +146,34 @@ Alternatively, you can pass the Axios configuration options to each SDK function
 ```js
 const response = await getFoo({
   baseURL: 'https://example.com', // <-- override internal configuration
+});
+```
+
+## Auth
+
+::: warning
+To use this feature, you must opt in to the [experimental parser](/openapi-ts/configuration#parser).
+:::
+
+The SDKs include auth mechanisms for every endpoint. You will want to configure the `auth` field to pass the right token for each request. The `auth` field can be a string or a function returning a string representing the token. The returned value will be attached only to requests that require auth.
+
+```js
+import { client } from 'client/sdk.gen';
+
+client.setConfig({
+  auth: () => '<my_token>', // [!code ++]
+  baseURL: 'https://example.com',
+});
+```
+
+If you're not using SDKs or generating auth, using interceptors is a common approach to configuring auth for each request.
+
+```js
+import { client } from 'client/sdk.gen';
+
+client.instance.interceptors.request.use((config) => {
+  config.headers.set('Authorization', 'Bearer <my_token>'); // [!code ++]
+  return config;
 });
 ```
 

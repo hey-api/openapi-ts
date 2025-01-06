@@ -5,13 +5,13 @@ const lowercaseRegExp = /[\p{Ll}]/u;
 const identifierRegExp = /([\p{Alpha}\p{N}_]|$)/u;
 const separatorsRegExp = /[_.\- `\\[\]{}\\/]+/;
 
-const leadingSeparatorsRegExp = new RegExp('^' + separatorsRegExp.source);
+const leadingSeparatorsRegExp = new RegExp(`^${separatorsRegExp.source}`);
 const separatorsAndIdentifierRegExp = new RegExp(
-  separatorsRegExp.source + identifierRegExp.source,
+  `${separatorsRegExp.source}${identifierRegExp.source}`,
   'gu',
 );
 const numbersAndIdentifierRegExp = new RegExp(
-  '\\d+' + identifierRegExp.source,
+  `\\d+${identifierRegExp.source}`,
   'gu',
 );
 
@@ -92,9 +92,15 @@ const preserveCase = ({
 
 export const stringCase = ({
   case: _case,
+  stripLeadingSeparators = true,
   value,
 }: {
   readonly case: StringCase | undefined;
+  /**
+   * If leading separators have a semantic meaning, we might not want to
+   * remove them.
+   */
+  stripLeadingSeparators?: boolean;
   value: string;
 }): string => {
   let result = value.trim();
@@ -124,7 +130,10 @@ export const stringCase = ({
     result = preserveCase({ case: _case, string: result });
   }
 
-  result = result.replace(leadingSeparatorsRegExp, '');
+  if (stripLeadingSeparators || result[0] !== value[0]) {
+    result = result.replace(leadingSeparatorsRegExp, '');
+  }
+
   result =
     _case === 'SCREAMING_SNAKE_CASE'
       ? result.toLocaleUpperCase()
@@ -137,7 +146,12 @@ export const stringCase = ({
   if (_case === 'snake_case' || _case === 'SCREAMING_SNAKE_CASE') {
     result = result.replaceAll(
       separatorsAndIdentifierRegExp,
-      (_, identifier) => `_${identifier}`,
+      (match, identifier, offset) => {
+        if (offset === 0 && !stripLeadingSeparators) {
+          return match;
+        }
+        return `_${identifier}`;
+      },
     );
 
     if (result[result.length - 1] === '_') {
@@ -159,8 +173,19 @@ export const stringCase = ({
       },
     );
 
-    result = result.replaceAll(separatorsAndIdentifierRegExp, (_, identifier) =>
-      identifier.toLocaleUpperCase(),
+    result = result.replaceAll(
+      separatorsAndIdentifierRegExp,
+      (match, identifier, offset) => {
+        if (
+          offset === 0 &&
+          !stripLeadingSeparators &&
+          match[0] &&
+          value.startsWith(match[0])
+        ) {
+          return match;
+        }
+        return identifier.toLocaleUpperCase();
+      },
     );
   }
 

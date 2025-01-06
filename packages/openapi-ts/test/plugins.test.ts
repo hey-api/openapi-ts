@@ -12,7 +12,7 @@ import { getFilePaths } from './utils';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const versions = ['3.0.x', '3.1.x'];
+const versions = ['2.0.x', '3.0.x', '3.1.x'];
 
 for (const version of versions) {
   const namespace = 'plugins';

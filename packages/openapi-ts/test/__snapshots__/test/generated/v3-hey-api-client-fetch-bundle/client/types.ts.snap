@@ -12,17 +12,10 @@ export interface Config<ThrowOnError extends boolean = boolean>
   /**
    * **This feature works only with the [experimental parser](https://heyapi.dev/openapi-ts/configuration#parser)**
    *
-   * Access token or a function returning access token. The resolved token
-   * will be added to request headers where it's required.
+   * Auth token or a function returning auth token. The resolved value will be
+   * added to the request payload as defined by its `security` array.
    */
-  accessToken?: (() => Promise<string | undefined>) | string | undefined;
-  /**
-   * **This feature works only with the [experimental parser](https://heyapi.dev/openapi-ts/configuration#parser)**
-   *
-   * API key or a function returning API key. The resolved key will be added
-   * to the request payload as required.
-   */
-  apiKey?: (() => Promise<string | undefined>) | string | undefined;
+  auth?: ((auth: Auth) => Promise<AuthToken> | AuthToken) | AuthToken;
   /**
    * Base URL for all requests made by this client.
    *
@@ -112,6 +105,15 @@ export interface Config<ThrowOnError extends boolean = boolean>
   throwOnError?: ThrowOnError;
 }
 
+export interface Auth {
+  in?: 'header' | 'query';
+  name?: string;
+  scheme?: 'basic' | 'bearer';
+  type: 'apiKey' | 'http';
+}
+
+type AuthToken = string | undefined;
+
 export interface RequestOptions<
   ThrowOnError extends boolean = boolean,
   Url extends string = string,
@@ -138,7 +140,7 @@ export interface RequestOptions<
   /**
    * Security mechanism(s) to use for the request.
    */
-  security?: ReadonlyArray<Security>;
+  security?: ReadonlyArray<Auth>;
   url: Url;
 }
 
@@ -161,12 +163,6 @@ export type RequestResult<
         response: Response;
       }
     >;
-
-export interface Security {
-  fn: 'accessToken' | 'apiKey';
-  in: 'header' | 'query';
-  name: string;
-}
 
 type MethodFn = <
   Data = unknown,

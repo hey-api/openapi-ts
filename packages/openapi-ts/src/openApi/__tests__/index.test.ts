@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { type OpenApi, parseExperimental, parseLegacy } from '..';
+import { type OpenApi, parseLegacy, parseOpenApiSpec } from '..';
 import type { OpenApiV3_0_X } from '../3.0.x';
 import { parseV3_0_X } from '../3.0.x';
 import type { OpenApiV3_1_X } from '../3.1.x';
@@ -104,8 +104,8 @@ describe('experimentalParser', () => {
       openapi: '3.0.0',
       paths: {},
     };
-    parseExperimental({
-      // @ts-ignore
+    parseOpenApiSpec({
+      // @ts-expect-error
       config: {},
       spec,
     });
@@ -121,8 +121,8 @@ describe('experimentalParser', () => {
       openapi: '3.0.1',
       paths: {},
     };
-    parseExperimental({
-      // @ts-ignore
+    parseOpenApiSpec({
+      // @ts-expect-error
       config: {},
       spec,
     });
@@ -138,8 +138,8 @@ describe('experimentalParser', () => {
       openapi: '3.0.2',
       paths: {},
     };
-    parseExperimental({
-      // @ts-ignore
+    parseOpenApiSpec({
+      // @ts-expect-error
       config: {},
       spec,
     });
@@ -155,8 +155,8 @@ describe('experimentalParser', () => {
       openapi: '3.0.3',
       paths: {},
     };
-    parseExperimental({
-      // @ts-ignore
+    parseOpenApiSpec({
+      // @ts-expect-error
       config: {},
       spec,
     });
@@ -172,8 +172,8 @@ describe('experimentalParser', () => {
       openapi: '3.0.4',
       paths: {},
     };
-    parseExperimental({
-      // @ts-ignore
+    parseOpenApiSpec({
+      // @ts-expect-error
       config: {},
       spec,
     });
@@ -188,8 +188,8 @@ describe('experimentalParser', () => {
       },
       openapi: '3.1.0',
     };
-    parseExperimental({
-      // @ts-ignore
+    parseOpenApiSpec({
+      // @ts-expect-error
       config: {},
       spec,
     });
@@ -204,8 +204,8 @@ describe('experimentalParser', () => {
       },
       openapi: '3.1.1',
     };
-    parseExperimental({
-      // @ts-ignore
+    parseOpenApiSpec({
+      // @ts-expect-error
       config: {},
       spec,
     });

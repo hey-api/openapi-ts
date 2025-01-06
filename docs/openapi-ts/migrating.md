@@ -29,9 +29,29 @@ This config option is deprecated and will be removed.
 
 ## v0.61.0
 
+### Added `auth` option
+
+Client package functions `accessToken` and `apiKey` were replaced with a single `auth` function for fetching auth tokens. If your API supports multiple auth mechanisms, you can use the `auth` argument to return the appropriate token.
+
+```js
+import { client } from 'client/sdk.gen';
+
+client.setConfig({
+  accessToken: () => '<my_token>', // [!code --]
+  apiKey: () => '<my_token>', // [!code --]
+  auth: (auth) => '<my_token>', // [!code ++]
+});
+```
+
+Due to conflict with the Axios native `auth` option, we removed support for configuring Axios auth. Please let us know if you require this feature added back.
+
 ### Added `watch` option
 
 While this is a new feature, supporting it involved replacing the `@apidevtools/json-schema-ref-parser` dependency with our own implementation. Since this was a big change, we're applying caution and marking this as a breaking change.
+
+### Changed `parseAs: 'auto'` behavior
+
+The Fetch API client will return raw response body as `ReadableStream` when `Content-Type` response header is undefined and `parseAs` is `auto`.
 
 ## v0.60.0
 

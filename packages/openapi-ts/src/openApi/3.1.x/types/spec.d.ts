@@ -955,9 +955,9 @@ export interface MediaTypeObject {
  */
 export interface OAuthFlowObject {
   /**
-   * **REQUIRED**. The authorization URL to be used for this flow. This MUST be in the form of a URL. The OAuth2 standard requires the use of TLS.
+   * **REQUIRED (`"implicit"`, `"authorizationCode"`)**. The authorization URL to be used for this flow. This MUST be in the form of a URL. The OAuth2 standard requires the use of TLS.
    */
-  authorizationUrl: string;
+  authorizationUrl?: string;
   /**
    * The URL to be used for obtaining refresh tokens. This MUST be in the form of a URL. The OAuth2 standard requires the use of TLS.
    */
@@ -967,9 +967,9 @@ export interface OAuthFlowObject {
    */
   scopes: Record<string, string>;
   /**
-   * **REQUIRED**. The token URL to be used for this flow. This MUST be in the form of a URL. The OAuth2 standard requires the use of TLS.
+   * **REQUIRED (`"password"`, `"clientCredentials"`, `"authorizationCode"`)**. The token URL to be used for this flow. This MUST be in the form of a URL. The OAuth2 standard requires the use of TLS.
    */
-  tokenUrl: string;
+  tokenUrl?: string;
 }
 
 /**

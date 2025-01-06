@@ -20,5 +20,8 @@ export type Foo = 'foo' | 'bar' | null | '' | true | false;
 export enum Numbers {
     _100 = 100,
     _200 = 200,
-    _300 = 300
+    _300 = 300,
+    '_-100' = -100,
+    '_-200' = -200,
+    '_-300' = -300
 }
