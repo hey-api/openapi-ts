@@ -1,5 +1,12 @@
 # @example/openapi-ts-tanstack-react-query
 
+## 0.0.22
+
+### Patch Changes
+
+- Updated dependencies [[`e2e1410`](https://github.com/hey-api/openapi-ts/commit/e2e1410b22c0c84c40d1b1803e9650d546350cb7)]:
+  - @hey-api/client-fetch@0.6.0
+
 ## 0.0.21
 
 ### Patch Changes
