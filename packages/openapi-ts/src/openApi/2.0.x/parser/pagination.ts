@@ -1,8 +1,17 @@
 import { paginationKeywordsRegExp } from '../../../ir/pagination';
 import type { IR } from '../../../ir/types';
+import type { SchemaType } from '../../shared/types/schema';
 import type { ParameterObject, ReferenceObject } from '../types/spec';
 import { type SchemaObject } from '../types/spec';
 import { getSchemaType } from './schema';
+
+const isPaginationType = (
+  schemaType: SchemaType<SchemaObject> | undefined,
+): boolean =>
+  schemaType === 'boolean' ||
+  schemaType === 'integer' ||
+  schemaType === 'number' ||
+  schemaType === 'string';
 
 // We handle only simple values for now, up to 1 nested field
 export const paginationField = ({
@@ -83,12 +92,7 @@ export const paginationField = ({
         const schemaType = getSchemaType({ schema: property });
         // TODO: resolve deeper references
 
-        if (
-          schemaType === 'boolean' ||
-          schemaType === 'integer' ||
-          schemaType === 'number' ||
-          schemaType === 'string'
-        ) {
+        if (isPaginationType(schemaType)) {
           return name;
         }
       }
