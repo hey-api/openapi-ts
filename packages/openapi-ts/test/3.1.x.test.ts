@@ -432,6 +432,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'pagination-ref-any-of.yaml',
+        output: 'pagination-ref-any-of',
+        plugins: ['@tanstack/react-query'],
+      }),
+      description: 'detects pagination for composite types with null',
+    },
+    {
+      config: createConfig({
         input: 'parameter-explode-false.json',
         output: 'parameter-explode-false',
         plugins: ['@hey-api/sdk'],
