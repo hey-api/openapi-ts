@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.61.1
+
+### Patch Changes
+
+- [#1530](https://github.com/hey-api/openapi-ts/pull/1530) [`67b7295`](https://github.com/hey-api/openapi-ts/commit/67b72959be499ff59f5f68bfdaa7e5568f5de02f) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: detect pagination in composite schemas with null type
+
+- [#1535](https://github.com/hey-api/openapi-ts/pull/1535) [`d4cfa05`](https://github.com/hey-api/openapi-ts/commit/d4cfa05ed425d57f79b28efe76e6a33f1e892ec5) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle primitive constants in Zod and types
+
 ## 0.61.0
 
 ### Minor Changes
