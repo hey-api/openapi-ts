@@ -279,10 +279,10 @@ export const zModelSquare = z.object({
 
 export const zCompositionWithOneOfDiscriminator = z.union([
     z.object({
-        kind: z.string().optional()
+        kind: z.literal('circle').optional()
     }).merge(zModelCircle),
     z.object({
-        kind: z.string().optional()
+        kind: z.literal('square').optional()
     }).merge(zModelSquare)
 ]);
 
@@ -317,7 +317,7 @@ export const z3eNum1Период = z.enum([
     'Dog'
 ]);
 
-export const zConstValue = z.string();
+export const zConstValue = z.literal('ConstValue');
 
 export const zCompositionWithNestedAnyOfAndNull = z.object({
     propA: z.union([
@@ -489,10 +489,10 @@ export const zFreeFormObjectWithAdditionalPropertiesEqTrue = z.object({});
 export const zFreeFormObjectWithAdditionalPropertiesEqEmptyObject = z.object({});
 
 export const zModelWithConst = z.object({
-    String: z.string().optional(),
-    number: z.number().optional(),
+    String: z.literal('String').optional(),
+    number: z.literal(0).optional(),
     null: z.null().optional(),
-    withType: z.string().optional()
+    withType: z.literal('Some string').optional()
 });
 
 export const zModelWithAdditionalPropertiesEqTrue = z.object({
