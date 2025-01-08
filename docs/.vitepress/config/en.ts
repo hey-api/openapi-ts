@@ -11,7 +11,7 @@ export default defineConfig({
     nav: [
       {
         link: 'https://github.com/sponsors/hey-api',
-        text: 'Sponsor Hey API',
+        text: 'Sponsor Hey API 💰',
       },
     ],
     sidebar: [
