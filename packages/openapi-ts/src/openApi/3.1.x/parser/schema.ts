@@ -142,7 +142,8 @@ const parseArray = ({
 }): IR.SchemaObject => {
   if (
     (schema.prefixItems && schema.prefixItems.length) ||
-    (schema.maxItems && schema.maxItems === schema.minItems)
+    (schema.maxItems && schema.maxItems === schema.minItems) ||
+    schema.const !== undefined
   ) {
     irSchema.type = 'tuple';
   } else {

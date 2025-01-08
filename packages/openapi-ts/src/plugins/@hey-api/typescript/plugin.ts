@@ -438,6 +438,7 @@ const objectTypeToIdentifier = ({
   plugin: Plugin.Instance<Config>;
   schema: SchemaWithType<'object'>;
 }) => {
+  // TODO: parser - handle constants
   let indexProperty: Property | undefined;
   const schemaProperties: Array<Property> = [];
   let indexPropertyItems: Array<IR.SchemaObject> = [];
@@ -560,10 +561,15 @@ const tupleTypeToIdentifier = ({
   plugin: Plugin.Instance<Config>;
   schema: SchemaWithType<'tuple'>;
 }) => {
-  const itemTypes: Array<ts.TypeNode> = [];
+  let itemTypes: Array<ts.Expression | ts.TypeNode> = [];
 
-  for (const item of schema.items ?? []) {
-    itemTypes.push(
+  if (schema.const && Array.isArray(schema.const)) {
+    itemTypes = schema.const.map((value) => {
+      const expression = compiler.valueToExpression({ value });
+      return expression ?? compiler.identifier({ text: 'unknown' });
+    });
+  } else if (schema.items) {
+    itemTypes = schema.items.map((item) =>
       schemaToType({
         context,
         namespace,

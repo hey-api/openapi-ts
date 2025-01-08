@@ -395,15 +395,20 @@ export const createAnonymousFunction = ({
 
 /**
  * Create Array type expression.
- * @param arr - The array to create.
- * @param multiLine - if the array should be multiline.
- * @returns ts.ArrayLiteralExpression
  */
 export const createArrayLiteralExpression = <T>({
   elements,
   multiLine = false,
 }: {
+  /**
+   * The array to create.
+   */
   elements: T[];
+  /**
+   * Should the array be multi line?
+   *
+   * @default false
+   */
   multiLine?: boolean;
 }): ts.ArrayLiteralExpression => {
   const expression = ts.factory.createArrayLiteralExpression(
