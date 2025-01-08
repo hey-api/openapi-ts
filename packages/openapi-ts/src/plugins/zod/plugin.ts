@@ -26,6 +26,7 @@ const defaultIdentifier = compiler.identifier({ text: 'default' });
 const intersectionIdentifier = compiler.identifier({ text: 'intersection' });
 const lazyIdentifier = compiler.identifier({ text: 'lazy' });
 const lengthIdentifier = compiler.identifier({ text: 'length' });
+const literalIdentifier = compiler.identifier({ text: 'literal' });
 const maxIdentifier = compiler.identifier({ text: 'max' });
 const mergeIdentifier = compiler.identifier({ text: 'merge' });
 const minIdentifier = compiler.identifier({ text: 'min' });
@@ -146,11 +147,15 @@ const booleanTypeToZodSchema = ({
   context: IR.Context;
   schema: SchemaWithType<'boolean'>;
 }) => {
-  if (schema.const !== undefined) {
-    // TODO: parser - add constant
-    // return compiler.literalTypeNode({
-    //   literal: compiler.ots.boolean(schema.const as boolean),
-    // });
+  if (typeof schema.const === 'boolean') {
+    const expression = compiler.callExpression({
+      functionName: compiler.propertyAccessExpression({
+        expression: zIdentifier,
+        name: literalIdentifier,
+      }),
+      parameters: [compiler.ots.boolean(schema.const)],
+    });
+    return expression;
   }
 
   const expression = compiler.callExpression({
@@ -245,6 +250,18 @@ const numberTypeToZodSchema = ({
 }) => {
   const isBigInt = schema.type === 'integer' && schema.format === 'int64';
 
+  if (typeof schema.const === 'number') {
+    // TODO: parser - handle bigint constants
+    const expression = compiler.callExpression({
+      functionName: compiler.propertyAccessExpression({
+        expression: zIdentifier,
+        name: literalIdentifier,
+      }),
+      parameters: [compiler.ots.number(schema.const)],
+    });
+    return expression;
+  }
+
   let numberExpression = compiler.callExpression({
     functionName: compiler.propertyAccessExpression({
       expression: zIdentifier,
@@ -261,13 +278,6 @@ const numberTypeToZodSchema = ({
         name: compiler.identifier({ text: 'int' }),
       }),
     });
-  }
-
-  if (schema.const !== undefined) {
-    // TODO: parser - add constant
-    // return compiler.literalTypeNode({
-    //   literal: compiler.ots.number(schema.const as number),
-    // });
   }
 
   if (schema.exclusiveMinimum !== undefined) {
@@ -322,6 +332,7 @@ const objectTypeToZodSchema = ({
   result: Result;
   schema: SchemaWithType<'object'>;
 }) => {
+  // TODO: parser - handle constants
   const properties: Array<ts.PropertyAssignment> = [];
 
   // let indexProperty: Property | undefined;
@@ -419,19 +430,23 @@ const stringTypeToZodSchema = ({
   context: IR.Context;
   schema: SchemaWithType<'string'>;
 }) => {
+  if (typeof schema.const === 'string') {
+    const expression = compiler.callExpression({
+      functionName: compiler.propertyAccessExpression({
+        expression: zIdentifier,
+        name: literalIdentifier,
+      }),
+      parameters: [compiler.ots.string(schema.const)],
+    });
+    return expression;
+  }
+
   let stringExpression = compiler.callExpression({
     functionName: compiler.propertyAccessExpression({
       expression: zIdentifier,
       name: compiler.identifier({ text: schema.type }),
     }),
   });
-
-  if (schema.const !== undefined) {
-    // TODO: parser - add constant
-    // return compiler.literalTypeNode({
-    //   literal: compiler.stringLiteral({ text: schema.const as string }),
-    // });
-  }
 
   if (schema.format) {
     switch (schema.format) {
@@ -524,6 +539,63 @@ const stringTypeToZodSchema = ({
   }
 
   return stringExpression;
+};
+
+const tupleTypeToZodSchema = ({
+  context,
+  schema,
+}: {
+  context: IR.Context;
+  schema: SchemaWithType<'tuple'>;
+}) => {
+  if (schema.const && Array.isArray(schema.const)) {
+    const tupleElements = schema.const.map((value) =>
+      compiler.callExpression({
+        functionName: compiler.propertyAccessExpression({
+          expression: zIdentifier,
+          name: literalIdentifier,
+        }),
+        parameters: [compiler.valueToExpression({ value })],
+      }),
+    );
+    const expression = compiler.callExpression({
+      functionName: compiler.propertyAccessExpression({
+        expression: zIdentifier,
+        name: compiler.identifier({ text: 'tuple' }),
+      }),
+      parameters: [
+        compiler.arrayLiteralExpression({
+          elements: tupleElements,
+        }),
+      ],
+    });
+    return expression;
+  }
+
+  // TODO: parser - handle tuple items
+  // const itemTypes: Array<ts.TypeNode> = [];
+
+  // for (const item of schema.items ?? []) {
+  //   itemTypes.push(
+  //     schemaToType({
+  //       context,
+  //       namespace,
+  //       plugin,
+  //       schema: item,
+  //     }),
+  //   );
+  // }
+
+  // return compiler.typeTupleNode({
+  //   types: itemTypes,
+  // });
+
+  return unknownTypeToZodSchema({
+    context,
+    schema: {
+      type: 'unknown',
+    },
+  });
 };
 
 const undefinedTypeToZodSchema = ({
@@ -625,18 +697,10 @@ const schemaTypeToZodSchema = ({
         schema: schema as SchemaWithType<'string'>,
       });
     case 'tuple':
-      // TODO: parser - temporary unknown while not handled
-      return unknownTypeToZodSchema({
+      return tupleTypeToZodSchema({
         context,
-        schema: {
-          type: 'unknown',
-        },
+        schema: schema as SchemaWithType<'tuple'>,
       });
-    // TODO: parser - handle tuple
-    // return tupleTypeToIdentifier({
-    //   context,
-    //   schema: schema as SchemaWithType<'tuple'>,
-    // });
     case 'undefined':
       return undefinedTypeToZodSchema({
         context,

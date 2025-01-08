@@ -480,6 +480,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'schema-const.yaml',
+        output: 'schema-const',
+        plugins: ['@hey-api/typescript', 'zod'],
+      }),
+      description: 'handles various constants',
+    },
+    {
+      config: createConfig({
         input: 'security-api-key.json',
         output: 'security-api-key',
         plugins: [
