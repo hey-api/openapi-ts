@@ -57,7 +57,7 @@ Output is the next thing to define. It can be either a string pointing to the de
 You should treat the output folder as a dependency. Do not directly modify its contents as your changes might be erased when you run `@hey-api/openapi-ts` again.
 :::
 
-## Clients
+## Client
 
 Clients are responsible for sending the actual HTTP requests. The `client` value is not required, but you must define it if you're generating SDKs (enabled by default).
 
