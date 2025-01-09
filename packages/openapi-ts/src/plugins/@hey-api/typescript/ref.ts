@@ -1,8 +1,21 @@
-import type { TypeScriptFile } from '../../../generate/files';
+import type { Identifier, TypeScriptFile } from '../../../generate/files';
 import type { IR } from '../../../ir/types';
 import { operationIrRef } from '../../shared/utils/ref';
 
 export const typesId = 'types';
+
+function refIdentifier<T extends Identifier>(
+  identifier: T,
+  onGet?: (identifier: T) => void,
+): T {
+  return {
+    ...identifier,
+    get name() {
+      onGet?.(identifier);
+      return identifier.name;
+    },
+  };
+}
 
 export const importIdentifierData = ({
   context,
@@ -12,19 +25,20 @@ export const importIdentifierData = ({
   context: IR.Context;
   file: TypeScriptFile;
   operation: IR.OperationObject;
-}): ReturnType<TypeScriptFile['identifier']> => {
+}): Identifier => {
   const identifierData = context.file({ id: 'types' })!.identifier({
     $ref: operationIrRef({ id: operation.id, type: 'data' }),
     namespace: 'type',
   });
-  if (identifierData.name) {
-    file.import({
-      asType: true,
-      module: file.relativePathToFile({ context, id: 'types' }),
-      name: identifierData.name,
-    });
-  }
-  return identifierData;
+  return refIdentifier(identifierData, (identifier) => {
+    if (identifier.name) {
+      file.import({
+        asType: true,
+        module: file.relativePathToFile({ context, id: 'types' }),
+        name: identifier.name,
+      });
+    }
+  });
 };
 
 export const importIdentifierError = ({
@@ -35,19 +49,20 @@ export const importIdentifierError = ({
   context: IR.Context;
   file: TypeScriptFile;
   operation: IR.OperationObject;
-}): ReturnType<TypeScriptFile['identifier']> => {
+}): Identifier => {
   const identifierError = context.file({ id: 'types' })!.identifier({
     $ref: operationIrRef({ id: operation.id, type: 'error' }),
     namespace: 'type',
   });
-  if (identifierError.name) {
-    file.import({
-      asType: true,
-      module: file.relativePathToFile({ context, id: 'types' }),
-      name: identifierError.name,
-    });
-  }
-  return identifierError;
+  return refIdentifier(identifierError, (identifier) => {
+    if (identifier.name) {
+      file.import({
+        asType: true,
+        module: file.relativePathToFile({ context, id: 'types' }),
+        name: identifier.name,
+      });
+    }
+  });
 };
 
 export const importIdentifierResponse = ({
@@ -58,17 +73,18 @@ export const importIdentifierResponse = ({
   context: IR.Context;
   file: TypeScriptFile;
   operation: IR.OperationObject;
-}): ReturnType<TypeScriptFile['identifier']> => {
+}): Identifier => {
   const identifierResponse = context.file({ id: 'types' })!.identifier({
     $ref: operationIrRef({ id: operation.id, type: 'response' }),
     namespace: 'type',
   });
-  if (identifierResponse.name) {
-    file.import({
-      asType: true,
-      module: file.relativePathToFile({ context, id: 'types' }),
-      name: identifierResponse.name,
-    });
-  }
-  return identifierResponse;
+  return refIdentifier(identifierResponse, (identifier) => {
+    if (identifier.name) {
+      file.import({
+        asType: true,
+        module: file.relativePathToFile({ context, id: 'types' }),
+        name: identifier.name,
+      });
+    }
+  });
 };

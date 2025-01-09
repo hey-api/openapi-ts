@@ -37,19 +37,21 @@ interface Auth {
 
 export const operationOptionsType = ({
   context,
-  identifierData,
-  identifierError,
+  file,
+  operation,
   throwOnError,
 }: {
   context: IR.Context;
-  identifierData?: ReturnType<TypeScriptFile['identifier']>;
-  // TODO: refactor this so we don't need to import error type unless it's used here
-  identifierError?: ReturnType<TypeScriptFile['identifier']>;
+  file: TypeScriptFile;
+  operation: IR.OperationObject;
   throwOnError?: string;
 }) => {
+  const identifierData = importIdentifierData({ context, file, operation });
+
   const optionsName = clientApi.Options.name;
 
   if (context.config.client.name === '@hey-api/client-nuxt') {
+    const identifierError = importIdentifierError({ context, file, operation });
     return `${optionsName}<${identifierData?.name || 'unknown'}, ${identifierError?.name || 'unknown'}, TComposable>`;
   }
 
@@ -448,16 +450,11 @@ const generateClassSdk = ({
   context: IR.Context;
   plugin: Plugin.Instance<Config>;
 }) => {
+  const isNuxtClient = context.config.client.name === '@hey-api/client-nuxt';
   const file = context.file({ id: sdkId })!;
   const sdks = new Map<string, Array<ts.MethodDeclaration>>();
 
   context.subscribe('operation', ({ operation }) => {
-    const identifierData = importIdentifierData({ context, file, operation });
-    // TODO: import error type only if we are sure we are going to use it
-    // const identifierError = importIdentifierError({ context, file, operation });
-
-    const isNuxtClient = context.config.client.name === '@hey-api/client-nuxt';
-
     const node = compiler.methodDeclaration({
       accessLevel: 'public',
       comment: [
@@ -478,8 +475,8 @@ const generateClassSdk = ({
           name: 'options',
           type: operationOptionsType({
             context,
-            identifierData,
-            // identifierError,
+            file,
+            operation,
             throwOnError: isNuxtClient ? undefined : 'ThrowOnError',
           }),
         },
@@ -541,15 +538,10 @@ const generateFlatSdk = ({
   context: IR.Context;
   plugin: Plugin.Instance<Config>;
 }) => {
+  const isNuxtClient = context.config.client.name === '@hey-api/client-nuxt';
   const file = context.file({ id: sdkId })!;
 
   context.subscribe('operation', ({ operation }) => {
-    const identifierData = importIdentifierData({ context, file, operation });
-    // TODO: import error type only if we are sure we are going to use it
-    // const identifierError = importIdentifierError({ context, file, operation });
-
-    const isNuxtClient = context.config.client.name === '@hey-api/client-nuxt';
-
     const node = compiler.constVariable({
       comment: [
         operation.deprecated && '@deprecated',
@@ -564,8 +556,8 @@ const generateFlatSdk = ({
             name: 'options',
             type: operationOptionsType({
               context,
-              identifierData,
-              // identifierError,
+              file,
+              operation,
               throwOnError: isNuxtClient ? undefined : 'ThrowOnError',
             }),
           },
