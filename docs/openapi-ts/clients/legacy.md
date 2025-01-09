@@ -9,6 +9,10 @@ import { embedProject } from '../../embed'
 
 # Legacy Clients
 
+::: warning
+This feature is deprecated and no longer maintained. Please migrate to one of the client packages.
+:::
+
 Before client packages, clients were generated using `@hey-api/openapi-ts`. In fact, `@hey-api/openapi-ts` still supports generating legacy clients. You can generate them with the `client` config option.
 
 ::: code-group
@@ -78,7 +82,7 @@ You might not need a `node` client. Fetch API is [experimental](https://nodejs.o
 
 ## Interceptors
 
-Interceptors (middleware) can be used to modify requests before they're sent or responses before they're returned to the rest of your application.
+Interceptors (middleware) can be used to modify requests before they're sent or responses before they're returned to your application.
 
 Below is an example request interceptor
 

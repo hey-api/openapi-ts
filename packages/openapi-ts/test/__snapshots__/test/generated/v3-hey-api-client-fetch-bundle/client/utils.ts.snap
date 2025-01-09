@@ -1,4 +1,4 @@
-import type { Client, Config, RequestOptions, Security } from './types';
+import type { Auth, Client, Config, RequestOptions } from './types';
 
 interface PathSerializer {
   path: Record<string, unknown>;
@@ -365,46 +365,54 @@ export const getParseAs = (
 };
 
 export const getAuthToken = async (
-  security: Security,
-  options: Pick<RequestOptions, 'accessToken' | 'apiKey'>,
+  auth: Auth,
+  callback: RequestOptions['auth'],
 ): Promise<string | undefined> => {
-  if (security.fn === 'accessToken') {
-    const token =
-      typeof options.accessToken === 'function'
-        ? await options.accessToken()
-        : options.accessToken;
-    return token ? `Bearer ${token}` : undefined;
+  const token =
+    typeof callback === 'function' ? await callback(auth) : callback;
+
+  if (!token) {
+    return;
   }
 
-  if (security.fn === 'apiKey') {
-    return typeof options.apiKey === 'function'
-      ? await options.apiKey()
-      : options.apiKey;
+  if (auth.scheme === 'bearer') {
+    return `Bearer ${token}`;
   }
+
+  if (auth.scheme === 'basic') {
+    return `Basic ${btoa(token)}`;
+  }
+
+  return token;
 };
 
 export const setAuthParams = async ({
   security,
   ...options
 }: Pick<Required<RequestOptions>, 'security'> &
-  Pick<RequestOptions, 'accessToken' | 'apiKey' | 'query'> & {
+  Pick<RequestOptions, 'auth' | 'query'> & {
     headers: Headers;
   }) => {
-  for (const scheme of security) {
-    const token = await getAuthToken(scheme, options);
+  for (const auth of security) {
+    const token = await getAuthToken(auth, options.auth);
 
     if (!token) {
       continue;
     }
 
-    if (scheme.in === 'header') {
-      options.headers.set(scheme.name, token);
-    } else if (scheme.in === 'query') {
-      if (!options.query) {
-        options.query = {};
-      }
+    const name = auth.name ?? 'Authorization';
 
-      options.query[scheme.name] = token;
+    switch (auth.in) {
+      case 'query':
+        if (!options.query) {
+          options.query = {};
+        }
+        options.query[name] = token;
+        break;
+      case 'header':
+      default:
+        options.headers.set(name, token);
+        break;
     }
 
     return;

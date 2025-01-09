@@ -1,92 +1,92 @@
 import Handlebars from 'handlebars';
 
-// @ts-ignore
+// @ts-expect-error
 import templateClient from '../legacy/handlebars/compiled/client.js';
-// @ts-ignore
+// @ts-expect-error
 import angularGetHeaders from '../legacy/handlebars/compiled/core/angular/getHeaders.js';
-// @ts-ignore
+// @ts-expect-error
 import angularGetRequestBody from '../legacy/handlebars/compiled/core/angular/getRequestBody.js';
-// @ts-ignore
+// @ts-expect-error
 import angularGetResponseBody from '../legacy/handlebars/compiled/core/angular/getResponseBody.js';
-// @ts-ignore
+// @ts-expect-error
 import angularGetResponseHeader from '../legacy/handlebars/compiled/core/angular/getResponseHeader.js';
-// @ts-ignore
+// @ts-expect-error
 import angularRequest from '../legacy/handlebars/compiled/core/angular/request.js';
-// @ts-ignore
+// @ts-expect-error
 import angularSendRequest from '../legacy/handlebars/compiled/core/angular/sendRequest.js';
-// @ts-ignore
+// @ts-expect-error
 import templateCoreApiError from '../legacy/handlebars/compiled/core/ApiError.js';
-// @ts-ignore
+// @ts-expect-error
 import templateCoreApiRequestOptions from '../legacy/handlebars/compiled/core/ApiRequestOptions.js';
-// @ts-ignore
+// @ts-expect-error
 import templateCoreApiResult from '../legacy/handlebars/compiled/core/ApiResult.js';
-// @ts-ignore
+// @ts-expect-error
 import axiosGetHeaders from '../legacy/handlebars/compiled/core/axios/getHeaders.js';
-// @ts-ignore
+// @ts-expect-error
 import axiosGetRequestBody from '../legacy/handlebars/compiled/core/axios/getRequestBody.js';
-// @ts-ignore
+// @ts-expect-error
 import axiosGetResponseBody from '../legacy/handlebars/compiled/core/axios/getResponseBody.js';
-// @ts-ignore
+// @ts-expect-error
 import axiosGetResponseHeader from '../legacy/handlebars/compiled/core/axios/getResponseHeader.js';
-// @ts-ignore
+// @ts-expect-error
 import axiosRequest from '../legacy/handlebars/compiled/core/axios/request.js';
-// @ts-ignore
+// @ts-expect-error
 import axiosSendRequest from '../legacy/handlebars/compiled/core/axios/sendRequest.js';
-// @ts-ignore
+// @ts-expect-error
 import templateCoreBaseHttpRequest from '../legacy/handlebars/compiled/core/BaseHttpRequest.js';
-// @ts-ignore
+// @ts-expect-error
 import templateCancelablePromise from '../legacy/handlebars/compiled/core/CancelablePromise.js';
-// @ts-ignore
+// @ts-expect-error
 import fetchGetHeaders from '../legacy/handlebars/compiled/core/fetch/getHeaders.js';
-// @ts-ignore
+// @ts-expect-error
 import fetchGetRequestBody from '../legacy/handlebars/compiled/core/fetch/getRequestBody.js';
-// @ts-ignore
+// @ts-expect-error
 import fetchGetResponseBody from '../legacy/handlebars/compiled/core/fetch/getResponseBody.js';
-// @ts-ignore
+// @ts-expect-error
 import fetchGetResponseHeader from '../legacy/handlebars/compiled/core/fetch/getResponseHeader.js';
-// @ts-ignore
+// @ts-expect-error
 import fetchRequest from '../legacy/handlebars/compiled/core/fetch/request.js';
-// @ts-ignore
+// @ts-expect-error
 import fetchSendRequest from '../legacy/handlebars/compiled/core/fetch/sendRequest.js';
-// @ts-ignore
+// @ts-expect-error
 import functionBase64 from '../legacy/handlebars/compiled/core/functions/base64.js';
-// @ts-ignore
+// @ts-expect-error
 import functionCatchErrorCodes from '../legacy/handlebars/compiled/core/functions/catchErrorCodes.js';
-// @ts-ignore
+// @ts-expect-error
 import functionGetFormData from '../legacy/handlebars/compiled/core/functions/getFormData.js';
-// @ts-ignore
+// @ts-expect-error
 import functionGetQueryString from '../legacy/handlebars/compiled/core/functions/getQueryString.js';
-// @ts-ignore
+// @ts-expect-error
 import functionGetUrl from '../legacy/handlebars/compiled/core/functions/getUrl.js';
-// @ts-ignore
+// @ts-expect-error
 import functionIsBlob from '../legacy/handlebars/compiled/core/functions/isBlob.js';
-// @ts-ignore
+// @ts-expect-error
 import functionIsFormData from '../legacy/handlebars/compiled/core/functions/isFormData.js';
-// @ts-ignore
+// @ts-expect-error
 import functionIsString from '../legacy/handlebars/compiled/core/functions/isString.js';
-// @ts-ignore
+// @ts-expect-error
 import functionIsStringWithValue from '../legacy/handlebars/compiled/core/functions/isStringWithValue.js';
-// @ts-ignore
+// @ts-expect-error
 import functionIsSuccess from '../legacy/handlebars/compiled/core/functions/isSuccess.js';
-// @ts-ignore
+// @ts-expect-error
 import functionResolve from '../legacy/handlebars/compiled/core/functions/resolve.js';
-// @ts-ignore
+// @ts-expect-error
 import templateCoreHttpRequest from '../legacy/handlebars/compiled/core/HttpRequest.js';
-// @ts-ignore
+// @ts-expect-error
 import templateCoreSettings from '../legacy/handlebars/compiled/core/OpenAPI.js';
-// @ts-ignore
+// @ts-expect-error
 import templateCoreRequest from '../legacy/handlebars/compiled/core/request.js';
-// @ts-ignore
+// @ts-expect-error
 import xhrGetHeaders from '../legacy/handlebars/compiled/core/xhr/getHeaders.js';
-// @ts-ignore
+// @ts-expect-error
 import xhrGetRequestBody from '../legacy/handlebars/compiled/core/xhr/getRequestBody.js';
-// @ts-ignore
+// @ts-expect-error
 import xhrGetResponseBody from '../legacy/handlebars/compiled/core/xhr/getResponseBody.js';
-// @ts-ignore
+// @ts-expect-error
 import xhrGetResponseHeader from '../legacy/handlebars/compiled/core/xhr/getResponseHeader.js';
-// @ts-ignore
+// @ts-expect-error
 import xhrRequest from '../legacy/handlebars/compiled/core/xhr/request.js';
-// @ts-ignore
+// @ts-expect-error
 import xhrSendRequest from '../legacy/handlebars/compiled/core/xhr/sendRequest.js';
 import { getConfig } from './config';
 import { stringCase } from './stringCase';

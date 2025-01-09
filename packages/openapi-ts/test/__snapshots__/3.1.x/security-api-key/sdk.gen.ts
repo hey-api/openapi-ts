@@ -10,9 +10,9 @@ export const getFoo = <ThrowOnError extends boolean = false>(options?: Options<G
         ...options,
         security: [
             {
-                fn: 'apiKey',
                 in: 'query',
-                name: 'foo'
+                name: 'foo',
+                type: 'apiKey'
             }
         ],
         url: '/foo'

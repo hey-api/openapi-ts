@@ -57,7 +57,7 @@ Output is the next thing to define. It can be either a string pointing to the de
 You should treat the output folder as a dependency. Do not directly modify its contents as your changes might be erased when you run `@hey-api/openapi-ts` again.
 :::
 
-## Clients
+## Client
 
 Clients are responsible for sending the actual HTTP requests. The `client` value is not required, but you must define it if you're generating SDKs (enabled by default).
 
@@ -96,7 +96,7 @@ You can learn more on the [Output](/openapi-ts/output) page.
 
 ## Parser
 
-If you're using OpenAPI 3.0 or newer, we encourage you to try out the experimental parser. In the future this will become the default parser, but until it's been tested it's an opt-in feature. To try it out, set the `experimentalParser` flag in your configuration to `true`.
+If you're NOT using a legacy client, we encourage you to try out the experimental parser. Soon, it will become the default parser, but until it's been tested it's an opt-in feature. To try it out, set the `experimentalParser` flag in your configuration to `true`.
 
 ::: code-group
 
@@ -110,7 +110,11 @@ export default {
 ```
 
 ```sh [cli]
-npx @hey-api/openapi-ts -i path/to/openapi.json -o src/client -c @hey-api/client-fetch -e
+npx @hey-api/openapi-ts \
+  -c @hey-api/client-fetch \
+  -e \  # [!code ++]
+  -i path/to/openapi.json \
+  -o src/client
 ```
 
 :::
@@ -274,7 +278,11 @@ export default {
 ```
 
 ```sh [cli]
-npx @hey-api/openapi-ts -i path/to/openapi.json -o src/client -c @hey-api/client-fetch -w
+npx @hey-api/openapi-ts \
+  -c @hey-api/client-fetch \
+  -i path/to/openapi.json \
+  -o src/client \
+  -w  # [!code ++]
 ```
 
 :::

@@ -1,4 +1,5 @@
 import type { OpenApiV2Schema, OpenApiV3Schema } from '../../../openApi';
+import type { SchemaObject as OpenApiV2_0_XSchemaObject } from '../../../openApi/2.0.x/types/spec';
 import type {
   ReferenceObject as OpenApiV3_0_XReferenceObject,
   SchemaObject as OpenApiV3_0_XSchemaObject,
@@ -17,6 +18,7 @@ export interface Config extends Plugin.Name<'@hey-api/schemas'> {
     schema:
       | OpenApiV2Schema
       | OpenApiV3Schema
+      | OpenApiV2_0_XSchemaObject
       | OpenApiV3_0_XReferenceObject
       | OpenApiV3_0_XSchemaObject
       | OpenApiV3_1_XSchemaObject,

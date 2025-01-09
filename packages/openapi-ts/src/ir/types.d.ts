@@ -33,7 +33,7 @@ interface IROperationObject {
   parameters?: IRParametersObject;
   path: keyof IRPathsObject;
   responses?: IRResponsesObject;
-  security?: ReadonlyArray<SecuritySchemeObject>;
+  security?: ReadonlyArray<IRSecurityObject>;
   // TODO: parser - add more properties
   // servers?: ReadonlyArray<ServerObject>;
   summary?: string;
@@ -174,6 +174,7 @@ interface IRSchemaObject
     | 'array'
     | 'boolean'
     | 'enum'
+    | 'integer'
     | 'never'
     | 'null'
     | 'number'
@@ -184,6 +185,8 @@ interface IRSchemaObject
     | 'unknown'
     | 'void';
 }
+
+type IRSecurityObject = SecuritySchemeObject;
 
 interface IRModel {
   components?: IRComponentsObject;
@@ -204,4 +207,5 @@ export namespace IR {
   export type ResponseObject = IRResponseObject;
   export type ResponsesObject = IRResponsesObject;
   export type SchemaObject = IRSchemaObject;
+  export type SecurityObject = IRSecurityObject;
 }

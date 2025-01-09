@@ -20,12 +20,13 @@ export const useTypeData = ({
   const file = context.file({ id: plugin.name })!;
 
   const identifierData = importIdentifierData({ context, file, operation });
-  const identifierError = importIdentifierError({ context, file, operation });
+  // TODO: import error type only if we are sure we are going to use it
+  // const identifierError = importIdentifierError({ context, file, operation });
 
   const typeData = operationOptionsType({
     context,
     identifierData,
-    identifierError,
+    // identifierError,
   });
   return typeData;
 };

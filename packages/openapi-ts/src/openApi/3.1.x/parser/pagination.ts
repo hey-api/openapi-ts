@@ -1,9 +1,18 @@
 import { paginationKeywordsRegExp } from '../../../ir/pagination';
 import type { IR } from '../../../ir/types';
+import type { SchemaType } from '../../shared/types/schema';
 import type { ParameterObject, RequestBodyObject } from '../types/spec';
 import { type SchemaObject } from '../types/spec';
 import { mediaTypeObject } from './mediaType';
 import { getSchemaTypes } from './schema';
+
+const isPaginationType = (
+  schemaTypes: ReadonlyArray<SchemaType<SchemaObject>>,
+): boolean =>
+  schemaTypes.includes('boolean') ||
+  schemaTypes.includes('integer') ||
+  schemaTypes.includes('number') ||
+  schemaTypes.includes('string');
 
 // We handle only simple values for now, up to 1 nested field
 export const paginationField = ({
@@ -65,15 +74,25 @@ export const paginationField = ({
       const property = schema.properties[name]!;
 
       if (typeof property !== 'boolean') {
-        const schemaTypes = getSchemaTypes({ schema: property });
         // TODO: resolve deeper references
+        const schemaTypes = getSchemaTypes({ schema: property });
 
-        if (
-          schemaTypes.includes('boolean') ||
-          schemaTypes.includes('integer') ||
-          schemaTypes.includes('number') ||
-          schemaTypes.includes('string')
-        ) {
+        if (!schemaTypes.length) {
+          const compositionSchemas = property.anyOf ?? property.oneOf;
+          const nonNullCompositionSchemas = (compositionSchemas ?? []).filter(
+            (schema) => schema.type !== 'null',
+          );
+          if (nonNullCompositionSchemas.length === 1) {
+            const schemaTypes = getSchemaTypes({
+              schema: nonNullCompositionSchemas[0]!,
+            });
+            if (isPaginationType(schemaTypes)) {
+              return name;
+            }
+          }
+        }
+
+        if (isPaginationType(schemaTypes)) {
           return name;
         }
       }
