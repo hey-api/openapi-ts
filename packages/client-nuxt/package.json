@@ -60,16 +60,16 @@
     "dev": "tsup --watch",
     "prepublishOnly": "pnpm build",
     "test:coverage": "vitest run --coverage",
-    "test:types": "vitest --typecheck --watch=false",
     "test:update": "vitest watch --update",
     "test:watch": "vitest watch",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "vitest --typecheck --watch=false"
   },
   "peerDependencies": {
     "nuxt": ">= 3.0.0 < 4"
   },
   "devDependencies": {
-    "nuxt": "3.15.0"
+    "@nuxt/test-utils": "3.15.1",
+    "nuxt": "3.15.1"
   }
 }
