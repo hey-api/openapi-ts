@@ -13,6 +13,7 @@ dist
 coverage
 .env
 .nuxt
+.output
 .svelte-kit
 
 # test files
