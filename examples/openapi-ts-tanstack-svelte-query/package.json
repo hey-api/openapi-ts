@@ -30,14 +30,14 @@
     "eslint": "9.0.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-svelte": "2.36.0",
-    "globals": "15.0.0",
+    "globals": "15.14.0",
     "prettier": "3.1.1",
     "prettier-plugin-svelte": "3.1.2",
     "svelte": "4.2.19",
     "svelte-check": "3.6.0",
-    "typescript": "5.5.3",
-    "typescript-eslint": "8.0.0",
+    "typescript": "5.7.3",
+    "typescript-eslint": "8.19.1",
     "vite": "5.4.6",
-    "vitest": "2.0.0"
+    "vitest": "2.1.8"
   }
 }

@@ -26,7 +26,7 @@ const stop = async () => {
 
 const evaluate = async (fn: EvaluateFunc<unknown[]>) => await _page.evaluate(fn)
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 const exposeFunction = async (name: string, fn: Function) =>
   await _page.exposeFunction(name, fn)
 
