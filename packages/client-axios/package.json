@@ -59,10 +59,11 @@
     "dev": "tsup --watch",
     "prepublishOnly": "pnpm build",
     "test:coverage": "vitest run --coverage",
+    "test:types": "vitest --typecheck --watch=false",
     "test:update": "vitest watch --update",
     "test:watch": "vitest watch",
     "test": "vitest run",
-    "typecheck": "vitest --typecheck --watch=false"
+    "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
     "axios": ">= 1.0.0 < 2"
