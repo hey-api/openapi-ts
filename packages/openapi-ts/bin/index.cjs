@@ -114,7 +114,7 @@ async function start() {
     if (!context[0] || !context[0].config.watch) {
       process.exit(0);
     }
-  } catch (error) {
+  } catch {
     process.exit(1);
   }
 }

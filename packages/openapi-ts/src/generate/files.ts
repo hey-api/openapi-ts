@@ -11,7 +11,7 @@ import type { StringCase } from '../types/config';
 import { stringCase } from '../utils/stringCase';
 import { ensureDirSync } from './utils';
 
-interface Identifier {
+export interface Identifier {
   /**
    * Did this function add a new property to the file's `identifiers` map?
    */
