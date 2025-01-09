@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.61.2
+
+### Patch Changes
+
+- [#1543](https://github.com/hey-api/openapi-ts/pull/1543) [`7a2d6dc`](https://github.com/hey-api/openapi-ts/commit/7a2d6dcd6e30411178ac5c78db3f1dbbcc8d6b27) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: send GET request only on first spec fetch
+
 ## 0.61.1
 
 ### Patch Changes
