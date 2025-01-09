@@ -255,7 +255,7 @@ export interface ExternalDocumentationObject {
  *
  * TODO: examples
  */
-export interface HeaderObject extends Omit<ParameterObject, 'in' | 'name'> {}
+export type HeaderObject = Omit<ParameterObject, 'in' | 'name'>;
 
 /**
  * The object provides metadata about the API. The metadata MAY be used by the clients if needed, and MAY be presented in editing or documentation generation tools for convenience.
@@ -1279,8 +1279,4 @@ type OpenApiSchemaFormats =
   | 'date-time'
   | 'password';
 
-type Format =
-  | JsonSchemaFormats
-  | OpenApiSchemaFormats
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  | (string & {});
+type Format = JsonSchemaFormats | OpenApiSchemaFormats | (string & {});

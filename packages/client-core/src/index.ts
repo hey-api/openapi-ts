@@ -99,7 +99,7 @@ export const isSuccess = (status: number): boolean =>
 export const base64 = (str: string): string => {
   try {
     return btoa(str);
-  } catch (err) {
+  } catch {
     return Buffer.from(str).toString('base64');
   }
 };
@@ -249,7 +249,7 @@ export const catchErrorCodes = (
     const errorBody = (() => {
       try {
         return JSON.stringify(result.body, null, 2);
-      } catch (e) {
+      } catch {
         return undefined;
       }
     })();
