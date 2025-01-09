@@ -299,15 +299,17 @@ const getPlugins = (
   });
 };
 
+interface WatchValues {
+  headers: Headers;
+  lastValue: string | undefined;
+}
+
 const getSpec = async ({
   inputPath,
   watch,
 }: {
   inputPath: Config['input']['path'];
-  watch: {
-    headers: Headers;
-    lastValue: string | undefined;
-  };
+  watch: WatchValues;
 }): Promise<
   | {
       data: JSONSchema;
@@ -330,59 +332,62 @@ const getSpec = async ({
 
   // no support for watching files and objects for now
   if (resolvedInput.type === 'url') {
-    const request = await sendRequest({
-      init: {
-        headers: watch.headers,
-        method: 'HEAD',
-      },
-      url: resolvedInput.path,
-    });
-    response = request.response;
+    // do not send HEAD request on first run
+    if (watch.lastValue) {
+      const request = await sendRequest({
+        init: {
+          headers: watch.headers,
+          method: 'HEAD',
+        },
+        url: resolvedInput.path,
+      });
+      response = request.response;
 
-    if (!response.ok) {
-      // assume the server is no longer running
-      // do nothing, it might be restarted later
-      return {
-        error: 'not-ok',
-        response,
-      };
-    }
+      if (!response.ok) {
+        // assume the server is no longer running
+        // do nothing, it might be restarted later
+        return {
+          error: 'not-ok',
+          response,
+        };
+      }
 
-    if (response.status === 304) {
-      return {
-        error: 'not-modified',
-        response,
-      };
-    }
+      if (response.status === 304) {
+        return {
+          error: 'not-modified',
+          response,
+        };
+      }
 
-    if (hasChanged === undefined) {
-      const eTag = response.headers.get('ETag');
-      if (eTag) {
-        hasChanged = eTag !== watch.headers.get('If-None-Match');
+      if (hasChanged === undefined) {
+        const eTag = response.headers.get('ETag');
+        if (eTag) {
+          hasChanged = eTag !== watch.headers.get('If-None-Match');
 
-        if (hasChanged) {
-          watch.headers.set('If-None-Match', eTag);
+          if (hasChanged) {
+            watch.headers.set('If-None-Match', eTag);
+          }
         }
       }
-    }
 
-    if (hasChanged === undefined) {
-      const lastModified = response.headers.get('Last-Modified');
-      if (lastModified) {
-        hasChanged = lastModified !== watch.headers.get('If-Modified-Since');
+      if (hasChanged === undefined) {
+        const lastModified = response.headers.get('Last-Modified');
+        if (lastModified) {
+          hasChanged = lastModified !== watch.headers.get('If-Modified-Since');
 
-        if (hasChanged) {
-          watch.headers.set('If-Modified-Since', lastModified);
+          if (hasChanged) {
+            watch.headers.set('If-Modified-Since', lastModified);
+          }
         }
       }
-    }
 
-    // we definitely know the input has not changed
-    if (hasChanged === false) {
-      return {
-        error: 'not-modified',
-        response,
-      };
+      // we definitely know the input has not changed
+      if (hasChanged === false) {
+        return {
+          error: 'not-modified',
+          response,
+        };
+      }
     }
 
     const fileRequest = await sendRequest({
@@ -578,10 +583,7 @@ export async function createClient(
       watch: _watch,
     }: {
       config: Config;
-      watch?: {
-        headers: Headers;
-        lastValue: string | undefined;
-      };
+      watch?: WatchValues;
     }) => {
       const inputPath = config.input.path;
 
