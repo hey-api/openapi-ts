@@ -12,7 +12,7 @@ import { getFilePaths } from './utils';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const versions = ['3.0.x', '3.1.x'];
+const versions = ['2.0.x', '3.0.x', '3.1.x'];
 
 for (const version of versions) {
   const namespace = 'plugins';
@@ -27,8 +27,13 @@ for (const version of versions) {
     ): UserConfig => ({
       client: '@hey-api/client-fetch',
       experimentalParser: true,
-      input: path.join(__dirname, 'spec', version, 'full.json'),
       ...userConfig,
+      input: path.join(
+        __dirname,
+        'spec',
+        version,
+        typeof userConfig.input === 'string' ? userConfig.input : 'full.json',
+      ),
       output: path.join(
         outputDir,
         typeof userConfig.plugins[0] === 'string'
@@ -228,6 +233,22 @@ for (const version of versions) {
           plugins: ['zod'],
         }),
         description: 'generate Zod schemas with Zod plugin',
+      },
+      {
+        config: createConfig({
+          input: 'type-format.yaml',
+          output: 'type-format',
+          plugins: [
+            '@hey-api/transformers',
+            'zod',
+            {
+              name: '@hey-api/sdk',
+              transformer: true,
+              validator: true,
+            },
+          ],
+        }),
+        description: 'handles various schema types and formats',
       },
     ];
 

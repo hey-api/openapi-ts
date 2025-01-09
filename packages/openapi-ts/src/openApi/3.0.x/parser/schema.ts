@@ -1,31 +1,19 @@
 import type { IR } from '../../../ir/types';
 import { addItemsToSchema } from '../../../ir/utils';
 import { refToName } from '../../../utils/ref';
+import type {
+  SchemaContext,
+  SchemaType,
+  SchemaWithRequired,
+} from '../../shared/types/schema';
 import { discriminatorValue } from '../../shared/utils/discriminator';
 import type { ReferenceObject, SchemaObject } from '../types/spec';
-
-interface SchemaContext {
-  /**
-   * Optional schema $ref. This will be only defined for reusable components
-   * from the OpenAPI specification.
-   */
-  $ref?: string;
-  context: IR.Context;
-}
-
-type SchemaWithRequired<K extends keyof Required<SchemaObject>> = Omit<
-  SchemaObject,
-  K
-> &
-  Pick<Required<SchemaObject>, K>;
-
-type SchemaType = Required<SchemaObject>['type'];
 
 export const getSchemaType = ({
   schema,
 }: {
   schema: SchemaObject;
-}): SchemaType | undefined => {
+}): SchemaType<SchemaObject> | undefined => {
   if (schema.type) {
     return schema.type;
   }
@@ -182,11 +170,12 @@ const parseBoolean = ({
 
 const parseNumber = ({
   irSchema = {},
+  schema,
 }: SchemaContext & {
   irSchema?: IR.SchemaObject;
-  schema: SchemaObject;
+  schema: SchemaWithRequired<SchemaObject, 'type'>;
 }): IR.SchemaObject => {
-  irSchema.type = 'number';
+  irSchema.type = schema.type;
 
   return irSchema;
 };
@@ -281,7 +270,7 @@ const parseAllOf = ({
   context,
   schema,
 }: SchemaContext & {
-  schema: SchemaWithRequired<'allOf'>;
+  schema: SchemaWithRequired<SchemaObject, 'allOf'>;
 }): IR.SchemaObject => {
   let irSchema = initIrSchema({ schema });
 
@@ -417,7 +406,7 @@ const parseAnyOf = ({
   context,
   schema,
 }: SchemaContext & {
-  schema: SchemaWithRequired<'anyOf'>;
+  schema: SchemaWithRequired<SchemaObject, 'anyOf'>;
 }): IR.SchemaObject => {
   let irSchema = initIrSchema({ schema });
 
@@ -490,7 +479,7 @@ const parseEnum = ({
   context,
   schema,
 }: SchemaContext & {
-  schema: SchemaWithRequired<'enum'>;
+  schema: SchemaWithRequired<SchemaObject, 'enum'>;
 }): IR.SchemaObject => {
   let irSchema = initIrSchema({ schema });
 
@@ -500,7 +489,7 @@ const parseEnum = ({
 
   for (const [index, enumValue] of schema.enum.entries()) {
     const typeOfEnumValue = typeof enumValue;
-    let enumType: SchemaType | 'null' | undefined;
+    let enumType: SchemaType<SchemaObject> | 'null' | undefined;
 
     if (
       typeOfEnumValue === 'string' ||
@@ -558,7 +547,7 @@ const parseOneOf = ({
   context,
   schema,
 }: SchemaContext & {
-  schema: SchemaWithRequired<'oneOf'>;
+  schema: SchemaWithRequired<SchemaObject, 'oneOf'>;
 }): IR.SchemaObject => {
   let irSchema = initIrSchema({ schema });
 
@@ -657,7 +646,7 @@ const parseNullableType = ({
   schema,
 }: SchemaContext & {
   irSchema?: IR.SchemaObject;
-  schema: SchemaWithRequired<'type'>;
+  schema: SchemaWithRequired<SchemaObject, 'type'>;
 }): IR.SchemaObject => {
   if (!irSchema) {
     irSchema = initIrSchema({ schema });
@@ -699,7 +688,7 @@ const parseType = ({
   context,
   schema,
 }: SchemaContext & {
-  schema: SchemaWithRequired<'type'>;
+  schema: SchemaWithRequired<SchemaObject, 'type'>;
 }): IR.SchemaObject => {
   const irSchema = initIrSchema({ schema });
 
@@ -741,7 +730,7 @@ const parseOneType = ({
   schema,
 }: SchemaContext & {
   irSchema?: IR.SchemaObject;
-  schema: SchemaWithRequired<'type'>;
+  schema: SchemaWithRequired<SchemaObject, 'type'>;
 }): IR.SchemaObject => {
   if (!irSchema) {
     irSchema = initIrSchema({ schema });
@@ -834,7 +823,7 @@ export const schemaToIrSchema = ({
     return parseEnum({
       $ref,
       context,
-      schema: schema as SchemaWithRequired<'enum'>,
+      schema: schema as SchemaWithRequired<SchemaObject, 'enum'>,
     });
   }
 
@@ -842,7 +831,7 @@ export const schemaToIrSchema = ({
     return parseAllOf({
       $ref,
       context,
-      schema: schema as SchemaWithRequired<'allOf'>,
+      schema: schema as SchemaWithRequired<SchemaObject, 'allOf'>,
     });
   }
 
@@ -850,7 +839,7 @@ export const schemaToIrSchema = ({
     return parseAnyOf({
       $ref,
       context,
-      schema: schema as SchemaWithRequired<'anyOf'>,
+      schema: schema as SchemaWithRequired<SchemaObject, 'anyOf'>,
     });
   }
 
@@ -858,7 +847,7 @@ export const schemaToIrSchema = ({
     return parseOneOf({
       $ref,
       context,
-      schema: schema as SchemaWithRequired<'oneOf'>,
+      schema: schema as SchemaWithRequired<SchemaObject, 'oneOf'>,
     });
   }
 
@@ -867,7 +856,7 @@ export const schemaToIrSchema = ({
     return parseType({
       $ref,
       context,
-      schema: schema as SchemaWithRequired<'type'>,
+      schema: schema as SchemaWithRequired<SchemaObject, 'type'>,
     });
   }
 

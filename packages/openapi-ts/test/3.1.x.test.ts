@@ -11,11 +11,11 @@ import { getFilePaths } from './utils';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const VERSION = '3.1.x';
+const version = '3.1.x';
 
-const outputDir = path.join(__dirname, 'generated', VERSION);
+const outputDir = path.join(__dirname, 'generated', version);
 
-describe(`OpenAPI ${VERSION}`, () => {
+describe(`OpenAPI ${version}`, () => {
   const createConfig = (userConfig: UserConfig): UserConfig => ({
     client: '@hey-api/client-fetch',
     experimentalParser: true,
@@ -24,7 +24,7 @@ describe(`OpenAPI ${VERSION}`, () => {
     input: path.join(
       __dirname,
       'spec',
-      VERSION,
+      version,
       typeof userConfig.input === 'string' ? userConfig.input : '',
     ),
     output: path.join(
@@ -432,6 +432,14 @@ describe(`OpenAPI ${VERSION}`, () => {
     },
     {
       config: createConfig({
+        input: 'pagination-ref-any-of.yaml',
+        output: 'pagination-ref-any-of',
+        plugins: ['@tanstack/react-query'],
+      }),
+      description: 'detects pagination for composite types with null',
+    },
+    {
+      config: createConfig({
         input: 'parameter-explode-false.json',
         output: 'parameter-explode-false',
         plugins: ['@hey-api/sdk'],
@@ -472,6 +480,14 @@ describe(`OpenAPI ${VERSION}`, () => {
     },
     {
       config: createConfig({
+        input: 'schema-const.yaml',
+        output: 'schema-const',
+        plugins: ['@hey-api/typescript', 'zod'],
+      }),
+      description: 'handles various constants',
+    },
+    {
+      config: createConfig({
         input: 'security-api-key.json',
         output: 'security-api-key',
         plugins: [
@@ -482,6 +498,19 @@ describe(`OpenAPI ${VERSION}`, () => {
         ],
       }),
       description: 'generates SDK functions with auth (api key)',
+    },
+    {
+      config: createConfig({
+        input: 'security-http-bearer.json',
+        output: 'security-http-bearer',
+        plugins: [
+          {
+            auth: true,
+            name: '@hey-api/sdk',
+          },
+        ],
+      }),
+      description: 'generates SDK functions with auth (Bearer token)',
     },
     {
       config: createConfig({
@@ -562,7 +591,7 @@ describe(`OpenAPI ${VERSION}`, () => {
         path.join(
           __dirname,
           '__snapshots__',
-          VERSION,
+          version,
           filePath.slice(outputDir.length + 1),
         ),
       );

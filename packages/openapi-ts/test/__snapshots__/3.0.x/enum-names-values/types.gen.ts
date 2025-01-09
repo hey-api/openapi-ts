@@ -8,4 +8,4 @@ export type MyFoo2 = 'MyFoo' | 'MyBar';
 
 export type Foo = 'foo' | 'bar' | null | '' | true | false;
 
-export type Numbers = 100 | 200 | 300;
+export type Numbers = 100 | 200 | 300 | -100 | -200 | -300;

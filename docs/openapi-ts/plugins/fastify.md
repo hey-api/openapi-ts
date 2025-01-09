@@ -27,7 +27,7 @@ Live demo
 To use this feature, you must opt in to the [experimental parser](/openapi-ts/configuration#parser).
 :::
 
-Assuming you have already created a [configuration](/openapi-ts/get-started) file, simply add `fastify` to your plugins and you'll be ready to generate Fastify artifacts. :tada:
+In your [configuration](/openapi-ts/get-started), add `fastify` to your plugins and you'll be ready to generate Fastify artifacts. :tada:
 
 ```js
 import { defaultPlugins } from '@hey-api/openapi-ts';

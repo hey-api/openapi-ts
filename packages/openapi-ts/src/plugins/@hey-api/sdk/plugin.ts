@@ -27,6 +27,14 @@ import {
 import { serviceFunctionIdentifier } from './plugin-legacy';
 import type { Config } from './types';
 
+// type copied from client packages
+interface Auth {
+  in?: 'header' | 'query';
+  name?: string;
+  scheme?: 'basic' | 'bearer';
+  type: 'apiKey' | 'http';
+}
+
 export const operationOptionsType = ({
   context,
   identifierData,
@@ -35,10 +43,12 @@ export const operationOptionsType = ({
 }: {
   context: IR.Context;
   identifierData?: ReturnType<TypeScriptFile['identifier']>;
+  // TODO: refactor this so we don't need to import error type unless it's used here
   identifierError?: ReturnType<TypeScriptFile['identifier']>;
   throwOnError?: string;
 }) => {
   const optionsName = clientApi.Options.name;
+
   if (context.config.client.name === '@hey-api/client-nuxt') {
     return `${optionsName}<${identifierData?.name || 'unknown'}, ${identifierError?.name || 'unknown'}, TComposable>`;
   }
@@ -106,6 +116,89 @@ export const getResponseType = (
   if (cleanContent.startsWith('text/')) {
     return 'text';
   }
+};
+
+// TODO: parser - handle more security types
+const securitySchemeObjectToAuthObject = ({
+  securitySchemeObject,
+}: {
+  securitySchemeObject: IR.SecurityObject;
+}): Auth | undefined => {
+  if (securitySchemeObject.type === 'oauth2') {
+    // TODO: parser - handle more/multiple oauth2 flows
+    if (securitySchemeObject.flows.password) {
+      return {
+        scheme: 'bearer',
+        type: 'http',
+      };
+    }
+
+    return;
+  }
+
+  if (securitySchemeObject.type === 'apiKey') {
+    if (securitySchemeObject.in === 'header') {
+      return {
+        name: securitySchemeObject.name,
+        type: 'apiKey',
+      };
+    }
+
+    // TODO: parser - support cookies auth
+    if (securitySchemeObject.in === 'query') {
+      return {
+        in: securitySchemeObject.in,
+        name: securitySchemeObject.name,
+        type: 'apiKey',
+      };
+    }
+
+    return;
+  }
+
+  if (securitySchemeObject.type === 'http') {
+    if (
+      securitySchemeObject.scheme === 'bearer' ||
+      securitySchemeObject.scheme === 'basic'
+    ) {
+      return {
+        scheme: securitySchemeObject.scheme,
+        type: 'http',
+      };
+    }
+
+    return;
+  }
+};
+
+const operationAuth = ({
+  operation,
+  plugin,
+}: {
+  context: IR.Context;
+  operation: IR.OperationObject;
+  plugin: Plugin.Instance<Config>;
+}): Array<Auth> => {
+  if (!operation.security || !plugin.auth) {
+    return [];
+  }
+
+  const auth: Array<Auth> = [];
+
+  for (const securitySchemeObject of operation.security) {
+    const authObject = securitySchemeObjectToAuthObject({
+      securitySchemeObject,
+    });
+    if (authObject) {
+      auth.push(authObject);
+    } else {
+      console.warn(
+        `❗️ SDK warning: unsupported security scheme. Please open an issue if you'd like it added https://github.com/hey-api/openapi-ts/issues\n${JSON.stringify(securitySchemeObject, null, 2)}`,
+      );
+    }
+  }
+
+  return auth;
 };
 
 const operationStatements = ({
@@ -213,46 +306,12 @@ const operationStatements = ({
   // content type. currently impossible because successes do not contain
   // header information
 
-  if (operation.security && plugin.auth) {
-    // TODO: parser - handle more security types
-    // type copied from client packages
-    const security: Array<{
-      fn: 'accessToken' | 'apiKey';
-      in: 'header' | 'query';
-      name: string;
-    }> = [];
-
-    for (const securitySchemeObject of operation.security) {
-      if (securitySchemeObject.type === 'oauth2') {
-        if (securitySchemeObject.flows.password) {
-          security.push({
-            fn: 'accessToken',
-            in: 'header',
-            name: 'Authorization',
-          });
-        }
-      } else if (securitySchemeObject.type === 'apiKey') {
-        // TODO: parser - support cookies auth
-        if (securitySchemeObject.in !== 'cookie') {
-          security.push({
-            fn: 'apiKey',
-            in: securitySchemeObject.in,
-            name: securitySchemeObject.name,
-          });
-        }
-      } else {
-        console.warn(
-          `❗️ SDK warning: security scheme isn't currently supported. Please open an issue if you'd like it added https://github.com/hey-api/openapi-ts/issues\n${JSON.stringify(securitySchemeObject, null, 2)}`,
-        );
-      }
-    }
-
-    if (security.length) {
-      requestOptions.push({
-        key: 'security',
-        value: compiler.arrayLiteralExpression({ elements: security }),
-      });
-    }
+  const auth = operationAuth({ context, operation, plugin });
+  if (auth.length) {
+    requestOptions.push({
+      key: 'security',
+      value: compiler.arrayLiteralExpression({ elements: auth }),
+    });
   }
 
   for (const name in operation.parameters?.query) {
@@ -394,7 +453,8 @@ const generateClassSdk = ({
 
   context.subscribe('operation', ({ operation }) => {
     const identifierData = importIdentifierData({ context, file, operation });
-    const identifierError = importIdentifierError({ context, file, operation });
+    // TODO: import error type only if we are sure we are going to use it
+    // const identifierError = importIdentifierError({ context, file, operation });
 
     const isNuxtClient = context.config.client.name === '@hey-api/client-nuxt';
 
@@ -419,7 +479,7 @@ const generateClassSdk = ({
           type: operationOptionsType({
             context,
             identifierData,
-            identifierError,
+            // identifierError,
             throwOnError: isNuxtClient ? undefined : 'ThrowOnError',
           }),
         },
@@ -485,7 +545,8 @@ const generateFlatSdk = ({
 
   context.subscribe('operation', ({ operation }) => {
     const identifierData = importIdentifierData({ context, file, operation });
-    const identifierError = importIdentifierError({ context, file, operation });
+    // TODO: import error type only if we are sure we are going to use it
+    // const identifierError = importIdentifierError({ context, file, operation });
 
     const isNuxtClient = context.config.client.name === '@hey-api/client-nuxt';
 
@@ -504,7 +565,7 @@ const generateFlatSdk = ({
             type: operationOptionsType({
               context,
               identifierData,
-              identifierError,
+              // identifierError,
               throwOnError: isNuxtClient ? undefined : 'ThrowOnError',
             }),
           },
@@ -572,11 +633,15 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     ...clientApi.Options,
     module: clientModule,
   });
-  file.import({
-    asType: true,
-    module: clientModule,
-    name: 'Composable',
-  });
+
+  const isNuxtClient = context.config.client.name === '@hey-api/client-nuxt';
+  if (isNuxtClient) {
+    file.import({
+      asType: true,
+      module: clientModule,
+      name: 'Composable',
+    });
+  }
 
   // define client first
   const statement = compiler.constVariable({

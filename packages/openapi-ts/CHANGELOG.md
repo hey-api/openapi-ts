@@ -1,5 +1,64 @@
 # @hey-api/openapi-ts
 
+## 0.61.1
+
+### Patch Changes
+
+- [#1530](https://github.com/hey-api/openapi-ts/pull/1530) [`67b7295`](https://github.com/hey-api/openapi-ts/commit/67b72959be499ff59f5f68bfdaa7e5568f5de02f) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: detect pagination in composite schemas with null type
+
+- [#1535](https://github.com/hey-api/openapi-ts/pull/1535) [`d4cfa05`](https://github.com/hey-api/openapi-ts/commit/d4cfa05ed425d57f79b28efe76e6a33f1e892ec5) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle primitive constants in Zod and types
+
+## 0.61.0
+
+### Minor Changes
+
+- [#1520](https://github.com/hey-api/openapi-ts/pull/1520) [`b3c23ba`](https://github.com/hey-api/openapi-ts/commit/b3c23ba99c361bdca3ab9c44017b6e5c044f40a7) Thanks [@chriswiggins](https://github.com/chriswiggins)! - Add support for HTTP Bearer Authentication Scheme
+
+- [#1525](https://github.com/hey-api/openapi-ts/pull/1525) [`7b7313e`](https://github.com/hey-api/openapi-ts/commit/7b7313eeaf9a749fb81465546bc4e4bdce31d5ab) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add OpenAPI 2.0 support to experimental parser
+
+- [#1511](https://github.com/hey-api/openapi-ts/pull/1511) [`4e8064d`](https://github.com/hey-api/openapi-ts/commit/4e8064d9a589e14b42d2b1a329e2436f242884da) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add watch mode
+
+  ## Watch Mode
+
+  ::: warning
+  Watch mode currently supports only remote files via URL.
+  :::
+
+  If your schema changes frequently, you may want to automatically regenerate the output during development. To watch your input file for changes, enable `watch` mode in your configuration or pass the `--watch` flag to the CLI.
+
+  ### Config
+
+  ```js
+  export default {
+    client: '@hey-api/client-fetch',
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    watch: true,
+  };
+  ```
+
+  ### CLI
+
+  ```sh
+  npx @hey-api/openapi-ts \
+    -c @hey-api/client-fetch \
+    -i path/to/openapi.json \
+    -o src/client \
+    -w
+  ```
+
+- **BREAKING**: please update `@hey-api/client-*` packages to the latest version
+
+  feat: add support for basic http auth
+
+### Patch Changes
+
+- [#1529](https://github.com/hey-api/openapi-ts/pull/1529) [`ccc0bbc`](https://github.com/hey-api/openapi-ts/commit/ccc0bbcbdeace22bbd8e92caadebdca81e61e393) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add support for long integers
+
+- [#1512](https://github.com/hey-api/openapi-ts/pull/1512) [`dd0e0a2`](https://github.com/hey-api/openapi-ts/commit/dd0e0a266153e34448fbc3db6b0f864f75483280) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add `sdk.throwOnError` option
+
+- [#1525](https://github.com/hey-api/openapi-ts/pull/1525) [`7b7313e`](https://github.com/hey-api/openapi-ts/commit/7b7313eeaf9a749fb81465546bc4e4bdce31d5ab) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: preserve leading separators in enum keys
+
 ## 0.60.1
 
 ### Patch Changes

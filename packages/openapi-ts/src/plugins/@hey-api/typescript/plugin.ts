@@ -7,7 +7,7 @@ import { deduplicateSchema } from '../../../ir/schema';
 import type { IR } from '../../../ir/types';
 import { escapeComment } from '../../../utils/escape';
 import { irRef, isRefOpenApiComponent } from '../../../utils/ref';
-import { digitsRegExp } from '../../../utils/regexp';
+import { numberRegExp } from '../../../utils/regexp';
 import { stringCase } from '../../../utils/stringCase';
 import { fieldName } from '../../shared/utils/case';
 import { operationIrRef } from '../../shared/utils/ref';
@@ -115,12 +115,16 @@ const schemaToEnumObject = ({
     }
 
     if (key) {
-      key = stringCase({ case: plugin.enumsCase, value: key });
+      key = stringCase({
+        case: plugin.enumsCase,
+        stripLeadingSeparators: false,
+        value: key,
+      });
 
-      digitsRegExp.lastIndex = 0;
+      numberRegExp.lastIndex = 0;
       // TypeScript enum keys cannot be numbers
       if (
-        digitsRegExp.test(key) &&
+        numberRegExp.test(key) &&
         (plugin.enums === 'typescript' ||
           plugin.enums === 'typescript+namespace')
       ) {
@@ -398,16 +402,24 @@ const enumTypeToIdentifier = ({
 };
 
 const numberTypeToIdentifier = ({
+  context,
   schema,
 }: {
   context: IR.Context;
   namespace: Array<ts.Statement>;
-  schema: SchemaWithType<'number'>;
+  schema: SchemaWithType<'integer' | 'number'>;
 }) => {
   if (schema.const !== undefined) {
     return compiler.literalTypeNode({
       literal: compiler.ots.number(schema.const as number),
     });
+  }
+
+  if (schema.type === 'integer' && schema.format === 'int64') {
+    // TODO: parser - add ability to skip type transformers
+    if (context.config.plugins['@hey-api/transformers']?.bigInt) {
+      return compiler.typeReferenceNode({ typeName: 'BigInt' });
+    }
   }
 
   return compiler.keywordTypeNode({
@@ -426,6 +438,7 @@ const objectTypeToIdentifier = ({
   plugin: Plugin.Instance<Config>;
   schema: SchemaWithType<'object'>;
 }) => {
+  // TODO: parser - handle constants
   let indexProperty: Property | undefined;
   const schemaProperties: Array<Property> = [];
   let indexPropertyItems: Array<IR.SchemaObject> = [];
@@ -548,10 +561,15 @@ const tupleTypeToIdentifier = ({
   plugin: Plugin.Instance<Config>;
   schema: SchemaWithType<'tuple'>;
 }) => {
-  const itemTypes: Array<ts.TypeNode> = [];
+  let itemTypes: Array<ts.Expression | ts.TypeNode> = [];
 
-  for (const item of schema.items ?? []) {
-    itemTypes.push(
+  if (schema.const && Array.isArray(schema.const)) {
+    itemTypes = schema.const.map((value) => {
+      const expression = compiler.valueToExpression({ value });
+      return expression ?? compiler.identifier({ text: 'unknown' });
+    });
+  } else if (schema.items) {
+    itemTypes = schema.items.map((item) =>
       schemaToType({
         context,
         namespace,
@@ -601,6 +619,13 @@ const schemaTypeToIdentifier = ({
         plugin,
         schema: schema as SchemaWithType<'enum'>,
       });
+    case 'integer':
+    case 'number':
+      return numberTypeToIdentifier({
+        context,
+        namespace,
+        schema: schema as SchemaWithType<'integer' | 'number'>,
+      });
     case 'never':
       return compiler.keywordTypeNode({
         keyword: 'never',
@@ -608,12 +633,6 @@ const schemaTypeToIdentifier = ({
     case 'null':
       return compiler.literalTypeNode({
         literal: compiler.null(),
-      });
-    case 'number':
-      return numberTypeToIdentifier({
-        context,
-        namespace,
-        schema: schema as SchemaWithType<'number'>,
       });
     case 'object':
       return objectTypeToIdentifier({

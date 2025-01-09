@@ -32,10 +32,13 @@ export const Foo = {
     false: false
 } as const;
 
-export type Numbers = 100 | 200 | 300;
+export type Numbers = 100 | 200 | 300 | -100 | -200 | -300;
 
 export const Numbers = {
     100: 100,
     200: 200,
-    300: 300
+    300: 300,
+    '-100': -100,
+    '-200': -200,
+    '-300': -300
 } as const;
