@@ -2,6 +2,8 @@
 **/node_modules
 **/templates
 **/dist
+**/.nuxt
+**/.output
 **/.svelte-kit
 **/.vitepress/cache
 **/.vitepress/dist

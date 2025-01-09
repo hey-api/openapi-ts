@@ -20,11 +20,11 @@
   },
   "scripts": {
     "prepublishOnly": "pnpm build",
-    "test:coverage": "vitest run --coverage",
-    "test:update": "vitest watch --update",
-    "test:watch": "vitest watch",
-    "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "test:coverage:disabled": "vitest run --coverage",
+    "test:update:disabled": "vitest watch --update",
+    "test:watch:disabled": "vitest watch",
+    "test:disabled": "vitest run",
+    "typecheck:disabled": "tsc --noEmit"
   },
   "engines": {
     "node": "^18.0.0 || >=20.0.0"

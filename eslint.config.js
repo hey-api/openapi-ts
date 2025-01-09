@@ -53,6 +53,12 @@ export default tseslint.config(
       '@typescript-eslint/consistent-type-imports': 'off',
     },
   },
+  {
+    files: ['**/*.cjs'],
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+    },
+  },
   configPrettier,
   {
     ignores: [
@@ -65,6 +71,8 @@ export default tseslint.config(
       '**/test/e2e/generated/',
       '**/test/generated/',
       '**/__snapshots__/',
+      '**/.nuxt/',
+      '**/.output/',
       '**/.svelte-kit/',
       '**/.vitepress/cache',
       '**/.vitepress/dist',
