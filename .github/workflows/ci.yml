@@ -18,15 +18,11 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
-        # node-version: [18.x, 20.x, 22.x]
-        # tests decided to fail for Node 18 out of nowhere, disable for now
-        node-version: [20.x, 22.x]
+        node-version: ['18.20.5', '20.11.1', '22.11.0']
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 8.15.7
+      - uses: pnpm/action-setup@v4.0.0
 
       - uses: actions/setup-node@v4
         with:
@@ -36,8 +32,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build library
-        run: pnpm build
+      - name: Build packages
+        run: pnpm --filter './packages/**' run build
+
+      - name: Build examples
+        if: matrix.node-version == '22.11.0' && matrix.os == 'ubuntu-latest'
+        run: pnpm --filter './examples/**' run build
 
       - name: Run linter
         run: pnpm lint
@@ -52,5 +52,5 @@ jobs:
         run: pnpm test:e2e
 
       - name: Publish previews
-        if: matrix.node-version == '22.x' && matrix.os == 'ubuntu-latest'
+        if: matrix.node-version == '22.11.0' && matrix.os == 'ubuntu-latest'
         run: pnpx pkg-pr-new publish --compact --pnpm './packages/*'

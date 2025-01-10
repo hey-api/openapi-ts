@@ -624,7 +624,7 @@ export interface ExternalDocumentationObject {
  *   type: integer
  * ```
  */
-export interface HeaderObject extends Omit<ParameterObject, 'in' | 'name'> {}
+export type HeaderObject = Omit<ParameterObject, 'in' | 'name'>;
 
 /**
  * The object provides metadata about the API. The metadata MAY be used by the clients if needed, and MAY be presented in editing or documentation generation tools for convenience.
@@ -1660,7 +1660,7 @@ export interface ResponsesObject {
  *
  * This object MAY be extended with {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#specification-extensions Specification Extensions}, though as noted, additional properties MAY omit the `x-` prefix within this object.
  */
-export interface SchemaObject extends JsonSchemaDraft2020_12 {}
+export type SchemaObject = JsonSchemaDraft2020_12;
 
 /**
  * Lists the required security schemes to execute this operation. The name used for each property MUST correspond to a security scheme declared in the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#componentsSecuritySchemes Security Schemes} under the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#components-object Components Object}.

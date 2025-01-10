@@ -148,7 +148,6 @@ type JsonSchemaFormats =
   | 'ipv4'
   | 'ipv6'
   | 'uri'
-  // eslint-disable-next-line @typescript-eslint/ban-types
   | (string & {});
 
 type JsonSchemaTypes =
