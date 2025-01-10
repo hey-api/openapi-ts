@@ -130,7 +130,7 @@ export const getModelProperties = ({
         exclusiveMinimum: property.exclusiveMinimum,
         format:
           property.type === 'array'
-            ? property.items?.format ?? property.format
+            ? (property.items?.format ?? property.format)
             : property.format,
         in: '',
         isDefinition: false,

@@ -351,7 +351,6 @@ type JsonSchemaFormats =
   | 'uri-reference'
   | 'uri-template'
   | 'uuid'
-  // eslint-disable-next-line @typescript-eslint/ban-types
   | (string & {});
 
 type JsonSchemaTypes =
