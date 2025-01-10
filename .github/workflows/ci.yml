@@ -32,8 +32,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build library
-        run: pnpm build
+      - name: Build packages
+        run: pnpm --filter './packages/**' run build
+
+      - name: Build examples
+        if: matrix.node-version == '22.x' && matrix.os == 'ubuntu-latest'
+        run: pnpm --filter './examples/**' run build
 
       - name: Run linter
         run: pnpm lint
