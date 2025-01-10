@@ -269,7 +269,7 @@ export interface ClientConfig {
       };
 }
 
-export interface UserConfig extends ClientConfig {}
+export type UserConfig = ClientConfig;
 
 export type Config = Omit<
   Required<ClientConfig>,

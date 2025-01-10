@@ -21,7 +21,6 @@ export type PluginNames =
   | 'fastify'
   | 'zod';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 export type AnyPluginName = PluginNames | (string & {});
 
 type PluginTag = 'transformer' | 'validator';
