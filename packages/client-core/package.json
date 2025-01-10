@@ -25,8 +25,5 @@
     "test:watch:disabled": "vitest watch",
     "test:disabled": "vitest run",
     "typecheck:disabled": "tsc --noEmit"
-  },
-  "engines": {
-    "node": "^18.0.0 || >=20.0.0"
   }
 }
