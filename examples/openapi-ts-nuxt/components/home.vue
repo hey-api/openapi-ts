@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import { getPetById } from '~/client';
 
+const petId = ref(BigInt(8));
+
+function incrementPetId() {
+  petId.value++;
+}
+
 /**
  * useAsyncData
  *
@@ -11,11 +17,13 @@ import { getPetById } from '~/client';
  * Result: { cookies: {} }
  */
 const asyncData = await getPetById({
-  asyncDataOptions: {},
+  asyncDataOptions: {
+    watch: [petId],
+  },
   composable: 'useAsyncData',
   key: 'item',
   path: {
-    petId: BigInt(8),
+    petId,
   },
 });
 
@@ -88,7 +96,6 @@ watch(lazyFetch.data, (newPet) => {
 });
 
 async function handleFetch() {
-  const petId = ref(BigInt(8));
   const result = await getPetById({
     composable: '$fetch',
     path: {
@@ -103,5 +110,6 @@ async function handleFetch() {
   <h1>Get Random Pet Nuxt APIs</h1>
   <div>
     <button @click="handleFetch" type="button">$fetch</button>
+    <button @click="incrementPetId" type="button">increment petId</button>
   </div>
 </template>

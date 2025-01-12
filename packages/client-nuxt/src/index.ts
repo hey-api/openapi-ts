@@ -90,8 +90,6 @@ export const createClient = (config: Config = {}): Client => {
       opts.headers.delete('Content-Type');
     }
 
-    const url = buildUrl(opts);
-
     const fetchFn = opts.$fetch;
 
     if (composable === '$fetch') {
@@ -100,16 +98,20 @@ export const createClient = (config: Config = {}): Client => {
     }
 
     if (composable === 'useFetch') {
+      const url = buildUrl(opts);
       return useFetch(url, opts);
     }
 
     if (composable === 'useLazyFetch') {
+      const url = buildUrl(opts);
       return useLazyFetch(url, opts);
     }
 
-    const handler: (ctx?: NuxtApp) => Promise<any> = () =>
+    const handler: (ctx?: NuxtApp) => Promise<any> = () => {
+      const url = buildUrl(opts);
       // @ts-expect-error
-      fetchFn(url, opts);
+      return fetchFn(url, opts);
+    };
 
     if (composable === 'useAsyncData') {
       return key
