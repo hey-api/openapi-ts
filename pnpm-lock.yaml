@@ -264,6 +264,9 @@ importers:
       vue-router:
         specifier: 4.5.0
         version: 4.5.0(vue@3.5.13(typescript@5.6.1-rc))
+      zod:
+        specifier: 3.23.8
+        version: 3.23.8
     devDependencies:
       '@hey-api/openapi-ts':
         specifier: workspace:*

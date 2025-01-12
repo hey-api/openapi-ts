@@ -12,10 +12,16 @@ export default defineConfig({
   },
   plugins: [
     '@hey-api/schemas',
-    '@hey-api/sdk',
+    {
+      name: '@hey-api/sdk',
+      transformer: true,
+      validator: true,
+    },
     {
       enums: 'javascript',
       name: '@hey-api/typescript',
     },
+    '@hey-api/transformers',
+    'zod',
   ],
 });
