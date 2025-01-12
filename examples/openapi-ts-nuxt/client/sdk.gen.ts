@@ -7,6 +7,17 @@ import {
   type Options,
 } from '@hey-api/client-nuxt';
 
+import {
+  addPetResponseTransformer,
+  createUserResponseTransformer,
+  findPetsByStatusResponseTransformer,
+  findPetsByTagsResponseTransformer,
+  getOrderByIdResponseTransformer,
+  getPetByIdResponseTransformer,
+  getUserByNameResponseTransformer,
+  placeOrderResponseTransformer,
+  updatePetResponseTransformer,
+} from './transformers.gen';
 import type {
   AddPetData,
   AddPetResponse,
@@ -41,6 +52,21 @@ import type {
   UploadFileData,
   UploadFileResponse,
 } from './types.gen';
+import {
+  zAddPetResponse,
+  zCreateUserResponse,
+  zCreateUsersWithListInputResponse,
+  zFindPetsByStatusResponse,
+  zFindPetsByTagsResponse,
+  zGetInventoryResponse,
+  zGetOrderByIdResponse,
+  zGetPetByIdResponse,
+  zGetUserByNameResponse,
+  zLoginUserResponse,
+  zPlaceOrderResponse,
+  zUpdatePetResponse,
+  zUploadFileResponse,
+} from './zod.gen';
 
 export const client = createClient(createConfig());
 
@@ -57,6 +83,8 @@ export const addPet = <TComposable extends Composable>(
       'Content-Type': 'application/json',
       ...options?.headers,
     },
+    responseTransformer: addPetResponseTransformer,
+    responseValidator: async (data) => await zAddPetResponse.parseAsync(data),
     url: '/pet',
   });
 
@@ -73,6 +101,9 @@ export const updatePet = <TComposable extends Composable>(
       'Content-Type': 'application/json',
       ...options?.headers,
     },
+    responseTransformer: updatePetResponseTransformer,
+    responseValidator: async (data) =>
+      await zUpdatePetResponse.parseAsync(data),
     url: '/pet',
   });
 
@@ -89,6 +120,9 @@ export const findPetsByStatus = <TComposable extends Composable>(
     unknown
   >({
     ...options,
+    responseTransformer: findPetsByStatusResponseTransformer,
+    responseValidator: async (data) =>
+      await zFindPetsByStatusResponse.parseAsync(data),
     url: '/pet/findByStatus',
   });
 
@@ -102,6 +136,9 @@ export const findPetsByTags = <TComposable extends Composable>(
   (options?.client ?? client).get<TComposable, FindPetsByTagsResponse, unknown>(
     {
       ...options,
+      responseTransformer: findPetsByTagsResponseTransformer,
+      responseValidator: async (data) =>
+        await zFindPetsByTagsResponse.parseAsync(data),
       url: '/pet/findByTags',
     },
   );
@@ -126,6 +163,9 @@ export const getPetById = <TComposable extends Composable>(
 ) =>
   (options?.client ?? client).get<TComposable, GetPetByIdResponse, unknown>({
     ...options,
+    responseTransformer: getPetByIdResponseTransformer,
+    responseValidator: async (data) =>
+      await zGetPetByIdResponse.parseAsync(data),
     security: [
       {
         name: 'api_key',
@@ -158,6 +198,8 @@ export const uploadFile = <TComposable extends Composable>(
       'Content-Type': 'application/octet-stream',
       ...options?.headers,
     },
+    responseValidator: async (data) =>
+      await zUploadFileResponse.parseAsync(data),
     url: '/pet/{petId}/uploadImage',
   });
 
@@ -170,6 +212,8 @@ export const getInventory = <TComposable extends Composable>(
 ) =>
   (options?.client ?? client).get<TComposable, GetInventoryResponse, unknown>({
     ...options,
+    responseValidator: async (data) =>
+      await zGetInventoryResponse.parseAsync(data),
     security: [
       {
         name: 'api_key',
@@ -192,6 +236,9 @@ export const placeOrder = <TComposable extends Composable>(
       'Content-Type': 'application/json',
       ...options?.headers,
     },
+    responseTransformer: placeOrderResponseTransformer,
+    responseValidator: async (data) =>
+      await zPlaceOrderResponse.parseAsync(data),
     url: '/store/order',
   });
 
@@ -216,6 +263,9 @@ export const getOrderById = <TComposable extends Composable>(
 ) =>
   (options?.client ?? client).get<TComposable, GetOrderByIdResponse, unknown>({
     ...options,
+    responseTransformer: getOrderByIdResponseTransformer,
+    responseValidator: async (data) =>
+      await zGetOrderByIdResponse.parseAsync(data),
     url: '/store/order/{orderId}',
   });
 
@@ -232,6 +282,9 @@ export const createUser = <TComposable extends Composable>(
       'Content-Type': 'application/json',
       ...options?.headers,
     },
+    responseTransformer: createUserResponseTransformer,
+    responseValidator: async (data) =>
+      await zCreateUserResponse.parseAsync(data),
     url: '/user',
   });
 
@@ -252,6 +305,8 @@ export const createUsersWithListInput = <TComposable extends Composable>(
       'Content-Type': 'application/json',
       ...options?.headers,
     },
+    responseValidator: async (data) =>
+      await zCreateUsersWithListInputResponse.parseAsync(data),
     url: '/user/createWithList',
   });
 
@@ -263,6 +318,8 @@ export const loginUser = <TComposable extends Composable>(
 ) =>
   (options?.client ?? client).get<TComposable, LoginUserResponse, unknown>({
     ...options,
+    responseValidator: async (data) =>
+      await zLoginUserResponse.parseAsync(data),
     url: '/user/login',
   });
 
@@ -297,6 +354,9 @@ export const getUserByName = <TComposable extends Composable>(
 ) =>
   (options?.client ?? client).get<TComposable, GetUserByNameResponse, unknown>({
     ...options,
+    responseTransformer: getUserByNameResponseTransformer,
+    responseValidator: async (data) =>
+      await zGetUserByNameResponse.parseAsync(data),
     url: '/user/{username}',
   });
 

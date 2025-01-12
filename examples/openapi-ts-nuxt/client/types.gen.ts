@@ -2,10 +2,10 @@
 
 export type Order = {
   complete?: boolean;
-  id?: number;
-  petId?: number;
+  id?: bigint;
+  petId?: bigint;
   quantity?: number;
-  shipDate?: string;
+  shipDate?: Date;
   /**
    * Order Status
    */
@@ -14,7 +14,7 @@ export type Order = {
 
 export type Customer = {
   address?: Array<Address>;
-  id?: number;
+  id?: bigint;
   username?: string;
 };
 
@@ -26,14 +26,14 @@ export type Address = {
 };
 
 export type Category = {
-  id?: number;
+  id?: bigint;
   name?: string;
 };
 
 export type User = {
   email?: string;
   firstName?: string;
-  id?: number;
+  id?: bigint;
   lastName?: string;
   password?: string;
   phone?: string;
@@ -45,13 +45,13 @@ export type User = {
 };
 
 export type Tag = {
-  id?: number;
+  id?: bigint;
   name?: string;
 };
 
 export type Pet = {
   category?: Category;
-  id?: number;
+  id?: bigint;
   name: string;
   photoUrls: Array<string>;
   /**
@@ -201,7 +201,7 @@ export type DeletePetData = {
     /**
      * Pet id to delete
      */
-    petId: number;
+    petId: bigint;
   };
   query?: never;
   url: '/pet/{petId}';
@@ -220,7 +220,7 @@ export type GetPetByIdData = {
     /**
      * ID of pet to return
      */
-    petId: number;
+    petId: bigint;
   };
   query?: never;
   url: '/pet/{petId}';
@@ -252,7 +252,7 @@ export type UpdatePetWithFormData = {
     /**
      * ID of pet that needs to be updated
      */
-    petId: number;
+    petId: bigint;
   };
   query?: {
     /**
@@ -280,7 +280,7 @@ export type UploadFileData = {
     /**
      * ID of pet to update
      */
-    petId: number;
+    petId: bigint;
   };
   query?: {
     /**
@@ -348,7 +348,7 @@ export type DeleteOrderData = {
     /**
      * ID of the order that needs to be deleted
      */
-    orderId: number;
+    orderId: bigint;
   };
   query?: never;
   url: '/store/order/{orderId}';
@@ -371,7 +371,7 @@ export type GetOrderByIdData = {
     /**
      * ID of order that needs to be fetched
      */
-    orderId: number;
+    orderId: bigint;
   };
   query?: never;
   url: '/store/order/{orderId}';

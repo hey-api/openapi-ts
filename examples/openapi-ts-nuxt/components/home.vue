@@ -15,7 +15,7 @@ const asyncData = await getPetById({
   composable: 'useAsyncData',
   key: 'item',
   path: {
-    petId: 8,
+    petId: BigInt(8),
   },
 });
 
@@ -30,7 +30,7 @@ const asyncDataWithRequestFetch = await getPetById({
   $fetch: requestFetch,
   composable: 'useAsyncData',
   path: {
-    petId: 8,
+    petId: BigInt(8),
   },
 });
 
@@ -42,7 +42,7 @@ const asyncDataWithRequestFetch = await getPetById({
 const fetch = await getPetById({
   composable: 'useFetch',
   path: {
-    petId: 8,
+    petId: BigInt(8),
   },
 });
 
@@ -56,7 +56,7 @@ const lazyAsyncData = await getPetById({
   composable: 'useLazyAsyncData',
   key: 'count',
   path: {
-    petId: 8,
+    petId: BigInt(8),
   },
 });
 watch(lazyAsyncData.data, (newPet) => {
@@ -76,7 +76,7 @@ watch(lazyAsyncData.data, (newPet) => {
 const lazyFetch = await getPetById({
   composable: 'useLazyFetch',
   path: {
-    petId: 8,
+    petId: BigInt(8),
   },
 });
 watch(lazyFetch.data, (newPet) => {
@@ -91,7 +91,7 @@ async function handleFetch() {
   const result = await getPetById({
     composable: '$fetch',
     path: {
-      petId: 8,
+      petId: BigInt(8),
     },
   });
   console.log(result);

@@ -1,237 +1,175 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { getAuthToken, getParseAs, setAuthParams } from '../utils';
+import type { Auth } from '../types';
+import { getAuthToken, setAuthParams } from '../utils';
 
 describe('getAuthToken', () => {
-  it('returns access token', async () => {
-    const accessToken = vi.fn().mockReturnValue('foo');
-    const apiKey = vi.fn().mockReturnValue('bar');
+  it('returns bearer token', async () => {
+    const auth = vi.fn().mockReturnValue('foo');
     const token = await getAuthToken(
       {
-        fn: 'accessToken',
-        in: 'header',
-        name: 'baz',
+        scheme: 'bearer',
+        type: 'http',
       },
-      {
-        accessToken,
-        apiKey,
-      },
+      auth,
     );
-    expect(accessToken).toHaveBeenCalled();
+    expect(auth).toHaveBeenCalled();
     expect(token).toBe('Bearer foo');
   });
 
-  it('returns nothing when accessToken function is undefined', async () => {
-    const apiKey = vi.fn().mockReturnValue('bar');
+  it('returns basic token', async () => {
+    const auth = vi.fn().mockReturnValue('foo:bar');
     const token = await getAuthToken(
       {
-        fn: 'accessToken',
-        in: 'header',
-        name: 'baz',
+        scheme: 'basic',
+        type: 'http',
       },
+      auth,
+    );
+    expect(auth).toHaveBeenCalled();
+    expect(token).toBe(`Basic ${btoa('foo:bar')}`);
+  });
+
+  it('returns raw token', async () => {
+    const auth = vi.fn().mockReturnValue('foo');
+    const token = await getAuthToken(
       {
-        apiKey,
+        type: 'http',
       },
+      auth,
+    );
+    expect(auth).toHaveBeenCalled();
+    expect(token).toBe('foo');
+  });
+
+  it('returns nothing when auth function is undefined', async () => {
+    const token = await getAuthToken(
+      {
+        type: 'http',
+      },
+      undefined,
     );
     expect(token).toBeUndefined();
   });
-
-  it('returns API key', async () => {
-    const accessToken = vi.fn().mockReturnValue('foo');
-    const apiKey = vi.fn().mockReturnValue('bar');
-    const token = await getAuthToken(
-      {
-        fn: 'apiKey',
-        in: 'header',
-        name: 'baz',
-      },
-      {
-        accessToken,
-        apiKey,
-      },
-    );
-    expect(apiKey).toHaveBeenCalled();
-    expect(token).toBe('bar');
-  });
-
-  it('returns nothing when apiKey function is undefined', async () => {
-    const accessToken = vi.fn().mockReturnValue('foo');
-    const token = await getAuthToken(
-      {
-        fn: 'apiKey',
-        in: 'header',
-        name: 'baz',
-      },
-      {
-        accessToken,
-      },
-    );
-    expect(token).toBeUndefined();
-  });
-});
-
-describe('getParseAs', () => {
-  const scenarios: Array<{
-    content: Parameters<typeof getParseAs>[0];
-    parseAs: ReturnType<typeof getParseAs>;
-  }> = [
-    {
-      content: null,
-      parseAs: 'stream',
-    },
-    {
-      content: 'application/json',
-      parseAs: 'json',
-    },
-    {
-      content: 'application/ld+json',
-      parseAs: 'json',
-    },
-    {
-      content: 'application/ld+json;charset=utf-8',
-      parseAs: 'json',
-    },
-    {
-      content: 'application/ld+json; charset=utf-8',
-      parseAs: 'json',
-    },
-    {
-      content: 'multipart/form-data',
-      parseAs: 'formData',
-    },
-    {
-      content: 'application/*',
-      parseAs: 'blob',
-    },
-    {
-      content: 'audio/*',
-      parseAs: 'blob',
-    },
-    {
-      content: 'image/*',
-      parseAs: 'blob',
-    },
-    {
-      content: 'video/*',
-      parseAs: 'blob',
-    },
-    {
-      content: 'text/*',
-      parseAs: 'text',
-    },
-    {
-      content: 'unsupported',
-      parseAs: undefined,
-    },
-  ];
-
-  it.each(scenarios)(
-    'detects $content as $parseAs',
-    async ({ content, parseAs }) => {
-      expect(getParseAs(content)).toEqual(parseAs);
-    },
-  );
 });
 
 describe('setAuthParams', () => {
-  it('sets access token in headers', async () => {
-    const accessToken = vi.fn().mockReturnValue('foo');
-    const apiKey = vi.fn().mockReturnValue('bar');
+  it('sets bearer token in headers', async () => {
+    const auth = vi.fn().mockReturnValue('foo');
     const headers = new Headers();
     const query: Record<any, unknown> = {};
     await setAuthParams({
-      accessToken,
-      apiKey,
+      auth,
       headers,
       query,
       security: [
         {
-          fn: 'accessToken',
-          in: 'header',
           name: 'baz',
+          scheme: 'bearer',
+          type: 'http',
         },
       ],
     });
-    expect(accessToken).toHaveBeenCalled();
+    expect(auth).toHaveBeenCalled();
     expect(headers.get('baz')).toBe('Bearer foo');
     expect(Object.keys(query).length).toBe(0);
   });
 
   it('sets access token in query', async () => {
-    const accessToken = vi.fn().mockReturnValue('foo');
-    const apiKey = vi.fn().mockReturnValue('bar');
+    const auth = vi.fn().mockReturnValue('foo');
     const headers = new Headers();
     const query: Record<any, unknown> = {};
     await setAuthParams({
-      accessToken,
-      apiKey,
+      auth,
       headers,
       query,
       security: [
         {
-          fn: 'accessToken',
           in: 'query',
           name: 'baz',
+          scheme: 'bearer',
+          type: 'http',
         },
       ],
     });
-    expect(accessToken).toHaveBeenCalled();
+    expect(auth).toHaveBeenCalled();
     expect(headers.get('baz')).toBeNull();
     expect(query.baz).toBe('Bearer foo');
   });
 
-  it('sets first scheme only', async () => {
-    const accessToken = vi.fn().mockReturnValue('foo');
-    const apiKey = vi.fn().mockReturnValue('bar');
+  it('sets Authorization header when `in` and `name` are undefined', async () => {
+    const auth = vi.fn().mockReturnValue('foo');
     const headers = new Headers();
     const query: Record<any, unknown> = {};
     await setAuthParams({
-      accessToken,
-      apiKey,
+      auth,
       headers,
       query,
       security: [
         {
-          fn: 'accessToken',
-          in: 'header',
-          name: 'baz',
-        },
-        {
-          fn: 'accessToken',
-          in: 'query',
-          name: 'baz',
+          type: 'http',
         },
       ],
     });
-    expect(accessToken).toHaveBeenCalled();
+    expect(auth).toHaveBeenCalled();
+    expect(headers.get('Authorization')).toBe('foo');
+    expect(query).toEqual({});
+  });
+
+  it('sets first scheme only', async () => {
+    const auth = vi.fn().mockReturnValue('foo');
+    const headers = new Headers();
+    const query: Record<any, unknown> = {};
+    await setAuthParams({
+      auth,
+      headers,
+      query,
+      security: [
+        {
+          name: 'baz',
+          scheme: 'bearer',
+          type: 'http',
+        },
+        {
+          in: 'query',
+          name: 'baz',
+          scheme: 'bearer',
+          type: 'http',
+        },
+      ],
+    });
+    expect(auth).toHaveBeenCalled();
     expect(headers.get('baz')).toBe('Bearer foo');
     expect(Object.keys(query).length).toBe(0);
   });
 
   it('sets first scheme with token', async () => {
-    const accessToken = vi.fn().mockReturnValue('foo');
-    const apiKey = vi.fn().mockReturnValue(undefined);
+    const auth = vi.fn().mockImplementation((auth: Auth) => {
+      if (auth.type === 'apiKey') {
+        return;
+      }
+      return 'foo';
+    });
     const headers = new Headers();
     const query: Record<any, unknown> = {};
     await setAuthParams({
-      accessToken,
-      apiKey,
+      auth,
       headers,
       query,
       security: [
         {
-          fn: 'apiKey',
-          in: 'header',
           name: 'baz',
+          type: 'apiKey',
         },
         {
-          fn: 'accessToken',
           in: 'query',
           name: 'baz',
+          scheme: 'bearer',
+          type: 'http',
         },
       ],
     });
-    expect(accessToken).toHaveBeenCalled();
+    expect(auth).toHaveBeenCalled();
     expect(headers.get('baz')).toBeNull();
     expect(query.baz).toBe('Bearer foo');
   });

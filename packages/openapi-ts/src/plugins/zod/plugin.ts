@@ -22,6 +22,7 @@ interface Result {
 export const zodId = 'zod';
 
 // frequently used identifiers
+const coerceIdentifier = compiler.identifier({ text: 'coerce' });
 const defaultIdentifier = compiler.identifier({ text: 'default' });
 const intersectionIdentifier = compiler.identifier({ text: 'intersection' });
 const lazyIdentifier = compiler.identifier({ text: 'lazy' });
@@ -263,12 +264,18 @@ const numberTypeToZodSchema = ({
   }
 
   let numberExpression = compiler.callExpression({
-    functionName: compiler.propertyAccessExpression({
-      expression: zIdentifier,
-      name: isBigInt
-        ? compiler.identifier({ text: 'bigint' })
-        : compiler.identifier({ text: 'number' }),
-    }),
+    functionName: isBigInt
+      ? compiler.propertyAccessExpression({
+          expression: compiler.propertyAccessExpression({
+            expression: zIdentifier,
+            name: coerceIdentifier,
+          }),
+          name: compiler.identifier({ text: 'bigint' }),
+        })
+      : compiler.propertyAccessExpression({
+          expression: zIdentifier,
+          name: compiler.identifier({ text: 'number' }),
+        }),
   });
 
   if (!isBigInt && schema.type === 'integer') {

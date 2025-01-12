@@ -38,7 +38,7 @@ export const createClient = (config: Config = {}): Client => {
       headers: mergeHeaders(_config.headers, options.headers),
     };
 
-    const { security } = opts;
+    const { responseTransformer, responseValidator, security } = opts;
     if (security) {
       // auth must happen in interceptors otherwise we'd need to require
       // asyncContext enabled
@@ -50,6 +50,22 @@ export const createClient = (config: Config = {}): Client => {
           query: options.query,
           security,
         });
+      };
+    }
+
+    if (responseTransformer || responseValidator) {
+      opts.onResponse = async ({ options, response }) => {
+        if (options.responseType && options.responseType !== 'json') {
+          return;
+        }
+
+        if (responseValidator) {
+          await responseValidator(response._data);
+        }
+
+        if (responseTransformer) {
+          response._data = await responseTransformer(response._data);
+        }
       };
     }
 
@@ -65,16 +81,6 @@ export const createClient = (config: Config = {}): Client => {
     const url = buildUrl(opts);
 
     const fetchFn = opts.$fetch;
-
-    // if (parseAs === 'json') {
-    //   if (opts.responseValidator) {
-    //     await opts.responseValidator(data);
-    //   }
-
-    //   if (opts.responseTransformer) {
-    //     data = await opts.responseTransformer(data);
-    //   }
-    // }
 
     if (composable === '$fetch') {
       // @ts-expect-error
