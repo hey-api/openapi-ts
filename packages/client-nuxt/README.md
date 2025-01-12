@@ -4,9 +4,7 @@
   <p align="center">🚀 Nuxt client for `@hey-api/openapi-ts` codegen.</p>
 </div>
 
-<!-- TODO: update link to Nuxt example -->
-
-[Live demo](https://stackblitz.com/edit/hey-api-client-fetch-example?file=openapi-ts.config.ts,src%2Fclient%2Fschemas.gen.ts,src%2Fclient%2Fsdk.gen.ts,src%2Fclient%2Ftypes.gen.ts,src%2FApp.tsx)
+[Live demo](https://stackblitz.com/edit/hey-api-client-nuxt-example?file=openapi-ts.config.ts,src%2Fclient%2Fschemas.gen.ts,src%2Fclient%2Fsdk.gen.ts,src%2Fclient%2Ftypes.gen.ts,src%2Fcomponents%home.vue)
 
 ## Features
 
