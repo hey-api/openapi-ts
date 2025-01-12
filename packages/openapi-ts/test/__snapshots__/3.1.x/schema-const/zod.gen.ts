@@ -15,5 +15,5 @@ export const zFoo = z.object({
         z.literal(true)
     ]).optional(),
     corge: z.object({}).optional(),
-    garply: z.bigint().optional()
+    garply: z.coerce.bigint().optional()
 });
