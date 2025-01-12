@@ -135,46 +135,46 @@ export interface RequestOptions<
 }
 
 export type RequestResult<
-  Data = unknown,
+  TData = unknown,
   TError = unknown,
   ThrowOnError extends boolean = boolean,
 > = ThrowOnError extends true
-  ? Promise<AxiosResponse<Data>>
+  ? Promise<AxiosResponse<TData>>
   : Promise<
-      | (AxiosResponse<Data> & { error: undefined })
+      | (AxiosResponse<TData> & { error: undefined })
       | (AxiosError<TError> & { data: undefined; error: TError })
     >;
 
 type MethodFn = <
-  Data = unknown,
+  TData = unknown,
   TError = unknown,
   ThrowOnError extends boolean = false,
 >(
   options: Omit<RequestOptions<ThrowOnError>, 'method'>,
-) => RequestResult<Data, TError, ThrowOnError>;
+) => RequestResult<TData, TError, ThrowOnError>;
 
 type RequestFn = <
-  Data = unknown,
+  TData = unknown,
   TError = unknown,
   ThrowOnError extends boolean = false,
 >(
   options: Omit<RequestOptions<ThrowOnError>, 'method'> &
     Pick<Required<RequestOptions<ThrowOnError>>, 'method'>,
-) => RequestResult<Data, TError, ThrowOnError>;
+) => RequestResult<TData, TError, ThrowOnError>;
 
 export interface Client {
   /**
    * Returns the final request URL. This method works only with experimental parser.
    */
   buildUrl: <
-    Data extends {
+    TData extends {
       body?: unknown;
       path?: Record<string, unknown>;
       query?: Record<string, unknown>;
       url: string;
     },
   >(
-    options: Pick<Data, 'url'> & Omit<Options<Data>, 'axios'>,
+    options: Pick<TData, 'url'> & Omit<Options<TData>, 'axios'>,
   ) => string;
   delete: MethodFn;
   get: MethodFn;
@@ -198,22 +198,22 @@ interface DataShape {
 }
 
 export type Options<
-  Data extends DataShape = DataShape,
+  TData extends DataShape = DataShape,
   ThrowOnError extends boolean = boolean,
 > = OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'path' | 'query' | 'url'> &
-  Omit<Data, 'url'>;
+  Omit<TData, 'url'>;
 
 export type OptionsLegacyParser<
-  Data = unknown,
+  TData = unknown,
   ThrowOnError extends boolean = boolean,
-> = Data extends { body?: any }
-  ? Data extends { headers?: any }
-    ? OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'headers' | 'url'> & Data
+> = TData extends { body?: any }
+  ? TData extends { headers?: any }
+    ? OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'headers' | 'url'> & TData
     : OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'url'> &
-        Data &
+        TData &
         Pick<RequestOptions<ThrowOnError>, 'headers'>
-  : Data extends { headers?: any }
+  : TData extends { headers?: any }
     ? OmitKeys<RequestOptions<ThrowOnError>, 'headers' | 'url'> &
-        Data &
+        TData &
         Pick<RequestOptions<ThrowOnError>, 'body'>
-    : OmitKeys<RequestOptions<ThrowOnError>, 'url'> & Data;
+    : OmitKeys<RequestOptions<ThrowOnError>, 'url'> & TData;
