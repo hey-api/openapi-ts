@@ -6,21 +6,14 @@ import {
   useLazyFetch,
 } from 'nuxt/app';
 
-import type { Client, Config, RequestOptions } from './types';
+import type { Client, Config } from './types';
 import {
   buildUrl,
   createConfig,
-  createInterceptors,
-  getParseAs,
   mergeConfigs,
   mergeHeaders,
   setAuthParams,
 } from './utils';
-
-type ReqInit = Omit<RequestInit, 'body' | 'headers'> & {
-  body?: any;
-  headers: ReturnType<typeof mergeHeaders>;
-};
 
 export const createClient = (config: Config = {}): Client => {
   let _config = mergeConfigs(createConfig(), config);
@@ -32,46 +25,73 @@ export const createClient = (config: Config = {}): Client => {
     return getConfig();
   };
 
-  const interceptors = createInterceptors<
-    Request,
-    Response,
-    unknown,
-    RequestOptions
-  >();
-
-  const clientRequest: Client['clientRequest'] = ({
+  const request: Client['request'] = ({
     asyncDataOptions,
     composable,
-    fetchOptions,
     key,
-    requestFetch,
-    url,
-    ...opts
+    ...options
   }) => {
-    const fetchFn = requestFetch ?? $fetch;
-    const baseUrl = 'https://petstore3.swagger.io/api/v3';
-    const finalUrl = `${baseUrl}${url}`;
+    const opts = {
+      ..._config,
+      ...options,
+      $fetch: options.$fetch ?? _config.$fetch ?? $fetch,
+      headers: mergeHeaders(_config.headers, options.headers),
+    };
+
+    const { security } = opts;
+    if (security) {
+      // auth must happen in interceptors otherwise we'd need to require
+      // asyncContext enabled
+      // https://nuxt.com/docs/guide/going-further/experimental-features#asynccontext
+      opts.onRequest = async ({ options }) => {
+        await setAuthParams({
+          auth: opts.auth,
+          headers: options.headers,
+          query: options.query,
+          security,
+        });
+      };
+    }
+
+    if (opts.body && opts.bodySerializer) {
+      opts.body = opts.bodySerializer(opts.body);
+    }
+
+    // remove Content-Type header if body is empty to avoid sending invalid requests
+    if (!opts.body) {
+      opts.headers.delete('Content-Type');
+    }
+
+    const url = buildUrl(opts);
+
+    const fetchFn = opts.$fetch;
+
+    // if (parseAs === 'json') {
+    //   if (opts.responseValidator) {
+    //     await opts.responseValidator(data);
+    //   }
+
+    //   if (opts.responseTransformer) {
+    //     data = await opts.responseTransformer(data);
+    //   }
+    // }
 
     if (composable === '$fetch') {
-      return fetchFn(finalUrl, opts);
+      // @ts-expect-error
+      return fetchFn(url, opts);
     }
 
     if (composable === 'useFetch') {
-      return useFetch(finalUrl, {
-        ...opts,
-        ...fetchOptions,
-      });
+      return useFetch(url, opts);
     }
 
     if (composable === 'useLazyFetch') {
-      return useLazyFetch(finalUrl, {
-        ...opts,
-        ...fetchOptions,
-      });
+      return useLazyFetch(url, opts);
     }
 
     const handler: (ctx?: NuxtApp) => Promise<any> = () =>
-      fetchFn(finalUrl, opts);
+      // @ts-expect-error
+      fetchFn(url, opts);
 
     if (composable === 'useAsyncData') {
       return key
@@ -88,152 +108,32 @@ export const createClient = (config: Config = {}): Client => {
     return undefined as any;
   };
 
-  // @ts-expect-error
-  const request: Client['request'] = async (options) => {
-    const opts = {
-      ..._config,
-      ...options,
-      fetch: options.fetch ?? _config.fetch ?? globalThis.fetch,
-      headers: mergeHeaders(_config.headers, options.headers),
-    };
-
-    if (opts.security) {
-      await setAuthParams({
-        ...opts,
-        security: opts.security,
-      });
-    }
-
-    if (opts.body && opts.bodySerializer) {
-      opts.body = opts.bodySerializer(opts.body);
-    }
-
-    // remove Content-Type header if body is empty to avoid sending invalid requests
-    if (!opts.body) {
-      opts.headers.delete('Content-Type');
-    }
-
-    const url = buildUrl(opts);
-    const requestInit: ReqInit = {
-      redirect: 'follow',
-      ...opts,
-    };
-
-    let request = new Request(url, requestInit);
-
-    for (const fn of interceptors.request._fns) {
-      request = await fn(request, opts);
-    }
-
-    // fetch must be assigned here, otherwise it would throw the error:
-    // TypeError: Failed to execute 'fetch' on 'Window': Illegal invocation
-    const _fetch = opts.fetch!;
-    let response = await _fetch(request);
-
-    for (const fn of interceptors.response._fns) {
-      response = await fn(response, request, opts);
-    }
-
-    const result = {
-      request,
-      response,
-    };
-
-    if (response.ok) {
-      if (
-        response.status === 204 ||
-        response.headers.get('Content-Length') === '0'
-      ) {
-        return {
-          data: {},
-          ...result,
-        };
-      }
-
-      const parseAs =
-        (opts.parseAs === 'auto'
-          ? getParseAs(response.headers.get('Content-Type'))
-          : opts.parseAs) ?? 'json';
-
-      if (parseAs === 'stream') {
-        return {
-          data: response.body,
-          ...result,
-        };
-      }
-
-      let data = await response[parseAs]();
-      if (parseAs === 'json') {
-        if (opts.responseValidator) {
-          await opts.responseValidator(data);
-        }
-
-        if (opts.responseTransformer) {
-          data = await opts.responseTransformer(data);
-        }
-      }
-
-      return {
-        data,
-        ...result,
-      };
-    }
-
-    let error = await response.text();
-
-    try {
-      error = JSON.parse(error);
-    } catch {
-      // noop
-    }
-
-    let finalError = error;
-
-    for (const fn of interceptors.error._fns) {
-      finalError = (await fn(error, response, request, opts)) as string;
-    }
-
-    finalError = finalError || ({} as string);
-
-    if (opts.throwOnError) {
-      throw finalError;
-    }
-
-    return {
-      error: finalError,
-      ...result,
-    };
-  };
-
   return {
     buildUrl,
-    clientRequest,
-    connect: (options) => clientRequest({ ...options, method: 'CONNECT' }),
-    delete: (options) => clientRequest({ ...options, method: 'DELETE' }),
-    get: (options) => clientRequest({ ...options, method: 'GET' }),
+    connect: (options) => request({ ...options, method: 'CONNECT' }),
+    delete: (options) => request({ ...options, method: 'DELETE' }),
+    get: (options) => request({ ...options, method: 'GET' }),
     getConfig,
-    head: (options) => clientRequest({ ...options, method: 'HEAD' }),
-    interceptors,
-    options: (options) => clientRequest({ ...options, method: 'OPTIONS' }),
-    patch: (options) => clientRequest({ ...options, method: 'PATCH' }),
-    post: (options) => clientRequest({ ...options, method: 'POST' }),
-    put: (options) => clientRequest({ ...options, method: 'PUT' }),
+    head: (options) => request({ ...options, method: 'HEAD' }),
+    options: (options) => request({ ...options, method: 'OPTIONS' }),
+    patch: (options) => request({ ...options, method: 'PATCH' }),
+    post: (options) => request({ ...options, method: 'POST' }),
+    put: (options) => request({ ...options, method: 'PUT' }),
     request,
     setConfig,
-    trace: (options) => clientRequest({ ...options, method: 'TRACE' }),
+    trace: (options) => request({ ...options, method: 'TRACE' }),
   };
 };
 
 export type {
+  Auth,
   Client,
   Composable,
   Config,
   Options,
   OptionsLegacyParser,
-  OptionsOld,
   RequestOptions,
   RequestResult,
-  Security,
 } from './types';
 export {
   createConfig,
