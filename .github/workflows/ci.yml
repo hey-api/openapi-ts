@@ -53,4 +53,4 @@ jobs:
 
       - name: Publish previews
         if: matrix.node-version == '22.11.0' && matrix.os == 'ubuntu-latest'
-        run: pnpx pkg-pr-new publish --compact --pnpm './packages/*'
+        run: pnpx pkg-pr-new publish --pnpm './packages/*'
