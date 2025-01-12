@@ -20,7 +20,9 @@ jobs:
         os: [macos-latest, ubuntu-latest, windows-latest]
         node-version: ['18.20.5', '20.11.1', '22.11.0']
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0
 
       - uses: pnpm/action-setup@v4.0.0
 
@@ -51,6 +53,6 @@ jobs:
       - name: Run e2e tests
         run: pnpm test:e2e
 
-      - name: Publish previews
+      - name: Publish preview packages
         if: matrix.node-version == '22.11.0' && matrix.os == 'ubuntu-latest'
-        run: pnpx pkg-pr-new publish --pnpm './packages/*'
+        run: ./scripts/publish-preview-packages.sh ${{ github.event.pull_request.base.ref }}
