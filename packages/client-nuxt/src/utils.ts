@@ -1,4 +1,4 @@
-import type { Client, Config, RequestOptions, Security } from './types';
+import type { Auth, Client, Config, RequestOptions } from './types';
 
 interface PathSerializer {
   path: Record<string, unknown>;
@@ -13,7 +13,9 @@ type ArraySeparatorStyle = ArrayStyle | MatrixStyle;
 type ObjectStyle = 'form' | 'deepObject';
 type ObjectSeparatorStyle = ObjectStyle | MatrixStyle;
 
-export type QuerySerializer = (query: Record<string, unknown>) => string;
+export type QuerySerializer = (
+  query: Parameters<Client['buildUrl']>[0]['query'],
+) => string;
 
 export type BodySerializer = (body: any) => any;
 
@@ -322,89 +324,57 @@ export const createQuerySerializer = <T = unknown>({
   return querySerializer;
 };
 
-/**
- * Infers parseAs value from provided Content-Type header.
- */
-export const getParseAs = (
-  contentType: string | null,
-): Exclude<Config['parseAs'], 'auto'> => {
-  if (!contentType) {
-    // If no Content-Type header is provided, the best we can do is return the raw response body,
-    // which is effectively the same as the 'stream' option.
-    return 'stream';
-  }
+export const getAuthToken = async (
+  auth: Auth,
+  callback: RequestOptions['auth'],
+): Promise<string | undefined> => {
+  const token =
+    typeof callback === 'function' ? await callback(auth) : callback;
 
-  const cleanContent = contentType.split(';')[0]?.trim();
-
-  if (!cleanContent) {
+  if (!token) {
     return;
   }
 
-  if (
-    cleanContent.startsWith('application/json') ||
-    cleanContent.endsWith('+json')
-  ) {
-    return 'json';
+  if (auth.scheme === 'bearer') {
+    return `Bearer ${token}`;
   }
 
-  if (cleanContent === 'multipart/form-data') {
-    return 'formData';
+  if (auth.scheme === 'basic') {
+    return `Basic ${btoa(token)}`;
   }
 
-  if (
-    ['application/', 'audio/', 'image/', 'video/'].some((type) =>
-      cleanContent.startsWith(type),
-    )
-  ) {
-    return 'blob';
-  }
-
-  if (cleanContent.startsWith('text/')) {
-    return 'text';
-  }
-};
-
-export const getAuthToken = async (
-  security: Security,
-  options: Pick<RequestOptions, 'accessToken' | 'apiKey'>,
-): Promise<string | undefined> => {
-  if (security.fn === 'accessToken') {
-    const token =
-      typeof options.accessToken === 'function'
-        ? await options.accessToken()
-        : options.accessToken;
-    return token ? `Bearer ${token}` : undefined;
-  }
-
-  if (security.fn === 'apiKey') {
-    return typeof options.apiKey === 'function'
-      ? await options.apiKey()
-      : options.apiKey;
-  }
+  return token;
 };
 
 export const setAuthParams = async ({
   security,
   ...options
 }: Pick<Required<RequestOptions>, 'security'> &
-  Pick<RequestOptions, 'accessToken' | 'apiKey' | 'query'> & {
+  Pick<RequestOptions, 'auth' | 'query'> & {
     headers: Headers;
   }) => {
-  for (const scheme of security) {
-    const token = await getAuthToken(scheme, options);
+  for (const auth of security) {
+    const token = await getAuthToken(auth, options.auth);
 
     if (!token) {
       continue;
     }
 
-    if (scheme.in === 'header') {
-      options.headers.set(scheme.name, token);
-    } else if (scheme.in === 'query') {
-      if (!options.query) {
-        options.query = {};
-      }
+    const name = auth.name ?? 'Authorization';
 
-      options.query[scheme.name] = token;
+    switch (auth.in) {
+      case 'query':
+        if (!options.query) {
+          options.query = {};
+        }
+        // TODO: handle refs
+        // @ts-expect-error
+        options.query[name] = token;
+        break;
+      case 'header':
+      default:
+        options.headers.set(name, token);
+        break;
     }
 
     return;
@@ -413,7 +383,7 @@ export const setAuthParams = async ({
 
 export const buildUrl: Client['buildUrl'] = (options) => {
   const url = getUrl({
-    baseUrl: options.baseUrl ?? '',
+    baseUrl: options.baseURL ?? '',
     path: options.path,
     query: options.query,
     querySerializer:
@@ -431,12 +401,9 @@ export const getUrl = ({
   query,
   querySerializer,
   url: _url,
-}: {
+}: Pick<Parameters<Client['buildUrl']>[0], 'path' | 'query' | 'url'> & {
   baseUrl: string;
-  path?: Record<string, unknown>;
-  query?: Record<string, unknown>;
   querySerializer: QuerySerializer;
-  url: string;
 }) => {
   const pathUrl = _url.startsWith('/') ? _url : `/${_url}`;
   let url = baseUrl + pathUrl;
@@ -455,8 +422,8 @@ export const getUrl = ({
 
 export const mergeConfigs = (a: Config, b: Config): Config => {
   const config = { ...a, ...b };
-  if (config.baseUrl?.endsWith('/')) {
-    config.baseUrl = config.baseUrl.substring(0, config.baseUrl.length - 1);
+  if (config.baseURL?.endsWith('/')) {
+    config.baseURL = config.baseURL.substring(0, config.baseURL.length - 1);
   }
   config.headers = mergeHeaders(a.headers, b.headers);
   return config;
@@ -493,72 +460,6 @@ export const mergeHeaders = (
   }
   return mergedHeaders;
 };
-
-type ErrInterceptor<Err, Res, Req, Options> = (
-  error: Err,
-  response: Res,
-  request: Req,
-  options: Options,
-) => Err | Promise<Err>;
-
-type ReqInterceptor<Req, Options> = (
-  request: Req,
-  options: Options,
-) => Req | Promise<Req>;
-
-type ResInterceptor<Res, Req, Options> = (
-  response: Res,
-  request: Req,
-  options: Options,
-) => Res | Promise<Res>;
-
-class Interceptors<Interceptor> {
-  _fns: Interceptor[];
-
-  constructor() {
-    this._fns = [];
-  }
-
-  clear() {
-    this._fns = [];
-  }
-
-  exists(fn: Interceptor) {
-    return this._fns.indexOf(fn) !== -1;
-  }
-
-  eject(fn: Interceptor) {
-    const index = this._fns.indexOf(fn);
-    if (index !== -1) {
-      this._fns = [...this._fns.slice(0, index), ...this._fns.slice(index + 1)];
-    }
-  }
-
-  use(fn: Interceptor) {
-    this._fns = [...this._fns, fn];
-  }
-}
-
-// `createInterceptors()` response, meant for external use as it does not
-// expose internals
-export interface Middleware<Req, Res, Err, Options> {
-  error: Pick<
-    Interceptors<ErrInterceptor<Err, Res, Req, Options>>,
-    'eject' | 'use'
-  >;
-  request: Pick<Interceptors<ReqInterceptor<Req, Options>>, 'eject' | 'use'>;
-  response: Pick<
-    Interceptors<ResInterceptor<Res, Req, Options>>,
-    'eject' | 'use'
-  >;
-}
-
-// do not add `Middleware` as return type so we can use _fns internally
-export const createInterceptors = <Req, Res, Err, Options>() => ({
-  error: new Interceptors<ErrInterceptor<Err, Res, Req, Options>>(),
-  request: new Interceptors<ReqInterceptor<Req, Options>>(),
-  response: new Interceptors<ResInterceptor<Res, Req, Options>>(),
-});
 
 const serializeFormDataPair = (data: FormData, key: string, value: unknown) => {
   if (typeof value === 'string' || value instanceof Blob) {
@@ -644,9 +545,8 @@ const defaultHeaders = {
 
 export const createConfig = (override: Config = {}): Config => ({
   ...jsonBodySerializer,
-  baseUrl: '',
+  baseURL: '',
   headers: defaultHeaders,
-  parseAs: 'auto',
   querySerializer: defaultQuerySerializer,
   ...override,
 });

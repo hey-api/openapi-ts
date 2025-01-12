@@ -35,6 +35,8 @@ interface Auth {
   type: 'apiKey' | 'http';
 }
 
+const nuxtTypeComposable = 'TComposable';
+
 export const operationOptionsType = ({
   context,
   file,
@@ -51,15 +53,14 @@ export const operationOptionsType = ({
   const optionsName = clientApi.Options.name;
 
   if (context.config.client.name === '@hey-api/client-nuxt') {
-    const identifierError = importIdentifierError({ context, file, operation });
-    return `${optionsName}<${identifierData?.name || 'unknown'}, ${identifierError?.name || 'unknown'}, TComposable>`;
+    return `${optionsName}<${nuxtTypeComposable}, ${identifierData.name || 'unknown'}>`;
   }
 
   // TODO: refactor this to be more generic, works for now
   if (throwOnError) {
-    return `${optionsName}<${identifierData?.name || 'unknown'}, ${throwOnError}>`;
+    return `${optionsName}<${identifierData.name || 'unknown'}, ${throwOnError}>`;
   }
-  return identifierData
+  return identifierData.name
     ? `${optionsName}<${identifierData.name}>`
     : optionsName;
 };
@@ -424,6 +425,8 @@ const operationStatements = ({
   });
 
   const isNuxtClient = context.config.client.name === '@hey-api/client-nuxt';
+  const responseType = identifierResponse.name || 'unknown';
+  const errorType = identifierError.name || 'unknown';
 
   return [
     compiler.returnFunctionCall({
@@ -434,11 +437,9 @@ const operationStatements = ({
         }),
       ],
       name: `(options?.client ?? client).${operation.method}`,
-      types: [
-        identifierResponse.name || 'unknown',
-        identifierError.name || 'unknown',
-        isNuxtClient ? 'TComposable' : 'ThrowOnError',
-      ],
+      types: isNuxtClient
+        ? [nuxtTypeComposable, responseType, errorType]
+        : [responseType, errorType, 'ThrowOnError'],
     }),
   ];
 };
@@ -471,7 +472,7 @@ const generateClassSdk = ({
       }),
       parameters: [
         {
-          isRequired: hasOperationDataRequired(operation),
+          isRequired: isNuxtClient || hasOperationDataRequired(operation),
           name: 'options',
           type: operationOptionsType({
             context,
@@ -491,7 +492,7 @@ const generateClassSdk = ({
         ? [
             {
               extends: compiler.typeNode('Composable'),
-              name: 'TComposable',
+              name: nuxtTypeComposable,
             },
           ]
         : [
@@ -552,7 +553,7 @@ const generateFlatSdk = ({
       expression: compiler.arrowFunction({
         parameters: [
           {
-            isRequired: hasOperationDataRequired(operation),
+            isRequired: isNuxtClient || hasOperationDataRequired(operation),
             name: 'options',
             type: operationOptionsType({
               context,
@@ -572,7 +573,7 @@ const generateFlatSdk = ({
           ? [
               {
                 extends: compiler.typeNode('Composable'),
-                name: 'TComposable',
+                name: nuxtTypeComposable,
               },
             ]
           : [
