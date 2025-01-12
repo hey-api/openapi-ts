@@ -40,31 +40,43 @@ export const createClient = (config: Config = {}): Client => {
 
     const { responseTransformer, responseValidator, security } = opts;
     if (security) {
+      const _onRequest = opts.onRequest;
       // auth must happen in interceptors otherwise we'd need to require
       // asyncContext enabled
       // https://nuxt.com/docs/guide/going-further/experimental-features#asynccontext
-      opts.onRequest = async ({ options }) => {
+      opts.onRequest = async (context) => {
+        const { options } = context;
+
         await setAuthParams({
           auth: opts.auth,
           headers: options.headers,
           query: options.query,
           security,
         });
+
+        if (typeof _onRequest === 'function') {
+          await _onRequest(context);
+        }
       };
     }
 
     if (responseTransformer || responseValidator) {
-      opts.onResponse = async ({ options, response }) => {
-        if (options.responseType && options.responseType !== 'json') {
-          return;
+      const _onResponse = opts.onResponse;
+      opts.onResponse = async (context) => {
+        const { options, response } = context;
+
+        if (!options.responseType || options.responseType === 'json') {
+          if (responseValidator) {
+            await responseValidator(response._data);
+          }
+
+          if (responseTransformer) {
+            response._data = await responseTransformer(response._data);
+          }
         }
 
-        if (responseValidator) {
-          await responseValidator(response._data);
-        }
-
-        if (responseTransformer) {
-          response._data = await responseTransformer(response._data);
+        if (typeof _onResponse === 'function') {
+          await _onResponse(context);
         }
       };
     }
