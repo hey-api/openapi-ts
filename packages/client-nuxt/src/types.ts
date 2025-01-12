@@ -6,6 +6,7 @@ import type {
   useLazyAsyncData,
   useLazyFetch,
 } from 'nuxt/app';
+import type { Ref } from 'vue';
 
 import type {
   BodySerializer,
@@ -15,11 +16,18 @@ import type {
 
 type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
 
+type WithRefs<TData> = {
+  [K in keyof TData]: TData[K] extends object
+    ? WithRefs<TData[K]> | Ref<TData[K]>
+    : TData[K] | Ref<TData[K]>;
+};
+
 export interface Config
   extends Omit<
-    FetchOptions<unknown>,
-    'baseURL' | 'body' | 'headers' | 'method'
-  > {
+      FetchOptions<unknown>,
+      'baseURL' | 'body' | 'headers' | 'method' | 'query'
+    >,
+    WithRefs<Pick<FetchOptions<unknown>, 'query'>> {
   /**
    * **This feature works only with the [experimental parser](https://heyapi.dev/openapi-ts/configuration#parser)**
    *
@@ -106,14 +114,18 @@ type AuthToken = string | undefined;
 export interface RequestOptions<
   TComposable extends Composable = Composable,
   Url extends string = string,
-> extends Config {
+> extends Config,
+    WithRefs<{
+      /**
+       * Any body that you want to add to your request.
+       *
+       * {@link https://developer.mozilla.org/docs/Web/API/fetch#body}
+       */
+      body?: BodyInit | Record<string, any> | null;
+      path?: Record<string, unknown>;
+      query?: FetchOptions<unknown>['query'];
+    }> {
   asyncDataOptions?: AsyncDataOptions<unknown>;
-  /**
-   * Any body that you want to add to your request.
-   *
-   * {@link https://developer.mozilla.org/docs/Web/API/fetch#body}
-   */
-  body?: BodyInit | Record<string, any> | null;
   /**
    * You can provide a client instance returned by `createClient()` instead of
    * individual options. This might be also useful if you want to implement a
@@ -122,8 +134,6 @@ export interface RequestOptions<
   client?: Client;
   composable: TComposable;
   key?: string;
-  path?: Record<string, unknown>;
-  query?: FetchOptions<unknown>['query'];
   /**
    * Security mechanism(s) to use for the request.
    */
@@ -164,20 +174,26 @@ type RequestFn = <
     Pick<Required<RequestOptions<TComposable>>, 'method'>,
 ) => RequestResult<TComposable, TData, TError>;
 
+interface DataShape {
+  body?: unknown;
+  headers?: unknown;
+  path?: Record<string, unknown>;
+  query?: unknown;
+  url: string;
+}
+
+export type BuildUrlOptions<
+  TData extends Omit<DataShape, 'headers'> = Omit<DataShape, 'headers'>,
+> = Pick<WithRefs<TData>, 'path' | 'query'> &
+  Pick<TData, 'url'> &
+  Pick<Options<'$fetch', TData>, 'baseURL' | 'querySerializer'>;
+
 export interface Client {
   /**
    * Returns the final request URL. This method works only with experimental parser.
    */
-  buildUrl: <
-    TData extends {
-      body?: unknown;
-      path?: Record<string, unknown>;
-      query?: FetchOptions<unknown>['query'];
-      url: string;
-    },
-  >(
-    options: Pick<TData, 'path' | 'query' | 'url'> &
-      Pick<Options<'$fetch', TData>, 'baseURL' | 'querySerializer'>,
+  buildUrl: <TData extends Omit<DataShape, 'headers'>>(
+    options: BuildUrlOptions<TData>,
   ) => string;
   connect: MethodFn;
   delete: MethodFn;
@@ -193,19 +209,11 @@ export interface Client {
   trace: MethodFn;
 }
 
-interface DataShape {
-  body?: unknown;
-  headers?: unknown;
-  path?: unknown;
-  query?: unknown;
-  url: string;
-}
-
 export type Options<
   TComposable extends Composable,
   TData extends DataShape = DataShape,
 > = OmitKeys<RequestOptions<TComposable>, 'body' | 'path' | 'query' | 'url'> &
-  Omit<TData, 'url'>;
+  WithRefs<Omit<TData, 'url'>>;
 
 export type OptionsLegacyParser<TData = unknown> = TData extends { body?: any }
   ? TData extends { headers?: any }

@@ -602,13 +602,17 @@ importers:
   packages/client-fetch: {}
 
   packages/client-nuxt:
+    dependencies:
+      nuxt:
+        specifier: '>= 3.0.0 < 4'
+        version: 3.15.1(@parcel/watcher@2.5.0)(@types/node@22.10.5)(db0@0.2.1)(encoding@0.1.13)(eslint@9.17.0(jiti@2.4.2))(ioredis@5.4.2)(less@4.2.0)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.30.1)(sass@1.80.7)(terser@5.36.0)(typescript@5.6.1-rc)(vite@6.0.7(@types/node@22.10.5)(jiti@2.4.2)(less@4.2.0)(sass@1.80.7)(terser@5.36.0)(yaml@2.7.0))(yaml@2.7.0)
+      vue:
+        specifier: '>= 3.5.13 < 4'
+        version: 3.5.13(typescript@5.6.1-rc)
     devDependencies:
       '@nuxt/test-utils':
         specifier: 3.15.1
         version: 3.15.1(@types/node@22.10.5)(@vue/test-utils@2.4.6)(jsdom@24.1.0)(less@4.2.0)(magicast@0.3.5)(rollup@4.30.1)(sass@1.80.7)(terser@5.36.0)(typescript@5.6.1-rc)(vitest@1.6.0(@types/node@22.10.5)(jsdom@24.1.0)(less@4.2.0)(sass@1.80.7)(terser@5.36.0))
-      nuxt:
-        specifier: 3.15.1
-        version: 3.15.1(@parcel/watcher@2.5.0)(@types/node@22.10.5)(db0@0.2.1)(encoding@0.1.13)(eslint@9.17.0(jiti@2.4.2))(ioredis@5.4.2)(less@4.2.0)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.30.1)(sass@1.80.7)(terser@5.36.0)(typescript@5.6.1-rc)(vite@6.0.7(@types/node@22.10.5)(jiti@2.4.2)(less@4.2.0)(sass@1.80.7)(terser@5.36.0)(yaml@2.7.0))(yaml@2.7.0)
 
   packages/openapi-ts:
     dependencies:

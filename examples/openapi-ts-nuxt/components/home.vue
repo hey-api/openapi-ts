@@ -88,10 +88,11 @@ watch(lazyFetch.data, (newPet) => {
 });
 
 async function handleFetch() {
+  const petId = ref(BigInt(8));
   const result = await getPetById({
     composable: '$fetch',
     path: {
-      petId: BigInt(8),
+      petId,
     },
   });
   console.log(result);

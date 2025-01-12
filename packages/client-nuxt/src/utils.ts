@@ -1,9 +1,14 @@
-import type { Auth, Client, Config, RequestOptions } from './types';
+import { toValue } from 'vue';
 
-interface PathSerializer {
-  path: Record<string, unknown>;
-  url: string;
-}
+import type {
+  Auth,
+  BuildUrlOptions,
+  Client,
+  Config,
+  RequestOptions,
+} from './types';
+
+type PathSerializer = Pick<Required<BuildUrlOptions>, 'path' | 'url'>;
 
 const PATH_PARAM_RE = /\{[^{}]+\}/g;
 
@@ -217,7 +222,8 @@ const defaultPathSerializer = ({ path, url: _url }: PathSerializer) => {
         style = 'matrix';
       }
 
-      const value = path[name];
+      // @ts-expect-error
+      const value = toValue(toValue(path)[name]);
 
       if (value === undefined || value === null) {
         continue;
@@ -271,9 +277,10 @@ export const createQuerySerializer = <T = unknown>({
 }: QuerySerializerOptions = {}) => {
   const querySerializer = (queryParams: T) => {
     let search: string[] = [];
-    if (queryParams && typeof queryParams === 'object') {
-      for (const name in queryParams) {
-        const value = queryParams[name];
+    const qParams = toValue(queryParams);
+    if (qParams && typeof qParams === 'object') {
+      for (const name in qParams) {
+        const value = toValue(qParams[name]);
 
         if (value === undefined || value === null) {
           continue;
@@ -367,9 +374,8 @@ export const setAuthParams = async ({
         if (!options.query) {
           options.query = {};
         }
-        // TODO: handle refs
         // @ts-expect-error
-        options.query[name] = token;
+        toValue(options.query)[name] = token;
         break;
       case 'header':
       default:
@@ -401,7 +407,7 @@ export const getUrl = ({
   query,
   querySerializer,
   url: _url,
-}: Pick<Parameters<Client['buildUrl']>[0], 'path' | 'query' | 'url'> & {
+}: Pick<BuildUrlOptions, 'path' | 'query' | 'url'> & {
   baseUrl: string;
   querySerializer: QuerySerializer;
 }) => {
