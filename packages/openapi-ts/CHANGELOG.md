@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.61.3
+
+### Patch Changes
+
+- [#1552](https://github.com/hey-api/openapi-ts/pull/1552) [`ceb8bd7`](https://github.com/hey-api/openapi-ts/commit/ceb8bd74207566871e9f179cb28b2d8c440ef2c8) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: use z.coerce before calling z.bigint
+
 ## 0.61.2
 
 ### Patch Changes
