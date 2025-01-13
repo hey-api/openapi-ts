@@ -17,9 +17,9 @@ import type {
 type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
 
 type WithRefs<TData> = {
-  [K in keyof TData]: TData[K] extends object
-    ? WithRefs<TData[K]> | Ref<TData[K]>
-    : TData[K] | Ref<TData[K]>;
+  [K in keyof TData]: NonNullable<TData[K]> extends object
+    ? WithRefs<NonNullable<TData[K]>> | Ref<NonNullable<TData[K]>>
+    : NonNullable<TData[K]> | Ref<NonNullable<TData[K]>>;
 };
 
 export interface Config
@@ -122,7 +122,7 @@ export interface RequestOptions<
        * {@link https://developer.mozilla.org/docs/Web/API/fetch#body}
        */
       body?: BodyInit | Record<string, any> | null;
-      path?: Record<string, unknown>;
+      path?: FetchOptions<unknown>['query'];
       query?: FetchOptions<unknown>['query'];
     }> {
   asyncDataOptions?: AsyncDataOptions<unknown>;
@@ -177,8 +177,8 @@ type RequestFn = <
 interface DataShape {
   body?: unknown;
   headers?: unknown;
-  path?: Record<string, unknown>;
-  query?: unknown;
+  path?: FetchOptions<unknown>['query'];
+  query?: FetchOptions<unknown>['query'];
   url: string;
 }
 
