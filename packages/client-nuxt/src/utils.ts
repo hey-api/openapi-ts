@@ -1,4 +1,5 @@
-import { toValue } from 'vue';
+import type { ComputedRef, Ref } from 'vue';
+import { isRef, toValue, unref } from 'vue';
 
 import type {
   Auth,
@@ -222,7 +223,6 @@ const defaultPathSerializer = ({ path, url: _url }: PathSerializer) => {
         style = 'matrix';
       }
 
-      // @ts-expect-error
       const value = toValue(toValue(path)[name]);
 
       if (value === undefined || value === null) {
@@ -374,7 +374,6 @@ export const setAuthParams = async ({
         if (!options.query) {
           options.query = {};
         }
-        // @ts-expect-error
         toValue(options.query)[name] = token;
         break;
       case 'header':
@@ -556,3 +555,31 @@ export const createConfig = (override: Config = {}): Config => ({
   querySerializer: defaultQuerySerializer,
   ...override,
 });
+
+type UnwrapNestedRefs<T> =
+  T extends Ref<infer V>
+    ? V
+    : T extends ComputedRef<infer V>
+      ? V
+      : T extends Record<string, unknown> // this doesn't handle functions well
+        ? { [K in keyof T]: UnwrapNestedRefs<T[K]> }
+        : T;
+
+export const unwrapRefs = <T extends Record<string, unknown>>(
+  obj: T,
+): UnwrapNestedRefs<T> => {
+  const result = {} as UnwrapNestedRefs<T>;
+
+  for (const key in obj) {
+    const value = obj[key];
+    if (isRef(value)) {
+      result[key] = unref(value) as UnwrapNestedRefs<T>[typeof key];
+    } else if (value !== null && typeof value === 'object' && !isRef(value)) {
+      result[key] = unwrapRefs(value as T) as UnwrapNestedRefs<T>[typeof key];
+    } else {
+      result[key] = value as UnwrapNestedRefs<T>[typeof key];
+    }
+  }
+
+  return result;
+};

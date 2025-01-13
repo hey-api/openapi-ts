@@ -1,11 +1,25 @@
 <script setup lang="ts">
-import { getPetById } from '~/client';
+import {
+  findPetsByStatus,
+  getPetById,
+  type FindPetsByStatusData,
+} from '~/client';
 
 const petId = ref(BigInt(8));
+const status =
+  ref<NonNullable<FindPetsByStatusData['query']>['status']>('available');
 
 function incrementPetId() {
   petId.value++;
 }
+
+function changeStatus() {
+  status.value = status.value === 'available' ? 'pending' : 'available';
+}
+
+const query = computed(() => ({
+  status: status.value,
+}));
 
 /**
  * useAsyncData
@@ -25,6 +39,17 @@ const asyncData = await getPetById({
   path: {
     petId,
   },
+});
+watch(asyncData.data, (newPet) => {
+  console.log('pet', newPet);
+});
+
+await findPetsByStatus({
+  asyncDataOptions: {
+    watch: [status],
+  },
+  composable: 'useAsyncData',
+  query,
 });
 
 /**
@@ -111,5 +136,6 @@ async function handleFetch() {
   <div>
     <button @click="handleFetch" type="button">$fetch</button>
     <button @click="incrementPetId" type="button">increment petId</button>
+    <button @click="changeStatus" type="button">change status</button>
   </div>
 </template>

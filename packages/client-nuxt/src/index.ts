@@ -13,6 +13,7 @@ import {
   mergeConfigs,
   mergeHeaders,
   setAuthParams,
+  unwrapRefs,
 } from './utils';
 
 export const createClient = (config: Config = {}): Client => {
@@ -93,8 +94,12 @@ export const createClient = (config: Config = {}): Client => {
     const fetchFn = opts.$fetch;
 
     if (composable === '$fetch') {
-      // @ts-expect-error
-      return fetchFn(url, opts);
+      const url = buildUrl(opts);
+      return fetchFn(
+        url,
+        // @ts-expect-error
+        unwrapRefs(opts),
+      );
     }
 
     if (composable === 'useFetch') {
@@ -109,8 +114,11 @@ export const createClient = (config: Config = {}): Client => {
 
     const handler: (ctx?: NuxtApp) => Promise<any> = () => {
       const url = buildUrl(opts);
-      // @ts-expect-error
-      return fetchFn(url, opts);
+      return fetchFn(
+        url,
+        // @ts-expect-error
+        unwrapRefs(opts),
+      );
     };
 
     if (composable === 'useAsyncData') {
