@@ -9,11 +9,11 @@ export const client = createClient(createConfig());
 
 export const postFoo = <ThrowOnError extends boolean = false>(options?: Options<PostFooData, ThrowOnError>) => {
     return (options?.client ?? client).post<PostFooResponse, unknown, ThrowOnError>({
-        ...options,
         responseTransformer: postFooResponseTransformer,
         responseValidator: async (data) => {
             return await zPostFooResponse.parseAsync(data);
         },
-        url: '/foo'
+        url: '/foo',
+        ...options
     });
 };

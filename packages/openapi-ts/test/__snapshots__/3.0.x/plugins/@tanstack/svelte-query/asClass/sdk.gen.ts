@@ -8,26 +8,26 @@ export const client = createClient(createConfig());
 export class DefaultService {
     public static export<ThrowOnError extends boolean = false>(options?: Options<ExportData, ThrowOnError>) {
         return (options?.client ?? client).get<unknown, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/no-tag'
+            url: '/api/v{api-version}/no-tag',
+            ...options
         });
     }
     
     public static import<ThrowOnError extends boolean = false>(options: Options<ImportData, ThrowOnError>) {
         return (options?.client ?? client).post<ImportResponse, unknown, ThrowOnError>({
+            url: '/api/v{api-version}/no-tag',
             ...options,
             headers: {
                 'Content-Type': 'application/json',
                 ...options?.headers
-            },
-            url: '/api/v{api-version}/no-tag'
+            }
         });
     }
     
     public static getApiVbyApiVersionSimpleOperation<ThrowOnError extends boolean = false>(options: Options<GetApiVbyApiVersionSimpleOperationData, ThrowOnError>) {
         return (options?.client ?? client).get<GetApiVbyApiVersionSimpleOperationResponse, GetApiVbyApiVersionSimpleOperationError, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/simple:operation'
+            url: '/api/v{api-version}/simple:operation',
+            ...options
         });
     }
     
@@ -36,57 +36,57 @@ export class DefaultService {
 export class SimpleService {
     public static apiVVersionODataControllerCount<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionODataControllerCountData, ThrowOnError>) {
         return (options?.client ?? client).get<ApiVVersionODataControllerCountResponse, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/simple/$count'
+            url: '/api/v{api-version}/simple/$count',
+            ...options
         });
     }
     
     public static deleteCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: Options<DeleteCallWithoutParametersAndResponseData, ThrowOnError>) {
         return (options?.client ?? client).delete<unknown, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/simple'
+            url: '/api/v{api-version}/simple',
+            ...options
         });
     }
     
     public static getCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: Options<GetCallWithoutParametersAndResponseData, ThrowOnError>) {
         return (options?.client ?? client).get<unknown, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/simple'
+            url: '/api/v{api-version}/simple',
+            ...options
         });
     }
     
     public static headCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: Options<HeadCallWithoutParametersAndResponseData, ThrowOnError>) {
         return (options?.client ?? client).head<unknown, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/simple'
+            url: '/api/v{api-version}/simple',
+            ...options
         });
     }
     
     public static optionsCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: Options<OptionsCallWithoutParametersAndResponseData, ThrowOnError>) {
         return (options?.client ?? client).options<unknown, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/simple'
+            url: '/api/v{api-version}/simple',
+            ...options
         });
     }
     
     public static patchCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: Options<PatchCallWithoutParametersAndResponseData, ThrowOnError>) {
         return (options?.client ?? client).patch<unknown, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/simple'
+            url: '/api/v{api-version}/simple',
+            ...options
         });
     }
     
     public static postCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: Options<PostCallWithoutParametersAndResponseData, ThrowOnError>) {
         return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/simple'
+            url: '/api/v{api-version}/simple',
+            ...options
         });
     }
     
     public static putCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: Options<PutCallWithoutParametersAndResponseData, ThrowOnError>) {
         return (options?.client ?? client).put<unknown, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/simple'
+            url: '/api/v{api-version}/simple',
+            ...options
         });
     }
     
@@ -95,52 +95,52 @@ export class SimpleService {
 export class ParametersService {
     public static deleteFoo<ThrowOnError extends boolean = false>(options: Options<DeleteFooData3, ThrowOnError>) {
         return (options?.client ?? client).delete<unknown, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/foo/{foo_param}/bar/{BarParam}'
+            url: '/api/v{api-version}/foo/{foo_param}/bar/{BarParam}',
+            ...options
         });
     }
     
     public static callWithParameters<ThrowOnError extends boolean = false>(options: Options<CallWithParametersData, ThrowOnError>) {
         return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
+            url: '/api/v{api-version}/parameters/{parameterPath}',
             ...options,
             headers: {
                 'Content-Type': 'application/json',
                 ...options?.headers
-            },
-            url: '/api/v{api-version}/parameters/{parameterPath}'
+            }
         });
     }
     
     public static callWithWeirdParameterNames<ThrowOnError extends boolean = false>(options: Options<CallWithWeirdParameterNamesData, ThrowOnError>) {
         return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
+            url: '/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}',
             ...options,
             headers: {
                 'Content-Type': 'application/json',
                 ...options?.headers
-            },
-            url: '/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}'
+            }
         });
     }
     
     public static getCallWithOptionalParam<ThrowOnError extends boolean = false>(options: Options<GetCallWithOptionalParamData, ThrowOnError>) {
         return (options?.client ?? client).get<unknown, unknown, ThrowOnError>({
+            url: '/api/v{api-version}/parameters',
             ...options,
             headers: {
                 'Content-Type': 'application/json',
                 ...options?.headers
-            },
-            url: '/api/v{api-version}/parameters'
+            }
         });
     }
     
     public static postCallWithOptionalParam<ThrowOnError extends boolean = false>(options: Options<PostCallWithOptionalParamData, ThrowOnError>) {
         return (options?.client ?? client).post<PostCallWithOptionalParamResponse, unknown, ThrowOnError>({
+            url: '/api/v{api-version}/parameters',
             ...options,
             headers: {
                 'Content-Type': 'application/json',
                 ...options?.headers
-            },
-            url: '/api/v{api-version}/parameters'
+            }
         });
     }
     
@@ -149,8 +149,8 @@ export class ParametersService {
 export class DescriptionsService {
     public static callWithDescriptions<ThrowOnError extends boolean = false>(options?: Options<CallWithDescriptionsData, ThrowOnError>) {
         return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/descriptions'
+            url: '/api/v{api-version}/descriptions',
+            ...options
         });
     }
     
@@ -162,8 +162,8 @@ export class DeprecatedService {
      */
     public static deprecatedCall<ThrowOnError extends boolean = false>(options: Options<DeprecatedCallData, ThrowOnError>) {
         return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/parameters/deprecated'
+            url: '/api/v{api-version}/parameters/deprecated',
+            ...options
         });
     }
     
@@ -172,12 +172,12 @@ export class DeprecatedService {
 export class RequestBodyService {
     public static postApiVbyApiVersionRequestBody<ThrowOnError extends boolean = false>(options?: Options<PostApiVbyApiVersionRequestBodyData, ThrowOnError>) {
         return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
+            url: '/api/v{api-version}/requestBody',
             ...options,
             headers: {
                 'Content-Type': 'application/json',
                 ...options?.headers
-            },
-            url: '/api/v{api-version}/requestBody'
+            }
         });
     }
     
@@ -186,13 +186,13 @@ export class RequestBodyService {
 export class FormDataService {
     public static postApiVbyApiVersionFormData<ThrowOnError extends boolean = false>(options?: Options<PostApiVbyApiVersionFormDataData, ThrowOnError>) {
         return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
-            ...options,
             ...formDataBodySerializer,
+            url: '/api/v{api-version}/formData',
+            ...options,
             headers: {
                 'Content-Type': null,
                 ...options?.headers
-            },
-            url: '/api/v{api-version}/formData'
+            }
         });
     }
     
@@ -201,22 +201,22 @@ export class FormDataService {
 export class DefaultsService {
     public static callWithDefaultParameters<ThrowOnError extends boolean = false>(options?: Options<CallWithDefaultParametersData, ThrowOnError>) {
         return (options?.client ?? client).get<unknown, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/defaults'
+            url: '/api/v{api-version}/defaults',
+            ...options
         });
     }
     
     public static callWithDefaultOptionalParameters<ThrowOnError extends boolean = false>(options?: Options<CallWithDefaultOptionalParametersData, ThrowOnError>) {
         return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/defaults'
+            url: '/api/v{api-version}/defaults',
+            ...options
         });
     }
     
     public static callToTestOrderOfParams<ThrowOnError extends boolean = false>(options: Options<CallToTestOrderOfParamsData, ThrowOnError>) {
         return (options?.client ?? client).put<unknown, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/defaults'
+            url: '/api/v{api-version}/defaults',
+            ...options
         });
     }
     
@@ -225,29 +225,29 @@ export class DefaultsService {
 export class DuplicateService {
     public static duplicateName<ThrowOnError extends boolean = false>(options?: Options<DuplicateNameData, ThrowOnError>) {
         return (options?.client ?? client).delete<unknown, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/duplicate'
+            url: '/api/v{api-version}/duplicate',
+            ...options
         });
     }
     
     public static duplicateName2<ThrowOnError extends boolean = false>(options?: Options<DuplicateName2Data, ThrowOnError>) {
         return (options?.client ?? client).get<unknown, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/duplicate'
+            url: '/api/v{api-version}/duplicate',
+            ...options
         });
     }
     
     public static duplicateName3<ThrowOnError extends boolean = false>(options?: Options<DuplicateName3Data, ThrowOnError>) {
         return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/duplicate'
+            url: '/api/v{api-version}/duplicate',
+            ...options
         });
     }
     
     public static duplicateName4<ThrowOnError extends boolean = false>(options?: Options<DuplicateName4Data, ThrowOnError>) {
         return (options?.client ?? client).put<unknown, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/duplicate'
+            url: '/api/v{api-version}/duplicate',
+            ...options
         });
     }
     
@@ -256,15 +256,15 @@ export class DuplicateService {
 export class NoContentService {
     public static callWithNoContentResponse<ThrowOnError extends boolean = false>(options?: Options<CallWithNoContentResponseData, ThrowOnError>) {
         return (options?.client ?? client).get<CallWithNoContentResponseResponse, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/no-content'
+            url: '/api/v{api-version}/no-content',
+            ...options
         });
     }
     
     public static callWithResponseAndNoContentResponse<ThrowOnError extends boolean = false>(options?: Options<CallWithResponseAndNoContentResponseData, ThrowOnError>) {
         return (options?.client ?? client).get<CallWithResponseAndNoContentResponseResponse, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/multiple-tags/response-and-no-content'
+            url: '/api/v{api-version}/multiple-tags/response-and-no-content',
+            ...options
         });
     }
     
@@ -273,29 +273,29 @@ export class NoContentService {
 export class ResponseService {
     public static callWithResponseAndNoContentResponse<ThrowOnError extends boolean = false>(options?: Options<CallWithResponseAndNoContentResponseData, ThrowOnError>) {
         return (options?.client ?? client).get<CallWithResponseAndNoContentResponseResponse, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/multiple-tags/response-and-no-content'
+            url: '/api/v{api-version}/multiple-tags/response-and-no-content',
+            ...options
         });
     }
     
     public static callWithResponse<ThrowOnError extends boolean = false>(options?: Options<CallWithResponseData, ThrowOnError>) {
         return (options?.client ?? client).get<CallWithResponseResponse, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/response'
+            url: '/api/v{api-version}/response',
+            ...options
         });
     }
     
     public static callWithDuplicateResponses<ThrowOnError extends boolean = false>(options?: Options<CallWithDuplicateResponsesData, ThrowOnError>) {
         return (options?.client ?? client).post<CallWithDuplicateResponsesResponse, CallWithDuplicateResponsesError, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/response'
+            url: '/api/v{api-version}/response',
+            ...options
         });
     }
     
     public static callWithResponses<ThrowOnError extends boolean = false>(options?: Options<CallWithResponsesData, ThrowOnError>) {
         return (options?.client ?? client).put<CallWithResponsesResponse, CallWithResponsesError, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/response'
+            url: '/api/v{api-version}/response',
+            ...options
         });
     }
     
@@ -304,15 +304,15 @@ export class ResponseService {
 export class MultipleTags1Service {
     public static dummyA<ThrowOnError extends boolean = false>(options?: Options<DummyAData, ThrowOnError>) {
         return (options?.client ?? client).get<DummyAResponse, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/multiple-tags/a'
+            url: '/api/v{api-version}/multiple-tags/a',
+            ...options
         });
     }
     
     public static dummyB<ThrowOnError extends boolean = false>(options?: Options<DummyBData, ThrowOnError>) {
         return (options?.client ?? client).get<DummyBResponse, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/multiple-tags/b'
+            url: '/api/v{api-version}/multiple-tags/b',
+            ...options
         });
     }
     
@@ -321,15 +321,15 @@ export class MultipleTags1Service {
 export class MultipleTags2Service {
     public static dummyA<ThrowOnError extends boolean = false>(options?: Options<DummyAData, ThrowOnError>) {
         return (options?.client ?? client).get<DummyAResponse, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/multiple-tags/a'
+            url: '/api/v{api-version}/multiple-tags/a',
+            ...options
         });
     }
     
     public static dummyB<ThrowOnError extends boolean = false>(options?: Options<DummyBData, ThrowOnError>) {
         return (options?.client ?? client).get<DummyBResponse, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/multiple-tags/b'
+            url: '/api/v{api-version}/multiple-tags/b',
+            ...options
         });
     }
     
@@ -338,8 +338,8 @@ export class MultipleTags2Service {
 export class MultipleTags3Service {
     public static dummyB<ThrowOnError extends boolean = false>(options?: Options<DummyBData, ThrowOnError>) {
         return (options?.client ?? client).get<DummyBResponse, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/multiple-tags/b'
+            url: '/api/v{api-version}/multiple-tags/b',
+            ...options
         });
     }
     
@@ -348,8 +348,8 @@ export class MultipleTags3Service {
 export class CollectionFormatService {
     public static collectionFormat<ThrowOnError extends boolean = false>(options: Options<CollectionFormatData, ThrowOnError>) {
         return (options?.client ?? client).get<unknown, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/collectionFormat'
+            url: '/api/v{api-version}/collectionFormat',
+            ...options
         });
     }
     
@@ -358,8 +358,8 @@ export class CollectionFormatService {
 export class TypesService {
     public static types<ThrowOnError extends boolean = false>(options: Options<TypesData, ThrowOnError>) {
         return (options?.client ?? client).get<TypesResponse, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/types'
+            url: '/api/v{api-version}/types',
+            ...options
         });
     }
     
@@ -368,13 +368,13 @@ export class TypesService {
 export class UploadService {
     public static uploadFile<ThrowOnError extends boolean = false>(options: Options<UploadFileData, ThrowOnError>) {
         return (options?.client ?? client).post<UploadFileResponse, unknown, ThrowOnError>({
-            ...options,
             ...urlSearchParamsBodySerializer,
+            url: '/api/v{api-version}/upload',
+            ...options,
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 ...options?.headers
-            },
-            url: '/api/v{api-version}/upload'
+            }
         });
     }
     
@@ -383,8 +383,8 @@ export class UploadService {
 export class FileResponseService {
     public static fileResponse<ThrowOnError extends boolean = false>(options: Options<FileResponseData, ThrowOnError>) {
         return (options?.client ?? client).get<FileResponseResponse, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/file/{id}'
+            url: '/api/v{api-version}/file/{id}',
+            ...options
         });
     }
     
@@ -393,19 +393,19 @@ export class FileResponseService {
 export class ComplexService {
     public static complexTypes<ThrowOnError extends boolean = false>(options: Options<ComplexTypesData, ThrowOnError>) {
         return (options?.client ?? client).get<ComplexTypesResponse, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/complex'
+            url: '/api/v{api-version}/complex',
+            ...options
         });
     }
     
     public static complexParams<ThrowOnError extends boolean = false>(options: Options<ComplexParamsData, ThrowOnError>) {
         return (options?.client ?? client).put<ComplexParamsResponse, unknown, ThrowOnError>({
+            url: '/api/v{api-version}/complex/{id}',
             ...options,
             headers: {
                 'Content-Type': 'application/json-patch+json',
                 ...options?.headers
-            },
-            url: '/api/v{api-version}/complex/{id}'
+            }
         });
     }
     
@@ -414,20 +414,20 @@ export class ComplexService {
 export class MultipartService {
     public static multipartResponse<ThrowOnError extends boolean = false>(options?: Options<MultipartResponseData, ThrowOnError>) {
         return (options?.client ?? client).get<MultipartResponseResponse, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/multipart'
+            url: '/api/v{api-version}/multipart',
+            ...options
         });
     }
     
     public static multipartRequest<ThrowOnError extends boolean = false>(options?: Options<MultipartRequestData, ThrowOnError>) {
         return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
-            ...options,
             ...formDataBodySerializer,
+            url: '/api/v{api-version}/multipart',
+            ...options,
             headers: {
                 'Content-Type': null,
                 ...options?.headers
-            },
-            url: '/api/v{api-version}/multipart'
+            }
         });
     }
     
@@ -436,8 +436,8 @@ export class MultipartService {
 export class HeaderService {
     public static callWithResultFromHeader<ThrowOnError extends boolean = false>(options?: Options<CallWithResultFromHeaderData, ThrowOnError>) {
         return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/header'
+            url: '/api/v{api-version}/header',
+            ...options
         });
     }
     
@@ -446,8 +446,8 @@ export class HeaderService {
 export class ErrorService {
     public static testErrorCode<ThrowOnError extends boolean = false>(options: Options<TestErrorCodeData, ThrowOnError>) {
         return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/error'
+            url: '/api/v{api-version}/error',
+            ...options
         });
     }
     
@@ -456,8 +456,8 @@ export class ErrorService {
 export class NonAsciiÆøåÆøÅöôêÊService {
     public static nonAsciiæøåÆøÅöôêÊ字符串<ThrowOnError extends boolean = false>(options: Options<NonAsciiæøåÆøÅöôêÊ字符串Data, ThrowOnError>) {
         return (options?.client ?? client).post<NonAsciiæøåÆøÅöôêÊ字符串Response, unknown, ThrowOnError>({
-            ...options,
-            url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串'
+            url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
+            ...options
         });
     }
     
@@ -466,13 +466,13 @@ export class NonAsciiÆøåÆøÅöôêÊService {
      */
     public static putWithFormUrlEncoded<ThrowOnError extends boolean = false>(options: Options<PutWithFormUrlEncodedData, ThrowOnError>) {
         return (options?.client ?? client).put<unknown, unknown, ThrowOnError>({
-            ...options,
             ...urlSearchParamsBodySerializer,
+            url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
+            ...options,
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 ...options?.headers
-            },
-            url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串'
+            }
         });
     }
     
