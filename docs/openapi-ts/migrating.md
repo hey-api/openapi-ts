@@ -27,6 +27,23 @@ This config option is deprecated and will be removed in favor of [clients](./cli
 
 This config option is deprecated and will be removed.
 
+## v0.62.0
+
+### Changed parser
+
+Formerly known as the experimental parser, this is now the default parser. This change should not impact the generated output's functionality. However, there might be cases where this results in breaking changes due to different handling of certain scenarios. If you need to revert to the legacy parser, set the `experimentalParser` flag to `false`.
+
+```js
+export default {
+  client: '@hey-api/client-fetch',
+  experimentalParser: false, // [!code ++]
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+};
+```
+
+Note that the legacy parser is no longer supported and will be removed in the v1 release.
+
 ## v0.61.0
 
 ### Added `auth` option

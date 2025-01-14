@@ -99,10 +99,6 @@ Re-exporting your plugin from `index.ts` may result in broken output due to nami
 
 ## Handler
 
-::: warning
-To use this feature, you must opt in to the [experimental parser](/openapi-ts/configuration#parser).
-:::
-
 Notice we defined `_handler` in our `config.ts` file. This method is responsible for generating the actual output. We recommend implementing it in `plugin.ts`.
 
 ::: code-group

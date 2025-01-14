@@ -6,7 +6,7 @@ export default defineConfig({
     name: '@hey-api/client-nuxt',
     // name: 'legacy/xhr',
   },
-  experimentalParser: true,
+  // experimentalParser: false,
   input: {
     // exclude: '^#/components/schemas/ModelWithCircularReference$',
     // include:

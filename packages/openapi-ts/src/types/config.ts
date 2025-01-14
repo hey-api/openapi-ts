@@ -65,12 +65,6 @@ export interface ClientConfig {
    */
   dryRun?: boolean;
   /**
-   * Opt in to the experimental parser?
-   *
-   * @default false
-   */
-  experimentalParser?: boolean;
-  /**
    * Path to the OpenAPI specification. This can be either local or remote path.
    * Both JSON and YAML file formats are supported. You can also pass the parsed
    * object directly if you're fetching the file yourself.
@@ -82,8 +76,6 @@ export interface ClientConfig {
     | Record<string, unknown>
     | {
         /**
-         * **This feature works only with the [experimental parser](https://heyapi.dev/openapi-ts/configuration#parser)**
-         *
          * Prevent parts matching the regular expression from being processed.
          * You can select both operations and components by reference within
          * the bundled input. In case of conflicts, `exclude` takes precedence
@@ -95,8 +87,6 @@ export interface ClientConfig {
          */
         exclude?: string;
         /**
-         * **This feature works only with the [experimental parser](https://heyapi.dev/openapi-ts/configuration#parser)**
-         *
          * Process only parts matching the regular expression. You can select both
          * operations and components by reference within the bundled input. In
          * case of conflicts, `exclude` takes precedence over `include`.
@@ -160,8 +150,6 @@ export interface ClientConfig {
     | string
     | {
         /**
-         * **This feature works only with the [experimental parser](https://heyapi.dev/openapi-ts/configuration#parser)**
-         *
          * Defines casing of the output fields. By default, we preserve `input`
          * values as data transforms incur a performance penalty at runtime.
          *
@@ -203,50 +191,6 @@ export interface ClientConfig {
    */
   plugins?: ReadonlyArray<UserPlugins['name'] | UserPlugins>;
   /**
-   * Manually set base in OpenAPI config instead of inferring from server value
-   *
-   * @deprecated
-   */
-  // eslint-disable-next-line typescript-sort-keys/interface
-  base?: string;
-  /**
-   * Generate core client classes?
-   *
-   * @deprecated
-   *
-   * @default true
-   */
-  exportCore?: boolean;
-  /**
-   * Custom client class name. Please note this option is deprecated and
-   * will be removed in favor of clients.
-   *
-   * @link https://heyapi.dev/openapi-ts/migrating.html#deprecated-name
-   *
-   * @deprecated
-   */
-  name?: string;
-  /**
-   * Path to custom request file. Please note this option is deprecated and
-   * will be removed in favor of clients.
-   *
-   * @link https://heyapi.dev/openapi-ts/migrating.html#deprecated-request
-   *
-   * @deprecated
-   */
-  request?: string;
-  /**
-   * Use options or arguments functions. Please note this option is deprecated and
-   * will be removed in favor of clients.
-   *
-   * @link https://heyapi.dev/openapi-ts/migrating.html#deprecated-useoptions
-   *
-   * @deprecated
-   *
-   * @default true
-   */
-  useOptions?: boolean;
-  /**
    * Regenerate the client when the input file changes?
    *
    * @default false
@@ -268,6 +212,58 @@ export interface ClientConfig {
          */
         interval?: number;
       };
+  /**
+   * @deprecated
+   *
+   * Manually set base in OpenAPI config instead of inferring from server value
+   */
+  // eslint-disable-next-line typescript-sort-keys/interface
+  base?: string;
+  /**
+   * @deprecated
+   *
+   * Opt in to the experimental parser?
+   *
+   * @default true
+   */
+  experimentalParser?: boolean;
+  /**
+   * @deprecated
+   *
+   * Generate core client classes?
+   *
+   * @default true
+   */
+  exportCore?: boolean;
+  /**
+   * @deprecated
+   *
+   * Custom client class name. Please note this option is deprecated and
+   * will be removed in favor of clients.
+   *
+   * @link https://heyapi.dev/openapi-ts/migrating.html#deprecated-name
+   */
+  name?: string;
+  /**
+   * @deprecated
+   *
+   * Path to custom request file. Please note this option is deprecated and
+   * will be removed in favor of clients.
+   *
+   * @link https://heyapi.dev/openapi-ts/migrating.html#deprecated-request
+   */
+  request?: string;
+  /**
+   * @deprecated
+   *
+   * Use options or arguments functions. Please note this option is deprecated and
+   * will be removed in favor of clients.
+   *
+   * @link https://heyapi.dev/openapi-ts/migrating.html#deprecated-useoptions
+   *
+   * @default true
+   */
+  useOptions?: boolean;
 }
 
 export type UserConfig = ClientConfig;
