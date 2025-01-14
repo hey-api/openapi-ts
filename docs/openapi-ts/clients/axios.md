@@ -151,10 +151,6 @@ const response = await getFoo({
 
 ## Auth
 
-::: warning
-To use this feature, you must opt in to the [experimental parser](/openapi-ts/configuration#parser).
-:::
-
 The SDKs include auth mechanisms for every endpoint. You will want to configure the `auth` field to pass the right token for each request. The `auth` field can be a string or a function returning a string representing the token. The returned value will be attached only to requests that require auth.
 
 ```js
@@ -178,10 +174,6 @@ client.instance.interceptors.request.use((config) => {
 ```
 
 ## Build URL
-
-::: warning
-To use this feature, you must opt in to the [experimental parser](/openapi-ts/configuration#parser).
-:::
 
 If you need to access the compiled URL, you can use the `buildUrl()` method. It's loosely typed by default to accept almost any value; in practice, you will want to pass a type hint.
 

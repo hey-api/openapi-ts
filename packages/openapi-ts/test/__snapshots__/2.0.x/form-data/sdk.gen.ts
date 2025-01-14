@@ -7,12 +7,12 @@ export const client = createClient(createConfig());
 
 export const postV1Foo = <ThrowOnError extends boolean = false>(options: Options<PostV1FooData, ThrowOnError>) => {
     return (options?.client ?? client).post<PostV1FooResponse, unknown, ThrowOnError>({
-        ...options,
         ...formDataBodySerializer,
+        url: '/v1/foo',
+        ...options,
         headers: {
             'Content-Type': null,
             ...options?.headers
-        },
-        url: '/v1/foo'
+        }
     });
 };

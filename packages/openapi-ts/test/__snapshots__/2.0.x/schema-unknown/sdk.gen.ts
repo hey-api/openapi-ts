@@ -10,11 +10,11 @@ export const client = createClient(createConfig());
  */
 export const sendEmail = <ThrowOnError extends boolean = false>(options: Options<SendEmailData, ThrowOnError>) => {
     return (options?.client ?? client).post<SendEmailResponse2, SendEmailError, ThrowOnError>({
+        url: '/email',
         ...options,
         headers: {
             'Content-Type': 'application/json',
             ...options?.headers
-        },
-        url: '/email'
+        }
     });
 };

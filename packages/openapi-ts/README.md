@@ -178,35 +178,6 @@ Clients are responsible for sending the actual HTTP requests. The `client` value
 
 You can learn more on the [Clients](https://heyapi.dev/openapi-ts/clients) page.
 
-### Parser
-
-If you're NOT using a legacy client, we encourage you to try out the experimental parser. Soon, it will become the default parser, but until it's been tested it's an opt-in feature. To try it out, set the `experimentalParser` flag in your configuration to `true`.
-
-#### config
-
-```js
-export default {
-  client: '@hey-api/client-fetch',
-  experimentalParser: true,
-  input: 'path/to/openapi.json',
-  output: 'src/client',
-};
-```
-
-#### cli
-
-```sh
-npx @hey-api/openapi-ts \
-  -c @hey-api/client-fetch \
-  -e \
-  -i path/to/openapi.json \
-  -o src/client
-```
-
-The experimental parser produces a cleaner output while being faster than the legacy parser. It also supports features such as [Filters](https://heyapi.dev/openapi-ts/configuration#filters) and more are being added.
-
-The legacy parser will be used with the [legacy clients](https://heyapi.dev/openapi-ts/clients/legacy) regardless of the `experimentalParser` flag value. However, it's unlikely to receive any further updates.
-
 ## Plugins
 
 Plugins are responsible for generating artifacts from your input. By default, Hey API will generate TypeScript interfaces and SDK from your OpenAPI specification. You can add, remove, or customize any of the plugins. In fact, we highly encourage you to do so!

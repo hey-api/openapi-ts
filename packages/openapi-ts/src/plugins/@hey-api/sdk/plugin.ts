@@ -239,7 +239,7 @@ const operationStatements = ({
   //   }
   // }
 
-  const requestOptions: ObjectValue[] = [{ spread: 'options' }];
+  const requestOptions: ObjectValue[] = [];
 
   if (operation.body) {
     switch (operation.body.type) {
@@ -266,23 +266,6 @@ const operationStatements = ({
         });
         break;
     }
-
-    requestOptions.push({
-      key: 'headers',
-      value: [
-        {
-          key: 'Content-Type',
-          // form-data does not need Content-Type header, browser will set it automatically
-          value:
-            operation.body.type === 'form-data'
-              ? null
-              : operation.body.mediaType,
-        },
-        {
-          spread: 'options?.headers',
-        },
-      ],
-    });
   }
 
   if (context.config.client.name === '@hey-api/client-axios') {
@@ -423,6 +406,27 @@ const operationStatements = ({
     key: 'url',
     value: operation.path,
   });
+
+  // options must go last to allow overriding parameters above
+  requestOptions.push({ spread: 'options' });
+  if (operation.body) {
+    requestOptions.push({
+      key: 'headers',
+      value: [
+        {
+          key: 'Content-Type',
+          // form-data does not need Content-Type header, browser will set it automatically
+          value:
+            operation.body.type === 'form-data'
+              ? null
+              : operation.body.mediaType,
+        },
+        {
+          spread: 'options?.headers',
+        },
+      ],
+    });
+  }
 
   const isNuxtClient = context.config.client.name === '@hey-api/client-nuxt';
   const responseType = identifierResponse.name || 'unknown';
