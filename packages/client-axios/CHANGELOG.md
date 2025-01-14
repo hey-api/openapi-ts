@@ -1,5 +1,11 @@
 # @hey-api/client-axios
 
+## 0.5.0
+
+### Minor Changes
+
+- [#1568](https://github.com/hey-api/openapi-ts/pull/1568) [`465410c`](https://github.com/hey-api/openapi-ts/commit/465410c201eb19e737e3143ad53a146e95f80107) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: change the default parser
+
 ## 0.4.0
 
 ### Minor Changes

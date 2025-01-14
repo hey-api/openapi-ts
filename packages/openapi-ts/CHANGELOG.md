@@ -1,5 +1,15 @@
 # @hey-api/openapi-ts
 
+## 0.62.0
+
+### Minor Changes
+
+- [#1568](https://github.com/hey-api/openapi-ts/pull/1568) [`465410c`](https://github.com/hey-api/openapi-ts/commit/465410c201eb19e737e3143ad53a146e95f80107) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: change the default parser
+
+### Patch Changes
+
+- [#1566](https://github.com/hey-api/openapi-ts/pull/1566) [`39d558a`](https://github.com/hey-api/openapi-ts/commit/39d558afc6af97fe8de1a6471b9d1f172ec2960a) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: spread sdk options at the end to allow overriding generated values
+
 ## 0.61.3
 
 ### Patch Changes
