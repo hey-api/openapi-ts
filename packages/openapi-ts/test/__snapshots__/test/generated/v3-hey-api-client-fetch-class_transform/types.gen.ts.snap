@@ -3,6 +3,15 @@
 /**
  * This is a model that contains a some dates
  */
+export type SimpleModel = {
+    id: number;
+    name: string;
+    readonly enabled: boolean;
+};
+
+/**
+ * This is a model that contains a some dates
+ */
 export type ModelWithDates = {
     id: number;
     name: string;
@@ -19,100 +28,113 @@ export type ParentModelWithDates = {
     readonly modified?: Date;
     items?: Array<ModelWithDates>;
     item?: ModelWithDates;
-    'nullable-date'?: Array<(Date | null)>;
+    'nullable-date'?: Array<Date | unknown>;
     simpleItems?: Array<SimpleModel>;
     simpleItem?: SimpleModel;
-    dates?: Array<(Date)>;
-    strings?: Array<(string)>;
+    dates?: Array<Date>;
+    strings?: Array<string>;
 };
 
-/**
- * This is a model that contains a some dates
- */
-export type SimpleModel = {
-    id: number;
-    name: string;
-    readonly enabled: boolean;
+export type ParentModelWithDatesData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/model-with-dates';
 };
 
-export type ParentModelWithDatesResponse = (ParentModelWithDates | unknown);
-
-export type ParentModelWithDatesError = unknown;
-
-export type ModelWithDatesResponse = (ModelWithDates);
-
-export type ModelWithDatesError = unknown;
-
-export type ModelWithDatesArrayResponse = (Array<ModelWithDates>);
-
-export type ModelWithDatesArrayError = unknown;
-
-export type ArrayOfDatesResponse = (Array<(Date)>);
-
-export type ArrayOfDatesError = unknown;
-
-export type DateResponse = (Date);
-
-export type DateError = unknown;
-
-export type MultipleResponsesResponse = (Array<ModelWithDates> | Array<SimpleModel>);
-
-export type MultipleResponsesError = unknown;
-
-export type ParentModelWithDatesResponseTransformer = (data: any) => Promise<ParentModelWithDatesResponse>;
-
-export type ParentModelWithDatesModelResponseTransformer = (data: any) => ParentModelWithDates;
-
-export type ModelWithDatesModelResponseTransformer = (data: any) => ModelWithDates;
-
-export const ModelWithDatesModelResponseTransformer: ModelWithDatesModelResponseTransformer = data => {
-    if (data?.modified) {
-        data.modified = new Date(data.modified);
-    }
-    if (data?.expires) {
-        data.expires = new Date(data.expires);
-    }
-    return data;
+export type ParentModelWithDatesResponses = {
+    /**
+     * Success
+     */
+    200: ParentModelWithDates;
+    /**
+     * Success
+     */
+    201: unknown;
 };
 
-export const ParentModelWithDatesModelResponseTransformer: ParentModelWithDatesModelResponseTransformer = data => {
-    if (data?.modified) {
-        data.modified = new Date(data.modified);
-    }
-    if (Array.isArray(data?.items)) {
-        data.items.forEach(ModelWithDatesModelResponseTransformer);
-    }
-    if (data?.item) {
-        ModelWithDatesModelResponseTransformer(data.item);
-    }
-    if (Array.isArray(data?.['nullable-date'])) {
-        data['nullable-date'] = data['nullable-date'].map(item => item ? new Date(item) : item);
-    }
-    if (Array.isArray(data?.dates)) {
-        data.dates = data.dates.map(item => item ? new Date(item) : item);
-    }
-    return data;
+export type ParentModelWithDatesResponse = ParentModelWithDatesResponses[keyof ParentModelWithDatesResponses];
+
+export type ModelWithDatesData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/model-with-dates';
 };
 
-export const ParentModelWithDatesResponseTransformer: ParentModelWithDatesResponseTransformer = async (data) => {
-    if (data) {
-        ParentModelWithDatesModelResponseTransformer(data);
-    }
-    return data;
+export type ModelWithDatesResponses = {
+    /**
+     * Success
+     */
+    200: ModelWithDates;
 };
 
-export type ModelWithDatesResponseTransformer = (data: any) => Promise<ModelWithDatesResponse>;
+export type ModelWithDatesResponse = ModelWithDatesResponses[keyof ModelWithDatesResponses];
 
-export const ModelWithDatesResponseTransformer: ModelWithDatesResponseTransformer = async (data) => {
-    ModelWithDatesModelResponseTransformer(data);
-    return data;
+export type ModelWithDatesArrayData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/model-with-dates-array';
 };
 
-export type ModelWithDatesArrayResponseTransformer = (data: any) => Promise<ModelWithDatesArrayResponse>;
-
-export const ModelWithDatesArrayResponseTransformer: ModelWithDatesArrayResponseTransformer = async (data) => {
-    if (Array.isArray(data)) {
-        data.forEach(ModelWithDatesModelResponseTransformer);
-    }
-    return data;
+export type ModelWithDatesArrayResponses = {
+    /**
+     * Success
+     */
+    200: Array<ModelWithDates>;
 };
+
+export type ModelWithDatesArrayResponse = ModelWithDatesArrayResponses[keyof ModelWithDatesArrayResponses];
+
+export type ArrayOfDatesData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/array-of-dates';
+};
+
+export type ArrayOfDatesResponses = {
+    /**
+     * Success
+     */
+    200: Array<Date>;
+};
+
+export type ArrayOfDatesResponse = ArrayOfDatesResponses[keyof ArrayOfDatesResponses];
+
+export type DateData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/date';
+};
+
+export type DateResponses = {
+    /**
+     * Success
+     */
+    200: Date;
+};
+
+export type DateResponse = DateResponses[keyof DateResponses];
+
+export type MultipleResponsesData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/multiple-responses';
+};
+
+export type MultipleResponsesResponses = {
+    /**
+     * Updated
+     */
+    200: Array<ModelWithDates>;
+    /**
+     * Created
+     */
+    201: Array<SimpleModel>;
+};
+
+export type MultipleResponsesResponse = MultipleResponsesResponses[keyof MultipleResponsesResponses];
