@@ -17,8 +17,6 @@ type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
 export interface Config<ThrowOnError extends boolean = boolean>
   extends Omit<CreateAxiosDefaults, 'auth' | 'headers'> {
   /**
-   * **This feature works only with the [experimental parser](https://heyapi.dev/openapi-ts/configuration#parser)**
-   *
    * Auth token or a function returning auth token. The resolved value will be
    * added to the request payload as defined by its `security` array.
    */
@@ -85,8 +83,6 @@ export interface Config<ThrowOnError extends boolean = boolean>
    */
   responseTransformer?: (data: unknown) => Promise<unknown>;
   /**
-   * **This feature works only with the [experimental parser](https://heyapi.dev/openapi-ts/configuration#parser)**
-   *
    * A function validating response data. This is useful if you want to ensure
    * the response conforms to the desired shape, so it can be safely passed to
    * the transformers and returned to the user.

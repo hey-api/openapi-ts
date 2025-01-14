@@ -11,8 +11,6 @@ export interface Config extends Plugin.Name<'@hey-api/typescript'> {
    */
   enums?: 'javascript' | 'typescript' | 'typescript+namespace' | false;
   /**
-   * **This feature works only with the [experimental parser](https://heyapi.dev/openapi-ts/configuration#parser)**
-   *
    * Defines casing of the enum keys. By default, we use `SCREAMING_SNAKE_CASE`.
    * This option has effect only when `enums` is defined.
    *
@@ -20,8 +18,6 @@ export interface Config extends Plugin.Name<'@hey-api/typescript'> {
    */
   enumsCase?: StringCase;
   /**
-   * **This feature works only with the [experimental parser](https://heyapi.dev/openapi-ts/configuration#parser)**
-   *
    * By default, inline enums (enums not defined as reusable components in
    * the input file) are generated as inlined union types. You can set
    * `exportInlineEnums` to `true` to treat inline enums as reusable components.
@@ -31,19 +27,17 @@ export interface Config extends Plugin.Name<'@hey-api/typescript'> {
    */
   exportInlineEnums?: boolean;
   /**
-   * **This feature works only with the [experimental parser](https://heyapi.dev/openapi-ts/configuration#parser)**
-   *
    * Defines casing of the identifiers. By default, we use `PascalCase`.
    *
    * @default 'PascalCase'
    */
   identifierCase?: Exclude<StringCase, 'SCREAMING_SNAKE_CASE'>;
   /**
+   * @deprecated
+   *
    * **This feature works only with the legacy parser**
    *
    * Include only types matching regular expression.
-   *
-   * @deprecated
    */
   include?: string;
   /**
@@ -53,24 +47,24 @@ export interface Config extends Plugin.Name<'@hey-api/typescript'> {
    */
   output?: string;
   /**
+   * @deprecated
+   *
    * **This feature works only with the legacy parser**
    *
    * Use your preferred naming pattern
    *
    * @default 'preserve'
-   *
-   * @deprecated
    */
   style?: 'PascalCase' | 'preserve';
   /**
+   * @deprecated
+   *
    * **This feature works only with the legacy parser**
    *
    * Generate a tree of types containing all operations? It will be named
    * $OpenApiTs.
    *
    * @default false
-   *
-   * @deprecated
    */
   tree?: boolean;
 }

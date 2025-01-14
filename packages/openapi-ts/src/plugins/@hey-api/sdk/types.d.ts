@@ -16,8 +16,6 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
    */
   asClass?: boolean;
   /**
-   * **This feature works only with the [experimental parser](https://heyapi.dev/openapi-ts/configuration#parser)**
-   *
    * Should the generated functions contain auth mechanisms? You may want to
    * disable this option if you're handling auth yourself or defining it
    * globally on the client and want to reduce the size of generated code.
@@ -26,6 +24,8 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
    */
   auth?: boolean;
   /**
+   * @deprecated
+   *
    * **This feature works only with the legacy parser**
    *
    * Filter endpoints to be included in the generated SDK. The provided
@@ -33,8 +33,6 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
    * included in the output. The input pattern this string will be tested
    * against is `{method} {path}`. For example, you can match
    * `POST /api/v1/foo` with `^POST /api/v1/foo$`.
-   *
-   * @deprecated
    */
   filter?: string;
   /**
@@ -96,8 +94,6 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
    */
   transformer?: '@hey-api/transformers' | boolean;
   /**
-   * **This feature works only with the [experimental parser](https://heyapi.dev/openapi-ts/configuration#parser)**
-   *
    * Validate response data against schema before returning. This is useful
    * if you want to ensure the response conforms to a desired shape. However,
    * validation adds runtime overhead, so it's not recommended to use unless

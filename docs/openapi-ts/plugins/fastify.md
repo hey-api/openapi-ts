@@ -23,10 +23,6 @@ Live demo
 
 ## Installation
 
-::: warning
-To use this feature, you must opt in to the [experimental parser](/openapi-ts/configuration#parser).
-:::
-
 In your [configuration](/openapi-ts/get-started), add `fastify` to your plugins and you'll be ready to generate Fastify artifacts. :tada:
 
 ```js
@@ -34,7 +30,6 @@ import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
   client: '@hey-api/client-fetch',
-  experimentalParser: true, // [!code ++]
   input: 'path/to/openapi.json',
   output: 'src/client',
   plugins: [
