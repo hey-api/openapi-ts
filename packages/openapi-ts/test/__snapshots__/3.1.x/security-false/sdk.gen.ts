@@ -7,7 +7,7 @@ export const client = createClient(createConfig());
 
 export const getFoo = <ThrowOnError extends boolean = false>(options?: Options<GetFooData, ThrowOnError>) => {
     return (options?.client ?? client).get<unknown, unknown, ThrowOnError>({
-        ...options,
-        url: '/foo'
+        url: '/foo',
+        ...options
     });
 };

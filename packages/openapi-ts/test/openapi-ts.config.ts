@@ -12,7 +12,7 @@ export default defineConfig({
     // exclude: '^#/components/schemas/ModelWithCircularReference$',
     // include:
     //   '^(#/components/schemas/import|#/paths/api/v{api-version}/simple/options)$',
-    path: './packages/openapi-ts/test/spec/3.1.x/schema-const.yaml',
+    path: './packages/openapi-ts/test/spec/3.0.x/security-api-key.json',
     // path: './test/spec/v3-transforms.json',
     // path: 'https://mongodb-mms-prod-build-server.s3.amazonaws.com/openapi/2caffd88277a4e27c95dcefc7e3b6a63a3b03297-v2-2023-11-15.json',
     // path: 'https://raw.githubusercontent.com/swagger-api/swagger-petstore/master/src/main/resources/openapi.yaml',
@@ -39,7 +39,7 @@ export default defineConfig({
       // asClass: true,
       // auth: false,
       // include...
-      // name: '@hey-api/sdk',
+      name: '@hey-api/sdk',
       // operationId: false,
       // serviceNameBuilder: '^Parameters',
       // throwOnError: true,
