@@ -7,11 +7,11 @@ export const client = createClient(createConfig());
 
 export const postFoo = <ThrowOnError extends boolean = false>(options: Options<PostFooData, ThrowOnError>) => {
     return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
+        url: '/foo',
         ...options,
         headers: {
             'Content-Type': 'application/json',
             ...options?.headers
-        },
-        url: '/foo'
+        }
     });
 };
