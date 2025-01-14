@@ -32,8 +32,6 @@ export interface PluginContext {
 
 interface BaseConfig {
   /**
-   * **This feature works only with the [experimental parser](https://heyapi.dev/openapi-ts/configuration#parser)**
-   *
    * Should the exports from the plugin's file be re-exported in the index
    * barrel file?
    */
@@ -107,8 +105,9 @@ export namespace Plugin {
     Pick<Required<BaseConfig>, 'exportFromIndex' | 'output'>;
 
   /**
-   * Plugin implementation for legacy parser. Use only if you need to support
-   * OpenAPI 2.0 since that isn't supported by the experimental parser yet.
+   * @deprecated
+   *
+   * Plugin implementation for legacy parser.
    */
   export type LegacyHandler<Config extends BaseConfig> = (args: {
     client: Client;

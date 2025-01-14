@@ -94,35 +94,6 @@ Plugins are responsible for generating artifacts from your input. By default, He
 
 You can learn more on the [Output](/openapi-ts/output) page.
 
-## Parser
-
-If you're NOT using a legacy client, we encourage you to try out the experimental parser. Soon, it will become the default parser, but until it's been tested it's an opt-in feature. To try it out, set the `experimentalParser` flag in your configuration to `true`.
-
-::: code-group
-
-```js [config]
-export default {
-  client: '@hey-api/client-fetch',
-  experimentalParser: true, // [!code ++]
-  input: 'path/to/openapi.json',
-  output: 'src/client',
-};
-```
-
-```sh [cli]
-npx @hey-api/openapi-ts \
-  -c @hey-api/client-fetch \
-  -e \  # [!code ++]
-  -i path/to/openapi.json \
-  -o src/client
-```
-
-:::
-
-The experimental parser produces a cleaner output while being faster than the legacy parser. It also supports features such as [Filters](#filters) and more are being added.
-
-The legacy parser will be used with the [legacy clients](/openapi-ts/clients/legacy) regardless of the `experimentalParser` flag value. However, it's unlikely to receive any further updates.
-
 ## Formatting
 
 To format your output folder contents, set `output.format` to a valid formatter.
@@ -222,10 +193,6 @@ You can also prevent your output from being linted by adding your output path to
 
 ## Filters
 
-::: warning
-To use this feature, you must opt in to the [experimental parser](#parser).
-:::
-
 If you work with large specifications and want to generate output from their subset, you can use regular expressions to select the relevant definitions. Set `input.include` to match resource references to be included or `input.exclude` to match resource references to be excluded. When both regular expressions match the same definition, `input.exclude` takes precedence over `input.include`.
 
 ::: code-group
@@ -233,7 +200,6 @@ If you work with large specifications and want to generate output from their sub
 ```js [include]
 export default {
   client: '@hey-api/client-fetch',
-  experimentalParser: true, // [!code ++]
   input: {
     // match only the schema named `foo` and `GET` operation for the `/api/v1/foo` path // [!code ++]
     include: '^(#/components/schemas/foo|#/paths/api/v1/foo/get)$', // [!code ++]
@@ -246,7 +212,6 @@ export default {
 ```js [exclude]
 export default {
   client: '@hey-api/client-fetch',
-  experimentalParser: true, // [!code ++]
   input: {
     // match everything except for the schema named `foo` and `GET` operation for the `/api/v1/foo` path // [!code ++]
     exclude: '^(#/components/schemas/foo|#/paths/api/v1/foo/get)$', // [!code ++]

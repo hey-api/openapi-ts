@@ -489,7 +489,7 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
       base,
       configFile = '',
       dryRun = false,
-      experimentalParser = false,
+      experimentalParser = true,
       exportCore = true,
       name,
       request,
