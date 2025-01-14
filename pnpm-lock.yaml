@@ -161,8 +161,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/client-fetch
       fastify:
-        specifier: 5.2.0
-        version: 5.2.0
+        specifier: 5.2.1
+        version: 5.2.1
       fastify-openapi-glue:
         specifier: 4.8.0
         version: 4.8.0
@@ -286,8 +286,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/client-fetch
       '@tanstack/angular-query-experimental':
-        specifier: 5.62.13
-        version: 5.62.13(@angular/common@19.0.5(@angular/core@19.0.5(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.0.5(rxjs@7.8.1)(zone.js@0.15.0))
+        specifier: 5.64.1
+        version: 5.64.1(@angular/common@19.0.5(@angular/core@19.0.5(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.0.5(rxjs@7.8.1)(zone.js@0.15.0))
       rxjs:
         specifier: ~7.8.0
         version: 7.8.1
@@ -350,11 +350,11 @@ importers:
         specifier: 3.1.6
         version: 3.1.6(@types/react-dom@19.0.1)(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@tanstack/react-query':
-        specifier: 5.62.15
-        version: 5.62.15(react@19.0.0)
+        specifier: 5.64.1
+        version: 5.64.1(react@19.0.0)
       '@tanstack/react-query-devtools':
-        specifier: 5.62.15
-        version: 5.62.15(@tanstack/react-query@5.62.15(react@19.0.0))(react@19.0.0)
+        specifier: 5.64.1
+        version: 5.64.1(@tanstack/react-query@5.64.1(react@19.0.0))(react@19.0.0)
       react:
         specifier: 19.0.0
         version: 19.0.0
@@ -414,8 +414,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/client-fetch
       '@tanstack/svelte-query':
-        specifier: 5.62.12
-        version: 5.62.12(svelte@4.2.19)
+        specifier: 5.64.1
+        version: 5.64.1(svelte@4.2.19)
     devDependencies:
       '@fontsource/fira-mono':
         specifier: 5.0.0
@@ -481,11 +481,11 @@ importers:
         specifier: workspace:*
         version: link:../../packages/client-fetch
       '@tanstack/vue-query':
-        specifier: 5.62.12
-        version: 5.62.12(vue@3.5.13(typescript@5.5.3))
+        specifier: 5.64.1
+        version: 5.64.1(vue@3.5.13(typescript@5.5.3))
       '@tanstack/vue-query-devtools':
-        specifier: 5.62.12
-        version: 5.62.12(@tanstack/vue-query@5.62.12(vue@3.5.13(typescript@5.5.3)))(vue@3.5.13(typescript@5.5.3))
+        specifier: 5.64.1
+        version: 5.64.1(@tanstack/vue-query@5.64.1(vue@3.5.13(typescript@5.5.3)))(vue@3.5.13(typescript@5.5.3))
       pinia:
         specifier: 2.3.0
         version: 2.3.0(typescript@5.5.3)(vue@3.5.13(typescript@5.5.3))
@@ -634,20 +634,20 @@ importers:
         specifier: workspace:*
         version: link:../client-fetch
       '@tanstack/angular-query-experimental':
-        specifier: 5.62.13
-        version: 5.62.13(@angular/common@19.0.5(@angular/core@19.0.5(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.0.5(rxjs@7.8.1)(zone.js@0.15.0))
+        specifier: 5.64.1
+        version: 5.64.1(@angular/common@19.0.5(@angular/core@19.0.5(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.0.5(rxjs@7.8.1)(zone.js@0.15.0))
       '@tanstack/react-query':
-        specifier: 5.62.15
-        version: 5.62.15(react@19.0.0)
+        specifier: 5.64.1
+        version: 5.64.1(react@19.0.0)
       '@tanstack/solid-query':
         specifier: 5.51.21
         version: 5.51.21(solid-js@1.9.4)
       '@tanstack/svelte-query':
-        specifier: 5.62.12
-        version: 5.62.12(svelte@4.2.19)
+        specifier: 5.64.1
+        version: 5.64.1(svelte@4.2.19)
       '@tanstack/vue-query':
-        specifier: 5.62.12
-        version: 5.62.12(vue@3.5.13(typescript@5.5.3))
+        specifier: 5.64.1
+        version: 5.64.1(vue@3.5.13(typescript@5.5.3))
       '@types/cross-spawn':
         specifier: 6.0.6
         version: 6.0.6
@@ -667,8 +667,8 @@ importers:
         specifier: 4.21.0
         version: 4.21.0
       fastify:
-        specifier: 5.2.0
-        version: 5.2.0
+        specifier: 5.2.1
+        version: 5.2.1
       glob:
         specifier: 10.4.3
         version: 10.4.3
@@ -2144,8 +2144,14 @@ packages:
   '@fastify/fast-json-stringify-compiler@5.0.2':
     resolution: {integrity: sha512-YdR7gqlLg1xZAQa+SX4sMNzQHY5pC54fu9oC5aYSUqBhyn6fkLkrdtKlpVdCNPlwuUuXA1PjFTEmvMF6ZVXVGw==}
 
+  '@fastify/forwarded@3.0.0':
+    resolution: {integrity: sha512-kJExsp4JCms7ipzg7SJ3y8DwmePaELHxKYtg+tZow+k0znUTf3cb+npgyqm8+ATZOdmfgfydIebPDWM172wfyA==}
+
   '@fastify/merge-json-schemas@0.1.1':
     resolution: {integrity: sha512-fERDVz7topgNjtXsJTTW1JKLy0rhuLRcquYqNR9rF7OcVpCa2OVW49ZPDIhaRRCaUuvVxI+N416xUoF76HNSXA==}
+
+  '@fastify/proxy-addr@5.0.0':
+    resolution: {integrity: sha512-37qVVA1qZ5sgH7KpHkkC4z9SK6StIsIcOmpjvMPXNb3vx2GQxhZocogVYbr2PbbeLCQxYIPDok307xEvRZOzGA==}
 
   '@floating-ui/core@1.6.9':
     resolution: {integrity: sha512-uMXCuQ3BItDUbAMhIXw7UPXRfAlOAvZzdK9BWpE60MCn+Svt3aLn9jsPTi/WNGlRUu2uI0v5S7JiIUsbsvh3fw==}
@@ -3676,8 +3682,8 @@ packages:
       svelte: ^4.0.0 || ^5.0.0-next.0
       vite: ^5.0.0
 
-  '@tanstack/angular-query-experimental@5.62.13':
-    resolution: {integrity: sha512-K3BCgFu7RTtKgahfCKhBwrC8hpRDqOIRGEvnASf2D7nwysm2wREjNanQZaFEETzGVSX8HGqxp+80qUb7L/cKlg==}
+  '@tanstack/angular-query-experimental@5.64.1':
+    resolution: {integrity: sha512-JMLxcQgdXATg54ZE9hdsGGb5V0ZKbfwnuQsyOHSU9bVaSpg0o/ps1Z8ngRbdOAjVuvjYbkte/Cn6aIpt29BaCQ==}
     peerDependencies:
       '@angular/common': '>=16.0.0'
       '@angular/core': '>=16.0.0'
@@ -3689,23 +3695,20 @@ packages:
   '@tanstack/query-core@5.51.21':
     resolution: {integrity: sha512-POQxm42IUp6n89kKWF4IZi18v3fxQWFRolvBA6phNVmA8psdfB1MvDnGacCJdS+EOX12w/CyHM62z//rHmYmvw==}
 
-  '@tanstack/query-core@5.62.12':
-    resolution: {integrity: sha512-6igFeBgymHkCxVgaEk+yiLwkMf9haui/EQLmI3o9CatOyDThEoFKe8toLWvWliZC/Jf+h7NwHi/zjfyLArr1ow==}
+  '@tanstack/query-core@5.64.1':
+    resolution: {integrity: sha512-978Wx4Wl4UJZbmvU/rkaM9cQtXXrbhK0lsz/UZhYIbyKYA8E4LdomTwyh2GHZ4oU0BKKoDH4YlKk2VscCUgNmg==}
 
-  '@tanstack/query-core@5.62.15':
-    resolution: {integrity: sha512-wT20X14CxcWY8YLJ/1pnsXn/y1Q2uRJZYWW93PWRtZt+3/JlGZyiyTcO4pGnqycnP7CokCROAyatsraosqZsDA==}
+  '@tanstack/query-devtools@5.62.16':
+    resolution: {integrity: sha512-3ff6UBJr0H3nIhfLSl9911rvKqXf0u4B58jl0uYdDWLqPk9pCvYIbxC35cGxK2+8INl4IaFVUHb/IdgWrNkg3Q==}
 
-  '@tanstack/query-devtools@5.62.9':
-    resolution: {integrity: sha512-b1NZzDLVf6laJsB1Cfm3ieuYzM+WqoO8qpm9v+3Etwd+Ph4zkhUMiT+wcWj5AhEPsXiRodKYiiW048VDNdBxNg==}
-
-  '@tanstack/react-query-devtools@5.62.15':
-    resolution: {integrity: sha512-8aE7uD45NHZgNtHMVQC7PvM9f72mKK4bqcpHr9La8TsTRX7x8dy2Kdu2ReFNLCrdlEWkxdP5843tc/lHg+Q/rg==}
+  '@tanstack/react-query-devtools@5.64.1':
+    resolution: {integrity: sha512-8ajcGE3wXYlb4KuJnkFYkJwJKc/qmPNTpQD7YTgLRMBPTGGp1xk7VMzxL87DoXuweO8luplUUblJJ3noVs/luQ==}
     peerDependencies:
-      '@tanstack/react-query': ^5.62.15
+      '@tanstack/react-query': ^5.64.1
       react: ^18 || ^19
 
-  '@tanstack/react-query@5.62.15':
-    resolution: {integrity: sha512-Ny3xxsOWmEQCFyHiV3CF7t6+QAV+LpBEREiXyllKR4+tStyd8smOAa98ZHmEx0ZNy36M31K8enifB5wTSYAKJw==}
+  '@tanstack/react-query@5.64.1':
+    resolution: {integrity: sha512-vW5ggHpIO2Yjj44b4sB+Fd3cdnlMJppXRBJkEHvld6FXh3j5dwWJoQo7mGtKI2RbSFyiyu/PhGAy0+Vv5ev9Eg==}
     peerDependencies:
       react: ^18 || ^19
 
@@ -3714,19 +3717,19 @@ packages:
     peerDependencies:
       solid-js: ^1.6.0
 
-  '@tanstack/svelte-query@5.62.12':
-    resolution: {integrity: sha512-tG/FR6ttvf4nBeCvV/fel7KsvEJe/drAC/+WrfxgA5TzmjorSka0RoCN9TcoETcneGMXGqOD8rE9iK5z9KABUw==}
+  '@tanstack/svelte-query@5.64.1':
+    resolution: {integrity: sha512-AK81EBsLFYhpmn3/NhTZfhiALwm/56sPc6/LkyQ910QB3TDYEKmK/yr6ubW+sMo4C2FyGwWePSXVBjGCQ926XA==}
     peerDependencies:
       svelte: ^3.54.0 || ^4.0.0 || ^5.0.0-next.0
 
-  '@tanstack/vue-query-devtools@5.62.12':
-    resolution: {integrity: sha512-ZxFz3a56Y1MkEnPaEgiusw8/55pjIeAsYjmNBODVB1ysr5cIrW+3Wlp9TwQmLSPLF5gULO9byX5WOoqLgYErMw==}
+  '@tanstack/vue-query-devtools@5.64.1':
+    resolution: {integrity: sha512-8+FPvzAv+FBqMjcAmoQ/zRiJrGNmGXp/RO0sTyT4BXnugYSZwp7MjQVBsnmK3jucwtun8TpQPjcG1huAX57kUQ==}
     peerDependencies:
-      '@tanstack/vue-query': ^5.62.12
+      '@tanstack/vue-query': ^5.64.1
       vue: ^3.3.0
 
-  '@tanstack/vue-query@5.62.12':
-    resolution: {integrity: sha512-/d4zBLDUcc6pNHZTIzreD7oxp2AOk+G+ImTQzZMM7GVXI2kvW86repzK12vCaB1aIdg61wbUw/ytcdC42Ki5Rw==}
+  '@tanstack/vue-query@5.64.1':
+    resolution: {integrity: sha512-VeA1yvsoZmsKwe/aQYoDZVs0ZintCTVkkU2k8D5FajiMgAsdXgzebqyCs4b+Vc4qDpVQ6U3Y0vNW696B7c96dw==}
     peerDependencies:
       '@vue/composition-api': ^1.1.2
       vue: ^2.6.0 || ^3.3.0
@@ -5595,8 +5598,8 @@ packages:
   fastify-plugin@5.0.1:
     resolution: {integrity: sha512-HCxs+YnRaWzCl+cWRYFnHmeRFyR5GVnJTAaCJQiYzQSDwK9MgJdyAsuL3nh0EWRCYMgQ5MeziymvmAhUHYHDUQ==}
 
-  fastify@5.2.0:
-    resolution: {integrity: sha512-3s+Qt5S14Eq5dCpnE0FxTp3z4xKChI83ZnMv+k0FwX+VUoZrgCFoLAxpfdi/vT4y6Mk+g7aAMt9pgXDoZmkefQ==}
+  fastify@5.2.1:
+    resolution: {integrity: sha512-rslrNBF67eg8/Gyn7P2URV8/6pz8kSAscFL4EThZJ8JBMaXacVdVE4hmUcnPNKERl5o/xTiBSLfdowBRhVF1WA==}
 
   fastq@1.18.0:
     resolution: {integrity: sha512-QKHXPW0hD8g4UET03SdOdunzSouc9N4AuHdsX8XNcTsuz+yYFILVNIX4l9yHABMhiEI9Db0JTTIpu0wB+Y1QQw==}
@@ -10880,9 +10883,16 @@ snapshots:
     dependencies:
       fast-json-stringify: 6.0.0
 
+  '@fastify/forwarded@3.0.0': {}
+
   '@fastify/merge-json-schemas@0.1.1':
     dependencies:
       fast-deep-equal: 3.1.3
+
+  '@fastify/proxy-addr@5.0.0':
+    dependencies:
+      '@fastify/forwarded': 3.0.0
+      ipaddr.js: 2.2.0
 
   '@floating-ui/core@1.6.9':
     dependencies:
@@ -12388,12 +12398,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@tanstack/angular-query-experimental@5.62.13(@angular/common@19.0.5(@angular/core@19.0.5(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.0.5(rxjs@7.8.1)(zone.js@0.15.0))':
+  '@tanstack/angular-query-experimental@5.64.1(@angular/common@19.0.5(@angular/core@19.0.5(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.0.5(rxjs@7.8.1)(zone.js@0.15.0))':
     dependencies:
       '@angular/common': 19.0.5(@angular/core@19.0.5(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       '@angular/core': 19.0.5(rxjs@7.8.1)(zone.js@0.15.0)
-      '@tanstack/query-core': 5.62.12
-      '@tanstack/query-devtools': 5.62.9
+      '@tanstack/query-core': 5.64.1
+      '@tanstack/query-devtools': 5.62.16
 
   '@tanstack/match-sorter-utils@8.19.4':
     dependencies:
@@ -12401,21 +12411,19 @@ snapshots:
 
   '@tanstack/query-core@5.51.21': {}
 
-  '@tanstack/query-core@5.62.12': {}
+  '@tanstack/query-core@5.64.1': {}
 
-  '@tanstack/query-core@5.62.15': {}
+  '@tanstack/query-devtools@5.62.16': {}
 
-  '@tanstack/query-devtools@5.62.9': {}
-
-  '@tanstack/react-query-devtools@5.62.15(@tanstack/react-query@5.62.15(react@19.0.0))(react@19.0.0)':
+  '@tanstack/react-query-devtools@5.64.1(@tanstack/react-query@5.64.1(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@tanstack/query-devtools': 5.62.9
-      '@tanstack/react-query': 5.62.15(react@19.0.0)
+      '@tanstack/query-devtools': 5.62.16
+      '@tanstack/react-query': 5.64.1(react@19.0.0)
       react: 19.0.0
 
-  '@tanstack/react-query@5.62.15(react@19.0.0)':
+  '@tanstack/react-query@5.64.1(react@19.0.0)':
     dependencies:
-      '@tanstack/query-core': 5.62.15
+      '@tanstack/query-core': 5.64.1
       react: 19.0.0
 
   '@tanstack/solid-query@5.51.21(solid-js@1.9.4)':
@@ -12423,21 +12431,21 @@ snapshots:
       '@tanstack/query-core': 5.51.21
       solid-js: 1.9.4
 
-  '@tanstack/svelte-query@5.62.12(svelte@4.2.19)':
+  '@tanstack/svelte-query@5.64.1(svelte@4.2.19)':
     dependencies:
-      '@tanstack/query-core': 5.62.12
+      '@tanstack/query-core': 5.64.1
       svelte: 4.2.19
 
-  '@tanstack/vue-query-devtools@5.62.12(@tanstack/vue-query@5.62.12(vue@3.5.13(typescript@5.5.3)))(vue@3.5.13(typescript@5.5.3))':
+  '@tanstack/vue-query-devtools@5.64.1(@tanstack/vue-query@5.64.1(vue@3.5.13(typescript@5.5.3)))(vue@3.5.13(typescript@5.5.3))':
     dependencies:
-      '@tanstack/query-devtools': 5.62.9
-      '@tanstack/vue-query': 5.62.12(vue@3.5.13(typescript@5.5.3))
+      '@tanstack/query-devtools': 5.62.16
+      '@tanstack/vue-query': 5.64.1(vue@3.5.13(typescript@5.5.3))
       vue: 3.5.13(typescript@5.5.3)
 
-  '@tanstack/vue-query@5.62.12(vue@3.5.13(typescript@5.5.3))':
+  '@tanstack/vue-query@5.64.1(vue@3.5.13(typescript@5.5.3))':
     dependencies:
       '@tanstack/match-sorter-utils': 8.19.4
-      '@tanstack/query-core': 5.62.12
+      '@tanstack/query-core': 5.64.1
       '@vue/devtools-api': 6.6.4
       vue: 3.5.13(typescript@5.5.3)
       vue-demi: 0.14.10(vue@3.5.13(typescript@5.5.3))
@@ -14688,11 +14696,12 @@ snapshots:
 
   fastify-plugin@5.0.1: {}
 
-  fastify@5.2.0:
+  fastify@5.2.1:
     dependencies:
       '@fastify/ajv-compiler': 4.0.2
       '@fastify/error': 4.0.0
       '@fastify/fast-json-stringify-compiler': 5.0.2
+      '@fastify/proxy-addr': 5.0.0
       abstract-logging: 2.0.1
       avvio: 9.1.0
       fast-json-stringify: 6.0.0
@@ -14700,7 +14709,6 @@ snapshots:
       light-my-request: 6.5.1
       pino: 9.6.0
       process-warning: 4.0.1
-      proxy-addr: 2.0.7
       rfdc: 1.4.1
       secure-json-parse: 3.0.2
       semver: 7.6.3
