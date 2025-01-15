@@ -59,7 +59,9 @@ describe('OpenAPI v3', () => {
     client: 'legacy/fetch',
     exportCore: true,
     input: '',
-    output: '',
+    output: {
+      path: '',
+    },
     plugins: [
       '@hey-api/sdk',
       {
@@ -289,6 +291,18 @@ describe('OpenAPI v3', () => {
     },
     {
       config: createConfig({
+        client: '@hey-api/client-fetch',
+        output: {
+          indexFile: false,
+          path: '',
+        },
+        plugins: ['@hey-api/typescript'],
+      }),
+      description: 'generate output without index file',
+      name: 'v3_no_index',
+    },
+    {
+      config: createConfig({
         plugins: [
           {
             include: '^ModelWithString',
@@ -473,7 +487,10 @@ describe('OpenAPI v3', () => {
       await createClient({
         ...config,
         input: V3_SPEC_PATH,
-        output,
+        output: {
+          ...(typeof config.output === 'object' ? config.output : {}),
+          path: output,
+        },
       });
       sync(`${output}**/*.ts`).forEach((file) => {
         const content = fs.readFileSync(file, 'utf8').toString();

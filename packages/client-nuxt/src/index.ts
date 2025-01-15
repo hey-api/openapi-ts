@@ -83,7 +83,7 @@ export const createClient = (config: Config = {}): Client => {
     }
 
     if (opts.body && opts.bodySerializer) {
-      opts.body = opts.bodySerializer(opts.body);
+      opts.body = opts.bodySerializer(unwrapRefs(opts.body));
     }
 
     // remove Content-Type header if body is empty to avoid sending invalid requests
