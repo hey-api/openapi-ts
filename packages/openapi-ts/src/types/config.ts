@@ -171,6 +171,14 @@ export interface ClientConfig {
          */
         format?: Formatters | false;
         /**
+         * Should the exports from plugin files be re-exported in the index
+         * barrel file? By default, this is enabled and only default plugins
+         * are re-exported.
+         *
+         * @default true
+         */
+        indexFile?: boolean;
+        /**
          * Process output folder with linter?
          *
          * @default false
