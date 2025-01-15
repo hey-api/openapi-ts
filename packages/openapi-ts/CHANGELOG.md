@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.62.1
+
+### Patch Changes
+
+- [#1574](https://github.com/hey-api/openapi-ts/pull/1574) [`51bf7fc`](https://github.com/hey-api/openapi-ts/commit/51bf7fc88cb6e9ab392106b85f900a75540e524f) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: generate bigint type instead of BigInt
+
+- [#1572](https://github.com/hey-api/openapi-ts/pull/1572) [`0e4882a`](https://github.com/hey-api/openapi-ts/commit/0e4882ae3b0dc048a2d9a2a0b5c39fbdeed6de8d) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add ability to skip generating index file with output.indexFile
+
 ## 0.62.0
 
 ### Minor Changes
