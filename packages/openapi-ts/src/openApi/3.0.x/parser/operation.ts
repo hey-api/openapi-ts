@@ -169,9 +169,7 @@ const operationToIrOperation = ({
       irOperation.responses[name] = {
         schema: {
           description: responseObject.description,
-          // TODO: parser - cover all statues with empty response bodies
-          // 1xx, 204, 205, 304
-          type: name === '204' ? 'void' : 'unknown',
+          type: 'void',
         },
       };
     }
