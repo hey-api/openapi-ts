@@ -443,22 +443,30 @@ export const mergeHeaders = (
       continue;
     }
 
+    let h: unknown = header;
+    if (isRef(h)) {
+      h = unref(h);
+    }
+
     const iterator =
-      header instanceof Headers ? header.entries() : Object.entries(header);
+      h instanceof Headers
+        ? h.entries()
+        : Object.entries(h as Record<string, unknown>);
 
     for (const [key, value] of iterator) {
       if (value === null) {
         mergedHeaders.delete(key);
       } else if (Array.isArray(value)) {
         for (const v of value) {
-          mergedHeaders.append(key, v as string);
+          mergedHeaders.append(key, unwrapRefs(v) as string);
         }
       } else if (value !== undefined) {
+        const v = unwrapRefs(value);
         // assume object headers are meant to be JSON stringified, i.e. their
         // content value in OpenAPI specification is 'application/json'
         mergedHeaders.set(
           key,
-          typeof value === 'object' ? JSON.stringify(value) : (value as string),
+          typeof v === 'object' ? JSON.stringify(v) : (v as string),
         );
       }
     }
@@ -556,30 +564,32 @@ export const createConfig = (override: Config = {}): Config => ({
   ...override,
 });
 
-type UnwrapNestedRefs<T> =
+type UnwrapRefs<T> =
   T extends Ref<infer V>
     ? V
     : T extends ComputedRef<infer V>
       ? V
       : T extends Record<string, unknown> // this doesn't handle functions well
-        ? { [K in keyof T]: UnwrapNestedRefs<T[K]> }
+        ? { [K in keyof T]: UnwrapRefs<T[K]> }
         : T;
 
-export const unwrapRefs = <T extends Record<string, unknown>>(
-  obj: T,
-): UnwrapNestedRefs<T> => {
-  const result = {} as UnwrapNestedRefs<T>;
-
-  for (const key in obj) {
-    const value = obj[key];
-    if (isRef(value)) {
-      result[key] = unref(value) as UnwrapNestedRefs<T>[typeof key];
-    } else if (value !== null && typeof value === 'object' && !isRef(value)) {
-      result[key] = unwrapRefs(value as T) as UnwrapNestedRefs<T>[typeof key];
-    } else {
-      result[key] = value as UnwrapNestedRefs<T>[typeof key];
-    }
+export const unwrapRefs = <T>(value: T): UnwrapRefs<T> => {
+  if (value === null || typeof value !== 'object' || value instanceof Headers) {
+    return (isRef(value) ? unref(value) : value) as UnwrapRefs<T>;
   }
 
-  return result;
+  if (Array.isArray(value)) {
+    return value.map((item) => unwrapRefs(item)) as UnwrapRefs<T>;
+  }
+
+  if (isRef(value)) {
+    return unwrapRefs(unref(value) as T);
+  }
+
+  for (const key in value) {
+    // @ts-expect-error
+    value[key] = unwrapRefs(value[key] as T);
+  }
+
+  return value as UnwrapRefs<T>;
 };

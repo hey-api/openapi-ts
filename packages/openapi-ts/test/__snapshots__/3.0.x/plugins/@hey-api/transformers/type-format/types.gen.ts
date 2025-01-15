@@ -2,7 +2,7 @@
 
 export type Foo = {
     bar?: number;
-    foo: BigInt;
+    foo: bigint;
     id: string;
 };
 

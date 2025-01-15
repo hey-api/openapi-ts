@@ -24,6 +24,7 @@ export default defineConfig({
   output: {
     // case: 'snake_case',
     // format: 'prettier',
+    // indexFile: false,
     // lint: 'eslint',
     path: './packages/openapi-ts/test/generated/sample/',
   },

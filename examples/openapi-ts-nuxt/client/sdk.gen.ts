@@ -78,14 +78,14 @@ export const addPet = <TComposable extends Composable>(
   options: Options<TComposable, AddPetData>,
 ) =>
   (options?.client ?? client).post<TComposable, AddPetResponse, unknown>({
+    responseTransformer: addPetResponseTransformer,
+    responseValidator: async (data) => await zAddPetResponse.parseAsync(data),
+    url: '/pet',
     ...options,
     headers: {
       'Content-Type': 'application/json',
       ...options?.headers,
     },
-    responseTransformer: addPetResponseTransformer,
-    responseValidator: async (data) => await zAddPetResponse.parseAsync(data),
-    url: '/pet',
   });
 
 /**
@@ -96,15 +96,15 @@ export const updatePet = <TComposable extends Composable>(
   options: Options<TComposable, UpdatePetData>,
 ) =>
   (options?.client ?? client).put<TComposable, UpdatePetResponse, unknown>({
+    responseTransformer: updatePetResponseTransformer,
+    responseValidator: async (data) =>
+      await zUpdatePetResponse.parseAsync(data),
+    url: '/pet',
     ...options,
     headers: {
       'Content-Type': 'application/json',
       ...options?.headers,
     },
-    responseTransformer: updatePetResponseTransformer,
-    responseValidator: async (data) =>
-      await zUpdatePetResponse.parseAsync(data),
-    url: '/pet',
   });
 
 /**
@@ -119,11 +119,11 @@ export const findPetsByStatus = <TComposable extends Composable>(
     FindPetsByStatusResponse,
     unknown
   >({
-    ...options,
     responseTransformer: findPetsByStatusResponseTransformer,
     responseValidator: async (data) =>
       await zFindPetsByStatusResponse.parseAsync(data),
     url: '/pet/findByStatus',
+    ...options,
   });
 
 /**
@@ -135,11 +135,11 @@ export const findPetsByTags = <TComposable extends Composable>(
 ) =>
   (options?.client ?? client).get<TComposable, FindPetsByTagsResponse, unknown>(
     {
-      ...options,
       responseTransformer: findPetsByTagsResponseTransformer,
       responseValidator: async (data) =>
         await zFindPetsByTagsResponse.parseAsync(data),
       url: '/pet/findByTags',
+      ...options,
     },
   );
 
@@ -150,8 +150,8 @@ export const deletePet = <TComposable extends Composable>(
   options: Options<TComposable, DeletePetData>,
 ) =>
   (options?.client ?? client).delete<TComposable, unknown, unknown>({
-    ...options,
     url: '/pet/{petId}',
+    ...options,
   });
 
 /**
@@ -162,7 +162,6 @@ export const getPetById = <TComposable extends Composable>(
   options: Options<TComposable, GetPetByIdData>,
 ) =>
   (options?.client ?? client).get<TComposable, GetPetByIdResponse, unknown>({
-    ...options,
     responseTransformer: getPetByIdResponseTransformer,
     responseValidator: async (data) =>
       await zGetPetByIdResponse.parseAsync(data),
@@ -173,6 +172,7 @@ export const getPetById = <TComposable extends Composable>(
       },
     ],
     url: '/pet/{petId}',
+    ...options,
   });
 
 /**
@@ -182,8 +182,8 @@ export const updatePetWithForm = <TComposable extends Composable>(
   options: Options<TComposable, UpdatePetWithFormData>,
 ) =>
   (options?.client ?? client).post<TComposable, unknown, unknown>({
-    ...options,
     url: '/pet/{petId}',
+    ...options,
   });
 
 /**
@@ -193,14 +193,14 @@ export const uploadFile = <TComposable extends Composable>(
   options: Options<TComposable, UploadFileData>,
 ) =>
   (options?.client ?? client).post<TComposable, UploadFileResponse, unknown>({
+    responseValidator: async (data) =>
+      await zUploadFileResponse.parseAsync(data),
+    url: '/pet/{petId}/uploadImage',
     ...options,
     headers: {
       'Content-Type': 'application/octet-stream',
       ...options?.headers,
     },
-    responseValidator: async (data) =>
-      await zUploadFileResponse.parseAsync(data),
-    url: '/pet/{petId}/uploadImage',
   });
 
 /**
@@ -211,7 +211,6 @@ export const getInventory = <TComposable extends Composable>(
   options: Options<TComposable, GetInventoryData>,
 ) =>
   (options?.client ?? client).get<TComposable, GetInventoryResponse, unknown>({
-    ...options,
     responseValidator: async (data) =>
       await zGetInventoryResponse.parseAsync(data),
     security: [
@@ -221,6 +220,7 @@ export const getInventory = <TComposable extends Composable>(
       },
     ],
     url: '/store/inventory',
+    ...options,
   });
 
 /**
@@ -231,15 +231,15 @@ export const placeOrder = <TComposable extends Composable>(
   options: Options<TComposable, PlaceOrderData>,
 ) =>
   (options?.client ?? client).post<TComposable, PlaceOrderResponse, unknown>({
+    responseTransformer: placeOrderResponseTransformer,
+    responseValidator: async (data) =>
+      await zPlaceOrderResponse.parseAsync(data),
+    url: '/store/order',
     ...options,
     headers: {
       'Content-Type': 'application/json',
       ...options?.headers,
     },
-    responseTransformer: placeOrderResponseTransformer,
-    responseValidator: async (data) =>
-      await zPlaceOrderResponse.parseAsync(data),
-    url: '/store/order',
   });
 
 /**
@@ -250,8 +250,8 @@ export const deleteOrder = <TComposable extends Composable>(
   options: Options<TComposable, DeleteOrderData>,
 ) =>
   (options?.client ?? client).delete<TComposable, unknown, unknown>({
-    ...options,
     url: '/store/order/{orderId}',
+    ...options,
   });
 
 /**
@@ -262,11 +262,11 @@ export const getOrderById = <TComposable extends Composable>(
   options: Options<TComposable, GetOrderByIdData>,
 ) =>
   (options?.client ?? client).get<TComposable, GetOrderByIdResponse, unknown>({
-    ...options,
     responseTransformer: getOrderByIdResponseTransformer,
     responseValidator: async (data) =>
       await zGetOrderByIdResponse.parseAsync(data),
     url: '/store/order/{orderId}',
+    ...options,
   });
 
 /**
@@ -277,15 +277,15 @@ export const createUser = <TComposable extends Composable>(
   options: Options<TComposable, CreateUserData>,
 ) =>
   (options?.client ?? client).post<TComposable, CreateUserResponse, unknown>({
+    responseTransformer: createUserResponseTransformer,
+    responseValidator: async (data) =>
+      await zCreateUserResponse.parseAsync(data),
+    url: '/user',
     ...options,
     headers: {
       'Content-Type': 'application/json',
       ...options?.headers,
     },
-    responseTransformer: createUserResponseTransformer,
-    responseValidator: async (data) =>
-      await zCreateUserResponse.parseAsync(data),
-    url: '/user',
   });
 
 /**
@@ -300,14 +300,14 @@ export const createUsersWithListInput = <TComposable extends Composable>(
     CreateUsersWithListInputResponse,
     unknown
   >({
+    responseValidator: async (data) =>
+      await zCreateUsersWithListInputResponse.parseAsync(data),
+    url: '/user/createWithList',
     ...options,
     headers: {
       'Content-Type': 'application/json',
       ...options?.headers,
     },
-    responseValidator: async (data) =>
-      await zCreateUsersWithListInputResponse.parseAsync(data),
-    url: '/user/createWithList',
   });
 
 /**
@@ -317,10 +317,10 @@ export const loginUser = <TComposable extends Composable>(
   options: Options<TComposable, LoginUserData>,
 ) =>
   (options?.client ?? client).get<TComposable, LoginUserResponse, unknown>({
-    ...options,
     responseValidator: async (data) =>
       await zLoginUserResponse.parseAsync(data),
     url: '/user/login',
+    ...options,
   });
 
 /**
@@ -330,8 +330,8 @@ export const logoutUser = <TComposable extends Composable>(
   options: Options<TComposable, LogoutUserData>,
 ) =>
   (options?.client ?? client).get<TComposable, unknown, unknown>({
-    ...options,
     url: '/user/logout',
+    ...options,
   });
 
 /**
@@ -342,8 +342,8 @@ export const deleteUser = <TComposable extends Composable>(
   options: Options<TComposable, DeleteUserData>,
 ) =>
   (options?.client ?? client).delete<TComposable, unknown, unknown>({
-    ...options,
     url: '/user/{username}',
+    ...options,
   });
 
 /**
@@ -353,11 +353,11 @@ export const getUserByName = <TComposable extends Composable>(
   options: Options<TComposable, GetUserByNameData>,
 ) =>
   (options?.client ?? client).get<TComposable, GetUserByNameResponse, unknown>({
-    ...options,
     responseTransformer: getUserByNameResponseTransformer,
     responseValidator: async (data) =>
       await zGetUserByNameResponse.parseAsync(data),
     url: '/user/{username}',
+    ...options,
   });
 
 /**
@@ -368,10 +368,10 @@ export const updateUser = <TComposable extends Composable>(
   options: Options<TComposable, UpdateUserData>,
 ) =>
   (options?.client ?? client).put<TComposable, unknown, unknown>({
+    url: '/user/{username}',
     ...options,
     headers: {
       'Content-Type': 'application/json',
       ...options?.headers,
     },
-    url: '/user/{username}',
   });

@@ -143,7 +143,11 @@ export const generateOutput = async ({ context }: { context: IR.Context }) => {
         continue;
       }
 
-      if (!file.isEmpty() && file.exportFromIndex) {
+      if (
+        !file.isEmpty() &&
+        file.exportFromIndex &&
+        context.config.output.indexFile
+      ) {
         // TODO: parser - add export method for more granular control over
         // what's exported so we can support named exports
         indexFile.add(
@@ -156,6 +160,8 @@ export const generateOutput = async ({ context }: { context: IR.Context }) => {
       file.write('\n\n');
     }
 
-    indexFile.write();
+    if (context.config.output.indexFile) {
+      indexFile.write();
+    }
   }
 };

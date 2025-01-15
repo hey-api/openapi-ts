@@ -418,7 +418,7 @@ const numberTypeToIdentifier = ({
   if (schema.type === 'integer' && schema.format === 'int64') {
     // TODO: parser - add ability to skip type transformers
     if (context.config.plugins['@hey-api/transformers']?.bigInt) {
-      return compiler.typeReferenceNode({ typeName: 'BigInt' });
+      return compiler.typeReferenceNode({ typeName: 'bigint' });
     }
   }
 

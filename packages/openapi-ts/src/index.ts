@@ -159,6 +159,7 @@ const getOutput = (userConfig: ClientConfig): Config['output'] => {
   let output: Config['output'] = {
     clean: true,
     format: false,
+    indexFile: true,
     lint: false,
     path: '',
   };
