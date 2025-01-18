@@ -586,10 +586,10 @@ export const unwrapRefs = <T>(value: T): UnwrapRefs<T> => {
     return unwrapRefs(unref(value) as T);
   }
 
+  // unwrap into new object to avoid modifying the source
+  const result: Record<string, unknown> = {};
   for (const key in value) {
-    // @ts-expect-error
-    value[key] = unwrapRefs(value[key] as T);
+    result[key] = unwrapRefs(value[key] as T);
   }
-
-  return value as UnwrapRefs<T>;
+  return result as UnwrapRefs<T>;
 };
