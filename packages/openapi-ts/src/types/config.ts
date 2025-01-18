@@ -16,7 +16,7 @@ export const CLIENTS = [
   'legacy/xhr',
 ] as const;
 
-type Client = (typeof CLIENTS)[number];
+export type Client = (typeof CLIENTS)[number];
 
 export type Formatters = 'biome' | 'prettier';
 

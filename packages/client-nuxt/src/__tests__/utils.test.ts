@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import type { Auth } from '../types';
-import { getAuthToken, setAuthParams } from '../utils';
+import { getAuthToken, mergeInterceptors, setAuthParams } from '../utils';
 
 describe('getAuthToken', () => {
   it('returns bearer token', async () => {
@@ -50,6 +50,32 @@ describe('getAuthToken', () => {
       undefined,
     );
     expect(token).toBeUndefined();
+  });
+});
+
+describe('mergeInterceptors', () => {
+  it('handles no arguments', () => {
+    const result = mergeInterceptors();
+    expect(result).toEqual([]);
+  });
+
+  it('handles interceptor function', () => {
+    const foo = () => {};
+    const result = mergeInterceptors(foo);
+    expect(result).toEqual([foo]);
+  });
+
+  it('handles interceptors array', () => {
+    const foo = [() => {}];
+    const result = mergeInterceptors(foo);
+    expect(result).toEqual([foo[0]]);
+  });
+
+  it('handles interceptors array and function', () => {
+    const foo = [() => {}, () => {}];
+    const bar = () => {};
+    const result = mergeInterceptors(foo, bar);
+    expect(result).toEqual([foo[0], foo[1], bar]);
   });
 });
 
