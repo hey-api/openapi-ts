@@ -8,11 +8,31 @@ import type {
 } from 'nuxt/app';
 import type { Ref } from 'vue';
 
-import type {
-  BodySerializer,
-  QuerySerializer,
-  QuerySerializerOptions,
-} from './utils';
+export type ArraySeparatorStyle = ArrayStyle | MatrixStyle;
+type ArrayStyle = 'form' | 'spaceDelimited' | 'pipeDelimited';
+type MatrixStyle = 'label' | 'matrix' | 'simple';
+export type ObjectSeparatorStyle = ObjectStyle | MatrixStyle;
+type ObjectStyle = 'form' | 'deepObject';
+
+export type BodySerializer = (body: any) => any;
+
+export interface SerializerOptions<T> {
+  /**
+   * @default true
+   */
+  explode: boolean;
+  style: T;
+}
+
+export type QuerySerializer = (
+  query: Parameters<Client['buildUrl']>[0]['query'],
+) => string;
+
+export interface QuerySerializerOptions {
+  allowReserved?: boolean;
+  array?: SerializerOptions<ArrayStyle>;
+  object?: SerializerOptions<ObjectStyle>;
+}
 
 type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
 
