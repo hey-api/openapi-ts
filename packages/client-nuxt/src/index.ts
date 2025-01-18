@@ -157,6 +157,7 @@ export type {
   Config,
   Options,
   OptionsLegacyParser,
+  QuerySerializerOptions,
   RequestOptions,
   RequestResult,
 } from './types';
@@ -164,6 +165,5 @@ export {
   createConfig,
   formDataBodySerializer,
   jsonBodySerializer,
-  type QuerySerializerOptions,
   urlSearchParamsBodySerializer,
 } from './utils';

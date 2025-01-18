@@ -2,38 +2,23 @@ import type { ComputedRef, Ref } from 'vue';
 import { isRef, toValue, unref } from 'vue';
 
 import type {
+  ArraySeparatorStyle,
   Auth,
   BuildUrlOptions,
   Client,
   Config,
+  ObjectSeparatorStyle,
+  QuerySerializer,
+  QuerySerializerOptions,
   RequestOptions,
+  SerializerOptions,
 } from './types';
 
 type PathSerializer = Pick<Required<BuildUrlOptions>, 'path' | 'url'>;
 
 const PATH_PARAM_RE = /\{[^{}]+\}/g;
 
-type ArrayStyle = 'form' | 'spaceDelimited' | 'pipeDelimited';
-type MatrixStyle = 'label' | 'matrix' | 'simple';
-type ArraySeparatorStyle = ArrayStyle | MatrixStyle;
-type ObjectStyle = 'form' | 'deepObject';
-type ObjectSeparatorStyle = ObjectStyle | MatrixStyle;
-
 type MaybeArray<T> = T | T[];
-
-export type QuerySerializer = (
-  query: Parameters<Client['buildUrl']>[0]['query'],
-) => string;
-
-export type BodySerializer = (body: any) => any;
-
-interface SerializerOptions<T> {
-  /**
-   * @default true
-   */
-  explode: boolean;
-  style: T;
-}
 
 interface SerializeOptions<T>
   extends SerializePrimitiveOptions,
@@ -44,12 +29,6 @@ interface SerializePrimitiveOptions {
 }
 interface SerializePrimitiveParam extends SerializePrimitiveOptions {
   value: string;
-}
-
-export interface QuerySerializerOptions {
-  allowReserved?: boolean;
-  array?: SerializerOptions<ArrayStyle>;
-  object?: SerializerOptions<ObjectStyle>;
 }
 
 const serializePrimitiveParam = ({
