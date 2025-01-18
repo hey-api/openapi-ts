@@ -19,6 +19,8 @@ type ArraySeparatorStyle = ArrayStyle | MatrixStyle;
 type ObjectStyle = 'form' | 'deepObject';
 type ObjectSeparatorStyle = ObjectStyle | MatrixStyle;
 
+type MaybeArray<T> = T | T[];
+
 export type QuerySerializer = (
   query: Parameters<Client['buildUrl']>[0]['query'],
 ) => string;
@@ -473,6 +475,16 @@ export const mergeHeaders = (
   }
   return mergedHeaders;
 };
+
+export const mergeInterceptors = <T>(...args: Array<MaybeArray<T>>): Array<T> =>
+  args.reduce<Array<T>>((acc, item) => {
+    if (typeof item === 'function') {
+      acc.push(item);
+    } else if (Array.isArray(item)) {
+      return acc.concat(item);
+    }
+    return acc;
+  }, []);
 
 const serializeFormDataPair = (data: FormData, key: string, value: unknown) => {
   if (typeof value === 'string' || value instanceof Blob) {

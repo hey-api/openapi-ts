@@ -1,5 +1,5 @@
 ---
-title: Next.js
+title: Next.js client
 description: Next.js client for Hey API. Compatible with all our features.
 ---
 
