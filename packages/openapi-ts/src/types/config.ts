@@ -8,6 +8,7 @@ import type {
 export const CLIENTS = [
   '@hey-api/client-axios',
   '@hey-api/client-fetch',
+  '@hey-api/client-nuxt',
   'legacy/angular',
   'legacy/axios',
   'legacy/fetch',
@@ -15,7 +16,7 @@ export const CLIENTS = [
   'legacy/xhr',
 ] as const;
 
-type Client = (typeof CLIENTS)[number];
+export type Client = (typeof CLIENTS)[number];
 
 export type Formatters = 'biome' | 'prettier';
 
