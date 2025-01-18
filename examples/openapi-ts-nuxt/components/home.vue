@@ -123,6 +123,16 @@ watch(lazyFetch.data, (newPet) => {
 async function handleFetch() {
   const result = await getPetById({
     composable: '$fetch',
+    onRequest: [
+      () => {
+        console.log('onRequest: local');
+      },
+    ],
+    onResponse: [
+      () => {
+        console.log('onResponse: local');
+      },
+    ],
     path: {
       petId,
     },

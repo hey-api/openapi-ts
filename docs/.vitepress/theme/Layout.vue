@@ -29,7 +29,7 @@ const { Layout } = DefaultTheme;
   background-color: var(--vp-c-bg);
   border-bottom: 1px solid var(--vp-c-divider);
   color: var(--vp-c-text-1);
-  column-gap: 1.5rem;
+  column-gap: 0.5rem;
   display: flex;
   font-size: var(--announcement-font-size);
   height: var(--announcement-height);

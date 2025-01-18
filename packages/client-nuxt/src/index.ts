@@ -12,6 +12,7 @@ import {
   createConfig,
   mergeConfigs,
   mergeHeaders,
+  mergeInterceptors,
   setAuthParams,
   unwrapRefs,
 } from './utils';
@@ -37,36 +38,36 @@ export const createClient = (config: Config = {}): Client => {
       ...options,
       $fetch: options.$fetch ?? _config.$fetch ?? $fetch,
       headers: mergeHeaders(_config.headers, options.headers),
+      onRequest: mergeInterceptors(_config.onRequest, options.onRequest),
+      onResponse: mergeInterceptors(_config.onResponse, options.onResponse),
     };
 
     const { responseTransformer, responseValidator, security } = opts;
     if (security) {
-      const _onRequest = opts.onRequest;
       // auth must happen in interceptors otherwise we'd need to require
       // asyncContext enabled
       // https://nuxt.com/docs/guide/going-further/experimental-features#asynccontext
-      opts.onRequest = async (context) => {
-        const { options } = context;
-
-        await setAuthParams({
-          auth: opts.auth,
-          headers: options.headers,
-          query: options.query,
-          security,
-        });
-
-        if (typeof _onRequest === 'function') {
-          await _onRequest(context);
-        }
-      };
+      opts.onRequest = [
+        async ({ options }) => {
+          await setAuthParams({
+            auth: opts.auth,
+            headers: options.headers,
+            query: options.query,
+            security,
+          });
+        },
+        ...opts.onRequest,
+      ];
     }
 
     if (responseTransformer || responseValidator) {
-      const _onResponse = opts.onResponse;
-      opts.onResponse = async (context) => {
-        const { options, response } = context;
+      opts.onResponse = [
+        ...opts.onResponse,
+        async ({ options, response }) => {
+          if (options.responseType && options.responseType !== 'json') {
+            return;
+          }
 
-        if (!options.responseType || options.responseType === 'json') {
           if (responseValidator) {
             await responseValidator(response._data);
           }
@@ -74,12 +75,8 @@ export const createClient = (config: Config = {}): Client => {
           if (responseTransformer) {
             response._data = await responseTransformer(response._data);
           }
-        }
-
-        if (typeof _onResponse === 'function') {
-          await _onResponse(context);
-        }
-      };
+        },
+      ];
     }
 
     if (opts.body && opts.bodySerializer) {

@@ -13,6 +13,12 @@ client.setConfig({
   headers: {
     Authorization: 'Bearer <token_from_service_client>',
   },
+  onRequest: () => {
+    console.log('onRequest: global');
+  },
+  onResponse: () => {
+    console.log('onResponse: global');
+  },
 });
 </script>
 
