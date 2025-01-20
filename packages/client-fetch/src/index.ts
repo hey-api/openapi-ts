@@ -39,6 +39,7 @@ export const createClient = (config: Config = {}): Client => {
       fetch: options.fetch ?? _config.fetch ?? globalThis.fetch,
       headers: mergeHeaders(_config.headers, options.headers),
     };
+    const contentType: string | null = opts.headers.get('Content-Type')
 
     if (opts.security) {
       await setAuthParams({
@@ -47,7 +48,7 @@ export const createClient = (config: Config = {}): Client => {
       });
     }
 
-    if (opts.body && opts.bodySerializer) {
+    if (opts.body && opts.bodySerializer && contentType !== 'text/plain') {
       opts.body = opts.bodySerializer(opts.body);
     }
 
