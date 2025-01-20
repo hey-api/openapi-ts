@@ -95,7 +95,8 @@ Interceptors (middleware) can be used to modify requests before they're sent or 
 ```js [use]
 import { client } from 'client/sdk.gen';
 
-client.interceptors.request.use((request) => {
+// Supports async functions
+client.interceptors.request.use(async (request) => {
   // do something
   return request;
 });
