@@ -17,8 +17,8 @@
   },
   "dependencies": {
     "@hey-api/client-fetch": "workspace:*",
-    "@tanstack/vue-query": "5.62.12",
-    "@tanstack/vue-query-devtools": "5.62.12",
+    "@tanstack/vue-query": "5.64.2",
+    "@tanstack/vue-query-devtools": "5.64.2",
     "pinia": "2.3.0",
     "vue": "3.5.13",
     "vue-router": "4.5.0"
