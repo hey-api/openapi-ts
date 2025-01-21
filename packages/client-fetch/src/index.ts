@@ -167,7 +167,6 @@ export const createClient = (config: Config = {}): Client => {
 };
 
 export type {
-  Auth,
   Client,
   Config,
   Options,
@@ -175,10 +174,10 @@ export type {
   RequestOptions,
   RequestResult,
 } from './types';
+export { createConfig } from './utils';
+export type { Auth, QuerySerializerOptions } from '@hey-api/client-core';
 export {
-  createConfig,
   formDataBodySerializer,
   jsonBodySerializer,
-  type QuerySerializerOptions,
   urlSearchParamsBodySerializer,
-} from './utils';
+} from '@hey-api/client-core';

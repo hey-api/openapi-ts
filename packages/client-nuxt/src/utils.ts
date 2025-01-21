@@ -1,17 +1,21 @@
+import type { QuerySerializerOptions } from '@hey-api/client-core';
+import {
+  getAuthToken,
+  jsonBodySerializer,
+  serializeArrayParam,
+  serializeObjectParam,
+  serializePrimitiveParam,
+} from '@hey-api/client-core';
 import type { ComputedRef, Ref } from 'vue';
 import { isRef, toValue, unref } from 'vue';
 
 import type {
   ArraySeparatorStyle,
-  Auth,
   BuildUrlOptions,
   Client,
   Config,
-  ObjectSeparatorStyle,
   QuerySerializer,
-  QuerySerializerOptions,
   RequestOptions,
-  SerializerOptions,
 } from './types';
 
 type PathSerializer = Pick<Required<BuildUrlOptions>, 'path' | 'url'>;
@@ -19,168 +23,6 @@ type PathSerializer = Pick<Required<BuildUrlOptions>, 'path' | 'url'>;
 const PATH_PARAM_RE = /\{[^{}]+\}/g;
 
 type MaybeArray<T> = T | T[];
-
-interface SerializeOptions<T>
-  extends SerializePrimitiveOptions,
-    SerializerOptions<T> {}
-interface SerializePrimitiveOptions {
-  allowReserved?: boolean;
-  name: string;
-}
-interface SerializePrimitiveParam extends SerializePrimitiveOptions {
-  value: string;
-}
-
-const serializePrimitiveParam = ({
-  allowReserved,
-  name,
-  value,
-}: SerializePrimitiveParam) => {
-  if (value === undefined || value === null) {
-    return '';
-  }
-
-  if (typeof value === 'object') {
-    throw new Error(
-      'Deeply-nested arrays/objects aren’t supported. Provide your own `querySerializer()` to handle these.',
-    );
-  }
-
-  return `${name}=${allowReserved ? value : encodeURIComponent(value)}`;
-};
-
-const separatorArrayExplode = (style: ArraySeparatorStyle) => {
-  switch (style) {
-    case 'label':
-      return '.';
-    case 'matrix':
-      return ';';
-    case 'simple':
-      return ',';
-    default:
-      return '&';
-  }
-};
-
-const separatorArrayNoExplode = (style: ArraySeparatorStyle) => {
-  switch (style) {
-    case 'form':
-      return ',';
-    case 'pipeDelimited':
-      return '|';
-    case 'spaceDelimited':
-      return '%20';
-    default:
-      return ',';
-  }
-};
-
-const separatorObjectExplode = (style: ObjectSeparatorStyle) => {
-  switch (style) {
-    case 'label':
-      return '.';
-    case 'matrix':
-      return ';';
-    case 'simple':
-      return ',';
-    default:
-      return '&';
-  }
-};
-
-const serializeArrayParam = ({
-  allowReserved,
-  explode,
-  name,
-  style,
-  value,
-}: SerializeOptions<ArraySeparatorStyle> & {
-  value: unknown[];
-}) => {
-  if (!explode) {
-    const joinedValues = (
-      allowReserved ? value : value.map((v) => encodeURIComponent(v as string))
-    ).join(separatorArrayNoExplode(style));
-    switch (style) {
-      case 'label':
-        return `.${joinedValues}`;
-      case 'matrix':
-        return `;${name}=${joinedValues}`;
-      case 'simple':
-        return joinedValues;
-      default:
-        return `${name}=${joinedValues}`;
-    }
-  }
-
-  const separator = separatorArrayExplode(style);
-  const joinedValues = value
-    .map((v) => {
-      if (style === 'label' || style === 'simple') {
-        return allowReserved ? v : encodeURIComponent(v as string);
-      }
-
-      return serializePrimitiveParam({
-        allowReserved,
-        name,
-        value: v as string,
-      });
-    })
-    .join(separator);
-  return style === 'label' || style === 'matrix'
-    ? separator + joinedValues
-    : joinedValues;
-};
-
-const serializeObjectParam = ({
-  allowReserved,
-  explode,
-  name,
-  style,
-  value,
-}: SerializeOptions<ObjectSeparatorStyle> & {
-  value: Record<string, unknown> | Date;
-}) => {
-  if (value instanceof Date) {
-    return `${name}=${value.toISOString()}`;
-  }
-
-  if (style !== 'deepObject' && !explode) {
-    let values: string[] = [];
-    Object.entries(value).forEach(([key, v]) => {
-      values = [
-        ...values,
-        key,
-        allowReserved ? (v as string) : encodeURIComponent(v as string),
-      ];
-    });
-    const joinedValues = values.join(',');
-    switch (style) {
-      case 'form':
-        return `${name}=${joinedValues}`;
-      case 'label':
-        return `.${joinedValues}`;
-      case 'matrix':
-        return `;${name}=${joinedValues}`;
-      default:
-        return joinedValues;
-    }
-  }
-
-  const separator = separatorObjectExplode(style);
-  const joinedValues = Object.entries(value)
-    .map(([key, v]) =>
-      serializePrimitiveParam({
-        allowReserved,
-        name: style === 'deepObject' ? `${name}[${key}]` : key,
-        value: v as string,
-      }),
-    )
-    .join(separator);
-  return style === 'label' || style === 'matrix'
-    ? separator + joinedValues
-    : joinedValues;
-};
 
 const defaultPathSerializer = ({ path, url: _url }: PathSerializer) => {
   let url = _url;
@@ -310,28 +152,6 @@ export const createQuerySerializer = <T = unknown>({
     return search.join('&');
   };
   return querySerializer;
-};
-
-export const getAuthToken = async (
-  auth: Auth,
-  callback: RequestOptions['auth'],
-): Promise<string | undefined> => {
-  const token =
-    typeof callback === 'function' ? await callback(auth) : callback;
-
-  if (!token) {
-    return;
-  }
-
-  if (auth.scheme === 'bearer') {
-    return `Bearer ${token}`;
-  }
-
-  if (auth.scheme === 'basic') {
-    return `Basic ${btoa(token)}`;
-  }
-
-  return token;
 };
 
 export const setAuthParams = async ({
@@ -464,72 +284,6 @@ export const mergeInterceptors = <T>(...args: Array<MaybeArray<T>>): Array<T> =>
     }
     return acc;
   }, []);
-
-const serializeFormDataPair = (data: FormData, key: string, value: unknown) => {
-  if (typeof value === 'string' || value instanceof Blob) {
-    data.append(key, value);
-  } else {
-    data.append(key, JSON.stringify(value));
-  }
-};
-
-export const formDataBodySerializer = {
-  bodySerializer: <T extends Record<string, any> | Array<Record<string, any>>>(
-    body: T,
-  ) => {
-    const data = new FormData();
-
-    Object.entries(body).forEach(([key, value]) => {
-      if (value === undefined || value === null) {
-        return;
-      }
-      if (Array.isArray(value)) {
-        value.forEach((v) => serializeFormDataPair(data, key, v));
-      } else {
-        serializeFormDataPair(data, key, value);
-      }
-    });
-
-    return data;
-  },
-};
-
-export const jsonBodySerializer = {
-  bodySerializer: <T>(body: T) => JSON.stringify(body),
-};
-
-const serializeUrlSearchParamsPair = (
-  data: URLSearchParams,
-  key: string,
-  value: unknown,
-) => {
-  if (typeof value === 'string') {
-    data.append(key, value);
-  } else {
-    data.append(key, JSON.stringify(value));
-  }
-};
-
-export const urlSearchParamsBodySerializer = {
-  bodySerializer: <T extends Record<string, any> | Array<Record<string, any>>>(
-    body: T,
-  ) => {
-    const data = new URLSearchParams();
-
-    Object.entries(body).forEach(([key, value]) => {
-      if (value === undefined || value === null) {
-        return;
-      }
-      if (Array.isArray(value)) {
-        value.forEach((v) => serializeUrlSearchParamsPair(data, key, v));
-      } else {
-        serializeUrlSearchParamsPair(data, key, value);
-      }
-    });
-
-    return data;
-  },
-};
 
 const defaultQuerySerializer = createQuerySerializer({
   allowReserved: false,

@@ -55,7 +55,7 @@
     "src"
   ],
   "scripts": {
-    "build": "tsup && pnpm check-exports",
+    "build": "tsup && rollup -c && pnpm check-exports",
     "check-exports": "attw --pack .",
     "dev": "tsup --watch",
     "prepublishOnly": "pnpm build",
@@ -70,6 +70,7 @@
     "vue": ">= 3.5.13 < 4"
   },
   "devDependencies": {
+    "@hey-api/client-core": "workspace:*",
     "@nuxt/test-utils": "3.15.1"
   }
 }

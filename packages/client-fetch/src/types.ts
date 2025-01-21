@@ -1,9 +1,11 @@
 import type {
+  Auth,
   BodySerializer,
-  Middleware,
   QuerySerializer,
   QuerySerializerOptions,
-} from './utils';
+} from '@hey-api/client-core';
+
+import type { Middleware } from './utils';
 
 type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
 
@@ -99,13 +101,6 @@ export interface Config<ThrowOnError extends boolean = boolean>
    * @default false
    */
   throwOnError?: ThrowOnError;
-}
-
-export interface Auth {
-  in?: 'header' | 'query';
-  name?: string;
-  scheme?: 'basic' | 'bearer';
-  type: 'apiKey' | 'http';
 }
 
 type AuthToken = string | undefined;
