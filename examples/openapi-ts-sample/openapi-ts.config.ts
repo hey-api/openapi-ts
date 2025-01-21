@@ -2,8 +2,7 @@ import { defineConfig } from '@hey-api/openapi-ts';
 
 export default defineConfig({
   client: '@hey-api/client-fetch',
-  input:
-    '../../packages/openapi-ts/test/spec/2.0.x/body-response-text-plain.yaml',
+  input: '../../packages/openapi-ts/test/spec/3.1.x/body-nested-array.yaml',
   output: {
     format: 'prettier',
     lint: 'eslint',

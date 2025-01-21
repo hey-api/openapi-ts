@@ -151,19 +151,18 @@ export const createClient = (config: Config = {}): Client => {
 };
 
 export type {
-  Auth,
   Client,
   Composable,
   Config,
   Options,
   OptionsLegacyParser,
-  QuerySerializerOptions,
   RequestOptions,
   RequestResult,
 } from './types';
+export { createConfig } from './utils';
+export type { Auth, QuerySerializerOptions } from '@hey-api/client-core';
 export {
-  createConfig,
   formDataBodySerializer,
   jsonBodySerializer,
   urlSearchParamsBodySerializer,
-} from './utils';
+} from '@hey-api/client-core';
