@@ -254,6 +254,14 @@ const operationStatements = ({
         });
         break;
       case 'json':
+        // jsonBodySerializer is the default, no need to specify
+        break;
+      case 'text':
+        // ensure we don't use any serializer by default
+        requestOptions.push({
+          key: 'bodySerializer',
+          value: null,
+        });
         break;
       case 'url-search-params':
         requestOptions.push({ spread: 'urlSearchParamsBodySerializer' });
