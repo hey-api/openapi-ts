@@ -65,7 +65,7 @@ export interface Config
    * A function for serializing request body parameter. By default,
    * {@link JSON.stringify()} will be used.
    */
-  bodySerializer?: BodySerializer;
+  bodySerializer?: BodySerializer | null;
   /**
    * An object containing any HTTP headers that you want to pre-populate your
    * `Headers` object with.
