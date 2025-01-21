@@ -1,0 +1,20 @@
+openapi: 3.0.4
+info:
+  title: OpenAPI 3.0.4 body response text plain example
+  version: 1
+paths:
+  /foo:
+    post:
+      requestBody:
+        content:
+          'text/plain':
+            schema:
+              type: string
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
