@@ -14,7 +14,9 @@ import { postFoo } from './client/sdk.gen';
 function App() {
   const onClick = async () => {
     postFoo({
-      body: 'foo',
+      body: {
+        foo: [[1, 2]],
+      },
     });
   };
 

@@ -54,7 +54,7 @@
     "src"
   ],
   "scripts": {
-    "build": "tsup && pnpm check-exports",
+    "build": "tsup && rollup -c && pnpm check-exports",
     "check-exports": "attw --pack .",
     "dev": "tsup --watch",
     "prepublishOnly": "pnpm build",
@@ -68,6 +68,7 @@
     "axios": ">= 1.0.0 < 2"
   },
   "devDependencies": {
+    "@hey-api/client-core": "workspace:*",
     "axios": "1.7.9"
   }
 }

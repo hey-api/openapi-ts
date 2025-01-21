@@ -1,4 +1,9 @@
 import type {
+  Auth,
+  BodySerializer,
+  QuerySerializerOptions,
+} from '@hey-api/client-core';
+import type {
   AsyncDataOptions,
   useAsyncData,
   useFetch,
@@ -14,25 +19,9 @@ type MatrixStyle = 'label' | 'matrix' | 'simple';
 export type ObjectSeparatorStyle = ObjectStyle | MatrixStyle;
 type ObjectStyle = 'form' | 'deepObject';
 
-export type BodySerializer = (body: any) => any;
-
-export interface SerializerOptions<T> {
-  /**
-   * @default true
-   */
-  explode: boolean;
-  style: T;
-}
-
 export type QuerySerializer = (
   query: Parameters<Client['buildUrl']>[0]['query'],
 ) => string;
-
-export interface QuerySerializerOptions {
-  allowReserved?: boolean;
-  array?: SerializerOptions<ArrayStyle>;
-  object?: SerializerOptions<ObjectStyle>;
-}
 
 type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
 
@@ -49,8 +38,6 @@ export interface Config
     >,
     WithRefs<Pick<FetchOptions<unknown>, 'query'>> {
   /**
-   * **This feature works only with the [experimental parser](https://heyapi.dev/openapi-ts/configuration#parser)**
-   *
    * Auth token or a function returning auth token. The resolved value will be
    * added to the request payload as defined by its `security` array.
    */
@@ -113,20 +100,11 @@ export interface Config
    */
   responseTransformer?: (data: unknown) => Promise<unknown>;
   /**
-   * **This feature works only with the [experimental parser](https://heyapi.dev/openapi-ts/configuration#parser)**
-   *
    * A function validating response data. This is useful if you want to ensure
    * the response conforms to the desired shape, so it can be safely passed to
    * the transformers and returned to the user.
    */
   responseValidator?: (data: unknown) => Promise<unknown>;
-}
-
-export interface Auth {
-  in?: 'header' | 'query';
-  name?: string;
-  scheme?: 'basic' | 'bearer';
-  type: 'apiKey' | 'http';
 }
 
 type AuthToken = string | undefined;
