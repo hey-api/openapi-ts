@@ -36,6 +36,13 @@ describe(`OpenAPI ${version}`, () => {
   const scenarios = [
     {
       config: createConfig({
+        input: 'body-response-text-plain.yaml',
+        output: 'body-response-text-plain',
+      }),
+      description: 'handle text/plain content type',
+    },
+    {
+      config: createConfig({
         input: 'enum-names-values.json',
         output: 'enum-names-values',
       }),

@@ -1,5 +1,5 @@
 const fileLikeRegExp =
-  /^(application\/(pdf|rtf|msword|vnd\.(ms-|openxmlformats-officedocument\.)|zip|x-(7z|tar|rar|zip|iso)|octet-stream|gzip|x-msdownload|json\+download|xml|x-yaml|x-7z-compressed|x-tar)|text\/(plain|yaml|css|javascript)|audio\/(mpeg|wav)|video\/(mp4|x-matroska)|image\/(vnd\.adobe\.photoshop|svg\+xml))(; ?charset=[^;]+)?$/i;
+  /^(application\/(pdf|rtf|msword|vnd\.(ms-|openxmlformats-officedocument\.)|zip|x-(7z|tar|rar|zip|iso)|octet-stream|gzip|x-msdownload|json\+download|xml|x-yaml|x-7z-compressed|x-tar)|text\/(yaml|css|javascript)|audio\/(mpeg|wav)|video\/(mp4|x-matroska)|image\/(vnd\.adobe\.photoshop|svg\+xml))(; ?charset=[^;]+)?$/i;
 const jsonMimeRegExp = /^application\/(.*\+)?json(;.*)?$/i;
 const multipartFormDataMimeRegExp = /^multipart\/form-data(;.*)?$/i;
 const xWwwFormUrlEncodedMimeRegExp =

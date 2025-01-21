@@ -52,7 +52,7 @@ describe('isMediaTypeFileLike', () => {
       mediaType: 'text/javascript; charset=ISO-8859-1',
     },
     {
-      fileLike: true,
+      fileLike: false,
       mediaType: 'text/plain; charset=utf-8',
     },
     {
