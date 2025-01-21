@@ -128,8 +128,12 @@ const securitySchemeObjectToAuthObject = ({
   securitySchemeObject: IR.SecurityObject;
 }): Auth | undefined => {
   if (securitySchemeObject.type === 'oauth2') {
-    // TODO: parser - handle more/multiple oauth2 flows
-    if (securitySchemeObject.flows.password) {
+    if (
+      securitySchemeObject.flows.password ||
+      securitySchemeObject.flows.authorizationCode ||
+      securitySchemeObject.flows.clientCredentials ||
+      securitySchemeObject.flows.implicit
+    ) {
       return {
         scheme: 'bearer',
         type: 'http',
