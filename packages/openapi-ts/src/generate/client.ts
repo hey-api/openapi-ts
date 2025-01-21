@@ -54,20 +54,17 @@ export const generateClientBundle = ({
 
   const clientModulePath = path.normalize(require.resolve(name));
   const clientModulePathComponents = clientModulePath.split(path.sep);
-  const clientSrcPath = [
-    ...clientModulePathComponents.slice(
-      0,
-      clientModulePathComponents.indexOf('dist'),
-    ),
-    'src',
-  ].join(path.sep);
+  const clientDistPath = clientModulePathComponents
+    .slice(0, clientModulePathComponents.indexOf('dist') + 1)
+    .join(path.sep);
 
-  // copy client modules
-  const files = ['index.ts', 'types.ts', 'utils.ts'];
-  files.forEach((file) => {
+  const indexJsFile =
+    clientModulePathComponents[clientModulePathComponents.length - 1];
+  const distFiles = [indexJsFile!, 'index.d.cts', 'index.d.ts'];
+  for (const file of distFiles) {
     fs.copyFileSync(
-      path.resolve(clientSrcPath, file),
+      path.resolve(clientDistPath, file),
       path.resolve(dirPath, file),
     );
-  });
+  }
 };

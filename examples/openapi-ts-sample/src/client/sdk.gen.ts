@@ -3,22 +3,23 @@
 import {
   createClient,
   createConfig,
+  formDataBodySerializer,
   type Options,
 } from '@hey-api/client-fetch';
 
-import type { PostFooData, PostFooResponse } from './types.gen';
+import type { PostFooData } from './types.gen';
 
 export const client = createClient(createConfig());
 
 export const postFoo = <ThrowOnError extends boolean = false>(
   options: Options<PostFooData, ThrowOnError>,
 ) =>
-  (options?.client ?? client).post<PostFooResponse, unknown, ThrowOnError>({
-    bodySerializer: null,
+  (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
+    ...formDataBodySerializer,
     url: '/foo',
     ...options,
     headers: {
-      'Content-Type': 'text/plain',
+      'Content-Type': null,
       ...options?.headers,
     },
   });

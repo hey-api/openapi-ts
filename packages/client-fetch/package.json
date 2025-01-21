@@ -54,7 +54,7 @@
     "src"
   ],
   "scripts": {
-    "build": "tsup && pnpm check-exports",
+    "build": "tsup && rollup -c && pnpm check-exports",
     "check-exports": "attw --pack .",
     "dev": "tsup --watch",
     "prepublishOnly": "pnpm build",
@@ -63,5 +63,8 @@
     "test:watch": "vitest watch",
     "test": "vitest run",
     "typecheck": "vitest --typecheck --watch=false"
+  },
+  "devDependencies": {
+    "@hey-api/client-core": "workspace:*"
   }
 }
