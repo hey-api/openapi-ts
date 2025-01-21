@@ -67,6 +67,7 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'body-response-text-plain.yaml',
         output: 'body-response-text-plain',
+        plugins: ['@hey-api/typescript', '@hey-api/sdk'],
       }),
       description: 'handle text/plain content type',
     },

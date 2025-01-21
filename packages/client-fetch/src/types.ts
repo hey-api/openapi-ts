@@ -24,7 +24,7 @@ export interface Config<ThrowOnError extends boolean = boolean>
    * A function for serializing request body parameter. By default,
    * {@link JSON.stringify()} will be used.
    */
-  bodySerializer?: BodySerializer;
+  bodySerializer?: BodySerializer | null;
   /**
    * Fetch API implementation. You can use this option to provide a custom
    * fetch instance.
