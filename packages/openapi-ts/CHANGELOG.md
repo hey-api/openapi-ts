@@ -1,5 +1,19 @@
 # @hey-api/openapi-ts
 
+## 0.62.3
+
+### Patch Changes
+
+- [#1600](https://github.com/hey-api/openapi-ts/pull/1600) [`0432418`](https://github.com/hey-api/openapi-ts/commit/0432418d72c94ef94865f8216ed2f723ad5191f9) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: bundle clients from compiled index file
+
+- [#1594](https://github.com/hey-api/openapi-ts/pull/1594) [`bc66cde`](https://github.com/hey-api/openapi-ts/commit/bc66cde1ebe0e2df08c8d04b3ddc9504e4952cf3) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: generate correct response for text/plain content type
+
+- [#1596](https://github.com/hey-api/openapi-ts/pull/1596) [`4784727`](https://github.com/hey-api/openapi-ts/commit/47847276e8bc854045044dd414382080270dd779) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: do not use a body serializer on text/plain sdks
+
+- [#1602](https://github.com/hey-api/openapi-ts/pull/1602) [`194f941`](https://github.com/hey-api/openapi-ts/commit/194f94110545f2cae07bde13b863cd0cb5284d8a) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: support all oauth2 flows in sdk auth
+
+- [#1596](https://github.com/hey-api/openapi-ts/pull/1596) [`4784727`](https://github.com/hey-api/openapi-ts/commit/47847276e8bc854045044dd414382080270dd779) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add null to valid bodySerializer types
+
 ## 0.62.2
 
 ### Patch Changes
