@@ -65,6 +65,13 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'body-response-text-plain.yaml',
+        output: 'body-response-text-plain',
+      }),
+      description: 'handle text/plain content type',
+    },
+    {
+      config: createConfig({
         input: 'case.json',
         output: 'case',
         plugins: [
