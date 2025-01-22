@@ -59,11 +59,11 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
    */
   output?: string;
   /**
+   * @deprecated
+   *
    * Define shape of returned value from service calls
    *
    * @default 'body'
-   *
-   * @deprecated
    */
   response?: 'body' | 'response';
   /**

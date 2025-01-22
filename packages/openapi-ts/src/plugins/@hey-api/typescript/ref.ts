@@ -26,7 +26,7 @@ export const importIdentifierData = ({
   file: TypeScriptFile;
   operation: IR.OperationObject;
 }): Identifier => {
-  const identifierData = context.file({ id: 'types' })!.identifier({
+  const identifierData = context.file({ id: typesId })!.identifier({
     $ref: operationIrRef({ id: operation.id, type: 'data' }),
     namespace: 'type',
   });
@@ -34,7 +34,7 @@ export const importIdentifierData = ({
     if (identifier.name) {
       file.import({
         asType: true,
-        module: file.relativePathToFile({ context, id: 'types' }),
+        module: file.relativePathToFile({ context, id: typesId }),
         name: identifier.name,
       });
     }
@@ -50,7 +50,7 @@ export const importIdentifierError = ({
   file: TypeScriptFile;
   operation: IR.OperationObject;
 }): Identifier => {
-  const identifierError = context.file({ id: 'types' })!.identifier({
+  const identifierError = context.file({ id: typesId })!.identifier({
     $ref: operationIrRef({ id: operation.id, type: 'error' }),
     namespace: 'type',
   });
@@ -58,7 +58,7 @@ export const importIdentifierError = ({
     if (identifier.name) {
       file.import({
         asType: true,
-        module: file.relativePathToFile({ context, id: 'types' }),
+        module: file.relativePathToFile({ context, id: typesId }),
         name: identifier.name,
       });
     }
@@ -74,7 +74,7 @@ export const importIdentifierResponse = ({
   file: TypeScriptFile;
   operation: IR.OperationObject;
 }): Identifier => {
-  const identifierResponse = context.file({ id: 'types' })!.identifier({
+  const identifierResponse = context.file({ id: typesId })!.identifier({
     $ref: operationIrRef({ id: operation.id, type: 'response' }),
     namespace: 'type',
   });
@@ -82,7 +82,7 @@ export const importIdentifierResponse = ({
     if (identifier.name) {
       file.import({
         asType: true,
-        module: file.relativePathToFile({ context, id: 'types' }),
+        module: file.relativePathToFile({ context, id: typesId }),
         name: identifier.name,
       });
     }

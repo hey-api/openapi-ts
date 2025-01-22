@@ -7,6 +7,7 @@ import { irRef } from '../../../utils/ref';
 import { stringCase } from '../../../utils/stringCase';
 import { operationIrRef } from '../../shared/utils/ref';
 import type { Plugin } from '../../types';
+import { typesId } from '../typescript/ref';
 import type { Config } from './types';
 
 interface OperationIRRef {
@@ -460,7 +461,7 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
       return;
     }
 
-    const identifierResponse = context.file({ id: 'types' })!.identifier({
+    const identifierResponse = context.file({ id: typesId })!.identifier({
       $ref: operationIrRef({ id: operation.id, type: 'response' }),
       namespace: 'type',
     });
@@ -486,7 +487,7 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     if (nodes.length) {
       file.import({
         asType: true,
-        module: file.relativePathToFile({ context, id: 'types' }),
+        module: file.relativePathToFile({ context, id: typesId }),
         name: identifierResponse.name,
       });
       const responseTransformerNode = compiler.constVariable({
