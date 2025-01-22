@@ -1,10 +1,10 @@
 import type { Plugin } from '../types';
 
-export interface Config extends Plugin.Name<'fastify'> {
+export interface Config extends Plugin.Name<'msw'> {
   /**
    * Name of the generated file.
    *
-   * @default 'fastify'
+   * @default 'msw'
    */
   output?: string;
 }

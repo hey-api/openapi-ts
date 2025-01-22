@@ -35,6 +35,7 @@ import {
   defaultConfig as tanStackVueQuery,
 } from './@tanstack/vue-query';
 import { type Config as Fastify, defaultConfig as fastify } from './fastify';
+import { type Config as Msw, defaultConfig as msw } from './msw';
 import type { DefaultPluginConfigs, Plugin } from './types';
 import { type Config as Zod, defaultConfig as zod } from './zod';
 
@@ -52,6 +53,7 @@ export type UserPlugins =
   | Plugin.UserConfig<TanStackSvelteQuery>
   | Plugin.UserConfig<TanStackVueQuery>
   | Plugin.UserConfig<Fastify>
+  | Plugin.UserConfig<Msw>
   | Plugin.UserConfig<Zod>;
 
 /**
@@ -68,6 +70,7 @@ export type ClientPlugins =
   | Plugin.Config<TanStackSvelteQuery>
   | Plugin.Config<TanStackVueQuery>
   | Plugin.Config<Fastify>
+  | Plugin.Config<Msw>
   | Plugin.Config<Zod>;
 
 export const defaultPluginConfigs: DefaultPluginConfigs<ClientPlugins> = {
@@ -81,5 +84,6 @@ export const defaultPluginConfigs: DefaultPluginConfigs<ClientPlugins> = {
   '@tanstack/svelte-query': tanStackSvelteQuery,
   '@tanstack/vue-query': tanStackVueQuery,
   fastify,
+  msw,
   zod,
 };

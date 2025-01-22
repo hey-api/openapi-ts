@@ -4,6 +4,7 @@ import { compiler, type Property } from '../../compiler';
 import { operationResponsesMap } from '../../ir/operation';
 import { hasParameterGroupObjectRequired } from '../../ir/parameter';
 import type { IR } from '../../ir/types';
+import { typesId } from '../@hey-api/typescript/ref';
 import { operationIrRef } from '../shared/utils/ref';
 import type { Plugin } from '../types';
 import type { Config } from './types';
@@ -18,7 +19,7 @@ const operationToRouteHandler = ({
   operation: IR.OperationObject;
 }): Property | undefined => {
   const file = context.file({ id: fastifyId })!;
-  const fileTypes = context.file({ id: 'types' })!;
+  const fileTypes = context.file({ id: typesId })!;
 
   const properties: Array<Property> = [];
 
@@ -30,7 +31,7 @@ const operationToRouteHandler = ({
     if (operation.body) {
       file.import({
         asType: true,
-        module: file.relativePathToFile({ context, id: 'types' }),
+        module: file.relativePathToFile({ context, id: typesId }),
         name: identifierData.name,
       });
       properties.push({
@@ -44,7 +45,7 @@ const operationToRouteHandler = ({
       if (operation.parameters.header) {
         file.import({
           asType: true,
-          module: file.relativePathToFile({ context, id: 'types' }),
+          module: file.relativePathToFile({ context, id: typesId }),
           name: identifierData.name,
         });
         properties.push({
@@ -59,7 +60,7 @@ const operationToRouteHandler = ({
       if (operation.parameters.path) {
         file.import({
           asType: true,
-          module: file.relativePathToFile({ context, id: 'types' }),
+          module: file.relativePathToFile({ context, id: typesId }),
           name: identifierData.name,
         });
         properties.push({
@@ -74,7 +75,7 @@ const operationToRouteHandler = ({
       if (operation.parameters.query) {
         file.import({
           asType: true,
-          module: file.relativePathToFile({ context, id: 'types' }),
+          module: file.relativePathToFile({ context, id: typesId }),
           name: identifierData.name,
         });
         properties.push({
@@ -102,7 +103,7 @@ const operationToRouteHandler = ({
       if (!hasDefaultResponse) {
         file.import({
           asType: true,
-          module: file.relativePathToFile({ context, id: 'types' }),
+          module: file.relativePathToFile({ context, id: typesId }),
           name: identifierErrors.name,
         });
         errorsTypeReference = compiler.typeReferenceNode({
@@ -111,7 +112,7 @@ const operationToRouteHandler = ({
       } else if (keys.length > 1) {
         file.import({
           asType: true,
-          module: file.relativePathToFile({ context, id: 'types' }),
+          module: file.relativePathToFile({ context, id: typesId }),
           name: identifierErrors.name,
         });
         const errorsType = compiler.typeReferenceNode({
@@ -140,7 +141,7 @@ const operationToRouteHandler = ({
       if (!hasDefaultResponse) {
         file.import({
           asType: true,
-          module: file.relativePathToFile({ context, id: 'types' }),
+          module: file.relativePathToFile({ context, id: typesId }),
           name: identifierResponses.name,
         });
         responsesTypeReference = compiler.typeReferenceNode({
@@ -149,7 +150,7 @@ const operationToRouteHandler = ({
       } else if (keys.length > 1) {
         file.import({
           asType: true,
-          module: file.relativePathToFile({ context, id: 'types' }),
+          module: file.relativePathToFile({ context, id: typesId }),
           name: identifierResponses.name,
         });
         const responsesType = compiler.typeReferenceNode({
