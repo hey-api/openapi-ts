@@ -16,6 +16,7 @@ interface SerializerOptions<T> {
 }
 type ArrayStyle = 'form' | 'spaceDelimited' | 'pipeDelimited';
 type ObjectStyle = 'form' | 'deepObject';
+
 type BodySerializer = (body: any) => any;
 interface QuerySerializerOptions {
     allowReserved?: boolean;
@@ -23,7 +24,7 @@ interface QuerySerializerOptions {
     object?: SerializerOptions<ObjectStyle>;
 }
 declare const formDataBodySerializer: {
-    bodySerializer: <T extends Record<string, any> | Array<Record<string, any>>>(body: T) => FormData;
+    bodySerializer: <T>(body: T) => FormData;
 };
 declare const jsonBodySerializer: {
     bodySerializer: <T>(body: T) => string;

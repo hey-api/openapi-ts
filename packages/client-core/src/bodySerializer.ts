@@ -4,23 +4,15 @@ import type {
   SerializerOptions,
 } from './pathSerializer';
 
-export type QuerySerializer = (query: Record<string, unknown>) => string;
-
 export type BodySerializer = (body: any) => any;
+
+export type QuerySerializer = (query: Record<string, unknown>) => string;
 
 export interface QuerySerializerOptions {
   allowReserved?: boolean;
   array?: SerializerOptions<ArrayStyle>;
   object?: SerializerOptions<ObjectStyle>;
 }
-
-const serializeFormDataPair = (data: FormData, key: string, value: unknown) => {
-  if (typeof value === 'string' || value instanceof Blob) {
-    data.append(key, value);
-  } else {
-    data.append(key, JSON.stringify(value));
-  }
-};
 
 const serializeUrlSearchParamsPair = (
   data: URLSearchParams,
@@ -34,23 +26,39 @@ const serializeUrlSearchParamsPair = (
   }
 };
 
-export const formDataBodySerializer = {
-  bodySerializer: <T extends Record<string, any> | Array<Record<string, any>>>(
-    body: T,
-  ) => {
-    const data = new FormData();
+const serializeFormBody = <T>(data: FormData, value: T, key?: string) => {
+  if (value === null || value === undefined) {
+    return;
+  }
 
-    Object.entries(body).forEach(([key, value]) => {
-      if (value === undefined || value === null) {
-        return;
-      }
-      if (Array.isArray(value)) {
-        value.forEach((v) => serializeFormDataPair(data, key, v));
-      } else {
-        serializeFormDataPair(data, key, value);
-      }
+  if (typeof value === 'string' || value instanceof Blob) {
+    return data.append(key ?? 'key', value);
+  }
+
+  if (typeof value !== 'object') {
+    return data.append(key ?? 'key', JSON.stringify(value));
+  }
+
+  if (Array.isArray(value)) {
+    value.forEach((item, index) => {
+      serializeFormBody(
+        data,
+        item,
+        key ? `${key}[${index}]` : `array[${index}]`,
+      );
     });
+    return;
+  }
 
+  for (const [k, v] of Object.entries(value)) {
+    serializeFormBody(data, v, key ? `${key}[${k}]` : k);
+  }
+};
+
+export const formDataBodySerializer = {
+  bodySerializer: <T>(body: T) => {
+    const data = new FormData();
+    serializeFormBody(data, body);
     return data;
   },
 };
