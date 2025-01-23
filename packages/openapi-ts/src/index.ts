@@ -23,13 +23,7 @@ import type {
   PluginNames,
 } from './plugins/types';
 import type { Client } from './types/client';
-import type {
-  ClientConfig,
-  Config,
-  Formatters,
-  Linters,
-  UserConfig,
-} from './types/config';
+import type { Config, Formatters, Linters, UserConfig } from './types/config';
 import { CLIENTS } from './types/config';
 import {
   isLegacyClient,
@@ -103,7 +97,7 @@ const processOutput = ({ config }: { config: Config }) => {
   }
 };
 
-const getClient = (userConfig: ClientConfig): Config['client'] => {
+const getClient = (userConfig: UserConfig): Config['client'] => {
   let client: Config['client'] = {
     bundle: false,
     name: '' as Config['client']['name'],
@@ -119,7 +113,7 @@ const getClient = (userConfig: ClientConfig): Config['client'] => {
   return client;
 };
 
-const getInput = (userConfig: ClientConfig): Config['input'] => {
+const getInput = (userConfig: UserConfig): Config['input'] => {
   let input: Config['input'] = {
     path: '',
   };
@@ -139,7 +133,7 @@ const getInput = (userConfig: ClientConfig): Config['input'] => {
   return input;
 };
 
-const getLogs = (userConfig: ClientConfig): Config['logs'] => {
+const getLogs = (userConfig: UserConfig): Config['logs'] => {
   let logs: Config['logs'] = {
     level: 'info',
     path: process.cwd(),
@@ -155,7 +149,7 @@ const getLogs = (userConfig: ClientConfig): Config['logs'] => {
   return logs;
 };
 
-const getOutput = (userConfig: ClientConfig): Config['output'] => {
+const getOutput = (userConfig: UserConfig): Config['output'] => {
   let output: Config['output'] = {
     clean: true,
     format: false,
@@ -271,7 +265,7 @@ const getPluginsConfig = ({
 };
 
 const getPlugins = (
-  userConfig: ClientConfig,
+  userConfig: UserConfig,
 ): Pick<Config, 'plugins' | 'pluginOrder'> => {
   const userPluginsConfig: Config['plugins'] = {};
 
@@ -438,7 +432,7 @@ const getSpec = async ({
 };
 
 const getWatch = (
-  userConfig: Pick<ClientConfig, 'watch'> & Pick<Config, 'input'>,
+  userConfig: Pick<UserConfig, 'watch'> & Pick<Config, 'input'>,
 ): Config['watch'] => {
   let watch: Config['watch'] = {
     enabled: false,
@@ -476,7 +470,7 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
     name: 'openapi-ts',
   });
 
-  const userConfigs: ClientConfig[] = Array.isArray(userConfig)
+  const userConfigs: UserConfig[] = Array.isArray(userConfig)
     ? userConfig
     : Array.isArray(configFromFile)
       ? configFromFile.map((config) => ({
