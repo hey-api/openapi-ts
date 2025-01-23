@@ -29,7 +29,7 @@ export type StringCase =
   | 'snake_case'
   | 'SCREAMING_SNAKE_CASE';
 
-export interface ClientConfig {
+export interface UserConfig {
   /**
    * HTTP client to generate
    */
@@ -274,10 +274,8 @@ export interface ClientConfig {
   useOptions?: boolean;
 }
 
-export type UserConfig = ClientConfig;
-
 export type Config = Omit<
-  Required<ClientConfig>,
+  Required<UserConfig>,
   | 'base'
   | 'client'
   | 'input'
@@ -288,15 +286,15 @@ export type Config = Omit<
   | 'request'
   | 'watch'
 > &
-  Pick<ClientConfig, 'base' | 'name' | 'request'> & {
-    client: Extract<Required<ClientConfig>['client'], object>;
-    input: ExtractWithDiscriminator<ClientConfig['input'], { path: unknown }>;
-    logs: Extract<Required<ClientConfig['logs']>, object>;
-    output: Extract<ClientConfig['output'], object>;
+  Pick<UserConfig, 'base' | 'name' | 'request'> & {
+    client: Extract<Required<UserConfig>['client'], object>;
+    input: ExtractWithDiscriminator<UserConfig['input'], { path: unknown }>;
+    logs: Extract<Required<UserConfig['logs']>, object>;
+    output: Extract<UserConfig['output'], object>;
     pluginOrder: ReadonlyArray<ClientPlugins['name']>;
     plugins: ArrayOfObjectsToObjectMap<
       ExtractArrayOfObjects<ReadonlyArray<ClientPlugins>, { name: string }>,
       'name'
     >;
-    watch: Extract<ClientConfig['watch'], object>;
+    watch: Extract<UserConfig['watch'], object>;
   };

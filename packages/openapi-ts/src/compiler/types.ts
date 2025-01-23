@@ -287,24 +287,84 @@ export const createKeywordTypeNode = ({
 
 export const toTypeParameters = (types: FunctionTypeParameter[]) =>
   types.map((type) =>
-    ts.factory.createTypeParameterDeclaration(
-      undefined,
-      type.name,
+    createTypeParameterDeclaration({
       // TODO: support other extends values
-      type.extends
+      constraint: type.extends
         ? typeof type.extends === 'string'
           ? createKeywordTypeNode({ keyword: 'boolean' })
           : type.extends
         : undefined,
       // TODO: support other default types
-      type.default !== undefined
-        ? isTsNode(type.default)
-          ? (type.default as unknown as ts.TypeNode)
-          : ts.factory.createLiteralTypeNode(
-              type.default ? ts.factory.createTrue() : ts.factory.createFalse(),
-            )
-        : undefined,
-    ),
+      defaultType:
+        type.default !== undefined
+          ? isTsNode(type.default)
+            ? (type.default as unknown as ts.TypeNode)
+            : ts.factory.createLiteralTypeNode(
+                type.default
+                  ? ts.factory.createTrue()
+                  : ts.factory.createFalse(),
+              )
+          : undefined,
+      name: type.name,
+    }),
+  );
+
+export const createTypeOperatorNode = ({
+  operator,
+  type,
+}: {
+  operator: 'keyof' | 'readonly' | 'unique';
+  type: ts.TypeNode;
+}) => {
+  const operatorKeyword =
+    operator === 'keyof'
+      ? ts.SyntaxKind.KeyOfKeyword
+      : operator === 'readonly'
+        ? ts.SyntaxKind.ReadonlyKeyword
+        : ts.SyntaxKind.UniqueKeyword;
+  return ts.factory.createTypeOperatorNode(operatorKeyword, type);
+};
+
+export const createTypeParameterDeclaration = ({
+  constraint,
+  defaultType,
+  modifiers,
+  name,
+}: {
+  constraint?: ts.TypeNode;
+  defaultType?: ts.TypeNode;
+  modifiers?: Array<ts.Modifier>;
+  name: string | ts.Identifier;
+}) =>
+  ts.factory.createTypeParameterDeclaration(
+    modifiers,
+    name,
+    constraint,
+    defaultType,
+  );
+
+export const createMappedTypeNode = ({
+  members,
+  nameType,
+  questionToken,
+  readonlyToken,
+  type,
+  typeParameter,
+}: {
+  members?: ts.NodeArray<ts.TypeElement>;
+  nameType?: ts.TypeNode;
+  questionToken?: ts.QuestionToken | ts.PlusToken | ts.MinusToken;
+  readonlyToken?: ts.ReadonlyKeyword | ts.PlusToken | ts.MinusToken;
+  type?: ts.TypeNode;
+  typeParameter: ts.TypeParameterDeclaration;
+}) =>
+  ts.factory.createMappedTypeNode(
+    readonlyToken,
+    typeParameter,
+    nameType,
+    questionToken,
+    type,
+    members,
   );
 
 export const createLiteralTypeNode = ({

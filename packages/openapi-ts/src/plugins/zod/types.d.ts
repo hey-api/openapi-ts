@@ -9,6 +9,7 @@ export interface Config extends Plugin.Name<'zod'> {
   // nameBuilder?: (model: IR.OperationObject | IR.SchemaObject) => string;
   /**
    * Name of the generated file.
+   *
    * @default 'zod'
    */
   output?: string;
