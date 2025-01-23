@@ -502,18 +502,18 @@ const stringTypeToZodSchema = ({
           }),
           parameters: [
             compiler.arrayLiteralExpression({
-              elements: ['File', 'Blob'].map(typeIdent => (
+              elements: ['File', 'Blob'].map((typeIdent) =>
                 compiler.callExpression({
                   functionName: compiler.propertyAccessExpression({
                     expression: zIdentifier,
                     name: instanceofIdentifier,
                   }),
-                  parameters: [compiler.identifier({ text: typeIdent })]
-                })
-              )),
+                  parameters: [compiler.identifier({ text: typeIdent })],
+                }),
+              ),
             }),
           ],
-        })
+        });
     }
   }
 
