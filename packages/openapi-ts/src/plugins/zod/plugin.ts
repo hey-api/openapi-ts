@@ -4,15 +4,11 @@ import { compiler } from '../../compiler';
 import { operationResponsesMap } from '../../ir/operation';
 import { deduplicateSchema } from '../../ir/schema';
 import type { IR } from '../../ir/types';
+import type { SchemaWithType } from '../../openApi/shared/types/schema';
 import { numberRegExp } from '../../utils/regexp';
 import { operationIrRef } from '../shared/utils/ref';
 import type { Plugin } from '../types';
 import type { Config } from './types';
-
-interface SchemaWithType<T extends Required<IR.SchemaObject>['type']>
-  extends Omit<IR.SchemaObject, 'type'> {
-  type: Extract<Required<IR.SchemaObject>['type'], T>;
-}
 
 interface Result {
   circularReferenceTracker: Set<string>;
