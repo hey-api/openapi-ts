@@ -24,7 +24,10 @@ export const zSimpleString = z.string();
 
 export const zNonAsciiStringæøåÆøÅöôêÊ字符串 = z.string();
 
-export const zSimpleFile = z.string();
+export const zSimpleFile = z.union([
+    z.instanceof(File),
+    z.instanceof(Blob)
+]);
 
 export const zSimpleReference = z.object({
     prop: z.string().optional()
@@ -156,7 +159,10 @@ export const zModelWithReference = z.object({
 
 export const zModelWithArray = z.object({
     prop: z.array(zModelWithString).optional(),
-    propWithFile: z.array(z.string()).optional(),
+    propWithFile: z.array(z.union([
+        z.instanceof(File),
+        z.instanceof(Blob)
+    ])).optional(),
     propWithNumber: z.array(z.number()).optional()
 });
 
