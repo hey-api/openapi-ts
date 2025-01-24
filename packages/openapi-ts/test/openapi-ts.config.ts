@@ -55,9 +55,9 @@ export default defineConfig({
     },
     // @ts-ignore
     {
-      enums: 'typescript',
+      // enums: 'typescript',
       // enums: 'typescript+namespace',
-      // enums: 'javascript',
+      enums: 'javascript',
       enumsCase: 'camelCase',
       // exportInlineEnums: true,
       // identifierCase: 'preserve',

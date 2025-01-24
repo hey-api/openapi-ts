@@ -1,6 +1,7 @@
 import type ts from 'typescript';
 
 import { compiler } from '../../compiler';
+import type { Identifier } from '../../generate/files';
 import type { IR } from '../../ir/types';
 import { irRef } from '../../utils/ref';
 import { stringCase } from '../../utils/stringCase';
@@ -18,6 +19,8 @@ import {
   responseBodyTypeTypeName,
   undefinedReference,
 } from './interfaces';
+import { getSuccessResponse, responseOptions } from './response';
+import { schemaToExpression } from './schema';
 import type { Config } from './types';
 
 export const mswId = 'msw';
@@ -25,16 +28,17 @@ export const mswId = 'msw';
 const nameTransformer = (name: string) => `${name}-handler`;
 
 const resolverStatements = ({
-  // context,
+  context,
+  identifierResponse,
   operation,
 }: {
   context: IR.Context;
+  identifierResponse: Identifier;
   operation: IR.OperationObject;
 }) => {
   const statements: Array<ts.Statement> = [];
 
-  // TODO: get any of the 2xx status codes
-  console.log(operation.responses);
+  const successResponse = getSuccessResponse(operation)
 
   const response = compiler.constVariable({
     expression: compiler.callExpression({
@@ -43,11 +47,24 @@ const resolverStatements = ({
         name: compiler.identifier({ text: 'json' }),
       }),
       parameters: [
-        compiler.objectExpression({
-          obj: [],
+        identifierResponse.name && successResponse?.schema ? schemaToExpression({
+          context,
+          schema: successResponse.schema,
+        }) : compiler.identifier({ text: 'undefined' }),
+        responseOptions({
+          responseSchema: successResponse,
         }),
       ],
-      types: [],
+      types: [
+        identifierResponse.name ? compiler.typeReferenceNode({
+          typeArguments: [
+            compiler.typeReferenceNode({
+              typeName: identifierResponse.name,
+            }),
+          ],
+          typeName: responseBodyTypeTypeName,
+        }) : undefinedReference,
+      ],
     }),
     name: 'response',
   });
@@ -94,7 +111,7 @@ const operationToMswHandler = ({
 
   // TODO: add support for baseUrl/servers
   // replace our curly brackets with colon
-  const handlerPath = `*${operation.path.replace(/{([^}]+)}/g, ':$1')}`;
+  const handlerPath = `*${operation.path.replace(/\{(.+?)\}/g, ':$1')}`;
 
   const statement = compiler.constVariable({
     exportConst: true,
@@ -112,6 +129,7 @@ const operationToMswHandler = ({
           ],
           statements: resolverStatements({
             context,
+            identifierResponse,
             operation,
           }),
         }),
