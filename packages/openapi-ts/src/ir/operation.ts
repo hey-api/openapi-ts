@@ -97,6 +97,7 @@ interface OperationResponsesMap {
   responses?: IR.SchemaObject;
 }
 
+// TODO: handle multiple content types
 export const operationResponsesMap = (
   operation: IR.OperationObject,
 ): OperationResponsesMap => {
