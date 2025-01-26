@@ -25,7 +25,7 @@ Live demo
 - supports OpenAPI 2.0, 3.0, and 3.1 specifications
 - supports JSON and YAML input files
 - generates TypeScript interfaces and SDKs
-- Fetch API, Axios, Angular, Node.js, and XHR clients available
+- Fetch API, Axios, Nuxt, Angular, Node.js, and XHR clients available
 - plugin ecosystem to reduce third-party boilerplate
 
 ## Quick Start
@@ -34,9 +34,9 @@ The fastest way to use `@hey-api/openapi-ts` is via npx
 
 ```sh
 npx @hey-api/openapi-ts \
-  -c @hey-api/client-fetch \
   -i path/to/openapi.json \
   -o src/client \
+  -c @hey-api/client-fetch
 ```
 
 Congratulations on creating your first client! 🎉 You can learn more about the generated files on the [Output](/openapi-ts/output) page.
@@ -89,9 +89,9 @@ You can also generate clients programmatically by importing `@hey-api/openapi-ts
 import { createClient } from '@hey-api/openapi-ts';
 
 createClient({
-  client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
+  plugins: ['@hey-api/client-fetch'],
 });
 ```
 

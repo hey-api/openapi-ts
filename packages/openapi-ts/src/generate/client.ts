@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import type { ImportExportItemObject } from '../compiler/utils';
+import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
 import type { Config } from '../types/config';
 import { ensureDirSync, relativeModulePath } from './utils';
 
@@ -17,14 +18,16 @@ export const clientModulePath = ({
   config: Config;
   sourceOutput: string;
 }): string => {
-  if (config.client.bundle) {
+  const client = getClientPlugin(config);
+
+  if ('bundle' in client && client.bundle) {
     return relativeModulePath({
       moduleOutput: 'client',
       sourceOutput,
     });
   }
 
-  return config.client.name;
+  return client.name;
 };
 
 export const clientApi = {

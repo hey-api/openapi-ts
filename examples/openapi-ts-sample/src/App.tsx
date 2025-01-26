@@ -9,6 +9,7 @@ import {
   Section,
 } from '@radix-ui/themes';
 
+// @ts-expect-error
 import { postFoo } from './client/sdk.gen';
 
 function App() {

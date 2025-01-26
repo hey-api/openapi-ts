@@ -95,15 +95,15 @@ export const createClient = (config: Config): Client => {
 
   return {
     buildUrl,
-    delete: (options) => request({ ...options, method: 'delete' }),
-    get: (options) => request({ ...options, method: 'get' }),
+    delete: (options) => request({ ...options, method: 'DELETE' }),
+    get: (options) => request({ ...options, method: 'GET' }),
     getConfig,
-    head: (options) => request({ ...options, method: 'head' }),
+    head: (options) => request({ ...options, method: 'HEAD' }),
     instance,
-    options: (options) => request({ ...options, method: 'options' }),
-    patch: (options) => request({ ...options, method: 'patch' }),
-    post: (options) => request({ ...options, method: 'post' }),
-    put: (options) => request({ ...options, method: 'put' }),
+    options: (options) => request({ ...options, method: 'OPTIONS' }),
+    patch: (options) => request({ ...options, method: 'PATCH' }),
+    post: (options) => request({ ...options, method: 'POST' }),
+    put: (options) => request({ ...options, method: 'PUT' }),
     request,
     setConfig,
   } as Client;
@@ -112,6 +112,7 @@ export const createClient = (config: Config): Client => {
 export type {
   Client,
   Config,
+  CreateClientConfig,
   Options,
   OptionsLegacyParser,
   RequestOptions,

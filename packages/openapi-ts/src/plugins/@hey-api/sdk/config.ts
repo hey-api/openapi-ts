@@ -8,6 +8,17 @@ export const defaultConfig: Plugin.Config<Config> = {
   _handler: handler,
   _handlerLegacy: handlerLegacy,
   _infer: (config, context) => {
+    if (config.client) {
+      if (typeof config.client === 'boolean') {
+        config.client = context.pluginByTag(
+          'client',
+          '🚫 client needs to be set to generate SDKs - which HTTP client do you want to use?',
+        ) as unknown as typeof config.client;
+      }
+
+      context.ensureDependency(config.client);
+    }
+
     if (config.transformer) {
       if (typeof config.transformer === 'boolean') {
         config.transformer = context.pluginByTag(
@@ -30,13 +41,13 @@ export const defaultConfig: Plugin.Config<Config> = {
   },
   asClass: false,
   auth: true,
+  client: true,
   exportFromIndex: true,
   name: '@hey-api/sdk',
   operationId: true,
   output: 'sdk',
   response: 'body',
   serviceNameBuilder: '{{name}}Service',
-  throwOnError: false,
 };
 
 /**

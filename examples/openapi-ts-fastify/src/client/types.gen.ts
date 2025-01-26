@@ -8,7 +8,7 @@ export type Pet = {
 
 export type Pets = Array<Pet>;
 
-export type Error = {
+export type _Error = {
   code: number;
   message: string;
 };
@@ -29,7 +29,7 @@ export type ListPetsErrors = {
   /**
    * unexpected error
    */
-  default: Error;
+  default: _Error;
 };
 
 export type ListPetsError = ListPetsErrors[keyof ListPetsErrors];
@@ -54,7 +54,7 @@ export type CreatePetsErrors = {
   /**
    * unexpected error
    */
-  default: Error;
+  default: _Error;
 };
 
 export type CreatePetsError = CreatePetsErrors[keyof CreatePetsErrors];
@@ -82,7 +82,7 @@ export type ShowPetByIdErrors = {
   /**
    * unexpected error
    */
-  default: Error;
+  default: _Error;
 };
 
 export type ShowPetByIdError = ShowPetByIdErrors[keyof ShowPetByIdErrors];

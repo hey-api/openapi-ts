@@ -169,6 +169,7 @@ export const createClient = (config: Config = {}): Client => {
 export type {
   Client,
   Config,
+  CreateClientConfig,
   Options,
   OptionsLegacyParser,
   RequestOptions,

@@ -29,11 +29,11 @@ In your [configuration](/openapi-ts/get-started), add `fastify` to your plugins 
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
+    '@hey-api/client-fetch',
     'fastify', // [!code ++]
   ],
 };

@@ -24,7 +24,6 @@ import type {
 } from './plugins/types';
 import type { Client } from './types/client';
 import type { Config, Formatters, Linters, UserConfig } from './types/config';
-import { CLIENTS } from './types/config';
 import {
   isLegacyClient,
   legacyNameFromConfig,
@@ -95,22 +94,6 @@ const processOutput = ({ config }: { config: Config }) => {
     console.log(`✨ Running ${module.name}`);
     sync(module.command, module.args(config.output.path));
   }
-};
-
-const getClient = (userConfig: UserConfig): Config['client'] => {
-  let client: Config['client'] = {
-    bundle: false,
-    name: '' as Config['client']['name'],
-  };
-  if (typeof userConfig.client === 'string') {
-    client.name = userConfig.client;
-  } else if (userConfig.client) {
-    client = {
-      ...client,
-      ...userConfig.client,
-    };
-  }
-  return client;
 };
 
 const getInput = (userConfig: UserConfig): Config['input'] => {
@@ -225,7 +208,7 @@ const getPluginsConfig = ({
               config._dependencies = [...config._dependencies, dependency];
             }
           },
-          pluginByTag: (tag) => {
+          pluginByTag: (tag, errorMessage) => {
             for (const userPlugin of userPlugins) {
               const defaultConfig =
                 defaultPluginConfigs[userPlugin as PluginNames];
@@ -237,6 +220,11 @@ const getPluginsConfig = ({
                 return userPlugin;
               }
             }
+
+            throw new Error(
+              errorMessage ||
+                `🚫 missing plugin - no plugin with tag "${tag}" found`,
+            );
           },
         };
         config._infer(config, context);
@@ -269,7 +257,24 @@ const getPlugins = (
 ): Pick<Config, 'plugins' | 'pluginOrder'> => {
   const userPluginsConfig: Config['plugins'] = {};
 
-  const userPlugins = (userConfig.plugins ?? defaultPlugins)
+  let definedPlugins: UserConfig['plugins'] = defaultPlugins;
+  if (userConfig.plugins) {
+    if (
+      userConfig.plugins.length === 1 &&
+      ((typeof userConfig.plugins[0] === 'string' &&
+        (userConfig.plugins[0].startsWith('@hey-api/client') ||
+          userConfig.plugins[0].startsWith('legacy/'))) ||
+        (typeof userConfig.plugins[0] !== 'string' &&
+          (userConfig.plugins[0]?.name.startsWith('@hey-api/client') ||
+            userConfig.plugins[0]?.name.startsWith('legacy/'))))
+    ) {
+      definedPlugins = [...defaultPlugins, ...userConfig.plugins];
+    } else {
+      definedPlugins = userConfig.plugins;
+    }
+  }
+
+  const userPlugins = definedPlugins
     .map((plugin) => {
       if (typeof plugin === 'string') {
         return plugin;
@@ -502,20 +507,14 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
 
     if (!input.path) {
       throw new Error(
-        '🚫 missing input - which OpenAPI specification should we use to generate your client?',
+        '🚫 missing input - which OpenAPI specification should we use to generate your output?',
       );
     }
 
     if (!output.path) {
       throw new Error(
-        '🚫 missing output - where should we generate your client?',
+        '🚫 missing output - where should we generate your output?',
       );
-    }
-
-    const client = getClient(userConfig);
-
-    if (client.name && !CLIENTS.includes(client.name)) {
-      throw new Error('🚫 invalid client - select a valid client value');
     }
 
     if (!useOptions) {
@@ -529,11 +528,10 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
     const config = setConfig({
       ...getPlugins(userConfig),
       base,
-      client,
       configFile,
       dryRun,
       experimentalParser,
-      exportCore: isLegacyClient(client) ? exportCore : false,
+      exportCore: false,
       input,
       logs,
       name,
@@ -542,6 +540,7 @@ const initConfigs = async (userConfig: UserConfig): Promise<Config[]> => {
       useOptions,
       watch: getWatch({ ...userConfig, input }),
     });
+    config.exportCore = isLegacyClient(config) ? exportCore : false;
 
     if (logs.level === 'debug') {
       console.warn('config:', config);

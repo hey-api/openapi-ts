@@ -1,6 +1,7 @@
 import type {
   Auth,
-  BodySerializer,
+  Client as CoreClient,
+  Config as CoreConfig,
   QuerySerializerOptions,
 } from '@hey-api/client-core';
 import type {
@@ -23,8 +24,6 @@ export type QuerySerializer = (
   query: Parameters<Client['buildUrl']>[0]['query'],
 ) => string;
 
-type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
-
 type WithRefs<TData> = {
   [K in keyof TData]: NonNullable<TData[K]> extends object
     ? WithRefs<NonNullable<TData[K]>> | Ref<NonNullable<TData[K]>>
@@ -36,56 +35,14 @@ export interface Config
       FetchOptions<unknown>,
       'baseURL' | 'body' | 'headers' | 'method' | 'query'
     >,
-    WithRefs<Pick<FetchOptions<unknown>, 'query'>> {
-  /**
-   * Auth token or a function returning auth token. The resolved value will be
-   * added to the request payload as defined by its `security` array.
-   */
-  auth?: ((auth: Auth) => Promise<AuthToken> | AuthToken) | AuthToken;
+    WithRefs<Pick<FetchOptions<unknown>, 'query'>>,
+    Omit<CoreConfig, 'querySerializer'> {
   /**
    * Base URL for all requests made by this client.
    *
    * @default ''
    */
   baseURL?: string;
-  /**
-   * A function for serializing request body parameter. By default,
-   * {@link JSON.stringify()} will be used.
-   */
-  bodySerializer?: BodySerializer | null;
-  /**
-   * An object containing any HTTP headers that you want to pre-populate your
-   * `Headers` object with.
-   *
-   * {@link https://developer.mozilla.org/docs/Web/API/Headers/Headers#init See more}
-   */
-  headers?:
-    | RequestInit['headers']
-    | Record<
-        string,
-        | string
-        | number
-        | boolean
-        | (string | number | boolean)[]
-        | null
-        | undefined
-        | unknown
-      >;
-  /**
-   * The request method.
-   *
-   * {@link https://developer.mozilla.org/docs/Web/API/fetch#method See more}
-   */
-  method?:
-    | 'CONNECT'
-    | 'DELETE'
-    | 'GET'
-    | 'HEAD'
-    | 'OPTIONS'
-    | 'PATCH'
-    | 'POST'
-    | 'PUT'
-    | 'TRACE';
   /**
    * A function for serializing request query parameters. By default, arrays
    * will be exploded in form style, objects will be exploded in deepObject
@@ -94,20 +51,7 @@ export interface Config
    * {@link https://swagger.io/docs/specification/serialization/#query View examples}
    */
   querySerializer?: QuerySerializer | QuerySerializerOptions;
-  /**
-   * A function transforming response data before it's returned. This is useful
-   * for post-processing data, e.g. converting ISO strings into Date objects.
-   */
-  responseTransformer?: (data: unknown) => Promise<unknown>;
-  /**
-   * A function validating response data. This is useful if you want to ensure
-   * the response conforms to the desired shape, so it can be safely passed to
-   * the transformers and returned to the user.
-   */
-  responseValidator?: (data: unknown) => Promise<unknown>;
 }
-
-type AuthToken = string | undefined;
 
 export interface RequestOptions<
   TComposable extends Composable = Composable,
@@ -172,6 +116,16 @@ type RequestFn = <
     Pick<Required<RequestOptions<TComposable>>, 'method'>,
 ) => RequestResult<TComposable, TData, TError>;
 
+/**
+ * The `createClientConfig()` function will be called on client initialization
+ * and the returned object will become the client's initial configuration.
+ *
+ * You may want to initialize your client this way instead of calling
+ * `setConfig()`. This is useful for example if you're using Next.js
+ * to ensure your client always has the correct values.
+ */
+export type CreateClientConfig = (override?: Config) => Config;
+
 interface DataShape {
   body?: unknown;
   headers?: unknown;
@@ -186,26 +140,13 @@ export type BuildUrlOptions<
   Pick<TData, 'url'> &
   Pick<Options<'$fetch', TData>, 'baseURL' | 'querySerializer'>;
 
-export interface Client {
-  /**
-   * Returns the final request URL. This method works only with experimental parser.
-   */
-  buildUrl: <TData extends Omit<DataShape, 'headers'>>(
-    options: BuildUrlOptions<TData>,
-  ) => string;
-  connect: MethodFn;
-  delete: MethodFn;
-  get: MethodFn;
-  getConfig: () => Config;
-  head: MethodFn;
-  options: MethodFn;
-  patch: MethodFn;
-  post: MethodFn;
-  put: MethodFn;
-  request: RequestFn;
-  setConfig: (config: Config) => Config;
-  trace: MethodFn;
-}
+type BuildUrlFn = <TData extends Omit<DataShape, 'headers'>>(
+  options: BuildUrlOptions<TData>,
+) => string;
+
+export type Client = CoreClient<RequestFn, Config, MethodFn, BuildUrlFn>;
+
+type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
 
 export type Options<
   TComposable extends Composable,

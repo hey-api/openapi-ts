@@ -1,17 +1,12 @@
 import { defineConfig } from '../src';
 
 export default defineConfig({
-  client: {
-    bundle: true,
-    name: '@hey-api/client-fetch',
-    // name: 'legacy/xhr',
-  },
   // experimentalParser: false,
   input: {
     // exclude: '^#/components/schemas/ModelWithCircularReference$',
     // include:
     //   '^(#/components/schemas/import|#/paths/api/v{api-version}/simple/options)$',
-    path: './packages/openapi-ts/test/spec/3.1.x/body-nested-array.yaml',
+    path: './packages/openapi-ts/test/spec/3.1.x/full.json',
     // path: './test/spec/v3-transforms.json',
     // path: 'https://mongodb-mms-prod-build-server.s3.amazonaws.com/openapi/2caffd88277a4e27c95dcefc7e3b6a63a3b03297-v2-2023-11-15.json',
     // path: 'https://raw.githubusercontent.com/swagger-api/swagger-petstore/master/src/main/resources/openapi.yaml',
@@ -31,6 +26,11 @@ export default defineConfig({
   plugins: [
     // @ts-ignore
     {
+      // bundle: true,
+      // name: '@hey-api/client-fetch',
+    },
+    // @ts-ignore
+    {
       // name: '@hey-api/schemas',
       // type: 'json',
     },
@@ -39,12 +39,12 @@ export default defineConfig({
       // asClass: true,
       // auth: false,
       // include...
-      name: '@hey-api/sdk',
+      // name: '@hey-api/sdk',
       // operationId: false,
       // serviceNameBuilder: '^Parameters',
       // throwOnError: true,
       // transformer: '@hey-api/transformers',
-      transformer: true,
+      // transformer: true,
       // validator: 'zod',
     },
     // @ts-ignore
@@ -55,10 +55,10 @@ export default defineConfig({
     },
     // @ts-ignore
     {
-      enums: 'typescript',
+      // enums: 'typescript',
       // enums: 'typescript+namespace',
       // enums: 'javascript',
-      enumsCase: 'camelCase',
+      // enumsCase: 'camelCase',
       // exportInlineEnums: true,
       // identifierCase: 'preserve',
       name: '@hey-api/typescript',

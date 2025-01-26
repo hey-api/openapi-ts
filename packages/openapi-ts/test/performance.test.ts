@@ -15,9 +15,9 @@ describe('performance', () => {
     Performance.clear();
 
     await createClient({
-      client: '@hey-api/client-fetch',
       input: V3_SPEC_PATH,
       output: toOutputPath('perf'),
+      plugins: ['@hey-api/client-fetch'],
     });
 
     Performance.measure('createClient');
@@ -30,9 +30,9 @@ describe('performance', () => {
     Performance.clear();
 
     await createClient({
-      client: '@hey-api/client-fetch',
       input: V3_SPEC_PATH,
       output: toOutputPath('perf'),
+      plugins: ['@hey-api/client-fetch'],
     });
 
     Performance.measure('parser');
@@ -45,10 +45,9 @@ describe('performance', () => {
     Performance.clear();
 
     await createClient({
-      client: '@hey-api/client-fetch',
-      experimentalParser: true,
       input: V3_1_X_SPEC_PATH,
       output: toOutputPath('perf'),
+      plugins: ['@hey-api/client-fetch'],
     });
 
     Performance.measure('parser');
