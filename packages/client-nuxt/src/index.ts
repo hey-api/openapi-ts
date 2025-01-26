@@ -154,6 +154,7 @@ export type {
   Client,
   Composable,
   Config,
+  CreateClientConfig,
   Options,
   OptionsLegacyParser,
   RequestOptions,

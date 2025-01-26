@@ -1,3 +1,4 @@
+type AuthToken = string | undefined;
 interface Auth {
     in?: 'header' | 'query';
     name?: string;
@@ -31,6 +32,72 @@ declare const urlSearchParamsBodySerializer: {
     bodySerializer: <T extends Record<string, any> | Array<Record<string, any>>>(body: T) => URLSearchParams;
 };
 
+interface Client$1<RequestFn = never, Config = unknown, MethodFn = never, BuildUrlFn = never> {
+    /**
+     * Returns the final request URL.
+     */
+    buildUrl: BuildUrlFn;
+    connect: MethodFn;
+    delete: MethodFn;
+    get: MethodFn;
+    getConfig: () => Config;
+    head: MethodFn;
+    options: MethodFn;
+    patch: MethodFn;
+    post: MethodFn;
+    put: MethodFn;
+    request: RequestFn;
+    setConfig: (config: Config) => Config;
+    trace: MethodFn;
+}
+interface Config$1 {
+    /**
+     * Auth token or a function returning auth token. The resolved value will be
+     * added to the request payload as defined by its `security` array.
+     */
+    auth?: ((auth: Auth) => Promise<AuthToken> | AuthToken) | AuthToken;
+    /**
+     * A function for serializing request body parameter. By default,
+     * {@link JSON.stringify()} will be used.
+     */
+    bodySerializer?: BodySerializer | null;
+    /**
+     * An object containing any HTTP headers that you want to pre-populate your
+     * `Headers` object with.
+     *
+     * {@link https://developer.mozilla.org/docs/Web/API/Headers/Headers#init See more}
+     */
+    headers?: RequestInit['headers'] | Record<string, string | number | boolean | (string | number | boolean)[] | null | undefined | unknown>;
+    /**
+     * The request method.
+     *
+     * {@link https://developer.mozilla.org/docs/Web/API/fetch#method See more}
+     */
+    method?: 'CONNECT' | 'DELETE' | 'GET' | 'HEAD' | 'OPTIONS' | 'PATCH' | 'POST' | 'PUT' | 'TRACE';
+    /**
+     * A function for serializing request query parameters. By default, arrays
+     * will be exploded in form style, objects will be exploded in deepObject
+     * style, and reserved characters are percent-encoded.
+     *
+     * This method will have no effect if the native `paramsSerializer()` Axios
+     * API function is used.
+     *
+     * {@link https://swagger.io/docs/specification/serialization/#query View examples}
+     */
+    querySerializer?: QuerySerializer | QuerySerializerOptions;
+    /**
+     * A function transforming response data before it's returned. This is useful
+     * for post-processing data, e.g. converting ISO strings into Date objects.
+     */
+    responseTransformer?: (data: unknown) => Promise<unknown>;
+    /**
+     * A function validating response data. This is useful if you want to ensure
+     * the response conforms to the desired shape, so it can be safely passed to
+     * the transformers and returned to the user.
+     */
+    responseValidator?: (data: unknown) => Promise<unknown>;
+}
+
 type ErrInterceptor<Err, Res, Req, Options> = (error: Err, response: Res, request: Req, options: Options) => Err | Promise<Err>;
 type ReqInterceptor<Req, Options> = (request: Req, options: Options) => Req | Promise<Req>;
 type ResInterceptor<Res, Req, Options> = (response: Res, request: Req, options: Options) => Res | Promise<Res>;
@@ -47,15 +114,9 @@ interface Middleware<Req, Res, Err, Options> {
     request: Pick<Interceptors<ReqInterceptor<Req, Options>>, 'eject' | 'use'>;
     response: Pick<Interceptors<ResInterceptor<Res, Req, Options>>, 'eject' | 'use'>;
 }
-declare const createConfig: (override?: Config) => Config;
+declare const createConfig: CreateClientConfig;
 
-type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
-interface Config<ThrowOnError extends boolean = boolean> extends Omit<RequestInit, 'body' | 'headers' | 'method'> {
-    /**
-     * Auth token or a function returning auth token. The resolved value will be
-     * added to the request payload as defined by its `security` array.
-     */
-    auth?: ((auth: Auth) => Promise<AuthToken> | AuthToken) | AuthToken;
+interface Config<ThrowOnError extends boolean = boolean> extends Omit<RequestInit, 'body' | 'headers' | 'method'>, Config$1 {
     /**
      * Base URL for all requests made by this client.
      *
@@ -63,30 +124,12 @@ interface Config<ThrowOnError extends boolean = boolean> extends Omit<RequestIni
      */
     baseUrl?: string;
     /**
-     * A function for serializing request body parameter. By default,
-     * {@link JSON.stringify()} will be used.
-     */
-    bodySerializer?: BodySerializer | null;
-    /**
      * Fetch API implementation. You can use this option to provide a custom
      * fetch instance.
      *
      * @default globalThis.fetch
      */
     fetch?: (request: Request) => ReturnType<typeof fetch>;
-    /**
-     * An object containing any HTTP headers that you want to pre-populate your
-     * `Headers` object with.
-     *
-     * {@link https://developer.mozilla.org/docs/Web/API/Headers/Headers#init See more}
-     */
-    headers?: RequestInit['headers'] | Record<string, string | number | boolean | (string | number | boolean)[] | null | undefined | unknown>;
-    /**
-     * The request method.
-     *
-     * {@link https://developer.mozilla.org/docs/Web/API/fetch#method See more}
-     */
-    method?: 'CONNECT' | 'DELETE' | 'GET' | 'HEAD' | 'OPTIONS' | 'PATCH' | 'POST' | 'PUT' | 'TRACE';
     /**
      * Return the response data parsed in a specified format. By default, `auto`
      * will infer the appropriate method from the `Content-Type` response header.
@@ -97,32 +140,12 @@ interface Config<ThrowOnError extends boolean = boolean> extends Omit<RequestIni
      */
     parseAs?: Exclude<keyof Body, 'body' | 'bodyUsed'> | 'auto' | 'stream';
     /**
-     * A function for serializing request query parameters. By default, arrays
-     * will be exploded in form style, objects will be exploded in deepObject
-     * style, and reserved characters are percent-encoded.
-     *
-     * {@link https://swagger.io/docs/specification/serialization/#query View examples}
-     */
-    querySerializer?: QuerySerializer | QuerySerializerOptions;
-    /**
-     * A function transforming response data before it's returned. This is useful
-     * for post-processing data, e.g. converting ISO strings into Date objects.
-     */
-    responseTransformer?: (data: unknown) => Promise<unknown>;
-    /**
-     * A function validating response data. This is useful if you want to ensure
-     * the response conforms to the desired shape, so it can be safely passed to
-     * the transformers and returned to the user.
-     */
-    responseValidator?: (data: unknown) => Promise<unknown>;
-    /**
      * Throw an error instead of returning it in the response?
      *
      * @default false
      */
     throwOnError?: ThrowOnError;
 }
-type AuthToken = string | undefined;
 interface RequestOptions<ThrowOnError extends boolean = boolean, Url extends string = string> extends Config<ThrowOnError> {
     /**
      * Any body that you want to add to your request.
@@ -160,30 +183,24 @@ type RequestResult<TData = unknown, TError = unknown, ThrowOnError extends boole
 }>;
 type MethodFn = <TData = unknown, TError = unknown, ThrowOnError extends boolean = false>(options: Omit<RequestOptions<ThrowOnError>, 'method'>) => RequestResult<TData, TError, ThrowOnError>;
 type RequestFn = <TData = unknown, TError = unknown, ThrowOnError extends boolean = false>(options: Omit<RequestOptions<ThrowOnError>, 'method'> & Pick<Required<RequestOptions<ThrowOnError>>, 'method'>) => RequestResult<TData, TError, ThrowOnError>;
-interface Client<Req = Request, Res = Response, Err = unknown, Opts = RequestOptions> {
-    /**
-     * Returns the final request URL. This method works only with experimental parser.
-     */
-    buildUrl: <TData extends {
-        body?: unknown;
-        path?: Record<string, unknown>;
-        query?: Record<string, unknown>;
-        url: string;
-    }>(options: Pick<TData, 'url'> & Options<TData>) => string;
-    connect: MethodFn;
-    delete: MethodFn;
-    get: MethodFn;
-    getConfig: () => Config;
-    head: MethodFn;
-    interceptors: Middleware<Req, Res, Err, Opts>;
-    options: MethodFn;
-    patch: MethodFn;
-    post: MethodFn;
-    put: MethodFn;
-    request: RequestFn;
-    setConfig: (config: Config) => Config;
-    trace: MethodFn;
-}
+type BuildUrlFn = <TData extends {
+    body?: unknown;
+    path?: Record<string, unknown>;
+    query?: Record<string, unknown>;
+    url: string;
+}>(options: Pick<TData, 'url'> & Options<TData>) => string;
+type Client = Client$1<RequestFn, Config, MethodFn, BuildUrlFn> & {
+    interceptors: Middleware<Request, Response, unknown, RequestOptions>;
+};
+/**
+ * The `createClientConfig()` function will be called on client initialization
+ * and the returned object will become the client's initial configuration.
+ *
+ * You may want to initialize your client this way instead of calling
+ * `setConfig()`. This is useful for example if you're using Next.js
+ * to ensure your client always has the correct values.
+ */
+type CreateClientConfig = (override?: Config) => Config;
 interface DataShape {
     body?: unknown;
     headers?: unknown;
@@ -191,6 +208,7 @@ interface DataShape {
     query?: unknown;
     url: string;
 }
+type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
 type Options<TData extends DataShape = DataShape, ThrowOnError extends boolean = boolean> = OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'path' | 'query' | 'url'> & Omit<TData, 'url'>;
 type OptionsLegacyParser<TData = unknown, ThrowOnError extends boolean = boolean> = TData extends {
     body?: any;
@@ -202,4 +220,4 @@ type OptionsLegacyParser<TData = unknown, ThrowOnError extends boolean = boolean
 
 declare const createClient: (config?: Config) => Client;
 
-export { type Auth, type Client, type Config, type Options, type OptionsLegacyParser, type QuerySerializerOptions, type RequestOptions, type RequestResult, createClient, createConfig, formDataBodySerializer, jsonBodySerializer, urlSearchParamsBodySerializer };
+export { type Auth, type Client, type Config, type CreateClientConfig, type Options, type OptionsLegacyParser, type QuerySerializerOptions, type RequestOptions, type RequestResult, createClient, createConfig, formDataBodySerializer, jsonBodySerializer, urlSearchParamsBodySerializer };

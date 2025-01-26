@@ -20,11 +20,11 @@ describe('OpenAPI v2', () => {
   it.each([
     {
       config: {
-        client: 'legacy/fetch',
         exportCore: true,
         input: '',
         output: '',
         plugins: [
+          'legacy/fetch',
           '@hey-api/schemas',
           {
             asClass: true,
@@ -56,13 +56,13 @@ describe('OpenAPI v2', () => {
 
 describe('OpenAPI v3', () => {
   const config: UserConfig = {
-    client: 'legacy/fetch',
     exportCore: true,
     input: '',
     output: {
       path: '',
     },
     plugins: [
+      'legacy/fetch',
       '@hey-api/sdk',
       {
         enums: 'javascript',
@@ -81,6 +81,7 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         plugins: [
+          'legacy/fetch',
           {
             enums: 'javascript',
             name: '@hey-api/typescript',
@@ -96,8 +97,8 @@ describe('OpenAPI v3', () => {
     },
     {
       config: createConfig({
-        client: 'legacy/angular',
         plugins: [
+          'legacy/angular',
           '@hey-api/typescript',
           {
             asClass: true,
@@ -110,16 +111,15 @@ describe('OpenAPI v3', () => {
     },
     {
       config: createConfig({
-        client: 'legacy/angular',
-        plugins: ['@hey-api/typescript', '@hey-api/sdk'],
+        plugins: ['legacy/angular', '@hey-api/typescript', '@hey-api/sdk'],
       }),
       description: 'generate tree-shakeable angular client',
       name: 'v3_angular_tree_shakeable',
     },
     {
       config: createConfig({
-        client: 'legacy/node',
         plugins: [
+          'legacy/node',
           {
             enums: 'javascript',
             name: '@hey-api/typescript',
@@ -135,8 +135,8 @@ describe('OpenAPI v3', () => {
     },
     {
       config: createConfig({
-        client: 'legacy/axios',
         plugins: [
+          'legacy/axios',
           {
             enums: 'javascript',
             name: '@hey-api/typescript',
@@ -152,8 +152,8 @@ describe('OpenAPI v3', () => {
     },
     {
       config: createConfig({
-        client: 'legacy/xhr',
         plugins: [
+          'legacy/xhr',
           {
             enums: 'javascript',
             name: '@hey-api/typescript',
@@ -171,6 +171,7 @@ describe('OpenAPI v3', () => {
       config: createConfig({
         name: 'ApiClient',
         plugins: [
+          'legacy/fetch',
           '@hey-api/typescript',
           '@hey-api/sdk',
           {
@@ -189,6 +190,7 @@ describe('OpenAPI v3', () => {
       config: createConfig({
         exportCore: false,
         plugins: [
+          'legacy/fetch',
           {
             dates: true,
             name: '@hey-api/transformers',
@@ -202,6 +204,7 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         plugins: [
+          'legacy/fetch',
           {
             include: '^ModelWithString',
             name: '@hey-api/typescript',
@@ -223,12 +226,11 @@ describe('OpenAPI v3', () => {
     },
     {
       config: createConfig({
-        client: '@hey-api/client-fetch',
         output: {
           indexFile: false,
           path: '',
         },
-        plugins: ['@hey-api/typescript'],
+        plugins: ['@hey-api/client-fetch', '@hey-api/typescript'],
       }),
       description: 'generate output without index file',
       name: 'v3_no_index',
@@ -236,6 +238,7 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         plugins: [
+          'legacy/fetch',
           {
             include: '^ModelWithString',
             name: '@hey-api/typescript',
@@ -257,6 +260,7 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         plugins: [
+          'legacy/fetch',
           {
             enums: 'typescript',
             name: '@hey-api/typescript',
@@ -273,6 +277,7 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         plugins: [
+          'legacy/fetch',
           {
             enums: 'typescript+namespace',
             name: '@hey-api/typescript',
@@ -343,6 +348,7 @@ describe('OpenAPI v3', () => {
       config: createConfig({
         exportCore: false,
         plugins: [
+          'legacy/fetch',
           {
             enums: 'javascript',
             name: '@hey-api/typescript',
@@ -362,6 +368,7 @@ describe('OpenAPI v3', () => {
       config: createConfig({
         exportCore: false,
         plugins: [
+          'legacy/fetch',
           {
             enums: 'javascript',
             name: '@hey-api/typescript',
@@ -379,6 +386,7 @@ describe('OpenAPI v3', () => {
       config: createConfig({
         exportCore: false,
         plugins: [
+          'legacy/fetch',
           {
             enums: 'javascript',
             name: '@hey-api/typescript',

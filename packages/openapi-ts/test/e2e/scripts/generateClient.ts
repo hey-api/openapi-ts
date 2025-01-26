@@ -1,22 +1,26 @@
 import { createClient } from '../../../'
-import type { Config } from '../../../src/types/config'
+import type { PluginClientNames } from '../../../src/plugins/types'
 
 export const generateClient = async (
   dir: string,
   version: string,
-  client: Config['client']['name'],
+  client: PluginClientNames,
   useOptions: boolean = false,
   name?: string
 ) => {
   await createClient({
-    client,
     input: `./test/spec/${version}.json`,
     name,
     output: `./test/e2e/generated/${dir}/`,
-    plugins: ['@hey-api/typescript', '@hey-api/schemas', {
-      asClass: true,
-      name: '@hey-api/sdk',
-    }],
+    plugins: [
+      '@hey-api/typescript',
+      '@hey-api/schemas',
+      client,
+      {
+        asClass: true,
+        name: '@hey-api/sdk',
+      },
+    ],
     useOptions
   })
 }

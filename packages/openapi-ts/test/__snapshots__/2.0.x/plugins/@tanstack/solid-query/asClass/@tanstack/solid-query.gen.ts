@@ -3,7 +3,8 @@
 import type { Options } from '@hey-api/client-fetch';
 import { queryOptions, type MutationOptions, type DefaultError } from '@tanstack/solid-query';
 import type { ServiceWithEmptyTagData, DeleteCallWithoutParametersAndResponseData, GetCallWithoutParametersAndResponseData, PatchCallWithoutParametersAndResponseData, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, CallWithDescriptionsData, CallWithParametersData, CallWithWeirdParameterNamesData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, DuplicateNameData, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data, CallWithNoContentResponseData, CallWithResponseAndNoContentResponseData, DummyAData, DummyBData, CallWithResponseData, CallWithDuplicateResponsesData, CallWithDuplicateResponsesError, CallWithDuplicateResponsesResponse, CallWithResponsesData, CallWithResponsesError, CallWithResponsesResponse, CollectionFormatData, TypesData, ComplexTypesData, CallWithResultFromHeaderData, TestErrorCodeData, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PostApiVbyApiVersionBodyData, PostApiVbyApiVersionBodyError, PostApiVbyApiVersionBodyResponse } from '../types.gen';
-import { DefaultService, SimpleService, DescriptionsService, ParametersService, DefaultsService, DuplicateService, NoContentService, ResponseService, MultipleTags1Service, CollectionFormatService, TypesService, ComplexService, HeaderService, ErrorService, NonAsciiÆøåÆøÅöôêÊService, client } from '../sdk.gen';
+import { DefaultService, SimpleService, DescriptionsService, ParametersService, DefaultsService, DuplicateService, NoContentService, ResponseService, MultipleTags1Service, CollectionFormatService, TypesService, ComplexService, HeaderService, ErrorService, NonAsciiÆøåÆøÅöôêÊService } from '../sdk.gen';
+import { client as _heyApiClient } from '../client.gen';
 
 type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -13,7 +14,7 @@ type QueryKey<TOptions extends Options> = [
 ];
 
 const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, infinite?: boolean): QueryKey<TOptions>[0] => {
-    const params: QueryKey<TOptions>[0] = { _id: id, baseUrl: (options?.client ?? client).getConfig().baseUrl } as QueryKey<TOptions>[0];
+    const params: QueryKey<TOptions>[0] = { _id: id, baseUrl: (options?.client ?? _heyApiClient).getConfig().baseUrl } as QueryKey<TOptions>[0];
     if (infinite) {
         params._infinite = infinite;
     }
