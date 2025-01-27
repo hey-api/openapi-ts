@@ -14,6 +14,7 @@ import type {
   BuildUrlOptions,
   Client,
   Config,
+  CreateClientConfig,
   QuerySerializer,
   RequestOptions,
 } from './types';
@@ -301,7 +302,7 @@ const defaultHeaders = {
   'Content-Type': 'application/json',
 };
 
-export const createConfig = (override: Config = {}): Config => ({
+export const createConfig: CreateClientConfig = (override = {}) => ({
   ...jsonBodySerializer,
   baseURL: '',
   headers: defaultHeaders,

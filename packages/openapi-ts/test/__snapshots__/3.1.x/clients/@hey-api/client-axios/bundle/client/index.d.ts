@@ -1,5 +1,6 @@
 import { CreateAxiosDefaults, AxiosStatic, AxiosResponse, AxiosError, AxiosInstance } from 'axios';
 
+type AuthToken = string | undefined;
 interface Auth {
     in?: 'header' | 'query';
     name?: string;
@@ -33,20 +34,30 @@ declare const urlSearchParamsBodySerializer: {
     bodySerializer: <T extends Record<string, any> | Array<Record<string, any>>>(body: T) => URLSearchParams;
 };
 
-type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
-interface Config<ThrowOnError extends boolean = boolean> extends Omit<CreateAxiosDefaults, 'auth' | 'headers'> {
+interface Client$1<RequestFn = never, Config = unknown, MethodFn = never, BuildUrlFn = never> {
+    /**
+     * Returns the final request URL.
+     */
+    buildUrl: BuildUrlFn;
+    connect: MethodFn;
+    delete: MethodFn;
+    get: MethodFn;
+    getConfig: () => Config;
+    head: MethodFn;
+    options: MethodFn;
+    patch: MethodFn;
+    post: MethodFn;
+    put: MethodFn;
+    request: RequestFn;
+    setConfig: (config: Config) => Config;
+    trace: MethodFn;
+}
+interface Config$1 {
     /**
      * Auth token or a function returning auth token. The resolved value will be
      * added to the request payload as defined by its `security` array.
      */
     auth?: ((auth: Auth) => Promise<AuthToken> | AuthToken) | AuthToken;
-    /**
-     * Axios implementation. You can use this option to provide a custom
-     * Axios instance.
-     *
-     * @default axios
-     */
-    axios?: AxiosStatic;
     /**
      * A function for serializing request body parameter. By default,
      * {@link JSON.stringify()} will be used.
@@ -58,13 +69,13 @@ interface Config<ThrowOnError extends boolean = boolean> extends Omit<CreateAxio
      *
      * {@link https://developer.mozilla.org/docs/Web/API/Headers/Headers#init See more}
      */
-    headers?: CreateAxiosDefaults['headers'] | Record<string, string | number | boolean | (string | number | boolean)[] | null | undefined | unknown>;
+    headers?: RequestInit['headers'] | Record<string, string | number | boolean | (string | number | boolean)[] | null | undefined | unknown>;
     /**
      * The request method.
      *
      * {@link https://developer.mozilla.org/docs/Web/API/fetch#method See more}
      */
-    method?: 'connect' | 'delete' | 'get' | 'head' | 'options' | 'patch' | 'post' | 'put' | 'trace';
+    method?: 'CONNECT' | 'DELETE' | 'GET' | 'HEAD' | 'OPTIONS' | 'PATCH' | 'POST' | 'PUT' | 'TRACE';
     /**
      * A function for serializing request query parameters. By default, arrays
      * will be exploded in form style, objects will be exploded in deepObject
@@ -87,6 +98,23 @@ interface Config<ThrowOnError extends boolean = boolean> extends Omit<CreateAxio
      * the transformers and returned to the user.
      */
     responseValidator?: (data: unknown) => Promise<unknown>;
+}
+
+interface Config<ThrowOnError extends boolean = boolean> extends Omit<CreateAxiosDefaults, 'auth' | 'headers' | 'method'>, Config$1 {
+    /**
+     * Axios implementation. You can use this option to provide a custom
+     * Axios instance.
+     *
+     * @default axios
+     */
+    axios?: AxiosStatic;
+    /**
+     * An object containing any HTTP headers that you want to pre-populate your
+     * `Headers` object with.
+     *
+     * {@link https://developer.mozilla.org/docs/Web/API/Headers/Headers#init See more}
+     */
+    headers?: CreateAxiosDefaults['headers'] | Record<string, string | number | boolean | (string | number | boolean)[] | null | undefined | unknown>;
     /**
      * Throw an error instead of returning it in the response?
      *
@@ -94,7 +122,6 @@ interface Config<ThrowOnError extends boolean = boolean> extends Omit<CreateAxio
      */
     throwOnError?: ThrowOnError;
 }
-type AuthToken = string | undefined;
 interface RequestOptions<ThrowOnError extends boolean = boolean, Url extends string = string> extends Config<ThrowOnError> {
     /**
      * Any body that you want to add to your request.
@@ -124,28 +151,24 @@ type RequestResult<TData = unknown, TError = unknown, ThrowOnError extends boole
 })>;
 type MethodFn = <TData = unknown, TError = unknown, ThrowOnError extends boolean = false>(options: Omit<RequestOptions<ThrowOnError>, 'method'>) => RequestResult<TData, TError, ThrowOnError>;
 type RequestFn = <TData = unknown, TError = unknown, ThrowOnError extends boolean = false>(options: Omit<RequestOptions<ThrowOnError>, 'method'> & Pick<Required<RequestOptions<ThrowOnError>>, 'method'>) => RequestResult<TData, TError, ThrowOnError>;
-interface Client {
-    /**
-     * Returns the final request URL. This method works only with experimental parser.
-     */
-    buildUrl: <TData extends {
-        body?: unknown;
-        path?: Record<string, unknown>;
-        query?: Record<string, unknown>;
-        url: string;
-    }>(options: Pick<TData, 'url'> & Omit<Options<TData>, 'axios'>) => string;
-    delete: MethodFn;
-    get: MethodFn;
-    getConfig: () => Config;
-    head: MethodFn;
+type BuildUrlFn = <TData extends {
+    body?: unknown;
+    path?: Record<string, unknown>;
+    query?: Record<string, unknown>;
+    url: string;
+}>(options: Pick<TData, 'url'> & Omit<Options<TData>, 'axios'>) => string;
+type Client = Client$1<RequestFn, Config, MethodFn, BuildUrlFn> & {
     instance: AxiosInstance;
-    options: MethodFn;
-    patch: MethodFn;
-    post: MethodFn;
-    put: MethodFn;
-    request: RequestFn;
-    setConfig: (config: Config) => Config;
-}
+};
+/**
+ * The `createClientConfig()` function will be called on client initialization
+ * and the returned object will become the client's initial configuration.
+ *
+ * You may want to initialize your client this way instead of calling
+ * `setConfig()`. This is useful for example if you're using Next.js
+ * to ensure your client always has the correct values.
+ */
+type CreateClientConfig = (override?: Config) => Config;
 interface DataShape {
     body?: unknown;
     headers?: unknown;
@@ -153,6 +176,7 @@ interface DataShape {
     query?: unknown;
     url: string;
 }
+type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
 type Options<TData extends DataShape = DataShape, ThrowOnError extends boolean = boolean> = OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'path' | 'query' | 'url'> & Omit<TData, 'url'>;
 type OptionsLegacyParser<TData = unknown, ThrowOnError extends boolean = boolean> = TData extends {
     body?: any;
@@ -162,8 +186,8 @@ type OptionsLegacyParser<TData = unknown, ThrowOnError extends boolean = boolean
     headers?: any;
 } ? OmitKeys<RequestOptions<ThrowOnError>, 'headers' | 'url'> & TData & Pick<RequestOptions<ThrowOnError>, 'body'> : OmitKeys<RequestOptions<ThrowOnError>, 'url'> & TData;
 
-declare const createConfig: (override?: Config) => Config;
+declare const createConfig: CreateClientConfig;
 
 declare const createClient: (config: Config) => Client;
 
-export { type Auth, type Client, type Config, type Options, type OptionsLegacyParser, type QuerySerializerOptions, type RequestOptions, type RequestResult, createClient, createConfig, formDataBodySerializer, jsonBodySerializer, urlSearchParamsBodySerializer };
+export { type Auth, type Client, type Config, type CreateClientConfig, type Options, type OptionsLegacyParser, type QuerySerializerOptions, type RequestOptions, type RequestResult, createClient, createConfig, formDataBodySerializer, jsonBodySerializer, urlSearchParamsBodySerializer };

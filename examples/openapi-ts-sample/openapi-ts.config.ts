@@ -1,14 +1,18 @@
 import { defineConfig } from '@hey-api/openapi-ts';
 
 export default defineConfig({
-  client: '@hey-api/client-fetch',
-  input: '../../packages/openapi-ts/test/spec/3.1.x/body-nested-array.yaml',
+  input:
+    'https://raw.githubusercontent.com/swagger-api/swagger-petstore/master/src/main/resources/openapi.yaml',
   output: {
     format: 'prettier',
     lint: 'eslint',
     path: './src/client',
   },
   plugins: [
+    {
+      name: '@hey-api/client-fetch',
+      runtimeConfigPath: './src/hey-api.ts',
+    },
     '@hey-api/schemas',
     '@hey-api/sdk',
     {

@@ -1,14 +1,27 @@
 import type { IR } from '../ir/types';
 import type { OpenApi as LegacyOpenApi } from '../openApi';
 import type { OpenApi } from '../openApi/types';
-import type { Client } from '../types/client';
+import type { Client as LegacyClient } from '../types/client';
 import type { Files } from '../types/utils';
 
 type OmitUnderscoreKeys<T> = {
   [K in keyof T as K extends `_${string}` ? never : K]: T[K];
 };
 
+export type PluginClientNames =
+  | '@hey-api/client-axios'
+  | '@hey-api/client-fetch'
+  | '@hey-api/client-nuxt'
+  | 'legacy/angular'
+  | 'legacy/axios'
+  | 'legacy/fetch'
+  | 'legacy/node'
+  | 'legacy/xhr';
+
+export type PluginValidatorNames = 'zod';
+
 export type PluginNames =
+  | PluginClientNames
   | '@hey-api/schemas'
   | '@hey-api/sdk'
   | '@hey-api/transformers'
@@ -19,15 +32,18 @@ export type PluginNames =
   | '@tanstack/svelte-query'
   | '@tanstack/vue-query'
   | 'fastify'
-  | 'zod';
+  | PluginValidatorNames;
 
 export type AnyPluginName = PluginNames | (string & {});
 
-type PluginTag = 'transformer' | 'validator';
+type PluginTag = 'client' | 'transformer' | 'validator';
 
 export interface PluginContext {
   ensureDependency: (name: PluginNames | true) => void;
-  pluginByTag: (tag: PluginTag) => AnyPluginName | undefined;
+  pluginByTag: (
+    tag: PluginTag,
+    errorMessage?: string,
+  ) => AnyPluginName | undefined;
 }
 
 interface BaseConfig {
@@ -71,6 +87,41 @@ export type DefaultPluginConfigs<T> = {
 };
 
 /**
+ * Public Client API.
+ */
+export namespace Client {
+  export type Config = {
+    /**
+     * Bundle the client module? Set this to true if don't want to declare it
+     * as a separate dependency. When true, the client module will be generated
+     * from the client package and bundled with the rest of the generated output.
+     * This is useful if you're repackaging the output, publishing it to other
+     * users, and you don't want them to install any dependencies.
+     *
+     * @default false
+     */
+    bundle?: boolean;
+    /**
+     * Name of the generated file.
+     *
+     * @default 'client'
+     */
+    output?: string;
+    /**
+     * Relative path to the runtime configuration file. This file must export
+     * a `createClientConfig()` function. The `createClientConfig()` function
+     * will be called on client initialization and the returned object will
+     * become the client's initial configuration.
+     *
+     * You may want to initialize your client this way instead of calling
+     * `setConfig()`. This is useful for example if you're using Next.js
+     * to ensure your client always has the correct values.
+     */
+    runtimeConfigPath?: string;
+  };
+}
+
+/**
  * Public Plugin API.
  */
 export namespace Plugin {
@@ -110,7 +161,7 @@ export namespace Plugin {
    * Plugin implementation for legacy parser.
    */
   export type LegacyHandler<Config extends BaseConfig> = (args: {
-    client: Client;
+    client: LegacyClient;
     files: Files;
     openApi: LegacyOpenApi;
     plugin: Plugin.Instance<Config>;

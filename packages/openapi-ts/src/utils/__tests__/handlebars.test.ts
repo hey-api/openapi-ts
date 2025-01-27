@@ -10,9 +10,6 @@ import {
 describe('registerHandlebarHelpers', () => {
   it('should register the helpers', () => {
     setConfig({
-      client: {
-        name: 'legacy/fetch',
-      },
       configFile: '',
       dryRun: false,
       experimentalParser: false,
@@ -28,7 +25,12 @@ describe('registerHandlebarHelpers', () => {
         format: 'prettier',
         path: '',
       },
-      pluginOrder: ['@hey-api/typescript', '@hey-api/schemas', '@hey-api/sdk'],
+      pluginOrder: [
+        '@hey-api/typescript',
+        '@hey-api/schemas',
+        'legacy/fetch',
+        '@hey-api/sdk',
+      ],
       plugins: {
         '@hey-api/schemas': {
           _handler: () => {},
@@ -45,6 +47,12 @@ describe('registerHandlebarHelpers', () => {
           _handlerLegacy: () => {},
           enums: 'javascript',
           name: '@hey-api/typescript',
+        },
+        'legacy/fetch': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          _tags: ['client'],
+          name: 'legacy/fetch',
         },
       },
       useOptions: false,
@@ -67,9 +75,6 @@ describe('registerHandlebarHelpers', () => {
 describe('registerHandlebarTemplates', () => {
   it('should return correct templates', () => {
     setConfig({
-      client: {
-        name: 'legacy/fetch',
-      },
       configFile: '',
       dryRun: false,
       experimentalParser: false,
@@ -85,7 +90,12 @@ describe('registerHandlebarTemplates', () => {
         format: 'prettier',
         path: '',
       },
-      pluginOrder: ['@hey-api/typescript', '@hey-api/schemas', '@hey-api/sdk'],
+      pluginOrder: [
+        '@hey-api/typescript',
+        '@hey-api/schemas',
+        'legacy/fetch',
+        '@hey-api/sdk',
+      ],
       plugins: {
         '@hey-api/schemas': {
           _handler: () => {},
@@ -102,6 +112,12 @@ describe('registerHandlebarTemplates', () => {
           _handlerLegacy: () => {},
           enums: 'javascript',
           name: '@hey-api/typescript',
+        },
+        'legacy/fetch': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          _tags: ['client'],
+          name: 'legacy/fetch',
         },
       },
       useOptions: false,

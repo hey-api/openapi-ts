@@ -39,7 +39,7 @@ jobs:
 
       - name: Build examples
         if: matrix.node-version == '22.11.0' && matrix.os == 'ubuntu-latest'
-        run: pnpm --filter './examples/**' run build
+        run: pnpm --filter './examples/**' --filter '!./examples/openapi-ts-sample' run build
 
       - name: Run linter
         run: pnpm lint

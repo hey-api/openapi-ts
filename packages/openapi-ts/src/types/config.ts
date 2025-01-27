@@ -5,19 +5,6 @@ import type {
   ExtractWithDiscriminator,
 } from './utils';
 
-export const CLIENTS = [
-  '@hey-api/client-axios',
-  '@hey-api/client-fetch',
-  '@hey-api/client-nuxt',
-  'legacy/angular',
-  'legacy/axios',
-  'legacy/fetch',
-  'legacy/node',
-  'legacy/xhr',
-] as const;
-
-export type Client = (typeof CLIENTS)[number];
-
 export type Formatters = 'biome' | 'prettier';
 
 export type Linters = 'biome' | 'eslint' | 'oxlint';
@@ -30,29 +17,6 @@ export type StringCase =
   | 'SCREAMING_SNAKE_CASE';
 
 export interface UserConfig {
-  /**
-   * HTTP client to generate
-   */
-  client?:
-    | Client
-    | false
-    | {
-        /**
-         * Bundle the client module? Set this to true if you're using a client
-         * package and don't want to declare it as a separate dependency.
-         * When true, the client module will be generated from the client
-         * package and bundled with the rest of the generated output. This is
-         * useful if you're repackaging the output, publishing it to other users,
-         * and you don't want them to install any dependencies.
-         *
-         * @default false
-         */
-        bundle?: boolean;
-        /**
-         * HTTP client to generate
-         */
-        name: Client;
-      };
   /**
    * Path to the config file. Set this value if you don't use the default
    * config file name, or it's not located in the project root.
@@ -277,7 +241,6 @@ export interface UserConfig {
 export type Config = Omit<
   Required<UserConfig>,
   | 'base'
-  | 'client'
   | 'input'
   | 'logs'
   | 'name'
@@ -287,7 +250,6 @@ export type Config = Omit<
   | 'watch'
 > &
   Pick<UserConfig, 'base' | 'name' | 'request'> & {
-    client: Extract<Required<UserConfig>['client'], object>;
     input: ExtractWithDiscriminator<UserConfig['input'], { path: unknown }>;
     logs: Extract<Required<UserConfig['logs']>, object>;
     output: Extract<UserConfig['output'], object>;
