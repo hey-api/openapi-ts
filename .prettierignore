@@ -2,6 +2,7 @@
 **/node_modules
 **/templates
 **/dist
+**/.next
 **/.nuxt
 **/.output
 **/.svelte-kit

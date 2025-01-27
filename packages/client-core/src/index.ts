@@ -24,3 +24,4 @@ export {
   serializeObjectParam,
   serializePrimitiveParam,
 } from './pathSerializer';
+export type { Client, Config } from './types';

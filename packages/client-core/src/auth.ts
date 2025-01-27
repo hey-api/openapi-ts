@@ -1,4 +1,4 @@
-type AuthToken = string | undefined;
+export type AuthToken = string | undefined;
 
 export interface Auth {
   in?: 'header' | 'query';

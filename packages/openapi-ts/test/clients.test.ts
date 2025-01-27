@@ -5,13 +5,14 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import { createClient } from '../';
-import type { Client, UserConfig } from '../src/types/config';
+import type { PluginClientNames } from '../src/plugins/types';
+import type { UserConfig } from '../src/types/config';
 import { getFilePaths } from './utils';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const clients: ReadonlyArray<Client> = [
+const clients: ReadonlyArray<PluginClientNames> = [
   '@hey-api/client-axios',
   '@hey-api/client-fetch',
   '@hey-api/client-nuxt',
@@ -33,7 +34,6 @@ for (const client of clients) {
       userConfig: Omit<UserConfig, 'input'> &
         Pick<Partial<UserConfig>, 'input'>,
     ): UserConfig => ({
-      client,
       ...userConfig,
       input: path.join(__dirname, 'spec', '3.1.x', 'full.json'),
       output: path.join(
@@ -46,16 +46,19 @@ for (const client of clients) {
       {
         config: createConfig({
           output: 'default',
+          plugins: [client],
         }),
         description: 'default output',
       },
       {
         config: createConfig({
-          client: {
-            bundle: true,
-            name: client,
-          },
           output: 'bundle',
+          plugins: [
+            {
+              bundle: true,
+              name: client,
+            },
+          ],
         }),
         description: 'default output with bundled client',
       },

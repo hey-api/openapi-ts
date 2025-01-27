@@ -27,9 +27,6 @@ describe('generateLegacyCore', () => {
     };
 
     setConfig({
-      client: {
-        name: 'legacy/fetch',
-      },
       configFile: '',
       dryRun: false,
       experimentalParser: false,
@@ -45,7 +42,12 @@ describe('generateLegacyCore', () => {
       output: {
         path: '',
       },
-      pluginOrder: ['@hey-api/typescript', '@hey-api/schemas', '@hey-api/sdk'],
+      pluginOrder: [
+        '@hey-api/typescript',
+        '@hey-api/schemas',
+        'legacy/fetch',
+        '@hey-api/sdk',
+      ],
       plugins: {
         '@hey-api/schemas': {
           _handler: () => {},
@@ -62,6 +64,12 @@ describe('generateLegacyCore', () => {
           _handlerLegacy: () => {},
           enums: 'javascript',
           name: '@hey-api/typescript',
+        },
+        'legacy/fetch': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          _tags: ['client'],
+          name: 'legacy/fetch',
         },
       },
       useOptions: true,
@@ -110,9 +118,6 @@ describe('generateLegacyCore', () => {
     };
 
     const config = setConfig({
-      client: {
-        name: 'legacy/fetch',
-      },
       configFile: '',
       dryRun: false,
       experimentalParser: false,
@@ -128,7 +133,12 @@ describe('generateLegacyCore', () => {
       output: {
         path: '',
       },
-      pluginOrder: ['@hey-api/typescript', '@hey-api/schemas', '@hey-api/sdk'],
+      pluginOrder: [
+        '@hey-api/typescript',
+        '@hey-api/schemas',
+        'legacy/fetch',
+        '@hey-api/sdk',
+      ],
       plugins: {
         '@hey-api/schemas': {
           _handler: () => {},
@@ -145,6 +155,12 @@ describe('generateLegacyCore', () => {
           _handlerLegacy: () => {},
           enums: 'javascript',
           name: '@hey-api/typescript',
+        },
+        'legacy/fetch': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          _tags: ['client'],
+          name: 'legacy/fetch',
         },
       },
       useOptions: true,
@@ -176,9 +192,6 @@ describe('generateLegacyCore', () => {
 
     const config = setConfig({
       base: 'foo',
-      client: {
-        name: 'legacy/fetch',
-      },
       configFile: '',
       dryRun: false,
       experimentalParser: false,
@@ -194,7 +207,12 @@ describe('generateLegacyCore', () => {
       output: {
         path: '',
       },
-      pluginOrder: ['@hey-api/typescript', '@hey-api/schemas', '@hey-api/sdk'],
+      pluginOrder: [
+        '@hey-api/typescript',
+        '@hey-api/schemas',
+        'legacy/fetch',
+        '@hey-api/sdk',
+      ],
       plugins: {
         '@hey-api/schemas': {
           _handler: () => {},
@@ -211,6 +229,12 @@ describe('generateLegacyCore', () => {
           _handlerLegacy: () => {},
           enums: 'javascript',
           name: '@hey-api/typescript',
+        },
+        'legacy/fetch': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          _tags: ['client'],
+          name: 'legacy/fetch',
         },
       },
       useOptions: true,

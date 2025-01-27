@@ -10,7 +10,12 @@ import {
   serializePrimitiveParam,
 } from '@hey-api/client-core';
 
-import type { Client, Config, RequestOptions } from './types';
+import type {
+  Client,
+  Config,
+  CreateClientConfig,
+  RequestOptions,
+} from './types';
 
 interface PathSerializer {
   path: Record<string, unknown>;
@@ -392,7 +397,7 @@ const defaultHeaders = {
   'Content-Type': 'application/json',
 };
 
-export const createConfig = (override: Config = {}): Config => ({
+export const createConfig: CreateClientConfig = (override = {}) => ({
   ...jsonBodySerializer,
   baseUrl: '',
   headers: defaultHeaders,

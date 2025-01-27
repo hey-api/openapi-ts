@@ -15,6 +15,7 @@ import { transformServiceName } from '../../../utils/transform';
 import { operationIrRef } from '../../shared/utils/ref';
 import type { Plugin } from '../../types';
 import { zodId } from '../../zod/plugin';
+import { clientId, getClientPlugin } from '../client-core/utils';
 import {
   operationTransformerIrRef,
   transformersId,
@@ -52,7 +53,8 @@ export const operationOptionsType = ({
 
   const optionsName = clientApi.Options.name;
 
-  if (context.config.client.name === '@hey-api/client-nuxt') {
+  const client = getClientPlugin(context.config);
+  if (client.name === '@hey-api/client-nuxt') {
     return `${optionsName}<${nuxtTypeComposable}, ${identifierData.name || 'unknown'}>`;
   }
 
@@ -280,7 +282,8 @@ const operationStatements = ({
     }
   }
 
-  if (context.config.client.name === '@hey-api/client-axios') {
+  const client = getClientPlugin(context.config);
+  if (client.name === '@hey-api/client-axios') {
     // try to infer `responseType` option for Axios. We don't need this in
     // Fetch API client because it automatically detects the correct response
     // during runtime.
@@ -440,9 +443,18 @@ const operationStatements = ({
     });
   }
 
-  const isNuxtClient = context.config.client.name === '@hey-api/client-nuxt';
+  const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const responseType = identifierResponse.name || 'unknown';
   const errorType = identifierError.name || 'unknown';
+
+  const heyApiClient = file.import({
+    alias: '_heyApiClient',
+    module: file.relativePathToFile({
+      context,
+      id: clientId,
+    }),
+    name: 'client',
+  });
 
   return [
     compiler.returnFunctionCall({
@@ -452,7 +464,18 @@ const operationStatements = ({
           obj: requestOptions,
         }),
       ],
-      name: `(options?.client ?? client).${operation.method}`,
+      name: compiler.propertyAccessExpression({
+        expression: compiler.binaryExpression({
+          left: compiler.propertyAccessExpression({
+            expression: compiler.identifier({ text: 'options' }),
+            isOptional: true,
+            name: 'client',
+          }),
+          operator: '??',
+          right: compiler.identifier({ text: heyApiClient.name }),
+        }),
+        name: compiler.identifier({ text: operation.method }),
+      }),
       types: isNuxtClient
         ? [nuxtTypeComposable, responseType, errorType]
         : [responseType, errorType, 'ThrowOnError'],
@@ -467,7 +490,8 @@ const generateClassSdk = ({
   context: IR.Context;
   plugin: Plugin.Instance<Config>;
 }) => {
-  const isNuxtClient = context.config.client.name === '@hey-api/client-nuxt';
+  const client = getClientPlugin(context.config);
+  const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const file = context.file({ id: sdkId })!;
   const sdks = new Map<string, Array<ts.MethodDeclaration>>();
 
@@ -514,7 +538,9 @@ const generateClassSdk = ({
           ]
         : [
             {
-              default: plugin.throwOnError,
+              default:
+                ('throwOnError' in client ? client.throwOnError : false) ??
+                false,
               extends: 'boolean',
               name: 'ThrowOnError',
             },
@@ -556,7 +582,8 @@ const generateFlatSdk = ({
   context: IR.Context;
   plugin: Plugin.Instance<Config>;
 }) => {
-  const isNuxtClient = context.config.client.name === '@hey-api/client-nuxt';
+  const client = getClientPlugin(context.config);
+  const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const file = context.file({ id: sdkId })!;
 
   context.subscribe('operation', ({ operation }) => {
@@ -596,7 +623,9 @@ const generateFlatSdk = ({
             ]
           : [
               {
-                default: plugin.throwOnError,
+                default:
+                  ('throwOnError' in client ? client.throwOnError : false) ??
+                  false,
                 extends: 'boolean',
                 name: 'ThrowOnError',
               },
@@ -614,38 +643,24 @@ const generateFlatSdk = ({
 };
 
 export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
-  if (!context.config.client.name) {
-    throw new Error(
-      '🚫 client needs to be set to generate SDKs - which HTTP client do you want to use?',
-    );
-  }
-
   const file = context.createFile({
     exportFromIndex: plugin.exportFromIndex,
     id: sdkId,
     path: plugin.output,
   });
-  const sdkOutput = file.nameWithoutExtension();
 
   // import required packages and core files
   const clientModule = clientModulePath({
     config: context.config,
-    sourceOutput: sdkOutput,
-  });
-  file.import({
-    module: clientModule,
-    name: 'createClient',
-  });
-  file.import({
-    module: clientModule,
-    name: 'createConfig',
+    sourceOutput: file.nameWithoutExtension(),
   });
   file.import({
     ...clientApi.Options,
     module: clientModule,
   });
 
-  const isNuxtClient = context.config.client.name === '@hey-api/client-nuxt';
+  const client = getClientPlugin(context.config);
+  const isNuxtClient = client.name === '@hey-api/client-nuxt';
   if (isNuxtClient) {
     file.import({
       asType: true,
@@ -653,33 +668,6 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
       name: 'Composable',
     });
   }
-
-  // define client first
-  const statement = compiler.constVariable({
-    exportConst: true,
-    expression: compiler.callExpression({
-      functionName: 'createClient',
-      parameters: [
-        compiler.callExpression({
-          functionName: 'createConfig',
-          parameters: [
-            plugin.throwOnError
-              ? compiler.objectExpression({
-                  obj: [
-                    {
-                      key: 'throwOnError',
-                      value: plugin.throwOnError,
-                    },
-                  ],
-                })
-              : undefined,
-          ],
-        }),
-      ],
-    }),
-    name: 'client',
-  });
-  file.add(statement);
 
   if (plugin.asClass) {
     generateClassSdk({ context, plugin });

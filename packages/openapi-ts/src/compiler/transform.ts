@@ -67,7 +67,7 @@ export const createBinaryExpression = ({
   right,
 }: {
   left: ts.Expression;
-  operator?: '=' | '===' | 'in';
+  operator?: '=' | '===' | 'in' | '??';
   right: ts.Expression | string;
 }) => {
   const expression = ts.factory.createBinaryExpression(
@@ -77,7 +77,9 @@ export const createBinaryExpression = ({
       ? ts.SyntaxKind.EqualsToken
       : operator === '==='
         ? ts.SyntaxKind.EqualsEqualsEqualsToken
-        : ts.SyntaxKind.InKeyword,
+        : operator === '??'
+          ? ts.SyntaxKind.QuestionQuestionToken
+          : ts.SyntaxKind.InKeyword,
     typeof right === 'string' ? createIdentifier({ text: right }) : right,
   );
   return expression;
@@ -104,14 +106,13 @@ export const createDateTransformMutation = ({
   const thenStatement = createBlock({
     statements: [
       expressionToStatement({
-        expression: ts.factory.createBinaryExpression(
-          accessExpression,
-          ts.SyntaxKind.EqualsToken,
-          createNewExpression({
+        expression: createBinaryExpression({
+          left: accessExpression,
+          right: createNewExpression({
             argumentsArray: [accessExpression],
             expression: createIdentifier({ text: 'Date' }),
           }),
-        ),
+        }),
       }),
     ],
   });
@@ -227,10 +228,9 @@ export const createArrayMapTransform = ({
     thenStatement: createBlock({
       statements: [
         expressionToStatement({
-          expression: ts.factory.createBinaryExpression(
-            accessExpression,
-            ts.factory.createToken(ts.SyntaxKind.EqualsToken),
-            ts.factory.createCallChain(
+          expression: createBinaryExpression({
+            left: accessExpression,
+            right: ts.factory.createCallChain(
               createPropertyAccessExpression({
                 expression: accessExpression,
                 name: 'map',
@@ -248,7 +248,7 @@ export const createArrayMapTransform = ({
                 }),
               ],
             ),
-          ),
+          }),
         }),
       ],
     }),

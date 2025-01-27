@@ -20,6 +20,7 @@ import type { Config } from '../../../types/config';
 import type { Files } from '../../../types/utils';
 import { getConfig, isLegacyClient } from '../../../utils/config';
 import { transformServiceName } from '../../../utils/transform';
+import { getClientPlugin } from '../../@hey-api/client-core/utils';
 import {
   generateImport,
   operationDataTypeName,
@@ -102,7 +103,8 @@ const TOptionsType = 'TOptions';
 
 const getClientBaseUrlKey = () => {
   const config = getConfig();
-  return config.client.name === '@hey-api/client-axios' ? 'baseURL' : 'baseUrl';
+  const clientPlugin = getClientPlugin(config);
+  return clientPlugin.name === '@hey-api/client-axios' ? 'baseURL' : 'baseUrl';
 };
 
 const createInfiniteParamsFunction = ({
@@ -329,7 +331,7 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
               {
                 key: getClientBaseUrlKey(),
                 value: compiler.identifier({
-                  text: `(options?.client ?? client).getConfig().${getClientBaseUrlKey()}`,
+                  text: `(options?.client ?? _heyApiClient).getConfig().${getClientBaseUrlKey()}`,
                 }),
               },
             ],
@@ -596,7 +598,8 @@ const createTypeError = ({
     });
   }
 
-  if (config.client.name === '@hey-api/client-axios') {
+  const clientPlugin = getClientPlugin(config);
+  if (clientPlugin.name === '@hey-api/client-axios') {
     const axiosError = file.import({
       asType: true,
       module: 'axios',
@@ -1294,21 +1297,23 @@ export const handlerLegacy: Plugin.LegacyHandler<
         file.add(statement);
       }
 
-      const sdkModulePath = relativeModulePath({
-        moduleOutput: files.sdk!.nameWithoutExtension(),
-        sourceOutput: plugin.output,
-      });
-
       if (hasQueries || hasInfiniteQueries) {
         file.import({
-          module: sdkModulePath,
+          alias: '_heyApiClient',
+          module: relativeModulePath({
+            moduleOutput: files.client!.nameWithoutExtension(),
+            sourceOutput: plugin.output,
+          }),
           name: 'client',
         });
       }
 
       if (hasUsedQueryFn) {
         file.import({
-          module: sdkModulePath,
+          module: relativeModulePath({
+            moduleOutput: files.sdk!.nameWithoutExtension(),
+            sourceOutput: plugin.output,
+          }),
           name: queryFn.split('.')[0]!,
         });
       }

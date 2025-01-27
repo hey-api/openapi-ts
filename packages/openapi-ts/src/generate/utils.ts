@@ -36,6 +36,6 @@ export const relativeModulePath = ({
 }): string => {
   const outputParts = sourceOutput.split('/');
   const relativePath =
-    new Array(outputParts.length).fill('').join('../') || './';
+    Array.from({ length: outputParts.length }).fill('').join('../') || './';
   return `${relativePath}${moduleOutput}`;
 };

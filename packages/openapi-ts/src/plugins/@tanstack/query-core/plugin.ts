@@ -1,6 +1,7 @@
 import { clientApi, clientModulePath } from '../../../generate/client';
 import { getServiceName } from '../../../utils/postprocess';
 import { transformServiceName } from '../../../utils/transform';
+import { clientId } from '../../@hey-api/client-core/utils';
 import { serviceFunctionIdentifier } from '../../@hey-api/sdk/plugin-legacy';
 import { createInfiniteQueryOptions } from './infiniteQueryOptions';
 import { createMutationOptions } from './mutationOptions';
@@ -88,7 +89,8 @@ export const handler: PluginHandler = ({ context, plugin }) => {
   context.subscribe('after', () => {
     if (state.hasQueries || state.hasInfiniteQueries) {
       file.import({
-        module: file.relativePathToFile({ context, id: 'sdk' }),
+        alias: '_heyApiClient',
+        module: file.relativePathToFile({ context, id: clientId }),
         name: 'client',
       });
     }

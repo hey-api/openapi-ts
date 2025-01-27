@@ -10,7 +10,12 @@ import {
   serializePrimitiveParam,
 } from '@hey-api/client-core';
 
-import type { Client, Config, RequestOptions } from './types';
+import type {
+  Client,
+  Config,
+  CreateClientConfig,
+  RequestOptions,
+} from './types';
 
 interface PathSerializer {
   path: Record<string, unknown>;
@@ -280,7 +285,7 @@ export const mergeHeaders = (
   return mergedHeaders;
 };
 
-export const createConfig = (override: Config = {}): Config => ({
+export const createConfig: CreateClientConfig = (override = {}) => ({
   baseURL: '',
   ...override,
 });
