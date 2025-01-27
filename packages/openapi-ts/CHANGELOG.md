@@ -1,5 +1,62 @@
 # @hey-api/openapi-ts
 
+## 0.63.0
+
+### Minor Changes
+
+- [#1626](https://github.com/hey-api/openapi-ts/pull/1626) [`8eba19d`](https://github.com/hey-api/openapi-ts/commit/8eba19d4092fc0903572ab9fdadf0b4c26928ba2) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: move clients to plugins
+
+  ### Client plugins
+
+  Clients are now plugins generating their own `client.gen.ts` file. There's no migration needed if you're using CLI. If you're using the configuration file, move `client` options to `plugins`.
+
+  ```js
+  export default {
+    client: '@hey-api/client-fetch', // [!code --]
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    plugins: ['@hey-api/client-fetch'], // [!code ++]
+  };
+  ```
+
+### Patch Changes
+
+- [#1626](https://github.com/hey-api/openapi-ts/pull/1626) [`8eba19d`](https://github.com/hey-api/openapi-ts/commit/8eba19d4092fc0903572ab9fdadf0b4c26928ba2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: move sdk.throwOnError option to client.throwOnError
+
+  ### Moved `sdk.throwOnError` option
+
+  This SDK configuration option has been moved to the client plugins where applicable. Not every client can be configured to throw on error, so it didn't make sense to expose the option when it didn't have any effect.
+
+  ```js
+  export default {
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    plugins: [
+      {
+        name: '@hey-api/client-fetch',
+        throwOnError: true, // [!code ++]
+      },
+      {
+        name: '@hey-api/sdk',
+        throwOnError: true, // [!code --]
+      },
+    ],
+  };
+  ```
+
+- [#1626](https://github.com/hey-api/openapi-ts/pull/1626) [`8eba19d`](https://github.com/hey-api/openapi-ts/commit/8eba19d4092fc0903572ab9fdadf0b4c26928ba2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: sdks import client from client.gen.ts instead of defining it inside the file
+
+  ### Added `client.gen.ts` file
+
+  The internal `client` instance previously located in `sdk.gen.ts` is now defined in `client.gen.ts`. If you're importing it in your code, update the import module.
+
+  ```js
+  import { client } from 'client/sdk.gen'; // [!code --]
+  import { client } from 'client/client.gen'; // [!code ++]
+  ```
+
+- [#1626](https://github.com/hey-api/openapi-ts/pull/1626) [`8eba19d`](https://github.com/hey-api/openapi-ts/commit/8eba19d4092fc0903572ab9fdadf0b4c26928ba2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: throw if inferred plugin not found
+
 ## 0.62.3
 
 ### Patch Changes

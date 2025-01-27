@@ -1,5 +1,11 @@
 # @hey-api/client-fetch
 
+## 0.7.2
+
+### Patch Changes
+
+- [#1626](https://github.com/hey-api/openapi-ts/pull/1626) [`8eba19d`](https://github.com/hey-api/openapi-ts/commit/8eba19d4092fc0903572ab9fdadf0b4c26928ba2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export CreateClientConfig type
+
 ## 0.7.1
 
 ### Patch Changes
