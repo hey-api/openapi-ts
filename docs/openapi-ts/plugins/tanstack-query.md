@@ -36,11 +36,11 @@ In your [configuration](/openapi-ts/get-started), add TanStack Query to your plu
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
+    '@hey-api/client-fetch',
     '@tanstack/react-query', // [!code ++]
   ],
 };
@@ -50,11 +50,11 @@ export default {
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
+    '@hey-api/client-fetch',
     '@tanstack/vue-query', // [!code ++]
   ],
 };
@@ -64,11 +64,11 @@ export default {
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
+    '@hey-api/client-fetch',
     '@tanstack/angular-query-experimental', // [!code ++]
   ],
 };
@@ -78,11 +78,11 @@ export default {
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
+    '@hey-api/client-fetch',
     '@tanstack/svelte-query', // [!code ++]
   ],
 };
@@ -92,11 +92,11 @@ export default {
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
+    '@hey-api/client-fetch',
     '@tanstack/solid-query', // [!code ++]
   ],
 };

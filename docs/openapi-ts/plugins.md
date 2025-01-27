@@ -11,10 +11,10 @@ Every generated file in your output is created by a plugin. You already learned 
 
 Apart from being responsible for the default output, Hey API plugins are the foundation for other plugins. Instead of creating their own primitives, other plugins can reuse the artifacts from Hey API plugins. This results in a smaller output size and a better user experience.
 
-- `@hey-api/schemas` - export OpenAPI definitions as JavaScript objects
-- `@hey-api/sdk` - robust and polished SDKs
-- `@hey-api/transformers` - response data transformer functions
-- `@hey-api/typescript` - TypeScript interfaces and enums
+- [`@hey-api/schemas`](/openapi-ts/output/json-schema) - export OpenAPI definitions as JavaScript objects
+- [`@hey-api/sdk`](/openapi-ts/output/sdk) - robust and polished SDKs
+- [`@hey-api/transformers`](/openapi-ts/transformers) - response data transformer functions
+- [`@hey-api/typescript`](/openapi-ts/output/typescript) - TypeScript interfaces and enums
 
 ## Third Party
 

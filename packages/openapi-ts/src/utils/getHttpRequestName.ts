@@ -1,11 +1,11 @@
-import type { Config } from '../types/config';
+import type { PluginClientNames } from '../plugins/types';
 
 /**
  * Generate the HttpRequest filename based on the selected client
  * @param client HTTP client to generate
  */
-export const getHttpRequestName = (client: Config['client']): string => {
-  switch (client.name) {
+export const getHttpRequestName = (clientName: PluginClientNames): string => {
+  switch (clientName) {
     case 'legacy/angular':
       return 'AngularHttpRequest';
     case 'legacy/axios':
