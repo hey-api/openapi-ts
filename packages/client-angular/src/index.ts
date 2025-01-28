@@ -1,20 +1,15 @@
-import type { HttpRequest } from '@angular/common/http';
-import { HttpHeaders, HttpResponse } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
-
-import type { Client, Config } from './types';
+import type { Client, Config, RequestOptions } from './types';
 import {
   buildUrl,
   createConfig,
+  createInterceptors,
   getParseAs,
   mergeConfigs,
   mergeHeaders,
+  setAuthParams,
 } from './utils';
 
-type ReqInit = Omit<
-  Partial<HttpRequest<unknown>>,
-  'body' | 'headers' | 'observe'
-> & {
+type ReqInit = Omit<RequestInit, 'body' | 'headers'> & {
   body?: any;
   headers: ReturnType<typeof mergeHeaders>;
 };
@@ -29,22 +24,32 @@ export const createClient = (config: Config = {}): Client => {
     return getConfig();
   };
 
+  const interceptors = createInterceptors<
+    Request,
+    Response,
+    unknown,
+    RequestOptions
+  >();
+
   // @ts-expect-error
   const request: Client['request'] = async (options) => {
-    const { method, ...opts } = {
+    const opts = {
       ..._config,
       ...options,
-      // fetch: options.fetch ?? _config.fetch ?? globalThis.fetch,
+      fetch: options.fetch ?? _config.fetch ?? globalThis.fetch,
       headers: mergeHeaders(_config.headers, options.headers),
     };
 
-    // TODO: TBD
-    // if (opts.security) {
-    //   await setAuthParams({
-    //     ...opts,
-    //     security: opts.security,
-    //   });
-    // }
+    if (opts.security) {
+      await setAuthParams({
+        ...opts,
+        security: opts.security,
+      });
+    }
+
+    if (opts.body && opts.bodySerializer) {
+      opts.body = opts.bodySerializer(opts.body);
+    }
 
     // remove Content-Type header if body is empty to avoid sending invalid requests
     if (!opts.body) {
@@ -57,39 +62,20 @@ export const createClient = (config: Config = {}): Client => {
       ...opts,
     };
 
-    // TODO: TBD - angular has native interceptors
-    // for (const fn of interceptors.request._fns) {
-    //   request = await fn(request, opts);
-    // }
+    let request = new Request(url, requestInit);
 
-    if (!opts.httpClient) {
-      throw new Error('You must provide a HttpClient somewhere.');
+    for (const fn of interceptors.request._fns) {
+      request = await fn(request, opts);
     }
 
-    console.debug(method, url, { requestInit });
-    // TODO: angular hinted multiple times for a promise-based client; let's hope for it
-    const response = await firstValueFrom(
-      opts.httpClient.request(method, url, {
-        // TODO: must be here for the gloriously overtyped constructor calls
-        observe: 'response',
-        responseType: 'blob',
-        ...requestInit,
-        headers: new HttpHeaders(opts.headers),
-      }),
-    );
+    // fetch must be assigned here, otherwise it would throw the error:
+    // TypeError: Failed to execute 'fetch' on 'Window': Illegal invocation
+    const _fetch = opts.fetch!;
+    let response = await _fetch(request);
 
-    if (!isHttpBlobResponse(response)) {
-      throw new Error(
-        `First value of the response stream is not a 'HttpResponse', make sure you configure the HttpClient using 'withFetch()'`,
-      );
+    for (const fn of interceptors.response._fns) {
+      response = await fn(response, request, opts);
     }
-
-    // TODO: Everything below is kind of useless - but maybe it helps compatabillity?
-
-    // TODO: TBD - angular has native interceptors
-    // for (const fn of interceptors.response._fns) {
-    //   response = await fn(response, request, opts);
-    // }
 
     const result = {
       request,
@@ -119,25 +105,14 @@ export const createClient = (config: Config = {}): Client => {
         };
       }
 
-      let data: unknown = response.body;
-
-      if (data) {
-        if (parseAs === 'formData') {
-          throw new Error(
-            "Using parseAs 'formData' is incompatible with the angular client.",
-          );
+      let data = await response[parseAs]();
+      if (parseAs === 'json') {
+        if (opts.responseValidator) {
+          await opts.responseValidator(data);
         }
 
-        if (parseAs === 'json') {
-          data = JSON.parse(await response.body!.text());
-
-          if (opts.responseValidator) {
-            await opts.responseValidator(data);
-          }
-
-          if (opts.responseTransformer) {
-            data = await opts.responseTransformer(data);
-          }
+        if (opts.responseTransformer) {
+          data = await opts.responseTransformer(data);
         }
       }
 
@@ -147,7 +122,7 @@ export const createClient = (config: Config = {}): Client => {
       };
     }
 
-    let error = (await response.body?.text()) ?? '';
+    let error = await response.text();
 
     try {
       error = JSON.parse(error);
@@ -156,6 +131,10 @@ export const createClient = (config: Config = {}): Client => {
     }
 
     let finalError = error;
+
+    for (const fn of interceptors.error._fns) {
+      finalError = (await fn(error, response, request, opts)) as string;
+    }
 
     finalError = finalError || ({} as string);
 
@@ -176,6 +155,7 @@ export const createClient = (config: Config = {}): Client => {
     get: (options) => request({ ...options, method: 'GET' }),
     getConfig,
     head: (options) => request({ ...options, method: 'HEAD' }),
+    interceptors,
     options: (options) => request({ ...options, method: 'OPTIONS' }),
     patch: (options) => request({ ...options, method: 'PATCH' }),
     post: (options) => request({ ...options, method: 'POST' }),
@@ -186,16 +166,10 @@ export const createClient = (config: Config = {}): Client => {
   };
 };
 
-function isHttpBlobResponse(response: any): response is HttpResponse<Blob> {
-  return (
-    response instanceof HttpResponse &&
-    (response.body === null || response.body instanceof Blob)
-  );
-}
-
 export type {
   Client,
   Config,
+  CreateClientConfig,
   Options,
   OptionsLegacyParser,
   RequestOptions,

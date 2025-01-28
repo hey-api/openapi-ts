@@ -1,4 +1,8 @@
 import {
+  type Config as HeyApiClientAngular,
+  defaultConfig as heyApiClientAngular,
+} from './@hey-api/client-angular';
+import {
   type Config as HeyApiClientAxios,
   defaultConfig as heyApiClientAxios,
 } from './@hey-api/client-axios';
@@ -76,6 +80,7 @@ import { type Config as Zod, defaultConfig as zod } from './zod';
 export type UserPlugins =
   | Plugin.UserConfig<HeyApiClientAxios>
   | Plugin.UserConfig<HeyApiClientFetch>
+  | Plugin.UserConfig<HeyApiClientAngular>
   | Plugin.UserConfig<HeyApiClientNuxt>
   | Plugin.UserConfig<HeyApiLegacyAngular>
   | Plugin.UserConfig<HeyApiLegacyAxios>
@@ -100,6 +105,7 @@ export type UserPlugins =
 export type ClientPlugins =
   | Plugin.Config<HeyApiClientAxios>
   | Plugin.Config<HeyApiClientFetch>
+  | Plugin.Config<HeyApiClientAngular>
   | Plugin.Config<HeyApiClientNuxt>
   | Plugin.Config<HeyApiLegacyAngular>
   | Plugin.Config<HeyApiLegacyAxios>
@@ -119,6 +125,7 @@ export type ClientPlugins =
   | Plugin.Config<Zod>;
 
 export const defaultPluginConfigs: DefaultPluginConfigs<ClientPlugins> = {
+  '@hey-api/client-angular': heyApiClientAngular,
   '@hey-api/client-axios': heyApiClientAxios,
   '@hey-api/client-fetch': heyApiClientFetch,
   '@hey-api/client-nuxt': heyApiClientNuxt,
