@@ -3,6 +3,17 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 
+import { client } from '@/src/client/client.gen';
+
+client.interceptors.request.use((options) => {
+  console.log(options);
+});
+
+client.interceptors.response.use((response, options) => {
+  console.log(response, options);
+  return response;
+});
+
 const geistSans = Geist({
   subsets: ['latin'],
   variable: '--font-geist-sans',

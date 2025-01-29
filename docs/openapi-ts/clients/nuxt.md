@@ -11,6 +11,10 @@ Nuxt client is currently in beta. The interface might change before it becomes s
 
 [Nuxt](https://nuxt.com/) is an open source framework that makes web development intuitive and powerful.
 
+<!-- <button class="buttonLink" @click="(event) => embedProject('hey-api-client-fetch-example')(event)">
+Live demo
+</button> -->
+
 ## Installation
 
 Start by adding `@hey-api/client-nuxt` to your dependencies.

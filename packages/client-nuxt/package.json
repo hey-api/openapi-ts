@@ -19,14 +19,13 @@
   "funding": "https://github.com/sponsors/hey-api",
   "keywords": [
     "client",
+    "codegen",
     "fetch",
     "http",
     "javascript",
     "nuxt",
     "openapi",
-    "react",
     "rest",
-    "svelte",
     "swagger",
     "typescript",
     "vue"

@@ -186,8 +186,8 @@ type OptionsLegacyParser<TData = unknown, ThrowOnError extends boolean = boolean
     headers?: any;
 } ? OmitKeys<RequestOptions<ThrowOnError>, 'headers' | 'url'> & TData & Pick<RequestOptions<ThrowOnError>, 'body'> : OmitKeys<RequestOptions<ThrowOnError>, 'url'> & TData;
 
-declare const createConfig: CreateClientConfig;
+declare const createClient: (config?: Config) => Client;
 
-declare const createClient: (config: Config) => Client;
+declare const createConfig: CreateClientConfig;
 
 export { type Auth, type Client, type Config, type CreateClientConfig, type Options, type OptionsLegacyParser, type QuerySerializerOptions, type RequestOptions, type RequestResult, createClient, createConfig, formDataBodySerializer, jsonBodySerializer, urlSearchParamsBodySerializer };

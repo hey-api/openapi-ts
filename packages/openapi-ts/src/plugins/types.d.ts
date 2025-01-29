@@ -11,6 +11,7 @@ type OmitUnderscoreKeys<T> = {
 export type PluginClientNames =
   | '@hey-api/client-axios'
   | '@hey-api/client-fetch'
+  | '@hey-api/client-next'
   | '@hey-api/client-nuxt'
   | 'legacy/angular'
   | 'legacy/axios'

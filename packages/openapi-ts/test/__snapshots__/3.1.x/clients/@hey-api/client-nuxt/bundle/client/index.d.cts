@@ -180,8 +180,8 @@ type OptionsLegacyParser<TData = unknown> = TData extends {
 type FetchOptions<TData> = Omit<UseFetchOptions<TData, TData>, keyof AsyncDataOptions<TData>>;
 type Composable = '$fetch' | 'useAsyncData' | 'useFetch' | 'useLazyAsyncData' | 'useLazyFetch';
 
-declare const createConfig: CreateClientConfig;
-
 declare const createClient: (config?: Config) => Client;
+
+declare const createConfig: CreateClientConfig;
 
 export { type Auth, type Client, type Composable, type Config, type CreateClientConfig, type Options, type OptionsLegacyParser, type QuerySerializerOptions, type RequestOptions, type RequestResult, createClient, createConfig, formDataBodySerializer, jsonBodySerializer, urlSearchParamsBodySerializer };
