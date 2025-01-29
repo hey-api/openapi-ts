@@ -261,9 +261,9 @@ importers:
 
   examples/openapi-ts-next:
     dependencies:
-      '@hey-api/client-fetch':
+      '@hey-api/client-next':
         specifier: workspace:*
-        version: link:../../packages/client-fetch
+        version: link:../../packages/client-next
       next:
         specifier: 15.1.6
         version: 15.1.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.80.7)
@@ -730,6 +730,12 @@ importers:
         specifier: workspace:*
         version: link:../client-core
 
+  packages/client-next:
+    devDependencies:
+      '@hey-api/client-core':
+        specifier: workspace:*
+        version: link:../client-core
+
   packages/client-nuxt:
     dependencies:
       nuxt:
@@ -800,6 +806,9 @@ importers:
       '@hey-api/client-fetch':
         specifier: workspace:*
         version: link:../client-fetch
+      '@hey-api/client-next':
+        specifier: workspace:*
+        version: link:../client-next
       '@hey-api/client-nuxt':
         specifier: workspace:*
         version: link:../client-nuxt
