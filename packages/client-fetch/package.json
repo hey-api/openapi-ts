@@ -19,6 +19,7 @@
   "funding": "https://github.com/sponsors/hey-api",
   "keywords": [
     "client",
+    "codegen",
     "fetch",
     "http",
     "javascript",

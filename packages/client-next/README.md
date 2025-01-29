@@ -1,11 +1,11 @@
 <div align="center">
   <img alt="Hey API logo" height="150" src="https://heyapi.dev/images/logo-300w.png" width="150">
-  <h1 align="center"><b>Nuxt Client</b></h1>
-  <p align="center">🚀 Nuxt client for `@hey-api/openapi-ts` codegen.</p>
+  <h1 align="center"><b>Next.js Client</b></h1>
+  <p align="center">🚀 Next.js client for `@hey-api/openapi-ts` codegen.</p>
 </div>
 
-<!-- TODO: add working example once StackBlitz updates their Node version -->
-<!-- [Live demo](https://stackblitz.com/edit/hey-api-client-nuxt-example?file=openapi-ts.config.ts,src%2Fclient%2Fschemas.gen.ts,src%2Fclient%2Fsdk.gen.ts,src%2Fclient%2Ftypes.gen.ts,src%2Fcomponents%home.vue) -->
+<!-- TODO: Add working Next.js example -->
+<!-- [Live demo](https://stackblitz.com/edit/hey-api-client-fetch-example?file=openapi-ts.config.ts,src%2Fclient%2Fschemas.gen.ts,src%2Fclient%2Fsdk.gen.ts,src%2Fclient%2Ftypes.gen.ts,src%2FApp.tsx) -->
 
 ## Features
 
