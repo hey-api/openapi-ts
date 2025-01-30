@@ -27,7 +27,7 @@ export default defineConfig({
     // @ts-ignore
     {
       // bundle: true,
-      // name: '@hey-api/client-fetch',
+      name: '@hey-api/client-fetch',
     },
     // @ts-ignore
     {
@@ -38,8 +38,9 @@ export default defineConfig({
     {
       // asClass: true,
       // auth: false,
+      client: false,
       // include...
-      // name: '@hey-api/sdk',
+      name: '@hey-api/sdk',
       // operationId: false,
       // serviceNameBuilder: '^Parameters',
       // throwOnError: true,

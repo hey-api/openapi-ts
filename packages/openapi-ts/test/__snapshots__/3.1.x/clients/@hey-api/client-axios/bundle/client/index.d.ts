@@ -129,12 +129,6 @@ interface RequestOptions<ThrowOnError extends boolean = boolean, Url extends str
      * {@link https://developer.mozilla.org/docs/Web/API/fetch#body}
      */
     body?: unknown;
-    /**
-     * You can provide a client instance returned by `createClient()` instead of
-     * individual options. This might be also useful if you want to implement a
-     * custom client.
-     */
-    client?: Client;
     path?: Record<string, unknown>;
     query?: Record<string, unknown>;
     /**
@@ -169,7 +163,7 @@ type Client = Client$1<RequestFn, Config, MethodFn, BuildUrlFn> & {
  * to ensure your client always has the correct values.
  */
 type CreateClientConfig = (override?: Config) => Config;
-interface DataShape {
+interface TDataShape {
     body?: unknown;
     headers?: unknown;
     path?: unknown;
@@ -177,7 +171,7 @@ interface DataShape {
     url: string;
 }
 type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
-type Options<TData extends DataShape = DataShape, ThrowOnError extends boolean = boolean> = OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'path' | 'query' | 'url'> & Omit<TData, 'url'>;
+type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'path' | 'query' | 'url'> & Omit<TData, 'url'>;
 type OptionsLegacyParser<TData = unknown, ThrowOnError extends boolean = boolean> = TData extends {
     body?: any;
 } ? TData extends {
@@ -190,4 +184,4 @@ declare const createClient: (config?: Config) => Client;
 
 declare const createConfig: CreateClientConfig;
 
-export { type Auth, type Client, type Config, type CreateClientConfig, type Options, type OptionsLegacyParser, type QuerySerializerOptions, type RequestOptions, type RequestResult, createClient, createConfig, formDataBodySerializer, jsonBodySerializer, urlSearchParamsBodySerializer };
+export { type Auth, type Client, type Config, type CreateClientConfig, type Options, type OptionsLegacyParser, type QuerySerializerOptions, type RequestOptions, type RequestResult, type TDataShape, createClient, createConfig, formDataBodySerializer, jsonBodySerializer, urlSearchParamsBodySerializer };

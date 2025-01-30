@@ -7,6 +7,7 @@ export type {
   OptionsLegacyParser,
   RequestOptions,
   RequestResult,
+  TDataShape,
 } from './types';
 export { createConfig } from './utils';
 export type { Auth, QuerySerializerOptions } from '@hey-api/client-core';

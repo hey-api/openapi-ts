@@ -51,6 +51,8 @@ interface Namespaces {
   value: Namespace;
 }
 
+export type FileImportResult = Pick<ImportExportItemObject, 'asType' | 'name'>;
+
 export class TypeScriptFile {
   /**
    * Should the exports from this file be re-exported in the index barrel file?
@@ -159,7 +161,7 @@ export class TypeScriptFile {
     ...importedItem
   }: ImportExportItemObject & {
     module: string;
-  }): Pick<ImportExportItemObject, 'asType' | 'name'> {
+  }): FileImportResult {
     let moduleMap = this._imports.get(module);
 
     if (!moduleMap) {

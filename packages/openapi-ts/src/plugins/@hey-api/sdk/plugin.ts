@@ -3,7 +3,7 @@ import type ts from 'typescript';
 import { compiler } from '../../../compiler';
 import type { ObjectValue } from '../../../compiler/types';
 import { clientApi, clientModulePath } from '../../../generate/client';
-import type { TypeScriptFile } from '../../../generate/files';
+import type { FileImportResult, TypeScriptFile } from '../../../generate/files';
 import {
   hasOperationDataRequired,
   statusCodeToGroup,
@@ -67,7 +67,7 @@ export const operationOptionsType = ({
     : optionsName;
 };
 
-const sdkId = 'sdk';
+export const sdkId = 'sdk';
 
 /**
  * Infers `responseType` value from provided response content type. This is
@@ -212,10 +212,12 @@ const operationAuth = ({
 
 const operationStatements = ({
   context,
+  isRequiredOptions,
   operation,
   plugin,
 }: {
   context: IR.Context;
+  isRequiredOptions: boolean;
   operation: IR.OperationObject;
   plugin: Plugin.Instance<Config>;
 }): Array<ts.Statement> => {
@@ -447,12 +449,20 @@ const operationStatements = ({
   const responseType = identifierResponse.name || 'unknown';
   const errorType = identifierError.name || 'unknown';
 
-  const heyApiClient = file.import({
-    alias: '_heyApiClient',
-    module: file.relativePathToFile({
-      context,
-      id: clientId,
-    }),
+  const heyApiClient = plugin.client
+    ? file.import({
+        alias: '_heyApiClient',
+        module: file.relativePathToFile({
+          context,
+          id: clientId,
+        }),
+        name: 'client',
+      })
+    : undefined;
+
+  const optionsClient = compiler.propertyAccessExpression({
+    expression: compiler.identifier({ text: 'options' }),
+    isOptional: !isRequiredOptions,
     name: 'client',
   });
 
@@ -465,15 +475,13 @@ const operationStatements = ({
         }),
       ],
       name: compiler.propertyAccessExpression({
-        expression: compiler.binaryExpression({
-          left: compiler.propertyAccessExpression({
-            expression: compiler.identifier({ text: 'options' }),
-            isOptional: true,
-            name: 'client',
-          }),
-          operator: '??',
-          right: compiler.identifier({ text: heyApiClient.name }),
-        }),
+        expression: heyApiClient?.name
+          ? compiler.binaryExpression({
+              left: optionsClient,
+              operator: '??',
+              right: compiler.identifier({ text: heyApiClient.name }),
+            })
+          : optionsClient,
         name: compiler.identifier({ text: operation.method }),
       }),
       types: isNuxtClient
@@ -496,6 +504,8 @@ const generateClassSdk = ({
   const sdks = new Map<string, Array<ts.MethodDeclaration>>();
 
   context.subscribe('operation', ({ operation }) => {
+    const isRequiredOptions =
+      !plugin.client || isNuxtClient || hasOperationDataRequired(operation);
     const node = compiler.methodDeclaration({
       accessLevel: 'public',
       comment: [
@@ -512,7 +522,7 @@ const generateClassSdk = ({
       }),
       parameters: [
         {
-          isRequired: isNuxtClient || hasOperationDataRequired(operation),
+          isRequired: isRequiredOptions,
           name: 'options',
           type: operationOptionsType({
             context,
@@ -525,6 +535,7 @@ const generateClassSdk = ({
       returnType: undefined,
       statements: operationStatements({
         context,
+        isRequiredOptions,
         operation,
         plugin,
       }),
@@ -587,6 +598,8 @@ const generateFlatSdk = ({
   const file = context.file({ id: sdkId })!;
 
   context.subscribe('operation', ({ operation }) => {
+    const isRequiredOptions =
+      !plugin.client || isNuxtClient || hasOperationDataRequired(operation);
     const node = compiler.constVariable({
       comment: [
         operation.deprecated && '@deprecated',
@@ -597,7 +610,7 @@ const generateFlatSdk = ({
       expression: compiler.arrowFunction({
         parameters: [
           {
-            isRequired: isNuxtClient || hasOperationDataRequired(operation),
+            isRequired: isRequiredOptions,
             name: 'options',
             type: operationOptionsType({
               context,
@@ -610,6 +623,7 @@ const generateFlatSdk = ({
         returnType: undefined,
         statements: operationStatements({
           context,
+          isRequiredOptions,
           operation,
           plugin,
         }),
@@ -642,6 +656,105 @@ const generateFlatSdk = ({
   });
 };
 
+const createTypeOptions = ({
+  clientOptions,
+  context,
+  plugin,
+}: {
+  clientOptions: FileImportResult;
+  context: IR.Context;
+  plugin: Plugin.Instance<Config>;
+}) => {
+  const file = context.file({ id: sdkId })!;
+  const client = getClientPlugin(context.config);
+  const isNuxtClient = client.name === '@hey-api/client-nuxt';
+
+  const clientModule = clientModulePath({
+    config: context.config,
+    sourceOutput: file.nameWithoutExtension(),
+  });
+  const tDataShape = file.import({
+    asType: true,
+    module: clientModule,
+    name: 'TDataShape',
+  });
+  const clientType = file.import({
+    asType: true,
+    module: clientModule,
+    name: 'Client',
+  });
+
+  const typeOptions = compiler.typeAliasDeclaration({
+    exportType: true,
+    name: 'Options',
+    type: compiler.typeIntersectionNode({
+      types: [
+        compiler.typeReferenceNode({
+          typeArguments: isNuxtClient
+            ? [
+                compiler.typeReferenceNode({ typeName: 'TComposable' }),
+                compiler.typeReferenceNode({ typeName: 'TData' }),
+              ]
+            : [
+                compiler.typeReferenceNode({ typeName: 'TData' }),
+                compiler.typeReferenceNode({ typeName: 'ThrowOnError' }),
+              ],
+          typeName: clientOptions.name,
+        }),
+        compiler.typeInterfaceNode({
+          properties: [
+            {
+              comment: [
+                'You can provide a client instance returned by `createClient()` instead of',
+                'individual options. This might be also useful if you want to implement a',
+                'custom client.',
+              ],
+              isRequired: !plugin.client,
+              name: 'client',
+              type: compiler.typeReferenceNode({ typeName: clientType.name }),
+            },
+          ],
+          useLegacyResolution: false,
+        }),
+      ],
+    }),
+    typeParameters: isNuxtClient
+      ? [
+          compiler.typeParameterDeclaration({
+            constraint: compiler.typeReferenceNode({ typeName: 'Composable' }),
+            name: 'TComposable',
+          }),
+          compiler.typeParameterDeclaration({
+            constraint: compiler.typeReferenceNode({
+              typeName: tDataShape.name,
+            }),
+            defaultType: compiler.typeReferenceNode({
+              typeName: tDataShape.name,
+            }),
+            name: 'TData',
+          }),
+        ]
+      : [
+          compiler.typeParameterDeclaration({
+            constraint: compiler.typeReferenceNode({
+              typeName: tDataShape.name,
+            }),
+            defaultType: compiler.typeReferenceNode({
+              typeName: tDataShape.name,
+            }),
+            name: 'TData',
+          }),
+          compiler.typeParameterDeclaration({
+            constraint: compiler.keywordTypeNode({ keyword: 'boolean' }),
+            defaultType: compiler.keywordTypeNode({ keyword: 'boolean' }),
+            name: 'ThrowOnError',
+          }),
+        ],
+  });
+
+  file.add(typeOptions);
+};
+
 export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
   const file = context.createFile({
     exportFromIndex: plugin.exportFromIndex,
@@ -654,8 +767,9 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     config: context.config,
     sourceOutput: file.nameWithoutExtension(),
   });
-  file.import({
+  const clientOptions = file.import({
     ...clientApi.Options,
+    alias: 'ClientOptions',
     module: clientModule,
   });
 
@@ -668,6 +782,12 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
       name: 'Composable',
     });
   }
+
+  createTypeOptions({
+    clientOptions,
+    context,
+    plugin,
+  });
 
   if (plugin.asClass) {
     generateClassSdk({ context, plugin });
