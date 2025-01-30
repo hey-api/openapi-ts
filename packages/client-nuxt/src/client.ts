@@ -5,16 +5,18 @@ import {
   useLazyAsyncData,
   useLazyFetch,
 } from 'nuxt/app';
+import { reactive, ref, watch } from 'vue';
 
 import type { Client, Config } from './types';
 import {
   buildUrl,
   createConfig,
+  executeFetchFn,
   mergeConfigs,
   mergeHeaders,
   mergeInterceptors,
+  serializeBody,
   setAuthParams,
-  unwrapRefs,
 } from './utils';
 
 export const createClient = (config: Config = {}): Client => {
@@ -68,6 +70,10 @@ export const createClient = (config: Config = {}): Client => {
             return;
           }
 
+          if (!response.ok) {
+            return;
+          }
+
           if (responseValidator) {
             await responseValidator(response._data);
           }
@@ -79,10 +85,6 @@ export const createClient = (config: Config = {}): Client => {
       ];
     }
 
-    if (opts.body && opts.bodySerializer) {
-      opts.body = opts.bodySerializer(unwrapRefs(opts.body));
-    }
-
     // remove Content-Type header if body is empty to avoid sending invalid requests
     if (!opts.body) {
       opts.headers.delete('Content-Type');
@@ -91,32 +93,26 @@ export const createClient = (config: Config = {}): Client => {
     const fetchFn = opts.$fetch;
 
     if (composable === '$fetch') {
-      const url = buildUrl(opts);
-      return fetchFn(
-        url,
-        // @ts-expect-error
-        unwrapRefs(opts),
-      );
+      return executeFetchFn(opts, fetchFn);
     }
 
-    if (composable === 'useFetch') {
-      const url = buildUrl(opts);
-      return useFetch(url, opts);
+    if (composable === 'useFetch' || composable === 'useLazyFetch') {
+      const bodyParams = reactive({
+        body: opts.body,
+        bodySerializer: opts.bodySerializer,
+      });
+      const body = ref(serializeBody(opts));
+      opts.body = body;
+      watch(bodyParams, (changed) => {
+        body.value = serializeBody(changed);
+      });
+      return composable === 'useLazyFetch'
+        ? useLazyFetch(() => buildUrl(opts), opts)
+        : useFetch(() => buildUrl(opts), opts);
     }
 
-    if (composable === 'useLazyFetch') {
-      const url = buildUrl(opts);
-      return useLazyFetch(url, opts);
-    }
-
-    const handler: (ctx?: NuxtApp) => Promise<any> = () => {
-      const url = buildUrl(opts);
-      return fetchFn(
-        url,
-        // @ts-expect-error
-        unwrapRefs(opts),
-      );
-    };
+    const handler: (ctx?: NuxtApp) => Promise<unknown> = () =>
+      executeFetchFn(opts, fetchFn);
 
     if (composable === 'useAsyncData') {
       return key
