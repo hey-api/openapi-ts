@@ -68,12 +68,6 @@ export interface RequestOptions<
       query?: FetchOptions<unknown>['query'];
     }> {
   asyncDataOptions?: AsyncDataOptions<unknown>;
-  /**
-   * You can provide a client instance returned by `createClient()` instead of
-   * individual options. This might be also useful if you want to implement a
-   * custom client.
-   */
-  client?: Client;
   composable: TComposable;
   key?: string;
   /**
@@ -126,7 +120,7 @@ type RequestFn = <
  */
 export type CreateClientConfig = (override?: Config) => Config;
 
-interface DataShape {
+export interface TDataShape {
   body?: unknown;
   headers?: unknown;
   path?: FetchOptions<unknown>['query'];
@@ -135,12 +129,12 @@ interface DataShape {
 }
 
 export type BuildUrlOptions<
-  TData extends Omit<DataShape, 'headers'> = Omit<DataShape, 'headers'>,
+  TData extends Omit<TDataShape, 'headers'> = Omit<TDataShape, 'headers'>,
 > = Pick<WithRefs<TData>, 'path' | 'query'> &
   Pick<TData, 'url'> &
   Pick<Options<'$fetch', TData>, 'baseURL' | 'querySerializer'>;
 
-type BuildUrlFn = <TData extends Omit<DataShape, 'headers'>>(
+type BuildUrlFn = <TData extends Omit<TDataShape, 'headers'>>(
   options: BuildUrlOptions<TData>,
 ) => string;
 
@@ -150,7 +144,7 @@ type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
 
 export type Options<
   TComposable extends Composable,
-  TData extends DataShape = DataShape,
+  TData extends TDataShape = TDataShape,
 > = OmitKeys<RequestOptions<TComposable>, 'body' | 'path' | 'query' | 'url'> &
   WithRefs<Omit<TData, 'url'>>;
 

@@ -132,12 +132,6 @@ interface RequestOptions<TComposable extends Composable = Composable, Url extend
     query?: FetchOptions<unknown>['query'];
 }> {
     asyncDataOptions?: AsyncDataOptions<unknown>;
-    /**
-     * You can provide a client instance returned by `createClient()` instead of
-     * individual options. This might be also useful if you want to implement a
-     * custom client.
-     */
-    client?: Client;
     composable: TComposable;
     key?: string;
     /**
@@ -158,18 +152,18 @@ type RequestFn = <TComposable extends Composable, TData = unknown, TError = unkn
  * to ensure your client always has the correct values.
  */
 type CreateClientConfig = (override?: Config) => Config;
-interface DataShape {
+interface TDataShape {
     body?: unknown;
     headers?: unknown;
     path?: FetchOptions<unknown>['query'];
     query?: FetchOptions<unknown>['query'];
     url: string;
 }
-type BuildUrlOptions<TData extends Omit<DataShape, 'headers'> = Omit<DataShape, 'headers'>> = Pick<WithRefs<TData>, 'path' | 'query'> & Pick<TData, 'url'> & Pick<Options<'$fetch', TData>, 'baseURL' | 'querySerializer'>;
-type BuildUrlFn = <TData extends Omit<DataShape, 'headers'>>(options: BuildUrlOptions<TData>) => string;
+type BuildUrlOptions<TData extends Omit<TDataShape, 'headers'> = Omit<TDataShape, 'headers'>> = Pick<WithRefs<TData>, 'path' | 'query'> & Pick<TData, 'url'> & Pick<Options<'$fetch', TData>, 'baseURL' | 'querySerializer'>;
+type BuildUrlFn = <TData extends Omit<TDataShape, 'headers'>>(options: BuildUrlOptions<TData>) => string;
 type Client = Client$1<RequestFn, Config, MethodFn, BuildUrlFn>;
 type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
-type Options<TComposable extends Composable, TData extends DataShape = DataShape> = OmitKeys<RequestOptions<TComposable>, 'body' | 'path' | 'query' | 'url'> & WithRefs<Omit<TData, 'url'>>;
+type Options<TComposable extends Composable, TData extends TDataShape = TDataShape> = OmitKeys<RequestOptions<TComposable>, 'body' | 'path' | 'query' | 'url'> & WithRefs<Omit<TData, 'url'>>;
 type OptionsLegacyParser<TData = unknown> = TData extends {
     body?: any;
 } ? TData extends {
@@ -184,4 +178,4 @@ declare const createClient: (config?: Config) => Client;
 
 declare const createConfig: CreateClientConfig;
 
-export { type Auth, type Client, type Composable, type Config, type CreateClientConfig, type Options, type OptionsLegacyParser, type QuerySerializerOptions, type RequestOptions, type RequestResult, createClient, createConfig, formDataBodySerializer, jsonBodySerializer, urlSearchParamsBodySerializer };
+export { type Auth, type Client, type Composable, type Config, type CreateClientConfig, type Options, type OptionsLegacyParser, type QuerySerializerOptions, type RequestOptions, type RequestResult, type TDataShape, createClient, createConfig, formDataBodySerializer, jsonBodySerializer, urlSearchParamsBodySerializer };

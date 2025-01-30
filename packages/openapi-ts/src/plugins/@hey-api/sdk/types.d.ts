@@ -28,7 +28,7 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
    */
   auth?: boolean;
   /**
-   * Use an internal client instance to send HTTP requests. This is useful if
+   * Use an internal client instance to send HTTP requests? This is useful if
    * you don't want to manually pass the client to each SDK function.
    *
    * Ensure you have declared the selected library as a dependency to avoid
