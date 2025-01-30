@@ -54,12 +54,6 @@ export interface RequestOptions<
     | Array<Record<string, unknown>>
     | Array<unknown>
     | number;
-  /**
-   * You can provide a client instance returned by `createClient()` instead of
-   * individual options. This might be also useful if you want to implement a
-   * custom client.
-   */
-  client?: Client;
   path?: Record<string, unknown>;
   query?: Record<string, unknown>;
   /**
@@ -129,7 +123,7 @@ export type Client = CoreClient<RequestFn, Config, MethodFn, BuildUrlFn> & {
  */
 export type CreateClientConfig = (override?: Config) => Config;
 
-interface DataShape {
+export interface TDataShape {
   body?: unknown;
   headers?: unknown;
   path?: unknown;
@@ -140,7 +134,7 @@ interface DataShape {
 type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
 
 export type Options<
-  TData extends DataShape = DataShape,
+  TData extends TDataShape = TDataShape,
   ThrowOnError extends boolean = boolean,
 > = OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'path' | 'query' | 'url'> &
   Omit<TData, 'url'>;
