@@ -285,29 +285,36 @@ export const createKeywordTypeNode = ({
   return ts.factory.createKeywordTypeNode(kind);
 };
 
-export const toTypeParameters = (types: FunctionTypeParameter[]) =>
-  types.map((type) =>
-    createTypeParameterDeclaration({
+export const toTypeParameters = (
+  types: (FunctionTypeParameter | ts.TypeParameterDeclaration)[],
+) =>
+  types.map((node) => {
+    // @ts-expect-error
+    if (ts.isTypeParameterDeclaration(node)) {
+      return node;
+    }
+
+    return createTypeParameterDeclaration({
       // TODO: support other extends values
-      constraint: type.extends
-        ? typeof type.extends === 'string'
+      constraint: node.extends
+        ? typeof node.extends === 'string'
           ? createKeywordTypeNode({ keyword: 'boolean' })
-          : type.extends
+          : node.extends
         : undefined,
       // TODO: support other default types
       defaultType:
-        type.default !== undefined
-          ? isTsNode(type.default)
-            ? (type.default as unknown as ts.TypeNode)
+        node.default !== undefined
+          ? isTsNode(node.default)
+            ? (node.default as unknown as ts.TypeNode)
             : ts.factory.createLiteralTypeNode(
-                type.default
+                node.default
                   ? ts.factory.createTrue()
                   : ts.factory.createFalse(),
               )
           : undefined,
-      name: type.name,
-    }),
-  );
+      name: node.name,
+    });
+  });
 
 export const createTypeOperatorNode = ({
   operator,

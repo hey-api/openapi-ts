@@ -15,6 +15,7 @@ const __dirname = path.dirname(__filename);
 const clients: ReadonlyArray<PluginClientNames> = [
   '@hey-api/client-axios',
   '@hey-api/client-fetch',
+  '@hey-api/client-next',
   '@hey-api/client-nuxt',
 ];
 
@@ -61,6 +62,32 @@ for (const client of clients) {
           ],
         }),
         description: 'default output with bundled client',
+      },
+      {
+        config: createConfig({
+          output: 'sdk-client-optional',
+          plugins: [
+            client,
+            {
+              client: true,
+              name: '@hey-api/sdk',
+            },
+          ],
+        }),
+        description: 'SDK with optional client option',
+      },
+      {
+        config: createConfig({
+          output: 'sdk-client-required',
+          plugins: [
+            client,
+            {
+              client: false,
+              name: '@hey-api/sdk',
+            },
+          ],
+        }),
+        description: 'SDK with required client option',
       },
     ];
 
