@@ -69,7 +69,7 @@ import {
   zUploadFileResponse,
 } from './zod.gen';
 
-type Options<
+export type Options<
   TComposable extends Composable,
   TData extends TDataShape = TDataShape,
 > = ClientOptions<TComposable, TData> & {

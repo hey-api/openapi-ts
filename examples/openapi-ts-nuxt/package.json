@@ -20,6 +20,7 @@
     "zod": "3.23.8"
   },
   "devDependencies": {
-    "@hey-api/openapi-ts": "workspace:*"
+    "@hey-api/openapi-ts": "workspace:*",
+    "vite": "6.0.9"
   }
 }
