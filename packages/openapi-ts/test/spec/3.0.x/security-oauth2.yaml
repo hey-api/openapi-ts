@@ -1,6 +1,6 @@
-openapi: 3.1.1
+openapi: 3.0.4
 info:
-  title: OpenAPI 3.1.1 security oauth2 example
+  title: OpenAPI 3.0.4 security oauth2 example
   version: '1'
 paths:
   /foo:
