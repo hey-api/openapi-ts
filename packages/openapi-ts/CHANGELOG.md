@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.63.2
+
+### Patch Changes
+
+- [#1651](https://github.com/hey-api/openapi-ts/pull/1651) [`df350f3`](https://github.com/hey-api/openapi-ts/commit/df350f31dae957d063010ba46c5008ae831b3a32) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: lower Node version requirements
+
 ## 0.63.1
 
 ### Patch Changes
