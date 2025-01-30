@@ -1,5 +1,12 @@
 # @example/openapi-ts-axios
 
+## 0.0.26
+
+### Patch Changes
+
+- Updated dependencies [[`2dc380e`](https://github.com/hey-api/openapi-ts/commit/2dc380eabc17c723654beb04ecd7bce6d33d3b49), [`603541e`](https://github.com/hey-api/openapi-ts/commit/603541e307dc2953da7dddd300176865629b50bb), [`2cbffeb`](https://github.com/hey-api/openapi-ts/commit/2cbffeb2cdd6c6143cd68cac68369584879dda31), [`2cbffeb`](https://github.com/hey-api/openapi-ts/commit/2cbffeb2cdd6c6143cd68cac68369584879dda31)]:
+  - @hey-api/client-axios@0.5.3
+
 ## 0.0.25
 
 ### Patch Changes

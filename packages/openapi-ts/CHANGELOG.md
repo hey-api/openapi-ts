@@ -1,5 +1,17 @@
 # @hey-api/openapi-ts
 
+## 0.63.1
+
+### Patch Changes
+
+- [#1637](https://github.com/hey-api/openapi-ts/pull/1637) [`2dc380e`](https://github.com/hey-api/openapi-ts/commit/2dc380eabc17c723654beb04ecd7bce6d33d3b49) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update keywords in package.json
+
+- [#1637](https://github.com/hey-api/openapi-ts/pull/1637) [`2dc380e`](https://github.com/hey-api/openapi-ts/commit/2dc380eabc17c723654beb04ecd7bce6d33d3b49) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add Next.js client
+
+- [#1646](https://github.com/hey-api/openapi-ts/pull/1646) [`2cbffeb`](https://github.com/hey-api/openapi-ts/commit/2cbffeb2cdd6c6143cd68cac68369584879dda31) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: support required client in SDK using sdk.client = false
+
+- [#1648](https://github.com/hey-api/openapi-ts/pull/1648) [`66a9e45`](https://github.com/hey-api/openapi-ts/commit/66a9e4517d2306da8c60750dc3380e6774a7177b) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add support for openIdConnect auth flow
+
 ## 0.63.0
 
 ### Minor Changes
