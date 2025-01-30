@@ -18,7 +18,7 @@ import type {
   ShowPetByIdResponse,
 } from './types.gen';
 
-type Options<
+export type Options<
   TData extends TDataShape = TDataShape,
   ThrowOnError extends boolean = boolean,
 > = ClientOptions<TData, ThrowOnError> & {

@@ -319,7 +319,7 @@ type UnwrapRefs<T> =
         ? { [K in keyof T]: UnwrapRefs<T[K]> }
         : T;
 
-export const unwrapRefs = <T>(value: T): UnwrapRefs<T> => {
+const unwrapRefs = <T>(value: T): UnwrapRefs<T> => {
   if (value === null || typeof value !== 'object' || value instanceof Headers) {
     return (isRef(value) ? unref(value) : value) as UnwrapRefs<T>;
   }
@@ -338,4 +338,26 @@ export const unwrapRefs = <T>(value: T): UnwrapRefs<T> => {
     result[key] = unwrapRefs(value[key] as T);
   }
   return result as UnwrapRefs<T>;
+};
+
+export const serializeBody = (
+  opts: Pick<Parameters<Client['request']>[0], 'body' | 'bodySerializer'>,
+) => {
+  if (opts.body && opts.bodySerializer) {
+    return opts.bodySerializer(opts.body);
+  }
+  return opts.body;
+};
+
+export const executeFetchFn = (
+  opts: Omit<Parameters<Client['request']>[0], 'composable'>,
+  fetchFn: Required<Config>['$fetch'],
+) => {
+  const unwrappedOpts = unwrapRefs(opts);
+  unwrappedOpts.body = serializeBody(unwrappedOpts);
+  return fetchFn(
+    buildUrl(opts),
+    // @ts-expect-error
+    unwrappedOpts,
+  );
 };
