@@ -76,7 +76,7 @@
     "typecheck": "tsc --noEmit"
   },
   "engines": {
-    "node": "^18.20.5 || ^20.11.1 || >=22.11.0"
+    "node": "^18.18.0 || ^20.9.0 || >=22.11.0"
   },
   "dependencies": {
     "@hey-api/json-schema-ref-parser": "1.0.1",
@@ -117,7 +117,7 @@
     "fastify": "5.2.0",
     "glob": "10.4.3",
     "node-fetch": "3.3.2",
-    "nuxt": "3.15.1",
+    "nuxt": "3.14.1592",
     "prettier": "3.4.2",
     "puppeteer": "22.12.1",
     "rxjs": "7.8.1",
