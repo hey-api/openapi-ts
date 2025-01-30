@@ -28,9 +28,19 @@ import {
 import { serviceFunctionIdentifier } from './plugin-legacy';
 import type { Config } from './types';
 
-// type copied from client packages
-interface Auth {
+// copy-pasted from @hey-api/client-core
+export interface Auth {
+  /**
+   * Which part of the request do we use to send the auth?
+   *
+   * @default 'header'
+   */
   in?: 'header' | 'query';
+  /**
+   * Header or query parameter name.
+   *
+   * @default 'Authorization'
+   */
   name?: string;
   scheme?: 'basic' | 'bearer';
   type: 'apiKey' | 'http';
@@ -129,6 +139,13 @@ const securitySchemeObjectToAuthObject = ({
 }: {
   securitySchemeObject: IR.SecurityObject;
 }): Auth | undefined => {
+  if (securitySchemeObject.type === 'openIdConnect') {
+    return {
+      scheme: 'bearer',
+      type: 'http',
+    };
+  }
+
   if (securitySchemeObject.type === 'oauth2') {
     if (
       securitySchemeObject.flows.password ||

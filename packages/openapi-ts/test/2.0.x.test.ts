@@ -247,7 +247,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'security-oauth2.json',
+        input: 'security-oauth2.yaml',
         output: 'security-oauth2',
         plugins: [
           '@hey-api/client-fetch',
@@ -261,7 +261,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'security-oauth2.json',
+        input: 'security-oauth2.yaml',
         output: 'security-false',
         plugins: [
           '@hey-api/client-fetch',
