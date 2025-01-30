@@ -2,7 +2,17 @@ import { CreateAxiosDefaults, AxiosStatic, AxiosResponse, AxiosError, AxiosInsta
 
 type AuthToken = string | undefined;
 interface Auth {
+    /**
+     * Which part of the request do we use to send the auth?
+     *
+     * @default 'header'
+     */
     in?: 'header' | 'query';
+    /**
+     * Header or query parameter name.
+     *
+     * @default 'Authorization'
+     */
     name?: string;
     scheme?: 'basic' | 'bearer';
     type: 'apiKey' | 'http';

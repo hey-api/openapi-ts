@@ -1,0 +1,17 @@
+openapi: 3.0.4
+info:
+  title: OpenAPI 3.0.4 security OpenID Connect example
+  version: '1'
+paths:
+  /foo:
+    get:
+      responses:
+        '200':
+          description: OK
+      security:
+        - foo: []
+components:
+  securitySchemes:
+    foo:
+      openIdConnectUrl: 'https://example.com/.well-known/openid-configuration'
+      type: 'openIdConnect'
