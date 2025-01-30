@@ -37,7 +37,7 @@
     "typecheck": "pnpm --recursive --filter '!./examples/openapi-ts-sample' typecheck"
   },
   "engines": {
-    "node": "^18.20.5 || ^20.11.1 || >=22.11.0"
+    "node": "^18.18.0 || ^20.9.0 || >=22.11.0"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.17.2",
