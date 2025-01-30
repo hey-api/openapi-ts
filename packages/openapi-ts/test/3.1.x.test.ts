@@ -539,6 +539,20 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'security-open-id-connect.yaml',
+        output: 'security-open-id-connect',
+        plugins: [
+          '@hey-api/client-fetch',
+          {
+            auth: true,
+            name: '@hey-api/sdk',
+          },
+        ],
+      }),
+      description: 'generates SDK functions with auth (OpenID Connect)',
+    },
+    {
+      config: createConfig({
         input: 'security-oauth2.yaml',
         output: 'security-false',
         plugins: [
