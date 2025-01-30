@@ -1,5 +1,17 @@
 # @hey-api/client-fetch
 
+## 0.7.3
+
+### Patch Changes
+
+- [#1637](https://github.com/hey-api/openapi-ts/pull/1637) [`2dc380e`](https://github.com/hey-api/openapi-ts/commit/2dc380eabc17c723654beb04ecd7bce6d33d3b49) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update keywords in package.json
+
+- [#1649](https://github.com/hey-api/openapi-ts/pull/1649) [`603541e`](https://github.com/hey-api/openapi-ts/commit/603541e307dc2953da7dddd300176865629b50bb) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle BigInt in JSON body serializer
+
+- [#1646](https://github.com/hey-api/openapi-ts/pull/1646) [`2cbffeb`](https://github.com/hey-api/openapi-ts/commit/2cbffeb2cdd6c6143cd68cac68369584879dda31) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: remove client from Options interface
+
+- [#1646](https://github.com/hey-api/openapi-ts/pull/1646) [`2cbffeb`](https://github.com/hey-api/openapi-ts/commit/2cbffeb2cdd6c6143cd68cac68369584879dda31) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export TDataShape interface
+
 ## 0.7.2
 
 ### Patch Changes
