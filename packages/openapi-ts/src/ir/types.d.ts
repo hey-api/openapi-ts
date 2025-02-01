@@ -191,6 +191,7 @@ type IRSecurityObject = SecuritySchemeObject;
 interface IRModel {
   components?: IRComponentsObject;
   paths?: IRPathsObject;
+  servers?: ReadonlyArray<unknown>;
 }
 
 export namespace IR {
