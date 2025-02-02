@@ -22,3 +22,7 @@ export type Quuz = ({
 } & Bar) | ({
     type?: 'baz';
 } & Baz);
+
+export type ClientOptions = {
+    baseUrl: `${string}://${string}` | (string & {});
+};

@@ -273,6 +273,30 @@ describe(`OpenAPI ${version}`, () => {
       }),
       description: 'generates SDK functions without auth',
     },
+    {
+      config: createConfig({
+        input: 'servers.yaml',
+        output: 'servers',
+        plugins: ['@hey-api/client-fetch', '@hey-api/typescript'],
+      }),
+      description: 'generates baseUrl',
+    },
+    {
+      config: createConfig({
+        input: 'servers-base-path.yaml',
+        output: 'servers-base-path',
+        plugins: ['@hey-api/client-fetch', '@hey-api/typescript'],
+      }),
+      description: 'generates baseUrl from basePath',
+    },
+    {
+      config: createConfig({
+        input: 'servers-host.yaml',
+        output: 'servers-host',
+        plugins: ['@hey-api/client-fetch', '@hey-api/typescript'],
+      }),
+      description: 'generates baseUrl from host',
+    },
   ];
 
   it.each(scenarios)('$description', async ({ config }) => {

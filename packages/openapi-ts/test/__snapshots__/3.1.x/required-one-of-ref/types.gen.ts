@@ -8,3 +8,7 @@ export type Foo = {
 export type Bar = Foo & {
     bar: number;
 };
+
+export type ClientOptions = {
+    baseUrl: `${string}://${string}` | (string & {});
+};

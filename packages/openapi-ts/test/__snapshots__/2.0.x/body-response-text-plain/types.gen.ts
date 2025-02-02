@@ -15,3 +15,7 @@ export type PostFooResponses = {
 };
 
 export type PostFooResponse = PostFooResponses[keyof PostFooResponses];
+
+export type ClientOptions = {
+    baseUrl: string;
+};

@@ -6,15 +6,13 @@ import type {
 
 import type { Middleware } from './utils';
 
-export interface Config<ThrowOnError extends boolean = boolean>
+export interface Config<T extends ClientOptions = ClientOptions>
   extends Omit<RequestInit, 'body' | 'headers' | 'method'>,
     CoreConfig {
   /**
    * Base URL for all requests made by this client.
-   *
-   * @default ''
    */
-  baseUrl?: string;
+  baseUrl?: T['baseUrl'];
   /**
    * Fetch API implementation. You can use this option to provide a custom
    * fetch instance.
@@ -36,13 +34,15 @@ export interface Config<ThrowOnError extends boolean = boolean>
    *
    * @default false
    */
-  throwOnError?: ThrowOnError;
+  throwOnError?: T['throwOnError'];
 }
 
 export interface RequestOptions<
   ThrowOnError extends boolean = boolean,
   Url extends string = string,
-> extends Config<ThrowOnError> {
+> extends Config<{
+    throwOnError: ThrowOnError;
+  }> {
   /**
    * Any body that you want to add to your request.
    *
@@ -82,6 +82,11 @@ export type RequestResult<
         response: Response;
       }
     >;
+
+export interface ClientOptions {
+  baseUrl?: string;
+  throwOnError?: boolean;
+}
 
 type MethodFn = <
   TData = unknown,
@@ -123,7 +128,9 @@ export type Client = CoreClient<RequestFn, Config, MethodFn, BuildUrlFn> & {
  * `setConfig()`. This is useful for example if you're using Next.js
  * to ensure your client always has the correct values.
  */
-export type CreateClientConfig = (override?: Config) => Config;
+export type CreateClientConfig<T extends ClientOptions = ClientOptions> = (
+  override?: Config<ClientOptions & T>,
+) => Config<Required<ClientOptions> & T>;
 
 export interface TDataShape {
   body?: unknown;

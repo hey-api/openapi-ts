@@ -102,7 +102,7 @@ In our custom file, we need to export a `createClientConfig()` method. This func
 ::: code-group
 
 ```ts [hey-api.ts]
-import type { CreateClientConfig } from '@hey-api/client-next';
+import type { CreateClientConfig } from './client/client.gen';
 
 export const createClientConfig: CreateClientConfig = (config) => ({
   ...config,

@@ -83,3 +83,7 @@ export type get_foo_responses = {
 };
 
 export type get_foo_response = get_foo_responses[keyof get_foo_responses];
+
+export type client_options = {
+    baseUrl: `${string}://${string}` | (string & {});
+};

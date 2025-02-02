@@ -490,6 +490,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'servers.yaml',
+        output: 'servers',
+        plugins: ['@hey-api/client-fetch', '@hey-api/typescript'],
+      }),
+      description: 'generates baseUrl',
+    },
+    {
+      config: createConfig({
         input: 'transformers-all-of.yaml',
         output: 'transformers-all-of',
         plugins: ['@hey-api/client-fetch', '@hey-api/transformers'],

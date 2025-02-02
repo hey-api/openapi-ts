@@ -43,3 +43,7 @@ export type QuxMapped = FooMapped & {
 } & {
     qux?: boolean;
 };
+
+export type ClientOptions = {
+    baseUrl: `${string}://${string}` | (string & {});
+};
