@@ -5,7 +5,7 @@ import type { Identifier } from '../../../generate/files';
 import type { IR } from '../../../ir/types';
 import { parseUrl } from '../../../utils/url';
 import type { Plugin } from '../../types';
-import { getClientBaseUrlKey } from '../client-core/utils';
+import { getClientBaseUrlKey, getClientPlugin } from '../client-core/utils';
 import { typesId } from './ref';
 import type { Config } from './types';
 
@@ -47,6 +47,24 @@ export const createClientOptions = ({
     return;
   }
 
+  const client = getClientPlugin(context.config);
+
+  const types: Array<ts.TypeNode> = servers.map((server) =>
+    serverToBaseUrlType({ server }),
+  );
+
+  if (!('strictBaseUrl' in client && client.strictBaseUrl)) {
+    if (servers.length) {
+      types.push(
+        compiler.typeIntersectionNode({
+          types: [stringType, ts.factory.createTypeLiteralNode([])],
+        }),
+      );
+    } else {
+      types.push(stringType);
+    }
+  }
+
   const typeClientOptions = compiler.typeAliasDeclaration({
     exportType: true,
     name: identifier.name,
@@ -54,20 +72,7 @@ export const createClientOptions = ({
       properties: [
         {
           name: getClientBaseUrlKey(context.config),
-          type: compiler.typeUnionNode({
-            types: [
-              ...servers.map((server) =>
-                serverToBaseUrlType({
-                  server,
-                }),
-              ),
-              servers.length
-                ? compiler.typeIntersectionNode({
-                    types: [stringType, ts.factory.createTypeLiteralNode([])],
-                  })
-                : stringType,
-            ],
-          }),
+          type: compiler.typeUnionNode({ types }),
         },
       ],
       useLegacyResolution: false,

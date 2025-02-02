@@ -26,8 +26,10 @@ export default defineConfig({
   plugins: [
     // @ts-ignore
     {
+      baseUrl: 'http://example.com',
       // bundle: true,
       name: '@hey-api/client-fetch',
+      strictBaseUrl: true,
     },
     // @ts-ignore
     {

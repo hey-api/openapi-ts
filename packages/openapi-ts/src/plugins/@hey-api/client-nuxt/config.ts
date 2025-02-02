@@ -1,15 +1,13 @@
 import type { Plugin } from '../../types';
+import { clientDefaultConfig } from '../client-core/config';
 import { handler } from '../client-core/plugin';
 import type { Config } from './types';
 
 export const defaultConfig: Plugin.Config<Config> = {
-  _dependencies: ['@hey-api/typescript'],
+  ...clientDefaultConfig,
   _handler: handler,
   _handlerLegacy: () => {},
-  _tags: ['client'],
-  bundle: false,
   name: '@hey-api/client-nuxt',
-  output: 'client',
 };
 
 /**
