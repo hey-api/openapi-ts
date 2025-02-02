@@ -30,7 +30,7 @@ type WithRefs<TData> = {
     : NonNullable<TData[K]> | Ref<NonNullable<TData[K]>>;
 };
 
-export interface Config
+export interface Config<T extends ClientOptions = ClientOptions>
   extends Omit<
       FetchOptions<unknown>,
       'baseURL' | 'body' | 'headers' | 'method' | 'query'
@@ -39,10 +39,8 @@ export interface Config
     Omit<CoreConfig, 'querySerializer'> {
   /**
    * Base URL for all requests made by this client.
-   *
-   * @default ''
    */
-  baseURL?: string;
+  baseURL?: T['baseURL'];
   /**
    * A function for serializing request query parameters. By default, arrays
    * will be exploded in form style, objects will be exploded in deepObject
@@ -93,6 +91,10 @@ export type RequestResult<
           ? ReturnType<typeof useLazyFetch<TData | null, TError>>
           : never;
 
+export interface ClientOptions {
+  baseURL?: string;
+}
+
 type MethodFn = <
   TComposable extends Composable,
   TData = unknown,
@@ -118,7 +120,9 @@ type RequestFn = <
  * `setConfig()`. This is useful for example if you're using Next.js
  * to ensure your client always has the correct values.
  */
-export type CreateClientConfig = (override?: Config) => Config;
+export type CreateClientConfig<T extends ClientOptions = ClientOptions> = (
+  override?: Config<ClientOptions & T>,
+) => Config<Required<ClientOptions> & T>;
 
 export interface TDataShape {
   body?: unknown;

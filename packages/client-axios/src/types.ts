@@ -11,8 +11,8 @@ import type {
   CreateAxiosDefaults,
 } from 'axios';
 
-export interface Config<ThrowOnError extends boolean = boolean>
-  extends Omit<CreateAxiosDefaults, 'auth' | 'headers' | 'method'>,
+export interface Config<T extends ClientOptions = ClientOptions>
+  extends Omit<CreateAxiosDefaults, 'auth' | 'baseURL' | 'headers' | 'method'>,
     CoreConfig {
   /**
    * Axios implementation. You can use this option to provide a custom
@@ -21,6 +21,10 @@ export interface Config<ThrowOnError extends boolean = boolean>
    * @default axios
    */
   axios?: AxiosStatic;
+  /**
+   * Base URL for all requests made by this client.
+   */
+  baseURL?: T['baseURL'];
   /**
    * An object containing any HTTP headers that you want to pre-populate your
    * `Headers` object with.
@@ -44,13 +48,15 @@ export interface Config<ThrowOnError extends boolean = boolean>
    *
    * @default false
    */
-  throwOnError?: ThrowOnError;
+  throwOnError?: T['throwOnError'];
 }
 
 export interface RequestOptions<
   ThrowOnError extends boolean = boolean,
   Url extends string = string,
-> extends Config<ThrowOnError> {
+> extends Config<{
+    throwOnError: ThrowOnError;
+  }> {
   /**
    * Any body that you want to add to your request.
    *
@@ -76,6 +82,11 @@ export type RequestResult<
       | (AxiosResponse<TData> & { error: undefined })
       | (AxiosError<TError> & { data: undefined; error: TError })
     >;
+
+export interface ClientOptions {
+  baseURL?: string;
+  throwOnError?: boolean;
+}
 
 type MethodFn = <
   TData = unknown,
@@ -117,7 +128,9 @@ export type Client = CoreClient<RequestFn, Config, MethodFn, BuildUrlFn> & {
  * `setConfig()`. This is useful for example if you're using Next.js
  * to ensure your client always has the correct values.
  */
-export type CreateClientConfig = (override?: Config) => Config;
+export type CreateClientConfig<T extends ClientOptions = ClientOptions> = (
+  override?: Config<ClientOptions & T>,
+) => Config<Required<ClientOptions> & T>;
 
 export interface TDataShape {
   body?: unknown;
