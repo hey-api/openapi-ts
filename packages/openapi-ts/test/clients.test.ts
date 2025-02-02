@@ -89,6 +89,58 @@ for (const client of clients) {
         }),
         description: 'SDK with required client option',
       },
+      {
+        config: createConfig({
+          output: 'base-url-false',
+          plugins: [
+            {
+              baseUrl: false,
+              name: client,
+            },
+            '@hey-api/typescript',
+          ],
+        }),
+        description: 'client without base URL',
+      },
+      {
+        config: createConfig({
+          output: 'base-url-number',
+          plugins: [
+            {
+              baseUrl: 0,
+              name: client,
+            },
+            '@hey-api/typescript',
+          ],
+        }),
+        description: 'client with numeric base URL',
+      },
+      {
+        config: createConfig({
+          output: 'base-url-string',
+          plugins: [
+            {
+              baseUrl: 'https://foo.com',
+              name: client,
+            },
+            '@hey-api/typescript',
+          ],
+        }),
+        description: 'client with custom string base URL',
+      },
+      {
+        config: createConfig({
+          output: 'base-url-strict',
+          plugins: [
+            {
+              name: client,
+              strictBaseUrl: true,
+            },
+            '@hey-api/typescript',
+          ],
+        }),
+        description: 'client with strict base URL',
+      },
     ];
 
     it.each(scenarios)('$description', async ({ config }) => {
