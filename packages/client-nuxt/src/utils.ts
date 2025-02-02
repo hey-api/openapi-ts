@@ -13,8 +13,8 @@ import type {
   ArraySeparatorStyle,
   BuildUrlOptions,
   Client,
+  ClientOptions,
   Config,
-  CreateClientConfig,
   QuerySerializer,
   RequestOptions,
 } from './types';
@@ -190,7 +190,7 @@ export const setAuthParams = async ({
 
 export const buildUrl: Client['buildUrl'] = (options) => {
   const url = getUrl({
-    baseUrl: options.baseURL ?? '',
+    baseUrl: options.baseURL as string,
     path: options.path,
     query: options.query,
     querySerializer:
@@ -209,11 +209,11 @@ export const getUrl = ({
   querySerializer,
   url: _url,
 }: Pick<BuildUrlOptions, 'path' | 'query' | 'url'> & {
-  baseUrl: string;
+  baseUrl?: string;
   querySerializer: QuerySerializer;
 }) => {
   const pathUrl = _url.startsWith('/') ? _url : `/${_url}`;
-  let url = baseUrl + pathUrl;
+  let url = (baseUrl ?? '') + pathUrl;
   if (path) {
     url = defaultPathSerializer({ path, url });
   }
@@ -302,9 +302,10 @@ const defaultHeaders = {
   'Content-Type': 'application/json',
 };
 
-export const createConfig: CreateClientConfig = (override = {}) => ({
+export const createConfig = <T extends ClientOptions = ClientOptions>(
+  override: Config<ClientOptions & T> = {},
+): Config<Required<ClientOptions> & T> => ({
   ...jsonBodySerializer,
-  baseURL: '',
   headers: defaultHeaders,
   querySerializer: defaultQuerySerializer,
   ...override,

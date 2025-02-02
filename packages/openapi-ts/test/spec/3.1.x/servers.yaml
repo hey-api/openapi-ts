@@ -1,0 +1,21 @@
+openapi: 3.1.1
+info:
+  title: OpenAPI 3.1.1 servers example
+  version: 1
+servers:
+  - url: https://development.gigantic-server.com/v1
+    description: Development server
+  - url: https://staging.gigantic-server.com/v1
+    description: Staging server
+  - url: https://api.gigantic-server.com/v1
+    description: Production server
+paths:
+  /foo:
+    get:
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                type: string
+          description: OK
