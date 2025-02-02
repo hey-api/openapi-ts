@@ -7,5 +7,5 @@ export type Bar = 'foo' | 'bar';
 export type Baz = 'foo' | 'bar';
 
 export type ClientOptions = {
-    baseUrl: string;
+    baseUrl: `${string}://${string}` | (string & {});
 };

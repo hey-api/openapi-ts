@@ -3,5 +3,5 @@
 export type Foo = unknown;
 
 export type ClientOptions = {
-    baseUrl: string;
+    baseUrl: `${string}://${string}` | (string & {});
 };

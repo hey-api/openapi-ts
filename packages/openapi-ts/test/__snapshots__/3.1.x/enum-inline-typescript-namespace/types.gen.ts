@@ -12,5 +12,5 @@ export type Foo = {
 };
 
 export type ClientOptions = {
-    baseUrl: string;
+    baseUrl: `${string}://${string}` | (string & {});
 };
