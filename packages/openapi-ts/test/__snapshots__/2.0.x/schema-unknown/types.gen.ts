@@ -130,3 +130,7 @@ export type SendEmailResponses = {
 };
 
 export type SendEmailResponse2 = SendEmailResponses[keyof SendEmailResponses];
+
+export type ClientOptions = {
+    baseUrl: `${string}://api.postmarkapp.com` | (string & {});
+};

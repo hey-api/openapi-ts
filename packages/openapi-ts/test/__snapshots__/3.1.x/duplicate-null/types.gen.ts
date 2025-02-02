@@ -4,3 +4,7 @@
  * should not produce duplicate null
  */
 export type WeirdEnum = '' | string | null;
+
+export type ClientOptions = {
+    baseUrl: `${string}://${string}` | (string & {});
+};

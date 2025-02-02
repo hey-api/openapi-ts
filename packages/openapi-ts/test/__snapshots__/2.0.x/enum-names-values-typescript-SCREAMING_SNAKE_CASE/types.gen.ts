@@ -25,3 +25,7 @@ export enum Numbers {
     '_-200' = -200,
     '_-300' = -300
 }
+
+export type ClientOptions = {
+    baseUrl: string;
+};

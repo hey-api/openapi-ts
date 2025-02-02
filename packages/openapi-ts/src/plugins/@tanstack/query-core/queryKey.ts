@@ -2,8 +2,8 @@ import { compiler, type Property } from '../../../compiler';
 import { clientApi } from '../../../generate/client';
 import { hasOperationDataRequired } from '../../../ir/operation';
 import type { IR } from '../../../ir/types';
+import { getClientBaseUrlKey } from '../../@hey-api/client-core/utils';
 import { serviceFunctionIdentifier } from '../../@hey-api/sdk/plugin-legacy';
-import { getClientBaseUrlKey } from './client';
 import type { PluginInstance } from './types';
 import { useTypeData } from './useType';
 
@@ -69,9 +69,9 @@ export const createQueryKeyFunction = ({
                 value: compiler.identifier({ text: 'id' }),
               },
               {
-                key: getClientBaseUrlKey(),
+                key: getClientBaseUrlKey(context.config),
                 value: compiler.identifier({
-                  text: `(options?.client ?? _heyApiClient).getConfig().${getClientBaseUrlKey()}`,
+                  text: `(options?.client ?? _heyApiClient).getConfig().${getClientBaseUrlKey(context.config)}`,
                 }),
               },
             ],
@@ -271,7 +271,7 @@ export const createQueryKeyType = ({
         compiler.typeIntersectionNode({
           types: [
             compiler.typeReferenceNode({
-              typeName: `Pick<${TOptionsType}, '${getClientBaseUrlKey()}' | 'body' | 'headers' | 'path' | 'query'>`,
+              typeName: `Pick<${TOptionsType}, '${getClientBaseUrlKey(context.config)}' | 'body' | 'headers' | 'path' | 'query'>`,
             }),
             compiler.typeInterfaceNode({
               properties,

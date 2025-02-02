@@ -22,3 +22,7 @@ export type PostV1FooResponses = {
 };
 
 export type PostV1FooResponse = PostV1FooResponses[keyof PostV1FooResponses];
+
+export type ClientOptions = {
+    baseUrl: string;
+};

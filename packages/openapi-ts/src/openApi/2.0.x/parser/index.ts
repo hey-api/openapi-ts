@@ -11,6 +11,7 @@ import type {
 import { parseOperation } from './operation';
 import { parametersArrayToObject } from './parameter';
 import { parseSchema } from './schema';
+import { parseServers } from './server';
 
 type PathKeys<T extends keyof PathsObject = keyof PathsObject> =
   keyof T extends infer K ? (K extends `/${string}` ? K : never) : never;
@@ -54,6 +55,8 @@ export const parseV2_0_X = (context: IR.Context<OpenApiV2_0_X>) => {
       });
     }
   }
+
+  parseServers({ context });
 
   for (const path in context.spec.paths) {
     if (path.startsWith('x-')) {

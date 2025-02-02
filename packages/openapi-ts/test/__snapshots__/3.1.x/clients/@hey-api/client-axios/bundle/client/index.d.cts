@@ -110,7 +110,7 @@ interface Config$1 {
     responseValidator?: (data: unknown) => Promise<unknown>;
 }
 
-interface Config<ThrowOnError extends boolean = boolean> extends Omit<CreateAxiosDefaults, 'auth' | 'headers' | 'method'>, Config$1 {
+interface Config<T extends ClientOptions = ClientOptions> extends Omit<CreateAxiosDefaults, 'auth' | 'baseURL' | 'headers' | 'method'>, Config$1 {
     /**
      * Axios implementation. You can use this option to provide a custom
      * Axios instance.
@@ -118,6 +118,10 @@ interface Config<ThrowOnError extends boolean = boolean> extends Omit<CreateAxio
      * @default axios
      */
     axios?: AxiosStatic;
+    /**
+     * Base URL for all requests made by this client.
+     */
+    baseURL?: T['baseURL'];
     /**
      * An object containing any HTTP headers that you want to pre-populate your
      * `Headers` object with.
@@ -130,9 +134,11 @@ interface Config<ThrowOnError extends boolean = boolean> extends Omit<CreateAxio
      *
      * @default false
      */
-    throwOnError?: ThrowOnError;
+    throwOnError?: T['throwOnError'];
 }
-interface RequestOptions<ThrowOnError extends boolean = boolean, Url extends string = string> extends Config<ThrowOnError> {
+interface RequestOptions<ThrowOnError extends boolean = boolean, Url extends string = string> extends Config<{
+    throwOnError: ThrowOnError;
+}> {
     /**
      * Any body that you want to add to your request.
      *
@@ -153,6 +159,10 @@ type RequestResult<TData = unknown, TError = unknown, ThrowOnError extends boole
     data: undefined;
     error: TError;
 })>;
+interface ClientOptions {
+    baseURL?: string;
+    throwOnError?: boolean;
+}
 type MethodFn = <TData = unknown, TError = unknown, ThrowOnError extends boolean = false>(options: Omit<RequestOptions<ThrowOnError>, 'method'>) => RequestResult<TData, TError, ThrowOnError>;
 type RequestFn = <TData = unknown, TError = unknown, ThrowOnError extends boolean = false>(options: Omit<RequestOptions<ThrowOnError>, 'method'> & Pick<Required<RequestOptions<ThrowOnError>>, 'method'>) => RequestResult<TData, TError, ThrowOnError>;
 type BuildUrlFn = <TData extends {
@@ -172,7 +182,7 @@ type Client = Client$1<RequestFn, Config, MethodFn, BuildUrlFn> & {
  * `setConfig()`. This is useful for example if you're using Next.js
  * to ensure your client always has the correct values.
  */
-type CreateClientConfig = (override?: Config) => Config;
+type CreateClientConfig<T extends ClientOptions = ClientOptions> = (override?: Config<ClientOptions & T>) => Config<Required<ClientOptions> & T>;
 interface TDataShape {
     body?: unknown;
     headers?: unknown;
@@ -192,6 +202,6 @@ type OptionsLegacyParser<TData = unknown, ThrowOnError extends boolean = boolean
 
 declare const createClient: (config?: Config) => Client;
 
-declare const createConfig: CreateClientConfig;
+declare const createConfig: <T extends ClientOptions = ClientOptions>(override?: Config<Omit<ClientOptions, keyof T> & T>) => Config<Omit<ClientOptions, keyof T> & T>;
 
-export { type Auth, type Client, type Config, type CreateClientConfig, type Options, type OptionsLegacyParser, type QuerySerializerOptions, type RequestOptions, type RequestResult, type TDataShape, createClient, createConfig, formDataBodySerializer, jsonBodySerializer, urlSearchParamsBodySerializer };
+export { type Auth, type Client, type ClientOptions, type Config, type CreateClientConfig, type Options, type OptionsLegacyParser, type QuerySerializerOptions, type RequestOptions, type RequestResult, type TDataShape, createClient, createConfig, formDataBodySerializer, jsonBodySerializer, urlSearchParamsBodySerializer };

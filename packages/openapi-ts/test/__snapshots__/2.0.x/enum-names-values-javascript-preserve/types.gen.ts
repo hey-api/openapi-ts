@@ -41,3 +41,7 @@ export const Numbers = {
     '-200': -200,
     '-300': -300
 } as const;
+
+export type ClientOptions = {
+    baseUrl: string;
+};
