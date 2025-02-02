@@ -9,3 +9,7 @@ export type Foo = ({
     bar?: string;
     baz?: string;
 };
+
+export type ClientOptions = {
+    baseUrl: string;
+};

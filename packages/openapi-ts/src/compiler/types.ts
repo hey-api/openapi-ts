@@ -1012,3 +1012,31 @@ export const createAsExpression = ({
   expression: ts.Expression;
   type: ts.TypeNode;
 }) => ts.factory.createAsExpression(expression, type);
+
+export const createTemplateLiteralType = ({
+  value,
+}: {
+  value: ReadonlyArray<string | ts.TypeNode>;
+}) => {
+  const spans: Array<ts.TemplateLiteralTypeSpan> = [];
+  let spanText = '';
+
+  for (const item of value.slice(0).reverse()) {
+    if (typeof item === 'string') {
+      spanText = `${item}${spanText}`;
+    } else {
+      const literal = spans.length
+        ? ts.factory.createTemplateMiddle(spanText)
+        : ts.factory.createTemplateTail(spanText);
+      const span = ts.factory.createTemplateLiteralTypeSpan(item, literal);
+      spans.push(span);
+      spanText = '';
+    }
+  }
+
+  const templateLiteralType = ts.factory.createTemplateLiteralType(
+    ts.factory.createTemplateHead(spanText),
+    spans.reverse(),
+  );
+  return templateLiteralType;
+};

@@ -13,3 +13,7 @@ export type CreateResponses = {
      */
     200: unknown;
 };
+
+export type ClientOptions = {
+    baseUrl: string;
+};

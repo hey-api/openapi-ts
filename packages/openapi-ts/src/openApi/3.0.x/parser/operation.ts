@@ -236,6 +236,10 @@ export const parseOperation = ({
     context.ir.paths[path] = {};
   }
 
+  if (operation.servers) {
+    context.ir.servers = [...(context.ir.servers ?? []), ...operation.servers];
+  }
+
   operation.id = operationToId({
     context,
     id: operation.operationId,

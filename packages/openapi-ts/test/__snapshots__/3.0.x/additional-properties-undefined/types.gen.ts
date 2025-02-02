@@ -5,3 +5,7 @@ export type Foo = {
         [key: string]: unknown;
     };
 };
+
+export type ClientOptions = {
+    baseUrl: string;
+};

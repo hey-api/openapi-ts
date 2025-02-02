@@ -13,3 +13,7 @@ export type Baz = Foo & {
     bar: string;
     [key: string]: unknown | string;
 };
+
+export type ClientOptions = {
+    baseUrl: string;
+};
