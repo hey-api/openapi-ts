@@ -1,5 +1,39 @@
 # @hey-api/openapi-ts
 
+## 0.64.0
+
+### Minor Changes
+
+- [#1661](https://github.com/hey-api/openapi-ts/pull/1661) [`ccefe43`](https://github.com/hey-api/openapi-ts/commit/ccefe434ee83f1202769547ce128e1c134dee25f) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: added `client.baseUrl` option
+
+  ### Added `client.baseUrl` option
+
+  You can use this option to configure the default base URL for the generated client. By default, we will attempt to resolve the first defined server or infer the base URL from the input path. If you'd like to preserve the previous behavior, set `baseUrl` to `false`.
+
+  ```js
+  export default {
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    plugins: [
+      {
+        baseUrl: false, // [!code ++]
+        name: '@hey-api/client-fetch',
+      },
+    ],
+  };
+  ```
+
+- [#1661](https://github.com/hey-api/openapi-ts/pull/1661) [`bb6d46a`](https://github.com/hey-api/openapi-ts/commit/bb6d46ae119ce4e7e3a2ab3fded74ac4fb4cdff2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: make createConfig, CreateClientConfig, and Config accept ClientOptions generic
+
+  ### Added `ClientOptions` interface
+
+  The `Config` interface now accepts an optional generic extending `ClientOptions` instead of `boolean` type `ThrowOnError`.
+
+  ```ts
+  type Foo = Config<false>; // [!code --]
+  type Foo = Config<{ throwOnError: false }>; // [!code ++]
+  ```
+
 ## 0.63.2
 
 ### Patch Changes
