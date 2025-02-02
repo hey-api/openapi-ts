@@ -12,7 +12,7 @@ import { stringCase } from '../../../utils/stringCase';
 import { fieldName } from '../../shared/utils/case';
 import { operationIrRef } from '../../shared/utils/ref';
 import type { Plugin } from '../../types';
-import { getClientBaseUrlKey } from '../client-core/utils';
+import { createClientOptions } from './clientOptions';
 import { typesId } from './ref';
 import type { Config } from './types';
 
@@ -1020,66 +1020,19 @@ export const schemaToType = ({
   return type;
 };
 
-const createClientOptions = ({
-  context,
-}: {
-  context: IR.Context;
-  plugin: Plugin.Instance<Config>;
-}) => {
-  const file = context.file({ id: typesId })!;
-
-  const clientOptions = file.identifier({
-    $ref: 'ClientOptions',
-    create: true,
-    namespace: 'type',
-  });
-
-  if (!clientOptions.name) {
-    return;
-  }
-
-  const typeClientOptions = compiler.typeAliasDeclaration({
-    exportType: true,
-    name: clientOptions.name,
-    type: compiler.typeInterfaceNode({
-      properties: [
-        {
-          name: getClientBaseUrlKey(context.config),
-          type: compiler.typeUnionNode({
-            types: [
-              compiler.literalTypeNode({
-                literal: compiler.stringLiteral({ text: '/' }),
-              }),
-              compiler.typeIntersectionNode({
-                types: [
-                  compiler.keywordTypeNode({ keyword: 'string' }),
-                  ts.factory.createTypeLiteralNode([]),
-                ],
-              }),
-            ],
-          }),
-        },
-      ],
-      useLegacyResolution: false,
-    }),
-  });
-
-  file.add(typeClientOptions);
-};
-
 export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
-  context.createFile({
+  const file = context.createFile({
     exportFromIndex: plugin.exportFromIndex,
     id: typesId,
     identifierCase: plugin.identifierCase,
     path: plugin.output,
   });
 
-  context.subscribe('before', () => {
-    createClientOptions({
-      context,
-      plugin,
-    });
+  // reserve identifier for ClientOptions
+  const clientOptions = file.identifier({
+    $ref: 'ClientOptions',
+    create: true,
+    namespace: 'type',
   });
 
   context.subscribe('schema', ({ $ref, schema }) => {
@@ -1114,6 +1067,21 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
       context,
       operation,
       plugin,
+    });
+  });
+
+  const servers: Array<IR.ServerObject> = [];
+
+  context.subscribe('server', ({ server }) => {
+    servers.push(server);
+  });
+
+  context.subscribe('after', () => {
+    createClientOptions({
+      context,
+      identifier: clientOptions,
+      plugin,
+      servers,
     });
   });
 };

@@ -5,3 +5,7 @@ export type Type = 'foo' | 'bar';
 export type Foo = {
     type?: 'foo' | 'bar';
 };
+
+export type ClientOptions = {
+    baseUrl: string;
+};

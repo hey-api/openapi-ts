@@ -58,6 +58,7 @@ export const compiler = {
   safeAccessExpression: transform.createSafeAccessExpression,
   stringLiteral: types.createStringLiteral,
   stringToTsNodes: utils.stringToTsNodes,
+  templateLiteralType: types.createTemplateLiteralType,
   transformArrayMap: transform.createArrayMapTransform,
   transformArrayMutation: transform.createArrayTransformMutation,
   transformDateMutation: transform.createDateTransformMutation,

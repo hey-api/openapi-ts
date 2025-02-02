@@ -5,3 +5,7 @@ export type Foo = {
 };
 
 export type Bar = string;
+
+export type ClientOptions = {
+    baseUrl: string;
+};

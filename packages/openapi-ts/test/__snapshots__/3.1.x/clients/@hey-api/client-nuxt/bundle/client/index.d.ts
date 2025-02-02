@@ -115,13 +115,11 @@ type QuerySerializer = (query: Parameters<Client['buildUrl']>[0]['query']) => st
 type WithRefs<TData> = {
     [K in keyof TData]: NonNullable<TData[K]> extends object ? WithRefs<NonNullable<TData[K]>> | Ref<NonNullable<TData[K]>> : NonNullable<TData[K]> | Ref<NonNullable<TData[K]>>;
 };
-interface Config extends Omit<FetchOptions<unknown>, 'baseURL' | 'body' | 'headers' | 'method' | 'query'>, WithRefs<Pick<FetchOptions<unknown>, 'query'>>, Omit<Config$1, 'querySerializer'> {
+interface Config<T extends ClientOptions = ClientOptions> extends Omit<FetchOptions<unknown>, 'baseURL' | 'body' | 'headers' | 'method' | 'query'>, WithRefs<Pick<FetchOptions<unknown>, 'query'>>, Omit<Config$1, 'querySerializer'> {
     /**
      * Base URL for all requests made by this client.
-     *
-     * @default ''
      */
-    baseURL?: string;
+    baseURL?: T['baseURL'];
     /**
      * A function for serializing request query parameters. By default, arrays
      * will be exploded in form style, objects will be exploded in deepObject
@@ -151,6 +149,9 @@ interface RequestOptions<TComposable extends Composable = Composable, Url extend
     url: Url;
 }
 type RequestResult<TComposable extends Composable, TData, TError> = TComposable extends '$fetch' ? ReturnType<typeof $fetch<TData>> : TComposable extends 'useAsyncData' ? ReturnType<typeof useAsyncData<TData | null, TError>> : TComposable extends 'useFetch' ? ReturnType<typeof useFetch<TData | null, TError>> : TComposable extends 'useLazyAsyncData' ? ReturnType<typeof useLazyAsyncData<TData | null, TError>> : TComposable extends 'useLazyFetch' ? ReturnType<typeof useLazyFetch<TData | null, TError>> : never;
+interface ClientOptions {
+    baseURL?: string;
+}
 type MethodFn = <TComposable extends Composable, TData = unknown, TError = unknown>(options: Omit<RequestOptions<TComposable>, 'method'>) => RequestResult<TComposable, TData, TError>;
 type RequestFn = <TComposable extends Composable, TData = unknown, TError = unknown>(options: Omit<RequestOptions<TComposable>, 'method'> & Pick<Required<RequestOptions<TComposable>>, 'method'>) => RequestResult<TComposable, TData, TError>;
 /**
@@ -161,7 +162,7 @@ type RequestFn = <TComposable extends Composable, TData = unknown, TError = unkn
  * `setConfig()`. This is useful for example if you're using Next.js
  * to ensure your client always has the correct values.
  */
-type CreateClientConfig = (override?: Config) => Config;
+type CreateClientConfig<T extends ClientOptions = ClientOptions> = (override?: Config<ClientOptions & T>) => Config<Required<ClientOptions> & T>;
 interface TDataShape {
     body?: unknown;
     headers?: unknown;
@@ -186,6 +187,6 @@ type Composable = '$fetch' | 'useAsyncData' | 'useFetch' | 'useLazyAsyncData' | 
 
 declare const createClient: (config?: Config) => Client;
 
-declare const createConfig: CreateClientConfig;
+declare const createConfig: <T extends ClientOptions = ClientOptions>(override?: Config<Omit<ClientOptions, keyof T> & T>) => Config<Omit<ClientOptions, keyof T> & T>;
 
-export { type Auth, type Client, type Composable, type Config, type CreateClientConfig, type Options, type OptionsLegacyParser, type QuerySerializerOptions, type RequestOptions, type RequestResult, type TDataShape, createClient, createConfig, formDataBodySerializer, jsonBodySerializer, urlSearchParamsBodySerializer };
+export { type Auth, type Client, type ClientOptions, type Composable, type Config, type CreateClientConfig, type Options, type OptionsLegacyParser, type QuerySerializerOptions, type RequestOptions, type RequestResult, type TDataShape, createClient, createConfig, formDataBodySerializer, jsonBodySerializer, urlSearchParamsBodySerializer };

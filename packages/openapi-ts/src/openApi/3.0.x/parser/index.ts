@@ -99,6 +99,10 @@ export const parseV3_0_X = (context: IR.Context<OpenApiV3_0_X>) => {
     }
   }
 
+  if (context.spec.servers) {
+    context.ir.servers = context.spec.servers;
+  }
+
   for (const path in context.spec.paths) {
     const pathItem = context.spec.paths[path as keyof PathsObject]!;
 

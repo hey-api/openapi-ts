@@ -83,3 +83,7 @@ export type getFooResponses = {
 };
 
 export type getFooResponse = getFooResponses[keyof getFooResponses];
+
+export type clientOptions = {
+    baseUrl: string;
+};

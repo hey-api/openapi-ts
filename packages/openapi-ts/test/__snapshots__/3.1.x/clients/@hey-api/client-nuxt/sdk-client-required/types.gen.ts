@@ -1937,3 +1937,7 @@ export type PutWithFormUrlEncodedData = {
     query?: never;
     url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串';
 };
+
+export type ClientOptions = {
+    baseURL: 'http://localhost:3000/base' | (string & {});
+};
