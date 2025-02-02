@@ -303,8 +303,8 @@ const defaultHeaders = {
 };
 
 export const createConfig = <T extends ClientOptions = ClientOptions>(
-  override: Config<ClientOptions & T> = {},
-): Config<Required<ClientOptions> & T> => ({
+  override: Config<Omit<ClientOptions, keyof T> & T> = {},
+): Config<Omit<ClientOptions, keyof T> & T> => ({
   ...jsonBodySerializer,
   headers: defaultHeaders,
   querySerializer: defaultQuerySerializer,

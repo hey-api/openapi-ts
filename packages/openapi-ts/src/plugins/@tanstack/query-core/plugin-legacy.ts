@@ -20,7 +20,10 @@ import type { Config } from '../../../types/config';
 import type { Files } from '../../../types/utils';
 import { getConfig, isLegacyClient } from '../../../utils/config';
 import { transformServiceName } from '../../../utils/transform';
-import { getClientPlugin } from '../../@hey-api/client-core/utils';
+import {
+  getClientBaseUrlKey,
+  getClientPlugin,
+} from '../../@hey-api/client-core/utils';
 import {
   generateImport,
   operationDataTypeName,
@@ -100,12 +103,6 @@ const mutationOptionsFn = 'mutationOptions';
 const queryKeyName = 'QueryKey';
 const queryOptionsFn = 'queryOptions';
 const TOptionsType = 'TOptions';
-
-const getClientBaseUrlKey = () => {
-  const config = getConfig();
-  const clientPlugin = getClientPlugin(config);
-  return clientPlugin.name === '@hey-api/client-axios' ? 'baseURL' : 'baseUrl';
-};
 
 const createInfiniteParamsFunction = ({
   file,
@@ -329,9 +326,9 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
                 value: compiler.identifier({ text: 'id' }),
               },
               {
-                key: getClientBaseUrlKey(),
+                key: getClientBaseUrlKey(getConfig()),
                 value: compiler.identifier({
-                  text: `(options?.client ?? _heyApiClient).getConfig().${getClientBaseUrlKey()}`,
+                  text: `(options?.client ?? _heyApiClient).getConfig().${getClientBaseUrlKey(getConfig())}`,
                 }),
               },
             ],
@@ -491,7 +488,7 @@ const createQueryKeyType = ({ file }: { file: Files[keyof Files] }) => {
         compiler.typeIntersectionNode({
           types: [
             compiler.typeReferenceNode({
-              typeName: `Pick<${TOptionsType}, '${getClientBaseUrlKey()}' | 'body' | 'headers' | 'path' | 'query'>`,
+              typeName: `Pick<${TOptionsType}, '${getClientBaseUrlKey(getConfig())}' | 'body' | 'headers' | 'path' | 'query'>`,
             }),
             compiler.typeInterfaceNode({
               properties,
