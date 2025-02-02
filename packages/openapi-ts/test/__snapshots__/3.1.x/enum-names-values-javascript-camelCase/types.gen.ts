@@ -44,5 +44,5 @@ export const Numbers = {
 } as const;
 
 export type ClientOptions = {
-    baseUrl: string;
+    baseUrl: `${string}://${string}` | (string & {});
 };

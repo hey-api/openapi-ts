@@ -25,5 +25,5 @@ export type PostFooResponses = {
 };
 
 export type ClientOptions = {
-    baseUrl: string;
+    baseUrl: `${string}://${string}` | (string & {});
 };

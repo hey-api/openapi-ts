@@ -15,5 +15,5 @@ export type CreateResponses = {
 };
 
 export type ClientOptions = {
-    baseUrl: string;
+    baseUrl: `${string}://${string}` | (string & {});
 };

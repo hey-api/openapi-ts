@@ -6,5 +6,5 @@
 export type WeirdEnum = '' | string | null;
 
 export type ClientOptions = {
-    baseUrl: string;
+    baseUrl: `${string}://${string}` | (string & {});
 };

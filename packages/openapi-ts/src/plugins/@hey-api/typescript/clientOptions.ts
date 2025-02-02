@@ -53,16 +53,14 @@ export const createClientOptions = ({
     serverToBaseUrlType({ server }),
   );
 
-  if (!('strictBaseUrl' in client && client.strictBaseUrl)) {
-    if (servers.length) {
-      types.push(
-        compiler.typeIntersectionNode({
-          types: [stringType, ts.factory.createTypeLiteralNode([])],
-        }),
-      );
-    } else {
-      types.push(stringType);
-    }
+  if (!servers.length) {
+    types.push(stringType);
+  } else if (!('strictBaseUrl' in client && client.strictBaseUrl)) {
+    types.push(
+      compiler.typeIntersectionNode({
+        types: [stringType, ts.factory.createTypeLiteralNode([])],
+      }),
+    );
   }
 
   const typeClientOptions = compiler.typeAliasDeclaration({

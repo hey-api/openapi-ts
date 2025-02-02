@@ -85,5 +85,5 @@ export type getFooResponses = {
 export type getFooResponse = getFooResponses[keyof getFooResponses];
 
 export type clientOptions = {
-    baseUrl: string;
+    baseUrl: `${string}://${string}` | (string & {});
 };

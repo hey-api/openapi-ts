@@ -27,5 +27,5 @@ export type GetBarResponses = {
 export type GetBarResponse = GetBarResponses[keyof GetBarResponses];
 
 export type ClientOptions = {
-    baseUrl: string;
+    baseUrl: `${string}://${string}` | (string & {});
 };

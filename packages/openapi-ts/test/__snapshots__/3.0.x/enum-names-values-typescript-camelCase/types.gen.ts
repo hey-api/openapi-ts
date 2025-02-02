@@ -27,5 +27,5 @@ export enum Numbers {
 }
 
 export type ClientOptions = {
-    baseUrl: string;
+    baseUrl: `${string}://${string}` | (string & {});
 };
