@@ -3,6 +3,7 @@ import { handler } from '../client-core/plugin';
 import type { Config } from './types';
 
 export const defaultConfig: Plugin.Config<Config> = {
+  _dependencies: ['@hey-api/typescript'],
   _handler: handler,
   _handlerLegacy: () => {},
   _tags: ['client'],
