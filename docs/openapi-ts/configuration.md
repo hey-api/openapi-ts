@@ -273,7 +273,7 @@ Setting `output.clean` to `false` may result in broken output. Ensure you typech
 
 ## Config API
 
-You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/types/config.ts) interface.
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/types/config.d.ts) interface.
 
 <!--@include: ../examples.md-->
 <!--@include: ../sponsors.md-->

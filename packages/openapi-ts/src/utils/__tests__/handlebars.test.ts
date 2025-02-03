@@ -58,7 +58,8 @@ describe('registerHandlebarHelpers', () => {
       useOptions: false,
       watch: {
         enabled: false,
-        interval: 1000,
+        interval: 1_000,
+        timeout: 60_000,
       },
     });
     registerHandlebarHelpers();
@@ -123,7 +124,8 @@ describe('registerHandlebarTemplates', () => {
       useOptions: false,
       watch: {
         enabled: false,
-        interval: 1000,
+        interval: 1_000,
+        timeout: 60_000,
       },
     });
     const templates = registerHandlebarTemplates();

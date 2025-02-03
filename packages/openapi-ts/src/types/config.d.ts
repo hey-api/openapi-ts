@@ -163,7 +163,8 @@ export interface UserConfig {
    */
   plugins?: ReadonlyArray<UserPlugins['name'] | UserPlugins>;
   /**
-   * Regenerate the client when the input file changes?
+   * Regenerate the client when the input file changes? You can alternatively
+   * pass a numeric value for the interval in ms.
    *
    * @default false
    */
@@ -178,11 +179,17 @@ export interface UserConfig {
          */
         enabled?: boolean;
         /**
-         * How often should we attempt to detect the input file change?
+         * How often should we attempt to detect the input file change? (in ms)
          *
          * @default 1000
          */
         interval?: number;
+        /**
+         * How long will we wait before the request times out?
+         *
+         * @default 60_000
+         */
+        timeout?: number;
       };
   /**
    * @deprecated
@@ -258,5 +265,5 @@ export type Config = Omit<
       ExtractArrayOfObjects<ReadonlyArray<ClientPlugins>, { name: string }>,
       'name'
     >;
-    watch: Extract<UserConfig['watch'], object>;
+    watch: Extract<Required<UserConfig['watch']>, object>;
   };
