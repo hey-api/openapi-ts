@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.64.1
+
+### Patch Changes
+
+- [#1668](https://github.com/hey-api/openapi-ts/pull/1668) [`7a03341`](https://github.com/hey-api/openapi-ts/commit/7a03341301d9d56ae93b4e4e3bd1ca469444f886) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: watch mode handles servers not exposing HEAD method for spec
+
+- [#1668](https://github.com/hey-api/openapi-ts/pull/1668) [`7a03341`](https://github.com/hey-api/openapi-ts/commit/7a03341301d9d56ae93b4e4e3bd1ca469444f886) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add watch.timeout option
+
 ## 0.64.0
 
 ### Minor Changes
