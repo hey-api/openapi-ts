@@ -59,7 +59,8 @@ describe('generateIndexFile', () => {
       useOptions: true,
       watch: {
         enabled: false,
-        interval: 1000,
+        interval: 1_000,
+        timeout: 60_000,
       },
     });
 
