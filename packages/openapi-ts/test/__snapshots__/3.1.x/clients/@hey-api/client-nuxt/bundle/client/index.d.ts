@@ -42,7 +42,7 @@ declare const jsonBodySerializer: {
     bodySerializer: <T>(body: T) => string;
 };
 declare const urlSearchParamsBodySerializer: {
-    bodySerializer: <T extends Record<string, any> | Array<Record<string, any>>>(body: T) => URLSearchParams;
+    bodySerializer: <T extends Record<string, any> | Array<Record<string, any>>>(body: T) => string;
 };
 
 interface Client$1<RequestFn = never, Config = unknown, MethodFn = never, BuildUrlFn = never> {
