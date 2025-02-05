@@ -79,6 +79,6 @@ export const urlSearchParamsBodySerializer = {
       }
     });
 
-    return data;
+    return data.toString();
   },
 };
