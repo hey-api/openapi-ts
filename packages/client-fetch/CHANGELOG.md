@@ -1,5 +1,12 @@
 # @hey-api/client-fetch
 
+## 0.8.1
+
+### Patch Changes
+
+- [#1674](https://github.com/hey-api/openapi-ts/pull/1674) [`7f0f4a7`](https://github.com/hey-api/openapi-ts/commit/7f0f4a76b06c8fafb33581b522faf8efc6fd85ac) Thanks [@ale18V](https://github.com/ale18V)! - Return a string from urlSearchParamsBodySerializer instead of a URLSearchParams object.
+  This is due to some runtimes not being able to handle the URLSearchParams object as fetch body.
+
 ## 0.8.0
 
 ### Minor Changes
