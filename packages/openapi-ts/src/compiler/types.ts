@@ -285,26 +285,93 @@ export const createKeywordTypeNode = ({
   return ts.factory.createKeywordTypeNode(kind);
 };
 
-export const toTypeParameters = (types: FunctionTypeParameter[]) =>
-  types.map((type) =>
-    ts.factory.createTypeParameterDeclaration(
-      undefined,
-      type.name,
+export const toTypeParameters = (
+  types: (FunctionTypeParameter | ts.TypeParameterDeclaration)[],
+) =>
+  types.map((node) => {
+    // @ts-expect-error
+    if (ts.isTypeParameterDeclaration(node)) {
+      return node;
+    }
+
+    return createTypeParameterDeclaration({
       // TODO: support other extends values
-      type.extends
-        ? typeof type.extends === 'string'
+      constraint: node.extends
+        ? typeof node.extends === 'string'
           ? createKeywordTypeNode({ keyword: 'boolean' })
-          : type.extends
+          : node.extends
         : undefined,
       // TODO: support other default types
-      type.default !== undefined
-        ? isTsNode(type.default)
-          ? (type.default as unknown as ts.TypeNode)
-          : ts.factory.createLiteralTypeNode(
-              type.default ? ts.factory.createTrue() : ts.factory.createFalse(),
-            )
-        : undefined,
-    ),
+      defaultType:
+        node.default !== undefined
+          ? isTsNode(node.default)
+            ? (node.default as unknown as ts.TypeNode)
+            : ts.factory.createLiteralTypeNode(
+                node.default
+                  ? ts.factory.createTrue()
+                  : ts.factory.createFalse(),
+              )
+          : undefined,
+      name: node.name,
+    });
+  });
+
+export const createTypeOperatorNode = ({
+  operator,
+  type,
+}: {
+  operator: 'keyof' | 'readonly' | 'unique';
+  type: ts.TypeNode;
+}) => {
+  const operatorKeyword =
+    operator === 'keyof'
+      ? ts.SyntaxKind.KeyOfKeyword
+      : operator === 'readonly'
+        ? ts.SyntaxKind.ReadonlyKeyword
+        : ts.SyntaxKind.UniqueKeyword;
+  return ts.factory.createTypeOperatorNode(operatorKeyword, type);
+};
+
+export const createTypeParameterDeclaration = ({
+  constraint,
+  defaultType,
+  modifiers,
+  name,
+}: {
+  constraint?: ts.TypeNode;
+  defaultType?: ts.TypeNode;
+  modifiers?: Array<ts.Modifier>;
+  name: string | ts.Identifier;
+}) =>
+  ts.factory.createTypeParameterDeclaration(
+    modifiers,
+    name,
+    constraint,
+    defaultType,
+  );
+
+export const createMappedTypeNode = ({
+  members,
+  nameType,
+  questionToken,
+  readonlyToken,
+  type,
+  typeParameter,
+}: {
+  members?: ts.NodeArray<ts.TypeElement>;
+  nameType?: ts.TypeNode;
+  questionToken?: ts.QuestionToken | ts.PlusToken | ts.MinusToken;
+  readonlyToken?: ts.ReadonlyKeyword | ts.PlusToken | ts.MinusToken;
+  type?: ts.TypeNode;
+  typeParameter: ts.TypeParameterDeclaration;
+}) =>
+  ts.factory.createMappedTypeNode(
+    readonlyToken,
+    typeParameter,
+    nameType,
+    questionToken,
+    type,
+    members,
   );
 
 export const createLiteralTypeNode = ({
@@ -945,3 +1012,31 @@ export const createAsExpression = ({
   expression: ts.Expression;
   type: ts.TypeNode;
 }) => ts.factory.createAsExpression(expression, type);
+
+export const createTemplateLiteralType = ({
+  value,
+}: {
+  value: ReadonlyArray<string | ts.TypeNode>;
+}) => {
+  const spans: Array<ts.TemplateLiteralTypeSpan> = [];
+  let spanText = '';
+
+  for (const item of value.slice(0).reverse()) {
+    if (typeof item === 'string') {
+      spanText = `${item}${spanText}`;
+    } else {
+      const literal = spans.length
+        ? ts.factory.createTemplateMiddle(spanText)
+        : ts.factory.createTemplateTail(spanText);
+      const span = ts.factory.createTemplateLiteralTypeSpan(item, literal);
+      spans.push(span);
+      spanText = '';
+    }
+  }
+
+  const templateLiteralType = ts.factory.createTemplateLiteralType(
+    ts.factory.createTemplateHead(spanText),
+    spans.reverse(),
+  );
+  return templateLiteralType;
+};

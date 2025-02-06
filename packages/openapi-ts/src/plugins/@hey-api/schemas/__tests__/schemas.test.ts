@@ -13,9 +13,6 @@ vi.mock('node:fs');
 describe('generateLegacySchemas', () => {
   it('writes to filesystem', async () => {
     setConfig({
-      client: {
-        name: 'legacy/fetch',
-      },
       configFile: '',
       dryRun: false,
       experimentalParser: false,
@@ -31,7 +28,12 @@ describe('generateLegacySchemas', () => {
       output: {
         path: '',
       },
-      pluginOrder: ['@hey-api/typescript', '@hey-api/schemas', '@hey-api/sdk'],
+      pluginOrder: [
+        '@hey-api/typescript',
+        '@hey-api/schemas',
+        'legacy/fetch',
+        '@hey-api/sdk',
+      ],
       plugins: {
         '@hey-api/schemas': {
           _handler: () => {},
@@ -49,11 +51,18 @@ describe('generateLegacySchemas', () => {
           enums: 'javascript',
           name: '@hey-api/typescript',
         },
+        'legacy/fetch': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          _tags: ['client'],
+          name: 'legacy/fetch',
+        },
       },
       useOptions: true,
       watch: {
         enabled: false,
-        interval: 1000,
+        interval: 1_000,
+        timeout: 60_000,
       },
     });
 
@@ -92,9 +101,6 @@ describe('generateLegacySchemas', () => {
     const nameFn = vi.fn().mockReturnValue('customName');
 
     setConfig({
-      client: {
-        name: 'legacy/fetch',
-      },
       configFile: '',
       dryRun: false,
       experimentalParser: false,
@@ -110,7 +116,12 @@ describe('generateLegacySchemas', () => {
       output: {
         path: '',
       },
-      pluginOrder: ['@hey-api/typescript', '@hey-api/schemas', '@hey-api/sdk'],
+      pluginOrder: [
+        '@hey-api/typescript',
+        '@hey-api/schemas',
+        'legacy/fetch',
+        '@hey-api/sdk',
+      ],
       plugins: {
         '@hey-api/schemas': {
           _handler: () => {},
@@ -129,11 +140,18 @@ describe('generateLegacySchemas', () => {
           enums: 'javascript',
           name: '@hey-api/typescript',
         },
+        'legacy/fetch': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          _tags: ['client'],
+          name: 'legacy/fetch',
+        },
       },
       useOptions: true,
       watch: {
         enabled: false,
-        interval: 1000,
+        interval: 1_000,
+        timeout: 60_000,
       },
     });
 

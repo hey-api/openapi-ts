@@ -21,6 +21,10 @@ import type { Files } from '../../../types/utils';
 import { getConfig, isLegacyClient } from '../../../utils/config';
 import { transformServiceName } from '../../../utils/transform';
 import {
+  getClientBaseUrlKey,
+  getClientPlugin,
+} from '../../@hey-api/client-core/utils';
+import {
   generateImport,
   operationDataTypeName,
   operationErrorTypeName,
@@ -99,11 +103,6 @@ const mutationOptionsFn = 'mutationOptions';
 const queryKeyName = 'QueryKey';
 const queryOptionsFn = 'queryOptions';
 const TOptionsType = 'TOptions';
-
-const getClientBaseUrlKey = () => {
-  const config = getConfig();
-  return config.client.name === '@hey-api/client-axios' ? 'baseURL' : 'baseUrl';
-};
 
 const createInfiniteParamsFunction = ({
   file,
@@ -327,9 +326,9 @@ const createQueryKeyFunction = ({ file }: { file: Files[keyof Files] }) => {
                 value: compiler.identifier({ text: 'id' }),
               },
               {
-                key: getClientBaseUrlKey(),
+                key: getClientBaseUrlKey(getConfig()),
                 value: compiler.identifier({
-                  text: `(options?.client ?? client).getConfig().${getClientBaseUrlKey()}`,
+                  text: `(options?.client ?? _heyApiClient).getConfig().${getClientBaseUrlKey(getConfig())}`,
                 }),
               },
             ],
@@ -489,7 +488,7 @@ const createQueryKeyType = ({ file }: { file: Files[keyof Files] }) => {
         compiler.typeIntersectionNode({
           types: [
             compiler.typeReferenceNode({
-              typeName: `Pick<${TOptionsType}, '${getClientBaseUrlKey()}' | 'body' | 'headers' | 'path' | 'query'>`,
+              typeName: `Pick<${TOptionsType}, '${getClientBaseUrlKey(getConfig())}' | 'body' | 'headers' | 'path' | 'query'>`,
             }),
             compiler.typeInterfaceNode({
               properties,
@@ -596,7 +595,8 @@ const createTypeError = ({
     });
   }
 
-  if (config.client.name === '@hey-api/client-axios') {
+  const clientPlugin = getClientPlugin(config);
+  if (clientPlugin.name === '@hey-api/client-axios') {
     const axiosError = file.import({
       asType: true,
       module: 'axios',
@@ -1294,21 +1294,23 @@ export const handlerLegacy: Plugin.LegacyHandler<
         file.add(statement);
       }
 
-      const sdkModulePath = relativeModulePath({
-        moduleOutput: files.sdk!.nameWithoutExtension(),
-        sourceOutput: plugin.output,
-      });
-
       if (hasQueries || hasInfiniteQueries) {
         file.import({
-          module: sdkModulePath,
+          alias: '_heyApiClient',
+          module: relativeModulePath({
+            moduleOutput: files.client!.nameWithoutExtension(),
+            sourceOutput: plugin.output,
+          }),
           name: 'client',
         });
       }
 
       if (hasUsedQueryFn) {
         file.import({
-          module: sdkModulePath,
+          module: relativeModulePath({
+            moduleOutput: files.sdk!.nameWithoutExtension(),
+            sourceOutput: plugin.output,
+          }),
           name: queryFn.split('.')[0]!,
         });
       }

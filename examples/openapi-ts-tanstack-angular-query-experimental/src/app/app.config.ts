@@ -7,7 +7,7 @@ import {
   QueryClient,
 } from '@tanstack/angular-query-experimental';
 
-import { client } from '../client';
+import { client } from '../client/client.gen';
 import { routes } from './app.routes';
 
 client.setConfig({

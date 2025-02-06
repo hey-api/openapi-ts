@@ -1,5 +1,142 @@
 # @hey-api/openapi-ts
 
+## 0.64.1
+
+### Patch Changes
+
+- [#1668](https://github.com/hey-api/openapi-ts/pull/1668) [`7a03341`](https://github.com/hey-api/openapi-ts/commit/7a03341301d9d56ae93b4e4e3bd1ca469444f886) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: watch mode handles servers not exposing HEAD method for spec
+
+- [#1668](https://github.com/hey-api/openapi-ts/pull/1668) [`7a03341`](https://github.com/hey-api/openapi-ts/commit/7a03341301d9d56ae93b4e4e3bd1ca469444f886) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add watch.timeout option
+
+## 0.64.0
+
+### Minor Changes
+
+- [#1661](https://github.com/hey-api/openapi-ts/pull/1661) [`ccefe43`](https://github.com/hey-api/openapi-ts/commit/ccefe434ee83f1202769547ce128e1c134dee25f) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: added `client.baseUrl` option
+
+  ### Added `client.baseUrl` option
+
+  You can use this option to configure the default base URL for the generated client. By default, we will attempt to resolve the first defined server or infer the base URL from the input path. If you'd like to preserve the previous behavior, set `baseUrl` to `false`.
+
+  ```js
+  export default {
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    plugins: [
+      {
+        baseUrl: false, // [!code ++]
+        name: '@hey-api/client-fetch',
+      },
+    ],
+  };
+  ```
+
+- [#1661](https://github.com/hey-api/openapi-ts/pull/1661) [`bb6d46a`](https://github.com/hey-api/openapi-ts/commit/bb6d46ae119ce4e7e3a2ab3fded74ac4fb4cdff2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: make createConfig, CreateClientConfig, and Config accept ClientOptions generic
+
+  ### Added `ClientOptions` interface
+
+  The `Config` interface now accepts an optional generic extending `ClientOptions` instead of `boolean` type `ThrowOnError`.
+
+  ```ts
+  type Foo = Config<false>; // [!code --]
+  type Foo = Config<{ throwOnError: false }>; // [!code ++]
+  ```
+
+## 0.63.2
+
+### Patch Changes
+
+- [#1651](https://github.com/hey-api/openapi-ts/pull/1651) [`df350f3`](https://github.com/hey-api/openapi-ts/commit/df350f31dae957d063010ba46c5008ae831b3a32) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: lower Node version requirements
+
+## 0.63.1
+
+### Patch Changes
+
+- [#1637](https://github.com/hey-api/openapi-ts/pull/1637) [`2dc380e`](https://github.com/hey-api/openapi-ts/commit/2dc380eabc17c723654beb04ecd7bce6d33d3b49) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update keywords in package.json
+
+- [#1637](https://github.com/hey-api/openapi-ts/pull/1637) [`2dc380e`](https://github.com/hey-api/openapi-ts/commit/2dc380eabc17c723654beb04ecd7bce6d33d3b49) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add Next.js client
+
+- [#1646](https://github.com/hey-api/openapi-ts/pull/1646) [`2cbffeb`](https://github.com/hey-api/openapi-ts/commit/2cbffeb2cdd6c6143cd68cac68369584879dda31) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: support required client in SDK using sdk.client = false
+
+- [#1648](https://github.com/hey-api/openapi-ts/pull/1648) [`66a9e45`](https://github.com/hey-api/openapi-ts/commit/66a9e4517d2306da8c60750dc3380e6774a7177b) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add support for openIdConnect auth flow
+
+## 0.63.0
+
+### Minor Changes
+
+- [#1626](https://github.com/hey-api/openapi-ts/pull/1626) [`8eba19d`](https://github.com/hey-api/openapi-ts/commit/8eba19d4092fc0903572ab9fdadf0b4c26928ba2) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: move clients to plugins
+
+  ### Client plugins
+
+  Clients are now plugins generating their own `client.gen.ts` file. There's no migration needed if you're using CLI. If you're using the configuration file, move `client` options to `plugins`.
+
+  ```js
+  export default {
+    client: '@hey-api/client-fetch', // [!code --]
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    plugins: ['@hey-api/client-fetch'], // [!code ++]
+  };
+  ```
+
+### Patch Changes
+
+- [#1626](https://github.com/hey-api/openapi-ts/pull/1626) [`8eba19d`](https://github.com/hey-api/openapi-ts/commit/8eba19d4092fc0903572ab9fdadf0b4c26928ba2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: move sdk.throwOnError option to client.throwOnError
+
+  ### Moved `sdk.throwOnError` option
+
+  This SDK configuration option has been moved to the client plugins where applicable. Not every client can be configured to throw on error, so it didn't make sense to expose the option when it didn't have any effect.
+
+  ```js
+  export default {
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    plugins: [
+      {
+        name: '@hey-api/client-fetch',
+        throwOnError: true, // [!code ++]
+      },
+      {
+        name: '@hey-api/sdk',
+        throwOnError: true, // [!code --]
+      },
+    ],
+  };
+  ```
+
+- [#1626](https://github.com/hey-api/openapi-ts/pull/1626) [`8eba19d`](https://github.com/hey-api/openapi-ts/commit/8eba19d4092fc0903572ab9fdadf0b4c26928ba2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: sdks import client from client.gen.ts instead of defining it inside the file
+
+  ### Added `client.gen.ts` file
+
+  The internal `client` instance previously located in `sdk.gen.ts` is now defined in `client.gen.ts`. If you're importing it in your code, update the import module.
+
+  ```js
+  import { client } from 'client/sdk.gen'; // [!code --]
+  import { client } from 'client/client.gen'; // [!code ++]
+  ```
+
+- [#1626](https://github.com/hey-api/openapi-ts/pull/1626) [`8eba19d`](https://github.com/hey-api/openapi-ts/commit/8eba19d4092fc0903572ab9fdadf0b4c26928ba2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: throw if inferred plugin not found
+
+## 0.62.3
+
+### Patch Changes
+
+- [#1600](https://github.com/hey-api/openapi-ts/pull/1600) [`0432418`](https://github.com/hey-api/openapi-ts/commit/0432418d72c94ef94865f8216ed2f723ad5191f9) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: bundle clients from compiled index file
+
+- [#1594](https://github.com/hey-api/openapi-ts/pull/1594) [`bc66cde`](https://github.com/hey-api/openapi-ts/commit/bc66cde1ebe0e2df08c8d04b3ddc9504e4952cf3) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: generate correct response for text/plain content type
+
+- [#1596](https://github.com/hey-api/openapi-ts/pull/1596) [`4784727`](https://github.com/hey-api/openapi-ts/commit/47847276e8bc854045044dd414382080270dd779) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: do not use a body serializer on text/plain sdks
+
+- [#1602](https://github.com/hey-api/openapi-ts/pull/1602) [`194f941`](https://github.com/hey-api/openapi-ts/commit/194f94110545f2cae07bde13b863cd0cb5284d8a) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: support all oauth2 flows in sdk auth
+
+- [#1596](https://github.com/hey-api/openapi-ts/pull/1596) [`4784727`](https://github.com/hey-api/openapi-ts/commit/47847276e8bc854045044dd414382080270dd779) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add null to valid bodySerializer types
+
+## 0.62.2
+
+### Patch Changes
+
+- [#1519](https://github.com/hey-api/openapi-ts/pull/1519) [`14d3c4c`](https://github.com/hey-api/openapi-ts/commit/14d3c4ce0393d543e2d3aaebbfcf8f0cf32483b0) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add support for Nuxt client
+
 ## 0.62.1
 
 ### Patch Changes

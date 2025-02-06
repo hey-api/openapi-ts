@@ -25,6 +25,7 @@ export interface Config extends Plugin.Name<'@hey-api/schemas'> {
   ) => string;
   /**
    * Name of the generated file.
+   *
    * @default 'schemas'
    */
   output?: string;
@@ -32,6 +33,7 @@ export interface Config extends Plugin.Name<'@hey-api/schemas'> {
    * Choose schema type to generate. Select 'form' if you don't want
    * descriptions to reduce bundle size and you plan to use schemas
    * for form validation
+   *
    * @default 'json'
    */
   type?: 'form' | 'json';

@@ -10,3 +10,7 @@ export type Bar = Foo & {
     foo: string;
     baz: string;
 };
+
+export type ClientOptions = {
+    baseUrl: `${string}://${string}` | (string & {});
+};

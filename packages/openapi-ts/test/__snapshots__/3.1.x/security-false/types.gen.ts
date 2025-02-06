@@ -13,3 +13,7 @@ export type GetFooResponses = {
      */
     200: unknown;
 };
+
+export type ClientOptions = {
+    baseUrl: `${string}://${string}` | (string & {});
+};

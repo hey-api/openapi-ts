@@ -172,7 +172,7 @@ describe('bin', () => {
     ]);
     expect(result.stdout.toString()).toBe('');
     expect(result.stderr.toString()).toContain('Unexpected error occurred');
-    expect(result.stderr.toString()).toContain('invalid client');
+    expect(result.stderr.toString()).toContain('client needs to be set');
   });
 
   it('displays help', () => {

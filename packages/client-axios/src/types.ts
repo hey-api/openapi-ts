@@ -1,4 +1,9 @@
 import type {
+  Auth,
+  Client as CoreClient,
+  Config as CoreConfig,
+} from '@hey-api/client-core';
+import type {
   AxiosError,
   AxiosInstance,
   AxiosResponse,
@@ -6,21 +11,9 @@ import type {
   CreateAxiosDefaults,
 } from 'axios';
 
-import type {
-  BodySerializer,
-  QuerySerializer,
-  QuerySerializerOptions,
-} from './utils';
-
-type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
-
-export interface Config<ThrowOnError extends boolean = boolean>
-  extends Omit<CreateAxiosDefaults, 'auth' | 'headers'> {
-  /**
-   * Auth token or a function returning auth token. The resolved value will be
-   * added to the request payload as defined by its `security` array.
-   */
-  auth?: ((auth: Auth) => Promise<AuthToken> | AuthToken) | AuthToken;
+export interface Config<T extends ClientOptions = ClientOptions>
+  extends Omit<CreateAxiosDefaults, 'auth' | 'baseURL' | 'headers' | 'method'>,
+    CoreConfig {
   /**
    * Axios implementation. You can use this option to provide a custom
    * Axios instance.
@@ -29,10 +22,9 @@ export interface Config<ThrowOnError extends boolean = boolean>
    */
   axios?: AxiosStatic;
   /**
-   * A function for serializing request body parameter. By default,
-   * {@link JSON.stringify()} will be used.
+   * Base URL for all requests made by this client.
    */
-  bodySerializer?: BodySerializer;
+  baseURL?: T['baseURL'];
   /**
    * An object containing any HTTP headers that you want to pre-populate your
    * `Headers` object with.
@@ -52,75 +44,25 @@ export interface Config<ThrowOnError extends boolean = boolean>
         | unknown
       >;
   /**
-   * The request method.
-   *
-   * {@link https://developer.mozilla.org/docs/Web/API/fetch#method See more}
-   */
-  method?:
-    | 'connect'
-    | 'delete'
-    | 'get'
-    | 'head'
-    | 'options'
-    | 'patch'
-    | 'post'
-    | 'put'
-    | 'trace';
-  /**
-   * A function for serializing request query parameters. By default, arrays
-   * will be exploded in form style, objects will be exploded in deepObject
-   * style, and reserved characters are percent-encoded.
-   *
-   * This method will have no effect if the native `paramsSerializer()` Axios
-   * API function is used.
-   *
-   * {@link https://swagger.io/docs/specification/serialization/#query View examples}
-   */
-  querySerializer?: QuerySerializer | QuerySerializerOptions;
-  /**
-   * A function transforming response data before it's returned. This is useful
-   * for post-processing data, e.g. converting ISO strings into Date objects.
-   */
-  responseTransformer?: (data: unknown) => Promise<unknown>;
-  /**
-   * A function validating response data. This is useful if you want to ensure
-   * the response conforms to the desired shape, so it can be safely passed to
-   * the transformers and returned to the user.
-   */
-  responseValidator?: (data: unknown) => Promise<unknown>;
-  /**
    * Throw an error instead of returning it in the response?
    *
    * @default false
    */
-  throwOnError?: ThrowOnError;
+  throwOnError?: T['throwOnError'];
 }
-
-export interface Auth {
-  in?: 'header' | 'query';
-  name?: string;
-  scheme?: 'basic' | 'bearer';
-  type: 'apiKey' | 'http';
-}
-
-type AuthToken = string | undefined;
 
 export interface RequestOptions<
   ThrowOnError extends boolean = boolean,
   Url extends string = string,
-> extends Config<ThrowOnError> {
+> extends Config<{
+    throwOnError: ThrowOnError;
+  }> {
   /**
    * Any body that you want to add to your request.
    *
    * {@link https://developer.mozilla.org/docs/Web/API/fetch#body}
    */
   body?: unknown;
-  /**
-   * You can provide a client instance returned by `createClient()` instead of
-   * individual options. This might be also useful if you want to implement a
-   * custom client.
-   */
-  client?: Client;
   path?: Record<string, unknown>;
   query?: Record<string, unknown>;
   /**
@@ -141,6 +83,11 @@ export type RequestResult<
       | (AxiosError<TError> & { data: undefined; error: TError })
     >;
 
+export interface ClientOptions {
+  baseURL?: string;
+  throwOnError?: boolean;
+}
+
 type MethodFn = <
   TData = unknown,
   TError = unknown,
@@ -158,34 +105,34 @@ type RequestFn = <
     Pick<Required<RequestOptions<ThrowOnError>>, 'method'>,
 ) => RequestResult<TData, TError, ThrowOnError>;
 
-export interface Client {
-  /**
-   * Returns the final request URL. This method works only with experimental parser.
-   */
-  buildUrl: <
-    TData extends {
-      body?: unknown;
-      path?: Record<string, unknown>;
-      query?: Record<string, unknown>;
-      url: string;
-    },
-  >(
-    options: Pick<TData, 'url'> & Omit<Options<TData>, 'axios'>,
-  ) => string;
-  delete: MethodFn;
-  get: MethodFn;
-  getConfig: () => Config;
-  head: MethodFn;
-  instance: AxiosInstance;
-  options: MethodFn;
-  patch: MethodFn;
-  post: MethodFn;
-  put: MethodFn;
-  request: RequestFn;
-  setConfig: (config: Config) => Config;
-}
+type BuildUrlFn = <
+  TData extends {
+    body?: unknown;
+    path?: Record<string, unknown>;
+    query?: Record<string, unknown>;
+    url: string;
+  },
+>(
+  options: Pick<TData, 'url'> & Omit<Options<TData>, 'axios'>,
+) => string;
 
-interface DataShape {
+export type Client = CoreClient<RequestFn, Config, MethodFn, BuildUrlFn> & {
+  instance: AxiosInstance;
+};
+
+/**
+ * The `createClientConfig()` function will be called on client initialization
+ * and the returned object will become the client's initial configuration.
+ *
+ * You may want to initialize your client this way instead of calling
+ * `setConfig()`. This is useful for example if you're using Next.js
+ * to ensure your client always has the correct values.
+ */
+export type CreateClientConfig<T extends ClientOptions = ClientOptions> = (
+  override?: Config<ClientOptions & T>,
+) => Config<Required<ClientOptions> & T>;
+
+export interface TDataShape {
   body?: unknown;
   headers?: unknown;
   path?: unknown;
@@ -193,8 +140,10 @@ interface DataShape {
   url: string;
 }
 
+type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
+
 export type Options<
-  TData extends DataShape = DataShape,
+  TData extends TDataShape = TDataShape,
   ThrowOnError extends boolean = boolean,
 > = OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'path' | 'query' | 'url'> &
   Omit<TData, 'url'>;

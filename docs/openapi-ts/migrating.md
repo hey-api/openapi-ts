@@ -27,6 +27,79 @@ This config option is deprecated and will be removed in favor of [clients](./cli
 
 This config option is deprecated and will be removed.
 
+## v0.64.0
+
+### Added `ClientOptions` interface
+
+The `Config` interface now accepts an optional generic extending `ClientOptions` instead of `boolean` type `ThrowOnError`.
+
+```ts
+type Foo = Config<false>; // [!code --]
+type Foo = Config<{ throwOnError: false }>; // [!code ++]
+```
+
+### Added `client.baseUrl` option
+
+You can use this option to configure the default base URL for the generated client. By default, we will attempt to resolve the first defined server or infer the base URL from the input path. If you'd like to preserve the previous behavior, set `baseUrl` to `false`.
+
+```js
+export default {
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  plugins: [
+    {
+      baseUrl: false, // [!code ++]
+      name: '@hey-api/client-fetch',
+    },
+  ],
+};
+```
+
+## v0.63.0
+
+### Client plugins
+
+Clients are now plugins generating their own `client.gen.ts` file. There's no migration needed if you're using CLI. If you're using the configuration file, move `client` options to `plugins`.
+
+```js
+export default {
+  client: '@hey-api/client-fetch', // [!code --]
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  plugins: ['@hey-api/client-fetch'], // [!code ++]
+};
+```
+
+### Added `client.gen.ts` file
+
+Related to above, the internal `client` instance previously located in `sdk.gen.ts` is now defined in `client.gen.ts`. If you're importing it in your code, update the import module.
+
+```js
+import { client } from 'client/sdk.gen'; // [!code --]
+import { client } from 'client/client.gen'; // [!code ++]
+```
+
+### Moved `sdk.throwOnError` option
+
+This SDK configuration option has been moved to the client plugins where applicable. Not every client can be configured to throw on error, so it didn't make sense to expose the option when it didn't have any effect.
+
+```js
+export default {
+  input: 'path/to/openapi.json',
+  output: 'src/client',
+  plugins: [
+    {
+      name: '@hey-api/client-fetch',
+      throwOnError: true, // [!code ++]
+    },
+    {
+      name: '@hey-api/sdk',
+      throwOnError: true, // [!code --]
+    },
+  ],
+};
+```
+
 ## v0.62.0
 
 ### Changed parser

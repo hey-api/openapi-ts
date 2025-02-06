@@ -1,4 +1,40 @@
 import {
+  type Config as HeyApiClientAxios,
+  defaultConfig as heyApiClientAxios,
+} from './@hey-api/client-axios';
+import {
+  type Config as HeyApiClientFetch,
+  defaultConfig as heyApiClientFetch,
+} from './@hey-api/client-fetch';
+import {
+  type Config as HeyApiClientNext,
+  defaultConfig as heyApiClientNext,
+} from './@hey-api/client-next';
+import {
+  type Config as HeyApiClientNuxt,
+  defaultConfig as heyApiClientNuxt,
+} from './@hey-api/client-nuxt';
+import {
+  type Config as HeyApiLegacyAngular,
+  defaultConfig as heyApiLegacyAngular,
+} from './@hey-api/legacy-angular';
+import {
+  type Config as HeyApiLegacyAxios,
+  defaultConfig as heyApiLegacyAxios,
+} from './@hey-api/legacy-axios';
+import {
+  type Config as HeyApiLegacyFetch,
+  defaultConfig as heyApiLegacyFetch,
+} from './@hey-api/legacy-fetch';
+import {
+  type Config as HeyApiLegacyNode,
+  defaultConfig as heyApiLegacyNode,
+} from './@hey-api/legacy-node';
+import {
+  type Config as HeyApiLegacyXhr,
+  defaultConfig as heyApiLegacyXhr,
+} from './@hey-api/legacy-xhr';
+import {
   type Config as HeyApiSchemas,
   defaultConfig as heyApiSchemas,
 } from './@hey-api/schemas';
@@ -42,6 +78,15 @@ import { type Config as Zod, defaultConfig as zod } from './zod';
  * User-facing plugin types.
  */
 export type UserPlugins =
+  | Plugin.UserConfig<HeyApiClientAxios>
+  | Plugin.UserConfig<HeyApiClientFetch>
+  | Plugin.UserConfig<HeyApiClientNext>
+  | Plugin.UserConfig<HeyApiClientNuxt>
+  | Plugin.UserConfig<HeyApiLegacyAngular>
+  | Plugin.UserConfig<HeyApiLegacyAxios>
+  | Plugin.UserConfig<HeyApiLegacyFetch>
+  | Plugin.UserConfig<HeyApiLegacyNode>
+  | Plugin.UserConfig<HeyApiLegacyXhr>
   | Plugin.UserConfig<HeyApiSchemas>
   | Plugin.UserConfig<HeyApiSdk>
   | Plugin.UserConfig<HeyApiTransformers>
@@ -58,6 +103,15 @@ export type UserPlugins =
  * Internal plugin types.
  */
 export type ClientPlugins =
+  | Plugin.Config<HeyApiClientAxios>
+  | Plugin.Config<HeyApiClientFetch>
+  | Plugin.Config<HeyApiClientNext>
+  | Plugin.Config<HeyApiClientNuxt>
+  | Plugin.Config<HeyApiLegacyAngular>
+  | Plugin.Config<HeyApiLegacyAxios>
+  | Plugin.Config<HeyApiLegacyFetch>
+  | Plugin.Config<HeyApiLegacyNode>
+  | Plugin.Config<HeyApiLegacyXhr>
   | Plugin.Config<HeyApiSchemas>
   | Plugin.Config<HeyApiSdk>
   | Plugin.Config<HeyApiTransformers>
@@ -71,6 +125,10 @@ export type ClientPlugins =
   | Plugin.Config<Zod>;
 
 export const defaultPluginConfigs: DefaultPluginConfigs<ClientPlugins> = {
+  '@hey-api/client-axios': heyApiClientAxios,
+  '@hey-api/client-fetch': heyApiClientFetch,
+  '@hey-api/client-next': heyApiClientNext,
+  '@hey-api/client-nuxt': heyApiClientNuxt,
   '@hey-api/schemas': heyApiSchemas,
   '@hey-api/sdk': heyApiSdk,
   '@hey-api/transformers': heyApiTransformers,
@@ -81,5 +139,10 @@ export const defaultPluginConfigs: DefaultPluginConfigs<ClientPlugins> = {
   '@tanstack/svelte-query': tanStackSvelteQuery,
   '@tanstack/vue-query': tanStackVueQuery,
   fastify,
+  'legacy/angular': heyApiLegacyAngular,
+  'legacy/axios': heyApiLegacyAxios,
+  'legacy/fetch': heyApiLegacyFetch,
+  'legacy/node': heyApiLegacyNode,
+  'legacy/xhr': heyApiLegacyXhr,
   zod,
 };

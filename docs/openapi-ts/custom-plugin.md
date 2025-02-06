@@ -167,10 +167,10 @@ Once we're satisfied with our plugin, we can register it in the [configuration](
 import { defineConfig } from 'path/to/my-plugin';
 
 export default {
-  client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
   plugins: [
+    '@hey-api/client-fetch',
     defineConfig({
       myOption: true,
     }),

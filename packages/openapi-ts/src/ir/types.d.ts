@@ -1,27 +1,27 @@
 import type { JsonSchemaDraft2020_12 } from '../openApi/3.1.x/types/json-schema-draft-2020-12';
-import type { SecuritySchemeObject } from '../openApi/3.1.x/types/spec';
+import type {
+  SecuritySchemeObject,
+  ServerObject,
+} from '../openApi/3.1.x/types/spec';
 import type { IRContext } from './context';
 import type { IRMediaType } from './mediaType';
+
+interface IRBodyObject {
+  mediaType: string;
+  /**
+   * Does body control pagination? We handle only simple values
+   * for now, up to 1 nested field.
+   */
+  pagination?: boolean | string;
+  required?: boolean;
+  schema: IRSchemaObject;
+  type?: IRMediaType;
+}
 
 interface IRComponentsObject {
   parameters?: Record<string, IRParameterObject>;
   requestBodies?: Record<string, IRRequestBodyObject>;
   schemas?: Record<string, IRSchemaObject>;
-}
-
-interface IRPathsObject {
-  [path: `/${string}`]: IRPathItemObject;
-}
-
-interface IRPathItemObject {
-  delete?: IROperationObject;
-  get?: IROperationObject;
-  head?: IROperationObject;
-  options?: IROperationObject;
-  patch?: IROperationObject;
-  post?: IROperationObject;
-  put?: IROperationObject;
-  trace?: IROperationObject;
 }
 
 interface IROperationObject {
@@ -34,22 +34,9 @@ interface IROperationObject {
   path: keyof IRPathsObject;
   responses?: IRResponsesObject;
   security?: ReadonlyArray<IRSecurityObject>;
-  // TODO: parser - add more properties
-  // servers?: ReadonlyArray<ServerObject>;
+  servers?: ReadonlyArray<IRServerObject>;
   summary?: string;
   tags?: ReadonlyArray<string>;
-}
-
-interface IRBodyObject {
-  mediaType: string;
-  /**
-   * Does body control pagination? We handle only simple values
-   * for now, up to 1 nested field.
-   */
-  pagination?: boolean | string;
-  required?: boolean;
-  schema: IRSchemaObject;
-  type?: IRMediaType;
 }
 
 interface IRParametersObject {
@@ -92,6 +79,21 @@ interface IRParameterObject
     | 'pipeDelimited'
     | 'simple'
     | 'spaceDelimited';
+}
+
+interface IRPathsObject {
+  [path: `/${string}`]: IRPathItemObject;
+}
+
+interface IRPathItemObject {
+  delete?: IROperationObject;
+  get?: IROperationObject;
+  head?: IROperationObject;
+  options?: IROperationObject;
+  patch?: IROperationObject;
+  post?: IROperationObject;
+  put?: IROperationObject;
+  trace?: IROperationObject;
 }
 
 interface IRRequestBodyObject
@@ -188,9 +190,12 @@ interface IRSchemaObject
 
 type IRSecurityObject = SecuritySchemeObject;
 
+type IRServerObject = ServerObject;
+
 interface IRModel {
   components?: IRComponentsObject;
   paths?: IRPathsObject;
+  servers?: ReadonlyArray<IRServerObject>;
 }
 
 export namespace IR {
@@ -208,4 +213,5 @@ export namespace IR {
   export type ResponsesObject = IRResponsesObject;
   export type SchemaObject = IRSchemaObject;
   export type SecurityObject = IRSecurityObject;
+  export type ServerObject = IRServerObject;
 }

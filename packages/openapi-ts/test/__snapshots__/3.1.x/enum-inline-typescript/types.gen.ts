@@ -8,3 +8,7 @@ export enum Type {
 export type Foo = {
     type?: 'foo' | 'bar';
 };
+
+export type ClientOptions = {
+    baseUrl: `${string}://${string}` | (string & {});
+};

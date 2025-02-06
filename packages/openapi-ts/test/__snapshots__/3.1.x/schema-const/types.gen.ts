@@ -17,3 +17,7 @@ export type Foo = {
     };
     garply?: 10n;
 };
+
+export type ClientOptions = {
+    baseUrl: `${string}://${string}` | (string & {});
+};

@@ -1,17 +1,25 @@
+import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
 import type { Config } from '../types/config';
 
 let _config: Config;
 
-export const getConfig = () => _config;
+export const getConfig = () => {
+  const config = _config;
+  const plugin = getClientPlugin(config);
+  // patch legacy config to avoid breaking handlebars
+  // @ts-expect-error
+  config.client = plugin;
+  return config;
+};
 
 export const setConfig = (config: Config) => {
   _config = config;
   return getConfig();
 };
 
-export const isLegacyClient = (config: Config | Config['client']) => {
-  const client = 'client' in config ? config.client.name : config.name;
-  return client.startsWith('legacy/');
+export const isLegacyClient = (config: Config) => {
+  const plugin = getClientPlugin(config);
+  return plugin.name.startsWith('legacy/');
 };
 
 /**
