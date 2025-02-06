@@ -28,11 +28,11 @@ In your [configuration](/openapi-ts/get-started), add `zod` to your plugins and 
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
+    '@hey-api/client-fetch',
     'zod', // [!code ++]
   ],
 };
@@ -46,11 +46,11 @@ To automatically validate response data in your SDKs, set `sdk.validator` to `tr
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  client: '@hey-api/client-fetch',
   input: 'path/to/openapi.json',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
+    '@hey-api/client-fetch',
     'zod',
     {
       name: '@hey-api/sdk', // [!code ++]

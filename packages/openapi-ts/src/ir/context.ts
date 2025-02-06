@@ -56,6 +56,7 @@ interface Events {
     name: string;
     schema: IR.SchemaObject;
   }) => void;
+  server: (args: { server: IR.ServerObject }) => void;
 }
 
 type Listeners = {

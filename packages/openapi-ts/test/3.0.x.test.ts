@@ -17,8 +17,6 @@ const outputDir = path.join(__dirname, 'generated', version);
 
 describe(`OpenAPI ${version}`, () => {
   const createConfig = (userConfig: UserConfig): UserConfig => ({
-    client: '@hey-api/client-fetch',
-    experimentalParser: true,
     plugins: ['@hey-api/typescript'],
     ...userConfig,
     input: path.join(
@@ -62,6 +60,18 @@ describe(`OpenAPI ${version}`, () => {
       }),
       description:
         'generates correct array when items are oneOf array with single item',
+    },
+    {
+      config: createConfig({
+        input: 'body-response-text-plain.yaml',
+        output: 'body-response-text-plain',
+        plugins: [
+          '@hey-api/client-fetch',
+          '@hey-api/typescript',
+          '@hey-api/sdk',
+        ],
+      }),
+      description: 'handle text/plain content type',
     },
     {
       config: createConfig({
@@ -380,7 +390,7 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'internal-name-conflict.json',
         output: 'internal-name-conflict',
-        plugins: ['@tanstack/react-query'],
+        plugins: ['@hey-api/client-fetch', '@tanstack/react-query'],
       }),
       description:
         'handles conflict between generated code and internal artifacts',
@@ -396,16 +406,15 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'parameter-explode-false.json',
         output: 'parameter-explode-false',
-        plugins: ['@hey-api/sdk'],
+        plugins: ['@hey-api/client-fetch', '@hey-api/sdk'],
       }),
       description: 'handles non-exploded array query parameters',
     },
     {
       config: createConfig({
-        client: '@hey-api/client-axios',
         input: 'parameter-explode-false.json',
         output: 'parameter-explode-false-axios',
-        plugins: ['@hey-api/sdk'],
+        plugins: ['@hey-api/client-axios', '@hey-api/sdk'],
       }),
       description: 'handles non-exploded array query parameters (Axios)',
     },
@@ -414,6 +423,7 @@ describe(`OpenAPI ${version}`, () => {
         input: 'security-api-key.json',
         output: 'security-api-key',
         plugins: [
+          '@hey-api/client-fetch',
           {
             auth: true,
             name: '@hey-api/sdk',
@@ -427,6 +437,7 @@ describe(`OpenAPI ${version}`, () => {
         input: 'security-http-bearer.json',
         output: 'security-http-bearer',
         plugins: [
+          '@hey-api/client-fetch',
           {
             auth: true,
             name: '@hey-api/sdk',
@@ -437,9 +448,10 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'security-oauth2.json',
+        input: 'security-oauth2.yaml',
         output: 'security-oauth2',
         plugins: [
+          '@hey-api/client-fetch',
           {
             auth: true,
             name: '@hey-api/sdk',
@@ -450,9 +462,24 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'security-oauth2.json',
+        input: 'security-open-id-connect.yaml',
+        output: 'security-open-id-connect',
+        plugins: [
+          '@hey-api/client-fetch',
+          {
+            auth: true,
+            name: '@hey-api/sdk',
+          },
+        ],
+      }),
+      description: 'generates SDK functions with auth (OpenID Connect)',
+    },
+    {
+      config: createConfig({
+        input: 'security-oauth2.yaml',
         output: 'security-false',
         plugins: [
+          '@hey-api/client-fetch',
           {
             auth: false,
             name: '@hey-api/sdk',
@@ -463,9 +490,17 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'servers.yaml',
+        output: 'servers',
+        plugins: ['@hey-api/client-fetch', '@hey-api/typescript'],
+      }),
+      description: 'generates baseUrl',
+    },
+    {
+      config: createConfig({
         input: 'transformers-all-of.yaml',
         output: 'transformers-all-of',
-        plugins: ['@hey-api/transformers'],
+        plugins: ['@hey-api/client-fetch', '@hey-api/transformers'],
       }),
       description: 'transforms nested date in all of composition',
     },
@@ -473,7 +508,7 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'transformers-any-of-null.json',
         output: 'transformers-any-of-null',
-        plugins: ['@hey-api/transformers'],
+        plugins: ['@hey-api/client-fetch', '@hey-api/transformers'],
       }),
       description: 'transforms nullable date property',
     },
@@ -481,7 +516,7 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'transformers-array.json',
         output: 'transformers-array',
-        plugins: ['@hey-api/transformers'],
+        plugins: ['@hey-api/client-fetch', '@hey-api/transformers'],
       }),
       description: 'transforms an array',
     },

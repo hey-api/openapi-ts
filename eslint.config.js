@@ -71,6 +71,7 @@ export default tseslint.config(
       '**/test/e2e/generated/',
       '**/test/generated/',
       '**/__snapshots__/',
+      '**/.next/',
       '**/.nuxt/',
       '**/.output/',
       '**/.svelte-kit/',

@@ -1096,3 +1096,7 @@ export type PostApiVbyApiVersionBodyResponses = {
 };
 
 export type PostApiVbyApiVersionBodyResponse = PostApiVbyApiVersionBodyResponses[keyof PostApiVbyApiVersionBodyResponses];
+
+export type ClientOptions = {
+    baseURL: 'http://localhost:3000/base' | (string & {});
+};

@@ -73,11 +73,11 @@ export default defineConfig({
               },
               {
                 link: '/openapi-ts/clients/next-js',
-                text: 'Next.js <span data-soon>soon</span>',
+                text: 'Next.js',
               },
               {
                 link: '/openapi-ts/clients/nuxt',
-                text: 'Nuxt <span data-soon>soon</span>',
+                text: 'Nuxt',
               },
               {
                 link: '/openapi-ts/clients/legacy',

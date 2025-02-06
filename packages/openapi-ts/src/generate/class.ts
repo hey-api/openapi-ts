@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import type { OpenApi } from '../openApi';
+import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
 import type { Client } from '../types/client';
 import { getConfig, legacyNameFromConfig } from '../utils/config';
 import { getHttpRequestName } from '../utils/getHttpRequestName';
@@ -26,10 +27,11 @@ export const generateLegacyClientClass = async (
 ) => {
   const config = getConfig();
 
+  const clientPlugin = getClientPlugin(config);
   const templateResult = templates.client({
     $config: config,
     ...client,
-    httpRequest: getHttpRequestName(config.client),
+    httpRequest: getHttpRequestName(clientPlugin.name),
     models: sortByName(client.models),
     services: sortByName(client.services),
   });

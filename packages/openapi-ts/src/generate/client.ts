@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import type { ImportExportItemObject } from '../compiler/utils';
+import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
 import type { Config } from '../types/config';
 import { ensureDirSync, relativeModulePath } from './utils';
 
@@ -17,14 +18,16 @@ export const clientModulePath = ({
   config: Config;
   sourceOutput: string;
 }): string => {
-  if (config.client.bundle) {
+  const client = getClientPlugin(config);
+
+  if ('bundle' in client && client.bundle) {
     return relativeModulePath({
       moduleOutput: 'client',
       sourceOutput,
     });
   }
 
-  return config.client.name;
+  return client.name;
 };
 
 export const clientApi = {
@@ -54,20 +57,17 @@ export const generateClientBundle = ({
 
   const clientModulePath = path.normalize(require.resolve(name));
   const clientModulePathComponents = clientModulePath.split(path.sep);
-  const clientSrcPath = [
-    ...clientModulePathComponents.slice(
-      0,
-      clientModulePathComponents.indexOf('dist'),
-    ),
-    'src',
-  ].join(path.sep);
+  const clientDistPath = clientModulePathComponents
+    .slice(0, clientModulePathComponents.indexOf('dist') + 1)
+    .join(path.sep);
 
-  // copy client modules
-  const files = ['index.ts', 'types.ts', 'utils.ts'];
-  files.forEach((file) => {
+  const indexJsFile =
+    clientModulePathComponents[clientModulePathComponents.length - 1];
+  const distFiles = [indexJsFile!, 'index.d.cts', 'index.d.ts'];
+  for (const file of distFiles) {
     fs.copyFileSync(
-      path.resolve(clientSrcPath, file),
+      path.resolve(clientDistPath, file),
       path.resolve(dirPath, file),
     );
-  });
+  }
 };

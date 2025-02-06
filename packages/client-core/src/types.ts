@@ -1,19 +1,69 @@
-export type ApiResult<TData = any> = {
-  readonly body: TData;
-  readonly ok: boolean;
-  readonly status: number;
-  readonly statusText: string;
-  readonly url: string;
-};
+import type { Auth, AuthToken } from './auth';
+import type {
+  BodySerializer,
+  QuerySerializer,
+  QuerySerializerOptions,
+} from './bodySerializer';
 
-export type ApiRequestOptions<T = unknown> = {
-  readonly body?: any;
-  readonly cookies?: Record<string, unknown>;
-  readonly errors?: Record<number | string, string>;
-  readonly formData?: Record<string, unknown> | any[];
-  readonly headers?: Record<string, unknown>;
-  readonly mediaType?: string;
-  readonly method:
+export interface Client<
+  RequestFn = never,
+  Config = unknown,
+  MethodFn = never,
+  BuildUrlFn = never,
+> {
+  /**
+   * Returns the final request URL.
+   */
+  buildUrl: BuildUrlFn;
+  connect: MethodFn;
+  delete: MethodFn;
+  get: MethodFn;
+  getConfig: () => Config;
+  head: MethodFn;
+  options: MethodFn;
+  patch: MethodFn;
+  post: MethodFn;
+  put: MethodFn;
+  request: RequestFn;
+  setConfig: (config: Config) => Config;
+  trace: MethodFn;
+}
+
+export interface Config {
+  /**
+   * Auth token or a function returning auth token. The resolved value will be
+   * added to the request payload as defined by its `security` array.
+   */
+  auth?: ((auth: Auth) => Promise<AuthToken> | AuthToken) | AuthToken;
+  /**
+   * A function for serializing request body parameter. By default,
+   * {@link JSON.stringify()} will be used.
+   */
+  bodySerializer?: BodySerializer | null;
+  /**
+   * An object containing any HTTP headers that you want to pre-populate your
+   * `Headers` object with.
+   *
+   * {@link https://developer.mozilla.org/docs/Web/API/Headers/Headers#init See more}
+   */
+  headers?:
+    | RequestInit['headers']
+    | Record<
+        string,
+        | string
+        | number
+        | boolean
+        | (string | number | boolean)[]
+        | null
+        | undefined
+        | unknown
+      >;
+  /**
+   * The request method.
+   *
+   * {@link https://developer.mozilla.org/docs/Web/API/fetch#method See more}
+   */
+  method?:
     | 'CONNECT'
     | 'DELETE'
     | 'GET'
@@ -23,13 +73,26 @@ export type ApiRequestOptions<T = unknown> = {
     | 'POST'
     | 'PUT'
     | 'TRACE';
-  readonly path?: Record<string, unknown>;
-  readonly query?: Record<string, unknown>;
-  readonly responseHeader?: string;
-  readonly responseTransformer?: (data: unknown) => Promise<T>;
-  readonly url: string;
-};
-
-export type Headers = Record<string, string>;
-export type Middleware<T> = (value: T) => T | Promise<T>;
-export type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
+  /**
+   * A function for serializing request query parameters. By default, arrays
+   * will be exploded in form style, objects will be exploded in deepObject
+   * style, and reserved characters are percent-encoded.
+   *
+   * This method will have no effect if the native `paramsSerializer()` Axios
+   * API function is used.
+   *
+   * {@link https://swagger.io/docs/specification/serialization/#query View examples}
+   */
+  querySerializer?: QuerySerializer | QuerySerializerOptions;
+  /**
+   * A function transforming response data before it's returned. This is useful
+   * for post-processing data, e.g. converting ISO strings into Date objects.
+   */
+  responseTransformer?: (data: unknown) => Promise<unknown>;
+  /**
+   * A function validating response data. This is useful if you want to ensure
+   * the response conforms to the desired shape, so it can be safely passed to
+   * the transformers and returned to the user.
+   */
+  responseValidator?: (data: unknown) => Promise<unknown>;
+}

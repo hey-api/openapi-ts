@@ -15,3 +15,7 @@ export type PostFooResponses = {
      */
     default: unknown;
 };
+
+export type ClientOptions = {
+    baseUrl: `${string}://${string}` | (string & {});
+};
