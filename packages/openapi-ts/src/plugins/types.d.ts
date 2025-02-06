@@ -13,6 +13,7 @@ export type PluginNames =
   | '@hey-api/sdk'
   | '@hey-api/transformers'
   | '@hey-api/typescript'
+  | '@pinia-colada/sdk'
   | '@tanstack/angular-query-experimental'
   | '@tanstack/react-query'
   | '@tanstack/solid-query'
@@ -77,7 +78,7 @@ export namespace Plugin {
   export type Config<Config extends BaseConfig> = Config &
     Meta<Config> & {
       _handler: Plugin.Handler<Config>;
-      _handlerLegacy: Plugin.LegacyHandler<Config>;
+      _handlerLegacy?: Plugin.LegacyHandler<Config>;
       exportFromIndex?: boolean;
     };
 
