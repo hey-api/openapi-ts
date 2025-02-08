@@ -37,6 +37,9 @@ for (const client of clients) {
     ): UserConfig => ({
       ...userConfig,
       input: path.join(__dirname, 'spec', '3.1.x', 'full.json'),
+      logs: {
+        level: 'silent',
+      },
       output: path.join(
         outputDir,
         typeof userConfig.output === 'string' ? userConfig.output : '',
