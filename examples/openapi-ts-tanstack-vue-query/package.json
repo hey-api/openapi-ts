@@ -12,8 +12,7 @@
     "openapi-ts": "openapi-ts",
     "preview": "vite preview",
     "test:unit": "vitest",
-    "typecheck:old": "vue-tsc --build --force",
-    "typecheck": "vue-tsc --version"
+    "typecheck": "vue-tsc --build --force"
   },
   "dependencies": {
     "@hey-api/client-fetch": "workspace:*",

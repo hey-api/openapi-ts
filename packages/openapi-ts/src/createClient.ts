@@ -48,11 +48,13 @@ export const createClient = async ({
   let context: IR.Context | undefined;
 
   if (data) {
-    if (_watch) {
-      console.clear();
-      console.log(`⏳ Input changed, generating from ${inputPath}`);
-    } else {
-      console.log(`⏳ Generating from ${inputPath}`);
+    if (config.logs.level !== 'silent') {
+      if (_watch) {
+        console.clear();
+        console.log(`⏳ Input changed, generating from ${inputPath}`);
+      } else {
+        console.log(`⏳ Generating from ${inputPath}`);
+      }
     }
 
     Performance.start('parser');
@@ -83,10 +85,12 @@ export const createClient = async ({
     if (!config.dryRun) {
       processOutput({ config });
 
-      const outputPath = process.env.INIT_CWD
-        ? `./${path.relative(process.env.INIT_CWD, config.output.path)}`
-        : config.output.path;
-      console.log(`🚀 Done! Your output is in ${outputPath}`);
+      if (config.logs.level !== 'silent') {
+        const outputPath = process.env.INIT_CWD
+          ? `./${path.relative(process.env.INIT_CWD, config.output.path)}`
+          : config.output.path;
+        console.log(`🚀 Done! Your output is in ${outputPath}`);
+      }
     }
     Performance.end('postprocess');
   }
