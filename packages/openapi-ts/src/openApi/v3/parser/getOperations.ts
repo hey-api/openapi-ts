@@ -19,6 +19,8 @@ export const getOperations = ({
   const operationIds = new Map<string, string>();
   const operations: Operation[] = [];
 
+  const config = getConfig();
+
   for (const path in openApi.paths) {
     const pathItem = openApi.paths[path]!;
     const pathParameters = getOperationParameters({
@@ -40,9 +42,11 @@ export const getOperations = ({
 
         if (op.operationId) {
           if (operationIds.has(op.operationId)) {
-            console.warn(
-              `❗️ Duplicate operationId: ${op.operationId} in ${operationKey}. Please ensure your operation IDs are unique. This behavior is not supported and will likely lead to unexpected results.`,
-            );
+            if (config.logs.level !== 'silent') {
+              console.warn(
+                `❗️ Duplicate operationId: ${op.operationId} in ${operationKey}. Please ensure your operation IDs are unique. This behavior is not supported and will likely lead to unexpected results.`,
+              );
+            }
           } else {
             operationIds.set(op.operationId, operationKey);
           }
@@ -50,7 +54,7 @@ export const getOperations = ({
 
         if (
           operationFilterFn({
-            config: getConfig(),
+            config,
             operationKey,
           })
         ) {

@@ -207,6 +207,7 @@ export const parseOperation = ({
   securitySchemesMap: Map<string, SecuritySchemeObject>;
 }) => {
   ensureUniqueOperationId({
+    context,
     id: operation.operationId,
     method,
     operationIds,
