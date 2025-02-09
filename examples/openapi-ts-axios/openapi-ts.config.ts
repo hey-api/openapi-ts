@@ -1,7 +1,6 @@
 import { defineConfig } from '@hey-api/openapi-ts';
 
 export default defineConfig({
-  client: '@hey-api/client-axios',
   input:
     'https://raw.githubusercontent.com/swagger-api/swagger-petstore/master/src/main/resources/openapi.yaml',
   output: {
@@ -10,6 +9,7 @@ export default defineConfig({
     path: './src/client',
   },
   plugins: [
+    '@hey-api/client-axios',
     '@hey-api/schemas',
     '@hey-api/sdk',
     {

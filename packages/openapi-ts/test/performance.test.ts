@@ -1,23 +1,27 @@
+import path from 'node:path';
+
 import { describe, expect, it } from 'vitest';
 
 import { createClient } from '../src/index';
 import { Performance } from '../src/utils/performance';
 
-const V3_SPEC_PATH = './test/spec/v3.json';
-const V3_1_X_SPEC_PATH = './test/spec/3.1.x/full.json';
+const V3_SPEC_PATH = path.resolve(__dirname, 'spec', 'v3.json');
+const V3_1_X_SPEC_PATH = path.resolve(__dirname, 'spec', '3.1.x', 'full.json');
 
-const OUTPUT_PREFIX = './test/generated/';
-
-const toOutputPath = (name: string) => `${OUTPUT_PREFIX}${name}/`;
+const toOutputPath = (name: string) =>
+  path.resolve(__dirname, 'generated', name);
 
 describe('performance', () => {
   it('creates client under 1000ms', async () => {
     Performance.clear();
 
     await createClient({
-      client: '@hey-api/client-fetch',
       input: V3_SPEC_PATH,
+      logs: {
+        level: 'silent',
+      },
       output: toOutputPath('perf'),
+      plugins: ['@hey-api/client-fetch'],
     });
 
     Performance.measure('createClient');
@@ -30,9 +34,12 @@ describe('performance', () => {
     Performance.clear();
 
     await createClient({
-      client: '@hey-api/client-fetch',
       input: V3_SPEC_PATH,
+      logs: {
+        level: 'silent',
+      },
       output: toOutputPath('perf'),
+      plugins: ['@hey-api/client-fetch'],
     });
 
     Performance.measure('parser');
@@ -45,10 +52,12 @@ describe('performance', () => {
     Performance.clear();
 
     await createClient({
-      client: '@hey-api/client-fetch',
-      experimentalParser: true,
       input: V3_1_X_SPEC_PATH,
+      logs: {
+        level: 'silent',
+      },
       output: toOutputPath('perf'),
+      plugins: ['@hey-api/client-fetch'],
     });
 
     Performance.measure('parser');

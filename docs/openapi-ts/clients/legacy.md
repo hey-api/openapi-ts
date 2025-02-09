@@ -19,41 +19,41 @@ Before client packages, clients were generated using `@hey-api/openapi-ts`. In f
 
 ```js [fetch]
 export default {
-  client: 'legacy/fetch', // [!code ++]
   input: 'path/to/openapi.json',
   output: 'src/client',
+  plugins: ['legacy/fetch'], // [!code ++]
 };
 ```
 
 ```js [axios]
 export default {
-  client: 'legacy/axios', // [!code ++]
   input: 'path/to/openapi.json',
   output: 'src/client',
+  plugins: ['legacy/axios'], // [!code ++]
 };
 ```
 
 ```js [angular]
 export default {
-  client: 'legacy/angular', // [!code ++]
   input: 'path/to/openapi.json',
   output: 'src/client',
+  plugins: ['legacy/angular'], // [!code ++]
 };
 ```
 
 ```js [node]
 export default {
-  client: 'legacy/node', // [!code ++]
   input: 'path/to/openapi.json',
   output: 'src/client',
+  plugins: ['legacy/node'], // [!code ++]
 };
 ```
 
 ```js [xhr]
 export default {
-  client: 'legacy/xhr', // [!code ++]
   input: 'path/to/openapi.json',
   output: 'src/client',
+  plugins: ['legacy/xhr'], // [!code ++]
 };
 ```
 

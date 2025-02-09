@@ -23,3 +23,7 @@ export type PostFooResponses = {
      */
     200: unknown;
 };
+
+export type ClientOptions = {
+    baseUrl: `${string}://${string}` | (string & {});
+};

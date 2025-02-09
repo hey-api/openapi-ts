@@ -5,15 +5,17 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import { createClient } from '../';
-import type { Client, UserConfig } from '../src/types/config';
+import type { PluginClientNames } from '../src/plugins/types';
+import type { UserConfig } from '../src/types/config';
 import { getFilePaths } from './utils';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const clients: ReadonlyArray<Client> = [
+const clients: ReadonlyArray<PluginClientNames> = [
   '@hey-api/client-axios',
   '@hey-api/client-fetch',
+  '@hey-api/client-next',
   '@hey-api/client-nuxt',
 ];
 
@@ -33,9 +35,11 @@ for (const client of clients) {
       userConfig: Omit<UserConfig, 'input'> &
         Pick<Partial<UserConfig>, 'input'>,
     ): UserConfig => ({
-      client,
       ...userConfig,
       input: path.join(__dirname, 'spec', '3.1.x', 'full.json'),
+      logs: {
+        level: 'silent',
+      },
       output: path.join(
         outputDir,
         typeof userConfig.output === 'string' ? userConfig.output : '',
@@ -46,18 +50,99 @@ for (const client of clients) {
       {
         config: createConfig({
           output: 'default',
+          plugins: [client],
         }),
         description: 'default output',
       },
       {
         config: createConfig({
-          client: {
-            bundle: true,
-            name: client,
-          },
           output: 'bundle',
+          plugins: [
+            {
+              bundle: true,
+              name: client,
+            },
+          ],
         }),
         description: 'default output with bundled client',
+      },
+      {
+        config: createConfig({
+          output: 'sdk-client-optional',
+          plugins: [
+            client,
+            {
+              client: true,
+              name: '@hey-api/sdk',
+            },
+          ],
+        }),
+        description: 'SDK with optional client option',
+      },
+      {
+        config: createConfig({
+          output: 'sdk-client-required',
+          plugins: [
+            client,
+            {
+              client: false,
+              name: '@hey-api/sdk',
+            },
+          ],
+        }),
+        description: 'SDK with required client option',
+      },
+      {
+        config: createConfig({
+          output: 'base-url-false',
+          plugins: [
+            {
+              baseUrl: false,
+              name: client,
+            },
+            '@hey-api/typescript',
+          ],
+        }),
+        description: 'client without base URL',
+      },
+      {
+        config: createConfig({
+          output: 'base-url-number',
+          plugins: [
+            {
+              baseUrl: 0,
+              name: client,
+            },
+            '@hey-api/typescript',
+          ],
+        }),
+        description: 'client with numeric base URL',
+      },
+      {
+        config: createConfig({
+          output: 'base-url-string',
+          plugins: [
+            {
+              baseUrl: 'https://foo.com',
+              name: client,
+            },
+            '@hey-api/typescript',
+          ],
+        }),
+        description: 'client with custom string base URL',
+      },
+      {
+        config: createConfig({
+          output: 'base-url-strict',
+          plugins: [
+            {
+              name: client,
+              strictBaseUrl: true,
+            },
+            '@hey-api/typescript',
+          ],
+        }),
+        description: 'client with strict base URL',
       },
     ];
 

@@ -1,7 +1,17 @@
-type AuthToken = string | undefined;
+export type AuthToken = string | undefined;
 
 export interface Auth {
+  /**
+   * Which part of the request do we use to send the auth?
+   *
+   * @default 'header'
+   */
   in?: 'header' | 'query';
+  /**
+   * Header or query parameter name.
+   *
+   * @default 'Authorization'
+   */
   name?: string;
   scheme?: 'basic' | 'bearer';
   type: 'apiKey' | 'http';

@@ -33,6 +33,7 @@ import { transformServiceName } from '../../../utils/transform';
 import { setUniqueTypeName } from '../../../utils/type';
 import { unique } from '../../../utils/unique';
 import type { Plugin } from '../../types';
+import { getClientPlugin } from '../client-core/utils';
 import type { Config } from './types';
 
 type OnNode = (node: Node) => void;
@@ -213,7 +214,8 @@ const toOperationReturnType = (client: Client, operation: Operation) => {
     returnType = compiler.typeNode('ApiResult', [returnType]);
   }
 
-  if (config.client.name === 'legacy/angular') {
+  const clientPlugin = getClientPlugin(config);
+  if (clientPlugin.name === 'legacy/angular') {
     returnType = compiler.typeNode('Observable', [returnType]);
   } else {
     returnType = compiler.typeNode('CancelablePromise', [returnType]);
@@ -581,7 +583,8 @@ const toOperationStatements = ({
     ];
   }
 
-  if (config.client.name === 'legacy/angular') {
+  const clientPlugin = getClientPlugin(config);
+  if (clientPlugin.name === 'legacy/angular') {
     return [
       compiler.returnFunctionCall({
         args: ['OpenAPI', 'this.http', options],
@@ -603,18 +606,17 @@ const processService = ({
   onClientImport,
   onImport,
   onNode,
-  plugin,
   service,
 }: {
   client: Client;
   onClientImport: OnImport;
   onImport: OnImport;
   onNode: OnNode;
-  plugin: Plugin.Instance<Config>;
   service: Service;
 }) => {
   const config = getConfig();
 
+  const clientPlugin = getClientPlugin(config);
   const isLegacy = isLegacyClient(config);
 
   for (const operation of service.operations) {
@@ -665,7 +667,9 @@ const processService = ({
   }
 
   const throwOnErrorTypeGeneric: FunctionTypeParameter = {
-    default: plugin.throwOnError,
+    default:
+      ('throwOnError' in clientPlugin ? clientPlugin.throwOnError : false) ??
+      false,
     extends: 'boolean',
     name: 'ThrowOnError',
   };
@@ -689,7 +693,7 @@ const processService = ({
         types: !isLegacy ? [throwOnErrorTypeGeneric] : undefined,
       };
       const expression =
-        config.client.name === 'legacy/angular'
+        clientPlugin.name === 'legacy/angular'
           ? compiler.anonymousFunction(compileFunctionParams)
           : compiler.arrowFunction(compileFunctionParams);
       const statement = compiler.constVariable({
@@ -714,7 +718,7 @@ const processService = ({
       comment: toOperationComment(operation),
       isStatic:
         legacyNameFromConfig(config) === undefined &&
-        config.client.name !== 'legacy/angular',
+        clientPlugin.name !== 'legacy/angular',
       name: serviceFunctionIdentifier({
         config,
         id: operation.name,
@@ -755,7 +759,7 @@ const processService = ({
       }),
       ...members,
     ];
-  } else if (config.client.name === 'legacy/angular') {
+  } else if (clientPlugin.name === 'legacy/angular') {
     members = [
       compiler.constructorDeclaration({
         multiLine: false,
@@ -774,7 +778,7 @@ const processService = ({
 
   const statement = compiler.classDeclaration({
     decorator:
-      config.client.name === 'legacy/angular'
+      clientPlugin.name === 'legacy/angular'
         ? { args: [{ providedIn: 'root' }], name: 'Injectable' }
         : undefined,
     members,
@@ -789,15 +793,8 @@ const processService = ({
 export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
   client,
   files,
-  plugin,
 }) => {
   const config = getConfig();
-
-  if (!config.client.name) {
-    throw new Error(
-      '🚫 client needs to be set to generate SDKs - which HTTP client do you want to use?',
-    );
-  }
 
   const isLegacy = isLegacyClient(config);
 
@@ -823,7 +820,8 @@ export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
       module: clientModulePath({ config, sourceOutput: sdkOutput }),
     });
   } else {
-    if (config.client.name === 'legacy/angular') {
+    const clientPlugin = getClientPlugin(config);
+    if (clientPlugin.name === 'legacy/angular') {
       files.sdk.import({
         module: '@angular/core',
         name: 'Injectable',
@@ -858,8 +856,9 @@ export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
     }
 
     if (legacyNameFromConfig(config)) {
+      const clientPlugin = getClientPlugin(config);
       files.sdk.import({
-        asType: config.client.name !== 'legacy/angular',
+        asType: clientPlugin.name !== 'legacy/angular',
         module: './core/BaseHttpRequest',
         name: 'BaseHttpRequest',
       });
@@ -878,6 +877,7 @@ export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
 
   // define client first
   if (!isLegacy) {
+    const clientPlugin = getClientPlugin(config);
     const statement = compiler.constVariable({
       exportConst: true,
       expression: compiler.callExpression({
@@ -886,12 +886,12 @@ export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
           compiler.callExpression({
             functionName: 'createConfig',
             parameters: [
-              plugin.throwOnError
+              'throwOnError' in clientPlugin && clientPlugin.throwOnError
                 ? compiler.objectExpression({
                     obj: [
                       {
                         key: 'throwOnError',
-                        value: plugin.throwOnError,
+                        value: true,
                       },
                     ],
                   })
@@ -925,7 +925,6 @@ export const handlerLegacy: Plugin.LegacyHandler<Config> = ({
       onNode: (node) => {
         files.sdk!.add(node);
       },
-      plugin,
       service,
     });
   }

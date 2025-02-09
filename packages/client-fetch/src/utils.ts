@@ -10,7 +10,7 @@ import {
   serializePrimitiveParam,
 } from '@hey-api/client-core';
 
-import type { Client, Config, RequestOptions } from './types';
+import type { Client, ClientOptions, Config, RequestOptions } from './types';
 
 interface PathSerializer {
   path: Record<string, unknown>;
@@ -229,7 +229,7 @@ export const setAuthParams = async ({
 
 export const buildUrl: Client['buildUrl'] = (options) => {
   const url = getUrl({
-    baseUrl: options.baseUrl ?? '',
+    baseUrl: options.baseUrl as string,
     path: options.path,
     query: options.query,
     querySerializer:
@@ -248,14 +248,14 @@ export const getUrl = ({
   querySerializer,
   url: _url,
 }: {
-  baseUrl: string;
+  baseUrl?: string;
   path?: Record<string, unknown>;
   query?: Record<string, unknown>;
   querySerializer: QuerySerializer;
   url: string;
 }) => {
   const pathUrl = _url.startsWith('/') ? _url : `/${_url}`;
-  let url = baseUrl + pathUrl;
+  let url = (baseUrl ?? '') + pathUrl;
   if (path) {
     url = defaultPathSerializer({ path, url });
   }
@@ -392,9 +392,10 @@ const defaultHeaders = {
   'Content-Type': 'application/json',
 };
 
-export const createConfig = (override: Config = {}): Config => ({
+export const createConfig = <T extends ClientOptions = ClientOptions>(
+  override: Config<Omit<ClientOptions, keyof T> & T> = {},
+): Config<Omit<ClientOptions, keyof T> & T> => ({
   ...jsonBodySerializer,
-  baseUrl: '',
   headers: defaultHeaders,
   parseAs: 'auto',
   querySerializer: defaultQuerySerializer,

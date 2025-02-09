@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/client-fetch",
-  "version": "0.7.1",
+  "version": "0.8.1",
   "description": "🚀 Fetch API client for `@hey-api/openapi-ts` codegen.",
   "homepage": "https://heyapi.dev/",
   "repository": {
@@ -19,6 +19,7 @@
   "funding": "https://github.com/sponsors/hey-api",
   "keywords": [
     "client",
+    "codegen",
     "fetch",
     "http",
     "javascript",

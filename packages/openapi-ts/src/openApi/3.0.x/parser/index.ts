@@ -13,6 +13,7 @@ import { parseOperation } from './operation';
 import { parametersArrayToObject, parseParameter } from './parameter';
 import { parseRequestBody } from './requestBody';
 import { parseSchema } from './schema';
+import { parseServers } from './server';
 
 export const parseV3_0_X = (context: IR.Context<OpenApiV3_0_X>) => {
   const operationIds = new Map<string, string>();
@@ -98,6 +99,8 @@ export const parseV3_0_X = (context: IR.Context<OpenApiV3_0_X>) => {
       });
     }
   }
+
+  parseServers({ context });
 
   for (const path in context.spec.paths) {
     const pathItem = context.spec.paths[path as keyof PathsObject]!;

@@ -1,6 +1,10 @@
 import type { IR } from '../../../ir/types';
 import type { Operation } from '../../../types/client';
-import type { Plugin } from '../../types';
+import type {
+  Plugin,
+  PluginClientNames,
+  PluginValidatorNames,
+} from '../../types';
 
 export interface Config extends Plugin.Name<'@hey-api/sdk'> {
   /**
@@ -23,6 +27,18 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
    * @default true
    */
   auth?: boolean;
+  /**
+   * Use an internal client instance to send HTTP requests? This is useful if
+   * you don't want to manually pass the client to each SDK function.
+   *
+   * Ensure you have declared the selected library as a dependency to avoid
+   * errors. You can customize the selected client output through its plugin.
+   * You can also set `client` to `true` to automatically choose the client
+   * from your defined plugins.
+   *
+   * @default true
+   */
+  client?: PluginClientNames | boolean;
   /**
    * @deprecated
    *
@@ -59,11 +75,11 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
    */
   output?: string;
   /**
+   * @deprecated
+   *
    * Define shape of returned value from service calls
    *
    * @default 'body'
-   *
-   * @deprecated
    */
   response?: 'body' | 'response';
   /**
@@ -75,12 +91,6 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
    * @default '{{name}}Service'
    */
   serviceNameBuilder?: string;
-  /**
-   * Throw an error instead of returning it in the response?
-   *
-   * @default false
-   */
-  throwOnError?: boolean;
   /**
    * Transform response data before returning. This is useful if you want to
    * convert for example ISO strings into Date objects. However, transformation
@@ -106,5 +116,5 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
    *
    * @default false
    */
-  validator?: 'zod' | boolean;
+  validator?: PluginValidatorNames | boolean;
 }

@@ -1,0 +1,30 @@
+openapi: 3.0.4
+info:
+  title: OpenAPI 3.0.4 security oauth2 example
+  version: '1'
+paths:
+  /foo:
+    get:
+      responses:
+        '200':
+          description: OK
+      security:
+        - foo: []
+components:
+  securitySchemes:
+    foo:
+      flows:
+        authorizationCode:
+          authorizationUrl: '/'
+          tokenUrl: '/'
+          scopes: {}
+        clientCredentials:
+          tokenUrl: '/'
+          scopes: {}
+        implicit:
+          authorizationUrl: '/'
+          scopes: {}
+        password:
+          scopes: {}
+          tokenUrl: '/'
+      type: 'oauth2'

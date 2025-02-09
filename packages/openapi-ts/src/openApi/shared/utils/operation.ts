@@ -8,11 +8,13 @@ import { sanitizeNamespaceIdentifier } from '../../common/parser/sanitize';
  * future, we should add a strict check and throw on duplicate identifiers.
  */
 export const ensureUniqueOperationId = ({
+  context,
   id,
   method,
   operationIds,
   path,
 }: {
+  context: IR.Context;
   id: string | undefined;
   method: IR.OperationObject['method'];
   operationIds: Map<string, string>;
@@ -25,10 +27,12 @@ export const ensureUniqueOperationId = ({
   const operationKey = `${method.toUpperCase()} ${path}`;
 
   if (operationIds.has(id)) {
-    // TODO: parser - support throw on duplicate
-    console.warn(
-      `❗️ Duplicate operationId: ${id} in ${operationKey}. Please ensure your operation IDs are unique. This behavior is not supported and will likely lead to unexpected results.`,
-    );
+    if (context.config.logs.level !== 'silent') {
+      // TODO: parser - support throw on duplicate
+      console.warn(
+        `❗️ Duplicate operationId: ${id} in ${operationKey}. Please ensure your operation IDs are unique. This behavior is not supported and will likely lead to unexpected results.`,
+      );
+    }
   } else {
     operationIds.set(id, operationKey);
   }

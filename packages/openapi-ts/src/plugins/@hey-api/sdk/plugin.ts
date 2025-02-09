@@ -3,7 +3,7 @@ import type ts from 'typescript';
 import { compiler } from '../../../compiler';
 import type { ObjectValue } from '../../../compiler/types';
 import { clientApi, clientModulePath } from '../../../generate/client';
-import type { TypeScriptFile } from '../../../generate/files';
+import type { FileImportResult, TypeScriptFile } from '../../../generate/files';
 import {
   hasOperationDataRequired,
   statusCodeToGroup,
@@ -15,6 +15,7 @@ import { transformServiceName } from '../../../utils/transform';
 import { operationIrRef } from '../../shared/utils/ref';
 import type { Plugin } from '../../types';
 import { zodId } from '../../zod/plugin';
+import { clientId, getClientPlugin } from '../client-core/utils';
 import {
   operationTransformerIrRef,
   transformersId,
@@ -27,9 +28,19 @@ import {
 import { serviceFunctionIdentifier } from './plugin-legacy';
 import type { Config } from './types';
 
-// type copied from client packages
-interface Auth {
+// copy-pasted from @hey-api/client-core
+export interface Auth {
+  /**
+   * Which part of the request do we use to send the auth?
+   *
+   * @default 'header'
+   */
   in?: 'header' | 'query';
+  /**
+   * Header or query parameter name.
+   *
+   * @default 'Authorization'
+   */
   name?: string;
   scheme?: 'basic' | 'bearer';
   type: 'apiKey' | 'http';
@@ -52,7 +63,8 @@ export const operationOptionsType = ({
 
   const optionsName = clientApi.Options.name;
 
-  if (context.config.client.name === '@hey-api/client-nuxt') {
+  const client = getClientPlugin(context.config);
+  if (client.name === '@hey-api/client-nuxt') {
     return `${optionsName}<${nuxtTypeComposable}, ${identifierData.name || 'unknown'}>`;
   }
 
@@ -65,7 +77,7 @@ export const operationOptionsType = ({
     : optionsName;
 };
 
-const sdkId = 'sdk';
+export const sdkId = 'sdk';
 
 /**
  * Infers `responseType` value from provided response content type. This is
@@ -127,6 +139,13 @@ const securitySchemeObjectToAuthObject = ({
 }: {
   securitySchemeObject: IR.SecurityObject;
 }): Auth | undefined => {
+  if (securitySchemeObject.type === 'openIdConnect') {
+    return {
+      scheme: 'bearer',
+      type: 'http',
+    };
+  }
+
   if (securitySchemeObject.type === 'oauth2') {
     if (
       securitySchemeObject.flows.password ||
@@ -210,10 +229,12 @@ const operationAuth = ({
 
 const operationStatements = ({
   context,
+  isRequiredOptions,
   operation,
   plugin,
 }: {
   context: IR.Context;
+  isRequiredOptions: boolean;
   operation: IR.OperationObject;
   plugin: Plugin.Instance<Config>;
 }): Array<ts.Statement> => {
@@ -280,7 +301,8 @@ const operationStatements = ({
     }
   }
 
-  if (context.config.client.name === '@hey-api/client-axios') {
+  const client = getClientPlugin(context.config);
+  if (client.name === '@hey-api/client-axios') {
     // try to infer `responseType` option for Axios. We don't need this in
     // Fetch API client because it automatically detects the correct response
     // during runtime.
@@ -440,9 +462,26 @@ const operationStatements = ({
     });
   }
 
-  const isNuxtClient = context.config.client.name === '@hey-api/client-nuxt';
+  const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const responseType = identifierResponse.name || 'unknown';
   const errorType = identifierError.name || 'unknown';
+
+  const heyApiClient = plugin.client
+    ? file.import({
+        alias: '_heyApiClient',
+        module: file.relativePathToFile({
+          context,
+          id: clientId,
+        }),
+        name: 'client',
+      })
+    : undefined;
+
+  const optionsClient = compiler.propertyAccessExpression({
+    expression: compiler.identifier({ text: 'options' }),
+    isOptional: !isRequiredOptions,
+    name: 'client',
+  });
 
   return [
     compiler.returnFunctionCall({
@@ -452,7 +491,16 @@ const operationStatements = ({
           obj: requestOptions,
         }),
       ],
-      name: `(options?.client ?? client).${operation.method}`,
+      name: compiler.propertyAccessExpression({
+        expression: heyApiClient?.name
+          ? compiler.binaryExpression({
+              left: optionsClient,
+              operator: '??',
+              right: compiler.identifier({ text: heyApiClient.name }),
+            })
+          : optionsClient,
+        name: compiler.identifier({ text: operation.method }),
+      }),
       types: isNuxtClient
         ? [nuxtTypeComposable, responseType, errorType]
         : [responseType, errorType, 'ThrowOnError'],
@@ -467,11 +515,14 @@ const generateClassSdk = ({
   context: IR.Context;
   plugin: Plugin.Instance<Config>;
 }) => {
-  const isNuxtClient = context.config.client.name === '@hey-api/client-nuxt';
+  const client = getClientPlugin(context.config);
+  const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const file = context.file({ id: sdkId })!;
   const sdks = new Map<string, Array<ts.MethodDeclaration>>();
 
   context.subscribe('operation', ({ operation }) => {
+    const isRequiredOptions =
+      !plugin.client || isNuxtClient || hasOperationDataRequired(operation);
     const node = compiler.methodDeclaration({
       accessLevel: 'public',
       comment: [
@@ -488,7 +539,7 @@ const generateClassSdk = ({
       }),
       parameters: [
         {
-          isRequired: isNuxtClient || hasOperationDataRequired(operation),
+          isRequired: isRequiredOptions,
           name: 'options',
           type: operationOptionsType({
             context,
@@ -501,6 +552,7 @@ const generateClassSdk = ({
       returnType: undefined,
       statements: operationStatements({
         context,
+        isRequiredOptions,
         operation,
         plugin,
       }),
@@ -514,7 +566,9 @@ const generateClassSdk = ({
           ]
         : [
             {
-              default: plugin.throwOnError,
+              default:
+                ('throwOnError' in client ? client.throwOnError : false) ??
+                false,
               extends: 'boolean',
               name: 'ThrowOnError',
             },
@@ -556,10 +610,13 @@ const generateFlatSdk = ({
   context: IR.Context;
   plugin: Plugin.Instance<Config>;
 }) => {
-  const isNuxtClient = context.config.client.name === '@hey-api/client-nuxt';
+  const client = getClientPlugin(context.config);
+  const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const file = context.file({ id: sdkId })!;
 
   context.subscribe('operation', ({ operation }) => {
+    const isRequiredOptions =
+      !plugin.client || isNuxtClient || hasOperationDataRequired(operation);
     const node = compiler.constVariable({
       comment: [
         operation.deprecated && '@deprecated',
@@ -570,7 +627,7 @@ const generateFlatSdk = ({
       expression: compiler.arrowFunction({
         parameters: [
           {
-            isRequired: isNuxtClient || hasOperationDataRequired(operation),
+            isRequired: isRequiredOptions,
             name: 'options',
             type: operationOptionsType({
               context,
@@ -583,6 +640,7 @@ const generateFlatSdk = ({
         returnType: undefined,
         statements: operationStatements({
           context,
+          isRequiredOptions,
           operation,
           plugin,
         }),
@@ -596,7 +654,9 @@ const generateFlatSdk = ({
             ]
           : [
               {
-                default: plugin.throwOnError,
+                default:
+                  ('throwOnError' in client ? client.throwOnError : false) ??
+                  false,
                 extends: 'boolean',
                 name: 'ThrowOnError',
               },
@@ -613,39 +673,125 @@ const generateFlatSdk = ({
   });
 };
 
-export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
-  if (!context.config.client.name) {
-    throw new Error(
-      '🚫 client needs to be set to generate SDKs - which HTTP client do you want to use?',
-    );
-  }
+const createTypeOptions = ({
+  clientOptions,
+  context,
+  plugin,
+}: {
+  clientOptions: FileImportResult;
+  context: IR.Context;
+  plugin: Plugin.Instance<Config>;
+}) => {
+  const file = context.file({ id: sdkId })!;
+  const client = getClientPlugin(context.config);
+  const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
+  const clientModule = clientModulePath({
+    config: context.config,
+    sourceOutput: file.nameWithoutExtension(),
+  });
+  const tDataShape = file.import({
+    asType: true,
+    module: clientModule,
+    name: 'TDataShape',
+  });
+  const clientType = file.import({
+    asType: true,
+    module: clientModule,
+    name: 'Client',
+  });
+
+  const typeOptions = compiler.typeAliasDeclaration({
+    exportType: true,
+    name: 'Options',
+    type: compiler.typeIntersectionNode({
+      types: [
+        compiler.typeReferenceNode({
+          typeArguments: isNuxtClient
+            ? [
+                compiler.typeReferenceNode({ typeName: 'TComposable' }),
+                compiler.typeReferenceNode({ typeName: 'TData' }),
+              ]
+            : [
+                compiler.typeReferenceNode({ typeName: 'TData' }),
+                compiler.typeReferenceNode({ typeName: 'ThrowOnError' }),
+              ],
+          typeName: clientOptions.name,
+        }),
+        compiler.typeInterfaceNode({
+          properties: [
+            {
+              comment: [
+                'You can provide a client instance returned by `createClient()` instead of',
+                'individual options. This might be also useful if you want to implement a',
+                'custom client.',
+              ],
+              isRequired: !plugin.client,
+              name: 'client',
+              type: compiler.typeReferenceNode({ typeName: clientType.name }),
+            },
+          ],
+          useLegacyResolution: false,
+        }),
+      ],
+    }),
+    typeParameters: isNuxtClient
+      ? [
+          compiler.typeParameterDeclaration({
+            constraint: compiler.typeReferenceNode({ typeName: 'Composable' }),
+            name: 'TComposable',
+          }),
+          compiler.typeParameterDeclaration({
+            constraint: compiler.typeReferenceNode({
+              typeName: tDataShape.name,
+            }),
+            defaultType: compiler.typeReferenceNode({
+              typeName: tDataShape.name,
+            }),
+            name: 'TData',
+          }),
+        ]
+      : [
+          compiler.typeParameterDeclaration({
+            constraint: compiler.typeReferenceNode({
+              typeName: tDataShape.name,
+            }),
+            defaultType: compiler.typeReferenceNode({
+              typeName: tDataShape.name,
+            }),
+            name: 'TData',
+          }),
+          compiler.typeParameterDeclaration({
+            constraint: compiler.keywordTypeNode({ keyword: 'boolean' }),
+            defaultType: compiler.keywordTypeNode({ keyword: 'boolean' }),
+            name: 'ThrowOnError',
+          }),
+        ],
+  });
+
+  file.add(typeOptions);
+};
+
+export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
   const file = context.createFile({
     exportFromIndex: plugin.exportFromIndex,
     id: sdkId,
     path: plugin.output,
   });
-  const sdkOutput = file.nameWithoutExtension();
 
   // import required packages and core files
   const clientModule = clientModulePath({
     config: context.config,
-    sourceOutput: sdkOutput,
+    sourceOutput: file.nameWithoutExtension(),
   });
-  file.import({
-    module: clientModule,
-    name: 'createClient',
-  });
-  file.import({
-    module: clientModule,
-    name: 'createConfig',
-  });
-  file.import({
+  const clientOptions = file.import({
     ...clientApi.Options,
+    alias: 'ClientOptions',
     module: clientModule,
   });
 
-  const isNuxtClient = context.config.client.name === '@hey-api/client-nuxt';
+  const client = getClientPlugin(context.config);
+  const isNuxtClient = client.name === '@hey-api/client-nuxt';
   if (isNuxtClient) {
     file.import({
       asType: true,
@@ -654,32 +800,11 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     });
   }
 
-  // define client first
-  const statement = compiler.constVariable({
-    exportConst: true,
-    expression: compiler.callExpression({
-      functionName: 'createClient',
-      parameters: [
-        compiler.callExpression({
-          functionName: 'createConfig',
-          parameters: [
-            plugin.throwOnError
-              ? compiler.objectExpression({
-                  obj: [
-                    {
-                      key: 'throwOnError',
-                      value: plugin.throwOnError,
-                    },
-                  ],
-                })
-              : undefined,
-          ],
-        }),
-      ],
-    }),
-    name: 'client',
+  createTypeOptions({
+    clientOptions,
+    context,
+    plugin,
   });
-  file.add(statement);
 
   if (plugin.asClass) {
     generateClassSdk({ context, plugin });

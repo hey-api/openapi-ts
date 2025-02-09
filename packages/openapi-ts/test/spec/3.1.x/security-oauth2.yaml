@@ -14,6 +14,16 @@ components:
   securitySchemes:
     foo:
       flows:
+        authorizationCode:
+          authorizationUrl: '/'
+          tokenUrl: '/'
+          scopes: {}
+        clientCredentials:
+          tokenUrl: '/'
+          scopes: {}
+        implicit:
+          authorizationUrl: '/'
+          scopes: {}
         password:
           scopes: {}
           tokenUrl: '/'

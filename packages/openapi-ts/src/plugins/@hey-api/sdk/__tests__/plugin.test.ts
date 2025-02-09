@@ -16,9 +16,6 @@ vi.mock('node:fs');
 describe('handlerLegacy', () => {
   it('writes to filesystem', async () => {
     setConfig({
-      client: {
-        name: 'legacy/fetch',
-      },
       configFile: '',
       dryRun: false,
       experimentalParser: false,
@@ -33,7 +30,12 @@ describe('handlerLegacy', () => {
       output: {
         path: '',
       },
-      pluginOrder: ['@hey-api/typescript', '@hey-api/schemas', '@hey-api/sdk'],
+      pluginOrder: [
+        '@hey-api/typescript',
+        '@hey-api/schemas',
+        'legacy/fetch',
+        '@hey-api/sdk',
+      ],
       plugins: {
         '@hey-api/schemas': {
           _handler: () => {},
@@ -51,11 +53,18 @@ describe('handlerLegacy', () => {
           _handlerLegacy: () => {},
           name: '@hey-api/typescript',
         },
+        'legacy/fetch': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          _tags: ['client'],
+          name: 'legacy/fetch',
+        },
       },
       useOptions: false,
       watch: {
         enabled: false,
-        interval: 1000,
+        interval: 1_000,
+        timeout: 60_000,
       },
     });
 
@@ -167,9 +176,6 @@ describe('methodNameBuilder', () => {
 
   it('use default name', async () => {
     setConfig({
-      client: {
-        name: 'legacy/fetch',
-      },
       configFile: '',
       dryRun: false,
       experimentalParser: false,
@@ -184,7 +190,12 @@ describe('methodNameBuilder', () => {
       output: {
         path: '',
       },
-      pluginOrder: ['@hey-api/typescript', '@hey-api/schemas', '@hey-api/sdk'],
+      pluginOrder: [
+        '@hey-api/typescript',
+        '@hey-api/schemas',
+        'legacy/fetch',
+        '@hey-api/sdk',
+      ],
       plugins: {
         '@hey-api/schemas': {
           _handler: () => {},
@@ -202,11 +213,18 @@ describe('methodNameBuilder', () => {
           _handlerLegacy: () => {},
           name: '@hey-api/typescript',
         },
+        'legacy/fetch': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          _tags: ['client'],
+          name: 'legacy/fetch',
+        },
       },
       useOptions: false,
       watch: {
         enabled: false,
-        interval: 1000,
+        interval: 1_000,
+        timeout: 60_000,
       },
     });
 
@@ -240,9 +258,6 @@ describe('methodNameBuilder', () => {
     const methodNameBuilder = vi.fn().mockReturnValue('customName');
 
     setConfig({
-      client: {
-        name: 'legacy/fetch',
-      },
       configFile: '',
       dryRun: false,
       experimentalParser: false,
@@ -257,7 +272,12 @@ describe('methodNameBuilder', () => {
       output: {
         path: '',
       },
-      pluginOrder: ['@hey-api/typescript', '@hey-api/schemas', '@hey-api/sdk'],
+      pluginOrder: [
+        '@hey-api/typescript',
+        '@hey-api/schemas',
+        'legacy/fetch',
+        '@hey-api/sdk',
+      ],
       plugins: {
         '@hey-api/schemas': {
           _handler: () => {},
@@ -276,11 +296,18 @@ describe('methodNameBuilder', () => {
           _handlerLegacy: () => {},
           name: '@hey-api/typescript',
         },
+        'legacy/fetch': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          _tags: ['client'],
+          name: 'legacy/fetch',
+        },
       },
       useOptions: false,
       watch: {
         enabled: false,
-        interval: 1000,
+        interval: 1_000,
+        timeout: 60_000,
       },
     });
 
@@ -316,9 +343,6 @@ describe('methodNameBuilder', () => {
     const methodNameBuilder = vi.fn().mockReturnValue('customName');
 
     setConfig({
-      client: {
-        name: 'legacy/fetch',
-      },
       configFile: '',
       dryRun: false,
       experimentalParser: false,
@@ -333,7 +357,12 @@ describe('methodNameBuilder', () => {
       output: {
         path: '',
       },
-      pluginOrder: ['@hey-api/typescript', '@hey-api/schemas', '@hey-api/sdk'],
+      pluginOrder: [
+        '@hey-api/typescript',
+        '@hey-api/schemas',
+        'legacy/fetch',
+        '@hey-api/sdk',
+      ],
       plugins: {
         '@hey-api/schemas': {
           _handler: () => {},
@@ -352,11 +381,18 @@ describe('methodNameBuilder', () => {
           _handlerLegacy: () => {},
           name: '@hey-api/typescript',
         },
+        'legacy/fetch': {
+          _handler: () => {},
+          _handlerLegacy: () => {},
+          _tags: ['client'],
+          name: 'legacy/fetch',
+        },
       },
       useOptions: false,
       watch: {
         enabled: false,
-        interval: 1000,
+        interval: 1_000,
+        timeout: 60_000,
       },
     });
 
