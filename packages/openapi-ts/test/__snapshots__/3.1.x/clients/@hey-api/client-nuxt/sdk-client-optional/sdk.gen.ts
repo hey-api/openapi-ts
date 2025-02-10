@@ -11,6 +11,11 @@ export type Options<TComposable extends Composable, TData extends TDataShape = T
      * custom client.
      */
     client?: Client;
+    /**
+     * You can pass arbitrary values through the `meta` object. This can be
+     * used to access values that aren't defined as part of the SDK function.
+     */
+    meta?: Record<string, unknown>;
 };
 
 export const export_ = <TComposable extends Composable>(options: Options<TComposable, ExportData>) => {
