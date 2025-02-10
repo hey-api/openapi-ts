@@ -1,4 +1,3 @@
-import type { NuxtApp } from 'nuxt/app';
 import {
   useAsyncData,
   useFetch,
@@ -111,8 +110,7 @@ export const createClient = (config: Config = {}): Client => {
         : useFetch(() => buildUrl(opts), opts);
     }
 
-    const handler: (ctx?: NuxtApp) => Promise<unknown> = () =>
-      executeFetchFn(opts, fetchFn);
+    const handler: any = () => executeFetchFn(opts, fetchFn);
 
     if (composable === 'useAsyncData') {
       return key

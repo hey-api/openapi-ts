@@ -38,6 +38,10 @@ const query = computed(() => ({
  */
 const asyncData = await getPetById({
   asyncDataOptions: {
+    default: () => ({
+      name: 'Default Pet',
+      photoUrls: [],
+    }),
     watch: [petId],
   },
   composable: 'useAsyncData',
