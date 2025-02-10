@@ -37,7 +37,6 @@ export const getSpec = async ({
   let hasChanged: boolean | undefined;
   let response: Response | undefined;
 
-  // no support for watching files and objects for now
   if (resolvedInput.type === 'url') {
     // do NOT send HEAD request on first run or if unsupported
     if (watch.lastValue && watch.isHeadMethodSupported !== false) {
@@ -128,6 +127,13 @@ export const getSpec = async ({
       const content = new TextDecoder().decode(arrayBuffer);
       hasChanged = content !== watch.lastValue;
       watch.lastValue = content;
+    }
+  } else {
+    // we do not support watch mode for files or raw spec data
+    if (!watch.lastValue) {
+      watch.lastValue = resolvedInput.type;
+    } else {
+      hasChanged = false;
     }
   }
 

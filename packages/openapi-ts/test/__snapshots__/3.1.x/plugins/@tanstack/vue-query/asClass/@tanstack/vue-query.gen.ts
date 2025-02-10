@@ -2,7 +2,7 @@
 
 import { type Options, DefaultService, SimpleService, ParametersService, DescriptionsService, DeprecatedService, RequestBodyService, FormDataService, DefaultsService, DuplicateService, NoContentService, ResponseService, MultipleTags1Service, CollectionFormatService, TypesService, UploadService, FileResponseService, ComplexService, MultipartService, HeaderService, ErrorService, NonAsciiÆøåÆøÅöôêÊService } from '../sdk.gen';
 import { queryOptions, type UseMutationOptions, type DefaultError, infiniteQueryOptions, type InfiniteData } from '@tanstack/vue-query';
-import type { ExportData, ImportData, ImportResponse, ApiVVersionODataControllerCountData, GetApiVbyApiVersionSimpleOperationData, DeleteCallWithoutParametersAndResponseData, GetCallWithoutParametersAndResponseData, PatchCallWithoutParametersAndResponseData, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, DeleteFooData3, CallWithDescriptionsData, DeprecatedCallData, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, PostApiVbyApiVersionRequestBodyData, PostApiVbyApiVersionFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, DuplicateNameData, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data, CallWithNoContentResponseData, CallWithResponseAndNoContentResponseData, DummyAData, DummyBData, CallWithResponseData, CallWithDuplicateResponsesData, CallWithDuplicateResponsesError, CallWithDuplicateResponsesResponse, CallWithResponsesData, CallWithResponsesError, CallWithResponsesResponse, CollectionFormatData, TypesData, UploadFileData, UploadFileResponse, FileResponseData, ComplexTypesData, MultipartResponseData, MultipartRequestData, ComplexParamsData, ComplexParamsResponse, CallWithResultFromHeaderData, TestErrorCodeData, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData } from '../types.gen';
+import type { ExportData, PatchApiVbyApiVersionNoTagData, ImportData, ImportResponse, FooWowData, ApiVVersionODataControllerCountData, GetApiVbyApiVersionSimpleOperationData, DeleteCallWithoutParametersAndResponseData, GetCallWithoutParametersAndResponseData, PatchCallWithoutParametersAndResponseData, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, DeleteFooData3, CallWithDescriptionsData, DeprecatedCallData, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, PostApiVbyApiVersionRequestBodyData, PostApiVbyApiVersionFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, DuplicateNameData, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data, CallWithNoContentResponseData, CallWithResponseAndNoContentResponseData, DummyAData, DummyBData, CallWithResponseData, CallWithDuplicateResponsesData, CallWithDuplicateResponsesError, CallWithDuplicateResponsesResponse, CallWithResponsesData, CallWithResponsesError, CallWithResponsesResponse, CollectionFormatData, TypesData, UploadFileData, UploadFileResponse, FileResponseData, ComplexTypesData, MultipartResponseData, MultipartRequestData, ComplexParamsData, ComplexParamsResponse, CallWithResultFromHeaderData, TestErrorCodeData, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData } from '../types.gen';
 import { client as _heyApiClient } from '../client.gen';
 
 type QueryKey<TOptions extends Options> = [
@@ -51,6 +51,20 @@ export const exportOptions = (options?: Options<ExportData>) => {
     });
 };
 
+export const patchApiVbyApiVersionNoTagMutation = (options?: Partial<Options<PatchApiVbyApiVersionNoTagData>>) => {
+    const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<PatchApiVbyApiVersionNoTagData>> = {
+        mutationFn: async (localOptions) => {
+            const { data } = await DefaultService.patchApiVbyApiVersionNoTag({
+                ...options,
+                ...localOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
 export const importQueryKey = (options: Options<ImportData>) => [
     createQueryKey('import', options)
 ];
@@ -74,6 +88,20 @@ export const importMutation = (options?: Partial<Options<ImportData>>) => {
     const mutationOptions: UseMutationOptions<ImportResponse, DefaultError, Options<ImportData>> = {
         mutationFn: async (localOptions) => {
             const { data } = await DefaultService.import({
+                ...options,
+                ...localOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const fooWowMutation = (options?: Partial<Options<FooWowData>>) => {
+    const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<FooWowData>> = {
+        mutationFn: async (localOptions) => {
+            const { data } = await DefaultService.fooWow({
                 ...options,
                 ...localOptions,
                 throwOnError: true
