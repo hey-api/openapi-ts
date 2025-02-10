@@ -1,5 +1,15 @@
 # @hey-api/openapi-ts
 
+## 0.64.2
+
+### Patch Changes
+
+- [#1697](https://github.com/hey-api/openapi-ts/pull/1697) [`dec3fed`](https://github.com/hey-api/openapi-ts/commit/dec3fedb5f51aad4711fec15a006c525cb0bf7d8) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add exportFromIndex option to all plugins
+
+- [#1699](https://github.com/hey-api/openapi-ts/pull/1699) [`8ff188f`](https://github.com/hey-api/openapi-ts/commit/8ff188fb269cf46321538dbe846e1b9ae3b8de42) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow passing arbitrary values to SDK functions via `meta` field
+
+- [#1687](https://github.com/hey-api/openapi-ts/pull/1687) [`04c7cea`](https://github.com/hey-api/openapi-ts/commit/04c7ceac940a81cbed6a4070d9244aa5052ba4a2) Thanks [@hunshcn](https://github.com/hunshcn)! - sanitize "+" in uri to avoid plus in function name
+
 ## 0.64.1
 
 ### Patch Changes
