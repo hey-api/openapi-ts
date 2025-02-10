@@ -94,7 +94,7 @@ In the file above, we define a `my-plugin` plugin which will generate a `my-plug
 By default, your plugin output won't be re-exported from the `index.ts` file. To enable this feature, add `exportFromIndex: true` to your `config.ts` file.
 
 ::: warning
-Re-exporting your plugin from `index.ts` may result in broken output due to naming conflicts. Ensure your exported identifiers are unique.
+Re-exporting your plugin from index file may result in broken output due to naming conflicts. Ensure your exported identifiers are unique.
 :::
 
 ## Handler
