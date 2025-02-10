@@ -77,12 +77,12 @@ export default defineConfig({
     },
     // @ts-ignore
     {
-      // name: '@tanstack/react-query',
+      name: '@tanstack/react-query',
     },
     // @ts-ignore
     {
-      exportFromIndex: true,
-      name: 'zod',
+      // exportFromIndex: true,
+      // name: 'zod',
     },
   ],
   // useOptions: false,
