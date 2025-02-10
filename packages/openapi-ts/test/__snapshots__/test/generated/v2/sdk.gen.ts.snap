@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { CollectionFormatData, ComplexTypesData, ComplexTypesResponse, PostApiBodyData, PostApiBodyResponse, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, CallWithDescriptionsData, TestErrorCodeData, TestErrorCodeResponse, CallWithResultFromHeaderResponse, DummyAResponse, DummyBResponse, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, CallWithParametersData, CallWithWeirdParameterNamesData, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, TypesData, TypesResponse } from './types.gen';
+import type { CollectionFormatData, ComplexTypesData, ComplexTypesResponse, PatchApiNoTagResponse, FooWowResponse, PostApiBodyData, PostApiBodyResponse, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, CallWithDescriptionsData, TestErrorCodeData, TestErrorCodeResponse, CallWithResultFromHeaderResponse, DummyAResponse, DummyBResponse, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, CallWithParametersData, CallWithWeirdParameterNamesData, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, TypesData, TypesResponse } from './types.gen';
 
 export class CollectionFormatService {
     /**
@@ -63,7 +63,29 @@ export class DefaultService {
     public static serviceWithEmptyTag(): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/v{api-version}/no-tag'
+            url: '/api/v{api-version}/no+tag'
+        });
+    }
+    
+    /**
+     * @returns unknown OK
+     * @throws ApiError
+     */
+    public static patchApiNoTag(): CancelablePromise<PatchApiNoTagResponse> {
+        return __request(OpenAPI, {
+            method: 'PATCH',
+            url: '/api/v{api-version}/no+tag'
+        });
+    }
+    
+    /**
+     * @returns unknown OK
+     * @throws ApiError
+     */
+    public static fooWow(): CancelablePromise<FooWowResponse> {
+        return __request(OpenAPI, {
+            method: 'PUT',
+            url: '/api/v{api-version}/no+tag'
         });
     }
     

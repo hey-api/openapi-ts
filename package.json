@@ -32,6 +32,7 @@
     "test:coverage": "turbo run test:coverage",
     "test:e2e": "turbo run test:e2e",
     "test:update": "turbo run test:update",
+    "test:watch": "turbo run test:watch",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck --filter=\"!@example/openapi-ts-sample\"",
     "vitepress": "turbo run $1 --filter=\"@docs/openapi-ts\""

@@ -2,7 +2,7 @@
 
 import { type Options, DefaultService, SimpleService, DescriptionsService, ParametersService, DefaultsService, DuplicateService, NoContentService, ResponseService, MultipleTags1Service, CollectionFormatService, TypesService, ComplexService, HeaderService, ErrorService, NonAsciiÆøåÆøÅöôêÊService } from '../sdk.gen';
 import { queryOptions, type MutationOptions, type DefaultError } from '@tanstack/solid-query';
-import type { ServiceWithEmptyTagData, DeleteCallWithoutParametersAndResponseData, GetCallWithoutParametersAndResponseData, PatchCallWithoutParametersAndResponseData, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, CallWithDescriptionsData, CallWithParametersData, CallWithWeirdParameterNamesData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, DuplicateNameData, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data, CallWithNoContentResponseData, CallWithResponseAndNoContentResponseData, DummyAData, DummyBData, CallWithResponseData, CallWithDuplicateResponsesData, CallWithDuplicateResponsesError, CallWithDuplicateResponsesResponse, CallWithResponsesData, CallWithResponsesError, CallWithResponsesResponse, CollectionFormatData, TypesData, ComplexTypesData, CallWithResultFromHeaderData, TestErrorCodeData, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PostApiVbyApiVersionBodyData, PostApiVbyApiVersionBodyError, PostApiVbyApiVersionBodyResponse } from '../types.gen';
+import type { ServiceWithEmptyTagData, PatchApiVbyApiVersionNoTagData, FooWowData, DeleteCallWithoutParametersAndResponseData, GetCallWithoutParametersAndResponseData, PatchCallWithoutParametersAndResponseData, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, CallWithDescriptionsData, CallWithParametersData, CallWithWeirdParameterNamesData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, DuplicateNameData, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data, CallWithNoContentResponseData, CallWithResponseAndNoContentResponseData, DummyAData, DummyBData, CallWithResponseData, CallWithDuplicateResponsesData, CallWithDuplicateResponsesError, CallWithDuplicateResponsesResponse, CallWithResponsesData, CallWithResponsesError, CallWithResponsesResponse, CollectionFormatData, TypesData, ComplexTypesData, CallWithResultFromHeaderData, TestErrorCodeData, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PostApiVbyApiVersionBodyData, PostApiVbyApiVersionBodyError, PostApiVbyApiVersionBodyResponse } from '../types.gen';
 import { client as _heyApiClient } from '../client.gen';
 
 type QueryKey<TOptions extends Options> = [
@@ -49,6 +49,34 @@ export const serviceWithEmptyTagOptions = (options?: Options<ServiceWithEmptyTag
         },
         queryKey: serviceWithEmptyTagQueryKey(options)
     });
+};
+
+export const patchApiVbyApiVersionNoTagMutation = (options?: Partial<Options<PatchApiVbyApiVersionNoTagData>>) => {
+    const mutationOptions: MutationOptions<unknown, DefaultError, Options<PatchApiVbyApiVersionNoTagData>> = {
+        mutationFn: async (localOptions) => {
+            const { data } = await DefaultService.patchApiVbyApiVersionNoTag({
+                ...options,
+                ...localOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const fooWowMutation = (options?: Partial<Options<FooWowData>>) => {
+    const mutationOptions: MutationOptions<unknown, DefaultError, Options<FooWowData>> = {
+        mutationFn: async (localOptions) => {
+            const { data } = await DefaultService.fooWow({
+                ...options,
+                ...localOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
 };
 
 export const deleteCallWithoutParametersAndResponseMutation = (options?: Partial<Options<DeleteCallWithoutParametersAndResponseData>>) => {
