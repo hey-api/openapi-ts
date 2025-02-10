@@ -27,14 +27,14 @@ export default defineConfig({
     path: path.resolve(__dirname, 'generated', 'sample'),
   },
   plugins: [
-    'legacy/xhr',
     // @ts-ignore
-    // {
-    //   baseUrl: false,
-    //   // bundle: true,
-    //   name: '@hey-api/client-fetch',
-    //   strictBaseUrl: true,
-    // },
+    {
+      baseUrl: false,
+      // bundle: true,
+      exportFromIndex: true,
+      name: '@hey-api/client-fetch',
+      strictBaseUrl: true,
+    },
     // @ts-ignore
     {
       // name: '@hey-api/schemas',
@@ -81,7 +81,8 @@ export default defineConfig({
     },
     // @ts-ignore
     {
-      // name: 'zod',
+      exportFromIndex: true,
+      name: 'zod',
     },
   ],
   // useOptions: false,
