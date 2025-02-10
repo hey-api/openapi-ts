@@ -410,7 +410,35 @@ export type ServiceWithEmptyTagData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/api/v{api-version}/no-tag';
+    url: '/api/v{api-version}/no+tag';
+};
+
+export type PatchApiVbyApiVersionNoTagData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v{api-version}/no+tag';
+};
+
+export type PatchApiVbyApiVersionNoTagResponses = {
+    /**
+     * OK
+     */
+    default: unknown;
+};
+
+export type FooWowData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v{api-version}/no+tag';
+};
+
+export type FooWowResponses = {
+    /**
+     * OK
+     */
+    default: unknown;
 };
 
 export type DeleteCallWithoutParametersAndResponseData = {

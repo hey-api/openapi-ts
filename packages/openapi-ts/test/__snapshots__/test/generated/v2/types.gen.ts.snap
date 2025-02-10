@@ -502,6 +502,10 @@ export type ComplexTypesData = {
 
 export type ComplexTypesResponse = (Array<ModelWithString>);
 
+export type PatchApiNoTagResponse = (unknown);
+
+export type FooWowResponse = (unknown);
+
 export type PostApiBodyData = {
     /**
      * Body should not be unknown

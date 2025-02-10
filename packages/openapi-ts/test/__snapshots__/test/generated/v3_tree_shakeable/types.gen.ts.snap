@@ -1089,11 +1089,15 @@ export type SimpleString = string;
  */
 export type SimpleStringWithPattern = (string) | null;
 
+export type PatchApiNoTagResponse = (unknown);
+
 export type ImportData = {
     requestBody: (ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly);
 };
 
 export type ImportResponse = (Model_From_Zendesk | ModelWithReadOnlyAndWriteOnly);
+
+export type FooWowResponse = (unknown);
 
 export type ApiVVersionODataControllerCountResponse = (Model_From_Zendesk);
 
