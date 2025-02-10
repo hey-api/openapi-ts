@@ -3,5 +3,6 @@ export const clientDefaultConfig = {
   _tags: ['client'],
   baseUrl: true,
   bundle: false,
+  exportFromIndex: false,
   output: 'client',
 } as const;
