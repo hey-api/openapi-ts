@@ -4,6 +4,7 @@ import type { FileImportResult } from '../../../generate/files';
 import type { IR } from '../../../ir/types';
 import type { Plugin } from '../../types';
 import { getClientPlugin } from '../client-core/utils';
+import { nuxtTypeDefault, nuxtTypeResponse } from './constants';
 import { sdkId } from './plugin';
 import type { Config } from './types';
 
@@ -45,6 +46,8 @@ export const createTypeOptions = ({
             ? [
                 compiler.typeReferenceNode({ typeName: 'TComposable' }),
                 compiler.typeReferenceNode({ typeName: 'TData' }),
+                compiler.typeReferenceNode({ typeName: nuxtTypeResponse }),
+                compiler.typeReferenceNode({ typeName: nuxtTypeDefault }),
               ]
             : [
                 compiler.typeReferenceNode({ typeName: 'TData' }),
@@ -98,6 +101,14 @@ export const createTypeOptions = ({
               typeName: tDataShape.name,
             }),
             name: 'TData',
+          }),
+          compiler.typeParameterDeclaration({
+            defaultType: compiler.keywordTypeNode({ keyword: 'unknown' }),
+            name: nuxtTypeResponse,
+          }),
+          compiler.typeParameterDeclaration({
+            defaultType: compiler.keywordTypeNode({ keyword: 'undefined' }),
+            name: nuxtTypeDefault,
           }),
         ]
       : [

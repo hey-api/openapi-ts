@@ -72,23 +72,38 @@ import {
 export type Options<
   TComposable extends Composable,
   TData extends TDataShape = TDataShape,
-> = ClientOptions<TComposable, TData> & {
+  ResT = unknown,
+  DefaultT = undefined,
+> = ClientOptions<TComposable, TData, ResT, DefaultT> & {
   /**
    * You can provide a client instance returned by `createClient()` instead of
    * individual options. This might be also useful if you want to implement a
    * custom client.
    */
   client?: Client;
+  /**
+   * You can pass arbitrary values through the `meta` object. This can be
+   * used to access values that aren't defined as part of the SDK function.
+   */
+  meta?: Record<string, unknown>;
 };
 
 /**
  * Add a new pet to the store
  * Add a new pet to the store
  */
-export const addPet = <TComposable extends Composable>(
-  options: Options<TComposable, AddPetData>,
+export const addPet = <
+  TComposable extends Composable,
+  DefaultT extends AddPetResponse = AddPetResponse,
+>(
+  options: Options<TComposable, AddPetData, AddPetResponse, DefaultT>,
 ) =>
-  (options.client ?? _heyApiClient).post<TComposable, AddPetResponse, unknown>({
+  (options.client ?? _heyApiClient).post<
+    TComposable,
+    AddPetResponse | DefaultT,
+    unknown,
+    DefaultT
+  >({
     responseTransformer: addPetResponseTransformer,
     responseValidator: async (data) => await zAddPetResponse.parseAsync(data),
     security: [
@@ -109,13 +124,17 @@ export const addPet = <TComposable extends Composable>(
  * Update an existing pet
  * Update an existing pet by Id
  */
-export const updatePet = <TComposable extends Composable>(
-  options: Options<TComposable, UpdatePetData>,
+export const updatePet = <
+  TComposable extends Composable,
+  DefaultT extends UpdatePetResponse = UpdatePetResponse,
+>(
+  options: Options<TComposable, UpdatePetData, UpdatePetResponse, DefaultT>,
 ) =>
   (options.client ?? _heyApiClient).put<
     TComposable,
-    UpdatePetResponse,
-    unknown
+    UpdatePetResponse | DefaultT,
+    unknown,
+    DefaultT
   >({
     responseTransformer: updatePetResponseTransformer,
     responseValidator: async (data) =>
@@ -138,13 +157,22 @@ export const updatePet = <TComposable extends Composable>(
  * Finds Pets by status
  * Multiple status values can be provided with comma separated strings
  */
-export const findPetsByStatus = <TComposable extends Composable>(
-  options: Options<TComposable, FindPetsByStatusData>,
+export const findPetsByStatus = <
+  TComposable extends Composable,
+  DefaultT extends FindPetsByStatusResponse = FindPetsByStatusResponse,
+>(
+  options: Options<
+    TComposable,
+    FindPetsByStatusData,
+    FindPetsByStatusResponse,
+    DefaultT
+  >,
 ) =>
   (options.client ?? _heyApiClient).get<
     TComposable,
-    FindPetsByStatusResponse,
-    unknown
+    FindPetsByStatusResponse | DefaultT,
+    unknown,
+    DefaultT
   >({
     responseTransformer: findPetsByStatusResponseTransformer,
     responseValidator: async (data) =>
@@ -163,13 +191,22 @@ export const findPetsByStatus = <TComposable extends Composable>(
  * Finds Pets by tags
  * Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
  */
-export const findPetsByTags = <TComposable extends Composable>(
-  options: Options<TComposable, FindPetsByTagsData>,
+export const findPetsByTags = <
+  TComposable extends Composable,
+  DefaultT extends FindPetsByTagsResponse = FindPetsByTagsResponse,
+>(
+  options: Options<
+    TComposable,
+    FindPetsByTagsData,
+    FindPetsByTagsResponse,
+    DefaultT
+  >,
 ) =>
   (options.client ?? _heyApiClient).get<
     TComposable,
-    FindPetsByTagsResponse,
-    unknown
+    FindPetsByTagsResponse | DefaultT,
+    unknown,
+    DefaultT
   >({
     responseTransformer: findPetsByTagsResponseTransformer,
     responseValidator: async (data) =>
@@ -187,10 +224,15 @@ export const findPetsByTags = <TComposable extends Composable>(
 /**
  * Deletes a pet
  */
-export const deletePet = <TComposable extends Composable>(
-  options: Options<TComposable, DeletePetData>,
+export const deletePet = <TComposable extends Composable, DefaultT = undefined>(
+  options: Options<TComposable, DeletePetData, unknown, DefaultT>,
 ) =>
-  (options.client ?? _heyApiClient).delete<TComposable, unknown, unknown>({
+  (options.client ?? _heyApiClient).delete<
+    TComposable,
+    unknown | DefaultT,
+    unknown,
+    DefaultT
+  >({
     security: [
       {
         scheme: 'bearer',
@@ -205,13 +247,17 @@ export const deletePet = <TComposable extends Composable>(
  * Find pet by ID
  * Returns a single pet
  */
-export const getPetById = <TComposable extends Composable>(
-  options: Options<TComposable, GetPetByIdData>,
+export const getPetById = <
+  TComposable extends Composable,
+  DefaultT extends GetPetByIdResponse = GetPetByIdResponse,
+>(
+  options: Options<TComposable, GetPetByIdData, GetPetByIdResponse, DefaultT>,
 ) =>
   (options.client ?? _heyApiClient).get<
     TComposable,
-    GetPetByIdResponse,
-    unknown
+    GetPetByIdResponse | DefaultT,
+    unknown,
+    DefaultT
   >({
     responseTransformer: getPetByIdResponseTransformer,
     responseValidator: async (data) =>
@@ -233,10 +279,18 @@ export const getPetById = <TComposable extends Composable>(
 /**
  * Updates a pet in the store with form data
  */
-export const updatePetWithForm = <TComposable extends Composable>(
-  options: Options<TComposable, UpdatePetWithFormData>,
+export const updatePetWithForm = <
+  TComposable extends Composable,
+  DefaultT = undefined,
+>(
+  options: Options<TComposable, UpdatePetWithFormData, unknown, DefaultT>,
 ) =>
-  (options.client ?? _heyApiClient).post<TComposable, unknown, unknown>({
+  (options.client ?? _heyApiClient).post<
+    TComposable,
+    unknown | DefaultT,
+    unknown,
+    DefaultT
+  >({
     security: [
       {
         scheme: 'bearer',
@@ -250,13 +304,17 @@ export const updatePetWithForm = <TComposable extends Composable>(
 /**
  * uploads an image
  */
-export const uploadFile = <TComposable extends Composable>(
-  options: Options<TComposable, UploadFileData>,
+export const uploadFile = <
+  TComposable extends Composable,
+  DefaultT extends UploadFileResponse = UploadFileResponse,
+>(
+  options: Options<TComposable, UploadFileData, UploadFileResponse, DefaultT>,
 ) =>
   (options.client ?? _heyApiClient).post<
     TComposable,
-    UploadFileResponse,
-    unknown
+    UploadFileResponse | DefaultT,
+    unknown,
+    DefaultT
   >({
     responseValidator: async (data) =>
       await zUploadFileResponse.parseAsync(data),
@@ -278,13 +336,22 @@ export const uploadFile = <TComposable extends Composable>(
  * Returns pet inventories by status
  * Returns a map of status codes to quantities
  */
-export const getInventory = <TComposable extends Composable>(
-  options: Options<TComposable, GetInventoryData>,
+export const getInventory = <
+  TComposable extends Composable,
+  DefaultT extends GetInventoryResponse = GetInventoryResponse,
+>(
+  options: Options<
+    TComposable,
+    GetInventoryData,
+    GetInventoryResponse,
+    DefaultT
+  >,
 ) =>
   (options.client ?? _heyApiClient).get<
     TComposable,
-    GetInventoryResponse,
-    unknown
+    GetInventoryResponse | DefaultT,
+    unknown,
+    DefaultT
   >({
     responseValidator: async (data) =>
       await zGetInventoryResponse.parseAsync(data),
@@ -302,13 +369,17 @@ export const getInventory = <TComposable extends Composable>(
  * Place an order for a pet
  * Place a new order in the store
  */
-export const placeOrder = <TComposable extends Composable>(
-  options: Options<TComposable, PlaceOrderData>,
+export const placeOrder = <
+  TComposable extends Composable,
+  DefaultT extends PlaceOrderResponse = PlaceOrderResponse,
+>(
+  options: Options<TComposable, PlaceOrderData, PlaceOrderResponse, DefaultT>,
 ) =>
   (options.client ?? _heyApiClient).post<
     TComposable,
-    PlaceOrderResponse,
-    unknown
+    PlaceOrderResponse | DefaultT,
+    unknown,
+    DefaultT
   >({
     responseTransformer: placeOrderResponseTransformer,
     responseValidator: async (data) =>
@@ -325,10 +396,18 @@ export const placeOrder = <TComposable extends Composable>(
  * Delete purchase order by ID
  * For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors
  */
-export const deleteOrder = <TComposable extends Composable>(
-  options: Options<TComposable, DeleteOrderData>,
+export const deleteOrder = <
+  TComposable extends Composable,
+  DefaultT = undefined,
+>(
+  options: Options<TComposable, DeleteOrderData, unknown, DefaultT>,
 ) =>
-  (options.client ?? _heyApiClient).delete<TComposable, unknown, unknown>({
+  (options.client ?? _heyApiClient).delete<
+    TComposable,
+    unknown | DefaultT,
+    unknown,
+    DefaultT
+  >({
     url: '/store/order/{orderId}',
     ...options,
   });
@@ -337,13 +416,22 @@ export const deleteOrder = <TComposable extends Composable>(
  * Find purchase order by ID
  * For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions.
  */
-export const getOrderById = <TComposable extends Composable>(
-  options: Options<TComposable, GetOrderByIdData>,
+export const getOrderById = <
+  TComposable extends Composable,
+  DefaultT extends GetOrderByIdResponse = GetOrderByIdResponse,
+>(
+  options: Options<
+    TComposable,
+    GetOrderByIdData,
+    GetOrderByIdResponse,
+    DefaultT
+  >,
 ) =>
   (options.client ?? _heyApiClient).get<
     TComposable,
-    GetOrderByIdResponse,
-    unknown
+    GetOrderByIdResponse | DefaultT,
+    unknown,
+    DefaultT
   >({
     responseTransformer: getOrderByIdResponseTransformer,
     responseValidator: async (data) =>
@@ -356,13 +444,17 @@ export const getOrderById = <TComposable extends Composable>(
  * Create user
  * This can only be done by the logged in user.
  */
-export const createUser = <TComposable extends Composable>(
-  options: Options<TComposable, CreateUserData>,
+export const createUser = <
+  TComposable extends Composable,
+  DefaultT extends CreateUserResponse = CreateUserResponse,
+>(
+  options: Options<TComposable, CreateUserData, CreateUserResponse, DefaultT>,
 ) =>
   (options.client ?? _heyApiClient).post<
     TComposable,
-    CreateUserResponse,
-    unknown
+    CreateUserResponse | DefaultT,
+    unknown,
+    DefaultT
   >({
     responseTransformer: createUserResponseTransformer,
     responseValidator: async (data) =>
@@ -379,13 +471,23 @@ export const createUser = <TComposable extends Composable>(
  * Creates list of users with given input array
  * Creates list of users with given input array
  */
-export const createUsersWithListInput = <TComposable extends Composable>(
-  options: Options<TComposable, CreateUsersWithListInputData>,
+export const createUsersWithListInput = <
+  TComposable extends Composable,
+  DefaultT extends
+    CreateUsersWithListInputResponse = CreateUsersWithListInputResponse,
+>(
+  options: Options<
+    TComposable,
+    CreateUsersWithListInputData,
+    CreateUsersWithListInputResponse,
+    DefaultT
+  >,
 ) =>
   (options.client ?? _heyApiClient).post<
     TComposable,
-    CreateUsersWithListInputResponse,
-    unknown
+    CreateUsersWithListInputResponse | DefaultT,
+    unknown,
+    DefaultT
   >({
     responseValidator: async (data) =>
       await zCreateUsersWithListInputResponse.parseAsync(data),
@@ -400,13 +502,17 @@ export const createUsersWithListInput = <TComposable extends Composable>(
 /**
  * Logs user into the system
  */
-export const loginUser = <TComposable extends Composable>(
-  options: Options<TComposable, LoginUserData>,
+export const loginUser = <
+  TComposable extends Composable,
+  DefaultT extends LoginUserResponse = LoginUserResponse,
+>(
+  options: Options<TComposable, LoginUserData, LoginUserResponse, DefaultT>,
 ) =>
   (options.client ?? _heyApiClient).get<
     TComposable,
-    LoginUserResponse,
-    unknown
+    LoginUserResponse | DefaultT,
+    unknown,
+    DefaultT
   >({
     responseValidator: async (data) =>
       await zLoginUserResponse.parseAsync(data),
@@ -417,10 +523,18 @@ export const loginUser = <TComposable extends Composable>(
 /**
  * Logs out current logged in user session
  */
-export const logoutUser = <TComposable extends Composable>(
-  options: Options<TComposable, LogoutUserData>,
+export const logoutUser = <
+  TComposable extends Composable,
+  DefaultT = undefined,
+>(
+  options: Options<TComposable, LogoutUserData, unknown, DefaultT>,
 ) =>
-  (options.client ?? _heyApiClient).get<TComposable, unknown, unknown>({
+  (options.client ?? _heyApiClient).get<
+    TComposable,
+    unknown | DefaultT,
+    unknown,
+    DefaultT
+  >({
     url: '/user/logout',
     ...options,
   });
@@ -429,10 +543,18 @@ export const logoutUser = <TComposable extends Composable>(
  * Delete user
  * This can only be done by the logged in user.
  */
-export const deleteUser = <TComposable extends Composable>(
-  options: Options<TComposable, DeleteUserData>,
+export const deleteUser = <
+  TComposable extends Composable,
+  DefaultT = undefined,
+>(
+  options: Options<TComposable, DeleteUserData, unknown, DefaultT>,
 ) =>
-  (options.client ?? _heyApiClient).delete<TComposable, unknown, unknown>({
+  (options.client ?? _heyApiClient).delete<
+    TComposable,
+    unknown | DefaultT,
+    unknown,
+    DefaultT
+  >({
     url: '/user/{username}',
     ...options,
   });
@@ -440,13 +562,22 @@ export const deleteUser = <TComposable extends Composable>(
 /**
  * Get user by user name
  */
-export const getUserByName = <TComposable extends Composable>(
-  options: Options<TComposable, GetUserByNameData>,
+export const getUserByName = <
+  TComposable extends Composable,
+  DefaultT extends GetUserByNameResponse = GetUserByNameResponse,
+>(
+  options: Options<
+    TComposable,
+    GetUserByNameData,
+    GetUserByNameResponse,
+    DefaultT
+  >,
 ) =>
   (options.client ?? _heyApiClient).get<
     TComposable,
-    GetUserByNameResponse,
-    unknown
+    GetUserByNameResponse | DefaultT,
+    unknown,
+    DefaultT
   >({
     responseTransformer: getUserByNameResponseTransformer,
     responseValidator: async (data) =>
@@ -459,10 +590,18 @@ export const getUserByName = <TComposable extends Composable>(
  * Update user
  * This can only be done by the logged in user.
  */
-export const updateUser = <TComposable extends Composable>(
-  options: Options<TComposable, UpdateUserData>,
+export const updateUser = <
+  TComposable extends Composable,
+  DefaultT = undefined,
+>(
+  options: Options<TComposable, UpdateUserData, unknown, DefaultT>,
 ) =>
-  (options.client ?? _heyApiClient).put<TComposable, unknown, unknown>({
+  (options.client ?? _heyApiClient).put<
+    TComposable,
+    unknown | DefaultT,
+    unknown,
+    DefaultT
+  >({
     url: '/user/{username}',
     ...options,
     headers: {
