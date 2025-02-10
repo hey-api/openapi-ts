@@ -33,6 +33,10 @@
       "cache": false,
       "dependsOn": []
     },
+    "test:watch": {
+      "cache": false,
+      "dependsOn": []
+    },
     "typecheck": {
       "cache": false,
       "dependsOn": []
