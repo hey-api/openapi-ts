@@ -1,5 +1,11 @@
 # @hey-api/client-nuxt
 
+## 0.2.2
+
+### Patch Changes
+
+- [#1701](https://github.com/hey-api/openapi-ts/pull/1701) [`e86629b`](https://github.com/hey-api/openapi-ts/commit/e86629bfa9ae2a47131d3a9a240a6aa2a4f67911) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: correctly type default value for Nuxt client
+
 ## 0.2.1
 
 ### Patch Changes
