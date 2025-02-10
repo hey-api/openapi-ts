@@ -115,6 +115,7 @@ type QuerySerializer = (query: Parameters<Client['buildUrl']>[0]['query']) => st
 type WithRefs<TData> = {
     [K in keyof TData]: NonNullable<TData[K]> extends object ? WithRefs<NonNullable<TData[K]>> | Ref<NonNullable<TData[K]>> : NonNullable<TData[K]> | Ref<NonNullable<TData[K]>>;
 };
+type KeysOf<T> = Array<T extends T ? (keyof T extends string ? keyof T : never) : never>;
 interface Config<T extends ClientOptions = ClientOptions> extends Omit<FetchOptions<unknown>, 'baseURL' | 'body' | 'headers' | 'method' | 'query'>, WithRefs<Pick<FetchOptions<unknown>, 'query'>>, Omit<Config$1, 'querySerializer'> {
     /**
      * Base URL for all requests made by this client.
@@ -129,7 +130,7 @@ interface Config<T extends ClientOptions = ClientOptions> extends Omit<FetchOpti
      */
     querySerializer?: QuerySerializer | QuerySerializerOptions;
 }
-interface RequestOptions<TComposable extends Composable = Composable, Url extends string = string> extends Config, WithRefs<{
+interface RequestOptions<TComposable extends Composable = Composable, ResT = unknown, DefaultT = undefined, Url extends string = string> extends Config, WithRefs<{
     /**
      * Any body that you want to add to your request.
      *
@@ -139,7 +140,7 @@ interface RequestOptions<TComposable extends Composable = Composable, Url extend
     path?: FetchOptions<unknown>['query'];
     query?: FetchOptions<unknown>['query'];
 }> {
-    asyncDataOptions?: AsyncDataOptions<unknown>;
+    asyncDataOptions?: AsyncDataOptions<ResT, ResT, KeysOf<ResT>, DefaultT>;
     composable: TComposable;
     key?: string;
     /**
@@ -148,12 +149,12 @@ interface RequestOptions<TComposable extends Composable = Composable, Url extend
     security?: ReadonlyArray<Auth>;
     url: Url;
 }
-type RequestResult<TComposable extends Composable, TData, TError> = TComposable extends '$fetch' ? ReturnType<typeof $fetch<TData>> : TComposable extends 'useAsyncData' ? ReturnType<typeof useAsyncData<TData | null, TError>> : TComposable extends 'useFetch' ? ReturnType<typeof useFetch<TData | null, TError>> : TComposable extends 'useLazyAsyncData' ? ReturnType<typeof useLazyAsyncData<TData | null, TError>> : TComposable extends 'useLazyFetch' ? ReturnType<typeof useLazyFetch<TData | null, TError>> : never;
+type RequestResult<TComposable extends Composable, ResT, TError> = TComposable extends '$fetch' ? ReturnType<typeof $fetch<ResT>> : TComposable extends 'useAsyncData' ? ReturnType<typeof useAsyncData<ResT | null, TError>> : TComposable extends 'useFetch' ? ReturnType<typeof useFetch<ResT | null, TError>> : TComposable extends 'useLazyAsyncData' ? ReturnType<typeof useLazyAsyncData<ResT | null, TError>> : TComposable extends 'useLazyFetch' ? ReturnType<typeof useLazyFetch<ResT | null, TError>> : never;
 interface ClientOptions {
     baseURL?: string;
 }
-type MethodFn = <TComposable extends Composable, TData = unknown, TError = unknown>(options: Omit<RequestOptions<TComposable>, 'method'>) => RequestResult<TComposable, TData, TError>;
-type RequestFn = <TComposable extends Composable, TData = unknown, TError = unknown>(options: Omit<RequestOptions<TComposable>, 'method'> & Pick<Required<RequestOptions<TComposable>>, 'method'>) => RequestResult<TComposable, TData, TError>;
+type MethodFn = <TComposable extends Composable, ResT = unknown, TError = unknown, DefaultT = undefined>(options: Omit<RequestOptions<TComposable, ResT, DefaultT>, 'method'>) => RequestResult<TComposable, ResT, TError>;
+type RequestFn = <TComposable extends Composable, ResT = unknown, TError = unknown, DefaultT = undefined>(options: Omit<RequestOptions<TComposable, ResT, DefaultT>, 'method'> & Pick<Required<RequestOptions<TComposable, ResT, DefaultT>>, 'method'>) => RequestResult<TComposable, ResT, TError>;
 /**
  * The `createClientConfig()` function will be called on client initialization
  * and the returned object will become the client's initial configuration.
@@ -174,7 +175,7 @@ type BuildUrlOptions<TData extends Omit<TDataShape, 'headers'> = Omit<TDataShape
 type BuildUrlFn = <TData extends Omit<TDataShape, 'headers'>>(options: BuildUrlOptions<TData>) => string;
 type Client = Client$1<RequestFn, Config, MethodFn, BuildUrlFn>;
 type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
-type Options<TComposable extends Composable, TData extends TDataShape = TDataShape> = OmitKeys<RequestOptions<TComposable>, 'body' | 'path' | 'query' | 'url'> & WithRefs<Omit<TData, 'url'>>;
+type Options<TComposable extends Composable, TData extends TDataShape = TDataShape, ResT = unknown, DefaultT = undefined> = OmitKeys<RequestOptions<TComposable, ResT, DefaultT>, 'body' | 'path' | 'query' | 'url'> & WithRefs<Omit<TData, 'url'>>;
 type OptionsLegacyParser<TData = unknown> = TData extends {
     body?: any;
 } ? TData extends {

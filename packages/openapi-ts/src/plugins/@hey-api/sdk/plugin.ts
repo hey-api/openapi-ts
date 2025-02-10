@@ -25,6 +25,7 @@ import {
   importIdentifierError,
   importIdentifierResponse,
 } from '../typescript/ref';
+import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
 import { serviceFunctionIdentifier } from './plugin-legacy';
 import { createTypeOptions } from './typeOptions';
 import type { Config } from './types';
@@ -47,8 +48,6 @@ export interface Auth {
   type: 'apiKey' | 'http';
 }
 
-const nuxtTypeComposable = 'TComposable';
-
 export const operationOptionsType = ({
   context,
   file,
@@ -61,12 +60,17 @@ export const operationOptionsType = ({
   throwOnError?: string;
 }) => {
   const identifierData = importIdentifierData({ context, file, operation });
+  const identifierResponse = importIdentifierResponse({
+    context,
+    file,
+    operation,
+  });
 
   const optionsName = clientApi.Options.name;
 
   const client = getClientPlugin(context.config);
   if (client.name === '@hey-api/client-nuxt') {
-    return `${optionsName}<${nuxtTypeComposable}, ${identifierData.name || 'unknown'}>`;
+    return `${optionsName}<${nuxtTypeComposable}, ${identifierData.name || 'unknown'}, ${identifierResponse.name || 'unknown'}, ${nuxtTypeDefault}>`;
   }
 
   // TODO: refactor this to be more generic, works for now
@@ -503,7 +507,12 @@ const operationStatements = ({
         name: compiler.identifier({ text: operation.method }),
       }),
       types: isNuxtClient
-        ? [nuxtTypeComposable, responseType, errorType]
+        ? [
+            nuxtTypeComposable,
+            `${responseType} | ${nuxtTypeDefault}`,
+            errorType,
+            nuxtTypeDefault,
+          ]
         : [responseType, errorType, 'ThrowOnError'],
     }),
   ];
@@ -524,6 +533,11 @@ const generateClassSdk = ({
   context.subscribe('operation', ({ operation }) => {
     const isRequiredOptions =
       !plugin.client || isNuxtClient || hasOperationDataRequired(operation);
+    const identifierResponse = importIdentifierResponse({
+      context,
+      file,
+      operation,
+    });
     const node = compiler.methodDeclaration({
       accessLevel: 'public',
       comment: [
@@ -563,6 +577,19 @@ const generateClassSdk = ({
               // default: compiler.ots.string('$fetch'),
               extends: compiler.typeNode('Composable'),
               name: nuxtTypeComposable,
+            },
+            {
+              default: identifierResponse.name
+                ? compiler.typeReferenceNode({
+                    typeName: identifierResponse.name,
+                  })
+                : compiler.typeNode('undefined'),
+              extends: identifierResponse.name
+                ? compiler.typeReferenceNode({
+                    typeName: identifierResponse.name,
+                  })
+                : undefined,
+              name: nuxtTypeDefault,
             },
           ]
         : [
@@ -618,6 +645,11 @@ const generateFlatSdk = ({
   context.subscribe('operation', ({ operation }) => {
     const isRequiredOptions =
       !plugin.client || isNuxtClient || hasOperationDataRequired(operation);
+    const identifierResponse = importIdentifierResponse({
+      context,
+      file,
+      operation,
+    });
     const node = compiler.constVariable({
       comment: [
         operation.deprecated && '@deprecated',
@@ -651,6 +683,19 @@ const generateFlatSdk = ({
                 // default: compiler.ots.string('$fetch'),
                 extends: compiler.typeNode('Composable'),
                 name: nuxtTypeComposable,
+              },
+              {
+                default: identifierResponse.name
+                  ? compiler.typeReferenceNode({
+                      typeName: identifierResponse.name,
+                    })
+                  : compiler.typeNode('undefined'),
+                extends: identifierResponse.name
+                  ? compiler.typeReferenceNode({
+                      typeName: identifierResponse.name,
+                    })
+                  : undefined,
+                name: nuxtTypeDefault,
               },
             ]
           : [

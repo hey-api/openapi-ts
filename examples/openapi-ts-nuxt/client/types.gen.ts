@@ -561,3 +561,7 @@ export type UpdateUserResponses = {
    */
   default: unknown;
 };
+
+export type ClientOptions = {
+  baseURL: `${string}://${string}/v3` | (string & {});
+};
