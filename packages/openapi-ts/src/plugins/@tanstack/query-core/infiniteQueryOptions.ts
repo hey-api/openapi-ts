@@ -32,6 +32,17 @@ const createInfiniteParamsFunction = ({
 }) => {
   const file = context.file({ id: plugin.name })!;
 
+  if (plugin.runtimeConfigPath) {
+    file.import({
+      module: file.relativePathToFile({
+        context,
+        id: plugin.runtimeConfigPath,
+      }),
+      name: createInfiniteParamsFn,
+    });
+    return;
+  }
+
   const fn = compiler.constVariable({
     expression: compiler.arrowFunction({
       multiLine: true,
@@ -185,15 +196,15 @@ const createInfiniteParamsFunction = ({
           }),
         }),
         compiler.returnVariable({
-          expression: ts.factory.createAsExpression(
-            ts.factory.createAsExpression(
-              compiler.identifier({ text: 'params' }),
-              ts.factory.createKeywordTypeNode(ts.SyntaxKind.UnknownKeyword),
-            ),
-            ts.factory.createTypeQueryNode(
+          expression: compiler.asExpression({
+            expression: compiler.asExpression({
+              expression: compiler.identifier({ text: 'params' }),
+              type: compiler.keywordTypeNode({ keyword: 'unknown' }),
+            }),
+            type: ts.factory.createTypeQueryNode(
               compiler.identifier({ text: 'page' }),
             ),
-          ),
+          }),
         }),
       ],
       types: [
