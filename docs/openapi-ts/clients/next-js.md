@@ -9,10 +9,12 @@ description: Next.js client for Hey API. Compatible with all our features.
 Next.js client is currently in beta. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
 :::
 
+### About
+
 [Next.js](https://nextjs.org/) is the React framework for the web. Used by some of the world's largest companies, Next.js enables you to create high-quality web applications with the power of React components.
 
 <!-- <button class="buttonLink" @click="(event) => embedProject('hey-api-client-next-example')(event)">
-Live demo
+Launch demo
 </button> -->
 
 ## Installation

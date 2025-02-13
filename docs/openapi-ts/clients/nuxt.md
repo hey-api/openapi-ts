@@ -9,10 +9,12 @@ description: Nuxt client for Hey API. Compatible with all our features.
 Nuxt client is currently in beta. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
 :::
 
+### About
+
 [Nuxt](https://nuxt.com/) is an open source framework that makes web development intuitive and powerful.
 
 <!-- <button class="buttonLink" @click="(event) => embedProject('hey-api-client-fetch-example')(event)">
-Live demo
+Launch demo
 </button> -->
 
 ## Installation
