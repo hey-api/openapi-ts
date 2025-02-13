@@ -86,6 +86,16 @@ export const createQueryOptions = ({
     namespace: 'value',
   });
 
+  if (plugin.runtimeConfigPath) {
+    file.import({
+      module: file.relativePathToFile({
+        context,
+        id: plugin.runtimeConfigPath,
+      }),
+      name: 'transformQueryKey',
+    });
+  }
+
   const statement = compiler.constVariable({
     // TODO: describe options, same as the actual function call
     comment: [],
@@ -112,15 +122,19 @@ export const createQueryOptions = ({
                       {
                         destructure: [
                           {
-                            name: 'queryKey',
-                          },
-                          {
                             name: 'signal',
                           },
                         ],
                       },
                     ],
                     statements: [
+                      compiler.constVariable({
+                        expression: compiler.callExpression({
+                          functionName: identifierQueryKey.name || '',
+                          parameters: ['options'],
+                        }),
+                        name: 'queryKey',
+                      }),
                       compiler.constVariable({
                         destructure: true,
                         expression: compiler.awaitExpression({
@@ -162,10 +176,20 @@ export const createQueryOptions = ({
                 },
                 {
                   key: 'queryKey',
-                  value: compiler.callExpression({
-                    functionName: identifierQueryKey.name || '',
-                    parameters: ['options'],
-                  }),
+                  value: plugin.runtimeConfigPath
+                    ? compiler.callExpression({
+                        functionName: 'transformQueryKey',
+                        parameters: [
+                          compiler.callExpression({
+                            functionName: identifierQueryKey.name || '',
+                            parameters: ['options'],
+                          }),
+                        ],
+                      })
+                    : compiler.callExpression({
+                        functionName: identifierQueryKey.name || '',
+                        parameters: ['options'],
+                      }),
                 },
               ],
             }),

@@ -6,6 +6,7 @@ import {
   queryOptions,
 } from '@tanstack/angular-query-experimental';
 
+import { transformQueryKey } from '../../runtimeConfig';
 import { client as _heyApiClient } from '../client.gen';
 import {
   addPet,
@@ -57,7 +58,7 @@ import type {
   UploadFileResponse,
 } from '../types.gen';
 
-type QueryKey<TOptions extends Options> = [
+export type QueryKey<TOptions extends Options> = [
   Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
     _id: string;
     _infinite?: boolean;
@@ -68,7 +69,7 @@ const createQueryKey = <TOptions extends Options>(
   id: string,
   options?: TOptions,
   infinite?: boolean,
-): QueryKey<TOptions>[0] => {
+): [QueryKey<TOptions>[0]] => {
   const params: QueryKey<TOptions>[0] = {
     _id: id,
     baseUrl: (options?.client ?? _heyApiClient).getConfig().baseUrl,
@@ -88,16 +89,16 @@ const createQueryKey = <TOptions extends Options>(
   if (options?.query) {
     params.query = options.query;
   }
-  return params;
+  return [params];
 };
 
-export const addPetQueryKey = (options: Options<AddPetData>) => [
-  createQueryKey('addPet', options),
-];
+export const addPetQueryKey = (options: Options<AddPetData>) =>
+  createQueryKey('addPet', options);
 
 export const addPetOptions = (options: Options<AddPetData>) =>
   queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
+    queryFn: async ({ signal }) => {
+      const queryKey = addPetQueryKey(options);
       const { data } = await addPet({
         ...options,
         ...queryKey[0],
@@ -106,7 +107,7 @@ export const addPetOptions = (options: Options<AddPetData>) =>
       });
       return data;
     },
-    queryKey: addPetQueryKey(options),
+    queryKey: transformQueryKey(addPetQueryKey(options)),
   });
 
 export const addPetMutation = (options?: Partial<Options<AddPetData>>) => {
@@ -149,13 +150,14 @@ export const updatePetMutation = (
 
 export const findPetsByStatusQueryKey = (
   options?: Options<FindPetsByStatusData>,
-) => [createQueryKey('findPetsByStatus', options)];
+) => createQueryKey('findPetsByStatus', options);
 
 export const findPetsByStatusOptions = (
   options?: Options<FindPetsByStatusData>,
 ) =>
   queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
+    queryFn: async ({ signal }) => {
+      const queryKey = findPetsByStatusQueryKey(options);
       const { data } = await findPetsByStatus({
         ...options,
         ...queryKey[0],
@@ -164,16 +166,16 @@ export const findPetsByStatusOptions = (
       });
       return data;
     },
-    queryKey: findPetsByStatusQueryKey(options),
+    queryKey: transformQueryKey(findPetsByStatusQueryKey(options)),
   });
 
-export const findPetsByTagsQueryKey = (
-  options?: Options<FindPetsByTagsData>,
-) => [createQueryKey('findPetsByTags', options)];
+export const findPetsByTagsQueryKey = (options?: Options<FindPetsByTagsData>) =>
+  createQueryKey('findPetsByTags', options);
 
 export const findPetsByTagsOptions = (options?: Options<FindPetsByTagsData>) =>
   queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
+    queryFn: async ({ signal }) => {
+      const queryKey = findPetsByTagsQueryKey(options);
       const { data } = await findPetsByTags({
         ...options,
         ...queryKey[0],
@@ -182,7 +184,7 @@ export const findPetsByTagsOptions = (options?: Options<FindPetsByTagsData>) =>
       });
       return data;
     },
-    queryKey: findPetsByTagsQueryKey(options),
+    queryKey: transformQueryKey(findPetsByTagsQueryKey(options)),
   });
 
 export const deletePetMutation = (
@@ -205,13 +207,13 @@ export const deletePetMutation = (
   return mutationOptions;
 };
 
-export const getPetByIdQueryKey = (options: Options<GetPetByIdData>) => [
-  createQueryKey('getPetById', options),
-];
+export const getPetByIdQueryKey = (options: Options<GetPetByIdData>) =>
+  createQueryKey('getPetById', options);
 
 export const getPetByIdOptions = (options: Options<GetPetByIdData>) =>
   queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
+    queryFn: async ({ signal }) => {
+      const queryKey = getPetByIdQueryKey(options);
       const { data } = await getPetById({
         ...options,
         ...queryKey[0],
@@ -220,18 +222,19 @@ export const getPetByIdOptions = (options: Options<GetPetByIdData>) =>
       });
       return data;
     },
-    queryKey: getPetByIdQueryKey(options),
+    queryKey: transformQueryKey(getPetByIdQueryKey(options)),
   });
 
 export const updatePetWithFormQueryKey = (
   options: Options<UpdatePetWithFormData>,
-) => [createQueryKey('updatePetWithForm', options)];
+) => createQueryKey('updatePetWithForm', options);
 
 export const updatePetWithFormOptions = (
   options: Options<UpdatePetWithFormData>,
 ) =>
   queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
+    queryFn: async ({ signal }) => {
+      const queryKey = updatePetWithFormQueryKey(options);
       const { data } = await updatePetWithForm({
         ...options,
         ...queryKey[0],
@@ -240,7 +243,7 @@ export const updatePetWithFormOptions = (
       });
       return data;
     },
-    queryKey: updatePetWithFormQueryKey(options),
+    queryKey: transformQueryKey(updatePetWithFormQueryKey(options)),
   });
 
 export const updatePetWithFormMutation = (
@@ -263,13 +266,13 @@ export const updatePetWithFormMutation = (
   return mutationOptions;
 };
 
-export const uploadFileQueryKey = (options: Options<UploadFileData>) => [
-  createQueryKey('uploadFile', options),
-];
+export const uploadFileQueryKey = (options: Options<UploadFileData>) =>
+  createQueryKey('uploadFile', options);
 
 export const uploadFileOptions = (options: Options<UploadFileData>) =>
   queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
+    queryFn: async ({ signal }) => {
+      const queryKey = uploadFileQueryKey(options);
       const { data } = await uploadFile({
         ...options,
         ...queryKey[0],
@@ -278,7 +281,7 @@ export const uploadFileOptions = (options: Options<UploadFileData>) =>
       });
       return data;
     },
-    queryKey: uploadFileQueryKey(options),
+    queryKey: transformQueryKey(uploadFileQueryKey(options)),
   });
 
 export const uploadFileMutation = (
@@ -301,13 +304,13 @@ export const uploadFileMutation = (
   return mutationOptions;
 };
 
-export const getInventoryQueryKey = (options?: Options<GetInventoryData>) => [
-  createQueryKey('getInventory', options),
-];
+export const getInventoryQueryKey = (options?: Options<GetInventoryData>) =>
+  createQueryKey('getInventory', options);
 
 export const getInventoryOptions = (options?: Options<GetInventoryData>) =>
   queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
+    queryFn: async ({ signal }) => {
+      const queryKey = getInventoryQueryKey(options);
       const { data } = await getInventory({
         ...options,
         ...queryKey[0],
@@ -316,16 +319,16 @@ export const getInventoryOptions = (options?: Options<GetInventoryData>) =>
       });
       return data;
     },
-    queryKey: getInventoryQueryKey(options),
+    queryKey: transformQueryKey(getInventoryQueryKey(options)),
   });
 
-export const placeOrderQueryKey = (options?: Options<PlaceOrderData>) => [
-  createQueryKey('placeOrder', options),
-];
+export const placeOrderQueryKey = (options?: Options<PlaceOrderData>) =>
+  createQueryKey('placeOrder', options);
 
 export const placeOrderOptions = (options?: Options<PlaceOrderData>) =>
   queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
+    queryFn: async ({ signal }) => {
+      const queryKey = placeOrderQueryKey(options);
       const { data } = await placeOrder({
         ...options,
         ...queryKey[0],
@@ -334,7 +337,7 @@ export const placeOrderOptions = (options?: Options<PlaceOrderData>) =>
       });
       return data;
     },
-    queryKey: placeOrderQueryKey(options),
+    queryKey: transformQueryKey(placeOrderQueryKey(options)),
   });
 
 export const placeOrderMutation = (
@@ -377,13 +380,13 @@ export const deleteOrderMutation = (
   return mutationOptions;
 };
 
-export const getOrderByIdQueryKey = (options: Options<GetOrderByIdData>) => [
-  createQueryKey('getOrderById', options),
-];
+export const getOrderByIdQueryKey = (options: Options<GetOrderByIdData>) =>
+  createQueryKey('getOrderById', options);
 
 export const getOrderByIdOptions = (options: Options<GetOrderByIdData>) =>
   queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
+    queryFn: async ({ signal }) => {
+      const queryKey = getOrderByIdQueryKey(options);
       const { data } = await getOrderById({
         ...options,
         ...queryKey[0],
@@ -392,16 +395,16 @@ export const getOrderByIdOptions = (options: Options<GetOrderByIdData>) =>
       });
       return data;
     },
-    queryKey: getOrderByIdQueryKey(options),
+    queryKey: transformQueryKey(getOrderByIdQueryKey(options)),
   });
 
-export const createUserQueryKey = (options?: Options<CreateUserData>) => [
-  createQueryKey('createUser', options),
-];
+export const createUserQueryKey = (options?: Options<CreateUserData>) =>
+  createQueryKey('createUser', options);
 
 export const createUserOptions = (options?: Options<CreateUserData>) =>
   queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
+    queryFn: async ({ signal }) => {
+      const queryKey = createUserQueryKey(options);
       const { data } = await createUser({
         ...options,
         ...queryKey[0],
@@ -410,7 +413,7 @@ export const createUserOptions = (options?: Options<CreateUserData>) =>
       });
       return data;
     },
-    queryKey: createUserQueryKey(options),
+    queryKey: transformQueryKey(createUserQueryKey(options)),
   });
 
 export const createUserMutation = (
@@ -435,13 +438,14 @@ export const createUserMutation = (
 
 export const createUsersWithListInputQueryKey = (
   options?: Options<CreateUsersWithListInputData>,
-) => [createQueryKey('createUsersWithListInput', options)];
+) => createQueryKey('createUsersWithListInput', options);
 
 export const createUsersWithListInputOptions = (
   options?: Options<CreateUsersWithListInputData>,
 ) =>
   queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
+    queryFn: async ({ signal }) => {
+      const queryKey = createUsersWithListInputQueryKey(options);
       const { data } = await createUsersWithListInput({
         ...options,
         ...queryKey[0],
@@ -450,7 +454,7 @@ export const createUsersWithListInputOptions = (
       });
       return data;
     },
-    queryKey: createUsersWithListInputQueryKey(options),
+    queryKey: transformQueryKey(createUsersWithListInputQueryKey(options)),
   });
 
 export const createUsersWithListInputMutation = (
@@ -473,13 +477,13 @@ export const createUsersWithListInputMutation = (
   return mutationOptions;
 };
 
-export const loginUserQueryKey = (options?: Options<LoginUserData>) => [
-  createQueryKey('loginUser', options),
-];
+export const loginUserQueryKey = (options?: Options<LoginUserData>) =>
+  createQueryKey('loginUser', options);
 
 export const loginUserOptions = (options?: Options<LoginUserData>) =>
   queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
+    queryFn: async ({ signal }) => {
+      const queryKey = loginUserQueryKey(options);
       const { data } = await loginUser({
         ...options,
         ...queryKey[0],
@@ -488,16 +492,16 @@ export const loginUserOptions = (options?: Options<LoginUserData>) =>
       });
       return data;
     },
-    queryKey: loginUserQueryKey(options),
+    queryKey: transformQueryKey(loginUserQueryKey(options)),
   });
 
-export const logoutUserQueryKey = (options?: Options<LogoutUserData>) => [
-  createQueryKey('logoutUser', options),
-];
+export const logoutUserQueryKey = (options?: Options<LogoutUserData>) =>
+  createQueryKey('logoutUser', options);
 
 export const logoutUserOptions = (options?: Options<LogoutUserData>) =>
   queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
+    queryFn: async ({ signal }) => {
+      const queryKey = logoutUserQueryKey(options);
       const { data } = await logoutUser({
         ...options,
         ...queryKey[0],
@@ -506,7 +510,7 @@ export const logoutUserOptions = (options?: Options<LogoutUserData>) =>
       });
       return data;
     },
-    queryKey: logoutUserQueryKey(options),
+    queryKey: transformQueryKey(logoutUserQueryKey(options)),
   });
 
 export const deleteUserMutation = (
@@ -529,13 +533,13 @@ export const deleteUserMutation = (
   return mutationOptions;
 };
 
-export const getUserByNameQueryKey = (options: Options<GetUserByNameData>) => [
-  createQueryKey('getUserByName', options),
-];
+export const getUserByNameQueryKey = (options: Options<GetUserByNameData>) =>
+  createQueryKey('getUserByName', options);
 
 export const getUserByNameOptions = (options: Options<GetUserByNameData>) =>
   queryOptions({
-    queryFn: async ({ queryKey, signal }) => {
+    queryFn: async ({ signal }) => {
+      const queryKey = getUserByNameQueryKey(options);
       const { data } = await getUserByName({
         ...options,
         ...queryKey[0],
@@ -544,7 +548,7 @@ export const getUserByNameOptions = (options: Options<GetUserByNameData>) =>
       });
       return data;
     },
-    queryKey: getUserByNameQueryKey(options),
+    queryKey: transformQueryKey(getUserByNameQueryKey(options)),
   });
 
 export const updateUserMutation = (
