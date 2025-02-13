@@ -13,10 +13,14 @@ import { embedProject } from '../../embed'
 TanStack Query plugin is currently in beta. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
 :::
 
+### About
+
 [TanStack Query](https://tanstack.com/query) is a powerful asynchronous state management solution for TypeScript/JavaScript, React, Solid, Vue, Svelte, and Angular.
 
+### Demo
+
 <button class="buttonLink" @click="(event) => embedProject('hey-api-client-fetch-plugin-tanstack-react-query-example')(event)">
-Live demo
+Launch demo
 </button>
 
 ## Features

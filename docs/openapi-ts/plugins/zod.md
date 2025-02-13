@@ -9,10 +9,14 @@ description: Zod plugin for Hey API. Compatible with all our features.
 This feature is in development! :tada: Try it out and provide feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues/876).
 :::
 
+### About
+
 [Zod](https://zod.dev/) is a TypeScript-first schema validation library with static type inference.
 
+### Demo
+
 <button class="buttonLink" @click="(event) => embedProject('hey-api-client-fetch-plugin-zod-example')(event)">
-Live demo
+Launch demo
 </button>
 
 ## Features

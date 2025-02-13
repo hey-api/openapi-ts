@@ -48,6 +48,51 @@ iframe {
   margin: 0;
 }
 
+.authors-list {
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 1rem;
+  gap: 1em;
+  padding: 0 !important;
+}
+
+.authors-list img {
+  border-radius: 50%;
+  display: block;
+  height: 2rem;
+  width: 2rem;
+}
+
+.authors-list a {
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  display: flex;
+  column-gap: 0.4em;
+  padding: 0.4em 0.6em;
+  text-decoration: none;
+  transition: border-color ease-out 300ms;
+}
+
+.authors-list h3 {
+  color: var(--vp-c-text-1);
+  font-size: inherit;
+  margin: 0;
+}
+
+.authors-list a::after {
+  display: none !important;
+}
+
+.authors-list li {
+  margin: 0 !important;
+}
+
+h3#demo + iframe,
+h3#demo + button {
+  margin: 1rem 0 0;
+}
+
 .buttonLink {
   color: var(--vp-c-brand-1);
   font-size: 16px;
@@ -67,6 +112,7 @@ iframe {
   text-align: center;
 }
 
+.authors-list li,
 .home-list li,
 .sponsors-list li {
   list-style: none;
@@ -129,6 +175,7 @@ iframe {
   width: 100%;
 }
 
+html.dark .authors-list li > a,
 html.dark .sponsors-list li > a {
   background-color: var(--vp-button-brand-bg);
 }
@@ -138,6 +185,8 @@ html.dark .sponsors-list li > a {
   display: none;
 }
 
+.authors-list li > a:hover,
+.authors-list li > a:focus,
 .sponsors-list li > a:hover,
 .sponsors-list li > a:focus {
   border-color: var(--vp-c-brand-1);
