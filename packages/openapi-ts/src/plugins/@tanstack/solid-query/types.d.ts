@@ -1,13 +1,9 @@
 import type { Plugin } from '../../types';
+import type { TanStackQuery } from '../query-core/types';
 
-export interface Config extends Plugin.Name<'@tanstack/solid-query'> {
-  /**
-   * Should the exports from the generated files be re-exported in the index
-   * barrel file?
-   *
-   * @default false
-   */
-  exportFromIndex?: boolean;
+export interface Config
+  extends Plugin.Name<'@tanstack/solid-query'>,
+    TanStackQuery.Config {
   /**
    * Generate `createInfiniteQuery()` helpers? These will be generated from GET and POST requests where a pagination parameter is detected.
    *

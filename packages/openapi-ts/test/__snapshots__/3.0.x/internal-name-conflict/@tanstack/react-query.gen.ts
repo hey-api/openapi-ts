@@ -5,14 +5,16 @@ import { queryOptions, type UseMutationOptions, type DefaultError } from '@tanst
 import type { CreateData } from '../types.gen';
 import { client as _heyApiClient } from '../client.gen';
 
-type QueryKey<TOptions extends Options> = [
+export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
         _id: string;
         _infinite?: boolean;
     }
 ];
 
-const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, infinite?: boolean): QueryKey<TOptions>[0] => {
+const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, infinite?: boolean): [
+    QueryKey<TOptions>[0]
+] => {
     const params: QueryKey<TOptions>[0] = { _id: id, baseUrl: (options?.client ?? _heyApiClient).getConfig().baseUrl } as QueryKey<TOptions>[0];
     if (infinite) {
         params._infinite = infinite;
@@ -29,12 +31,12 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
     if (options?.query) {
         params.query = options.query;
     }
-    return params;
+    return [
+        params
+    ];
 };
 
-export const createQueryKey2 = (options?: Options<CreateData>) => [
-    createQueryKey('create', options)
-];
+export const createQueryKey2 = (options?: Options<CreateData>) => createQueryKey('create', options);
 
 export const createOptions = (options?: Options<CreateData>) => {
     return queryOptions({
