@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.64.4
+
+### Patch Changes
+
+- [#1710](https://github.com/hey-api/openapi-ts/pull/1710) [`4afdaa1`](https://github.com/hey-api/openapi-ts/commit/4afdaa1247b0bf0629817a51c29ca25840569b77) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: use relative path to custom config file if provided when resolving relative paths
+
 ## 0.64.3
 
 ### Patch Changes
