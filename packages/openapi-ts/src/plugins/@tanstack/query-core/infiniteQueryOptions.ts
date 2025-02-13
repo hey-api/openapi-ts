@@ -32,17 +32,6 @@ const createInfiniteParamsFunction = ({
 }) => {
   const file = context.file({ id: plugin.name })!;
 
-  if (plugin.runtimeConfigPath) {
-    file.import({
-      module: file.relativePathToFile({
-        context,
-        id: plugin.runtimeConfigPath,
-      }),
-      name: createInfiniteParamsFn,
-    });
-    return;
-  }
-
   const fn = compiler.constVariable({
     expression: compiler.arrowFunction({
       multiLine: true,
@@ -344,6 +333,13 @@ export const createInfiniteQueryOptions = ({
         },
       ],
       statements: [
+        compiler.constVariable({
+          expression: compiler.callExpression({
+            functionName: identifierQueryKey.name || '',
+            parameters: ['options'],
+          }),
+          name: 'queryKey',
+        }),
         compiler.returnFunctionCall({
           args: [
             compiler.objectExpression({
@@ -365,9 +361,7 @@ export const createInfiniteQueryOptions = ({
                           {
                             name: 'pageParam',
                           },
-                          {
-                            name: 'queryKey',
-                          },
+
                           {
                             name: 'signal',
                           },
@@ -464,23 +458,25 @@ export const createInfiniteQueryOptions = ({
                 },
                 {
                   key: 'queryKey',
-                  value: compiler.callExpression({
-                    functionName: identifierQueryKey.name || '',
-                    parameters: ['options'],
-                  }),
+                  value: plugin.runtimeConfigPath
+                    ? compiler.callExpression({
+                        functionName: 'transformQueryKey',
+                        parameters: ['queryKey'],
+                      })
+                    : 'queryKey',
                 },
               ],
             }),
           ],
           name: infiniteQueryOptionsFn,
-          // TODO: better types syntax
           types: [
             typeResponse,
             typeError.name,
             `${typeof state.typeInfiniteData === 'string' ? state.typeInfiniteData : state.typeInfiniteData.name}<${typeResponse}>`,
-            typeQueryKey,
+            'unknown[]',
             typePageParam,
           ],
+          // TODO: better types syntax
         }),
       ],
     }),

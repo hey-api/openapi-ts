@@ -39,8 +39,9 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
 export const createQueryKey2 = (options?: Options<CreateData>) => createQueryKey('create', options);
 
 export const createOptions = (options?: Options<CreateData>) => {
+    const queryKey = createQueryKey2(options);
     return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
+        queryFn: async ({ signal }) => {
             const { data } = await create({
                 ...options,
                 ...queryKey[0],
@@ -49,7 +50,7 @@ export const createOptions = (options?: Options<CreateData>) => {
             });
             return data;
         },
-        queryKey: createQueryKey2(options)
+        queryKey
     });
 };
 
