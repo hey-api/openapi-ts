@@ -70,7 +70,9 @@ export const createQueryKeyFunction = ({
             type: compiler.typeReferenceNode({ typeName: 'boolean' }),
           },
         ],
-        returnType,
+        returnType: compiler.typeTupleNode({
+          types: [returnType],
+        }),
         statements: [
           compiler.constVariable({
             assertion: returnType,
@@ -200,8 +202,10 @@ export const createQueryKeyFunction = ({
               ],
             }),
           }),
-          compiler.returnVariable({
-            expression: 'params',
+          compiler.returnStatement({
+            expression: compiler.arrayLiteralExpression({
+              elements: [compiler.identifier({ text: 'params' })],
+            }),
           }),
         ],
         types: [
