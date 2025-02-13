@@ -9,6 +9,8 @@ description: Arktype plugin for Hey API. Compatible with all our features.
 This feature isn't in development yet. Help us prioritize it by voting on [GitHub](https://github.com/hey-api/openapi-ts/issues/1473).
 :::
 
+### About
+
 [Arktype](https://arktype.io/) is a TypeScript's 1:1 validator, optimized from editor to runtime.
 
 <!--@include: ../../sponsors.md-->
