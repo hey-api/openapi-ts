@@ -16,6 +16,9 @@ export default defineConfig({
       enums: 'javascript',
       name: '@hey-api/typescript',
     },
-    '@tanstack/angular-query-experimental',
+    {
+      name: '@tanstack/angular-query-experimental',
+      runtimeConfigPath: './src/runtimeConfig.ts',
+    },
   ],
 });

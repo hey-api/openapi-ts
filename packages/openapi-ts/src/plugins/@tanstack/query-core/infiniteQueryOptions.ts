@@ -32,17 +32,6 @@ const createInfiniteParamsFunction = ({
 }) => {
   const file = context.file({ id: plugin.name })!;
 
-  if (plugin.runtimeConfigPath) {
-    file.import({
-      module: file.relativePathToFile({
-        context,
-        id: plugin.runtimeConfigPath,
-      }),
-      name: createInfiniteParamsFn,
-    });
-    return;
-  }
-
   const fn = compiler.constVariable({
     expression: compiler.arrowFunction({
       multiLine: true,
