@@ -78,6 +78,7 @@ export default defineConfig({
     // @ts-ignore
     {
       name: '@tanstack/react-query',
+      runtimeConfigPath: './hey-api.ts',
     },
     // @ts-ignore
     {
