@@ -1194,8 +1194,7 @@ export const ModelWithPatternSchema = {
         },
         patternWithNewline: {
             type: 'string',
-            pattern: `aaa
-bbb`
+            pattern: 'aaa\\nbbb'
         },
         patternWithBacktick: {
             type: 'string',
