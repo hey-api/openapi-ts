@@ -35,6 +35,7 @@ const optionalIdentifier = compiler.identifier({ text: 'optional' });
 const readonlyIdentifier = compiler.identifier({ text: 'readonly' });
 const regexIdentifier = compiler.identifier({ text: 'regex' });
 const unionIdentifier = compiler.identifier({ text: 'union' });
+const instanceofIdentifier = compiler.identifier({ text: 'instanceof' });
 const zIdentifier = compiler.identifier({ text: 'z' });
 
 const nameTransformer = (name: string) => `z-${name}`;
@@ -493,6 +494,26 @@ const stringTypeToZodSchema = ({
           }),
         });
         break;
+      case 'binary':
+        stringExpression = compiler.callExpression({
+          functionName: compiler.propertyAccessExpression({
+            expression: zIdentifier,
+            name: unionIdentifier,
+          }),
+          parameters: [
+            compiler.arrayLiteralExpression({
+              elements: ['File', 'Blob'].map((typeIdent) =>
+                compiler.callExpression({
+                  functionName: compiler.propertyAccessExpression({
+                    expression: zIdentifier,
+                    name: instanceofIdentifier,
+                  }),
+                  parameters: [compiler.identifier({ text: typeIdent })],
+                }),
+              ),
+            }),
+          ],
+        });
     }
   }
 
