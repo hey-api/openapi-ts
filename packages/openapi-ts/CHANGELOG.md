@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.64.5
+
+### Patch Changes
+
+- [#1728](https://github.com/hey-api/openapi-ts/pull/1728) [`cc8dabb`](https://github.com/hey-api/openapi-ts/commit/cc8dabbf1cb94879bb08fe66ecb04c4d0801e9cc) Thanks [@georgesmith46](https://github.com/georgesmith46)! - fix: correctly generate zod regex expressions when using patterns
+
 ## 0.64.4
 
 ### Patch Changes
