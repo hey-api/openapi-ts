@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 export const zFoo: z.ZodTypeAny = z.union([
     z.object({
-        foo: z.string().regex(/^\\d{3}-\\d{2}-\\d{4}$/).optional(),
+        foo: z.string().regex(/^\d{3}-\d{2}-\d{4}$/).optional(),
         bar: z.object({
             foo: z.lazy(() => {
                 return zFoo;
