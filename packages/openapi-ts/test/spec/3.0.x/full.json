@@ -2932,7 +2932,7 @@
           },
           "patternWithNewline": {
             "type": "string",
-            "pattern": "aaa\nbbb"
+            "pattern": "aaa\\nbbb"
           },
           "patternWithBacktick": {
             "type": "string",
