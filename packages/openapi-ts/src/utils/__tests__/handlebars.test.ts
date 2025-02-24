@@ -74,7 +74,7 @@ describe('registerHandlebarHelpers', () => {
 });
 
 describe('registerHandlebarTemplates', () => {
-  it('should return correct templates', () => {
+  it('should return correct templates', async () => {
     setConfig({
       configFile: '',
       dryRun: false,
@@ -128,7 +128,7 @@ describe('registerHandlebarTemplates', () => {
         timeout: 60_000,
       },
     });
-    const templates = registerHandlebarTemplates();
+    const templates = await registerHandlebarTemplates('../../../templates');
     expect(templates.core.settings).toBeDefined();
     expect(templates.core.apiError).toBeDefined();
     expect(templates.core.apiRequestOptions).toBeDefined();

@@ -267,6 +267,7 @@ export const initConfigs = async (
       exportCore = true,
       name,
       request,
+      templatesPath,
       useOptions = true,
     } = userConfig;
 
@@ -311,6 +312,7 @@ export const initConfigs = async (
       name,
       output,
       request,
+      templatesPath,
       useOptions,
       watch: getWatch({ ...userConfig, input }),
     });

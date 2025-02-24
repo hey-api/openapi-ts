@@ -60,13 +60,13 @@
   "files": [
     "bin",
     "dist",
+    "templates",
     "LICENSE.md"
   ],
   "scripts": {
     "build": "tsup && pnpm check-exports",
     "check-exports": "attw --pack .",
     "dev": "tsup --watch",
-    "handlebars": "node src/legacy/handlebars/handlebars.cjs",
     "prepublishOnly": "pnpm build",
     "test:coverage": "vitest run --config vitest.config.unit.ts --coverage",
     "test:e2e": "vitest run --config vitest.config.e2e.ts",
