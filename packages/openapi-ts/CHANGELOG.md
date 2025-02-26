@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.64.6
+
+### Patch Changes
+
+- [#1748](https://github.com/hey-api/openapi-ts/pull/1748) [`7326d25`](https://github.com/hey-api/openapi-ts/commit/7326d2550ae3336fd8f754f8d4a25f1a40c13a2b) Thanks [@Matsuuu](https://github.com/Matsuuu)! - fix: Wrap HEAD request in a try-catch to prevent watch mode crashes on server reloads
+
 ## 0.64.5
 
 ### Patch Changes
