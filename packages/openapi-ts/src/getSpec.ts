@@ -40,14 +40,22 @@ export const getSpec = async ({
   if (resolvedInput.type === 'url') {
     // do NOT send HEAD request on first run or if unsupported
     if (watch.lastValue && watch.isHeadMethodSupported !== false) {
-      const request = await sendRequest({
-        init: {
-          headers: watch.headers,
-          method: 'HEAD',
-        },
-        timeout,
-        url: resolvedInput.path,
-      });
+      let request;
+      try {
+        request = await sendRequest({
+          init: {
+            headers: watch.headers,
+            method: 'HEAD',
+          },
+          timeout,
+          url: resolvedInput.path,
+        });
+      } catch (ex) {
+        return {
+          error: 'not-ok',
+          response: new Response(ex.message),
+        };
+      }
       response = request.response;
 
       if (!response.ok && watch.isHeadMethodSupported) {
