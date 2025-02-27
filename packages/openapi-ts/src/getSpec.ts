@@ -109,14 +109,21 @@ export const getSpec = async ({
       }
     }
 
-    const fileRequest = await sendRequest({
-      init: {
-        method: 'GET',
-      },
-      timeout,
-      url: resolvedInput.path,
-    });
-    response = fileRequest.response;
+    try {
+      const fileRequest = await sendRequest({
+        init: {
+          method: 'GET',
+        },
+        timeout,
+        url: resolvedInput.path,
+      });
+      response = fileRequest.response;
+    } catch (ex) {
+      return {
+        error: 'not-ok',
+        response: new Response(ex.message),
+      };
+    }
 
     if (!response.ok) {
       // assume the server is no longer running
