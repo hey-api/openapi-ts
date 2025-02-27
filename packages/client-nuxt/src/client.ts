@@ -85,7 +85,7 @@ export const createClient = (config: Config = {}): Client => {
     }
 
     // remove Content-Type header if body is empty to avoid sending invalid requests
-    if (!opts.body) {
+    if (opts.body === undefined || opts.body === '') {
       opts.headers.delete('Content-Type');
     }
 
