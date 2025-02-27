@@ -1,5 +1,11 @@
 # @hey-api/client-nuxt
 
+## 0.2.3
+
+### Patch Changes
+
+- [#1753](https://github.com/hey-api/openapi-ts/pull/1753) [`b8cc9f8`](https://github.com/hey-api/openapi-ts/commit/b8cc9f8a5eaf4f4ff345abc49c14c6b96744c2ea) Thanks [@LinuCC](https://github.com/LinuCC)! - fix: dropping Content-Type header with falsey but valid json body
+
 ## 0.2.2
 
 ### Patch Changes
