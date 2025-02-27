@@ -3,6 +3,10 @@ title: Zod
 description: Zod plugin for Hey API. Compatible with all our features.
 ---
 
+<script setup>
+import { embedProject } from '../../embed'
+</script>
+
 # Zod
 
 ::: warning
