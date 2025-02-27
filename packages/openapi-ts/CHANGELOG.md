@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.64.7
+
+### Patch Changes
+
+- [#1755](https://github.com/hey-api/openapi-ts/pull/1755) [`82f7c14`](https://github.com/hey-api/openapi-ts/commit/82f7c1425dd903b75d15cf532b88580d180f281a) Thanks [@Matsuuu](https://github.com/Matsuuu)! - fix: Wrap the GET request in watch mode with try-catch to prevent crashes on no-head watch targets
+
 ## 0.64.6
 
 ### Patch Changes
