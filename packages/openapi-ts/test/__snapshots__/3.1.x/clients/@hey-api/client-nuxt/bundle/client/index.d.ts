@@ -136,7 +136,7 @@ interface RequestOptions<TComposable extends Composable = Composable, ResT = unk
      *
      * {@link https://developer.mozilla.org/docs/Web/API/fetch#body}
      */
-    body?: BodyInit | Record<string, any> | null;
+    body?: unknown;
     path?: FetchOptions<unknown>['query'];
     query?: FetchOptions<unknown>['query'];
 }> {
