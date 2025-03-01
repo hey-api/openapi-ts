@@ -13,11 +13,11 @@ This feature is in development! :tada: Try it out and provide feedback on [GitHu
 
 [Zod](https://zod.dev/) is a TypeScript-first schema validation library with static type inference.
 
-### Demo
+<!-- ### Demo
 
 <button class="buttonLink" @click="(event) => embedProject('hey-api-client-fetch-plugin-zod-example')(event)">
 Launch demo
-</button>
+</button> -->
 
 ## Features
 
