@@ -44,5 +44,9 @@ export namespace TanStackQuery {
      * @default false
      */
     exportFromIndex?: boolean;
+    /**
+     * TODO
+     */
+    runtimeConfigPath?: string;
   };
 }
