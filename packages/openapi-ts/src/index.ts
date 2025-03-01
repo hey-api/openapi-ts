@@ -29,7 +29,7 @@ export const createClient = async (
     Performance.end('config');
 
     Performance.start('handlebars');
-    const templates = registerHandlebarTemplates();
+    const templates = await registerHandlebarTemplates();
     Performance.end('handlebars');
 
     const clients = await Promise.all(

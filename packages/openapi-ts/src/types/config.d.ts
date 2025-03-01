@@ -68,6 +68,30 @@ export interface UserConfig {
         path: string | Record<string, unknown>;
       };
   /**
+   * @deprecated
+   *
+   * Opt in to the experimental parser?
+   *
+   * @default true
+   */
+  experimentalParser?: boolean;
+  /**
+   * @deprecated
+   *
+   * Generate core client classes?
+   *
+   * @default true
+   */
+  exportCore?: boolean;
+  /**
+   * Plugins generate artifacts from `input`. By default, we generate SDK
+   * functions and TypeScript interfaces. If you manually define `plugins`,
+   * you need to include the default plugins if you wish to use them.
+   *
+   * @default ['@hey-api/typescript', '@hey-api/sdk']
+   */
+  plugins?: ReadonlyArray<UserPlugins['name'] | UserPlugins>;
+  /**
    * The relative location of the logs folder
    *
    * @default process.cwd()
@@ -107,6 +131,15 @@ export interface UserConfig {
          */
         path?: string;
       };
+  /**
+   * @deprecated
+   *
+   * Custom client class name. Please note this option is deprecated and
+   * will be removed in favor of clients.
+   *
+   * @link https://heyapi.dev/openapi-ts/migrating.html#deprecated-name
+   */
+  name?: string;
   /**
    * The relative location of the output folder
    */
@@ -155,14 +188,6 @@ export interface UserConfig {
         path: string;
       };
   /**
-   * Plugins generate artifacts from `input`. By default, we generate SDK
-   * functions and TypeScript interfaces. If you manually define `plugins`,
-   * you need to include the default plugins if you wish to use them.
-   *
-   * @default ['@hey-api/typescript', '@hey-api/sdk']
-   */
-  plugins?: ReadonlyArray<UserPlugins['name'] | UserPlugins>;
-  /**
    * Regenerate the client when the input file changes? You can alternatively
    * pass a numeric value for the interval in ms.
    *
@@ -194,44 +219,17 @@ export interface UserConfig {
   /**
    * @deprecated
    *
-   * Manually set base in OpenAPI config instead of inferring from server value
-   */
-  // eslint-disable-next-line typescript-sort-keys/interface
-  base?: string;
-  /**
-   * @deprecated
-   *
-   * Opt in to the experimental parser?
-   *
-   * @default true
-   */
-  experimentalParser?: boolean;
-  /**
-   * @deprecated
-   *
-   * Generate core client classes?
-   *
-   * @default true
-   */
-  exportCore?: boolean;
-  /**
-   * @deprecated
-   *
-   * Custom client class name. Please note this option is deprecated and
-   * will be removed in favor of clients.
-   *
-   * @link https://heyapi.dev/openapi-ts/migrating.html#deprecated-name
-   */
-  name?: string;
-  /**
-   * @deprecated
-   *
    * Path to custom request file. Please note this option is deprecated and
    * will be removed in favor of clients.
    *
    * @link https://heyapi.dev/openapi-ts/migrating.html#deprecated-request
    */
   request?: string;
+  /**
+   * Path to the template files.
+   * @default 'node_modules/@hey-api/openapi-ts/templates'
+   */
+  templatesPath?: string;
   /**
    * @deprecated
    *
@@ -243,6 +241,13 @@ export interface UserConfig {
    * @default true
    */
   useOptions?: boolean;
+  /**
+   * @deprecated
+   *
+   * Manually set base in OpenAPI config instead of inferring from server value
+   */
+  // eslint-disable-next-line typescript-sort-keys/interface
+  base?: string;
 }
 
 export type Config = Omit<
@@ -255,8 +260,9 @@ export type Config = Omit<
   | 'plugins'
   | 'request'
   | 'watch'
+  | 'templatesPath'
 > &
-  Pick<UserConfig, 'base' | 'name' | 'request'> & {
+  Pick<UserConfig, 'base' | 'name' | 'request' | 'templatesPath'> & {
     input: ExtractWithDiscriminator<UserConfig['input'], { path: unknown }>;
     logs: Extract<Required<UserConfig['logs']>, object>;
     output: Extract<UserConfig['output'], object>;
