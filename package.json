@@ -38,7 +38,7 @@
     "vitepress": "turbo run $1 --filter=\"@docs/openapi-ts\""
   },
   "engines": {
-    "node": "^18.18.0 || ^20.9.0 || >=22.11.0"
+    "node": "^18.18.0 || ^20.9.0 || >=22.10.0"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.17.2",
