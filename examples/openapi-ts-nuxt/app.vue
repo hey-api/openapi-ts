@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { client } from './client/client.gen';
+import { client } from '#hey-api/client.gen';
 
 // configure internal service client
 client.setConfig({

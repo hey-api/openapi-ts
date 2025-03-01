@@ -27,6 +27,10 @@ export const clientModulePath = ({
     });
   }
 
+  if (client.name === '@hey-api/client-nuxt') {
+    return '@hey-api/client-nuxt/runtime';
+  }
+
   return client.name;
 };
 
