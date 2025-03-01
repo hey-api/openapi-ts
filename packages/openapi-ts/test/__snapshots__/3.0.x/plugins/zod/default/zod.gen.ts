@@ -28,7 +28,10 @@ export const zSimpleString = z.string();
 
 export const zNonAsciiStringæøåÆøÅöôêÊ字符串 = z.string();
 
-export const zSimpleFile = z.string();
+export const zSimpleFile = z.union([
+    z.instanceof(File),
+    z.instanceof(Blob)
+]);
 
 export const zSimpleReference = z.object({
     prop: z.string().optional()
@@ -221,13 +224,19 @@ export const zModelWithArrayReadOnlyAndWriteOnly = z.object({
         bar: z.string().readonly(),
         baz: z.string()
     })).optional(),
-    propWithFile: z.array(z.string()).optional(),
+    propWithFile: z.array(z.union([
+        z.instanceof(File),
+        z.instanceof(Blob)
+    ])).optional(),
     propWithNumber: z.array(z.number()).optional()
 });
 
 export const zModelWithArray = z.object({
     prop: z.array(zModelWithString).optional(),
-    propWithFile: z.array(z.string()).optional(),
+    propWithFile: z.array(z.union([
+        z.instanceof(File),
+        z.instanceof(Blob)
+    ])).optional(),
     propWithNumber: z.array(z.number()).optional()
 });
 
@@ -791,12 +800,18 @@ export const zTypesResponse = z.union([
 
 export const zUploadFileResponse = z.boolean();
 
-export const zFileResponseResponse = z.string();
+export const zFileResponseResponse = z.union([
+    z.instanceof(File),
+    z.instanceof(Blob)
+]);
 
 export const zComplexTypesResponse = z.array(zModelWithString);
 
 export const zMultipartResponseResponse = z.object({
-    file: z.string().optional(),
+    file: z.union([
+        z.instanceof(File),
+        z.instanceof(Blob)
+    ]).optional(),
     metadata: z.object({
         foo: z.string().optional(),
         bar: z.string().optional()
