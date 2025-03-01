@@ -23,10 +23,42 @@
           }
         }
       }
+    },
+    "/api/nested-date-object": {
+      "get": {
+        "operationId": "nestedDateObject",
+        "responses": {
+          "200": {
+            "description": "Object with nested date",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NestedDateObject"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "NestedDateObject": {
+        "description": "Object with a nested date structure",
+        "type": "object",
+        "properties": {
+          "foo": {
+            "type": "object",
+            "properties": {
+              "bar": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      },
       "Foo": {
         "type": "object",
         "properties": {

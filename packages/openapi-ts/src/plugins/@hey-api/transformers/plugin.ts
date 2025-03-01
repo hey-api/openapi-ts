@@ -243,6 +243,15 @@ const processSchemaType = ({
       });
 
       if (dataExpression) {
+        // In a map callback, the item needs to be returned, not just the transformation result
+        if (typeof dataExpression === 'string' && dataExpression === 'item') {
+          return [
+            compiler.returnStatement({
+              expression: callExpression,
+            }),
+          ];
+        }
+
         return [
           typeof dataExpression === 'string'
             ? callExpression
@@ -267,15 +276,32 @@ const processSchemaType = ({
       ? []
       : processSchemaType({
           context,
+          dataExpression: 'item',
           plugin,
-          schema: {
-            ...schema,
-            type: undefined,
-          },
+          schema: schema.items?.[0]
+            ? schema.items[0]
+            : {
+                ...schema,
+                type: undefined,
+              },
         });
 
     if (!nodes.length) {
       return [];
+    }
+
+    // Ensure the map callback has a return statement for the item
+    const mapCallbackStatements = ensureStatements(nodes);
+    const hasReturnStatement = mapCallbackStatements.some((stmt) =>
+      isNodeReturnStatement({ node: stmt }),
+    );
+
+    if (!hasReturnStatement) {
+      mapCallbackStatements.push(
+        compiler.returnStatement({
+          expression: compiler.identifier({ text: 'item' }),
+        }),
+      );
     }
 
     return [
@@ -295,16 +321,7 @@ const processSchemaType = ({
                   type: 'any',
                 },
               ],
-              statements:
-                nodes.length === 1
-                  ? ts.isStatement(nodes[0]!)
-                    ? []
-                    : [
-                        compiler.returnStatement({
-                          expression: nodes[0],
-                        }),
-                      ]
-                  : ensureStatements(nodes),
+              statements: mapCallbackStatements,
             }),
           ],
         }),
@@ -342,17 +359,6 @@ const processSchemaType = ({
           );
         }
       }
-    }
-
-    if (nodes.length) {
-      nodes.push(
-        compiler.returnStatement({
-          expression:
-            typeof dataExpression === 'string'
-              ? compiler.identifier({ text: dataExpression })
-              : dataExpression,
-        }),
-      );
     }
 
     return nodes;
@@ -406,16 +412,7 @@ const processSchemaType = ({
               compiler.ifStatement({
                 expression: identifierItem,
                 thenStatement: compiler.block({
-                  statements:
-                    nodes.length === 1
-                      ? ts.isStatement(nodes[0]!)
-                        ? []
-                        : [
-                            compiler.returnStatement({
-                              expression: nodes[0],
-                            }),
-                          ]
-                      : ensureStatements(nodes),
+                  statements: ensureStatements(nodes),
                 }),
               }),
               compiler.returnStatement({ expression: identifierItem }),
