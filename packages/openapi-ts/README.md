@@ -36,6 +36,11 @@
 - generates TypeScript interfaces and SDKs
 - Fetch API, Axios, Nuxt, Angular, Node.js, and XHR clients available
 - plugin ecosystem to reduce third-party boilerplate
+- [platform](https://heyapi.dev/openapi-ts/integrations) for automating codegen builds
+
+## Platform
+
+Our platform for OpenAPI specifications is now available. Automatically update your code when the APIs it depends on change. [Find out more](https://heyapi.dev/openapi-ts/integrations).
 
 ## Sponsors
 
@@ -46,10 +51,6 @@ Love Hey API? Become our [sponsor](https://github.com/sponsors/hey-api).
     <img alt="Stainless logo" height="50" src="https://heyapi.dev/images/stainless-logo-wordmark-480w.jpeg" />
   </a>
 </p>
-
-## GitHub Integration (coming 2025)
-
-Automatically update your code when the APIs it depends on change. [Find out more](https://heyapi.dev/openapi-ts/integrations.html).
 
 ## Quick Start
 

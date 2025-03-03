@@ -29,6 +29,7 @@ Launch demo
 - generates TypeScript interfaces and SDKs
 - Fetch API, Axios, Nuxt, Angular, Node.js, and XHR clients available
 - plugin ecosystem to reduce third-party boilerplate
+- [platform](https://heyapi.dev/openapi-ts/integrations) for automating codegen builds
 
 ## Quick Start
 
