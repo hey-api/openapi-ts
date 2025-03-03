@@ -13,7 +13,7 @@ import { embedProject } from '../embed'
 This package is in initial development. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
 :::
 
-[@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) is an OpenAPI to TypeScript codegen trusted more than 800k times each month to generate reliable API clients and SDKs. The code is [MIT-licensed](/license) and free to use. Discover available features below or view our [roadmap](https://github.com/orgs/hey-api/discussions/1495) to learn what's coming next.
+[@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) is an OpenAPI to TypeScript codegen trusted more than 900k times each month to generate reliable API clients and SDKs. The code is [MIT-licensed](/license) and free to use. Discover available features below or view our [roadmap](https://github.com/orgs/hey-api/discussions/1495) to learn what's coming next.
 
 ### Demo
 
@@ -36,7 +36,7 @@ The fastest way to use `@hey-api/openapi-ts` is via npx
 
 ```sh
 npx @hey-api/openapi-ts \
-  -i path/to/openapi.json \
+  -i https://get.heyapi.dev/hey-api/backend \
   -o src/client \
   -c @hey-api/client-fetch
 ```
@@ -91,7 +91,7 @@ You can also generate clients programmatically by importing `@hey-api/openapi-ts
 import { createClient } from '@hey-api/openapi-ts';
 
 createClient({
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: ['@hey-api/client-fetch'],
 });
