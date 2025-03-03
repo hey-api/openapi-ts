@@ -32,7 +32,7 @@ In your [configuration](/openapi-ts/get-started), add `zod` to your plugins and 
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
@@ -50,7 +50,7 @@ To automatically validate response data in your SDKs, set `sdk.validator` to `tr
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
