@@ -57,7 +57,7 @@ The fastest way to use `@hey-api/openapi-ts` is via npx
 
 ```sh
 npx @hey-api/openapi-ts \
-  -i path/to/openapi.json \
+  -i https://get.heyapi.dev/hey-api/backend \
   -o src/client \
   -c @hey-api/client-fetch
 ```
@@ -114,7 +114,7 @@ You can also generate clients programmatically by importing `@hey-api/openapi-ts
 import { createClient } from '@hey-api/openapi-ts';
 
 createClient({
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: ['@hey-api/client-fetch'],
 });
@@ -130,7 +130,7 @@ createClient({
 import { defineConfig } from '@hey-api/openapi-ts';
 
 export default defineConfig({
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: ['@hey-api/client-fetch'],
 });
@@ -141,7 +141,7 @@ export default defineConfig({
 ```js
 /** @type {import('@hey-api/openapi-ts').UserConfig} */
 module.exports = {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: ['@hey-api/client-fetch'],
 };
@@ -152,7 +152,7 @@ module.exports = {
 ```js
 /** @type {import('@hey-api/openapi-ts').UserConfig} */
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: ['@hey-api/client-fetch'],
 };
