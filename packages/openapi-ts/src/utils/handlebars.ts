@@ -1,93 +1,6 @@
+import { promises as fs } from 'fs';
 import Handlebars from 'handlebars';
 
-// @ts-expect-error
-import templateClient from '../legacy/handlebars/compiled/client.js';
-// @ts-expect-error
-import angularGetHeaders from '../legacy/handlebars/compiled/core/angular/getHeaders.js';
-// @ts-expect-error
-import angularGetRequestBody from '../legacy/handlebars/compiled/core/angular/getRequestBody.js';
-// @ts-expect-error
-import angularGetResponseBody from '../legacy/handlebars/compiled/core/angular/getResponseBody.js';
-// @ts-expect-error
-import angularGetResponseHeader from '../legacy/handlebars/compiled/core/angular/getResponseHeader.js';
-// @ts-expect-error
-import angularRequest from '../legacy/handlebars/compiled/core/angular/request.js';
-// @ts-expect-error
-import angularSendRequest from '../legacy/handlebars/compiled/core/angular/sendRequest.js';
-// @ts-expect-error
-import templateCoreApiError from '../legacy/handlebars/compiled/core/ApiError.js';
-// @ts-expect-error
-import templateCoreApiRequestOptions from '../legacy/handlebars/compiled/core/ApiRequestOptions.js';
-// @ts-expect-error
-import templateCoreApiResult from '../legacy/handlebars/compiled/core/ApiResult.js';
-// @ts-expect-error
-import axiosGetHeaders from '../legacy/handlebars/compiled/core/axios/getHeaders.js';
-// @ts-expect-error
-import axiosGetRequestBody from '../legacy/handlebars/compiled/core/axios/getRequestBody.js';
-// @ts-expect-error
-import axiosGetResponseBody from '../legacy/handlebars/compiled/core/axios/getResponseBody.js';
-// @ts-expect-error
-import axiosGetResponseHeader from '../legacy/handlebars/compiled/core/axios/getResponseHeader.js';
-// @ts-expect-error
-import axiosRequest from '../legacy/handlebars/compiled/core/axios/request.js';
-// @ts-expect-error
-import axiosSendRequest from '../legacy/handlebars/compiled/core/axios/sendRequest.js';
-// @ts-expect-error
-import templateCoreBaseHttpRequest from '../legacy/handlebars/compiled/core/BaseHttpRequest.js';
-// @ts-expect-error
-import templateCancelablePromise from '../legacy/handlebars/compiled/core/CancelablePromise.js';
-// @ts-expect-error
-import fetchGetHeaders from '../legacy/handlebars/compiled/core/fetch/getHeaders.js';
-// @ts-expect-error
-import fetchGetRequestBody from '../legacy/handlebars/compiled/core/fetch/getRequestBody.js';
-// @ts-expect-error
-import fetchGetResponseBody from '../legacy/handlebars/compiled/core/fetch/getResponseBody.js';
-// @ts-expect-error
-import fetchGetResponseHeader from '../legacy/handlebars/compiled/core/fetch/getResponseHeader.js';
-// @ts-expect-error
-import fetchRequest from '../legacy/handlebars/compiled/core/fetch/request.js';
-// @ts-expect-error
-import fetchSendRequest from '../legacy/handlebars/compiled/core/fetch/sendRequest.js';
-// @ts-expect-error
-import functionBase64 from '../legacy/handlebars/compiled/core/functions/base64.js';
-// @ts-expect-error
-import functionCatchErrorCodes from '../legacy/handlebars/compiled/core/functions/catchErrorCodes.js';
-// @ts-expect-error
-import functionGetFormData from '../legacy/handlebars/compiled/core/functions/getFormData.js';
-// @ts-expect-error
-import functionGetQueryString from '../legacy/handlebars/compiled/core/functions/getQueryString.js';
-// @ts-expect-error
-import functionGetUrl from '../legacy/handlebars/compiled/core/functions/getUrl.js';
-// @ts-expect-error
-import functionIsBlob from '../legacy/handlebars/compiled/core/functions/isBlob.js';
-// @ts-expect-error
-import functionIsFormData from '../legacy/handlebars/compiled/core/functions/isFormData.js';
-// @ts-expect-error
-import functionIsString from '../legacy/handlebars/compiled/core/functions/isString.js';
-// @ts-expect-error
-import functionIsStringWithValue from '../legacy/handlebars/compiled/core/functions/isStringWithValue.js';
-// @ts-expect-error
-import functionIsSuccess from '../legacy/handlebars/compiled/core/functions/isSuccess.js';
-// @ts-expect-error
-import functionResolve from '../legacy/handlebars/compiled/core/functions/resolve.js';
-// @ts-expect-error
-import templateCoreHttpRequest from '../legacy/handlebars/compiled/core/HttpRequest.js';
-// @ts-expect-error
-import templateCoreSettings from '../legacy/handlebars/compiled/core/OpenAPI.js';
-// @ts-expect-error
-import templateCoreRequest from '../legacy/handlebars/compiled/core/request.js';
-// @ts-expect-error
-import xhrGetHeaders from '../legacy/handlebars/compiled/core/xhr/getHeaders.js';
-// @ts-expect-error
-import xhrGetRequestBody from '../legacy/handlebars/compiled/core/xhr/getRequestBody.js';
-// @ts-expect-error
-import xhrGetResponseBody from '../legacy/handlebars/compiled/core/xhr/getResponseBody.js';
-// @ts-expect-error
-import xhrGetResponseHeader from '../legacy/handlebars/compiled/core/xhr/getResponseHeader.js';
-// @ts-expect-error
-import xhrRequest from '../legacy/handlebars/compiled/core/xhr/request.js';
-// @ts-expect-error
-import xhrSendRequest from '../legacy/handlebars/compiled/core/xhr/sendRequest.js';
 import { getConfig } from './config';
 import { stringCase } from './stringCase';
 import { transformServiceName } from './transform';
@@ -169,174 +82,235 @@ export interface Templates {
   };
 }
 
+async function compileHbs(fileName: string) {
+  const template = await fs.readFile(fileName, 'utf8').toString().trim();
+
+  const compiled = Handlebars.compile(template, {
+    knownHelpers: {
+      camelCase: true,
+      equals: true,
+      ifServicesResponse: true,
+      ifdef: true,
+      notEquals: true,
+      transformServiceName: true,
+    },
+    knownHelpersOnly: true,
+    noEscape: true,
+    preventIndent: true,
+    strict: true,
+  });
+
+  return compiled;
+}
+
 /**
  * Read all the Handlebar templates that we need and return a wrapper object
  * so we can easily access the templates in our generator/write functions.
  */
-export const registerHandlebarTemplates = (): Templates => {
+export const registerHandlebarTemplates = async (
+  templatesPath = 'node_modules/@hey-api/openapi-ts/templates',
+): Promise<Templates> => {
   registerHandlebarHelpers();
 
+  const templateClient = await compileHbs(templatesPath + '/client.hbs');
+  const templateCoreApiError = await compileHbs(
+    templatesPath + '/core/ApiError.hbs',
+  );
+  const templateCoreApiRequestOptions = await compileHbs(
+    templatesPath + '/core/ApiRequestOptions.hbs',
+  );
+  const templateCoreApiResult = await compileHbs(
+    templatesPath + '/core/ApiResult.hbs',
+  );
+  const templateCoreBaseHttpRequest = await compileHbs(
+    templatesPath + '/core/BaseHttpRequest.hbs',
+  );
+  const templateCancelablePromise = await compileHbs(
+    templatesPath + '/core/CancelablePromise.hbs',
+  );
+  const templateCoreHttpRequest = await compileHbs(
+    templatesPath + '/core/HttpRequest.hbs',
+  );
+  const templateCoreRequest = await compileHbs(
+    templatesPath + '/core/request.hbs',
+  );
+  const templateCoreSettings = await compileHbs(
+    templatesPath + '/core/OpenAPI.hbs',
+  );
   // Main templates (entry points for the files we write to disk)
   const templates: Templates = {
-    client: Handlebars.template(templateClient),
+    client: templateClient,
     core: {
-      apiError: Handlebars.template(templateCoreApiError),
-      apiRequestOptions: Handlebars.template(templateCoreApiRequestOptions),
-      apiResult: Handlebars.template(templateCoreApiResult),
-      baseHttpRequest: Handlebars.template(templateCoreBaseHttpRequest),
-      cancelablePromise: Handlebars.template(templateCancelablePromise),
-      httpRequest: Handlebars.template(templateCoreHttpRequest),
-      request: Handlebars.template(templateCoreRequest),
-      settings: Handlebars.template(templateCoreSettings),
+      apiError: templateCoreApiError,
+      apiRequestOptions: templateCoreApiRequestOptions,
+      apiResult: templateCoreApiResult,
+      baseHttpRequest: templateCoreBaseHttpRequest,
+      cancelablePromise: templateCancelablePromise,
+      httpRequest: templateCoreHttpRequest,
+      request: templateCoreRequest,
+      settings: templateCoreSettings,
     },
   };
 
-  // Generic functions used in 'request' file @see src/legacy/handlebars/templates/core/request.hbs for more info
-  Handlebars.registerPartial(
-    'functions/base64',
-    Handlebars.template(functionBase64),
+  const functionBase64 = await compileHbs(
+    templatesPath + '/core/functions/base64.hbs',
   );
+  const functionCatchErrorCodes = await compileHbs(
+    templatesPath + '/core/functions/catchErrorCodes.hbs',
+  );
+  const functionGetFormData = await compileHbs(
+    templatesPath + '/core/functions/getFormData.hbs',
+  );
+  const functionGetQueryString = await compileHbs(
+    templatesPath + '/core/functions/getQueryString.hbs',
+  );
+  const functionGetUrl = await compileHbs(
+    templatesPath + '/core/functions/getUrl.hbs',
+  );
+  const functionIsBlob = await compileHbs(
+    templatesPath + '/core/functions/isBlob.hbs',
+  );
+  const functionIsFormData = await compileHbs(
+    templatesPath + '/core/functions/isFormData.hbs',
+  );
+  const functionIsString = await compileHbs(
+    templatesPath + '/core/functions/isString.hbs',
+  );
+  const functionIsStringWithValue = await compileHbs(
+    templatesPath + '/core/functions/isStringWithValue.hbs',
+  );
+  const functionIsSuccess = await compileHbs(
+    templatesPath + '/core/functions/isSuccess.hbs',
+  );
+  const functionResolve = await compileHbs(
+    templatesPath + '/core/functions/resolve.hbs',
+  );
+  // Generic functions used in 'request' file @see src/legacy/handlebars/templates/core/request.hbs for more info
+  Handlebars.registerPartial('functions/base64', functionBase64);
   Handlebars.registerPartial(
     'functions/catchErrorCodes',
-    Handlebars.template(functionCatchErrorCodes),
+    functionCatchErrorCodes,
   );
-  Handlebars.registerPartial(
-    'functions/getFormData',
-    Handlebars.template(functionGetFormData),
-  );
+  Handlebars.registerPartial('functions/getFormData', functionGetFormData);
   Handlebars.registerPartial(
     'functions/getQueryString',
-    Handlebars.template(functionGetQueryString),
+    functionGetQueryString,
   );
-  Handlebars.registerPartial(
-    'functions/getUrl',
-    Handlebars.template(functionGetUrl),
-  );
-  Handlebars.registerPartial(
-    'functions/isBlob',
-    Handlebars.template(functionIsBlob),
-  );
-  Handlebars.registerPartial(
-    'functions/isFormData',
-    Handlebars.template(functionIsFormData),
-  );
-  Handlebars.registerPartial(
-    'functions/isString',
-    Handlebars.template(functionIsString),
-  );
+  Handlebars.registerPartial('functions/getUrl', functionGetUrl);
+  Handlebars.registerPartial('functions/isBlob', functionIsBlob);
+  Handlebars.registerPartial('functions/isFormData', functionIsFormData);
+  Handlebars.registerPartial('functions/isString', functionIsString);
   Handlebars.registerPartial(
     'functions/isStringWithValue',
-    Handlebars.template(functionIsStringWithValue),
+    functionIsStringWithValue,
   );
-  Handlebars.registerPartial(
-    'functions/isSuccess',
-    Handlebars.template(functionIsSuccess),
-  );
-  Handlebars.registerPartial(
-    'functions/resolve',
-    Handlebars.template(functionResolve),
-  );
+  Handlebars.registerPartial('functions/isSuccess', functionIsSuccess);
+  Handlebars.registerPartial('functions/resolve', functionResolve);
 
+  const fetchGetHeaders = await compileHbs(
+    templatesPath + '/core/fetch/getHeaders.hbs',
+  );
+  const fetchGetRequestBody = await compileHbs(
+    templatesPath + '/core/fetch/getRequestBody.hbs',
+  );
+  const fetchGetResponseBody = await compileHbs(
+    templatesPath + '/core/fetch/getResponseBody.hbs',
+  );
+  const fetchGetResponseHeader = await compileHbs(
+    templatesPath + '/core/fetch/getResponseHeader.hbs',
+  );
+  const fetchRequest = await compileHbs(
+    templatesPath + '/core/fetch/request.hbs',
+  );
+  const fetchSendRequest = await compileHbs(
+    templatesPath + '/core/fetch/sendRequest.hbs',
+  );
   // Specific files for the fetch client implementation
-  Handlebars.registerPartial(
-    'fetch/getHeaders',
-    Handlebars.template(fetchGetHeaders),
-  );
-  Handlebars.registerPartial(
-    'fetch/getRequestBody',
-    Handlebars.template(fetchGetRequestBody),
-  );
-  Handlebars.registerPartial(
-    'fetch/getResponseBody',
-    Handlebars.template(fetchGetResponseBody),
-  );
-  Handlebars.registerPartial(
-    'fetch/getResponseHeader',
-    Handlebars.template(fetchGetResponseHeader),
-  );
-  Handlebars.registerPartial(
-    'fetch/request',
-    Handlebars.template(fetchRequest),
-  );
-  Handlebars.registerPartial(
-    'fetch/sendRequest',
-    Handlebars.template(fetchSendRequest),
-  );
+  Handlebars.registerPartial('fetch/getHeaders', fetchGetHeaders);
+  Handlebars.registerPartial('fetch/getRequestBody', fetchGetRequestBody);
+  Handlebars.registerPartial('fetch/getResponseBody', fetchGetResponseBody);
+  Handlebars.registerPartial('fetch/getResponseHeader', fetchGetResponseHeader);
+  Handlebars.registerPartial('fetch/request', fetchRequest);
+  Handlebars.registerPartial('fetch/sendRequest', fetchSendRequest);
 
+  const xhrGetHeaders = await compileHbs(
+    templatesPath + '/core/xhr/getHeaders.hbs',
+  );
+  const xhrGetRequestBody = await compileHbs(
+    templatesPath + '/core/xhr/getRequestBody.hbs',
+  );
+  const xhrGetResponseBody = await compileHbs(
+    templatesPath + '/core/xhr/getResponseBody.hbs',
+  );
+  const xhrGetResponseHeader = await compileHbs(
+    templatesPath + '/core/xhr/getResponseHeader.hbs',
+  );
+  const xhrRequest = await compileHbs(templatesPath + '/core/xhr/request.hbs');
+  const xhrSendRequest = await compileHbs(
+    templatesPath + '/core/xhr/sendRequest.hbs',
+  );
   // Specific files for the xhr client implementation
-  Handlebars.registerPartial(
-    'xhr/getHeaders',
-    Handlebars.template(xhrGetHeaders),
-  );
-  Handlebars.registerPartial(
-    'xhr/getRequestBody',
-    Handlebars.template(xhrGetRequestBody),
-  );
-  Handlebars.registerPartial(
-    'xhr/getResponseBody',
-    Handlebars.template(xhrGetResponseBody),
-  );
-  Handlebars.registerPartial(
-    'xhr/getResponseHeader',
-    Handlebars.template(xhrGetResponseHeader),
-  );
-  Handlebars.registerPartial('xhr/request', Handlebars.template(xhrRequest));
-  Handlebars.registerPartial(
-    'xhr/sendRequest',
-    Handlebars.template(xhrSendRequest),
-  );
+  Handlebars.registerPartial('xhr/getHeaders', xhrGetHeaders);
+  Handlebars.registerPartial('xhr/getRequestBody', xhrGetRequestBody);
+  Handlebars.registerPartial('xhr/getResponseBody', xhrGetResponseBody);
+  Handlebars.registerPartial('xhr/getResponseHeader', xhrGetResponseHeader);
+  Handlebars.registerPartial('xhr/request', xhrRequest);
+  Handlebars.registerPartial('xhr/sendRequest', xhrSendRequest);
 
+  const axiosGetHeaders = await compileHbs(
+    templatesPath + '/core/axios/getHeaders.hbs',
+  );
+  const axiosGetRequestBody = await compileHbs(
+    templatesPath + '/core/axios/getRequestBody.hbs',
+  );
+  const axiosGetResponseBody = await compileHbs(
+    templatesPath + '/core/axios/getResponseBody.hbs',
+  );
+  const axiosGetResponseHeader = await compileHbs(
+    templatesPath + '/core/axios/getResponseHeader.hbs',
+  );
+  const axiosRequest = await compileHbs(
+    templatesPath + '/core/axios/request.hbs',
+  );
+  const axiosSendRequest = await compileHbs(
+    templatesPath + '/core/axios/sendRequest.hbs',
+  );
   // Specific files for the axios client implementation
-  Handlebars.registerPartial(
-    'axios/getHeaders',
-    Handlebars.template(axiosGetHeaders),
-  );
-  Handlebars.registerPartial(
-    'axios/getRequestBody',
-    Handlebars.template(axiosGetRequestBody),
-  );
-  Handlebars.registerPartial(
-    'axios/getResponseBody',
-    Handlebars.template(axiosGetResponseBody),
-  );
-  Handlebars.registerPartial(
-    'axios/getResponseHeader',
-    Handlebars.template(axiosGetResponseHeader),
-  );
-  Handlebars.registerPartial(
-    'axios/request',
-    Handlebars.template(axiosRequest),
-  );
-  Handlebars.registerPartial(
-    'axios/sendRequest',
-    Handlebars.template(axiosSendRequest),
-  );
+  Handlebars.registerPartial('axios/getHeaders', axiosGetHeaders);
+  Handlebars.registerPartial('axios/getRequestBody', axiosGetRequestBody);
+  Handlebars.registerPartial('axios/getResponseBody', axiosGetResponseBody);
+  Handlebars.registerPartial('axios/getResponseHeader', axiosGetResponseHeader);
+  Handlebars.registerPartial('axios/request', axiosRequest);
+  Handlebars.registerPartial('axios/sendRequest', axiosSendRequest);
 
+  const angularGetHeaders = await compileHbs(
+    templatesPath + '/core/angular/getHeaders.hbs',
+  );
+  const angularGetRequestBody = await compileHbs(
+    templatesPath + '/core/angular/getRequestBody.hbs',
+  );
+  const angularGetResponseBody = await compileHbs(
+    templatesPath + '/core/angular/getResponseBody.hbs',
+  );
+  const angularGetResponseHeader = await compileHbs(
+    templatesPath + '/core/angular/getResponseHeader.hbs',
+  );
+  const angularRequest = await compileHbs(
+    templatesPath + '/core/angular/request.hbs',
+  );
+  const angularSendRequest = await compileHbs(
+    templatesPath + '/core/angular/sendRequest.hbs',
+  );
   // Specific files for the angular client implementation
-  Handlebars.registerPartial(
-    'angular/getHeaders',
-    Handlebars.template(angularGetHeaders),
-  );
-  Handlebars.registerPartial(
-    'angular/getRequestBody',
-    Handlebars.template(angularGetRequestBody),
-  );
-  Handlebars.registerPartial(
-    'angular/getResponseBody',
-    Handlebars.template(angularGetResponseBody),
-  );
+  Handlebars.registerPartial('angular/getHeaders', angularGetHeaders);
+  Handlebars.registerPartial('angular/getRequestBody', angularGetRequestBody);
+  Handlebars.registerPartial('angular/getResponseBody', angularGetResponseBody);
   Handlebars.registerPartial(
     'angular/getResponseHeader',
-    Handlebars.template(angularGetResponseHeader),
+    angularGetResponseHeader,
   );
-  Handlebars.registerPartial(
-    'angular/request',
-    Handlebars.template(angularRequest),
-  );
-  Handlebars.registerPartial(
-    'angular/sendRequest',
-    Handlebars.template(angularSendRequest),
-  );
+  Handlebars.registerPartial('angular/request', angularRequest);
+  Handlebars.registerPartial('angular/sendRequest', angularSendRequest);
 
   return templates;
 };
