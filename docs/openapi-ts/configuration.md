@@ -13,7 +13,7 @@ description: Configure @hey-api/openapi-ts.
 import { defineConfig } from '@hey-api/openapi-ts';
 
 export default defineConfig({
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: ['@hey-api/client-fetch'],
 });
@@ -22,7 +22,7 @@ export default defineConfig({
 ```js [openapi-ts.config.cjs]
 /** @type {import('@hey-api/openapi-ts').UserConfig} */
 module.exports = {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: ['@hey-api/client-fetch'],
 };
@@ -31,7 +31,7 @@ module.exports = {
 ```js [openapi-ts.config.mjs]
 /** @type {import('@hey-api/openapi-ts').UserConfig} */
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: ['@hey-api/client-fetch'],
 };
@@ -102,7 +102,7 @@ To format your output folder contents, set `output.format` to a valid formatter.
 
 ```js [disabled]
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: {
     format: false, // [!code ++]
     path: 'src/client',
@@ -113,7 +113,7 @@ export default {
 
 ```js [prettier]
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: {
     format: 'prettier', // [!code ++]
     path: 'src/client',
@@ -124,7 +124,7 @@ export default {
 
 ```js [biome]
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: {
     format: 'biome', // [!code ++]
     path: 'src/client',
@@ -145,7 +145,7 @@ To lint your output folder contents, set `output.lint` to a valid linter.
 
 ```js [disabled]
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: {
     lint: false, // [!code ++]
     path: 'src/client',
@@ -156,7 +156,7 @@ export default {
 
 ```js [eslint]
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: {
     lint: 'eslint', // [!code ++]
     path: 'src/client',
@@ -167,7 +167,7 @@ export default {
 
 ```js [biome]
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: {
     lint: 'biome', // [!code ++]
     path: 'src/client',
@@ -178,7 +178,7 @@ export default {
 
 ```js [oxlint]
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: {
     lint: 'oxlint', // [!code ++]
     path: 'src/client',
@@ -202,7 +202,7 @@ export default {
   input: {
     // match only the schema named `foo` and `GET` operation for the `/api/v1/foo` path // [!code ++]
     include: '^(#/components/schemas/foo|#/paths/api/v1/foo/get)$', // [!code ++]
-    path: 'path/to/openapi.json',
+    path: 'https://get.heyapi.dev/hey-api/backend',
   },
   output: 'src/client',
   plugins: ['@hey-api/client-fetch'],
@@ -214,7 +214,7 @@ export default {
   input: {
     // match everything except for the schema named `foo` and `GET` operation for the `/api/v1/foo` path // [!code ++]
     exclude: '^(#/components/schemas/foo|#/paths/api/v1/foo/get)$', // [!code ++]
-    path: 'path/to/openapi.json',
+    path: 'https://get.heyapi.dev/hey-api/backend',
   },
   output: 'src/client',
   plugins: ['@hey-api/client-fetch'],
@@ -235,7 +235,7 @@ If your schema changes frequently, you may want to automatically regenerate the 
 
 ```js [config]
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: ['@hey-api/client-fetch'],
   watch: true, // [!code ++]
@@ -244,7 +244,7 @@ export default {
 
 ```sh [cli]
 npx @hey-api/openapi-ts \
-  -i path/to/openapi.json \
+  -i https://get.heyapi.dev/hey-api/backend \
   -o src/client \
   -c @hey-api/client-fetch \
   -w  # [!code ++]
@@ -258,7 +258,7 @@ By default, you can't keep custom files in the `output.path` folder because it's
 
 ```js
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: {
     clean: false, // [!code ++]
     path: 'src/client',

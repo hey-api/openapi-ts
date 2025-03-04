@@ -31,7 +31,7 @@ There are two ways to generate validators. If you only need response validation 
 
 ```js [sdk]
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     '@hey-api/client-fetch',
@@ -45,7 +45,7 @@ export default {
 
 ```js [validator]
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     '@hey-api/client-fetch',

@@ -1,5 +1,17 @@
 # @hey-api/openapi-ts
 
+## 0.64.9
+
+### Patch Changes
+
+- [#1774](https://github.com/hey-api/openapi-ts/pull/1774) [`c0b36b9`](https://github.com/hey-api/openapi-ts/commit/c0b36b95645d484034c3af145c5554867568979b) Thanks [@mrlubos](https://github.com/mrlubos)! - docs: announce Hey API platform
+
+## 0.64.8
+
+### Patch Changes
+
+- [#1764](https://github.com/hey-api/openapi-ts/pull/1764) [`b3ecac3`](https://github.com/hey-api/openapi-ts/commit/b3ecac31d49a269ab400db4dbb84a22f1047e19a) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: reduce minimum Node.js 22 version to 22.10.0
+
 ## 0.64.7
 
 ### Patch Changes
