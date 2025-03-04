@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.64.10
+
+### Patch Changes
+
+- [#1779](https://github.com/hey-api/openapi-ts/pull/1779) [`57fcec8`](https://github.com/hey-api/openapi-ts/commit/57fcec804e339cfe508cfba4afd203c22495bff2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: don't throw on missing performance marks
+
+- [#1767](https://github.com/hey-api/openapi-ts/pull/1767) [`2de84ea`](https://github.com/hey-api/openapi-ts/commit/2de84ea3dbd2cba50150808a872aea8242c33014) Thanks [@Schroedi](https://github.com/Schroedi)! - fix: handle nested dates in transformers
+
 ## 0.64.9
 
 ### Patch Changes
