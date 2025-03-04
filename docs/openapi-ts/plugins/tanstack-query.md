@@ -40,7 +40,7 @@ In your [configuration](/openapi-ts/get-started), add TanStack Query to your plu
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
@@ -54,7 +54,7 @@ export default {
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
@@ -68,7 +68,7 @@ export default {
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
@@ -82,7 +82,7 @@ export default {
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
@@ -96,7 +96,7 @@ export default {
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,

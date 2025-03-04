@@ -13,11 +13,11 @@ This feature is in development! :tada: Try it out and provide feedback on [GitHu
 
 [Zod](https://zod.dev/) is a TypeScript-first schema validation library with static type inference.
 
-### Demo
+<!-- ### Demo
 
 <button class="buttonLink" @click="(event) => embedProject('hey-api-client-fetch-plugin-zod-example')(event)">
 Launch demo
-</button>
+</button> -->
 
 ## Features
 
@@ -32,7 +32,7 @@ In your [configuration](/openapi-ts/get-started), add `zod` to your plugins and 
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
@@ -50,7 +50,7 @@ To automatically validate response data in your SDKs, set `sdk.validator` to `tr
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,

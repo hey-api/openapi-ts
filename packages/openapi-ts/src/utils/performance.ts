@@ -32,15 +32,19 @@ export class PerformanceReport {
     );
 
     marks.forEach((mark) => {
-      const markMeasure = Performance.measure(mark);
-      const markDuration = Math.ceil(markMeasure.duration * 100) / 100;
-      const percentage =
-        Math.ceil(
-          (markMeasure.duration / this.totalMeasure.duration) * 100 * 100,
-        ) / 100;
-      console.warn(
-        `${mark}: ${markDuration.toFixed(2)}ms (${percentage.toFixed(2)}%)`,
-      );
+      try {
+        const markMeasure = Performance.measure(mark);
+        const markDuration = Math.ceil(markMeasure.duration * 100) / 100;
+        const percentage =
+          Math.ceil(
+            (markMeasure.duration / this.totalMeasure.duration) * 100 * 100,
+          ) / 100;
+        console.warn(
+          `${mark}: ${markDuration.toFixed(2)}ms (${percentage.toFixed(2)}%)`,
+        );
+      } catch {
+        // noop
+      }
     });
   }
 }
