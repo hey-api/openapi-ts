@@ -28,15 +28,19 @@ const getInput = (userConfig: UserConfig): Config['input'] => {
   };
   if (typeof userConfig.input === 'string') {
     input.path = userConfig.input;
-  } else if (userConfig.input && userConfig.input.path) {
+  } else if (
+    userConfig.input &&
+    (userConfig.input.path || userConfig.input.organization)
+  ) {
     input = {
       ...input,
+      path: 'https://get.heyapi.dev',
       ...userConfig.input,
     };
   } else {
     input = {
       ...input,
-      path: userConfig.input,
+      path: userConfig.input as Record<string, unknown>,
     };
   }
   return input;
