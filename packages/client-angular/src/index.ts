@@ -1,10 +1,16 @@
-import type { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { HttpClient, HttpEventType, HttpRequest } from '@angular/common/http';
-import { assertInInjectionContext, inject } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+// import {
+//   HttpClient,
+//   type HttpErrorResponse,
+//   HttpEventType,
+//   HttpRequest,
+//   type HttpResponse,
+// } from '@angular/common/http';
 
-import type { Client, Config, RequestOptions } from './types';
+// import { HttpClient } from '@angular/common/http';
+// import { provideHttpClient } from '@angular/common/http';
+
+import { _defaultHttpClient } from './client';
+import type { Client, Config } from './types';
 import {
   buildUrl,
   createConfig,
@@ -30,10 +36,14 @@ export const createClient = (config: Config = {}): Client => {
   };
 
   const interceptors = createInterceptors<
-    HttpRequest<unknown>,
-    HttpResponse<unknown>,
-    HttpErrorResponse,
-    RequestOptions
+    any,
+    any,
+    any,
+    any
+    // HttpRequest<unknown>,
+    // HttpResponse<unknown>,
+    // HttpErrorResponse,
+    // RequestOptions
   >();
 
   const request: Client['request'] = async (options) => {
@@ -65,91 +75,87 @@ export const createClient = (config: Config = {}): Client => {
       ...opts,
     };
 
-    let _httpClient = opts.httpClient;
+    const _httpClient = opts.httpClient ?? _defaultHttpClient;
 
-    if (!_httpClient) {
-      assertInInjectionContext(request);
-      _httpClient = inject(HttpClient);
-    }
+    return [_httpClient, url, method, requestInit] as any;
+    // let _request = new HttpRequest<unknown>(method, url, requestInit);
 
-    let _request = new HttpRequest<unknown>(method, url, requestInit);
+    // for (const fn of interceptors.request._fns) {
+    //   _request = await fn(_request, opts);
+    // }
+    // try {
+    //   let response = await firstValueFrom(
+    //     _httpClient.request(_request).pipe(
+    //       filter((event) => event.type === HttpEventType.Response),
+    //       map((event) => event as HttpResponse<unknown>),
+    //     ),
+    //   );
 
-    for (const fn of interceptors.request._fns) {
-      _request = await fn(_request, opts);
-    }
-    try {
-      let response = await firstValueFrom(
-        _httpClient.request(_request).pipe(
-          filter((event) => event.type === HttpEventType.Response),
-          map((event) => event as HttpResponse<unknown>),
-        ),
-      );
+    //   for (const fn of interceptors.response._fns) {
+    //     response = await fn(response, _request, opts);
+    //   }
 
-      for (const fn of interceptors.response._fns) {
-        response = await fn(response, _request, opts);
-      }
+    //   const result = {
+    //     request: _request,
+    //     response,
+    //   };
 
-      const result = {
-        request: _request,
-        response,
-      };
+    //   if (response.ok) {
+    //     if (
+    //       response.status === 204 ||
+    //       response.headers.get('Content-Length') === '0'
+    //     ) {
+    //       return {
+    //         data: {},
+    //         ...result,
+    //       };
+    //     }
 
-      if (response.ok) {
-        if (
-          response.status === 204 ||
-          response.headers.get('Content-Length') === '0'
-        ) {
-          return {
-            data: {},
-            ...result,
-          };
-        }
+    //     // const parseAs =
+    //     //   (opts.parseAs === 'auto'
+    //     //     ? getParseAs(response.headers.get('Content-Type'))
+    //     //     : opts.parseAs) ?? 'json';
 
-        // const parseAs =
-        //   (opts.parseAs === 'auto'
-        //     ? getParseAs(response.headers.get('Content-Type'))
-        //     : opts.parseAs) ?? 'json';
+    //     let data = response.body;
+    //     // if (parseAs === 'stream') {
+    //     // return {
+    //     //   data: response.body,
+    //     //   ...result,
+    //     // };
+    //     // }
 
-        let data = response.body;
-        // if (parseAs === 'stream') {
-        // return {
-        //   data: response.body,
-        //   ...result,
-        // };
-        // }
+    //     // let data = await response[parseAs]();
+    //     // if (parseAs === 'json') {
+    //     if (opts.responseValidator) {
+    //       await opts.responseValidator(data);
+    //     }
 
-        // let data = await response[parseAs]();
-        // if (parseAs === 'json') {
-        if (opts.responseValidator) {
-          await opts.responseValidator(data);
-        }
+    //     if (opts.responseTransformer) {
+    //       data = await opts.responseTransformer(data);
+    //     }
+    //     // }
 
-        if (opts.responseTransformer) {
-          data = await opts.responseTransformer(data);
-        }
-        // }
+    //     return {
+    //       data,
+    //       ...result,
+    //     };
+    //   }
+    // } catch (err) {
+    //   let finalError = err;
 
-        return {
-          data,
-          ...result,
-        };
-      }
-    } catch (err) {
-      let finalError = err;
+    //   for (const fn of interceptors.error._fns) {
+    //     finalError = await fn(err, err, _request, opts);
+    //   }
 
-      for (const fn of interceptors.error._fns) {
-        finalError = await fn(err, err, _request, opts);
-      }
+    //   if (opts.throwOnError) {
+    //     throw finalError;
+    //   }
 
-      if (opts.throwOnError) {
-        throw finalError;
-      }
-
-      return {
-        error: finalError,
-        ...err,
-      };
-    }
+    //   return {
+    //     error: finalError,
+    //     ...err,
+    //   };
+    // }
   };
 
   return {
@@ -170,14 +176,17 @@ export const createClient = (config: Config = {}): Client => {
   };
 };
 
+export { provideHeyApiClient } from './client';
 export type {
   Client,
+  ClientOptions,
   Config,
   CreateClientConfig,
   Options,
   OptionsLegacyParser,
   RequestOptions,
   RequestResult,
+  TDataShape,
 } from './types';
 export { createConfig } from './utils';
 export type { Auth, QuerySerializerOptions } from '@hey-api/client-core';

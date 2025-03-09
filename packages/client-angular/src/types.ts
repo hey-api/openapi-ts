@@ -12,15 +12,14 @@ import type {
 
 import type { Middleware } from './utils';
 
-export interface Config<ThrowOnError extends boolean = boolean>
+export interface Config<T extends ClientOptions = ClientOptions>
   extends Omit<RequestInit, 'body' | 'headers' | 'method'>,
     CoreConfig {
   /**
    * Base URL for all requests made by this client.
-   *
-   * @default ''
    */
-  baseUrl?: string;
+  baseUrl?: T['baseUrl'];
+
   /**
    * The HTTP client to use for making requests.
    */
@@ -39,30 +38,21 @@ export interface Config<ThrowOnError extends boolean = boolean>
    *
    * @default false
    */
-  throwOnError?: ThrowOnError;
+  throwOnError?: T['throwOnError'];
 }
 
 export interface RequestOptions<
   ThrowOnError extends boolean = boolean,
   Url extends string = string,
-> extends Config<ThrowOnError> {
+> extends Config<{
+    throwOnError: ThrowOnError;
+  }> {
   /**
    * Any body that you want to add to your request.
    *
    * {@link https://developer.mozilla.org/docs/Web/API/fetch#body}
    */
-  body?:
-    | RequestInit['body']
-    | Record<string, unknown>
-    | Array<Record<string, unknown>>
-    | Array<unknown>
-    | number;
-  /**
-   * You can provide a client instance returned by `createClient()` instead of
-   * individual options. This might be also useful if you want to implement a
-   * custom client.
-   */
-  client?: Client;
+  body?: unknown;
   path?: Record<string, unknown>;
   query?: Record<string, unknown>;
   /**
@@ -91,6 +81,11 @@ export type RequestResult<
         response: Response;
       }
     >;
+
+export interface ClientOptions {
+  baseUrl?: string;
+  throwOnError?: boolean;
+}
 
 type MethodFn = <
   TData = unknown,
@@ -137,9 +132,11 @@ export type Client = CoreClient<RequestFn, Config, MethodFn, BuildUrlFn> & {
  * `setConfig()`. This is useful for example if you're using Next.js
  * to ensure your client always has the correct values.
  */
-export type CreateClientConfig = (override?: Config) => Config;
+export type CreateClientConfig<T extends ClientOptions = ClientOptions> = (
+  override?: Config<ClientOptions & T>,
+) => Config<Required<ClientOptions> & T>;
 
-interface DataShape {
+export interface TDataShape {
   body?: unknown;
   headers?: unknown;
   path?: unknown;
@@ -150,7 +147,7 @@ interface DataShape {
 type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
 
 export type Options<
-  TData extends DataShape = DataShape,
+  TData extends TDataShape = TDataShape,
   ThrowOnError extends boolean = boolean,
 > = OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'path' | 'query' | 'url'> &
   Omit<TData, 'url'>;
