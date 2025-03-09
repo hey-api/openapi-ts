@@ -73,7 +73,7 @@ export default defineConfig({
               },
               {
                 link: '/openapi-ts/clients/next-js',
-                text: 'Next.js <span data-soon>soon</span>',
+                text: 'Next.js',
               },
               {
                 link: '/openapi-ts/clients/nuxt',
@@ -210,7 +210,7 @@ export default defineConfig({
         items: [
           {
             link: '/openapi-ts/integrations',
-            text: 'GitHub <span data-soon>soon</span>',
+            text: 'GitHub',
           },
         ],
         text: 'Integrations',

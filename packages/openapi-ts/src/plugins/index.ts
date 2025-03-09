@@ -11,6 +11,10 @@ import {
   defaultConfig as heyApiClientFetch,
 } from './@hey-api/client-fetch';
 import {
+  type Config as HeyApiClientNext,
+  defaultConfig as heyApiClientNext,
+} from './@hey-api/client-next';
+import {
   type Config as HeyApiClientNuxt,
   defaultConfig as heyApiClientNuxt,
 } from './@hey-api/client-nuxt';
@@ -81,6 +85,7 @@ export type UserPlugins =
   | Plugin.UserConfig<HeyApiClientAxios>
   | Plugin.UserConfig<HeyApiClientFetch>
   | Plugin.UserConfig<HeyApiClientAngular>
+  | Plugin.UserConfig<HeyApiClientNext>
   | Plugin.UserConfig<HeyApiClientNuxt>
   | Plugin.UserConfig<HeyApiLegacyAngular>
   | Plugin.UserConfig<HeyApiLegacyAxios>
@@ -106,9 +111,7 @@ export type ClientPlugins =
   | Plugin.Config<HeyApiClientAxios>
   | Plugin.Config<HeyApiClientFetch>
   | Plugin.Config<HeyApiClientAngular>
-  | Plugin.Config<HeyApiClientNuxt>
   | Plugin.Config<HeyApiLegacyAngular>
-  | Plugin.Config<HeyApiLegacyAxios>
   | Plugin.Config<HeyApiLegacyFetch>
   | Plugin.Config<HeyApiLegacyNode>
   | Plugin.Config<HeyApiLegacyXhr>
@@ -128,6 +131,7 @@ export const defaultPluginConfigs: DefaultPluginConfigs<ClientPlugins> = {
   '@hey-api/client-angular': heyApiClientAngular,
   '@hey-api/client-axios': heyApiClientAxios,
   '@hey-api/client-fetch': heyApiClientFetch,
+  '@hey-api/client-next': heyApiClientNext,
   '@hey-api/client-nuxt': heyApiClientNuxt,
   '@hey-api/schemas': heyApiSchemas,
   '@hey-api/sdk': heyApiSdk,

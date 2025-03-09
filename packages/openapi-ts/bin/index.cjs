@@ -13,7 +13,7 @@ const params = program
   .version(pkg.version)
   .option(
     '-c, --client <value>',
-    'HTTP client to generate [@hey-api/client-axios, @hey-api/client-fetch, @hey-api/client-nuxt, legacy/angular, legacy/axios, legacy/fetch, legacy/node, legacy/xhr]',
+    'HTTP client to generate [@hey-api/client-axios, @hey-api/client-fetch, @hey-api/client-next, @hey-api/client-nuxt, legacy/angular, legacy/axios, legacy/fetch, legacy/node, legacy/xhr]',
   )
   .option('-d, --debug', 'Set log level to debug')
   .option('--dry-run [value]', 'Skip writing files to disk?')
@@ -115,6 +115,10 @@ async function start() {
 
     if (typeof params.watch === 'string') {
       userConfig.watch = Number.parseInt(params.watch, 10);
+    }
+
+    if (!Object.keys(userConfig.logs).length) {
+      delete userConfig.logs;
     }
 
     const context = await createClient(userConfig);

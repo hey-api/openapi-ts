@@ -15,6 +15,7 @@ const __dirname = path.dirname(__filename);
 const clients: ReadonlyArray<PluginClientNames> = [
   '@hey-api/client-axios',
   '@hey-api/client-fetch',
+  '@hey-api/client-next',
   '@hey-api/client-nuxt',
 ];
 
@@ -36,6 +37,9 @@ for (const client of clients) {
     ): UserConfig => ({
       ...userConfig,
       input: path.join(__dirname, 'spec', '3.1.x', 'full.json'),
+      logs: {
+        level: 'silent',
+      },
       output: path.join(
         outputDir,
         typeof userConfig.output === 'string' ? userConfig.output : '',
@@ -61,6 +65,84 @@ for (const client of clients) {
           ],
         }),
         description: 'default output with bundled client',
+      },
+      {
+        config: createConfig({
+          output: 'sdk-client-optional',
+          plugins: [
+            client,
+            {
+              client: true,
+              name: '@hey-api/sdk',
+            },
+          ],
+        }),
+        description: 'SDK with optional client option',
+      },
+      {
+        config: createConfig({
+          output: 'sdk-client-required',
+          plugins: [
+            client,
+            {
+              client: false,
+              name: '@hey-api/sdk',
+            },
+          ],
+        }),
+        description: 'SDK with required client option',
+      },
+      {
+        config: createConfig({
+          output: 'base-url-false',
+          plugins: [
+            {
+              baseUrl: false,
+              name: client,
+            },
+            '@hey-api/typescript',
+          ],
+        }),
+        description: 'client without base URL',
+      },
+      {
+        config: createConfig({
+          output: 'base-url-number',
+          plugins: [
+            {
+              baseUrl: 0,
+              name: client,
+            },
+            '@hey-api/typescript',
+          ],
+        }),
+        description: 'client with numeric base URL',
+      },
+      {
+        config: createConfig({
+          output: 'base-url-string',
+          plugins: [
+            {
+              baseUrl: 'https://foo.com',
+              name: client,
+            },
+            '@hey-api/typescript',
+          ],
+        }),
+        description: 'client with custom string base URL',
+      },
+      {
+        config: createConfig({
+          output: 'base-url-strict',
+          plugins: [
+            {
+              name: client,
+              strictBaseUrl: true,
+            },
+            '@hey-api/typescript',
+          ],
+        }),
+        description: 'client with strict base URL',
       },
     ];
 

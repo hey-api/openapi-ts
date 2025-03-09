@@ -1,3 +1,5 @@
+import path from 'node:path';
+
 import { defineConfig } from '../src';
 
 export default defineConfig({
@@ -6,7 +8,8 @@ export default defineConfig({
     // exclude: '^#/components/schemas/ModelWithCircularReference$',
     // include:
     //   '^(#/components/schemas/import|#/paths/api/v{api-version}/simple/options)$',
-    path: './packages/openapi-ts/test/spec/3.1.x/full.json',
+    path: path.resolve(__dirname, 'spec', '3.1.x', 'full.json'),
+    // path: 'http://localhost:8000/openapi.json',
     // path: './test/spec/v3-transforms.json',
     // path: 'https://mongodb-mms-prod-build-server.s3.amazonaws.com/openapi/2caffd88277a4e27c95dcefc7e3b6a63a3b03297-v2-2023-11-15.json',
     // path: 'https://raw.githubusercontent.com/swagger-api/swagger-petstore/master/src/main/resources/openapi.yaml',
@@ -21,13 +24,16 @@ export default defineConfig({
     // format: 'prettier',
     // indexFile: false,
     // lint: 'eslint',
-    path: './packages/openapi-ts/test/generated/sample/',
+    path: path.resolve(__dirname, 'generated', 'sample'),
   },
   plugins: [
     // @ts-ignore
     {
+      baseUrl: false,
       // bundle: true,
-      // name: '@hey-api/client-fetch',
+      exportFromIndex: true,
+      name: '@hey-api/client-fetch',
+      strictBaseUrl: true,
     },
     // @ts-ignore
     {
@@ -38,8 +44,9 @@ export default defineConfig({
     {
       // asClass: true,
       // auth: false,
+      // client: false,
       // include...
-      // name: '@hey-api/sdk',
+      name: '@hey-api/sdk',
       // operationId: false,
       // serviceNameBuilder: '^Parameters',
       // throwOnError: true,
@@ -70,10 +77,11 @@ export default defineConfig({
     },
     // @ts-ignore
     {
-      // name: '@tanstack/react-query',
+      name: '@tanstack/react-query',
     },
     // @ts-ignore
     {
+      // exportFromIndex: true,
       // name: 'zod',
     },
   ],
@@ -81,5 +89,6 @@ export default defineConfig({
   // watch: {
   //   enabled: true,
   //   interval: 1_000,
+  //   timeout: 60_000,
   // },
 });

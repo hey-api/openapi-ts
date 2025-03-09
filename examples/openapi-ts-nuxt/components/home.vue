@@ -1,16 +1,22 @@
 <script setup lang="ts">
 import {
+  addPet,
   findPetsByStatus,
   getPetById,
   type FindPetsByStatusData,
 } from '~/client';
 
+const name = ref('foo');
 const petId = ref(BigInt(8));
 const status =
   ref<NonNullable<FindPetsByStatusData['query']>['status']>('available');
 
 function incrementPetId() {
   petId.value++;
+}
+
+function addNewPet() {
+  name.value = name.value === 'foo' ? 'bar' : 'foo';
 }
 
 function changeStatus() {
@@ -32,6 +38,10 @@ const query = computed(() => ({
  */
 const asyncData = await getPetById({
   asyncDataOptions: {
+    default: () => ({
+      name: 'Default Pet',
+      photoUrls: [],
+    }),
     watch: [petId],
   },
   composable: 'useAsyncData',
@@ -79,6 +89,30 @@ const fetch = await getPetById({
   },
 });
 
+await addPet({
+  asyncDataOptions: {
+    watch: [name],
+  },
+  body: {
+    category: {
+      id: BigInt(0),
+      name: 'Cats',
+    },
+    id: BigInt(0),
+    name,
+    photoUrls: ['string'],
+    status: 'available',
+    tags: [
+      {
+        id: BigInt(0),
+        name: 'pet',
+      },
+    ],
+  },
+  composable: 'useAsyncData',
+  key: 'addPet',
+});
+
 /**
  * useLazyAsyncData
  *
@@ -121,23 +155,27 @@ watch(lazyFetch.data, (newPet) => {
 });
 
 async function handleFetch() {
-  const result = await getPetById({
-    composable: '$fetch',
-    onRequest: [
-      () => {
-        console.log('onRequest: local');
+  try {
+    const result = await getPetById({
+      composable: '$fetch',
+      onRequest: [
+        () => {
+          console.log('onRequest: local');
+        },
+      ],
+      onResponse: [
+        () => {
+          console.log('onResponse: local');
+        },
+      ],
+      path: {
+        petId,
       },
-    ],
-    onResponse: [
-      () => {
-        console.log('onResponse: local');
-      },
-    ],
-    path: {
-      petId,
-    },
-  });
-  console.log(result);
+    });
+    console.log(result);
+  } catch (error) {
+    console.log(error);
+  }
 }
 </script>
 
@@ -147,5 +185,11 @@ async function handleFetch() {
     <button @click="handleFetch" type="button">$fetch</button>
     <button @click="incrementPetId" type="button">increment petId</button>
     <button @click="changeStatus" type="button">change status</button>
+    <button @click="addNewPet" type="button">add pet</button>
+    <div>
+      <p>id: {{ petId }}</p>
+      <p>name: {{ name }}</p>
+      <p>status: {{ status }}</p>
+    </div>
   </div>
 </template>

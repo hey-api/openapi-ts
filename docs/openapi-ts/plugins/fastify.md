@@ -9,11 +9,21 @@ description: Fastify plugin for Hey API. Compatible with all our features.
 Fastify plugin is currently in beta. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
 :::
 
+### About
+
 [Fastify](https://fastify.dev/) is a fast and low overhead web framework for Node.js.
 
+<!-- ### Demo
+
 <button class="buttonLink" @click="(event) => embedProject('hey-api-client-fetch-plugin-fastify-example')(event)">
-Live demo
-</button>
+StackBlitz
+</button> -->
+
+### Collaborators
+
+<AuthorsList :people="[
+  { name: 'Jacob Cohen', github: 'https://github.com/jacobinu' },
+]" />
 
 ## Features
 
@@ -29,7 +39,7 @@ In your [configuration](/openapi-ts/get-started), add `fastify` to your plugins 
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,

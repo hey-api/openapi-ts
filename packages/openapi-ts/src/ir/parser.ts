@@ -7,6 +7,10 @@ import type { IR } from './types';
 export const parseIR = async ({ context }: { context: IR.Context }) => {
   await context.broadcast('before');
 
+  for (const server of context.ir.servers ?? []) {
+    await context.broadcast('server', { server });
+  }
+
   if (context.ir.components) {
     for (const name in context.ir.components.schemas) {
       const schema = context.ir.components.schemas[name]!;

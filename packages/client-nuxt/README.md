@@ -4,7 +4,8 @@
   <p align="center">🚀 Nuxt client for `@hey-api/openapi-ts` codegen.</p>
 </div>
 
-[Live demo](https://stackblitz.com/edit/hey-api-client-nuxt-example?file=openapi-ts.config.ts,src%2Fclient%2Fschemas.gen.ts,src%2Fclient%2Fsdk.gen.ts,src%2Fclient%2Ftypes.gen.ts,src%2Fcomponents%home.vue)
+<!-- TODO: add working example once StackBlitz updates their Node version -->
+<!-- [Live demo](https://stackblitz.com/edit/hey-api-client-nuxt-example?file=openapi-ts.config.ts,src%2Fclient%2Fschemas.gen.ts,src%2Fclient%2Fsdk.gen.ts,src%2Fclient%2Ftypes.gen.ts,src%2Fcomponents%home.vue) -->
 
 ## Features
 
@@ -15,6 +16,11 @@
 - granular request and response customization options
 - minimal learning curve thanks to extending the underlying technology
 - support bundling inside the generated output
+- [platform](https://heyapi.dev/openapi-ts/integrations) for automating codegen builds
+
+## Platform
+
+Our platform for OpenAPI specifications is now available. Automatically update your code when the APIs it depends on change. [Find out more](https://heyapi.dev/openapi-ts/integrations).
 
 ## Documentation
 
@@ -30,10 +36,6 @@ Love Hey API? Become our [sponsor](https://github.com/sponsors/hey-api).
   </a>
 </p>
 
-## GitHub Integration (coming soon)
-
-Automatically update your code when the APIs it depends on change. [Find out more](https://heyapi.dev/openapi-ts/integrations.html).
-
 ## Migration Guides
 
-[OpenAPI Typescript Codegen](https://heyapi.dev/openapi-ts/migrating.html#openapi-typescript-codegen)
+[OpenAPI Typescript Codegen](https://heyapi.dev/openapi-ts/migrating#openapi-typescript-codegen)

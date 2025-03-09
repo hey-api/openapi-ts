@@ -1,6 +1,16 @@
 type AuthToken = string | undefined;
 interface Auth {
+    /**
+     * Which part of the request do we use to send the auth?
+     *
+     * @default 'header'
+     */
     in?: 'header' | 'query';
+    /**
+     * Header or query parameter name.
+     *
+     * @default 'Authorization'
+     */
     name?: string;
     scheme?: 'basic' | 'bearer';
     type: 'apiKey' | 'http';
@@ -29,7 +39,7 @@ declare const jsonBodySerializer: {
     bodySerializer: <T>(body: T) => string;
 };
 declare const urlSearchParamsBodySerializer: {
-    bodySerializer: <T extends Record<string, any> | Array<Record<string, any>>>(body: T) => URLSearchParams;
+    bodySerializer: <T extends Record<string, any> | Array<Record<string, any>>>(body: T) => string;
 };
 
 interface Client$1<RequestFn = never, Config = unknown, MethodFn = never, BuildUrlFn = never> {
@@ -114,15 +124,13 @@ interface Middleware<Req, Res, Err, Options> {
     request: Pick<Interceptors<ReqInterceptor<Req, Options>>, 'eject' | 'use'>;
     response: Pick<Interceptors<ResInterceptor<Res, Req, Options>>, 'eject' | 'use'>;
 }
-declare const createConfig: CreateClientConfig;
+declare const createConfig: <T extends ClientOptions = ClientOptions>(override?: Config<Omit<ClientOptions, keyof T> & T>) => Config<Omit<ClientOptions, keyof T> & T>;
 
-interface Config<ThrowOnError extends boolean = boolean> extends Omit<RequestInit, 'body' | 'headers' | 'method'>, Config$1 {
+interface Config<T extends ClientOptions = ClientOptions> extends Omit<RequestInit, 'body' | 'headers' | 'method'>, Config$1 {
     /**
      * Base URL for all requests made by this client.
-     *
-     * @default ''
      */
-    baseUrl?: string;
+    baseUrl?: T['baseUrl'];
     /**
      * Fetch API implementation. You can use this option to provide a custom
      * fetch instance.
@@ -144,21 +152,17 @@ interface Config<ThrowOnError extends boolean = boolean> extends Omit<RequestIni
      *
      * @default false
      */
-    throwOnError?: ThrowOnError;
+    throwOnError?: T['throwOnError'];
 }
-interface RequestOptions<ThrowOnError extends boolean = boolean, Url extends string = string> extends Config<ThrowOnError> {
+interface RequestOptions<ThrowOnError extends boolean = boolean, Url extends string = string> extends Config<{
+    throwOnError: ThrowOnError;
+}> {
     /**
      * Any body that you want to add to your request.
      *
      * {@link https://developer.mozilla.org/docs/Web/API/fetch#body}
      */
-    body?: RequestInit['body'] | Record<string, unknown> | Array<Record<string, unknown>> | Array<unknown> | number;
-    /**
-     * You can provide a client instance returned by `createClient()` instead of
-     * individual options. This might be also useful if you want to implement a
-     * custom client.
-     */
-    client?: Client;
+    body?: unknown;
     path?: Record<string, unknown>;
     query?: Record<string, unknown>;
     /**
@@ -181,6 +185,10 @@ type RequestResult<TData = unknown, TError = unknown, ThrowOnError extends boole
     request: Request;
     response: Response;
 }>;
+interface ClientOptions {
+    baseUrl?: string;
+    throwOnError?: boolean;
+}
 type MethodFn = <TData = unknown, TError = unknown, ThrowOnError extends boolean = false>(options: Omit<RequestOptions<ThrowOnError>, 'method'>) => RequestResult<TData, TError, ThrowOnError>;
 type RequestFn = <TData = unknown, TError = unknown, ThrowOnError extends boolean = false>(options: Omit<RequestOptions<ThrowOnError>, 'method'> & Pick<Required<RequestOptions<ThrowOnError>>, 'method'>) => RequestResult<TData, TError, ThrowOnError>;
 type BuildUrlFn = <TData extends {
@@ -200,8 +208,8 @@ type Client = Client$1<RequestFn, Config, MethodFn, BuildUrlFn> & {
  * `setConfig()`. This is useful for example if you're using Next.js
  * to ensure your client always has the correct values.
  */
-type CreateClientConfig = (override?: Config) => Config;
-interface DataShape {
+type CreateClientConfig<T extends ClientOptions = ClientOptions> = (override?: Config<ClientOptions & T>) => Config<Required<ClientOptions> & T>;
+interface TDataShape {
     body?: unknown;
     headers?: unknown;
     path?: unknown;
@@ -209,7 +217,7 @@ interface DataShape {
     url: string;
 }
 type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
-type Options<TData extends DataShape = DataShape, ThrowOnError extends boolean = boolean> = OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'path' | 'query' | 'url'> & Omit<TData, 'url'>;
+type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'path' | 'query' | 'url'> & Omit<TData, 'url'>;
 type OptionsLegacyParser<TData = unknown, ThrowOnError extends boolean = boolean> = TData extends {
     body?: any;
 } ? TData extends {
@@ -220,4 +228,4 @@ type OptionsLegacyParser<TData = unknown, ThrowOnError extends boolean = boolean
 
 declare const createClient: (config?: Config) => Client;
 
-export { type Auth, type Client, type Config, type CreateClientConfig, type Options, type OptionsLegacyParser, type QuerySerializerOptions, type RequestOptions, type RequestResult, createClient, createConfig, formDataBodySerializer, jsonBodySerializer, urlSearchParamsBodySerializer };
+export { type Auth, type Client, type ClientOptions, type Config, type CreateClientConfig, type Options, type OptionsLegacyParser, type QuerySerializerOptions, type RequestOptions, type RequestResult, type TDataShape, createClient, createConfig, formDataBodySerializer, jsonBodySerializer, urlSearchParamsBodySerializer };

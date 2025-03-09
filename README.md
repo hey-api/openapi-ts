@@ -36,6 +36,11 @@
 - generates TypeScript interfaces and SDKs
 - Fetch API, Axios, Nuxt, Angular, Node.js, and XHR clients available
 - plugin ecosystem to reduce third-party boilerplate
+- [platform](https://heyapi.dev/openapi-ts/integrations) for automating codegen builds
+
+## Platform
+
+Our platform for OpenAPI specifications is now available. Automatically update your code when the APIs it depends on change. [Find out more](https://heyapi.dev/openapi-ts/integrations).
 
 ## Sponsors
 
@@ -47,17 +52,13 @@ Love Hey API? Become our [sponsor](https://github.com/sponsors/hey-api).
   </a>
 </p>
 
-## GitHub Integration (coming 2025)
-
-Automatically update your code when the APIs it depends on change. [Find out more](https://heyapi.dev/openapi-ts/integrations.html).
-
 ## Quick Start
 
 The fastest way to use `@hey-api/openapi-ts` is via npx
 
 ```sh
 npx @hey-api/openapi-ts \
-  -i path/to/openapi.json \
+  -i https://get.heyapi.dev/hey-api/backend \
   -o src/client \
   -c @hey-api/client-fetch
 ```
@@ -114,7 +115,7 @@ You can also generate clients programmatically by importing `@hey-api/openapi-ts
 import { createClient } from '@hey-api/openapi-ts';
 
 createClient({
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: ['@hey-api/client-fetch'],
 });
@@ -130,7 +131,7 @@ createClient({
 import { defineConfig } from '@hey-api/openapi-ts';
 
 export default defineConfig({
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: ['@hey-api/client-fetch'],
 });
@@ -141,7 +142,7 @@ export default defineConfig({
 ```js
 /** @type {import('@hey-api/openapi-ts').UserConfig} */
 module.exports = {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: ['@hey-api/client-fetch'],
 };
@@ -152,7 +153,7 @@ module.exports = {
 ```js
 /** @type {import('@hey-api/openapi-ts').UserConfig} */
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: ['@hey-api/client-fetch'],
 };

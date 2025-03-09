@@ -1,7 +1,9 @@
 import type { Plugin } from '../../types';
+import type { TanStackQuery } from '../query-core/types';
 
 export interface Config
-  extends Plugin.Name<'@tanstack/angular-query-experimental'> {
+  extends Plugin.Name<'@tanstack/angular-query-experimental'>,
+    TanStackQuery.Config {
   /**
    * Generate {@link https://tanstack.com/query/v5/docs/framework/angular/reference/infiniteQueryOptions `infiniteQueryOptions()`} helpers? These will be generated from GET and POST requests where a pagination parameter is detected.
    *

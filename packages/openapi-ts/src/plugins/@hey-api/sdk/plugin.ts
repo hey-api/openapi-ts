@@ -25,18 +25,28 @@ import {
   importIdentifierError,
   importIdentifierResponse,
 } from '../typescript/ref';
+import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
 import { serviceFunctionIdentifier } from './plugin-legacy';
+import { createTypeOptions } from './typeOptions';
 import type { Config } from './types';
 
-// type copied from client packages
-interface Auth {
+// copy-pasted from @hey-api/client-core
+export interface Auth {
+  /**
+   * Which part of the request do we use to send the auth?
+   *
+   * @default 'header'
+   */
   in?: 'header' | 'query';
+  /**
+   * Header or query parameter name.
+   *
+   * @default 'Authorization'
+   */
   name?: string;
   scheme?: 'basic' | 'bearer';
   type: 'apiKey' | 'http';
 }
-
-const nuxtTypeComposable = 'TComposable';
 
 export const operationOptionsType = ({
   context,
@@ -50,12 +60,17 @@ export const operationOptionsType = ({
   throwOnError?: string;
 }) => {
   const identifierData = importIdentifierData({ context, file, operation });
+  const identifierResponse = importIdentifierResponse({
+    context,
+    file,
+    operation,
+  });
 
   const optionsName = clientApi.Options.name;
 
   const client = getClientPlugin(context.config);
   if (client.name === '@hey-api/client-nuxt') {
-    return `${optionsName}<${nuxtTypeComposable}, ${identifierData.name || 'unknown'}>`;
+    return `${optionsName}<${nuxtTypeComposable}, ${identifierData.name || 'unknown'}, ${identifierResponse.name || 'unknown'}, ${nuxtTypeDefault}>`;
   }
 
   // TODO: refactor this to be more generic, works for now
@@ -67,7 +82,7 @@ export const operationOptionsType = ({
     : optionsName;
 };
 
-const sdkId = 'sdk';
+export const sdkId = 'sdk';
 
 /**
  * Infers `responseType` value from provided response content type. This is
@@ -129,6 +144,13 @@ const securitySchemeObjectToAuthObject = ({
 }: {
   securitySchemeObject: IR.SecurityObject;
 }): Auth | undefined => {
+  if (securitySchemeObject.type === 'openIdConnect') {
+    return {
+      scheme: 'bearer',
+      type: 'http',
+    };
+  }
+
   if (securitySchemeObject.type === 'oauth2') {
     if (
       securitySchemeObject.flows.password ||
@@ -212,10 +234,12 @@ const operationAuth = ({
 
 const operationStatements = ({
   context,
+  isRequiredOptions,
   operation,
   plugin,
 }: {
   context: IR.Context;
+  isRequiredOptions: boolean;
   operation: IR.OperationObject;
   plugin: Plugin.Instance<Config>;
 }): Array<ts.Statement> => {
@@ -447,12 +471,20 @@ const operationStatements = ({
   const responseType = identifierResponse.name || 'unknown';
   const errorType = identifierError.name || 'unknown';
 
-  const heyApiClient = file.import({
-    alias: '_heyApiClient',
-    module: file.relativePathToFile({
-      context,
-      id: clientId,
-    }),
+  const heyApiClient = plugin.client
+    ? file.import({
+        alias: '_heyApiClient',
+        module: file.relativePathToFile({
+          context,
+          id: clientId,
+        }),
+        name: 'client',
+      })
+    : undefined;
+
+  const optionsClient = compiler.propertyAccessExpression({
+    expression: compiler.identifier({ text: 'options' }),
+    isOptional: !isRequiredOptions,
     name: 'client',
   });
 
@@ -465,19 +497,22 @@ const operationStatements = ({
         }),
       ],
       name: compiler.propertyAccessExpression({
-        expression: compiler.binaryExpression({
-          left: compiler.propertyAccessExpression({
-            expression: compiler.identifier({ text: 'options' }),
-            isOptional: true,
-            name: 'client',
-          }),
-          operator: '??',
-          right: compiler.identifier({ text: heyApiClient.name }),
-        }),
+        expression: heyApiClient?.name
+          ? compiler.binaryExpression({
+              left: optionsClient,
+              operator: '??',
+              right: compiler.identifier({ text: heyApiClient.name }),
+            })
+          : optionsClient,
         name: compiler.identifier({ text: operation.method }),
       }),
       types: isNuxtClient
-        ? [nuxtTypeComposable, responseType, errorType]
+        ? [
+            nuxtTypeComposable,
+            `${responseType} | ${nuxtTypeDefault}`,
+            errorType,
+            nuxtTypeDefault,
+          ]
         : [responseType, errorType, 'ThrowOnError'],
     }),
   ];
@@ -496,6 +531,13 @@ const generateClassSdk = ({
   const sdks = new Map<string, Array<ts.MethodDeclaration>>();
 
   context.subscribe('operation', ({ operation }) => {
+    const isRequiredOptions =
+      !plugin.client || isNuxtClient || hasOperationDataRequired(operation);
+    const identifierResponse = importIdentifierResponse({
+      context,
+      file,
+      operation,
+    });
     const node = compiler.methodDeclaration({
       accessLevel: 'public',
       comment: [
@@ -513,7 +555,7 @@ const generateClassSdk = ({
       }),
       parameters: [
         {
-          isRequired: isNuxtClient || hasOperationDataRequired(operation),
+          isRequired: isRequiredOptions,
           name: 'options',
           type: operationOptionsType({
             context,
@@ -526,6 +568,7 @@ const generateClassSdk = ({
       returnType: undefined,
       statements: operationStatements({
         context,
+        isRequiredOptions,
         operation,
         plugin,
       }),
@@ -535,6 +578,19 @@ const generateClassSdk = ({
               // default: compiler.ots.string('$fetch'),
               extends: compiler.typeNode('Composable'),
               name: nuxtTypeComposable,
+            },
+            {
+              default: identifierResponse.name
+                ? compiler.typeReferenceNode({
+                    typeName: identifierResponse.name,
+                  })
+                : compiler.typeNode('undefined'),
+              extends: identifierResponse.name
+                ? compiler.typeReferenceNode({
+                    typeName: identifierResponse.name,
+                  })
+                : undefined,
+              name: nuxtTypeDefault,
             },
           ]
         : [
@@ -604,6 +660,13 @@ const generateFlatSdk = ({
   const file = context.file({ id: sdkId })!;
 
   context.subscribe('operation', ({ operation }) => {
+    const isRequiredOptions =
+      !plugin.client || isNuxtClient || hasOperationDataRequired(operation);
+    const identifierResponse = importIdentifierResponse({
+      context,
+      file,
+      operation,
+    });
     const node = compiler.constVariable({
       comment: [
         operation.deprecated && '@deprecated',
@@ -614,7 +677,7 @@ const generateFlatSdk = ({
       expression: compiler.arrowFunction({
         parameters: [
           {
-            isRequired: isNuxtClient || hasOperationDataRequired(operation),
+            isRequired: isRequiredOptions,
             name: 'options',
             type: operationOptionsType({
               context,
@@ -627,6 +690,7 @@ const generateFlatSdk = ({
         returnType: undefined,
         statements: operationStatements({
           context,
+          isRequiredOptions,
           operation,
           plugin,
         }),
@@ -636,6 +700,19 @@ const generateFlatSdk = ({
                 // default: compiler.ots.string('$fetch'),
                 extends: compiler.typeNode('Composable'),
                 name: nuxtTypeComposable,
+              },
+              {
+                default: identifierResponse.name
+                  ? compiler.typeReferenceNode({
+                      typeName: identifierResponse.name,
+                    })
+                  : compiler.typeNode('undefined'),
+                extends: identifierResponse.name
+                  ? compiler.typeReferenceNode({
+                      typeName: identifierResponse.name,
+                    })
+                  : undefined,
+                name: nuxtTypeDefault,
               },
             ]
           : [
@@ -671,8 +748,9 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     config: context.config,
     sourceOutput: file.nameWithoutExtension(),
   });
-  file.import({
+  const clientOptions = file.import({
     ...clientApi.Options,
+    alias: 'ClientOptions',
     module: clientModule,
   });
 
@@ -685,6 +763,12 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
       name: 'Composable',
     });
   }
+
+  createTypeOptions({
+    clientOptions,
+    context,
+    plugin,
+  });
 
   if (plugin.asClass) {
     generateClassSdk({ context, plugin });

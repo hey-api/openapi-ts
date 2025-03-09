@@ -40,7 +40,7 @@
       },
       "Baz": {
         "default": "baz",
-        "pattern": "foo\nbar",
+        "pattern": "foo\\nbar",
         "readOnly": true,
         "type": "string"
       }

@@ -1,5 +1,125 @@
 # @hey-api/openapi-ts
 
+## 0.64.10
+
+### Patch Changes
+
+- [#1779](https://github.com/hey-api/openapi-ts/pull/1779) [`57fcec8`](https://github.com/hey-api/openapi-ts/commit/57fcec804e339cfe508cfba4afd203c22495bff2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: don't throw on missing performance marks
+
+- [#1767](https://github.com/hey-api/openapi-ts/pull/1767) [`2de84ea`](https://github.com/hey-api/openapi-ts/commit/2de84ea3dbd2cba50150808a872aea8242c33014) Thanks [@Schroedi](https://github.com/Schroedi)! - fix: handle nested dates in transformers
+
+## 0.64.9
+
+### Patch Changes
+
+- [#1774](https://github.com/hey-api/openapi-ts/pull/1774) [`c0b36b9`](https://github.com/hey-api/openapi-ts/commit/c0b36b95645d484034c3af145c5554867568979b) Thanks [@mrlubos](https://github.com/mrlubos)! - docs: announce Hey API platform
+
+## 0.64.8
+
+### Patch Changes
+
+- [#1764](https://github.com/hey-api/openapi-ts/pull/1764) [`b3ecac3`](https://github.com/hey-api/openapi-ts/commit/b3ecac31d49a269ab400db4dbb84a22f1047e19a) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: reduce minimum Node.js 22 version to 22.10.0
+
+## 0.64.7
+
+### Patch Changes
+
+- [#1755](https://github.com/hey-api/openapi-ts/pull/1755) [`82f7c14`](https://github.com/hey-api/openapi-ts/commit/82f7c1425dd903b75d15cf532b88580d180f281a) Thanks [@Matsuuu](https://github.com/Matsuuu)! - fix: Wrap the GET request in watch mode with try-catch to prevent crashes on no-head watch targets
+
+## 0.64.6
+
+### Patch Changes
+
+- [#1748](https://github.com/hey-api/openapi-ts/pull/1748) [`7326d25`](https://github.com/hey-api/openapi-ts/commit/7326d2550ae3336fd8f754f8d4a25f1a40c13a2b) Thanks [@Matsuuu](https://github.com/Matsuuu)! - fix: Wrap HEAD request in a try-catch to prevent watch mode crashes on server reloads
+
+## 0.64.5
+
+### Patch Changes
+
+- [#1728](https://github.com/hey-api/openapi-ts/pull/1728) [`cc8dabb`](https://github.com/hey-api/openapi-ts/commit/cc8dabbf1cb94879bb08fe66ecb04c4d0801e9cc) Thanks [@georgesmith46](https://github.com/georgesmith46)! - fix: correctly generate zod regex expressions when using patterns
+
+## 0.64.4
+
+### Patch Changes
+
+- [#1710](https://github.com/hey-api/openapi-ts/pull/1710) [`4afdaa1`](https://github.com/hey-api/openapi-ts/commit/4afdaa1247b0bf0629817a51c29ca25840569b77) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: use relative path to custom config file if provided when resolving relative paths
+
+## 0.64.3
+
+### Patch Changes
+
+- [#1701](https://github.com/hey-api/openapi-ts/pull/1701) [`e86629b`](https://github.com/hey-api/openapi-ts/commit/e86629bfa9ae2a47131d3a9a240a6aa2a4f67911) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: correctly type default value for Nuxt client
+
+## 0.64.2
+
+### Patch Changes
+
+- [#1697](https://github.com/hey-api/openapi-ts/pull/1697) [`dec3fed`](https://github.com/hey-api/openapi-ts/commit/dec3fedb5f51aad4711fec15a006c525cb0bf7d8) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add exportFromIndex option to all plugins
+
+- [#1699](https://github.com/hey-api/openapi-ts/pull/1699) [`8ff188f`](https://github.com/hey-api/openapi-ts/commit/8ff188fb269cf46321538dbe846e1b9ae3b8de42) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow passing arbitrary values to SDK functions via `meta` field
+
+- [#1687](https://github.com/hey-api/openapi-ts/pull/1687) [`04c7cea`](https://github.com/hey-api/openapi-ts/commit/04c7ceac940a81cbed6a4070d9244aa5052ba4a2) Thanks [@hunshcn](https://github.com/hunshcn)! - sanitize "+" in uri to avoid plus in function name
+
+## 0.64.1
+
+### Patch Changes
+
+- [#1668](https://github.com/hey-api/openapi-ts/pull/1668) [`7a03341`](https://github.com/hey-api/openapi-ts/commit/7a03341301d9d56ae93b4e4e3bd1ca469444f886) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: watch mode handles servers not exposing HEAD method for spec
+
+- [#1668](https://github.com/hey-api/openapi-ts/pull/1668) [`7a03341`](https://github.com/hey-api/openapi-ts/commit/7a03341301d9d56ae93b4e4e3bd1ca469444f886) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add watch.timeout option
+
+## 0.64.0
+
+### Minor Changes
+
+- [#1661](https://github.com/hey-api/openapi-ts/pull/1661) [`ccefe43`](https://github.com/hey-api/openapi-ts/commit/ccefe434ee83f1202769547ce128e1c134dee25f) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: added `client.baseUrl` option
+
+  ### Added `client.baseUrl` option
+
+  You can use this option to configure the default base URL for the generated client. By default, we will attempt to resolve the first defined server or infer the base URL from the input path. If you'd like to preserve the previous behavior, set `baseUrl` to `false`.
+
+  ```js
+  export default {
+    input: 'path/to/openapi.json',
+    output: 'src/client',
+    plugins: [
+      {
+        baseUrl: false, // [!code ++]
+        name: '@hey-api/client-fetch',
+      },
+    ],
+  };
+  ```
+
+- [#1661](https://github.com/hey-api/openapi-ts/pull/1661) [`bb6d46a`](https://github.com/hey-api/openapi-ts/commit/bb6d46ae119ce4e7e3a2ab3fded74ac4fb4cdff2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: make createConfig, CreateClientConfig, and Config accept ClientOptions generic
+
+  ### Added `ClientOptions` interface
+
+  The `Config` interface now accepts an optional generic extending `ClientOptions` instead of `boolean` type `ThrowOnError`.
+
+  ```ts
+  type Foo = Config<false>; // [!code --]
+  type Foo = Config<{ throwOnError: false }>; // [!code ++]
+  ```
+
+## 0.63.2
+
+### Patch Changes
+
+- [#1651](https://github.com/hey-api/openapi-ts/pull/1651) [`df350f3`](https://github.com/hey-api/openapi-ts/commit/df350f31dae957d063010ba46c5008ae831b3a32) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: lower Node version requirements
+
+## 0.63.1
+
+### Patch Changes
+
+- [#1637](https://github.com/hey-api/openapi-ts/pull/1637) [`2dc380e`](https://github.com/hey-api/openapi-ts/commit/2dc380eabc17c723654beb04ecd7bce6d33d3b49) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update keywords in package.json
+
+- [#1637](https://github.com/hey-api/openapi-ts/pull/1637) [`2dc380e`](https://github.com/hey-api/openapi-ts/commit/2dc380eabc17c723654beb04ecd7bce6d33d3b49) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add Next.js client
+
+- [#1646](https://github.com/hey-api/openapi-ts/pull/1646) [`2cbffeb`](https://github.com/hey-api/openapi-ts/commit/2cbffeb2cdd6c6143cd68cac68369584879dda31) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: support required client in SDK using sdk.client = false
+
+- [#1648](https://github.com/hey-api/openapi-ts/pull/1648) [`66a9e45`](https://github.com/hey-api/openapi-ts/commit/66a9e4517d2306da8c60750dc3380e6774a7177b) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add support for openIdConnect auth flow
+
 ## 0.63.0
 
 ### Minor Changes

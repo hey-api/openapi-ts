@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import type { Observable } from 'rxjs';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { ImportData, ImportResponse, ApiVVersionODataControllerCountResponse, GetApiSimpleOperationData, GetApiSimpleOperationResponse, DeleteFooData3, CallWithDescriptionsData, DeprecatedCallData, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, PostApiRequestBodyData, PostApiFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, DummyAResponse, DummyBResponse, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, CollectionFormatData, TypesData, TypesResponse, UploadFileData, UploadFileResponse, FileResponseData, FileResponseResponse, ComplexTypesData, ComplexTypesResponse, MultipartRequestData, MultipartResponseResponse, ComplexParamsData, ComplexParamsResponse, CallWithResultFromHeaderResponse, TestErrorCodeData, TestErrorCodeResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData } from './types.gen';
+import type { PatchApiNoTagResponse, ImportData, ImportResponse, FooWowResponse, ApiVVersionODataControllerCountResponse, GetApiSimpleOperationData, GetApiSimpleOperationResponse, DeleteFooData3, CallWithDescriptionsData, DeprecatedCallData, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, PostApiRequestBodyData, PostApiFormDataData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, DummyAResponse, DummyBResponse, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, CollectionFormatData, TypesData, TypesResponse, UploadFileData, UploadFileResponse, FileResponseData, FileResponseResponse, ComplexTypesData, ComplexTypesResponse, MultipartRequestData, MultipartResponseResponse, ComplexParamsData, ComplexParamsResponse, CallWithResultFromHeaderResponse, TestErrorCodeData, TestErrorCodeResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData } from './types.gen';
 
 /**
  * @throws ApiError
@@ -13,7 +13,18 @@ import type { ImportData, ImportResponse, ApiVVersionODataControllerCountRespons
 export const export_ = function (): Observable<void> {
     return __request(OpenAPI, this.http, {
         method: 'GET',
-        url: '/api/v{api-version}/no-tag'
+        url: '/api/v{api-version}/no+tag'
+    });
+};
+
+/**
+ * @returns unknown OK
+ * @throws ApiError
+ */
+export const patchApiNoTag = function (): Observable<PatchApiNoTagResponse> {
+    return __request(OpenAPI, this.http, {
+        method: 'PATCH',
+        url: '/api/v{api-version}/no+tag'
     });
 };
 
@@ -27,9 +38,20 @@ export const export_ = function (): Observable<void> {
 export const import_ = function (data: ImportData): Observable<ImportResponse> {
     return __request(OpenAPI, this.http, {
         method: 'POST',
-        url: '/api/v{api-version}/no-tag',
+        url: '/api/v{api-version}/no+tag',
         body: data.requestBody,
         mediaType: 'application/json'
+    });
+};
+
+/**
+ * @returns unknown OK
+ * @throws ApiError
+ */
+export const fooWow = function (): Observable<FooWowResponse> {
+    return __request(OpenAPI, this.http, {
+        method: 'PUT',
+        url: '/api/v{api-version}/no+tag'
     });
 };
 

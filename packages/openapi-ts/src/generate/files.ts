@@ -51,6 +51,8 @@ interface Namespaces {
   value: Namespace;
 }
 
+export type FileImportResult = Pick<ImportExportItemObject, 'asType' | 'name'>;
+
 export class TypeScriptFile {
   /**
    * Should the exports from this file be re-exported in the index barrel file?
@@ -159,7 +161,7 @@ export class TypeScriptFile {
     ...importedItem
   }: ImportExportItemObject & {
     module: string;
-  }): Pick<ImportExportItemObject, 'asType' | 'name'> {
+  }): FileImportResult {
     let moduleMap = this._imports.get(module);
 
     if (!moduleMap) {
@@ -200,15 +202,22 @@ export class TypeScriptFile {
   }): string {
     let filePath = '';
 
-    if (!id.startsWith('.')) {
+    // relative file path
+    if (id.startsWith('.')) {
+      let configFileParts: Array<string> = [];
+      // if providing a custom configuration file, relative paths must resolve
+      // relative to the configuration file.
+      if (context.config.configFile) {
+        const cfgParts = context.config.configFile.split('/');
+        configFileParts = cfgParts.slice(0, cfgParts.length - 1);
+      }
+      filePath = path.resolve(process.cwd(), ...configFileParts, id);
+    } else {
       const file = context.file({ id });
       if (!file) {
         throw new Error(`File with id ${id} does not exist`);
       }
-
       filePath = file._path;
-    } else {
-      filePath = path.resolve(process.cwd(), id);
     }
 
     const thisPathParts = this._path.split(path.sep);

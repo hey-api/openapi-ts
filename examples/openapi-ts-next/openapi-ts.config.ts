@@ -6,12 +6,12 @@ export default defineConfig({
   output: {
     format: 'prettier',
     lint: 'eslint',
-    path: './app/client',
+    path: './src/client',
   },
   plugins: [
     {
-      name: '@hey-api/client-fetch',
-      runtimeConfigPath: './app/hey-api.ts',
+      name: '@hey-api/client-next',
+      runtimeConfigPath: './src/hey-api.ts',
     },
     '@hey-api/sdk',
     {

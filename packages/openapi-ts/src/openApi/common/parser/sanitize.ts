@@ -27,7 +27,7 @@ export const sanitizeNamespaceIdentifier = (name: string) =>
   name
     .replace(/^[^\p{ID_Start}]+/u, '')
     .replace(/[^$\u200c\u200d\p{ID_Continue}]/gu, '-')
-    .replace(/\$/g, '-');
+    .replace(/[$+]/g, '-');
 
 export const sanitizeOperationParameterName = (name: string) => {
   const withoutBrackets = name.replace('[]', 'Array');

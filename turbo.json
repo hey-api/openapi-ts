@@ -1,0 +1,45 @@
+{
+  "$schema": "./node_modules/turbo/schema.json",
+  "tasks": {
+    "build": {
+      "cache": false,
+      "dependsOn": ["^build"],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        ".output/**",
+        ".svelte-kit/**",
+        ".vitepress/dist/**",
+        "dist/**"
+      ]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "test": {
+      "cache": false,
+      "dependsOn": []
+    },
+    "test:coverage": {
+      "cache": false,
+      "dependsOn": []
+    },
+    "test:e2e": {
+      "cache": false,
+      "dependsOn": []
+    },
+    "test:update": {
+      "cache": false,
+      "dependsOn": []
+    },
+    "test:watch": {
+      "cache": false,
+      "dependsOn": []
+    },
+    "typecheck": {
+      "cache": false,
+      "dependsOn": []
+    }
+  }
+}

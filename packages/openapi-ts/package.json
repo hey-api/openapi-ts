@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/openapi-ts",
-  "version": "0.63.0",
+  "version": "0.64.10",
   "description": "🚀 The OpenAPI to TypeScript codegen. Generate clients, SDKs, validators, and more.",
   "homepage": "https://heyapi.dev/",
   "repository": {
@@ -26,7 +26,10 @@
     "http",
     "javascript",
     "json",
+    "next",
+    "next.js",
     "node",
+    "nuxt",
     "openapi",
     "rest",
     "swagger",
@@ -73,10 +76,10 @@
     "typecheck": "tsc --noEmit"
   },
   "engines": {
-    "node": "^18.20.5 || ^20.11.1 || >=22.11.0"
+    "node": "^18.18.0 || ^20.9.0 || >=22.10.0"
   },
   "dependencies": {
-    "@hey-api/json-schema-ref-parser": "1.0.1",
+    "@hey-api/json-schema-ref-parser": "1.0.2",
     "c12": "2.0.1",
     "commander": "13.0.0",
     "handlebars": "4.7.8"
@@ -85,19 +88,20 @@
     "typescript": "^5.5.3"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "19.0.6",
-    "@angular/animations": "19.0.5",
-    "@angular/cli": "19.0.6",
-    "@angular/common": "19.0.5",
-    "@angular/compiler": "19.0.5",
-    "@angular/compiler-cli": "19.0.5",
-    "@angular/core": "19.0.5",
-    "@angular/forms": "19.0.5",
-    "@angular/platform-browser": "19.0.5",
-    "@angular/platform-browser-dynamic": "19.0.5",
-    "@angular/router": "19.0.5",
+    "@angular-devkit/build-angular": "19.2.0",
+    "@angular/animations": "19.2.0",
+    "@angular/cli": "19.2.0",
+    "@angular/common": "19.2.0",
+    "@angular/compiler": "19.2.0",
+    "@angular/compiler-cli": "19.2.0",
+    "@angular/core": "19.2.0",
+    "@angular/forms": "19.2.0",
+    "@angular/platform-browser": "19.2.0",
+    "@angular/platform-browser-dynamic": "19.2.0",
+    "@angular/router": "19.2.0",
     "@hey-api/client-axios": "workspace:*",
     "@hey-api/client-fetch": "workspace:*",
+    "@hey-api/client-next": "workspace:*",
     "@hey-api/client-nuxt": "workspace:*",
     "@tanstack/angular-query-experimental": "5.62.13",
     "@tanstack/react-query": "5.62.15",
@@ -113,7 +117,7 @@
     "fastify": "5.2.0",
     "glob": "10.4.3",
     "node-fetch": "3.3.2",
-    "nuxt": "3.15.1",
+    "nuxt": "3.14.1592",
     "prettier": "3.4.2",
     "puppeteer": "22.12.1",
     "rxjs": "7.8.1",

@@ -25,6 +25,9 @@ describe(`OpenAPI ${version}`, () => {
       version,
       typeof userConfig.input === 'string' ? userConfig.input : '',
     ),
+    logs: {
+      level: 'silent',
+    },
     output: path.join(
       outputDir,
       typeof userConfig.output === 'string' ? userConfig.output : '',
@@ -539,6 +542,20 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'security-open-id-connect.yaml',
+        output: 'security-open-id-connect',
+        plugins: [
+          '@hey-api/client-fetch',
+          {
+            auth: true,
+            name: '@hey-api/sdk',
+          },
+        ],
+      }),
+      description: 'generates SDK functions with auth (OpenID Connect)',
+    },
+    {
+      config: createConfig({
         input: 'security-oauth2.yaml',
         output: 'security-false',
         plugins: [
@@ -550,6 +567,14 @@ describe(`OpenAPI ${version}`, () => {
         ],
       }),
       description: 'generates SDK functions without auth',
+    },
+    {
+      config: createConfig({
+        input: 'servers.yaml',
+        output: 'servers',
+        plugins: ['@hey-api/client-fetch', '@hey-api/typescript'],
+      }),
+      description: 'generates baseUrl',
     },
     {
       config: createConfig({

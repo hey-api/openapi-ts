@@ -14,6 +14,13 @@ export interface Config extends Plugin.Name<'@hey-api/transformers'> {
    */
   dates?: boolean;
   /**
+   * Should the exports from the generated files be re-exported in the index
+   * barrel file?
+   *
+   * @default false
+   */
+  exportFromIndex?: boolean;
+  /**
    * Name of the generated file.
    *
    * @default 'transformers'

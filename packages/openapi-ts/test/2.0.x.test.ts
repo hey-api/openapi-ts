@@ -25,6 +25,9 @@ describe(`OpenAPI ${version}`, () => {
       version,
       typeof userConfig.input === 'string' ? userConfig.input : '',
     ),
+    logs: {
+      level: 'silent',
+    },
     output: path.join(
       outputDir,
       typeof userConfig.output === 'string' ? userConfig.output : '',
@@ -247,7 +250,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'security-oauth2.json',
+        input: 'security-oauth2.yaml',
         output: 'security-oauth2',
         plugins: [
           '@hey-api/client-fetch',
@@ -261,7 +264,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'security-oauth2.json',
+        input: 'security-oauth2.yaml',
         output: 'security-false',
         plugins: [
           '@hey-api/client-fetch',
@@ -272,6 +275,30 @@ describe(`OpenAPI ${version}`, () => {
         ],
       }),
       description: 'generates SDK functions without auth',
+    },
+    {
+      config: createConfig({
+        input: 'servers.yaml',
+        output: 'servers',
+        plugins: ['@hey-api/client-fetch', '@hey-api/typescript'],
+      }),
+      description: 'generates baseUrl',
+    },
+    {
+      config: createConfig({
+        input: 'servers-base-path.yaml',
+        output: 'servers-base-path',
+        plugins: ['@hey-api/client-fetch', '@hey-api/typescript'],
+      }),
+      description: 'generates baseUrl from basePath',
+    },
+    {
+      config: createConfig({
+        input: 'servers-host.yaml',
+        output: 'servers-host',
+        plugins: ['@hey-api/client-fetch', '@hey-api/typescript'],
+      }),
+      description: 'generates baseUrl from host',
     },
   ];
 

@@ -35,7 +35,7 @@ In your [configuration](/openapi-ts/get-started), add `@hey-api/transformers` to
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
@@ -53,7 +53,7 @@ To automatically transform response data in your SDKs, set `sdk.transformer` to 
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,
@@ -75,7 +75,7 @@ To convert date strings into `Date` objects, use the `dates` configuration optio
 import { defaultPlugins } from '@hey-api/openapi-ts';
 
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     ...defaultPlugins,

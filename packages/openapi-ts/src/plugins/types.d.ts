@@ -12,6 +12,7 @@ export type PluginClientNames =
   | '@hey-api/client-axios'
   | '@hey-api/client-fetch'
   | '@hey-api/client-angular'
+  | '@hey-api/client-next'
   | '@hey-api/client-nuxt'
   | 'legacy/angular'
   | 'legacy/axios'
@@ -88,41 +89,6 @@ export type DefaultPluginConfigs<T> = {
 };
 
 /**
- * Public Client API.
- */
-export namespace Client {
-  export type Config = {
-    /**
-     * Bundle the client module? Set this to true if don't want to declare it
-     * as a separate dependency. When true, the client module will be generated
-     * from the client package and bundled with the rest of the generated output.
-     * This is useful if you're repackaging the output, publishing it to other
-     * users, and you don't want them to install any dependencies.
-     *
-     * @default false
-     */
-    bundle?: boolean;
-    /**
-     * Name of the generated file.
-     *
-     * @default 'client'
-     */
-    output?: string;
-    /**
-     * Relative path to the runtime configuration file. This file must export
-     * a `createClientConfig()` function. The `createClientConfig()` function
-     * will be called on client initialization and the returned object will
-     * become the client's initial configuration.
-     *
-     * You may want to initialize your client this way instead of calling
-     * `setConfig()`. This is useful for example if you're using Next.js
-     * to ensure your client always has the correct values.
-     */
-    runtimeConfigPath?: string;
-  };
-}
-
-/**
  * Public Plugin API.
  */
 export namespace Plugin {
@@ -148,10 +114,10 @@ export namespace Plugin {
   /**
    * Plugin implementation for experimental parser.
    */
-  export type Handler<Config extends BaseConfig> = (args: {
+  export type Handler<Config extends BaseConfig, ReturnType = void> = (args: {
     context: IR.Context<OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X>;
     plugin: Plugin.Instance<Config>;
-  }) => void;
+  }) => ReturnType;
 
   export type Instance<Config extends BaseConfig> = OmitUnderscoreKeys<Config> &
     Pick<Required<BaseConfig>, 'exportFromIndex' | 'output'>;
