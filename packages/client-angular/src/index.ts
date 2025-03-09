@@ -1,9 +1,14 @@
+import type { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpEventType, HttpRequest } from '@angular/common/http';
+import { assertInInjectionContext, inject } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
+
 import type { Client, Config, RequestOptions } from './types';
 import {
   buildUrl,
   createConfig,
   createInterceptors,
-  getParseAs,
   mergeConfigs,
   mergeHeaders,
   setAuthParams,
@@ -25,18 +30,16 @@ export const createClient = (config: Config = {}): Client => {
   };
 
   const interceptors = createInterceptors<
-    Request,
-    Response,
-    unknown,
+    HttpRequest<unknown>,
+    HttpResponse<unknown>,
+    HttpErrorResponse,
     RequestOptions
   >();
 
-  // @ts-expect-error
   const request: Client['request'] = async (options) => {
     const opts = {
       ..._config,
       ...options,
-      fetch: options.fetch ?? _config.fetch ?? globalThis.fetch,
       headers: mergeHeaders(_config.headers, options.headers),
     };
 
@@ -57,56 +60,66 @@ export const createClient = (config: Config = {}): Client => {
     }
 
     const url = buildUrl(opts);
-    const requestInit: ReqInit = {
+    const { method, ...requestInit }: ReqInit = {
       redirect: 'follow',
       ...opts,
     };
 
-    let request = new Request(url, requestInit);
+    let _httpClient = opts.httpClient;
+
+    if (!_httpClient) {
+      assertInInjectionContext(request);
+      _httpClient = inject(HttpClient);
+    }
+
+    let _request = new HttpRequest<unknown>(method, url, requestInit);
 
     for (const fn of interceptors.request._fns) {
-      request = await fn(request, opts);
+      _request = await fn(_request, opts);
     }
+    try {
+      let response = await firstValueFrom(
+        _httpClient.request(_request).pipe(
+          filter((event) => event.type === HttpEventType.Response),
+          map((event) => event as HttpResponse<unknown>),
+        ),
+      );
 
-    // fetch must be assigned here, otherwise it would throw the error:
-    // TypeError: Failed to execute 'fetch' on 'Window': Illegal invocation
-    const _fetch = opts.fetch!;
-    let response = await _fetch(request);
-
-    for (const fn of interceptors.response._fns) {
-      response = await fn(response, request, opts);
-    }
-
-    const result = {
-      request,
-      response,
-    };
-
-    if (response.ok) {
-      if (
-        response.status === 204 ||
-        response.headers.get('Content-Length') === '0'
-      ) {
-        return {
-          data: {},
-          ...result,
-        };
+      for (const fn of interceptors.response._fns) {
+        response = await fn(response, _request, opts);
       }
 
-      const parseAs =
-        (opts.parseAs === 'auto'
-          ? getParseAs(response.headers.get('Content-Type'))
-          : opts.parseAs) ?? 'json';
+      const result = {
+        request: _request,
+        response,
+      };
 
-      if (parseAs === 'stream') {
-        return {
-          data: response.body,
-          ...result,
-        };
-      }
+      if (response.ok) {
+        if (
+          response.status === 204 ||
+          response.headers.get('Content-Length') === '0'
+        ) {
+          return {
+            data: {},
+            ...result,
+          };
+        }
 
-      let data = await response[parseAs]();
-      if (parseAs === 'json') {
+        // const parseAs =
+        //   (opts.parseAs === 'auto'
+        //     ? getParseAs(response.headers.get('Content-Type'))
+        //     : opts.parseAs) ?? 'json';
+
+        let data = response.body;
+        // if (parseAs === 'stream') {
+        // return {
+        //   data: response.body,
+        //   ...result,
+        // };
+        // }
+
+        // let data = await response[parseAs]();
+        // if (parseAs === 'json') {
         if (opts.responseValidator) {
           await opts.responseValidator(data);
         }
@@ -114,38 +127,29 @@ export const createClient = (config: Config = {}): Client => {
         if (opts.responseTransformer) {
           data = await opts.responseTransformer(data);
         }
+        // }
+
+        return {
+          data,
+          ...result,
+        };
+      }
+    } catch (err) {
+      let finalError = err;
+
+      for (const fn of interceptors.error._fns) {
+        finalError = await fn(err, err, _request, opts);
+      }
+
+      if (opts.throwOnError) {
+        throw finalError;
       }
 
       return {
-        data,
-        ...result,
+        error: finalError,
+        ...err,
       };
     }
-
-    let error = await response.text();
-
-    try {
-      error = JSON.parse(error);
-    } catch {
-      // noop
-    }
-
-    let finalError = error;
-
-    for (const fn of interceptors.error._fns) {
-      finalError = (await fn(error, response, request, opts)) as string;
-    }
-
-    finalError = finalError || ({} as string);
-
-    if (opts.throwOnError) {
-      throw finalError;
-    }
-
-    return {
-      error: finalError,
-      ...result,
-    };
   };
 
   return {

@@ -1,4 +1,10 @@
 import type {
+  HttpClient,
+  HttpErrorResponse,
+  HttpRequest,
+  HttpResponse,
+} from '@angular/common/http';
+import type {
   Auth,
   Client as CoreClient,
   Config as CoreConfig,
@@ -16,12 +22,9 @@ export interface Config<ThrowOnError extends boolean = boolean>
    */
   baseUrl?: string;
   /**
-   * Fetch API implementation. You can use this option to provide a custom
-   * fetch instance.
-   *
-   * @default globalThis.fetch
+   * The HTTP client to use for making requests.
    */
-  fetch?: (request: Request) => ReturnType<typeof fetch>;
+  httpClient?: HttpClient;
   /**
    * Return the response data parsed in a specified format. By default, `auto`
    * will infer the appropriate method from the `Content-Type` response header.
@@ -118,7 +121,12 @@ type BuildUrlFn = <
 ) => string;
 
 export type Client = CoreClient<RequestFn, Config, MethodFn, BuildUrlFn> & {
-  interceptors: Middleware<Request, Response, unknown, RequestOptions>;
+  interceptors: Middleware<
+    HttpRequest<unknown>,
+    HttpResponse<unknown>,
+    HttpErrorResponse,
+    RequestOptions
+  >;
 };
 
 /**

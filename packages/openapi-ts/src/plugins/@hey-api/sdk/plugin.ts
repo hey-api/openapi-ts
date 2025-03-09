@@ -504,6 +504,7 @@ const generateClassSdk = ({
         operation.description && escapeComment(operation.description),
       ],
       isStatic: true,
+      // isStatic: client.name !== '@hey-api/client-angular',
       name: serviceFunctionIdentifier({
         config: context.config,
         handleIllegal: false,
