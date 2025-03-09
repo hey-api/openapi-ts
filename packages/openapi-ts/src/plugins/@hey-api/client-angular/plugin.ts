@@ -1,7 +1,7 @@
 import { compiler } from '../../../compiler';
 import { clientModulePath } from '../../../generate/client';
+import type { PluginHandler } from '../client-core/types';
 import { clientId } from '../client-core/utils';
-import type { PluginHandler } from './types';
 
 export const handler: PluginHandler = ({ context, plugin }) => {
   const file = context.createFile({

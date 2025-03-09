@@ -1,16 +1,14 @@
 import type { Plugin } from '../../types';
-import { handler } from './plugin';
+import { clientDefaultConfig } from '../client-core/config';
+import { handler } from '../client-core/plugin';
+// import { handler } from './plugin';
 import type { Config } from './types';
 
 export const defaultConfig: Plugin.Config<Config> = {
+  ...clientDefaultConfig,
   _handler: handler,
-  _handlerLegacy: () => {
-    // TODO: Add error for dx?
-  },
-  _tags: ['client'],
-  bundle: false,
+  _handlerLegacy: () => {},
   name: '@hey-api/client-angular',
-  output: 'client',
   throwOnError: false,
 };
 

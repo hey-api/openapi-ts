@@ -1,16 +1,25 @@
 import type { Plugin } from '../../types';
+import type { Config as ClientAngularConfig } from '../client-angular';
 import type { Config as ClientAxiosConfig } from '../client-axios';
 import type { Config as ClientFetchConfig } from '../client-fetch';
 import type { Config as ClientNextConfig } from '../client-next';
 import type { Config as ClientNuxtConfig } from '../client-nuxt';
 
 export type PluginHandler<ReturnType = void> = Plugin.Handler<
-  ClientAxiosConfig | ClientFetchConfig | ClientNextConfig | ClientNuxtConfig,
+  | ClientAxiosConfig
+  | ClientFetchConfig
+  | ClientNextConfig
+  | ClientNuxtConfig
+  | ClientAngularConfig,
   ReturnType
 >;
 
 export type PluginInstance = Plugin.Instance<
-  ClientAxiosConfig | ClientFetchConfig | ClientNextConfig | ClientNuxtConfig
+  | ClientAxiosConfig
+  | ClientFetchConfig
+  | ClientNextConfig
+  | ClientNuxtConfig
+  | ClientAngularConfig
 >;
 
 /**

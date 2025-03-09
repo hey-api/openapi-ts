@@ -110,7 +110,11 @@ export type UserPlugins =
 export type ClientPlugins =
   | Plugin.Config<HeyApiClientAxios>
   | Plugin.Config<HeyApiClientFetch>
+  | Plugin.Config<HeyApiClientNext>
+  | Plugin.Config<HeyApiClientNuxt>
   | Plugin.Config<HeyApiClientAngular>
+  | Plugin.Config<HeyApiLegacyAngular>
+  | Plugin.Config<HeyApiLegacyAxios>
   | Plugin.Config<HeyApiLegacyAngular>
   | Plugin.Config<HeyApiLegacyFetch>
   | Plugin.Config<HeyApiLegacyNode>

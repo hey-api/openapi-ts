@@ -1,4 +1,4 @@
-import type { Client, Plugin } from '../../types';
+import type { Plugin } from '../../types';
 
 export interface Config
   extends Plugin.Name<'@hey-api/client-angular'>,
@@ -10,7 +10,3 @@ export interface Config
    */
   throwOnError?: boolean;
 }
-
-export type PluginHandler = Plugin.Handler<Config>;
-
-export type PluginInstance = Plugin.Instance<Config>;
