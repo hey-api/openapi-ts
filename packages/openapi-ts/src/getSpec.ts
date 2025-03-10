@@ -30,7 +30,15 @@ export const getSpec = async ({
   watch: WatchValues;
 }): Promise<SpecResponse | SpecError> => {
   const refParser = new $RefParser();
-  const resolvedInput = getResolvedInput({ pathOrUrlOrSchema: inputPath });
+  // TODO: patch @hey-api/json-schema-ref-parser to correctly handle raw spec
+  const resolvedInput =
+    typeof inputPath === 'string'
+      ? getResolvedInput({ pathOrUrlOrSchema: inputPath })
+      : ({
+          path: '',
+          schema: inputPath,
+          type: 'json',
+        } as const);
 
   let arrayBuffer: ArrayBuffer | undefined;
   // boolean signals whether the file has **definitely** changed
