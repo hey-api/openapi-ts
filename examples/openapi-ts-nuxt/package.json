@@ -7,7 +7,6 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "openapi-ts": "openapi-ts",
     "postinstall": "nuxt prepare",
     "preview": "nuxt preview",
     "typecheck": "tsc --noEmit"
