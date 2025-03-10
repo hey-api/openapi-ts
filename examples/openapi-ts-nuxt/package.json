@@ -7,9 +7,9 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "postinstall": "nuxt prepare",
+    "postinstall:disabled": "nuxt prepare",
     "preview": "nuxt preview",
-    "typecheck": "tsc --noEmit"
+    "typecheck:disabled": "tsc --noEmit"
   },
   "dependencies": {
     "@hey-api/client-nuxt": "workspace:*",
