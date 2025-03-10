@@ -1,4 +1,4 @@
-import { AsyncDataOptions, useAsyncData, useFetch, useLazyAsyncData, useLazyFetch, UseFetchOptions } from 'nuxt/app';
+import { UseFetchOptions, AsyncDataOptions, useAsyncData, useFetch, useLazyAsyncData, useLazyFetch } from 'nuxt/app';
 import { Ref } from 'vue';
 
 type AuthToken = string | undefined;
