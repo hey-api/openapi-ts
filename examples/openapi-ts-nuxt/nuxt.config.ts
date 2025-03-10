@@ -7,7 +7,7 @@ export default defineNuxtConfig({
   future: {
     compatibilityVersion: 4,
   },
-  heyapi: {
+  heyApi: {
     config: {
       input:
         'https://raw.githubusercontent.com/swagger-api/swagger-petstore/master/src/main/resources/openapi.yaml',
@@ -27,5 +27,12 @@ export default defineNuxtConfig({
       ],
     },
   },
-  modules: ['@hey-api/client-nuxt'],
+  imports: {
+    transform: {
+      // Build was throwing an error.
+      // see https://github.com/nuxt/nuxt/issues/18823#issuecomment-1419704343
+      exclude: [/\bclient-nuxt\b/],
+    },
+  },
+  modules: ['@hey-api/nuxt'],
 });

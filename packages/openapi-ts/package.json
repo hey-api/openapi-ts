@@ -102,6 +102,7 @@
     "@hey-api/client-axios": "workspace:*",
     "@hey-api/client-fetch": "workspace:*",
     "@hey-api/client-next": "workspace:*",
+    "@hey-api/client-nuxt": "workspace:*",
     "@tanstack/angular-query-experimental": "5.62.13",
     "@tanstack/react-query": "5.62.15",
     "@tanstack/solid-query": "5.51.21",
