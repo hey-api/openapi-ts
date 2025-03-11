@@ -40,8 +40,9 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
 export const serviceWithEmptyTagQueryKey = (options?: Options<ServiceWithEmptyTagData>) => createQueryKey('serviceWithEmptyTag', options);
 
 export const serviceWithEmptyTagOptions = (options?: Options<ServiceWithEmptyTagData>) => {
+    const queryKey = serviceWithEmptyTagQueryKey(options);
     return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
+        queryFn: async ({ signal }) => {
             const { data } = await serviceWithEmptyTag({
                 ...options,
                 ...queryKey[0],
@@ -50,7 +51,7 @@ export const serviceWithEmptyTagOptions = (options?: Options<ServiceWithEmptyTag
             });
             return data;
         },
-        queryKey: serviceWithEmptyTagQueryKey(options)
+        queryKey
     });
 };
 
@@ -99,8 +100,9 @@ export const deleteCallWithoutParametersAndResponseMutation = (options?: Partial
 export const getCallWithoutParametersAndResponseQueryKey = (options?: Options<GetCallWithoutParametersAndResponseData>) => createQueryKey('getCallWithoutParametersAndResponse', options);
 
 export const getCallWithoutParametersAndResponseOptions = (options?: Options<GetCallWithoutParametersAndResponseData>) => {
+    const queryKey = getCallWithoutParametersAndResponseQueryKey(options);
     return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
+        queryFn: async ({ signal }) => {
             const { data } = await getCallWithoutParametersAndResponse({
                 ...options,
                 ...queryKey[0],
@@ -109,7 +111,7 @@ export const getCallWithoutParametersAndResponseOptions = (options?: Options<Get
             });
             return data;
         },
-        queryKey: getCallWithoutParametersAndResponseQueryKey(options)
+        queryKey
     });
 };
 
@@ -130,8 +132,9 @@ export const patchCallWithoutParametersAndResponseMutation = (options?: Partial<
 export const postCallWithoutParametersAndResponseQueryKey = (options?: Options<PostCallWithoutParametersAndResponseData>) => createQueryKey('postCallWithoutParametersAndResponse', options);
 
 export const postCallWithoutParametersAndResponseOptions = (options?: Options<PostCallWithoutParametersAndResponseData>) => {
+    const queryKey = postCallWithoutParametersAndResponseQueryKey(options);
     return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
+        queryFn: async ({ signal }) => {
             const { data } = await postCallWithoutParametersAndResponse({
                 ...options,
                 ...queryKey[0],
@@ -140,7 +143,7 @@ export const postCallWithoutParametersAndResponseOptions = (options?: Options<Po
             });
             return data;
         },
-        queryKey: postCallWithoutParametersAndResponseQueryKey(options)
+        queryKey
     });
 };
 
@@ -175,8 +178,9 @@ export const putCallWithoutParametersAndResponseMutation = (options?: Partial<Op
 export const callWithDescriptionsQueryKey = (options?: Options<CallWithDescriptionsData>) => createQueryKey('callWithDescriptions', options);
 
 export const callWithDescriptionsOptions = (options?: Options<CallWithDescriptionsData>) => {
+    const queryKey = callWithDescriptionsQueryKey(options);
     return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
+        queryFn: async ({ signal }) => {
             const { data } = await callWithDescriptions({
                 ...options,
                 ...queryKey[0],
@@ -185,7 +189,7 @@ export const callWithDescriptionsOptions = (options?: Options<CallWithDescriptio
             });
             return data;
         },
-        queryKey: callWithDescriptionsQueryKey(options)
+        queryKey
     });
 };
 
@@ -206,8 +210,9 @@ export const callWithDescriptionsMutation = (options?: Partial<Options<CallWithD
 export const callWithParametersQueryKey = (options: Options<CallWithParametersData>) => createQueryKey('callWithParameters', options);
 
 export const callWithParametersOptions = (options: Options<CallWithParametersData>) => {
+    const queryKey = callWithParametersQueryKey(options);
     return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
+        queryFn: async ({ signal }) => {
             const { data } = await callWithParameters({
                 ...options,
                 ...queryKey[0],
@@ -216,7 +221,7 @@ export const callWithParametersOptions = (options: Options<CallWithParametersDat
             });
             return data;
         },
-        queryKey: callWithParametersQueryKey(options)
+        queryKey
     });
 };
 
@@ -237,8 +242,9 @@ export const callWithParametersMutation = (options?: Partial<Options<CallWithPar
 export const callWithWeirdParameterNamesQueryKey = (options: Options<CallWithWeirdParameterNamesData>) => createQueryKey('callWithWeirdParameterNames', options);
 
 export const callWithWeirdParameterNamesOptions = (options: Options<CallWithWeirdParameterNamesData>) => {
+    const queryKey = callWithWeirdParameterNamesQueryKey(options);
     return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
+        queryFn: async ({ signal }) => {
             const { data } = await callWithWeirdParameterNames({
                 ...options,
                 ...queryKey[0],
@@ -247,7 +253,7 @@ export const callWithWeirdParameterNamesOptions = (options: Options<CallWithWeir
             });
             return data;
         },
-        queryKey: callWithWeirdParameterNamesQueryKey(options)
+        queryKey
     });
 };
 
@@ -268,8 +274,9 @@ export const callWithWeirdParameterNamesMutation = (options?: Partial<Options<Ca
 export const callWithDefaultParametersQueryKey = (options: Options<CallWithDefaultParametersData>) => createQueryKey('callWithDefaultParameters', options);
 
 export const callWithDefaultParametersOptions = (options: Options<CallWithDefaultParametersData>) => {
+    const queryKey = callWithDefaultParametersQueryKey(options);
     return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
+        queryFn: async ({ signal }) => {
             const { data } = await callWithDefaultParameters({
                 ...options,
                 ...queryKey[0],
@@ -278,15 +285,16 @@ export const callWithDefaultParametersOptions = (options: Options<CallWithDefaul
             });
             return data;
         },
-        queryKey: callWithDefaultParametersQueryKey(options)
+        queryKey
     });
 };
 
 export const callWithDefaultOptionalParametersQueryKey = (options?: Options<CallWithDefaultOptionalParametersData>) => createQueryKey('callWithDefaultOptionalParameters', options);
 
 export const callWithDefaultOptionalParametersOptions = (options?: Options<CallWithDefaultOptionalParametersData>) => {
+    const queryKey = callWithDefaultOptionalParametersQueryKey(options);
     return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
+        queryFn: async ({ signal }) => {
             const { data } = await callWithDefaultOptionalParameters({
                 ...options,
                 ...queryKey[0],
@@ -295,7 +303,7 @@ export const callWithDefaultOptionalParametersOptions = (options?: Options<CallW
             });
             return data;
         },
-        queryKey: callWithDefaultOptionalParametersQueryKey(options)
+        queryKey
     });
 };
 
@@ -344,8 +352,9 @@ export const duplicateNameMutation = (options?: Partial<Options<DuplicateNameDat
 export const duplicateName2QueryKey = (options?: Options<DuplicateName2Data>) => createQueryKey('duplicateName2', options);
 
 export const duplicateName2Options = (options?: Options<DuplicateName2Data>) => {
+    const queryKey = duplicateName2QueryKey(options);
     return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
+        queryFn: async ({ signal }) => {
             const { data } = await duplicateName2({
                 ...options,
                 ...queryKey[0],
@@ -354,15 +363,16 @@ export const duplicateName2Options = (options?: Options<DuplicateName2Data>) => 
             });
             return data;
         },
-        queryKey: duplicateName2QueryKey(options)
+        queryKey
     });
 };
 
 export const duplicateName3QueryKey = (options?: Options<DuplicateName3Data>) => createQueryKey('duplicateName3', options);
 
 export const duplicateName3Options = (options?: Options<DuplicateName3Data>) => {
+    const queryKey = duplicateName3QueryKey(options);
     return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
+        queryFn: async ({ signal }) => {
             const { data } = await duplicateName3({
                 ...options,
                 ...queryKey[0],
@@ -371,7 +381,7 @@ export const duplicateName3Options = (options?: Options<DuplicateName3Data>) => 
             });
             return data;
         },
-        queryKey: duplicateName3QueryKey(options)
+        queryKey
     });
 };
 
@@ -406,8 +416,9 @@ export const duplicateName4Mutation = (options?: Partial<Options<DuplicateName4D
 export const callWithNoContentResponseQueryKey = (options?: Options<CallWithNoContentResponseData>) => createQueryKey('callWithNoContentResponse', options);
 
 export const callWithNoContentResponseOptions = (options?: Options<CallWithNoContentResponseData>) => {
+    const queryKey = callWithNoContentResponseQueryKey(options);
     return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
+        queryFn: async ({ signal }) => {
             const { data } = await callWithNoContentResponse({
                 ...options,
                 ...queryKey[0],
@@ -416,15 +427,16 @@ export const callWithNoContentResponseOptions = (options?: Options<CallWithNoCon
             });
             return data;
         },
-        queryKey: callWithNoContentResponseQueryKey(options)
+        queryKey
     });
 };
 
 export const callWithResponseAndNoContentResponseQueryKey = (options?: Options<CallWithResponseAndNoContentResponseData>) => createQueryKey('callWithResponseAndNoContentResponse', options);
 
 export const callWithResponseAndNoContentResponseOptions = (options?: Options<CallWithResponseAndNoContentResponseData>) => {
+    const queryKey = callWithResponseAndNoContentResponseQueryKey(options);
     return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
+        queryFn: async ({ signal }) => {
             const { data } = await callWithResponseAndNoContentResponse({
                 ...options,
                 ...queryKey[0],
@@ -433,15 +445,16 @@ export const callWithResponseAndNoContentResponseOptions = (options?: Options<Ca
             });
             return data;
         },
-        queryKey: callWithResponseAndNoContentResponseQueryKey(options)
+        queryKey
     });
 };
 
 export const dummyAQueryKey = (options?: Options<DummyAData>) => createQueryKey('dummyA', options);
 
 export const dummyAOptions = (options?: Options<DummyAData>) => {
+    const queryKey = dummyAQueryKey(options);
     return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
+        queryFn: async ({ signal }) => {
             const { data } = await dummyA({
                 ...options,
                 ...queryKey[0],
@@ -450,15 +463,16 @@ export const dummyAOptions = (options?: Options<DummyAData>) => {
             });
             return data;
         },
-        queryKey: dummyAQueryKey(options)
+        queryKey
     });
 };
 
 export const dummyBQueryKey = (options?: Options<DummyBData>) => createQueryKey('dummyB', options);
 
 export const dummyBOptions = (options?: Options<DummyBData>) => {
+    const queryKey = dummyBQueryKey(options);
     return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
+        queryFn: async ({ signal }) => {
             const { data } = await dummyB({
                 ...options,
                 ...queryKey[0],
@@ -467,15 +481,16 @@ export const dummyBOptions = (options?: Options<DummyBData>) => {
             });
             return data;
         },
-        queryKey: dummyBQueryKey(options)
+        queryKey
     });
 };
 
 export const callWithResponseQueryKey = (options?: Options<CallWithResponseData>) => createQueryKey('callWithResponse', options);
 
 export const callWithResponseOptions = (options?: Options<CallWithResponseData>) => {
+    const queryKey = callWithResponseQueryKey(options);
     return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
+        queryFn: async ({ signal }) => {
             const { data } = await callWithResponse({
                 ...options,
                 ...queryKey[0],
@@ -484,15 +499,16 @@ export const callWithResponseOptions = (options?: Options<CallWithResponseData>)
             });
             return data;
         },
-        queryKey: callWithResponseQueryKey(options)
+        queryKey
     });
 };
 
 export const callWithDuplicateResponsesQueryKey = (options?: Options<CallWithDuplicateResponsesData>) => createQueryKey('callWithDuplicateResponses', options);
 
 export const callWithDuplicateResponsesOptions = (options?: Options<CallWithDuplicateResponsesData>) => {
+    const queryKey = callWithDuplicateResponsesQueryKey(options);
     return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
+        queryFn: async ({ signal }) => {
             const { data } = await callWithDuplicateResponses({
                 ...options,
                 ...queryKey[0],
@@ -501,7 +517,7 @@ export const callWithDuplicateResponsesOptions = (options?: Options<CallWithDupl
             });
             return data;
         },
-        queryKey: callWithDuplicateResponsesQueryKey(options)
+        queryKey
     });
 };
 
@@ -536,8 +552,9 @@ export const callWithResponsesMutation = (options?: Partial<Options<CallWithResp
 export const collectionFormatQueryKey = (options: Options<CollectionFormatData>) => createQueryKey('collectionFormat', options);
 
 export const collectionFormatOptions = (options: Options<CollectionFormatData>) => {
+    const queryKey = collectionFormatQueryKey(options);
     return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
+        queryFn: async ({ signal }) => {
             const { data } = await collectionFormat({
                 ...options,
                 ...queryKey[0],
@@ -546,15 +563,16 @@ export const collectionFormatOptions = (options: Options<CollectionFormatData>) 
             });
             return data;
         },
-        queryKey: collectionFormatQueryKey(options)
+        queryKey
     });
 };
 
 export const typesQueryKey = (options: Options<TypesData>) => createQueryKey('types', options);
 
 export const typesOptions = (options: Options<TypesData>) => {
+    const queryKey = typesQueryKey(options);
     return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
+        queryFn: async ({ signal }) => {
             const { data } = await types({
                 ...options,
                 ...queryKey[0],
@@ -563,15 +581,16 @@ export const typesOptions = (options: Options<TypesData>) => {
             });
             return data;
         },
-        queryKey: typesQueryKey(options)
+        queryKey
     });
 };
 
 export const complexTypesQueryKey = (options: Options<ComplexTypesData>) => createQueryKey('complexTypes', options);
 
 export const complexTypesOptions = (options: Options<ComplexTypesData>) => {
+    const queryKey = complexTypesQueryKey(options);
     return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
+        queryFn: async ({ signal }) => {
             const { data } = await complexTypes({
                 ...options,
                 ...queryKey[0],
@@ -580,15 +599,16 @@ export const complexTypesOptions = (options: Options<ComplexTypesData>) => {
             });
             return data;
         },
-        queryKey: complexTypesQueryKey(options)
+        queryKey
     });
 };
 
 export const callWithResultFromHeaderQueryKey = (options?: Options<CallWithResultFromHeaderData>) => createQueryKey('callWithResultFromHeader', options);
 
 export const callWithResultFromHeaderOptions = (options?: Options<CallWithResultFromHeaderData>) => {
+    const queryKey = callWithResultFromHeaderQueryKey(options);
     return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
+        queryFn: async ({ signal }) => {
             const { data } = await callWithResultFromHeader({
                 ...options,
                 ...queryKey[0],
@@ -597,7 +617,7 @@ export const callWithResultFromHeaderOptions = (options?: Options<CallWithResult
             });
             return data;
         },
-        queryKey: callWithResultFromHeaderQueryKey(options)
+        queryKey
     });
 };
 
@@ -618,8 +638,9 @@ export const callWithResultFromHeaderMutation = (options?: Partial<Options<CallW
 export const testErrorCodeQueryKey = (options: Options<TestErrorCodeData>) => createQueryKey('testErrorCode', options);
 
 export const testErrorCodeOptions = (options: Options<TestErrorCodeData>) => {
+    const queryKey = testErrorCodeQueryKey(options);
     return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
+        queryFn: async ({ signal }) => {
             const { data } = await testErrorCode({
                 ...options,
                 ...queryKey[0],
@@ -628,7 +649,7 @@ export const testErrorCodeOptions = (options: Options<TestErrorCodeData>) => {
             });
             return data;
         },
-        queryKey: testErrorCodeQueryKey(options)
+        queryKey
     });
 };
 
@@ -649,8 +670,9 @@ export const testErrorCodeMutation = (options?: Partial<Options<TestErrorCodeDat
 export const nonAsciiæøåÆøÅöôêÊ字符串QueryKey = (options: Options<NonAsciiæøåÆøÅöôêÊ字符串Data>) => createQueryKey('nonAsciiæøåÆøÅöôêÊ字符串', options);
 
 export const nonAsciiæøåÆøÅöôêÊ字符串Options = (options: Options<NonAsciiæøåÆøÅöôêÊ字符串Data>) => {
+    const queryKey = nonAsciiæøåÆøÅöôêÊ字符串QueryKey(options);
     return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
+        queryFn: async ({ signal }) => {
             const { data } = await nonAsciiæøåÆøÅöôêÊ字符串({
                 ...options,
                 ...queryKey[0],
@@ -659,7 +681,7 @@ export const nonAsciiæøåÆøÅöôêÊ字符串Options = (options: Options<No
             });
             return data;
         },
-        queryKey: nonAsciiæøåÆøÅöôêÊ字符串QueryKey(options)
+        queryKey
     });
 };
 
@@ -680,8 +702,9 @@ export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options?: Partial<
 export const postApiVbyApiVersionBodyQueryKey = (options: Options<PostApiVbyApiVersionBodyData>) => createQueryKey('postApiVbyApiVersionBody', options);
 
 export const postApiVbyApiVersionBodyOptions = (options: Options<PostApiVbyApiVersionBodyData>) => {
+    const queryKey = postApiVbyApiVersionBodyQueryKey(options);
     return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
+        queryFn: async ({ signal }) => {
             const { data } = await postApiVbyApiVersionBody({
                 ...options,
                 ...queryKey[0],
@@ -690,7 +713,7 @@ export const postApiVbyApiVersionBodyOptions = (options: Options<PostApiVbyApiVe
             });
             return data;
         },
-        queryKey: postApiVbyApiVersionBodyQueryKey(options)
+        queryKey
     });
 };
 

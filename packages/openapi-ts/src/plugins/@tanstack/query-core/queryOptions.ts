@@ -109,6 +109,13 @@ export const createQueryOptions = ({
         },
       ],
       statements: [
+        compiler.constVariable({
+          expression: compiler.callExpression({
+            functionName: identifierQueryKey.name || '',
+            parameters: ['options'],
+          }),
+          name: 'queryKey',
+        }),
         compiler.returnFunctionCall({
           args: [
             compiler.objectExpression({
@@ -128,13 +135,6 @@ export const createQueryOptions = ({
                       },
                     ],
                     statements: [
-                      compiler.constVariable({
-                        expression: compiler.callExpression({
-                          functionName: identifierQueryKey.name || '',
-                          parameters: ['options'],
-                        }),
-                        name: 'queryKey',
-                      }),
                       compiler.constVariable({
                         destructure: true,
                         expression: compiler.awaitExpression({
@@ -176,19 +176,14 @@ export const createQueryOptions = ({
                 },
                 {
                   key: 'queryKey',
+                  shorthand: !plugin.runtimeConfigPath,
                   value: plugin.runtimeConfigPath
                     ? compiler.callExpression({
                         functionName: 'transformQueryKey',
-                        parameters: [
-                          compiler.callExpression({
-                            functionName: identifierQueryKey.name || '',
-                            parameters: ['options'],
-                          }),
-                        ],
+                        parameters: ['queryKey'],
                       })
-                    : compiler.callExpression({
-                        functionName: identifierQueryKey.name || '',
-                        parameters: ['options'],
+                    : compiler.identifier({
+                        text: 'queryKey',
                       }),
                 },
               ],
