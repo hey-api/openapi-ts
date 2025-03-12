@@ -245,6 +245,12 @@ for (const version of versions) {
       },
       {
         config: createConfig({
+          output: 'default',
+          plugins: ['openapi-info']
+        })
+      },
+      {
+        config: createConfig({
           input: 'type-format.yaml',
           output: 'type-format',
           plugins: [

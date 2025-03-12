@@ -33,6 +33,7 @@ export type PluginNames =
   | '@tanstack/svelte-query'
   | '@tanstack/vue-query'
   | 'fastify'
+  | 'openapi-info'
   | PluginValidatorNames;
 
 export type AnyPluginName = PluginNames | (string & {});

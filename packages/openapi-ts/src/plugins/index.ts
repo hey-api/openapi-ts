@@ -73,6 +73,7 @@ import {
 import { type Config as Fastify, defaultConfig as fastify } from './fastify';
 import type { DefaultPluginConfigs, Plugin } from './types';
 import { type Config as Zod, defaultConfig as zod } from './zod';
+import {type Config as OpenApiInfo, defaultConfig as openApiInfo} from './metadata'
 
 /**
  * User-facing plugin types.
@@ -97,7 +98,8 @@ export type UserPlugins =
   | Plugin.UserConfig<TanStackSvelteQuery>
   | Plugin.UserConfig<TanStackVueQuery>
   | Plugin.UserConfig<Fastify>
-  | Plugin.UserConfig<Zod>;
+  | Plugin.UserConfig<Zod>
+  | Plugin.UserConfig<OpenApiInfo>;
 
 /**
  * Internal plugin types.
@@ -122,7 +124,8 @@ export type ClientPlugins =
   | Plugin.Config<TanStackSvelteQuery>
   | Plugin.Config<TanStackVueQuery>
   | Plugin.Config<Fastify>
-  | Plugin.Config<Zod>;
+  | Plugin.Config<Zod>
+  | Plugin.Config<OpenApiInfo>;
 
 export const defaultPluginConfigs: DefaultPluginConfigs<ClientPlugins> = {
   '@hey-api/client-axios': heyApiClientAxios,
@@ -145,4 +148,5 @@ export const defaultPluginConfigs: DefaultPluginConfigs<ClientPlugins> = {
   'legacy/node': heyApiLegacyNode,
   'legacy/xhr': heyApiLegacyXhr,
   zod,
+  'openapi-info': openApiInfo,
 };
