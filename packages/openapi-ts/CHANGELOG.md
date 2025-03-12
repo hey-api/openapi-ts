@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.64.11
+
+### Patch Changes
+
+- [#1800](https://github.com/hey-api/openapi-ts/pull/1800) [`a4811bd`](https://github.com/hey-api/openapi-ts/commit/a4811bdf178ec1a7f1602e0483a32fe7303f4eac) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: support Hey API platform input arguments
+
+- [#1800](https://github.com/hey-api/openapi-ts/pull/1800) [`a4811bd`](https://github.com/hey-api/openapi-ts/commit/a4811bdf178ec1a7f1602e0483a32fe7303f4eac) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle raw OpenAPI specification input
+
 ## 0.64.10
 
 ### Patch Changes

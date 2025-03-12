@@ -1,5 +1,12 @@
 # @example/openapi-ts-nuxt
 
+## 0.0.11
+
+### Patch Changes
+
+- Updated dependencies [[`d80f835`](https://github.com/hey-api/openapi-ts/commit/d80f835b46775a01451f02f832ceb288c2b561d2)]:
+  - @hey-api/nuxt@0.1.0
+
 ## 0.0.10
 
 ### Patch Changes
