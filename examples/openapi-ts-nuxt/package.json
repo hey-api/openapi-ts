@@ -7,7 +7,7 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "postinstall:enable-after-release": "nuxt prepare",
+    "postinstall:disabled": "nuxt prepare",
     "preview": "nuxt preview",
     "typecheck:disabled": "tsc --noEmit"
   },
