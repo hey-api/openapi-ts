@@ -9,7 +9,7 @@
     "generate": "nuxt generate",
     "postinstall:enable-after-release": "nuxt prepare",
     "preview": "nuxt preview",
-    "typecheck:old": "tsc --noEmit"
+    "typecheck:disabled": "tsc --noEmit"
   },
   "dependencies": {
     "@hey-api/nuxt": "workspace:*",
