@@ -1,5 +1,5 @@
-import { UseFetchOptions, AsyncDataOptions, useAsyncData, useFetch, useLazyAsyncData, useLazyFetch } from 'nuxt/app';
-import { Ref } from 'vue';
+import type { AsyncDataOptions, useAsyncData, useFetch, UseFetchOptions, useLazyAsyncData, useLazyFetch } from 'nuxt/app';
+import type { Ref } from 'vue';
 
 type AuthToken = string | undefined;
 interface Auth {
@@ -190,4 +190,4 @@ declare const createClient: (config?: Config) => Client;
 
 declare const createConfig: <T extends ClientOptions = ClientOptions>(override?: Config<Omit<ClientOptions, keyof T> & T>) => Config<Omit<ClientOptions, keyof T> & T>;
 
-export { type Auth, type Client, type ClientOptions, type Composable, type Config, type CreateClientConfig, type Options, type OptionsLegacyParser, type QuerySerializerOptions, type RequestOptions, type RequestResult, type TDataShape, createClient, createConfig, formDataBodySerializer, jsonBodySerializer, urlSearchParamsBodySerializer };
+export { type Auth, type Client, type ClientOptions, type Composable, type Config, createClient, type CreateClientConfig, createConfig, formDataBodySerializer, jsonBodySerializer, type Options, type OptionsLegacyParser, type QuerySerializerOptions, type RequestOptions, type RequestResult, type TDataShape, urlSearchParamsBodySerializer };
