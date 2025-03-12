@@ -1,5 +1,11 @@
 # @hey-api/client-nuxt
 
+## 0.3.0
+
+### Minor Changes
+
+- [#1800](https://github.com/hey-api/openapi-ts/pull/1800) [`d80f835`](https://github.com/hey-api/openapi-ts/commit/d80f835b46775a01451f02f832ceb288c2b561d2) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: drop cjs support
+
 ## 0.2.4
 
 ### Patch Changes
