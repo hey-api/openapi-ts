@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.64.12
+
+### Patch Changes
+
+- [#1816](https://github.com/hey-api/openapi-ts/pull/1816) [`b9e1b4b`](https://github.com/hey-api/openapi-ts/commit/b9e1b4bec5e1c5d1f2b5b9cfc7fa145274ae604d) Thanks [@shemsiu](https://github.com/shemsiu)! - Allow `scheme` property to be case-insensitive
+
 ## 0.64.11
 
 ### Patch Changes
