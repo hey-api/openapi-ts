@@ -188,12 +188,10 @@ const securitySchemeObjectToAuthObject = ({
   }
 
   if (securitySchemeObject.type === 'http') {
-    if (
-      securitySchemeObject.scheme === 'bearer' ||
-      securitySchemeObject.scheme === 'basic'
-    ) {
+    const scheme = securitySchemeObject.scheme.toLowerCase();
+    if (scheme === 'bearer' || scheme === 'basic') {
       return {
-        scheme: securitySchemeObject.scheme,
+        scheme: scheme as 'bearer' | 'basic',
         type: 'http',
       };
     }
