@@ -922,6 +922,18 @@ importers:
         specifier: 3.23.8
         version: 3.23.8
 
+  packages/rollup-plugin:
+    devDependencies:
+      '@hey-api/openapi-ts':
+        specifier: workspace:*
+        version: link:../openapi-ts
+      typescript:
+        specifier: 5.5.3
+        version: 5.5.3
+      vite:
+        specifier: 6.0.9
+        version: 6.0.9(@types/node@22.10.5)(jiti@2.4.2)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.0)
+
 packages:
 
   '@algolia/autocomplete-core@1.17.9':
@@ -17391,7 +17403,7 @@ snapshots:
       domhandler: 5.0.3
       htmlparser2: 9.1.0
       picocolors: 1.1.1
-      postcss: 8.5.2
+      postcss: 8.5.3
       postcss-media-query-parser: 0.2.3
 
   better-path-resolve@1.0.0:
@@ -24428,7 +24440,7 @@ snapshots:
   vite@6.1.0(@types/node@22.10.5)(jiti@2.4.2)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.0):
     dependencies:
       esbuild: 0.24.2
-      postcss: 8.5.2
+      postcss: 8.5.3
       rollup: 4.31.0
     optionalDependencies:
       '@types/node': 22.10.5
