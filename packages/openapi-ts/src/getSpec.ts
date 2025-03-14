@@ -30,15 +30,7 @@ export const getSpec = async ({
   watch: WatchValues;
 }): Promise<SpecResponse | SpecError> => {
   const refParser = new $RefParser();
-  // TODO: patch @hey-api/json-schema-ref-parser to correctly handle raw spec
-  const resolvedInput =
-    typeof inputPath === 'string'
-      ? getResolvedInput({ pathOrUrlOrSchema: inputPath })
-      : ({
-          path: '',
-          schema: inputPath,
-          type: 'json',
-        } as const);
+  const resolvedInput = getResolvedInput({ pathOrUrlOrSchema: inputPath });
 
   let arrayBuffer: ArrayBuffer | undefined;
   // boolean signals whether the file has **definitely** changed
@@ -48,9 +40,8 @@ export const getSpec = async ({
   if (resolvedInput.type === 'url') {
     // do NOT send HEAD request on first run or if unsupported
     if (watch.lastValue && watch.isHeadMethodSupported !== false) {
-      let request;
       try {
-        request = await sendRequest({
+        const request = await sendRequest({
           init: {
             headers: watch.headers,
             method: 'HEAD',
@@ -58,13 +49,21 @@ export const getSpec = async ({
           timeout,
           url: resolvedInput.path,
         });
-      } catch (ex) {
+
+        if (request.response.status >= 300) {
+          return {
+            error: 'not-ok',
+            response: request.response,
+          };
+        }
+
+        response = request.response;
+      } catch (error) {
         return {
           error: 'not-ok',
-          response: new Response(ex.message),
+          response: new Response(error.message),
         };
       }
-      response = request.response;
 
       if (!response.ok && watch.isHeadMethodSupported) {
         // assume the server is no longer running
@@ -118,18 +117,26 @@ export const getSpec = async ({
     }
 
     try {
-      const fileRequest = await sendRequest({
+      const request = await sendRequest({
         init: {
           method: 'GET',
         },
         timeout,
         url: resolvedInput.path,
       });
-      response = fileRequest.response;
-    } catch (ex) {
+
+      if (request.response.status >= 300) {
+        return {
+          error: 'not-ok',
+          response: request.response,
+        };
+      }
+
+      response = request.response;
+    } catch (error) {
       return {
         error: 'not-ok',
-        response: new Response(ex.message),
+        response: new Response(error.message),
       };
     }
 
