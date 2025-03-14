@@ -260,6 +260,20 @@ for (const version of versions) {
         }),
         description: 'handles various schema types and formats',
       },
+      {
+        config: createConfig({
+          output: 'runtimeConfigPath',
+          plugins: [
+            {
+              name: '@tanstack/angular-query-experimental',
+              runtimeConfigPath: './runtimeConfigPath',
+            },
+            '@hey-api/client-fetch',
+          ],
+        }),
+        description:
+          'generate Fetch API client with TanStack Angular Query Experimental plugin providing a runtimeConfigPath that includes a transformQueryKey method',
+      },
     ];
 
     it.each(scenarios)('$description', async ({ config }) => {

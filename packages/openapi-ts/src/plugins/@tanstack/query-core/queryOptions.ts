@@ -86,6 +86,16 @@ export const createQueryOptions = ({
     namespace: 'value',
   });
 
+  if (plugin.runtimeConfigPath) {
+    file.import({
+      module: file.relativePathToFile({
+        context,
+        id: plugin.runtimeConfigPath,
+      }),
+      name: 'transformQueryKey',
+    });
+  }
+
   const statement = compiler.constVariable({
     // TODO: describe options, same as the actual function call
     comment: [],
@@ -99,6 +109,13 @@ export const createQueryOptions = ({
         },
       ],
       statements: [
+        compiler.constVariable({
+          expression: compiler.callExpression({
+            functionName: identifierQueryKey.name || '',
+            parameters: ['options'],
+          }),
+          name: 'queryKey',
+        }),
         compiler.returnFunctionCall({
           args: [
             compiler.objectExpression({
@@ -111,9 +128,6 @@ export const createQueryOptions = ({
                     parameters: [
                       {
                         destructure: [
-                          {
-                            name: 'queryKey',
-                          },
                           {
                             name: 'signal',
                           },
@@ -162,10 +176,15 @@ export const createQueryOptions = ({
                 },
                 {
                   key: 'queryKey',
-                  value: compiler.callExpression({
-                    functionName: identifierQueryKey.name || '',
-                    parameters: ['options'],
-                  }),
+                  shorthand: !plugin.runtimeConfigPath,
+                  value: plugin.runtimeConfigPath
+                    ? compiler.callExpression({
+                        functionName: 'transformQueryKey',
+                        parameters: ['queryKey'],
+                      })
+                    : compiler.identifier({
+                        text: 'queryKey',
+                      }),
                 },
               ],
             }),

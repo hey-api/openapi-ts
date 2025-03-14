@@ -230,6 +230,7 @@ const createQueryKeyLiteral = ({
     $ref: `#/ir/${createQueryKeyFn}`,
     namespace: 'value',
   });
+
   const createQueryKeyCallExpression = compiler.callExpression({
     functionName: identifierCreateQueryKey.name || '',
     parameters: [

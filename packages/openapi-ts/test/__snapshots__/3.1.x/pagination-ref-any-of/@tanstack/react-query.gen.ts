@@ -39,8 +39,9 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
 export const postFooQueryKey = (options: Options<PostFooData>) => createQueryKey('postFoo', options);
 
 export const postFooOptions = (options: Options<PostFooData>) => {
+    const queryKey = postFooQueryKey(options);
     return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
+        queryFn: async ({ signal }) => {
             const { data } = await postFoo({
                 ...options,
                 ...queryKey[0],
@@ -49,7 +50,7 @@ export const postFooOptions = (options: Options<PostFooData>) => {
             });
             return data;
         },
-        queryKey: postFooQueryKey(options)
+        queryKey
     });
 };
 
@@ -85,10 +86,11 @@ const createInfiniteParams = <K extends Pick<QueryKey<Options>[0], 'body' | 'hea
 export const postFooInfiniteQueryKey = (options: Options<PostFooData>): QueryKey<Options<PostFooData>> => createQueryKey('postFoo', options, true);
 
 export const postFooInfiniteOptions = (options: Options<PostFooData>) => {
-    return infiniteQueryOptions<unknown, DefaultError, InfiniteData<unknown>, QueryKey<Options<PostFooData>>, number | null | Pick<QueryKey<Options<PostFooData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
+    const queryKey = postFooInfiniteQueryKey(options);
+    return infiniteQueryOptions<unknown, DefaultError, InfiniteData<unknown>, unknown[], number | null | Pick<QueryKey<Options<PostFooData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
     // @ts-ignore
     {
-        queryFn: async ({ pageParam, queryKey, signal }) => {
+        queryFn: async ({ pageParam, signal }) => {
             // @ts-ignore
             const page: Pick<QueryKey<Options<PostFooData>>[0], 'body' | 'headers' | 'path' | 'query'> = typeof pageParam === 'object' ? pageParam : {
                 body: {
@@ -104,7 +106,7 @@ export const postFooInfiniteOptions = (options: Options<PostFooData>) => {
             });
             return data;
         },
-        queryKey: postFooInfiniteQueryKey(options)
+        queryKey: 'queryKey'
     });
 };
 
