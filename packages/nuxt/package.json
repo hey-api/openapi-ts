@@ -54,16 +54,17 @@
   },
   "dependencies": {
     "@hey-api/client-nuxt": "workspace:*",
-    "@hey-api/openapi-ts": "workspace:*",
     "@nuxt/kit": "3.15.4",
     "defu": "6.1.4",
     "mlly": "1.7.4"
   },
   "peerDependencies": {
+    "@hey-api/openapi-ts": "< 2",
     "nuxt": ">= 3.0.0 < 4",
     "vue": ">= 3.5.13 < 4"
   },
   "devDependencies": {
+    "@hey-api/openapi-ts": "workspace:*",
     "@nuxt/module-builder": "0.8.4",
     "@nuxt/schema": "3.14.1592",
     "@nuxt/test-utils": "3.14.0",
