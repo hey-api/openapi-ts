@@ -11,21 +11,26 @@ import type { Config, UserConfig } from './types/config';
 import { registerHandlebarTemplates } from './utils/handlebars';
 import { Performance, PerformanceReport } from './utils/performance';
 
+type Configs = UserConfig | (() => UserConfig) | (() => Promise<UserConfig>);
+
 /**
  * Generate a client from the provided configuration.
  *
  * @param userConfig User provided {@link UserConfig} configuration.
  */
 export const createClient = async (
-  userConfig: UserConfig,
+  userConfig?: Configs,
 ): Promise<ReadonlyArray<Client | IR.Context>> => {
+  const resolvedConfig =
+    typeof userConfig === 'function' ? await userConfig() : userConfig;
+
   let configs: Config[] = [];
 
   try {
     Performance.start('createClient');
 
     Performance.start('config');
-    configs = await initConfigs(userConfig);
+    configs = await initConfigs(resolvedConfig);
     Performance.end('config');
 
     Performance.start('handlebars');
@@ -61,10 +66,10 @@ export const createClient = async (
     return result;
   } catch (error) {
     const config = configs[0] as Config | undefined;
-    const dryRun = config ? config.dryRun : userConfig?.dryRun;
+    const dryRun = config ? config.dryRun : resolvedConfig?.dryRun;
     // TODO: add setting for log output
     if (!dryRun) {
-      const logs = config?.logs ?? getLogs(userConfig);
+      const logs = config?.logs ?? getLogs(resolvedConfig);
       if (logs.level !== 'silent') {
         const logName = `openapi-ts-error-${Date.now()}.log`;
         const logsDir = path.resolve(process.cwd(), logs.path ?? '');
@@ -82,7 +87,8 @@ export const createClient = async (
 /**
  * Type helper for openapi-ts.config.ts, returns {@link UserConfig} object
  */
-export const defineConfig = (config: UserConfig): UserConfig => config;
+export const defineConfig = async (config: Configs): Promise<UserConfig> =>
+  typeof config === 'function' ? await config() : config;
 
 export { defaultPlugins } from './initConfigs';
 export type { IR } from './ir/types';
