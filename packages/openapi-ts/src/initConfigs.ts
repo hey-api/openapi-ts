@@ -240,10 +240,10 @@ const getWatch = (
 };
 
 export const initConfigs = async (
-  userConfig: UserConfig,
+  userConfig: UserConfig | undefined,
 ): Promise<Config[]> => {
   let configurationFile: string | undefined = undefined;
-  if (userConfig.configFile) {
+  if (userConfig?.configFile) {
     const parts = userConfig.configFile.split('.');
     configurationFile = parts.slice(0, parts.length - 1).join('.');
   }
