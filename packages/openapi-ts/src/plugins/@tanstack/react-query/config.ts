@@ -12,6 +12,7 @@ export const defaultConfig: Plugin.Config<Config> = {
   mutationOptions: true,
   name: '@tanstack/react-query',
   output: '@tanstack/react-query',
+  paginationKeywords: ['after', 'before', 'cursor', 'offset', 'page', 'start'],
   queryOptions: true,
 };
 

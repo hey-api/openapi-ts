@@ -44,5 +44,13 @@ export namespace TanStackQuery {
      * @default false
      */
     exportFromIndex?: boolean;
+
+    /**
+     * Array of keywords to be considered as pagination field names.
+     * These will be used to detect pagination fields in schemas and parameters.
+     *
+     * @default ['after', 'before', 'cursor', 'offset', 'page', 'start']
+     */
+    paginationKeywords?: string[];
   };
 }
