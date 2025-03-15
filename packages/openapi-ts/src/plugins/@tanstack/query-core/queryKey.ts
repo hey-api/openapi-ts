@@ -30,6 +30,17 @@ export const createQueryKeyFunction = ({
   });
 
   if (identifierCreateQueryKey.name) {
+    if (plugin.runtimeConfigPath) {
+      file.import({
+        module: file.relativePathToFile({
+          context,
+          id: plugin.runtimeConfigPath,
+        }),
+        name: identifierCreateQueryKey.name,
+      });
+      return;
+    }
+
     const returnType = compiler.indexedAccessTypeNode({
       indexType: compiler.literalTypeNode({
         literal: compiler.ots.number(0),
@@ -249,6 +260,18 @@ export const createQueryKeyType = ({
   plugin: PluginInstance;
 }) => {
   const file = context.file({ id: plugin.name })!;
+
+  if (plugin.runtimeConfigPath) {
+    file.import({
+      asType: true,
+      module: file.relativePathToFile({
+        context,
+        id: plugin.runtimeConfigPath,
+      }),
+      name: queryKeyName,
+    });
+    return;
+  }
 
   const properties: Property[] = [
     {
