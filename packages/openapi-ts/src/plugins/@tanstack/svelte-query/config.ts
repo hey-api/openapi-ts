@@ -12,6 +12,7 @@ export const defaultConfig: Plugin.Config<Config> = {
   mutationOptions: true,
   name: '@tanstack/svelte-query',
   output: '@tanstack/svelte-query',
+  paginationKeywords: ['after', 'before', 'cursor', 'offset', 'page', 'start'],
   queryOptions: true,
 };
 

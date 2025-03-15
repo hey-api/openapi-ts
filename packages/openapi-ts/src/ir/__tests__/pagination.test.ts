@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { paginationKeywordsRegExp } from '../pagination';
+import { getPaginationKeywordsRegExp } from '../pagination';
 
 describe('paginationKeywordsRegExp', () => {
   const scenarios: Array<{
@@ -44,8 +44,9 @@ describe('paginationKeywordsRegExp', () => {
   it.each(scenarios)(
     'is $value pagination param? $output',
     async ({ result, value }) => {
-      paginationKeywordsRegExp.lastIndex = 0;
-      expect(paginationKeywordsRegExp.test(value)).toEqual(result);
+      const paginationRegExp = getPaginationKeywordsRegExp();
+      paginationRegExp.lastIndex = 0;
+      expect(paginationRegExp.test(value)).toEqual(result);
     },
   );
 });
