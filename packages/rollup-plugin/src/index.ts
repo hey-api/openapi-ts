@@ -1,15 +1,14 @@
-import { createClient, type UserConfig } from '@hey-api/openapi-ts';
+import { createClient } from '@hey-api/openapi-ts';
 
 export function heyApiPlugin(options?: {
   /**
    * `@hey-api/openapi-ts` configuration options.
    */
-  config?: UserConfig;
+  config?: Parameters<typeof createClient>[0];
 }) {
   return {
     buildStart: async () => {
-      // @ts-expect-error
-      await createClient(options?.config ?? {});
+      await createClient(options?.config);
     },
     name: 'hey-api-plugin',
   };
