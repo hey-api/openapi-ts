@@ -55,7 +55,7 @@
     "prepublishOnly": "pnpm build"
   },
   "peerDependencies": {
-    "@hey-api/openapi-ts": "0.64.12"
+    "@hey-api/openapi-ts": "< 2"
   },
   "devDependencies": {
     "@hey-api/openapi-ts": "workspace:*",
