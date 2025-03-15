@@ -77,10 +77,13 @@ export const handler: PluginHandler = ({ context, plugin }) => {
     });
 
     if (state.hasUsedQueryFn) {
-      file.import({
-        module: file.relativePathToFile({ context, id: sdkId }),
-        name: queryFn.split('.')[0]!,
-      });
+      const serviceName = queryFn.split('.')[0];
+      if (serviceName) {
+        file.import({
+          module: file.relativePathToFile({ context, id: sdkId }),
+          name: serviceName,
+        });
+      }
     }
   });
 
