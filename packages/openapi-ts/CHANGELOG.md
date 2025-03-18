@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.64.13
+
+### Patch Changes
+
+- [#1822](https://github.com/hey-api/openapi-ts/pull/1822) [`c73b0d4`](https://github.com/hey-api/openapi-ts/commit/c73b0d401c2bfa6f0b0d89d844a6aa09f2685a69) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: bump json-schema-ref-parser package
+
+- [#1826](https://github.com/hey-api/openapi-ts/pull/1826) [`90886c1`](https://github.com/hey-api/openapi-ts/commit/90886c1372a999e8cb59d5da218762f6ee6cd459) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow config to be a function
+
 ## 0.64.12
 
 ### Patch Changes
