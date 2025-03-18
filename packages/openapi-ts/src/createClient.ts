@@ -15,6 +15,7 @@ import { postProcessClient } from './utils/postprocess';
 
 const isPlatformPath = (path: string) =>
   path.startsWith('https://get.heyapi.dev');
+// || path.startsWith('http://localhost:4000')
 
 export const compileInputPath = (input: Config['input']) => {
   const result: Pick<
@@ -106,7 +107,20 @@ export const compileInputPath = (input: Config['input']) => {
 
   const query = queryParams.join('&');
   const platformUrl = baseUrl || 'get.heyapi.dev';
-  const compiledPath = `https://${[platformUrl, result.organization, result.project].join('/')}`;
+  const isLocalhost = platformUrl.startsWith('localhost');
+  const platformUrlWithProtocol = [
+    isLocalhost ? 'http' : 'https',
+    platformUrl,
+  ].join('://');
+  const compiledPath = isLocalhost
+    ? [
+        platformUrlWithProtocol,
+        'v1',
+        'get',
+        result.organization,
+        result.project,
+      ].join('/')
+    : [platformUrlWithProtocol, result.organization, result.project].join('/');
   result.path = query ? `${compiledPath}?${query}` : compiledPath;
 
   return result;
