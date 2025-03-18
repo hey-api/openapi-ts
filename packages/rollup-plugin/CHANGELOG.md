@@ -1,5 +1,11 @@
 # @hey-api/rollup-plugin
 
+## 0.1.2
+
+### Patch Changes
+
+- [#1836](https://github.com/hey-api/openapi-ts/pull/1836) [`f22dc53`](https://github.com/hey-api/openapi-ts/commit/f22dc533bb822d90b2be835217367ae9e6bbc559) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: use enforce pre
+
 ## 0.1.1
 
 ### Patch Changes
