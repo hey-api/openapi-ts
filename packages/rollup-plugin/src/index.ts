@@ -10,6 +10,7 @@ export function heyApiPlugin(options?: {
     buildStart: async () => {
       await createClient(options?.config);
     },
+    enforce: 'pre',
     name: 'hey-api-plugin',
   };
 }
