@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/rollup-plugin",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "🚀 Vite/Rollup plugin for `@hey-api/openapi-ts` codegen.",
   "homepage": "https://heyapi.dev/",
   "repository": {
