@@ -7,7 +7,6 @@ export function heyApiPlugin(options?: {
   config?: Parameters<typeof createClient>[0];
 }) {
   return {
-    // TODO: rename to vite-plugin if we end up using `configResolved`
     configResolved: async () => {
       await createClient(options?.config);
     },
