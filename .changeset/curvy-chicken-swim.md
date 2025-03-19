@@ -1,5 +1,5 @@
 ---
-'@hey-api/rollup-plugin': patch
+'@hey-api/vite-plugin': minor
 ---
 
-fix: use configResolved hook
+fix: initial release

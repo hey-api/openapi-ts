@@ -922,7 +922,7 @@ importers:
         specifier: 3.23.8
         version: 3.23.8
 
-  packages/rollup-plugin:
+  packages/vite-plugin:
     devDependencies:
       '@hey-api/openapi-ts':
         specifier: workspace:*

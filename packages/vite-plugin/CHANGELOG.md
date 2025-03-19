@@ -1,4 +1,4 @@
-# @hey-api/rollup-plugin
+# @hey-api/vite-plugin
 
 ## 0.1.2
 
