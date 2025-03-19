@@ -7,7 +7,7 @@ export function heyApiPlugin(options?: {
   config?: Parameters<typeof createClient>[0];
 }) {
   return {
-    buildStart: async () => {
+    configResolved: async () => {
       await createClient(options?.config);
     },
     enforce: 'pre',
