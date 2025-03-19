@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/vite-plugin",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "🚀 Vite plugin for `@hey-api/openapi-ts` codegen.",
   "homepage": "https://heyapi.dev/",
   "repository": {

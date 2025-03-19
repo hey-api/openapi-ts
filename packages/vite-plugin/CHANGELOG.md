@@ -1,5 +1,11 @@
 # @hey-api/vite-plugin
 
+## 0.2.0
+
+### Minor Changes
+
+- [#1838](https://github.com/hey-api/openapi-ts/pull/1838) [`cee4508`](https://github.com/hey-api/openapi-ts/commit/cee4508fe2a58f4bbc79955176c9e930f941ba94) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: initial release
+
 ## 0.1.2
 
 ### Patch Changes
