@@ -4,7 +4,7 @@ import type {
 } from '@hey-api/client-core';
 import {
   getAuthToken,
-  jsonBodySerializer,
+  // jsonBodySerializer,
   serializeArrayParam,
   serializeObjectParam,
   serializePrimitiveParam,
@@ -395,7 +395,7 @@ const defaultHeaders = {
 export const createConfig = <T extends ClientOptions = ClientOptions>(
   override: Config<Omit<ClientOptions, keyof T> & T> = {},
 ): Config<Omit<ClientOptions, keyof T> & T> => ({
-  ...jsonBodySerializer,
+  // ...jsonBodySerializer,
   headers: defaultHeaders,
   parseAs: 'auto',
   querySerializer: defaultQuerySerializer,

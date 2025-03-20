@@ -1,3 +1,5 @@
+import type { ClientSDK } from '@sitecore-marketplace-sdk/client';
+
 import type { Client, Config, RequestOptions } from './types';
 import {
   buildUrl,
@@ -6,12 +8,54 @@ import {
   getParseAs,
   mergeConfigs,
   mergeHeaders,
-  setAuthParams,
 } from './utils';
 
 type ReqInit = Omit<RequestInit, 'body' | 'headers'> & {
   body?: any;
   headers: ReturnType<typeof mergeHeaders>;
+};
+
+const fetch = async (
+  input: globalThis.Request,
+  init?: RequestInit,
+): Promise<Response> => {
+  const clientSdk: ClientSDK | undefined = (window as any)
+    .sitecore_marketplace__clientSdk;
+
+  if (!clientSdk) {
+    throw new Error('ClientSDK is not available on the window object.');
+  }
+
+  const url = new URL(input.url);
+  const path = url.pathname + url.search + url.hash;
+
+  const method = init?.method || 'GET';
+  const headers = init?.headers
+    ? Object.fromEntries(new Headers(init.headers))
+    : undefined;
+  const body = init?.body;
+
+  return clientSdk
+    .mutate('host.request', {
+      params: {
+        body,
+        contentType: headers?.['Content-Type'],
+        headers,
+        method,
+        path,
+        requiresAuth: true,
+      },
+    })
+    .then((response) => {
+      const init: ResponseInit = {
+        headers: response.headers || {},
+        status: response.status || 200,
+        statusText: response.statusText || '',
+      };
+
+      // Use the Blob directly as the body
+      return new Response(response.body, init);
+    });
 };
 
 export const createClient = (config: Config = {}): Client => {
@@ -36,16 +80,15 @@ export const createClient = (config: Config = {}): Client => {
     const opts = {
       ..._config,
       ...options,
-      fetch: options.fetch ?? _config.fetch ?? globalThis.fetch,
       headers: mergeHeaders(_config.headers, options.headers),
     };
 
-    if (opts.security) {
-      await setAuthParams({
-        ...opts,
-        security: opts.security,
-      });
-    }
+    // if (opts.security) {
+    //   await setAuthParams({
+    //     ...opts,
+    //     security: opts.security,
+    //   });
+    // }
 
     if (opts.body && opts.bodySerializer) {
       opts.body = opts.bodySerializer(opts.body);
@@ -70,7 +113,7 @@ export const createClient = (config: Config = {}): Client => {
 
     // fetch must be assigned here, otherwise it would throw the error:
     // TypeError: Failed to execute 'fetch' on 'Window': Illegal invocation
-    const _fetch = opts.fetch!;
+    const _fetch = fetch;
     let response = await _fetch(request);
 
     for (const fn of interceptors.response._fns) {

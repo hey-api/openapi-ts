@@ -9,6 +9,7 @@
     "noUnusedLocals": true,
     "strict": true,
     "target": "ES2022",
-    "useUnknownInCatchVariables": false
+    "useUnknownInCatchVariables": false,
+    "sourceMap": true
   }
 }

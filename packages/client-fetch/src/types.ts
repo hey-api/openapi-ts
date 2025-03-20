@@ -13,13 +13,7 @@ export interface Config<T extends ClientOptions = ClientOptions>
    * Base URL for all requests made by this client.
    */
   baseUrl?: T['baseUrl'];
-  /**
-   * Fetch API implementation. You can use this option to provide a custom
-   * fetch instance.
-   *
-   * @default globalThis.fetch
-   */
-  fetch?: (request: Request) => ReturnType<typeof fetch>;
+
   /**
    * Return the response data parsed in a specified format. By default, `auto`
    * will infer the appropriate method from the `Content-Type` response header.

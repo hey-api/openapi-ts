@@ -67,5 +67,8 @@
   },
   "devDependencies": {
     "@hey-api/client-core": "workspace:*"
+  },
+  "peerDependencies": {
+    "@sitecore-marketplace-sdk/client": "link:D:/Sitecore/Sitecore-PD/mkp/sitecore.mkp.sdk/packages/client"
   }
 }
