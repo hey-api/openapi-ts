@@ -12,6 +12,7 @@ export const defaultConfig: Plugin.Config<Config> = {
   mutationOptions: true,
   name: '@tanstack/solid-query',
   output: '@tanstack/solid-query',
+  paginationKeywords: ['after', 'before', 'cursor', 'offset', 'page', 'start'],
   queryOptions: true,
 };
 
