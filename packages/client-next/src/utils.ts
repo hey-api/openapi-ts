@@ -217,6 +217,9 @@ export const setAuthParams = async ({
         }
         options.query[name] = token;
         break;
+      case 'cookie':
+        options.headers.append('Cookie', `${name}=${token}`);
+        break;
       case 'header':
       default:
         options.headers.set(name, token);

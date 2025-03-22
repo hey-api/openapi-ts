@@ -171,6 +171,15 @@ export const setAuthParams = async ({
         }
         options.query[name] = token;
         break;
+      case 'cookie': {
+        const value = `${name}=${token}`;
+        if ('Cookie' in options.headers && options.headers['Cookie']) {
+          options.headers['Cookie'] = `${options.headers['Cookie']}; ${value}`;
+        } else {
+          options.headers['Cookie'] = value;
+        }
+        break;
+      }
       case 'header':
       default:
         options.headers[name] = token;
