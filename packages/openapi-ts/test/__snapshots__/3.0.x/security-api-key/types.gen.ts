@@ -14,6 +14,20 @@ export type GetFooResponses = {
     200: unknown;
 };
 
+export type GetBarData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/bar';
+};
+
+export type GetBarResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
 export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});
 };

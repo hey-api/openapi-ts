@@ -18,6 +18,20 @@
           }
         ]
       }
+    },
+    "/bar": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "bar": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -25,6 +39,11 @@
       "foo": {
         "in": "query",
         "name": "foo",
+        "type": "apiKey"
+      },
+      "bar": {
+        "in": "cookie",
+        "name": "bar",
         "type": "apiKey"
       }
     }
