@@ -23,7 +23,8 @@ export const getFoo = <ThrowOnError extends boolean = false>(options?: Options<G
         security: [
             {
                 scheme: 'bearer',
-                type: 'http'
+                type: 'http',
+                bearerFormat: 'JWT'
             }
         ],
         url: '/foo',

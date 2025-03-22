@@ -2,6 +2,13 @@ export type AuthToken = string | undefined;
 
 export interface Auth {
   /**
+   * The token that should appear first in the Authorization header for the
+   * 'http' type, when scheme is 'bearer'.
+   *
+   * @default 'Bearer'
+   */
+  bearerFormat?: string;
+  /**
    * Which part of the request do we use to send the auth?
    *
    * @default 'header'
@@ -29,7 +36,9 @@ export const getAuthToken = async (
   }
 
   if (auth.scheme === 'bearer') {
-    return `Bearer ${token}`;
+    const format =
+      auth.bearerFormat !== undefined ? auth.bearerFormat : 'Bearer';
+    return `${format} ${token}`;
   }
 
   if (auth.scheme === 'basic') {

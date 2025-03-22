@@ -3,6 +3,13 @@ import { CreateAxiosDefaults, AxiosStatic, AxiosResponse, AxiosError, AxiosInsta
 type AuthToken = string | undefined;
 interface Auth {
     /**
+     * The token that should appear first in the Authorization header for the
+     * 'http' type, when scheme is 'bearer'.
+     *
+     * @default 'Bearer'
+     */
+    bearerFormat?: string;
+    /**
      * Which part of the request do we use to send the auth?
      *
      * @default 'header'

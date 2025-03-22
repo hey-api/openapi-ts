@@ -33,6 +33,13 @@ import type { Config } from './types';
 // copy-pasted from @hey-api/client-core
 export interface Auth {
   /**
+   * The token that should appear first in the Authorization header for the
+   * 'http' type, when scheme is 'bearer'.
+   *
+   * @default 'Bearer'
+   */
+  bearerFormat?: string;
+  /**
    * Which part of the request do we use to send the auth?
    *
    * @default 'header'
@@ -190,10 +197,19 @@ const securitySchemeObjectToAuthObject = ({
   if (securitySchemeObject.type === 'http') {
     const scheme = securitySchemeObject.scheme.toLowerCase();
     if (scheme === 'bearer' || scheme === 'basic') {
-      return {
+      const auth: Auth = {
         scheme: scheme as 'bearer' | 'basic',
         type: 'http',
       };
+
+      if (
+        scheme === 'bearer' &&
+        securitySchemeObject.bearerFormat !== undefined
+      ) {
+        auth.bearerFormat = securitySchemeObject.bearerFormat;
+      }
+
+      return auth;
     }
 
     return;
