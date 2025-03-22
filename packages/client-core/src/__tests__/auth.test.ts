@@ -16,6 +16,20 @@ describe('getAuthToken', () => {
     expect(token).toBe('Bearer foo');
   });
 
+  it('returns bearer token with custom format', async () => {
+    const auth = vi.fn().mockReturnValue('foo');
+    const token = await getAuthToken(
+      {
+        bearerFormat: 'MyCustomFormat',
+        scheme: 'bearer',
+        type: 'http',
+      },
+      auth,
+    );
+    expect(auth).toHaveBeenCalled();
+    expect(token).toBe('MyCustomFormat foo');
+  });
+
   it('returns basic token', async () => {
     const auth = vi.fn().mockReturnValue('foo:bar');
     const token = await getAuthToken(
