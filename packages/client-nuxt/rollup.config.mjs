@@ -3,7 +3,7 @@ import path from 'node:path';
 import { defineConfig } from 'rollup';
 import dts from 'rollup-plugin-dts';
 
-const files = ['index.d.ts', 'index.d.cts'];
+const files = ['index.d.ts'];
 
 export default files.map((file) =>
   defineConfig({

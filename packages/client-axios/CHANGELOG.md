@@ -1,5 +1,11 @@
 # @hey-api/client-axios
 
+## 0.6.2
+
+### Patch Changes
+
+- [#1774](https://github.com/hey-api/openapi-ts/pull/1774) [`c0b36b9`](https://github.com/hey-api/openapi-ts/commit/c0b36b95645d484034c3af145c5554867568979b) Thanks [@mrlubos](https://github.com/mrlubos)! - docs: announce Hey API platform
+
 ## 0.6.1
 
 ### Patch Changes

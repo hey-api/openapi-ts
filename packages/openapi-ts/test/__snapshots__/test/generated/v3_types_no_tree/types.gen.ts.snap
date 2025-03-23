@@ -955,14 +955,28 @@ export type ExportData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/api/v{api-version}/no-tag';
+    url: '/api/v{api-version}/no+tag';
+};
+
+export type PatchApiVbyApiVersionNoTagData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v{api-version}/no+tag';
+};
+
+export type PatchApiVbyApiVersionNoTagResponses = {
+    /**
+     * OK
+     */
+    default: unknown;
 };
 
 export type ImportData = {
     body: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
     path?: never;
     query?: never;
-    url: '/api/v{api-version}/no-tag';
+    url: '/api/v{api-version}/no+tag';
 };
 
 export type ImportResponses = {
@@ -977,6 +991,20 @@ export type ImportResponses = {
 };
 
 export type ImportResponse = ImportResponses[keyof ImportResponses];
+
+export type FooWowData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v{api-version}/no+tag';
+};
+
+export type FooWowResponses = {
+    /**
+     * OK
+     */
+    default: unknown;
+};
 
 export type ApiVVersionODataControllerCountData = {
     body?: never;

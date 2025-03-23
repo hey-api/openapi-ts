@@ -13,10 +13,14 @@ import { embedProject } from '../../embed'
 Axios client is currently in beta. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
 :::
 
+### About
+
 [Axios](https://axios-http.com/) is a simple promise based HTTP client for the browser and Node.js. Axios provides a simple to use library in a small package with a very extensible interface.
 
+### Demo
+
 <button class="buttonLink" @click="(event) => embedProject('hey-api-client-axios-example')(event)">
-Live demo
+Launch demo
 </button>
 
 ## Installation
@@ -49,7 +53,7 @@ In your [configuration](/openapi-ts/get-started), add `@hey-api/client-axios` to
 
 ```js [config]
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: ['@hey-api/client-axios'], // [!code ++]
 };
@@ -57,7 +61,7 @@ export default {
 
 ```sh [cli]
 npx @hey-api/openapi-ts \
-  -i path/to/openapi.json \
+  -i https://get.heyapi.dev/hey-api/backend \
   -o src/client \
   -c @hey-api/client-axios # [!code ++]
 ```
@@ -90,7 +94,7 @@ Since `client.gen.ts` is a generated file, we can't directly modify it. Instead,
 
 ```js
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     {
@@ -220,7 +224,7 @@ Sometimes, you may not want to declare client packages as a dependency. This sce
 
 ```js
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     {

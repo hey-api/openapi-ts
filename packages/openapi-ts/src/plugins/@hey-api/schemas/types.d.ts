@@ -9,6 +9,13 @@ import type { Plugin } from '../../types';
 
 export interface Config extends Plugin.Name<'@hey-api/schemas'> {
   /**
+   * Should the exports from the generated files be re-exported in the index
+   * barrel file?
+   *
+   * @default false
+   */
+  exportFromIndex?: boolean;
+  /**
    * Customise the schema name. By default, `{{name}}Schema` is used. `name` is a
    * valid JavaScript/TypeScript identifier, e.g. if your schema name is
    * "Foo-Bar", `name` value would be "FooBar".

@@ -19,7 +19,7 @@ Before client packages, clients were generated using `@hey-api/openapi-ts`. In f
 
 ```js [fetch]
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: ['legacy/fetch'], // [!code ++]
 };
@@ -27,7 +27,7 @@ export default {
 
 ```js [axios]
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: ['legacy/axios'], // [!code ++]
 };
@@ -35,7 +35,7 @@ export default {
 
 ```js [angular]
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: ['legacy/angular'], // [!code ++]
 };
@@ -43,7 +43,7 @@ export default {
 
 ```js [node]
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: ['legacy/node'], // [!code ++]
 };
@@ -51,7 +51,7 @@ export default {
 
 ```js [xhr]
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: ['legacy/xhr'], // [!code ++]
 };

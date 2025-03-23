@@ -9,10 +9,12 @@ description: Next.js client for Hey API. Compatible with all our features.
 Next.js client is currently in beta. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
 :::
 
+### About
+
 [Next.js](https://nextjs.org/) is the React framework for the web. Used by some of the world's largest companies, Next.js enables you to create high-quality web applications with the power of React components.
 
 <!-- <button class="buttonLink" @click="(event) => embedProject('hey-api-client-next-example')(event)">
-Live demo
+Launch demo
 </button> -->
 
 ## Installation
@@ -45,7 +47,7 @@ In your [configuration](/openapi-ts/get-started), add `@hey-api/client-next` to 
 
 ```js [config]
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: ['@hey-api/client-next'], // [!code ++]
 };
@@ -53,7 +55,7 @@ export default {
 
 ```sh [cli]
 npx @hey-api/openapi-ts \
-  -i path/to/openapi.json \
+  -i https://get.heyapi.dev/hey-api/backend \
   -o src/client \
   -c @hey-api/client-next # [!code ++]
 ```
@@ -86,7 +88,7 @@ Since `client.gen.ts` is a generated file, we can't directly modify it. Instead,
 
 ```js
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     {
@@ -253,7 +255,7 @@ Sometimes, you may not want to declare client packages as a dependency. This sce
 
 ```js
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     {

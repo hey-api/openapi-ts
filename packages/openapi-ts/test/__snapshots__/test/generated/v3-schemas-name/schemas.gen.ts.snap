@@ -1201,8 +1201,7 @@ export const $ModelWithPattern = {
         },
         patternWithNewline: {
             type: 'string',
-            pattern: `aaa
-bbb`
+            pattern: 'aaa\\nbbb'
         },
         patternWithBacktick: {
             type: 'string',

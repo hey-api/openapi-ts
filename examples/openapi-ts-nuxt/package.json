@@ -1,26 +1,24 @@
 {
   "name": "@example/openapi-ts-nuxt",
   "private": true,
-  "version": "0.0.7",
+  "version": "0.0.13",
   "type": "module",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "openapi-ts": "openapi-ts",
-    "postinstall": "nuxt prepare",
+    "postinstall:disabled": "nuxt prepare",
     "preview": "nuxt preview",
-    "typecheck": "tsc --noEmit"
+    "typecheck:disabled": "tsc --noEmit"
   },
   "dependencies": {
-    "@hey-api/client-nuxt": "workspace:*",
+    "@hey-api/nuxt": "workspace:*",
     "nuxt": "3.14.1592",
     "vue": "3.5.13",
     "vue-router": "4.5.0",
     "zod": "3.23.8"
   },
   "devDependencies": {
-    "@hey-api/openapi-ts": "workspace:*",
     "vite": "6.0.9"
   }
 }

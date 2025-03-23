@@ -1,5 +1,29 @@
 # @hey-api/client-nuxt
 
+## 0.3.0
+
+### Minor Changes
+
+- [#1800](https://github.com/hey-api/openapi-ts/pull/1800) [`d80f835`](https://github.com/hey-api/openapi-ts/commit/d80f835b46775a01451f02f832ceb288c2b561d2) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: drop cjs support
+
+## 0.2.4
+
+### Patch Changes
+
+- [#1774](https://github.com/hey-api/openapi-ts/pull/1774) [`c0b36b9`](https://github.com/hey-api/openapi-ts/commit/c0b36b95645d484034c3af145c5554867568979b) Thanks [@mrlubos](https://github.com/mrlubos)! - docs: announce Hey API platform
+
+## 0.2.3
+
+### Patch Changes
+
+- [#1753](https://github.com/hey-api/openapi-ts/pull/1753) [`b8cc9f8`](https://github.com/hey-api/openapi-ts/commit/b8cc9f8a5eaf4f4ff345abc49c14c6b96744c2ea) Thanks [@LinuCC](https://github.com/LinuCC)! - fix: dropping Content-Type header with falsey but valid json body
+
+## 0.2.2
+
+### Patch Changes
+
+- [#1701](https://github.com/hey-api/openapi-ts/pull/1701) [`e86629b`](https://github.com/hey-api/openapi-ts/commit/e86629bfa9ae2a47131d3a9a240a6aa2a4f67911) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: correctly type default value for Nuxt client
+
 ## 0.2.1
 
 ### Patch Changes

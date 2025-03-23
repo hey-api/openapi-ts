@@ -2,17 +2,19 @@
 
 import { type Options, DefaultService, SimpleService, DescriptionsService, ParametersService, DefaultsService, DuplicateService, NoContentService, ResponseService, MultipleTags1Service, CollectionFormatService, TypesService, ComplexService, HeaderService, ErrorService, NonAsciiÆøåÆøÅöôêÊService } from '../sdk.gen';
 import { queryOptions, type MutationOptions, type DefaultError } from '@tanstack/angular-query-experimental';
-import type { ServiceWithEmptyTagData, DeleteCallWithoutParametersAndResponseData, GetCallWithoutParametersAndResponseData, PatchCallWithoutParametersAndResponseData, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, CallWithDescriptionsData, CallWithParametersData, CallWithWeirdParameterNamesData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, DuplicateNameData, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data, CallWithNoContentResponseData, CallWithResponseAndNoContentResponseData, DummyAData, DummyBData, CallWithResponseData, CallWithDuplicateResponsesData, CallWithDuplicateResponsesError, CallWithDuplicateResponsesResponse, CallWithResponsesData, CallWithResponsesError, CallWithResponsesResponse, CollectionFormatData, TypesData, ComplexTypesData, CallWithResultFromHeaderData, TestErrorCodeData, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PostApiVbyApiVersionBodyData, PostApiVbyApiVersionBodyError, PostApiVbyApiVersionBodyResponse } from '../types.gen';
+import type { ServiceWithEmptyTagData, PatchApiVbyApiVersionNoTagData, FooWowData, DeleteCallWithoutParametersAndResponseData, GetCallWithoutParametersAndResponseData, PatchCallWithoutParametersAndResponseData, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, CallWithDescriptionsData, CallWithParametersData, CallWithWeirdParameterNamesData, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, DuplicateNameData, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data, CallWithNoContentResponseData, CallWithResponseAndNoContentResponseData, DummyAData, DummyBData, CallWithResponseData, CallWithDuplicateResponsesData, CallWithDuplicateResponsesError, CallWithDuplicateResponsesResponse, CallWithResponsesData, CallWithResponsesError, CallWithResponsesResponse, CollectionFormatData, TypesData, ComplexTypesData, CallWithResultFromHeaderData, TestErrorCodeData, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PostApiVbyApiVersionBodyData, PostApiVbyApiVersionBodyError, PostApiVbyApiVersionBodyResponse } from '../types.gen';
 import { client as _heyApiClient } from '../client.gen';
 
-type QueryKey<TOptions extends Options> = [
+export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
         _id: string;
         _infinite?: boolean;
     }
 ];
 
-const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, infinite?: boolean): QueryKey<TOptions>[0] => {
+const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, infinite?: boolean): [
+    QueryKey<TOptions>[0]
+] => {
     const params: QueryKey<TOptions>[0] = { _id: id, baseUrl: (options?.client ?? _heyApiClient).getConfig().baseUrl } as QueryKey<TOptions>[0];
     if (infinite) {
         params._infinite = infinite;
@@ -29,12 +31,12 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
     if (options?.query) {
         params.query = options.query;
     }
-    return params;
+    return [
+        params
+    ];
 };
 
-export const serviceWithEmptyTagQueryKey = (options?: Options<ServiceWithEmptyTagData>) => [
-    createQueryKey('serviceWithEmptyTag', options)
-];
+export const serviceWithEmptyTagQueryKey = (options?: Options<ServiceWithEmptyTagData>) => createQueryKey('serviceWithEmptyTag', options);
 
 export const serviceWithEmptyTagOptions = (options?: Options<ServiceWithEmptyTagData>) => {
     return queryOptions({
@@ -51,6 +53,34 @@ export const serviceWithEmptyTagOptions = (options?: Options<ServiceWithEmptyTag
     });
 };
 
+export const patchApiVbyApiVersionNoTagMutation = (options?: Partial<Options<PatchApiVbyApiVersionNoTagData>>) => {
+    const mutationOptions: MutationOptions<unknown, DefaultError, Options<PatchApiVbyApiVersionNoTagData>> = {
+        mutationFn: async (localOptions) => {
+            const { data } = await DefaultService.patchApiVbyApiVersionNoTag({
+                ...options,
+                ...localOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const fooWowMutation = (options?: Partial<Options<FooWowData>>) => {
+    const mutationOptions: MutationOptions<unknown, DefaultError, Options<FooWowData>> = {
+        mutationFn: async (localOptions) => {
+            const { data } = await DefaultService.fooWow({
+                ...options,
+                ...localOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
 export const deleteCallWithoutParametersAndResponseMutation = (options?: Partial<Options<DeleteCallWithoutParametersAndResponseData>>) => {
     const mutationOptions: MutationOptions<unknown, DefaultError, Options<DeleteCallWithoutParametersAndResponseData>> = {
         mutationFn: async (localOptions) => {
@@ -65,9 +95,7 @@ export const deleteCallWithoutParametersAndResponseMutation = (options?: Partial
     return mutationOptions;
 };
 
-export const getCallWithoutParametersAndResponseQueryKey = (options?: Options<GetCallWithoutParametersAndResponseData>) => [
-    createQueryKey('getCallWithoutParametersAndResponse', options)
-];
+export const getCallWithoutParametersAndResponseQueryKey = (options?: Options<GetCallWithoutParametersAndResponseData>) => createQueryKey('getCallWithoutParametersAndResponse', options);
 
 export const getCallWithoutParametersAndResponseOptions = (options?: Options<GetCallWithoutParametersAndResponseData>) => {
     return queryOptions({
@@ -98,9 +126,7 @@ export const patchCallWithoutParametersAndResponseMutation = (options?: Partial<
     return mutationOptions;
 };
 
-export const postCallWithoutParametersAndResponseQueryKey = (options?: Options<PostCallWithoutParametersAndResponseData>) => [
-    createQueryKey('postCallWithoutParametersAndResponse', options)
-];
+export const postCallWithoutParametersAndResponseQueryKey = (options?: Options<PostCallWithoutParametersAndResponseData>) => createQueryKey('postCallWithoutParametersAndResponse', options);
 
 export const postCallWithoutParametersAndResponseOptions = (options?: Options<PostCallWithoutParametersAndResponseData>) => {
     return queryOptions({
@@ -145,9 +171,7 @@ export const putCallWithoutParametersAndResponseMutation = (options?: Partial<Op
     return mutationOptions;
 };
 
-export const callWithDescriptionsQueryKey = (options?: Options<CallWithDescriptionsData>) => [
-    createQueryKey('callWithDescriptions', options)
-];
+export const callWithDescriptionsQueryKey = (options?: Options<CallWithDescriptionsData>) => createQueryKey('callWithDescriptions', options);
 
 export const callWithDescriptionsOptions = (options?: Options<CallWithDescriptionsData>) => {
     return queryOptions({
@@ -178,9 +202,7 @@ export const callWithDescriptionsMutation = (options?: Partial<Options<CallWithD
     return mutationOptions;
 };
 
-export const callWithParametersQueryKey = (options: Options<CallWithParametersData>) => [
-    createQueryKey('callWithParameters', options)
-];
+export const callWithParametersQueryKey = (options: Options<CallWithParametersData>) => createQueryKey('callWithParameters', options);
 
 export const callWithParametersOptions = (options: Options<CallWithParametersData>) => {
     return queryOptions({
@@ -211,9 +233,7 @@ export const callWithParametersMutation = (options?: Partial<Options<CallWithPar
     return mutationOptions;
 };
 
-export const callWithWeirdParameterNamesQueryKey = (options: Options<CallWithWeirdParameterNamesData>) => [
-    createQueryKey('callWithWeirdParameterNames', options)
-];
+export const callWithWeirdParameterNamesQueryKey = (options: Options<CallWithWeirdParameterNamesData>) => createQueryKey('callWithWeirdParameterNames', options);
 
 export const callWithWeirdParameterNamesOptions = (options: Options<CallWithWeirdParameterNamesData>) => {
     return queryOptions({
@@ -244,9 +264,7 @@ export const callWithWeirdParameterNamesMutation = (options?: Partial<Options<Ca
     return mutationOptions;
 };
 
-export const callWithDefaultParametersQueryKey = (options: Options<CallWithDefaultParametersData>) => [
-    createQueryKey('callWithDefaultParameters', options)
-];
+export const callWithDefaultParametersQueryKey = (options: Options<CallWithDefaultParametersData>) => createQueryKey('callWithDefaultParameters', options);
 
 export const callWithDefaultParametersOptions = (options: Options<CallWithDefaultParametersData>) => {
     return queryOptions({
@@ -263,9 +281,7 @@ export const callWithDefaultParametersOptions = (options: Options<CallWithDefaul
     });
 };
 
-export const callWithDefaultOptionalParametersQueryKey = (options?: Options<CallWithDefaultOptionalParametersData>) => [
-    createQueryKey('callWithDefaultOptionalParameters', options)
-];
+export const callWithDefaultOptionalParametersQueryKey = (options?: Options<CallWithDefaultOptionalParametersData>) => createQueryKey('callWithDefaultOptionalParameters', options);
 
 export const callWithDefaultOptionalParametersOptions = (options?: Options<CallWithDefaultOptionalParametersData>) => {
     return queryOptions({
@@ -324,9 +340,7 @@ export const duplicateNameMutation = (options?: Partial<Options<DuplicateNameDat
     return mutationOptions;
 };
 
-export const duplicateName2QueryKey = (options?: Options<DuplicateName2Data>) => [
-    createQueryKey('duplicateName2', options)
-];
+export const duplicateName2QueryKey = (options?: Options<DuplicateName2Data>) => createQueryKey('duplicateName2', options);
 
 export const duplicateName2Options = (options?: Options<DuplicateName2Data>) => {
     return queryOptions({
@@ -343,9 +357,7 @@ export const duplicateName2Options = (options?: Options<DuplicateName2Data>) => 
     });
 };
 
-export const duplicateName3QueryKey = (options?: Options<DuplicateName3Data>) => [
-    createQueryKey('duplicateName3', options)
-];
+export const duplicateName3QueryKey = (options?: Options<DuplicateName3Data>) => createQueryKey('duplicateName3', options);
 
 export const duplicateName3Options = (options?: Options<DuplicateName3Data>) => {
     return queryOptions({
@@ -390,9 +402,7 @@ export const duplicateName4Mutation = (options?: Partial<Options<DuplicateName4D
     return mutationOptions;
 };
 
-export const callWithNoContentResponseQueryKey = (options?: Options<CallWithNoContentResponseData>) => [
-    createQueryKey('callWithNoContentResponse', options)
-];
+export const callWithNoContentResponseQueryKey = (options?: Options<CallWithNoContentResponseData>) => createQueryKey('callWithNoContentResponse', options);
 
 export const callWithNoContentResponseOptions = (options?: Options<CallWithNoContentResponseData>) => {
     return queryOptions({
@@ -409,9 +419,7 @@ export const callWithNoContentResponseOptions = (options?: Options<CallWithNoCon
     });
 };
 
-export const callWithResponseAndNoContentResponseQueryKey = (options?: Options<CallWithResponseAndNoContentResponseData>) => [
-    createQueryKey('callWithResponseAndNoContentResponse', options)
-];
+export const callWithResponseAndNoContentResponseQueryKey = (options?: Options<CallWithResponseAndNoContentResponseData>) => createQueryKey('callWithResponseAndNoContentResponse', options);
 
 export const callWithResponseAndNoContentResponseOptions = (options?: Options<CallWithResponseAndNoContentResponseData>) => {
     return queryOptions({
@@ -428,9 +436,7 @@ export const callWithResponseAndNoContentResponseOptions = (options?: Options<Ca
     });
 };
 
-export const dummyAQueryKey = (options?: Options<DummyAData>) => [
-    createQueryKey('dummyA', options)
-];
+export const dummyAQueryKey = (options?: Options<DummyAData>) => createQueryKey('dummyA', options);
 
 export const dummyAOptions = (options?: Options<DummyAData>) => {
     return queryOptions({
@@ -447,9 +453,7 @@ export const dummyAOptions = (options?: Options<DummyAData>) => {
     });
 };
 
-export const dummyBQueryKey = (options?: Options<DummyBData>) => [
-    createQueryKey('dummyB', options)
-];
+export const dummyBQueryKey = (options?: Options<DummyBData>) => createQueryKey('dummyB', options);
 
 export const dummyBOptions = (options?: Options<DummyBData>) => {
     return queryOptions({
@@ -466,9 +470,7 @@ export const dummyBOptions = (options?: Options<DummyBData>) => {
     });
 };
 
-export const callWithResponseQueryKey = (options?: Options<CallWithResponseData>) => [
-    createQueryKey('callWithResponse', options)
-];
+export const callWithResponseQueryKey = (options?: Options<CallWithResponseData>) => createQueryKey('callWithResponse', options);
 
 export const callWithResponseOptions = (options?: Options<CallWithResponseData>) => {
     return queryOptions({
@@ -485,9 +487,7 @@ export const callWithResponseOptions = (options?: Options<CallWithResponseData>)
     });
 };
 
-export const callWithDuplicateResponsesQueryKey = (options?: Options<CallWithDuplicateResponsesData>) => [
-    createQueryKey('callWithDuplicateResponses', options)
-];
+export const callWithDuplicateResponsesQueryKey = (options?: Options<CallWithDuplicateResponsesData>) => createQueryKey('callWithDuplicateResponses', options);
 
 export const callWithDuplicateResponsesOptions = (options?: Options<CallWithDuplicateResponsesData>) => {
     return queryOptions({
@@ -532,9 +532,7 @@ export const callWithResponsesMutation = (options?: Partial<Options<CallWithResp
     return mutationOptions;
 };
 
-export const collectionFormatQueryKey = (options: Options<CollectionFormatData>) => [
-    createQueryKey('collectionFormat', options)
-];
+export const collectionFormatQueryKey = (options: Options<CollectionFormatData>) => createQueryKey('collectionFormat', options);
 
 export const collectionFormatOptions = (options: Options<CollectionFormatData>) => {
     return queryOptions({
@@ -551,9 +549,7 @@ export const collectionFormatOptions = (options: Options<CollectionFormatData>) 
     });
 };
 
-export const typesQueryKey = (options: Options<TypesData>) => [
-    createQueryKey('types', options)
-];
+export const typesQueryKey = (options: Options<TypesData>) => createQueryKey('types', options);
 
 export const typesOptions = (options: Options<TypesData>) => {
     return queryOptions({
@@ -570,9 +566,7 @@ export const typesOptions = (options: Options<TypesData>) => {
     });
 };
 
-export const complexTypesQueryKey = (options: Options<ComplexTypesData>) => [
-    createQueryKey('complexTypes', options)
-];
+export const complexTypesQueryKey = (options: Options<ComplexTypesData>) => createQueryKey('complexTypes', options);
 
 export const complexTypesOptions = (options: Options<ComplexTypesData>) => {
     return queryOptions({
@@ -589,9 +583,7 @@ export const complexTypesOptions = (options: Options<ComplexTypesData>) => {
     });
 };
 
-export const callWithResultFromHeaderQueryKey = (options?: Options<CallWithResultFromHeaderData>) => [
-    createQueryKey('callWithResultFromHeader', options)
-];
+export const callWithResultFromHeaderQueryKey = (options?: Options<CallWithResultFromHeaderData>) => createQueryKey('callWithResultFromHeader', options);
 
 export const callWithResultFromHeaderOptions = (options?: Options<CallWithResultFromHeaderData>) => {
     return queryOptions({
@@ -622,9 +614,7 @@ export const callWithResultFromHeaderMutation = (options?: Partial<Options<CallW
     return mutationOptions;
 };
 
-export const testErrorCodeQueryKey = (options: Options<TestErrorCodeData>) => [
-    createQueryKey('testErrorCode', options)
-];
+export const testErrorCodeQueryKey = (options: Options<TestErrorCodeData>) => createQueryKey('testErrorCode', options);
 
 export const testErrorCodeOptions = (options: Options<TestErrorCodeData>) => {
     return queryOptions({
@@ -655,9 +645,7 @@ export const testErrorCodeMutation = (options?: Partial<Options<TestErrorCodeDat
     return mutationOptions;
 };
 
-export const nonAsciiæøåÆøÅöôêÊ字符串QueryKey = (options: Options<NonAsciiæøåÆøÅöôêÊ字符串Data>) => [
-    createQueryKey('nonAsciiæøåÆøÅöôêÊ字符串', options)
-];
+export const nonAsciiæøåÆøÅöôêÊ字符串QueryKey = (options: Options<NonAsciiæøåÆøÅöôêÊ字符串Data>) => createQueryKey('nonAsciiæøåÆøÅöôêÊ字符串', options);
 
 export const nonAsciiæøåÆøÅöôêÊ字符串Options = (options: Options<NonAsciiæøåÆøÅöôêÊ字符串Data>) => {
     return queryOptions({
@@ -688,9 +676,7 @@ export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options?: Partial<
     return mutationOptions;
 };
 
-export const postApiVbyApiVersionBodyQueryKey = (options: Options<PostApiVbyApiVersionBodyData>) => [
-    createQueryKey('postApiVbyApiVersionBody', options)
-];
+export const postApiVbyApiVersionBodyQueryKey = (options: Options<PostApiVbyApiVersionBodyData>) => createQueryKey('postApiVbyApiVersionBody', options);
 
 export const postApiVbyApiVersionBodyOptions = (options: Options<PostApiVbyApiVersionBodyData>) => {
     return queryOptions({

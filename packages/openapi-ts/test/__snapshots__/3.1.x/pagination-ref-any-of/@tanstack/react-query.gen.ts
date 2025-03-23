@@ -5,14 +5,16 @@ import { queryOptions, infiniteQueryOptions, type InfiniteData, type DefaultErro
 import type { PostFooData } from '../types.gen';
 import { client as _heyApiClient } from '../client.gen';
 
-type QueryKey<TOptions extends Options> = [
+export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
         _id: string;
         _infinite?: boolean;
     }
 ];
 
-const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, infinite?: boolean): QueryKey<TOptions>[0] => {
+const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, infinite?: boolean): [
+    QueryKey<TOptions>[0]
+] => {
     const params: QueryKey<TOptions>[0] = { _id: id, baseUrl: (options?.client ?? _heyApiClient).getConfig().baseUrl } as QueryKey<TOptions>[0];
     if (infinite) {
         params._infinite = infinite;
@@ -29,12 +31,12 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
     if (options?.query) {
         params.query = options.query;
     }
-    return params;
+    return [
+        params
+    ];
 };
 
-export const postFooQueryKey = (options: Options<PostFooData>) => [
-    createQueryKey('postFoo', options)
-];
+export const postFooQueryKey = (options: Options<PostFooData>) => createQueryKey('postFoo', options);
 
 export const postFooOptions = (options: Options<PostFooData>) => {
     return queryOptions({
@@ -80,9 +82,7 @@ const createInfiniteParams = <K extends Pick<QueryKey<Options>[0], 'body' | 'hea
     return params as unknown as typeof page;
 };
 
-export const postFooInfiniteQueryKey = (options: Options<PostFooData>): QueryKey<Options<PostFooData>> => [
-    createQueryKey('postFoo', options, true)
-];
+export const postFooInfiniteQueryKey = (options: Options<PostFooData>): QueryKey<Options<PostFooData>> => createQueryKey('postFoo', options, true);
 
 export const postFooInfiniteOptions = (options: Options<PostFooData>) => {
     return infiniteQueryOptions<unknown, DefaultError, InfiniteData<unknown>, QueryKey<Options<PostFooData>>, number | null | Pick<QueryKey<Options<PostFooData>>[0], 'body' | 'headers' | 'path' | 'query'>>(

@@ -13,10 +13,14 @@ import { embedProject } from '../../embed'
 Fetch API client is currently in beta. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
 :::
 
+### About
+
 The [Fetch API](https://developer.mozilla.org/docs/Web/API/Fetch_API) provides an interface for fetching resources (including across the network). It is a more powerful and flexible replacement for XMLHttpRequest.
 
+### Demo
+
 <button class="buttonLink" @click="(event) => embedProject('hey-api-client-fetch-example')(event)">
-Live demo
+Launch demo
 </button>
 
 ## Installation
@@ -49,7 +53,7 @@ In your [configuration](/openapi-ts/get-started), add `@hey-api/client-fetch` to
 
 ```js [config]
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: ['@hey-api/client-fetch'], // [!code ++]
 };
@@ -57,7 +61,7 @@ export default {
 
 ```sh [cli]
 npx @hey-api/openapi-ts \
-  -i path/to/openapi.json \
+  -i https://get.heyapi.dev/hey-api/backend \
   -o src/client \
   -c @hey-api/client-fetch # [!code ++]
 ```
@@ -90,7 +94,7 @@ Since `client.gen.ts` is a generated file, we can't directly modify it. Instead,
 
 ```js
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     {
@@ -260,7 +264,7 @@ Sometimes, you may not want to declare client packages as a dependency. This sce
 
 ```js
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     {

@@ -40,6 +40,13 @@ export interface Config extends Plugin.Name<'@hey-api/sdk'> {
    */
   client?: PluginClientNames | boolean;
   /**
+   * Should the exports from the generated files be re-exported in the index
+   * barrel file?
+   *
+   * @default true
+   */
+  exportFromIndex?: boolean;
+  /**
    * @deprecated
    *
    * **This feature works only with the legacy parser**

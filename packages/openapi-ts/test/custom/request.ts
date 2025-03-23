@@ -30,7 +30,7 @@ export const request = <T>(
       onCancel(() => {
         clearTimeout(timeout);
       });
-    } catch (e) {
-      reject(e);
+    } catch (error) {
+      reject(error);
     }
   });

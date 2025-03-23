@@ -10,6 +10,7 @@ export const defaultConfig: Plugin.Config<Config> = {
   _tags: ['transformer'],
   bigInt: true,
   dates: true,
+  exportFromIndex: false,
   name: '@hey-api/transformers',
   output: 'transformers',
 };

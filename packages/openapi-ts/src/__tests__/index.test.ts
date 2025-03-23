@@ -1,6 +1,6 @@
 import { describe, it } from 'vitest';
 
-import { createClient } from './index';
+import { createClient } from '../index';
 
 describe('index', () => {
   it('parses v2 without issues', async () => {

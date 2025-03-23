@@ -45,12 +45,55 @@ export * from './types.gen';
 
 :::
 
-We recommend importing artifacts from their files to avoid ambiguity, but we leave this choice up to you.
+### Disable index file
+
+We recommend importing artifacts from their respective files to avoid ambiguity, but we leave this choice up to you.
 
 ```ts
-import type { Pet } from './client'; // 👎 // [!code --]
-import type { Pet } from './client/types.gen'; // 👍 // [!code ++]
+import type { Pet } from './client';
+// or
+import type { Pet } from './client/types.gen';
 ```
+
+If you're not importing artifacts from the index file, you can skip generating it altogether by setting the `output.indexFile` option to `false`.
+
+```js
+import { defaultPlugins } from '@hey-api/openapi-ts';
+
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: {
+    indexFile: false, // [!code ++]
+    path: 'src/client',
+  },
+  plugins: ['@hey-api/client-fetch'],
+};
+```
+
+### Re-export more files
+
+You can choose which files should be re-exported by setting the `exportFromIndex` option to `true` on any plugin. For example, here's how you would re-export [Zod](/openapi-ts/plugins/zod) plugin exports.
+
+```js
+import { defaultPlugins } from '@hey-api/openapi-ts';
+
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    ...defaultPlugins,
+    '@hey-api/client-fetch',
+    {
+      exportFromIndex: true, // [!code ++]
+      name: 'zod',
+    },
+  ],
+};
+```
+
+::: warning
+Re-exporting additional files from index file may result in broken output due to naming conflicts.
+:::
 
 ## Client
 

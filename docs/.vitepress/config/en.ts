@@ -210,7 +210,7 @@ export default defineConfig({
         items: [
           {
             link: '/openapi-ts/integrations',
-            text: 'GitHub <span data-soon>soon</span>',
+            text: 'GitHub',
           },
         ],
         text: 'Integrations',

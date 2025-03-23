@@ -1,110 +1,112 @@
+import path from 'node:path';
+
 import { sync } from 'cross-spawn';
 import { describe, expect, it } from 'vitest';
 
 describe('bin', () => {
   it('supports required parameters', () => {
     const result = sync('node', [
-      './bin/index.cjs',
+      path.resolve(__dirname, '..', 'bin', 'index.cjs'),
       '--input',
-      './test/spec/v3.json',
+      path.resolve(__dirname, 'spec', 'v3.json'),
       '--output',
-      './test/generated/bin',
+      path.resolve(__dirname, 'generated', 'bin'),
       '--client',
       '@hey-api/client-fetch',
       '--dry-run',
       'true',
     ]);
-    expect(result.stdout.toString()).toContain('Generating from');
-    expect(result.stderr.toString()).toContain('Duplicate operationId');
+    expect(result.error).toBeFalsy();
+    expect(result.status).toBe(0);
   });
 
   it('generates angular client', () => {
     const result = sync('node', [
-      './bin/index.cjs',
+      path.resolve(__dirname, '..', 'bin', 'index.cjs'),
       '--input',
-      './test/spec/v3.json',
+      path.resolve(__dirname, 'spec', 'v3.json'),
       '--output',
-      './test/generated/bin',
+      path.resolve(__dirname, 'generated', 'bin'),
       '--client',
       'legacy/angular',
       '--dry-run',
       'true',
     ]);
-    expect(result.stdout.toString()).toContain('');
-    expect(result.stderr.toString()).toContain('Duplicate operationId');
+    expect(result.error).toBeFalsy();
+    expect(result.status).toBe(0);
   });
 
   it('generates axios client', () => {
     const result = sync('node', [
-      './bin/index.cjs',
+      path.resolve(__dirname, '..', 'bin', 'index.cjs'),
       '--input',
-      './test/spec/v3.json',
+      path.resolve(__dirname, 'spec', 'v3.json'),
       '--output',
-      './test/generated/bin',
+      path.resolve(__dirname, 'generated', 'bin'),
       '--client',
       'legacy/axios',
       '--dry-run',
       'true',
     ]);
-    expect(result.stdout.toString()).toContain('');
-    expect(result.stderr.toString()).toContain('Duplicate operationId');
+    expect(result.error).toBeFalsy();
+    expect(result.status).toBe(0);
   });
 
   it('generates fetch client', () => {
     const result = sync('node', [
-      './bin/index.cjs',
+      path.resolve(__dirname, '..', 'bin', 'index.cjs'),
       '--input',
-      './test/spec/v3.json',
+      path.resolve(__dirname, 'spec', 'v3.json'),
       '--output',
-      './test/generated/bin',
+      path.resolve(__dirname, 'generated', 'bin'),
       '--client',
       'legacy/fetch',
       '--dry-run',
       'true',
     ]);
-    expect(result.stdout.toString()).toContain('');
-    expect(result.stderr.toString()).toContain('Duplicate operationId');
+    expect(result.error).toBeFalsy();
+    expect(result.status).toBe(0);
   });
 
   it('generates node client', () => {
     const result = sync('node', [
-      './bin/index.cjs',
+      path.resolve(__dirname, '..', 'bin', 'index.cjs'),
       '--input',
-      './test/spec/v3.json',
+      path.resolve(__dirname, 'spec', 'v3.json'),
       '--output',
-      './test/generated/bin',
+      path.resolve(__dirname, 'generated', 'bin'),
       '--client',
       'legacy/node',
       '--dry-run',
       'true',
     ]);
-    expect(result.stdout.toString()).toContain('');
-    expect(result.stderr.toString()).toContain('Duplicate operationId');
+    expect(result.error).toBeFalsy();
+    expect(result.status).toBe(0);
   });
 
   it('generates xhr client', () => {
     const result = sync('node', [
-      './bin/index.cjs',
+      path.resolve(__dirname, '..', 'bin', 'index.cjs'),
       '--input',
-      './test/spec/v3.json',
+      path.resolve(__dirname, 'spec', 'v3.json'),
       '--output',
-      './test/generated/bin',
+      path.resolve(__dirname, 'generated', 'bin'),
       '--client',
       'legacy/xhr',
       '--dry-run',
       'true',
     ]);
-    expect(result.stdout.toString()).toContain('');
-    expect(result.stderr.toString()).toContain('Duplicate operationId');
+    expect(result.error).toBeFalsy();
+    expect(result.status).toBe(0);
   });
 
   it('supports all parameters', () => {
     const result = sync('node', [
-      './bin/index.cjs',
+      path.resolve(__dirname, '..', 'bin', 'index.cjs'),
       '--input',
-      './test/spec/v3.json',
+      path.resolve(__dirname, 'spec', 'v3.json'),
       '--output',
-      './test/generated/bin',
+      path.resolve(__dirname, 'generated', 'bin'),
       '--client',
       'legacy/fetch',
       '--useOptions',
@@ -117,12 +119,16 @@ describe('bin', () => {
       '--dry-run',
       'true',
     ]);
-    expect(result.stdout.toString()).toContain('Generating from');
-    expect(result.stderr.toString()).toContain('Duplicate operationId');
+    expect(result.error).toBeFalsy();
+    expect(result.status).toBe(0);
   });
 
   it('throws error without input', () => {
-    const result = sync('node', ['./bin/index.cjs', '--dry-run', 'true']);
+    const result = sync('node', [
+      path.resolve(__dirname, '..', 'bin', 'index.cjs'),
+      '--dry-run',
+      'true',
+    ]);
     expect(result.stdout.toString()).toBe('');
     expect(result.stderr.toString()).toContain('Unexpected error occurred');
     expect(result.stderr.toString()).toContain('missing input');
@@ -130,9 +136,9 @@ describe('bin', () => {
 
   it('throws error without output', () => {
     const result = sync('node', [
-      './bin/index.cjs',
+      path.resolve(__dirname, '..', 'bin', 'index.cjs'),
       '--input',
-      './test/spec/v3.json',
+      path.resolve(__dirname, 'spec', 'v3.json'),
       '--dry-run',
       'true',
     ]);
@@ -143,11 +149,11 @@ describe('bin', () => {
 
   it('throws error with wrong parameters', () => {
     const result = sync('node', [
-      './bin/index.cjs',
+      path.resolve(__dirname, '..', 'bin', 'index.cjs'),
       '--input',
-      './test/spec/v3.json',
+      path.resolve(__dirname, 'spec', 'v3.json'),
       '--output',
-      './test/generated/bin',
+      path.resolve(__dirname, 'generated', 'bin'),
       '--unknown',
       '--dry-run',
       'true',
@@ -160,11 +166,11 @@ describe('bin', () => {
 
   it('throws error with wrong client', () => {
     const result = sync('node', [
-      './bin/index.cjs',
+      path.resolve(__dirname, '..', 'bin', 'index.cjs'),
       '--input',
-      './test/spec/v3.json',
+      path.resolve(__dirname, 'spec', 'v3.json'),
       '--output',
-      './test/generated/bin',
+      path.resolve(__dirname, 'generated', 'bin'),
       '--client',
       'invalid/client',
       '--dry-run',
@@ -177,7 +183,7 @@ describe('bin', () => {
 
   it('displays help', () => {
     const result = sync('node', [
-      './bin/index.cjs',
+      path.resolve(__dirname, '..', 'bin', 'index.cjs'),
       '--help',
       '--dry-run',
       'true',
@@ -192,11 +198,11 @@ describe('bin', () => {
 describe('cli', () => {
   it('handles false booleans', () => {
     const result = sync('node', [
-      './bin/index.cjs',
+      path.resolve(__dirname, '..', 'bin', 'index.cjs'),
       '--input',
-      './test/spec/v3.json',
+      path.resolve(__dirname, 'spec', 'v3.json'),
       '--output',
-      './test/generated/bin',
+      path.resolve(__dirname, 'generated', 'bin'),
       '--debug',
       '--exportCore',
       'false',
@@ -217,11 +223,11 @@ describe('cli', () => {
 
   it('handles true booleans', () => {
     const result = sync('node', [
-      './bin/index.cjs',
+      path.resolve(__dirname, '..', 'bin', 'index.cjs'),
       '--input',
-      './test/spec/v3.json',
+      path.resolve(__dirname, 'spec', 'v3.json'),
       '--output',
-      './test/generated/bin',
+      path.resolve(__dirname, 'generated', 'bin'),
       '--client',
       '@hey-api/client-fetch',
       '--debug',
@@ -247,11 +253,11 @@ describe('cli', () => {
 
   it('handles optional booleans', () => {
     const result = sync('node', [
-      './bin/index.cjs',
+      path.resolve(__dirname, '..', 'bin', 'index.cjs'),
       '--input',
-      './test/spec/v3.json',
+      path.resolve(__dirname, 'spec', 'v3.json'),
       '--output',
-      './test/generated/bin',
+      path.resolve(__dirname, 'generated', 'bin'),
       '--client',
       '@hey-api/client-fetch',
       '--debug',

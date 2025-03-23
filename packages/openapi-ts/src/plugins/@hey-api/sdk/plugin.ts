@@ -3,7 +3,7 @@ import type ts from 'typescript';
 import { compiler } from '../../../compiler';
 import type { ObjectValue } from '../../../compiler/types';
 import { clientApi, clientModulePath } from '../../../generate/client';
-import type { FileImportResult, TypeScriptFile } from '../../../generate/files';
+import type { TypeScriptFile } from '../../../generate/files';
 import {
   hasOperationDataRequired,
   statusCodeToGroup,
@@ -25,7 +25,9 @@ import {
   importIdentifierError,
   importIdentifierResponse,
 } from '../typescript/ref';
+import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
 import { serviceFunctionIdentifier } from './plugin-legacy';
+import { createTypeOptions } from './typeOptions';
 import type { Config } from './types';
 
 // copy-pasted from @hey-api/client-core
@@ -46,8 +48,6 @@ export interface Auth {
   type: 'apiKey' | 'http';
 }
 
-const nuxtTypeComposable = 'TComposable';
-
 export const operationOptionsType = ({
   context,
   file,
@@ -60,12 +60,17 @@ export const operationOptionsType = ({
   throwOnError?: string;
 }) => {
   const identifierData = importIdentifierData({ context, file, operation });
+  const identifierResponse = importIdentifierResponse({
+    context,
+    file,
+    operation,
+  });
 
   const optionsName = clientApi.Options.name;
 
   const client = getClientPlugin(context.config);
   if (client.name === '@hey-api/client-nuxt') {
-    return `${optionsName}<${nuxtTypeComposable}, ${identifierData.name || 'unknown'}>`;
+    return `${optionsName}<${nuxtTypeComposable}, ${identifierData.name || 'unknown'}, ${identifierResponse.name || 'unknown'}, ${nuxtTypeDefault}>`;
   }
 
   // TODO: refactor this to be more generic, works for now
@@ -183,12 +188,10 @@ const securitySchemeObjectToAuthObject = ({
   }
 
   if (securitySchemeObject.type === 'http') {
-    if (
-      securitySchemeObject.scheme === 'bearer' ||
-      securitySchemeObject.scheme === 'basic'
-    ) {
+    const scheme = securitySchemeObject.scheme.toLowerCase();
+    if (scheme === 'bearer' || scheme === 'basic') {
       return {
-        scheme: securitySchemeObject.scheme,
+        scheme: scheme as 'bearer' | 'basic',
         type: 'http',
       };
     }
@@ -502,7 +505,12 @@ const operationStatements = ({
         name: compiler.identifier({ text: operation.method }),
       }),
       types: isNuxtClient
-        ? [nuxtTypeComposable, responseType, errorType]
+        ? [
+            nuxtTypeComposable,
+            `${responseType} | ${nuxtTypeDefault}`,
+            errorType,
+            nuxtTypeDefault,
+          ]
         : [responseType, errorType, 'ThrowOnError'],
     }),
   ];
@@ -523,6 +531,11 @@ const generateClassSdk = ({
   context.subscribe('operation', ({ operation }) => {
     const isRequiredOptions =
       !plugin.client || isNuxtClient || hasOperationDataRequired(operation);
+    const identifierResponse = importIdentifierResponse({
+      context,
+      file,
+      operation,
+    });
     const node = compiler.methodDeclaration({
       accessLevel: 'public',
       comment: [
@@ -562,6 +575,19 @@ const generateClassSdk = ({
               // default: compiler.ots.string('$fetch'),
               extends: compiler.typeNode('Composable'),
               name: nuxtTypeComposable,
+            },
+            {
+              default: identifierResponse.name
+                ? compiler.typeReferenceNode({
+                    typeName: identifierResponse.name,
+                  })
+                : compiler.typeNode('undefined'),
+              extends: identifierResponse.name
+                ? compiler.typeReferenceNode({
+                    typeName: identifierResponse.name,
+                  })
+                : undefined,
+              name: nuxtTypeDefault,
             },
           ]
         : [
@@ -617,6 +643,11 @@ const generateFlatSdk = ({
   context.subscribe('operation', ({ operation }) => {
     const isRequiredOptions =
       !plugin.client || isNuxtClient || hasOperationDataRequired(operation);
+    const identifierResponse = importIdentifierResponse({
+      context,
+      file,
+      operation,
+    });
     const node = compiler.constVariable({
       comment: [
         operation.deprecated && '@deprecated',
@@ -651,6 +682,19 @@ const generateFlatSdk = ({
                 extends: compiler.typeNode('Composable'),
                 name: nuxtTypeComposable,
               },
+              {
+                default: identifierResponse.name
+                  ? compiler.typeReferenceNode({
+                      typeName: identifierResponse.name,
+                    })
+                  : compiler.typeNode('undefined'),
+                extends: identifierResponse.name
+                  ? compiler.typeReferenceNode({
+                      typeName: identifierResponse.name,
+                    })
+                  : undefined,
+                name: nuxtTypeDefault,
+              },
             ]
           : [
               {
@@ -671,105 +715,6 @@ const generateFlatSdk = ({
     });
     file.add(node);
   });
-};
-
-const createTypeOptions = ({
-  clientOptions,
-  context,
-  plugin,
-}: {
-  clientOptions: FileImportResult;
-  context: IR.Context;
-  plugin: Plugin.Instance<Config>;
-}) => {
-  const file = context.file({ id: sdkId })!;
-  const client = getClientPlugin(context.config);
-  const isNuxtClient = client.name === '@hey-api/client-nuxt';
-
-  const clientModule = clientModulePath({
-    config: context.config,
-    sourceOutput: file.nameWithoutExtension(),
-  });
-  const tDataShape = file.import({
-    asType: true,
-    module: clientModule,
-    name: 'TDataShape',
-  });
-  const clientType = file.import({
-    asType: true,
-    module: clientModule,
-    name: 'Client',
-  });
-
-  const typeOptions = compiler.typeAliasDeclaration({
-    exportType: true,
-    name: 'Options',
-    type: compiler.typeIntersectionNode({
-      types: [
-        compiler.typeReferenceNode({
-          typeArguments: isNuxtClient
-            ? [
-                compiler.typeReferenceNode({ typeName: 'TComposable' }),
-                compiler.typeReferenceNode({ typeName: 'TData' }),
-              ]
-            : [
-                compiler.typeReferenceNode({ typeName: 'TData' }),
-                compiler.typeReferenceNode({ typeName: 'ThrowOnError' }),
-              ],
-          typeName: clientOptions.name,
-        }),
-        compiler.typeInterfaceNode({
-          properties: [
-            {
-              comment: [
-                'You can provide a client instance returned by `createClient()` instead of',
-                'individual options. This might be also useful if you want to implement a',
-                'custom client.',
-              ],
-              isRequired: !plugin.client,
-              name: 'client',
-              type: compiler.typeReferenceNode({ typeName: clientType.name }),
-            },
-          ],
-          useLegacyResolution: false,
-        }),
-      ],
-    }),
-    typeParameters: isNuxtClient
-      ? [
-          compiler.typeParameterDeclaration({
-            constraint: compiler.typeReferenceNode({ typeName: 'Composable' }),
-            name: 'TComposable',
-          }),
-          compiler.typeParameterDeclaration({
-            constraint: compiler.typeReferenceNode({
-              typeName: tDataShape.name,
-            }),
-            defaultType: compiler.typeReferenceNode({
-              typeName: tDataShape.name,
-            }),
-            name: 'TData',
-          }),
-        ]
-      : [
-          compiler.typeParameterDeclaration({
-            constraint: compiler.typeReferenceNode({
-              typeName: tDataShape.name,
-            }),
-            defaultType: compiler.typeReferenceNode({
-              typeName: tDataShape.name,
-            }),
-            name: 'TData',
-          }),
-          compiler.typeParameterDeclaration({
-            constraint: compiler.keywordTypeNode({ keyword: 'boolean' }),
-            defaultType: compiler.keywordTypeNode({ keyword: 'boolean' }),
-            name: 'ThrowOnError',
-          }),
-        ],
-  });
-
-  file.add(typeOptions);
 };
 
 export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {

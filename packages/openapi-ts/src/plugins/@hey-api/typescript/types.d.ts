@@ -18,6 +18,13 @@ export interface Config extends Plugin.Name<'@hey-api/typescript'> {
    */
   enumsCase?: StringCase;
   /**
+   * Should the exports from the generated files be re-exported in the index
+   * barrel file?
+   *
+   * @default true
+   */
+  exportFromIndex?: boolean;
+  /**
    * By default, inline enums (enums not defined as reusable components in
    * the input file) are generated as inlined union types. You can set
    * `exportInlineEnums` to `true` to treat inline enums as reusable components.

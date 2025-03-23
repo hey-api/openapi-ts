@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import path from 'node:path';
 
 import { sync } from 'glob';
 import { describe, expect, it } from 'vitest';
@@ -14,7 +15,11 @@ const OUTPUT_PREFIX = './test/generated/';
 
 const toOutputPath = (name: string) => `${OUTPUT_PREFIX}${name}/`;
 const toSnapshotPath = (file: string) =>
-  `./__snapshots__/${file.replace(OUTPUT_PREFIX, '')}.snap`;
+  path.resolve(
+    __dirname,
+    '__snapshots__',
+    `${file.replace(OUTPUT_PREFIX, '')}.snap`,
+  );
 
 describe('OpenAPI v2', () => {
   it.each([
@@ -22,6 +27,9 @@ describe('OpenAPI v2', () => {
       config: {
         exportCore: true,
         input: '',
+        logs: {
+          level: 'silent',
+        },
         output: '',
         plugins: [
           'legacy/fetch',
@@ -58,6 +66,9 @@ describe('OpenAPI v3', () => {
   const config: UserConfig = {
     exportCore: true,
     input: '',
+    logs: {
+      level: 'silent',
+    },
     output: {
       path: '',
     },

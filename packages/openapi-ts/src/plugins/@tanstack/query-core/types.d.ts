@@ -31,3 +31,18 @@ export interface PluginState {
   hasUsedQueryFn: boolean;
   typeInfiniteData: ImportExportItem;
 }
+
+/**
+ * Public TanStack Query API.
+ */
+export namespace TanStackQuery {
+  export type Config = {
+    /**
+     * Should the exports from the generated files be re-exported in the index
+     * barrel file?
+     *
+     * @default false
+     */
+    exportFromIndex?: boolean;
+  };
+}

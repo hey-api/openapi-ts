@@ -1,7 +1,7 @@
 {
   "name": "@example/openapi-ts-tanstack-vue-query",
   "private": true,
-  "version": "0.0.28",
+  "version": "0.0.30",
   "type": "module",
   "scripts": {
     "build-only": "vite build",
@@ -12,8 +12,7 @@
     "openapi-ts": "openapi-ts",
     "preview": "vite preview",
     "test:unit": "vitest",
-    "typecheck:old": "vue-tsc --build --force",
-    "typecheck": "vue-tsc --version"
+    "typecheck": "vue-tsc --build --force"
   },
   "dependencies": {
     "@hey-api/client-fetch": "workspace:*",

@@ -117,6 +117,10 @@ async function start() {
       userConfig.watch = Number.parseInt(params.watch, 10);
     }
 
+    if (!Object.keys(userConfig.logs).length) {
+      delete userConfig.logs;
+    }
+
     const context = await createClient(userConfig);
     if (!context[0] || !context[0].config.watch) {
       process.exit(0);
