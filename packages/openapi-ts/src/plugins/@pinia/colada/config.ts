@@ -2,12 +2,26 @@ import type { Plugin } from '../../types';
 import { handler } from './plugin';
 import type { Config } from './types';
 
+export const PluginName = '@pinia/colada';
+
+/**
+ * Default options for the Pinia Colada plugin
+ */
 export const defaultConfig: Plugin.Config<Config> = {
   _dependencies: ['@hey-api/typescript'],
   _handler: handler,
+  enableCaching: false,
+  enablePaginationOnKey: undefined,
+  errorHandling: 'specific',
   exportFromIndex: true,
-  name: '@pinia-colada/sdk',
-  output: 'queries',
+  groupByTag: false,
+  importPath: PluginName,
+  includeTypes: true,
+  name: PluginName,
+  output: PluginName,
+  resolveQuery: undefined,
+  resolveQueryKey: undefined,
+  useInfiniteQueries: false,
 };
 
 /**
