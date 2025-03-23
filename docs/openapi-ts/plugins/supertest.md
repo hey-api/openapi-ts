@@ -9,6 +9,8 @@ description: Supertest plugin for Hey API. Compatible with all our features.
 This feature isn't in development yet. Help us prioritize it by voting on [GitHub](https://github.com/hey-api/openapi-ts/issues/1488).
 :::
 
+### About
+
 [Supertest](https://github.com/ladjs/supertest) is a super-agent driven library for testing node.js HTTP servers using a fluent API.
 
 <!--@include: ../../sponsors.md-->

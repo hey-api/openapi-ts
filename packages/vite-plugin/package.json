@@ -1,0 +1,63 @@
+{
+  "name": "@hey-api/vite-plugin",
+  "version": "0.2.0",
+  "description": "🚀 Vite plugin for `@hey-api/openapi-ts` codegen.",
+  "homepage": "https://heyapi.dev/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hey-api/openapi-ts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hey-api/openapi-ts/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "email": "lubos@heyapi.dev",
+    "name": "Hey API",
+    "url": "https://heyapi.dev"
+  },
+  "funding": "https://github.com/sponsors/hey-api",
+  "keywords": [
+    "codegen",
+    "openapi",
+    "plugin",
+    "vite",
+    "vite-plugin",
+    "swagger"
+  ],
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "LICENSE.md"
+  ],
+  "scripts": {
+    "build": "tsup && pnpm check-exports",
+    "check-exports": "attw --pack .",
+    "dev": "tsup --watch",
+    "prepublishOnly": "pnpm build"
+  },
+  "peerDependencies": {
+    "@hey-api/openapi-ts": "0.64.13"
+  },
+  "devDependencies": {
+    "@hey-api/openapi-ts": "workspace:*",
+    "typescript": "5.5.3",
+    "vite": "6.0.9"
+  }
+}

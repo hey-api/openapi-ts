@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import type { Observable } from 'rxjs';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { CollectionFormatData, ComplexTypesData, ComplexTypesResponse, ComplexParamsData, ComplexParamsResponse, ImportData, ImportResponse, GetApiSimpleOperationData, GetApiSimpleOperationResponse, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, DeprecatedCallData, CallWithDescriptionsData, TestErrorCodeData, TestErrorCodeResponse, FileResponseData, FileResponseResponse, PostApiFormDataData, CallWithResultFromHeaderResponse, MultipartRequestData, MultipartResponseResponse, DummyAResponse, DummyBResponse, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData, DeleteFooData3, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, PostApiRequestBodyData, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, ApiVVersionODataControllerCountResponse, TypesData, TypesResponse, UploadFileData, UploadFileResponse } from './types.gen';
+import type { CollectionFormatData, ComplexTypesData, ComplexTypesResponse, ComplexParamsData, ComplexParamsResponse, PatchApiNoTagResponse, ImportData, ImportResponse, FooWowResponse, GetApiSimpleOperationData, GetApiSimpleOperationResponse, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, DeprecatedCallData, CallWithDescriptionsData, TestErrorCodeData, TestErrorCodeResponse, FileResponseData, FileResponseResponse, PostApiFormDataData, CallWithResultFromHeaderResponse, MultipartRequestData, MultipartResponseResponse, DummyAResponse, DummyBResponse, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData, DeleteFooData3, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, PostApiRequestBodyData, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, ApiVVersionODataControllerCountResponse, TypesData, TypesResponse, UploadFileData, UploadFileResponse } from './types.gen';
 
 @Injectable({
     providedIn: 'root'
@@ -99,7 +99,18 @@ export class DefaultService {
     public export(): Observable<void> {
         return __request(OpenAPI, this.http, {
             method: 'GET',
-            url: '/api/v{api-version}/no-tag'
+            url: '/api/v{api-version}/no+tag'
+        });
+    }
+    
+    /**
+     * @returns unknown OK
+     * @throws ApiError
+     */
+    public patchApiNoTag(): Observable<PatchApiNoTagResponse> {
+        return __request(OpenAPI, this.http, {
+            method: 'PATCH',
+            url: '/api/v{api-version}/no+tag'
         });
     }
     
@@ -113,9 +124,20 @@ export class DefaultService {
     public import(data: ImportData): Observable<ImportResponse> {
         return __request(OpenAPI, this.http, {
             method: 'POST',
-            url: '/api/v{api-version}/no-tag',
+            url: '/api/v{api-version}/no+tag',
             body: data.requestBody,
             mediaType: 'application/json'
+        });
+    }
+    
+    /**
+     * @returns unknown OK
+     * @throws ApiError
+     */
+    public fooWow(): Observable<FooWowResponse> {
+        return __request(OpenAPI, this.http, {
+            method: 'PUT',
+            url: '/api/v{api-version}/no+tag'
         });
     }
     

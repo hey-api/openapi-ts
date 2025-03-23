@@ -1,11 +1,4 @@
 <script setup lang="ts">
-import {
-  addPet,
-  findPetsByStatus,
-  getPetById,
-  type FindPetsByStatusData,
-} from '~/client';
-
 const name = ref('foo');
 const petId = ref(BigInt(8));
 const status =
@@ -36,8 +29,17 @@ const query = computed(() => ({
  * This will NOT forward anything.
  * Result: { cookies: {} }
  */
+// const { data } = await useAsyncData(() => getPetById())
+async function submitHandler() {}
 const asyncData = await getPetById({
+  // fetchAdapter: (url, options) => fetch(url, options),
+  // fetchAdapter: (url, options) => $fetch(url, options),
+  // fetchAdapter: (url, options) => axiosInstance[(options.method || 'get').toLowerCase()](url, options),
   asyncDataOptions: {
+    default: () => ({
+      name: 'Default Pet',
+      photoUrls: [],
+    }),
     watch: [petId],
   },
   composable: 'useAsyncData',

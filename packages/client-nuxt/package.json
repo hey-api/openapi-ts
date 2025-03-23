@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/client-nuxt",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "🚀 Nuxt client for `@hey-api/openapi-ts` codegen.",
   "homepage": "https://heyapi.dev/",
   "repository": {
@@ -31,21 +31,17 @@
     "vue"
   ],
   "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/index.js",
   "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "require": {
-        "types": "./dist/index.d.cts",
-        "default": "./dist/index.cjs"
-      }
-    },
+    ".": "./dist/index.js",
     "./package.json": "./package.json"
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "./dist/index.d.ts"
+      ]
+    }
   },
   "sideEffects": false,
   "files": [
@@ -55,7 +51,7 @@
   ],
   "scripts": {
     "build": "tsup && rollup -c && pnpm check-exports",
-    "check-exports": "attw --pack .",
+    "check-exports": "attw --ignore-rules cjs-resolves-to-esm --pack .",
     "dev": "tsup --watch",
     "prepublishOnly": "pnpm build",
     "test:coverage": "vitest run --coverage",

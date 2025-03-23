@@ -32,6 +32,9 @@ for (const version of versions) {
         version,
         typeof userConfig.input === 'string' ? userConfig.input : 'full.json',
       ),
+      logs: {
+        level: 'silent',
+      },
       output: path.join(
         outputDir,
         typeof userConfig.plugins[0] === 'string'
@@ -316,6 +319,9 @@ for (const version of versions) {
 
       await createClient({
         input: path.join(__dirname, 'spec', '3.1.x', 'full.json'),
+        logs: {
+          level: 'silent',
+        },
         output: path.join(outputDir, myPlugin.name, 'default'),
         plugins: [myPlugin, '@hey-api/client-fetch'],
       });

@@ -2,7 +2,7 @@
 
 import type { CancelablePromise } from './core/CancelablePromise';
 import type { BaseHttpRequest } from './core/BaseHttpRequest';
-import type { CollectionFormatData, ComplexTypesData, ComplexTypesResponse, ComplexParamsData, ComplexParamsResponse, ImportData, ImportResponse, GetApiSimpleOperationData, GetApiSimpleOperationResponse, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, DeprecatedCallData, CallWithDescriptionsData, TestErrorCodeData, TestErrorCodeResponse, FileResponseData, FileResponseResponse, PostApiFormDataData, CallWithResultFromHeaderResponse, MultipartRequestData, MultipartResponseResponse, DummyAResponse, DummyBResponse, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData, DeleteFooData3, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, PostApiRequestBodyData, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, ApiVVersionODataControllerCountResponse, TypesData, TypesResponse, UploadFileData, UploadFileResponse } from './types.gen';
+import type { CollectionFormatData, ComplexTypesData, ComplexTypesResponse, ComplexParamsData, ComplexParamsResponse, PatchApiNoTagResponse, ImportData, ImportResponse, FooWowResponse, GetApiSimpleOperationData, GetApiSimpleOperationResponse, CallWithDefaultParametersData, CallWithDefaultOptionalParametersData, CallToTestOrderOfParamsData, DeprecatedCallData, CallWithDescriptionsData, TestErrorCodeData, TestErrorCodeResponse, FileResponseData, FileResponseResponse, PostApiFormDataData, CallWithResultFromHeaderResponse, MultipartRequestData, MultipartResponseResponse, DummyAResponse, DummyBResponse, CallWithNoContentResponseResponse, CallWithResponseAndNoContentResponseResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PutWithFormUrlEncodedData, DeleteFooData3, CallWithParametersData, CallWithWeirdParameterNamesData, GetCallWithOptionalParamData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, PostApiRequestBodyData, CallWithResponseResponse, CallWithDuplicateResponsesResponse, CallWithResponsesResponse, ApiVVersionODataControllerCountResponse, TypesData, TypesResponse, UploadFileData, UploadFileResponse } from './types.gen';
 
 export class CollectionFormatService {
     constructor(public readonly httpRequest: BaseHttpRequest) { }
@@ -87,7 +87,18 @@ export class DefaultService {
     public export(): CancelablePromise<void> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/api/v{api-version}/no-tag'
+            url: '/api/v{api-version}/no+tag'
+        });
+    }
+    
+    /**
+     * @returns unknown OK
+     * @throws ApiError
+     */
+    public patchApiNoTag(): CancelablePromise<PatchApiNoTagResponse> {
+        return this.httpRequest.request({
+            method: 'PATCH',
+            url: '/api/v{api-version}/no+tag'
         });
     }
     
@@ -101,9 +112,20 @@ export class DefaultService {
     public import(data: ImportData): CancelablePromise<ImportResponse> {
         return this.httpRequest.request({
             method: 'POST',
-            url: '/api/v{api-version}/no-tag',
+            url: '/api/v{api-version}/no+tag',
             body: data.requestBody,
             mediaType: 'application/json'
+        });
+    }
+    
+    /**
+     * @returns unknown OK
+     * @throws ApiError
+     */
+    public fooWow(): CancelablePromise<FooWowResponse> {
+        return this.httpRequest.request({
+            method: 'PUT',
+            url: '/api/v{api-version}/no+tag'
         });
     }
     

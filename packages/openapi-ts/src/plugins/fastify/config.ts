@@ -6,6 +6,7 @@ export const defaultConfig: Plugin.Config<Config> = {
   _dependencies: ['@hey-api/typescript'],
   _handler: handler,
   _handlerLegacy: () => {},
+  exportFromIndex: false,
   name: 'fastify',
   output: 'fastify',
 };

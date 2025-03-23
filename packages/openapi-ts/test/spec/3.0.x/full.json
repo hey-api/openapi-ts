@@ -10,10 +10,17 @@
     }
   ],
   "paths": {
-    "/api/v{api-version}/no-tag": {
+    "/api/v{api-version}/no+tag": {
       "tags": [],
       "get": {
         "operationId": "export"
+      },
+      "patch": {
+        "responses": {
+          "default": {
+            "description": "OK"
+          }
+        }
       },
       "post": {
         "operationId": "import",
@@ -55,6 +62,14 @@
                 }
               }
             }
+          }
+        }
+      },
+      "put": {
+        "operationId": "foo+Wow",
+        "responses": {
+          "default": {
+            "description": "OK"
           }
         }
       }
@@ -2917,7 +2932,7 @@
           },
           "patternWithNewline": {
             "type": "string",
-            "pattern": "aaa\nbbb"
+            "pattern": "aaa\\nbbb"
           },
           "patternWithBacktick": {
             "type": "string",

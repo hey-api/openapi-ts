@@ -37,19 +37,33 @@ export const getSpec = async ({
   let hasChanged: boolean | undefined;
   let response: Response | undefined;
 
-  // no support for watching files and objects for now
   if (resolvedInput.type === 'url') {
     // do NOT send HEAD request on first run or if unsupported
     if (watch.lastValue && watch.isHeadMethodSupported !== false) {
-      const request = await sendRequest({
-        init: {
-          headers: watch.headers,
-          method: 'HEAD',
-        },
-        timeout,
-        url: resolvedInput.path,
-      });
-      response = request.response;
+      try {
+        const request = await sendRequest({
+          init: {
+            headers: watch.headers,
+            method: 'HEAD',
+          },
+          timeout,
+          url: resolvedInput.path,
+        });
+
+        if (request.response.status >= 300) {
+          return {
+            error: 'not-ok',
+            response: request.response,
+          };
+        }
+
+        response = request.response;
+      } catch (error) {
+        return {
+          error: 'not-ok',
+          response: new Response(error.message),
+        };
+      }
 
       if (!response.ok && watch.isHeadMethodSupported) {
         // assume the server is no longer running
@@ -102,14 +116,29 @@ export const getSpec = async ({
       }
     }
 
-    const fileRequest = await sendRequest({
-      init: {
-        method: 'GET',
-      },
-      timeout,
-      url: resolvedInput.path,
-    });
-    response = fileRequest.response;
+    try {
+      const request = await sendRequest({
+        init: {
+          method: 'GET',
+        },
+        timeout,
+        url: resolvedInput.path,
+      });
+
+      if (request.response.status >= 300) {
+        return {
+          error: 'not-ok',
+          response: request.response,
+        };
+      }
+
+      response = request.response;
+    } catch (error) {
+      return {
+        error: 'not-ok',
+        response: new Response(error.message),
+      };
+    }
 
     if (!response.ok) {
       // assume the server is no longer running
@@ -128,6 +157,13 @@ export const getSpec = async ({
       const content = new TextDecoder().decode(arrayBuffer);
       hasChanged = content !== watch.lastValue;
       watch.lastValue = content;
+    }
+  } else {
+    // we do not support watch mode for files or raw spec data
+    if (!watch.lastValue) {
+      watch.lastValue = resolvedInput.type;
+    } else {
+      hasChanged = false;
     }
   }
 

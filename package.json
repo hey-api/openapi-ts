@@ -20,24 +20,25 @@
   "funding": "https://github.com/sponsors/hey-api",
   "type": "module",
   "scripts": {
-    "build": "pnpm --recursive --filter '!./examples/openapi-ts-sample' build",
+    "build": "turbo run build --filter=\"!@example/openapi-ts-sample\"",
     "changeset": "changeset",
     "client": "sh ./scripts/client.sh",
-    "docs": "pnpm --filter @hey-api/docs --",
     "example": "sh ./scripts/example.sh",
     "format": "prettier --write .",
     "lint:fix": "prettier --check --write . && eslint . --fix",
     "lint": "prettier --check . && eslint .",
-    "openapi-ts": "pnpm --filter @hey-api/openapi-ts --",
+    "openapi-ts": "turbo run $1 --filter=\"@hey-api/openapi-ts\"",
     "prepare": "husky",
-    "test:coverage": "pnpm --recursive test:coverage",
-    "test:e2e": "pnpm --recursive test:e2e",
-    "test:update": "pnpm --recursive test:update",
-    "test": "pnpm --recursive test",
-    "typecheck": "pnpm --recursive --filter '!./examples/openapi-ts-sample' typecheck"
+    "test:coverage": "turbo run test:coverage",
+    "test:e2e": "turbo run test:e2e",
+    "test:update": "turbo run test:update",
+    "test:watch": "turbo run test:watch",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck --filter=\"!@example/openapi-ts-sample\"",
+    "vitepress": "turbo run $1 --filter=\"@docs/openapi-ts\""
   },
   "engines": {
-    "node": "^18.18.0 || ^20.9.0 || >=22.11.0"
+    "node": "^18.18.0 || ^20.9.0 || >=22.10.0"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.17.2",
@@ -60,6 +61,7 @@
     "rollup": "4.31.0",
     "rollup-plugin-dts": "6.1.1",
     "tsup": "8.3.5",
+    "turbo": "2.4.0",
     "typescript": "5.5.3",
     "typescript-eslint": "8.19.1",
     "vitest": "1.6.0"

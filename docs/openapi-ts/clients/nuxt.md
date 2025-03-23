@@ -9,10 +9,12 @@ description: Nuxt client for Hey API. Compatible with all our features.
 Nuxt client is currently in beta. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
 :::
 
+### About
+
 [Nuxt](https://nuxt.com/) is an open source framework that makes web development intuitive and powerful.
 
 <!-- <button class="buttonLink" @click="(event) => embedProject('hey-api-client-fetch-example')(event)">
-Live demo
+Launch demo
 </button> -->
 
 ## Installation
@@ -45,7 +47,7 @@ In your [configuration](/openapi-ts/get-started), add `@hey-api/client-nuxt` to 
 
 ```js [config]
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: ['@hey-api/client-nuxt'], // [!code ++]
 };
@@ -53,7 +55,7 @@ export default {
 
 ```sh [cli]
 npx @hey-api/openapi-ts \
-  -i path/to/openapi.json \
+  -i https://get.heyapi.dev/hey-api/backend \
   -o src/client \
   -c @hey-api/client-nuxt # [!code ++]
 ```
@@ -86,7 +88,7 @@ Since `client.gen.ts` is a generated file, we can't directly modify it. Instead,
 
 ```js
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     {
@@ -220,7 +222,7 @@ Sometimes, you may not want to declare client packages as a dependency. This sce
 
 ```js
 export default {
-  input: 'path/to/openapi.json',
+  input: 'https://get.heyapi.dev/hey-api/backend',
   output: 'src/client',
   plugins: [
     {

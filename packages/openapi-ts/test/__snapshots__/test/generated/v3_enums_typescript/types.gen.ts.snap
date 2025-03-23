@@ -1106,11 +1106,15 @@ export type ComplexParamsData = {
 
 export type ComplexParamsResponse = (ModelWithString);
 
+export type PatchApiNoTagResponse = (unknown);
+
 export type ImportData = {
     requestBody: (ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly);
 };
 
 export type ImportResponse = (Model_From_Zendesk | ModelWithReadOnlyAndWriteOnly);
+
+export type FooWowResponse = (unknown);
 
 export type GetApiSimpleOperationData = {
     /**

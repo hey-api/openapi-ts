@@ -25,6 +25,9 @@ describe(`OpenAPI ${version}`, () => {
       version,
       typeof userConfig.input === 'string' ? userConfig.input : '',
     ),
+    logs: {
+      level: 'silent',
+    },
     output: path.join(
       outputDir,
       typeof userConfig.output === 'string' ? userConfig.output : '',

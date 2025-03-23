@@ -1,5 +1,47 @@
 # @example/openapi-ts-nuxt
 
+## 0.0.13
+
+### Patch Changes
+
+- Updated dependencies [[`0670a38`](https://github.com/hey-api/openapi-ts/commit/0670a38c66dffc1431a7d4b48ec06b72d4f6868f)]:
+  - @hey-api/nuxt@0.1.2
+
+## 0.0.12
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @hey-api/nuxt@0.1.1
+
+## 0.0.11
+
+### Patch Changes
+
+- Updated dependencies [[`d80f835`](https://github.com/hey-api/openapi-ts/commit/d80f835b46775a01451f02f832ceb288c2b561d2)]:
+  - @hey-api/nuxt@0.1.0
+
+## 0.0.10
+
+### Patch Changes
+
+- Updated dependencies [[`c0b36b9`](https://github.com/hey-api/openapi-ts/commit/c0b36b95645d484034c3af145c5554867568979b)]:
+  - @hey-api/client-nuxt@0.2.4
+
+## 0.0.9
+
+### Patch Changes
+
+- Updated dependencies [[`b8cc9f8`](https://github.com/hey-api/openapi-ts/commit/b8cc9f8a5eaf4f4ff345abc49c14c6b96744c2ea)]:
+  - @hey-api/client-nuxt@0.2.3
+
+## 0.0.8
+
+### Patch Changes
+
+- Updated dependencies [[`e86629b`](https://github.com/hey-api/openapi-ts/commit/e86629bfa9ae2a47131d3a9a240a6aa2a4f67911)]:
+  - @hey-api/client-nuxt@0.2.2
+
 ## 0.0.7
 
 ### Patch Changes

@@ -1,4 +1,3 @@
-import type { NuxtApp } from 'nuxt/app';
 import {
   useAsyncData,
   useFetch,
@@ -86,7 +85,7 @@ export const createClient = (config: Config = {}): Client => {
     }
 
     // remove Content-Type header if body is empty to avoid sending invalid requests
-    if (!opts.body) {
+    if (opts.body === undefined || opts.body === '') {
       opts.headers.delete('Content-Type');
     }
 
@@ -111,8 +110,7 @@ export const createClient = (config: Config = {}): Client => {
         : useFetch(() => buildUrl(opts), opts);
     }
 
-    const handler: (ctx?: NuxtApp) => Promise<unknown> = () =>
-      executeFetchFn(opts, fetchFn);
+    const handler: any = () => executeFetchFn(opts, fetchFn);
 
     if (composable === 'useAsyncData') {
       return key

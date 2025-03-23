@@ -1,5 +1,87 @@
 # @hey-api/openapi-ts
 
+## 0.64.13
+
+### Patch Changes
+
+- [#1822](https://github.com/hey-api/openapi-ts/pull/1822) [`c73b0d4`](https://github.com/hey-api/openapi-ts/commit/c73b0d401c2bfa6f0b0d89d844a6aa09f2685a69) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: bump json-schema-ref-parser package
+
+- [#1826](https://github.com/hey-api/openapi-ts/pull/1826) [`90886c1`](https://github.com/hey-api/openapi-ts/commit/90886c1372a999e8cb59d5da218762f6ee6cd459) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow config to be a function
+
+## 0.64.12
+
+### Patch Changes
+
+- [#1816](https://github.com/hey-api/openapi-ts/pull/1816) [`b9e1b4b`](https://github.com/hey-api/openapi-ts/commit/b9e1b4bec5e1c5d1f2b5b9cfc7fa145274ae604d) Thanks [@shemsiu](https://github.com/shemsiu)! - Allow `scheme` property to be case-insensitive
+
+## 0.64.11
+
+### Patch Changes
+
+- [#1800](https://github.com/hey-api/openapi-ts/pull/1800) [`a4811bd`](https://github.com/hey-api/openapi-ts/commit/a4811bdf178ec1a7f1602e0483a32fe7303f4eac) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: support Hey API platform input arguments
+
+- [#1800](https://github.com/hey-api/openapi-ts/pull/1800) [`a4811bd`](https://github.com/hey-api/openapi-ts/commit/a4811bdf178ec1a7f1602e0483a32fe7303f4eac) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle raw OpenAPI specification input
+
+## 0.64.10
+
+### Patch Changes
+
+- [#1779](https://github.com/hey-api/openapi-ts/pull/1779) [`57fcec8`](https://github.com/hey-api/openapi-ts/commit/57fcec804e339cfe508cfba4afd203c22495bff2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: don't throw on missing performance marks
+
+- [#1767](https://github.com/hey-api/openapi-ts/pull/1767) [`2de84ea`](https://github.com/hey-api/openapi-ts/commit/2de84ea3dbd2cba50150808a872aea8242c33014) Thanks [@Schroedi](https://github.com/Schroedi)! - fix: handle nested dates in transformers
+
+## 0.64.9
+
+### Patch Changes
+
+- [#1774](https://github.com/hey-api/openapi-ts/pull/1774) [`c0b36b9`](https://github.com/hey-api/openapi-ts/commit/c0b36b95645d484034c3af145c5554867568979b) Thanks [@mrlubos](https://github.com/mrlubos)! - docs: announce Hey API platform
+
+## 0.64.8
+
+### Patch Changes
+
+- [#1764](https://github.com/hey-api/openapi-ts/pull/1764) [`b3ecac3`](https://github.com/hey-api/openapi-ts/commit/b3ecac31d49a269ab400db4dbb84a22f1047e19a) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: reduce minimum Node.js 22 version to 22.10.0
+
+## 0.64.7
+
+### Patch Changes
+
+- [#1755](https://github.com/hey-api/openapi-ts/pull/1755) [`82f7c14`](https://github.com/hey-api/openapi-ts/commit/82f7c1425dd903b75d15cf532b88580d180f281a) Thanks [@Matsuuu](https://github.com/Matsuuu)! - fix: Wrap the GET request in watch mode with try-catch to prevent crashes on no-head watch targets
+
+## 0.64.6
+
+### Patch Changes
+
+- [#1748](https://github.com/hey-api/openapi-ts/pull/1748) [`7326d25`](https://github.com/hey-api/openapi-ts/commit/7326d2550ae3336fd8f754f8d4a25f1a40c13a2b) Thanks [@Matsuuu](https://github.com/Matsuuu)! - fix: Wrap HEAD request in a try-catch to prevent watch mode crashes on server reloads
+
+## 0.64.5
+
+### Patch Changes
+
+- [#1728](https://github.com/hey-api/openapi-ts/pull/1728) [`cc8dabb`](https://github.com/hey-api/openapi-ts/commit/cc8dabbf1cb94879bb08fe66ecb04c4d0801e9cc) Thanks [@georgesmith46](https://github.com/georgesmith46)! - fix: correctly generate zod regex expressions when using patterns
+
+## 0.64.4
+
+### Patch Changes
+
+- [#1710](https://github.com/hey-api/openapi-ts/pull/1710) [`4afdaa1`](https://github.com/hey-api/openapi-ts/commit/4afdaa1247b0bf0629817a51c29ca25840569b77) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: use relative path to custom config file if provided when resolving relative paths
+
+## 0.64.3
+
+### Patch Changes
+
+- [#1701](https://github.com/hey-api/openapi-ts/pull/1701) [`e86629b`](https://github.com/hey-api/openapi-ts/commit/e86629bfa9ae2a47131d3a9a240a6aa2a4f67911) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: correctly type default value for Nuxt client
+
+## 0.64.2
+
+### Patch Changes
+
+- [#1697](https://github.com/hey-api/openapi-ts/pull/1697) [`dec3fed`](https://github.com/hey-api/openapi-ts/commit/dec3fedb5f51aad4711fec15a006c525cb0bf7d8) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add exportFromIndex option to all plugins
+
+- [#1699](https://github.com/hey-api/openapi-ts/pull/1699) [`8ff188f`](https://github.com/hey-api/openapi-ts/commit/8ff188fb269cf46321538dbe846e1b9ae3b8de42) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow passing arbitrary values to SDK functions via `meta` field
+
+- [#1687](https://github.com/hey-api/openapi-ts/pull/1687) [`04c7cea`](https://github.com/hey-api/openapi-ts/commit/04c7ceac940a81cbed6a4070d9244aa5052ba4a2) Thanks [@hunshcn](https://github.com/hunshcn)! - sanitize "+" in uri to avoid plus in function name
+
 ## 0.64.1
 
 ### Patch Changes
