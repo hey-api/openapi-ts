@@ -7,7 +7,7 @@ interface Auth {
      *
      * @default 'header'
      */
-    in?: 'header' | 'query';
+    in?: 'header' | 'query' | 'cookie';
     /**
      * Header or query parameter name.
      *
