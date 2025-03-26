@@ -73,10 +73,7 @@ export const paginationField = ({
     paginationRegExp.lastIndex = 0;
 
     if (paginationRegExp.test(name)) {
-      const property = schema.properties[name];
-
-      // Skip if property doesn't exist
-      if (!property) continue;
+      const property = schema.properties[name]!;
 
       if (typeof property !== 'boolean') {
         // TODO: resolve deeper references
