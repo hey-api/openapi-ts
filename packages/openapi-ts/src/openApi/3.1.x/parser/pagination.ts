@@ -85,10 +85,7 @@ export const paginationField = ({
             (schema) => schema.type !== 'null',
           );
           if (nonNullCompositionSchemas.length === 1) {
-            const firstSchema = nonNullCompositionSchemas[0];
-
-            // Skip if schema doesn't exist
-            if (!firstSchema) continue;
+            const firstSchema = nonNullCompositionSchemas[0]!;
 
             const schemaTypes = getSchemaTypes({
               schema: firstSchema,
