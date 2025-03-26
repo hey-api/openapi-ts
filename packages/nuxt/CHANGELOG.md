@@ -1,5 +1,12 @@
 # @hey-api/nuxt
 
+## 0.1.3
+
+### Patch Changes
+
+- Updated dependencies [[`fe43b88`](https://github.com/hey-api/openapi-ts/commit/fe43b889c20a2001f56e259f93f64851a1caa1d1)]:
+  - @hey-api/client-nuxt@0.3.1
+
 ## 0.1.2
 
 ### Patch Changes
