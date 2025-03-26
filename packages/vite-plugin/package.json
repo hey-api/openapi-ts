@@ -1,7 +1,7 @@
 {
-  "name": "@hey-api/rollup-plugin",
-  "version": "0.1.0",
-  "description": "🚀 Vite/Rollup plugin for `@hey-api/openapi-ts` codegen.",
+  "name": "@hey-api/vite-plugin",
+  "version": "0.2.0",
+  "description": "🚀 Vite plugin for `@hey-api/openapi-ts` codegen.",
   "homepage": "https://heyapi.dev/",
   "repository": {
     "type": "git",
@@ -21,8 +21,6 @@
     "codegen",
     "openapi",
     "plugin",
-    "rollup",
-    "rollup-plugin",
     "vite",
     "vite-plugin",
     "swagger"
@@ -55,7 +53,7 @@
     "prepublishOnly": "pnpm build"
   },
   "peerDependencies": {
-    "@hey-api/openapi-ts": "< 2"
+    "@hey-api/openapi-ts": "0.64.13"
   },
   "devDependencies": {
     "@hey-api/openapi-ts": "workspace:*",

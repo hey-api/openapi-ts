@@ -1,7 +1,7 @@
 <div align="center">
   <img alt="Hey API logo" height="150" src="https://heyapi.dev/images/logo-300w.png" width="150">
-  <h1 align="center"><b>Vite/Rollup Plugin</b></h1>
-  <p align="center">🚀 Vite/Rollup plugin for `@hey-api/openapi-ts` codegen.</p>
+  <h1 align="center"><b>Vite Plugin</b></h1>
+  <p align="center">🚀 Vite plugin for `@hey-api/openapi-ts` codegen.</p>
 </div>
 
 ## Platform
@@ -24,10 +24,10 @@ Love Hey API? Become our [sponsor](https://github.com/sponsors/hey-api).
 
 ## Usage
 
-Add to `plugins` inside your Vite/Rollup configuration.
+Add to `plugins` inside your Vite configuration.
 
 ```ts
-import { heyApiPlugin } from '@hey-api/rollup-plugin';
+import { heyApiPlugin } from '@hey-api/vite-plugin';
 
 export default defineConfig({
   plugins: [

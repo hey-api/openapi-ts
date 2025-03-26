@@ -142,6 +142,15 @@ const { data, error } = useInfiniteQuery({
 });
 ```
 
+Infinite queries are recognized by having one of these keywords in the endpoint's parameters:
+
+- after
+- before
+- cursor
+- offset
+- page
+- start
+
 ## Mutations
 
 Mutations are generated from DELETE, PATCH, POST, and PUT endpoints. The generated functions follow the naming convention of SDK functions and append `Mutation`, e.g. `addPetMutation()`.
