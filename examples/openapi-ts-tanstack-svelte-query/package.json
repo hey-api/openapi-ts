@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@hey-api/client-fetch": "workspace:*",
-    "@tanstack/svelte-query": "5.62.12"
+    "@tanstack/svelte-query": "5.69.0"
   },
   "devDependencies": {
     "@fontsource/fira-mono": "5.0.0",
