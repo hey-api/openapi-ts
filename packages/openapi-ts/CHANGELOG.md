@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.64.14
+
+### Patch Changes
+
+- [#1827](https://github.com/hey-api/openapi-ts/pull/1827) [`9dd43db`](https://github.com/hey-api/openapi-ts/commit/9dd43db54f2b7ebf87c5c7c118fdf149162a533d) Thanks [@john-cremit](https://github.com/john-cremit)! - feat: allow customizing pagination keywords using `input.pagination.keywords`
+
 ## 0.64.13
 
 ### Patch Changes
