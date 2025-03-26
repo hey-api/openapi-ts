@@ -66,6 +66,18 @@ interface Input {
    */
   organization?: string;
   /**
+   * Pagination configuration
+   */
+  pagination?: {
+    /**
+     * Array of keywords to be considered as pagination field names.
+     * These will be used to detect pagination fields in schemas and parameters.
+     *
+     * @default ['after', 'before', 'cursor', 'offset', 'page', 'start']
+     */
+    keywords?: ReadonlyArray<string>;
+  };
+  /**
    * Path to the OpenAPI specification. This can be either local or remote path.
    * Both JSON and YAML file formats are supported. You can also pass the parsed
    * object directly if you're fetching the file yourself.
@@ -88,6 +100,7 @@ interface Input {
    * the first match will be returned.
    */
   tags?: ReadonlyArray<string>;
+
   /**
    * **Requires `path` to start with `https://get.heyapi.dev` or be undefined**
    *

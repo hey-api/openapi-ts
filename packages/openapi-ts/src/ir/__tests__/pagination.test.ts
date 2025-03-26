@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import { paginationKeywordsRegExp } from '../pagination';
+import type { Config } from '../../types/config';
+import { getPaginationKeywordsRegExp } from '../pagination';
 
 describe('paginationKeywordsRegExp', () => {
-  const scenarios: Array<{
+  const defaultScenarios: Array<{
     result: boolean;
     value: string;
   }> = [
@@ -41,11 +42,33 @@ describe('paginationKeywordsRegExp', () => {
     },
   ];
 
-  it.each(scenarios)(
+  it.each(defaultScenarios)(
     'is $value pagination param? $output',
     async ({ result, value }) => {
-      paginationKeywordsRegExp.lastIndex = 0;
-      expect(paginationKeywordsRegExp.test(value)).toEqual(result);
+      const paginationRegExp = getPaginationKeywordsRegExp();
+      expect(paginationRegExp.test(value)).toEqual(result);
+    },
+  );
+
+  const customScenarios: Array<{
+    result: boolean;
+    value: string;
+  }> = [
+    { result: true, value: 'customPagination' },
+    { result: true, value: 'pageSize' },
+    { result: true, value: 'perPage' },
+    { result: false, value: 'page' },
+  ];
+
+  it.each(customScenarios)(
+    'with custom config, $value should match? $result',
+    async ({ result, value }) => {
+      const pagination: Config['input']['pagination'] = {
+        keywords: ['customPagination', 'pageSize', 'perPage'],
+      };
+
+      const paginationRegExp = getPaginationKeywordsRegExp(pagination);
+      expect(paginationRegExp.test(value)).toEqual(result);
     },
   );
 });
