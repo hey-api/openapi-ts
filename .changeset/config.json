@@ -12,5 +12,5 @@
   "fixed": [],
   "ignore": [],
   "linked": [],
-  "updateInternalDependencies": "patch"
+  "updateInternalDependencies": "minor"
 }
