@@ -75,7 +75,7 @@ interface Input {
      *
      * @default ['after', 'before', 'cursor', 'offset', 'page', 'start']
      */
-    keywords?: string[];
+    keywords?: ReadonlyArray<string>;
   };
   /**
    * Path to the OpenAPI specification. This can be either local or remote path.
