@@ -28,7 +28,7 @@ export const paginationField = ({
   name: string;
   schema: SchemaObject | ReferenceObject;
 }): boolean | string => {
-  const paginationRegExp = getPaginationKeywordsRegExp();
+  const paginationRegExp = getPaginationKeywordsRegExp(context.config);
   paginationRegExp.lastIndex = 0;
   if (paginationRegExp.test(name)) {
     return true;
@@ -73,11 +73,14 @@ export const paginationField = ({
   }
 
   for (const name in schema.properties) {
-    const paginationRegExp = getPaginationKeywordsRegExp();
+    const paginationRegExp = getPaginationKeywordsRegExp(config);
     paginationRegExp.lastIndex = 0;
 
     if (paginationRegExp.test(name)) {
-      const property = schema.properties[name]!;
+      const property = schema.properties[name];
+
+      // Skip if property doesn't exist
+      if (!property) continue;
 
       if (typeof property !== 'boolean' && !('$ref' in property)) {
         const schemaType = getSchemaType({ schema: property });
@@ -92,6 +95,7 @@ export const paginationField = ({
 
   for (const allOf of schema.allOf ?? []) {
     const pagination = paginationField({
+      config,
       context,
       name,
       schema: allOf,
