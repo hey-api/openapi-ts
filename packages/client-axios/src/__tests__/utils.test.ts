@@ -90,6 +90,27 @@ describe('setAuthParams', () => {
     expect(query).toEqual({});
   });
 
+  it('sets an API key in a cookie', async () => {
+    const auth = vi.fn().mockReturnValue('foo');
+    const headers: Record<any, unknown> = {};
+    const query: Record<any, unknown> = {};
+    await setAuthParams({
+      auth,
+      headers,
+      query,
+      security: [
+        {
+          in: 'cookie',
+          name: 'baz',
+          type: 'apiKey',
+        },
+      ],
+    });
+    expect(auth).toHaveBeenCalled();
+    expect(headers.Cookie).toBe('baz=foo');
+    expect(query).toEqual({});
+  });
+
   it('sets first scheme only', async () => {
     const auth = vi.fn().mockReturnValue('foo');
     const headers: Record<any, unknown> = {};
