@@ -73,14 +73,11 @@ export const paginationField = ({
   }
 
   for (const name in schema.properties) {
-    const paginationRegExp = getPaginationKeywordsRegExp(config);
+    const paginationRegExp = getPaginationKeywordsRegExp(context.config);
     paginationRegExp.lastIndex = 0;
 
     if (paginationRegExp.test(name)) {
-      const property = schema.properties[name];
-
-      // Skip if property doesn't exist
-      if (!property) continue;
+      const property = schema.properties[name]!;
 
       if (typeof property !== 'boolean' && !('$ref' in property)) {
         const schemaType = getSchemaType({ schema: property });
@@ -95,7 +92,6 @@ export const paginationField = ({
 
   for (const allOf of schema.allOf ?? []) {
     const pagination = paginationField({
-      config,
       context,
       name,
       schema: allOf,
