@@ -10,14 +10,6 @@ describe('paginationKeywordsRegExp', () => {
   }> = [
     {
       result: true,
-      value: 'page',
-    },
-    {
-      result: true,
-      value: 'cursor',
-    },
-    {
-      result: true,
       value: 'after',
     },
     {
@@ -26,7 +18,15 @@ describe('paginationKeywordsRegExp', () => {
     },
     {
       result: true,
+      value: 'cursor',
+    },
+    {
+      result: true,
       value: 'offset',
+    },
+    {
+      result: true,
+      value: 'page',
     },
     {
       result: true,
@@ -34,11 +34,11 @@ describe('paginationKeywordsRegExp', () => {
     },
     {
       result: false,
-      value: 'pageSize',
+      value: 'my_start',
     },
     {
       result: false,
-      value: 'perPage',
+      value: 'start_my',
     },
   ];
 
