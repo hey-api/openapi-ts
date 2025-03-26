@@ -917,9 +917,7 @@ export const handlerLegacy: Plugin.LegacyHandler<
               (model) => model.meta?.$ref === ref,
             );
             return refModel?.properties.find((property) => {
-              const paginationRegExp = getPaginationKeywordsRegExp(
-                plugin.config,
-              );
+              const paginationRegExp = getPaginationKeywordsRegExp(config);
               paginationRegExp.lastIndex = 0;
               if (paginationRegExp.test(property.name)) {
                 paginationField = property;
@@ -929,7 +927,7 @@ export const handlerLegacy: Plugin.LegacyHandler<
           }
 
           return parameter.properties.find((property) => {
-            const paginationRegExp = getPaginationKeywordsRegExp(plugin.config);
+            const paginationRegExp = getPaginationKeywordsRegExp(config);
             paginationRegExp.lastIndex = 0;
             if (paginationRegExp.test(property.name)) {
               paginationField = property;
