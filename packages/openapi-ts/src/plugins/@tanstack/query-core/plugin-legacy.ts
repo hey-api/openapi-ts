@@ -5,7 +5,7 @@ import type { ImportExportItem } from '../../../compiler/module';
 import type { ImportExportItemObject } from '../../../compiler/utils';
 import { clientApi, clientModulePath } from '../../../generate/client';
 import { relativeModulePath } from '../../../generate/utils';
-import { paginationKeywordsRegExp } from '../../../ir/pagination';
+import { getPaginationKeywordsRegExp } from '../../../ir/pagination';
 import type { IR } from '../../../ir/types';
 import { isOperationParameterRequired } from '../../../openApi';
 import { getOperationKey } from '../../../openApi/common/parser/operation';
@@ -900,8 +900,10 @@ export const handlerLegacy: Plugin.LegacyHandler<
         let paginationField!: Model | OperationParameter;
 
         const paginationParameter = operation.parameters.find((parameter) => {
-          paginationKeywordsRegExp.lastIndex = 0;
-          if (paginationKeywordsRegExp.test(parameter.name)) {
+          const paginationRegExp = getPaginationKeywordsRegExp(
+            config.input.pagination,
+          );
+          if (paginationRegExp.test(parameter.name)) {
             paginationField = parameter;
             return true;
           }
@@ -916,8 +918,10 @@ export const handlerLegacy: Plugin.LegacyHandler<
               (model) => model.meta?.$ref === ref,
             );
             return refModel?.properties.find((property) => {
-              paginationKeywordsRegExp.lastIndex = 0;
-              if (paginationKeywordsRegExp.test(property.name)) {
+              const paginationRegExp = getPaginationKeywordsRegExp(
+                config.input.pagination,
+              );
+              if (paginationRegExp.test(property.name)) {
                 paginationField = property;
                 return true;
               }
@@ -925,8 +929,10 @@ export const handlerLegacy: Plugin.LegacyHandler<
           }
 
           return parameter.properties.find((property) => {
-            paginationKeywordsRegExp.lastIndex = 0;
-            if (paginationKeywordsRegExp.test(property.name)) {
+            const paginationRegExp = getPaginationKeywordsRegExp(
+              config.input.pagination,
+            );
+            if (paginationRegExp.test(property.name)) {
               paginationField = property;
               return true;
             }
