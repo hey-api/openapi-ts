@@ -10,9 +10,9 @@ export const DEFAULT_PAGINATION_KEYWORDS = [
   'start',
 ];
 
-export function getPaginationKeywordsRegExp(config?: Config): RegExp {
-  const configKeywords = config?.input?.pagination?.keywords;
-  const keywords = configKeywords || DEFAULT_PAGINATION_KEYWORDS;
+export function getPaginationKeywordsRegExp({
+  keywords = DEFAULT_PAGINATION_KEYWORDS,
+}: Config['input']['pagination'] = {}): RegExp {
   const pattern = `^(${keywords.join('|')})$`;
   return new RegExp(pattern);
 }

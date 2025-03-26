@@ -46,7 +46,6 @@ describe('paginationKeywordsRegExp', () => {
     'is $value pagination param? $output',
     async ({ result, value }) => {
       const paginationRegExp = getPaginationKeywordsRegExp();
-      paginationRegExp.lastIndex = 0;
       expect(paginationRegExp.test(value)).toEqual(result);
     },
   );
@@ -64,16 +63,11 @@ describe('paginationKeywordsRegExp', () => {
   it.each(customScenarios)(
     'with custom config, $value should match? $result',
     async ({ result, value }) => {
-      const config: Config = {
-        input: {
-          pagination: {
-            keywords: ['customPagination', 'pageSize', 'perPage'],
-          },
-        },
-      } as Config;
+      const pagination: Config['input']['pagination'] = {
+        keywords: ['customPagination', 'pageSize', 'perPage'],
+      };
 
-      const paginationRegExp = getPaginationKeywordsRegExp(config);
-      paginationRegExp.lastIndex = 0;
+      const paginationRegExp = getPaginationKeywordsRegExp(pagination);
       expect(paginationRegExp.test(value)).toEqual(result);
     },
   );
