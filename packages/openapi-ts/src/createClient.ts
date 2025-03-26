@@ -2,7 +2,6 @@ import path from 'node:path';
 
 import { generateLegacyOutput, generateOutput } from './generate/output';
 import { getSpec } from './getSpec';
-import { setPaginationKeywords } from './ir/pagination';
 import type { IR } from './ir/types';
 import { parseLegacy, parseOpenApiSpec } from './openApi';
 import { processOutput } from './processOutput';
@@ -177,23 +176,6 @@ export const createClient = async ({
     inputPath,
     watch: Boolean(_watch),
   });
-
-  const tanstackPluginNames = [
-    '@tanstack/react-query',
-    '@tanstack/angular-query-experimental',
-    '@tanstack/solid-query',
-    '@tanstack/vue-query',
-    '@tanstack/svelte-query',
-  ] as const;
-
-  for (const pluginName of tanstackPluginNames) {
-    if (
-      pluginName in config.plugins &&
-      config.plugins[pluginName]?.paginationKeywords
-    ) {
-      setPaginationKeywords(config.plugins[pluginName].paginationKeywords);
-    }
-  }
 
   Performance.start('spec');
   const { data, error, response } = await getSpec({
