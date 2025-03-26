@@ -24,8 +24,9 @@ export const paginationField = ({
   name: string;
   schema: SchemaObject;
 }): boolean | string => {
-  const paginationRegExp = getPaginationKeywordsRegExp(context.config);
-  paginationRegExp.lastIndex = 0;
+  const paginationRegExp = getPaginationKeywordsRegExp(
+    context.config.input.pagination,
+  );
   if (paginationRegExp.test(name)) {
     return true;
   }
@@ -69,8 +70,9 @@ export const paginationField = ({
   }
 
   for (const name in schema.properties) {
-    const paginationRegExp = getPaginationKeywordsRegExp(context.config);
-    paginationRegExp.lastIndex = 0;
+    const paginationRegExp = getPaginationKeywordsRegExp(
+      context.config.input.pagination,
+    );
 
     if (paginationRegExp.test(name)) {
       const property = schema.properties[name]!;
