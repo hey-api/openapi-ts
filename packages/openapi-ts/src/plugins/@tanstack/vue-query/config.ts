@@ -12,7 +12,6 @@ export const defaultConfig: Plugin.Config<Config> = {
   mutationOptions: true,
   name: '@tanstack/vue-query',
   output: '@tanstack/vue-query',
-  paginationKeywords: ['after', 'before', 'cursor', 'offset', 'page', 'start'],
   queryOptions: true,
 };
 
