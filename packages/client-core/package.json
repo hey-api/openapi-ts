@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/client-core",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "private": true,
   "description": "Core utilities for type-safe @hey-api/openapi-ts clients",
   "homepage": "https://heyapi.dev/",

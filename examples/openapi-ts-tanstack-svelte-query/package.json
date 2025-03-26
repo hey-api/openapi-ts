@@ -1,7 +1,7 @@
 {
   "name": "@example/openapi-ts-tanstack-svelte-query",
   "private": true,
-  "version": "0.0.30",
+  "version": "0.0.31",
   "type": "module",
   "scripts": {
     "build": "vite build",
