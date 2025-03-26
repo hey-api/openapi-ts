@@ -1,5 +1,12 @@
 # @example/openapi-ts-tanstack-angular-query-experimental
 
+## 0.0.20
+
+### Patch Changes
+
+- Updated dependencies [[`fe43b88`](https://github.com/hey-api/openapi-ts/commit/fe43b889c20a2001f56e259f93f64851a1caa1d1)]:
+  - @hey-api/client-fetch@0.8.4
+
 ## 0.0.19
 
 ### Patch Changes
