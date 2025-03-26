@@ -4,7 +4,7 @@ import type { Config } from '../../types/config';
 import { getPaginationKeywordsRegExp } from '../pagination';
 
 describe('paginationKeywordsRegExp', () => {
-  const scenarios: Array<{
+  const defaultScenarios: Array<{
     result: boolean;
     value: string;
   }> = [
@@ -42,7 +42,7 @@ describe('paginationKeywordsRegExp', () => {
     },
   ];
 
-  it.each(scenarios)(
+  it.each(defaultScenarios)(
     'is $value pagination param? $output',
     async ({ result, value }) => {
       const paginationRegExp = getPaginationKeywordsRegExp();
@@ -51,27 +51,30 @@ describe('paginationKeywordsRegExp', () => {
     },
   );
 
-  it('uses custom keywords from config', async () => {
-    const config: Config = {
-      input: {
-        pagination: {
-          keywords: ['customPagination', 'pageSize', 'perPage'],
+  const customScenarios: Array<{
+    result: boolean;
+    value: string;
+  }> = [
+    { result: true, value: 'customPagination' },
+    { result: true, value: 'pageSize' },
+    { result: true, value: 'perPage' },
+    { result: false, value: 'page' },
+  ];
+
+  it.each(customScenarios)(
+    'with custom config, $value should match? $result',
+    async ({ result, value }) => {
+      const config: Config = {
+        input: {
+          pagination: {
+            keywords: ['customPagination', 'pageSize', 'perPage'],
+          },
         },
-      },
-    } as Config;
+      } as Config;
 
-    const paginationRegExp = getPaginationKeywordsRegExp(config);
-
-    // Should match custom keywords
-    paginationRegExp.lastIndex = 0;
-    expect(paginationRegExp.test('customPagination')).toEqual(true);
-    paginationRegExp.lastIndex = 0;
-    expect(paginationRegExp.test('pageSize')).toEqual(true);
-    paginationRegExp.lastIndex = 0;
-    expect(paginationRegExp.test('perPage')).toEqual(true);
-
-    // Should not match default keywords
-    paginationRegExp.lastIndex = 0;
-    expect(paginationRegExp.test('page')).toEqual(false);
-  });
+      const paginationRegExp = getPaginationKeywordsRegExp(config);
+      paginationRegExp.lastIndex = 0;
+      expect(paginationRegExp.test(value)).toEqual(result);
+    },
+  );
 });
