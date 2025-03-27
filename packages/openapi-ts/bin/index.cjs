@@ -35,6 +35,10 @@ const params = program
   )
   .option('-s, --silent', 'Set log level to silent')
   .option(
+    '--no-log-file',
+    'Disable writing a log file. Works like --silent but without supressing console output',
+  )
+  .option(
     '-w, --watch [value]',
     'Regenerate the client when the input file changes?',
   )
@@ -83,6 +87,7 @@ async function start() {
 
     userConfig = processParams(params, [
       'dryRun',
+      'logFile',
       'experimentalParser',
       'exportCore',
       'useOptions',
