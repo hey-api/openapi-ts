@@ -35,6 +35,7 @@ describe('generateLegacyCore', () => {
         path: '',
       },
       logs: {
+        file: true,
         level: 'info',
         path: process.cwd(),
       },
@@ -127,6 +128,7 @@ describe('generateLegacyCore', () => {
         path: '',
       },
       logs: {
+        file: true,
         level: 'info',
         path: process.cwd(),
       },
@@ -202,6 +204,7 @@ describe('generateLegacyCore', () => {
         path: '',
       },
       logs: {
+        file: true,
         level: 'info',
         path: process.cwd(),
       },

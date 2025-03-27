@@ -18,6 +18,7 @@ vi.mock('../3.1.x', () => ({
 vi.mock('../../utils/config', () => {
   const config: Partial<Config> = {
     logs: {
+      file: false,
       level: 'silent',
       path: '',
     },

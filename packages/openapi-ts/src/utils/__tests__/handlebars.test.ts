@@ -18,6 +18,7 @@ describe('registerHandlebarHelpers', () => {
         path: '',
       },
       logs: {
+        file: true,
         level: 'info',
         path: process.cwd(),
       },
@@ -84,6 +85,7 @@ describe('registerHandlebarTemplates', () => {
         path: '',
       },
       logs: {
+        file: true,
         level: 'info',
         path: process.cwd(),
       },
