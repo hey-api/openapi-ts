@@ -24,6 +24,7 @@ describe('handlerLegacy', () => {
         path: '',
       },
       logs: {
+        file: true,
         level: 'info',
         path: process.cwd(),
       },
@@ -184,6 +185,7 @@ describe('methodNameBuilder', () => {
         path: '',
       },
       logs: {
+        file: true,
         level: 'info',
         path: process.cwd(),
       },
@@ -266,6 +268,7 @@ describe('methodNameBuilder', () => {
         path: '',
       },
       logs: {
+        file: true,
         level: 'info',
         path: process.cwd(),
       },
@@ -351,6 +354,7 @@ describe('methodNameBuilder', () => {
         path: '',
       },
       logs: {
+        file: true,
         level: 'info',
         path: process.cwd(),
       },

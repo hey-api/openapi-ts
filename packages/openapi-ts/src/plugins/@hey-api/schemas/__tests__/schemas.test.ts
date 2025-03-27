@@ -21,6 +21,7 @@ describe('generateLegacySchemas', () => {
         path: '',
       },
       logs: {
+        file: true,
         level: 'info',
         path: process.cwd(),
       },
@@ -109,6 +110,7 @@ describe('generateLegacySchemas', () => {
         path: '',
       },
       logs: {
+        file: true,
         level: 'info',
         path: process.cwd(),
       },
