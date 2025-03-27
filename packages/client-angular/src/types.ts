@@ -1,7 +1,6 @@
 import type {
   HttpClient,
   HttpErrorResponse,
-  HttpRequest,
   HttpResponse,
 } from '@angular/common/http';
 import type {
@@ -9,8 +8,6 @@ import type {
   Client as CoreClient,
   Config as CoreConfig,
 } from '@hey-api/client-core';
-
-import type { Middleware } from './utils';
 
 export interface Config<T extends ClientOptions = ClientOptions>
   extends Omit<RequestInit, 'body' | 'headers' | 'method'>,
@@ -64,21 +61,19 @@ export interface RequestOptions<
 
 export type RequestResult<
   TData = unknown,
-  TError = unknown,
+  TError extends HttpErrorResponse = HttpErrorResponse,
   ThrowOnError extends boolean = boolean,
 > = ThrowOnError extends true
   ? Promise<{
       data: TData;
-      request: Request;
-      response: Response;
+      response: HttpResponse<TData>;
     }>
   : Promise<
       (
         | { data: TData; error: undefined }
         | { data: undefined; error: TError }
       ) & {
-        request: Request;
-        response: Response;
+        response: HttpResponse<TData>;
       }
     >;
 
@@ -89,7 +84,7 @@ export interface ClientOptions {
 
 type MethodFn = <
   TData = unknown,
-  TError = unknown,
+  TError extends HttpErrorResponse = HttpErrorResponse,
   ThrowOnError extends boolean = false,
 >(
   options: Omit<RequestOptions<ThrowOnError>, 'method'>,
@@ -97,7 +92,7 @@ type MethodFn = <
 
 type RequestFn = <
   TData = unknown,
-  TError = unknown,
+  TError extends HttpErrorResponse = HttpErrorResponse,
   ThrowOnError extends boolean = false,
 >(
   options: Omit<RequestOptions<ThrowOnError>, 'method'> &
@@ -115,14 +110,7 @@ type BuildUrlFn = <
   options: Pick<TData, 'url'> & Options<TData>,
 ) => string;
 
-export type Client = CoreClient<RequestFn, Config, MethodFn, BuildUrlFn> & {
-  interceptors: Middleware<
-    HttpRequest<unknown>,
-    HttpResponse<unknown>,
-    HttpErrorResponse,
-    RequestOptions
-  >;
-};
+export type Client = CoreClient<RequestFn, Config, MethodFn, BuildUrlFn>;
 
 /**
  * The `createClientConfig()` function will be called on client initialization

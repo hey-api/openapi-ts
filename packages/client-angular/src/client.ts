@@ -1,34 +1,34 @@
-import type { HttpClient } from '@angular/common/http';
+import type { HttpErrorResponse } from '@angular/common/http';
 import {
-  type HttpErrorResponse,
-  HttpEventType,
-  HttpRequest,
+  HttpClient,
+  HttpHeaders,
   type HttpResponse,
 } from '@angular/common/http';
-import { provideAppInitializer } from '@angular/core';
-import { filter, firstValueFrom, map } from 'rxjs';
+import { inject, provideAppInitializer } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 
-import type { Client, Config, RequestOptions } from './types';
+import type { Client, Config } from './types';
 import {
   buildUrl,
   createConfig,
-  createInterceptors,
   mergeConfigs,
   mergeHeaders,
   setAuthParams,
 } from './utils';
 
-type ReqInit = Omit<RequestInit, 'body' | 'headers'> & {
-  body?: any;
-  headers: ReturnType<typeof mergeHeaders>;
-};
-
 export let _defaultHttpClient: HttpClient;
 
-export function provideHeyApiClient(httpClientGetter: () => HttpClient) {
+export function provideHeyApiClient() {
+  console.log('@hey-api will init');
   return provideAppInitializer(() => {
-    _defaultHttpClient = httpClientGetter();
+    console.log('@hey-api client initialized');
+    _defaultHttpClient = inject(HttpClient);
   });
+}
+
+export function updateHeyApiHttpClient(httpClient: HttpClient) {
+  console.log('@hey-api httpClient updated');
+  _defaultHttpClient = httpClient;
 }
 
 export const createClient = (config: Config = {}): Client => {
@@ -40,13 +40,6 @@ export const createClient = (config: Config = {}): Client => {
     _config = mergeConfigs(_config, config);
     return getConfig();
   };
-
-  const interceptors = createInterceptors<
-    HttpRequest<unknown>,
-    HttpResponse<unknown>,
-    HttpErrorResponse,
-    RequestOptions
-  >();
 
   const request: Client['request'] = async (options) => {
     const opts = {
@@ -66,96 +59,40 @@ export const createClient = (config: Config = {}): Client => {
       opts.body = opts.bodySerializer(opts.body);
     }
 
-    // remove Content-Type header if body is empty to avoid sending invalid requests
+    // Remove Content-Type header if body is empty to avoid sending invalid requests
     if (!opts.body) {
       opts.headers.delete('Content-Type');
     }
 
     const url = buildUrl(opts);
-    const { method, ...requestInit }: ReqInit = {
-      redirect: 'follow',
-      ...opts,
-    };
-
     const _httpClient = opts.httpClient ?? _defaultHttpClient;
 
-    let _request = new HttpRequest<unknown>(method, url, requestInit);
-
-    for (const fn of interceptors.request._fns) {
-      _request = await fn(_request, opts);
-    }
     try {
-      let response = await firstValueFrom(
-        _httpClient.request(_request).pipe(
-          filter((event) => event.type === HttpEventType.Response),
-          map((event) => event as HttpResponse<unknown>),
-        ),
-      );
+      // Return the raw HTTP response directly
+      const response = (await firstValueFrom(
+        _httpClient.request(opts.method ?? 'GET', url, {
+          body: opts.body,
+          headers: new HttpHeaders(opts.headers),
+          observe: 'response' as const, // Ensures we get the full HttpResponse
+          // responseType: opts.responseType ?? 'json' as 'json' | 'text' | 'blob',
+          responseType: 'json',
+          // withCredentials: opts.withCredentials ?? false,
+        }),
+      )) as HttpResponse<any>;
 
-      for (const fn of interceptors.response._fns) {
-        response = await fn(response, _request, opts);
-      }
-
-      const result = {
-        request: _request,
+      return {
+        data: response.body,
         response,
-      };
-
-      if (response.ok) {
-        if (
-          response.status === 204 ||
-          response.headers.get('Content-Length') === '0'
-        ) {
-          return {
-            data: {},
-            ...result,
-          };
-        }
-
-        // const parseAs =
-        //   (opts.parseAs === 'auto'
-        //     ? getParseAs(response.headers.get('Content-Type'))
-        //     : opts.parseAs) ?? 'json';
-
-        let data = response.body;
-        // if (parseAs === 'stream') {
-        // return {
-        //   data: response.body,
-        //   ...result,
-        // };
-        // }
-
-        // let data = await response[parseAs]();
-        // if (parseAs === 'json') {
-        if (opts.responseValidator) {
-          await opts.responseValidator(data);
-        }
-
-        if (opts.responseTransformer) {
-          data = await opts.responseTransformer(data);
-        }
-        // }
-
-        return {
-          data,
-          ...result,
-        };
-      }
+      } as any;
     } catch (err) {
-      let finalError = err;
-
-      for (const fn of interceptors.error._fns) {
-        finalError = await fn(err, err, _request, opts);
-      }
-
       if (opts.throwOnError) {
-        throw finalError;
+        throw err;
       }
 
       return {
-        error: finalError,
-        ...err,
-      };
+        error: err as HttpErrorResponse,
+        response: err as HttpErrorResponse,
+      } as any;
     }
   };
 
@@ -166,7 +103,6 @@ export const createClient = (config: Config = {}): Client => {
     get: (options) => request({ ...options, method: 'GET' }),
     getConfig,
     head: (options) => request({ ...options, method: 'HEAD' }),
-    interceptors,
     options: (options) => request({ ...options, method: 'OPTIONS' }),
     patch: (options) => request({ ...options, method: 'PATCH' }),
     post: (options) => request({ ...options, method: 'POST' }),
