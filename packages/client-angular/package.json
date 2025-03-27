@@ -1,5 +1,5 @@
 {
-  "name": "@hey-api/client-angular",
+  "name": "@mscopp/client-angular",
   "version": "0.7.2-angular-client-poc",
   "description": "🚀 Fetch API client for `@hey-api/openapi-ts` codegen.",
   "homepage": "https://heyapi.dev/",
