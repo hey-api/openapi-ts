@@ -1,8 +1,4 @@
-import type {
-  HttpClient,
-  HttpErrorResponse,
-  HttpResponse,
-} from '@angular/common/http';
+import type { HttpClient, HttpResponse } from '@angular/common/http';
 import type {
   Auth,
   Client as CoreClient,
@@ -61,7 +57,7 @@ export interface RequestOptions<
 
 export type RequestResult<
   TData = unknown,
-  TError extends HttpErrorResponse = HttpErrorResponse,
+  TError = unknown,
   ThrowOnError extends boolean = boolean,
 > = ThrowOnError extends true
   ? Promise<{
@@ -84,7 +80,7 @@ export interface ClientOptions {
 
 type MethodFn = <
   TData = unknown,
-  TError extends HttpErrorResponse = HttpErrorResponse,
+  TError = unknown,
   ThrowOnError extends boolean = false,
 >(
   options: Omit<RequestOptions<ThrowOnError>, 'method'>,
@@ -92,7 +88,7 @@ type MethodFn = <
 
 type RequestFn = <
   TData = unknown,
-  TError extends HttpErrorResponse = HttpErrorResponse,
+  TError = unknown,
   ThrowOnError extends boolean = false,
 >(
   options: Omit<RequestOptions<ThrowOnError>, 'method'> &

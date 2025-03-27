@@ -89,8 +89,10 @@ export const createClient = (config: Config = {}): Client => {
         throw err;
       }
 
+      const error = err as HttpErrorResponse;
+
       return {
-        error: err as HttpErrorResponse,
+        error: error.error,
         response: err as HttpErrorResponse,
       } as any;
     }
