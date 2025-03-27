@@ -4,7 +4,7 @@ import {
   HttpHeaders,
   type HttpResponse,
 } from '@angular/common/http';
-import { inject, provideAppInitializer } from '@angular/core';
+import { inject, isDevMode, provideAppInitializer } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import type { Client, Config } from './types';
@@ -19,10 +19,12 @@ import {
 export let _defaultHttpClient: HttpClient;
 
 export function provideHeyApiClient() {
-  console.log('@hey-api will init');
   return provideAppInitializer(() => {
-    console.log('@hey-api client initialized');
     _defaultHttpClient = inject(HttpClient);
+
+    if (isDevMode()) {
+      console.info('@hey-api client initialized');
+    }
   });
 }
 
