@@ -67,11 +67,11 @@ export const createClient = async (
   } catch (error) {
     const config = configs[0] as Config | undefined;
     const dryRun = config ? config.dryRun : resolvedConfig?.dryRun;
-    const writeLogFile = config ? config.logFile : resolvedConfig?.logFile;
+
     // TODO: add setting for log output
     if (!dryRun) {
       const logs = config?.logs ?? getLogs(resolvedConfig);
-      if (logs.level !== 'silent' && writeLogFile) {
+      if (logs.level !== 'silent' && logs.file) {
         const logName = `openapi-ts-error-${Date.now()}.log`;
         const logsDir = path.resolve(process.cwd(), logs.path ?? '');
         ensureDirSync(logsDir);

@@ -118,6 +118,8 @@ async function start() {
       userConfig.logs.level = 'silent';
     }
 
+    userConfig.logs.file = userConfig.logFile;
+
     if (typeof params.watch === 'string') {
       userConfig.watch = Number.parseInt(params.watch, 10);
     }

@@ -136,23 +136,6 @@ export interface UserConfig {
     | Record<string, unknown>
     | Input;
   /**
-   * @deprecated
-   *
-   * Opt in to the experimental parser?
-   *
-   * @default true
-   */
-  experimentalParser?: boolean;
-
-  /**
-   * @deprecated
-   *
-   * Generate core client classes?
-   *
-   * @default true
-   */
-  exportCore?: boolean;
-  /**
    * The relative location of the logs folder
    *
    * @default process.cwd()
@@ -160,6 +143,12 @@ export interface UserConfig {
   logs?:
     | string
     | {
+        /**
+         * Whether or not error logs should be written to a file or not
+         *
+         * @default true
+         * */
+        file?: boolean;
         /**
          * The logging level to control the verbosity of log output.
          * Determines which messages are logged based on their severity.
@@ -185,6 +174,7 @@ export interface UserConfig {
           | 'silent'
           | 'trace'
           | 'warn';
+
         /**
          * The relative location of the logs folder
          *
@@ -192,48 +182,6 @@ export interface UserConfig {
          */
         path?: string;
       };
-  /**
-   * Whether or not error logs should be written to a file or not
-   * */
-  logFile: boolean;
-  /**
-   * Regenerate the client when the input file changes? You can alternatively
-   * pass a numeric value for the interval in ms.
-   *
-   * @default false
-   */
-  watch?:
-    | boolean
-    | number
-    | {
-        /**
-         * Regenerate the client when the input file changes?
-         *
-         * @default false
-         */
-        enabled?: boolean;
-        /**
-         * How often should we attempt to detect the input file change? (in ms)
-         *
-         * @default 1000
-         */
-        interval?: number;
-        /**
-         * How long will we wait before the request times out?
-         *
-         * @default 60_000
-         */
-        timeout?: number;
-      };
-  /**
-   * @deprecated
-   *
-   * Custom client class name. Please note this option is deprecated and
-   * will be removed in favor of clients.
-   *
-   * @link https://heyapi.dev/openapi-ts/migrating.html#deprecated-name
-   */
-  name?: string;
   /**
    * The relative location of the output folder
    */
@@ -290,12 +238,66 @@ export interface UserConfig {
    */
   plugins?: ReadonlyArray<UserPlugins['name'] | UserPlugins>;
   /**
+   * Regenerate the client when the input file changes? You can alternatively
+   * pass a numeric value for the interval in ms.
+   *
+   * @default false
+   */
+  watch?:
+    | boolean
+    | number
+    | {
+        /**
+         * Regenerate the client when the input file changes?
+         *
+         * @default false
+         */
+        enabled?: boolean;
+        /**
+         * How often should we attempt to detect the input file change? (in ms)
+         *
+         * @default 1000
+         */
+        interval?: number;
+        /**
+         * How long will we wait before the request times out?
+         *
+         * @default 60_000
+         */
+        timeout?: number;
+      };
+  /**
    * @deprecated
    *
    * Manually set base in OpenAPI config instead of inferring from server value
    */
   // eslint-disable-next-line typescript-sort-keys/interface
   base?: string;
+  /**
+   * @deprecated
+   *
+   * Opt in to the experimental parser?
+   *
+   * @default true
+   */
+  experimentalParser?: boolean;
+  /**
+   * @deprecated
+   *
+   * Generate core client classes?
+   *
+   * @default true
+   */
+  exportCore?: boolean;
+  /**
+   * @deprecated
+   *
+   * Custom client class name. Please note this option is deprecated and
+   * will be removed in favor of clients.
+   *
+   * @link https://heyapi.dev/openapi-ts/migrating.html#deprecated-name
+   */
+  name?: string;
   /**
    * @deprecated
    *
