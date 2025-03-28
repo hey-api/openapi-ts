@@ -40,10 +40,12 @@ const zIdentifier = compiler.identifier({ text: 'z' });
 const nameTransformer = (name: string) => `z-${name}`;
 
 const arrayTypeToZodSchema = ({
+  config,
   context,
   result,
   schema,
 }: {
+  config: Omit<Config, 'name'>;
   context: IR.Context;
   result: Result;
   schema: SchemaWithType<'array'>;
@@ -73,6 +75,7 @@ const arrayTypeToZodSchema = ({
     // at least one item is guaranteed
     const itemExpressions = schema.items!.map((item) =>
       schemaToZodSchema({
+        config,
         context,
         result,
         schema: item,
@@ -331,10 +334,12 @@ const numberTypeToZodSchema = ({
 };
 
 const objectTypeToZodSchema = ({
+  config,
   context,
   result,
   schema,
 }: {
+  config: Omit<Config, 'name'>;
   context: IR.Context;
   result: Result;
   schema: SchemaWithType<'object'>;
@@ -353,6 +358,7 @@ const objectTypeToZodSchema = ({
     const isRequired = required.includes(name);
 
     const propertyExpression = schemaToZodSchema({
+      config,
       context,
       optional: !isRequired,
       result,
@@ -432,8 +438,10 @@ const objectTypeToZodSchema = ({
 };
 
 const stringTypeToZodSchema = ({
+  config,
   schema,
 }: {
+  config: Omit<Config, 'name'>;
   context: IR.Context;
   schema: SchemaWithType<'string'>;
 }) => {
@@ -463,6 +471,11 @@ const stringTypeToZodSchema = ({
             expression: stringExpression,
             name: compiler.identifier({ text: 'datetime' }),
           }),
+          parameters: [
+            config.dateTimeOptions
+              ? JSON.stringify(config.dateTimeOptions)
+              : undefined,
+          ],
         });
         break;
       case 'ipv4':
@@ -642,10 +655,12 @@ const voidTypeToZodSchema = ({
 };
 
 const schemaTypeToZodSchema = ({
+  config,
   context,
   result,
   schema,
 }: {
+  config: Omit<Config, 'name'>;
   context: IR.Context;
   result: Result;
   schema: IR.SchemaObject;
@@ -653,6 +668,7 @@ const schemaTypeToZodSchema = ({
   switch (schema.type as Required<IR.SchemaObject>['type']) {
     case 'array':
       return arrayTypeToZodSchema({
+        config,
         context,
         result,
         schema: schema as SchemaWithType<'array'>,
@@ -685,12 +701,14 @@ const schemaTypeToZodSchema = ({
       });
     case 'object':
       return objectTypeToZodSchema({
+        config,
         context,
         result,
         schema: schema as SchemaWithType<'object'>,
       });
     case 'string':
       return stringTypeToZodSchema({
+        config,
         context,
         schema: schema as SchemaWithType<'string'>,
       });
@@ -718,10 +736,12 @@ const schemaTypeToZodSchema = ({
 };
 
 const operationToZodSchema = ({
+  config,
   context,
   operation,
   result,
 }: {
+  config: Omit<Config, 'name'>;
   context: IR.Context;
   operation: IR.OperationObject;
   result: Result;
@@ -736,6 +756,7 @@ const operationToZodSchema = ({
           id: operation.id,
           type: 'response',
         }),
+        config,
         context,
         result,
         schema: response,
@@ -746,6 +767,7 @@ const operationToZodSchema = ({
 
 const schemaToZodSchema = ({
   $ref,
+  config,
   context,
   optional,
   result,
@@ -755,6 +777,7 @@ const schemaToZodSchema = ({
    * When $ref is supplied, a node will be emitted to the file.
    */
   $ref?: string;
+  config: Omit<Config, 'name'>;
   context: IR.Context;
   /**
    * Accept `optional` to handle optional object properties. We can't handle
@@ -798,6 +821,7 @@ const schemaToZodSchema = ({
     if (!identifierRef.name) {
       const ref = context.resolveIrRef<IR.SchemaObject>(schema.$ref);
       expression = schemaToZodSchema({
+        config,
         context,
         result,
         schema: ref,
@@ -836,6 +860,7 @@ const schemaToZodSchema = ({
     }
   } else if (schema.type) {
     expression = schemaTypeToZodSchema({
+      config,
       context,
       result,
       schema,
@@ -846,6 +871,7 @@ const schemaToZodSchema = ({
     if (schema.items) {
       const itemTypes = schema.items.map((item) =>
         schemaToZodSchema({
+          config,
           context,
           result,
           schema: item,
@@ -895,6 +921,7 @@ const schemaToZodSchema = ({
       }
     } else {
       expression = schemaToZodSchema({
+        config,
         context,
         result,
         schema,
@@ -903,6 +930,7 @@ const schemaToZodSchema = ({
   } else {
     // catch-all fallback for failed schemas
     expression = schemaTypeToZodSchema({
+      config,
       context,
       result,
       schema: {
@@ -982,6 +1010,10 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     name: 'z',
   });
 
+  const config: Omit<Config, 'name'> = {
+    dateTimeOptions: plugin.dateTimeOptions,
+  };
+
   context.subscribe('operation', ({ operation }) => {
     const result: Result = {
       circularReferenceTracker: new Set(),
@@ -989,6 +1021,7 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     };
 
     operationToZodSchema({
+      config,
       context,
       operation,
       result,
@@ -1003,6 +1036,7 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
 
     schemaToZodSchema({
       $ref,
+      config,
       context,
       result,
       schema,
