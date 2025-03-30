@@ -14,8 +14,3 @@ yarn-error.log*
 dist
 coverage
 .env
-
-# test files
-test/generated
-test/e2e/generated
-generated/
