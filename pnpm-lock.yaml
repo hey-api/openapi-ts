@@ -724,6 +724,15 @@ importers:
 
   packages/client-core: {}
 
+  packages/client-custom:
+    devDependencies:
+      '@hey-api/client-core':
+        specifier: workspace:*
+        version: link:../client-core
+      '@hey-api/openapi-ts':
+        specifier: workspace:*
+        version: link:../openapi-ts
+
   packages/client-fetch:
     devDependencies:
       '@hey-api/client-core':
@@ -807,6 +816,45 @@ importers:
         specifier: 4.7.8
         version: 4.7.8
     devDependencies:
+      '@types/cross-spawn':
+        specifier: 6.0.6
+        version: 6.0.6
+      '@types/express':
+        specifier: 4.17.21
+        version: 4.17.21
+      axios:
+        specifier: 1.7.9
+        version: 1.7.9
+      cross-spawn:
+        specifier: 7.0.5
+        version: 7.0.5
+      eslint:
+        specifier: 9.17.0
+        version: 9.17.0(jiti@2.4.2)
+      express:
+        specifier: 4.21.0
+        version: 4.21.0
+      glob:
+        specifier: 10.4.3
+        version: 10.4.3
+      node-fetch:
+        specifier: 3.3.2
+        version: 3.3.2
+      prettier:
+        specifier: 3.4.2
+        version: 3.4.2
+      ts-node:
+        specifier: 10.9.2
+        version: 10.9.2(@types/node@22.10.5)(typescript@5.5.3)
+      tslib:
+        specifier: 2.8.1
+        version: 2.8.1
+      typescript:
+        specifier: 5.5.3
+        version: 5.5.3
+
+  packages/openapi-ts-tests:
+    devDependencies:
       '@angular-devkit/build-angular':
         specifier: 19.2.0
         version: 19.2.0(@angular/compiler-cli@19.2.0(@angular/compiler@19.2.0(@angular/core@19.2.0(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.5.3))(@angular/compiler@19.2.0(@angular/core@19.2.0(rxjs@7.8.1)(zone.js@0.15.0)))(@types/node@22.10.5)(chokidar@4.0.3)(jiti@2.4.2)(karma@6.4.4)(tailwindcss@3.4.9(ts-node@10.9.2(@types/node@22.10.5)(typescript@5.5.3)))(typescript@5.5.3)(vite@6.1.0(@types/node@22.10.5)(jiti@2.4.2)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.0))(yaml@2.7.0)
@@ -843,6 +891,9 @@ importers:
       '@hey-api/client-axios':
         specifier: workspace:*
         version: link:../client-axios
+      '@hey-api/client-custom':
+        specifier: workspace:*
+        version: link:../client-custom
       '@hey-api/client-fetch':
         specifier: workspace:*
         version: link:../client-fetch
@@ -852,6 +903,9 @@ importers:
       '@hey-api/client-nuxt':
         specifier: workspace:*
         version: link:../client-nuxt
+      '@hey-api/openapi-ts':
+        specifier: workspace:*
+        version: link:../openapi-ts
       '@tanstack/angular-query-experimental':
         specifier: 5.62.13
         version: 5.62.13(@angular/common@19.2.0(@angular/core@19.2.0(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.2.0(rxjs@7.8.1)(zone.js@0.15.0))
@@ -14205,7 +14259,7 @@ snapshots:
       semver: 7.7.1
       simple-git: 3.27.0
       sirv: 3.0.1
-      tinyglobby: 0.2.10
+      tinyglobby: 0.2.12
       unimport: 3.14.6(rollup@3.29.5)
       vite: 6.0.9(@types/node@22.10.5)(jiti@2.4.2)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.0)
       vite-plugin-inspect: 0.8.9(@nuxt/kit@3.15.4(magicast@0.3.5))(rollup@3.29.5)(vite@6.0.9(@types/node@22.10.5)(jiti@2.4.2)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.0))
@@ -14252,7 +14306,7 @@ snapshots:
       semver: 7.7.1
       simple-git: 3.27.0
       sirv: 3.0.1
-      tinyglobby: 0.2.10
+      tinyglobby: 0.2.12
       unimport: 3.14.6(rollup@4.35.0)
       vite: 6.0.9(@types/node@22.10.5)(jiti@2.4.2)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.0)
       vite-plugin-inspect: 0.8.9(@nuxt/kit@3.15.4(magicast@0.3.5))(rollup@4.35.0)(vite@6.0.9(@types/node@22.10.5)(jiti@2.4.2)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.0))
@@ -14299,7 +14353,7 @@ snapshots:
       semver: 7.7.1
       simple-git: 3.27.0
       sirv: 3.0.1
-      tinyglobby: 0.2.10
+      tinyglobby: 0.2.12
       unimport: 3.14.6(rollup@4.35.0)
       vite: 6.1.0(@types/node@22.10.5)(jiti@2.4.2)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.0)
       vite-plugin-inspect: 0.8.9(@nuxt/kit@3.15.4(magicast@0.3.5))(rollup@4.35.0)(vite@6.1.0(@types/node@22.10.5)(jiti@2.4.2)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.0))
@@ -16522,8 +16576,8 @@ snapshots:
     dependencies:
       '@mapbox/node-pre-gyp': 2.0.0(encoding@0.1.13)
       '@rollup/pluginutils': 5.1.4(rollup@4.35.0)
-      acorn: 8.14.0
-      acorn-import-attributes: 1.9.5(acorn@8.14.0)
+      acorn: 8.14.1
+      acorn-import-attributes: 1.9.5(acorn@8.14.1)
       async-sema: 3.1.1
       bindings: 1.5.0
       estree-walker: 2.0.2
@@ -16751,7 +16805,7 @@ snapshots:
 
   '@vue/devtools-core@7.6.8(vite@6.0.9(@types/node@22.10.5)(jiti@2.4.2)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.0))(vue@3.5.13(typescript@5.6.1-rc))':
     dependencies:
-      '@vue/devtools-kit': 7.6.8
+      '@vue/devtools-kit': 7.7.2
       '@vue/devtools-shared': 7.7.2
       mitt: 3.0.1
       nanoid: 5.1.3
@@ -16763,7 +16817,7 @@ snapshots:
 
   '@vue/devtools-core@7.6.8(vite@6.1.0(@types/node@22.10.5)(jiti@2.4.2)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.0))(vue@3.5.13(typescript@5.5.3))':
     dependencies:
-      '@vue/devtools-kit': 7.6.8
+      '@vue/devtools-kit': 7.7.2
       '@vue/devtools-shared': 7.7.2
       mitt: 3.0.1
       nanoid: 5.1.3
@@ -17011,9 +17065,9 @@ snapshots:
       mime-types: 2.1.35
       negotiator: 0.6.3
 
-  acorn-import-attributes@1.9.5(acorn@8.14.0):
+  acorn-import-attributes@1.9.5(acorn@8.14.1):
     dependencies:
-      acorn: 8.14.0
+      acorn: 8.14.1
 
   acorn-jsx@5.3.2(acorn@7.4.1):
     dependencies:
@@ -19045,7 +19099,7 @@ snapshots:
 
   extract-zip@2.0.1:
     dependencies:
-      debug: 4.3.4
+      debug: 4.4.0(supports-color@9.4.0)
       get-stream: 5.2.0
       yauzl: 2.10.0
     optionalDependencies:
@@ -20009,7 +20063,7 @@ snapshots:
 
   istanbul-lib-instrument@6.0.3:
     dependencies:
-      '@babel/core': 7.26.9
+      '@babel/core': 7.26.10
       '@babel/parser': 7.26.10
       '@istanbuljs/schema': 0.1.3
       istanbul-lib-coverage: 3.2.2
@@ -22334,7 +22388,7 @@ snapshots:
   proxy-agent@6.4.0:
     dependencies:
       agent-base: 7.1.3
-      debug: 4.3.4
+      debug: 4.4.0(supports-color@9.4.0)
       http-proxy-agent: 7.0.2
       https-proxy-agent: 7.0.6(supports-color@9.4.0)
       lru-cache: 7.18.3
@@ -22545,7 +22599,7 @@ snapshots:
 
   regenerator-transform@0.15.2:
     dependencies:
-      '@babel/runtime': 7.26.9
+      '@babel/runtime': 7.26.10
 
   regex-parser@2.3.1: {}
 
@@ -24098,7 +24152,7 @@ snapshots:
 
   unplugin@2.0.0-beta.1:
     dependencies:
-      acorn: 8.14.0
+      acorn: 8.14.1
       webpack-virtual-modules: 0.6.2
 
   unplugin@2.2.0:
