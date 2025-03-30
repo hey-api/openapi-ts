@@ -106,7 +106,8 @@ const getPluginsConfig = ({
           pluginByTag: (tag, errorMessage) => {
             for (const userPlugin of userPlugins) {
               const defaultConfig =
-                defaultPluginConfigs[userPlugin as PluginNames];
+                defaultPluginConfigs[userPlugin as PluginNames] ||
+                pluginConfigs[userPlugin as PluginNames];
               if (
                 defaultConfig &&
                 defaultConfig._tags?.includes(tag) &&
@@ -166,6 +167,19 @@ const getOutput = (userConfig: UserConfig): Config['output'] => {
   return output;
 };
 
+const isPluginClient = (plugin: Required<UserConfig>['plugins'][number]) => {
+  if (typeof plugin === 'string') {
+    return plugin.startsWith('@hey-api/client') || plugin.startsWith('legacy/');
+  }
+
+  return (
+    plugin.name.startsWith('@hey-api/client') ||
+    plugin.name.startsWith('legacy/') ||
+    // @ts-expect-error
+    (plugin._tags && plugin._tags.includes('client'))
+  );
+};
+
 const getPlugins = (
   userConfig: UserConfig,
 ): Pick<Config, 'plugins' | 'pluginOrder'> => {
@@ -173,14 +187,14 @@ const getPlugins = (
 
   let definedPlugins: UserConfig['plugins'] = defaultPlugins;
   if (userConfig.plugins) {
+    userConfig.plugins = userConfig.plugins.filter(
+      (plugin) =>
+        (typeof plugin === 'string' && plugin) ||
+        (typeof plugin !== 'string' && plugin.name),
+    );
     if (
       userConfig.plugins.length === 1 &&
-      ((typeof userConfig.plugins[0] === 'string' &&
-        (userConfig.plugins[0].startsWith('@hey-api/client') ||
-          userConfig.plugins[0].startsWith('legacy/'))) ||
-        (typeof userConfig.plugins[0] !== 'string' &&
-          (userConfig.plugins[0]?.name.startsWith('@hey-api/client') ||
-            userConfig.plugins[0]?.name.startsWith('legacy/'))))
+      isPluginClient(userConfig.plugins[0]!)
     ) {
       definedPlugins = [...defaultPlugins, ...userConfig.plugins];
     } else {

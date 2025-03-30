@@ -1,0 +1,21 @@
+.DS_Store
+.idea
+.tsup
+.tmp
+junit.xml
+logs
+node_modules
+npm-debug.log*
+temp
+yarn-debug.log*
+yarn-error.log*
+
+*.iml
+dist
+coverage
+.env
+
+# test files
+test/generated
+test/e2e/generated
+generated/
