@@ -5,7 +5,10 @@ import type { Config as ClientNextConfig } from '../client-next';
 import type { Config as ClientNuxtConfig } from '../client-nuxt';
 
 export type PluginHandler<ReturnType = void> = Plugin.Handler<
-  ClientAxiosConfig | ClientFetchConfig | ClientNextConfig | ClientNuxtConfig,
+  Omit<
+    ClientAxiosConfig | ClientFetchConfig | ClientNextConfig | ClientNuxtConfig,
+    'name'
+  >,
   ReturnType
 >;
 
