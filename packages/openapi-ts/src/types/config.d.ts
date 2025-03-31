@@ -144,6 +144,12 @@ export interface UserConfig {
     | string
     | {
         /**
+         * Whether or not error logs should be written to a file or not
+         *
+         * @default true
+         * */
+        file?: boolean;
+        /**
          * The logging level to control the verbosity of log output.
          * Determines which messages are logged based on their severity.
          *
@@ -168,6 +174,7 @@ export interface UserConfig {
           | 'silent'
           | 'trace'
           | 'warn';
+
         /**
          * The relative location of the logs folder
          *
