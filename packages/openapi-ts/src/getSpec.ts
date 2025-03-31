@@ -5,6 +5,7 @@ import {
   sendRequest,
 } from '@hey-api/json-schema-ref-parser';
 
+import { mergeHeaders } from './mergeHeaders';
 import type { Config } from './types/config';
 import type { WatchValues } from './types/types';
 
@@ -21,10 +22,12 @@ interface SpecError {
 }
 
 export const getSpec = async ({
+  fetchOptions,
   inputPath,
   timeout,
   watch,
 }: {
+  fetchOptions?: RequestInit;
   inputPath: Config['input']['path'];
   timeout: number;
   watch: WatchValues;
@@ -42,9 +45,10 @@ export const getSpec = async ({
     if (watch.lastValue && watch.isHeadMethodSupported !== false) {
       try {
         const request = await sendRequest({
-          init: {
-            headers: watch.headers,
+          fetchOptions: {
             method: 'HEAD',
+            ...fetchOptions,
+            headers: mergeHeaders(fetchOptions?.headers, watch.headers),
           },
           timeout,
           url: resolvedInput.path,
@@ -118,8 +122,9 @@ export const getSpec = async ({
 
     try {
       const request = await sendRequest({
-        init: {
+        fetchOptions: {
           method: 'GET',
+          ...fetchOptions,
         },
         timeout,
         url: resolvedInput.path,

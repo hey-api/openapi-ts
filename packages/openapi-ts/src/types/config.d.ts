@@ -50,6 +50,11 @@ interface Input {
    */
   exclude?: string;
   /**
+   * You pass any valid Fetch API options to the request for fetching your
+   * specification. This is useful if your file is behind auth for example.
+   */
+  fetch?: RequestInit;
+  /**
    * Process only parts matching the regular expression. You can select both
    * operations and components by reference within the bundled input. In
    * case of conflicts, `exclude` takes precedence over `include`.
@@ -133,7 +138,7 @@ export interface UserConfig {
   input:
     | 'https://get.heyapi.dev/<organization>/<project>'
     | (string & {})
-    | Record<string, unknown>
+    | (Record<string, unknown> & { path?: never })
     | Input;
   /**
    * The relative location of the logs folder
