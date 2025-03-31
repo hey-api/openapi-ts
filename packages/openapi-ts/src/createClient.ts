@@ -193,6 +193,7 @@ export const createClient = async ({
 
   Performance.start('spec');
   const { data, error, response } = await getSpec({
+    fetchOptions: config.input.fetch,
     inputPath: inputPath.path,
     timeout,
     watch,
