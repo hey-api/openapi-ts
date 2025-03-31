@@ -1,7 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import path from 'node:path';
 
+// @ts-ignore
 import { customClientPlugin } from '@hey-api/client-custom/plugin';
 import { defineConfig } from '@hey-api/openapi-ts';
+
+// @ts-ignore
+import { myClientPlugin } from './custom/client/plugin';
 
 // @ts-ignore
 // eslint-disable-next-line arrow-body-style
@@ -48,10 +53,16 @@ export default defineConfig(() => {
       path: path.resolve(__dirname, 'generated', 'sample'),
     },
     plugins: [
-      customClientPlugin(),
+      // customClientPlugin({
+      //   bundle: true,
+      // }),
+      myClientPlugin({
+        // bundle: true,
+      }),
       {
         // baseUrl: false,
         // bundle: true,
+        // bundleSource_EXPERIMENTAL: true,
         // exportFromIndex: true,
         // name: '@hey-api/client-fetch',
         // strictBaseUrl: true,

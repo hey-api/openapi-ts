@@ -46,6 +46,16 @@ export namespace Client {
      */
     bundle?: boolean;
     /**
+     * **This is an experimental feature.**
+     *
+     * When `bundle` is set to `true`, you can optionally set this option
+     * to `true` to bundle the client source code instead of the `dist` folder.
+     * This will copy the TypeScript files instead of CJS/ESM JavaScript files.
+     *
+     * @default false
+     */
+    bundleSource_EXPERIMENTAL?: boolean;
+    /**
      * Should the exports from the generated files be re-exported in the index
      * barrel file?
      *
