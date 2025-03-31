@@ -1,5 +1,17 @@
 # @hey-api/openapi-ts
 
+## 0.65.0
+
+### Minor Changes
+
+- [#1889](https://github.com/hey-api/openapi-ts/pull/1889) [`67c385b`](https://github.com/hey-api/openapi-ts/commit/67c385bf6289a79726b0cdd85fd81ca501cf2248) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: support custom clients
+
+### Patch Changes
+
+- [#1892](https://github.com/hey-api/openapi-ts/pull/1892) [`29fa764`](https://github.com/hey-api/openapi-ts/commit/29fa764986af3d3af842793c74d61681c7e967a1) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow passing fetch options to the request resolving a specification
+
+- [#1877](https://github.com/hey-api/openapi-ts/pull/1877) [`6971f5b`](https://github.com/hey-api/openapi-ts/commit/6971f5bca4dd17ea65400c504ad0a4ffb083a38b) Thanks [@Matsuuu](https://github.com/Matsuuu)! - feat: ability to disable writing a log file via a `--no-log-file` flag or `logs.file` = `false`
+
 ## 0.64.15
 
 ### Patch Changes
