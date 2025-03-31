@@ -21,6 +21,7 @@ describe('generateLegacyTypes', () => {
         path: '',
       },
       logs: {
+        file: true,
         level: 'info',
         path: process.cwd(),
       },
