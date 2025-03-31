@@ -53,7 +53,7 @@ export default defineConfig({
             collapsed: true,
             items: [
               {
-                link: '/openapi-ts/custom-plugin',
+                link: '/openapi-ts/plugins/custom',
                 text: 'Custom Plugin',
               },
             ],
@@ -78,6 +78,10 @@ export default defineConfig({
               {
                 link: '/openapi-ts/clients/nuxt',
                 text: 'Nuxt',
+              },
+              {
+                link: '/openapi-ts/clients/custom',
+                text: 'Custom Client',
               },
               {
                 link: '/openapi-ts/clients/legacy',
