@@ -1,5 +1,11 @@
 # @hey-api/client-next
 
+## 0.3.0
+
+### Minor Changes
+
+- [#1889](https://github.com/hey-api/openapi-ts/pull/1889) [`67c385b`](https://github.com/hey-api/openapi-ts/commit/67c385bf6289a79726b0cdd85fd81ca501cf2248) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add @hey-api/openapi-ts to peer dependencies
+
 ## 0.2.4
 
 ### Patch Changes
