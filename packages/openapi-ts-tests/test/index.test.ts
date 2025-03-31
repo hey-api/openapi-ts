@@ -534,7 +534,7 @@ describe('index', () => {
     await createClient({
       dryRun: true,
       input:
-        'https://raw.githubusercontent.com/hey-api/openapi-ts/main/packages/openapi-ts/test/spec/v2.json',
+        'https://raw.githubusercontent.com/hey-api/openapi-ts/main/packages/openapi-ts-tests/test/spec/v2.json',
       output: './generated/v2-downloaded/',
       plugins: ['@hey-api/client-fetch'],
     });
@@ -544,7 +544,7 @@ describe('index', () => {
     await createClient({
       dryRun: true,
       input:
-        'https://raw.githubusercontent.com/hey-api/openapi-ts/main/packages/openapi-ts/test/spec/v3.json',
+        'https://raw.githubusercontent.com/hey-api/openapi-ts/main/packages/openapi-ts-tests/test/spec/v3.json',
       output: './generated/v3-downloaded/',
       plugins: ['@hey-api/client-fetch'],
     });
