@@ -17,6 +17,11 @@ export default defineConfig(() => {
     input: {
       branch: 'main',
       // exclude: '^#/components/schemas/ModelWithCircularReference$',
+      // fetch: {
+      //   headers: {
+      //     'x-foo': 'bar',
+      //   },
+      // },
       // include:
       //   '^(#/components/schemas/import|#/paths/api/v{api-version}/simple/options)$',
       organization: 'hey-api',
