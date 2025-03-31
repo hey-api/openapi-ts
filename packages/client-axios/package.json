@@ -66,10 +66,12 @@
     "typecheck": "vitest --typecheck --watch=false"
   },
   "peerDependencies": {
+    "@hey-api/openapi-ts": "< 2",
     "axios": ">= 1.0.0 < 2"
   },
   "devDependencies": {
     "@hey-api/client-core": "workspace:*",
+    "@hey-api/openapi-ts": "workspace:*",
     "axios": "1.7.9"
   }
 }

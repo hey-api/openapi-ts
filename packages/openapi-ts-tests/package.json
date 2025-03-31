@@ -1,6 +1,7 @@
 {
   "name": "@test/openapi-ts",
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
     "test:coverage": "vitest run --config vitest.config.unit.ts --coverage",
@@ -29,6 +30,7 @@
     "@angular/platform-browser-dynamic": "19.2.0",
     "@angular/router": "19.2.0",
     "@hey-api/client-axios": "workspace:*",
+    "@hey-api/client-core": "workspace:*",
     "@hey-api/client-custom": "workspace:*",
     "@hey-api/client-fetch": "workspace:*",
     "@hey-api/client-next": "workspace:*",
