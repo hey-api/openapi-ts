@@ -107,7 +107,7 @@ importers:
         version: 0.33.5
       vitepress:
         specifier: 1.3.0
-        version: 1.3.0(@algolia/client-search@5.21.0)(@types/node@22.10.5)(@types/react@19.0.1)(axios@1.7.9)(less@4.2.2)(postcss@8.5.3)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)(search-insights@2.17.3)(terser@5.39.0)(typescript@5.5.3)
+        version: 1.3.0(@algolia/client-search@5.21.0)(@types/node@22.10.5)(@types/react@19.0.1)(axios@1.8.2)(less@4.2.2)(postcss@8.5.3)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)(search-insights@2.17.3)(terser@5.39.0)(typescript@5.5.3)
       vue:
         specifier: 3.5.13
         version: 3.5.13(typescript@5.5.3)
@@ -127,8 +127,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6(@types/react-dom@19.0.1)(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       axios:
-        specifier: 1.7.9
-        version: 1.7.9
+        specifier: 1.8.2
+        version: 1.8.2
       react:
         specifier: 19.0.0
         version: 19.0.0
@@ -737,8 +737,8 @@ importers:
         specifier: workspace:*
         version: link:../openapi-ts
       axios:
-        specifier: 1.7.9
-        version: 1.7.9
+        specifier: 1.8.2
+        version: 1.8.2
 
   packages/client-core: {}
 
@@ -850,8 +850,8 @@ importers:
         specifier: 4.17.21
         version: 4.17.21
       axios:
-        specifier: 1.7.9
-        version: 1.7.9
+        specifier: 1.8.2
+        version: 1.8.2
       cross-spawn:
         specifier: 7.0.5
         version: 7.0.5
@@ -958,8 +958,8 @@ importers:
         specifier: 4.17.21
         version: 4.17.21
       axios:
-        specifier: 1.7.9
-        version: 1.7.9
+        specifier: 1.8.2
+        version: 1.8.2
       cross-spawn:
         specifier: 7.0.5
         version: 7.0.5
@@ -5734,8 +5734,8 @@ packages:
     resolution: {integrity: sha512-Xm7bpRXnDSX2YE2YFfBk2FnF0ep6tmG7xPh8iHee8MIcrgq762Nkce856dYtJYLkuIoYZvGfTs/PbZhideTcEg==}
     engines: {node: '>=4'}
 
-  axios@1.7.9:
-    resolution: {integrity: sha512-LhLcE7Hbiryz8oMDdDptSrWowmB4Bl6RCt6sIJKpRB4XtVf0iEgewX3au/pJqm+Py1kCASkb/FFKjxQaLtxJvw==}
+  axios@1.8.2:
+    resolution: {integrity: sha512-ls4GYBm5aig9vWx8AWDSGLpnpDQRtWAfrjU+EuytuODrFBkqesN2RkOQCBzrA1RQNHw1SmRMSDDDSwzNAYQ6Rg==}
 
   axobject-query@4.1.0:
     resolution: {integrity: sha512-qIj0G9wZbMGNLjLmg1PT6v2mE9AH2zlnADJD/2tC6E00hgmhUOfEB6greHPAfLRSufHqROIUTkw6E+M3lH0PTQ==}
@@ -8487,8 +8487,8 @@ packages:
     resolution: {integrity: sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==}
     engines: {node: '>= 0.6'}
 
-  mime-db@1.53.0:
-    resolution: {integrity: sha512-oHlN/w+3MQ3rba9rqFr6V/ypF10LSkdwUysQL7GkXoTgIWeV+tcXGA852TBxH+gsh8UWoyhR1hKcoMJTuWflpg==}
+  mime-db@1.54.0:
+    resolution: {integrity: sha512-aU5EJuIN2WDemCcAp2vFBfp/m4EAhWJnUNSSw0ixs7/kXbd6Pg64EmwJkNdFhB8aWt1sH2CTXrLxo/iAGV3oPQ==}
     engines: {node: '>= 0.6'}
 
   mime-types@2.1.35:
@@ -11943,7 +11943,7 @@ snapshots:
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@angular-devkit/architect': 0.1902.0(chokidar@4.0.3)
-      '@angular-devkit/build-webpack': 0.1902.0(chokidar@4.0.3)(webpack-dev-server@5.2.0(webpack@5.98.0(esbuild@0.24.2)))(webpack@5.98.0(esbuild@0.25.0))
+      '@angular-devkit/build-webpack': 0.1902.0(chokidar@4.0.3)(webpack-dev-server@5.2.0(webpack@5.98.0(esbuild@0.25.0)))(webpack@5.98.0(esbuild@0.25.0))
       '@angular-devkit/core': 19.2.0(chokidar@4.0.3)
       '@angular/build': 19.2.0(@angular/compiler-cli@19.2.0(@angular/compiler@19.2.0(@angular/core@19.2.0(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.5.3))(@angular/compiler@19.2.0(@angular/core@19.2.0(rxjs@7.8.1)(zone.js@0.15.0)))(@types/node@22.10.5)(chokidar@4.0.3)(jiti@2.4.2)(karma@6.4.4)(less@4.2.2)(postcss@8.5.2)(tailwindcss@3.4.9(ts-node@10.9.2(@types/node@22.10.5)(typescript@5.5.3)))(terser@5.39.0)(typescript@5.5.3)(yaml@2.7.0)
       '@angular/compiler-cli': 19.2.0(@angular/compiler@19.2.0(@angular/core@19.2.0(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.5.3)
@@ -11993,9 +11993,9 @@ snapshots:
       tree-kill: 1.2.2
       tslib: 2.8.1
       typescript: 5.5.3
-      webpack: 5.98.0(esbuild@0.25.0)
-      webpack-dev-middleware: 7.4.2(webpack@5.98.0(esbuild@0.24.2))
-      webpack-dev-server: 5.2.0(webpack@5.98.0(esbuild@0.24.2))
+      webpack: 5.98.0(esbuild@0.24.2)
+      webpack-dev-middleware: 7.4.2(webpack@5.98.0(esbuild@0.25.0))
+      webpack-dev-server: 5.2.0(webpack@5.98.0(esbuild@0.25.0))
       webpack-merge: 6.0.1
       webpack-subresource-integrity: 5.1.0(webpack@5.98.0(esbuild@0.25.0))
     optionalDependencies:
@@ -12025,12 +12025,12 @@ snapshots:
       - webpack-cli
       - yaml
 
-  '@angular-devkit/build-webpack@0.1902.0(chokidar@4.0.3)(webpack-dev-server@5.2.0(webpack@5.98.0(esbuild@0.24.2)))(webpack@5.98.0(esbuild@0.25.0))':
+  '@angular-devkit/build-webpack@0.1902.0(chokidar@4.0.3)(webpack-dev-server@5.2.0(webpack@5.98.0(esbuild@0.25.0)))(webpack@5.98.0(esbuild@0.25.0))':
     dependencies:
       '@angular-devkit/architect': 0.1902.0(chokidar@4.0.3)
       rxjs: 7.8.1
-      webpack: 5.98.0(esbuild@0.25.0)
-      webpack-dev-server: 5.2.0(webpack@5.98.0(esbuild@0.24.2))
+      webpack: 5.98.0(esbuild@0.24.2)
+      webpack-dev-server: 5.2.0(webpack@5.98.0(esbuild@0.25.0))
     transitivePeerDependencies:
       - chokidar
 
@@ -14146,7 +14146,7 @@ snapshots:
     dependencies:
       '@angular/compiler-cli': 19.2.0(@angular/compiler@19.2.0(@angular/core@19.2.0(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.5.3)
       typescript: 5.5.3
-      webpack: 5.98.0(esbuild@0.25.0)
+      webpack: 5.98.0(esbuild@0.24.2)
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -16977,13 +16977,13 @@ snapshots:
       - '@vue/composition-api'
       - vue
 
-  '@vueuse/integrations@10.11.1(axios@1.7.9)(focus-trap@7.6.4)(vue@3.5.13(typescript@5.5.3))':
+  '@vueuse/integrations@10.11.1(axios@1.8.2)(focus-trap@7.6.4)(vue@3.5.13(typescript@5.5.3))':
     dependencies:
       '@vueuse/core': 10.11.1(vue@3.5.13(typescript@5.5.3))
       '@vueuse/shared': 10.11.1(vue@3.5.13(typescript@5.5.3))
       vue-demi: 0.14.10(vue@3.5.13(typescript@5.5.3))
     optionalDependencies:
-      axios: 1.7.9
+      axios: 1.8.2
       focus-trap: 7.6.4
     transitivePeerDependencies:
       - '@vue/composition-api'
@@ -17391,7 +17391,7 @@ snapshots:
 
   axe-core@4.10.3: {}
 
-  axios@1.7.9:
+  axios@1.8.2:
     dependencies:
       follow-redirects: 1.15.9(debug@4.4.0)
       form-data: 4.0.2
@@ -17408,7 +17408,7 @@ snapshots:
       '@babel/core': 7.26.9
       find-cache-dir: 4.0.0
       schema-utils: 4.3.0
-      webpack: 5.98.0(esbuild@0.25.0)
+      webpack: 5.98.0(esbuild@0.24.2)
 
   babel-plugin-polyfill-corejs2@0.4.12(@babel/core@7.26.9):
     dependencies:
@@ -17879,7 +17879,7 @@ snapshots:
 
   compressible@2.0.18:
     dependencies:
-      mime-db: 1.53.0
+      mime-db: 1.54.0
 
   compression@1.8.0:
     dependencies:
@@ -17957,7 +17957,7 @@ snapshots:
       normalize-path: 3.0.0
       schema-utils: 4.3.0
       serialize-javascript: 6.0.2
-      webpack: 5.98.0(esbuild@0.25.0)
+      webpack: 5.98.0(esbuild@0.24.2)
 
   core-js-compat@3.41.0:
     dependencies:
@@ -18029,7 +18029,7 @@ snapshots:
       postcss-value-parser: 4.2.0
       semver: 7.7.1
     optionalDependencies:
-      webpack: 5.98.0(esbuild@0.25.0)
+      webpack: 5.98.0(esbuild@0.24.2)
 
   css-select@5.1.0:
     dependencies:
@@ -20364,7 +20364,7 @@ snapshots:
     dependencies:
       less: 4.2.2
     optionalDependencies:
-      webpack: 5.98.0(esbuild@0.25.0)
+      webpack: 5.98.0(esbuild@0.24.2)
 
   less@4.2.2:
     dependencies:
@@ -20389,7 +20389,7 @@ snapshots:
     dependencies:
       webpack-sources: 3.2.3
     optionalDependencies:
-      webpack: 5.98.0(esbuild@0.25.0)
+      webpack: 5.98.0(esbuild@0.24.2)
 
   light-my-request@6.6.0:
     dependencies:
@@ -20695,7 +20695,7 @@ snapshots:
 
   mime-db@1.52.0: {}
 
-  mime-db@1.53.0: {}
+  mime-db@1.54.0: {}
 
   mime-types@2.1.35:
     dependencies:
@@ -20719,7 +20719,7 @@ snapshots:
     dependencies:
       schema-utils: 4.3.0
       tapable: 2.2.1
-      webpack: 5.98.0(esbuild@0.25.0)
+      webpack: 5.98.0(esbuild@0.24.2)
 
   minimalistic-assert@1.0.1: {}
 
@@ -22156,7 +22156,7 @@ snapshots:
       postcss: 8.5.2
       semver: 7.7.1
     optionalDependencies:
-      webpack: 5.98.0(esbuild@0.25.0)
+      webpack: 5.98.0(esbuild@0.24.2)
     transitivePeerDependencies:
       - typescript
 
@@ -22899,7 +22899,7 @@ snapshots:
       neo-async: 2.6.2
     optionalDependencies:
       sass: 1.85.0
-      webpack: 5.98.0(esbuild@0.25.0)
+      webpack: 5.98.0(esbuild@0.24.2)
 
   sass@1.85.0:
     dependencies:
@@ -23239,7 +23239,7 @@ snapshots:
     dependencies:
       iconv-lite: 0.6.3
       source-map-js: 1.2.1
-      webpack: 5.98.0(esbuild@0.25.0)
+      webpack: 5.98.0(esbuild@0.24.2)
 
   source-map-support@0.5.21:
     dependencies:
@@ -23620,16 +23620,16 @@ snapshots:
 
   term-size@2.2.1: {}
 
-  terser-webpack-plugin@5.3.14(esbuild@0.25.0)(webpack@5.98.0(esbuild@0.24.2)):
+  terser-webpack-plugin@5.3.14(esbuild@0.24.2)(webpack@5.98.0(esbuild@0.25.0)):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
       jest-worker: 27.5.1
       schema-utils: 4.3.0
       serialize-javascript: 6.0.2
       terser: 5.39.0
-      webpack: 5.98.0(esbuild@0.25.0)
+      webpack: 5.98.0(esbuild@0.24.2)
     optionalDependencies:
-      esbuild: 0.25.0
+      esbuild: 0.24.2
 
   terser@5.39.0:
     dependencies:
@@ -24539,7 +24539,7 @@ snapshots:
     optionalDependencies:
       vite: 6.0.9(@types/node@22.10.5)(jiti@2.4.2)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.0)
 
-  vitepress@1.3.0(@algolia/client-search@5.21.0)(@types/node@22.10.5)(@types/react@19.0.1)(axios@1.7.9)(less@4.2.2)(postcss@8.5.3)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)(search-insights@2.17.3)(terser@5.39.0)(typescript@5.5.3):
+  vitepress@1.3.0(@algolia/client-search@5.21.0)(@types/node@22.10.5)(@types/react@19.0.1)(axios@1.8.2)(less@4.2.2)(postcss@8.5.3)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)(search-insights@2.17.3)(terser@5.39.0)(typescript@5.5.3):
     dependencies:
       '@docsearch/css': 3.9.0
       '@docsearch/js': 3.9.0(@algolia/client-search@5.21.0)(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(search-insights@2.17.3)
@@ -24550,7 +24550,7 @@ snapshots:
       '@vue/devtools-api': 7.7.2
       '@vue/shared': 3.5.13
       '@vueuse/core': 10.11.1(vue@3.5.13(typescript@5.5.3))
-      '@vueuse/integrations': 10.11.1(axios@1.7.9)(focus-trap@7.6.4)(vue@3.5.13(typescript@5.5.3))
+      '@vueuse/integrations': 10.11.1(axios@1.8.2)(focus-trap@7.6.4)(vue@3.5.13(typescript@5.5.3))
       focus-trap: 7.6.4
       mark.js: 8.11.1
       minisearch: 6.3.0
@@ -24782,7 +24782,7 @@ snapshots:
 
   webidl-conversions@7.0.0: {}
 
-  webpack-dev-middleware@7.4.2(webpack@5.98.0(esbuild@0.24.2)):
+  webpack-dev-middleware@7.4.2(webpack@5.98.0(esbuild@0.25.0)):
     dependencies:
       colorette: 2.0.20
       memfs: 4.17.0
@@ -24791,9 +24791,9 @@ snapshots:
       range-parser: 1.2.1
       schema-utils: 4.3.0
     optionalDependencies:
-      webpack: 5.98.0(esbuild@0.25.0)
+      webpack: 5.98.0(esbuild@0.24.2)
 
-  webpack-dev-server@5.2.0(webpack@5.98.0(esbuild@0.24.2)):
+  webpack-dev-server@5.2.0(webpack@5.98.0(esbuild@0.25.0)):
     dependencies:
       '@types/bonjour': 3.5.13
       '@types/connect-history-api-fallback': 1.5.4
@@ -24820,10 +24820,10 @@ snapshots:
       serve-index: 1.9.1
       sockjs: 0.3.24
       spdy: 4.0.2
-      webpack-dev-middleware: 7.4.2(webpack@5.98.0(esbuild@0.24.2))
+      webpack-dev-middleware: 7.4.2(webpack@5.98.0(esbuild@0.25.0))
       ws: 8.18.1
     optionalDependencies:
-      webpack: 5.98.0(esbuild@0.25.0)
+      webpack: 5.98.0(esbuild@0.24.2)
     transitivePeerDependencies:
       - bufferutil
       - debug
@@ -24841,11 +24841,11 @@ snapshots:
   webpack-subresource-integrity@5.1.0(webpack@5.98.0(esbuild@0.25.0)):
     dependencies:
       typed-assert: 1.0.9
-      webpack: 5.98.0(esbuild@0.25.0)
+      webpack: 5.98.0(esbuild@0.24.2)
 
   webpack-virtual-modules@0.6.2: {}
 
-  webpack@5.98.0(esbuild@0.25.0):
+  webpack@5.98.0(esbuild@0.24.2):
     dependencies:
       '@types/eslint-scope': 3.7.7
       '@types/estree': 1.0.6
@@ -24867,7 +24867,7 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 4.3.0
       tapable: 2.2.1
-      terser-webpack-plugin: 5.3.14(esbuild@0.25.0)(webpack@5.98.0(esbuild@0.24.2))
+      terser-webpack-plugin: 5.3.14(esbuild@0.24.2)(webpack@5.98.0(esbuild@0.25.0))
       watchpack: 2.4.2
       webpack-sources: 3.2.3
     transitivePeerDependencies:
