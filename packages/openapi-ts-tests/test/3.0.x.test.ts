@@ -422,6 +422,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'read-write-only.yaml',
+        output: 'read-write-only',
+        plugins: ['@hey-api/client-fetch', '@hey-api/typescript'],
+      }),
+      description: 'handles read-only and write-only types',
+    },
+    {
+      config: createConfig({
         input: 'security-api-key.json',
         output: 'security-api-key',
         plugins: [

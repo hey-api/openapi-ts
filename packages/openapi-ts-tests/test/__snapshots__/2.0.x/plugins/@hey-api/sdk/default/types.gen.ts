@@ -267,8 +267,15 @@ export type ModelWithNestedEnums = {
 /**
  * This is a model with one property containing a reference
  */
-export type ModelWithReference = {
-    prop?: ModelWithProperties;
+export type ModelWithReferenceReadable = {
+    prop?: ModelWithPropertiesReadable;
+};
+
+/**
+ * This is a model with one property containing a reference
+ */
+export type ModelWithReferenceWritable = {
+    prop?: ModelWithPropertiesWritable;
 };
 
 /**
@@ -299,7 +306,7 @@ export type ModelWithCircularReference = {
 /**
  * This is a model with one nested property
  */
-export type ModelWithProperties = {
+export type ModelWithPropertiesReadable = {
     required: string;
     readonly requiredAndReadOnly: string;
     string?: string;
@@ -316,7 +323,21 @@ export type ModelWithProperties = {
 /**
  * This is a model with one nested property
  */
-export type ModelWithNestedProperties = {
+export type ModelWithPropertiesWritable = {
+    required: string;
+    string?: string;
+    number?: number;
+    boolean?: boolean;
+    reference?: ModelWithString;
+    'property with space'?: string;
+    default?: string;
+    try?: string;
+};
+
+/**
+ * This is a model with one nested property
+ */
+export type ModelWithNestedPropertiesReadable = {
     readonly first: {
         readonly second: {
             readonly third: string;
@@ -372,11 +393,24 @@ export type Default = {
 /**
  * This is a model that contains a some patterns
  */
-export type ModelWithPattern = {
+export type ModelWithPatternReadable = {
     key: string;
     name: string;
     readonly enabled?: boolean;
     readonly modified?: string;
+    id?: string;
+    text?: string;
+    patternWithSingleQuotes?: string;
+    patternWithNewline?: string;
+    patternWithBacktick?: string;
+};
+
+/**
+ * This is a model that contains a some patterns
+ */
+export type ModelWithPatternWritable = {
+    key: string;
+    name: string;
     id?: string;
     text?: string;
     patternWithSingleQuotes?: string;

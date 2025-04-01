@@ -271,6 +271,9 @@ export interface UserConfig {
          */
         timeout?: number;
       };
+
+  // DEPRECATED OPTIONS BELOW
+
   /**
    * @deprecated
    *

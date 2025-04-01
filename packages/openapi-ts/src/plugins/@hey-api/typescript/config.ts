@@ -13,8 +13,11 @@ export const defaultConfig: Plugin.Config<Config> = {
   identifierCase: 'PascalCase',
   name: '@hey-api/typescript',
   output: 'types',
+  readOnlyWriteOnlyBehavior: 'split',
+  readableNameBuilder: '{{name}}Readable',
   style: 'preserve',
   tree: false,
+  writableNameBuilder: '{{name}}Writable',
 };
 
 /**
