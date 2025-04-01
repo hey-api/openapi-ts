@@ -108,6 +108,7 @@ const operationToIrOperation = ({
               ? operation.requestBody
               : content.schema),
           },
+          state: undefined,
         }),
       };
 
@@ -148,6 +149,7 @@ const operationToIrOperation = ({
             description: responseObject.description,
             ...contentToSchema({ content }),
           },
+          state: undefined,
         }),
       };
     } else {

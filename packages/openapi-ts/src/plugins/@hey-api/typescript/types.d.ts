@@ -40,19 +40,45 @@ export interface Config extends Plugin.Name<'@hey-api/typescript'> {
    */
   identifierCase?: Exclude<StringCase, 'SCREAMING_SNAKE_CASE'>;
   /**
+   * Name of the generated file.
+   *
+   * @default 'types'
+   */
+  output?: string;
+  /**
+   * Choose how to handle types containing read-only or write-only fields?
+   * This option exists for backward compatibility with outputs created before
+   * this feature existed.
+   *
+   * @default 'split'
+   */
+  readOnlyWriteOnlyBehavior?: 'off' | 'split';
+  /**
+   * Customize the name of types used in responses or containing read-only
+   * fields.
+   *
+   * @default '{{name}}Readable'
+   */
+  readableNameBuilder?: string;
+  /**
+   * Customize the name of types used in payloads or containing write-only
+   * fields.
+   *
+   * @default '{{name}}Writable'
+   */
+  writableNameBuilder?: string;
+
+  // DEPRECATED OPTIONS BELOW
+
+  /**
    * @deprecated
    *
    * **This feature works only with the legacy parser**
    *
    * Include only types matching regular expression.
    */
+  // eslint-disable-next-line typescript-sort-keys/interface
   include?: string;
-  /**
-   * Name of the generated file.
-   *
-   * @default 'types'
-   */
-  output?: string;
   /**
    * @deprecated
    *

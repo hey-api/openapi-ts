@@ -15,7 +15,7 @@ export default defineConfig(() => {
   return {
     // experimentalParser: false,
     input: {
-      branch: 'main',
+      // branch: 'main',
       // exclude: '^#/components/schemas/ModelWithCircularReference$',
       // fetch: {
       //   headers: {
@@ -24,7 +24,7 @@ export default defineConfig(() => {
       // },
       // include:
       //   '^(#/components/schemas/import|#/paths/api/v{api-version}/simple/options)$',
-      organization: 'hey-api',
+      // organization: 'hey-api',
       // path: {
       //   components: {},
       //   info: {
@@ -33,15 +33,16 @@ export default defineConfig(() => {
       //   openapi: '3.1.0',
       //   paths: {},
       // },
-      // path: path.resolve(__dirname, 'spec', '3.1.x', 'full.json'),
+      path: path.resolve(__dirname, 'spec', '3.1.x', 'validators.json'),
+      // path: path.resolve(__dirname, 'spec', '3.1.x', 'read-write-only.yaml'),
       // path: 'http://localhost:4000/',
-      path: 'https://get.heyapi.dev/',
+      // path: 'https://get.heyapi.dev/',
       // path: 'https://get.heyapi.dev/hey-api/backend?branch=main&version=1.0.0',
       // path: 'http://localhost:8000/openapi.json',
       // path: './test/spec/v3-transforms.json',
       // path: 'https://mongodb-mms-prod-build-server.s3.amazonaws.com/openapi/2caffd88277a4e27c95dcefc7e3b6a63a3b03297-v2-2023-11-15.json',
       // path: 'https://raw.githubusercontent.com/swagger-api/swagger-petstore/master/src/main/resources/openapi.yaml',
-      project: 'backend',
+      // project: 'backend',
       // project: 'upload-openapi-spec',
       // version: '1.0.0',
     },
@@ -61,15 +62,15 @@ export default defineConfig(() => {
       // customClientPlugin({
       //   bundle: true,
       // }),
-      myClientPlugin({
-        // bundle: true,
-      }),
+      // myClientPlugin({
+      //   // bundle: true,
+      // }),
       {
         // baseUrl: false,
         // bundle: true,
         // bundleSource_EXPERIMENTAL: true,
         // exportFromIndex: true,
-        // name: '@hey-api/client-fetch',
+        name: '@hey-api/client-fetch',
         // strictBaseUrl: true,
       },
       {
@@ -101,14 +102,17 @@ export default defineConfig(() => {
         // enumsCase: 'camelCase',
         // exportInlineEnums: true,
         // identifierCase: 'preserve',
-        // name: '@hey-api/typescript',
+        name: '@hey-api/typescript',
+        // readOnlyWriteOnlyBehavior: 'off',
+        // readableNameBuilder: 'Readable{{name}}',
+        // writableNameBuilder: 'Writable{{name}}',
         // tree: true,
       },
       {
         // name: 'fastify',
       },
       {
-        // name: '@tanstack/react-query',
+        name: '@tanstack/react-query',
       },
       {
         // exportFromIndex: true,

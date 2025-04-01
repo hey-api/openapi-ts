@@ -340,15 +340,31 @@ export type ModelWithNestedEnums = {
 /**
  * This is a model with one property containing a reference
  */
-export type ModelWithReference = {
-    prop?: ModelWithProperties;
+export type ModelWithReferenceReadable = {
+    prop?: ModelWithPropertiesReadable;
+};
+
+/**
+ * This is a model with one property containing a reference
+ */
+export type ModelWithReferenceWritable = {
+    prop?: ModelWithPropertiesWritable;
 };
 
 /**
  * This is a model with one property containing an array
  */
-export type ModelWithArrayReadOnlyAndWriteOnly = {
-    prop?: Array<ModelWithReadOnlyAndWriteOnly>;
+export type ModelWithArrayReadOnlyAndWriteOnlyReadable = {
+    prop?: Array<ModelWithReadOnlyAndWriteOnlyReadable>;
+    propWithFile?: Array<Blob | File>;
+    propWithNumber?: Array<number>;
+};
+
+/**
+ * This is a model with one property containing an array
+ */
+export type ModelWithArrayReadOnlyAndWriteOnlyWritable = {
+    prop?: Array<ModelWithReadOnlyAndWriteOnlyWritable>;
     propWithFile?: Array<Blob | File>;
     propWithNumber?: Array<number>;
 };
@@ -539,7 +555,7 @@ export type CompositionExtendedModel = CompositionBaseModel & {
 /**
  * This is a model with one nested property
  */
-export type ModelWithProperties = {
+export type ModelWithPropertiesReadable = {
     required: string;
     readonly requiredAndReadOnly: string;
     requiredAndNullable: string | null;
@@ -557,7 +573,22 @@ export type ModelWithProperties = {
 /**
  * This is a model with one nested property
  */
-export type ModelWithNestedProperties = {
+export type ModelWithPropertiesWritable = {
+    required: string;
+    requiredAndNullable: string | null;
+    string?: string;
+    number?: number;
+    boolean?: boolean;
+    reference?: ModelWithString;
+    'property with space'?: string;
+    default?: string;
+    try?: string;
+};
+
+/**
+ * This is a model with one nested property
+ */
+export type ModelWithNestedPropertiesReadable = {
     readonly first: {
         readonly second: {
             readonly third: string | null;
@@ -609,7 +640,7 @@ export type ModelThatExtendsExtends = ModelWithString & ModelThatExtends & {
 /**
  * This is a model that contains a some patterns
  */
-export type ModelWithPattern = {
+export type ModelWithPatternReadable = {
     key: string;
     name: string;
     readonly enabled?: boolean;
@@ -621,12 +652,29 @@ export type ModelWithPattern = {
     patternWithBacktick?: string;
 };
 
-export type File = {
+/**
+ * This is a model that contains a some patterns
+ */
+export type ModelWithPatternWritable = {
+    key: string;
+    name: string;
+    id?: string;
+    text?: string;
+    patternWithSingleQuotes?: string;
+    patternWithNewline?: string;
+    patternWithBacktick?: string;
+};
+
+export type FileReadable = {
     readonly id?: string;
     readonly updated_at?: string;
     readonly created_at?: string;
     mime: string;
     readonly file?: string;
+};
+
+export type FileWritable = {
+    mime: string;
 };
 
 export type Default = {
@@ -740,9 +788,13 @@ export type ModelWithNestedCompositionEnums = {
     foo?: ModelWithNestedArrayEnumsDataFoo;
 };
 
-export type ModelWithReadOnlyAndWriteOnly = {
+export type ModelWithReadOnlyAndWriteOnlyReadable = {
     foo: string;
     readonly bar: string;
+};
+
+export type ModelWithReadOnlyAndWriteOnlyWritable = {
+    foo: string;
     baz: string;
 };
 
@@ -918,9 +970,11 @@ export type AdditionalPropertiesIntegerIssue = {
     [key: string]: number;
 };
 
-export type OneOfAllOfIssue = ((ConstValue | GenericSchemaDuplicateIssue1SystemBoolean) & _3eNum1Период) | GenericSchemaDuplicateIssue1SystemString;
+export type OneOfAllOfIssueReadable = ((ConstValue | GenericSchemaDuplicateIssue1SystemBooleanReadable) & _3eNum1Период) | GenericSchemaDuplicateIssue1SystemStringReadable;
 
-export type GenericSchemaDuplicateIssue1SystemBoolean = {
+export type OneOfAllOfIssueWritable = ((ConstValue | GenericSchemaDuplicateIssue1SystemBooleanWritable) & _3eNum1Период) | GenericSchemaDuplicateIssue1SystemStringWritable;
+
+export type GenericSchemaDuplicateIssue1SystemBooleanReadable = {
     item?: boolean;
     error?: string | null;
     readonly hasError?: boolean;
@@ -929,10 +983,23 @@ export type GenericSchemaDuplicateIssue1SystemBoolean = {
     };
 };
 
-export type GenericSchemaDuplicateIssue1SystemString = {
+export type GenericSchemaDuplicateIssue1SystemBooleanWritable = {
+    item?: boolean;
+    error?: string | null;
+    data?: {
+        [key: string]: never;
+    };
+};
+
+export type GenericSchemaDuplicateIssue1SystemStringReadable = {
     item?: string | null;
     error?: string | null;
     readonly hasError?: boolean;
+};
+
+export type GenericSchemaDuplicateIssue1SystemStringWritable = {
+    item?: string | null;
+    error?: string | null;
 };
 
 /**
@@ -971,7 +1038,7 @@ export type PatchApiVbyApiVersionNoTagResponses = {
 };
 
 export type ImportData = {
-    body: ModelWithReadOnlyAndWriteOnly | ModelWithArrayReadOnlyAndWriteOnly;
+    body: ModelWithReadOnlyAndWriteOnlyWritable | ModelWithArrayReadOnlyAndWriteOnlyWritable;
     path?: never;
     query?: never;
     url: '/api/v{api-version}/no+tag';
@@ -985,7 +1052,7 @@ export type ImportResponses = {
     /**
      * Default success response
      */
-    default: ModelWithReadOnlyAndWriteOnly;
+    default: ModelWithReadOnlyAndWriteOnlyReadable;
 };
 
 export type ImportResponse = ImportResponses[keyof ImportResponses];
@@ -1833,17 +1900,12 @@ export type MultipartRequestData = {
 
 export type ComplexParamsData = {
     body?: {
-        readonly key: string | null;
         name: string | null;
         enabled?: boolean;
         type: 'Monkey' | 'Horse' | 'Bird';
         listOfModels?: Array<ModelWithString> | null;
         listOfStrings?: Array<string> | null;
         parameters: ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary;
-        readonly user?: {
-            readonly id?: number;
-            readonly name?: string | null;
-        };
     };
     path: {
         id: number;

@@ -262,6 +262,36 @@ for (const version of versions) {
         }),
         description: 'handles various schema types and formats',
       },
+      {
+        config: createConfig({
+          input: 'read-write-only.yaml',
+          output: 'read-write-only-ignore',
+          plugins: [
+            {
+              name: '@hey-api/typescript',
+              readOnlyWriteOnlyBehavior: 'off',
+            },
+            '@hey-api/client-fetch',
+          ],
+        }),
+        description: 'ignores read-only and write-only handling',
+      },
+      {
+        config: createConfig({
+          input: 'read-write-only.yaml',
+          output: 'read-write-only-custom-name',
+          plugins: [
+            {
+              name: '@hey-api/typescript',
+              readOnlyWriteOnlyBehavior: 'split',
+              readableNameBuilder: 'Readable{{name}}',
+              writableNameBuilder: 'Writable{{name}}',
+            },
+            '@hey-api/client-fetch',
+          ],
+        }),
+        description: 'custom read-only and write-only naming',
+      },
     ];
 
     it.each(scenarios)('$description', async ({ config }) => {
