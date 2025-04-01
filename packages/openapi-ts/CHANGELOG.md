@@ -1,5 +1,29 @@
 # @hey-api/openapi-ts
 
+## 0.66.0
+
+### Minor Changes
+
+- [#1896](https://github.com/hey-api/openapi-ts/pull/1896) [`8840ed7`](https://github.com/hey-api/openapi-ts/commit/8840ed73df5ee718e803aa6e27b66e0c82ec3651) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: support read-only and write-only properties
+
+  ### Read-only and write-only fields
+
+  Starting with v0.66.0, `@hey-api/typescript` will generate separate types for payloads and responses if it detects any read-only or write-only fields. To preserve the previous behavior and generate a single type regardless, set `readOnlyWriteOnlyBehavior` to `off`.
+
+  ```js
+  export default {
+    input: 'https://get.heyapi.dev/hey-api/backend',
+    output: 'src/client',
+    plugins: [
+      // ...other plugins
+      {
+        name: '@hey-api/typescript',
+        readOnlyWriteOnlyBehavior: 'off', // [!code ++]
+      },
+    ],
+  };
+  ```
+
 ## 0.65.0
 
 ### Minor Changes
