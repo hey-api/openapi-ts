@@ -141,9 +141,16 @@ interface IRSchemaObject
   > {
   /**
    * If the schema is intended to be used as an object property, it can be
-   * marked as read-only or write-only.
+   * marked as read-only or write-only. This value controls whether the schema
+   * receives the "readonly" TypeScript keyword.
    */
   accessScope?: 'read' | 'write';
+  /**
+   * Similar to `accessScope`, but tells us whether the schema as a whole
+   * contains any read-only or write-only fields. This value controls whether
+   * we split the schema into individual schemas for payloads and responses.
+   */
+  accessScopes?: ReadonlyArray<'read' | 'write'>;
   /**
    * If type is `object`, `additionalProperties` can be used to either define
    * a schema for properties not included in `properties` or disallow such

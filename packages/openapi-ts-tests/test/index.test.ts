@@ -239,7 +239,13 @@ describe('OpenAPI v3', () => {
           indexFile: false,
           path: '',
         },
-        plugins: ['@hey-api/client-fetch', '@hey-api/typescript'],
+        plugins: [
+          '@hey-api/client-fetch',
+          {
+            name: '@hey-api/typescript',
+            readOnlyWriteOnlyBehavior: 'off',
+          },
+        ],
       }),
       description: 'generate output without index file',
       name: 'v3_no_index',
@@ -306,6 +312,7 @@ describe('OpenAPI v3', () => {
         plugins: [
           {
             name: '@hey-api/typescript',
+            readOnlyWriteOnlyBehavior: 'off',
             style: 'PascalCase',
           },
         ],
@@ -399,6 +406,7 @@ describe('OpenAPI v3', () => {
           {
             enums: 'javascript',
             name: '@hey-api/typescript',
+            readOnlyWriteOnlyBehavior: 'off',
           },
           '@hey-api/sdk',
         ],
@@ -409,7 +417,12 @@ describe('OpenAPI v3', () => {
     {
       config: createConfig({
         exportCore: false,
-        plugins: ['@hey-api/typescript'],
+        plugins: [
+          {
+            name: '@hey-api/typescript',
+            readOnlyWriteOnlyBehavior: 'off',
+          },
+        ],
       }),
       description: 'generate only types with default settings',
       name: 'v3_types',
@@ -420,6 +433,7 @@ describe('OpenAPI v3', () => {
         plugins: [
           {
             name: '@hey-api/typescript',
+            readOnlyWriteOnlyBehavior: 'off',
             tree: false,
           },
         ],
