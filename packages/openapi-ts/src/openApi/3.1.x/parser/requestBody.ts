@@ -26,6 +26,7 @@ const requestBodyToIrRequestBody = ({
     schema: schemaToIrSchema({
       context,
       schema: finalSchema,
+      state: undefined,
     }),
   };
 
