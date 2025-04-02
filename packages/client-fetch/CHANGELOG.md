@@ -1,5 +1,11 @@
 # @hey-api/client-fetch
 
+## 0.10.0
+
+### Minor Changes
+
+- [#1899](https://github.com/hey-api/openapi-ts/pull/1899) [`fed9699`](https://github.com/hey-api/openapi-ts/commit/fed969985275621c7c2b65ffc760c7c66fafaf72) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: set next field to never and recommend switching to the Next.js client
+
 ## 0.9.0
 
 ### Minor Changes
