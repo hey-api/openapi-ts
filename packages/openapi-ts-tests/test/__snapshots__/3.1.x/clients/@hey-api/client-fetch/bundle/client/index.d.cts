@@ -139,6 +139,13 @@ interface Config<T extends ClientOptions = ClientOptions> extends Omit<RequestIn
      */
     fetch?: (request: Request) => ReturnType<typeof fetch>;
     /**
+     * Please don't use the Fetch client for Next.js applications. The `next`
+     * options won't have any effect.
+     *
+     * Install {@link https://www.npmjs.com/package/@hey-api/client-next `@hey-api/client-next`} instead.
+     */
+    next?: never;
+    /**
      * Return the response data parsed in a specified format. By default, `auto`
      * will infer the appropriate method from the `Content-Type` response header.
      * You can override this behavior with any of the {@link Body} methods.
