@@ -51,6 +51,8 @@ The following plugins are planned but not in development yet. You can help us pr
 - [Yup](/openapi-ts/plugins/yup) <span data-soon>Soon</span>
 - [Zustand](/openapi-ts/plugins/zustand) <span data-soon>Soon</span>
 
+Don't see your plugin? [Build your own](/openapi-ts/plugins/custom) or let us know your interest by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
+
 ## Community
 
 Featured community plugins.

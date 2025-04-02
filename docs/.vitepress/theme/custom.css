@@ -199,30 +199,21 @@ html.dark .sponsors-list li > a {
   text-transform: lowercase;
 }
 
-.VPFeatures.VPHomeFeatures {
-  padding: 0;
-}
-
 .VPFeatures.VPHomeFeatures > .container {
   max-width: initial;
 }
 
 .VPFeatures.VPHomeFeatures > .container > .items {
-  flex-wrap: nowrap;
-  gap: 0.5rem;
+  gap: 1rem;
+  justify-content: center;
   margin: 0;
-  overflow-x: auto;
-  padding: 0.2rem 1.5rem;
-  scroll-padding-inline: 1.5rem;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
+  padding: 0.2rem 0;
 }
 
 @media (min-width: 640px) {
   .VPFeatures.VPHomeFeatures > .container > .items {
-    padding: 0.4rem 3rem;
-    scroll-padding-inline: 3rem;
+    gap: 1rem;
+    padding: 0.4rem 0;
   }
 
   .home-list > ul,
@@ -233,19 +224,14 @@ html.dark .sponsors-list li > a {
 
 @media (min-width: 960px) {
   .VPFeatures.VPHomeFeatures > .container > .items {
-    padding: 0.5rem 4rem;
-    scroll-padding-inline: 4rem;
+    gap: 1rem;
+    padding: 0.5rem 0;
   }
-}
-
-.VPFeatures.VPHomeFeatures > .container > .items::-webkit-scrollbar {
-  display: none;
 }
 
 .VPFeatures.VPHomeFeatures > .container > .items > .item {
   flex-shrink: 0;
   max-width: 390px;
   padding: 0;
-  scroll-snap-align: start;
   width: 100%;
 }
