@@ -24,5 +24,9 @@ export type CreateClientConfig<T extends DefaultClientOptions = ClientOptions> =
   ) => Config<Required<DefaultClientOptions> & T>;
 
 export const client = createClient(
-  createClientConfig(createConfig<ClientOptions>()),
+  createClientConfig(
+    createConfig<ClientOptions>({
+      baseUrl: 'https://petstore3.swagger.io/api/v3',
+    }),
+  ),
 );

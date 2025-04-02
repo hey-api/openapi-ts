@@ -68,20 +68,6 @@ The Next.js client is built as a thin wrapper on top of [fetch](https://nextjs.o
 
 When we installed the client above, it created a [`client.gen.ts`](/openapi-ts/output#client) file. You will most likely want to configure the exported `client` instance. There are two ways to do that.
 
-### `setConfig()`
-
-This is the simpler approach. You can call the `setConfig()` method at the beginning of your application or anytime you need to update the client configuration. You can pass any Fetch API configuration option to `setConfig()`, and even your own Fetch implementation.
-
-```js
-import { client } from 'client/client.gen';
-
-client.setConfig({
-  baseUrl: 'https://example.com',
-});
-```
-
-The disadvantage of this approach is that your code may call the `client` instance before it's configured for the first time. Depending on your use case, you might need to use the second approach.
-
 ### Runtime API
 
 Since `client.gen.ts` is a generated file, we can't directly modify it. Instead, we can tell our configuration to use a custom file implementing the Runtime API. We do that by specifying the `runtimeConfigPath` option.
@@ -114,7 +100,21 @@ export const createClientConfig: CreateClientConfig = (config) => ({
 
 :::
 
-With this approach, `client.gen.ts` will call `createClientConfig()` before initializing the `client` instance. If needed, you can still use `setConfig()` to update the client configuration later.
+With this approach, `client.gen.ts` will call `createClientConfig()` before initializing the `client` instance. This is the recommended approach because it guarantees the client will be initialized in both server and client environment. If needed, you can still use `setConfig()` to update the client configuration later.
+
+### `setConfig()`
+
+This is the simpler approach. You can call the `setConfig()` method at the beginning of your application or anytime you need to update the client configuration. You can pass any Fetch API configuration option to `setConfig()`, and even your own Fetch implementation.
+
+```js
+import { client } from 'client/client.gen';
+
+client.setConfig({
+  baseUrl: 'https://example.com',
+});
+```
+
+The disadvantage of this approach is that your code may call the `client` instance before it's configured for the first time. Depending on your use case, this might be an acceptable trade-off. However, our Next.js users usually want to use the first approach.
 
 ### `createClient()`
 
