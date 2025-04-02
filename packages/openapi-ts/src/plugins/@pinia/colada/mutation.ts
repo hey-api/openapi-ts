@@ -127,7 +127,12 @@ export const createMutationFunction = ({
         }),
       ],
     }),
-    name: generateFunctionName(operation, false),
+    name: generateFunctionName(
+      operation,
+      false,
+      plugin.prefixUse,
+      plugin.suffixQueryMutation,
+    ),
   });
 
   file.add(node);
