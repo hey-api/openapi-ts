@@ -68,6 +68,7 @@ describe('openapi-client generator', () => {
 
   const options = {
     client: 'fetch' as const,
+    directory: './libs',
     name: 'test-api',
     scope: '@test-api',
     spec: '',
@@ -223,13 +224,8 @@ paths:
   describe('updatePackageJson', () => {
     it('should update package.json with correct dependencies', () => {
       const normalizedOptions = normalizeOptions(options);
-      const {
-        clientType,
-        projectDirectory,
-        projectName,
-        projectRoot,
-        projectScope,
-      } = normalizedOptions;
+      const { clientType, projectName, projectRoot, projectScope } =
+        normalizedOptions;
 
       // Create initial package.json
       tree.write(
@@ -243,7 +239,6 @@ paths:
 
       updatePackageJson({
         clientType,
-        projectDirectory,
         projectName,
         projectRoot,
         projectScope,
@@ -263,13 +258,8 @@ paths:
         client: 'axios' as const,
       } satisfies OpenApiClientGeneratorSchema;
       const normalizedOptions = normalizeOptions(axiosOptions);
-      const {
-        clientType,
-        projectDirectory,
-        projectName,
-        projectRoot,
-        projectScope,
-      } = normalizedOptions;
+      const { clientType, projectName, projectRoot, projectScope } =
+        normalizedOptions;
 
       // Create initial package.json
       tree.write(
@@ -283,7 +273,6 @@ paths:
 
       updatePackageJson({
         clientType,
-        projectDirectory,
         projectName,
         projectRoot,
         projectScope,
