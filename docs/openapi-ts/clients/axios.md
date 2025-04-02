@@ -15,7 +15,7 @@ Axios client is currently in beta. The interface might change before it becomes 
 
 ### About
 
-[Axios](https://axios-http.com/) is a simple promise based HTTP client for the browser and Node.js. Axios provides a simple to use library in a small package with a very extensible interface.
+[Axios](https://axios-http.com) is a simple promise based HTTP client for the browser and Node.js. Axios provides a simple to use library in a small package with a very extensible interface.
 
 ### Demo
 

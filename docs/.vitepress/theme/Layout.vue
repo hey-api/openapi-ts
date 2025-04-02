@@ -8,11 +8,13 @@ const { Layout } = DefaultTheme;
   <Layout>
     <template #layout-top>
       <div class="announcement">
-        <span>
-          Our platform<span class="hide-sm"> for OpenAPI specifications</span>
-          is now available
-        </span>
-        <a href="https://app.heyapi.dev/"> Join Beta </a>
+        <span> Build better APIs with our platform </span>
+        <a
+          href="https://app.heyapi.dev/"
+          rel="noopener noreferrer"
+          target="_blank"
+          >Dashboard</a
+        >
       </div>
       <!-- <div class="announcement">
         <span>
