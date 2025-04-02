@@ -1,6 +1,6 @@
 {
   "name": "@example/openapi-ts-tanstack-angular-query-experimental",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
