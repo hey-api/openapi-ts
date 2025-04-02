@@ -1,11 +1,11 @@
 import type { Plugin } from '../../types';
 import { clientDefaultConfig } from '../client-core/config';
-import { handler } from '../client-core/plugin';
+import { clientPluginHandler } from '../client-core/plugin';
 import type { Config } from './types';
 
 export const defaultConfig: Plugin.Config<Config> = {
   ...clientDefaultConfig,
-  _handler: handler,
+  _handler: clientPluginHandler,
   _handlerLegacy: () => {},
   name: '@hey-api/client-fetch',
   throwOnError: false,

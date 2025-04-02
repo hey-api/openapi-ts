@@ -50,6 +50,11 @@ interface Input {
    */
   exclude?: string;
   /**
+   * You pass any valid Fetch API options to the request for fetching your
+   * specification. This is useful if your file is behind auth for example.
+   */
+  fetch?: RequestInit;
+  /**
    * Process only parts matching the regular expression. You can select both
    * operations and components by reference within the bundled input. In
    * case of conflicts, `exclude` takes precedence over `include`.
@@ -65,6 +70,18 @@ interface Input {
    * Organization created in Hey API platform.
    */
   organization?: string;
+  /**
+   * Pagination configuration
+   */
+  pagination?: {
+    /**
+     * Array of keywords to be considered as pagination field names.
+     * These will be used to detect pagination fields in schemas and parameters.
+     *
+     * @default ['after', 'before', 'cursor', 'offset', 'page', 'start']
+     */
+    keywords?: ReadonlyArray<string>;
+  };
   /**
    * Path to the OpenAPI specification. This can be either local or remote path.
    * Both JSON and YAML file formats are supported. You can also pass the parsed
@@ -88,6 +105,7 @@ interface Input {
    * the first match will be returned.
    */
   tags?: ReadonlyArray<string>;
+
   /**
    * **Requires `path` to start with `https://get.heyapi.dev` or be undefined**
    *
@@ -120,7 +138,7 @@ export interface UserConfig {
   input:
     | 'https://get.heyapi.dev/<organization>/<project>'
     | (string & {})
-    | Record<string, unknown>
+    | (Record<string, unknown> & { path?: never })
     | Input;
   /**
    * The relative location of the logs folder
@@ -130,6 +148,12 @@ export interface UserConfig {
   logs?:
     | string
     | {
+        /**
+         * Whether or not error logs should be written to a file or not
+         *
+         * @default true
+         * */
+        file?: boolean;
         /**
          * The logging level to control the verbosity of log output.
          * Determines which messages are logged based on their severity.
@@ -155,6 +179,7 @@ export interface UserConfig {
           | 'silent'
           | 'trace'
           | 'warn';
+
         /**
          * The relative location of the logs folder
          *
@@ -246,6 +271,9 @@ export interface UserConfig {
          */
         timeout?: number;
       };
+
+  // DEPRECATED OPTIONS BELOW
+
   /**
    * @deprecated
    *

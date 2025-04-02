@@ -1,5 +1,53 @@
 # @hey-api/openapi-ts
 
+## 0.66.0
+
+### Minor Changes
+
+- [#1896](https://github.com/hey-api/openapi-ts/pull/1896) [`8840ed7`](https://github.com/hey-api/openapi-ts/commit/8840ed73df5ee718e803aa6e27b66e0c82ec3651) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: support read-only and write-only properties
+
+  ### Read-only and write-only fields
+
+  Starting with v0.66.0, `@hey-api/typescript` will generate separate types for payloads and responses if it detects any read-only or write-only fields. To preserve the previous behavior and generate a single type regardless, set `readOnlyWriteOnlyBehavior` to `off`.
+
+  ```js
+  export default {
+    input: 'https://get.heyapi.dev/hey-api/backend',
+    output: 'src/client',
+    plugins: [
+      // ...other plugins
+      {
+        name: '@hey-api/typescript',
+        readOnlyWriteOnlyBehavior: 'off', // [!code ++]
+      },
+    ],
+  };
+  ```
+
+## 0.65.0
+
+### Minor Changes
+
+- [#1889](https://github.com/hey-api/openapi-ts/pull/1889) [`67c385b`](https://github.com/hey-api/openapi-ts/commit/67c385bf6289a79726b0cdd85fd81ca501cf2248) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: support custom clients
+
+### Patch Changes
+
+- [#1892](https://github.com/hey-api/openapi-ts/pull/1892) [`29fa764`](https://github.com/hey-api/openapi-ts/commit/29fa764986af3d3af842793c74d61681c7e967a1) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow passing fetch options to the request resolving a specification
+
+- [#1877](https://github.com/hey-api/openapi-ts/pull/1877) [`6971f5b`](https://github.com/hey-api/openapi-ts/commit/6971f5bca4dd17ea65400c504ad0a4ffb083a38b) Thanks [@Matsuuu](https://github.com/Matsuuu)! - feat: ability to disable writing a log file via a `--no-log-file` flag or `logs.file` = `false`
+
+## 0.64.15
+
+### Patch Changes
+
+- [#1850](https://github.com/hey-api/openapi-ts/pull/1850) [`fe43b88`](https://github.com/hey-api/openapi-ts/commit/fe43b889c20a2001f56e259f93f64851a1caa1d1) Thanks [@kelnos](https://github.com/kelnos)! - feat: add support for cookies auth
+
+## 0.64.14
+
+### Patch Changes
+
+- [#1827](https://github.com/hey-api/openapi-ts/pull/1827) [`9dd43db`](https://github.com/hey-api/openapi-ts/commit/9dd43db54f2b7ebf87c5c7c118fdf149162a533d) Thanks [@john-cremit](https://github.com/john-cremit)! - feat: allow customizing pagination keywords using `input.pagination.keywords`
+
 ## 0.64.13
 
 ### Patch Changes

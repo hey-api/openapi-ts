@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/client-next",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "🚀 Next.js client for `@hey-api/openapi-ts` codegen.",
   "homepage": "https://heyapi.dev/",
   "repository": {
@@ -65,7 +65,11 @@
     "test": "vitest run",
     "typecheck": "vitest --typecheck --watch=false"
   },
+  "peerDependencies": {
+    "@hey-api/openapi-ts": "< 2"
+  },
   "devDependencies": {
-    "@hey-api/client-core": "workspace:*"
+    "@hey-api/client-core": "workspace:*",
+    "@hey-api/openapi-ts": "workspace:*"
   }
 }
