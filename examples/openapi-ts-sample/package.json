@@ -1,7 +1,7 @@
 {
   "name": "@example/openapi-ts-sample",
   "private": true,
-  "version": "0.0.10",
+  "version": "0.0.11",
   "type": "module",
   "scripts": {
     "build": "tsc && vite build",

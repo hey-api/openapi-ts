@@ -1,7 +1,7 @@
 {
   "name": "@example/openapi-ts-tanstack-react-query",
   "private": true,
-  "version": "0.0.32",
+  "version": "0.0.33",
   "type": "module",
   "scripts": {
     "build": "tsc && vite build",
