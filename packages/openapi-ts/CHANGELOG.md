@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.66.1
+
+### Patch Changes
+
+- [#1906](https://github.com/hey-api/openapi-ts/pull/1906) [`d1928d1`](https://github.com/hey-api/openapi-ts/commit/d1928d17710240bb42a6aa12da4618a9dd962df2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: exclude and include expressions can be an array
+
+- [#1906](https://github.com/hey-api/openapi-ts/pull/1906) [`d1928d1`](https://github.com/hey-api/openapi-ts/commit/d1928d17710240bb42a6aa12da4618a9dd962df2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: support excluding deprecated fields with '@deprecated'
+
 ## 0.66.0
 
 ### Minor Changes
