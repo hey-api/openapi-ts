@@ -1,12 +1,10 @@
-import type { IR } from '../../../ir/types';
-
-export interface SchemaContext {
+export interface SchemaState {
   /**
    * Optional schema $ref. This will be only defined for reusable components
    * from the OpenAPI specification.
    */
   $ref?: string;
-  context: IR.Context;
+  circularReferenceTracker: Set<string>;
 }
 
 export type SchemaWithRequired<

@@ -5,7 +5,10 @@ import type { Config as ClientNextConfig } from '../client-next';
 import type { Config as ClientNuxtConfig } from '../client-nuxt';
 
 export type PluginHandler<ReturnType = void> = Plugin.Handler<
-  ClientAxiosConfig | ClientFetchConfig | ClientNextConfig | ClientNuxtConfig,
+  Omit<
+    ClientAxiosConfig | ClientFetchConfig | ClientNextConfig | ClientNuxtConfig,
+    'name'
+  >,
   ReturnType
 >;
 
@@ -42,6 +45,16 @@ export namespace Client {
      * @default false
      */
     bundle?: boolean;
+    /**
+     * **This is an experimental feature.**
+     *
+     * When `bundle` is set to `true`, you can optionally set this option
+     * to `true` to bundle the client source code instead of the `dist` folder.
+     * This will copy the TypeScript files instead of CJS/ESM JavaScript files.
+     *
+     * @default false
+     */
+    bundleSource_EXPERIMENTAL?: boolean;
     /**
      * Should the exports from the generated files be re-exported in the index
      * barrel file?

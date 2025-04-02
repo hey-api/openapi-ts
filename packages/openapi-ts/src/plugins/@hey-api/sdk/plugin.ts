@@ -37,7 +37,7 @@ export interface Auth {
    *
    * @default 'header'
    */
-  in?: 'header' | 'query';
+  in?: 'header' | 'query' | 'cookie';
   /**
    * Header or query parameter name.
    *
@@ -175,8 +175,10 @@ const securitySchemeObjectToAuthObject = ({
       };
     }
 
-    // TODO: parser - support cookies auth
-    if (securitySchemeObject.in === 'query') {
+    if (
+      securitySchemeObject.in === 'query' ||
+      securitySchemeObject.in == 'cookie'
+    ) {
       return {
         in: securitySchemeObject.in,
         name: securitySchemeObject.name,

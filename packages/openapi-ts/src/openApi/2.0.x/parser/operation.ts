@@ -153,6 +153,7 @@ const operationToIrOperation = ({
                   description: requestBody.description,
                   ...content.schema,
                 },
+        state: undefined,
       });
 
       requestBodyObject.mediaType = content.mediaType;
@@ -218,6 +219,7 @@ const operationToIrOperation = ({
             description: responseObject.description,
             ...contentToSchema({ content }),
           },
+          state: undefined,
         }),
       };
     } else {
