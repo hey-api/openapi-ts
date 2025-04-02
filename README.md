@@ -181,10 +181,10 @@ Clients are responsible for sending the actual HTTP requests. Using clients is n
 
 ### Native Clients
 
-- [`@hey-api/client-fetch](https://heyapi.dev/openapi-ts/clients/fetch)
-- [`@hey-api/client-axios](https://heyapi.dev/openapi-ts/clients/axios)
-- [`@hey-api/client-next](https://heyapi.dev/openapi-ts/clients/next-js)
-- [`@hey-api/client-nuxt](https://heyapi.dev/openapi-ts/clients/nuxt)
+- [`@hey-api/client-fetch`](https://heyapi.dev/openapi-ts/clients/fetch)
+- [`@hey-api/client-axios`](https://heyapi.dev/openapi-ts/clients/axios)
+- [`@hey-api/client-next`](https://heyapi.dev/openapi-ts/clients/next-js)
+- [`@hey-api/client-nuxt`](https://heyapi.dev/openapi-ts/clients/nuxt)
 
 Don't see your client? [Build your own](https://heyapi.dev/openapi-ts/clients/custom) or let us know your interest by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
 
