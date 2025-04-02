@@ -39,31 +39,34 @@ interface Input {
    */
   commit_sha?: string;
   /**
-   * Prevent parts matching the regular expression from being processed.
+   * Prevent parts matching the regular expression(s) from being processed.
    * You can select both operations and components by reference within
-   * the bundled input. In case of conflicts, `exclude` takes precedence
-   * over `include`.
+   * the bundled input.
+   *
+   * In case of conflicts, `exclude` takes precedence over `include`.
    *
    * @example
    * operation: '^#/paths/api/v1/foo/get$'
    * schema: '^#/components/schemas/Foo$'
+   * deprecated: '@deprecated'
    */
-  exclude?: string;
+  exclude?: ReadonlyArray<string> | string;
   /**
    * You pass any valid Fetch API options to the request for fetching your
    * specification. This is useful if your file is behind auth for example.
    */
   fetch?: RequestInit;
   /**
-   * Process only parts matching the regular expression. You can select both
-   * operations and components by reference within the bundled input. In
-   * case of conflicts, `exclude` takes precedence over `include`.
+   * Process only parts matching the regular expression(s). You can select both
+   * operations and components by reference within the bundled input.
+   *
+   * In case of conflicts, `exclude` takes precedence over `include`.
    *
    * @example
    * operation: '^#/paths/api/v1/foo/get$'
    * schema: '^#/components/schemas/Foo$'
    */
-  include?: string;
+  include?: ReadonlyArray<string> | string;
   /**
    * **Requires `path` to start with `https://get.heyapi.dev` or be undefined**
    *
