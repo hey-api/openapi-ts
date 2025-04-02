@@ -19,8 +19,10 @@ export const defaultConfig: Plugin.Config<Config> = {
   includeTypes: true,
   name: PluginName,
   output: PluginName,
+  prefixUse: true,
   resolveQuery: undefined,
   resolveQueryKey: undefined,
+  suffixQueryMutation: true,
   useInfiniteQueries: false,
 };
 

@@ -227,8 +227,18 @@ export const hasPagination = (
 export const generateFunctionName = (
   operation: IR.OperationObject,
   isQueryType: boolean,
+  prefixUse: boolean = true,
+  suffixQueryMutation: boolean = true,
 ): string => {
-  const prefix = isQueryType ? 'use' : 'use';
-  const suffix = isQueryType ? 'Query' : 'Mutation';
-  return `${prefix}${stringCase({ case: 'PascalCase', value: operation.id })}${suffix}`;
+  const operationPascalCase = stringCase({
+    case: 'PascalCase',
+    value: operation.id,
+  });
+  const prefix = prefixUse ? 'use' : '';
+  const suffix = suffixQueryMutation
+    ? isQueryType
+      ? 'Query'
+      : 'Mutation'
+    : '';
+  return `${prefix}${operationPascalCase}${suffix}`;
 };

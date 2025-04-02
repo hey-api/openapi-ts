@@ -85,6 +85,12 @@ export interface Config extends Plugin.Name<'@pinia/colada'> {
   output: string;
 
   /**
+   * Whether to prefix generated function names with 'use'.
+   * @default true
+   */
+  prefixUse?: boolean;
+
+  /**
    * Custom hook that determines if an operation should be a query or not.
    * Return true to force query, false to force mutation, undefined to use default logic.
    * @default undefined
@@ -97,6 +103,13 @@ export interface Config extends Plugin.Name<'@pinia/colada'> {
    * @default undefined
    */
   resolveQueryKey?: (operation: IR.OperationObject) => Array<string>;
+
+  /**
+   * Whether to suffix generated function names with 'Query' or 'Mutation' to indicate the type
+   * of Pinia Colada operation that is used under the hood.
+   * @default true
+   */
+  suffixQueryMutation?: boolean;
 
   /**
    * Use infinite queries.

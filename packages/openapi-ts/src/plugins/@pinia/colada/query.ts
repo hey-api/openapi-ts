@@ -125,7 +125,12 @@ export const createQueryFunction = ({
         }),
       ],
     }),
-    name: generateFunctionName(operation, true),
+    name: generateFunctionName(
+      operation,
+      true,
+      plugin.prefixUse,
+      plugin.suffixQueryMutation,
+    ),
   });
 
   file.add(node);
