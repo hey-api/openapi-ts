@@ -1,0 +1,33 @@
+# <%= projectName %> - OpenAPI Client
+
+This library was generated with [NX](https://nx.dev) using the @hey-api/nx-plugin OpenAPI client generator.
+
+## Usage
+
+This package provides a TypeScript client for interacting with the API described by the OpenAPI spec in the `api/` directory.
+
+### Usage with <%= clientType %>
+
+```typescript
+import { ApiClient } from '<%= projectScope %>/<%= projectName %>';
+
+// Create client instance
+const client = new ApiClient({
+  BASE: 'https://api.example.com',
+  // Add any additional configuration here
+});
+
+// Example API call
+async function getData() {
+  const result = await client.someEndpoint.getData();
+  console.log(result);
+}
+```
+
+## Regenerating the API Client
+
+// TODO - need to implement
+
+## License
+
+[MIT](LICENSE)
