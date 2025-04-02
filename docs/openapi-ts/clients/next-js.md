@@ -11,7 +11,7 @@ Next.js client is currently in beta. The interface might change before it become
 
 ### About
 
-[Next.js](https://nextjs.org/) is the React framework for the web. Used by some of the world's largest companies, Next.js enables you to create high-quality web applications with the power of React components.
+[Next.js](https://nextjs.org) is the React framework for the web. Used by some of the world's largest companies, Next.js enables you to create high-quality web applications with the power of React components.
 
 <!-- <button class="buttonLink" @click="(event) => embedProject('hey-api-client-next-example')(event)">
 Launch demo
