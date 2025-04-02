@@ -11,6 +11,6 @@ This feature isn't in development yet. Help us prioritize it by voting on [GitHu
 
 ### About
 
-[Pinia Colada](https://pinia-colada.esm.dev/) is the data fetching layer for Pinia.
+[Pinia Colada](https://pinia-colada.esm.dev) is the data fetching layer for Pinia.
 
 <!--@include: ../../sponsors.md-->

@@ -23,13 +23,13 @@ Launch demo
 
 ## Features
 
-- works with CLI, Node.js 18+, or npx
-- supports OpenAPI 2.0, 3.0, and 3.1 specifications
-- supports JSON and YAML input files
-- generates TypeScript interfaces and SDKs
-- Fetch API, Axios, Nuxt, Angular, Node.js, and XHR clients available
+- runs in CLI, Node.js 18+, or npx
+- works with OpenAPI 2.0, 3.0, and 3.1
+- customizable types and SDKs
+- clients for your runtime (Fetch API, Axios, Next.js, Nuxt, etc.)
 - plugin ecosystem to reduce third-party boilerplate
-- [platform](https://heyapi.dev/openapi-ts/integrations) for automating codegen builds
+- custom plugins and custom clients
+- [integration](/openapi-ts/integrations) with Hey API Platform
 
 ## Quick Start
 

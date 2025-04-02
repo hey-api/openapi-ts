@@ -31,7 +31,7 @@ Hey API natively supports the following clients.
 - [Nuxt](/openapi-ts/clients/nuxt)
 - [Legacy](/openapi-ts/clients/legacy)
 
-Don't see your client? Let us know your interest by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
+Don't see your client? [Build your own](/openapi-ts/clients/custom) or let us know your interest by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
 
 <!--@include: ../examples.md-->
 <!--@include: ../sponsors.md-->
