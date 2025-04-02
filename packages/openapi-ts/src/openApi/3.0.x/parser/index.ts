@@ -1,5 +1,5 @@
 import type { IR } from '../../../ir/types';
-import { canProcessRef } from '../../shared/utils/filter';
+import { canProcessRef, createFilters } from '../../shared/utils/filter';
 import { mergeParametersObjects } from '../../shared/utils/parameter';
 import type {
   OpenApiV3_0_X,
@@ -19,18 +19,15 @@ export const parseV3_0_X = (context: IR.Context<OpenApiV3_0_X>) => {
   const operationIds = new Map<string, string>();
   const securitySchemesMap = new Map<string, SecuritySchemeObject>();
 
-  const excludeRegExp = context.config.input.exclude
-    ? new RegExp(context.config.input.exclude)
-    : undefined;
-  const includeRegExp = context.config.input.include
-    ? new RegExp(context.config.input.include)
-    : undefined;
+  const excludeFilters = createFilters(context.config.input.exclude);
+  const includeFilters = createFilters(context.config.input.include);
 
-  const shouldProcessRef = ($ref: string) =>
+  const shouldProcessRef = ($ref: string, schema: Record<string, any>) =>
     canProcessRef({
       $ref,
-      excludeRegExp,
-      includeRegExp,
+      excludeFilters,
+      includeFilters,
+      schema,
     });
 
   // TODO: parser - handle more component types, old parser handles only parameters and schemas
@@ -47,15 +44,15 @@ export const parseV3_0_X = (context: IR.Context<OpenApiV3_0_X>) => {
 
     for (const name in context.spec.components.parameters) {
       const $ref = `#/components/parameters/${name}`;
-      if (!shouldProcessRef($ref)) {
-        continue;
-      }
-
       const parameterOrReference = context.spec.components.parameters[name]!;
       const parameter =
         '$ref' in parameterOrReference
           ? context.resolveRef<ParameterObject>(parameterOrReference.$ref)
           : parameterOrReference;
+
+      if (!shouldProcessRef($ref, parameter)) {
+        continue;
+      }
 
       parseParameter({
         $ref,
@@ -66,16 +63,16 @@ export const parseV3_0_X = (context: IR.Context<OpenApiV3_0_X>) => {
 
     for (const name in context.spec.components.requestBodies) {
       const $ref = `#/components/requestBodies/${name}`;
-      if (!shouldProcessRef($ref)) {
-        continue;
-      }
-
       const requestBodyOrReference =
         context.spec.components.requestBodies[name]!;
       const requestBody =
         '$ref' in requestBodyOrReference
           ? context.resolveRef<RequestBodyObject>(requestBodyOrReference.$ref)
           : requestBodyOrReference;
+
+      if (!shouldProcessRef($ref, requestBody)) {
+        continue;
+      }
 
       parseRequestBody({
         $ref,
@@ -86,11 +83,11 @@ export const parseV3_0_X = (context: IR.Context<OpenApiV3_0_X>) => {
 
     for (const name in context.spec.components.schemas) {
       const $ref = `#/components/schemas/${name}`;
-      if (!shouldProcessRef($ref)) {
+      const schema = context.spec.components.schemas[name]!;
+
+      if (!shouldProcessRef($ref, schema)) {
         continue;
       }
-
-      const schema = context.spec.components.schemas[name]!;
 
       parseSchema({
         $ref,
@@ -139,7 +136,10 @@ export const parseV3_0_X = (context: IR.Context<OpenApiV3_0_X>) => {
     };
 
     const $refDelete = `#/paths${path}/delete`;
-    if (finalPathItem.delete && shouldProcessRef($refDelete)) {
+    if (
+      finalPathItem.delete &&
+      shouldProcessRef($refDelete, finalPathItem.delete)
+    ) {
       parseOperation({
         ...operationArgs,
         method: 'delete',
@@ -158,7 +158,7 @@ export const parseV3_0_X = (context: IR.Context<OpenApiV3_0_X>) => {
     }
 
     const $refGet = `#/paths${path}/get`;
-    if (finalPathItem.get && shouldProcessRef($refGet)) {
+    if (finalPathItem.get && shouldProcessRef($refGet, finalPathItem.get)) {
       parseOperation({
         ...operationArgs,
         method: 'get',
@@ -177,7 +177,7 @@ export const parseV3_0_X = (context: IR.Context<OpenApiV3_0_X>) => {
     }
 
     const $refHead = `#/paths${path}/head`;
-    if (finalPathItem.head && shouldProcessRef($refHead)) {
+    if (finalPathItem.head && shouldProcessRef($refHead, finalPathItem.head)) {
       parseOperation({
         ...operationArgs,
         method: 'head',
@@ -196,7 +196,10 @@ export const parseV3_0_X = (context: IR.Context<OpenApiV3_0_X>) => {
     }
 
     const $refOptions = `#/paths${path}/options`;
-    if (finalPathItem.options && shouldProcessRef($refOptions)) {
+    if (
+      finalPathItem.options &&
+      shouldProcessRef($refOptions, finalPathItem.options)
+    ) {
       parseOperation({
         ...operationArgs,
         method: 'options',
@@ -215,7 +218,10 @@ export const parseV3_0_X = (context: IR.Context<OpenApiV3_0_X>) => {
     }
 
     const $refPatch = `#/paths${path}/patch`;
-    if (finalPathItem.patch && shouldProcessRef($refPatch)) {
+    if (
+      finalPathItem.patch &&
+      shouldProcessRef($refPatch, finalPathItem.patch)
+    ) {
       parseOperation({
         ...operationArgs,
         method: 'patch',
@@ -234,7 +240,7 @@ export const parseV3_0_X = (context: IR.Context<OpenApiV3_0_X>) => {
     }
 
     const $refPost = `#/paths${path}/post`;
-    if (finalPathItem.post && shouldProcessRef($refPost)) {
+    if (finalPathItem.post && shouldProcessRef($refPost, finalPathItem.post)) {
       parseOperation({
         ...operationArgs,
         method: 'post',
@@ -253,7 +259,7 @@ export const parseV3_0_X = (context: IR.Context<OpenApiV3_0_X>) => {
     }
 
     const $refPut = `#/paths${path}/put`;
-    if (finalPathItem.put && shouldProcessRef($refPut)) {
+    if (finalPathItem.put && shouldProcessRef($refPut, finalPathItem.put)) {
       parseOperation({
         ...operationArgs,
         method: 'put',
@@ -272,7 +278,10 @@ export const parseV3_0_X = (context: IR.Context<OpenApiV3_0_X>) => {
     }
 
     const $refTrace = `#/paths${path}/trace`;
-    if (finalPathItem.trace && shouldProcessRef($refTrace)) {
+    if (
+      finalPathItem.trace &&
+      shouldProcessRef($refTrace, finalPathItem.trace)
+    ) {
       parseOperation({
         ...operationArgs,
         method: 'trace',
