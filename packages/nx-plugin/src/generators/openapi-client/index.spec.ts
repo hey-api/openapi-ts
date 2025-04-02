@@ -260,8 +260,8 @@ paths:
     it('should update package.json with axios dependencies when clientType is axios', () => {
       const axiosOptions = {
         ...options,
-        clientType: 'axios' as const,
-      };
+        client: 'axios' as const,
+      } satisfies OpenApiClientGeneratorSchema;
       const normalizedOptions = normalizeOptions(axiosOptions);
       const {
         clientType,
