@@ -22,8 +22,8 @@
     },
     "scope": {
       "type": "string",
-      "description": "Project scope of the library",
-      "x-prompt": "What is the project scope of the library?"
+      "description": "Scope of the library",
+      "x-prompt": "What is the scope of the library?"
     },
     "spec": {
       "type": "string",

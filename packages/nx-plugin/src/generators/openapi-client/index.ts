@@ -15,13 +15,15 @@ import { existsSync } from 'fs';
 import { mkdir, readFile, rm } from 'fs/promises';
 import { join } from 'path';
 
+import type { UpdateApiExecutorSchema } from '../../executors/update-api/schema';
+
 const tempFolder = join(process.cwd(), 'tmp');
 
 export type OpenApiClientType = 'fetch' | 'axios';
 
 export interface OpenApiClientGeneratorSchema {
   client: OpenApiClientType;
-  directory?: string;
+  directory: string;
   name: string;
   scope: string;
   spec: string;
@@ -33,14 +35,8 @@ export default async function (
   options: OpenApiClientGeneratorSchema,
 ) {
   const normalizedOptions = normalizeOptions(options);
-  const {
-    clientType,
-    projectDirectory,
-    projectName,
-    projectRoot,
-    projectScope,
-    specFile,
-  } = normalizedOptions;
+  const { clientType, projectName, projectRoot, projectScope, specFile } =
+    normalizedOptions;
 
   // Create the temp folder
   if (!existsSync(tempFolder)) {
@@ -63,7 +59,6 @@ export default async function (
   // Update the package.json file
   updatePackageJson({
     clientType,
-    projectDirectory,
     projectName,
     projectRoot,
     projectScope,
@@ -105,11 +100,9 @@ export function normalizeOptions(
   options: OpenApiClientGeneratorSchema,
 ): NormalizedOptions {
   const name = names(options.name).fileName;
-  const projectDirectory = options.directory
-    ? `${names(options.directory).fileName}/${name}`
-    : name;
+  const projectDirectory = names(options.directory).fileName;
   const projectName = name.replace(new RegExp('/', 'g'), '-');
-  const projectRoot = `${projectDirectory}`;
+  const projectRoot = join(projectDirectory, projectName);
   const tagArray = options.tags
     ? options.tags.split(',').map((s) => s.trim())
     : ['api', 'openapi'];
@@ -135,11 +128,28 @@ export function generateNxProject({
   normalizedOptions: NormalizedOptions;
   tree: Tree;
 }) {
-  const { clientType, projectName, projectRoot, tagArray } = normalizedOptions;
+  const {
+    clientType,
+    projectDirectory,
+    projectName,
+    projectRoot,
+    projectScope,
+    specFile,
+    tagArray,
+  } = normalizedOptions;
+
+  const updateOptions: UpdateApiExecutorSchema = {
+    client: clientType,
+    directory: projectDirectory,
+    name: projectName,
+    scope: projectScope,
+    spec: specFile,
+  };
+
   // Create basic project structure
   addProjectConfiguration(
     tree,
-    projectName,
+    `${projectScope}/${projectName}`,
     {
       projectType: 'library',
       root: projectRoot,
@@ -178,6 +188,10 @@ export function generateNxProject({
               `${projectRoot}/package.json`,
             ],
           },
+        },
+        updateApi: {
+          executor: './libs/openapi-generator:update-api',
+          options: updateOptions,
         },
       },
     },
@@ -257,14 +271,12 @@ export async function generateApi({
  */
 export function updatePackageJson({
   clientType,
-  projectDirectory,
   projectName,
   projectRoot,
   projectScope,
   tree,
 }: {
   clientType: OpenApiClientType;
-  projectDirectory: string;
   projectName: string;
   projectRoot: string;
   projectScope: string;
@@ -300,14 +312,12 @@ export function updatePackageJson({
   const tsConfigPath = join(workspaceRoot, 'tsconfig.base.json');
   if (existsSync(tsConfigPath)) {
     updateJson(tree, 'tsconfig.base.json', (json) => {
-      const paths = json.compilerOptions.paths || {};
-      paths[`${projectScope}/${projectName}`] = [
-        `${projectDirectory}/${projectName}/src/index.ts`,
+      json.compilerOptions.paths[`${projectScope}/${projectName}`] = [
+        `${projectRoot}/src/index.ts`,
       ];
-      paths[`${projectScope}/${projectName}/rq`] = [
-        `${projectDirectory}/${projectName}/src/rq.ts`,
+      json.compilerOptions.paths[`${projectScope}/${projectName}/rq`] = [
+        `${projectRoot}/src/rq.ts`,
       ];
-      json.compilerOptions.paths = paths;
       return json;
     });
   } else {
@@ -326,7 +336,6 @@ export function generateClientCode({
   projectRoot: string;
 }) {
   logger.info(`Generating client code using spec file...`);
-  // Copy bundled and dereferenced spec file to project
   execSync(
     `npx @hey-api/openapi-ts -i ${tempFolder}/api/spec.yaml -o ${projectRoot}/src/generated -c @hey-api/client-${clientType} -p @tanstack/react-query`,
     {

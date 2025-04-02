@@ -1,6 +1,6 @@
 # <%= projectName %> - OpenAPI Client
 
-This library was generated with [NX](https://nx.dev) using the @hey-api/nx-plugin OpenAPI client generator.
+This library was generated with [NX](https://nx.dev) using the OpenAPI client generator.
 
 ## Usage
 
@@ -26,7 +26,12 @@ async function getData() {
 
 ## Regenerating the API Client
 
-// TODO - need to implement
+If the API specification changes, you can regenerate the client:
+
+```bash
+# From the project root
+nx run <%= projectScope %>/<%= projectName %>:updateApi
+```
 
 ## License
 

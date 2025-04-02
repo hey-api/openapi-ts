@@ -8,7 +8,7 @@ The generator automatically bundles and dereferences the OpenAPI spec file using
 
 ```bash
 # Using nx directly
-nx generate openapi-client <name> --spec=<path-to-spec> --client=<client-type> --scope=<scope> --tags=<tags>
+nx generate openapi-client <name> --spec=<path-to-spec> --client=<client-type> --scope=<project-scope>
 
 # Interactive mode
 nx generate openapi-client
@@ -29,10 +29,13 @@ nx generate openapi-client
 
 ```bash
 # Generate a fetch API client
-nx generate openapi-client my-api --spec=https://example.com/api-spec.yaml --client=@hey-api/client-fetch --scope=@my-app
+nx generate openapi-client my-api --spec=https://example.com/api-spec.yaml --client=@hey-api/client-fetch
 
 # Generate an axios client from a local file
-nx generate openapi-client my-api --spec=./api-specs/my-api.yaml --client=@hey-api/client-axios --scope=@my-app
+nx generate openapi-client my-api --spec=./api-specs/my-api.yaml --client=@hey-api/client-axios
+
+# Generate with custom directory and tags
+nx generate openapi-client my-api --spec=./api-specs/my-api.yaml --directory=libs/api --tags=api,openapi,my-service
 ```
 
 ## Generated Project Structure
@@ -42,16 +45,19 @@ The generator creates a new library project with the following structure:
 ```
 libs/<name>/
 ├── api/
-│   └── spec.yaml           # Bundled and dereferenced OpenAPI spec file
+│   └── spec.yaml        # Bundled and dereferenced OpenAPI spec file
 ├── src/
 │   ├── generated/       # Generated API client code (not committed to git)
-│   └── index.ts         # Exports everything from generated/
-├── vite.config.ts
+|   ├── client.spec.ts   # Unit test for the client code
+│   ├── index.ts         # Exports everything from generated/
+|   └── rq.ts            # Exports tanstack query client code
 ├── package.json
+├── vitest.config.ts     # Vitest configuration
 ├── README.md
-├── tsconfig.json
-├── tsconfig.lib.json
-├── tsconfig.spec.json
+├── project.json         # NX project configuration
+├── tsconfig.json        # root config
+├── tsconfig.lib.json    # library config
+├── tsconfig.spec.json   # test config
 └── openapi-ts.config.ts # Configuration for @hey-api/openapi-ts
 ```
 
@@ -59,14 +65,22 @@ libs/<name>/
 
 The generator uses Redocly CLI (`@redocly/cli`) to bundle and dereference the OpenAPI spec file:
 
-1. The original spec file is provided to Redocly CLI which bundles and dereferences the spec file
+1. Redocly CLI bundles and dereferences the spec file
 2. The bundled version is saved to `api/spec.yaml`
 
 This ensures that the spec file used for code generation is self-contained with all references resolved.
 
-## Regenerating the API Client
+## Generating the API Client
 
-TODO
+After the project is created, you can regenerate the API client at any time:
+
+```bash
+# Using nx
+nx run <project-scope>/<project-name>:updateApi
+
+# Using npm script (from the project root)
+npm run update
+```
 
 ## Dependencies
 
@@ -76,13 +90,13 @@ The generator adds the following dependencies to the created project:
 - `@hey-api/client-fetch` or `@hey-api/client-axios` - Client implementation (dependency)
 - `axios` - If using the axios client (dependency)
 
-The generator also uses `@redocly/cli` from the workspace dependencies for bundling the spec file.
+The generator also uses `@redocly/cli` for bundling the spec file.
 
 ## TODO
 
 - [x] Generate the client code
 - [x] Setup tests
+- [x] Add generator to update the API spec file and regenerate the client code
 - [ ] Make plugins configurable and ability to add additional plugins
-- [ ] Add generator to update the API spec file and regenerate the client code
 - [ ] Support different test frameworks
 - [ ] Support additional client types

@@ -1,5 +1,5 @@
 {
-  "name": "<%= projectScope %>/<%= projectName %>",
+  "name": "@cash-standalone/<%= projectName %>",
   "version": "0.1.0",
   "type": "commonjs",
   "exports": {
@@ -18,6 +18,6 @@
     },
   },
   "scripts": {
-    "generate": "nx run <%= projectName %>:generateApi"
+    "update": "nx run <%= projectScope %>/<%= projectName %>:updateApi"
   }
 }

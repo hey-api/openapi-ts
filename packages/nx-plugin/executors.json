@@ -1,0 +1,9 @@
+{
+  "executors": {
+    "update-api": {
+      "implementation": "./dist/executors/update-api",
+      "schema": "./dist/executors/update-api/schema.json",
+      "description": "update-api executor"
+    }
+  }
+}
