@@ -1,5 +1,6 @@
 import type { Tree } from '@nx/devkit';
 import {
+  addDependenciesToPackageJson,
   addProjectConfiguration,
   formatFiles,
   generateFiles,
@@ -15,6 +16,7 @@ import { existsSync } from 'fs';
 import { mkdir, readFile, rm } from 'fs/promises';
 import { join } from 'path';
 
+import packageJson from '../../../package.json';
 import type { UpdateApiExecutorSchema } from '../../executors/update-api/schema';
 
 const tempFolder = join(process.cwd(), 'tmp');
@@ -57,7 +59,7 @@ export default async function (
   });
 
   // Update the package.json file
-  updatePackageJson({
+  const installDeps = await updatePackageJson({
     clientType,
     projectName,
     projectRoot,
@@ -78,7 +80,8 @@ export default async function (
   await rm(tempFolder, { force: true, recursive: true });
 
   // Return a function that installs the packages
-  return () => {
+  return async () => {
+    await installDeps();
     installPackagesTask(tree);
   };
 }
@@ -100,9 +103,9 @@ export function normalizeOptions(
   options: OpenApiClientGeneratorSchema,
 ): NormalizedOptions {
   const name = names(options.name).fileName;
-  const projectDirectory = names(options.directory).fileName;
+  const projectDirectory = names(options.directory).fileName.replace('./', '');
   const projectName = name.replace(new RegExp('/', 'g'), '-');
-  const projectRoot = join(projectDirectory, projectName);
+  const projectRoot = `${projectDirectory}/${projectName}`;
   const tagArray = options.tags
     ? options.tags.split(',').map((s) => s.trim())
     : ['api', 'openapi'];
@@ -147,56 +150,51 @@ export function generateNxProject({
   };
 
   // Create basic project structure
-  addProjectConfiguration(
-    tree,
-    `${projectScope}/${projectName}`,
-    {
-      projectType: 'library',
-      root: projectRoot,
-      sourceRoot: `${projectRoot}/src`,
-      tags: tagArray,
-      targets: {
-        build: {
-          executor: '@nx/js:tsc',
-          options: {
-            additionalEntryPoints: [`${projectRoot}/src/rq.ts`],
-            assets: [
-              {
-                glob: 'README.md',
-                input: `./${projectRoot}`,
-                output: '.',
-              },
-            ],
-            main: `${projectRoot}/src/index.ts`,
-            outputPath: `dist/${projectRoot}`,
-            tsConfig: `${projectRoot}/tsconfig.lib.json`,
-          },
-          outputs: ['{options.outputPath}'],
+  addProjectConfiguration(tree, `${projectScope}/${projectName}`, {
+    projectType: 'library',
+    root: projectRoot,
+    sourceRoot: `${projectRoot}/src`,
+    tags: tagArray,
+    targets: {
+      build: {
+        executor: '@nx/js:tsc',
+        options: {
+          additionalEntryPoints: [`${projectRoot}/src/rq.ts`],
+          assets: [
+            {
+              glob: 'README.md',
+              input: `./${projectRoot}`,
+              output: '.',
+            },
+          ],
+          main: `${projectRoot}/src/index.ts`,
+          outputPath: `dist/${projectRoot}`,
+          tsConfig: `${projectRoot}/tsconfig.lib.json`,
         },
-        generateApi: {
-          executor: 'nx:run-commands',
-          options: {
-            command: `npx @hey-api/openapi-ts -i ./api/spec.yaml -o ./src/generated -c @hey-api/client-${clientType} -p @tanstack/react-query`,
-            cwd: projectRoot,
-          },
-        },
-        lint: {
-          executor: '@nx/eslint:lint',
-          options: {
-            lintFilePatterns: [
-              `${projectRoot}/**/*.ts`,
-              `${projectRoot}/package.json`,
-            ],
-          },
-        },
-        updateApi: {
-          executor: './libs/openapi-generator:update-api',
-          options: updateOptions,
+        outputs: ['{options.outputPath}'],
+      },
+      generateApi: {
+        executor: 'nx:run-commands',
+        options: {
+          command: `npx @hey-api/openapi-ts -i ./api/spec.yaml -o ./src/generated -c @hey-api/client-${clientType} -p @tanstack/react-query`,
+          cwd: projectRoot,
         },
       },
+      lint: {
+        executor: '@nx/eslint:lint',
+        options: {
+          lintFilePatterns: [
+            `${projectRoot}/**/*.ts`,
+            `${projectRoot}/package.json`,
+          ],
+        },
+      },
+      updateApi: {
+        executor: `${packageJson.name}:update-api`,
+        options: updateOptions,
+      },
     },
-    false,
-  );
+  });
 
   // Create directory structure
   const templatePath = join(__dirname, 'files');
@@ -269,7 +267,7 @@ export async function generateApi({
 /**
  * Updates the package.json file to add dependencies and scripts
  */
-export function updatePackageJson({
+export async function updatePackageJson({
   clientType,
   projectName,
   projectRoot,
@@ -283,46 +281,44 @@ export function updatePackageJson({
   tree: Tree;
 }) {
   // Update package.json to add dependencies and scripts
-  if (tree.exists(`${projectRoot}/package.json`)) {
-    updateJson(tree, `${projectRoot}/package.json`, (json) => {
-      json.scripts = {
-        ...json.scripts,
-        generate: 'nx run ' + projectName + ':generateApi',
-      };
+  const deps: Record<string, string> =
+    clientType === 'fetch'
+      ? {
+          '@hey-api/client-fetch': '^0.9.0',
+        }
+      : {
+          '@hey-api/client-axios': '^0.7.0',
+          axios: '^1.6.0',
+        };
 
-      // Add the required dependencies
-      json.dependencies = json.dependencies || {};
-      json.devDependencies = json.devDependencies || {};
-
-      // Add the client dependency
-      if (clientType === 'fetch') {
-        json.dependencies['@hey-api/client-fetch'] = '^0.9.0';
-      } else if (clientType === 'axios') {
-        json.dependencies['@hey-api/client-axios'] = '^0.7.0';
-        json.dependencies['axios'] = '^1.6.0';
-      }
-
-      // Add dev dependency for the generator
-      json.devDependencies['@hey-api/openapi-ts'] = '^0.66.0';
-
-      return json;
-    });
-  }
+  const installDeps = addDependenciesToPackageJson(
+    tree,
+    deps,
+    {},
+    join(projectRoot, 'package.json'),
+  );
 
   const tsConfigPath = join(workspaceRoot, 'tsconfig.base.json');
   if (existsSync(tsConfigPath)) {
     updateJson(tree, 'tsconfig.base.json', (json) => {
-      json.compilerOptions.paths[`${projectScope}/${projectName}`] = [
-        `${projectRoot}/src/index.ts`,
+      const paths = json.compilerOptions.paths || {};
+      paths[`${projectScope}/${projectName}`] = [
+        `./${projectRoot}/src/index.ts`,
       ];
-      json.compilerOptions.paths[`${projectScope}/${projectName}/rq`] = [
-        `${projectRoot}/src/rq.ts`,
+      paths[`${projectScope}/${projectName}/rq`] = [
+        `./${projectRoot}/src/rq.ts`,
       ];
+      json.compilerOptions.paths = paths;
       return json;
     });
   } else {
-    logger.error(`Failed to find tsconfig.base.json file in ${workspaceRoot}`);
+    logger.error(`Failed to find tsconfig.base.json file in ${workspaceRoot}.`);
+    throw new Error(
+      `Failed to find tsconfig.base.json file in ${workspaceRoot}.`,
+    );
   }
+
+  return installDeps;
 }
 
 /**
