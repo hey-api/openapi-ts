@@ -75,6 +75,24 @@ describe('paginationKeywordsRegExp', () => {
 });
 
 describe('operationPagination', () => {
+  const queryParam = (
+    name: string,
+    type: IR.SchemaObject['type'] = 'string',
+  ): IR.ParameterObject => ({
+    explode: true,
+    location: 'query',
+    name,
+    schema: { type },
+    style: 'form',
+  });
+
+  const emptyContext = {} as IR.Context;
+
+  const baseOperationMeta = {
+    method: 'post' as const,
+    path: '/test' as const,
+  };
+
   const queryScenarios: Array<{
     hasPagination: boolean;
     operation: IR.OperationObject;
@@ -82,46 +100,28 @@ describe('operationPagination', () => {
     {
       hasPagination: true,
       operation: {
+        ...baseOperationMeta,
         id: 'op1',
         method: 'get',
         parameters: {
           query: {
-            page: {
-              explode: true,
-              location: 'query',
-              name: 'page',
-              schema: { type: 'integer' },
-              style: 'form',
-            },
-            perPage: {
-              explode: true,
-              location: 'query',
-              name: 'perPage',
-              schema: { type: 'integer' },
-              style: 'form',
-            },
+            page: queryParam('page', 'integer'),
+            perPage: queryParam('perPage', 'integer'),
           },
         },
-        path: '/test',
       },
     },
     {
       hasPagination: false,
       operation: {
+        ...baseOperationMeta,
         id: 'op2',
         method: 'get',
         parameters: {
           query: {
-            sort: {
-              explode: true,
-              location: 'query',
-              name: 'sort',
-              schema: { type: 'string' },
-              style: 'form',
-            },
+            sort: queryParam('sort', 'string'),
           },
         },
-        path: '/test',
       },
     },
   ];
@@ -129,13 +129,14 @@ describe('operationPagination', () => {
   it.each(queryScenarios)(
     'query params for $operation.id → $hasPagination',
     ({ hasPagination, operation }) => {
-      const result = operationPagination({ context: {} as any, operation });
+      const result = operationPagination({ context: emptyContext, operation });
       expect(Boolean(result)).toEqual(hasPagination);
     },
   );
 
   it('body.pagination === true returns entire body', () => {
     const operation: IR.OperationObject = {
+      ...baseOperationMeta,
       body: {
         mediaType: 'application/json',
         pagination: true,
@@ -147,11 +148,9 @@ describe('operationPagination', () => {
         },
       },
       id: 'bodyTrue',
-      method: 'post',
-      path: '/test',
     };
 
-    const result = operationPagination({ context: {} as any, operation });
+    const result = operationPagination({ context: emptyContext, operation });
 
     expect(result?.in).toEqual('body');
     expect(result?.name).toEqual('body');
@@ -160,6 +159,7 @@ describe('operationPagination', () => {
 
   it('body.pagination = "pagination" returns the matching property', () => {
     const operation: IR.OperationObject = {
+      ...baseOperationMeta,
       body: {
         mediaType: 'application/json',
         pagination: 'pagination',
@@ -176,11 +176,9 @@ describe('operationPagination', () => {
         },
       },
       id: 'bodyField',
-      method: 'post',
-      path: '/test',
     };
 
-    const result = operationPagination({ context: {} as any, operation });
+    const result = operationPagination({ context: emptyContext, operation });
 
     expect(result?.in).toEqual('body');
     expect(result?.name).toEqual('pagination');
@@ -203,14 +201,13 @@ describe('operationPagination', () => {
     } as unknown as IR.Context;
 
     const operation: IR.OperationObject = {
+      ...baseOperationMeta,
       body: {
         mediaType: 'application/json',
         pagination: 'pagination',
         schema: { $ref: '#/components/schemas/PaginationBody' },
       },
       id: 'refPagination',
-      method: 'post',
-      path: '/test',
     };
 
     const result = operationPagination({ context, operation });
@@ -225,6 +222,7 @@ describe('operationPagination', () => {
 
   it('falls back to query when pagination key not found in body', () => {
     const operation: IR.OperationObject = {
+      ...baseOperationMeta,
       body: {
         mediaType: 'application/json',
         pagination: 'pagination',
@@ -236,22 +234,14 @@ describe('operationPagination', () => {
         },
       },
       id: 'fallback',
-      method: 'post',
       parameters: {
         query: {
-          cursor: {
-            explode: true,
-            location: 'query',
-            name: 'cursor',
-            schema: { type: 'string' },
-            style: 'form',
-          },
+          cursor: queryParam('cursor', 'string'),
         },
       },
-      path: '/test',
     };
 
-    const result = operationPagination({ context: {} as any, operation });
+    const result = operationPagination({ context: emptyContext, operation });
 
     expect(result?.in).toEqual('query');
     expect(result?.schema?.properties?.cursor).toBeDefined();
