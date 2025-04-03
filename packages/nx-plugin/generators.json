@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "generators": {
     "openapi-client": {
-      "factory": "./dist/generators/openapi-client",
+      "factory": "./dist/generators/openapi-client/index.js",
       "schema": "./dist/generators/openapi-client/schema.json",
-      "description": "Generate an OpenAPI client library from an OpenAPI spec file"
+      "description": "Generate an OpenAPI client library from an OpenAPI spec file."
     }
   }
 }
