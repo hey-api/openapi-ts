@@ -255,4 +255,3 @@ describe('operationPagination', () => {
     expect(result?.schema?.type).toEqual('string');
   });
 });
-test(pagination): fix new tests in CI (2)
