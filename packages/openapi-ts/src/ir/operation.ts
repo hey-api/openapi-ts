@@ -28,29 +28,38 @@ export const operationPagination = ({
   context: IR.Context;
   operation: IR.OperationObject;
 }): Pagination | undefined => {
-  if (operation.body?.pagination) {
-    if (typeof operation.body.pagination === 'boolean') {
-      return {
-        in: 'body',
-        name: 'body',
-        schema: operation.body.schema,
-      };
-    }
+  const body = operation.body;
 
-    const schema = operation.body.schema.$ref
-      ? context.resolveIrRef<IR.RequestBodyObject | IR.SchemaObject>(
-          operation.body.schema.$ref,
-        )
-      : operation.body.schema;
-    const finalSchema = 'schema' in schema ? schema.schema : schema;
+  if (!body || !body.pagination) {
+    return parameterWithPagination(operation.parameters);
+  }
+
+  if (body.pagination === true) {
     return {
       in: 'body',
-      name: operation.body.pagination,
-      schema: finalSchema.properties![operation.body.pagination]!,
+      name: 'body',
+      schema: body.schema,
     };
   }
 
-  return parameterWithPagination(operation.parameters);
+  const schema = body.schema;
+  const resolvedSchema = schema.$ref
+    ? context.resolveIrRef<IR.RequestBodyObject | IR.SchemaObject>(schema.$ref)
+    : schema;
+
+  const finalSchema =
+    'schema' in resolvedSchema ? resolvedSchema.schema : resolvedSchema;
+  const paginationProp = finalSchema?.properties?.[body.pagination];
+
+  if (!paginationProp) {
+    return parameterWithPagination(operation.parameters);
+  }
+
+  return {
+    in: 'body',
+    name: body.pagination,
+    schema: paginationProp,
+  };
 };
 
 type StatusGroup = '1XX' | '2XX' | '3XX' | '4XX' | '5XX' | 'default';
