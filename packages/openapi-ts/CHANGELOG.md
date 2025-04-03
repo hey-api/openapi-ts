@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.66.2
+
+### Patch Changes
+
+- [#1913](https://github.com/hey-api/openapi-ts/pull/1913) [`7cfa4a7`](https://github.com/hey-api/openapi-ts/commit/7cfa4a76b13ca97d49c5f0366ba7264f94753d8b) Thanks [@BogdanMaier](https://github.com/BogdanMaier)! - fix: prevent crash when optional pagination field is missing
+
 ## 0.66.1
 
 ### Patch Changes
