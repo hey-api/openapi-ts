@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.66.3
+
+### Patch Changes
+
+- [#1917](https://github.com/hey-api/openapi-ts/pull/1917) [`d7af22c`](https://github.com/hey-api/openapi-ts/commit/d7af22c771af4bd2dab28acc69430717da390670) Thanks [@Freddis](https://github.com/Freddis)! - fix: handle nullable dates in transformers
+
 ## 0.66.2
 
 ### Patch Changes
