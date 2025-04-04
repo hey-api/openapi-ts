@@ -37,7 +37,7 @@
     "svelte-check": "4.1.4",
     "typescript": "5.5.3",
     "typescript-eslint": "8.19.1",
-    "vite": "6.0.13",
+    "vite": "6.0.14",
     "vitest": "1.6.0"
   }
 }
