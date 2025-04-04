@@ -14,19 +14,26 @@ import {
 import { execSync } from 'child_process';
 import { existsSync } from 'fs';
 import { mkdir, readFile, rm } from 'fs/promises';
+import latestVersion from 'latest-version';
 import { join } from 'path';
 
 import packageJson from '../../../package.json';
 import type { UpdateApiExecutorSchema } from '../../executors/update-api/schema';
+import {
+  generateClientCode,
+  generateClientCommand,
+  getPackageName,
+  getVersionOfPackage,
+} from '../../utils';
+import { CONSTANTS } from '../../vars';
 
 const tempFolder = join(process.cwd(), 'tmp');
 
-export type OpenApiClientType = 'fetch' | 'axios';
-
 export interface OpenApiClientGeneratorSchema {
-  client: OpenApiClientType;
+  client: string;
   directory: string;
   name: string;
+  plugins: string[];
   scope: string;
   spec: string;
   tags?: string;
@@ -37,8 +44,14 @@ export default async function (
   options: OpenApiClientGeneratorSchema,
 ) {
   const normalizedOptions = normalizeOptions(options);
-  const { clientType, projectName, projectRoot, projectScope, specFile } =
-    normalizedOptions;
+  const {
+    clientType,
+    plugins,
+    projectName,
+    projectRoot,
+    projectScope,
+    specFile,
+  } = normalizedOptions;
 
   // Create the temp folder
   if (!existsSync(tempFolder)) {
@@ -70,7 +83,9 @@ export default async function (
   // Generate the client code
   generateClientCode({
     clientType,
-    projectRoot,
+    outputPath: `${projectRoot}/src/generated`,
+    plugins,
+    specFile: `${tempFolder}/api/spec.yaml`,
   });
 
   // Format the files
@@ -87,7 +102,8 @@ export default async function (
 }
 
 export interface NormalizedOptions {
-  clientType: OpenApiClientType;
+  clientType: string;
+  plugins: string[];
   projectDirectory: string;
   projectName: string;
   projectRoot: string;
@@ -112,6 +128,7 @@ export function normalizeOptions(
 
   return {
     clientType: options.client,
+    plugins: options.plugins,
     projectDirectory,
     projectName,
     projectRoot,
@@ -133,6 +150,7 @@ export function generateNxProject({
 }) {
   const {
     clientType,
+    plugins,
     projectDirectory,
     projectName,
     projectRoot,
@@ -145,9 +163,16 @@ export function generateNxProject({
     client: clientType,
     directory: projectDirectory,
     name: projectName,
+    plugins,
     scope: projectScope,
     spec: specFile,
   };
+
+  const additionalEntryPoints: string[] = [];
+
+  if (plugins.includes('@tanstack/react-query')) {
+    additionalEntryPoints.push(`${projectRoot}/src/rq.ts`);
+  }
 
   // Create basic project structure
   addProjectConfiguration(tree, `${projectScope}/${projectName}`, {
@@ -159,7 +184,7 @@ export function generateNxProject({
       build: {
         executor: '@nx/js:tsc',
         options: {
-          additionalEntryPoints: [`${projectRoot}/src/rq.ts`],
+          additionalEntryPoints,
           assets: [
             {
               glob: 'README.md',
@@ -169,14 +194,19 @@ export function generateNxProject({
           ],
           main: `${projectRoot}/src/index.ts`,
           outputPath: `dist/${projectRoot}`,
-          tsConfig: `${projectRoot}/tsconfig.lib.json`,
+          tsConfig: `${projectRoot}/${CONSTANTS.TS_LIB_CONFIG_NAME}`,
         },
         outputs: ['{options.outputPath}'],
       },
       generateApi: {
         executor: 'nx:run-commands',
         options: {
-          command: `npx @hey-api/openapi-ts -i ./api/spec.yaml -o ./src/generated -c @hey-api/client-${clientType} -p @tanstack/react-query`,
+          command: generateClientCommand({
+            clientType,
+            outputPath: `./src/${CONSTANTS.GENERATED_DIR_NAME}`,
+            plugins,
+            specFile: `./${CONSTANTS.SPEC_DIR_NAME}/${CONSTANTS.SPEC_FILE_NAME}`,
+          }),
           cwd: projectRoot,
         },
       },
@@ -200,7 +230,7 @@ export function generateNxProject({
   const templatePath = join(__dirname, 'files');
   generateFiles(tree, templatePath, projectRoot, {
     ...normalizedOptions,
-    clientType: `@hey-api/client-${clientType}`,
+    clientType,
   });
 }
 
@@ -217,11 +247,18 @@ export async function generateApi({
   tree: Tree;
 }) {
   // Create api directory if it doesn't exist
-  const apiDirectory = joinPathFragments(projectRoot, 'api');
+  const apiDirectory = joinPathFragments(projectRoot, CONSTANTS.SPEC_DIR_NAME);
 
   // Determine spec file paths
-  const specDestination = joinPathFragments(apiDirectory, 'spec.yaml');
-  const tempSpecDestination = joinPathFragments(tempFolder, 'api', 'spec.yaml');
+  const specDestination = joinPathFragments(
+    apiDirectory,
+    CONSTANTS.SPEC_FILE_NAME,
+  );
+  const tempSpecDestination = joinPathFragments(
+    tempFolder,
+    CONSTANTS.SPEC_DIR_NAME,
+    CONSTANTS.SPEC_FILE_NAME,
+  );
 
   try {
     // Create a full file path for the temporary and final spec files
@@ -274,22 +311,25 @@ export async function updatePackageJson({
   projectScope,
   tree,
 }: {
-  clientType: OpenApiClientType;
+  clientType: string;
   projectName: string;
   projectRoot: string;
   projectScope: string;
   tree: Tree;
 }) {
+  const packageName = getPackageName(clientType);
+  const packageVersion =
+    getVersionOfPackage(clientType) || (await latestVersion(packageName));
+
   // Update package.json to add dependencies and scripts
-  const deps: Record<string, string> =
-    clientType === 'fetch'
-      ? {
-          '@hey-api/client-fetch': '^0.9.0',
-        }
-      : {
-          '@hey-api/client-axios': '^0.7.0',
-          axios: '^1.6.0',
-        };
+  const deps: Record<string, string> = {
+    [packageName]: packageVersion,
+  };
+
+  if (packageName === '@hey-api/client-axios') {
+    const axiosVersion = await latestVersion('axios');
+    deps['axios'] = `^${axiosVersion}`;
+  }
 
   const installDeps = addDependenciesToPackageJson(
     tree,
@@ -298,9 +338,10 @@ export async function updatePackageJson({
     join(projectRoot, 'package.json'),
   );
 
-  const tsConfigPath = join(workspaceRoot, 'tsconfig.base.json');
+  const tsconfigName = 'tsconfig.base.json';
+  const tsConfigPath = join(workspaceRoot, tsconfigName);
   if (existsSync(tsConfigPath)) {
-    updateJson(tree, 'tsconfig.base.json', (json) => {
+    updateJson(tree, tsconfigName, (json) => {
       const paths = json.compilerOptions.paths || {};
       paths[`${projectScope}/${projectName}`] = [
         `./${projectRoot}/src/index.ts`,
@@ -312,31 +353,9 @@ export async function updatePackageJson({
       return json;
     });
   } else {
-    logger.error(`Failed to find tsconfig.base.json file in ${workspaceRoot}.`);
-    throw new Error(
-      `Failed to find tsconfig.base.json file in ${workspaceRoot}.`,
-    );
+    logger.error(`Failed to find ${tsconfigName} file in ${workspaceRoot}.`);
+    throw new Error(`Failed to find ${tsconfigName} file in ${workspaceRoot}.`);
   }
 
   return installDeps;
-}
-
-/**
- * Generates the client code using the spec file
- */
-export function generateClientCode({
-  clientType,
-  projectRoot,
-}: {
-  clientType: OpenApiClientType;
-  projectRoot: string;
-}) {
-  logger.info(`Generating client code using spec file...`);
-  execSync(
-    `npx @hey-api/openapi-ts -i ${tempFolder}/api/spec.yaml -o ${projectRoot}/src/generated -c @hey-api/client-${clientType} -p @tanstack/react-query`,
-    {
-      stdio: 'inherit',
-    },
-  );
-  logger.info(`Generated client code successfully.`);
 }
