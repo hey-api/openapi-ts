@@ -375,9 +375,9 @@ export function generateNxProject({
             (json) => {
               for (const include of addToTsConfigIncludes) {
                 // use a set to avoid duplicates
-                const setOfIncludes = new Set(json.compilerOptions.include);
+                const setOfIncludes = new Set(json.include);
                 setOfIncludes.add(include);
-                json.compilerOptions.include = Array.from(setOfIncludes);
+                json.include = Array.from(setOfIncludes);
               }
               return json;
             },
