@@ -56,7 +56,6 @@
       "type": "string",
       "description": "Test to use",
       "default": "none",
-      "x-prompt": "Which test runner would you like to use?",
       "enum": ["none", "vitest"]
     }
   },
