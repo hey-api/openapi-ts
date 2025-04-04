@@ -39,21 +39,7 @@
       "type": "string",
       "description": "Type of client to generate",
       "default": "@hey-api/client-fetch",
-      "enum": ["@hey-api/client-fetch", "@hey-api/client-axios"],
-      "x-prompt": {
-        "message": "Which client type would you like to use?",
-        "type": "list",
-        "items": [
-          {
-            "value": "@hey-api/client-fetch",
-            "label": "Fetch API client"
-          },
-          {
-            "value": "@hey-api/client-axios",
-            "label": "Axios client"
-          }
-        ]
-      }
+      "x-prompt": "Which client type would you like to use?"
     },
     "plugins": {
       "type": "array",

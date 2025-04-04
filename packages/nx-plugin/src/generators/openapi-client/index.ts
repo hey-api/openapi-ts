@@ -14,7 +14,6 @@ import {
 import { execSync } from 'child_process';
 import { existsSync } from 'fs';
 import { mkdir, readFile, rm } from 'fs/promises';
-import latestVersion from 'latest-version';
 import { join } from 'path';
 
 import packageJson from '../../../package.json';
@@ -28,6 +27,77 @@ import {
 import { CONSTANTS } from '../../vars';
 
 const tempFolder = join(process.cwd(), 'tmp');
+
+/**
+ * Plugin configuration for the OpenAPI client generator
+ */
+export type ClientPluginOptions = {
+  /**
+   * Additional entry points to be added for this plugin to the tsconfig.base.json file
+   */
+  additionalEntryPoints?: string[];
+  /**
+   * Package.json exports to be added for this plugin to the package.json file
+   */
+  packageJsonExports?: Record<
+    string,
+    {
+      default: string;
+      development: string;
+      import: string;
+      types: string;
+    }
+  >;
+  /**
+   * Path to the template files to be added for this plugin to the project
+   */
+  templateFilesPath?: string;
+  /**
+   * Compiler paths to be added for this plugin to the tsconfig.base.json file
+   */
+  tsConfigCompilerPaths?: Record<string, string>;
+};
+
+const getClientPlugins = ({
+  inputPlugins,
+  projectName,
+  projectRoot,
+  projectScope,
+}: NormalizedOptions & {
+  inputPlugins: string[];
+}): Record<string, ClientPluginOptions> => {
+  const plugins: Record<string, ClientPluginOptions> = {
+    '@tanstack/react-query': {
+      additionalEntryPoints: [`${projectRoot}/src/rq.ts`],
+      packageJsonExports: {
+        './rq': {
+          default: './dist/rq.js',
+          development: './src/rq.ts',
+          import: './dist/rq.js',
+          types: './dist/rq.d.ts',
+        },
+      },
+      templateFilesPath: './plugins/rq',
+      tsConfigCompilerPaths: {
+        [`${projectScope}/${projectName}/rq`]: `./${projectRoot}/src/rq.ts`,
+      },
+    },
+  };
+
+  // Filter the plugins that are in the inputPlugins array
+  const filteredPlugins = Object.keys(plugins)
+    .filter((plugin) => inputPlugins.includes(plugin))
+    .reduce(
+      (acc, plugin) => {
+        const keyedPlugin = plugin as keyof typeof plugins;
+        acc[plugin] = plugins[keyedPlugin]!;
+        return acc;
+      },
+      {} as Record<string, ClientPluginOptions>,
+    );
+
+  return filteredPlugins;
+};
 
 export interface OpenApiClientGeneratorSchema {
   client: string;
@@ -53,6 +123,11 @@ export default async function (
     specFile,
   } = normalizedOptions;
 
+  const clientPlugins = getClientPlugins({
+    ...normalizedOptions,
+    inputPlugins: plugins,
+  });
+
   // Create the temp folder
   if (!existsSync(tempFolder)) {
     await mkdir(tempFolder);
@@ -60,6 +135,7 @@ export default async function (
 
   // Generate the Nx project
   generateNxProject({
+    clientPlugins,
     normalizedOptions,
     tree,
   });
@@ -73,6 +149,7 @@ export default async function (
 
   // Update the package.json file
   const installDeps = await updatePackageJson({
+    clientPlugins,
     clientType,
     projectName,
     projectRoot,
@@ -142,9 +219,11 @@ export function normalizeOptions(
  * Generates the nx project
  */
 export function generateNxProject({
+  clientPlugins,
   normalizedOptions,
   tree,
 }: {
+  clientPlugins: Record<string, ClientPluginOptions>;
   normalizedOptions: NormalizedOptions;
   tree: Tree;
 }) {
@@ -170,8 +249,12 @@ export function generateNxProject({
 
   const additionalEntryPoints: string[] = [];
 
-  if (plugins.includes('@tanstack/react-query')) {
-    additionalEntryPoints.push(`${projectRoot}/src/rq.ts`);
+  for (const plugin of plugins) {
+    if (clientPlugins[plugin]) {
+      additionalEntryPoints.push(
+        ...(clientPlugins[plugin].additionalEntryPoints || []),
+      );
+    }
   }
 
   // Create basic project structure
@@ -193,7 +276,8 @@ export function generateNxProject({
             },
           ],
           main: `${projectRoot}/src/index.ts`,
-          outputPath: `dist/${projectRoot}`,
+          outputPath: `${projectRoot}/dist`,
+          rootDir: `${projectRoot}/src`,
           tsConfig: `${projectRoot}/${CONSTANTS.TS_LIB_CONFIG_NAME}`,
         },
         outputs: ['{options.outputPath}'],
@@ -210,15 +294,6 @@ export function generateNxProject({
           cwd: projectRoot,
         },
       },
-      lint: {
-        executor: '@nx/eslint:lint',
-        options: {
-          lintFilePatterns: [
-            `${projectRoot}/**/*.ts`,
-            `${projectRoot}/package.json`,
-          ],
-        },
-      },
       updateApi: {
         executor: `${packageJson.name}:update-api`,
         options: updateOptions,
@@ -232,6 +307,32 @@ export function generateNxProject({
     ...normalizedOptions,
     clientType,
   });
+
+  for (const plugin of plugins) {
+    if (clientPlugins[plugin]) {
+      if (clientPlugins[plugin].templateFilesPath) {
+        const pluginTemplatePath = join(
+          __dirname,
+          clientPlugins[plugin].templateFilesPath,
+        );
+        generateFiles(tree, pluginTemplatePath, projectRoot, {
+          ...normalizedOptions,
+          clientType,
+        });
+      }
+
+      const packageJsonExports = clientPlugins[plugin].packageJsonExports;
+      if (packageJsonExports) {
+        updateJson(tree, `${projectRoot}/package.json`, (json) => {
+          json.exports = {
+            ...json.exports,
+            ...packageJsonExports,
+          };
+          return json;
+        });
+      }
+    }
+  }
 }
 
 /**
@@ -305,24 +406,32 @@ export async function generateApi({
  * Updates the package.json file to add dependencies and scripts
  */
 export async function updatePackageJson({
+  clientPlugins,
   clientType,
   projectName,
   projectRoot,
   projectScope,
   tree,
 }: {
+  clientPlugins: Record<string, ClientPluginOptions>;
   clientType: string;
   projectName: string;
   projectRoot: string;
   projectScope: string;
   tree: Tree;
 }) {
+  const { default: latestVersion } = await import('latest-version');
   const packageName = getPackageName(clientType);
   const packageVersion =
-    getVersionOfPackage(clientType) || (await latestVersion(packageName));
+    getVersionOfPackage(clientType) || `^${await latestVersion(packageName)}`;
+
+  const latestOpenApiTsVersion = `^${await latestVersion(
+    '@hey-api/openapi-ts',
+  )}`;
 
   // Update package.json to add dependencies and scripts
   const deps: Record<string, string> = {
+    '@hey-api/openapi-ts': latestOpenApiTsVersion,
     [packageName]: packageVersion,
   };
 
@@ -346,9 +455,16 @@ export async function updatePackageJson({
       paths[`${projectScope}/${projectName}`] = [
         `./${projectRoot}/src/index.ts`,
       ];
-      paths[`${projectScope}/${projectName}/rq`] = [
-        `./${projectRoot}/src/rq.ts`,
-      ];
+      for (const plugin of Object.keys(clientPlugins)) {
+        const item = clientPlugins[plugin]!;
+        const pluginTsConfigPath = item.tsConfigCompilerPaths;
+        if (pluginTsConfigPath) {
+          // for each key in the pluginTsConfigPath object, add it to the paths object
+          for (const [key, value] of Object.entries(pluginTsConfigPath)) {
+            paths[key] = [value];
+          }
+        }
+      }
       json.compilerOptions.paths = paths;
       return json;
     });

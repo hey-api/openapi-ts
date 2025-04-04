@@ -25,7 +25,7 @@
     "swagger"
   ],
   "private": true,
-  "type": "module",
+  "type": "commonjs",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",

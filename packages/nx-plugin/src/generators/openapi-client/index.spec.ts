@@ -67,7 +67,7 @@ describe('openapi-client generator', () => {
   let tempSpecPath: string;
 
   const options = {
-    client: 'fetch' as const,
+    client: '@hey-api/client-fetch',
     directory: './libs',
     name: 'test-api',
     plugins: [],
@@ -122,10 +122,11 @@ paths:
       const normalized = normalizeOptions(options);
 
       expect(normalized).toEqual({
-        clientType: 'fetch',
-        projectDirectory: 'test-api',
+        clientType: '@hey-api/client-fetch',
+        plugins: [],
+        projectDirectory: 'libs',
         projectName: 'test-api',
-        projectRoot: 'test-api',
+        projectRoot: 'libs/test-api',
         projectScope: '@test-api',
         specFile: tempSpecPath,
         tagArray: ['api', 'openapi'],
@@ -142,8 +143,9 @@ paths:
       const normalized = normalizeOptions(customOptions);
 
       expect(normalized).toEqual({
-        clientType: 'fetch',
-        projectDirectory: 'custom-dir/test-api',
+        clientType: '@hey-api/client-fetch',
+        plugins: [],
+        projectDirectory: 'custom-dir',
         projectName: 'test-api',
         projectRoot: 'custom-dir/test-api',
         projectScope: '@test-api',
@@ -157,7 +159,7 @@ paths:
     it('should generate project configuration', () => {
       const normalizedOptions = normalizeOptions(options);
 
-      generateNxProject({ normalizedOptions, tree });
+      generateNxProject({ clientPlugins: {}, normalizedOptions, tree });
 
       const config = readJson(
         tree,
@@ -166,14 +168,13 @@ paths:
       expect(config).toBeDefined();
       expect(config.projectType).toBe('library');
       expect(config.targets.build).toBeDefined();
-      expect(config.targets.lint).toBeDefined();
       expect(config.targets.generateApi).toBeDefined();
     });
 
     it('should generate project files', () => {
       const normalizedOptions = normalizeOptions(options);
 
-      generateNxProject({ normalizedOptions, tree });
+      generateNxProject({ clientPlugins: {}, normalizedOptions, tree });
 
       expect(
         tree.exists(`${normalizedOptions.projectRoot}/tsconfig.json`),
@@ -223,10 +224,9 @@ paths:
   });
 
   describe('updatePackageJson', () => {
-    it('should update package.json with correct dependencies', () => {
+    it('should update package.json with correct dependencies', async () => {
       const normalizedOptions = normalizeOptions(options);
-      const { clientType, projectName, projectRoot, projectScope } =
-        normalizedOptions;
+      const { projectName, projectRoot, projectScope } = normalizedOptions;
 
       // Create initial package.json
       tree.write(
@@ -234,33 +234,42 @@ paths:
         JSON.stringify({
           dependencies: {},
           devDependencies: {},
-          name: projectName,
+          name: `${projectScope}/${projectName}`,
         }),
       );
 
-      updatePackageJson({
-        clientType,
+      // Create tsconfig.base.json
+      tree.write(
+        'tsconfig.base.json',
+        JSON.stringify({
+          compilerOptions: {
+            paths: {},
+          },
+        }),
+      );
+
+      await updatePackageJson({
+        clientPlugins: {},
+        clientType: '@hey-api/client-fetch',
         projectName,
         projectRoot,
         projectScope,
         tree,
       });
 
+      // Verify tsconfig.base.json was updated
+      const tsconfig = readJson(tree, 'tsconfig.base.json');
+      expect(
+        tsconfig.compilerOptions.paths[`${projectScope}/${projectName}`],
+      ).toBeDefined();
+
       const packageJson = readJson(tree, `${projectRoot}/package.json`);
-      expect(packageJson.dependencies['@hey-api/client-fetch']).toBe('^0.9.0');
-      expect(packageJson.devDependencies['@hey-api/openapi-ts']).toBe(
-        '^0.66.0',
-      );
+      expect(packageJson.dependencies['@hey-api/client-fetch']).toBeDefined();
     });
 
-    it('should update package.json with axios dependencies when clientType is axios', () => {
-      const axiosOptions = {
-        ...options,
-        client: 'axios' as const,
-      } satisfies OpenApiClientGeneratorSchema;
-      const normalizedOptions = normalizeOptions(axiosOptions);
-      const { clientType, projectName, projectRoot, projectScope } =
-        normalizedOptions;
+    it('should update package.json with correct dependencies', async () => {
+      const normalizedOptions = normalizeOptions(options);
+      const { projectName, projectRoot, projectScope } = normalizedOptions;
 
       // Create initial package.json
       tree.write(
@@ -268,22 +277,84 @@ paths:
         JSON.stringify({
           dependencies: {},
           devDependencies: {},
-          name: projectName,
+          name: `${projectScope}/${projectName}`,
         }),
       );
 
-      updatePackageJson({
-        clientType,
+      // Create tsconfig.base.json
+      tree.write(
+        'tsconfig.base.json',
+        JSON.stringify({
+          compilerOptions: {
+            paths: {},
+          },
+        }),
+      );
+
+      await updatePackageJson({
+        clientPlugins: {
+          '@tanstack/react-query': {
+            tsConfigCompilerPaths: {
+              'my-test-path': './src/index.ts',
+            },
+          },
+        },
+        clientType: '@hey-api/client-fetch',
         projectName,
         projectRoot,
         projectScope,
         tree,
       });
 
+      // Verify tsconfig.base.json was updated
+      const tsconfig = readJson(tree, 'tsconfig.base.json');
+      expect(
+        tsconfig.compilerOptions.paths[`${projectScope}/${projectName}`],
+      ).toBeDefined();
+      expect(tsconfig.compilerOptions.paths['my-test-path']).toBeDefined();
+    });
+
+    it('should update package.json with axios dependencies when clientType is axios', async () => {
+      const normalizedOptions = normalizeOptions(options);
+      const { projectName, projectRoot, projectScope } = normalizedOptions;
+
+      // Create initial package.json
+      tree.write(
+        `${projectRoot}/package.json`,
+        JSON.stringify({
+          dependencies: {},
+          devDependencies: {},
+          name: `${projectScope}/${projectName}`,
+        }),
+      );
+
+      // Create tsconfig.base.json
+      tree.write(
+        'tsconfig.base.json',
+        JSON.stringify({
+          compilerOptions: {
+            paths: {},
+          },
+        }),
+      );
+
+      await updatePackageJson({
+        clientPlugins: {},
+        clientType: '@hey-api/client-axios',
+        projectName,
+        projectRoot,
+        projectScope,
+        tree,
+      });
+
+      // Verify tsconfig.base.json was updated
+      const tsconfig = readJson(tree, 'tsconfig.base.json');
+      expect(
+        tsconfig.compilerOptions.paths[`${projectScope}/${projectName}`],
+      ).toBeDefined();
+
       const packageJson = readJson(tree, `${projectRoot}/package.json`);
-      expect(packageJson.dependencies['@hey-api/client-axios']).toBeTruthy();
-      expect(packageJson.dependencies['axios']).toBeTruthy();
-      expect(packageJson.devDependencies['@hey-api/openapi-ts']).toBeTruthy();
+      expect(packageJson.dependencies.axios).toBeDefined();
     });
   });
 

@@ -22,9 +22,8 @@
     "client": {
       "type": "string",
       "description": "The type of client to generate",
-      "x-prompt": "What is the type of client to generate? (fetch, axios)",
-      "default": "fetch",
-      "enum": ["fetch", "axios"]
+      "x-prompt": "What is the type of client to generate? (@hey-api/client-fetch, @hey-api/client-axios)",
+      "default": "@hey-api/client-fetch"
     },
     "scope": {
       "type": "string",
