@@ -8,9 +8,9 @@ import executor from '.';
 import type { UpdateApiExecutorSchema } from './schema';
 
 const options: UpdateApiExecutorSchema = {
-  client: 'fetch',
+  client: '@hey-api/client-fetch',
   // don't use tmp, as it is used internally in the lib code for temp files
-  directory: 'temp',
+  directory: 'temp-update-api',
   name: 'my-api',
   plugins: [],
   scope: '@my-org',
@@ -102,7 +102,7 @@ paths:
   });
 
   it('handles different client types', async () => {
-    const axiosOptions = { ...options, client: 'axios' };
+    const axiosOptions = { ...options, client: '@hey-api/client-axios' };
     const output = await executor(axiosOptions, context);
     expect(output.success).toBe(true);
   });

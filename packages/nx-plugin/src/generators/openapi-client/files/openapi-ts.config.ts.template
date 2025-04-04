@@ -1,10 +1,12 @@
 import { defineConfig } from '@hey-api/openapi-ts';
 
 export default defineConfig({
-  input: 'api/spec.yaml',
-  output: 'src/generated',
+  input: '<%= SPEC_DIR_NAME %>/<%= SPEC_FILE_NAME %>',
+  output: 'src/<%= GENERATED_DIR_NAME %>',
   plugins: [
     '<%= clientType %>',
-    '@tanstack/react-query',
+    <% for(let x = 0; x < plugins.length; x++) { %>
+      '<%= plugins[x] %>'
+    <% } %>
   ],
 });
