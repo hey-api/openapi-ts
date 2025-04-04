@@ -1,3 +1,4 @@
+import { createClient } from '@hey-api/openapi-ts';
 import { logger } from '@nx/devkit';
 import { execSync } from 'child_process';
 
@@ -29,10 +30,18 @@ export function getPackageName(packageName: string) {
     : packageName;
 }
 
+type ConfigOptions = NonNullable<Parameters<typeof createClient>[0]>;
+type ClientConfig = Extract<
+  ConfigOptions,
+  {
+    plugins?: any;
+  }
+>;
+
 /**
  * Generates the client code using the spec file
  */
-export function generateClientCode({
+export async function generateClientCode({
   clientType,
   outputPath,
   plugins,
@@ -45,15 +54,11 @@ export function generateClientCode({
 }) {
   try {
     logger.info(`Generating client code using spec file...`);
-    execSync(
-      generateClientCommand({
-        clientType,
-        outputPath,
-        plugins,
-        specFile,
-      }),
-      { stdio: 'inherit' },
-    );
+    await createClient({
+      input: specFile,
+      output: outputPath,
+      plugins: [clientType, ...plugins] as ClientConfig['plugins'],
+    });
     logger.info(`Generated client code successfully.`);
   } catch (error) {
     logger.error(`Failed to generate client code: ${error}`);
