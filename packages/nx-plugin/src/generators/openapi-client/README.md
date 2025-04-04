@@ -16,14 +16,14 @@ nx generate openapi-client
 
 ## Options
 
-| Option      | Description                                       | Required | Default       |
-| ----------- | ------------------------------------------------- | -------- | ------------- |
-| `name`      | Library name                                      | Yes      | -             |
-| `scope`     | Scope of the project                              | Yes      | -             |
-| `spec`      | Path to the OpenAPI spec file (URL or local path) | Yes      | -             |
-| `client`    | Type of client to generate                        | No       | `fetch`       |
-| `directory` | Directory where the library will be created       | No       | `libs`        |
-| `tags`      | Add tags to the library (comma-separated)         | No       | `api,openapi` |
+| Option      | Description                                       | Required | Default                 |
+| ----------- | ------------------------------------------------- | -------- | ----------------------- |
+| `name`      | Library name                                      | Yes      | -                       |
+| `scope`     | Scope of the project                              | Yes      | -                       |
+| `spec`      | Path to the OpenAPI spec file (URL or local path) | Yes      | -                       |
+| `client`    | Type of client to generate                        | No       | `@hey-api/client-fetch` |
+| `directory` | Directory where the library will be created       | No       | `libs`                  |
+| `tags`      | Add tags to the library (comma-separated)         | No       | `api,openapi`           |
 
 ## Examples
 
