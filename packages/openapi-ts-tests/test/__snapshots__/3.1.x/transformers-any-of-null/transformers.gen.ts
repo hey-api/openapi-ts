@@ -12,6 +12,9 @@ const fooSchemaResponseTransformer = (data: any) => {
     if (data.baz) {
         data.baz = new Date(data.baz);
     }
+    if (data.requiredQux) {
+        data.requiredQux = new Date(data.requiredQux);
+    }
     return data;
 };
 
