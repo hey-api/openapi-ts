@@ -1,6 +1,6 @@
 import type { ExecutorContext } from '@nx/devkit';
 import { existsSync } from 'fs';
-import { mkdir, rm, writeFile } from 'fs/promises';
+import { mkdir, readFile, rm, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
@@ -76,6 +76,98 @@ paths:
   });
 
   it('can run', async () => {
+    const output = await executor(options, context);
+    expect(output.success).toBe(true);
+  });
+
+  it('handles invalid spec file', async () => {
+    const invalidSpecPath = join(
+      process.cwd(),
+      options.directory,
+      options.name,
+      'api',
+      'invalid.yaml',
+    );
+    await writeFile(invalidSpecPath, 'invalid: yaml');
+    options.spec = invalidSpecPath;
+
+    const output = await executor(options, context);
+    expect(output.success).toBe(false);
+  });
+
+  it('handles non-existent spec file', async () => {
+    options.spec = 'non-existent.yaml';
+    const output = await executor(options, context);
+    expect(output.success).toBe(false);
+  });
+
+  it('handles different client types', async () => {
+    const axiosOptions = { ...options, client: 'axios' };
+    const output = await executor(axiosOptions, context);
+    expect(output.success).toBe(true);
+  });
+
+  it('handles plugins', async () => {
+    const pluginOptions = {
+      ...options,
+      plugins: ['@tanstack/react-query'],
+    };
+    const output = await executor(pluginOptions, context);
+    expect(output.success).toBe(true);
+  });
+
+  it('handles identical specs', async () => {
+    // Create a copy of the existing spec
+    const existingSpecPath = join(
+      process.cwd(),
+      options.directory,
+      options.name,
+      'api',
+      'spec.yaml',
+    );
+    const newSpecPath = join(
+      process.cwd(),
+      options.directory,
+      options.name,
+      'api',
+      'new-spec.yaml',
+    );
+    const existingSpec = await readFile(existingSpecPath, 'utf-8');
+    await writeFile(newSpecPath, existingSpec);
+    options.spec = newSpecPath;
+
+    const output = await executor(options, context);
+    expect(output.success).toBe(true);
+  });
+
+  it('handles different spec versions', async () => {
+    const v2SpecPath = join(
+      process.cwd(),
+      options.directory,
+      options.name,
+      'api',
+      'v2-spec.yaml',
+    );
+    const v2Spec = `
+swagger: "2.0"
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /test:
+    get:
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+`;
+    await writeFile(v2SpecPath, v2Spec);
+    options.spec = v2SpecPath;
+
     const output = await executor(options, context);
     expect(output.success).toBe(true);
   });
