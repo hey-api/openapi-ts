@@ -20,12 +20,13 @@ async function compareSpecs(existingSpecPath: string, newSpecPath: string) {
   const parsedNewSpec = await bundle(newSpecPath);
   logger.debug('New spec parsed.');
 
-  const existingSpecVersion = JSON.parse(
-    JSON.stringify(parsedExistingSpec),
-  ).openapi;
-  const newSpecVersion = JSON.parse(JSON.stringify(parsedNewSpec)).openapi;
-
+  const existingSpec = JSON.parse(JSON.stringify(parsedExistingSpec));
+  const existingSpecVersion = existingSpec.openapi || existingSpec.swagger;
+  const newSpec = JSON.parse(JSON.stringify(parsedNewSpec));
+  const newSpecVersion = newSpec.openapi || newSpec.swagger;
   logger.debug('Checking spec versions...');
+  logger.debug(`Existing spec version: ${existingSpecVersion}`);
+  logger.debug(`New spec version: ${newSpecVersion}`);
   const existingVersionIs3 = existingSpecVersion.startsWith('3');
   const newSpecVersionIs3 = newSpecVersion.startsWith('3');
   const existingVersionIs2 = existingSpecVersion.startsWith('2');
