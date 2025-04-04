@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": 2,
+  "title": "UpdateApi executor",
+  "description": "Update the OpenAPI spec file and client",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the project",
+      "x-prompt": "What is the name of the project? (e.g. my-api)",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      }
+    },
+    "spec": {
+      "type": "string",
+      "description": "The path to the OpenAPI spec file",
+      "x-prompt": "What is the path to the OpenAPI spec file? (URI or local file path)"
+    },
+    "client": {
+      "type": "string",
+      "description": "The type of client to generate",
+      "x-prompt": "What is the type of client to generate? (@hey-api/client-fetch, @hey-api/client-axios)",
+      "default": "@hey-api/client-fetch"
+    },
+    "scope": {
+      "type": "string",
+      "description": "The scope of the project",
+      "x-prompt": "What is the scope of the project? (e.g. @my-org)"
+    },
+    "directory": {
+      "type": "string",
+      "description": "The directory of the project",
+      "x-prompt": "What is the directory of the project? (e.g. libs)",
+      "default": "libs"
+    },
+    "plugins": {
+      "type": "array",
+      "description": "The plugins to use",
+      "x-prompt": "What plugins would you like to use? (e.g. @tanstack/react-query)",
+      "default": [],
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": ["spec", "scope", "name"]
+}

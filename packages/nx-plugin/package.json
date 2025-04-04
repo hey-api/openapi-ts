@@ -1,0 +1,69 @@
+{
+  "name": "@hey-api/nx-plugin",
+  "version": "0.0.1",
+  "description": "🚀 Nx plugin for `@hey-api/openapi-ts` codegen.",
+  "homepage": "https://heyapi.dev/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hey-api/openapi-ts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hey-api/openapi-ts/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "email": "lubos@heyapi.dev",
+    "name": "Hey API",
+    "url": "https://heyapi.dev"
+  },
+  "funding": "https://github.com/sponsors/hey-api",
+  "keywords": [
+    "codegen",
+    "openapi",
+    "plugin",
+    "nx",
+    "swagger"
+  ],
+  "private": true,
+  "type": "commonjs",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup && pnpm check-exports",
+    "check-exports": "attw --pack .",
+    "test:watch": "vitest watch --config vitest.config.ts",
+    "test": "vitest run --config vitest.config.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "development": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "executors": "./executors.json",
+  "generators": "./generators.json",
+  "dependencies": {
+    "@apidevtools/swagger-parser": "10.1.1",
+    "@hey-api/openapi-ts": "workspace:*",
+    "@nx/devkit": "20.7.1",
+    "@redocly/cli": "1.34.1",
+    "latest-version": "9.0.0",
+    "nx": "20.7.1",
+    "openapi-diff": "0.23.7",
+    "tslib": "2.3.0"
+  },
+  "devDependencies": {
+    "typescript": "5.5.3",
+    "vitest": "1.6.0"
+  },
+  "files": [
+    "dist",
+    "LICENSE.md",
+    "generators.json"
+  ]
+}
