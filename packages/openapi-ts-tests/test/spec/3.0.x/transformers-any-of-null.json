@@ -42,8 +42,18 @@
                 "format": "date-time"
               }
             ]
+          },
+          "requiredBaz": {
+            "anyOf": [
+              {
+                "type": "string",
+                "nullable": true,
+                "format": "date-time"
+              }
+            ]
           }
-        }
+        },
+        "required": ["requiredBaz"]
       }
     }
   }

@@ -3,6 +3,7 @@
 export type Foo = {
     foo?: Date;
     bar?: Date | null;
+    requiredBaz: Date | null;
 };
 
 export type GetFooData = {
