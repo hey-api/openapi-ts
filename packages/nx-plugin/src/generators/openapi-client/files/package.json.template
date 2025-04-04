@@ -1,5 +1,5 @@
 {
-  "name": "@cash-standalone/<%= projectName %>",
+  "name": "<%= projectScope %>/<%= projectName %>",
   "version": "0.1.0",
   "type": "commonjs",
   "exports": {
