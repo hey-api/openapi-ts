@@ -41,10 +41,12 @@ const nameTransformer = (name: string) => `z-${name}`;
 
 const arrayTypeToZodSchema = ({
   context,
+  plugin,
   result,
   schema,
 }: {
   context: IR.Context;
+  plugin: Config;
   result: Result;
   schema: SchemaWithType<'array'>;
 }): ts.CallExpression => {
@@ -74,6 +76,7 @@ const arrayTypeToZodSchema = ({
     const itemExpressions = schema.items!.map((item) =>
       schemaToZodSchema({
         context,
+        plugin,
         result,
         schema: item,
       }),
@@ -332,10 +335,12 @@ const numberTypeToZodSchema = ({
 
 const objectTypeToZodSchema = ({
   context,
+  plugin,
   result,
   schema,
 }: {
   context: IR.Context;
+  plugin: Config;
   result: Result;
   schema: SchemaWithType<'object'>;
 }) => {
@@ -355,6 +360,7 @@ const objectTypeToZodSchema = ({
     const propertyExpression = schemaToZodSchema({
       context,
       optional: !isRequired,
+      plugin,
       result,
       schema: property,
     });
@@ -432,9 +438,11 @@ const objectTypeToZodSchema = ({
 };
 
 const stringTypeToZodSchema = ({
+  plugin,
   schema,
 }: {
   context: IR.Context;
+  plugin: Config;
   schema: SchemaWithType<'string'>;
 }) => {
   if (typeof schema.const === 'string') {
@@ -463,6 +471,11 @@ const stringTypeToZodSchema = ({
             expression: stringExpression,
             name: compiler.identifier({ text: 'datetime' }),
           }),
+          parameters: [
+            plugin.dateTimeOptions
+              ? JSON.stringify(plugin.dateTimeOptions)
+              : undefined,
+          ],
         });
         break;
       case 'ipv4':
@@ -643,10 +656,12 @@ const voidTypeToZodSchema = ({
 
 const schemaTypeToZodSchema = ({
   context,
+  plugin,
   result,
   schema,
 }: {
   context: IR.Context;
+  plugin: Config;
   result: Result;
   schema: IR.SchemaObject;
 }): ts.Expression => {
@@ -654,6 +669,7 @@ const schemaTypeToZodSchema = ({
     case 'array':
       return arrayTypeToZodSchema({
         context,
+        plugin,
         result,
         schema: schema as SchemaWithType<'array'>,
       });
@@ -686,12 +702,14 @@ const schemaTypeToZodSchema = ({
     case 'object':
       return objectTypeToZodSchema({
         context,
+        plugin,
         result,
         schema: schema as SchemaWithType<'object'>,
       });
     case 'string':
       return stringTypeToZodSchema({
         context,
+        plugin,
         schema: schema as SchemaWithType<'string'>,
       });
     case 'tuple':
@@ -720,10 +738,12 @@ const schemaTypeToZodSchema = ({
 const operationToZodSchema = ({
   context,
   operation,
+  plugin,
   result,
 }: {
   context: IR.Context;
   operation: IR.OperationObject;
+  plugin: Config;
   result: Result;
 }) => {
   if (operation.responses) {
@@ -737,6 +757,7 @@ const operationToZodSchema = ({
           type: 'response',
         }),
         context,
+        plugin,
         result,
         schema: response,
       });
@@ -748,6 +769,7 @@ const schemaToZodSchema = ({
   $ref,
   context,
   optional,
+  plugin,
   result,
   schema,
 }: {
@@ -762,6 +784,7 @@ const schemaToZodSchema = ({
    * `.default()` which is handled in this function.
    */
   optional?: boolean;
+  plugin: Config;
   result: Result;
   schema: IR.SchemaObject;
 }): ts.Expression => {
@@ -799,6 +822,7 @@ const schemaToZodSchema = ({
       const ref = context.resolveIrRef<IR.SchemaObject>(schema.$ref);
       expression = schemaToZodSchema({
         context,
+        plugin,
         result,
         schema: ref,
       });
@@ -837,6 +861,7 @@ const schemaToZodSchema = ({
   } else if (schema.type) {
     expression = schemaTypeToZodSchema({
       context,
+      plugin,
       result,
       schema,
     });
@@ -847,6 +872,7 @@ const schemaToZodSchema = ({
       const itemTypes = schema.items.map((item) =>
         schemaToZodSchema({
           context,
+          plugin,
           result,
           schema: item,
         }),
@@ -896,6 +922,7 @@ const schemaToZodSchema = ({
     } else {
       expression = schemaToZodSchema({
         context,
+        plugin,
         result,
         schema,
       });
@@ -904,6 +931,7 @@ const schemaToZodSchema = ({
     // catch-all fallback for failed schemas
     expression = schemaTypeToZodSchema({
       context,
+      plugin,
       result,
       schema: {
         type: 'unknown',
@@ -991,6 +1019,7 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     operationToZodSchema({
       context,
       operation,
+      plugin,
       result,
     });
   });
@@ -1004,6 +1033,7 @@ export const handler: Plugin.Handler<Config> = ({ context, plugin }) => {
     schemaToZodSchema({
       $ref,
       context,
+      plugin,
       result,
       schema,
     });

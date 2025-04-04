@@ -3,6 +3,15 @@ import type { Plugin } from '../types';
 
 export interface Config extends Plugin.Name<'zod'> {
   /**
+   * Zod options for the generated schema about datetimes.
+   * https://zod.dev/?id=datetimes
+   */
+  dateTimeOptions?: {
+    local?: boolean;
+    offset?: boolean;
+    precision?: number;
+  };
+  /**
    * Should the exports from the generated files be re-exported in the index
    * barrel file?
    *
