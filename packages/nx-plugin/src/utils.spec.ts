@@ -1,3 +1,4 @@
+import { createClient } from '@hey-api/openapi-ts';
 import { execSync } from 'child_process';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -12,6 +13,10 @@ import {
 // Mock execSync to prevent actual command execution
 vi.mock('child_process', () => ({
   execSync: vi.fn(),
+}));
+
+vi.mock('@hey-api/openapi-ts', () => ({
+  createClient: vi.fn(),
 }));
 
 describe('utils', () => {
@@ -86,33 +91,34 @@ describe('utils', () => {
       vi.clearAllMocks();
     });
 
-    it('should execute command successfully', () => {
-      generateClientCode({
+    it('should execute command successfully', async () => {
+      await generateClientCode({
         clientType: '@hey-api/client-fetch',
         outputPath: './src/generated',
         plugins: [],
         specFile: './api/spec.yaml',
       });
 
-      expect(execSync).toHaveBeenCalledWith(
-        'npx @hey-api/openapi-ts -i ./api/spec.yaml -o ./src/generated -c @hey-api/client-fetch',
-        { stdio: 'inherit' },
-      );
+      expect(createClient).toHaveBeenCalledWith({
+        input: './api/spec.yaml',
+        output: './src/generated',
+        plugins: ['@hey-api/client-fetch'],
+      });
     });
 
-    it('should throw error when command fails', () => {
-      vi.mocked(execSync).mockImplementationOnce(() => {
+    it('should throw error when command fails', async () => {
+      vi.mocked(createClient).mockImplementationOnce(() => {
         throw new Error('Command failed');
       });
 
-      expect(() =>
+      await expect(
         generateClientCode({
           clientType: '@hey-api/client-fetch',
           outputPath: './src/generated',
           plugins: [],
           specFile: './api/spec.yaml',
         }),
-      ).toThrow('Command failed');
+      ).rejects.toThrow('Command failed');
     });
   });
 
