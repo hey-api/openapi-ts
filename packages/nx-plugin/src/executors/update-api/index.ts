@@ -1,16 +1,17 @@
 import { bundle } from '@apidevtools/swagger-parser';
 import type { PromiseExecutor } from '@nx/devkit';
 import { logger } from '@nx/devkit';
-import { execSync } from 'child_process';
 import { existsSync } from 'fs';
 import { cp, mkdir, readFile, rm, writeFile } from 'fs/promises';
 import OpenApiDiff from 'openapi-diff';
 import { join } from 'path';
 
+import { bundleAndDereferenceSpecFile, generateClientCode } from '../../utils';
+import { CONSTANTS } from '../../vars';
 import type { UpdateApiExecutorSchema } from './schema';
 
-const tempFolder = join(process.cwd(), 'tmp');
-const tempApiFolder = join(tempFolder, 'api');
+const tempFolder = join(process.cwd(), CONSTANTS.TMP_DIR_NAME);
+const tempApiFolder = join(tempFolder, CONSTANTS.SPEC_DIR_NAME);
 
 async function compareSpecs(existingSpecPath: string, newSpecPath: string) {
   logger.debug('Parsing existing spec...');
@@ -84,26 +85,20 @@ const runExecutor: PromiseExecutor<UpdateApiExecutorSchema> = async (
 
     // Determine file paths
     const projectRoot = join(options.directory, options.name);
-    const apiDirectory = join(projectRoot, 'api');
-    const existingSpecPath = join(apiDirectory, 'spec.yaml');
-    const tempSpecPath = join(tempApiFolder, 'spec.yaml');
-    const generatedTempDir = join(tempFolder, 'generated');
+    const apiDirectory = join(projectRoot, CONSTANTS.SPEC_DIR_NAME);
+    const existingSpecPath = join(apiDirectory, CONSTANTS.SPEC_FILE_NAME);
+    const tempSpecPath = join(tempApiFolder, CONSTANTS.SPEC_FILE_NAME);
+    const generatedTempDir = join(tempFolder, CONSTANTS.GENERATED_DIR_NAME);
 
     // Check if existing spec exists
     if (!existsSync(existingSpecPath)) {
       throw new Error(`No existing spec file found at ${existingSpecPath}.`);
     }
 
-    // Bundle and dereference the new spec file
-    logger.debug(`Bundling new OpenAPI spec file using Redocly CLI...`);
-    execSync(
-      `npx redocly bundle ${options.spec} --output ${tempSpecPath} --ext yaml --dereferenced`,
-      {
-        stdio: 'inherit',
-      },
-    );
-
-    logger.debug('New spec bundled.');
+    bundleAndDereferenceSpecFile({
+      outputPath: tempSpecPath,
+      specFile: options.spec,
+    });
 
     // Read both files they can be yaml or json OpenAPI spec files
     logger.info('Reading existing and new spec files...');
@@ -131,14 +126,13 @@ const runExecutor: PromiseExecutor<UpdateApiExecutorSchema> = async (
 
     // Generate new client code
     try {
-      execSync(
-        `npx @hey-api/openapi-ts -i ${tempSpecPath} -o ${generatedTempDir} -c @hey-api/client-${options.client} -p @tanstack/react-query`,
-        {
-          stdio: 'inherit',
-        },
-      );
+      generateClientCode({
+        clientType: options.client,
+        outputPath: generatedTempDir,
+        plugins: options.plugins,
+        specFile: tempSpecPath,
+      });
     } catch (error) {
-      logger.error('Failed to generate new client code.');
       await cleanup();
       throw error;
     }
@@ -150,7 +144,11 @@ const runExecutor: PromiseExecutor<UpdateApiExecutorSchema> = async (
     await writeFile(existingSpecPath, newSpecString);
 
     // Copy new generated code to project
-    const projectGeneratedDir = join(projectRoot, 'src', 'generated');
+    const projectGeneratedDir = join(
+      projectRoot,
+      'src',
+      CONSTANTS.GENERATED_DIR_NAME,
+    );
 
     // Remove old generated directory if it exists
     if (existsSync(projectGeneratedDir)) {

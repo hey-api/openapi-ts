@@ -36,6 +36,15 @@
       "description": "The directory of the project",
       "x-prompt": "What is the directory of the project? (e.g. libs)",
       "default": "libs"
+    },
+    "plugins": {
+      "type": "array",
+      "description": "The plugins to use",
+      "x-prompt": "What plugins would you like to use? (e.g. @tanstack/react-query)",
+      "default": [],
+      "items": {
+        "type": "string"
+      }
     }
   },
   "required": ["spec", "scope", "name"]

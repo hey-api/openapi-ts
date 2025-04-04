@@ -52,6 +52,7 @@
     "@hey-api/openapi-ts": "workspace:*",
     "@nx/devkit": "20.7.1",
     "@redocly/cli": "1.34.1",
+    "latest-version": "9.0.0",
     "nx": "20.7.1",
     "openapi-diff": "0.23.7",
     "tslib": "2.3.0"
