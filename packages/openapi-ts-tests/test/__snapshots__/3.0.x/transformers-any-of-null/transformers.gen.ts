@@ -9,6 +9,9 @@ const fooSchemaResponseTransformer = (data: any) => {
     if (data.bar) {
         data.bar = new Date(data.bar);
     }
+    if (data.requiredBaz) {
+        data.requiredBaz = new Date(data.requiredBaz);
+    }
     return data;
 };
 

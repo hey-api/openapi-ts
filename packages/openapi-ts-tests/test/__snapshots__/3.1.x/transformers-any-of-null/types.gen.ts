@@ -13,6 +13,7 @@ export type Foo = {
     foo?: Date;
     bar?: Date | null;
     baz?: Date | null;
+    requiredQux: Date | null;
 };
 
 export type GetFooData = {
