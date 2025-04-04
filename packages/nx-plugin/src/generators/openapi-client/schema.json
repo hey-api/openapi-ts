@@ -31,9 +31,12 @@
       "x-prompt": "What is the URL or local path to the OpenAPI spec file?"
     },
     "tags": {
-      "type": "string",
+      "type": "array",
       "description": "Add tags to the library (comma-separated)",
-      "default": "api,openapi"
+      "default": ["api", "openapi"],
+      "items": {
+        "type": "string"
+      }
     },
     "client": {
       "type": "string",
@@ -48,6 +51,13 @@
       "items": {
         "type": "string"
       }
+    },
+    "test": {
+      "type": "string",
+      "description": "Test to use",
+      "default": "none",
+      "x-prompt": "Which test runner would you like to use?",
+      "enum": ["none", "vitest"]
     }
   },
   "required": ["name", "spec", "scope"]

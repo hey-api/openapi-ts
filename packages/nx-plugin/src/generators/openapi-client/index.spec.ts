@@ -62,7 +62,7 @@ vi.mock('../../utils', async () => {
   };
 });
 
-const tempDir = 'temp';
+const tempDirectory = 'temp-openapi-client';
 
 describe('openapi-client generator', () => {
   let tree: Tree;
@@ -70,11 +70,12 @@ describe('openapi-client generator', () => {
 
   const options = {
     client: '@hey-api/client-fetch',
-    directory: tempDir,
+    directory: tempDirectory,
     name: 'test-api',
     plugins: [],
     scope: '@test-api',
     spec: '',
+    tags: ['api', 'openapi'],
   } satisfies OpenApiClientGeneratorSchema;
 
   beforeEach(() => {
@@ -95,7 +96,7 @@ paths:
     `;
 
     // Create temp directory in the workspace root
-    const tempDir = join(process.cwd(), 'tmp');
+    const tempDir = join(process.cwd(), tempDirectory);
     const apiDir = join(tempDir, 'api');
     if (!existsSync(apiDir)) {
       mkdirSync(apiDir, { recursive: true });
@@ -113,7 +114,7 @@ paths:
   });
 
   afterEach(async () => {
-    const tempDir = join(process.cwd(), 'tmp');
+    const tempDir = join(process.cwd(), tempDirectory);
     if (existsSync(tempDir)) {
       await rm(tempDir, { recursive: true });
     }
@@ -126,12 +127,13 @@ paths:
       expect(normalized).toEqual({
         clientType: '@hey-api/client-fetch',
         plugins: [],
-        projectDirectory: tempDir,
+        projectDirectory: tempDirectory,
         projectName: 'test-api',
-        projectRoot: `${tempDir}/test-api`,
+        projectRoot: `${tempDirectory}/test-api`,
         projectScope: '@test-api',
         specFile: tempSpecPath,
         tagArray: ['api', 'openapi'],
+        test: 'none',
       });
     });
 
@@ -139,7 +141,7 @@ paths:
       const customOptions = {
         ...options,
         directory: 'custom-dir',
-        tags: 'custom,tags',
+        tags: ['custom', 'tags'],
       };
 
       const normalized = normalizeOptions(customOptions);
@@ -153,6 +155,7 @@ paths:
         projectScope: '@test-api',
         specFile: tempSpecPath,
         tagArray: ['custom', 'tags'],
+        test: 'none',
       });
     });
   });
