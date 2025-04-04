@@ -17,6 +17,10 @@ export const fieldName = ({
 }) => {
   numberRegExp.lastIndex = 0;
   if (numberRegExp.test(name)) {
+    // For negative numbers, use string literals instead
+    if (name.startsWith('-')) {
+      return ts.factory.createStringLiteral(name);
+    }
     return ts.factory.createNumericLiteral(name);
   }
 

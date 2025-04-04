@@ -1,0 +1,60 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "OpenAPI 3.1.1 negative property names example",
+    "version": "1"
+  },
+  "components": {
+    "schemas": {
+      "ReactionRollup": {
+        "title": "Reaction Rollup",
+        "type": "object",
+        "properties": {
+          "url": {
+            "format": "uri",
+            "type": "string"
+          },
+          "total_count": {
+            "type": "integer"
+          },
+          "+1": {
+            "type": "integer"
+          },
+          "-1": {
+            "type": "integer"
+          },
+          "laugh": {
+            "type": "integer"
+          },
+          "confused": {
+            "type": "integer"
+          },
+          "heart": {
+            "type": "integer"
+          },
+          "hooray": {
+            "type": "integer"
+          },
+          "eyes": {
+            "type": "integer"
+          },
+          "rocket": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "url",
+          "total_count",
+          "+1",
+          "-1",
+          "laugh",
+          "confused",
+          "heart",
+          "hooray",
+          "eyes",
+          "rocket"
+        ]
+      }
+    }
+  }
+}
