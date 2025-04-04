@@ -127,7 +127,7 @@ const runExecutor: PromiseExecutor<UpdateApiExecutorSchema> = async (
 
     // Generate new client code
     try {
-      generateClientCode({
+      await generateClientCode({
         clientType: options.client,
         outputPath: generatedTempDir,
         plugins: options.plugins,

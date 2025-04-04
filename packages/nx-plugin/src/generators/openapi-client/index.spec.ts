@@ -53,7 +53,7 @@ vi.mock('child_process', () => ({
 }));
 
 // Mock generateClientCode to prevent actual code generation
-vi.mock('./index', async () => {
+vi.mock('../../utils', async () => {
   // eslint-disable-next-line @typescript-eslint/consistent-type-imports
   const actual = (await vi.importActual('./index')) as typeof import('./index');
   return {
@@ -62,13 +62,15 @@ vi.mock('./index', async () => {
   };
 });
 
+const tempDir = 'temp';
+
 describe('openapi-client generator', () => {
   let tree: Tree;
   let tempSpecPath: string;
 
   const options = {
     client: '@hey-api/client-fetch',
-    directory: './libs',
+    directory: tempDir,
     name: 'test-api',
     plugins: [],
     scope: '@test-api',
@@ -124,9 +126,9 @@ paths:
       expect(normalized).toEqual({
         clientType: '@hey-api/client-fetch',
         plugins: [],
-        projectDirectory: 'libs',
+        projectDirectory: tempDir,
         projectName: 'test-api',
-        projectRoot: 'libs/test-api',
+        projectRoot: `${tempDir}/test-api`,
         projectScope: '@test-api',
         specFile: tempSpecPath,
         tagArray: ['api', 'openapi'],
