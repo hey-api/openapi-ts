@@ -62,6 +62,10 @@ vi.mock('../../utils', async () => {
   };
 });
 
+vi.mock('latest-version', () => ({
+  default: vi.fn(() => '1.0.0'),
+}));
+
 const tempDirectory = 'temp-openapi-client';
 
 describe('openapi-client generator', () => {
