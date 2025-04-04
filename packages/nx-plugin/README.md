@@ -16,7 +16,7 @@ Run `nx g @hey-api/nx-plugin:openapi-client`
 - `scope`: The scope of the project. (required)
 - `spec`: The path to the OpenAPI spec file. (required)
 - `directory`: The directory to create the project in. (optional) (default: `libs`)
-- `client`: The type of client to generate. (optional) (default: `fetch`)
+- `client`: The type of client to generate. (optional) (default: `@hey-api/client-fetch`)
 - `tags`: The tags to add to the project. (optional) (default: `api,openapi`)
 
 #### Example
@@ -37,7 +37,8 @@ Run `nx run @my-org/my-generated-package:updateApi`
 #### Options
 
 - `spec`: The path to the OpenAPI spec file. (required)
-- `client`: The type of client to generate. (optional) (default: `fetch`)
-- `directory`: The directory to create the project in. (optional) (default: `libs`)
 - `name`: The name of the project. (required)
 - `scope`: The scope of the project. (required)
+- `client`: The type of client to generate. (optional) (default: `@hey-api/client-fetch`)
+- `directory`: The directory to create the project in. (optional) (default: `libs`)
+- `plugins`: Additional plugins to provide to the client api. (optional) (default:[])

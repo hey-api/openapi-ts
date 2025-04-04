@@ -97,6 +97,6 @@ The generator also uses `@redocly/cli` for bundling the spec file.
 - [x] Generate the client code
 - [x] Setup tests
 - [x] Add generator to update the API spec file and regenerate the client code
-- [ ] Make plugins configurable and ability to add additional plugins
+- [x] Make plugins configurable and ability to add additional plugins
+- [x] Support additional client types
 - [ ] Support different test frameworks
-- [ ] Support additional client types
