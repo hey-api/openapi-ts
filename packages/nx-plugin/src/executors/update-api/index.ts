@@ -72,6 +72,9 @@ async function compareSpecs(existingSpecPath: string, newSpecPath: string) {
 
 const runExecutor: PromiseExecutor<UpdateApiExecutorSchema> = async (
   options,
+  // this is added to stop the CI from complaining about not using the context and to stop the linter from complaining
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _context,
 ) => {
   try {
     // Create temp folders if they don't exist
@@ -141,8 +144,23 @@ const runExecutor: PromiseExecutor<UpdateApiExecutorSchema> = async (
     // If we got here, generation was successful. Update the files
     logger.info('Updating existing spec and client files...');
 
+    const apiDirectoryExists = existsSync(apiDirectory);
+    const existingSpecFileExists = existsSync(existingSpecPath);
     // Copy new spec to project
-    await writeFile(existingSpecPath, newSpecString);
+    if (apiDirectoryExists) {
+      if (existingSpecFileExists) {
+        logger.debug('Existing spec file found. Updating...');
+      } else {
+        logger.debug('No existing spec file found. Creating...');
+      }
+      await writeFile(existingSpecPath, newSpecString);
+    } else {
+      logger.error(
+        `No API directory found at ${apiDirectory} after checking once, exiting.`,
+      );
+      await cleanup();
+      return { success: false };
+    }
 
     // Copy new generated code to project
     const projectGeneratedDir = join(
