@@ -9,7 +9,6 @@ import {
   logger,
   names,
   updateJson,
-  workspaceRoot,
 } from '@nx/devkit';
 import { execSync } from 'child_process';
 import { existsSync } from 'fs';
@@ -500,9 +499,8 @@ export async function updatePackageJson({
     join(projectRoot, 'package.json'),
   );
 
-  const tsconfigName = 'tsconfig.base.json';
-  const tsConfigPath = join(workspaceRoot, tsconfigName);
-  if (existsSync(tsConfigPath)) {
+  try {
+    const tsconfigName = 'tsconfig.base.json';
     updateJson(tree, tsconfigName, (json) => {
       const paths = json.compilerOptions.paths || {};
       paths[`${projectScope}/${projectName}`] = [
@@ -521,9 +519,10 @@ export async function updatePackageJson({
       json.compilerOptions.paths = paths;
       return json;
     });
-  } else {
-    logger.error(`Failed to find ${tsconfigName} file in ${workspaceRoot}.`);
-    throw new Error(`Failed to find ${tsconfigName} file in ${workspaceRoot}.`);
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    logger.error(`Failed to update tsconfig.base.json: ${errorMessage}`);
+    throw error;
   }
 
   return installDeps;
