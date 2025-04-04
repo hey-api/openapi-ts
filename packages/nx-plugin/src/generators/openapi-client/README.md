@@ -16,14 +16,16 @@ nx generate openapi-client
 
 ## Options
 
-| Option      | Description                                       | Required | Default                 |
-| ----------- | ------------------------------------------------- | -------- | ----------------------- |
-| `name`      | Library name                                      | Yes      | -                       |
-| `scope`     | Scope of the project                              | Yes      | -                       |
-| `spec`      | Path to the OpenAPI spec file (URL or local path) | Yes      | -                       |
-| `client`    | Type of client to generate                        | No       | `@hey-api/client-fetch` |
-| `directory` | Directory where the library will be created       | No       | `libs`                  |
-| `tags`      | Add tags to the library (comma-separated)         | No       | `api,openapi`           |
+| Option      | Description                                       | Required | Default                 | Type               |
+| ----------- | ------------------------------------------------- | -------- | ----------------------- | ------------------ |
+| `name`      | Library name                                      | Yes      | -                       | string             |
+| `scope`     | Scope of the project                              | Yes      | -                       | string             |
+| `spec`      | Path to the OpenAPI spec file (URL or local path) | Yes      | -                       | string             |
+| `client`    | Type of client to generate                        | No       | `@hey-api/client-fetch` | string             |
+| `directory` | Directory where the library will be created       | No       | `libs`                  | string             |
+| `tags`      | Add tags to the library (comma-separated)         | No       | `api,openapi`           | string[]           |
+| `plugins`   | Additional plugins for client                     | No       | []                      | string[]           |
+| `test`      | Tests to generate                                 | No       | `none`                  | 'none' or 'vitest' |
 
 ## Examples
 
@@ -36,6 +38,9 @@ nx generate openapi-client my-api --spec=./api-specs/my-api.yaml --client=@hey-a
 
 # Generate with custom directory and tags
 nx generate openapi-client my-api --spec=./api-specs/my-api.yaml --directory=libs/api --tags=api,openapi,my-service
+
+# Generates with test files
+nx generate openapi-client my-api --spec=./api-specs/my-api.yaml --directory=libs/api --test=vitest
 ```
 
 ## Generated Project Structure
@@ -87,7 +92,7 @@ npm run update
 The generator adds the following dependencies to the created project:
 
 - `@hey-api/openapi-ts` - For generating the client code (dev dependency)
-- `@hey-api/client-fetch` or `@hey-api/client-axios` - Client implementation (dependency)
+- `@hey-api/client-fetch` or `@hey-api/client-axios` or whichever client is provided - Client implementation (dependency)
 - `axios` - If using the axios client (dependency)
 
 The generator also uses `@redocly/cli` for bundling the spec file.
@@ -95,8 +100,9 @@ The generator also uses `@redocly/cli` for bundling the spec file.
 ## TODO
 
 - [x] Generate the client code
-- [x] Setup tests
+- [x] Setup tests for generated code
 - [x] Add generator to update the API spec file and regenerate the client code
 - [x] Make plugins configurable and ability to add additional plugins
 - [x] Support additional client types
 - [ ] Support different test frameworks
+- [ ] Add linting generation for
