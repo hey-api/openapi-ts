@@ -38,21 +38,29 @@
     "client": {
       "type": "string",
       "description": "Type of client to generate",
-      "default": "fetch",
-      "enum": ["fetch", "axios"],
+      "default": "@hey-api/client-fetch",
+      "enum": ["@hey-api/client-fetch", "@hey-api/client-axios"],
       "x-prompt": {
         "message": "Which client type would you like to use?",
         "type": "list",
         "items": [
           {
-            "value": "fetch",
+            "value": "@hey-api/client-fetch",
             "label": "Fetch API client"
           },
           {
-            "value": "axios",
+            "value": "@hey-api/client-axios",
             "label": "Axios client"
           }
         ]
+      }
+    },
+    "plugins": {
+      "type": "array",
+      "description": "Plugins to use",
+      "default": [],
+      "items": {
+        "type": "string"
       }
     }
   },

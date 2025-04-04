@@ -8,6 +8,7 @@ const options: UpdateApiExecutorSchema = {
   client: 'fetch',
   directory: 'libs',
   name: 'my-api',
+  plugins: [],
   scope: '@my-org',
   spec: '',
 };

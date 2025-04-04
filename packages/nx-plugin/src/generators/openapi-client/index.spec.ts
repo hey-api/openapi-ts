@@ -7,11 +7,11 @@ import { rm } from 'fs/promises';
 import { dirname, join } from 'path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { generateClientCode } from '../../utils';
 import type { OpenApiClientGeneratorSchema } from './index';
 import generator from './index';
 import {
   generateApi,
-  generateClientCode,
   generateNxProject,
   normalizeOptions,
   updatePackageJson,
@@ -70,6 +70,7 @@ describe('openapi-client generator', () => {
     client: 'fetch' as const,
     directory: './libs',
     name: 'test-api',
+    plugins: [],
     scope: '@test-api',
     spec: '',
   } satisfies OpenApiClientGeneratorSchema;
@@ -289,7 +290,7 @@ paths:
   describe('generateClientCode', () => {
     it('should generate client code without errors', () => {
       const normalizedOptions = normalizeOptions(options);
-      const { clientType, projectRoot } = normalizedOptions;
+      const { clientType, plugins, projectRoot } = normalizedOptions;
 
       // Create necessary directories
       const fullProjectRoot = join(process.cwd(), projectRoot);
@@ -300,7 +301,9 @@ paths:
       expect(() =>
         generateClientCode({
           clientType,
-          projectRoot,
+          outputPath: `${projectRoot}/src/generated`,
+          plugins,
+          specFile: tempSpecPath,
         }),
       ).not.toThrow();
     });
