@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@hey-api/client-fetch": "workspace:*",
-    "fastify": "5.2.0",
-    "fastify-openapi-glue": "4.8.0"
+    "fastify": "5.2.2",
+    "fastify-openapi-glue": "4.9.0"
   },
   "devDependencies": {
     "@hey-api/openapi-ts": "workspace:*",
