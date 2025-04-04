@@ -1,6 +1,6 @@
 import { createClient } from '@hey-api/openapi-ts';
 import { execSync } from 'child_process';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   bundleAndDereferenceSpecFile,
@@ -20,6 +20,14 @@ vi.mock('@hey-api/openapi-ts', () => ({
 }));
 
 describe('utils', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  afterEach(() => {
+    vi.resetAllMocks();
+  });
+
   describe('generateClientCommand', () => {
     it('should generate command without plugins', () => {
       const command = generateClientCommand({
