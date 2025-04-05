@@ -44,6 +44,11 @@
       "items": {
         "type": "string"
       }
+    },
+    "force": {
+      "type": "boolean",
+      "description": "If true, the Client code will be regenerated even if the spec has not changed",
+      "default": false
     }
   },
   "required": ["spec", "scope", "name"]
