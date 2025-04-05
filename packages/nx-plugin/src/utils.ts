@@ -1,6 +1,8 @@
+import { bundle } from '@apidevtools/swagger-parser';
 import { createClient } from '@hey-api/openapi-ts';
 import { logger } from '@nx/devkit';
 import { execSync } from 'child_process';
+import OpenApiDiff from 'openapi-diff';
 
 export function generateClientCommand({
   clientType,
@@ -87,4 +89,64 @@ export function bundleAndDereferenceSpecFile({
     logger.error(`Failed to bundle and dereference spec file: ${error}`);
     throw error;
   }
+}
+
+export async function compareSpecs(
+  existingSpecPath: string,
+  newSpecPath: string,
+) {
+  logger.debug('Parsing existing spec...');
+  const parsedExistingSpec = await bundle(existingSpecPath);
+  logger.debug('Existing spec parsed.');
+  const parsedNewSpec = await bundle(newSpecPath);
+  logger.debug('New spec parsed.');
+
+  const existingSpec = JSON.parse(JSON.stringify(parsedExistingSpec));
+  const existingSpecVersion = existingSpec.openapi || existingSpec.swagger;
+  const newSpec = JSON.parse(JSON.stringify(parsedNewSpec));
+  const newSpecVersion = newSpec.openapi || newSpec.swagger;
+  logger.debug('Checking spec versions...');
+  logger.debug(`Existing spec version: ${existingSpecVersion}`);
+  logger.debug(`New spec version: ${newSpecVersion}`);
+  const existingVersionIs3 = existingSpecVersion.startsWith('3');
+  const newSpecVersionIs3 = newSpecVersion.startsWith('3');
+  const existingVersionIs2 = existingSpecVersion.startsWith('2');
+  const newSpecVersionIs2 = newSpecVersion.startsWith('2');
+
+  if (!newSpecVersionIs3 && !newSpecVersionIs2) {
+    logger.error('New spec is not a valid OpenAPI spec version of 2 or 3.');
+    throw new Error('New spec is not a valid OpenAPI spec version of 2 or 3.');
+  }
+
+  if (!existingVersionIs3 && !existingVersionIs2) {
+    logger.error(
+      'Existing spec is not a valid OpenAPI spec version of 2 or 3.',
+    );
+    throw new Error(
+      'Existing spec is not a valid OpenAPI spec version of 2 or 3.',
+    );
+  }
+
+  logger.debug('Comparing specs...');
+  // Compare specs
+  const diff = await OpenApiDiff.diffSpecs({
+    destinationSpec: {
+      content: JSON.stringify(parsedNewSpec),
+      format: newSpecVersionIs3 ? 'openapi3' : 'swagger2',
+      location: newSpecPath,
+    },
+    sourceSpec: {
+      content: JSON.stringify(parsedExistingSpec),
+      format: existingVersionIs3 ? 'openapi3' : 'swagger2',
+      location: existingSpecPath,
+    },
+  });
+  const areSpecsEqual =
+    diff.breakingDifferencesFound === false &&
+    diff.nonBreakingDifferences.length === 0 &&
+    // TODO: figure out if we should check unclassifiedDifferences
+    diff.unclassifiedDifferences.length === 0;
+
+  logger.debug(`Are specs equal: ${areSpecsEqual}`);
+  return areSpecsEqual;
 }
