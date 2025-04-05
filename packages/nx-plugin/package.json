@@ -24,7 +24,6 @@
     "nx",
     "swagger"
   ],
-  "private": true,
   "type": "commonjs",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -34,7 +33,8 @@
     "check-exports": "attw --pack .",
     "test:watch": "vitest watch --config vitest.config.ts",
     "test": "vitest run --config vitest.config.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "pnpm build"
   },
   "exports": {
     "./package.json": "./package.json",
@@ -64,6 +64,7 @@
   "files": [
     "dist",
     "LICENSE.md",
-    "generators.json"
+    "generators.json",
+    "executors.json"
   ]
 }
