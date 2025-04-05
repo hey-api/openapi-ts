@@ -49,6 +49,7 @@
     "eslint": "9.17.0",
     "express": "4.21.0",
     "fastify": "5.2.0",
+    "find-my-way": "9.2.0",
     "glob": "10.4.3",
     "node-fetch": "3.3.2",
     "nuxt": "3.14.1592",
@@ -60,5 +61,10 @@
     "typescript": "5.8.3",
     "vue": "3.5.13",
     "zod": "3.23.8"
+  },
+  "overrides": {
+    "fastify": {
+      "find-my-way": "$find-my-way"
+    }
   }
 }

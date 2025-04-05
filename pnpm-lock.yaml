@@ -199,6 +199,9 @@ importers:
       fastify-openapi-glue:
         specifier: 4.8.0
         version: 4.8.0
+      find-my-way:
+        specifier: 9.2.0
+        version: 9.2.0
     devDependencies:
       '@config/vite-base':
         specifier: workspace:*
@@ -1077,6 +1080,9 @@ importers:
       fastify:
         specifier: 5.2.0
         version: 5.2.0
+      find-my-way:
+        specifier: 9.2.0
+        version: 9.2.0
       glob:
         specifier: 10.4.3
         version: 10.4.3
