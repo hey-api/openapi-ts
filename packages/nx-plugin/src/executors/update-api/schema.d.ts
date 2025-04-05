@@ -5,4 +5,8 @@ export interface UpdateApiExecutorSchema {
   plugins: string[];
   scope: string;
   spec: string;
+  /**
+   * Temporary folder used to store files, only change for testing
+   */
+  tempFolder?: string;
 }
