@@ -1,29 +1,79 @@
-import type { ExecutorContext } from '@nx/devkit';
-import { existsSync } from 'fs';
+import { type ExecutorContext, logger } from '@nx/devkit';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { mkdir, readFile, rm, writeFile } from 'fs/promises';
-import { join } from 'path';
-import { afterAll, describe, expect, it } from 'vitest';
+import { dirname, join } from 'path';
+import { afterAll, describe, expect, it, vi } from 'vitest';
 
+import generator from '../../generators/openapi-client';
+import { getGeneratorOptions, TestOptions } from '../../test-utils';
+import { CONSTANTS } from '../../vars';
 import executor from '.';
 import type { UpdateApiExecutorSchema } from './schema';
 
-const options: UpdateApiExecutorSchema = {
-  client: '@hey-api/client-fetch',
+// Mock execSync to prevent actual command execution
+vi.mock('child_process', () => ({
+  execSync: vi.fn((command: string) => {
+    // Mock successful bundling by copying the spec file
+    if (command.includes('redocly bundle')) {
+      const args = command.split(' ');
+      const specFileIndex = args.indexOf('bundle') + 1;
+      const outputFileIndex = args.indexOf('--output') + 1;
+
+      if (specFileIndex > 0 && outputFileIndex > 0) {
+        const specFile = args[specFileIndex];
+        const outputFile = args[outputFileIndex];
+
+        if (!specFile || !existsSync(specFile)) {
+          throw new Error(
+            `ENOENT: no such file or directory, open '${specFile}'`,
+          );
+        }
+
+        if (!outputFile) {
+          throw new Error(
+            `ENOENT: no such file or directory, open '${outputFile}'`,
+          );
+        }
+
+        const content = readFileSync(specFile, 'utf-8');
+        mkdirSync(dirname(outputFile), { recursive: true });
+        writeFileSync(outputFile, content);
+      }
+      return '';
+    }
+    return '';
+  }),
+}));
+
+vi.mock('latest-version', () => ({
+  default: vi.fn(() => '1.0.0'),
+}));
+
+const tempDirectory = 'temp-update-api';
+
+const defaultOptions: UpdateApiExecutorSchema = {
+  client: TestOptions.client,
   // don't use tmp, as it is used internally in the lib code for temp files
   directory: 'temp-update-api',
-  name: 'my-api',
+  name: TestOptions.name,
   plugins: [],
-  scope: '@my-org',
+  scope: TestOptions.scope,
   spec: '',
+  tempFolder: tempDirectory,
 };
 
-const generateOptions = async (name: string) => {
-  const apiDir = join(process.cwd(), options.directory, name, 'api');
+const testSpecName = 'spec.yaml';
+
+const getExecutorOptions = async (name: string) => {
+  const projectDir = join(defaultOptions.directory, name);
+  const apiDir = join(projectDir, 'api');
   // Create the API directory and spec file
-  if (!existsSync(apiDir)) {
-    await mkdir(apiDir, { recursive: true });
+  const absoluteApiDir = join(process.cwd(), apiDir);
+  if (!existsSync(absoluteApiDir)) {
+    await mkdir(absoluteApiDir, { recursive: true });
   }
-  const specPath = join(apiDir, 'spec.yaml');
+  const specPath = join(apiDir, testSpecName);
+  const absoluteSpecPath = join(process.cwd(), specPath);
   const validSpec = `
 openapi: 3.0.0
 info:
@@ -43,139 +93,172 @@ paths:
                   message:
                     type: string
 `;
-  await writeFile(specPath, validSpec);
-  return {
-    ...options,
-    name,
-    spec: specPath,
-  };
-};
+  logger.debug(`Writing executor spec to ${absoluteSpecPath}`);
+  await writeFile(absoluteSpecPath, validSpec);
 
-const context: ExecutorContext = {
-  cwd: process.cwd(),
-  isVerbose: false,
-  nxJsonConfiguration: {},
-  projectGraph: {
-    dependencies: {},
-    nodes: {},
-  },
-  projectsConfigurations: {
-    projects: {
-      'my-api': {
-        root: 'libs/my-api',
-        targets: {},
-      },
+  const context: ExecutorContext = {
+    cwd: process.cwd(),
+    isVerbose: false,
+    nxJsonConfiguration: {},
+    projectGraph: {
+      dependencies: {},
+      nodes: {},
     },
-    version: 2,
-  },
-  root: '',
+    projectsConfigurations: {
+      projects: {
+        [TestOptions.name]: {
+          root: projectDir,
+          targets: {},
+        },
+      },
+      version: 2,
+    },
+    root: '',
+  };
+
+  return {
+    context,
+    options: {
+      ...defaultOptions,
+      directory: tempDirectory,
+      name,
+      spec: specPath,
+    },
+  };
 };
 
 describe('UpdateApi Executor', () => {
   afterAll(async () => {
-    const apiDir = join(process.cwd(), options.directory);
+    const apiDir = join(process.cwd(), tempDirectory);
     if (existsSync(apiDir)) {
       await rm(apiDir, { force: true, recursive: true });
     }
   });
 
   it('can run', async () => {
-    const testOptions = await generateOptions(options.name + '1');
-    const output = await executor(testOptions, context);
+    const { context, options } = await getExecutorOptions(
+      defaultOptions.name + '1',
+    );
+    const output = await executor(options, context);
     expect(output.success).toBe(true);
   });
 
   it('handles invalid spec file', async () => {
-    const invalidOptions = await generateOptions(options.name + '2');
+    const { context, options } = await getExecutorOptions(
+      defaultOptions.name + '2',
+    );
     const invalidSpecPath = join(
       process.cwd(),
-      invalidOptions.directory,
-      invalidOptions.name,
+      options.directory,
+      options.name,
       'api',
       'invalid.yaml',
     );
-    await mkdir(
-      join(process.cwd(), invalidOptions.directory, invalidOptions.name, 'api'),
-      { recursive: true },
-    );
+    await mkdir(join(process.cwd(), options.directory, options.name, 'api'), {
+      recursive: true,
+    });
     await writeFile(invalidSpecPath, 'invalid: yaml');
-    invalidOptions.spec = invalidSpecPath;
+    options.spec = invalidSpecPath;
 
-    const output = await executor(invalidOptions, context);
+    const output = await executor(options, context);
     expect(output.success).toBe(false);
   });
 
   it('handles non-existent spec file', async () => {
-    const nonExistentOptions = await generateOptions(options.name + '3');
-    nonExistentOptions.spec = 'non-existent.yaml';
-    const output = await executor(nonExistentOptions, context);
+    const { context, options } = await getExecutorOptions(
+      defaultOptions.name + '3',
+    );
+    options.spec = 'non-existent.yaml';
+    const output = await executor(options, context);
     expect(output.success).toBe(false);
   });
 
   it('handles different client types', async () => {
-    const axiosOptions = await generateOptions(options.name + '4');
-    axiosOptions.client = '@hey-api/client-axios';
-    const output = await executor(axiosOptions, context);
+    const { context, options } = await getExecutorOptions(
+      defaultOptions.name + '4',
+    );
+    options.client = '@hey-api/client-axios';
+    const output = await executor(options, context);
     expect(output.success).toBe(true);
   });
 
   it('handles plugins', async () => {
-    const pluginOptions = await generateOptions(options.name + '5');
-    pluginOptions.plugins = ['@tanstack/react-query'];
-    const output = await executor(pluginOptions, context);
+    const { context, options } = await getExecutorOptions(
+      defaultOptions.name + '5',
+    );
+    options.plugins = ['@tanstack/react-query'];
+    const output = await executor(options, context);
     expect(output.success).toBe(true);
   });
 
   it('handles identical specs', async () => {
-    const identicalOptions = await generateOptions(options.name + '6');
+    const { context, options } = await getExecutorOptions(
+      defaultOptions.name + '6',
+    );
     // Create a copy of the existing spec
     const existingSpecPath = join(
       process.cwd(),
-      identicalOptions.directory,
-      identicalOptions.name,
-      'api',
-      'spec.yaml',
+      options.tempFolder ?? '',
+      options.name,
+      CONSTANTS.SPEC_DIR_NAME,
+      testSpecName,
     );
     const newSpecPath = join(
       process.cwd(),
-      identicalOptions.directory,
-      identicalOptions.name,
-      'api',
+      options.tempFolder ?? '',
+      options.name,
+      CONSTANTS.SPEC_DIR_NAME,
       'new-spec.yaml',
     );
     const existingSpec = await readFile(existingSpecPath, 'utf-8');
     await mkdir(
       join(
         process.cwd(),
-        identicalOptions.directory,
-        identicalOptions.name,
-        'api',
+        options.directory,
+        options.name,
+        CONSTANTS.SPEC_DIR_NAME,
       ),
-      { recursive: true },
+      {
+        recursive: true,
+      },
     );
     await writeFile(newSpecPath, existingSpec);
-    identicalOptions.spec = newSpecPath;
+    options.spec = newSpecPath;
 
-    const output = await executor(identicalOptions, context);
+    const output = await executor(options, context);
     expect(output.success).toBe(true);
   });
 
   it('handles different spec versions', async () => {
-    const v2Options = await generateOptions(options.name + '7');
-    const v2SpecPath = join(
-      process.cwd(),
-      v2Options.directory,
-      v2Options.name,
-      'api',
-      'v2-spec.yaml',
+    const {
+      options: generatorOptions,
+      specPath,
+      tree,
+    } = await getGeneratorOptions({
+      name: defaultOptions.name + '7',
+      tempDirectory: 'temp-update-api',
+    });
+    const { context, options } = await getExecutorOptions(
+      generatorOptions.name,
     );
+
+    // Update the executor spec path to the spec path from the generator
+    options.spec = specPath;
+
+    const absoluteApiDir = join(
+      process.cwd(),
+      options.tempFolder ?? '',
+      options.name,
+      CONSTANTS.SPEC_DIR_NAME,
+    );
+    const v2SpecPath = join(process.cwd(), specPath);
     const v2Spec = `
 swagger: "2.0"
 info:
   title: Test API
   version: 1.0.0
 paths:
-  /test:
+  /test2:
     get:
       responses:
         '200':
@@ -186,14 +269,20 @@ paths:
               message:
                 type: string
 `;
-    await mkdir(
-      join(process.cwd(), v2Options.directory, v2Options.name, 'api'),
-      { recursive: true },
-    );
-    await writeFile(v2SpecPath, v2Spec);
-    v2Options.spec = v2SpecPath;
+    await generator(tree, generatorOptions);
 
-    const output = await executor(v2Options, context);
+    await mkdir(absoluteApiDir, {
+      recursive: true,
+    });
+    if (existsSync(v2SpecPath)) {
+      logger.debug(`Spec file already exists: ${v2SpecPath}`);
+      await writeFile(v2SpecPath, v2Spec);
+    } else {
+      logger.error(`Spec file does not exist: ${v2SpecPath}`);
+      throw new Error(`Spec file does not exist: ${v2SpecPath}`);
+    }
+
+    const output = await executor(options, context);
     expect(output.success).toBe(true);
   });
 });
